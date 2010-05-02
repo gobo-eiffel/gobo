@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_avt: STRING; a_static_context: XM_XSLT_EXPRESSION_CONTEXT; a_all_untyped: BOOLEAN) is
+	make (a_avt: STRING; a_static_context: XM_XSLT_EXPRESSION_CONTEXT; a_all_untyped: BOOLEAN)
 			-- Initialize `Current'
 		require
 			avt_not_void: a_avt /= Void
@@ -66,7 +66,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	parse_components (a_line_number: INTEGER) is
+	parse_components (a_line_number: INTEGER)
 			-- Parse `avt' into `components'.
 		local
 			l_leading_character, l_avt_length: INTEGER
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 	static_context: XM_XSLT_EXPRESSION_CONTEXT
 			-- Static context
 
-	append_fixed_component (a_string_component: STRING) is
+	append_fixed_component (a_string_component: STRING)
 			--	Append `a_string_component' onto `components'.
 		require
 			string_component_not_void: a_string_component /= Void
@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 			one_more: components.count = old components.count + 1
 		end
 
-	append_parsed_expression (a_expression: XM_XPATH_EXPRESSION) is
+	append_parsed_expression (a_expression: XM_XPATH_EXPRESSION)
 			-- Append `a_expression' onto `components'.
 		require
 			expression_not_void: a_expression /= Void

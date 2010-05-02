@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_file: like output_file) is
+	make (a_file: like output_file)
 			-- Create a new result summary.
 		require
 			a_file_not_void: a_file /= Void
@@ -48,7 +48,7 @@ feature -- Access
 
 feature -- Element change
 
-	put_failure (a_test: TS_TEST; a_reason: STRING) is
+	put_failure (a_test: TS_TEST; a_reason: STRING)
 			-- Add failed test `a_test'.
 		local
 			a_result: TS_FAILED_RESULT
@@ -61,7 +61,7 @@ feature -- Element change
 			output_file.flush
 		end
 
-	put_abort (a_test: TS_TEST; a_reason: STRING) is
+	put_abort (a_test: TS_TEST; a_reason: STRING)
 			-- Add aborted test `a_test'.
 		local
 			a_result: TS_ABORTED_RESULT
@@ -74,7 +74,7 @@ feature -- Element change
 			output_file.flush
 		end
 
-	start_test (a_test: TS_TEST) is
+	start_test (a_test: TS_TEST)
 			-- Inform Current that a test will be started.
 		do
 			output_file.put_character ('@')

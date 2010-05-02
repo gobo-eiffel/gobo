@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER; a_name: STRING) is
+	make (filename: STRING; line: INTEGER; a_name: STRING)
 			-- Create a new error reporting that the precedence
 			-- of symbol `a_name' has been defined twice.
 		require
@@ -37,10 +37,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: precedence of $3 defined twice"
+	default_template: STRING = "%"$1%", line $2: precedence of $3 defined twice"
 			-- Default template used to built the error message
 
-	code: STRING is "PR0006"
+	code: STRING = "PR0006"
 			-- Error code
 
 invariant

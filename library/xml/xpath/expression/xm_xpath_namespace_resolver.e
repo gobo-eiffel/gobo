@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	uri_for_defaulted_prefix (a_prefix: STRING; a_use_default_namespace: BOOLEAN): STRING is
+	uri_for_defaulted_prefix (a_prefix: STRING; a_use_default_namespace: BOOLEAN): STRING
 			-- Namespace URI corresponding to a given prefix
 		require
 			prefix_not_void: a_prefix /= Void
@@ -29,7 +29,7 @@ feature -- Access
 			void_if_prefix_not_in_scope: True
 		end
 
-	fingerprint (a_qname: STRING; a_use_default_namespace: BOOLEAN): INTEGER is
+	fingerprint (a_qname: STRING; a_use_default_namespace: BOOLEAN): INTEGER
 			-- Fingerprint of `a_qname';
 			-- Returns -2 if no namespace decalaration in scope for prefix.
 		require

@@ -22,15 +22,15 @@ create
 
 feature -- Access
 
-	program_name: STRING is "concat2"
+	program_name: STRING = "concat2"
 			-- Program name
 
-	library_name: STRING is "test"
+	library_name: STRING = "test"
 			-- Library name of example
 
 feature -- Test
 
-	test_concat2 is
+	test_concat2
 			-- Test 'concat2' example.
 		local
 			a_debug: STRING
@@ -96,10 +96,10 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	expected_output: STRING is "output2.log"
+	expected_output: STRING = "output2.log"
 			-- Name of file containing expected output
 
-	expected_output1: STRING is
+	expected_output1: STRING
 			-- Name of file containing first part expected output
 		once
 			Result := file_system.nested_pathname ("${GOBO}", <<"test", "example", "test", "data", "concat2a.log">>)
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 			expected_output1_not_empty: Result.count > 0
 		end
 
-	expected_output2: STRING is
+	expected_output2: STRING
 			-- Name of file containing second part of expected output
 		once
 			Result := file_system.nested_pathname ("${GOBO}", <<"test", "example", "test", "data", "concat2b.log">>)
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 			expected_output2_not_empty: Result.count > 0
 		end
 
-	expected_output3: STRING is
+	expected_output3: STRING
 			-- Name of file containing third part of expected output
 		once
 			Result := file_system.nested_pathname ("${GOBO}", <<"test", "example", "test", "data", "concat2c.log">>)

@@ -23,7 +23,7 @@ inherit
 
 feature -- Access
 
-	collation_key (a_string: STRING): ST_COLLATION_KEY is
+	collation_key (a_string: STRING): ST_COLLATION_KEY
 			-- Collation key for `a_string';
 			-- Collation keys provide better performance for multiple
 			-- comparisons involving the same source strings.
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Comparison
 
-	three_way_comparison (a_string, another_string: STRING): INTEGER is
+	three_way_comparison (a_string, another_string: STRING): INTEGER
 			-- Compare `a_string' with `another_string'
 		require
 			a_string_not_void: a_string /= Void
@@ -49,7 +49,7 @@ feature -- Comparison
 			three_way_comparison: Result >= -1 and Result <= 1
 		end
 
-	less_than (u, v: STRING): BOOLEAN is
+	less_than (u, v: STRING): BOOLEAN
 			-- Is `u' considered less than `v'?
 		do
 			Result := three_way_comparison (u, v) = -1

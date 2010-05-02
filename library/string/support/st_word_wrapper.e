@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new word-wrapper.
 		do
 			maximum_text_width := Default_maximum_text_width
@@ -40,10 +40,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	Default_maximum_text_width: INTEGER is 79
+	Default_maximum_text_width: INTEGER = 79
 			-- Default value for `maximum_text_width'
 
-	Default_new_line_indentation: INTEGER is 0
+	Default_new_line_indentation: INTEGER = 0
 			-- Default value for `new_line_indentation'
 
 	maximum_text_width: INTEGER
@@ -60,7 +60,7 @@ feature -- Statistics
 
 feature -- Configuration
 
-	set_maximum_text_width (a_value: INTEGER) is
+	set_maximum_text_width (a_value: INTEGER)
 			-- Set `maximum_text_width' to `a_value'.
 		require
 			larger_than_indentation: a_value > new_line_indentation
@@ -70,7 +70,7 @@ feature -- Configuration
 			value_set: maximum_text_width = a_value
 		end
 
-	set_new_line_indentation (a_value: INTEGER) is
+	set_new_line_indentation (a_value: INTEGER)
 			-- Set `new_line_indendation' to `a_value'.
 		require
 			not_too_small: a_value >= 0
@@ -83,7 +83,7 @@ feature -- Configuration
 
 feature -- Text transformation
 
-	wrapped_string (a_text: STRING): STRING is
+	wrapped_string (a_text: STRING): STRING
 			-- The wrapped version of `a_text', as a copy of the original
 			-- string with newlines at the correct positions
 		require
@@ -140,7 +140,7 @@ feature -- Text transformation
 
 feature {NONE} -- Implementation
 
-	canonify_whitespace (a_text: STRING) is
+	canonify_whitespace (a_text: STRING)
 			-- Replace all whitespace characters by ' ' in `a_text'.
 		require
 			not_void: a_text /= Void
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 			string_same_size: a_text.count = old a_text.count
 		end
 
-	is_space (a_character: CHARACTER): BOOLEAN is
+	is_space (a_character: CHARACTER): BOOLEAN
 			-- Is `a_character' a tab, a newline, a linefeed or a space?
 		do
 			Result := (a_character = ' ') or (a_character = '%T') or (a_character = '%N') or (a_character = '%R')

@@ -14,11 +14,11 @@ class XM_XPATH_SHARED_ANY_TYPE
 
 feature -- Access
 
-	any_type: XM_XPATH_ANY_TYPE is
+	any_type: XM_XPATH_ANY_TYPE
 			-- Singleton
 		once
 			create Result.make
 		end
 
 end
-	
+

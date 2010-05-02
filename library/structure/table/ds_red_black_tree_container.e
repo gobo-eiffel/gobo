@@ -25,14 +25,14 @@ inherit
 
 feature -- Access
 
-	new_cursor: DS_RED_BLACK_TREE_CONTAINER_CURSOR [G, K] is
+	new_cursor: DS_RED_BLACK_TREE_CONTAINER_CURSOR [G, K]
 			-- New external cursor
 		deferred
 		end
 
 feature {NONE} -- Element change
 
-	on_node_added (a_node: like root_node) is
+	on_node_added (a_node: like root_node)
 			-- `a_node' was just added to the binary search tree.
 			-- If some modifications need to be made, they should
 			-- take place in here. So the algorithms stay as
@@ -79,7 +79,7 @@ feature {NONE} -- Element change
 			end
 		end
 
-	insert_case_3 (a_node, a_uncle, a_grand_parent: like root_node) is
+	insert_case_3 (a_node, a_uncle, a_grand_parent: like root_node)
 			-- Case 3.
 		require
 			a_node_not_void: a_node /= Void
@@ -95,7 +95,7 @@ feature {NONE} -- Element change
 			a_grand_parens_is_red: a_grand_parent.is_red
 		end
 
-	insert_case_4 (a_node, a_grand_parent: like root_node): like root_node is
+	insert_case_4 (a_node, a_grand_parent: like root_node): like root_node
 			-- Case 4.
 		require
 			a_node_not_void: a_node /= Void
@@ -117,7 +117,7 @@ feature {NONE} -- Element change
 			result_not_void: Result /= Void
 		end
 
-	insert_case_5 (a_node, a_grand_parent: like root_node) is
+	insert_case_5 (a_node, a_grand_parent: like root_node)
 			-- Case 5.
 		require
 			a_node_not_void: a_node /= Void
@@ -141,7 +141,7 @@ feature {NONE} -- Element change
 
 feature {NONE} -- Removal
 
-	on_root_node_removed is
+	on_root_node_removed
 			-- There is a new `root_node', check that it is black.
 		do
 			if root_node.is_red then
@@ -149,7 +149,7 @@ feature {NONE} -- Removal
 			end
 		end
 
-	on_node_removed (a_old_node, a_node: like root_node; a_was_left_child: BOOLEAN) is
+	on_node_removed (a_old_node, a_node: like root_node; a_was_left_child: BOOLEAN)
 			-- The previsous `left_child' or `right_child'
 			-- (depending on `a_was_left_child') of `a_node'
 			-- was just removed.
@@ -228,7 +228,7 @@ feature {NONE} -- Removal
 			end
 		end
 
-	remove_case_2 (a_parent, a_sibling: like root_node; a_is_left_child: BOOLEAN): like root_node is
+	remove_case_2 (a_parent, a_sibling: like root_node; a_is_left_child: BOOLEAN): like root_node
 			-- Case 2.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -245,7 +245,7 @@ feature {NONE} -- Removal
 			end
 		end
 
-	remove_case_5 (a_parent, a_sibling: like root_node; a_sibling_is_red, a_is_left_child: BOOLEAN): like root_node is
+	remove_case_5 (a_parent, a_sibling: like root_node; a_sibling_is_red, a_is_left_child: BOOLEAN): like root_node
 			-- Case 5.
 		require
 			a_sibling_not_void: a_sibling /= Void
@@ -273,7 +273,7 @@ feature {NONE} -- Removal
 			end
 		end
 
-	remove_case_6 (a_parent, a_sibling: like root_node; a_is_left_child: BOOLEAN) is
+	remove_case_6 (a_parent, a_sibling: like root_node; a_is_left_child: BOOLEAN)
 			-- Case 6.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -302,7 +302,7 @@ feature {NONE} -- Removal
 
 feature {NONE} -- Status report
 
-	is_node_red (a_node: like root_node): BOOLEAN is
+	is_node_red (a_node: like root_node): BOOLEAN
 			-- Is `a_node' red?
 			-- If `a_node' is Void, its color is black.
 		do
@@ -314,7 +314,7 @@ feature {NONE} -- Status report
 			non_void_case: a_node /= Void implies Result = a_node.is_red
 		end
 
-	all_paths_have_same_number_of_black_nodes: BOOLEAN is
+	all_paths_have_same_number_of_black_nodes: BOOLEAN
 			-- Property of Red-Black Trees
 		do
 			Result := True

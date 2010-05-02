@@ -6,12 +6,12 @@ inherit
 
 feature
 
-	f is
+	f
 		do
 			print ("DD.f%N")
 		end
 
-	g is
+	g
 		do
 			print ("DD.g%N")
 		end

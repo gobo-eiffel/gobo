@@ -14,7 +14,7 @@ deferred class ET_DOTNET_ASSEMBLY_CONSUMER
 
 feature {NONE} -- Initialization
 
-	make (a_system: like current_system) is
+	make (a_system: like current_system)
 			-- Create a new assembly consumer.
 		require
 			a_system_not_void: a_system /= Void
@@ -29,7 +29,7 @@ feature -- Access
 	current_system: ET_SYSTEM
 			-- Surrounding Eiffel system
 
-	error_handler: ET_ERROR_HANDLER is
+	error_handler: ET_ERROR_HANDLER
 			-- Error handler
 		do
 			Result := current_system.error_handler
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Consuming
 
-	consume_assemblies (an_assemblies: ET_DOTNET_ASSEMBLIES) is
+	consume_assemblies (an_assemblies: ET_DOTNET_ASSEMBLIES)
 			-- Consume `an_assemblies' and put the classes in `universe'.
 		require
 			an_assemblies_not_void: an_assemblies /= Void
@@ -53,7 +53,7 @@ feature -- Consuming
 			end
 		end
 
-	consume_class (a_class: ET_CLASS) is
+	consume_class (a_class: ET_CLASS)
 			-- Consume `a_class'.
 		require
 			a_class_not_void: a_class /= Void
@@ -65,14 +65,14 @@ feature -- Consuming
 
 feature {ET_DOTNET_ASSEMBLY} -- Consuming
 
-	consume_assembly (an_assembly: ET_DOTNET_ASSEMBLY) is
+	consume_assembly (an_assembly: ET_DOTNET_ASSEMBLY)
 			-- Consume `an_assembly' and put the classes in `universe'.
 		require
 			an_assembly_not_void: an_assembly /= Void
 		deferred
 		end
 
-	consume_gac_assembly (an_assembly: ET_DOTNET_GAC_ASSEMBLY) is
+	consume_gac_assembly (an_assembly: ET_DOTNET_GAC_ASSEMBLY)
 			-- Consume `an_assembly' and put the classes in `universe'.
 		require
 			an_assembly_not_void: an_assembly /= Void

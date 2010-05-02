@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant
 		do
 			name := "compare"
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, where known
 		do
 			Result := type_factory.integer_type
@@ -56,7 +56,7 @@ feature -- Access
 
 feature -- Status report
 
-	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
+	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE
 			-- Type of argument number `argument_number'
 		do
 			if argument_number < 3 then
@@ -68,7 +68,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_collator: ST_COLLATOR
@@ -103,11 +103,11 @@ feature -- Evaluation
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_optional
 		end
-	
+
 end
-	
+

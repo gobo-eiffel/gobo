@@ -10,10 +10,10 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XSLT_SEQUENCE_OUTPUTTER	
+class XM_XSLT_SEQUENCE_OUTPUTTER
 
 inherit
-	
+
 	XM_XPATH_SEQUENCE_RECEIVER
 		redefine
 			start_document
@@ -38,7 +38,7 @@ inherit
 	--  and text nodes are received while an element is being constructed, the nodes are added
 	--  to the tree. Otherwise, "orphan" nodes (nodes with no parent) are created and added
 	--  directly to the sequence.
- 
+
 	-- This class is not used to build temporary trees. For that, the XM_XSLT_COMPLEX_CONTENT_OUTPUTTER is used.
 
 create
@@ -47,7 +47,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_transformer: XM_XSLT_TRANSFORMER) is
+	make (a_transformer: XM_XSLT_TRANSFORMER)
 			-- Establish invariant.
 		require
 			transformer_not_void: a_transformer /= Void
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 			transformer_set: transformer = a_transformer
 		end
 
-	make_with_size (a_size: INTEGER; a_transformer: XM_XSLT_TRANSFORMER) is
+	make_with_size (a_size: INTEGER; a_transformer: XM_XSLT_TRANSFORMER)
 			-- Establish invariant.
 		require
 			strictly_positive_size: a_size > 0
@@ -77,7 +77,7 @@ feature -- Access
 	transformer: XM_XSLT_TRANSFORMER
 			-- Transformer for error reporting
 
-	sequence: XM_XPATH_VALUE is
+	sequence: XM_XPATH_VALUE
 			-- Built sequence
 		require
 			not_under_construction: not is_under_construction
@@ -98,7 +98,7 @@ feature -- Access
 			sequence_not_void: Result /= Void
 		end
 
-	first_item: XM_XPATH_ITEM is
+	first_item: XM_XPATH_ITEM
 			-- First item of output sequence
 		do
 			if output_list.count > 0 then
@@ -111,7 +111,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_under_construction: BOOLEAN is
+	is_under_construction: BOOLEAN
 			-- Is `sequence' under construction?
 		do
 			Result := level /= 0
@@ -119,7 +119,7 @@ feature -- Status report
 
 feature -- Events
 
-	on_error (a_message: STRING) is
+	on_error (a_message: STRING)
 			-- Event producer detected an error.
 		local
 			an_error: XM_XPATH_ERROR_VALUE
@@ -156,7 +156,7 @@ feature -- Events
 			end
 		end
 
-	start_document is
+	start_document
 			-- New document
 		do
 			cached_sequence := Void
@@ -169,7 +169,7 @@ feature -- Events
 			level := level + 1
 		end
 
-	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
+	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER)
 			-- Notify the start of an element.
 		do
 			if in_start_tag then
@@ -185,7 +185,7 @@ feature -- Events
 			mark_as_written
 		end
 
-	end_element is
+	end_element
 			-- Notify the end of an element.
 		do
 			if in_start_tag then
@@ -200,7 +200,7 @@ feature -- Events
 			previous_atomic := False
 		end -- TODO: what about freeing document from document pool?
 
-	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
+	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER)
 			-- Notify a namespace.
 		local
 			l_orphan: XM_XPATH_ORPHAN
@@ -229,7 +229,7 @@ feature -- Events
 			previous_atomic := False
 		end
 
-	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
+	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER)
 			-- Notify an attribute.
 		local
 			l_orphan: XM_XPATH_ORPHAN
@@ -249,7 +249,7 @@ feature -- Events
 			previous_atomic := False
 		end
 
-	start_content is
+	start_content
 			-- Notify the start of the content, that is, the completion of all attributes and namespaces.
 		do
 			in_start_tag := False
@@ -258,7 +258,7 @@ feature -- Events
 			mark_as_written
 		end
 
-	notify_characters (chars: STRING; properties: INTEGER) is
+	notify_characters (chars: STRING; properties: INTEGER)
 			-- Notify character data.
 		local
 			l_orphan: XM_XPATH_ORPHAN
@@ -280,7 +280,7 @@ feature -- Events
 			previous_atomic := False
 		end
 
-	notify_comment (a_content_string: STRING; properties: INTEGER) is
+	notify_comment (a_content_string: STRING; properties: INTEGER)
 			-- Notify a comment.
 		local
 			l_orphan: XM_XPATH_ORPHAN
@@ -300,7 +300,7 @@ feature -- Events
 			previous_atomic := False
 		end
 
-	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
+	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER)
 			-- Notify a processing instruction.
 		local
 			l_orphan: XM_XPATH_ORPHAN
@@ -328,7 +328,7 @@ feature -- Events
 			previous_atomic := False
 		end
 
-	end_document is
+	end_document
 			-- Notify the end of the document.
 		do
 			level := level - 1
@@ -340,7 +340,7 @@ feature -- Events
 			previous_atomic := False
 		end
 
-	close is
+	close
 			-- Notify end of event stream.
 		do
 			is_open := False
@@ -349,7 +349,7 @@ feature -- Events
 			end
 		end
 
-	append_item (an_item: XM_XPATH_ITEM) is
+	append_item (an_item: XM_XPATH_ITEM)
 			-- Output an item (atomic value or node) to the sequence.
 		do
 			if level = 0 then
@@ -360,11 +360,11 @@ feature -- Events
 					tree_not_void: tree /= Void
 					-- Guarenteed by `start_element' or `start_document'
 				end
-				
-				
+
+
 				-- If an atomic value is written to a tree, and the previous item was also
 				--  an atomic value, then add a single space to separate them
-				
+
 				if previous_atomic then
 					tree.notify_characters (" ", 0)
 				end
@@ -382,13 +382,13 @@ feature -- Events
 
 feature -- Element change
 
-	set_document_locator (a_locator: XM_XPATH_LOCATOR) is
+	set_document_locator (a_locator: XM_XPATH_LOCATOR)
 			-- Set the locator.
 		do
 			-- do nothing
 		end
 
-	pop_last_item is
+	pop_last_item
 			-- Remove last item in `output_list'.
 			-- Removed item (if any) is `last_popped_item'.
 		do
@@ -400,7 +400,7 @@ feature -- Element change
 				output_list.remove_last
 			end
 		end
-			
+
 feature {NONE} -- Implementation
 
 	output_list: DS_ARRAYED_LIST [XM_XPATH_ITEM]
@@ -421,7 +421,7 @@ feature {NONE} -- Implementation
 	cached_sequence: XM_XPATH_VALUE
 			-- Result returned by `sequence'
 
-	create_tree is
+	create_tree
 			-- Create `tree'.
 		require
 			tree_not_created: tree = Void
@@ -444,4 +444,4 @@ invariant
 	transformer_not_void: transformer /= Void
 
 end
-	
+

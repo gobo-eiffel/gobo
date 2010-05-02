@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (min, max: INTEGER) is
+	make (min, max: INTEGER)
 			-- Make structure to allow creation of a
 			-- set of equivalence classes for symbols
 			-- within bounds `min'..`max'.
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	initialize is
+	initialize
 			-- Prepare structure to allow creation of a
 			-- set of equivalence classes for symbols
 			-- within bounds `lower'..`upper'.
@@ -76,7 +76,7 @@ feature -- Initialization
 
 feature -- Access
 
-	equivalence_class (symbol: INTEGER): INTEGER is
+	equivalence_class (symbol: INTEGER): INTEGER
 			-- Equivalence class number for `symbol'
 		require
 			valid_symbol: valid_symbol (symbol)
@@ -85,7 +85,7 @@ feature -- Access
 			Result := storage.item (symbol).item
 		end
 
-	previous_symbol (symbol: INTEGER): INTEGER is
+	previous_symbol (symbol: INTEGER): INTEGER
 			-- Previous symbol with same equivalence
 			-- class as `symbol'
 		require
@@ -99,19 +99,19 @@ feature -- Access
 	count: INTEGER
 			-- Number of equivalence classes
 
-	capacity: INTEGER is
+	capacity: INTEGER
 			-- Maximum number of equivalence classes
 		do
 			Result := storage.count
 		end
 
-	lower: INTEGER is
+	lower: INTEGER
 			-- Smallest allowed symbol
 		do
 			Result := storage.lower
 		end
 
-	upper: INTEGER is
+	upper: INTEGER
 			-- Largest allowed symbol
 		do
 			Result := storage.upper
@@ -119,7 +119,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_representative (symbol: INTEGER): BOOLEAN is
+	is_representative (symbol: INTEGER): BOOLEAN
 			-- Is `symbol' the representative
 			-- of its equivalence class?
 		require
@@ -128,13 +128,13 @@ feature -- Status report
 			Result := storage.item (symbol).left = Void
 		end
 
-	valid_symbol (a_symbol: INTEGER): BOOLEAN is
+	valid_symbol (a_symbol: INTEGER): BOOLEAN
 			-- Is `a_symbol' a valid symbol?
 		do
 			Result := storage.valid_index (a_symbol)
 		end
 
-	valid_symbol_class (symbol_class: LX_SYMBOL_CLASS): BOOLEAN is
+	valid_symbol_class (symbol_class: LX_SYMBOL_CLASS): BOOLEAN
 			-- Are symbols in `symbol_class' valid?
 		require
 			symbol_class_not_void: symbol_class /= Void
@@ -143,7 +143,7 @@ feature -- Status report
 			Result := symbol_class.is_empty or else (lower <= symbol_class.first and upper >= symbol_class.last)
 		end
 
-	built: BOOLEAN is
+	built: BOOLEAN
 			-- Have the equivalence classes been numbered?
 		do
 			Result := count /= 0
@@ -151,7 +151,7 @@ feature -- Status report
 
 feature -- Element change
 
-	build is
+	build
 			-- Build equivalence class numbers.
 		local
 			i, j, nb: INTEGER
@@ -183,7 +183,7 @@ feature -- Element change
 			built: built
 		end
 
-	put (symbol: INTEGER) is
+	put (symbol: INTEGER)
 			-- Create equivalence class for single `symbol'.
 		require
 			not_built: not built
@@ -207,7 +207,7 @@ feature -- Element change
 			end
 		end
 
-	add (symbol_class: LX_SYMBOL_CLASS) is
+	add (symbol_class: LX_SYMBOL_CLASS)
 			-- Update equivalence classes based on `symbol_class'.
 		require
 			not_built: not built
@@ -301,7 +301,7 @@ feature -- Element change
 
 feature -- Conversion
 
-	to_table: ARRAY [INTEGER] is
+	to_table: ARRAY [INTEGER]
 			-- Array of equivalence classes, indexed by symbols
 		require
 			built: built
@@ -325,7 +325,7 @@ feature -- Conversion
 --			forall i in `lower' .. `upper', Result.item (i) = equivalence_class (i)
 		end
 
-	to_array (l, u: INTEGER): ARRAY [INTEGER] is
+	to_array (l, u: INTEGER): ARRAY [INTEGER]
 			-- Slice of array equivalence classes, indexed by symbols;
 			-- Entries out of bounds `lower'..`upper' are set to 0
 		require

@@ -1,6 +1,6 @@
 note
 	description: "[
-		Values that may be hashed into an integer index, 
+		Values that may be hashed into an integer index,
 		for use as keys in hash tables
 		]"
 	library: "Free implementation of ELKS library"

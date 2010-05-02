@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type: like base_type; a_class: like base_class; an_open_operand_type_sets: like open_operand_type_sets; a_result_type_set: like result_type_set) is
+	make (a_type: like base_type; a_class: like base_class; an_open_operand_type_sets: like open_operand_type_sets; a_result_type_set: like result_type_set)
 			-- Create a new FUNCTION type.
 		require
 			a_type_not_void: a_type /= Void
@@ -56,7 +56,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	new_dynamic_query (a_query: ET_QUERY; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE is
+	new_dynamic_query (a_query: ET_QUERY; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE
 			-- Run-time query associated with `a_query';
 			-- Create a new object at each call.
 		local
@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_dynamic_procedure (a_procedure: ET_PROCEDURE; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE is
+	new_dynamic_procedure (a_procedure: ET_PROCEDURE; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE
 			-- Run-time procedure associated with `a_procedure';
 			-- Create a new object at each call.
 		do

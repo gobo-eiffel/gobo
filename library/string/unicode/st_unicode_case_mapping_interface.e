@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	lower_utf8_string (a_string: STRING): UC_UTF8_STRING is
+	lower_utf8_string (a_string: STRING): UC_UTF8_STRING
 			-- New lower-cased version of `a_string'
 		require
 			a_string_not_void: a_string /= Void
@@ -54,7 +54,7 @@ feature -- Access
 			length_may_change: True
 		end
 
-	upper_utf8_string (a_string: STRING): UC_UTF8_STRING is
+	upper_utf8_string (a_string: STRING): UC_UTF8_STRING
 			-- New upper-cased version of `a_string'
 		require
 			a_string_not_void: a_string /= Void
@@ -92,7 +92,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	lower_codes (a_code: INTEGER): DS_ARRAYED_LIST [INTEGER] is
+	lower_codes (a_code: INTEGER): DS_ARRAYED_LIST [INTEGER]
 			-- Code points of full lower case mapping of `a_code' as a Unicode code point
 		require
 			a_code_large_enough: a_code >= minimum_unicode_character_code
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 			non_empty: Result /= Void implies not Result.is_empty
 		end
 
-	upper_codes (a_code: INTEGER): DS_ARRAYED_LIST [INTEGER] is
+	upper_codes (a_code: INTEGER): DS_ARRAYED_LIST [INTEGER]
 			-- Code points of full upper case mapping of `a_code' as a Unicode code point
 		require
 			a_code_large_enough: a_code >= minimum_unicode_character_code
@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 			non_empty: Result /= Void implies not Result.is_empty
 		end
 
-	title_codes (a_code: INTEGER): DS_ARRAYED_LIST [INTEGER] is
+	title_codes (a_code: INTEGER): DS_ARRAYED_LIST [INTEGER]
 			-- Code points of full title case mapping of `a_code' as a Unicode code point
 		require
 			a_code_large_enough: a_code >= minimum_unicode_character_code
@@ -143,28 +143,28 @@ feature {NONE} -- Implementation
 			non_empty: Result /= Void implies not Result.is_empty
 		end
 
-	lower_case_mappings: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]] is
+	lower_case_mappings: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]]
 			-- Full lower case mappings for each code point
 		deferred
 		ensure
 			lower_case_mappings_not_void: Result /= Void
 		end
 
-	title_case_mappings: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]] is
+	title_case_mappings: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]]
 			-- Full title case mappings for each code point
 		deferred
 		ensure
 			title_case_mappings_not_void: Result /= Void
 		end
 
-	upper_case_mappings: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]] is
+	upper_case_mappings: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]]
 			-- Full upper case mappings for each code point
 		deferred
 		ensure
 			upper_case_mappings_not_void: Result /= Void
 		end
 
-	new_singleton (i: INTEGER): DS_ARRAYED_LIST [INTEGER] is
+	new_singleton (i: INTEGER): DS_ARRAYED_LIST [INTEGER]
 			-- List of one integer
 		do
 			create Result.make (1)
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 			one_integer: Result.count = 1
 		end
 
-	new_pair (i, j: INTEGER): DS_ARRAYED_LIST [INTEGER] is
+	new_pair (i, j: INTEGER): DS_ARRAYED_LIST [INTEGER]
 			-- List of two integers
 		do
 			create Result.make (2)
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 			two_integers: Result.count = 2
 		end
 
-	new_triple (i, j, k: INTEGER): DS_ARRAYED_LIST [INTEGER] is
+	new_triple (i, j, k: INTEGER): DS_ARRAYED_LIST [INTEGER]
 			-- List of three integers
 		do
 			create Result.make (3)

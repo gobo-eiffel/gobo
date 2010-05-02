@@ -13,8 +13,8 @@ note
 deferred class XM_XPATH_SECURITY_MANAGER
 
 feature -- Access
-	
-	is_uri_permitted (an_absolute_uri: UT_URI): BOOLEAN is
+
+	is_uri_permitted (an_absolute_uri: UT_URI): BOOLEAN
 			-- Is reading permitted from `an_absolute_uri'?
 		require
 			absolute_uri: an_absolute_uri /= Void and then an_absolute_uri.is_absolute
@@ -22,4 +22,4 @@ feature -- Access
 		end
 
 end
-	
+

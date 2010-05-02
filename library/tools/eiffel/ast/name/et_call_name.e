@@ -23,7 +23,7 @@ inherit
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset call name as it was when it was last parsed.
 		do
 			seed := 0
@@ -31,7 +31,7 @@ feature -- Initialization
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Name of feature call
 		deferred
 		ensure
@@ -39,7 +39,7 @@ feature -- Access
 			name_not_empty: Result.count > 0
 		end
 
-	lower_name: STRING is
+	lower_name: STRING
 			-- Lower-name of feature call
 			-- (May return the same object as `name' if already in lower case,
 			-- otherwise return a new object at each call.)
@@ -58,7 +58,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_seed (a_seed: INTEGER) is
+	set_seed (a_seed: INTEGER)
 			-- Set `seed' to `a_seed'.
 		do
 			seed := a_seed
@@ -68,13 +68,13 @@ feature -- Setting
 
 feature -- Status report
 
-	is_identifier: BOOLEAN is
+	is_identifier: BOOLEAN
 			-- Is current call name an identifier?
 		do
 			-- Result := False
 		end
 
-	is_local: BOOLEAN is
+	is_local: BOOLEAN
 			-- Is current call name actually a local variable name?
 		do
 			-- Result := False
@@ -86,187 +86,187 @@ feature -- Status report
 			-- Result := False
 		end
 
-	is_argument: BOOLEAN is
+	is_argument: BOOLEAN
 			-- Is current call name actually a formal argument name?
 		do
 			-- Result := False
 		end
 
-	is_tuple_label: BOOLEAN is
+	is_tuple_label: BOOLEAN
 			-- Is current call name a tuple label?
 		do
 			-- Result := False
 		end
 
-	is_feature_name: BOOLEAN is
+	is_feature_name: BOOLEAN
 			-- Is current call name a feature name?
 		do
 			-- Result := False
 		end
 
-	is_infix: BOOLEAN is
+	is_infix: BOOLEAN
 			-- Is current call name of the form 'infix ...'?
 		do
 			-- Result := False
 		end
 
-	is_infix_and: BOOLEAN is
+	is_infix_and: BOOLEAN
 			-- Is current call name of the form 'infix "and"'?
 		do
 			-- Result := False
 		end
 
-	is_infix_and_then: BOOLEAN is
+	is_infix_and_then: BOOLEAN
 			-- Is current call name of the form 'infix "and then"'?
 		do
 			-- Result := False
 		end
 
-	is_infix_div: BOOLEAN is
+	is_infix_div: BOOLEAN
 			-- Is current call name of the form 'infix "//"'?
 		do
 			-- Result := False
 		end
 
-	is_infix_divide: BOOLEAN is
+	is_infix_divide: BOOLEAN
 			-- Is current call name of the form 'infix "/"'?
 		do
 			-- Result := False
 		end
 
-	is_infix_freeop: BOOLEAN is
+	is_infix_freeop: BOOLEAN
 			-- Is current call name of the form 'infix "free-operator"'?
 		do
 			-- Result := False
 		end
 
-	is_infix_ge: BOOLEAN is
+	is_infix_ge: BOOLEAN
 			-- Is current call name of the form 'infix ">="'?
 		do
 			-- Result := False
 		end
 
-	is_infix_gt: BOOLEAN is
+	is_infix_gt: BOOLEAN
 			-- Is current call name of the form 'infix ">"'?
 		do
 			-- Result := False
 		end
 
-	is_infix_implies: BOOLEAN is
+	is_infix_implies: BOOLEAN
 			-- Is current call name of the form 'infix "implies"'?
 		do
 			-- Result := False
 		end
 
-	is_infix_le: BOOLEAN is
+	is_infix_le: BOOLEAN
 			-- Is current call name of the form 'infix "<="'?
 		do
 			-- Result := False
 		end
 
-	is_infix_lt: BOOLEAN is
+	is_infix_lt: BOOLEAN
 			-- Is current call name of the form 'infix "<"'?
 		do
 			-- Result := False
 		end
 
-	is_infix_minus: BOOLEAN is
+	is_infix_minus: BOOLEAN
 			-- Is current call name of the form 'infix "-"'?
 		do
 			-- Result := False
 		end
 
-	is_infix_mod: BOOLEAN is
+	is_infix_mod: BOOLEAN
 			-- Is current call name of the form 'infix "\\"'?
 		do
 			-- Result := False
 		end
 
-	is_infix_or: BOOLEAN is
+	is_infix_or: BOOLEAN
 			-- Is current call name of the form 'infix "or"'?
 		do
 			-- Result := False
 		end
 
-	is_infix_or_else: BOOLEAN is
+	is_infix_or_else: BOOLEAN
 			-- Is current call name of the form 'infix "or else"'?
 		do
 			-- Result := False
 		end
 
-	is_infix_plus: BOOLEAN is
+	is_infix_plus: BOOLEAN
 			-- Is current call name of the form 'infix "+"'?
 		do
 			-- Result := False
 		end
 
-	is_infix_power: BOOLEAN is
+	is_infix_power: BOOLEAN
 			-- Is current call name of the form 'infix "^"'?
 		do
 			-- Result := False
 		end
 
-	is_infix_times: BOOLEAN is
+	is_infix_times: BOOLEAN
 			-- Is current call name of the form 'infix "*"'?
 		do
 			-- Result := False
 		end
 
-	is_infix_xor: BOOLEAN is
+	is_infix_xor: BOOLEAN
 			-- Is current call name of the form 'infix "xor"'?
 		do
 			-- Result := False
 		end
 
-	is_infix_dotdot: BOOLEAN is
+	is_infix_dotdot: BOOLEAN
 			-- Is current call name of the form 'infix ".."'?
 		do
 			-- Result := False
 		end
 
-	is_prefix: BOOLEAN is
+	is_prefix: BOOLEAN
 			-- Is current call name of the form 'prefix ...'?
 		do
 			-- Result := False
 		end
 
-	is_prefix_minus: BOOLEAN is
+	is_prefix_minus: BOOLEAN
 			-- Is current call name of the form 'prefix "-"'?
 		do
 			-- Result := False
 		end
 
-	is_prefix_plus: BOOLEAN is
+	is_prefix_plus: BOOLEAN
 			-- Is current call name of the form 'prefix "+"'?
 		do
 			-- Result := False
 		end
 
-	is_prefix_freeop: BOOLEAN is
+	is_prefix_freeop: BOOLEAN
 			-- Is current call name of the form 'prefix "free-operator"'?
 		do
 			-- Result := False
 		end
 
-	is_prefix_not: BOOLEAN is
+	is_prefix_not: BOOLEAN
 			-- Is current call name of the form 'prefix "not"'?
 		do
 			-- Result := False
 		end
 
-	is_bracket: BOOLEAN is
+	is_bracket: BOOLEAN
 			-- Is current call name of the form 'alias "[]"'?
 		do
 			-- Result := False
 		end
 
-	is_alias: BOOLEAN is
+	is_alias: BOOLEAN
 			-- Is current call name of the form 'alias "..."'?
 		do
 			-- Result := False
 		end
 
-	is_precursor: BOOLEAN is
+	is_precursor: BOOLEAN
 			-- Is current call name of the form 'precursor'?
 		do
 			-- Result := False
@@ -274,7 +274,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	same_call_name (other: ET_CALL_NAME): BOOLEAN is
+	same_call_name (other: ET_CALL_NAME): BOOLEAN
 			-- Are `Current' and `other' the same names of the same feature?
 			-- (case insensitive)
 		require
@@ -284,7 +284,7 @@ feature -- Comparison
 
 feature -- Conversion
 
-	precursor_keyword: ET_PRECURSOR_KEYWORD is
+	precursor_keyword: ET_PRECURSOR_KEYWORD
 			-- Current name viewed as a 'precursor' keyword
 		require
 			is_precursor: is_precursor
@@ -294,7 +294,7 @@ feature -- Conversion
 			definition: ANY_.same_objects (Result, Current)
 		end
 
-	local_name: ET_LOCAL_NAME is
+	local_name: ET_LOCAL_NAME
 			-- Current name viewed as a local name
 		require
 			is_local: is_local
@@ -304,7 +304,7 @@ feature -- Conversion
 			definition: ANY_.same_objects (Result, Current)
 		end
 
-	argument_name: ET_ARGUMENT_NAME is
+	argument_name: ET_ARGUMENT_NAME
 			-- Current name viewed as an argument name
 		require
 			is_argument: is_argument
@@ -314,7 +314,7 @@ feature -- Conversion
 			definition: ANY_.same_objects (Result, Current)
 		end
 
-	object_test_local_name: ET_OBJECT_TEST_LOCAL_NAME is
+	object_test_local_name: ET_OBJECT_TEST_LOCAL_NAME
 			-- Current name viewed as an object-test local name
 		require
 			is_object_test_local: is_object_test_local
@@ -324,7 +324,7 @@ feature -- Conversion
 			definition: ANY_.same_objects (Result, Current)
 		end
 
-	feature_name: ET_FEATURE_NAME is
+	feature_name: ET_FEATURE_NAME
 			-- Current name viewed as a feature name
 		require
 			is_feature_name: is_feature_name

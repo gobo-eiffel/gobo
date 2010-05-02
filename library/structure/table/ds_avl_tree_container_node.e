@@ -25,7 +25,7 @@ feature {DS_AVL_TREE_CONTAINER, DS_AVL_TREE_CONTAINER_NODE} -- Access
 
 feature {DS_AVL_TREE_CONTAINER, DS_AVL_TREE_CONTAINER_NODE} -- Setting
 
-	set_balance (a_balance: INTEGER) is
+	set_balance (a_balance: INTEGER)
 			-- Set `balance' to `a_balance'.
 		require
 			range: -1 <= a_balance and a_balance <= 1

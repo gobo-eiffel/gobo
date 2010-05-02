@@ -22,7 +22,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_container: like container) is
+	make (a_container: like container)
 			-- Create a new cursor for `a_container'.
 		require
 			a_container_not_void: a_container /= Void
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item: G is
+	item: G
 			-- Item at cursor position
 		do
 			Result := position.item
@@ -47,7 +47,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	key: K is
+	key: K
 			-- Key at cursor position
 		require
 			not_off: not off
@@ -68,7 +68,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Status report
 
 feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Setting
 
-	set_position (a_position: like position) is
+	set_position (a_position: like position)
 			-- Set `position to `a_position'.
 		require
 			a_position_not_void: a_position /= Void
@@ -80,7 +80,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Setting
 
 feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Status setting
 
-	set_is_before (a_bool: BOOLEAN) is
+	set_is_before (a_bool: BOOLEAN)
 			-- Set `is_before' to `a_bool'.
 		do
 			position := Void
@@ -92,7 +92,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Status setting
 
 feature -- Cursor movement
 
-	go_at_or_before_key (a_key: K) is
+	go_at_or_before_key (a_key: K)
 			-- Move to last position with a smaller key than `k'.
 		do
 			container.cursor_go_at_or_before_key (Current, a_key)
@@ -100,7 +100,7 @@ feature -- Cursor movement
 			not_after: not after
 		end
 
-	go_at_or_after_key (a_key: K) is
+	go_at_or_after_key (a_key: K)
 			-- Move to first position with a greater key than `k'.
 		do
 			container.cursor_go_at_or_after_key (Current, a_key)

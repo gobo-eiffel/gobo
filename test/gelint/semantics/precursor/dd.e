@@ -9,7 +9,7 @@ inherit
 
 feature
 
-	f: ARRAY [INTEGER] is
+	f: ARRAY [INTEGER]
 		do
 			Result := precursor
 		end

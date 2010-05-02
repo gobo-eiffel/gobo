@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING) is
+	make (a_name: STRING)
 			-- Create a new Eiffel system.
 			-- Error messages will be sent to standard files.
 			-- Use default Eiffel AST factory.
@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_dotnet: BOOLEAN is
+	is_dotnet: BOOLEAN
 			-- Does current system contain Eiffel for .NET kernel classes?
 			-- Hence follow Eiffel for .NET validity rules.
 		local
@@ -109,7 +109,7 @@ feature -- Access
 
 feature -- Kernel types
 
-	set_none_type is
+	set_none_type
 			-- Set type "NONE".
 		local
 			l_name: ET_CLASS_NAME
@@ -150,7 +150,7 @@ feature -- Feature seeds
 
 feature -- Feature seeds setting
 
-	set_default_create_seed (a_seed: INTEGER) is
+	set_default_create_seed (a_seed: INTEGER)
 			-- Set `default_create_seed' to `a_seed'.
 		require
 			a_seed_not_negative: a_seed >= 0
@@ -160,7 +160,7 @@ feature -- Feature seeds setting
 			default_create_seed_set: default_create_seed = a_seed
 		end
 
-	set_copy_seed (a_seed: INTEGER) is
+	set_copy_seed (a_seed: INTEGER)
 			-- Set `copy_seed' to `a_seed'.
 		require
 			a_seed_not_negative: a_seed >= 0
@@ -170,7 +170,7 @@ feature -- Feature seeds setting
 			copy_seed_set: copy_seed = a_seed
 		end
 
-	set_is_equal_seed (a_seed: INTEGER) is
+	set_is_equal_seed (a_seed: INTEGER)
 			-- Set `is_equal_seed' to `a_seed'.
 		require
 			a_seed_not_negative: a_seed >= 0
@@ -180,7 +180,7 @@ feature -- Feature seeds setting
 			is_equal_seed_set: is_equal_seed = a_seed
 		end
 
-	set_dispose_seed (a_seed: INTEGER) is
+	set_dispose_seed (a_seed: INTEGER)
 			-- Set `dispose_seed' to `a_seed'.
 		require
 			a_seed_not_negative: a_seed >= 0
@@ -190,7 +190,7 @@ feature -- Feature seeds setting
 			dispose_seed_set: dispose_seed = a_seed
 		end
 
-	set_routine_call_seed (a_seed: INTEGER) is
+	set_routine_call_seed (a_seed: INTEGER)
 			-- Set `routine_call_seed' to `a_seed'.
 		require
 			a_seed_not_negative: a_seed >= 0
@@ -200,7 +200,7 @@ feature -- Feature seeds setting
 			routine_call_seed_set: routine_call_seed = a_seed
 		end
 
-	set_function_item_seed (a_seed: INTEGER) is
+	set_function_item_seed (a_seed: INTEGER)
 			-- Set `function_item_seed' to `a_seed'.
 		require
 			a_seed_not_negative: a_seed >= 0
@@ -212,7 +212,7 @@ feature -- Feature seeds setting
 
 feature -- Class registration
 
-	register_class (a_class: ET_CLASS) is
+	register_class (a_class: ET_CLASS)
 			-- Register `a_class'.
 		require
 			a_class_not_void: a_class /= Void
@@ -226,7 +226,7 @@ feature -- Class registration
 
 feature -- Feature registration
 
-	register_feature (a_feature: ET_FEATURE) is
+	register_feature (a_feature: ET_FEATURE)
 			-- Register `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -242,7 +242,7 @@ feature -- Feature registration
 
 feature -- Inline constant registration
 
-	register_inline_constant (a_constant: ET_INLINE_CONSTANT) is
+	register_inline_constant (a_constant: ET_INLINE_CONSTANT)
 			-- Register `a_constant'.
 		require
 			a_constant_not_void: a_constant /= Void
@@ -256,7 +256,7 @@ feature -- Inline constant registration
 
 feature -- Setting
 
-	set_root_type (a_name: ET_CLASS_NAME) is
+	set_root_type (a_name: ET_CLASS_NAME)
 			-- Set `root_type'.
 		require
 			a_name_not_void: a_name /= Void
@@ -277,7 +277,7 @@ feature -- Setting
 			root_type_set: root_type.name.same_class_name (a_name)
 		end
 
-	unset_root_type is
+	unset_root_type
 			-- Unset `root_type'.
 		do
 			root_type := Void
@@ -285,7 +285,7 @@ feature -- Setting
 			root_type_unset: root_type = Void
 		end
 
-	set_root_creation (a_name: like root_creation) is
+	set_root_creation (a_name: like root_creation)
 			-- Set `root_creation' to `a_name'.
 		do
 			root_creation := a_name
@@ -293,7 +293,7 @@ feature -- Setting
 			root_creation_set: root_creation = a_name
 		end
 
-	set_error_handler (a_handler: like error_handler) is
+	set_error_handler (a_handler: like error_handler)
 			-- Set `error_handler' to `a_handler'.
 		require
 			a_handler_not_void: a_handler /= Void
@@ -303,7 +303,7 @@ feature -- Setting
 			error_handler_set: error_handler = a_handler
 		end
 
-	set_ast_factory (a_factory: like ast_factory) is
+	set_ast_factory (a_factory: like ast_factory)
 			-- Set `ast_factory' to `a_factory'.
 		require
 			a_factory_not_void: a_factory /= Void
@@ -350,7 +350,7 @@ feature -- Compilation options
 
 feature -- Compilation options setting
 
-	set_console_application_mode (b: BOOLEAN) is
+	set_console_application_mode (b: BOOLEAN)
 			-- Set `console_application_mode' to `b'.
 		do
 			console_application_mode := b
@@ -358,7 +358,7 @@ feature -- Compilation options setting
 			console_application_mode_set: console_application_mode = b
 		end
 
-	set_exception_trace_mode (b: BOOLEAN) is
+	set_exception_trace_mode (b: BOOLEAN)
 			-- Set `exception_trace_mode' to `b'.
 		do
 			exception_trace_mode := b
@@ -366,7 +366,7 @@ feature -- Compilation options setting
 			exception_trace_mode_set: exception_trace_mode = b
 		end
 
-	set_trace_mode (b: BOOLEAN) is
+	set_trace_mode (b: BOOLEAN)
 			-- Set `trace_mode' to `b'.
 		do
 			trace_mode := b
@@ -374,7 +374,7 @@ feature -- Compilation options setting
 			trace_mode_set: trace_mode = b
 		end
 
-	set_alias_transition_mode (b: BOOLEAN) is
+	set_alias_transition_mode (b: BOOLEAN)
 			-- Set `alias_transition_mode' to `b'.
 		do
 			alias_transition_mode := b
@@ -382,7 +382,7 @@ feature -- Compilation options setting
 			alias_transition_mode_set: alias_transition_mode = b
 		end
 
-	set_use_boehm_gc (b: BOOLEAN) is
+	set_use_boehm_gc (b: BOOLEAN)
 			-- Set `use_boehm_gc' to `b'.
 		do
 			use_boehm_gc := b
@@ -390,7 +390,7 @@ feature -- Compilation options setting
 			use_boehm_gc_set: use_boehm_gc = b
 		end
 
-	set_system_name (a_name: like system_name) is
+	set_system_name (a_name: like system_name)
 			-- Set `system_name' to `a_name'.
 		do
 			system_name := a_name
@@ -398,7 +398,7 @@ feature -- Compilation options setting
 			system_name_set: system_name = a_name
 		end
 
-	set_external_include_pathnames (a_pathnames: like external_include_pathnames) is
+	set_external_include_pathnames (a_pathnames: like external_include_pathnames)
 			-- Set `external_include_pathnames' to `a_pathnames'.
 		require
 			a_pathnames_not_void: a_pathnames /= Void
@@ -409,7 +409,7 @@ feature -- Compilation options setting
 			external_include_pathnames_set: external_include_pathnames = a_pathnames
 		end
 
-	set_external_object_pathnames (a_pathnames: like external_object_pathnames) is
+	set_external_object_pathnames (a_pathnames: like external_object_pathnames)
 			-- Set `external_object_pathnames' to `a_pathnames'.
 		require
 			a_pathnames_not_void: a_pathnames /= Void
@@ -420,7 +420,7 @@ feature -- Compilation options setting
 			external_object_pathnames_set: external_object_pathnames = a_pathnames
 		end
 
-	set_external_library_pathnames (a_pathnames: like external_library_pathnames) is
+	set_external_library_pathnames (a_pathnames: like external_library_pathnames)
 			-- Set `external_library_pathnames' to `a_pathnames'.
 		require
 			a_pathnames_not_void: a_pathnames /= Void
@@ -504,7 +504,7 @@ feature -- Parser status report
 
 feature -- Parser setting
 
-	set_use_attached_keyword (b: BOOLEAN) is
+	set_use_attached_keyword (b: BOOLEAN)
 			-- Set `use_attached_keyword' to `b'.
 		do
 			use_attached_keyword := b
@@ -512,7 +512,7 @@ feature -- Parser setting
 			use_attached_keyword_set: use_attached_keyword = b
 		end
 
-	set_use_attribute_keyword (b: BOOLEAN) is
+	set_use_attribute_keyword (b: BOOLEAN)
 			-- Set `use_attribute_keyword' to `b'.
 		do
 			use_attribute_keyword := b
@@ -520,7 +520,7 @@ feature -- Parser setting
 			use_attribute_keyword_set: use_attribute_keyword = b
 		end
 
-	set_use_detachable_keyword (b: BOOLEAN) is
+	set_use_detachable_keyword (b: BOOLEAN)
 			-- Set `use_detachable_keyword' to `b'.
 		do
 			use_detachable_keyword := b
@@ -528,7 +528,7 @@ feature -- Parser setting
 			use_detachable_keyword_set: use_detachable_keyword = b
 		end
 
-	set_use_note_keyword (b: BOOLEAN) is
+	set_use_note_keyword (b: BOOLEAN)
 			-- Set `use_note_keyword' to `b'.
 		do
 			use_note_keyword := b
@@ -536,7 +536,7 @@ feature -- Parser setting
 			use_note_keyword_set: use_note_keyword = b
 		end
 
-	set_use_reference_keyword (b: BOOLEAN) is
+	set_use_reference_keyword (b: BOOLEAN)
 			-- Set `use_reference_keyword' to `b'.
 		do
 			use_reference_keyword := b
@@ -544,7 +544,7 @@ feature -- Parser setting
 			use_reference_keyword_set: use_reference_keyword = b
 		end
 
-	set_default_keyword_usage is
+	set_default_keyword_usage
 			-- Set default keyword usage.
 		do
 			set_use_attribute_keyword (True)
@@ -554,7 +554,7 @@ feature -- Parser setting
 			set_use_detachable_keyword (True)
 		end
 
-	set_providers_enabled (b: BOOLEAN) is
+	set_providers_enabled (b: BOOLEAN)
 			-- Set `providers_enabled' to `b'.
 		do
 			providers_enabled := b
@@ -562,7 +562,7 @@ feature -- Parser setting
 			providers_enabled_set: providers_enabled = b
 		end
 
-	set_cluster_dependence_enabled (b: BOOLEAN) is
+	set_cluster_dependence_enabled (b: BOOLEAN)
 			-- Set `cluster_dependence_enabled' to `b'.
 		do
 			cluster_dependence_enabled := b
@@ -570,7 +570,7 @@ feature -- Parser setting
 			cluster_dependence_enabled_set: cluster_dependence_enabled = b
 		end
 
-	set_use_cluster_dependence_pathnames (b: BOOLEAN) is
+	set_use_cluster_dependence_pathnames (b: BOOLEAN)
 			-- Set `use_cluster_dependence_pathnames' to `b'.
 		do
 			use_cluster_dependence_pathnames := b
@@ -578,7 +578,7 @@ feature -- Parser setting
 			use_cluster_dependence_pathnames_set: use_cluster_dependence_pathnames = b
 		end
 
-	set_qualified_anchored_types_enabled (b: BOOLEAN) is
+	set_qualified_anchored_types_enabled (b: BOOLEAN)
 			-- Set `qualified_anchored_types_enabled' to `b'.
 		do
 			qualified_anchored_types_enabled := b
@@ -586,7 +586,7 @@ feature -- Parser setting
 			qualified_anchored_types_enabled_set: qualified_anchored_types_enabled = b
 		end
 
-	set_preparse_enabled (b: BOOLEAN) is
+	set_preparse_enabled (b: BOOLEAN)
 			-- Set `preparse_enabled' to `b'.
 		do
 			preparse_enabled := b
@@ -594,7 +594,7 @@ feature -- Parser setting
 			preparse_enabled_set: preparse_enabled = b
 		end
 
-	set_preparse_shallow_mode is
+	set_preparse_shallow_mode
 			-- Set `preparse_shallow_mode' to True.
 		do
 			preparse_shallow_mode := True
@@ -606,7 +606,7 @@ feature -- Parser setting
 			preparse_multiple_mode_unset: not preparse_multiple_mode
 		end
 
-	set_preparse_single_mode is
+	set_preparse_single_mode
 			-- Set `preparse_single_mode' to True.
 		do
 			preparse_single_mode := True
@@ -618,7 +618,7 @@ feature -- Parser setting
 			preparse_multiple_mode_unset: not preparse_multiple_mode
 		end
 
-	set_preparse_multiple_mode is
+	set_preparse_multiple_mode
 			-- Set `preparse_multiple_mode' to True.
 		do
 			preparse_multiple_mode := True
@@ -630,7 +630,7 @@ feature -- Parser setting
 			preparse_single_mode_unset: not preparse_single_mode
 		end
 
-	set_preparse_readonly_mode (b: BOOLEAN) is
+	set_preparse_readonly_mode (b: BOOLEAN)
 			-- Set `preparse_readonly_mode' to `b'.
 		do
 			preparse_readonly_mode := b
@@ -638,7 +638,7 @@ feature -- Parser setting
 			preparse_readonly_mode_set: preparse_readonly_mode = b
 		end
 
-	set_preparse_override_mode (b: BOOLEAN) is
+	set_preparse_override_mode (b: BOOLEAN)
 			-- Set `preparse_override_mode' to `b'.
 		do
 			preparse_override_mode := b
@@ -664,7 +664,7 @@ feature -- Implementation checking status report
 
 feature -- Implementation checking status setting
 
-	set_flat_mode (b: BOOLEAN) is
+	set_flat_mode (b: BOOLEAN)
 			-- Set `flat_mode' to `b'.
 		local
 			a_checker: ET_IMPLEMENTATION_CHECKER
@@ -682,7 +682,7 @@ feature -- Implementation checking status setting
 			flat_mode_set: flat_mode = b
 		end
 
-	set_flat_dbc_mode (b: BOOLEAN) is
+	set_flat_dbc_mode (b: BOOLEAN)
 			-- Set `flat_dbc_mode' to `b'.
 		local
 			a_checker: ET_IMPLEMENTATION_CHECKER
@@ -700,7 +700,7 @@ feature -- Implementation checking status setting
 			flat_dbc_mode_set: flat_dbc_mode = b
 		end
 
-	set_suppliers_enabled (b: BOOLEAN) is
+	set_suppliers_enabled (b: BOOLEAN)
 			-- Set `suppliers_enabled' to `b'.
 		local
 			a_checker: ET_IMPLEMENTATION_CHECKER
@@ -718,7 +718,7 @@ feature -- Implementation checking status setting
 			suppliers_enabled_set: suppliers_enabled = b
 		end
 
-	set_unknown_builtin_reported (b: BOOLEAN) is
+	set_unknown_builtin_reported (b: BOOLEAN)
 			-- Set `unknown_builtin_reported' to `b'.
 		do
 			unknown_builtin_reported := b
@@ -728,7 +728,7 @@ feature -- Implementation checking status setting
 
 feature -- Parsing
 
-	preparse_recursive is
+	preparse_recursive
 			-- Build a mapping between class names and their filenames and
 			-- populate `master_classes', even if the classes have not been
 			-- parsed yet. If current universe had already been preparsed,
@@ -750,7 +750,7 @@ feature -- Parsing
 			build_scm_write_mappings
 		end
 
-	parse_all_recursive is
+	parse_all_recursive
 			-- Parse all classes declared locally in the current universe,
 			-- and recursively those that are declared in universes it
 			-- depends on. There is no need to call one of the preparse
@@ -774,7 +774,7 @@ feature -- Parsing
 			build_scm_write_mappings
 		end
 
-	parse_system is
+	parse_system
 			-- Parse all classes reachable from the root class.
 			-- The Eiffel system needs to have been preparsed beforehand.
 			--
@@ -818,13 +818,13 @@ feature -- Parsing
 
 feature -- SCM mappings
 
-	build_scm_read_mappings is
+	build_scm_read_mappings
 			-- Build SCM read mappings for all clusters in current system.
 		do
 			clusters_do_explicit_recursive (agent build_scm_read_mapping)
 		end
 
-	build_scm_read_mapping (a_cluster: ET_CLUSTER) is
+	build_scm_read_mapping (a_cluster: ET_CLUSTER)
 			-- Build SCM read mapping of `a_cluster' if not already done.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -844,7 +844,7 @@ feature -- SCM mappings
 	scm_read_mapping_builder: FUNCTION [ANY, TUPLE [ET_CLUSTER], ET_CLUSTER_SCM_READ_MAPPING]
 			-- Function which is able to build a SCM read mapping for a given cluster
 
-	set_scm_read_mapping_builder (a_builder: like scm_read_mapping_builder) is
+	set_scm_read_mapping_builder (a_builder: like scm_read_mapping_builder)
 			-- Set `scm_read_mapping_builder' to `a_builder'.
 		do
 			scm_read_mapping_builder := a_builder
@@ -852,13 +852,13 @@ feature -- SCM mappings
 			scm_read_mapping_builder_set: scm_read_mapping_builder = a_builder
 		end
 
-	build_scm_write_mappings is
+	build_scm_write_mappings
 			-- Build SCM write mappings for all clusters in current system.
 		do
 			clusters_do_explicit_recursive (agent build_scm_write_mapping)
 		end
 
-	build_scm_write_mapping (a_cluster: ET_CLUSTER) is
+	build_scm_write_mapping (a_cluster: ET_CLUSTER)
 			-- Build SCM write mapping of `a_cluster' if not already done.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -879,7 +879,7 @@ feature -- SCM mappings
 	scm_write_mapping_builder: FUNCTION [ANY, TUPLE [ET_CLUSTER], ET_CLUSTER_SCM_WRITE_MAPPING]
 			-- Function which is able to build a SCM write mapping for a given cluster
 
-	set_scm_write_mapping_builder (a_builder: like scm_write_mapping_builder) is
+	set_scm_write_mapping_builder (a_builder: like scm_write_mapping_builder)
 			-- Set `scm_write_mapping_builder' to `a_builder'.
 		do
 			scm_write_mapping_builder := a_builder
@@ -889,7 +889,7 @@ feature -- SCM mappings
 
 feature -- Compilation status report
 
-	is_ecma: BOOLEAN is
+	is_ecma: BOOLEAN
 			-- Should the compilation process use ECMA's semantics?
 		do
 			Result := (ecma_version /= Void)
@@ -901,7 +901,7 @@ feature -- Compilation status report
 			-- ECMA version, if any, whose semantics should be
 			-- used by the compilation process
 
-	is_ise: BOOLEAN is
+	is_ise: BOOLEAN
 			-- Should the compilation process use ISE's semantics?
 		do
 			Result := (ise_version /= Void)
@@ -915,7 +915,7 @@ feature -- Compilation status report
 
 feature -- Compilation setting
 
-	set_ecma_version (a_version: like ecma_version) is
+	set_ecma_version (a_version: like ecma_version)
 			-- Set `ecma_version' to `a_version'.
 		do
 			ecma_version := a_version
@@ -934,7 +934,7 @@ feature -- Compilation setting
 			ecma_version_set: ecma_version = a_version
 		end
 
-	set_ise_version (a_version: like ise_version) is
+	set_ise_version (a_version: like ise_version)
 			-- Set `ise_version' to `a_version'.
 		do
 			ise_version := a_version
@@ -955,7 +955,7 @@ feature -- Compilation setting
 
 feature -- Compilation
 
-	compile is
+	compile
 			-- Compile current Eiffel system.
 			-- `flat_mode' means that the inherited features are checked
 			-- again in the descendant classes during Degree 3.
@@ -977,7 +977,7 @@ feature -- Compilation
 			end
 		end
 
-	compile_system is
+	compile_system
 			-- Compile all classes reachable from the root class.
 			-- `flat_mode' means that the inherited features are checked
 			-- again in the descendant classes during Degree 3.
@@ -1027,7 +1027,7 @@ feature -- Compilation
 			end
 		end
 
-	compile_all is
+	compile_all
 			-- Compile all classes in the current Eiffel system.
 			-- `flat_mode' means that the inherited features are checked
 			-- again in the descendant classes during Degree 3.
@@ -1072,7 +1072,7 @@ feature -- Compilation
 			end
 		end
 
-	compile_degree_5 is
+	compile_degree_5
 			-- Equivalent of ISE's Degree 5.
 			--
 			-- Note that this operation will be interrupted if a stop request
@@ -1091,7 +1091,7 @@ feature -- Compilation
 			end
 		end
 
-	compile_degree_4 is
+	compile_degree_4
 			-- Equivalent of ISE Eiffel's Degree 4.
 			--
 			-- Note that this operation will be interrupted if a stop request
@@ -1113,7 +1113,7 @@ feature -- Compilation
 			end
 		end
 
-	compile_degree_3 is
+	compile_degree_3
 			-- Equivalent of ISE Eiffel's Degree 3.
 			-- `flat_mode' means that the inherited features are checked
 			-- again in the descendant classes.
@@ -1142,7 +1142,7 @@ feature -- Compilation
 			classes_do_if_recursive_until (agent {ET_CLASS}.process (l_processor), agent {ET_CLASS}.interface_checked, stop_request)
 		end
 
-	check_provider_validity is
+	check_provider_validity
 			-- Check cluster dependence constraints.
 			--
 			-- Note that this operation will be interrupted if a stop request
@@ -1154,7 +1154,7 @@ feature -- Compilation
 			end
 		end
 
-	check_master_class_validity is
+	check_master_class_validity
 			-- Check for invalid class name clashes and invalid class overriding.
 			--
 			-- Note that this operation will be interrupted if a stop request
@@ -1175,7 +1175,7 @@ feature -- Processors
 	master_class_checker: ET_AST_PROCESSOR
 			-- Master class checker
 
-	dotnet_assembly_consumer: ET_DOTNET_ASSEMBLY_CONSUMER is
+	dotnet_assembly_consumer: ET_DOTNET_ASSEMBLY_CONSUMER
 			-- .NET assembly consumer
 		do
 			Result := internal_dotnet_assembly_consumer
@@ -1206,7 +1206,7 @@ feature -- Processors
 	null_processor: ET_AST_NULL_PROCESSOR
 			-- Null processor
 
-	activate_processors is
+	activate_processors
 			-- Activate processors.
 		local
 			l_implementation_checker: ET_IMPLEMENTATION_CHECKER
@@ -1248,7 +1248,7 @@ feature -- Processors
 			end
 		end
 
-	set_eiffel_preparser (a_eiffel_preparser: like eiffel_preparser) is
+	set_eiffel_preparser (a_eiffel_preparser: like eiffel_preparser)
 			-- Set `eiffel_preparser' to `a_eiffel_preparser'.
 		require
 			a_eiffel_preparser_not_void: a_eiffel_preparser /= Void
@@ -1258,7 +1258,7 @@ feature -- Processors
 			eiffel_preparser_set: eiffel_preparser = a_eiffel_preparser
 		end
 
-	set_master_class_checker (a_master_class_checker: like master_class_checker) is
+	set_master_class_checker (a_master_class_checker: like master_class_checker)
 			-- Set `master_class_checker' to `a_master_class_checker'.
 		require
 			a_master_class_checker_not_void: a_master_class_checker /= Void
@@ -1268,7 +1268,7 @@ feature -- Processors
 			master_class_checker_set: master_class_checker = a_master_class_checker
 		end
 
-	set_eiffel_parser (a_eiffel_parser: like eiffel_parser) is
+	set_eiffel_parser (a_eiffel_parser: like eiffel_parser)
 			-- Set `eiffel_parser' to `a_eiffel_parser'.
 		require
 			a_eiffel_parser_not_void: a_eiffel_parser /= Void
@@ -1278,7 +1278,7 @@ feature -- Processors
 			eiffel_parser_set: eiffel_parser = a_eiffel_parser
 		end
 
-	set_dotnet_assembly_consumer (a_consumer: like dotnet_assembly_consumer) is
+	set_dotnet_assembly_consumer (a_consumer: like dotnet_assembly_consumer)
 			-- Set `dotnet_assembly_consumer' to `a_consumer'.
 		require
 			a_consumer_not_void: a_consumer /= Void
@@ -1288,7 +1288,7 @@ feature -- Processors
 			dotnet_assembly_consumer_set: dotnet_assembly_consumer = a_consumer
 		end
 
-	set_provider_checker (a_provider_checker: like provider_checker) is
+	set_provider_checker (a_provider_checker: like provider_checker)
 			-- Set `provider_checker' to `a_provider_checker'.
 		require
 			a_provider_checker_not_void: a_provider_checker /= Void
@@ -1298,7 +1298,7 @@ feature -- Processors
 			provider_checker_set: provider_checker = a_provider_checker
 		end
 
-	set_ancestor_builder (an_ancestor_builder: like ancestor_builder) is
+	set_ancestor_builder (an_ancestor_builder: like ancestor_builder)
 			-- Set `ancestor_builder' to `an_ancestor_builder'.
 		require
 			an_ancestor_builder_not_void: an_ancestor_builder /= Void
@@ -1308,7 +1308,7 @@ feature -- Processors
 			ancestor_builder_set: ancestor_builder = an_ancestor_builder
 		end
 
-	set_feature_flattener (a_feature_flattener: like feature_flattener) is
+	set_feature_flattener (a_feature_flattener: like feature_flattener)
 			-- Set `feature_flattener' to `a_feature_flattener'.
 		require
 			a_feature_flattener_not_void: a_feature_flattener /= Void
@@ -1318,7 +1318,7 @@ feature -- Processors
 			feature_flattener_set: feature_flattener = a_feature_flattener
 		end
 
-	set_interface_checker (an_interface_checker: like interface_checker) is
+	set_interface_checker (an_interface_checker: like interface_checker)
 			-- Set `interface_checker' to `an_interface_checker'.
 		require
 			an_interface_checker_not_void: an_interface_checker /= Void
@@ -1328,7 +1328,7 @@ feature -- Processors
 			interface_checker_set: interface_checker = an_interface_checker
 		end
 
-	set_implementation_checker (a_checker: like implementation_checker) is
+	set_implementation_checker (a_checker: like implementation_checker)
 			-- Set `implementation_chcker' to `a_checker'.
 		require
 			a_checker_not_void: a_checker /= Void
@@ -1338,7 +1338,7 @@ feature -- Processors
 			implementation_checker_set: implementation_checker = a_checker
 		end
 
-	set_flat_implementation_checker (a_checker: like flat_implementation_checker) is
+	set_flat_implementation_checker (a_checker: like flat_implementation_checker)
 			-- Set `flat_implementation_chcker' to `a_checker'.
 		require
 			a_checker_not_void: a_checker /= Void
@@ -1350,7 +1350,7 @@ feature -- Processors
 
 feature -- Stop
 
-	stop_requested: BOOLEAN is
+	stop_requested: BOOLEAN
 			-- Has the interruption of the current operation
 			-- been requested? The operation will therefore be
 			-- interrupted at the earliest possible time.
@@ -1365,7 +1365,7 @@ feature -- Stop
 			-- a request to interrupt the current operation;
 			-- No interruption if Void
 
-	set_stop_request (a_stop_request: like stop_request) is
+	set_stop_request (a_stop_request: like stop_request)
 			-- Set `stop_request' to `a_stop_request'.
 		do
 			stop_request := a_stop_request
@@ -1375,7 +1375,7 @@ feature -- Stop
 
 feature -- Timing
 
-	print_time (a_start: DT_DATE_TIME; a_degree: STRING) is
+	print_time (a_start: DT_DATE_TIME; a_degree: STRING)
 			-- Print time spent in `a_degree' since `a_start'.
 		require
 			a_start_not_void: a_start /= Void

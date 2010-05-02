@@ -22,7 +22,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_unary (an_operand: XM_XPATH_EXPRESSION) is
+	make_unary (an_operand: XM_XPATH_EXPRESSION)
 			-- Establish invariant
 		require
 			operand_not_void: an_operand /= Void
@@ -39,25 +39,25 @@ feature -- Access
 	base_expression: XM_XPATH_EXPRESSION
 			-- Base_Expression
 
-	is_unary_expression: BOOLEAN is
+	is_unary_expression: BOOLEAN
 			-- Is `Current' a unary expression?
 		do
 			Result := True
 		end
 
-	as_unary_expression: XM_XPATH_UNARY_EXPRESSION is
+	as_unary_expression: XM_XPATH_UNARY_EXPRESSION
 			-- `Current' seen as a unary expression
 		do
 			Result := Current
 		end
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, when known
 		do
 			Result := base_expression.item_type
 		end
 
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions of `Current'
 		do
 			create Result.make (1)
@@ -67,7 +67,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Are `Current' and `other' the same expression?
 		do
 			if other.is_unary_expression then
@@ -77,7 +77,7 @@ feature -- Comparison
 
 feature -- Status report
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -88,10 +88,10 @@ feature -- Status report
 			std.error.put_new_line
 			base_expression.display (a_level + 1)
 		end
-	
-feature -- Optimization	
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+feature -- Optimization
+
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -106,7 +106,7 @@ feature -- Optimization
 			end
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -123,9 +123,9 @@ feature -- Optimization
 				if base_expression.is_value and not base_expression.depends_upon_implicit_timezone then
 					create_iterator (a_context.new_compile_time_context)
 					expression_factory.create_sequence_extent (last_iterator)
-					
+
 					-- if early evaluation fails, suppress the error: the value might not be needed at run-time
-					
+
 					if is_error or expression_factory.last_created_closure.is_error then
 						error_value := Void
 						if base_expression.is_error then
@@ -141,7 +141,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -152,15 +152,15 @@ feature -- Optimization
 			if base_expression.is_error then
 				set_replacement (a_replacement, base_expression)
 			else
-				
+
 				-- If  operand value is, pre-evaluate the expression
-				
+
 				if base_expression.is_value and then not base_expression.depends_upon_implicit_timezone then
 					create_iterator (a_context.new_compile_time_context)
 					expression_factory.create_sequence_extent (last_iterator)
-					
+
 					-- if early evaluation fails, suppress the error: the value might not be needed at run-time
-					
+
 					if is_error or expression_factory.last_created_closure.is_error then
 						error_value := Void
 						if base_expression.is_error then
@@ -175,8 +175,8 @@ feature -- Optimization
 				end
 			end
 		end
-	
-	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
+
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this subexpression.
 		local
 			l_promotion: XM_XPATH_EXPRESSION
@@ -197,7 +197,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	processed_eager_evaluation (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
+	processed_eager_evaluation (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE
 			-- Eager evaluation via `generate_events'
 		do
 			Result := base_expression.processed_eager_evaluation (a_context)
@@ -205,7 +205,7 @@ feature -- Evaluation
 
 feature -- Element change
 
-	set_base_expression (an_operand: XM_XPATH_EXPRESSION) is
+	set_base_expression (an_operand: XM_XPATH_EXPRESSION)
 			-- Set `base_expression'.
 		require
 			operand_not_void: an_operand /= Void
@@ -218,19 +218,19 @@ feature -- Element change
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinalities (base_expression)
 		end
 
-	compute_special_properties is
+	compute_special_properties
 			-- Compute special properties.
 		do
 			clone_special_properties (base_expression)
 		end
 
-	display_operator: STRING is
+	display_operator: STRING
 			-- Format `operator' for display
 		deferred
 		ensure
@@ -242,4 +242,4 @@ invariant
 	base_expression: base_expression /= Void
 
 end
-	
+

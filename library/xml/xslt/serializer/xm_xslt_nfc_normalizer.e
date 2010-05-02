@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize `Current'.
 		do
 			-- nothing to do
@@ -31,10 +31,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	normalization_form: STRING is "NFC"
+	normalization_form: STRING = "NFC"
 			-- Name of normalization form provided by `Current'
 
-	normalized_string (a_string: STRING): UC_UTF8_STRING is
+	normalized_string (a_string: STRING): UC_UTF8_STRING
 			-- Normalized version of `a_string' according to `normalization_form'
 		do
 			Result := normalization.to_nfc (a_string)

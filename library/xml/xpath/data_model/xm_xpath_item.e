@@ -15,7 +15,7 @@ deferred class XM_XPATH_ITEM
 inherit
 
 	ANY -- required by SE 2.1b1
-	
+
 	XM_XPATH_TYPE
 		export {NONE} all end
 
@@ -34,7 +34,7 @@ inherit
 
 feature -- Access
 
-	string_value: STRING is
+	string_value: STRING
 			--Value of the item as a string
 		require
 			item_not_in_error: not is_error
@@ -43,7 +43,7 @@ feature -- Access
 			string_value_not_void: Result /= Void
 		end
 
-	typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE] is
+	typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE]
 			-- Typed value
 		require
 			item_not_in_error: not is_error
@@ -52,117 +52,117 @@ feature -- Access
 			typed_value_invulnerable: Result /= Void and then Result.is_invulnerable
 		end
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Type
 		deferred
 		ensure
 			item_type_not_void: Result /= Void
 		end
 
-	type_name: STRING is
+	type_name: STRING
 			-- Type name for diagnostic purposes
 		deferred
 		ensure
 			type_name_not_void: Result /= Void
 		end
 
-	error_value: XM_XPATH_ERROR_VALUE is
+	error_value: XM_XPATH_ERROR_VALUE
 			-- Error value
 		deferred
 		end
-	
+
 feature -- Status report
 
-	is_error: BOOLEAN is
+	is_error: BOOLEAN
 			-- Has item failed evaluation?
 		deferred
 		end
 
-	is_node: BOOLEAN is
+	is_node: BOOLEAN
 			-- Is `Current' a node?
 		do
 			Result := False
 		end
 
-	is_atomic_value: BOOLEAN is
+	is_atomic_value: BOOLEAN
 			-- Is `Current' an atomic value?
 		do
 			Result := False
 		end
-	
-	is_function_package: BOOLEAN is
+
+	is_function_package: BOOLEAN
 			-- Is `Current' an XSLT function call package??
 		do
 			Result := False
 		end
 
-	is_element: BOOLEAN is
+	is_element: BOOLEAN
 			-- Is `Current' an element?
 		do
 			Result := False
 		end
 
-	is_document: BOOLEAN is
+	is_document: BOOLEAN
 			-- Is `Current' a document?
 		do
 			Result := False
 		end
-	
-	is_untyped_atomic: BOOLEAN is
+
+	is_untyped_atomic: BOOLEAN
 			-- Is `Current' an untyped atomic value?
 		do
 			Result := False
 		end
 
-	is_numeric_value: BOOLEAN is
+	is_numeric_value: BOOLEAN
 			-- Is `Current' a numeric value?
 		do
 			Result := False
 		end
 
-	is_integer_value: BOOLEAN is
+	is_integer_value: BOOLEAN
 			-- Is `Current' an integer value?
 		do
 			Result := False
 		end
 
-	is_machine_integer_value: BOOLEAN is
+	is_machine_integer_value: BOOLEAN
 			-- Is `Current' a machine integer value?
 		do
 			Result := False
 		end
 
-	is_double_value: BOOLEAN is
+	is_double_value: BOOLEAN
 			-- Is `Current' a double value?
 		do
 			Result := False
 		end
 
-	is_decimal_value: BOOLEAN is
+	is_decimal_value: BOOLEAN
 			-- Is `Current' a decimal value?
 		do
 			Result := False
 		end
 
-	is_string_value: BOOLEAN is
+	is_string_value: BOOLEAN
 			-- Is `Current' a string value?
 		do
 			Result := False
 		end
 
-	is_boolean_value: BOOLEAN is
+	is_boolean_value: BOOLEAN
 			-- Is `Current' a boolean value?
 		do
 			Result := False
 		end
 
-	is_qname_value: BOOLEAN is
+	is_qname_value: BOOLEAN
 			-- Is `Current' a QName value?
 		do
 			Result := False
 		end
 
-	is_any_uri: BOOLEAN is
+	is_any_uri: BOOLEAN
 			-- Is `Current' an anyURI value?
 		do
 			Result := False
@@ -170,7 +170,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_last_error (a_error_value: XM_XPATH_ERROR_VALUE) is
+	set_last_error (a_error_value: XM_XPATH_ERROR_VALUE)
 			-- Set `error_value'.
 		require
 			item_not_in_error: not is_error
@@ -181,7 +181,7 @@ feature -- Status setting
 			error_value_set: error_value = a_error_value
 		end
 
-	set_last_error_from_string (a_message, a_namespace_uri, a_code: STRING; a_error_type: INTEGER) is
+	set_last_error_from_string (a_message, a_namespace_uri, a_code: STRING; a_error_type: INTEGER)
 			-- Set `error_value'.
 		require
 			item_not_in_error: not is_error
@@ -197,8 +197,8 @@ feature -- Status setting
 		end
 
 feature -- Conversion
-	
-	as_item_value: XM_XPATH_VALUE is
+
+	as_item_value: XM_XPATH_VALUE
 			-- `Current' seen as a value
 		require
 			item_not_in_error: not is_error
@@ -207,7 +207,7 @@ feature -- Conversion
 			value_not_void: Result /= Void
 		end
 
-	as_node: XM_XPATH_NODE is
+	as_node: XM_XPATH_NODE
 			-- `Current' seen as a node
 		require
 			node: is_node
@@ -216,7 +216,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_atomic_value: XM_XPATH_ATOMIC_VALUE is
+	as_atomic_value: XM_XPATH_ATOMIC_VALUE
 			-- `Current' seen as an atomic_value
 		require
 			atomic_value: is_atomic_value
@@ -224,8 +224,8 @@ feature -- Conversion
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
-	
-	as_element: XM_XPATH_ELEMENT is
+
+	as_element: XM_XPATH_ELEMENT
 			-- `Current' seen as an element
 		require
 			element: is_element
@@ -234,7 +234,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_document: XM_XPATH_DOCUMENT is
+	as_document: XM_XPATH_DOCUMENT
 			-- `Current' seen as a document
 		require
 			document: is_document
@@ -243,7 +243,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_untyped_atomic: XM_XPATH_STRING_VALUE is
+	as_untyped_atomic: XM_XPATH_STRING_VALUE
 			-- `Current' seen as an untyped atomic
 		require
 			untyped_atomic_value: is_untyped_atomic
@@ -254,7 +254,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_numeric_value: XM_XPATH_NUMERIC_VALUE is
+	as_numeric_value: XM_XPATH_NUMERIC_VALUE
 			-- `Current' seen as a numeric value
 		require
 			numeric_value: is_numeric_value
@@ -263,7 +263,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_integer_value: XM_XPATH_INTEGER_VALUE is
+	as_integer_value: XM_XPATH_INTEGER_VALUE
 			-- `Current' seen as an integer value
 		require
 			integer_value: is_integer_value
@@ -272,7 +272,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_machine_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE is
+	as_machine_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 			-- `Current' seen as a machine integer value
 		require
 			machine_integer_value: is_machine_integer_value
@@ -281,7 +281,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_double_value: XM_XPATH_DOUBLE_VALUE is
+	as_double_value: XM_XPATH_DOUBLE_VALUE
 			-- `Current' seen as a double value
 		require
 			double_value: is_double_value
@@ -290,13 +290,13 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	is_float_value: BOOLEAN is
+	is_float_value: BOOLEAN
 			-- Is `Current' a float value?
 		do
 			Result := False
 		end
 
-	as_float_value: XM_XPATH_FLOAT_VALUE is
+	as_float_value: XM_XPATH_FLOAT_VALUE
 			-- `Current' seen as a float value
 		require
 			float_value: is_float_value
@@ -305,7 +305,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_decimal_value: XM_XPATH_DECIMAL_VALUE is
+	as_decimal_value: XM_XPATH_DECIMAL_VALUE
 			-- `Current' seen as a decimal value
 		require
 			decimal_value: is_decimal_value
@@ -314,7 +314,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_string_value: XM_XPATH_STRING_VALUE is
+	as_string_value: XM_XPATH_STRING_VALUE
 			-- `Current' seen as a string value
 		require
 			string_value: is_string_value
@@ -325,7 +325,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_boolean_value: XM_XPATH_BOOLEAN_VALUE is
+	as_boolean_value: XM_XPATH_BOOLEAN_VALUE
 			-- `Current' seen as a boolean value
 		require
 			boolean_value: is_boolean_value
@@ -334,7 +334,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_qname_value: XM_XPATH_QNAME_VALUE is
+	as_qname_value: XM_XPATH_QNAME_VALUE
 			-- `Current' seen as a QName value
 		require
 			qname_value: is_qname_value
@@ -343,7 +343,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_any_uri: XM_XPATH_ANY_URI_VALUE is
+	as_any_uri: XM_XPATH_ANY_URI_VALUE
 			-- `Current' seen as an anyURI value
 		require
 			any_uri_value: is_any_uri
@@ -354,7 +354,7 @@ feature -- Conversion
 
 feature -- Output
 
-	send (a_receiver: XM_XPATH_SEQUENCE_RECEIVER) is
+	send (a_receiver: XM_XPATH_SEQUENCE_RECEIVER)
 			-- Send `Current' to `a_receiver'.
 		require
 			receiver_not_void: a_receiver /= Void
@@ -373,4 +373,4 @@ invariant
 	floats_are_numeric: is_float_value implies is_numeric_value
 
 end
-	
+

@@ -21,7 +21,7 @@ inherit
 		end
 
 	XM_XPATH_TYPE
-	
+
 	XM_XPATH_ERROR_TYPES
 
 	XM_XPATH_SHARED_CONFORMANCE
@@ -42,16 +42,16 @@ create
 
 feature -- Results
 
-	expected_resolved_uri: STRING is
+	expected_resolved_uri: STRING
 			-- Expected result from `test_resolve_relative_uri_against_static_content'
 		local
 			a_uri: UT_URI
 		once
 			create a_uri.make_resolve (base_directory, "./data/contents.html")
-			Result := a_uri.full_reference  
+			Result := a_uri.full_reference
 		end
 
-	base_directory: UT_URI is
+	base_directory: UT_URI
 			-- URI of directory containing this class
 		local
 			l_uri: STRING
@@ -60,10 +60,10 @@ feature -- Results
 			l_uri := Execution_environment.interpreted_string (l_uri)
 			Result := File_uri.filename_to_uri (l_uri)
 		end
-		
+
 feature -- Tests
 
-	test_escape_html_uri is
+	test_escape_html_uri
 			-- Test fn:escape-html-uri ("http://www.example.com/00/Weather/CA/Los 20Angeles#ocean").
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -83,7 +83,7 @@ feature -- Tests
 			assert_strings_equal ("Correct result", "http://www.example.com/00/Weather/CA/Los Angeles#ocean", a_string_value.string_value)
 		end
 
-	test_encode_for_uri_one is
+	test_encode_for_uri_one
 			-- Test fn:encode-for-uri ("http://www.example.com/00/Weather/CA/Los%20Angeles#ocean").
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -103,7 +103,7 @@ feature -- Tests
 			assert_strings_equal ("Correct result", "http%%3A%%2F%%2Fwww.example.com%%2F00%%2FWeather%%2FCA%%2FLos%%2520Angeles#ocean", a_string_value.string_value)
 		end
 
-	test_encode_for_uri_two is
+	test_encode_for_uri_two
 			-- Test fn:concat("http://www.example.com/", encode-for-uri("~bébé")).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -123,7 +123,7 @@ feature -- Tests
 			assert_strings_equal ("Correct result", "http://www.example.com/~b%%C3%%A9b%%C3%%A9", a_string_value.string_value)
 		end
 
-	test_encode_for_uri_three is
+	test_encode_for_uri_three
 			-- Test fn:concat("http://www.example.com/", encode-for-uri("100% organic"))
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -143,7 +143,7 @@ feature -- Tests
 			assert_strings_equal ("Correct result", "http://www.example.com/100%%25%%20organic", a_string_value.string_value)
 		end
 
-	test_iri_two_uri_one is
+	test_iri_two_uri_one
 			-- Test fn:iri-to-uri ("http://www.example.com/00/Weather/CA/Los%20Angeles#ocean").
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -162,8 +162,8 @@ feature -- Tests
 			assert ("String value", a_string_value /= Void)
 			assert_strings_equal ("Correct result", "http://www.example.com/00/Weather/CA/Los%%20Angeles#ocean", a_string_value.string_value)
 		end
-	
-	test_iri_two_uri_two is
+
+	test_iri_two_uri_two
 			-- Test fn:iri-to-uri ("http://www.example.com/~bébé")..
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -182,8 +182,8 @@ feature -- Tests
 			assert ("String value", a_string_value /= Void)
 			assert_strings_equal ("Correct result", "http://www.example.com/~b%%C3%%A9b%%C3%%A9", a_string_value.string_value)
 		end
-	
-	test_resolve_absolute_uri_against_static_context is
+
+	test_resolve_absolute_uri_against_static_context
 			-- Test fn:resolve-uri ("http://www.example.com/index.html").
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -201,7 +201,7 @@ feature -- Tests
 			assert_strings_equal ("Correct result", "http://www.example.com/index.html", evaluated_items.item (1).as_any_uri.string_value)
 		end
 
-	test_resolve_relative_uri_against_absolute_uri is
+	test_resolve_relative_uri_against_absolute_uri
 			-- Test fn:resolve-uri ("./contents.html", "http://www.example.com/index.html").
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -219,7 +219,7 @@ feature -- Tests
 			assert_strings_equal ("Correct result", "http://www.example.com/contents.html", evaluated_items.item (1).as_any_uri.string_value)
 		end
 
-	test_resolve_relative_uri_against_static_content is
+	test_resolve_relative_uri_against_static_content
 			-- Test fn:resolve-uri ("./contents.html").
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -237,7 +237,7 @@ feature -- Tests
 			assert_strings_case_insensitive_equal ("Correct result", expected_resolved_uri, evaluated_items.item (1).as_any_uri.string_value)
 		end
 
-	set_up is
+	set_up
 			-- <Precursor>.
 		do
 			conformance.set_basic_xslt_processor
@@ -245,7 +245,7 @@ feature -- Tests
 
 feature {NONE} -- Implementation
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}",
@@ -255,8 +255,8 @@ feature {NONE} -- Implementation
 			data_dirname_not_void: Result /= Void
 			data_dirname_not_empty: not Result.is_empty
 		end
-		
-	books_xml_uri: UT_URI is
+
+	books_xml_uri: UT_URI
 			-- URI of file 'books.xml'
 		local
 			a_path: STRING

@@ -29,7 +29,7 @@ create
 
 feature -- Processing
 
-	execute is
+	execute
 			-- Start 'geyacc' execution.
 		local
 			fsm: PR_FSM
@@ -125,7 +125,7 @@ feature -- Processing
 			end
 		end
 
-	parse_input_file is
+	parse_input_file
 			-- Parse input file.
 		local
 			parser: PR_YACC_PARSER
@@ -155,7 +155,7 @@ feature -- Processing
 			end
 		end
 
-	read_command_line is
+	read_command_line
 			-- Read command line arguments.
 		local
 			i, nb: INTEGER
@@ -275,11 +275,11 @@ feature -- Access
 
 feature -- Constants
 
-	Eiffel_extension: STRING is ".e"
+	Eiffel_extension: STRING = ".e"
 
 feature {NONE} -- Error handling
 
-	report_usage_error is
+	report_usage_error
 			-- Report usage error and then terminate
 			-- with exit status 1.
 		do
@@ -287,14 +287,14 @@ feature {NONE} -- Error handling
 			Exceptions.die (1)
 		end
 
-	report_usage_message is
+	report_usage_message
 			-- Report usage message and exit.
 		do
 			error_handler.report_info (Usage_message)
 			Exceptions.die (0)
 		end
 
-	report_version_number is
+	report_version_number
 			-- Report version number and exit.
 		local
 			a_message: UT_VERSION_NUMBER
@@ -304,7 +304,7 @@ feature {NONE} -- Error handling
 			Exceptions.die (0)
 		end
 
-	Usage_message: UT_USAGE_MESSAGE is
+	Usage_message: UT_USAGE_MESSAGE
 			-- Geyacc usage message
 		once
 			create Result.make ("[--version][--help][-hxV?][--(new|old)_typing]%N%
@@ -316,7 +316,7 @@ feature {NONE} -- Error handling
 
 feature {NONE} -- Implementation
 
-	resurrect_code is
+	resurrect_code
 			-- Make sure that SmartEiffel does not complain about possible
 			-- "calls on a Void target in the living Eiffel code".
 		local

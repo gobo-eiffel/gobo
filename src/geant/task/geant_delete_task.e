@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT) is
+	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT)
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	build_command (a_project: GEANT_PROJECT) is
+	build_command (a_project: GEANT_PROJECT)
 			-- Create instance of `command'
 		do
 			create command.make (a_project)
@@ -74,7 +74,7 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Directory_attribute_name: STRING is
+	Directory_attribute_name: STRING
 			-- Name of xml attribute directory.
 		once
 			Result := "directory"
@@ -83,7 +83,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	File_attribute_name: STRING is
+	File_attribute_name: STRING
 			-- Name of xml attribute file.
 		once
 			Result := "file"
@@ -92,7 +92,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Fileset_element_name: STRING is
+	Fileset_element_name: STRING
 			-- Name of xml subelement for fileset
 		once
 			Result := "fileset"
@@ -101,7 +101,7 @@ feature {NONE} -- Constants
 			element_name_not_empty: Result.count > 0
 		end
 
-	Directoryset_element_name: STRING is
+	Directoryset_element_name: STRING
 			-- Name of xml subelement for directoryset
 		once
 			Result := "directoryset"

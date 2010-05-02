@@ -25,7 +25,7 @@ inherit
 
 feature -- Status report
 
-	is_open_write: BOOLEAN is
+	is_open_write: BOOLEAN
 			-- Is file opened in write mode?
 		do
 			Result := old_is_open_write
@@ -33,13 +33,13 @@ feature -- Status report
 
 feature -- Output
 
-	put_character (c: CHARACTER) is
+	put_character (c: CHARACTER)
 			-- Write `c' to output file.
 		do
 			old_put_character (c)
 		end
 
-	put_string (a_string: STRING) is
+	put_string (a_string: STRING)
 			-- Write `a_string' to output file.
 			-- Note: If `a_string' is a UC_STRING or descendant, then
 			-- write the bytes of its associated UTF unicode encoding.
@@ -49,7 +49,7 @@ feature -- Output
 
 feature -- Basic operations
 
-	open_write is
+	open_write
 			-- Open current file in write-only mode if
 			-- it can be opened, let it closed otherwise.
 			-- If the file is successfully opened, it is
@@ -72,7 +72,7 @@ feature -- Basic operations
 			end
 		end
 
-	open_append is
+	open_append
 			-- Open current file in append mode if it
 			-- can be opened, let it closed otherwise.
 			-- If the file is successfully opened, it is
@@ -96,7 +96,7 @@ feature -- Basic operations
 			end
 		end
 
-	recursive_open_write is
+	recursive_open_write
 			-- Open current file in write-only mode if
 			-- it can be opened, let it closed otherwise.
 			-- If the file is successfully opened, it is
@@ -123,7 +123,7 @@ feature -- Basic operations
 			end
 		end
 
-	recursive_open_append is
+	recursive_open_append
 			-- Open current file in append mode if it
 			-- can be opened, let it closed otherwise.
 			-- If the file is successfully opened, it is
@@ -151,7 +151,7 @@ feature -- Basic operations
 			end
 		end
 
-	flush is
+	flush
 			-- Flush buffered data to disk.
 		do
 			old_flush
@@ -159,7 +159,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	old_flush is
+	old_flush
 			-- Flush buffered data to disk.
 			-- Note that there is no guarantee that the operating
 			-- system will physically write the data to the disk.
@@ -170,19 +170,19 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	old_put_character (c: CHARACTER) is
+	old_put_character (c: CHARACTER)
 			-- Write `c' at current position.
 		require
 			extendible: extendible
 		deferred
 		end
 
-	extendible: BOOLEAN is
+	extendible: BOOLEAN
 			-- May new items be added?
 		deferred
 		end
 
-	old_put_string (s: STRING) is
+	old_put_string (s: STRING)
 			-- Write `s' at current position.
 		require
 			extendible: extendible
@@ -190,12 +190,12 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	old_is_open_write: BOOLEAN is
+	old_is_open_write: BOOLEAN
 			-- Is file open for writing?
 		deferred
 		end
 
-	old_open_write is
+	old_open_write
 			-- Open file in write-only mode;
 			-- create it if it does not exist.
 		require
@@ -206,7 +206,7 @@ feature {NONE} -- Implementation
 			open_write: old_is_open_write
 		end
 
-	old_open_append is
+	old_open_append
 			-- Open file in append-only mode;
 			-- create it if it does not exist.
 		require
@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 			open_append: is_open_append
 		end
 
-	is_open_append: BOOLEAN is
+	is_open_append: BOOLEAN
 			-- Is file open for appending?
 		deferred
 		end

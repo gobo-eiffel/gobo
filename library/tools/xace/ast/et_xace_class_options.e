@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like class_name; an_options: like options) is
+	make (a_name: like class_name; an_options: like options)
 			-- Create a new class options for class `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -45,7 +45,7 @@ feature -- Access
 
 feature -- Element change
 
-	put_feature_option (an_option: ET_XACE_FEATURE_OPTIONS) is
+	put_feature_option (an_option: ET_XACE_FEATURE_OPTIONS)
 			-- Add `an_option' to `feature_options'.
 		require
 			an_option_not_void: an_option /= Void

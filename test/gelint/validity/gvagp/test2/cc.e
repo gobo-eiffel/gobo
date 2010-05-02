@@ -5,7 +5,7 @@ feature
 	item: G
 			-- Item
 
-	put (v: G) is
+	put (v: G)
 			-- Set `item' to `v'.
 		do
 			item := v

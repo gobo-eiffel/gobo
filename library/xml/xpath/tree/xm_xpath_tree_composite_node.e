@@ -11,7 +11,7 @@ note
 	revision: "$Revision$"
 
 deferred class XM_XPATH_TREE_COMPOSITE_NODE
-	
+
 inherit
 
 	XM_XPATH_COMPOSITE_NODE
@@ -30,19 +30,19 @@ inherit
 
 feature -- Access
 
-	is_tree_composite_node: BOOLEAN is
+	is_tree_composite_node: BOOLEAN
 			-- Is `Current' a composite node?
 		do
 			Result := True
 		end
 
-	as_tree_composite_node: XM_XPATH_TREE_COMPOSITE_NODE is
+	as_tree_composite_node: XM_XPATH_TREE_COMPOSITE_NODE
 			-- `Current' seen as a composite node
 		do
 			Result := Current
 		end
 
-	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE is
+	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE
 			-- Node sequence number (in document order)
 		do
 			if saved_sequence_number = Void then
@@ -53,7 +53,7 @@ feature -- Access
 			saved_sequence_number_not_void: saved_sequence_number /= Void
 		end
 
-	string_value: STRING is
+	string_value: STRING
 			-- String-value
 		local
 			l_node: XM_XPATH_NODE
@@ -62,7 +62,7 @@ feature -- Access
 			-- TODO: review why copy-on-write is being used. The string value
 			--       should be read-only, in which case we might be able to
 			--       cache it.
-			
+
 			-- Return the concatentation of the string value of all it's
 			-- text-node descendants.
 
@@ -87,7 +87,7 @@ feature -- Access
 			end
 		end
 
-	first_child: XM_XPATH_NODE is
+	first_child: XM_XPATH_NODE
 			-- The first child of this node;
 			-- If there are no children, return `Void'
 		do
@@ -96,7 +96,7 @@ feature -- Access
 			end
 		end
 
-	nth_child (an_index: INTEGER): XM_XPATH_NODE is
+	nth_child (an_index: INTEGER): XM_XPATH_NODE
 			-- The nth child of this node
 		require
 			valid_index: is_valid_child_index (an_index)
@@ -104,7 +104,7 @@ feature -- Access
 				Result := children.item (an_index)
 		end
 
-	last_child: XM_XPATH_NODE is
+	last_child: XM_XPATH_NODE
 			-- The last child of this node;
 			-- If there are no children, return `Void'
 		do
@@ -113,7 +113,7 @@ feature -- Access
 			end
 		end
 
-	child_iterator (a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_TREE_NODE] is
+	child_iterator (a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_TREE_NODE]
 			-- Iterator over `children'
 		do
 			create {XM_XPATH_TREE_CHILD_ENUMERATION} Result.make (Current, a_node_test)
@@ -123,13 +123,13 @@ feature -- Access
 
 feature -- Status report
 
-	has_child_nodes: BOOLEAN is
+	has_child_nodes: BOOLEAN
 			-- Does `Current' have any children?
 		do
 			Result := children.count > 0
 		end
 
-	is_valid_child_index (a_index: INTEGER): BOOLEAN is
+	is_valid_child_index (a_index: INTEGER): BOOLEAN
 			-- Does `a_index' represent a valid child?
 		do
 			Result := a_index > 0 and a_index <= children.count
@@ -137,7 +137,7 @@ feature -- Status report
 
 feature -- Element change
 
-	add_child (a_child: XM_XPATH_TREE_NODE) is
+	add_child (a_child: XM_XPATH_TREE_NODE)
 			-- Add a child node to this node.
 			-- Note: normalizing adjacent text nodes
 			--  is the responsibility of the caller
@@ -151,7 +151,7 @@ feature -- Element change
 			a_child.set_parent (Current, children.count)
 		end
 
-	replace_child (a_child: XM_XPATH_TREE_NODE; a_index: INTEGER) is
+	replace_child (a_child: XM_XPATH_TREE_NODE; a_index: INTEGER)
 			-- Replace child at `an_index' with `a_child'
 		require
 			child_not_void: a_child /= Void
@@ -163,7 +163,7 @@ feature -- Element change
 
 feature -- Removal
 
-	strip_whitespace_nodes is
+	strip_whitespace_nodes
 			-- Strip all whitespace-only text nodes whose immediate following sibling is xsl:param or xsl:sort.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_TREE_NODE]
@@ -201,7 +201,7 @@ feature -- Removal
 		end
 
 feature {XM_XPATH_TREE_BUILDER} -- Restricted
-	
+
 	sequence_number_high_word: INTEGER
 			-- High_word of the sequence number
 
@@ -213,7 +213,7 @@ feature {NONE} -- Implementation
 	saved_sequence_number: XM_XPATH_64BIT_NUMERIC_CODE
 			-- Cache for `sequence_number'
 
-	update_indices is
+	update_indices
 			-- Update child indices to reflect removal.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_TREE_NODE]

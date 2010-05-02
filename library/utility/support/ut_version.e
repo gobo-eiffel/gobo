@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_major: like major; a_minor: like minor; a_revision: like revision; a_build: like build) is
+	make (a_major: like major; a_minor: like minor; a_revision: like revision; a_build: like build)
 			-- Make new version of the form "major.minor.revision,build".
 		require
 			a_major_not_negative: a_major >= 0
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			build_set: build = a_build
 		end
 
-	make_major (a_major: like major) is
+	make_major (a_major: like major)
 			-- Make new version of the form "major".
 			-- Note that this version is greater than any other
 			-- version of the form "major.xxx", "major.xxx.yyy"
@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 			no_build: not has_build
 		end
 
-	make_major_minor (a_major: like major; a_minor: like minor) is
+	make_major_minor (a_major: like major; a_minor: like minor)
 			-- Make new version of the form "major.minor".
 			-- Note that this version is greater than any other
 			-- version of the form "major.minor.xxx",
@@ -96,7 +96,7 @@ feature {NONE} -- Initialization
 			no_build: not has_build
 		end
 
-	make_latest is
+	make_latest
 			-- Make new version which is greater than any other
 			-- version.
 		do
@@ -113,25 +113,25 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	has_major: BOOLEAN is
+	has_major: BOOLEAN
 			-- Does current version have a major version?
 		do
 			Result := (internal_major >= 0)
 		end
 
-	has_minor: BOOLEAN is
+	has_minor: BOOLEAN
 			-- Does current version have a minor version?
 		do
 			Result := (internal_minor >= 0)
 		end
 
-	has_revision: BOOLEAN is
+	has_revision: BOOLEAN
 			-- Does current version have a revision number?
 		do
 			Result := (internal_revision >= 0)
 		end
 
-	has_build: BOOLEAN is
+	has_build: BOOLEAN
 			-- Does current version have a build number?
 		do
 			Result := (internal_build >= 0)
@@ -139,7 +139,7 @@ feature -- Status report
 
 feature -- Access
 
-	major: INTEGER is
+	major: INTEGER
 			-- Major version
 		require
 			has_major: has_major
@@ -149,7 +149,7 @@ feature -- Access
 			major_not_negative: Result >= 0
 		end
 
-	minor: INTEGER is
+	minor: INTEGER
 			-- Minor version
 		require
 			has_minor: has_minor
@@ -159,7 +159,7 @@ feature -- Access
 			minor_not_negative: Result >= 0
 		end
 
-	revision: INTEGER is
+	revision: INTEGER
 			-- Revision number
 		require
 			has_revision: has_revision
@@ -169,7 +169,7 @@ feature -- Access
 			revision_not_negative: Result >= 0
 		end
 
-	build: INTEGER is
+	build: INTEGER
 			-- Build number
 		require
 			has_build: has_build
@@ -181,7 +181,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current version less than `other'?
 		do
 			if other.has_major then
@@ -227,7 +227,7 @@ feature -- Comparison
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- New string containing terse printable representation
 			-- of current object
 		do

@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_global_variable (an_executable: XM_XSLT_EXECUTABLE; a_name: STRING; a_slot_number: INTEGER; a_slot_manager: like slot_manager) is
+	make_global_variable (an_executable: XM_XSLT_EXECUTABLE; a_name: STRING; a_slot_number: INTEGER; a_slot_manager: like slot_manager)
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
@@ -50,13 +50,13 @@ feature -- Access
 
 feature -- Status report
 
-	is_global: BOOLEAN is
+	is_global: BOOLEAN
 			-- Is binding global or local?
 		do
 			Result := True
 		end
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -70,7 +70,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
 			check
@@ -78,7 +78,7 @@ feature -- Evaluation
 			end
 		end
 
-	evaluate_variable (a_context: XM_XPATH_CONTEXT) is 
+	evaluate_variable (a_context: XM_XPATH_CONTEXT)
 			-- Evaluate variable
 		local
 			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
@@ -111,7 +111,7 @@ feature -- Evaluation
 			end
 		end
 
-	select_value (a_context: XM_XSLT_EVALUATION_CONTEXT): XM_XPATH_VALUE is
+	select_value (a_context: XM_XSLT_EVALUATION_CONTEXT): XM_XPATH_VALUE
 			-- Value of `select_expression'
 		local
 			l_new_context: XM_XSLT_EVALUATION_CONTEXT
@@ -131,7 +131,7 @@ feature -- Evaluation
 
 feature -- Element_change
 
-	set_slot_manager (a_slot_manager: like slot_manager) is
+	set_slot_manager (a_slot_manager: like slot_manager)
 			-- Set `slot_manager'.
 		require
 			slot_manager_not_void: a_slot_manager /= Void
@@ -143,13 +143,13 @@ feature -- Element_change
 
 feature -- Conversion
 
-	is_global_variable: BOOLEAN is
+	is_global_variable: BOOLEAN
 			-- Is `Current' a global xsl:variable/param?
 		do
 			Result := True
 		end
 
-	as_global_variable: XM_XSLT_GLOBAL_VARIABLE is
+	as_global_variable: XM_XSLT_GLOBAL_VARIABLE
 			-- `Current' seen as a global xsl:variable/param
 		do
 			Result := Current
@@ -160,4 +160,4 @@ invariant
 	slot_manager_not_void: slot_manager /= Void
 
 end
-	
+

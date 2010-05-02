@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	index: INTEGER is
+	index: INTEGER
 			-- Index of current position
 		deferred
 		ensure
@@ -27,14 +27,14 @@ feature -- Access
 
 feature -- Status report
 
-	valid_index (i: INTEGER): BOOLEAN is
+	valid_index (i: INTEGER): BOOLEAN
 			-- Is `i' a valid index value?
 		deferred
 		end
 
 feature -- Cursor movement
 
-	go_i_th (i: INTEGER) is
+	go_i_th (i: INTEGER)
 			-- Move cursor to `i'-th position.
 		require
 			valid_index: valid_index (i)

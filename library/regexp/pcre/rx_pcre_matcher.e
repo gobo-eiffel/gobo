@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- On entry ecode points to the first opcode, and `eptr' to the first character
 			-- in the subject string, while `eptr_vector' holds the value of `eptr' at the start of the
 			-- last bracketed group - used for breaking infinite loops matching zero-length
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 
 feature -- Resetting
 
-	reset is
+	reset
 			-- Reset the pattern.
 			-- Do not change the options (see `set_default_options' for the list of options).
 		do
@@ -64,7 +64,7 @@ feature -- Resetting
 			wipe_out
 		end
 
-	wipe_out is
+	wipe_out
 			-- Get rid of last match.
 		do
 			precursor
@@ -73,7 +73,7 @@ feature -- Resetting
 
 feature -- Compilation
 
-	compile (a_pattern: STRING) is
+	compile (a_pattern: STRING)
 			-- There are two different sets of meta-characters: those  that
 			-- are  recognized anywhere in the pattern except within square
 			-- brackets, and those that are recognized in square  brackets.
@@ -111,7 +111,7 @@ feature -- Compilation
 
 feature -- Access
 
-	captured_start_position (n: INTEGER): INTEGER is
+	captured_start_position (n: INTEGER): INTEGER
 			-- Start position of the `n'-th captured substring;
 			-- 'n = 0' represents the whole matched string.
 			-- Return 0 if undefined captured substring.
@@ -119,7 +119,7 @@ feature -- Access
 			Result := offset_vector.item (n * 2)
 		end
 
-	captured_end_position (n: INTEGER): INTEGER is
+	captured_end_position (n: INTEGER): INTEGER
 			-- End position of the `n'-th captured substring;
 			-- 'n = 0' represents the whole matched string.
 			-- Return -1 if undefined captured substring.
@@ -129,7 +129,7 @@ feature -- Access
 
 feature -- Matching
 
-	match_substring (a_subject: STRING; a_from, a_to: INTEGER) is
+	match_substring (a_subject: STRING; a_from, a_to: INTEGER)
 			-- Try to match the substring of `a_subject' between
 			-- positions `a_from' and `a_to' with the current pattern.
 			-- Make result available in `has_matched' and the various
@@ -139,7 +139,7 @@ feature -- Matching
 			match_it (a_subject, a_from, a_to)
 		end
 
-	match_unbounded_substring (a_subject: STRING; a_from, a_to: INTEGER) is
+	match_unbounded_substring (a_subject: STRING; a_from, a_to: INTEGER)
 			-- Try to match the substring of `a_subject' between
 			-- positions `a_from' and `a_to' with the current pattern.
 			-- Make result available in `has_matched' and the various
@@ -164,7 +164,7 @@ feature -- Matching
 			is_eol := l_old_eol
 		end
 
-	first_match is
+	first_match
 			-- Rewind the matcher to the first match (if any),
 		require
 			is_matching: is_matching
@@ -172,7 +172,7 @@ feature -- Matching
 			match_it (subject, subject_start, subject_end)
 		end
 
-	next_match is
+	next_match
 			-- Match next portion (if any).
 		require
 			is_matching: is_matching
@@ -230,7 +230,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Setting
 
-	set_next_start (an_index: INTEGER) is
+	set_next_start (an_index: INTEGER)
 			-- Set `subject_next_start' to `an_index'.
 		do
 			subject_next_start := an_index
@@ -238,7 +238,7 @@ feature {NONE} -- Setting
 			subject_next_start_set: subject_next_start = an_index
 		end
 
-	set_match_count (a_count: INTEGER) is
+	set_match_count (a_count: INTEGER)
 			-- Set `match_count' to `a_count'.
 		do
 			match_count := a_count
@@ -248,7 +248,7 @@ feature {NONE} -- Setting
 
 feature {NONE} -- Matching
 
-	match_it (a_subject: STRING; a_start, a_end: INTEGER) is
+	match_it (a_subject: STRING; a_start, a_end: INTEGER)
 			-- This function applies a compiled regexp to a subject string and picks out
 			-- portions of the string if it matches. Two elements in the 'offset_vector'
 			-- are set for each substring: the offsets to the start and end of the
@@ -429,7 +429,7 @@ feature {NONE} -- Matching
 			subject_set: subject = a_subject
 		end
 
-	match_start (a_eptr: INTEGER): BOOLEAN is
+	match_start (a_eptr: INTEGER): BOOLEAN
 			-- Start a new matching cycle.
 		local
 			new_count: INTEGER
@@ -451,7 +451,7 @@ feature {NONE} -- Matching
 			Result := match_internal (0, True, False) = return_true
 		end
 
-	match_recursive (a_ecode: INTEGER; a_isgroup, a_condassert: BOOLEAN): INTEGER is
+	match_recursive (a_ecode: INTEGER; a_isgroup, a_condassert: BOOLEAN): INTEGER
 			-- Recursive call for matching subexpression and the like.
 		local
 			old_eptr: INTEGER
@@ -481,7 +481,7 @@ feature {NONE} -- Matching
 			valid_result: Result = return_true or Result = return_false
 		end
 
-	match_internal (a_ec: INTEGER; a_isgroup, a_iscondassert: BOOLEAN): INTEGER is
+	match_internal (a_ec: INTEGER; a_isgroup, a_iscondassert: BOOLEAN): INTEGER
 			-- The real matching work is mainly done in this routine.
 		local
 			op: INTEGER
@@ -1133,7 +1133,7 @@ feature {NONE} -- Matching
 			valid_result: Result = return_true or Result = return_false
 		end
 
-	match_additional_bracket (a_ec, a_number: INTEGER): INTEGER is
+	match_additional_bracket (a_ec, a_number: INTEGER): INTEGER
 			-- Opening capturing bracket. If there is space in the offset vector, save
 			-- the current subject position in the working slot at the top of the vector. We
 			-- mustn't change the current values of the data slot, because they may be set
@@ -1162,7 +1162,7 @@ feature {NONE} -- Matching
 			end
 		end
 
-	next_matching_alternate (a_ec: INTEGER): INTEGER is
+	next_matching_alternate (a_ec: INTEGER): INTEGER
 		local
 			op, res: INTEGER
 		do
@@ -1186,7 +1186,7 @@ feature {NONE} -- Matching
 			valid_result: Result = return_true or Result = return_none
 		end
 
-	match_ref (a_eptr, a_offset, a_length: INTEGER): INTEGER is
+	match_ref (a_eptr, a_offset, a_length: INTEGER): INTEGER
 			-- If a back reference hasn't been set, the length that is passed is greater
 			-- than the number of characters left in the string, so the match fails.
 			-- `a_offset' is the index into the offset vector. `a_length' is the length
@@ -1236,7 +1236,7 @@ feature {NONE} -- Matching
 			end
 		end
 
-	match_repeated_refs (a_ec: INTEGER): INTEGER is
+	match_repeated_refs (a_ec: INTEGER): INTEGER
 			-- Match a back reference, possibly repeatedly. Look past the end of the
 			-- item to see if there is repeat information following. The code is similar
 			-- to that for character classes, but repeated for efficiency. Then obey
@@ -1387,7 +1387,7 @@ feature {NONE} -- Matching
 			valid_result: Result = return_true or Result = return_false or Result = return_none
 		end
 
-	match_repeated_classes (a_ec: INTEGER): INTEGER is
+	match_repeated_classes (a_ec: INTEGER): INTEGER
 			-- Match a character class, possibly repeatedly. Look past the end of the
 			-- item to see if there is repeat information following. Then obey similar
 			-- code to character type repeats - written out again for speed.
@@ -1527,7 +1527,7 @@ feature {NONE} -- Matching
 			valid_result: Result = return_true or Result = return_false or Result = return_none
 		end
 
-	match_repeated_characters (a_ec, a_min, a_max: INTEGER; a_minimize: BOOLEAN): INTEGER is
+	match_repeated_characters (a_ec, a_min, a_max: INTEGER; a_minimize: BOOLEAN): INTEGER
 		local
 			i, tmpptr: INTEGER
 			c: INTEGER
@@ -1680,7 +1680,7 @@ feature {NONE} -- Matching
 			valid_result: Result = return_true or Result = return_false or Result = return_none
 		end
 
-	match_not_repeated_characters (a_ec, a_min, a_max: INTEGER; a_minimize: BOOLEAN): INTEGER is
+	match_not_repeated_characters (a_ec, a_min, a_max: INTEGER; a_minimize: BOOLEAN): INTEGER
 		local
 			i, tmpptr: INTEGER
 			c: INTEGER
@@ -1832,7 +1832,7 @@ feature {NONE} -- Matching
 			valid_result: Result = return_true or Result = return_false or Result = return_none
 		end
 
-	match_repeated_type (a_ec, a_min, a_max: INTEGER; a_minimize: BOOLEAN): INTEGER is
+	match_repeated_type (a_ec, a_min, a_max: INTEGER; a_minimize: BOOLEAN): INTEGER
 		local
 			i, pp: INTEGER
 			ctype: INTEGER
@@ -2133,10 +2133,10 @@ feature {NONE} -- Matching
 
 feature {NONE} -- Constants
 
-	return_true: INTEGER is 1
+	return_true: INTEGER = 1
 
-	return_none: INTEGER is 0
+	return_none: INTEGER = 0
 
-	return_false: INTEGER is -1
+	return_false: INTEGER = -1
 
 end

@@ -22,7 +22,7 @@ inherit
 
 feature -- Status report
 
-	is_expat_parser_available: BOOLEAN is
+	is_expat_parser_available: BOOLEAN
 			-- Is Expat XML parser available?
 		do
 			Result := True
@@ -30,7 +30,7 @@ feature -- Status report
 
 feature -- Access
 
-	new_expat_parser: XM_PARSER is
+	new_expat_parser: XM_PARSER
 			-- New Expat XML parser
 		do
 			create {XM_EXPAT_PARSER} Result.make

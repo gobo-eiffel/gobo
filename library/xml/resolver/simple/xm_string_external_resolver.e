@@ -1,15 +1,15 @@
 note
-	
+
 	description:
-	
+
 		"External resolver using strings for entity content"
-	
+
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2004, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class XM_STRING_EXTERNAL_RESOLVER
 
 inherit
@@ -25,10 +25,10 @@ inherit
 create
 
 	make
-	
+
 feature {NONE} -- Creation
 
-	make is
+	make
 			-- Make.
 		do
 			create strings.make_map_default
@@ -37,7 +37,7 @@ feature {NONE} -- Creation
 		ensure
 			empty: strings.is_empty
 		end
-		
+
 feature -- Access
 
 	strings: DS_HASH_TABLE [STRING, STRING]
@@ -45,7 +45,7 @@ feature -- Access
 
 feature -- Action(s)
 
-	resolve (a_system_name: STRING) is
+	resolve (a_system_name: STRING)
 			-- Open file with corresponding name.
 		do
 			if strings.has (a_system_name) then
@@ -65,7 +65,7 @@ feature -- Result
 	last_error: STRING
 			-- Last error.
 
-	has_error: BOOLEAN is
+	has_error: BOOLEAN
 			-- Is there an error.
 		do
 			Result := last_error /= Void

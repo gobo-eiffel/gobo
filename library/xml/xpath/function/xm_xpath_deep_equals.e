@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant
 		do
 			name := "deep-equals"; namespace_uri := Xpath_standard_functions_uri
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, where known
 		do
 			Result := type_factory.boolean_type
@@ -57,7 +57,7 @@ feature -- Access
 
 feature -- Status report
 
-	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
+	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE
 			-- Type of argument number `argument_number'
 		do
 			if argument_number = 3 then
@@ -69,7 +69,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_comparer: XM_XPATH_ATOMIC_COMPARER
@@ -102,7 +102,7 @@ feature -- Evaluation
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
@@ -110,7 +110,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 
-	deep_equals (an_iterator, another_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_comparer: XM_XPATH_ATOMIC_COMPARER): BOOLEAN is
+	deep_equals (an_iterator, another_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_comparer: XM_XPATH_ATOMIC_COMPARER): BOOLEAN
 			-- Are two sequences deep-equal?
 			-- Not 100% pure - may set `Current' into error status.
 		require
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 							else
 								check
 									first_item_atomic: an_item.is_atomic_value
-									second_item_atomic: another_item.is_atomic_value 
+									second_item_atomic: another_item.is_atomic_value
 									-- as they are not nodes
 								end
 								if not a_comparer.are_comparable (an_item.as_atomic_value, another_item.as_atomic_value) then
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	nodes_are_deep_equal (a_node, another_node: XM_XPATH_NODE; a_comparer: XM_XPATH_ATOMIC_COMPARER): BOOLEAN is
+	nodes_are_deep_equal (a_node, another_node: XM_XPATH_NODE; a_comparer: XM_XPATH_ATOMIC_COMPARER): BOOLEAN
 			-- Is `a_node' deep-equal to `another_node'?
 		require
 			first_node_not_void: a_node /= Void
@@ -218,7 +218,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	are_elements_equal (a_node, another_node: XM_XPATH_NODE; a_comparer: XM_XPATH_ATOMIC_COMPARER): BOOLEAN is
+	are_elements_equal (a_node, another_node: XM_XPATH_NODE; a_comparer: XM_XPATH_ATOMIC_COMPARER): BOOLEAN
 			-- Is `a_node' deep-equal to `another_node' ?
 		require
 			first_node_is_element: a_node /= Void and then a_node.node_type = Element_node
@@ -233,8 +233,8 @@ feature {NONE} -- Implementation
 				Result := are_contents_equal (a_node, another_node, a_comparer)
 			end
 		end
-	
-	are_contents_equal (a_node, another_node: XM_XPATH_NODE; a_comparer: XM_XPATH_ATOMIC_COMPARER): BOOLEAN is
+
+	are_contents_equal (a_node, another_node: XM_XPATH_NODE; a_comparer: XM_XPATH_ATOMIC_COMPARER): BOOLEAN
 			-- Is the contents of `a_node' deep-equal to `another_node'?
 		require
 			first_node_not_void: a_node /= Void
@@ -296,19 +296,19 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	are_attributes_equal (a_node, another_node: XM_XPATH_NODE; a_comparer: XM_XPATH_ATOMIC_COMPARER): BOOLEAN is
+	are_attributes_equal (a_node, another_node: XM_XPATH_NODE; a_comparer: XM_XPATH_ATOMIC_COMPARER): BOOLEAN
 			-- Is attribute `a_node' deep-equal to `another_node'?
 		require
 			first_node_is_element: a_node /= Void and then a_node.node_type = Attribute_node
 			second_node_is_element: another_node /= Void and then another_node.node_type = Attribute_node
-			comparer_not_void: a_comparer /= Void		
+			comparer_not_void: a_comparer /= Void
 		do
 			if a_node.fingerprint = another_node.fingerprint then
-				Result := deep_equals (a_node.typed_value, another_node.typed_value, a_comparer) 
+				Result := deep_equals (a_node.typed_value, another_node.typed_value, a_comparer)
 			end
 		end
 
-	are_attribute_collections_equal (a_node, another_node: XM_XPATH_NODE; a_comparer: XM_XPATH_ATOMIC_COMPARER): BOOLEAN is
+	are_attribute_collections_equal (a_node, another_node: XM_XPATH_NODE; a_comparer: XM_XPATH_ATOMIC_COMPARER): BOOLEAN
 			-- Are attribute chlidren of `a_node' deep-equal to attribute children of `another_node'?
 		require
 			first_node_is_element: a_node /= Void and then a_node.node_type = Element_node
@@ -362,4 +362,4 @@ feature {NONE} -- Implementation
 		end
 
 end
-	
+

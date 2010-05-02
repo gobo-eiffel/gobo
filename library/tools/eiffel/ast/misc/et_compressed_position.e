@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_line, a_column: INTEGER) is
+	make (a_line, a_column: INTEGER)
 			-- Create a new position.
 		require
 			a_line_positive: a_line >= 0
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			no_column_set: a_column > maximum_column implies column = no_column
 		end
 
-	make_default is
+	make_default
 			-- Create a new default position.
 		do
 			compressed_position := 0
@@ -47,14 +47,14 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	line: INTEGER is
+	line: INTEGER
 			-- Line number
 			-- (between 1 and 8388607, 0 if unknown or overflow)
 		do
 			Result := compressed_position // 256
 		end
 
-	column: INTEGER is
+	column: INTEGER
 			-- Column number
 			-- (between 1 and 255, 0 if unknown or overflow)
 		do
@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_position (a_line, a_column: INTEGER) is
+	set_position (a_line, a_column: INTEGER)
 			-- Set to new position.
 		require
 			a_line_positive: a_line >= 0
@@ -91,10 +91,10 @@ feature -- Setting
 
 feature -- Constants
 
-	maximum_line: INTEGER is 8388607
+	maximum_line: INTEGER = 8388607
 			-- Maxumum line number (2^23-1)
 
-	maximum_column: INTEGER is 255
+	maximum_column: INTEGER = 255
 			-- Maximum column number (2^8-1)
 
 feature {NONE} -- Implementation

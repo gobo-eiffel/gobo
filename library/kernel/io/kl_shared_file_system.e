@@ -23,7 +23,7 @@ inherit
 
 feature -- File systems
 
-	file_system: KL_FILE_SYSTEM is
+	file_system: KL_FILE_SYSTEM
 			-- Underlying file system
 		once
 			if operating_system.is_windows then
@@ -39,7 +39,7 @@ feature -- File systems
 			current_file_system: Result.is_current_file_system
 		end
 
-	windows_file_system: KL_WINDOWS_FILE_SYSTEM is
+	windows_file_system: KL_WINDOWS_FILE_SYSTEM
 			-- Windows-like file system which accepts both
 			-- \ and / as directory separator
 		once
@@ -48,7 +48,7 @@ feature -- File systems
 			file_system_not_void: Result /= Void
 		end
 
-	windows_backslash_only_file_system: KL_WINDOWS_FILE_SYSTEM is
+	windows_backslash_only_file_system: KL_WINDOWS_FILE_SYSTEM
 			-- Windows-like file system which accepts only \ as
 			-- directory separator
 		once
@@ -57,7 +57,7 @@ feature -- File systems
 			file_system_not_void: Result /= Void
 		end
 
-	unix_file_system: KL_UNIX_FILE_SYSTEM is
+	unix_file_system: KL_UNIX_FILE_SYSTEM
 			-- Unix-like file system
 		once
 			create Result.make

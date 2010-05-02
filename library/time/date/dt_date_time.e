@@ -85,7 +85,7 @@ create {DT_DATE_TIME_HANDLER}
 
 feature {NONE} -- Initialization
 
-	make (y, m, d, h, mi, s: INTEGER) is
+	make (y, m, d, h, mi, s: INTEGER)
 			-- Create a new date time.
 		require
 			m_large_enough: m >= January
@@ -111,7 +111,7 @@ feature {NONE} -- Initialization
 			millisecond_set: millisecond = 0
 		end
 
-	make_precise (y, m, d, h, mi, s, ms: INTEGER) is
+	make_precise (y, m, d, h, mi, s, ms: INTEGER)
 			-- Create a new date time with millisecond precision.
 		require
 			m_large_enough: m >= January
@@ -139,7 +139,7 @@ feature {NONE} -- Initialization
 			millisecond_set: millisecond = ms
 		end
 
-	make_from_date_time (a_date: DT_DATE; a_time: DT_TIME) is
+	make_from_date_time (a_date: DT_DATE; a_time: DT_TIME)
 			-- Create a new date time using `a_date' and `a_time'.
 		require
 			a_date_not_void: a_date /= Void
@@ -157,7 +157,7 @@ feature {NONE} -- Initialization
 			millisecond_set: millisecond = a_time.millisecond
 		end
 
-	make_from_date (a_date: DT_DATE) is
+	make_from_date (a_date: DT_DATE)
 			-- Create a new date time using `a_date'.
 		require
 			a_date_not_void: a_date /= Void
@@ -174,7 +174,7 @@ feature {NONE} -- Initialization
 			millisecond_set: millisecond = 0
 		end
 
-	make_from_epoch (s: INTEGER) is
+	make_from_epoch (s: INTEGER)
 			-- Create a new date time from the number of
 			-- seconds since epoch (1 Jan 1970 at 00:00:00).
 		local
@@ -197,7 +197,7 @@ feature {NONE} -- Initialization
 			make_time_from_second_count (ss)
 		end
 
-	make_from_storage (a_date_storage, a_time_storage: INTEGER) is
+	make_from_storage (a_date_storage, a_time_storage: INTEGER)
 			-- Create a new date time from `a_date_storage'
 			-- and `a_time_storage'.
 		do
@@ -210,7 +210,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	date: DT_DATE is
+	date: DT_DATE
 			-- Date part
 		do
 			create Result.make_from_storage (date_storage)
@@ -220,7 +220,7 @@ feature -- Access
 			day_set: Result.day = day
 		end
 
-	time: DT_TIME is
+	time: DT_TIME
 			-- Time part
 		do
 			create Result.make_from_storage (time_storage)
@@ -231,7 +231,7 @@ feature -- Access
 			millisecond_set: Result.millisecond = millisecond
 		end
 
-	duration (other: like Current): DT_DATE_TIME_DURATION is
+	duration (other: like Current): DT_DATE_TIME_DURATION
 			-- Duration between `other' and `Current'
 		do
 			create Result.make_precise (0, 0, day_count - other.day_count,
@@ -239,7 +239,7 @@ feature -- Access
 				second - other.second, millisecond - other.millisecond)
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code
 		do
 			Result := date_storage + time_storage
@@ -250,7 +250,7 @@ feature -- Access
 
 feature -- Element change
 
-	add_duration (a_duration: like duration) is
+	add_duration (a_duration: like duration)
 			-- Add `a_duration' to `Current'.
 			-- (Add `a_duration.year' and `a_duration.month' first, then
 			-- set `day' to `day.min (day_in_month (new_month, new_year))'
@@ -274,7 +274,7 @@ feature -- Element change
 			add_years_months_days (a_duration.year, a_duration.month, a_duration.day + d)
 		end
 
-	add_hours (h: INTEGER) is
+	add_hours (h: INTEGER)
 			-- Add `h' hours to `Current'.
 		do
 			if h /= 0 then
@@ -289,7 +289,7 @@ feature -- Element change
 			end
 		end
 
-	add_minutes (m: INTEGER) is
+	add_minutes (m: INTEGER)
 			-- Add `m' minutes to `Current'.
 		do
 			if m /= 0 then
@@ -304,7 +304,7 @@ feature -- Element change
 			end
 		end
 
-	add_seconds (s: INTEGER) is
+	add_seconds (s: INTEGER)
 			-- Add `s' seconds to `Current'.
 		do
 			if s /= 0 then
@@ -319,7 +319,7 @@ feature -- Element change
 			end
 		end
 
-	add_milliseconds (ms: INTEGER) is
+	add_milliseconds (ms: INTEGER)
 			-- Add `ms' milliseconds to `Current'.
 		do
 			if ms /= 0 then
@@ -336,7 +336,7 @@ feature -- Element change
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is `Current' before `other' on the time axis?
 		do
 			Result := date_storage < other.date_storage or else
@@ -344,7 +344,7 @@ feature -- Comparison
 				time_storage < other.time_storage)
 		end
 
-	same_date_time (other: DT_DATE_TIME): BOOLEAN is
+	same_date_time (other: DT_DATE_TIME): BOOLEAN
 			-- Is `Current' date-time equal to `other'?
 		require
 			other_not_void: other /= Void

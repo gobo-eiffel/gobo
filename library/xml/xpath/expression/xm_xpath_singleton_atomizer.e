@@ -25,7 +25,7 @@ create {XM_XPATH_EXPRESSION_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make (a_sequence: XM_XPATH_EXPRESSION; a_role: XM_XPATH_ROLE_LOCATOR; empty: BOOLEAN) is
+	make (a_sequence: XM_XPATH_EXPRESSION; a_role: XM_XPATH_ROLE_LOCATOR; empty: BOOLEAN)
 			-- Establish invariant
 		require
 			sequence_not_void: a_sequence /= Void
@@ -45,9 +45,9 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
 
-	item_type: XM_XPATH_ITEM_TYPE is
+
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Determine the data type of the expression, if possible
 		local
 			a_kind_mask: INTEGER
@@ -100,9 +100,9 @@ feature -- Access
 			end
 		end
 
-feature -- Optimization	
+feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -119,12 +119,12 @@ feature -- Optimization
 			end
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			create l_replacement.make (Void)		
+			create l_replacement.make (Void)
 			base_expression.check_static_type (l_replacement, a_context, a_context_item_type)
 			set_base_expression (l_replacement.item)
 			if base_expression.is_error then
@@ -144,7 +144,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -160,7 +160,7 @@ feature -- Evaluation
 				from
 					l_iterator.start
 				until
-					is_error or else l_iterator.after 
+					is_error or else l_iterator.after
 				loop
 					l_item := l_iterator.item
 					if l_item.is_atomic_value then
@@ -201,16 +201,16 @@ feature -- Evaluation
 		end
 
 feature {XM_XPATH_UNARY_EXPRESSION} -- Restricted
-	
-	display_operator: STRING is
+
+	display_operator: STRING
 			-- Format `operator' for display
 		do
 			Result := "atomize singleton"
 		end
-	
+
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			if allows_empty then
@@ -220,7 +220,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			end
 		end
 
-	compute_special_properties is
+	compute_special_properties
 			-- Compute special properties.
 		do
 			Precursor
@@ -244,4 +244,4 @@ invariant
 
 end
 
-	
+

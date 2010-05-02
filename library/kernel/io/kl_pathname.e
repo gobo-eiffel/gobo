@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new empty pathname.
 		do
 			create components.make (1, Initial_components_capacity)
@@ -46,14 +46,14 @@ feature -- Status report
 	is_relative: BOOLEAN
 			-- Is pathname a relative pathname?
 
-	is_current (i: INTEGER): BOOLEAN is
+	is_current (i: INTEGER): BOOLEAN
 			-- Is component at `i'-th position the
 			-- relative current directory name?
 		do
 			Result := (item (i) = Current_directory)
 		end
 
-	is_parent (i: INTEGER): BOOLEAN is
+	is_parent (i: INTEGER): BOOLEAN
 			-- Is component at `i'-th position the
 			-- relative parent directory name?
 		do
@@ -62,7 +62,7 @@ feature -- Status report
 
 feature -- Access
 
-	item (i: INTEGER): STRING is
+	item (i: INTEGER): STRING
 			-- Pathname component at `i'-th position
 		local
 			s: detachable STRING
@@ -96,7 +96,7 @@ feature -- Measurement
 
 feature -- Setting
 
-	set_relative (b: BOOLEAN) is
+	set_relative (b: BOOLEAN)
 			-- Set `is_relative' to `b'.
 		do
 			is_relative := b
@@ -104,7 +104,7 @@ feature -- Setting
 			is_relative: is_relative = b
 		end
 
-	set_drive (a_drive: like drive) is
+	set_drive (a_drive: like drive)
 			-- Set `drive' to `a_drive'.
 		do
 			drive := a_drive
@@ -112,7 +112,7 @@ feature -- Setting
 			drive_set: drive = a_drive
 		end
 
-	set_hostname (a_hostname: like hostname) is
+	set_hostname (a_hostname: like hostname)
 			-- Set `hostname' to `a_hostname'.
 		do
 			hostname := a_hostname
@@ -120,7 +120,7 @@ feature -- Setting
 			hostname_set: hostname = a_hostname
 		end
 
-	set_sharename (a_sharename: like sharename) is
+	set_sharename (a_sharename: like sharename)
 			-- Set `sharename' to `a_sharename'.
 		do
 			sharename := a_sharename
@@ -130,7 +130,7 @@ feature -- Setting
 
 feature -- Element change
 
-	append_name (a_name: STRING) is
+	append_name (a_name: STRING)
 			-- Append component `a_name' to pathname.
 		require
 			a_name_not_void: a_name /= Void
@@ -143,7 +143,7 @@ feature -- Element change
 			appended: item (count) = a_name
 		end
 
-	append_names (a_names: ARRAY [STRING]) is
+	append_names (a_names: ARRAY [STRING])
 			-- Append components `a_names' to pathname.
 		require
 			a_names_not_void: a_names /= Void
@@ -165,7 +165,7 @@ feature -- Element change
 			count_set: count = old count + a_names.count
 		end
 
-	append_current is
+	append_current
 			-- Append current directory to pathname.
 		do
 			append_name (Current_directory)
@@ -174,7 +174,7 @@ feature -- Element change
 			appended: is_current (count)
 		end
 
-	append_parent is
+	append_parent
 			-- Append parent directory to pathname.
 		do
 			append_name (Parent_directory)
@@ -183,7 +183,7 @@ feature -- Element change
 			appended: is_parent (count)
 		end
 
-	set_canonical is
+	set_canonical
 			-- Make pathname canonical.
 		local
 			i, j, nb: INTEGER
@@ -237,7 +237,7 @@ feature -- Element change
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Copy `other' to current pathname.
 		do
 			standard_copy (other)
@@ -251,13 +251,13 @@ feature {KL_PATHNAME} -- Implementation
 
 feature {NONE} -- Constants
 
-	Initial_components_capacity: INTEGER is 10
+	Initial_components_capacity: INTEGER = 10
 			-- Initial capacity for `components'
 
-	Current_directory: STRING is "."
+	Current_directory: STRING = "."
 			-- Special pathname component representing the current directory
 
-	Parent_directory: STRING is ".."
+	Parent_directory: STRING = ".."
 			-- Special pathname component representing the parent directory
 
 invariant

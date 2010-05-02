@@ -24,20 +24,20 @@ inherit
 
 feature -- Access
 
-	type_mark: ET_TYPE_MARK is
+	type_mark: ET_TYPE_MARK
 			-- 'attached' or 'detachable' keyword,
 			-- or '!' or '?' symbol
 		deferred
 		end
 
-	like_keyword: ET_KEYWORD is
+	like_keyword: ET_KEYWORD
 			-- 'like' keyword
 		deferred
 		end
 
 feature -- Status report
 
-	has_anchored_type: BOOLEAN is
+	has_anchored_type: BOOLEAN
 			-- Does current type contain an anchored type?
 		do
 			Result := True
@@ -45,7 +45,7 @@ feature -- Status report
 
 feature -- Type processing
 
-	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_LIKE_TYPE is
+	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_LIKE_TYPE
 			-- Version of current type where the formal generic
 			-- parameter types have been replaced by their actual
 			-- counterparts in `a_parameters'
@@ -55,7 +55,7 @@ feature -- Type processing
 
 feature {NONE} -- Constants
 
-	like_space: STRING is "like "
+	like_space: STRING = "like "
 			-- Eiffel keywords
 
 invariant

@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER; sc: STRING) is
+	make (filename: STRING; line: INTEGER; sc: STRING)
 			-- Create a new error reporting that there are
 			-- multiple <<EOF>> rules for start condition `sc'.
 		require
@@ -37,10 +37,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: multiple <<EOF>> rules for start condition $3"
+	default_template: STRING = "%"$1%", line $2: multiple <<EOF>> rules for start condition $3"
 			-- Default template used to built the error message
 
-	code: STRING is "LX0014"
+	code: STRING = "LX0014"
 			-- Error code
 
 invariant

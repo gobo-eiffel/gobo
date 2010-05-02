@@ -41,7 +41,7 @@ feature -- Status report
 
 feature -- Element change
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -90,7 +90,7 @@ feature -- Element change
 			attributes_prepared := True
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 		local
 			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -217,13 +217,13 @@ feature -- Element change
 			end
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (an_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		do
 			last_generated_expression := Void
 		end
 
-	assemble (a_map: DS_HASH_TABLE [STRING, INTEGER]) is
+	assemble (a_map: DS_HASH_TABLE [STRING, INTEGER])
 			-- Assemble all the mappings defined by `Current' into `a_map'.
 		require
 			map_not_void: a_map /= Void
@@ -262,13 +262,13 @@ feature -- Element change
 
 feature -- Conversion
 
-	is_character_map: BOOLEAN is
+	is_character_map: BOOLEAN
 			-- Is `Current' an xsl:character-map?
 		do
 			Result := True
 		end
 
-	as_character_map: XM_XSLT_CHARACTER_MAP is
+	as_character_map: XM_XSLT_CHARACTER_MAP
 			-- `Current' seen as an xsl:character-map
 		do
 			Result := Current
@@ -276,7 +276,7 @@ feature -- Conversion
 
 feature {XM_XSLT_CHARACTER_MAP} -- Implementation
 
-	check_circularity (origin: like Current) is
+	check_circularity (origin: like Current)
 			-- Check for any cirular references to `Current'.
 		require
 			other_character_map_not_void: origin /= Void

@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target: ET_ECF_TARGET; a_version: UT_VERSION) is
+	make (a_target: ET_ECF_TARGET; a_version: UT_VERSION)
 			-- Create a new ECF state based on information specified in `a_target'.
 		require
 			a_target_not_void: a_target /= Void

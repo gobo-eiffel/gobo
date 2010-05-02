@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_filter: XM_XPATH_EXPRESSION; a_context: XM_XPATH_CONTEXT; a_is_single_boolean: BOOLEAN) is
+	make (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_filter: XM_XPATH_EXPRESSION; a_context: XM_XPATH_CONTEXT; a_is_single_boolean: BOOLEAN)
 			-- Establish invariant.
 		require
 			base_iterator_before: a_base_iterator /= Void and then not a_base_iterator.is_error and then a_base_iterator.before
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			is_singleton_boolean_filter_set: is_singleton_boolean_filter = a_is_single_boolean
 		end
 
-	make_non_numeric (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_filter: XM_XPATH_EXPRESSION; a_context: XM_XPATH_CONTEXT) is
+	make_non_numeric (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_filter: XM_XPATH_EXPRESSION; a_context: XM_XPATH_CONTEXT)
 			-- Establish invariant for non-numeric results.
 		require
 			base_iterator_before: a_base_iterator /= Void and then not a_base_iterator.is_error and then a_base_iterator.before
@@ -65,10 +65,10 @@ feature {NONE} -- Initialization
 			filter_set: filter = a_filter
 			is_not_singleton_boolean_filter: not is_singleton_boolean_filter
 		end
-		
+
 feature -- Access
 
-	item: XM_XPATH_ITEM is
+	item: XM_XPATH_ITEM
 			-- Value or node at the current position
 		do
 			Result := current_item
@@ -76,7 +76,7 @@ feature -- Access
 
 feature -- Status report
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
 			Result := not before and then current_item = Void
@@ -84,7 +84,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move to next position
 		do
 			index := index + 1
@@ -93,7 +93,7 @@ feature -- Cursor movement
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 			if not  non_numeric then
@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 	current_item: like item
 			-- Current item
 
-	advance is
+	advance
 			-- Move to next matching node.
 		local
 			l_item: like item

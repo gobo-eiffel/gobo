@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT; an_xml_element: XM_ELEMENT) is
+	make (a_project: GEANT_PROJECT; an_xml_element: XM_ELEMENT)
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
@@ -95,7 +95,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	build_command (a_project: GEANT_PROJECT) is
+	build_command (a_project: GEANT_PROJECT)
 			-- Create instance of `command'
 		do
 			create command.make (a_project)
@@ -108,7 +108,7 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Ace_attribute_name: STRING is
+	Ace_attribute_name: STRING
 			-- Name of xml attribute for "ace"
 		once
 			Result := "ace"
@@ -117,7 +117,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	C_compile_attribute_name: STRING is
+	C_compile_attribute_name: STRING
 			-- Name of xml attribute for "c_compile"
 		once
 			Result := "c_compile"
@@ -126,7 +126,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Catcall_attribute_name: STRING is
+	Catcall_attribute_name: STRING
 			-- Name of xml attribute for "catcall"
 		once
 			Result := "catcall"
@@ -135,7 +135,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Clean_attribute_name: STRING is
+	Clean_attribute_name: STRING
 			-- Name of xml attribute for "clean"
 		once
 			Result := "clean"
@@ -144,7 +144,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Exit_code_variable_attribute_name: STRING is
+	Exit_code_variable_attribute_name: STRING
 			-- Name of xml attribute exit_code_variable.
 		once
 			Result := "exit_code_variable"
@@ -153,7 +153,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Finalize_attribute_name: STRING is
+	Finalize_attribute_name: STRING
 			-- Name of xml attribute for "finalize"
 		once
 			Result := "finalize"
@@ -162,7 +162,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Gc_attribute_name: STRING is
+	Gc_attribute_name: STRING
 			-- Name of xml attribute for "gc"
 		once
 			Result := "gc"
@@ -171,7 +171,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Gelint_attribute_name: STRING is
+	Gelint_attribute_name: STRING
 			-- Name of xml attribute for "gelint"
 		once
 			Result := "gelint"
@@ -180,7 +180,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Split_attribute_name: STRING is
+	Split_attribute_name: STRING
 			-- Name of xml attribute for "split"
 		once
 			Result := "split"
@@ -189,7 +189,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Split_size_attribute_name: STRING is
+	Split_size_attribute_name: STRING
 			-- Name of xml attribute for "split_size"
 		once
 			Result := "split_size"

@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER; a_string: STRING) is
+	make (filename: STRING; line: INTEGER; a_string: STRING)
 			-- Create a new error reporting that `a_string'
 			-- must have at least two characters.
 		require
@@ -37,10 +37,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: literal string tokens must have a least two characters ($3)"
+	default_template: STRING = "%"$1%", line $2: literal string tokens must have a least two characters ($3)"
 			-- Default template used to built the error message
 
-	code: STRING is "PR0020"
+	code: STRING = "PR0020"
 			-- Error code
 
 invariant

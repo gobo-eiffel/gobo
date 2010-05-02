@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create new ECF variables.
 		local
 			l_hash_function: KL_AGENT_HASH_FUNCTION [STRING]
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	value (a_variable: STRING): STRING is
+	value (a_variable: STRING): STRING
 			-- Value of variable `a_variable';
 			-- Void if variable is defined in `primary_variables' nor in `secondary_variables'
 		do
@@ -54,7 +54,7 @@ feature -- Access
 			end
 		end
 
-	primary_value (a_variable: STRING): STRING is
+	primary_value (a_variable: STRING): STRING
 			-- Value of variable `a_variable';
 			-- Void if variable is defined in `primary_variables'
 		require
@@ -75,7 +75,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_primary_value (a_variable, a_value: STRING) is
+	set_primary_value (a_variable, a_value: STRING)
 			-- Set variable `a_variable' to `a_value'.
 		require
 			a_variable_not_void: a_variable /= Void
@@ -86,7 +86,7 @@ feature -- Setting
 			primary_value_set: primary_value (a_variable) = a_value
 		end
 
-	set_secondary_variables (a_variables: like secondary_variables) is
+	set_secondary_variables (a_variables: like secondary_variables)
 			-- Set `secondary_variables' to `a_variables'.
 		require
 			a_variables_not_void: a_variables /= Void

@@ -25,7 +25,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_xace_filename (a_name: like xace_filename) is
+	set_xace_filename (a_name: like xace_filename)
 			-- Set `xace_filename' to `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -47,7 +47,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_shallow (b: BOOLEAN) is
+	set_shallow (b: BOOLEAN)
 			-- Set `is_shallow' to `b'.
 		do
 			is_shallow := b
@@ -55,7 +55,7 @@ feature -- Status setting
 			shallow_set: is_shallow = b
 		end
 
-	set_ve (b: BOOLEAN) is
+	set_ve (b: BOOLEAN)
 			-- Set `is_ve' to `b'.
 		do
 			is_ve := b
@@ -65,17 +65,17 @@ feature -- Status setting
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute command.
 		deferred
 		end
 
 feature {NONE} -- Constants
 
-	default_system_filename: STRING is "system.xace"
+	default_system_filename: STRING = "system.xace"
 			-- Default name of system Xace file
 
-	default_library_filename: STRING is "library.xace"
+	default_library_filename: STRING = "library.xace"
 			-- Default name of library Xace file
 
 invariant

@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (e: like expression; a_feature: like convert_feature) is
+	make (e: like expression; a_feature: like convert_feature)
 			-- Create a new conversion expression.
 		require
 			e_not_void: e /= Void
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: ET_FEATURE_NAME is
+	name: ET_FEATURE_NAME
 			-- Feature name
 		do
 			Result := convert_feature.name
@@ -53,7 +53,7 @@ feature -- Access
 			definition: Result = convert_feature.name
 		end
 
-	arguments: ET_ACTUAL_ARGUMENTS is
+	arguments: ET_ACTUAL_ARGUMENTS
 			-- Arguments
 		do
 		ensure then
@@ -62,7 +62,7 @@ feature -- Access
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_convert_to_expression (Current)

@@ -21,7 +21,7 @@ feature -- Access
 	name: ET_CLASS_NAME
 			-- Name of class
 
-	upper_name: STRING is
+	upper_name: STRING
 			-- Upper-name of class
 			-- (May return the same object as `name.name' if already in upper case,
 			-- otherwise return a new object at each call.)
@@ -33,7 +33,7 @@ feature -- Access
 			definition: Result.is_equal (name.name.as_upper)
 		end
 
-	lower_name: STRING is
+	lower_name: STRING
 			-- Lower-name of class
 			-- (May return the same object as `name.name' if already in lower case,
 			-- otherwise return a new object at each call.)
@@ -45,14 +45,14 @@ feature -- Access
 			definition: Result.is_equal (name.name.as_lower)
 		end
 
-	actual_class: ET_CLASS is
+	actual_class: ET_CLASS
 			-- Actual class
 		deferred
 		ensure
 			actual_class_not_void: Result /= Void
 		end
 
-	actual_intrinsic_class: ET_CLASS is
+	actual_intrinsic_class: ET_CLASS
 			-- Actual class, not taking into account (recursively) the
 			-- fact that a class may be overridden by classes declared
 			-- in override groups of other universes
@@ -62,7 +62,7 @@ feature -- Access
 			actual_intrinsic_class_not_void: Result /= Void
 		end
 
-	intrinsic_class: ET_NAMED_CLASS is
+	intrinsic_class: ET_NAMED_CLASS
 			-- Class declared either locally in `universe' or imported from another universe,
 			-- that will represent the current class in `universe' when not taking into account
 			-- the fact that the current class may be overridden by classes declared in override
@@ -73,14 +73,14 @@ feature -- Access
 			intrinsic_class_not_void: Result /= Void
 		end
 
-	universe: ET_UNIVERSE is
+	universe: ET_UNIVERSE
 			-- Universe to which current class belongs
 		deferred
 		ensure
 			universe_not_void: Result /= Void
 		end
 
-	current_system: ET_SYSTEM is
+	current_system: ET_SYSTEM
 			-- Surrounding Eiffel system
 		do
 			Result := universe.current_system
@@ -88,7 +88,7 @@ feature -- Access
 			current_system_not_void: Result /= Void
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			Result := name.hash_code
@@ -96,7 +96,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_override (a_universe: ET_UNIVERSE): BOOLEAN is
+	is_override (a_universe: ET_UNIVERSE): BOOLEAN
 			-- Is current class considered as an override class in `a_universe'?
 			-- This means that current class has been declared in an override
 			-- group and that group is part of `a_universe'.
@@ -107,7 +107,7 @@ feature -- Status report
 			in_universe: Result implies universe = a_universe
 		end
 
-	same_named_class (other: ET_NAMED_CLASS): BOOLEAN is
+	same_named_class (other: ET_NAMED_CLASS): BOOLEAN
 			-- Do `Current' and `other' represent the same class?
 		require
 			other_not_void: other /= Void
@@ -119,7 +119,7 @@ feature -- Status report
 
 feature -- Preparsing status
 
-	is_preparsed: BOOLEAN is
+	is_preparsed: BOOLEAN
 			-- Has current class been preparsed (i.e. its group is already
 			-- known but the class has not necessarily been parsed yet)?
 		deferred
@@ -127,12 +127,12 @@ feature -- Preparsing status
 
 feature -- Parsing status
 
-	is_parsed: BOOLEAN is
+	is_parsed: BOOLEAN
 			-- Has current class been parsed?
 		deferred
 		end
 
-	is_parsed_successfully: BOOLEAN is
+	is_parsed_successfully: BOOLEAN
 			-- Has current class been successfully parsed?
 		do
 			Result := is_parsed and then not has_syntax_error
@@ -140,19 +140,19 @@ feature -- Parsing status
 			definition: Result = (is_parsed and then not has_syntax_error)
 		end
 
-	has_syntax_error: BOOLEAN is
+	has_syntax_error: BOOLEAN
 			-- Has a fatal syntax error been detected?
 		deferred
 		end
 
 feature -- Ancestor building status
 
-	ancestors_built: BOOLEAN is
+	ancestors_built: BOOLEAN
 			-- Have `ancestors' been built?
 		deferred
 		end
 
-	ancestors_built_successfully: BOOLEAN is
+	ancestors_built_successfully: BOOLEAN
 			-- Have `ancestors' been successfully built?
 		do
 			Result := ancestors_built and then not has_ancestors_error
@@ -160,19 +160,19 @@ feature -- Ancestor building status
 			definition: Result = (ancestors_built and then not has_ancestors_error)
 		end
 
-	has_ancestors_error: BOOLEAN is
+	has_ancestors_error: BOOLEAN
 			-- Has a fatal error occurred when building `ancestors'?
 		deferred
 		end
 
 feature -- Feature flattening status
 
-	features_flattened: BOOLEAN is
+	features_flattened: BOOLEAN
 			-- Have features been flattened?
 		deferred
 		end
 
-	features_flattened_successfully: BOOLEAN is
+	features_flattened_successfully: BOOLEAN
 			-- Have features been successfully flattened?
 		do
 			Result := features_flattened and then not has_flattening_error
@@ -180,19 +180,19 @@ feature -- Feature flattening status
 			definition: Result = (features_flattened and then not has_flattening_error)
 		end
 
-	has_flattening_error: BOOLEAN is
+	has_flattening_error: BOOLEAN
 			-- Has a fatal error occurred during feature flattening?
 		deferred
 		end
 
 feature -- Interface checking status
 
-	interface_checked: BOOLEAN is
+	interface_checked: BOOLEAN
 			-- Has the interface of current class been checked?
 		deferred
 		end
 
-	interface_checked_successfully: BOOLEAN is
+	interface_checked_successfully: BOOLEAN
 			-- Has the interface of current class been successfully checked?
 		do
 			Result := interface_checked and then not has_interface_error
@@ -200,21 +200,21 @@ feature -- Interface checking status
 			definition: Result = (interface_checked and then not has_interface_error)
 		end
 
-	has_interface_error: BOOLEAN is
+	has_interface_error: BOOLEAN
 			-- Has a fatal error occurred during interface checking?
 		deferred
 		end
 
 feature -- Implementation checking status
 
-	implementation_checked: BOOLEAN is
+	implementation_checked: BOOLEAN
 			-- Has the implementation of current class been checked?
 			-- Immediate and redefined (and possibly inherited when in flat mode)
 			-- features and invariant have been checked.
 		deferred
 		end
 
-	not_implementation_checked: BOOLEAN is
+	not_implementation_checked: BOOLEAN
 			-- Has the implementation of current class not been checked?
 			-- Immediate and redefined (and possibly inherited when in flat mode)
 			-- features and invariant have not been checked.
@@ -224,7 +224,7 @@ feature -- Implementation checking status
 			definition: Result = not implementation_checked
 		end
 
-	implementation_checked_successfully: BOOLEAN is
+	implementation_checked_successfully: BOOLEAN
 			-- Has the implementation of current class been successfully checked?
 		do
 			Result := implementation_checked and then not has_implementation_error
@@ -232,14 +232,14 @@ feature -- Implementation checking status
 			definition: Result = (implementation_checked and then not has_implementation_error)
 		end
 
-	has_implementation_error: BOOLEAN is
+	has_implementation_error: BOOLEAN
 			-- Has a fatal error occurred during implementation checking?
 		deferred
 		end
 
 feature -- Setting
 
-	set_name (a_name: like name) is
+	set_name (a_name: like name)
 			-- Set `name' to `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -257,7 +257,7 @@ feature -- System
 			--
 			-- For example it can be marked as being reachable from the root class.
 
-	set_marked (b: BOOLEAN) is
+	set_marked (b: BOOLEAN)
 			-- Set `is_marked' to `b'.
 		do
 			is_marked := b
@@ -265,13 +265,13 @@ feature -- System
 			marked_set: is_marked = b
 		end
 
-	in_system: BOOLEAN is
+	in_system: BOOLEAN
 			-- Is current class reachable from the root class?
 		do
 			Result := is_marked
 		end
 
-	set_in_system (b: BOOLEAN) is
+	set_in_system (b: BOOLEAN)
 			-- Set `in_system' to `b'.
 		do
 			set_marked (b)

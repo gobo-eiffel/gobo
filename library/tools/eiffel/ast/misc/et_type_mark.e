@@ -18,49 +18,49 @@ inherit
 
 feature -- Status report
 
-	is_attached: BOOLEAN is
+	is_attached: BOOLEAN
 			-- Is current type mark 'attached'?
 		do
 			-- Result := False
 		end
 
-	is_detachable: BOOLEAN is
+	is_detachable: BOOLEAN
 			-- Is current type mark 'detachable'?
 		do
 			-- Result := False
 		end
 
-	is_expanded: BOOLEAN is
+	is_expanded: BOOLEAN
 			-- Is current type mark 'expanded'?
 		do
 			-- Result := False
 		end
 
-	is_reference: BOOLEAN is
+	is_reference: BOOLEAN
 			-- Is current type mark 'reference'?
 		do
 			-- Result := False
 		end
 
-	is_separate: BOOLEAN is
+	is_separate: BOOLEAN
 			-- Is current type mark 'separate'?
 		do
 			-- Result := False
 		end
 
-	is_question_mark: BOOLEAN is
+	is_question_mark: BOOLEAN
 			-- Is current type mark '?'?
 		do
 			-- Result := False
 		end
 
-	is_bang: BOOLEAN is
+	is_bang: BOOLEAN
 			-- Is current type mark '!'?
 		do
 			-- Result := False
 		end
 
-	is_attachment_mark: BOOLEAN is
+	is_attachment_mark: BOOLEAN
 			-- Is current type mark an attachment mark?
 		do
 			Result := is_attached_mark or is_detachable_mark
@@ -68,7 +68,7 @@ feature -- Status report
 			definition: Result = (is_attached_mark or is_detachable_mark)
 		end
 
-	is_attached_mark: BOOLEAN is
+	is_attached_mark: BOOLEAN
 			-- Is current type mark an attached mark?
 		do
 			Result := is_attached or is_bang
@@ -76,7 +76,7 @@ feature -- Status report
 			definition: Result = (is_attached or is_bang)
 		end
 
-	is_detachable_mark: BOOLEAN is
+	is_detachable_mark: BOOLEAN
 			-- Is current type mark a detachable mark?
 		do
 			Result := is_detachable or is_question_mark
@@ -84,7 +84,7 @@ feature -- Status report
 			definition: Result = (is_detachable or is_question_mark)
 		end
 
-	is_keyword: BOOLEAN is
+	is_keyword: BOOLEAN
 			-- Is current type mark a keyword?
 		do
 			Result := not (is_question_mark or is_bang)
@@ -94,7 +94,7 @@ feature -- Status report
 
 feature -- Access
 
-	text: STRING is
+	text: STRING
 			-- Textual representation of type mark
 		deferred
 		ensure

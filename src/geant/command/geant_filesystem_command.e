@@ -18,7 +18,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	create_directory (a_directory: STRING) is
+	create_directory (a_directory: STRING)
 			-- Create possibly nested directory
 			-- in `a_directory' if it does not exist yet.
 		require
@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	create_directory_for_pathname (a_pathname: STRING) is
+	create_directory_for_pathname (a_pathname: STRING)
 			-- Create directory from `a_pathname'.
 		require
 			a_pathname_not_void: a_pathname /= Void
@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_file_outofdate (a_first_filename, a_second_filename: STRING): BOOLEAN is
+	is_file_outofdate (a_first_filename, a_second_filename: STRING): BOOLEAN
 			-- Is timestamp of file named `a_second_filename' older than
 			-- timestamp of file named `a_first_filename' or doesn't exist at all?
 		require

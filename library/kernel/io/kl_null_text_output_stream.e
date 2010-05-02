@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name) is
+	make (a_name: like name)
 			-- Create a null output stream.
 		require
 			a_name_not_void: a_name /= Void
@@ -34,19 +34,19 @@ feature {NONE} -- Initialization
 
 feature -- Output
 
-	put_character (c: CHARACTER) is
+	put_character (c: CHARACTER)
 			-- Write `c' to output stream.
 		do
 		end
 
-	put_string (a_string: STRING) is
+	put_string (a_string: STRING)
 			-- Write `a_string' to output stream.
 		do
 		end
 
 feature -- Status report
 
-	is_open_write: BOOLEAN is True
+	is_open_write: BOOLEAN = True
 			-- Can items be written to output stream?
 
 feature -- Access
@@ -54,12 +54,12 @@ feature -- Access
 	name: STRING
 			-- Name of output stream
 
-	eol: STRING is "%N"
+	eol: STRING = "%N"
 			-- Line separator
 
 feature -- Basic operations
 
-	flush is
+	flush
 			-- Flush buffered data to disk.
 		do
 		end

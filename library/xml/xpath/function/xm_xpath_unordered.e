@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant
 		do
 			name := "unordered"; namespace_uri := Xpath_standard_functions_uri
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, where known
 		do
 			Result := arguments.item (1).item_type
@@ -49,13 +49,13 @@ feature -- Access
 			end
 		end
 
-	is_unordered_function: BOOLEAN is
+	is_unordered_function: BOOLEAN
 			-- Is `Current' XPath unordered() function?
 		do
 			Result := True
 		end
 
-	as_unordered_function: XM_XPATH_UNORDERED is
+	as_unordered_function: XM_XPATH_UNORDERED
 			-- `Current' seen as XPath unordered() function
 		do
 			Result := Current
@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -86,10 +86,10 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]		
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			Precursor (a_replacement, a_context, a_context_item_type)
 			if not is_error and a_replacement.item = Current then
@@ -110,7 +110,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Pre-evaluate `Current' at compile time.
 		do
 			set_replacement (a_replacement, arguments.item (1))
@@ -118,7 +118,7 @@ feature -- Evaluation
 
 feature -- Status report
 
-	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
+	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE
 			-- Type of argument number `argument_number'
 		do
 			create Result.make_any_sequence
@@ -128,11 +128,11 @@ feature -- Optimization
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_zero_or_more
 		end
-		
+
 end
-	
+

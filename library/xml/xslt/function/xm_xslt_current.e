@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant
 		do
 			name := "current"; namespace_uri := Xpath_standard_functions_uri
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, where known
 		do
 			Result := any_item
@@ -52,13 +52,13 @@ feature -- Access
 
 feature -- Status report
 
-	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
+	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE
 			-- Type of argument number `argument_number'
 		do
 			-- will never be called
 		end
 
-	is_current_function: BOOLEAN is
+	is_current_function: BOOLEAN
 			-- Is `Current' the XSLT "current()" function?
 		do
 			Result := True
@@ -66,7 +66,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	compute_intrinsic_dependencies is
+	compute_intrinsic_dependencies
 			-- Determine the intrinsic dependencies of an expression.
 		do
 			set_intrinsically_depends_upon_current_item
@@ -74,7 +74,7 @@ feature -- Status setting
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
@@ -89,7 +89,7 @@ feature -- Evaluation
 			l_evaluation_context.transformer.report_fatal_error (l_error)
 		end
 
-	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Pre-evaluate `Current' at compile time.
 		do
 			a_replacement.put (Current)
@@ -97,13 +97,13 @@ feature -- Evaluation
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
 		end
-	
-	compute_special_properties is
+
+	compute_special_properties
 			-- Compute special properties.
 		do
 			initialize_special_properties
@@ -114,5 +114,5 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 		end
 
 end
-	
+
 

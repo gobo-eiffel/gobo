@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new empty actual argument list.
 		do
 			precursor
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			right_symbol := tokens.right_bracket_symbol
 		end
 
-	make_with_capacity (nb: INTEGER) is
+	make_with_capacity (nb: INTEGER)
 			-- Create a new empty actual argument list with capacity `nb'.
 		do
 			precursor (nb)
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_bracket_argument_list (Current)

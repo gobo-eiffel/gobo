@@ -57,7 +57,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_null is
+	make_null
 			-- Next is null processor.
 		do
 			make_callbacks_null
@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 
 feature -- Setting
 
-	set_next (a_callback: XM_CALLBACKS) is
+	set_next (a_callback: XM_CALLBACKS)
 			-- Client will receive callbacks to.
 		require
 			a_callback_not_void: a_callback /= Void
@@ -77,7 +77,7 @@ feature -- Setting
 
 feature -- DTD
 
-	on_attribute_declaration (a_element_name, a_name: STRING; a_model: XM_DTD_ATTRIBUTE_CONTENT) is
+	on_attribute_declaration (a_element_name, a_name: STRING; a_model: XM_DTD_ATTRIBUTE_CONTENT)
 			-- Attribute declaration, one event per attribute.
 		local
 			l_sub: DS_BILINKED_LIST [XM_DTD_ATTRIBUTE_CONTENT]
@@ -107,7 +107,7 @@ feature {NONE} -- DTD implementation
 	defaults: DS_HASH_TABLE [DS_LIST [XM_DTD_ATTRIBUTE_CONTENT], STRING]
 			-- Attributes defaults
 
-	has_attribute (a_sub: DS_LIST [XM_DTD_ATTRIBUTE_CONTENT]; a_name: STRING): BOOLEAN is
+	has_attribute (a_sub: DS_LIST [XM_DTD_ATTRIBUTE_CONTENT]; a_name: STRING): BOOLEAN
 			-- Has element level attribute?
 		require
 			a_sub_not_void: a_sub /= Void
@@ -128,7 +128,7 @@ feature {NONE} -- DTD implementation
 
 feature -- Content
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Start of start tag.
 			-- Store name of current element.
 		local
@@ -149,7 +149,7 @@ feature -- Content
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
 			-- Remove from defaults attributes which are explicitely
 			-- declared.
 		do
@@ -161,7 +161,7 @@ feature -- Content
 			end
 		end
 
-	on_start_tag_finish is
+	on_start_tag_finish
 			-- Issue default attributes.
 		do
 			pop_attributes
@@ -170,7 +170,7 @@ feature -- Content
 
 feature {NONE} -- Attribute queue
 
-	reset_attributes is
+	reset_attributes
 			-- Clear attributes queue.
 		do
 			--namespaces := Void
@@ -178,7 +178,7 @@ feature {NONE} -- Attribute queue
 			values := Void
 		end
 
-	is_space (a: INTEGER): BOOLEAN is
+	is_space (a: INTEGER): BOOLEAN
 			-- Is this a space character?
 		do
 			Result := a = Lf_char.code
@@ -187,7 +187,7 @@ feature {NONE} -- Attribute queue
 				or a = Space_char.code
 		end
 
-	push_attribute (a_ns, a_prefix, a_local, a_value: STRING) is
+	push_attribute (a_ns, a_prefix, a_local, a_value: STRING)
 			-- Push attributes, if attribute name already
 			-- in list overwrite the value.
 		local
@@ -216,7 +216,7 @@ feature {NONE} -- Attribute queue
 			end
 		end
 
-	pop_attributes is
+	pop_attributes
 			-- Pop attributes queued.
 		local
 			i, nb: INTEGER
@@ -238,7 +238,7 @@ feature {NONE} -- Attribute queue
 
 feature {NONE} -- Content implementation
 
-	dtd_name (a_prefix, a_local: STRING): STRING is
+	dtd_name (a_prefix, a_local: STRING): STRING
 			-- Name for DTD (without namespaces)
 		require
 			a_local_not_void: a_local /= Void
@@ -254,7 +254,7 @@ feature {NONE} -- Content implementation
 			no_prefix_same: not has_prefix (a_prefix) implies (Result = a_local)
 		end
 
-	dtd_prefix (a_dtd_name: STRING): STRING is
+	dtd_prefix (a_dtd_name: STRING): STRING
 			-- Prefix from a DTD name
 		require
 			a_dtd_name_not_void: a_dtd_name /= Void
@@ -267,7 +267,7 @@ feature {NONE} -- Content implementation
 			end
 		end
 
-	dtd_local (a_dtd_name: STRING): STRING is
+	dtd_local (a_dtd_name: STRING): STRING
 			-- Local part from a DTD name
 		require
 			a_dtd_name_not_void: a_dtd_name /= Void
@@ -284,7 +284,7 @@ feature {NONE} -- Content implementation
 			dtd_local_not_void: Result /= Void
 		end
 
-	Colon_char: CHARACTER is
+	Colon_char: CHARACTER
 			-- Colon char
 		once
 			Result := Prefix_separator.item (1)
@@ -299,7 +299,7 @@ feature {NONE} -- Tokens implementation
 	element_tokens: DS_HASH_TABLE [BOOLEAN, STRING]
 			-- Set of token attributes for current element.
 
-	token_on_attribute_declaration (an_element_name, a_name: STRING; a_model: XM_DTD_ATTRIBUTE_CONTENT) is
+	token_on_attribute_declaration (an_element_name, a_name: STRING; a_model: XM_DTD_ATTRIBUTE_CONTENT)
 			-- Attribute declaration, one event per attribute.
 		local
 			a_token_sub: like element_tokens
@@ -318,7 +318,7 @@ feature {NONE} -- Tokens implementation
 			end
 		end
 
-	token_on_start_tag (a_prefix, a_local: STRING) is
+	token_on_start_tag (a_prefix, a_local: STRING)
 			-- Initialize at start tag.
 		do
 			element_tokens := Void
@@ -327,7 +327,7 @@ feature {NONE} -- Tokens implementation
 			end
 		end
 
-	forward_attribute (a_ns, a_prefix, a_local, a_value: STRING) is
+	forward_attribute (a_ns, a_prefix, a_local, a_value: STRING)
 			-- Push attributes, if attribute name already
 			-- in list overwrite the value.
 		require

@@ -18,7 +18,7 @@ inherit
 
 feature -- Specialized structures
 
-	new_entities_table: DS_HASH_TABLE [XM_EIFFEL_ENTITY_DEF, STRING] is
+	new_entities_table: DS_HASH_TABLE [XM_EIFFEL_ENTITY_DEF, STRING]
 			-- New entities table
 		do
 			create Result.make_map_default

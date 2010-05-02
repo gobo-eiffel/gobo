@@ -14,7 +14,7 @@ class XM_XPATH_SHARED_ATOMIZING_FUNCTION
 
 feature -- Access
 
-	shared_atomizing_function: XM_XPATH_ATOMIZING_FUNCTION is
+	shared_atomizing_function: XM_XPATH_ATOMIZING_FUNCTION
 			-- Shared object
 		once
 			create Result.make
@@ -24,4 +24,4 @@ feature -- Access
 
 end
 
-	
+

@@ -36,12 +36,12 @@ create
 
 feature -- Status report
 
-	is_result: BOOLEAN is True
+	is_result: BOOLEAN = True
 			-- Is current expression the 'Result' entity?
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_result (Current)

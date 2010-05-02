@@ -18,11 +18,11 @@ inherit
 
 feature -- Access
 
-	empty_property_set: DS_HASH_TABLE [STRING, STRING] is
+	empty_property_set: DS_HASH_TABLE [STRING, STRING]
 			-- Empty trace properties
 		once
 			create Result.make_with_equality_testers (0, string_equality_tester, string_equality_tester)
 		end
 
 end
-	
+

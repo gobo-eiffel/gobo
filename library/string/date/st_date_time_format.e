@@ -18,7 +18,7 @@ inherit
 
 feature -- Conversion
 
-	date_to_string (a_date: DT_DATE): STRING is
+	date_to_string (a_date: DT_DATE): STRING
 			-- Formatted date
 		require
 			date_not_void: a_date /= Void
@@ -28,7 +28,7 @@ feature -- Conversion
 			valid_date_string: is_date (Result)
 		end
 
-	zoned_date_to_string (a_date: DT_FIXED_OFFSET_ZONED_DATE): STRING is
+	zoned_date_to_string (a_date: DT_FIXED_OFFSET_ZONED_DATE): STRING
 			-- Formatted date with time zone
 		require
 			zoned_date_not_void: a_date /= Void
@@ -38,7 +38,7 @@ feature -- Conversion
 			valid_zoned_date_string: is_zoned_date (Result)
 		end
 
-	date_time_to_string (a_date_time: DT_DATE_TIME): STRING is
+	date_time_to_string (a_date_time: DT_DATE_TIME): STRING
 			-- Formatted date-time
 		require
 			date_time_not_void: a_date_time /= Void
@@ -48,7 +48,7 @@ feature -- Conversion
 			valid_date_time_string: is_date_time (Result)
 		end
 
-	zoned_date_time_to_string (a_date_time: DT_ZONED_DATE_TIME): STRING is
+	zoned_date_time_to_string (a_date_time: DT_ZONED_DATE_TIME): STRING
 			-- Formatted date-time with time zone
 		require
 			zoned_date_time_not_void: a_date_time /= Void
@@ -58,7 +58,7 @@ feature -- Conversion
 			valid_zoned_date_time_string: is_zoned_date_time (Result)
 		end
 
-	time_to_string (a_time: DT_TIME): STRING is
+	time_to_string (a_time: DT_TIME): STRING
 			-- Formatted time
 		require
 			time_not_void: a_time /= Void
@@ -68,7 +68,7 @@ feature -- Conversion
 			valid_time_string: is_time (Result)
 		end
 
-	zoned_time_to_string (a_time: DT_FIXED_OFFSET_ZONED_TIME): STRING is
+	zoned_time_to_string (a_time: DT_FIXED_OFFSET_ZONED_TIME): STRING
 			-- Formatted time with time zone
 		require
 			zoned_time_not_void: a_time /= Void

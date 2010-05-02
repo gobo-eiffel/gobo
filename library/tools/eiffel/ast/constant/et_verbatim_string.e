@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_literal: like literal; a_value: like value; a_marker: like marker; an_open, a_close: STRING; a_left_aligned: BOOLEAN) is
+	make (a_literal: like literal; a_value: like value; a_marker: like marker; an_open, a_close: STRING; a_left_aligned: BOOLEAN)
 			-- Create a new verbatim string.
 		require
 			a_literal_not_void: a_literal /= Void
@@ -68,7 +68,7 @@ feature -- Access
 	close_white_characters: STRING
 			-- White characters after "xyz[ and before ]xyz"
 
-	last_position: ET_POSITION is
+	last_position: ET_POSITION
 			-- Position of last character of current node in source code
 		do
 			create {ET_COMPRESSED_POSITION} Result.make (line + value.occurrences ('%N') + 1, close_white_characters.count + marker.count)
@@ -76,7 +76,7 @@ feature -- Access
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_verbatim_string (Current)

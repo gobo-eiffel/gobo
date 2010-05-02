@@ -22,7 +22,7 @@ inherit
 
 feature -- Access
 
-	last: G is
+	last: G
 			-- Last item in container
 		require
 			not_empty: not is_empty
@@ -31,14 +31,14 @@ feature -- Access
 			has_last: has (Result)
 		end
 
-	new_cursor: DS_BILINEAR_CURSOR [G] is
+	new_cursor: DS_BILINEAR_CURSOR [G]
 			-- New external cursor for traversal
 		deferred
 		end
 
 feature -- Status report
 
-	is_last: BOOLEAN is
+	is_last: BOOLEAN
 			-- Is internal cursor on last item?
 		do
 			Result := cursor_is_last (internal_cursor)
@@ -48,7 +48,7 @@ feature -- Status report
 			definition: Result implies (item_for_iteration = last)
 		end
 
-	before: BOOLEAN is
+	before: BOOLEAN
 			-- Is there no valid position to left of internal cursor?
 		do
 			Result := cursor_before (internal_cursor)
@@ -56,7 +56,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	finish is
+	finish
 			-- Move internal cursor to last position.
 		do
 			cursor_finish (internal_cursor)
@@ -65,7 +65,7 @@ feature -- Cursor movement
 			not_empty_behavior: not is_empty implies is_last
 		end
 
-	back is
+	back
 			-- Move internal cursor to previous position.
 		require
 			not_before: not before
@@ -73,7 +73,7 @@ feature -- Cursor movement
 			cursor_back (internal_cursor)
 		end
 
-	search_back (v: G) is
+	search_back (v: G)
 			-- Move internal cursor to first position at or before current
 			-- position where `item_for_iteration' and `v' are equal.
 			-- (Use `equality_tester''s comparison criterion
@@ -85,7 +85,7 @@ feature -- Cursor movement
 			cursor_search_back (internal_cursor, v)
 		end
 
-	go_before is
+	go_before
 			-- Move internal cursor to `before' position.
 		do
 			cursor_go_before (internal_cursor)
@@ -95,7 +95,7 @@ feature -- Cursor movement
 
 feature {DS_CURSOR} -- Cursor implementation
 
-	cursor_off (a_cursor: like new_cursor): BOOLEAN is
+	cursor_off (a_cursor: like new_cursor): BOOLEAN
 			-- Is there no item at `a_cursor' position?
 		do
 			Result := cursor_after (a_cursor) or cursor_before (a_cursor)
@@ -103,7 +103,7 @@ feature {DS_CURSOR} -- Cursor implementation
 
 feature {DS_BILINEAR_CURSOR} -- Cursor implementation
 
-	cursor_is_last (a_cursor: like new_cursor): BOOLEAN is
+	cursor_is_last (a_cursor: like new_cursor): BOOLEAN
 			-- Is `a_cursor' on last item?
 		require
 			a_cursor_not_void: a_cursor /= Void
@@ -115,7 +115,7 @@ feature {DS_BILINEAR_CURSOR} -- Cursor implementation
 			definition: Result implies (cursor_item (a_cursor) = last)
 		end
 
-	cursor_before (a_cursor: like new_cursor): BOOLEAN is
+	cursor_before (a_cursor: like new_cursor): BOOLEAN
 			-- Is there no valid position to left of `a_cursor'?
 		require
 			a_cursor_not_void: a_cursor /= Void
@@ -123,7 +123,7 @@ feature {DS_BILINEAR_CURSOR} -- Cursor implementation
 		deferred
 		end
 
-	cursor_finish (a_cursor: like new_cursor) is
+	cursor_finish (a_cursor: like new_cursor)
 			-- Move `a_cursor' to last position.
 		require
 			a_cursor_not_void: a_cursor /= Void
@@ -134,7 +134,7 @@ feature {DS_BILINEAR_CURSOR} -- Cursor implementation
 			not_empty_behavior: not is_empty implies cursor_is_last (a_cursor)
 		end
 
-	cursor_back (a_cursor: like new_cursor) is
+	cursor_back (a_cursor: like new_cursor)
 			-- Move `a_cursor' to previous position.
 		require
 			a_cursor_not_void: a_cursor /= Void
@@ -143,7 +143,7 @@ feature {DS_BILINEAR_CURSOR} -- Cursor implementation
 		deferred
 		end
 
-	cursor_search_back (a_cursor: like new_cursor; v: G) is
+	cursor_search_back (a_cursor: like new_cursor; v: G)
 			-- Move `a_cursor' to first position at or before its current
 			-- position where `cursor_item (a_cursor)' and `v' are equal.
 			-- (Use `equality_tester''s comparison criterion
@@ -156,7 +156,7 @@ feature {DS_BILINEAR_CURSOR} -- Cursor implementation
 		deferred
 		end
 
-	cursor_go_before (a_cursor: like new_cursor) is
+	cursor_go_before (a_cursor: like new_cursor)
 			-- Move `a_cursor' to `before' position.
 		require
 			a_cursor_not_void: a_cursor /= Void

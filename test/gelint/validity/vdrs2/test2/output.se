@@ -1,8 +1,8 @@
 ****** Fatal Error : Constant feature cannot be redefined.
 Line 5 column 2 in CC (c.e) :
-	f: INTEGER is 5
+	f: INTEGER = 5
 	^
 Line 12 column 2 in BB (b.e) :
-	f: INTEGER is
+	f: INTEGER
 	^
 ------

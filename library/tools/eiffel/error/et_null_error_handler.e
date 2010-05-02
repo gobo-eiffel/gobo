@@ -130,14 +130,14 @@ create
 
 feature -- Cluster error status
 
-	reportable_gcaaa_error (a_cluster: ET_CLUSTER): BOOLEAN is
+	reportable_gcaaa_error (a_cluster: ET_CLUSTER): BOOLEAN
 			-- Can a GCAAA error be reported when it
 			-- appears in `a_cluster'?
 		do
 			Result := False
 		end
 
-	reportable_gcaab_error (a_cluster: ET_CLUSTER): BOOLEAN is
+	reportable_gcaab_error (a_cluster: ET_CLUSTER): BOOLEAN
 			-- Can a GCAAB error be reported when it
 			-- appears in `a_cluster'?
 		do
@@ -146,7 +146,7 @@ feature -- Cluster error status
 
 feature -- Universe error status
 
-	reportable_vscn_error (a_universe: ET_UNIVERSE): BOOLEAN is
+	reportable_vscn_error (a_universe: ET_UNIVERSE): BOOLEAN
 			-- Can a VSCN error be reported when it
 			-- appears in `a_universe'?
 		do
@@ -155,721 +155,721 @@ feature -- Universe error status
 
 feature -- Validity error status
 
-	reportable_vaol1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vaol1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VAOL-1 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vape_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vape_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VAPE error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vave_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vave_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VAVE error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vcch1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vcch1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VCCH-1 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vcch2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vcch2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VCCH-2 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vcfg1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vcfg1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VCFG-1 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vcfg2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vcfg2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VCFG-2 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vcfg3_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vcfg3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VCFG-3 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vdjr_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdjr_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDJR error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vdpr1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdpr1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDPR-1 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vdpr2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdpr2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDPR-2 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vdpr3_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdpr3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDPR-3 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vdpr4_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdpr4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDPR-4 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vdrd2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdrd2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDRD-2 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vdrd3_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdrd3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDRD-3 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vdrd4_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdrd4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDRD-4 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vdrd5_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdrd5_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDRD-5 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vdrd6_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdrd6_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDRD-6 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vdrs1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdrs1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDRS-1 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vdrs2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdrs2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDRS-2 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vdrs3_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdrs3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDRS-3 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vdrs4_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdrs4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDRS-4 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vdus1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdus1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDUS-1 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vdus2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdus2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDUS-2 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vdus3_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdus3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDUS-3 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vdus4_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdus4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDUS-4 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vffd4_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vffd4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VFFD-4 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vffd5_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vffd5_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VFFD-5 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vffd6_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vffd6_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VFFD-6 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vffd7_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vffd7_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VFFD-7 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_veen_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_veen_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VEEN error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_veen2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_veen2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VEEN-2 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vgcc3_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vgcc3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VGCC-3 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vgcc5_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vgcc5_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VGCC-5 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vgcc6_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vgcc6_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VGCC-6 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vgcc8_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vgcc8_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VGCC-8 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vgcp1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vgcp1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VGCP-1 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vgcp2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vgcp2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VGCP-2 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vgcp3_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vgcp3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VGCP-3 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vhay_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vhay_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VHAY error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vhpr1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vhpr1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VHPR-1 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vhpr3_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vhpr3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VHPR-3 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vhrc1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vhrc1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VHRC-1 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vhrc2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vhrc2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VHRC-2 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vhrc4_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vhrc4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VHRC-4 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vhrc5_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vhrc5_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VHRC-5 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vjar_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vjar_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VJAR error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vjaw_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vjaw_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VJAW error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vjrv_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vjrv_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VJRV error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vkcn1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vkcn1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VKCN-1 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vkcn2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vkcn2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VKCN-2 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vlel1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vlel1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VLEL-1 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vlel2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vlel2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VLEL-2 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vlel3_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vlel3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VLEL-3 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vmfn_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vmfn_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VMFN error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vmrc2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vmrc2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VMRC-2 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vmss1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vmss1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VMSS-1 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vmss2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vmss2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VMSS-2 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vmss3_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vmss3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VMSS-3 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vomb1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vomb1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VOMB-1 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vomb2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vomb2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VOMB-2 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vpca1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vpca1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VPCA-1 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vpca2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vpca2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VPCA-2 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vpca3_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vpca3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VPCA-3 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vpca4_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vpca4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VPCA-4 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vpca5_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vpca5_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VPCA-5 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vqmc1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vqmc1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VQMC-1 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vqmc2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vqmc2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VQMC-2 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vqmc3_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vqmc3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VQMC-3 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vqmc4_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vqmc4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VQMC-4 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vqmc5_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vqmc5_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VQMC-5 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vqmc6_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vqmc6_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VQMC-6 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vqui_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vqui_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VQUI error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vreg_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vreg_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VREG error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vrfa_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vrfa_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VRFA error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vrle1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vrle1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VRLE-1 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vrle2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vrle2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VRLE-2 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vtat1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vtat1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VTAT-1 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vtat2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vtat2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VTAT-2 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vtbt_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vtbt_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VTBT error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vtcg3_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vtcg3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VTCG-3 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vtcg4_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vtcg4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VTCG-4 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vtct_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vtct_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VTCT error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vtgc_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vtgc_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VTGC error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vtug1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vtug1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VTUG-1 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vtug2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vtug2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VTUG-2 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vuar1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vuar1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VUAR-1 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vuar2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vuar2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VUAR-2 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vuar4_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vuar4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VUAR-4 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vuex1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vuex1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VUEX-1 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vuex2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vuex2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VUEX-2 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vwbe_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vwbe_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VWBE error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vweq_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vweq_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VWEQ error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vwst1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vwst1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VWST-1 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vwst2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vwst2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VWST-2 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_vxrt_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vxrt_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VXRT error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_gvagp_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_gvagp_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVAGP error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_gvhpr4_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_gvhpr4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVHPR-4 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_gvhpr5_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_gvhpr5_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVHPR-5 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_gvuaa_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_gvuaa_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVUAA error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_gvual_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_gvual_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVUAL error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_gvuia_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_gvuia_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVUIA error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_gvuil_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_gvuil_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVUIL error be reported when it
 			-- appears in `a_class'?
 		do

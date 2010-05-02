@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_start_string: STRING; a_target_uri: UT_URI) is
+	make (a_start_string: STRING; a_target_uri: UT_URI)
 			-- Establish invariant.
 		require
 			target_uri_not_void: a_target_uri /= Void and then a_target_uri.is_absolute
@@ -40,7 +40,7 @@ feature -- Access
 	count: INTEGER
 			-- length of `start_string'
 
-	target: STRING is
+	target: STRING
 			-- URI to be used
 		do
 			Result := target_uri.full_reference
@@ -60,4 +60,4 @@ invariant
 	correct_count: start_string.count = count
 
 end
-	
+

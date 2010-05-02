@@ -25,14 +25,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new csv handler.
 		do
 		end
 
 feature -- Input
 
-	read_row (a_row: STRING; a_cells: DS_ARRAYED_LIST [STRING]) is
+	read_row (a_row: STRING; a_cells: DS_ARRAYED_LIST [STRING])
 			-- Split `a_row' into cells and append them at the end of `a_cells'.
 			-- The cell strings added to `a_cells' are not shared objects and
 			-- can be kept without the need to clone them.
@@ -80,7 +80,7 @@ feature -- Input
 			no_void_cell: not a_cells.has_void
 		end
 
-	read_file (a_file: KI_TEXT_INPUT_STREAM; a_action: PROCEDURE [ANY, TUPLE [DS_ARRAYED_LIST [STRING]]]) is
+	read_file (a_file: KI_TEXT_INPUT_STREAM; a_action: PROCEDURE [ANY, TUPLE [DS_ARRAYED_LIST [STRING]]])
 			-- Read csv file `a_file' and for each row, call `a_action' where the list
 			-- passed as argument is the list of cells making up this row. The list
 			-- passed as argument is supposed to be non-void and contains no void
@@ -111,7 +111,7 @@ feature -- Input
 
 feature -- Output
 
-	put_cell (a_cell: STRING; a_row: STRING) is
+	put_cell (a_cell: STRING; a_row: STRING)
 			-- Append `a_cell' to `a_row'. Add escape characters if needed.
 			-- Do not add the comma separator character.
 		require

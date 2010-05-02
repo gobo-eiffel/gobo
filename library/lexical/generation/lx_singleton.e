@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (id, def, symb, targ: INTEGER) is
+	make (id, def, symb, targ: INTEGER)
 			-- Create a new single out-transition state info.
 		do
 			state_id := id

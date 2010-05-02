@@ -22,7 +22,7 @@ create
 
 feature -- Test
 
-	test_available is
+	test_available
 			-- Test task 'available'
 		do
 			tasks := "{
@@ -36,7 +36,7 @@ feature -- Test
 
 		end
 
-	test_available_dir is
+	test_available_dir
 			-- Test task 'available'
 		do
 			tasks := "{
@@ -47,7 +47,7 @@ feature -- Test
 			basic_test ("test_available_dir")
 		end
 
-	test_available_subdir is
+	test_available_subdir
 			-- Test task 'available'
 		do
 			tasks := "{

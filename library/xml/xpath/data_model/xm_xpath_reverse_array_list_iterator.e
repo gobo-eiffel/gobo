@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_list: DS_ARRAYED_LIST [G]) is
+	make (a_list: DS_ARRAYED_LIST [G])
 		-- Initialize using `a_list'
 		require
 			list_not_void: a_list /= Void
@@ -45,11 +45,11 @@ feature {NONE} -- Initialization
 			list_set: list = a_list
 		end
 
-	make_slice (a_list: DS_ARRAYED_LIST [G]; a_start, a_end: INTEGER) is
+	make_slice (a_list: DS_ARRAYED_LIST [G]; a_start, a_end: INTEGER)
 		-- Initialize using slice of `a_list' from `a_start' to `a_end'.
 		require
 			list_not_void: a_list /= Void
-			list_not_empty: not a_list.is_empty			
+			list_not_empty: not a_list.is_empty
 			no_void_item: not a_list.has_void
 			first_item: a_start >= 1
 			last_item: a_end <= a_start
@@ -76,50 +76,50 @@ feature -- Access
 	last_item: INTEGER
 			-- Last item in slice
 
-	item: G is
+	item: G
 			-- Value or node at the current position
 		do
 			Result := cursor.item
 		end
 
-	last_position: INTEGER is
+	last_position: INTEGER
 			-- Last position (= number of items in sequence)
 		do
 			Result := first_item - last_item + 1
 		end
 
-	reverse_iterator: XM_XPATH_SEQUENCE_ITERATOR [G] is
+	reverse_iterator: XM_XPATH_SEQUENCE_ITERATOR [G]
 		do
 			create {XM_XPATH_ARRAY_LIST_ITERATOR [G]} Result.make_slice (list, last_item, first_item)
 		end
 
 feature -- Status report
 
-	is_reversible_iterator: BOOLEAN is
+	is_reversible_iterator: BOOLEAN
 			-- Does `Current' yield a reversible_sequence?
 		do
 			Result := True
 		end
 
-	is_realizable_iterator: BOOLEAN is
+	is_realizable_iterator: BOOLEAN
 			-- Is `Current' a realizable iterator?
 		do
 			Result := True
 		end
 
-	is_last_position_finder: BOOLEAN is
+	is_last_position_finder: BOOLEAN
 			-- Can `Current' find the last position?
 		do
 			Result := True
 		end
 
-	is_invulnerable: BOOLEAN is
+	is_invulnerable: BOOLEAN
 			-- Is `Current' guaranteed free of implicit errors?
 		do
 			Result := True
 		end
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Are there no more items in the sequence?
 		do
 			Result := cursor.before or (index > first_item - last_item + 1)
@@ -127,14 +127,14 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Move to first position
 		do
 			index := 1
 			cursor.finish
 		end
 
-	forth is
+	forth
 			-- Move to next position
 		do
 			index := index + 1
@@ -143,7 +143,7 @@ feature -- Cursor movement
 
 feature -- Evaluation
 
-	realize is
+	realize
 			-- Realize the sequence as a value.
 		local
 			l_list: DS_ARRAYED_LIST [XM_XPATH_ITEM]
@@ -158,19 +158,19 @@ feature -- Evaluation
 			loop
 				l_list.put_last (list.item (l_index))
 				l_index := l_index - 1
-			end			
+			end
 			create {XM_XPATH_SEQUENCE_EXTENT} last_realized_value.make_from_list (l_list)
 		end
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original;
 			-- The new iterator will be repositioned at the start of the sequence
 		do
 			create Result.make_slice (list, first_item, last_item)
 		end
-	
+
 feature {NONE} -- Implementation
 
 	list: DS_ARRAYED_LIST [G]
@@ -189,4 +189,4 @@ invariant
 	last_not_greater_than_first: last_item <= first_item
 
 end
-	
+

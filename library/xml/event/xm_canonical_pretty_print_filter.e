@@ -28,7 +28,7 @@ create
 
 feature -- Meta
 
-	on_comment (a_content: STRING) is
+	on_comment (a_content: STRING)
 			-- Do not print comment.
 		do
 			next.on_comment (a_content)
@@ -36,8 +36,8 @@ feature -- Meta
 
 feature {NONE} -- Escaped
 
-	is_escaped (a_char: INTEGER): BOOLEAN is
-			-- Is this character to be escaped? 
+	is_escaped (a_char: INTEGER): BOOLEAN
+			-- Is this character to be escaped?
 			-- Include line separators and tab, quote, but not non-ascii characters.
 		do
 			Result := a_char = Lt_char.code
@@ -49,7 +49,7 @@ feature {NONE} -- Escaped
 				or a_char = Quot_char.code -- always escape quote
 		end
 
-	escaped_char (a_char: INTEGER): STRING is
+	escaped_char (a_char: INTEGER): STRING
 			-- Add quote escaping to Precursor version.
 		do
 			if a_char = Quot_char.code then
@@ -58,5 +58,5 @@ feature {NONE} -- Escaped
 				Result := Precursor (a_char)
 			end
 		end
-		
+
 end

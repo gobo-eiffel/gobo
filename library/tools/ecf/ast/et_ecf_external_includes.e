@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_external_include: like external_include) is
+	make (a_external_include: like external_include)
 			-- Create a new external include list with initially one include `a_external_include'.
 		require
 			a_external_include_not_void: a_external_include /= Void
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			external_include_set: external_includes.last = a_external_include
 		end
 
-	make_empty is
+	make_empty
 			-- Create a new empty external include list.
 		do
 			create external_includes.make (Initial_external_includes_capacity)
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is the list of external includes empty?
 		do
 			Result := (count = 0)
@@ -50,7 +50,7 @@ feature -- Status report
 
 feature -- Access
 
-	external_include (i: INTEGER): ET_ECF_EXTERNAL_INCLUDE is
+	external_include (i: INTEGER): ET_ECF_EXTERNAL_INCLUDE
 			-- `i'-th external include
 		require
 			i_large_enough: i >= 1
@@ -66,7 +66,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of external includes
 		do
 			Result := external_includes.count
@@ -77,7 +77,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	put_last (a_external_include: like external_include) is
+	put_last (a_external_include: like external_include)
 			-- Add `a_external_include' to the list of external includes.
 		require
 			a_external_include_not_void: a_external_include /= Void
@@ -88,7 +88,7 @@ feature -- Element change
 			external_include_added: external_includes.last = a_external_include
 		end
 
-	fill_external_includes (a_system: ET_SYSTEM; a_state: ET_ECF_STATE) is
+	fill_external_includes (a_system: ET_SYSTEM; a_state: ET_ECF_STATE)
 			-- Add to `a_system' the current external includes
 			-- whose conditions satisfy `a_state'.
 		require
@@ -100,7 +100,7 @@ feature -- Element change
 
 feature {NONE} -- Constants
 
-	Initial_external_includes_capacity: INTEGER is 50
+	Initial_external_includes_capacity: INTEGER = 50
 			-- Initial capacity for `external_includes'
 
 invariant

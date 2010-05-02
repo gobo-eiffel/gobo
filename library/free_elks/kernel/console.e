@@ -1,6 +1,6 @@
 note
 	description: "[
-		Commonly used console input and output mechanisms. 
+		Commonly used console input and output mechanisms.
 		This class may be used as ancestor by classes needing its facilities.
 		]"
 	library: "Free implementation of ELKS library"

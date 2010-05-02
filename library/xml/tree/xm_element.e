@@ -39,8 +39,8 @@ create
 	make_child
 
 feature {NONE} -- Initialization
-	
-	make (a_parent: like parent; a_name: like name; a_ns: like namespace) is
+
+	make (a_parent: like parent; a_name: like name; a_ns: like namespace)
 			-- Create a new child element, without attaching to parent.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -56,8 +56,8 @@ feature {NONE} -- Initialization
 			name_set: name = a_name
 			ns_prefix_set: namespace = a_ns
 		end
-		
-	make_last (a_parent: XM_ELEMENT; a_name: like name; a_ns: like namespace) is
+
+	make_last (a_parent: XM_ELEMENT; a_name: like name; a_ns: like namespace)
 			-- Create a new child element, and add it to the parent.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -74,8 +74,8 @@ feature {NONE} -- Initialization
 			name_set: name = a_name
 			ns_prefix_set: namespace = a_ns
 		end
-		
-	make_root (a_parent: XM_DOCUMENT; a_name: like name; a_ns: like namespace) is
+
+	make_root (a_parent: XM_DOCUMENT; a_name: like name; a_ns: like namespace)
 			-- Create a new root element, and add it to the document parent.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -92,8 +92,8 @@ feature {NONE} -- Initialization
 			name_set: name = a_name
 			ns_prefix_set: namespace = a_ns
 		end
-		
-	make_child (a_parent: like parent; a_name: like name; a_ns: like namespace) is
+
+	make_child (a_parent: like parent; a_name: like name; a_ns: like namespace)
 			-- Create a new child element.
 		obsolete
 			"Use make"
@@ -107,7 +107,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	force_last (v: like last) is
+	force_last (v: like last)
 			-- `force_last' with parent removal and optimisation for
 			-- force_last (last).
 		do
@@ -117,8 +117,8 @@ feature -- Element change
 			-- else force_last (last) happens to be a no-op.
 			end
 		end
-		
-	put_last (v: like last) is
+
+	put_last (v: like last)
 			-- `put_last' with parent removal and optimisation for
 			-- put_last (last).
 		do
@@ -128,10 +128,10 @@ feature -- Element change
 			-- else force_last (last) happens to be a no-op.
 			end
 		end
-		
+
 feature {NONE} -- Parent processing
 
-	before_addition (a_node: XM_NODE) is
+	before_addition (a_node: XM_NODE)
 			-- Remove node from original parent if not us.
 		do
 			if a_node /= Void then
@@ -145,8 +145,8 @@ feature {NONE} -- Parent processing
 		ensure then
 			parent_accepted: a_node /= Void implies a_node.parent = Current
 		end
-	
-	addable_item (a_node: XM_NODE): BOOLEAN is
+
+	addable_item (a_node: XM_NODE): BOOLEAN
 			-- Is this not of the correct type for addition?
 			-- (element node)
 		local
@@ -162,10 +162,10 @@ feature {NONE} -- Parent processing
 					or typer.is_attribute
 			end
 		end
-		
+
 feature {XM_NODE} -- Removal
 
-	equality_delete (v: XM_NODE) is
+	equality_delete (v: XM_NODE)
 			-- Call `delete' with Void equality tester.
 		local
 			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
@@ -187,10 +187,10 @@ feature {XM_NODE} -- Removal
 				end
 			end
 		end
-		
+
 feature -- Status report
 
-	has_attribute_by_qualified_name (a_uri: STRING; a_name: STRING): BOOLEAN is
+	has_attribute_by_qualified_name (a_uri: STRING; a_name: STRING): BOOLEAN
 			-- Does current element contain an attribute with
 			-- this qualified name?
 		require
@@ -214,8 +214,8 @@ feature -- Status report
 				end
 			end
 		end
-		
-	has_attribute_by_name (a_name: STRING): BOOLEAN is
+
+	has_attribute_by_name (a_name: STRING): BOOLEAN
 			-- Does current element contain an attribute named `a_name'?
 			-- element?
 		require
@@ -241,7 +241,7 @@ feature -- Status report
 
 feature {NONE} -- Name comparison with namespace.
 
-	attribute_same_name (a_named: XM_ATTRIBUTE; a_name: STRING): BOOLEAN is
+	attribute_same_name (a_named: XM_ATTRIBUTE; a_name: STRING): BOOLEAN
 			-- Has 'a_named' attribute the same name as `a_name',
 			-- either because of same namespace or within the
 			-- default namespace.
@@ -253,8 +253,8 @@ feature {NONE} -- Name comparison with namespace.
 			same_name: Result implies same_string (a_named.name, a_name)
 			default_ns: (a_named.namespace.uri.count = 0) implies (Result = same_string (a_named.name, a_name))
 		end
-		
-	named_same_name (a_named: XM_NAMED_NODE; a_name: STRING): BOOLEAN is
+
+	named_same_name (a_named: XM_NAMED_NODE; a_name: STRING): BOOLEAN
 			-- Has 'a_named' same name as 'a_name' and
 			-- same namespace as current node?
 		require
@@ -265,10 +265,10 @@ feature {NONE} -- Name comparison with namespace.
 		ensure
 			same_name: Result implies same_string (a_named.name, a_name)
 		end
-		
+
 feature -- Access (from XM_COMPOSITE)
-	
-	has_element_by_name (a_name: STRING): BOOLEAN is
+
+	has_element_by_name (a_name: STRING): BOOLEAN
 			-- Has current node at least one direct child
 			-- element with the name `a_name'?
 		local
@@ -290,7 +290,7 @@ feature -- Access (from XM_COMPOSITE)
 			end
 		end
 
-	has_element_by_qualified_name (a_uri: STRING; a_name: STRING): BOOLEAN is
+	has_element_by_qualified_name (a_uri: STRING; a_name: STRING): BOOLEAN
 			-- Has current node at least one direct child
 			-- element with this qualified name ?
 		local
@@ -311,8 +311,8 @@ feature -- Access (from XM_COMPOSITE)
 				end
 			end
 		end
-		
-	element_by_name (a_name: STRING): XM_ELEMENT is
+
+	element_by_name (a_name: STRING): XM_ELEMENT
 			-- Direct child element with name `a_name';
 			-- If there are more than one element with that name, anyone may be returned.
 			-- Return Void if no element with that name is a child of current node.
@@ -334,8 +334,8 @@ feature -- Access (from XM_COMPOSITE)
 				end
 			end
 		end
-		
-	element_by_qualified_name (a_uri: STRING; a_name: STRING): XM_ELEMENT is
+
+	element_by_qualified_name (a_uri: STRING; a_name: STRING): XM_ELEMENT
 			-- Direct child element with given qualified name;
 			-- If there are more than one element with that name, anyone may be returned.
 			-- Return Void if no element with that name is a child of current node.
@@ -357,10 +357,10 @@ feature -- Access (from XM_COMPOSITE)
 				end
 			end
 		end
-	
+
 feature -- Access
 
-	attribute_by_name (a_name: STRING): XM_ATTRIBUTE is
+	attribute_by_name (a_name: STRING): XM_ATTRIBUTE
 			-- Attribute named `a_name' in current element;
 			-- Return Void if no such attribute was found.
 		require
@@ -387,7 +387,7 @@ feature -- Access
 			namespace: Result /= Void implies (not Result.has_prefix)
 		end
 
-	attribute_by_qualified_name (a_uri: STRING; a_name: STRING): XM_ATTRIBUTE is
+	attribute_by_qualified_name (a_uri: STRING; a_name: STRING): XM_ATTRIBUTE
 			-- Attribute named `a_name' in current element;
 			-- Return Void if no such attribute was found.
 		require
@@ -415,7 +415,7 @@ feature -- Access
 			namespace: Result /= Void implies Result.has_qualified_name (a_uri, a_name)
 		end
 
-	namespace_declarations: DS_LINKED_LIST [XM_NAMESPACE] is
+	namespace_declarations: DS_LINKED_LIST [XM_NAMESPACE]
 			-- Namespaces declared directly in this element;
 			-- This list must contain at most one namespace with a
 			-- void prefix. If such a namespace exists it is a declared
@@ -440,11 +440,11 @@ feature -- Access
 			no_void_declaration: not Result.has_void
 		end
 
-	attributes: DS_LIST [XM_ATTRIBUTE] is
+	attributes: DS_LIST [XM_ATTRIBUTE]
 			-- List of all attributes in current element
 			-- (Create a new list at each call.)
 		local
-			a_cursor: DS_LINEAR_CURSOR [XM_NODE] 
+			a_cursor: DS_LINEAR_CURSOR [XM_NODE]
 			typer: XM_NODE_TYPER
 		do
 			create typer
@@ -461,7 +461,7 @@ feature -- Access
 
 feature -- Element change
 
-	add_unqualified_attribute (a_name: STRING; a_value: STRING) is
+	add_unqualified_attribute (a_name: STRING; a_value: STRING)
 			-- Add an attribute without a specific namespace.
 		require
 			a_name_not_void: a_name /= Void
@@ -472,8 +472,8 @@ feature -- Element change
 		ensure
 			attribute_added: has_attribute_by_name (a_name)
 		end
-		
-	add_attribute (a_name: STRING; a_ns: XM_NAMESPACE; a_value: STRING) is
+
+	add_attribute (a_name: STRING; a_ns: XM_NAMESPACE; a_value: STRING)
 			-- Add an attribute to current element.
 			-- (at end if last is an attribute, at beginning otherwise)
 		require
@@ -503,7 +503,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_attribute_by_name (a_name: STRING) is
+	remove_attribute_by_name (a_name: STRING)
 			-- Remove attribute named `a_name' from current element.
 		require
 			a_name_not_void: a_name /= Void
@@ -526,7 +526,7 @@ feature -- Removal
 			end
 		end
 
-	remove_attribute_by_qualified_name (a_uri: STRING; a_name: STRING) is
+	remove_attribute_by_qualified_name (a_uri: STRING; a_name: STRING)
 			-- Remove attribute named `a_name' from current element.
 		require
 			a_uri_not_void: a_uri /= Void
@@ -549,8 +549,8 @@ feature -- Removal
 				end
 			end
 		end
-		
-	join_text_nodes is
+
+	join_text_nodes
 			-- Join sequences of text nodes.
 		local
 			text_node: XM_CHARACTER_DATA
@@ -592,7 +592,7 @@ feature -- Removal
 
 feature -- Processing
 
-	process (a_processor: XM_NODE_PROCESSOR) is
+	process (a_processor: XM_NODE_PROCESSOR)
 			-- Process current node with `a_processor'.
 		do
 			a_processor.process_element (Current)

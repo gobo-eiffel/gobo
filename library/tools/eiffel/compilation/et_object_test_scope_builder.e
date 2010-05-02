@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	build_scope (a_expression: ET_EXPRESSION; a_scope: ET_OBJECT_TEST_SCOPE) is
+	build_scope (a_expression: ET_EXPRESSION; a_scope: ET_OBJECT_TEST_SCOPE)
 			-- Add to `a_scope' the object-tests found in `a_expression'
 			-- that are guaranteed to be successful if `a_expression'
 			-- is evaluated to True.
@@ -60,7 +60,7 @@ feature -- Basic operations
 			scope := old_scope
 		end
 
-	build_negated_scope (a_expression: ET_EXPRESSION; a_scope: ET_OBJECT_TEST_SCOPE) is
+	build_negated_scope (a_expression: ET_EXPRESSION; a_scope: ET_OBJECT_TEST_SCOPE)
 			-- Add to `a_scope' the object-tests found in `a_expression'
 			-- that are guaranteed to be successful if `a_expression'
 			-- is evaluated to False.
@@ -81,7 +81,7 @@ feature -- Basic operations
 
 feature {ET_AST_NODE} -- Processing
 
-	process_infix_expression (an_expression: ET_INFIX_EXPRESSION) is
+	process_infix_expression (an_expression: ET_INFIX_EXPRESSION)
 			-- Process `an_expression'.
 		local
 			l_name: ET_OPERATOR
@@ -108,7 +108,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_named_object_test (an_expression: ET_NAMED_OBJECT_TEST) is
+	process_named_object_test (an_expression: ET_NAMED_OBJECT_TEST)
 			-- Process `an_expression'.
 		do
 			if not is_negated then
@@ -122,19 +122,19 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_old_object_test (an_expression: ET_OLD_OBJECT_TEST) is
+	process_old_object_test (an_expression: ET_OLD_OBJECT_TEST)
 			-- Process `an_expression'.
 		do
 			process_named_object_test (an_expression)
 		end
 
-	process_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION) is
+	process_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			an_expression.expression.process (Current)
 		end
 
-	process_prefix_expression (an_expression: ET_PREFIX_EXPRESSION) is
+	process_prefix_expression (an_expression: ET_PREFIX_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			if an_expression.is_boolean_operator then

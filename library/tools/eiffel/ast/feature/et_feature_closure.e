@@ -29,7 +29,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_end_keyword (an_end: like end_keyword) is
+	set_end_keyword (an_end: like end_keyword)
 			-- Set `end_keyword' to `an_end'.
 		require
 			an_end_not_void: an_end /= Void
@@ -39,7 +39,7 @@ feature -- Setting
 			end_keyword_set: end_keyword = an_end
 		end
 
-	set_preconditions (a_preconditions: like preconditions) is
+	set_preconditions (a_preconditions: like preconditions)
 			-- Set `preconditions' to `a_preconditions'.
 		do
 			preconditions := a_preconditions
@@ -47,7 +47,7 @@ feature -- Setting
 			preconditions_set: preconditions = a_preconditions
 		end
 
-	set_postconditions (a_postconditions: like postconditions) is
+	set_postconditions (a_postconditions: like postconditions)
 			-- Set `postconditions' to `a_postconditions'.
 		do
 			postconditions := a_postconditions
@@ -55,13 +55,13 @@ feature -- Setting
 			postconditions_set: postconditions = a_postconditions
 		end
 
-	reset_preconditions is
+	reset_preconditions
 			-- Set `preconditions' to Void.
 		do
 			preconditions := Void
 		end
 
-	reset_postconditions is
+	reset_postconditions
 			-- Set `postconditions' to Void.
 		do
 			postconditions := Void

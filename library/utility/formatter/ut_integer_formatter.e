@@ -20,7 +20,7 @@ inherit
 
 feature -- File handling
 
-	put_decimal_integer (a_file: KI_CHARACTER_OUTPUT_STREAM; an_int: INTEGER) is
+	put_decimal_integer (a_file: KI_CHARACTER_OUTPUT_STREAM; an_int: INTEGER)
 			-- Write decimal representation of `an_int' to `a_file'.
 			-- Regexp: 0|(-?[1-9][0-9]*)
 		require
@@ -117,7 +117,7 @@ feature -- File handling
 			end
 		end
 
-	put_octal_integer (a_file: KI_CHARACTER_OUTPUT_STREAM; an_int: INTEGER) is
+	put_octal_integer (a_file: KI_CHARACTER_OUTPUT_STREAM; an_int: INTEGER)
 			-- Write octal representation of `an_int' to `a_file'.
 			-- Regexp: 0|[1-7][0-7]*
 		require
@@ -155,7 +155,7 @@ feature -- File handling
 			end
 		end
 
-	put_hexadecimal_integer (a_file: KI_CHARACTER_OUTPUT_STREAM; an_int: INTEGER; uppercase: BOOLEAN) is
+	put_hexadecimal_integer (a_file: KI_CHARACTER_OUTPUT_STREAM; an_int: INTEGER; uppercase: BOOLEAN)
 			-- Write hexadecimal representation of `an_int' to `a_file'.
 			-- Regexp:
 			--    uppercase:      0|[1-9A-F][0-9A-F]*

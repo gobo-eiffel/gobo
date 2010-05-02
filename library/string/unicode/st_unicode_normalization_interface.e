@@ -37,7 +37,7 @@ inherit
 
 feature -- Access
 
-	is_nfd (a_source: STRING): BOOLEAN is
+	is_nfd (a_source: STRING): BOOLEAN
 			-- Is `a_source' in NFD normal form?
 		require
 			source_not_void: a_source /= Void
@@ -55,7 +55,7 @@ feature -- Access
 			end
 		end
 
-	is_nfkd (a_source: STRING): BOOLEAN is
+	is_nfkd (a_source: STRING): BOOLEAN
 			-- Is `a_source' in NFKD normal form?
 		require
 			source_not_void: a_source /= Void
@@ -73,7 +73,7 @@ feature -- Access
 			end
 		end
 
-	is_nfc (a_source: STRING): BOOLEAN is
+	is_nfc (a_source: STRING): BOOLEAN
 			-- Is `a_source' in NFC normal form?
 		require
 			source_not_void: a_source /= Void
@@ -88,7 +88,7 @@ feature -- Access
 			end
 		end
 
-	is_nfkc (a_source: STRING): BOOLEAN is
+	is_nfkc (a_source: STRING): BOOLEAN
 			-- Is `a_source' in NFKC normal form?
 		require
 			source_not_void: a_source /= Void
@@ -103,7 +103,7 @@ feature -- Access
 			end
 		end
 
-	as_nfd (a_source: STRING): UC_UTF8_STRING is
+	as_nfd (a_source: STRING): UC_UTF8_STRING
 			-- Canonical decomposition of `a_source'
 		require
 			source_not_void: a_source /= Void
@@ -126,7 +126,7 @@ feature -- Access
 			is_nfd: is_nfd (Result)
 		end
 
-	to_nfd (a_source: STRING): UC_UTF8_STRING is
+	to_nfd (a_source: STRING): UC_UTF8_STRING
 			-- Canonical decomposition of `a_source'
 		require
 			source_not_void: a_source /= Void
@@ -146,7 +146,7 @@ feature -- Access
 			new_object: Result /= a_source
 		end
 
-	as_nfkd (a_source: STRING): UC_UTF8_STRING is
+	as_nfkd (a_source: STRING): UC_UTF8_STRING
 			-- Compatibility decomposition of `a_source'
 		require
 			source_not_void: a_source /= Void
@@ -169,7 +169,7 @@ feature -- Access
 			is_nfd: is_nfd (Result)
 		end
 
-	to_nfkd (a_source: STRING): UC_UTF8_STRING is
+	to_nfkd (a_source: STRING): UC_UTF8_STRING
 			-- Compatibility decomposition of `a_source'
 		require
 			source_not_void: a_source /= Void
@@ -189,7 +189,7 @@ feature -- Access
 			new_object: Result /= a_source
 		end
 
-	to_nfc (a_source: STRING): UC_UTF8_STRING is
+	to_nfc (a_source: STRING): UC_UTF8_STRING
 			-- Canonical decomposition then canonical composition of `a_source'
 		require
 			source_not_void: a_source /= Void
@@ -211,7 +211,7 @@ feature -- Access
 			new_object: Result /= a_source
 		end
 
-	to_nfkc (a_source: STRING): UC_UTF8_STRING is
+	to_nfkc (a_source: STRING): UC_UTF8_STRING
 			-- Compatibility decomposition then canonical composition of `a_source'
 		require
 			source_not_void: a_source /= Void
@@ -235,13 +235,13 @@ feature -- Access
 
 feature -- Status report
 
-	valid_code (a_code: INTEGER): BOOLEAN is
+	valid_code (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' a valid Unicode code point?
 		do
 			Result := unicode.valid_code (a_code)
 		end
 
-	frozen less_than (u, v: INTEGER): BOOLEAN is
+	frozen less_than (u, v: INTEGER): BOOLEAN
 			-- Is `u' considered less than `v'?
 		do
 				-- This will fail to meet the post-conditions
@@ -257,7 +257,7 @@ feature -- Status report
 
 feature -- Property
 
-	canonical_combining_class_property (a_code: INTEGER): INTEGER is -- should be NATURAL_8
+	canonical_combining_class_property (a_code: INTEGER): INTEGER  -- should be NATURAL_8
 			-- Canonical_Combining_Class property for `a_code'
 		require
 			valid_code: valid_code (a_code)
@@ -274,7 +274,7 @@ feature -- Property
 			property_small_enough: Result <= 255
 		end
 
-	decomposition_type_property (a_code: INTEGER): INTEGER is
+	decomposition_type_property (a_code: INTEGER): INTEGER
 			-- Decomposition_Type property for `a_code'
 		require
 			valid_code: valid_code (a_code)
@@ -291,7 +291,7 @@ feature -- Property
 			property_small_enough: Result <= Compatibility_decomposition_mapping
 		end
 
-	decomposition_mapping_property (a_code: INTEGER): DS_ARRAYED_LIST [INTEGER] is
+	decomposition_mapping_property (a_code: INTEGER): DS_ARRAYED_LIST [INTEGER]
 			-- Decomposition_Mapping property for `a_code'
 		require
 			valid_code: valid_code (a_code)
@@ -310,13 +310,13 @@ feature -- Property
 
 feature {NONE} -- Implementation
 
-	False_value: CHARACTER is '%/0/'
+	False_value: CHARACTER = '%/0/'
 
-	True_value: CHARACTER is '%/1/'
+	True_value: CHARACTER = '%/1/'
 
-	Uncertain_value: CHARACTER is '%/2/'
+	Uncertain_value: CHARACTER = '%/2/'
 
-	quick_check (a_source: STRING; a_form: INTEGER): UT_TRISTATE is
+	quick_check (a_source: STRING; a_form: INTEGER): UT_TRISTATE
 			-- Quick check for `a_source' being in `a_form'
 		require
 			source_not_void: a_source /= Void
@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 			boolean_result_for_decompositions: (a_form = Nfd or a_form = Nfkd) implies not Result.is_undefined
 		end
 
-	nfd_quick_check (a_code: INTEGER): CHARACTER is
+	nfd_quick_check (a_code: INTEGER): CHARACTER
 			-- NFD quick check property for `a_code'
 		require
 			valid_code: valid_code (a_code)
@@ -377,7 +377,7 @@ feature {NONE} -- Implementation
 			nfd_quick_check_in_range: Result = False_value or Result = True_value
 		end
 
-	nfkd_quick_check (a_code: INTEGER): CHARACTER is
+	nfkd_quick_check (a_code: INTEGER): CHARACTER
 			-- NFKD quick check property for `a_code'
 		require
 			valid_code: valid_code (a_code)
@@ -393,7 +393,7 @@ feature {NONE} -- Implementation
 			nfkd_quick_check_in_range: Result = False_value or Result = True_value
 		end
 
-	nfc_quick_check (a_code: INTEGER): CHARACTER is
+	nfc_quick_check (a_code: INTEGER): CHARACTER
 			-- NFC quick check property for `a_code'
 		require
 			valid_code: valid_code (a_code)
@@ -409,7 +409,7 @@ feature {NONE} -- Implementation
 			nfc_quick_check_in_range: Result = False_value or Result = True_value or Result = Uncertain_value
 		end
 
-	nfkc_quick_check (a_code: INTEGER): CHARACTER is
+	nfkc_quick_check (a_code: INTEGER): CHARACTER
 			-- NFKC quick check property for `a_code'
 		require
 			valid_code: valid_code (a_code)
@@ -425,7 +425,7 @@ feature {NONE} -- Implementation
 			nfkc_quick_check_in_range: Result = False_value or Result = True_value or Result = Uncertain_value
 		end
 
-	order_canonically (a_decomposition: DS_ARRAYED_LIST [INTEGER]; changed: DS_CELL [BOOLEAN]) is
+	order_canonically (a_decomposition: DS_ARRAYED_LIST [INTEGER]; changed: DS_CELL [BOOLEAN])
 			-- Perform Canonical Ordering on `a_decomposition'.
 		require
 			decomposition_not_void: a_decomposition /= Void
@@ -453,7 +453,7 @@ feature {NONE} -- Implementation
 			in_canonical_order: True
 		end
 
-	end_of_combining_sequence (a_decomposition: DS_ARRAYED_LIST [INTEGER]; a_start, len: INTEGER): INTEGER is
+	end_of_combining_sequence (a_decomposition: DS_ARRAYED_LIST [INTEGER]; a_start, len: INTEGER): INTEGER
 			-- Last character in combining sequence
 		require
 			decomposition_not_void: a_decomposition /= Void
@@ -480,7 +480,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	recursively_decompose (a_code: INTEGER; is_canonical: BOOLEAN; a_decomposition: DS_ARRAYED_LIST [INTEGER]; changed: DS_CELL [BOOLEAN]) is
+	recursively_decompose (a_code: INTEGER; is_canonical: BOOLEAN; a_decomposition: DS_ARRAYED_LIST [INTEGER]; changed: DS_CELL [BOOLEAN])
 			-- Recursively decompose `a_code' into `a_decomposition'
 		require
 			decomposition_not_void: a_decomposition /= Void
@@ -512,7 +512,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	string_from_codes (a_decomposition: DS_ARRAYED_LIST [INTEGER]): UC_UTF8_STRING is
+	string_from_codes (a_decomposition: DS_ARRAYED_LIST [INTEGER]): UC_UTF8_STRING
 			-- String from code-point list
 		require
 			decomposition_not_void: a_decomposition /= Void
@@ -534,7 +534,7 @@ feature {NONE} -- Implementation
 			same_count: Result.count = a_decomposition.count
 		end
 
-	decomposition (a_source: STRING; is_canonical: BOOLEAN; changed: DS_CELL [BOOLEAN]): DS_ARRAYED_LIST [INTEGER] is
+	decomposition (a_source: STRING; is_canonical: BOOLEAN; changed: DS_CELL [BOOLEAN]): DS_ARRAYED_LIST [INTEGER]
 			-- Decomposition of `a_source'
 		require
 			source_not_void: a_source /= Void
@@ -560,7 +560,7 @@ feature {NONE} -- Implementation
 			in_canonical_order: True
 		end
 
-	canonically_compose (a_decomposition: DS_ARRAYED_LIST [INTEGER]) is
+	canonically_compose (a_decomposition: DS_ARRAYED_LIST [INTEGER])
 			-- Canonically compose `a_decomposition' in place.
 		require
 			decomposition_not_void: a_decomposition /= Void
@@ -616,7 +616,7 @@ feature {NONE} -- Implementation
 			decomposition_not_empty: not a_decomposition.is_empty
 		end
 
-	nfd_quick_check_array: SPECIAL [SPECIAL [ARRAY [CHARACTER]]] is
+	nfd_quick_check_array: SPECIAL [SPECIAL [ARRAY [CHARACTER]]]
 			-- NFD_Quick_Check values for each code point
 		deferred
 		ensure
@@ -624,7 +624,7 @@ feature {NONE} -- Implementation
 --			no_void_nfd_quick_check_array: not Result.has (Void)
 		end
 
-	nfc_quick_check_array: SPECIAL [SPECIAL [ARRAY [CHARACTER]]] is
+	nfc_quick_check_array: SPECIAL [SPECIAL [ARRAY [CHARACTER]]]
 			-- NFC_Quick_Check values for each code point
 		deferred
 		ensure
@@ -632,7 +632,7 @@ feature {NONE} -- Implementation
 --			no_void_nfc_quick_check_array: not Result.has (Void)
 		end
 
-	nfkd_quick_check_array: SPECIAL [SPECIAL [ARRAY [CHARACTER]]] is
+	nfkd_quick_check_array: SPECIAL [SPECIAL [ARRAY [CHARACTER]]]
 			-- NFKD_Quick_Check values for each code point
 		deferred
 		ensure
@@ -640,7 +640,7 @@ feature {NONE} -- Implementation
 --			no_void_nfkd_quick_check_array: not Result.has (Void)
 		end
 
-	nfkc_quick_check_array: SPECIAL [SPECIAL [ARRAY [CHARACTER]]] is
+	nfkc_quick_check_array: SPECIAL [SPECIAL [ARRAY [CHARACTER]]]
 			-- NFKC_Quick_Check values for each code point
 		deferred
 		ensure
@@ -648,7 +648,7 @@ feature {NONE} -- Implementation
 --			no_void_nfkc_quick_check_array: not Result.has (Void)
 		end
 
-	canonical_combining_class_properties: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]] is
+	canonical_combining_class_properties: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]]
 			-- Values of Canonical_Combining_Class for each code-point
 		deferred
 		ensure
@@ -656,7 +656,7 @@ feature {NONE} -- Implementation
 --			no_void_canonical_combining_class_property: not Result.has (Void)
 		end
 
-	decomposition_type_properties: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]] is
+	decomposition_type_properties: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]]
 			-- Decomposition type property for each code point
 		deferred
 		ensure
@@ -664,21 +664,21 @@ feature {NONE} -- Implementation
 --			no_void_decomposition_type_property: not Result.has (Void)
 		end
 
-	decomposition_mapping_properties: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]] is
+	decomposition_mapping_properties: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]]
 			-- Decomposition mapping property for each code point
 		deferred
 		ensure
 			decomposition_mapping_properties_not_void: Result /= Void
 		end
 
-	composition_map: DS_HASH_TABLE [INTEGER, DS_HASHABLE_PAIR [INTEGER, INTEGER]] is
+	composition_map: DS_HASH_TABLE [INTEGER, DS_HASHABLE_PAIR [INTEGER, INTEGER]]
 			-- Map of compositions indexed by hashed character pairs
 		deferred
 		ensure
 			composition_map_not_void: composition_map /= Void
 		end
 
-	string_to_array8 (a_string: STRING): ARRAY [INTEGER_8] is
+	string_to_array8 (a_string: STRING): ARRAY [INTEGER_8]
 			-- Zero-indexed byte array interpretation of `a_string';
 			-- Numbers > 127 are encoded as negative numbers.
 		require
@@ -704,7 +704,7 @@ feature {NONE} -- Implementation
 			correct_count: Result.upper = 255
 		end
 
-	new_singleton (i: INTEGER): DS_ARRAYED_LIST [INTEGER] is
+	new_singleton (i: INTEGER): DS_ARRAYED_LIST [INTEGER]
 			-- List of one integer
 		do
 			create Result.make (1)
@@ -714,7 +714,7 @@ feature {NONE} -- Implementation
 			one_integer: Result.count = 1
 		end
 
-	new_pair (i, j: INTEGER): DS_ARRAYED_LIST [INTEGER] is
+	new_pair (i, j: INTEGER): DS_ARRAYED_LIST [INTEGER]
 			-- List of two integers
 		do
 			create Result.make (2)
@@ -725,7 +725,7 @@ feature {NONE} -- Implementation
 			two_integers: Result.count = 2
 		end
 
-	new_triple (i, j, k: INTEGER): DS_ARRAYED_LIST [INTEGER] is
+	new_triple (i, j, k: INTEGER): DS_ARRAYED_LIST [INTEGER]
 			-- List of three integers
 		do
 			create Result.make (3)
@@ -737,7 +737,7 @@ feature {NONE} -- Implementation
 			three_integers: Result.count = 3
 		end
 
-	new_quadruple (i, j, k, l: INTEGER): DS_ARRAYED_LIST [INTEGER] is
+	new_quadruple (i, j, k, l: INTEGER): DS_ARRAYED_LIST [INTEGER]
 			-- List of four integers
 		do
 			create Result.make (4)
@@ -750,7 +750,7 @@ feature {NONE} -- Implementation
 			four_integers: Result.count = 4
 		end
 
-	new_quintuple (i, j, k, l, m: INTEGER): DS_ARRAYED_LIST [INTEGER] is
+	new_quintuple (i, j, k, l, m: INTEGER): DS_ARRAYED_LIST [INTEGER]
 			-- List of five integers
 		do
 			create Result.make (5)
@@ -764,7 +764,7 @@ feature {NONE} -- Implementation
 			five_integers: Result.count = 5
 		end
 
-	new_sextuple (i, j, k, l, m, n: INTEGER): DS_ARRAYED_LIST [INTEGER] is
+	new_sextuple (i, j, k, l, m, n: INTEGER): DS_ARRAYED_LIST [INTEGER]
 			-- List of six integers
 		do
 			create Result.make (6)
@@ -779,7 +779,7 @@ feature {NONE} -- Implementation
 			six_integers: Result.count = 6
 		end
 
-	new_heptuple (i, j, k, l, m, n, o: INTEGER): DS_ARRAYED_LIST [INTEGER] is
+	new_heptuple (i, j, k, l, m, n, o: INTEGER): DS_ARRAYED_LIST [INTEGER]
 			-- List of seven integers
 		do
 			create Result.make (7)
@@ -795,7 +795,7 @@ feature {NONE} -- Implementation
 			seven_integers: Result.count = 7
 		end
 
-	new_octuple (i, j, k, l, m, n, o, p: INTEGER): DS_ARRAYED_LIST [INTEGER] is
+	new_octuple (i, j, k, l, m, n, o, p: INTEGER): DS_ARRAYED_LIST [INTEGER]
 			-- List of eight integers
 		do
 			create Result.make (8)
@@ -812,7 +812,7 @@ feature {NONE} -- Implementation
 			eight_integers: Result.count = 8
 		end
 
-	new_eighteen_tuple (i, j, k, l, m, n, o, n8, n9, n10, n11, n12, n13, n14, n15, n16, n17, n18: INTEGER): DS_ARRAYED_LIST [INTEGER] is
+	new_eighteen_tuple (i, j, k, l, m, n, o, n8, n9, n10, n11, n12, n13, n14, n15, n16, n17, n18: INTEGER): DS_ARRAYED_LIST [INTEGER]
 			-- List of eighteen integers
 		do
 			create Result.make (18)
@@ -839,7 +839,7 @@ feature {NONE} -- Implementation
 			eighteen_integers: Result.count = 18
 		end
 
-	injected_canonical_combining_class (a_class: INTEGER_8): INTEGER is
+	injected_canonical_combining_class (a_class: INTEGER_8): INTEGER
 			-- Canonical combining class injected from a small set of integers
 		require
 			valid_projection: a_class >= 0 and a_class <= 60

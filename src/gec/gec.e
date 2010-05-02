@@ -44,7 +44,7 @@ create
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Start 'gec' execution.
 		local
 			a_filename: STRING
@@ -101,7 +101,7 @@ feature -- Access
 
 feature {NONE} -- Eiffel config file parsing
 
-	parse_ace_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+	parse_ace_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Read Ace file `a_file'.
 			-- Put result in `last_system' if no error occurred.
 		require
@@ -120,7 +120,7 @@ feature {NONE} -- Eiffel config file parsing
 			end
 		end
 
-	parse_xace_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+	parse_xace_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Read Xace file `a_file'.
 			-- Put result in `last_system' if no error occurred.
 		require
@@ -172,7 +172,7 @@ feature {NONE} -- Eiffel config file parsing
 			end
 		end
 
-	parse_ecf_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+	parse_ecf_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Read ECF file `a_file'.
 			-- Put result in `last_system' if no error occurred.
 		require
@@ -193,7 +193,7 @@ feature {NONE} -- Eiffel config file parsing
 
 feature {NONE} -- Processing
 
-	process_system (a_system: ET_SYSTEM) is
+	process_system (a_system: ET_SYSTEM)
 			-- Process `a_system'.
 		require
 			a_system_not_void: a_system /= Void
@@ -278,7 +278,7 @@ feature {NONE} -- Processing
 
 feature -- Error handling
 
-	report_cannot_read_error (a_filename: STRING) is
+	report_cannot_read_error (a_filename: STRING)
 			-- Report that `a_filename' cannot be
 			-- opened in read mode.
 		require
@@ -290,7 +290,7 @@ feature -- Error handling
 			error_handler.report_error (an_error)
 		end
 
-	report_version_number is
+	report_version_number
 			-- Report version number.
 		local
 			a_message: UT_VERSION_NUMBER
@@ -301,43 +301,43 @@ feature -- Error handling
 
 feature -- Status report
 
-	is_finalize: BOOLEAN is
+	is_finalize: BOOLEAN
 			-- Compilation with optimizations turned on?
 		do
 			Result := finalize_flag.was_found
 		end
 
-	is_gelint: BOOLEAN is
+	is_gelint: BOOLEAN
 			-- Should gelint be run on the full content of each class being compiled?
 		do
 			Result := gelint_flag.was_found
 		end
 
-	catcall_error_mode: BOOLEAN is
+	catcall_error_mode: BOOLEAN
 			-- Are CAT-call errors considered as fatal errors?
 		do
 			Result := catcall_option.was_found and then STRING_.same_string (catcall_option.parameter, "error")
 		end
 
-	catcall_warning_mode: BOOLEAN is
+	catcall_warning_mode: BOOLEAN
 			-- Are CAT-call errors considered just as warnings?
 		do
 			Result := not catcall_option.was_found or else STRING_.same_string (catcall_option.parameter, "warning")
 		end
 
-	qualified_anchored_types_enabled: BOOLEAN is
+	qualified_anchored_types_enabled: BOOLEAN
 			-- Are Qualified Anchored Types allowed?
 		do
 			Result := qat_option.was_found and then qat_option.parameter
 		end
 
-	no_c_compile: BOOLEAN is
+	no_c_compile: BOOLEAN
 			-- Should the back-end C compiler not be invoked on the generated C code?
 		do
 			Result := c_compile_option.was_found and then not c_compile_option.parameter
 		end
 
-	no_split: BOOLEAN is
+	no_split: BOOLEAN
 			-- Should C code be generated into a single file?
 		do
 			Result := split_option.was_found and then not split_option.parameter
@@ -346,19 +346,19 @@ feature -- Status report
 	split_size: INTEGER
 			-- Size (in bytes) of generated C files in bytes when in split mode
 
-	use_boehm_gc: BOOLEAN is
+	use_boehm_gc: BOOLEAN
 			-- Should the application be compiled with the Boehm GC?
 		do
 			Result := gc_option.was_found and then STRING_.same_string (gc_option.parameter, "boehm")
 		end
 
-	is_silent: BOOLEAN is
+	is_silent: BOOLEAN
 			-- Should gec run in silent mode?
 		do
 			Result := silent_flag.was_found
 		end
 
-	is_verbose: BOOLEAN is
+	is_verbose: BOOLEAN
 			-- Should gec run in verbose mode?
 		do
 			Result := verbose_flag.was_found
@@ -402,7 +402,7 @@ feature -- Argument parsing
 	version_flag: AP_FLAG
 			-- Flag for '--version'
 
-	parse_arguments is
+	parse_arguments
 			-- Initialize options and parse the command line.
 		local
 			a_parser: AP_PARSER

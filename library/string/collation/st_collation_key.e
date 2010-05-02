@@ -21,14 +21,14 @@ inherit
 
 feature -- Access
 
-	source: STRING is
+	source: STRING
 			-- Associated string
 		deferred
 		ensure
 			source_string_not_void: Result /= Void
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			Result := source.hash_code
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Comparison
 
-	three_way_comparison (other: like Current): INTEGER is
+	three_way_comparison (other: like Current): INTEGER
 			-- Comparison of `Current' with `other'
 		require
 			other_key_not_void: other /= Void

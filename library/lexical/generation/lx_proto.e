@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (i: INTEGER; trans: like transitions; com_st: like common_state) is
+	make (i: INTEGER; trans: like transitions; com_st: like common_state)
 			-- Create a new proto of state id `i'.
 		require
 			trans_not_void: trans /= Void

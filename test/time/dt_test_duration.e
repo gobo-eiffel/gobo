@@ -23,7 +23,7 @@ create
 
 feature -- Test
 
-	test_date_duration1 is
+	test_date_duration1
 			-- Test features of DT_DURATION using DT_DATE_DURATION.
 		local
 			d1, d2, d3: DT_DURATION
@@ -48,7 +48,7 @@ feature -- Test
 			assert ("infix_less2", not (d1 < d2))
 		end
 
-	test_date_duration2 is
+	test_date_duration2
 			-- Test features of DT_DURATION using DT_DATE_DURATION.
 		local
 			d1, d2: DT_DURATION
@@ -63,7 +63,7 @@ feature -- Test
 			assert ("infix_less2", not (d2 < d1))
 		end
 
-	test_date_duration3 is
+	test_date_duration3
 			-- Test features of DT_DURATION using DT_DATE_DURATION.
 		local
 			d1, d2, d3: DT_DURATION
@@ -86,7 +86,7 @@ feature -- Test
 			assert ("infix_less2", not (d2 < d1))
 		end
 
-	test_date_duration4 is
+	test_date_duration4
 			-- Test features of DT_DURATION using DT_DATE_DURATION.
 		local
 			d1, d2, d3: DT_DURATION
@@ -109,7 +109,7 @@ feature -- Test
 			assert ("infix_less2", d2 < d1)
 		end
 
-	test_time_duration1 is
+	test_time_duration1
 			-- Test features of DT_DURATION using DT_TIME_DURATION.
 		local
 			d1, d2, d3: DT_DURATION
@@ -134,7 +134,7 @@ feature -- Test
 			assert ("infix_less2", not (d1 < d2))
 		end
 
-	test_time_duration2 is
+	test_time_duration2
 			-- Test features of DT_DURATION using DT_TIME_DURATION.
 		local
 			d1, d2: DT_DURATION
@@ -149,7 +149,7 @@ feature -- Test
 			assert ("infix_less2", not (d2 < d1))
 		end
 
-	test_time_duration3 is
+	test_time_duration3
 			-- Test features of DT_DURATION using DT_TIME_DURATION.
 		local
 			d1, d2, d3: DT_DURATION
@@ -172,7 +172,7 @@ feature -- Test
 			assert ("infix_less2", d2 < d1)
 		end
 
-	test_time_duration4 is
+	test_time_duration4
 			-- Test features of DT_DURATION using DT_TIME_DURATION.
 		local
 			d1, d2, d3: DT_DURATION
@@ -195,7 +195,7 @@ feature -- Test
 			assert ("infix_less2", d2 < d1)
 		end
 
-	test_date_time_duration1 is
+	test_date_time_duration1
 			-- Test features of DT_DURATION using DT_DATE_TIME_DURATION.
 		local
 			d1, d2, d3: DT_DURATION
@@ -220,7 +220,7 @@ feature -- Test
 			assert ("infix_less2", not (d1 < d2))
 		end
 
-	test_date_time_duration2 is
+	test_date_time_duration2
 			-- Test features of DT_DURATION using DT_DATE_TIME_DURATION.
 		local
 			d1, d2: DT_DURATION
@@ -235,7 +235,7 @@ feature -- Test
 			assert ("infix_less2", not (d2 < d1))
 		end
 
-	test_date_time_duration3 is
+	test_date_time_duration3
 			-- Test features of DT_DURATION using DT_DATE_TIME_DURATION.
 		local
 			d1, d2, d3: DT_DURATION
@@ -258,7 +258,7 @@ feature -- Test
 			assert ("infix_less2", not (d2 < d1))
 		end
 
-	test_date_time_duration4 is
+	test_date_time_duration4
 			-- Test features of DT_DURATION using DT_DATE_TIME_DURATION.
 		local
 			d1, d2, d3: DT_DURATION

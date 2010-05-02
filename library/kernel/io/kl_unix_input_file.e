@@ -41,7 +41,7 @@ create
 
 feature -- Input
 
-	read_line is
+	read_line
 			-- Read characters from input file until a line separator
 			-- or end of file is reached. Make the characters that have
 			-- been read available in `last_string' and discard the line
@@ -75,7 +75,7 @@ feature -- Input
 			end_of_file := is_eof
 		end
 
-	read_new_line is
+	read_new_line
 			-- Read a line separator from input file.
 			-- Make the characters making up the recognized
 			-- line separator available in `last_string',
@@ -98,7 +98,7 @@ feature -- Input
 
 feature -- Access
 
-	eol: STRING is "%N"
+	eol: STRING = "%N"
 			-- Line separator
 
 end

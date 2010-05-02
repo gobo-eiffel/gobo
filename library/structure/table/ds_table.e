@@ -24,14 +24,14 @@ inherit
 
 feature -- Access
 
-	at alias "@", item (k: K): G is
+	at alias "@", item (k: K): G
 			-- Item associated with `k'
 		require
 			has_k: has (k)
 		deferred
 		end
 
-	value (k: K): G is
+	value (k: K): G
 			-- Item associated with `k';
 			-- Return default value if no such item
 		require else
@@ -44,12 +44,12 @@ feature -- Access
 
 feature -- Status report
 
-	valid_key (k: K): BOOLEAN is
+	valid_key (k: K): BOOLEAN
 			-- Is `k' a valid key?
 		deferred
 		end
 
-	valid_void_key: BOOLEAN is
+	valid_void_key: BOOLEAN
 			-- Is Void a valid key?
 		local
 			k: detachable K
@@ -61,14 +61,14 @@ feature -- Status report
 			end
 		end
 
-	has (k: K): BOOLEAN is
+	has (k: K): BOOLEAN
 			-- Is there an item associated with `k'?
 		deferred
 		ensure
 			valid_key: Result implies valid_key (k)
 		end
 
-	has_void: BOOLEAN is
+	has_void: BOOLEAN
 			-- Is there an item associated with Void?
 		local
 			k: detachable K
@@ -84,7 +84,7 @@ feature -- Status report
 
 feature -- Element change
 
-	replace (v: G; k: K) is
+	replace (v: G; k: K)
 			-- Replace item associated with `k' by `v'.
 		require
 			has_k: has (k)
@@ -94,7 +94,7 @@ feature -- Element change
 			same_count: count = old count
 		end
 
-	put (v: G; k: K) is
+	put (v: G; k: K)
 			-- Associate `v' with key `k'.
 		require
 			valid_key: valid_key (k)
@@ -105,7 +105,7 @@ feature -- Element change
 			one_more: (not old has (k)) implies (count = old count + 1)
 		end
 
-	put_new (v: G; k: K) is
+	put_new (v: G; k: K)
 			-- Associate `v' with key `k'.
 		require
 			valid_key: valid_key (k)
@@ -116,7 +116,7 @@ feature -- Element change
 			inserted: has (k) and then item (k) = v
 		end
 
-	swap (k, l: K) is
+	swap (k, l: K)
 			-- Exchange items associated with `k' and `l'.
 		require
 			valid_k: has (k)
@@ -135,7 +135,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove (k: K) is
+	remove (k: K)
 			-- Remove item associated with `k'.
 		require
 			valid_key: valid_key (k)
@@ -148,7 +148,7 @@ feature -- Removal
 
 feature -- Iteration
 
-	do_all_with_key (an_action: PROCEDURE [ANY, TUPLE [G, K]]) is
+	do_all_with_key (an_action: PROCEDURE [ANY, TUPLE [G, K]])
 			-- Apply `an_action' to every item.
 			-- `an_action' receives the item and its key.
 			-- (Semantics not guaranteed if `an_action' changes the structure.)
@@ -157,7 +157,7 @@ feature -- Iteration
 		deferred
 		end
 
-	do_if_with_key (an_action: PROCEDURE [ANY, TUPLE [G, K]]; a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN]) is
+	do_if_with_key (an_action: PROCEDURE [ANY, TUPLE [G, K]]; a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test'.
 			-- `an_action' and `a_test' receive the item and its key.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
@@ -167,7 +167,7 @@ feature -- Iteration
 		deferred
 		end
 
-	there_exists_with_key (a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN]): BOOLEAN is
+	there_exists_with_key (a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for at least one item and its key?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		require
@@ -175,7 +175,7 @@ feature -- Iteration
 		deferred
 		end
 
-	for_all_with_key (a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN]): BOOLEAN is
+	for_all_with_key (a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for all items and their keys?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		require

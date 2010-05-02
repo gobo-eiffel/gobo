@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Element change
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -77,7 +77,7 @@ feature -- Element change
 			attributes_prepared := True
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 		local
 			a_character_map: XM_XSLT_CHARACTER_MAP
@@ -90,7 +90,7 @@ feature -- Element change
 			end
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (an_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		do
 			last_generated_expression := Void

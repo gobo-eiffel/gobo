@@ -27,7 +27,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_callbacks (a_callbacks: like callbacks) is
+	set_callbacks (a_callbacks: like callbacks)
 			-- Set `callbacks' to `a_callbacks'.
 		do
 			callbacks := a_callbacks
@@ -37,7 +37,7 @@ feature -- Setting
 
 feature {NONE} -- Document
 
-	on_start is
+	on_start
 			-- Forward start.
 		do
 			if callbacks = Void then
@@ -46,13 +46,13 @@ feature {NONE} -- Document
 			callbacks.on_start
 		end
 
-	on_finish is
+	on_finish
 			-- Forward finish.
 		do
 			callbacks.on_finish
 		end
 
-	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN) is
+	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN)
 			-- XML declaration.
 		do
 			callbacks.on_xml_declaration (a_version, an_encoding, a_standalone)
@@ -60,7 +60,7 @@ feature {NONE} -- Document
 
 feature {NONE} -- Errors
 
-	on_error (a_message: STRING) is
+	on_error (a_message: STRING)
 			-- Event producer detected an error.
 		do
 			callbacks.on_error (a_message)
@@ -68,13 +68,13 @@ feature {NONE} -- Errors
 
 feature {NONE} -- Meta
 
-	on_processing_instruction (a_name, a_content: STRING) is
+	on_processing_instruction (a_name, a_content: STRING)
 			-- Forward PI.
 		do
 			callbacks.on_processing_instruction (a_name, a_content)
 		end
 
-	on_comment (a_content: STRING) is
+	on_comment (a_content: STRING)
 			-- Forward comment.
 		do
 			callbacks.on_comment (a_content)
@@ -82,25 +82,25 @@ feature {NONE} -- Meta
 
 feature {NONE} -- Tag
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Start of start tag.
 		do
 			callbacks.on_start_tag (a_namespace, a_prefix, a_local_part)
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
 			-- Process attribute.
 		do
 			callbacks.on_attribute (a_namespace, a_prefix, a_local_part, a_value)
 		end
 
-	on_start_tag_finish is
+	on_start_tag_finish
 			-- End of start tag.
 		do
 			callbacks.on_start_tag_finish
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- End tag.
 		do
 			callbacks.on_end_tag (a_namespace, a_prefix, a_local_part)
@@ -108,7 +108,7 @@ feature {NONE} -- Tag
 
 feature {NONE} -- Content
 
-	on_content (a_content: STRING) is
+	on_content (a_content: STRING)
 			-- Forward content.
 		do
 			callbacks.on_content (a_content)

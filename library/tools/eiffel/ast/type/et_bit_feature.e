@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_named_base_class: like named_base_class) is
+	make (a_name: like name; a_named_base_class: like named_base_class)
 			-- Create a new 'BIT feature' type.
 		require
 			a_name_not_void: a_name /= Void
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset type as it was just after it was last parsed.
 		do
 			name.reset
@@ -55,7 +55,7 @@ feature -- Access
 			-- current type and which is supposed
 			-- to be an integer constant attribute
 
-	seed: INTEGER is
+	seed: INTEGER
 			-- Feature ID of one of the seeds of the
 			-- feature associated with current type;
 			-- 0 if not resolved yet
@@ -65,7 +65,7 @@ feature -- Access
 			seed_positive: Result >= 0
 		end
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -75,19 +75,19 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := bit_keyword
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := name
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := name.break
@@ -95,7 +95,7 @@ feature -- Access
 
 feature -- Resolving
 
-	resolve_identifier_type (a_seed: INTEGER; a_constant: like constant) is
+	resolve_identifier_type (a_seed: INTEGER; a_constant: like constant)
 			-- Resolve current type with `a_seed' and `a_constant'.
 		require
 			a_seed_positive: a_seed > 0
@@ -110,7 +110,7 @@ feature -- Resolving
 
 feature -- Output
 
-	append_to_string (a_string: STRING) is
+	append_to_string (a_string: STRING)
 			-- Append textual representation of
 			-- current type to `a_string'.
 		do
@@ -120,7 +120,7 @@ feature -- Output
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_bit_feature (Current)

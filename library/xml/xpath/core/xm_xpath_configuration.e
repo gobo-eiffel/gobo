@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_configuration is
+	make_configuration
 			-- Initialize `Current' with standard settings.
 		local
 			l_property_table: DS_HASH_TABLE [STRING, STRING]
@@ -49,13 +49,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	Standard_file_collection: STRING is "standard-file-collection"
+	Standard_file_collection: STRING = "standard-file-collection"
 			-- Property name for standard implementation of file: URI scheme
 
-	Standard_ftp_collection: STRING is "standard-ftp-collection"
+	Standard_ftp_collection: STRING = "standard-ftp-collection"
 			-- Property name for standard implementation of ftp: URI scheme
 
-	Standard_http_collection: STRING is "standard-http-collection"
+	Standard_http_collection: STRING = "standard-http-collection"
 			-- Property name for standard implementation of http: URI scheme
 
 	collection_resolver: XM_XPATH_COLLECTION_RESOLVER
@@ -83,7 +83,7 @@ feature -- Status report
 	initialized: BOOLEAN
 			-- Has initialization completed?
 
-	is_tracing: BOOLEAN is
+	is_tracing: BOOLEAN
 			-- Is tracing active?
 		do
 			Result := False
@@ -92,13 +92,13 @@ feature -- Status report
 	is_tracing_suppressed: BOOLEAN
 			-- Is output from XPath trace() function suppressed?
 
-	are_all_nodes_untyped: BOOLEAN is
+	are_all_nodes_untyped: BOOLEAN
 			-- Are all nodes untyped?
 		do
 			Result := True -- for Basic-level XSLT
 		end
 
-	is_uri_written (a_uri: STRING): BOOLEAN is
+	is_uri_written (a_uri: STRING): BOOLEAN
 			-- Has `a_uri' been written to yet?
 		require
 			a_uri_not_void: a_uri /= Void
@@ -108,7 +108,7 @@ feature -- Status report
 
 feature -- Setting
 
-	suppress_trace_output (yes_or_no: BOOLEAN) is
+	suppress_trace_output (yes_or_no: BOOLEAN)
 			-- Turn tracing supression on-or-off.
 		do
 			is_tracing_suppressed := yes_or_no
@@ -116,7 +116,7 @@ feature -- Setting
 			set: is_tracing_suppressed = yes_or_no
 		end
 
-	set_collection_resolver (a_collection_resolver: like collection_resolver) is
+	set_collection_resolver (a_collection_resolver: like collection_resolver)
 			-- Set `collection_resolver'.
 			-- This routine also removes system-properties indicating use of the standard implementation.
 		require
@@ -127,8 +127,8 @@ feature -- Setting
 		ensure
 			collection_resolver_set: collection_resolver = a_collection_resolver
 		end
-		
-	set_product_name (a_name: STRING) is
+
+	set_product_name (a_name: STRING)
 			-- Set `product_name'.
 		require
 			name_not_void: a_name /= Void
@@ -138,7 +138,7 @@ feature -- Setting
 			name_set: product_name = a_name
 		end
 
-	set_product_version (a_version: STRING) is
+	set_product_version (a_version: STRING)
 			-- Set `product_version'.
 		require
 			version_not_void: a_version /= Void
@@ -148,7 +148,7 @@ feature -- Setting
 			version_set: product_version = a_version
 		end
 
-	set_vendor_name (a_name: STRING) is
+	set_vendor_name (a_name: STRING)
 			-- Set `vendor_name'.
 		require
 			name_not_void: a_name /= Void
@@ -158,7 +158,7 @@ feature -- Setting
 			name_set: vendor_name = a_name
 		end
 
-	set_vendor_url (a_url: STRING) is
+	set_vendor_url (a_url: STRING)
 			-- Set `vendor_url'.
 		require
 			url_not_void: a_url /= Void
@@ -168,7 +168,7 @@ feature -- Setting
 			url_set: vendor_url = a_url
 		end
 
-	set_digits (digits: INTEGER) is
+	set_digits (digits: INTEGER)
 			-- Set the preceision for decimal and integer arithmetic.
 		require
 			sufficient_precision: digits >= 18
@@ -178,7 +178,7 @@ feature -- Setting
 			digits_set: shared_decimal_context.digits = digits
 		end
 
-	trace (a_label, a_value: STRING) is
+	trace (a_label, a_value: STRING)
 			-- Create trace entry.
 		require
 			tracing_enabled: is_tracing
@@ -188,7 +188,7 @@ feature -- Setting
 			-- Default is to do nothing - host language should override.
 		end
 
-	register_property_namespace_table (a_table: DS_HASH_TABLE [STRING, STRING]; a_namespace: STRING) is
+	register_property_namespace_table (a_table: DS_HASH_TABLE [STRING, STRING]; a_namespace: STRING)
 			-- Register `a_table' as system-properties in `a_namespace'.
 		require
 			a_table_not_void: a_table /= Void
@@ -204,7 +204,7 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	clear_resolver_properties is
+	clear_resolver_properties
 			-- Remove all standard resolver system-properties.
 		local
 			l_property_table: DS_HASH_TABLE [STRING, STRING]

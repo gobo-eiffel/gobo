@@ -14,7 +14,7 @@ deferred class KI_INPUT_STREAM [G]
 
 feature -- Input
 
-	read is
+	read
 			-- Read the next item in input stream.
 			-- Make the result available in `last_item'.
 		require
@@ -23,7 +23,7 @@ feature -- Input
 		deferred
 		end
 
-	unread (an_item: G) is
+	unread (an_item: G)
 			-- Put `an_item' back in input stream.
 			-- This item will be read first by the next
 			-- call to a read routine.
@@ -36,7 +36,7 @@ feature -- Input
 			last_item_set: last_item = an_item
 		end
 
-	read_to_buffer (a_buffer: KI_BUFFER [G]; pos, nb: INTEGER): INTEGER is
+	read_to_buffer (a_buffer: KI_BUFFER [G]; pos, nb: INTEGER): INTEGER
 			-- Fill `a_buffer', starting at position `pos', with
 			-- at most `nb' items read from input stream.
 			-- Return the number of items actually read.
@@ -78,7 +78,7 @@ feature -- Input
 
 feature -- Status report
 
-	is_closable: BOOLEAN is
+	is_closable: BOOLEAN
 			-- Can current input stream be closed?
 		do
 			Result := False
@@ -86,12 +86,12 @@ feature -- Status report
 			is_open: Result implies is_open_read
 		end
 
-	is_open_read: BOOLEAN is
+	is_open_read: BOOLEAN
 			-- Can items be read from input stream?
 		deferred
 		end
 
-	is_rewindable: BOOLEAN is
+	is_rewindable: BOOLEAN
 			-- Can current input stream be rewound to return input from
 			-- the beginning of the stream?
 		do
@@ -100,28 +100,28 @@ feature -- Status report
 			rewind_implies_open: Result implies is_open_read
 		end
 
-	end_of_input: BOOLEAN is
+	end_of_input: BOOLEAN
 			-- Has the end of input stream been reached?
 		require
 			is_open_read: is_open_read
 		deferred
 		end
 
-	valid_unread_item (an_item: G): BOOLEAN is
+	valid_unread_item (an_item: G): BOOLEAN
 			-- Can `an_item' be put back in input stream?
 		deferred
 		end
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Name of input stream
 		deferred
 		ensure
 			name_not_void: Result /= Void
 		end
 
-	last_item: G is
+	last_item: G
 			-- Last item read
 		require
 			is_open_read: is_open_read
@@ -131,7 +131,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	close is
+	close
 			-- Try to close input stream if it is closable. Set
 			-- `is_open_read' to false if operation was successful.
 		require
@@ -140,7 +140,7 @@ feature -- Basic operations
 				-- Do nothing.
 		end
 
-	rewind is
+	rewind
 			-- Move input position to the beginning of stream.
 		require
 			can_rewind: is_rewindable

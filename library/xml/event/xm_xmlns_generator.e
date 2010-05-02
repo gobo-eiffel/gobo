@@ -1,7 +1,7 @@
 note
-	
+
 	description:
-	
+
 		"Filter that generates consistent xmlns declarations (existings ones if any are replaced)"
 
 	library: "Gobo Eiffel XML Library"
@@ -9,11 +9,11 @@ note
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
-		
+
 class XM_XMLNS_GENERATOR
 
 inherit
-	
+
 	XM_CALLBACKS_FILTER
 		redefine
 			has_resolved_namespaces,
@@ -24,21 +24,21 @@ inherit
 			on_end_tag,
 			on_finish
 		end
-	
+
 	XM_MARKUP_CONSTANTS
 		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
-	
+
 create
 
 	make_null,
 	set_next
-	
+
 feature {NONE} -- Default element namespace handling
 
-	on_default (a_namespace: STRING) is
+	on_default (a_namespace: STRING)
 			-- Process default namespace declaration.
 		require
 			not_void: a_namespace /= Void
@@ -49,13 +49,13 @@ feature {NONE} -- Default element namespace handling
 				next.on_attribute (Xmlns_namespace, Void, Xmlns, a_namespace)
 			end
 		end
-		
+
 feature {NONE} -- Unique prefix
 
 	last_unique_prefix: INTEGER
 			-- Number used to make unique numeric prefix
-					
-	unique_prefix: STRING is
+
+	unique_prefix: STRING
 			-- Unique prefix.
 		do
 			create Result.make_empty
@@ -65,25 +65,25 @@ feature {NONE} -- Unique prefix
 			result_not_void: Result /= Void
 			not_implicit: not is_implicit (Result)
 		end
-	
-	reset_unique_prefix is
+
+	reset_unique_prefix
 			-- Reset unique prefix generator.
 		do
 			last_unique_prefix := 0
-		end	
-		
-	next_unique_prefix is
+		end
+
+	next_unique_prefix
 			-- Go to next unique prefix.
 		do
 			last_unique_prefix := last_unique_prefix + 1
 		end
-		
+
 feature {NONE} -- Prefix handling
 
 	context: XM_XMLNS_GENERATOR_CONTEXT
 			-- xmlns context
-			
-	handle_prefix (a_namespace: STRING; a_prefix: STRING): STRING is
+
+	handle_prefix (a_namespace: STRING; a_prefix: STRING): STRING
 			-- Handle prefix.
 		require
 			a_namespace_not_void: a_namespace /= Void
@@ -93,11 +93,11 @@ feature {NONE} -- Prefix handling
 					-- Ignore the prefix and use the previously declared one
 				Result := context.item (a_namespace)
 			else
-				if a_prefix = Void or else a_prefix.is_empty 
-					or else context.element_has_prefix (a_prefix) 
+				if a_prefix = Void or else a_prefix.is_empty
+					or else context.element_has_prefix (a_prefix)
 				then
-						-- There is no prefix, or the prefix is in use and 
-						-- declared in this element so cannot be overridden: 
+						-- There is no prefix, or the prefix is in use and
+						-- declared in this element so cannot be overridden:
 						-- generage new prefix.
 					from
 						next_unique_prefix
@@ -112,7 +112,7 @@ feature {NONE} -- Prefix handling
 				else
 						-- Use declared prefix
 					Result := a_prefix
-				end 
+				end
 				context.force (Result, a_namespace)
 			end
 			context.element_prefix (Result)
@@ -120,29 +120,29 @@ feature {NONE} -- Prefix handling
 			result_not_void: Result /= Void
 			not_implicit: not is_implicit (Result)
 		end
-		
-	is_implicit (a_prefix: STRING): BOOLEAN is
+
+	is_implicit (a_prefix: STRING): BOOLEAN
 			-- Is this an implicit prefix? eg xml:
 		do
 			Result := STRING_.same_string (a_prefix, Xml_prefix)
 		end
-		
+
 feature -- Events
 
-	on_start is
+	on_start
 			-- Reset context.
 		do
 			create context.make
 			reset_unique_prefix
-			
+
 			next.on_start
 		end
-		
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Start tag, handle default namespace.
 		do
 			check resolved: a_namespace /= Void end
-			
+
 			context.on_start_element
 			if a_prefix = Void or else a_prefix.is_empty then
 				next.on_start_tag (a_namespace, a_prefix, a_local_part)
@@ -153,8 +153,8 @@ feature -- Events
 					a_local_part)
 			end
 		end
-		
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
+
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
 			-- Process attribute's prefix.
 		do
 			check resolved: a_namespace /= Void end
@@ -167,16 +167,16 @@ feature -- Events
 			elseif is_implicit (a_prefix) then
 					-- Implicit namespaces are not declared.
 				next.on_attribute (a_namespace,
-					a_prefix, 
+					a_prefix,
 					a_local_part, a_value)
 			else
 				next.on_attribute (a_namespace,
-					handle_prefix (a_namespace, a_prefix), 
+					handle_prefix (a_namespace, a_prefix),
 					a_local_part, a_value)
 			end
 		end
-		
-	on_start_tag_finish is
+
+	on_start_tag_finish
 			-- Issue xmlns attributes
 		local
 			a_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
@@ -192,15 +192,15 @@ feature -- Events
 			end
 			next.on_start_tag_finish
 		end
-	
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)is
+
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- End tag, reset context.
 		do
 			context.on_end_element
 			next.on_end_tag (a_namespace, a_prefix, a_local_part)
 		end
-		
-	on_finish is
+
+	on_finish
 		do
 			-- free context
 			create context.make
@@ -209,7 +209,7 @@ feature -- Events
 
 feature -- Events mode
 
-	has_resolved_namespaces: BOOLEAN is
+	has_resolved_namespaces: BOOLEAN
 			-- Namespaces required
 		do
 			Result := True

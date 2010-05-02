@@ -11,7 +11,7 @@ note
 	revision: "$Revision$"
 
 class XM_XPATH_TINY_PRECEDING_SIBLING_ENUMERATION
-	
+
 inherit
 
 	XM_XPATH_AXIS_ITERATOR [XM_XPATH_TINY_NODE]
@@ -22,10 +22,10 @@ inherit
 create
 
 	make
-	
+
 feature {NONE} -- Initialization
 
-	make (a_document: XM_XPATH_TINY_FOREST; a_starting_node: XM_XPATH_TINY_NODE; a_node_test: XM_XPATH_NODE_TEST) is
+	make (a_document: XM_XPATH_TINY_FOREST; a_starting_node: XM_XPATH_TINY_NODE; a_node_test: XM_XPATH_NODE_TEST)
 			-- Establish invariant
 		require
 			document_not_void: a_document /= Void
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
 		local
 			a_tiny_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_TINY_NODE]
@@ -57,7 +57,7 @@ feature -- Access
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move to next position
 		do
 			index := index + 1
@@ -72,12 +72,12 @@ feature -- Cursor movement
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 			create Result.make (document, starting_node, node_test)
 		end
-	
+
 feature {NONE} -- Implementation
 
 	document: XM_XPATH_TINY_FOREST
@@ -88,14 +88,14 @@ feature {NONE} -- Implementation
 
 	parent_node: XM_XPATH_TINY_COMPOSITE_NODE
 			-- The parent node
-	
+
 	node_test: XM_XPATH_NODE_TEST
 			-- The node test to apply when selecting nodes
 
 	next_node_number: INTEGER
 			-- The next node to be returned by the enumeration
 
-	advance is
+	advance
 			-- Move to the next matching node
 		local
 			finished: BOOLEAN
@@ -111,12 +111,12 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-	
+
 invariant
 
 	document_not_void: document /= Void
 	starting_node_not_void: starting_node /= Void
 	node_test_not_void: node_test /= Void
-	
+
 end
-	
+

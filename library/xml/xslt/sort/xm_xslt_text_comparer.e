@@ -13,7 +13,7 @@ note
 class XM_XSLT_TEXT_COMPARER
 
 inherit
-	
+
 	KL_PART_COMPARATOR [XM_XPATH_ITEM]
 
 
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialiaztion
 
-	make (a_comparer: KL_PART_COMPARATOR [XM_XPATH_ITEM]) is
+	make (a_comparer: KL_PART_COMPARATOR [XM_XPATH_ITEM])
 			-- Establish invariant.
 		require
 			comparer_not_void: a_comparer /= Void
@@ -32,8 +32,8 @@ feature {NONE} -- Initialiaztion
 		ensure
 			comparer_set: comparer = a_comparer
 		end
-	
-	make_from_collator (a_collator: ST_COLLATOR) is
+
+	make_from_collator (a_collator: ST_COLLATOR)
 			-- Establish invariant
 		require
 			collator_not_void: a_collator /= Void
@@ -42,10 +42,10 @@ feature {NONE} -- Initialiaztion
 		ensure
 			collator_set: collator = a_collator
 		end
-	
+
 feature -- Comparison
 
-	less_than (u, v: XM_XPATH_ITEM): BOOLEAN is
+	less_than (u, v: XM_XPATH_ITEM): BOOLEAN
 			-- Is `u' considered less than `v'?
 		local
 			s1, s2: STRING

@@ -14,7 +14,7 @@ class UT_SHARED_ECF_VERSIONS
 
 feature -- Access
 
-	ecf_1_0_0: UT_VERSION is
+	ecf_1_0_0: UT_VERSION
 			-- ECF 1.0.0
 			-- Corresponding to ISE 5.7
 		once
@@ -23,7 +23,7 @@ feature -- Access
 			ecf_1_0_0_not_void: Result /= Void
 		end
 
-	ecf_1_2_0: UT_VERSION is
+	ecf_1_2_0: UT_VERSION
 			-- ECF 1.2.0
 			-- Corresponding to ISE 6.0
 		once
@@ -32,7 +32,7 @@ feature -- Access
 			ecf_1_2_0_not_void: Result /= Void
 		end
 
-	ecf_1_3_0: UT_VERSION is
+	ecf_1_3_0: UT_VERSION
 			-- ECF 1.3.0
 			-- Corresponding to ISE 6.1
 		once
@@ -41,7 +41,7 @@ feature -- Access
 			ecf_1_3_0_not_void: Result /= Void
 		end
 
-	ecf_1_4_0: UT_VERSION is
+	ecf_1_4_0: UT_VERSION
 			-- ECF 1.4.0
 			-- Corresponding to ISE 6.2
 		once
@@ -50,7 +50,7 @@ feature -- Access
 			ecf_1_4_0_not_void: Result /= Void
 		end
 
-	ecf_1_5_0: UT_VERSION is
+	ecf_1_5_0: UT_VERSION
 			-- ECF 1.5.0
 			-- Corresponding to ISE 6.4
 		once
@@ -59,7 +59,7 @@ feature -- Access
 			ecf_1_5_0_not_void: Result /= Void
 		end
 
-	ecf_latest: UT_VERSION is
+	ecf_latest: UT_VERSION
 			-- After the last ECF version
 		once
 			create Result.make_latest

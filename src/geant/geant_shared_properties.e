@@ -34,7 +34,7 @@ inherit
 
 feature -- Access
 
-	Commandline_variables: GEANT_VARIABLES is
+	Commandline_variables: GEANT_VARIABLES
 			-- Variables specified on commandline using -D
 			-- example: -Dname=value
 		once
@@ -43,7 +43,7 @@ feature -- Access
 			Commandline_variables_not_void: Result /= Void
 		end
 
-	commandline_arguments: GEANT_ARGUMENT_VARIABLES is
+	commandline_arguments: GEANT_ARGUMENT_VARIABLES
 			-- Arguments for start target specified on commandline using -A
 			-- example: -Aname=value
 		once
@@ -52,7 +52,7 @@ feature -- Access
 			commandline_arguments: Result /= Void
 		end
 
-	Empty_variables: GEANT_VARIABLES is
+	Empty_variables: GEANT_VARIABLES
 			-- Variables with no entries
 		once
 			create Result.make
@@ -60,7 +60,7 @@ feature -- Access
 			Empty_variables_not_void: Result /= Void
 		end
 
-	Empty_argument_variables: GEANT_ARGUMENT_VARIABLES is
+	Empty_argument_variables: GEANT_ARGUMENT_VARIABLES
 			-- Argument variables with no entries
 		once
 			create Result.make
@@ -68,7 +68,7 @@ feature -- Access
 			Empty_argument_variables_not_void: Result /= Void
 		end
 
-	Default_builtin_variables: GEANT_VARIABLES is
+	Default_builtin_variables: GEANT_VARIABLES
 			-- Default built-in variables
 		once
 			create Result.make
@@ -88,7 +88,7 @@ feature -- Access
 			default_builtin_variables_not_void: Result /= Void
 		end
 
-	Arguments_string_splitter: ST_SPLITTER is
+	Arguments_string_splitter: ST_SPLITTER
 			-- String splitter for terse arguments
 		once
 			create Result.make
@@ -97,13 +97,13 @@ feature -- Access
 			Arguments_string_splitter_not_void: Result /= Void
 		end
 
-	system_parents: DS_ARRAYED_LIST [GEANT_PARENT] is
+	system_parents: DS_ARRAYED_LIST [GEANT_PARENT]
 			-- Projects of system
 		once
 			create Result.make (5)
 		end
 
-	Project_variables_resolver: GEANT_PROJECT_VARIABLE_RESOLVER is
+	Project_variables_resolver: GEANT_PROJECT_VARIABLE_RESOLVER
 			-- Project variables resolver
 		once
 			create Result.make
@@ -111,7 +111,7 @@ feature -- Access
 			Project_variables_resolver_not_void: Result /= Void
 		end
 
-	validation_messages: DS_ARRAYED_LIST [STRING] is
+	validation_messages: DS_ARRAYED_LIST [STRING]
 			-- Validation messages containing messages if tasks have been defined incorrectly
 		once
 			create Result.make (5)
@@ -119,7 +119,7 @@ feature -- Access
 
 feature {GEANT_INTERPRETING_ELEMENT} -- Access
 
-	target_arguments_stack: DS_STACK [GEANT_ARGUMENT_VARIABLES] is
+	target_arguments_stack: DS_STACK [GEANT_ARGUMENT_VARIABLES]
 			-- Arguments stack
 		local
 			a_target_arguments_stack: DS_ARRAYED_STACK [GEANT_ARGUMENT_VARIABLES]
@@ -131,7 +131,7 @@ feature {GEANT_INTERPRETING_ELEMENT} -- Access
 			target_arguments_stack_not_void: Result /= Void
 		end
 
-	target_locals_stack: DS_STACK [GEANT_VARIABLES] is
+	target_locals_stack: DS_STACK [GEANT_VARIABLES]
 			-- Locals stack
 		local
 			a_target_locals_stack: DS_ARRAYED_STACK [GEANT_VARIABLES]
@@ -200,7 +200,7 @@ feature -- Status report
 
 feature -- Processing
 
-	exit_application (a_code: INTEGER; a_message: ARRAY [STRING]) is
+	exit_application (a_code: INTEGER; a_message: ARRAY [STRING])
 			-- Exit application with code `a_code';
 			-- if a_message /= Void log it.
 		require
@@ -215,7 +215,7 @@ feature -- Processing
 			Exceptions.die (a_code)
 		end
 
-	string_tokens (a_string: STRING; a_delimiter: CHARACTER): DS_ARRAYED_LIST [STRING] is
+	string_tokens (a_string: STRING; a_delimiter: CHARACTER): DS_ARRAYED_LIST [STRING]
 			-- Strings delimited by `a_delimiter' in `a_string';
 			-- Candidate for STRING_ROUTINES
 		require
@@ -375,7 +375,7 @@ feature -- Processing
 			string_tokens_not_void: Result /= Void
 		end
 
-	glob_prefix (a_star_string: STRING): STRING is
+	glob_prefix (a_star_string: STRING): STRING
 			-- Substring of `a_star_string' before first '*' if any
 			-- otherwise `a_star_string'
 		require
@@ -398,7 +398,7 @@ feature -- Processing
 			not_has_star: (a_star_string.index_of ('*', 1) = 0) implies Result.is_equal (a_star_string)
 		end
 
-	glob_postfix (a_star_string: STRING): STRING is
+	glob_postfix (a_star_string: STRING): STRING
 			-- Substring of `a_star_string' after first '*' if any
 			-- otherwise `a_star_string'
 		require
@@ -425,7 +425,7 @@ feature -- Processing
 
 feature {NONE} -- Implemenation
 
-	log_messages (a_message: ARRAY [STRING]) is
+	log_messages (a_message: ARRAY [STRING])
 			-- if a_message /= Void log it.
 		require
 			-- Note: ARRAY.has is not portable:

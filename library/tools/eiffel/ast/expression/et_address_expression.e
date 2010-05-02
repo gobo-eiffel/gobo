@@ -24,14 +24,14 @@ feature -- Access
 	dollar: ET_SYMBOL
 			-- '$' symbol
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
 			Result := dollar.position
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := dollar
@@ -39,12 +39,12 @@ feature -- Access
 
 feature -- Status report
 
-	is_never_void: BOOLEAN is True
+	is_never_void: BOOLEAN = True
 			-- Can current expression never be void?
 
 feature -- Setting
 
-	set_dollar (a_dollar: like dollar) is
+	set_dollar (a_dollar: like dollar)
 			-- Set `dollar' to `a_dollar'.
 		require
 			a_dollar_not_void: a_dollar /= Void

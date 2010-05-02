@@ -44,7 +44,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new DTD attribute content.
 		do
 			set_data
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Like in DTD.
 		local
 			a_cursor: DS_LINEAR_CURSOR [STRING]
@@ -124,7 +124,7 @@ feature -- Name content type
 	name: STRING
 			-- Attribute name
 
-	set_name (a_name: like name) is
+	set_name (a_name: like name)
 			-- Set name.
 		require
 			a_name_not_void: a_name /= Void
@@ -134,7 +134,7 @@ feature -- Name content type
 			name_set: name = a_name
 		end
 
-	has_name: BOOLEAN is
+	has_name: BOOLEAN
 			-- Has name been set?
 		do
 			Result := name /= Void
@@ -154,7 +154,7 @@ feature -- Default value
 			-- require has_default_value
 			-- ensure Result /= Void
 
-	set_default_value (a_value: like default_value) is
+	set_default_value (a_value: like default_value)
 			-- Set default value.
 		require
 			a_value_not_void: a_value /= Void
@@ -165,13 +165,13 @@ feature -- Default value
 			default_value_set: default_value = a_value
 		end
 
-	has_default_value: BOOLEAN is
+	has_default_value: BOOLEAN
 			-- Is there a default value?
 		do
 			Result := default_value /= Void
 		end
 
-	copy_default (other: XM_DTD_ATTRIBUTE_CONTENT) is
+	copy_default (other: XM_DTD_ATTRIBUTE_CONTENT)
 			-- Copy default value settings from 'other'.
 		require
 			other_not_void: other /= Void
@@ -190,7 +190,7 @@ feature -- Default value
 
 feature -- Defaults
 
-	is_value_required: BOOLEAN is
+	is_value_required: BOOLEAN
 			-- Is attribute value required?
 		local
 			a_value: CHARACTER
@@ -204,7 +204,7 @@ feature -- Defaults
 			Result := a_value = 'R'
 		end
 
-	set_value_required is
+	set_value_required
 			-- Attribute value required.
 		do
 			value := 'R'
@@ -212,13 +212,13 @@ feature -- Defaults
 			set: is_value_required
 		end
 
-	is_value_implied: BOOLEAN is
+	is_value_implied: BOOLEAN
 			-- Is attribute value implied?
 		do
 			Result := value = 'I'
 		end
 
-	set_value_implied is
+	set_value_implied
 			-- Attribute value implied.
 		do
 			value := 'I'
@@ -226,13 +226,13 @@ feature -- Defaults
 			set: is_value_implied
 		end
 
-	is_value_fixed: BOOLEAN is
+	is_value_fixed: BOOLEAN
 			-- Is value fixed?
 		do
 			Result := value = 'F'
 		end
 
-	set_value_fixed (a_value: like default_value) is
+	set_value_fixed (a_value: like default_value)
 			-- Set fixed value.
 		require
 			a_value_not_void: a_value /= Void
@@ -246,13 +246,13 @@ feature -- Defaults
 
 feature -- String content type
 
-	is_data: BOOLEAN is
+	is_data: BOOLEAN
 			-- CDATA, arbitrary character data?
 		do
 			Result := type = 'C'
 		end
 
-	set_data is
+	set_data
 			-- CDATA.
 		do
 			type := 'C'
@@ -262,13 +262,13 @@ feature -- String content type
 
 feature -- Enumerated content type
 
-	is_notation: BOOLEAN is
+	is_notation: BOOLEAN
 			-- NOTATION?
 		do
 			Result := type = 'N'
 		end
 
-	set_notation is
+	set_notation
 			-- NOTATION.
 		do
 			type := 'N'
@@ -276,13 +276,13 @@ feature -- Enumerated content type
 			set: is_notation
 		end
 
-	is_enumeration: BOOLEAN is
+	is_enumeration: BOOLEAN
 			-- Fixed enumeration?
 		do
 			Result := type = 'U'
 		end
 
-	set_enumeration is
+	set_enumeration
 			-- Fixed enumeration.
 		do
 			type := 'U'
@@ -293,13 +293,13 @@ feature -- Enumerated content type
 
 feature -- Tokenized content type
 
-	is_id: BOOLEAN is
+	is_id: BOOLEAN
 			-- ID (identifier declaration)?
 		do
 			Result := type = 'I'
 		end
 
-	set_id is
+	set_id
 			-- ID.
 		do
 			type := 'I'
@@ -307,13 +307,13 @@ feature -- Tokenized content type
 			set: is_id
 		end
 
-	is_id_ref: BOOLEAN is
+	is_id_ref: BOOLEAN
 			-- IDREF (identifier reference)?
 		do
 			Result := type = 'R'
 		end
 
-	set_id_ref is
+	set_id_ref
 			-- IDREF.
 		do
 			type := 'R'
@@ -321,13 +321,13 @@ feature -- Tokenized content type
 			set: is_id_ref
 		end
 
-	is_entity: BOOLEAN is
+	is_entity: BOOLEAN
 			-- ENTITY?
 		do
 			Result := type = 'E'
 		end
 
-	set_entity is
+	set_entity
 			-- ENTITY.
 		do
 			type := 'E'
@@ -335,13 +335,13 @@ feature -- Tokenized content type
 			set: is_entity
 		end
 
-	is_token: BOOLEAN is
+	is_token: BOOLEAN
 			-- NMTOKEN?
 		do
 			Result := type = 'T'
 		end
 
-	set_token is
+	set_token
 			-- NMTOKEN.
 		do
 			type := 'T'
@@ -352,7 +352,7 @@ feature -- Tokenized content type
 	is_list_type: BOOLEAN
 			-- Is the type a list (NMTOKENS, ENTITIES, IDREFS)?
 
-	set_list_type is
+	set_list_type
 			-- Set type to list.
 		require
 			valid: is_token or is_entity or is_id_ref
@@ -364,7 +364,7 @@ feature -- Tokenized content type
 
 feature -- Enumeration
 
-	enumeration: DS_LIST [STRING] is
+	enumeration: DS_LIST [STRING]
 			-- List of allowed values for fixed enumeration.
 		require
 			is_enumeration: is_enumeration
@@ -373,8 +373,8 @@ feature -- Enumeration
 		ensure
 			result_not_void: Result /= Void
 		end
-	
-	set_enumeration_list (a_list: like enumeration) is
+
+	set_enumeration_list (a_list: like enumeration)
 			-- Set enumeration type and associated list.
 		require
 			not_void: a_list /= Void
@@ -385,20 +385,20 @@ feature -- Enumeration
 			enumeration_type_forced: is_enumeration
 			list_set: enumeration_list = a_list
 		end
-		
+
 feature {NONE} -- Enumeration list
 
 	enumeration_list: like enumeration
 			-- List of allowed values for fixed enumeration.
-			
-	Default_enumeration_list: DS_LINKED_LIST [STRING] is
+
+	Default_enumeration_list: DS_LINKED_LIST [STRING]
 			-- Default for 'enumeration_list'.
 		once
 			create Result.make
 		ensure
 			not_void: Result /= Void
 		end
-	
+
 invariant
 
 	exclusive: BOOLEAN_.nxor (<<is_token, is_entity, is_id_ref, is_id, is_data, is_notation, is_enumeration>>)

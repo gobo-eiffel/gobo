@@ -14,7 +14,7 @@ class XM_XPATH_SHARED_CONFORMANCE
 
 feature -- Access
 
-	conformance: XM_XPATH_CONFORMANCE is
+	conformance: XM_XPATH_CONFORMANCE
 			-- The shared conformance object
 		once
 			create Result

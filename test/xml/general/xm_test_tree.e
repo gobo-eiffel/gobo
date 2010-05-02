@@ -23,7 +23,7 @@ create
 
 feature -- Test
 
-	test_simple is
+	test_simple
 			-- Simple tree.
 		local
 			a_root: XM_ELEMENT
@@ -41,7 +41,7 @@ feature -- Test
 			end
 		end
 
-	test_walk is
+	test_walk
 			-- Walk through tree.
 		do
 			make_parser
@@ -86,7 +86,7 @@ feature -- Test
 			assert_last
 		end
 
-	test_walk_namespaces is
+	test_walk_namespaces
 			-- Walk through tree with namespaces.
 		do
 			make_parser
@@ -118,7 +118,7 @@ feature -- Test
 			assert_last
 		end
 
-	test_build_simple is
+	test_build_simple
 			-- Build very simple tree.
 		local
 			a_namespace: XM_NAMESPACE
@@ -140,7 +140,7 @@ feature -- Test
 			assert_last
 		end
 
-	test_build_with_add is
+	test_build_with_add
 			-- Build simple tree and use addition routine(s).
 		local
 			a_namespace: XM_NAMESPACE
@@ -188,21 +188,21 @@ feature {NONE} -- Walk navigation
 	typer: XM_NODE_TYPER
 			-- XML node typer
 
-	go_root is
+	go_root
 			-- Go to root node.
 		do
 			node := tree_pipe.document
 			create typer
 		end
 
-	go_up is
+	go_up
 			-- Go to parent.
 		do
 			assert ("has parent", not node.is_root_node)
 			node := node.parent
 		end
 
-	go_down is
+	go_down
 			-- Go to first child.
 		do
 			node.process (typer)
@@ -211,7 +211,7 @@ feature {NONE} -- Walk navigation
 			node := typer.composite.first
 		end
 
-	go_next is
+	go_next
 			-- Move to next sibling, or don't
 			-- move if last sibling.
 		local
@@ -241,14 +241,14 @@ feature {NONE} -- Walk navigation
 
 feature {NONE} -- Walk assertions
 
-	assert_document is
+	assert_document
 			-- Node is document.
 		do
 			node.process (typer)
 			assert ("document node expected", typer.is_document)
 		end
 
-	assert_comment (a: STRING) is
+	assert_comment (a: STRING)
 			-- Assert current node is a comment.
 		require
 			a_not_void: a /= Void
@@ -259,7 +259,7 @@ feature {NONE} -- Walk assertions
 		end
 
 
-	assert_element (a_name: STRING) is
+	assert_element (a_name: STRING)
 			-- Node is an element.
 		require
 			a_name_not_void: a_name /= Void
@@ -269,7 +269,7 @@ feature {NONE} -- Walk assertions
 			assert_strings_equal ("element name", a_name, typer.element.name)
 		end
 
-	assert_element_has_qualified (a_uri: STRING; a_name: STRING) is
+	assert_element_has_qualified (a_uri: STRING; a_name: STRING)
 			-- Child node of an element.
 		require
 			a_uri_not_void: a_uri /= Void
@@ -280,7 +280,7 @@ feature {NONE} -- Walk assertions
 			assert_has_element_qualified (typer.element, a_uri, a_name)
 		end
 
-	assert_ns_element (a_ns: STRING; a_name: STRING) is
+	assert_ns_element (a_ns: STRING; a_name: STRING)
 			-- Node is an element (with namespace).
 		require
 			a_ns_not_void: a_ns /= Void
@@ -292,7 +292,7 @@ feature {NONE} -- Walk assertions
 			assert_strings_equal ("element namespace", a_ns, typer.element.namespace.uri)
 		end
 
-	assert_childless is
+	assert_childless
 			-- Node is empty composite.
 		do
 			node.process (typer)
@@ -300,7 +300,7 @@ feature {NONE} -- Walk assertions
 			assert ("element not empty", typer.element.count = 0)
 		end
 
-	assert_attribute (a_name: STRING; a_value: STRING) is
+	assert_attribute (a_name: STRING; a_value: STRING)
 			-- Node is an attribute.
 		require
 			a_named_not_void: a_name /= Void
@@ -317,7 +317,7 @@ feature {NONE} -- Walk assertions
 			assert_attribute_element (an_attribute)
 		end
 
-	assert_attribute_element (an_attribute: XM_ATTRIBUTE) is
+	assert_attribute_element (an_attribute: XM_ATTRIBUTE)
 			-- Checks on attributes parent element.
 		require
 			an_atttribute_not_void: an_attribute /= Void
@@ -332,7 +332,7 @@ feature {NONE} -- Walk assertions
 			end
 		end
 
-	assert_ns_attribute (a_ns: STRING; a_name: STRING; a_value: STRING) is
+	assert_ns_attribute (a_ns: STRING; a_name: STRING; a_value: STRING)
 			-- Node is an attribute (with namespace).
 		require
 			a_ns_not_void: a_ns /= Void
@@ -345,19 +345,19 @@ feature {NONE} -- Walk assertions
 			assert_strings_equal ("attribute namespace", a_ns, typer.xml_attribute.namespace.uri)
 		end
 
-	assert_last is
+	assert_last
 			-- Node is last in parent.
 		do
 			assert ("last", node.is_last)
 		end
 
-	assert_first is
+	assert_first
 			-- Node is first in parent.
 		do
 			assert ("first", node.is_first)
 		end
 
-	assert_text (a: STRING) is
+	assert_text (a: STRING)
 			-- Assert text node
 		require
 			a_not_void: a /= Void
@@ -367,7 +367,7 @@ feature {NONE} -- Walk assertions
 			assert_strings_equal ("text", a, typer.character_data.content)
 		end
 
-	assert_text_space is
+	assert_text_space
 			-- Assert text node with only spaces.
 		local
 			i: INTEGER
@@ -389,7 +389,7 @@ feature {NONE} -- Walk assertions
 			end
 		end
 
-	assert_single is
+	assert_single
 			-- Node is singleton.
 		do
 			assert ("singleton", node.is_first and node.is_last)
@@ -397,7 +397,7 @@ feature {NONE} -- Walk assertions
 
 feature {NONE} -- Implementation
 
-	assert_has_element (a: XM_COMPOSITE; a_name: STRING) is
+	assert_has_element (a: XM_COMPOSITE; a_name: STRING)
 			-- Test element_by_name.
 		require
 			a_not_void: a /= Void
@@ -409,7 +409,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	assert_has_element_qualified (a: XM_COMPOSITE; a_uri: STRING; a_name: STRING) is
+	assert_has_element_qualified (a: XM_COMPOSITE; a_uri: STRING; a_name: STRING)
 			-- Test element_by_name.
 		require
 			a_not_void: a /= Void
@@ -422,7 +422,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	make_parser is
+	make_parser
 			-- Create XML parser.
 		do
 			create parser.make

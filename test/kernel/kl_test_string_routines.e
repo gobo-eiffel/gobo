@@ -27,7 +27,7 @@ create
 
 feature -- Test
 
-	test_make_from_string is
+	test_make_from_string
 			-- Test feature `make_from_string'.
 		local
 			a_string, foo: STRING
@@ -55,7 +55,7 @@ feature -- Test
 			assert_equal ("same_string3", bnullr, a_string)
 		end
 
-	test_make_buffer is
+	test_make_buffer
 			-- Test feature `make_buffer'.
 		local
 			a_string: STRING
@@ -70,7 +70,7 @@ feature -- Test
 			assert_integers_equal ("count2", 0,  a_string.count)
 		end
 
-	test_has_substring is
+	test_has_substring
 			-- Test feature `has_substring'.
 		local
 			a_string1: STRING
@@ -102,7 +102,7 @@ feature -- Test
 			assert ("has11", STRING_.has_substring (uc_string1, uc_string1))
 		end
 
-	test_is_decimal is
+	test_is_decimal
 			-- Test feature `is_decimal'.
 		local
 			uc_string: UC_UTF8_STRING
@@ -117,7 +117,7 @@ feature -- Test
 			assert ("not_integer3", not STRING_.is_decimal (uc_string))
 		end
 
-	test_is_integer_64 is
+	test_is_integer_64
 			-- Test feature `is_integer_64'.
 		local
 			uc_string: UC_UTF8_STRING
@@ -136,7 +136,7 @@ feature -- Test
 			assert ("not_is_integer_64_5", not STRING_.is_integer_64 ("0+019223372136854775807"))
 		end
 
-	test_to_integer_64 is
+	test_to_integer_64
 			-- Test feature `to_integer_64'.
 		local
 			uc_string: UC_UTF8_STRING
@@ -150,7 +150,7 @@ feature -- Test
 			assert_equal ("to_integer_64_6", Platform.Minimum_integer_64, STRING_.to_integer_64 ("-0000000009223372036854775808"))
 		end
 
-	test_is_hexadecimal is
+	test_is_hexadecimal
 			-- Test feature `is_hexadecimal'.
 		local
 			uc_string: UC_UTF8_STRING
@@ -166,7 +166,7 @@ feature -- Test
 			assert ("not_hexa3", not STRING_.is_hexadecimal (uc_string))
 		end
 
-	test_to_utf16_be is
+	test_to_utf16_be
 			-- Test feature `to_utf16_be'.
 		local
 			a_unicode: UC_STRING
@@ -200,7 +200,7 @@ feature -- Test
 			assert_integers_equal ("fourth_byte4", 2, a_byte_string.item_code (4))
 		end
 
-	test_to_utf16_le is
+	test_to_utf16_le
 			-- Test feature `to_utf16_le'.
 		local
 			a_unicode: UC_STRING
@@ -234,7 +234,7 @@ feature -- Test
 			assert_integers_equal ("fourth_byte4", 223, a_byte_string.item_code (4))
 		end
 
-	test_to_utf32_be is
+	test_to_utf32_be
 			-- Test feature `to_utf32_be'.
 		local
 			a_unicode: UC_STRING
@@ -274,7 +274,7 @@ feature -- Test
 			assert_integers_equal ("fourth_byte4", 2, a_byte_string.item_code (4))
 		end
 
-	test_to_utf32_le is
+	test_to_utf32_le
 			-- Test feature `to_utf32_le'.
 		local
 			a_unicode: UC_STRING
@@ -314,7 +314,7 @@ feature -- Test
 			assert_integers_equal ("fourth_byte4", 0, a_byte_string.item_code (4))
 		end
 
-	test_substring_index is
+	test_substring_index
 			-- Test feature `substring_index'.
 		local
 			a_string1: STRING
@@ -338,7 +338,7 @@ feature -- Test
 			assert_integers_equal ("index9", 0, STRING_.substring_index (uc_string1, uc_string2, 7))
 		end
 
-	test_case_insensitive_hash_code is
+	test_case_insensitive_hash_code
 			-- Test feature `case_insensitive_hash_code'.
 		local
 			a_string, a_string2: STRING
@@ -349,7 +349,7 @@ feature -- Test
 			assert ("hash_code2", STRING_.case_insensitive_hash_code (a_string) = STRING_.case_insensitive_hash_code (a_string2))
 		end
 
-	test_concat is
+	test_concat
 			-- Test feature `concat'.
 		local
 			a_string, a_string1, a_string2: STRING
@@ -388,7 +388,7 @@ feature -- Test
 			assert ("new_string8", a_string /= uc_string2)
 		end
 
-	test_appended_string is
+	test_appended_string
 			-- Test feature `appended_string'.
 		local
 			a_string, a_string1, a_string2: STRING
@@ -429,7 +429,7 @@ feature -- Test
 			assert ("new_string8", a_string /= uc_string2)
 		end
 
-	test_replaced_substring1 is
+	test_replaced_substring1
 			-- Test feature `replaced_substring'.
 		local
 			a_string: STRING
@@ -506,7 +506,7 @@ feature -- Test
 			assert_equal ("replaced16", "foototobar", a_string.out)
 		end
 
-	test_replaced_substring2 is
+	test_replaced_substring2
 			-- Test feature `replaced_substring'.
 		local
 			a_string: STRING
@@ -580,7 +580,7 @@ feature -- Test
 			assert_equal ("replaced16", "foototobar", a_string.out)
 		end
 
-	test_replaced_substring3 is
+	test_replaced_substring3
 			-- Test feature `replaced_substring'.
 		local
 			a_string: STRING
@@ -654,7 +654,7 @@ feature -- Test
 			assert_equal ("replaced16", "foototobar", a_string.out)
 		end
 
-	test_replaced_first_substring1 is
+	test_replaced_first_substring1
 			-- Test feature `replaced_first_substring'.
 		local
 			a_text: STRING
@@ -829,7 +829,7 @@ feature -- Test
 			assert_equal ("replaced1_50", a_expt, a_got)
 		end
 
-	test_replaced_first_substring2 is
+	test_replaced_first_substring2
 			-- Test feature `replaced_first_substring'.
 		local
 			a_text: STRING
@@ -1032,7 +1032,7 @@ feature -- Test
 			assert_equal ("replaced1_50", a_expt, a_got.out)
 		end
 
-	test_replaced_all_substrings1 is
+	test_replaced_all_substrings1
 			-- Test feature `replaced_all_substrings'.
 		local
 			a_text: STRING
@@ -1207,7 +1207,7 @@ feature -- Test
 			assert_equal ("replaced1_50", a_expt, a_got)
 		end
 
-	test_replaced_all_substrings2 is
+	test_replaced_all_substrings2
 			-- Test feature `replaced_all_substrings'.
 		local
 			a_text: STRING
@@ -1401,7 +1401,7 @@ feature -- Test
 			assert_equal ("replaced2_50", a_expt, a_got.out)
 		end
 
-	test_elks_same_string is
+	test_elks_same_string
 			-- Test feature `elks_same_string'.
 		local
 			a_string1, a_string2: STRING
@@ -1425,7 +1425,7 @@ feature -- Test
 			assert ("same5", STRING_.elks_same_string (uc_string1, uc_string2))
 		end
 
-	test_same_string is
+	test_same_string
 			-- Test feature `same_string'.
 		local
 			a_string1, a_string2: STRING
@@ -1451,7 +1451,7 @@ feature -- Test
 			assert ("same5", STRING_.same_string (uc_string1, uc_string2))
 		end
 
-	test_left_adjust is
+	test_left_adjust
 			-- Test feature `left_adjust'.
 		local
 			a_string: STRING
@@ -1479,7 +1479,7 @@ feature -- Test
 			assert_equal ("left_adjust4", "a%%/432/", uc_string.out)
 		end
 
-	test_right_adjust is
+	test_right_adjust
 			-- Test feature `right_adjust'.
 		local
 			a_string: STRING
@@ -1507,7 +1507,7 @@ feature -- Test
 			assert_equal ("right_adjust4", "%%/567/o", uc_string.out)
 		end
 
-	test_wipe_out is
+	test_wipe_out
 			-- Test feature `wipe_out'.
 		local
 			a_string: STRING
@@ -1522,7 +1522,7 @@ feature -- Test
 			assert_integers_equal ("wiped_out2", 0, uc_string.count)
 		end
 
-	test_resize_buffer is
+	test_resize_buffer
 			-- Test feature `resize_buffer'.
 		local
 			a_string: STRING
@@ -1535,7 +1535,7 @@ feature -- Test
 			assert_integers_equal ("count2", 6,  a_string.count)
 		end
 
-	test_hexadecimal_to_integer is
+	test_hexadecimal_to_integer
 			-- Test feature `hexadecimal_to_integer'.
 		local
 			a_string: STRING
@@ -1547,7 +1547,7 @@ feature -- Test
 			assert_integers_equal ("hexa2", 181,  STRING_.hexadecimal_to_integer (uc_string))
 		end
 
-	test_same_case_insensitive is
+	test_same_case_insensitive
 			-- Test feature `same_case_insensitive'.
 		local
 			a_string1, a_string2: STRING
@@ -1571,7 +1571,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	too_big_character: INTEGER is
+	too_big_character: INTEGER
 			-- Code of a character that does not fit into a CHARACTER
 		once
 			Result := Platform.Maximum_character_code + 1
@@ -1579,7 +1579,7 @@ feature {NONE} -- Implementation
 			too_big: Result > Platform.Maximum_character_code
 		end
 
-	too_big_character2: INTEGER is
+	too_big_character2: INTEGER
 			-- Code of a character that does not fit into a CHARACTER
 		once
 			Result := Platform.Maximum_character_code + 2

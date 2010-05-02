@@ -27,7 +27,7 @@ create
 
 feature -- Test
 
-	test_once_recursive is
+	test_once_recursive
 			-- Test recursive once functions.
 			-- ECMA 367-2, section 8.23.22 p.124: "Semantics: Once Routine Execution Semantics",
 			-- says that the recursive calls to once-functions should return the value of
@@ -38,7 +38,7 @@ feature -- Test
 
 feature -- Once function
 
-	f: INTEGER is
+	f: INTEGER
 			-- Recursive once function
 		once
 			Result := 1

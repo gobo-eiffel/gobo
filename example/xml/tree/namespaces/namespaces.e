@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Run.
 		do
 			Arguments.set_program_name ("namespaces")
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Processing
 
-	process_data_file is
+	process_data_file
 			-- Parse file.
 		local
 			formatter: NS_FORMATTER
@@ -67,7 +67,7 @@ feature -- Processing
 			error_handler.report_info_message ("exiting...")
 		end
 
-	process_arguments is
+	process_arguments
 			-- Read command line arguments.
 		local
 			parser_switch: STRING
@@ -99,7 +99,7 @@ feature -- Processing
 
 feature -- Parser
 
-	fact: XM_EXPAT_PARSER_FACTORY is
+	fact: XM_EXPAT_PARSER_FACTORY
 			-- Expat XML parser factory
 		once
 			create Result
@@ -126,7 +126,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	Usage_message: UT_USAGE_MESSAGE is
+	Usage_message: UT_USAGE_MESSAGE
 			-- Usage message
 		local
 			a_message: STRING

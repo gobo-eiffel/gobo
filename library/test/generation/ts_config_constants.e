@@ -14,7 +14,7 @@ class TS_CONFIG_CONSTANTS
 
 feature -- Constants
 
-	Default_class_regexp: LX_REGULAR_EXPRESSION is
+	Default_class_regexp: LX_REGULAR_EXPRESSION
 			-- Default class regexp
 		once
 			create {LX_DFA_REGULAR_EXPRESSION} Result.compile_case_insensitive ("TEST_.*")
@@ -23,7 +23,7 @@ feature -- Constants
 			regexp_compiled: Result.is_compiled
 		end
 
-	Default_feature_regexp: LX_REGULAR_EXPRESSION is
+	Default_feature_regexp: LX_REGULAR_EXPRESSION
 			-- Default feature regexp
 		once
 			create {LX_DFA_REGULAR_EXPRESSION} Result.compile_case_insensitive ("test_.*")
@@ -32,10 +32,10 @@ feature -- Constants
 			regexp_compiled: Result.is_compiled
 		end
 
-	Default_class_prefix: STRING is "X"
+	Default_class_prefix: STRING = "X"
 			-- Default prefix of generated testcase class names
 
-	Default_cluster_name: ET_IDENTIFIER is
+	Default_cluster_name: ET_IDENTIFIER
 			-- Default cluster name
 		once
 			create Result.make ("root")
@@ -43,7 +43,7 @@ feature -- Constants
 			cluster_name_not_void: Result /= Void
 		end
 
-	Default_cluster_pathname: ET_IDENTIFIER is
+	Default_cluster_pathname: ET_IDENTIFIER
 			-- Default cluster pathname
 		once
 			create Result.make (".")

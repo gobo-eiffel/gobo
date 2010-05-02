@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_static_context: XM_XPATH_STATIC_CONTEXT; an_id: XM_XPATH_EXPRESSION) is
+	make (a_static_context: XM_XPATH_STATIC_CONTEXT; an_id: XM_XPATH_EXPRESSION)
 			-- Establish invariant
 		require
 			id_not_void: an_id /= Void
@@ -47,25 +47,25 @@ feature -- Access
 	id_expression: XM_XPATH_EXPRESSION
 			-- The expression
 
-	original_text: STRING is
+	original_text: STRING
 			-- Original text
 		do
 			Result := "id()"
 		end
 
-	node_kind: INTEGER is
+	node_kind: INTEGER
 			-- Type of nodes matched
 		do
 			Result := Element_node
 		end
 
-	node_test: XM_XSLT_NODE_TEST is
+	node_test: XM_XSLT_NODE_TEST
 			-- Retrieve an `XM_XSLT_NODE_TEST' that all nodes matching this pattern must satisfy
 		do
 			create {XM_XSLT_NODE_KIND_TEST} Result.make (static_context, Element_node)
 		end
 
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions of `Current'
 		do
 			create Result.make (1)
@@ -73,7 +73,7 @@ feature -- Access
 			Result.put (id_expression, 1)
 		end
 
-	compute_dependencies is
+	compute_dependencies
 			-- Compute dependencies which restrict optimizations
 		do
 			if not id_expression.are_dependencies_computed and id_expression.is_computed_expression then
@@ -84,7 +84,7 @@ feature -- Access
 
 feature -- Optimization
 
-	type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Type-check the pattern
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -97,7 +97,7 @@ feature -- Optimization
 			end
 		end
 
-	promote (a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote sub-expressions of `Current'.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -109,7 +109,7 @@ feature -- Optimization
 
 feature -- Matching
 
-	match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Attempt to match `Current' againast `a_node'.
 		local
 			l_doc: XM_XPATH_DOCUMENT

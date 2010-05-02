@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_iterator, another_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; a_comparer: XM_XPATH_NODE_ORDER_COMPARER) is
+	make (an_iterator, another_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; a_comparer: XM_XPATH_NODE_ORDER_COMPARER)
 			-- Establish invariant.
 		require
 			comparer_not_void: a_comparer /= Void
@@ -42,20 +42,20 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
-	item: XM_XPATH_NODE is
+
+	item: XM_XPATH_NODE
 			-- Value or node at the current position
 		do
 			Result := current_node
 		end
 
-	is_node_iterator: BOOLEAN is
+	is_node_iterator: BOOLEAN
 			-- Does `Current' yield a node_sequence?
 		do
 			Result := True
 		end
 
-	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
 		do
 			Result ?= ANY_.to_any (Current)
@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Status report
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
 			Result := first_iterator.after
@@ -71,7 +71,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move to next position
 		do
 			advance
@@ -80,7 +80,7 @@ feature -- Cursor movement
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 			create Result.make (first_iterator.another, second_iterator.another, comparer)
@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 	current_node: like item
 			-- Current item
 
-	advance is
+	advance
 			-- Move to next item.
 		require
 			not_after: before or else not after
@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	advance_both_iterators is
+	advance_both_iterators
 			-- Move to next item.
 		require
 			first_iterator_not_off: not first_iterator.is_error and then not first_iterator.off

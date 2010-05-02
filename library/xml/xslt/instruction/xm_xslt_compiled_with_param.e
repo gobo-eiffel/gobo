@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_executable: XM_XSLT_EXECUTABLE; a_variable_name: STRING) is
+	make (an_executable: XM_XSLT_EXECUTABLE; a_variable_name: STRING)
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -55,15 +55,15 @@ feature -- Status report
 
 feature -- Evaluation
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
 			check
 				process_leaving_tail_not_used: False
 			end
 		end
-	
-	evaluate_variable (a_context: XM_XPATH_CONTEXT) is 
+
+	evaluate_variable (a_context: XM_XPATH_CONTEXT)
 			-- Evaluate variable
 		do
 			check

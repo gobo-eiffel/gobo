@@ -32,21 +32,21 @@ inherit
 
 feature -- Node processor.
 
-	process_document (a_node: XM_DOCUMENT) is
+	process_document (a_node: XM_DOCUMENT)
 			-- Process document.
 		do
 			make_namespaces
 			a_node.process_children (Current)
 		end
 
-	process_element (a_node: XM_ELEMENT) is
+	process_element (a_node: XM_ELEMENT)
 			-- Collect namespaces.
 		do
 			process_namespace (a_node.namespace)
 			a_node.process_children (Current)
 		end
 
-	process_attribute (a_node: XM_ATTRIBUTE) is
+	process_attribute (a_node: XM_ATTRIBUTE)
 			-- Collect namespaces.
 		do
 			process_namespace (a_node.namespace)
@@ -66,7 +66,7 @@ feature {NONE} -- State
 
 feature -- Result
 
-	top_level_declaration: STRING is
+	top_level_declaration: STRING
 			-- Top level declaration of all xml namespaces within
 			-- the document.
 		require
@@ -92,7 +92,7 @@ feature -- Result
 			not_void_result: Result /= Void
 		end
 
-	has_namespace (a_ns: XM_NAMESPACE): BOOLEAN is
+	has_namespace (a_ns: XM_NAMESPACE): BOOLEAN
 			-- Is this namespace known (has an allocated prefix)?
 		require
 			a_ns_not_void: a_ns /= Void
@@ -101,7 +101,7 @@ feature -- Result
 				and then (namespaces.has (a_ns.uri) or implicit_namespaces.has (a_ns.uri))
 		end
 
-	ns_prefix (a_ns: XM_NAMESPACE): STRING is
+	ns_prefix (a_ns: XM_NAMESPACE): STRING
 			-- Prefix for a non default NS.
 		require
 			a_ns_not_void: a_ns /= Void
@@ -118,7 +118,7 @@ feature -- Result
 			result_not_empty: Result.count > 0
 		end
 
-	namespace_declaration (a_ns: XM_NAMESPACE): STRING is
+	namespace_declaration (a_ns: XM_NAMESPACE): STRING
 			-- Single xmlns declaration.
 		require
 			a_ns_not_void: a_ns /= Void
@@ -136,7 +136,7 @@ feature -- Result
 
 feature {NONE} -- Implementation
 
-	process_namespace (a_namespace: XM_NAMESPACE) is
+	process_namespace (a_namespace: XM_NAMESPACE)
 			-- Process a non default namespace.
 		require
 			a_namespace_not_void: a_namespace /= Void
@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	make_namespaces is
+	make_namespaces
 			-- Initialise namespace tables.
 		do
 			create namespaces.make_map_default
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 			prefixes_not_void: prefixes /= Void
 		end
 
-	register_namespace (a_ns: XM_NAMESPACE) is
+	register_namespace (a_ns: XM_NAMESPACE)
 			-- Register a namespace (and prefix).
 		require
 			a_ns_not_void: a_ns /= Void
@@ -201,7 +201,7 @@ feature {NONE} -- Implementation
 			prefixes.force_new (a_ns, a_ns.ns_prefix)
 		end
 
-	unique_prefix: STRING is
+	unique_prefix: STRING
 			-- Find out a prefix not used in current
 			-- namespaces.
 		require
@@ -230,7 +230,7 @@ feature {NONE} -- Implementation
 			new_prefix: not prefixes.has (Result)
 		end
 
-	implicit_namespaces: DS_HASH_TABLE [XM_NAMESPACE, STRING] is
+	implicit_namespaces: DS_HASH_TABLE [XM_NAMESPACE, STRING]
 			-- Implicit namespaces defined in standards that must
 			-- not be declared.
 		local

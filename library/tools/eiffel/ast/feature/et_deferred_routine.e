@@ -21,7 +21,7 @@ inherit
 
 feature -- Status report
 
-	is_deferred: BOOLEAN is True
+	is_deferred: BOOLEAN = True
 			-- Is feature deferred?
 
 feature -- Access
@@ -31,7 +31,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_deferred_keyword (a_deferred: like deferred_keyword) is
+	set_deferred_keyword (a_deferred: like deferred_keyword)
 			-- Set `deferred_keyword' to `a_deferred'.
 		require
 			a_deferred_not_void: a_deferred /= Void

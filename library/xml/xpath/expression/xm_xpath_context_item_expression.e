@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize `Current' as a normal context item expression.
 		do
 			compute_static_properties
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			not_current_replacement: not is_current_replacement
 		end
 
-	make_current is
+	make_current
 			-- Initialize `Current' as a replacement for fn:current().
 		do
 			make
@@ -49,13 +49,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_context_item: BOOLEAN is
+	is_context_item: BOOLEAN
 			-- Is `Current' a context-item expression?
 		do
 			Result := True
 		end
 
-	as_context_item: XM_XPATH_CONTEXT_ITEM_EXPRESSION is
+	as_context_item: XM_XPATH_CONTEXT_ITEM_EXPRESSION
 			-- `Current' seen as a context-item expression
 		do
 			Result := Current
@@ -66,18 +66,18 @@ feature -- Access
 
 feature -- Comparison
 
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Are `Current' and `other' the same expression?
 		do
 			Result := other.is_context_item
 		end
-	
+
 feature -- Status report
 
 	is_current_replacement: BOOLEAN
 			-- Is `Current' a replacement for fn:current()?
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -89,15 +89,15 @@ feature -- Status report
 
 feature -- Status setting
 
-	compute_intrinsic_dependencies is
+	compute_intrinsic_dependencies
 			-- Determine the intrinsic dependencies of an expression.
 		do
 			set_intrinsically_depends_upon_context_item
 		end
 
 feature -- Optimization
-	
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			if a_context_item_type = Void then
@@ -112,7 +112,7 @@ feature -- Optimization
 			a_replacement.put (Current)
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 
@@ -125,7 +125,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			if a_context /= Void and then a_context.is_context_position_set then
@@ -135,7 +135,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterator over the values of a sequence
 		do
 			if a_context /= Void and then a_context.is_context_position_set then
@@ -149,7 +149,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over a node sequence
 		do
 			if a_context /= Void and then a_context.is_context_position_set then
@@ -158,16 +158,16 @@ feature -- Evaluation
 				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make_from_string ("The context item is not set", Xpath_errors_uri, "XPDY0002", Dynamic_error)
 			end
 		end
-	
+
 feature {NONE} -- Implementation
-	
-	compute_cardinality is
+
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
 		end
 
-	compute_special_properties is
+	compute_special_properties
 			-- Compute special properties.
 		do
 			Precursor

@@ -15,7 +15,7 @@ deferred class XM_XSLT_ERROR_LISTENER
 inherit
 
 	XM_XSLT_CONFIGURATION_CONSTANTS
-	
+
 feature -- Access
 
 	recovery_policy: INTEGER
@@ -35,7 +35,7 @@ feature -- Status report
 	recovered: BOOLEAN
 			-- Did `Current' recover from the last recoverable error?
 
-	is_error_code_editing: BOOLEAN is
+	is_error_code_editing: BOOLEAN
 			-- Will the next error code be edited?
 		do
 			Result := not error_change_stack.is_empty
@@ -45,21 +45,21 @@ feature -- Status report
 
 feature -- Events
 
-	warning (a_message: STRING; a_locator: XM_XPATH_LOCATOR) is
+	warning (a_message: STRING; a_locator: XM_XPATH_LOCATOR)
 			-- Receive notification of a warning.
 		require
 			message_not_void: a_message /= Void
 		deferred
 		end
 
-	error (a_error: XM_XPATH_ERROR_VALUE) is
+	error (a_error: XM_XPATH_ERROR_VALUE)
 			-- Receive notification of a recoverable error.
 		require
 			error_not_void: a_error /= Void
 		deferred
 		end
 
-	fatal_error (a_error: XM_XPATH_ERROR_VALUE) is
+	fatal_error (a_error: XM_XPATH_ERROR_VALUE)
 			-- Receive notification of a non-recoverable error.
 		require
 			error_not_void: a_error /= Void
@@ -68,7 +68,7 @@ feature -- Events
 
 feature -- Status setting
 
-	set_recovery_policy (a_recovery_policy: like recovery_policy) is
+	set_recovery_policy (a_recovery_policy: like recovery_policy)
 			-- Set recovery policy.
 		require
 			valid_recovery_policy: a_recovery_policy >= Recover_silently and then a_recovery_policy <= Do_not_recover
@@ -78,7 +78,7 @@ feature -- Status setting
 			recovery_policy_set: recovery_policy = a_recovery_policy
 		end
 
-	set_warning_threshold (a_warning_threshold: like warning_threshold) is
+	set_warning_threshold (a_warning_threshold: like warning_threshold)
 			-- Set `warning_threshold'.
 		do
 			warning_threshold := a_warning_threshold
@@ -86,7 +86,7 @@ feature -- Status setting
 			threshold_set: warning_threshold = a_warning_threshold
 		end
 
-	set_recoverable_error_threshold (a_recoverable_error_threshold: like recoverable_error_threshold) is
+	set_recoverable_error_threshold (a_recoverable_error_threshold: like recoverable_error_threshold)
 			-- Set `recoverable_error_threshold'.
 		do
 			recoverable_error_threshold := a_recoverable_error_threshold
@@ -94,15 +94,15 @@ feature -- Status setting
 			threshold_set: recoverable_error_threshold = a_recoverable_error_threshold
 		end
 
-	treat_warnings_as_recoverable_errors is
+	treat_warnings_as_recoverable_errors
 			-- Treat warnings as recoverable errors.
 		do
 			warnings_are_recoverable_errors := True
 		end
 
 feature -- Element change
-	
-	set_next_error_code (a_uri, a_code: STRING) is
+
+	set_next_error_code (a_uri, a_code: STRING)
 			-- Change the next reported error code to `a_uri'#`a_code'
 		require
 			a_uri_not_void: a_uri /= Void
@@ -116,7 +116,7 @@ feature -- Element change
 			correct_error_code_set: error_change_stack.item.first.is_equal (a_uri) and error_change_stack.item.second.is_equal (a_code)
 		end
 
-	clear_next_error_code_change is
+	clear_next_error_code_change
 			-- Reverse effect of last call to `set_next_error_code'.
 		require
 			next_error_code_set: is_error_code_editing
@@ -137,4 +137,4 @@ invariant
 	error_change_stack_not_void: error_change_stack /= Void
 
 end
-	
+

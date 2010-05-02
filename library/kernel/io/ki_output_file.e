@@ -29,7 +29,7 @@ inherit
 
 feature -- Basic operations
 
-	open_append is
+	open_append
 			-- Open current file in append mode if it
 			-- can be opened, let it closed otherwise.
 			-- If the file is successfully opened, it is
@@ -41,7 +41,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	recursive_open_write is
+	recursive_open_write
 			-- Open current file in write-only mode if
 			-- it can be opened, let it closed otherwise.
 			-- If the file is successfully opened, it is
@@ -54,7 +54,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	recursive_open_append is
+	recursive_open_append
 			-- Open current file in append mode if it
 			-- can be opened, let it closed otherwise.
 			-- If the file is successfully opened, it is

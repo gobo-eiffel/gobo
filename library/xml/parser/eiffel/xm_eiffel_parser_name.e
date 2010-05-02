@@ -48,7 +48,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_namespaces is
+	make_namespaces
 			-- Create a new empty name, that behaves with namespaces.
 		do
 			make_no_namespaces
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			use_namespaces: use_namespaces
 		end
 
-	make_no_namespaces is
+	make_no_namespaces
 			--
 		do
 			count := 0
@@ -66,48 +66,48 @@ feature {NONE} -- Initialization
 			tail := Void
 		ensure
 			not_use_namespaces: not use_namespaces
-		
+
 		end
-		
+
 feature -- Status report
 
 	use_namespaces: BOOLEAN
 			-- Is namespace parsing enabled?
-			
+
 feature -- Status report
 
-	is_name: BOOLEAN is
+	is_name: BOOLEAN
 			-- Is `Current' a name?
 		do
 			Result := is_simple_name or is_namespace_name
 		end
 
-	is_simple_name: BOOLEAN is
+	is_simple_name: BOOLEAN
 			-- Is current name a simple name?
 		do
 			Result := count = 1 and then first.count > 0
 		end
 
-	is_namespace_name: BOOLEAN is
+	is_namespace_name: BOOLEAN
 			-- Is current name with a namespace?
 		do
 			Result := count = 2 and then
 				(first.count > 0 and second.count > 0)
 		end
 
-	is_namespace_declaration: BOOLEAN is
+	is_namespace_declaration: BOOLEAN
 			-- Is current name an XML namespace declaration?
 		do
 			Result := (count = 1 or count = 2) and then same_string (Xmlns, first)
 		end
 
-	is_named_namespace_declaration: BOOLEAN is
+	is_named_namespace_declaration: BOOLEAN
 			-- Is current name an XML declaration for a named namespace?
 		do
 			Result := is_namespace_declaration and is_namespace_name
 		end
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is name empty?
 		do
 			Result := count = 0
@@ -117,7 +117,7 @@ feature -- Status report
 
 feature -- Access
 
-	ns_prefix: STRING is
+	ns_prefix: STRING
 			-- Namespace prefix
 		do
 			if use_namespaces and is_namespace_name then
@@ -127,7 +127,7 @@ feature -- Access
 			no_namespaces_void: not use_namespaces implies Result = Void
 		end
 
-	local_part: STRING is
+	local_part: STRING
 			-- Local part
 			-- (including tail)
 		local
@@ -153,7 +153,7 @@ feature -- Access
 			end
 		end
 
-	item (i: INTEGER): STRING is
+	item (i: INTEGER): STRING
 			-- Item at position i.
 		require
 			i_large_enough: i >= 1
@@ -171,7 +171,7 @@ feature -- Access
 	first: STRING
 			-- First item (name or namespace)
 
-	last: STRING is
+	last: STRING
 			-- Last item
 		require
 			not_empty: not is_empty
@@ -187,7 +187,7 @@ feature -- Access
 			definition: Result = item (count)
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		local
 			i, nb: INTEGER
@@ -207,7 +207,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	can_force_last (a_string: STRING): BOOLEAN is
+	can_force_last (a_string: STRING): BOOLEAN
 			-- Is it possible to add an element?
 		require
 			a_string_not_void: a_string /= Void
@@ -220,8 +220,8 @@ feature -- Element change
 		ensure
 			use_namespaces: not use_namespaces implies Result
 		end
-		
-	force_last (a_string: STRING) is
+
+	force_last (a_string: STRING)
 			-- Add `a_string' at end.
 		require
 			a_string_not_void: a_string /= Void
@@ -242,10 +242,10 @@ feature -- Element change
 			one_more: count = old count + 1
 			at_last: last = a_string
 		end
-		
+
 feature -- Removal
 
-	wipe_out is
+	wipe_out
 			-- Remove all.
 		do
 			count := 0
@@ -258,7 +258,7 @@ feature -- Removal
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Are `Current' and `other' considered equal?
 		local
 			a_cursor, an_other_cursor: DS_LINEAR_CURSOR [STRING]
@@ -293,7 +293,7 @@ feature -- Comparison
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Colon-separated name
 		local
 			i, nb: INTEGER

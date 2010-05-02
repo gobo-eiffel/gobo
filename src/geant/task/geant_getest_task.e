@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT; an_xml_element: XM_ELEMENT) is
+	make (a_project: GEANT_PROJECT; an_xml_element: XM_ELEMENT)
 			-- Create a new task with information held in `an_element'.
 		local
 			a_name, a_value: STRING
@@ -124,7 +124,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	build_command (a_project: GEANT_PROJECT) is
+	build_command (a_project: GEANT_PROJECT)
 			-- Create instance of `command'
 		do
 			create command.make (a_project)
@@ -137,7 +137,7 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Verbose_attribute_name: STRING is
+	Verbose_attribute_name: STRING
 			-- Name of xml attribute for 'verbose'
 		once
 			Result := "verbose"
@@ -146,7 +146,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Config_filename_attribute_name: STRING is
+	Config_filename_attribute_name: STRING
 			-- Name of xml attribute for getest config_filename
 		once
 			Result := "config"
@@ -155,7 +155,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Compile_attribute_name: STRING is
+	Compile_attribute_name: STRING
 			-- Name of xml attribute for getest 'compile'
 		once
 			Result := "compile"
@@ -164,7 +164,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Class_attribute_name: STRING is
+	Class_attribute_name: STRING
 			-- Name of xml attribute for getest 'class'
 		once
 			Result := "class"
@@ -173,7 +173,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Feature_attribute_name: STRING is
+	Feature_attribute_name: STRING
 			-- Name of xml attribute for getest 'feature'
 		once
 			Result := "feature"
@@ -182,7 +182,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Default_test_attribute_name: STRING is
+	Default_test_attribute_name: STRING
 			-- Name of xml attribute for getest 'default_test'
 		once
 			Result := "default_test"
@@ -191,7 +191,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Generation_attribute_name: STRING is
+	Generation_attribute_name: STRING
 			-- Name of xml attribute for getest 'generation'
 		once
 			Result := "generation"
@@ -200,7 +200,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Compilation_attribute_name: STRING is
+	Compilation_attribute_name: STRING
 			-- Name of xml attribute for getest 'compilation'
 		once
 			Result := "compilation"
@@ -209,7 +209,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Execution_attribute_name: STRING is
+	Execution_attribute_name: STRING
 			-- Name of xml attribute for getest 'execution'
 		once
 			Result := "execution"
@@ -218,7 +218,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Abort_attribute_name: STRING is
+	Abort_attribute_name: STRING
 			-- Name of xml attribute for getest 'abort'
 		once
 			Result := "abort"
@@ -227,7 +227,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Attribute_element_name: STRING is
+	Attribute_element_name: STRING
 			-- Name of xml subelement for attributes
 		once
 			Result := "attribute"
@@ -236,7 +236,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Define_element_name: STRING is
+	Define_element_name: STRING
 			-- Name of xml subelement for defines
 		once
 			Result := "define"
@@ -245,7 +245,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Value_attribute_name: STRING is
+	Value_attribute_name: STRING
 			-- Name of xml attribute "value" of subelement <define>
 		once
 			Result := "value"

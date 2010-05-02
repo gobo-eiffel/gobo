@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (str: STRING) is
+	make (str: STRING)
 			-- Create a new buffer with characters from `str'.
 			-- Do not alter `str' during the scanning process.
 		require
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			beginning_of_line: beginning_of_line
 		end
 
-	make_from_buffer (buff: like content) is
+	make_from_buffer (buff: like content)
 			-- Create a new buffer using `buff'.
 			-- `buff' might be altered during the scanning process.
 			-- Use `make' if this behavior is not desired.
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Name of buffer
 		do
 				-- Note: this routine should be a once-function but
@@ -106,7 +106,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_position (p, l, c: INTEGER) is
+	set_position (p, l, c: INTEGER)
 			-- Set `position' to `p', `line' to `l'
 			-- and `column' to `c'.
 		require
@@ -123,7 +123,7 @@ feature -- Setting
 			column_set: column = c
 		end
 
-	set_index (i: INTEGER) is
+	set_index (i: INTEGER)
 			-- Set `index' to `i'.
 		require
 			i_small_enough: i <= count + 2
@@ -134,7 +134,7 @@ feature -- Setting
 			index_set: index = i
 		end
 
-	set_beginning_of_line (b: BOOLEAN) is
+	set_beginning_of_line (b: BOOLEAN)
 			-- Set `beginning_of_line' to `b'.
 		do
 			beginning_of_line := b
@@ -154,7 +154,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_interactive (b: BOOLEAN) is
+	set_interactive (b: BOOLEAN)
 			-- Set `interactive' to `b'.
 		do
 			interactive := b
@@ -164,14 +164,14 @@ feature -- Status setting
 
 feature -- Element change
 
-	fill is
+	fill
 			-- Fill buffer. Set `filled' to True if characters
 			-- have been added to buffer.
 		do
 			filled := False
 		end
 
-	flush is
+	flush
 			-- Flush buffer.
 		do
 				-- We always need two end-of-file characters.
@@ -191,7 +191,7 @@ feature -- Element change
 			beginning_of_line: beginning_of_line
 		end
 
-	wipe_out is
+	wipe_out
 			-- Wipe out buffer.
 		do
 			flush
@@ -202,7 +202,7 @@ feature -- Element change
 			not_filled: not filled
 		end
 
-	compact_left is
+	compact_left
 			-- Move unconsumed characters to the start of buffer
 			-- and make sure there is still available space at
 			-- the end of buffer.
@@ -225,7 +225,7 @@ feature -- Element change
 			not_full: capacity > count
 		end
 
-	compact_right is
+	compact_right
 			-- Move unconsumed characters to the end of buffer
 			-- and make sure there is still available space at
 			-- the start of buffer.
@@ -252,7 +252,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	new_default_buffer (nb: INTEGER): like content is
+	new_default_buffer (nb: INTEGER): like content
 			-- New buffer that can contain `nb' characters;
 			-- `nb' should be large enough to make room for
 			-- the two end-of-buffer characters
@@ -267,7 +267,7 @@ feature {NONE} -- Implementation
 			buffer_count_large_enough: Result.count >= 2
 		end
 
-	resize is
+	resize
 			-- Increase `capacity'.
 		do
 			if capacity = 0 then
@@ -287,7 +287,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	default_capacity: INTEGER is
+	default_capacity: INTEGER
 			-- Default capacity of buffer
 		once
 			Result := 16384
@@ -295,10 +295,10 @@ feature {NONE} -- Constants
 			positive_default_capacity: Result > 0
 		end
 
-	End_of_buffer_character: CHARACTER is '%U'
+	End_of_buffer_character: CHARACTER = '%U'
 			-- End of buffer character
 
-	Name_constant: STRING is "<string>"
+	Name_constant: STRING = "<string>"
 			-- Name of string buffer
 
 invariant

@@ -17,7 +17,7 @@ inherit
 
 feature -- Test
 
-	test_1 is
+	test_1
 			-- Test #1.
 		do
 			compile_and_test ("test1")
@@ -25,7 +25,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	rule_dirname: STRING is
+	rule_dirname: STRING
 			-- Name of the directory containing the tests of the rule being tested
 		once
 			Result := file_system.nested_pathname ("${GOBO}", <<"test", "gelint", "validity", "vtcg">>)

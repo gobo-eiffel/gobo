@@ -39,7 +39,7 @@ inherit
 
 feature -- Status report
 
-	valid_code (a_code: INTEGER): BOOLEAN is
+	valid_code (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' a valid unicode?
 		do
 			Result := (a_code >= minimum_unicode_character_code and a_code <= maximum_unicode_character_code)
@@ -49,7 +49,7 @@ feature -- Status report
 
 feature -- Access
 
-	lower_code (a_code_point: INTEGER): INTEGER is
+	lower_code (a_code_point: INTEGER): INTEGER
 			-- Code of lower-case character of character with code `a_code_point'
 		require
 			valid_code: valid_code (a_code_point)
@@ -68,7 +68,7 @@ feature -- Access
 			valid_lower_code: valid_code (Result)
 		end
 
-	upper_code (a_code_point: INTEGER): INTEGER is
+	upper_code (a_code_point: INTEGER): INTEGER
 			-- Code of upper-case character of character with code `a_code_point'
 		require
 			valid_code: valid_code (a_code_point)
@@ -87,7 +87,7 @@ feature -- Access
 			valid_upper_code: valid_code (Result)
 		end
 
-	title_code (a_code_point: INTEGER): INTEGER is
+	title_code (a_code_point: INTEGER): INTEGER
 			-- Code of title-case character of character with code `a_code_point'
 		require
 			valid_code: valid_code (a_code_point)

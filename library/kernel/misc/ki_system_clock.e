@@ -14,19 +14,19 @@ deferred class KI_SYSTEM_CLOCK
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new system clock.
 		deferred
 		end
 
 feature -- Access
 
-	year: INTEGER is
+	year: INTEGER
 			-- Year
 		deferred
 		end
 
-	month: INTEGER is
+	month: INTEGER
 			-- Month
 		deferred
 		ensure
@@ -34,7 +34,7 @@ feature -- Access
 			month_small_enough: Result <= 12
 		end
 
-	day: INTEGER is
+	day: INTEGER
 			-- Day
 		deferred
 		ensure
@@ -42,7 +42,7 @@ feature -- Access
 			day_small_enough: Result <= 31
 		end
 
-	hour: INTEGER is
+	hour: INTEGER
 			-- Hour
 		deferred
 		ensure
@@ -50,7 +50,7 @@ feature -- Access
 			hour_small_enough: Result < 24
 		end
 
-	minute: INTEGER is
+	minute: INTEGER
 			-- Minute
 		deferred
 		ensure
@@ -58,7 +58,7 @@ feature -- Access
 			minute_small_enough: Result < 60
 		end
 
-	second: INTEGER is
+	second: INTEGER
 			-- Second
 		deferred
 		ensure
@@ -66,7 +66,7 @@ feature -- Access
 			second_small_enough: Result < 62
 		end
 
-	millisecond: INTEGER is
+	millisecond: INTEGER
 			-- Millisecond
 		deferred
 		ensure
@@ -76,12 +76,12 @@ feature -- Access
 
 feature -- Setting
 
-	set_local_time is
+	set_local_time
 			-- Set clock to current local time.
 		deferred
 		end
 
-	set_utc_time is
+	set_utc_time
 			-- Set clock to current UTC time.
 		deferred
 		end

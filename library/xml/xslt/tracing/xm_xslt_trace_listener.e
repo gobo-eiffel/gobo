@@ -14,14 +14,14 @@ deferred class XM_XSLT_TRACE_LISTENER
 
 feature -- Status report
 
-	is_tracing: BOOLEAN is
+	is_tracing: BOOLEAN
 			-- Is tracing active?
 		deferred
 		end
 
 feature -- Events
 
-	start_tracing is
+	start_tracing
 			-- Start tracing.
 		require
 			not_tracing: not is_tracing
@@ -30,7 +30,7 @@ feature -- Events
 			tracing_active: is_tracing
 		end
 
-	stop_tracing is
+	stop_tracing
 			-- Stop tracing.
 		require
 			tracing_active: is_tracing
@@ -39,7 +39,7 @@ feature -- Events
 			not_tracing: not is_tracing
 		end
 
-	trace_instruction_entry (some_trace_details: XM_XSLT_TRACE_DETAILS) is
+	trace_instruction_entry (some_trace_details: XM_XSLT_TRACE_DETAILS)
 		--  Trace start of instruction execution.
 		require
 			tracing_active: is_tracing
@@ -47,7 +47,7 @@ feature -- Events
 		deferred
 		end
 
-	trace_instruction_exit (some_trace_details: XM_XSLT_TRACE_DETAILS) is
+	trace_instruction_exit (some_trace_details: XM_XSLT_TRACE_DETAILS)
 		--  Trace end of instruction execution.
 		require
 			tracing_active: is_tracing
@@ -55,7 +55,7 @@ feature -- Events
 		deferred
 		end
 
-	trace_current_item_start (a_current_item: XM_XPATH_ITEM) is
+	trace_current_item_start (a_current_item: XM_XPATH_ITEM)
 			-- Trace making new item current.
 		require
 			tracing_active: is_tracing
@@ -63,7 +63,7 @@ feature -- Events
 		deferred
 		end
 
-	trace_current_item_finish (a_current_item: XM_XPATH_ITEM) is
+	trace_current_item_finish (a_current_item: XM_XPATH_ITEM)
 			-- Trace leaving current item.
 		require
 			tracing_active: is_tracing
@@ -71,7 +71,7 @@ feature -- Events
 		deferred
 		end
 
-	trace_user_entry (a_label, a_value: STRING) is
+	trace_user_entry (a_label, a_value: STRING)
 			-- Trace user entry (e.g. XPath trace() function).
 		require
 			tracing_enabled: is_tracing
@@ -81,4 +81,4 @@ feature -- Events
 		end
 
 end
-	
+

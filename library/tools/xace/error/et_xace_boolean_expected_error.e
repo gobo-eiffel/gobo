@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_element: XM_ELEMENT; an_attribute_name: STRING; an_actual_value: STRING; a_position: XM_POSITION) is
+	make (an_element: XM_ELEMENT; an_attribute_name: STRING; an_actual_value: STRING; a_position: XM_POSITION)
 			-- Create an error reporting that the value of attribute `an_attribute_name'
 			-- in element `an_element' should be a boolean value.
 		require
@@ -41,10 +41,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "attribute '$2' in element '$1' should have a boolean value $4"
+	default_template: STRING = "attribute '$2' in element '$1' should have a boolean value $4"
 			-- Default template used to built the error message
 
-	code: STRING is "XA0005"
+	code: STRING = "XA0005"
 			-- Error code
 
 end

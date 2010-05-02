@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_literal: like literal) is
+	make (a_literal: like literal)
 			-- Create a new Bit constant.
 		require
 			a_literal_not_void: a_literal /= Void
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_bit_constant: BOOLEAN is True
+	is_bit_constant: BOOLEAN = True
 			-- Is current constant a BIT constant?
 
 feature -- Access
@@ -62,7 +62,7 @@ feature -- Access
 	literal: STRING
 			-- Literal bit value
 
-	last_position: ET_POSITION is
+	last_position: ET_POSITION
 			-- Position of last character of current node in source code
 		do
 			create {ET_COMPRESSED_POSITION} Result.make (line, column + literal.count - 1)
@@ -70,7 +70,7 @@ feature -- Access
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_bit_constant (Current)

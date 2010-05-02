@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_executable: XM_XSLT_EXECUTABLE; a_name: XM_XPATH_EXPRESSION) is
+	make (an_executable: XM_XSLT_EXECUTABLE; a_name: XM_XPATH_EXPRESSION)
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, when known
 		do
 			Result := processing_instruction_node_kind_test
@@ -59,8 +59,8 @@ feature -- Access
 			end
 		end
 
-	
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions of `Current'
 		do
 			create Result.make (2)
@@ -71,7 +71,7 @@ feature -- Access
 
 feature -- Status report
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		do
 			std.error.put_string (STRING_.appended_string (indentation (a_level), "xsl:processing-instruction"))
@@ -79,10 +79,10 @@ feature -- Status report
 			name.display (a_level + 1)
 			Precursor (a_level + 1)
 		end
-	
+
 feature -- Status setting
 
-	compute_dependencies is
+	compute_dependencies
 			-- Compute dependencies on context.
 		do
 			Precursor
@@ -91,7 +91,7 @@ feature -- Status setting
 
 feature -- Optimization
 
-	type_check (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	type_check (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type checking
 		local
 			l_role: XM_XPATH_ROLE_LOCATOR
@@ -117,10 +117,10 @@ feature -- Optimization
 			end
 		end
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]		
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			name.simplify (l_replacement)
@@ -132,7 +132,7 @@ feature -- Optimization
 			end
 		end
 
-	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this instruction.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -145,7 +145,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
 			evaluate_name (a_context)
@@ -162,7 +162,7 @@ feature -- Evaluation
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 	evaluated_name: STRING
 			-- Result of calling `evaluate_name'
 
-	set_name (a_name: XM_XPATH_EXPRESSION) is
+	set_name (a_name: XM_XPATH_EXPRESSION)
 			-- Ensure `name' = `a_name'.
 		do
 			if name /= a_name then
@@ -190,13 +190,13 @@ feature {NONE} -- Implementation
 			set: name = a_name
 		end
 
-	check_content (a_content: STRING; a_context: XM_XPATH_CONTEXT) is
+	check_content (a_content: STRING; a_context: XM_XPATH_CONTEXT)
 			-- Check and possibly modify `a_content' for conformance to node kind.
 		do
 			last_string_value := STRING_.replaced_all_substrings (a_content, "?>", "? >")
 		end
 
-	evaluate_name_code (a_context: XM_XPATH_CONTEXT) is
+	evaluate_name_code (a_context: XM_XPATH_CONTEXT)
 			-- Evaluate name code.
 		do
 			evaluate_name (a_context)
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	evaluate_name (a_context: XM_XPATH_CONTEXT) is
+	evaluate_name (a_context: XM_XPATH_CONTEXT)
 			-- Evaluate name of PI.
 		require
 			a_context_not_void: a_context /= Void
@@ -239,6 +239,6 @@ feature {NONE} -- Implementation
 invariant
 
 	name_not_void: initialized implies name /= Void
-	
+
 end
-	
+

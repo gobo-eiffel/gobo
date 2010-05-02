@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_configuration: XM_XPATH_CONFIGURATION) is
+	make (a_configuration: XM_XPATH_CONFIGURATION)
 			-- Initialize `scheme' and register system property.
 		require
 			a_configuration_not_void: a_configuration /= Void
@@ -52,7 +52,7 @@ feature -- Status report
 
 feature -- Element change
 
-	resolve (a_uri: UT_URI; a_context: XM_XPATH_CONTEXT) is
+	resolve (a_uri: UT_URI; a_context: XM_XPATH_CONTEXT)
 			-- Resolve `a_uri' to a sequence of nodes.
 		local
 			l_directory_name: STRING

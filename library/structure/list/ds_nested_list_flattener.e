@@ -22,14 +22,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new nested list flattener.
 		do
 		end
 
 feature -- Basic operations
 
-	flatten (nested_lists: DS_LINEAR [DS_NESTED_LIST [G]]) is
+	flatten (nested_lists: DS_LINEAR [DS_NESTED_LIST [G]])
 			-- Make sure that for each list in `nested_lists'
 			-- all items are held locally, even those that
 			-- could be accessed remotely.
@@ -66,7 +66,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	traverse (a_list: DS_NESTED_LIST [G]; pending: DS_STACK [DS_NESTED_LIST [G]]) is
+	traverse (a_list: DS_NESTED_LIST [G]; pending: DS_STACK [DS_NESTED_LIST [G]])
 			-- Traverse nested lists containing the remote items
 			-- of `a_list' and copy them locally. `pending' is the
 			-- stack of nested lists currently being traversed.

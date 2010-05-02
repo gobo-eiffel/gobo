@@ -402,7 +402,7 @@ feature {NONE} -- Local variables
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new Eiffel scanner.
 		do
 			make_with_buffer (Empty_buffer)
@@ -413,7 +413,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset scanner before scanning next input.
 		do
 			reset_compressed_scanner_skeleton
@@ -440,7 +440,7 @@ feature -- Status report
 
 feature {NONE} -- Processing
 
-	process_operator (op: INTEGER): INTEGER is
+	process_operator (op: INTEGER): INTEGER
 			-- Process current token as operator `op' or as
 			-- an Eiffel string depending on the context
 		require
@@ -457,7 +457,7 @@ feature {NONE} -- Processing
 
 feature {NONE} -- Constants
 
-	Init_buffer_size: INTEGER is 256
+	Init_buffer_size: INTEGER = 256
 				-- Initial size for `eif_buffer'
 
 invariant

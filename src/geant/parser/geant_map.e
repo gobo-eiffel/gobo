@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT) is
+	make (a_project: GEANT_PROJECT)
 			-- Create a new fileset.
 		require
 			project_not_void: a_project /= Void
@@ -50,7 +50,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- Can element be executed?
 		do
 			Result := type /= Void and then
@@ -123,7 +123,7 @@ feature -- Access
 	map: GEANT_MAP
 			-- Nested Map
 
-	mapped_filename (a_filename: STRING): STRING is
+	mapped_filename (a_filename: STRING): STRING
 			-- Mapped `a_filename' according to patterns
 			-- `source_pattern' and `target_pattern'
 			-- depending on `type'
@@ -213,7 +213,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_type (a_type: STRING) is
+	set_type (a_type: STRING)
 			-- Set `type' to `a_type'.
 		require
 			type_not_void: a_type /= Void
@@ -228,7 +228,7 @@ feature -- Setting
 			type_set: type = a_type
 		end
 
-	set_source_pattern (a_source_pattern: like source_pattern) is
+	set_source_pattern (a_source_pattern: like source_pattern)
 			-- Set `source_pattern' to `a_source_pattern'.
 		require
 			a_source_pattern_not_void: a_source_pattern /= Void
@@ -238,7 +238,7 @@ feature -- Setting
 			source_pattern_set: source_pattern = a_source_pattern
 		end
 
-	set_target_pattern (a_target_pattern: like target_pattern) is
+	set_target_pattern (a_target_pattern: like target_pattern)
 			-- Set `target_pattern' to `a_target_pattern'.
 		require
 			a_target_pattern_not_void: a_target_pattern /= Void
@@ -248,7 +248,7 @@ feature -- Setting
 			target_pattern_set: target_pattern = a_target_pattern
 		end
 
-	set_map (a_map: like map) is
+	set_map (a_map: like map)
 			-- Set `map' to `a_map'.
 		require
 			a_map_not_void: a_map /= Void
@@ -260,7 +260,7 @@ feature -- Setting
 
 feature -- Constants
 
-	Type_attribute_value_identity: STRING is
+	Type_attribute_value_identity: STRING
 			-- Value 'identity' of xml attribute for type
 		once
 			Result := "identity"
@@ -269,7 +269,7 @@ feature -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Type_attribute_value_flat: STRING is
+	Type_attribute_value_flat: STRING
 			-- Value 'flat' of xml attribute for type
 		once
 			Result := "flat"
@@ -278,7 +278,7 @@ feature -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Type_attribute_value_merge: STRING is
+	Type_attribute_value_merge: STRING
 			-- Value 'merge' of xml attribute for type
 		once
 			Result := "merge"
@@ -287,7 +287,7 @@ feature -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Type_attribute_value_glob: STRING is
+	Type_attribute_value_glob: STRING
 			-- Value 'glob' of xml attribute for type
 		once
 			Result := "glob"
@@ -296,7 +296,7 @@ feature -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Type_attribute_value_regexp: STRING is
+	Type_attribute_value_regexp: STRING
 			-- Value 'regexp' of xml attribute for type
 		once
 			Result := "regexp"

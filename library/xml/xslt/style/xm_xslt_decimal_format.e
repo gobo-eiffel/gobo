@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_decimal_format: BOOLEAN is
+	is_decimal_format: BOOLEAN
 			-- Is `Current' an xsl:decimal_format?
 		do
 			Result := True
@@ -71,14 +71,14 @@ feature -- Status report
 
 feature -- Element change
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		do
 			-- this has already been done in `preprepare_attributes'
 			attributes_prepared := True
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 		do
 			check_top_level (Void)
@@ -86,13 +86,13 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (a_executable: XM_XSLT_EXECUTABLE) is
+	compile (a_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction, or to Eiffel code.
 		do
 			last_generated_expression := Void
 		end
 
-	register is
+	register
 			-- Register decimal format represented by `Current' with the manager.
 		local
 			l_decimal_format: XM_XSLT_DECIMAL_FORMAT_ENTRY
@@ -155,7 +155,7 @@ feature -- Element change
 
 feature -- Conversion
 
-	as_decimal_format: XM_XSLT_DECIMAL_FORMAT is
+	as_decimal_format: XM_XSLT_DECIMAL_FORMAT
 			-- `Current' seen as an xsl:decimal_format
 		do
 			Result := Current
@@ -163,7 +163,7 @@ feature -- Conversion
 
 feature {NONE} -- Implementation
 
-	preprepare_attributes is
+	preprepare_attributes
 			-- Prepare attributes early.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -233,7 +233,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	validate_decimal_separator is
+	validate_decimal_separator
 			-- Validate `decimal_separator'.
 		require
 			no_error_yet: not any_compile_errors
@@ -248,7 +248,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	validate_grouping_separator is
+	validate_grouping_separator
 			-- Validate `grouping_separator'.
 		require
 			no_error_yet: not any_compile_errors
@@ -263,7 +263,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	validate_percent is
+	validate_percent
 			-- Validate `percent'.
 		require
 			no_error_yet: not any_compile_errors
@@ -278,7 +278,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	validate_per_mille is
+	validate_per_mille
 			-- Validate `per_mille'.
 		require
 			no_error_yet: not any_compile_errors
@@ -293,7 +293,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	validate_zero_digit is
+	validate_zero_digit
 			-- Validate `zero_digit'.
 		require
 			no_error_yet: not any_compile_errors
@@ -322,7 +322,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	validate_digit is
+	validate_digit
 			-- Validate `digit'.
 		require
 			no_error_yet: not any_compile_errors
@@ -337,7 +337,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	validate_pattern_separator is
+	validate_pattern_separator
 			-- Validate `pattern_separator'.
 		require
 			no_error_yet: not any_compile_errors
@@ -352,7 +352,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	validate_minus_sign is
+	validate_minus_sign
 			-- Validate `minus_sign'.
 		require
 			no_error_yet: not any_compile_errors
@@ -367,7 +367,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	created_decimal_format (a_fingerprint: INTEGER): XM_XSLT_DECIMAL_FORMAT_ENTRY is
+	created_decimal_format (a_fingerprint: INTEGER): XM_XSLT_DECIMAL_FORMAT_ENTRY
 			-- Decimal format named bu `a_fingerprint'.
 		require
 			no_error_yet: not any_compile_errors

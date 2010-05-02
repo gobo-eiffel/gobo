@@ -17,7 +17,7 @@ inherit
 
 feature -- Access
 
-	library_name: STRING is
+	library_name: STRING
 			-- Library name of example
 		deferred
 		ensure
@@ -27,7 +27,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	program_dirname: STRING is
+	program_dirname: STRING
 			-- Name of program source directory
 		do
 			Result := file_system.nested_pathname ("${GOBO}", <<"example", library_name, program_name>>)

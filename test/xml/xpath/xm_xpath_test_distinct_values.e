@@ -44,7 +44,7 @@ create
 
 feature -- Result
 
-	two: MA_DECIMAL is
+	two: MA_DECIMAL
 			-- 2.0
 		once
 			create Result.make_from_integer (2)
@@ -54,7 +54,7 @@ feature -- Result
 
 feature -- Test
 
-	test_distinct_values_one is
+	test_distinct_values_one
 			-- Test fn:distinct-values((1, 2.0, 3, 2)) might return (1, 2.0, 3).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -81,14 +81,14 @@ feature -- Test
 			assert ("Third value is three", an_integer_value.value = 3)
 		end
 
-	set_up is
+	set_up
 		do
 			conformance.set_basic_xslt_processor
 		end
 
 feature {NONE} -- Implementation
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}",
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 			data_dirname_not_empty: not Result.is_empty
 		end
 
-	languages_xml_uri: UT_URI is
+	languages_xml_uri: UT_URI
 			-- URI of file 'languages.xml'
 		local
 			a_path: STRING

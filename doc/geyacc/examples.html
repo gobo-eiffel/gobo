@@ -379,7 +379,7 @@ indicating that an error occurred in the lexical analysis.)</p>
 <p>Here is the code for the lexical analyzer routine:</p>
 
 <blockquote>
-    <pre><font color="#008080"><em>read_token </em><em><strong>is</strong></em><em>
+    <pre><font color="#008080"><em>read_token
         </em>-- Lexical analyzer returns a double floating point
         -- number on the stack and the token NUM, or the ASCII
         -- character read if not a number. Skips all blanks
@@ -569,7 +569,7 @@ color="#0000FF"> $2 }
 
 </font><font color="#008080"><em><strong>feature</strong></em>
 
-    <em>read_token</em> <em><strong>is</strong></em>
+    <em>read_token</em>
         <em><strong>do</strong></em>
             ...
         <em><strong>end</strong></em>
@@ -983,7 +983,7 @@ memory management of <tt>mcalc</tt>.</p>
 <blockquote>
     <pre><font color="#008080"><em><strong>feature </strong></em>{<em>NONE</em>} -- Initialization<em>
 
-    make </em><em><strong>is</strong></em><em>
+    make
             </em>-- Create a new calculator with memory.<em>
         </em><em><strong>do</strong></em><em>
             make_parser_skeleton
@@ -992,7 +992,7 @@ memory management of <tt>mcalc</tt>.</p>
 
 feature</strong></em><em> </em>-- Memory management<em>
 
-    memory_value </em>(<em>a_name</em>:<em> STRING</em>):<em> DOUBLE </em><em><strong>is</strong></em><em>
+    memory_value </em>(<em>a_name</em>:<em> STRING</em>):<em> DOUBLE
             </em>-- Value associated with memory <em>a_name</em>;
             -- 0.0 if no value has been stored in <em>a_name</em> yet<em>
         </em><em><strong>require</strong></em><em>
@@ -1005,7 +1005,7 @@ feature</strong></em><em> </em>-- Memory management<em>
             </em><em><strong>end
         end</strong></em><em>
 
-    set_memory_value </em>(<em>a_value</em>:<em> DOUBLE</em>;<em> a_name</em>:<em> STRING</em>)<em> </em><em><strong>is</strong></em><em>
+    set_memory_value </em>(<em>a_value</em>:<em> DOUBLE</em>;<em> a_name</em>:<em> STRING</em>)<em>
             </em>-- Store <em>a_value</em> into <em>a_name</em>.<em>
         </em><em><strong>require</strong></em><em>
             a_name_not_void</em>:<em> a_name </em>/=<em> Void

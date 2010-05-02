@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parameter: like actual_parameter; a_comma: like comma) is
+	make (a_parameter: like actual_parameter; a_comma: like comma)
 			-- Create a new actual_parameter-comma.
 		require
 			a_parameter_not_void: a_parameter /= Void
@@ -40,13 +40,13 @@ feature -- Access
 	actual_parameter: ET_ACTUAL_PARAMETER
 			-- Actual parameter in comma-separated list
 
-	type: ET_TYPE is
+	type: ET_TYPE
 			-- Type of `actual_parameter'
 		do
 			Result := actual_parameter.type
 		end
 
-	label: ET_IDENTIFIER is
+	label: ET_IDENTIFIER
 			-- Label of `actual_parameter';
 			-- Useful when part of a labeled tuple, Void if no label
 		do
@@ -56,26 +56,26 @@ feature -- Access
 	comma: ET_SYMBOL
 			-- Comma separator
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
 			Result := actual_parameter.position
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := actual_parameter.first_leaf
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := comma
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := comma.break
@@ -83,7 +83,7 @@ feature -- Access
 
 feature -- Type processing
 
-	resolved_formal_parameters_with_type (a_type: ET_TYPE): ET_ACTUAL_PARAMETER_COMMA is
+	resolved_formal_parameters_with_type (a_type: ET_TYPE): ET_ACTUAL_PARAMETER_COMMA
 			-- Version of current actual parameter where its type
 			-- is replaced by `a_type'
 		local
@@ -99,7 +99,7 @@ feature -- Type processing
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_actual_parameter_comma (Current)

@@ -14,7 +14,7 @@ class KL_IMPORTED_DOUBLE_ROUTINES
 
 feature -- Access
 
-	DOUBLE_: KL_DOUBLE_ROUTINES is
+	DOUBLE_: KL_DOUBLE_ROUTINES
 			-- Routines that ought to be in class DOUBLE
 		once
 			create Result

@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_string: like manifest_string) is
+	make (a_string: like manifest_string)
 			-- Create a new once manifest string.
 		require
 			a_string_not_void: a_string /= Void
@@ -41,7 +41,7 @@ feature -- Access
 	manifest_string: ET_MANIFEST_STRING
 			-- Manifest string
 
-	constant: ET_CONSTANT is
+	constant: ET_CONSTANT
 			-- Constant value
 		do
 			Result := manifest_string
@@ -49,7 +49,7 @@ feature -- Access
 			definition: Result = manifest_string
 		end
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -59,19 +59,19 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := once_keyword
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := manifest_string
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := manifest_string.break
@@ -79,7 +79,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_once_keyword (a_once: like once_keyword) is
+	set_once_keyword (a_once: like once_keyword)
 			-- Set `once_keyword' to `a_once'.
 		require
 			a_once_not_void: a_once /= Void
@@ -91,7 +91,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_once_manifest_string (Current)

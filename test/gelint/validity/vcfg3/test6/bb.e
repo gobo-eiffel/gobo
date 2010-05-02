@@ -6,7 +6,7 @@ inherit
 
 feature
 
-	g is
+	g
 		do
 			item1 := "gobo1"
 			item2 := "gobo2"

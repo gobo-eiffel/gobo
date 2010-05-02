@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new precursor features.
 		do
 			create precursors.make (500000)
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Processing
 
-	mark_precursors (a_system: ET_SYSTEM) is
+	mark_precursors (a_system: ET_SYSTEM)
 			-- Mark the features which are the precursor of at least one feature
 			-- of one of the classes marked in `a_system'.
 			--
@@ -50,7 +50,7 @@ feature -- Processing
 			a_system.classes_do_if_recursive (agent {ET_CLASS}.features_do_all (agent add_precursors), agent {ET_CLASS}.is_marked)
 		end
 
-	unmark_all is
+	unmark_all
 			-- Unmark all features previously marked with `mark_precursors'.
 		do
 			precursors.wipe_out
@@ -58,7 +58,7 @@ feature -- Processing
 
 feature -- Status report
 
-	is_marked (a_feature: ET_FEATURE): BOOLEAN is
+	is_marked (a_feature: ET_FEATURE): BOOLEAN
 			-- Is `a_feature' the precursor of at least one other feature?
 		require
 			a_feature_not_void: a_feature /= Void
@@ -76,7 +76,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_use_implementation_feature (b: BOOLEAN) is
+	set_use_implementation_feature (b: BOOLEAN)
 			-- Set `use_implementation_feature' to `b'.
 		do
 			use_implementation_feature := b
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 	precursors: DS_HASH_SET [ET_FEATURE]
 			-- Features which have been marked as precursors of other features
 
-	add_precursors (a_feature: ET_FEATURE) is
+	add_precursors (a_feature: ET_FEATURE)
 			-- Added precursors (or their implementation features if
 			-- `use_implementation_feature' is set) of `a_feature' to
 			-- `precursors'.
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_to_precursors (a_feature: ET_FEATURE) is
+	add_to_precursors (a_feature: ET_FEATURE)
 			-- Add `a_feature' (or its implementation feature if
 			-- `use_implementation_feature' is set) to `precursors'.
 		require

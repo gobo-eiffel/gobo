@@ -23,7 +23,7 @@ create
 
 feature -- Test
 
-	test_compile1 is
+	test_compile1
 			-- Test feature 'compile'.
 		local
 			a_regexp: RX_PCRE_REGULAR_EXPRESSION
@@ -35,7 +35,7 @@ feature -- Test
 			assert ("not_recognizes1", not a_regexp.recognizes ("aaabbbcccddd"))
 		end
 
-	test_compile2 is
+	test_compile2
 			-- Test feature 'compile'.
 		local
 			a_regexp: RX_PCRE_REGULAR_EXPRESSION
@@ -62,7 +62,7 @@ feature -- Test
 			assert ("compiled1", a_regexp.is_compiled)
 		end
 
-	test_optimize1 is
+	test_optimize1
 			-- Test feature 'optimize'.
 		local
 			a_regexp: RX_PCRE_REGULAR_EXPRESSION
@@ -76,7 +76,7 @@ feature -- Test
 			assert ("recognizes4", a_regexp.recognizes ("ba"))
 		end
 
-	test_recognizes is
+	test_recognizes
 			-- Test feature `recognizes'.
 		local
 			a_regexp: RX_PCRE_REGULAR_EXPRESSION
@@ -93,7 +93,7 @@ feature -- Test
 			assert ("recognizes3", a_regexp.recognizes ("eiffel"))
 		end
 
-	test_split1 is
+	test_split1
 			-- Test feature `split'.
 		local
 			a_regexp: RX_PCRE_REGULAR_EXPRESSION
@@ -112,7 +112,7 @@ feature -- Test
 			assert_strings_equal ("split_item3", "two", a_split.item (3))
 		end
 
-	test_split2 is
+	test_split2
 			-- Test feature `split'.
 		local
 			a_regexp: RX_PCRE_REGULAR_EXPRESSION
@@ -130,7 +130,7 @@ feature -- Test
 			assert_strings_equal ("split_item2", "b", a_split.item (2))
 		end
 
-	test_split3 is
+	test_split3
 			-- Test feature `split'.
 		local
 			a_regexp: RX_PCRE_REGULAR_EXPRESSION
@@ -150,7 +150,7 @@ feature -- Test
 			assert_strings_equal ("split_item4", "o", a_split.item (4))
 		end
 
-	test_double_curly_braces is
+	test_double_curly_braces
 			-- Test what happens when using double curly braces.
 		local
 			a_regexp: RX_PCRE_REGULAR_EXPRESSION
@@ -166,7 +166,7 @@ feature -- Test
 			assert ("not_recognizes3", not a_regexp.recognizes ("17"))
 		end
 
-	test_degenerated1 is
+	test_degenerated1
 			-- Test degenerated regexp "|".
 			-- Check to see if it works like "<empty_string>|<empty_string>"
 			-- (and not like "\|"). See bug#1917556.
@@ -192,7 +192,7 @@ feature -- Test
 			assert_strings_equal ("split_item8", "o", a_split.item (8))
 		end
 
-	test_match1 is
+	test_match1
 			-- Test feature 'match'.
 		local
 			a_regexp: RX_PCRE_REGULAR_EXPRESSION
@@ -205,7 +205,7 @@ feature -- Test
 			assert ("no_matched1", not a_regexp.has_matched)
 		end
 
-	test_match2 is
+	test_match2
 			-- Test feature 'match'.
 		local
 			a_regexp: RX_PCRE_REGULAR_EXPRESSION
@@ -218,7 +218,7 @@ feature -- Test
 			assert ("no_matched1", not a_regexp.has_matched)
 		end
 
-	test_match_substring1 is
+	test_match_substring1
 			-- Test feature 'match_substring'.
 		local
 			a_regexp: RX_PCRE_REGULAR_EXPRESSION
@@ -231,7 +231,7 @@ feature -- Test
 			assert ("matched1", a_regexp.has_matched)
 		end
 
-	test_match_substring2 is
+	test_match_substring2
 			-- Test feature 'match'.
 		local
 			a_regexp: RX_PCRE_REGULAR_EXPRESSION
@@ -246,7 +246,7 @@ feature -- Test
 
 feature -- Test Input 1
 
-	test_input1_regexp1 is
+	test_input1_regexp1
 			-- Test first regexp in testinput1.
 		local
 			a_regexp: RX_PCRE_REGULAR_EXPRESSION
@@ -276,7 +276,7 @@ feature -- Test Input 1
 
 feature -- Test replacement
 
-	test_replacement1 is
+	test_replacement1
 			-- Test replacement.
 		local
 			a_regexp: RX_PCRE_REGULAR_EXPRESSION
@@ -300,7 +300,7 @@ feature -- Test replacement
 			assert_equal ("relacement2", "abc8#0def", a_replacement)
 		end
 
-	test_replacement2 is
+	test_replacement2
 			-- Test replacement.
 			-- This is to test that there is no infinite loop
 			-- when replacing all occurrences of a pattern that

@@ -22,7 +22,7 @@ create
 
 feature -- Access
 
-	has_class (a_class: ET_CLASS): BOOLEAN is
+	has_class (a_class: ET_CLASS): BOOLEAN
 			-- Is there a type in the list with `a_class' as base class?
 		require
 			a_class_not_void: a_class /= Void
@@ -40,7 +40,7 @@ feature -- Access
 			end
 		end
 
-	base_type (a_class: ET_CLASS): ET_BASE_TYPE is
+	base_type (a_class: ET_CLASS): ET_BASE_TYPE
 			-- Type in the list whose base class is `a_class';
 			-- Void if no such type
 		require
@@ -65,7 +65,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_BASE_TYPE] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_BASE_TYPE]
 			-- Fixed array routines
 		once
 			create Result

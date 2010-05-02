@@ -21,7 +21,7 @@ inherit
 		end
 
 	XM_XPATH_TYPE
-	
+
 	XM_XPATH_ERROR_TYPES
 
 	XM_XPATH_SHARED_CONFORMANCE
@@ -32,7 +32,7 @@ inherit
 
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
-	
+
 	UT_SHARED_FILE_URI_ROUTINES
 		export {NONE} all end
 
@@ -42,7 +42,7 @@ create
 
 feature -- Test
 
-	test_single_id_against_tiny_tree is
+	test_single_id_against_tiny_tree
 			-- Test fn:id ('A6').
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -58,7 +58,7 @@ feature -- Test
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
 		end
 
-	test_single_id_against_standard_tree is
+	test_single_id_against_standard_tree
 			-- Test fn:id ('A6').
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -73,8 +73,8 @@ feature -- Test
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
 		end
-	
-	test_multiple_id_strings_against_standard_tree is
+
+	test_multiple_id_strings_against_standard_tree
 			-- Test fn:id (('A6', 'A1')).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -89,8 +89,8 @@ feature -- Test
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("Two evaluated items", evaluated_items /= Void and then evaluated_items.count = 2)
 		end
-	
-	test_multiple_id_strings_against_tiny_tree is
+
+	test_multiple_id_strings_against_tiny_tree
 			-- Test fn:id (('A6', 'A1')).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -105,8 +105,8 @@ feature -- Test
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("Two evaluated items", evaluated_items /= Void and then evaluated_items.count = 2)
 		end
-	
-	test_multiple_id_multiple_strings_against_standard_tree is
+
+	test_multiple_id_multiple_strings_against_standard_tree
 			-- Test fn:id (('A6', 'A1 A2')).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -122,7 +122,7 @@ feature -- Test
 			assert ("Three evaluated items", evaluated_items /= Void and then evaluated_items.count = 3)
 		end
 
-	test_multiple_id_multiple_strings_against_tiny_tree is
+	test_multiple_id_multiple_strings_against_tiny_tree
 			-- Test fn:id (('A6', 'A1 A2')).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -138,7 +138,7 @@ feature -- Test
 			assert ("Three evaluated items", evaluated_items /= Void and then evaluated_items.count = 3)
 		end
 
-	test_multiple_ids_against_standard_tree is
+	test_multiple_ids_against_standard_tree
 			--	Test fn:id (' A1 A6 B99').
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -154,7 +154,7 @@ feature -- Test
 			assert ("Two evaluated items", evaluated_items /= Void and then evaluated_items.count = 2)
 		end
 
-	test_multiple_ids_against_tiny_tree is
+	test_multiple_ids_against_tiny_tree
 			--	Test fn:id (' A1 A6 B99').
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -170,7 +170,7 @@ feature -- Test
 			assert ("Two evaluated items", evaluated_items /= Void and then evaluated_items.count = 2)
 		end
 
-	test_idrefs_against_tiny_tree is
+	test_idrefs_against_tiny_tree
 			--	Test fn:idref ((' A1 ', 'A3 A7 A2 ')).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -186,7 +186,7 @@ feature -- Test
 			assert ("four evaluated items", evaluated_items /= Void and then evaluated_items.count = 4)
 		end
 
-	test_idrefs_against_standard_tree is
+	test_idrefs_against_standard_tree
 			--	Test fn:idref ((' A1 ', 'A3 A7 A2 ')).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -202,14 +202,14 @@ feature -- Test
 			assert ("four evaluated items", evaluated_items /= Void and then evaluated_items.count = 4)
 		end
 
-	set_up is
+	set_up
 		do
 			conformance.set_basic_xslt_processor
 		end
 
 feature {NONE} -- Implementation
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}",
@@ -219,8 +219,8 @@ feature {NONE} -- Implementation
 			data_dirname_not_void: Result /= Void
 			data_dirname_not_empty: not Result.is_empty
 		end
-		
-	idrefs_xml_uri: UT_URI is
+
+	idrefs_xml_uri: UT_URI
 			-- URI of file 'idrefs.xml'
 		local
 			a_path: STRING
@@ -233,4 +233,4 @@ feature {NONE} -- Implementation
 
 end
 
-			
+

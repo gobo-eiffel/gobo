@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_offset: like fixed_offset) is
+	make (an_offset: like fixed_offset)
 			-- Create a new time zone with `an_offset'.
 		require
 			an_offset_not_void: an_offset /= Void
@@ -105,7 +105,7 @@ feature {NONE} -- Initialization
 			fixed_offset_set: fixed_offset = an_offset
 		end
 
-	make_hours_minutes (h, m: INTEGER) is
+	make_hours_minutes (h, m: INTEGER)
 			-- Create a new time zone with offset `h':`m'.
 		require
 			h_large_enough: h > -Hours_in_day
@@ -120,7 +120,7 @@ feature {NONE} -- Initialization
 			make_hours_minutes_seconds (h, m, 0)
 		end
 
-	make_hours_minutes_seconds (h, m, s: INTEGER) is
+	make_hours_minutes_seconds (h, m, s: INTEGER)
 			-- Create a new time zone with offset `h':`m':`s'.
 		require
 			h_large_enough: h > -Hours_in_day
@@ -144,7 +144,7 @@ feature {NONE} -- Initialization
 			make (l_offset)
 		end
 
-	make_named (a_name: like name; an_offset: like fixed_offset) is
+	make_named (a_name: like name; an_offset: like fixed_offset)
 			-- Create a new time zone with `an_offset' named `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -159,7 +159,7 @@ feature {NONE} -- Initialization
 			fixed_offset_set: fixed_offset = an_offset
 		end
 
-	make_named_hours_minutes (a_name: like name; h, m: INTEGER) is
+	make_named_hours_minutes (a_name: like name; h, m: INTEGER)
 			-- Create a new time zone with offset `h':`m'.
 		require
 			a_name_not_void: a_name /= Void
@@ -177,7 +177,7 @@ feature {NONE} -- Initialization
 			name_set: name = a_name
 		end
 
-	make_named_hours_minutes_seconds (a_name: like name; h, m, s: INTEGER) is
+	make_named_hours_minutes_seconds (a_name: like name; h, m, s: INTEGER)
 			-- Create a new time zone with offset `h':`m':`s'.
 		require
 			a_name_not_void: a_name /= Void
@@ -208,7 +208,7 @@ feature -- Access
 	name: STRING
 			-- Time zone name
 
-	offset (a_date_time: DT_DATE_TIME): DT_TIME_DURATION is
+	offset (a_date_time: DT_DATE_TIME): DT_TIME_DURATION
 			-- UTC offset for `a_date_time' in `Current' time zone
 		do
 			Result := fixed_offset
@@ -219,7 +219,7 @@ feature -- Access
 
 feature -- Conversion
 
-	convert_to_utc (a_date_time: DT_DATE_TIME) is
+	convert_to_utc (a_date_time: DT_DATE_TIME)
 			-- Convert `a_date_time', considered to be relative to `Current'
 			-- time zone, into the same time but relative to UTC.
 			-- (`a_date_time' will be altered by the call.)
@@ -227,7 +227,7 @@ feature -- Conversion
 			a_date_time.add_milliseconds (-(fixed_offset.millisecond_count))
 		end
 
-	convert_from_utc (a_date_time: DT_DATE_TIME) is
+	convert_from_utc (a_date_time: DT_DATE_TIME)
 			-- Convert `a_date_time', considered to be relative to UTC,
 			-- into the same time but relative to `Current' time zone.
 			-- (`a_date_time' will be altered by the call.)

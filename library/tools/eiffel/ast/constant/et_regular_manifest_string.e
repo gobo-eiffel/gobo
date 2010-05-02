@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_literal: like literal) is
+	make (a_literal: like literal)
 			-- Create a new manifest string.
 		require
 			a_literal_not_void: a_literal /= Void
@@ -41,13 +41,13 @@ feature -- Access
 	value: STRING
 			-- String value
 
-	literal: STRING is
+	literal: STRING
 			-- Literal value
 		do
 			Result := value
 		end
 
-	last_position: ET_POSITION is
+	last_position: ET_POSITION
 			-- Position of last character of current node in source code
 		do
 			create {ET_COMPRESSED_POSITION} Result.make (line, column + value.count + 1)
@@ -55,7 +55,7 @@ feature -- Access
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_regular_manifest_string (Current)

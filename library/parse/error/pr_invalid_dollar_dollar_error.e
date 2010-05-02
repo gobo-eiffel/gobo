@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER) is
+	make (filename: STRING; line: INTEGER)
 			-- Create a new error reporting that $$ has
 			-- been used in an error action.
 		require
@@ -35,10 +35,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: invalid use of $$$$ in error action"
+	default_template: STRING = "%"$1%", line $2: invalid use of $$$$ in error action"
 			-- Default template used to built the error message
 
-	code: STRING is "PR0026"
+	code: STRING = "PR0026"
 			-- Error code
 
 invariant

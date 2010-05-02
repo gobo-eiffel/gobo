@@ -29,13 +29,13 @@ feature -- Access
 
 feature -- Status report
 
-	allows_parameter: BOOLEAN is
+	allows_parameter: BOOLEAN
 			-- Does this option allow a parameter?
 		do
 			Result := False
 		end
 
-	needs_parameter: BOOLEAN is
+	needs_parameter: BOOLEAN
 			-- Does this option need a parameter?
 		do
 			Result := False
@@ -43,13 +43,13 @@ feature -- Status report
 
 feature {AP_PARSER} -- Parser Interface
 
-	record_occurrence (a_parser: AP_PARSER) is
+	record_occurrence (a_parser: AP_PARSER)
 			-- This option was found during parsing.
 		do
 			occurrences := occurrences + 1
 		end
 
-	reset is
+	reset
 			-- Reset the option to a clean state before parsing.
 		do
 			occurrences := 0

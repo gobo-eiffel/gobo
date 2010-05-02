@@ -36,14 +36,14 @@ inherit
 
 feature -- Status report
 
-	end_of_file: BOOLEAN is
+	end_of_file: BOOLEAN
 			-- Has the end of input file been reached?
 		require
 			is_open_read: is_open_read
 		deferred
 		end
 
-	end_of_input: BOOLEAN is
+	end_of_input: BOOLEAN
 			-- Has the end of input stream been reached?
 		do
 			Result := end_of_file
@@ -51,7 +51,7 @@ feature -- Status report
 			definition: Result = end_of_file
 		end
 
-	valid_unread_character (a_character: CHARACTER): BOOLEAN is
+	valid_unread_character (a_character: CHARACTER): BOOLEAN
 			-- Can `a_character' be put back in input stream?
 		do
 			Result := a_character.code <= Platform.Maximum_byte_code
@@ -61,7 +61,7 @@ feature -- Status report
 
 feature -- Access
 
-	last_character: CHARACTER is
+	last_character: CHARACTER
 			-- Last character read
 		deferred
 		ensure then
@@ -70,7 +70,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	open_read is
+	open_read
 			-- Open current file in read-only mode if
 			-- it can be opened, let it closed otherwise.
 		deferred

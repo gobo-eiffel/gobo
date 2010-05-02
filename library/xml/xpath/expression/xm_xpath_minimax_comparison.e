@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; an_operand_two: XM_XPATH_EXPRESSION) is
+	make (an_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; an_operand_two: XM_XPATH_EXPRESSION)
 			-- Establish invariant
 		do
 			Precursor (an_operand_one, a_token, an_operand_two)
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Determine the data type of the expression, if possible
 		do
 			Result := type_factory.boolean_type
@@ -50,7 +50,7 @@ feature -- Access
 
 feature -- Optimization
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_value: XM_XPATH_VALUE
@@ -107,7 +107,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT)
 			-- Effective boolean value
 		local
 			first_range, second_range: ARRAY [XM_XPATH_NUMERIC_VALUE]
@@ -135,9 +135,9 @@ feature -- Evaluation
 							if first_range = Void or else second_range = Void then
 								last_boolean_value := false_value
 							else
-								
+
 								-- Now test how the min of one sequence compares to the max of the other
-								
+
 								inspect
 									operator
 								when Less_than_token then
@@ -156,7 +156,7 @@ feature -- Evaluation
 			end
 		end
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			calculate_effective_boolean_value (a_context)
@@ -165,7 +165,7 @@ feature -- Evaluation
 
 feature {NONE} -- Implementation
 
-	computed_range (an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT): ARRAY [XM_XPATH_NUMERIC_VALUE] is
+	computed_range (an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT): ARRAY [XM_XPATH_NUMERIC_VALUE]
 			-- Compute the range of a sequence, ignoring NaNs;
 			-- Not 100% pure - caller checks for iterators going into error status.
 		require
@@ -194,7 +194,7 @@ feature {NONE} -- Implementation
 							end
 							if a_number.three_way_comparison (Result.item (2), a_context) = 1 then
 								Result.put (a_number, 2)
-							end							
+							end
 						end
 					end
 				end
@@ -204,7 +204,7 @@ feature {NONE} -- Implementation
 			void_or_two_numbers: Result /= Void implies Result.count = 2
 		end
 
-	false_value: XM_XPATH_BOOLEAN_VALUE is
+	false_value: XM_XPATH_BOOLEAN_VALUE
 			-- False result
 		do
 			create Result.make (False)
@@ -213,4 +213,4 @@ feature {NONE} -- Implementation
 		end
 
 end
-	
+

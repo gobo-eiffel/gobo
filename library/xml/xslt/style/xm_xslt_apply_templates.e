@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER;a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
+		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration)
 			-- Establish invariant.
 		do
 			mode_name_code := -1 -- default mode
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	mark_tail_calls is
+	mark_tail_calls
 			-- Mark tail-recursive calls on templates and functions.
 		do
 			use_tail_recursion := True
@@ -50,7 +50,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -79,7 +79,7 @@ feature -- Element change
 					end
 					l_cursor.forth
 				variant
-					attribute_collection.number_of_attributes + 1 - l_cursor.index	
+					attribute_collection.number_of_attributes + 1 - l_cursor.index
 				end
 			end
 			if l_select_attribute /= Void then
@@ -108,7 +108,7 @@ feature -- Element change
 			attributes_prepared := True
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 		local
 			l_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -183,7 +183,7 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (an_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		local
 			l_sort_key_list: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION]
@@ -206,7 +206,7 @@ feature -- Element change
 
 feature -- Conversion
 
-	is_apply_templates: BOOLEAN is
+	is_apply_templates: BOOLEAN
 			-- Is `Current' an xsl:apply-templates?
 		do
 			Result := True

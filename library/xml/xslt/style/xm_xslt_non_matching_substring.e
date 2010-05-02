@@ -26,13 +26,13 @@ create {XM_XSLT_NODE_FACTORY}
 
 feature -- Access
 
-	may_contain_sequence_constructor: BOOLEAN is
+	may_contain_sequence_constructor: BOOLEAN
 			-- Is `Current' allowed to contain a sequence constructor?
 		do
 			Result := True
 		end
 
-	returned_item_type: XM_XPATH_ITEM_TYPE is
+	returned_item_type: XM_XPATH_ITEM_TYPE
 			-- Type of item returned by this instruction
 		do
 			Result := common_child_item_type
@@ -40,7 +40,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_non_matching_substring: BOOLEAN is
+	is_non_matching_substring: BOOLEAN
 			-- Is `Current' an xsl:non-matching-substring?
 		do
 			Result := True
@@ -48,7 +48,7 @@ feature -- Status report
 
 feature -- Element change
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -70,7 +70,7 @@ feature -- Element change
 			attributes_prepared := True
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 		local
 			an_analyze_string: XM_XSLT_ANALYZE_STRING
@@ -84,7 +84,7 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (an_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		local
 			an_error: XM_XPATH_ERROR_VALUE
@@ -96,7 +96,7 @@ feature -- Element change
 feature -- Conversion
 
 
-	as_non_matching_substring: XM_XSLT_NON_MATCHING_SUBSTRING is
+	as_non_matching_substring: XM_XSLT_NON_MATCHING_SUBSTRING
 			-- `Current' seen as an xsl:non-matching-substring
 		do
 			Result := Current

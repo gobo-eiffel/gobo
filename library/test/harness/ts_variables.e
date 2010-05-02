@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new empty variables.
 		do
 			create variables.make_map (10)
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	has (a_name: STRING): BOOLEAN is
+	has (a_name: STRING): BOOLEAN
 			-- Has variable named `a_name' been defined?
 		require
 			a_name_not_void: a_name /= Void
@@ -45,7 +45,7 @@ feature -- Status report
 
 feature -- Access
 
-	value (a_name: STRING): STRING is
+	value (a_name: STRING): STRING
 			-- Value of variable `a_name'
 		require
 			a_name_not_void: a_name /= Void
@@ -57,7 +57,7 @@ feature -- Access
 			value_not_void: Result /= Void
 		end
 
-	new_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING] is
+	new_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
 			-- Cursor to traverse variables
 		do
 			Result := variables.new_cursor
@@ -67,7 +67,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_value (a_name, a_value: STRING) is
+	set_value (a_name, a_value: STRING)
 			-- Set variable `a_name' to `a_value'.
 		require
 			a_name_not_void: a_name /= Void

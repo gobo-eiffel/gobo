@@ -26,10 +26,10 @@ create {XM_XSLT_NODE_FACTORY}
 	make_style_element
 
 feature {NONE} -- Initialization
-	
+
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
+		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration)
 			-- Establish invariant.
 		do
 			cached_variable_fingerprint := -1
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	required_type: XM_XPATH_SEQUENCE_TYPE is
+	required_type: XM_XPATH_SEQUENCE_TYPE
 			-- Static type of the variable
 		local
 			a_document_test: XM_XPATH_NODE_KIND_TEST
@@ -73,7 +73,7 @@ feature -- Access
 
 feature -- Element change
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		require else
 			preparation_state: preparation_state < 2
@@ -90,7 +90,7 @@ feature -- Element change
 			end
 		end
 
-	compile (a_executable: XM_XSLT_EXECUTABLE) is
+	compile (a_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		local
 			l_local_variable: XM_XSLT_LOCAL_VARIABLE
@@ -109,7 +109,7 @@ feature -- Element change
 					create l_global_variable.make_global_variable (a_executable, variable_name, slot_number, slot_manager)
 					initialize_instruction (a_executable, l_global_variable)
 					l_global_variable.set_required_type (required_type)
-					fixup_binding (l_global_variable)					
+					fixup_binding (l_global_variable)
 					last_generated_expression := l_global_variable
 				else
 					create l_local_variable.make (a_executable, variable_name, slot_number)
@@ -141,13 +141,13 @@ feature -- Element change
 
 feature -- Conversion
 
-	is_xslt_variable: BOOLEAN is
+	is_xslt_variable: BOOLEAN
 			-- Is `Current' an xsl:variable?
 		do
 			Result := True
 		end
 
-	as_xslt_variable: XM_XSLT_VARIABLE is
+	as_xslt_variable: XM_XSLT_VARIABLE
 			-- `Current' seen as an xsl:variable
 		do
 			Result := Current

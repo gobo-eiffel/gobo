@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_stream: like base_stream) is
+	make (a_stream: like base_stream)
 			-- Create a new proxy output stream.
 		require
 			a_stream_not_void: a_stream /= Void
@@ -44,13 +44,13 @@ feature {NONE} -- Initialization
 
 feature -- Output
 
-	put_character (c: CHARACTER) is
+	put_character (c: CHARACTER)
 			-- Write `c' to output stream.
 		do
 			base_stream.put_character (c)
 		end
 
-	put_string (a_string: STRING) is
+	put_string (a_string: STRING)
 			-- Write `a_string' to output stream.
 		do
 			base_stream.put_string (a_string)
@@ -61,7 +61,7 @@ feature -- Access
 	base_stream: KI_CHARACTER_OUTPUT_STREAM
 			-- Underlying stream
 
-	name: STRING is
+	name: STRING
 			-- Name of output stream
 		do
 			Result := base_stream.name
@@ -69,13 +69,13 @@ feature -- Access
 
 feature -- Status report
 
-	is_open_write: BOOLEAN is
+	is_open_write: BOOLEAN
 			-- Can characters be written to output stream?
 		do
 			Result := base_stream.is_open_write
 		end
 
-	is_closable: BOOLEAN is
+	is_closable: BOOLEAN
 			-- Can current output stream be closed?
 		do
 			Result := base_stream.is_closable
@@ -83,13 +83,13 @@ feature -- Status report
 
 feature -- Basic operations
 
-	flush is
+	flush
 			-- Flush buffered data to disk.
 		do
 			base_stream.flush
 		end
 
-	close is
+	close
 			-- Try to close output stream if it is closable. Set
 			-- `is_open_write' to false if operation was successful.
 		do

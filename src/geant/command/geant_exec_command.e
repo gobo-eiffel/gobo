@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT) is
+	make (a_project: GEANT_PROJECT)
 			-- Initialize command.
 		do
 			Precursor (a_project)
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- Can command be executed?
 		local
 			a_is_valid: DS_CELL [BOOLEAN]
@@ -84,7 +84,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_fileset (a_fileset: like fileset) is
+	set_fileset (a_fileset: like fileset)
 			-- Set `fileset' to `a_fileset'.
 		require
 			a_fileset_not_void: a_fileset /= Void
@@ -98,7 +98,7 @@ feature -- Setting
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute command.
 		local
 			s: STRING

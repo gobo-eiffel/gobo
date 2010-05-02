@@ -48,7 +48,7 @@ create
 
 feature
 
-	make is
+	make
 		local
 			b: BB
 		do
@@ -69,7 +69,7 @@ feature
 
 	name: STRING
 
-	f is
+	f
 		local
 			d: DD [like name]
 		do

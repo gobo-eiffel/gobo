@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_serializer: like serializer; a_properties: like output_properties) is
+	make (a_serializer: like serializer; a_properties: like output_properties)
 			-- Initialize `Current'.
 		require
 			a_serializer_not_void: a_serializer /= Void
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			output_properties_set: output_properties = a_properties
 		end
 
-	set_normalizer is
+	set_normalizer
 			-- Set `normalizer' as specified in `a_properties' or issue error.
 		local
 			l_request, l_message: STRING

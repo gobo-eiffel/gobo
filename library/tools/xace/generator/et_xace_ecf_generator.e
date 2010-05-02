@@ -32,13 +32,13 @@ create
 
 feature -- Access
 
-	default_system_output_filename: STRING is
+	default_system_output_filename: STRING
 			-- Name of generated ECF file
 		once
 			Result := compiler + ".ecf"
 		end
 
-	default_library_output_filename: STRING is
+	default_library_output_filename: STRING
 			-- Name of generated library ECF file
 		once
 			Result := compiler + ".ecf"
@@ -46,13 +46,13 @@ feature -- Access
 
 feature -- Output
 
-	generate_system (a_system: ET_XACE_SYSTEM_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM) is
+	generate_system (a_system: ET_XACE_SYSTEM_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Generate a new ECF file from `a_system'.
 		do
 			print_ecf_system_file (a_system, a_file)
 		end
 
-	generate_library (a_library: ET_XACE_LIBRARY_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM) is
+	generate_library (a_library: ET_XACE_LIBRARY_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Generate a new ECF file from `a_library'.
 		do
 			print_ecf_library_file (a_library, a_file)
@@ -60,7 +60,7 @@ feature -- Output
 
 feature {NONE} -- Output
 
-	print_ecf_system_file (a_system: ET_XACE_SYSTEM_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_ecf_system_file (a_system: ET_XACE_SYSTEM_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print ECF version of `a_system' to `a_file'.
 		require
 			a_system_not_void: a_system /= Void
@@ -146,7 +146,7 @@ feature {NONE} -- Output
 			a_file.put_line ("</system>")
 		end
 
-	print_ecf_library_file (a_library: ET_XACE_LIBRARY_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_ecf_library_file (a_library: ET_XACE_LIBRARY_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print ECF version of `a_library' to `a_file'.
 		require
 			a_library_not_void: a_library /= Void
@@ -213,7 +213,7 @@ feature {NONE} -- Output
 			a_file.put_line ("</system>")
 		end
 
-	print_options (an_option: ET_XACE_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_options (an_option: ET_XACE_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print ECF options found in `an_option' to `a_file'.
 		require
 			an_option_not_void: an_option /= Void
@@ -408,7 +408,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_settings (an_option: ET_XACE_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_settings (an_option: ET_XACE_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print ECF settings found in `an_option' to `a_file'.
 		require
 			an_option_not_void: an_option /= Void
@@ -703,7 +703,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_file_rules (an_option: ET_XACE_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_file_rules (an_option: ET_XACE_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' ECF file rules found in `an_option' if any.
 		require
 			an_option_not_void: an_option /= Void
@@ -737,7 +737,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_external_includes (an_includes: DS_LINKED_LIST [STRING]; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_external_includes (an_includes: DS_LINKED_LIST [STRING]; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print include directories `an_includes' to `a_file'.
 		require
 			an_includes_not_void: an_includes /= Void
@@ -764,7 +764,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_external_c_compiler_options (an_options: DS_LINKED_LIST [STRING]; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_external_c_compiler_options (an_options: DS_LINKED_LIST [STRING]; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print C compiler options `an_options' to `a_file'.
 		require
 			an_options_not_void: an_options /= Void
@@ -791,7 +791,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_external_libraries (a_libraries: DS_LINKED_LIST [STRING]; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_external_libraries (a_libraries: DS_LINKED_LIST [STRING]; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print link libraries `a_link_libraries' to `a_file'.
 		require
 			a_libraries_not_void: a_libraries /= Void
@@ -818,7 +818,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_clusters (a_clusters: ET_XACE_CLUSTERS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_clusters (a_clusters: ET_XACE_CLUSTERS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print `a_clusters' to `a_file'.
 		require
 			a_clusters_not_void: a_clusters /= Void
@@ -842,7 +842,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_cluster (a_cluster: ET_XACE_CLUSTER; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_cluster (a_cluster: ET_XACE_CLUSTER; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print `a_cluster' to `a_file'.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -911,7 +911,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_ecf_clusters (a_clusters: ET_XACE_CLUSTERS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_ecf_clusters (a_clusters: ET_XACE_CLUSTERS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the ECF libraries of which `a_clusters' or
 			-- recursively their subclusters are the root clusters and which
 			-- are otherwise described in other ECF files.
@@ -953,7 +953,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_override_clusters (a_clusters: ET_XACE_CLUSTERS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_override_clusters (a_clusters: ET_XACE_CLUSTERS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the override clusters and their subclusters
 			-- found in `a_clusters'.
 		require
@@ -978,7 +978,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_override_cluster (a_cluster: ET_XACE_CLUSTER; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_override_cluster (a_cluster: ET_XACE_CLUSTER; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print override cluster `a_cluster' to `a_file'.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -1047,7 +1047,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_assemblies (a_clusters: ET_XACE_CLUSTERS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_assemblies (a_clusters: ET_XACE_CLUSTERS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the assembly clause for
 			-- `a_clusters' and recursively their subclusters.
 		require
@@ -1101,7 +1101,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_class_options (a_class_option: ET_XACE_CLASS_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_class_options (a_class_option: ET_XACE_CLASS_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print ECF options found in `a_class_option' to `a_file'.
 		require
 			a_class_option_not_void: a_class_option /= Void
@@ -1311,7 +1311,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_class_visible (a_class_option: ET_XACE_CLASS_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_class_visible (a_class_option: ET_XACE_CLASS_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' visible clause corresponding to the class
 			-- represented by `a_class_option', and of its features.
 		require
@@ -1342,7 +1342,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_feature_visible (a_class_name: STRING; a_feature_option: ET_XACE_FEATURE_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_feature_visible (a_class_name: STRING; a_feature_option: ET_XACE_FEATURE_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' visible clause corresponding to the feature
 			-- represented by `a_feature_option' in class `a_class_name'.
 		require
@@ -1372,7 +1372,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_mounted_libraries (a_mounted_libraries: ET_XACE_MOUNTED_LIBRARIES; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_mounted_libraries (a_mounted_libraries: ET_XACE_MOUNTED_LIBRARIES; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print `a_mounted_libraries' to `a_file'.
 		require
 			a_mounted_libraries_not_void: a_mounted_libraries /= Void
@@ -1416,7 +1416,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_escaped_string (a_string: STRING; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_escaped_string (a_string: STRING; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print escaped version of `a_string' to `a_file'.
 		require
 			a_string_not_void: a_string /= Void
@@ -1455,7 +1455,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_quote_escaped_string (a_string: STRING; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_quote_escaped_string (a_string: STRING; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print escaped version of `a_string' (with quotes also
 			-- escaped for attribute values) to `a_file'.
 		require
@@ -1493,7 +1493,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_escaped_character (a_char: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_escaped_character (a_char: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print escaped version of `a_char' to `a_file'.
 		require
 			is_escaped: is_escaped (a_char)
@@ -1515,7 +1515,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_ecf_namespaces (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_ecf_namespaces (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print_ECF namespaces to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -1529,7 +1529,7 @@ feature {NONE} -- Output
 
 feature {NONE} -- Escaped
 
-	is_escaped (a_char: INTEGER): BOOLEAN is
+	is_escaped (a_char: INTEGER): BOOLEAN
 			-- Is this an escapable character?
 		do
 			Result := a_char = Lt_char.code

@@ -1,6 +1,6 @@
 note
 
-	description: 
+	description:
 
 		"Test URL encoding routines"
 
@@ -26,7 +26,7 @@ create
 
 feature -- Tests
 
-	test_decoding is
+	test_decoding
 			-- Test URL encoding.
 		local
 			encoder: UT_URL_ENCODING
@@ -43,20 +43,20 @@ feature -- Tests
 			assert_strings_equal ("malformed_invalid_chars", "a%%_Zb", encoder.unescape_string ("a%%_Zb"))
 		end
 
-	test_encoding is
+	test_encoding
 			-- Test URL decoding.
 		local
 			encoder: UT_URL_ENCODING
 		do
 			create encoder
 			assert_strings_equal ("space", "a+b", encoder.escape_string ("a b"))
-			assert_strings_equal ("percent", "%%25", encoder.escape_string ("%%")) 
-			assert_strings_equal ("sequence", "%%2B+ab", encoder.escape_string ("+ ab")) 
+			assert_strings_equal ("percent", "%%25", encoder.escape_string ("%%"))
+			assert_strings_equal ("sequence", "%%2B+ab", encoder.escape_string ("+ ab"))
 			assert_strings_equal ("custom_space", "%%20", encoder.escape_custom (" ", encoder.new_character_set (""), False))
 			assert_equal ("custom_space_plus", "+", encoder.escape_custom (" ", encoder.new_character_set (""), True))
 		end
 
-	test_utf8 is
+	test_utf8
 			-- Test escaping with UTF8.
 		local
 			l_string, l_decoded_string: STRING

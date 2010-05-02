@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name) is
+	make (a_name: like name)
 			-- Create a new feature address.
 		require
 			a_name_not_void: a_name /= Void
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset expression as it was just after it was last parsed.
 		do
 			name.reset
@@ -49,13 +49,13 @@ feature -- Access
 	name: ET_FEATURE_NAME
 			-- Feature name
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := name.last_leaf
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := name.break
@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_feature_address (Current)

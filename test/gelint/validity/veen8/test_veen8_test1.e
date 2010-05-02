@@ -12,7 +12,7 @@ note
 		where `bb' is not a boolean expression. Therefore the expression
 		'l.is_empty' is not in the scope of the object-test local.
 		Indeed, the standard:
-		
+
 			ECMA 367-2, section 8.24.4 p.128: "Definition: Conjunctive,
 			disjunctive, implicative; Term, semistrict term"
 
@@ -22,7 +22,7 @@ note
 		So 'and then' with target `bb' does not meet the conditions.
 
 		This is nevertheless accepted by ISE 6.2.7.2969, and not
-		surprisingly results in a call-on-void-target at execution. 
+		surprisingly results in a call-on-void-target at execution.
 	]"
 
 	copyright: "Copyright (c) 2008, Eric Bezault and others"
@@ -42,7 +42,7 @@ create
 
 feature -- Test
 
-	test_validity is
+	test_validity
 			-- Test for validity rule VEEN-8.
 		do
 			compile_and_test ("test1")
@@ -50,14 +50,14 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	rule_dirname: STRING is
+	rule_dirname: STRING
 			-- Name of the directory containing the tests of the rule being tested
 		do
 			Result := file_system.nested_pathname ("${GOBO}", <<"test", "gelint", "validity", "veen8">>)
 			Result := Execution_environment.interpreted_string (Result)
 		end
 
-	testdir: STRING is
+	testdir: STRING
 			-- Name of temporary directory where to run the test
 		do
 			Result := "Ttest1"

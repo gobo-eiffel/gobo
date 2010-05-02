@@ -37,7 +37,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; an_operand_two: XM_XPATH_EXPRESSION; a_function_library: XM_XPATH_FUNCTION_LIBRARY) is
+	make (an_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; an_operand_two: XM_XPATH_EXPRESSION; a_function_library: XM_XPATH_FUNCTION_LIBRARY)
 			-- Establish invariant
 		require
 			operand_1_not_void: an_operand_one /= Void
@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, when known
 		do
 			Result := common_super_type (first_operand.item_type, second_operand.item_type)
@@ -72,7 +72,7 @@ feature -- Access
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -95,7 +95,7 @@ feature -- Optimization
 		end
 
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_role, l_other_role: XM_XPATH_ROLE_LOCATOR
@@ -138,7 +138,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT)
 			-- Effective boolean value
 		local
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
@@ -157,7 +157,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over the values of a sequence
 		local
 			l_iterator, l_other_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -194,7 +194,7 @@ feature -- Evaluation
 			node_iterator: last_iterator.is_node_iterator
 		end
 
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over a node sequence
 		do
 			create_iterator (a_context)
@@ -205,7 +205,7 @@ feature -- Evaluation
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			inspect
@@ -219,7 +219,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			end
 		end
 
-	compute_special_properties is
+	compute_special_properties
 			-- Compute special properties.
 		do
 			initialize_special_properties
@@ -237,7 +237,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {XM_XPATH_VENN_EXPRESSION} -- Local
 
-	simplify_empty_expression (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify_empty_expression (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Further simplification when either operand is an empty sequence;
 			-- This can happen after reduction with constructs of the form //a[condition] | //b[not(condition)]
 			-- (common in XPath 1.0 because there were no conditional expressions)
@@ -276,18 +276,18 @@ feature {XM_XPATH_VENN_EXPRESSION} -- Local
 						set_replacement (a_replacement, first_operand)
 						l_finished := True
 					end
-				end				
-			end			
+				end
+			end
 			if not l_finished then
 				merge_axis_expression (a_replacement)
 			end
 		ensure
 			replaced: a_replacement.item /= Void
 		end
-		
+
 feature {NONE} -- Implementation
 
-	set_cardinality_for_union_expression is
+	set_cardinality_for_union_expression
 			-- Set cardinality for union expression.
 		do
 			if first_operand.is_empty_sequence then
@@ -301,7 +301,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_cardinality_for_intersect_expression is
+	set_cardinality_for_intersect_expression
 			-- Set cardinality for intersect expression.
 		do
 			if first_operand.is_empty_sequence then
@@ -315,7 +315,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_cardinality_for_difference_expression is
+	set_cardinality_for_difference_expression
 			-- Set cardinality for difference expression.
 		do
 			if first_operand.is_empty_sequence then
@@ -329,7 +329,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	test_context_document_nodeset: BOOLEAN is
+	test_context_document_nodeset: BOOLEAN
 			-- Are all nodes in the same document as the context node?
 		do
 			inspect
@@ -340,10 +340,10 @@ feature {NONE} -- Implementation
 				Result := first_operand.context_document_nodeset or second_operand.context_document_nodeset
 			when Except_token then
 				Result := first_operand.context_document_nodeset
-			end				
+			end
 		end
 
-	test_subtree_nodeset: BOOLEAN is
+	test_subtree_nodeset: BOOLEAN
 			-- Are all nodes a subtree of the context node?
 		do
 			inspect
@@ -354,15 +354,15 @@ feature {NONE} -- Implementation
 				Result := first_operand.subtree_nodeset or second_operand.subtree_nodeset
 			when Except_token then
 				Result := first_operand.subtree_nodeset
-			end				
+			end
 		end
 
-	merge_axis_expression (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	merge_axis_expression (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Merge expressions when both operands are axis expressions on the same axis;
 			--  ie. rewrite (axis::test1 | axis::test2) as axis::(test1 | test2)
 		require
 			a_replacement_not_void: a_replacement /= Void
-			not_replaced: a_replacement.item = Void			
+			not_replaced: a_replacement.item = Void
 		local
 			l_axis_expression, l_other_axis_expression: XM_XPATH_AXIS_EXPRESSION
 			l_combined_node_test: XM_XPATH_COMBINED_NODE_TEST
@@ -384,13 +384,13 @@ feature {NONE} -- Implementation
 			replaced: a_replacement.item /= Void
 		end
 
-	merge_common_start_expression (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	merge_common_start_expression (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Merge common start path expressions;
 			--  i.e. rewrite (/X | /Y) as /(X|Y).
 			--  This applies recursively, so that /A/B/C | /A/B/D becomes /A/B/child::(C|D)
 		require
 			a_replacement_not_void: a_replacement /= Void
-			not_replaced: a_replacement.item = Void		
+			not_replaced: a_replacement.item = Void
 		local
 			l_path_expression, l_other_path_expression: XM_XPATH_PATH_EXPRESSION
 			l_venn_expression: XM_XPATH_VENN_EXPRESSION
@@ -412,12 +412,12 @@ feature {NONE} -- Implementation
 			replaced: a_replacement.item /= Void
 		end
 
-	merge_non_positional_filter_expression (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	merge_non_positional_filter_expression (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Merge non-positional filter expressions;
 			-- A[exp0] | A[exp1] becomes A[exp0 | exp1]
 		require
 			a_replacement_not_void: a_replacement /= Void
-			not_replaced: a_replacement.item = Void		
+			not_replaced: a_replacement.item = Void
 		local
 			l_expression: XM_XPATH_EXPRESSION
 			l_filter_expression, l_other_filter_expression: XM_XPATH_FILTER_EXPRESSION
@@ -465,4 +465,4 @@ invariant
 	function_library_not_void: initialized implies function_library /= Void
 
 end
-	
+

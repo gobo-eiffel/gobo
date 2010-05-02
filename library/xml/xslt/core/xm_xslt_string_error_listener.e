@@ -30,10 +30,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_recovery_policy: INTEGER) is
+	make (a_recovery_policy: INTEGER)
 			-- Establish invariant.
 		require
-			recovery_policy: a_recovery_policy >= Recover_silently and then a_recovery_policy <= Do_not_recover			
+			recovery_policy: a_recovery_policy >= Recover_silently and then a_recovery_policy <= Do_not_recover
 		do
 			recovered := True
 			recovery_policy := a_recovery_policy
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Events
 
-	warning (a_message: STRING; a_locator: XM_XPATH_LOCATOR) is
+	warning (a_message: STRING; a_locator: XM_XPATH_LOCATOR)
 			-- Receive notification of a warning.
 		do
 			if warnings_are_recoverable_errors then
@@ -62,7 +62,7 @@ feature -- Events
 			end
 		end
 
-	error (a_error: XM_XPATH_ERROR_VALUE) is
+	error (a_error: XM_XPATH_ERROR_VALUE)
 			-- Receive notification of a recoverable error.
 		local
 			l_msg: STRING
@@ -85,7 +85,7 @@ feature -- Events
 			end
 		end
 
-	fatal_error (a_error: XM_XPATH_ERROR_VALUE) is
+	fatal_error (a_error: XM_XPATH_ERROR_VALUE)
 			-- Receive notification of a non-recoverable error.
 		local
 			l_error: like a_error
@@ -101,7 +101,7 @@ feature -- Events
 feature {NONE} -- Implementation
 
 
-	set_error_text (a_message: STRING; a_locator: XM_XPATH_LOCATOR) is
+	set_error_text (a_message: STRING; a_locator: XM_XPATH_LOCATOR)
 			-- Set_error_text.
 		require
 			message_not_void: a_message /= Void
@@ -123,4 +123,4 @@ invariant
 	error_text: not recovered implies error_text /= Void
 
 end
-	
+

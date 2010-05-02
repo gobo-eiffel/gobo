@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (o: like old_name; n: like new_name) is
+	make (o: like old_name; n: like new_name)
 			-- Create a new rename pair.
 		require
 			o_not_void: o /= Void
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset rename pair as it was when it was last parsed.
 		do
 			old_name.reset
@@ -56,32 +56,32 @@ feature -- Access
 	as_keyword: ET_KEYWORD
 			-- 'as' keyword
 
-	rename_pair: ET_RENAME is
+	rename_pair: ET_RENAME
 			-- Rename pair in comma-separated list
 		do
 			Result := Current
 		end
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
 			Result := old_name.position
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := old_name.first_leaf
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := new_name.last_leaf
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := new_name.break
@@ -89,7 +89,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_as_keyword (an_as: like as_keyword) is
+	set_as_keyword (an_as: like as_keyword)
 			-- Set `as_keyword' to `an_as'.
 		require
 			an_as_not_void: an_as /= Void
@@ -101,7 +101,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_rename (Current)

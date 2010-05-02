@@ -19,17 +19,17 @@ inherit
 
 feature -- Access
 
-	generating_type: STRING is
+	generating_type: STRING
 		do
 		end
 
-	generator: STRING is
+	generator: STRING
 		do
 		end
 
 feature -- Output
 
-	print (an_object: ANY) is
+	print (an_object: ANY)
 		do
 		end
 

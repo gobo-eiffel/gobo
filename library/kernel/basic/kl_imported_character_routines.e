@@ -14,7 +14,7 @@ class KL_IMPORTED_CHARACTER_ROUTINES
 
 feature -- Access
 
-	CHARACTER_: KL_CHARACTER_ROUTINES is
+	CHARACTER_: KL_CHARACTER_ROUTINES
 			-- Routines that ought to be in class CHARACTER
 		once
 			create Result

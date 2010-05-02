@@ -55,7 +55,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new parser.
 			-- The string mode (see XM_STRING_MODE parent) is set by
 			-- default to a safe mode, and the parser will be in error
@@ -80,7 +80,7 @@ feature {NONE} -- Initialization
 			string_mode_set_to_safe_latin1_only: is_string_mode_latin1
 		end
 
-	null_resolver: XM_NULL_EXTERNAL_RESOLVER is
+	null_resolver: XM_NULL_EXTERNAL_RESOLVER
 			-- Null resolver.
 		once
 			create Result
@@ -88,7 +88,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset parser before parsing next input.
 		do
 			make_scanner
@@ -99,7 +99,7 @@ feature -- Initialization
 
 feature -- Parsing
 
-	parse_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
+	parse_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM)
 			-- Parse XML document from input stream.
 		do
 			reset
@@ -107,7 +107,7 @@ feature -- Parsing
 			parse_with_events
 		end
 
-	parse_from_string (a_string: STRING) is
+	parse_from_string (a_string: STRING)
 			-- Parse XML document from `a_string'.
 		local
 			a_stream: KL_STRING_INPUT_STREAM
@@ -116,7 +116,7 @@ feature -- Parsing
 			parse_from_stream (a_stream)
 		end
 
-	parse_from_system (a_system: STRING) is
+	parse_from_system (a_system: STRING)
 			-- Parse from system identifier using resolver.
 		do
 			reset
@@ -124,7 +124,7 @@ feature -- Parsing
 			parse_from_entity
 		end
 
-	parse_from_public (a_public: STRING; a_system: STRING) is
+	parse_from_public (a_public: STRING; a_system: STRING)
 			-- Parse from public/system identifier using resolver.
 		do
 			reset
@@ -134,7 +134,7 @@ feature -- Parsing
 
 feature {NONE} -- Implementation
 
-	parse_from_entity is
+	parse_from_entity
 			-- Parse from entity resolver
 		do
 			if not entity_resolver.has_error then
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	parse_with_events is
+	parse_with_events
 			-- Parse with start/finish events.
 		do
 			reset_error_state
@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 
 feature -- Namespace mode
 
-	disable_namespaces is
+	disable_namespaces
 			-- Disable namespace parsing and allow strict
 			-- XML 1.0 names (eg ":" or ":a:b:c:").
 			-- Namespace field in events is always Void.
@@ -172,7 +172,7 @@ feature -- Namespace mode
 
 feature {NONE} -- Namespaces
 
-	namespace_force_last (a_name: XM_EIFFEL_PARSER_NAME; a_string: STRING) is
+	namespace_force_last (a_name: XM_EIFFEL_PARSER_NAME; a_string: STRING)
 			-- Force last namespace name component, or error.
 		require
 			a_name_not_void: a_name /= Void
@@ -187,13 +187,13 @@ feature {NONE} -- Namespaces
 
 feature -- Error reporting
 
-	is_correct: BOOLEAN is
+	is_correct: BOOLEAN
 			-- Has no error been detected?
 		do
 			Result := (internal_last_error_description = Void)
 		end
 
-	last_error: INTEGER is
+	last_error: INTEGER
 			-- Code of last error
 			-- (See XM_ERROR_CODES.)
 		do
@@ -204,7 +204,7 @@ feature -- Error reporting
 			end
 		end
 
-	last_error_description: STRING is
+	last_error_description: STRING
 			-- Textual description of last error
 		do
 			Result := internal_last_error_description
@@ -217,7 +217,7 @@ feature {NONE} -- Error reporting
 
 feature -- Error
 
-	line: INTEGER is
+	line: INTEGER
 			-- Current line
 		do
 			Result := position.row
@@ -225,7 +225,7 @@ feature -- Error
 			definition: Result = position.row
 		end
 
-	column: INTEGER is
+	column: INTEGER
 			-- Current column
 		do
 			Result := position.column
@@ -233,7 +233,7 @@ feature -- Error
 			definition: Result = position.column
 		end
 
-	byte_position: INTEGER is
+	byte_position: INTEGER
 			-- Current byte index
 		do
 			Result := position.byte_index
@@ -241,7 +241,7 @@ feature -- Error
 			definition: Result = position.byte_index
 		end
 
-	position: XM_POSITION is
+	position: XM_POSITION
 			-- Current position in the source of the XML document
 		do
 			if is_correct then
@@ -251,7 +251,7 @@ feature -- Error
 			end
 		end
 
-	positions: DS_LIST [XM_POSITION] is
+	positions: DS_LIST [XM_POSITION]
 			-- Current stack of positions, starting with the current entity.
 		do
 			if error_positions = Void then
@@ -261,7 +261,7 @@ feature -- Error
 			end
 		end
 
-	error_header: STRING is
+	error_header: STRING
 			-- Header for error message
 			-- (<filename>:<line>:<column>:)
 		do
@@ -280,14 +280,14 @@ feature {NONE} -- Error
 	error_positions: like positions
 			-- Position stack in case of error.
 
-	reset_error_state is
+	reset_error_state
 			-- Set error state.
 		do
 			error_positions := Void
 			internal_last_error_description := Void
 		end
 
-	setup_error_state (an_error: STRING) is
+	setup_error_state (an_error: STRING)
 			-- Set error message and position
 		require
 			an_error_not_void: an_error /= Void
@@ -315,7 +315,7 @@ feature {NONE} -- Error
 			scanners_empty: scanners.is_empty
 		end
 
-	new_positions: DS_BILINKED_LIST [XM_POSITION] is
+	new_positions: DS_BILINKED_LIST [XM_POSITION]
 			-- Create stack of positions representing position in current XML
 			-- entities.
 		local
@@ -345,7 +345,7 @@ feature {NONE} -- Error
 
 feature -- Obsolete error
 
-	filename: STRING is
+	filename: STRING
 			-- Current file
 		obsolete  "Use position.source_name"
 		do
@@ -354,7 +354,7 @@ feature -- Obsolete error
 			filename_not_void: Result /= Void
 		end
 
-	source: XM_SOURCE is
+	source: XM_SOURCE
 			-- Source of the XML document beeing parsed
 		obsolete "Use position.source_name"
 		do
@@ -363,14 +363,14 @@ feature -- Obsolete error
 
 feature {NONE} -- Error reporting
 
-	report_error (an_error: STRING) is
+	report_error (an_error: STRING)
 			-- On error.
 		do
 			setup_error_state (an_error)
 			on_error (last_error_extended_description)
 		end
 
-	force_error (a_message: STRING) is
+	force_error (a_message: STRING)
 			-- Report error message.
 		do
 			report_error (a_message)
@@ -381,7 +381,7 @@ feature {NONE} -- Error reporting
 
 feature {XM_PARSER_STOP_ON_ERROR_FILTER} -- Error reporting
 
-	force_unreported_error (an_error: STRING) is
+	force_unreported_error (an_error: STRING)
 			-- Stop the parser, but do not issue an event error because
 			-- the error is issued by a downstream event.
 		do
@@ -402,7 +402,7 @@ feature {NONE} -- State
 
 feature {NONE} -- Factory
 
-	new_namespace_name: XM_EIFFEL_PARSER_NAME is
+	new_namespace_name: XM_EIFFEL_PARSER_NAME
 			-- New namespace name
 		do
 			if use_namespaces then
@@ -415,7 +415,7 @@ feature {NONE} -- Factory
 			namespace_name_empty: Result.is_empty
 		end
 
-	new_name_set: DS_HASH_SET [XM_EIFFEL_PARSER_NAME] is
+	new_name_set: DS_HASH_SET [XM_EIFFEL_PARSER_NAME]
 			-- New name set for checking
 		do
 			create Result.make_equal (10)
@@ -423,7 +423,7 @@ feature {NONE} -- Factory
 			name_set_not_void: Result /= Void
 		end
 
-	new_dtd_attribute_content: XM_DTD_ATTRIBUTE_CONTENT is
+	new_dtd_attribute_content: XM_DTD_ATTRIBUTE_CONTENT
 			-- New dtd attribute content
 		do
 			create Result.make
@@ -431,7 +431,7 @@ feature {NONE} -- Factory
 			content_not_void: Result /= Void
 		end
 
-	new_dtd_attribute_content_list: DS_BILINKED_LIST [XM_DTD_ATTRIBUTE_CONTENT] is
+	new_dtd_attribute_content_list: DS_BILINKED_LIST [XM_DTD_ATTRIBUTE_CONTENT]
 			-- New dtd attribute content list
 		do
 			create Result.make
@@ -439,7 +439,7 @@ feature {NONE} -- Factory
 			content_list_not_void: Result /= Void
 		end
 
-	new_dtd_external_id: XM_DTD_EXTERNAL_ID is
+	new_dtd_external_id: XM_DTD_EXTERNAL_ID
 			-- New dtd external id
 		do
 			create Result.make
@@ -449,7 +449,7 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Encoding
 
-	apply_encoding (an_encoding: STRING) is
+	apply_encoding (an_encoding: STRING)
 			-- Set encoding on current scanner.
 		require
 			not_void: an_encoding /= Void
@@ -463,7 +463,7 @@ feature {NONE} -- Encoding
 
 feature {NONE} -- DTD
 
-	set_element_repetition (a_node: XM_DTD_ELEMENT_CONTENT; a_value: STRING) is
+	set_element_repetition (a_node: XM_DTD_ELEMENT_CONTENT; a_value: STRING)
 			-- Set repetition status of a node.
 		require
 			a_node_not_void: a_node /= Void
@@ -478,16 +478,16 @@ feature {NONE} -- DTD
 			end
 		end
 
-	One_or_more_repetition: STRING is "+"
+	One_or_more_repetition: STRING = "+"
 			-- Special symbol: One of more
 
-	Zero_or_one_repetition: STRING is "?"
+	Zero_or_one_repetition: STRING = "?"
 			-- Special symbol: Zero or one
 
-	Zero_or_more_repetition: STRING is "*"
+	Zero_or_more_repetition: STRING = "*"
 			-- Special symbol: Zero or more
 
-	element_name (a_name: STRING): XM_DTD_ELEMENT_CONTENT is
+	element_name (a_name: STRING): XM_DTD_ELEMENT_CONTENT
 			-- New element content name node
 		require
 			a_name_not_void: a_name /= Void
@@ -497,7 +497,7 @@ feature {NONE} -- DTD
 			element_name_not_void: Result /= Void
 		end
 
-	on_attribute_declarations (ele_name: STRING; some_attributes: DS_LINEAR [XM_DTD_ATTRIBUTE_CONTENT]) is
+	on_attribute_declarations (ele_name: STRING; some_attributes: DS_LINEAR [XM_DTD_ATTRIBUTE_CONTENT])
 			-- Send all element declarations.
 		require
 			ele_not_void: ele_name /= Void
@@ -516,7 +516,7 @@ feature {NONE} -- DTD
 
 feature {NONE} -- Entities
 
-	new_literal_entity (a_name, a_value: STRING): XM_EIFFEL_ENTITY_DEF is
+	new_literal_entity (a_name, a_value: STRING): XM_EIFFEL_ENTITY_DEF
 			-- New literal entity definition
 		require
 			a_value_not_void: a_value /= Void
@@ -526,7 +526,7 @@ feature {NONE} -- Entities
 			entity_not_void: Result /= Void
 		end
 
-	new_external_entity (a_value: XM_DTD_EXTERNAL_ID): XM_EIFFEL_ENTITY_DEF is
+	new_external_entity (a_value: XM_DTD_EXTERNAL_ID): XM_EIFFEL_ENTITY_DEF
 			-- New external entity definition
 		require
 			a_value_not_void: a_value /= Void
@@ -538,7 +538,7 @@ feature {NONE} -- Entities
 
 feature {NONE} -- Entities
 
-	when_entity_declared (a_name: STRING; a_def: XM_EIFFEL_ENTITY_DEF) is
+	when_entity_declared (a_name: STRING; a_def: XM_EIFFEL_ENTITY_DEF)
 			-- Entity has been declared.
 		require
 			a_name_not_void: a_name /= Void
@@ -561,7 +561,7 @@ feature {NONE} -- Entities
 			end
 		end
 
-	when_pe_entity_declared (a_name: STRING; in_def: XM_EIFFEL_ENTITY_DEF) is
+	when_pe_entity_declared (a_name: STRING; in_def: XM_EIFFEL_ENTITY_DEF)
 			-- PE entity has been declared.
 		require
 			a_name_not_void: a_name /= Void
@@ -586,7 +586,7 @@ feature {NONE} -- Entities
 			end
 		end
 
-	entity_referenced_in_entity_value (a_name: STRING): STRING is
+	entity_referenced_in_entity_value (a_name: STRING): STRING
 			-- Named parameter entity has been referenced in entity value
 		require
 			a_name_not_void: a_name /= Void
@@ -603,7 +603,7 @@ feature {NONE} -- Entities
 			end
 		end
 
-	defined_entity_referenced (a_def: XM_EIFFEL_ENTITY_DEF): STRING is
+	defined_entity_referenced (a_def: XM_EIFFEL_ENTITY_DEF): STRING
 			-- Resolved defined entity in quoted value
 		require
 			a_def_not_void: a_def /= Void
@@ -616,7 +616,7 @@ feature {NONE} -- Entities
 			end
 		end
 
-	resolve_external_id (a_resolver: XM_EXTERNAL_RESOLVER; an_id: XM_DTD_EXTERNAL_ID) is
+	resolve_external_id (a_resolver: XM_EXTERNAL_RESOLVER; an_id: XM_DTD_EXTERNAL_ID)
 			-- Apply `an_id' to resolver.
 		require
 			a_resolver_not_void: a_resolver /= Void
@@ -629,7 +629,7 @@ feature {NONE} -- Entities
 			end
 		end
 
-	external_entity_to_string (a_sys: XM_DTD_EXTERNAL_ID): STRING is
+	external_entity_to_string (a_sys: XM_DTD_EXTERNAL_ID): STRING
 			-- External entity to string
 		require
 			a_sys_not_void: a_sys /= Void
@@ -675,7 +675,7 @@ feature {NONE} -- Entities
 
 feature {NONE} -- DTD
 
-	when_external_dtd (a_system: XM_DTD_EXTERNAL_ID) is
+	when_external_dtd (a_system: XM_DTD_EXTERNAL_ID)
 			-- Load external DTD from system name.
 		require
 			a_system_not_void: a_system /= Void
@@ -702,7 +702,7 @@ feature {NONE} -- DTD
 
 feature {NONE} -- Scanner implementation
 
-	make_scanner is
+	make_scanner
 			-- Initialize main scanner and saved
 			-- scannners stack.
 		do
@@ -719,7 +719,7 @@ feature {NONE} -- Scanner implementation
 	last_token: INTEGER
 			-- Last token read by `read_token'
 
-	read_token is
+	read_token
 			-- Read token from scanner.
 		local
 			last_text: STRING
@@ -772,7 +772,7 @@ feature {NONE} -- Scanner implementation
 
 feature {NONE} -- Scanner entity processing
 
-	process_pe_entity (a_name: STRING) is
+	process_pe_entity (a_name: STRING)
 			-- Push PE entity scanner on stack.
 		require
 			a_name_not_void: a_name /= Void
@@ -784,7 +784,7 @@ feature {NONE} -- Scanner entity processing
 			end
 		end
 
-	process_entity (a_name: STRING) is
+	process_entity (a_name: STRING)
 			-- Push entity scanner on stack.
 		require
 			a_name_not_void: a_name /= Void
@@ -797,7 +797,7 @@ feature {NONE} -- Scanner entity processing
 			end
 		end
 
-	process_attribute_entity (a_name: STRING) is
+	process_attribute_entity (a_name: STRING)
 			-- Push entity scanner on stack.
 		require
 			a_name_not_void: a_name /= Void
@@ -814,7 +814,7 @@ feature {NONE} -- Scanner entity processing
 			end
 		end
 
-	process_entity_scanner (a_def: XM_EIFFEL_ENTITY_DEF) is
+	process_entity_scanner (a_def: XM_EIFFEL_ENTITY_DEF)
 			-- Save previous scannner, create new scanner, and
 			-- reset it with previous scanner state.
 		require
@@ -838,7 +838,7 @@ feature {NONE} -- Scanner entity processing
 
 feature {NONE} -- String mode
 
-	onstring_ascii (a_string: STRING): STRING is
+	onstring_ascii (a_string: STRING): STRING
 			-- Incoming ascii string.
 		require
 			ascii: unicode.is_ascii_string (a_string)
@@ -850,7 +850,7 @@ feature {NONE} -- String mode
 			end
 		end
 
-	onstring_utf8 (a_string: STRING): STRING is
+	onstring_utf8 (a_string: STRING): STRING
 			-- Incoming UTF8 encoded string.
 		require
 			not_ascii: not unicode.is_ascii_string (a_string)
@@ -875,7 +875,7 @@ feature {NONE} -- String mode
 
 feature {NONE} -- String mode implementation
 
-	maximum_item_code (a_string: STRING): INTEGER is
+	maximum_item_code (a_string: STRING): INTEGER
 			-- Return the largest character code used in
 			-- `a_string'.
 		require
@@ -904,7 +904,7 @@ feature {NONE} -- String mode implementation
 			result_positive: Result >= 0
 		end
 
-	shared_empty_string: STRING is
+	shared_empty_string: STRING
 			-- Shared empty string (type depends on string mode)
 		do
 			if is_string_mode_unicode then
@@ -918,7 +918,7 @@ feature {NONE} -- String mode implementation
 
 feature {NONE} -- String mode: shared empty string implementation
 
-	shared_empty_string_string: STRING is
+	shared_empty_string_string: STRING
 			-- Empty string of type STRING
 		once
 			create Result.make_empty
@@ -926,7 +926,7 @@ feature {NONE} -- String mode: shared empty string implementation
 			string_type: ANY_.same_types (Result, "")
 		end
 
-	shared_empty_string_uc: STRING is
+	shared_empty_string_uc: STRING
 			-- Empty string of type UC_STRING
 		once
 			Result := new_unicode_string_empty

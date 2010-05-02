@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_giaaa is
+	make_giaaa
 			-- Create a new GIAAA error.
 		do
 			code := giaaa_template_code
@@ -37,13 +37,13 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	gi_default_template: STRING is "[$1] internal error."
+	gi_default_template: STRING = "[$1] internal error."
 			-- Default templates
 
-	giaaa_etl_code: STRING is "GIAAA"
+	giaaa_etl_code: STRING = "GIAAA"
 			-- ETL validity codes
 
-	giaaa_template_code: STRING is "giaaa"
+	giaaa_template_code: STRING = "giaaa"
 		-- Template error codes
 
 end

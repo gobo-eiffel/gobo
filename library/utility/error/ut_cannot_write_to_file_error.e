@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_filename: STRING) is
+	make (a_filename: STRING)
 			-- Create a new error reporting that file
 			-- `a_filename' cannot be opened in write mode.
 		require
@@ -34,10 +34,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "$0: cannot write to '$1'"
+	default_template: STRING = "$0: cannot write to '$1'"
 			-- Default template used to built the error message
 
-	code: STRING is "UT0004"
+	code: STRING = "UT0004"
 			-- Error code
 
 invariant

@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Create a new character buffer being able
 			-- to contain `n' characters.
 		do
@@ -47,13 +47,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item (i: INTEGER): CHARACTER is
+	item (i: INTEGER): CHARACTER
 			-- Item at position `i'
 		do
 			Result := as_special.item (i)
 		end
 
-	substring (s, e: INTEGER): STRING is
+	substring (s, e: INTEGER): STRING
 			-- New string made up of characters held in
 			-- buffer between indexes `s' and `e'
 		do
@@ -67,7 +67,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of characters in buffer
 		do
 			Result := area.count - 1
@@ -82,13 +82,13 @@ feature -- Conversion
 
 feature -- Element change
 
-	put (v: CHARACTER; i: INTEGER) is
+	put (v: CHARACTER; i: INTEGER)
 			-- Replace character at position `i' by `v'.
 		do
 			as_special.put (v, i)
 		end
 
-	append_substring_to_string (s, e: INTEGER; a_string: STRING) is
+	append_substring_to_string (s, e: INTEGER; a_string: STRING)
 			-- Append string made up of characters held in buffer
 			-- between indexes `s' and `e' to `a_string'.
 		local
@@ -118,7 +118,7 @@ feature -- Element change
 			end
 		end
 
-	fill_from_string (a_string: STRING; pos: INTEGER) is
+	fill_from_string (a_string: STRING; pos: INTEGER)
 			-- Copy characters of `a_string' to buffer
 			-- starting at position `pos'.
 		local
@@ -130,7 +130,7 @@ feature -- Element change
 			end
 		end
 
-	fill_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM; pos, nb: INTEGER): INTEGER is
+	fill_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM; pos, nb: INTEGER): INTEGER
 			-- Fill buffer, starting at position `pos', with
 			-- at most `nb' characters read from `a_stream'.
 			-- Return the number of characters actually read.
@@ -138,7 +138,7 @@ feature -- Element change
 			Result := a_stream.read_to_string (area, pos + 1, nb)
 		end
 
-	move_left (old_pos, new_pos: INTEGER; nb: INTEGER) is
+	move_left (old_pos, new_pos: INTEGER; nb: INTEGER)
 			-- Copy `nb' characters from `old_pos' to
 			-- `new_pos' in buffer.
 		do
@@ -147,7 +147,7 @@ feature -- Element change
 			end
 		end
 
-	move_right (old_pos, new_pos: INTEGER; nb: INTEGER) is
+	move_right (old_pos, new_pos: INTEGER; nb: INTEGER)
 			-- Copy `nb' characters from `old_pos' to
 			-- `new_pos' in buffer.
 		do
@@ -158,7 +158,7 @@ feature -- Element change
 
 feature -- Resizing
 
-	resize (n: INTEGER) is
+	resize (n: INTEGER)
 			-- Resize buffer so that it contains `n' characters.
 			-- Do not lose any previously entered characters.
 		do

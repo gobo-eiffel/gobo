@@ -21,7 +21,7 @@ inherit
 
 	XM_XPATH_ERROR_TYPES
 		export {NONE} all end
-	
+
 	UT_SHARED_URL_ENCODING
 		export {NONE} all end
 
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_entries: ARRAY [STRING]; a_base_uri: UT_URI; a_context: XM_XPATH_CONTEXT) is
+	make (a_entries: ARRAY [STRING]; a_base_uri: UT_URI; a_context: XM_XPATH_CONTEXT)
 			-- Set `entries' to `a_entries'.
 		require
 			a_entries_not_void: a_entries /= Void
@@ -56,7 +56,7 @@ feature -- Access
 
 feature -- Status report
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
 			Result := item = Void
@@ -64,7 +64,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move to next position.
 		local
 			a_file_name: STRING
@@ -76,7 +76,7 @@ feature -- Cursor movement
 				if position <= size then
 					a_file_name := entries.item (position)
 					if not Url_encoding.has_excluded_characters (a_file_name) then
-						
+
 						-- for now, we just ignore errors, continuing around the loop
 
 						create a_file_uri.make_resolve (base_uri, a_file_name)
@@ -99,7 +99,7 @@ feature -- Cursor movement
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original;
 			-- The new iterator will be repositioned at the start of the sequence
 		do
@@ -130,4 +130,4 @@ invariant
 	saved_context_not_void: saved_context /= Void
 
 end
-	
+

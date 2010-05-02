@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_system: ET_SYSTEM) is
+	make (a_name: STRING; a_system: ET_SYSTEM)
 			-- Create a new Eiffel class library.
 		require
 			a_name_not_void: a_name /= Void
@@ -52,7 +52,7 @@ feature -- Access
 	library: ET_LIBRARY
 			-- Eiffel library being adapted
 
-	kind_name: STRING is
+	kind_name: STRING
 			-- Name of the kind of universe (e.g. "library", "assembly", etc.)
 		once
 			Result := "library"
@@ -60,7 +60,7 @@ feature -- Access
 
 feature -- Relations
 
-	add_library_recursive (a_visited: DS_HASH_SET [ET_LIBRARY]) is
+	add_library_recursive (a_visited: DS_HASH_SET [ET_LIBRARY])
 			-- Add current library to `a_visited' and
 			-- recursively the libraries it depends on.
 		require

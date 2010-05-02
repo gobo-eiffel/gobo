@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 	make (a_context: XM_XSLT_EVALUATION_CONTEXT;
 			a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM];
-			some_sort_keys: DS_ARRAYED_LIST [XM_XSLT_FIXED_SORT_KEY_DEFINITION]) is
+			some_sort_keys: DS_ARRAYED_LIST [XM_XSLT_FIXED_SORT_KEY_DEFINITION])
 			-- Establish invariant
 		require
 			context_not_void: a_context /= Void
@@ -73,13 +73,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item: XM_XPATH_ITEM is
+	item: XM_XPATH_ITEM
 			-- Value or node at the current position
 		do
 			Result := node_keys.item (index).item
 		end
 
-	last_position: INTEGER is
+	last_position: INTEGER
 			-- Last position (= number of items in sequence)
 		do
 			if not count_determined then
@@ -100,13 +100,13 @@ feature -- Status report
 	count_determined: BOOLEAN
 			-- Has `count' been determined yet?
 
-	is_last_position_finder: BOOLEAN is
+	is_last_position_finder: BOOLEAN
 			-- Can `Current' find the last position?
 		do
 			Result := True
 		end
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
 			Result := count_determined and then index > count
@@ -114,7 +114,7 @@ feature -- Status report
 
 feature -- Status report
 
-	less_than (u, v: XM_XSLT_SORT_RECORD): BOOLEAN is
+	less_than (u, v: XM_XSLT_SORT_RECORD): BOOLEAN
 			-- Is `u' considered less than `v'?
 		local
 			l_sort_key, l_other_sort_key: XM_XPATH_ITEM
@@ -182,7 +182,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move to next position
 		do
 			if not count_determined then perform_sorting end
@@ -193,7 +193,7 @@ feature -- Cursor movement
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 
@@ -215,7 +215,7 @@ feature -- Duplication
 
 feature {XM_XSLT_SORTED_ITERATOR} -- Local
 
-	set_count (a_count: INTEGER) is
+	set_count (a_count: INTEGER)
 			-- Set `count'.
 		require
 			positive_count: count >= 0
@@ -227,7 +227,7 @@ feature {XM_XSLT_SORTED_ITERATOR} -- Local
 			count_set: count = a_count
 		end
 
-	set_node_keys (some_node_keys: DS_ARRAYED_LIST [XM_XSLT_SORT_RECORD]) is
+	set_node_keys (some_node_keys: DS_ARRAYED_LIST [XM_XSLT_SORT_RECORD])
 			-- Set `node_keys'.
 		do
 			node_keys := some_node_keys
@@ -252,7 +252,7 @@ feature {NONE} -- Implementation
 	node_keys: DS_ARRAYED_LIST [XM_XSLT_SORT_RECORD]
 			-- List of items with their sort-keys
 
-	make_default is
+	make_default
 			-- Purely for compatibility with the interface
 		do
 			check
@@ -260,7 +260,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	perform_sorting is
+	perform_sorting
 			-- Sort the sequence.
 		require
 			not_yet_sorted: not count_determined
@@ -291,7 +291,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_array is
+	build_array
 			-- Build `node_keys'.
 		require
 			not_yet_sorted: not count_determined

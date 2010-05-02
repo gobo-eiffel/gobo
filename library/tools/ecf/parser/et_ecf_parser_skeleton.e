@@ -33,7 +33,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_standard is
+	make_standard
 			-- Create a new ECF parser.
 			-- Error messages will be sent to standard files.
 		local
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			ise_version_set: ise_version = ise_latest
 		end
 
-	make (an_error_handler: like error_handler) is
+	make (an_error_handler: like error_handler)
 			-- Create a new ECF parser.
 		require
 			an_error_handler_not_void: an_error_handler /= Void
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			ise_version_set: ise_version = ise_latest
 		end
 
-	make_with_factory (a_factory: like ast_factory; an_error_handler: like error_handler) is
+	make_with_factory (a_factory: like ast_factory; an_error_handler: like error_handler)
 			-- Create a new ECF parser using `a_factory' as AST factory.
 		require
 			a_factory_not_void: a_factory /= Void
@@ -80,7 +80,7 @@ feature -- Access
 	error_handler: ET_ECF_ERROR_HANDLER
 			-- Error handler
 
-	parsed_libraries: DS_HASH_TABLE [ET_ECF_LIBRARY, STRING] is
+	parsed_libraries: DS_HASH_TABLE [ET_ECF_LIBRARY, STRING]
 			-- Already parsed ECF libraries, indexed by UUID
 		deferred
 		ensure
@@ -88,7 +88,7 @@ feature -- Access
 			no_void_library: not Result.has_void_item
 		end
 
-	library_parser: ET_ECF_LIBRARY_PARSER is
+	library_parser: ET_ECF_LIBRARY_PARSER
 			-- Library parser
 		deferred
 		ensure
@@ -100,7 +100,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_ise_version (a_version: like ise_version) is
+	set_ise_version (a_version: like ise_version)
 			-- Set `ise_version' to `a_version'.
 		require
 			a_version_not_void: a_version /= Void
@@ -112,7 +112,7 @@ feature -- Setting
 
 feature {NONE} -- AST factory
 
-	new_adapted_library (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_ADAPTED_LIBRARY is
+	new_adapted_library (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_ADAPTED_LIBRARY
 			-- New library built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
@@ -160,7 +160,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_build_condition (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_BUILD_CONDITION is
+	new_build_condition (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_BUILD_CONDITION
 			-- New build condition built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
@@ -190,7 +190,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_cluster (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_override: BOOLEAN; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_CLUSTER is
+	new_cluster (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_override: BOOLEAN; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_CLUSTER
 			-- New cluster built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
@@ -276,7 +276,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_condition (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_CONDITIONS is
+	new_condition (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_CONDITIONS
 			-- New condition built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
@@ -334,7 +334,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_custom_condition (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_CUSTOM_CONDITION is
+	new_custom_condition (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_CUSTOM_CONDITION
 			-- New custom condition built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
@@ -370,7 +370,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_dotnet_condition (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_DOTNET_CONDITION is
+	new_dotnet_condition (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_DOTNET_CONDITION
 			-- New dotnet condition built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
@@ -396,7 +396,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_dynamic_runtime_condition (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_DYNAMIC_RUNTIME_CONDITION is
+	new_dynamic_runtime_condition (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_DYNAMIC_RUNTIME_CONDITION
 			-- New dynamic_runtime condition built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
@@ -422,7 +422,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_external_include (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_EXTERNAL_INCLUDE is
+	new_external_include (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_EXTERNAL_INCLUDE
 			-- New external include built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
@@ -464,7 +464,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_external_library (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_EXTERNAL_LIBRARY is
+	new_external_library (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_EXTERNAL_LIBRARY
 			-- New external library built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
@@ -506,7 +506,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_external_object (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_EXTERNAL_OBJECT is
+	new_external_object (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_EXTERNAL_OBJECT
 			-- New external object built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
@@ -548,7 +548,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_file_rule (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_FILE_RULE is
+	new_file_rule (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_FILE_RULE
 			-- New file rule built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
@@ -601,7 +601,7 @@ feature {NONE} -- AST factory
 			Result.set_condition (l_conditions)
 		end
 
-	new_library (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_filename: STRING; a_adapted_library: ET_ECF_ADAPTED_LIBRARY): ET_ECF_LIBRARY is
+	new_library (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_filename: STRING; a_adapted_library: ET_ECF_ADAPTED_LIBRARY): ET_ECF_LIBRARY
 			-- New library built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
@@ -656,7 +656,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_multithreaded_condition (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_MULTITHREADED_CONDITION is
+	new_multithreaded_condition (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_MULTITHREADED_CONDITION
 			-- New multithreaded condition built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
@@ -682,7 +682,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_override (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_CLUSTER is
+	new_override (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_CLUSTER
 			-- New override built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
@@ -768,7 +768,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_platform_condition (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_PLATFORM_CONDITION is
+	new_platform_condition (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_PLATFORM_CONDITION
 			-- New platform condition built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
@@ -798,7 +798,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_root (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_ROOT is
+	new_root (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_ROOT
 			-- New root built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
@@ -843,7 +843,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_system (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_filename: STRING): ET_ECF_SYSTEM is
+	new_system (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_filename: STRING): ET_ECF_SYSTEM
 			-- New system built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
@@ -867,7 +867,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_target (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_TARGET is
+	new_target (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_TARGET
 			-- New target built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
@@ -989,7 +989,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_version_condition (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_VERSION_CONDITION is
+	new_version_condition (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_VERSION_CONDITION
 			-- New version condition built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
@@ -1059,7 +1059,7 @@ feature {NONE} -- AST factory
 
 feature {NONE} -- Element change
 
-	fill_system_config (a_system_config: ET_ECF_SYSTEM_CONFIG; an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE) is
+	fill_system_config (a_system_config: ET_ECF_SYSTEM_CONFIG; an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE)
 			-- Build system `a_system_config' from `an_element'
 		require
 			a_system_config_not_void: a_system_config /= Void
@@ -1129,7 +1129,7 @@ feature {NONE} -- Element change
 			end
 		end
 
-	add_variable (a_variables: ET_ECF_VARIABLES; an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE) is
+	add_variable (a_variables: ET_ECF_VARIABLES; an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE)
 			-- Add to `a_variables' the variable held in `an_element'.
 		require
 			a_variables_not_void: a_variables /= Void
@@ -1161,7 +1161,7 @@ feature {NONE} -- Element change
 			end
 		end
 
-	parse_libraries (a_universe: ET_ECF_INTERNAL_UNIVERSE; a_state: ET_ECF_STATE) is
+	parse_libraries (a_universe: ET_ECF_INTERNAL_UNIVERSE; a_state: ET_ECF_STATE)
 			-- Parse libraries referenced in `a_universe' when in `a_state'.
 		require
 			a_universe_not_void: a_universe /= Void
@@ -1227,7 +1227,7 @@ feature {NONE} -- Element change
 
 feature {NONE} -- Implementation
 
-	element_name (a_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_IDENTIFIER is
+	element_name (a_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_IDENTIFIER
 			-- Element name
 		require
 			a_element_not_void: a_element /= Void
@@ -1242,7 +1242,7 @@ feature {NONE} -- Implementation
 			element_name_not_void: Result /= Void
 		end
 
-	attribute_name (a_attribute: XM_ATTRIBUTE; a_position_table: XM_POSITION_TABLE): ET_IDENTIFIER is
+	attribute_name (a_attribute: XM_ATTRIBUTE; a_position_table: XM_POSITION_TABLE): ET_IDENTIFIER
 			-- Attribute name
 		require
 			a_attribute_not_void: a_attribute /= Void
@@ -1257,7 +1257,7 @@ feature {NONE} -- Implementation
 			attribute_name_not_void: Result /= Void
 		end
 
-	attribute_value (a_attribute: XM_ATTRIBUTE; a_position_table: XM_POSITION_TABLE): ET_IDENTIFIER is
+	attribute_value (a_attribute: XM_ATTRIBUTE; a_position_table: XM_POSITION_TABLE): ET_IDENTIFIER
 			-- Attribute value
 		require
 			a_attribute_not_void: a_attribute /= Void
@@ -1273,7 +1273,7 @@ feature {NONE} -- Implementation
 			attribute_value_not_void: Result /= Void
 		end
 
-	is_true (a_string: STRING): BOOLEAN is
+	is_true (a_string: STRING): BOOLEAN
 			-- Is `a_string' equal to "true" (case-insensitive)?
 		require
 			a_string_not_void: a_string /= Void
@@ -1281,7 +1281,7 @@ feature {NONE} -- Implementation
 			Result := STRING_.same_case_insensitive (a_string, True_constant)
 		end
 
-	is_false (a_string: STRING): BOOLEAN is
+	is_false (a_string: STRING): BOOLEAN
 			-- Is `a_string' equal to "false" (case-insensitive)?
 		require
 			a_string_not_void: a_string /= Void
@@ -1289,7 +1289,7 @@ feature {NONE} -- Implementation
 			Result := STRING_.same_case_insensitive (a_string, False_constant)
 		end
 
-	ecf_version (a_namespace: STRING): UT_VERSION is
+	ecf_version (a_namespace: STRING): UT_VERSION
 			-- ECF version corresponding to `a_namespace', or void if not recognized
 		require
 			a_namespace_not_void: a_namespace /= Void
@@ -1315,10 +1315,10 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constant
 
-	True_constant: STRING is "true"
+	True_constant: STRING = "true"
 			-- True constant
 
-	False_constant: STRING is "false"
+	False_constant: STRING = "false"
 			-- False constant
 
 invariant

@@ -41,7 +41,7 @@ create
 
 feature	{NONE} -- Initialization
 
-	make (a_type: XM_XPATH_ITEM_TYPE; a_cardinality: INTEGER) is
+	make (a_type: XM_XPATH_ITEM_TYPE; a_cardinality: INTEGER)
 			-- Create a specific sequence
 		require
 			valid_cardinality: is_valid_required_cardinality (a_cardinality)
@@ -50,14 +50,14 @@ feature	{NONE} -- Initialization
 			set_cardinality (a_cardinality)
 		end
 
-	make_empty is
+	make_empty
 			-- create an empty_sequence
 		do
 			primary_type := empty_item
 			set_cardinality_empty
 		end
-	
-	make_non_empty_sequence is
+
+	make_non_empty_sequence
 			-- Create a non-empty sequence
 		do
 			primary_type := any_item
@@ -65,209 +65,209 @@ feature	{NONE} -- Initialization
 		end
 
 
-	make_any_sequence is
+	make_any_sequence
 			-- Create a general sequence
 		do
 			primary_type := any_item
 			set_cardinality_zero_or_more
 		end
 
-	make_single_item is
+	make_single_item
 			-- Create a sequence that allows exactly one item
 		do
 			primary_type := any_item
 			set_cardinality_exactly_one
 		end
 
-	make_optional_item is
+	make_optional_item
 			-- Create a sequence that allows zero or one items
 		do
 			primary_type := any_item
 			set_cardinality_optional
 		end
-	
-	make_single_atomic is
+
+	make_single_atomic
 			-- Create a sequence that one atomic item
 		do
 			primary_type := type_factory.any_atomic_type
 			set_cardinality_exactly_one
 		end
-	
-	make_optional_atomic is
+
+	make_optional_atomic
 			-- Create a sequence that allows zero or one atomic items
 		do
 			primary_type := type_factory.any_atomic_type
 			set_cardinality_optional
 		end
 
-	make_single_boolean is
+	make_single_boolean
 			-- Create a sequence of a single xs:boolean
 		do
 			primary_type := type_factory.boolean_type
 			set_cardinality_exactly_one
 		end
-	
-	make_single_qname is
+
+	make_single_qname
 			-- Create a sequence of a single QName
 		do
 			primary_type := type_factory.qname_type
 			set_cardinality_exactly_one
 		end
-	
-	make_optional_qname is
+
+	make_optional_qname
 			-- Create a sequence that allows zero or one QNames
 		do
 			primary_type := type_factory.qname_type
 			set_cardinality_optional
 		end
-	
-	make_qname_sequence is
+
+	make_qname_sequence
 			-- Create a sequence that allows zero or more QNames
 		do
 			primary_type := type_factory.qname_type
 			set_cardinality_zero_or_more
 		end
 
-	make_single_string is
+	make_single_string
 			-- Create a sequence that allows exactly one string
 		do
 			primary_type := type_factory.string_type
 			set_cardinality_exactly_one
 		end
 
-	make_optional_string is
+	make_optional_string
 			-- Create a sequence that allows zero or one strings
 		do
 			primary_type := type_factory.string_type
 			set_cardinality_optional
 		end
 
-	make_single_any_uri is
+	make_single_any_uri
 			-- Create a sequence of a single anyURI
 		do
 			primary_type := type_factory.any_uri_type
 			set_cardinality_exactly_one
 		end
 
-	make_single_integer is
+	make_single_integer
 			-- Create a sequence that allows exactly one integer
 		do
 			primary_type := type_factory.integer_type
 			set_cardinality_exactly_one
 		end
 
-	make_optional_integer is
+	make_optional_integer
 			-- Create a sequence that allows zero or one integer
 		do
 			primary_type := type_factory.integer_type
 			set_cardinality_optional
 		end
 
-	make_integer_sequence is
+	make_integer_sequence
 			-- Create a sequence that allows zero or more integers.
 		do
 			primary_type := type_factory.integer_type
 			set_cardinality_zero_or_more
 		end
 
-	make_single_double is
+	make_single_double
 			-- Create a sequence that allows exactly one double
 		do
 			primary_type := type_factory.double_type
 			set_cardinality_exactly_one
 		end
 
-	make_single_node is
+	make_single_node
 			-- Create a sequence that allows exactly one node
 		do
 			primary_type := any_node_test
 			set_cardinality_exactly_one
 		end
 
-	make_optional_node is
+	make_optional_node
 			-- Create a sequence that allows zero or one node
 		do
 			primary_type := any_node_test
 			set_cardinality_optional
 		end
 
-	make_node_sequence is
+	make_node_sequence
 			-- Create a sequence that allows zero or more node
 		do
 			primary_type := any_node_test
 			set_cardinality_zero_or_more
 		end
 
-	make_single_number is
+	make_single_number
 			-- Create a sequence that exactly one numeric values
 		do
 			primary_type := type_factory.numeric_type
 			set_cardinality_exactly_one
 		end
 
-	make_optional_number is
+	make_optional_number
 			-- Create a sequence that allows zero or one numeric values
 		do
 			primary_type := type_factory.numeric_type
 			set_cardinality_optional
 		end
 
-	make_numeric_sequence is
+	make_numeric_sequence
 			-- Create a sequence that allows zero or more numeric values
 		do
 			primary_type := type_factory.numeric_type
 			set_cardinality_zero_or_more
 		end
 
-	make_atomic_sequence is
+	make_atomic_sequence
 			-- Create a sequence that allows zero or more atomic values
 		do
 			primary_type := type_factory.any_atomic_type
 			set_cardinality_zero_or_more
 		end
 
-	make_string_sequence is
+	make_string_sequence
 			-- Create a sequence that allows zero or more atomic values
 		do
 			primary_type := type_factory.string_type
 			set_cardinality_zero_or_more
 		end
 
-	make_optional_date_time is
+	make_optional_date_time
 			-- Create a sequence that allows zero or one dateTimes
 		do
 			primary_type := type_factory.date_time_type
 			set_cardinality_optional
 		end
 
-	make_single_date is
+	make_single_date
 			-- Create a sequence that allows exactly one date.
 		do
 			primary_type := type_factory.date_type
 			set_cardinality_exactly_one
 		end
 
-	make_single_time is
+	make_single_time
 			-- Create a sequence that allows exactly one time.
 		do
 			primary_type := type_factory.time_type
 			set_cardinality_exactly_one
 		end
 
-	make_optional_date is
+	make_optional_date
 			-- Create a sequence that allows zero or one dates
 		do
 			primary_type := type_factory.date_type
 			set_cardinality_optional
 		end
-	make_optional_time is
+	make_optional_time
 			-- Create a sequence that allows zero or one times
 		do
 			primary_type := type_factory.time_type
 			set_cardinality_optional
 		end
 
-	make_optional_duration is
+	make_optional_duration
 			-- Create a sequence that allows zero or one durations
 		do
 			primary_type := type_factory.duration_type
@@ -275,14 +275,14 @@ feature	{NONE} -- Initialization
 		end
 
 
-	make_optional_day_time_duration is
+	make_optional_day_time_duration
 			-- Create a sequence that allows zero or one dayTimeDurations
 		do
 			primary_type := type_factory.day_time_duration_type
 			set_cardinality_optional
 		end
 
-	make_optional_year_month_duration is
+	make_optional_year_month_duration
 			-- Create a sequence that allows zero or one dayTimeDurations
 		do
 			primary_type := type_factory.year_month_duration_type
@@ -298,5 +298,5 @@ feature -- Access
 invariant
 
 	valid_primary_type: primary_type /= Void
-	
+
 end

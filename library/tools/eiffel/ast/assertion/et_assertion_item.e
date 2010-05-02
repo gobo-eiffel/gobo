@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	assertion: ET_ASSERTION is
+	assertion: ET_ASSERTION
 			-- Assertion in list of assertions
 		deferred
 		ensure

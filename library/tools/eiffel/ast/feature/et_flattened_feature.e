@@ -20,7 +20,7 @@ inherit
 
 feature -- Status report
 
-	is_immediate: BOOLEAN is
+	is_immediate: BOOLEAN
 			-- Is current feature immediate?
 			-- Note that this feature only make sense when flattening the features.
 			-- Otherwise, features that are declared or redeclared in a class
@@ -33,7 +33,7 @@ feature -- Status report
 			definition: Result = not is_adapted
 		end
 
-	is_inherited: BOOLEAN is
+	is_inherited: BOOLEAN
 			-- Is current feature being inherited?
 			-- Note that this feature only make sense when flattening the features.
 			-- Otherwise, features that are declared or redeclared in a class
@@ -44,7 +44,7 @@ feature -- Status report
 			-- Result := False
 		end
 
-	is_redeclared: BOOLEAN is
+	is_redeclared: BOOLEAN
 			-- Is current feature being redeclared?
 			-- Note that this feature only make sense when flattening the features.
 			-- Otherwise, features that are declared or redeclared in a class
@@ -55,7 +55,7 @@ feature -- Status report
 			-- Result := False
 		end
 
-	is_adapted: BOOLEAN is
+	is_adapted: BOOLEAN
 			-- Is current feature being either inherited or redeclared?
 			-- Note that this feature only make sense when flattening the features.
 			-- Otherwise, features that are declared or redeclared in a class
@@ -68,13 +68,13 @@ feature -- Status report
 			definition: Result = (is_inherited or is_redeclared)
 		end
 
-	is_dotnet: BOOLEAN is
+	is_dotnet: BOOLEAN
 			-- Is current feature a .NET feature?
 		do
 			-- Result := False
 		end
 
-	has_seed (a_seed: INTEGER): BOOLEAN is
+	has_seed (a_seed: INTEGER): BOOLEAN
 			-- Does current feature have `a_seed'?
 		do
 			if first_seed = a_seed then
@@ -86,7 +86,7 @@ feature -- Status report
 			definition: Result = (first_seed = a_seed or (other_seeds /= Void and then other_seeds.has (a_seed)))
 		end
 
-	has_common_seed (other: ET_FLATTENED_FEATURE): BOOLEAN is
+	has_common_seed (other: ET_FLATTENED_FEATURE): BOOLEAN
 			-- Do current feature and `other' have a least one seed in common?
 		require
 			other_not_void: other /= Void
@@ -116,20 +116,20 @@ feature -- Status report
 
 feature -- Access
 
-	name: ET_FEATURE_NAME is
+	name: ET_FEATURE_NAME
 			-- Feature name
 		deferred
 		ensure
 			name_not_void: Result /= Void
 		end
 
-	type: ET_TYPE is
+	type: ET_TYPE
 			-- Return type;
 			-- Void for procedures
 		deferred
 		end
 
-	arguments: ET_FORMAL_ARGUMENT_LIST is
+	arguments: ET_FORMAL_ARGUMENT_LIST
 			-- Formal arguments;
 			-- Void if not a routine or a routine with no arguments
 		deferred
@@ -144,7 +144,7 @@ feature -- Access
 			-- is only one seed (which is then accessible
 			-- through `first_seed')
 
-	flattened_feature: ET_FEATURE is
+	flattened_feature: ET_FEATURE
 			-- Feature resulting after feature flattening
 		deferred
 		ensure
@@ -153,7 +153,7 @@ feature -- Access
 
 feature -- Conversion
 
-	immediate_feature: ET_FEATURE is
+	immediate_feature: ET_FEATURE
 			-- Current feature viewed as an immediate feature
 		require
 			is_immediate: is_immediate
@@ -163,7 +163,7 @@ feature -- Conversion
 			definition: ANY_.same_objects (Result, Current)
 		end
 
-	inherited_feature: ET_INHERITED_FEATURE is
+	inherited_feature: ET_INHERITED_FEATURE
 			-- Current feature viewed as an inherited feature
 		require
 			is_inherited: is_inherited
@@ -173,7 +173,7 @@ feature -- Conversion
 			definition: ANY_.same_objects (Result, Current)
 		end
 
-	redeclared_feature: ET_REDECLARED_FEATURE is
+	redeclared_feature: ET_REDECLARED_FEATURE
 			-- Current feature viewed as a redeclared feature
 		require
 			is_redeclared: is_redeclared
@@ -183,7 +183,7 @@ feature -- Conversion
 			definition: ANY_.same_objects (Result, Current)
 		end
 
-	adapted_feature: ET_ADAPTED_FEATURE is
+	adapted_feature: ET_ADAPTED_FEATURE
 			-- Current feature viewed as an adapted feature
 		require
 			is_adapted: is_adapted

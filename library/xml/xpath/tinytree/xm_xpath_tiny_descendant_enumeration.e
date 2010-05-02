@@ -11,7 +11,7 @@ note
 	revision: "$Revision$"
 
 class XM_XPATH_TINY_DESCENDANT_ENUMERATION
-	
+
 inherit
 
 	XM_XPATH_AXIS_ITERATOR [XM_XPATH_TINY_NODE]
@@ -20,16 +20,16 @@ inherit
 		end
 
 	XM_XPATH_TYPE
-	
+
 	KL_SHARED_STANDARD_FILES
 
 create
 
 	make
-	
+
 feature {NONE} -- Initialization
 
-	make (a_document: XM_XPATH_TINY_FOREST; a_starting_node: XM_XPATH_TINY_NODE; a_node_test: XM_XPATH_NODE_TEST; self: BOOLEAN) is
+	make (a_document: XM_XPATH_TINY_FOREST; a_starting_node: XM_XPATH_TINY_NODE; a_node_test: XM_XPATH_NODE_TEST; self: BOOLEAN)
 			-- Establish invariant
 		require
 			document_not_void: a_document /= Void
@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
 		local
 			a_tiny_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_TINY_NODE]
@@ -88,7 +88,7 @@ feature -- Access
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Move to next position
 		do
 			index := index + 1
@@ -99,7 +99,7 @@ feature -- Cursor movement
 			end
 		end
 
-	forth is
+	forth
 			-- Move to next position
 		do
 			index := index + 1
@@ -113,12 +113,12 @@ feature -- Cursor movement
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 			create Result.make (document, starting_node, node_test, include_self)
 		end
-	
+
 feature {NONE} -- Implementation
 
 	document: XM_XPATH_TINY_FOREST
@@ -139,14 +139,14 @@ feature {NONE} -- Implementation
 	starting_depth: INTEGER
 			-- depth of starting node
 
-	advance is
+	advance
 			-- Move to the next matching node
 		local
 			finished: BOOLEAN
 		do
 			from
 			until
-				finished 
+				finished
 			loop
 				next_node_number := next_node_number + 1
 				debug ("XPath descendants enumeration")
@@ -173,12 +173,12 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-	
+
 invariant
 
 	document_not_void: document /= Void
 	starting_node_not_void: starting_node /= Void
 	node_test_not_void: node_test /= Void
-	
+
 end
-	
+

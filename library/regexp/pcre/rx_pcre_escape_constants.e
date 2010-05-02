@@ -21,7 +21,7 @@ inherit
 
 feature -- Access
 
-	escape_character (a_code: INTEGER): INTEGER is
+	escape_character (a_code: INTEGER): INTEGER
 			-- Code of escape character for character with code `a_code';
 			-- Return 0 if not escaped.
 		require
@@ -95,28 +95,28 @@ feature -- Access
 
 feature -- Constants
 
-	esc_uca: INTEGER is 1
+	esc_uca: INTEGER = 1
 
-	esc_ucb: INTEGER is 2
+	esc_ucb: INTEGER = 2
 
-	esc_lcb: INTEGER is 3
+	esc_lcb: INTEGER = 3
 
-	esc_ucd: INTEGER is 4
+	esc_ucd: INTEGER = 4
 
-	esc_lcd: INTEGER is 5
+	esc_lcd: INTEGER = 5
 
-	esc_ucs: INTEGER is 6
+	esc_ucs: INTEGER = 6
 
-	esc_lcs: INTEGER is 7
+	esc_lcs: INTEGER = 7
 
-	esc_ucw: INTEGER is 8
+	esc_ucw: INTEGER = 8
 
-	esc_lcw: INTEGER is 9
+	esc_lcw: INTEGER = 9
 
-	esc_ucz: INTEGER is 10
+	esc_ucz: INTEGER = 10
 
-	esc_lcz: INTEGER is 11
+	esc_lcz: INTEGER = 11
 
-	esc_ref: INTEGER is 12
+	esc_ref: INTEGER = 12
 
 end

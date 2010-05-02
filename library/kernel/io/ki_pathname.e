@@ -57,12 +57,12 @@ inherit
 
 feature -- Status report
 
-	is_relative: BOOLEAN is
+	is_relative: BOOLEAN
 			-- Is pathname a relative pathname?
 		deferred
 		end
 
-	is_current (i: INTEGER): BOOLEAN is
+	is_current (i: INTEGER): BOOLEAN
 			-- Is component at `i'-th position the
 			-- relative current directory name?
 		require
@@ -71,7 +71,7 @@ feature -- Status report
 		deferred
 		end
 
-	is_parent (i: INTEGER): BOOLEAN is
+	is_parent (i: INTEGER): BOOLEAN
 			-- Is component at `i'-th position the
 			-- relative parent directory name?
 		require
@@ -80,7 +80,7 @@ feature -- Status report
 		deferred
 		end
 
-	is_canonical: BOOLEAN is
+	is_canonical: BOOLEAN
 			-- Is pathname canonical?
 			-- (A pathname is canonical if it has no parent directory
 			-- component except at leading positions, and no current
@@ -117,7 +117,7 @@ feature -- Status report
 
 feature -- Access
 
-	item (i: INTEGER): STRING is
+	item (i: INTEGER): STRING
 			-- Pathname component at `i'-th position
 		require
 			i_large_enough: i >= 1
@@ -128,27 +128,27 @@ feature -- Access
 			item_not_empty: not Result.is_empty
 		end
 
-	drive: detachable STRING is
+	drive: detachable STRING
 			-- Drive of pathname if present,
 			-- Void otherwise
 		deferred
 		end
 
-	hostname: detachable STRING is
+	hostname: detachable STRING
 			-- Hostname of pathname if present,
 			-- Void otherwise
 			-- (for example, with UNC we can have: \\hostname\sharename)
 		deferred
 		end
 
-	sharename: detachable STRING is
+	sharename: detachable STRING
 			-- Sharename of pathname if present,
 			-- Void otherwise
 			-- (for example, with UNC we can have: \\hostname\sharename)
 		deferred
 		end
 
-	trailing_items (a_pathname: KI_PATHNAME): ARRAY [STRING] is
+	trailing_items (a_pathname: KI_PATHNAME): ARRAY [STRING]
 			-- Items in `a_pathname' that are past the last item in `Current'
 			--
 			-- Useful when `Current' is a subpathname of `a_pathname'.
@@ -183,7 +183,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of components in pathname
 		deferred
 		ensure
@@ -192,7 +192,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	set_canonical is
+	set_canonical
 			-- Make pathname canonical.
 		deferred
 		ensure
@@ -201,7 +201,7 @@ feature -- Element change
 
 feature -- Comparison
 
-	same_pathname (a_pathname: KI_PATHNAME): BOOLEAN is
+	same_pathname (a_pathname: KI_PATHNAME): BOOLEAN
 			-- Is current pathname considered equal to `other'?
 			-- Use case-sensitive comparison.
 		require
@@ -214,7 +214,7 @@ feature -- Comparison
 			end
 		end
 
-	same_case_insensitive (a_pathname: KI_PATHNAME): BOOLEAN is
+	same_case_insensitive (a_pathname: KI_PATHNAME): BOOLEAN
 			-- Is current pathname considered equal to `other'?
 			-- Use case-insensitive comparison.
 		require
@@ -227,7 +227,7 @@ feature -- Comparison
 			end
 		end
 
-	is_subpathname (a_pathname: KI_PATHNAME): BOOLEAN is
+	is_subpathname (a_pathname: KI_PATHNAME): BOOLEAN
 			-- Is current pathname a subpathname of `other'?
 			-- Use case-sensitive comparison.
 		require
@@ -263,7 +263,7 @@ feature -- Comparison
 			end
 		end
 
-	is_case_insensitive_subpathname (a_pathname: KI_PATHNAME): BOOLEAN is
+	is_case_insensitive_subpathname (a_pathname: KI_PATHNAME): BOOLEAN
 			-- Is current pathname a subpathname of `other'?
 			-- Use case-insensitive comparison.
 		require
@@ -299,7 +299,7 @@ feature -- Comparison
 			end
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is current pathname considered equal to `other'?
 		do
 			if ANY_.same_types (Current, other) then

@@ -57,97 +57,97 @@ create
 
 feature -- Status report
 
-	is_infix: BOOLEAN is
+	is_infix: BOOLEAN
 			-- Is current feature name of the form 'infix ...'?
 		do
 			Result := (code >= tokens.min_infix_code and code <= tokens.max_infix_code)
 		end
 
-	is_infix_div: BOOLEAN is
+	is_infix_div: BOOLEAN
 			-- Is current feature name of the form 'infix "//"'?
 		do
 			Result := (code = tokens.infix_div_code)
 		end
 
-	is_infix_divide: BOOLEAN is
+	is_infix_divide: BOOLEAN
 			-- Is current feature name of the form 'infix "/"'?
 		do
 			Result := (code = tokens.infix_divide_code)
 		end
 
-	is_infix_ge: BOOLEAN is
+	is_infix_ge: BOOLEAN
 			-- Is current feature name of the form 'infix ">="'?
 		do
 			Result := (code = tokens.infix_ge_code)
 		end
 
-	is_infix_gt: BOOLEAN is
+	is_infix_gt: BOOLEAN
 			-- Is current feature name of the form 'infix ">"'?
 		do
 			Result := (code = tokens.infix_gt_code)
 		end
 
-	is_infix_le: BOOLEAN is
+	is_infix_le: BOOLEAN
 			-- Is current feature name of the form 'infix "<="'?
 		do
 			Result := (code = tokens.infix_le_code)
 		end
 
-	is_infix_lt: BOOLEAN is
+	is_infix_lt: BOOLEAN
 			-- Is current feature name of the form 'infix "<"'?
 		do
 			Result := (code = tokens.infix_lt_code)
 		end
 
-	is_infix_minus: BOOLEAN is
+	is_infix_minus: BOOLEAN
 			-- Is current feature name of the form 'infix "-"'?
 		do
 			Result := (code = tokens.infix_minus_code)
 		end
 
-	is_infix_mod: BOOLEAN is
+	is_infix_mod: BOOLEAN
 			-- Is current feature name of the form 'infix "\\"'?
 		do
 			Result := (code = tokens.infix_mod_code)
 		end
 
-	is_infix_plus: BOOLEAN is
+	is_infix_plus: BOOLEAN
 			-- Is current feature name of the form 'infix "+"'?
 		do
 			Result := (code = tokens.infix_plus_code)
 		end
 
-	is_infix_power: BOOLEAN is
+	is_infix_power: BOOLEAN
 			-- Is current feature name of the form 'infix "^"'?
 		do
 			Result := (code = tokens.infix_power_code)
 		end
 
-	is_infix_times: BOOLEAN is
+	is_infix_times: BOOLEAN
 			-- Is current feature name of the form 'infix "*"'?
 		do
 			Result := (code = tokens.infix_times_code)
 		end
 
-	is_infix_dotdot: BOOLEAN is
+	is_infix_dotdot: BOOLEAN
 			-- Is current feature name of the form 'infix ".."'?
 		do
 			Result := (code = tokens.infix_dotdot_code)
 		end
 
-	is_prefix: BOOLEAN is
+	is_prefix: BOOLEAN
 			-- Is current feature name of the form 'prefix ...'?
 		do
 			Result := (code >= tokens.min_prefix_code and code <= tokens.max_prefix_code)
 		end
 
-	is_prefix_minus: BOOLEAN is
+	is_prefix_minus: BOOLEAN
 			-- Is current feature name of the form 'prefix "-"'?
 		do
 			Result := (code = tokens.prefix_minus_code)
 		end
 
-	is_prefix_plus: BOOLEAN is
+	is_prefix_plus: BOOLEAN
 			-- Is current feature name of the form 'prefix "+"'?
 		do
 			Result := (code = tokens.prefix_plus_code)
@@ -155,7 +155,7 @@ feature -- Status report
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Name of feature call
 		do
 			inspect code
@@ -193,7 +193,7 @@ feature -- Access
 			end
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code
 		do
 			Result := code.code
@@ -201,7 +201,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_infix_minus is
+	set_infix_minus
 			-- Set `is_infix_minus'.
 		do
 			code := tokens.infix_minus_code
@@ -209,7 +209,7 @@ feature -- Status setting
 			is_infix_minus: is_infix_minus
 		end
 
-	set_prefix_minus is
+	set_prefix_minus
 			-- Set `is_prefix_minus'.
 		do
 			code := tokens.prefix_minus_code
@@ -217,7 +217,7 @@ feature -- Status setting
 			is_prefix_minus: is_prefix_minus
 		end
 
-	set_infix_plus is
+	set_infix_plus
 			-- Set `is_infix_plus'.
 		do
 			code := tokens.infix_plus_code
@@ -225,7 +225,7 @@ feature -- Status setting
 			is_infix_plus: is_infix_plus
 		end
 
-	set_prefix_plus is
+	set_prefix_plus
 			-- Set `is_prefix_plus'.
 		do
 			code := tokens.prefix_plus_code
@@ -235,7 +235,7 @@ feature -- Status setting
 
 feature -- Comparison
 
-	same_call_name (other: ET_CALL_NAME): BOOLEAN is
+	same_call_name (other: ET_CALL_NAME): BOOLEAN
 			-- Are `Current' and `other' the same feature call name?
 			-- (case insensitive)
 		do
@@ -279,7 +279,7 @@ feature -- Comparison
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_symbol_operator (Current)

@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_condition: BOOLEAN) is
+	make (a_condition: BOOLEAN)
 			-- Set condition.
 		do
 			condition := a_condition
@@ -38,8 +38,8 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
-	item_type: XM_XPATH_ITEM_TYPE is
+
+	item_type: XM_XPATH_ITEM_TYPE
 			--Determine the data type of the expression, if possible
 		do
 			Result := type_factory.boolean_type
@@ -52,13 +52,13 @@ feature -- Access
 	condition: BOOLEAN
 			-- Is position() eq last()?
 
-	is_last_expression: BOOLEAN is
+	is_last_expression: BOOLEAN
 			-- Is `Current' an is-last expression?
 		do
 			Result := True
 		end
 
-	as_last_expression: XM_XPATH_IS_LAST_EXPRESSION is
+	as_last_expression: XM_XPATH_IS_LAST_EXPRESSION
 			-- `Current' seen as an is-last expression
 		do
 			Result := Current
@@ -66,8 +66,8 @@ feature -- Access
 
 feature -- Status setting
 
-	
-	compute_intrinsic_dependencies is
+
+	compute_intrinsic_dependencies
 			-- Determine the intrinsic dependencies of an expression.
 		do
 			set_intrinsically_depends_upon_position
@@ -76,7 +76,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -88,21 +88,21 @@ feature -- Status report
 
 feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			a_replacement.put (Current)
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			a_replacement.put (Current)
 		end
 
 feature -- Evaluation
-	
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			if a_context.is_context_position_set then
@@ -111,20 +111,20 @@ feature -- Evaluation
 				a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Context position is not set", Xpath_errors_uri, "XPDY0002", Dynamic_error))
 			end
 		end
-	
+
 feature {XM_XPATH_EXPRESSION} -- Restricted
-	
-	compute_cardinality is
+
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
 		end
 
-	compute_special_properties is
+	compute_special_properties
 			-- Compute special properties.
 		do
 			Precursor
 			set_non_creating
 		end
-	
+
 end

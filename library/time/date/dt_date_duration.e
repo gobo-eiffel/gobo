@@ -53,7 +53,7 @@ create {DT_DATE}
 
 feature {NONE} -- Initialization
 
-	make (y, m, d: INTEGER) is
+	make (y, m, d: INTEGER)
 			-- Create a new date duration.
 		do
 			year := y
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 			day_set: day = d
 		end
 
-	make_definite (d: INTEGER) is
+	make_definite (d: INTEGER)
 			-- Create a new definite date duration.
 		do
 			year := 0
@@ -76,7 +76,7 @@ feature {NONE} -- Initialization
 			day_set: day = d
 		end
 
-	make_canonical_from_dates (date_from, date_to: like date) is
+	make_canonical_from_dates (date_from, date_to: like date)
 			-- Create a new canonical duration between
 			-- `date_from' and `date_to'.
 		require
@@ -136,7 +136,7 @@ feature -- Access
 	day: INTEGER
 			-- Day part
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code
 		do
 			Result := day + month * Max_days_in_month + year * Days_in_year
@@ -145,7 +145,7 @@ feature -- Access
 			end
 		end
 
-	date (a_date: DT_DATE): DT_DATE is
+	date (a_date: DT_DATE): DT_DATE
 			-- Addition of current duration to `a_date'
 			-- (Create a new object at each call.)
 		do
@@ -154,7 +154,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_definite: BOOLEAN is
+	is_definite: BOOLEAN
 			-- Is current duration independent of the date
 			-- on which it applies (use of `day' only)
 			-- or not (use of `year', `month' and `day')?
@@ -164,7 +164,7 @@ feature -- Status report
 			definition: Result = (year = 0 and month = 0)
 		end
 
-	is_canonical (a_date: like date): BOOLEAN is
+	is_canonical (a_date: like date): BOOLEAN
 			-- Has current duration a canonical form
 			-- when to be added to `a_date'?
 		require
@@ -201,7 +201,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_definite (a_date: like date) is
+	set_definite (a_date: like date)
 			-- Set current duration to be definite
 			-- when to be added to `a_date'.
 		require
@@ -220,7 +220,7 @@ feature -- Status setting
 			same_duration: (a_date + Current).is_equal (a_date + old cloned_object)
 		end
 
-	set_canonical (a_date: like date) is
+	set_canonical (a_date: like date)
 			-- Set current duration to be canonical
 			-- when to be added to `a_date'.
 		require
@@ -239,7 +239,7 @@ feature -- Status setting
 
 feature -- Setting
 
-	set_year_month_day (y, m, d: INTEGER) is
+	set_year_month_day (y, m, d: INTEGER)
 			-- Set `year' to `y', `month' to `m' and `day' to `d'.
 		do
 			year := y
@@ -251,7 +251,7 @@ feature -- Setting
 			day_set: day = d
 		end
 
-	set_year (y: INTEGER) is
+	set_year (y: INTEGER)
 			-- Set `year' to `y'.
 		do
 			year := y
@@ -261,7 +261,7 @@ feature -- Setting
 			same_day: day = old day
 		end
 
-	set_month (m: INTEGER) is
+	set_month (m: INTEGER)
 			-- Set `month' to `m'.
 		do
 			month := m
@@ -271,7 +271,7 @@ feature -- Setting
 			same_day: day = old day
 		end
 
-	set_day (d: INTEGER) is
+	set_day (d: INTEGER)
 			-- Set `day' to `d'.
 		do
 			day := d
@@ -283,7 +283,7 @@ feature -- Setting
 
 feature -- Element change
 
-	add_years_months_days (y, m, d: INTEGER) is
+	add_years_months_days (y, m, d: INTEGER)
 			-- Add `y' years, `m' months and `d' days
 			-- to current duration.
 		do
@@ -296,7 +296,7 @@ feature -- Element change
 			days_added: day = old day + d
 		end
 
-	add_years (y: INTEGER) is
+	add_years (y: INTEGER)
 			-- Add `y' years to current duration.
 		do
 			year := year + y
@@ -304,7 +304,7 @@ feature -- Element change
 			years_added: year = old year + y
 		end
 
-	add_months (m: INTEGER) is
+	add_months (m: INTEGER)
 			-- Add `m' months to current duration.
 		do
 			month := month + m
@@ -312,7 +312,7 @@ feature -- Element change
 			months_added: month = old month + m
 		end
 
-	add_days (d: INTEGER) is
+	add_days (d: INTEGER)
 			-- Add `d' days to current duration.
 		do
 			day := day + d
@@ -322,21 +322,21 @@ feature -- Element change
 
 feature -- Basic operations
 
-	plus alias "+" (other: like Current): like Current is
+	plus alias "+" (other: like Current): like Current
 			-- Sum of current duration with `other'
 		do
 			Result := cloned_object
 			Result.add_years_months_days (other.year, other.month, other.day)
 		end
 
-	minus alias "-" (other: like Current): like Current is
+	minus alias "-" (other: like Current): like Current
 			-- Difference with `other'
 		do
 			Result := cloned_object
 			Result.add_years_months_days (-other.year, -other.month, -other.day)
 		end
 
-	opposite alias "-": like Current is
+	opposite alias "-": like Current
 			-- Unary minus
 		do
 			Result := cloned_object
@@ -345,7 +345,7 @@ feature -- Basic operations
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current date duration less than `other'?
 		local
 			m: INTEGER
@@ -358,7 +358,7 @@ feature -- Comparison
 			end
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is current date duration equal to `other'?
 		do
 			if ANY_.same_types (Current, other) then
@@ -366,7 +366,7 @@ feature -- Comparison
 			end
 		end
 
-	same_date_duration (other: DT_DATE_DURATION): BOOLEAN is
+	same_date_duration (other: DT_DATE_DURATION): BOOLEAN
 			-- Is current date duration equal to `other'?
 		require
 			other_not_void: other /= Void
@@ -382,7 +382,7 @@ feature -- Comparison
 
 feature -- Conversion
 
-	to_date_time_duration: DT_DATE_TIME_DURATION is
+	to_date_time_duration: DT_DATE_TIME_DURATION
 			-- Date time duration equivalent to current date duration
 		do
 			create Result.make (year, month, day, 0, 0, 0)
@@ -397,7 +397,7 @@ feature -- Conversion
 			millisecond_set: Result.millisecond = 0
 		end
 
-	to_canonical (a_date: like date): like Current is
+	to_canonical (a_date: like date): like Current
 			-- Canonical version of current duration
 			-- when to be added to `a_date'
 		require
@@ -411,7 +411,7 @@ feature -- Conversion
 			same_duration: (a_date + Current).is_equal (a_date + Result)
 		end
 
-	to_definite (a_date: like date): like Current is
+	to_definite (a_date: like date): like Current
 			-- Definite version of current duration
 			-- when to be added to `a_date'
 		require
@@ -427,7 +427,7 @@ feature -- Conversion
 
 feature {NONE} -- Implementation
 
-	tmp_date: DT_DATE is
+	tmp_date: DT_DATE
 			-- Temporary date
 		once
 			create Result.make (1, 1, 1)

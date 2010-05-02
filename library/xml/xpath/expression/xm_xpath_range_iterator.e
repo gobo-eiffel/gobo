@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_min, a_max: INTEGER) is
+	make (a_min, a_max: INTEGER)
 			-- Establish invariant.
 		require
 			valid_maximum: a_max >= minimum
@@ -39,13 +39,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item: XM_XPATH_ITEM is
+	item: XM_XPATH_ITEM
 			-- Value or node at the current position
 		do
 			create {XM_XPATH_MACHINE_INTEGER_VALUE} Result.make (index + minimum - 1)
 		end
 
-	last_position: INTEGER is
+	last_position: INTEGER
 			-- Last position (= number of items in sequence)
 		do
 			Result := maximum - minimum + 1
@@ -53,19 +53,19 @@ feature -- Access
 
 feature -- Status report
 
-	is_realizable_iterator: BOOLEAN is
+	is_realizable_iterator: BOOLEAN
 			-- Is `Current' a realizable iterator?
 		do
 			Result := True
 		end
 
-	is_last_position_finder: BOOLEAN is
+	is_last_position_finder: BOOLEAN
 			-- Can `Current' find the last position?
 		do
 			Result := True
 		end
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
 			Result := not before and then index > maximum - minimum + 1
@@ -73,7 +73,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move to next position
 		do
 			index := index + 1
@@ -81,7 +81,7 @@ feature -- Cursor movement
 
 feature -- Evaluation
 
-	realize is
+	realize
 			-- Realize the sequence as a value.
 		do
 			create {XM_XPATH_INTEGER_RANGE} last_realized_value .make (minimum, maximum)
@@ -89,7 +89,7 @@ feature -- Evaluation
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 			create Result.make (minimum, maximum)

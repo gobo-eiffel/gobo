@@ -22,7 +22,7 @@ feature -- Access
 
 feature -- Evaluation
 
-	map (a_context: XM_XPATH_CONTEXT) is
+	map (a_context: XM_XPATH_CONTEXT)
 			-- Map `a_context.context_item' to a sequence
 		require
 			a_context_not_void: a_context /= Void

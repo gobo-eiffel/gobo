@@ -35,13 +35,13 @@ create
 
 feature {NONE} -- Implementation
 
-	make is
+	make
 		do
 		end
 
 feature -- Access
 
-	expanded_name: STRING is "element"
+	expanded_name: STRING = "element"
 			-- Expanded name of implemented scheme;
 
 	value: XM_XPATH_VALUE
@@ -57,7 +57,7 @@ feature -- Status report
 
 feature -- Element change
 
-	evaluate (a_resource: XM_XPATH_DOCUMENT; a_namespace_context: XM_XPOINTER_NAMESPACE_CONTEXT; some_data: STRING) is
+	evaluate (a_resource: XM_XPATH_DOCUMENT; a_namespace_context: XM_XPOINTER_NAMESPACE_CONTEXT; some_data: STRING)
 			-- Evaluate `some_data' against `a_resource' within `a_namespace_context'.
 		local
 			an_index, a_counter, a_child_number: INTEGER
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 	components: DS_LIST [STRING]
 			-- Components of scheme data
 
-	parse (some_data: STRING) is
+	parse (some_data: STRING)
 			-- Parse scheme data.
 		require
 			scheme_data_not_void: some_data /= Void

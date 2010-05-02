@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_string_value: STRING; a_parent: XM_XPATH_DOCUMENT; a_system_id: STRING) is
+	make (a_string_value: STRING; a_parent: XM_XPATH_DOCUMENT; a_system_id: STRING)
 			-- Establsh invariant.
 		require
 			string_value_not_void: a_string_value /= Void
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Type
 		do
 			Result := shared_node_kind_test (node_type)
@@ -56,18 +56,18 @@ feature -- Access
 	document: XM_XPATH_DOCUMENT
 			-- Document that owns this node
 
-	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE is
+	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE
 			-- Node sequence number (in document order).
 		do
 			create Result.make (1, 0)
 		end
-	
+
 	document_number: INTEGER
 
 	string_value: STRING
 			-- String value of `Current'
 
-	base_uri: STRING is
+	base_uri: STRING
 			-- Base URI as per XML:Base recommendation
 		do
 			if system_id.count > 0 then
@@ -76,11 +76,11 @@ feature -- Access
 		end
 
 	system_id: STRING
-		
-	line_number: INTEGER is -1
+
+	line_number: INTEGER = -1
 
 
-	node_kind: STRING is
+	node_kind: STRING
 			-- "attribute", "element",
 			-- "namespace", "processing-instruction",
 			-- "comment", or "text".
@@ -90,17 +90,17 @@ feature -- Access
 
 	parent: XM_XPATH_COMPOSITE_NODE
 			-- Parent of current node
-	
-	root: XM_XPATH_NODE is
+
+	root: XM_XPATH_NODE
 			-- The root node for `Current'
 		do
 			Result := document
 		end
-	
+
 	name_code: INTEGER
 			-- Name code this node - used in displaying names
 
-	node_name: STRING is
+	node_name: STRING
 			-- Qualified name
 		do
 			if name_code = -1 then
@@ -110,47 +110,47 @@ feature -- Access
 			end
 		end
 
-	document_root: XM_XPATH_DOCUMENT is
+	document_root: XM_XPATH_DOCUMENT
 			-- The document node for `Current'
 		do
 			Result := Void
 		end
 
-	typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE] is
+	typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE]
 			-- Typed value
 		do
 			create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ATOMIC_VALUE]} Result.make (create {XM_XPATH_STRING_VALUE}.make_untyped_atomic (string_value))
 		end
 
-	new_axis_iterator (an_axis_type: INTEGER): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
+	new_axis_iterator (an_axis_type: INTEGER): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
 			-- An enumeration over the nodes reachable by `an_axis_type' from this node
 		do
 			todo ("new_axis_iterator", False)
 		end
 
-	new_axis_iterator_with_node_test (an_axis_type: INTEGER; a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
+	new_axis_iterator_with_node_test (an_axis_type: INTEGER; a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
 			-- An enumeration over the nodes reachable by `an_axis_type' from this node;
 			-- Only nodes that match the pattern specified by `a_node_test' will be selected.
 		do
 			todo ("new_axis_iterator with node test", False)
 		end
 
-	atomized_value: XM_XPATH_VALUE is
+	atomized_value: XM_XPATH_VALUE
 			-- Typed value as atomic value or (unusually) sequence of atomic values.
 		do
 			create {XM_XPATH_STRING_VALUE} Result.make_untyped_atomic (string_value)
 		end
 
-	path: STRING is
+	path: STRING
 			-- XPath expression for location within document;
 			-- Used for reporting purposes.
 		do
 			Result := "/text()[1]"
 		end
-	
+
 feature -- Comparison
 
-	is_same_node (other: XM_XPATH_NODE): BOOLEAN is
+	is_same_node (other: XM_XPATH_NODE): BOOLEAN
 			-- Does `Current' represent the same node in the tree as `other'?
 		do
 			Result := Current = other
@@ -158,7 +158,7 @@ feature -- Comparison
 
 feature -- Element change
 
-	set_name_code (a_name_code: INTEGER) is
+	set_name_code (a_name_code: INTEGER)
 			-- Set name code.
 		require
 			positive_name_code: a_name_code >= 0
@@ -170,14 +170,14 @@ feature -- Element change
 
 feature -- Duplication
 
-	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
+	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN)
 			-- Copy `Current' to `a_receiver'.
 		do
 			a_receiver.notify_characters (string_value, 0)
 		end
 
 feature {XM_XPATH_NODE} -- Local
-	
+
 	is_possible_child: BOOLEAN
 
 invariant

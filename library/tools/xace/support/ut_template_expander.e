@@ -26,13 +26,13 @@ create
 
 feature {NONE} -- Initialisation
 
-	make is
+	make
 		do
 		end
 
 feature -- Access
 
-	expand_from_array (a_template: STRING; a_parameters: ARRAY [STRING]): STRING is
+	expand_from_array (a_template: STRING; a_parameters: ARRAY [STRING]): STRING
 			-- expands special tokens with parameters in template string
 			--
 			-- returns a new string based on `a_tmpl'
@@ -152,7 +152,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	expand_from_values (a_template: STRING; a_variables: KL_VALUES [STRING, STRING]): STRING is
+	expand_from_values (a_template: STRING; a_variables: KL_VALUES [STRING, STRING]): STRING
 			-- String where the variables have been
 			-- replaced by their values. The variables
 			-- are considered to be either ${[^}]*} or $[a-zA-Z0-9_]+

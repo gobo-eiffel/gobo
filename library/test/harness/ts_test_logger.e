@@ -14,14 +14,14 @@ deferred class TS_TEST_LOGGER
 
 feature -- Log
 
-	report_assertion (a_tag: STRING; a_passed: BOOLEAN) is
+	report_assertion (a_tag: STRING; a_passed: BOOLEAN)
 			-- Report whether assertion with tag `a_tag' passed or not.
 		require
 			a_tag_not_void: a_tag /= Void
 		deferred
 		end
 
-	report_abort is
+	report_abort
 			-- Report that current test has been aborted.
 		deferred
 		end

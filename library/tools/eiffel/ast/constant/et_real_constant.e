@@ -36,7 +36,7 @@ inherit
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset constant as it was just after it was last parsed.
 		do
 			type := Void
@@ -60,7 +60,7 @@ feature -- Access
 			-- Type of real constant;
 			-- Void if not determined yet
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -73,7 +73,7 @@ feature -- Access
 			end
 		end
 
-	first_position: ET_POSITION is
+	first_position: ET_POSITION
 			-- Position of first character of current node in source code
 		do
 			if cast_type /= Void then
@@ -85,13 +85,13 @@ feature -- Access
 			end
 		end
 
-	last_position: ET_POSITION is
+	last_position: ET_POSITION
 			-- Position of last character of current node in source code
 		do
 			create {ET_COMPRESSED_POSITION} Result.make (line, column + literal.count - 1)
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			if cast_type /= Void then
@@ -105,7 +105,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_negative: BOOLEAN is
+	is_negative: BOOLEAN
 			-- Is real value negative?
 		do
 			if sign /= Void then
@@ -113,12 +113,12 @@ feature -- Status report
 			end
 		end
 
-	is_real_constant: BOOLEAN is True
+	is_real_constant: BOOLEAN = True
 			-- Is current constant a real constant?
 
 feature -- Setting
 
-	set_sign (a_sign: like sign) is
+	set_sign (a_sign: like sign)
 			-- Set `sign' to `a_sign'.
 		do
 			sign := a_sign
@@ -126,7 +126,7 @@ feature -- Setting
 			sign_set: sign = a_sign
 		end
 
-	set_cast_type (a_type: like cast_type) is
+	set_cast_type (a_type: like cast_type)
 			-- Set `cast_type' to `a_type'.
 		do
 			cast_type := a_type
@@ -134,7 +134,7 @@ feature -- Setting
 			cast_type_set: cast_type = a_type
 		end
 
-	set_type (a_type: like type) is
+	set_type (a_type: like type)
 			-- Set `type' to `a_type'.
 		do
 			type := a_type
@@ -144,7 +144,7 @@ feature -- Setting
 
 feature -- Type conversion
 
-	manifest_constant_convert_feature (a_source_type: ET_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_CONVERT_FEATURE is
+	manifest_constant_convert_feature (a_source_type: ET_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_CONVERT_FEATURE
 			-- Implicit feature to convert `Current' of type `a_source_type' to `a_target_type'.
 			-- This is only possible when there is no explicit type cast and the value of the
 			-- constant can be represented in `a_target_type'.

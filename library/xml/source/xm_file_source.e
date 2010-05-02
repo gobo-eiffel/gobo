@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_filename: STRING) is
+	make (a_filename: STRING)
 			-- Create a new file source.
 		require
 			a_filename_not_void: a_filename /= Void
@@ -49,7 +49,7 @@ feature -- Access
 	filename: STRING
 			-- File name
 
-	uri: STRING is
+	uri: STRING
 			-- File URI
 		do
 			Result := STRING_.concat ("file:", filename)
@@ -57,7 +57,7 @@ feature -- Access
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Textual representation
 		do
 			Result := filename

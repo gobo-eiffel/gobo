@@ -23,7 +23,7 @@ inherit
 	XM_XPATH_SHARED_EXPRESSION_FACTORY
 
 	XM_XPATH_SHARED_ANY_ITEM_TYPE
-	
+
 	XM_XPATH_TYPE
 
 	XM_XPATH_AXIS
@@ -42,7 +42,7 @@ create
 
 feature -- Test
 
-	test_filtered_path_two is
+	test_filtered_path_two
 		-- Test evaluation of "//fred[position() = last()".
 		local
 			l_expression: XM_XPATH_EXPRESSION
@@ -81,7 +81,7 @@ feature -- Test
 
 feature -- Setting
 
-	set_up is
+	set_up
 		do
 			conformance.set_basic_xslt_processor
 		end

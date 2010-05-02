@@ -24,7 +24,7 @@ inherit
 
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
-   
+
 	UT_SHARED_FILE_URI_ROUTINES
 		export {NONE} all end
 
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize `Current'.
 		do
 			create error_listener.make (Do_not_recover, create {UT_ERROR_HANDLER}.make_standard)
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	error_listener: XM_XSLT_DEFAULT_ERROR_LISTENER 
+	error_listener: XM_XSLT_DEFAULT_ERROR_LISTENER
 			-- Destination for error messages and warnings
 
 	encoder_factory: XM_XSLT_ENCODER_FACTORY
@@ -67,7 +67,7 @@ feature -- Access
 
 feature {NONE} -- Basic operations
 
-	parse_xml_file (a_file_name: STRING) is
+	parse_xml_file (a_file_name: STRING)
 			-- Parse and serialize `a_file_name'.
 		require
 			a_file_name_not_void: a_file_name /= Void
@@ -103,7 +103,7 @@ feature {NONE} -- Basic operations
 			l_parser.parse_from_system (l_uri.full_reference)
 		end
 
-	current_directory_base: UT_URI is
+	current_directory_base: UT_URI
 			-- URI of current directory
 		local
   			l_cwd: KI_PATHNAME
@@ -114,7 +114,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Argument processing
 
-	process_arguments is
+	process_arguments
 			-- Modify `output_properties' according to arguments.
 		require
 			arguments_parser_not_void: arguments_parser /= Void
@@ -165,10 +165,10 @@ feature {NONE} -- Argument processing
 
 feature {NONE} -- Arguments
 
-	Yes_value: STRING is "yes"
+	Yes_value: STRING = "yes"
 			-- Parameter value of "yes"
 
-	Omit_value: STRING is "omit"
+	Omit_value: STRING = "omit"
 			-- Parameter value of "omit"
 
 	arguments_parser: AP_PARSER
@@ -184,16 +184,16 @@ feature {NONE} -- Arguments
 
 	doctype_public_option: AP_STRING_OPTION
 			-- Value for DOCTYPE PUBLIC (requires `doctype_system_option')
-	
+
 	doctype_system_option: AP_STRING_OPTION
 			-- Value for DOCTYPE SYSTEM.
-	
+
 	encoding_option: AP_STRING_OPTION
 			-- Value for encoding
-	
+
 	escape_uri_attributes_option: AP_ENUMERATION_OPTION
 			-- Value for escape-uri-attributes
-	
+
 	include_content_type_option: AP_ENUMERATION_OPTION
 			-- Value for include-content-type
 
@@ -202,7 +202,7 @@ feature {NONE} -- Arguments
 
 	media_type_option: AP_STRING_OPTION
 			-- Value for media-type
-	
+
 	normalization_form_option: AP_ENUMERATION_OPTION
 			-- Value for normalization-form
 
@@ -211,14 +211,14 @@ feature {NONE} -- Arguments
 
 	standalone_option: AP_ENUMERATION_OPTION
 			-- Value for standalone
-	
+
 	undeclare_prefixes_option: AP_ENUMERATION_OPTION
 			-- Value for undeclare-prefixes
 
 	version_option: AP_STRING_OPTION
 			-- Value for version
-	
-	create_arguments_parser is
+
+	create_arguments_parser
 			-- Create options and parameters structures and parser.
 		do
 			create arguments_parser.make
@@ -257,7 +257,7 @@ feature {NONE} -- Arguments
 			version_option_not_void: version_option /= Void
 		end
 
-	create_method_option is
+	create_method_option
 			-- Create and configure `method_option'.
 		do
 			create method_option.make ('m', "method")
@@ -272,7 +272,7 @@ feature {NONE} -- Arguments
 			method_option_not_void: method_option /= Void
 		end
 
-	create_bom_option is
+	create_bom_option
 			-- Create and configure `bom_option'.
 		do
 			create bom_option.make ('b', "byte-order-mark")
@@ -285,7 +285,7 @@ feature {NONE} -- Arguments
 			bom_option_not_void: bom_option /= Void
 		end
 
-	create_doctype_public_option is
+	create_doctype_public_option
 			-- Create and configure `doctype_public_option'.
 		do
 			create doctype_public_option.make ('p', "doctype-public")
@@ -296,8 +296,8 @@ feature {NONE} -- Arguments
 		ensure
 			doctype_public_option_not_void: doctype_public_option /= Void
 		end
-	
-	create_doctype_system_option is
+
+	create_doctype_system_option
 			-- Create and configure `doctype_system_option'.
 		do
 			create doctype_system_option.make ('s', "doctype-system")
@@ -309,7 +309,7 @@ feature {NONE} -- Arguments
 			doctype_system_option_not_void: doctype_system_option /= Void
 		end
 
-	create_encoding_option is
+	create_encoding_option
 			-- Create and configure `encoding_option'.
 		do
 			create encoding_option.make ('n', "encoding")
@@ -321,7 +321,7 @@ feature {NONE} -- Arguments
 			encoding_option_not_void: encoding_option /= Void
 		end
 
-	create_escape_uri_attributes_option is
+	create_escape_uri_attributes_option
 			-- Create and configure `escape_uri_attributes_option'.
 		do
 			create escape_uri_attributes_option.make ('e', "escape-uri-attributes")
@@ -334,7 +334,7 @@ feature {NONE} -- Arguments
 			escape_uri_attributes_option_not_void: escape_uri_attributes_option /= Void
 		end
 
-	create_include_content_type_option is
+	create_include_content_type_option
 			-- Create and configure `include_content_type_option'.
 		do
 			create include_content_type_option.make ('i', "include-content-type")
@@ -347,7 +347,7 @@ feature {NONE} -- Arguments
 			include_content_type_option_not_void: include_content_type_option /= Void
 		end
 
-	create_indent_option is
+	create_indent_option
 			-- Create and configure `indent_option'.
 		do
 			create indent_option.make ('d', "indent")
@@ -360,7 +360,7 @@ feature {NONE} -- Arguments
 			indent_option_not_void: indent_option /= Void
 		end
 
-	create_media_type_option is
+	create_media_type_option
 			-- Create and configure `media_type_option'.
 		do
 			create media_type_option.make ('t', "media-type")
@@ -371,8 +371,8 @@ feature {NONE} -- Arguments
 		ensure
 			media_type_option_not_void: media_type_option /= Void
 		end
-	
-	create_normalization_form_option is
+
+	create_normalization_form_option
 			-- Create and configure `normalization_form_option'.
 		do
 			create normalization_form_option.make ('f', "normalization-form")
@@ -386,8 +386,8 @@ feature {NONE} -- Arguments
 		ensure
 			normalization_form_option_not_void: normalization_form_option /= Void
 		end
-	
-	create_omit_xml_declaration_option is
+
+	create_omit_xml_declaration_option
 			-- Create and configure `omit_xml_declaration_option'.
 		do
 			create omit_xml_declaration_option.make ('o', "omit-xml-declaration")
@@ -399,8 +399,8 @@ feature {NONE} -- Arguments
 		ensure
 			omit_xml_declaration_option_not_void: omit_xml_declaration_option /= Void
 		end
-	
-	create_standalone_option is
+
+	create_standalone_option
 			-- Create and configure `standalone_option'.
 		do
 			create standalone_option.make ('l', "standalone")
@@ -414,7 +414,7 @@ feature {NONE} -- Arguments
 			standalone_option_not_void: standalone_option /= Void
 		end
 
-	create_undeclare_prefixes_option is
+	create_undeclare_prefixes_option
 			-- Create and configure `undeclare_prefixes_option'.
 		do
 			create undeclare_prefixes_option.make ('u', "undeclare-prefixes")
@@ -427,7 +427,7 @@ feature {NONE} -- Arguments
 			undeclare_prefixes_option_not_void: undeclare_prefixes_option /= Void
 		end
 
-	create_version_option is
+	create_version_option
 			-- Create and configure `version_option'.
 		do
 			create version_option.make ('v', "version")

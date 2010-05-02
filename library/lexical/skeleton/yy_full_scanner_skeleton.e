@@ -21,7 +21,7 @@ inherit
 
 feature -- Scanning
 
-	read_token is
+	read_token
 			-- Read a token from `input_buffer'.
 			-- Make result available in `last_token'.
 		local
@@ -223,7 +223,7 @@ feature {NONE} -- Tables
 
 feature {NONE} -- Implementation
 
-	yy_build_tables is
+	yy_build_tables
 			-- Build scanner tables.
 		deferred
 		ensure then
@@ -231,7 +231,7 @@ feature {NONE} -- Implementation
 			yy_accept_not_void: yy_accept /= Void
 		end
 
-	yy_previous_state: INTEGER is
+	yy_previous_state: INTEGER
 			-- State just before EOB character was reached
 		local
 			yy_cp, yy_nb: INTEGER
@@ -267,7 +267,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	yy_null_trans_state (yy_current_state: INTEGER): INTEGER is
+	yy_null_trans_state (yy_current_state: INTEGER): INTEGER
 			-- State reachable from `yy_current_state' through
 			-- a transition on NULL character; 0 if jammed
 		local
@@ -285,20 +285,20 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	yyNb_rows: INTEGER is
+	yyNb_rows: INTEGER
 			-- Number of rows in `yy_nxt'
 		deferred
 		end
 
-	yyNext_token: INTEGER is 1
+	yyNext_token: INTEGER = 1
 
-	yyMatch: INTEGER is 2
+	yyMatch: INTEGER = 2
 
-	yyFind_action: INTEGER is 3
+	yyFind_action: INTEGER = 3
 
-	yyDo_action: INTEGER is 4
+	yyDo_action: INTEGER = 4
 
-	yyFind_rule: INTEGER is 5
+	yyFind_rule: INTEGER = 5
 
 invariant
 

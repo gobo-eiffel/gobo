@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize `Current'.
 		do
 			-- Nothing to do in this default implementation.
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_supported (a_form: STRING): BOOLEAN is
+	is_supported (a_form: STRING): BOOLEAN
 			-- Is `a_from' a Unicode normalization form supported by `Current'?
 		require
 			a_form_not_void: a_form /= Void
@@ -52,7 +52,7 @@ feature -- Status report
 
 feature -- Access
 
-	normalizer (a_form: STRING): XM_XSLT_UNICODE_NORMALIZER is
+	normalizer (a_form: STRING): XM_XSLT_UNICODE_NORMALIZER
 			-- Unicode normalizer for `a_form'.
 		require
 			a_form_not_void: a_form /= Void

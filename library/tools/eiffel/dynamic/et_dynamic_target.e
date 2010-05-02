@@ -14,7 +14,7 @@ deferred class ET_DYNAMIC_TARGET
 
 feature -- Element change
 
-	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM) is
+	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM)
 			-- Add `a_type' coming from `a_type_set' to current target.
 		require
 			a_type_not_void: a_type /= Void
@@ -24,7 +24,7 @@ feature -- Element change
 		deferred
 		end
 
-	put_type_from_attachment (a_type: ET_DYNAMIC_TYPE; an_attachment: ET_DYNAMIC_ATTACHMENT; a_system: ET_DYNAMIC_SYSTEM) is
+	put_type_from_attachment (a_type: ET_DYNAMIC_TYPE; an_attachment: ET_DYNAMIC_ATTACHMENT; a_system: ET_DYNAMIC_SYSTEM)
 			-- Add `a_type' coming from `an_attachment' to current target.
 		require
 			a_type_not_void: a_type /= Void
@@ -35,7 +35,7 @@ feature -- Element change
 			put_type_from_type_set (a_type, an_attachment.source_type_set, a_system)
 		end
 
-	propagate_can_be_void (a_type_set: ET_DYNAMIC_TYPE_SET) is
+	propagate_can_be_void (a_type_set: ET_DYNAMIC_TYPE_SET)
 			-- Propagate the information that `a_type_set', from which types
 			-- are propagated, is the dynamic type set of an expression which
 			-- can be void at some point during execution.

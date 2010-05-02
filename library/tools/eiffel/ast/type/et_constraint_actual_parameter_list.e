@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create an empty actual generic parameter list.
 		do
 			left_bracket := tokens.left_bracket_symbol
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			precursor
 		end
 
-	make_with_capacity (nb: INTEGER) is
+	make_with_capacity (nb: INTEGER)
 			-- Create an empty actual generic parameter list with capacity `nb'.
 		do
 			left_bracket := tokens.left_bracket_symbol
@@ -55,7 +55,7 @@ feature -- Access
 	right_bracket: ET_SYMBOL
 			-- Right bracket
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -67,7 +67,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_left_bracket (l: like left_bracket) is
+	set_left_bracket (l: like left_bracket)
 			-- Set `left_bracket' to `l'.
 		require
 			l_not_void: l /= Void
@@ -77,7 +77,7 @@ feature -- Setting
 			left_bracket_set: left_bracket = l
 		end
 
-	set_right_bracket (r: like right_bracket) is
+	set_right_bracket (r: like right_bracket)
 			-- Set `right_bracket' to `r'.
 		require
 			r_not_void: r /= Void
@@ -90,7 +90,7 @@ feature -- Setting
 feature -- Conversion
 
 	resolved_syntactical_constraint (a_formals: ET_FORMAL_PARAMETER_LIST;
-		a_class: ET_CLASS; a_parser: ET_EIFFEL_PARSER_SKELETON): ET_ACTUAL_PARAMETER_LIST is
+		a_class: ET_CLASS; a_parser: ET_EIFFEL_PARSER_SKELETON): ET_ACTUAL_PARAMETER_LIST
 			-- Version of current types, appearing in the constraint of one
 			-- of the formal generic parameters in `a_formals' of `a_class',
 			-- where class names and formal generic parameter names have been
@@ -106,7 +106,7 @@ feature -- Conversion
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM]
 			-- Fixed array routines
 		once
 			create Result

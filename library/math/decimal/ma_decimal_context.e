@@ -66,7 +66,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_default is
+	make_default
 			-- Create a new default context for general purpose arithmetic (IEEE 854), single precision.
 		local
 			index: INTEGER
@@ -89,7 +89,7 @@ feature {NONE} -- Initialization
 			trap_underflow: is_trapped (Signal_underflow)
 		end
 
-	make_double is
+	make_double
 			-- Create a new double precision context.
 		do
 			make_default
@@ -103,7 +103,7 @@ feature {NONE} -- Initialization
 			trap_underflow: is_trapped (Signal_underflow)
 		end
 
-	make_extended is
+	make_extended
 			-- Create a new extended default context (IEEE 854), single precision.
 		do
 			make (Default_digits, Round_half_even)
@@ -113,7 +113,7 @@ feature {NONE} -- Initialization
 			default_rounding_mode: rounding_mode = Round_half_even
 		end
 
-	make_double_extended is
+	make_double_extended
 			-- Create a new extented default context, double precision.
 		do
 			make_extended
@@ -123,7 +123,7 @@ feature {NONE} -- Initialization
 			default_rounding_mode: rounding_mode = Round_half_even
 		end
 
-	make (a_digits, a_rounding_mode: INTEGER) is
+	make (a_digits, a_rounding_mode: INTEGER)
 			-- Create a new math context.
 		require
 			a_digits_valid: a_digits >= Minimum_digits and a_digits <= Maximum_digits
@@ -147,7 +147,7 @@ feature -- Access
 			-- The DECIMAL operators use this value to determine the precision of results.
 			-- Note that leading zeros (in the integer part of a number) are never significant.
 
-	precision: INTEGER is
+	precision: INTEGER
 			-- Synonym for 'digits'
 		do
 			Result := digits
@@ -166,7 +166,7 @@ feature -- Access
 			-- Exponent limit;
 			-- Exponents can range from -exponent_limit through +exponent_limit
 
-	e_tiny: INTEGER is
+	e_tiny: INTEGER
 			-- Minimum value of the exponent for subnormal numbers
 		do
 			Result := (-exponent_limit) - (digits - 1)
@@ -174,7 +174,7 @@ feature -- Access
 
 feature -- Access
 
-	default_context: MA_DECIMAL_CONTEXT is
+	default_context: MA_DECIMAL_CONTEXT
 			-- Default context for general purpose arithmetic
 		obsolete
 			"[050911] Use MA_SHARED_DECIMAL_CONTEXT instead."
@@ -186,7 +186,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_flagged (a_signal: INTEGER): BOOLEAN is
+	is_flagged (a_signal: INTEGER): BOOLEAN
 			-- Is `a_signal' flagged?
 		require
 			valid_signal: valid_signal (a_signal)
@@ -194,7 +194,7 @@ feature -- Status report
 			Result := flags.item (a_signal)
 		end
 
-	is_trapped (a_signal: INTEGER): BOOLEAN is
+	is_trapped (a_signal: INTEGER): BOOLEAN
 			-- Is `a_signal' trapped?
 		require
 			valid_signal: valid_signal (a_signal)
@@ -202,7 +202,7 @@ feature -- Status report
 			Result := traps.item (a_signal)
 		end
 
-	valid_signal (a_signal: INTEGER): BOOLEAN is
+	valid_signal (a_signal: INTEGER): BOOLEAN
 			-- Is `a_signal' a valid one?
 		do
 			Result := INTEGER_ARRAY_.has (signals, a_signal)
@@ -216,7 +216,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_digits (some_digits: INTEGER) is
+	set_digits (some_digits: INTEGER)
 			-- Set `digits' to `some_digits'.
 		require
 			some_digits_valid: some_digits >= Minimum_digits and some_digits <= Maximum_digits
@@ -226,7 +226,7 @@ feature -- Element change
 			digits_set: digits = some_digits
 		end
 
-	set_exponent_limit (a_limit: INTEGER) is
+	set_exponent_limit (a_limit: INTEGER)
 			-- Set `exponent_limit' to `a_limit'.
 		require
 			limit_positive: a_limit >= 0
@@ -236,19 +236,19 @@ feature -- Element change
 			limit_set: exponent_limit = a_limit
 		end
 
-	enable_exception_on_trap is
+	enable_exception_on_trap
 			-- Enable exception when trap occurs.
 		do
 			exception_on_trap := True
 		end
 
-	disable_exception_on_trap is
+	disable_exception_on_trap
 			-- Disable exception when trap occurs.
 		do
 			exception_on_trap := False
 		end
 
-	enable_trap (a_signal: INTEGER) is
+	enable_trap (a_signal: INTEGER)
 			-- Enable trapping of `a_signal'.
 		require
 			valid_signal: valid_signal (a_signal)
@@ -258,7 +258,7 @@ feature -- Element change
 			trapped_signal: is_trapped (a_signal)
 		end
 
-	disable_trap (a_signal: INTEGER) is
+	disable_trap (a_signal: INTEGER)
 			-- Enable trapping of `a_signal'.
 		require
 			valid_signal: valid_signal (a_signal)
@@ -268,7 +268,7 @@ feature -- Element change
 			not_trapped_signal: not is_trapped (a_signal)
 		end
 
-	set_flag (a_signal: INTEGER) is
+	set_flag (a_signal: INTEGER)
 			-- Flag `a_signal'.
 		require
 			valid_signal: valid_signal (a_signal)
@@ -278,7 +278,7 @@ feature -- Element change
 			flagged_signal: is_flagged (a_signal)
 		end
 
-	reset_flag (a_signal: INTEGER) is
+	reset_flag (a_signal: INTEGER)
 			-- Reset `a_signal'.
 		require
 			valid_signal: valid_signal (a_signal)
@@ -288,7 +288,7 @@ feature -- Element change
 			unflagged_signal: not is_flagged (a_signal)
 		end
 
-	reset_flags is
+	reset_flags
 			-- Reset all signals to zero.
 		local
 			i, nb: INTEGER
@@ -304,7 +304,7 @@ feature -- Element change
 			end
 		end
 
-	set_rounding_mode (a_mode: INTEGER) is
+	set_rounding_mode (a_mode: INTEGER)
 			-- Set `rounding_mode' to `a_mode'.
 		require
 			valid_mode: INTEGER_ARRAY_.has (Rounds, a_mode)
@@ -314,7 +314,7 @@ feature -- Element change
 			rounding_mode_set: rounding_mode = a_mode
 		end
 
-	set_extended is
+	set_extended
 			-- Set `is_extended' to True.
 		do
 			is_extended := True
@@ -322,7 +322,7 @@ feature -- Element change
 			extended: is_extended
 		end
 
-	set_normal is
+	set_normal
 			-- Set `is_extended' to False.
 		do
 			is_extended := False
@@ -332,7 +332,7 @@ feature -- Element change
 
 feature -- Conversion
 
-	out: STRING is
+	out: STRING
 			-- Printable representation
 		do
 			create Result.make (30)
@@ -344,7 +344,7 @@ feature -- Conversion
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' equal to Current?
 		do
 			Result := digits = other.digits
@@ -358,7 +358,7 @@ feature -- Comparison
 
 feature -- Basic operations
 
-	signal (a_signal: INTEGER; a_message: STRING) is
+	signal (a_signal: INTEGER; a_message: STRING)
 			-- Raise flag `a_signal' for `a_message' reason.
 		require
 			valid_signal: valid_signal (a_signal)
@@ -381,7 +381,7 @@ feature -- Basic operations
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Copy `other'.
 		do
 			standard_copy (other)
@@ -399,7 +399,7 @@ feature {MA_DECIMAL_HANDLER, MA_DECIMAL_CONTEXT} -- Signals
 
 feature {MA_DECIMAL} -- Implementation
 
-	force_digits (d: INTEGER) is
+	force_digits (d: INTEGER)
 			-- Force digits to `d', just for do_underflow.
 		require
 			d_positive: d >= 0

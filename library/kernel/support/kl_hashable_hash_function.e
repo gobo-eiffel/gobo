@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	hash_code (v: G): INTEGER is
+	hash_code (v: G): INTEGER
 			-- Hash code for `v'
 		do
 			Result := v.hash_code

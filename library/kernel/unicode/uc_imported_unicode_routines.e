@@ -14,7 +14,7 @@ class UC_IMPORTED_UNICODE_ROUTINES
 
 feature -- Access
 
-	unicode: UC_UNICODE_ROUTINES is
+	unicode: UC_UNICODE_ROUTINES
 			-- Unicode routines
 		once
 			create Result

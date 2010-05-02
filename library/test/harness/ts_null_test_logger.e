@@ -22,19 +22,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new null logger.
 		do
 		end
 
 feature -- Log
 
-	report_assertion (a_tag: STRING; a_passed: BOOLEAN) is
+	report_assertion (a_tag: STRING; a_passed: BOOLEAN)
 			-- Report whether assertion with tag `a_tag' passed or not.
 		do
 		end
 
-	report_abort is
+	report_abort
 			-- Report that current test has been aborted.
 		do
 		end

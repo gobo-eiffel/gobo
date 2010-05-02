@@ -40,7 +40,7 @@ create
 feature {NONE} -- Initialization
 
 	make (an_executable: like executable; a_body: like body; a_function_name: like function_name; a_fingerprint, a_arity: INTEGER; a_system_id: like system_id;
-			a_line_number: like line_number; a_slot_manager: like slot_manager; a_result_type: like result_type; memo_function: BOOLEAN) is
+			a_line_number: like line_number; a_slot_manager: like slot_manager; a_result_type: like result_type; memo_function: BOOLEAN)
 				-- Establish invariant
 		require
 			executable_not_void: an_executable /= Void
@@ -85,7 +85,7 @@ feature -- Access
 	parameter_count: INTEGER
 			-- Number of parameters passed
 
-	evaluation_mode: INTEGER is
+	evaluation_mode: INTEGER
 			-- Method used to evaluate `Current'
 		do
 			if cached_evaluation_mode = Evaluation_method_undecided then
@@ -97,13 +97,13 @@ feature -- Access
 			evaluation_mode_small_enough: Result <= Create_memo_closure
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- hash code
 		do
 			Result := function_name.hash_code
 		end
 
-	parameter_references (a_binding: XM_XPATH_BINDING): INTEGER is
+	parameter_references (a_binding: XM_XPATH_BINDING): INTEGER
 			-- Approximate count of references by parameters of `Current' to `a_binding'
 			-- If `a_binding' is a user-function parameter of `Current' then return 1.
 			-- Else return many.
@@ -126,7 +126,7 @@ feature -- Access
 			if not found then Result := Many_references end
 		end
 
-	system_id_from_module_number (a_module_number: INTEGER): STRING is
+	system_id_from_module_number (a_module_number: INTEGER): STRING
 			-- System identifier
 		do
 			Result := executable.system_id (a_module_number)
@@ -137,13 +137,13 @@ feature -- Status report
 	is_memo_function: BOOLEAN
 			-- Is `Current' a memo function?
 
-	is_user_function: BOOLEAN is
+	is_user_function: BOOLEAN
 			-- Is `Current' a compiled user function?
 		do
 			Result := True
 		end
 
-	is_computed_expression: BOOLEAN is
+	is_computed_expression: BOOLEAN
 			-- Is `Current' a computed expression?
 		do
 			Result := False
@@ -154,7 +154,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	call (a_return_value: DS_CELL [XM_XPATH_VALUE]; a_actual_arguments: ARRAY [XM_XPATH_VALUE]; a_parameter_count: INTEGER; a_context: XM_XSLT_EVALUATION_CONTEXT; a_evaluate_tail_calls: BOOLEAN) is
+	call (a_return_value: DS_CELL [XM_XPATH_VALUE]; a_actual_arguments: ARRAY [XM_XPATH_VALUE]; a_parameter_count: INTEGER; a_context: XM_XSLT_EVALUATION_CONTEXT; a_evaluate_tail_calls: BOOLEAN)
 			-- Evaluate function call.
 			-- Result returned as `a_return_value.item'.
 		require
@@ -184,7 +184,7 @@ feature -- Evaluation
 			called_value_not_void: a_return_value.item /= Void -- but may be an error value
 		end
 
-	generate_events (a_actual_arguments: ARRAY [XM_XPATH_VALUE]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_events (a_actual_arguments: ARRAY [XM_XPATH_VALUE]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		require
 			a_actual_arguments_not_void: a_actual_arguments /= Void
@@ -197,7 +197,7 @@ feature -- Evaluation
 
 feature -- Element change
 
-	compute_evaluation_mode is
+	compute_evaluation_mode
 			-- Compute and set `evaluation_mode'.
 		do
 			if is_tail_recursive or is_memo_function then
@@ -207,7 +207,7 @@ feature -- Element change
 			end
 		end
 
-	set_parameter_definitions (a_parameters: DS_ARRAYED_LIST [XM_XSLT_USER_FUNCTION_PARAMETER]) is
+	set_parameter_definitions (a_parameters: DS_ARRAYED_LIST [XM_XSLT_USER_FUNCTION_PARAMETER])
 			-- Set `parameter_definitions'.
 		require
 			parameter_definitions_not_void: a_parameters /= Void
@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 	cached_evaluation_mode: INTEGER
 			-- Remembered value for `evaluation_mode'
 
-	put_cached_value (a_transformer: XM_XSLT_TRANSFORMER; a_actual_arguments: ARRAY [XM_XPATH_VALUE]; a_cached_result: XM_XPATH_VALUE) is
+	put_cached_value (a_transformer: XM_XSLT_TRANSFORMER; a_actual_arguments: ARRAY [XM_XPATH_VALUE]; a_cached_result: XM_XPATH_VALUE)
 			-- Save value in cache.
 		require
 			memo_function: is_memo_function
@@ -244,7 +244,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fetch_cached_value (a_return_value: DS_CELL [XM_XPATH_VALUE]; a_transformer: XM_XSLT_TRANSFORMER; a_actual_arguments: ARRAY [XM_XPATH_VALUE]) is
+	fetch_cached_value (a_return_value: DS_CELL [XM_XPATH_VALUE]; a_transformer: XM_XSLT_TRANSFORMER; a_actual_arguments: ARRAY [XM_XPATH_VALUE])
 			-- Save value from cache into `a_return_value.item'.
 		require
 			a_return_value_not_void: a_return_value /= Void
@@ -268,7 +268,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	calculate_combined_key (a_key: DS_CELL [STRING]; a_actual_arguments: ARRAY [XM_XPATH_VALUE]; a_transformer: XM_XSLT_TRANSFORMER) is
+	calculate_combined_key (a_key: DS_CELL [STRING]; a_actual_arguments: ARRAY [XM_XPATH_VALUE]; a_transformer: XM_XSLT_TRANSFORMER)
 			-- Calculate representation of all argument values.
 		require
 			a_key_not_void: a_key /= Void
@@ -337,7 +337,7 @@ feature {NONE} -- Implementation
 			error_or_combined_key_set: not a_transformer.is_error implies a_key.item /= Void
 		end
 
-	code_one: CHARACTER is
+	code_one: CHARACTER
 			-- Control-A
 		once
 			Result := INTEGER_.to_character (1)
@@ -345,7 +345,7 @@ feature {NONE} -- Implementation
 			code_is_one: Result.code = 1
 		end
 
-	code_two: CHARACTER is
+	code_two: CHARACTER
 			-- Control-B
 		once
 			Result := INTEGER_.to_character (2)

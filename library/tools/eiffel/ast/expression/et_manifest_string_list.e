@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new list of manifest strings.
 		do
 			precursor
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			right_parenthesis := tokens.right_parenthesis_symbol
 		end
 
-	make_with_capacity (nb: INTEGER) is
+	make_with_capacity (nb: INTEGER)
 			-- Create a new lits of manifest strings with capacity `nb'.
 		do
 			precursor (nb)
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	manifest_string (i: INTEGER): ET_MANIFEST_STRING is
+	manifest_string (i: INTEGER): ET_MANIFEST_STRING
 			-- Manifest string at index `i' in list
 		require
 			i_large_enough: i >= 1
@@ -62,7 +62,7 @@ feature -- Access
 	right_parenthesis: ET_SYMBOL
 			-- Right parenthesis
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -72,19 +72,19 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := left_parenthesis
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := right_parenthesis
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := right_parenthesis.break
@@ -92,7 +92,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_left_parenthesis (l: like left_parenthesis) is
+	set_left_parenthesis (l: like left_parenthesis)
 			-- Set `left_parenthesis' to `l'.
 		require
 			l_not_void: l /= Void
@@ -102,7 +102,7 @@ feature -- Setting
 			left_parenthesis_set: left_parenthesis = l
 		end
 
-	set_right_parenthesis (r: like right_parenthesis) is
+	set_right_parenthesis (r: like right_parenthesis)
 			-- Set `right_parenthesis' to `r'.
 		require
 			r_not_void: r /= Void
@@ -114,7 +114,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_manifest_string_list (Current)
@@ -122,7 +122,7 @@ feature -- Processing
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_MANIFEST_STRING_ITEM] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_MANIFEST_STRING_ITEM]
 			-- Fixed array routines
 		once
 			create Result

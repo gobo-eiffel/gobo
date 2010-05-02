@@ -14,12 +14,12 @@ class RX_PCRE_OPTION_ROUTINES
 
 feature -- Access
 
-	null_option: INTEGER is 0
+	null_option: INTEGER = 0
 			-- Null option
 
 feature -- Status report
 
-	is_option_caseless (an_option: INTEGER): BOOLEAN is
+	is_option_caseless (an_option: INTEGER): BOOLEAN
 			-- Is 'caseless' set in `an_option'?
 		require
 			valid_option: an_option >= null_option
@@ -27,7 +27,7 @@ feature -- Status report
 			Result := (((an_option // caseless_mask) \\ 2) = 1)
 		end
 
-	is_option_multiline (an_option: INTEGER): BOOLEAN is
+	is_option_multiline (an_option: INTEGER): BOOLEAN
 			-- Is 'multiline' set in `an_option'?
 		require
 			valid_option: an_option >= null_option
@@ -35,7 +35,7 @@ feature -- Status report
 			Result := (((an_option // multiline_mask) \\ 2) = 1)
 		end
 
-	is_option_dotall (an_option: INTEGER): BOOLEAN is
+	is_option_dotall (an_option: INTEGER): BOOLEAN
 			-- Is 'dotall' set in `an_option'?
 		require
 			valid_option: an_option >= null_option
@@ -43,7 +43,7 @@ feature -- Status report
 			Result := (((an_option // dotall_mask) \\ 2) = 1)
 		end
 
-	is_option_greedy (an_option: INTEGER): BOOLEAN is
+	is_option_greedy (an_option: INTEGER): BOOLEAN
 			-- Is 'greedy' set in `an_option'?
 		require
 			valid_option: an_option >= null_option
@@ -51,7 +51,7 @@ feature -- Status report
 			Result := (((an_option // greedy_mask) \\ 2) = 1)
 		end
 
-	is_option_extended (an_option: INTEGER): BOOLEAN is
+	is_option_extended (an_option: INTEGER): BOOLEAN
 			-- Is 'extended' set in `an_option'?
 		require
 			valid_option: an_option >= null_option
@@ -59,7 +59,7 @@ feature -- Status report
 			Result := (((an_option // extended_mask) \\ 2) = 1)
 		end
 
-	is_option_undef (an_option: INTEGER): BOOLEAN is
+	is_option_undef (an_option: INTEGER): BOOLEAN
 			-- Is 'undef' set in `an_option'?
 		require
 			valid_option: an_option >= null_option
@@ -67,7 +67,7 @@ feature -- Status report
 			Result := (((an_option // undef_mask) \\ 2) = 1)
 		end
 
-	is_option_ims (an_option: INTEGER): BOOLEAN is
+	is_option_ims (an_option: INTEGER): BOOLEAN
 			-- Is there no other flags than `caseless',
 			-- `multiline' and `dotall' set in `an_option'?
 		require
@@ -84,7 +84,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_option_caseless (an_option: INTEGER): INTEGER is
+	set_option_caseless (an_option: INTEGER): INTEGER
 			-- Set 'caseless' in `an_option'.
 		require
 			valid_option: an_option >= null_option
@@ -99,7 +99,7 @@ feature -- Status setting
 			caseless_set: is_option_caseless (Result)
 		end
 
-	unset_option_caseless (an_option: INTEGER): INTEGER is
+	unset_option_caseless (an_option: INTEGER): INTEGER
 			-- Unset 'caseless' in `an_option'.
 		require
 			valid_option: an_option >= null_option
@@ -114,7 +114,7 @@ feature -- Status setting
 			caseless_unset: not is_option_caseless (Result)
 		end
 
-	set_option_multiline (an_option: INTEGER): INTEGER is
+	set_option_multiline (an_option: INTEGER): INTEGER
 			-- Set 'multiline' in `an_option'.
 		require
 			valid_option: an_option >= null_option
@@ -129,7 +129,7 @@ feature -- Status setting
 			multiline_set: is_option_multiline (Result)
 		end
 
-	unset_option_multiline (an_option: INTEGER): INTEGER is
+	unset_option_multiline (an_option: INTEGER): INTEGER
 			-- Unset 'multiline' in `an_option'.
 		require
 			valid_option: an_option >= null_option
@@ -144,7 +144,7 @@ feature -- Status setting
 			multiline_unset: not is_option_multiline (Result)
 		end
 
-	set_option_dotall (an_option: INTEGER): INTEGER is
+	set_option_dotall (an_option: INTEGER): INTEGER
 			-- Set 'dotall' in `an_option'.
 		require
 			valid_option: an_option >= null_option
@@ -159,7 +159,7 @@ feature -- Status setting
 			dotall_set: is_option_dotall (Result)
 		end
 
-	unset_option_dotall (an_option: INTEGER): INTEGER is
+	unset_option_dotall (an_option: INTEGER): INTEGER
 			-- Unset 'dotall' in `an_option'.
 		require
 			valid_option: an_option >= null_option
@@ -174,7 +174,7 @@ feature -- Status setting
 			dotall_unset: not is_option_dotall (Result)
 		end
 
-	set_option_greedy (an_option: INTEGER): INTEGER is
+	set_option_greedy (an_option: INTEGER): INTEGER
 			-- Set 'greedy' in `an_option'.
 		require
 			valid_option: an_option >= null_option
@@ -189,7 +189,7 @@ feature -- Status setting
 			greedy_set: is_option_greedy (Result)
 		end
 
-	unset_option_greedy (an_option: INTEGER): INTEGER is
+	unset_option_greedy (an_option: INTEGER): INTEGER
 			-- Unset 'greedy' in `an_option'.
 		require
 			valid_option: an_option >= null_option
@@ -204,7 +204,7 @@ feature -- Status setting
 			greedy_unset: not is_option_greedy (Result)
 		end
 
-	set_option_extended (an_option: INTEGER): INTEGER is
+	set_option_extended (an_option: INTEGER): INTEGER
 			-- Set 'extended' in `an_option'.
 		require
 			valid_option: an_option >= null_option
@@ -219,7 +219,7 @@ feature -- Status setting
 			extended_set: is_option_extended (Result)
 		end
 
-	unset_option_extended (an_option: INTEGER): INTEGER is
+	unset_option_extended (an_option: INTEGER): INTEGER
 			-- Unset 'extended' in `an_option'.
 		require
 			valid_option: an_option >= null_option
@@ -234,7 +234,7 @@ feature -- Status setting
 			extended_unset: not is_option_extended (Result)
 		end
 
-	set_option_undef (an_option: INTEGER): INTEGER is
+	set_option_undef (an_option: INTEGER): INTEGER
 			-- Set 'undef' in `an_option'.
 		require
 			valid_option: an_option >= null_option
@@ -249,7 +249,7 @@ feature -- Status setting
 			undef_set: is_option_undef (Result)
 		end
 
-	unset_option_undef (an_option: INTEGER): INTEGER is
+	unset_option_undef (an_option: INTEGER): INTEGER
 			-- Unset 'undef' in `an_option'.
 		require
 			valid_option: an_option >= null_option
@@ -266,7 +266,7 @@ feature -- Status setting
 
 feature -- Conversion
 
-	to_option_ims (an_option: INTEGER): INTEGER is
+	to_option_ims (an_option: INTEGER): INTEGER
 			-- Keep only `caseless', `multiline' and `dotall' flags.
 		require
 			valid_option: an_option >= null_option
@@ -288,16 +288,16 @@ feature -- Conversion
 
 feature {NONE} -- Constants
 
-	caseless_mask: INTEGER is 1
+	caseless_mask: INTEGER = 1
 
-	multiline_mask: INTEGER is 2
+	multiline_mask: INTEGER = 2
 
-	dotall_mask: INTEGER is 4
+	dotall_mask: INTEGER = 4
 
-	greedy_mask: INTEGER is 8
+	greedy_mask: INTEGER = 8
 
-	extended_mask: INTEGER is 16
+	extended_mask: INTEGER = 16
 
-	undef_mask: INTEGER is 32
+	undef_mask: INTEGER = 32
 
 end

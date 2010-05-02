@@ -22,7 +22,7 @@ create
 
 feature -- Test
 
-	test_make is
+	test_make
 			-- Test feature 'make'.
 		local
 			bs: BOOL_STRING
@@ -33,7 +33,7 @@ feature -- Test
 			assert ("item2", bs.item (2) = False)
 		end
 
-	test_all_true is
+	test_all_true
 			-- Test feature 'all_true'.
 		local
 			bs: BOOL_STRING
@@ -44,7 +44,7 @@ feature -- Test
 			assert ("item2", bs.item (2) = True)
 		end
 
-	test_all_false is
+	test_all_false
 			-- Test feature 'all_false'.
 		local
 			bs: BOOL_STRING
@@ -56,7 +56,7 @@ feature -- Test
 			assert ("item2", bs.item (2) = False)
 		end
 
-	test_conjuncted is
+	test_conjuncted
 			-- Test feature 'conjuncted alias "and"'.
 		local
 			bs1, bs2, bs3: BOOL_STRING
@@ -70,7 +70,7 @@ feature -- Test
 			assert ("item2", bs3.item (2) = False)
 		end
 
-	test_disjuncted is
+	test_disjuncted
 			-- Test feature 'disjuncted alias "or"'.
 		local
 			bs1, bs2, bs3: BOOL_STRING
@@ -84,7 +84,7 @@ feature -- Test
 			assert ("item2", bs3.item (2) = True)
 		end
 
-	test_disjuncted_exclusive is
+	test_disjuncted_exclusive
 			-- Test feature 'disjuncted_exclusive alias "xor"'.
 		local
 			bs1, bs2, bs3: BOOL_STRING
@@ -98,7 +98,7 @@ feature -- Test
 			assert ("item2", bs3.item (2) = True)
 		end
 
-	test_negated is
+	test_negated
 			-- Test feature 'negated alias "not"'.
 		local
 			bs1, bs2: BOOL_STRING
@@ -110,7 +110,7 @@ feature -- Test
 			assert ("item2", bs2.item (2) = True)
 		end
 
-	test_right_shifted is
+	test_right_shifted
 			-- Test feature 'right_shifted'.
 		local
 			bs1, bs2: BOOL_STRING
@@ -125,7 +125,7 @@ feature -- Test
 			assert ("item4", bs2.item (4) = True)
 		end
 
-	test_left_shifted is
+	test_left_shifted
 			-- Test feature 'left_shifted'.
 		local
 			bs1, bs2: BOOL_STRING

@@ -18,14 +18,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new AST factory.
 		do
 		end
 
 feature -- AST factory
 
-	new_cluster (a_name, a_pathname: STRING; a_universe: ET_UNIVERSE): ET_XACE_CLUSTER is
+	new_cluster (a_name, a_pathname: STRING; a_universe: ET_UNIVERSE): ET_XACE_CLUSTER
 			-- New cluster
 		require
 			a_name_not_void: a_name /= Void
@@ -37,7 +37,7 @@ feature -- AST factory
 			cluster_not_void: Result /= Void
 		end
 
-	new_clusters (a_cluster: ET_XACE_CLUSTER): ET_XACE_CLUSTERS is
+	new_clusters (a_cluster: ET_XACE_CLUSTER): ET_XACE_CLUSTERS
 			-- New cluster list
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -47,7 +47,7 @@ feature -- AST factory
 			clusters_not_void: Result /= Void
 		end
 
-	new_library: ET_XACE_LIBRARY_CONFIG is
+	new_library: ET_XACE_LIBRARY_CONFIG
 			-- New Xace library
 		do
 			create Result.make
@@ -55,7 +55,7 @@ feature -- AST factory
 			library_not_void: Result /= Void
 		end
 
-	new_mounted_library (a_pathname: STRING; a_library: ET_XACE_LIBRARY_CONFIG; a_position: XM_POSITION): ET_XACE_MOUNTED_LIBRARY is
+	new_mounted_library (a_pathname: STRING; a_library: ET_XACE_LIBRARY_CONFIG; a_position: XM_POSITION): ET_XACE_MOUNTED_LIBRARY
 			-- New mounted library
 		require
 			a_pathname_not_void: a_pathname /= Void
@@ -67,7 +67,7 @@ feature -- AST factory
 			mounted_library_not_void: Result /= Void
 		end
 
-	new_mounted_libraries: ET_XACE_MOUNTED_LIBRARIES is
+	new_mounted_libraries: ET_XACE_MOUNTED_LIBRARIES
 			-- New mounted library list
 		do
 			create Result.make_empty
@@ -75,7 +75,7 @@ feature -- AST factory
 			mounted_libraries_not_void: Result /= Void
 		end
 
-	new_options: ET_XACE_OPTIONS is
+	new_options: ET_XACE_OPTIONS
 			-- New option clause
 		do
 			create Result.make
@@ -83,7 +83,7 @@ feature -- AST factory
 			options_not_void: Result /= Void
 		end
 
-	new_class_options (a_name: STRING; an_option: ET_XACE_OPTIONS): ET_XACE_CLASS_OPTIONS is
+	new_class_options (a_name: STRING; an_option: ET_XACE_OPTIONS): ET_XACE_CLASS_OPTIONS
 			-- New options for class `a_name'
 		require
 			a_name_not_void: a_name /= Void
@@ -95,7 +95,7 @@ feature -- AST factory
 			class_options_not_void: Result /= Void
 		end
 
-	new_feature_options (a_name: STRING; an_option: ET_XACE_OPTIONS): ET_XACE_FEATURE_OPTIONS is
+	new_feature_options (a_name: STRING; an_option: ET_XACE_OPTIONS): ET_XACE_FEATURE_OPTIONS
 			-- New options for feature `a_name'
 		require
 			a_name_not_void: a_name /= Void
@@ -107,7 +107,7 @@ feature -- AST factory
 			feature_options_not_void: Result /= Void
 		end
 
-	new_system: ET_XACE_SYSTEM_CONFIG is
+	new_system: ET_XACE_SYSTEM_CONFIG
 			-- New Xace system
 		do
 			create Result.make

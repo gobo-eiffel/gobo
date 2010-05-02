@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Creation
 
-	make is
+	make
 			-- Reset.
 		do
 			create prefixes.make_default
@@ -43,13 +43,13 @@ feature {NONE} -- Creation
 		end
 
 feature {NONE} -- Default context
-	
+
 	default_namespaces: DS_LINKED_STACK [STRING]
 			-- Default namespace URI stack.
 
 feature -- Default
 
-	is_same_as_default (a_namespace: STRING): BOOLEAN is
+	is_same_as_default (a_namespace: STRING): BOOLEAN
 			-- Is namespace the same as the default one for the current element?
 		require
 			a_namespace_not_void: a_namespace /= Void
@@ -57,7 +57,7 @@ feature -- Default
 			Result := STRING_.same_string (a_namespace, default_namespaces.item)
 		end
 
-	set_default (a_namespace: STRING) is
+	set_default (a_namespace: STRING)
 			-- Set default namespace URI.
 		require
 			a_namespace_not_void: a_namespace /= Void
@@ -81,7 +81,7 @@ feature {NONE} -- Prefixed context
 
 feature -- Status
 
-	has (a_namespace: STRING): BOOLEAN is
+	has (a_namespace: STRING): BOOLEAN
 			-- Is namespace known to prefixes table?
 		require
 			a_namespace_not_void: a_namespace /= Void
@@ -105,7 +105,7 @@ feature -- Status
 			end
 		end
 
-	item (a_namespace: STRING): STRING is
+	item (a_namespace: STRING): STRING
 			-- Find prefix for namespace
 		require
 			a_namespace_not_void: a_namespace /= Void
@@ -118,7 +118,7 @@ feature -- Status
 			result_not_empty: Result /= Void implies not Result.is_empty
 		end
 
-	new_element_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING] is
+	new_element_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
 			-- New element cursor.
 		do
 			check in_element: not prefixes.is_empty end
@@ -129,13 +129,13 @@ feature -- Status
 
 feature -- Setting
 
-	force (a_prefix: STRING; a_namespace: STRING) is
+	force (a_prefix: STRING; a_namespace: STRING)
 			-- Add namespace, prefix to context.
 		require
 			a_namespace_not_void: a_namespace /= Void
 			a_namespace_not_empty: not a_namespace.is_empty
 			a_prefix_not_void: a_prefix /= Void
-			a_prefix_not_empty: not a_prefix.is_empty		
+			a_prefix_not_empty: not a_prefix.is_empty
 		do
 			prefixes.last.force (a_prefix, a_namespace)
 		ensure
@@ -145,20 +145,20 @@ feature -- Setting
 
 feature -- Status
 
-	element_has_prefix (a_prefix: STRING): BOOLEAN is
+	element_has_prefix (a_prefix: STRING): BOOLEAN
 			-- Is this prefix used in the top element?
 		require
 			a_prefix_not_void: a_prefix /= Void
-			a_prefix_not_empty: not a_prefix.is_empty		
+			a_prefix_not_empty: not a_prefix.is_empty
 		do
 			Result := element_prefixes.has (a_prefix)
 		end
 
-	element_prefix (a_prefix: STRING) is
+	element_prefix (a_prefix: STRING)
 			-- Declare prefix in use in top element.
 		require
 			a_prefix_not_void: a_prefix /= Void
-			a_prefix_not_empty: not a_prefix.is_empty		
+			a_prefix_not_empty: not a_prefix.is_empty
 		do
 			element_prefixes.force (a_prefix)
 		ensure
@@ -167,7 +167,7 @@ feature -- Status
 
 feature -- Elements
 
-	on_start_element is
+	on_start_element
 			-- Push context.
 		local
 			a_table: DS_HASH_TABLE [STRING, STRING]
@@ -181,7 +181,7 @@ feature -- Elements
 			default_namespaces.force (default_namespaces.item)
 		end
 
-	on_end_element is
+	on_end_element
 			-- Pop context.
 		do
 			check prefixes.count > 0 end

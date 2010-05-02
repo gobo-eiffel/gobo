@@ -1,7 +1,7 @@
 note
-	
+
 	description:
-	
+
 		"Test unicode character checking"
 
 	test_status: "ok_to_run"
@@ -26,34 +26,34 @@ create
 
 feature -- Test
 
-	test_empty is
+	test_empty
 			-- Empty tests.
 		do
 			assert_empty (characters_1_0)
 			assert_empty (characters_1_1)
 		end
-		
-	test_name is
+
+	test_name
 			-- Name tests.
 		do
 			assert_name (characters_1_0)
 			assert_name (characters_1_1)
 		end
-		
+
 feature {NONE} -- Test
 
-	assert_empty (a_characters: XM_UNICODE_CHARACTERS) is
+	assert_empty (a_characters: XM_UNICODE_CHARACTERS)
 			-- Test assertions with empty names.
 		require
 			a_characters_not_void: a_characters /= Void
 		do
 			assert ("empty_string", a_characters.is_string (""))
-			assert ("empty_name", not a_characters.is_name (""))			
-			assert ("empty_ncname", not a_characters.is_ncname (""))			
-			assert ("empty_qname", not a_characters.is_qname (""))			
+			assert ("empty_name", not a_characters.is_name (""))
+			assert ("empty_ncname", not a_characters.is_ncname (""))
+			assert ("empty_qname", not a_characters.is_qname (""))
 		end
-		
-	assert_name (a_characters: XM_UNICODE_CHARACTERS) is
+
+	assert_name (a_characters: XM_UNICODE_CHARACTERS)
 			-- Test trivial names.
 		require
 			a_characters_not_void: a_characters /= Void
@@ -63,8 +63,8 @@ feature {NONE} -- Test
 			assert ("colon", a_characters.is_name ("abc:de"))
 			assert ("colon_ncname", not a_characters.is_ncname ("ab:c-de"))
 		end
-		
-	assert_qname (a_characters: XM_UNICODE_CHARACTERS) is
+
+	assert_qname (a_characters: XM_UNICODE_CHARACTERS)
 			-- Test trivial Qname.
 		require
 			a_characters_not_void: a_characters /= Void
@@ -75,5 +75,5 @@ feature {NONE} -- Test
 			assert ("colon_last", not a_characters.is_qname ("abc:"))
 			assert ("colon_many", not a_characters.is_qname ("ab:cd:e"))
 		end
-		
+
 end

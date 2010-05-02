@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_feature: like current_feature; a_type: like target_type) is
+	make (a_feature: like current_feature; a_type: like target_type)
 			-- Create a new feature with its target base type.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -45,7 +45,7 @@ feature -- Access
 	target_type: ET_BASE_TYPE
 			-- Base type of the target
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			Result := current_feature.hash_code
@@ -53,7 +53,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_targeted_feature (other: ET_TARGETED_FEATURE): BOOLEAN is
+	same_targeted_feature (other: ET_TARGETED_FEATURE): BOOLEAN
 			-- Do `Current' and `other' represent the same feature
 			-- with the same target type?
 		require
@@ -66,7 +66,7 @@ feature -- Comparison
 
 feature -- Output
 
-	debug_output: STRING is
+	debug_output: STRING
 			-- String that should be displayed in debugger to represent `Current'
 		do
 			Result := target_type.to_text + "." + current_feature.lower_name

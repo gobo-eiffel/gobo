@@ -42,19 +42,19 @@ inherit
 
 feature -- Access
 
-	is_computed_expression: BOOLEAN is
+	is_computed_expression: BOOLEAN
 			-- Is `Current' a computed expression?
 		do
 			Result := True
 		end
 
-	as_computed_expression: XM_XPATH_COMPUTED_EXPRESSION is
+	as_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
 			-- `Current' seen as a computed expression
 		do
 			Result := Current
 		end
 
-	line_number: INTEGER is
+	line_number: INTEGER
 			-- Line number of `Current' within source document
 		do
 			if location_identifier = 0 then
@@ -66,7 +66,7 @@ feature -- Access
 			end
 		end
 
-	system_id: STRING is
+	system_id: STRING
 			-- System identifier of module containg `Current'
 		local
 			a_module_number: INTEGER
@@ -87,7 +87,7 @@ feature -- Access
 			end
 		end
 
-	system_id_from_module_number (a_module_number: INTEGER): STRING is
+	system_id_from_module_number (a_module_number: INTEGER): STRING
 			-- System identifier
 		do
 
@@ -100,7 +100,7 @@ feature -- Access
 			end
 		end
 
-	location_message: STRING is
+	location_message: STRING
 			-- Location text for messages
 		do
 			Result := "line " + line_number.out + " in module " + system_id
@@ -109,7 +109,7 @@ feature -- Access
 			location_message_not_empty: not Result.is_empty
 		end
 
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions of `Current'
 		do
 
@@ -120,19 +120,19 @@ feature -- Access
 			Result.set_equality_tester (expression_tester)
 		end
 
-	container: XM_XPATH_EXPRESSION_CONTAINER is
+	container: XM_XPATH_EXPRESSION_CONTAINER
 			-- Containing parent
 		do
 			Result := parent
 		end
 
-	parameter_references (a_binding: XM_XPATH_BINDING): INTEGER is
+	parameter_references (a_binding: XM_XPATH_BINDING): INTEGER
 			-- Approximate count of references by parameters of `Current' to `a_binding'
 		do
 			-- pre-condition cannot be met
 		end
 
-	is_repeated_sub_expression (a_child: XM_XPATH_EXPRESSION): BOOLEAN is
+	is_repeated_sub_expression (a_child: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Is `a_child' a repeatedly-evaluated sub-expression?
 		require
 			child_not_void: a_child /= Void
@@ -142,7 +142,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Are `Current' and `other' the same expression?
 		do
 			Result := Current = other
@@ -153,13 +153,13 @@ feature -- Status report
 	initialized: BOOLEAN
 			-- Has creation procedure completed?
 
-	frozen is_user_function: BOOLEAN is
+	frozen is_user_function: BOOLEAN
 			-- Is `Current' a compiled user function?
 		do
 			-- `False'
 		end
 
-	sub_expressions_have_cardinality: BOOLEAN is
+	sub_expressions_have_cardinality: BOOLEAN
 			-- Is `are_cardinalities_computed' satisfied for all `sub_expressions'?
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -171,7 +171,7 @@ feature -- Status report
 			end
 		end
 
-	sub_expressions_have_intrinsic_dependencies: BOOLEAN is
+	sub_expressions_have_intrinsic_dependencies: BOOLEAN
 			-- Is `are_intrinsic_dependencies_computed' satisfied for all `sub_expressions'?
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -183,7 +183,7 @@ feature -- Status report
 			end
 		end
 
-	sub_expressions_have_dependencies: BOOLEAN is
+	sub_expressions_have_dependencies: BOOLEAN
 			-- Is `are_dependencies_computed' satisfied for all `sub_expressions'?
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -195,7 +195,7 @@ feature -- Status report
 			end
 		end
 
-	sub_expressions_have_special_properties: BOOLEAN is
+	sub_expressions_have_special_properties: BOOLEAN
 			-- Is `are_special_properties_computed' satisfied for all `sub_expressions'?
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -209,7 +209,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	frozen compute_static_properties is
+	frozen compute_static_properties
 			-- Compute the static properties
 		require
 			not_yet_computed: not are_static_properties_computed
@@ -265,7 +265,7 @@ feature -- Status setting
 		end
 
 
-	compute_intrinsic_dependencies is
+	compute_intrinsic_dependencies
 			-- Determine the intrinsic dependencies of an expression.
 		require
 			not_yet_computed: not are_intrinsic_dependencies_computed
@@ -276,7 +276,7 @@ feature -- Status setting
 			computed: are_intrinsic_dependencies_computed
 		end
 
-	compute_dependencies is
+	compute_dependencies
 			-- Compute dependencies on context.
 			-- This default implementation computes them as
 			-- the union of the sub-expressions' dependencies.
@@ -307,7 +307,7 @@ feature -- Status setting
 			computed: are_dependencies_computed
 		end
 
-	reset_dependencies is
+	reset_dependencies
 			-- Re-compute dependencies.
 		require
 			dependencies_previously_computed: are_dependencies_computed
@@ -320,7 +320,7 @@ feature -- Status setting
 			computed: are_dependencies_computed
 		end
 
-	reset_static_properties is
+	reset_static_properties
 			-- Re-compute all static properties.
 		require
 			static_properties_previously_computed: are_static_properties_computed
@@ -337,7 +337,7 @@ feature -- Status setting
 			recomputed: are_static_properties_computed
 		end
 
-	conditionally_set_error_location is
+	conditionally_set_error_location
 			-- Copy location information into `error_value' if not set.
 		require
 			error_value_not_void: error_value /= Void
@@ -352,14 +352,14 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations
 		do
 			-- do nothing
 			a_replacement.put (Current)
 		end
 
-	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this subexpression.
 		do
 			-- do nothing
@@ -368,7 +368,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			create_iterator (a_context)
@@ -386,7 +386,7 @@ feature -- Evaluation
 			end
 		end
 
-	evaluate_as_string (a_context: XM_XPATH_CONTEXT) is
+	evaluate_as_string (a_context: XM_XPATH_CONTEXT)
 			-- Evaluate `Current' as a String
 		local
 			l_result: DS_CELL [XM_XPATH_ITEM]
@@ -405,7 +405,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterator over the values of a sequence
 		local
 			l_result: DS_CELL [XM_XPATH_ITEM]
@@ -433,7 +433,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over a node sequence.
 		local
 			l_result: DS_CELL [XM_XPATH_ITEM]
@@ -459,7 +459,7 @@ feature -- Evaluation
 			end
 		end
 
-	generate_events (a_context: XM_XPATH_CONTEXT) is
+	generate_events (a_context: XM_XPATH_CONTEXT)
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_result: DS_CELL [XM_XPATH_ITEM]
@@ -507,7 +507,7 @@ feature -- Evaluation
 			end
 		end
 
-	processed_eager_evaluation (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
+	processed_eager_evaluation (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE
 			-- Eager evaluation via `generate_events'
 		do
 			check
@@ -519,7 +519,7 @@ feature -- Evaluation
 
 feature -- Element change
 
-	set_source_location (a_module_number, a_line_number: INTEGER) is
+	set_source_location (a_module_number, a_line_number: INTEGER)
 			-- Set source location information.
 		require
 			positive_module_number: a_module_number >= 0
@@ -528,7 +528,7 @@ feature -- Element change
 			location_identifier := INTEGER_.bit_shift_left (a_module_number, module_number_shift) + a_line_number
 		end
 
-	set_location_identifier (a_location_identifier: INTEGER) is
+	set_location_identifier (a_location_identifier: INTEGER)
 			-- Set source location information.
 		do
 			location_identifier := a_location_identifier
@@ -536,7 +536,7 @@ feature -- Element change
 			location_identifier_set: location_identifier = a_location_identifier
 		end
 
-	copy_location_identifier (a_destination: XM_XPATH_EXPRESSION) is
+	copy_location_identifier (a_destination: XM_XPATH_EXPRESSION)
 			-- Copy source location information.
 		require
 			a_destination_not_void: a_destination /= Void
@@ -546,7 +546,7 @@ feature -- Element change
 			end
 		end
 
-	set_parent (a_container: XM_XPATH_EXPRESSION_CONTAINER) is
+	set_parent (a_container: XM_XPATH_EXPRESSION_CONTAINER)
 			-- Set `a_container' to be parent of `Current'.
 		require
 			not_self: a_container /= Current
@@ -556,7 +556,7 @@ feature -- Element change
 			parent_set: parent = a_container
 		end
 
-	adopt_child_expression (a_child: XM_XPATH_EXPRESSION) is
+	adopt_child_expression (a_child: XM_XPATH_EXPRESSION)
 			-- Adopt `a_child' if it is a computed expression.
 		require
 			a_child_not_void: a_child /= Void
@@ -607,7 +607,7 @@ feature -- Element change
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	native_implementations: INTEGER is
+	native_implementations: INTEGER
 			-- Natively-supported evaluation routines
 		do
 			if cardinality_allows_many then
@@ -617,7 +617,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			end
 		end
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		require
 			not_yet_computed: not are_cardinalities_computed
@@ -627,7 +627,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			computed: are_cardinalities_computed
 		end
 
-	compute_special_properties is
+	compute_special_properties
 			-- Compute special properties.
 		require
 			not_yet_computed: not are_special_properties_computed
@@ -643,7 +643,7 @@ feature {XM_XPATH_COMPUTED_EXPRESSION} -- Local
 	location_identifier: INTEGER
 			-- Index into SYSTEM ID array
 
-	accumulate_slots_used (a_set: DS_HASH_SET [INTEGER]) is
+	accumulate_slots_used (a_set: DS_HASH_SET [INTEGER])
 			-- Add all slot numbers used by `Current' to `a_set'.
 		require
 			set_not_void: a_set /= Void
@@ -669,7 +669,7 @@ feature {XM_XPATH_COMPUTED_EXPRESSION} -- Local
 
 feature {XM_XPATH_CLOSURE} -- Restricted
 
-	slots_used: DS_ARRAYED_LIST [INTEGER] is
+	slots_used: DS_ARRAYED_LIST [INTEGER]
 			-- Slot numbers in use
 		require
 			dependency_on_local_variables: depends_upon_local_variables
@@ -708,13 +708,13 @@ feature {NONE} -- Implementation
 	cached_slots_used: DS_ARRAYED_LIST [INTEGER]
 			-- Cached result of `slots_used'
 
-	line_number_mask: INTEGER is
+	line_number_mask: INTEGER
 			-- Bit mask for extracting line number from `location_identifer'
 		once
 			Result := 1048575
 		end
 
-	module_number_shift: INTEGER is 20
+	module_number_shift: INTEGER = 20
 			-- Number of bits to shift `location_identifer' for module number
 
 invariant

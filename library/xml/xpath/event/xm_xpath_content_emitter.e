@@ -66,7 +66,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_receiver: XM_XPATH_RECEIVER; a_callback: XM_CALLBACKS) is
+	make (a_receiver: XM_XPATH_RECEIVER; a_callback: XM_CALLBACKS)
 		-- Establish invariant
 		require
 			receiver_not_void: a_receiver /= Void
@@ -83,19 +83,19 @@ feature {NONE} -- Initialization
 
 feature -- Document type definition callbacks
 
-	on_doctype (a_name: STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN) is
+	on_doctype (a_name: STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN)
 			-- Document type declaration.
 		do
 			before_dtd := False
 		end
 
-	on_element_declaration (a_name: STRING; a_model: XM_DTD_ELEMENT_CONTENT) is
+	on_element_declaration (a_name: STRING; a_model: XM_DTD_ELEMENT_CONTENT)
 			-- Element declaration.
 		do
 			-- In the future add support for element typing?
 		end
 
-	on_attribute_declaration (an_element_name, a_name: STRING; a_model: XM_DTD_ATTRIBUTE_CONTENT) is
+	on_attribute_declaration (an_element_name, a_name: STRING; a_model: XM_DTD_ATTRIBUTE_CONTENT)
 			-- Attribute declaration, one event per attribute.
 		local
 			an_attribute_table: DS_HASH_TABLE [XM_DTD_ATTRIBUTE_CONTENT, STRING]
@@ -122,7 +122,7 @@ feature -- Document type definition callbacks
 		end
 
 	on_entity_declaration (an_entity_name: STRING; is_parameter: BOOLEAN; a_value: STRING;
-		an_id: XM_DTD_EXTERNAL_ID; a_notation_name: STRING) is
+		an_id: XM_DTD_EXTERNAL_ID; a_notation_name: STRING)
 			-- Entity declaration.
 		do
 			if an_id /= Void and then a_notation_name /= Void then
@@ -133,25 +133,25 @@ feature -- Document type definition callbacks
 			end
 		end
 
-	on_notation_declaration (a_notation_name: STRING; an_id: XM_DTD_EXTERNAL_ID) is
+	on_notation_declaration (a_notation_name: STRING; an_id: XM_DTD_EXTERNAL_ID)
 			-- Notation declaration.
 		do
 			-- do nothing
 		end
 
-	on_dtd_processing_instruction (a_name: STRING; a_content: STRING) is
+	on_dtd_processing_instruction (a_name: STRING; a_content: STRING)
 			-- Processing instruction within DTD.
 		do
 			-- do nothing
 		end
 
-	on_dtd_comment (a_content: STRING) is
+	on_dtd_comment (a_content: STRING)
 			-- Processing a comment within DTD.
 		do
 			-- do nothing
 		end
 
-	on_dtd_end is
+	on_dtd_end
 			-- End of DTD (last event in a document type).
 		do
 			-- do nothing
@@ -159,7 +159,7 @@ feature -- Document type definition callbacks
 
 feature -- Document events
 
-	on_start is
+	on_start
 			-- Called when parsing starts.
 		do
 			debug ("XPath content emitter")
@@ -170,7 +170,7 @@ feature -- Document events
 			Precursor
 		end
 
-	on_finish is
+	on_finish
 			-- Called when parsing finished
 		do
 			debug ("XPath content emitter")
@@ -181,7 +181,7 @@ feature -- Document events
 			Precursor
 		end
 
-	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN) is
+	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN)
 			-- XML declaration.
 		do
 			debug ("XPath content emitter")
@@ -198,7 +198,7 @@ feature -- Document events
 
 feature -- Errors
 
-	on_error (a_message: STRING) is
+	on_error (a_message: STRING)
 			-- Event producer detected an error.
 		do
 			debug ("XPath content emitter")
@@ -212,7 +212,7 @@ feature -- Errors
 
 feature -- Meta
 
-	on_processing_instruction (a_name: STRING; a_content: STRING) is
+	on_processing_instruction (a_name: STRING; a_content: STRING)
 			-- Processing instruction.
 		do
 			debug ("XPath content emitter")
@@ -226,7 +226,7 @@ feature -- Meta
 			Precursor (a_name, a_content)
 		end
 
-	on_comment (a_content: STRING) is
+	on_comment (a_content: STRING)
 			-- Processing a comment.
 		do
 			debug ("XPath content emitter")
@@ -240,7 +240,7 @@ feature -- Meta
 
 feature -- Tag
 
-	on_start_tag (a_namespace: STRING; an_ns_prefix: STRING; a_local_part: STRING) is
+	on_start_tag (a_namespace: STRING; an_ns_prefix: STRING; a_local_part: STRING)
 			-- Start of start tag.
 		local
 			a_name_code: INTEGER
@@ -298,7 +298,7 @@ feature -- Tag
 			Precursor (a_namespace, an_ns_prefix, a_local_part)
 		end
 
-	on_attribute (a_namespace: STRING; an_ns_prefix: STRING; a_local_part: STRING; a_value: STRING) is
+	on_attribute (a_namespace: STRING; an_ns_prefix: STRING; a_local_part: STRING; a_value: STRING)
 			-- Start of attribute or namespace declaration
 		local
 			a_name_code, a_namespace_code: INTEGER
@@ -366,7 +366,7 @@ feature -- Tag
 
 		end
 
-	on_start_tag_finish is
+	on_start_tag_finish
 			-- End of start tag.
 		do
 			debug ("XPath content emitter")
@@ -376,7 +376,7 @@ feature -- Tag
 			Precursor
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- End tag.
 		do
 			debug ("XPath content emitter")
@@ -396,7 +396,7 @@ feature -- Tag
 
 feature -- Content
 
-	on_content (a_content: STRING) is
+	on_content (a_content: STRING)
 			-- Text content;
 			-- XM_CONTENT_CONCATENATOR is assumed to be present
 			--  earlier in the event chain, so this event is
@@ -426,7 +426,7 @@ feature {NONE} -- Implementation
 	before_dtd: BOOLEAN
 			-- Has DTD been seen yet?
 
-	is_namespace_declaration (an_ns_prefix, a_local_part: STRING): BOOLEAN is
+	is_namespace_declaration (an_ns_prefix, a_local_part: STRING): BOOLEAN
 			-- Is attribute of form xmlns= or xmlns:prefix?
 		require
 			prefix_not_void: an_ns_prefix /= Void
@@ -451,7 +451,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	notify_attribute (a_name_code: INTEGER; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
+	notify_attribute (a_name_code: INTEGER; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
 			-- Notify an attribute
 		require
 			prefix_not_void: a_prefix /= Void

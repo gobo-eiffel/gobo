@@ -21,7 +21,7 @@ inherit
 		end
 
 	XM_XPATH_TYPE
-	
+
 	XM_XPATH_ERROR_TYPES
 
 	XM_XPATH_SHARED_CONFORMANCE
@@ -32,7 +32,7 @@ inherit
 
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
-	
+
 	UT_SHARED_FILE_URI_ROUTINES
 		export {NONE} all end
 
@@ -42,7 +42,7 @@ create
 
 feature -- Test
 
-	test_untyped_atomic_to_untyped_atomic is
+	test_untyped_atomic_to_untyped_atomic
 			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:untypedAtomic.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -60,7 +60,7 @@ feature -- Test
 			assert ("String value", STRING_.same_string (evaluated_items.item (1).string_value, "fred"))
 		end
 
-	test_untyped_atomic_to_string is
+	test_untyped_atomic_to_string
 			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:string.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -77,7 +77,7 @@ feature -- Test
 			assert ("String value", STRING_.same_string (evaluated_items.item (1).string_value, "fred"))
 		end
 
-	test_untyped_atomic_to_any_uri is
+	test_untyped_atomic_to_any_uri
 			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:anyURI
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -94,7 +94,7 @@ feature -- Test
 			assert ("String value", STRING_.same_string (evaluated_items.item (1).string_value, "fred"))
 		end
 
-	test_untyped_atomic_to_notation is
+	test_untyped_atomic_to_notation
 			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:NOTATION.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -105,10 +105,10 @@ feature -- Test
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('fred') cast as xs:NOTATION")
 			-- xs:NOTATION not supported by basic-level processor
-			assert ("Evaluation error", an_evaluator.is_error) 
+			assert ("Evaluation error", an_evaluator.is_error)
 		end
 
-	test_untyped_atomic_to_bad_float is
+	test_untyped_atomic_to_bad_float
 			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:float.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -121,7 +121,7 @@ feature -- Test
 			assert ("Evaluation error", an_evaluator.is_error)
 		end
 
-	test_untyped_atomic_to_float is
+	test_untyped_atomic_to_float
 			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:float.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -137,9 +137,9 @@ feature -- Test
 			evaluated_items := an_evaluator.evaluated_items
 			a_float_value ?= evaluated_items.item (1)
 			assert ("Correct value", a_float_value /= Void and then a_float_value.value <= 17.5E-12 and then a_float_value.value >= 17.4E-12)
-		end	
+		end
 
-	test_untyped_atomic_to_double_unsucessful is
+	test_untyped_atomic_to_double_unsucessful
 			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:double, with invalid value.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -152,7 +152,7 @@ feature -- Test
 			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "FORG0001"))
 		end
 
-	test_untyped_atomic_to_double is
+	test_untyped_atomic_to_double
 			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:double.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -168,9 +168,9 @@ feature -- Test
 			evaluated_items := an_evaluator.evaluated_items
 			a_double_value ?= evaluated_items.item (1)
 			assert ("Correct value", a_double_value /= Void and then a_double_value.value = 17.5E-12)
-		end	
+		end
 
-	test_untyped_atomic_to_decimal_unsucessful is
+	test_untyped_atomic_to_decimal_unsucessful
 			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:decimal, with invalid value.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -183,7 +183,7 @@ feature -- Test
 			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "FORG0001"))
 		end
 
-	test_untyped_atomic_to_decimal is
+	test_untyped_atomic_to_decimal
 			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:decimal
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -202,8 +202,8 @@ feature -- Test
 			a_decimal_value ?= evaluated_items.item (1)
 			assert ("Correct value", a_decimal_value /= Void and then a_decimal_value.value.is_equal (a_decimal))
 		end
-	
-	test_untyped_atomic_to_integer_unsucessful is
+
+	test_untyped_atomic_to_integer_unsucessful
 			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:integer, with invalid value.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -216,7 +216,7 @@ feature -- Test
 			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "FORG0001"))
 		end
 
-	test_untyped_atomic_to_integer is
+	test_untyped_atomic_to_integer
 			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:integer
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -234,7 +234,7 @@ feature -- Test
 			assert ("Correct value", an_integer_value /= Void and then an_integer_value.value = 56)
 		end
 
-	test_untyped_atomic_to_boolean_unsucessful is
+	test_untyped_atomic_to_boolean_unsucessful
 			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:boolean, with invalid value.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -247,7 +247,7 @@ feature -- Test
 			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "FORG0001"))
 		end
 
-	test_untyped_atomic_to_boolean is
+	test_untyped_atomic_to_boolean
 			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:boolean.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -263,9 +263,9 @@ feature -- Test
 			evaluated_items := an_evaluator.evaluated_items
 			a_boolean_value ?= evaluated_items.item (1)
 			assert ("Correct value", a_boolean_value /= Void and then a_boolean_value.value)
-		end	
+		end
 
-	test_untyped_atomic_to_qname_unsucessful is
+	test_untyped_atomic_to_qname_unsucessful
 			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:QName, with invalid value.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -278,7 +278,7 @@ feature -- Test
 			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Static_error and STRING_.same_string (an_evaluator.error_value.code, "XPTY0004"))
 		end
 
-	test_untyped_atomic_to_qname_2 is
+	test_untyped_atomic_to_qname_2
 			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:QName.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -289,9 +289,9 @@ feature -- Test
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('xs:untypedAtomic') cast as xs:QName")
 			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Static_error and STRING_.same_string (an_evaluator.error_value.code, "XPTY0004"))
-		end	
+		end
 
-	test_untyped_atomic_to_date is
+	test_untyped_atomic_to_date
 			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:date.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -307,9 +307,9 @@ feature -- Test
 			evaluated_items := an_evaluator.evaluated_items
 			a_date_value ?= evaluated_items.item (1)
 			assert ("Date value", a_date_value /= Void)
-		end	
+		end
 
-	test_untyped_atomic_to_zoneless_date is
+	test_untyped_atomic_to_zoneless_date
 			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:date.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -325,9 +325,9 @@ feature -- Test
 			evaluated_items := an_evaluator.evaluated_items
 			a_date_value ?= evaluated_items.item (1)
 			assert ("Date value", a_date_value /= Void)
-		end	
+		end
 
-	test_untyped_atomic_to_date_unsucessful is
+	test_untyped_atomic_to_date_unsucessful
 			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:date, with invalid value.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -340,7 +340,7 @@ feature -- Test
 			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "FORG0001"))
 		end
 
-	test_untyped_atomic_to_zoneless_time is
+	test_untyped_atomic_to_zoneless_time
 			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:time.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -356,9 +356,9 @@ feature -- Test
 			evaluated_items := an_evaluator.evaluated_items
 			a_time_value ?= evaluated_items.item (1)
 			assert ("Time value", a_time_value /= Void)
-		end	
+		end
 
-	test_untyped_atomic_to_date_time is
+	test_untyped_atomic_to_date_time
 			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:dateTime.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -374,9 +374,9 @@ feature -- Test
 			evaluated_items := an_evaluator.evaluated_items
 			a_date_time_value ?= evaluated_items.item (1)
 			assert ("DateTime value", a_date_time_value /= Void)
-		end	
+		end
 
-	test_untyped_atomic_to_duration is
+	test_untyped_atomic_to_duration
 			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:duration.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -392,9 +392,9 @@ feature -- Test
 			evaluated_items := an_evaluator.evaluated_items
 			a_duration_value ?= evaluated_items.item (1)
 			assert ("Duration value", a_duration_value /= Void)
-		end	
+		end
 
-	test_untyped_atomic_to_year_month_duration is
+	test_untyped_atomic_to_year_month_duration
 			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:yearMonthDuration.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -410,9 +410,9 @@ feature -- Test
 			evaluated_items := an_evaluator.evaluated_items
 			a_duration_value ?= evaluated_items.item (1)
 			assert ("YearMonthDuration value", a_duration_value /= Void)
-		end	
+		end
 
-	test_untyped_atomic_to_day_time_duration is
+	test_untyped_atomic_to_day_time_duration
 			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:dayTimeDuration.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -428,9 +428,9 @@ feature -- Test
 			evaluated_items := an_evaluator.evaluated_items
 			a_duration_value ?= evaluated_items.item (1)
 			assert ("DayTimeDuration value", a_duration_value /= Void)
-		end	
+		end
 
-	test_untyped_atomic_to_g_year_month is
+	test_untyped_atomic_to_g_year_month
 			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:gYearMonth.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -459,7 +459,7 @@ feature -- Test
 			assert ("Not castable", a_boolean_value /= Void and then not a_boolean_value.value)
 		end
 
-	test_untyped_atomic_to_g_year is
+	test_untyped_atomic_to_g_year
 			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:gYear.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -488,7 +488,7 @@ feature -- Test
 			assert ("Not castable", a_boolean_value /= Void and then not a_boolean_value.value)
 		end
 
-	test_untyped_atomic_to_g_month is
+	test_untyped_atomic_to_g_month
 			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:gMonth.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -517,7 +517,7 @@ feature -- Test
 			assert ("Not castable", a_boolean_value /= Void and then not a_boolean_value.value)
 		end
 
-	test_untyped_atomic_to_g_month_day is
+	test_untyped_atomic_to_g_month_day
 			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:gMonthDay.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -546,7 +546,7 @@ feature -- Test
 			assert ("Not castable", a_boolean_value /= Void and then not a_boolean_value.value)
 		end
 
-	test_untyped_atomic_to_g_day is
+	test_untyped_atomic_to_g_day
 			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:gDay.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -575,7 +575,7 @@ feature -- Test
 			assert ("Not castable", a_boolean_value /= Void and then not a_boolean_value.value)
 		end
 
-	test_untyped_atomic_to_base64 is
+	test_untyped_atomic_to_base64
 			-- Test creating an xs:untypedAtomic from a string then casting it to an xs:base64Binary.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -599,7 +599,7 @@ feature -- Test
 			assert ("base64Binary value", a_value /= Void)
 		end
 
-	test_base64_to_hex_binary is
+	test_base64_to_hex_binary
 			-- Test casting an xs:base64Binary to an xs:hexBinary.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -622,17 +622,17 @@ feature -- Test
 			a_value ?= evaluated_items.item (1)
 			assert ("hexBinary value", a_value /= Void)
 		end
-	
+
 feature -- Set up
 
-	set_up is
+	set_up
 		do
 			conformance.set_basic_xslt_processor
 		end
 
 feature {NONE} -- Implementation
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}",
@@ -642,8 +642,8 @@ feature {NONE} -- Implementation
 			data_dirname_not_void: Result /= Void
 			data_dirname_not_empty: not Result.is_empty
 		end
-		
-	books_xml_uri: UT_URI is
+
+	books_xml_uri: UT_URI
 			-- URI of file 'books.xml'
 		local
 			a_path: STRING
@@ -654,7 +654,7 @@ feature {NONE} -- Implementation
 			books_xml_uri_not_void: Result /= Void
 		end
 
-	diagnose_evaluation_error (an_evaluator: XM_XPATH_EVALUATOR) is
+	diagnose_evaluation_error (an_evaluator: XM_XPATH_EVALUATOR)
 			-- Print error diagnosis to standard error stream.
 		do
 			std.error.put_string (an_evaluator.error_value.error_message)
@@ -663,8 +663,8 @@ feature {NONE} -- Implementation
 			std.error.put_new_line
 		end
 
-	encoded_string: STRING is "R0lGODdhMAAwAPAAAAAAAP///ywAAAAAMAAwAAAC8IyPqcvt3wCcDkiLc7C0qwyGHhSWpjQu5yqmCYsapyuvUUlvONmOZtfzgFzByTB10QgxOR0TqBQejhRNzOfkVJ+5YiUqrXF5Y5lKh/DeuNcP5yLWGsEbtLiOSpa/TPg7JpJHxyendzWTBfX0cxOnKPjgBzi4diinWGdkF8kjdfnycQZXZeYGejmJlZeGl9i2icVqaNVailT6F5iJ90m6mvuTS4OK05M0vDk0Q4XUtwvKOzrcd3iq9uisF81M1OIcR7lEewwcLp7tuNNkM3uNna3F2JQFo97Vriy/Xl4/f1cf5VWzXyym7PHhhx4dbgYKAAA7"
+	encoded_string: STRING = "R0lGODdhMAAwAPAAAAAAAP///ywAAAAAMAAwAAAC8IyPqcvt3wCcDkiLc7C0qwyGHhSWpjQu5yqmCYsapyuvUUlvONmOZtfzgFzByTB10QgxOR0TqBQejhRNzOfkVJ+5YiUqrXF5Y5lKh/DeuNcP5yLWGsEbtLiOSpa/TPg7JpJHxyendzWTBfX0cxOnKPjgBzi4diinWGdkF8kjdfnycQZXZeYGejmJlZeGl9i2icVqaNVailT6F5iJ90m6mvuTS4OK05M0vDk0Q4XUtwvKOzrcd3iq9uisF81M1OIcR7lEewwcLp7tuNNkM3uNna3F2JQFo97Vriy/Xl4/f1cf5VWzXyym7PHhhx4dbgYKAAA7"
 			-- base64-encoded image/gif file
 end
 
-			
+

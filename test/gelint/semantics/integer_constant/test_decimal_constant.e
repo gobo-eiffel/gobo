@@ -21,7 +21,7 @@ create
 
 feature -- Test
 
-	test_generating_type is
+	test_generating_type
 			-- Test the generating type of decimal integer manifest constants.
 			-- The general rule when there is not hint about its type of an integer
 			-- manifest constant is that if the value is representable as an INTEGER_32
@@ -88,7 +88,7 @@ feature -- Test
 			assert_strings_equal ("nineteen_digit_negative_1", "INTEGER_64", (-9223372036854775808).generating_type.out)
 		end
 
-	test_value is
+	test_value
 			-- Test the value of decimal integer manifest constants.
 		do
 			assert_equal ("one_digit_1", {INTEGER_32} 1, 1)
@@ -150,13 +150,13 @@ feature -- Test
 			assert_equal ("nineteen_digit_negative_1", {INTEGER_64} -9223372036854775808, -9223372036854775808)
 		end
 
-	test_underscore is
+	test_underscore
 			-- Test the value of decimal integer manifest constants with underscores.
 		do
 			assert_equal ("underscore_1", 1234, 12_34)
 		end
 
-	test_integer_8_context is
+	test_integer_8_context
 			-- Test the value of decimal integer manifest constants
 			-- with a context expecting an "INTEGER_8".
 		local
@@ -170,7 +170,7 @@ feature -- Test
 			assert_equal ("integer_8_3", {INTEGER_8} 65, i)
 		end
 
-	test_integer_8_constant is
+	test_integer_8_constant
 			-- Test the value of decimal integer manifest constants
 			-- declared in constant attributes.
 		do

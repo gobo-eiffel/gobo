@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_encoding: STRING; a_raw_outputter: XM_OUTPUT) is
+	make (an_encoding: STRING; a_raw_outputter: XM_OUTPUT)
 			-- Establish invariant.
 		require
 			outputter_not_void: a_raw_outputter /= Void
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	byte_order_mark: STRING is
+	byte_order_mark: STRING
 			-- XML BOM
 		once
 			if is_utf16_le then
@@ -68,19 +68,19 @@ feature -- Status report
 	is_utf16_be, is_utf16_le: BOOLEAN
 			-- Flags for specific encoding schemes
 
-	byte_order_mark_permitted: BOOLEAN is
+	byte_order_mark_permitted: BOOLEAN
 			--	Is a BOM permitted?
 		do
 			Result := not (is_utf16_be or is_utf16_le)
 		end
 
-	is_byte_order_mark_default: BOOLEAN is
+	is_byte_order_mark_default: BOOLEAN
 			-- Is emitting a BOM the default behaviour?
 		do
 			Result := True
 		end
 
-	is_bad_character_code (a_code: INTEGER): BOOLEAN is
+	is_bad_character_code (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' not representable in `encoding'?
 		do
 			Result := False
@@ -99,7 +99,7 @@ feature -- Status report
 
 feature -- Element change
 
-	output (a_character_string: STRING) is
+	output (a_character_string: STRING)
 			-- Encode `a_character_string' and write it to `outputter'.
 		do
 			if not is_error then
@@ -116,7 +116,7 @@ feature -- Element change
 			end
 		end
 
-	output_ignoring_error (a_character_string: STRING) is
+	output_ignoring_error (a_character_string: STRING)
 			-- Output `a_character_string', ignoring any error.
 		do
 			if is_error then

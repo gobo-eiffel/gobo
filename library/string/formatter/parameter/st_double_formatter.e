@@ -25,7 +25,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new formatter.
 		do
 			precursor
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset_options is
+	reset_options
 			-- Reset options to their default values.
 		do
 			precursor
@@ -48,7 +48,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	valid_parameter (a_parameter: ANY): BOOLEAN is
+	valid_parameter (a_parameter: ANY): BOOLEAN
 			-- Is `a_parameter' a valid parameter for current formatter?
 		local
 			a_cell: detachable DS_CELL [DOUBLE]
@@ -59,7 +59,7 @@ feature -- Status report
 
 feature -- Formatting
 
-	format_to (a_parameter: ANY; a_stream: KI_CHARACTER_OUTPUT_STREAM) is
+	format_to (a_parameter: ANY; a_stream: KI_CHARACTER_OUTPUT_STREAM)
 			-- Format `a_parameter' to `a_stream'.
 			-- (Use DS_CELL [DOUBLE] because in SE 2.1
 			-- DOUBLE does not conform to ANY.)
@@ -74,7 +74,7 @@ feature -- Formatting
 			double_format_to (a_cell.item, a_stream)
 		end
 
-	double_format_to (a_parameter: DOUBLE; a_stream: KI_CHARACTER_OUTPUT_STREAM) is
+	double_format_to (a_parameter: DOUBLE; a_stream: KI_CHARACTER_OUTPUT_STREAM)
 			-- Format `a_parameter' to `a_stream'.
 		require
 			a_stream_not_void: a_stream /= Void
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 	fractional_part: STRING
 			-- Fractional part
 
-	build_integer_and_fractional_parts (d: DOUBLE) is
+	build_integer_and_fractional_parts (d: DOUBLE)
 			-- Build `integer_part', `fractional_part' and `fsign' for `d'.
 			--
 			-- This function is used as a substitute for simple expression:
@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_integer_to_string (i: INTEGER; a_precision: INTEGER; a_string: STRING) is
+	append_integer_to_string (i: INTEGER; a_precision: INTEGER; a_string: STRING)
 			-- Append decimal representation of `i' to `a_string'.
 		require
 			i_not_negative: i >= 0
@@ -196,14 +196,14 @@ feature {NONE} -- Implementation
 			unsigned_decimal_formatter.integer_format_to (i, string_output_stream)
 		end
 
-	decimal_digit_count: INTEGER is 8
+	decimal_digit_count: INTEGER = 8
 			-- Number of decimal digits that can fit into INTEGER type;
 			-- Used in fractional part calculating decimal_digit_count < log10(Maxint)
 
 	fractional_list: DS_ARRAYED_LIST [INTEGER]
 			-- Hold fractional part pieces within `build_integer_and_fractional_parts'
 
-	double_sign (d: DOUBLE): INTEGER is
+	double_sign (d: DOUBLE): INTEGER
 			-- Sign of `d'
 		do
 			if d > 0.0 then

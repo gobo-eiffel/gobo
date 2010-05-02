@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tag: like tag; a_terms: like terms) is
+	make (a_tag: like tag; a_terms: like terms)
 			-- Create a new tagged note clause.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_tagged_indexing (Current)

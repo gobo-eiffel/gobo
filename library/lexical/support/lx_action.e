@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_text: like text) is
+	make (a_text: like text)
 			-- Create a new semantic action.
 		require
 			a_text_not_void: a_text /= Void
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute current command.
 		do
 		end
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_text (a_text: like text) is
+	set_text (a_text: like text)
 			-- Set `text' to `a_text'.
 		require
 			a_text_not_void: a_text /= Void
@@ -61,7 +61,7 @@ feature -- Setting
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Textual representation
 		do
 			Result := text

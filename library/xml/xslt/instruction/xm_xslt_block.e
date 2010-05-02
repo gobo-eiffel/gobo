@@ -45,7 +45,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_executable: XM_XSLT_EXECUTABLE; a_head, a_tail: XM_XPATH_EXPRESSION; a_module_number, a_line_number: INTEGER) is
+	make (a_executable: XM_XSLT_EXECUTABLE; a_head, a_tail: XM_XPATH_EXPRESSION; a_module_number, a_line_number: INTEGER)
 			-- Create a general-purpose block.
 		require
 			a_executable_not_void: a_executable /= Void
@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	creates_new_nodes: BOOLEAN is
+	creates_new_nodes: BOOLEAN
 			-- Can `Current' create new nodes?
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -88,7 +88,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this instruction.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -117,7 +117,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -172,7 +172,7 @@ feature -- Evaluation
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_special_properties is
+	compute_special_properties
 			-- Compute special properties.
 		do
 			Precursor {XM_XPATH_SEQUENCE_EXPRESSION}
@@ -183,7 +183,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 
-	native_implementations: INTEGER is
+	native_implementations: INTEGER
 			-- Natively-supported evaluation routines
 		do
 				Result := Supports_process + Supports_iterator

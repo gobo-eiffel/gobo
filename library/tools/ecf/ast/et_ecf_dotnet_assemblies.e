@@ -25,7 +25,7 @@ create
 
 feature -- Access
 
-	assembly (i: INTEGER): ET_ECF_DOTNET_ASSEMBLY is
+	assembly (i: INTEGER): ET_ECF_DOTNET_ASSEMBLY
 			-- `i'-th assembly
 		do
 			Result := assemblies.item (i)

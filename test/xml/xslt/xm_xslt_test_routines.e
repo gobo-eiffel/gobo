@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Test support routines
 
-	Buffer_size: INTEGER is 8000
+	Buffer_size: INTEGER = 8000
 			-- Size of read buffer used by `read_utf8_results_file'
 
 	last_utf8_string: UC_UTF8_STRING
@@ -36,7 +36,7 @@ feature {NONE} -- Test support routines
 	last_latin1_string: STRING
 			-- Last contents read by `read_results_file'
 
-	read_utf8_results_file (a_filename: STRING) is
+	read_utf8_results_file (a_filename: STRING)
 			-- Read `a_filename' within `data_dirname' as UTF-8 bytes and set `last_utf8_string' to contents.
 		local
 			l_test_file: KL_BINARY_INPUT_FILE
@@ -61,7 +61,7 @@ feature {NONE} -- Test support routines
 			last_utf8_string_not_void: last_utf8_string /= Void
 		end
 
-	read_results_file (a_filename: STRING) is
+	read_results_file (a_filename: STRING)
 			-- Read `a_filename' within `data_dirname' as Latin-1 bytes and set `last_latin1_string' to contents.
 		local
 			l_test_file: KL_TEXT_INPUT_FILE
@@ -84,7 +84,7 @@ feature {NONE} -- Test support routines
 			last_latin1_string_not_void: last_latin1_string /= Void
 		end
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}",

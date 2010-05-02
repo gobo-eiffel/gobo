@@ -1721,7 +1721,7 @@ feature {NONE} -- Implementation
 
 	file_gs_ta (file: POINTER; a_string: POINTER; length, begin: INTEGER): INTEGER
 			-- Same as `file_gs' but it won't prevent garbage collection from occurring
-			-- while blocked waiting for data.			
+			-- while blocked waiting for data.
 		external
 			"C blocking signature (FILE *, char *, EIF_INTEGER, EIF_INTEGER): EIF_INTEGER use %"eif_file.h%""
 		alias
@@ -1730,7 +1730,7 @@ feature {NONE} -- Implementation
 
 	file_gss_ta (file: POINTER; a_string: POINTER; length: INTEGER): INTEGER
 			-- Same as `file_gss' but it won't prevent garbage collection from occurring
-			-- while blocked waiting for data.			
+			-- while blocked waiting for data.
 
 		external
 			"C blocking signature (FILE *, char *, EIF_INTEGER): EIF_INTEGER use %"eif_file.h%""
@@ -1740,7 +1740,7 @@ feature {NONE} -- Implementation
 
 	file_gw_ta (file: POINTER; a_string: POINTER; length, begin: INTEGER): INTEGER
 			-- Same as `file_gw' but it won't prevent garbage collection from occurring
-			-- while blocked waiting for data.			
+			-- while blocked waiting for data.
 		external
 			"C blocking signature (FILE *, char *, EIF_INTEGER, EIF_INTEGER): EIF_INTEGER use %"eif_file.h%""
 		alias

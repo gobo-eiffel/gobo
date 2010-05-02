@@ -18,7 +18,7 @@ inherit
 
 feature -- Output
 
-	put_line (a_string: STRING) is
+	put_line (a_string: STRING)
 			-- Write `a_string' to output stream
 			-- followed by a line separator.
 		require
@@ -29,7 +29,7 @@ feature -- Output
 			put_new_line
 		end
 
-	put_new_line is
+	put_new_line
 			-- Write a line separator to output stream.
 		require
 			is_open_write: is_open_write
@@ -39,7 +39,7 @@ feature -- Output
 
 feature -- Access
 
-	eol: STRING is
+	eol: STRING
 			-- Line separator
 		deferred
 		ensure

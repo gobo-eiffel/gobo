@@ -26,10 +26,10 @@ create {XM_XSLT_NODE_FACTORY}
 	make_style_element
 
 feature {NONE} -- Initialization
-	
+
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
+		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration)
 			-- Establish invariant.
 		do
 			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_configuration)
@@ -38,13 +38,13 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	may_contain_sequence_constructor: BOOLEAN is
+	may_contain_sequence_constructor: BOOLEAN
 			-- Is `Current' allowed to contain a sequence constructor?
 		do
 			Result := True
 		end
 
-	is_absent_extension_element: BOOLEAN is
+	is_absent_extension_element: BOOLEAN
 			-- Is `Current' and `XM_XSLT_ABSENT_EXTENSION_ELEMENT'?
 		do
 			Result := True
@@ -54,7 +54,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	process_all_attributes is
+	process_all_attributes
 			-- Process the attributes of this element and all its children.
 		do
 			if is_top_level and is_forwards_compatible_processing_enabled then
@@ -65,18 +65,18 @@ feature -- Basic operations
 			attributes_prepared := True
 		end
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		do
 			attributes_prepared := True
 		end
 
-	validate is
+	validate
 		do
 			validated := True
 		end
 
-	validate_subtree is
+	validate_subtree
 			-- Recursively walk through the stylesheet to validate all nodes.
 		do
 			if is_top_level and is_forwards_compatible_processing_enabled then
@@ -88,14 +88,14 @@ feature -- Basic operations
 			validated := True
 		end
 
-	compile (a_executable: XM_XSLT_EXECUTABLE) is
+	compile (a_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		do
 			last_generated_expression := Void
 			if not is_top_level then
-				
+
 				-- if there are fallback children, compile the code for the fallback elements
-				
+
 				if validation_error = Void then
 					create validation_error.make_from_string ("Unknown extension instruction: ", Gexslt_eiffel_type_uri, "UNKNOWN_EXTENSION_INSTRUCTION", Static_error)
 				end

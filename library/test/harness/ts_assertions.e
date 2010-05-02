@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new assertions.
 		do
 			exception_on_error := True
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset assertions.
 		do
 			count := 0
@@ -54,7 +54,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	error_reported: BOOLEAN is
+	error_reported: BOOLEAN
 			-- Has an error been reported?
 		do
 			Result := not error_messages.is_empty
@@ -71,7 +71,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_exception_on_error (b: BOOLEAN) is
+	set_exception_on_error (b: BOOLEAN)
 			-- Set `exception_on_error' to `b'.
 		do
 			exception_on_error := b
@@ -91,7 +91,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	add_assertion is
+	add_assertion
 			-- Add one assertion.
 		do
 			count := count + 1
@@ -101,7 +101,7 @@ feature -- Element change
 
 feature -- Error report
 
-	report_error (a_message: STRING) is
+	report_error (a_message: STRING)
 			-- Report error with message `a_message'
 			-- and raise an exception.
 		require
@@ -118,7 +118,7 @@ feature -- Error report
 
 feature -- Exceptions
 
-	catch_exception is
+	catch_exception
 			-- Catch exception raised by `raise_exception'.
 		require
 			exception_raised: exception_raised
@@ -130,7 +130,7 @@ feature -- Exceptions
 
 feature {NONE} -- Exceptions
 
-	raise_exception is
+	raise_exception
 			-- Raise an exception.
 		do
 			exception_raised := True
@@ -141,7 +141,7 @@ feature {NONE} -- Exceptions
 
 feature {NONE} -- Constants
 
-	Assertion_failure: STRING is "Gobo_assertion"
+	Assertion_failure: STRING = "Gobo_assertion"
 			-- Developer exception message
 
 invariant

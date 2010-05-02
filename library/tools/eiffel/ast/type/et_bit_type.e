@@ -30,16 +30,16 @@ inherit
 
 feature -- Status report
 
-	is_expanded: BOOLEAN is True
+	is_expanded: BOOLEAN = True
 			-- Is current type expanded?
 
-	is_type_expanded (a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	is_type_expanded (a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Is current type expanded when viewed from `a_context'?
 		do
 			Result := True
 		end
 
-	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does the base type of current type contain `a_class'
 			-- when it appears in `a_context'?
 		do
@@ -61,7 +61,7 @@ feature -- Access
 	size: INTEGER
 			-- Size of current bit type
 
-	base_type (a_context: ET_TYPE_CONTEXT): ET_BASE_TYPE is
+	base_type (a_context: ET_TYPE_CONTEXT): ET_BASE_TYPE
 			-- Base type of current type, when it appears in `a_context',
 			-- only made up of class names and generic formal parameters
 			-- when the root type of `a_context' is a generic type not
@@ -78,7 +78,7 @@ feature -- Access
 			end
 		end
 
-	shallow_base_type (a_context: ET_BASE_TYPE): ET_BASE_TYPE is
+	shallow_base_type (a_context: ET_BASE_TYPE): ET_BASE_TYPE
 			-- Base type of current type, when it appears in `a_context',
 			-- but where the actual generic parameters are not replaced
 			-- by their named version and should still be considered as
@@ -89,7 +89,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_bit_keyword (a_bit: like bit_keyword) is
+	set_bit_keyword (a_bit: like bit_keyword)
 			-- Set `bit_keyword' to `a_bit'.
 		require
 			a_bit_not_void: a_bit /= Void
@@ -101,19 +101,19 @@ feature -- Setting
 
 feature -- Size
 
-	size_computed: BOOLEAN is
+	size_computed: BOOLEAN
 			-- Has `size' already been computed?
 		do
 			Result := (size /= No_size)
 		end
 
-	has_size_error: BOOLEAN is
+	has_size_error: BOOLEAN
 			-- Has an error occurred when computing `size'?
 		do
 			Result := (size = Invalid_size)
 		end
 
-	compute_size is
+	compute_size
 			-- Compute `size'.
 		do
 			if size = No_size then
@@ -136,7 +136,7 @@ feature -- Size
 
 feature -- Comparison
 
-	same_syntactical_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_syntactical_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the base types here!
@@ -155,7 +155,7 @@ feature -- Comparison
 			end
 		end
 
-	same_named_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_named_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		do
@@ -169,7 +169,7 @@ feature -- Comparison
 			end
 		end
 
-	same_base_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_base_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 		do
@@ -185,7 +185,7 @@ feature -- Comparison
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
-	same_syntactical_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_syntactical_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the base types here!
@@ -210,14 +210,14 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_named_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_named_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		do
 			Result := same_syntactical_bit_type (other, other_context, a_context)
 		end
 
-	same_base_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_base_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 		do
@@ -226,7 +226,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
 feature -- Conformance
 
-	conforms_to_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	conforms_to_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does current type appearing in `a_context' conform
 			-- to `other' type appearing in `other_context'?
 			-- (Note: 'current_system.ancestor_builder' is used on the classes
@@ -244,7 +244,7 @@ feature -- Conformance
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
-	conforms_from_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	conforms_from_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- (Note: 'current_system.ancestor_builder' is used on the classes
@@ -269,13 +269,13 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
 feature {NONE} -- Constants
 
-	bit_space: STRING is "BIT "
+	bit_space: STRING = "BIT "
 			-- Eiffel keywords
 
-	No_size: INTEGER is -1
+	No_size: INTEGER = -1
 			-- Marker which says that `size' has not been computed yet
 
-	Invalid_size: INTEGER is -2
+	Invalid_size: INTEGER = -2
 			-- Marker which says that `size' has an invalid value
 
 invariant

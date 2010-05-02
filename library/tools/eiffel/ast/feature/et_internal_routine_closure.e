@@ -32,7 +32,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_compound (a_compound: like compound) is
+	set_compound (a_compound: like compound)
 			-- Set `compound' to `a_compound'.
 		do
 			compound := a_compound
@@ -40,7 +40,7 @@ feature -- Setting
 			compound_set: compound = a_compound
 		end
 
-	set_locals (a_locals: like locals) is
+	set_locals (a_locals: like locals)
 			-- Set `locals' to `a_locals'.
 		do
 			locals := a_locals
@@ -48,7 +48,7 @@ feature -- Setting
 			locals_set: locals = a_locals
 		end
 
-	set_rescue_clause (a_rescue: like rescue_clause) is
+	set_rescue_clause (a_rescue: like rescue_clause)
 			-- Set `rescue_clause' to `a_rescue'.
 		do
 			rescue_clause := a_rescue

@@ -29,7 +29,7 @@ inherit
 
 feature -- Access
 
-	program_name: STRING is
+	program_name: STRING
 			-- Program name
 		deferred
 		ensure
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Test
 
-	compile_program is
+	compile_program
 			-- Compile program.
 		local
 			a_debug: STRING
@@ -61,7 +61,7 @@ feature -- Test
 
 feature -- Execution
 
-	set_up is
+	set_up
 			-- Setup for a test.
 		local
 			a_testdir: STRING
@@ -74,7 +74,7 @@ feature -- Execution
 			file_system.cd (a_testdir)
 		end
 
-	tear_down is
+	tear_down
 			-- Tear down after a test.
 		do
 			if old_cwd /= Void then
@@ -89,7 +89,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	program_dirname: STRING is
+	program_dirname: STRING
 			-- Name of program source directory
 		deferred
 		ensure
@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 			program_dirname_not_empty: Result.count > 0
 		end
 
-	program_exe: STRING is
+	program_exe: STRING
 			-- Name of program executable filename
 		do
 			Result := file_system.pathname (file_system.relative_current_directory, program_name + file_system.exe_extension)
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 			program_exe_not_empty: Result.count > 0
 		end
 
-	geant_filename: STRING is
+	geant_filename: STRING
 			-- Name of geant build file used for compilation
 		do
 			Result := file_system.pathname (program_dirname, "build.eant")
@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 			geant_filename_not_empty: Result.count > 0
 		end
 
-	testdir: STRING is
+	testdir: STRING
 			-- Name of temporary directory where to run the test
 		do
 			Result := "T" + program_name
@@ -124,13 +124,13 @@ feature {NONE} -- Implementation
 			testdir_not_empty: Result.count > 0
 		end
 
-	output_log_filename: STRING is "output.log"
+	output_log_filename: STRING = "output.log"
 			-- Output log filename
 
-	error_log_filename: STRING is "error.log"
+	error_log_filename: STRING = "error.log"
 			-- Error log filename
 
-	output_log: STRING is
+	output_log: STRING
 			-- Where and how to redirect output logs
 		once
 			Result := " > " + output_log_filename + " 2> " + error_log_filename
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 			output_log_not_empty: Result.count > 0
 		end
 
-	freeise_log_filename: STRING is
+	freeise_log_filename: STRING
 			-- Name of file containing message displayed
 			-- by programs compiled with the free version
 			-- of ISE Eiffel under Linux/Unix
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 			freeise_log_filename_not_empty: Result.count > 0
 		end
 
-	geeraise_log_filename: STRING is
+	geeraise_log_filename: STRING
 			-- Name of file containing message displayed
 			-- by programs compiled with Gobo Eiffel Compiler
 			-- when raising an exception

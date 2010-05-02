@@ -214,7 +214,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
-	question_character_class: LX_SYMBOL_CLASS is
+	question_character_class: LX_SYMBOL_CLASS
 			-- "?" character class (i.e. all characters except /)
 		local
 			question_string: STRING

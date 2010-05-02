@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make (a_pattern: XM_XSLT_PATTERN; a_handler: XM_XSLT_RULE_VALUE; a_precedence: INTEGER; a_priority: MA_DECIMAL; a_sequence_number: INTEGER) is
+	make (a_pattern: XM_XSLT_PATTERN; a_handler: XM_XSLT_RULE_VALUE; a_precedence: INTEGER; a_priority: MA_DECIMAL; a_sequence_number: INTEGER)
 			-- Establish invariant.
 		require
 			pattern_not_void: a_pattern /= Void
@@ -39,7 +39,7 @@ feature {NONE} -- Implementation
 			sequence_number_set: sequence_number = a_sequence_number
 		end
 
-	make_with_copy (other: XM_XSLT_RULE) is
+	make_with_copy (other: XM_XSLT_RULE)
 			-- Create as a copy of `other', along with a copy of it's chain.
 		require
 			other_rule_not_void: other /= Void
@@ -59,7 +59,7 @@ feature -- Access
 
 	pattern: XM_XSLT_PATTERN
 			-- pattern which this rule matches
-	
+
 	handler: XM_XSLT_RULE_VALUE
 			-- handler for `pattern'
 
@@ -74,13 +74,13 @@ feature -- Access
 
 	sequence_number: INTEGER
 			-- Sequence number
-	
+
 	next_rule: XM_XSLT_RULE
 			-- Next rule on the chain
 
 feature -- Element change
 
-	set_next_rule (a_next_rule: XM_XSLT_RULE) is
+	set_next_rule (a_next_rule: XM_XSLT_RULE)
 			-- Set next rule in chain.
 		do
 			next_rule := a_next_rule
@@ -88,7 +88,7 @@ feature -- Element change
 			next_rule_set: next_rule = a_next_rule
 		end
 
-	set_priority_rank (a_rank: INTEGER) is
+	set_priority_rank (a_rank: INTEGER)
 			-- Set `priority_rank'.
 		require
 			strictly_positive_rank: a_rank > 0
@@ -100,10 +100,10 @@ feature -- Element change
 		end
 
 invariant
-	
+
 	pattern_not_void: pattern /= Void
 	handler_not_void: handler /= Void
 	positive_sequence_number: sequence_number >= 0
 
 end
-	
+

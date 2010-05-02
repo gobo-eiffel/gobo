@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_mount1, a_mount2: ET_XACE_MOUNTED_LIBRARY) is
+	make (a_mount1, a_mount2: ET_XACE_MOUNTED_LIBRARY)
 			-- Create a new error reporting that a library has been
 			-- mounted several times with different prefixes.
 		require
@@ -49,10 +49,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "Library '$1' mounted with incompatible prefixes '$2' and '$3' in $4 and $5"
+	default_template: STRING = "Library '$1' mounted with incompatible prefixes '$2' and '$3' in $4 and $5"
 			-- Default template used to built the error message
 
-	code: STRING is "XA0011"
+	code: STRING = "XA0011"
 			-- Error code
 
 end

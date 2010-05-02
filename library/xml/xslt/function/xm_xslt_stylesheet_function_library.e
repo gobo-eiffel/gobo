@@ -13,7 +13,7 @@ note
 class XM_XSLT_STYLESHEET_FUNCTION_LIBRARY
 
 inherit
-	
+
 	XM_XPATH_FUNCTION_LIBRARY
 
 		-- The XSLT processor will instantiate two objects of this class,
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_stylesheet: XM_XSLT_STYLESHEET; overriding: BOOLEAN) is
+	make (a_stylesheet: XM_XSLT_STYLESHEET; overriding: BOOLEAN)
 			-- Establish invariant
 		require
 			principal_stylesheet: a_stylesheet /= Void and then a_stylesheet.principal_stylesheet = a_stylesheet
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_function_available (a_fingerprint, an_arity: INTEGER; is_restricted: BOOLEAN): BOOLEAN is
+	is_function_available (a_fingerprint, an_arity: INTEGER; is_restricted: BOOLEAN): BOOLEAN
 			-- Does `a_fingerprint' represent an available function with `an_arity'?
 		local
 			a_function: XM_XSLT_FUNCTION
@@ -60,7 +60,7 @@ feature -- Status report
 
 feature -- Element change
 
-	bind_function (a_fingerprint: INTEGER; some_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]; is_restricted: BOOLEAN) is
+	bind_function (a_fingerprint: INTEGER; some_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]; is_restricted: BOOLEAN)
 			-- Bind `a_fingerprint' to it's definition as `last_bound_function', setting the arguments to `some_arguments'.
 		local
 			a_function: XM_XSLT_FUNCTION
@@ -90,4 +90,4 @@ invariant
 	principal_stylesheet: stylesheet /= Void and then stylesheet.principal_stylesheet = stylesheet
 
 end
-	
+

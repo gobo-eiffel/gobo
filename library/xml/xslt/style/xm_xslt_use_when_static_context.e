@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 	make (a_configuration: XM_XSLT_CONFIGURATION; a_namespace_context: XM_XPATH_NAMESPACE_RESOLVER;
 		a_base_uri: like base_uri; a_system_id: like system_id; a_line_number: like line_number;
-		  a_default_namespace: like default_element_namespace; a_backwards: BOOLEAN; a_factory: like node_factory) is
+		  a_default_namespace: like default_element_namespace; a_backwards: BOOLEAN; a_factory: like node_factory)
 			-- Initialize `Current'.
 		require
 			a_configuration_not_void: a_configuration /= Void
@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	host_language: STRING is "XSLT"
+	host_language: STRING = "XSLT"
 			-- Name of host language
 
 	base_uri: UT_URI
@@ -85,7 +85,7 @@ feature -- Access
 	default_element_namespace: STRING
 			-- Default XPath namespace uri
 
-	default_function_namespace_uri: STRING is
+	default_function_namespace_uri: STRING
 			-- Namespace for non-prefixed XPath functions
 		do
 			Result := Xpath_standard_functions_uri
@@ -94,7 +94,7 @@ feature -- Access
 	default_collation_name: STRING
 			-- URI naming the default collation
 
-	available_functions: XM_XPATH_FUNCTION_LIBRARY is
+	available_functions: XM_XPATH_FUNCTION_LIBRARY
 			-- Available functions
 		local
 			l_function_library: XM_XPATH_FUNCTION_LIBRARY
@@ -119,31 +119,31 @@ feature -- Access
 	is_backwards_compatible_mode: BOOLEAN
 			-- Is XPath 1.0 Backwards Compatible Mode used?
 
-	is_variable_declared (a_fingerprint: INTEGER): BOOLEAN is
+	is_variable_declared (a_fingerprint: INTEGER): BOOLEAN
 			-- Does `a_fingerprint' represent a variable declared in the static context?
 		do
 			Result := False
 		end
 
-	is_data_type_valid (a_fingerprint: INTEGER): BOOLEAN is
+	is_data_type_valid (a_fingerprint: INTEGER): BOOLEAN
 			-- Does `a_fingerprint' represent a data-type in `Current'?
 		do
 			Result := True
 		end
 
-	uri_for_prefix (a_xml_prefix: STRING): STRING is
+	uri_for_prefix (a_xml_prefix: STRING): STRING
 			-- URI for `a_xml_prefix'
 		do
 			Result := namespace_resolver.uri_for_defaulted_prefix (a_xml_prefix, False)
 		end
 
-	is_prefix_declared (a_xml_prefix: STRING): BOOLEAN is
+	is_prefix_declared (a_xml_prefix: STRING): BOOLEAN
 			-- Is `a_xml_prefix' allocated to a namespace?
 		do
 			Result := (namespace_resolver.uri_for_defaulted_prefix (a_xml_prefix, False) /= Void)
 		end
 
-	is_element_available (a_qname: STRING): BOOLEAN is
+	is_element_available (a_qname: STRING): BOOLEAN
 			-- Is element name `a_qname' available?
 		local
 			l_parser: XM_XPATH_QNAME_PARSER
@@ -167,7 +167,7 @@ feature -- Access
 
 feature -- Creation
 
-	new_compile_time_context: XM_XPATH_CONTEXT is
+	new_compile_time_context: XM_XPATH_CONTEXT
 			-- Restricted dynamic context
 		local
 			l_configuration: XM_XSLT_CONFIGURATION
@@ -182,7 +182,7 @@ feature -- Creation
 
 feature -- Element change
 
-	bind_variable (a_fingerprint: INTEGER) is
+	bind_variable (a_fingerprint: INTEGER)
 			-- Bind variable to it's declaration.
 		do
 			-- pre-condition is never met
@@ -190,7 +190,7 @@ feature -- Element change
 
 feature -- Output
 
-	issue_warning (a_warning: STRING) is
+	issue_warning (a_warning: STRING)
 			-- Issue a warning message
 		local
 			l_configuration: XM_XSLT_CONFIGURATION
@@ -208,7 +208,7 @@ feature {NONE} -- Implementation
 	cached_function_manager: XM_XPATH_FUNCTION_LIBRARY_MANAGER
 			-- Function library manager
 
-	add_function_library (a_manager: XM_XPATH_FUNCTION_LIBRARY_MANAGER; a_library: XM_XPATH_FUNCTION_LIBRARY) is
+	add_function_library (a_manager: XM_XPATH_FUNCTION_LIBRARY_MANAGER; a_library: XM_XPATH_FUNCTION_LIBRARY)
 			-- Add `a_library' to `a_manager'.
 		require
 			a_manager_not_void: a_manager /= Void

@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (handler: like error_handler) is
+	make (handler: like error_handler)
 			-- Create a new command line.
 		require
 			hander_not_void: handler /= Void
@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Parsing
 
-	read_options (options: LX_DESCRIPTION) is
+	read_options (options: LX_DESCRIPTION)
 			-- Read options from the command line
 			-- and update `options' accordingly.
 		require
@@ -220,7 +220,7 @@ feature -- Parsing
 
 feature{NONE} -- Reporting
 
-	report_version_number is
+	report_version_number
 			-- Report version number and exit.
 		local
 			a_message: UT_VERSION_NUMBER

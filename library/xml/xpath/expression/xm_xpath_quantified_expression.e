@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_operator: INTEGER; a_range_variable: XM_XPATH_RANGE_VARIABLE_DECLARATION; a_sequence_expression: XM_XPATH_EXPRESSION; an_action: XM_XPATH_EXPRESSION) is
+	make (an_operator: INTEGER; a_range_variable: XM_XPATH_RANGE_VARIABLE_DECLARATION; a_sequence_expression: XM_XPATH_EXPRESSION; an_action: XM_XPATH_EXPRESSION)
 			-- Establish invariant
 		require
 			valid_operator: an_operator = Every_token or an_operator = Some_token
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			--Determine the data type of the expression, if possible
 		do
 			Result := type_factory.boolean_type
@@ -66,13 +66,13 @@ feature -- Access
 			end
 		end
 
-	required_type: XM_XPATH_SEQUENCE_TYPE is
+	required_type: XM_XPATH_SEQUENCE_TYPE
 			-- Static type of variable
 		do
 			create result.make (sequence.item_type, Required_cardinality_exactly_one)
 		end
 
-	is_repeated_sub_expression (a_child: XM_XPATH_EXPRESSION): BOOLEAN is
+	is_repeated_sub_expression (a_child: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Is `a_child' a repeatedly-evaluated sub-expression?
 		do
 			Result := a_child = action
@@ -80,7 +80,7 @@ feature -- Access
 
 feature -- Status report
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -100,7 +100,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
@@ -157,7 +157,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -183,7 +183,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT)
 			-- Effective boolean value
 		local
 			a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -246,7 +246,7 @@ feature -- Evaluation
 			end
 		end
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			calculate_effective_boolean_value (a_context)
@@ -255,20 +255,20 @@ feature -- Evaluation
 
 feature {NONE} -- Implementation
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
 		end
 
-	compute_special_properties is
+	compute_special_properties
 			-- Compute special properties.
 		do
 			Precursor
 			set_non_creating
 		end
 
-	promote_subexpressions (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	promote_subexpressions (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Extract subexpressions that don't depend on the range variable.
 		local
 			l_offer: XM_XPATH_PROMOTION_OFFER

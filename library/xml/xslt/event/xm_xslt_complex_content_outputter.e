@@ -9,10 +9,10 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XSLT_COMPLEX_CONTENT_OUTPUTTER	
+class XM_XSLT_COMPLEX_CONTENT_OUTPUTTER
 
 inherit
-	
+
 	UC_SHARED_STRING_EQUALITY_TESTER
 		export {NONE} all end
 
@@ -46,7 +46,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_underlying_receiver: XM_XPATH_RECEIVER) is
+	make (a_underlying_receiver: XM_XPATH_RECEIVER)
 			-- Establish invariant.
 		require
 			underlying_receiver_not_void: a_underlying_receiver /= Void
@@ -66,13 +66,13 @@ feature {NONE} -- Initialization
 		end
 
 feature {XM_XSLT_TRANSFORMER} -- Access
-		
+
 	next_receiver: XM_XPATH_RECEIVER
 			-- Next receiver in pipeline
 
 feature -- Status report
-	
-	is_name_code_ok_for_start_element (a_name_code: INTEGER): BOOLEAN is
+
+	is_name_code_ok_for_start_element (a_name_code: INTEGER): BOOLEAN
 			-- Is `a_name_code' valid for `start_element'?
 		do
 
@@ -83,7 +83,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	mark_as_written is
+	mark_as_written
 			-- Mark as output has been written.
 		do
 			is_written := True
@@ -92,13 +92,13 @@ feature -- Status setting
 
 feature -- Events
 
-	on_error (a_message: STRING) is
+	on_error (a_message: STRING)
 			-- Event producer detected an error.
 		do
 			next_receiver.on_error (a_message)
 		end
 
-	open is
+	open
 			-- Notify start of event stream.
 		do
 			is_open := True
@@ -107,7 +107,7 @@ feature -- Events
 			previous_atomic := False
 		end
 
-	start_document is
+	start_document
 			-- New document
 		do
 			is_document_started := True
@@ -119,7 +119,7 @@ feature -- Events
 			previous_atomic := False
 		end
 
-	start_nested_document is
+	start_nested_document
 			-- Start a copy of a new document within `Current'.
 		require
 			nested_document: is_document_started
@@ -129,7 +129,7 @@ feature -- Events
 			is_top_level := True
 		end
 
-	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
+	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER)
 			-- Notify the start of an element.
 		do
 			is_top_level := False
@@ -157,7 +157,7 @@ feature -- Events
 			mark_as_written
 		end
 
-	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
+	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER)
 			-- Notify a namespace.
 		local
 			reject_these_duplicates, reject: BOOLEAN
@@ -172,7 +172,7 @@ feature -- Events
 						on_error ("XTDE0410: Namespace declarations must be created before the element's children")
 					end
 				else
-					
+
 					-- Handle declarations whose prefix is duplicated for this element.
 
 					reject_these_duplicates := are_duplicates_rejected (properties)
@@ -187,7 +187,7 @@ feature -- Events
 						if a_namespace_code = another_namespace_code then
 
 							-- same prefix and URI: ignore this duplicate
-							
+
 							reject := True
 						else
 							if a_prefix_code = prefix_code_from_namespace_code (another_namespace_code) then
@@ -200,7 +200,7 @@ feature -- Events
 								reject := True
 							else
 								an_index := an_index + 1
-							end							
+							end
 						end
 					end
 					if not reject then
@@ -219,7 +219,7 @@ feature -- Events
 						end
 					end
 					if not reject then
-						
+
 						-- If it's not a duplicate namespace, add it to the list for this start tag.
 
 						pending_namespaces_list_size := pending_namespaces_list_size + 1
@@ -234,7 +234,7 @@ feature -- Events
 			mark_as_written
 		end
 
-	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
+	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER)
 			-- Notify an attribute.
 		local
 			an_index, a_new_size: INTEGER
@@ -245,7 +245,7 @@ feature -- Events
 					if is_top_level then
 						on_error ("XTDE0420: Cannot write an attribute declaration when the parent is a document node")
 					else
-						on_error ("XTDE0410: Attributes must be created before the element's children")						
+						on_error ("XTDE0410: Attributes must be created before the element's children")
 					end
 				else
 
@@ -291,7 +291,7 @@ feature -- Events
 			mark_as_written
 		end
 
-	start_content is
+	start_content
 			-- Notify the start of the content, that is, the completion of all attributes and namespaces.
 		local
 			properties, an_index: INTEGER
@@ -307,7 +307,7 @@ feature -- Events
 				from
 					an_index := 1
 				until
-					an_index > pending_attributes_lists_size 
+					an_index > pending_attributes_lists_size
 				loop
 					a_name_code := pending_attributes_name_codes.item (an_index)
 					if shared_name_pool.name_code_to_prefix_index (a_name_code) /= 0 then
@@ -319,7 +319,7 @@ feature -- Events
 				from
 					an_index := 1
 				until
-					an_index > pending_namespaces_list_size 
+					an_index > pending_namespaces_list_size
 				loop
 					next_receiver.notify_namespace (pending_namespaces.item (an_index), 0)
 					an_index := an_index + 1
@@ -327,7 +327,7 @@ feature -- Events
 				from
 					an_index := 1
 				until
-					an_index > pending_attributes_lists_size 
+					an_index > pending_attributes_lists_size
 				loop
 					next_receiver.notify_attribute (pending_attributes_name_codes.item (an_index),
 															  pending_attributes_type_codes.item (an_index),
@@ -343,7 +343,7 @@ feature -- Events
 			mark_as_written
 		end
 
-	end_element is
+	end_element
 			-- Notify the end of an element.
 		do
 			if pending_start_tag >=0 then start_content end
@@ -352,7 +352,7 @@ feature -- Events
 			mark_as_written
 		end
 
-	notify_characters (chars: STRING; properties: INTEGER) is
+	notify_characters (chars: STRING; properties: INTEGER)
 			-- Notify character data.
 		do
 			previous_atomic := False
@@ -363,7 +363,7 @@ feature -- Events
 			mark_as_written
 		end
 
-	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
+	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER)
 			-- Notify a processing instruction.
 		do
 			if pending_start_tag >= 0 then start_content end
@@ -371,8 +371,8 @@ feature -- Events
 			previous_atomic := False
 			mark_as_written
 		end
-	
-	notify_comment (a_content_string: STRING; properties: INTEGER) is
+
+	notify_comment (a_content_string: STRING; properties: INTEGER)
 			-- Notify a comment.
 		do
 			if pending_start_tag >= 0 then start_content end
@@ -381,7 +381,7 @@ feature -- Events
 			mark_as_written
 		end
 
-	end_document is
+	end_document
 			-- Notify the end of the document.
 		do
 			next_receiver.end_document
@@ -389,20 +389,20 @@ feature -- Events
 			previous_atomic := False
 		end
 
-	end_nested_document is
+	end_nested_document
 			-- Notify end of nested document copy.
 		do
 		end
 
-	close is
+	close
 			-- Notify end of event stream.
 		do
 			next_receiver.close
 			is_open := False
-			previous_atomic := False			
+			previous_atomic := False
 		end
 
-	append_item (an_item: XM_XPATH_ITEM) is
+	append_item (an_item: XM_XPATH_ITEM)
 			-- Output an item (atomic value or node) to the sequence.
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -434,7 +434,7 @@ feature -- Events
 
 feature -- Element change
 
-	set_document_locator (a_locator: XM_XPATH_LOCATOR) is
+	set_document_locator (a_locator: XM_XPATH_LOCATOR)
 			-- Set the locator.
 		do
 			-- do nothing
@@ -475,7 +475,7 @@ feature {NONE} -- Implementation
 	pending_namespaces: ARRAY [INTEGER]
 			-- Pending namespace codes
 
-	Initial_arrays_size: INTEGER is 5
+	Initial_arrays_size: INTEGER = 5
 			-- Initial size for arrays
 
 	current_simple_type: INTEGER
@@ -487,7 +487,7 @@ feature {NONE} -- Implementation
 	is_top_level: BOOLEAN
 			-- Are we dealing with a document node or not?
 
-	check_proposed_prefix (a_name_code: INTEGER; a_sequence_number: INTEGER) is
+	check_proposed_prefix (a_name_code: INTEGER; a_sequence_number: INTEGER)
 			-- Check that the prefix for an element or attribute is acceptable,
 			--  allocating a substitute prefix if not.
 			-- The prefix is acceptable unless a namespace declaration has been
@@ -547,7 +547,7 @@ feature {NONE} -- Implementation
 			last_checked_namecode: last_checked_namecode > -1
 		end
 
-	substituted_prefix (a_namespace_code: INTEGER; a_sequence_number: INTEGER): STRING is
+	substituted_prefix (a_namespace_code: INTEGER; a_sequence_number: INTEGER): STRING
 			-- Substituted prefix for `a_name_code'
 		require
 			valid_namespace_code: shared_name_pool.is_valid_namespace_code (a_namespace_code)
@@ -577,5 +577,5 @@ invariant
 		pending_attributes_name_codes.count = pending_attributes_values.count and then
 		pending_attributes_name_codes.count = pending_attributes_properties.count
 		namespaces_list: pending_namespaces /= Void
-		
+
 end

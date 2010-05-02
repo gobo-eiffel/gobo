@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_etl_code (a_code: like etl_code) is
+	set_etl_code (a_code: like etl_code)
 			-- Set `etl_code' to `a_code'.
 		require
 			a_code_not_void: a_code /= Void
@@ -46,7 +46,7 @@ feature -- Setting
 			etl_code_set: etl_code = a_code
 		end
 
-	set_default_template (a_template: like default_template) is
+	set_default_template (a_template: like default_template)
 			-- Set `default_template' to `a_template'.
 		require
 			a_template_not_void: a_template /= Void
@@ -56,7 +56,7 @@ feature -- Setting
 			default_template_set: default_template = a_template
 		end
 
-	set_parameters (a_parameters: like parameters) is
+	set_parameters (a_parameters: like parameters)
 			-- Set `parameters' to `a_parameters'.
 		require
 			a_parameters_not_void: a_parameters /= Void
@@ -67,7 +67,7 @@ feature -- Setting
 			parameters_set: parameters = a_parameters
 		end
 
-	set_code (a_code: like code) is
+	set_code (a_code: like code)
 			-- Set `code' to `a_code'.
 		require
 			a_code_not_void: a_code /= Void

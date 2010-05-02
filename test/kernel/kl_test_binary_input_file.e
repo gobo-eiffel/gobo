@@ -29,7 +29,7 @@ create
 
 feature -- Test
 
-	test_make is
+	test_make
 			-- Test feature `make'.
 		local
 			a_file: KL_BINARY_INPUT_FILE
@@ -42,7 +42,7 @@ feature -- Test
 			assert ("is_closed", a_file.is_closed)
 		end
 
-	test_exists is
+	test_exists
 			-- Test feature `exists'.
 		local
 			a_file: KL_BINARY_INPUT_FILE
@@ -105,7 +105,7 @@ feature -- Test
 			end
 		end
 
-	test_is_readable is
+	test_is_readable
 			-- Test feature `is_readable'.
 		local
 			a_file: KL_BINARY_INPUT_FILE
@@ -168,7 +168,7 @@ feature -- Test
 			end
 		end
 
-	test_count is
+	test_count
 			-- Test feature `count'.
 		local
 			a_file: KL_BINARY_INPUT_FILE
@@ -192,7 +192,7 @@ feature -- Test
 			assert_integers_equal ("count4", 48 + 2 * file_system.eol.count, a_file.count)
 		end
 
-	test_time_stamp is
+	test_time_stamp
 			-- Test feature `time_stamp'.
 		local
 			a_file: KL_BINARY_INPUT_FILE
@@ -227,7 +227,7 @@ feature -- Test
 			out_file.delete
 		end
 
-	test_open_read is
+	test_open_read
 			-- Test feature `open_read'.
 		local
 			a_file: KL_BINARY_INPUT_FILE
@@ -249,7 +249,7 @@ feature -- Test
 			assert ("not_opened", not a_file.is_open_read)
 		end
 
-	test_read_character is
+	test_read_character
 			-- Test feature `read_character'.
 		local
 			a_file: KL_BINARY_INPUT_FILE
@@ -276,7 +276,7 @@ feature -- Test
 			end
 		end
 
-	test_unread_character1 is
+	test_unread_character1
 			-- Test feature `unread_character'.
 		local
 			a_file: KL_BINARY_INPUT_FILE
@@ -307,7 +307,7 @@ feature -- Test
 			end
 		end
 
-	test_unread_character2 is
+	test_unread_character2
 			-- Test feature `unread_character'.
 		local
 			a_file: KL_BINARY_INPUT_FILE
@@ -343,7 +343,7 @@ feature -- Test
 			end
 		end
 
-	test_unread_character3 is
+	test_unread_character3
 			-- Test feature `unread_character'.
 		local
 			a_file: KL_BINARY_INPUT_FILE
@@ -377,7 +377,7 @@ feature -- Test
 			end
 		end
 
-	test_read_string is
+	test_read_string
 			-- Test feature `read_string'.
 		local
 			a_file: KL_BINARY_INPUT_FILE
@@ -408,7 +408,7 @@ feature -- Test
 			end
 		end
 
-	test_read_to_string is
+	test_read_to_string
 			-- Test feature `read_to_string'.
 		local
 			a_file: KL_BINARY_INPUT_FILE
@@ -437,7 +437,7 @@ feature -- Test
 			end
 		end
 
-	test_read_to_buffer is
+	test_read_to_buffer
 			-- Test feature `read_to_buffer'.
 		local
 			a_file: KL_BINARY_INPUT_FILE
@@ -466,7 +466,7 @@ feature -- Test
 			end
 		end
 
-	test_end_of_file is
+	test_end_of_file
 			-- Test feature `end_of_file' with `read_character'.
 		local
 			a_file: KL_BINARY_INPUT_FILE
@@ -495,7 +495,7 @@ feature -- Test
 			end
 		end
 
-	test_end_of_file2 is
+	test_end_of_file2
 			-- Test feature `end_of_file' with `read_string'.
 		local
 			a_file: KL_BINARY_INPUT_FILE
@@ -524,7 +524,7 @@ feature -- Test
 			end
 		end
 
-	test_empty_end_of_file is
+	test_empty_end_of_file
 			-- Test feature `end_of_file' on empty file with `read_character'.
 		local
 			a_file: KL_BINARY_INPUT_FILE
@@ -544,7 +544,7 @@ feature -- Test
 			end
 		end
 
-	test_empty_end_of_file2 is
+	test_empty_end_of_file2
 			-- Test feature `end_of_file' on empty file with `read_string'.
 		local
 			a_file: KL_BINARY_INPUT_FILE
@@ -564,7 +564,7 @@ feature -- Test
 			end
 		end
 
-	test_change_name1 is
+	test_change_name1
 			-- Test feature `change_name'.
 			-- Old file exists and new file does not exist.
 		local
@@ -595,7 +595,7 @@ feature -- Test
 			end
 		end
 
-	test_change_name2 is
+	test_change_name2
 			-- Test feature `change_name'.
 			-- Old file and new file do not exist.
 		local
@@ -613,7 +613,7 @@ feature -- Test
 			assert ("not_readable4", not file_system.is_file_readable (new_name))
 		end
 
-	test_change_name3 is
+	test_change_name3
 			-- Test feature `change_name'.
 			-- Old file does not exist and new file exists.
 		local
@@ -644,7 +644,7 @@ feature -- Test
 			end
 		end
 
-	test_change_name4 is
+	test_change_name4
 			-- Test feature `change_name'.
 			-- Old file and new file exist.
 		local
@@ -688,7 +688,7 @@ feature -- Test
 			end
 		end
 
-	test_delete_file is
+	test_delete_file
 			-- Test feature `delete_file'.
 		local
 			a_file: KL_BINARY_INPUT_FILE
@@ -712,7 +712,7 @@ feature -- Test
 			end
 		end
 
-	test_binary is
+	test_binary
 			-- Test that file is binary.
 		local
 			a_file: KL_BINARY_INPUT_FILE

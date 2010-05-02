@@ -36,7 +36,7 @@ create
 
 feature -- Validity checking
 
-	check_builtin_feature_validity (a_feature: ET_FEATURE) is
+	check_builtin_feature_validity (a_feature: ET_FEATURE)
 			-- Check whether `a_feature' is a known built-in feature,
 			-- and if yes, check the validity of its signature.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -62,7 +62,7 @@ feature -- Status report
 
 feature {NONE} -- Built-in validity
 
-	check_external_function_validity (a_feature: ET_EXTERNAL_FUNCTION) is
+	check_external_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Check validity of `a_feature', written in `current_class',
 			-- if it appears to be a built-in feature.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -78,7 +78,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_external_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE) is
+	check_external_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE)
 			-- Check validity of `a_feature', written in `current_class',
 			-- if it appears to be a built-in feature.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -94,7 +94,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_function_validity (a_feature: ET_EXTERNAL_FUNCTION) is
+	check_builtin_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Check validity of built-in `a_feature', written in `current_class'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -191,7 +191,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_any_function_validity (a_feature: ET_EXTERNAL_FUNCTION) is
+	check_builtin_any_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Check validity of built-in `a_feature' from class "ANY".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -372,7 +372,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_type_function_validity (a_feature: ET_EXTERNAL_FUNCTION) is
+	check_builtin_type_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Check validity of built-in `a_feature' from class "TYPE".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -962,7 +962,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_special_function_validity (a_feature: ET_EXTERNAL_FUNCTION) is
+	check_builtin_special_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Check validity of built-in `a_feature' from class "SPECIAL".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1079,7 +1079,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_sized_character_ref_function_validity (a_feature: ET_EXTERNAL_FUNCTION; a_character_type: ET_CLASS_TYPE; a_builtin_class_code: INTEGER) is
+	check_builtin_sized_character_ref_function_validity (a_feature: ET_EXTERNAL_FUNCTION; a_character_type: ET_CLASS_TYPE; a_builtin_class_code: INTEGER)
 			-- Check validity of built-in `a_feature' from the ref class of sized `a_character_type'.
 			-- `a_builtin_class_code' is the built-in code of base class of `a_character_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1117,7 +1117,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_sized_character_function_validity (a_feature: ET_EXTERNAL_FUNCTION; a_builtin_class_code: INTEGER) is
+	check_builtin_sized_character_function_validity (a_feature: ET_EXTERNAL_FUNCTION; a_builtin_class_code: INTEGER)
 			-- Check validity of built-in `a_feature' from a sized character class whose
 			-- built-in code is `a_builtin_class_code'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1185,7 +1185,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_boolean_ref_function_validity (a_feature: ET_EXTERNAL_FUNCTION) is
+	check_builtin_boolean_ref_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Check validity of built-in `a_feature' from class "BOOLEAN_REF".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1221,7 +1221,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_boolean_function_validity (a_feature: ET_EXTERNAL_FUNCTION) is
+	check_builtin_boolean_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Check validity of built-in `a_feature' from class "BOOLEAN".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1362,7 +1362,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_pointer_ref_function_validity (a_feature: ET_EXTERNAL_FUNCTION) is
+	check_builtin_pointer_ref_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Check validity of built-in `a_feature' from class "POINTER_REF".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1398,7 +1398,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_pointer_function_validity (a_feature: ET_EXTERNAL_FUNCTION) is
+	check_builtin_pointer_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Check validity of built-in `a_feature' from class "POINTER".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1471,7 +1471,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_arguments_function_validity (a_feature: ET_EXTERNAL_FUNCTION) is
+	check_builtin_arguments_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Check validity of built-in `a_feature' from class "ARGUMENTS".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1518,7 +1518,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_memory_function_validity (a_feature: ET_EXTERNAL_FUNCTION) is
+	check_builtin_memory_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Check validity of built-in `a_feature' from class "MEMORY".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1561,7 +1561,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_identified_routines_function_validity (a_feature: ET_EXTERNAL_FUNCTION) is
+	check_builtin_identified_routines_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Check validity of built-in `a_feature' from class "IDENTIFIED_ROUTINES".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1617,7 +1617,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_internal_function_validity (a_feature: ET_EXTERNAL_FUNCTION) is
+	check_builtin_internal_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Check validity of built-in `a_feature' from class "INTERNAL".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1664,7 +1664,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_platform_function_validity (a_feature: ET_EXTERNAL_FUNCTION) is
+	check_builtin_platform_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Check validity of built-in `a_feature' from class "PLATFORM".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1851,7 +1851,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_procedure_function_validity (a_feature: ET_EXTERNAL_FUNCTION) is
+	check_builtin_procedure_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Check validity of built-in `a_feature' from class "PROCEDURE".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1876,7 +1876,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_function_function_validity (a_feature: ET_EXTERNAL_FUNCTION) is
+	check_builtin_function_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Check validity of built-in `a_feature' from class "FUNCTION".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1915,7 +1915,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_tuple_function_validity (a_feature: ET_EXTERNAL_FUNCTION) is
+	check_builtin_tuple_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Check validity of built-in `a_feature' from class "TUPLE".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -2300,7 +2300,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_sized_integer_ref_function_validity (a_feature: ET_EXTERNAL_FUNCTION; a_integer_type: ET_CLASS_TYPE; a_builtin_class_code: INTEGER) is
+	check_builtin_sized_integer_ref_function_validity (a_feature: ET_EXTERNAL_FUNCTION; a_integer_type: ET_CLASS_TYPE; a_builtin_class_code: INTEGER)
 			-- Check validity of built-in `a_feature' from the ref class of sized `a_integer_type'.
 			-- `a_builtin_class_code' is the built-in code of base class of `a_integer_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -2338,7 +2338,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_sized_integer_function_validity (a_feature: ET_EXTERNAL_FUNCTION; a_builtin_class_code: INTEGER) is
+	check_builtin_sized_integer_function_validity (a_feature: ET_EXTERNAL_FUNCTION; a_builtin_class_code: INTEGER)
 			-- Check validity of built-in `a_feature' from a sized integer class whose
 			-- built-in code is `a_builtin_class_code'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -2834,7 +2834,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_sized_real_ref_function_validity (a_feature: ET_EXTERNAL_FUNCTION; a_real_type: ET_CLASS_TYPE; a_builtin_class_code: INTEGER) is
+	check_builtin_sized_real_ref_function_validity (a_feature: ET_EXTERNAL_FUNCTION; a_real_type: ET_CLASS_TYPE; a_builtin_class_code: INTEGER)
 			-- Check validity of built-in `a_feature' from the ref class of sized `a_real_type'.
 			-- `a_builtin_class_code' is the built-in code of base class of `a_real_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -2872,7 +2872,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_sized_real_function_validity (a_feature: ET_EXTERNAL_FUNCTION; a_builtin_class_code: INTEGER) is
+	check_builtin_sized_real_function_validity (a_feature: ET_EXTERNAL_FUNCTION; a_builtin_class_code: INTEGER)
 			-- Check validity of built-in `a_feature' from a sized real class whose
 			-- built-in code is `a_builtin_class_code'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -3152,7 +3152,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE) is
+	check_builtin_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE)
 			-- Check validity of built-in `a_feature', written in `current_class'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -3249,7 +3249,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_any_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE) is
+	check_builtin_any_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE)
 			-- Check validity of built-in `a_feature' from class "ANY".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -3347,7 +3347,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_type_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE) is
+	check_builtin_type_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE)
 			-- Check validity of built-in `a_feature' from class "TYPE".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -3832,7 +3832,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_special_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE) is
+	check_builtin_special_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE)
 			-- Check validity of built-in `a_feature' from class "SPECIAL".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -3924,7 +3924,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_sized_character_ref_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE; a_character_type: ET_CLASS_TYPE; a_builtin_class_code: INTEGER) is
+	check_builtin_sized_character_ref_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE; a_character_type: ET_CLASS_TYPE; a_builtin_class_code: INTEGER)
 			-- Check validity of built-in`a_feature' from the ref class of sized `a_character_type'.
 			-- `a_builtin_class_code' is the built-in code of base class of `a_character_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -3962,7 +3962,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_sized_character_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE; a_builtin_class_code: INTEGER) is
+	check_builtin_sized_character_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE; a_builtin_class_code: INTEGER)
 			-- Check validity of built-in `a_feature' from a sized character class whose
 			-- built-in code is `a_builtin_class_code'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -4000,7 +4000,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_boolean_ref_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE) is
+	check_builtin_boolean_ref_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE)
 			-- Check validity of built-in `a_feature' from class "BOOLEAN_REF".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -4036,7 +4036,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_boolean_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE) is
+	check_builtin_boolean_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE)
 			-- Check validity of built-in `a_feature' from class "BOOLEAN".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -4088,7 +4088,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_pointer_ref_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE) is
+	check_builtin_pointer_ref_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE)
 			-- Check validity of built-in `a_feature' from class "POINTER_REF".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -4124,7 +4124,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_pointer_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE) is
+	check_builtin_pointer_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE)
 			-- Check validity of built-in `a_feature' from class "POINTER".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -4161,7 +4161,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_arguments_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE) is
+	check_builtin_arguments_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE)
 			-- Check validity of built-in `a_feature' from class "ARGUMENTS".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -4188,7 +4188,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_memory_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE) is
+	check_builtin_memory_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE)
 			-- Check validity of built-in `a_feature' from class "MEMORY".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -4224,7 +4224,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_identified_routines_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE) is
+	check_builtin_identified_routines_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE)
 			-- Check validity of built-in `a_feature' from class "IDENTIFIED_ROUTINES".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -4265,7 +4265,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_internal_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE) is
+	check_builtin_internal_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE)
 			-- Check validity of built-in `a_feature' from class "INTERNAL".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -4292,7 +4292,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_platform_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE) is
+	check_builtin_platform_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE)
 			-- Check validity of built-in `a_feature' from class "PLATFORM".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -4379,7 +4379,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_procedure_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE) is
+	check_builtin_procedure_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE)
 			-- Check validity of built-in `a_feature' from class "PROCEDURE".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -4412,7 +4412,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_function_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE) is
+	check_builtin_function_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE)
 
 			-- Check validity of built-in `a_feature' from class "FUNCTION".
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -4440,7 +4440,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_tuple_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE) is
+	check_builtin_tuple_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE)
 			-- Check validity of built-in `a_feature' from class "TUPLE".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -4807,7 +4807,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_sized_integer_ref_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE; a_integer_type: ET_CLASS_TYPE; a_builtin_class_code: INTEGER) is
+	check_builtin_sized_integer_ref_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE; a_integer_type: ET_CLASS_TYPE; a_builtin_class_code: INTEGER)
 			-- Check validity of built-in `a_feature' from the ref class of sized `a_integer_type'.
 			-- `a_builtin_class_code' is the built-in code of base class of `a_integer_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -4845,7 +4845,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_sized_integer_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE; a_builtin_class_code: INTEGER) is
+	check_builtin_sized_integer_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE; a_builtin_class_code: INTEGER)
 			-- Check validity of built-in `a_feature' from a sized integer class whose
 			-- built-in code is `a_builtin_class_code'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -5013,7 +5013,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_sized_real_ref_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE; a_real_type: ET_CLASS_TYPE; a_builtin_class_code: INTEGER) is
+	check_builtin_sized_real_ref_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE; a_real_type: ET_CLASS_TYPE; a_builtin_class_code: INTEGER)
 			-- Check validity of built-in `a_feature' from the ref class of sized `a_real_type'.
 			-- `a_builtin_class_code' is the built-in code of base class of `a_real_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -5051,7 +5051,7 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_sized_real_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE; a_builtin_class_code: INTEGER) is
+	check_builtin_sized_real_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE; a_builtin_class_code: INTEGER)
 			-- Check validity of built-in `a_feature' from a sized real class whose
 			-- built-in code is `a_builtin_class_code'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -5156,13 +5156,13 @@ feature {NONE} -- Built-in validity
 
 feature {ET_AST_NODE} -- Type dispatcher
 
-	process_external_function (a_feature: ET_EXTERNAL_FUNCTION) is
+	process_external_function (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Process `a_feature'.
 		do
 			check_external_function_validity (a_feature)
 		end
 
-	process_external_procedure (a_feature: ET_EXTERNAL_PROCEDURE) is
+	process_external_procedure (a_feature: ET_EXTERNAL_PROCEDURE)
 			-- Process `a_feature'.
 		do
 			check_external_procedure_validity (a_feature)

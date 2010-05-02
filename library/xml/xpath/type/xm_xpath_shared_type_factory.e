@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	type_factory: XM_XPATH_TYPE_FACTORY is
+	type_factory: XM_XPATH_TYPE_FACTORY
 			-- Singleton type factory
 		once
 			if conformance.basic_xslt_processor then
@@ -32,4 +32,4 @@ feature -- Access
 		end
 
 end
-	
+

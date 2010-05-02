@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (e: like expression) is
+	make (e: like expression)
 			-- Create a new old expression.
 		require
 			e_not_void: e /= Void
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset expression as it was just after it was last parsed.
 		do
 			expression.reset
@@ -49,7 +49,7 @@ feature -- Access
 	old_keyword: ET_KEYWORD
 			-- 'old' keyword
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -59,7 +59,7 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := old_keyword
@@ -67,7 +67,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_old_keyword (an_old: like old_keyword) is
+	set_old_keyword (an_old: like old_keyword)
 			-- Set `old_keyword' to `an_old'.
 		require
 			an_old_not_void: an_old /= Void
@@ -79,7 +79,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_old_expression (Current)

@@ -32,63 +32,63 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Nothing to do.
 		do
 		end
 
 feature -- Access
 
-	item: G is
+	item: G
 			-- Value or node at the current position
 		do
 		end
 
-	last_position: INTEGER is
+	last_position: INTEGER
 			-- Last position (= number of items in sequence)
 		do
 			Result := 0
 		end
 
-	reverse_iterator: like Current is
+	reverse_iterator: like Current
 		do
 			Result := Current
 		end
 
 feature -- Status report
 
-	is_empty_iterator: BOOLEAN is
+	is_empty_iterator: BOOLEAN
 			-- Is `Current' an iterator over a guarenteed empty sequence?
 		do
 			Result := True
 		end
 
-	
-	is_last_position_finder: BOOLEAN is
+
+	is_last_position_finder: BOOLEAN
 			-- Can `Current' find the last position?
 		do
 			Result := True
 		end
-	
-	is_node_iterator: BOOLEAN is
+
+	is_node_iterator: BOOLEAN
 			-- Does `Current' yield a node_sequence?
 		do
 			Result := True
 		end
 
-	is_reversible_iterator: BOOLEAN is
+	is_reversible_iterator: BOOLEAN
 			-- Does `Current' yield a reversible_sequence?
 		do
 			Result := True
 		end
 
-	is_invulnerable: BOOLEAN is
+	is_invulnerable: BOOLEAN
 			-- Is `Current' guarenteed free of implicit errors?
 		do
 			Result := True
 		end
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
 			Result := True
@@ -96,13 +96,13 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move to next position
 		do
 			index := index + 1
 		end
 
-	reset is
+	reset
 			-- Reset position to facilitate reuse.
 		do
 			index := 0
@@ -112,13 +112,13 @@ feature -- Cursor movement
 
 feature -- Conversion
 
-	as_empty_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE] is
+	as_empty_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as an empty iterator
 		do
 			Result := Current
 		end
 
-	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
 		do
 			Result := Current
@@ -126,7 +126,7 @@ feature -- Conversion
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 			create Result.make
@@ -134,7 +134,7 @@ feature -- Duplication
 
 feature {NONE} -- Implementation
 
-	advance is
+	advance
 			-- Move to the next position
 		do
 

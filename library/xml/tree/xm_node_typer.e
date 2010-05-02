@@ -26,7 +26,7 @@ inherit
 
 feature
 
-	process_element (a: XM_ELEMENT) is
+	process_element (a: XM_ELEMENT)
 			-- Element.
 		do
 			reset
@@ -34,36 +34,36 @@ feature
 			composite := a
 		end
 
-	process_character_data (a: XM_CHARACTER_DATA) is
+	process_character_data (a: XM_CHARACTER_DATA)
 			-- Character data.
 		do
 			reset
 			character_data := a
 		end
 
-	process_processing_instruction (a: XM_PROCESSING_INSTRUCTION) is
+	process_processing_instruction (a: XM_PROCESSING_INSTRUCTION)
 			-- Processing instruction.
 		do
 			reset
 			processing_instruction := a
 		end
 
-	process_document (a: XM_DOCUMENT) is
-			-- Root.	
+	process_document (a: XM_DOCUMENT)
+			-- Root.
 		do
 			reset
 			document := a
 			composite := a
 		end
 
-	process_comment (a: XM_COMMENT) is
+	process_comment (a: XM_COMMENT)
 			-- Comment.
 		do
 			reset
 			comment := a
 		end
 
-	process_attribute (a: XM_ATTRIBUTE) is
+	process_attribute (a: XM_ATTRIBUTE)
 			-- Attribute.
 		do
 			reset
@@ -72,37 +72,37 @@ feature
 
 feature -- Status report
 
-	is_element: BOOLEAN is
+	is_element: BOOLEAN
 			-- Element?
 		do
 			Result := element /= Void
 		end
 
-	is_character_data: BOOLEAN is
+	is_character_data: BOOLEAN
 			-- Character data?
 		do
 			Result := character_data /= Void
 		end
 
-	is_processing_instruction: BOOLEAN is
+	is_processing_instruction: BOOLEAN
 			-- Processing instruction?
 		do
 			Result := processing_instruction /= Void
 		end
 
-	is_document: BOOLEAN is
+	is_document: BOOLEAN
 			-- Document?
 		do
 			Result := document /= Void
 		end
 
-	is_comment: BOOLEAN is
+	is_comment: BOOLEAN
 			-- Comment?
 		do
 			Result := comment /= Void
 		end
 
-	is_attribute: BOOLEAN is
+	is_attribute: BOOLEAN
 			-- Attribute?
 		do
 			Result := xml_attribute /= Void
@@ -142,7 +142,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_composite: BOOLEAN is
+	is_composite: BOOLEAN
 			-- Composite?
 		do
 			Result := composite /= Void
@@ -159,7 +159,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	reset is
+	reset
 			-- Reset.
 		do
 			element := Void

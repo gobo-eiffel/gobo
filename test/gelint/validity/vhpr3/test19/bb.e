@@ -9,7 +9,7 @@ inherit
 
 feature -- Access
 
-	f is
+	f
 		do
 			item := "gobo"
 		end

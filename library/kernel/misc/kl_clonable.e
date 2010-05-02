@@ -21,7 +21,7 @@ inherit
 
 feature -- Duplication
 
-	cloned_object: like Current is
+	cloned_object: like Current
 			-- Clone of current object
 		do
 			Result := twin

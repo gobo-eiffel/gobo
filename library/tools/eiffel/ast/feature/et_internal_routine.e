@@ -30,7 +30,7 @@ inherit
 
 feature -- Initialization
 
-	reset_after_features_flattened is
+	reset_after_features_flattened
 			-- Reset current feature as it was just after it was last flattened.
 		do
 			if implementation_checked then

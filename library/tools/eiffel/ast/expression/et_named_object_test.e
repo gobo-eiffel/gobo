@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type: like declared_type; a_expression: like expression; a_name: like name) is
+	make (a_type: like declared_type; a_expression: like expression; a_name: like name)
 			-- Create a new object-test expression.
 		require
 			a_name_not_void: a_name /= Void
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset expression as it was just after it was last parsed.
 		do
 			name.reset
@@ -67,19 +67,19 @@ feature -- Access
 			-- Name of object-test local
 
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash value
 		do
 			Result := name.hash_code
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := name.last_leaf
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := name.break
@@ -87,7 +87,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_as_keyword (a_as: like as_keyword) is
+	set_as_keyword (a_as: like as_keyword)
 			-- Set `as_keyword' to `a_as'.
 		require
 			a_as_not_void: a_as /= Void
@@ -99,7 +99,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_named_object_test (Current)

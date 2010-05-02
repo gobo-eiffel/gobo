@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_formal: like formal_parameter; a_comma: like comma) is
+	make (a_formal: like formal_parameter; a_comma: like comma)
 			-- Create a new formal_parameter-comma.
 		require
 			a_formal_not_void: a_formal /= Void
@@ -43,26 +43,26 @@ feature -- Access
 	comma: ET_SYMBOL
 			-- Comma separator
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
 			Result := formal_parameter.position
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := formal_parameter.first_leaf
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := comma
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := comma.break
@@ -70,7 +70,7 @@ feature -- Access
 
 feature -- Type processing
 
-	resolved_formal_parameters_with_type (a_type: ET_TYPE): ET_ACTUAL_PARAMETER_ITEM is
+	resolved_formal_parameters_with_type (a_type: ET_TYPE): ET_ACTUAL_PARAMETER_ITEM
 			-- Version of current actual parameter where its type
 			-- is replaced by `a_type'
 		do
@@ -83,7 +83,7 @@ feature -- Type processing
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_formal_parameter_comma (Current)

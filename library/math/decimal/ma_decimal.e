@@ -120,7 +120,7 @@ create {MA_DECIMAL_TEXT_PARSER}
 
 feature {NONE} -- Initialization
 
-	make (a_precision: INTEGER) is
+	make (a_precision: INTEGER)
 			-- Create a new decimal using `a_precision' digits.
 		require
 			a_precision_positive: a_precision > 0
@@ -132,7 +132,7 @@ feature {NONE} -- Initialization
 			zero: is_zero
 		end
 
-	make_copy (other: like Current) is
+	make_copy (other: like Current)
 			-- Make a copy of `other'.
 		require
 			other_not_void: other /= Void
@@ -151,7 +151,7 @@ feature {NONE} -- Initialization
 			exponent_copy: exponent = other.exponent
 		end
 
-	make_zero is
+	make_zero
 			-- Make zero.
 		do
 			coefficient := special_coefficient
@@ -159,7 +159,7 @@ feature {NONE} -- Initialization
 			zero: is_zero
 		end
 
-	make_one is
+	make_one
 			-- Make one.
 		do
 			make (1)
@@ -169,7 +169,7 @@ feature {NONE} -- Initialization
 			positive: not is_negative
 		end
 
-	make_from_integer (a_value: INTEGER) is
+	make_from_integer (a_value: INTEGER)
 			-- Make a new decimal from integer `a_value'.
 		local
 			temp_value, v, index, ten_exponent: INTEGER
@@ -218,7 +218,7 @@ feature {NONE} -- Initialization
 			equal_to_value: to_integer = a_value
 		end
 
-	make_from_string_ctx (value_string: STRING; ctx: MA_DECIMAL_CONTEXT) is
+	make_from_string_ctx (value_string: STRING; ctx: MA_DECIMAL_CONTEXT)
 			-- Make a new decimal from `value_string' relative to `ctx'.
 		require
 			value_string_not_void: value_string /= Void
@@ -231,7 +231,7 @@ feature {NONE} -- Initialization
 			make_from_parser (l_parser, ctx)
 		end
 
-	make_from_parser (a_decimal_parser: MA_DECIMAL_TEXT_PARSER; a_context: MA_DECIMAL_CONTEXT) is
+	make_from_parser (a_decimal_parser: MA_DECIMAL_TEXT_PARSER; a_context: MA_DECIMAL_CONTEXT)
 			-- Make from `a_decimal_parser', relative to `a_context'.
 		require
 			a_decimal_parser_not_void: a_decimal_parser /= Void
@@ -278,7 +278,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	make_from_string (value_string: STRING) is
+	make_from_string (value_string: STRING)
 			-- Make a new decimal from string `value_string' relative to `shared_decimal_context'.
 		require
 			value_string_not_void: value_string /= Void
@@ -286,7 +286,7 @@ feature {NONE} -- Initialization
 			make_from_string_ctx (value_string, shared_decimal_context)
 		end
 
-	make_special (code_special: INTEGER) is
+	make_special (code_special: INTEGER)
 			-- Make special from code.
 		require
 			valid_code_special: code_special = Special_infinity or else code_special = Special_quiet_nan
@@ -300,7 +300,7 @@ feature {NONE} -- Initialization
 			exponent_zero: exponent = 0
 		end
 
-	make_nan is
+	make_nan
 			-- Make quiet 'Not a Number'.
 		do
 			make_special (Special_quiet_nan)
@@ -308,7 +308,7 @@ feature {NONE} -- Initialization
 			is_nan: is_quiet_nan
 		end
 
-	make_snan is
+	make_snan
 			-- Make Signaling 'Not a Number'.
 		do
 			make_special (Special_signaling_nan)
@@ -316,7 +316,7 @@ feature {NONE} -- Initialization
 			is_snan: is_signaling_nan
 		end
 
-	make_infinity (a_sign: INTEGER) is
+	make_infinity (a_sign: INTEGER)
 			-- Make Infinity.
 		require
 			a_sign_valid: a_sign = -1 or else a_sign = 1
@@ -330,7 +330,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	sign: INTEGER is
+	sign: INTEGER
 			-- Sign: positive = 1; negative = -1
 		do
 			if is_negative then
@@ -346,7 +346,7 @@ feature -- Access
 	exponent: INTEGER
 			-- Current exponent
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		local
 			i: INTEGER
@@ -401,7 +401,7 @@ feature -- Access
 
 feature -- Constants
 
-	one: like Current is
+	one: like Current
 			-- Neutral element for "*" and "/"
 		do
 			Result := once_one
@@ -410,7 +410,7 @@ feature -- Constants
 			one_is_positive: not Result.is_negative
 		end
 
-	minus_one: MA_DECIMAL is
+	minus_one: MA_DECIMAL
 			-- Minus one
 		once
 			create Result.make_copy (one)
@@ -420,7 +420,7 @@ feature -- Constants
 			is_minus_one: Result.is_one and then Result.is_negative
 		end
 
-	zero: like Current is
+	zero: like Current
 			-- Neutral element for "+" and "-"
 		do
 			Result := once_zero
@@ -428,7 +428,7 @@ feature -- Constants
 			is_zero: Result.is_zero
 		end
 
-	negative_zero: MA_DECIMAL is
+	negative_zero: MA_DECIMAL
 			-- Negative zero
 		once
 			create Result.make_zero
@@ -439,7 +439,7 @@ feature -- Constants
 			is_negative: Result.is_negative
 		end
 
-	nan: MA_DECIMAL is
+	nan: MA_DECIMAL
 			-- Not a Number
 		once
 			create Result.make_nan
@@ -448,7 +448,7 @@ feature -- Constants
 			is_nan: Result.is_nan
 		end
 
-	snan: MA_DECIMAL is
+	snan: MA_DECIMAL
 			-- Signaling Not a Number
 		once
 			create Result.make_snan
@@ -457,7 +457,7 @@ feature -- Constants
 			is_snan: Result.is_signaling_nan
 		end
 
-	infinity: MA_DECIMAL is
+	infinity: MA_DECIMAL
 			-- Infinity
 		once
 			create Result.make_infinity (1)
@@ -467,7 +467,7 @@ feature -- Constants
 			is_positive: Result.is_positive
 		end
 
-	negative_infinity: MA_DECIMAL is
+	negative_infinity: MA_DECIMAL
 			-- Negative infinity
 		once
 			create Result.make_infinity (-1)
@@ -479,7 +479,7 @@ feature -- Constants
 
 feature {MA_DECIMAL} -- Access
 
-	adjusted_exponent: INTEGER is
+	adjusted_exponent: INTEGER
 			-- Exponent of the most significant digit; see SDAS page 5
 		do
 			Result := exponent + count - 1
@@ -494,7 +494,7 @@ feature {MA_DECIMAL, MA_DECIMAL_PARSER, MA_DECIMAL_HANDLER} -- Access
 
 feature -- Status report
 
-	is_integer: BOOLEAN is
+	is_integer: BOOLEAN
 			-- Is this an integer?
 			-- (i.e no fractional part other than all zeroes)
 		local
@@ -523,7 +523,7 @@ feature -- Status report
 			end
 		end
 
-	is_double: BOOLEAN is
+	is_double: BOOLEAN
 			-- Is this a double?
 		local
 			str: STRING
@@ -532,7 +532,7 @@ feature -- Status report
 			Result := str.is_double
 		end
 
-	divisible (other: like Current): BOOLEAN is
+	divisible (other: like Current): BOOLEAN
 			-- May current object be divided by `other'?
 		do
 			Result := not other.is_zero
@@ -540,7 +540,7 @@ feature -- Status report
 			definition: Result = not other.is_zero
 		end
 
-	exponentiable (other: NUMERIC): BOOLEAN is
+	exponentiable (other: NUMERIC): BOOLEAN
 			-- May current object be elevated to the power `other'?
 		do
 				--| TODO
@@ -549,7 +549,7 @@ feature -- Status report
 	is_negative: BOOLEAN
 			-- Is the number negative?
 
-	is_positive: BOOLEAN is
+	is_positive: BOOLEAN
 			-- Is the number positive?
 		do
 			Result := not is_negative
@@ -557,7 +557,7 @@ feature -- Status report
 			definition: Result = not is_negative
 		end
 
-	is_nan: BOOLEAN is
+	is_nan: BOOLEAN
 			-- Is this "Not a Number" (NaN)?
 		do
 			Result := is_signaling_nan or is_quiet_nan
@@ -565,7 +565,7 @@ feature -- Status report
 			definition: Result = (is_signaling_nan or is_quiet_nan)
 		end
 
-	is_special: BOOLEAN is
+	is_special: BOOLEAN
 			-- Is this a special value?
 		do
 			Result := (special /= Special_none)
@@ -573,25 +573,25 @@ feature -- Status report
 			definition: Result = (is_nan or else is_infinity)
 		end
 
-	is_signaling_nan: BOOLEAN is
+	is_signaling_nan: BOOLEAN
 			-- Is this a "Signaling NaN"?
 		do
 			Result := (special = Special_signaling_nan)
 		end
 
-	is_quiet_nan: BOOLEAN is
+	is_quiet_nan: BOOLEAN
 			-- Is this a "Quiet NaN"?
 		do
 			Result := (special = Special_quiet_nan)
 		end
 
-	is_infinity: BOOLEAN is
+	is_infinity: BOOLEAN
 			-- Is this an Infinity?
 		do
 			Result := (special = Special_infinity)
 		end
 
-	is_zero: BOOLEAN is
+	is_zero: BOOLEAN
 			-- Is this a Zero value?
 		do
 			if not is_special and then coefficient.is_zero then
@@ -601,7 +601,7 @@ feature -- Status report
 			definition: Result = (not is_special and then coefficient.is_zero)
 		end
 
-	is_one: BOOLEAN is
+	is_one: BOOLEAN
 			-- Is this a One ?
 		do
 			if not is_special and then exponent = 0 and then coefficient.is_one then
@@ -613,7 +613,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	product alias "*" (other: like Current): like Current is
+	product alias "*" (other: like Current): like Current
 			-- Product by `other'
 		do
 			Result := multiply (other, shared_decimal_context)
@@ -621,7 +621,7 @@ feature -- Basic operations
 			product_not_void: Result /= Void
 		end
 
-	identity alias "+": like Current is
+	identity alias "+": like Current
 			-- Unary plus
 		do
 			Result := plus (shared_decimal_context)
@@ -629,7 +629,7 @@ feature -- Basic operations
 			unary_plus_not_void: Result /= Void
 		end
 
-	binary_plus alias "+" (other: like Current): like Current is
+	binary_plus alias "+" (other: like Current): like Current
 			-- Sum with `other' (commutative)
 		do
 			Result := add (other, shared_decimal_context)
@@ -637,7 +637,7 @@ feature -- Basic operations
 			sum_not_void: Result /= Void
 		end
 
-	opposite alias "-": like Current is
+	opposite alias "-": like Current
 			-- Unary minus
 		do
 			Result := minus (shared_decimal_context)
@@ -645,7 +645,7 @@ feature -- Basic operations
 			unary_minus_not_void: Result /= Void
 		end
 
-	binary_minus alias "-" (other: like Current): like Current is
+	binary_minus alias "-" (other: like Current): like Current
 			-- Result of subtracting `other'
 		do
 			Result := subtract (other, shared_decimal_context)
@@ -653,7 +653,7 @@ feature -- Basic operations
 			subtract_not_void: Result /= Void
 		end
 
-	quotient alias "/" (other: like Current): like Current is
+	quotient alias "/" (other: like Current): like Current
 			-- Division by `other'
 		do
 			Result := divide (other, shared_decimal_context)
@@ -661,7 +661,7 @@ feature -- Basic operations
 			division_not_void: Result /= Void
 		end
 
-	integer_remainder alias "\\" (other: like Current): like Current is
+	integer_remainder alias "\\" (other: like Current): like Current
 			-- Remainder of integer division
 		do
 			Result := remainder (other, shared_decimal_context)
@@ -669,7 +669,7 @@ feature -- Basic operations
 			remainder_not_void: Result /= Void
 		end
 
-	integer_quotient alias "//" (other: like Current): like Current is
+	integer_quotient alias "//" (other: like Current): like Current
 			-- Integer division
 		do
 			Result := divide_integer (other, shared_decimal_context)
@@ -677,13 +677,13 @@ feature -- Basic operations
 			integer_division_not_void: Result /= Void
 		end
 
-	power alias "^" (other: NUMERIC): MA_DECIMAL is
+	power alias "^" (other: NUMERIC): MA_DECIMAL
 			-- Current decimal to the power `other'
 		do
 				--| TODO
 		end
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current decimal less than `other'?
 		local
 			res: MA_DECIMAL
@@ -696,7 +696,7 @@ feature -- Basic operations
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Count of significant digits
 		do
 			if is_special then
@@ -710,7 +710,7 @@ feature -- Measurement
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Are `Current' and `other' considered equal?
 		local
 			comparison_result: like Current
@@ -733,7 +733,7 @@ feature -- Comparison
 
 feature -- Conversion
 
-	out: STRING is
+	out: STRING
 			-- Printable representation
 		do
 			create Result.make (0)
@@ -761,7 +761,7 @@ feature -- Conversion
 			Result.append_string ("]")
 		end
 
-	to_double: DOUBLE is
+	to_double: DOUBLE
 			-- `Current' as a DOUBLE
 		require
 			is_double: is_double
@@ -772,7 +772,7 @@ feature -- Conversion
 			Result := str.to_double
 		end
 
-	to_integer: INTEGER is
+	to_integer: INTEGER
 			-- `Current' as an INTEGER
 		require
 			is_integer: is_integer
@@ -785,7 +785,7 @@ feature -- Conversion
 			Result := to_integer_ctx (ctx)
 		end
 
-	to_integer_ctx (ctx: MA_DECIMAL_CONTEXT): INTEGER is
+	to_integer_ctx (ctx: MA_DECIMAL_CONTEXT): INTEGER
 			-- `Current' as an INTEGER wrt `ctx'
 		require
 			is_integer: is_integer
@@ -812,7 +812,7 @@ feature -- Conversion
 			end
 		end
 
-	to_engineering_string: STRING is
+	to_engineering_string: STRING
 			-- `Current' as a number in engineering notation
 		do
 			Result := to_string_general (True)
@@ -820,7 +820,7 @@ feature -- Conversion
 			to_string_not_void: Result /= Void
 		end
 
-	to_scientific_string: STRING is
+	to_scientific_string: STRING
 			-- `Current' as a sting expressed in scientific notation
 		do
 			Result := to_string_general (False)
@@ -830,7 +830,7 @@ feature -- Conversion
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Copy `other' to current decimal.
 		do
 			if other /= Current then
@@ -847,7 +847,7 @@ feature -- Duplication
 
 feature -- Basic operations
 
-	add (other: like Current; ctx: MA_DECIMAL_CONTEXT): like Current is
+	add (other: like Current; ctx: MA_DECIMAL_CONTEXT): like Current
 			-- Add `other' with respect to the `ctx' context
 		require
 			other_not_void: other /= Void
@@ -897,7 +897,7 @@ feature -- Basic operations
 			add_not_void: Result /= Void
 		end
 
-	subtract (other: like Current; ctx: MA_DECIMAL_CONTEXT): like Current is
+	subtract (other: like Current; ctx: MA_DECIMAL_CONTEXT): like Current
 			-- Subtract `other' with respect to the `ctx' context
 		require
 			other_not_void: other /= Void
@@ -922,7 +922,7 @@ feature -- Basic operations
 			subtract_not_void: Result /= Void
 		end
 
-	multiply (other: like Current; ctx: MA_DECIMAL_CONTEXT): like Current is
+	multiply (other: like Current; ctx: MA_DECIMAL_CONTEXT): like Current
 			-- Multiply `other' with respect to `ctx'
 		require
 			other_not_void: other /= Void
@@ -977,7 +977,7 @@ feature -- Basic operations
 			multiply_not_void: Result /= Void
 		end
 
-	divide (other: like Current; ctx: MA_DECIMAL_CONTEXT): like Current is
+	divide (other: like Current; ctx: MA_DECIMAL_CONTEXT): like Current
 			-- Divide `Current' by `other' whith respect to `ctx'
 		require
 			other_not_void: other /= Void
@@ -989,7 +989,7 @@ feature -- Basic operations
 			divide_not_void: Result /= Void
 		end
 
-	divide_integer (other: like Current; ctx: MA_DECIMAL_CONTEXT): like Current is
+	divide_integer (other: like Current; ctx: MA_DECIMAL_CONTEXT): like Current
 			-- Integer division of `Current' by `other' whith respect to `ctx'
 		require
 			other_not_void: other /= Void
@@ -1000,7 +1000,7 @@ feature -- Basic operations
 			divide_integer_not_void: Result /= Void
 		end
 
-	remainder (other: like Current; ctx: MA_DECIMAL_CONTEXT): like Current is
+	remainder (other: like Current; ctx: MA_DECIMAL_CONTEXT): like Current
 			-- Remainder of integer division of `Current' by `other' whith respect to `ctx'
 		require
 			other_not_void: other /= Void
@@ -1048,7 +1048,7 @@ feature -- Basic operations
 			remainder_not_void: Result /= Void
 		end
 
-	rescale (new_exponent: INTEGER; ctx: MA_DECIMAL_CONTEXT): like Current is
+	rescale (new_exponent: INTEGER; ctx: MA_DECIMAL_CONTEXT): like Current
 			-- Decimal from `Current' rescaled to `new_exponent'
 		require
 			ctx_not_void: ctx /= Void
@@ -1166,7 +1166,7 @@ feature -- Basic operations
 			rescale_not_void: Result /= Void
 		end
 
-	rescale_decimal (new_exponent: like Current; ctx: MA_DECIMAL_CONTEXT): like Current is
+	rescale_decimal (new_exponent: like Current; ctx: MA_DECIMAL_CONTEXT): like Current
 			-- Rescale using decimal `new_exponent'
 		require
 			new_exponent_not_void: new_exponent /= Void
@@ -1215,7 +1215,7 @@ feature -- Basic operations
 			rescale_decimal_not_void: Result /= Void
 		end
 
-	round_to_integer (ctx: MA_DECIMAL_CONTEXT): like Current is
+	round_to_integer (ctx: MA_DECIMAL_CONTEXT): like Current
 			-- Round to an integer with exponent 0
 		require
 			ctx_not_void: ctx /= Void
@@ -1226,7 +1226,7 @@ feature -- Basic operations
 			definition: not Result.is_special implies Result.exponent = 0
 		end
 
-	plus (ctx: MA_DECIMAL_CONTEXT): like Current is
+	plus (ctx: MA_DECIMAL_CONTEXT): like Current
 			-- Prefix "+" with respect to the `ctx' context
 		require
 			ctx_not_void: ctx /= Void
@@ -1240,7 +1240,7 @@ feature -- Basic operations
 			plus_not_void: Result /= Void
 		end
 
-	normalize: like Current is
+	normalize: like Current
 			-- Normalized version of current decimal
 		local
 			l_count, trailing_zeroes: INTEGER
@@ -1272,7 +1272,7 @@ feature -- Basic operations
 			normalize_not_void: Result /= Void
 		end
 
-	minus (ctx: MA_DECIMAL_CONTEXT): like Current is
+	minus (ctx: MA_DECIMAL_CONTEXT): like Current
 			-- Prefix "-" with respect to the `ctx' context
 		require
 			ctx_not_void: ctx /= Void
@@ -1286,7 +1286,7 @@ feature -- Basic operations
 			minus_not_void: Result /= Void
 		end
 
-	abs: like Current is
+	abs: like Current
 			-- Absolute value of `Current'
 		do
 			Result := abs_ctx (shared_decimal_context)
@@ -1294,7 +1294,7 @@ feature -- Basic operations
 			abs_not_void: Result /= Void
 		end
 
-	abs_ctx (ctx: MA_DECIMAL_CONTEXT): like Current is
+	abs_ctx (ctx: MA_DECIMAL_CONTEXT): like Current
 			-- Absolute value of `Current' relative to `ctx'
 		require
 			ctx_not_void: ctx /= Void
@@ -1309,7 +1309,7 @@ feature -- Basic operations
 			definition: Result.sign >= 0
 		end
 
-	max_ctx (other: like Current; ctx: MA_DECIMAL_CONTEXT): like Current is
+	max_ctx (other: like Current; ctx: MA_DECIMAL_CONTEXT): like Current
 			-- Max between `Current' and `other' relative to `ctx'
 		require
 			other_not_void: other /= Void
@@ -1335,7 +1335,7 @@ feature -- Basic operations
 			max_ctx_not_void: Result /= Void
 		end
 
-	min_ctx (other: like Current; ctx: MA_DECIMAL_CONTEXT): like Current is
+	min_ctx (other: like Current; ctx: MA_DECIMAL_CONTEXT): like Current
 			-- Min between `Current' and `other' relative to `ctx'
 		require
 			other_not_void: other /= Void
@@ -1361,7 +1361,7 @@ feature -- Basic operations
 			min_ctx_not_void: Result /= Void
 		end
 
-	compare (other: like Current; ctx: MA_DECIMAL_CONTEXT): like Current is
+	compare (other: like Current; ctx: MA_DECIMAL_CONTEXT): like Current
 			-- Compare value of `Current' and `other';
 			-- Result = 0 if Current = other,
 			-- Result = -1 if Current < other,
@@ -1444,7 +1444,7 @@ feature -- Basic operations
 
 feature {MA_DECIMAL, MA_DECIMAL_PARSER} -- Element change
 
-	set_exponent (e: like exponent) is
+	set_exponent (e: like exponent)
 			-- Set `exponent' to `e'.
 		do
 			exponent := e
@@ -1452,7 +1452,7 @@ feature {MA_DECIMAL, MA_DECIMAL_PARSER} -- Element change
 			exponent_set: exponent = e
 		end
 
-	set_negative is
+	set_negative
 			-- Set negative.
 		do
 			is_negative := True
@@ -1460,7 +1460,7 @@ feature {MA_DECIMAL, MA_DECIMAL_PARSER} -- Element change
 			negative: is_negative
 		end
 
-	set_positive is
+	set_positive
 			-- Set positive.
 		do
 			is_negative := False
@@ -1470,22 +1470,22 @@ feature {MA_DECIMAL, MA_DECIMAL_PARSER} -- Element change
 
 feature {NONE} -- Constants
 
-	Align_hint_current: INTEGER is 1
+	Align_hint_current: INTEGER = 1
 
-	Align_hint_other: INTEGER is 2
+	Align_hint_other: INTEGER = 2
 
-	Align_hint_both: INTEGER is 3
+	Align_hint_both: INTEGER = 3
 
-	Align_hint_current_zero: INTEGER is 4
+	Align_hint_current_zero: INTEGER = 4
 
-	Align_hint_other_zero: INTEGER is 5
+	Align_hint_other_zero: INTEGER = 5
 
 feature {MA_DECIMAL} -- Status setting
 
 	special: INTEGER
 			-- Special status
 
-	set_quiet_nan is
+	set_quiet_nan
 			-- Set to qNaN.
 		do
 			make_nan
@@ -1495,7 +1495,7 @@ feature {MA_DECIMAL} -- Status setting
 
 feature {MA_DECIMAL} -- Basic operations
 
-	add_special (other: like Current; ctx: MA_DECIMAL_CONTEXT): like Current is
+	add_special (other: like Current; ctx: MA_DECIMAL_CONTEXT): like Current
 			-- Add special numbers.
 		require
 			other_not_void: other /= Void
@@ -1540,7 +1540,7 @@ feature {MA_DECIMAL} -- Basic operations
 			add_special_not_void: Result /= Void
 		end
 
-	subtract_special (other: like Current; ctx: MA_DECIMAL_CONTEXT): like Current is
+	subtract_special (other: like Current; ctx: MA_DECIMAL_CONTEXT): like Current
 			-- Subtract special numbers.
 		require
 			other_not_void: other /= Void
@@ -1587,7 +1587,7 @@ feature {MA_DECIMAL} -- Basic operations
 			subtract_special_not_void: Result /= Void
 		end
 
-	unsigned_add (other: like Current; ctx: MA_DECIMAL_CONTEXT) is
+	unsigned_add (other: like Current; ctx: MA_DECIMAL_CONTEXT)
 			-- Add `other' to `Current'.
 			-- Note: this will alter `other' and `Current'.
 		require
@@ -1622,7 +1622,7 @@ feature {MA_DECIMAL} -- Basic operations
 			end
 		end
 
-	unsigned_subtract (other: like Current; ctx: MA_DECIMAL_CONTEXT) is
+	unsigned_subtract (other: like Current; ctx: MA_DECIMAL_CONTEXT)
 			-- Subtract `other' without taking the sign into account.
 		require
 			other_not_void: other /= Void
@@ -1666,7 +1666,7 @@ feature {MA_DECIMAL} -- Basic operations
 			end
 		end
 
-	round (ctx: MA_DECIMAL_CONTEXT) is
+	round (ctx: MA_DECIMAL_CONTEXT)
 			-- Round `Current' according to ctx.rounding_mode.
 		require
 			not_special: not is_special
@@ -1704,7 +1704,7 @@ feature {MA_DECIMAL} -- Basic operations
 			rounded: count <= ctx.digits
 		end
 
-	align_and_hint (other: like Current; precision: INTEGER): INTEGER is
+	align_and_hint (other: like Current; precision: INTEGER): INTEGER
 			-- Align `Current' and `other' with respect to `precision'
 			-- and give hint for further operations
 		local
@@ -1793,7 +1793,7 @@ feature {MA_DECIMAL} -- Basic operations
 			hint_both_is_same_exponent: Result = Align_hint_both implies exponent = other.exponent
 		end
 
-	align_overlapped (other: like Current; precision: INTEGER) is
+	align_overlapped (other: like Current; precision: INTEGER)
 			-- Align overlapping numbers.
 		require
 			other_not_void: other /= Void
@@ -1819,7 +1819,7 @@ feature {MA_DECIMAL} -- Basic operations
 			same_exponent: exponent = other.exponent
 		end
 
-	align_unlimited (other: like Current) is
+	align_unlimited (other: like Current)
 			-- Align unlimited.
 		require
 			other_not_void: other /= Void
@@ -1843,7 +1843,7 @@ feature {MA_DECIMAL} -- Basic operations
 			same_exponent: exponent = other.exponent
 		end
 
-	shift_left (a_count: INTEGER) is
+	shift_left (a_count: INTEGER)
 			-- Shift the coefficient left `a_count' position and adjust `exponent'.
 			-- value still must be the same as with the original `exponent'.
 		require
@@ -1857,7 +1857,7 @@ feature {MA_DECIMAL} -- Basic operations
 			exponent_adapted: exponent = old exponent - a_count
 		end
 
-	shift_right (a_count: INTEGER) is
+	shift_right (a_count: INTEGER)
 			-- Shift the coefficient right `a_count' position and adjust `exponent'.
 			-- Digits are lost.
 		require
@@ -1870,7 +1870,7 @@ feature {MA_DECIMAL} -- Basic operations
 			exponent_adapted: exponent = old exponent + a_count
 		end
 
-	grow (a_count: INTEGER) is
+	grow (a_count: INTEGER)
 			-- Grow `coefficient' so that it can accommodate `a_count' digits.
 		require
 			not_special: not is_special
@@ -1882,7 +1882,7 @@ feature {MA_DECIMAL} -- Basic operations
 			count_set: count = a_count
 		end
 
-	do_round_up (ctx: MA_DECIMAL_CONTEXT) is
+	do_round_up (ctx: MA_DECIMAL_CONTEXT)
 			-- Round away from zero.
 		require
 			ctx_not_void: ctx /= Void
@@ -1901,7 +1901,7 @@ feature {MA_DECIMAL} -- Basic operations
 			end
 		end
 
-	do_round_down (ctx: MA_DECIMAL_CONTEXT) is
+	do_round_down (ctx: MA_DECIMAL_CONTEXT)
 			-- Round towards zero.
 		require
 			ctx_not_void: ctx /= Void
@@ -1917,7 +1917,7 @@ feature {MA_DECIMAL} -- Basic operations
 			coefficient.keep_head (ctx.digits)
 		end
 
-	do_round_ceiling (ctx: MA_DECIMAL_CONTEXT) is
+	do_round_ceiling (ctx: MA_DECIMAL_CONTEXT)
 			-- Round to a more positive number.
 		require
 			ctx_not_void: ctx /= Void
@@ -1929,7 +1929,7 @@ feature {MA_DECIMAL} -- Basic operations
 			end
 		end
 
-	do_round_floor (ctx: MA_DECIMAL_CONTEXT) is
+	do_round_floor (ctx: MA_DECIMAL_CONTEXT)
 			-- Round to a more negative number.
 		require
 			ctx_not_void: ctx /= Void
@@ -1941,7 +1941,7 @@ feature {MA_DECIMAL} -- Basic operations
 			end
 		end
 
-	do_round_half_up (ctx: MA_DECIMAL_CONTEXT) is
+	do_round_half_up (ctx: MA_DECIMAL_CONTEXT)
 			-- Round to nearest neighbor, where an equidistant value is rounded up.
 			-- If the discarded digits represent greater than or equal to half (0.5 times) the value
 			-- of a one in the next position then the result should be rounded up (away from zero).
@@ -1959,7 +1959,7 @@ feature {MA_DECIMAL} -- Basic operations
 			end
 		end
 
-	do_round_half_down (ctx: MA_DECIMAL_CONTEXT) is
+	do_round_half_down (ctx: MA_DECIMAL_CONTEXT)
 			-- Round to nearest neighbor, where an equidistant value is rounded down.
 			-- If the discarded digits represent greater than half (0.5 times)
 			-- the value of a one in the next position then the result should be
@@ -1980,7 +1980,7 @@ feature {MA_DECIMAL} -- Basic operations
 			end
 		end
 
-	three_way_compare_discarded_to_half (ctx: MA_DECIMAL_CONTEXT): INTEGER is
+	three_way_compare_discarded_to_half (ctx: MA_DECIMAL_CONTEXT): INTEGER
 			-- Compare discarded digits greater than 0.5
 		require
 			ctx_not_void: ctx /= Void
@@ -2013,7 +2013,7 @@ feature {MA_DECIMAL} -- Basic operations
 			definition: Result >= -1 and then Result <= 1
 		end
 
-	do_round_half_even (ctx: MA_DECIMAL_CONTEXT) is
+	do_round_half_even (ctx: MA_DECIMAL_CONTEXT)
 			-- Round to nearest neighbor, where an equidistant value is rounded to the nearest even neighbor.
 			-- If the discarded digits represent greater than half (0.5 times) the value of a one in the
 			-- next position then the result should be rounded up (away from zero).
@@ -2040,7 +2040,7 @@ feature {MA_DECIMAL} -- Basic operations
 			end
 		end
 
-	lost_digits (ctx: MA_DECIMAL_CONTEXT): BOOLEAN is
+	lost_digits (ctx: MA_DECIMAL_CONTEXT): BOOLEAN
 			-- Should Current loose digits if rounded wrt `ctx'?
 		require
 			ctx_not_void: ctx /= Void
@@ -2061,7 +2061,7 @@ feature {MA_DECIMAL} -- Basic operations
 			definition2: (count - ctx.digits - 1) < 0 implies not Result
 		end
 
-	is_overflow (ctx: MA_DECIMAL_CONTEXT): BOOLEAN is
+	is_overflow (ctx: MA_DECIMAL_CONTEXT): BOOLEAN
 			-- Is there an overflow condition wrt `ctx'?
 		require
 			ctx_not_void: ctx /= Void
@@ -2071,7 +2071,7 @@ feature {MA_DECIMAL} -- Basic operations
 			definition: Result = (adjusted_exponent > ctx.exponent_limit)
 		end
 
-	is_underflow (ctx: MA_DECIMAL_CONTEXT): BOOLEAN is
+	is_underflow (ctx: MA_DECIMAL_CONTEXT): BOOLEAN
 			-- Is there an underflow condition wrt `ctx'?
 		require
 			ctx_not_void: ctx /= Void
@@ -2081,7 +2081,7 @@ feature {MA_DECIMAL} -- Basic operations
 			definition: Result = (adjusted_exponent < -ctx.exponent_limit)
 		end
 
-	clean_up (ctx: MA_DECIMAL_CONTEXT) is
+	clean_up (ctx: MA_DECIMAL_CONTEXT)
 			-- Clean up Current wrt `ctx', rounding it if necessary.
 		require
 			ctx_not_void: ctx /= Void
@@ -2118,7 +2118,7 @@ feature {MA_DECIMAL} -- Basic operations
 			end
 		end
 
-	strip_leading_zeroes is
+	strip_leading_zeroes
 			-- Strip leading zeroes.
 		require
 			not_special: not is_special
@@ -2126,7 +2126,7 @@ feature {MA_DECIMAL} -- Basic operations
 			coefficient.strip_leading_zeroes
 		end
 
-	set_largest (ctx: MA_DECIMAL_CONTEXT) is
+	set_largest (ctx: MA_DECIMAL_CONTEXT)
 			-- Set to largest finite number that can be represented with ctx.precision.
 		require
 			ctx_not_void: ctx /= Void
@@ -2152,7 +2152,7 @@ feature {MA_DECIMAL} -- Basic operations
 			end
 		end
 
-	promote_to_infinity (a_sign: INTEGER) is
+	promote_to_infinity (a_sign: INTEGER)
 			-- Promote to infinity.
 		do
 			make_infinity (a_sign)
@@ -2161,7 +2161,7 @@ feature {MA_DECIMAL} -- Basic operations
 			sign_set: sign = a_sign
 		end
 
-	do_overflow (ctx: MA_DECIMAL_CONTEXT) is
+	do_overflow (ctx: MA_DECIMAL_CONTEXT)
 			-- Do overflow.
 		require
 			ctx_not_void: ctx /= Void
@@ -2194,7 +2194,7 @@ feature {MA_DECIMAL} -- Basic operations
 			end
 		end
 
-	do_underflow (ctx: MA_DECIMAL_CONTEXT) is
+	do_underflow (ctx: MA_DECIMAL_CONTEXT)
 			-- Do underflow.
 		require
 			ctx_not_void: ctx /= Void
@@ -2280,14 +2280,14 @@ feature {MA_DECIMAL} -- Basic operations
 			end
 		end
 
-	division_standard: INTEGER is 1
+	division_standard: INTEGER = 1
 
-	division_integer: INTEGER is 2
+	division_integer: INTEGER = 2
 
-	division_remainder: INTEGER is 3
+	division_remainder: INTEGER = 3
 			-- Division types
 
-	do_divide (other: like Current; ctx: MA_DECIMAL_CONTEXT; division_type: INTEGER): like Current is
+	do_divide (other: like Current; ctx: MA_DECIMAL_CONTEXT; division_type: INTEGER): like Current
 			-- Do a `division_type' of `Current' by `other'
 		require
 			other_not_void: other /= Void
@@ -2362,7 +2362,7 @@ feature {MA_DECIMAL} -- Basic operations
 			divide_not_void: Result /= Void
 		end
 
-	internal_divide (other: like Current; ctx: MA_DECIMAL_CONTEXT; division_type: INTEGER): like Current is
+	internal_divide (other: like Current; ctx: MA_DECIMAL_CONTEXT; division_type: INTEGER): like Current
 			-- Divide `Current' by `other' whith respect to `ctx'
 		require
 			other_not_void: other /= Void
@@ -2542,7 +2542,7 @@ feature {MA_DECIMAL} -- Basic operations
 			divide_not_void: Result /= Void
 		end
 
-	do_rescale_special (ctx: MA_DECIMAL_CONTEXT) is
+	do_rescale_special (ctx: MA_DECIMAL_CONTEXT)
 			-- Rescale special numbers.
 		require
 			is_special: is_special
@@ -2561,7 +2561,7 @@ feature {MA_DECIMAL} -- Basic operations
 			end
 		end
 
-	to_string_general (is_engineering: BOOLEAN): STRING is
+	to_string_general (is_engineering: BOOLEAN): STRING
 			-- `Current' as a number in engineering notation if `is_engineering'
 			-- is True, in scientific notation otherwise.
 		local
@@ -2667,7 +2667,7 @@ feature {MA_DECIMAL} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	parser: MA_DECIMAL_TEXT_PARSER is
+	parser: MA_DECIMAL_TEXT_PARSER
 			-- Decimal text parser
 		once
 			create Result.make
@@ -2675,7 +2675,7 @@ feature {NONE} -- Implementation
 			parser_not_void: Result /= Void
 		end
 
-	once_zero: MA_DECIMAL is
+	once_zero: MA_DECIMAL
 			-- Shared Zero
 		once
 			create Result.make_zero
@@ -2684,7 +2684,7 @@ feature {NONE} -- Implementation
 			is_zero: Result.is_zero
 		end
 
-	once_one: MA_DECIMAL is
+	once_one: MA_DECIMAL
 			-- Shared One
 		once
 			create Result.make_one
@@ -2693,7 +2693,7 @@ feature {NONE} -- Implementation
 			is_one: Result.is_one
 		end
 
-	special_coefficient: MA_DECIMAL_COEFFICIENT is
+	special_coefficient: MA_DECIMAL_COEFFICIENT
 		once
 			create {MA_DECIMAL_COEFFICIENT_IMP} Result.make (1)
 			Result.put (0, 0)

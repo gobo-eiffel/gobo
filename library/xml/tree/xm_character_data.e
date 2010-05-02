@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: XM_ELEMENT; c: like content) is
+	make (a_parent: XM_ELEMENT; c: like content)
 			-- Create a new character data node.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			content_set: content = c
 		end
 
-	make_last (a_parent: XM_ELEMENT; c: like content) is
+	make_last (a_parent: XM_ELEMENT; c: like content)
 			-- Create a new character data node,
 			-- and add it to parent.
 		require
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			in_parent: parent.last = Current
 			content_set: content = c
 		end
-		
+
 feature -- Access
 
 	content: STRING
@@ -60,7 +60,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_content (a_content: STRING) is
+	set_content (a_content: STRING)
 			-- Set content.
 		require
 			a_content_not_void: a_content /= Void
@@ -70,8 +70,8 @@ feature -- Element change
 			set: content = a_content
 			same_string: STRING_.same_string (content, a_content)
 		end
-		
-	append_content (other: like Current) is
+
+	append_content (other: like Current)
 			-- Append the content of 'other' to
 			-- the content of `Current'.
 		require
@@ -86,7 +86,7 @@ feature -- Element change
 
 feature -- Processing
 
-	process (a_processor: XM_NODE_PROCESSOR) is
+	process (a_processor: XM_NODE_PROCESSOR)
 			-- Process current node with `a_processor'.
 		do
 			a_processor.process_character_data (Current)

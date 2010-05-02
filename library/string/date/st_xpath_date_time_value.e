@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_lexical_date_time: STRING) is
+	make (a_lexical_date_time: STRING)
 			-- Create from lexical xs:dateTime.
 		require
 			lexical_date_time: a_lexical_date_time /= Void and then is_date_time (a_lexical_date_time)
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	make_from_date_time (a_date_time: DT_DATE_TIME) is
+	make_from_date_time (a_date_time: DT_DATE_TIME)
 			-- Create from date_time object.
 		require
 			date_time_not_void: a_date_time /= Void
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			local_date_time := a_date_time.twin
 		end
 
-	make_from_zoned_date_time (a_date_time: DT_FIXED_OFFSET_ZONED_DATE_TIME) is
+	make_from_zoned_date_time (a_date_time: DT_FIXED_OFFSET_ZONED_DATE_TIME)
 			-- Create from date_time object.
 		require
 			date_time_not_void: a_date_time /= Void
@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 			zoned := True
 		end
 
-	make_from_date (a_date: DT_DATE) is
+	make_from_date (a_date: DT_DATE)
 			-- Create from date object.
 		require
 			date_not_void: a_date /= Void
@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 			create local_date_time.make_from_date (a_date)
 		end
 
-	make_from_zoned_date (a_date: DT_FIXED_OFFSET_ZONED_DATE) is
+	make_from_zoned_date (a_date: DT_FIXED_OFFSET_ZONED_DATE)
 			-- Create from zoned date object.
 		require
 			date_not_void: a_date /= Void
@@ -88,7 +88,7 @@ feature -- Access
 	local_date_time: detachable DT_DATE_TIME
 			-- Date_Time value without zone
 
-	date: DT_DATE is
+	date: DT_DATE
 			-- Date component, ignoring time zone
 		local
 			l_date: detachable like date
@@ -115,7 +115,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	time: DT_TIME is
+	time: DT_TIME
 			-- Time component, ignoring time zone
 		local
 			l_time: DT_TIME
@@ -144,13 +144,13 @@ feature -- Access
 
 feature -- Status report
 
-	is_xpath_date_time: BOOLEAN is
+	is_xpath_date_time: BOOLEAN
 			-- Does `Current' have both a time component and a date component?
 		do
 			Result := True
 		end
 
-	is_date_time (a_lexical_date_time: STRING): BOOLEAN is
+	is_date_time (a_lexical_date_time: STRING): BOOLEAN
 			-- Is `a_lexical_date_time' a valid xs:dateTime?
 		require
 			lexical_date_time_not_void: a_lexical_date_time /= Void
@@ -163,7 +163,7 @@ feature -- Status report
 
 feature -- Conversion
 
-	as_xpath_date_time: ST_XPATH_DATE_TIME_VALUE is
+	as_xpath_date_time: ST_XPATH_DATE_TIME_VALUE
 			-- `Current' seen as a date-time value
 		do
 			Result := Current

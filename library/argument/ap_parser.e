@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create an argument parser containing a help option.
 		local
 			help_alternative_options_list: AP_ALTERNATIVE_OPTIONS_LIST
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			alternative_options_lists.force_last (help_alternative_options_list)
 		end
 
-	make_empty is
+	make_empty
 			-- Create a parser without predefined options.
 		do
 			create {DS_ARRAYED_LIST [AP_OPTION]} options.make (0)
@@ -85,7 +85,7 @@ feature -- Access
 	last_option_parameter: detachable STRING
 			-- Last parameter that was passed to an option
 
-	all_options: DS_LIST [AP_OPTION] is
+	all_options: DS_LIST [AP_OPTION]
 			-- All options that are used in the parser (including
 			-- alternatives), without duplicates
 		local
@@ -129,7 +129,7 @@ feature -- Access
 
 feature -- Configuration
 
-	set_application_description (a_string: STRING) is
+	set_application_description (a_string: STRING)
 			-- Set the description for application to `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -139,7 +139,7 @@ feature -- Configuration
 			application_description_set: application_description = a_string
 		end
 
-	set_error_handler (an_error_handler: AP_ERROR_HANDLER) is
+	set_error_handler (an_error_handler: AP_ERROR_HANDLER)
 			-- Set the error handler to `an_error_handler'.
 		require
 			an_error_handler_not_void: an_error_handler /= Void
@@ -149,7 +149,7 @@ feature -- Configuration
 			error_handler_set: error_handler = an_error_handler
 		end
 
-	set_parameters_description (a_string: STRING) is
+	set_parameters_description (a_string: STRING)
 			-- Set the description for parameters to `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -161,7 +161,7 @@ feature -- Configuration
 
 feature -- Status report
 
-	has_long_option (an_option: STRING): BOOLEAN is
+	has_long_option (an_option: STRING): BOOLEAN
 			-- Does the parser have a long option `an_option' in the current
 			-- option set?
 		require
@@ -189,7 +189,7 @@ feature -- Status report
 			end
 		end
 
-	has_short_option (a_character: CHARACTER): BOOLEAN is
+	has_short_option (a_character: CHARACTER): BOOLEAN
 			-- Does the parser have a short option `a_character' in the
 			-- current option set?
 		local
@@ -212,7 +212,7 @@ feature -- Status report
 
 feature -- Parser
 
-	parse_arguments is
+	parse_arguments
 			-- Parse the command line arguments.
 		require
 			valid_options: valid_options
@@ -233,7 +233,7 @@ feature -- Parser
 			parse_list (args)
 		end
 
-	parse_array (an_array: ARRAY [STRING]) is
+	parse_array (an_array: ARRAY [STRING])
 			-- Parse `an_array' of arguments.
 		require
 			an_array_not_void: an_array /= Void
@@ -246,7 +246,7 @@ feature -- Parser
 			parse_list (args)
 		end
 
-	parse_list (a_list: DS_LIST [STRING]) is
+	parse_list (a_list: DS_LIST [STRING])
 			-- Parse `a_list' of arguments.
 		require
 			a_list_not_void: a_list /= Void
@@ -269,7 +269,7 @@ feature -- Parser
 
 feature -- Error handling
 
-	final_error_action is
+	final_error_action
 			-- Code to execute when an error was encountered.
 		do
 			error_handler.report_error_message (abort_message)
@@ -278,7 +278,7 @@ feature -- Error handling
 
 feature -- Validity checks
 
-	is_alpha_numeric (a_character: CHARACTER): BOOLEAN is
+	is_alpha_numeric (a_character: CHARACTER): BOOLEAN
 			-- Is `a_character' an alpha-numeric character?
 			-- (the property is available in CHARACTER_REF of FreeELKS,
 			-- unfortunately SmartEiffel does not seem to support it)
@@ -289,7 +289,7 @@ feature -- Validity checks
 			Result := (c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z') or (c >= '0' and c <= '9')
 		end
 
-	valid_long_form (a_string: STRING): BOOLEAN is
+	valid_long_form (a_string: STRING): BOOLEAN
 			-- Is `a_string' a valid long form for an option?
 			-- Allowed character: alpha_numeric, dash (not twice in
 			-- a row and not at beginning or end)
@@ -326,14 +326,14 @@ feature -- Validity checks
 			void_string_are_never_valid: (a_string = Void) implies not Result
 		end
 
-	valid_short_form (a_character: CHARACTER): BOOLEAN is
+	valid_short_form (a_character: CHARACTER): BOOLEAN
 			-- Is `a_character' a valid short form for an option?
 			-- Allowed characters: alpha_numeric
 		do
 			Result := is_alpha_numeric (a_character)
 		end
 
-	all_valid_short_and_long_form (a_list: DS_LIST [AP_OPTION]): BOOLEAN is
+	all_valid_short_and_long_form (a_list: DS_LIST [AP_OPTION]): BOOLEAN
 			-- Do all options that are part of `a_list' have valid short
 			-- and long form? Is a short or long form used twice?
 		require
@@ -376,7 +376,7 @@ feature -- Validity checks
 			end
 		end
 
-	valid_options: BOOLEAN is
+	valid_options: BOOLEAN
 			-- Are all options correctly set up?
 		local
 			aol: AP_ALTERNATIVE_OPTIONS_LIST
@@ -420,7 +420,7 @@ feature {NONE} -- Implementation
 	is_first_option: BOOLEAN
 			-- Are we still looking for the first option?
 
-	check_options_after_parsing is
+	check_options_after_parsing
 			-- Check if all mandatory options were passed to the program and
 			-- options were not given too often.
 		require
@@ -453,7 +453,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	parse_argument (a_argument_list: DS_LIST [STRING]) is
+	parse_argument (a_argument_list: DS_LIST [STRING])
 			-- Parse the current argument.
 		require
 			parameters_not_void: parameters /= Void
@@ -495,7 +495,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	parse_long (a_argument_list: DS_LIST [STRING]) is
+	parse_long (a_argument_list: DS_LIST [STRING])
 			-- Parse a long argument.
 		require
 			a_argument_list_attached: a_argument_list /= Void
@@ -596,7 +596,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	parse_short (a_argument_list: DS_LIST [STRING]) is
+	parse_short (a_argument_list: DS_LIST [STRING])
 			-- Parse a short option.
 		require
 			a_argument_list_attached: a_argument_list /= Void
@@ -684,7 +684,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	reset_parser is
+	reset_parser
 			-- Reset parser and all option prior to parsing arguments.
 		local
 			all_options_list: DS_LIST [AP_OPTION]

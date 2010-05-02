@@ -14,7 +14,7 @@ class ST_IMPORTED_UNICODE_V410_CHARACTER_CLASS_ROUTINES
 
 feature -- Access
 
-	unicode_v410_character_class: ST_UNICODE_V410_CHARACTER_CLASS_ROUTINES is
+	unicode_v410_character_class: ST_UNICODE_V410_CHARACTER_CLASS_ROUTINES
 			-- Unicode version 4.1.0 character class routines
 		once
 			create Result

@@ -14,7 +14,7 @@ deferred class XM_EXPAT_ENCODING_CALLBACK
 
 feature -- Callbacks
 
-	on_unknown_encoding_procedure (name_ptr, info_ptr: POINTER): BOOLEAN is
+	on_unknown_encoding_procedure (name_ptr, info_ptr: POINTER): BOOLEAN
 			-- This is called for an encoding that is unknown to the
 			-- parser. The encodingHandlerData argument is that which
 			-- was passed as the second argument to

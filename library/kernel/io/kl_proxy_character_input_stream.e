@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_stream: like base_stream) is
+	make (a_stream: like base_stream)
 			-- Create a new proxy for `a_stream'.
 		require
 			base_stream_not_void: a_stream /= Void
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Input
 
-	read_string (nb: INTEGER) is
+	read_string (nb: INTEGER)
 			-- Read at most `nb' characters from input stream.
 			-- Make the characters that have actually been read
 			-- available in `last_string'.
@@ -52,14 +52,14 @@ feature -- Input
 			base_stream.read_string (nb)
 		end
 
-	read_character is
+	read_character
 			-- Read the next character in input stream.
 			-- Make the result available in `last_character'.
 		do
 			base_stream.read_character
 		end
 
-	unread_character (an_item: CHARACTER) is
+	unread_character (an_item: CHARACTER)
 			-- Put `an_item' back in input stream.
 			-- This character will be read first by the next
 			-- call to a read routine.
@@ -72,19 +72,19 @@ feature -- Access
 	base_stream: KI_CHARACTER_INPUT_STREAM
 			-- Underlying stream
 
-	name: STRING is
+	name: STRING
 			-- Name of input stream
 		do
 			Result := base_stream.name
 		end
 
-	last_string: STRING is
+	last_string: STRING
 			-- Last string read
 		do
 			Result := base_stream.last_string
 		end
 
-	last_character: CHARACTER is
+	last_character: CHARACTER
 			-- Last character read
 		do
 			Result := base_stream.last_character
@@ -92,32 +92,32 @@ feature -- Access
 
 feature -- Status report
 
-	end_of_input: BOOLEAN is
+	end_of_input: BOOLEAN
 			-- Has the end of input stream been reached?
 		do
 			Result := base_stream.end_of_input
 		end
 
-	is_open_read: BOOLEAN is
+	is_open_read: BOOLEAN
 			-- Can characters be read from input stream?
 		do
 			Result := base_stream.is_open_read
 		end
 
-	is_closable: BOOLEAN is
+	is_closable: BOOLEAN
 			-- Can current input stream be closed?
 		do
 			Result := base_stream.is_closable
 		end
 
-	is_rewindable: BOOLEAN is
+	is_rewindable: BOOLEAN
 			-- Can current input stream be rewound to return input from
 			-- the beginning of the stream?
 		do
 			Result := base_stream.is_rewindable
 		end
 
-	valid_unread_character (a_character: CHARACTER): BOOLEAN is
+	valid_unread_character (a_character: CHARACTER): BOOLEAN
 			-- Can `a_character' be put back in input stream?
 		do
 			Result := base_stream.valid_unread_character (a_character)
@@ -125,14 +125,14 @@ feature -- Status report
 
 feature -- Basic operations
 
-	close is
+	close
 			-- Try to close input stream if it is closable. Set
 			-- `is_open_read' to false if operation was successful.
 		do
 			base_stream.close
 		end
 
-	rewind is
+	rewind
 			-- Move input position to the beginning of stream.
 		do
 			base_stream.rewind

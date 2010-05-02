@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_node_factory: XM_XPATH_NODE_FACTORY; a_base_uri: like base_uri; a_document_uri: like document_uri) is
+	make (a_node_factory: XM_XPATH_NODE_FACTORY; a_base_uri: like base_uri; a_document_uri: like document_uri)
 			-- Establish invariant..
 		require
 			node_factory_not_void: a_node_factory /= Void
@@ -62,24 +62,24 @@ feature -- Access
 
 feature -- Status report
 
-	has_xpath_error: BOOLEAN is
+	has_xpath_error: BOOLEAN
 			-- Has an XPath error value been reported?
 		do
 			Result := last_xpath_error /= Void
 		ensure
 			error_value: Result implies last_xpath_error /= Void
 		end
-		
+
 feature -- Events
 
-	on_error (a_message: STRING) is
+	on_error (a_message: STRING)
 			-- Event producer detected an error.
 		do
 			has_error := True
 			last_error := a_message
 		end
 
-	open is
+	open
 			-- Notify start of event stream.
 		do
 			has_error := False
@@ -87,7 +87,7 @@ feature -- Events
 			Precursor
 		end
 
-	start_document is
+	start_document
 			-- Notify the start of the document
 		do
 			create tree_document.make (base_uri, document_uri)
@@ -101,7 +101,7 @@ feature -- Events
 			is_document_started := True
 		end
 
-	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING) is
+	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING)
 			-- Notify an unparsed entity URI
 		do
 			if not has_error then
@@ -110,7 +110,7 @@ feature -- Events
 			is_written := True
 		end
 
-	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
+	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER)
 			-- Notify the start of an element
 		do
 			debug ("XSLT stripper")
@@ -123,7 +123,7 @@ feature -- Events
 			is_written := True
 		end
 
-	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
+	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER)
 			-- Notify a namespace.
 		do
 			if not has_error then
@@ -137,7 +137,7 @@ feature -- Events
 			is_written := True
 		end
 
-	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; a_properties: INTEGER) is
+	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; a_properties: INTEGER)
 			-- Notify an attribute.
 		do
 			if not has_error then
@@ -153,7 +153,7 @@ feature -- Events
 			is_written := True
 		end
 
-	start_content is
+	start_content
 			-- Notify the start of the content, that is, the completion of all attributes and namespaces.
 		local
 			l_element: XM_XPATH_TREE_ELEMENT
@@ -191,7 +191,7 @@ feature -- Events
 						end
 					elseif current_composite_node = tree_document then
 						tree_document.set_document_element (l_element)
-					
+
 					end
 					current_composite_node := l_element
 				end
@@ -207,7 +207,7 @@ feature -- Events
 			is_written := True
 		end
 
-	end_element is
+	end_element
 			-- Notify the end of an element.
 		do
 			if not has_error then
@@ -224,7 +224,7 @@ feature -- Events
 			is_written := True
 		end
 
-	notify_characters (a_character_string: STRING; properties: INTEGER) is
+	notify_characters (a_character_string: STRING; properties: INTEGER)
 			-- Notify character data.
 		local
 			a_text_node: XM_XPATH_TREE_TEXT
@@ -249,7 +249,7 @@ feature -- Events
 			is_written := True
 		end
 
-	notify_processing_instruction (a_target: STRING; a_data_string: STRING; properties: INTEGER) is
+	notify_processing_instruction (a_target: STRING; a_data_string: STRING; properties: INTEGER)
 			-- Notify a processing instruction.
 		local
 			a_processing_instruction: XM_XPATH_TREE_PROCESSING_INSTRUCTION
@@ -257,13 +257,13 @@ feature -- Events
 		do
 			if not has_error then
 				if not shared_name_pool.is_name_code_allocated ("", "", a_target) then
-					
+
 					-- TODO need to check for resource exhaustion in name pool
-					
+
 					shared_name_pool.allocate_name ("", "", a_target)
 					a_name_code := shared_name_pool.last_name_code
 				else
-					a_name_code := shared_name_pool.name_code ("", "", a_target) 
+					a_name_code := shared_name_pool.name_code ("", "", a_target)
 				end
 				create a_processing_instruction.make (tree_document, a_name_code, a_data_string)
 				if current_composite_node /= Void then
@@ -274,7 +274,7 @@ feature -- Events
 			is_written := True
 		end
 
-	notify_comment (a_content_string: STRING; properties: INTEGER) is
+	notify_comment (a_content_string: STRING; properties: INTEGER)
 			-- Notify a comment.
 		local
 			a_comment: XM_XPATH_TREE_COMMENT
@@ -288,26 +288,26 @@ feature -- Events
 			is_written := True
 		end
 
-	end_document is
+	end_document
 			-- Parsing finished.
 		do
 			current_composite_node := Void
 			is_document_started := False
 		end
 
-	close is
+	close
 			-- Notify end of event stream.
 		do
 			Precursor
 
 			-- `Current' will not be reused, so we can free some memory:
-			
+
 			node_factory := Void
 		end
 
 feature {XM_XPATH_TREE_ELEMENT} -- Element change (actually only used by XM_XSLT_LITERAL_RESULT_ELEMENT)
 
-	graft_element (a_element: XM_XPATH_TREE_ELEMENT) is
+	graft_element (a_element: XM_XPATH_TREE_ELEMENT)
 			-- Graft `a_element' into the tree (dangerous).
 		require
 			a_element_not_void: a_element /= Void
@@ -349,4 +349,4 @@ invariant
 	node_factory_not_void: is_open implies node_factory /= Void
 
 end
-	
+

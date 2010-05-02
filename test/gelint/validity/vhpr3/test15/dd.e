@@ -1,6 +1,6 @@
 class DD [G]
 
-feature 
+feature
 
 	item: G
 

@@ -25,7 +25,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; a_operand_two: XM_XPATH_EXPRESSION) is
+	make (a_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; a_operand_two: XM_XPATH_EXPRESSION)
 			-- Establish invariant
 		require
 			operand_1_not_void: a_operand_one /= Void
@@ -54,20 +54,20 @@ feature -- Access
 
 	first_operand, second_operand: XM_XPATH_EXPRESSION
 			-- The two operands
-	
-	is_binary_expression: BOOLEAN is
+
+	is_binary_expression: BOOLEAN
 			-- Is `Current' a binary expression?
 		do
 			Result := True
 		end
 
-	as_binary_expression: XM_XPATH_BINARY_EXPRESSION is
+	as_binary_expression: XM_XPATH_BINARY_EXPRESSION
 			-- `Current' seen as a binary expression
 		do
 			Result := Current
 		end
 
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions of `Current'
 		do
 			create Result.make (2)
@@ -78,7 +78,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Are `Current' and `other' the same expression?
 		local
 			other_binary: XM_XPATH_BINARY_EXPRESSION
@@ -102,13 +102,13 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_valid_operator (a_operator: INTEGER): BOOLEAN is
+	is_valid_operator (a_operator: INTEGER): BOOLEAN
 			-- Is `a_operator' valid for `Current'?
 		do
 			Result := True
 		end
 
-	is_commutative (an_operator: INTEGER): BOOLEAN is
+	is_commutative (an_operator: INTEGER): BOOLEAN
 			-- Is `an_operator' a commutative operator?
 		do
 			Result := an_operator = And_token
@@ -123,7 +123,7 @@ feature -- Status report
 				or else an_operator = Fortran_not_equal_token
 		end
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -136,9 +136,9 @@ feature -- Status report
 			second_operand.display (a_level + 1)
 		end
 
-feature -- Optimization	
+feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -163,7 +163,7 @@ feature -- Optimization
 			end
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_result: DS_CELL [XM_XPATH_ITEM]
@@ -209,7 +209,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_result: DS_CELL [XM_XPATH_ITEM]
@@ -229,7 +229,7 @@ feature -- Optimization
 					set_second_operand (l_replacement.item)
 
 					-- If both operands are known, [[and result is a singleton??]], pre-evaluate the expression
-					
+
 					if first_operand.is_value and not first_operand.depends_upon_implicit_timezone
 						and second_operand.is_value and not second_operand.depends_upon_implicit_timezone
 						and not cardinality_allows_many then
@@ -246,13 +246,13 @@ feature -- Optimization
 							a_replacement.put (Current)
 						end
 					else
-						a_replacement.put (Current)						
+						a_replacement.put (Current)
 					end
 				end
 			end
 		end
 
-	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this subexpression.
 		local
 			l_promotion: XM_XPATH_EXPRESSION
@@ -283,7 +283,7 @@ feature -- Optimization
 
 feature -- Element change
 
-	set_first_operand (a_operand: XM_XPATH_EXPRESSION) is
+	set_first_operand (a_operand: XM_XPATH_EXPRESSION)
 			-- Set `first_operand'.
 		require
 			a_operand_not_void: a_operand /= Void
@@ -296,7 +296,7 @@ feature -- Element change
 			first_operand_set: first_operand = a_operand
 		end
 
-	set_second_operand (a_operand: XM_XPATH_EXPRESSION) is
+	set_second_operand (a_operand: XM_XPATH_EXPRESSION)
 			-- Set `second_operand'.
 		require
 			a_operand_not_void: a_operand /= Void
@@ -311,7 +311,7 @@ feature -- Element change
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			if first_operand.cardinality_allows_zero and
@@ -322,7 +322,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			end
 		end
 
-	display_operator: STRING is
+	display_operator: STRING
 			-- Format `operator' for display
 		do
 			Result := token_name (operator)
@@ -330,7 +330,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			display_operator_not_void: Result /= Void
 		end
 
-	compute_special_properties is
+	compute_special_properties
 			-- Compute special properties.
 		do
 			Precursor
@@ -343,4 +343,4 @@ invariant
 	second_operand: initialized implies second_operand /= Void
 
 end
-	
+

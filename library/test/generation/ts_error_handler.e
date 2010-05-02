@@ -26,7 +26,7 @@ create
 
 feature -- Reporting
 
-	report_error (an_error: UT_ERROR) is
+	report_error (an_error: UT_ERROR)
 			-- Report `an_error'.
 		do
 			precursor (an_error)
@@ -40,7 +40,7 @@ feature -- Access
 
 feature -- Syntax errors
 
-	report_config_syntax_error (a_filename: STRING; p: ET_POSITION) is
+	report_config_syntax_error (a_filename: STRING; p: ET_POSITION)
 			-- Report a syntax error in configuration file.
 		require
 			p_not_void: p /= Void
@@ -52,7 +52,7 @@ feature -- Syntax errors
 			report_error (an_error)
 		end
 
-	report_regexp_syntax_error (a_regexp: ET_IDENTIFIER; a_filename: STRING) is
+	report_regexp_syntax_error (a_regexp: ET_IDENTIFIER; a_filename: STRING)
 			-- Report a syntax error in `a_regexp'.
 		require
 			a_regexp_not_void: a_regexp /= Void
@@ -66,7 +66,7 @@ feature -- Syntax errors
 			report_error (an_error)
 		end
 
-	report_option_regexp_syntax_error (an_option: STRING; a_regexp: STRING) is
+	report_option_regexp_syntax_error (an_option: STRING; a_regexp: STRING)
 			-- Report a syntax error in `a_regexp' given as command-line option.
 		require
 			an_option_not_void: an_option /= Void
@@ -78,7 +78,7 @@ feature -- Syntax errors
 			report_error (an_error)
 		end
 
-	report_eiffel_compilation_error is
+	report_eiffel_compilation_error
 			-- Report that an Eiffel compilation error occurred.
 		local
 			an_error: TS_EIFFEL_COMPILATION_ERROR

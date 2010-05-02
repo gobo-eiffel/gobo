@@ -23,7 +23,7 @@ create
 
 feature -- Test
 
-	test_parse_empty_string is
+	test_parse_empty_string
 			-- Test feature `parse_from_string' with an empty input string.
 		do
 			create parser.make
@@ -32,7 +32,7 @@ feature -- Test
 			assert_strings_equal ("no_element", "STRING:1:1:parse error", parser.last_error_extended_description)
 		end
 
-	test_entity_quoted_quote is
+	test_entity_quoted_quote
 			--Test quote/apos in quote.
 		do
 			create parser.make
@@ -44,7 +44,7 @@ feature -- Test
 			assert ("apos_in_quote", parser.is_correct)
 		end
 
-	test_entity_error is
+	test_entity_error
 			-- Test entity error.
 		do
 			create parser.make
@@ -53,7 +53,7 @@ feature -- Test
 			assert_strings_equal ("error_message", "h:1:2:Misformed start tag", parser.last_error_extended_description)
 		end
 
-	test_position is
+	test_position
 			-- Test feature `position' with erroneous input string.
 		local
 			a_position: XM_DEFAULT_POSITION
@@ -67,7 +67,7 @@ feature -- Test
 			assert_integers_equal ("byte_index_correct", 7, a_position.byte_index)
 		end
 
-	test_end_tag is
+	test_end_tag
 			-- Test end tag checking is enabled.
 		do
 			create parser.make

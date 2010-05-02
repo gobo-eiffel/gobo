@@ -40,7 +40,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_base_uri: like base_uri; a_document_uri: like document_uri) is
+	make (a_base_uri: like base_uri; a_document_uri: like document_uri)
 			-- Initialize `Current'.
 		require
 			a_base_uri_not_void: a_base_uri /= Void
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			base_uri_set: base_uri = a_base_uri
 			document_uri_set: document_uri = a_document_uri
 		end
-	
+
 feature -- Access
 
 	tree: XM_XPATH_TINY_FOREST
@@ -63,14 +63,14 @@ feature -- Access
 
 feature -- Events
 
-	on_error (a_message: STRING) is
+	on_error (a_message: STRING)
 			-- Event producer detected an error.
 		do
 			has_error := True
 			last_error := a_message
 		end
 
-	open is
+	open
 			-- Notify start of event stream.
 		do
 			if tree = Void then
@@ -90,8 +90,8 @@ feature -- Events
 			tree_not_void: tree /= Void
 			at_root_level: current_depth = 1
 		end
-	
-	start_document is
+
+	start_document
 			-- Notify the start of the document
 		do
 			is_document_started := True
@@ -105,7 +105,7 @@ feature -- Events
 			tree.add_document_node (tiny_document)
 			node_number := tree.last_node_added
 			previously_at_depth.put(1, 1) -- i.e. depth one is node 1 - the document node
-			previously_at_depth.put (0, 2) 
+			previously_at_depth.put (0, 2)
 			tree.set_next_sibling (-1, 1) -- i.e. node one has next sibling 0 (no next sibling)
 			current_depth := current_depth + 1
 		ensure then
@@ -114,13 +114,13 @@ feature -- Events
 			root_is_document: current_root = tiny_document
 		end
 
-	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING) is
+	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING)
 			-- Notify an unparsed entity URI
 		do
 			tree.set_unparsed_entity (a_name, a_system_id, a_public_id)
 		end
 
-	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
+	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER)
 			-- Notify the start of an element
 		local
 			an_owner_node, a_previous_sibling: INTEGER
@@ -168,14 +168,14 @@ feature -- Events
 			mark_as_written
 		end
 
-	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
+	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER)
 			-- Notify a namespace.
 		do
 			tree.add_namespace (node_number, a_namespace_code)
 			mark_as_written
 		end
 
-	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
+	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER)
 			-- Notify an attribute.
 		local
 			a_new_type_code: like a_type_code
@@ -189,14 +189,14 @@ feature -- Events
 			mark_as_written
 		end
 
-	start_content is
+	start_content
 			-- Notify the start of the content, that is, the completion of all attributes and namespaces.
 		do
 			node_number := node_number + 1
 			mark_as_written
 		end
-	
-	end_element is
+
+	end_element
 			-- Notify the end of an element.
 		do
 			previously_at_depth.put (-1, current_depth)
@@ -204,7 +204,7 @@ feature -- Events
 			mark_as_written
 		end
 
-	notify_characters (a_character_string: STRING; properties: INTEGER) is
+	notify_characters (a_character_string: STRING; properties: INTEGER)
 			-- Notify character data.
 		local
 			a_buffer_start, a_previous_sibling, a_previous_node: INTEGER
@@ -218,12 +218,12 @@ feature -- Events
 				if tree.retrieve_node_kind (a_previous_node) = Text_node and then tree.depth_of (a_previous_node) = current_depth then
 
 					-- merge consecutive text nodes
-					
+
 					tree.increase_beta_value (a_character_string.count, a_previous_node)
 				else
 					tree.add_node (Text_node, current_depth, a_buffer_start, a_character_string.count, -1)
 					node_number := tree.last_node_added
-					
+
 					a_previous_sibling := previously_at_depth.item (current_depth)
 					if a_previous_sibling > 0 then
 						tree.set_next_sibling (node_number, a_previous_sibling)
@@ -234,8 +234,8 @@ feature -- Events
 			end
 			mark_as_written
 		end
-	
-	notify_processing_instruction (a_target: STRING; a_data_string: STRING; properties: INTEGER) is
+
+	notify_processing_instruction (a_target: STRING; a_data_string: STRING; properties: INTEGER)
 			-- Notify a processing instruction.
 		local
 			l_name_code, l_previous_sibling, l_comment_start: INTEGER
@@ -243,11 +243,11 @@ feature -- Events
 			if not shared_name_pool.is_name_code_allocated ("", "", a_target) then
 
 				-- TODO need to check for resource exhaustion in name pool
-				
+
 				shared_name_pool.allocate_name ("", "", a_target)
 				l_name_code := shared_name_pool.last_name_code
 			else
-				l_name_code := shared_name_pool.name_code ("", "", a_target) 
+				l_name_code := shared_name_pool.name_code ("", "", a_target)
 			end
 			l_comment_start := tree.next_comment_start
 			tree.store_comment (a_data_string)
@@ -270,7 +270,7 @@ feature -- Events
 			mark_as_written
 		end
 
-	notify_comment (a_content_string: STRING; properties: INTEGER) is
+	notify_comment (a_content_string: STRING; properties: INTEGER)
 			-- Notify a comment.
 		local
 			l_previous_sibling, l_comment_start: INTEGER
@@ -289,14 +289,14 @@ feature -- Events
 			mark_as_written
 		end
 
-	end_document is
+	end_document
 			-- Parsing finished.
 		do
 			previously_at_depth := Void
 			is_document_started := False
 		end
 
-	close is
+	close
 			-- Notify end of event stream.
 		do
 			if not is_timing and then is_reporting_sizes then tree.print_sizes end
@@ -321,7 +321,7 @@ feature -- Status report
 	is_reporting_sizes: BOOLEAN
 			-- Do we report on sizes actually used?
 
-	show_size is
+	show_size
 			-- Print tree size information.
 		do
 			tree.print_sizes
@@ -329,7 +329,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_reporting_sizes (true_or_false: BOOLEAN) is
+	set_reporting_sizes (true_or_false: BOOLEAN)
 			-- Set if we report on sizes actually used.
 		do
 			is_reporting_sizes := true_or_false
@@ -337,7 +337,7 @@ feature -- Status setting
 			set: is_reporting_sizes = true_or_false
 		end
 
-	reset_defaults is
+	reset_defaults
 			-- Use the default tree implementation parameters
 		require
 			always_allowed: True
@@ -347,7 +347,7 @@ feature -- Status setting
 			default_parameters_in_use: defaults_overridden = False
 		end
 
-	set_defaults (a_new_estimated_node_count: INTEGER; a_new_estimated_attribute_count: INTEGER; a_new_estimated_namespace_count: INTEGER; a_new_estimated_character_count: INTEGER) is
+	set_defaults (a_new_estimated_node_count: INTEGER; a_new_estimated_attribute_count: INTEGER; a_new_estimated_namespace_count: INTEGER; a_new_estimated_character_count: INTEGER)
 			-- Supply values for the tree implementation parameters.
 			-- Zeros mean using existing values.
 		require
@@ -370,7 +370,7 @@ feature {NONE} -- Implementation
 
 	defaults_overridden: BOOLEAN
 			-- `True' only if `set_defaults' has been called more recently than `reset_defaults'
-	
+
 	current_depth: INTEGER
 			-- Depth within the tree;
 

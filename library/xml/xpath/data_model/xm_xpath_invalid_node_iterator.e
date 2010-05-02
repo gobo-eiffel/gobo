@@ -12,7 +12,7 @@ note
 
 
 class XM_XPATH_INVALID_NODE_ITERATOR
-	
+
 inherit
 
 	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -22,7 +22,7 @@ inherit
 
 	XM_XPATH_STANDARD_NAMESPACES
 		export {NONE} all end
-	
+
 	XM_XPATH_ERROR_TYPES
 		export {NONE} all end
 
@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_error: XM_XPATH_ERROR_VALUE) is
+	make (a_error: XM_XPATH_ERROR_VALUE)
 			-- Establish invariant.
 		require
 			error_not_void: a_error /= Void
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			error_set: error_value = a_error
 		end
 
-	make_from_string (a_string, a_namespace_uri, a_error_code: STRING; a_error_type: INTEGER) is
+	make_from_string (a_string, a_namespace_uri, a_error_code: STRING; a_error_type: INTEGER)
 			-- Create from `a_string'.
 		require
 			valid_error_type: a_error_type = Static_error or a_error_type = Type_error or a_error_type = Dynamic_error
@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item: XM_XPATH_NODE is
+	item: XM_XPATH_NODE
 			-- Node at the current position
 		do
 			check
@@ -74,7 +74,7 @@ feature -- Access
 
 feature -- Status report
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
 			check
@@ -83,15 +83,15 @@ feature -- Status report
 			end
 		end
 
-	is_node_iterator: BOOLEAN is
+	is_node_iterator: BOOLEAN
 			-- Does `Current' yield a node sequence?
 		do
 			Result := True
 		end
 
 feature -- Conversion
-	
-	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
 		do
 			Result := Current
@@ -99,18 +99,18 @@ feature -- Conversion
 
 feature -- Cursor movement
 
-		forth is
+		forth
 			-- Move to next position
 		do
 			check
 				not_called: False
 				-- precondition is never met
-			end			
+			end
 		end
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 			check
@@ -124,4 +124,4 @@ invariant
 	in_error: is_error
 
 end
-	
+

@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Perform the common initialization steps.
 		do
 			needs_parameter := True
@@ -46,7 +46,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_parameter_as_optional is
+	set_parameter_as_optional
 			-- Set the parameter as optional. If no parameter is given,
 			-- the corresponding parameter value is set to `Void'. This
 			-- only works for long forms and makes it impossible to
@@ -61,13 +61,13 @@ feature -- Status setting
 
 feature {AP_PARSER} -- Parser Interface
 
-	reset is
+	reset
 			-- Reset the option to a clean state before parsing.
 		do
 			create {DS_ARRAYED_LIST [detachable STRING]} parameters.make (1)
 		end
 
-	record_occurrence (a_parser: AP_PARSER) is
+	record_occurrence (a_parser: AP_PARSER)
 			-- This option was found during parsing by `a_parser'.
 		do
 			parameters.force_last (a_parser.last_option_parameter)

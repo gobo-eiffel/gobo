@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_value: STRING) is
+	make (a_value: STRING)
 			-- Establish invariant
 		require
 			value_not_void: a_value /= Void
@@ -48,19 +48,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_any_uri: BOOLEAN is
+	is_any_uri: BOOLEAN
 			-- Is `Current' an anyURI value?
 		do
 			Result := True
 		end
 
-	as_any_uri: XM_XPATH_ANY_URI_VALUE is
+	as_any_uri: XM_XPATH_ANY_URI_VALUE
 			-- `Current' seen as an anyURI value
 		do
 			Result := Current
 		end
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type
 		do
 			Result := type_factory.any_uri_type
@@ -72,7 +72,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Are `Current' and `other' the same expression?
 		do
 			if other.is_any_uri then
@@ -80,7 +80,7 @@ feature -- Comparison
 			end
 		end
 
-	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER is
+	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER
 			-- Compare `Current' to `other'
 		do
 
@@ -92,13 +92,13 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
+	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN
 			-- Is `other' comparable to `Current'?
 		do
 			Result := other.is_any_uri or other.is_string_value or other.is_untyped_atomic
 		end
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -110,7 +110,7 @@ feature -- Status report
 			std.error.put_new_line
 		end
 
-	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN is
+	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN
 			-- Is `Current' convertible to `a_required_type'?
 		do
 			inspect
@@ -127,7 +127,7 @@ feature -- Status report
 
 feature -- Conversion
 
-	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE) is
+	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE)
 			-- Convert `Current' to `a_required_type'
 		do
 			inspect

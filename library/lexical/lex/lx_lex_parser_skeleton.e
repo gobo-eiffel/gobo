@@ -31,7 +31,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (handler: like error_handler) is
+	make (handler: like error_handler)
 			-- Create a new scanner description parser.
 		require
 			handler_not_void: handler /= Void
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			error_handler_set: error_handler = handler
 		end
 
-	make_from_description (a_description: LX_DESCRIPTION; handler: like error_handler) is
+	make_from_description (a_description: LX_DESCRIPTION; handler: like error_handler)
 			-- Create a new scanner description parser
 			-- and initialize it with `a_description'.
 		require
@@ -76,7 +76,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset parser before parsing next input.
 		do
 			reset_lex_scanner
@@ -92,7 +92,7 @@ feature -- Initialization
 
 feature -- Parsing
 
-	parse_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+	parse_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Parse scanner description from `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -102,7 +102,7 @@ feature -- Parsing
 			parse
 		end
 
-	parse_string (a_string: STRING) is
+	parse_string (a_string: STRING)
 			-- Parse scanner description from `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -128,7 +128,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_action_factory (a_factory: like action_factory) is
+	set_action_factory (a_factory: like action_factory)
 			-- Set `action_factory' to `a_factory'.
 		require
 			a_factory_not_void: a_factory /= Void
@@ -138,7 +138,7 @@ feature -- Setting
 			action_factory_set: action_factory = a_factory
 		end
 
-	set_options_overrider (an_overrider: like options_overrider) is
+	set_options_overrider (an_overrider: like options_overrider)
 			-- Set `options_overrider' to `an_overrider'.
 		do
 			options_overrider := an_overrider
@@ -159,7 +159,7 @@ feature -- Status report
 
 feature {NONE} -- Measurement
 
-	process_singleton_char (a_char: INTEGER) is
+	process_singleton_char (a_char: INTEGER)
 			-- Update `singleton_{line,column,count}'.
 			-- Singleton: a_char
 		do
@@ -173,7 +173,7 @@ feature {NONE} -- Measurement
 			end
 		end
 
-	process_singleton_star is
+	process_singleton_star
 			-- Update `singleton_{line,column,count}'.
 			-- Singleton: Singleton '*'
 		do
@@ -186,7 +186,7 @@ feature {NONE} -- Measurement
 			end
 		end
 
-	process_singleton_plus is
+	process_singleton_plus
 			-- Update `singleton_{line,column,count}'.
 			-- Singleton: Singleton '+'
 		do
@@ -204,7 +204,7 @@ feature {NONE} -- Measurement
 			end
 		end
 
-	process_singleton_optional is
+	process_singleton_optional
 			-- Update `singleton_{line,column,count}'.
 			-- Singleton: Singleton '?'
 		do
@@ -217,7 +217,7 @@ feature {NONE} -- Measurement
 			end
 		end
 
-	process_singleton_fixed_iteration (i: INTEGER) is
+	process_singleton_fixed_iteration (i: INTEGER)
 			-- Update `singleton_{line,column,count}'.
 			-- Singleton: Singleton '{' i '}'
 		do
@@ -237,7 +237,7 @@ feature {NONE} -- Measurement
 			end
 		end
 
-	process_singleton_bounded_iteration (i, j: INTEGER) is
+	process_singleton_bounded_iteration (i, j: INTEGER)
 			-- Update `singleton_{line,column,count}'.
 			-- Singleton: Singleton '{' i ',' j '}'
 		do
@@ -250,7 +250,7 @@ feature {NONE} -- Measurement
 			end
 		end
 
-	process_singleton_unbounded_iteration (i: INTEGER) is
+	process_singleton_unbounded_iteration (i: INTEGER)
 			-- Update `singleton_{line,column,count}'.
 			-- Singleton: Singleton '{' i ',' '}'
 		do
@@ -261,7 +261,7 @@ feature {NONE} -- Measurement
 			end
 		end
 
-	process_singleton_dot is
+	process_singleton_dot
 			-- Update `singleton_{line,column,count}'.
 			-- Singleton: '.'
 		do
@@ -270,7 +270,7 @@ feature {NONE} -- Measurement
 			singleton_column := 1
 		end
 
-	process_singleton_empty_string is
+	process_singleton_empty_string
 			-- Update `singleton_{line,column,count}'.
 			-- String: -- Empty
 		do
@@ -283,7 +283,7 @@ feature {NONE} -- Measurement
 			singleton_column_known: singleton_column = 0
 		end
 
-	process_singleton_string (a_char: INTEGER) is
+	process_singleton_string (a_char: INTEGER)
 			-- Update `singleton_{line,column,count}'.
 			-- String: String a_char
 		require
@@ -304,7 +304,7 @@ feature {NONE} -- Measurement
 			singleton_column_known: singleton_column >= 0
 		end
 
-	process_singleton_symbol_class (a_symbol_class: LX_SYMBOL_CLASS) is
+	process_singleton_symbol_class (a_symbol_class: LX_SYMBOL_CLASS)
 			-- Update `singleton_{line,column,count}'.
 			-- Singleton: CCL_OP
 			-- Singleton: Full_CCl
@@ -334,7 +334,7 @@ feature {NONE} -- Measurement
 			end
 		end
 
-	process_singleton_series is
+	process_singleton_series
 			-- Update `series_{line,column,count}'.
 			-- Series: Singleton Series
 		do
@@ -368,7 +368,7 @@ feature {NONE} -- Measurement
 			end
 		end
 
-	process_regexp_or_series is
+	process_regexp_or_series
 			-- Update `regexp_{line,column,count}'.
 			-- Regular_expression: Regular_expression '|' Series
 		do
@@ -452,13 +452,13 @@ feature {NONE} -- Measurement
 			-- the trail part of the rule being parsed
 			-- when this rule has a trailing context
 
-	Zero_or_more: INTEGER is -1
+	Zero_or_more: INTEGER = -1
 
-	One_or_more: INTEGER is -2
+	One_or_more: INTEGER = -2
 
 feature {NONE} -- Factory
 
-	new_symbol_nfa (symbol: INTEGER): LX_NFA is
+	new_symbol_nfa (symbol: INTEGER): LX_NFA
 			-- New NFA made of two states and a
 			-- symbol transition labeled `symbol'
 		local
@@ -491,7 +491,7 @@ feature {NONE} -- Factory
 			nfa_not_void: Result /= Void
 		end
 
-	new_epsilon_nfa: LX_NFA is
+	new_epsilon_nfa: LX_NFA
 			-- New NFA made of two states and an epsilon transition
 		do
 			create Result.make_epsilon (in_trail_context)
@@ -499,7 +499,7 @@ feature {NONE} -- Factory
 			nfa_not_void: Result /= Void
 		end
 
-	new_symbol_class_nfa (symbols: LX_SYMBOL_CLASS): LX_NFA is
+	new_symbol_class_nfa (symbols: LX_SYMBOL_CLASS): LX_NFA
 			-- New NFA made of two states and a symbol
 			-- class transition labeled `symbols'
 		require
@@ -510,7 +510,7 @@ feature {NONE} -- Factory
 			nfa_not_void: Result /= Void
 		end
 
-	new_character_class: LX_SYMBOL_CLASS is
+	new_character_class: LX_SYMBOL_CLASS
 			-- New empty character class
 		do
 			create Result.make (description.characters_count)
@@ -518,7 +518,7 @@ feature {NONE} -- Factory
 			character_class_not_void: Result /= Void
 		end
 
-	new_nfa_from_character (a_char: INTEGER): LX_NFA is
+	new_nfa_from_character (a_char: INTEGER): LX_NFA
 			-- New NFA with a transition labeled `a_char'
 			-- (Take case-sensitiveness into account.)
 		local
@@ -575,7 +575,7 @@ feature {NONE} -- Factory
 			nfa_not_void: Result /= Void
 		end
 
-	new_nfa_from_character_class (a_character_class: LX_SYMBOL_CLASS): LX_NFA is
+	new_nfa_from_character_class (a_character_class: LX_SYMBOL_CLASS): LX_NFA
 			-- New NFA with a transition labeled with `a_character_class'
 			-- (Sort symbols in `a_character_class' if necessary and
 			-- eventually register to `description.equiv_classes'.)
@@ -596,7 +596,7 @@ feature {NONE} -- Factory
 			nfa_not_void: Result /= Void
 		end
 
-	new_bounded_iteration_nfa (a_nfa: LX_NFA; i, j: INTEGER): LX_NFA is
+	new_bounded_iteration_nfa (a_nfa: LX_NFA; i, j: INTEGER): LX_NFA
 			-- New NFA that matches whatever matched `a_nfa' from
 			-- `i' number of times to `j' number of times
 		require
@@ -624,7 +624,7 @@ feature {NONE} -- Factory
 			nfa_not_void: Result /= Void
 		end
 
-	new_unbounded_iteration_nfa (a_nfa: LX_NFA; i: INTEGER): LX_NFA is
+	new_unbounded_iteration_nfa (a_nfa: LX_NFA; i: INTEGER): LX_NFA
 			-- New NFA that matches `i' or more occurrences of `a_nfa'
 		require
 			a_nfa_not_void: a_nfa /= Void
@@ -640,7 +640,7 @@ feature {NONE} -- Factory
 			nfa_not_void: Result /= Void
 		end
 
-	new_iteration_nfa (a_nfa: LX_NFA; i: INTEGER): LX_NFA is
+	new_iteration_nfa (a_nfa: LX_NFA; i: INTEGER): LX_NFA
 			-- New NFA that matches whatever `a_nfa'
 			-- matched `i' number of times
 		require
@@ -659,7 +659,7 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Implementation
 
-	push_start_condition (a_name: STRING; stack: LX_START_CONDITIONS) is
+	push_start_condition (a_name: STRING; stack: LX_START_CONDITIONS)
 			-- Push start condition named `a_name' on top of `stack'.
 			-- Do nothing if that start condition is already in `stack'.
 		require
@@ -680,7 +680,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_rule (a_nfa: LX_NFA) is
+	process_rule (a_nfa: LX_NFA)
 			-- Process a rule.
 		require
 			a_nfa_not_void: a_nfa /= Void
@@ -708,7 +708,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_bol_rule (a_nfa: LX_NFA) is
+	process_bol_rule (a_nfa: LX_NFA)
 			-- Process a beginning-of-line rule.
 		require
 			a_nfa_not_void: a_nfa /= Void
@@ -737,7 +737,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_eof_rule is
+	process_eof_rule
 			-- Process a "<<EOF>>" rule.
 		do
 			if start_condition_stack.is_empty then
@@ -754,7 +754,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_eof_action (stack: LX_START_CONDITIONS) is
+	build_eof_action (stack: LX_START_CONDITIONS)
 			-- Build the "<<EOF>>" action for start conditions in `stack'.
 		require
 			stack_not_void: stack /= Void
@@ -788,7 +788,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_default_rule is
+	process_default_rule
 			-- Process default rule.
 		require
 			rule_not_void: rule /= Void
@@ -818,7 +818,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_character_to_string (a_char: INTEGER; a_string: LX_NFA): LX_NFA is
+	append_character_to_string (a_char: INTEGER; a_string: LX_NFA): LX_NFA
 			-- Append character `a_char' at end of string `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -884,7 +884,7 @@ feature {NONE} -- Implementation
 			string_set: Result = a_string
 		end
 
-	append_character_to_character_class (a_char: INTEGER; a_character_class: LX_SYMBOL_CLASS): LX_SYMBOL_CLASS is
+	append_character_to_character_class (a_char: INTEGER; a_character_class: LX_SYMBOL_CLASS): LX_SYMBOL_CLASS
 			-- Append character `a_char' to `a_character_class'.
 		require
 			a_character_class_not_void: a_character_class /= Void
@@ -912,7 +912,7 @@ feature {NONE} -- Implementation
 			character_class_set: Result = a_character_class
 		end
 
-	append_character_set_to_character_class (char1, char2: INTEGER; a_character_class: LX_SYMBOL_CLASS): LX_SYMBOL_CLASS is
+	append_character_set_to_character_class (char1, char2: INTEGER; a_character_class: LX_SYMBOL_CLASS): LX_SYMBOL_CLASS
 			-- Append character set `char1'-`char2' to `a_character_class'.
 		require
 			a_character_class_not_void: a_character_class /= Void
@@ -960,7 +960,7 @@ feature {NONE} -- Implementation
 			character_class_set: Result = a_character_class
 		end
 
-	append_trail_context_to_regexp (a_trail, a_regexp: LX_NFA): LX_NFA is
+	append_trail_context_to_regexp (a_trail, a_regexp: LX_NFA): LX_NFA
 			-- Append trailing context `a_trail'
 			-- to regular expression `a_regexp'.
 		require
@@ -980,7 +980,7 @@ feature {NONE} -- Implementation
 			regexp_set: Result = a_regexp
 		end
 
-	append_eol_to_regexp (a_regexp: LX_NFA): LX_NFA is
+	append_eol_to_regexp (a_regexp: LX_NFA): LX_NFA
 			-- Append end-of-line trailing context (i.e. "$")
 			-- to regular expression `a_regexp'.
 		require
@@ -993,7 +993,7 @@ feature {NONE} -- Implementation
 			regexp_set: Result = a_regexp
 		end
 
-	dot_character_class: LX_SYMBOL_CLASS is
+	dot_character_class: LX_SYMBOL_CLASS
 			-- "." character class (i.e. all characters except new_line)
 		local
 			dot_string: STRING
@@ -1017,7 +1017,7 @@ feature {NONE} -- Implementation
 			dot_character_class_not_void: Result /= Void
 		end
 
-	set_action (a_text: STRING) is
+	set_action (a_text: STRING)
 			-- Set pending rules' action using `a_text'.
 		require
 			a_text_not_void: a_text /= Void
@@ -1038,7 +1038,7 @@ feature {NONE} -- Implementation
 			pending_rules.wipe_out
 		end
 
-	build_equiv_classes is
+	build_equiv_classes
 			-- Build equivalence classes and renumber
 			-- symbol and character class transitions.
 		require
@@ -1062,7 +1062,7 @@ feature {NONE} -- Implementation
 			built: description.equiv_classes.built
 		end
 
-	check_options is
+	check_options
 			-- Check user-specified options.
 		do
 			if description.full_table then
@@ -1077,7 +1077,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	override_options is
+	override_options
 			-- Override options specified in the input file.
 		do
 			if options_overrider /= Void then
@@ -1087,7 +1087,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Error handling
 
-	report_error (a_message: STRING) is
+	report_error (a_message: STRING)
 			-- Report a syntax error.
 		local
 			an_error: UT_SYNTAX_ERROR
@@ -1099,7 +1099,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_all_start_conditions_eof_warning is
+	report_all_start_conditions_eof_warning
 			-- Report that all start conditions already
 			-- have <<EOF>> rules.
 		local
@@ -1111,7 +1111,7 @@ feature {NONE} -- Error handling
 			end
 		end
 
-	report_bad_start_condition_list_error is
+	report_bad_start_condition_list_error
 			-- Report the presence of a bad start condition list.
 		local
 			an_error: LX_BAD_START_CONDITION_LIST_ERROR
@@ -1123,7 +1123,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_bad_iteration_values_error is
+	report_bad_iteration_values_error
 			-- Report the presence of bad iteration values.
 		local
 			an_error: LX_BAD_ITERATION_VALUES_ERROR
@@ -1135,7 +1135,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_iteration_not_positive_error is
+	report_iteration_not_positive_error
 			-- Report that the iteration in a regular
 			-- expression must be positive.
 		local
@@ -1148,7 +1148,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_multiple_EOF_rules_error (sc: STRING) is
+	report_multiple_EOF_rules_error (sc: STRING)
 			-- Report that there are multiple <<EOF>> rules for
 			-- start condition `sc'. This error is not fatal
 			-- (do not set `successful' to false).
@@ -1161,7 +1161,7 @@ feature {NONE} -- Error handling
 			error_handler.report_error (an_error)
 		end
 
-	report_negative_range_in_character_class_error is
+	report_negative_range_in_character_class_error
 			-- Report that there is a negative range in character class.
 		local
 			an_error: LX_NEGATIVE_RANGE_IN_CHARACTER_CLASS_ERROR
@@ -1173,7 +1173,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_start_condition_specified_twice_warning (sc: STRING) is
+	report_start_condition_specified_twice_warning (sc: STRING)
 			-- Report that `sc' has been specified twice.
 		require
 			sc_not_void: sc /= Void
@@ -1186,7 +1186,7 @@ feature {NONE} -- Error handling
 			end
 		end
 
-	report_trailing_context_used_twice_error is
+	report_trailing_context_used_twice_error
 			-- Report that trailing context is used twice.
 		local
 			an_error: LX_TRAILING_CONTEXT_USED_TWICE_ERROR
@@ -1198,7 +1198,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_undeclared_start_condition_error (sc: STRING) is
+	report_undeclared_start_condition_error (sc: STRING)
 			-- Report that `sc' has not been declared as a start condition.
 			-- (do not set `successful' to false).
 		require
@@ -1210,7 +1210,7 @@ feature {NONE} -- Error handling
 			error_handler.report_error (an_error)
 		end
 
-	report_unrecognized_rule_error is
+	report_unrecognized_rule_error
 			-- Report an unrecoginzed rule.
 		local
 			an_error: LX_UNRECOGNIZED_RULE_ERROR
@@ -1222,7 +1222,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_full_and_meta_equiv_classes_error is
+	report_full_and_meta_equiv_classes_error
 			-- Report that the use of meta equivalence classes
 			-- does not make sense with full tables.
 		local
@@ -1235,7 +1235,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_full_and_reject_error is
+	report_full_and_reject_error
 			-- Report that the use of reject is incompatible
 			-- with full tables.
 		local
@@ -1248,7 +1248,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_full_and_variable_trailing_context_error is
+	report_full_and_variable_trailing_context_error
 			-- Report that the use of variable trailing context
 			-- is incompatible with full tables.
 		local
@@ -1263,16 +1263,16 @@ feature {NONE} -- Error handling
 
 feature {NONE} -- Constants
 
-	Initial_max_pending_rules: INTEGER is 10
+	Initial_max_pending_rules: INTEGER = 10
 			-- Initial maximum number of pending rules
 
-	Initial_max_start_conditions: INTEGER is 40
+	Initial_max_start_conditions: INTEGER = 40
 			-- Initial maximum number of start conditions
 
-	Initial_old_positions: INTEGER is 10
+	Initial_old_positions: INTEGER = 10
 			-- Initial maximum number of old {lines,columns,counts}
 
-	Eof_nfa: LX_NFA is
+	Eof_nfa: LX_NFA
 			-- End-of-file NFA
 		once
 			create Result.make_epsilon (False)

@@ -41,7 +41,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_receiver: like base_receiver; a_config: like configuration; a_factory: like node_factory) is
+	make (a_receiver: like base_receiver; a_config: like configuration; a_factory: like node_factory)
 			-- Initialize `Current'.
 		require
 			a_receiver_not_void: a_receiver /= Void
@@ -71,7 +71,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_tag_buffer (a_buffer: like start_tag_buffer) is
+	set_tag_buffer (a_buffer: like start_tag_buffer)
 			-- Set `start_tag_buffer' to `a_buffer'.
 		require
 			a_buffer_not_void: a_buffer /= Void
@@ -83,7 +83,7 @@ feature -- Setting
 
 feature -- Events
 
-	open is
+	open
 			-- Notify start of event stream.
 		do
 			is_open := True
@@ -111,7 +111,7 @@ feature -- Events
 			no_error_implies_locator_not_void: True
 		end
 
-	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
+	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER)
 			-- Notify the start of an element.
 		local
 			l_uri_code, l_fingerprint: INTEGER
@@ -166,7 +166,7 @@ feature -- Events
 			end
 		end
 
-	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
+	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER)
 			-- Notify a namespace.
 		do
 			mark_as_written
@@ -175,7 +175,7 @@ feature -- Events
 			end
 		end
 
-	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
+	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER)
 			-- Notify an attribute.
 		do
 			mark_as_written
@@ -184,7 +184,7 @@ feature -- Events
 			end
 		end
 
-	start_content is
+	start_content
 			-- Notify the start of the content, that is, the completion of all attributes and namespaces.
 		do
 			mark_as_written
@@ -193,7 +193,7 @@ feature -- Events
 			end
 		end
 
-	end_element is
+	end_element
 			-- Notify the end of an element.
 		do
 			mark_as_written
@@ -205,7 +205,7 @@ feature -- Events
 			end
 		end
 
-	notify_characters (chars: STRING; properties: INTEGER) is
+	notify_characters (chars: STRING; properties: INTEGER)
 			-- Notify character data.
 		do
 			mark_as_written
@@ -214,13 +214,13 @@ feature -- Events
 			end
 		end
 
-	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
+	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER)
 			-- Notify a processing instruction.
 		do
 			-- drop silently from stylesheet modules
 		end
 
-	notify_comment (a_content_string: STRING; properties: INTEGER) is
+	notify_comment (a_content_string: STRING; properties: INTEGER)
 			-- Notify a comment.
 		do
 			-- drop silently from stylesheet modules
@@ -228,7 +228,7 @@ feature -- Events
 
 feature -- Element change
 
-	set_document_locator (a_locator: XM_XPATH_LOCATOR) is
+	set_document_locator (a_locator: XM_XPATH_LOCATOR)
 			-- Set the locator.
 		do
 			locator := a_locator
@@ -263,7 +263,7 @@ feature {NONE} -- Implementation
 	last_use_when_value: BOOLEAN
 			-- Result from last call to `evaluate_use_when'
 
-	evaluate_use_when (a_use_when: STRING; a_base_uri: UT_URI; a_backwards: BOOLEAN) is
+	evaluate_use_when (a_use_when: STRING; a_base_uri: UT_URI; a_backwards: BOOLEAN)
 			-- Evaluate `a_use_when' as an XPath expression.
 		require
 			a_use_when_not_void: a_use_when /= Void

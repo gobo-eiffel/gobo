@@ -18,14 +18,14 @@ inherit
 
 feature -- Status report
 
-	is_digit (c: CHARACTER): BOOLEAN is
+	is_digit (c: CHARACTER): BOOLEAN
 			-- Is `c' a digit?
 			-- A digit is one of 0123456789
 		do
 			Result := (c >= '0' and c <= '9')
 		end
 
-	is_hex_digit (c: CHARACTER): BOOLEAN is
+	is_hex_digit (c: CHARACTER): BOOLEAN
 			-- Is `c' a hexadecimal digit?
 			-- A digit is one of 0123456789a-fA-f
 		do
@@ -34,7 +34,7 @@ feature -- Status report
 
 feature -- Access
 
-	next (c: CHARACTER): CHARACTER is
+	next (c: CHARACTER): CHARACTER
 			-- Next character
 		require
 			c_small_enough: c.code < Platform.Maximum_character_code
@@ -44,7 +44,7 @@ feature -- Access
 			definition: Result.code = c.code + 1
 		end
 
-	previous (c: CHARACTER): CHARACTER is
+	previous (c: CHARACTER): CHARACTER
 			-- Previous character
 		require
 			c_small_enough: c.code > Platform.Minimum_character_code
@@ -54,13 +54,13 @@ feature -- Access
 			definition: Result.code = c.code - 1
 		end
 
-	as_lower (c: CHARACTER): CHARACTER is
+	as_lower (c: CHARACTER): CHARACTER
 			-- Lower-case version of character `c'
 		do
 			Result := c.lower
 		end
 
-	as_upper (c: CHARACTER): CHARACTER is
+	as_upper (c: CHARACTER): CHARACTER
 			-- Upper-case version of character `c'
 		do
 			Result := c.upper

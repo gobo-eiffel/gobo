@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT) is
+	make (a_project: GEANT_PROJECT)
 			-- Create a new fileset.
 		local
 			a_tester: UC_STRING_EQUALITY_TESTER
@@ -73,7 +73,7 @@ feature -- Access
 	map: GEANT_MAP
 			-- Map for filenames
 
-	has_map: BOOLEAN is
+	has_map: BOOLEAN
 			-- Does current fileset has a map?
 		do
 			Result := map /= Void
@@ -109,7 +109,7 @@ feature -- Access
 			-- during iterations;
 			-- default: 'fs.mapped_filename'
 
-	item_filename: STRING is
+	item_filename: STRING
 			-- Filename at current cursor
 		require
 			not_off: not off
@@ -123,7 +123,7 @@ feature -- Access
 			item_filename_not_void: Result /= Void
 		end
 
-	item_mapped_filename: STRING is
+	item_mapped_filename: STRING
 			-- Mapped filename at current cursor
 		require
 			not_off: not off
@@ -139,7 +139,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- Can element be executed?
 		do
 			Result := is_in_gobo_31_format or else is_in_gobo_32_format
@@ -178,7 +178,7 @@ feature -- Status report
 			correct_format: Result implies is_in_gobo_31_format or else is_in_gobo_32_format
 		end
 
-	is_in_gobo_31_format: BOOLEAN is
+	is_in_gobo_31_format: BOOLEAN
 			-- Is fileset setup for obsolete GOBO 3.1 format?
 		do
 			Result := directory_name /= Void and then filename_directory_name = Void and then
@@ -189,7 +189,7 @@ feature -- Status report
 				dir_name = Void
 		end
 
-	is_in_gobo_32_format: BOOLEAN is
+	is_in_gobo_32_format: BOOLEAN
 			-- Is fileset setup for GOBO 3.2 format?
 		do
 			Result := directory_name = Void and then not concat
@@ -197,7 +197,7 @@ feature -- Status report
 			definition: Result implies directory_name = Void and then not concat
 		end
 
-	are_project_variables_up_to_date: BOOLEAN is
+	are_project_variables_up_to_date: BOOLEAN
 			-- If not `off' is project variable named `filename_variable_name' set to `item_filename' and
 			-- project variable named `mapped_filename_variable_name' set to `item_mapped_filename'?
 			-- And if `off' are project variables named `filename_variable_name' and
@@ -227,19 +227,19 @@ feature -- Status report
 				(Result implies not project.variables.has (mapped_filename_variable_name))
 		end
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is fileset empty?
 		do
 			Result := filenames.is_empty
 		end
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Is there no valid position to right of cursor?
 		do
 			Result := filenames.after
 		end
 
-	off: BOOLEAN is
+	off: BOOLEAN
 			-- Is there no item at internal cursor position?
 		do
 			Result := filenames.off
@@ -247,7 +247,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_dir_name (a_dir_name: STRING) is
+	set_dir_name (a_dir_name: STRING)
 			-- Set `dir_name' to `a_dir_name'.
 		require
 			dir_name_not_void: a_dir_name /= Void
@@ -257,7 +257,7 @@ feature -- Element change
 			dir_name_set: dir_name.is_equal (a_dir_name)
 		end
 
-	set_directory_name (a_directory_name: STRING) is
+	set_directory_name (a_directory_name: STRING)
 			-- Set `directory_name' to `a_directory_name'.
 		require
 			directory_name_not_void: a_directory_name /= Void
@@ -267,7 +267,7 @@ feature -- Element change
 			directory_name_set: directory_name.is_equal (a_directory_name)
 		end
 
-	set_include_wc_string (a_include_wc_string: like include_wc_string) is
+	set_include_wc_string (a_include_wc_string: like include_wc_string)
 			-- Set `include_wc_string' to `a_include_wc_string' and
 			-- make a compiled version available in `include_wildcard'
 		require
@@ -284,7 +284,7 @@ feature -- Element change
 			include_wc_string_set: include_wc_string = a_include_wc_string
 		end
 
-	set_exclude_wc_string (a_exclude_wc_string: like exclude_wc_string) is
+	set_exclude_wc_string (a_exclude_wc_string: like exclude_wc_string)
 			-- Set `exclude_wc_string' to `a_exclude_wc_string' and
 			-- make a compiled version available in `exclude_wildcard'
 		require
@@ -301,7 +301,7 @@ feature -- Element change
 			exclude_wc_string_set: exclude_wc_string = a_exclude_wc_string
 		end
 
-	set_convert_to_filesystem (b: BOOLEAN) is
+	set_convert_to_filesystem (b: BOOLEAN)
 			-- Set `convert_to_filesystem' to `b'.
 		do
 			convert_to_filesystem := b
@@ -309,7 +309,7 @@ feature -- Element change
 			convert_to_filesystem_set: convert_to_filesystem = b
 		end
 
-	set_map (a_map: like map) is
+	set_map (a_map: like map)
 			-- Set `map' to `a_map'.
 		require
 			a_map_not_void: a_map /= Void
@@ -319,7 +319,7 @@ feature -- Element change
 			map_set: map = a_map
 		end
 
-	set_force (b: BOOLEAN) is
+	set_force (b: BOOLEAN)
 			-- Set `force' to `b'.
 		do
 			force := b
@@ -327,7 +327,7 @@ feature -- Element change
 			force_set: force = b
 		end
 
-	set_concat (b: BOOLEAN) is
+	set_concat (b: BOOLEAN)
 			-- Set `concat' to `b'.
 		do
 			concat := b
@@ -335,7 +335,7 @@ feature -- Element change
 			concat_set: concat = b
 		end
 
-	set_filename_directory_name (a_filename_directory_name: STRING) is
+	set_filename_directory_name (a_filename_directory_name: STRING)
 			-- Set `filename_directory_name' to `a_filename_directory_name'.
 		require
 			filename_directory_name_not_void: a_filename_directory_name /= Void
@@ -345,7 +345,7 @@ feature -- Element change
 			filename_directory_name_set: filename_directory_name.is_equal (a_filename_directory_name)
 		end
 
-	set_mapped_filename_directory_name (a_mapped_filename_directory_name: STRING) is
+	set_mapped_filename_directory_name (a_mapped_filename_directory_name: STRING)
 			-- Set `mapped_filename_directory_name' to `a_mapped_filename_directory_name'.
 		require
 			mapped_filename_directory_name_not_void: a_mapped_filename_directory_name /= Void
@@ -355,7 +355,7 @@ feature -- Element change
 			mapped_filename_directory_name_set: mapped_filename_directory_name.is_equal (a_mapped_filename_directory_name)
 		end
 
-	set_filename_variable_name (a_filename_variable_name: STRING) is
+	set_filename_variable_name (a_filename_variable_name: STRING)
 			-- Set `filename_variable_name' to `a_filename_variable_name'.
 		require
 			a_filename_variable_name_not_void: a_filename_variable_name /= Void
@@ -366,7 +366,7 @@ feature -- Element change
 			filename_variable_name_set: filename_variable_name = a_filename_variable_name
 		end
 
-	set_mapped_filename_variable_name (a_mapped_filename_variable_name: STRING) is
+	set_mapped_filename_variable_name (a_mapped_filename_variable_name: STRING)
 			-- Set `mapped_filename_variable_name' to `a_mapped_filename_variable_name'.
 		require
 			a_mapped_filename_variable_name_not_void: a_mapped_filename_variable_name /= Void
@@ -379,7 +379,7 @@ feature -- Element change
 
 feature -- Element change
 
-	add_fileset_entry_if_necessary (a_filename: STRING) is
+	add_fileset_entry_if_necessary (a_filename: STRING)
 			-- Add new GEANT_FILESET_ENTRY created from `a_filename'
 			-- to `filenames'.
 			-- If force is set to 'false' do this only if the file named
@@ -419,7 +419,7 @@ feature -- Element change
 			end
 		end
 
-	remove_fileset_entry (a_filename: STRING) is
+	remove_fileset_entry (a_filename: STRING)
 			-- Remove entry with name equal to `a_filename' if existing.
 		local
 			a_entry: GEANT_FILESET_ENTRY
@@ -429,7 +429,7 @@ feature -- Element change
 			filenames.remove (a_entry)
 		end
 
-	add_single_include (a_filename: STRING) is
+	add_single_include (a_filename: STRING)
 			-- Add `a_filename' to list of single filenames to include into fileset.
 		require
 			a_filename_not_void: a_filename /= Void
@@ -437,7 +437,7 @@ feature -- Element change
 			single_includes.force_last (a_filename)
 		end
 
-	add_single_exclude (a_filename: STRING) is
+	add_single_exclude (a_filename: STRING)
 			-- Add `a_filename' to list of single filenames to exclude from fileset.
 		require
 			a_filename_not_void: a_filename /= Void
@@ -447,7 +447,7 @@ feature -- Element change
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Move cursor to first position.
 		do
 			filenames.start
@@ -461,7 +461,7 @@ feature -- Cursor movement
 			project_variables_up_to_date: are_project_variables_up_to_date
 		end
 
-	forth is
+	forth
 	   		-- Move cursor to next position.
 		require
 			not_after: not after
@@ -476,7 +476,7 @@ feature -- Cursor movement
 			project_variables_up_to_date: are_project_variables_up_to_date
 		end
 
-	go_after is
+	go_after
 			-- Move cursor to `after' position.
 		do
 			remove_project_variables
@@ -487,7 +487,7 @@ feature -- Cursor movement
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Populate `filenames'.
 		local
 			al_directory_name: STRING
@@ -569,7 +569,7 @@ feature {NONE} -- Implementation/Access
 
 feature {NONE} -- Implementation/Processing
 
-	scan_internal (a_directory_name: STRING) is
+	scan_internal (a_directory_name: STRING)
 			-- Scan directory named `a_directory_name' recursivley;
 			-- put filenames found matching `include_wildcard' and not matching `exclude_wildcard'
 			-- into `filenames';
@@ -615,7 +615,7 @@ feature {NONE} -- Implementation/Processing
 			end
 		end
 
-	is_file_outofdate (a_first_filename, a_second_filename: STRING): BOOLEAN is
+	is_file_outofdate (a_first_filename, a_second_filename: STRING): BOOLEAN
 			-- Is timestamp of file named `a_second_filename' older than
 			-- timestamp of file named `a_first_filename' or doesn't exist at all?
 		require
@@ -635,7 +635,7 @@ feature {NONE} -- Implementation/Processing
 			end
 		end
 
-	update_project_variables is
+	update_project_variables
 			-- Set project variable with name `filename_variable_name' to `item_filename' and
 			-- project variable with name `mapped_filename_variable_name' to `item_mapped_filename'.
 		require
@@ -647,7 +647,7 @@ feature {NONE} -- Implementation/Processing
 			project_variables_set: are_project_variables_up_to_date
 		end
 
-	remove_project_variables is
+	remove_project_variables
 			-- Remove project variable with name `filename_variable_name' and
 			-- project variable with name `mapped_filename_variable_name'.
 		do

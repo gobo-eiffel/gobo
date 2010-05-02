@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_static_context: XM_XPATH_STATIC_CONTEXT; a_node_type: INTEGER; a_uri, an_original_text: STRING) is
+	make (a_static_context: XM_XPATH_STATIC_CONTEXT; a_node_type: INTEGER; a_uri, an_original_text: STRING)
 		require
 			static_context_not_void: a_static_context /= Void
 			uri_not_void: a_uri /= Void
@@ -51,11 +51,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-		frozen default_priority: MA_DECIMAL is
+		frozen default_priority: MA_DECIMAL
 			--  Determine the default priority to use if this pattern appears as a match pattern for a template with no explicit priority attribute.
 		do
 				create Result.make_from_string ("-0.25")
 		end
 
 end
-	
+

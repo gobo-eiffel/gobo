@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_namespace_uri, a_local_name: STRING; a_base_type: XM_XPATH_SCHEMA_TYPE; a_fingerprint: INTEGER) is
+	make (a_namespace_uri, a_local_name: STRING; a_base_type: XM_XPATH_SCHEMA_TYPE; a_fingerprint: INTEGER)
 			-- Create a built-in type.
 		require
 			base_type_not_void: a_base_type /= Void
@@ -53,28 +53,28 @@ feature {NONE} -- Initialization
 			local_name_set: STRING_.same_string (local_name, a_local_name)
 			namespace_uri_set: STRING_.same_string (namespace_uri, a_namespace_uri)
 		end
-	
+
 feature -- Access
 
-	is_atomic_type: BOOLEAN is
+	is_atomic_type: BOOLEAN
 			-- Is `Current' an atomic type?
 		do
 			Result := True
 		end
 
-	as_atomic_type: XM_XPATH_ATOMIC_TYPE is
+	as_atomic_type: XM_XPATH_ATOMIC_TYPE
 			-- `Current' seen as an atomic type
 		do
 			Result := Current
 		end
 
-	common_atomic_type: XM_XPATH_ATOMIC_TYPE is
+	common_atomic_type: XM_XPATH_ATOMIC_TYPE
 			-- Lowest common super-type
 		do
 			Result := Current
 		end
 
-	matches_item (a_item: XM_XPATH_ITEM; a_treat_uri_as_string: BOOLEAN): BOOLEAN is
+	matches_item (a_item: XM_XPATH_ITEM; a_treat_uri_as_string: BOOLEAN): BOOLEAN
 			-- Does `a_item' conform to `Current'?
 		local
 			l_atomic_value: XM_XPATH_ATOMIC_VALUE
@@ -87,13 +87,13 @@ feature -- Access
 					Result := is_sub_type (a_item.item_type, Current)
 					if not Result and a_treat_uri_as_string then
 						-- allow promotion from anyURI to string
-						Result := (fingerprint = type_factory.string_type.fingerprint) and is_sub_type (l_atomic_value.item_type, type_factory.any_uri_type) 
+						Result := (fingerprint = type_factory.string_type.fingerprint) and is_sub_type (l_atomic_value.item_type, type_factory.any_uri_type)
 					end
 				end
 			end
 		end
 
-	super_type: XM_XPATH_ITEM_TYPE is
+	super_type: XM_XPATH_ITEM_TYPE
 			-- Type from which this item type is derived by restriction
 		do
 			if is_same_type (type_factory.any_atomic_type) then
@@ -103,7 +103,7 @@ feature -- Access
 			end
 		end
 
-	primitive_type: INTEGER is
+	primitive_type: INTEGER
 			-- Primitive type corresponding to this item type
 		local
 			a_super_type: XM_XPATH_ITEM_TYPE
@@ -120,7 +120,7 @@ feature -- Access
 			end
 		end
 
-	atomized_item_type: XM_XPATH_ATOMIC_TYPE is
+	atomized_item_type: XM_XPATH_ATOMIC_TYPE
 			-- Type of atomic values that will be produced when an item of this type is atomized
 		do
 			Result := Current
@@ -128,7 +128,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_same_type (other: XM_XPATH_ITEM_TYPE): BOOLEAN is
+	is_same_type (other: XM_XPATH_ITEM_TYPE): BOOLEAN
 			-- Is `other' the same type as `Current'?
 		do
 			Result := other.is_atomic_type and then other.as_atomic_type.fingerprint = fingerprint
@@ -140,8 +140,8 @@ feature -- Status report
 			-- Is `Current' a built-in type?
 
 feature -- Conversion
-	
-	conventional_name: STRING is
+
+	conventional_name: STRING
 			-- Representation of this type name for use in error messages;
 			-- Where this is a QName, it will use conventional prefixes.
 		do

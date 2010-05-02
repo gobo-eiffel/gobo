@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_containing_element: XM_ELEMENT; an_element_name: STRING; a_position: XM_POSITION) is
+	make (a_containing_element: XM_ELEMENT; an_element_name: STRING; a_position: XM_POSITION)
 			-- Create an error reporting that element `an_element_name'
 			-- is missing in element `a_containing_element'.
 		require
@@ -39,10 +39,10 @@ feature {NONE} -- Initialization
 
 feature {ANY} -- Access
 
-	default_template: STRING is "element '$1' must have child-element '$2' $3"
+	default_template: STRING = "element '$1' must have child-element '$2' $3"
 			-- Default template used to built the error message
 
-	code: STRING is "XA0002"
+	code: STRING = "XA0002"
 			-- Error code
 
 end

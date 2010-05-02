@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_document: XM_XPATH_TINY_FOREST; a_node_number: INTEGER) is
+	make (a_document: XM_XPATH_TINY_FOREST; a_node_number: INTEGER)
 		require
 			valid_document: a_document /= Void
 			valid_node_number: a_node_number > 1 and a_node_number <= a_document.last_node_added
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	string_value: STRING is
+	string_value: STRING
 			-- String-value
 		local
 			start, length: INTEGER
@@ -57,7 +57,7 @@ feature -- Access
 			Result := tree.comment_buffer.substring (start, start + length - 1)
 		end
 
-	base_uri: STRING is
+	base_uri: STRING
 			-- Base URI
 		local
 			l_initial_system_id: STRING
@@ -77,7 +77,7 @@ feature -- Access
 
 feature -- Duplication
 
-	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
+	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN)
 			-- Copy `Current' to `a_receiver'.
 		do
 			a_receiver.notify_processing_instruction (node_name, string_value, 0)
@@ -85,7 +85,7 @@ feature -- Duplication
 
 feature {XM_XPATH_NODE} -- Restricted
 
-	is_possible_child: BOOLEAN is
+	is_possible_child: BOOLEAN
 			-- Can this node be a child of a document or element node?
 		do
 			Result := True

@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER; a_string: STRING; token1, token2: STRING) is
+	make (filename: STRING; line: INTEGER; a_string: STRING; token1, token2: STRING)
 			-- Create a new error reporting that the literal
 			-- `a_string' has been defined twice.
 		require
@@ -41,10 +41,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: literal string $3 defined twice with $4 and $5"
+	default_template: STRING = "%"$1%", line $2: literal string $3 defined twice with $4 and $5"
 			-- Default template used to built the error message
 
-	code: STRING is "PR0022"
+	code: STRING = "PR0022"
 			-- Error code
 
 invariant

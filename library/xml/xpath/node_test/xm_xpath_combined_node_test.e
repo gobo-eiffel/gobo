@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_node_test: XM_XPATH_NODE_TEST; a_operator: INTEGER; a_other_node_test: XM_XPATH_NODE_TEST) is
+	make (a_node_test: XM_XPATH_NODE_TEST; a_operator: INTEGER; a_other_node_test: XM_XPATH_NODE_TEST)
 		require
 			node_test_one_not_void: a_node_test /= Void
 			node_test_two_not_void: a_other_node_test /= Void
@@ -70,13 +70,13 @@ feature -- Access
 	operator: INTEGER
 			-- Set operation
 
-	node_kind_mask: INTEGER is
+	node_kind_mask: INTEGER
 			-- Mask of types of nodes matched
 		do
 			Result := INTEGER_.bit_and (node_test_one.node_kind_mask, node_test_two.node_kind_mask)
 		end
 
-	constraining_node_names: DS_SET [INTEGER] is
+	constraining_node_names: DS_SET [INTEGER]
 			-- Set of fingerprints of node names allowed
 		do
 			if node_test_one.constraining_node_names = Void then
@@ -86,7 +86,7 @@ feature -- Access
 			end
 		end
 
-	content_type: XM_XPATH_SCHEMA_TYPE is
+	content_type: XM_XPATH_SCHEMA_TYPE
 			-- Content type
 		local
 			a_type, another_type: XM_XPATH_SCHEMA_TYPE
@@ -105,13 +105,13 @@ feature -- Access
 			end
 		end
 
-	is_combined_node_test: BOOLEAN is
+	is_combined_node_test: BOOLEAN
 			-- Is `Current' a combined node test?
 		do
 			Result := True
 		end
 
-	as_combined_node_test: XM_XPATH_COMBINED_NODE_TEST is
+	as_combined_node_test: XM_XPATH_COMBINED_NODE_TEST
 			-- `Current' seen as a combined node test
 		do
 			Result := Current
@@ -119,13 +119,13 @@ feature -- Access
 
 feature -- Status report
 
-	is_at_most_one_name_constraint: BOOLEAN is
+	is_at_most_one_name_constraint: BOOLEAN
 			-- Is there at most one name constraint?
 		do
 			Result := node_test_one.constraining_node_names = Void or else node_test_two.constraining_node_names = Void
 		end
 
-	allows_text_nodes: BOOLEAN is
+	allows_text_nodes: BOOLEAN
 			-- Does this node test allow text nodes?
 		do
 			Result := node_test_one.allows_text_nodes or else node_test_two.allows_text_nodes
@@ -133,7 +133,7 @@ feature -- Status report
 
 feature -- Matching
 
-	matches_node (a_node_kind: INTEGER; a_fingerprint: INTEGER; a_node_type: INTEGER): BOOLEAN is
+	matches_node (a_node_kind: INTEGER; a_fingerprint: INTEGER; a_node_type: INTEGER): BOOLEAN
 			-- Is this node test satisfied by a given node?
 		do
 			inspect

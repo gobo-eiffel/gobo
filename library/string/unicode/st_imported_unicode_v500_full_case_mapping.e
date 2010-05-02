@@ -14,7 +14,7 @@ class ST_IMPORTED_UNICODE_V500_FULL_CASE_MAPPING
 
 feature -- Access
 
-	case_mapping_v500: ST_UNICODE_V500_FULL_CASE_MAPPING is
+	case_mapping_v500: ST_UNICODE_V500_FULL_CASE_MAPPING
 			-- Unicode V5.0.0 full case mapping routines
 		once
 			create Result

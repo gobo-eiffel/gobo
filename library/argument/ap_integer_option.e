@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Perform the common initialization steps.
 		do
 			Precursor
@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Status report
 
-	needs_parameter: BOOLEAN is
+	needs_parameter: BOOLEAN
 			-- Does this option need a parameter ?
 		do
 			Result := True
@@ -49,13 +49,13 @@ feature -- Status report
 
 feature {AP_PARSER} -- Parser Interface
 
-	reset is
+	reset
 			-- Reset the option to a clean state before parsing.
 		do
 			create {DS_LINKED_LIST [INTEGER]} parameters.make
 		end
 
-	record_occurrence (a_parser: AP_PARSER) is
+	record_occurrence (a_parser: AP_PARSER)
 			-- Record the occurrence of the option with `a_parameter'.
 		local
 			error: AP_ERROR

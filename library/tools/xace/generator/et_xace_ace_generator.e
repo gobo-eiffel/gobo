@@ -30,13 +30,13 @@ create
 
 feature -- Access
 
-	default_system_output_filename: STRING is
+	default_system_output_filename: STRING
 			-- Name of generated Ace file
 		once
 			Result := compiler + ".ace"
 		end
 
-	default_library_output_filename: STRING is
+	default_library_output_filename: STRING
 			-- Name of generated library Ace file
 		once
 			Result := compiler + ".ace"
@@ -44,13 +44,13 @@ feature -- Access
 
 feature -- Output
 
-	generate_system (a_system: ET_XACE_SYSTEM_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM) is
+	generate_system (a_system: ET_XACE_SYSTEM_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Generate a new Ace file from `a_system'.
 		do
 			print_ace_file (a_system, a_file)
 		end
 
-	generate_library (a_library: ET_XACE_LIBRARY_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM) is
+	generate_library (a_library: ET_XACE_LIBRARY_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Generate a new Ace file from `a_library'.
 		do
 			print_precompile_ace_file (a_library, a_file)
@@ -58,7 +58,7 @@ feature -- Output
 
 feature {NONE} -- Output
 
-	print_ace_file (a_system: ET_XACE_SYSTEM_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_ace_file (a_system: ET_XACE_SYSTEM_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print Ace `a_system' to `a_file'.
 		require
 			a_system_not_void: a_system /= Void
@@ -120,7 +120,7 @@ feature {NONE} -- Output
 			a_file.put_line ("end")
 		end
 
-	print_precompile_ace_file (a_library: ET_XACE_LIBRARY_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_precompile_ace_file (a_library: ET_XACE_LIBRARY_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print precompilation Ace file to `a_file'.
 		require
 			a_library_not_void: a_library /= Void
@@ -176,7 +176,7 @@ feature {NONE} -- Output
 			a_file.put_line ("end")
 		end
 
-	print_assemblies (a_clusters: ET_XACE_CLUSTERS; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_assemblies (a_clusters: ET_XACE_CLUSTERS; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the assembly clause for
 			-- `a_clusters' and recursively their subclusters.
 		require
@@ -231,7 +231,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_options (an_option: ET_XACE_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_options (an_option: ET_XACE_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print `an_option' to `a_file'.
 		require
 			an_option_not_void: an_option /= Void
@@ -526,7 +526,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_clusters (a_clusters: ET_XACE_CLUSTERS; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_clusters (a_clusters: ET_XACE_CLUSTERS; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print `a_clusters' to `a_file'.
 		require
 			a_clusters_not_void: a_clusters /= Void
@@ -549,7 +549,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_cluster (a_cluster: ET_XACE_CLUSTER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_cluster (a_cluster: ET_XACE_CLUSTER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print `a_cluster' to `a_file'.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -632,7 +632,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_cluster_options (an_option: ET_XACE_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM): BOOLEAN is
+	print_cluster_options (an_option: ET_XACE_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM): BOOLEAN
 			-- Print cluster options `an_option' to `a_file'.
 			-- Return True if the end keyword needs to be printed.
 		require
@@ -816,7 +816,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_class_options (an_option_list: DS_LINKED_LIST [ET_XACE_CLASS_OPTIONS]; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM): BOOLEAN is
+	print_class_options (an_option_list: DS_LINKED_LIST [ET_XACE_CLASS_OPTIONS]; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM): BOOLEAN
 			-- Print class options `an_option_list' to `a_file'.
 			-- Return True if the end keyword needs to be printed.
 		require
@@ -1006,7 +1006,7 @@ feature {NONE} -- Output
 		end
 
 	print_c_compiler_options_and_include_directories (a_c_compiler_options: DS_LINKED_LIST [STRING];
-		a_directories: DS_LINKED_LIST [STRING]; a_file: KI_TEXT_OUTPUT_STREAM) is
+		a_directories: DS_LINKED_LIST [STRING]; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print `a_c_compiler_options' and
 			-- `a_directories' to `a_file'.
 		require
@@ -1059,7 +1059,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_link_libraries (a_libraries: DS_LINKED_LIST [STRING]; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_link_libraries (a_libraries: DS_LINKED_LIST [STRING]; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print `a_libraries' to `a_file'.
 		require
 			a_libraries_not_void: a_libraries /= Void
@@ -1094,7 +1094,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_escaped_name (a_name: STRING; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_escaped_name (a_name: STRING; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print escaped version of `a_name' to `a_file'.
 		do
 			if a_name.has ('.') or else is_lace_keyword (a_name) then
@@ -1108,7 +1108,7 @@ feature {NONE} -- Output
 
 feature {NONE} -- Implementation
 
-	is_lace_keyword (a_name: STRING): BOOLEAN is
+	is_lace_keyword (a_name: STRING): BOOLEAN
 			-- Is `a_name' a LACE keyword?
 		require
 			a_name_not_void: a_name /= Void
@@ -1129,7 +1129,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	lace_keywords: ARRAY [STRING] is
+	lace_keywords: ARRAY [STRING]
 			-- LACE keywords
 		once
 			Result := <<

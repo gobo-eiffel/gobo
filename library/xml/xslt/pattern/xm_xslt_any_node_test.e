@@ -22,7 +22,7 @@ inherit
 		end
 
 	XM_XPATH_ANY_NODE_TEST
-		rename 
+		rename
 			make as make_xpath
 		end
 
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant
 		do
 			system_id := ""
@@ -40,14 +40,14 @@ feature {NONE} -- Initialization
 			initialize_dependencies
 			make_xpath
 		end
-	
+
 feature -- Access
 
-		frozen default_priority: MA_DECIMAL is
+		frozen default_priority: MA_DECIMAL
 			--  Determine the default priority to use if this pattern appears as a match pattern for a template with no explicit priority attribute.
 		do
 				create Result.make_from_string ("-0.5")
 		end
-	
+
 end
-	
+

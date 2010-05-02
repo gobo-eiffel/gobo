@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_assembly: like assembly) is
+	make (an_assembly: like assembly)
 			-- Create a new assembly list with initially
 			-- one assembly `an_assembly'.
 		require
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			assemblies_set: assemblies.last = an_assembly
 		end
 
-	make_empty is
+	make_empty
 			-- Create a new empty assembly list.
 		do
 			create assemblies.make (Initial_assemblies_capacity)
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	assembly (i: INTEGER): ET_DOTNET_ASSEMBLY is
+	assembly (i: INTEGER): ET_DOTNET_ASSEMBLY
 			-- `i'-th assembly
 		require
 			i_large_enough: i >= 1
@@ -58,7 +58,7 @@ feature -- Access
 			assembly_not_void: Result /= Void
 		end
 
-	assembly_by_name (a_name: STRING): ET_DOTNET_ASSEMBLY is
+	assembly_by_name (a_name: STRING): ET_DOTNET_ASSEMBLY
 			-- Assembly with name `a_name';
 			-- Void if not such assembly
 		require
@@ -85,7 +85,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of assemblies
 		do
 			Result := assemblies.count
@@ -95,7 +95,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	put_last (an_assembly: like assembly) is
+	put_last (an_assembly: like assembly)
 			-- Add `an_assembly' to the list of assemblies.
 		require
 			an_assembly_not_void: an_assembly /= Void
@@ -108,7 +108,7 @@ feature -- Element change
 
 feature -- Iteration
 
-	do_all (an_action: PROCEDURE [ANY, TUPLE [ET_DOTNET_ASSEMBLY]]) is
+	do_all (an_action: PROCEDURE [ANY, TUPLE [ET_DOTNET_ASSEMBLY]])
 			-- Apply `an_action' to every .NET assembly, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 		require
@@ -123,7 +123,7 @@ feature -- Iteration
 			end
 		end
 
-	universes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]) is
+	universes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]])
 			-- Apply `an_action' to every .NET assembly (viewed as a universe), from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 		require
@@ -138,7 +138,7 @@ feature -- Iteration
 			end
 		end
 
-	universes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_test: FUNCTION [ANY, TUPLE [ET_UNIVERSE], BOOLEAN]) is
+	universes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_test: FUNCTION [ANY, TUPLE [ET_UNIVERSE], BOOLEAN])
 			-- Apply `an_action' to every .NET assembly (viewed as a universe) that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 		require
@@ -160,7 +160,7 @@ feature -- Iteration
 
 feature {NONE} -- Constants
 
-	Initial_assemblies_capacity: INTEGER is 50
+	Initial_assemblies_capacity: INTEGER = 50
 			-- Initial capacity for `assemblies'
 
 invariant

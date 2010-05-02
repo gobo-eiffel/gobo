@@ -29,30 +29,30 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create intrinsic dependencies.
 		do
 			compute_static_properties
 			initialized := True
 		ensure
-			static_properties_computed: are_static_properties_computed			
+			static_properties_computed: are_static_properties_computed
 		end
 
 feature -- Access
 
-	is_root_expression: BOOLEAN is
+	is_root_expression: BOOLEAN
 			-- Is `Current' a root expression?
 		do
 			Result := True
 		end
 
-	as_root_expression: XM_XPATH_ROOT_EXPRESSION is
+	as_root_expression: XM_XPATH_ROOT_EXPRESSION
 			-- `Current' seen as a root expression
 		do
 			Result := Current
 		end
-	
-	item_type: XM_XPATH_ITEM_TYPE is
+
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Determine the data type of the expression, if possible
 		do
 			Result := document_node_kind_test
@@ -62,7 +62,7 @@ feature -- Access
 			end
 		end
 
-	node (a_context: XM_XPATH_CONTEXT): XM_XPATH_NODE is
+	node (a_context: XM_XPATH_CONTEXT): XM_XPATH_NODE
 			-- The single node
 		local
 			a_document: XM_XPATH_DOCUMENT
@@ -81,7 +81,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Are `Current' and `other' the same expression?
 		do
 			Result := other.is_root_expression
@@ -89,7 +89,7 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_valid_context_for_node (a_context: XM_XPATH_CONTEXT): BOOLEAN is
+	is_valid_context_for_node (a_context: XM_XPATH_CONTEXT): BOOLEAN
 			-- Is the dynamic context in a suitable condition to call `node'?
 		do
 			if a_context /= Void and then a_context.context_item /= Void then
@@ -99,7 +99,7 @@ feature -- Status report
 			end
 		end
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -111,7 +111,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	compute_intrinsic_dependencies is
+	compute_intrinsic_dependencies
 			-- Determine the intrinsic dependencies of an expression.
 		do
 			set_intrinsically_depends_upon_context_item
@@ -120,7 +120,7 @@ feature -- Status setting
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
@@ -128,7 +128,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 
-	dynamic_error_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_ERROR_VALUE is
+	dynamic_error_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_ERROR_VALUE
 			-- Dynamic error value
 		do
 			if a_context = Void then

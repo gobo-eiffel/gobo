@@ -22,7 +22,7 @@ create
 
 feature -- Sort
 
-	subsort_with_comparator (a_container: ARRAY [G]; a_comparator: KL_PART_COMPARATOR [G]; lower, upper: INTEGER) is
+	subsort_with_comparator (a_container: ARRAY [G]; a_comparator: KL_PART_COMPARATOR [G]; lower, upper: INTEGER)
 			-- Sort `a_container' according to `a_comparator''s
 			-- comparison criterion within bounds `lower'..`upper'?
 		local

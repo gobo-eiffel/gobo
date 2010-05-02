@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant.
 		do
 			create scheme_sequence.make_default
@@ -58,10 +58,10 @@ feature -- Status report
 
 	error_message, error_code: STRING
 			-- Error text and code from `parse'
-	
+
 feature -- Element change
 
-	parse (an_xpointer: STRING) is
+	parse (an_xpointer: STRING)
 			-- Parse `an_xpointer' into it's schemes.
 		require
 			xpointer_not_empty: an_xpointer /= Void and then an_xpointer.count > 0
@@ -129,12 +129,12 @@ feature {NONE} -- Implementation
 	current_scheme_data: STRING
 			-- Data for scheme currently being parsed
 
-	set_error (a_message, a_code: STRING) is
+	set_error (a_message, a_code: STRING)
 			-- Set `error_message' and `error_code'.
 		require
 			message_not_void: a_message /= Void and then a_message.count > 0
 			code_not_void: a_code /= Void and then a_code.count > 0
-			not_in_error: not is_error			
+			not_in_error: not is_error
 		do
 			error_message := a_message; error_code := a_code
 			is_error := True
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	parse_scheme (a_tokenizer: XM_XPOINTER_TOKENIZER; a_name: STRING) is
+	parse_scheme (a_tokenizer: XM_XPOINTER_TOKENIZER; a_name: STRING)
 			-- Parse a single XPointer scheme name and data and set `last_token'.
 		require
 			no_previous_error: not is_error
@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 				and then current_scheme_data /= Void
 		end
 
-	parse_scheme_name (a_tokenizer: XM_XPOINTER_TOKENIZER; a_name: STRING) is
+	parse_scheme_name (a_tokenizer: XM_XPOINTER_TOKENIZER; a_name: STRING)
 			-- Parse scheme name
 		require
 			no_previous_error: not is_error
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 						else
 							current_scheme_name := a_tokenizer.last_token_value
 							if not is_qname (current_scheme_name) then
-								set_error ("XPointer scheme name is not a lexical QName: " + current_scheme_name, "XPOINTER_LEXICAL")								
+								set_error ("XPointer scheme name is not a lexical QName: " + current_scheme_name, "XPOINTER_LEXICAL")
 							else
 								a_tokenizer.next
 							end
@@ -243,7 +243,7 @@ feature {NONE} -- Implementation
 			error_or_lexical_qname: not is_error implies current_scheme_name /= Void and then is_qname (current_scheme_name)
 		end
 
-	store_current_scheme is
+	store_current_scheme
 			-- Store current parsed scheme.
 		require
 			no_previous_error: not is_error
@@ -253,7 +253,7 @@ feature {NONE} -- Implementation
 			scheme_sequence.force_last (current_scheme_name)
 			scheme_data.force_last (current_scheme_data)
 		end
-			
+
 invariant
 
 	possible_error: is_error implies error_message /= Void and then error_code /= Void
@@ -262,4 +262,4 @@ invariant
 		and then scheme_sequence.count = scheme_data.count
 
 end
-	
+

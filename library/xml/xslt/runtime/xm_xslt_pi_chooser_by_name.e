@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING) is
+	make (a_name: STRING)
 			-- Set name of stylesheet to be chosen.
 		require
 			name_not_void: a_name /= Void
@@ -40,7 +40,7 @@ feature -- Access
 			-- Name of stylesheet to be chosen;
 			-- Empty string means select preferred stylesheet.
 
-	selected_index (a_list: DS_LIST [STRING]): INTEGER is
+	selected_index (a_list: DS_LIST [STRING]): INTEGER
 			-- Index of chosen xml-stylesheet from within `a_list'
 		local
 			a_cursor: DS_LIST_CURSOR [STRING]
@@ -70,7 +70,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- Set name of stylesheet to be chosen.
 		require
 			name_not_void: a_name /= Void

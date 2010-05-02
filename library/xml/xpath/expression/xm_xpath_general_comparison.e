@@ -27,7 +27,7 @@ inherit
 	XM_XPATH_ROLE
 
 	XM_XPATH_TYPE
-	
+
 	XM_XPATH_COMPARISON_ROUTINES
 
 create
@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; an_operand_two: XM_XPATH_EXPRESSION; a_collator: ST_COLLATOR) is
+	make (an_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; an_operand_two: XM_XPATH_EXPRESSION; a_collator: ST_COLLATOR)
 			-- Establish invariant
 		require
 			operand_1_not_void: an_operand_one /= Void
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Determine the data type of the expression, if possible
 		do
 			Result := type_factory.boolean_type
@@ -65,11 +65,11 @@ feature -- Access
 				-- that `Result' is not optimized away.
 			end
 		end
-	
-feature -- Optimization	
 
-	
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+feature -- Optimization
+
+
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
@@ -112,7 +112,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
@@ -136,7 +136,7 @@ feature -- Optimization
 				else
 
 					-- If either operand is statically empty, evaluate as `False'.
-					
+
 					if first_operand.is_empty_sequence or second_operand.is_empty_sequence then
 						create l_boolean_value.make (False)
 						set_replacement (a_replacement, l_boolean_value)
@@ -159,7 +159,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT)
 			-- Effective boolean value
 		local
 			an_iterator, another_iterator, a_third_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -180,9 +180,9 @@ feature -- Evaluation
 				if another_iterator.is_error then
 					create last_boolean_value.make (False); last_boolean_value.set_last_error (another_iterator.error_value); set_last_error (another_iterator.error_value)
 				else
-					
+
 					-- The second operand is more likely to be a singleton than the first so:
-					
+
 					expression_factory.create_sequence_extent (another_iterator)
 					a_value := expression_factory.last_created_closure
 					a_count := a_value.count
@@ -241,7 +241,7 @@ feature -- Evaluation
 			end
 		end
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			calculate_effective_boolean_value (a_context)
@@ -250,7 +250,7 @@ feature -- Evaluation
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
@@ -264,13 +264,13 @@ feature {NONE} -- Implementation
 	atomic_comparer: XM_XPATH_ATOMIC_COMPARER
 			-- Comparer for atomic values
 
-	display_operator: STRING is
+	display_operator: STRING
 			-- Format `operator' for display
 		do
 			Result := STRING_.appended_string ("many-to-many ", Precursor)
 		end
 
-	calculate_effective_boolean_value_with_second_operand_singleton (a_context: XM_XPATH_CONTEXT; an_item: XM_XPATH_ITEM; an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
+	calculate_effective_boolean_value_with_second_operand_singleton (a_context: XM_XPATH_CONTEXT; an_item: XM_XPATH_ITEM; an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM])
 			-- Effective boolean value
 		local
 			finished: BOOLEAN
@@ -313,11 +313,11 @@ feature {NONE} -- Implementation
 				end
 			end
 		ensure
-			last_boolean_value_not_void: last_boolean_value /= Void			
+			last_boolean_value_not_void: last_boolean_value /= Void
 		end
 
 	type_check_two_singletons (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT;
-		a_type, a_other_type: XM_XPATH_ATOMIC_TYPE; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+		a_type, a_other_type: XM_XPATH_ATOMIC_TYPE; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Use a value comparison if both arguments are singletons
 		require
 			context_not_void: a_context /= Void
@@ -350,7 +350,7 @@ feature {NONE} -- Implementation
 				else
 					create {XM_XPATH_CAST_EXPRESSION} second_operand.make (second_operand, a_type, False)
 					adopt_child_expression (second_operand)
-				end	
+				end
 			end
 			create l_replacement.make (Void)
 			create {XM_XPATH_VALUE_COMPARISON} l_computed_expression.make (first_operand, singleton_operator, second_operand, atomic_comparer.collator)
@@ -363,9 +363,9 @@ feature {NONE} -- Implementation
 				l_expression.check_static_type (a_replacement, a_context, a_context_item_type)
 			end
 		end
-	
+
 	optimize_two_singletons (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT;
-		a_type, a_other_type: XM_XPATH_ATOMIC_TYPE; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+		a_type, a_other_type: XM_XPATH_ATOMIC_TYPE; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Use a value comparison if both arguments are singletons
 		require
 			context_not_void: a_context /= Void
@@ -398,7 +398,7 @@ feature {NONE} -- Implementation
 				else
 					create {XM_XPATH_CAST_EXPRESSION} second_operand.make (second_operand, a_type, False)
 					adopt_child_expression (second_operand)
-				end	
+				end
 			end
 			create l_replacement.make (Void)
 			create {XM_XPATH_VALUE_COMPARISON} l_computed_expression.make (first_operand, singleton_operator, second_operand, atomic_comparer.collator)
@@ -414,7 +414,7 @@ feature {NONE} -- Implementation
 
 
 	operands_not_in_error_so_type_check (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
-		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Type check after operands have been checked.
 		require
 			context_not_void: a_context /= Void
@@ -486,7 +486,7 @@ feature {NONE} -- Implementation
 		end
 
 	operands_not_in_error_so_optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
-		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Optimize after operands have been optimized.
 		require
 			context_not_void: a_context /= Void
@@ -522,7 +522,7 @@ feature {NONE} -- Implementation
 		end
 
 	type_check_singleton_and_empty_sequence (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
-		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Type check when neither argument allows a sequence of >1
 		require
 			context_not_void: a_context /= Void
@@ -536,7 +536,7 @@ feature {NONE} -- Implementation
 		end
 
 	optimize_singleton_and_empty_sequence (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
-		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Optimize when neither argument allows a sequence of >1
 		require
 			context_not_void: a_context /= Void
@@ -550,7 +550,7 @@ feature {NONE} -- Implementation
 		end
 
 	type_check_first_operand_single (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
-		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- If first argument is a singleton, reverse the arguments
 		require
 			context_not_void: a_context /= Void
@@ -558,13 +558,13 @@ feature {NONE} -- Implementation
 			not_replaced: a_replacement.item = Void
 		local
 			l_general_comparison: XM_XPATH_GENERAL_COMPARISON
-		do	
+		do
 			create l_general_comparison.make (second_operand, inverse_operator (operator), first_operand, atomic_comparer.collator)
 			l_general_comparison.check_static_type (a_replacement, a_context, a_context_item_type)
 		end
 
 	optimize_first_operand_single (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
-		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- If first argument is a singleton, reverse the arguments
 		require
 			context_not_void: a_context /= Void
@@ -572,13 +572,13 @@ feature {NONE} -- Implementation
 			not_replaced: a_replacement.item = Void
 		local
 			l_general_comparison: XM_XPATH_GENERAL_COMPARISON
-		do	
+		do
 			create l_general_comparison.make (second_operand, inverse_operator (operator), first_operand, atomic_comparer.collator)
 			l_general_comparison.optimize (a_replacement, a_context, a_context_item_type)
 		end
 
 	optimize_n_to_m_equals_i (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
-		a_context: XM_XPATH_STATIC_CONTEXT; a_range_expression: XM_XPATH_RANGE_EXPRESSION) is
+		a_context: XM_XPATH_STATIC_CONTEXT; a_range_expression: XM_XPATH_RANGE_EXPRESSION)
 			-- Look for (N to M = I)
 		require
 			context_not_void: a_context /= Void
@@ -599,7 +599,7 @@ feature {NONE} -- Implementation
 		end
 
 	optimize_n_to_m_equals_i_two (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
-		a_context: XM_XPATH_STATIC_CONTEXT; an_integer_range: XM_XPATH_INTEGER_RANGE) is
+		a_context: XM_XPATH_STATIC_CONTEXT; an_integer_range: XM_XPATH_INTEGER_RANGE)
 			-- Look for (N to M = I)
 		require
 			context_not_void: a_context /= Void
@@ -619,7 +619,7 @@ feature {NONE} -- Implementation
 		end
 
 	type_check_inequalities (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
-		a_context: XM_XPATH_STATIC_CONTEXT; a_type, a_other_type: XM_XPATH_ITEM_TYPE; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+		a_context: XM_XPATH_STATIC_CONTEXT; a_type, a_other_type: XM_XPATH_ITEM_TYPE; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- If the operator is gt, ge, lt, le then replace X < Y by min(X) < max(Y)
 
 			-- This optimization is done only in the case where at least one of the
@@ -666,7 +666,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	evaluate_two_constants (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
+	evaluate_two_constants (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Evaluate the expression now if both arguments are constant
 		require
 			a_context_not_void: a_context /= Void
@@ -688,10 +688,10 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	
+
 	general_comparison: is_general_comparison_operator (operator)
 	atomic_comparer_not_void: initialized implies atomic_comparer /= Void
 	value_comparison: initialized implies is_value_comparison_operator (singleton_operator)
 
 end
-	
+

@@ -41,7 +41,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
+	make (a_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM])
 			-- Create from an iterator.
 		require
 			iterator_before: a_iterator /= Void and then a_iterator.before and then not a_iterator.is_error
@@ -85,7 +85,7 @@ feature {NONE} -- Initialization
 			set_cardinality_from_count
 		end
 
-	make_as_view (a_extent: XM_XPATH_SEQUENCE_EXTENT; a_start, a_length: INTEGER) is
+	make_as_view (a_extent: XM_XPATH_SEQUENCE_EXTENT; a_start, a_length: INTEGER)
 			-- Create as a view over `an_extent'.
 		require
 			a_extent_not_void: a_extent /= Void
@@ -103,7 +103,7 @@ feature {NONE} -- Initialization
 			set_cardinality_from_count
 		end
 
-	make_from_list (a_list: DS_LIST [XM_XPATH_ITEM]) is
+	make_from_list (a_list: DS_LIST [XM_XPATH_ITEM])
 			-- Create from a list of items.
 		require
 			list_not_void: a_list /= Void
@@ -114,7 +114,7 @@ feature {NONE} -- Initialization
 			set_cardinality_from_count
 		end
 
-	make_default is
+	make_default
         -- Create an empty container.
 		do
 			make_value
@@ -122,7 +122,7 @@ feature {NONE} -- Initialization
 			set_cardinality_from_count
 		end
 
-	set_cardinality_from_count is
+	set_cardinality_from_count
 			-- Set cardinality from `count'
 		do
 			if count = 0 then
@@ -136,19 +136,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_sequence_extent: BOOLEAN is
+	is_sequence_extent: BOOLEAN
 			-- Is `Current' a sequence extent?
 		do
 			Result := True
 		end
 
-	as_sequence_extent: XM_XPATH_SEQUENCE_EXTENT is
+	as_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
 			-- `Current' seen as a sequence extent
 		do
 			Result := Current
 		end
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression
 		local
 			l_counter: INTEGER
@@ -177,7 +177,7 @@ feature -- Access
 			Result := cached_item_type
 		end
 
-	item_at (a_index: INTEGER): XM_XPATH_ITEM is
+	item_at (a_index: INTEGER): XM_XPATH_ITEM
 			-- Item at `a_index'
 		do
 			Result := item (a_index)
@@ -185,13 +185,13 @@ feature -- Access
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is current container equal to other?
 		do
 			Result := same_expression (other)
 		end
 
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Are `Current' and `other' the same expression?
 		local
 			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
@@ -236,7 +236,7 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_node_sequence: BOOLEAN is
+	is_node_sequence: BOOLEAN
 			-- Is `Current' a node-sequence?
 		local
 			l_index: INTEGER
@@ -254,7 +254,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		local
 			l_count: INTEGER
@@ -277,7 +277,7 @@ feature -- Optimization
 			end
 		end
 
-	reduce is
+	reduce
 			-- Reduce a value to its simplest form.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -301,7 +301,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT)
 			-- Effective boolean value
 		local
 			l_item: XM_XPATH_ITEM
@@ -324,7 +324,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- An iterator over the values of a sequence
 		do
 			if count = 0 then
@@ -336,13 +336,13 @@ feature -- Evaluation
 			end
 		end
 
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over a node sequence
 		do
 			last_node_iterator := node_iterator (False)
 		end
 
-	reverse_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	reverse_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			-- An iterator over the values of a sequence in reverse order
 		do
 			if is_node_sequence then
@@ -354,7 +354,7 @@ feature -- Evaluation
 			end
 		end
 
-	node_iterator (in_reverse: BOOLEAN): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	node_iterator (in_reverse: BOOLEAN): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- An iterator over the nodes of a node-sequence
 		require
 			is_node_sequence
@@ -390,7 +390,7 @@ feature -- Evaluation
 
 feature {XM_XPATH_SEQUENCE_EXTENT} -- Implementation
 
-	Estimated_item_count: INTEGER is 20
+	Estimated_item_count: INTEGER = 20
 			-- Guess at number of items in sequence
 
 	cached_item_type: XM_XPATH_ITEM_TYPE
@@ -398,7 +398,7 @@ feature {XM_XPATH_SEQUENCE_EXTENT} -- Implementation
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	native_implementations: INTEGER is
+	native_implementations: INTEGER
 			-- Natively-supported evaluation routines
 		do
 			Result := Supports_iterator

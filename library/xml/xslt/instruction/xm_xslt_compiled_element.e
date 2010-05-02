@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 	make (an_executable: XM_XSLT_EXECUTABLE; an_element_name, a_namespace: XM_XPATH_EXPRESSION; a_namespace_context: XM_XSLT_NAMESPACE_CONTEXT;
 			some_attribute_sets: DS_ARRAYED_LIST [INTEGER]; a_schema_type: XM_XPATH_SCHEMA_TYPE; a_validation_action: INTEGER;
-			inherit_namespaces: BOOLEAN; a_content: XM_XPATH_EXPRESSION) is
+			inherit_namespaces: BOOLEAN; a_content: XM_XPATH_EXPRESSION)
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
@@ -62,8 +62,8 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
-	item_type: XM_XPATH_ITEM_TYPE is
+
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, when known
 		do
 			if internal_item_type /= Void then
@@ -76,8 +76,8 @@ feature -- Access
 				-- that `Result' is not optimized away.
 			end
 		end
-	
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions
 		do
 			create Result.make (3)
@@ -89,7 +89,7 @@ feature -- Access
 			end
 		end
 
-	name_code (a_context: XM_XSLT_EVALUATION_CONTEXT): INTEGER is
+	name_code (a_context: XM_XSLT_EVALUATION_CONTEXT): INTEGER
 			-- Name code;
 			-- Not 100% pure as it may report an error.
 		local
@@ -98,7 +98,7 @@ feature -- Access
 			l_string_value: XM_XPATH_STRING_VALUE
 			l_uri, l_xml_prefix: STRING
 			l_parser: XM_XPATH_QNAME_PARSER
-			l_error: XM_XPATH_ERROR_VALUE 
+			l_error: XM_XPATH_ERROR_VALUE
 		do
 			create l_item.make (Void)
 			element_name.evaluate_item (l_item, a_context)
@@ -160,7 +160,7 @@ feature -- Access
 			end
 		end
 
-	new_base_uri (a_context: XM_XPATH_CONTEXT): STRING is
+	new_base_uri (a_context: XM_XPATH_CONTEXT): STRING
 			-- Re-calculated base URI
 		do
 			Result := base_uri
@@ -171,7 +171,7 @@ feature -- Access
 
 feature -- Status report
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -194,7 +194,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -228,12 +228,12 @@ feature -- Optimization
 				-- The following code will need modifying for a schema-aware processor:
 
 				create {XM_XPATH_CONTENT_TYPE_TEST} internal_item_type.make (Element_node, type_factory.untyped_type)
-				
+
 				Precursor (a_replacement)
 			end
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_role: XM_XPATH_ROLE_LOCATOR
@@ -291,7 +291,7 @@ feature -- Optimization
 			end
 		end
 
-	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this instruction.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -317,7 +317,7 @@ feature -- Optimization
 
 feature {XM_XSLT_ELEMENT_CONSTRUCTOR} -- Local
 
-	output_namespace_nodes (a_context: XM_XSLT_EVALUATION_CONTEXT; a_receiver: XM_XPATH_RECEIVER) is
+	output_namespace_nodes (a_context: XM_XSLT_EVALUATION_CONTEXT; a_receiver: XM_XPATH_RECEIVER)
 			-- Output namespace nodes for the new element.
 		do
 			-- do_nothing
@@ -325,17 +325,17 @@ feature {XM_XSLT_ELEMENT_CONSTRUCTOR} -- Local
 
 
 feature {NONE} -- Implementation
-	
+
 	element_name: XM_XPATH_EXPRESSION
 			-- Name
-	
+
 	namespace: XM_XPATH_EXPRESSION
 			-- Namespace
 
 	namespace_context: XM_XSLT_NAMESPACE_CONTEXT
 			-- namespace context
 
-	internal_item_type: XM_XPATH_ITEM_TYPE 
+	internal_item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, when known
 
 invariant
@@ -344,4 +344,4 @@ invariant
 	namespace_or_namespace_context: initialized and then namespace = Void implies namespace_context /= Void
 
 end
-	
+

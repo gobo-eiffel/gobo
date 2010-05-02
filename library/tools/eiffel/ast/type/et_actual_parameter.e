@@ -28,7 +28,7 @@ inherit
 
 feature -- Access
 
-	actual_parameter: ET_ACTUAL_PARAMETER is
+	actual_parameter: ET_ACTUAL_PARAMETER
 			-- Actual parameter in comma-separated list
 		do
 			Result := Current
@@ -36,12 +36,12 @@ feature -- Access
 			definition: Result = Current
 		end
 
-	type: ET_TYPE is
+	type: ET_TYPE
 			-- Type of `actual_parameter'
 		deferred
 		end
 
-	named_parameter (a_context: ET_TYPE_CONTEXT): ET_ACTUAL_PARAMETER is
+	named_parameter (a_context: ET_TYPE_CONTEXT): ET_ACTUAL_PARAMETER
 			-- Same as current actual parameter but its type
 			-- replaced by its named type
 		require
@@ -54,7 +54,7 @@ feature -- Access
 			named_parameter_named: Result.type.is_named_type
 		end
 
-	named_parameter_with_type (a_type: ET_NAMED_TYPE): ET_ACTUAL_PARAMETER is
+	named_parameter_with_type (a_type: ET_NAMED_TYPE): ET_ACTUAL_PARAMETER
 			-- Same as current actual parameter but its type
 			-- replaced by `a_type'
 		require
@@ -69,7 +69,7 @@ feature -- Access
 
 feature -- Status report
 
-	named_parameter_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	named_parameter_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does the named parameter of current type contain `a_class'
 			-- when it appears in `a_context'?
 		require
@@ -82,14 +82,14 @@ feature -- Status report
 
 feature -- Type processing
 
-	resolved_formal_parameters_with_type (a_type: ET_TYPE): ET_ACTUAL_PARAMETER is
+	resolved_formal_parameters_with_type (a_type: ET_TYPE): ET_ACTUAL_PARAMETER
 			-- Version of current actual parameter where its type
 			-- is replaced by `a_type'
 		deferred
 		end
 
 	resolved_syntactical_constraint_with_type (a_type: ET_TYPE;
-		a_parser: ET_EIFFEL_PARSER_SKELETON): ET_ACTUAL_PARAMETER is
+		a_parser: ET_EIFFEL_PARSER_SKELETON): ET_ACTUAL_PARAMETER
 			-- Version of current actual parameter, where its type has
 			-- been replaced by `a_type'
 		do

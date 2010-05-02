@@ -21,12 +21,12 @@ create
 
 feature -- Access
 
-	program_name: STRING is "gexace"
+	program_name: STRING = "gexace"
 			-- Program name
 
 feature -- Test
 
-	test_gexace is
+	test_gexace
 			-- Test 'gexace'.
 		local
 			gexace_exe: STRING
@@ -91,7 +91,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	sample_dirname: STRING is
+	sample_dirname: STRING
 			-- Name of directory where sample files are located
 		once
 			Result := file_system.nested_pathname ("${GOBO}", <<"test", "src", "gexace", "data">>)

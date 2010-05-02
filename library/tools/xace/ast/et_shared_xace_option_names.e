@@ -14,7 +14,7 @@ class ET_SHARED_XACE_OPTION_NAMES
 
 feature -- Access
 
-	options: ET_XACE_OPTION_NAMES is
+	options: ET_XACE_OPTION_NAMES
 			-- Option names
 		once
 			create Result

@@ -25,7 +25,7 @@ feature -- Access
 	name: ET_CLASS_NAME
 			-- Name of type
 
-	upper_name: STRING is
+	upper_name: STRING
 			-- Upper-name of type
 			-- (May return the same object as `name.name' if already in upper case,
 			-- otherwise return a new object at each call.)
@@ -37,7 +37,7 @@ feature -- Access
 			definition: Result.is_equal (name.name.as_upper)
 		end
 
-	lower_name: STRING is
+	lower_name: STRING
 			-- Lower-name of type
 			-- (May return the same object as `name.name' if already in lower case,
 			-- otherwise return a new object at each call.)
@@ -51,7 +51,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_named_type: BOOLEAN is
+	is_named_type: BOOLEAN
 			-- Is current type only made up of named types?
 		do
 			Result := True

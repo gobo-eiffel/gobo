@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT; an_xml_element: XM_ELEMENT) is
+	make (a_project: GEANT_PROJECT; an_xml_element: XM_ELEMENT)
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
@@ -83,7 +83,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	build_command (a_project: GEANT_PROJECT) is
+	build_command (a_project: GEANT_PROJECT)
 			-- Create instance of `command'
 		do
 			create command.make (a_project)
@@ -96,7 +96,7 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Separate_actions_attribute_name: STRING is
+	Separate_actions_attribute_name: STRING
 			-- Name of xml attribute for separate_actions
 		once
 			Result := "separate_actions"
@@ -105,7 +105,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Verbose_filename_attribute_name: STRING is
+	Verbose_filename_attribute_name: STRING
 			-- Name of xml attribute for verbose_filename
 		once
 			Result := "verbose"
@@ -114,7 +114,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Tokens_classname_attribute_name: STRING is
+	Tokens_classname_attribute_name: STRING
 			-- Name of xml attribute for tokens_classname
 		once
 			Result := "tokens"
@@ -123,7 +123,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Tokens_filename_attribute_name: STRING is
+	Tokens_filename_attribute_name: STRING
 			-- Name of xml attribute for tokens_filename
 		once
 			Result := "tokens_file"
@@ -132,7 +132,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Output_filename_attribute_name: STRING is
+	Output_filename_attribute_name: STRING
 			-- Name of xml attribute for output_filename
 		once
 			Result := "output"
@@ -141,7 +141,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Input_filename_attribute_name: STRING is
+	Input_filename_attribute_name: STRING
 			-- Name of xml attribute for input_filename
 		once
 			Result := "input"
@@ -150,7 +150,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Old_typing_attribute_name: STRING is
+	Old_typing_attribute_name: STRING
 			-- Name of xml attribute for 'old_typing'
 		once
 			Result := "old_typing"
@@ -159,7 +159,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	New_typing_attribute_name: STRING is
+	New_typing_attribute_name: STRING
 			-- Name of xml attribute for 'new_typing'
 		once
 			Result := "new_typing"

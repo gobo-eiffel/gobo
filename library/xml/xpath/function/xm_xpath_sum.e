@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant
 		do
 			name := "sum"; namespace_uri := Xpath_standard_functions_uri
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, where known
 		local
 			a_base_type: XM_XPATH_ITEM_TYPE
@@ -64,7 +64,7 @@ feature -- Access
 
 feature -- Status report
 
-	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
+	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE
 			-- Type of argument number `argument_number'
 		do
 			inspect
@@ -78,7 +78,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -133,7 +133,7 @@ feature -- Evaluation
 
 feature {XM_XPATH_FUNCTION_CALL} -- Local
 
-	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -150,7 +150,7 @@ feature {XM_XPATH_FUNCTION_CALL} -- Local
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
@@ -158,7 +158,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 
-	evaluate_numeric_total (a_result: DS_CELL [XM_XPATH_ITEM]; a_first_value: XM_XPATH_NUMERIC_VALUE; a_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
+	evaluate_numeric_total (a_result: DS_CELL [XM_XPATH_ITEM]; a_first_value: XM_XPATH_NUMERIC_VALUE; a_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM])
 			-- Evaluate total of a sequence of numeric values.
 		require
 			a_result_not_void: a_result /= Void
@@ -169,7 +169,7 @@ feature {NONE} -- Implementation
 			l_sum, l_numeric_value: XM_XPATH_NUMERIC_VALUE
 			l_item: XM_XPATH_ITEM
 			l_finished: BOOLEAN
-		do			
+		do
 			from
 				l_numeric_value := a_first_value
 				a_iterator.forth
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	evaluate_duration_total (a_result: DS_CELL [XM_XPATH_ITEM]; a_first_value: XM_XPATH_DURATION_VALUE; a_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
+	evaluate_duration_total (a_result: DS_CELL [XM_XPATH_ITEM]; a_first_value: XM_XPATH_DURATION_VALUE; a_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM])
 			-- Evaluate sum of a sequence of duration values.
 		require
 			a_result_not_void: a_result /= Void
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 							check
 								good_duration: l_sum.is_months_duration or else l_sum.is_seconds_duration
 								-- plus will return an error otherwise
-							end							
+							end
 						end
 					end
 				end
@@ -268,4 +268,4 @@ feature {NONE} -- Implementation
 		end
 
 end
-	
+

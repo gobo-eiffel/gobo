@@ -18,7 +18,7 @@ inherit
 
 feature -- Element change
 
-	replace (v: G) is
+	replace (v: G)
 			-- Replace item at cursor position by `v'.
 		require
 			not_off: not off
@@ -27,7 +27,7 @@ feature -- Element change
 			replaced: item = v
 		end
 
-	swap (other: DS_DYNAMIC_CURSOR [G]) is
+	swap (other: DS_DYNAMIC_CURSOR [G])
 			-- Exchange items at current and `other''s positions.
 			-- Note: cursors may reference two different containers.
 		require

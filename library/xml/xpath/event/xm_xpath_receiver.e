@@ -54,17 +54,17 @@ feature -- Ststus report
 	is_written: BOOLEAN
 			-- Has any output been written yet?
 
-	is_builder: BOOLEAN is
+	is_builder: BOOLEAN
 			-- Is `Current' an `XM_XPATH_BUILDER'?
 		do
 		end
 
-	is_proxy: BOOLEAN is
+	is_proxy: BOOLEAN
 			-- Is `Current' an `XM_XPATH_PROXY_RECEIVER'?
 		do
 		end
 
-	is_name_code_ok_for_start_element (a_name_code: INTEGER): BOOLEAN is
+	is_name_code_ok_for_start_element (a_name_code: INTEGER): BOOLEAN
 			-- Is `a_name_code' valid for `start_element'?
 		do
 
@@ -75,7 +75,7 @@ feature -- Ststus report
 
 feature -- Status setting
 
-	mark_as_written is
+	mark_as_written
 			-- Mark as output has been written.
 		do
 			is_written := True
@@ -83,14 +83,14 @@ feature -- Status setting
 
 feature -- Events
 
-	on_error (a_message: STRING) is
+	on_error (a_message: STRING)
 			-- Event producer detected an error.
 		require
 			not_void: a_message /= Void
 		deferred
 		end
 
-	open is
+	open
 			-- Notify start of event stream.
 		require
 			not_open: not is_open
@@ -99,8 +99,8 @@ feature -- Events
 			opened: is_open
 			not_started: not is_document_started
 		end
-	
-	start_document is
+
+	start_document
 			-- Notify start of document node.
 		require
 			opened: is_open
@@ -110,7 +110,7 @@ feature -- Events
 			document_started: is_document_started
 		end
 
-	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING) is
+	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING)
 			-- Notify an unparsed entity URI.
 		require
 			name_not_void: a_name /= Void
@@ -119,7 +119,7 @@ feature -- Events
 			not_empty: is_written
 		end
 
-	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
+	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER)
 			-- Notify the start of an element.
 		require
 			valid_name_code: shared_name_pool.is_valid_name_code (a_name_code) and is_name_code_ok_for_start_element (a_name_code)
@@ -128,7 +128,7 @@ feature -- Events
 			not_empty: is_written
 		end
 
-	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
+	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER)
 			-- Notify a namespace.
 			-- Namespaces are notified after the `start_element' event, and before
 			--  any children for the element. The namespaces that are reported are only required
@@ -141,7 +141,7 @@ feature -- Events
 			not_empty: is_written
 		end
 
-	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
+	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER)
 			-- Notify an attribute;
 			-- Attributes are notified after the `start_element' event, and before any
 			--  children. Namespaces and attributes may be intermingled
@@ -153,7 +153,7 @@ feature -- Events
 			not_empty: is_written
 		end
 
-	start_content is
+	start_content
 			-- Notify the start of the content, that is, the completion of all attributes and namespaces.
 			-- Note that the initial receiver of output from XSLT instructions will not receive this event,
 			--  it has to detect it itself. Note that this event is reported for every element even if it has
@@ -165,7 +165,7 @@ feature -- Events
 			not_empty: is_written
 		end
 
-	end_element is
+	end_element
 			-- Notify the end of an element;
 			-- The receiver must maintain a stack if it needs to know which
 			--  element is ending.
@@ -176,7 +176,7 @@ feature -- Events
 			not_empty: is_written
 		end
 
-	notify_characters (chars: STRING; properties: INTEGER) is
+	notify_characters (chars: STRING; properties: INTEGER)
 			-- Notify character data.
 			-- Note that some receivers may require the character data to be
 			--  sent in a single event, but in general this is not a requirement.
@@ -188,7 +188,7 @@ feature -- Events
 			not_empty: is_written
 		end
 
-	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
+	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER)
 			-- Notify a processing instruction.
 		require
 			name_not_void: a_name /= Void
@@ -197,8 +197,8 @@ feature -- Events
 		ensure
 			not_empty: is_written
 		end
-	
-	notify_comment (a_content_string: STRING; properties: INTEGER) is
+
+	notify_comment (a_content_string: STRING; properties: INTEGER)
 			-- Notify a comment.
 			-- Comments are only notified if they are outside the DTD.
 		require
@@ -208,7 +208,7 @@ feature -- Events
 			not_empty: is_written
 		end
 
-	end_document is
+	end_document
 			-- Notify end of document node.
 		require
 			document_started: is_document_started
@@ -217,7 +217,7 @@ feature -- Events
 			document_ended: not is_document_started
 		end
 
-	close is
+	close
 			-- Notify end of event stream.
 		require
 			opened: is_open
@@ -229,7 +229,7 @@ feature -- Events
 
 feature -- Element change
 
-	set_document_uri (a_uri: UT_URI) is
+	set_document_uri (a_uri: UT_URI)
 			-- Set `document_uri' for destination tree.
 		require
 			not_open: not is_open
@@ -240,7 +240,7 @@ feature -- Element change
 			document_uri_set: document_uri = a_uri
 		end
 
-	set_base_uri (a_uri: STRING) is
+	set_base_uri (a_uri: STRING)
 			-- Set `base_uri' for destination tree.
 		require
 			a_uri: a_uri /= Void
@@ -250,7 +250,7 @@ feature -- Element change
 			base_uri_set: base_uri = a_uri
 		end
 
-	set_document_locator (a_locator: XM_XPATH_LOCATOR) is
+	set_document_locator (a_locator: XM_XPATH_LOCATOR)
 			-- Set the locator.
 		require
 			not_open: not is_open
@@ -260,7 +260,7 @@ feature -- Element change
 
 feature -- Conversion
 
-	as_builder: XM_XPATH_BUILDER is
+	as_builder: XM_XPATH_BUILDER
 			-- `Current' as a builder
 		require
 			builder: is_builder
@@ -269,7 +269,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_proxy: XM_XPATH_PROXY_RECEIVER is
+	as_proxy: XM_XPATH_PROXY_RECEIVER
 			-- `Current' as a proxy
 		require
 			proxy: is_proxy

@@ -28,18 +28,18 @@ inherit
 
 feature -- Status report
 
-	is_external: BOOLEAN is True
+	is_external: BOOLEAN = True
 			-- Is feature external?
 
 feature -- Built-in
 
-	is_builtin: BOOLEAN is
+	is_builtin: BOOLEAN
 			-- Is current feature built-in?
 		do
 			Result := (builtin_code /= tokens.builtin_not_builtin)
 		end
 
-	is_builtin_unknown: BOOLEAN is
+	is_builtin_unknown: BOOLEAN
 			-- Is current built-in feature unknown?
 		require
 			is_builtin: is_builtin
@@ -50,7 +50,7 @@ feature -- Built-in
 	builtin_code: INTEGER
 			-- Built-in feature code
 
-	set_builtin_code (a_code: INTEGER) is
+	set_builtin_code (a_code: INTEGER)
 			-- Set `builtin_code' to `a_code'.
 		do
 			builtin_code := a_code

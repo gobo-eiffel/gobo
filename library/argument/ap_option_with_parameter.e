@@ -23,7 +23,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Perform the common initialization steps.
 		do
 			Precursor
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	example: STRING is
+	example: STRING
 			-- Example for the usage of the option
 		local
 			l_long_form: like long_form
@@ -68,7 +68,7 @@ feature -- Access
 			end
 		end
 
-	names: STRING is
+	names: STRING
 			-- Names of the option (short and long)
 		do
 			Result := Precursor
@@ -90,7 +90,7 @@ feature -- Access
 	parameter_description: STRING
 			-- Name of the parameter
 
-	parameter: detachable G is
+	parameter: detachable G
 			-- Last value give to the option
 		require
 			was_found: was_found
@@ -98,12 +98,12 @@ feature -- Access
 			Result := parameters.last
 		end
 
-	parameters: DS_LIST [detachable G] is
+	parameters: DS_LIST [detachable G]
 			-- All parameters given to the option
 		deferred
 		end
 
-	occurrences: INTEGER is
+	occurrences: INTEGER
 			-- Number of times this flag was encountered
 		do
 			Result := parameters.count
@@ -111,7 +111,7 @@ feature -- Access
 
 feature -- Status report
 
-	allows_parameter: BOOLEAN is
+	allows_parameter: BOOLEAN
 			-- Does this option allow a parameter ?
 		do
 			Result := True
@@ -119,7 +119,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_parameter_description (a_string: STRING) is
+	set_parameter_description (a_string: STRING)
 			-- Set the parameter name to `a_string'.
 		require
 			a_string_not_void: a_string /= Void

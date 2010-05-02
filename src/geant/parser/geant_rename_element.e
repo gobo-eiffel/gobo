@@ -25,7 +25,7 @@ create
 
 feature -- Initialization
 
-	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT) is
+	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT)
 			-- Create new rename clause with information held in `an_xml_element'.
 		local
 			a_value: STRING
@@ -53,7 +53,7 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Target_attribute_name: STRING is
+	Target_attribute_name: STRING
 			-- "target" attribute name
 		once
 			Result := "target"
@@ -62,7 +62,7 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	As_attribute_name: STRING is
+	As_attribute_name: STRING
 			-- "as" attribute name
 		once
 			Result := "as"

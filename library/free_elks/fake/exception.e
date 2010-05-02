@@ -29,7 +29,7 @@ feature -- Access
 	message: ?STRING
 			-- Message(Tag) of current exception
 
-	exception_trace: STRING is
+	exception_trace: STRING
 			-- String representation of current exception trace
 		do
 -- TODO

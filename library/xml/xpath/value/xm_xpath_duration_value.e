@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_duration: STRING) is
+	make (a_duration: STRING)
 			-- Create from lexical duration.
 		require
 			lexical_duration: a_duration /= Void and then is_duration (a_duration)
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			duration := a_parser.string_to_duration (a_duration)
 		end
 
-	make_from_duration (a_duration: like duration) is
+	make_from_duration (a_duration: like duration)
 			-- Create from duration.
 		require
 			duration_not_void: a_duration /= Void
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, where know
 		do
 			Result := type_factory.duration_type
@@ -64,7 +64,7 @@ feature -- Access
 			end
 		end
 
-	string_value: STRING is
+	string_value: STRING
 			-- Value of the item as a string
 		local
 			l_string: STRING
@@ -84,7 +84,7 @@ feature -- Access
 				if duration.year /= 0 then Result := Result + duration.year.abs.out + "Y" end
 				if duration.month /= 0 then Result := Result + duration.month.abs.out + "M" end
 				if duration.day /= 0 then Result := Result + duration.day.abs.out + "D" end
-				if duration.hour /= 0 or else duration.minute /= 0 
+				if duration.hour /= 0 or else duration.minute /= 0
 					or else duration.second /= 0 or else duration.millisecond /= 0 then
 					Result := Result + "T"
 				end
@@ -108,14 +108,14 @@ feature -- Access
 			end
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			Result := duration.hash_code
 		end
 
 
-	seconds: MA_DECIMAL is
+	seconds: MA_DECIMAL
 			-- Seconds component (including milliseconds)
 		local
 			l_string, l_milliseconds: STRING
@@ -141,7 +141,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Are `Current' and `other' the same expression?
 		local
 			l_duration: like duration
@@ -160,14 +160,14 @@ feature -- Comparison
 			end
 		end
 
-	equal_duration (a_other: XM_XPATH_DURATION_VALUE): BOOLEAN is
+	equal_duration (a_other: XM_XPATH_DURATION_VALUE): BOOLEAN
 			-- Is `Current' equal to `a_other'?
 			-- XPath functions and operators says two xs:durations are equal iff all their seconds count and their months count are equal
 		do
 			Result := normalized_duration.same_expression (a_other.normalized_duration)
 		end
 
-	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER is
+	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER
 			-- Comparison of `Current' to `other'
 		local
 			l_duration: like duration
@@ -182,7 +182,7 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_normal: BOOLEAN is
+	is_normal: BOOLEAN
 			-- Is `duration' in normal form?
 		do
 			Result := duration.month.abs < 12 and then duration.hour.abs < 24
@@ -192,7 +192,7 @@ feature -- Status report
 				and then duration.is_time_canonical
 		end
 
-	is_negative: BOOLEAN is
+	is_negative: BOOLEAN
 			-- Is `Current' a negative duration?
 		require
 			in_normal_form: is_normal
@@ -203,7 +203,7 @@ feature -- Status report
 				or else duration.millisecond < 0
 		end
 
-	is_duration (a_duration: STRING): BOOLEAN is
+	is_duration (a_duration: STRING): BOOLEAN
 			-- Is `a_duration' a valid duration?
 		require
 			lexical_duration_not_void: a_duration /= Void
@@ -214,19 +214,19 @@ feature -- Status report
 			Result := a_parser.is_duration (a_duration)
 		end
 
-	is_duration_value: BOOLEAN is
+	is_duration_value: BOOLEAN
 			-- Is `Current' an xs:duration value?
 		do
 			Result := True
 		end
 
-	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
+	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN
 			-- Is `other' comparable to `Current'?
 		do
 			Result := False -- xs:duration may only be compared for equality
 		end
 
-	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN is
+	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN
 			-- Is `Current' convertible to `a_required_type'?
 		do
 			if	a_required_type = any_item or else a_required_type = type_factory.any_atomic_type
@@ -239,7 +239,7 @@ feature -- Status report
 			end
 		end
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			l_string: STRING
@@ -253,13 +253,13 @@ feature -- Status report
 
 feature -- Conversions
 
-	as_duration_value: XM_XPATH_DURATION_VALUE is
+	as_duration_value: XM_XPATH_DURATION_VALUE
 			-- `Current' seen as an xs:duration value
 		do
 			Result := Current
 		end
 
-	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE) is
+	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE)
 			-- Convert `Current' to `a_required_type'
 		local
 			a_duration: like duration
@@ -282,7 +282,7 @@ feature -- Conversions
 
 feature -- Basic operations
 
-	plus (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM is
+	plus (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM
 			-- Addition of `other' to `Current'
 		require
 			other_duration_not_void: other /= Void
@@ -292,7 +292,7 @@ feature -- Basic operations
 			result_may_be_in_error: Result /= Void
 		end
 
-	minus (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM is
+	minus (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM
 			-- Subtraction of `other' from `Current'
 		require
 			other_duration_not_void: other /= Void
@@ -301,8 +301,8 @@ feature -- Basic operations
 		ensure
 			result_may_be_in_error: Result /= Void
 		end
-		
-	multiply (a_scalar: DOUBLE): XM_XPATH_ITEM is
+
+	multiply (a_scalar: DOUBLE): XM_XPATH_ITEM
 			-- Multiplication of `Current' by `a_scalar'
 		require
 			non_zero_double: a_scalar /= 0 -- and then not a_scalar.is_infinity and then not a_scalar.is_nan
@@ -311,8 +311,8 @@ feature -- Basic operations
 		ensure
 			result_may_be_in_error: Result /= Void
 		end
-		
-	scalar_divide (a_scalar: DOUBLE): XM_XPATH_ITEM is
+
+	scalar_divide (a_scalar: DOUBLE): XM_XPATH_ITEM
 			-- Division of `Current' by `a_scalar'
 		require
 			non_zero_double: a_scalar /= 0 -- and then not a_scalar.is_infinity and then not a_scalar.is_nan
@@ -321,8 +321,8 @@ feature -- Basic operations
 		ensure
 			result_may_be_in_error: Result /= Void
 		end
-		
-	divide (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM is
+
+	divide (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM
 			-- Division of `other' into `Current'
 		require
 			other_duration_not_void: other /= Void
@@ -331,10 +331,10 @@ feature -- Basic operations
 		ensure
 			result_may_be_in_error: Result /= Void
 		end
-		
+
 feature {XM_XPATH_DURATION_VALUE} -- Implementation
 
-	normalized_duration: XM_XPATH_DURATION_VALUE is
+	normalized_duration: XM_XPATH_DURATION_VALUE
 			-- Normal form of `duration'
 		local
 			a_year, a_month, a_day, an_hour: INTEGER

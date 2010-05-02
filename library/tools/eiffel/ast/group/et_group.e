@@ -23,12 +23,12 @@ inherit
 
 feature -- Initialization
 
-	reset_absolute_pathname: STRING is
+	reset_absolute_pathname: STRING
 			-- Force the computation of `absolute_pathname' next time
 			-- it will be called. This is useful when the values of the
 			-- environment variables have changed or when the cluster
 			-- hierarchy has changed. Otherwise the result of
-			-- `absolute_pathname' is cached to avoid having to 
+			-- `absolute_pathname' is cached to avoid having to
 			-- compute its value at each call (like a once-per-object).
 		do
 			cached_absolute_pathname := Void
@@ -38,31 +38,31 @@ feature -- Initialization
 
 feature -- Status report
 
-	is_cluster: BOOLEAN is
+	is_cluster: BOOLEAN
 			-- Is current group a cluster?
 		do
 			-- Result := False
 		end
 
-	is_dotnet_assembly: BOOLEAN is
+	is_dotnet_assembly: BOOLEAN
 			-- Is current group a .NET assembly?
 		do
 			-- Result := False
 		end
 
-	is_none: BOOLEAN is
+	is_none: BOOLEAN
 			-- Is current group a built-in group for class "NONE"?
 		do
 			-- Result := False
 		end
 
-	is_unknown: BOOLEAN is
+	is_unknown: BOOLEAN
 			-- Is current group a built-in group for class "*UNKNOWN*"?
 		do
 			-- Result := False
 		end
 
-	is_override: BOOLEAN is
+	is_override: BOOLEAN
 			-- Is current group an override group?
 			-- In other words, do classes in this group and other override
 			-- groups take precedence over classes with same names but in
@@ -70,7 +70,7 @@ feature -- Status report
 		deferred
 		end
 
-	is_read_only: BOOLEAN is
+	is_read_only: BOOLEAN
 			-- Is current group a read-only group?
 			-- In other words, are changes in this group and in its classes
 			-- not taken into account when repreparsing or reparsing
@@ -83,12 +83,12 @@ feature -- Status report
 			-- (e.g. using 'attribute' and 'note' as identifiers instead of
 			-- keywords)?
 
-	is_preparsed: BOOLEAN is
+	is_preparsed: BOOLEAN
 			-- Has current group already been traversed to look for its classes?
 		deferred
 		end
 
-	has_subgroup (a_group: ET_GROUP): BOOLEAN is
+	has_subgroup (a_group: ET_GROUP): BOOLEAN
 			-- Is `a_group' (recursively) one of the subgroups
 			-- of current group?
 		require
@@ -108,14 +108,14 @@ feature -- Status report
 
 feature -- Access
 
-	universe: ET_UNIVERSE is
+	universe: ET_UNIVERSE
 			-- Surrounding universe
 		deferred
 		ensure
 			universe_not_void: Result /= Void
 		end
 
-	current_system: ET_SYSTEM is
+	current_system: ET_SYSTEM
 			-- Surrounding Eiffel system
 		do
 			Result := universe.current_system
@@ -123,7 +123,7 @@ feature -- Access
 			current_system_not_void: Result /= Void
 		end
 
-	name: STRING is
+	name: STRING
 			-- Name
 		deferred
 		ensure
@@ -131,7 +131,7 @@ feature -- Access
 			name_not_empty: Result.count > 0
 		end
 
-	lower_name: STRING is
+	lower_name: STRING
 			-- Lower-name of group
 			-- (May return the same object as `name' if already in lower case.)
 		local
@@ -155,7 +155,7 @@ feature -- Access
 			definition: Result.same_string (name.as_lower)
 		end
 
-	prefixed_name: STRING is
+	prefixed_name: STRING
 			-- Group name with possible prefixes
 		do
 			Result := name
@@ -164,12 +164,12 @@ feature -- Access
 			prefixed_name_not_empty: Result.count > 0
 		end
 
-	pathname: STRING is
+	pathname: STRING
 			-- Directory pathname (may be Void)
 		deferred
 		end
 
-	relative_name (a_universe: ET_UNIVERSE; a_separator: CHARACTER): STRING is
+	relative_name (a_universe: ET_UNIVERSE; a_separator: CHARACTER): STRING
 			-- Name of current group relative its parents and its universe down to `a_universe'
 			-- (use `a_separator' as separator between parents' and universes' names)
 			--
@@ -198,7 +198,7 @@ feature -- Access
 			relative_name_not_empty: Result.count > 0
 		end
 
-	relative_lower_name (a_universe: ET_UNIVERSE; a_separator: CHARACTER): STRING is
+	relative_lower_name (a_universe: ET_UNIVERSE; a_separator: CHARACTER): STRING
 			-- Lower-name of current group relative its parents and its universe down to `a_universe'
 			-- (use `a_separator' as separator between parents' and universes' names)
 			--
@@ -228,7 +228,7 @@ feature -- Access
 			definition: Result.same_string (relative_name (a_universe, a_separator).as_lower)
 		end
 
-	full_name (a_separator: CHARACTER): STRING is
+	full_name (a_separator: CHARACTER): STRING
 			-- Full name, which is the name relative to `current_system'
 			-- (use `a_separator' as separator between parents' and universes' names)
 		do
@@ -238,7 +238,7 @@ feature -- Access
 			full_name_not_empty: Result.count > 0
 		end
 
-	full_lower_name (a_separator: CHARACTER): STRING is
+	full_lower_name (a_separator: CHARACTER): STRING
 			-- Full lower-name, which is the name relative to `current_system'
 			-- (use `a_separator' as separator between parents' and universes' names)
 		do
@@ -249,7 +249,7 @@ feature -- Access
 			definition: Result.same_string (full_name (a_separator).as_lower)
 		end
 
-	full_pathname: STRING is
+	full_pathname: STRING
 			-- Full directory pathname
 		local
 			a_pathname: STRING
@@ -265,7 +265,7 @@ feature -- Access
 			full_pathname_not_empty: Result.count > 0
 		end
 
-	full_unix_pathname: STRING is
+	full_unix_pathname: STRING
 			-- Full Unix directory pathname
 		local
 			a_pathname: STRING
@@ -281,11 +281,11 @@ feature -- Access
 			full_unix_pathname_not_empty: Result.count > 0
 		end
 
-	absolute_pathname: STRING is
+	absolute_pathname: STRING
 			-- Canonical absolute pathname of current group where
 			-- environment variables have been resolved
 			--
-			-- Note that the result is cached to avoid having to 
+			-- Note that the result is cached to avoid having to
 			-- compute its value at each call (like a once-per-object).
 			-- Call `reset_absolute_pathname' first to force the
 			-- computation again, for example when the values of the
@@ -307,7 +307,7 @@ feature -- Access
 			aboslute_pathname_not_empty: Result.count > 0
 		end
 
-	cluster: ET_CLUSTER is
+	cluster: ET_CLUSTER
 			-- Current group viewed as a cluster
 		require
 			is_cluster: is_cluster
@@ -317,7 +317,7 @@ feature -- Access
 			definition: ANY_.same_objects (Result, Current)
 		end
 
-	dotnet_assembly: ET_DOTNET_ASSEMBLY is
+	dotnet_assembly: ET_DOTNET_ASSEMBLY
 			-- Current group viewed as a .NET assembly
 		require
 			is_dotnet_assembly: is_dotnet_assembly
@@ -327,7 +327,7 @@ feature -- Access
 			definition: ANY_.same_objects (Result, Current)
 		end
 
-	kind_name: STRING is
+	kind_name: STRING
 			-- Name of the kind of group (e.g. "cluster", "assembly", etc.)
 		once
 			Result := "group"
@@ -335,7 +335,7 @@ feature -- Access
 			kind_name_not_void: Result /= Void
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			Result := name.hash_code
@@ -346,14 +346,14 @@ feature -- Access
 
 feature -- Nested
 
-	parent: ET_GROUP is
+	parent: ET_GROUP
 			-- Parent group
 		deferred
 		end
 
 feature -- Status setting
 
-	set_use_obsolete_syntax (b: BOOLEAN) is
+	set_use_obsolete_syntax (b: BOOLEAN)
 			-- Set `use_obsolete_syntax' to `b'.
 		do
 			use_obsolete_syntax := b
@@ -363,7 +363,7 @@ feature -- Status setting
 
 feature -- Setting
 
-	set_data (a_data: like data) is
+	set_data (a_data: like data)
 			-- Set `data' to `a_data'.
 		do
 			data := a_data
@@ -373,7 +373,7 @@ feature -- Setting
 
 feature -- Output
 
-	debug_output: STRING is
+	debug_output: STRING
 			-- String that should be displayed in debugger to represent `Current'
 		do
 			Result := full_name ('/')

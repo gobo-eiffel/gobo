@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 	make (a_xml_element: XM_ELEMENT;
 		a_variables: GEANT_PROJECT_VARIABLES;
 		a_options: GEANT_PROJECT_OPTIONS;
-		a_build_filename: STRING) is
+		a_build_filename: STRING)
 			-- Create element with information held in `a_xml_element'.
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -114,7 +114,7 @@ feature {NONE} -- Initialization
 			project_set: project /= Void
 		end
 
-	load_parent_projects is
+	load_parent_projects
 			-- Load parent projects if present.
 		local
 			a_inherit_element: GEANT_INHERIT_ELEMENT
@@ -148,7 +148,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	has_inherit_element: BOOLEAN is
+	has_inherit_element: BOOLEAN
 			-- Does `xml_element' has a subelement named `Inherit_element_name'?
 		local
 			a_xml_element: XM_ELEMENT
@@ -157,7 +157,7 @@ feature -- Access
 			Result := a_xml_element /= Void
 		end
 
-	has_parent: BOOLEAN is
+	has_parent: BOOLEAN
 			-- Does `xml_element' has an attribute named `Inherit_attribute_name'?
 		do
 			Result := has_attribute (Inherit_attribute_name)
@@ -170,7 +170,7 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Name_attribute_name: STRING is
+	Name_attribute_name: STRING
 			-- "name" attribute name
 		once
 			Result := "name"
@@ -179,7 +179,7 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Default_attribute_name: STRING is
+	Default_attribute_name: STRING
 			-- "default" attribute name
 		once
 			Result := "default"
@@ -188,7 +188,7 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Inherit_attribute_name: STRING is
+	Inherit_attribute_name: STRING
 			-- "inherit" attribute name
 		once
 			Result := "inherit"
@@ -197,7 +197,7 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Inherit_element_name: STRING is
+	Inherit_element_name: STRING
 			-- "inherit" element name
 		once
 			Result := "inherit"
@@ -206,7 +206,7 @@ feature {NONE} -- Constants
 			element_name_not_empty: Result.count > 0
 		end
 
-	Project_element_name: STRING is
+	Project_element_name: STRING
 			-- "project" element name
 		once
 			Result := "project"
@@ -215,7 +215,7 @@ feature {NONE} -- Constants
 			element_name_not_empty: Result.count > 0
 		end
 
-	Target_element_name: STRING is
+	Target_element_name: STRING
 			-- "target" element name
 		once
 			Result := "target"

@@ -20,7 +20,7 @@ inherit
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset assertions as they were just after they were last parsed.
 		local
 			i, nb: INTEGER
@@ -34,7 +34,7 @@ feature -- Initialization
 
 feature -- Access
 
-	assertion (i: INTEGER): ET_ASSERTION is
+	assertion (i: INTEGER): ET_ASSERTION
 			-- Assertion at index `i' in list
 		require
 			i_large_enough: i >= 1
@@ -47,7 +47,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_ASSERTION_ITEM] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_ASSERTION_ITEM]
 			-- Fixed array routines
 		once
 			create Result

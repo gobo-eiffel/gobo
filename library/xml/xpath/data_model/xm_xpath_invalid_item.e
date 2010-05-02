@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_error: XM_XPATH_ERROR_VALUE) is
+	make (a_error: XM_XPATH_ERROR_VALUE)
 			-- Establish invariant.
 		require
 			error_not_void: a_error /= Void
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			error_set: error_value = a_error
 		end
 
-	make_from_string (a_string, a_namespace_uri, a_error_code: STRING; a_error_type: INTEGER) is
+	make_from_string (a_string, a_namespace_uri, a_error_code: STRING; a_error_type: INTEGER)
 			-- Create from `a_string'.
 		require
 			namespace_uri_not_void: a_namespace_uri /= Void
@@ -50,13 +50,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	string_value: STRING is
+	string_value: STRING
 			--Value of the item as a string
 		do
 			-- pre-condition cannot be met
 		end
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Type
 		do
 			check
@@ -65,7 +65,7 @@ feature -- Access
 			end
 		end
 
-	typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE] is
+	typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE]
 			-- Typed value
 		do
 			check
@@ -74,13 +74,13 @@ feature -- Access
 			end
 		end
 
-	type_name: STRING is
+	type_name: STRING
 			-- Type name for diagnostic purposes
 		do
 			Result := "Item in error"
 		end
 
-	as_item_value: XM_XPATH_VALUE is
+	as_item_value: XM_XPATH_VALUE
 			-- `Current' seen as a value
 		do
 			check
@@ -99,14 +99,14 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_last_error (a_error_value: XM_XPATH_ERROR_VALUE) is
+	set_last_error (a_error_value: XM_XPATH_ERROR_VALUE)
 			-- Set `error_value'.
 		do
 			is_error := True
 			error_value := a_error_value
 		end
 
-	set_last_error_from_string (a_message, a_namespace_uri, a_code: STRING; a_error_type: INTEGER) is
+	set_last_error_from_string (a_message, a_namespace_uri, a_code: STRING; a_error_type: INTEGER)
 			-- Set `error_value'.
 		do
 			is_error := True

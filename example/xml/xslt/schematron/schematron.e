@@ -71,7 +71,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Run.
 		local
 			a_string_resolver: XM_STRING_URI_RESOLVER
@@ -93,7 +93,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
+
 	transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			-- Transformer factory
 
@@ -102,7 +102,7 @@ feature -- Access
 
 feature -- Processing
 
-	process_arguments is
+	process_arguments
 			-- Parse command line.
 		local
 			an_argument: STRING
@@ -129,7 +129,7 @@ feature -- Processing
 			filenames_set: data_filename /= Void and schema_filename /= Void
 		end
 
-	transform_schematron_rules is
+	transform_schematron_rules
 			-- Create validating stylesheet from schematron rules.
 		local
 			a_source: XM_XSLT_URI_SOURCE
@@ -172,7 +172,7 @@ feature -- Processing
 			transformer_factory_created: transformer_factory /= Void
 		end
 
-	create_report is
+	create_report
 			-- Create a validation report.
 		require
 			transformer_factory_exists: transformer_factory /= Void
@@ -228,7 +228,7 @@ feature -- Processing
 			end
 		end
 
-	process_file (a_file: STRING) is
+	process_file (a_file: STRING)
 			-- Convert `a_file' to a URI and add it to `uris'.
 		require
 			at_least_one_character: a_file /= Void and then a_file.count > 0
@@ -251,10 +251,10 @@ feature {NONE} -- Implementation
 	data_filename, schema_filename, output_filename: STRING
 			-- File names from command line
 
-	Validator_uri: STRING is "string:/schematron-rules"
+	Validator_uri: STRING = "string:/schematron-rules"
 			-- Absolute URI of generated validating-stylesheet
 
-	usage_message: UT_USAGE_MESSAGE is
+	usage_message: UT_USAGE_MESSAGE
 			-- Gexslt usage message.
 		once
 			create Result.make ("[--output=output-file-name] data-file-name schematron-rules-file-name")
@@ -262,7 +262,7 @@ feature {NONE} -- Implementation
 			usage_message_not_void: Result /= Void
 		end
 
-	current_directory_base: UT_URI is
+	current_directory_base: UT_URI
 			-- URI of current directory
 		local
 			a_cwd: KI_PATHNAME
@@ -271,7 +271,7 @@ feature {NONE} -- Implementation
 			Result := File_uri.pathname_to_uri (a_cwd)
 		end
 
-	report_processing_error (a_category, a_message: STRING) is
+	report_processing_error (a_category, a_message: STRING)
 			-- Report a compilation or transformation error.
 		require
 			message_not_void: a_message /= Void
@@ -286,7 +286,7 @@ feature {NONE} -- Implementation
 			error_handler.report_error (an_error)
 		end
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}", <<"example", "xml", "xslt", "schematron", "data">>)
@@ -296,7 +296,7 @@ feature {NONE} -- Implementation
 			data_dirname_not_empty: not Result.is_empty
 		end
 
-	schematron_basic_uri: UT_URI is
+	schematron_basic_uri: UT_URI
 			-- URI of file 'schematron-basic.xsl'
 		local
 			a_path: STRING
@@ -307,7 +307,7 @@ feature {NONE} -- Implementation
 			schematron_basic_uri_not_void: Result /= Void
 		end
 
-	dummy_uri: UT_URI is
+	dummy_uri: UT_URI
 			-- Dummy base URI
 		once
 			create Result.make ("dummy:")
@@ -321,4 +321,4 @@ invariant
 	error_handler_exists: error_handler /= Void
 
 end
-	
+

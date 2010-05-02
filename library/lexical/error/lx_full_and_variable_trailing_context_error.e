@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new error reporting that the use
 			-- of variable trailing context is incompatible
 			-- with full tables.
@@ -33,10 +33,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "$0: variable trailing context rules cannot be used with -f"
+	default_template: STRING = "$0: variable trailing context rules cannot be used with -f"
 			-- Default template used to built the error message
 
-	code: STRING is "LX0029"
+	code: STRING = "LX0029"
 			-- Error code
 
 invariant

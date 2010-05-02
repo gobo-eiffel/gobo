@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Execution
 
-	execute is
+	execute
 			-- Execute tool.
 		local
 			a_system: ET_SYSTEM
@@ -113,7 +113,7 @@ feature {NONE} -- Execution
 			end
 		end
 
-	read_arguments is
+	read_arguments
 			-- Read command-line arguments.
 		do
 				-- Read filenames.
@@ -145,7 +145,7 @@ feature -- Access
 
 feature -- Error handling
 
-	report_cannot_read_error (a_filename: STRING) is
+	report_cannot_read_error (a_filename: STRING)
 			-- Report that `a_filename' cannot be
 			-- opened in read mode.
 		require
@@ -157,7 +157,7 @@ feature -- Error handling
 			error_handler.report_error (an_error)
 		end
 
-	report_cannot_write_error (a_filename: STRING) is
+	report_cannot_write_error (a_filename: STRING)
 			-- Report that `a_filename' cannot be
 			-- opened in write mode.
 		require
@@ -169,13 +169,13 @@ feature -- Error handling
 			error_handler.report_error (an_error)
 		end
 
-	report_usage_error is
+	report_usage_error
 			-- Report usage error.
 		do
 			error_handler.report_error (Usage_message)
 		end
 
-	Usage_message: UT_USAGE_MESSAGE is
+	Usage_message: UT_USAGE_MESSAGE
 			-- Usage message
 		once
 			create Result.make ("input_filename [output_filename]")

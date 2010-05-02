@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_hash_agent: like hash_agent) is
+	make (a_hash_agent: like hash_agent)
 			-- Create a new hash function implemented using `a_hash_agent'.
 		require
 			a_hash_agent_not_void: a_hash_agent /= Void
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	hash_code (v: G): INTEGER is
+	hash_code (v: G): INTEGER
 			-- Hash code for `v'
 		do
 			Result := hash_agent.item ([v])

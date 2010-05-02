@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_literal: like literal) is
+	make (a_literal: like literal)
 			-- Create a new Real constant.
 		require
 			a_literal_not_void: a_literal /= Void
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_underscored_real_constant (Current)

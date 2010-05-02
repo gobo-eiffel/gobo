@@ -26,7 +26,7 @@ create
 
 feature -- Tests
 
-	test_no_namespaces is
+	test_no_namespaces
 			-- No namespaces.
 		do
 			assert_formatted ("no_namespaces",
@@ -41,7 +41,7 @@ feature -- Tests
 						"<doc/>", "<doc></doc>")
 		end
 
-	test_impplicit_namespace is
+	test_impplicit_namespace
 			-- Test xml:
 		do
 			assert_formatted ("xml",
@@ -49,7 +49,7 @@ feature -- Tests
 				"<doc xml:space=%"default%"></doc>") -- stays undeclared
 		end
 
-	test_attribute is
+	test_attribute
 			-- Namespaces and attributes.
 		do
 			assert_formatted ("simple_attribute",
@@ -62,7 +62,7 @@ feature -- Tests
 
 feature {NONE} -- Implementation
 
-	assert_formatted (a_tag: STRING; a_in: STRING; a_out: STRING) is
+	assert_formatted (a_tag: STRING; a_in: STRING; a_out: STRING)
 			-- Assert input XML is formatted as output.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	make_parser is
+	make_parser
 			-- Make parser.
 		do
 			create parser.make
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 			make_formatter
 		end
 
-	make_formatter is
+	make_formatter
 			-- Make formatter
 		do
 			create formatter.make

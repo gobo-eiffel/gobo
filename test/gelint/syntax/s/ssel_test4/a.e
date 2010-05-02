@@ -19,7 +19,7 @@ create
 
 feature
 
-	make is
+	make
 		do
 			print ("first line %
 				%%

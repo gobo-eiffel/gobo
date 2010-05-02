@@ -21,7 +21,7 @@ inherit
 
 feature -- Access
 
-	lower_name: STRING is
+	lower_name: STRING
 			-- Lower-name of feature call
 			-- (May return the same object as `name' if already in lower case.)
 		local
@@ -41,7 +41,7 @@ feature -- Access
 			end
 		end
 
-	free_operator_name: STRING is
+	free_operator_name: STRING
 			-- Name of free operator
 		deferred
 		ensure
@@ -54,7 +54,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_call_name (other: ET_CALL_NAME): BOOLEAN is
+	same_call_name (other: ET_CALL_NAME): BOOLEAN
 			-- Are feature name and `other' the same feature call name?
 			-- (case insensitive)
 		local

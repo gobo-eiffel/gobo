@@ -13,12 +13,12 @@ note
 class XM_XSLT_NUMERIC_COMPARER
 
 inherit
-	
+
 	KL_PART_COMPARATOR [XM_XPATH_ITEM]
 
 feature -- Comparison
 
-	less_than (u, v: XM_XPATH_ITEM): BOOLEAN is
+	less_than (u, v: XM_XPATH_ITEM): BOOLEAN
 			-- Is `u' considered less than `v'?
 		local
 			l_string: STRING
@@ -39,7 +39,7 @@ feature -- Comparison
 					l_double := l_string.to_double
 				else
 					l_first_nan := True
-				end	
+				end
 			end
 
 			if v.is_numeric_value then
@@ -55,8 +55,8 @@ feature -- Comparison
 					l_other_double := l_string.to_double
 				else
 					l_second_nan := True
-				end	
-			end			
+				end
+			end
 
 			if l_first_nan then
 				Result := not l_second_nan

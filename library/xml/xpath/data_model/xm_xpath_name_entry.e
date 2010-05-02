@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_code: INTEGER; a_local_name: STRING) is
+	make (a_code: INTEGER; a_local_name: STRING)
 			-- Establish invariant
 		require
 			positive_code: uri_code >= 0 and uri_code < 32000
@@ -30,12 +30,12 @@ feature {NONE} -- Initialization
 		ensure
 			no_next_entry: next = Void
 		end
-	
+
 feature -- Access
 
 	local_name: STRING
 			-- The local part of an XML name
-	
+
 	uri_code: INTEGER -- TODO - should be INTEGER_16 when all compilers support it
 			-- A code representing the uri
 
@@ -44,18 +44,18 @@ feature -- Access
 
 feature -- Element change
 
-	set_next (a_next_entry: XM_XPATH_NAME_ENTRY) is
+	set_next (a_next_entry: XM_XPATH_NAME_ENTRY)
 			-- Set the `next' field to `a_next_entry'
 		do
 			next := a_next_entry
 		ensure
 			next_set: next = a_next_entry
 		end
-	
+
 invariant
-	
+
 	positive_uri_code: uri_code >= 0 -- and then uri_code < 32K ?? check this
 	local_name_not_void: local_name /= Void
-	
+
 end
-	
+

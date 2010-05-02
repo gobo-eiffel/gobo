@@ -49,7 +49,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tree: XM_XPATH_TINY_FOREST; a_node_number: INTEGER; a_base_uri: STRING; a_document_uri: like document_uri) is
+	make (a_tree: XM_XPATH_TINY_FOREST; a_node_number: INTEGER; a_base_uri: STRING; a_document_uri: like document_uri)
 			-- Establish invariant.
 		require
 			tree_not_void: a_tree /= Void
@@ -75,31 +75,31 @@ feature -- Access
 	base_uri: STRING
 			-- Base URI of `Current'
 
-	system_id: STRING is
+	system_id: STRING
 			-- SYSTEM id of `Current', or `Void' if not known
 		do
 			Result := tree.system_id_for_node (node_number)
 		end
 
-	line_number: INTEGER is
+	line_number: INTEGER
 			-- Line number of node in original source document
 		do
 			Result := 0
 		end
 
-	is_tiny_document: BOOLEAN is
+	is_tiny_document: BOOLEAN
 			-- Is `Current' a tiny-tree document node?
 		do
 			Result := True
 		end
 
-	as_tiny_document: XM_XPATH_TINY_DOCUMENT is
+	as_tiny_document: XM_XPATH_TINY_DOCUMENT
 			-- `Current' seen as a tiny-tree document
 		do
 			Result := Current
 		end
 
-	selected_id (an_id: STRING): XM_XPATH_ELEMENT is
+	selected_id (an_id: STRING): XM_XPATH_ELEMENT
 			-- Element with ID value of `id'
 		do
 			if id_table = Void then
@@ -111,7 +111,7 @@ feature -- Access
 			end
 		end
 
-	unparsed_entity_system_id (an_entity_name: STRING): STRING is
+	unparsed_entity_system_id (an_entity_name: STRING): STRING
 			-- System identifier of an unparsed external entity
 		local
 			an_entity_table_entry: DS_ARRAYED_LIST [STRING]
@@ -130,7 +130,7 @@ feature -- Access
 			end
 		end
 
-	unparsed_entity_public_id (an_entity_name: STRING): STRING is
+	unparsed_entity_public_id (an_entity_name: STRING): STRING
 			-- Public identifier of an unparsed external entity
 		local
 			an_entity_table_entry: DS_ARRAYED_LIST [STRING]
@@ -152,7 +152,7 @@ feature -- Access
 	document_uri: UT_URI
 			-- Absolute URI of the source from which the document was constructed
 
-	all_elements (a_fingerprint: INTEGER): DS_ARRAYED_LIST [XM_XPATH_TINY_ELEMENT] is
+	all_elements (a_fingerprint: INTEGER): DS_ARRAYED_LIST [XM_XPATH_TINY_ELEMENT]
 			-- An enumeration of all elements with a given name;
 			-- This is implemented as a memo function:
 			--  the first time it is called for a particular
@@ -202,21 +202,21 @@ feature -- Access
 			end
 		end
 
-	root: XM_XPATH_NODE is
+	root: XM_XPATH_NODE
 			-- The root node for `Current';
 			-- This is not necessarily a Document node.
 		do
 			Result := Current
 		end
 
-	document_root: XM_XPATH_DOCUMENT is
+	document_root: XM_XPATH_DOCUMENT
 			-- The document node for `Current';
 			-- If `Current' is in a document fragment, then return Void
 		do
 			Result := Current
 		end
 
-	idrefs_nodes (some_idrefs: DS_LIST [STRING]): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	idrefs_nodes (some_idrefs: DS_LIST [STRING]): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Sequence of nodes in document order with an IDREF in `some_idrefs'
 		do
 			if attribute_idref_table = Void then
@@ -226,7 +226,7 @@ feature -- Access
 			end
 		end
 
-	is_idref_registered (an_attribute_number: INTEGER; an_idref: STRING): BOOLEAN is
+	is_idref_registered (an_attribute_number: INTEGER; an_idref: STRING): BOOLEAN
 			-- Is `an_attribute_number' registered for `an_idref'?
 		require
 			valid_attribute_number: tree.is_attribute_number_valid (an_attribute_number)
@@ -237,7 +237,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_system_id (a_system_id: STRING) is
+	set_system_id (a_system_id: STRING)
 			-- Set the SYSTEM ID.
 		require
 			system_id_not_void: a_system_id /= Void
@@ -245,7 +245,7 @@ feature -- Element change
 			tree.set_system_id_for_node (node_number, a_system_id)
 		end
 
-	register_id (an_element: XM_XPATH_TINY_ELEMENT; a_value: STRING) is
+	register_id (an_element: XM_XPATH_TINY_ELEMENT; a_value: STRING)
 			-- Register an ID value.
 		require
 			element_not_void: an_element /= Void
@@ -258,7 +258,7 @@ feature -- Element change
 			end
 		end
 
-	register_attribute_idref (an_attribute_number: INTEGER; an_idref: STRING) is
+	register_attribute_idref (an_attribute_number: INTEGER; an_idref: STRING)
 			-- Register `an_idref' for `an_attribute_number'.
 		require
 			valid_attribute_number: tree.is_attribute_number_valid (an_attribute_number)
@@ -273,7 +273,7 @@ feature -- Element change
 			idref_registered: is_idref_registered (an_attribute_number, an_idref)
 		end
 
-	set_unparsed_entity (a_name, a_system_id, a_public_id: STRING) is
+	set_unparsed_entity (a_name, a_system_id, a_public_id: STRING)
 			-- Save SYSTEM and PUBLIC ids for `a_name'.
 		require
 			entity_name_not_void: a_name /= Void
@@ -295,7 +295,7 @@ feature -- Element change
 
 feature -- Duplication
 
-	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
+	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN)
 			-- Copy `Current' to `a_receiver'.
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -315,7 +315,7 @@ feature -- Duplication
 
 feature {XM_XPATH_NODE} -- Restricted
 
-	is_possible_child: BOOLEAN is
+	is_possible_child: BOOLEAN
 			-- Can this node be a child of a document or element node?
 		do
 			Result := False

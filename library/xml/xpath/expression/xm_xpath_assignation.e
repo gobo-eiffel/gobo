@@ -19,7 +19,7 @@ inherit
 			simplify, sub_expressions, allocate_slots, promote,
 			is_assignation, as_assignation
 		end
-	
+
 	XM_XPATH_BINDING
 
 	XM_XPATH_PROMOTION_ACTIONS
@@ -45,7 +45,7 @@ feature -- Access
 	slot_number: INTEGER
 			-- Slot number for range variable
 
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions of `Current'
 		do
 			create Result.make (2)
@@ -54,13 +54,13 @@ feature -- Access
 			Result.put (action, 2)
 		end
 
-	is_assignation: BOOLEAN is
+	is_assignation: BOOLEAN
 			-- Is `Current' a assignation?
 		do
 			Result := True
 		end
 
-	as_assignation: XM_XPATH_ASSIGNATION is
+	as_assignation: XM_XPATH_ASSIGNATION
 			-- `Current' seen as a assignation
 		do
 			Result := Current
@@ -68,7 +68,7 @@ feature -- Access
 
 feature -- Status report
 
-		is_global: BOOLEAN is
+		is_global: BOOLEAN
 			-- Is binding global or local?
 		do
 			Result := False
@@ -76,7 +76,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -103,7 +103,7 @@ feature -- Optimization
 			end
 		end
 
-	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this subexpression.
 		local
 			l_promotion: XM_XPATH_EXPRESSION
@@ -155,7 +155,7 @@ feature -- Optimization
 						replace_action (l_replacement.item)
 						reset_static_properties
 					end
-					a_offer.set_binding_list (l_saved_binding_list)		
+					a_offer.set_binding_list (l_saved_binding_list)
 				end
 				a_replacement.put (Current)
 			end
@@ -163,7 +163,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_variable (a_context: XM_XPATH_CONTEXT) is
+	evaluate_variable (a_context: XM_XPATH_CONTEXT)
 			-- Evaluate variable
 		do
 			last_evaluated_binding := a_context.evaluated_local_variable (slot_number)
@@ -175,7 +175,7 @@ feature -- Evaluation
 
 feature -- Element change
 
-	allocate_slots (next_free_slot: INTEGER; a_slot_manager: XM_XPATH_SLOT_MANAGER) is
+	allocate_slots (next_free_slot: INTEGER; a_slot_manager: XM_XPATH_SLOT_MANAGER)
 			-- Allocate slot numbers for all range variable in `Current' and it's sub-expresions.
 		do
 			set_slot_number (next_free_slot)
@@ -185,7 +185,7 @@ feature -- Element change
 			Precursor (next_free_slot + 1, a_slot_manager)
 		end
 
-	set_sequence (a_sequence: XM_XPATH_EXPRESSION) is
+	set_sequence (a_sequence: XM_XPATH_EXPRESSION)
 			-- Set `sequence.
 		require
 			sequence_not_void: a_sequence /= Void
@@ -196,7 +196,7 @@ feature -- Element change
 			sequence_set: sequence = a_sequence
 		end
 
-	replace_action (a_action: XM_XPATH_EXPRESSION) is
+	replace_action (a_action: XM_XPATH_EXPRESSION)
 			-- Set `action'.
 		require
 			a_action_not_void: a_action /= Void
@@ -207,7 +207,7 @@ feature -- Element change
 			action_set: action = a_action
 		end
 
-	set_action (a_action: XM_XPATH_EXPRESSION) is
+	set_action (a_action: XM_XPATH_EXPRESSION)
 			-- Set `action'.
 		require
 			a_action_not_void: a_action /= Void
@@ -219,7 +219,7 @@ feature -- Element change
 			action_set: action = a_action
 		end
 
-	set_declaration (a_declaration: XM_XPATH_RANGE_VARIABLE_DECLARATION) is
+	set_declaration (a_declaration: XM_XPATH_RANGE_VARIABLE_DECLARATION)
 			-- Set `declaration'.
 		require
 			dclaration_is_void: declaration = Void
@@ -232,7 +232,7 @@ feature -- Element change
 			name_not_void: variable_name /= Void
 		end
 
-	set_declaration_void is
+	set_declaration_void
 			-- Set `declaration' to `Void'.
 		require
 			declaration_not_void: declaration /= Void
@@ -242,7 +242,7 @@ feature -- Element change
 			declaration_void: declaration = Void
 		end
 
-	set_slot_number (a_slot_number: INTEGER) is
+	set_slot_number (a_slot_number: INTEGER)
 			-- Set `slot_number.
 		require
 			strictly_positive_slot_number: a_slot_number > 0
@@ -262,5 +262,5 @@ invariant
 	valid_operator: operator = For_token or operator = Some_token or operator = Every_token or operator = Let_token
 	sequence_not_void: initialized implies sequence /= Void
 	action_not_void: initialized implies action /= Void
-	
+
 end

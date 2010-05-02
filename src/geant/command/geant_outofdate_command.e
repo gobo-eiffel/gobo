@@ -22,7 +22,7 @@ create
 
 feature -- Status report
 
-	is_file_executable: BOOLEAN is
+	is_file_executable: BOOLEAN
 			-- Can command be executed on sourcefile `source_filename' to targetfile `target_filename'?
 		do
 			Result := source_filename /= Void and then source_filename.count > 0
@@ -36,7 +36,7 @@ feature -- Status report
 			fileset_void: Result implies fileset = Void
 		end
 
-	is_fileset_executable: BOOLEAN is
+	is_fileset_executable: BOOLEAN
 			-- Can command be executed on `fileset' as input to target defined by `fileset.map'?
 		do
 			Result := source_filename = Void
@@ -49,7 +49,7 @@ feature -- Status report
 			target_filename_void: Result implies target_filename = Void
 		end
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- Can command be executed?
 		do
 			Result := is_file_executable xor is_fileset_executable
@@ -86,7 +86,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_source_filename (a_source_filename: like source_filename) is
+	set_source_filename (a_source_filename: like source_filename)
 			-- Set `source_filename' to `a_source_filename'.
 		require
 			a_source_filename_not_void : a_source_filename /= Void
@@ -96,7 +96,7 @@ feature -- Setting
 			source_filename_set: source_filename = a_source_filename
 		end
 
-	set_target_filename (a_filename: like target_filename) is
+	set_target_filename (a_filename: like target_filename)
 			-- Set `target_filename' to `a_filename'.
 		require
 			a_filename_not_void : a_filename /= Void
@@ -107,7 +107,7 @@ feature -- Setting
 			target_filename_set: target_filename = a_filename
 		end
 
-	set_variable_name (a_variable_name: like variable_name) is
+	set_variable_name (a_variable_name: like variable_name)
 			-- Set `variable_name' to `a_variable_name'.
 		require
 			a_variable_name_not_void : a_variable_name /= Void
@@ -118,7 +118,7 @@ feature -- Setting
 			variable_name_set: variable_name = a_variable_name
 		end
 
-	set_true_value (a_true_value: like true_value) is
+	set_true_value (a_true_value: like true_value)
 			-- Set `true_value' to `a_true_value'.
 		require
 			a_true_value_not_void : a_true_value /= Void
@@ -129,7 +129,7 @@ feature -- Setting
 			true_value_set: true_value = a_true_value
 		end
 
-	set_false_value (a_false_value: like false_value) is
+	set_false_value (a_false_value: like false_value)
 			-- Set `false_value' to `a_false_value'.
 		require
 			a_false_value_not_void : a_false_value /= Void
@@ -140,7 +140,7 @@ feature -- Setting
 			false_value_set: false_value = a_false_value
 		end
 
-	set_fileset (a_fileset: like fileset) is
+	set_fileset (a_fileset: like fileset)
 			-- Set `fileset' to `a_fileset'.
 		require
 			a_fileset_not_void: a_fileset /= Void
@@ -152,7 +152,7 @@ feature -- Setting
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute command.
 		local
 			a_from_file: STRING

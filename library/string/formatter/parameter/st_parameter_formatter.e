@@ -21,7 +21,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new formatter.
 		do
 			reset_options
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset_options is
+	reset_options
 			-- Reset options to their default values.
 		do
 			set_width (1)
@@ -51,19 +51,19 @@ feature -- Options
 			-- Minimum width of formatted parameter
 			-- (Does never cause truncation of formatted parameter.)
 
-	is_right_aligned: BOOLEAN is
+	is_right_aligned: BOOLEAN
 			-- Should formatted parameter be aligned to the right?
 		do
 			Result := (alignment = align_right)
 		end
 
-	is_left_aligned: BOOLEAN is
+	is_left_aligned: BOOLEAN
 			-- Should formatted parameter be aligned to the left?
 		do
 			Result := (alignment = align_left)
 		end
 
-	is_center_aligned: BOOLEAN is
+	is_center_aligned: BOOLEAN
 			-- Should formatted parameter be centered?
 		do
 			Result := (alignment = align_center)
@@ -89,7 +89,7 @@ feature -- Options
 
 feature -- Setting
 
-	set_precision (p: INTEGER) is
+	set_precision (p: INTEGER)
 			-- Set `precision' to `p'.
 		require
 			p_not_negative: p >= 0
@@ -99,7 +99,7 @@ feature -- Setting
 			precision_set: precision = p
 		end
 
-	set_width (w: INTEGER) is
+	set_width (w: INTEGER)
 			-- Set `width' to `w'.
 		require
 			w_not_negative: w >= 0
@@ -109,7 +109,7 @@ feature -- Setting
 			width_set: width = w
 		end
 
-	set_align_left is
+	set_align_left
 			-- Set left alignment.
 		do
 			alignment := align_left
@@ -117,7 +117,7 @@ feature -- Setting
 			is_left_aligned: is_left_aligned
 		end
 
-	set_align_right is
+	set_align_right
 			-- Set right alignment.
 		do
 			alignment := align_right
@@ -125,7 +125,7 @@ feature -- Setting
 			is_right_aligned: is_right_aligned
 		end
 
-	set_align_center is
+	set_align_center
 			-- Set center alignment.
 		do
 			alignment := align_center
@@ -133,7 +133,7 @@ feature -- Setting
 			is_center_aligned: is_center_aligned
 		end
 
-	set_padding_character (c: CHARACTER) is
+	set_padding_character (c: CHARACTER)
 			-- Set `padding_character' to `c'.
 		do
 			padding_character := c
@@ -141,7 +141,7 @@ feature -- Setting
 			padding_character_set: padding_character = c
 		end
 
-	set_plus_sign_enabled (b: BOOLEAN) is
+	set_plus_sign_enabled (b: BOOLEAN)
 			-- Set `plus_sign_enabled' to `b'.
 		do
 			plus_sign_enabled := b
@@ -149,7 +149,7 @@ feature -- Setting
 			plus_sign_enabled_set: plus_sign_enabled = b
 		end
 
-	set_space_sign_enabled (b: BOOLEAN) is
+	set_space_sign_enabled (b: BOOLEAN)
 			-- Set `space_sign_enabled' to `b'.
 		do
 			space_sign_enabled := b
@@ -157,7 +157,7 @@ feature -- Setting
 			space_sign_enabled_set: space_sign_enabled = b
 		end
 
-	set_lowercase (b: BOOLEAN) is
+	set_lowercase (b: BOOLEAN)
 			-- Set `is_lowercase' to `b'.
 		do
 			is_lowercase := b
@@ -167,7 +167,7 @@ feature -- Setting
 
 feature -- Status report
 
-	valid_parameter (a_parameter: ANY): BOOLEAN is
+	valid_parameter (a_parameter: ANY): BOOLEAN
 			-- Is `a_parameter' a valid parameter for current formatter?
 		require
 			a_parameter_not_void: a_parameter /= Void
@@ -176,7 +176,7 @@ feature -- Status report
 
 feature -- Formatting
 
-	format_to (a_parameter: ANY; a_stream: KI_CHARACTER_OUTPUT_STREAM) is
+	format_to (a_parameter: ANY; a_stream: KI_CHARACTER_OUTPUT_STREAM)
 			-- Format `a_parameter' to `a_stream'.
 		require
 			a_parameter_not_void: a_parameter /= Void
@@ -188,7 +188,7 @@ feature -- Formatting
 
 feature {NONE} -- Formatting
 
-	right_format_to (a_string: STRING; a_stream: KI_CHARACTER_OUTPUT_STREAM) is
+	right_format_to (a_string: STRING; a_stream: KI_CHARACTER_OUTPUT_STREAM)
 			-- Append '(width - a_string.count).max (0)' occurrences of
 			-- `padding_character' to `a_stream', and then append `a_string'.
 		require
@@ -209,7 +209,7 @@ feature {NONE} -- Formatting
 			a_stream.put_string (a_string)
 		end
 
-	left_format_to (a_string: STRING; a_stream: KI_CHARACTER_OUTPUT_STREAM) is
+	left_format_to (a_string: STRING; a_stream: KI_CHARACTER_OUTPUT_STREAM)
 			-- Append `a_string' to `a_stream', and then append
 			-- '(width - a_string.count).max (0)' occurrences of
 			-- `padding_character'.
@@ -231,7 +231,7 @@ feature {NONE} -- Formatting
 			end
 		end
 
-	center_format_to (a_string: STRING; a_stream: KI_CHARACTER_OUTPUT_STREAM) is
+	center_format_to (a_string: STRING; a_stream: KI_CHARACTER_OUTPUT_STREAM)
 			-- Append '(width - a_string.count).max (0) // 2' occurrences of
 			-- `padding_character' to `a_stream', then append `a_string', and
 			-- then append enough occurrences of `padding_character' so that
@@ -268,7 +268,7 @@ feature {NONE} -- Formatting
 			end
 		end
 
-	justify_format_to (a_string: STRING; a_stream: KI_CHARACTER_OUTPUT_STREAM) is
+	justify_format_to (a_string: STRING; a_stream: KI_CHARACTER_OUTPUT_STREAM)
 			-- Append `a_string' to `a_stream' using defined alignment
 			-- and padding character if needed.
 		require
@@ -291,13 +291,13 @@ feature {NONE} -- Alignment
 	alignment: INTEGER
 			-- Alignment policy for formatted parameter
 
-	align_left: INTEGER is 1
+	align_left: INTEGER = 1
 			-- Possible value for `alignment'
 
-	align_right: INTEGER is 2
+	align_right: INTEGER = 2
 			-- Possible value for `alignment'
 
-	align_center: INTEGER is 3
+	align_center: INTEGER = 3
 			-- Possible value for `alignment'
 
 invariant

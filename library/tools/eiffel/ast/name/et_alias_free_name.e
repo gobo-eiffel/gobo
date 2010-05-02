@@ -62,7 +62,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_infix (a_string: like alias_string) is
+	make_infix (a_string: like alias_string)
 			-- Create a new infix 'alias "<free-operator>"' feature name.
 		require
 			a_string_not_void: a_string /= Void
@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 			is_infix_freeop: is_infix_freeop
 		end
 
-	make_prefix (a_string: like alias_string) is
+	make_prefix (a_string: like alias_string)
 			-- Create a new prefix 'alias "<free-operator>"' feature name.
 		require
 			a_string_not_void: a_string /= Void
@@ -94,37 +94,37 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_prefix: BOOLEAN is
+	is_prefix: BOOLEAN
 			-- Is current feature name of the form 'prefix ...'?
 		do
 			Result := (code = tokens.prefix_freeop_code)
 		end
 
-	is_infix: BOOLEAN is
+	is_infix: BOOLEAN
 			-- Is current feature name of the form 'infix ...'?
 		do
 			Result := (code = tokens.infix_freeop_code)
 		end
 
-	is_prefix_freeop: BOOLEAN is
+	is_prefix_freeop: BOOLEAN
 			-- Is current feature name of the form 'prefix "free-operator"'?
 		do
 			Result := (code = tokens.prefix_freeop_code)
 		end
 
-	is_infix_freeop: BOOLEAN is
+	is_infix_freeop: BOOLEAN
 			-- Is current feature name of the form 'infix "free-operator"'?
 		do
 			Result := (code = tokens.infix_freeop_code)
 		end
 
-	is_prefixable: BOOLEAN is
+	is_prefixable: BOOLEAN
 			-- Can current alias be used as the name of a prefix feature?
 		do
 			Result := True
 		end
 
-	is_infixable: BOOLEAN is
+	is_infixable: BOOLEAN
 			-- Can current alias be used as the name of an infix feature?
 		do
 			Result := True
@@ -132,7 +132,7 @@ feature -- Status report
 
 feature -- Access
 
-	alias_name: STRING is
+	alias_name: STRING
 			-- Name of alias
 		do
 			create Result.make (free_operator_name.count + 8)
@@ -141,7 +141,7 @@ feature -- Access
 			Result.append_character ('%"')
 		end
 
-	alias_lower_name: STRING is
+	alias_lower_name: STRING
 			-- Lower-name of alias
 			-- (May return the same object as `alias_name' if already in lower case.)
 		local
@@ -161,7 +161,7 @@ feature -- Access
 			end
 		end
 
-	free_operator_name: STRING is
+	free_operator_name: STRING
 			-- Name of free operator
 		do
 			Result := alias_string.value
@@ -169,7 +169,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_infix is
+	set_infix
 			-- Set `is_infix_freeop'.
 		do
 			code := tokens.infix_freeop_code
@@ -177,7 +177,7 @@ feature -- Status setting
 			is_infix_freeop: is_infix_freeop
 		end
 
-	set_prefix is
+	set_prefix
 			-- Set `is_prefix_freeop'.
 		do
 			code := tokens.prefix_freeop_code
@@ -187,7 +187,7 @@ feature -- Status setting
 
 feature -- Comparison
 
-	same_alias_name (other: ET_ALIAS_NAME): BOOLEAN is
+	same_alias_name (other: ET_ALIAS_NAME): BOOLEAN
 			-- Are `Current' and `other' the same alias name?
 			-- Do not take "infix" and "prefix" properties into account.
 		local
@@ -211,7 +211,7 @@ feature -- Comparison
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_alias_free_name (Current)
@@ -219,7 +219,7 @@ feature -- Processing
 
 feature {NONE} -- Constants
 
-	alias_double_quote: STRING is "alias %""
+	alias_double_quote: STRING = "alias %""
 
 invariant
 

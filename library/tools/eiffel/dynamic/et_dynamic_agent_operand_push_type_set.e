@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type: like static_type; an_agent_type: like agent_type) is
+	make (a_type: like static_type; an_agent_type: like agent_type)
 			-- Create a new empty dynamic type set.
 			-- Set `first_type' to `a_type' if it is expanded.
 		require
@@ -50,7 +50,7 @@ feature -- Access
 
 feature -- Element change
 
-	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM) is
+	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM)
 			-- Add `a_type' coming from `a_type_set' to current target.
 		local
 			old_count: INTEGER

@@ -30,7 +30,7 @@ feature -- Access
 
 feature -- Element change
 
-	put_right (other: like Current) is
+	put_right (other: like Current)
 			-- Put `other' to right of cell.
 			-- Make sure that link is bidirectional.
 		do
@@ -40,7 +40,7 @@ feature -- Element change
 			bilinked: other.left = Current
 		end
 
-	put_left (other: like Current) is
+	put_left (other: like Current)
 			-- Put `other' to left of cell.
 			-- Make sure that link is bidirectional.
 		require
@@ -53,7 +53,7 @@ feature -- Element change
 			bilinked: other.right = Current
 		end
 
-	forget_left is
+	forget_left
 			-- Remove left neighbor.
 		do
 			left := Void
@@ -63,7 +63,7 @@ feature -- Element change
 
 feature {DS_BILINKABLE} -- Implementation
 
-	attach_right (other: like Current) is
+	attach_right (other: like Current)
 			-- Put `other' to right of cell.
 		do
 			right := other
@@ -71,7 +71,7 @@ feature {DS_BILINKABLE} -- Implementation
 			linked: right = other
 		end
 
-	attach_left (other: like Current) is
+	attach_left (other: like Current)
 			-- Put `other' to left of cell.
 		do
 			left := other

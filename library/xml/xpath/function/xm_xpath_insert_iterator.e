@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_base_iterator, an_insertion_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; an_insert_position: INTEGER) is
+	make (a_base_iterator, an_insertion_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; an_insert_position: INTEGER)
 			-- Establish invariant.
 		require
 			base_iterator_before: a_base_iterator /= Void and then not a_base_iterator.is_error and then a_base_iterator.before
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			insertion_iterator_set: insertion_iterator = an_insertion_iterator
 			insert_position_set: insert_position = an_insert_position
 		end
-	
+
 feature -- Access
 
 	item: XM_XPATH_ITEM
@@ -46,7 +46,7 @@ feature -- Access
 
 feature -- Status report
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
 			Result := item = Void
@@ -54,7 +54,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move to next position
 		do
 			index := index + 1
@@ -151,12 +151,12 @@ feature -- Cursor movement
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 			create Result.make (base_iterator.another, insertion_iterator.another, insert_position)
 		end
-	
+
 feature {NONE} -- Implementation
 
 	base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -178,4 +178,4 @@ invariant
 	strictly_positive_insert_position: insert_position > 0
 
 end
-	
+

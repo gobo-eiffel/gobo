@@ -14,7 +14,7 @@ deferred class ET_ECF_ROOT
 
 feature -- Element change
 
-	fill_root (a_system: ET_ECF_SYSTEM) is
+	fill_root (a_system: ET_ECF_SYSTEM)
 			-- Fill `a_system' with root information.
 		require
 			a_system_not_void: a_system /= Void

@@ -21,28 +21,28 @@ inherit
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset feature name as it was when it was last parsed.
 		deferred
 		end
 
 feature -- Access
 
-	feature_name: ET_FEATURE_NAME is
+	feature_name: ET_FEATURE_NAME
 			-- Feature name
 		deferred
 		ensure
 			feature_name_not_void: Result /= Void
 		end
 
-	alias_name: ET_ALIAS_NAME is
+	alias_name: ET_ALIAS_NAME
 			-- Alias name, if any
 		deferred
 		end
 
 feature -- Comparison
 
-	same_extended_feature_name (other: ET_EXTENDED_FEATURE_NAME): BOOLEAN is
+	same_extended_feature_name (other: ET_EXTENDED_FEATURE_NAME): BOOLEAN
 			-- Are feature name and `other' the same extended feature name?
 			-- (case insensitive)
 		require

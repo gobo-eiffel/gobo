@@ -29,10 +29,10 @@ create {XM_XSLT_NODE_FACTORY}
 	make_style_element
 
 feature {NONE} -- Initialization
-	
+
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
+		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration)
 			-- Establish invariant.
 		do
 			cached_variable_fingerprint := -1
@@ -45,13 +45,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_non_white_following_sibling: BOOLEAN is
+	is_non_white_following_sibling: BOOLEAN
 			-- Is `Current' such that an immediate preceding-sibling all-whitspace text node should be stripped in xslt stylesheets?
 		do
 			Result := True
 		end
 
-	required_type: XM_XPATH_SEQUENCE_TYPE is
+	required_type: XM_XPATH_SEQUENCE_TYPE
 			-- Static type of the variable
 		do
 			if as_type /= Void then
@@ -61,7 +61,7 @@ feature -- Access
 			end
 		end
 
-	allows_required: BOOLEAN is
+	allows_required: BOOLEAN
 			-- Is the "required" attribute allowed?
 		local
 			a_function: XM_XSLT_FUNCTION
@@ -70,7 +70,7 @@ feature -- Access
 			Result := a_function = Void
 		end
 
-	allows_value: BOOLEAN is
+	allows_value: BOOLEAN
 			-- Is the "select" attribute allowed?
 		local
 			a_function: XM_XSLT_FUNCTION
@@ -81,7 +81,7 @@ feature -- Access
 
 feature -- Element change
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 		local
 			is_local: BOOLEAN
@@ -144,7 +144,7 @@ feature -- Element change
 						report_compile_error (an_error)
 					end
 				end
-				
+
 			end
 			if not any_compile_errors then
 				Precursor
@@ -152,7 +152,7 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (a_executable: XM_XSLT_EXECUTABLE) is
+	compile (a_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		local
 			l_function: XM_XSLT_FUNCTION
@@ -168,7 +168,7 @@ feature -- Element change
 			last_generated_expression := Void
 			l_function ?= parent
 			if l_function /= Void then
-				
+
 				-- For Function arguments, the XM_XSLT_USER_FUNCTION_PARAMETER is more efficient than
 				--  the general-purpose XM_XSLT_COMPILED_PARAM object, and these are compiled
 				--  when compiling the parent xsl:function
@@ -216,13 +216,13 @@ feature -- Element change
 
 feature -- Conversion
 
-	is_param: BOOLEAN is
+	is_param: BOOLEAN
 			-- Is `Current' an xsl:param?
 		do
 			Result := True
 		end
-	
-	as_param: XM_XSLT_PARAM is
+
+	as_param: XM_XSLT_PARAM
 			-- `Current' seen as an xsl:param
 		do
 			Result := Current

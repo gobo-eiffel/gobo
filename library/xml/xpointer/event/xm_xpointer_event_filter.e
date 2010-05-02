@@ -49,7 +49,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_xpointer: STRING; a_media_type: UT_MEDIA_TYPE; a_resolver: XM_RESOLVER_MEDIA_TYPE; a_callback: XM_CALLBACKS; a_dtd_callback: XM_DTD_CALLBACKS) is
+	make (an_xpointer: STRING; a_media_type: UT_MEDIA_TYPE; a_resolver: XM_RESOLVER_MEDIA_TYPE; a_callback: XM_CALLBACKS; a_dtd_callback: XM_DTD_CALLBACKS)
 			-- Establish invariant.
 		require
 			xpointer_not_void: an_xpointer /= Void
@@ -76,7 +76,7 @@ feature -- Access
 	media_type: UT_MEDIA_TYPE
 		-- Media type of document entity
 
-	Unacceptable_media_type: STRING is "Media type is not acceptable for fragment processing"
+	Unacceptable_media_type: STRING = "Media type is not acceptable for fragment processing"
 			-- Unaaceptable media type error message
 
 feature -- Status report
@@ -84,7 +84,7 @@ feature -- Status report
 	is_filtering: BOOLEAN
 			-- Are we actually doing any XPointer filtering?
 
-	has_media_type (a_media_type: UT_MEDIA_TYPE): BOOLEAN is
+	has_media_type (a_media_type: UT_MEDIA_TYPE): BOOLEAN
 			-- Is `a_media_type' acceptable for fragment processing?
 		require
 			filtering: is_filtering
@@ -93,7 +93,7 @@ feature -- Status report
 			Result := acceptable_media_types.has (a_media_type)
 		end
 
-	any_types_added: BOOLEAN is
+	any_types_added: BOOLEAN
 			-- Have any acceptable media types been declared?
 		require
 			filtering: is_filtering
@@ -109,7 +109,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_no_filtering is
+	set_no_filtering
 			-- Change this into a pure pass-through filter.
 		do
 			is_filtering := False
@@ -120,7 +120,7 @@ feature -- Status setting
 			not_filtering: not is_filtering
 		end
 
-	set_xpointer (an_xpointer: STRING) is
+	set_xpointer (an_xpointer: STRING)
 			-- Use `an_xpointer' as the XPointer.
 		require
 			xpointer_not_void: an_xpointer /= Void
@@ -149,7 +149,7 @@ feature -- Status setting
 			namespace_bindings_stack_not_void: namespace_bindings_stack /= Void
 		end
 
-	add_media_type (a_media_type: UT_MEDIA_TYPE) is
+	add_media_type (a_media_type: UT_MEDIA_TYPE)
 			-- Add `a_media_type' to list of acceptable media types
 		require
 			filtering: is_filtering
@@ -161,7 +161,7 @@ feature -- Status setting
 			media_type_added: has_media_type (a_media_type)
 		end
 
-	add_standard_media_types is
+	add_standard_media_types
 			-- Add standard XPointer media types to list of acceptable media types
 		require
 			filtering: is_filtering
@@ -183,7 +183,7 @@ feature -- Status setting
 			add_media_type (a_media_type)
 		end
 
-	allow_generic_xml_types (yes_or_no: BOOLEAN) is
+	allow_generic_xml_types (yes_or_no: BOOLEAN)
 			-- Allow or disallow all media types of form "application/*+xml"
 		require
 			filtering: is_filtering
@@ -193,7 +193,7 @@ feature -- Status setting
 			generic_types_set: generic_xml_types_allowed = yes_or_no
 		end
 
-	ignore_media_types is
+	ignore_media_types
 			-- Ignore `media_type'.
 		require
 			filtering: is_filtering
@@ -205,7 +205,7 @@ feature -- Status setting
 
 feature -- Document type definition callbacks
 
-	on_attribute_declaration (an_element_name, a_name: STRING; a_model: XM_DTD_ATTRIBUTE_CONTENT) is
+	on_attribute_declaration (an_element_name, a_name: STRING; a_model: XM_DTD_ATTRIBUTE_CONTENT)
 			-- Attribute declaration, one event per attribute.
 		local
 			an_attribute_table: DS_HASH_TABLE [XM_DTD_ATTRIBUTE_CONTENT, STRING]
@@ -236,7 +236,7 @@ feature -- Document type definition callbacks
 
 feature -- Document
 
-	on_start is
+	on_start
 			-- Called when parsing starts.
 		local
 			ok_to_filter: BOOLEAN
@@ -283,7 +283,7 @@ feature -- Document
 			end
 		end
 
-	on_finish is
+	on_finish
 			-- Called when parsing finished
 		do
 			if not is_error then Precursor end
@@ -292,7 +292,7 @@ feature -- Document
 
 feature -- Meta
 
-	on_processing_instruction (a_name: STRING; a_content: STRING) is
+	on_processing_instruction (a_name: STRING; a_content: STRING)
 			-- Processing instruction.
 		do
 
@@ -304,7 +304,7 @@ feature -- Meta
 			end
 		end
 
-	on_comment (a_content: STRING) is
+	on_comment (a_content: STRING)
 			-- Processing a comment.
 		do
 			if not is_filtering or else (is_forwarding and then is_shorthand_found and then not is_error) then
@@ -314,7 +314,7 @@ feature -- Meta
 
 feature -- Tag
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Start of start tag.
 		local
 			l_element_qname, l_prefix: STRING
@@ -356,7 +356,7 @@ feature -- Tag
 			end
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
 			-- Start of attribute.
 		local
 			an_attribute_table: DS_HASH_TABLE [XM_DTD_ATTRIBUTE_CONTENT, STRING]
@@ -430,7 +430,7 @@ feature -- Tag
 			end
 		end
 
-	on_start_tag_finish is
+	on_start_tag_finish
 			-- End of start tag.
 		local
 			l_namespaces: XM_XPOINTER_NAMESPACE_CONTEXT
@@ -463,7 +463,7 @@ feature -- Tag
 			if not is_filtering or else is_forwarding then Precursor end
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- End tag.
 		local
 			an_element_qname, an_xml_prefix: STRING
@@ -499,7 +499,7 @@ feature -- Tag
 
 feature -- Content
 
-	on_content (a_content: STRING) is
+	on_content (a_content: STRING)
 			-- Text content.
 		do
 			if not is_filtering or else is_forwarding then Precursor (a_content) end

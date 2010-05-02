@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_lexical_date: STRING) is
+	make (a_lexical_date: STRING)
 			-- Create from lexical date.
 		local
 			a_date_time_parser: ST_XSD_DATE_TIME_PARSER
@@ -40,14 +40,14 @@ feature {NONE} -- Initialization
 			create a_date_time_parser.make_1_1
 			if a_date_time_parser.is_zoned_month (a_lexical_date) then
 				zoned := True
-				zoned_date := a_date_time_parser.string_to_zoned_month (a_lexical_date)				
+				zoned_date := a_date_time_parser.string_to_zoned_month (a_lexical_date)
 			else
 				local_date := a_date_time_parser.string_to_month (a_lexical_date)
 			end
 			if not zoned then set_depends_upon_implicit_timezone end
 		end
 
-	make_from_date (a_date: DT_DATE) is
+	make_from_date (a_date: DT_DATE)
 			-- Create from date object.
 		do
 			Precursor (a_date)
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	make_from_zoned_date (a_date: DT_FIXED_OFFSET_ZONED_DATE) is
+	make_from_zoned_date (a_date: DT_FIXED_OFFSET_ZONED_DATE)
 			-- Create from date object.
 		do
 			Precursor (a_date)
@@ -73,7 +73,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, where know
 		do
 			Result := type_factory.g_month_type
@@ -83,7 +83,7 @@ feature -- Access
 			end
 		end
 
-	string_value: STRING is
+	string_value: STRING
 			--Value of the item as a string
 		local
 			a_date_time_parser: ST_XSD_DATE_TIME_FORMAT
@@ -98,7 +98,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Are `Current' and `other' the same expression?
 		do
 			if other.is_month_value then
@@ -107,7 +107,7 @@ feature -- Comparison
 			end
 		end
 
-	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER is
+	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER
 			-- Comparison of `Current' to `other'
 		local
 			l_mv: XM_XPATH_MONTH_VALUE
@@ -152,25 +152,25 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_date_value: BOOLEAN is
+	is_date_value: BOOLEAN
 			-- Is `Current' a date value?
 		do
 			Result := False
 		end
 
-	is_calendar_value: BOOLEAN is
+	is_calendar_value: BOOLEAN
 			-- Is `Current' a calendar value?
 		do
 			Result := False
 		end
 
-	is_month_value: BOOLEAN is
+	is_month_value: BOOLEAN
 			-- Is `Current' a gMonth value?
 		do
 			Result := True
 		end
 
-	is_date (a_lexical_date: STRING): BOOLEAN is
+	is_date (a_lexical_date: STRING): BOOLEAN
 			-- Is `a_lexical_date' a valid date?
 		local
 			a_date_time_parser: ST_XSD_DATE_TIME_PARSER
@@ -180,13 +180,13 @@ feature -- Status report
 				or else a_date_time_parser.is_month (a_lexical_date)
 		end
 
-	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
+	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN
 			-- Is `other' comparable to `Current'?
 		do
 			Result := other.is_month_value
 		end
 
-	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN is
+	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN
 			-- Is `Current' convertible to `a_required_type'?
 		do
 			if	a_required_type = any_item or else a_required_type = type_factory.any_atomic_type
@@ -197,7 +197,7 @@ feature -- Status report
 			end
 		end
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -211,13 +211,13 @@ feature -- Status report
 
 feature -- Conversions
 
-	as_month_value: XM_XPATH_MONTH_VALUE is
+	as_month_value: XM_XPATH_MONTH_VALUE
 			-- `Current' seen as a gMonth value
 		do
 			Result := Current
 		end
 
-	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE) is
+	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE)
 			-- Convert `Current' to `a_required_type'
 		do
 			if	a_required_type = any_item or a_required_type = type_factory.any_atomic_type or

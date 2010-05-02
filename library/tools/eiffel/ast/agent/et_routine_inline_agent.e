@@ -28,7 +28,7 @@ inherit
 
 feature -- Access
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		local
 			l_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
@@ -41,7 +41,7 @@ feature -- Access
 			end
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		local
 			l_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST

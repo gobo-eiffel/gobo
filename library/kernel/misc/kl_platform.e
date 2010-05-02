@@ -52,37 +52,37 @@ inherit
 
 feature -- Bits
 
-	Boolean_bits: INTEGER is
+	Boolean_bits: INTEGER
 			-- Number of bits in a value of type BOOLEAN
 		once
 			Result := old_boolean_bits
 		end
 
-	Character_bits: INTEGER is
+	Character_bits: INTEGER
 			-- Number of bits in a value of type CHARACTER
 		once
 			Result := 8
 		end
 
-	Double_bits: INTEGER is
+	Double_bits: INTEGER
 			-- Number of bits in a value of type DOUBLE
 		once
 			Result := old_double_bits
 		end
 
-	Integer_bits: INTEGER is
+	Integer_bits: INTEGER
 			-- Number of bits in a value of type INTEGER
 		once
 			Result := old_integer_bits
 		end
 
-	Pointer_bits: INTEGER is
+	Pointer_bits: INTEGER
 			-- Number of bits in a value of type POINTER
 		once
 			Result := old_pointer_bits
 		end
 
-	Real_bits: INTEGER is
+	Real_bits: INTEGER
 			-- Number of bits in a value of type REAL
 		once
 			Result := old_real_bits
@@ -90,37 +90,37 @@ feature -- Bits
 
 feature -- Bytes
 
-	Boolean_bytes: INTEGER is
+	Boolean_bytes: INTEGER
 			-- Number of bytes in a value of type BOOLEAN
 		once
 			Result := old_boolean_bytes
 		end
 
-	Character_bytes: INTEGER is
+	Character_bytes: INTEGER
 			-- Number of bytes in a value of type CHARACTER
 		once
 			Result := 1
 		end
 
-	Double_bytes: INTEGER is
+	Double_bytes: INTEGER
 			-- Number of bytes in a value of type DOUBLE
 		once
 			Result := old_double_bytes
 		end
 
-	Integer_bytes: INTEGER is
+	Integer_bytes: INTEGER
 			-- Number of bytes in a value of type INTEGER
 		once
 			Result := old_integer_bytes
 		end
 
-	Pointer_bytes: INTEGER is
+	Pointer_bytes: INTEGER
 			-- Number of bytes in a value of type POINTER
 		once
 			Result := old_pointer_bytes
 		end
 
-	Real_bytes: INTEGER is
+	Real_bytes: INTEGER
 			-- Number of bytes in a value of type REAL
 		once
 			Result := old_real_bytes
@@ -128,37 +128,37 @@ feature -- Bytes
 
 feature -- Values
 
-	Minimum_character_code: INTEGER is
+	Minimum_character_code: INTEGER
 			-- Smallest supported code for CHARACTER values
 		once
 			Result := {CHARACTER}.min_value
 		end
 
-	Maximum_character_code: INTEGER is
+	Maximum_character_code: INTEGER
 			-- Largest supported code for CHARACTER values
 		once
 			Result := {CHARACTER}.max_value
 		end
 
-	Minimum_integer: INTEGER is
+	Minimum_integer: INTEGER
 			-- Smallest supported value of type INTEGER
 		once
 			Result := {INTEGER}.min_value
 		end
 
-	Maximum_integer: INTEGER is
+	Maximum_integer: INTEGER
 			-- Largest supported value of type INTEGER
 		once
 			Result := {INTEGER}.max_value
 		end
 
-	Minimum_integer_64: INTEGER_64 is
+	Minimum_integer_64: INTEGER_64
 			-- Smallest supported value of type INTEGER_64
 		once
 			Result := -9223372036854775808
 		end
 
-	Maximum_integer_64: INTEGER_64 is
+	Maximum_integer_64: INTEGER_64
 			-- Largest supported value of type INTEGER_64
 		once
 			Result := 9223372036854775807

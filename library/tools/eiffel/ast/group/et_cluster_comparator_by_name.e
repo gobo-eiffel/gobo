@@ -25,14 +25,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new comparator.
 		do
 		end
 
 feature -- Status report
 
-	less_than (u, v: ET_CLUSTER): BOOLEAN is
+	less_than (u, v: ET_CLUSTER): BOOLEAN
 			-- Is `u' considered less than `v'?
 		do
 			Result := (STRING_.three_way_case_insensitive_comparison (u.name, v.name) = -1)

@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (symbols: like label; state: like target) is
+	make (symbols: like label; state: like target)
 			-- Create a new transition to
 			-- `target', labeled `symbols'.
 		require
@@ -51,7 +51,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_label (symbols: like label) is
+	set_label (symbols: like label)
 			-- Set `label' to `symbols'.
 		require
 			symbols_not_void: symbols /= Void
@@ -64,7 +64,7 @@ feature -- Setting
 
 feature -- Status report
 
-	labeled (symbol: INTEGER): BOOLEAN is
+	labeled (symbol: INTEGER): BOOLEAN
 			-- Is current transition labeled `symbol'?
 		do
 			if label.negated then
@@ -76,14 +76,14 @@ feature -- Status report
 
 feature -- Equivalence classes
 
-	record (equiv_classes: LX_EQUIVALENCE_CLASSES) is
+	record (equiv_classes: LX_EQUIVALENCE_CLASSES)
 			-- Update set label equivalence classes `equiv_classes'
 			-- with transition labels, if any.
 		do
 			equiv_classes.add (label)
 		end
 
-	recordable (equiv_classes: LX_EQUIVALENCE_CLASSES): BOOLEAN is
+	recordable (equiv_classes: LX_EQUIVALENCE_CLASSES): BOOLEAN
 			-- May current transition be recorded in `equiv_classes'?
 		do
 			Result := equiv_classes.valid_symbol_class (label)

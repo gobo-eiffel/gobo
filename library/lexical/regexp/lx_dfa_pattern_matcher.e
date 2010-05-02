@@ -22,13 +22,13 @@ inherit
 
 feature -- Status report
 
-	is_compiled: BOOLEAN is
+	is_compiled: BOOLEAN
 			-- Has pattern been sucessfully compiled?
 		do
 			Result := yy_nxt /= Void
 		end
 
-	matches (a_string: STRING): BOOLEAN is
+	matches (a_string: STRING): BOOLEAN
 			-- Does `a_string' include a token of the language
 			-- described by current pattern?
 		local
@@ -59,7 +59,7 @@ feature -- Status report
 			end
 		end
 
-	recognizes (a_string: STRING): BOOLEAN is
+	recognizes (a_string: STRING): BOOLEAN
 			-- Is `a_string' a token of the language
 			-- described by current pattern?
 		local
@@ -81,7 +81,7 @@ feature -- Status report
 
 feature -- Access
 
-	captured_start_position (n: INTEGER): INTEGER is
+	captured_start_position (n: INTEGER): INTEGER
 			-- Start position of the `n'-th captured substring;
 			-- 'n = 0' represents the whole matched string.
 			-- Return 0 if undefined captured substring.
@@ -89,7 +89,7 @@ feature -- Access
 			Result := matched_start
 		end
 
-	captured_end_position (n: INTEGER): INTEGER is
+	captured_end_position (n: INTEGER): INTEGER
 			-- End position of the `n'-th captured substring;
 			-- 'n = 0' represents the whole matched string.
 			-- Return -1 if undefined captured substring.
@@ -99,7 +99,7 @@ feature -- Access
 
 feature -- Matching
 
-	match_substring (a_subject: STRING; a_from, a_to: INTEGER) is
+	match_substring (a_subject: STRING; a_from, a_to: INTEGER)
 			-- Try to match the substring of `a_subject' between
 			-- positions `a_from' and `a_to' with the current pattern.
 			-- Make result available in `has_matched' and the various
@@ -129,7 +129,7 @@ feature -- Matching
 			end
 		end
 
-	match_unbounded_substring (a_subject: STRING; a_from, a_to: INTEGER) is
+	match_unbounded_substring (a_subject: STRING; a_from, a_to: INTEGER)
 			-- Try to match the substring of `a_subject' between
 			-- positions `a_from' and `a_to' with the current pattern.
 			-- Make result available in `has_matched' and the various
@@ -143,7 +143,7 @@ feature -- Matching
 
 feature -- Resetting
 
-	reset is
+	reset
 			-- Reset the pattern.
 		do
 			pattern := Void
@@ -162,7 +162,7 @@ feature {NONE} -- Matching
 	matched_end: INTEGER
 			-- End position of the last match
 
-	smallest_end_position (a_string: STRING; start_pos: INTEGER): INTEGER is
+	smallest_end_position (a_string: STRING; start_pos: INTEGER): INTEGER
 			-- Position of the last character of the smallest
 			-- token in `a_string' starting at position `start_pos'
 			-- and matched by current pattern;
@@ -204,7 +204,7 @@ feature {NONE} -- Matching
 			valid_position: Result /= -1 implies (start_pos <= Result + 1 and Result <= a_string.count)
 		end
 
-	longest_end_position (a_string: STRING; start_pos: INTEGER): INTEGER is
+	longest_end_position (a_string: STRING; start_pos: INTEGER): INTEGER
 			-- Position of the last character of the longest
 			-- token in `a_string' starting at position `start_pos'
 			-- and matched by current pattern;

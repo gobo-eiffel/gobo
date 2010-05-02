@@ -21,7 +21,7 @@ inherit
 
 feature -- Access
 
-	lower_name: STRING is
+	lower_name: STRING
 			-- Lower-name of feature call
 			-- (May return the same object as `name' if already in lower case.)
 		do

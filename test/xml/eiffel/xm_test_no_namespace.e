@@ -1,7 +1,7 @@
 note
-	
+
 	description:
-	
+
 		"Test namespace resolution"
 
 	test_status: "ok_to_run"
@@ -10,15 +10,15 @@ note
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class XM_TEST_NO_NAMESPACE
 
 inherit
 
 	TS_TEST_CASE
-	
+
 	XM_CALLBACKS_FILTER_FACTORY
-	
+
 	KL_SHARED_STANDARD_FILES
 
 create
@@ -27,21 +27,21 @@ create
 
 feature -- Test
 
-	test_regular is
+	test_regular
 		do
 			assert_name ("basic", "<a/>",<<"a">>)
 			assert_name ("namspaced", "<a:bc d:ef='z'/>", <<"a:bc", "d:ef">>)
 		end
-		
-	test_element_single is
+
+	test_element_single
 		do
 			assert_name ("single colon", "<:/>", <<":">>)
 			assert_name ("front", "<:ab></:ab>", <<":ab">>)
 			assert_name ("back", "<c:></c:>", <<"c:">>)
 			assert_name ("both", "<:abc:/>", <<":abc:">>)
 		end
-	
-	test_element_multiple is
+
+	test_element_multiple
 		do
 			assert_name ("front", "<:ab:c></:ab:c>", <<":ab:c">>)
 			assert_name ("back", "<ee:c:></ee:c:>", <<"ee:c:">>)
@@ -50,7 +50,7 @@ feature -- Test
 			assert_name ("three in", "<abc:de:fgh></abc:de:fgh>", <<"abc:de:fgh">>)
 		end
 
-	test_attribute is
+	test_attribute
 		do
 			assert_name ("attr simple", "<: :='a'/>", <<":",":">>)
 			assert_name ("attr middle", "<a:bcd e:fg='a'/>", <<"a:bcd","e:fg">>)
@@ -59,7 +59,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	assert_name (a_name: STRING; a_in: STRING; a_ns: ARRAY[STRING]) is
+	assert_name (a_name: STRING; a_in: STRING; a_ns: ARRAY[STRING])
 			-- Test that an XML document sequence of local part
 			-- events (excluding xmlns, flattened) is correct when
 			-- namespace parsing is disabled.
@@ -73,14 +73,14 @@ feature {NONE} -- Implementation
 		do
 			create a_parser.make
 			a_parser.disable_namespaces -- this is what is being tested!
-			
+
 			create a_checker.make_null
 			a_checker.set (a_ns)
 			a_parser.set_callbacks (standard_callbacks_pipe (<<a_checker>>))
 			a_parser.parse_from_string (a_in)
-			
+
 			assert ("parsing ok for "+a_name, a_parser.is_correct)
 			assert (a_name, not a_checker.has_failed)
 		end
-		
+
 end

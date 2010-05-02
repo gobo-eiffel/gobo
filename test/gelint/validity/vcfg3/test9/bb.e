@@ -6,7 +6,7 @@ inherit
 
 feature
 
-	g is
+	g
 		local
 			e: EE
 			d: DD [EE]

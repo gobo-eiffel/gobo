@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type: like type; a_feature: like convert_feature; e: like expression) is
+	make (a_type: like type; a_feature: like convert_feature; e: like expression)
 			-- Create a new built-in conversion expression.
 		require
 			a_type_not_void: a_type /= Void
@@ -48,7 +48,7 @@ feature -- Access
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_convert_builtin_expression (Current)

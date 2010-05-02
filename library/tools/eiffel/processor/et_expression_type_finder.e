@@ -85,7 +85,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new feature validity checker.
 		do
 			create type_checker.make
@@ -103,7 +103,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	find_expression_type_in_feature (a_expression: ET_EXPRESSION; a_feature: ET_FEATURE; a_context: ET_NESTED_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT) is
+	find_expression_type_in_feature (a_expression: ET_EXPRESSION; a_feature: ET_FEATURE; a_context: ET_NESTED_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT)
 			-- Expression `a_expression' (whose possible attachment target is of type
 			-- `a_target_type') appears in the body of `a_feature' and is viewed from
 			-- `a_context' (`a_feature' is a feature of the root context of `a_context').
@@ -155,7 +155,7 @@ feature -- Basic operations
 			current_feature_impl := old_feature_impl
 		end
 
-	find_expression_type_in_agent (a_expression: ET_EXPRESSION; a_agent: ET_INLINE_AGENT; a_feature: ET_STANDALONE_CLOSURE; a_context: ET_NESTED_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT) is
+	find_expression_type_in_agent (a_expression: ET_EXPRESSION; a_agent: ET_INLINE_AGENT; a_feature: ET_STANDALONE_CLOSURE; a_context: ET_NESTED_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT)
 			-- Expression `a_expression' (whose possible attachment target is of type
 			-- `a_target_type') appears in inline agent `a_agent' in the body of feature
 			-- or invariant `a_feature' and is viewed from `a_context' (`a_feature' is
@@ -211,7 +211,7 @@ feature -- Basic operations
 			current_inline_agent := Void
 		end
 
-	find_expression_type_in_precondition (a_expression: ET_EXPRESSION; a_feature_impl, a_feature: ET_FEATURE; a_context: ET_NESTED_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT) is
+	find_expression_type_in_precondition (a_expression: ET_EXPRESSION; a_feature_impl, a_feature: ET_FEATURE; a_context: ET_NESTED_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT)
 			-- Expression `a_expression' (whose possible attachment target is of type
 			-- `a_target_type') appears in the precondition of `a_feature' (written in
 			-- `a_feature_impl') and is viewed from `a_context' (`a_feature' is a feature
@@ -278,7 +278,7 @@ feature -- Basic operations
 			current_feature_impl := old_feature_impl
 		end
 
-	find_expression_type_in_postcondition (a_expression: ET_EXPRESSION; a_feature_impl, a_feature: ET_FEATURE; a_context: ET_NESTED_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT) is
+	find_expression_type_in_postcondition (a_expression: ET_EXPRESSION; a_feature_impl, a_feature: ET_FEATURE; a_context: ET_NESTED_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT)
 			-- Expression `a_expression' (whose possible attachment target is of type
 			-- `a_target_type') appears in the postcondition of `a_feature' (written in
 			-- `a_feature_impl') and is viewed from `a_context' (`a_feature' is a feature
@@ -343,7 +343,7 @@ feature -- Basic operations
 			current_feature_impl := old_feature_impl
 		end
 
-	find_expression_type_in_invariant (a_expression: ET_EXPRESSION; a_invariant: ET_INVARIANTS; a_context: ET_NESTED_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT) is
+	find_expression_type_in_invariant (a_expression: ET_EXPRESSION; a_invariant: ET_INVARIANTS; a_context: ET_NESTED_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT)
 			-- Expression `a_expression' (whose possible attachment target is of type
 			-- `a_target_type') appears in `a_invariant' and is viewed from `a_context'
 			-- (`a_invariant' is an invariant of the root context of `a_context').
@@ -411,7 +411,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_internal_error_enabled (b: BOOLEAN) is
+	set_internal_error_enabled (b: BOOLEAN)
 			-- Set `internal_error_enabled' to `b'.
 		do
 			internal_error_enabled := b
@@ -421,7 +421,7 @@ feature -- Status setting
 
 feature {NONE} -- Expression processing
 
-	find_binary_integer_constant_type (a_constant: ET_BINARY_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_binary_integer_constant_type (a_constant: ET_BINARY_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -432,7 +432,7 @@ feature {NONE} -- Expression processing
 			find_integer_constant_type (a_constant, a_context)
 		end
 
-	find_bit_constant_type (a_constant: ET_BIT_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_bit_constant_type (a_constant: ET_BIT_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -449,7 +449,7 @@ feature {NONE} -- Expression processing
 			a_context.force_last (l_type)
 		end
 
-	find_bracket_expression_type (an_expression: ET_BRACKET_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_bracket_expression_type (an_expression: ET_BRACKET_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -460,7 +460,7 @@ feature {NONE} -- Expression processing
 			find_qualified_call_expression_type (an_expression, a_context)
 		end
 
-	find_c1_character_constant_type (a_constant: ET_C1_CHARACTER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_c1_character_constant_type (a_constant: ET_C1_CHARACTER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -471,7 +471,7 @@ feature {NONE} -- Expression processing
 			find_character_constant_type (a_constant, a_context)
 		end
 
-	find_c2_character_constant_type (a_constant: ET_C2_CHARACTER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_c2_character_constant_type (a_constant: ET_C2_CHARACTER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -482,7 +482,7 @@ feature {NONE} -- Expression processing
 			find_character_constant_type (a_constant, a_context)
 		end
 
-	find_c3_character_constant_type (a_constant: ET_C3_CHARACTER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_c3_character_constant_type (a_constant: ET_C3_CHARACTER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -493,7 +493,7 @@ feature {NONE} -- Expression processing
 			find_character_constant_type (a_constant, a_context)
 		end
 
-	find_call_expression_type (an_expression: ET_CALL_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_call_expression_type (an_expression: ET_CALL_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -508,7 +508,7 @@ feature {NONE} -- Expression processing
 			end
 		end
 
-	find_character_constant_type (a_constant: ET_CHARACTER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_character_constant_type (a_constant: ET_CHARACTER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -526,7 +526,7 @@ feature {NONE} -- Expression processing
 			a_context.force_last (l_type)
 		end
 
-	find_convert_builtin_expression_type (an_expression: ET_CONVERT_BUILTIN_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_convert_builtin_expression_type (an_expression: ET_CONVERT_BUILTIN_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -541,7 +541,7 @@ feature {NONE} -- Expression processing
 			a_context.force_last (l_type)
 		end
 
-	find_convert_from_expression_type (an_expression: ET_CONVERT_FROM_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_convert_from_expression_type (an_expression: ET_CONVERT_FROM_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -552,7 +552,7 @@ feature {NONE} -- Expression processing
 			find_creation_expression_type (an_expression, a_context)
 		end
 
-	find_convert_to_expression_type (an_expression: ET_CONVERT_TO_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_convert_to_expression_type (an_expression: ET_CONVERT_TO_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -563,7 +563,7 @@ feature {NONE} -- Expression processing
 			find_qualified_call_expression_type (an_expression, a_context)
 		end
 
-	find_create_expression_type (an_expression: ET_CREATION_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_create_expression_type (an_expression: ET_CREATION_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -574,7 +574,7 @@ feature {NONE} -- Expression processing
 			find_creation_expression_type (an_expression, a_context)
 		end
 
-	find_creation_expression_type (an_expression: ET_CREATION_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_creation_expression_type (an_expression: ET_CREATION_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -589,7 +589,7 @@ feature {NONE} -- Expression processing
 			a_context.force_last (l_creation_type)
 		end
 
-	find_current_type (an_expression: ET_CURRENT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_current_type (an_expression: ET_CURRENT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -601,7 +601,7 @@ feature {NONE} -- Expression processing
 			a_context.force_last (current_type)
 		end
 
-	find_current_address_type (an_expression: ET_CURRENT_ADDRESS; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_current_address_type (an_expression: ET_CURRENT_ADDRESS; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -629,7 +629,7 @@ feature {NONE} -- Expression processing
 			end
 		end
 
-	find_equality_expression_type (an_expression: ET_EQUALITY_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_equality_expression_type (an_expression: ET_EQUALITY_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -641,7 +641,7 @@ feature {NONE} -- Expression processing
 			a_context.force_last (current_universe_impl.boolean_type)
 		end
 
-	find_expression_address_type (an_expression: ET_EXPRESSION_ADDRESS; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_expression_address_type (an_expression: ET_EXPRESSION_ADDRESS; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -681,7 +681,7 @@ feature {NONE} -- Expression processing
 			end
 		end
 
-	find_false_constant_type (a_constant: ET_FALSE_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_false_constant_type (a_constant: ET_FALSE_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -693,7 +693,7 @@ feature {NONE} -- Expression processing
 			a_context.force_last (current_universe_impl.boolean_type)
 		end
 
-	find_feature_address_type (an_expression: ET_FEATURE_ADDRESS; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_feature_address_type (an_expression: ET_FEATURE_ADDRESS; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -740,19 +740,19 @@ feature {NONE} -- Expression processing
 						-- For example:
 						--    deferred class A
 						--    feature
-						--       f (a: ANY) is
+						--       f (a: ANY)
 						--           require
 						--               pre: g ($a)
 						--           deferred
 						--           end
-						--      g (a: TYPED_POINTER [ANY]): BOOLEAN is deferred end
+						--      g (a: TYPED_POINTER [ANY]): BOOLEAN deferred end
 						--    end
 						--    class B
 						--    inherit
 						--        A
 						--    feature
-						--        f (a: STRING) is do ... end
-						--        g (a: TYPED_POINTER [STRING]): BOOLEAN is do ... end
+						--        f (a: STRING) do ... end
+						--        g (a: TYPED_POINTER [STRING]): BOOLEAN do ... end
 						--    end
 						-- `a' in the inherited precondition "pre" should be considered
 						-- of type STRING (and not ANY) is class B.
@@ -920,7 +920,7 @@ feature {NONE} -- Expression processing
 			end
 		end
 
-	find_formal_argument_type (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_formal_argument_type (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `a_name' appears.
 			-- It will be altered on exit to represent the type of `a_name'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -944,19 +944,19 @@ feature {NONE} -- Expression processing
 					-- For example:
 					--    deferred class A
 					--    feature
-					--       f (a: ANY) is
+					--       f (a: ANY)
 					--           require
 					--               pre: g (a)
 					--           deferred
 					--           end
-					--      g (a: ANY): BOOLEAN is deferred end
+					--      g (a: ANY): BOOLEAN deferred end
 					--    end
 					--    class B
 					--    inherit
 					--        A
 					--    feature
-					--        f (a: STRING) is do ... end
-					--        g (a: STRING): BOOLEAN is do ... end
+					--        f (a: STRING) do ... end
+					--        g (a: STRING): BOOLEAN do ... end
 					--    end
 					-- `a' in the inherited precondition "pre" should be considered
 					-- of type STRING (and not ANY) is class B.
@@ -986,7 +986,7 @@ feature {NONE} -- Expression processing
 			end
 		end
 
-	find_hexadecimal_integer_constant_type (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_hexadecimal_integer_constant_type (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -997,7 +997,7 @@ feature {NONE} -- Expression processing
 			find_integer_constant_type (a_constant, a_context)
 		end
 
-	find_infix_cast_expression_type (an_expression: ET_INFIX_CAST_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_infix_cast_expression_type (an_expression: ET_INFIX_CAST_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1012,7 +1012,7 @@ feature {NONE} -- Expression processing
 			a_context.force_last (l_type)
 		end
 
-	find_infix_expression_type (an_expression: ET_INFIX_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_infix_expression_type (an_expression: ET_INFIX_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1092,7 +1092,7 @@ feature {NONE} -- Expression processing
 			end
 		end
 
-	find_integer_constant_type (a_constant: ET_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_integer_constant_type (a_constant: ET_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1110,7 +1110,7 @@ feature {NONE} -- Expression processing
 			a_context.force_last (l_type)
 		end
 
-	find_local_variable_type (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_local_variable_type (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `a_name' appears.
 			-- It will be altered on exit to represent the type of `a_name'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1150,7 +1150,7 @@ feature {NONE} -- Expression processing
 			end
 		end
 
-	find_manifest_array_type (an_expression: ET_MANIFEST_ARRAY; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_manifest_array_type (an_expression: ET_MANIFEST_ARRAY; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1281,7 +1281,7 @@ feature {NONE} -- Expression processing
 			end
 		end
 
-	find_manifest_string_type (a_string: ET_MANIFEST_STRING; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_manifest_string_type (a_string: ET_MANIFEST_STRING; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `a_string' appears.
 			-- It will be altered on exit to represent the type of `a_string'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1299,7 +1299,7 @@ feature {NONE} -- Expression processing
 			a_context.force_last (l_type)
 		end
 
-	find_manifest_tuple_type (an_expression: ET_MANIFEST_TUPLE; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_manifest_tuple_type (an_expression: ET_MANIFEST_TUPLE; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1379,7 +1379,7 @@ feature {NONE} -- Expression processing
 			end
 		end
 
-	find_manifest_type_type (an_expression: ET_MANIFEST_TYPE; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_manifest_type_type (an_expression: ET_MANIFEST_TYPE; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1403,7 +1403,7 @@ feature {NONE} -- Expression processing
 			a_context.force_last (l_type_type)
 		end
 
-	find_object_equality_expression_type (an_expression: ET_OBJECT_EQUALITY_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_object_equality_expression_type (an_expression: ET_OBJECT_EQUALITY_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1415,7 +1415,7 @@ feature {NONE} -- Expression processing
 			a_context.force_last (current_universe_impl.boolean_type)
 		end
 
-	find_object_test_type (an_expression: ET_OBJECT_TEST; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_object_test_type (an_expression: ET_OBJECT_TEST; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1427,7 +1427,7 @@ feature {NONE} -- Expression processing
 			a_context.force_last (current_universe_impl.boolean_type)
 		end
 
-	find_object_test_local_type (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_object_test_local_type (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `a_name' appears.
 			-- It will be altered on exit to represent the type of `a_name'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1471,7 +1471,7 @@ feature {NONE} -- Expression processing
 			end
 		end
 
-	find_octal_integer_constant_type (a_constant: ET_OCTAL_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_octal_integer_constant_type (a_constant: ET_OCTAL_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1482,7 +1482,7 @@ feature {NONE} -- Expression processing
 			find_integer_constant_type (a_constant, a_context)
 		end
 
-	find_old_expression_type (an_expression: ET_OLD_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_old_expression_type (an_expression: ET_OLD_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1496,7 +1496,7 @@ feature {NONE} -- Expression processing
 			find_expression_type (l_expression, a_context, current_target_type)
 		end
 
-	find_once_manifest_string_type (an_expression: ET_ONCE_MANIFEST_STRING; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_once_manifest_string_type (an_expression: ET_ONCE_MANIFEST_STRING; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1510,7 +1510,7 @@ feature {NONE} -- Expression processing
 			find_expression_type (l_string, a_context, current_target_type)
 		end
 
-	find_parenthesized_expression_type (an_expression: ET_PARENTHESIZED_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_parenthesized_expression_type (an_expression: ET_PARENTHESIZED_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1524,7 +1524,7 @@ feature {NONE} -- Expression processing
 			find_expression_type (l_expression, a_context, current_target_type)
 		end
 
-	find_precursor_expression_type (an_expression: ET_PRECURSOR_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_precursor_expression_type (an_expression: ET_PRECURSOR_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1570,7 +1570,7 @@ feature {NONE} -- Expression processing
 			end
 		end
 
-	find_prefix_expression_type (an_expression: ET_PREFIX_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_prefix_expression_type (an_expression: ET_PREFIX_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1581,7 +1581,7 @@ feature {NONE} -- Expression processing
 			find_qualified_call_expression_type (an_expression, a_context)
 		end
 
-	find_qualified_call_expression_type (a_call: ET_FEATURE_CALL_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_qualified_call_expression_type (a_call: ET_FEATURE_CALL_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `a_call' appears.
 			-- It will be altered on exit to represent the type of `a_call'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1685,7 +1685,7 @@ feature {NONE} -- Expression processing
 			end
 		end
 
-	find_real_constant_type (a_constant: ET_REAL_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_real_constant_type (a_constant: ET_REAL_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1703,7 +1703,7 @@ feature {NONE} -- Expression processing
 			a_context.force_last (l_type)
 		end
 
-	find_regular_integer_constant_type (a_constant: ET_REGULAR_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_regular_integer_constant_type (a_constant: ET_REGULAR_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1714,7 +1714,7 @@ feature {NONE} -- Expression processing
 			find_integer_constant_type (a_constant, a_context)
 		end
 
-	find_regular_manifest_string_type (a_string: ET_REGULAR_MANIFEST_STRING; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_regular_manifest_string_type (a_string: ET_REGULAR_MANIFEST_STRING; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `a_string' appears.
 			-- It will be altered on exit to represent the type of `a_string'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1725,7 +1725,7 @@ feature {NONE} -- Expression processing
 			find_manifest_string_type (a_string, a_context)
 		end
 
-	find_regular_real_constant_type (a_constant: ET_REGULAR_REAL_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_regular_real_constant_type (a_constant: ET_REGULAR_REAL_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1736,7 +1736,7 @@ feature {NONE} -- Expression processing
 			find_real_constant_type (a_constant, a_context)
 		end
 
-	find_result_type (an_expression: ET_RESULT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_result_type (an_expression: ET_RESULT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1756,19 +1756,19 @@ feature {NONE} -- Expression processing
 					-- For example:
 					--    deferred class A
 					--    feature
-					--       f: ANY is
+					--       f: ANY
 					--           deferred
 					--           ensure
 					--              post: g (Result)
 					--           end
-					--      g (a: ANY): BOOLEAN is deferred end
+					--      g (a: ANY): BOOLEAN deferred end
 					--    end
 					--    class B
 					--    inherit
 					--        A
 					--    feature
-					--        f: STRING is do ... end
-					--        g (a: STRING): BOOLEAN is do ... end
+					--        f: STRING do ... end
+					--        g (a: STRING): BOOLEAN do ... end
 					--    end
 					-- 'Result' in the inherited postcondition "post" should be considered
 					-- of type STRING (and not ANY) is class B.
@@ -1787,7 +1787,7 @@ feature {NONE} -- Expression processing
 			end
 		end
 
-	find_result_address_type (an_expression: ET_RESULT_ADDRESS; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_result_address_type (an_expression: ET_RESULT_ADDRESS; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1810,19 +1810,19 @@ feature {NONE} -- Expression processing
 					-- For example:
 					--    deferred class A
 					--    feature
-					--       f: ANY is
+					--       f: ANY
 					--           deferred
 					--           ensure
 					--              post: g ($Result)
 					--           end
-					--      g (a: TYPED_POINTER [ANY]): BOOLEAN is deferred end
+					--      g (a: TYPED_POINTER [ANY]): BOOLEAN deferred end
 					--    end
 					--    class B
 					--    inherit
 					--        A
 					--    feature
-					--        f: STRING is do ... end
-					--        g (a: TYPED_POINTER [STRING]): BOOLEAN is do ... end
+					--        f: STRING do ... end
+					--        g (a: TYPED_POINTER [STRING]): BOOLEAN do ... end
 					--    end
 					-- 'Result' in the inherited postcondition "post" should be considered
 					-- of type STRING (and not ANY) is class B.
@@ -1852,7 +1852,7 @@ feature {NONE} -- Expression processing
 			end
 		end
 
-	find_special_manifest_string_type (a_string: ET_SPECIAL_MANIFEST_STRING; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_special_manifest_string_type (a_string: ET_SPECIAL_MANIFEST_STRING; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `a_string' appears.
 			-- It will be altered on exit to represent the type of `a_string'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1863,7 +1863,7 @@ feature {NONE} -- Expression processing
 			find_manifest_string_type (a_string, a_context)
 		end
 
-	find_static_call_expression_type (an_expression: ET_STATIC_CALL_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_static_call_expression_type (an_expression: ET_STATIC_CALL_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1910,7 +1910,7 @@ feature {NONE} -- Expression processing
 			end
 		end
 
-	find_strip_expression_type (an_expression: ET_STRIP_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_strip_expression_type (an_expression: ET_STRIP_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1922,7 +1922,7 @@ feature {NONE} -- Expression processing
 			a_context.force_last (current_system.array_any_type)
 		end
 
-	find_true_constant_type (a_constant: ET_TRUE_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_true_constant_type (a_constant: ET_TRUE_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1934,7 +1934,7 @@ feature {NONE} -- Expression processing
 			a_context.force_last (current_universe_impl.boolean_type)
 		end
 
-	find_underscored_integer_constant_type (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_underscored_integer_constant_type (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1945,7 +1945,7 @@ feature {NONE} -- Expression processing
 			find_integer_constant_type (a_constant, a_context)
 		end
 
-	find_underscored_real_constant_type (a_constant: ET_UNDERSCORED_REAL_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_underscored_real_constant_type (a_constant: ET_UNDERSCORED_REAL_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1956,7 +1956,7 @@ feature {NONE} -- Expression processing
 			find_real_constant_type (a_constant, a_context)
 		end
 
-	find_unqualified_call_expression_type (a_call: ET_FEATURE_CALL_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_unqualified_call_expression_type (a_call: ET_FEATURE_CALL_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `a_call' appears.
 			-- It will be altered on exit to represent the type of `a_call'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -2035,7 +2035,7 @@ feature {NONE} -- Expression processing
 			end
 		end
 
-	find_verbatim_string_type (a_string: ET_VERBATIM_STRING; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_verbatim_string_type (a_string: ET_VERBATIM_STRING; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `a_string' appears.
 			-- It will be altered on exit to represent the type of `a_string'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -2046,7 +2046,7 @@ feature {NONE} -- Expression processing
 			find_manifest_string_type (a_string, a_context)
 		end
 
-	find_void_type (an_expression: ET_VOID; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_void_type (an_expression: ET_VOID; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -2058,7 +2058,7 @@ feature {NONE} -- Expression processing
 			a_context.force_last (current_system.none_type)
 		end
 
-	find_expression_type (an_expression: ET_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT) is
+	find_expression_type (an_expression: ET_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT)
 			-- Find type of `an_expression' (whose possible attachment target
 			-- is of type `a_target_type') in `current_feature' of `current_type'.
 			-- Set `has_fatal_error' if a fatal error occurred. Otherwise
@@ -2084,7 +2084,7 @@ feature {NONE} -- Expression processing
 
 feature {NONE} -- Agent validity
 
-	find_call_agent_type (an_expression: ET_CALL_AGENT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_call_agent_type (an_expression: ET_CALL_AGENT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -2120,7 +2120,7 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	find_unqualified_call_agent_type (an_expression: ET_CALL_AGENT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_unqualified_call_agent_type (an_expression: ET_CALL_AGENT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -2174,7 +2174,7 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	find_unqualified_query_call_agent_type (an_expression: ET_CALL_AGENT; a_query: ET_QUERY; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_unqualified_query_call_agent_type (an_expression: ET_CALL_AGENT; a_query: ET_QUERY; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -2224,7 +2224,7 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	find_unqualified_procedure_call_agent_type (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_unqualified_procedure_call_agent_type (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -2262,7 +2262,7 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	find_qualified_call_agent_type (an_expression: ET_CALL_AGENT; a_target: ET_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_qualified_call_agent_type (an_expression: ET_CALL_AGENT; a_target: ET_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -2331,7 +2331,7 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	find_qualified_query_call_agent_type (an_expression: ET_CALL_AGENT; a_target: ET_EXPRESSION; a_query: ET_QUERY; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_qualified_query_call_agent_type (an_expression: ET_CALL_AGENT; a_target: ET_EXPRESSION; a_query: ET_QUERY; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type of the target.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -2387,7 +2387,7 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	find_qualified_procedure_call_agent_type (an_expression: ET_CALL_AGENT; a_target: ET_EXPRESSION; a_procedure: ET_PROCEDURE; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_qualified_procedure_call_agent_type (an_expression: ET_CALL_AGENT; a_target: ET_EXPRESSION; a_procedure: ET_PROCEDURE; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type of the target.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -2431,7 +2431,7 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	find_qualified_tuple_label_call_agent_type (an_expression: ET_CALL_AGENT; a_target: ET_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_qualified_tuple_label_call_agent_type (an_expression: ET_CALL_AGENT; a_target: ET_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type of the target.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -2475,7 +2475,7 @@ feature {NONE} -- Agent validity
 			a_context.force_last (l_agent_type)
 		end
 
-	find_typed_call_agent_type (an_expression: ET_CALL_AGENT; a_target: ET_AGENT_OPEN_TARGET; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_typed_call_agent_type (an_expression: ET_CALL_AGENT; a_target: ET_AGENT_OPEN_TARGET; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -2540,7 +2540,7 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	find_typed_query_call_agent_type (an_expression: ET_CALL_AGENT; a_target: ET_AGENT_OPEN_TARGET; a_query: ET_QUERY; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_typed_query_call_agent_type (an_expression: ET_CALL_AGENT; a_target: ET_AGENT_OPEN_TARGET; a_query: ET_QUERY; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type of the target.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -2600,7 +2600,7 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	find_typed_procedure_call_agent_type (an_expression: ET_CALL_AGENT; a_target: ET_AGENT_OPEN_TARGET; a_procedure: ET_PROCEDURE; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_typed_procedure_call_agent_type (an_expression: ET_CALL_AGENT; a_target: ET_AGENT_OPEN_TARGET; a_procedure: ET_PROCEDURE; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type of the target.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -2648,7 +2648,7 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	find_typed_tuple_label_call_agent_type (an_expression: ET_CALL_AGENT; a_target: ET_AGENT_OPEN_TARGET; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_typed_tuple_label_call_agent_type (an_expression: ET_CALL_AGENT; a_target: ET_AGENT_OPEN_TARGET; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type of the target.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -2697,7 +2697,7 @@ feature {NONE} -- Agent validity
 			a_context.force_last (l_agent_type)
 		end
 
-	find_do_function_inline_agent_type (an_expression: ET_DO_FUNCTION_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_do_function_inline_agent_type (an_expression: ET_DO_FUNCTION_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -2708,7 +2708,7 @@ feature {NONE} -- Agent validity
 			find_query_inline_agent_type (an_expression, a_context)
 		end
 
-	find_do_procedure_inline_agent_type (an_expression: ET_DO_PROCEDURE_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_do_procedure_inline_agent_type (an_expression: ET_DO_PROCEDURE_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -2719,7 +2719,7 @@ feature {NONE} -- Agent validity
 			find_procedure_inline_agent_type (an_expression, a_context)
 		end
 
-	find_external_function_inline_agent_type (an_expression: ET_EXTERNAL_FUNCTION_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_external_function_inline_agent_type (an_expression: ET_EXTERNAL_FUNCTION_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -2730,7 +2730,7 @@ feature {NONE} -- Agent validity
 			find_query_inline_agent_type (an_expression, a_context)
 		end
 
-	find_external_procedure_inline_agent_type (an_expression: ET_EXTERNAL_PROCEDURE_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_external_procedure_inline_agent_type (an_expression: ET_EXTERNAL_PROCEDURE_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -2741,7 +2741,7 @@ feature {NONE} -- Agent validity
 			find_procedure_inline_agent_type (an_expression, a_context)
 		end
 
-	find_once_function_inline_agent_type (an_expression: ET_ONCE_FUNCTION_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_once_function_inline_agent_type (an_expression: ET_ONCE_FUNCTION_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -2752,7 +2752,7 @@ feature {NONE} -- Agent validity
 			find_query_inline_agent_type (an_expression, a_context)
 		end
 
-	find_once_procedure_inline_agent_type (an_expression: ET_ONCE_PROCEDURE_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_once_procedure_inline_agent_type (an_expression: ET_ONCE_PROCEDURE_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -2763,7 +2763,7 @@ feature {NONE} -- Agent validity
 			find_procedure_inline_agent_type (an_expression, a_context)
 		end
 
-	find_query_inline_agent_type (an_expression: ET_QUERY_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_query_inline_agent_type (an_expression: ET_QUERY_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -2807,7 +2807,7 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	find_procedure_inline_agent_type (an_expression: ET_PROCEDURE_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_procedure_inline_agent_type (an_expression: ET_PROCEDURE_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -2839,7 +2839,7 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	fill_open_operands (an_agent: ET_AGENT; a_closure: ET_CLOSURE; an_open_operands: ET_ACTUAL_PARAMETER_LIST) is
+	fill_open_operands (an_agent: ET_AGENT; a_closure: ET_CLOSURE; an_open_operands: ET_ACTUAL_PARAMETER_LIST)
 			-- Fill in `an_open_operands' the types of the open arguments of `an_agent'
 			-- where the corresponding formal arguments are those of `a_closure'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -2933,145 +2933,145 @@ feature {NONE} -- Agent validity
 
 feature {ET_AST_NODE} -- Processing
 
-	process_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT) is
+	process_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			find_binary_integer_constant_type (a_constant, current_context)
 		end
 
-	process_bit_constant (a_constant: ET_BIT_CONSTANT) is
+	process_bit_constant (a_constant: ET_BIT_CONSTANT)
 			-- Process `a_constant'.
 		do
 			find_bit_constant_type (a_constant, current_context)
 		end
 
-	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION) is
+	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			find_bracket_expression_type (an_expression, current_context)
 		end
 
-	process_c1_character_constant (a_constant: ET_C1_CHARACTER_CONSTANT) is
+	process_c1_character_constant (a_constant: ET_C1_CHARACTER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			find_c1_character_constant_type (a_constant, current_context)
 		end
 
-	process_c2_character_constant (a_constant: ET_C2_CHARACTER_CONSTANT) is
+	process_c2_character_constant (a_constant: ET_C2_CHARACTER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			find_c2_character_constant_type (a_constant, current_context)
 		end
 
-	process_c3_character_constant (a_constant: ET_C3_CHARACTER_CONSTANT) is
+	process_c3_character_constant (a_constant: ET_C3_CHARACTER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			find_c3_character_constant_type (a_constant, current_context)
 		end
 
-	process_call_agent (an_expression: ET_CALL_AGENT) is
+	process_call_agent (an_expression: ET_CALL_AGENT)
 			-- Process `an_expression'.
 		do
 			find_call_agent_type (an_expression, current_context)
 		end
 
-	process_call_expression (an_expression: ET_CALL_EXPRESSION) is
+	process_call_expression (an_expression: ET_CALL_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			find_call_expression_type (an_expression, current_context)
 		end
 
-	process_convert_builtin_expression (an_expression: ET_CONVERT_BUILTIN_EXPRESSION) is
+	process_convert_builtin_expression (an_expression: ET_CONVERT_BUILTIN_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			find_convert_builtin_expression_type (an_expression, current_context)
 		end
 
-	process_convert_from_expression (an_expression: ET_CONVERT_FROM_EXPRESSION) is
+	process_convert_from_expression (an_expression: ET_CONVERT_FROM_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			find_convert_from_expression_type (an_expression, current_context)
 		end
 
-	process_convert_to_expression (an_expression: ET_CONVERT_TO_EXPRESSION) is
+	process_convert_to_expression (an_expression: ET_CONVERT_TO_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			find_convert_to_expression_type (an_expression, current_context)
 		end
 
-	process_create_expression (an_expression: ET_CREATE_EXPRESSION) is
+	process_create_expression (an_expression: ET_CREATE_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			find_create_expression_type (an_expression, current_context)
 		end
 
-	process_current (an_expression: ET_CURRENT) is
+	process_current (an_expression: ET_CURRENT)
 			-- Process `an_expression'.
 		do
 			find_current_type (an_expression, current_context)
 		end
 
-	process_current_address (an_expression: ET_CURRENT_ADDRESS) is
+	process_current_address (an_expression: ET_CURRENT_ADDRESS)
 			-- Process `an_expression'.
 		do
 			find_current_address_type (an_expression, current_context)
 		end
 
-	process_do_function_inline_agent (an_expression: ET_DO_FUNCTION_INLINE_AGENT) is
+	process_do_function_inline_agent (an_expression: ET_DO_FUNCTION_INLINE_AGENT)
 			-- Process `an_expression'.
 		do
 			find_do_function_inline_agent_type (an_expression, current_context)
 		end
 
-	process_do_procedure_inline_agent (an_expression: ET_DO_PROCEDURE_INLINE_AGENT) is
+	process_do_procedure_inline_agent (an_expression: ET_DO_PROCEDURE_INLINE_AGENT)
 			-- Process `an_expression'.
 		do
 			find_do_procedure_inline_agent_type (an_expression, current_context)
 		end
 
-	process_equality_expression (an_expression: ET_EQUALITY_EXPRESSION) is
+	process_equality_expression (an_expression: ET_EQUALITY_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			find_equality_expression_type (an_expression, current_context)
 		end
 
-	process_expression_address (an_expression: ET_EXPRESSION_ADDRESS) is
+	process_expression_address (an_expression: ET_EXPRESSION_ADDRESS)
 			-- Process `an_expression'.
 		do
 			find_expression_address_type (an_expression, current_context)
 		end
 
-	process_external_function_inline_agent (an_expression: ET_EXTERNAL_FUNCTION_INLINE_AGENT) is
+	process_external_function_inline_agent (an_expression: ET_EXTERNAL_FUNCTION_INLINE_AGENT)
 			-- Process `an_expression'.
 		do
 			find_external_function_inline_agent_type (an_expression, current_context)
 		end
 
-	process_external_procedure_inline_agent (an_expression: ET_EXTERNAL_PROCEDURE_INLINE_AGENT) is
+	process_external_procedure_inline_agent (an_expression: ET_EXTERNAL_PROCEDURE_INLINE_AGENT)
 			-- Process `an_expression'.
 		do
 			find_external_procedure_inline_agent_type (an_expression, current_context)
 		end
 
-	process_false_constant (a_constant: ET_FALSE_CONSTANT) is
+	process_false_constant (a_constant: ET_FALSE_CONSTANT)
 			-- Process `a_constant'.
 		do
 			find_false_constant_type (a_constant, current_context)
 		end
 
-	process_feature_address (an_expression: ET_FEATURE_ADDRESS) is
+	process_feature_address (an_expression: ET_FEATURE_ADDRESS)
 			-- Process `an_expression'.
 		do
 			find_feature_address_type (an_expression, current_context)
 		end
 
-	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT) is
+	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			find_hexadecimal_integer_constant_type (a_constant, current_context)
 		end
 
-	process_identifier (an_identifier: ET_IDENTIFIER) is
+	process_identifier (an_identifier: ET_IDENTIFIER)
 			-- Process `an_identifier'.
 		do
 			if an_identifier.is_argument then
@@ -3085,181 +3085,181 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_infix_cast_expression (an_expression: ET_INFIX_CAST_EXPRESSION) is
+	process_infix_cast_expression (an_expression: ET_INFIX_CAST_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			find_infix_cast_expression_type (an_expression, current_context)
 		end
 
-	process_infix_expression (an_expression: ET_INFIX_EXPRESSION) is
+	process_infix_expression (an_expression: ET_INFIX_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			find_infix_expression_type (an_expression, current_context)
 		end
 
-	process_manifest_array (an_expression: ET_MANIFEST_ARRAY) is
+	process_manifest_array (an_expression: ET_MANIFEST_ARRAY)
 			-- Process `an_expression'.
 		do
 			find_manifest_array_type (an_expression, current_context)
 		end
 
-	process_manifest_tuple (an_expression: ET_MANIFEST_TUPLE) is
+	process_manifest_tuple (an_expression: ET_MANIFEST_TUPLE)
 			-- Process `an_expression'.
 		do
 			find_manifest_tuple_type (an_expression, current_context)
 		end
 
-	process_manifest_type (an_expression: ET_MANIFEST_TYPE) is
+	process_manifest_type (an_expression: ET_MANIFEST_TYPE)
 			-- Process `an_expression'.
 		do
 			find_manifest_type_type (an_expression, current_context)
 		end
 
-	process_named_object_test (an_expression: ET_NAMED_OBJECT_TEST) is
+	process_named_object_test (an_expression: ET_NAMED_OBJECT_TEST)
 			-- Process `an_expression'.
 		do
 			find_object_test_type (an_expression, current_context)
 		end
 
-	process_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION) is
+	process_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			find_object_equality_expression_type (an_expression, current_context)
 		end
 
-	process_object_test (an_expression: ET_OBJECT_TEST) is
+	process_object_test (an_expression: ET_OBJECT_TEST)
 			-- Process `an_expression'.
 		do
 			find_object_test_type (an_expression, current_context)
 		end
 
-	process_octal_integer_constant (a_constant: ET_OCTAL_INTEGER_CONSTANT) is
+	process_octal_integer_constant (a_constant: ET_OCTAL_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			find_octal_integer_constant_type (a_constant, current_context)
 		end
 
-	process_old_expression (an_expression: ET_OLD_EXPRESSION) is
+	process_old_expression (an_expression: ET_OLD_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			find_old_expression_type (an_expression, current_context)
 		end
 
-	process_old_object_test (an_expression: ET_OLD_OBJECT_TEST) is
+	process_old_object_test (an_expression: ET_OLD_OBJECT_TEST)
 			-- Process `an_expression'.
 		do
 			find_object_test_type (an_expression, current_context)
 		end
 
-	process_once_function_inline_agent (an_expression: ET_ONCE_FUNCTION_INLINE_AGENT) is
+	process_once_function_inline_agent (an_expression: ET_ONCE_FUNCTION_INLINE_AGENT)
 			-- Process `an_expression'.
 		do
 			find_once_function_inline_agent_type (an_expression, current_context)
 		end
 
-	process_once_manifest_string (an_expression: ET_ONCE_MANIFEST_STRING) is
+	process_once_manifest_string (an_expression: ET_ONCE_MANIFEST_STRING)
 			-- Process `an_expression'.
 		do
 			find_once_manifest_string_type (an_expression, current_context)
 		end
 
-	process_once_procedure_inline_agent (an_expression: ET_ONCE_PROCEDURE_INLINE_AGENT) is
+	process_once_procedure_inline_agent (an_expression: ET_ONCE_PROCEDURE_INLINE_AGENT)
 			-- Process `an_expression'.
 		do
 			find_once_procedure_inline_agent_type (an_expression, current_context)
 		end
 
-	process_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION) is
+	process_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			find_parenthesized_expression_type (an_expression, current_context)
 		end
 
-	process_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION) is
+	process_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			find_precursor_expression_type (an_expression, current_context)
 		end
 
-	process_prefix_expression (an_expression: ET_PREFIX_EXPRESSION) is
+	process_prefix_expression (an_expression: ET_PREFIX_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			find_prefix_expression_type (an_expression, current_context)
 		end
 
-	process_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT) is
+	process_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			find_regular_integer_constant_type (a_constant, current_context)
 		end
 
-	process_regular_manifest_string (a_string: ET_REGULAR_MANIFEST_STRING) is
+	process_regular_manifest_string (a_string: ET_REGULAR_MANIFEST_STRING)
 			-- Process `a_string'.
 		do
 			find_regular_manifest_string_type (a_string, current_context)
 		end
 
-	process_regular_real_constant (a_constant: ET_REGULAR_REAL_CONSTANT) is
+	process_regular_real_constant (a_constant: ET_REGULAR_REAL_CONSTANT)
 			-- Process `a_constant'.
 		do
 			find_regular_real_constant_type (a_constant, current_context)
 		end
 
-	process_result (an_expression: ET_RESULT) is
+	process_result (an_expression: ET_RESULT)
 			-- Process `an_expression'.
 		do
 			find_result_type (an_expression, current_context)
 		end
 
-	process_result_address (an_expression: ET_RESULT_ADDRESS) is
+	process_result_address (an_expression: ET_RESULT_ADDRESS)
 			-- Process `an_expression'.
 		do
 			find_result_address_type (an_expression, current_context)
 		end
 
-	process_special_manifest_string (a_string: ET_SPECIAL_MANIFEST_STRING) is
+	process_special_manifest_string (a_string: ET_SPECIAL_MANIFEST_STRING)
 			-- Process `a_string'.
 		do
 			find_special_manifest_string_type (a_string, current_context)
 		end
 
-	process_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION) is
+	process_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			find_static_call_expression_type (an_expression, current_context)
 		end
 
-	process_strip_expression (an_expression: ET_STRIP_EXPRESSION) is
+	process_strip_expression (an_expression: ET_STRIP_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			find_strip_expression_type (an_expression, current_context)
 		end
 
-	process_true_constant (a_constant: ET_TRUE_CONSTANT) is
+	process_true_constant (a_constant: ET_TRUE_CONSTANT)
 			-- Process `a_constant'.
 		do
 			find_true_constant_type (a_constant, current_context)
 		end
 
-	process_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT) is
+	process_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			find_underscored_integer_constant_type (a_constant, current_context)
 		end
 
-	process_underscored_real_constant (a_constant: ET_UNDERSCORED_REAL_CONSTANT) is
+	process_underscored_real_constant (a_constant: ET_UNDERSCORED_REAL_CONSTANT)
 			-- Process `a_constant'.
 		do
 			find_underscored_real_constant_type (a_constant, current_context)
 		end
 
-	process_verbatim_string (a_string: ET_VERBATIM_STRING) is
+	process_verbatim_string (a_string: ET_VERBATIM_STRING)
 			-- Process `a_string'.
 		do
 			find_verbatim_string_type (a_string, current_context)
 		end
 
-	process_void (an_expression: ET_VOID) is
+	process_void (an_expression: ET_VOID)
 			-- Process `an_expression'.
 		do
 			find_void_type (an_expression, current_context)
@@ -3278,19 +3278,19 @@ feature {NONE} -- Access
 			--
 			--    deferred class A
 			--    feature
-			--       f (a: ANY) is
+			--       f (a: ANY)
 			--           require
 			--               pre: g (a)
 			--           deferred
 			--           end
-			--      g (a: ANY): BOOLEAN is deferred end
+			--      g (a: ANY): BOOLEAN deferred end
 			--    end
 			--    class B
 			--    inherit
 			--        A
 			--    feature
-			--        f (a: STRING) is do ... end
-			--        g (a: STRING): BOOLEAN is do ... end
+			--        f (a: STRING) do ... end
+			--        g (a: STRING): BOOLEAN do ... end
 			--    end
 			--
 			-- When processing the inherited precondition 'pre' in B.f,
@@ -3300,7 +3300,7 @@ feature {NONE} -- Access
 	current_inline_agent: ET_INLINE_AGENT
 			-- Inline agent being processed if any, Void otherwise
 
-	current_closure: ET_CLOSURE is
+	current_closure: ET_CLOSURE
 			-- Inner closure being processed
 		do
 			if current_inline_agent /= Void then
@@ -3314,7 +3314,7 @@ feature {NONE} -- Access
 			not_in_agent: current_inline_agent = Void implies Result = current_feature
 		end
 
-	current_closure_impl: ET_CLOSURE is
+	current_closure_impl: ET_CLOSURE
 			-- Inner closure where the code being processed has been written
 		do
 			if current_inline_agent /= Void then
@@ -3340,7 +3340,7 @@ feature {NONE} -- Access
 	current_class_impl: ET_CLASS
 			-- Class where `current_feature_impl' has been written
 
-	current_universe_impl: ET_UNIVERSE is
+	current_universe_impl: ET_UNIVERSE
 			-- Universe to which `current_class_impl' belongs
 		do
 			Result := current_class_impl.universe
@@ -3375,7 +3375,7 @@ feature {NONE} -- Type checking
 
 feature {NONE} -- Type contexts
 
-	new_context (a_root_context: ET_BASE_TYPE): ET_NESTED_TYPE_CONTEXT is
+	new_context (a_root_context: ET_BASE_TYPE): ET_NESTED_TYPE_CONTEXT
 			-- New nested type context
 		require
 			a_root_context_not_void: a_root_context /= Void
@@ -3394,7 +3394,7 @@ feature {NONE} -- Type contexts
 			is_empty: Result.is_empty
 		end
 
-	free_context (a_context: ET_NESTED_TYPE_CONTEXT) is
+	free_context (a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Free `a_context' so that it can be reused.
 		require
 			a_context_not_void: a_context /= Void
@@ -3408,7 +3408,7 @@ feature {NONE} -- Type contexts
 
 feature {NONE} -- Constants
 
-	dummy_feature: ET_FEATURE is
+	dummy_feature: ET_FEATURE
 			-- Dummy feature
 		local
 			a_name: ET_FEATURE_NAME

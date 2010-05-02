@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_standard is
+	make_standard
 			-- Create a new Xace parser.
 			-- Error messages will be sent to standard files.
 		local
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			make (a_handler)
 		end
 
-	make (an_error_handler: like error_handler) is
+	make (an_error_handler: like error_handler)
 			-- Create a new Xace parser.
 		require
 			an_error_handler_not_void: an_error_handler /= Void
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			error_handler_set: error_handler = an_error_handler
 		end
 
-	make_with_factory (a_factory: like ast_factory; an_error_handler: like error_handler) is
+	make_with_factory (a_factory: like ast_factory; an_error_handler: like error_handler)
 			-- Create a new Xace parser using `a_factory' as AST factory.
 		require
 			a_factory_not_void: a_factory /= Void
@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 			error_handler_set: error_handler = an_error_handler
 		end
 
-	make_with_variables (a_variables: KL_VALUES [STRING, STRING]; an_error_handler: like error_handler) is
+	make_with_variables (a_variables: KL_VALUES [STRING, STRING]; an_error_handler: like error_handler)
 			-- Create a new Xace parser with variables defined in `a_variables'.
 		require
 			a_variables_not_void: a_variables /= Void
@@ -81,7 +81,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_with_variables_and_factory (a_variables: KL_VALUES [STRING, STRING];
-		a_factory: like ast_factory; an_error_handler: like error_handler) is
+		a_factory: like ast_factory; an_error_handler: like error_handler)
 			-- Create a new Xace parser with variables defined in `a_variables'
 			-- and using `a_factory' as AST factory.
 		require
@@ -125,7 +125,7 @@ feature {NONE} -- Initialization
 
 feature -- Parsing
 
-	parse_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+	parse_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Parse Xace file `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -183,7 +183,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_parsed_libraries (a_libraries: like parsed_libraries) is
+	set_parsed_libraries (a_libraries: like parsed_libraries)
 			-- Set `parsed_libraries' to `a_libraries'.
 		require
 			a_libraries_not_void: a_libraries /= Void

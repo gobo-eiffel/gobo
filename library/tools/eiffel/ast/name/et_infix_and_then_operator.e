@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new binary 'and then' operator.
 		do
 			and_keyword := tokens.and_keyword
@@ -35,15 +35,15 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_infix: BOOLEAN is True
+	is_infix: BOOLEAN = True
 			-- Is current feature name of the form 'infix ...'?
 
-	is_infix_and_then: BOOLEAN is True
+	is_infix_and_then: BOOLEAN = True
 			-- Is current feature name of the form 'infix "and then"'?
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Name of feature call
 		do
 			Result := tokens.infix_and_then_name
@@ -55,32 +55,32 @@ feature -- Access
 	then_keyword: ET_TOKEN
 			-- 'then' keyword
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code
 		do
 			Result := tokens.infix_and_then_code.code
 		end
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
 			Result := and_keyword.position
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := and_keyword
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := then_keyword
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := then_keyword.break
@@ -88,7 +88,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_and_keyword (an_and: like and_keyword) is
+	set_and_keyword (an_and: like and_keyword)
 			-- Set `and_keyword' to `an_and'.
 		require
 			an_and_not_void: an_and /= Void
@@ -98,7 +98,7 @@ feature -- Setting
 			and_keyword_set: and_keyword = an_and
 		end
 
-	set_then_keyword (a_then: like then_keyword) is
+	set_then_keyword (a_then: like then_keyword)
 			-- Set `then_keyword' to `a_then'.
 		require
 			a_then_not_void: a_then /= Void
@@ -110,7 +110,7 @@ feature -- Setting
 
 feature -- Comparison
 
-	same_call_name (other: ET_CALL_NAME): BOOLEAN is
+	same_call_name (other: ET_CALL_NAME): BOOLEAN
 			-- Are `Current' and `other' the same feature call name?
 			-- (case insensitive)
 		do
@@ -123,7 +123,7 @@ feature -- Comparison
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_infix_and_then_operator (Current)

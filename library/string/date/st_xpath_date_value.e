@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_lexical_date: STRING) is
+	make (a_lexical_date: STRING)
 			-- Create from lexical date.
 		require
 			lexical_date: a_lexical_date /= Void and then is_date (a_lexical_date)
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	make_from_date (a_date: DT_DATE) is
+	make_from_date (a_date: DT_DATE)
 			-- Create from date object.
 		require
 			date_not_void: a_date /= Void
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			local_date := a_date.twin
 		end
 
-	make_from_zoned_date (a_date: DT_FIXED_OFFSET_ZONED_DATE) is
+	make_from_zoned_date (a_date: DT_FIXED_OFFSET_ZONED_DATE)
 			-- Create from date object.
 		require
 			date_not_void: a_date /= Void
@@ -69,7 +69,7 @@ feature -- Access
 	local_date: detachable DT_DATE
 			-- Date value without zone
 
-	date: DT_DATE is
+	date: DT_DATE
 			-- Date component
 		local
 			l_date: detachable DT_DATE
@@ -94,13 +94,13 @@ feature -- Access
 
 feature -- Status report
 
-	is_xpath_date: BOOLEAN is
+	is_xpath_date: BOOLEAN
 			-- Does `Current' have a date component and no time component?
 		do
 			Result := True
 		end
 
-	is_date (a_lexical_date: STRING): BOOLEAN is
+	is_date (a_lexical_date: STRING): BOOLEAN
 			-- Is `a_lexical_date' a valid date?
 		require
 			lexical_date_not_void: a_lexical_date /= Void
@@ -113,7 +113,7 @@ feature -- Status report
 
 feature -- Conversion
 
-	as_xpath_date: ST_XPATH_DATE_VALUE is
+	as_xpath_date: ST_XPATH_DATE_VALUE
 			-- `Current' seen as a date value
 		do
 			Result := Current

@@ -1,8 +1,8 @@
 ****** Fatal Error : Cannot redefine a frozen feature.
 Line 5 column 9 in CC (c.e) :
-	frozen f is
+	frozen f
 	       ^
 Line 12 column 2 in BB (b.e) :
-	f is
+	f
 	^
 ------

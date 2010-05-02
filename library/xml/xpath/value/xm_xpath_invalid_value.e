@@ -22,10 +22,10 @@ inherit
 create
 
 	make, make_from_string
-	
+
 feature {NONE} -- Initialization
 
-	make (an_error_value: XM_XPATH_ERROR_VALUE) is
+	make (an_error_value: XM_XPATH_ERROR_VALUE)
 			-- Set in error.
 		do
 			make_value
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			error_set: error_value = an_error_value
 		end
 
-	make_from_string (a_string, a_namespace_uri, an_error_code: STRING; an_error_type: INTEGER) is
+	make_from_string (a_string, a_namespace_uri, an_error_code: STRING; an_error_type: INTEGER)
 			-- Create from `a_string'.
 		require
 			valid_error_code: an_error_code /= Void
@@ -53,25 +53,25 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_invalid_value: BOOLEAN is
+	is_invalid_value: BOOLEAN
 			-- Is `Current' an invalid value?
 		do
 			Result := True
 		end
 
-	as_invalid_value: XM_XPATH_INVALID_VALUE is
+	as_invalid_value: XM_XPATH_INVALID_VALUE
 			-- `Current' seen as an invalid value
 		do
 			Result := Current
 		end
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type
 		do
 			Result := any_item -- Can't meet pre-condition anyway
 		end
 
-	string_value: STRING is
+	string_value: STRING
 			--Value of the item as a string
 		do
 			Result := error_value.error_message -- Can't meet pre-condition anyway
@@ -79,7 +79,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Are `Current' and `other' the same expression?
 		do
 			if other.is_invalid_value then
@@ -89,7 +89,7 @@ feature -- Comparison
 
 feature -- Comparison
 
-	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER is
+	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER
 			-- Compare `Current' to `other'
 		do
 			Result := 1  -- Can't meet pre-condition anyway
@@ -97,19 +97,19 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
+	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN
 			-- Is `other' comparable to `Current'?
 		do
 			Result := False
 		end
 
-	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN is
+	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN
 			-- Is `Current' convertible to `a_required_type'?
 		do
 			Result := False
 		end
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -120,8 +120,8 @@ feature -- Status report
 		end
 
 feature -- Conversion
-	
-	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE) is
+
+	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE)
 			-- Convert `Current' to `required_type'
 		do
 			converted_value := Void

@@ -28,7 +28,7 @@ create make
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant.
 		do
 			create bindings.make_with_equality_testers (10, Void, string_equality_tester)
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_prefix_declared (an_xml_prefix: STRING): BOOLEAN is
+	is_prefix_declared (an_xml_prefix: STRING): BOOLEAN
 			-- Is there a binding for `an_xml_prefix'?
 		require
 			ncname: an_xml_prefix /= Void and then (an_xml_prefix.is_empty or is_ncname (an_xml_prefix))
@@ -50,7 +50,7 @@ feature -- Access
 			end
 		end
 
-	is_prefix_proscribed (an_xml_prefix: STRING): BOOLEAN is
+	is_prefix_proscribed (an_xml_prefix: STRING): BOOLEAN
 			-- Is it forbidden to create a binding for `an_xml_prefix'?
 		require
 			ncname: an_xml_prefix /= Void and then (an_xml_prefix.is_empty or is_ncname (an_xml_prefix))
@@ -58,7 +58,7 @@ feature -- Access
 			Result := STRING_.same_string (an_xml_prefix, Xmlns) or else STRING_.same_string (an_xml_prefix, Xml_prefix)
 		end
 
-	is_namespace_proscribed (a_namespace_uri: STRING): BOOLEAN is
+	is_namespace_proscribed (a_namespace_uri: STRING): BOOLEAN
 			-- Is it forbidden to create a binding onto `a_namespace_uri'?
 		require
 			namespace_uri_not_empty: a_namespace_uri /= Void
@@ -66,7 +66,7 @@ feature -- Access
 			Result := STRING_.same_string (a_namespace_uri, Xml_prefix_namespace) or else STRING_.same_string (a_namespace_uri, Xmlns_namespace)
 		end
 
-	namespace_uri (an_xml_prefix: STRING): STRING is
+	namespace_uri (an_xml_prefix: STRING): STRING
 			-- Namespace URI for `an_xml_prefix'
 		require
 			ncname: an_xml_prefix /= Void and then (an_xml_prefix.is_empty or is_ncname (an_xml_prefix))
@@ -81,7 +81,7 @@ feature -- Access
 			namespace_uri_not_emoty: Result /= Void and then Result.count > 0
 		end
 
-	namespace_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING] is
+	namespace_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
 			-- Cursor over declared namespace other than 'xml'
 		do
 			Result := bindings.new_cursor
@@ -91,7 +91,7 @@ feature -- Access
 
 feature -- Element change
 
-	bind (an_xml_prefix, a_namespace_uri: STRING) is
+	bind (an_xml_prefix, a_namespace_uri: STRING)
 			-- Bind `an_xml_prefix' to `a_namespace_uri'.
 		require
 			ncname: an_xml_prefix /= Void and then (an_xml_prefix.is_empty or is_ncname (an_xml_prefix))

@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new address of 'Current'.
 		do
 			dollar := tokens.dollar_symbol
@@ -34,13 +34,13 @@ feature -- Access
 	current_keyword: ET_CURRENT
 			-- 'Current' keyword
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := current_keyword
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := current_keyword.break
@@ -48,7 +48,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_current_keyword (a_current: like current_keyword) is
+	set_current_keyword (a_current: like current_keyword)
 			-- Set `current_keyword' to `a_current'.
 		require
 			a_current_not_void: a_current /= Void
@@ -60,7 +60,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_current_address (Current)

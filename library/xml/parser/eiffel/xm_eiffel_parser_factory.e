@@ -22,7 +22,7 @@ inherit
 
 feature -- Status report
 
-	is_eiffel_parser_available: BOOLEAN is
+	is_eiffel_parser_available: BOOLEAN
 			-- Is Eiffel XML parser available?
 		do
 			Result := True
@@ -30,7 +30,7 @@ feature -- Status report
 
 feature -- Access
 
-	new_eiffel_parser: XM_PARSER is
+	new_eiffel_parser: XM_PARSER
 			-- New Eiffel XML parser
 		do
 			create {XM_EIFFEL_PARSER} Result.make

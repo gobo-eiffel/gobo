@@ -33,7 +33,7 @@ create
 
 feature -- Test
 
-	test_current_function is
+	test_current_function
 			-- Test of current() function.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -55,7 +55,7 @@ feature -- Test
 			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
 			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
 			l_transformer := l_transformer_factory.created_transformer
-			assert ("transformer", l_transformer /= Void)					  
+			assert ("transformer", l_transformer /= Void)
 			create l_second_uri_source.make (books_xml_uri.full_reference)
 			create l_output
 			l_output.set_output_to_string
@@ -65,7 +65,7 @@ feature -- Test
 			assert ("Correct result", STRING_.same_string (l_output.last_output, expected_result_string))
 		end
 
-	test_nested_current_function is
+	test_nested_current_function
 			-- Test of current() function within nested xsl:for-each.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -97,12 +97,12 @@ feature -- Test
 			assert ("Correct result", STRING_.same_string (l_output.last_output, expected_result_string))
 		end
 
-	expected_result_string: STRING is "Patterns of Crime in Animal Culture"
+	expected_result_string: STRING = "Patterns of Crime in Animal Culture"
 			-- Expected result
 
 feature {NONE} -- Implementation
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing schematron data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}",
@@ -113,15 +113,15 @@ feature {NONE} -- Implementation
 			data_dirname_not_empty: not Result.is_empty
 		end
 
-	dummy_uri: UT_URI is
+	dummy_uri: UT_URI
 			-- Dummy URI
 		once
 			create Result.make ("dummy:")
 		ensure
 			dummy_uri_is_absolute: Result /= Void and then Result.is_absolute
 		end
-		
-	current_xsl_uri: UT_URI is
+
+	current_xsl_uri: UT_URI
 			-- URI of file 'current.xsl'
 		local
 			l_path: STRING
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 			current_xsl_uri_not_void: Result /= Void
 		end
 
-	current2_xsl_uri: UT_URI is
+	current2_xsl_uri: UT_URI
 			-- URI of file 'current2.xsl'
 		local
 			l_path: STRING
@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 			current2_xsl_uri_not_void: Result /= Void
 		end
 
-	xpath_data_dirname: STRING is
+	xpath_data_dirname: STRING
 			-- Name of directory containing XPath data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}",
@@ -153,8 +153,8 @@ feature {NONE} -- Implementation
 			xpath_data_dirname_not_void: Result /= Void
 			xpath_data_dirname_not_empty: not Result.is_empty
 		end
-		
-	books_xml_uri: UT_URI is
+
+	books_xml_uri: UT_URI
 			-- URI of file 'books.xml'
 		local
 			l_path: STRING

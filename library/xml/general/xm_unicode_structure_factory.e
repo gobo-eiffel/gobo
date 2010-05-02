@@ -18,7 +18,7 @@ inherit
 
 feature -- Status report
 
-	same_string (a_string, other: STRING): BOOLEAN is
+	same_string (a_string, other: STRING): BOOLEAN
 			-- Do the strings hold the same characters?
 			-- (polymorphically safe)
 		require
@@ -30,7 +30,7 @@ feature -- Status report
 
 feature -- General structures
 
-	new_string_set: DS_HASH_SET [STRING] is
+	new_string_set: DS_HASH_SET [STRING]
 			-- New string set
 		do
 			create Result.make_default
@@ -40,7 +40,7 @@ feature -- General structures
 			equality_tester: Result.equality_tester = string_equality_tester
 		end
 
-	new_string_bilinked_list: DS_BILINKED_LIST [STRING] is
+	new_string_bilinked_list: DS_BILINKED_LIST [STRING]
 			-- New string list
 		do
 			create Result.make
@@ -50,7 +50,7 @@ feature -- General structures
 			equality_tester: Result.equality_tester = string_equality_tester
 		end
 
-	new_string_arrayed_list: DS_ARRAYED_LIST [STRING] is
+	new_string_arrayed_list: DS_ARRAYED_LIST [STRING]
 			-- New string list
 		do
 			create Result.make_default
@@ -60,7 +60,7 @@ feature -- General structures
 			equality_tester: Result.equality_tester = string_equality_tester
 		end
 
-	new_string_stack: DS_LINKED_STACK [STRING] is
+	new_string_stack: DS_LINKED_STACK [STRING]
 			-- New string stack
 		do
 			create Result.make_default
@@ -68,7 +68,7 @@ feature -- General structures
 			stack_not_void: Result /= Void
 		end
 
-	new_string_queue: DS_LINKED_QUEUE [STRING] is
+	new_string_queue: DS_LINKED_QUEUE [STRING]
 			-- New string queue
 		do
 			create Result.make
@@ -76,7 +76,7 @@ feature -- General structures
 			queue_not_void: Result /= Void
 		end
 
-	new_string_string_table: DS_HASH_TABLE [STRING, STRING] is
+	new_string_string_table: DS_HASH_TABLE [STRING, STRING]
 			-- New table of strings
 		do
 			create Result.make_map_default
@@ -90,7 +90,7 @@ feature -- General structures
 
 feature -- Specialized structures
 
-	new_tokens_table: DS_HASH_TABLE [DS_HASH_TABLE [BOOLEAN, STRING], STRING] is
+	new_tokens_table: DS_HASH_TABLE [DS_HASH_TABLE [BOOLEAN, STRING], STRING]
 			-- New tokens table
 		do
 			create Result.make_map_default
@@ -100,7 +100,7 @@ feature -- Specialized structures
 			equality_tester: Result.key_equality_tester = string_equality_tester
 		end
 
-	new_boolean_string_table: DS_HASH_TABLE [BOOLEAN, STRING] is
+	new_boolean_string_table: DS_HASH_TABLE [BOOLEAN, STRING]
 			-- New boolean table
 		do
 			create Result.make_map_default
@@ -110,7 +110,7 @@ feature -- Specialized structures
 			equality_tester: Result.key_equality_tester = string_equality_tester
 		end
 
-	new_dtd_attribute_content_list_table: DS_HASH_TABLE [DS_LIST [XM_DTD_ATTRIBUTE_CONTENT], STRING] is
+	new_dtd_attribute_content_list_table: DS_HASH_TABLE [DS_LIST [XM_DTD_ATTRIBUTE_CONTENT], STRING]
 			-- New attribute content table
 		do
 			create Result.make_map_default

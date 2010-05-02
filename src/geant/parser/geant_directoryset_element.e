@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT) is
+	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT)
 			-- Create new directoryset element with information held in `a_xml_element'.
 		local
 			a_value: STRING
@@ -87,7 +87,7 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Directory_attribute_name: STRING is
+	Directory_attribute_name: STRING
 			-- Name of xml attribute for directory
 		once
 			Result := "directory"
@@ -96,7 +96,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Include_attribute_name: STRING is
+	Include_attribute_name: STRING
 			-- Name of xml attribute for include
 		once
 			Result := "include"
@@ -105,7 +105,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Exclude_attribute_name: STRING is
+	Exclude_attribute_name: STRING
 			-- Name of xml attribute for exclude
 		once
 			Result := "exclude"
@@ -114,7 +114,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Concat_attribute_name: STRING is
+	Concat_attribute_name: STRING
 			-- Name of xml attribute for concat
 		once
 			Result := "concat"
@@ -123,7 +123,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Include_element_name: STRING is
+	Include_element_name: STRING
 			-- Name of xml subelement for include
 		once
 			Result := "include"
@@ -132,7 +132,7 @@ feature {NONE} -- Constants
 			element_name_not_empty: Result.count > 0
 		end
 
-	Exclude_element_name: STRING is
+	Exclude_element_name: STRING
 			-- Name of xml subelement for exclude
 		once
 			Result := "exclude"

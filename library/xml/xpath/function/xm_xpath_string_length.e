@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant
 		do
 			name := "string-length"; namespace_uri := Xpath_standard_functions_uri
@@ -41,19 +41,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_string_length_function: BOOLEAN is
+	is_string_length_function: BOOLEAN
 			-- Is `Current' XPath an string-length() function?
 		do
 			Result := True
 		end
 
-	as_string_length_function: XM_XPATH_STRING_LENGTH is
+	as_string_length_function: XM_XPATH_STRING_LENGTH
 			-- `Current' seen as an XPath string-length() function
 		do
 			Result := Current
 		end
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, where known
 		do
 			Result := type_factory.integer_type
@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Status report
 
-	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
+	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE
 			-- Type of argument number `argument_number'
 		do
 			create Result.make_optional_string
@@ -77,7 +77,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_test_for_zero is
+	set_test_for_zero
 			-- Set `is_test_for_zero'.
 		do
 			is_test_for_zero := True
@@ -87,7 +87,7 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		do
 			use_context_item_as_default
@@ -96,7 +96,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_atomic_value: XM_XPATH_ATOMIC_VALUE
@@ -128,11 +128,11 @@ feature -- Evaluation
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
 		end
 
 end
-	
+

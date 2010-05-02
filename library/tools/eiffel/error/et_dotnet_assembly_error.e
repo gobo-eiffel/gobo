@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_gaaaa (an_assembly: like assembly) is
+	make_gaaaa (an_assembly: like assembly)
 			-- Create a new GAAAA error: .NET assemblies not supported.
 		require
 			an_assembly_not_void: an_assembly /= Void
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			-- dollar2: $2 = assembly full name
 		end
 
-	make_gazzz (an_assembly: like assembly; a_message: STRING) is
+	make_gazzz (an_assembly: like assembly; a_message: STRING)
 			-- Create a new GAZZZ error: error explained as plain text in `a_message'.
 		require
 			an_assembly_not_void: an_assembly /= Void
@@ -71,7 +71,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_assembly (an_assembly: like assembly) is
+	set_assembly (an_assembly: like assembly)
 			-- Set `assembly' to `an_assembly'.
 		require
 			an_assembly_not_void: an_assembly /= Void
@@ -83,16 +83,16 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	gaaaa_default_template: STRING is "[$1] assembly $2: .NET assemblies not supported."
-	gazzz_default_template: STRING is "[$1] assembly $2: $3."
+	gaaaa_default_template: STRING = "[$1] assembly $2: .NET assemblies not supported."
+	gazzz_default_template: STRING = "[$1] assembly $2: $3."
 			-- Default templates
 
-	gaaaa_etl_code: STRING is "GAAAA"
-	gazzz_etl_code: STRING is "GAZZZ"
+	gaaaa_etl_code: STRING = "GAAAA"
+	gazzz_etl_code: STRING = "GAZZZ"
 			-- ETL validity codes
 
-	gaaaa_template_code: STRING is "gaaaa"
-	gazzz_template_code: STRING is "gazzz"
+	gaaaa_template_code: STRING = "gaaaa"
+	gazzz_template_code: STRING = "gazzz"
 			-- Template error codes
 
 invariant

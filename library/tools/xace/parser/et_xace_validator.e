@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_error_handler: like error_handler) is
+	make (an_error_handler: like error_handler)
 			-- Create a new Xace XML validator.
 		require
 			an_error_handler_not_void: an_error_handler /= Void
@@ -54,7 +54,7 @@ feature -- Status report
 
 feature -- Validation
 
-	validate_system_doc (a_doc: XM_DOCUMENT; a_position_table: XM_POSITION_TABLE) is
+	validate_system_doc (a_doc: XM_DOCUMENT; a_position_table: XM_POSITION_TABLE)
 			-- Check whether `a_doc' is a valid XML Xace system.
 			-- Set `has_error' to True if not.
 		require
@@ -70,7 +70,7 @@ feature -- Validation
 			end
 		end
 
-	validate_cluster_doc (a_doc: XM_DOCUMENT; a_position_table: XM_POSITION_TABLE) is
+	validate_cluster_doc (a_doc: XM_DOCUMENT; a_position_table: XM_POSITION_TABLE)
 			-- Check whether `a_doc' is a valid XML Xace cluster.
 			-- Set `has_error' to True if not.
 		require
@@ -86,7 +86,7 @@ feature -- Validation
 			end
 		end
 
-	validate_library_doc (a_doc: XM_DOCUMENT; a_position_table: XM_POSITION_TABLE) is
+	validate_library_doc (a_doc: XM_DOCUMENT; a_position_table: XM_POSITION_TABLE)
 			-- Check whether `a_doc' is a valid XML Xace library.
 			-- Set `has_error' to True if not.
 		require
@@ -106,7 +106,7 @@ feature -- Validation
 
 feature {NONE} -- Validation
 
-	validate_system (a_system: XM_ELEMENT; a_position_table: XM_POSITION_TABLE) is
+	validate_system (a_system: XM_ELEMENT; a_position_table: XM_POSITION_TABLE)
 			-- Check whether `a_system' is a valid Xace 'system' element.
 			-- Set `has_error' to True if not.
 		require
@@ -160,7 +160,7 @@ feature {NONE} -- Validation
 			end
 		end
 
-	validate_library (a_library: XM_ELEMENT; a_position_table: XM_POSITION_TABLE) is
+	validate_library (a_library: XM_ELEMENT; a_position_table: XM_POSITION_TABLE)
 			-- Check whether `a_library' is a valid Xace 'library' element.
 			-- Set `has_error' to True if not.
 		require
@@ -200,7 +200,7 @@ feature {NONE} -- Validation
 			end
 		end
 
-	validate_root (a_root: XM_ELEMENT; a_position_table: XM_POSITION_TABLE) is
+	validate_root (a_root: XM_ELEMENT; a_position_table: XM_POSITION_TABLE)
 			-- Check whether `a_root' is a valid Xace 'root' element.
 			-- Set `has_error' to True if not.
 		require
@@ -218,7 +218,7 @@ feature {NONE} -- Validation
 			end
 		end
 
-	validate_named_cluster (a_cluster: XM_ELEMENT; a_position_table: XM_POSITION_TABLE) is
+	validate_named_cluster (a_cluster: XM_ELEMENT; a_position_table: XM_POSITION_TABLE)
 			-- Check whether `a_cluster' is a valid Xace 'cluster' element.
 			-- Set `has_error' to True if not.
 		require
@@ -237,7 +237,7 @@ feature {NONE} -- Validation
 			end
 		end
 
-	validate_cluster (a_cluster: XM_ELEMENT; a_position_table: XM_POSITION_TABLE) is
+	validate_cluster (a_cluster: XM_ELEMENT; a_position_table: XM_POSITION_TABLE)
 			-- Check whether `a_cluster' is a valid Xace 'cluster' element.
 			-- Set `has_error' to True if not.
 		require
@@ -275,7 +275,7 @@ feature {NONE} -- Validation
 			end
 		end
 
-	validate_class (a_class: XM_ELEMENT; a_position_table: XM_POSITION_TABLE) is
+	validate_class (a_class: XM_ELEMENT; a_position_table: XM_POSITION_TABLE)
 			-- Check whether `a_class' is a valid Xace 'class' element.
 			-- Set `has_error' to True if not.
 		require
@@ -307,7 +307,7 @@ feature {NONE} -- Validation
 			end
 		end
 
-	validate_feature (a_feature: XM_ELEMENT; a_position_table: XM_POSITION_TABLE) is
+	validate_feature (a_feature: XM_ELEMENT; a_position_table: XM_POSITION_TABLE)
 			-- Check whether `a_feature' is a valid Xace 'feature' element.
 			-- Set `has_error' to True if not.
 		require
@@ -337,7 +337,7 @@ feature {NONE} -- Validation
 			end
 		end
 
-	validate_mount (a_mount: XM_ELEMENT; a_position_table: XM_POSITION_TABLE) is
+	validate_mount (a_mount: XM_ELEMENT; a_position_table: XM_POSITION_TABLE)
 			-- Check whether `a_mount' is a valid Xace 'mount' element.
 			-- Set `has_error' to True if not.
 		require
@@ -368,7 +368,7 @@ feature {NONE} -- Validation
 			end
 		end
 
-	validate_option (an_option: XM_ELEMENT; a_position_table: XM_POSITION_TABLE) is
+	validate_option (an_option: XM_ELEMENT; a_position_table: XM_POSITION_TABLE)
 			-- Check whether `an_option' is a valid Xace 'option' element.
 			-- Set `has_error' to True if not.
 		require
@@ -440,7 +440,7 @@ feature {NONE} -- Validation
 			end
 		end
 
-	validate_external (an_external: XM_ELEMENT; a_position_table: XM_POSITION_TABLE) is
+	validate_external (an_external: XM_ELEMENT; a_position_table: XM_POSITION_TABLE)
 			-- Check whether `an_external' is a valid Xace 'external' element.
 			-- Set `has_error' to True if not.
 		require
@@ -476,7 +476,7 @@ feature {NONE} -- Validation
 			end
 		end
 
-	validate_exclude (an_exclude: XM_ELEMENT; a_position_table: XM_POSITION_TABLE) is
+	validate_exclude (an_exclude: XM_ELEMENT; a_position_table: XM_POSITION_TABLE)
 			-- Check whether `an_exclude' is a valid Xace 'exclude' element.
 			-- Set `has_error' to True if not.
 		require
@@ -490,7 +490,7 @@ feature {NONE} -- Validation
 			end
 		end
 
-	validate_export (an_export: XM_ELEMENT; a_position_table: XM_POSITION_TABLE) is
+	validate_export (an_export: XM_ELEMENT; a_position_table: XM_POSITION_TABLE)
 			-- Check whether `an_export' is a valid Xace 'export' element.
 			-- Set `has_error' to True if not.
 		require

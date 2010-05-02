@@ -24,7 +24,7 @@ inherit
 
 feature -- Access
 
-	actual_parameter: ET_CONSTRAINT_ACTUAL_PARAMETER is
+	actual_parameter: ET_CONSTRAINT_ACTUAL_PARAMETER
 			-- Actual parameter
 		do
 			Result := Current
@@ -35,7 +35,7 @@ feature -- Access
 feature -- Conversion
 
 	resolved_syntactical_constraint_with_type (a_type: ET_TYPE;
-		a_parser: ET_EIFFEL_PARSER_SKELETON): ET_ACTUAL_PARAMETER is
+		a_parser: ET_EIFFEL_PARSER_SKELETON): ET_ACTUAL_PARAMETER
 			-- Version of current actual parameter, where its type has
 			-- been replaced by `a_type'
 		deferred

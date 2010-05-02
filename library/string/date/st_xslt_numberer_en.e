@@ -32,7 +32,7 @@ inherit
 
 feature -- Access
 
-	formatted_string (a_number: MA_DECIMAL; a_picture: STRING; a_group_size: INTEGER; a_group_separator, a_letter, an_ordinal: STRING): STRING is
+	formatted_string (a_number: MA_DECIMAL; a_picture: STRING; a_group_size: INTEGER; a_group_separator, a_letter, an_ordinal: STRING): STRING
 			-- Formated number string
 		local
 			a_character_code: INTEGER
@@ -119,7 +119,7 @@ feature -- Access
 			end
 		end
 
-	month_name (a_month, a_minimum_width, a_maximum_width: INTEGER): STRING is
+	month_name (a_month, a_minimum_width, a_maximum_width: INTEGER): STRING
 			-- Month name or abbreviation
 		local
 			a_max: INTEGER
@@ -140,7 +140,7 @@ feature -- Access
 			end
 		end
 
-	day_name (a_day, a_minimum_width, a_maximum_width: INTEGER): STRING is
+	day_name (a_day, a_minimum_width, a_maximum_width: INTEGER): STRING
 			-- Name of day of week
 		local
 			a_max: INTEGER
@@ -164,7 +164,7 @@ feature -- Access
 			end
 		end
 
-	half_day_name (a_minute, a_minimum_width, a_maximum_width: INTEGER): STRING is
+	half_day_name (a_minute, a_minimum_width, a_maximum_width: INTEGER): STRING
 			-- A.M./P.M indicator
 		do
 			if a_minute < 12 * 60 then
@@ -191,7 +191,7 @@ feature -- Access
 feature {NONE} -- Implementation
 	-- Alphabets
 
-	latin_upper_case_letters: STRING is
+	latin_upper_case_letters: STRING
 			-- Latin upper case alphabet
 		once
 			Result := new_unicode_string ("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 			latin_upper_case_letters_not_void: Result /= Void
 		end
 
-	latin_lower_case_letters: STRING is
+	latin_lower_case_letters: STRING
 			-- Latin lower case alphabet
 		once
 			Result := new_unicode_string ("abcdefghijklmnopqrstuvwxyz")
@@ -207,7 +207,7 @@ feature {NONE} -- Implementation
 			latin_lower_case_letters_not_void: Result /= Void
 		end
 
-	european_digits: STRING is
+	european_digits: STRING
 			-- "Indo-Arabic" numerals, for fallback to format "1"
 		once
 			Result := new_unicode_string ("0123456789")
@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 			european_digits_not_void: Result /= Void
 		end
 
-	roman_thousands: ARRAY [STRING] is
+	roman_thousands: ARRAY [STRING]
 			-- Thousands in Roman numerals
 		once
 			create Result.make (0, 3)
@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 			roman_thousands_not_void: Result /= Void
 		end
 
-	roman_hundreds: ARRAY [STRING] is
+	roman_hundreds: ARRAY [STRING]
 			-- Hundreds in Roman numerals
 		once
 			create Result.make (0, 9)
@@ -245,7 +245,7 @@ feature {NONE} -- Implementation
 			roman_hundreds_not_void: Result /= Void
 		end
 
-	roman_tens: ARRAY [STRING] is
+	roman_tens: ARRAY [STRING]
 			-- Tens in Roman numerals
 		once
 			create Result.make (0, 9)
@@ -263,7 +263,7 @@ feature {NONE} -- Implementation
 			roman_tens_not_void: Result /= Void
 		end
 
-	roman_units: ARRAY [STRING] is
+	roman_units: ARRAY [STRING]
 			-- Units in Roman numerals
 		once
 			create Result.make (0, 9)
@@ -281,7 +281,7 @@ feature {NONE} -- Implementation
 			roman_tens_not_void: Result /= Void
 		end
 
-	converted_number (a_number: MA_DECIMAL; digits: STRING; a_minimum_width, a_group_size: INTEGER; a_group_separator, an_ordinal: STRING): STRING is
+	converted_number (a_number: MA_DECIMAL; digits: STRING; a_minimum_width, a_group_size: INTEGER; a_group_separator, an_ordinal: STRING): STRING
 			-- Conversion of `a_number' using `digits'
 		require
 			positive_number: a_number /= Void and then a_number.is_positive
@@ -344,7 +344,7 @@ feature {NONE} -- Implementation
 			converted_number_not_void: Result /= Void
 		end
 
-	converted_roman_numerals (a_number: MA_DECIMAL): STRING is
+	converted_roman_numerals (a_number: MA_DECIMAL): STRING
 			-- Conversion of `a_number' to Roman numerals
 		require
 			positive_integer: a_number /= Void and then a_number.is_positive and then a_number.is_integer
@@ -367,7 +367,7 @@ feature {NONE} -- Implementation
 			ascii_string: True
 		end
 
-	alphabetic_number (a_number: INTEGER; an_alphabet: STRING): STRING is
+	alphabetic_number (a_number: INTEGER; an_alphabet: STRING): STRING
 			-- Aplhabetic representation of `a_number'
 		require
 			number_is_positive: a_number >= 0
@@ -392,7 +392,7 @@ feature {NONE} -- Implementation
 			result_not_empty: Result /= Void and then not Result.is_empty
 		end
 
-	cased_words_number (a_number: INTEGER; is_title_case, is_upper_case: BOOLEAN): STRING is
+	cased_words_number (a_number: INTEGER; is_title_case, is_upper_case: BOOLEAN): STRING
 			-- English words expressing `a_number'
 		require
 			positive_integer: a_number >= 0
@@ -413,7 +413,7 @@ feature {NONE} -- Implementation
 			result_not_empty: Result /= Void and then not Result.is_empty
 		end
 
-	words_number (a_number: INTEGER): STRING is
+	words_number (a_number: INTEGER): STRING
 			-- English words expressing `a_number'
 		require
 			strictly_positive_integer: a_number > 0
@@ -476,7 +476,7 @@ feature {NONE} -- Implementation
 			result_not_empty: Result /= Void and then not Result.is_empty
 		end
 
-	cased_ordinal_number (a_number: INTEGER; is_title_case, is_upper_case: BOOLEAN): STRING is
+	cased_ordinal_number (a_number: INTEGER; is_title_case, is_upper_case: BOOLEAN): STRING
 			-- English words expressing `a_number' as an ordinal
 		require
 			positive_integer: a_number >= 0
@@ -498,7 +498,7 @@ feature {NONE} -- Implementation
 			result_not_empty: Result /= Void and then not Result.is_empty
 		end
 
-	ordinal_number (a_number: INTEGER): STRING is
+	ordinal_number (a_number: INTEGER): STRING
 			-- English words expressing `a_number' as an ordinal
 		require
 			strictly_positive_integer: a_number > 0
@@ -570,7 +570,7 @@ feature {NONE} -- Implementation
 			result_not_empty: Result /= Void and then not Result.is_empty
 		end
 
-	english_tens: ARRAY [STRING] is
+	english_tens: ARRAY [STRING]
 			-- English words for tens
 		once
 			create Result.make (0, 9)
@@ -588,7 +588,7 @@ feature {NONE} -- Implementation
 			ten_numbers: Result /= Void and then Result.count = 10
 		end
 
-	english_units: ARRAY [STRING] is
+	english_units: ARRAY [STRING]
 			-- English words for units and teens
 		once
 			create Result.make (1, 19)
@@ -615,7 +615,7 @@ feature {NONE} -- Implementation
 			ten_numbers: Result /= Void and then Result.count = 19
 		end
 
-	english_ordinal_tens: ARRAY [STRING] is
+	english_ordinal_tens: ARRAY [STRING]
 			-- English ordinal words for tens
 		once
 			create Result.make (0, 9)
@@ -633,7 +633,7 @@ feature {NONE} -- Implementation
 			ten_numbers: Result /= Void and then Result.count = 10
 		end
 
-	english_ordinal_units: ARRAY [STRING] is
+	english_ordinal_units: ARRAY [STRING]
 			-- English ordinal words for units and teens
 		once
 			create Result.make (1, 19)
@@ -660,7 +660,7 @@ feature {NONE} -- Implementation
 			ten_numbers: Result /= Void and then Result.count = 19
 		end
 
-	english_months: ARRAY [STRING] is
+	english_months: ARRAY [STRING]
 			-- English names for months
 		once
 			create Result.make (1, 12)
@@ -680,7 +680,7 @@ feature {NONE} -- Implementation
 			twelve_months: Result /= Void and then Result.count = 12
 		end
 
-	english_days: ARRAY [STRING] is
+	english_days: ARRAY [STRING]
 			-- English names for days
 		once
 			create Result.make (1, 7)
@@ -695,7 +695,7 @@ feature {NONE} -- Implementation
 			seven_days: Result /= Void and then Result.count = 7
 		end
 
-	english_day_abbreviations: ARRAY [STRING] is
+	english_day_abbreviations: ARRAY [STRING]
 			-- Abbreviated English names for days
 		once
 			create Result.make (1, 7)
@@ -710,7 +710,7 @@ feature {NONE} -- Implementation
 			seven_days: Result /= Void and then Result.count = 7
 		end
 
-	ordinal_suffix (a_number: MA_DECIMAL): STRING is
+	ordinal_suffix (a_number: MA_DECIMAL): STRING
 			-- Ordinal suffix
 		require
 			number_is_integral: a_number /= Void and then a_number.is_integer
@@ -737,7 +737,7 @@ feature {NONE} -- Implementation
 			result_not_empty: Result /= Void and then not Result.is_empty
 		end
 
-	Hundred: MA_DECIMAL is
+	Hundred: MA_DECIMAL
 			-- One hundred
 		once
 			create Result.make_from_integer (100)
@@ -745,7 +745,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	Ten: MA_DECIMAL is
+	Ten: MA_DECIMAL
 			-- Ten
 		once
 			create Result.make_from_integer (10)

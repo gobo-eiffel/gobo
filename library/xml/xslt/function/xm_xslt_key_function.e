@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant
 		do
 			key_fingerprint := -1
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, where known
 		do
 			Result := any_node_test
@@ -62,7 +62,7 @@ feature -- Access
 
 feature -- Status report
 
-	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
+	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE
 			-- Type of argument number `argument_number'
 		do
 			inspect
@@ -78,7 +78,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		local
 			l_function:XM_XSLT_KEY_FUNCTION
@@ -98,7 +98,7 @@ feature -- Optimization
 			end
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			Precursor (a_replacement, a_context, a_context_item_type)
@@ -111,7 +111,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterator over the values of a sequence
 		local
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -205,14 +205,14 @@ feature -- Evaluation
 			node_iterator: last_iterator.is_node_iterator
 		end
 
-	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Pre-evaluate `Current' at compile time.
 		do
 			a_replacement.put (Current)
 			-- Suppress compile-time evaluation
 		end
-	
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over a node sequence
 		do
 			create_iterator (a_context)
@@ -221,7 +221,7 @@ feature -- Evaluation
 
 feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 
-	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		local
 			l_string_value: XM_XPATH_STRING_VALUE
@@ -243,9 +243,9 @@ feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 						static_context_is_xslt_context: l_xslt_context /= Void
 					end
 					if l_string_value /= Void then
-						
+
 						-- Common case, key name is supplied as a constant
-						
+
 						key_fingerprint := l_xslt_context.fingerprint (l_string_value.string_value, False)
 						if key_fingerprint = -1 then
 							a_replacement.put (Void)
@@ -262,13 +262,13 @@ feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_zero_or_more
 		end
 
-	compute_special_properties is
+	compute_special_properties
 			-- Compute special properties.
 		do
 			initialize_special_properties
@@ -289,4 +289,4 @@ feature {NONE} -- Implementation
 			-- Have arguments been cheked yet?
 
 end
-	
+

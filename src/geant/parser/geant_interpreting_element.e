@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT) is
+	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT)
 			-- Initialize element by setting `project' to `a_project'
 			-- and `xml_element' to 'a_xml_element'.
 		require
@@ -61,7 +61,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_enabled: BOOLEAN is
+	is_enabled: BOOLEAN
 			-- Do conditions enable this `a_element'?
 			-- conditions is the boolean expression
 			-- "(xml attribute 'if') and not
@@ -97,7 +97,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_project (a_project: like project) is
+	set_project (a_project: like project)
 			-- Set `project' to `a_project'.
 		require
 			a_project_not_void: a_project /= Void
@@ -109,7 +109,7 @@ feature -- Setting
 
 feature -- Access/XML attribute and content values
 
-	attribute_value (an_attr_name: STRING): STRING is
+	attribute_value (an_attr_name: STRING): STRING
 			-- Value of attribue `an_attr_name'
 		local
 			a_string_interpreter: GEANT_STRING_INTERPRETER
@@ -128,7 +128,7 @@ feature -- Access/XML attribute and content values
 			end
 		end
 
-	attribute_value_or_default (an_attr_name: STRING; a_default_value: STRING): STRING is
+	attribute_value_or_default (an_attr_name: STRING; a_default_value: STRING): STRING
 			-- Value of attribue `an_attr_name',
 			-- or `a_default_value' of no such attribute
 		do
@@ -139,7 +139,7 @@ feature -- Access/XML attribute and content values
 			end
 		end
 
-	content: STRING is
+	content: STRING
 			-- Content of element if any; Void otherwise
 		local
 			a_string_interpreter: GEANT_STRING_INTERPRETER
@@ -158,7 +158,7 @@ feature -- Access/XML attribute and content values
 
 feature {NONE} -- Constants
 
-	Dir_attribute_name: STRING is
+	Dir_attribute_name: STRING
 			-- "dir" attribute name
 		once
 			Result := "dir"
@@ -167,7 +167,7 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	If_attribute_name: STRING is
+	If_attribute_name: STRING
 			-- "if" attribute name
 		once
 			Result := "if"
@@ -176,7 +176,7 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Unless_attribute_name: STRING is
+	Unless_attribute_name: STRING
 			-- "unless" attribute name
 		once
 			Result := "unless"

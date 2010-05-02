@@ -25,7 +25,7 @@ create
 
 feature -- Access
 
-	is_function_available (a_fingerprint, an_arity: INTEGER; is_restricted: BOOLEAN): BOOLEAN is
+	is_function_available (a_fingerprint, an_arity: INTEGER; is_restricted: BOOLEAN): BOOLEAN
 			-- Does `a_fingerprint' represent an available function with `an_arity'?
 		do
 			if a_fingerprint = Current_function_type_code and then not is_restricted then
@@ -73,7 +73,7 @@ feature -- Access
 
 feature -- Element change
 
-	bind_function (a_fingerprint: INTEGER; some_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]; is_restricted: BOOLEAN) is
+	bind_function (a_fingerprint: INTEGER; some_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]; is_restricted: BOOLEAN)
 			-- Bind `a_fingerprint' to it's definition as `last_bound_function'.
 		local
 			a_function_call: XM_XPATH_FUNCTION_CALL

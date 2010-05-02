@@ -28,7 +28,7 @@ create {KL_SHARED_ARGUMENTS}
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new command-line argument holder.
 		do
 			program_name := argument (0)
@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_program_name (a_name: like program_name) is
+	set_program_name (a_name: like program_name)
 			-- Set `program_name' to `a_name'.
 		require
 			a_name_not_void: a_name /= Void

@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type_mark: like type_mark; a_type: like target_type; a_name: like qualified_name) is
+	make (a_type_mark: like type_mark; a_type: like target_type; a_name: like qualified_name)
 			-- Create a new 'like {A}.b' type.
 		require
 			a_type_not_void: a_type /= Void
@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_like_keyword (a_like: like like_keyword) is
+	set_like_keyword (a_like: like like_keyword)
 			-- Set `like_keyword' to `a_like'.
 		require
 			a_like_not_void: a_like /= Void
@@ -73,7 +73,7 @@ feature -- Setting
 			like_keyword_set: like_keyword = a_like
 		end
 
-	set_left_brace (a_left: like left_brace) is
+	set_left_brace (a_left: like left_brace)
 			-- Set `left_brace' to `a_left'.
 		require
 			a_left_not_void: a_left /= Void
@@ -83,7 +83,7 @@ feature -- Setting
 			left_brace_set: left_brace = a_left
 		end
 
-	set_right_brace (a_right: like right_brace) is
+	set_right_brace (a_right: like right_brace)
 			-- Set `right_brace' to `a_right'.
 		require
 			a_right_not_void: a_right /= Void
@@ -95,7 +95,7 @@ feature -- Setting
 
 feature -- Type processing
 
-	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_QUALIFIED_LIKE_BRACED_TYPE is
+	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_QUALIFIED_LIKE_BRACED_TYPE
 			-- Version of current type where the formal generic
 			-- parameter types have been replaced by their actual
 			-- counterparts in `a_parameters'
@@ -115,7 +115,7 @@ feature -- Type processing
 
 feature -- Output
 
-	append_to_string (a_string: STRING) is
+	append_to_string (a_string: STRING)
 			-- Append textual representation of
 			-- current type to `a_string'.
 		do
@@ -129,7 +129,7 @@ feature -- Output
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_qualified_like_braced_type (Current)

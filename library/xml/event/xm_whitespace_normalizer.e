@@ -39,7 +39,7 @@ create
 
 feature -- Content
 
-	on_content (a_content: STRING) is
+	on_content (a_content: STRING)
 			-- Process content event with whitespace removal
 			-- if heading/trailing the content events.
 		do
@@ -76,7 +76,7 @@ feature {NONE} -- Content
 	last_content: ST_COPY_ON_WRITE_STRING
 			-- Last unprocessed content event.
 
-	default_space_preserved: BOOLEAN is
+	default_space_preserved: BOOLEAN
 			-- Initial xml:space mode, can be redefined.
 			-- Default: False.
 		do
@@ -84,13 +84,13 @@ feature {NONE} -- Content
 
 feature {NONE} -- Content
 
-	in_content: BOOLEAN is
+	in_content: BOOLEAN
 			-- Is there a pending unprocessed content event?
 		do
 			Result := last_content /= Void
 		end
 
-	end_content is
+	end_content
 			-- New non-content event; process pending
 			-- content first.
 		do
@@ -105,7 +105,7 @@ feature {NONE} -- Content
 			last_content_void: last_content = Void
 		end
 
-	is_space (a_code: INTEGER): BOOLEAN is
+	is_space (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' the character code of a white space character?
 		do
 			Result := a_code = Lf_char.code
@@ -114,7 +114,7 @@ feature {NONE} -- Content
 				or a_code = Space_char.code
 		end
 
-	normalize_content_head is
+	normalize_content_head
 			-- Remove whitespace from beginning of content.
 		require
 			in_content: in_content
@@ -144,7 +144,7 @@ feature {NONE} -- Content
 			no_whitespace_at_head: in_content implies not is_space (last_content.item.item_code (1))
 		end
 
-	normalize_content_tail is
+	normalize_content_tail
 			-- Remove whitespace at end of content.
 		require
 			in_content: in_content
@@ -170,7 +170,7 @@ feature {NONE} -- Content
 
 feature -- Events
 
-	on_start is
+	on_start
 			-- Reset.
 		do
 			last_content := Void
@@ -179,21 +179,21 @@ feature -- Events
 			Precursor
 		end
 
-	on_processing_instruction (a_name: STRING; a_content: STRING) is
+	on_processing_instruction (a_name: STRING; a_content: STRING)
 			-- Clear content and forward.
 		do
 			end_content
 			Precursor (a_name, a_content)
 		end
 
-	on_comment (a_comment: STRING) is
+	on_comment (a_comment: STRING)
 			-- Clear content and forward.
 		do
 			end_content
 			Precursor (a_comment)
 		end
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Clear content and forward.
 		do
 			end_content
@@ -201,7 +201,7 @@ feature -- Events
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
 			-- Process xml:space attribute
 		do
 			if has_prefix (a_prefix)
@@ -215,7 +215,7 @@ feature -- Events
 			Precursor (a_namespace, a_prefix, a_local_part, a_value)
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Clear content and forward.
 		do
 			end_content
@@ -223,7 +223,7 @@ feature -- Events
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
 
-	on_finish is
+	on_finish
 			-- Clear content and forward.
 		do
 			end_content

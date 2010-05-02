@@ -22,7 +22,7 @@ create
 
 feature -- Test
 
-	test_mkdir is
+	test_mkdir
 			-- Test task 'mkdir'
 		local
 			s: STRING

@@ -22,14 +22,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new command.
 		do
 		end
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute current command.
 		do
 				-- Do nothing.

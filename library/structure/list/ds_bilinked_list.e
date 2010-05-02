@@ -44,7 +44,7 @@ create
 
 feature -- Access
 
-	new_cursor: DS_BILINKED_LIST_CURSOR [G] is
+	new_cursor: DS_BILINKED_LIST_CURSOR [G]
 			-- New external cursor for traversal
 		do
 			create Result.make (Current)
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Element change
 
-	put_left_cursor, force_left_cursor (v: G; a_cursor: like new_cursor) is
+	put_left_cursor, force_left_cursor (v: G; a_cursor: like new_cursor)
 			-- Add `v' to left of `a_cursor' position.
 			-- Do not move cursors.
 			-- (Synonym of `a_cursor.put_left (v)'.)
@@ -73,7 +73,7 @@ feature -- Element change
 			end
 		end
 
-	extend_left_cursor, append_left_cursor (other: DS_LINEAR [G]; a_cursor: like new_cursor) is
+	extend_left_cursor, append_left_cursor (other: DS_LINEAR [G]; a_cursor: like new_cursor)
 			-- Add items of `other' to left of `a_cursor' position.
 			-- Keep items of `other' in the same order.
 			-- Do not move cursors.
@@ -124,7 +124,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_last is
+	remove_last
 			-- Remove item at end of list.
 			-- Move any cursors at this position `forth'.
 			-- (Performance: O(1).)
@@ -138,7 +138,7 @@ feature -- Removal
 			end
 		end
 
-	remove_at_cursor (a_cursor: like new_cursor) is
+	remove_at_cursor (a_cursor: like new_cursor)
 			-- Remove item at `a_cursor' position.
 			-- Move any cursors at this position `forth'.
 			-- (Synonym of `a_cursor.remove'.)
@@ -161,7 +161,7 @@ feature -- Removal
 			end
 		end
 
-	remove_left_cursor (a_cursor: like new_cursor) is
+	remove_left_cursor (a_cursor: like new_cursor)
 			-- Remove item to left of `a_cursor' position.
 			-- Move any cursors at this position `forth'.
 			-- (Synonym of `a_cursor.remove_left'.)
@@ -188,7 +188,7 @@ feature -- Removal
 			end
 		end
 
-	prune_last (n: INTEGER) is
+	prune_last (n: INTEGER)
 			-- Remove `n' last items from list.
 			-- Move all cursors `off'.
 			-- (Performance: O(n).)
@@ -216,7 +216,7 @@ feature -- Removal
 			end
 		end
 
-	prune_left_cursor (n: INTEGER; a_cursor: like new_cursor) is
+	prune_left_cursor (n: INTEGER; a_cursor: like new_cursor)
 			-- Remove `n' items to left of `a_cursor' position.
 			-- Move all cursors `off'.
 			-- (Synonym of `a_cursor.prune_left (n)'.)
@@ -254,7 +254,7 @@ feature -- Removal
 			end
 		end
 
-	keep_last (n: INTEGER) is
+	keep_last (n: INTEGER)
 			-- Keep `n' last items of list.
 			-- Move all cursors `off'.
 			-- (Performance: O(n).)
@@ -289,7 +289,7 @@ feature {DS_LINKED_LIST, DS_LINKED_LIST_CURSOR} -- Implementation
 
 feature {NONE} -- Implementation
 
-	set_first_cell (a_cell: like first_cell) is
+	set_first_cell (a_cell: like first_cell)
 			-- Set `first_cell' to `a_cell'.
 			-- This routine has to be called (instead of
 			-- making a direct assignment to `first_cell')
@@ -304,7 +304,7 @@ feature {NONE} -- Implementation
 
 feature {DS_BILINKED_LIST_CURSOR} -- Cursor implementation
 
-	cursor_back (a_cursor: like new_cursor) is
+	cursor_back (a_cursor: like new_cursor)
 			-- Move `a_cursor' to previous position.
 			-- (Performance: O(1).)
 		local
@@ -328,7 +328,7 @@ feature {DS_BILINKED_LIST_CURSOR} -- Cursor implementation
 			end
 		end
 
-	cursor_search_back (a_cursor: like new_cursor; v: G) is
+	cursor_search_back (a_cursor: like new_cursor; v: G)
 			-- Move `a_cursor' to first position at or before its current
 			-- position where `cursor_item (a_cursor)' and `v' are equal.
 			-- (Use `equality_tester''s comparison criterion
@@ -369,7 +369,7 @@ feature {DS_BILINKED_LIST_CURSOR} -- Cursor implementation
 			end
 		end
 
-	cursor_go_i_th (a_cursor: like new_cursor; i: INTEGER) is
+	cursor_go_i_th (a_cursor: like new_cursor; i: INTEGER)
 			-- Move `a_cursor' to `i'-th position.
 			-- (Performance: O(min(i,count-i)).)
 		local

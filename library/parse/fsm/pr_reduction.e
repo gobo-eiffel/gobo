@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_rule: like rule) is
+	make (a_rule: like rule)
 			-- Create a new reduction transition for `a_rule'.
 		require
 			a_rule_not_void: a_rule /= Void
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current reduction considered less than `other'?
 		do
 			Result := rule < other.rule
@@ -59,7 +59,7 @@ feature -- Comparison
 
 feature -- Element change
 
-	put_transition (a_transition: PR_TRANSITION) is
+	put_transition (a_transition: PR_TRANSITION)
 			-- Add `a_transition' to `transitions'.
 		require
 			a_transition_not_void: a_transition /= Void
@@ -69,7 +69,7 @@ feature -- Element change
 			transition_added: transitions.has (a_transition)
 		end
 
-	build_lookaheads is
+	build_lookaheads
 			-- Find out the lookahead tokens `lookaheads'
 			-- as being the possible following tokens of
 			-- transitions leading to current reduction.
@@ -115,7 +115,7 @@ feature -- Element change
 
 feature {NONE} -- Constants
 
-	Initial_max_nb_lookaheads: INTEGER is 10
+	Initial_max_nb_lookaheads: INTEGER = 10
 			-- Initial maximum number of lookahead tokens
 
 invariant

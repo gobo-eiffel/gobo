@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER) is
+	make (filename: STRING; line: INTEGER)
 			-- Create a new error reporting an unrecoginzed rule.
 		require
 			filename_not_void: filename /= Void
@@ -34,10 +34,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: unrecognized rule"
+	default_template: STRING = "%"$1%", line $2: unrecognized rule"
 			-- Default template used to built the error message
 
-	code: STRING is "LX0025"
+	code: STRING = "LX0025"
 			-- Error code
 
 invariant

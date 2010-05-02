@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT) is
+	make (a_project: GEANT_PROJECT)
 			-- Create a new 'gec' command.
 		do
 			precursor (a_project)
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- Can command be executed?
 		do
 			Result := is_ace_configuration or is_cleanable
@@ -48,7 +48,7 @@ feature -- Status report
 			exit_code_variable_name_void_or_not_empty: Result implies (exit_code_variable_name = Void or else exit_code_variable_name.count > 0)
 		end
 
-	is_ace_configuration: BOOLEAN is
+	is_ace_configuration: BOOLEAN
 			-- Does ace file configuration apply?
 		do
 			Result := (ace_filename /= Void and then ace_filename.count > 0)
@@ -57,7 +57,7 @@ feature -- Status report
 			ace_filename_not_empty: Result implies ace_filename.count > 0
 		end
 
-	is_cleanable: BOOLEAN is
+	is_cleanable: BOOLEAN
 			-- Can system be cleaned?
 		do
 			Result := clean /= Void and then clean.count > 0
@@ -100,7 +100,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_ace_filename (a_filename: like ace_filename) is
+	set_ace_filename (a_filename: like ace_filename)
 			-- Set `ace_filename' to `a_filename'.
 		require
 			a_filename_not_void: a_filename /= Void
@@ -111,7 +111,7 @@ feature -- Setting
 			ace_filename_set: ace_filename = a_filename
 		end
 
-	set_c_compile (b: BOOLEAN) is
+	set_c_compile (b: BOOLEAN)
 			-- Set `c_compile' to `b'.
 		do
 			c_compile := b
@@ -119,7 +119,7 @@ feature -- Setting
 			c_compile_set: c_compile = b
 		end
 
-	set_finalize (b: BOOLEAN) is
+	set_finalize (b: BOOLEAN)
 			-- Set `finalize' to `b'.
 		do
 			finalize := b
@@ -127,7 +127,7 @@ feature -- Setting
 			finalize_set: finalize = b
 		end
 
-	set_gelint (b: BOOLEAN) is
+	set_gelint (b: BOOLEAN)
 			-- Set `gelint' to `b'.
 		do
 			gelint := b
@@ -135,7 +135,7 @@ feature -- Setting
 			gelint_set: gelint = b
 		end
 
-	set_catcall_mode (a_mode: STRING) is
+	set_catcall_mode (a_mode: STRING)
 			-- Set `catcall_mode' to `a_mode'.
 		do
 			catcall_mode := a_mode
@@ -143,7 +143,7 @@ feature -- Setting
 			catcall_mode_set: catcall_mode = a_mode
 		end
 
-	set_split_mode (b: BOOLEAN) is
+	set_split_mode (b: BOOLEAN)
 			-- Set `split_mode' to `b'.
 		do
 			split_mode := b
@@ -151,7 +151,7 @@ feature -- Setting
 			split_mode_set: split_mode = b
 		end
 
-	set_split_size (s: INTEGER) is
+	set_split_size (s: INTEGER)
 			-- Set `split_size' to `s'.
 		require
 			s_positive: s > 0
@@ -161,7 +161,7 @@ feature -- Setting
 			split_size_set: split_size = s
 		end
 
-	set_garbage_collector (s: STRING) is
+	set_garbage_collector (s: STRING)
 			-- Set `garbage_collector' to `s'.
 		require
 			s_not_void: s /= Void
@@ -172,7 +172,7 @@ feature -- Setting
 			garbage_collector_set: garbage_collector = s
 		end
 
-	set_clean (a_clean: like clean) is
+	set_clean (a_clean: like clean)
 			-- Set `clean' to `a_clean'.
 		do
 			clean := a_clean
@@ -180,7 +180,7 @@ feature -- Setting
 			clean_set: clean = a_clean
 		end
 
-	set_exit_code_variable_name (a_exit_code_variable_name: like exit_code_variable_name) is
+	set_exit_code_variable_name (a_exit_code_variable_name: like exit_code_variable_name)
 			-- Set `exit_code_variable_name' to `a_exit_code_variable_name'.
 		require
 			a_exit_code_variable_name_not_void: a_exit_code_variable_name /= Void
@@ -193,7 +193,7 @@ feature -- Setting
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute command.
 		local
 			cmd: STRING
@@ -321,7 +321,7 @@ feature -- Execution
 
 feature -- Command-line
 
-	new_ace_cmdline: STRING is
+	new_ace_cmdline: STRING
 			-- Execution commandline for Ace configuration
 		require
 			is_ace_configuration: is_ace_configuration

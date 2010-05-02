@@ -33,7 +33,7 @@ create
 
 feature -- Parsing
 
-	parse_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+	parse_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Parse Xace file `a_file'.
 		local
 			a_document: XM_DOCUMENT
@@ -80,7 +80,7 @@ feature -- Access
 
 feature {NONE} -- Xace AST factory
 
-	new_system (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_SYSTEM is
+	new_system (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_SYSTEM
 			-- New Eiffel system build from `an_element'
 		local
 			l_error_handler: ET_ERROR_HANDLER
@@ -148,7 +148,7 @@ feature {NONE} -- Xace AST factory
 
 feature {NONE} -- Eiffel AST factory
 
-	new_eiffel_ast_factory: ET_AST_FACTORY is
+	new_eiffel_ast_factory: ET_AST_FACTORY
 			-- New Eiffel AST factory
 		do
 			if eiffel_ast_factory /= Void then
@@ -160,7 +160,7 @@ feature {NONE} -- Eiffel AST factory
 			eiffel_ast_factory_not_void: Result /= Void
 		end
 
-	new_eiffel_error_handler: ET_ERROR_HANDLER is
+	new_eiffel_error_handler: ET_ERROR_HANDLER
 			-- New Eiffel error handler for Eiffel parser
 		do
 			if eiffel_error_handler /= Void then
@@ -184,7 +184,7 @@ feature -- Configuration
 
 feature -- Configuration setting
 
-	set_eiffel_ast_factory (a_factory: like eiffel_ast_factory) is
+	set_eiffel_ast_factory (a_factory: like eiffel_ast_factory)
 			-- Set `eiffel_ast_factory' to `a_factory'.
 		do
 			eiffel_ast_factory := a_factory
@@ -192,7 +192,7 @@ feature -- Configuration setting
 			eiffel_ast_factory_set: eiffel_ast_factory = a_factory
 		end
 
-	set_eiffel_error_handler (a_handler: like eiffel_error_handler) is
+	set_eiffel_error_handler (a_handler: like eiffel_error_handler)
 			-- Set `eiffel_error_handler' to `a_handler'.
 		do
 			eiffel_error_handler := a_handler

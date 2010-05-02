@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	ecma_367_1: UT_VERSION is
+	ecma_367_1: UT_VERSION
 			-- ECMA 367-1
 		once
 			create Result.make_major_minor (367, 1)
@@ -26,7 +26,7 @@ feature -- Access
 			ecma_367_1_not_void: Result /= Void
 		end
 
-	ecma_367_2: UT_VERSION is
+	ecma_367_2: UT_VERSION
 			-- ECMA 367-2
 		once
 			create Result.make_major_minor (367, 2)
@@ -34,7 +34,7 @@ feature -- Access
 			ecma_367_2_not_void: Result /= Void
 		end
 
-	ecma_367_latest: UT_VERSION is
+	ecma_367_latest: UT_VERSION
 			-- After the last release ECMA 367
 		once
 			create Result.make_major (367)

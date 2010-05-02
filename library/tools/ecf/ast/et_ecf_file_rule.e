@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_exclude: like exclude; a_include: like include) is
+	make (a_exclude: like exclude; a_include: like include)
 			-- Create a new file rule.
 		require
 			no_void_exclude: a_exclude /= Void implies not a_exclude.has_void
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_included (a_pathname: STRING): BOOLEAN is
+	is_included (a_pathname: STRING): BOOLEAN
 			-- Is `a_pathname' included according to the exclude/include rules?
 			-- That means it is either not excluded or it is included.
 		do
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 	include_regexp: RX_PCRE_REGULAR_EXPRESSION
 			-- Include regular expression
 
-	compile_regexp (a_patterns: DS_HASH_SET [STRING]): RX_PCRE_REGULAR_EXPRESSION is
+	compile_regexp (a_patterns: DS_HASH_SET [STRING]): RX_PCRE_REGULAR_EXPRESSION
 			-- Compile `a_patterns' into a regular expression
 		local
 			l_cursor: DS_HASH_SET_CURSOR [STRING]

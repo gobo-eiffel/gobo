@@ -29,7 +29,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_type_mark: like type_mark; a_name: like name;
-		a_parameters: like actual_parameters; a_named_base_class: like named_base_class) is
+		a_parameters: like actual_parameters; a_named_base_class: like named_base_class)
 			-- Create a new generic class type.
 		require
 			a_name_not_void: a_name /= Void
@@ -54,7 +54,7 @@ feature -- Access
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_generic_class_type (Current)

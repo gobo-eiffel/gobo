@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_less_than_agent: like less_than_agent) is
+	make (a_less_than_agent: like less_than_agent)
 			-- Create a new comparator implemented using `a_less_than_agent'.
 		require
 			a_less_than_agent_not_void: a_less_than_agent /= Void
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	less_than (u, v: G): BOOLEAN is
+	less_than (u, v: G): BOOLEAN
 			-- Is `u' considered less than `v'?
 		do
 			Result := less_than_agent.item ([u, v])

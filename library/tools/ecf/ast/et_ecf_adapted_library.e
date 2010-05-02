@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name, a_filename: ET_IDENTIFIER; a_universe: like universe) is
+	make (a_name, a_filename: ET_IDENTIFIER; a_universe: like universe)
 			-- Create a new ECF adapted library.
 		require
 			a_name_not_void: a_name /= Void
@@ -61,7 +61,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_library (a_library: like library) is
+	set_library (a_library: like library)
 			-- Set `library' to `a_library'.
 		require
 			a_library_not_void: a_library /= Void

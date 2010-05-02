@@ -37,7 +37,7 @@ create
 
 feature -- Access
 
-	key: K is
+	key: K
 			-- Key at cursor position
 		do
 			Result := container.cursor_key (Current)
@@ -48,7 +48,7 @@ feature -- Access
 
 feature -- Element change
 
-	replace (v: G) is
+	replace (v: G)
 			-- Replace item at cursor position by `v'.
 		do
 			container.item_storage_put (v, position)

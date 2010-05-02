@@ -23,8 +23,8 @@ inherit
 		export {NONE} all end
 
 feature -- Output
-	
-	todo (a_routine_name: STRING; is_partially_done: BOOLEAN) is
+
+	todo (a_routine_name: STRING; is_partially_done: BOOLEAN)
 			-- Write a TODO message.
 		require
 			routine_name_not_void: a_routine_name /= Void and then a_routine_name.count > 2
@@ -44,7 +44,7 @@ feature -- Output
 			end
 		end
 
-	debug_print (a_string: STRING) is
+	debug_print (a_string: STRING)
 			-- Print `a_string' plus it's item codes.
 		local
 			i: INTEGER
@@ -65,7 +65,7 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	keys: DS_HASH_SET [STRING] is
+	keys: DS_HASH_SET [STRING]
 			-- Routines we have already seen
 		once
 			create Result.make (30)
@@ -73,4 +73,4 @@ feature {NONE} -- Implementation
 		end
 
 end
-	
+

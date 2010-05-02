@@ -22,7 +22,7 @@ create
 
 feature -- Access
 
-	value: BOOLEAN is
+	value: BOOLEAN
 			-- Boolean value
 		do
 			Result := boolean_value (string_value)
@@ -30,7 +30,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	boolean_value (a_value: STRING): BOOLEAN is
+	boolean_value (a_value: STRING): BOOLEAN
 			-- Value of `a_value'
 		require
 			a_value_not_void: a_value /= Void
@@ -48,7 +48,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	True_attribute_value: STRING is
+	True_attribute_value: STRING
 			-- "true" attribute value
 		once
 			Result := "true"
@@ -56,7 +56,7 @@ feature {NONE} -- Constants
 			attribute_value_not_void: Result /= Void
 		end
 
-	False_attribute_value: STRING is
+	False_attribute_value: STRING
 			-- "false" attribute value
 		once
 			Result := "false"

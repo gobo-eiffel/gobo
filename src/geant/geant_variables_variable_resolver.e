@@ -22,14 +22,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create new Variable resolver.
 		do
 		end
 
 feature -- Access
 
-	value (k: STRING): STRING is
+	value (k: STRING): STRING
 			-- Item associated with `k';
 			-- Void if no such item
 		do
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Status report
 
-	has (k: STRING): BOOLEAN is
+	has (k: STRING): BOOLEAN
 			-- Is there an item associated with `k'?
 		do
 			Result := variables.has (k)
@@ -51,7 +51,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_variables (a_variables: like variables) is
+	set_variables (a_variables: like variables)
 			-- Set `variables' to `a_variables'.
 		require
 			a_variables_not_void: a_variables /= Void

@@ -18,7 +18,7 @@ inherit
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset convert feature as it was when it was last parsed.
 		do
 			name.reset
@@ -27,13 +27,13 @@ feature -- Initialization
 
 feature -- Status report
 
-	is_convert_from: BOOLEAN is
+	is_convert_from: BOOLEAN
 			-- Is it a conversion from another type?
 		do
 			-- Result := False
 		end
 
-	is_convert_to: BOOLEAN is
+	is_convert_to: BOOLEAN
 			-- Is it a conversion to another type?
 		do
 			-- Result := False
@@ -47,20 +47,20 @@ feature -- Access
 	types: ET_TYPE_LIST
 			-- Conversion types
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
 			Result := name.position
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := name.first_leaf
 		end
 
-	convert_feature: ET_CONVERT_FEATURE is
+	convert_feature: ET_CONVERT_FEATURE
 			-- Conversion feature in comma-separated list
 		do
 			Result := Current

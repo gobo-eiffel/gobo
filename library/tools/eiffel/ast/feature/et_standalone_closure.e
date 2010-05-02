@@ -30,13 +30,13 @@ inherit
 
 feature -- Status report
 
-	is_feature: BOOLEAN is
+	is_feature: BOOLEAN
 			-- Is `Current' a feature?
 		do
 			-- Result := False
 		end
 
-	is_invariants: BOOLEAN is
+	is_invariants: BOOLEAN
 			-- Is `Current' class invariants?
 		do
 			-- Result := False
@@ -44,7 +44,7 @@ feature -- Status report
 
 feature -- Access
 
-	first_precursor: ET_STANDALONE_CLOSURE is
+	first_precursor: ET_STANDALONE_CLOSURE
 			-- First precursor;
 			-- Void if the feature has no precursor.
 			-- Useful to build the flat preconditions and
@@ -52,7 +52,7 @@ feature -- Access
 		deferred
 		end
 
-	implementation_class: ET_CLASS is
+	implementation_class: ET_CLASS
 			-- Class where implementation of current feature
 			-- has been provided;
 			-- Useful for interpreting feature calls and type
@@ -65,7 +65,7 @@ feature -- Access
 			implementation_class_not_void: Result /= Void
 		end
 
-	implementation_feature: ET_STANDALONE_CLOSURE is
+	implementation_feature: ET_STANDALONE_CLOSURE
 			-- Current feature in `implementation_class',
 			-- Useful for interpreting feature calls and type
 			-- anchors (that might be renamed in descendant classes)
@@ -77,7 +77,7 @@ feature -- Access
 
 feature -- Export status
 
-	clients: ET_CLIENT_LIST is
+	clients: ET_CLIENT_LIST
 			-- Clients to which feature is exported
 		deferred
 		ensure
@@ -100,7 +100,7 @@ feature -- Implementation checking status
 	has_assertions_error: BOOLEAN
 			-- Has a fatal error occurred during assertions implementation checking?
 
-	set_implementation_checked is
+	set_implementation_checked
 			-- Set `implementation_checked' to True.
 		do
 			implementation_checked := True
@@ -108,7 +108,7 @@ feature -- Implementation checking status
 			implementation_checked: implementation_checked
 		end
 
-	set_implementation_error is
+	set_implementation_error
 			-- Set `has_implementation_error' to True.
 		do
 			has_implementation_error := True
@@ -116,7 +116,7 @@ feature -- Implementation checking status
 			has_implementation_error: has_implementation_error
 		end
 
-	reset_implementation_checked is
+	reset_implementation_checked
 			-- Set `implementation_checked' to False.
 		do
 			has_implementation_error := False
@@ -126,7 +126,7 @@ feature -- Implementation checking status
 			no_implementation_error: not has_implementation_error
 		end
 
-	set_assertions_checked is
+	set_assertions_checked
 			-- Set `assertions_checked' to True.
 		do
 			assertions_checked := True
@@ -134,7 +134,7 @@ feature -- Implementation checking status
 			assertions_checked: assertions_checked
 		end
 
-	set_assertions_error is
+	set_assertions_error
 			-- Set `has_assertions_error' to True.
 		do
 			has_assertions_error := True
@@ -142,7 +142,7 @@ feature -- Implementation checking status
 			has_assertions_error: has_assertions_error
 		end
 
-	reset_assertions_checked is
+	reset_assertions_checked
 			-- Set `assertions_checked' to False.
 		do
 			has_assertions_error := False
@@ -154,7 +154,7 @@ feature -- Implementation checking status
 
 feature -- Conversion
 
-	as_feature: ET_FEATURE is
+	as_feature: ET_FEATURE
 			-- `Current' viewed as a feature
 		require
 			is_feature: is_feature
@@ -164,7 +164,7 @@ feature -- Conversion
 			definition: ANY_.same_objects (Result, Current)
 		end
 
-	as_invariants: ET_INVARIANTS is
+	as_invariants: ET_INVARIANTS
 			-- `Current' viewed as class invariants
 		require
 			is_invariants: is_invariants

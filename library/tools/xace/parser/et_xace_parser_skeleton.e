@@ -33,7 +33,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (an_error_handler: like error_handler) is
+	make (an_error_handler: like error_handler)
 			-- Create a new Xace parser.
 		require
 			an_error_handler_not_void: an_error_handler /= Void
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			error_handler_set: error_handler = an_error_handler
 		end
 
-	make_with_factory (a_factory: like ast_factory; an_error_handler: like error_handler) is
+	make_with_factory (a_factory: like ast_factory; an_error_handler: like error_handler)
 			-- Create a new Xace parser.
 		require
 			a_factory_not_void: a_factory /= Void
@@ -65,14 +65,14 @@ feature -- Access
 	error_handler: ET_XACE_ERROR_HANDLER
 			-- Error handler
 
-	library_parser: ET_XACE_LIBRARY_CONFIG_PARSER is
+	library_parser: ET_XACE_LIBRARY_CONFIG_PARSER
 			-- Library parser
 		deferred
 		ensure
 			library_parser_not_void: Result /= Void
 		end
 
-	parsed_libraries: DS_HASH_TABLE [ET_XACE_LIBRARY_CONFIG, STRING] is
+	parsed_libraries: DS_HASH_TABLE [ET_XACE_LIBRARY_CONFIG, STRING]
 			-- Already parsed Xace libraries, indexed by filenames
 		deferred
 		ensure
@@ -91,7 +91,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_shallow (b: BOOLEAN) is
+	set_shallow (b: BOOLEAN)
 			-- Set `is_shallow' to `b'.
 		do
 			is_shallow := b
@@ -102,7 +102,7 @@ feature -- Status setting
 			shallow_set: is_shallow = b
 		end
 
-	set_ve (b: BOOLEAN) is
+	set_ve (b: BOOLEAN)
 			-- Set `is_ve' to `b'.
 		do
 			is_ve := b
@@ -115,7 +115,7 @@ feature -- Status setting
 
 feature {NONE} -- AST factory
 
-	new_system (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_SYSTEM_CONFIG is
+	new_system (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_SYSTEM_CONFIG
 			-- New Xace system build from `an_element'
 		require
 			an_element_not_void: an_element /= Void
@@ -129,7 +129,7 @@ feature {NONE} -- AST factory
 			new_system_not_void: Result /= Void
 		end
 
-	new_library (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_LIBRARY_CONFIG is
+	new_library (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_LIBRARY_CONFIG
 			-- New library build from `an_element'
 		require
 			an_element_not_void: an_element /= Void
@@ -144,7 +144,7 @@ feature {NONE} -- AST factory
 			new_library_not_void: Result /= Void
 		end
 
-	new_cluster (an_element: XM_ELEMENT; a_parent_prefix: STRING; a_position_table: XM_POSITION_TABLE; a_universe: ET_UNIVERSE): ET_XACE_CLUSTER is
+	new_cluster (an_element: XM_ELEMENT; a_parent_prefix: STRING; a_position_table: XM_POSITION_TABLE; a_universe: ET_UNIVERSE): ET_XACE_CLUSTER
 			-- New cluster build from `an_element'
 		require
 			an_element_not_void: an_element /= Void
@@ -274,7 +274,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_class (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_CLASS_OPTIONS is
+	new_class (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_CLASS_OPTIONS
 			-- New class options build from `an_element'.
 		require
 			an_element_not_void: an_element /= Void
@@ -313,7 +313,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_feature (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_FEATURE_OPTIONS is
+	new_feature (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_FEATURE_OPTIONS
 			-- New feature options build from `an_element'.
 		require
 			an_element_not_void: an_element /= Void
@@ -346,7 +346,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_mount (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_eiffel_system: ET_SYSTEM): ET_XACE_MOUNTED_LIBRARY is
+	new_mount (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_eiffel_system: ET_SYSTEM): ET_XACE_MOUNTED_LIBRARY
 			-- New mounted library build from `an_element'.
 		require
 			an_element_not_void: an_element /= Void
@@ -392,7 +392,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_options (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_OPTIONS is
+	new_options (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_OPTIONS
 			-- New option clause build from `an_element'
 		require
 			an_element_not_void: an_element /= Void
@@ -405,7 +405,7 @@ feature {NONE} -- AST factory
 			options_not_void: Result /= Void
 		end
 
-	new_export (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_CLASS_OPTIONS is
+	new_export (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_CLASS_OPTIONS
 			-- New export clause build from `an_element'
 		require
 			an_element_not_void: an_element /= Void
@@ -443,7 +443,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_exported_feature (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_FEATURE_OPTIONS is
+	new_exported_feature (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_FEATURE_OPTIONS
 			-- New exported feature build from `an_element'
 		require
 			an_element_not_void: an_element /= Void
@@ -476,7 +476,7 @@ feature {NONE} -- AST factory
 
 feature {NONE} -- Element change
 
-	fill_system (a_system: ET_XACE_SYSTEM_CONFIG; an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_eiffel_system: ET_SYSTEM) is
+	fill_system (a_system: ET_XACE_SYSTEM_CONFIG; an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_eiffel_system: ET_SYSTEM)
 			-- Fill Xace system `a_system' with data found in `an_element'.
 		require
 			a_system_not_void: a_system /= Void
@@ -649,7 +649,7 @@ feature {NONE} -- Element change
 			a_system.set_libraries (a_mounts)
 		end
 
-	fill_library (a_library: ET_XACE_LIBRARY_CONFIG; an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_eiffel_system: ET_SYSTEM) is
+	fill_library (a_library: ET_XACE_LIBRARY_CONFIG; an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_eiffel_system: ET_SYSTEM)
 			-- Fill Xace library `a_library' with data found in `an_element'.
 		require
 			a_library_not_void: a_library /= Void
@@ -783,7 +783,7 @@ feature {NONE} -- Element change
 			a_library.set_libraries (a_mounts)
 		end
 
-	fill_options (an_option: ET_XACE_OPTIONS; an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE) is
+	fill_options (an_option: ET_XACE_OPTIONS; an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE)
 			-- Fill Xace option `an_option' with data found in `an_element'.
 		require
 			an_option_not_void: an_option /= Void
@@ -1523,7 +1523,7 @@ feature {NONE} -- Element change
 			end
 		end
 
-	fill_externals (an_option: ET_XACE_OPTIONS; a_cluster: ET_XACE_CLUSTER; an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE) is
+	fill_externals (an_option: ET_XACE_OPTIONS; a_cluster: ET_XACE_CLUSTER; an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE)
 			-- Fill Xace externals with data found in `an_element'.
 		require
 			an_option_not_void: an_option /= Void
@@ -1569,7 +1569,7 @@ feature {NONE} -- Element change
 
 feature {NONE} -- Status report
 
-	is_true (a_string: STRING): BOOLEAN is
+	is_true (a_string: STRING): BOOLEAN
 			-- Is `a_string' equal to "true" (case-insensitive)?
 		require
 			a_string_not_void: a_string /= Void
@@ -1577,7 +1577,7 @@ feature {NONE} -- Status report
 			Result := STRING_.same_case_insensitive (a_string, True_constant)
 		end
 
-	is_false (a_string: STRING): BOOLEAN is
+	is_false (a_string: STRING): BOOLEAN
 			-- Is `a_string' equal to "false" (case-insensitive)?
 		require
 			a_string_not_void: a_string /= Void
@@ -1587,11 +1587,11 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Constant
 
-	True_constant: STRING is "true"
-	False_constant: STRING is "false"
+	True_constant: STRING = "true"
+	False_constant: STRING = "false"
 			-- Boolean string representation
 
-	empty_prefix: STRING is ""
+	empty_prefix: STRING = ""
 			-- Empty prefix
 
 invariant

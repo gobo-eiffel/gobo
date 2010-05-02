@@ -30,19 +30,19 @@ inherit
 
 feature -- Access
 
-	is_tiny_composite_node: BOOLEAN is
+	is_tiny_composite_node: BOOLEAN
 			-- Is `Current' a composite node?
 		do
 			Result := True
 		end
 
-	as_tiny_composite_node: XM_XPATH_TINY_COMPOSITE_NODE is
+	as_tiny_composite_node: XM_XPATH_TINY_COMPOSITE_NODE
 			-- `Current' seen as a composite node
 		do
 			Result := Current
 		end
 
-	string_value: STRING is
+	string_value: STRING
 			-- String-value
 		local
 			a_level, a_next_node, a_start_position, a_length: INTEGER
@@ -53,7 +53,7 @@ feature -- Access
 			-- Actually, more complicated than the above description.
 
 			a_level := tree.depth_of (node_number)
-			
+
 			-- Note, we can't rely on the value being contiguously stored because of whitespace
 			-- nodes: the data for these may still be present
 			-- Also there may be processing-instruction and comment nodes present.
@@ -83,7 +83,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_child_nodes: BOOLEAN is
+	has_child_nodes: BOOLEAN
 			-- Does `Current' have any children?
 		do
 			Result := node_number  < tree.number_of_nodes
@@ -91,4 +91,4 @@ feature -- Status report
 		end
 
 end
-	
+

@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (o: like old_name; n: like new_name; a_comma: like comma) is
+	make (o: like old_name; n: like new_name; a_comma: like comma)
 			-- Create a new rename pair.
 		require
 			o_not_void: o /= Void
@@ -47,13 +47,13 @@ feature -- Access
 	comma: ET_SYMBOL
 			-- Comma separator
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := comma
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := comma.break
@@ -61,7 +61,7 @@ feature -- Access
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_rename_comma (Current)

@@ -9,7 +9,7 @@ note
 	copyright:  "Copyright (c) 1999, Eric Bezault and others"
 	license:    "MIT License"
 
-class DS_LINKED_LIST [G]
+class SAMPLE [G]
 
 inherit
 
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create an empty list.
 			-- Use `=' as comparison criterion.
 		do
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			before: before
 		end
 
-	make_equal is
+	make_equal
 			-- Create an empty list.
 			-- Use `equal' as comparison criterion.
 		do
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			before: before
 		end
 
-	make_from_linear (other: DS_LINEAR [G]) is
+	make_from_linear (other: DS_LINEAR [G])
 			-- Create a new list and fill it with items of `other'.
 			-- Use `=' as comparison criterion.
 		require
@@ -82,7 +82,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	infix "@", item (i: INTEGER): G is
+	infix "@", item (i: INTEGER): G
 			-- Item at index `i'
 			-- (Performance: O(i).)
 		local
@@ -97,21 +97,21 @@ feature -- Access
 			Result := a_cell.item
 		end
 
-	first: G is
+	first: G
 			-- First item in list
 			-- (Performance: O(1).)
 		do
 			Result := first_cell.item
 		end
 
-	last: G is
+	last: G
 			-- Last item in list
 			-- (Performance: O(1).)
 		do
 			Result := last_cell.item
 		end
 
-	new_cursor: DS_LINKED_LIST_CURSOR [G] is
+	new_cursor: DS_LINKED_LIST_CURSOR [G]
 			-- New external cursor for traversal
 		do
 			create Result.make (Current)
@@ -123,7 +123,7 @@ feature -- Measurement
 			-- Number of items in list
 			-- (Performance: O(1).)
 
-	occurrences (v: G): INTEGER is
+	occurrences (v: G): INTEGER
 			-- Number of times `v' appears in list
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -153,7 +153,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	has (v: G): BOOLEAN is
+	has (v: G): BOOLEAN
 			-- Does list include `v'?
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -185,7 +185,7 @@ feature -- Status report
 			end
 		end
 
-	extendible (n: INTEGER): BOOLEAN is
+	extendible (n: INTEGER): BOOLEAN
 			-- May list be extended with `n' items?
 		do
 			Result := True
@@ -195,7 +195,7 @@ feature -- Status report
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Copy `other' to current list.
 			-- Move all cursors `off' (unless `other = Current').
 			-- (Performance: O(other.count).)
@@ -235,7 +235,7 @@ feature -- Duplication
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is list equal to `other'?
 			-- Do not take cursor positions nor
 			-- `equality_tester' into account.
@@ -266,7 +266,7 @@ feature -- Comparison
 
 feature -- Element change
 
-	put_first, force_first (v: G) is
+	put_first, force_first (v: G)
 			-- Add `v' to beginning of list.
 			-- Do not move cursors.
 			-- (Performance: O(1).)
@@ -285,7 +285,7 @@ feature -- Element change
 			end
 		end
 
-	put_last, force_last (v: G) is
+	put_last, force_last (v: G)
 			-- Add `v' to end of list.
 			-- Do not move cursors.
 			-- (Performance: O(1).)
@@ -304,7 +304,7 @@ feature -- Element change
 			end
 		end
 
-	replace (v: G; i: INTEGER) is
+	replace (v: G; i: INTEGER)
 			-- Replace item at index `i' by `v'.
 			-- Do not move cursors.
 			-- (Performance: O(i).)
@@ -320,7 +320,7 @@ feature -- Element change
 			a_cell.put (v)
 		end
 
-	put, force (v: G; i: INTEGER) is
+	put, force (v: G; i: INTEGER)
 			-- Add `v' at `i'-th position.
 			-- Do not move cursors.
 			-- (Performance: O(i).)
@@ -349,7 +349,7 @@ feature -- Element change
 			end
 		end
 
-	put_left_cursor, force_left_cursor (v: G; a_cursor: like new_cursor) is
+	put_left_cursor, force_left_cursor (v: G; a_cursor: like new_cursor)
 			-- Add `v' to left of `a_cursor' position.
 			-- Do not move cursors.
 			-- (Synonym of `a_cursor.put_left (v)'.)
@@ -383,7 +383,7 @@ feature -- Element change
 			end
 		end
 
-	put_right_cursor, force_right_cursor (v: G; a_cursor: like new_cursor) is
+	put_right_cursor, force_right_cursor (v: G; a_cursor: like new_cursor)
 			-- Add `v' to right of `a_cursor' position.
 			-- Do not move cursors.
 			-- (Synonym of `a_cursor.put_right (v)'.)
@@ -404,7 +404,7 @@ feature -- Element change
 			end
 		end
 
-	swap (i, j: INTEGER) is
+	swap (i, j: INTEGER)
 			-- Exchange items at indexes i and j.
 			-- Do not move cursors.
 			-- (Performance: O(max(i,j)).)
@@ -437,7 +437,7 @@ feature -- Element change
 			end
 		end
 
-	extend_first, append_first (other: DS_LINEAR [G]) is
+	extend_first, append_first (other: DS_LINEAR [G])
 			-- Add items of `other' to beginning of list.
 			-- Keep items of `other' in the same order.
 			-- Do not move cursors.
@@ -461,7 +461,7 @@ feature -- Element change
 			end
 		end
 
-	extend_last, append_last (other: DS_LINEAR [G]) is
+	extend_last, append_last (other: DS_LINEAR [G])
 			-- Add items of `other' to end of list.
 			-- Keep items of `other' in the same order.
 			-- Do not move cursors.
@@ -485,7 +485,7 @@ feature -- Element change
 			end
 		end
 
-	extend, append (other: DS_LINEAR [G]; i: INTEGER) is
+	extend, append (other: DS_LINEAR [G]; i: INTEGER)
 			-- Add items of `other' at `i'-th position.
 			-- Keep items of `other' in the same order.
 			-- Do not move cursors.
@@ -519,7 +519,7 @@ feature -- Element change
 			end
 		end
 
-	extend_left_cursor, append_left_cursor (other: DS_LINEAR [G]; a_cursor: like new_cursor) is
+	extend_left_cursor, append_left_cursor (other: DS_LINEAR [G]; a_cursor: like new_cursor)
 			-- Add items of `other' to left of `a_cursor' position.
 			-- Keep items of `other' in the same order.
 			-- Do not move cursors.
@@ -576,7 +576,7 @@ feature -- Element change
 			end
 		end
 
-	extend_right_cursor, append_right_cursor (other: DS_LINEAR [G]; a_cursor: like new_cursor) is
+	extend_right_cursor, append_right_cursor (other: DS_LINEAR [G]; a_cursor: like new_cursor)
 			-- Add items of `other' to right of `a_cursor' position.
 			-- Keep items of `other' in the same order.
 			-- Do not move cursors.
@@ -615,7 +615,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_first is
+	remove_first
 			-- Remove item at beginning of list.
 			-- Move any cursors at this position `forth'.
 			-- (Performance: O(1).)
@@ -632,7 +632,7 @@ feature -- Removal
 			end
 		end
 
-	remove_last is
+	remove_last
 			-- Remove item at end of list.
 			-- Move any cursors at this position `forth'.
 			-- (Performance: O(count).)
@@ -655,7 +655,7 @@ feature -- Removal
 			end
 		end
 
-	remove (i: INTEGER) is
+	remove (i: INTEGER)
 			-- Remove item at `i'-th position.
 			-- Move any cursors at this position `forth'.
 			-- (Performance: O(i).)
@@ -685,7 +685,7 @@ feature -- Removal
 			end
 		end
 
-	remove_at_cursor (a_cursor: like new_cursor) is
+	remove_at_cursor (a_cursor: like new_cursor)
 			-- Remove item at `a_cursor' position.
 			-- Move any cursors at this position `forth'.
 			-- (Synonym of `a_cursor.remove'.)
@@ -718,7 +718,7 @@ feature -- Removal
 			end
 		end
 		
-	remove_left_cursor (a_cursor: like new_cursor) is
+	remove_left_cursor (a_cursor: like new_cursor)
 			-- Remove item to left of `a_cusor' position.
 			-- Move any cursors at this position `forth'.
 			-- (Synonym of `a_cursor.remove_left'.)
@@ -754,7 +754,7 @@ feature -- Removal
 			end
 		end
 
-	remove_right_cursor (a_cursor: like new_cursor) is
+	remove_right_cursor (a_cursor: like new_cursor)
 			-- Remove item to right of `a_cursor' position.
 			-- Move any cursors at this position `forth'.
 			-- (Synonym of `a_cursor.remove_right'.)
@@ -782,7 +782,7 @@ feature -- Removal
 			end
 		end
 
-	prune_first (n: INTEGER) is
+	prune_first (n: INTEGER)
 			-- Remove `n' first items from list.
 			-- Move all cursors `off'.
 			-- (Performance: O(n).)
@@ -806,7 +806,7 @@ feature -- Removal
 			end
 		end
 
-	prune_last (n: INTEGER) is
+	prune_last (n: INTEGER)
 			-- Remove `n' last items from list.
 			-- Move all cursors `off'.
 			-- (Performance: O(count-n).)
@@ -814,7 +814,7 @@ feature -- Removal
 			keep_first (count - n)
 		end
 			
-	prune (n: INTEGER; i: INTEGER) is
+	prune (n: INTEGER; i: INTEGER)
 			-- Remove `n' items at and after `i'-th position.
 			-- Move all cursors `off'.
 			-- (Performance: O(i+n).)
@@ -853,7 +853,7 @@ feature -- Removal
 			end
 		end
 
-	prune_left_cursor (n: INTEGER; a_cursor: like new_cursor) is
+	prune_left_cursor (n: INTEGER; a_cursor: like new_cursor)
 			-- Remove `n' items to left of `a_cursor' position.
 			-- Move all cursors `off'.
 			-- (Synonym of `a_cursor.prune_left (n)'.)
@@ -888,7 +888,7 @@ feature -- Removal
 			end
 		end
 
-	prune_right_cursor (n: INTEGER; a_cursor: like new_cursor) is
+	prune_right_cursor (n: INTEGER; a_cursor: like new_cursor)
 			-- Remove `n' items to right of `a_cursor' position.
 			-- Move all cursors `off'.
 			-- (Synonym of `a_cursor.prune_right (n)'.)
@@ -922,7 +922,7 @@ feature -- Removal
 			end
 		end
 
-	keep_first (n: INTEGER) is
+	keep_first (n: INTEGER)
 			-- Keep `n' first items in list.
 			-- Move all cursors `off'.
 			-- (Performance: O(n).)
@@ -946,7 +946,7 @@ feature -- Removal
 			end
 		end
 
-	keep_last (n: INTEGER) is
+	keep_last (n: INTEGER)
 			-- Keep `n' last items in list.
 			-- Move all cursors `off'.
 			-- (Performance: O(count-n).)
@@ -954,7 +954,7 @@ feature -- Removal
 			prune_first (count - n)
 		end
 
-	delete (v: G) is
+	delete (v: G)
 			-- Remove all occurrences of `v'.
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -1070,7 +1070,7 @@ feature -- Removal
 			end
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items from list.
 			-- Move all cursors `off'.
 			-- (Performance: O(1).)
@@ -1091,7 +1091,7 @@ feature {DS_LINKED_LIST, DS_LINKED_LIST_CURSOR} -- Implementation
 
 feature {NONE} -- Implementation
 
-	set_first_cell (a_cell: like first_cell) is
+	set_first_cell (a_cell: like first_cell)
 			-- Set `first_cell' to `a_cell'.
 			-- This routine has to be called (instead of
 			-- making a direct assignment to `first_cell')
@@ -1107,7 +1107,7 @@ feature {NONE} -- Implementation
 			first_cell_set: first_cell = a_cell
 		end
 
-	set_last_cell (a_cell: like first_cell) is
+	set_last_cell (a_cell: like first_cell)
 			-- Set `last_cell' to `a_cell'.
 			-- This routine has to be called (instead of
 			-- making a direct assignment to `last_cell')
@@ -1126,7 +1126,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Cursor movement
 
-	move_last_cursors_after is
+	move_last_cursors_after
 			-- Move `after' all cursors at last position.
 		local
 			a_cursor, previous_cursor, next_cursor: like new_cursor
@@ -1153,7 +1153,7 @@ feature {NONE} -- Cursor movement
 			end
 		end
 
-	move_all_cursors (old_cell, new_cell: like first_cell) is
+	move_all_cursors (old_cell, new_cell: like first_cell)
 			-- Move all cursors at position `old_cell' to `new_cell'.
 		require
 			old_cell_not_void: old_cell /= Void
@@ -1169,7 +1169,7 @@ feature {NONE} -- Cursor movement
 			end
 		end
 
-	move_all_cursors_after is
+	move_all_cursors_after
 			-- Move `after' all cursors.
 		local
 			a_cursor, next_cursor: like new_cursor

@@ -15,10 +15,10 @@ class XM_EIFFEL_DECLARATION
 create
 
 	make
-	
+
 feature {NONE} -- Creation
 
-	make is
+	make
 			-- Initialize.
 		do
 			version := Default_version
@@ -28,40 +28,40 @@ feature {NONE} -- Creation
 
 feature {NONE} -- Encoding
 
-	Default_version: STRING is "1.0"
-	Default_encoding: STRING is "utf-8"
-	Default_stand_alone: BOOLEAN is True
-			
+	Default_version: STRING = "1.0"
+	Default_encoding: STRING = "utf-8"
+	Default_stand_alone: BOOLEAN = True
+
 feature -- Attribute(s)
 
 	version: STRING
 			-- Version
-			
+
 	encoding: STRING
 			-- XML encoding.
-			
+
 	stand_alone: BOOLEAN
 			-- Standalone document?
 
 feature -- Setting
 
-	set_version (a: STRING) is
+	set_version (a: STRING)
 			-- Set version.
 		require
 			not_void: a /= Void
 		do
 			version := a
 		end
-		
-	set_encoding (a: STRING) is
+
+	set_encoding (a: STRING)
 			-- Set encoding
 		require
 			not_void: a /= Void
 		do
 			encoding := a
 		end
-	
-	set_stand_alone (a: BOOLEAN) is
+
+	set_stand_alone (a: BOOLEAN)
 			-- Set stand alone status.
 		do
 			stand_alone := a
@@ -69,7 +69,7 @@ feature -- Setting
 
 feature -- Event(s)
 
-	process (a_callback: XM_CALLBACKS) is
+	process (a_callback: XM_CALLBACKS)
 			-- Process XML declaration events.
 		require
 			not_void: a_callback /= Void
@@ -81,5 +81,5 @@ invariant
 
 	version_not_void: version /= Void
 	encoding_not_void: encoding /= Void
-		
+
 end

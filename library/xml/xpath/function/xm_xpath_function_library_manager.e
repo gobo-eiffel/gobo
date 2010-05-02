@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant
 		do
 			create libraries.make_default
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_function_available (a_fingerprint, an_arity: INTEGER; is_restricted: BOOLEAN): BOOLEAN is
+	is_function_available (a_fingerprint, an_arity: INTEGER; is_restricted: BOOLEAN): BOOLEAN
 			-- Does `a_fingerprint' represent an available function with `an_arity'?
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_FUNCTION_LIBRARY]
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Element change
 
-	bind_function (a_fingerprint: INTEGER; some_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]; is_restricted: BOOLEAN) is
+	bind_function (a_fingerprint: INTEGER; some_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]; is_restricted: BOOLEAN)
 			-- Bind `a_fingerprint' to it's definition as `last_bound_function'.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_FUNCTION_LIBRARY]
@@ -68,10 +68,10 @@ feature -- Element change
 				else
 					a_cursor.forth
 				end
-			end			
+			end
 		end
 
-	add_function_library (a_library: XM_XPATH_FUNCTION_LIBRARY) is
+	add_function_library (a_library: XM_XPATH_FUNCTION_LIBRARY)
 			-- Add `a_library' to list of managed function libraries.
 		require
 			function_library_not_void: a_library /= Void
@@ -89,4 +89,4 @@ invariant
 	libraries_not_void: libraries /= Void
 
 end
-	
+

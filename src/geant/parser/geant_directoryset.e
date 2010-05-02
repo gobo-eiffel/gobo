@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT) is
+	make (a_project: GEANT_PROJECT)
 			-- Create a new directoryset.
 		local
 			a_tester: UC_STRING_EQUALITY_TESTER
@@ -51,7 +51,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- Can element be executed?
 		do
 			Result := (directory_name /= Void and then directory_name.count > 0)
@@ -100,19 +100,19 @@ feature -- Access
 			-- during iterations;
 			-- default: 'fs.directoryname'
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is set empty?
 		do
 			Result := directory_names.is_empty
 		end
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Is there no valid position to right of cursor?
 		do
 			Result := directory_names.after
 		end
 
-	item_directory_name: STRING is
+	item_directory_name: STRING
 			-- Directoryname at current cursor
 		require
 			not_after: not after
@@ -126,7 +126,7 @@ feature -- Access
 			item_directory_name_not_void: Result /= Void
 		end
 
-	are_project_variables_up_to_date: BOOLEAN is
+	are_project_variables_up_to_date: BOOLEAN
 			-- If not `after': is project variable named `directory_name_variable_name'
 			--   set to `item_directory_name'?
 			-- If `after' is project variables named `directory_name_variable_name' not existing?
@@ -149,7 +149,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_directory_name (a_directory_name: STRING) is
+	set_directory_name (a_directory_name: STRING)
 			-- Set `directory_name' to `a_directory_name'.
 		require
 			directory_name_not_void: a_directory_name /= Void
@@ -159,7 +159,7 @@ feature -- Setting
 			directory_name_set: directory_name.is_equal (a_directory_name)
 		end
 
-	set_include_wc_string (a_include_wc_string: like include_wc_string) is
+	set_include_wc_string (a_include_wc_string: like include_wc_string)
 			-- Set `include_wc_string' to `a_include_wc_string' and
 			-- make a compiled version available in `include_wildcard'
 		require
@@ -176,7 +176,7 @@ feature -- Setting
 			include_wc_string_set: include_wc_string = a_include_wc_string
 		end
 
-	set_exclude_wc_string (a_exclude_wc_string: like exclude_wc_string) is
+	set_exclude_wc_string (a_exclude_wc_string: like exclude_wc_string)
 			-- Set `exclude_wc_string' to `a_exclude_wc_string' and
 			-- make a compiled version available in `exclude_wildcard'
 		require
@@ -193,7 +193,7 @@ feature -- Setting
 			exclude_wc_string_set: exclude_wc_string = a_exclude_wc_string
 		end
 
-	set_convert_to_filesystem (b: BOOLEAN) is
+	set_convert_to_filesystem (b: BOOLEAN)
 			-- Set `convert_to_filesystem' to `b'.
 			-- Note: `convert_to_filesystem' should be set only once.
 			-- Therefore this is a once command.
@@ -203,7 +203,7 @@ feature -- Setting
 			convert_to_filesystem_set: convert_to_filesystem = b
 		end
 
-	set_concat (b: BOOLEAN) is
+	set_concat (b: BOOLEAN)
 			-- Set `concat' to `b'.
 		do
 			concat := b
@@ -211,7 +211,7 @@ feature -- Setting
 			concat_set: concat = b
 		end
 
-	set_directory_name_variable_name (a_directory_name_variable_name: STRING) is
+	set_directory_name_variable_name (a_directory_name_variable_name: STRING)
 			-- Set `directory_name_variable_name' to `a_directory_name_variable_name'.
 		require
 			a_directory_name_variable_name_not_void: a_directory_name_variable_name /= Void
@@ -224,7 +224,7 @@ feature -- Setting
 
 feature -- Element change
 
-	add_fileset_entry_if_necessary (a_directory_name: STRING) is
+	add_fileset_entry_if_necessary (a_directory_name: STRING)
 			-- Add new GEANT_FILESET_ENTRY created from `a_directory_name'
 			-- to `directory_names'.
 		require
@@ -244,7 +244,7 @@ feature -- Element change
 			directory_names.force_last (a_entry)
 		end
 
-	remove_fileset_entry (a_directory_name: STRING) is
+	remove_fileset_entry (a_directory_name: STRING)
 			-- Remove entry with name equal to `a_directory_name' if existing.
 		local
 			a_entry: GEANT_FILESET_ENTRY
@@ -254,7 +254,7 @@ feature -- Element change
 			directory_names.remove (a_entry)
 		end
 
-	add_single_include (a_directory_name: STRING) is
+	add_single_include (a_directory_name: STRING)
 			-- Add `a_directory_name' to list of single directory_names to include into fileset.
 		require
 			a_directory_name_not_void: a_directory_name /= Void
@@ -262,7 +262,7 @@ feature -- Element change
 			single_includes.force_last (a_directory_name)
 		end
 
-	add_single_exclude (a_directory_name: STRING) is
+	add_single_exclude (a_directory_name: STRING)
 			-- Add `a_directory_name' to list of single directory_names to exclude from fileset.
 		require
 			a_directory_name_not_void: a_directory_name /= Void
@@ -272,7 +272,7 @@ feature -- Element change
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Move cursor to first position.
 		do
 			directory_names.start
@@ -282,7 +282,7 @@ feature -- Cursor movement
 			project_variables_up_to_date: are_project_variables_up_to_date
 		end
 
-	forth is
+	forth
 	   		-- Move cursor to next position.
 		require
 			not_after: not after
@@ -295,7 +295,7 @@ feature -- Cursor movement
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Populate `directory_names'.
 		local
 			al_directory_name: STRING
@@ -350,7 +350,7 @@ feature {NONE} -- Implementation/Access
 
 feature {NONE} -- Implementation/Processing
 
-	scan_internal (a_directory_name: STRING) is
+	scan_internal (a_directory_name: STRING)
 			-- Scan directory named `directory_name' recursivley;
 			-- put directory_names found matching `include_wildcard' and not matching
 			-- `exclude_wildcard' into `directory_names';
@@ -393,7 +393,7 @@ feature {NONE} -- Implementation/Processing
 			end
 		end
 
-	update_project_variables is
+	update_project_variables
 			-- Set project variable with name `directory_name_variable_name' to `item_directory_name'.
 		do
 			if not after then

@@ -22,14 +22,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new stopwatch.
 		do
 		end
 
 feature -- Access
 
-	elapsed_time: DT_DATE_TIME_DURATION is
+	elapsed_time: DT_DATE_TIME_DURATION
 			-- Elapsed time
 		local
 			l_start_time: like stop_time
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_started: BOOLEAN is
+	is_started: BOOLEAN
 			-- Has stopwatch been started?
 		do
 			Result := start_time /= Void and stop_time = Void
@@ -62,7 +62,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	reset is
+	reset
 			-- Reset stopwatch.
 		do
 			start_time := Void
@@ -73,7 +73,7 @@ feature -- Basic operations
 			no_stop_time: stop_time = Void
 		end
 
-	start is
+	start
 			-- Start stopwatch.
 		do
 			start_time := system_clock.date_time_now
@@ -84,7 +84,7 @@ feature -- Basic operations
 			no_stop_time: stop_time = Void
 		end
 
-	stop is
+	stop
 			-- Stop stopwatch.
 		require
 			started: is_started

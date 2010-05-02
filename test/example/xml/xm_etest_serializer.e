@@ -25,15 +25,15 @@ create
 
 feature -- Access
 
-	program_name: STRING is "serializer"
+	program_name: STRING = "serializer"
 			-- Program name
 
-	library_name: STRING is "xml"
+	library_name: STRING = "xml"
 			-- Library name of example
 
 feature -- Test
 
-	test_serializer is
+	test_serializer
 			-- Test 'xslt/serializer' example.
 		do
 			compile_program
@@ -45,21 +45,21 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	program_dirname: STRING is
+	program_dirname: STRING
 			-- Name of program source directory
 		do
 			Result := file_system.nested_pathname ("${GOBO}", <<"example", library_name, "xslt", program_name>>)
 			Result := Execution_environment.interpreted_string (Result)
 		end
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of data directory
 		do
 			Result := file_system.nested_pathname ("${GOBO}", <<"test", "example", "xml", "data">>)
 			Result := Execution_environment.interpreted_string (Result)
 		end
 
-	input_filename: STRING is
+	input_filename: STRING
 			-- Name of input document
 		do
 			Result := file_system.pathname (data_dirname, "doc.xml")

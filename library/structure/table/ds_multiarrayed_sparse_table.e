@@ -42,7 +42,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Create an empty table and allocate memory space
 			-- for at least `n' items. Array chunks will have
 			-- a size of `default_chunk_size'.
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			chunk_size_set: chunk_size = default_chunk_size
 		end
 
-	make_equal (n: INTEGER) is
+	make_equal (n: INTEGER)
 			-- Create an empty table and allocate memory space
 			-- for at least `n' items. Array chunks will have
 			-- a size of `default_chunk_size'.
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 			chunk_size_set: chunk_size = default_chunk_size
 		end
 
-	make_with_chunk_size (n: INTEGER; a_chunk_size: INTEGER) is
+	make_with_chunk_size (n: INTEGER; a_chunk_size: INTEGER)
 			-- Create an empty table and allocate memory space
 			-- for at least `n' items. Array chunks will have
 			-- a size of `a_chunk_size'.
@@ -88,7 +88,7 @@ feature {NONE} -- Initialization
 			before: before
 		end
 
-	make_equal_with_chunk_size (n: INTEGER; a_chunk_size: INTEGER) is
+	make_equal_with_chunk_size (n: INTEGER; a_chunk_size: INTEGER)
 			-- Create an empty table and allocate memory space
 			-- for at least `n' items. Array chunks will have
 			-- a size of `a_chunk_size'.
@@ -108,7 +108,7 @@ feature {NONE} -- Initialization
 			before: before
 		end
 
-	make_default is
+	make_default
 			-- Create an empty table and allocate memory space
 			-- for at least `default_capacity' items. Array
 			-- chunks will have a size of `default_chunk_size'.
@@ -121,7 +121,7 @@ feature {NONE} -- Initialization
 			chunk_size_set: chunk_size = default_chunk_size
 		end
 
-	make_map (n: INTEGER) is
+	make_map (n: INTEGER)
 			-- Create an empty table and allocate memory space
 			-- for at least `n' items. Array chunks will have
 			-- a size of `default_chunk_size'.
@@ -133,7 +133,7 @@ feature {NONE} -- Initialization
 			chunk_size_set: chunk_size = default_chunk_size
 		end
 
-	make_map_equal (n: INTEGER) is
+	make_map_equal (n: INTEGER)
 			-- Create an empty table and allocate memory space
 			-- for at least `n' items. Array chunks will have
 			-- a size of `default_chunk_size'.
@@ -146,7 +146,7 @@ feature {NONE} -- Initialization
 			chunk_size_set: chunk_size = default_chunk_size
 		end
 
-	make_map_with_chunk_size (n: INTEGER; a_chunk_size: INTEGER) is
+	make_map_with_chunk_size (n: INTEGER; a_chunk_size: INTEGER)
 			-- Create an empty table and allocate memory space
 			-- for at least `n' items. Array chunks will have
 			-- a size of `a_chunk_size'.
@@ -164,7 +164,7 @@ feature {NONE} -- Initialization
 			before: before
 		end
 
-	make_map_equal_with_chunk_size (n: INTEGER; a_chunk_size: INTEGER) is
+	make_map_equal_with_chunk_size (n: INTEGER; a_chunk_size: INTEGER)
 			-- Create an empty table and allocate memory space
 			-- for at least `n' items. Array chunks will have
 			-- a size of `a_chunk_size'.
@@ -183,7 +183,7 @@ feature {NONE} -- Initialization
 			before: before
 		end
 
-	make_map_default is
+	make_map_default
 			-- Create an empty table and allocate memory space
 			-- for at least `default_capacity' items.  Array
 			-- chunks will have a size of `default_chunk_size'.
@@ -195,7 +195,7 @@ feature {NONE} -- Initialization
 			chunk_size_set: chunk_size = default_chunk_size
 		end
 
-	make_with_equality_testers (n: INTEGER; an_item_tester: like equality_tester; a_key_tester: like key_equality_tester) is
+	make_with_equality_testers (n: INTEGER; an_item_tester: like equality_tester; a_key_tester: like key_equality_tester)
 			-- Create an empty table and allocate memory space for at
 			-- least `n' items. Array chunks will have a size of
 			-- `default_chunk_size'.
@@ -214,7 +214,7 @@ feature {NONE} -- Initialization
 			key_equality_tester_set: key_equality_tester = a_key_tester
 		end
 
-	make_with_chunk_size_and_equality_testers (n: INTEGER; a_chunk_size: INTEGER; an_item_tester: like equality_tester; a_key_tester: like key_equality_tester) is
+	make_with_chunk_size_and_equality_testers (n: INTEGER; a_chunk_size: INTEGER; an_item_tester: like equality_tester; a_key_tester: like key_equality_tester)
 			-- Create an empty table and allocate memory space for at
 			-- least `n' items. Array chunks will have a size of `a_chunk_size'.
 			-- Use `an_item_tester' as comparison criterion for items.
@@ -236,7 +236,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	new_cursor: DS_MULTIARRAYED_SPARSE_TABLE_CURSOR [G, K] is
+	new_cursor: DS_MULTIARRAYED_SPARSE_TABLE_CURSOR [G, K]
 			-- New external cursor for traversal
 		do
 			create Result.make (Current)
@@ -247,7 +247,7 @@ feature -- Measurement
 	chunk_size: INTEGER
 			-- Size of array chunks
 
-	default_chunk_size: INTEGER is
+	default_chunk_size: INTEGER
 			-- Default value for `chunk_size'
 			-- (Default value: 30000)
 		do
@@ -258,7 +258,7 @@ feature -- Measurement
 
 feature {DS_MULTIARRAYED_SPARSE_TABLE_CURSOR} -- Implementation
 
-	item_storage_item (i: INTEGER): G is
+	item_storage_item (i: INTEGER): G
 			-- Item at position `i' in `item_storage'
 		local
 			subitems: SPECIAL [G]
@@ -269,7 +269,7 @@ feature {DS_MULTIARRAYED_SPARSE_TABLE_CURSOR} -- Implementation
 			end
 		end
 
-	item_storage_put (v: G; i: INTEGER) is
+	item_storage_put (v: G; i: INTEGER)
 			-- Put `v' at position `i' in `item_storage'.
 		local
 			subitems: SPECIAL [G]
@@ -284,7 +284,7 @@ feature {DS_MULTIARRAYED_SPARSE_TABLE_CURSOR} -- Implementation
 			subitems.put (v, i \\ chunk_size)
 		end
 
-	key_storage_item (i: INTEGER): K is
+	key_storage_item (i: INTEGER): K
 			-- Item at position `i' in `key_storage'
 		local
 			subkeys: SPECIAL [K]
@@ -295,7 +295,7 @@ feature {DS_MULTIARRAYED_SPARSE_TABLE_CURSOR} -- Implementation
 			end
 		end
 
-	clashes_item (i: INTEGER): INTEGER is
+	clashes_item (i: INTEGER): INTEGER
 			-- Item at position `i' in `clashes'
 		local
 			subclashes: SPECIAL [INTEGER]
@@ -311,7 +311,7 @@ feature {NONE} -- Implementation
 	item_storage: ARRAY [SPECIAL [G]]
 			-- Storage for items of the table indexed from 1 to `capacity'
 
-	make_item_storage (n: INTEGER) is
+	make_item_storage (n: INTEGER)
 			-- Create `item_storage'.
 		do
 			create special_item_routines
@@ -319,7 +319,7 @@ feature {NONE} -- Implementation
 			create item_storage.make (0, ((n - 1) // chunk_size))
 		end
 
-	clone_item_storage is
+	clone_item_storage
 			-- Clone `item_storage'.
 		local
 			i, nb: INTEGER
@@ -340,13 +340,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	item_storage_resize (n: INTEGER) is
+	item_storage_resize (n: INTEGER)
 			-- Resize `item_storage'.
 		do
 			array_special_item_routines.resize (item_storage, 0, ((n - 1) // chunk_size))
 		end
 
-	item_storage_wipe_out is
+	item_storage_wipe_out
 			-- Wipe out items in `item_storage'.
 		local
 			i, nb: INTEGER
@@ -365,7 +365,7 @@ feature {NONE} -- Implementation
 	key_storage: ARRAY [SPECIAL [K]]
 			-- Storage for keys of the table indexed from 1 to `capacity'
 
-	make_key_storage (n: INTEGER) is
+	make_key_storage (n: INTEGER)
 			-- Create `key_storage'.
 		do
 			create special_key_routines
@@ -373,7 +373,7 @@ feature {NONE} -- Implementation
 			create key_storage.make (0, ((n - 1) // chunk_size))
 		end
 
-	key_storage_put (k: K; i: INTEGER) is
+	key_storage_put (k: K; i: INTEGER)
 			-- Put `k' at position `i' in `key_storage'.
 		local
 			subkeys: SPECIAL [K]
@@ -388,7 +388,7 @@ feature {NONE} -- Implementation
 			subkeys.put (k, i \\ chunk_size)
 		end
 
-	clone_key_storage is
+	clone_key_storage
 			-- Clone `key_storage'.
 		local
 			i, nb: INTEGER
@@ -409,13 +409,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	key_storage_resize (n: INTEGER) is
+	key_storage_resize (n: INTEGER)
 			-- Resize `key_storage'.
 		do
 			array_special_key_routines.resize (key_storage, 0, ((n - 1) // chunk_size))
 		end
 
-	key_storage_wipe_out is
+	key_storage_wipe_out
 			-- Wipe out items in `key_storage'.
 		local
 			i, nb: INTEGER
@@ -438,13 +438,13 @@ feature {NONE} -- Implementation
 			-- slot positions located before or at `last_position' with
 			-- indexes less that or equal to `Free_watermark'.
 
-	make_clashes (n: INTEGER) is
+	make_clashes (n: INTEGER)
 			-- Create `clashes'.
 		do
 			create clashes.make (0, ((n - 1) // chunk_size))
 		end
 
-	clashes_put (v: INTEGER; i: INTEGER) is
+	clashes_put (v: INTEGER; i: INTEGER)
 			-- Put `v' at position `i' in `clashes'.
 		local
 			subclashes: SPECIAL [INTEGER]
@@ -459,7 +459,7 @@ feature {NONE} -- Implementation
 			subclashes.put (v, i \\ chunk_size)
 		end
 
-	clone_clashes is
+	clone_clashes
 			-- Clone `clashes'.
 		local
 			i, nb: INTEGER
@@ -480,13 +480,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	clashes_resize (n: INTEGER) is
+	clashes_resize (n: INTEGER)
 			-- Resize `clashes'.
 		do
 			ARRAY_SPECIAL_INTEGER_.resize (clashes, 0, ((n - 1) // chunk_size))
 		end
 
-	clashes_wipe_out is
+	clashes_wipe_out
 			-- Wipe out items in `clashes'.
 		local
 			i, nb: INTEGER
@@ -507,13 +507,13 @@ feature {NONE} -- Implementation
 			-- from 0 to `modulus' (the entry at index `modulus'
 			-- being reserved for void items)
 
-	make_slots (n: INTEGER) is
+	make_slots (n: INTEGER)
 			-- Create `slots'.
 		do
 			create slots.make (0, ((n - 1) // chunk_size))
 		end
 
-	slots_item (i: INTEGER): INTEGER is
+	slots_item (i: INTEGER): INTEGER
 			-- Item at position `i' in `slots'
 		local
 			subslots: SPECIAL [INTEGER]
@@ -524,7 +524,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	slots_put (v: INTEGER; i: INTEGER) is
+	slots_put (v: INTEGER; i: INTEGER)
 			-- Put `v' at position `i' in `slots'.
 		local
 			subslots: SPECIAL [INTEGER]
@@ -539,7 +539,7 @@ feature {NONE} -- Implementation
 			subslots.put (v, i \\ chunk_size)
 		end
 
-	clone_slots is
+	clone_slots
 			-- Clone `slots'.
 		local
 			i, nb: INTEGER
@@ -560,13 +560,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	slots_resize (n: INTEGER) is
+	slots_resize (n: INTEGER)
 			-- Resize `slots'.
 		do
 			ARRAY_SPECIAL_INTEGER_.resize (slots, 0, ((n - 1) // chunk_size))
 		end
 
-	slots_wipe_out is
+	slots_wipe_out
 			-- Wipe out items in `slots'.
 		local
 			i, nb: INTEGER

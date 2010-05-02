@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_slot_manager: like slot_manager; some_variables: like variables) is
+	make (a_slot_manager: like slot_manager; some_variables: like variables)
 			-- Assemble stack frame.
 		require
 			slot_manager_not_void: a_slot_manager /= Void
@@ -31,14 +31,14 @@ feature {NONE} -- Initialization
 			variables_set: variables = some_variables
 		end
 
-	make_empty is
+	make_empty
 			-- Create empty stack frame.
 		do
 			create slot_manager.make
 			create variables.make (1, 0)
 		end
 
-	make_fixed_size (a_variable_count: INTEGER) is
+	make_fixed_size (a_variable_count: INTEGER)
 			-- Create empty stack frame.
 		require
 			strictly_positive_variable_count: a_variable_count > 0
@@ -58,7 +58,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_variable (a_value: XM_XPATH_VALUE;  a_slot_number: INTEGER) is
+	set_variable (a_value: XM_XPATH_VALUE;  a_slot_number: INTEGER)
 			-- Set a variable's value.
 		require
 			valid_local_variable: a_slot_number > 0
@@ -66,7 +66,7 @@ feature -- Element change
 			variables.force (a_value, a_slot_number)
 		end
 
-	set_variables (a_variables: like variables) is
+	set_variables (a_variables: like variables)
 			-- Set `variables' to `a_variables'.
 		require
 			a_variables_not_void: a_variables /= Void
@@ -76,7 +76,7 @@ feature -- Element change
 			variables_set: variables = a_variables
 		end
 
-	set_slot_manager (a_slot_manager: XM_XPATH_SLOT_MANAGER; a_parameter_count: INTEGER) is
+	set_slot_manager (a_slot_manager: XM_XPATH_SLOT_MANAGER; a_parameter_count: INTEGER)
 			-- Set `slot_manager' to `a_slot_manager' and re-allocate `variables' if necessary.
 		require
 			a_slot_manager_not_void: a_slot_manager /= Void
@@ -119,4 +119,4 @@ invariant
 	variables_not_void: variables /= Void
 
 end
-	
+

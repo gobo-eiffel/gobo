@@ -47,7 +47,7 @@ create
 
 feature
 
-	make is
+	make
 		local
 			b: BB
 		do
@@ -61,11 +61,11 @@ class BB
 
 feature
 
-	f is
+	f
 		do
 		end
 
-	f is
+	f
 		do
 		end
 

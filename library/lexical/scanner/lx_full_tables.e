@@ -37,7 +37,7 @@ feature -- Constants
 
 feature -- Conversion
 
-	from_tables (other: like to_tables) is
+	from_tables (other: like to_tables)
 			-- Set current tables with those of `other'.
 		do
 			yy_nxt := other.yy_nxt
@@ -55,7 +55,7 @@ feature -- Conversion
 			yyPosition_used := other.yyPosition_used
 		end
 
-	to_tables: LX_FULL_TABLES is
+	to_tables: LX_FULL_TABLES
 			-- New full tables made from current tables
 		do
 			create Result.make_from_tables (Current)

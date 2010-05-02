@@ -41,7 +41,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_time: like time; a_time_zone: like time_zone) is
+	make (a_time: like time; a_time_zone: like time_zone)
 			-- Create a new time `a_time' in time zone `a_time_zone'.
 		require
 			time_not_void: a_time /= Void
@@ -62,7 +62,7 @@ feature -- Access
 	time_zone: DT_FIXED_OFFSET_TIME_ZONE
 			-- Time zone
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code
 		do
 			Result := time.hash_code
@@ -70,13 +70,13 @@ feature -- Access
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is `Current' before `other' on the time axis?
 		do
 			Result := time_to_utc < other.time_to_utc
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `Current' time equal to `other'?
 		do
 			if ANY_.same_types (Current, other) then
@@ -84,7 +84,7 @@ feature -- Comparison
 			end
 		end
 
-	same_time (other: DT_FIXED_OFFSET_ZONED_TIME): BOOLEAN is
+	same_time (other: DT_FIXED_OFFSET_ZONED_TIME): BOOLEAN
 			-- Is `Current' time equal to `other'?
 		require
 			other_not_void: other /= Void
@@ -94,7 +94,7 @@ feature -- Comparison
 
 feature -- Conversion
 
-	time_to_utc: DT_TIME is
+	time_to_utc: DT_TIME
 			-- Convert `time' into the same time but relative to UTC.
 			-- (Create a new time object at each call.)
 		do

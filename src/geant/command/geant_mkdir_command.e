@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT) is
+	make (a_project: GEANT_PROJECT)
 			-- Initialize command.
 		do
 			Precursor (a_project)
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- Can command be executed?
 		local
 			a_is_valid: DS_CELL [BOOLEAN]
@@ -64,7 +64,7 @@ feature -- Access
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute command.
 		do
 			mkdir_agent_cell.item.call ([directory.value])
@@ -72,7 +72,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	create_directory (a_directory_name: STRING) is
+	create_directory (a_directory_name: STRING)
 			-- Create directory named `a_directory'.
 		require
 			a_directory_name_not_void: a_directory_name /= Void

@@ -42,7 +42,7 @@ feature -- Access
 
 feature -- Type resolving
 
-	resolve_type (a_type: ET_TYPE; a_feature: ET_FEATURE; a_class: ET_CLASS) is
+	resolve_type (a_type: ET_TYPE; a_feature: ET_FEATURE; a_class: ET_CLASS)
 			-- Resolve identifiers (such as 'like identifier' and
 			-- 'BIT identifier') in type `a_type' when it appears
 			-- in `a_feature' in `a_class'. Do not try to resolve
@@ -71,7 +71,7 @@ feature -- Type resolving
 
 feature {NONE} -- Type resolving
 
-	resolve_bit_feature (a_type: ET_BIT_FEATURE) is
+	resolve_bit_feature (a_type: ET_BIT_FEATURE)
 			-- Resolve 'BIT identifier' type.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -116,7 +116,7 @@ feature {NONE} -- Type resolving
 			end
 		end
 
-	resolve_like_feature (a_type: ET_LIKE_FEATURE) is
+	resolve_like_feature (a_type: ET_LIKE_FEATURE)
 			-- Resolve 'like identifier' type.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -166,7 +166,7 @@ feature {NONE} -- Type resolving
 			end
 		end
 
-	resolve_qualified_like_identifier (a_type: ET_QUALIFIED_LIKE_IDENTIFIER) is
+	resolve_qualified_like_identifier (a_type: ET_QUALIFIED_LIKE_IDENTIFIER)
 			-- Resolve 'identifier' in 'like identifier.b'
 			-- and 'like {like identifier}.b'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -176,7 +176,7 @@ feature {NONE} -- Type resolving
 			resolve_type (a_type.target_type, current_feature, current_class)
 		end
 
-	resolve_actual_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST) is
+	resolve_actual_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST)
 			-- Resolve the actual parameter types.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -199,7 +199,7 @@ feature {NONE} -- Type resolving
 
 feature {NONE} -- Validity
 
-	check_bit_type (a_type: ET_BIT_TYPE) is
+	check_bit_type (a_type: ET_BIT_TYPE)
 			-- Check validity of the integer constant.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -219,19 +219,19 @@ feature {NONE} -- Validity
 
 feature {ET_AST_NODE} -- Type processing
 
-	process_bit_feature (a_type: ET_BIT_FEATURE) is
+	process_bit_feature (a_type: ET_BIT_FEATURE)
 			-- Process `a_type'.
 		do
 			resolve_bit_feature (a_type)
 		end
 
-	process_class (a_type: ET_CLASS) is
+	process_class (a_type: ET_CLASS)
 			-- Process `a_type'.
 		do
 			process_class_type (a_type)
 		end
 
-	process_class_type (a_type: ET_CLASS_TYPE) is
+	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
 		local
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
@@ -242,31 +242,31 @@ feature {ET_AST_NODE} -- Type processing
 			end
 		end
 
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE) is
+	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
 			-- Process `a_type'.
 		do
 			process_class_type (a_type)
 		end
 
-	process_like_feature (a_type: ET_LIKE_FEATURE) is
+	process_like_feature (a_type: ET_LIKE_FEATURE)
 			-- Process `a_type'.
 		do
 			resolve_like_feature (a_type)
 		end
 
-	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE) is
+	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE)
 			-- Process `a_type'.
 		do
 			resolve_qualified_like_identifier (a_type)
 		end
 
-	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
+	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE)
 			-- Process `a_type'.
 		do
 			resolve_qualified_like_identifier (a_type)
 		end
 
-	process_tuple_type (a_type: ET_TUPLE_TYPE) is
+	process_tuple_type (a_type: ET_TUPLE_TYPE)
 			-- Process `a_type'.
 		local
 			a_parameters: ET_ACTUAL_PARAMETER_LIST

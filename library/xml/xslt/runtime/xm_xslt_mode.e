@@ -32,21 +32,21 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create default rules.
 		do
 			create rule_dictionary.make (1, Number_of_buckets + Document_node + 1)
 		end
 
 
-	make_stripper is
+	make_stripper
 			-- Create mode for stripper rules.
 		do
 			make
 			is_stripper := True
 		end
 
-	make_with_copy (other: XM_XSLT_MODE) is
+	make_with_copy (other: XM_XSLT_MODE)
 			-- Create by copying rules from `other'.
 		require
 			other_mode_not_void: other /= Void
@@ -79,7 +79,7 @@ feature -- Access
 	last_matched_rule: XM_XSLT_RULE
 			-- Result of last call to `match_rule' or `match_imported_rule' or `match_next_rule'
 
-	match_rule (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	match_rule (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Find handler for `a_node'
 		require
 			node_not_void: a_node /= Void
@@ -145,7 +145,7 @@ feature -- Access
 			Maybe_no_rule_matches: last_matched_rule = Void xor last_matched_rule /= Void
 		end
 
-	match_imported_rule (a_node: XM_XPATH_NODE; a_minimum_precedence, a_maximum_precedence: INTEGER; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	match_imported_rule (a_node: XM_XPATH_NODE; a_minimum_precedence, a_maximum_precedence: INTEGER; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Find handler for `a_node' within specified precedence range
 		require
 			node_not_void: a_node /= Void
@@ -232,7 +232,7 @@ feature -- Access
 			Maybe_no_rule_matches: True
 		end
 
-	match_next_rule (a_node: XM_XPATH_NODE; a_current_rule: XM_XSLT_RULE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	match_next_rule (a_node: XM_XPATH_NODE; a_current_rule: XM_XSLT_RULE; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Find handler for `a_node' within specified precedence range
 		require
 			a_node_not_void: a_node /= Void
@@ -351,7 +351,7 @@ feature -- Access
 			Maybe_no_rule_matches: True
 		end
 
-	name: STRING is
+	name: STRING
 			-- Name
 		do
 			if internal_name = Void then
@@ -365,7 +365,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_default_mode: BOOLEAN is
+	is_default_mode: BOOLEAN
 			-- Is `Current' the default mode?
 		do
 			Result := internal_name = Void
@@ -376,7 +376,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- Set name.
 		require
 			name_not_void: a_name /= Void
@@ -386,7 +386,7 @@ feature -- Element change
 			name_set: internal_name = a_name
 		end
 
-	add_rule (a_pattern: XM_XSLT_PATTERN; a_handler: XM_XSLT_RULE_VALUE; a_precedence: INTEGER; a_priority: MA_DECIMAL) is
+	add_rule (a_pattern: XM_XSLT_PATTERN; a_handler: XM_XSLT_RULE_VALUE; a_precedence: INTEGER; a_priority: MA_DECIMAL)
 			-- Add a rule to handle `a_pattern'.
 		require
 			pattern_not_void: a_pattern /= Void
@@ -467,13 +467,13 @@ feature {XM_XSLT_MODE} -- Local
 
 feature {NONE} -- Implementation
 
-	Number_of_buckets: INTEGER is 101
+	Number_of_buckets: INTEGER = 101
 			-- Hash factor
 
 	internal_name: STRING
 			-- Mode name
 
-	rule_key (a_fingerprint, a_node_kind: INTEGER): INTEGER is
+	rule_key (a_fingerprint, a_node_kind: INTEGER): INTEGER
 			-- Rule dictionary index
 		do
 			if a_node_kind = Element_node then
@@ -487,7 +487,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	report_ambiguity (a_node: XM_XPATH_NODE; a_rule, another_rule: XM_XSLT_RULE; a_transformer: XM_XSLT_TRANSFORMER)	is
+	report_ambiguity (a_node: XM_XPATH_NODE; a_rule, another_rule: XM_XSLT_RULE; a_transformer: XM_XSLT_TRANSFORMER)
 			-- Report an ambiguity;
 			--  that is, the situation where two rules of the same
 			--  precedence and priority match the same node.
@@ -537,7 +537,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	match_general_rule (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT; a_specific_rule: XM_XSLT_RULE; a_specific_precedence: INTEGER; a_specific_priority: INTEGER) is
+	match_general_rule (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT; a_specific_rule: XM_XSLT_RULE; a_specific_precedence: INTEGER; a_specific_priority: INTEGER)
 			-- Find rule on general list
 		require
 			node_not_void: a_node /= Void
@@ -586,7 +586,7 @@ feature {NONE} -- Implementation
 			Maybe_no_rule_matches: True
 		end
 
-	general_or_specific_rule (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT; a_specific_rule, a_general_rule: XM_XSLT_RULE): XM_XSLT_RULE is
+	general_or_specific_rule (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT; a_specific_rule, a_general_rule: XM_XSLT_RULE): XM_XSLT_RULE
 			-- Chosen rule between `a_specific_rule' and `a_general_rule'
 		require
 			node_not_void: a_node /= Void
@@ -623,7 +623,7 @@ feature {NONE} -- Implementation
 			Maybe_no_rule_matches: True
 		end
 
-	possible_new_context (a_context: XM_XSLT_EVALUATION_CONTEXT): XM_XSLT_EVALUATION_CONTEXT is
+	possible_new_context (a_context: XM_XSLT_EVALUATION_CONTEXT): XM_XSLT_EVALUATION_CONTEXT
 			-- New context, if any pattern might use local variables
 		require
 			major_context_not_void: a_context /= Void and then not a_context.is_minor

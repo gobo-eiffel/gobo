@@ -11,7 +11,7 @@ note
 	revision: "$Revision$"
 
 class XM_XPATH_TINY_SIBLING_ENUMERATION
-	
+
 inherit
 
 	XM_XPATH_AXIS_ITERATOR [XM_XPATH_TINY_NODE]
@@ -22,10 +22,10 @@ inherit
 create
 
 	make
-	
+
 feature {NONE} -- Initialization
 
-	make (a_document: XM_XPATH_TINY_FOREST; a_starting_node: XM_XPATH_TINY_NODE; a_node_test: XM_XPATH_NODE_TEST; children: BOOLEAN) is
+	make (a_document: XM_XPATH_TINY_FOREST; a_starting_node: XM_XPATH_TINY_NODE; a_node_test: XM_XPATH_NODE_TEST; children: BOOLEAN)
 			-- Establish invariant
 		require
 			document_not_void: a_document /= Void
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			node_test := a_node_test
 			get_children := children
 			if get_children then -- child:: axis
-				parent_node := starting_node 
+				parent_node := starting_node
 				-- move to first child
 				next_node_number := starting_node.node_number + 1
 			else -- following-sibling axis
@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
 		local
 			a_tiny_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_TINY_NODE]
@@ -75,7 +75,7 @@ feature -- Access
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move to next position
 		do
 			if need_to_advance then advance end
@@ -90,12 +90,12 @@ feature -- Cursor movement
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 			create Result.make (document, starting_node, node_test, get_children)
 		end
-	
+
 feature {NONE} -- Implementation
 
 	document: XM_XPATH_TINY_FOREST
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 
 	parent_node: XM_XPATH_TINY_NODE
 			-- The parent node
-	
+
 	node_test: XM_XPATH_NODE_TEST
 			-- The node test to apply when selecting nodes
 
@@ -115,11 +115,11 @@ feature {NONE} -- Implementation
 
 	need_to_advance: BOOLEAN
 			-- Do we need to advance
-	
+
 	next_node_number: INTEGER
 			-- The next node to be returned by the enumeration
-	
-	advance is
+
+	advance
 			-- Adjust internal pointers
 		require else
 			need_to_advance: need_to_advance
@@ -149,11 +149,11 @@ feature {NONE} -- Implementation
 		ensure then
 			no_need_to_advance: need_to_advance = False
 		end
-	
+
 invariant
 
 	document_not_void: document /= Void
 	starting_node_not_void: starting_node /= Void
-	
+
 end
-	
+

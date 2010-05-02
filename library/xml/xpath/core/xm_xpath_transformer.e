@@ -15,7 +15,7 @@ deferred class	XM_XPATH_TRANSFORMER
 
 feature -- Access
 
-	document_pool: XM_XPATH_DOCUMENT_POOL is
+	document_pool: XM_XPATH_DOCUMENT_POOL
 			-- Document pool
 		deferred
 		ensure
@@ -24,7 +24,7 @@ feature -- Access
 
 feature -- Element change
 
-	remove_document (a_uri: STRING) is
+	remove_document (a_uri: STRING)
 			-- Remove `a_document' from `Current'.
 			-- CAUTION: This breaks the guarentee of Unique URI to document mapping.
 		require

@@ -73,7 +73,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_minus (an_operator: like operator_name) is
+	make_minus (an_operator: like operator_name)
 			-- Create a new 'prefix "-"' feature name.
 		require
 			an_operator_not_void: an_operator /= Void
@@ -86,7 +86,7 @@ feature {NONE} -- Initialization
 			is_prefix_minus: is_prefix_minus
 		end
 
-	make_plus (an_operator: like operator_name) is
+	make_plus (an_operator: like operator_name)
 			-- Create a new 'prefix "+"' feature name.
 		require
 			an_operator_not_void: an_operator /= Void
@@ -101,18 +101,18 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_prefix: BOOLEAN is True
+	is_prefix: BOOLEAN = True
 			-- Is current feature name of the form 'prefix ...'?
 
-	is_infixable: BOOLEAN is False
+	is_infixable: BOOLEAN = False
 			-- Can current alias be used as the name of an infix feature?
 
-	is_prefixable: BOOLEAN is True
+	is_prefixable: BOOLEAN = True
 			-- Can current alias be used as the name of a prefix feature?
 
 feature -- Status setting
 
-	set_prefix is
+	set_prefix
 			-- Set current alias to prefix.
 		do
 			-- Do nothing.
@@ -120,7 +120,7 @@ feature -- Status setting
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Name of feature call
 		do
 			inspect code
@@ -136,7 +136,7 @@ feature -- Access
 			end
 		end
 
-	feature_alias_name: ET_ALIAS_NAME is
+	feature_alias_name: ET_ALIAS_NAME
 			-- Alias name, if any
 		do
 			Result := Current
@@ -146,7 +146,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_call_name (other: ET_CALL_NAME): BOOLEAN is
+	same_call_name (other: ET_CALL_NAME): BOOLEAN
 			-- Are `Current' and `other' the same names of the same feature?
 			-- (case insensitive)
 		do
@@ -166,7 +166,7 @@ feature -- Comparison
 			end
 		end
 
-	same_feature_name (other: ET_FEATURE_NAME): BOOLEAN is
+	same_feature_name (other: ET_FEATURE_NAME): BOOLEAN
 			-- Are feature name and `other' the same feature name?
 			-- (case insensitive)
 		do
@@ -179,7 +179,7 @@ feature -- Comparison
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_prefix_name (Current)
@@ -187,7 +187,7 @@ feature -- Processing
 
 feature {NONE} -- Implementation
 
-	default_keyword: ET_KEYWORD is
+	default_keyword: ET_KEYWORD
 			-- Default keyword
 		once
 			Result := tokens.prefix_keyword

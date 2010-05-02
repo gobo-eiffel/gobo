@@ -28,7 +28,7 @@ create
 
 feature -- Initialization
 
-	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT) is
+	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT)
 			-- Create new parent element with information held in `a_xml_element'.
 		require
 			a_project_not_void: a_project /= Void
@@ -99,7 +99,7 @@ feature -- Initialization
 			end
 		end
 
-	make_old (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT) is
+	make_old (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT)
 			-- Create new parent element with information held in `a_xml_element'.
 			-- (Only to suppport old form of inheritance)
 			-- TODO: remove after obsolete period
@@ -134,7 +134,7 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Location_attribute_name: STRING is
+	Location_attribute_name: STRING
 			-- "location" attribute name
 		once
 			Result := "location"
@@ -143,7 +143,7 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Inherit_attribute_name: STRING is
+	Inherit_attribute_name: STRING
 			-- "inherit" attribute name (only to suppport old form of inheritance)
 			-- TODO: remove after obsolete period
 		once
@@ -153,7 +153,7 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Rename_element_name: STRING is
+	Rename_element_name: STRING
 			-- "rename" element name
 		once
 			Result := "rename"
@@ -162,7 +162,7 @@ feature {NONE} -- Constants
 			element_name_not_empty: Result.count > 0
 		end
 
-	Redefine_element_name: STRING is
+	Redefine_element_name: STRING
 			-- "redefine" element name
 		once
 			Result := "redefine"
@@ -171,7 +171,7 @@ feature {NONE} -- Constants
 			element_name_not_empty: Result.count > 0
 		end
 
-	Select_element_name: STRING is
+	Select_element_name: STRING
 			-- "select" element name
 		once
 			Result := "select"

@@ -14,7 +14,7 @@ class UT_SHARED_FILE_URI_ROUTINES
 
 feature -- Access
 
-	File_uri: UT_FILE_URI_ROUTINES is
+	File_uri: UT_FILE_URI_ROUTINES
 			-- Shared file: URI routines
 		once
 			create Result

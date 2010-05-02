@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER) is
+	make (filename: STRING; line: INTEGER)
 			-- Create a new error reporting that
 			-- a '%' directive was expected.
 		require
@@ -35,10 +35,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: '%%' directive expected"
+	default_template: STRING = "%"$1%", line $2: '%%' directive expected"
 			-- Default template used to built the error message
 
-	code: STRING is "LX0009"
+	code: STRING = "LX0009"
 			-- Error code
 
 invariant

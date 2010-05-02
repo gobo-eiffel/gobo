@@ -14,7 +14,7 @@ deferred class MA_DECIMAL_PARSER
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new decimal parser.
 		do
 		end
@@ -26,14 +26,14 @@ feature -- Access
 
 feature -- Status report
 
-	error: BOOLEAN is
+	error: BOOLEAN
 			-- Has an error occurred during the last call to `parse'?
 		deferred
 		end
 
 feature -- Basic operations
 
-	parse (a_string: STRING) is
+	parse (a_string: STRING)
 			-- Parse `a_string'.
 		require
 			a_string_not_void: a_string /= Void

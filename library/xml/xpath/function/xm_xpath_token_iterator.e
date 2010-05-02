@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_input: STRING; a_regexp_cache_entry: XM_XPATH_REGEXP_CACHE_ENTRY) is
+	make (an_input: STRING; a_regexp_cache_entry: XM_XPATH_REGEXP_CACHE_ENTRY)
 			-- Establish invariant.
 		require
 				input_string: an_input /= Void
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			input_string_set: input = an_input
 			regular_expression_set: regexp_cache_entry = a_regexp_cache_entry
 		end
-	
+
 feature -- Access
 
 	item: XM_XPATH_ITEM
@@ -69,15 +69,15 @@ feature -- Access
 
 feature -- Status report
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
 			Result := item = Void
 		end
-	
+
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move to next position.
 		do
 			index := index + 1
@@ -90,12 +90,12 @@ feature -- Cursor movement
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 			create Result.make (input, regexp_cache_entry)
 		end
-	
+
 feature {NONE} -- Implementation
 
 	input: STRING
@@ -115,4 +115,4 @@ invariant
 	input_string: input /= Void
 	regular_expression_not_in_error: regexp_cache_entry /= Void and then not regexp_cache_entry.is_error
 end
-	
+

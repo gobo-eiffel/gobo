@@ -17,20 +17,20 @@ inherit
 	XM_XPATH_SECURITY_MANAGER
 
 feature -- Access
-	
+
 	is_highly_secure: BOOLEAN
 			-- Is high security in place?
 
-	is_output_uri_permitted (an_absolute_uri: UT_URI): BOOLEAN is
+	is_output_uri_permitted (an_absolute_uri: UT_URI): BOOLEAN
 			-- Is writing permitted to `an_absolute_uri'?
 		require
 			absolute_uri: an_absolute_uri /= Void and then an_absolute_uri.is_absolute
 		deferred
 		end
-	
+
 feature -- Element_change
 
-	set_high_security (on_or_off: BOOLEAN) is
+	set_high_security (on_or_off: BOOLEAN)
 			-- Turn high security on or off.
 		do
 			is_highly_secure := on_or_off
@@ -39,4 +39,4 @@ feature -- Element_change
 		end
 
 end
-	
+

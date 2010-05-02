@@ -11,7 +11,7 @@ note
 class XM_XSLT_COMPILED_APPLY_IMPORTS
 
 inherit
-	
+
 	XM_XSLT_INSTRUCTION
 		redefine
 			sub_expressions, creates_new_nodes, promote_instruction
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_executable: XM_XSLT_EXECUTABLE; some_actual_parameters, some_tunnel_parameters: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM]) is
+	make (an_executable: XM_XSLT_EXECUTABLE; some_actual_parameters, some_tunnel_parameters: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM])
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
@@ -50,8 +50,8 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions of `Current'
 		do
 			Result := xpath_expressions (actual_parameters)
@@ -61,13 +61,13 @@ feature -- Access
 
 feature -- Status report
 
-	creates_new_nodes: BOOLEAN is
+	creates_new_nodes: BOOLEAN
 			-- Can `Current' create new nodes?
 		do
 			Result := True
 		end
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		do
 			std.error.put_string (STRING_.concat (indentation (a_level), "xsl:apply-imports"))
@@ -76,7 +76,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		do
 			a_replacement.put (Current)
@@ -84,7 +84,7 @@ feature -- Optimization
 			simplify_with_params (tunnel_parameters)
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			a_replacement.put (Current)
@@ -92,7 +92,7 @@ feature -- Optimization
 			check_with_params (tunnel_parameters, a_context, a_context_item_type)
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			a_replacement.put (Current)
@@ -100,7 +100,7 @@ feature -- Optimization
 			optimize_with_params (tunnel_parameters, a_context, a_context_item_type)
 		end
 
-	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this instruction.
 		do
 			promote_with_params (actual_parameters, a_offer)
@@ -109,7 +109,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -123,7 +123,7 @@ feature -- Evaluation
 			l_rule: XM_XSLT_RULE
 		do
 			l_transformer := a_context.transformer
-			
+
 			-- handle any parameters
 
 			l_parameters := assembled_parameters (a_context, actual_parameters)
@@ -160,9 +160,9 @@ feature -- Evaluation
 						if l_transformer.is_error then
 							-- nothing to do
 						elseif l_rule = Void then
-							
+
 							-- Use the default action for the node.
-							
+
 							perform_default_action (l_current_iterator.item.as_node, l_parameters, l_tunnel_parameters, a_context)
 						else
 							l_template := l_rule.handler.as_template
@@ -178,7 +178,7 @@ feature -- Evaluation
 		end
 
 feature {NONE} -- Implementation
-	
+
 	actual_parameters: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM]
 			-- Non-tunnel parameters
 
@@ -191,4 +191,4 @@ invariant
 	tunnel_parameters_not_void: initialized implies tunnel_parameters /= Void
 
 end
-	
+

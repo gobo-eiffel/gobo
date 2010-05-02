@@ -44,7 +44,7 @@ create
 
 feature -- Test
 
-	test_printer is
+	test_printer
 			-- Test printer with the Eiffel classes of the
 			-- precomp Ace file.
 		local
@@ -91,7 +91,7 @@ feature -- Test
 
 feature {NONE} -- Test
 
-	check_class (a_class: ET_CLASS) is
+	check_class (a_class: ET_CLASS)
 			-- Check that after parsing `a_class' and printing back its AST,
 			-- we get two files containing the same text.
 		require
@@ -124,7 +124,7 @@ feature {NONE} -- Test
 
 feature -- Execution
 
-	set_up is
+	set_up
 			-- Setup for a test.
 		local
 			a_testdir: STRING
@@ -137,7 +137,7 @@ feature -- Execution
 			file_system.cd (a_testdir)
 		end
 
-	tear_down is
+	tear_down
 			-- Tear down after a test.
 		do
 			if old_cwd /= Void then
@@ -152,10 +152,10 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	testdir: STRING is "Ttools"
+	testdir: STRING = "Ttools"
 			-- Name of temporary directory where to run the test
 
-	xace_filename: STRING is
+	xace_filename: STRING
 			-- Name of Xace file used for the test
 		once
 			Result := file_system.nested_pathname ("${GOBO}", <<"test", "tools", "data", "system.xace">>)

@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_list: like container) is
+	make (a_list: like container)
 			-- Create a new cursor for `a_list'.
 		require
 			a_list_not_void: a_list /= Void
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item: G is
+	item: G
 			-- Item at cursor position
 			-- (Performance: O(1).)
 		do
@@ -62,13 +62,13 @@ feature -- Status report
 	before: BOOLEAN
 			-- Is there no valid position to left of cursor?
 
-	off: BOOLEAN is
+	off: BOOLEAN
 			-- Is there no item at cursor position?
 		do
 			Result := (current_cell = Void)
 		end
 
-	same_position (other: like Current): BOOLEAN is
+	same_position (other: like Current): BOOLEAN
 			-- Is current cursor at same position as `other'?
 		do
 			Result := current_cell = other.current_cell and before = other.before and after = other.after
@@ -76,7 +76,7 @@ feature -- Status report
 
 feature -- Element change
 
-	replace (v: G) is
+	replace (v: G)
 			-- Replace item at cursor position by `v'.
 			-- (Performance: O(1).)
 		do
@@ -90,7 +90,7 @@ feature {DS_LINKED_LIST, DS_LINKED_LIST_CURSOR} -- Implementation
 
 feature {DS_LINKED_LIST} -- Implementation
 
-	set_current_cell (a_cell: like current_cell) is
+	set_current_cell (a_cell: like current_cell)
 			-- Set `current_cell' to `a_cell'.
 			-- Do not change `after' or `before'.
 		require
@@ -102,7 +102,7 @@ feature {DS_LINKED_LIST} -- Implementation
 			current_cell_set: current_cell = a_cell
 		end
 
-	set_after is
+	set_after
 			-- Set position to after position.
 		do
 			current_cell := Void
@@ -112,7 +112,7 @@ feature {DS_LINKED_LIST} -- Implementation
 			after: after
 		end
 
-	set_before is
+	set_before
 			-- Set position to before position.
 		do
 			current_cell := Void
@@ -122,7 +122,7 @@ feature {DS_LINKED_LIST} -- Implementation
 			before: before
 		end
 
-	set (a_cell: like current_cell; b, a: BOOLEAN) is
+	set (a_cell: like current_cell; b, a: BOOLEAN)
 			-- Set cursor.
 		require
 			consistent: (a_cell /= Void) xor (a or b)

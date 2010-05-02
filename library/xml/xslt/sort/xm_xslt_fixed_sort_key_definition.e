@@ -11,9 +11,9 @@ note
 	revision: "$Revision$"
 
 class XM_XSLT_FIXED_SORT_KEY_DEFINITION
-	
+
 inherit
-	
+
 	XM_XSLT_SORT_KEY_DEFINITION
 		rename
 			make as old_make
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 	make (a_sort_key: XM_XPATH_EXPRESSION;
 			an_order, a_data_type, a_case_order, a_language: STRING;
-			a_collator: ST_COLLATOR) is
+			a_collator: ST_COLLATOR)
 			-- Establish invariant.
 		require
 			sort_key_not_void: a_sort_key /= Void
@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 			language_set: language = a_language
 			collator_set: collator = a_collator
 		end
-		
+
 feature -- Access
 
 	collator: ST_COLLATOR
@@ -80,7 +80,7 @@ feature -- Access
 	comparer: KL_PART_COMPARATOR [XM_XPATH_ITEM]
 			-- Object that performs comparisons
 
-	reduced_definition (a_context: XM_XSLT_EVALUATION_CONTEXT):  XM_XSLT_FIXED_SORT_KEY_DEFINITION is
+	reduced_definition (a_context: XM_XSLT_EVALUATION_CONTEXT):  XM_XSLT_FIXED_SORT_KEY_DEFINITION
 			-- Sort key definition without any dependencies on the context
 		do
 			Result := Current
@@ -98,13 +98,13 @@ feature -- Status report
 
 feature -- Conversion
 
-	is_fixed_sort_key: BOOLEAN is
+	is_fixed_sort_key: BOOLEAN
 			-- Is `Current' a fixed_sort_key?
 		do
 			Result := True
 		end
 
-	as_fixed_sort_key: XM_XSLT_FIXED_SORT_KEY_DEFINITION is
+	as_fixed_sort_key: XM_XSLT_FIXED_SORT_KEY_DEFINITION
 			-- `Current' seen as a fixed_sort_key
 		do
 			Result := Current
@@ -112,7 +112,7 @@ feature -- Conversion
 
 feature {NONE} -- Implementation
 
-	bind_comparer is
+	bind_comparer
 			-- Determine which comparer should be use.
 		local
 			l_message: STRING
@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	bind_case_order_comparer is
+	bind_case_order_comparer
 			-- Bind `comparer' so that it implements case-order.
 		require
 			comparer_not_void: comparer /= Void
@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 			comparer_not_void: not is_error implies comparer /= Void
 		end
 
-	bind_ordered_comparer is
+	bind_ordered_comparer
 			-- Bind `comparer' so that it implements order.
 		require
 			comparer_not_void: comparer /= Void
@@ -210,4 +210,4 @@ invariant
 	is_error_implies_error_value: is_error implies error_value /= Void
 
 end
-	
+

@@ -1,9 +1,9 @@
 ****** Error : Double definition of feature f.
 Line 5 column 2 in BB (b.e) :
-	f is
+	f
 	^
 Line 9 column 2 in BB (b.e) :
-	f is
+	f
 	^
 ------
 ****** Fatal Error : Bad instruction (when interpreted in AA).

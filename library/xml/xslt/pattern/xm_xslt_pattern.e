@@ -30,57 +30,57 @@ inherit
 feature -- Access
 
 
-	node_kind: INTEGER is
+	node_kind: INTEGER
 			-- Type of nodes matched
 		do
 			Result := Any_node
 		end
 
-	node_test: XM_XSLT_NODE_TEST is
+	node_test: XM_XSLT_NODE_TEST
 			-- Retrieve an `XM_XSLT_NODE_TEST' that all nodes matching this pattern must satisfy
 		deferred
 		ensure
 			non_void_test: Result /= Void
 		end
 
-	fingerprint: INTEGER is
+	fingerprint: INTEGER
 			-- Determine the name fingerprint of nodes to which this pattern applies;
 			-- Used for optimisation.
 		do
 			Result := -1 -- Means can match multiple fingerprints
 		end
 
-	default_priority: MA_DECIMAL is
+	default_priority: MA_DECIMAL
 			--  Determine the default priority to use if this pattern appears as a match pattern for a template with no explicit priority attribute.
 		do
 			create Result.make_from_string ("0.5")
 		end
 
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions of `Current'
 		do
-			
+
 			-- Default implementation returns an empty list;
 			-- Suitable for a pattern without sub-expressions.
-			
+
 			create Result.make_default
 			Result.set_equality_tester (expression_tester)
 		ensure
 			expression_tester: Result /= Void and then Result.equality_tester /= Void and then Result.equality_tester.is_equal (expression_tester)
 		end
-	
-	compute_dependencies is
+
+	compute_dependencies
 			-- Compute dependencies which restrict optimizations
 		do
 			-- Nothing to do by default
 		end
 
 feature -- Status report
-	
+
 	system_id: STRING
 			-- SYSTEM id of entity where pattern occurred
 
-	original_text: STRING is
+	original_text: STRING
 			-- Original text of the pattern, for use in diagnostics
 		deferred
 		ensure
@@ -96,19 +96,19 @@ feature -- Status report
 	error_value: XM_XPATH_ERROR_VALUE
 			-- Error value
 
-	is_node_test: BOOLEAN is
+	is_node_test: BOOLEAN
 			-- Is `Current' a node test?
 		do
 			Result := False
 		end
 
-	is_location_pattern: BOOLEAN is
+	is_location_pattern: BOOLEAN
 			-- Is `Current' a location-path pattern?
 		do
 			Result := False
 		end
 
-	is_union_pattern: BOOLEAN is
+	is_union_pattern: BOOLEAN
 			-- Is `Current' a union pattern?
 		do
 			Result := False
@@ -116,7 +116,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_system_id (a_system_id: STRING) is
+	set_system_id (a_system_id: STRING)
 			-- Set SYSTEM id of entity where pattern occurred to `a_system_id'
 		require
 			system_id_not_void: a_system_id /= Void
@@ -126,7 +126,7 @@ feature -- Status setting
 			system_id_set: system_id /= Void and then STRING_.same_string (system_id, a_system_id)
 		end
 
-	set_line_number (a_number: INTEGER) is
+	set_line_number (a_number: INTEGER)
 			-- Set line number where pattern occurred
 		do
 			line_number := a_number
@@ -134,7 +134,7 @@ feature -- Status setting
 			line_number_set: line_number = a_number
 		end
 
-	set_error_value (an_error_value: XM_XPATH_ERROR_VALUE)  is
+	set_error_value (an_error_value: XM_XPATH_ERROR_VALUE)
 			-- Set `error_value'
 		require
 			error_value_not_void: an_error_value /= Void
@@ -147,7 +147,7 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplified_pattern: XM_XSLT_PATTERN is
+	simplified_pattern: XM_XSLT_PATTERN
 			-- Simplify a pattern by applying any context-independent optimizations;
 			-- Default implementation does nothing
 		do
@@ -156,7 +156,7 @@ feature -- Optimization
 			pattern_not_void: Result /= Void
 		end
 
-	type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Type-check the pattern;
 			-- Default implementation does nothing. This is only needed for patterns that contain
 			-- variable references or function calls.
@@ -166,7 +166,7 @@ feature -- Optimization
 			-- do nothing
 		end
 
-	promote (a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote sub-expressions of `Current'.
 		require
 			a_offer_not_void: a_offer /= Void
@@ -176,7 +176,7 @@ feature -- Optimization
 
 feature -- Matching
 
-	last_match_result: BOOLEAN is
+	last_match_result: BOOLEAN
 			-- Result of last call to `match'
 		require
 			no_error: not is_error
@@ -184,7 +184,7 @@ feature -- Matching
 			Result := internal_last_match_result
 		end
 
-	match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Attempt to match `Current' against `a_node'.
 			-- Sets `last_match_result' and possibly `error_value'.
 		require
@@ -196,7 +196,7 @@ feature -- Matching
 
 feature -- Conversion
 
-	as_location_pattern: XM_XSLT_LOCATION_PATH_PATTERN is
+	as_location_pattern: XM_XSLT_LOCATION_PATH_PATTERN
 			-- `Current' seen as a location-path pattern
 		require
 			location_path_pattern: is_location_pattern
@@ -205,7 +205,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_union_pattern: XM_XSLT_UNION_PATTERN is
+	as_union_pattern: XM_XSLT_UNION_PATTERN
 			-- `Current' seen as a union pattern
 		require
 			union_pattern: is_union_pattern
@@ -220,7 +220,7 @@ feature {XM_XSLT_PATTERN} -- Local
 	internal_last_match_result: BOOLEAN
 			-- Result of last call to `match'
 
-	internal_match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	internal_match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Determine whether this Pattern matches the given Node;
 			-- This is an internal interface used for matching sub-patterns;
 			--  it does not alter current().
@@ -241,4 +241,4 @@ invariant
 	system_id_not_void: system_id /= Void
 
 end
-	
+

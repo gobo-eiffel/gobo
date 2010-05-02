@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (nb: INTEGER) is
+	make (nb: INTEGER)
 			-- Create a new topological sorter.
 			-- Set initial capacity to `nb'.
 		do
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	index_of (v: G): INTEGER is
+	index_of (v: G): INTEGER
 			-- Index of `v' in the list of items to be sorted;
 			-- Return 'count + 1' if `v' is not in the list yet
 		do
@@ -64,7 +64,7 @@ feature -- Access
 
 feature -- Status report
 
-	has (v: G): BOOLEAN is
+	has (v: G): BOOLEAN
 			-- Is `v' included in the list of items to be sorted?
 		do
 			Result := indexes.has (v)
@@ -72,7 +72,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_equality_tester (a_tester: like equality_tester) is
+	set_equality_tester (a_tester: like equality_tester)
 			-- Set `equality_tester' to `a_tester'.
 			-- A void equality tester means that `='
 			-- will be used as comparison criterion.
@@ -83,7 +83,7 @@ feature -- Setting
 
 feature -- Element change
 
-	put (v: G) is
+	put (v: G)
 			-- Add `v' to the list of items to be sorted.
 		do
 			items.put_last (v)
@@ -92,7 +92,7 @@ feature -- Element change
 			successors.put_last (Void)
 		end
 
-	force (v: G) is
+	force (v: G)
 			-- Add `v' to the list of items to be sorted.
 			-- Resize the list of items if needed.
 		local
@@ -110,7 +110,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove (v: G) is
+	remove (v: G)
 			-- Remove `v' to the list of items to be sorted.
 			-- Keep the order relation for the sorting though.
 		local
@@ -134,7 +134,7 @@ feature -- Removal
 			end
 		end
 
-	wipe_out is
+	wipe_out
 			-- Wipe out items.
 		do
 			reset

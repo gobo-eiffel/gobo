@@ -21,7 +21,7 @@ inherit
 
 feature -- Access
 
-	eiffel_character_out (c: CHARACTER): STRING is
+	eiffel_character_out (c: CHARACTER): STRING
 			-- Formatted version of `c'; if `c' is not
 			-- printable, it is replaced by its escaped
 			-- character sequence as described in ETL,
@@ -35,7 +35,7 @@ feature -- Access
 			eiffel_character_out_not_void: Result /= Void
 		end
 
-	quoted_eiffel_character_out (c: CHARACTER): STRING is
+	quoted_eiffel_character_out (c: CHARACTER): STRING
 			-- Formatted version of `c' surrounded by single
 			-- quotes; if `c' is not printable, it is replaced
 			-- by its escaped character sequence as described
@@ -51,7 +51,7 @@ feature -- Access
 
 feature -- String handling
 
-	append_eiffel_character (a_string: STRING; c: CHARACTER) is
+	append_eiffel_character (a_string: STRING; c: CHARACTER)
 			-- Append `c' to `a_string'; if `c' is not printable,
 			-- it is replaced by its escaped character sequence
 			-- as described in ETL, section 25.15, page 422.
@@ -96,7 +96,7 @@ feature -- String handling
 			end
 		end
 
-	append_quoted_eiffel_character (a_string: STRING; c: CHARACTER) is
+	append_quoted_eiffel_character (a_string: STRING; c: CHARACTER)
 			-- Append `c' surrounded by single quotes to `a_string';
 			-- if `c' is not printable, it is replaced by its
 			-- escaped character sequence as described in ETL,
@@ -111,7 +111,7 @@ feature -- String handling
 
 feature -- File handling
 
-	put_eiffel_character (a_file: KI_CHARACTER_OUTPUT_STREAM; c: CHARACTER) is
+	put_eiffel_character (a_file: KI_CHARACTER_OUTPUT_STREAM; c: CHARACTER)
 			-- Write `c' to `a_file'; if `c' is not printable,
 			-- it is replaced by its escaped character sequence
 			-- as described in ETL, section 25.15, page 422.
@@ -147,7 +147,7 @@ feature -- File handling
 			end
 		end
 
-	put_quoted_eiffel_character (a_file: KI_CHARACTER_OUTPUT_STREAM; c: CHARACTER) is
+	put_quoted_eiffel_character (a_file: KI_CHARACTER_OUTPUT_STREAM; c: CHARACTER)
 			-- Write `c' surrounded by single quotes to `a_string';
 			-- if `c' is not printable, it is replaced by its
 			-- escaped character sequence as described in ETL,

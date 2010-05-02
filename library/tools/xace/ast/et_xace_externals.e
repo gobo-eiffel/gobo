@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new external clause.
 		do
 			create c_compiler_options.make
@@ -28,25 +28,25 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is current external clause empty?
 		do
 			Result := c_compiler_options.is_empty and include_directories.is_empty and link_libraries.is_empty
 		end
 
-	has_c_compiler_options: BOOLEAN is
+	has_c_compiler_options: BOOLEAN
 			-- Are there some C compiler options?
 		do
 			Result := not c_compiler_options.is_empty
 		end
 
-	has_include_directories: BOOLEAN is
+	has_include_directories: BOOLEAN
 			-- Are there some include directories?
 		do
 			Result := not include_directories.is_empty
 		end
 
-	has_link_libraries: BOOLEAN is
+	has_link_libraries: BOOLEAN
 			-- Are there some link libraries?
 		do
 			Result := not link_libraries.is_empty
@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Element change
 
-	put_c_compiler_options (a_c_compiler_options: STRING) is
+	put_c_compiler_options (a_c_compiler_options: STRING)
 			-- Add a 'c_compiler_options' value to current external clause.
 		require
 			a_c_compiler_options_not_void: a_c_compiler_options /= Void
@@ -73,7 +73,7 @@ feature -- Element change
 			c_compiler_options.force_last (a_c_compiler_options)
 		end
 
-	put_include_directory (a_directory: STRING) is
+	put_include_directory (a_directory: STRING)
 			-- Add an include directory to current external clause.
 		require
 			a_directory_not_void: a_directory /= Void
@@ -81,7 +81,7 @@ feature -- Element change
 			include_directories.force_last (a_directory)
 		end
 
-	put_link_library (a_link_library: STRING) is
+	put_link_library (a_link_library: STRING)
 			-- Add a link library to current external clause.
 		require
 			a_link_library_not_void: a_link_library /= Void

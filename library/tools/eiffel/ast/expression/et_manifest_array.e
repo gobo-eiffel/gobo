@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new empty manifest array.
 		do
 			left_symbol := tokens.left_array_symbol
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			precursor
 		end
 
-	make_with_capacity (nb: INTEGER) is
+	make_with_capacity (nb: INTEGER)
 			-- Create a new empty manifest array with capacity `nb'.
 		do
 			left_symbol := tokens.left_array_symbol
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset manifest array as they were when they were last parsed.
 		local
 			l_item: ET_EXPRESSION_ITEM
@@ -82,12 +82,12 @@ feature -- Initialization
 
 feature -- Status report
 
-	is_never_void: BOOLEAN is True
+	is_never_void: BOOLEAN = True
 			-- Can current expression never be void?
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_manifest_array (Current)

@@ -18,44 +18,44 @@ inherit
 
 feature -- Access
 
-	minimum_unicode_character_code: INTEGER is 0
+	minimum_unicode_character_code: INTEGER = 0
 			-- Smallest code for unicode characters
 --		ensure
 --			definition: Result = 0
 --		end
 
-	maximum_unicode_character_code: INTEGER is 1114111
+	maximum_unicode_character_code: INTEGER = 1114111
 			-- Largest code for unicode characters (10FFFF);
 			-- Includes final two non-characters.
 --		ensure
 --			definition: Result = 1114111
 --		end
 
-	minimum_unicode_surrogate_code: INTEGER is 55296
+	minimum_unicode_surrogate_code: INTEGER = 55296
 			-- Lowest unicode surrogate code-point (0xD800)
 --		ensure
 --			definition: Result = 55296
 --		end
 
-	maximum_unicode_surrogate_code: INTEGER is 57343
+	maximum_unicode_surrogate_code: INTEGER = 57343
 			-- Highest unicode surrogate code-point (0xDFFF)
 --		ensure
 --			definition: Result = 57343
 --		end
 
-	maximum_bmp_character_code: INTEGER is 65535
+	maximum_bmp_character_code: INTEGER = 65535
 			-- Largest code for unicode characters in Basic Multi-lingual Plane (FFFF);
 --		ensure
 --			definition: Result = 65535
 --		end
 
-	minimum_ascii_character_code: INTEGER is 0
+	minimum_ascii_character_code: INTEGER = 0
 			-- Smallest code for ASCII characters
 --		ensure
 --			definition: Result = 0
 --		end
 
-	maximum_ascii_character_code: INTEGER is 127
+	maximum_ascii_character_code: INTEGER = 127
 			-- Largest code for ASCII characters
 			-- (2^7 - 1)
 --		ensure
@@ -63,157 +63,157 @@ feature -- Access
 --			small_enough: Result <= Platform.Maximum_byte_code
 --		end
 
-	minimum_ascii_character: CHARACTER is '%/0/'
+	minimum_ascii_character: CHARACTER = '%/0/'
 			-- Smallest ASCII character
 --		ensure
 --			definition: Result.code = minimum_ascii_code
 --		end
 
-	maximum_ascii_character: CHARACTER is '%/127/'
+	maximum_ascii_character: CHARACTER = '%/127/'
 			-- Largest ASCII character
 --		ensure
 --			definition: Result.code = maximum_ascii_code
 --		end
 
-	Unassigned_other_category: INTEGER is 0
+	Unassigned_other_category: INTEGER = 0
 			-- Unassigned chacaracter
 
-	Uppercase_letter_category: INTEGER is 1
+	Uppercase_letter_category: INTEGER = 1
 			-- Upper case letter
 
-	Lowercase_letter_category: INTEGER is 2
+	Lowercase_letter_category: INTEGER = 2
 			-- Lower case letter
 
-	Titlecase_letter_category: INTEGER is 3
+	Titlecase_letter_category: INTEGER = 3
 			-- Title case letter
 
-	Modifier_letter_category: INTEGER is 4
+	Modifier_letter_category: INTEGER = 4
 			-- Modifier letter
 
-	Other_letter_category: INTEGER is 5
+	Other_letter_category: INTEGER = 5
 			-- Other letter
 
-	Non_spacing_mark_category: INTEGER is 6
+	Non_spacing_mark_category: INTEGER = 6
 			-- Non-spacing mark
 
-	Spacing_combining_mark_category: INTEGER is 7
+	Spacing_combining_mark_category: INTEGER = 7
 			-- Spacing combining mark
 
-	Enclosing_mark_category: INTEGER is 8
+	Enclosing_mark_category: INTEGER = 8
 			-- Enclosing mark
 
-	Decimal_digit_number_category: INTEGER is 9
+	Decimal_digit_number_category: INTEGER = 9
 			-- Decimal digit number
 
-	Letter_number_category: INTEGER is 10
+	Letter_number_category: INTEGER = 10
 			-- Letter number
 
-	Other_number_category: INTEGER is 11
+	Other_number_category: INTEGER = 11
 			-- Other number
 
-	Connector_punctuation_category: INTEGER is 12
+	Connector_punctuation_category: INTEGER = 12
 			-- Connector punctuation
 
-	Dash_punctuation_category: INTEGER is 13
+	Dash_punctuation_category: INTEGER = 13
 			-- Dash punctuation
 
-	Open_punctuation_category: INTEGER is 14
+	Open_punctuation_category: INTEGER = 14
 			-- Open punctuation
 
-	Close_punctuation_category: INTEGER is 15
+	Close_punctuation_category: INTEGER = 15
 			-- Close punctuation
 
-	Initial_quote_punctuation_category: INTEGER is 16
+	Initial_quote_punctuation_category: INTEGER = 16
 			-- Initial punctuation
 
-	Final_quote_punctuation_category: INTEGER is 17
+	Final_quote_punctuation_category: INTEGER = 17
 			-- Final_quote punctuation
 
-	Other_punctuation_category: INTEGER is 18
+	Other_punctuation_category: INTEGER = 18
 			-- Other punctuation
 
-	Math_symbol_category: INTEGER is 19
+	Math_symbol_category: INTEGER = 19
 			-- Mathematics symbol
 
-	Currency_symbol_category: INTEGER is 20
+	Currency_symbol_category: INTEGER = 20
 			-- Currency symbol
 
-	Modifier_symbol_category: INTEGER is 21
+	Modifier_symbol_category: INTEGER = 21
 			-- Modifier symbol
 
-	Other_symbol_category: INTEGER is 22
+	Other_symbol_category: INTEGER = 22
 			-- Other symbol
 
-	Space_separator_category: INTEGER is 23
+	Space_separator_category: INTEGER = 23
 			-- Space separator
 
-	Line_separator_category: INTEGER is 24
+	Line_separator_category: INTEGER = 24
 			-- Line separator
 
-	Paragraph_separator_category: INTEGER is 25
+	Paragraph_separator_category: INTEGER = 25
 			-- Paragraph separator
 
-	Control_other_category: INTEGER is 26
+	Control_other_category: INTEGER = 26
 			-- Control character
 
-	Format_other_category: INTEGER is 27
+	Format_other_category: INTEGER = 27
 			-- Format character
 
-	Surrogate_other_category: INTEGER is 28
+	Surrogate_other_category: INTEGER = 28
 			-- Surrogate character
 
-	Private_other_category: INTEGER is 29
+	Private_other_category: INTEGER = 29
 			-- Private-use character
 
-	Canonical_decomposition_mapping: INTEGER is 0
+	Canonical_decomposition_mapping: INTEGER = 0
 			-- Decomposition mapping is canonical
 
-	Font_decomposition_mapping: INTEGER is 1
+	Font_decomposition_mapping: INTEGER = 1
 			-- Decomposition mapping for font variant
 
-	No_break_decomposition_mapping: INTEGER is 2
+	No_break_decomposition_mapping: INTEGER = 2
 			-- Decomposition mapping for no-break variant
 
-	Initial_decomposition_mapping: INTEGER is 3
+	Initial_decomposition_mapping: INTEGER = 3
 			-- Decomposition mapping for Arabic initial presentation form
 
-	Medial_decomposition_mapping: INTEGER is 4
+	Medial_decomposition_mapping: INTEGER = 4
 			-- Decomposition mapping for Arabic medial presentation form
 
-	Final_decomposition_mapping: INTEGER is 5
+	Final_decomposition_mapping: INTEGER = 5
 			-- Decomposition mapping for Arabic final presentation form
 
-	Isolated_decomposition_mapping: INTEGER is 6
+	Isolated_decomposition_mapping: INTEGER = 6
 			-- Decomposition mapping for Arabic isolated presentation form
 
-	Encircled_decomposition_mapping: INTEGER is 7
+	Encircled_decomposition_mapping: INTEGER = 7
 			-- Decomposition mapping for encircled form
 
-	Superscript_decomposition_mapping: INTEGER is 8
+	Superscript_decomposition_mapping: INTEGER = 8
 			-- Decomposition mapping for superscript form
 
-	Subscript_decomposition_mapping: INTEGER is 9
+	Subscript_decomposition_mapping: INTEGER = 9
 			-- Decomposition mapping for subscript form
 
-	Vertical_decomposition_mapping: INTEGER is 10
+	Vertical_decomposition_mapping: INTEGER = 10
 			-- Decomposition mapping for vertical layout presentation form
 
-	Wide_decomposition_mapping: INTEGER is 11
+	Wide_decomposition_mapping: INTEGER = 11
 			-- Decomposition mapping for wide (zenkaku) compatibility character
 
-	Narrow_decomposition_mapping: INTEGER is 12
+	Narrow_decomposition_mapping: INTEGER = 12
 			-- Decomposition mapping for narrow (hankaku) compatibility character
 
-	Small_decomposition_mapping: INTEGER is 13
+	Small_decomposition_mapping: INTEGER = 13
 			-- Decomposition mapping for small variant form (CNS compatibility)
 
-	Square_decomposition_mapping: INTEGER is 14
+	Square_decomposition_mapping: INTEGER = 14
 			-- Decomposition mapping for CJK squared font variant
 
-	Fraction_decomposition_mapping: INTEGER is 15
+	Fraction_decomposition_mapping: INTEGER = 15
 			-- Decomposition mapping for vulgar fraction form
 
-	Compatibility_decomposition_mapping: INTEGER is 16
+	Compatibility_decomposition_mapping: INTEGER = 16
 			-- Decomposition mapping for unspecified compatibility character
 
 end

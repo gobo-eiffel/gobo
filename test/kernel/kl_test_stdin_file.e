@@ -24,13 +24,13 @@ create
 
 feature -- Status report
 
-	read_from_console: BOOLEAN is False
+	read_from_console: BOOLEAN = False
 			-- Set this boolean to true to have this
 			-- test actually read from the console.
 
 feature -- Test
 
-	test_make is
+	test_make
 			-- Test feature `make'.
 		local
 			a_file: KL_STDIN_FILE
@@ -42,7 +42,7 @@ feature -- Test
 			assert ("not_eof", not a_file.end_of_file)
 		end
 
-	test_eol is
+	test_eol
 			-- Test feature `eol'.
 		local
 			a_file: KL_STDIN_FILE
@@ -51,7 +51,7 @@ feature -- Test
 			assert_equal ("eol", "%N", a_file.eol)
 		end
 
-	test_read_character is
+	test_read_character
 			-- Test feature `read_character'.
 		local
 			a_file: KL_STDIN_FILE
@@ -76,7 +76,7 @@ feature -- Test
 			end
 		end
 
-	test_unread_character1 is
+	test_unread_character1
 			-- Test feature `unread_character'.
 		local
 			a_file: KL_STDIN_FILE
@@ -105,7 +105,7 @@ feature -- Test
 			end
 		end
 
-	test_unread_character2 is
+	test_unread_character2
 			-- Test feature `unread_character'.
 		local
 			a_file: KL_STDIN_FILE
@@ -137,7 +137,7 @@ feature -- Test
 			end
 		end
 
-	test_read_string is
+	test_read_string
 			-- Test feature `read_string'.
 		local
 			a_file: KL_STDIN_FILE
@@ -166,7 +166,7 @@ feature -- Test
 			end
 		end
 
-	test_read_line is
+	test_read_line
 			-- Test feature `read_line'.
 		local
 			a_file: KL_STDIN_FILE
@@ -195,7 +195,7 @@ feature -- Test
 			end
 		end
 
-	test_read_new_line is
+	test_read_new_line
 			-- Test feature `read_new_line'.
 		local
 			a_file: KL_STDIN_FILE
@@ -229,7 +229,7 @@ feature -- Test
 			end
 		end
 
-	test_read_to_string is
+	test_read_to_string
 			-- Test feature `read_to_string'.
 		local
 			a_file: KL_STDIN_FILE
@@ -256,7 +256,7 @@ feature -- Test
 			end
 		end
 
-	test_read_to_buffer is
+	test_read_to_buffer
 			-- Test feature `read_to_buffer'.
 		local
 			a_file: KL_STDIN_FILE
@@ -283,7 +283,7 @@ feature -- Test
 			end
 		end
 
-	test_end_of_file1 is
+	test_end_of_file1
 			-- Test feature `end_of_file' with `read_character'.
 		local
 			a_file: KL_STDIN_FILE
@@ -302,7 +302,7 @@ feature -- Test
 			end
 		end
 
-	test_end_of_file2 is
+	test_end_of_file2
 			-- Test feature `end_of_file' with `read_string'.
 		local
 			a_file: KL_STDIN_FILE

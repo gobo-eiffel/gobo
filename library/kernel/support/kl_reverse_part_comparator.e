@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_comparator: like comparator) is
+	make (a_comparator: like comparator)
 			-- Create a new reverse comparator based on `a_comparator'.
 		require
 			a_comparator_not_void: a_comparator /= Void
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	less_than (u, v: G): BOOLEAN is
+	less_than (u, v: G): BOOLEAN
 			-- Is `u' considered less than `v'?
 		do
 			Result := comparator.less_than (v, u)
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_comparator (a_comparator: like comparator) is
+	set_comparator (a_comparator: like comparator)
 			-- Set `comparator' to `a_comparator'.
 		require
 			a_comparator_not_void: a_comparator /= Void

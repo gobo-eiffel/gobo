@@ -9,7 +9,7 @@ note
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class TAGCOUNT_CALLBACKS
 
 inherit
@@ -25,22 +25,22 @@ create
 	make
 
 feature -- Events
-	
-	on_start is
+
+	on_start
 			-- Reset tag count.
 		do
 			count := 0
 		end
-		
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Count start tags.
 		do
 			count := count + 1
 		end
-	
+
 feature -- Access
-	
+
 	count: INTEGER
 			-- Number of tags seen
-			
+
 end

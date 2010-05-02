@@ -11,9 +11,9 @@ note
 	revision: "$Revision$"
 
 deferred class XM_XPATH_SIMPLE_TYPE
-	
+
 inherit
-	
+
 	XM_XPATH_SCHEMA_TYPE
 		redefine
 			is_simple_type, as_simple_type
@@ -21,23 +21,23 @@ inherit
 
 feature -- Access
 
-	common_atomic_type: XM_XPATH_ATOMIC_TYPE is
+	common_atomic_type: XM_XPATH_ATOMIC_TYPE
 			-- Lowest common super-type
 		deferred
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	is_simple_type: BOOLEAN is
+	is_simple_type: BOOLEAN
 			-- Is `Current' a simple type?
 		do
 			Result := True
 		end
 
-	as_simple_type: XM_XPATH_SIMPLE_TYPE is
+	as_simple_type: XM_XPATH_SIMPLE_TYPE
 			-- `Current' seen as a simple type
 		do
 			Result := Current
 		end
-	
+
 end

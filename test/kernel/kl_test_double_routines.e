@@ -23,7 +23,7 @@ create
 
 feature -- Test
 
-	test_nth_root is
+	test_nth_root
 			-- Test feature `nth_root'.
 		local
 			r: KL_DOUBLE_ROUTINES
@@ -35,7 +35,7 @@ feature -- Test
 			assert_integers_equal ("nth_root2", 0, r.truncated_to_integer (r.nth_root (0.0, 1.0)))
 		end
 
-	test_log is
+	test_log
 			-- Test feature `log'.
 		local
 			r: KL_DOUBLE_ROUTINES
@@ -46,7 +46,7 @@ feature -- Test
 			assert_integers_equal ("log_1", 0, r.truncated_to_integer (r.log (1.0)))
 		end
 
-	test_log2 is
+	test_log2
 			-- Test feature `log2'.
 		local
 			r: KL_DOUBLE_ROUTINES
@@ -58,7 +58,7 @@ feature -- Test
 			assert_integers_equal ("log2_2", 10, r.truncated_to_integer (r.log2 (1024.0)))
 		end
 
-	test_log10 is
+	test_log10
 			-- Test feature `log10'.
 		local
 			r: KL_DOUBLE_ROUTINES
@@ -70,7 +70,7 @@ feature -- Test
 			assert_integers_equal ("log10_2", 1, r.truncated_to_integer (r.log10 (10.0)))
 		end
 
-	test_floor_to_integer is
+	test_floor_to_integer
 			-- Test feature `floor_to_integer'.
 		local
 			r: KL_DOUBLE_ROUTINES
@@ -83,7 +83,7 @@ feature -- Test
 			assert_integers_equal ("negative_exact", -47, r.floor_to_integer (-47.0))
 		end
 
-	test_rounded_to_integer is
+	test_rounded_to_integer
 			-- Test feature `rounded_to_integer'.
 		local
 			r: KL_DOUBLE_ROUTINES
@@ -100,7 +100,7 @@ feature -- Test
 			assert_integers_equal ("negative_exact", -47, r.rounded_to_integer (-47.0))
 		end
 
-	test_plus_infinity is
+	test_plus_infinity
 			-- Test feature `plus_infinity'.
 		local
 			r: KL_DOUBLE_ROUTINES
@@ -110,7 +110,7 @@ feature -- Test
 			assert ("infinity1", r.plus_infinity - 0.1 = r.plus_infinity)
 		end
 
-	test_minus_infinity is
+	test_minus_infinity
 			-- Test feature `minus_infinity'.
 		local
 			r: KL_DOUBLE_ROUTINES

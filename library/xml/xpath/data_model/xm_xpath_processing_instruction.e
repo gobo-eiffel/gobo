@@ -21,7 +21,7 @@ inherit
 
 feature -- Access
 
-	node_kind: STRING is
+	node_kind: STRING
 			-- Kind of node
 		do
 			Result := "processing-instruction"
@@ -29,13 +29,13 @@ feature -- Access
 			node_kind_is_processing_instruction: STRING_.same_string (Result, "processing-instruction")
 		end
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Type
 		do
 			Result := processing_instruction_node_kind_test
 		end
 
-	typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE] is
+	typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE]
 			-- Typed value
 		local
 			l_value: XM_XPATH_STRING_VALUE
@@ -44,7 +44,7 @@ feature -- Access
 			create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_STRING_VALUE]} Result.make (l_value)
 		end
 
-	path: STRING is
+	path: STRING
 			-- XPath expression for location within document;
 			-- Used for reporting purposes.
 		local
@@ -57,7 +57,7 @@ feature -- Access
 				if not STRING_.same_string (l_preceding_path, "/") then
 					Result := STRING_.appended_string (l_preceding_path, Result)
 				end
-			end			
+			end
 		end
-	
+
 end

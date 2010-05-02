@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target: like target; a_name: like qualified_name; args: like arguments) is
+	make (a_target: like target; a_name: like qualified_name; args: like arguments)
 			-- Create a new call agent.
 		require
 			a_target_not_void: a_target /= Void
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			arguments_set: arguments = args
 		end
 
-	make_unqualified (a_name: like qualified_name; args: like arguments) is
+	make_unqualified (a_name: like qualified_name; args: like arguments)
 			-- Create a new unqualified call agent.
 		require
 			a_name_not_void: a_name /= Void
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset expression as it was just after it was last parsed.
 		local
 			l_actuals: ET_AGENT_ARGUMENT_OPERAND_LIST
@@ -86,7 +86,7 @@ feature -- Access
 	qualified_name: ET_QUALIFIED_FEATURE_NAME
 			-- Qualified feature name
 
-	name: ET_FEATURE_NAME is
+	name: ET_FEATURE_NAME
 			-- Feature name
 		do
 			Result := qualified_name.feature_name
@@ -98,7 +98,7 @@ feature -- Access
 			-- Fictitious node corresponding to the result of the
 			-- associated feature when it's a query
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -111,13 +111,13 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := agent_keyword
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		local
 			l_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
@@ -130,7 +130,7 @@ feature -- Access
 			end
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		local
 			l_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
@@ -145,7 +145,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_qualified_call: BOOLEAN is
+	is_qualified_call: BOOLEAN
 			-- Is current call qualified?
 		local
 			l_implicit_target: ET_AGENT_IMPLICIT_CURRENT_TARGET
@@ -154,18 +154,18 @@ feature -- Status report
 			Result := (l_implicit_target = Void)
 		end
 
-	is_procedure: BOOLEAN is
+	is_procedure: BOOLEAN
 			-- Is the associated feature a procedure?
 		do
 			Result := (implicit_result = Void)
 		end
 
-	is_call_agent: BOOLEAN is True
+	is_call_agent: BOOLEAN = True
 			-- Is current agent a call agent?
 
 feature -- Status setting
 
-	set_procedure (b: BOOLEAN) is
+	set_procedure (b: BOOLEAN)
 			-- Set `is_procedure' to `b'.
 		do
 			if b then
@@ -179,7 +179,7 @@ feature -- Status setting
 
 feature {ET_AGENT_IMPLICIT_CURRENT_TARGET} -- Implicit node positions
 
-	implicit_target_position: ET_AST_NODE is
+	implicit_target_position: ET_AST_NODE
 			-- Node used to provide a position to the implicit target if any
 		do
 			Result := name.first_leaf
@@ -187,7 +187,7 @@ feature {ET_AGENT_IMPLICIT_CURRENT_TARGET} -- Implicit node positions
 
 feature {ET_AGENT_IMPLICIT_OPEN_ARGUMENT} -- Implicit node positions
 
-	implicit_argument_position: ET_AST_NODE is
+	implicit_argument_position: ET_AST_NODE
 			-- Node used to provide a position to implicit open arguments if any
 		do
 			Result := name.last_leaf
@@ -195,7 +195,7 @@ feature {ET_AGENT_IMPLICIT_OPEN_ARGUMENT} -- Implicit node positions
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_call_agent (Current)

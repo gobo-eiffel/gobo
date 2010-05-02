@@ -17,7 +17,7 @@ inherit
 
 feature -- Calls
 
-	call (args: OPEN_ARGS) is
+	call (args: OPEN_ARGS)
 			-- Call routine with operands `args'.
 		external
 			"built_in"

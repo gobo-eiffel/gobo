@@ -14,7 +14,7 @@ class ST_IMPORTED_UNICODE_NORMALIZATION_ROUTINES
 
 feature -- Access
 
-	normalization: ST_UNICODE_NORMALIZATION_ROUTINES is
+	normalization: ST_UNICODE_NORMALIZATION_ROUTINES
 			-- Unicode character class routines
 		once
 			create Result

@@ -29,7 +29,7 @@ create {XM_XPATH_MAPPED_PATH_EXPRESSION}
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant.
 		do
 			-- nothing to do
@@ -42,7 +42,7 @@ feature -- Access
 
 feature -- Evaluation
 
-	map_nodes (a_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
+	map_nodes (a_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT)
 			-- `a_item' mapped to zero or one items
 		do
 			check

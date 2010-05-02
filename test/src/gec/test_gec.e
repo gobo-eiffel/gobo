@@ -21,12 +21,12 @@ create
 
 feature -- Access
 
-	program_name: STRING is "gec"
+	program_name: STRING = "gec"
 			-- Program name
 
 feature -- Test
 
-	test_gec is
+	test_gec
 			-- Test 'gec'.
 		do
 			compile_program

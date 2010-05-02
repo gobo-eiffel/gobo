@@ -20,7 +20,7 @@ inherit
 
 feature -- Status report
 
-	less_than (u, v: AP_OPTION): BOOLEAN is
+	less_than (u, v: AP_OPTION): BOOLEAN
 			-- Is `u' considered less than `v'?
 		local
 			u_string, v_string: STRING

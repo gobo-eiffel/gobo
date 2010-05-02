@@ -27,14 +27,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new choice list.
 		do
 			when_keyword := tokens.when_keyword
 			precursor
 		end
 
-	make_with_capacity (nb: INTEGER) is
+	make_with_capacity (nb: INTEGER)
 			-- Create a new choice list with capacity `nb'.
 		do
 			when_keyword := tokens.when_keyword
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset choices as they were when they were last parsed.
 		local
 			i, nb: INTEGER
@@ -57,7 +57,7 @@ feature -- Initialization
 
 feature -- Access
 
-	choice (i: INTEGER): ET_CHOICE is
+	choice (i: INTEGER): ET_CHOICE
 			-- Choice at index `i' in list
 		require
 			i_large_enough: i >= 1
@@ -71,7 +71,7 @@ feature -- Access
 	when_keyword: ET_KEYWORD
 			-- 'when' keyword
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -81,13 +81,13 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := when_keyword
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			if is_empty then
@@ -97,7 +97,7 @@ feature -- Access
 			end
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			if is_empty then
@@ -109,7 +109,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_when_keyword (a_keyword: like when_keyword) is
+	set_when_keyword (a_keyword: like when_keyword)
 			-- Set `when_keyword' to `a_keyword'.
 		require
 			a_keyword_not_void: a_keyword /= Void
@@ -121,7 +121,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_choice_list (Current)
@@ -129,7 +129,7 @@ feature -- Processing
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_CHOICE_ITEM] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_CHOICE_ITEM]
 			-- Fixed array routines
 		once
 			create Result

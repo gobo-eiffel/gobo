@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Execute 'geant'.
 		local
 			a_project: GEANT_PROJECT
@@ -114,7 +114,7 @@ feature -- Access
 
 feature {NONE} -- Command line parsing
 
-	read_command_line is
+	read_command_line
 			-- Read command line arguments.
 		local
 			version_flag: AP_FLAG
@@ -229,7 +229,7 @@ feature {NONE} -- Command line parsing
 
 feature -- Setting
 
-	set_verbose (a_verbose: BOOLEAN) is
+	set_verbose (a_verbose: BOOLEAN)
 			-- Set `verbose' to `a_verbose'
 		do
 			verbose := a_verbose
@@ -237,7 +237,7 @@ feature -- Setting
 			verbose_set: verbose = a_verbose
 		end
 
-	set_debug_mode (a_debug_mode: BOOLEAN) is
+	set_debug_mode (a_debug_mode: BOOLEAN)
 			-- Set `debug_mode' to `a_debug_mode'
 		do
 			debug_mode := a_debug_mode
@@ -245,7 +245,7 @@ feature -- Setting
 			debug_mode_set: debug_mode = a_debug_mode
 		end
 
-	set_show_target_info (a_show_target_info: BOOLEAN) is
+	set_show_target_info (a_show_target_info: BOOLEAN)
 			-- Set `show_target_info' to `a_show_target_info'
 		do
 			show_target_info := a_show_target_info
@@ -253,7 +253,7 @@ feature -- Setting
 			show_target_info_set: show_target_info = a_show_target_info
 		end
 
-	set_no_exec (a_no_exec: BOOLEAN) is
+	set_no_exec (a_no_exec: BOOLEAN)
 			-- Set `no_exec' to `a_no_exec'
 		do
 			no_exec := a_no_exec
@@ -263,7 +263,7 @@ feature -- Setting
 
 feature {NONE} -- Error handling
 
-	report_version_number is
+	report_version_number
 			-- Report version number and exit.
 		local
 			a_message: UT_VERSION_NUMBER
@@ -275,7 +275,7 @@ feature {NONE} -- Error handling
 
 feature {NONE} -- Constants
 
-	Default_build_filename: STRING is
+	Default_build_filename: STRING
 			-- Default Name of build file
 		once
 			Result := "build.eant"

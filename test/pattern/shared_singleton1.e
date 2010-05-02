@@ -14,7 +14,7 @@ class SHARED_SINGLETON1
 
 feature -- Access
 
-	singleton1: SINGLETON1 is
+	singleton1: SINGLETON1
 			-- Singleton object
 		do
 			Result := singleton1_cell.item
@@ -28,7 +28,7 @@ feature -- Access
 
 feature -- Status report
 
-	singleton1_created: BOOLEAN is
+	singleton1_created: BOOLEAN
 			-- Has singleton already been created?
 		do
 			Result := singleton1_cell.item /= Void
@@ -36,7 +36,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	singleton1_cell: DS_CELL [SINGLETON1] is
+	singleton1_cell: DS_CELL [SINGLETON1]
 			-- Cell containing the singleton if already created
 		once
 			create Result.make (Void)

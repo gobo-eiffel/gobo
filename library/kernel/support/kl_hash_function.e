@@ -14,7 +14,7 @@ deferred class KL_HASH_FUNCTION [G]
 
 feature -- Access
 
-	hash_code (v: G): INTEGER is
+	hash_code (v: G): INTEGER
 			-- Hash code for `v'
 		require
 			v_not_void: v /= Void

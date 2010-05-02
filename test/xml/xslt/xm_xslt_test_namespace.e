@@ -33,12 +33,12 @@ create
 
 feature -- Access
 
-	expected_result: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?><p_0:item xmlns:p=%"q.uri%" xmlns:p_0=%"p.uri%"/>"
+	expected_result: STRING = "<?xml version=%"1.0%" encoding=%"UTF-8%"?><p_0:item xmlns:p=%"q.uri%" xmlns:p_0=%"p.uri%"/>"
 			-- Expected result for `test_character_map'
-	
+
 feature -- Test
 
-	test_xtde0430 is
+	test_xtde0430
 			-- Test error XTDE0430
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -64,14 +64,14 @@ feature -- Test
 			l_transformer.set_initial_template ("first")
 			assert ("Initial template set", l_transformer.initial_template /= Void)
 			create l_output
-			l_output.set_output_to_string 
+			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (Void, l_result)
 			assert ("Transform not successfull", l_transformer.is_error)
 			assert ("XTED0430", l_error_listener.has (xtde0430))
 		end
 
-	test_namespace is
+	test_namespace
 			-- Test xsl:namespace
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -93,11 +93,11 @@ feature -- Test
 			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
 			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
 			l_transformer := l_transformer_factory.created_transformer
-			assert ("transformer", l_transformer /= Void)			
+			assert ("transformer", l_transformer /= Void)
 			l_transformer.set_initial_template ("first")
 			assert ("Initial template set", l_transformer.initial_template /= Void)
 			create l_output
-			l_output.set_output_to_string 
+			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (Void, l_result)
 			assert ("Transform successfull", not l_transformer.is_error)
@@ -106,7 +106,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing schematron data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}",
@@ -117,15 +117,15 @@ feature {NONE} -- Implementation
 			data_dirname_not_empty: not Result.is_empty
 		end
 
-	dummy_uri: UT_URI is
+	dummy_uri: UT_URI
 			-- Dummy URI
 		once
 			create Result.make ("dummy:")
 		ensure
 			dummy_uri_is_absolute: Result /= Void and then Result.is_absolute
 		end
-		
-	namespace_xsl_uri: UT_URI is
+
+	namespace_xsl_uri: UT_URI
 			-- URI of file 'namespace.xsl'
 		local
 			l_path: STRING
@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 			namespace_xsl_uri_not_void: Result /= Void
 		end
 
-	namespace2_xsl_uri: UT_URI is
+	namespace2_xsl_uri: UT_URI
 			-- URI of file 'namespace2.xsl'
 		local
 			l_path: STRING
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 			namespace2_xsl_uri_not_void: Result /= Void
 		end
 
-	xtde0430: STRING is
+	xtde0430: STRING
 			-- Error XTDE0430
 		once
 			Result := Xpath_errors_uri + "#" + "XTDE0430"

@@ -20,7 +20,7 @@ inherit
 		redefine
 			default_priority, match
 		end
-	
+
 	XM_XPATH_DOCUMENT_NODE_TEST
 		rename
 			make as make_xpath
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_static_context: XM_XPATH_STATIC_CONTEXT; a_node_test: XM_XPATH_NODE_TEST) is
+	make (a_static_context: XM_XPATH_STATIC_CONTEXT; a_node_test: XM_XPATH_NODE_TEST)
 			-- Establish invariant
 		require
 			static_context_not_void: a_static_context /= Void
@@ -54,7 +54,7 @@ feature -- Access
 
 feature -- Matching
 
-	frozen match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	frozen match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Determine whether this Pattern matches the given Node;
 		do
 			internal_last_match_result := matches_item (a_node, False)

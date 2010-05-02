@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new variables object.
 		local
 			a_name: STRING
@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_builtin_variable_name (a_name: STRING): BOOLEAN is
+	is_builtin_variable_name (a_name: STRING): BOOLEAN
 			-- Is `a_name' the name of a built-in variable?
 		require
 			a_name_not_void: a_name /= Void
@@ -94,7 +94,7 @@ feature -- Status report
 
 feature {NONE} -- Constants
 
-	gobo_os_name: STRING is
+	gobo_os_name: STRING
 			-- Name of variable 'GOBO_OS'
 		once
 			Result := "GOBO_OS"
@@ -103,7 +103,7 @@ feature {NONE} -- Constants
 			gobo_os_name_not_empty: Result.count > 0
 		end
 
-	is_windows_name: STRING is
+	is_windows_name: STRING
 			-- Name of variable 'is_windows'
 		once
 			Result := "is_windows"
@@ -112,7 +112,7 @@ feature {NONE} -- Constants
 			is_windows_name_not_empty: Result.count > 0
 		end
 
-	is_unix_name: STRING is
+	is_unix_name: STRING
 			-- Name of variable 'is_unix'
 		once
 			Result := "is_unix"
@@ -121,7 +121,7 @@ feature {NONE} -- Constants
 			is_unix_name_not_empty: Result.count > 0
 		end
 
-	path_separator_name: STRING is
+	path_separator_name: STRING
 			-- Name of variable 'path_separator'
 		once
 			Result := "path_separator"
@@ -130,7 +130,7 @@ feature {NONE} -- Constants
 			path_separator_name_not_empty: Result.count > 0
 		end
 
-	exe_name: STRING is
+	exe_name: STRING
 			-- Name of variable 'exe'
 		once
 			Result := "exe"
@@ -139,7 +139,7 @@ feature {NONE} -- Constants
 			exe_name_not_empty: Result.count > 0
 		end
 
-	verbose_name: STRING is
+	verbose_name: STRING
 			-- Name of variable 'verbose'
 		once
 			Result := "verbose"

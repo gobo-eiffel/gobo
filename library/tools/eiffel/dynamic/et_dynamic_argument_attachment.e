@@ -26,7 +26,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_type_set: like source_type_set; an_argument: like actual_argument;
-		a_current_feature: like current_feature; a_current_type: like current_type) is
+		a_current_feature: like current_feature; a_current_type: like current_type)
 			-- Create a new argument passing.
 		require
 			a_type_set_not_void: a_type_set /= Void
@@ -50,13 +50,13 @@ feature -- Access
 	actual_argument: ET_ARGUMENT_OPERAND
 			-- Actual argument
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of attachment
 		do
 			Result := actual_argument.position
 		end
 
-	description: STRING is
+	description: STRING
 			-- Kind of attachment
 		local
 			l_implicit: ET_AGENT_IMPLICIT_OPEN_ARGUMENT
@@ -73,9 +73,9 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	argument_description: STRING is "argument"
-	open_argument_description: STRING is "open argument"
-	implicit_open_argument_description: STRING is "implicit open argument #"
+	argument_description: STRING = "argument"
+	open_argument_description: STRING = "open argument"
+	implicit_open_argument_description: STRING = "implicit open argument #"
 			-- Description constants
 
 invariant

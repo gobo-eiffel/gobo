@@ -28,8 +28,8 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_source: like source; a_target: like target) is
-			-- Create a new transition from 
+	make (a_source: like source; a_target: like target)
+			-- Create a new transition from
 			-- `a_source' to `a_target'.
 		require
 			a_source_not_void: a_source /= Void
@@ -49,7 +49,7 @@ feature -- Access
 	source, target: PR_STATE
 			-- Source and target of current transition
 
-	symbol: PR_SYMBOL is
+	symbol: PR_SYMBOL
 			-- Transition symbol
 		do
 			Result := target.accessing_symbol
@@ -67,13 +67,13 @@ feature -- Access
 
 feature {DS_NESTED_LIST_FLATTENER} -- Implementation
 
-	set_following_tokens (tokens: like following_tokens) is
+	set_following_tokens (tokens: like following_tokens)
 			-- Set `following_tokens' to `tokens'.
 		do
 			following_tokens := tokens
 		end
 
-	add_following_token (a_token: PR_TOKEN) is
+	add_following_token (a_token: PR_TOKEN)
 			-- Add `a_token' to `following_tokens'.
 		do
 			following_tokens.force_last (a_token)

@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 
 	make (a_tag: like tag; a_name: like assembly_name; a_version: like version;
 		a_culture: like culture; a_public_key_token: like public_key_token;
-		a_prefix: like class_prefix) is
+		a_prefix: like class_prefix)
 			-- Create a new assembly.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -71,14 +71,14 @@ feature -- Access
 
 feature -- Setting
 
-	set_assembly_pathname (a_pathname: STRING) is
+	set_assembly_pathname (a_pathname: STRING)
 			-- Set `assembly_pathname' to `a_pathname'.
 		do
 			assembly_pathname := a_pathname
 		ensure
 			assembly_pathname_set: assembly_pathname = a_pathname
 		end
-		
+
 invariant
 
 	tag_not_void: tag /= Void

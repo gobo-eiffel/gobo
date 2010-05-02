@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new grammar.
 		do
 			create tokens.make (Initial_max_nb_tokens)
@@ -57,7 +57,7 @@ feature -- Access
 	expected_conflicts: INTEGER
 			-- Number of expected shift/reduce conflicts
 
-	max_rhs: INTEGER is
+	max_rhs: INTEGER
 			-- Maximum number of right-hand-side
 			-- symbols in `rules'
 		local
@@ -90,7 +90,7 @@ feature -- User-defined Eiffel code
 
 feature -- Setting
 
-	set_start_symbol (a_symbol: like start_symbol) is
+	set_start_symbol (a_symbol: like start_symbol)
 			-- Set `start_symbol' to `a_symbol'.
 		require
 			a_symbol_not_void: a_symbol /= Void
@@ -100,7 +100,7 @@ feature -- Setting
 			start_symbol_set: start_symbol = a_symbol
 		end
 
-	set_eiffel_code (code: like eiffel_code) is
+	set_eiffel_code (code: like eiffel_code)
 			-- Set `eiffel_code' to `code'.
 		do
 			eiffel_code := code
@@ -108,7 +108,7 @@ feature -- Setting
 			eiffel_code_set: eiffel_code = code
 		end
 
-	set_expected_conflicts (nb: INTEGER) is
+	set_expected_conflicts (nb: INTEGER)
 			-- Set `expected_conflicts' to `nb'.
 		do
 			expected_conflicts := nb
@@ -118,7 +118,7 @@ feature -- Setting
 
 feature -- Element change
 
-	put_token (a_token: PR_TOKEN) is
+	put_token (a_token: PR_TOKEN)
 			-- Add `a_token' at the end of the
 			-- list of terminal symbols.
 		require
@@ -133,7 +133,7 @@ feature -- Element change
 			inserted: tokens.last = a_token
 		end
 
-	put_variable (a_variable: PR_VARIABLE) is
+	put_variable (a_variable: PR_VARIABLE)
 			-- Add `a_variable' at the end of the
 			-- list of non-terminal symbols.
 		require
@@ -148,7 +148,7 @@ feature -- Element change
 			inserted: variables.last = a_variable
 		end
 
-	put_type (a_type: PR_TYPE) is
+	put_type (a_type: PR_TYPE)
 			-- Add `a_type' at the end of the
 			-- list of symbol types.
 		require
@@ -163,7 +163,7 @@ feature -- Element change
 			inserted: types.last = a_type
 		end
 
-	put_rule (a_rule: PR_RULE) is
+	put_rule (a_rule: PR_RULE)
 			-- Add `a_rule' at the end of the
 			-- list of grammar rules.
 		require
@@ -180,7 +180,7 @@ feature -- Element change
 
 feature -- Output
 
-	print_grammar (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_grammar (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print textual representation of
 			-- current grammar to `a_file'.
 		require
@@ -228,7 +228,7 @@ feature -- Output
 
 feature -- Processing
 
-	reduce (error_handler: UT_ERROR_HANDLER) is
+	reduce (error_handler: UT_ERROR_HANDLER)
 			-- Remove useless nonterminal symbols and rules.
 			-- Report results to `error_handler'.
 		require
@@ -309,7 +309,7 @@ feature -- Processing
 			end
 		end
 
-	reduce_verbose (error_handler: UT_ERROR_HANDLER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	reduce_verbose (error_handler: UT_ERROR_HANDLER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Remove useless nonterminal symbols and rules.
 			-- Report verbosely results to `error_handler'
 			-- and `a_file'.
@@ -410,7 +410,7 @@ feature -- Processing
 			end
 		end
 
-	set_nullable is
+	set_nullable
 			-- Set nonterminal symbols which can be expanded
 			-- to an empty string.
 		local
@@ -509,7 +509,7 @@ feature -- Processing
 
 feature {NONE} -- Processing
 
-	mark_useful_variables is
+	mark_useful_variables
 			-- Mark all nonterminals which can expand to
 			-- an empty string or strings consisting only
 			-- of terminals. Mark the corresponding rules
@@ -570,7 +570,7 @@ feature {NONE} -- Processing
 			end
 		end
 
-	mark_useful_rules is
+	mark_useful_rules
 			-- Mark all rules which are reachable from
 			-- `start_symbol' and whose symbols are used.
 		local
@@ -604,7 +604,7 @@ feature {NONE} -- Processing
 			end
 		end
 
-	traverse_variable (a_variable: PR_VARIABLE) is
+	traverse_variable (a_variable: PR_VARIABLE)
 			-- Traverse the right-hand-side symbols of
 			-- the useful rules whose left-hand-side is
 			-- `a_variable' recursivelly and mark these
@@ -652,27 +652,27 @@ feature {NONE} -- Processing
 
 feature {NONE} -- Constants
 
-	Initial_max_nb_tokens: INTEGER is 100
+	Initial_max_nb_tokens: INTEGER = 100
 			-- Initial capacity for `tokens'
 
-	Max_nb_tokens_increment: INTEGER is 100
+	Max_nb_tokens_increment: INTEGER = 100
 			-- Increment when resizing `tokens'
 
-	Initial_max_nb_variables: INTEGER is 300
+	Initial_max_nb_variables: INTEGER = 300
 			-- Initial capacity for `variables'
 
-	Max_nb_variables_increment: INTEGER is 300
+	Max_nb_variables_increment: INTEGER = 300
 			-- Increment when resizing `variables'
 
-	Initial_max_nb_types: INTEGER is 300
+	Initial_max_nb_types: INTEGER = 300
 			-- Initial capacity for `types'
-	Max_nb_types_increment: INTEGER is 300
+	Max_nb_types_increment: INTEGER = 300
 			-- Increment when resizing `types'
 
-	Initial_max_nb_rules: INTEGER is 500
+	Initial_max_nb_rules: INTEGER = 500
 			-- Initial capacity for `rules'
 
-	Max_nb_rules_increment: INTEGER is 500
+	Max_nb_rules_increment: INTEGER = 500
 			-- Increment when resizing `rules'
 
 invariant

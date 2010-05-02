@@ -49,7 +49,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like extended_name; args: like arguments; a_type: like declared_type; a_class: like implementation_class) is
+	make (a_name: like extended_name; args: like arguments; a_type: like declared_type; a_class: like implementation_class)
 			-- Create a new .NET function.
 		do
 			precursor (a_name, args, a_type, a_class)
@@ -62,14 +62,14 @@ feature {NONE} -- Initialization
 
 feature -- status report
 
-	is_infixable: BOOLEAN is
+	is_infixable: BOOLEAN
 			-- Can current feature have a name of
 			-- the form 'infix ...'?
 		do
 			Result := arguments /= Void and then (arguments.count = 1 or (is_static and arguments.count = 2))
 		end
 
-	is_prefixable: BOOLEAN is
+	is_prefixable: BOOLEAN
 			-- Can current feature have a name of
 			-- the form 'prefix ...'?
 		do
@@ -78,7 +78,7 @@ feature -- status report
 
 feature -- Duplication
 
-	new_synonym (a_name: like extended_name): like Current is
+	new_synonym (a_name: like extended_name): like Current
 			-- Synonym feature
 		do
 			create Result.make (a_name, arguments, declared_type, implementation_class)
@@ -96,7 +96,7 @@ feature -- Duplication
 
 feature -- Conversion
 
-	renamed_feature (a_name: like extended_name): like Current is
+	renamed_feature (a_name: like extended_name): like Current
 			-- Renamed version of current feature
 		do
 			create Result.make (a_name, arguments, declared_type, implementation_class)
@@ -120,7 +120,7 @@ feature -- Conversion
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_dotnet_function (Current)

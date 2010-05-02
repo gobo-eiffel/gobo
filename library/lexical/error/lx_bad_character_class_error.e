@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER) is
+	make (filename: STRING; line: INTEGER)
 			-- Create a new error reporting the presence
 			-- of a bad character class.
 		require
@@ -35,10 +35,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: bad character class or missing close bracket"
+	default_template: STRING = "%"$1%", line $2: bad character class or missing close bracket"
 			-- Default template used to built the error message
 
-	code: STRING is "LX0004"
+	code: STRING = "LX0004"
 			-- Error code
 
 invariant

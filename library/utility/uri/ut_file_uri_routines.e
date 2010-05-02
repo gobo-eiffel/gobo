@@ -24,7 +24,7 @@ inherit
 
 feature -- Filename
 
-	uri_to_filename (a_uri: UT_URI): detachable STRING is
+	uri_to_filename (a_uri: UT_URI): detachable STRING
 			-- Convert URI to filename and then to string using the
 			-- current filesystem rules.
 		require
@@ -64,7 +64,7 @@ feature -- Filename
 			end
 		end
 
-	filename_to_uri (a_string: STRING): UT_URI is
+	filename_to_uri (a_string: STRING): UT_URI
 			-- Convert filename in the current filesystem convention
 			-- to a file: URI.
 		require
@@ -85,7 +85,7 @@ feature -- Filename
 
 feature -- Pathname
 
-	uri_to_pathname (a_uri: UT_URI): detachable KL_PATHNAME is
+	uri_to_pathname (a_uri: UT_URI): detachable KL_PATHNAME
 			-- Convert `a_uri' to a pathname.
 		require
 			a_uri_not_void: a_uri /= Void
@@ -148,7 +148,7 @@ feature -- Pathname
 			end
 		end
 
-	pathname_to_uri (a_pathname: KI_PATHNAME): UT_URI is
+	pathname_to_uri (a_pathname: KI_PATHNAME): UT_URI
 			-- Create a file: URI from a file system path name
 		require
 			a_pathname_not_void: a_pathname /= Void
@@ -207,7 +207,7 @@ feature -- Pathname
 
 feature {NONE} -- Implementation
 
-	pathname_to_uri_component, hostname_to_authority (a_string: STRING): UT_URI_STRING is
+	pathname_to_uri_component, hostname_to_authority (a_string: STRING): UT_URI_STRING
 			-- Convert KL_PATHNAME item to URI string
 			-- (Default to UTF-8 charset)
 		require
@@ -218,7 +218,7 @@ feature {NONE} -- Implementation
 			uri_component_not_void: Result /= Void
 		end
 
-	uri_component_to_pathname (a_uri_string: UT_URI_STRING): detachable STRING is
+	uri_component_to_pathname (a_uri_string: UT_URI_STRING): detachable STRING
 			-- Convert string used in URI component to pathname string
 		require
 			a_uri_string_not_void: a_uri_string /= Void
@@ -226,7 +226,7 @@ feature {NONE} -- Implementation
 			Result := a_uri_string.decoded_utf8
 		end
 
-	is_drive (a_drive: STRING): BOOLEAN is
+	is_drive (a_drive: STRING): BOOLEAN
 			-- Can this component be a drive name?
 		require
 			a_drive_not_void: a_drive /= Void
@@ -236,7 +236,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	Localhost_authority: STRING is "localhost"
-	File_scheme: STRING is "file"
+	Localhost_authority: STRING = "localhost"
+	File_scheme: STRING = "file"
 
 end

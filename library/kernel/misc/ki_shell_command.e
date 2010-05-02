@@ -14,7 +14,7 @@ deferred class KI_SHELL_COMMAND
 
 feature {NONE} -- Initialization
 
-	make (a_command: like command) is
+	make (a_command: like command)
 			-- Create a new shell command.
 		require
 			a_command_not_void: a_command /= Void
@@ -26,21 +26,21 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	command: STRING is
+	command: STRING
 			-- Command to be executed from the shell
 		deferred
 		end
 
 feature -- Status report
 
-	exit_code: INTEGER is
+	exit_code: INTEGER
 			-- Exit status code of the last execution of `command';
 			-- Its meaning depends on the value of `is_user_code'
 			-- and `is_system_code'.
 		deferred
 		end
 
-	is_user_code: BOOLEAN is
+	is_user_code: BOOLEAN
 			-- Has `exit_code' been set at the end of
 			-- a normal execution of `command'?
 		do
@@ -49,7 +49,7 @@ feature -- Status report
 			definition: Result = not is_system_code
 		end
 
-	is_system_code: BOOLEAN is
+	is_system_code: BOOLEAN
 			-- Has `exit_code' been set by the system because of
 			-- an abnormal termination of `command' or because
 			-- it could not be launched correctly?
@@ -58,7 +58,7 @@ feature -- Status report
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Ask operating system to execute `command'. Wait until
 			-- termination. Make exit status available in `exit_code',
 			-- `is_user_code' and `is_system_code'.

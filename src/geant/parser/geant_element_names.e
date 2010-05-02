@@ -14,7 +14,7 @@ class GEANT_ELEMENT_NAMES
 
 feature -- Attribute names and values
 
-	Id_attribute_name: STRING is
+	Id_attribute_name: STRING
 			-- "ID" attribute name
 		once
 			Result := "ID"
@@ -23,7 +23,7 @@ feature -- Attribute names and values
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Idref_attribute_name: STRING is
+	Idref_attribute_name: STRING
 			-- "IDREF" attribute name
 		once
 			Result := "IDREF"
@@ -34,7 +34,7 @@ feature -- Attribute names and values
 
 feature -- Task names
 
-	Gec_task_name: STRING is
+	Gec_task_name: STRING
 			-- "gec" task name
 		once
 			Result := "gec"
@@ -43,7 +43,7 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
-	Ise_task_name: STRING is
+	Ise_task_name: STRING
 			-- "ise" task name
 		once
 			Result := "ise"
@@ -52,7 +52,7 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
-	Exec_task_name: STRING is
+	Exec_task_name: STRING
 			-- "exec" task name
 		once
 			Result := "exec"
@@ -61,7 +61,7 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
-	Lcc_task_name: STRING is
+	Lcc_task_name: STRING
 			-- "lcc" task name
 		once
 			Result := "lcc"
@@ -70,7 +70,7 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
-	Set_task_name: STRING is
+	Set_task_name: STRING
 			-- "set" task name
 		once
 			Result := "set"
@@ -79,7 +79,7 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
-	Unset_task_name: STRING is
+	Unset_task_name: STRING
 			-- "unset" task name
 		once
 			Result := "unset"
@@ -88,7 +88,7 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
-	Gexace_task_name: STRING is
+	Gexace_task_name: STRING
 			-- "xace" task name
 		once
 			Result := "gexace"
@@ -97,7 +97,7 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
-	Gelex_task_name: STRING is
+	Gelex_task_name: STRING
 			-- "gelex" task name
 		once
 			Result := "gelex"
@@ -106,7 +106,7 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
-	Geyacc_task_name: STRING is
+	Geyacc_task_name: STRING
 			-- "geyacc" task name
 		once
 			Result := "geyacc"
@@ -115,7 +115,7 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
-	Gepp_task_name: STRING is
+	Gepp_task_name: STRING
 			-- "gepp" task name
 		once
 			Result := "gepp"
@@ -124,7 +124,7 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
-	Getest_task_name: STRING is
+	Getest_task_name: STRING
 			-- "getest" task name
 		once
 			Result := "getest"
@@ -133,7 +133,7 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
-	Geant_task_name: STRING is
+	Geant_task_name: STRING
 			-- "geant" task name
 		once
 			Result := "geant"
@@ -142,7 +142,7 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
-	Echo_task_name: STRING is
+	Echo_task_name: STRING
 			-- "echo" task name
 		once
 			Result := "echo"
@@ -151,7 +151,7 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
-	Mkdir_task_name: STRING is
+	Mkdir_task_name: STRING
 			-- "mkdir" task name
 		once
 			Result := "mkdir"
@@ -160,7 +160,7 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
-	Delete_task_name: STRING is
+	Delete_task_name: STRING
 			-- "delete" task name
 		once
 			Result := "delete"
@@ -169,7 +169,7 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
-	Copy_task_name: STRING is
+	Copy_task_name: STRING
 			-- "copy" task name
 		once
 			Result := "copy"
@@ -178,7 +178,7 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
-	Move_task_name: STRING is
+	Move_task_name: STRING
 			-- "move" task name
 		once
 			Result := "move"
@@ -187,7 +187,7 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
-	Setenv_task_name: STRING is
+	Setenv_task_name: STRING
 			-- "setenv" task name
 		once
 			Result := "setenv"
@@ -196,7 +196,7 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
-	Xslt_task_name: STRING is
+	Xslt_task_name: STRING
 			-- "xslt" task name
 		once
 			Result := "xslt"
@@ -205,7 +205,7 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
-	Outofdate_task_name: STRING is
+	Outofdate_task_name: STRING
 			-- "outofdate" task name
 		once
 			Result := "outofdate"
@@ -214,7 +214,7 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
-	Exit_task_name: STRING is
+	Exit_task_name: STRING
 			-- "exit" task name
 		once
 			Result := "exit"
@@ -223,7 +223,7 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
-	Precursor_task_name: STRING is
+	Precursor_task_name: STRING
 			-- "precursor" task name
 		once
 			Result := "precursor"
@@ -232,7 +232,7 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
-	Available_task_name: STRING is
+	Available_task_name: STRING
 			-- "available" task name
 		once
 			Result := "available"
@@ -241,7 +241,7 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
-	Input_task_name: STRING is
+	Input_task_name: STRING
 			-- "input" task name
 		once
 			Result := "input"
@@ -250,7 +250,7 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
-	Replace_task_name: STRING is
+	Replace_task_name: STRING
 			-- "replace" task name
 		once
 			Result := "replace"

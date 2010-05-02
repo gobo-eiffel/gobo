@@ -27,7 +27,7 @@ feature -- Access
 
 feature -- Element change
 
-	put_right (other: like Current) is
+	put_right (other: like Current)
 			-- Put `other' to right of cell.
 		require
 			other_not_void: other /= Void
@@ -37,7 +37,7 @@ feature -- Element change
 			linked: right = other
 		end
 
-	forget_right is
+	forget_right
 			-- Remove right neighbor.
 		do
 			right := Void

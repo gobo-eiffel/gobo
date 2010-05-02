@@ -84,7 +84,7 @@ CHAR_CODE (0*([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))
 -- to figure out that the first once keyword in the following example
 -- in part of a once manifest string expression and the second is
 -- part of the compound of the once routine:
---   f is
+--   f
 --      require
 --         once "foo" /= Void
 --      once
@@ -1152,7 +1152,7 @@ CHAR_CODE (0*([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))
 
 feature -- Scanning
 
-	read_token is
+	read_token
 			-- (NOTE: THIS IS THE COPY/PASTE VERSION OF THE CODE IN
 			-- THE YY_COMPRESSED_SCANNER_SKELETON CLASS, FOR OPTIMISATION
 			-- WITH ISE EIFFEL (ALLOW INLINING NOT POSSIBLE IN

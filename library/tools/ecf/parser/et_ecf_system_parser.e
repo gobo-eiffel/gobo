@@ -30,7 +30,7 @@ feature -- Access
 
 feature -- Parsing
 
-	parse_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+	parse_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Parse ECF file `a_file'.
 		do
 			last_system := Void
@@ -40,7 +40,7 @@ feature -- Parsing
 
 feature {NONE} -- Element change
 
-	build_system_config (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_filename: STRING) is
+	build_system_config (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_filename: STRING)
 			-- Build system config from `an_element'.
 		local
 			l_system: ET_ECF_SYSTEM

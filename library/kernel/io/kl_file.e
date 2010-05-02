@@ -27,7 +27,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name) is
+	make (a_name: like name)
 			-- Create a new file named `a_name'.
 			-- (`a_name' should follow the pathname convention
 			-- of the underlying platform. For pathname conversion
@@ -49,7 +49,7 @@ feature -- Access
 			-- the bytes of its associated UTF unicode encoding will
 			-- be used.
 
-	time_stamp: INTEGER is
+	time_stamp: INTEGER
 			-- Time stamp (number of seconds since 1 January 1970
 			-- at 00:00:00 UTC) of last modification to current file;
 			-- Return -1 if the time stamp was not available, if the
@@ -79,7 +79,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of bytes in current file;
 			-- Return -1 if the number of bytes was not available,
 			-- if the file did not exist for example.
@@ -103,7 +103,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Does file physically exist on disk?
 		local
 			rescued: BOOLEAN
@@ -122,7 +122,7 @@ feature -- Status report
 			end
 		end
 
-	is_readable: BOOLEAN is
+	is_readable: BOOLEAN
 			-- Can file be opened in read mode?
 		do
 			if string_name /= Empty_name then
@@ -130,13 +130,13 @@ feature -- Status report
 			end
 		end
 
-	is_closed: BOOLEAN is
+	is_closed: BOOLEAN
 			-- Is file closed?
 		do
 			Result := old_is_closed
 		end
 
-	same_physical_file (other_name: STRING): BOOLEAN is
+	same_physical_file (other_name: STRING): BOOLEAN
 			-- Are current file and file named `other_name'
 			-- the same physical file? Return False if one
 			-- or both files don't exist. (Return True if
@@ -232,7 +232,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	close is
+	close
 			-- Close current file if it is closable,
 			-- let it open otherwise.
 		local
@@ -248,7 +248,7 @@ feature -- Basic operations
 			end
 		end
 
-	change_name (new_name: STRING) is
+	change_name (new_name: STRING)
 			-- Rename current file as `new_name'.
 			-- Do nothing if the file could not be renamed, if
 			-- it did not exist or if `new_name' is physically
@@ -289,7 +289,7 @@ feature -- Basic operations
 			end
 		end
 
-	copy_file (new_name: STRING) is
+	copy_file (new_name: STRING)
 			-- Copy current file to `new_name'.
 			-- Do nothing if the file could not be copied, if it
 			-- did not exist or if `new_name' is physically
@@ -330,7 +330,7 @@ feature -- Basic operations
 			end
 		end
 
-	concat (a_filename: STRING) is
+	concat (a_filename: STRING)
 			-- Copy content of file `a_filename' to the end of current file.
 			-- Do nothing if file `a_filename' does not exist. Create
 			-- current file if it does not exist yet. If file `a_filename'
@@ -382,7 +382,7 @@ feature -- Basic operations
 			end
 		end
 
-	delete is
+	delete
 			-- Delete current file.
 			-- Do nothing if the file could not be
 			-- deleted or if it did not exist.
@@ -405,10 +405,10 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	Empty_name: STRING is "empty_name"
+	Empty_name: STRING = "empty_name"
 			-- Empty name place-holder
 
-	tmp_file1: KL_TEXT_INPUT_FILE is
+	tmp_file1: KL_TEXT_INPUT_FILE
 			-- Temporary file object
 		once
 			create Result.make (dummy_name)
@@ -417,10 +417,10 @@ feature {NONE} -- Implementation
 			file_closed: Result.is_closed
 		end
 
-	dummy_name: STRING is "dummy"
+	dummy_name: STRING = "dummy"
 			-- Dummy name
 
-	old_make (fn: STRING) is
+	old_make (fn: STRING)
 			-- Create file object with `fn' as file name.
 		require
 			string_exists: fn /= Void
@@ -435,50 +435,50 @@ feature {NONE} -- Implementation
 	string_name: STRING
 			-- Name of file (STRING version)
 
-	old_count: INTEGER is
+	old_count: INTEGER
 			-- Size in bytes (0 if no associated physical file)
 		deferred
 		end
 
-	old_exists: BOOLEAN is
+	old_exists: BOOLEAN
 			-- Does physical file exist?
 		deferred
 		end
 
-	date: INTEGER is
+	date: INTEGER
 			-- Time stamp (time of last modification)
 		require
 			file_exists: old_exists
 		deferred
 		end
 
-	is_plain: BOOLEAN is
+	is_plain: BOOLEAN
 			-- Is file a plain file?
 		require
 			file_exists: old_exists
 		deferred
 		end
 
-	old_is_readable: BOOLEAN is
+	old_is_readable: BOOLEAN
 			-- Is file readable?
 		require
 			file_exists: old_exists
 		deferred
 		end
 
-	old_is_closed: BOOLEAN is
+	old_is_closed: BOOLEAN
 			-- Is file closed?
 		deferred
 		end
 
-	inode: INTEGER is
+	inode: INTEGER
 			-- I-node number
 		require
 			file_exists: old_exists
 		deferred
 		end
 
-	old_change_name (new_name: STRING) is
+	old_change_name (new_name: STRING)
 			-- Change file name to `new_name'
 		require
 			new_name_not_void: new_name /= Void
@@ -488,7 +488,7 @@ feature {NONE} -- Implementation
 			name_changed: string_name.is_equal (new_name)
 		end
 
-	old_close is
+	old_close
 			-- Close file.
 		require
 			medium_is_open: not old_is_closed
@@ -497,7 +497,7 @@ feature {NONE} -- Implementation
 			is_closed: old_is_closed
 		end
 
-	old_delete is
+	old_delete
 			-- Remove link with physical file.
 			-- File does not physically disappear from the disk
 			-- until no more processes reference it.

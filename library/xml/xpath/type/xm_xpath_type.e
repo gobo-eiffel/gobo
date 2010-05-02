@@ -13,7 +13,7 @@ note
 class XM_XPATH_TYPE
 
 inherit
-	
+
 	ANY -- required by SE 2.1b1
 
 	KL_CLONABLE
@@ -45,26 +45,26 @@ feature -- Access
 	-- actually used by XPath;
 	-- All should be INTEGER_16 when this is available
 
-	Element_node: INTEGER is 1
-	Attribute_node: INTEGER is 2
-	Text_node: INTEGER is 3
-	Processing_instruction_node: INTEGER is 7
-	Comment_node: INTEGER is 8
-	Document_node: INTEGER is 9
-	Namespace_node: INTEGER is 13
+	Element_node: INTEGER = 1
+	Attribute_node: INTEGER = 2
+	Text_node: INTEGER = 3
+	Processing_instruction_node: INTEGER = 7
+	Comment_node: INTEGER = 8
+	Document_node: INTEGER = 9
+	Namespace_node: INTEGER = 13
 
-	Any_node: INTEGER is 0
+	Any_node: INTEGER = 0
 
-	Any_item_fingerprint: INTEGER is 88
+	Any_item_fingerprint: INTEGER = 88
 
-	Same_item_type: INTEGER is 1
-	Subsuming_type: INTEGER is 2
-	Subsumed_type: INTEGER is 3
-	Overlapping_types: INTEGER is 4
-	Disjoint_types: INTEGER is 5
+	Same_item_type: INTEGER = 1
+	Subsuming_type: INTEGER = 2
+	Subsumed_type: INTEGER = 3
+	Overlapping_types: INTEGER = 4
+	Disjoint_types: INTEGER = 5
 			-- Type realtionships
 
-	node_kind_description (a_node_kind: INTEGER): STRING is
+	node_kind_description (a_node_kind: INTEGER): STRING
 			-- Node test description
 		require
 			valid_node_type: is_node_type (a_node_kind)
@@ -91,8 +91,8 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-				
-	common_super_type (t1, t2: XM_XPATH_ITEM_TYPE): XM_XPATH_ITEM_TYPE is
+
+	common_super_type (t1, t2: XM_XPATH_ITEM_TYPE): XM_XPATH_ITEM_TYPE
 			-- Common supertype of two given types
 		require
 			types_not_void: t1 /= Void and then t2 /= void
@@ -110,7 +110,7 @@ feature -- Access
 					Result := t1
 				else
 					Result := common_super_type (t2.super_type, t1)
-					
+
 					-- eventually we will hit a type that is a supertype of t2. We reverse
 					-- the arguments so we go up each branch of the tree alternately.
 					-- If we hit the root of the tree, one of the earlier conditions will be satisfied,
@@ -121,7 +121,7 @@ feature -- Access
 			result_not_void: Result /= void
 		end
 
-	node_type_name (a_node_type: INTEGER): STRING is
+	node_type_name (a_node_type: INTEGER): STRING
 			-- Name of `a_node_type'
 		require
 			valid_node_type: is_node_type (a_node_type)
@@ -149,7 +149,7 @@ feature -- Access
 			node_type_name_not_void: Result /= Void
 		end
 
-	built_in_item_type (a_uri, a_local_name: STRING): XM_XPATH_ITEM_TYPE is
+	built_in_item_type (a_uri, a_local_name: STRING): XM_XPATH_ITEM_TYPE
 			-- Built-in type named by `a_uri', `a_local_name'
 		require
 			uri_not_void: a_uri /= Void
@@ -167,7 +167,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_node_type (a_type: INTEGER): BOOLEAN is
+	is_node_type (a_type: INTEGER): BOOLEAN
 			-- `True' if `a_type' type is node() or a subtype of node()
 		do
 			Result := a_type = Element_node
@@ -180,7 +180,7 @@ feature -- Status report
 				or else a_type = Any_node
 		end
 
-	is_node_item_type (a_type: XM_XPATH_ITEM_TYPE): BOOLEAN is
+	is_node_item_type (a_type: XM_XPATH_ITEM_TYPE): BOOLEAN
 			-- `True' if `a_type' is node() or a subtype of node()
 		require
 			type_not_void: a_type /= Void
@@ -188,7 +188,7 @@ feature -- Status report
 			Result := is_sub_type (a_type, any_node_test)
 		end
 
-	is_atomic_item_type (a_type: XM_XPATH_ITEM_TYPE): BOOLEAN is
+	is_atomic_item_type (a_type: XM_XPATH_ITEM_TYPE): BOOLEAN
 			-- `True' if `a_type' is an atomic value
 		require
 			type_not_void: a_type /= Void
@@ -196,7 +196,7 @@ feature -- Status report
 			Result := is_sub_type (a_type, type_factory.any_atomic_type)
 		end
 
-	is_numeric_primitive_type (a_fingerprint: INTEGER): BOOLEAN is
+	is_numeric_primitive_type (a_fingerprint: INTEGER): BOOLEAN
 			-- Is `a_fingerprint' a primitive numeric type?
 		do
 			Result := a_fingerprint = Integer_type_code or
@@ -206,7 +206,7 @@ feature -- Status report
 				a_fingerprint = Numeric_type_code
 		end
 
-	is_sub_type (a_sub_type, a_super_type: XM_XPATH_ITEM_TYPE): BOOLEAN is
+	is_sub_type (a_sub_type, a_super_type: XM_XPATH_ITEM_TYPE): BOOLEAN
 			-- Is `a_sub_type' a (non-proper) descendant of `a_super_type'?
 		require
 			super_type_not_void: a_super_type /= Void
@@ -219,7 +219,7 @@ feature -- Status report
 			end
 		end
 
-	type_relationship (a_first_type, a_second_type: XM_XPATH_ITEM_TYPE): INTEGER is
+	type_relationship (a_first_type, a_second_type: XM_XPATH_ITEM_TYPE): INTEGER
 			-- Relation of `a_first_type' to `a_second_type'
 		require
 			types_not_void: a_first_type /= Void and then a_second_type /= Void
@@ -305,8 +305,8 @@ feature -- Status report
 		ensure
 			valid_relationship: Result >= Same_item_type and then Disjoint_types >= Result
 		end
-			
-	is_promotable (a_source_type, a_target_type: XM_XPATH_ITEM_TYPE): BOOLEAN is
+
+	is_promotable (a_source_type, a_target_type: XM_XPATH_ITEM_TYPE): BOOLEAN
 			-- Can `a_source_type' be numerically promoted to `a_target_type?
 			--  (e.g. xs:integer is promotable to xs:double)
 		require
@@ -317,7 +317,7 @@ feature -- Status report
 			end
 		end
 
-	are_types_comparable (a_type, another_type: INTEGER): BOOLEAN is
+	are_types_comparable (a_type, another_type: INTEGER): BOOLEAN
 			-- Is `a_type' comparable with `another_type'?
 		local
 			t1, t2: INTEGER
@@ -356,7 +356,7 @@ feature -- Status report
 			end
 		end
 
-	is_ordered (a_type: INTEGER): BOOLEAN is
+	is_ordered (a_type: INTEGER): BOOLEAN
 			-- Is primitive type `a_type' ordered according to the XPath (not XML Schema) rules?
 		do
 			inspect
@@ -376,7 +376,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	node_test_relationship (a_node_test, another_node_test: XM_XPATH_NODE_TEST): INTEGER is
+	node_test_relationship (a_node_test, another_node_test: XM_XPATH_NODE_TEST): INTEGER
 			-- Relation of `a_node_test' to `another_node_test'
 		require
 			tests_not_void: a_node_test /= Void and then another_node_test /= Void
@@ -419,7 +419,7 @@ feature {NONE} -- Implementation
 			valid_relationship: Result >= Same_item_type and then Disjoint_types >= Result
 		end
 
-	non_trivial_node_test_relationship (a_node_test, another_node_test: XM_XPATH_NODE_TEST; a_node_kind_relationship: INTEGER): INTEGER is
+	non_trivial_node_test_relationship (a_node_test, another_node_test: XM_XPATH_NODE_TEST; a_node_kind_relationship: INTEGER): INTEGER
 			-- Relation of `a_node_test' to `another_node_test'
 		require
 			tests_not_void: a_node_test /= Void and then another_node_test /= Void
@@ -429,7 +429,7 @@ feature {NONE} -- Implementation
 		do
 			a_node_name_relationship := node_name_relationship (a_node_test, another_node_test)
 			a_content_relationship := content_relationship (a_node_test, another_node_test)
-				
+
 			if a_node_kind_relationship = Same_item_type
 				and then a_node_name_relationship = Same_item_type and then a_content_relationship = Same_item_type then
 				Result := Same_item_type
@@ -452,14 +452,14 @@ feature {NONE} -- Implementation
 			valid_relationship: Result >= Same_item_type and then Disjoint_types >= Result
 		end
 
-	node_name_relationship (a_node_test, another_node_test: XM_XPATH_NODE_TEST): INTEGER is
+	node_name_relationship (a_node_test, another_node_test: XM_XPATH_NODE_TEST): INTEGER
 			-- Relationship between two node names;
 			-- N.B. Namespace tests and local name tests do not occur
 			--  in sequence types, so we don't need to consider them.
 		require
 			tests_not_void: a_node_test /= Void and then another_node_test /= Void
 		local
-			a_set, another_set: DS_SET [INTEGER]			
+			a_set, another_set: DS_SET [INTEGER]
 		do
 			if a_node_test.is_at_most_one_name_constraint then
 				a_set := a_node_test.constraining_node_names
@@ -495,7 +495,7 @@ feature {NONE} -- Implementation
 			valid_relationship: Result >= Same_item_type and then Disjoint_types >= Result
 		end
 
-	content_relationship (a_node_test, another_node_test: XM_XPATH_NODE_TEST): INTEGER is
+	content_relationship (a_node_test, another_node_test: XM_XPATH_NODE_TEST): INTEGER
 			-- Relationship between two node contents
 		require
 			tests_not_void: a_node_test /= Void and then another_node_test /= Void
@@ -517,7 +517,7 @@ feature {NONE} -- Implementation
 			valid_relationship: Result >= Same_item_type and then Disjoint_types >= Result
 		end
 
-	schema_type_relationship (a_content_type, another_content_type: XM_XPATH_SCHEMA_TYPE): INTEGER is
+	schema_type_relationship (a_content_type, another_content_type: XM_XPATH_SCHEMA_TYPE): INTEGER
 			-- Relationship between two content types
 		require
 			types_not_void: a_content_type /= Void and then another_content_type /= Void
@@ -565,5 +565,5 @@ feature {NONE} -- Implementation
 		ensure
 			valid_relationship: Result >= Same_item_type and then Disjoint_types >= Result
 		end
-			
+
 end

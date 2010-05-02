@@ -9,7 +9,7 @@ inherit
 
 feature
 
-	f (s: STRING) is
+	f (s: STRING)
 		do
 			precursor (s)
 		end

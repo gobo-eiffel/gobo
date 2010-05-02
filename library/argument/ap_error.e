@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_invalid_parameter_error (an_option: AP_OPTION; a_string: STRING) is
+	make_invalid_parameter_error (an_option: AP_OPTION; a_string: STRING)
 			-- The option `an_option' was supplied with an invalid parameter `a_string'.
 		require
 			an_option_not_void: an_option /= Void
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			code := invalid_parameter_error_code
 		end
 
-	make_missing_option_error (an_option: AP_OPTION) is
+	make_missing_option_error (an_option: AP_OPTION)
 			-- The mandatory option `an_option' was missing.
 		require
 			an_option_not_void: an_option /= Void
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			code := missing_option_error_code
 		end
 
-	make_missing_parameter_error (an_option: AP_OPTION) is
+	make_missing_parameter_error (an_option: AP_OPTION)
 			-- The option `an_option' was missing a needed parameter.
 		require
 			an_option_not_void: an_option /= Void
@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			code := missing_parameter_error_code
 		end
 
-	make_surplus_option_error (an_option: AP_OPTION) is
+	make_surplus_option_error (an_option: AP_OPTION)
 			-- The option `an_option' was encountered too often.
 		require
 			an_option_not_void: an_option /= Void
@@ -73,7 +73,7 @@ feature {NONE} -- Initialization
 			code := surplus_option_error_code
 		end
 
-	make_unknown_option_error (a_string: STRING) is
+	make_unknown_option_error (a_string: STRING)
 			-- A non-existing option `a_string' was requested.
 		require
 			an_option_not_void: a_string /= Void
@@ -84,7 +84,7 @@ feature {NONE} -- Initialization
 			code := unknown_option_error_code
 		end
 
-	make_unnecessary_parameter_error (an_option: AP_OPTION; a_string: STRING) is
+	make_unnecessary_parameter_error (an_option: AP_OPTION; a_string: STRING)
 			-- The option `an_option' was supplied with an unnecessary parameter `a_string'.
 		require
 			an_option_not_void: an_option /= Void
@@ -102,34 +102,34 @@ feature -- Templates
 	default_template: STRING
 			-- Default template
 
-	invalid_parameter_error_template: STRING is "The value '$2' is not valid for the option '$1'."
+	invalid_parameter_error_template: STRING = "The value '$2' is not valid for the option '$1'."
 
-	missing_option_error_template: STRING is "The mandatory option '$1' is missing."
+	missing_option_error_template: STRING = "The mandatory option '$1' is missing."
 
-	missing_parameter_error_template: STRING is "The option '$1' is missing a parameter."
+	missing_parameter_error_template: STRING = "The option '$1' is missing a parameter."
 
-	surplus_option_error_template: STRING is "Too many occurrences of option '$1'."
+	surplus_option_error_template: STRING = "Too many occurrences of option '$1'."
 
-	unknown_option_error_template: STRING is "Unknown option '$1'."
+	unknown_option_error_template: STRING = "Unknown option '$1'."
 
-	unnecessary_parameter_error_template: STRING is "The flag '$1' was given the parameter '$2'."
+	unnecessary_parameter_error_template: STRING = "The flag '$1' was given the parameter '$2'."
 
 feature -- Error Codes
 
 	code: STRING
 			-- Error code
 
-	invalid_parameter_error_code: STRING is "APIPAR"
+	invalid_parameter_error_code: STRING = "APIPAR"
 
-	missing_option_error_code: STRING is "APMOPT"
+	missing_option_error_code: STRING = "APMOPT"
 
-	missing_parameter_error_code: STRING is "APMPAR"
+	missing_parameter_error_code: STRING = "APMPAR"
 
-	surplus_option_error_code: STRING is "APSOPT"
+	surplus_option_error_code: STRING = "APSOPT"
 
-	unknown_option_error_code: STRING is "APUOPT"
+	unknown_option_error_code: STRING = "APUOPT"
 
-	unnecessary_parameter_error_code: STRING is "APUPAR"
+	unnecessary_parameter_error_code: STRING = "APUPAR"
 
 invariant
 

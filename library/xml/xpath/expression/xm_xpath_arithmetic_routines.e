@@ -24,7 +24,7 @@ inherit
 
 feature -- Access
 
-	is_arithmetic_operator (a_operator: INTEGER): BOOLEAN is
+	is_arithmetic_operator (a_operator: INTEGER): BOOLEAN
 			-- Is `a_operator' an arithmetic operator?
 		do
 			Result := a_operator = Plus_token or
@@ -39,16 +39,16 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	Unknown_action: INTEGER is 1
-	Numeric_arithmetic_action: INTEGER is 2
-	Date_and_duration_action: INTEGER is 3
-	Date_difference_action: INTEGER is 4
-	Duration_addition_action: INTEGER is 5
-	Duration_multiplication_action: INTEGER is 6
-	Duration_division_action: INTEGER is 7
+	Unknown_action: INTEGER = 1
+	Numeric_arithmetic_action: INTEGER = 2
+	Date_and_duration_action: INTEGER = 3
+	Date_difference_action: INTEGER = 4
+	Duration_addition_action: INTEGER = 5
+	Duration_multiplication_action: INTEGER = 6
+	Duration_division_action: INTEGER = 7
 			-- Arithmetic action need on operands
 
-	signature_table (a_operator: INTEGER): ARRAY [XM_XPATH_ARITHMETIC_SIGNATURE] is
+	signature_table (a_operator: INTEGER): ARRAY [XM_XPATH_ARITHMETIC_SIGNATURE]
 			-- Signature table for `a_operator'
 		require
 			valid_operator: is_arithmetic_operator (a_operator)
@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 			signature_table_not_void: Result /= Void
 		end
 
-	signature_table_index (a_table: ARRAY [XM_XPATH_ARITHMETIC_SIGNATURE]; a_primitive_type, a_other_primitive_type: INTEGER): INTEGER is
+	signature_table_index (a_table: ARRAY [XM_XPATH_ARITHMETIC_SIGNATURE]; a_primitive_type, a_other_primitive_type: INTEGER): INTEGER
 			-- Index within `a_table' for `a_primitive_type' and `a_other_primitive_type'
 		local
 			l_type, l_other_type, i: INTEGER
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	action (a_type, a_other_type: INTEGER; a_operator: INTEGER): INTEGER is
+	action (a_type, a_other_type: INTEGER; a_operator: INTEGER): INTEGER
 			-- Action needed for `t1' and `t2'
 		require
 			valid_operator: is_arithmetic_operator (a_operator)
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 				l_type := Duration_type_code
 			else
 				l_type := a_type
-			end			
+			end
 			if a_other_type = Day_time_duration_type_code or a_other_type = Year_month_duration_type_code then
 				l_other_type := Duration_type_code
 			else
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 		end
 feature {NONE} -- Signature tables
 
-	plus_table: ARRAY [XM_XPATH_ARITHMETIC_SIGNATURE] is
+	plus_table: ARRAY [XM_XPATH_ARITHMETIC_SIGNATURE]
 			-- Signature table for addition
 		once
 			Result := <<create {XM_XPATH_ARITHMETIC_SIGNATURE}.make (Numeric_type_code, Numeric_type_code, Numeric_arithmetic_action, type_factory.numeric_type),
@@ -144,20 +144,20 @@ feature {NONE} -- Signature tables
 
 			create {XM_XPATH_ARITHMETIC_SIGNATURE}.make (Date_type_code, Duration_type_code, Date_and_duration_action, type_factory.date_type),
 			create {XM_XPATH_ARITHMETIC_SIGNATURE}.make (Duration_type_code, Date_type_code, Date_and_duration_action, type_factory.date_type),
-			
+
 			create {XM_XPATH_ARITHMETIC_SIGNATURE}.make (Time_type_code, Duration_type_code, Date_and_duration_action, type_factory.time_type),
 			create {XM_XPATH_ARITHMETIC_SIGNATURE}.make (Duration_type_code, Time_type_code, Date_and_duration_action, type_factory.time_type),
 
 			create {XM_XPATH_ARITHMETIC_SIGNATURE}.make (Date_time_type_code, Duration_type_code, Date_and_duration_action, type_factory.date_time_type),
 			create {XM_XPATH_ARITHMETIC_SIGNATURE}.make (Duration_type_code, Date_time_type_code, Date_and_duration_action, type_factory.date_time_type),
-			
+
 			create {XM_XPATH_ARITHMETIC_SIGNATURE}.make (Duration_type_code, Duration_type_code, Duration_addition_action, type_factory.duration_type)
 			>>
 		ensure
 			plus_table_not_void: Result /= Void
 		end
 
-	minus_table: ARRAY [XM_XPATH_ARITHMETIC_SIGNATURE] is
+	minus_table: ARRAY [XM_XPATH_ARITHMETIC_SIGNATURE]
 			-- Signature table for subtraction
 		once
 			Result := <<create {XM_XPATH_ARITHMETIC_SIGNATURE}.make (Numeric_type_code, Numeric_type_code, Numeric_arithmetic_action, type_factory.numeric_type),
@@ -170,7 +170,7 @@ feature {NONE} -- Signature tables
 
 			create {XM_XPATH_ARITHMETIC_SIGNATURE}.make (Time_type_code, Time_type_code, Date_difference_action, type_factory.day_time_duration_type),
 			create {XM_XPATH_ARITHMETIC_SIGNATURE}.make (Time_type_code, Duration_type_code, Date_and_duration_action, type_factory.time_type),
-			
+
 			create {XM_XPATH_ARITHMETIC_SIGNATURE}.make (Date_time_type_code, Date_time_type_code, Date_difference_action, type_factory.day_time_duration_type),
 			create {XM_XPATH_ARITHMETIC_SIGNATURE}.make (Date_time_type_code, Duration_type_code, Date_and_duration_action, type_factory.date_time_type),
 
@@ -180,7 +180,7 @@ feature {NONE} -- Signature tables
 			minus_table_not_void: Result /= Void
 		end
 
-	multiply_table: ARRAY [XM_XPATH_ARITHMETIC_SIGNATURE] is
+	multiply_table: ARRAY [XM_XPATH_ARITHMETIC_SIGNATURE]
 			-- Signature table for multiplication
 		once
 			Result := <<create {XM_XPATH_ARITHMETIC_SIGNATURE}.make (Numeric_type_code, Numeric_type_code, Numeric_arithmetic_action, type_factory.numeric_type),
@@ -194,8 +194,8 @@ feature {NONE} -- Signature tables
 		ensure
 			multiply_table_not_void: Result /= Void
 		end
-	
-	divide_table: ARRAY [XM_XPATH_ARITHMETIC_SIGNATURE] is
+
+	divide_table: ARRAY [XM_XPATH_ARITHMETIC_SIGNATURE]
 			-- Signature table for division
 		once
 			Result := <<create {XM_XPATH_ARITHMETIC_SIGNATURE}.make (Numeric_type_code, Numeric_type_code, Numeric_arithmetic_action, type_factory.numeric_type),
@@ -209,8 +209,8 @@ feature {NONE} -- Signature tables
 		ensure
 			divide_table_not_void: Result /= Void
 		end
-	
-	integer_divide_table: ARRAY [XM_XPATH_ARITHMETIC_SIGNATURE] is
+
+	integer_divide_table: ARRAY [XM_XPATH_ARITHMETIC_SIGNATURE]
 			-- Signature table for integer division
 		once
 			Result := <<create {XM_XPATH_ARITHMETIC_SIGNATURE}.make (Numeric_type_code, Numeric_type_code, Numeric_arithmetic_action, type_factory.integer_type),
@@ -221,8 +221,8 @@ feature {NONE} -- Signature tables
 		ensure
 			integer_divide_table_not_void: Result /= Void
 		end
-	
-	remainder_table: ARRAY [XM_XPATH_ARITHMETIC_SIGNATURE] is
+
+	remainder_table: ARRAY [XM_XPATH_ARITHMETIC_SIGNATURE]
 			-- Signature table for remainder
 		once
 			Result := <<create {XM_XPATH_ARITHMETIC_SIGNATURE}.make (Numeric_type_code, Numeric_type_code, Numeric_arithmetic_action, type_factory.numeric_type),

@@ -11,7 +11,7 @@ note
 class XM_XSLT_ATTRIBUTE_USAGE
 
 inherit
-	
+
 	XM_XSLT_INSTRUCTION
 		redefine
 			item_type
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_executable: XM_XSLT_EXECUTABLE; a_sets: like attribute_sets) is
+	make (a_executable: XM_XSLT_EXECUTABLE; a_sets: like attribute_sets)
 			-- Initialize `Current'.
 		require
 			a_executable_not_void: a_executable /= Void
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Type of items yielded
 		do
 			Result := attribute_node_kind_test
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Status report
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -63,19 +63,19 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Preform context-independent static optimizations
 		do
 			a_replacement.put (Current)
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			a_replacement.put (Current)
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			a_replacement.put (Current)
@@ -83,7 +83,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
 			expand_attribute_sets (a_context.transformer.executable, attribute_sets, a_context)
@@ -99,4 +99,4 @@ invariant
 	attribute_sets_not_void: attribute_sets /= Void
 
 end
-	
+

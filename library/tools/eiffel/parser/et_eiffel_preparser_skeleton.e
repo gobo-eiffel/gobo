@@ -33,7 +33,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new Eiffel preparser.
 		do
 			create eiffel_buffer.make_with_size (std.input, Initial_eiffel_buffer_size)
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset parser before parsing next input.
 		do
 			precursor
@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Parsing
 
-	process_cluster (a_cluster: ET_CLUSTER) is
+	process_cluster (a_cluster: ET_CLUSTER)
 			-- Traverse `a_cluster' (recursively) and build a mapping
 			-- between class names and filenames. Classes are added to
 			-- `universe.classes', but are not parsed.
@@ -77,7 +77,7 @@ feature -- Parsing
 
 feature {NONE} -- Parsing
 
-	preparse_cluster (a_cluster: ET_CLUSTER) is
+	preparse_cluster (a_cluster: ET_CLUSTER)
 			-- Traverse `a_cluster' (recursively) and build a mapping
 			-- between class names and filenames. Classes are added to
 			-- `current_universe.classes', but are not parsed.
@@ -159,7 +159,7 @@ feature {NONE} -- Parsing
 			group := old_group
 		end
 
-	preparse_file (a_filename: STRING; a_cluster: ET_CLUSTER) is
+	preparse_file (a_filename: STRING; a_cluster: ET_CLUSTER)
 			-- Analyze the file `a_filename' in `a_cluster' to determine the
 			-- class(es) that it contains. When in shallow mode, it is assumed
 			-- to contain excactly one class whose name is 'CLASSNAME' if the
@@ -235,7 +235,7 @@ feature {NONE} -- Parsing
 			end
 		end
 
-	preparse_class (a_class: ET_MASTER_CLASS; a_filename: STRING; a_time_stamp: INTEGER) is
+	preparse_class (a_class: ET_MASTER_CLASS; a_filename: STRING; a_time_stamp: INTEGER)
 			-- The file `a_filename' with time-stamp `a_time_stamp' is assumed
 			-- to contain a class with the same name as `a_class' in `current_universe'.
 			-- Check to see whether this class already existed, and if so whether
@@ -259,7 +259,7 @@ feature {NONE} -- Parsing
 			a_class.add_last_local_class (l_new_class)
 		end
 
-	preparse_clusters (a_clusters: ET_CLUSTERS) is
+	preparse_clusters (a_clusters: ET_CLUSTERS)
 			-- Traverse `a_clusters' (recursively) and build a mapping
 			-- between class names and filenames in each cluster. Classes
 			-- are added to `current_universe.classes', but are not parsed.
@@ -301,7 +301,7 @@ feature {NONE} -- Parsing
 
 feature -- Error handling
 
-	report_error (a_message: STRING) is
+	report_error (a_message: STRING)
 			-- Print error message.
 		do
 			error_handler.report_syntax_error (filename, current_position)
@@ -314,14 +314,14 @@ feature {NONE} -- Input buffer
 
 feature {NONE} -- Constants
 
-	Initial_eiffel_buffer_size: INTEGER is 500
+	Initial_eiffel_buffer_size: INTEGER = 500
 			-- Initial size for `eiffel_buffer';
 			-- No need to have a very large buffer, we just scan the
 			-- beginning of the class to determine its name
 
 feature {NONE} -- Implementation
 
-	tmp_directory: KL_DIRECTORY is
+	tmp_directory: KL_DIRECTORY
 			-- Temporary directory object
 		do
 			Result := shared_directory
@@ -333,7 +333,7 @@ feature {NONE} -- Implementation
 			directory_closed: Result.is_closed
 		end
 
-	shared_directory: KL_DIRECTORY is
+	shared_directory: KL_DIRECTORY
 			-- Shared directory object
 		once
 			create Result.make (dummy_name)

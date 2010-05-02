@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
+		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration)
 			-- Establish invariant.
 		do
 			is_instruction := True
@@ -42,7 +42,7 @@ feature -- Access
 	is_inherit_namespaces: BOOLEAN
 		-- Do we inherit namespaces?
 
-	trace_property (an_expanded_name: STRING): STRING is
+	trace_property (an_expanded_name: STRING): STRING
 			-- Value of trace-property
 		do
 			if STRING_.same_string (an_expanded_name, Gexslt_name_pseudo_attribute) then
@@ -52,7 +52,7 @@ feature -- Access
 			end
 		end
 
-	construct_type: INTEGER is
+	construct_type: INTEGER
 			-- Type of construct being traced
 		do
 			Result := Literal_result_element
@@ -60,7 +60,7 @@ feature -- Access
 
 feature -- Status report
 
-	may_contain_sequence_constructor: BOOLEAN is
+	may_contain_sequence_constructor: BOOLEAN
 			-- Is `Current' allowed to contain a sequence constructor?
 		do
 			Result := True
@@ -68,7 +68,7 @@ feature -- Status report
 
 feature -- Element change
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			an_index, a_name_code, a_uri_code, a_fingerprint: INTEGER
@@ -128,7 +128,7 @@ feature -- Element change
 			attributes_prepared := True
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 		local
 			l_element_uri_code: INTEGER
@@ -157,7 +157,7 @@ feature -- Element change
 			validated := True
 		end
 
-		validate_children is
+		validate_children
 			-- Validate the children of this node, recursively.
 		do
 			if not is_top_level then
@@ -165,7 +165,7 @@ feature -- Element change
 			end
 		end
 
-	compile (a_executable: XM_XSLT_EXECUTABLE) is
+	compile (a_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		local
 			l_fixed_element: XM_XSLT_FIXED_ELEMENT
@@ -229,7 +229,7 @@ feature -- Element change
 			end
 		end
 
-	constructed_stylesheet (a_compiler: XM_XSLT_STYLESHEET_COMPILER): XM_XPATH_TREE_DOCUMENT is
+	constructed_stylesheet (a_compiler: XM_XSLT_STYLESHEET_COMPILER): XM_XPATH_TREE_DOCUMENT
 			-- Simlified stylesheet constructed around `Current'
 		require
 			stylesheet_compiler_not_void: a_compiler /= Void
@@ -280,7 +280,7 @@ feature {NONE} -- Implementation
 	validation: INTEGER
 			-- Validation level
 
-	grafted_stylesheet (a_compiler: XM_XSLT_STYLESHEET_COMPILER; a_version: STRING): XM_XPATH_TREE_DOCUMENT is
+	grafted_stylesheet (a_compiler: XM_XSLT_STYLESHEET_COMPILER; a_version: STRING): XM_XPATH_TREE_DOCUMENT
 			-- Simlified stylesheet constructed around `Current'
 		require
 			stylesheet_compiler_not_void: a_compiler /= Void
@@ -327,7 +327,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_attribute_checked_clean (an_expression: XM_XPATH_EXPRESSION): BOOLEAN is
+	is_attribute_checked_clean (an_expression: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Is `an_expression' guarenteed free of special characters?
 		require
 			expression_not_void: an_expression /= Void
@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	validate_top_level_element (an_element_uri_code: INTEGER) is
+	validate_top_level_element (an_element_uri_code: INTEGER)
 			-- Validate a top-level LRE.
 		require
 			top_level_element: is_top_level
@@ -381,7 +381,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	should_namespaces_be_omitted (an_element_uri_code: INTEGER): BOOLEAN is
+	should_namespaces_be_omitted (an_element_uri_code: INTEGER): BOOLEAN
 			-- Should namespaces be omitted on output?
 		require
 			not_top_level: not is_top_level
@@ -424,7 +424,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	apply_namespace_aliases (an_element_uri_code: INTEGER; a_stylesheet: XM_XSLT_STYLESHEET) is
+	apply_namespace_aliases (an_element_uri_code: INTEGER; a_stylesheet: XM_XSLT_STYLESHEET)
 			-- Apply any aliases required to create the list of output namespaces.
 		require
 			not_top_level: not is_top_level
@@ -471,7 +471,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	validate_special_attributes is
+	validate_special_attributes
 			-- Validate special attributes.
 		local
 			a_use_attribute_sets_attribute, a_type_attribute, a_validation_attribute: STRING
@@ -500,7 +500,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	establish_attribute_names (a_stylesheet: XM_XSLT_STYLESHEET) is
+	establish_attribute_names (a_stylesheet: XM_XSLT_STYLESHEET)
 			-- Establish the names to be used for all the output attributes.
 			-- Also type-check the AVT expressions
 		require
@@ -554,7 +554,7 @@ feature {NONE} -- Implementation
 	excluded_namespace_count: INTEGER
 			-- Number of namespaces excluded
 
-	remove_excluded_namespaces (a_stylesheet: XM_XSLT_STYLESHEET) is
+	remove_excluded_namespaces (a_stylesheet: XM_XSLT_STYLESHEET)
 			-- Remove any namespace that is on the exclude-result-prefixes list,
 			--  unless it is the namespace of the element or an attribute.
 		require

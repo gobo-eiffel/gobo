@@ -15,7 +15,7 @@ class DT_SHARED_SYSTEM_CLOCK
 
 feature -- Access
 
-	system_clock: DT_SYSTEM_CLOCK is
+	system_clock: DT_SYSTEM_CLOCK
 			-- Local system clock
 		once
 			create Result.make
@@ -23,7 +23,7 @@ feature -- Access
 			system_clock_not_void: Result /= Void
 		end
 
-	utc_system_clock: DT_UTC_SYSTEM_CLOCK is
+	utc_system_clock: DT_UTC_SYSTEM_CLOCK
 			-- UTC system clock
 		once
 			create Result.make

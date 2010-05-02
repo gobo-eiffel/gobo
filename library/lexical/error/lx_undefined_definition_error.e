@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER; def: STRING) is
+	make (filename: STRING; line: INTEGER; def: STRING)
 			-- Create a new error reporting an undefined definition.
 		require
 			filename_not_void: filename /= Void
@@ -36,10 +36,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: undefined definition $3"
+	default_template: STRING = "%"$1%", line $2: undefined definition $3"
 			-- Default template used to built the error message
 
-	code: STRING is "LX0022"
+	code: STRING = "LX0022"
 			-- Error code
 
 invariant

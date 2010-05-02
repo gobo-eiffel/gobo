@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_cluster: like cluster) is
+	make (a_cluster: like cluster)
 			-- Create a new cluster list with initially
 			-- one cluster `a_cluster'.
 		require
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			clusters_set: clusters.last = a_cluster
 		end
 
-	make_empty is
+	make_empty
 			-- Create a new empty cluster list.
 		do
 			create clusters.make (Initial_clusters_capacity)
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	has_subcluster (a_cluster: ET_CLUSTER): BOOLEAN is
+	has_subcluster (a_cluster: ET_CLUSTER): BOOLEAN
 			-- Is `a_cluster' (recursively) one of the subclusters
 			-- of current clusters?
 		require
@@ -71,7 +71,7 @@ feature -- Status report
 			end
 		end
 
-	has_subcluster_by_name (a_names: ARRAY [STRING]): BOOLEAN is
+	has_subcluster_by_name (a_names: ARRAY [STRING]): BOOLEAN
 			-- Is there a subcluster (recursively) named `a_names' in current clusters?
 			-- Do not take into account missing implicit subclusters.
 		require
@@ -105,7 +105,7 @@ feature -- Status report
 			end
 		end
 
-	has_subcluster_with_absolute_pathname (a_pathname: STRING): BOOLEAN is
+	has_subcluster_with_absolute_pathname (a_pathname: STRING): BOOLEAN
 			-- Is there a subcluster (recursively) in current clusters with
 			-- absolute pathname `a_pathname'?
 			--
@@ -129,7 +129,7 @@ feature -- Status report
 
 feature -- Access
 
-	cluster (i: INTEGER): ET_CLUSTER is
+	cluster (i: INTEGER): ET_CLUSTER
 			-- `i'-th cluster
 		require
 			i_large_enough: i >= 1
@@ -140,7 +140,7 @@ feature -- Access
 			cluster_not_void: Result /= Void
 		end
 
-	cluster_by_name (a_name: STRING): ET_CLUSTER is
+	cluster_by_name (a_name: STRING): ET_CLUSTER
 			-- Cluster with name `a_name';
 			-- Void if not such cluster
 		require
@@ -162,7 +162,7 @@ feature -- Access
 			end
 		end
 
-	subcluster_by_name (a_names: ARRAY [STRING]): ET_CLUSTER is
+	subcluster_by_name (a_names: ARRAY [STRING]): ET_CLUSTER
 			-- Subcluster (recursively) named `a_names' in current clusters
 			--
 			-- Add missing implicit subclusters if needed.
@@ -177,7 +177,7 @@ feature -- Access
 			not_void_if_has: has_subcluster_by_name (a_names) implies Result /= Void
 		end
 
-	subcluster_by_name_with_parent (a_names: ARRAY [STRING]; a_parent_cluster: ET_CLUSTER): ET_CLUSTER is
+	subcluster_by_name_with_parent (a_names: ARRAY [STRING]; a_parent_cluster: ET_CLUSTER): ET_CLUSTER
 			-- Subcluster (recursively) named `a_names' in current clusters
 			--
 			-- If `a_parent_cluster' is not Void, then it is considered to be
@@ -234,7 +234,7 @@ feature -- Access
 			not_void_if_has: has_subcluster_by_name (a_names) implies Result /= Void
 		end
 
-	subcluster_with_absolute_pathname (a_pathname: STRING): ET_CLUSTER is
+	subcluster_with_absolute_pathname (a_pathname: STRING): ET_CLUSTER
 			-- Subcluster (recursively) with absolute pathname `a_pathname' in current clusters
 			--
 			-- `a_pathname' is expected to be a canonical absolute pathname.
@@ -263,7 +263,7 @@ feature -- Access
 
 feature -- Iterators
 
-	do_all (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]]) is
+	do_all (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]])
 			-- Apply `an_action' to every cluster.
 			-- (Semantics not guaranteed if `an_action' adds or removes clusters.)
 		require
@@ -278,7 +278,7 @@ feature -- Iterators
 			end
 		end
 
-	do_all_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]) is
+	do_all_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' to every cluster.
 			-- (Semantics not guaranteed if `an_action' adds or removes clusters.)
 			--
@@ -305,7 +305,7 @@ feature -- Iterators
 			end
 		end
 
-	do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]]) is
+	do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]])
 			-- Apply `an_action' to every cluster and recursively their subclusters.
 			-- (Semantics not guaranteed if `an_action' adds or removes clusters.)
 		require
@@ -327,7 +327,7 @@ feature -- Iterators
 			end
 		end
 
-	do_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]) is
+	do_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' to every cluster and recursively their subclusters.
 			-- (Semantics not guaranteed if `an_action' adds or removes clusters.)
 			--
@@ -361,7 +361,7 @@ feature -- Iterators
 			end
 		end
 
-	do_explicit (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]]) is
+	do_explicit (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]])
 			-- Apply `an_action' to every non-implicit cluster and recursively their subclusters.
 			-- (Semantics not guaranteed if `an_action' adds or removes clusters.)
 		require
@@ -385,7 +385,7 @@ feature -- Iterators
 			end
 		end
 
-	do_explicit_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]) is
+	do_explicit_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' to every non-implicit cluster and recursively their subclusters.
 			-- (Semantics not guaranteed if `an_action' adds or removes clusters.)
 			--
@@ -423,7 +423,7 @@ feature -- Iterators
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number (recursively) of non-abstract clusters
 		local
 			i, nb: INTEGER
@@ -437,7 +437,7 @@ feature -- Measurement
 			count_non_negative: Result >= 0
 		end
 
-	override_count: INTEGER is
+	override_count: INTEGER
 			-- Number (recursively) of non-abstract non-read-only override clusters
 		local
 			i, nb: INTEGER
@@ -451,7 +451,7 @@ feature -- Measurement
 			override_count_non_negative: Result >= 0
 		end
 
-	read_write_count: INTEGER is
+	read_write_count: INTEGER
 			-- Number (recursively) of non-abstract non-read-only clusters
 		local
 			i, nb: INTEGER
@@ -467,7 +467,7 @@ feature -- Measurement
 
 feature -- Status setting
 
-	set_overridden_constraint_enabled (b: BOOLEAN) is
+	set_overridden_constraint_enabled (b: BOOLEAN)
 			-- Set `overridden_constraint_enabled' of all clusters to `b'.
 		local
 			i, nb: INTEGER
@@ -479,7 +479,7 @@ feature -- Status setting
 			end
 		end
 
-	set_scm_mapping_constraint_enabled (b: BOOLEAN) is
+	set_scm_mapping_constraint_enabled (b: BOOLEAN)
 			-- Set `scm_mapping_constraint_enabled' of all clusters to `b'.
 		local
 			i, nb: INTEGER
@@ -493,7 +493,7 @@ feature -- Status setting
 
 feature -- Setting
 
-	set_provider_constraint (a_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT) is
+	set_provider_constraint (a_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT)
 			-- Set provider constraint of all clusters to `a_constraint'.
 		local
 			i, nb: INTEGER
@@ -505,7 +505,7 @@ feature -- Setting
 			end
 		end
 
-	set_dependant_constraint (a_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT) is
+	set_dependant_constraint (a_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT)
 			-- Set dependant constraint of all clusters to `a_constraint'.
 		local
 			i, nb: INTEGER
@@ -519,7 +519,7 @@ feature -- Setting
 
 feature {ET_CLUSTER} -- Setting
 
-	set_parent (a_parent: like cluster) is
+	set_parent (a_parent: like cluster)
 			-- Set parent of all clusters to `a_parent'.
 		local
 			i, nb: INTEGER
@@ -533,7 +533,7 @@ feature {ET_CLUSTER} -- Setting
 
 feature -- Element change
 
-	put_last (a_cluster: like cluster) is
+	put_last (a_cluster: like cluster)
 			-- Add `a_cluster' to the list of clusters.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -544,7 +544,7 @@ feature -- Element change
 			cluster_added: clusters.last = a_cluster
 		end
 
-	add_implicit_subclusters is
+	add_implicit_subclusters
 			-- Add (recursively) implicit subclusters to current clusters if they are recursive.
 			-- Note that these subclusters will otherwise be added when running one of
 			-- the `preparse_*' or `parse_*_all' routines of ET_UNIVERSE.
@@ -562,7 +562,7 @@ feature -- Element change
 
 feature {NONE} -- Constants
 
-	Initial_clusters_capacity: INTEGER is 50
+	Initial_clusters_capacity: INTEGER = 50
 			-- Initial capacity for `clusters'
 
 invariant

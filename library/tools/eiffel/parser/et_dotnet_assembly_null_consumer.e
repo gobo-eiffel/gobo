@@ -22,7 +22,7 @@ create
 
 feature -- Consuming
 
-	consume_class (a_class: ET_CLASS) is
+	consume_class (a_class: ET_CLASS)
 			-- Consume `a_class'.
 		do
 				-- Enforce postcondition.
@@ -32,13 +32,13 @@ feature -- Consuming
 
 feature {ET_DOTNET_ASSEMBLY} -- Consuming
 
-	consume_assembly (an_assembly: ET_DOTNET_ASSEMBLY) is
+	consume_assembly (an_assembly: ET_DOTNET_ASSEMBLY)
 			-- Consume `an_assembly' and put the classes in `universe'.
 		do
 			-- Do nothing.
 		end
 
-	consume_gac_assembly (an_assembly: ET_DOTNET_GAC_ASSEMBLY) is
+	consume_gac_assembly (an_assembly: ET_DOTNET_GAC_ASSEMBLY)
 			-- Consume `an_assembly' and put the classes in `universe'.
 		do
 			-- Do nothing.

@@ -20,15 +20,15 @@ inherit
 		redefine
 			process_document
 		end
-		
+
 create
 
 	make
-	
+
 feature -- Tree processor routines
 
-	process_document (a_document: XM_DOCUMENT) is
-			-- Process document using xmlns generator and 
+	process_document (a_document: XM_DOCUMENT)
+			-- Process document using xmlns generator and
 			-- pretty print with namespaces filters.
 		local
 			pretty_print: XM_NAMESPACE_PRETTY_PRINT_FILTER

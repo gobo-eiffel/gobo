@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 #ifdef GE
 feature {RAW_FILE} -- Implementation
 
-	old_open_read is
+	old_open_read
 			-- Open file in read-only mode.
 		do
 			precursor

@@ -24,19 +24,19 @@ inherit
 
 feature -- Access
 
-	target: ET_EXPRESSION is
+	target: ET_EXPRESSION
 			-- Target
 		deferred
 		end
 
-	arguments: ET_ACTUAL_ARGUMENTS is
+	arguments: ET_ACTUAL_ARGUMENTS
 			-- Arguments
 		deferred
 		end
 
 feature -- Measurement
 
-	arguments_count: INTEGER is
+	arguments_count: INTEGER
 			-- Number of arguments
 		local
 			l_arguments: like arguments

@@ -21,19 +21,19 @@ inherit
 
 feature -- Access
 
-	ise_eiffel_variable: STRING is "ISE_EIFFEL"
+	ise_eiffel_variable: STRING = "ISE_EIFFEL"
 			-- Name of environment variable "$ISE_EIFFEL"
 
-	ise_eiffel_value: detachable STRING is
+	ise_eiffel_value: detachable STRING
 			-- Value of environment variable "$ISE_EIFFEL"
 		do
 			Result := Execution_environment.variable_value (ise_eiffel_variable)
 		end
 
-	ise_library_variable: STRING is "ISE_LIBRARY"
+	ise_library_variable: STRING = "ISE_LIBRARY"
 			-- Name of environment variable "$ISE_LIBRARY"
 
-	ise_library_value: detachable STRING is
+	ise_library_value: detachable STRING
 			-- Value of environment variable "$ISE_LIBRARY"
 		do
 			Result := Execution_environment.variable_value (ise_library_variable)
@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_ise_library_variable is
+	set_ise_library_variable
 			-- Set environment variable $ISE_LIBRARY to $ISE_EIFFEL if not set yet.
 		local
 			l_ise_eiffel: detachable STRING

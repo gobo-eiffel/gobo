@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type_mark: like type_mark; a_parameters: like actual_parameters; a_named_base_class: like named_base_class) is
+	make (a_type_mark: like type_mark; a_parameters: like actual_parameters; a_named_base_class: like named_base_class)
 			-- Create a new TUPLE type.
 		require
 			a_named_base_class_not_void: a_named_base_class /= Void
@@ -61,7 +61,7 @@ feature -- Access
 	actual_parameters: ET_ACTUAL_PARAMETER_LIST
 			-- Actual generic parameters
 
-	base_type (a_context: ET_TYPE_CONTEXT): ET_TUPLE_TYPE is
+	base_type (a_context: ET_TYPE_CONTEXT): ET_TUPLE_TYPE
 			-- Base type of current type, when it appears in `a_context',
 			-- only made up of class names and generic formal parameters
 			-- when the root type of `a_context' is a generic type not
@@ -90,7 +90,7 @@ feature -- Access
 			end
 		end
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -102,7 +102,7 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			if type_mark /= Void then
@@ -112,7 +112,7 @@ feature -- Access
 			end
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			if actual_parameters /= Void then
@@ -122,7 +122,7 @@ feature -- Access
 			end
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			if actual_parameters /= Void then
@@ -134,7 +134,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_tuple_keyword (a_tuple: like tuple_keyword) is
+	set_tuple_keyword (a_tuple: like tuple_keyword)
 			-- Set `tuple_keyword' to `a_tuple'.
 		require
 			a_tuple_not_void: a_tuple /= Void
@@ -146,16 +146,16 @@ feature -- Setting
 
 feature -- Status report
 
-	is_expanded: BOOLEAN is False
+	is_expanded: BOOLEAN = False
 			-- Is current type expanded?
 
-	is_type_expanded (a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	is_type_expanded (a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Is current type expanded when viewed from `a_context'?
 		do
 			Result := False
 		end
 
-	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does the base type of current type contain `a_class'
 			-- when it appears in `a_context'?
 		local
@@ -173,7 +173,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	same_syntactical_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_syntactical_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the base types here!
@@ -189,7 +189,7 @@ feature -- Comparison
 			end
 		end
 
-	same_named_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_named_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		do
@@ -200,7 +200,7 @@ feature -- Comparison
 			end
 		end
 
-	same_base_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_base_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 		do
@@ -213,7 +213,7 @@ feature -- Comparison
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
-	same_syntactical_tuple_type (other: ET_TUPLE_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_syntactical_tuple_type (other: ET_TUPLE_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the base types here!
@@ -238,7 +238,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_named_tuple_type (other: ET_TUPLE_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_named_tuple_type (other: ET_TUPLE_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		local
@@ -258,7 +258,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_base_tuple_type (other: ET_TUPLE_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_base_tuple_type (other: ET_TUPLE_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 		local
@@ -280,7 +280,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
 feature -- Conformance
 
-	conforms_to_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	conforms_to_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does current type appearing in `a_context' conform
 			-- to `other' type appearing in `other_context'?
 			-- (Note: 'current_system.ancestor_builder' is used on the classes
@@ -295,7 +295,7 @@ feature -- Conformance
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
-	conforms_from_class_type (other: ET_CLASS_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	conforms_from_class_type (other: ET_CLASS_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- (Note: 'current_system.ancestor_builder' is used on the classes
@@ -313,7 +313,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			end
 		end
 
-	conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- (Note: 'current_system.ancestor_builder' is used on the classes
@@ -339,7 +339,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
 feature -- Type processing
 
-	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_TUPLE_TYPE is
+	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_TUPLE_TYPE
 			-- Version of current type where the formal generic
 			-- parameter types have been replaced by their actual
 			-- counterparts in `a_parameters'
@@ -360,7 +360,7 @@ feature -- Type processing
 
 feature -- Output
 
-	append_to_string (a_string: STRING) is
+	append_to_string (a_string: STRING)
 			-- Append textual representation of
 			-- current type to `a_string'.
 		local
@@ -374,7 +374,7 @@ feature -- Output
 			end
 		end
 
-	append_unaliased_to_string (a_string: STRING) is
+	append_unaliased_to_string (a_string: STRING)
 			-- Append textual representation of unaliased
 			-- version of current type to `a_string'.
 			-- An unaliased version if when aliased types such as INTEGER
@@ -392,7 +392,7 @@ feature -- Output
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_tuple_type (Current)
@@ -400,7 +400,7 @@ feature -- Processing
 
 feature {NONE} -- Constants
 
-	tuple_string: STRING is "TUPLE"
+	tuple_string: STRING = "TUPLE"
 			-- Eiffel keywords
 
 invariant

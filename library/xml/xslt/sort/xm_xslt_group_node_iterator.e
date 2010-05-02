@@ -42,13 +42,13 @@ feature -- Status report
 	is_error: BOOLEAN
 			-- Is `Current' in error?
 
-	is_node_iterator: BOOLEAN is
+	is_node_iterator: BOOLEAN
 			-- Does `Current' yield a node sequence?
 		do
 			Result := True
 		end
 
-	is_group_node_iterator: BOOLEAN is
+	is_group_node_iterator: BOOLEAN
 			-- Is `Current' a group-node-iterator?
 		do
 			Result := True
@@ -65,13 +65,13 @@ feature -- Access
 
 feature -- Conversion
 
-	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
 		do
 			Result := Current
 		end
 
-	as_group_node_iterator: XM_XSLT_GROUP_NODE_ITERATOR is
+	as_group_node_iterator: XM_XSLT_GROUP_NODE_ITERATOR
 			-- `Current' seen as a group-node-iterator.
 		do
 			Result := Current

@@ -27,7 +27,7 @@ create {XM_XPATH_STAND_ALONE_CONTEXT}
 
 feature {NONE} -- Initialization
 
-	make (a_qname: STRING; an_initial_value: XM_XPATH_VALUE) is
+	make (a_qname: STRING; an_initial_value: XM_XPATH_VALUE)
 			-- Establish invariant.
 		require
 			valid_name: a_qname /= Void and then is_qname (a_qname)
@@ -50,20 +50,20 @@ feature -- Access
 			-- This value may be changed between successive evaluations of
 			-- a compiled XPath expression that references the variable.
 
-	required_type: XM_XPATH_SEQUENCE_TYPE is
+	required_type: XM_XPATH_SEQUENCE_TYPE
 			-- Static type of variable
 		do
 			create Result.make_any_sequence
 		end
-	
-	variable_fingerprint: INTEGER is
+
+	variable_fingerprint: INTEGER
 			-- Fingerprint of variable name from name pool;
 			-- Not used.
 		do
 			Result := -1
 		end
 
-	slot_number: INTEGER is
+	slot_number: INTEGER
 			-- Slot number in local stack frame
 		do
 			-- Pre-condition is never met
@@ -71,7 +71,7 @@ feature -- Access
 
 feature -- Status report
 
-		is_global: BOOLEAN is
+		is_global: BOOLEAN
 			-- Is binding global or local?
 		do
 			Result := True
@@ -79,7 +79,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-		evaluate_variable (a_context: XM_XPATH_CONTEXT) is
+		evaluate_variable (a_context: XM_XPATH_CONTEXT)
 			-- Evaluate `Current' as a single item
 		do
 			last_evaluated_binding := value
@@ -87,7 +87,7 @@ feature -- Evaluation
 
 feature -- Element change
 
-	register_reference (a_reference: XM_XPATH_VARIABLE_REFERENCE) is
+	register_reference (a_reference: XM_XPATH_VARIABLE_REFERENCE)
 			-- Register `a_reference' as a reference to this variable for fix-up.
 		local
 			a_sequence_type: XM_XPATH_SEQUENCE_TYPE
@@ -100,7 +100,7 @@ feature -- Element change
 			a_reference.fix_up (Current)
 		end
 
-	set_value (a_value: XM_XPATH_VALUE) is
+	set_value (a_value: XM_XPATH_VALUE)
 			-- Set `value'.
 		require
 			value_not_void: a_value /= Void

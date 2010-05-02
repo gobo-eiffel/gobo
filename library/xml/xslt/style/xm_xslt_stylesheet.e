@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
+		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration)
 			-- Establish invariant.
 		local
 			a_code_point_collator: ST_COLLATOR
@@ -111,7 +111,7 @@ feature -- Access
 	function_library: XM_XPATH_FUNCTION_LIBRARY_MANAGER
 			-- Function libraries in use (only if this is the principal stylesheet module)
 
-	precedence: INTEGER is
+	precedence: INTEGER
 			-- Import precedence of `Current'
 		do
 			if was_included then
@@ -121,7 +121,7 @@ feature -- Access
 			end
 		end
 
-	namespace_alias (a_uri_code: INTEGER): INTEGER is
+	namespace_alias (a_uri_code: INTEGER): INTEGER
 			-- Declared namespace alias for a given namespace URI code if there is one.
 			-- If there is more than one, we get the last.
 		require
@@ -149,7 +149,7 @@ feature -- Access
 			end
 		end
 
-	find_collator (a_collator_uri: STRING): ST_COLLATOR is
+	find_collator (a_collator_uri: STRING): ST_COLLATOR
 			-- Does `a_collator_uri' represent a defined collator? -- TODO rename to found_collator
 		require
 			collator_uri_not_void: a_collator_uri /= Void
@@ -160,7 +160,7 @@ feature -- Access
 			collator_not_void: Result /= Void
 		end
 
-	module_number (a_system_id: STRING): INTEGER is
+	module_number (a_system_id: STRING): INTEGER
 			-- Module number of `a_system_id'
 		require
 			system_id_not_void: a_system_id /= Void
@@ -169,7 +169,7 @@ feature -- Access
 			Result := stylesheet_module_map.item (a_system_id)
 		end
 
-	gathered_output_properties (a_fingerprint: INTEGER): XM_XSLT_OUTPUT_PROPERTIES is
+	gathered_output_properties (a_fingerprint: INTEGER): XM_XSLT_OUTPUT_PROPERTIES
 			-- Accumulated output properties for format named by `a_fingerprint' (-1 = unnamed format)
 		require
 			nearly_positive_fingerprint: a_fingerprint > -2
@@ -224,7 +224,7 @@ feature -- Access
 			output_properties_not_void: Result /= Void
 		end
 
-	character_map (a_fingerprint: INTEGER): XM_XSLT_CHARACTER_MAP is
+	character_map (a_fingerprint: INTEGER): XM_XSLT_CHARACTER_MAP
 			-- Character map named by `a_fingerprint'
 		require
 			positive_fingerprint: a_fingerprint >= 0
@@ -252,7 +252,7 @@ feature -- Access
 			end
 		end
 
-	system_id_from_module_number (a_module_number: INTEGER): STRING is
+	system_id_from_module_number (a_module_number: INTEGER): STRING
 			-- System identifier
 		do
 			Result := module_list.item (a_module_number)
@@ -261,8 +261,8 @@ feature -- Access
 	input_type_annotations: INTEGER
 			-- Value of input-type-annotations attribute coded on `Current' and it's imports/inclusions
 
-	Strip_annotations: INTEGER is 1
-	Preserve_annotations: INTEGER is 2
+	Strip_annotations: INTEGER = 1
+	Preserve_annotations: INTEGER = 2
 			-- Bit-values for `input_type_annotations'
 
 feature -- Status report
@@ -283,7 +283,7 @@ feature -- Status report
 	needs_dynamic_output_properties: BOOLEAN
 			-- Does `Current' require dynamic output formats?
 
-	is_named_output_property_defined (a_fingerprint: INTEGER): BOOLEAN is
+	is_named_output_property_defined (a_fingerprint: INTEGER): BOOLEAN
 			-- Is there an xsl:output statement for `a_fingerprint'?
 		require
 			nearly_positive_fingerprint: a_fingerprint > -2
@@ -305,7 +305,7 @@ feature -- Status report
 			end
 		end
 
-	is_module_registered (a_system_id: STRING): BOOLEAN is
+	is_module_registered (a_system_id: STRING): BOOLEAN
 			-- Is `a_system_id' registered as a module?
 		require
 			system_id_not_void: a_system_id /= Void
@@ -313,13 +313,13 @@ feature -- Status report
 			Result := stylesheet_module_map.has (a_system_id)
 		end
 
-	has_namespace_aliases: BOOLEAN is
+	has_namespace_aliases: BOOLEAN
 			-- Have any namespace aliases been declared?
 		do
 			Result := namespace_alias_uri_codes /= Void
 		end
 
-	is_alias_result_namespace (a_uri_code: INTEGER): BOOLEAN is
+	is_alias_result_namespace (a_uri_code: INTEGER): BOOLEAN
 			-- Is `a_uri_code' included in the result-prefix of a namespace-alias?
 		local
 			an_index: INTEGER
@@ -342,7 +342,7 @@ feature -- Status report
 			end
 		end
 
-	is_collator_defined (a_collator_uri: STRING): BOOLEAN is
+	is_collator_defined (a_collator_uri: STRING): BOOLEAN
 			-- Does `a_collator_uri' represent a defined collator?
 		require
 			collator_uri_not_void: a_collator_uri /= Void
@@ -350,7 +350,7 @@ feature -- Status report
 			Result := collation_map.has (a_collator_uri)
 		end
 
-	strips_whitespace: BOOLEAN is
+	strips_whitespace: BOOLEAN
 			-- Does this stysheet do any whitespace stripping?
 		local
 			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
@@ -374,7 +374,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	force_explaining is
+	force_explaining
 			-- Force gexslt:explain="all" on.
 		do
 			is_all_explaining := True
@@ -382,7 +382,7 @@ feature -- Status setting
 			explaining_forced_on: is_all_explaining
 		end
 
-	set_compile_errors is
+	set_compile_errors
 			-- Mark this stylesheet as having compile errors
 		do
 			any_compile_errors := True
@@ -390,7 +390,7 @@ feature -- Status setting
 			compile_errors_reported: any_compile_errors = True
 		end
 
-	set_needs_dynamic_output_properties is
+	set_needs_dynamic_output_properties
 			--  Set dynamic output formats needed.
 		do
 			needs_dynamic_output_properties := True
@@ -400,7 +400,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_import_precedence (a_precedence: INTEGER) is
+	set_import_precedence (a_precedence: INTEGER)
 			-- Set import precedence for top-level elements
 		do
 			import_precedence := a_precedence
@@ -408,7 +408,7 @@ feature -- Element change
 			import_precedence_set: import_precedence = a_precedence
 		end
 
-	set_minimum_import_precedence (a_precedence: INTEGER) is
+	set_minimum_import_precedence (a_precedence: INTEGER)
 			-- Set minimum import precedence for top-level elements
 		do
 			minimum_import_precedence := a_precedence
@@ -416,7 +416,7 @@ feature -- Element change
 			minimum_import_precedence_set: minimum_import_precedence = a_precedence
 		end
 
-	set_importer (an_importer: like Current) is
+	set_importer (an_importer: like Current)
 			-- Set stylesheet that imported or included `Current'
 		require
 			importer_not_void: an_importer /= Void
@@ -426,7 +426,7 @@ feature -- Element change
 			importer_set: importer = an_importer
 		end
 
-	set_was_included is
+	set_was_included
 			-- Mark `Current' as pulled in by xsl:include.
 		do
 			was_included := True
@@ -434,7 +434,7 @@ feature -- Element change
 			included: was_included = True
 		end
 
-	ensure_stripper_rules is
+	ensure_stripper_rules
 			-- Ensure strip/preserve whitespace rules exist
 		do
 			if stripper_rules = Void then
@@ -444,7 +444,7 @@ feature -- Element change
 			stripper_rules_not_void: stripper_rules /= Void
 		end
 
-	register_module (a_system_id: STRING) is
+	register_module (a_system_id: STRING)
 			-- Register `a_system_id' as a stylesheet module.
 		require
 			system_id_not_void: a_system_id /= Void
@@ -459,7 +459,7 @@ feature -- Element change
 			module_registered: is_module_registered (a_system_id)
 		end
 
-	declare_collation (a_collator: ST_COLLATOR; a_name: STRING) is
+	declare_collation (a_collator: ST_COLLATOR; a_name: STRING)
 			-- Declare a collation.
 		require
 			collation_name_not_void: a_name /= Void -- TODO and then is a URI
@@ -475,7 +475,7 @@ feature -- Element change
 			collator_declared: is_collator_defined (a_name)
 		end
 
-	allocate_global_slot (a_variable_name: STRING) is
+	allocate_global_slot (a_variable_name: STRING)
 			-- Allocate a slot for a global variable or parameter.
 		require
 			variable_name_not_empty: a_variable_name /= Void and then a_variable_name.count > 0
@@ -485,7 +485,7 @@ feature -- Element change
 			global_slot_allocated: executable.global_slot_manager.number_of_variables = old executable.global_slot_manager.number_of_variables + 1
 		end
 
-	allocate_pattern_slots (a_variable_count: INTEGER) is
+	allocate_pattern_slots (a_variable_count: INTEGER)
 			-- Ensure there is enough space for local variables or parameters within match patterns in any template.
 		require
 			positive_variable_count: a_variable_count >= 0
@@ -497,7 +497,7 @@ feature -- Element change
 			no_smaller: largest_pattern_stack_frame >= old largest_pattern_stack_frame
 		end
 
-	merge_input_type_annotations (an_annotation_setting: INTEGER) is
+	merge_input_type_annotations (an_annotation_setting: INTEGER)
 			-- Merge `input_type_annotations' with `an_annotation_setting'.
 		require
 			valid_annotation: an_annotation_setting <= Preserve_annotations and then an_annotation_setting >= 0
@@ -517,7 +517,7 @@ feature -- Element change
 			end
 		end
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -582,7 +582,7 @@ feature -- Element change
 		end
 
 
-	set_stylesheet_compiler (a_stylesheet_compiler: like stylesheet_compiler; a_configuration: XM_XSLT_CONFIGURATION) is
+	set_stylesheet_compiler (a_stylesheet_compiler: like stylesheet_compiler; a_configuration: XM_XSLT_CONFIGURATION)
 			-- Set `stylesheet_compiler'.
 		require
 			stylesheet_compiler_not_void: a_stylesheet_compiler /= Void
@@ -617,7 +617,7 @@ feature -- Element change
 			function_library_not_void: function_library /= Void
 		end
 
-	preprocess is
+	preprocess
 			-- Perform all the processing possible before the source document is available.
 			-- Done once per stylesheet, so the stylesheet can be reused for multiple source documents.
 		require
@@ -688,7 +688,7 @@ feature -- Element change
 			indices_built: not any_compile_errors implies indices_built
 		end
 
-	splice_includes is
+	splice_includes
 			-- Process xsl:include and xsl:import elements.
 		require
 			includes_not_processed: not includes_processed
@@ -776,7 +776,7 @@ feature -- Element change
 			top_level_elements_created: top_level_elements /= Void
 		end
 
-	process_all_attributes is
+	process_all_attributes
 			-- Process the attributes of every node in the stylesheet.
 		local
 			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
@@ -805,7 +805,7 @@ feature -- Element change
 			includes_processed: includes_processed
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 			-- This is called once for each element, after the entire tree has been built.
 			-- As well as validation, it can perform first-time initialisation.
@@ -821,13 +821,13 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (an_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		do
 			last_generated_expression := Void -- `compile_stylesheet' is used instead
 		end
 
-	compile_stylesheet (a_configuration: XM_XSLT_CONFIGURATION) is
+	compile_stylesheet (a_configuration: XM_XSLT_CONFIGURATION)
 			-- Compile `Current' to an excutable instruction.
 		require
 			configuration_not_void: a_configuration /= Void
@@ -982,7 +982,7 @@ feature -- Element change
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Local
 
-	is_global_variable_declared (a_fingerprint: INTEGER): BOOLEAN is
+	is_global_variable_declared (a_fingerprint: INTEGER): BOOLEAN
 			-- Does `a_fingerprint' represent a global variable?
 		do
 			if principal_stylesheet = Current then
@@ -994,7 +994,7 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Local
 			end
 		end
 
-	bind_global_variable (a_fingerprint: INTEGER; a_static_context: XM_XSLT_EXPRESSION_CONTEXT) is
+	bind_global_variable (a_fingerprint: INTEGER; a_static_context: XM_XSLT_EXPRESSION_CONTEXT)
 			-- Bind variable to it's declaration.
 		require
 			variable_declared: is_global_variable_declared (a_fingerprint)
@@ -1007,7 +1007,7 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Local
 
 feature -- Conversion
 
-	is_stylesheet: BOOLEAN is
+	is_stylesheet: BOOLEAN
 			-- Is `Current' an xsl:stylesheet or xsl:transform?
 		do
 			Result := True
@@ -1047,7 +1047,7 @@ feature {NONE} -- Implementation
 	module_list: DS_ARRAYED_LIST [STRING]
 			-- List of stylesheet modules indexed by module number
 
-	build_indices is
+	build_indices
 			-- Build indices from selected top-level declarations.
 		require
 			indices_not_built: not indices_built
@@ -1080,7 +1080,7 @@ feature {NONE} -- Implementation
 			indices_built: indices_built
 		end
 
-	index_named_template (a_template: XM_XSLT_TEMPLATE) is
+	index_named_template (a_template: XM_XSLT_TEMPLATE)
 			-- Conditionally add an index entry for `a_template'.
 		require
 			indices_not_built: not indices_built
@@ -1128,7 +1128,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	index_variable_declaration (a_variable_declaration: XM_XSLT_VARIABLE_DECLARATION) is
+	index_variable_declaration (a_variable_declaration: XM_XSLT_VARIABLE_DECLARATION)
 			-- Conditionally add an index entry for `a_variable_declaration'.
 		require
 			indices_not_built: not indices_built
@@ -1178,7 +1178,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	collect_namespace_aliases is
+	collect_namespace_aliases
 			-- Collect any namespace aliases.
 		require
 			indices_built: indices_built
@@ -1258,7 +1258,7 @@ feature {NONE} -- Implementation
 			namespaces_alias_list_void: namespace_alias_list = Void
 		end
 
-	copy_top_level_elements (an_included_stylesheet: XM_XSLT_STYLESHEET) is
+	copy_top_level_elements (an_included_stylesheet: XM_XSLT_STYLESHEET)
 			-- Copy the top-level elements of the included stylesheet into the top level of `Current'.
 			--  Normally we add these elements at the end, in order, but if the precedence
 			--  of an element is less than the precedence of the previous element, we promote it.
@@ -1300,7 +1300,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	save_output_definitions is
+	save_output_definitions
 			-- Save output definitions in `executable.
 		require
 			executable_not_void: executable /= Void

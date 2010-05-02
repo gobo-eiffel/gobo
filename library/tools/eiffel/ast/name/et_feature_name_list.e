@@ -20,7 +20,7 @@ inherit
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset feature names as they were when they were last parsed.
 		local
 			i, nb: INTEGER
@@ -34,7 +34,7 @@ feature -- Initialization
 
 feature -- Access
 
-	feature_name (i: INTEGER): ET_FEATURE_NAME is
+	feature_name (i: INTEGER): ET_FEATURE_NAME
 			-- Feature name at index `i' in list
 		require
 			i_large_enough: i >= 1
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_feature_name (a_name: ET_FEATURE_NAME): BOOLEAN is
+	has_feature_name (a_name: ET_FEATURE_NAME): BOOLEAN
 			-- Is `a_name' listed in current list?
 		require
 			a_name_not_void: a_name /= Void
@@ -67,7 +67,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_FEATURE_NAME_ITEM] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_FEATURE_NAME_ITEM]
 			-- Fixed array routines
 		once
 			create Result

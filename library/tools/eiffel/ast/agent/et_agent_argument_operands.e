@@ -21,7 +21,7 @@ inherit
 
 feature -- Access
 
-	actual_argument (i: INTEGER): ET_AGENT_ARGUMENT_OPERAND is
+	actual_argument (i: INTEGER): ET_AGENT_ARGUMENT_OPERAND
 			-- Actual argument at index `i'
 		deferred
 		end

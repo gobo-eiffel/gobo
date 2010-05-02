@@ -30,7 +30,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (handler: like error_handler) is
+	make (handler: like error_handler)
 			-- Create a new scanner description scanner.
 		require
 			handler_not_void: handler /= Void
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			error_handler_set: error_handler = handler
 		end
 
-	make_from_description (a_description: LX_DESCRIPTION; handler: like error_handler) is
+	make_from_description (a_description: LX_DESCRIPTION; handler: like error_handler)
 			-- Create a new scanner description scanner and
 			-- initialize it with `a_description'.
 		require
@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset scanner before scanning next input.
 		do
 			reset_compressed_scanner_skeleton
@@ -103,7 +103,7 @@ feature -- Access
 	rule_line_nb: INTEGER
 			-- Line number of rule being parsed
 
-	filename: STRING is
+	filename: STRING
 			-- Name of file being parsed
 		local
 			file_buffer: YY_FILE_BUFFER
@@ -138,7 +138,7 @@ feature {NONE} -- Access
 
 feature -- Setting
 
-	set_error_handler (handler: like error_handler) is
+	set_error_handler (handler: like error_handler)
 			-- Set `error_handler' to `handler'.
 		require
 			handler_not_void: handler /= Void
@@ -150,7 +150,7 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	put_back_string (str: STRING) is
+	put_back_string (str: STRING)
 			-- Put `str' back to buffer for the scanner
 			-- to analyze it again.
 		require
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_new_start_condition (a_name: STRING; exclusive: BOOLEAN) is
+	add_new_start_condition (a_name: STRING; exclusive: BOOLEAN)
 			-- Create a new start condition named `a_name' and
 			-- insert it at the end of `start_conditions'.
 		require
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_character (a_code: INTEGER) is
+	process_character (a_code: INTEGER)
 			-- Check whether `a_code' is a valid code for character
 			-- whose printable representation is held in `text'.
 			-- Set `last_integer_value' accordingly.
@@ -197,9 +197,9 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_escaped_character is
+	process_escaped_character
 			-- Process escaped character whose printable representation
-			-- is held in `text'. Check whether the corresponding 
+			-- is held in `text'. Check whether the corresponding
 			-- character is not out of range. Set `last_integer_value' accordingly.
 		require
 --			valid_text: `text' recognized by \\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
@@ -267,7 +267,7 @@ feature {NONE} -- Implementation
 			process_character (a_code)
 		end
 
-	process_name_definition (a_name, a_definition: STRING) is
+	process_name_definition (a_name, a_definition: STRING)
 			-- Keep track of name definition.
 			-- Trailing spaces are removed from `a_definition'
 			-- and parentheses are added around it.
@@ -316,7 +316,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Error handling
 
-	report_bad_character_error (a_char: STRING) is
+	report_bad_character_error (a_char: STRING)
 			-- Report the presence of a bad character `a_char'.
 		require
 			a_char_not_void: a_char /= Void
@@ -330,7 +330,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_bad_character_class_error is
+	report_bad_character_class_error
 			-- Report the presence of a bad character class.
 		local
 			an_error: LX_BAD_CHARACTER_CLASS_ERROR
@@ -342,7 +342,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_bad_character_in_brackets_error is
+	report_bad_character_in_brackets_error
 			-- Report the presence of a bad character in {}'s.
 		local
 			an_error: LX_BAD_CHARACTER_IN_BRACKETS_ERROR
@@ -354,7 +354,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_bad_start_condition_error (sc: STRING) is
+	report_bad_start_condition_error (sc: STRING)
 			-- Report the presence of a bad start condition `sc'.
 		require
 			sc_not_void: sc /= Void
@@ -368,7 +368,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_character_out_of_range_error (a_char: STRING) is
+	report_character_out_of_range_error (a_char: STRING)
 			-- Report that character `a_char' is out of range.
 		require
 			a_char_not_void: a_char /= Void
@@ -382,7 +382,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_integer_too_large_error (an_int: STRING) is
+	report_integer_too_large_error (an_int: STRING)
 			-- Report that integer `an_int' is too large (implementation limitation).
 		require
 			an_int_not_void: an_int /= Void
@@ -396,7 +396,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_directive_expected_error is
+	report_directive_expected_error
 			-- Report that a '%' directive was expected.
 		local
 			an_error: LX_DIRECTIVE_EXPECTED_ERROR
@@ -408,7 +408,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_incomplete_name_definition_error is
+	report_incomplete_name_definition_error
 			-- Report an incomplete name definition.
 		local
 			an_error: LX_INCOMPLETE_NAME_DEFINITION_ERROR
@@ -420,7 +420,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_missing_bracket_error is
+	report_missing_bracket_error
 			-- Report a missing }.
 		local
 			an_error: LX_MISSING_BRACKET_ERROR
@@ -432,7 +432,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_missing_quote_error is
+	report_missing_quote_error
 			-- Report a missing quote.
 		local
 			an_error: LX_MISSING_QUOTE_ERROR
@@ -444,7 +444,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_name_defined_twice_error (a_name: STRING) is
+	report_name_defined_twice_error (a_name: STRING)
 			-- Report that `a_name' has been defined twice.
 		require
 			a_name_not_void: a_name /= Void
@@ -458,7 +458,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_start_condition_declared_twice_error (sc: STRING) is
+	report_start_condition_declared_twice_error (sc: STRING)
 			-- Report that `sc' has been declared twice.
 			-- This error is not fatal (do not set
 			-- `successful' to false).
@@ -471,7 +471,7 @@ feature {NONE} -- Error handling
 			error_handler.report_error (an_error)
 		end
 
-	report_start_condition_expected_error is
+	report_start_condition_expected_error
 			-- Report that a start condition name was expected.
 		local
 			an_error: LX_START_CONDITION_EXPECTED_ERROR
@@ -483,7 +483,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_undefined_definition_error (def: STRING) is
+	report_undefined_definition_error (def: STRING)
 			-- Report an undefined definition.
 		require
 			def_not_void: def /= Void
@@ -497,7 +497,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_unrecognized_directive_error is
+	report_unrecognized_directive_error
 			-- Report an unrecoginzed '%' directive.
 		local
 			an_error: LX_UNRECOGNIZED_DIRECTIVE_ERROR
@@ -509,7 +509,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_unrecognized_option_error (an_option: STRING) is
+	report_unrecognized_option_error (an_option: STRING)
 			-- Report an unrecoginzed %option.
 		require
 			an_option_not_void: an_option /= Void
@@ -525,10 +525,10 @@ feature {NONE} -- Error handling
 
 feature {NONE} -- Constants
 
-	Initial_max_nb_names: INTEGER is 101
+	Initial_max_nb_names: INTEGER = 101
 			-- Maximum number of name definitions
 
-	Initial_max_character_classes: INTEGER is 101
+	Initial_max_character_classes: INTEGER = 101
 			-- Maximum number of character classes
 
 invariant

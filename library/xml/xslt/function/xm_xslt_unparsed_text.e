@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant
 		do
 			name := "unparsed-text"; namespace_uri := Xpath_standard_functions_uri
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, where known
 		do
 			Result := type_factory.string_type
@@ -54,7 +54,7 @@ feature -- Access
 
 feature -- Status report
 
-	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
+	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE
 			-- Type of argument number `argument_number'
 		do
 			if argument_number = 1 then
@@ -66,7 +66,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_href, l_encoding: STRING
@@ -97,7 +97,7 @@ feature -- Evaluation
 			end
 		end
 
-	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Pre-evaluate `Current' at compile time.
 		do
 			a_replacement.put (Current)
@@ -106,7 +106,7 @@ feature -- Evaluation
 
 feature {XM_XPATH_FUNCTION_CALL} -- Local
 
-	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		do
 			Precursor (a_replacement, a_context)
@@ -117,7 +117,7 @@ feature {XM_XPATH_FUNCTION_CALL} -- Local
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_optional
@@ -129,4 +129,4 @@ feature {NONE} -- Implementation
 			-- Base URI saved from static context
 
 end
-	
+

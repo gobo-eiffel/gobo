@@ -27,7 +27,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_dtd_callbacks (a_callbacks: like dtd_callbacks) is
+	set_dtd_callbacks (a_callbacks: like dtd_callbacks)
 			-- Set `dtd_callbacks' to `a_callbacks'.
 		do
 			dtd_callbacks := a_callbacks
@@ -37,7 +37,7 @@ feature -- Setting
 
 feature {NONE} -- Document type definition callbacks
 
-	on_doctype (name: STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN) is
+	on_doctype (name: STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN)
 			-- Document type declaration.
 		do
 			if dtd_callbacks = Void then
@@ -48,14 +48,14 @@ feature {NONE} -- Document type definition callbacks
 			dtd_callbacks_not_void: dtd_callbacks /= Void
 		end
 
-	on_element_declaration (a_name: STRING; a_model: XM_DTD_ELEMENT_CONTENT) is
+	on_element_declaration (a_name: STRING; a_model: XM_DTD_ELEMENT_CONTENT)
 			-- Element declaration.
 		do
 			check dtd_callbacks_not_void: dtd_callbacks /= Void end
 			dtd_callbacks.on_element_declaration (a_name, a_model)
 		end
 
-	on_attribute_declaration (an_element_name, a_name: STRING; a_model: XM_DTD_ATTRIBUTE_CONTENT) is
+	on_attribute_declaration (an_element_name, a_name: STRING; a_model: XM_DTD_ATTRIBUTE_CONTENT)
 			-- Attribute declaration, one event per attribute.
 		do
 			check dtd_callbacks_not_void: dtd_callbacks /= Void end
@@ -63,35 +63,35 @@ feature {NONE} -- Document type definition callbacks
 		end
 
 	on_entity_declaration (entity_name: STRING; is_parameter: BOOLEAN; value: STRING;
-		an_id: XM_DTD_EXTERNAL_ID; notation_name: STRING) is
+		an_id: XM_DTD_EXTERNAL_ID; notation_name: STRING)
 			-- Entity declaration.
 		do
 			check dtd_callbacks_not_void: dtd_callbacks /= Void end
 			dtd_callbacks.on_entity_declaration (entity_name, is_parameter, value, an_id, notation_name)
 		end
 
-	on_notation_declaration (notation_name: STRING; an_id: XM_DTD_EXTERNAL_ID) is
+	on_notation_declaration (notation_name: STRING; an_id: XM_DTD_EXTERNAL_ID)
 			-- Notation declaration.
 		do
 			check dtd_callbacks_not_void: dtd_callbacks /= Void end
 			dtd_callbacks.on_notation_declaration (notation_name, an_id)
 		end
-		
-	on_dtd_processing_instruction (a_name, a_content: STRING) is
+
+	on_dtd_processing_instruction (a_name, a_content: STRING)
 			-- Forward PI.
 		do
 			check dtd_callbacks_not_void: dtd_callbacks /= Void end
 			dtd_callbacks.on_dtd_processing_instruction (a_name, a_content)
 		end
 
-	on_dtd_comment (a_content: STRING) is
+	on_dtd_comment (a_content: STRING)
 			-- Forward comment.
 		do
 			check dtd_callbacks_not_void: dtd_callbacks /= Void end
 			dtd_callbacks.on_dtd_comment (a_content)
 		end
 
-	on_dtd_end is
+	on_dtd_end
 			-- End of DTD.
 		do
 			check dtd_callbacks_not_void: dtd_callbacks /= Void end

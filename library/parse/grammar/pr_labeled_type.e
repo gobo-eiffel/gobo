@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_labels: like labels; a_type: like type) is
+	make (a_labels: like labels; a_type: like type)
 			-- Create a new labeled type.
 		require
 			a_labels_not_void: a_labels /= Void

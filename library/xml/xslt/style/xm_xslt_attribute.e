@@ -25,7 +25,7 @@ create {XM_XSLT_NODE_FACTORY}
 
 feature -- Access
 
-	select_and_content_error: STRING is
+	select_and_content_error: STRING
 			-- Error code when both select expression and content are mutually exclusive
 		do
 			Result := "XTSE0840"
@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Element change
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -124,7 +124,7 @@ feature -- Element change
 			attributes_prepared := True
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 		local
 			l_attribute_set: XM_XSLT_ATTRIBUTE_SET
@@ -155,7 +155,7 @@ feature -- Element change
 			Precursor
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (an_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		local
 			a_name_code: INTEGER
@@ -237,7 +237,7 @@ feature {NONE} -- Implementation
 	qname_prefix, namespace_uri, local_name, qname: STRING
 			-- Used for communicating with `compile'
 
-	prepare_attributes_2 (a_validation_attribute, a_type_attribute: STRING) is
+	prepare_attributes_2 (a_validation_attribute, a_type_attribute: STRING)
 			-- Continue prparing attributes.
 		local
 			an_error: XM_XPATH_ERROR_VALUE
@@ -268,7 +268,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_qname_parts (a_string_value: XM_XPATH_STRING_VALUE) is
+	set_qname_parts (a_string_value: XM_XPATH_STRING_VALUE)
 			-- Analyze and set qname parts.
 		require
 			string_value_not_void: a_string_value /= Void
@@ -314,7 +314,7 @@ feature {NONE} -- Implementation
 			namespace_uri: not any_compile_errors and then namespace = Void implies namespace_uri /= Void
 		end
 
-	compile_fixed_attribute (an_executable: XM_XSLT_EXECUTABLE; a_name_code: INTEGER) is
+	compile_fixed_attribute (an_executable: XM_XSLT_EXECUTABLE; a_name_code: INTEGER)
 			-- Compile to a fixed attribute.
 		require
 			executable_not_void: an_executable /= Void
@@ -326,7 +326,7 @@ feature {NONE} -- Implementation
 			last_generated_expression := a_fixed_attribute
 		end
 
-	choose_arbitrary_qname_prefix is
+	choose_arbitrary_qname_prefix
 			-- Choose an arbitrary XML prefix.
 		require
 			namespace_uri_not_void: namespace_uri /= Void

@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_variables: like variables) is
+	make (a_name: STRING; a_variables: like variables)
 			-- Create a new test suite named `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -46,7 +46,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of test cases
 		local
 			a_cursor: DS_LIST_CURSOR [TS_TEST]
@@ -64,7 +64,7 @@ feature -- Measurement
 
 feature -- Execution
 
-	execute (a_summary: TS_SUMMARY) is
+	execute (a_summary: TS_SUMMARY)
 			-- Run test and put results in `a_summary'.
 		local
 			a_cursor: DS_LIST_CURSOR [TS_TEST]
@@ -82,7 +82,7 @@ feature -- Execution
 
 feature -- Element change
 
-	put_test (a_test: TS_TEST) is
+	put_test (a_test: TS_TEST)
 			-- Add `a_test' to test suite.
 		require
 			a_test_not_void: a_test /= Void

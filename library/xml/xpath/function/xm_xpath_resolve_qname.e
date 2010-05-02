@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant
 		do
 			name := "resolve-qname"; namespace_uri := Xpath_standard_functions_uri
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, where known
 		do
 			Result := type_factory.qname_type
@@ -53,7 +53,7 @@ feature -- Access
 
 feature -- Status report
 
-	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
+	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE
 			-- Type of argument number `argument_number'
 		do
 			if argument_number = 1 then
@@ -65,7 +65,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_string, l_prefix, l_local_part: STRING
@@ -118,7 +118,7 @@ feature -- Evaluation
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_optional
@@ -126,7 +126,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 
-	resolve_qname (a_result: DS_CELL [XM_XPATH_ITEM]; a_element: XM_XPATH_ELEMENT; a_prefix, a_local_part: STRING) is
+	resolve_qname (a_result: DS_CELL [XM_XPATH_ITEM]; a_element: XM_XPATH_ELEMENT; a_prefix, a_local_part: STRING)
 			-- Resolve qname in scope of `an_element'.
 		require
 			a_result_not_void: a_result /= Void
@@ -177,6 +177,6 @@ feature {NONE} -- Implementation
 		ensure
 			a_result_not_empty: a_result.item /= Void
 		end
-	
+
 end
-	
+

@@ -92,7 +92,7 @@ create {DT_DATE, DT_DATE_TIME}
 
 feature {NONE} -- Initialization
 
-	make (y, m, d, h, mi, s: INTEGER) is
+	make (y, m, d, h, mi, s: INTEGER)
 			-- Create a new date time duration.
 		do
 			make_date_duration (y, m, d)
@@ -107,7 +107,7 @@ feature {NONE} -- Initialization
 			millisecond_set: millisecond = 0
 		end
 
-	make_precise (y, m, d, h, mi, s, ms: INTEGER) is
+	make_precise (y, m, d, h, mi, s, ms: INTEGER)
 			-- Create a new date time duration with millisecond precision.
 		do
 			make_date_duration (y, m, d)
@@ -122,7 +122,7 @@ feature {NONE} -- Initialization
 			millisecond_set: millisecond = ms
 		end
 
-	make_definite (d, h, mi, s: INTEGER) is
+	make_definite (d, h, mi, s: INTEGER)
 			-- Create a new definite date time duration.
 		do
 			make_definite_date_duration (d)
@@ -136,7 +136,7 @@ feature {NONE} -- Initialization
 			millisecond_set: millisecond = 0
 		end
 
-	make_precise_definite (d, h, mi, s, ms: INTEGER) is
+	make_precise_definite (d, h, mi, s, ms: INTEGER)
 			-- Create a new definite date time duration
 			-- with millisecond precision.
 		do
@@ -151,7 +151,7 @@ feature {NONE} -- Initialization
 			millisecond_set: millisecond = ms
 		end
 
-	make_canonical_definite (s: INTEGER) is
+	make_canonical_definite (s: INTEGER)
 			-- Create a new definite date time duration
 			-- where the time part is canonical and has
 			-- the same sign as the day part.
@@ -174,7 +174,7 @@ feature {NONE} -- Initialization
 			millisecond_set: millisecond = 0
 		end
 
-	make_precise_canonical_definite (ms: INTEGER) is
+	make_precise_canonical_definite (ms: INTEGER)
 			-- Create a new definite date time duration
 			-- with millisecond precision, where the time
 			-- part is canonical and has the same sign as
@@ -197,7 +197,7 @@ feature {NONE} -- Initialization
 			millisecond_count_set: ms = millisecond_count + day * Milliseconds_in_day
 		end
 
-	make_from_date_time_duration (a_date_duration: DT_DATE_DURATION; a_time_duration: DT_TIME_DURATION) is
+	make_from_date_time_duration (a_date_duration: DT_DATE_DURATION; a_time_duration: DT_TIME_DURATION)
 			-- Create a new date time duration using
 			-- `a_date_duration' and `a_time_duration'.
 		require
@@ -221,7 +221,7 @@ feature {NONE} -- Initialization
 			millisecond_set: millisecond = a_time_duration.millisecond
 		end
 
-	make_from_date_duration (a_date_duration: DT_DATE_DURATION) is
+	make_from_date_duration (a_date_duration: DT_DATE_DURATION)
 			-- Create a new date time duration using `a_date_duration'.
 		require
 			a_date_duration_not_void: a_date_duration /= Void
@@ -243,7 +243,7 @@ feature {NONE} -- Initialization
 			millisecond_set: millisecond = 0
 		end
 
-	make_canonical_from_dates (date_from, date_to: like date_time) is
+	make_canonical_from_dates (date_from, date_to: like date_time)
 			-- Create a new canonical duration between
 			-- `date_from' and `date_to'.
 		local
@@ -311,7 +311,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_canonical (a_date_time: like date_time): BOOLEAN is
+	is_canonical (a_date_time: like date_time): BOOLEAN
 			-- Has current duration a canonical form
 			-- when to be added to `a_date_time'?
 		local
@@ -368,7 +368,7 @@ feature -- Status report
 					day <= 0 and day > -(a_date_time + Current).days_in_current_month))
 		end
 
-	is_time_canonical: BOOLEAN is
+	is_time_canonical: BOOLEAN
 			-- Has date time duration a canonical time part
 			-- and has the time part same sign as the day part?
 		do
@@ -408,7 +408,7 @@ feature -- Status report
 
 feature -- Access
 
-	date_duration: DT_DATE_DURATION is
+	date_duration: DT_DATE_DURATION
 			-- Date duration part
 		do
 			create Result.make (year, month, day)
@@ -418,7 +418,7 @@ feature -- Access
 			day_set: Result.day = day
 		end
 
-	time_duration: DT_TIME_DURATION is
+	time_duration: DT_TIME_DURATION
 			-- Time duration part
 		do
 			create Result.make_precise (hour, minute, second, millisecond)
@@ -429,7 +429,7 @@ feature -- Access
 			millisecond_set: Result.millisecond = millisecond
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code
 		do
 			Result := day + month * Max_days_in_month + year * Days_in_year + millisecond_count
@@ -438,7 +438,7 @@ feature -- Access
 			end
 		end
 
-	date_time (a_date_time: DT_DATE_TIME): DT_DATE_TIME is
+	date_time (a_date_time: DT_DATE_TIME): DT_DATE_TIME
 			-- Addition of current duration to `a_date_time'
 			-- (Create a new object at each call.)
 		do
@@ -447,7 +447,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_canonical (a_date_time: like date_time) is
+	set_canonical (a_date_time: like date_time)
 			-- Set current duration to be canonical
 			-- when to be added to `a_date_time'.
 		local
@@ -460,7 +460,7 @@ feature -- Status setting
 			make_canonical_from_dates (a_date_time, final_date_time)
 		end
 
-	set_time_canonical is
+	set_time_canonical
 			-- Set duration with its time part canonical
 			-- and with the same sign as its day part.
 		local
@@ -495,7 +495,7 @@ feature -- Status setting
 
 feature -- Setting
 
-	set_date_duration (a_date_duration: like date_duration) is
+	set_date_duration (a_date_duration: like date_duration)
 			-- Set date part of current date time duration.
 		require
 			a_date_duration_not_void: a_date_duration /= Void
@@ -509,7 +509,7 @@ feature -- Setting
 			day_set: day = a_date_duration.day
 		end
 
-	set_time_duration (a_time_duration: like time_duration) is
+	set_time_duration (a_time_duration: like time_duration)
 			-- Set time part of current date time duration.
 		require
 			a_time_duration_not_void: a_time_duration /= Void
@@ -527,7 +527,7 @@ feature -- Setting
 
 feature -- Basic operations
 
-	plus alias "+" (other: like Current): like Current is
+	plus alias "+" (other: like Current): like Current
 			-- Sum of current duration with `other'
 		do
 			Result := cloned_object
@@ -535,7 +535,7 @@ feature -- Basic operations
 			Result.add_precise_hours_minutes_seconds (other.hour, other.minute, other.second, other.millisecond)
 		end
 
-	minus alias "-" (other: like Current): like Current is
+	minus alias "-" (other: like Current): like Current
 			-- Difference with `other'
 		do
 			Result := cloned_object
@@ -543,7 +543,7 @@ feature -- Basic operations
 			Result.add_precise_hours_minutes_seconds (-other.hour, -other.minute, -other.second, -other.millisecond)
 		end
 
-	opposite alias "-": like Current is
+	opposite alias "-": like Current
 			-- Unary minus
 		do
 			Result := cloned_object
@@ -553,7 +553,7 @@ feature -- Basic operations
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current date time duration less than `other'?
 		local
 			m, d, ms: INTEGER
@@ -583,7 +583,7 @@ feature -- Comparison
 			end
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is current date time duration equal to `other'?
 		do
 			if ANY_.same_types (Current, other) then
@@ -591,7 +591,7 @@ feature -- Comparison
 			end
 		end
 
-	same_date_time_duration (other: DT_DATE_TIME_DURATION): BOOLEAN is
+	same_date_time_duration (other: DT_DATE_TIME_DURATION): BOOLEAN
 			-- Is current date time duration equal to `other'?
 		require
 			other_not_void: other /= Void
@@ -619,7 +619,7 @@ feature -- Comparison
 
 feature -- Conversion
 
-	to_time_canonical: like Current is
+	to_time_canonical: like Current
 			-- Version of current duration where the time part
 			-- is canonical and has the same sign as the day part
 		do
@@ -632,7 +632,7 @@ feature -- Conversion
 
 feature {NONE} -- Implementation
 
-	tmp_date_time: DT_DATE_TIME is
+	tmp_date_time: DT_DATE_TIME
 			-- Temporary date time
 		once
 			create Result.make (1, 1, 1, 0, 0, 0)

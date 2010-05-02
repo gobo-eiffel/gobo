@@ -22,7 +22,7 @@ inherit
 
 feature -- Conversion
 
-	to_character (an_int: INTEGER): CHARACTER is
+	to_character (an_int: INTEGER): CHARACTER
 			-- Character whose code is `an_int'
 		require
 			an_int_large_enough: an_int >= Platform.Minimum_character_code
@@ -33,7 +33,7 @@ feature -- Conversion
 			valid_character_code: Result.code = an_int
 		end
 
-	to_hexadecimal (an_int: INTEGER; uppercase: BOOLEAN): STRING is
+	to_hexadecimal (an_int: INTEGER; uppercase: BOOLEAN): STRING
 			-- Hexadecimal representation of `an_int';
 			-- Return a new string at each call.
 		require
@@ -49,7 +49,7 @@ feature -- Conversion
 --			regexp_lowercase: not uppercase implies (0|[1-9a-f][0-9a-f]*).recognizes (Result)
 		end
 
-	to_decimal (an_int: INTEGER): STRING is
+	to_decimal (an_int: INTEGER): STRING
 			-- Decimal representation of `an_int';
 			-- Return a new string at each call.
 		do
@@ -61,7 +61,7 @@ feature -- Conversion
 --			regexp: (0|(-?[1-9][0-9]*)).recognizes (Result)
 		end
 
-	to_octal (an_int: INTEGER): STRING is
+	to_octal (an_int: INTEGER): STRING
 			-- Octal representation of `an_int';
 			-- Return a new string at each call.
 		require
@@ -75,11 +75,11 @@ feature -- Conversion
 --			regexp: (0|[1-7][0-7]*).recognizes (Result)
 		end
 
-	to_integer (an_int: INTEGER): INTEGER is
+	to_integer (an_int: INTEGER): INTEGER
 			-- Return `an_int';
-			-- This can be used to force integer manifest constants to 
-			-- be of INTEGER type -- some versions of SmartEiffel use 
-			-- the smallest possible INTEGER_* type. A manifest array 
+			-- This can be used to force integer manifest constants to
+			-- be of INTEGER type -- some versions of SmartEiffel use
+			-- the smallest possible INTEGER_* type. A manifest array
 			-- can thus be forced to be of type ARRAY [INTEGER].
 		do
 			Result := an_int
@@ -87,7 +87,7 @@ feature -- Conversion
 			definition: Result = an_int
 		end
 
-	to_integer_8 (an_int: INTEGER): INTEGER_8 is
+	to_integer_8 (an_int: INTEGER): INTEGER_8
 			-- Convert to INTEGER_8
 		require
 			an_int_large_enouh: an_int >= -128
@@ -98,7 +98,7 @@ feature -- Conversion
 
 feature -- Output
 
-	append_decimal_integer (an_int: INTEGER; a_string: STRING) is
+	append_decimal_integer (an_int: INTEGER; a_string: STRING)
 			-- Append decimal representation of `an_int' to `a_string'.
 			-- Note: works even when `a_string' is a UC_STRING.
 		require
@@ -196,7 +196,7 @@ feature -- Output
 --			regexp: (0|(-?[1-9][0-9]*)).recognizes (a_string.substring (old a_string.count + 1, a_string.count))
 		end
 
-	append_octal_integer (an_int: INTEGER; a_string: STRING) is
+	append_octal_integer (an_int: INTEGER; a_string: STRING)
 			-- Append octal representation of `an_int' to `a_string'.
 			-- Note: works even when `a_string' is a UC_STRING.
 		require
@@ -235,7 +235,7 @@ feature -- Output
 --			regexp: (0|[1-7][0-7]*).recognizes (a_string.substring (old a_string.count + 1, a_string.count))
 		end
 
-	append_hexadecimal_integer (an_int: INTEGER; a_string: STRING; uppercase: BOOLEAN) is
+	append_hexadecimal_integer (an_int: INTEGER; a_string: STRING; uppercase: BOOLEAN)
 			-- Append a hexadecimal representation of `an_int' to `a_string'.
 			-- Note: works even when `a_string' is a UC_STRING.
 		require
@@ -317,7 +317,7 @@ feature -- Output
 
 feature -- Operation(s)
 
-	div (x, n: INTEGER): INTEGER is
+	div (x, n: INTEGER): INTEGER
 			-- Integer division of `x' by `n'
 			-- (Use ISO C99 specification)
 		require
@@ -329,7 +329,7 @@ feature -- Operation(s)
 			definition: Result * n + mod (x, n) = x
 		end
 
-	mod (x, n: INTEGER): INTEGER is
+	mod (x, n: INTEGER): INTEGER
 			-- Reminder of the integer division of `x' by `n'
 			-- (Use ISO C99 specification)
 		require
@@ -342,7 +342,7 @@ feature -- Operation(s)
 			iso_c99: Result /= 0 implies Result.sign = x.sign
 		end
 
-	power (x, n: INTEGER): INTEGER is
+	power (x, n: INTEGER): INTEGER
 			-- Integer `x' to the power of `n' (`x' ^ `n')
 		require
 			positive_n: n >= 0
@@ -366,31 +366,31 @@ feature -- Operation(s)
 			recursive_definition: n > 0 implies (Result = x * power (x, n - 1))
 		end
 
-	bit_and (m, n: INTEGER): INTEGER is
+	bit_and (m, n: INTEGER): INTEGER
 			-- Bitwise 'and' between `m' and `n'
 		do
 			Result := m.bit_and (n)
 		end
 
-	bit_or (m, n: INTEGER): INTEGER is
+	bit_or (m, n: INTEGER): INTEGER
 			-- Bitwise 'or' between `m' and `n'
 		do
 			Result := m.bit_or (n)
 		end
 
-	bit_xor (m, n: INTEGER): INTEGER is
+	bit_xor (m, n: INTEGER): INTEGER
 			-- Bitwise 'xor' between `m' and `n'
 		do
 			Result := m.bit_xor (n)
 		end
 
-	bit_not (n: INTEGER): INTEGER is
+	bit_not (n: INTEGER): INTEGER
 			-- Bitwise 'not' of `n'
 		do
 			Result := n.bit_not
 		end
 
-	bit_shift_left (m, n: INTEGER): INTEGER is
+	bit_shift_left (m, n: INTEGER): INTEGER
 			-- `m' shifted `n' bits to left;
 			-- Note: The new bits added on the right are 0.
 		require
@@ -399,7 +399,7 @@ feature -- Operation(s)
 			Result := m.bit_shift_left (n)
 		end
 
-	bit_shift_right (m, n: INTEGER): INTEGER is
+	bit_shift_right (m, n: INTEGER): INTEGER
 			-- `m' shifted `n' bits to right;
 			-- Note: If the first bit of `m' is set (i.e. the sign bit), then
 			-- the new bits added on the left are 1; otherwise they are 0.
@@ -411,7 +411,7 @@ feature -- Operation(s)
 
 feature -- Status report
 
-	is_even (an_int: INTEGER): BOOLEAN is
+	is_even (an_int: INTEGER): BOOLEAN
 			-- Is `an_int' an even integer?
 		do
 			Result := an_int \\ 2 = 0

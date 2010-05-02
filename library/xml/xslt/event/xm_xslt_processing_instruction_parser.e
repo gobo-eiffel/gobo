@@ -45,7 +45,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_error_collector: XM_PARSER_STOP_ON_ERROR_FILTER) is
+	make (an_error_collector: XM_PARSER_STOP_ON_ERROR_FILTER)
 			-- Establish invariant
 		require
 			error_collector_not_void: an_error_collector /= Void
@@ -71,7 +71,7 @@ feature -- Status report
 
 feature -- Document type definuition callbacks
 
-	on_dtd_processing_instruction (a_name, a_content: STRING) is
+	on_dtd_processing_instruction (a_name, a_content: STRING)
 			-- PI.
 		do
 			if pi_name.is_equal (a_name) then process_pi (a_content) end
@@ -80,7 +80,7 @@ feature -- Document type definuition callbacks
 
 feature -- Errors
 
-	on_error (a_message: STRING) is
+	on_error (a_message: STRING)
 			-- Event producer detected an error.
 		do
 			error_collector.on_error (a_message)
@@ -88,7 +88,7 @@ feature -- Errors
 
 feature -- Tag
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Start of start tag.
 		do
 			on_error ("Document element found")
@@ -96,7 +96,7 @@ feature -- Tag
 
 feature -- Meta
 
-	on_processing_instruction (a_name: STRING; a_content: STRING) is
+	on_processing_instruction (a_name: STRING; a_content: STRING)
 			-- Processing instruction.
 		do
 			if pi_name.is_equal (a_name) then process_pi (a_content) end
@@ -104,7 +104,7 @@ feature -- Meta
 
 feature {NONE} -- Initialization
 
-	pi_name: STRING is "xml-stylesheet"
+	pi_name: STRING = "xml-stylesheet"
 			-- Name of processing instruction
 
 	error_collector: XM_PARSER_STOP_ON_ERROR_FILTER
@@ -123,7 +123,7 @@ feature {NONE} -- Initialization
 			-- Character set of stylesheet to be applied
 
 	applicable_media: DS_LIST [STRING]
-			-- Target media of stylesheet to be applied	
+			-- Target media of stylesheet to be applied
 
 	alternate: BOOLEAN
 			-- Is stylesheet to be applied an alternate?
@@ -131,7 +131,7 @@ feature {NONE} -- Initialization
 	alternate_seen: BOOLEAN
 			-- For duplication detection
 
-	process_pi (a_content: STRING) is
+	process_pi (a_content: STRING)
 			-- process an xml-stylesheet PI
 		require
 			content_not_void: a_content /= Void
@@ -195,7 +195,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	is_valid_name (a_name: STRING): BOOLEAN is
+	is_valid_name (a_name: STRING): BOOLEAN
 			-- Is `a_name' a valid pseudo-attribute?
 		require
 			name_not_void: a_name /= Void
@@ -208,7 +208,7 @@ feature {NONE} -- Initialization
 				or else STRING_.same_string (a_name, "alternate")
 		end
 
-	process_attribute (a_name, a_value: STRING) is
+	process_attribute (a_name, a_value: STRING)
 			-- Process a pseudo-attribute.
 		require
 			name_not_empty: a_name /= Void is_valid_name (a_name)
@@ -287,7 +287,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	set_error (a_message: STRING) is
+	set_error (a_message: STRING)
 			-- Set a diagnostic error message.
 		require
 			no_previous_error: not is_error
@@ -299,7 +299,7 @@ feature {NONE} -- Initialization
 			in_error: is_error
 		end
 
-	process_alternate (a_value: STRING) is
+	process_alternate (a_value: STRING)
 			-- Process "alternate=" pseudo-attribute.
 		require
 			not_seen_before: not alternate_seen
@@ -315,7 +315,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	process_media  (a_value: STRING) is
+	process_media  (a_value: STRING)
 			-- Process "media=" pseudo-attribute.
 		require
 			not_seen_before:applicable_media = Void
@@ -361,7 +361,7 @@ feature {NONE} -- Initialization
 			processed: applicable_media /= Void
 		end
 
-	create_pi is
+	create_pi
 			-- Create an entry in `stylesheets'.
 		require
 			no_error: not is_error
@@ -393,7 +393,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	unescaped_value (a_value: STRING): STRING is
+	unescaped_value (a_value: STRING): STRING
 			-- `a_value' with all escaping removed.
 		require
 			value_not_void: a_value /= Void
@@ -439,7 +439,7 @@ feature {NONE} -- Initialization
 			possible_void_result: True
 		end
 
-	character_reference (a_value: STRING): STRING is
+	character_reference (a_value: STRING): STRING
 			-- Decoded character reference
 		require
 			value_not_void: a_value /= Void
@@ -468,7 +468,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	predefined_entity_reference (a_value: STRING): STRING is
+	predefined_entity_reference (a_value: STRING): STRING
 			-- Decoded predefined entity reference
 		require
 			value_not_void: a_value /= Void

@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	start_state: LX_STATE is
+	start_state: LX_STATE
 			-- Automaton's start state
 		deferred
 		ensure

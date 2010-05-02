@@ -40,14 +40,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT) is
+	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT)
 			-- Create a new target.
 		do
 			Precursor (a_project, a_xml_element)
 			initialize
 		end
 
-	initialize is
+	initialize
 			-- Initialize current Group
 		local
 			a_xml_element: XM_ELEMENT
@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_target: BOOLEAN is
+	is_target: BOOLEAN
 			-- Is Current a GEANT_TARGET ?
 		do
 			Result := associated_target = Current
@@ -78,7 +78,7 @@ feature -- Access
 	parent: GEANT_GROUP
 			-- Parent group
 
-	associated_target: GEANT_TARGET is
+	associated_target: GEANT_TARGET
 			-- Associated target
 		do
 			Result ?= parent
@@ -91,7 +91,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_description (a_description: STRING) is
+	set_description (a_description: STRING)
 			-- Set `description' to `a_description'.
 		require
 			a_description_not_void: a_description /= Void
@@ -101,7 +101,7 @@ feature -- Setting
 			description_set: description = a_description
 		end
 
-	set_parent (a_parent: like parent) is
+	set_parent (a_parent: like parent)
 			-- Set `parent' to `a_parent'.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -113,7 +113,7 @@ feature -- Setting
 
 feature -- Processing
 
-	execute is
+	execute
 			-- Execute all tasks of `Current' in sequential order.
 		local
 			a_old_cwd: STRING
@@ -156,12 +156,12 @@ feature -- Processing
 
 feature {NONE} -- Execution implementation
 
-	prepare_variables_before_execution is
+	prepare_variables_before_execution
 			-- Prepare variables before tasks execution
 		do
 		end
 
-	execute_nested_tasks is
+	execute_nested_tasks
 			-- Process all elements from `xml_element'
 		local
 			l_xml_element: XM_ELEMENT
@@ -185,7 +185,7 @@ feature {NONE} -- Execution implementation
 			end
 		end
 
-	execute_group_element (a_xml_element: XM_ELEMENT) is
+	execute_group_element (a_xml_element: XM_ELEMENT)
 			-- Execute group element defined through `a_xml_element'.
 		require
 			a_xml_element_is_group: a_xml_element /= Void and then STRING_.same_string (a_xml_element.name, Group_element_name)
@@ -201,7 +201,7 @@ feature {NONE} -- Execution implementation
 			end
 		end
 
-	execute_element (a_xml_element: XM_ELEMENT) is
+	execute_element (a_xml_element: XM_ELEMENT)
 			-- Execute  command defined through `a_xml_element'.
 			-- except group
 		require
@@ -221,7 +221,7 @@ feature {NONE} -- Execution implementation
 			end
 		end
 
-	execute_task (a_xml_element: XM_ELEMENT) is
+	execute_task (a_xml_element: XM_ELEMENT)
 			-- Execute all task defined through `a_xml_element'.
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -250,7 +250,7 @@ feature {NONE} -- Execution implementation
 
 feature {NONE} -- Constants
 
-	Group_element_name: STRING is
+	Group_element_name: STRING
 			-- Name of xml subelement for group
 		once
 			Result := "group"
@@ -259,7 +259,7 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Global_element_name: STRING is
+	Global_element_name: STRING
 			-- Name of xml subelement for globals
 		once
 			Result := "global"
@@ -268,7 +268,7 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Local_element_name: STRING is
+	Local_element_name: STRING
 			-- Name of xml subelement for locals
 		once
 			Result := "local"

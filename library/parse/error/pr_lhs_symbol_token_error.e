@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER; a_name: STRING) is
+	make (filename: STRING; line: INTEGER; a_name: STRING)
 			-- Create a new error reporting that the left-hand-side
 			-- symbol `a_name' in a rule is a token instead of a
 			-- nonterminal symbol.
@@ -39,10 +39,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: left-hand-side symbol $3 is a token"
+	default_template: STRING = "%"$1%", line $2: left-hand-side symbol $3 is a token"
 			-- Default template used to built the error message
 
-	code: STRING is "PR0003"
+	code: STRING = "PR0003"
 			-- Error code
 
 invariant

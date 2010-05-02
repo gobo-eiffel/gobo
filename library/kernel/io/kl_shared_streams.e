@@ -14,7 +14,7 @@ class KL_SHARED_STREAMS
 
 feature -- Access
 
-	null_output_stream: KL_NULL_TEXT_OUTPUT_STREAM is
+	null_output_stream: KL_NULL_TEXT_OUTPUT_STREAM
 			-- Null output stream
 		once
 			create Result.make ("null")

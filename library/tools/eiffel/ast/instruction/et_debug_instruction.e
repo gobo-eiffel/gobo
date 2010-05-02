@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_keys: like keys; a_compound: like compound) is
+	make (a_keys: like keys; a_compound: like compound)
 			-- Create a new debug instruction.
 		do
 			keys := a_keys
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset instruction as it was just after it was last parsed.
 		do
 			if compound /= Void then
@@ -57,7 +57,7 @@ feature -- Access
 	end_keyword: ET_KEYWORD
 			-- 'end' keyword
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		local
@@ -81,7 +81,7 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			if compound /= Void then
@@ -93,13 +93,13 @@ feature -- Access
 			end
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := end_keyword
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := end_keyword.break
@@ -107,7 +107,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_keys (a_keys: like keys) is
+	set_keys (a_keys: like keys)
 			-- Set `keys' to `a_keys'.
 		do
 			keys := a_keys
@@ -115,7 +115,7 @@ feature -- Setting
 			keys_set: keys = a_keys
 		end
 
-	set_end_keyword (an_end: like end_keyword) is
+	set_end_keyword (an_end: like end_keyword)
 			-- Set `end_keyword' to `an_end'.
 		require
 			an_end_not_void: an_end /= Void
@@ -127,7 +127,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_debug_instruction (Current)

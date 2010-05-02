@@ -24,8 +24,8 @@ create
 	make
 
 feature {NONE} -- Initialization
-	
-	make (an_expression: XM_XPATH_EXPRESSION) is
+
+	make (an_expression: XM_XPATH_EXPRESSION)
 			-- Establish invariant.
 		require
 			source_expression_not_void: an_expression /= Void
@@ -40,8 +40,8 @@ feature {NONE} -- Initialization
 
 
 feature -- Access
-	
-	item_type: XM_XPATH_ITEM_TYPE is
+
+	item_type: XM_XPATH_ITEM_TYPE
 			--Determine the data type of the expression, if possible
 		do
 			Result := type_factory.qname_type
@@ -51,23 +51,23 @@ feature -- Access
 			end
 		end
 
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions of `Current'
 		do
 			create Result.make (1)
 			Result.put (source, 1)
 			Result.set_equality_tester (expression_tester)
 		end
-	
+
 feature -- Status report
 
-	is_node_sequence: BOOLEAN is
+	is_node_sequence: BOOLEAN
 			-- Is `Current' a sequence of zero or more nodes?
 		do
 			Result := False
 		end
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -78,9 +78,9 @@ feature -- Status report
 			source.display (a_level + 1)
 		end
 
-feature -- Optimization	
+feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static analysis of an expression and its subexpressions
 		local
 			l_xml_prefix, l_namespace_uri, l_local_name: STRING
@@ -125,7 +125,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			-- This cannot happen at present - see `check_static_type'.
@@ -135,7 +135,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Cannot evaluate a cast to xs:QName at run-time.", Xpath_errors_uri, "FONS0003", Dynamic_error))
@@ -146,13 +146,13 @@ feature {NONE} -- Implementation
 	source: XM_XPATH_EXPRESSION
 			-- Expression to be cast
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
 		end
 
-	compute_special_properties is
+	compute_special_properties
 			-- Compute special properties.
 		do
 			Precursor
@@ -164,4 +164,4 @@ invariant
 	source_expression_not_void: source /= Void
 
 end
-	
+

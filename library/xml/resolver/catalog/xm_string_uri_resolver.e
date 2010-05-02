@@ -28,19 +28,19 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create.
 		do
 		end
 
 feature -- Status report
 
-	scheme: STRING is "string"
+	scheme: STRING = "string"
 			-- Scheme
 
 feature -- Action(s)
 
-	resolve (a_uri: UT_URI) is
+	resolve (a_uri: UT_URI)
 			-- Resolve file URI.
 		local
 			a_system_id: STRING
@@ -63,19 +63,19 @@ feature -- Result
 	last_error: STRING
 			-- Error
 
-	has_error: BOOLEAN is
+	has_error: BOOLEAN
 			-- Is there an error?
 		do
 			Result := last_error /= Void
 		end
 
-	has_media_type: BOOLEAN is
+	has_media_type: BOOLEAN
 			-- Is the media type available?
 		do
 			Result := False
 		end
 
-	last_media_type: UT_MEDIA_TYPE is
+	last_media_type: UT_MEDIA_TYPE
 			-- Media type, if available.
 		do
 			-- pre-condition is never met
@@ -83,7 +83,7 @@ feature -- Result
 
 feature {NONE} -- Error messages
 
-	System_id_not_known_error: STRING is "SYSTEM id not known to bootstrap resolver "
+	System_id_not_known_error: STRING = "SYSTEM id not known to bootstrap resolver "
 			-- Error message
 
 end

@@ -41,7 +41,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Create an empty table and allocate
 			-- memory space for at least `n' items.
 			-- Use `=' as comparison criterion for items.
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			before: before
 		end
 
-	make_equal (n: INTEGER) is
+	make_equal (n: INTEGER)
 			-- Create an empty table and allocate
 			-- memory space for at least `n' items.
 			-- Use `equal' as comparison criterion for items.
@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 			before: before
 		end
 
-	make_default is
+	make_default
 			-- Create an empty table and allocate memory
 			-- space for at least `default_capacity' items.
 			-- Use `=' as comparison criterion for items.
@@ -85,7 +85,7 @@ feature {NONE} -- Initialization
 			before: before
 		end
 
-	make_map (n: INTEGER) is
+	make_map (n: INTEGER)
 			-- Create an empty table and allocate
 			-- memory space for at least `n' items.
 			-- Use `=' as comparison criterion for items.
@@ -100,7 +100,7 @@ feature {NONE} -- Initialization
 			before: before
 		end
 
-	make_map_equal (n: INTEGER) is
+	make_map_equal (n: INTEGER)
 			-- Create an empty table and allocate
 			-- memory space for at least `n' items.
 			-- Use `equal' as comparison criterion for items.
@@ -116,7 +116,7 @@ feature {NONE} -- Initialization
 			before: before
 		end
 
-	make_map_default is
+	make_map_default
 			-- Create an empty table and allocate memory
 			-- space for at least `default_capacity' items.
 			-- Use `=' as comparison criterion for items.
@@ -129,7 +129,7 @@ feature {NONE} -- Initialization
 			before: before
 		end
 
-	make_with_equality_testers (n: INTEGER; an_item_tester: like equality_tester; a_key_tester: like key_equality_tester) is
+	make_with_equality_testers (n: INTEGER; an_item_tester: like equality_tester; a_key_tester: like key_equality_tester)
 			-- Create an empty table and allocate
 			-- memory space for at least `n' items.
 			-- Use `an_item_tester' as comparison criterion for items.
@@ -151,7 +151,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	at alias "@", item (k: K): G is
+	at alias "@", item (k: K): G
 			-- Item associated with `k'
 		do
 			search_position (k)
@@ -161,7 +161,7 @@ feature -- Access
 			Result := item_storage_item (position)
 		end
 
-	key (k: K): K is
+	key (k: K): K
 			-- Key associated with `k'
 		require
 			has_k: has (k)
@@ -173,7 +173,7 @@ feature -- Access
 			Result := key_storage_item (position)
 		end
 
-	found_key: K is
+	found_key: K
 			-- Key of item found by last call to `search'
 		require
 			key_found: found
@@ -181,13 +181,13 @@ feature -- Access
 			Result := key_storage_item (found_position)
 		end
 
-	key_for_iteration: K is
+	key_for_iteration: K
 			-- Key at internal cursor position
 		do
 			Result := cursor_key (internal_cursor)
 		end
 
-	new_cursor: DS_SPARSE_TABLE_CURSOR [G, K] is
+	new_cursor: DS_SPARSE_TABLE_CURSOR [G, K]
 			-- New external cursor for traversal
 		do
 			create Result.make (Current)
@@ -198,7 +198,7 @@ feature -- Access
 			-- A void equality tester means that `='
 			-- will be used as comparison criterion.
 
-	keys: DS_BILINEAR [K] is
+	keys: DS_BILINEAR [K]
 			-- View of current table as a linear representation of its keys
 		do
 			Result := internal_keys
@@ -208,14 +208,14 @@ feature -- Access
 
 feature -- Status report
 
-	has (k: K): BOOLEAN is
+	has (k: K): BOOLEAN
 			-- Is there an item associated with `k'?
 		do
 			search_position (k)
 			Result := position /= No_position
 		end
 
-	valid_key (k: K): BOOLEAN is
+	valid_key (k: K): BOOLEAN
 			-- Is `k' a valid key?
 		do
 			Result := True
@@ -223,7 +223,7 @@ feature -- Status report
 			defintion: Result = True
 		end
 
-	key_equality_tester_settable (a_tester: like key_equality_tester): BOOLEAN is
+	key_equality_tester_settable (a_tester: like key_equality_tester): BOOLEAN
 			-- Can `set_key_equality_tester' be called with `a_tester'
 			-- as argument in current state of container?
 		do
@@ -232,7 +232,7 @@ feature -- Status report
 
 feature -- Search
 
-	search (k: K) is
+	search (k: K)
 			-- Search for item at key `k'.
 			-- If found, set `found' to true, and set
 			-- `found_item' to item associated with `k'.
@@ -246,7 +246,7 @@ feature -- Search
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is table equal to `other'?
 			-- Do not take cursor positions, capacity
 			-- nor `equality_tester' into account.
@@ -274,7 +274,7 @@ feature -- Comparison
 
 feature -- Setting
 
-	set_key_equality_tester (a_tester: like key_equality_tester) is
+	set_key_equality_tester (a_tester: like key_equality_tester)
 			-- Set `key_equality_tester' to `a_tester'.
 			-- A void key equality tester means that `='
 			-- will be used as comparison criterion.
@@ -289,7 +289,7 @@ feature -- Setting
 
 feature -- Element change
 
-	replace (v: G; k: K) is
+	replace (v: G; k: K)
 			-- Replace item associated with `k' by `v'.
 			-- Do not move cursors.
 		do
@@ -301,7 +301,7 @@ feature -- Element change
 			item_storage_put (v, position)
 		end
 
-	replace_found_item (v: G) is
+	replace_found_item (v: G)
 			-- Replace item associated with
 			-- the key of `found_item' by `v'.
 			-- Do not move cursors.
@@ -314,7 +314,7 @@ feature -- Element change
 			same_count: count = old count
 		end
 
-	put (v: G; k: K) is
+	put (v: G; k: K)
 			-- Associate `v' with key `k'.
 			-- Do not move cursors.
 		require
@@ -347,7 +347,7 @@ feature -- Element change
 			inserted: has (k) and then item (k) = v
 		end
 
-	put_new (v: G; k: K) is
+	put_new (v: G; k: K)
 			-- Associate `v' with key `k'.
 			-- Do not move cursors.
 		require
@@ -375,7 +375,7 @@ feature -- Element change
 			inserted: has (k) and then item (k) = v
 		end
 
-	put_last (v: G; k: K) is
+	put_last (v: G; k: K)
 			-- Associate `v' with key `k'. Put `v' at the end of table
 			-- if no item was already associated with `k', or replace
 			-- existing item otherwise.
@@ -410,7 +410,7 @@ feature -- Element change
 			last: (not old has (k)) implies last = v
 		end
 
-	put_last_new (v: G; k: K) is
+	put_last_new (v: G; k: K)
 			-- Associate `v' with key `k'. Put `v' at the end of table.
 			-- Do not move cursors.
 		require
@@ -438,7 +438,7 @@ feature -- Element change
 			last: last = v
 		end
 
-	force (v: G; k: K) is
+	force (v: G; k: K)
 			-- Associate `v' with key `k'.
 			-- Resize table if necessary.
 			-- Do not move cursors.
@@ -471,7 +471,7 @@ feature -- Element change
 			end
 		end
 
-	force_new (v: G; k: K) is
+	force_new (v: G; k: K)
 			-- Associate `v' with key `k'.
 			-- Resize table if necessary.
 			-- Do not move cursors.
@@ -497,7 +497,7 @@ feature -- Element change
 			count := count + 1
 		end
 
-	force_last (v: G; k: K) is
+	force_last (v: G; k: K)
 			-- Associate `v' with key `k'. Put `v' at the end of table
 			-- if no item was already associated with `k', or replace
 			-- existing item otherwise.
@@ -532,7 +532,7 @@ feature -- Element change
 			last: (not old has (k)) implies last = v
 		end
 
-	force_last_new (v: G; k: K) is
+	force_last_new (v: G; k: K)
 			-- Associate `v' with key `k'. Put `v' at the end of table.
 			-- Resize table if necessary.
 			-- Do not move cursors.
@@ -563,7 +563,7 @@ feature -- Element change
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Copy `other' to current container.
 			-- Move all cursors `off' (unless `other = Current').
 		local
@@ -576,7 +576,7 @@ feature -- Duplication
 
 feature -- Iteration
 
-	do_all_with_key (an_action: PROCEDURE [ANY, TUPLE [G, K]]) is
+	do_all_with_key (an_action: PROCEDURE [ANY, TUPLE [G, K]])
 			-- Apply `an_action' to every item, from first to last.
 			-- `an_action' receives the item and its key.
 			-- (Semantics not guaranteed if `an_action' changes the structure.)
@@ -595,7 +595,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if_with_key (an_action: PROCEDURE [ANY, TUPLE [G, K]]; a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN]) is
+	do_if_with_key (an_action: PROCEDURE [ANY, TUPLE [G, K]]; a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
 			-- `an_action' and `a_test' receive the item and its key.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
@@ -620,7 +620,7 @@ feature -- Iteration
 			end
 		end
 
-	there_exists_with_key (a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN]): BOOLEAN is
+	there_exists_with_key (a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for at least one item and its key?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		local
@@ -642,7 +642,7 @@ feature -- Iteration
 			end
 		end
 
-	for_all_with_key (a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN]): BOOLEAN is
+	for_all_with_key (a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for all items and their keys?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		local
@@ -667,7 +667,7 @@ feature -- Iteration
 
 feature {NONE} -- Implementation
 
-	internal_set_key_equality_tester (a_tester: like key_equality_tester) is
+	internal_set_key_equality_tester (a_tester: like key_equality_tester)
 			-- Set `key_equality_tester' to `a_tester'.
 			-- (No precondition, to be used internally only.)
 		do
@@ -678,7 +678,7 @@ feature {NONE} -- Implementation
 	internal_keys: DS_SPARSE_TABLE_KEYS [G, K]
 			-- View of current table as a linear representation of its keys
 
-	initialized: BOOLEAN is
+	initialized: BOOLEAN
 			-- Some Eiffel compilers check invariants even when the
 			-- execution of the creation procedure is not completed.
 			-- (In this case, checking the assertions of the being
@@ -691,7 +691,7 @@ feature {NONE} -- Implementation
 
 feature {DS_SPARSE_TABLE_CURSOR} -- Cursor implementation
 
-	cursor_key (a_cursor: like new_cursor): K is
+	cursor_key (a_cursor: like new_cursor): K
 			-- Key at `a_cursor' position
 		do
 			Result := key_storage_item (a_cursor.position)

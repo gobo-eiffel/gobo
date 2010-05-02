@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant.
 		do
 			create extension_emitter_factories.make_with_equality_testers (1, Void, string_equality_tester)
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_valid_output_method (a_method_uri, a_method_local_name: STRING): BOOLEAN is
+	is_valid_output_method (a_method_uri, a_method_local_name: STRING): BOOLEAN
 			-- Is `a_method_local_name' a valid output method within `a_method_uri'?
 		require
 			a_method_uri_not_void: a_method_uri /= Void
@@ -64,7 +64,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_extension_emitter_factory_registered (a_uri: STRING): BOOLEAN is
+	is_extension_emitter_factory_registered (a_uri: STRING): BOOLEAN
 			-- Is an extension emitter factory registered for `a_uri'?
 		require
 			a_uri_not_void: a_uri /= Void
@@ -75,7 +75,7 @@ feature -- Status report
 
 feature -- Element change
 
-	register_extension_emitter_factory (a_extension_emitter_factory: XM_XSLT_EXTENSION_EMITTER_FACTORY) is
+	register_extension_emitter_factory (a_extension_emitter_factory: XM_XSLT_EXTENSION_EMITTER_FACTORY)
 			-- Register `a_extension_emitter_factory' as the emitter factory for methods in `a_uri'.
 		require
 			a_extension_emitter_factory_not_void: a_extension_emitter_factory /= Void
@@ -86,7 +86,7 @@ feature -- Element change
 			extension_emitter_factory_registered: is_extension_emitter_factory_registered (a_extension_emitter_factory.namespace_uri)
 		end
 
-	set_defaults (a_method_uri, a_method_local_name: STRING; a_properties: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+	set_defaults (a_method_uri, a_method_local_name: STRING; a_properties: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER)
 			-- Set defaults for `a_method_local_name' within `a_method_uri'.
 		require
 			a_method_uri_not_void: a_method_uri /= Void
@@ -102,7 +102,7 @@ feature {XM_XSLT_SERIALIZER} -- Creation
 
 	new_receiver (a_method_uri, a_method_local_name: STRING; a_serializer: XM_XSLT_SERIALIZER;
 		a_result_stream: XM_OUTPUT; a_properties: XM_XSLT_OUTPUT_PROPERTIES;
-		a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]): XM_XPATH_RECEIVER is
+		a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]): XM_XPATH_RECEIVER
 			-- New receiver chain including an emitter
 		require
 			a_method_uri_not_void: a_method_uri /= Void
@@ -135,7 +135,7 @@ feature {XM_XSLT_SERIALIZER} -- Creation
 feature {XM_XSLT_UNCOMMITTED_EMITTER} -- Creation
 
 	new_xml_emitter (a_serializer: XM_XSLT_SERIALIZER; a_result_stream: XM_OUTPUT;	a_properties: XM_XSLT_OUTPUT_PROPERTIES;
-		a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]): DS_PAIR [XM_XPATH_RECEIVER, XM_XSLT_EMITTER] is
+		a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]): DS_PAIR [XM_XPATH_RECEIVER, XM_XSLT_EMITTER]
 			-- New receiver chain including an xml emitter
 		require
 			a_serializer_not_void: a_serializer /= Void
@@ -171,7 +171,7 @@ feature {XM_XSLT_UNCOMMITTED_EMITTER} -- Creation
 		end
 
 	new_xhtml_emitter (a_serializer: XM_XSLT_SERIALIZER; a_result_stream: XM_OUTPUT; a_properties: XM_XSLT_OUTPUT_PROPERTIES;
-		a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]): DS_PAIR [XM_XPATH_RECEIVER, XM_XSLT_EMITTER] is
+		a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]): DS_PAIR [XM_XPATH_RECEIVER, XM_XSLT_EMITTER]
 			-- New receiver chain including an xhtml emitter
 		require
 			a_serializer_not_void: a_serializer /= Void
@@ -202,7 +202,7 @@ feature {XM_XSLT_UNCOMMITTED_EMITTER} -- Creation
 			-- Phase three (a) of serialization
 			if a_properties.escape_uri_attributes then
 				create {XM_XSLT_URI_ESCAPER} l_receiver.make (l_receiver, True)
-			end			
+			end
 			-- Phase one of serialization
 			if a_properties.include_content_type then
 				create {XM_XSLT_META_TAG_INSERTER} l_receiver.make (l_receiver, a_properties, True)
@@ -211,11 +211,11 @@ feature {XM_XSLT_UNCOMMITTED_EMITTER} -- Creation
 		ensure
 			new_xhtml_emitter_not_void: Result /= Void
 			receiver_not_void: Result.first /= Void
-			emitter_not_void: Result.second /= Void			
+			emitter_not_void: Result.second /= Void
 		end
 
 	new_html_emitter (a_serializer: XM_XSLT_SERIALIZER; a_result_stream: XM_OUTPUT; a_properties: XM_XSLT_OUTPUT_PROPERTIES;
-		a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]): DS_PAIR [XM_XPATH_RECEIVER, XM_XSLT_EMITTER] is
+		a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]): DS_PAIR [XM_XPATH_RECEIVER, XM_XSLT_EMITTER]
 			-- New receiver chain including an html emitter
 		require
 			a_serializer_not_void: a_serializer /= Void
@@ -229,7 +229,7 @@ feature {XM_XSLT_UNCOMMITTED_EMITTER} -- Creation
 			-- Phases two, three (e) and five of serialization
 			create l_html_emitter.make (a_serializer, a_result_stream, a_properties)
 			l_receiver := l_html_emitter
-			-- Phase four of serialization			
+			-- Phase four of serialization
 			if a_properties.indent then
 				create {XM_XSLT_HTML_INDENTER} l_receiver.make (a_serializer, l_html_emitter, a_properties)
 			end
@@ -251,11 +251,11 @@ feature {XM_XSLT_UNCOMMITTED_EMITTER} -- Creation
 		ensure
 			new_html_emitter_not_void: Result /= Void
 			receiver_not_void: Result.first /= Void
-			emitter_not_void: Result.second /= Void			
+			emitter_not_void: Result.second /= Void
 		end
 
 	new_text_emitter (a_serializer: XM_XSLT_SERIALIZER; a_result_stream: XM_OUTPUT; a_properties: XM_XSLT_OUTPUT_PROPERTIES;
-		a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]): XM_XPATH_RECEIVER is
+		a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]): XM_XPATH_RECEIVER
 			-- New receiver chain including a text emitter
 		require
 			a_serializer_not_void: a_serializer /= Void
@@ -287,4 +287,4 @@ invariant
 	normalizer_factory_not_void: normalizer_factory /= Void
 
 end
-	
+

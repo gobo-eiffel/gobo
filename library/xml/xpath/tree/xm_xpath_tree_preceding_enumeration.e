@@ -11,7 +11,7 @@ note
 	revision: "$Revision$"
 
 class XM_XPATH_TREE_PRECEDING_ENUMERATION
-	
+
 inherit
 
 	XM_XPATH_AXIS_ITERATOR [XM_XPATH_TREE_NODE]
@@ -27,10 +27,10 @@ inherit
 create
 
 	make
-	
+
 feature {NONE} -- Initialization
 
-	make (a_starting_node: XM_XPATH_TREE_NODE; a_node_test: XM_XPATH_NODE_TEST) is
+	make (a_starting_node: XM_XPATH_TREE_NODE; a_node_test: XM_XPATH_NODE_TEST)
 			-- Establish invariant
 		require
 			starting_node_not_void: a_starting_node /= Void
@@ -50,8 +50,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
-			-- Does `Current' yield a node_sequence?	
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			-- Does `Current' yield a node_sequence?
 		local
 			a_tree_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_TREE_NODE]
 		do
@@ -61,14 +61,14 @@ feature -- Access
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Move to next position
 		do
 			index := 1
 			current_item := next_node
 		end
 
-	forth is
+	forth
 			-- Move to next position
 		do
 			index := index + 1
@@ -78,7 +78,7 @@ feature -- Cursor movement
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 			create Result.make (starting_node, node_test)
@@ -90,13 +90,13 @@ feature {NONE} -- Implemnentation
 			-- Next ancestor;
 			--  tested by `is_conforming' and adjusted by advance
 
-	advance_one_step is
+	advance_one_step
 			-- Move to the next candidate node
 		do
 			next_node := next_node.previous_node_in_document_order
 		end
-	
-	is_conforming (a_node: like starting_node): BOOLEAN is
+
+	is_conforming (a_node: like starting_node): BOOLEAN
 			-- Does `a_node' conform to `node_test', or is it `Void'?
 		local
 			is_ancestor: BOOLEAN
@@ -114,7 +114,7 @@ feature {NONE} -- Implemnentation
 			if not is_ancestor then Result := Precursor (a_node) end
 		end
 
-	advance is
+	advance
 			-- Move to the next matching node
 		do
 			from
@@ -128,4 +128,4 @@ feature {NONE} -- Implemnentation
 		end
 
 end
-	
+

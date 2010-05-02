@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_feature: like precursor_feature; a_parent: like parent) is
+	make (a_feature: like precursor_feature; a_parent: like parent)
 			-- Create a new parent feature.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset (a_feature: like precursor_feature; a_parent: like parent) is
+	reset (a_feature: like precursor_feature; a_parent: like parent)
 			-- Reset parent feature.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -53,7 +53,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	is_deferred: BOOLEAN is
+	is_deferred: BOOLEAN
 			-- Is feature inherited as deferred?
 		do
 			Result := has_undefine or precursor_feature.is_deferred
@@ -61,7 +61,7 @@ feature -- Status report
 			definition: Result = (has_undefine or precursor_feature.is_deferred)
 		end
 
-	has_seed (a_seed: INTEGER): BOOLEAN is
+	has_seed (a_seed: INTEGER): BOOLEAN
 			-- Does current parent feature have `a_seed'?
 		do
 			Result := precursor_feature.has_seed (a_seed)
@@ -69,7 +69,7 @@ feature -- Status report
 			definition: Result = precursor_feature.has_seed (a_seed)
 		end
 
-	has_rename: BOOLEAN is
+	has_rename: BOOLEAN
 			-- Does current feature appear in a Rename clause?
 		do
 			Result := new_name /= Void
@@ -77,7 +77,7 @@ feature -- Status report
 			definition: Result = (new_name /= Void)
 		end
 
-	has_redefine: BOOLEAN is
+	has_redefine: BOOLEAN
 			-- Does current feature appear in a Redefine clause?
 		do
 			Result := redefine_name /= Void
@@ -85,7 +85,7 @@ feature -- Status report
 			definition: Result = (redefine_name /= Void)
 		end
 
-	has_undefine: BOOLEAN is
+	has_undefine: BOOLEAN
 			-- Does current feature appear in an Undefine clause?
 		do
 			Result := undefine_name /= Void
@@ -93,7 +93,7 @@ feature -- Status report
 			definition: Result = (undefine_name /= Void)
 		end
 
-	has_select: BOOLEAN is
+	has_select: BOOLEAN
 			-- Does current feature appear in a Select clause?
 		do
 			Result := select_name /= Void
@@ -103,7 +103,7 @@ feature -- Status report
 
 feature -- Access
 
-	extended_name: ET_EXTENDED_FEATURE_NAME is
+	extended_name: ET_EXTENDED_FEATURE_NAME
 			-- Extended feature name
 		do
 			if new_name /= Void then
@@ -115,7 +115,7 @@ feature -- Access
 			extended_name_not_void: Result /= Void
 		end
 
-	name: ET_FEATURE_NAME is
+	name: ET_FEATURE_NAME
 			-- Feature name
 		do
 			if new_name /= Void then
@@ -127,7 +127,7 @@ feature -- Access
 			name_not_void: Result /= Void
 		end
 
-	alias_name: ET_ALIAS_NAME is
+	alias_name: ET_ALIAS_NAME
 			-- Alias name, if any
 		do
 			if new_name /= Void then
@@ -162,7 +162,7 @@ feature -- Access
 			-- Other parent feature being merged or joined
 			-- with current Parent feature
 
-	type: ET_TYPE is
+	type: ET_TYPE
 			-- Return type;
 			-- Void for procedures
 		do
@@ -171,7 +171,7 @@ feature -- Access
 			definition: Result = precursor_feature.type
 		end
 
-	arguments: ET_FORMAL_ARGUMENT_LIST is
+	arguments: ET_FORMAL_ARGUMENT_LIST
 			-- Formal arguments;
 			-- Void if not a routine or a routine with no arguments
 		do
@@ -180,7 +180,7 @@ feature -- Access
 			definition: Result = precursor_feature.arguments
 		end
 
-	first_seed: INTEGER is
+	first_seed: INTEGER
 			-- First seed
 		do
 			Result := precursor_feature.first_seed
@@ -188,7 +188,7 @@ feature -- Access
 			definition: Result = precursor_feature.first_seed
 		end
 
-	other_seeds: ET_FEATURE_IDS is
+	other_seeds: ET_FEATURE_IDS
 			-- Other seeds (feature IDs of first declarations
 			-- of current feature); May be Void if there
 			-- is only one seed (which is then accessible
@@ -199,7 +199,7 @@ feature -- Access
 			definition: Result = precursor_feature.other_seeds
 		end
 
-	clients: ET_CLIENT_LIST is
+	clients: ET_CLIENT_LIST
 			-- Clients to which feature is exported
 		do
 			Result := precursor_feature.clients
@@ -209,7 +209,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_version (other: ET_PARENT_FEATURE): BOOLEAN is
+	same_version (other: ET_PARENT_FEATURE): BOOLEAN
 			-- Do current feature and `other' have the same version?
 		require
 			other_not_void: other /= Void
@@ -224,7 +224,7 @@ feature -- Comparison
 
 feature -- Setting
 
-	set_new_name (a_name: like new_name) is
+	set_new_name (a_name: like new_name)
 			-- Set `new_name' to `a_name'.
 		do
 			new_name := a_name
@@ -232,7 +232,7 @@ feature -- Setting
 			new_name_set: new_name = a_name
 		end
 
-	set_undefine_name (a_name: like undefine_name) is
+	set_undefine_name (a_name: like undefine_name)
 			-- Set `undefine_name' to `a_name'.
 		do
 			undefine_name := a_name
@@ -240,7 +240,7 @@ feature -- Setting
 			undefine_name_set: undefine_name = a_name
 		end
 
-	set_redefine_name (a_name: like redefine_name) is
+	set_redefine_name (a_name: like redefine_name)
 			-- Set `redefine_name' to `a_name'.
 		do
 			redefine_name := a_name
@@ -248,7 +248,7 @@ feature -- Setting
 			redefine_name_set: redefine_name = a_name
 		end
 
-	set_select_name (a_name: like select_name) is
+	set_select_name (a_name: like select_name)
 			-- Set `select_name' to `a_name'.
 		do
 			select_name := a_name
@@ -256,7 +256,7 @@ feature -- Setting
 			select_name_set: select_name = a_name
 		end
 
-	set_merged_feature (a_feature: like merged_feature) is
+	set_merged_feature (a_feature: like merged_feature)
 			-- Set `merged_feature' to `a_feature'.
 		do
 			merged_feature := a_feature
@@ -269,7 +269,7 @@ feature -- Link
 	next: like Current
 			-- Next linked feature if list of features
 
-	set_next (a_next: like Current) is
+	set_next (a_next: like Current)
 			-- Set `next' to `a_next'.
 		do
 			next := a_next

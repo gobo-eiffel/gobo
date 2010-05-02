@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	agent_actual_argument: ET_AGENT_ARGUMENT_OPERAND is
+	agent_actual_argument: ET_AGENT_ARGUMENT_OPERAND
 			-- Agent actual argument in comma-separated list
 		do
 			Result := Current

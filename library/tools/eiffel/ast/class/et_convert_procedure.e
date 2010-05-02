@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_types: like types) is
+	make (a_name: like name; a_types: like types)
 			-- Create a new conversion procedure.
 		require
 			a_name_not_void: a_name /= Void
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_convert_from: BOOLEAN is True
+	is_convert_from: BOOLEAN = True
 			-- Is it a conversion from another type?
 
 feature -- Access
@@ -53,13 +53,13 @@ feature -- Access
 	right_parenthesis: ET_SYMBOL
 			-- Left parenthesis symbol
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := right_parenthesis
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := right_parenthesis.break
@@ -67,7 +67,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_left_parenthesis (a_parenthesis: like left_parenthesis) is
+	set_left_parenthesis (a_parenthesis: like left_parenthesis)
 			-- Set `left_parenthesis' to `a_parenthesis'.
 		require
 			a_parenthesis_not_void: a_parenthesis /= Void
@@ -77,7 +77,7 @@ feature -- Setting
 			left_parenthesis_set: left_parenthesis = a_parenthesis
 		end
 
-	set_right_parenthesis (a_parenthesis: like right_parenthesis) is
+	set_right_parenthesis (a_parenthesis: like right_parenthesis)
 			-- Set `right_parenthesis' to `a_parenthesis'.
 		require
 			a_parenthesis_not_void: a_parenthesis /= Void
@@ -89,7 +89,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_convert_procedure (Current)

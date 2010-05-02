@@ -21,9 +21,9 @@ inherit
 
 feature -- Access
 
-	Static_error: INTEGER is 1
-	Type_error: INTEGER is 2
-	Dynamic_error: INTEGER is 3
+	Static_error: INTEGER = 1
+	Type_error: INTEGER = 2
+	Dynamic_error: INTEGER = 3
 
 end
-	
+

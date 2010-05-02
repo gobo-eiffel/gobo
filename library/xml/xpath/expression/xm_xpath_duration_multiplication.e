@@ -13,7 +13,7 @@ revision: "$Revision$"
 class XM_XPATH_DURATION_MULTIPLICATION
 
 inherit
-	
+
 	XM_XPATH_ARITHMETIC_EXPRESSION
 		redefine
 			make, evaluate_item
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; a_operand_two: XM_XPATH_EXPRESSION) is
+	make (a_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; a_operand_two: XM_XPATH_EXPRESSION)
 			-- Establish invariant
 		do
 			-- One of the operands evaluates to a duration - we ensure it is the first one.
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 			-- We only take this path if the type could not be determined statically.
 		local
@@ -105,4 +105,4 @@ invariant
 	operator: operator = Multiply_token xor operator = Division_token
 
 end
-	
+

@@ -36,7 +36,7 @@ inherit
 
 feature -- Execution
 
-	set_up is
+	set_up
 			-- Setup for a test.
 		do
  			test_dir := Execution_environment.variable_value ("GOBO")
@@ -73,7 +73,7 @@ feature -- Execution
 			expected_exit_code := 0
 		end
 
-	tear_down is
+	tear_down
 			-- Tear down after a test.
 		do
 			file_system.set_current_working_directory (old_cwd)
@@ -81,7 +81,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	write_build_file (a_tag, a_filename: STRING)is
+	write_build_file (a_tag, a_filename: STRING)
 			-- Write concrete build file for test named `a_tag' into file named `a_filename';
 			-- use `project' as a template for the buildfile content, if existing replace
 			-- token 'TEST_TAG' with `a_tag' and token 'TASKS' with `tasks'.
@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 	test_dir: STRING
 			-- Test directory used as current working directory during test run
 
-	basic_test (a_tag: STRING) is
+	basic_test (a_tag: STRING)
 			-- Run test with tag `a_tag.
 			-- Note: since all geant functional tests work very similar this routine
 			-- issues the individual steps of such a test. The behavior can be
@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 	expected_exit_code: INTEGER
 			-- exit code the call to 'geant' is expected to return
 
-	project: STRING is
+	project: STRING =
 			-- Buildfile content for test
 			-- NOTE: "[ means left aligned, "{ means as is
 		"[
@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 			</project>
 		]"
 
-	default_expected_stdout_txt: STRING is
+	default_expected_stdout_txt: STRING
 			-- Template text for default output of build run,
 			-- which contains placeholder 'TASK_OUTPUT' which will
 			-- be replaced during test run
@@ -230,7 +230,7 @@ feature {NONE} -- Implementation
 			result_is_verbose_template: verbose implies Result = default_expected_verbose_stdout_txt
 		end
 
-	default_expected_verbose_stdout_txt: STRING is
+	default_expected_verbose_stdout_txt: STRING =
 		-- Default text written to stdout by geant when `verbose' = True
 "{
 Loading Project's configuration from build.eant
@@ -241,7 +241,7 @@ build1.t1:
 TASK_OUTPUT
 }"
 
-	default_expected_non_verbose_stdout_txt: STRING is
+	default_expected_non_verbose_stdout_txt: STRING =
 		-- Default text written to stdout by geant when `verbose' = False
 "{
 TASK_OUTPUT
@@ -249,7 +249,7 @@ TASK_OUTPUT
 
 feature {NONE} -- Assertion routines
 
-	assert_filecontent_equal_to_string (a_tag, a_filename, a_expected_content: STRING) is
+	assert_filecontent_equal_to_string (a_tag, a_filename, a_expected_content: STRING)
 			-- Assert there is no difference between the content of
 			-- the file named `a_filename' and a_expected_content'
 			-- (Expand environment variables in `a_filename'.)

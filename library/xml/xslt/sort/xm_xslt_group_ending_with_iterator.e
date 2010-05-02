@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 	make (a_population: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM];
 			a_key: XM_XSLT_PATTERN;
 			a_context: XM_XSLT_EVALUATION_CONTEXT;
-			a_locator: XM_XPATH_LOCATOR) is
+			a_locator: XM_XPATH_LOCATOR)
 			-- Establish invariant.
 		require
 			a_population_not_void: a_population /= Void
@@ -54,12 +54,12 @@ feature -- Access
 	item: XM_XPATH_ITEM
 			-- Initial item of current group
 
-	current_grouping_key: XM_XPATH_ATOMIC_VALUE is
+	current_grouping_key: XM_XPATH_ATOMIC_VALUE
 			-- Grouping key for current group
 		do
 			-- Result := Void
 		end
-	
+
 feature -- Status report
 
 	after: BOOLEAN
@@ -67,7 +67,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move to next position
 		local
 			an_error: XM_XPATH_ERROR_VALUE
@@ -128,7 +128,7 @@ feature -- Cursor movement
 
 feature -- Evaluation
 
-	current_group_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	current_group_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			-- Iterator over the members of the current group, in population order.
 		do
 			if current_members.is_empty then
@@ -140,12 +140,12 @@ feature -- Evaluation
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 			create Result.make (population.another, key_pattern, base_context, locator)
 		end
-	
+
 feature {NONE} -- Implementation
 
 	population: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 
 	base_context: XM_XSLT_EVALUATION_CONTEXT
 			-- Original context
-	
+
 	running_context: XM_XSLT_EVALUATION_CONTEXT
 			-- Context used
 
@@ -180,4 +180,4 @@ invariant
 	running_context_not_void: running_context /= Void
 
 end
-	
+

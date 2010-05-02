@@ -9,7 +9,7 @@ note
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class XM_TEST_STRING_EXTERNAL_RESOLVER
 
 inherit
@@ -21,18 +21,18 @@ inherit
 		end
 
 create
-	
+
 	make
-		
+
 feature -- Operations
 
-	initialize is
+	initialize
 			-- Reset depth.
 		do
 			depth := 0
 		end
-		
-	resolve (a_string: STRING) is
+
+	resolve (a_string: STRING)
 			-- Increement depth..
 		do
 			Precursor (a_string)
@@ -42,8 +42,8 @@ feature -- Operations
 		ensure then
 			depth_increased: not has_error implies depth = old depth + 1
 		end
-	
-	resolve_finish is
+
+	resolve_finish
 			-- Decrement depth..
 		do
 			Precursor

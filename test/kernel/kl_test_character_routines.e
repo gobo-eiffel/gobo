@@ -26,14 +26,14 @@ create
 
 feature -- Test
 
-	test_is_digit is
+	test_is_digit
 			-- Test feature `is_digit'.
 		do
 			assert ("0 is a digit", CHARACTER_.is_digit ('0'))
 			assert ("a is not a digit", not CHARACTER_.is_digit ('a'))
 		end
 
-	test_is_hex_digit is
+	test_is_hex_digit
 			-- Test feature `is_hex_digit'.
 		do
 			assert ("0 is a hex digit", CHARACTER_.is_hex_digit ('0'))

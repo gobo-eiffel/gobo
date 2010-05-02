@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_executable: XM_XSLT_EXECUTABLE; a_select_expression: XM_XPATH_EXPRESSION; disabled: BOOLEAN; a_module_number, a_line_number: INTEGER) is
+	make (an_executable: XM_XSLT_EXECUTABLE; a_select_expression: XM_XPATH_EXPRESSION; disabled: BOOLEAN; a_module_number, a_line_number: INTEGER)
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
@@ -89,8 +89,8 @@ feature -- Access
 
 	instruction_name: STRING
 			-- Name of instruction, for diagnostics
-	
-	item_type: XM_XPATH_ITEM_TYPE is
+
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, when known
 		do
 			Result := text_node_kind_test
@@ -102,13 +102,13 @@ feature -- Access
 
 feature -- Status report
 
-	is_value_of: BOOLEAN is
+	is_value_of: BOOLEAN
 			-- Is `Current' an `XM_XSLT_COMPILED_VALUE_OF'?
 		do
 			Result := True
 		end
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -125,7 +125,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	type_check (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	type_check (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type checking
 		do
 			-- do nothing
@@ -133,7 +133,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_orphan: XM_XPATH_ORPHAN
@@ -154,7 +154,7 @@ feature -- Evaluation
 			end
 		end
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
 			expand_children (a_context)
@@ -169,7 +169,7 @@ feature -- Evaluation
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
@@ -181,4 +181,4 @@ feature {NONE} -- Implementation
 			-- Receiver options
 
 end
-	
+

@@ -1,7 +1,7 @@
 note
 
 	description: "[
-		Infinite containers whose items are in one-to-one 
+		Infinite containers whose items are in one-to-one
 		correspondence with the integers.
 		]"
 	legal: "See notice at end of class."

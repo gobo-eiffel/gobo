@@ -22,15 +22,15 @@ create
 
 feature -- Access
 
-	program_name: STRING is "pcre"
+	program_name: STRING = "pcre"
 			-- Program name
 
-	library_name: STRING is "regexp"
+	library_name: STRING = "regexp"
 			-- Library name of example
 
 feature -- Test
 
-	test_pcre is
+	test_pcre
 			-- Test 'pcre' example.
 		local
 			pcre_exe: STRING
@@ -57,7 +57,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory where data files are located
 		once
 			Result := file_system.nested_pathname ("${GOBO}", <<"test", "example", "regexp", "data">>)
@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 			data_dirname_not_empty: Result.count > 0
 		end
 
-	pcre_filename: STRING is
+	pcre_filename: STRING
 			-- Name of expected output file
 		once
 			Result := file_system.pathname (data_dirname, "pcre.txt")
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 			pcre_filename_not_empty: Result.count > 0
 		end
 
-	freeise_pcre_filename: STRING is "output2.log"
+	freeise_pcre_filename: STRING = "output2.log"
 			-- Name of file containing expected output
 			-- when run with the free version of ISE Eiffel
 			-- under Linux/Unix

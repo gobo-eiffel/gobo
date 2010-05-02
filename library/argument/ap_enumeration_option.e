@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Perform the common initialization steps.
 		do
 			Precursor
@@ -46,7 +46,7 @@ feature -- Access
 
 feature -- Status setting
 
-	extend (a_value: STRING) is
+	extend (a_value: STRING)
 			-- Extend the possible values by `a_value'.
 			-- Update the parameter name.
 		require
@@ -57,7 +57,7 @@ feature -- Status setting
 			update_parameter_description
 		end
 
-	remove (a_value: STRING) is
+	remove (a_value: STRING)
 			-- Remove `a_value' from the possible values.
 			-- Update the parameter name.
 		require
@@ -68,7 +68,7 @@ feature -- Status setting
 			update_parameter_description
 		end
 
-	update_parameter_description is
+	update_parameter_description
 			-- Update the description of the parameter.
 		local
 			new_name: STRING
@@ -90,7 +90,7 @@ feature -- Status setting
 
 feature {AP_PARSER} -- Parser Interface
 
-	record_occurrence (a_parser: AP_PARSER) is
+	record_occurrence (a_parser: AP_PARSER)
 			-- This option was found during parsing by `a_parser'.
 		local
 			error: AP_ERROR

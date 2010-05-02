@@ -30,14 +30,14 @@ inherit
 
 feature -- Access
 
-	date: DT_DATE_VALUE is
+	date: DT_DATE_VALUE
 			-- Date part
 		deferred
 		ensure
 			date_not_void: Result /= Void
 		end
 
-	time: DT_TIME_VALUE is
+	time: DT_TIME_VALUE
 			-- Time part
 		deferred
 		ensure
@@ -46,7 +46,7 @@ feature -- Access
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Printable representation
 			-- (year/month/day hour:minute:second[.millisecond])
 			-- (The millisecond part appears only when not zero.)
@@ -55,7 +55,7 @@ feature -- Output
 			append_to_string (Result)
 		end
 
-	precise_out: STRING is
+	precise_out: STRING
 			-- Printable representation
 			-- (year/month/day hour:minute:second.millisecond)
 		do
@@ -63,7 +63,7 @@ feature -- Output
 			append_precise_to_string (Result)
 		end
 
-	append_to_string (a_string: STRING) is
+	append_to_string (a_string: STRING)
 			-- Append printable representation
 			-- (year/month/day hour:minute:second[.millisecond]) to `a_string'.
 			-- (The millisecond part appears only when not zero.)
@@ -73,7 +73,7 @@ feature -- Output
 			append_time_to_string (a_string)
 		end
 
-	append_precise_to_string (a_string: STRING) is
+	append_precise_to_string (a_string: STRING)
 			-- Append printable representation
 			-- (year/month/day hour:minute:second.millisecond)
 			-- to `a_string'.

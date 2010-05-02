@@ -22,7 +22,7 @@ create
 
 feature -- Test
 
-	test_charconv is
+	test_charconv
 			-- Test feature 'charconv'.
 		local
 			br: BASIC_ROUTINES
@@ -38,7 +38,7 @@ feature -- Test
 			assert ("charconv2", br.charconv (i) = c)
 		end
 
-	test_bottom_int_div is
+	test_bottom_int_div
 			-- Test feature 'bottom_int_div'.
 		local
 			br: BASIC_ROUTINES
@@ -79,7 +79,7 @@ feature -- Test
 			assert ("div8", br.bottom_int_div (i1, i2) = i3)
 		end
 
-	test_up_int_div is
+	test_up_int_div
 			-- Test feature 'up_int_div'.
 		local
 			br: BASIC_ROUTINES

@@ -27,7 +27,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_target: like target; a_name: like qualified_name; args: like arguments) is
+	make (a_target: like target; a_name: like qualified_name; args: like arguments)
 			-- Create a new feature call.
 		require
 			a_name_not_void: a_name /= Void
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset call as it was when it was last parsed.
 		do
 			Precursor
@@ -56,7 +56,7 @@ feature -- Access
 	target: ET_EXPRESSION
 			-- Target
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -67,7 +67,7 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			if target /= Void then
@@ -79,7 +79,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_name (a_name: like name) is
+	set_name (a_name: like name)
 			-- Set `name' to `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -89,7 +89,7 @@ feature -- Setting
 			name_set: name = a_name
 		end
 
-	set_target (a_target: like target) is
+	set_target (a_target: like target)
 			-- Set `target' to `a_target'.
 		do
 			target := a_target
@@ -97,7 +97,7 @@ feature -- Setting
 			target_set: target = a_target
 		end
 
-	set_arguments (args: like arguments) is
+	set_arguments (args: like arguments)
 			-- Set `arguments' to `args'.
 		do
 			arguments := args

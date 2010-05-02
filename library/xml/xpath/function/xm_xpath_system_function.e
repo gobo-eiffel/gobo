@@ -26,13 +26,13 @@ feature -- Access
 	namespace_uri, name: STRING
 			-- Qualified function name
 
-	is_system_function: BOOLEAN is
+	is_system_function: BOOLEAN
 			-- Is `Current' an XPath system function?
 		do
 			Result := True
 		end
 
-	as_system_function: XM_XPATH_SYSTEM_FUNCTION is
+	as_system_function: XM_XPATH_SYSTEM_FUNCTION
 			-- `Current' seen as an XPath system function
 		do
 			Result := Current
@@ -40,7 +40,7 @@ feature -- Access
 
 feature -- Status report
 
-	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
+	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE
 			-- Required type for argument number `argument_number'
 		require
 			argument_number_in_range: argument_number > 0 and then argument_number <= supplied_argument_count
@@ -51,7 +51,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		do
 			Precursor (a_replacement)
@@ -60,7 +60,7 @@ feature -- Optimization
 
 feature -- Element change
 
-	use_context_item_as_default is
+	use_context_item_as_default
 			-- Set "." as the default value for the first and only argument.
 		local
 			a_context_item_expression: XM_XPATH_CONTEXT_ITEM_EXPRESSION
@@ -74,7 +74,7 @@ feature -- Element change
 			end
 		end
 
-	add_context_document_argument (a_position: INTEGER; an_augmented_name: STRING) is
+	add_context_document_argument (a_position: INTEGER; an_augmented_name: STRING)
 			-- Add an implicit argument referring to the context document.
 			-- Called by functions such as id() and key() that take the context document as an implicit argument
 		require
@@ -107,7 +107,7 @@ feature -- Element change
 			end
 		end
 
-	set_argument_error_code (an_error_code: STRING) is
+	set_argument_error_code (an_error_code: STRING)
 			-- Set error code to be issued by `check_argument'.
 		require
 			error_code_not_empty: an_error_code /= void and then an_error_code.count > 0
@@ -119,7 +119,7 @@ feature -- Element change
 
 feature {XM_XPATH_SYSTEM_FUNCTION} -- Local
 
-	check_non_creating is
+	check_non_creating
 			-- Check non-creating special property.
 		require
 			special_properties_computed: are_special_properties_computed
@@ -153,7 +153,7 @@ feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 	argument_error_code: STRING
 			-- Error code set by `check_argument'
 
-	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		local
 			l_counter: INTEGER
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 			-- Minimum and maximum number of arguments permitted;
 			-- Maximum_argument_count = -1 implies no maximum
 
-	check_argument (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_argument_number: INTEGER; a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_argument (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_argument_number: INTEGER; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Perform static type checking on an argument to a function call, and add
 			--  type conversion logic where necessary.
 		require

@@ -94,6 +94,7 @@ Version 3.10 - ?
 
 	* Removed classes and features that had been marked as obsolete
 	  in 2004 or before.
+	* Removed warnings when compiling with ISE 6.6.
 
 Version 3.9 - 20 November 2008
 

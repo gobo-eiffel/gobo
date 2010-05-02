@@ -21,7 +21,7 @@ inherit
 		end
 
 	XM_XPATH_TYPE
-	
+
 	XM_XPATH_ERROR_TYPES
 
 	XM_XPATH_SHARED_CONFORMANCE
@@ -32,7 +32,7 @@ inherit
 
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
-	
+
 	UT_SHARED_FILE_URI_ROUTINES
 		export {NONE} all end
 
@@ -42,7 +42,7 @@ create
 
 feature -- Test
 
-	test_zero_or_one_no_error is
+	test_zero_or_one_no_error
 			-- Test fn:zero-or-one ('a') returns 'a'.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -62,7 +62,7 @@ feature -- Test
 			assert ("First value is a", STRING_.same_string (a_string_value.string_value, "a"))
 		end
 
-	test_zero_or_one_error is
+	test_zero_or_one_error
 			-- Test fn:zero-or-one (('a', 'b')) is an error.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -76,7 +76,7 @@ feature -- Test
 			assert ("Error FORG0003", STRING_.same_string (an_evaluator.error_value.code, "FORG0003"))
 		end
 
-	test_exactly_one_no_error is
+	test_exactly_one_no_error
 			-- Test fn:exactly-one ('a') returns 'a'.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -96,7 +96,7 @@ feature -- Test
 			assert ("First value is a", STRING_.same_string (a_string_value.string_value, "a"))
 		end
 
-	test_exactly_one_error is
+	test_exactly_one_error
 			-- Test fn:exactly-one (('a', 'b')) is an error.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -110,7 +110,7 @@ feature -- Test
 			assert ("Error FORG0004", STRING_.same_string (an_evaluator.error_value.code, "FORG0005"))
 		end
 
-	test_one_or_more_no_error is
+	test_one_or_more_no_error
 			-- Test fn:one-or-more ('a') returns 'a'.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -130,7 +130,7 @@ feature -- Test
 			assert ("First value is a", STRING_.same_string (a_string_value.string_value, "a"))
 		end
 
-	test_one_or_more_error is
+	test_one_or_more_error
 			-- Test fn:one-or-more (()) is an error.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -144,14 +144,14 @@ feature -- Test
 			assert ("Error FORG0005", STRING_.same_string (an_evaluator.error_value.code, "FORG0004"))
 		end
 
-	set_up is
+	set_up
 		do
 			conformance.set_basic_xslt_processor
 		end
 
 feature {NONE} -- Implementation
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}",
@@ -161,8 +161,8 @@ feature {NONE} -- Implementation
 			data_dirname_not_void: Result /= Void
 			data_dirname_not_empty: not Result.is_empty
 		end
-		
-	languages_xml_uri: UT_URI is
+
+	languages_xml_uri: UT_URI
 			-- URI of file 'languages.xml'
 		local
 			a_path: STRING
@@ -175,4 +175,4 @@ feature {NONE} -- Implementation
 
 end
 
-			
+

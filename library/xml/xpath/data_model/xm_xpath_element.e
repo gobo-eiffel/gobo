@@ -29,7 +29,7 @@ inherit
 
 feature -- Access
 
-	node_kind: STRING is
+	node_kind: STRING
 			-- Identifies the kind of node
 		do
 			Result := "element"
@@ -37,25 +37,25 @@ feature -- Access
 			node_kind_is_element: STRING_.same_string (Result, "element")
 		end
 
-	is_element: BOOLEAN is
+	is_element: BOOLEAN
 			-- Is `Current' an element?
 		do
 			Result := True
 		end
 
-	as_element: XM_XPATH_ELEMENT is
+	as_element: XM_XPATH_ELEMENT
 			-- `Current' seen as an element
 		do
 			Result := Current
 		end
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Type
 		do
 			Result := element_node_kind_test
 		end
 
-	base_uri: STRING is
+	base_uri: STRING
 			-- Base URI as per W3C XML:Base REC
 		local
 			l_uri: UT_URI
@@ -98,7 +98,7 @@ feature -- Access
 			end
 		end
 
-	attribute_value_by_name (a_uri: STRING; a_local_name:STRING): STRING is
+	attribute_value_by_name (a_uri: STRING; a_local_name:STRING): STRING
 			-- Value of named attribute
 		require
 			uri_not_void: a_uri /= Void
@@ -106,18 +106,18 @@ feature -- Access
 		deferred
 		end
 
-	attribute_value (a_fingerprint: INTEGER): STRING is
+	attribute_value (a_fingerprint: INTEGER): STRING
 			-- Value of attribute identified by `a_fingerprint'
 		deferred
 		end
 
-	type_annotation: INTEGER is
+	type_annotation: INTEGER
 			--Type annotation of this node
 		do
 			Result := type_factory.untyped_type.fingerprint
 		end
 
-	uri_code_for_prefix (a_xml_prefix: STRING): INTEGER is
+	uri_code_for_prefix (a_xml_prefix: STRING): INTEGER
 			-- URI code for `a_xml_prefix'
 		require
 			prefix_not_void: a_xml_prefix /= Void
@@ -142,21 +142,21 @@ feature -- Access
 			nearly_positive_result: Result > -2
 		end
 
-	uri_code_for_prefix_code (a_prefix_code: INTEGER): INTEGER is
+	uri_code_for_prefix_code (a_prefix_code: INTEGER): INTEGER
 			-- URI code for `a_prefix_code'
 		deferred
 		ensure
 			nearly_positive_result: Result > -2
 		end
 
-	declared_namespaces: DS_ARRAYED_LIST [INTEGER] is
+	declared_namespaces: DS_ARRAYED_LIST [INTEGER]
 			-- Codes for namespaces declared on `Current'
 		deferred
 		ensure
 			declared_namespaces_not_void: Result /= Void
 		end
 
-	namespace_codes_in_scope: DS_ARRAYED_LIST [INTEGER] is
+	namespace_codes_in_scope: DS_ARRAYED_LIST [INTEGER]
 			-- List of namespace codes in scope, including the XML namespace
 		deferred
 		ensure
@@ -164,7 +164,7 @@ feature -- Access
 			namespace_codes_in_scope_not_empty: not Result.is_empty
 		end
 
-	prefixes_in_scope: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_STRING_VALUE] is
+	prefixes_in_scope: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_STRING_VALUE]
 			-- Namespace prefixes in scope
 		local
 			l_namespace_code_list: DS_ARRAYED_LIST [INTEGER]
@@ -197,7 +197,7 @@ feature -- Access
 			iterator_not_void_nor_in_error: Result /= Void and then not Result.is_error
 		end
 
-	path: STRING is
+	path: STRING
 			-- XPath expression for location within document;
 			-- Used for reporting purposes.
 		local
@@ -221,7 +221,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_nilled: BOOLEAN is
+	is_nilled: BOOLEAN
 			-- Is current node "nilled"? (i.e. xsi: nill="true")
 		do
 			Result := False
@@ -229,7 +229,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_name_code (a_name_code: INTEGER) is
+	set_name_code (a_name_code: INTEGER)
 			-- Set `name_code'.
 			-- Needed (indirectly, through `XM_XPATH_TINY_ELEMENT') by `XM_XSLT_STRIPPER'.
 		require
@@ -239,7 +239,7 @@ feature -- Status setting
 
 feature -- Element change
 
-		output_namespace_nodes (a_receiver: XM_XPATH_RECEIVER; include_ancestors: BOOLEAN) is
+		output_namespace_nodes (a_receiver: XM_XPATH_RECEIVER; include_ancestors: BOOLEAN)
 			-- Output all namespace nodes associated with this element.
 		require
 			receiver_not_void: a_receiver /= Void
@@ -248,7 +248,7 @@ feature -- Element change
 
 feature {NONE} -- Access
 
-	unescaped_uri_characters: DS_HASH_SET [CHARACTER] is
+	unescaped_uri_characters: DS_HASH_SET [CHARACTER]
 			-- Characters not to be escaped for fn:encode-for-uri()
 		local
 			l_character_set: STRING

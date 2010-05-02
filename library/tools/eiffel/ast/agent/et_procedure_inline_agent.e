@@ -21,7 +21,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_formal_args: like formal_arguments; an_actual_args: like actual_arguments) is
+	make (a_formal_args: like formal_arguments; an_actual_args: like actual_arguments)
 			-- Create a new inline agent whose associated feature is a procedure.
 		do
 			make_inline_agent (an_actual_args)

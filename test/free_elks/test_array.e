@@ -24,7 +24,7 @@ create
 
 feature -- Test
 
-	test_subarray is
+	test_subarray
 			-- Test feature `subarray'.
 		local
 			l_ai1: ARRAY [INTEGER]
@@ -42,7 +42,7 @@ feature -- Test
 			assert_integers_equal ("upper_set2", 5, l_ai2.upper)
 		end
 
-	test_subarray___fail_ise_ge is
+	test_subarray___fail_ise_ge
 			-- Test feature `subarray'.
 			-- Does not work with ISE Eiffel and Gobo Eiffel.
 		local
@@ -59,7 +59,7 @@ feature -- Test
 			end
 		end
 
-	test_clear_all is
+	test_clear_all
 			-- Test feature `clear_all'.
 		local
 			l_ai: ARRAY [INTEGER]
@@ -92,7 +92,7 @@ feature -- Test
 			assert_integers_equal ("as_same_upper2", 2, l_as.upper)
 		end
 
-	test_manifest_array_character is
+	test_manifest_array_character
 			-- Test manifest arrays of CHARACTER.
 		local
 			l_array: ARRAY [CHARACTER]
@@ -102,7 +102,7 @@ feature -- Test
 			assert_characters_equal ("item2", 'c', l_array.item (2))
 		end
 
-	test_manifest_array_boolean is
+	test_manifest_array_boolean
 			-- Test manifest arrays of BOOLEAN.
 		local
 			l_array: ARRAY [BOOLEAN]
@@ -113,7 +113,7 @@ feature -- Test
 			assert ("item3", l_array.item (3))
 		end
 
-	test_manifest_array_integer_8 is
+	test_manifest_array_integer_8
 			-- Test manifest arrays of INTEGER_8.
 		local
 			l_array: ARRAY [INTEGER_8]
@@ -126,7 +126,7 @@ feature -- Test
 			assert ("item2", l_array.item (2) = i2)
 		end
 
-	test_manifest_array_integer_16 is
+	test_manifest_array_integer_16
 			-- Test manifest arrays of INTEGER_16.
 		local
 			l_array: ARRAY [INTEGER_16]
@@ -139,7 +139,7 @@ feature -- Test
 			assert ("item2", l_array.item (2) = i2)
 		end
 
-	test_manifest_array_integer_32 is
+	test_manifest_array_integer_32
 			-- Test manifest arrays of INTEGER_32.
 		local
 			l_array: ARRAY [INTEGER_32]
@@ -152,7 +152,7 @@ feature -- Test
 			assert ("item2", l_array.item (2) = i2)
 		end
 
-	test_manifest_array_integer_64 is
+	test_manifest_array_integer_64
 			-- Test manifest arrays of INTEGER_64.
 		local
 			l_array: ARRAY [INTEGER_64]
@@ -165,7 +165,7 @@ feature -- Test
 			assert ("item2", l_array.item (2) = i2)
 		end
 
-	test_manifest_array_natural_8 is
+	test_manifest_array_natural_8
 			-- Test manifest arrays of NATURAL_8.
 		local
 			l_array: ARRAY [NATURAL_8]
@@ -178,7 +178,7 @@ feature -- Test
 			assert ("item2", l_array.item (2) = i2)
 		end
 
-	test_manifest_array_natural_16 is
+	test_manifest_array_natural_16
 			-- Test manifest arrays of NATURAL_16.
 		local
 			l_array: ARRAY [NATURAL_16]
@@ -191,7 +191,7 @@ feature -- Test
 			assert ("item2", l_array.item (2) = i2)
 		end
 
-	test_manifest_array_natural_32 is
+	test_manifest_array_natural_32
 			-- Test manifest arrays of NATURAL_32.
 		local
 			l_array: ARRAY [NATURAL_32]
@@ -204,7 +204,7 @@ feature -- Test
 			assert ("item2", l_array.item (2) = i2)
 		end
 
-	test_manifest_array_natural_64 is
+	test_manifest_array_natural_64
 			-- Test manifest arrays of NATURAL_64.
 		local
 			l_array: ARRAY [NATURAL_64]
@@ -217,7 +217,7 @@ feature -- Test
 			assert ("item2", l_array.item (2) = i2)
 		end
 
-	test_manifest_array_real_32 is
+	test_manifest_array_real_32
 			-- Test manifest arrays of REAL_32.
 		local
 			l_array: ARRAY [REAL_32]
@@ -230,7 +230,7 @@ feature -- Test
 			assert ("item2", l_array.item (2) = r2)
 		end
 
-	test_manifest_array_real_64 is
+	test_manifest_array_real_64
 			-- Test manifest arrays of REAL_64.
 		local
 			l_array: ARRAY [REAL_64]
@@ -243,7 +243,7 @@ feature -- Test
 			assert ("item2", l_array.item (2) = r2)
 		end
 
-	test_manifest_any is
+	test_manifest_any
 			-- Test manifest arrays of ANY.
 		local
 			l_array: ARRAY [ANY]

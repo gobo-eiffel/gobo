@@ -22,15 +22,15 @@ create
 
 feature -- Access
 
-	program_name: STRING is "bang2create"
+	program_name: STRING = "bang2create"
 			-- Program name
 
-	library_name: STRING is "tools"
+	library_name: STRING = "tools"
 			-- Library name of example
 
 feature -- Test
 
-	test_bang2create is
+	test_bang2create
 			-- Test 'bang2create' example.
 		do
 			compile_program

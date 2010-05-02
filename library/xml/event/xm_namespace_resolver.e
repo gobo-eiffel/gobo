@@ -40,13 +40,13 @@ create
 
 feature -- Document
 
-	on_finish is
+	on_finish
 			-- Forward to `next'.
 		do
 			next.on_finish
 		end
 
-	on_start is
+	on_start
 			-- Initialize document variables.
 		do
 			create context.make
@@ -58,8 +58,8 @@ feature -- Forwarding policy
 
 	forward_xmlns: BOOLEAN
 			-- Should xmlns[:] attributes be forwarded to next filter?
-			
-	set_forward_xmlns (a_boolean: BOOLEAN) is
+
+	set_forward_xmlns (a_boolean: BOOLEAN)
 			-- Set forwarding of xmlns[:] attributes policy.
 			-- Default (False): do not forward.
 		do
@@ -67,10 +67,10 @@ feature -- Forwarding policy
 		ensure
 			set: forward_xmlns = a_boolean
 		end
-		
+
 feature -- Element
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Process start of start tag.
 		do
 			context.push
@@ -80,7 +80,7 @@ feature -- Element
 			element_local_part := a_local_part
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
 			-- Process attribute.
 		do
 			if not has_prefix (a_prefix) and is_xmlns (a_local_part) then
@@ -89,7 +89,7 @@ feature -- Element
 					-- Optionally do not eat xmlns attributes
 				if forward_xmlns then
 					attributes_force (a_prefix, a_local_part, a_value)
-				end	
+				end
 			elseif is_xmlns (a_prefix) then
 					-- Prefix declaration.
 				if context.shallow_has (a_prefix) then
@@ -109,7 +109,7 @@ feature -- Element
 			end
 		end
 
-	on_start_tag_finish is
+	on_start_tag_finish
 			-- Process end of start tag.
 		local
 			error_msg: STRING
@@ -124,7 +124,7 @@ feature -- Element
 					error_msg := STRING_.appended_string (error_msg, " in tag <")
 					error_msg := STRING_.appended_string (error_msg, element_prefix)
 					error_msg := STRING_.appended_string (error_msg, ":")
-					error_msg := STRING_.appended_string (error_msg, element_local_part) 
+					error_msg := STRING_.appended_string (error_msg, element_local_part)
 					error_msg := STRING_.appended_string (error_msg, ">")
 					on_error (error_msg)
 				end
@@ -136,7 +136,7 @@ feature -- Element
 			Precursor
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Process end tag.
 		do
 			if has_prefix (a_prefix) then
@@ -149,7 +149,7 @@ feature -- Element
 
 feature {NONE} -- Attribute events
 
-	on_delayed_attributes is
+	on_delayed_attributes
 			-- Resolve attributes.
 		do
 			from
@@ -194,19 +194,19 @@ feature {NONE} -- Context
 
 feature {NONE} -- Context
 
-	is_xmlns (a: STRING): BOOLEAN is
+	is_xmlns (a: STRING): BOOLEAN
 			-- Is this an xmlns[:] declaration?
 		do
 			Result := a /= Void and then same_string (Xmlns, a)
 		end
 
-	is_xml (a: STRING): BOOLEAN is
+	is_xml (a: STRING): BOOLEAN
 			-- Is this a xml: declaration?
 		do
 			Result := a /= Void and then same_string (Xml_prefix, a)
 		end
-		
-	Unprefixed_attribute_namespace: STRING is
+
+	Unprefixed_attribute_namespace: STRING
 			-- Namespace used for unprefixed attributes.
 		do
 			Result := Default_namespace
@@ -222,7 +222,7 @@ feature {NONE} -- Attributes
 	-- mean version of:
 	-- attributes: DS_QUEUE [PREFIX_LOCALPART_VALUE]
 
-	attributes_make is
+	attributes_make
 			-- Intialize queue.
 		do
 			attributes_prefix := new_string_queue
@@ -230,7 +230,7 @@ feature {NONE} -- Attributes
 			attributes_value := new_string_queue
 		end
 
-	attributes_force (a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
+	attributes_force (a_prefix: STRING; a_local_part: STRING; a_value: STRING)
 			-- Like attributes.force.
 		do
 			attributes_prefix.force (a_prefix)
@@ -238,7 +238,7 @@ feature {NONE} -- Attributes
 			attributes_value.force (a_value)
 		end
 
-	attributes_remove is
+	attributes_remove
 			-- Like attributes.remove.
 		require
 			not_empty: not attributes_is_empty
@@ -248,7 +248,7 @@ feature {NONE} -- Attributes
 			attributes_value.remove
 		end
 
-	attributes_is_empty: BOOLEAN is
+	attributes_is_empty: BOOLEAN
 			-- Like attributes.is_empty.
 		do
 			Result := attributes_prefix.is_empty
@@ -260,8 +260,8 @@ feature {NONE} -- Attributes
 
 feature {NONE} -- Error
 
-	Undeclared_namespace_error: STRING is "Undeclared namespace error"
-	Duplicate_namespace_declaration_error: STRING is "Namespace declared twice"
+	Undeclared_namespace_error: STRING = "Undeclared namespace error"
+	Duplicate_namespace_declaration_error: STRING = "Namespace declared twice"
 			-- Error messages
 
 end

@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_pathname: like pathname; a_universe: ET_ECF_INTERNAL_UNIVERSE) is
+	make (a_name: like name; a_pathname: like pathname; a_universe: ET_ECF_INTERNAL_UNIVERSE)
 			-- Create a new cluster.
 		require
 			a_name_not_void: a_name /= Void
@@ -69,7 +69,7 @@ feature -- Access
 	pathname: STRING
 			-- Directory pathname (may be Void)
 
-	full_pathname: STRING is
+	full_pathname: STRING
 			-- Full directory pathname
 		local
 			a_pathname: STRING
@@ -137,7 +137,7 @@ feature -- Access
 			end
 		end
 
-	full_unix_pathname: STRING is
+	full_unix_pathname: STRING
 			-- Full Unix directory pathname
 		do
 			Result := unix_file_system.pathname_from_file_system (full_pathname, file_system)
@@ -158,7 +158,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_valid_eiffel_filename (a_filename: STRING): BOOLEAN is
+	is_valid_eiffel_filename (a_filename: STRING): BOOLEAN
 			-- Is `a_filename' an Eiffel filename which has
 			-- not been excluded?
 		do
@@ -167,7 +167,7 @@ feature -- Status report
 			end
 		end
 
-	is_valid_directory_name (a_dirname: STRING): BOOLEAN is
+	is_valid_directory_name (a_dirname: STRING): BOOLEAN
 			-- Is `a_dirname' a directory name other than "." and
 			-- ".." and which has not been excluded?
 		do
@@ -191,7 +191,7 @@ feature -- Nested
 
 feature -- Setting
 
-	set_file_rules (a_file_rules: like file_rules) is
+	set_file_rules (a_file_rules: like file_rules)
 			-- Set `file_rules' to `a_file_rules'.
 		do
 			file_rules := a_file_rules
@@ -199,7 +199,7 @@ feature -- Setting
 			file_rules_set: file_rules = a_file_rules
 		end
 
-	set_ecf_file_rules (a_file_rules: like ecf_file_rules) is
+	set_ecf_file_rules (a_file_rules: like ecf_file_rules)
 			-- Set `ecf_file_rules' to `a_file_rules'.
 		do
 			ecf_file_rules := a_file_rules
@@ -207,7 +207,7 @@ feature -- Setting
 			ecf_file_rules_set: ecf_file_rules = a_file_rules
 		end
 
-	set_ecf_subclusters (a_subclusters: like ecf_subclusters) is
+	set_ecf_subclusters (a_subclusters: like ecf_subclusters)
 			-- Set `ecf_subclusters' to `a_subclusters'.
 		do
 			if ecf_subclusters /= Void then
@@ -223,7 +223,7 @@ feature -- Setting
 
 feature -- Element change
 
-	fill_subclusters (a_state: ET_ECF_STATE) is
+	fill_subclusters (a_state: ET_ECF_STATE)
 			-- Make sure that clusters in `ecf_subclusters' whose conditions
 			-- satisfy `a_state' are included in `subclusters'.
 			-- Process recursively the clusters in `subclusters'.
@@ -246,7 +246,7 @@ feature -- Element change
 			end
 		end
 
-	fill_file_rules (a_target: ET_ECF_TARGET; a_state: ET_ECF_STATE) is
+	fill_file_rules (a_target: ET_ECF_TARGET; a_state: ET_ECF_STATE)
 			-- Make sure that file rules in `a_target', in `parent' if any,
 			-- and in `ecf_file_rules' whose conditions satisfy `a_state'
 			-- are included in `file_rules'.
@@ -277,7 +277,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	new_recursive_cluster (a_name: STRING): like Current is
+	new_recursive_cluster (a_name: STRING): like Current
 			-- New recursive cluster
 		do
 			create Result.make (a_name, Void, universe)

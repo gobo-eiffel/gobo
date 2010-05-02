@@ -45,7 +45,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_root_class_name (a_name: like root_class_name) is
+	set_root_class_name (a_name: like root_class_name)
 			-- Set `root_class_name' to `a_name'.
 		local
 			an_identifier: ET_IDENTIFIER
@@ -59,7 +59,7 @@ feature -- Setting
 			end
 		end
 
-	set_creation_procedure_name (a_name: like creation_procedure_name) is
+	set_creation_procedure_name (a_name: like creation_procedure_name)
 			-- Set `creation_procedure_name' to `a_name'.
 		local
 			an_identifier: ET_IDENTIFIER

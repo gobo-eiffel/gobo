@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	class_actions: KL_AGENT_ROUTINES [ET_CLASS] is
+	class_actions: KL_AGENT_ROUTINES [ET_CLASS]
 			-- Routines that ought to be in agent classes
 		once
 			create Result
@@ -26,7 +26,7 @@ feature -- Access
 			class_actions_not_void: Result /= Void
 		end
 
-	master_class_actions: KL_AGENT_ROUTINES [ET_MASTER_CLASS] is
+	master_class_actions: KL_AGENT_ROUTINES [ET_MASTER_CLASS]
 			-- Routines that ought to be in agent classes
 		once
 			create Result
@@ -34,7 +34,7 @@ feature -- Access
 			master_class_actions_not_void: Result /= Void
 		end
 
-	universe_actions: KL_AGENT_ROUTINES [ET_UNIVERSE] is
+	universe_actions: KL_AGENT_ROUTINES [ET_UNIVERSE]
 			-- Routines that ought to be in agent classes
 		once
 			create Result

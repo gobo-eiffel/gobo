@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_configuration: XM_XPATH_CONFIGURATION) is
+	make (a_configuration: XM_XPATH_CONFIGURATION)
 			-- Establish invariant.
 		require
 			a_configuration_not_void: a_configuration /= Void
@@ -45,10 +45,10 @@ feature {NONE} -- Initialization
 			create a_file_resolver.make (a_configuration)
 			register_scheme (a_file_resolver)
 		end
-		
+
 feature -- Status report
 
-	supports_registering_schemes: BOOLEAN is
+	supports_registering_schemes: BOOLEAN
 			-- Does `Current' support registering scheme resolvers?
 		do
 			Result := True
@@ -61,8 +61,8 @@ feature -- Status report
 			-- Last error set by `resolve'
 
 feature -- Element change
-	
-	resolve (a_uri: UT_URI; a_context: XM_XPATH_CONTEXT) is
+
+	resolve (a_uri: UT_URI; a_context: XM_XPATH_CONTEXT)
 			-- Resolve `a_uri' to a sequence of nodes.
 		local
 			a_resolver: XM_XPATH_COLLECTION_SCHEME_RESOLVER
@@ -82,7 +82,7 @@ feature -- Element change
 			end
 		end
 
-	register_scheme (a_scheme: XM_XPATH_COLLECTION_SCHEME_RESOLVER) is
+	register_scheme (a_scheme: XM_XPATH_COLLECTION_SCHEME_RESOLVER)
 			-- Register scheme.
 		do
 			schemes.force (a_scheme, a_scheme.scheme)

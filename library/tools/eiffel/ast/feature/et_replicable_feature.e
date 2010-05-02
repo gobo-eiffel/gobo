@@ -20,7 +20,7 @@ inherit
 
 feature -- Status report
 
-	has_replication: BOOLEAN is
+	has_replication: BOOLEAN
 			-- Is current feature replicated?
 		do
 			-- Result := False
@@ -28,7 +28,7 @@ feature -- Status report
 
 feature -- Access
 
-	replicated_feature: ET_REPLICATED_FEATURE is
+	replicated_feature: ET_REPLICATED_FEATURE
 			-- Current feature viewed as a replicated feature
 		require
 			has_replication: has_replication
@@ -38,7 +38,7 @@ feature -- Access
 			definition: ANY_.same_objects (Result, Current)
 		end
 
-	first_feature: ET_ADAPTED_FEATURE is
+	first_feature: ET_ADAPTED_FEATURE
 			-- First feature with a given seed
 		deferred
 		ensure
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Measurement
 
-	selected_count: INTEGER is
+	selected_count: INTEGER
 			-- Number of selected features
 		deferred
 		end

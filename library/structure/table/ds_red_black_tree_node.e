@@ -27,7 +27,7 @@ create {DS_RED_BLACK_TREE}
 
 feature {NONE} -- Initialization
 
-	make (a_item: like item; a_key: like key) is
+	make (a_item: like item; a_key: like key)
 			-- Create a new red black tree node.
 		do
 			Precursor (a_item, a_key)

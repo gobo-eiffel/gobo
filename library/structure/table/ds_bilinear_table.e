@@ -26,7 +26,7 @@ inherit
 
 feature -- Access
 
-	key_for_iteration: K is
+	key_for_iteration: K
 			-- Key at internal cursor position
 		require
 			not_off: not off
@@ -34,14 +34,14 @@ feature -- Access
 			Result := cursor_key (internal_cursor)
 		end
 
-	new_cursor: DS_BILINEAR_TABLE_CURSOR [G, K] is
+	new_cursor: DS_BILINEAR_TABLE_CURSOR [G, K]
 			-- New external cursor for traversal
 		deferred
 		end
 
 feature {DS_BILINEAR_TABLE_CURSOR} -- Cursor implementation
 
-	cursor_key (a_cursor: like new_cursor): K is
+	cursor_key (a_cursor: like new_cursor): K
 			-- Key at `a_cursor' position
 		require
 			a_cursor_not_void: a_cursor /= Void

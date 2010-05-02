@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_axis_type: INTEGER; a_node_test: XM_XPATH_NODE_TEST) is
+	make (an_axis_type: INTEGER; a_node_test: XM_XPATH_NODE_TEST)
 		require
 			valid_axis_type: is_axis_valid (an_axis_type)
 		do
@@ -50,26 +50,26 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
+
 	axis: INTEGER
 			-- Type of axis
 
 	node_test: XM_XPATH_NODE_TEST
 			-- Node test
-	
-	is_axis_expression: BOOLEAN is
+
+	is_axis_expression: BOOLEAN
 			-- Is `Current' an axis expression?
 		do
 			Result := True
 		end
 
-	as_axis_expression: XM_XPATH_AXIS_EXPRESSION is
+	as_axis_expression: XM_XPATH_AXIS_EXPRESSION
 			-- `Current' seen as an axis expression
 		do
 			Result := Current
 		end
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			--Determine the data type of the expression, if possible
 		local
 			principal_axis: INTEGER
@@ -92,7 +92,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Are `Current' and `other' the same expression?
 		local
 			an_axis_expression: XM_XPATH_AXIS_EXPRESSION
@@ -113,13 +113,13 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_node_sequence: BOOLEAN is
+	is_node_sequence: BOOLEAN
 			-- Is `Current' a sequence of zero or more nodes?
 		do
 			Result := True
 		end
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -131,7 +131,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	compute_intrinsic_dependencies is
+	compute_intrinsic_dependencies
 			-- Determine the intrinsic dependencies of an expression.
 		do
 			set_intrinsically_depends_upon_context_item
@@ -139,7 +139,7 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations
 		local
 			l_parent_node: XM_XPATH_PARENT_NODE_EXPRESSION
@@ -152,7 +152,7 @@ feature -- Optimization
 			end
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_message: STRING
@@ -174,7 +174,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			a_replacement.put (Current)
@@ -182,7 +182,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterator over the values of a sequence
 		local
 			an_item: XM_XPATH_ITEM
@@ -201,7 +201,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over a node sequence.
 		local
 			an_item: XM_XPATH_ITEM
@@ -221,8 +221,8 @@ feature -- Evaluation
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
-	
-	compute_cardinality is
+
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			if axis = Self_axis then
@@ -234,7 +234,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			end
 		end
 
-	compute_special_properties is
+	compute_special_properties
 			-- Compute special properties.
 		do
 			initialize_special_properties
@@ -262,7 +262,7 @@ feature {NONE} -- Implementation
 	known_item_type: XM_XPATH_ITEM_TYPE
 			--  Data type of the expression, when known
 
-	axis_description: STRING is
+	axis_description: STRING
 			-- Description of `Current'
 		local
 			a_test_string: STRING
@@ -278,7 +278,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	check_node_test_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_node_test: XM_XPATH_NODE_TEST) is
+	check_node_test_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_node_test: XM_XPATH_NODE_TEST)
 			-- Check static type when context item is a node test.
 		require
 			context_not_void: a_context /= Void

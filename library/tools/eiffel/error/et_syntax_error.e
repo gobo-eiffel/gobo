@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_filename: STRING; a_position: ET_POSITION) is
+	make (a_filename: STRING; a_position: ET_POSITION)
 			-- Create a new Eiffel syntax error at `a_position' in `a_filename'.
 		require
 			a_filename_not_void: a_filename /= Void
@@ -50,7 +50,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_filename (a_filename: like filename) is
+	set_filename (a_filename: like filename)
 			-- Set `filename' to `a_filename'.
 		require
 			a_filename_not_void: a_filename /= Void
@@ -60,7 +60,7 @@ feature -- Setting
 			filename_set: filename = a_filename
 		end
 
-	set_current_class (a_class: like current_class) is
+	set_current_class (a_class: like current_class)
 			-- Set `current_class' to `a_class'.
 		do
 			current_class := a_class
@@ -70,11 +70,11 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	default_validity_template: STRING is "Syntax error:%N$1"
-	default_code: STRING is "gssss"
+	default_validity_template: STRING = "Syntax error:%N$1"
+	default_code: STRING = "gssss"
 			-- Default values
 
-	ssel_default_template: STRING is "SSEL: empty lines not allowed in middle of multi-line manifest strings.%N$1"
+	ssel_default_template: STRING = "SSEL: empty lines not allowed in middle of multi-line manifest strings.%N$1"
 			-- "SSEL: Syntax String Empty Line"
 
 end

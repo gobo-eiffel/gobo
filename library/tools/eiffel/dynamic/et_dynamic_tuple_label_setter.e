@@ -26,7 +26,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_type_set: like source_type_set; an_assigner: like assigner;
-		a_current_feature: like current_feature; a_current_type: like current_type) is
+		a_current_feature: like current_feature; a_current_type: like current_type)
 			-- Create a new Tuple label setter.
 		require
 			a_type_set_not_void: a_type_set /= Void
@@ -51,13 +51,13 @@ feature -- Access
 	assigner: ET_ASSIGNER_INSTRUCTION
 			-- Assigner instruction
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of attachment
 		do
 			Result := assigner.source.position
 		end
 
-	description: STRING is "tuple label setter"
+	description: STRING = "tuple label setter"
 			-- Kind of attachment
 
 invariant

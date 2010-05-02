@@ -14,7 +14,7 @@ class UT_IMPORTED_FORMATTERS
 
 feature -- Access
 
-	INTEGER_FORMATTER_: UT_INTEGER_FORMATTER is
+	INTEGER_FORMATTER_: UT_INTEGER_FORMATTER
 			-- Formatting routines that ought
 			-- to be in class INTEGER
 		once
@@ -23,7 +23,7 @@ feature -- Access
 			integer_formatter_not_void: Result /= Void
 		end
 
-	CHARACTER_FORMATTER_: UT_CHARACTER_FORMATTER is
+	CHARACTER_FORMATTER_: UT_CHARACTER_FORMATTER
 			-- Formatting routines that ought
 			-- to be in class CHARACTER
 		once
@@ -32,7 +32,7 @@ feature -- Access
 			character_formatter_not_void: Result /= Void
 		end
 
-	BOOLEAN_FORMATTER_: UT_BOOLEAN_FORMATTER is
+	BOOLEAN_FORMATTER_: UT_BOOLEAN_FORMATTER
 			-- Formatting routines that ought
 			-- to be in class BOOLEAN
 		once
@@ -41,7 +41,7 @@ feature -- Access
 			boolean_formatter_not_void: Result /= Void
 		end
 
-	STRING_FORMATTER_: UT_STRING_FORMATTER is
+	STRING_FORMATTER_: UT_STRING_FORMATTER
 			-- Formatting routines that ought
 			-- to be in class STRING
 		once
@@ -50,7 +50,7 @@ feature -- Access
 			string_formatter_not_void: Result /= Void
 		end
 
-	ARRAY_FORMATTER_: UT_ARRAY_FORMATTER is
+	ARRAY_FORMATTER_: UT_ARRAY_FORMATTER
 			-- Formatting routines that ought
 			-- to be in class ARRAY
 		once

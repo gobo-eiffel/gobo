@@ -23,7 +23,7 @@ create
 
 feature -- Test
 
-	test_list1 is
+	test_list1
 			-- Test features of DS_LIST.
 		local
 			a_list: DS_LIST [INTEGER]
@@ -50,7 +50,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	check_integer_list1 (a_list: DS_LIST [INTEGER]) is
+	check_integer_list1 (a_list: DS_LIST [INTEGER])
 			-- Test features of list `a_list'.
 		require
 			a_list_not_void: a_list /= Void

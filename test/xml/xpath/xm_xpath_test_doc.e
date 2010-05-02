@@ -42,7 +42,7 @@ create
 
 feature -- Test
 
-	test_collection_not_found is
+	test_collection_not_found
 			-- Test fn:collection("unknown:").
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -55,7 +55,7 @@ feature -- Test
 			assert ("Error FODC0004", an_evaluator.is_error and then STRING_.same_string (an_evaluator.error_value.code, "FODC0004"))
 		end
 
-	test_collection_on_data_directory is
+	test_collection_on_data_directory
 			-- Test fn:collection("../data/").
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -70,7 +70,7 @@ feature -- Test
 			-- TODO: add tests that all documents have same base URI, but each has a separate document-uri.
 		end
 
-	test_default_collection is
+	test_default_collection
 			-- Test fn:collection().
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -84,7 +84,7 @@ feature -- Test
 			assert ("At least 2 documents", an_evaluator.evaluated_items.count >= 2)
 		end
 
-	test_doc_available_function is
+	test_doc_available_function
 			-- Test fn:doc-available()
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -104,7 +104,7 @@ feature -- Test
 			assert ("Result is True", a_boolean_value.value)
 		end
 
-	test_doc_function is
+	test_doc_function
 			-- Test fn:doc()
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -124,7 +124,7 @@ feature -- Test
 			assert ("Result is True", a_boolean_value.value)
 		end
 
-	test_doc_parse_error is
+	test_doc_parse_error
 			-- Test error fn:doc()
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -138,14 +138,14 @@ feature -- Test
 			assert ("FODC0005", STRING_.same_string (an_evaluator.error_value.code, "FODC0005"))
 		end
 
-	set_up is
+	set_up
 		do
 			conformance.set_basic_xslt_processor
 		end
 
 feature {NONE} -- Implementation
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}",
@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 			data_dirname_not_empty: not Result.is_empty
 		end
 
-	books_xml_uri: UT_URI is
+	books_xml_uri: UT_URI
 			-- URI of file 'books.xml'
 		local
 			a_path: STRING

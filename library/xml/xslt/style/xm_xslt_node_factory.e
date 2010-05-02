@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_error_listener: XM_XSLT_ERROR_LISTENER; a_configuration: like configuration) is
+	make (an_error_listener: XM_XSLT_ERROR_LISTENER; a_configuration: like configuration)
 			-- Establish invariant.
 		require
 			error_listener_not_void: an_error_listener /= Void
@@ -53,7 +53,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_element_available (a_uri, a_local_name: STRING): BOOLEAN is
+	is_element_available (a_uri, a_local_name: STRING): BOOLEAN
 			-- Is named element available?
 		require
 			local_name_not_void: a_local_name /= Void
@@ -81,7 +81,7 @@ feature -- Status report
 			end
 		end
 
-	is_xslt_instruction (a_fingerprint: INTEGER): BOOLEAN is
+	is_xslt_instruction (a_fingerprint: INTEGER): BOOLEAN
 			-- Does `a_fingerprint' represent an XSLT instruction?
 		do
 			inspect
@@ -106,7 +106,7 @@ feature -- Status report
 feature -- Creation
 
 	new_element_node (a_document: XM_XPATH_TREE_DOCUMENT; a_parent: XM_XPATH_TREE_COMPOSITE_NODE; an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-							a_name_code: INTEGER; a_sequence_number: INTEGER): XM_XPATH_TREE_ELEMENT is
+							a_name_code: INTEGER; a_sequence_number: INTEGER): XM_XPATH_TREE_ELEMENT
 			-- New element node.
 		local
 			a_uri_code, a_child_index: INTEGER
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 			-- System configuration
 
 	new_xslt_element (a_document: XM_XPATH_TREE_DOCUMENT; a_parent: XM_XPATH_TREE_COMPOSITE_NODE; an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-							a_name_code: INTEGER; a_sequence_number: INTEGER): XM_XSLT_STYLE_ELEMENT is
+							a_name_code: INTEGER; a_sequence_number: INTEGER): XM_XSLT_STYLE_ELEMENT
 			-- New XSLT element.
 		require
 			document_not_void: a_document /= Void
@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 			a_fingerprint: INTEGER
 		do
 			a_fingerprint := shared_name_pool.fingerprint_from_name_code (a_name_code)
-			
+
 			inspect
 				a_fingerprint
 			when Xslt_apply_templates_type_code then
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 				create {XM_XSLT_ATTRIBUTE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 				Result.flag_as_instruction
 			when Xslt_attribute_set_type_code then
-				create {XM_XSLT_ATTRIBUTE_SET} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)				
+				create {XM_XSLT_ATTRIBUTE_SET} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 			when Xslt_analyze_string_type_code then
 				create {XM_XSLT_ANALYZE_STRING} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 				Result.flag_as_instruction
@@ -233,7 +233,7 @@ feature {NONE} -- Implementation
 				create {XM_XSLT_FOR_EACH_GROUP} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 				Result.flag_as_instruction
 			when Xslt_function_type_code then
-				create {XM_XSLT_FUNCTION} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)				
+				create {XM_XSLT_FUNCTION} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 			when Xslt_if_type_code then
 				create {XM_XSLT_IF} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 				Result.flag_as_instruction
@@ -242,7 +242,7 @@ feature {NONE} -- Implementation
 			when Xslt_import_type_code then
 				create {XM_XSLT_IMPORT} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 			when Xslt_include_type_code then
-				create {XM_XSLT_INCLUDE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)								
+				create {XM_XSLT_INCLUDE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 			when Xslt_key_type_code then
 				create {XM_XSLT_KEY} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 			when Xslt_matching_substring_type_code then
@@ -258,16 +258,16 @@ feature {NONE} -- Implementation
 				create {XM_XSLT_NEXT_MATCH} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 				Result.flag_as_instruction
 			when Xslt_non_matching_substring_type_code then
-				create {XM_XSLT_NON_MATCHING_SUBSTRING} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)				
+				create {XM_XSLT_NON_MATCHING_SUBSTRING} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 			when Xslt_number_type_code then
 				create {XM_XSLT_NUMBER} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 				Result.flag_as_instruction
 			when Xslt_otherwise_type_code then
-				create {XM_XSLT_OTHERWISE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)				
+				create {XM_XSLT_OTHERWISE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 			when Xslt_output_type_code then
 				create {XM_XSLT_OUTPUT} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 			when Xslt_output_character_type_code then
-				create {XM_XSLT_OUTPUT_CHARACTER} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)								
+				create {XM_XSLT_OUTPUT_CHARACTER} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 			when Xslt_param_type_code then
 				create {XM_XSLT_PARAM} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 			when Xslt_perform_sort_type_code then
@@ -298,9 +298,9 @@ feature {NONE} -- Implementation
 			when Xslt_variable_type_code then
 				create {XM_XSLT_VARIABLE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 			when Xslt_when_type_code then
-				create {XM_XSLT_WHEN} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)				
+				create {XM_XSLT_WHEN} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 			when Xslt_with_param_type_code then
-				create {XM_XSLT_WITH_PARAM} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)				
+				create {XM_XSLT_WITH_PARAM} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 			else
 			end
 			if Result /= Void then
@@ -315,7 +315,7 @@ feature {NONE} -- Implementation
 		end
 
 	possible_literal_result_element (a_document: XM_XPATH_TREE_DOCUMENT; a_parent: XM_XPATH_TREE_COMPOSITE_NODE; an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-							a_name_code: INTEGER; a_sequence_number: INTEGER): XM_XSLT_STYLE_ELEMENT is
+							a_name_code: INTEGER; a_sequence_number: INTEGER): XM_XSLT_STYLE_ELEMENT
 			-- New literal result element, or extension element.
 			-- TODO - add a locator
 		require
@@ -336,7 +336,7 @@ feature {NONE} -- Implementation
 		end
 
 	new_gexslt_user_defined_element (a_document: XM_XPATH_TREE_DOCUMENT; a_parent: XM_XPATH_TREE_COMPOSITE_NODE; an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-							a_name_code: INTEGER; a_sequence_number: INTEGER): XM_XSLT_STYLE_ELEMENT is
+							a_name_code: INTEGER; a_sequence_number: INTEGER): XM_XSLT_STYLE_ELEMENT
 			-- New gexslt instruction or User-defined Element (or child of latter).
 		require
 			document_not_void: a_document /= Void
@@ -345,7 +345,7 @@ feature {NONE} -- Implementation
 			a_fingerprint: INTEGER
 		do
 			a_fingerprint := shared_name_pool.fingerprint_from_name_code (a_name_code)
-			
+
 			inspect
 				a_fingerprint
 			when Gexslt_collation_type_code then
@@ -367,9 +367,9 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	
+
 	error_listener_not_void: error_listener /= Void
 	configuration_not_void: configuration /= Void
 
 end
-	
+

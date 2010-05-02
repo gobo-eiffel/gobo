@@ -70,12 +70,12 @@ create
 
 feature -- Status report
 
-	is_infix_freeop: BOOLEAN is True
+	is_infix_freeop: BOOLEAN = True
 			-- Is current feature name of the form 'infix "free-operator"'?
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Name of feature
 		do
 			create Result.make (free_operator_name.count + 8)
@@ -86,7 +86,7 @@ feature -- Access
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_infix_free_name (Current)
@@ -94,7 +94,7 @@ feature -- Processing
 
 feature {NONE} -- Constants
 
-	infix_double_quote: STRING is "infix %""
+	infix_double_quote: STRING = "infix %""
 
 invariant
 

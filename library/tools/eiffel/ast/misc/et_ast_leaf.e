@@ -29,26 +29,26 @@ inherit
 
 feature -- Access
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
 			Result := Current
 		end
 
-	first_position: ET_POSITION is
+	first_position: ET_POSITION
 			-- Position of first character of current node in source code
 		do
 			Result := Current
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := Current
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := Current
@@ -59,7 +59,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_break (a_break: like break) is
+	set_break (a_break: like break)
 			-- Set `break' to `a_break'.
 		do
 			break := a_break

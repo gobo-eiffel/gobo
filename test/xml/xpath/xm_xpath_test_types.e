@@ -29,7 +29,7 @@ feature -- Test
 
 	-- Some tests commented out, as they don't apply to a basic xslt processor
 
-	test_types is
+	test_types
 		do
 			conformance.set_basic_xslt_processor
 			assert ("super type", type_factory.decimal_type.super_type = type_factory.numeric_type)

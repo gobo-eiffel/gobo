@@ -26,20 +26,20 @@ create
 
 feature -- Test
 
-	test_bad_type_char is
+	test_bad_type_char
 			-- Test wrong type character.
 		do
 			assert ("test1", not valid_format_and_parameters ("$Q", Void))
 		end
 
-	test_number_of_parameters is
+	test_number_of_parameters
 			-- Test if exactly required number of parameters is detected.
 		do
 			assert ("test1", not valid_format_and_parameters ("$s", Void))
 			assert ("test2", not valid_format_and_parameters ("$s", <<"1", "2">>))
 		end
 
-	test_bad_width is
+	test_bad_width
 			-- Test width not present or not an integer.
 		do
 			assert ("test1", not valid_format_and_parameters ("$*i", <<integer_cell (1), double_cell (1.5)>>))
@@ -47,7 +47,7 @@ feature -- Test
 			assert ("test3", not valid_format_and_parameters ("$**i", <<integer_cell (1)>>))
 		end
 
-	test_bad_precision is
+	test_bad_precision
 			-- Test precision not present or not an integer.
 		do
 			assert ("test1", not valid_format_and_parameters ("$*i", <<integer_cell (1), double_cell (1.5)>>))
@@ -57,7 +57,7 @@ feature -- Test
 			assert ("test5", not valid_format_and_parameters ("$10.f", <<double_cell (1.2)>>))
 		end
 
-	test_bad_flags is
+	test_bad_flags
 			-- Test invalid combination of flags.
 		do
 			assert ("test1", not valid_format_and_parameters ("$0-i", <<integer_cell (1)>>))

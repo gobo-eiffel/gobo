@@ -19,19 +19,19 @@ feature -- Access
 
 feature -- Status report
 
-	passed: BOOLEAN is
+	passed: BOOLEAN
 			-- Has `test' passed?
 		do
 			Result := False
 		end
 
-	failed: BOOLEAN is
+	failed: BOOLEAN
 			-- Has `test' failed?
 		do
 			Result := False
 		end
 
-	aborted: BOOLEAN is
+	aborted: BOOLEAN
 			-- Has `test' aborted?
 		do
 			Result := False
@@ -39,7 +39,7 @@ feature -- Status report
 
 feature -- Output
 
-	print_result (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_result (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print result to `a_file'.
 		require
 			a_file_not_void: a_file /= Void

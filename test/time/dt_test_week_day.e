@@ -27,7 +27,7 @@ create
 
 feature -- Test
 
-	test_make_from_year_month_day_from_sunday is
+	test_make_from_year_month_day_from_sunday
 			-- Test feature `week_day_from_year_month_day' of class DT_WEEK_DAYS_FROM_SUNDAY.
 		local
 			a_day: DT_WEEK_DAY_FROM_SUNDAY
@@ -44,7 +44,7 @@ feature -- Test
 			assert ("sunday2", a_day.is_sunday)
 		end
 
-	test_make_from_year_month_day_from_monday is
+	test_make_from_year_month_day_from_monday
 			-- Test feature `week_day_from_year_month_day' of class DT_WEEK_DAYS_FROM_MONDAY.
 		local
 			a_day: DT_WEEK_DAY_FROM_MONDAY
@@ -61,7 +61,7 @@ feature -- Test
 			assert ("sunday2", a_day.is_sunday)
 		end
 
-	test_next_day_from_sunday is
+	test_next_day_from_sunday
 			-- Test feature `next_day' of class DT_WEEK_DAY_FROM_SUNDAY.
 		do
 			assert ("sunday", week_days_from_sunday.sunday.next_day.is_monday)
@@ -73,7 +73,7 @@ feature -- Test
 			assert ("saturday", week_days_from_sunday.saturday.next_day.is_sunday)
 		end
 
-	test_next_day_from_monday is
+	test_next_day_from_monday
 			-- Test feature `next_day' of class DT_WEEK_DAY_FROM_MONDAY.
 		do
 			assert ("sunday", week_days_from_monday.sunday.next_day.is_monday)
@@ -85,7 +85,7 @@ feature -- Test
 			assert ("saturday", week_days_from_monday.saturday.next_day.is_sunday)
 		end
 
-	test_previous_day_from_sunday is
+	test_previous_day_from_sunday
 			-- Test feature `previous_day' of class DT_WEEK_DAY_FROM_SUNDAY.
 		do
 			assert ("sunday", week_days_from_sunday.monday.previous_day.is_sunday)
@@ -97,7 +97,7 @@ feature -- Test
 			assert ("saturday", week_days_from_sunday.sunday.previous_day.is_saturday)
 		end
 
-	test_previous_day_from_monday is
+	test_previous_day_from_monday
 			-- Test feature `previous_day' of class DT_WEEK_DAY_FROM_MONDAY.
 		do
 			assert ("sunday", week_days_from_monday.monday.previous_day.is_sunday)
@@ -109,13 +109,13 @@ feature -- Test
 			assert ("saturday", week_days_from_monday.sunday.previous_day.is_saturday)
 		end
 
-	test_as_week_day_from_monday_from_sunday is
+	test_as_week_day_from_monday_from_sunday
 			-- Test feature `as_week_day_from_monday' of class DT_WEEK_DAY_FROM_SUNDAY.
 		do
 			assert ("monday", week_days_from_sunday.monday.as_week_day_from_monday.is_monday)
 		end
 
-	test_as_week_day_from_sunday_from_monday is
+	test_as_week_day_from_sunday_from_monday
 			-- Test feature `as_week_day_from_sunday' of class DT_WEEK_DAY_FROM_MONDAY.
 		do
 			assert ("monday", week_days_from_monday.monday.as_week_day_from_sunday.is_monday)

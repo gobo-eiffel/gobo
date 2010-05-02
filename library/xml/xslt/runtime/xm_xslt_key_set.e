@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_fingerprint: INTEGER) is
+	make (a_fingerprint: INTEGER)
 			-- Create set of keys named by `a_fingerprint'.
 		require
 			strictly_positive_fingerprint: a_fingerprint > 0
@@ -42,7 +42,7 @@ feature -- Access
 
 feature -- Element change
 
-	add_definition (a_def: XM_XSLT_KEY_DEFINITION) is
+	add_definition (a_def: XM_XSLT_KEY_DEFINITION)
 			-- Add `a_def' to `key_definitions'.
 		require
 			a_def_not_void: a_def /= Void

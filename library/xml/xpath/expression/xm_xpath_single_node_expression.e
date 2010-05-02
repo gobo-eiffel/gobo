@@ -24,8 +24,8 @@ inherit
 	-- But check this out for each concrete sub-class.
 
 feature -- Access
-	
-	item_type: XM_XPATH_ITEM_TYPE is
+
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Determine the data type of the expression, if possible
 		do
 			Result := any_node_test
@@ -35,7 +35,7 @@ feature -- Access
 			end
 		end
 
-	node (a_context: XM_XPATH_CONTEXT): XM_XPATH_NODE is
+	node (a_context: XM_XPATH_CONTEXT): XM_XPATH_NODE
 			-- The single node
 		require
 			dynamic_context: is_valid_context_for_node (a_context)
@@ -46,22 +46,22 @@ feature -- Access
 
 feature -- Status report
 
-	is_valid_context_for_node (a_context: XM_XPATH_CONTEXT): BOOLEAN is
+	is_valid_context_for_node (a_context: XM_XPATH_CONTEXT): BOOLEAN
 			-- Is the dynamic context in a suitable condition to call `node'?
 		deferred
 		end
 
 feature -- Status setting
 
-	compute_intrinsic_dependencies is
+	compute_intrinsic_dependencies
 			-- Determine the intrinsic dependencies of an expression.
 		do
 			set_intrinsically_depends_upon_context_item
 		end
-			
+
 feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			if a_context_item_type = Void then
@@ -75,7 +75,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			-- Repeat the check: in XSLT insufficient information is available the first time.
@@ -85,7 +85,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT)
 			-- Effective boolean value
 		do
 			if is_valid_context_for_node (a_context) then
@@ -96,7 +96,7 @@ feature -- Evaluation
 			end
 		end
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			if is_valid_context_for_node (a_context) then
@@ -106,7 +106,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over the values of a sequence
 		do
 			if is_valid_context_for_node (a_context) then
@@ -116,7 +116,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over a node sequence
 		do
 			if is_valid_context_for_node (a_context) then
@@ -127,14 +127,14 @@ feature -- Evaluation
 		end
 
 feature {NONE} -- Implementation
-	
-	compute_cardinality is
+
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_optional
 		end
-	
-	compute_special_properties is
+
+	compute_special_properties
 			-- Compute special properties.
 		do
 			initialize_special_properties
@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 			set_non_creating
 		end
 
-	dynamic_error_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_ERROR_VALUE is
+	dynamic_error_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_ERROR_VALUE
 			-- Dynamic error value
 		require
 			invalid_context: not is_valid_context_for_node (a_context)

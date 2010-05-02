@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	are_normalized_flags (a_flags_string: STRING): BOOLEAN is
+	are_normalized_flags (a_flags_string: STRING): BOOLEAN
 			-- Is `a_flags_string' a set of normalized flags?
 		require
 			flags_not_void: a_flags_string /= Void
@@ -61,7 +61,7 @@ feature -- Access
 			end
 		end
 
-	normalized_flags_string (a_flags_string: STRING): STRING is
+	normalized_flags_string (a_flags_string: STRING): STRING
 			-- Normalized version of `a_flags_string'
 		require
 			flags_not_void: a_flags_string /= Void
@@ -74,7 +74,7 @@ feature -- Access
 			--  instance of each of the four flags, i, m,s and x, and ordering them so.
 			-- If any other non-blank characters are present in the string, then
 			--  it is invalid (a static error should be signalled), and `Void' is returned.
-			
+
 			from
 				an_index := 1
 			until
@@ -106,7 +106,7 @@ feature -- Access
 			normalized: Result /= Void implies are_normalized_flags (Result)
 		end
 
-	composed_key (a_pattern, a_flags_string: STRING): STRING is
+	composed_key (a_pattern, a_flags_string: STRING): STRING
 			-- Concatenation of `a_pattern' with `a_flags_string', separated by an invalid XML character
 		require
 			pattern_not_void: a_pattern /= Void
@@ -121,4 +121,4 @@ feature -- Access
 		end
 
 end
-	
+

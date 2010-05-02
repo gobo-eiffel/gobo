@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type, a_subtype: STRING) is
+	make (a_type, a_subtype: STRING)
 			-- Create a new media type.
 		require
 			a_type_not_void: a_type /= Void
@@ -60,13 +60,13 @@ feature -- Access
 	subtype: STRING
 			-- Subtype
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			Result := subtype.hash_code
 		end
 
-	parameter (a_name: STRING): STRING is
+	parameter (a_name: STRING): STRING
 			-- Value of parameter named `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -81,7 +81,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_parameter (a_name: STRING): BOOLEAN is
+	has_parameter (a_name: STRING): BOOLEAN
 			-- Does `Current' have a parameter named `a_name'?
 		require
 			a_name_not_void: a_name /= Void
@@ -91,7 +91,7 @@ feature -- Status report
 			Result := parameters.has (a_name.as_lower)
 		end
 
-	is_valid_parameter_name (a_name: STRING): BOOLEAN is
+	is_valid_parameter_name (a_name: STRING): BOOLEAN
 			-- Is `a_name' a legitimate parameter name?
 		require
 			a_name_not_void: a_name /= Void
@@ -100,7 +100,7 @@ feature -- Status report
 			Result := is_token (a_name, False)
 		end
 
-	is_token (a_string: STRING; allow_specials: BOOLEAN): BOOLEAN is
+	is_token (a_string: STRING; allow_specials: BOOLEAN): BOOLEAN
 			-- Is `a_string' a token?
 		require
 			a_string_not_void: a_string /= Void
@@ -135,7 +135,7 @@ feature -- Status report
 
 feature -- Element change
 
-	add_parameter (a_name, a_value: STRING) is
+	add_parameter (a_name, a_value: STRING)
 			-- Add new parameter `a_name' with value `a_value'.
 		require
 			a_name_not_void: a_name /= Void

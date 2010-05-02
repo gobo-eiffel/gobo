@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_duration: STRING) is
+	make (a_duration: STRING)
 			-- Create from lexical duration.
 		local
 			a_parser: XM_XPATH_DURATION_PARSER
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			normalize
 		end
 
-	make_from_duration (a_duration: like duration) is
+	make_from_duration (a_duration: like duration)
 			-- Create from duration.
 		require
 			zero_years_and_months: a_duration.year = 0 and then a_duration.month = 0
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, where know
 		do
 			Result := type_factory.day_time_duration_type
@@ -68,7 +68,7 @@ feature -- Access
 			end
 		end
 
-	milliseconds: MA_DECIMAL is
+	milliseconds: MA_DECIMAL
 			-- Length in milliseconds
 		local
 			l_milliseconds: MA_DECIMAL
@@ -83,7 +83,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Are `Current' and `other' the same expression?
 		local
 			a_duration: like duration
@@ -96,7 +96,7 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_duration (a_duration: STRING): BOOLEAN is
+	is_duration (a_duration: STRING): BOOLEAN
 			-- Is `a_duration' a valid duration?
 		local
 			a_parser: XM_XPATH_DURATION_PARSER
@@ -105,13 +105,13 @@ feature -- Status report
 			Result := a_parser.is_seconds_duration (a_duration)
 		end
 
-	is_seconds_duration: BOOLEAN is
+	is_seconds_duration: BOOLEAN
 			-- Is `Current' an xdt:dayTimeDuration value?
 		do
 			Result := True
 		end
 
-	is_valid_time_zone: BOOLEAN is
+	is_valid_time_zone: BOOLEAN
 			-- Is `Current' valid as a fixed-offset time zone?
 		local
 			an_hour_count: INTEGER
@@ -128,13 +128,13 @@ feature -- Status report
 			end
 		end
 
-	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
+	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN
 			-- Is `other' comparable to `Current'?
 		do
 			Result := other.is_seconds_duration
 		end
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -148,7 +148,7 @@ feature -- Status report
 
 feature -- Conversions
 
-	as_seconds_duration: XM_XPATH_SECONDS_DURATION_VALUE is
+	as_seconds_duration: XM_XPATH_SECONDS_DURATION_VALUE
 			-- `Current' seen as an xdt:dayTimeDuration value
 		do
 			Result := Current
@@ -156,7 +156,7 @@ feature -- Conversions
 
 feature -- Basic operations
 
-	plus (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM is
+	plus (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM
 			-- Addition of `other' to `Current'
 		do
 			if other.is_seconds_duration then
@@ -166,7 +166,7 @@ feature -- Basic operations
 			end
 		end
 
-	minus (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM is
+	minus (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM
 			-- Subtraction of `other' from `Current'
 		do
 			if other.is_seconds_duration then
@@ -176,7 +176,7 @@ feature -- Basic operations
 			end
 		end
 
-	multiply (a_scalar: DOUBLE): XM_XPATH_ITEM is
+	multiply (a_scalar: DOUBLE): XM_XPATH_ITEM
 			-- Multiplication of `Current' by `a_scalar'
 		local
 			a_duration: like duration
@@ -197,13 +197,13 @@ feature -- Basic operations
 			end
 		end
 
-	scalar_divide (a_scalar: DOUBLE): XM_XPATH_ITEM is
+	scalar_divide (a_scalar: DOUBLE): XM_XPATH_ITEM
 			-- Division of `Current' by `a_scalar'
 		do
 			Result := multiply (1.0 / a_scalar)
 		end
 
-	divide (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM is
+	divide (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM
 			-- Division of `other' into `Current'
 		local
 			a_decimal, another_decimal: MA_DECIMAL
@@ -224,7 +224,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	normalize is
+	normalize
 			-- Normalize `duration'
 		local
 			l_day, l_hour: INTEGER
@@ -281,7 +281,7 @@ feature {NONE} -- Implementation
 			normal_duration: is_normal
 		end
 
-	milliseconds_in_day: MA_DECIMAL is
+	milliseconds_in_day: MA_DECIMAL
 			-- Number of milliseconds in one day
 		once
 			create Result.make_from_integer (24 * 60 * 60 * 1000)

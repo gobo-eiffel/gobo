@@ -28,7 +28,7 @@ inherit
 
 feature -- Access
 
-	actual_argument (i: INTEGER): ET_EXPRESSION is
+	actual_argument (i: INTEGER): ET_EXPRESSION
 			-- Actual argument at index `i'
 		deferred
 		end

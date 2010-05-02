@@ -22,7 +22,7 @@ create
 
 feature -- Test
 
-	test_parse_empty_string is
+	test_parse_empty_string
 			-- Test feature `parse_from_string' with an empty input string.
 		local
 			a_parser: XM_EXPAT_PARSER

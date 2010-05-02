@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new descendant classes.
 		do
 			create descendants_cache.make_map (50000)
@@ -26,14 +26,14 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset the cache so that to force the computation of the list
 			-- of descendant classes next time `descendants' will be called.
 		do
 			descendants_cache.wipe_out
 		end
 
-	build_all_descendants (a_system: ET_SYSTEM) is
+	build_all_descendants (a_system: ET_SYSTEM)
 			-- Build descendants of all classes marked in `a_system' and
 			-- keep them in a cache to be used by next calls to `descendants'.
 			--
@@ -58,7 +58,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_deferred_excluded (b: BOOLEAN) is
+	set_deferred_excluded (b: BOOLEAN)
 			-- Set `deferred_excluded' to `b'.
 			--
 			-- Note that `reset' might need to be called for this to take effect
@@ -70,7 +70,7 @@ feature -- Status setting
 			deferred_excluded_set: deferred_excluded = b
 		end
 
-	set_none_excluded (b: BOOLEAN) is
+	set_none_excluded (b: BOOLEAN)
 			-- Set `none_excluded' to `b'.
 			--
 			-- Note that `reset' might need to be called for this to take effect
@@ -84,7 +84,7 @@ feature -- Status setting
 
 feature -- Access
 
-	descendants (a_class: ET_CLASS): DS_ARRAYED_LIST [ET_CLASS] is
+	descendants (a_class: ET_CLASS): DS_ARRAYED_LIST [ET_CLASS]
 			-- Proper descendant classes of `a_class' that have been marked
 			-- as being part of the system
 			--
@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 			no_void_descendants: not a_descendants.has_void
 		end
 
-	add_to_ancestors (a_class: ET_CLASS) is
+	add_to_ancestors (a_class: ET_CLASS)
 			-- Add `a_class' to the descendants of its ancestors.
 		require
 			a_class_not_void: a_class /= Void
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_to_ancestor (a_class: ET_CLASS; a_ancestor: ET_BASE_TYPE) is
+	add_to_ancestor (a_class: ET_CLASS; a_ancestor: ET_BASE_TYPE)
 			-- Add `a_class' to the descendants of `a_ancestors'.
 		require
 			a_class_not_void: a_class /= Void
@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 			l_descendants.force_last (a_class)
 		end
 
-	add_no_descendants (a_class: ET_CLASS) is
+	add_no_descendants (a_class: ET_CLASS)
 			-- Associate `no_descendants' to `a_class' if no descendant
 			-- has been found for this class.
 		require
@@ -194,7 +194,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	no_descendants: DS_ARRAYED_LIST [ET_CLASS] is
+	no_descendants: DS_ARRAYED_LIST [ET_CLASS]
 			-- Shared empty list descendants
 		once
 			create Result.make (50)

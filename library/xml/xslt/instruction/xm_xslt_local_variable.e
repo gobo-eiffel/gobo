@@ -24,7 +24,7 @@ create
 
 feature -- Status report
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -38,7 +38,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_result: DS_CELL [XM_XPATH_VALUE]
@@ -48,7 +48,7 @@ feature -- Evaluation
 			a_context.set_local_variable (l_result.item, slot_number)
 		end
 
-	evaluate_variable (a_context: XM_XPATH_CONTEXT) is 
+	evaluate_variable (a_context: XM_XPATH_CONTEXT)
 			-- Evaluate variable
 		do
 			check
@@ -58,4 +58,4 @@ feature -- Evaluation
 		end
 
 end
-	
+

@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name, a_filename: STRING) is
+	make (a_name, a_filename: STRING)
 			-- Create a new ECF config.
 		require
 			a_name_not_void: a_name /= Void
@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_targets (a_targets: like targets) is
+	set_targets (a_targets: like targets)
 			-- Set `targets' to `a_targets'.
 		do
 			targets := a_targets
@@ -71,7 +71,7 @@ feature -- Setting
 			targets_set: targets = a_targets
 		end
 
-	set_library_target (a_target: like library_target) is
+	set_library_target (a_target: like library_target)
 			-- Set `library_target' to `a_target'.
 		do
 			library_target := a_target
@@ -79,7 +79,7 @@ feature -- Setting
 			library_target_set: library_target = a_target
 		end
 
-	set_uuid (a_uuid: like uuid) is
+	set_uuid (a_uuid: like uuid)
 			-- Set `uuid' to `a_uuid'.
 		do
 			uuid := a_uuid
@@ -87,7 +87,7 @@ feature -- Setting
 			uuid_set: uuid = a_uuid
 		end
 
-	set_ecf_namespace (a_namespace: like ecf_namespace) is
+	set_ecf_namespace (a_namespace: like ecf_namespace)
 			-- Set `ecf_namespace' to `a_namespace'.
 		do
 			ecf_namespace := a_namespace
@@ -95,7 +95,7 @@ feature -- Setting
 			ecf_namespace_set: ecf_namespace = a_namespace
 		end
 
-	set_ecf_version (a_version: like ecf_version) is
+	set_ecf_version (a_version: like ecf_version)
 			-- Set `ecf_version' to `a_version'.
 		do
 			ecf_version := a_version

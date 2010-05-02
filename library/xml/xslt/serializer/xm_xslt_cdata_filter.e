@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_receiver: like base_receiver; a_emitter: like emitter; a_serializer: like serializer; a_output_properties: like output_properties) is
+	make (a_receiver: like base_receiver; a_emitter: like emitter; a_serializer: like serializer; a_output_properties: like output_properties)
 			-- Initialize `Current'
 		require
 			a_receiver_not_void: a_receiver /= Void
@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 
 feature -- Events
 
-	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
+	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER)
 			-- Notify the start of an element
 		do
 			conditionally_flush
@@ -70,7 +70,7 @@ feature -- Events
 			Precursor (a_name_code, a_type_code, properties)
 		end
 
-	end_element is
+	end_element
 			-- Notify the end of an element.
 		do
 			conditionally_flush
@@ -78,21 +78,21 @@ feature -- Events
 			Precursor
 		end
 
-	notify_comment (a_content_string: STRING; properties: INTEGER) is
+	notify_comment (a_content_string: STRING; properties: INTEGER)
 			-- Notify a comment.
 		do
 			conditionally_flush
 			Precursor (a_content_string, properties)
 		end
 
-	notify_characters (chars: STRING; properties: INTEGER) is
+	notify_characters (chars: STRING; properties: INTEGER)
 			-- Notify character data.
 		do
 			character_buffer := STRING_.appended_string (character_buffer, chars)
 			mark_as_written
 		end
 
-	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
+	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER)
 			-- Notify a processing instruction.
 		do
 			conditionally_flush
@@ -114,7 +114,7 @@ feature {NONE} -- Initialization
 	cdata_names: DS_LIST [INTEGER]
 			-- Fingerprints of element-names to be output as CDATA sections
 
-	cdata_section_names: DS_ARRAYED_LIST [INTEGER] is
+	cdata_section_names: DS_ARRAYED_LIST [INTEGER]
 			-- Calculated fingerprints of element-names to be output as CDATA sections
 		local
 			l_cdata_section_elements: DS_HASH_SET [STRING]
@@ -138,7 +138,7 @@ feature {NONE} -- Initialization
 	character_buffer: STRING
 			-- Accumulated character data
 
-	conditionally_flush is
+	conditionally_flush
 			-- Set `output_encoder' or flush `character_buffer'.
 		do
 			if output_encoder /= Void then
@@ -169,7 +169,7 @@ feature {NONE} -- Initialization
 			buffer_is_empty: character_buffer.count = 0
 		end
 
-	flush is
+	flush
 			-- Flush `character_buffer'.
 		require
 			output_encoder_not_void: output_encoder /= Void
@@ -233,7 +233,7 @@ feature {NONE} -- Initialization
 			buffer_is_empty: character_buffer.is_empty
 		end
 
-	flush_cdata (a_character_string: STRING) is
+	flush_cdata (a_character_string: STRING)
 			-- Write a CDATA section.
 		require
 			buffer_not_void: a_character_string /= Void

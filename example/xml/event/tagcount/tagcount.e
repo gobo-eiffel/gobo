@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Run.
 		do
 			Arguments.set_program_name ("tagcount")
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Processing
 
-	parse_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
+	parse_stream (a_stream: KI_CHARACTER_INPUT_STREAM)
 			-- Parse open stream.
 		require
 			a_stream_not_void: a_stream /= Void
@@ -50,11 +50,11 @@ feature -- Processing
 			-- ascii only, no external entities or DTDs,
 			-- no namespace resolving.
 			create {XM_EIFFEL_PARSER} a_parser.make
-			
+
 			-- Create the event comsumer that counts start tags.
 			create {TAGCOUNT_CALLBACKS} a_consumer.make
 			a_parser.set_callbacks (a_consumer)
-			
+
 			-- Parse and display result
 			a_parser.parse_from_stream (a_stream)
 			if not a_parser.is_correct then
@@ -64,7 +64,7 @@ feature -- Processing
 			end
 		end
 
-	process_file (filename: STRING) is
+	process_file (filename: STRING)
 			-- Parse file.
 		require
 			filename_not_void: filename /= Void

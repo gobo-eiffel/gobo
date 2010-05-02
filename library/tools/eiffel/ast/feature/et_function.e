@@ -37,7 +37,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_name: like extended_name; args: like arguments; a_type: like declared_type; a_class: like implementation_class) is
+	make (a_name: like extended_name; args: like arguments; a_type: like declared_type; a_class: like implementation_class)
 			-- Create a new function.
 		require
 			a_name_not_void: a_name /= Void
@@ -62,24 +62,24 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_function: BOOLEAN is True
+	is_function: BOOLEAN = True
 			-- Is feature a function?
 
-	is_infixable: BOOLEAN is
+	is_infixable: BOOLEAN
 			-- Can current feature have a name of
 			-- the form 'infix ...'?
 		do
 			Result := arguments /= Void and then arguments.count = 1
 		end
 
-	is_prefixable: BOOLEAN is
+	is_prefixable: BOOLEAN
 			-- Can current feature have a name of
 			-- the form 'prefix ...'?
 		do
 			Result := arguments = Void or else arguments.count = 0
 		end
 
-	is_bracketable: BOOLEAN is
+	is_bracketable: BOOLEAN
 			-- Can current feature have a name of
 			-- the form 'alias "[]"'?
 		do
@@ -88,7 +88,7 @@ feature -- Status report
 
 feature -- Access
 
-	header_break: ET_BREAK is
+	header_break: ET_BREAK
 			-- Break which appears where the header comment is expected
 		local
 			l_break: ET_BREAK
@@ -118,7 +118,7 @@ feature -- Access
 
 feature -- Conversion
 
-	undefined_feature (a_name: like extended_name): ET_DEFERRED_FUNCTION is
+	undefined_feature (a_name: like extended_name): ET_DEFERRED_FUNCTION
 			-- Undefined version of current feature
 		do
 			create Result.make (a_name, arguments, declared_type, implementation_class)

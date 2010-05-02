@@ -43,25 +43,25 @@ inherit
 
 feature -- Access
 
-	Default_language: STRING is "en"
+	Default_language: STRING = "en"
 			-- Language used if user does not supply one
 
-	Default_calendar: STRING is "CE"
+	Default_calendar: STRING = "CE"
 			-- Calendar used if user does not supply one
 
-	Default_country: STRING is "US"
+	Default_country: STRING = "US"
 			-- Country used if user does not supply one
 
-	Iso_calendar: STRING is "ISO"
+	Iso_calendar: STRING = "ISO"
 			-- Calendar of ISO 8601
 
-	Ad_calendar: STRING is "AD"
+	Ad_calendar: STRING = "AD"
 			-- Anno Domini (Christian Era);
 			-- Same as "CE" except for the "E" modifier values
 
 feature -- Basic operations
 
-	format_date_time (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_picture, a_requested_language, a_requested_calendar, a_country: STRING) is
+	format_date_time (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_picture, a_requested_language, a_requested_calendar, a_country: STRING)
 			-- Format the result.
 		require
 			a_result_not_void: a_result /= Void
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 	primary_modifier: detachable STRING
 			-- Specifier in current variable marker
 
-	parse_picture_string (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_picture, a_language, a_calendar, a_country: STRING) is
+	parse_picture_string (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_picture, a_language, a_calendar, a_country: STRING)
 			-- Parse `a_picture' and format output.
 		require
 			a_result_not_void: a_result /= Void
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_marker (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_marker, a_language, a_calendar, a_country: STRING) is
+	format_marker (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_marker, a_language, a_calendar, a_country: STRING)
 			-- Parse `a_marker' and format output by appending to `a_result_string'.
 		require
 			a_result_not_void: a_result /= Void
@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	parse_and_format_marker (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_specifier: CHARACTER; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	parse_and_format_marker (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_specifier: CHARACTER; some_modifiers, a_language, a_calendar, a_country: STRING)
 			-- Format `a_calendar_value' according to `a_specifier' and `some_modifiers' by appending to `a_result_string'.
 		require
 			a_result_not_void: a_result /= Void
@@ -266,7 +266,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	check_not_date_value (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_message: STRING) is
+	check_not_date_value (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_message: STRING)
 			-- Check `a_calendar_value' is not an xs:date.
 		require
 			a_result_not_void: a_result /= Void
@@ -279,7 +279,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	check_not_time_value (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_message: STRING) is
+	check_not_time_value (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_message: STRING)
 			-- Check `a_calendar_value' is not an xs:time.
 		require
 			a_result_not_void: a_result /= Void
@@ -292,7 +292,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	ordinal_attribute_value: STRING is
+	ordinal_attribute_value: STRING
 			-- Value of xsl:number "ordinal" attribute
 		do
 			if is_ordinal then
@@ -304,7 +304,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	letter_attribute_value: STRING is
+	letter_attribute_value: STRING
 			-- Value of xsl:number "letter_value" attribute
 		do
 			if is_traditional then
@@ -316,7 +316,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	format_year (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_year (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING)
 			-- Format year from `a_calendar_value' and append to `a_result_string'.
 		require
 			a_result_not_void: a_result /= Void
@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_month (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_month (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING)
 			-- Format month from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -421,7 +421,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_day_in_month (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_day_in_month (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING)
 			-- Format day-in-month from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -469,7 +469,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_day_in_year (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_day_in_year (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING)
 			-- Format day-in-year from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -522,7 +522,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_day_of_week (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_day_of_week (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING)
 			-- Format day-of-week from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -579,7 +579,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_week_in_year (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_week_in_year (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING)
 			-- Format week-in-year from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -633,7 +633,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_week_in_month (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_week_in_month (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING)
 			-- Format week-in-month from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -686,7 +686,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_hour (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_hour (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING)
 			-- Format hour-in-day from `a_calendar_value' using 24-hour clock.
 		require
 			a_result_not_void: a_result /= Void
@@ -737,7 +737,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_hour_in_half_day (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_hour_in_half_day (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING)
 			-- Format hour-in-half-day from `a_calendar_value' using 12-hour clock.
 		require
 			a_result_not_void: a_result /= Void
@@ -788,7 +788,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_am_pm (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_am_pm (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING)
 			-- Format AM/PM marker from `a_calendar_value' using 24-hour clock.
 		require
 			a_result_not_void: a_result /= Void
@@ -825,7 +825,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_minute (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_minute (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING)
 			-- Format minute-in-hour from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -876,7 +876,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_second (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_second (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING)
 			-- Format second-in-hour from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -927,7 +927,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_millisecond (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_millisecond (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_modifiers, a_language, a_calendar, a_country: STRING)
 			-- Format fractional seconds from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -980,7 +980,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	one_thousand: MA_DECIMAL is
+	one_thousand: MA_DECIMAL
 			-- One thousand
 		once
 			create Result.make_from_integer (1000)
@@ -988,7 +988,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	format_time_zone (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_time_zone (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING)
 			-- Format time zone as an offset from UTC, or as the conventional name from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -1029,7 +1029,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_gmt_offset (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_gmt_offset (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING)
 			-- Format time zone as an offset from GMT from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -1061,7 +1061,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_calendar_name (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_calendar_name (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; some_modifiers, a_language, a_calendar, a_country: STRING)
 			-- Format calendar name.
 		require
 			a_result_not_void: a_result /= Void
@@ -1098,7 +1098,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_era (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_era (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING)
 			-- Format time zone as an offset from GMT from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -1137,7 +1137,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_decimal_format: BOOLEAN is
+	is_decimal_format: BOOLEAN
 			-- Does `primary_modifier' indicate a decimal format?
 		require
 			primary_modifier_not_void: primary_modifier /= Void
@@ -1152,7 +1152,7 @@ feature {NONE} -- Implementation
 			Result := is_zeros_plus_one (l_primary_modifier) or (l_primary_modifier.count = 1 and then is_one (l_primary_modifier.item_code (1)))
 		end
 
-	check_modifiers (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; some_modifiers, a_default: STRING; use_names: BOOLEAN) is
+	check_modifiers (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; some_modifiers, a_default: STRING; use_names: BOOLEAN)
 			-- Check `some_modifiers' for syntax errors.
 		require
 			a_result_not_void: a_result /= Void
@@ -1237,7 +1237,7 @@ feature {NONE} -- Implementation
 			primary_modifier_set: a_result.item = Void implies attached primary_modifier as el_primary_modifier and then not el_primary_modifier.is_empty
 		end
 
-	set_primary_modifier (a_modifier: STRING; use_names: BOOLEAN) is
+	set_primary_modifier (a_modifier: STRING; use_names: BOOLEAN)
 			-- Set `primary_modifier' to `a_modifier' if valid.
 		require
 			modifier_not_empty: a_modifier /= Void and then not a_modifier.is_empty
@@ -1266,7 +1266,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_widths (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_width: STRING) is
+	set_widths (a_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]; a_width: STRING)
 			-- Set widths.
 		require
 			a_result_not_void: a_result /= Void
@@ -1319,7 +1319,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_valid_specifier (a_specifier: CHARACTER): BOOLEAN is
+	is_valid_specifier (a_specifier: CHARACTER): BOOLEAN
 			-- Is `a_specifier' a valid format specifier?
 		do
 			inspect
@@ -1334,7 +1334,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_language_supported (a_requested_language: STRING): BOOLEAN is
+	is_language_supported (a_requested_language: STRING): BOOLEAN
 			-- Is `a_requested_language' supported by implementation?
 		require
 			requested_language_not_void: a_requested_language /= Void
@@ -1343,7 +1343,7 @@ feature {NONE} -- Implementation
 			Result := STRING_.same_string (a_requested_language, Default_language)
 		end
 
-	language (a_requested_language: STRING): STRING is
+	language (a_requested_language: STRING): STRING
 			-- Language to be used for output
 		require
 			requested_language_not_void: a_requested_language /= Void
@@ -1354,7 +1354,7 @@ feature {NONE} -- Implementation
 			result_not_empty: Result /= Void and then not Result.is_empty
 		end
 
-	language_prefix (a_requested_language: STRING): STRING is
+	language_prefix (a_requested_language: STRING): STRING
 			-- Language prefix to be emitted
 		require
 			requested_language_not_void: a_requested_language /= Void
@@ -1365,7 +1365,7 @@ feature {NONE} -- Implementation
 			result_not_empty: Result /= Void and then not Result.is_empty
 		end
 
-	is_calendar_supported (a_requested_calendar: STRING): BOOLEAN is
+	is_calendar_supported (a_requested_calendar: STRING): BOOLEAN
 			-- Is `a_requested_calendar' supported by implementation?
 		require
 			requested_calendar_not_void: a_requested_calendar /= Void
@@ -1374,7 +1374,7 @@ feature {NONE} -- Implementation
 			Result := STRING_.same_string (a_requested_calendar, Default_calendar) or STRING_.same_string (a_requested_calendar, Ad_calendar)
 		end
 
-	calendar (a_requested_calendar: STRING): STRING is
+	calendar (a_requested_calendar: STRING): STRING
 			-- Calendar to be used for output
 		require
 			requested_calendar_not_void: a_requested_calendar /= Void
@@ -1385,7 +1385,7 @@ feature {NONE} -- Implementation
 			result_not_empty: Result /= Void and then not Result.is_empty
 		end
 
-	calendar_prefix (a_requested_calendar, a_language: STRING): STRING is
+	calendar_prefix (a_requested_calendar, a_language: STRING): STRING
 			-- Calendar prefix to be emitted
 		require
 			requested_calendar_not_void: a_requested_calendar /= Void
@@ -1399,7 +1399,7 @@ feature {NONE} -- Implementation
 			result_not_empty: Result /= Void and then not Result.is_empty
 		end
 
-	calendar_name (a_calendar: STRING): STRING is
+	calendar_name (a_calendar: STRING): STRING
 			-- Full name for `a_calendar'
 		require
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
@@ -1421,7 +1421,7 @@ feature {NONE} -- Implementation
 			result_not_empty: Result /= Void and then not Result.is_empty
 		end
 
-	week_day_number (a_day: INTEGER; a_calendar, a_country: STRING): INTEGER is
+	week_day_number (a_day: INTEGER; a_calendar, a_country: STRING): INTEGER
 			-- Number of day in week for `a_calendar' in `a_country'
 		require
 				-- Monday = 1
@@ -1438,7 +1438,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_name_modifier: BOOLEAN is
+	is_name_modifier: BOOLEAN
 			-- Is `primary_modifier' a name request?
 		require
 			primary_modifier_not_void: primary_modifier /= Void
@@ -1459,7 +1459,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	correctly_cased_name (a_name: STRING): STRING is
+	correctly_cased_name (a_name: STRING): STRING
 			-- `a_name' cased according to `primary_modifier'
 		require
 			name_not_void: a_name /= Void
@@ -1490,7 +1490,7 @@ feature {NONE} -- Implementation
 			Result_attached: Result /= Void
 		end
 
-	era (a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_language, a_calendar, a_country: STRING): STRING is
+	era (a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_language, a_calendar, a_country: STRING): STRING
 			-- Era
 		require
 			calendar_value_not_void: a_calendar_value /= Void
@@ -1538,7 +1538,7 @@ feature {NONE} -- Implementation
 			not_empty: Result /= Void and then not Result.is_empty
 		end
 
-	prepended_with_zeros (a_string: STRING): STRING is
+	prepended_with_zeros (a_string: STRING): STRING
 			-- Left-padded version of `a_string'
 		require
 			string_not_void: a_string /= Void
@@ -1550,7 +1550,7 @@ feature {NONE} -- Implementation
 			minimum_width: Result.count = minimum_width
 		end
 
-	appended_with_blanks (a_string: STRING): STRING is
+	appended_with_blanks (a_string: STRING): STRING
 			-- Right-padded version of `a_string'
 		require
 			string_not_void: a_string /= Void
@@ -1562,7 +1562,7 @@ feature {NONE} -- Implementation
 			minimum_width: Result.count = minimum_width
 		end
 
-	appended_with_zeros (a_string: STRING): STRING is
+	appended_with_zeros (a_string: STRING): STRING
 			-- Right-padded version of `a_string'
 		require
 			string_not_void: a_string /= Void
@@ -1574,7 +1574,7 @@ feature {NONE} -- Implementation
 			minimum_width: Result.count = minimum_width
 		end
 
-	shared_half_even_context: MA_DECIMAL_CONTEXT is
+	shared_half_even_context: MA_DECIMAL_CONTEXT
 			-- Decimal context for use by rounded-half-even
 		once
 			create Result.make (shared_decimal_context.digits, Round_half_even)

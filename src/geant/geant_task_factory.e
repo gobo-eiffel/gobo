@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT) is
+	make (a_project: GEANT_PROJECT)
 			-- Create Current factory for `a_project'
 		require
 			a_project_not_void: a_project /= Void
@@ -43,7 +43,7 @@ feature {NONE} -- Property
 
 feature -- Access
 
-	new_task (a_xml_element: XM_ELEMENT): GEANT_TASK is
+	new_task (a_xml_element: XM_ELEMENT): GEANT_TASK
 			-- New GEANT_TASK for `a_xml_element'
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -57,7 +57,7 @@ feature -- Access
 
 feature -- Factory
 
-	new_gec_task (a_xml_element: XM_ELEMENT): GEANT_GEC_TASK is
+	new_gec_task (a_xml_element: XM_ELEMENT): GEANT_GEC_TASK
 			-- gec: Gobo Eiffel compilation
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -67,7 +67,7 @@ feature -- Factory
 			new_gec_task_not_void: Result /= Void
 		end
 
-	new_ise_task (a_xml_element: XM_ELEMENT): GEANT_ISE_TASK is
+	new_ise_task (a_xml_element: XM_ELEMENT): GEANT_ISE_TASK
 			-- ise: ISE Eiffel compilation
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -77,7 +77,7 @@ feature -- Factory
 			new_ise_task_not_void: Result /= Void
 		end
 
-	new_exec_task (a_xml_element: XM_ELEMENT): GEANT_EXEC_TASK is
+	new_exec_task (a_xml_element: XM_ELEMENT): GEANT_EXEC_TASK
 			-- exec
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -87,7 +87,7 @@ feature -- Factory
 			new_exec_task_not_void: Result /= Void
 		end
 
-	new_lcc_task (a_xml_element: XM_ELEMENT): GEANT_LCC_TASK is
+	new_lcc_task (a_xml_element: XM_ELEMENT): GEANT_LCC_TASK
 			-- lcc
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -97,7 +97,7 @@ feature -- Factory
 			new_lcc_task_not_void: Result /= Void
 		end
 
-	new_set_task (a_xml_element: XM_ELEMENT): GEANT_SET_TASK is
+	new_set_task (a_xml_element: XM_ELEMENT): GEANT_SET_TASK
 			-- set
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -107,7 +107,7 @@ feature -- Factory
 			new_set_task_not_void: Result /= Void
 		end
 
-	new_unset_task (a_xml_element: XM_ELEMENT): GEANT_UNSET_TASK is
+	new_unset_task (a_xml_element: XM_ELEMENT): GEANT_UNSET_TASK
 			-- unset
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -117,7 +117,7 @@ feature -- Factory
 			new_unset_task_not_void: Result /= Void
 		end
 
-	new_gexace_task (a_xml_element: XM_ELEMENT): GEANT_GEXACE_TASK is
+	new_gexace_task (a_xml_element: XM_ELEMENT): GEANT_GEXACE_TASK
 			-- gexace
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -127,7 +127,7 @@ feature -- Factory
 			new_gexace_task_not_void: Result /= Void
 		end
 
-	new_gelex_task (a_xml_element: XM_ELEMENT): GEANT_GELEX_TASK is
+	new_gelex_task (a_xml_element: XM_ELEMENT): GEANT_GELEX_TASK
 			-- gelex
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -137,7 +137,7 @@ feature -- Factory
 			new_gelex_task_not_void: Result /= Void
 		end
 
-	new_geyacc_task (a_xml_element: XM_ELEMENT): GEANT_GEYACC_TASK is
+	new_geyacc_task (a_xml_element: XM_ELEMENT): GEANT_GEYACC_TASK
 			-- geyacc
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -147,7 +147,7 @@ feature -- Factory
 			new_geyacc_task_not_void: Result /= Void
 		end
 
-	new_gepp_task (a_xml_element: XM_ELEMENT): GEANT_GEPP_TASK is
+	new_gepp_task (a_xml_element: XM_ELEMENT): GEANT_GEPP_TASK
 			-- gepp
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -157,7 +157,7 @@ feature -- Factory
 			new_gepp_task_not_void: Result /= Void
 		end
 
-	new_getest_task (a_xml_element: XM_ELEMENT): GEANT_GETEST_TASK is
+	new_getest_task (a_xml_element: XM_ELEMENT): GEANT_GETEST_TASK
 			-- getest
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -167,7 +167,7 @@ feature -- Factory
 			new_getest_task_not_void: Result /= Void
 		end
 
-	new_geant_task (a_xml_element: XM_ELEMENT): GEANT_GEANT_TASK is
+	new_geant_task (a_xml_element: XM_ELEMENT): GEANT_GEANT_TASK
 			-- geant
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -177,7 +177,7 @@ feature -- Factory
 			new_geant_task_not_void: Result /= Void
 		end
 
-	new_echo_task (a_xml_element: XM_ELEMENT): GEANT_ECHO_TASK is
+	new_echo_task (a_xml_element: XM_ELEMENT): GEANT_ECHO_TASK
 			-- echo
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -187,7 +187,7 @@ feature -- Factory
 			new_echo_task_not_void: Result /= Void
 		end
 
-	new_mkdir_task (a_xml_element: XM_ELEMENT): GEANT_MKDIR_TASK is
+	new_mkdir_task (a_xml_element: XM_ELEMENT): GEANT_MKDIR_TASK
 			-- mkdir
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -197,7 +197,7 @@ feature -- Factory
 			new_mkdir_task_not_void: Result /= Void
 		end
 
-	new_delete_task (a_xml_element: XM_ELEMENT): GEANT_DELETE_TASK is
+	new_delete_task (a_xml_element: XM_ELEMENT): GEANT_DELETE_TASK
 			-- delete
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -207,7 +207,7 @@ feature -- Factory
 			new_delete_task_not_void: Result /= Void
 		end
 
-	new_copy_task (a_xml_element: XM_ELEMENT): GEANT_COPY_TASK is
+	new_copy_task (a_xml_element: XM_ELEMENT): GEANT_COPY_TASK
 			-- copy
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -217,7 +217,7 @@ feature -- Factory
 			new_copy_task_not_void: Result /= Void
 		end
 
-	new_move_task (a_xml_element: XM_ELEMENT): GEANT_MOVE_TASK is
+	new_move_task (a_xml_element: XM_ELEMENT): GEANT_MOVE_TASK
 			-- move
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -227,7 +227,7 @@ feature -- Factory
 			new_move_task_not_void: Result /= Void
 		end
 
-	new_setenv_task (a_xml_element: XM_ELEMENT): GEANT_SETENV_TASK is
+	new_setenv_task (a_xml_element: XM_ELEMENT): GEANT_SETENV_TASK
 			-- setenv
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -237,7 +237,7 @@ feature -- Factory
 			new_setenv_task_not_void: Result /= Void
 		end
 
-	new_xslt_task (a_xml_element: XM_ELEMENT): GEANT_XSLT_TASK is
+	new_xslt_task (a_xml_element: XM_ELEMENT): GEANT_XSLT_TASK
 			-- xslt
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -247,7 +247,7 @@ feature -- Factory
 			new_xslt_task_not_void: Result /= Void
 		end
 
-	new_outofdate_task (a_xml_element: XM_ELEMENT): GEANT_OUTOFDATE_TASK is
+	new_outofdate_task (a_xml_element: XM_ELEMENT): GEANT_OUTOFDATE_TASK
 			-- outofdate
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -257,7 +257,7 @@ feature -- Factory
 			new_outofdate_task_not_void: Result /= Void
 		end
 
-	new_exit_task (a_xml_element: XM_ELEMENT): GEANT_EXIT_TASK is
+	new_exit_task (a_xml_element: XM_ELEMENT): GEANT_EXIT_TASK
 			-- exit
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -267,7 +267,7 @@ feature -- Factory
 			new_exit_task_not_void: Result /= Void
 		end
 
-	new_precursor_task (a_xml_element: XM_ELEMENT): GEANT_PRECURSOR_TASK is
+	new_precursor_task (a_xml_element: XM_ELEMENT): GEANT_PRECURSOR_TASK
 			-- precursor
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -277,7 +277,7 @@ feature -- Factory
 			new_precursor_task_not_void: Result /= Void
 		end
 
-	new_available_task (a_xml_element: XM_ELEMENT): GEANT_AVAILABLE_TASK is
+	new_available_task (a_xml_element: XM_ELEMENT): GEANT_AVAILABLE_TASK
 			-- available
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -287,7 +287,7 @@ feature -- Factory
 			new_available_task_not_void: Result /= Void
 		end
 
-	new_input_task (a_xml_element: XM_ELEMENT): GEANT_INPUT_TASK is
+	new_input_task (a_xml_element: XM_ELEMENT): GEANT_INPUT_TASK
 			-- input
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -297,7 +297,7 @@ feature -- Factory
 			new_input_task_not_void: Result /= Void
 		end
 
-	new_replace_task (a_xml_element: XM_ELEMENT): GEANT_REPLACE_TASK is
+	new_replace_task (a_xml_element: XM_ELEMENT): GEANT_REPLACE_TASK
 			-- replace
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -312,7 +312,7 @@ feature {NONE} -- Implementation
 	builders: DS_HASH_TABLE [FUNCTION [ANY, TUPLE [XM_ELEMENT], GEANT_TASK], STRING]
 			-- Table of task builders
 
-	create_builders is
+	create_builders
 			-- Table of task builders
 		do
 			create builders.make_map (30)

@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new position table.
 		do
 			create table.make
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	has (a_node: XM_NODE): BOOLEAN is
+	has (a_node: XM_NODE): BOOLEAN
 			-- Is there a position associated with `a_node'?
 		require
 			a_node_not_void: a_node /= Void
@@ -46,7 +46,7 @@ feature -- Status report
 
 feature -- Access
 
-	item (a_node: XM_NODE): XM_POSITION is
+	item (a_node: XM_NODE): XM_POSITION
 			-- Position associated with `a_node'
 		require
 			a_node_not_void: a_node /= Void
@@ -69,7 +69,7 @@ feature -- Access
 
 feature -- Element change
 
-	put (a_position: XM_POSITION; a_node: XM_NODE) is
+	put (a_position: XM_POSITION; a_node: XM_NODE)
 			-- Associate `a_node' with position `a_position'.
 		require
 			a_position_not_void: a_position /= Void

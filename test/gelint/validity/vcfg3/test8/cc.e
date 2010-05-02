@@ -5,7 +5,7 @@ feature
 	item1: G
 	item2: H
 
-	f is
+	f
 		do
 			if item2 /= Void then
 				print (item2.generating_type)

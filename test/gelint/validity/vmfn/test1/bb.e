@@ -2,11 +2,11 @@ class BB
 
 feature
 
-	f is
+	f
 		do
 		end
 
-	f is
+	f
 		do
 		end
 

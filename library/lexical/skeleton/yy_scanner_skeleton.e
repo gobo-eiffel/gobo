@@ -31,7 +31,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_buffer (a_buffer: like input_buffer) is
+	make_with_buffer (a_buffer: like input_buffer)
 			-- Create a new scanner with
 			-- `a_buffer' as input buffer.
 		do
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			yy_load_input_buffer
 		end
 
-	yy_initialize is
+	yy_initialize
 			-- Initialize lexical analyzer.
 		do
 			yy_build_tables
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset scanner before scanning next input source.
 			-- (This routine can be called in `wrap' before scanning
 			-- another input buffer.)
@@ -76,7 +76,7 @@ feature -- Initialization
 
 feature -- Access
 
-	text: STRING is
+	text: STRING
 			-- Text of last token read
 			-- (Create a new string at each call.)
 		do
@@ -87,7 +87,7 @@ feature -- Access
 			end
 		end
 
-	text_item (i: INTEGER): CHARACTER is
+	text_item (i: INTEGER): CHARACTER
 			-- `i'-th character of last token read
 		local
 			l_content_area: like yy_content_area
@@ -100,7 +100,7 @@ feature -- Access
 			end
 		end
 
-	text_substring (s, e: INTEGER): STRING is
+	text_substring (s, e: INTEGER): STRING
 			-- Substring of last token read
 			-- (Create a new string at each call.)
 			-- (For efficiency reason, this function bypasses the
@@ -114,7 +114,7 @@ feature -- Access
 			end
 		end
 
-	start_condition: INTEGER is
+	start_condition: INTEGER
 			-- Start condition
 		do
 			Result := (yy_start_state - 1) // 2
@@ -122,7 +122,7 @@ feature -- Access
 
 feature -- Measurement
 
-	text_count: INTEGER is
+	text_count: INTEGER
 			-- Number of characters in last token read
 		do
 			Result := yy_end - yy_start
@@ -143,7 +143,7 @@ feature -- Measurement
 
 feature -- Setting
 
-	set_start_condition (a_start_condition: INTEGER) is
+	set_start_condition (a_start_condition: INTEGER)
 			-- Set `start_condition' to `a_start_condition'.
 		do
 			yy_start_state := 2 * a_start_condition + 1
@@ -151,7 +151,7 @@ feature -- Setting
 
 feature -- Element change
 
-	append_text_to_string (a_string: STRING) is
+	append_text_to_string (a_string: STRING)
 			-- Append `text' at end of `a_string'.
 			-- (For efficiency reason, this feature bypasses the
 			-- call to `text' and directly copies the characters
@@ -162,7 +162,7 @@ feature -- Element change
 			end
 		end
 
-	append_text_substring_to_string (s, e: INTEGER; a_string: STRING) is
+	append_text_substring_to_string (s, e: INTEGER; a_string: STRING)
 			-- Append `text_substring' at end of `a_string'.
 			-- (For efficiency reason, this feature bypasses
 			-- the call to `text_substring' and directly copies
@@ -173,7 +173,7 @@ feature -- Element change
 			end
 		end
 
-	more is
+	more
 			-- Tell scanner to append the next matched token
 			-- to current value of `text' instead of
 			-- replacing it.
@@ -181,7 +181,7 @@ feature -- Element change
 			yy_more_flag := True
 		end
 
-	less (n: INTEGER) is
+	less (n: INTEGER)
 			-- Return all but the first `n' matched
 			-- characters back to `input_buffer'.
 		local
@@ -211,7 +211,7 @@ feature -- Element change
 			yy_position := position + n
 		end
 
-	unread_character (c: CHARACTER) is
+	unread_character (c: CHARACTER)
 			-- Put `c' back to `input_buffer'. This will alter both
 			-- `text' and the content of `input_buffer'.
 		do
@@ -231,7 +231,7 @@ feature -- Element change
 			yy_start := yy_end
 		end
 
-	read_character is
+	read_character
 			-- Read a character from `input_buffer'.
 			-- Make result available in `last_character'.
 		local
@@ -290,7 +290,7 @@ feature -- Element change
 
 feature -- Input
 
-	set_input_buffer (a_buffer: like input_buffer) is
+	set_input_buffer (a_buffer: like input_buffer)
 			-- Set `input_buffer' to `a_buffer'.
 		do
 			if a_buffer /= input_buffer then
@@ -302,7 +302,7 @@ feature -- Input
 			end
 		end
 
-	flush_input_buffer is
+	flush_input_buffer
 			-- Flush `input_buffer'. `input_buffer' will be automatically
 			-- refilled unless end of file has been found.
 		do
@@ -312,7 +312,7 @@ feature -- Input
 
 feature -- Debugging
 
-	print_last_token is
+	print_last_token
 			-- Print to standard error debug information
 			-- about the last token read. Can be redefined
 			-- in descendant classes to print more information.
@@ -354,7 +354,7 @@ feature -- Debugging
 
 feature {NONE} -- Implementation
 
-	yy_load_input_buffer is
+	yy_load_input_buffer
 			-- Take `input_buffer' state into account.
 		do
 			yy_set_content (input_buffer.content)
@@ -372,7 +372,7 @@ feature {NONE} -- Implementation
 			yy_position_set: yy_position = input_buffer.position
 		end
 
-	yy_refill_input_buffer is
+	yy_refill_input_buffer
 			-- Refill `input_buffer'.
 			-- Update `yy_start' and `yy_end'.
 		require
@@ -390,7 +390,7 @@ feature {NONE} -- Implementation
 			yy_start := yy_new_start
 		end
 
-	yy_set_content (a_content: like yy_content) is
+	yy_set_content (a_content: like yy_content)
 			-- Set `yy_content' to `a_content'.
 		require
 			a_content_not_void: a_content /= Void
@@ -401,12 +401,12 @@ feature {NONE} -- Implementation
 			yy_content_set: yy_content = a_content
 		end
 
-	yy_build_tables is
+	yy_build_tables
 			-- Build scanner tables.
 		deferred
 		end
 
-	yy_fixed_array (an_array: ARRAY [INTEGER]): SPECIAL [INTEGER] is
+	yy_fixed_array (an_array: ARRAY [INTEGER]): SPECIAL [INTEGER]
 			-- Zero-based array containing items of `an_array'
 		require
 			an_array_not_void: an_array /= Void
@@ -418,7 +418,7 @@ feature {NONE} -- Implementation
 --			same_items: forall i in 0 .. (an_array.count - 1), Result.item (i) = an_array.item (an_array.lower + i)
 		end
 
-	yy_array_subcopy (an_array: ARRAY [INTEGER]; other: ARRAY [INTEGER]; start_pos, end_pos, index_pos: INTEGER) is
+	yy_array_subcopy (an_array: ARRAY [INTEGER]; other: ARRAY [INTEGER]; start_pos, end_pos, index_pos: INTEGER)
 			-- Copy items of `other' within bounds `start_pos' and `end_pos'
 			-- to `an_array' starting at index `index_pos'.
 		require
@@ -436,17 +436,17 @@ feature {NONE} -- Implementation
 --			copied: forall i in 0 .. (end_pos - start_pos), an_array.item (index_pos + i) = other.item (start_pos + i)
 		end
 
-	yy_execute_action (yy_act: INTEGER) is
+	yy_execute_action (yy_act: INTEGER)
 			-- Execute semantic action.
 		deferred
 		end
 
-	yy_execute_eof_action (yy_sc: INTEGER) is
+	yy_execute_eof_action (yy_sc: INTEGER)
 			-- Execute EOF semantic action.
 		deferred
 		end
 
-	yy_at_beginning_of_line: INTEGER is
+	yy_at_beginning_of_line: INTEGER
 			-- 1 if the next token scanned from the current input
 			-- buffer will have '^' rules active, 0 otherwise
 		do
@@ -455,7 +455,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	yy_set_beginning_of_line is
+	yy_set_beginning_of_line
 			-- Set `yy_at_beginning_of_line' according
 			-- to the current position in input source.
 		local
@@ -471,7 +471,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	yy_set_line (a_column: INTEGER) is
+	yy_set_line (a_column: INTEGER)
 			-- Set `yy_line' and `yy_column' knowing that there
 			-- are `a_column' characters in the last token
 			-- after the last new-line or from the beginning
@@ -509,7 +509,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	yy_set_column (a_line: INTEGER) is
+	yy_set_column (a_line: INTEGER)
 			-- Set `yy_line' and `yy_column' knowing that there
 			-- are `a_line' new-line characters in last token.
 		require
@@ -544,7 +544,7 @@ feature {NONE} -- Implementation
 			yy_line := yy_line + a_line
 		end
 
-	yy_set_line_column is
+	yy_set_line_column
 			-- Set `yy_line' and `yy_column'.
 		local
 			i, nb: INTEGER
@@ -595,12 +595,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	yy_previous_state: INTEGER is
+	yy_previous_state: INTEGER
 			-- State just before EOB character was reached
 		deferred
 		end
 
-	yy_null_trans_state (yy_current_state: INTEGER): INTEGER is
+	yy_null_trans_state (yy_current_state: INTEGER): INTEGER
 			-- State reachable from `yy_current_state' through
 			-- a transition on NULL character; 0 if jammed
 		deferred
@@ -644,45 +644,45 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	yyBuffer_capacity: INTEGER is 16384
+	yyBuffer_capacity: INTEGER = 16384
 			-- Capacity of default input buffer
 
-	yyEnd_of_buffer_character: CHARACTER is '%U'
+	yyEnd_of_buffer_character: CHARACTER = '%U'
 			-- End of buffer character
 
-	yyEnd_of_file_character: CHARACTER is '%/255/'
+	yyEnd_of_file_character: CHARACTER = '%/255/'
 			-- End of file character
 
-	yyNew_line_character: CHARACTER is '%N'
+	yyNew_line_character: CHARACTER = '%N'
 			-- New line character
 
-	yyEnd_of_buffer: INTEGER is
+	yyEnd_of_buffer: INTEGER
 			-- End of buffer rule code
 		deferred
 		end
 
-	yyBacking_up: BOOLEAN is
+	yyBacking_up: BOOLEAN
 			-- Does current scanner back up?
 			-- (i.e. does it have non-accepting states)
 		deferred
 		end
 
-	yyLine_used: BOOLEAN is
+	yyLine_used: BOOLEAN
 			-- Are line and column numbers used?
 		deferred
 		end
 
-	yyPosition_used: BOOLEAN is
+	yyPosition_used: BOOLEAN
 			-- Is `position' used?
 		deferred
 		end
 
-	yyNull_equiv_class: INTEGER is
+	yyNull_equiv_class: INTEGER
 			-- Equivalence code for NULL character
 		deferred
 		end
 
-	yy_Dummy: INTEGER is 2147483647
+	yy_Dummy: INTEGER = 2147483647
 			-- To be inserted in manifest arrays
 			-- in order to make SE 2.1b1 happy.
 

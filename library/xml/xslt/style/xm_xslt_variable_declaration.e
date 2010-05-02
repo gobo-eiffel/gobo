@@ -23,16 +23,16 @@ inherit
 
 feature -- Access
 
-	required_type: XM_XPATH_SEQUENCE_TYPE is
+	required_type: XM_XPATH_SEQUENCE_TYPE
 			-- Static type of the variable
 		deferred
 		ensure
 			required_type_not_void: Result /= Void
 		end
 
-	
-	slot_number: INTEGER is
-			-- Slot number 
+
+	slot_number: INTEGER
+			-- Slot number
 		require
 			--non_redundant_global_variable: is_global_variable and then not is_redundant_variable
 		do
@@ -41,13 +41,13 @@ feature -- Access
 			--strictly_positive_result: Result > 0
 			positive_result: Result >= 0
 		end
-			
+
 	references: DS_ARRAYED_LIST [XM_XPATH_VARIABLE_REFERENCE]
 			-- List of XM_XPATH_VARIABLE_REFERENCE objects that reference `Current'
-										  
+
 feature -- Element change
 
-	register_reference (a_reference: XM_XPATH_VARIABLE_REFERENCE) is
+	register_reference (a_reference: XM_XPATH_VARIABLE_REFERENCE)
 			-- Register `ref' as a reference to this variable for fix-up.
 			-- This routine is called by the XPath parser when
 			-- each reference to the variable is enountered.
@@ -61,7 +61,7 @@ feature -- Element change
 			references.put_last (a_reference)
 		end
 
-	fixup_references is
+	fixup_references
 			-- Fix up references from XPath expressions.
 		local
 			l_constant_value: XM_XPATH_VALUE
@@ -72,11 +72,11 @@ feature -- Element change
 				if select_expression /= Void and then select_expression.is_value
 					and then not select_expression.depends_upon_implicit_timezone then
 					l_constant_value := select_expression.as_value
-					
+
 					-- We can't rely on the constant value, as it hasn't been type-checked yet
 					--  (e.g. numeric promotion might change it).
 					-- So we do a quick check for now:
-					
+
 					l_relationship := type_relationship (select_expression.item_type, required_type.primary_type)
 					if l_relationship = Same_item_type or l_relationship = Subsumed_type then
 						-- OK
@@ -89,7 +89,7 @@ feature -- Element change
 			Precursor
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 			-- This is called once for each element, after the entire tree has been built.
 			-- As well as validation, it can perform first-time initialisation.
@@ -124,7 +124,7 @@ feature -- Element change
 			validated := True
 		end
 
-	fixup_binding (a_binding: XM_XPATH_BINDING) is
+	fixup_binding (a_binding: XM_XPATH_BINDING)
 			-- Notify all variable references of the Binding instruction.
 		require
 			binding_not_void: a_binding /= Void
@@ -134,13 +134,13 @@ feature -- Element change
 
 feature -- Conversion
 
-	is_xslt_variable_declaration: BOOLEAN is
+	is_xslt_variable_declaration: BOOLEAN
 			-- Is `Current' an xsl:variable or xsl:param?
 		do
 			Result := True
 		end
 
-	as_xslt_variable_declaration: XM_XSLT_VARIABLE_DECLARATION is
+	as_xslt_variable_declaration: XM_XSLT_VARIABLE_DECLARATION
 			-- `Current' seen as an XSLT variable declaration
 		do
 			Result := Current

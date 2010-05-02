@@ -21,19 +21,19 @@ inherit
 
 feature -- Access
 
-	is_sequence_value: BOOLEAN is
+	is_sequence_value: BOOLEAN
 			-- Is `Current' a sequence value?
 		do
 			Result := True
 		end
 
-	as_sequence_value: XM_XPATH_SEQUENCE_VALUE is
+	as_sequence_value: XM_XPATH_SEQUENCE_VALUE
 			-- `Current' seen as a sequence value
 		do
 			Result := Current
 		end
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type
 		do
 			Result := any_item
@@ -45,7 +45,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_convertible_to_item (a_context: XM_XPATH_CONTEXT): BOOLEAN is
+	is_convertible_to_item (a_context: XM_XPATH_CONTEXT): BOOLEAN
 			-- Can `Current' be converted to an `XM_XPATH_ITEM'?
 		local
 			a_saved_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -66,7 +66,7 @@ feature -- Status report
 			last_iterator := a_saved_iterator
 		end
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -104,7 +104,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			create_iterator (a_context)
@@ -118,7 +118,7 @@ feature -- Evaluation
 			end
 		end
 
-	evaluate_as_string (a_context: XM_XPATH_CONTEXT) is
+	evaluate_as_string (a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a String
 		local
 			l_result: DS_CELL [XM_XPATH_ITEM]
@@ -128,13 +128,13 @@ feature -- Evaluation
 			if not l_result.item.is_string_value then
 				create last_evaluated_string.make ("")
 			else
-				last_evaluated_string := l_result.item.as_string_value 
+				last_evaluated_string := l_result.item.as_string_value
 			end
 		end
 
 feature  -- Conversion
 
-	as_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+	as_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM
 			-- Convert to an item
 		do
 			create_iterator (a_context)
@@ -147,7 +147,7 @@ feature  -- Conversion
 				end
 			else
 				create {XM_XPATH_INVALID_ITEM} Result.make (last_iterator.error_value)
-			end		
+			end
 		end
 
 end

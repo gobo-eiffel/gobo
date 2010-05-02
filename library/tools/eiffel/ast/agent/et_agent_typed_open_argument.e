@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type: like type) is
+	make (a_type: like type)
 			-- Create a new typed open argument.
 		do
 			type := a_type
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_open_operand: BOOLEAN is True
+	is_open_operand: BOOLEAN = True
 			-- Is current operand open?
 
 feature -- Access
@@ -51,13 +51,13 @@ feature -- Access
 	question_mark: ET_QUESTION_MARK_SYMBOL
 			-- '?' symbol
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := question_mark
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := question_mark.break
@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_question_mark (a_question_mark: like question_mark) is
+	set_question_mark (a_question_mark: like question_mark)
 			-- Set `question_mark' to `a_question_mark'.
 		require
 			a_question_mark_not_void: a_question_mark /= Void
@@ -77,7 +77,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_agent_typed_open_argument (Current)

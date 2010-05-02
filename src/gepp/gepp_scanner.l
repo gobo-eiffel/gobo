@@ -160,7 +160,7 @@ WS					[ \t\r]+
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new scanner.
 		do
 			make_with_buffer (Empty_buffer)
@@ -170,7 +170,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset scanner before scanning next input.
 		do
 			reset_compressed_scanner_skeleton
@@ -182,7 +182,7 @@ feature -- Access
 	line_nb: INTEGER
 			-- Current line number
 
-	include_stack: DS_STACK [YY_BUFFER] is
+	include_stack: DS_STACK [YY_BUFFER]
 			-- Input buffers not completely parsed yet
 		deferred
 		ensure
@@ -190,7 +190,7 @@ feature -- Access
 			no_void_buffer: not Result.has (Void)
 		end
 
-	line_nb_stack: DS_STACK [INTEGER] is
+	line_nb_stack: DS_STACK [INTEGER]
 			-- Line numbers in the corresponding input buffers in `include_stack'
 		deferred
 		ensure
@@ -200,7 +200,7 @@ feature -- Access
 
 feature -- Status report
 
-	ignored: BOOLEAN is
+	ignored: BOOLEAN
 			-- Is current line ignored?
 		deferred
 		end
@@ -211,7 +211,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_empty_lines (b: BOOLEAN) is
+	set_empty_lines (b: BOOLEAN)
 			-- Set `empty_lines' to `b'.
 		do
 			empty_lines := b
@@ -221,7 +221,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	wrap: BOOLEAN is
+	wrap: BOOLEAN
 			-- Should current scanner terminate when end of file is reached?
 			-- True unless an include file was being processed.
 		local
@@ -251,7 +251,7 @@ feature -- Output
 	output_file: KI_TEXT_OUTPUT_STREAM
 			-- Output file
 
-	set_output_file (a_file: like output_file) is
+	set_output_file (a_file: like output_file)
 			-- Set `output_file' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -262,7 +262,7 @@ feature -- Output
 			output_file_set: output_file = a_file
 		end
 
-	output (a_text: like text) is
+	output (a_text: like text)
 			-- Output `a_text' to `output_file'.
 		local
 			nb: INTEGER

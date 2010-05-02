@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_node_type: INTEGER) is
+	make (a_node_type: INTEGER)
 			-- Establish invariant
 		require
 			valid_node_type: is_node_type (a_node_type) and then a_node_type /= Any_node -- Use XM_XPATH_SHARED_ANY_NODE_TEST for that
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			kind_set: node_kind = a_node_type
 		end
 
-	make_document_test is
+	make_document_test
 			-- Make a test that matches document nodes.
 		do
 			make (Document_node)
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			matches_documents: node_kind = Document_node
 		end
 
-	make_element_test is
+	make_element_test
 			-- Make a test that matches element nodes.
 		do
 			make (Element_node)
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			matches_elements: node_kind = Element_node
 		end
 
-	make_attribute_test is
+	make_attribute_test
 			-- Make a test that matches attribute nodes.
 		do
 			make (Attribute_node)
@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 			matches_attributes: node_kind = Attribute_node
 		end
 
-	make_namespace_test is
+	make_namespace_test
 			-- Make a test that matches namespace nodes.
 		do
 			make (Namespace_node)
@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 			matches_namespaces: node_kind = Namespace_node
 		end
 
-	make_text_test is
+	make_text_test
 			-- Make a test that matches text nodes.
 		do
 			make (Text_node)
@@ -80,7 +80,7 @@ feature {NONE} -- Initialization
 			matches_text: node_kind = Text_node
 		end
 
-	make_comment_test is
+	make_comment_test
 			-- Make a test that matches comment nodes.
 		do
 			make (Comment_node)
@@ -88,7 +88,7 @@ feature {NONE} -- Initialization
 			matches_comments: node_kind = Comment_node
 		end
 
-	make_processing_instruction_test is
+	make_processing_instruction_test
 			-- Make a test that matches processing-instruction nodes.
 		do
 			make (Processing_instruction_node)
@@ -101,29 +101,29 @@ feature -- Access
 	node_kind: INTEGER
 			-- Type of nodes to which this pattern applies
 
-	node_kind_mask: INTEGER is
+	node_kind_mask: INTEGER
 			-- Mask of types of nodes matched
 		do
 			Result := INTEGER_.bit_shift_left (1, node_kind)
 		end
 
-	content_type: XM_XPATH_SCHEMA_TYPE is
+	content_type: XM_XPATH_SCHEMA_TYPE
 			-- Content type
 		do
 			if node_kind = Attribute_node then
-				create {XM_XPATH_ANY_SIMPLE_TYPE} Result.make 
+				create {XM_XPATH_ANY_SIMPLE_TYPE} Result.make
 			else
 				Result := Precursor
 			end
 		end
 
-	is_node_kind_test: BOOLEAN is
+	is_node_kind_test: BOOLEAN
 			-- Is `Current' a node kind test?
 		do
 			Result := True
 		end
 
-	as_node_kind_test: XM_XPATH_NODE_KIND_TEST is
+	as_node_kind_test: XM_XPATH_NODE_KIND_TEST
 			-- `Current' seen as a node kind test
 		do
 			Result := Current
@@ -131,7 +131,7 @@ feature -- Access
 
 feature -- Status report
 
-	allows_text_nodes: BOOLEAN is
+	allows_text_nodes: BOOLEAN
 			-- Does this node test allow text nodes?
 		do
 			Result := node_kind = Text_node
@@ -139,11 +139,11 @@ feature -- Status report
 
 feature -- Matching
 
-	matches_node (a_node_kind: INTEGER; a_fingerprint: INTEGER; a_node_type: INTEGER): BOOLEAN is
+	matches_node (a_node_kind: INTEGER; a_fingerprint: INTEGER; a_node_type: INTEGER): BOOLEAN
 			-- Is this node test satisfied by a given node?
 		do
 			Result := node_kind = a_node_kind
-		end	
+		end
 
 invariant
 

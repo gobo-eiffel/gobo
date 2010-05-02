@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_base_iterator: like base_iterator; a_mapping_function: like mapping_function) is
+	make (a_base_iterator: like base_iterator; a_mapping_function: like mapping_function)
 			-- Establish invariant.
 		require
 			base_iterator_before: a_base_iterator /= Void and then not a_base_iterator.is_error and then a_base_iterator.before
@@ -45,7 +45,7 @@ feature -- Access
 
 feature -- Status report
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
 			Result := not base_iterator.before and then base_iterator.after
@@ -53,7 +53,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move to next position
 		do
 			index := index + 1
@@ -80,7 +80,7 @@ feature -- Cursor movement
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 			create Result.make (base_iterator.another, mapping_function)

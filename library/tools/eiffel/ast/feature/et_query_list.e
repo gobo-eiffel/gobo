@@ -25,7 +25,7 @@ create
 
 feature -- Access
 
-	item (i: INTEGER): ET_QUERY is
+	item (i: INTEGER): ET_QUERY
 			-- Query at index `i' in list
 		do
 			Result := storage.item (count - i)
@@ -33,7 +33,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_QUERY] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_QUERY]
 			-- Fixed array routines
 		once
 			create Result

@@ -272,7 +272,7 @@ feature -- Access
 				j := j + 1
 			end
 		ensure
-			copied: -- for i in 0..end_pos - start_pos, a_area [i] = Current [i + start_pos]			
+			copied: -- for i in 0..end_pos - start_pos, a_area [i] = Current [i + start_pos]
 		end
 
 	item: POINTER

@@ -48,7 +48,7 @@ feature -- Comparison
 			temp: like Current
 		do
 			if not is_empty then
-				temp := duplicate (count)	
+				temp := duplicate (count)
 				temp.intersect (other)
 				Result := temp.is_empty
 			else
@@ -113,7 +113,7 @@ feature -- Basic operations
 		local
 			temp: like Current
 		do
-			temp := duplicate (count)	
+			temp := duplicate (count)
 			temp.intersect (other)
 			merge (other)
 			subtract (temp)

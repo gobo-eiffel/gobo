@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_description: LX_DESCRIPTION) is
+	make (a_description: LX_DESCRIPTION)
 			-- Create a new full table DFA using `start_conditions'
 			-- from `a_description' to build the start states and
 			-- user-defined options held in `a_description'.
@@ -51,13 +51,13 @@ feature {NONE} -- Initialization
 
 feature -- Generation
 
-	new_scanner: LX_FULL_SCANNER is
+	new_scanner: LX_FULL_SCANNER
 			-- New scanner corresponding to current DFA
 		do
 			create Result.make (Current)
 		end
 
-	print_backing_up_report (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_backing_up_report (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print a backing-up report to `a_file'.
 		do
 			Precursor (a_file)
@@ -75,10 +75,10 @@ feature -- Generation
 
 feature {NONE} -- Generation
 
-	print_build_tables (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_build_tables (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print code for `yy_build_tables' to `a_file'.
 		do
-			a_file.put_string ("%Tyy_build_tables is%N%
+			a_file.put_string ("%Tyy_build_tables%N%
 				%%T%T%T-- Build scanner tables.%N%T%Tdo%N")
 			a_file.put_string (Indentation)
 			a_file.put_string ("yy_nxt := yy_nxt_template%N")
@@ -91,7 +91,7 @@ feature {NONE} -- Generation
 			a_file.put_string ("%T%Tend%N")
 		end
 
-	print_eiffel_tables (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_eiffel_tables (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print Eiffel code for full tables to `a_file'.
 		do
 			print_eiffel_array ("yy_nxt_template", yy_nxt, a_file)
@@ -103,16 +103,16 @@ feature {NONE} -- Generation
 			print_eiffel_array ("yy_accept_template", yy_accept, a_file)
 		end
 
-	print_constants (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_constants (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print code for constants to `a_file'.
 		do
-			a_file.put_string ("%TyyNull_equiv_class: INTEGER is ")
+			a_file.put_string ("%TyyNull_equiv_class: INTEGER = ")
 			a_file.put_integer (yyNull_equiv_class)
 			a_file.put_string ("%N%T%T%T-- Equivalence code for NULL character%
-				%%N%N%TyyNb_rows: INTEGER is ")
+				%%N%N%TyyNb_rows: INTEGER = ")
 			a_file.put_integer (yyNb_rows)
 			a_file.put_string ("%N%T%T%T-- Number of rows in `yy_nxt'%N%N%
-				%%TyyBacking_up: BOOLEAN is ")
+				%%TyyBacking_up: BOOLEAN = ")
 			BOOLEAN_FORMATTER_.put_eiffel_boolean (a_file, yyBacking_up)
 			a_file.put_string ("%N%T%T%T-- Does current scanner back up?%N%
 				%%T%T%T-- (i.e. does it have non-accepting states)%N%N")
@@ -121,7 +121,7 @@ feature {NONE} -- Generation
 
 feature -- Building
 
-	build is
+	build
 			-- Build current DFA.
 		local
 			i: INTEGER
@@ -163,7 +163,7 @@ feature -- Building
 
 feature {NONE} -- Building
 
-	build_nxt_table is
+	build_nxt_table
 			-- Build `yy_nxt' table.
 		local
 			yy_nxt_: ARRAY [INTEGER]
@@ -217,7 +217,7 @@ feature {NONE} -- Building
 			yy_nxt_not_void: yy_nxt /= Void
 		end
 
-	build_accept_table is
+	build_accept_table
 			-- Build `yy_accept' table.
 		local
 			yy_accept_: ARRAY [INTEGER]
@@ -246,10 +246,10 @@ feature {NONE} -- Building
 
 feature {NONE} -- Constants
 
-	Initial_max_xpairs: INTEGER is 2000
+	Initial_max_xpairs: INTEGER = 2000
 			-- Initial capacity for the arrays of next/check pairs for non-templates
 
-	Max_xpairs_increment: INTEGER is 2000
+	Max_xpairs_increment: INTEGER = 2000
 			-- Inrcement when resizingthe arrays of next/check pairs for non-templates
 
 end

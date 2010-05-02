@@ -23,7 +23,7 @@ create
 
 feature -- Tests
 
-	test_decoding is
+	test_decoding
 			-- Test base64 decoding via a proxy string stream.
 		local
 			a_string_stream: KL_STRING_INPUT_STREAM
@@ -44,7 +44,7 @@ feature -- Tests
 			assert ("round_trip", STRING_.same_string (an_output_stream.string, encoded_string))
 		end
 
-	test_encoding_decoding_numerals is
+	test_encoding_decoding_numerals
 			-- Test base64 encoding and decoding of numerals.
 		local
 			i: INTEGER
@@ -68,10 +68,10 @@ feature -- Tests
 
 feature {NONE} -- Implementation
 
-	encoded_string: STRING is "R0lGODdhMAAwAPAAAAAAAP///ywAAAAAMAAwAAAC8IyPqcvt3wCcDkiLc7C0qwyGHhSWpjQu5yqmCYsapyuvUUlvONmOZtfzgFzByTB10QgxOR0TqBQejhRNzOfkVJ+5YiUqrXF5Y5lKh/DeuNcP5yLWGsEbtLiOSpa/TPg7JpJHxyendzWTBfX0cxOnKPjgBzi4diinWGdkF8kjdfnycQZXZeYGejmJlZeGl9i2icVqaNVailT6F5iJ90m6mvuTS4OK05M0vDk0Q4XUtwvKOzrcd3iq9uisF81M1OIcR7lEewwcLp7tuNNkM3uNna3F2JQFo97Vriy/Xl4/f1cf5VWzXyym7PHhhx4dbgYKAAA7"
+	encoded_string: STRING = "R0lGODdhMAAwAPAAAAAAAP///ywAAAAAMAAwAAAC8IyPqcvt3wCcDkiLc7C0qwyGHhSWpjQu5yqmCYsapyuvUUlvONmOZtfzgFzByTB10QgxOR0TqBQejhRNzOfkVJ+5YiUqrXF5Y5lKh/DeuNcP5yLWGsEbtLiOSpa/TPg7JpJHxyendzWTBfX0cxOnKPjgBzi4diinWGdkF8kjdfnycQZXZeYGejmJlZeGl9i2icVqaNVailT6F5iJ90m6mvuTS4OK05M0vDk0Q4XUtwvKOzrcd3iq9uisF81M1OIcR7lEewwcLp7tuNNkM3uNna3F2JQFo97Vriy/Xl4/f1cf5VWzXyym7PHhhx4dbgYKAAA7"
 			-- base64-encoded image/gif file
 
-	encoded_base64_binary (a_text: STRING): STRING is
+	encoded_base64_binary (a_text: STRING): STRING
 			-- `a_text' encoded as base64-binary
 		local
 			l_string_stream: KL_STRING_OUTPUT_STREAM
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 			Result := l_string_stream.string
 		end
 
-	decoded_base64_binary (a_text: STRING): STRING is
+	decoded_base64_binary (a_text: STRING): STRING
 			-- Decoded version of `a_text' from base64-binary
 		local
 			l_string_stream: KL_STRING_INPUT_STREAM

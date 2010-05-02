@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	monday: DT_WEEK_DAY_FROM_MONDAY is
+	monday: DT_WEEK_DAY_FROM_MONDAY
 			-- Monday
 		once
 			create Result.make_monday
@@ -27,7 +27,7 @@ feature -- Access
 			is_monday: Result.is_monday
 		end
 
-	tuesday: DT_WEEK_DAY_FROM_MONDAY is
+	tuesday: DT_WEEK_DAY_FROM_MONDAY
 			-- Tuesday
 		once
 			create Result.make_tuesday
@@ -36,7 +36,7 @@ feature -- Access
 			is_tuesday: Result.is_tuesday
 		end
 
-	wednesday: DT_WEEK_DAY_FROM_MONDAY is
+	wednesday: DT_WEEK_DAY_FROM_MONDAY
 			-- Wednesday
 		once
 			create Result.make_wednesday
@@ -45,7 +45,7 @@ feature -- Access
 			is_wednesday: Result.is_wednesday
 		end
 
-	thursday: DT_WEEK_DAY_FROM_MONDAY is
+	thursday: DT_WEEK_DAY_FROM_MONDAY
 			-- Thursday
 		once
 			create Result.make_thursday
@@ -54,7 +54,7 @@ feature -- Access
 			is_thursday: Result.is_thursday
 		end
 
-	friday: DT_WEEK_DAY_FROM_MONDAY is
+	friday: DT_WEEK_DAY_FROM_MONDAY
 			-- Friday
 		once
 			create Result.make_friday
@@ -63,7 +63,7 @@ feature -- Access
 			is_friday: Result.is_friday
 		end
 
-	saturday: DT_WEEK_DAY_FROM_MONDAY is
+	saturday: DT_WEEK_DAY_FROM_MONDAY
 			-- Saturday
 		once
 			create Result.make_saturday
@@ -72,7 +72,7 @@ feature -- Access
 			is_saturday: Result.is_saturday
 		end
 
-	sunday: DT_WEEK_DAY_FROM_MONDAY is
+	sunday: DT_WEEK_DAY_FROM_MONDAY
 			-- Sunday
 		once
 			create Result.make_sunday
@@ -81,7 +81,7 @@ feature -- Access
 			is_sunday: Result.is_sunday
 		end
 
-	week_day_from_code (a_code: INTEGER): DT_WEEK_DAY_FROM_MONDAY is
+	week_day_from_code (a_code: INTEGER): DT_WEEK_DAY_FROM_MONDAY
 			-- Week day with code `a_code'
 		require
 			a_code_valid: a_code >= 1 and a_code <= Days_in_week
@@ -112,7 +112,7 @@ feature -- Access
 			sunday: a_code = sunday_code implies Result = sunday
 		end
 
-	week_day_from_date (a_date: DT_DATE): DT_WEEK_DAY_FROM_MONDAY is
+	week_day_from_date (a_date: DT_DATE): DT_WEEK_DAY_FROM_MONDAY
 			-- Week day for `a_date'
 		require
 			a_date_not_void: a_date /= Void
@@ -122,7 +122,7 @@ feature -- Access
 			week_day_not_void: Result /= Void
 		end
 
-	week_day_from_year_month_day (a_year, a_month, a_day: INTEGER): DT_WEEK_DAY_FROM_MONDAY is
+	week_day_from_year_month_day (a_year, a_month, a_day: INTEGER): DT_WEEK_DAY_FROM_MONDAY
 			-- Week day for `a_day' in `a_month' of `a_year'
 		require
 			month_large_enough: a_month >= January
@@ -147,25 +147,25 @@ feature -- Access
 
 feature -- Codes
 
-	monday_code: INTEGER is 1
+	monday_code: INTEGER = 1
 			-- Code for Monday
 
-	tuesday_code: INTEGER is 2
+	tuesday_code: INTEGER = 2
 			-- Code for Tuesday
 
-	wednesday_code: INTEGER is 3
+	wednesday_code: INTEGER = 3
 			-- Code for Wednesday
 
-	thursday_code: INTEGER is 4
+	thursday_code: INTEGER = 4
 			-- Code for Thursday
 
-	friday_code: INTEGER is 5
+	friday_code: INTEGER = 5
 			-- Code for Friday
 
-	saturday_code: INTEGER is 6
+	saturday_code: INTEGER = 6
 			-- Code for Saturday
 
-	sunday_code: INTEGER is 7
+	sunday_code: INTEGER = 7
 			-- Code for Sunday
 
 end

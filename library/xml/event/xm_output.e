@@ -24,7 +24,7 @@ inherit
 
 feature -- Output
 
-	set_output_to_string is
+	set_output_to_string
 			-- Set output to new string.
 		do
 			create last_output.make_empty
@@ -34,7 +34,7 @@ feature -- Output
 			last_output_empty: last_output.count = 0
 		end
 
-	set_output_string (a_string: like last_output) is
+	set_output_string (a_string: like last_output)
 			-- Initialize output to given string,
 			-- the result must still be collected from
 			-- last_output, which may be another string.
@@ -45,7 +45,7 @@ feature -- Output
 			output_stream := Void
 		end
 
-	set_output_stream (a_stream: like output_stream) is
+	set_output_stream (a_stream: like output_stream)
 			-- Set output to stream.
 		require
 			a_stream_not_void: a_stream /= Void
@@ -54,14 +54,14 @@ feature -- Output
 			last_output := Void
 		end
 
-	set_output_standard is
+	set_output_standard
 			-- Set output to standard output (Default).
 		do
 			output_stream := std.output
 			last_output := Void
 		end
 
-	set_output_standard_error is
+	set_output_standard_error
 			-- Set output to standard error.
 		do
 			output_stream := std.error
@@ -72,7 +72,7 @@ feature -- Output
 			-- Last output;
 			-- May be void if standard output or stream is used.
 
-	flush is
+	flush
 			-- Flush `output_stream'.
 		do
 			if output_stream /= Void and then output_stream.is_open_write then
@@ -86,7 +86,7 @@ feature {NONE} -- Output stream
 
 feature -- Output, interface to descendants
 
-	output (a_string: STRING) is
+	output (a_string: STRING)
 			-- Output string.
 			-- All output from descendants should go through this for
 			-- convenient redefinition.

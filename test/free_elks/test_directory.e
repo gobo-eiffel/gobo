@@ -22,7 +22,7 @@ create
 
 feature -- Test
 
-	test_has_entry is
+	test_has_entry
 			-- Test feature 'has_entry'.
 		local
 			d: DIRECTORY

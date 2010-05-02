@@ -37,7 +37,7 @@ create
 
 feature -- Access
 
-	new_cursor: DS_MULTIARRAYED_HASH_TABLE_CURSOR [G, K] is
+	new_cursor: DS_MULTIARRAYED_HASH_TABLE_CURSOR [G, K]
 			-- New external cursor for traversal
 		do
 			create Result.make (Current)
@@ -48,7 +48,7 @@ feature -- Hashing
 	hash_function: KL_HASH_FUNCTION [K]
 			-- Hash function to compute position in the container
 
-	set_hash_function (a_hash_function: like hash_function) is
+	set_hash_function (a_hash_function: like hash_function)
 			-- Set `hash_function' to `a_hash_function'.
 		require
 			empty: is_empty
@@ -60,7 +60,7 @@ feature -- Hashing
 
 feature {NONE} -- Implementation
 
-	hash_position (k: K): INTEGER is
+	hash_position (k: K): INTEGER
 			-- Hash position of `k' in `slots';
 			-- Use `hash_function' as hashing function
 			-- if not Void, `k.hash_code' otherwise.

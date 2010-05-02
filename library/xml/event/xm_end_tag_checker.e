@@ -31,7 +31,7 @@ create
 
 feature -- Document
 
-	on_start is
+	on_start
 			-- Initialize.
 		do
 			prefixes := new_string_stack
@@ -41,7 +41,7 @@ feature -- Document
 
 feature -- Tag
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Start of start tag.
 		do
 			prefixes.force (a_prefix)
@@ -49,7 +49,7 @@ feature -- Tag
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- End tag.
 		do
 			if prefixes.count >= 0 then
@@ -77,8 +77,8 @@ feature {NONE} -- Mean version of STACK [PREFIX+NAME]
 
 feature {NONE} -- Errors
 
-	End_tag_mismatch_error: STRING is "End tag does not match start tag"
-	Extra_end_tag_error: STRING is "End tag without start tag"
+	End_tag_mismatch_error: STRING = "End tag does not match start tag"
+	Extra_end_tag_error: STRING = "End tag without start tag"
 			-- Error messages
 
 end

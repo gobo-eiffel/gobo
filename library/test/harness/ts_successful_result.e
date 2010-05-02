@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_test: like test) is
+	make (a_test: like test)
 			-- Create a new successful result associated with `a_test'.
 		require
 			a_test_not_void: a_test /= Void
@@ -37,12 +37,12 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	passed: BOOLEAN is True
+	passed: BOOLEAN = True
 			-- Has `test' passed?
 
 feature -- Output
 
-	print_result (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_result (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print result to `a_file'.
 		do
 			a_file.put_string ("PASS:  [")

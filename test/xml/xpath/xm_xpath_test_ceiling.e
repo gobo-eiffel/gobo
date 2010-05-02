@@ -21,7 +21,7 @@ inherit
 		end
 
 	XM_XPATH_TYPE
-	
+
 	XM_XPATH_ERROR_TYPES
 
 	XM_XPATH_SHARED_CONFORMANCE
@@ -32,7 +32,7 @@ inherit
 
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
-	
+
 	UT_SHARED_FILE_URI_ROUTINES
 		export {NONE} all end
 
@@ -42,7 +42,7 @@ create
 
 feature -- Constant
 
-	eleven: MA_DECIMAL is
+	eleven: MA_DECIMAL
 			-- 11 as a decimal
 		once
 			create Result.make_from_integer (11)
@@ -50,7 +50,7 @@ feature -- Constant
 			eleven_not_void: Result /= Void
 		end
 
-	minus_ten: MA_DECIMAL is
+	minus_ten: MA_DECIMAL
 			-- -10 as a decimal
 		once
 			create Result.make_from_integer (-10)
@@ -60,7 +60,7 @@ feature -- Constant
 
 feature -- Test
 
-	test_positive_ceiling is
+	test_positive_ceiling
 			-- Test fn:ceiling (10.5) returns 11.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -80,7 +80,7 @@ feature -- Test
 			assert ("Result is 11", a_decimal_value.value.is_equal (eleven))
 		end
 
-	test_negative_ceiling is
+	test_negative_ceiling
 			-- Test fn:ceiling (-10.5) returns -10.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -100,7 +100,7 @@ feature -- Test
 			assert ("Result is -10", a_decimal_value.value.is_equal (minus_ten))
 		end
 
-	test_positive_float_ceiling is
+	test_positive_float_ceiling
 			-- Test fn:ceiling (xs:float(10.5E0)) returns 11.0.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -120,7 +120,7 @@ feature -- Test
 			assert ("Result is 11.0", a_float_value.value = 11.0)
 		end
 
-	test_positive_double_ceiling is
+	test_positive_double_ceiling
 			-- Test fn:ceiling (10.5E0) returns 11.0.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -140,7 +140,7 @@ feature -- Test
 			assert ("Result is 11.0", a_double_value.value = 11.0)
 		end
 
-	test_negative_double_ceiling is
+	test_negative_double_ceiling
 			-- Test fn:ceiling (-10.5) returns -10.0.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -160,14 +160,14 @@ feature -- Test
 			assert ("Result is -10.0", a_double_value.value = -10.0)
 		end
 
-	set_up is
+	set_up
 		do
 			conformance.set_basic_xslt_processor
 		end
 
 feature {NONE} -- Implementation
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}",
@@ -177,8 +177,8 @@ feature {NONE} -- Implementation
 			data_dirname_not_void: Result /= Void
 			data_dirname_not_empty: not Result.is_empty
 		end
-		
-	books_xml_uri: UT_URI is
+
+	books_xml_uri: UT_URI
 			-- URI of file 'books.xml'
 		local
 			a_path: STRING
@@ -191,4 +191,4 @@ feature {NONE} -- Implementation
 
 end
 
-			
+

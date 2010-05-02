@@ -18,7 +18,7 @@ inherit
 
 feature -- Input
 
-	read_line is
+	read_line
 			-- Read characters from input stream until a line separator
 			-- or end of file is reached. Make the characters that have
 			-- been read available in `last_string' and discard the line
@@ -31,7 +31,7 @@ feature -- Input
 			last_string_not_void: not end_of_input implies last_string /= Void
 		end
 
-	read_new_line is
+	read_new_line
 			-- Read a line separator from input stream.
 			-- Make the characters making up the recognized
 			-- line separator available in `last_string',
@@ -49,7 +49,7 @@ feature -- Input
 
 feature -- Access
 
-	eol: STRING is
+	eol: STRING
 			-- Line separator
 		deferred
 		ensure

@@ -17,7 +17,7 @@ inherit
 
 feature -- Access
 
-	target: ANY is
+	target: ANY
 			-- Target of call, if already known
 		do
 			if is_target_closed then
@@ -25,13 +25,13 @@ feature -- Access
 			end
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value.
 		do
 			Result := 1
 		end
 
-	precondition (args: OPEN_ARGS): BOOLEAN is
+	precondition (args: OPEN_ARGS): BOOLEAN
 			-- Do `args' satisfy routine's precondition
 			-- in current state?
 		do
@@ -39,7 +39,7 @@ feature -- Access
 			--| FIXME compiler support needed!
 		end
 
-	postcondition (args: OPEN_ARGS): BOOLEAN is
+	postcondition (args: OPEN_ARGS): BOOLEAN
 			-- Does current state satisfy routine's
 			-- postcondition for `args'?
 		do
@@ -47,7 +47,7 @@ feature -- Access
 			--| FIXME compiler support needed!
 		end
 
-	empty_operands: OPEN_ARGS is
+	empty_operands: OPEN_ARGS
 			-- Empty tuple matching open operands
 		do
 			create Result
@@ -57,13 +57,13 @@ feature -- Access
 
 feature -- Status report
 
-	callable: BOOLEAN is
+	callable: BOOLEAN
 			-- Can routine be called on current object?
 		do
 			Result := True
 		end
 
-	valid_operands (args: TUPLE): BOOLEAN is
+	valid_operands (args: TUPLE): BOOLEAN
 			-- Are `args' valid operands for this routine?
 		local
 			l_expected_args: OPEN_ARGS
@@ -103,7 +103,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_target (a_target: like target) is
+	set_target (a_target: like target)
 			-- Set `a_target' as the next `target' for remaining calls to Current.
 		require
 			a_target_not_void: a_target /= Void
@@ -118,7 +118,7 @@ feature -- Setting
 
 feature -- Basic operations
 
-	call (args: OPEN_ARGS) is
+	call (args: OPEN_ARGS)
 			-- Call routine with operands `args'.
 		require
 			valid_operands: valid_operands (args)

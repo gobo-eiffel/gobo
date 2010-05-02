@@ -22,14 +22,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new all classes root.
 		do
 		end
 
 feature -- Element change
 
-	fill_root (a_system: ET_ECF_SYSTEM) is
+	fill_root (a_system: ET_ECF_SYSTEM)
 			-- Fill `a_system' with root information.
 		do
 			a_system.unset_root_type

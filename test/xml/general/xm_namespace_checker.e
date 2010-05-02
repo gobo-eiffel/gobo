@@ -1,9 +1,9 @@
 note
-	
+
 	description:
-	
+
 		"Test namespace resolution, event tester"
-		
+
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
 	license: "MIT License"
@@ -23,50 +23,50 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
-		
+
 create
 
 	make_null, set_next
-	
+
 feature -- Element change
 
-	set (a: like expected) is
+	set (a: like expected)
 			-- Set expected URI list.
 		do
 			expected := a
 		end
-		
+
 	expected: ARRAY [STRING]
 			-- Array of expected URIs
-		
+
 feature -- Events
 
-	on_start is
+	on_start
 			-- Initialize.
 		do
 			create actual.make
 		end
-		
-	on_start_tag (a_ns, a_pre, a_local: STRING) is
+
+	on_start_tag (a_ns, a_pre, a_local: STRING)
 			-- Check namespace.
 		do
 			check_namespace (a_ns)
 			next.on_start_tag (a_ns, a_pre, a_local)
 		end
-		
-	on_attribute (a_ns, a_pre, a_local: STRING; a_value: STRING) is
+
+	on_attribute (a_ns, a_pre, a_local: STRING; a_value: STRING)
 			-- Check namespace.
 		do
 			check_namespace (a_ns)
 			next.on_attribute (a_ns, a_pre, a_local, a_value)
 		end
-			
+
 feature {NONE} -- Implementation
 
 	actual: DS_LINKED_LIST [STRING]
 			-- Actual namespaces
 
-	check_namespace (a_ns: STRING) is
+	check_namespace (a_ns: STRING)
 			-- Build namespace event sequence for later checking.
 		do
 			if a_ns = Void then
@@ -75,14 +75,14 @@ feature {NONE} -- Implementation
 				actual.force_last (a_ns)
 			end
 		end
-		
+
 feature -- Status report
 
-	has_failed: BOOLEAN is
+	has_failed: BOOLEAN
 			-- Is there a failed index?
 		local
 			i: INTEGER
-			it: DS_LINEAR_CURSOR[STRING]	
+			it: DS_LINEAR_CURSOR[STRING]
 		do
 			Result := (expected = Void or actual = Void) or else actual.count /= expected.count
 			if not Result then
@@ -101,13 +101,13 @@ feature -- Status report
 				end
 			end
 		end
-					
-	failed: STRING is
+
+	failed: STRING
 			-- Failed message.
 		require
 			has: has_failed
 		local
-			it: DS_LINEAR_CURSOR[STRING]	
+			it: DS_LINEAR_CURSOR[STRING]
 		do
 			from
 				Result := ""
@@ -125,5 +125,5 @@ feature -- Status report
 				it.forth
 			end
 		end
-		
+
 end

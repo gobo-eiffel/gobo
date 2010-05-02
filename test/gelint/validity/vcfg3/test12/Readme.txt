@@ -60,7 +60,7 @@ create
 
 feature
 
-	make is
+	make
 		local
 			b: BB
 		do
@@ -81,7 +81,7 @@ inherit
 
 feature
 
-	g is
+	g
 		do
 			item1 := "gobo1"
 			item2 := "gobo2"
@@ -96,7 +96,7 @@ feature
 	item1: G
 	item2: H
 
-	f is
+	f
 		do
 			if item1 /= Void then
 				print (item1.generator)

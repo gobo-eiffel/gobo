@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_first, a_second: like first_operand_type; a_operation: like operation; a_result: like result_type) is
+	make (a_first, a_second: like first_operand_type; a_operation: like operation; a_result: like result_type)
 			-- Initialize `Current'.
 		require
 			a_result_not_void: a_result /= Void

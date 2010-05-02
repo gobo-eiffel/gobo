@@ -21,10 +21,10 @@ inherit
 
 feature -- Access
 
-	Many_references: INTEGER is 10
+	Many_references: INTEGER = 10
 			-- More than one reference
 
-	variable_reference_count (a_reference_list: DS_ARRAYED_LIST [XM_XPATH_VARIABLE_REFERENCE]; a_binding: XM_XPATH_BINDING): INTEGER is
+	variable_reference_count (a_reference_list: DS_ARRAYED_LIST [XM_XPATH_VARIABLE_REFERENCE]; a_binding: XM_XPATH_BINDING): INTEGER
 			-- Reference count at run-time. A reference in a loop counts as "many".
 			-- The value (0, 1 or many) does not have to be exact (unless it returns 0 incorrectly),
 			--  but if it returns 1 incorrectly, then the variable will be repeatedly evaluated.

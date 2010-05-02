@@ -11,7 +11,7 @@ note
 	revision: "$Revision$"
 
 class XM_XPATH_TINY_ANCESTOR_ENUMERATION
-	
+
 inherit
 
 	XM_XPATH_AXIS_ITERATOR [XM_XPATH_TINY_NODE]
@@ -22,10 +22,10 @@ inherit
 create
 
 	make
-	
+
 feature {NONE} -- Initialization
 
-	make (a_start_node: XM_XPATH_TINY_NODE; a_node_test: XM_XPATH_NODE_TEST; self: BOOLEAN) is
+	make (a_start_node: XM_XPATH_TINY_NODE; a_node_test: XM_XPATH_NODE_TEST; self: BOOLEAN)
 			-- Establish invariant
 		require
 			starting_node_not_void: a_start_node /= Void
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
 		local
 			a_tiny_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_TINY_NODE]
@@ -55,7 +55,7 @@ feature -- Access
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Move to next position
 		do
 			if include_self and node_test.matches_item (starting_node, False) then
@@ -67,7 +67,7 @@ feature -- Cursor movement
 			not_same_node: current_item /= Void and not include_self implies not starting_node.is_same_node (current_item)
 		end
 
-	forth is
+	forth
 			-- Move to next position
 		local
 			l_node: XM_XPATH_TINY_NODE
@@ -96,12 +96,12 @@ feature -- Cursor movement
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 			create Result.make (starting_node, node_test, include_self)
 		end
-	
+
 feature {NONE} -- Implemnentation
 
 	starting_node: XM_XPATH_TINY_NODE
@@ -113,16 +113,16 @@ feature {NONE} -- Implemnentation
 	include_self: BOOLEAN
 			-- Do we include ourself in the enumeration
 
-	advance is
+	advance
 			-- Move to the next matching node
 		do
 			-- Not used
 		end
-	
+
 invariant
 
 	starting_node_not_void: starting_node /= Void
 	node_test_not_void: node_test /= Void
-	
+
 end
-	
+

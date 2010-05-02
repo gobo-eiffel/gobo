@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: like parent; a_target: like target; a_data: like data) is
+	make (a_parent: like parent; a_target: like target; a_data: like data)
 			-- Create a new processing instruction node.
 		require
 			a_target_not_void: a_target /= Void
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			data_set: data = a_data
 		end
 
-	make_last (a_parent: XM_ELEMENT; a_target: like target; a_data: like data) is
+	make_last (a_parent: XM_ELEMENT; a_target: like target; a_data: like data)
 			-- Create a new processing instruction node,
 			-- and add it to parent.
 		require
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 			data_set: data = a_data
 		end
 
-	make_last_in_document (a_parent: XM_DOCUMENT; a_target: like target; a_data: like data) is
+	make_last_in_document (a_parent: XM_DOCUMENT; a_target: like target; a_data: like data)
 			-- Create a new processing instruction node.
 			-- and add it to parent.
 		require
@@ -91,7 +91,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_target (a_target: STRING) is
+	set_target (a_target: STRING)
 			-- Set target.
 		require
 			a_target_not_void: a_target /= Void
@@ -101,7 +101,7 @@ feature -- Setting
 			set: target = a_target
 		end
 
-	set_data (a_data: STRING) is
+	set_data (a_data: STRING)
 			-- Set data.
 		require
 			a_data_not_void: a_data /= Void
@@ -113,7 +113,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: XM_NODE_PROCESSOR) is
+	process (a_processor: XM_NODE_PROCESSOR)
 			-- Process current node with `a_processor'.
 		do
 			a_processor.process_processing_instruction (Current)

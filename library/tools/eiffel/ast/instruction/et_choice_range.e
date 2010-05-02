@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_lower: like lower; an_upper: like upper) is
+	make (a_lower: like lower; an_upper: like upper)
 			-- Create a new choice range.
 		require
 			a_lower_not_void: a_lower /= Void
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset choice range as it was when it was last parsed.
 		do
 			lower.reset
@@ -50,7 +50,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	is_range: BOOLEAN is True
+	is_range: BOOLEAN = True
 			-- Is current choice a range?
 
 feature -- Access
@@ -64,26 +64,26 @@ feature -- Access
 	dotdot: ET_SYMBOL
 			-- '..' symbol
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
 			Result := lower.position
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := lower.first_leaf
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := upper.last_leaf
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := upper.break
@@ -91,7 +91,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_dotdot (a_dotdot: like dotdot) is
+	set_dotdot (a_dotdot: like dotdot)
 			-- Set `dotdot' to `a_dotdot'.
 		require
 			a_dotdot_not_void: a_dotdot /= Void
@@ -103,7 +103,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_choice_range (Current)

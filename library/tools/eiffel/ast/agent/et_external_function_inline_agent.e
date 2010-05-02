@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_formal_args: like formal_arguments; a_type: like declared_type; a_language: like language; an_actual_args: like actual_arguments) is
+	make (a_formal_args: like formal_arguments; a_type: like declared_type; a_language: like language; an_actual_args: like actual_arguments)
 			-- Create a new inline agent whose associated feature is an external function.
 		require
 			a_type_not_void: a_type /= Void
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_external_function_inline_agent (Current)

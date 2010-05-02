@@ -21,7 +21,7 @@ feature -- Status report
 			-- Value of gexslt:method extension attribute;
 			-- Intended principally for http protocol, but value is unchecked here.
 
-	is_correct_scheme (a_scheme: STRING): BOOLEAN is
+	is_correct_scheme (a_scheme: STRING): BOOLEAN
 			-- does `Current' handle URIs for `a_scheme'?
 		require
 			scheme_not_void: a_scheme /= Void
@@ -30,7 +30,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_http_method (a_method: like http_method) is
+	set_http_method (a_method: like http_method)
 			-- Set `http_method' to `a_method'.
 		require
 			a_method_may_be_void: True
@@ -42,7 +42,7 @@ feature -- Setting
 
 feature -- Action
 
-	resolve (a_uri: UT_URI) is
+	resolve (a_uri: UT_URI)
 			-- Resolve `a_uri'.
 		require
 			uri_not_void: a_uri /= Void and then a_uri.is_absolute
@@ -58,4 +58,4 @@ feature -- Result
 			-- Result object from last call to `resolve'
 
 end
-	
+

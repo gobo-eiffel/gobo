@@ -31,12 +31,12 @@ create
 
 feature -- Access
 
-	Reversed_output_string: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?><output xmlns:xs=%"http://www.w3.org/2001/XMLSchema%">MAN BITES DOG</output>"
+	Reversed_output_string: STRING = "<?xml version=%"1.0%" encoding=%"UTF-8%"?><output xmlns:xs=%"http://www.w3.org/2001/XMLSchema%">MAN BITES DOG</output>"
 			-- Output from reverse*.xsl
 
 feature -- Test
 
-	test_xpath_reverse is
+	test_xpath_reverse
 			-- Transform using reverse.xsl and initial template.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -68,7 +68,7 @@ feature -- Test
 			assert ("Correct result", STRING_.same_string (l_output.last_output, Reversed_output_string))
 		end
 
-	test_xslt_reverse is
+	test_xslt_reverse
 			-- Transform using reverse2.xsl and initial template.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -101,7 +101,7 @@ feature -- Test
 			assert ("Correct result", STRING_.same_string (l_output.last_output, Reversed_output_string))
 		end
 
-	test_gexslt_reverse is
+	test_gexslt_reverse
 			-- Transform using reverse3.xsl and initial template.
 			-- Note that memoization is of no benefit here, so another test is needed.
 		local
@@ -137,7 +137,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing schematron data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}",
@@ -148,15 +148,15 @@ feature {NONE} -- Implementation
 			data_dirname_not_empty: not Result.is_empty
 		end
 
-	dummy_uri: UT_URI is
+	dummy_uri: UT_URI
 			-- Dummy URI
 		once
 			create Result.make ("dummy:")
 		ensure
 			dummy_uri_is_absolute: Result /= Void and then Result.is_absolute
 		end
-		
-	reverse_xsl_uri: UT_URI is
+
+	reverse_xsl_uri: UT_URI
 			-- URI of file 'reverse.xsl'
 		local
 			l_path: STRING
@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 			reverse_xsl_uri_not_void: Result /= Void
 		end
 
-	reverse2_xsl_uri: UT_URI is
+	reverse2_xsl_uri: UT_URI
 			-- URI of file 'reverse2.xsl'
 		local
 			l_path: STRING
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 			reverse2_xsl_uri_not_void: Result /= Void
 		end
 
-	reverse3_xsl_uri: UT_URI is
+	reverse3_xsl_uri: UT_URI
 			-- URI of file 'reverse3.xsl'
 		local
 			l_path: STRING

@@ -27,7 +27,7 @@ create
 feature {NONE} -- Initialization
 
 	make (an_executable: XM_XSLT_EXECUTABLE; a_content: XM_XPATH_EXPRESSION; some_attribute_sets: DS_ARRAYED_LIST [INTEGER];
-			a_copy_namespaces: BOOLEAN; an_inherit_namespaces: BOOLEAN; a_schema_type: XM_XPATH_SCHEMA_TYPE; a_validation_action: INTEGER) is
+			a_copy_namespaces: BOOLEAN; an_inherit_namespaces: BOOLEAN; a_schema_type: XM_XPATH_SCHEMA_TYPE; a_validation_action: INTEGER)
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
@@ -54,8 +54,8 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
-	name_code (a_context: XM_XSLT_EVALUATION_CONTEXT): INTEGER is
+
+	name_code (a_context: XM_XSLT_EVALUATION_CONTEXT): INTEGER
 			-- Name code
 		do
 			check
@@ -64,7 +64,7 @@ feature -- Access
 			Result := a_context.context_item.as_node.name_code
 		end
 
-	new_base_uri (a_context: XM_XPATH_CONTEXT): STRING is
+	new_base_uri (a_context: XM_XPATH_CONTEXT): STRING
 			-- Re-calculated base URI
 		local
 			l_item: XM_XPATH_ITEM
@@ -80,7 +80,7 @@ feature -- Access
 
 feature -- Status report
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		do
 			std.error.put_string ("xsl:copy%N")
@@ -88,7 +88,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_new_context: XM_XPATH_CONTEXT
@@ -108,7 +108,7 @@ feature -- Evaluation
 			a_result.put (l_outputter.first_item)
 		end
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_transformer: XM_XSLT_TRANSFORMER
@@ -149,7 +149,7 @@ feature -- Evaluation
 
 feature {XM_XSLT_ELEMENT_CONSTRUCTOR} -- Local
 
-	output_namespace_nodes (a_context: XM_XSLT_EVALUATION_CONTEXT; a_receiver: XM_XPATH_RECEIVER) is
+	output_namespace_nodes (a_context: XM_XSLT_EVALUATION_CONTEXT; a_receiver: XM_XPATH_RECEIVER)
 			-- Output namespace nodes for the new element.
 		local
 			an_element: XM_XPATH_ELEMENT
@@ -164,11 +164,11 @@ feature {XM_XSLT_ELEMENT_CONSTRUCTOR} -- Local
 		end
 
 feature {NONE} -- Implementation
-	
+
 	is_copy_namespaces: BOOLEAN
 			-- Are namespaces to be copied to the output?
 
-	copy_document (a_document: XM_XPATH_DOCUMENT; a_context: XM_XSLT_EVALUATION_CONTEXT; a_transformer: XM_XSLT_TRANSFORMER; a_receiver: XM_XPATH_SEQUENCE_RECEIVER) is
+	copy_document (a_document: XM_XPATH_DOCUMENT; a_context: XM_XSLT_EVALUATION_CONTEXT; a_transformer: XM_XSLT_TRANSFORMER; a_receiver: XM_XPATH_SEQUENCE_RECEIVER)
 			-- Copy an entire document.
 		require
 			document_node: a_document /= Void
@@ -206,4 +206,4 @@ feature {NONE} -- Implementation
 		end
 
 end
-	
+

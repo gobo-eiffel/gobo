@@ -2,7 +2,7 @@ class CC
 
 feature
 
-	frozen f is
+	frozen f
 		do
 			print ("CC%N")
 		end

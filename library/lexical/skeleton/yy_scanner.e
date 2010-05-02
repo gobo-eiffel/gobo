@@ -21,14 +21,14 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new scanner with
 			-- standard input as input file.
 		do
 			make_with_file (std.input)
 		end
 
-	make_with_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+	make_with_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Create a new scanner with
 			-- `a_file' as input file.
 		require
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			make_with_buffer (new_file_buffer (a_file))
 		end
 
-	make_with_buffer (a_buffer: like input_buffer) is
+	make_with_buffer (a_buffer: like input_buffer)
 			-- Create a new scanner with
 			-- `a_buffer' as input buffer.
 		require
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset scanner before scanning next input source.
 			-- (This routine can be called in `wrap' before scanning
 			-- another input buffer.)
@@ -66,7 +66,7 @@ feature -- Access
 			-- non-positive values mean that an error occurred
 			-- (see header-comment of `scanning_error'.))
 
-	text: STRING is
+	text: STRING
 			-- Text of last token read
 			-- (Create a new string at each call.)
 		deferred
@@ -75,7 +75,7 @@ feature -- Access
 			correct_count: Result.count = text_count
 		end
 
-	text_item (i: INTEGER): CHARACTER is
+	text_item (i: INTEGER): CHARACTER
 			-- `i'-th character of last token read
 		require
 			i_large_enough: i >= 1
@@ -85,7 +85,7 @@ feature -- Access
 			definition: Result = text.item (i)
 		end
 
-	text_substring (s, e: INTEGER): STRING is
+	text_substring (s, e: INTEGER): STRING
 			-- Substring of last token read
 			-- (Create a new string at each call.)
 			-- (For efficiency reason, this function can bypass the
@@ -102,21 +102,21 @@ feature -- Access
 			definition: s <= e implies Result.is_equal (text.substring (s, e))
 		end
 
-	start_condition: INTEGER is
+	start_condition: INTEGER
 			-- Start condition
 		deferred
 		end
 
 feature -- Measurement
 
-	text_count: INTEGER is
+	text_count: INTEGER
 			-- Number of characters in last token read
 		deferred
 		ensure
 			positive_count: Result >= 0
 		end
 
-	line: INTEGER is
+	line: INTEGER
 			-- Line number of last token read when
 			-- '%option line' has been specified
 		deferred
@@ -124,7 +124,7 @@ feature -- Measurement
 			line_positive: Result >= 1
 		end
 
-	column: INTEGER is
+	column: INTEGER
 			-- Column number of last token read when
 			-- '%option line' has been specified
 		deferred
@@ -132,7 +132,7 @@ feature -- Measurement
 			column_positive: Result >= 1
 		end
 
-	position: INTEGER is
+	position: INTEGER
 			-- Position of last token read (i.e. number of
 			-- characters from the start of the input source)
 			-- when '%option position' has been specified
@@ -143,7 +143,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	end_of_file: BOOLEAN is
+	end_of_file: BOOLEAN
 			-- Has the end of input buffer been reached?
 			-- This means that `last_token' has been set
 			-- to 0 indicating "all done".
@@ -151,24 +151,24 @@ feature -- Status report
 			Result := (last_token = yyEOF_token)
 		end
 
-	scanning_error: BOOLEAN is
+	scanning_error: BOOLEAN
 			-- Has an error occurred during scanning?
 			-- This can occur when too many `reject' are called (and hence
 			-- nothing can be matched anymore) or when the option "nodefault"
 			-- (or option -s) has been specified but the default rule is
-			-- matched nevertheless. 
+			-- matched nevertheless.
 		do
 			Result := (last_token = yyError_token)
 		end
 
-	valid_start_condition (sc: INTEGER): BOOLEAN is
+	valid_start_condition (sc: INTEGER): BOOLEAN
 			-- Is `sc' a valid start condition?
 		deferred
 		end
 
 feature -- Setting
 
-	set_last_token (a_token: INTEGER) is
+	set_last_token (a_token: INTEGER)
 			-- Set `last_token' to `a_token'.
 		do
 			last_token := a_token
@@ -176,7 +176,7 @@ feature -- Setting
 			last_token_set: last_token = a_token
 		end
 
-	set_start_condition (a_start_condition: INTEGER) is
+	set_start_condition (a_start_condition: INTEGER)
 			-- Set `start_condition' to `a_start_condition'.
 		require
 			valid_start_condition: valid_start_condition (a_start_condition)
@@ -187,7 +187,7 @@ feature -- Setting
 
 feature -- Scanning
 
-	scan is
+	scan
 			-- Scan `input_buffer' until end of file is found
 			-- or an error occurs.
 		do
@@ -202,7 +202,7 @@ feature -- Scanning
 			end_of_file: not scanning_error implies end_of_file
 		end
 
-	read_token is
+	read_token
 			-- Read a token from `input_buffer'.
 			-- Make result available in `last_token'.
 		deferred
@@ -210,7 +210,7 @@ feature -- Scanning
 
 feature -- Element change
 
-	append_text_to_string (a_string: STRING) is
+	append_text_to_string (a_string: STRING)
 			-- Append `text' at end of `a_string'.
 			-- (For efficiency reason, this feature can bypass the
 			-- call to `text' and directly copy the characters from
@@ -223,7 +223,7 @@ feature -- Element change
 			count_set: a_string.count = old (a_string.count) + text_count
 		end
 
-	append_text_substring_to_string (s, e: INTEGER; a_string: STRING) is
+	append_text_substring_to_string (s, e: INTEGER; a_string: STRING)
 			-- Append `text_substring' at end of `a_string'.
 			-- (For efficiency reason, this feature can bypass
 			-- the call to `text_substring' and directly copy
@@ -239,14 +239,14 @@ feature -- Element change
 			count_set: a_string.count = old (a_string.count) + (e - s + 1)
 		end
 
-	terminate is
+	terminate
 			-- Terminate scanner and set `last_token'
 			-- to 0 indicating "all done".
 		do
 			last_token := yyEOF_token
 		end
 
-	wrap: BOOLEAN is
+	wrap: BOOLEAN
 			-- Should current scanner terminate when end of file is reached?
 			-- This function can be redefined to switch to another input
 			-- buffer (but don't forget to update `start_condition').
@@ -255,14 +255,14 @@ feature -- Element change
 			Result := True
 		end
 
-	more is
+	more
 			-- Tell scanner to append the next matched token
-			-- to current value of `text' instead of 
+			-- to current value of `text' instead of
 			-- replacing it.
 		deferred
 		end
 
-	less (n: INTEGER) is
+	less (n: INTEGER)
 			-- Return all but the first `n' matched
 			-- characters back to `input_buffer'.
 		require
@@ -273,13 +273,13 @@ feature -- Element change
 			text_count_set: text_count = n
 		end
 
-	unread_character (c: CHARACTER) is
+	unread_character (c: CHARACTER)
 			-- Put `c' back to `input_buffer'. This will alter both
 			-- `text' and the content of `input_buffer'.
 		deferred
 		end
 
-	read_character is
+	read_character
 			-- Read a character from `input_buffer'.
 			-- Make result available in `last_character'.
 		deferred
@@ -293,7 +293,7 @@ feature -- Input
 	input_buffer: YY_BUFFER
 			-- Input buffer
 
-	set_input_buffer (a_buffer: like input_buffer) is
+	set_input_buffer (a_buffer: like input_buffer)
 			-- Set `input_buffer' to `a_buffer'.
 		require
 			a_buffer_not_void: a_buffer /= Void
@@ -303,7 +303,7 @@ feature -- Input
 			input_buffer_set: input_buffer = a_buffer
 		end
 
-	flush_input_buffer is
+	flush_input_buffer
 			-- Flush `input_buffer'. `input_buffer' will be automatically
 			-- refilled unless end of file has been found.
 		do
@@ -312,7 +312,7 @@ feature -- Input
 			flushed: input_buffer.count = 0
 		end
 
-	new_file_buffer (a_file: KI_CHARACTER_INPUT_STREAM): YY_FILE_BUFFER is
+	new_file_buffer (a_file: KI_CHARACTER_INPUT_STREAM): YY_FILE_BUFFER
 			-- New input buffer for `a_file'
 		require
 			a_file_not_void: a_file /= Void
@@ -323,7 +323,7 @@ feature -- Input
 			new_buffer_not_void: Result /= Void
 		end
 
-	new_string_buffer (a_string: STRING): YY_BUFFER is
+	new_string_buffer (a_string: STRING): YY_BUFFER
 			-- New input buffer for `a_string'
 		require
 			a_string_not_void: a_string /= Void
@@ -333,7 +333,7 @@ feature -- Input
 			new_buffer_not_void: Result /= Void
 		end
 
-	Empty_buffer: YY_BUFFER is
+	Empty_buffer: YY_BUFFER
 			-- Empty input buffer
 		once
 			create Result.make ("")
@@ -343,7 +343,7 @@ feature -- Input
 
 feature -- Output
 
-	output (a_text: like text) is
+	output (a_text: like text)
 			-- Output `a_text'.
 			-- (Note: this routine can be redefined in descendant
 			-- classes. Default: print `a_text' to standard output.)
@@ -353,7 +353,7 @@ feature -- Output
 			std.output.put_string (a_text)
 		end
 
-	echo is
+	echo
 			-- Output `text' using feature `output'.
 		do
 			output (text)
@@ -361,7 +361,7 @@ feature -- Output
 
 feature -- Action
 
-	pre_action is
+	pre_action
 			-- Action executed before every semantic action
 			-- when '%option pre-action' has been specified.
 			-- (Note: this routine can be redefined in descendant
@@ -369,7 +369,7 @@ feature -- Action
 		do
 		end
 
-	post_action is
+	post_action
 			-- Action executed after every semantic action
 			-- when '%option post-action' has been specified.
 			-- (Note: this routine can be redefined in descendant
@@ -377,7 +377,7 @@ feature -- Action
 		do
 		end
 
-	pre_eof_action is
+	pre_eof_action
 			-- Action executed before every end-of-file semantic action
 			-- (i.e. <<EOF>>) when '%option pre-eof-action' has been specified.
 			-- (Note: this routine can be redefined in descendant classes.
@@ -385,7 +385,7 @@ feature -- Action
 		do
 		end
 
-	post_eof_action is
+	post_eof_action
 			-- Action executed after every end-of-file semantic action
 			-- (i.e. <<EOF>>) when '%option post-eof-action' has been specified.
 			-- (Note: this routine can be redefined in descendant classes.
@@ -393,7 +393,7 @@ feature -- Action
 		do
 		end
 
-	default_action is
+	default_action
 			-- Action executed when default rule is matched.
 			-- (Note: this routine can be redefined in descendant classes.
 			-- Default: print last character read to standard output.)
@@ -403,7 +403,7 @@ feature -- Action
 
 feature -- Error handling
 
-	fatal_error (a_message: STRING) is
+	fatal_error (a_message: STRING)
 			-- A fatal error occurred.
 			-- Print `a_message'.
 		require
@@ -415,7 +415,7 @@ feature -- Error handling
 
 feature -- Debugging
 
-	print_last_token is
+	print_last_token
 			-- Print to standard error debug information
 			-- about the last token read. Can be redefined
 			-- in descendant classes to print more information.
@@ -426,13 +426,13 @@ feature -- Debugging
 
 feature {NONE} -- Constants
 
-	yyEOF_token: INTEGER is 0
+	yyEOF_token: INTEGER = 0
 			-- Predefined EOF token code
 
-	yyError_token: INTEGER is -1
+	yyError_token: INTEGER = -1
 			-- Predefined Error token code
 
-	yyUnknown_token: INTEGER is -2
+	yyUnknown_token: INTEGER = -2
 			-- Predefined Unknown token code
 
 invariant

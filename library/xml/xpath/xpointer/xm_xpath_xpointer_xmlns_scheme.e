@@ -33,13 +33,13 @@ create
 
 feature {NONE} -- Implementation
 
-	make is
+	make
 		do
 		end
 
 feature -- Access
 
-	expanded_name: STRING is "xmlns"
+	expanded_name: STRING = "xmlns"
 			-- Expanded name of implemented scheme
 
 	value: XM_XPATH_VALUE
@@ -52,10 +52,10 @@ feature -- Status report
 
 	is_error: BOOLEAN
 			-- Did a syntax or evaluation error occur?
-		
+
 feature -- Element change
 
-	evaluate (a_resource: XM_XPATH_DOCUMENT; a_namespace_context: XM_XPOINTER_NAMESPACE_CONTEXT; some_data: STRING) is
+	evaluate (a_resource: XM_XPATH_DOCUMENT; a_namespace_context: XM_XPOINTER_NAMESPACE_CONTEXT; some_data: STRING)
 			-- Evaluate `some_data' against `a_resource' within `a_namespace_context'.
 		local
 			a_splitter: ST_SPLITTER
@@ -102,4 +102,4 @@ feature {NONE} -- Implementation
 			-- Components of scheme data
 
 end
-	
+

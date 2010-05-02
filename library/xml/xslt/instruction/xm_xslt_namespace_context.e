@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_namespace_code_list: DS_ARRAYED_LIST [INTEGER]) is
+	make (a_namespace_code_list: DS_ARRAYED_LIST [INTEGER])
 			-- Establish invariant.
 		require
 			namespace_code_list_not_void: a_namespace_code_list /= Void
@@ -42,7 +42,7 @@ feature -- Access
 	namespace_code_list: DS_ARRAYED_LIST [INTEGER]
 			-- List of namespace codes
 
-	uri_for_defaulted_prefix (a_prefix: STRING; use_default_namespace: BOOLEAN): STRING is
+	uri_for_defaulted_prefix (a_prefix: STRING; use_default_namespace: BOOLEAN): STRING
 			-- Namespace URI corresponding to a given prefix
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -77,7 +77,7 @@ feature -- Access
 			end
 		end
 
-	fingerprint (a_qname: STRING; use_default_namespace: BOOLEAN): INTEGER is
+	fingerprint (a_qname: STRING; use_default_namespace: BOOLEAN): INTEGER
 			-- Fingerprint of `a_qname'
 		local
 			a_parser: XM_XPATH_QNAME_PARSER

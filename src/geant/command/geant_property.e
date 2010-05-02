@@ -21,14 +21,14 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create new GEANT_PROPERTY object.
 		do
 		end
 
 feature -- Access
 
-	string_value: STRING is
+	string_value: STRING
 			-- String value of property or Void if not available
 		require
 			is_defined: is_defined
@@ -40,14 +40,14 @@ feature -- Access
 			Result := retrieved_string_value
 		end
 
-	value: G is
+	value: G
 			-- Value of property
 		require
 			is_defined: is_defined
 		deferred
 		end
 
-	value_or_else (a_default: G): G is
+	value_or_else (a_default: G): G
 			-- `value' if `is_defined', `a_default' otherwise
 		do
 			if is_defined then
@@ -60,7 +60,7 @@ feature -- Access
 			default_if_not_defined: not is_defined implies Result = a_default
 		end
 
-	non_empty_value_or_else (a_default: G): G is
+	non_empty_value_or_else (a_default: G): G
 			-- `value' if `is_defined' and then `not string_value.is_empty', `a_default' otherwise
 		do
 			if is_defined and then not string_value.is_empty then
@@ -75,7 +75,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is a string value for this property available?
 		do
 			Result := string_value_agent /= Void and then string_value_agent.item ([]) /= Void
@@ -83,7 +83,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_string_value_agent (a_agent: like string_value_agent) is
+	set_string_value_agent (a_agent: like string_value_agent)
 			-- Set `string_value_agent' to `a_string_value_agent'.
 		do
 			string_value_agent := a_agent

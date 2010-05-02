@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (v: G; w: H) is
+	make (v: G; w: H)
 			-- Create a new cell containing `v' and `w'.
 		do
 			first := v
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Element change
 
-	put_second (w: H) is
+	put_second (w: H)
 			-- Insert `w' in cell.
 		do
 			second := w

@@ -23,7 +23,7 @@ create
 
 feature -- Test
 
-	test_bilinear_table is
+	test_bilinear_table
 			-- Test the basic table features of binary search tree.
 		do
 			do_test_bilinear_table (new_binary_search_tree)
@@ -31,7 +31,7 @@ feature -- Test
 			do_test_bilinear_table (new_red_black_tree)
 		end
 
-	test_bilinear_table_cursor is
+	test_bilinear_table_cursor
 			-- Test the cursor implementation for binary search trees.
 		do
 			do_test_bilinear_table_cursor (new_binary_search_tree)
@@ -39,7 +39,7 @@ feature -- Test
 			do_test_bilinear_table_cursor (new_red_black_tree)
 		end
 
-	test_do_all is
+	test_do_all
 			-- Test feature 'do_all'.
 		local
 			l_comparator: KL_COMPARABLE_COMPARATOR [STRING]
@@ -64,7 +64,7 @@ feature -- Test
 			assert ("empty", l_list.is_empty)
 		end
 
-	test_do_all_with_index is
+	test_do_all_with_index
 			-- Test feature 'do_all_with_index'.
 		local
 			l_comparator: KL_COMPARABLE_COMPARATOR [STRING]
@@ -90,7 +90,7 @@ feature -- Test
 			assert ("empty", l_list.is_empty)
 		end
 
-	test_do_all_with_key is
+	test_do_all_with_key
 			-- Test feature 'do_all_with_key'.
 		local
 			l_comparator: KL_COMPARABLE_COMPARATOR [STRING]
@@ -116,7 +116,7 @@ feature -- Test
 			assert ("empty", l_list.is_empty)
 		end
 
-	test_do_if is
+	test_do_if
 			-- Test feature 'do_if'.
 		local
 			l_comparator: KL_COMPARABLE_COMPARATOR [STRING]
@@ -142,7 +142,7 @@ feature -- Test
 			assert ("empty", l_list.is_empty)
 		end
 
-	test_do_if_with_index is
+	test_do_if_with_index
 			-- Test feature 'do_if_with_index'.
 		local
 			l_comparator: KL_COMPARABLE_COMPARATOR [STRING]
@@ -168,7 +168,7 @@ feature -- Test
 			assert_iarrays_same ("empty", <<INTEGER_.to_integer (0), 0, 0, 0, 0>>, l_list)
 		end
 
-	test_do_if_with_key is
+	test_do_if_with_key
 			-- Test feature 'do_if_with_key'.
 		local
 			l_comparator: KL_COMPARABLE_COMPARATOR [STRING]
@@ -194,7 +194,7 @@ feature -- Test
 			assert ("empty", l_list.is_empty)
 		end
 
-	test_there_exists is
+	test_there_exists
 			-- Test feature 'there_exists'.
 		local
 			l_comparator: KL_COMPARABLE_COMPARATOR [STRING]
@@ -220,7 +220,7 @@ feature -- Test
 			assert ("empty", not l_tree.there_exists (agent INTEGER_.is_even))
 		end
 
-	test_for_all is
+	test_for_all
 			-- Test feature 'for_all'.
 		local
 			l_comparator: KL_COMPARABLE_COMPARATOR [STRING]
@@ -248,7 +248,7 @@ feature -- Test
 
 feature {NONE} -- Test
 
-	do_test_bilinear_table (a_bilinear_table: DS_BILINEAR_TABLE [INTEGER, INTEGER]) is
+	do_test_bilinear_table (a_bilinear_table: DS_BILINEAR_TABLE [INTEGER, INTEGER])
 			-- Test the basic table features.
 		require
 			a_bilinear_table_not_void: a_bilinear_table /= Void
@@ -278,7 +278,7 @@ feature {NONE} -- Test
 			assert ("empty2", a_bilinear_table.is_empty)
 		end
 
-	do_test_bilinear_table_cursor (a_bilinear_table: DS_BILINEAR_TABLE [INTEGER, INTEGER]) is
+	do_test_bilinear_table_cursor (a_bilinear_table: DS_BILINEAR_TABLE [INTEGER, INTEGER])
 			-- Test the cursor implementation of the bilinear table.
 		require
 			a_bilinear_table_not_void: a_bilinear_table /= Void
@@ -334,7 +334,7 @@ feature {NONE} -- Test
 
 feature {NONE} -- Implementation
 
-	same_integers (i, j: INTEGER): BOOLEAN is
+	same_integers (i, j: INTEGER): BOOLEAN
 			-- Is `i' equal to `j'?
 			-- (Used as agent to test iterators.)
 		do
@@ -343,7 +343,7 @@ feature {NONE} -- Implementation
 			definition: Result = (i = j)
 		end
 
-	add_key_to_array (a_item: INTEGER; a_key: STRING; a_array: DS_ARRAYED_LIST [INTEGER]) is
+	add_key_to_array (a_item: INTEGER; a_key: STRING; a_array: DS_ARRAYED_LIST [INTEGER])
 			-- Add `a_key' to `a_array'.
 			-- (Used as agent to test iterators.)
 		require
@@ -354,7 +354,7 @@ feature {NONE} -- Implementation
 			a_array.force_last (a_key.to_integer)
 		end
 
-	key_starts_with (a_item: INTEGER; a_key: STRING; a_character: CHARACTER): BOOLEAN is
+	key_starts_with (a_item: INTEGER; a_key: STRING; a_character: CHARACTER): BOOLEAN
 			-- Does `a_key' have `a_character' as first character?
 			-- (Used as agent to test iterators.)
 		require
@@ -366,7 +366,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Factory
 
-	new_binary_search_tree: DS_BINARY_SEARCH_TREE [INTEGER, INTEGER] is
+	new_binary_search_tree: DS_BINARY_SEARCH_TREE [INTEGER, INTEGER]
 			-- New binary search tree
 		local
 			l_comparator: KL_COMPARABLE_COMPARATOR [INTEGER]
@@ -378,7 +378,7 @@ feature {NONE} -- Factory
 			new_tree_is_empty: Result.is_empty
 		end
 
-	new_avl_tree: DS_AVL_TREE [INTEGER, INTEGER] is
+	new_avl_tree: DS_AVL_TREE [INTEGER, INTEGER]
 			-- New avl tree
 		local
 			l_comparator: KL_COMPARABLE_COMPARATOR [INTEGER]
@@ -390,7 +390,7 @@ feature {NONE} -- Factory
 			new_tree_is_empty: Result.is_empty
 		end
 
-	new_red_black_tree: DS_RED_BLACK_TREE [INTEGER, INTEGER] is
+	new_red_black_tree: DS_RED_BLACK_TREE [INTEGER, INTEGER]
 			-- New red-black tree
 		local
 			l_comparator: KL_COMPARABLE_COMPARATOR [INTEGER]

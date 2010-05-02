@@ -14,7 +14,7 @@ deferred class ET_ARGUMENT_OPERANDS
 
 feature -- Status report
 
-	is_one_argument: BOOLEAN is
+	is_one_argument: BOOLEAN
 			-- Is there exactly one argument?
 		do
 			Result := (count = 1)
@@ -22,7 +22,7 @@ feature -- Status report
 			definition: Result = (count = 1)
 		end
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is there no actual argument?
 		do
 			Result := (count = 0)
@@ -30,7 +30,7 @@ feature -- Status report
 			definition: Result = (count = 0)
 		end
 
-	valid_index (i: INTEGER): BOOLEAN is
+	valid_index (i: INTEGER): BOOLEAN
 			-- Is `i' a valid index?
 		do
 			Result := i >= 1 and i <= count
@@ -40,7 +40,7 @@ feature -- Status report
 
 feature -- Access
 
-	actual_argument (i: INTEGER): ET_ARGUMENT_OPERAND is
+	actual_argument (i: INTEGER): ET_ARGUMENT_OPERAND
 			-- Actual argument at index `i'
 		require
 			i_large_enough: i >= 1
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of actual arguments
 		deferred
 		ensure

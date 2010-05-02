@@ -23,7 +23,7 @@ create
 
 feature -- Test
 
-	test_hash_table1 is
+	test_hash_table1
 			-- Test features of DS_MULTIARRAYED_HASH_TABLE.
 		local
 			a_table: DS_MULTIARRAYED_HASH_TABLE [INTEGER, INTEGER]
@@ -63,7 +63,7 @@ feature -- Test
 			assert_iarrays_same ("items9", <<INTEGER_.to_integer (8)>>, a_table.to_array)
 		end
 
-	test_do_all is
+	test_do_all
 			-- Test feature `do_all'.
 		local
 			a_table1: DS_MULTIARRAYED_HASH_TABLE [INTEGER, STRING]
@@ -85,7 +85,7 @@ feature -- Test
 			assert ("empty1", a_list2.is_empty)
 		end
 
-	test_do_all_with_index is
+	test_do_all_with_index
 			-- Test feature `do_all_with_index'.
 		local
 			a_table1: DS_MULTIARRAYED_HASH_TABLE [INTEGER, STRING]
@@ -107,7 +107,7 @@ feature -- Test
 			assert_iarrays_same ("items2", <<INTEGER_.to_integer (0), 0>>, an_array2)
 		end
 
-	test_do_if is
+	test_do_if
 			-- Test feature `do_if'.
 		local
 			a_table1: DS_MULTIARRAYED_HASH_TABLE [INTEGER, STRING]
@@ -129,7 +129,7 @@ feature -- Test
 			assert ("empty1", a_list2.is_empty)
 		end
 
-	test_do_if_with_index is
+	test_do_if_with_index
 			-- Test feature `do_if_with_index'.
 		local
 			a_table1: DS_MULTIARRAYED_HASH_TABLE [INTEGER, STRING]
@@ -151,7 +151,7 @@ feature -- Test
 			assert_iarrays_same ("items2", <<INTEGER_.to_integer (0), 0>>, an_array2)
 		end
 
-	test_there_exists is
+	test_there_exists
 			-- Test feature `there_exists'.
 		local
 			a_table1: DS_MULTIARRAYED_HASH_TABLE [INTEGER, STRING]
@@ -173,7 +173,7 @@ feature -- Test
 			assert ("there_dont_exist2", not a_table1.there_exists (agent INTEGER_.is_even))
 		end
 
-	test_for_all is
+	test_for_all
 			-- Test feature `for_all'.
 		local
 			a_table1: DS_MULTIARRAYED_HASH_TABLE [INTEGER, STRING]
@@ -197,7 +197,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	same_integers (i, j: INTEGER): BOOLEAN is
+	same_integers (i, j: INTEGER): BOOLEAN
 			-- Is `i' equal to `j'?
 			-- (Used as agent to test iterators.)
 		do

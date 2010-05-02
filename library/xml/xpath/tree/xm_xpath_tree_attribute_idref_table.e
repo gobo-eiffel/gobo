@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tree: XM_XPATH_TREE_DOCUMENT) is
+	make (a_tree: XM_XPATH_TREE_DOCUMENT)
 			-- Establish invariant.
 		require
 			tree_not_void: a_tree /= Void
@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	new_iterator (some_idrefs: DS_LIST [STRING]): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	new_iterator (some_idrefs: DS_LIST [STRING]): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- New iterator over `some_idrefs'
 		require
 			idrefs_not_empty: some_idrefs /= Void and then not some_idrefs.is_empty

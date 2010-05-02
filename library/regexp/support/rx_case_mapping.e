@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_default is
+	make_default
 			-- Create new mapping between upper- and lower-case characters.
 			-- Each character is its own upper- and lower-case version by default.
 		do
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			clear
 		end
 
-	make (an_upper_characters, a_lower_characters: STRING) is
+	make (an_upper_characters, a_lower_characters: STRING)
 			-- Create new mapping between upper- and lower-case characters.
 			-- Each character in `an_upper_characters' must have a corresponding
 			-- character in `a_lower_characters'.
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	to_lower (a_code: INTEGER): INTEGER is
+	to_lower (a_code: INTEGER): INTEGER
 			-- Code of lower character associated with character of code `a_code'
 		require
 			a_code_positive: a_code >= 0
@@ -66,7 +66,7 @@ feature -- Access
 			to_lower_positive: Result >= 0
 		end
 
-	to_upper (a_code: INTEGER): INTEGER is
+	to_upper (a_code: INTEGER): INTEGER
 			-- Code of upper character associated with character of code `a_code'
 			-- (Note: not optimized because the the regexp compiler needs only `to_lower'.)
 		require
@@ -90,7 +90,7 @@ feature -- Access
 			to_upper_positive: Result >= 0
 		end
 
-	flip_case (a_code: INTEGER): INTEGER is
+	flip_case (a_code: INTEGER): INTEGER
 			-- Flip character case of character with code `a_code'
 		require
 			a_code_positive: a_code >= 0
@@ -106,7 +106,7 @@ feature -- Access
 
 feature -- Reset
 
-	clear is
+	clear
 			-- Reset default mapping: each character is its own
 			-- upper- and lower-case version.
 		local
@@ -125,7 +125,7 @@ feature -- Reset
 
 feature -- Element Change
 
-	add (an_upper_characters, a_lower_characters: STRING) is
+	add (an_upper_characters, a_lower_characters: STRING)
 			-- Add mapping between upper- and lower-case characters.
 			-- Each character in `an_upper_characters' must have a
 			-- corresponding character in `a_lower_characters'.

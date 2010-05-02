@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_empty is
+	make_empty
 			-- Create an empty string.
 		do
 			make_encoded ("")
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			definition: encoded.is_empty
 		end
 
-	make_encoded (a_string: STRING) is
+	make_encoded (a_string: STRING)
 			-- Create with encoded `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			definition: encoded = a_string
 		end
 
-	make_decoded (a_string: STRING) is
+	make_decoded (a_string: STRING)
 			-- Create with `a_string', where each character is
 			-- percent-encoded directly.
 		require
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			encoded := Url_encoding.escape_string (a_string)
 		end
 
-	make_decoded_utf8 (a_string: STRING) is
+	make_decoded_utf8 (a_string: STRING)
 			-- Create with `a_string', to be encoded as UTF and
 			-- then percent-encoded.
 		require
@@ -70,7 +70,7 @@ feature -- Access
 	encoded: STRING
 			-- Percent-encoded string
 
-	decoded: STRING is
+	decoded: STRING
 			-- Decoded string where each %-encoded character
 			-- gives one item in the resulting string;
 			-- The encoding is assumed to be Latin-1.
@@ -87,7 +87,7 @@ feature -- Access
 			decoded_not_void: Result /= Void
 		end
 
-	decoded_utf8: detachable STRING is
+	decoded_utf8: detachable STRING
 			-- Decoded string where the percent-encoded characters
 			-- are in the UTF-8 character set
 			-- (This may return a STRING object of another type than STRING)

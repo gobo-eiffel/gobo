@@ -44,7 +44,7 @@ inherit
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset constant as it was just after it was last parsed.
 		do
 			type := Void
@@ -63,7 +63,7 @@ feature -- Access
 			-- `literal' if it fits into a NATURAL_64,
 			-- `has_overflow' is True otherwise
 
-	to_integer_8: INTEGER_8 is
+	to_integer_8: INTEGER_8
 			-- INTEGER_8 value of current integer constant
 		require
 			is_integer_8: is_integer_8
@@ -79,7 +79,7 @@ feature -- Access
 			end
 		end
 
-	to_integer_16: INTEGER_16 is
+	to_integer_16: INTEGER_16
 			-- INTEGER_16 value of current integer constant
 		require
 			is_integer_16: is_integer_16
@@ -95,7 +95,7 @@ feature -- Access
 			end
 		end
 
-	to_integer_32: INTEGER_32 is
+	to_integer_32: INTEGER_32
 			-- INTEGER_32 value of current integer constant
 		require
 			is_integer_32: is_integer_32
@@ -111,7 +111,7 @@ feature -- Access
 			end
 		end
 
-	to_integer_64: INTEGER_64 is
+	to_integer_64: INTEGER_64
 			-- INTEGER_64 value of current integer constant
 		require
 			is_integer_64: is_integer_64
@@ -127,7 +127,7 @@ feature -- Access
 			end
 		end
 
-	to_natural_8: NATURAL_8 is
+	to_natural_8: NATURAL_8
 			-- NATURAL_8 value of current integer constant
 		require
 			is_natural_8: is_natural_8
@@ -135,7 +135,7 @@ feature -- Access
 			Result := value.as_natural_8
 		end
 
-	to_natural_16: NATURAL_16 is
+	to_natural_16: NATURAL_16
 			-- NATURAL_16 value of current integer constant
 		require
 			is_natural_16: is_natural_16
@@ -143,7 +143,7 @@ feature -- Access
 			Result := value.as_natural_16
 		end
 
-	to_natural_32: NATURAL_32 is
+	to_natural_32: NATURAL_32
 			-- NATURAL_32 value of current integer constant
 		require
 			is_natural_32: is_natural_32
@@ -151,7 +151,7 @@ feature -- Access
 			Result := value.as_natural_32
 		end
 
-	to_natural_64: NATURAL_64 is
+	to_natural_64: NATURAL_64
 			-- NATURAL_64 value of current integer constant
 		require
 			is_natural_64: is_natural_64
@@ -169,7 +169,7 @@ feature -- Access
 			-- Type of integer constant;
 			-- Void if not determined yet
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -182,7 +182,7 @@ feature -- Access
 			end
 		end
 
-	value_position: ET_POSITION is
+	value_position: ET_POSITION
 			-- Position of first character of current node in source code,
 			-- without taking into account the cast type
 		do
@@ -195,7 +195,7 @@ feature -- Access
 			value_position_not_void: Result /= Void
 		end
 
-	first_position: ET_POSITION is
+	first_position: ET_POSITION
 			-- Position of first character of current node in source code
 		do
 			if cast_type /= Void then
@@ -207,13 +207,13 @@ feature -- Access
 			end
 		end
 
-	last_position: ET_POSITION is
+	last_position: ET_POSITION
 			-- Position of last character of current node in source code
 		do
 			create {ET_COMPRESSED_POSITION} Result.make (line, column + literal.count - 1)
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			if cast_type /= Void then
@@ -227,7 +227,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_negative: BOOLEAN is
+	is_negative: BOOLEAN
 			-- Is integer value negative?
 		do
 			if sign /= Void then
@@ -235,16 +235,16 @@ feature -- Status report
 			end
 		end
 
-	is_integer_constant: BOOLEAN is True
+	is_integer_constant: BOOLEAN = True
 			-- Is current constant an integer constant?
 
-	is_hexadecimal: BOOLEAN is
+	is_hexadecimal: BOOLEAN
 			-- Is current constant in hexadecimal format
 		do
 			Result := False
 		end
 
-	is_binary: BOOLEAN is
+	is_binary: BOOLEAN
 			-- Is current constant in binary format
 		do
 			Result := False
@@ -253,7 +253,7 @@ feature -- Status report
 	has_overflow: BOOLEAN
 			-- Is the integer absolute value too large to fit into a NATURAL_64?
 
-	is_integer_8: BOOLEAN is
+	is_integer_8: BOOLEAN
 			-- Is current integer constant representable as an INTEGER_8?
 		do
 			if has_overflow then
@@ -265,7 +265,7 @@ feature -- Status report
 			end
 		end
 
-	is_integer_16: BOOLEAN is
+	is_integer_16: BOOLEAN
 			-- Is current integer constant representable as an INTEGER_16?
 		do
 			if has_overflow then
@@ -277,7 +277,7 @@ feature -- Status report
 			end
 		end
 
-	is_integer_32: BOOLEAN is
+	is_integer_32: BOOLEAN
 			-- Is current integer constant representable as an INTEGER_32?
 		do
 			if has_overflow then
@@ -289,7 +289,7 @@ feature -- Status report
 			end
 		end
 
-	is_integer_64: BOOLEAN is
+	is_integer_64: BOOLEAN
 			-- Is current integer constant representable as an INTEGER_64?
 		do
 			if has_overflow then
@@ -301,7 +301,7 @@ feature -- Status report
 			end
 		end
 
-	is_natural_8: BOOLEAN is
+	is_natural_8: BOOLEAN
 			-- Is current integer constant representable as a NATURAL_8?
 		do
 			if has_overflow then
@@ -313,7 +313,7 @@ feature -- Status report
 			end
 		end
 
-	is_natural_16: BOOLEAN is
+	is_natural_16: BOOLEAN
 			-- Is current integer constant representable as a NATURAL_16?
 		do
 			if has_overflow then
@@ -325,7 +325,7 @@ feature -- Status report
 			end
 		end
 
-	is_natural_32: BOOLEAN is
+	is_natural_32: BOOLEAN
 			-- Is current integer constant representable as a NATURAL_32?
 		do
 			if has_overflow then
@@ -337,7 +337,7 @@ feature -- Status report
 			end
 		end
 
-	is_natural_64: BOOLEAN is
+	is_natural_64: BOOLEAN
 			-- Is current integer constant representable as a NATURAL_64?
 		do
 			if has_overflow then
@@ -351,7 +351,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_sign (a_sign: like sign) is
+	set_sign (a_sign: like sign)
 			-- Set `sign' to `a_sign'.
 		do
 			sign := a_sign
@@ -359,7 +359,7 @@ feature -- Setting
 			sign_set: sign = a_sign
 		end
 
-	set_cast_type (a_type: like cast_type) is
+	set_cast_type (a_type: like cast_type)
 			-- Set `cast_type' to `a_type'.
 		do
 			cast_type := a_type
@@ -367,7 +367,7 @@ feature -- Setting
 			cast_type_set: cast_type = a_type
 		end
 
-	set_type (a_type: like type) is
+	set_type (a_type: like type)
 			-- Set `type' to `a_type'.
 		do
 			type := a_type
@@ -377,7 +377,7 @@ feature -- Setting
 
 feature -- Type conversion
 
-	manifest_constant_convert_feature (a_source_type: ET_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_CONVERT_FEATURE is
+	manifest_constant_convert_feature (a_source_type: ET_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_CONVERT_FEATURE
 			-- Implicit feature to convert `Current' of type `a_source_type' to `a_target_type'.
 			-- This is only possible when there is no explicit type cast and the value of the
 			-- constant can be represented in `a_target_type'.
@@ -428,25 +428,25 @@ feature -- Type conversion
 
 feature {NONE} -- Constants
 
-	integer_8_min_value_abs: NATURAL_64 is
+	integer_8_min_value_abs: NATURAL_64
 			-- Absolute value of {INTEGER_8}.Min_value
 		once
 			Result := (-({INTEGER_8}.Min_value + 1)).as_natural_64 + 1
 		end
 
-	integer_16_min_value_abs: NATURAL_64 is
+	integer_16_min_value_abs: NATURAL_64
 			-- Absolute value of {INTEGER_16}.Min_value
 		once
 			Result := (-({INTEGER_16}.Min_value + 1)).as_natural_64 + 1
 		end
 
-	integer_32_min_value_abs: NATURAL_64 is
+	integer_32_min_value_abs: NATURAL_64
 			-- Absolute value of {INTEGER_32}.Min_value
 		once
 			Result := (-({INTEGER_32}.Min_value + 1)).as_natural_64 + 1
 		end
 
-	integer_64_min_value_abs: NATURAL_64 is
+	integer_64_min_value_abs: NATURAL_64
 			-- Absolute value of {INTEGER_64}.Min_value
 		once
 			Result := (-({INTEGER_64}.Min_value + 1)).as_natural_64 + 1

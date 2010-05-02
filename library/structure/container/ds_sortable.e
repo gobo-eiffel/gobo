@@ -18,7 +18,7 @@ inherit
 
 feature -- Status report
 
-	sorted (a_sorter: DS_SORTER [G]): BOOLEAN is
+	sorted (a_sorter: DS_SORTER [G]): BOOLEAN
 			-- Is container sorted according to `a_sorter''s criterion?
 		require
 			a_sorter_not_void: a_sorter /= Void
@@ -28,7 +28,7 @@ feature -- Status report
 
 feature -- Sort
 
-	sort (a_sorter: DS_SORTER [G]) is
+	sort (a_sorter: DS_SORTER [G])
 			-- Sort container using `a_sorter''s algorithm.
 		require
 			a_sorter_not_void: a_sorter /= Void

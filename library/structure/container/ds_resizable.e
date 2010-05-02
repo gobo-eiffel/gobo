@@ -21,7 +21,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_default is
+	make_default
 			-- Create an empty container and allocate memory
 			-- space for at least `default_capacity' items.
 		deferred
@@ -31,12 +31,12 @@ feature {NONE} -- Initialization
 
 feature -- Measurement
 
-	capacity: INTEGER is
+	capacity: INTEGER
 			-- Maximum number of items in container
 		deferred
 		end
 
-	default_capacity: INTEGER is
+	default_capacity: INTEGER
 			-- Initial capacity in `make_default'
 			-- (Default value: 10)
 		do
@@ -47,7 +47,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	is_full: BOOLEAN is
+	is_full: BOOLEAN
 			-- Is container full?
 		do
 			Result := count = capacity
@@ -55,7 +55,7 @@ feature -- Status report
 
 feature -- Resizing
 
-	resize (n: INTEGER) is
+	resize (n: INTEGER)
 			-- Resize container so that it can contain
 			-- at least `n' items. Do not lose any item.
 		require
@@ -67,7 +67,7 @@ feature -- Resizing
 
 feature {NONE} -- Configuration
 
-	new_capacity (n: INTEGER): INTEGER is
+	new_capacity (n: INTEGER): INTEGER
 			-- New capacity which could accommodate at least
 			-- `n' items (Used as argument of `resize'.)
 		require

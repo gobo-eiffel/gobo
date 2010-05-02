@@ -25,7 +25,7 @@ create
 
 feature -- Test
 
-	test_string_to_date is
+	test_string_to_date
 			-- Test is_date and string_to_date.
 		local
 			d1: DT_DATE
@@ -86,10 +86,10 @@ feature -- Test
 			assert ("Extra hyphen", not a_parser.is_date ("2004--02-29"))
 			assert ("time zone not allowed", not a_parser.is_date ("2004-02-29Z"))
 			assert ("Alphabetic month", not a_parser.is_date ("2004-a2-29"))
-			assert ("space", not a_parser.is_date ("2004- 02-29"))			
+			assert ("space", not a_parser.is_date ("2004- 02-29"))
 		end
 
-	test_string_to_zoned_date is
+	test_string_to_zoned_date
 			-- Test is_zoned_date and string_to_zoned_date.
 		local
 			d1: DT_FIXED_OFFSET_ZONED_DATE
@@ -118,7 +118,7 @@ feature -- Test
 			assert ("Date is 24th March - 1.5 hours", d1.date.year = 2000 and then d1.date.month = March and then d1.date.day = 24)
 			a_time_zone ?= d1.time_zone
 			assert ("Time zone is fixed offset 3", a_time_zone /= Void)
-			assert ("-01:30", a_time_zone.fixed_offset.hour = -1 and then a_time_zone.fixed_offset.minute = -30)			
+			assert ("-01:30", a_time_zone.fixed_offset.hour = -1 and then a_time_zone.fixed_offset.minute = -30)
 			assert ("Duplicate time zone", not a_parser.is_zoned_date ("2000-03-24+00:00Z"))
 			assert ("Space before time zone", not a_parser.is_zoned_date ("2000-03-24 +00:00"))
 			create a_parser.make_1_1
@@ -143,12 +143,12 @@ feature -- Test
 			assert ("Date is 24th March - 1.5 hours", d1.date.year = 2000 and then d1.date.month = March and then d1.date.day = 24)
 			a_time_zone ?= d1.time_zone
 			assert ("Time zone is fixed offset 3", a_time_zone /= Void)
-			assert ("-01:30", a_time_zone.fixed_offset.hour = -1 and then a_time_zone.fixed_offset.minute = -30)			
+			assert ("-01:30", a_time_zone.fixed_offset.hour = -1 and then a_time_zone.fixed_offset.minute = -30)
 			assert ("Duplicate time zone", not a_parser.is_zoned_date ("2000-03-24+00:00Z"))
 			assert ("Space before time zone", not a_parser.is_zoned_date ("2000-03-24 +00:00"))
 		end
 
-	test_string_to_time is
+	test_string_to_time
 			-- Test is_time and string_to_time.
 		local
 			t1, t2: DT_TIME
@@ -203,7 +203,7 @@ feature -- Test
 			assert ("Wrong separator", not a_parser.is_time ("01-54:00"))
 		end
 
-	test_string_to_zoned_time is
+	test_string_to_zoned_time
 			-- Test is_zoned_time and string_to_zoned_time.
 		local
 			t1: DT_FIXED_OFFSET_ZONED_TIME
@@ -247,10 +247,10 @@ feature -- Test
 					  and then t1.time.millisecond = 0 and then STRING_.same_string (t1.time_zone.name, "Z"))
 			a_time_zone ?= t1.time_zone
 			assert ("Time zone is fixed offset", a_time_zone /= Void)
-			assert ("-00:00 is UTC", a_time_zone.fixed_offset.hour = 0)			
+			assert ("-00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
 		end
 
-	test_string_to_date_time is
+	test_string_to_date_time
 			-- Test is_date_time and string_to_date_time.
 		local
 			dt1: DT_DATE_TIME
@@ -288,7 +288,7 @@ feature -- Test
 			assert ("Zoned", not a_parser.is_date_time (a_date_time))
 		end
 
-	test_string_to_zoned_date_time is
+	test_string_to_zoned_date_time
 			-- Test is_zoned_date_time and string_to_zoned_date_time.
 		local
 			dt1: DT_FIXED_OFFSET_ZONED_DATE_TIME
@@ -328,7 +328,7 @@ feature -- Test
 			assert ("No zone", not a_parser.is_zoned_date_time (a_date_time))
 		end
 
-	test_date_to_string is
+	test_date_to_string
 			-- Test date_to_string
 		local
 			d1: DT_DATE
@@ -354,7 +354,7 @@ feature -- Test
 			assert ("1st January 21000 CE", STRING_.same_string (a_formatter.date_to_string (d1), "21000-01-01"))
 		end
 
-	test_zoned_date_to_string is
+	test_zoned_date_to_string
 			-- Test date_to_string
 		local
 			d1: DT_DATE
@@ -398,7 +398,7 @@ feature -- Test
 			assert ("1st January 21000 CE +06:00", STRING_.same_string (a_formatter.zoned_date_to_string (dz1), "21000-01-01+06:00"))
 		end
 
-	test_time_to_string is
+	test_time_to_string
 			-- Test time_to_string
 		local
 			t1: DT_TIME
@@ -416,7 +416,7 @@ feature -- Test
 			assert ("Midnight", STRING_.same_string (a_formatter.time_to_string (t1), "00:00:00"))
 		end
 
-	test_zoned_time_to_string is
+	test_zoned_time_to_string
 			-- Test time_to_string
 		local
 			t1: DT_TIME
@@ -452,7 +452,7 @@ feature -- Test
 			assert ("07:15:34 -05:30", STRING_.same_string (a_formatter.zoned_time_to_string (dz1), "07:15:34-05:30"))
 		end
 
-	test_date_time_to_string is
+	test_date_time_to_string
 			-- Test date_time_to_string
 		local
 			dt1: DT_DATE_TIME
@@ -478,7 +478,7 @@ feature -- Test
 			assert ("07:15:34 on 1st January 21000 CE", STRING_.same_string (a_formatter.date_time_to_string (dt1), "21000-01-01T07:15:34"))
 		end
 
-	test_zoned_date_time_to_string is
+	test_zoned_date_time_to_string
 			-- Test date_time_to_string
 		local
 			dt1: DT_DATE_TIME
@@ -514,7 +514,7 @@ feature -- Test
 			assert ("07:15:34  on 31st December 21000 BCE -05:30", STRING_.same_string (a_formatter.zoned_date_time_to_string (dtz1), "-20999-12-31T07:15:34-05:30"))
 		end
 
-	test_string_to_year_month is
+	test_string_to_year_month
 			-- Test is_year_month and string_to_year_month.
 		local
 			d1: DT_DATE
@@ -574,7 +574,7 @@ feature -- Test
 			assert ("space", not a_parser.is_year_month ("2004- 02"))
 		end
 
-	test_string_to_zoned_year_month is
+	test_string_to_zoned_year_month
 			-- Test is_zoned_year_month and string_to_zoned_year_month.
 		local
 			d1: DT_FIXED_OFFSET_ZONED_DATE
@@ -603,7 +603,7 @@ feature -- Test
 			assert ("Date is March - 1.5 hours", d1.date.year = 2000 and then d1.date.month = March and then d1.date.day = 1)
 			a_time_zone ?= d1.time_zone
 			assert ("Time zone is fixed offset 3", a_time_zone /= Void)
-			assert ("-01:30", a_time_zone.fixed_offset.hour = -1 and then a_time_zone.fixed_offset.minute = -30)			
+			assert ("-01:30", a_time_zone.fixed_offset.hour = -1 and then a_time_zone.fixed_offset.minute = -30)
 			assert ("Duplicate time zone", not a_parser.is_zoned_year_month ("2000-03+00:00Z"))
 			assert ("Space before time zone", not a_parser.is_zoned_year_month ("2000-03 +00:00"))
 			create a_parser.make_1_1
@@ -628,12 +628,12 @@ feature -- Test
 			assert ("Date is March - 1.5 hours", d1.date.year = 2000 and then d1.date.month = March and then d1.date.day = 1)
 			a_time_zone ?= d1.time_zone
 			assert ("Time zone is fixed offset 3", a_time_zone /= Void)
-			assert ("-01:30", a_time_zone.fixed_offset.hour = -1 and then a_time_zone.fixed_offset.minute = -30)			
+			assert ("-01:30", a_time_zone.fixed_offset.hour = -1 and then a_time_zone.fixed_offset.minute = -30)
 			assert ("Duplicate time zone", not a_parser.is_zoned_year_month ("2000-03+00:00Z"))
 			assert ("Space before time zone", not a_parser.is_zoned_year_month ("2000-03 +00:00"))
 		end
 
-	test_string_to_year is
+	test_string_to_year
 			-- Test is_year and string_to_year.
 		local
 			d1: DT_DATE
@@ -683,7 +683,7 @@ feature -- Test
 			assert ("space", not a_parser.is_year ("2004 02"))
 		end
 
-	test_string_to_zoned_year is
+	test_string_to_zoned_year
 			-- Test is_zoned_year and string_to_zoned_year.
 		local
 			d1: DT_FIXED_OFFSET_ZONED_DATE
@@ -712,7 +712,7 @@ feature -- Test
 			assert ("Date is - 1.5 hours", d1.date.year = 2000 and then d1.date.month = 1 and then d1.date.day = 1)
 			a_time_zone ?= d1.time_zone
 			assert ("Time zone is fixed offset 3", a_time_zone /= Void)
-			assert ("-01:30", a_time_zone.fixed_offset.hour = -1 and then a_time_zone.fixed_offset.minute = -30)			
+			assert ("-01:30", a_time_zone.fixed_offset.hour = -1 and then a_time_zone.fixed_offset.minute = -30)
 			assert ("Duplicate time zone", not a_parser.is_zoned_year ("2000+00:00Z"))
 			assert ("Space before time zone", not a_parser.is_zoned_year ("2000 +00:00"))
 			create a_parser.make_1_1
@@ -737,12 +737,12 @@ feature -- Test
 			assert ("Date is - 1.5 hours", d1.date.year = 2000 and then d1.date.month = 1 and then d1.date.day = 1)
 			a_time_zone ?= d1.time_zone
 			assert ("Time zone is fixed offset 3", a_time_zone /= Void)
-			assert ("-01:30", a_time_zone.fixed_offset.hour = -1 and then a_time_zone.fixed_offset.minute = -30)			
+			assert ("-01:30", a_time_zone.fixed_offset.hour = -1 and then a_time_zone.fixed_offset.minute = -30)
 			assert ("Duplicate time zone", not a_parser.is_zoned_year ("2000+00:00Z"))
 			assert ("Space before time zone", not a_parser.is_zoned_year ("2000 +00:00"))
 		end
 
-	test_string_to_month_day is
+	test_string_to_month_day
 			-- Test is_month_day and string_to_month_day.
 		local
 			d1: DT_DATE
@@ -760,7 +760,7 @@ feature -- Test
 			assert ("Minus sign not allowed", not a_parser.is_month_day ("---03-2"))
 		end
 
-	test_string_to_zoned_month_day is
+	test_string_to_zoned_month_day
 			-- Test is_zoned_month_day and string_to_zoned_month_day.
 		local
 			d1: DT_FIXED_OFFSET_ZONED_DATE
@@ -791,7 +791,7 @@ feature -- Test
 			assert ("Zone is +05:00", a_time_zone.fixed_offset.hour = 5)
 		end
 
-	test_string_to_day is
+	test_string_to_day
 			-- Test is_day and string_to_day.
 		local
 			d1: DT_DATE
@@ -807,7 +807,7 @@ feature -- Test
 			assert ("Day is 21st", d1.year = 1 and then d1.month = 1 and then d1.day = 21)
 		end
 
-	test_string_to_zoned_day is
+	test_string_to_zoned_day
 			-- Test is_zoned_day and string_to_zoned_day.
 		local
 			d1: DT_FIXED_OFFSET_ZONED_DATE
@@ -838,7 +838,7 @@ feature -- Test
 			assert ("Zone is +05:00", a_time_zone.fixed_offset.hour = 5)
 		end
 
-	test_string_to_month is
+	test_string_to_month
 			-- Test is_month and string_to_month.
 		local
 			d1: DT_DATE
@@ -856,7 +856,7 @@ feature -- Test
 			assert ("Minus sign not allowed", not a_parser.is_month ("---03"))
 		end
 
-	test_string_to_zoned_month is
+	test_string_to_zoned_month
 			-- Test is_zoned_month and string_to_zoned_month.
 		local
 			d1: DT_FIXED_OFFSET_ZONED_DATE
@@ -887,7 +887,7 @@ feature -- Test
 			assert ("Zone is +05:00", a_time_zone.fixed_offset.hour = 5)
 		end
 
-	test_year_month_to_string is
+	test_year_month_to_string
 			-- Test year_month_to_string
 		local
 			d1: DT_DATE
@@ -913,7 +913,7 @@ feature -- Test
 			assert ("January 21000 CE", STRING_.same_string (a_formatter.year_month_to_string (d1), "21000-01"))
 		end
 
-	test_zoned_year_month_to_string is
+	test_zoned_year_month_to_string
 			-- Test year_month_to_string
 		local
 			d1: DT_DATE
@@ -957,7 +957,7 @@ feature -- Test
 			assert ("January 21000 CE +06:00", STRING_.same_string (a_formatter.zoned_year_month_to_string (dz1), "21000-01+06:00"))
 		end
 
-	test_year_to_string is
+	test_year_to_string
 			-- Test year_to_string
 		local
 			d1: DT_DATE
@@ -983,7 +983,7 @@ feature -- Test
 			assert ("21000 CE", STRING_.same_string (a_formatter.year_to_string (d1), "21000"))
 		end
 
-	test_zoned_year_to_string is
+	test_zoned_year_to_string
 			-- Test year_to_string
 		local
 			d1: DT_DATE
@@ -1024,10 +1024,10 @@ feature -- Test
 			create d1.make (21000, 1, 1)
 			create tz1.make_hours_minutes (6, 00)
 			create dz1.make (d1, tz1)
-			assert ("21000 CE +06:00", STRING_.same_string (a_formatter.zoned_year_to_string (dz1), "21000+06:00"))			
+			assert ("21000 CE +06:00", STRING_.same_string (a_formatter.zoned_year_to_string (dz1), "21000+06:00"))
 		end
 
-	test_month_day_to_string is
+	test_month_day_to_string
 			-- Test month_day_to_string
 		local
 			d1: DT_DATE
@@ -1053,7 +1053,7 @@ feature -- Test
 			assert ("1st January", STRING_.same_string (a_formatter.month_day_to_string (d1), "--01-01"))
 		end
 
-	test_zoned_month_day_to_string is
+	test_zoned_month_day_to_string
 			-- Test month_day_to_string
 		local
 			d1: DT_DATE
@@ -1094,10 +1094,10 @@ feature -- Test
 			create d1.make (1, 1, 1)
 			create tz1.make_hours_minutes (6, 00)
 			create dz1.make (d1, tz1)
-			assert ("1st January +06:00", STRING_.same_string (a_formatter.zoned_month_day_to_string (dz1), "--01-01+06:00"))			
+			assert ("1st January +06:00", STRING_.same_string (a_formatter.zoned_month_day_to_string (dz1), "--01-01+06:00"))
 		end
 
-	test_day_to_string is
+	test_day_to_string
 			-- Test day_to_string
 		local
 			d1: DT_DATE
@@ -1123,7 +1123,7 @@ feature -- Test
 			assert ("1st", STRING_.same_string (a_formatter.day_to_string (d1), "---01"))
 		end
 
-	test_zoned_day_to_string is
+	test_zoned_day_to_string
 			-- Test day_to_string
 		local
 			d1: DT_DATE
@@ -1167,7 +1167,7 @@ feature -- Test
 			assert ("1st +06:00", STRING_.same_string (a_formatter.zoned_day_to_string (dz1), "---01+06:00"))
 		end
 
-	test_month_to_string is
+	test_month_to_string
 			-- Test month_to_string
 		local
 			d1: DT_DATE
@@ -1184,7 +1184,7 @@ feature -- Test
 			assert ("January", STRING_.same_string (a_formatter.month_to_string (d1), "--01"))
 		end
 
-	test_zoned_month_to_string is
+	test_zoned_month_to_string
 			-- Test month_to_string
 		local
 			d1: DT_DATE

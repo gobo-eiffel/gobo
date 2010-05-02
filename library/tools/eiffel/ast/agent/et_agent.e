@@ -30,7 +30,7 @@ feature -- Access
 	arguments: ET_AGENT_ARGUMENT_OPERANDS
 			-- Arguments
 
-	implicit_result: ET_RESULT is
+	implicit_result: ET_RESULT
 			-- Fictitious node corresponding to the result of the
 			-- associated feature when it's a query
 		do
@@ -38,36 +38,36 @@ feature -- Access
 
 feature -- Status report
 
-	is_qualified_call: BOOLEAN is
+	is_qualified_call: BOOLEAN
 			-- Is current call qualified?
 		deferred
 		end
 
-	is_procedure: BOOLEAN is
+	is_procedure: BOOLEAN
 			-- Is the associated feature a procedure?
 		deferred
 		ensure
 			definition: Result = (implicit_result = Void)
 		end
 
-	is_call_agent: BOOLEAN is
+	is_call_agent: BOOLEAN
 			-- Is current agent a call agent?
 		do
 			Result := False
 		end
 
-	is_inline_agent: BOOLEAN is
+	is_inline_agent: BOOLEAN
 			-- Is current agent an inline agent?
 		do
 			Result := False
 		end
 
-	is_never_void: BOOLEAN is True
+	is_never_void: BOOLEAN = True
 			-- Can current expression never be void?
 
 feature -- Setting
 
-	set_agent_keyword (an_agent: like agent_keyword) is
+	set_agent_keyword (an_agent: like agent_keyword)
 			-- Set `agent_keyword' to `an_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
@@ -77,7 +77,7 @@ feature -- Setting
 			agent_keyword_set: agent_keyword = an_agent
 		end
 
-	set_arguments (an_arguments: like arguments) is
+	set_arguments (an_arguments: like arguments)
 			-- Set `arguments' to `an_arguments'.
 		do
 			arguments := an_arguments
@@ -87,7 +87,7 @@ feature -- Setting
 
 feature {ET_AGENT_IMPLICIT_CURRENT_TARGET} -- Implicit node positions
 
-	implicit_target_position: ET_AST_NODE is
+	implicit_target_position: ET_AST_NODE
 			-- Node used to provide a position to the implicit target if any
 		deferred
 		ensure
@@ -96,7 +96,7 @@ feature {ET_AGENT_IMPLICIT_CURRENT_TARGET} -- Implicit node positions
 
 feature {ET_AGENT_IMPLICIT_OPEN_ARGUMENT} -- Implicit node positions
 
-	implicit_argument_position: ET_AST_NODE is
+	implicit_argument_position: ET_AST_NODE
 			-- Node used to provide a position to implicit open arguments if any
 		deferred
 		ensure

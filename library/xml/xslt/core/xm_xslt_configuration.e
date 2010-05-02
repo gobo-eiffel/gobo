@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			a_uri_resolver: like uri_resolver;
 			an_output_resolver: like output_resolver;
 			an_error_listener: like error_listener;
-			an_encoder_factory: like encoder_factory) is
+			an_encoder_factory: like encoder_factory)
 			-- Establish invariant.
 		require
 			entity_resolver_not_void: an_entity_resolver /= Void
@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 			encoder_factory_set: encoder_factory = an_encoder_factory
 		end
 
-	make_with_defaults is
+	make_with_defaults
 			-- Establish invariant using defaults.
 		local
 			an_error_listener: XM_XSLT_DEFAULT_ERROR_LISTENER
@@ -118,28 +118,28 @@ feature -- Access
 
 	is_reporting_tiny_tree_statistics: BOOLEAN
 			-- Do we report statistics on tiny-tree source documents?
-	
+
 	is_timing: BOOLEAN
 			-- Should timings be written to standard error cstream?
 
-	recovery_policy: INTEGER is
+	recovery_policy: INTEGER
 			-- Recovery policy when warnings or errors are encountered
 		do
 			Result := error_listener.recovery_policy
 		ensure
 			recovery_policy_in_range: Result >= Recover_silently and Result <= Do_not_recover
 		end
-		
+
 	extension_functions: DS_ARRAYED_LIST [XM_XPATH_FUNCTION_LIBRARY]
 			-- Libraries of extension functions
-	
+
 	media_type_map: XM_XSLT_MEDIA_TYPE_MAP
 			-- URI to media-type mapping rules
 
 	assume_html_is_xhtml: BOOLEAN
 			-- Do we treat text/html as application/xhtml+xml (on the assumption that the HTTP server is lying for MSIE)?
 
-	is_tracing: BOOLEAN is
+	is_tracing: BOOLEAN
 			-- Is tracing enabled?
 		do
 			Result := trace_listener /= Void
@@ -154,8 +154,8 @@ feature -- Access
 	default_action_suppressed: BOOLEAN
 			-- Are default templates suppressed?
 			-- (If `True', then non-compliant)
-	
-	default_media_type (a_uri: STRING): UT_MEDIA_TYPE is
+
+	default_media_type (a_uri: STRING): UT_MEDIA_TYPE
 			-- Media-type associated with `a_uri' (only used when resolver returns no information)
 		require
 			uri_not_empty: a_uri /= Void and then a_uri.count > 0
@@ -183,7 +183,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_uri_written (a_uri: STRING): BOOLEAN is
+	is_uri_written (a_uri: STRING): BOOLEAN
 			-- Has `a_uri' been written to yet?
 		do
 
@@ -196,7 +196,7 @@ feature -- Status report
 
 feature -- Creation
 
-	new_message_emitter (a_transformer: XM_XSLT_TRANSFORMER; a_properties: XM_XSLT_OUTPUT_PROPERTIES): XM_XPATH_RECEIVER is
+	new_message_emitter (a_transformer: XM_XSLT_TRANSFORMER; a_properties: XM_XSLT_OUTPUT_PROPERTIES): XM_XPATH_RECEIVER
 			-- New destination for xsl:message
 		do
 			Result := message_emitter_factory.new_message_emitter (a_transformer, a_properties)
@@ -206,7 +206,7 @@ feature -- Creation
 
 feature -- Element change
 
-	force_explaining is
+	force_explaining
 			-- Force gexslt:explain="all" on.
 		do
 			is_explaining := True
@@ -214,7 +214,7 @@ feature -- Element change
 			explaining_forced_on: is_explaining
 		end
 
-	set_warns_on_default_action (a_status: BOOLEAN) is
+	set_warns_on_default_action (a_status: BOOLEAN)
 			-- Set whether warning messages are issued when a default template is invoked.
 		do
 			warns_on_default_action := a_status
@@ -223,7 +223,7 @@ feature -- Element change
 			status_set: warns_on_default_action = a_status
 		end
 
-	set_default_action_suppressed (a_status: BOOLEAN) is
+	set_default_action_suppressed (a_status: BOOLEAN)
 			-- Set whther default templates are suppressed.
 		do
 			default_action_suppressed := a_status
@@ -232,7 +232,7 @@ feature -- Element change
 			status_set: default_action_suppressed = a_status
 		end
 
-	add_extension_function_library (a_function_library: XM_XPATH_FUNCTION_LIBRARY) is
+	add_extension_function_library (a_function_library: XM_XPATH_FUNCTION_LIBRARY)
 			-- Add an extension-function library.
 		require
 			function_library_not_void: a_function_library /= Void
@@ -242,14 +242,14 @@ feature -- Element change
 			library_added: extension_functions.last = a_function_library
 		end
 
-	reset_entity_resolver is
+	reset_entity_resolver
 			-- Reset `entity_resolver' stack to initial condition.
 		do
 			entity_resolver.reset_uri_stack (saved_base_uri)
 		end
 
-			
-	set_line_numbering (on_or_off: BOOLEAN) is
+
+	set_line_numbering (on_or_off: BOOLEAN)
 			-- Turn line numbering `on_or_off'.
 		do
 			is_line_numbering := on_or_off
@@ -257,7 +257,7 @@ feature -- Element change
 			set: is_line_numbering = on_or_off
 		end
 
-	set_trace_listener (a_trace_listener: XM_XSLT_TRACE_LISTENER) is
+	set_trace_listener (a_trace_listener: XM_XSLT_TRACE_LISTENER)
 			-- Set `trace_listener'.
 		require
 			trace_listener_may_be_void: True
@@ -267,7 +267,7 @@ feature -- Element change
 			trace_listener_set: trace_listener = a_trace_listener
 		end
 
-	set_message_emitter_factory (a_message_emitter_factory: like message_emitter_factory) is
+	set_message_emitter_factory (a_message_emitter_factory: like message_emitter_factory)
 			-- Set `message_emitter_factory' to `a_message_emitter_factory'.
 		require
 			a_message_emitter_factory_not_void: a_message_emitter_factory /= Void
@@ -277,7 +277,7 @@ feature -- Element change
 			message_emitter_factory_set: message_emitter_factory = a_message_emitter_factory
 		end
 
-	set_entity_resolver (an_entity_resolver: like entity_resolver) is
+	set_entity_resolver (an_entity_resolver: like entity_resolver)
 			-- Set `entity_resolver'.
 		require
 			entity_resolver_not_void: an_entity_resolver /= Void
@@ -287,7 +287,7 @@ feature -- Element change
 			entity_resolver_set: entity_resolver = an_entity_resolver
 		end
 
-	set_uri_resolver (a_uri_resolver: like uri_resolver) is
+	set_uri_resolver (a_uri_resolver: like uri_resolver)
 			-- Set `uri_resolver'.
 		require
 			uri_resolver_not_void: a_uri_resolver /= Void
@@ -297,7 +297,7 @@ feature -- Element change
 			uri_resolver_set: uri_resolver = a_uri_resolver
 		end
 
-	set_output_resolver (an_output_resolver: like output_resolver) is
+	set_output_resolver (an_output_resolver: like output_resolver)
 			-- Set `output_resolver'.
 		require
 			output_resolver_not_void: an_output_resolver /= Void
@@ -307,7 +307,7 @@ feature -- Element change
 			output_resolver_set: output_resolver = an_output_resolver
 		end
 
-	set_recovery_policy (a_recovery_policy: INTEGER) is
+	set_recovery_policy (a_recovery_policy: INTEGER)
 			-- Set recovery policy.
 		require
 			valid_recovery_policy: a_recovery_policy >= Recover_silently and then a_recovery_policy <= Do_not_recover
@@ -317,7 +317,7 @@ feature -- Element change
 			recovery_policy_set: recovery_policy = a_recovery_policy
 		end
 
-	set_error_listener (an_error_listener: like error_listener) is
+	set_error_listener (an_error_listener: like error_listener)
 			-- Set error listener.
 		require
 			error_listener_not_void: an_error_listener /= Void
@@ -325,7 +325,7 @@ feature -- Element change
 			error_listener := an_error_listener
 		end
 
-	use_tiny_tree_model (true_or_false: BOOLEAN) is
+	use_tiny_tree_model (true_or_false: BOOLEAN)
 			-- Switch on/off use of tiny tree model for source XML.
 		do
 			is_tiny_tree_model := true_or_false
@@ -333,7 +333,7 @@ feature -- Element change
 			set: is_tiny_tree_model = true_or_false
 		end
 
-	report_tiny_tree_statistics (true_or_false: BOOLEAN) is
+	report_tiny_tree_statistics (true_or_false: BOOLEAN)
 			-- Switch on/off reporting of tiny tree statistics for source XML.
 		do
 			is_reporting_tiny_tree_statistics := true_or_false
@@ -341,7 +341,7 @@ feature -- Element change
 			set: is_reporting_tiny_tree_statistics = true_or_false
 		end
 
-	do_not_assume_xhtml is
+	do_not_assume_xhtml
 			-- Do not assume that text/html is really application/xhtml+xml.
 		do
 			assume_html_is_xhtml := False
@@ -349,7 +349,7 @@ feature -- Element change
 			really_html: not assume_html_is_xhtml
 		end
 
-	trace (a_label, a_value: STRING) is
+	trace (a_label, a_value: STRING)
 			-- Create trace entry.
 		do
 			if trace_listener.is_tracing then
@@ -357,7 +357,7 @@ feature -- Element change
 			end
 		end
 
-	set_final_execution_phase (a_phase: INTEGER) is
+	set_final_execution_phase (a_phase: INTEGER)
 			-- Set last phase to be executed.
 		require
 			final_execution_phase_in_range: a_phase <= Run_to_completion and then a_phase >= Stop_after_principal_source
@@ -367,7 +367,7 @@ feature -- Element change
 			phase_set: final_execution_phase = a_phase
 		end
 
-	set_tiny_tree_estimates (some_estimated_nodes, some_estimated_attributes, some_estimated_namespaces, some_estimated_characters: INTEGER) is
+	set_tiny_tree_estimates (some_estimated_nodes, some_estimated_attributes, some_estimated_namespaces, some_estimated_characters: INTEGER)
 			-- Set size parameters for tiny-tree source documents.
 		require
 			positive_nodes: some_estimated_nodes >= 0
@@ -387,15 +387,15 @@ feature -- Element change
 		end
 
 
-	suppress_dtd is
+	suppress_dtd
 			-- Suppress reading of external DTDs by XML parser.
 		do
 			is_dtd_suppressed := True
 		ensure
 			dtd_suppressed: is_dtd_suppressed
 		end
-	
-	set_timing (a_status: BOOLEAN) is
+
+	set_timing (a_status: BOOLEAN)
 			-- Set `is_timing' to `a_status'.
 		do
 			is_timing := a_status
@@ -406,7 +406,7 @@ feature -- Element change
 feature {XM_XSLT_TRANSFORMER, XM_XSLT_INSTRUCTION} -- Transformation
 
 	element_validator (a_receiver: XM_XPATH_RECEIVER; a_name_code: INTEGER; a_schema_type: XM_XPATH_SCHEMA_TYPE;
-							 a_validation_action: INTEGER): XM_XPATH_RECEIVER is
+							 a_validation_action: INTEGER): XM_XPATH_RECEIVER
 			-- A receiver that can be used to validate an element,
 			--  and that passes the validated element on to a target receiver.
 			-- If validation is not supported, the returned receiver
@@ -424,7 +424,7 @@ feature {XM_XSLT_TRANSFORMER, XM_XSLT_INSTRUCTION} -- Transformation
 			element_validator_not_void: Result /= Void
 		end
 
-	document_validator (a_receiver: XM_XPATH_RECEIVER; a_system_id: STRING; a_validation_action: INTEGER): XM_XPATH_RECEIVER is
+	document_validator (a_receiver: XM_XPATH_RECEIVER; a_system_id: STRING; a_validation_action: INTEGER): XM_XPATH_RECEIVER
 		-- A receiver that can be used to validate a document,
 			--  and that passes the validated element on to a target receiver.
 			-- If validation is not supported, the returned receiver
@@ -438,7 +438,7 @@ feature {XM_XSLT_TRANSFORMER, XM_XSLT_INSTRUCTION} -- Transformation
 		ensure
 			document_validator_not_void: Result /= Void
 		end
-	
+
 feature {NONE} -- Implementation
 
 	saved_base_uri: UT_URI

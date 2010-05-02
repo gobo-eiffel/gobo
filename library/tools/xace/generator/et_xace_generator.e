@@ -21,7 +21,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_compiler: like compiler; a_variables: like variables; an_error_handler: like error_handler) is
+	make (a_compiler: like compiler; a_variables: like variables; an_error_handler: like error_handler)
 			-- Create a new generator.
 		require
 			a_compiler_not_void: a_compiler /= Void
@@ -43,14 +43,14 @@ feature -- Access
 			-- Name of compiler for which the Eiffel config file is generated
 			-- (e.g. ise, ge, ...)
 
-	default_system_output_filename: STRING is
+	default_system_output_filename: STRING
 			-- Default system output filename
 		deferred
 		ensure
 			default_system_output_filename_not_void: Result /= Void
 		end
 
-	default_library_output_filename: STRING is
+	default_library_output_filename: STRING
 			-- Default library output filename
 		deferred
 		ensure
@@ -74,7 +74,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_shallow (b: BOOLEAN) is
+	set_shallow (b: BOOLEAN)
 			-- set `is_shallow' to `b'.
 		do
 			is_shallow := b
@@ -84,7 +84,7 @@ feature -- Status setting
 
 feature -- Output
 
-	generate_system (a_system: ET_XACE_SYSTEM_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM) is
+	generate_system (a_system: ET_XACE_SYSTEM_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Generate a new Eiffel config file from `a_system'.
 		require
 			a_system_not_void: a_system /= Void
@@ -99,7 +99,7 @@ feature -- Output
 		deferred
 		end
 
-	generate_library (a_library: ET_XACE_LIBRARY_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM) is
+	generate_library (a_library: ET_XACE_LIBRARY_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Generate a new Eiffel config file from `a_library'.
 		require
 			a_library_not_void: a_library /= Void
@@ -112,7 +112,7 @@ feature -- Output
 
 feature {NONE} -- Output
 
-	print_indentation (indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_indentation (indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print `indent' tab characters to `a_file'.
 		require
 			indent_positive: indent >= 0
@@ -127,7 +127,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_escaped_name (a_name: STRING; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_escaped_name (a_name: STRING; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print escaped version of `a_name' to `a_file'.
 		require
 			a_name_not_void: a_name /= Void
@@ -139,7 +139,7 @@ feature {NONE} -- Output
 
 feature {NONE} -- Implementation
 
-	is_windows: BOOLEAN is
+	is_windows: BOOLEAN
 			-- Is current generator generating an Eiffel config file
 			-- to be used under Windows?
 		local

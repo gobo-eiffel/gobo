@@ -27,7 +27,7 @@ create {DS_BINARY_SEARCH_TREE_SET}
 
 feature {NONE} -- Initialization
 
-	make (a_item: G) is
+	make (a_item: G)
 			-- Create a new node.
 		do
 			item := a_item
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Duplication
 
-	copy_item_and_key_to (other: like Current) is
+	copy_item_and_key_to (other: like Current)
 			-- Copy `item' and `key' to `other'.
 		do
 			other.set_item (item)

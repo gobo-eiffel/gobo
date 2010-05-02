@@ -119,7 +119,7 @@ feature -- Options and Flags
 
 feature -- Main
 
-   make is
+   make
          -- Main routine, called when the program is executed.
       local
          parser: AP_PARSER

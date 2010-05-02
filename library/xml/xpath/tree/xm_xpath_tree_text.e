@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_document: XM_XPATH_TREE_DOCUMENT; a_string_value: STRING) is
+	make (a_document: XM_XPATH_TREE_DOCUMENT; a_string_value: STRING)
 			-- Create `string_value'.
 		require
 			string_value_not_void: a_string_value /= Void
@@ -47,13 +47,13 @@ feature -- Access
 	string_value: STRING
 			--Value of the item as a string
 
-	is_tree_text: BOOLEAN is
+	is_tree_text: BOOLEAN
 			-- Is `Current' a text node?
 		do
 			Result := True
 		end
 
-	as_tree_text: XM_XPATH_TREE_TEXT is
+	as_tree_text: XM_XPATH_TREE_TEXT
 			-- `Current' seen as a text node
 		do
 			Result := Current
@@ -61,7 +61,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_all_whitespace: BOOLEAN is
+	is_all_whitespace: BOOLEAN
 			-- Does `string_value' consist only of XML white-space characters?
 		local
 			l_counter: INTEGER
@@ -83,7 +83,7 @@ feature -- Status report
 
 feature -- Duplication
 
-	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
+	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN)
 			-- Copy `Current' to `a_receiver'.
 		do
 			a_receiver.notify_characters (string_value, 0)

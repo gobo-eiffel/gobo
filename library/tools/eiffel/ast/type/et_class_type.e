@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type_mark: like type_mark; a_name: like name; a_named_base_class: like named_base_class) is
+	make (a_type_mark: like type_mark; a_name: like name; a_named_base_class: like named_base_class)
 			-- Create a new class type.
 		require
 			a_name_not_void: a_name /= Void
@@ -54,7 +54,7 @@ feature -- Access
 			-- 'attached', 'detachable', 'expanded', 'reference' or 'separate' keyword,
 			-- or '!' or '?' symbol
 
-	base_type (a_context: ET_TYPE_CONTEXT): ET_CLASS_TYPE is
+	base_type (a_context: ET_TYPE_CONTEXT): ET_CLASS_TYPE
 			-- Base type of current type, when it appears in `a_context',
 			-- only made up of class names and generic formal parameters
 			-- when the root type of `a_context' is a generic type not
@@ -84,7 +84,7 @@ feature -- Access
 			end
 		end
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -96,7 +96,7 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			if type_mark /= Void then
@@ -106,7 +106,7 @@ feature -- Access
 			end
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		local
 			a_parameters: like actual_parameters
@@ -119,7 +119,7 @@ feature -- Access
 			end
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		local
 			a_parameters: like actual_parameters
@@ -134,7 +134,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_separate: BOOLEAN is
+	is_separate: BOOLEAN
 			-- Is current type separate?
 		do
 			if type_mark /= Void then
@@ -144,7 +144,7 @@ feature -- Status report
 			end
 		end
 
-	is_expanded: BOOLEAN is
+	is_expanded: BOOLEAN
 			-- Is current type expanded?
 		do
 			if type_mark /= Void then
@@ -154,13 +154,13 @@ feature -- Status report
 			end
 		end
 
-	is_type_expanded (a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	is_type_expanded (a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Is current type expanded when viewed from `a_context'?
 		do
 			Result := is_expanded
 		end
 
-	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does the base type of current type contain `a_class'
 			-- when it appears in `a_context'?
 		local
@@ -178,7 +178,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	same_syntactical_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_syntactical_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the base types here!
@@ -197,7 +197,7 @@ feature -- Comparison
 			end
 		end
 
-	same_named_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_named_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		do
@@ -211,7 +211,7 @@ feature -- Comparison
 			end
 		end
 
-	same_base_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_base_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 		do
@@ -225,7 +225,7 @@ feature -- Comparison
 			end
 		end
 
-	same_as_base_class: BOOLEAN is
+	same_as_base_class: BOOLEAN
 			-- Is current type a non-generic class type with the same
 			-- expandedness and separateness status as its base class,
 			-- or is it its own base class?
@@ -244,7 +244,7 @@ feature -- Comparison
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
-	same_syntactical_class_type (other: ET_CLASS_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_syntactical_class_type (other: ET_CLASS_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the base types here!
@@ -280,7 +280,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_named_class_type (other: ET_CLASS_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_named_class_type (other: ET_CLASS_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		local
@@ -311,7 +311,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_base_class_type (other: ET_CLASS_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_base_class_type (other: ET_CLASS_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		local
@@ -344,7 +344,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
 feature -- Conformance
 
-	conforms_to_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	conforms_to_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does current type appearing in `a_context' conform
 			-- to `other' type appearing in `other_context'?
 			-- (Note: 'current_system.ancestor_builder' is used on the classes
@@ -362,7 +362,7 @@ feature -- Conformance
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
-	conforms_from_class_type (other: ET_CLASS_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	conforms_from_class_type (other: ET_CLASS_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- (Note: 'current_system.ancestor_builder' is used on the classes
@@ -448,7 +448,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
 feature -- Type processing
 
-	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_CLASS_TYPE is
+	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_CLASS_TYPE
 			-- Version of current type where the formal generic
 			-- parameter types have been replaced by their actual
 			-- counterparts in `a_parameters'
@@ -470,7 +470,7 @@ feature -- Type processing
 
 feature -- Output
 
-	append_to_string (a_string: STRING) is
+	append_to_string (a_string: STRING)
 			-- Append textual representation of
 			-- current type to `a_string'.
 		local
@@ -488,7 +488,7 @@ feature -- Output
 			end
 		end
 
-	append_unaliased_to_string (a_string: STRING) is
+	append_unaliased_to_string (a_string: STRING)
 			-- Append textual representation of unaliased
 			-- version of current type to `a_string'.
 			-- An unaliased version if when aliased types such as INTEGER
@@ -510,7 +510,7 @@ feature -- Output
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_class_type (Current)

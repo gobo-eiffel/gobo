@@ -14,7 +14,7 @@ class XM_SHARED_CATALOG_MANAGER
 
 feature -- Access
 
-	shared_catalog_manager: XM_CATALOG_MANAGER is
+	shared_catalog_manager: XM_CATALOG_MANAGER
 			-- Shared catalog manager
 		once
 			create Result.make
@@ -23,4 +23,4 @@ feature -- Access
 		end
 
 end
-	
+

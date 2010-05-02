@@ -31,7 +31,7 @@ create
 
 feature -- Test
 
-	test_initialization is
+	test_initialization
 			-- Test feature `glob_prefix'.
 		do
 			assert ("not_executable_1", not ds.is_executable)
@@ -41,7 +41,7 @@ feature -- Test
 			assert ("empty_1", ds.is_empty)
 		end
 
-	test_execute1 is
+	test_execute1
 			-- Test feature `execute' with `set_include_wc_string' applied.
 		local
 			a_entries: DS_ARRAYED_LIST [STRING]
@@ -63,7 +63,7 @@ feature -- Test
 			assert ("not_has_library", not a_entries.has ("library"))
 		end
 
-	test_execute2 is
+	test_execute2
 			-- Test feature `execute' with `set_include_wc_string' and `set_exclude_wc_string' applied.
 		local
 			a_entries: DS_ARRAYED_LIST [STRING]
@@ -93,7 +93,7 @@ feature -- Test
 
 feature -- Execution
 
-	set_up is
+	set_up
 			-- Setup for a test.
 		local
 			a_variables: GEANT_PROJECT_VARIABLES
@@ -107,7 +107,7 @@ feature -- Execution
 			create ds.make (project)
 		end
 
-	tear_down is
+	tear_down
 			-- Tear down after a test.
 		do
 			ds := Void

@@ -79,7 +79,7 @@ feature {NONE} -- Implementation
 			-- Name of file (STRING version)
 
 #ifdef GE
-	old_open_write is
+	old_open_write
 			-- Open file in write-only mode;
 			-- create it if it does not exist.
 		do
@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	old_open_append is
+	old_open_append
 			-- Open file in append-only mode;
 			-- create it if it does not exist.
 		do

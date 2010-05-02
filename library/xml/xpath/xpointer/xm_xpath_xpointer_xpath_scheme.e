@@ -42,7 +42,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make is
+	make
 			-- Establish environment.
 		local
 			a_core_function_library: XM_XPATH_CORE_FUNCTION_LIBRARY
@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 			gexslt_xpath_scheme: not is_w3c
 		end
 
-	make_w3c is
+	make_w3c
 			-- Create W3C xpath scheme.
 		do
 			make
@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	expanded_name: STRING is 
+	expanded_name: STRING
 			-- Expanded name of implemented scheme
 		do
 			if is_w3c then
@@ -95,7 +95,7 @@ feature -- Status report
 
 feature -- Element change
 
-	evaluate (a_resource: XM_XPATH_DOCUMENT; a_namespace_context: XM_XPOINTER_NAMESPACE_CONTEXT; a_data: STRING) is
+	evaluate (a_resource: XM_XPATH_DOCUMENT; a_namespace_context: XM_XPOINTER_NAMESPACE_CONTEXT; a_data: STRING)
 			-- Evaluate `a_data' against `a_resource' within `a_namespace_context'.
 		local
 			l_base_uri: UT_URI
@@ -145,13 +145,13 @@ feature -- Element change
 				end
 			end
 		end
-	
+
 feature {NONE} -- Implementation
 
 	function_library: XM_XPATH_FUNCTION_LIBRARY_MANAGER
 			-- Function library
 
-	evaluate_post_analysis (a_expression: XM_XPATH_EXPRESSION; a_document: XM_XPATH_DOCUMENT) is
+	evaluate_post_analysis (a_expression: XM_XPATH_EXPRESSION; a_document: XM_XPATH_DOCUMENT)
 			-- perform evaluation on `a_expression'.
 		require
 			expression_checked_and_optimized_without_error: a_expression /= Void and then not a_expression.is_error
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 			a_document_pool.add (a_document, Void, a_document.base_uri) -- N.B. We can safely ignore the media type
 			create a_context.make (a_document, a_document_pool, function_library)
 			a_context.set_string_mode_mixed
-			a_expression.create_iterator (a_context)			
+			a_expression.create_iterator (a_context)
 			a_sequence_iterator := a_expression.last_iterator
 			if a_sequence_iterator.is_error then
 				is_error := True
@@ -181,4 +181,4 @@ invariant
 	function_library_not_void: function_library /= Void
 
 end
-	
+

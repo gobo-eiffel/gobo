@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING) is
+	make (filename: STRING)
 			-- Create a new error reporting that no rules
 			-- has been specified in the input grammar.
 		require
@@ -34,10 +34,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%": no rules in input grammar"
+	default_template: STRING = "%"$1%": no rules in input grammar"
 			-- Default template used to built the error message
 
-	code: STRING is "PR0009"
+	code: STRING = "PR0009"
 			-- Error code
 
 invariant

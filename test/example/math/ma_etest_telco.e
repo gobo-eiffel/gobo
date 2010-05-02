@@ -25,15 +25,15 @@ create
 
 feature -- Access
 
-	program_name: STRING is "telco"
+	program_name: STRING = "telco"
 			-- Program name
 
-	library_name: STRING is "math"
+	library_name: STRING = "math"
 			-- Library name of example
 
 feature -- Test
 
-	test_telco is
+	test_telco
 			-- Test 'telco' benchmark.
 		local
 			telco_exe: STRING
@@ -64,7 +64,7 @@ feature -- Test
 						l_input_file.end_of_file
 					loop
 						l_line := l_input_file.last_string
-						if l_line.count > 9 and then l_line.substring (1, 9).is_equal ("Duration:") then 
+						if l_line.count > 9 and then l_line.substring (1, 9).is_equal ("Duration:") then
 							l_output_file.put_line ("Duration: 0:0:0.0  - hour:minute:second.millisecond")
 						else
 							l_output_file.put_line (l_line)
@@ -80,14 +80,14 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	program_dirname: STRING is
+	program_dirname: STRING
 			-- Name of program source directory
 		do
 			Result := file_system.nested_pathname ("${GOBO}", <<"example", library_name, "decimal", program_name>>)
 			Result := Execution_environment.interpreted_string (Result)
 		end
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory where expected files are located
 		once
 			Result := file_system.nested_pathname ("${GOBO}", <<"test", "example", "math", "data">>)
@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 			data_dirname_not_empty: Result.count > 0
 		end
 
-	telco_outc_filename: STRING is
+	telco_outc_filename: STRING
 			-- Name of expected output file
 		once
 			Result := file_system.pathname (data_dirname, "telco.outc")
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 			telco_outc_filename_not_empty: Result.count > 0
 		end
 
-	telco_txt_filename: STRING is
+	telco_txt_filename: STRING
 			-- Name of expected output log file
 		once
 			Result := file_system.pathname (data_dirname, "telco.txt")

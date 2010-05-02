@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Name of class
 		deferred
 		ensure
@@ -28,7 +28,7 @@ feature -- Access
 			name_not_empty: Result.count > 0
 		end
 
-	upper_name: STRING is
+	upper_name: STRING
 			-- Upper-name of class
 			-- (May return the same object as `name' if already in upper case,
 			-- otherwise return a new object at each call.)
@@ -39,7 +39,7 @@ feature -- Access
 			definition: Result.is_equal (name.as_upper)
 		end
 
-	lower_name: STRING is
+	lower_name: STRING
 			-- Lower-name of class
 			-- (May return the same object as `name' if already in upper case,
 			-- otherwise return a new object at each call.)
@@ -50,7 +50,7 @@ feature -- Access
 			definition: Result.is_equal (name.as_lower)
 		end
 
-	class_name: ET_CLASS_NAME is
+	class_name: ET_CLASS_NAME
 			-- Class name
 		do
 			Result := Current
@@ -60,13 +60,13 @@ feature -- Access
 
 feature -- Status report
 
-	is_identifier: BOOLEAN is
+	is_identifier: BOOLEAN
 			-- Is current class name an identifier?
 		do
 			-- Result := False
 		end
 
-	is_none: BOOLEAN is
+	is_none: BOOLEAN
 			-- Is current class name "NONE"?
 		do
 			Result := same_class_name (tokens.none_class_name)
@@ -74,7 +74,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	same_class_name (other: ET_CLASS_NAME): BOOLEAN is
+	same_class_name (other: ET_CLASS_NAME): BOOLEAN
 			-- Are class name and `other' the same class name?
 			-- (case insensitive)
 		require

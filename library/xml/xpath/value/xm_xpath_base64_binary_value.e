@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_value: STRING) is
+	make (a_value: STRING)
 			-- Create from encoded string.
 		require
 			value_is_base64: a_value /= Void and then STRING_.is_base64 (a_value)
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			static_properties_computed: are_static_properties_computed
 		end
 
-	make_and_encode (a_value: like binary_value) is
+	make_and_encode (a_value: like binary_value)
 			-- Create from decoded octets.
 		require
 			value_not_void: a_value /= Void
@@ -74,7 +74,7 @@ feature -- Access
 	binary_value: ARRAY [CHARACTER]
 			-- Decoded octets
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type
 		do
 			Result := type_factory.base64_binary_type
@@ -84,7 +84,7 @@ feature -- Access
 			end
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		local
 			a_count, an_index: INTEGER
@@ -97,7 +97,7 @@ feature -- Access
 			if Result < 0 then Result := 0 - Result end
 		end
 
-	string_value: STRING is
+	string_value: STRING
 			-- Value of the item as a string
 		local
 			an_encoder: UT_BASE64_ENCODING_OUTPUT_STREAM
@@ -118,7 +118,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Are `Current' and `other' the same expression?
 		local
 			an_index, a_count: INTEGER
@@ -135,7 +135,7 @@ feature -- Comparison
 			end
 		end
 
-	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER is
+	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER
 			-- Compare `Current' to `other'
 		do
 
@@ -150,19 +150,19 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_base64_binary: BOOLEAN is
+	is_base64_binary: BOOLEAN
 			-- Is `Current' a base64Binary value?
 		do
 			Result := True
 		end
 
-	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
+	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN
 			-- Is `other' comparable to `Current'?
 		do
 			Result := other.is_base64_binary
 		end
-	
-	display (a_level: INTEGER) is
+
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -174,7 +174,7 @@ feature -- Status report
 			std.error.put_new_line
 		end
 
-	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN is
+	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN
 			-- Is `Current' convertible to `a_required_type'?
 		do
 			inspect
@@ -189,13 +189,13 @@ feature -- Status report
 
 feature -- Conversion
 
-		as_base64_binary: XM_XPATH_BASE64_BINARY_VALUE is
+		as_base64_binary: XM_XPATH_BASE64_BINARY_VALUE
 			-- `Current' seen as a base64Binary value
 		do
 			Result := Current
 		end
 
-	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE) is
+	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE)
 			-- Convert `Current' to `a_required_type'
 		do
 			inspect

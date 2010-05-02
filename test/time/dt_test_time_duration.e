@@ -23,7 +23,7 @@ create
 
 feature -- Test
 
-	test_time_duration1 is
+	test_time_duration1
 			-- Test features of DT_TIME_DURATION.
 		local
 			d1, d2, d3: DT_TIME_DURATION
@@ -53,7 +53,7 @@ feature -- Test
 			assert ("is_equal2", d1.is_equal (d2))
 		end
 
-	test_time_duration2 is
+	test_time_duration2
 			-- Test features of DT_TIME_DURATION.
 		local
 			d1, d2, d3: DT_TIME_DURATION
@@ -80,7 +80,7 @@ feature -- Test
 			assert ("is_equal", not d1.is_equal (d2))
 		end
 
-	test_time_duration3 is
+	test_time_duration3
 			-- Test features of DT_TIME_DURATION.
 		local
 			d1, d2, d3: DT_TIME_DURATION
@@ -107,7 +107,7 @@ feature -- Test
 			assert ("is_equal", not d1.is_equal (d2))
 		end
 
-	test_time_duration4 is
+	test_time_duration4
 			-- Test features of DT_TIME_DURATION.
 		local
 			d1, d2, d3: DT_TIME_DURATION
@@ -134,7 +134,7 @@ feature -- Test
 			assert ("is_equal", not d1.is_equal (d2))
 		end
 
-	test_time_duration5 is
+	test_time_duration5
 			-- Test features of DT_TIME_DURATION.
 		local
 			d1, d2: DT_TIME_DURATION
@@ -144,7 +144,7 @@ feature -- Test
 			assert ("is_equal", d1.is_equal (d2))
 		end
 
-	test_time_duration6 is
+	test_time_duration6
 			-- Test features of DT_TIME_DURATION.
 		local
 			d1, d2: DT_TIME_DURATION
@@ -160,7 +160,7 @@ feature -- Test
 			assert_integers_equal ("millisecond_count", 675452089, d1.millisecond_count)
 		end
 
-	test_time_duration7 is
+	test_time_duration7
 			-- Test features of DT_TIME_DURATION.
 		local
 			d1, d2: DT_TIME_DURATION
@@ -176,7 +176,7 @@ feature -- Test
 			assert_integers_equal ("millisecond_count", -45638000, d1.millisecond_count)
 		end
 
-	test_time_duration8 is
+	test_time_duration8
 			-- Test features of DT_TIME_DURATION.
 		local
 			d1, d2: DT_TIME_DURATION
@@ -189,7 +189,7 @@ feature -- Test
 			assert_integers_equal ("millisecond_count", 46798000, d1.millisecond_count)
 		end
 
-	test_time_duration9 is
+	test_time_duration9
 			-- Test features of DT_TIME_DURATION.
 		local
 			d1, d2: DT_TIME_DURATION

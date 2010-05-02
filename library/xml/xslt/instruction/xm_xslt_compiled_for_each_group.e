@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 	make (a_executable: XM_XSLT_EXECUTABLE; a_select_expression, a_action: XM_XPATH_EXPRESSION; a_key_expression: XM_XPATH_EXPRESSION;
 		a_algorithm: INTEGER; a_sort_keys: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION];
-		a_collation_name: XM_XPATH_EXPRESSION; a_default_collation_name: STRING) is
+		a_collation_name: XM_XPATH_EXPRESSION; a_default_collation_name: STRING)
 			-- Establish invariant.
 		require
 			executable_not_void: a_executable /= Void
@@ -76,7 +76,7 @@ feature {NONE} -- Initialization
 
 	make_pattern (a_executable: XM_XSLT_EXECUTABLE; a_select_expression, a_action: XM_XPATH_EXPRESSION; a_key_pattern: XM_XSLT_PATTERN;
 		a_algorithm: INTEGER; a_sort_keys: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION];
-		a_collation_name: XM_XPATH_EXPRESSION; a_default_collation_name: STRING) is
+		a_collation_name: XM_XPATH_EXPRESSION; a_default_collation_name: STRING)
 			-- Establish invariant.
 		require
 			executable_not_void: a_executable /= Void
@@ -101,13 +101,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, when known
 		do
 			Result := action.item_type
 		end
 
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions of `Current'
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_SORT_KEY_DEFINITION]
@@ -140,13 +140,13 @@ feature -- Access
 
 feature -- Status report
 
-	creates_new_nodes: BOOLEAN is
+	creates_new_nodes: BOOLEAN
 			-- Can `Current' create new nodes?
 		do
 			Result := not action.non_creating
 		end
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			l_string: STRING
@@ -165,7 +165,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	compute_dependencies is
+	compute_dependencies
 			-- Compute dependencies on context.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_SORT_KEY_DEFINITION]
@@ -242,7 +242,7 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -271,7 +271,7 @@ feature -- Optimization
 			end
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -309,7 +309,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -338,7 +338,7 @@ feature -- Optimization
 			end
 		end
 
-	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this instruction.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -356,7 +356,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -403,7 +403,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterate over the values of a sequence
 		local
 			l_group_iterator: XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM]
@@ -435,7 +435,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterate over nodes of a sequence
 		local
 			l_group_iterator: XM_XSLT_GROUP_NODE_ITERATOR
@@ -466,14 +466,14 @@ feature -- Evaluation
 			end
 		end
 
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
+	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT)
 			-- Map `an_item' to a sequence
 		do
 			action.create_iterator (a_context)
 			create last_mapped_item.make_sequence (action.last_iterator)
 		end
 
-	map_nodes (a_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
+	map_nodes (a_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT)
 			-- Map `a_item' to a sequence
 		do
 			action.create_node_iterator (a_context)
@@ -503,7 +503,7 @@ feature {NONE} -- Implementation
 	collation_name: XM_XPATH_EXPRESSION
 			-- Collation name
 
-	set_select_expression (a_replacement: XM_XPATH_EXPRESSION) is
+	set_select_expression (a_replacement: XM_XPATH_EXPRESSION)
 			-- Conditionally set `select_expression' to `a_replacement'.
 		require
 			a_replacement_not_void: a_replacement /= Void
@@ -517,7 +517,7 @@ feature {NONE} -- Implementation
 			select_expression_set: select_expression = a_replacement
 		end
 
-	set_action (a_replacement: XM_XPATH_EXPRESSION) is
+	set_action (a_replacement: XM_XPATH_EXPRESSION)
 			-- Conditionally set `action' to `a_replacement'.
 		require
 			a_replacement_not_void: a_replacement /= Void
@@ -531,7 +531,7 @@ feature {NONE} -- Implementation
 			action_set: action = a_replacement
 		end
 
-	set_key_expression (a_replacement: XM_XPATH_EXPRESSION) is
+	set_key_expression (a_replacement: XM_XPATH_EXPRESSION)
 			-- Conditionally set `key_expression' to `a_replacement'.
 		require
 			a_replacement_not_void: a_replacement /= Void
@@ -545,7 +545,7 @@ feature {NONE} -- Implementation
 			key_expression_set: key_expression = a_replacement
 		end
 
-	algorithm_name: STRING is
+	algorithm_name: STRING
 			-- Name of grouping algorithm
 		do
 			inspect
@@ -564,7 +564,7 @@ feature {NONE} -- Implementation
 			algorithm_name_not_empty: not Result.is_empty
 		end
 
-	fetch_collator (a_collator: DS_PAIR [ST_COLLATOR, XM_XPATH_ERROR_VALUE]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	fetch_collator (a_collator: DS_PAIR [ST_COLLATOR, XM_XPATH_ERROR_VALUE]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Set `a_collator' from `collation_name'.
 		require
 			a_collator_not_void: a_collator /= Void
@@ -590,7 +590,7 @@ feature {NONE} -- Implementation
 			error_or_collator_not_void: a_collator.first /= Void xor a_collator.second /= Void
 		end
 
-	create_group_iterator (a_result: DS_PAIR [XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM], XM_XPATH_ERROR_VALUE]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	create_group_iterator (a_result: DS_PAIR [XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM], XM_XPATH_ERROR_VALUE]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Create group iterator in `a_result'.
 		require
 			a_result_not_void: a_result /= Void
@@ -620,7 +620,7 @@ feature {NONE} -- Implementation
 			result_or_error: a_result.first = Void xor a_result.second = Void
 		end
 
-	create_group_node_iterator (a_result: DS_PAIR [XM_XSLT_GROUP_NODE_ITERATOR, XM_XPATH_ERROR_VALUE]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	create_group_node_iterator (a_result: DS_PAIR [XM_XSLT_GROUP_NODE_ITERATOR, XM_XPATH_ERROR_VALUE]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Create group iterator over a node sequence.
 		require
 			a_context_not_void: a_context /= Void
@@ -646,7 +646,7 @@ feature {NONE} -- Implementation
 			result_or_error: a_result.first = Void xor a_result.second = Void
 		end
 
-	create_new_sorted_group_iterator (a_result: DS_PAIR [XM_XSLT_SORTED_GROUP_ITERATOR, XM_XPATH_ERROR_VALUE]; a_group_iterator: XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	create_new_sorted_group_iterator (a_result: DS_PAIR [XM_XSLT_SORTED_GROUP_ITERATOR, XM_XPATH_ERROR_VALUE]; a_group_iterator: XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Create sorted version of `a_result.first'
 		require
 			a_result_not_void: a_result /= Void
@@ -688,7 +688,7 @@ feature {NONE} -- Implementation
 			result_or_error: a_result.first = Void xor a_result.second = Void
 		end
 
-	create_new_sorted_group_node_iterator (a_result: DS_PAIR [XM_XSLT_GROUP_NODE_ITERATOR, XM_XPATH_ERROR_VALUE]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	create_new_sorted_group_node_iterator (a_result: DS_PAIR [XM_XSLT_GROUP_NODE_ITERATOR, XM_XPATH_ERROR_VALUE]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Create sorted version of `a_result.first'
 		require
 			a_result_not_void: a_result /= Void
@@ -729,7 +729,7 @@ feature {NONE} -- Implementation
 			result_or_error: a_result.first = Void xor a_result.second = Void
 		end
 
-	create_new_group_iterator (a_result: DS_PAIR [XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM], XM_XPATH_ERROR_VALUE]; a_population: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	create_new_group_iterator (a_result: DS_PAIR [XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM], XM_XPATH_ERROR_VALUE]; a_population: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Create iterator over groups of `a_population' in order of first appearance.
 		require
 			a_result_not_void: a_result /= Void
@@ -773,7 +773,7 @@ feature {NONE} -- Implementation
 			result_or_error: a_result.first = Void xor a_result.second = Void
 		end
 
-	create_new_group_node_iterator (a_result: DS_PAIR [XM_XSLT_GROUP_NODE_ITERATOR, XM_XPATH_ERROR_VALUE]; a_population: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	create_new_group_node_iterator (a_result: DS_PAIR [XM_XSLT_GROUP_NODE_ITERATOR, XM_XPATH_ERROR_VALUE]; a_population: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Create iterator over groups of `a_population' in order of first appearance.
 		require
 			a_result_not_void: a_result /= Void

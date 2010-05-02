@@ -143,7 +143,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_system: like current_dynamic_system) is
+	make (a_system: like current_dynamic_system)
 			-- Create a new C code generator.
 		local
 			l_buffer: STRING
@@ -222,7 +222,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	current_system: ET_SYSTEM is
+	current_system: ET_SYSTEM
 			-- Surrounding Eiffel system
 			-- (Note: there is a frozen feature called `system' in
 			-- class GENERAL of SmartEiffel 1.0)
@@ -237,7 +237,7 @@ feature -- Access
 
 feature -- Error handling
 
-	error_handler: ET_ERROR_HANDLER is
+	error_handler: ET_ERROR_HANDLER
 			-- Error handler
 		do
 			Result := current_system.error_handler
@@ -264,14 +264,14 @@ feature -- Measurement
 
 feature -- Compilation options
 
-	console_application_mode: BOOLEAN is
+	console_application_mode: BOOLEAN
 			-- Should the generated application be a console application
 			-- (or a Windows GUI application)?
 		do
 			Result := current_system.console_application_mode
 		end
 
-	exception_trace_mode: BOOLEAN is
+	exception_trace_mode: BOOLEAN
 			-- Should the generated application be able to provide an exception trace?
 			-- An exception trace is the execution path from the root creation procedure
 			-- to the feature where an exception occurred.
@@ -294,7 +294,7 @@ feature -- Compilation options
 			-- in a new C file if the current C file is already larger
 			-- than `split_threshold' bytes.
 
-	trace_mode: BOOLEAN is
+	trace_mode: BOOLEAN
 			-- Should the generated application be compiled with trace turned on?
 			-- The trace is displayed each time the execution enters or exits
 			-- from a feature.
@@ -307,7 +307,7 @@ feature -- Compilation options
 
 feature -- Compilation options setting
 
-	set_finalize_mode (b: BOOLEAN) is
+	set_finalize_mode (b: BOOLEAN)
 			-- Set `finalize_mode' to `b'.
 		do
 			finalize_mode := b
@@ -315,7 +315,7 @@ feature -- Compilation options setting
 			finalize_mode_set: finalize_mode = b
 		end
 
-	set_split_mode (b: BOOLEAN) is
+	set_split_mode (b: BOOLEAN)
 			-- Set `split_mode' to `b'.
 		do
 			split_mode := b
@@ -323,7 +323,7 @@ feature -- Compilation options setting
 			split_mode_set: split_mode = b
 		end
 
-	set_split_threshold (v: INTEGER) is
+	set_split_threshold (v: INTEGER)
 			-- Set `split_threshold' to `v'.
 		require
 			v_positive: v > 0
@@ -333,7 +333,7 @@ feature -- Compilation options setting
 			split_threshold_set: split_threshold = v
 		end
 
-	set_use_boehm_gc (b: BOOLEAN) is
+	set_use_boehm_gc (b: BOOLEAN)
 			-- Set `use_boehm_gc' to `b'.
 		do
 			use_boehm_gc := b
@@ -343,7 +343,7 @@ feature -- Compilation options setting
 
 feature -- Generation
 
-	generate (a_system_name: STRING) is
+	generate (a_system_name: STRING)
 			-- Generate C code and C compilation script file for `current_dynamic_system'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -357,7 +357,7 @@ feature -- Generation
 
 feature {NONE} -- Compilation script generation
 
-	generate_compilation_script (a_system_name: STRING) is
+	generate_compilation_script (a_system_name: STRING)
 			-- Generate C compilation script file for `current_dynamic_system'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -487,7 +487,7 @@ feature {NONE} -- Compilation script generation
 			end
 		end
 
-	c_config: DS_HASH_TABLE [STRING, STRING] is
+	c_config: DS_HASH_TABLE [STRING, STRING]
 			-- C compiler configuration
 		local
 			l_name: STRING
@@ -583,7 +583,7 @@ feature {NONE} -- Compilation script generation
 
 feature {NONE} -- C code Generation
 
-	generate_c_code (a_system_name: STRING) is
+	generate_c_code (a_system_name: STRING)
 			-- Generate C code for `current_dynamic_system'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -770,7 +770,7 @@ feature {NONE} -- C code Generation
 			system_name := old_system_name
 		end
 
-	generate_ids is
+	generate_ids
 			-- Generate types and feature ids.
 		local
 			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
@@ -841,7 +841,7 @@ feature {NONE} -- C code Generation
 
 feature {NONE} -- Feature generation
 
-	print_features (a_type: ET_DYNAMIC_TYPE) is
+	print_features (a_type: ET_DYNAMIC_TYPE)
 			-- Print features of `a_type' to `current_file' and its signature to `header_file'.
 		require
 			a_type_not_void: a_type /= Void
@@ -867,7 +867,7 @@ feature {NONE} -- Feature generation
 			current_type := old_type
 		end
 
-	print_feature (a_feature: ET_DYNAMIC_FEATURE) is
+	print_feature (a_feature: ET_DYNAMIC_FEATURE)
 			-- Print `a_feature' to `current_file' and its signature to `header_file'.
 			-- Also print the precursors used in its body (calls to 'precursor').
 		require
@@ -922,7 +922,7 @@ feature {NONE} -- Feature generation
 			end
 		end
 
-	print_constants_declaration is
+	print_constants_declaration
 			-- Print declarations of constant attributes
 			-- to `header_file' and `current_file'.
 		local
@@ -985,7 +985,7 @@ feature {NONE} -- Feature generation
 			end
 		end
 
-	print_deferred_function (a_feature: ET_DEFERRED_FUNCTION) is
+	print_deferred_function (a_feature: ET_DEFERRED_FUNCTION)
 			-- Print `a_feature' to `current_file' and its signature to `header_file'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -995,7 +995,7 @@ feature {NONE} -- Feature generation
 			error_handler.report_giaaa_error
 		end
 
-	print_deferred_procedure (a_feature: ET_DEFERRED_PROCEDURE) is
+	print_deferred_procedure (a_feature: ET_DEFERRED_PROCEDURE)
 			-- Print `a_feature' to `current_file' and its signature to `header_file'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -1005,7 +1005,7 @@ feature {NONE} -- Feature generation
 			error_handler.report_giaaa_error
 		end
 
-	print_do_function (a_feature: ET_DO_FUNCTION) is
+	print_do_function (a_feature: ET_DO_FUNCTION)
 			-- Print `a_feature' to `current_file' and its signature to `header_file'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -1013,7 +1013,7 @@ feature {NONE} -- Feature generation
 			print_internal_function (a_feature)
 		end
 
-	print_do_procedure (a_feature: ET_DO_PROCEDURE) is
+	print_do_procedure (a_feature: ET_DO_PROCEDURE)
 			-- Print `a_feature' to `current_file' and its signature to `header_file'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -1021,7 +1021,7 @@ feature {NONE} -- Feature generation
 			print_internal_procedure (a_feature)
 		end
 
-	print_external_function (a_feature: ET_EXTERNAL_FUNCTION) is
+	print_external_function (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Print `a_feature' to `current_file' and its signature to `header_file'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -1040,7 +1040,7 @@ feature {NONE} -- Feature generation
 			end
 		end
 
-	print_external_procedure (a_feature: ET_EXTERNAL_PROCEDURE) is
+	print_external_procedure (a_feature: ET_EXTERNAL_PROCEDURE)
 			-- Print `a_feature' to `current_file' and its signature to `header_file'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -1062,7 +1062,7 @@ feature {NONE} -- Feature generation
 			end
 		end
 
-	print_external_routine (a_feature: ET_EXTERNAL_ROUTINE; a_static: BOOLEAN; a_creation: BOOLEAN) is
+	print_external_routine (a_feature: ET_EXTERNAL_ROUTINE; a_static: BOOLEAN; a_creation: BOOLEAN)
 			-- Print `a_feature' to `current_file' and its signature to `header_file'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -1524,7 +1524,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_external_builtin_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_external_builtin_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -1538,7 +1538,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_external_builtin_function_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_external_builtin_function_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
 			-- `a_feature' is a built-in function.
 		require
@@ -1605,7 +1605,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_external_builtin_any_function_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_external_builtin_any_function_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
 			-- `a_feature' is a built-in function introduced in class "ANY".
 		require
@@ -1664,7 +1664,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_external_builtin_arguments_function_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_external_builtin_arguments_function_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
 			-- `a_feature' is a built-in function introduced in class "ARGUMENTS".
 		require
@@ -1691,7 +1691,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_external_builtin_boolean_function_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_external_builtin_boolean_function_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
 			-- `a_feature' is a built-in function introduced in class "BOOLEAN" and related classes.
 		require
@@ -1740,7 +1740,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_external_builtin_function_function_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_external_builtin_function_function_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
 			-- `a_feature' is a built-in function introduced in class "FUNCTION".
 		require
@@ -1765,7 +1765,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_external_builtin_identified_function_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_external_builtin_identified_function_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
 			-- `a_feature' is a built-in function introduced in class "IDENTIFIED" and relates classes.
 		require
@@ -1796,7 +1796,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_external_builtin_internal_function_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_external_builtin_internal_function_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
 			-- `a_feature' is a built-in function introduced in class "INTERNAL".
 		require
@@ -1823,7 +1823,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_external_builtin_platform_function_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_external_builtin_platform_function_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
 			-- `a_feature' is a built-in function introduced in class "PLATFORM".
 		require
@@ -1926,7 +1926,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_external_builtin_pointer_function_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_external_builtin_pointer_function_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
 			-- `a_feature' is a built-in function introduced in class "POINTER" and related classes.
 		require
@@ -1971,7 +1971,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_external_builtin_sized_character_function_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_external_builtin_sized_character_function_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
 			-- `a_feature' is a built-in function introduced in a sized character type and related classes.
 		require
@@ -2019,7 +2019,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_external_builtin_sized_integer_function_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_external_builtin_sized_integer_function_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
 			-- `a_feature' is a built-in function introduced in a sized integer type and related classes.
 		require
@@ -2223,7 +2223,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_external_builtin_sized_real_function_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_external_builtin_sized_real_function_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
 			-- `a_feature' is a built-in function introduced in a sized real type and related classes.
 		require
@@ -2345,7 +2345,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_external_builtin_special_function_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_external_builtin_special_function_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
 			-- `a_feature' is a built-in function introduced in class "SPECIAL".
 		require
@@ -2396,7 +2396,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_external_builtin_tuple_function_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_external_builtin_tuple_function_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
 			-- `a_feature' is a built-in function introduced in class "TUPLE".
 		require
@@ -2459,7 +2459,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_external_builtin_type_function_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_external_builtin_type_function_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
 			-- `a_feature' is a built-in function introduced in class "TYPE".
 		require
@@ -2560,7 +2560,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_external_builtin_procedure_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_external_builtin_procedure_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
 			-- `a_feature' is a built-in procedure.
 		require
@@ -2621,7 +2621,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_external_builtin_any_procedure_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_external_builtin_any_procedure_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
 			-- `a_feature' is a built-in procedure introduced in class "ANY".
 		require
@@ -2648,7 +2648,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_external_builtin_boolean_procedure_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_external_builtin_boolean_procedure_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
 			-- `a_feature' is a built-in procedure introduced in class "BOOLEAN" and related classes.
 		require
@@ -2671,7 +2671,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_external_builtin_identified_procedure_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_external_builtin_identified_procedure_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
 			-- `a_feature' is a built-in procedure introduced in class "IDENTIFIED" and related classes.
 		require
@@ -2694,7 +2694,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_external_builtin_pointer_procedure_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_external_builtin_pointer_procedure_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
 			-- `a_feature' is a built-in procedure introduced in class "POINTER" and related classes.
 		require
@@ -2717,7 +2717,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_external_builtin_procedure_procedure_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_external_builtin_procedure_procedure_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
 			-- `a_feature' is a built-in procedure introduced in class "PROCEDURE".
 		require
@@ -2740,7 +2740,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_external_builtin_sized_character_procedure_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_external_builtin_sized_character_procedure_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
 			-- `a_feature' is a built-in procedure introduced in a sized character type and related classes.
 		require
@@ -2762,7 +2762,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_external_builtin_sized_integer_procedure_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_external_builtin_sized_integer_procedure_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
 			-- `a_feature' is a built-in procedure introduced in a sized integer type and related classes.
 		require
@@ -2784,7 +2784,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_external_builtin_sized_real_procedure_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_external_builtin_sized_real_procedure_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
 			-- `a_feature' is a built-in procedure introduced in a sized real type and related classes.
 		require
@@ -2806,7 +2806,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_external_builtin_special_procedure_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_external_builtin_special_procedure_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
 			-- `a_feature' is a built-in procedure introduced in class "SPECIAL".
 		require
@@ -2835,7 +2835,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_external_builtin_tuple_procedure_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_external_builtin_tuple_procedure_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
 			-- `a_feature' is a built-in procedure introduced in class "TUPLE".
 		require
@@ -2888,7 +2888,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_external_builtin_type_procedure_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_external_builtin_type_procedure_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
 			-- `a_feature' is a built-in procedure introduced in class "TYPE".
 		require
@@ -2940,7 +2940,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 	print_external_c_prototype (a_feature_name: ET_FEATURE_NAME;
 		a_arguments: ET_FORMAL_ARGUMENT_LIST; a_result_type_set: ET_DYNAMIC_TYPE_SET;
 		a_signature_arguments, a_signature_result: STRING;
-		a_alias: ET_EXTERNAL_ALIAS) is
+		a_alias: ET_EXTERNAL_ALIAS)
 			-- Print to `header_file' a prototype for the external C function.
 			-- If `a_feature_name' is Void then the name of the C function will be found in the alias.
 			-- `a_signature_arguments' and `a_signature_result', if not Void,
@@ -3016,7 +3016,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 	print_external_c_body (a_feature_name: ET_FEATURE_NAME;
 		a_arguments: ET_FORMAL_ARGUMENT_LIST; a_result_type_set: ET_DYNAMIC_TYPE_SET;
 		a_signature_arguments, a_signature_result: STRING;
-		a_alias: ET_EXTERNAL_ALIAS; is_macro: BOOLEAN) is
+		a_alias: ET_EXTERNAL_ALIAS; is_macro: BOOLEAN)
 			-- Print body of external C function to `current_file'.
 			-- If `a_feature_name' is Void then the name of the C function will be found in the alias.
 			-- `a_signature_arguments' and `a_signature_result', if not Void,
@@ -3174,7 +3174,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 		end
 
 	print_external_c_struct_body (a_arguments: ET_FORMAL_ARGUMENT_LIST; a_result_type_set: ET_DYNAMIC_TYPE_SET;
-		a_struct_type, a_field_name, a_field_type: STRING) is
+		a_struct_type, a_field_name, a_field_type: STRING)
 			-- Print body of external C struct to `current_file'.
 			-- `a_result_type_set' is not Void if the external feature is a query.
 		require
@@ -3314,7 +3314,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			current_file.put_new_line
 		end
 
-	print_external_c_inline_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_external_c_inline_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print body of external "C inline" `a_feature' to `current_file'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -3472,7 +3472,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_external_c_includes (a_include_filenames: STRING) is
+	print_external_c_includes (a_include_filenames: STRING)
 			-- Print C includes declarations to `header_file'.
 			-- `a_incluse_filenames' are the filenames (with the
 			-- < > or " " characters included) separated by
@@ -3499,7 +3499,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 
 	print_external_cpp_body (a_feature_name: ET_FEATURE_NAME;
 		a_arguments: ET_FORMAL_ARGUMENT_LIST; a_result_type_set: ET_DYNAMIC_TYPE_SET;
-		a_cpp_class_type, a_signature_arguments, a_signature_result: STRING; a_alias: ET_EXTERNAL_ALIAS) is
+		a_cpp_class_type, a_signature_arguments, a_signature_result: STRING; a_alias: ET_EXTERNAL_ALIAS)
 			-- Print body of external C++ function to `current_file'.
 			-- If `a_feature_name' is Void then the name of the C++ function will be found in the alias.
 			-- `a_cpp_class_type' is the name of the C++ class type.
@@ -3697,7 +3697,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 	print_external_dllwin_body (a_feature_name: ET_FEATURE_NAME;
 		a_arguments: ET_FORMAL_ARGUMENT_LIST; a_result_type_set: ET_DYNAMIC_TYPE_SET;
 		a_dll_file: STRING; a_signature_arguments, a_signature_result: STRING;
-		a_alias: ET_EXTERNAL_ALIAS) is
+		a_alias: ET_EXTERNAL_ALIAS)
 			-- Print body of external dllwin function to `current_file'.
 			-- If `a_feature_name' is Void then the name of the C function in the DLL will be found in the alias.
 			-- `a_dll_file' is the name of the DLL file.
@@ -3975,7 +3975,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			current_file.put_new_line
 		end
 
-	print_internal_function (a_feature: ET_INTERNAL_FUNCTION) is
+	print_internal_function (a_feature: ET_INTERNAL_FUNCTION)
 			-- Print `a_feature' to `current_file' and its signature to `header_file'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -3994,7 +3994,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_internal_procedure (a_feature: ET_INTERNAL_PROCEDURE) is
+	print_internal_procedure (a_feature: ET_INTERNAL_PROCEDURE)
 			-- Print `a_feature' to `current_file' and its signature to `header_file'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -4016,7 +4016,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_internal_routine (a_feature: ET_INTERNAL_ROUTINE; a_static: BOOLEAN; a_creation: BOOLEAN) is
+	print_internal_routine (a_feature: ET_INTERNAL_ROUTINE; a_static: BOOLEAN; a_creation: BOOLEAN)
 			-- Print `a_feature' to `current_file' and its signature to `header_file'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -4302,7 +4302,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			flush_to_c_file
 		end
 
-	print_internal_routine_body_declaration (a_feature: ET_INTERNAL_ROUTINE_CLOSURE; a_result_type: ET_DYNAMIC_TYPE) is
+	print_internal_routine_body_declaration (a_feature: ET_INTERNAL_ROUTINE_CLOSURE; a_result_type: ET_DYNAMIC_TYPE)
 			-- Print the local variables declaration, the compound and the
 			-- rescue clause of `a_feature' to `current_file'.
 		require
@@ -4505,7 +4505,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			current_file := old_file
 		end
 
-	print_once_function (a_feature: ET_ONCE_FUNCTION) is
+	print_once_function (a_feature: ET_ONCE_FUNCTION)
 			-- Print `a_feature' to `current_file' and its signature to `header_file'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -4513,7 +4513,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			print_internal_function (a_feature)
 		end
 
-	print_once_procedure (a_feature: ET_ONCE_PROCEDURE) is
+	print_once_procedure (a_feature: ET_ONCE_PROCEDURE)
 			-- Print `a_feature' to `current_file' and its signature to `header_file'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -4521,7 +4521,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			print_internal_procedure (a_feature)
 		end
 
-	print_attribute (a_feature: ET_ATTRIBUTE) is
+	print_attribute (a_feature: ET_ATTRIBUTE)
 			-- Print function wrapper for `a_feature' to `current_file'
 			-- and its signature to `header_file'.
 		require
@@ -4536,7 +4536,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_extended_attribute (a_feature: ET_ATTRIBUTE) is
+	print_extended_attribute (a_feature: ET_ATTRIBUTE)
 			-- Print function wrapper for `a_feature' to `current_file'
 			-- and its signature to `header_file'.
 		require
@@ -4545,7 +4545,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			print_attribute (a_feature)
 		end
 
-	print_constant_attribute (a_feature: ET_CONSTANT_ATTRIBUTE) is
+	print_constant_attribute (a_feature: ET_CONSTANT_ATTRIBUTE)
 			-- Print function wrapper for `a_feature' to `current_file'
 			-- and its signature to `header_file'.
 		require
@@ -4565,7 +4565,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_unique_attribute (a_feature: ET_UNIQUE_ATTRIBUTE) is
+	print_unique_attribute (a_feature: ET_UNIQUE_ATTRIBUTE)
 			-- Print function wrapper for `a_feature' to `current_file'
 			-- and its signature to `header_file'.
 		require
@@ -4585,7 +4585,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_attribute_wrapper (a_feature: ET_QUERY; a_static: BOOLEAN) is
+	print_attribute_wrapper (a_feature: ET_QUERY; a_static: BOOLEAN)
 			-- Print function wrapper for `a_feature' to `current_file'
 			-- and its signature to `header_file'.
 		require
@@ -4776,7 +4776,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 
 feature {NONE} -- Instruction generation
 
-	print_assigner_instruction (an_instruction: ET_ASSIGNER_INSTRUCTION) is
+	print_assigner_instruction (an_instruction: ET_ASSIGNER_INSTRUCTION)
 			-- Print `an_instruction'.
 		require
 			an_instruction_not_void: an_instruction /= Void
@@ -4784,7 +4784,7 @@ feature {NONE} -- Instruction generation
 			print_qualified_call_instruction (an_instruction)
 		end
 
-	print_assignment (an_instruction: ET_ASSIGNMENT) is
+	print_assignment (an_instruction: ET_ASSIGNMENT)
 			-- Print `an_instruction'.
 		require
 			an_instruction_not_void: an_instruction /= Void
@@ -4844,7 +4844,7 @@ feature {NONE} -- Instruction generation
 			end
 		end
 
-	print_assignment_attempt (an_instruction: ET_ASSIGNMENT_ATTEMPT) is
+	print_assignment_attempt (an_instruction: ET_ASSIGNMENT_ATTEMPT)
 			-- Print `an_instruction'.
 		require
 			an_instruction_not_void: an_instruction /= Void
@@ -5106,7 +5106,7 @@ feature {NONE} -- Instruction generation
 			end
 		end
 
-	print_bang_instruction (an_instruction: ET_BANG_INSTRUCTION) is
+	print_bang_instruction (an_instruction: ET_BANG_INSTRUCTION)
 			-- Print `an_instruction'.
 		require
 			an_instruction_not_void: an_instruction /= Void
@@ -5114,7 +5114,7 @@ feature {NONE} -- Instruction generation
 			print_creation_instruction (an_instruction)
 		end
 
-	print_call_instruction (an_instruction: ET_CALL_INSTRUCTION) is
+	print_call_instruction (an_instruction: ET_CALL_INSTRUCTION)
 			-- Print `an_instruction'.
 		require
 			an_instruction_not_void: an_instruction /= Void
@@ -5126,7 +5126,7 @@ feature {NONE} -- Instruction generation
 			end
 		end
 
-	print_check_instruction (an_instruction: ET_CHECK_INSTRUCTION) is
+	print_check_instruction (an_instruction: ET_CHECK_INSTRUCTION)
 			-- Print `an_instruction'.
 		require
 			an_instruction_not_void: an_instruction /= Void
@@ -5134,7 +5134,7 @@ feature {NONE} -- Instruction generation
 			-- Do nothing.
 		end
 
-	print_compound (a_compound: ET_COMPOUND) is
+	print_compound (a_compound: ET_COMPOUND)
 			-- Print `a_compound'.
 		require
 			a_compound_not_void: a_compound /= Void
@@ -5148,7 +5148,7 @@ feature {NONE} -- Instruction generation
 			end
 		end
 
-	print_create_instruction (an_instruction: ET_CREATE_INSTRUCTION) is
+	print_create_instruction (an_instruction: ET_CREATE_INSTRUCTION)
 			-- Print `an_instruction'.
 		require
 			an_instruction_not_void: an_instruction /= Void
@@ -5156,7 +5156,7 @@ feature {NONE} -- Instruction generation
 			print_creation_instruction (an_instruction)
 		end
 
-	print_creation_instruction (an_instruction: ET_CREATION_INSTRUCTION) is
+	print_creation_instruction (an_instruction: ET_CREATION_INSTRUCTION)
 			-- Print `an_instruction'.
 		require
 			an_instruction_not_void: an_instruction /= Void
@@ -5257,7 +5257,7 @@ feature {NONE} -- Instruction generation
 			end
 		end
 
-	print_debug_instruction (an_instruction: ET_DEBUG_INSTRUCTION) is
+	print_debug_instruction (an_instruction: ET_DEBUG_INSTRUCTION)
 			-- Print `an_instruction'.
 		require
 			an_instruction_not_void: an_instruction /= Void
@@ -5265,7 +5265,7 @@ feature {NONE} -- Instruction generation
 			-- Do nothing.
 		end
 
-	print_if_instruction (an_instruction: ET_IF_INSTRUCTION) is
+	print_if_instruction (an_instruction: ET_IF_INSTRUCTION)
 			-- Print `an_instruction'.
 		require
 			an_instruction_not_void: an_instruction /= Void
@@ -5352,7 +5352,7 @@ feature {NONE} -- Instruction generation
 			current_file.put_new_line
 		end
 
-	print_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION) is
+	print_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION)
 			-- Print `an_instruction'.
 		require
 			an_instruction_not_void: an_instruction /= Void
@@ -5533,7 +5533,7 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			current_file.put_new_line
 		end
 
-	print_instruction (an_instruction: ET_INSTRUCTION) is
+	print_instruction (an_instruction: ET_INSTRUCTION)
 			-- Print `an_instruction'.
 		require
 			an_instruction_not_void: an_instruction /= Void
@@ -5541,7 +5541,7 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			an_instruction.process (Current)
 		end
 
-	print_loop_instruction (an_instruction: ET_LOOP_INSTRUCTION) is
+	print_loop_instruction (an_instruction: ET_LOOP_INSTRUCTION)
 			-- Print `an_instruction'.
 		require
 			an_instruction_not_void: an_instruction /= Void
@@ -5595,7 +5595,7 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			current_file.put_new_line
 		end
 
-	print_precursor_instruction (an_instruction: ET_PRECURSOR_INSTRUCTION) is
+	print_precursor_instruction (an_instruction: ET_PRECURSOR_INSTRUCTION)
 			-- Print `an_instruction'.
 		require
 			an_instruction_not_void: an_instruction /= Void
@@ -5715,7 +5715,7 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			call_operands.wipe_out
 		end
 
-	print_qualified_call_instruction (a_call: ET_FEATURE_CALL_INSTRUCTION) is
+	print_qualified_call_instruction (a_call: ET_FEATURE_CALL_INSTRUCTION)
 			-- Print qualified call instruction.
 		require
 			a_call_not_void: a_call /= Void
@@ -5932,7 +5932,7 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			call_operands.wipe_out
 		end
 
-	print_retry_instruction (an_instruction: ET_RETRY_INSTRUCTION) is
+	print_retry_instruction (an_instruction: ET_RETRY_INSTRUCTION)
 			-- Print `an_instruction'.
 		require
 			an_instruction_not_void: an_instruction /= Void
@@ -5946,7 +5946,7 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			has_retry := True
 		end
 
-	print_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION) is
+	print_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION)
 			-- Print `an_instruction'.
 		require
 			an_instruction_not_void: an_instruction /= Void
@@ -6011,7 +6011,7 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			call_operands.wipe_out
 		end
 
-	print_unqualified_call_instruction (a_call: ET_FEATURE_CALL_INSTRUCTION) is
+	print_unqualified_call_instruction (a_call: ET_FEATURE_CALL_INSTRUCTION)
 			-- Print unqualified call instruction.
 		require
 			a_call_not_void: a_call /= Void
@@ -6077,7 +6077,7 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			end
 		end
 
-	print_unqualified_identifier_call_instruction (an_identifier: ET_IDENTIFIER) is
+	print_unqualified_identifier_call_instruction (an_identifier: ET_IDENTIFIER)
 			-- Print unqualified identifier call instruction.
 		require
 			an_identifier_not_void: an_identifier /= Void
@@ -6091,7 +6091,7 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 
 feature {NONE} -- Procedure call generation
 
-	print_named_procedure_call (a_name: ET_CALL_NAME; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_named_procedure_call (a_name: ET_CALL_NAME; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to procedure `a_name' (static binding).
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
@@ -6120,7 +6120,7 @@ feature {NONE} -- Procedure call generation
 			end
 		end
 
-	print_tuple_label_setter_call (a_name: ET_CALL_NAME; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_tuple_label_setter_call (a_name: ET_CALL_NAME; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to a Tuple label setter (static binding).
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
@@ -6176,7 +6176,7 @@ feature {NONE} -- Procedure call generation
 			end
 		end
 
-	print_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to procedure `a_feature' (static binding).
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
@@ -6193,7 +6193,7 @@ feature {NONE} -- Procedure call generation
 			end
 		end
 
-	print_non_inlined_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_non_inlined_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a non-inlined version of a call to procedure `a_feature' (static binding).
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_check_void' means that we need to check whether the target is Void or not.
@@ -6234,7 +6234,7 @@ feature {NONE} -- Procedure call generation
 			current_file.put_new_line
 		end
 
-	print_builtin_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to procedure `a_feature' (static binding).
 			-- `a_feature' is a built-in feature.
 			-- `a_target_type' is the dynamic type of the target.
@@ -6293,7 +6293,7 @@ feature {NONE} -- Procedure call generation
 			end
 		end
 
-	print_builtin_any_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_any_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to procedure `a_feature' (static binding).
 			-- `a_feature' is a built-in feature introduced in class "ANY".
 			-- `a_target_type' is the dynamic type of the target.
@@ -6316,7 +6316,7 @@ feature {NONE} -- Procedure call generation
 			end
 		end
 
-	print_builtin_boolean_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_boolean_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to procedure `a_feature' (static binding).
 			-- `a_feature' is a built-in feature introduced in class "BOOLEAN" and related classes.
 			-- `a_target_type' is the dynamic type of the target.
@@ -6337,7 +6337,7 @@ feature {NONE} -- Procedure call generation
 			end
 		end
 
-	print_builtin_identified_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_identified_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to procedure `a_feature' (static binding).
 			-- `a_feature' is a built-in feature introduced in class "IDENTIFIED" and related classes.
 			-- `a_target_type' is the dynamic type of the target.
@@ -6358,7 +6358,7 @@ feature {NONE} -- Procedure call generation
 			end
 		end
 
-	print_builtin_pointer_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_pointer_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to procedure `a_feature' (static binding).
 			-- `a_feature' is a built-in feature introduced in class "POINTER" and related classes.
 			-- `a_target_type' is the dynamic type of the target.
@@ -6379,7 +6379,7 @@ feature {NONE} -- Procedure call generation
 			end
 		end
 
-	print_builtin_procedure_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_procedure_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to procedure `a_feature' (static binding).
 			-- `a_feature' is a built-in feature introduced in class "PROCEDURE".
 			-- `a_target_type' is the dynamic type of the target.
@@ -6406,7 +6406,7 @@ feature {NONE} -- Procedure call generation
 			end
 		end
 
-	print_builtin_sized_character_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_character_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to procedure `a_feature' (static binding).
 			-- `a_feature' is a built-in feature introduced in a sized character type and related classes.
 			-- `a_target_type' is the dynamic type of the target.
@@ -6426,7 +6426,7 @@ feature {NONE} -- Procedure call generation
 			end
 		end
 
-	print_builtin_sized_integer_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to procedure `a_feature' (static binding).
 			-- `a_feature' is a built-in feature introduced in a sized integer type and related classes.
 			-- `a_target_type' is the dynamic type of the target.
@@ -6446,7 +6446,7 @@ feature {NONE} -- Procedure call generation
 			end
 		end
 
-	print_builtin_sized_real_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_real_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to procedure `a_feature' (static binding).
 			-- `a_feature' is a built-in feature introduced in a sized real type and related classes.
 			-- `a_target_type' is the dynamic type of the target.
@@ -6466,7 +6466,7 @@ feature {NONE} -- Procedure call generation
 			end
 		end
 
-	print_builtin_special_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_special_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to procedure `a_feature' (static binding).
 			-- `a_feature' is a built-in feature introduced in class "SPECIAL".
 			-- `a_target_type' is the dynamic type of the target.
@@ -6489,7 +6489,7 @@ feature {NONE} -- Procedure call generation
 			end
 		end
 
-	print_builtin_tuple_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_tuple_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to procedure `a_feature' (static binding).
 			-- `a_feature' is a built-in feature introduced in class "TUPLE".
 			-- `a_target_type' is the dynamic type of the target.
@@ -6512,7 +6512,7 @@ feature {NONE} -- Procedure call generation
 
 feature {NONE} -- Expression generation
 
-	print_attachment_expression (an_expression: ET_EXPRESSION; a_source_type_set: ET_DYNAMIC_TYPE_SET; a_target_type: ET_DYNAMIC_TYPE) is
+	print_attachment_expression (an_expression: ET_EXPRESSION; a_source_type_set: ET_DYNAMIC_TYPE_SET; a_target_type: ET_DYNAMIC_TYPE)
 			-- Print `an_expression' of dynamic type set `a_source_type_set'
 			-- when it is to be attached to an entity of type `a_target_type'.
 			-- Make sure that the expression is boxed or unboxed when needed,
@@ -6716,7 +6716,7 @@ feature {NONE} -- Expression generation
 			end
 		end
 
-	print_attribute_access (an_attribute: ET_DYNAMIC_FEATURE; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_attribute_access (an_attribute: ET_DYNAMIC_FEATURE; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print access to `an_attribute' applied to object `a_target' of type `a_target_type'.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
 		require
@@ -6741,7 +6741,7 @@ feature {NONE} -- Expression generation
 			print_attribute_name (an_attribute, a_target_type, current_file)
 		end
 
-	print_attribute_routine_function_access (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_attribute_routine_function_access (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' an access to the function pointer pseudo attribute
 			-- of class "ROUTINE" applied to object `a_target' of type `a_targer_type'.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
@@ -6766,7 +6766,7 @@ feature {NONE} -- Expression generation
 			print_attribute_routine_function_name (a_target_type, current_file)
 		end
 
-	print_attribute_special_capacity_access (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_attribute_special_capacity_access (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print access to 'capacity' pseudo attribute of class SPECIAL applied to object `a_target' of type `a_target_type'.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
 		require
@@ -6790,7 +6790,7 @@ feature {NONE} -- Expression generation
 			print_attribute_special_capacity_name (a_target_type, current_file)
 		end
 
-	print_attribute_special_count_access (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_attribute_special_count_access (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print access to 'count' pseudo attribute of class SPECIAL applied to object `a_target' of type `a_target_type'.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
 		require
@@ -6814,7 +6814,7 @@ feature {NONE} -- Expression generation
 			print_attribute_special_count_name (a_target_type, current_file)
 		end
 
-	print_attribute_special_item_access (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_attribute_special_item_access (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print access to 'item' pseudo attribute of class SPECIAL applied to object `a_target' of type `a_target_type'.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
 		require
@@ -6838,7 +6838,7 @@ feature {NONE} -- Expression generation
 			print_attribute_special_item_name (a_target_type, current_file)
 		end
 
-	print_attribute_special_indexed_item_access (an_index: ET_EXPRESSION; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_attribute_special_indexed_item_access (an_index: ET_EXPRESSION; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' access to item at indexed `an_index'
 			-- in the 'item' pseudo attribute of class SPECIAL applied to
 			-- object `a_target' of type `a_target_type'. `an_index' must
@@ -6856,7 +6856,7 @@ feature {NONE} -- Expression generation
 			current_file.put_character (']')
 		end
 
-	print_attribute_tuple_item_access (i: INTEGER; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_attribute_tuple_item_access (i: INTEGER; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print access to `i'-th 'item' pseudo attribute of class TUPLE
 			-- applied to Tuple object `a_target' of type `a_target_type'.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
@@ -6881,7 +6881,7 @@ feature {NONE} -- Expression generation
 			print_attribute_tuple_item_name (i, a_target_type, current_file)
 		end
 
-	print_attribute_type_id_access (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_attribute_type_id_access (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print access to 'type_id' pseudo attribute applied to object `a_target' of type `a_target_type'.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
 		require
@@ -6907,7 +6907,7 @@ feature {NONE} -- Expression generation
 			print_attribute_type_id_name (a_target_type, current_file)
 		end
 
-	print_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT) is
+	print_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT)
 			-- Print `a_constant'.
 		require
 			a_constant_not_void: a_constant /= Void
@@ -6915,7 +6915,7 @@ feature {NONE} -- Expression generation
 			print_integer_constant (a_constant)
 		end
 
-	print_bit_constant (a_constant: ET_BIT_CONSTANT) is
+	print_bit_constant (a_constant: ET_BIT_CONSTANT)
 			-- Print `a_constant'.
 		require
 			a_constant_not_void: a_constant /= Void
@@ -6924,7 +6924,7 @@ feature {NONE} -- Expression generation
 print ("ET_C_GENERATOR.print_bit_constant%N")
 		end
 
-	print_boxed_attribute_access (an_attribute: ET_DYNAMIC_FEATURE; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_boxed_attribute_access (an_attribute: ET_DYNAMIC_FEATURE; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print access to `an_attribute' applied to `a_target' of type the boxed version of `a_target_type'.
 			-- The static type (i.e. declared type) of `a_target' is assumed to be of reference type.
 			-- There is no assumption about `a_target_type': it may be reference or expanded.
@@ -6954,7 +6954,7 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 			print_attribute_name (an_attribute, a_target_type, current_file)
 		end
 
-	print_boxed_attribute_item_access (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_boxed_attribute_item_access (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print access to 'item' pseudo attribute applied to `a_target' of type the boxed version of `a_target_type'.
 			-- The static type (i.e. declared type) of `a_target' is assumed to be of reference type.
 			-- (The boxed version of a type makes sure that each object
@@ -6976,7 +6976,7 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 			print_boxed_attribute_item_name (a_target_type, current_file)
 		end
 
-	print_boxed_attribute_type_id_access (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_boxed_attribute_type_id_access (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print access to 'type_id' pseudo attribute applied to `a_target' of type the boxed version of `a_target_type'.
 			-- The static type (i.e. declared type) of `a_target' is assumed to be of reference type.
 			-- There is no assumption about `a_target_type': it may be reference or expanded.
@@ -7000,7 +7000,7 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 			print_attribute_type_id_name (a_target_type, current_file)
 		end
 
-	print_boxed_expression (an_expression: ET_EXPRESSION; a_type: ET_DYNAMIC_TYPE) is
+	print_boxed_expression (an_expression: ET_EXPRESSION; a_type: ET_DYNAMIC_TYPE)
 			-- Print boxed version of `an_expression' of type `a_type'.
 			-- (The boxed version of a type makes sure that each object
 			-- of that type contains its type-id. It can be the type itself
@@ -7018,7 +7018,7 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 			current_file.put_character (')')
 		end
 
-	print_bracket_expression (an_expression: ET_BRACKET_EXPRESSION) is
+	print_bracket_expression (an_expression: ET_BRACKET_EXPRESSION)
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -7026,7 +7026,7 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 			print_qualified_call_expression (an_expression)
 		end
 
-	print_character_constant (a_constant: ET_CHARACTER_CONSTANT) is
+	print_character_constant (a_constant: ET_CHARACTER_CONSTANT)
 			-- Print `a_constant'.
 		require
 			a_constant_not_void: a_constant /= Void
@@ -7062,7 +7062,7 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 			end
 		end
 
-	print_call_expression (an_expression: ET_CALL_EXPRESSION) is
+	print_call_expression (an_expression: ET_CALL_EXPRESSION)
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -7074,7 +7074,7 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 			end
 		end
 
-	print_convert_builtin_expression (an_expression: ET_CONVERT_BUILTIN_EXPRESSION) is
+	print_convert_builtin_expression (an_expression: ET_CONVERT_BUILTIN_EXPRESSION)
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -7140,7 +7140,7 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 			end
 		end
 
-	print_convert_from_expression (an_expression: ET_CONVERT_FROM_EXPRESSION) is
+	print_convert_from_expression (an_expression: ET_CONVERT_FROM_EXPRESSION)
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -7148,7 +7148,7 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 			print_creation_expression (an_expression)
 		end
 
-	print_convert_to_expression (an_expression: ET_CONVERT_TO_EXPRESSION) is
+	print_convert_to_expression (an_expression: ET_CONVERT_TO_EXPRESSION)
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -7156,7 +7156,7 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 			print_qualified_call_expression (an_expression)
 		end
 
-	print_create_expression (an_expression: ET_CREATE_EXPRESSION) is
+	print_create_expression (an_expression: ET_CREATE_EXPRESSION)
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -7164,7 +7164,7 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 			print_creation_expression (an_expression)
 		end
 
-	print_creation_expression (an_expression: ET_CREATION_EXPRESSION) is
+	print_creation_expression (an_expression: ET_CREATION_EXPRESSION)
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -7267,7 +7267,7 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 			end
 		end
 
-	print_current (an_expression: ET_CURRENT) is
+	print_current (an_expression: ET_CURRENT)
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -7296,7 +7296,7 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 			end
 		end
 
-	print_current_address (an_expression: ET_CURRENT_ADDRESS) is
+	print_current_address (an_expression: ET_CURRENT_ADDRESS)
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -7365,7 +7365,7 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 			end
 		end
 
-	print_equality_expression (an_expression: ET_EQUALITY_EXPRESSION) is
+	print_equality_expression (an_expression: ET_EQUALITY_EXPRESSION)
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -7724,7 +7724,7 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 			end
 		end
 
-	print_expression (an_expression: ET_EXPRESSION) is
+	print_expression (an_expression: ET_EXPRESSION)
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -7741,7 +7741,7 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 			in_operand := old_in_operand
 		end
 
-	print_expression_address (an_expression: ET_EXPRESSION_ADDRESS) is
+	print_expression_address (an_expression: ET_EXPRESSION_ADDRESS)
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -7755,7 +7755,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			end
 		end
 
-	print_false_constant (a_constant: ET_FALSE_CONSTANT) is
+	print_false_constant (a_constant: ET_FALSE_CONSTANT)
 			-- Print `a_constant'.
 		require
 			a_constant_not_void: a_constant /= Void
@@ -7783,7 +7783,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			end
 		end
 
-	print_feature_address (an_expression: ET_FEATURE_ADDRESS) is
+	print_feature_address (an_expression: ET_FEATURE_ADDRESS)
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -7974,7 +7974,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			end
 		end
 
-	print_formal_argument (a_name: ET_IDENTIFIER) is
+	print_formal_argument (a_name: ET_IDENTIFIER)
 			-- Print formal argument `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -8019,7 +8019,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			end
 		end
 
-	print_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT) is
+	print_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT)
 			-- Print `a_constant'.
 		require
 			a_constant_not_void: a_constant /= Void
@@ -8027,7 +8027,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			print_integer_constant (a_constant)
 		end
 
-	print_infix_cast_expression (an_expression: ET_INFIX_CAST_EXPRESSION) is
+	print_infix_cast_expression (an_expression: ET_INFIX_CAST_EXPRESSION)
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -8035,7 +8035,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			an_expression.expression.process (Current)
 		end
 
-	print_infix_expression (an_expression: ET_INFIX_EXPRESSION) is
+	print_infix_expression (an_expression: ET_INFIX_EXPRESSION)
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -8043,7 +8043,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			print_qualified_call_expression (an_expression)
 		end
 
-	print_integer_constant (a_constant: ET_INTEGER_CONSTANT) is
+	print_integer_constant (a_constant: ET_INTEGER_CONSTANT)
 			-- Check validity of `a_constant'.
 		require
 			a_constant_not_void: a_constant /= Void
@@ -8187,7 +8187,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			end
 		end
 
-	print_local_variable (a_name: ET_IDENTIFIER) is
+	print_local_variable (a_name: ET_IDENTIFIER)
 			-- Print local variable `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -8263,7 +8263,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			end
 		end
 
-	print_manifest_array (an_expression: ET_MANIFEST_ARRAY) is
+	print_manifest_array (an_expression: ET_MANIFEST_ARRAY)
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -8443,7 +8443,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			end
 		end
 
-	print_manifest_string (a_string: ET_MANIFEST_STRING) is
+	print_manifest_string (a_string: ET_MANIFEST_STRING)
 			-- Print `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -8502,7 +8502,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			end
 		end
 
-	print_manifest_tuple (an_expression: ET_MANIFEST_TUPLE) is
+	print_manifest_tuple (an_expression: ET_MANIFEST_TUPLE)
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -8582,7 +8582,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			end
 		end
 
-	print_manifest_type (an_expression: ET_MANIFEST_TYPE) is
+	print_manifest_type (an_expression: ET_MANIFEST_TYPE)
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -8618,7 +8618,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			end
 		end
 
-	print_non_void_expression (an_expression: ET_EXPRESSION; a_check_void: BOOLEAN) is
+	print_non_void_expression (an_expression: ET_EXPRESSION; a_check_void: BOOLEAN)
 			-- Print `an_expression' which needs to be non-void.
 			-- The static type (i.e. declared type) of `an_expression' is assumed to be of reference type.
 			-- Useful for example when we want to get access to an attribute of this object.
@@ -8646,7 +8646,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			end
 		end
 
-	print_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION) is
+	print_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION)
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -8996,7 +8996,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			end
 		end
 
-	print_object_test (an_expression: ET_OBJECT_TEST) is
+	print_object_test (an_expression: ET_OBJECT_TEST)
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -9135,7 +9135,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			end
 		end
 
-	print_object_test_local (a_name: ET_IDENTIFIER) is
+	print_object_test_local (a_name: ET_IDENTIFIER)
 			-- Print object-test local `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -9169,7 +9169,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			end
 		end
 
-	print_octal_integer_constant (a_constant: ET_OCTAL_INTEGER_CONSTANT) is
+	print_octal_integer_constant (a_constant: ET_OCTAL_INTEGER_CONSTANT)
 			-- Print `a_constant'.
 		require
 			a_constant_not_void: a_constant /= Void
@@ -9177,7 +9177,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			print_integer_constant (a_constant)
 		end
 
-	print_old_expression (an_expression: ET_OLD_EXPRESSION) is
+	print_old_expression (an_expression: ET_OLD_EXPRESSION)
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -9187,7 +9187,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			an_expression.expression.process (Current)
 		end
 
-	print_once_manifest_string (an_expression: ET_ONCE_MANIFEST_STRING) is
+	print_once_manifest_string (an_expression: ET_ONCE_MANIFEST_STRING)
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -9203,7 +9203,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			end
 		end
 
-	print_operand (an_operand: ET_EXPRESSION) is
+	print_operand (an_operand: ET_EXPRESSION)
 			-- Print `an_operand'.
 		require
 			an_operand_not_void: an_operand /= Void
@@ -9220,7 +9220,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			in_operand := old_in_operand
 		end
 
-	print_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION) is
+	print_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION)
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -9228,7 +9228,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			an_expression.expression.process (Current)
 		end
 
-	print_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION) is
+	print_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION)
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -9385,7 +9385,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			end
 		end
 
-	print_prefix_expression (an_expression: ET_PREFIX_EXPRESSION) is
+	print_prefix_expression (an_expression: ET_PREFIX_EXPRESSION)
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -9393,7 +9393,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			print_qualified_call_expression (an_expression)
 		end
 
-	print_qualified_call_expression (a_call: ET_FEATURE_CALL_EXPRESSION) is
+	print_qualified_call_expression (a_call: ET_FEATURE_CALL_EXPRESSION)
 			-- Print qualified call expression.
 		require
 			a_call_not_void: a_call /= Void
@@ -9718,7 +9718,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			end
 		end
 
-	print_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT) is
+	print_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT)
 			-- Check validity of `a_constant'.
 		require
 			a_constant_not_void: a_constant /= Void
@@ -9726,7 +9726,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			print_integer_constant (a_constant)
 		end
 
-	print_regular_manifest_string (a_string: ET_REGULAR_MANIFEST_STRING) is
+	print_regular_manifest_string (a_string: ET_REGULAR_MANIFEST_STRING)
 			-- Print `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -9734,7 +9734,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			print_manifest_string (a_string)
 		end
 
-	print_regular_real_constant (a_constant: ET_REGULAR_REAL_CONSTANT) is
+	print_regular_real_constant (a_constant: ET_REGULAR_REAL_CONSTANT)
 			-- Print `a_constant'.
 		require
 			a_constant_not_void: a_constant /= Void
@@ -9773,7 +9773,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			end
 		end
 
-	print_result (an_expression: ET_RESULT) is
+	print_result (an_expression: ET_RESULT)
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -9848,7 +9848,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			end
 		end
 
-	print_result_address (an_expression: ET_RESULT_ADDRESS) is
+	print_result_address (an_expression: ET_RESULT_ADDRESS)
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -9954,7 +9954,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			end
 		end
 
-	print_special_manifest_string (a_string: ET_SPECIAL_MANIFEST_STRING) is
+	print_special_manifest_string (a_string: ET_SPECIAL_MANIFEST_STRING)
 			-- Print `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -9962,7 +9962,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			print_manifest_string (a_string)
 		end
 
-	print_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION) is
+	print_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION)
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -10098,7 +10098,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			end
 		end
 
-	print_strip_expression (an_expression: ET_STRIP_EXPRESSION) is
+	print_strip_expression (an_expression: ET_STRIP_EXPRESSION)
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -10112,7 +10112,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			end
 		end
 
-	print_target_expression (an_expression: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_target_expression (an_expression: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print `an_expression' when appearing as the target of a call.
 			-- `a_target_type' is one of the possible dynamic types of `an_expression'.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
@@ -10152,7 +10152,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			end
 		end
 
-	print_target_operand (an_operand: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE) is
+	print_target_operand (an_operand: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE)
 			-- Print `an_operand' when appearing as the target of a call.
 			-- `a_target_type' is one of the possible dynamic types of `an_operand'.
 		require
@@ -10171,7 +10171,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			in_operand := old_in_operand
 		end
 
-	print_temporary_variable (a_name: ET_IDENTIFIER) is
+	print_temporary_variable (a_name: ET_IDENTIFIER)
 			-- Print temporary variable `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -10213,7 +10213,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			end
 		end
 
-	print_true_constant (a_constant: ET_TRUE_CONSTANT) is
+	print_true_constant (a_constant: ET_TRUE_CONSTANT)
 			-- Print `a_constant'.
 		require
 			a_constant_not_void: a_constant /= Void
@@ -10241,7 +10241,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			end
 		end
 
-	print_unboxed_expression (an_expression: ET_EXPRESSION; a_type: ET_DYNAMIC_TYPE; a_check_void: BOOLEAN) is
+	print_unboxed_expression (an_expression: ET_EXPRESSION; a_type: ET_DYNAMIC_TYPE; a_check_void: BOOLEAN)
 			-- Print to `current_file' unboxed version of `an_expression' of type `a_type'.
 			-- There is no assumption about static type (i.e. declared type) of
 			-- `an_expression' or about `a_type': they may be reference or expanded.
@@ -10273,7 +10273,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			end
 		end
 
-	print_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT) is
+	print_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT)
 			-- Print `a_constant'.
 		require
 			a_constant_not_void: a_constant /= Void
@@ -10281,7 +10281,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			print_integer_constant (a_constant)
 		end
 
-	print_underscored_real_constant (a_constant: ET_UNDERSCORED_REAL_CONSTANT) is
+	print_underscored_real_constant (a_constant: ET_UNDERSCORED_REAL_CONSTANT)
 			-- Print `a_constant'.
 		require
 			a_constant_not_void: a_constant /= Void
@@ -10329,7 +10329,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			end
 		end
 
-	print_unqualified_call_expression (a_call: ET_FEATURE_CALL_EXPRESSION) is
+	print_unqualified_call_expression (a_call: ET_FEATURE_CALL_EXPRESSION)
 			-- Print unqualified call expression.
 		require
 			a_call_not_void: a_call /= Void
@@ -10556,7 +10556,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			end
 		end
 
-	print_unqualified_identifier_call_expression (an_identifier: ET_IDENTIFIER) is
+	print_unqualified_identifier_call_expression (an_identifier: ET_IDENTIFIER)
 			-- Print unqualified identifier call expression.
 		require
 			an_identifier_not_void: an_identifier /= Void
@@ -10720,7 +10720,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			end
 		end
 
-	print_verbatim_string (a_string: ET_VERBATIM_STRING) is
+	print_verbatim_string (a_string: ET_VERBATIM_STRING)
 			-- Print `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -10728,7 +10728,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			print_manifest_string (a_string)
 		end
 
-	print_void (an_expression: ET_VOID) is
+	print_void (an_expression: ET_VOID)
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -10740,7 +10740,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			end
 		end
 
-	print_writable (a_writable: ET_WRITABLE) is
+	print_writable (a_writable: ET_WRITABLE)
 			-- Print `a_writable'.
 		require
 			a_writable_not_void: a_writable /= Void
@@ -10824,7 +10824,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 
 feature {NONE} -- Equality generation
 
-	print_equality_function (i: INTEGER; an_expression: ET_EQUALITY_EXPRESSION) is
+	print_equality_function (i: INTEGER; an_expression: ET_EQUALITY_EXPRESSION)
 			-- Print function corresponding to `i'-th equality ('=' or '/=')
 			-- `an_expression' to `current_file' and its signature to `header_file'.
 			-- We need a function for equality when the dynamic type set of operands
@@ -11173,7 +11173,7 @@ feature {NONE} -- Equality generation
 			reset_temp_variables
 		end
 
-	print_object_equality_function (i: INTEGER; an_expression: ET_OBJECT_EQUALITY_EXPRESSION) is
+	print_object_equality_function (i: INTEGER; an_expression: ET_OBJECT_EQUALITY_EXPRESSION)
 			-- Print function corresponding to `i'-th object equality ('~' or '/~')
 			-- `an_expression' to `current_file' and its signature to `header_file'.
 		require
@@ -11498,7 +11498,7 @@ feature {NONE} -- Equality generation
 
 feature {NONE} -- Object-test generation
 
-	print_object_test_function (i: INTEGER; a_object_test: ET_OBJECT_TEST) is
+	print_object_test_function (i: INTEGER; a_object_test: ET_OBJECT_TEST)
 			-- Print function corresponding to `i'-th object-test `a_object_test'
 			-- to `current_file' and its signature to `header_file'.
 			-- This function will return True or False depending if it's
@@ -11797,7 +11797,7 @@ feature {NONE} -- Object-test generation
 
 feature {NONE} -- Query call generation
 
-	print_adapted_named_query_call (a_name: ET_CALL_NAME; a_target_type, a_result_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_adapted_named_query_call (a_name: ET_CALL_NAME; a_target_type, a_result_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to query `a_name' (static binding).
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
@@ -11849,7 +11849,7 @@ feature {NONE} -- Query call generation
 			end
 		end
 
-	print_adapted_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type, a_result_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_adapted_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type, a_result_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to query `a_feature' (static binding).
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
@@ -11870,7 +11870,7 @@ feature {NONE} -- Query call generation
 			print_adapted_expression (agent print_query_call (a_feature, a_target_type, a_check_void_target), l_query_type_set, a_result_type)
 		end
 
-	print_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to query `a_feature' (static binding).
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
@@ -11953,7 +11953,7 @@ feature {NONE} -- Query call generation
 			end
 		end
 
-	print_non_inlined_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_non_inlined_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a non-inlined version of a call to query `a_feature' (static binding).
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
@@ -11995,7 +11995,7 @@ feature {NONE} -- Query call generation
 			current_file.put_character (')')
 		end
 
-	print_builtin_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to query `a_feature' (static binding).
 			-- `a_feature' is a built-in feature.
 			-- `a_target_type' is the dynamic type of the target.
@@ -12066,7 +12066,7 @@ feature {NONE} -- Query call generation
 			end
 		end
 
-	print_builtin_any_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_any_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to query `a_feature' (static binding).
 			-- `a_feature' is a built-in feature introduced in class "ANY".
 			-- `a_target_type' is the dynamic type of the target.
@@ -12099,7 +12099,7 @@ feature {NONE} -- Query call generation
 			end
 		end
 
-	print_builtin_arguments_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_arguments_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to query `a_feature' (static binding).
 			-- `a_feature' is a built-in feature introduced in class "ARGUMENTS".
 			-- `a_target_type' is the dynamic type of the target.
@@ -12124,7 +12124,7 @@ feature {NONE} -- Query call generation
 			end
 		end
 
-	print_builtin_boolean_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_boolean_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to query `a_feature' (static binding).
 			-- `a_feature' is a built-in feature introduced in class "BOOLEAN" and related classes.
 			-- `a_target_type' is the dynamic type of the target.
@@ -12163,7 +12163,7 @@ feature {NONE} -- Query call generation
 			end
 		end
 
-	print_builtin_function_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_function_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to query `a_feature' (static binding).
 			-- `a_feature' is a built-in feature introduced in class "FUNCTION".
 			-- `a_target_type' is the dynamic type of the target.
@@ -12194,7 +12194,7 @@ feature {NONE} -- Query call generation
 			end
 		end
 
-	print_builtin_identified_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_identified_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to query `a_feature' (static binding).
 			-- `a_feature' is a built-in feature introduced in class "IDENTIFIED" and related classes.
 			-- `a_target_type' is the dynamic type of the target.
@@ -12221,7 +12221,7 @@ feature {NONE} -- Query call generation
 			end
 		end
 
-	print_builtin_internal_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_internal_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to query `a_feature' (static binding).
 			-- `a_feature' is a built-in feature introduced in class "INTERNAL".
 			-- `a_target_type' is the dynamic type of the target.
@@ -12246,7 +12246,7 @@ feature {NONE} -- Query call generation
 			end
 		end
 
-	print_builtin_platform_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_platform_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to query `a_feature' (static binding).
 			-- `a_feature' is a built-in feature introduced in class "PLATFORM".
 			-- `a_target_type' is the dynamic type of the target.
@@ -12297,7 +12297,7 @@ feature {NONE} -- Query call generation
 			end
 		end
 
-	print_builtin_pointer_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_pointer_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to query `a_feature' (static binding).
 			-- `a_feature' is a built-in feature introduced in class "POINTER" and related classes.
 			-- `a_target_type' is the dynamic type of the target.
@@ -12328,7 +12328,7 @@ feature {NONE} -- Query call generation
 			end
 		end
 
-	print_builtin_sized_character_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_character_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to query `a_feature' (static binding).
 			-- `a_feature' is a built-in feature introduced in a sized character type and related classes.
 			-- `a_target_type' is the dynamic type of the target.
@@ -12360,7 +12360,7 @@ feature {NONE} -- Query call generation
 			end
 		end
 
-	print_builtin_sized_integer_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to query `a_feature' (static binding).
 			-- `a_feature' is a built-in feature introduced in a sized integer type and related classes.
 			-- `a_target_type' is the dynamic type of the target.
@@ -12444,7 +12444,7 @@ feature {NONE} -- Query call generation
 			end
 		end
 
-	print_builtin_sized_real_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_real_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to query `a_feature' (static binding).
 			-- `a_feature' is a built-in feature introduced in a sized real type and related classes.
 			-- `a_target_type' is the dynamic type of the target.
@@ -12500,7 +12500,7 @@ feature {NONE} -- Query call generation
 			end
 		end
 
-	print_builtin_special_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_special_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to query `a_feature' (static binding).
 			-- `a_feature' is a built-in feature introduced in class "SPECIAL".
 			-- `a_target_type' is the dynamic type of the target.
@@ -12533,7 +12533,7 @@ feature {NONE} -- Query call generation
 			end
 		end
 
-	print_builtin_tuple_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_tuple_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to query `a_feature' (static binding).
 			-- `a_feature' is a built-in feature introduced in class "TUPLE".
 			-- `a_target_type' is the dynamic type of the target.
@@ -12560,7 +12560,7 @@ feature {NONE} -- Query call generation
 			end
 		end
 
-	print_builtin_type_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_type_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to query `a_feature' (static binding).
 			-- `a_feature' is a built-in feature introduced in class "TYPE".
 			-- `a_target_type' is the dynamic type of the target.
@@ -12597,7 +12597,7 @@ feature {NONE} -- Query call generation
 			end
 		end
 
-	print_adapted_expression (a_print_expression: PROCEDURE [ANY, TUPLE]; a_source_type_set: ET_DYNAMIC_TYPE_SET; a_target_type: ET_DYNAMIC_TYPE) is
+	print_adapted_expression (a_print_expression: PROCEDURE [ANY, TUPLE]; a_source_type_set: ET_DYNAMIC_TYPE_SET; a_target_type: ET_DYNAMIC_TYPE)
 			-- Print to `current_file' an expression (using `a_print_expression') with
 			-- dynamic type set `a_source_type_set' when the static type expected
 			-- by the caller is `a_target_type'. This is useful for example when the
@@ -12720,7 +12720,7 @@ feature {NONE} -- Query call generation
 
 feature {NONE} -- Agent generation
 
-	print_agent (an_agent: ET_AGENT) is
+	print_agent (an_agent: ET_AGENT)
 			-- Print `an_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
@@ -12805,7 +12805,7 @@ feature {NONE} -- Agent generation
 			end
 		end
 
-	print_call_agent (an_agent: ET_CALL_AGENT) is
+	print_call_agent (an_agent: ET_CALL_AGENT)
 			-- Print `an_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
@@ -12813,7 +12813,7 @@ feature {NONE} -- Agent generation
 			print_agent (an_agent)
 		end
 
-	print_do_function_inline_agent (an_agent: ET_DO_FUNCTION_INLINE_AGENT) is
+	print_do_function_inline_agent (an_agent: ET_DO_FUNCTION_INLINE_AGENT)
 			-- Print `an_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
@@ -12821,7 +12821,7 @@ feature {NONE} -- Agent generation
 			print_agent (an_agent)
 		end
 
-	print_do_procedure_inline_agent (an_agent: ET_DO_PROCEDURE_INLINE_AGENT) is
+	print_do_procedure_inline_agent (an_agent: ET_DO_PROCEDURE_INLINE_AGENT)
 			-- Print `an_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
@@ -12829,7 +12829,7 @@ feature {NONE} -- Agent generation
 			print_agent (an_agent)
 		end
 
-	print_external_function_inline_agent (an_agent: ET_EXTERNAL_FUNCTION_INLINE_AGENT) is
+	print_external_function_inline_agent (an_agent: ET_EXTERNAL_FUNCTION_INLINE_AGENT)
 			-- Print `an_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
@@ -12837,7 +12837,7 @@ feature {NONE} -- Agent generation
 			print_agent (an_agent)
 		end
 
-	print_external_procedure_inline_agent (an_agent: ET_EXTERNAL_PROCEDURE_INLINE_AGENT) is
+	print_external_procedure_inline_agent (an_agent: ET_EXTERNAL_PROCEDURE_INLINE_AGENT)
 			-- Print `an_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
@@ -12845,7 +12845,7 @@ feature {NONE} -- Agent generation
 			print_agent (an_agent)
 		end
 
-	print_once_function_inline_agent (an_agent: ET_ONCE_FUNCTION_INLINE_AGENT) is
+	print_once_function_inline_agent (an_agent: ET_ONCE_FUNCTION_INLINE_AGENT)
 			-- Print `an_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
@@ -12853,7 +12853,7 @@ feature {NONE} -- Agent generation
 			print_agent (an_agent)
 		end
 
-	print_once_procedure_inline_agent (an_agent: ET_ONCE_PROCEDURE_INLINE_AGENT) is
+	print_once_procedure_inline_agent (an_agent: ET_ONCE_PROCEDURE_INLINE_AGENT)
 			-- Print `an_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
@@ -12861,7 +12861,7 @@ feature {NONE} -- Agent generation
 			print_agent (an_agent)
 		end
 
-	print_agent_open_operand (a_name: ET_IDENTIFIER) is
+	print_agent_open_operand (a_name: ET_IDENTIFIER)
 			-- Print agent open operand `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -12903,7 +12903,7 @@ feature {NONE} -- Agent generation
 			current_agent := l_agent
 		end
 
-	print_agent_closed_operand (a_name: ET_IDENTIFIER) is
+	print_agent_closed_operand (a_name: ET_IDENTIFIER)
 			-- Print agent closed operand `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -12945,7 +12945,7 @@ feature {NONE} -- Agent generation
 			current_agent := l_agent
 		end
 
-	print_agent_open_operand_access (a_name: ET_IDENTIFIER) is
+	print_agent_open_operand_access (a_name: ET_IDENTIFIER)
 			-- Print to `current_file' an access to agent open operand `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -12954,7 +12954,7 @@ feature {NONE} -- Agent generation
 			print_argument_name (formal_argument (a_name.seed + 1), current_file)
 		end
 
-	print_agent_closed_operand_access (a_name: ET_IDENTIFIER; a_target: ET_EXPRESSION) is
+	print_agent_closed_operand_access (a_name: ET_IDENTIFIER; a_target: ET_EXPRESSION)
 			-- Print to `current_file' an access to agent closed operand `a_name' applied to `a_target'.
 			-- `a_target' is meant to be the Tuple corresponding to the attribute 'closed_operands'
 			-- in the Agent type.
@@ -12966,7 +12966,7 @@ feature {NONE} -- Agent generation
 			print_attribute_tuple_item_access (a_name.seed, a_target, agent_closed_operands_type, False)
 		end
 
-	print_agent_declaration (i: INTEGER; an_agent: ET_AGENT) is
+	print_agent_declaration (i: INTEGER; an_agent: ET_AGENT)
 			-- Print declaration of `i'-th agent `an_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
@@ -13342,7 +13342,7 @@ feature {NONE} -- Agent generation
 			agent_closed_operands_type := old_closed_operands_type
 		end
 
-	print_agent_body_declaration (an_agent: ET_AGENT) is
+	print_agent_body_declaration (an_agent: ET_AGENT)
 			-- Print body of declaration of agent `an_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
@@ -13352,7 +13352,7 @@ feature {NONE} -- Agent generation
 			current_agent := Void
 		end
 
-	print_call_agent_body_declaration (an_agent: ET_CALL_AGENT) is
+	print_call_agent_body_declaration (an_agent: ET_CALL_AGENT)
 			-- Print body of declaration of call agent `an_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
@@ -13436,7 +13436,7 @@ feature {NONE} -- Agent generation
 			current_file := old_file
 		end
 
-	print_do_function_inline_agent_body_declaration (an_agent: ET_DO_FUNCTION_INLINE_AGENT) is
+	print_do_function_inline_agent_body_declaration (an_agent: ET_DO_FUNCTION_INLINE_AGENT)
 			-- Print body of declaration of inline agent `an_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
@@ -13444,7 +13444,7 @@ feature {NONE} -- Agent generation
 			print_internal_routine_inline_agent_body_declaration (an_agent)
 		end
 
-	print_do_procedure_inline_agent_body_declaration (an_agent: ET_DO_PROCEDURE_INLINE_AGENT) is
+	print_do_procedure_inline_agent_body_declaration (an_agent: ET_DO_PROCEDURE_INLINE_AGENT)
 			-- Print body of declaration of inline agent `an_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
@@ -13452,7 +13452,7 @@ feature {NONE} -- Agent generation
 			print_internal_routine_inline_agent_body_declaration (an_agent)
 		end
 
-	print_external_function_inline_agent_body_declaration (an_agent: ET_EXTERNAL_FUNCTION_INLINE_AGENT) is
+	print_external_function_inline_agent_body_declaration (an_agent: ET_EXTERNAL_FUNCTION_INLINE_AGENT)
 			-- Print body of declaration of inline agent `an_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
@@ -13460,7 +13460,7 @@ feature {NONE} -- Agent generation
 -- TODO
 		end
 
-	print_external_procedure_inline_agent_body_declaration (an_agent: ET_EXTERNAL_PROCEDURE_INLINE_AGENT) is
+	print_external_procedure_inline_agent_body_declaration (an_agent: ET_EXTERNAL_PROCEDURE_INLINE_AGENT)
 			-- Print body of declaration of inline agent `an_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
@@ -13468,7 +13468,7 @@ feature {NONE} -- Agent generation
 -- TODO
 		end
 
-	print_once_function_inline_agent_body_declaration (an_agent: ET_ONCE_FUNCTION_INLINE_AGENT) is
+	print_once_function_inline_agent_body_declaration (an_agent: ET_ONCE_FUNCTION_INLINE_AGENT)
 			-- Print body of declaration of inline agent `an_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
@@ -13476,7 +13476,7 @@ feature {NONE} -- Agent generation
 			print_internal_routine_inline_agent_body_declaration (an_agent)
 		end
 
-	print_once_procedure_inline_agent_body_declaration (an_agent: ET_ONCE_PROCEDURE_INLINE_AGENT) is
+	print_once_procedure_inline_agent_body_declaration (an_agent: ET_ONCE_PROCEDURE_INLINE_AGENT)
 			-- Print body of declaration of inline agent `an_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
@@ -13484,7 +13484,7 @@ feature {NONE} -- Agent generation
 			print_internal_routine_inline_agent_body_declaration (an_agent)
 		end
 
-	print_internal_routine_inline_agent_body_declaration (an_agent: ET_INTERNAL_ROUTINE_INLINE_AGENT) is
+	print_internal_routine_inline_agent_body_declaration (an_agent: ET_INTERNAL_ROUTINE_INLINE_AGENT)
 			-- Print body of declaration of inline agent `an_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
@@ -13527,7 +13527,7 @@ feature {NONE} -- Agent generation
 
 feature {NONE} -- Polymorphic call functions generation
 
-	print_polymorphic_query_call_functions is
+	print_polymorphic_query_call_functions
 			-- Print polymorphic query call functions.
 		local
 			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
@@ -13588,7 +13588,7 @@ feature {NONE} -- Polymorphic call functions generation
 			end
 		end
 
-	print_polymorphic_tuple_label_call_functions is
+	print_polymorphic_tuple_label_call_functions
 			-- Print polymorphic call to Tuple label functions.
 		local
 			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
@@ -13651,7 +13651,7 @@ feature {NONE} -- Polymorphic call functions generation
 			end
 		end
 
-	print_polymorphic_procedure_call_functions is
+	print_polymorphic_procedure_call_functions
 			-- Print polymorphic procedure call functions.
 		local
 			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
@@ -13711,7 +13711,7 @@ feature {NONE} -- Polymorphic call functions generation
 			end
 		end
 
-	print_polymorphic_call_function (a_first_call, a_last_call: ET_DYNAMIC_QUALIFIED_CALL; a_target_type: ET_DYNAMIC_TYPE) is
+	print_polymorphic_call_function (a_first_call, a_last_call: ET_DYNAMIC_QUALIFIED_CALL; a_target_type: ET_DYNAMIC_TYPE)
 			-- Print to `current_file' dynamic binding code for the calls between `a_first_call'
 			-- and `a_last_call' whose target dynamic types are those stored in `a_target_dynamic_types'
 			-- whose type-id is itself stored between indexes `l' and `u' in `a_target_dynamic_type_ids'.
@@ -14028,7 +14028,7 @@ feature {NONE} -- Polymorphic call functions generation
 			current_feature := old_feature
 		end
 
-	print_binary_search_polymorphic_calls (a_first_call, a_last_call: ET_DYNAMIC_QUALIFIED_CALL; a_result_type: ET_DYNAMIC_TYPE; l, u: INTEGER; a_target_dynamic_type_ids: DS_ARRAYED_LIST [INTEGER]; a_target_dynamic_types: DS_HASH_TABLE [ET_DYNAMIC_TYPE, INTEGER]) is
+	print_binary_search_polymorphic_calls (a_first_call, a_last_call: ET_DYNAMIC_QUALIFIED_CALL; a_result_type: ET_DYNAMIC_TYPE; l, u: INTEGER; a_target_dynamic_type_ids: DS_ARRAYED_LIST [INTEGER]; a_target_dynamic_types: DS_HASH_TABLE [ET_DYNAMIC_TYPE, INTEGER])
 			-- Print to `current_file' dynamic binding code for the calls between `a_first_call'
 			-- and `a_last_call' whose target dynamic types are those stored in `a_target_dynamic_types'
 			-- whose type-id is itself stored between indexes `l' and `u' in `a_target_dynamic_type_ids'.
@@ -14150,7 +14150,7 @@ feature {NONE} -- Polymorphic call functions generation
 			end
 		end
 
-	same_declared_signature (a_call1, a_call2: ET_DYNAMIC_QUALIFIED_CALL): BOOLEAN is
+	same_declared_signature (a_call1, a_call2: ET_DYNAMIC_QUALIFIED_CALL): BOOLEAN
 			-- Do `a_call1' and `a_call2' have the same declared signature?
 			-- Note1: Reference types are considered the same declared type.
 			-- Note2: If the calls are idenfied to be to ROUTINE.call or FUNCTION.item
@@ -14219,7 +14219,7 @@ feature {NONE} -- Polymorphic call functions generation
 			end
 		end
 
-	set_polymorphic_call_argument_type_sets (an_argument_type_sets: ET_DYNAMIC_STANDALONE_TYPE_SET_LIST; a_first_call, a_last_call: ET_DYNAMIC_QUALIFIED_CALL; a_target_type: ET_DYNAMIC_TYPE) is
+	set_polymorphic_call_argument_type_sets (an_argument_type_sets: ET_DYNAMIC_STANDALONE_TYPE_SET_LIST; a_first_call, a_last_call: ET_DYNAMIC_QUALIFIED_CALL; a_target_type: ET_DYNAMIC_TYPE)
 			-- Set `an_argument_type_sets' as the union of actual argument type
 			-- sets for the calls between `a_first_call' and `a_last_call' with
 			-- target type `a_target_type'.
@@ -14348,7 +14348,7 @@ feature {NONE} -- Polymorphic call functions generation
 
 feature {NONE} -- Deep features generation
 
-	print_deep_twin_functions is
+	print_deep_twin_functions
 			-- Print all functions necessary to implement 'deep_twin'.
 		do
 			if not deep_twin_types.is_empty then
@@ -14368,7 +14368,7 @@ feature {NONE} -- Deep features generation
 			end
 		end
 
-	print_deep_twin_function (a_type: ET_DYNAMIC_TYPE) is
+	print_deep_twin_function (a_type: ET_DYNAMIC_TYPE)
 			-- Print 'GE_deep_twin' function for type `a_type' to `current_file'
 			-- and its signature to `header_file'.
 		require
@@ -14841,7 +14841,7 @@ feature {NONE} -- Deep features generation
 			current_type := old_type
 		end
 
-	print_deep_twin_polymorphic_call_function (a_target_type_set: ET_DYNAMIC_TYPE_SET) is
+	print_deep_twin_polymorphic_call_function (a_target_type_set: ET_DYNAMIC_TYPE_SET)
 			-- Print 'GE_deep_twin<type-id>x' function to `current_file' and its signature to `header_file'.
 			-- 'GE_deep_twin<type-id>x' corresponds to a polymorphic call to 'deep_twin'
 			-- whose target has `a_target_type_set' as dynamic type set.
@@ -14988,7 +14988,7 @@ feature {NONE} -- Deep features generation
 			current_type := old_type
 		end
 
-	print_deep_twin_binary_search_polymorphic_call (a_target_static_type: ET_DYNAMIC_TYPE; l, u: INTEGER; a_target_dynamic_type_ids: DS_ARRAYED_LIST [INTEGER]; a_target_dynamic_types: DS_HASH_TABLE [ET_DYNAMIC_TYPE, INTEGER]) is
+	print_deep_twin_binary_search_polymorphic_call (a_target_static_type: ET_DYNAMIC_TYPE; l, u: INTEGER; a_target_dynamic_type_ids: DS_ARRAYED_LIST [INTEGER]; a_target_dynamic_types: DS_HASH_TABLE [ET_DYNAMIC_TYPE, INTEGER])
 			-- Print to `current_file' dynamic binding code for the call to 'GE_deep_twin'
 			-- whose target's static type is `a_target_static_type' and whose target's
 			-- dynamic types are those stored in `a_target_dynamic_types' whose type-id is
@@ -15088,7 +15088,7 @@ feature {NONE} -- Deep features generation
 			end
 		end
 
-	print_set_deep_twined_attribute (an_attribute_type_set: ET_DYNAMIC_TYPE_SET; a_print_attribute_access: PROCEDURE [ANY, TUPLE]) is
+	print_set_deep_twined_attribute (an_attribute_type_set: ET_DYNAMIC_TYPE_SET; a_print_attribute_access: PROCEDURE [ANY, TUPLE])
 			-- Print to `current_file' the instructions needed to deep twin an attribute
 			-- of `current_type' whose dynamic type set is `an_attribute_type_set'.
 			-- `a_print_attribute_access' is used to print to `current_file'
@@ -15169,7 +15169,7 @@ feature {NONE} -- Deep features generation
 			mark_temp_variable_free (l_temp1)
 		end
 
-	print_deep_twined_attribute (an_attribute: ET_EXPRESSION; an_attribute_type_set: ET_DYNAMIC_TYPE_SET) is
+	print_deep_twined_attribute (an_attribute: ET_EXPRESSION; an_attribute_type_set: ET_DYNAMIC_TYPE_SET)
 			-- Print to `current_file' deep twined version of the attribute `an_attribute'
 			-- belonging to `current_type', with dynamic type set `an_attribute_type_set'.
 			-- The test for Void-ness of the attribute is assumed to have
@@ -15251,7 +15251,7 @@ feature {NONE} -- Deep features generation
 			end
 		end
 
-	print_adapted_deep_twin_call (a_target: ET_EXPRESSION; a_target_type, a_result_type: ET_DYNAMIC_TYPE) is
+	print_adapted_deep_twin_call (a_target: ET_EXPRESSION; a_target_type, a_result_type: ET_DYNAMIC_TYPE)
 			-- Print to `current_file' a call to the 'GE_deep_twin' function that
 			-- will deep twin `a_target' of type `a_target_type'.
 			-- `a_result_type' is the static type of the result expected by the caller,
@@ -15267,7 +15267,7 @@ feature {NONE} -- Deep features generation
 			print_adapted_expression (agent print_deep_twin_call (a_target, a_target_type), a_target_type, a_result_type)
 		end
 
-	print_deep_twin_call (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE) is
+	print_deep_twin_call (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE)
 			-- Print to `current_file' a call to the 'GE_deep_twin' function that
 			-- will deep twin `a_target' of type `a_target_type'.
 			-- The test for Void-ness of the target is assumed to have
@@ -15302,7 +15302,7 @@ feature {NONE} -- Deep features generation
 
 feature {NONE} -- Built-in feature generation
 
-	print_builtin_any_conforms_to_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_any_conforms_to_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'ANY.conforms_to'.
 		require
@@ -15465,7 +15465,7 @@ feature {NONE} -- Built-in feature generation
 			end
 		end
 
-	print_builtin_any_copy_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_any_copy_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'ANY.copy'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -15479,7 +15479,7 @@ feature {NONE} -- Built-in feature generation
 			print_builtin_any_standard_copy_call (a_feature, a_target_type, a_check_void_target)
 		end
 
-	print_builtin_any_deep_twin_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_any_deep_twin_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'ANY.deep_twin'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -15501,7 +15501,7 @@ feature {NONE} -- Built-in feature generation
 			current_file.put_character (')')
 		end
 
-	print_builtin_any_generating_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_any_generating_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'ANY.generating_type'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -15538,7 +15538,7 @@ feature {NONE} -- Built-in feature generation
 			current_file.put_character (')')
 		end
 
-	print_builtin_any_generator_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_any_generator_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'ANY.generator'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -15573,7 +15573,7 @@ feature {NONE} -- Built-in feature generation
 			end
 		end
 
-	print_builtin_any_is_deep_equal_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_any_is_deep_equal_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' then body of `a_feature' corresponding
 			-- to built-in feature 'ANY.is_deep_equal'.
 		require
@@ -15584,7 +15584,7 @@ feature {NONE} -- Built-in feature generation
 print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 		end
 
-	print_builtin_any_same_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_any_same_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'ANY.same_type'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -15641,7 +15641,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_any_standard_is_equal_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_any_standard_is_equal_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'ANY.standard_is_equal'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -15744,7 +15744,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_any_standard_copy_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_any_standard_copy_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static_binding) to `a_feature'
 			-- corresponding to built-in feature 'ANY.standard_copy'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -15894,7 +15894,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_any_standard_twin_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_any_standard_twin_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'ANY.standard_twin'.
 		require
@@ -16010,7 +16010,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_any_tagged_out_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_any_tagged_out_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'ANY.tagged_out'.
 		require
@@ -16055,7 +16055,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_any_twin_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_any_twin_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'ANY.twin'.
 		require
@@ -16196,7 +16196,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_arguments_argument_count_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_arguments_argument_count_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'ARGUMENTS.argument_count'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -16226,7 +16226,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_arguments_argument_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_arguments_argument_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'ARGUMENTS.argument'.
 		require
@@ -16277,7 +16277,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_boolean_and_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_boolean_and_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'BOOLEAN.infix "and"'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -16326,7 +16326,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_boolean_and_then_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_boolean_and_then_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'BOOLEAN.infix "and then"'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -16375,7 +16375,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_boolean_implies_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_boolean_implies_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'BOOLEAN.infix "implies"'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -16427,7 +16427,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_boolean_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_boolean_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'BOOLEAN_REF.item'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -16449,7 +16449,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_boolean_not_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_boolean_not_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'BOOLEAN.prefix "not"'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -16484,7 +16484,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_boolean_or_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_boolean_or_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'BOOLEAN.infix "or"'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -16533,7 +16533,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_boolean_or_else_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_boolean_or_else_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'BOOLEAN.infix "or else"'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -16582,7 +16582,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_boolean_set_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_boolean_set_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'BOOLEAN_REF.set_item'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -16656,7 +16656,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_boolean_xor_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_boolean_xor_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'BOOLEAN.infix "xor"'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -16704,7 +16704,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_function_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_function_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_feature' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'FUNCTION.item'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -16718,7 +16718,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_routine_call_call (a_feature, a_target_type, a_check_void_target)
 		end
 
-	print_builtin_identified_eif_id_object_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_identified_eif_id_object_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'IDENTIFIED.eif_id_object'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -16749,7 +16749,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_identified_eif_object_id_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_identified_eif_object_id_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'IDENTIFIED.eif_object_id'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -16780,7 +16780,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_identified_eif_object_id_free_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_identified_eif_object_id_free_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'IDENTIFIED.eif_object_id_free'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -16813,7 +16813,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_internal_type_of_type_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_internal_type_of_type_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'INTERNAL.type_of_type'.
 		require
@@ -16880,7 +16880,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_internal_max_type_id_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_internal_max_type_id_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'INTERNAL.max_type_id'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -16906,7 +16906,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_memory_free_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_memory_free_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'MEMORY.free'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -16940,7 +16940,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_memory_find_referers_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_memory_find_referers_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'MEMORY.find_referers'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -16984,7 +16984,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_platform_boolean_bytes_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_platform_boolean_bytes_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'PLATFORM.boolean_bytes'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -17010,7 +17010,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_platform_character_bytes_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_platform_character_bytes_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'PLATFORM.character_bytes'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -17036,7 +17036,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_platform_double_bytes_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_platform_double_bytes_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'PLATFORM.double_bytes'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -17062,7 +17062,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_platform_integer_bytes_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_platform_integer_bytes_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'PLATFORM.integer_bytes'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -17088,7 +17088,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_platform_is_dotnet_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_platform_is_dotnet_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'PLATFORM.is_dotnet'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -17102,7 +17102,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			current_file.put_string (c_eif_false)
 		end
 
-	print_builtin_platform_is_mac_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_platform_is_mac_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'PLATFORM.is_mac'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -17116,7 +17116,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			current_file.put_string (c_eif_is_mac)
 		end
 
-	print_builtin_platform_is_thread_capable_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_platform_is_thread_capable_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'PLATFORM.is_thread_capable'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -17130,7 +17130,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			current_file.put_string (c_eif_false)
 		end
 
-	print_builtin_platform_is_unix_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_platform_is_unix_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'PLATFORM.is_unix'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -17144,7 +17144,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			current_file.put_string (c_eif_is_unix)
 		end
 
-	print_builtin_platform_is_vms_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_platform_is_vms_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'PLATFORM.is_vms'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -17158,7 +17158,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			current_file.put_string (c_eif_is_vms)
 		end
 
-	print_builtin_platform_is_vxworks_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_platform_is_vxworks_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'PLATFORM.is_vxworks'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -17172,7 +17172,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			current_file.put_string (c_eif_is_vxworks)
 		end
 
-	print_builtin_platform_is_windows_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_platform_is_windows_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'PLATFORM.is_windows'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -17186,7 +17186,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			current_file.put_string (c_eif_is_windows)
 		end
 
-	print_builtin_platform_pointer_bytes_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_platform_pointer_bytes_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'PLATFORM.pointer_bytes'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -17212,7 +17212,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_platform_real_bytes_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_platform_real_bytes_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'PLATFORM.real_bytes'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -17238,7 +17238,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_platform_wide_character_bytes_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_platform_wide_character_bytes_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'PLATFORM.wide_character_bytes'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -17264,7 +17264,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_pointer_hash_code_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_pointer_hash_code_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'POINTER.hash_code'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -17315,7 +17315,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_pointer_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_pointer_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'POINTER_REF.item'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -17337,7 +17337,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_pointer_out_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_pointer_out_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'POINTER.out'.
 		require
@@ -17389,7 +17389,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_pointer_plus_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_pointer_plus_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'POINTER.infix "+"'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -17443,7 +17443,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_pointer_set_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_pointer_set_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'POINTER_REF.set_item'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -17517,7 +17517,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_pointer_to_integer_32_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_pointer_to_integer_32_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'POINTER.to_integer_32'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -17549,7 +17549,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_procedure_call_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_procedure_call_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'PROCEDURE.call'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -17563,7 +17563,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_routine_call_call (a_feature, a_target_type, a_check_void_target)
 		end
 
-	print_builtin_routine_call_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_routine_call_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'FUNCTION.item' or 'PROCEDURE.call'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -17846,7 +17846,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_character_code_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_character_code_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'CHARACTER_xx.code'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -17878,7 +17878,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_character_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_character_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'CHARACTER_xx_REF.item'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -17900,7 +17900,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_character_natural_32_code_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_character_natural_32_code_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'CHARACTER_xx.natural_32_code'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -17932,7 +17932,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_character_set_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_character_set_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'CHARACTER_xx_REF.set_item'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -18006,7 +18006,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_character_to_character_8_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_character_to_character_8_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'CHARACTER_xx.to_character_8'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -18038,7 +18038,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_character_to_character_32_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_character_to_character_32_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'CHARACTER_xx.to_character_32'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -18070,7 +18070,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_as_integer_8_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_as_integer_8_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_xx.as_integer_8'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -18102,7 +18102,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_as_integer_16_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_as_integer_16_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_xx.as_integer_16'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -18134,7 +18134,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_as_integer_32_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_as_integer_32_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_xx.as_integer_32'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -18166,7 +18166,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_as_integer_64_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_as_integer_64_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_xx.as_integer_64'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -18198,7 +18198,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_as_natural_8_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_as_natural_8_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_xx.as_natural_8'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -18230,7 +18230,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_as_natural_16_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_as_natural_16_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_xx.as_natural_16'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -18262,7 +18262,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_as_natural_32_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_as_natural_32_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_xx.as_natural_32'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -18294,7 +18294,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_as_natural_64_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_as_natural_64_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_xx.as_natural_64'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -18326,7 +18326,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_bit_and_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_bit_and_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_xx.bit_and'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -18374,7 +18374,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_bit_not_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_bit_not_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_xx.bit_not'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -18409,7 +18409,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_bit_or_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_bit_or_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_xx.bit_or'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -18457,7 +18457,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_bit_shift_left_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_bit_shift_left_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_xx.bit_shift_left'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -18506,7 +18506,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_bit_shift_right_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_bit_shift_right_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_xx.bit_shift_right'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -18555,7 +18555,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_bit_xor_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_bit_xor_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_xx.bit_xor'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -18603,7 +18603,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_div_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_div_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_xx.infix "//"'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -18651,7 +18651,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_divide_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_divide_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_xx.infix "/"'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -18705,7 +18705,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_identity_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_identity_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_xx.prefix "+"'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -18737,7 +18737,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_xx_REF.item'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -18759,7 +18759,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_lt_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_lt_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_xx.infix "<"'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -18807,7 +18807,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_minus_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_minus_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_xx.infix "-"'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -18855,7 +18855,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_mod_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_mod_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_xx.infix "\\"'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -18903,7 +18903,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_opposite_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_opposite_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_xx.prefix "-"'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -18938,7 +18938,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_plus_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_plus_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_xx.infix "+"'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -18986,7 +18986,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_power_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_power_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_xx.infix "^"'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -19043,7 +19043,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_set_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_set_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static file) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_REF.set_item'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -19117,7 +19117,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_times_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_times_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_xx.infix "*"'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -19165,7 +19165,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_to_character_8_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_to_character_8_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_xx.to_character_8'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -19197,7 +19197,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_to_character_32_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_to_character_32_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_xx.to_character_32'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -19229,7 +19229,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_to_double_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_to_double_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_xx.to_double'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -19261,7 +19261,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_to_real_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_to_real_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_xx.to_real'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -19293,7 +19293,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_to_real_32_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_to_real_32_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_xx.to_real_32'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -19325,7 +19325,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_to_real_64_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_integer_to_real_64_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_xx.to_real_64'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -19357,7 +19357,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_real_ceiling_real_32_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_real_ceiling_real_32_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'REAL_xx.ceiling_real_32'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -19396,7 +19396,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_real_ceiling_real_64_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_real_ceiling_real_64_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'REAL_xx.ceiling_real_64'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -19435,7 +19435,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_real_divide_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_real_divide_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'REAL_xx.infix "/"'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -19483,7 +19483,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_real_floor_real_32_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_real_floor_real_32_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'REAL_xx.floor_real_32'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -19522,7 +19522,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_real_floor_real_64_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_real_floor_real_64_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'REAL_xx.floor_real_64'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -19561,7 +19561,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_real_identity_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_real_identity_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'REAL_xx.prefix "+"'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -19593,7 +19593,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_real_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_real_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'REAL_xx_REF.item'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -19615,7 +19615,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_real_lt_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_real_lt_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'REAL_xx.infix "<"'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -19663,7 +19663,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_real_minus_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_real_minus_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'REAL_xx.infix "-"'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -19711,7 +19711,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_real_opposite_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_real_opposite_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'REAL_xx.prefix "-"'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -19746,7 +19746,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_real_out_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_sized_real_out_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'REAL_xx.out' from a sized real type.
 		require
@@ -19800,7 +19800,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_real_plus_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_real_plus_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'REAL_xx.infix "+"'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -19848,7 +19848,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_real_power_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_real_power_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'REAL_xx.infix "^"'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -19905,7 +19905,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_real_set_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_real_set_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'REAL_xx_REF.set_item'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -19979,7 +19979,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_real_times_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_real_times_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'REAL_xx.infix "*"'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -20027,7 +20027,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_real_to_double_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_real_to_double_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'REAL_xx.to_double'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -20059,7 +20059,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_real_truncated_to_integer_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_real_truncated_to_integer_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'REAL_xx.truncated_to_integer'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -20091,7 +20091,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_real_truncated_to_integer_64_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_real_truncated_to_integer_64_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'REAL_xx.truncated_to_integer_64'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -20123,7 +20123,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_real_truncated_to_real_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_sized_real_truncated_to_real_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'REAL_xx.truncated_to_real'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -20155,7 +20155,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_special_aliased_resized_area_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_special_aliased_resized_area_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'SPECIAL.aliased_resized_area'.
 		require
@@ -20369,7 +20369,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_special_base_address_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_special_base_address_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'SPECIAL.base_address'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -20392,7 +20392,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_special_capacity_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_special_capacity_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'SPECIAL.capacity'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -20406,7 +20406,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_attribute_special_capacity_access (call_operands.first, a_target_type, a_check_void_target)
 		end
 
-	print_builtin_special_count_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_special_count_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'SPECIAL.count'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -20420,7 +20420,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_attribute_special_count_access (call_operands.first, a_target_type, a_check_void_target)
 		end
 
-	print_builtin_special_element_size_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_special_element_size_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'SPECIAL.element_size'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -20447,7 +20447,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_special_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_special_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'SPECIAL.item'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -20477,7 +20477,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_special_put_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_special_put_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'SPECIAL.put'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -20519,7 +20519,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_special_put_default_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_special_put_default_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'SPECIAL.put_default'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -20565,7 +20565,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_tuple_basic_expanded_item_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_basic_expanded_item_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to a built-in feature of class "TUPLE" that returns the items
 			-- of basic expanded types.
@@ -20639,7 +20639,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_tuple_boolean_item_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_boolean_item_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TUPLE.boolean_item'.
 		require
@@ -20649,7 +20649,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_tuple_basic_expanded_item_body (a_feature)
 		end
 
-	print_builtin_tuple_character_8_item_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_character_8_item_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TUPLE.character_8_item'.
 		require
@@ -20659,7 +20659,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_tuple_basic_expanded_item_body (a_feature)
 		end
 
-	print_builtin_tuple_character_32_item_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_character_32_item_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TUPLE.character_32_item'.
 		require
@@ -20669,7 +20669,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_tuple_basic_expanded_item_body (a_feature)
 		end
 
-	print_builtin_tuple_count_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_tuple_count_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'TUPLE.count'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -20701,7 +20701,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_tuple_integer_8_item_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_integer_8_item_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TUPLE.integer_8_item'.
 		require
@@ -20711,7 +20711,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_tuple_basic_expanded_item_body (a_feature)
 		end
 
-	print_builtin_tuple_integer_16_item_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_integer_16_item_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TUPLE.integer_16_item'.
 		require
@@ -20721,7 +20721,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_tuple_basic_expanded_item_body (a_feature)
 		end
 
-	print_builtin_tuple_integer_32_item_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_integer_32_item_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TUPLE.integer_32_item'.
 		require
@@ -20731,7 +20731,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_tuple_basic_expanded_item_body (a_feature)
 		end
 
-	print_builtin_tuple_integer_64_item_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_integer_64_item_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TUPLE.integer_64_item'.
 		require
@@ -20741,7 +20741,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_tuple_basic_expanded_item_body (a_feature)
 		end
 
-	print_builtin_tuple_item_code_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_item_code_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TUPLE.item_code'.
 		require
@@ -20845,7 +20845,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_tuple_natural_8_item_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_natural_8_item_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TUPLE.natural_8_item'.
 		require
@@ -20855,7 +20855,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_tuple_basic_expanded_item_body (a_feature)
 		end
 
-	print_builtin_tuple_natural_16_item_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_natural_16_item_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TUPLE.natural_16_item'.
 		require
@@ -20865,7 +20865,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_tuple_basic_expanded_item_body (a_feature)
 		end
 
-	print_builtin_tuple_natural_32_item_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_natural_32_item_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TUPLE.natural_32_item'.
 		require
@@ -20875,7 +20875,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_tuple_basic_expanded_item_body (a_feature)
 		end
 
-	print_builtin_tuple_natural_64_item_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_natural_64_item_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TUPLE.natural_64_item'.
 		require
@@ -20885,7 +20885,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_tuple_basic_expanded_item_body (a_feature)
 		end
 
-	print_builtin_tuple_object_comparison_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_tuple_object_comparison_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'TUPLE.object_comparison'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -20900,7 +20900,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_attribute_access (a_feature, call_operands.first, a_target_type, a_check_void_target)
 		end
 
-	print_builtin_tuple_pointer_item_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_pointer_item_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TUPLE.pointer_item'.
 		require
@@ -20910,7 +20910,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_tuple_basic_expanded_item_body (a_feature)
 		end
 
-	print_builtin_tuple_put_basic_expanded_item_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_put_basic_expanded_item_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to a built-in feature of class "TUPLE" that sets the items
 			-- of basic expanded types.
@@ -20980,7 +20980,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_tuple_put_boolean_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_put_boolean_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TUPLE.put_boolean'.
 		require
@@ -20990,7 +20990,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_tuple_put_basic_expanded_item_body (a_feature)
 		end
 
-	print_builtin_tuple_put_character_8_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_put_character_8_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TUPLE.put_character_8'.
 		require
@@ -21000,7 +21000,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_tuple_put_basic_expanded_item_body (a_feature)
 		end
 
-	print_builtin_tuple_put_character_32_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_put_character_32_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TUPLE.put_character_32'.
 		require
@@ -21010,7 +21010,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_tuple_put_basic_expanded_item_body (a_feature)
 		end
 
-	print_builtin_tuple_put_integer_8_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_put_integer_8_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TUPLE.put_integer_8'.
 		require
@@ -21020,7 +21020,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_tuple_put_basic_expanded_item_body (a_feature)
 		end
 
-	print_builtin_tuple_put_integer_16_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_put_integer_16_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TUPLE.put_integer_16'.
 		require
@@ -21030,7 +21030,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_tuple_put_basic_expanded_item_body (a_feature)
 		end
 
-	print_builtin_tuple_put_integer_32_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_put_integer_32_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TUPLE.put_integer_32'.
 		require
@@ -21040,7 +21040,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_tuple_put_basic_expanded_item_body (a_feature)
 		end
 
-	print_builtin_tuple_put_integer_64_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_put_integer_64_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TUPLE.put_integer_64'.
 		require
@@ -21050,7 +21050,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_tuple_put_basic_expanded_item_body (a_feature)
 		end
 
-	print_builtin_tuple_put_natural_8_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_put_natural_8_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TUPLE.put_natural_8'.
 		require
@@ -21060,7 +21060,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_tuple_put_basic_expanded_item_body (a_feature)
 		end
 
-	print_builtin_tuple_put_natural_16_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_put_natural_16_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TUPLE.put_natural_16'.
 		require
@@ -21070,7 +21070,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_tuple_put_basic_expanded_item_body (a_feature)
 		end
 
-	print_builtin_tuple_put_natural_32_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_put_natural_32_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TUPLE.put_natural_32'.
 		require
@@ -21080,7 +21080,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_tuple_put_basic_expanded_item_body (a_feature)
 		end
 
-	print_builtin_tuple_put_natural_64_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_put_natural_64_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TUPLE.put_natural_64'.
 		require
@@ -21090,7 +21090,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_tuple_put_basic_expanded_item_body (a_feature)
 		end
 
-	print_builtin_tuple_put_pointer_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_put_pointer_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TUPLE.put_pointer'.
 		require
@@ -21100,7 +21100,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_tuple_put_basic_expanded_item_body (a_feature)
 		end
 
-	print_builtin_tuple_put_real_32_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_put_real_32_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TUPLE.put_real_32'.
 		require
@@ -21110,7 +21110,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_tuple_put_basic_expanded_item_body (a_feature)
 		end
 
-	print_builtin_tuple_put_real_64_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_put_real_64_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TUPLE.put_real_64'.
 		require
@@ -21120,7 +21120,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_tuple_put_basic_expanded_item_body (a_feature)
 		end
 
-	print_builtin_tuple_put_reference_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_put_reference_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TUPLE.put_reference'.
 		require
@@ -21197,7 +21197,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_tuple_real_32_item_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_real_32_item_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TUPLE.real_32_item'.
 		require
@@ -21207,7 +21207,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_tuple_basic_expanded_item_body (a_feature)
 		end
 
-	print_builtin_tuple_real_64_item_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_real_64_item_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TUPLE.real_64_item'.
 		require
@@ -21217,7 +21217,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_tuple_basic_expanded_item_body (a_feature)
 		end
 
-	print_builtin_tuple_reference_item_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_tuple_reference_item_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TUPLE.reference_item'.
 		require
@@ -21288,7 +21288,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_tuple_set_object_comparison_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_tuple_set_object_comparison_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'TUPLE.set_object_comparison'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -21349,7 +21349,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_type_base_class_name_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_type_base_class_name_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'TYPE.base_class_name'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -21391,7 +21391,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_type_basic_expanded_field_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_basic_expanded_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to a built-in feature of class "TYPE" that returns the fields
 			-- of basic expanded types.
@@ -21470,7 +21470,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_type_boolean_field_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_boolean_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.boolean_field'.
 		require
@@ -21480,7 +21480,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_type_basic_expanded_field_body (a_feature)
 		end
 
-	print_builtin_type_character_8_field_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_character_8_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.character_8_field'.
 		require
@@ -21490,7 +21490,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_type_basic_expanded_field_body (a_feature)
 		end
 
-	print_builtin_type_character_32_field_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_character_32_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.character_32_field'.
 		require
@@ -21500,7 +21500,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_type_basic_expanded_field_body (a_feature)
 		end
 
-	print_builtin_type_field_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.field'.
 		require
@@ -21570,7 +21570,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_type_field_count_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_type_field_count_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'TYPE.field_count'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -21605,7 +21605,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_type_field_name_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_field_name_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.field_name'.
 		require
@@ -21698,7 +21698,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_type_field_static_type_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_field_static_type_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.field_static_type'.
 		require
@@ -21785,7 +21785,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_type_field_type_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_field_type_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.field_type'.
 		require
@@ -21887,7 +21887,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_type_generating_type_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_generating_type_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' then body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.generating_type'.
 		require
@@ -21900,7 +21900,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			current_file.put_new_line
 		end
 
-	print_builtin_type_generic_parameter_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_generic_parameter_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.generic_parameter'.
 		require
@@ -22030,7 +22030,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_type_generic_parameter_count_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_type_generic_parameter_count_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'TYPE.generic_parameter_count'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -22063,7 +22063,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_type_integer_8_field_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_integer_8_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.integer_8_field'.
 		require
@@ -22073,7 +22073,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_type_basic_expanded_field_body (a_feature)
 		end
 
-	print_builtin_type_integer_16_field_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_integer_16_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.integer_16_field'.
 		require
@@ -22083,7 +22083,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_type_basic_expanded_field_body (a_feature)
 		end
 
-	print_builtin_type_integer_32_field_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_integer_32_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.integer_32_field'.
 		require
@@ -22093,7 +22093,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_type_basic_expanded_field_body (a_feature)
 		end
 
-	print_builtin_type_integer_64_field_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_integer_64_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.integer_64_field'.
 		require
@@ -22103,7 +22103,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_type_basic_expanded_field_body (a_feature)
 		end
 
-	print_builtin_type_is_expanded_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_type_is_expanded_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'TYPE.is_expanded'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -22131,7 +22131,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_type_name_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_type_name_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'TYPE.name'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -22173,7 +22173,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_type_natural_8_field_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_natural_8_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.natural_8_field'.
 		require
@@ -22183,7 +22183,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_type_basic_expanded_field_body (a_feature)
 		end
 
-	print_builtin_type_natural_16_field_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_natural_16_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.natural_16_field'.
 		require
@@ -22193,7 +22193,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_type_basic_expanded_field_body (a_feature)
 		end
 
-	print_builtin_type_natural_32_field_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_natural_32_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.natural_32_field'.
 		require
@@ -22203,7 +22203,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_type_basic_expanded_field_body (a_feature)
 		end
 
-	print_builtin_type_natural_64_field_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_natural_64_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.natural_64_field'.
 		require
@@ -22213,7 +22213,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_type_basic_expanded_field_body (a_feature)
 		end
 
-	print_builtin_type_pointer_field_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_pointer_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.pointer_field'.
 		require
@@ -22223,7 +22223,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_type_basic_expanded_field_body (a_feature)
 		end
 
-	print_builtin_type_real_32_field_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_real_32_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.real_32_field'.
 		require
@@ -22233,7 +22233,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_type_basic_expanded_field_body (a_feature)
 		end
 
-	print_builtin_type_real_64_field_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_real_64_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.real_64_field'.
 		require
@@ -22243,7 +22243,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_type_basic_expanded_field_body (a_feature)
 		end
 
-	print_builtin_type_runtime_name_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_type_runtime_name_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'TYPE.runtime_name'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -22285,7 +22285,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_type_set_basic_expanded_field_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_set_basic_expanded_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to a built-in feature of class "TYPE" that sets the fields
 			-- of basic expanded types.
@@ -22357,7 +22357,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_type_set_boolean_field_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_set_boolean_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.set_boolean_field'.
 		require
@@ -22367,7 +22367,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_type_set_basic_expanded_field_body (a_feature)
 		end
 
-	print_builtin_type_set_character_8_field_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_set_character_8_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.set_character_8_field'.
 		require
@@ -22377,7 +22377,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_type_set_basic_expanded_field_body (a_feature)
 		end
 
-	print_builtin_type_set_character_32_field_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_set_character_32_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.set_character_32_field'.
 		require
@@ -22387,7 +22387,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_type_set_basic_expanded_field_body (a_feature)
 		end
 
-	print_builtin_type_set_integer_8_field_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_set_integer_8_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.set_integer_8_field'.
 		require
@@ -22397,7 +22397,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_type_set_basic_expanded_field_body (a_feature)
 		end
 
-	print_builtin_type_set_integer_16_field_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_set_integer_16_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.set_integer_16_field'.
 		require
@@ -22407,7 +22407,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_type_set_basic_expanded_field_body (a_feature)
 		end
 
-	print_builtin_type_set_integer_32_field_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_set_integer_32_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.set_integer_32_field'.
 		require
@@ -22417,7 +22417,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_type_set_basic_expanded_field_body (a_feature)
 		end
 
-	print_builtin_type_set_integer_64_field_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_set_integer_64_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.set_integer_64_field'.
 		require
@@ -22427,7 +22427,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_type_set_basic_expanded_field_body (a_feature)
 		end
 
-	print_builtin_type_set_natural_8_field_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_set_natural_8_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.set_natural_8_field'.
 		require
@@ -22437,7 +22437,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_type_set_basic_expanded_field_body (a_feature)
 		end
 
-	print_builtin_type_set_natural_16_field_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_set_natural_16_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.set_natural_16_field'.
 		require
@@ -22447,7 +22447,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_type_set_basic_expanded_field_body (a_feature)
 		end
 
-	print_builtin_type_set_natural_32_field_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_set_natural_32_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.set_natural_32_field'.
 		require
@@ -22457,7 +22457,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_type_set_basic_expanded_field_body (a_feature)
 		end
 
-	print_builtin_type_set_natural_64_field_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_set_natural_64_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.set_natural_64_field'.
 		require
@@ -22467,7 +22467,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_type_set_basic_expanded_field_body (a_feature)
 		end
 
-	print_builtin_type_set_pointer_field_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_set_pointer_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.set_pointer_field'.
 		require
@@ -22477,7 +22477,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_type_set_basic_expanded_field_body (a_feature)
 		end
 
-	print_builtin_type_set_real_32_field_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_set_real_32_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.set_real_32_field'.
 		require
@@ -22487,7 +22487,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_type_set_basic_expanded_field_body (a_feature)
 		end
 
-	print_builtin_type_set_real_64_field_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_set_real_64_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.set_real_64_field'.
 		require
@@ -22497,7 +22497,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_type_set_basic_expanded_field_body (a_feature)
 		end
 
-	print_builtin_type_set_reference_field_body (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_type_set_reference_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.set_reference_field'.
 		require
@@ -22579,7 +22579,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_type_type_id_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+	print_builtin_type_type_id_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'TYPE.type_id'.
 			-- `a_target_type' is the dynamic type of the target.
@@ -22605,7 +22605,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 
 feature {NONE} -- C function generation
 
-	print_main_function is
+	print_main_function
 			-- Print 'main' function to `current_file'.
 		local
 			l_root_type: ET_DYNAMIC_TYPE
@@ -22693,7 +22693,7 @@ feature {NONE} -- C function generation
 			current_call_info := old_call_info
 		end
 
-	print_manifest_string_8_function is
+	print_manifest_string_8_function
 			-- Print 'GE_ms8' function to `current_file' and its signature to `header_file'.
 			-- 'GE_ms8' is used to create manifest strings of type "STRING_8".
 		local
@@ -22893,7 +22893,7 @@ feature {NONE} -- C function generation
 			reset_temp_variables
 		end
 
-	print_manifest_string_32_function is
+	print_manifest_string_32_function
 			-- Print 'GE_ms32' function to `current_file' and its signature to `header_file'.
 			-- 'GE_ms32' is used to create manifest strings of type "STRING_32".
 		local
@@ -23141,7 +23141,7 @@ feature {NONE} -- C function generation
 			reset_temp_variables
 		end
 
-	print_manifest_array_function (an_array_type: ET_DYNAMIC_TYPE) is
+	print_manifest_array_function (an_array_type: ET_DYNAMIC_TYPE)
 			-- Print 'GE_ma' function to `current_file' and its signature to `header_file'.
 			-- 'GE_ma<type-id>' is used to create manifest arrays of type 'type-id'.
 		require
@@ -23387,7 +23387,7 @@ feature {NONE} -- C function generation
 			end
 		end
 
-	print_big_manifest_array_function (an_array_type: ET_DYNAMIC_TYPE) is
+	print_big_manifest_array_function (an_array_type: ET_DYNAMIC_TYPE)
 			-- Print 'GE_bma' function to `current_file' and its signature to `header_file'.
 			-- 'GE_bma<type-id>' is used to create big manifest arrays of type 'type-id'.
 			-- "Big" means more elements than the number of function arguments that the
@@ -23558,7 +23558,7 @@ feature {NONE} -- C function generation
 			end
 		end
 
-	print_manifest_tuple_function (a_tuple_type: ET_DYNAMIC_TUPLE_TYPE) is
+	print_manifest_tuple_function (a_tuple_type: ET_DYNAMIC_TUPLE_TYPE)
 			-- Print 'GE_mt' function to `current_file' and its signature to `header_file'.
 			-- 'GE_mt<type-id>' is used to create manifest tuples of type 'type-id'.
 		require
@@ -23654,7 +23654,7 @@ feature {NONE} -- C function generation
 			current_file.put_new_line
 		end
 
-	print_boxed_function (a_type: ET_DYNAMIC_TYPE) is
+	print_boxed_function (a_type: ET_DYNAMIC_TYPE)
 			-- Print 'GE_boxed' function to `current_file' and its signature to `header_file'.
 			-- 'GE_boxed<type-id>' is used to create boxed objects of type `a_type' (with id <type_id>).
 			-- (The boxed version of a type makes sure that each object
@@ -23754,7 +23754,7 @@ feature {NONE} -- C function generation
 			current_file.put_new_line
 		end
 
-	print_const_init_function is
+	print_const_init_function
 			-- Print 'GE_const_init' function to `current_file', and its signature to `header_file'.
 			-- 'GE_const_init' is called to initialize the value of the non-expanded constant attributes
 			-- and inline constants (such as once manifest strings).
@@ -23861,7 +23861,7 @@ feature {NONE} -- C function generation
 			current_file.put_new_line
 		end
 
-	print_dynamic_type_id_set_constants is
+	print_dynamic_type_id_set_constants
 			-- Print 'GE_dtsN' constants to `current_file', and their signature to `header_file'.
 			-- 'GE_dtsN' are dymamic type id sets whose ids are sorted in increasing order.
 		local
@@ -23907,7 +23907,7 @@ feature {NONE} -- C function generation
 
 feature {NONE} -- Memory allocation
 
-	print_malloc_current (a_feature: ET_FEATURE) is
+	print_malloc_current (a_feature: ET_FEATURE)
 			-- Print memory allocation of 'Current' with `a_feature' as creation procedure.
 			-- Do not call the creation procedure.
 		require
@@ -23991,7 +23991,7 @@ feature {NONE} -- Memory allocation
 			end
 		end
 
-	print_object_allocation_functions is
+	print_object_allocation_functions
 			-- For each non-expanded type that is alive (e.g. that can have instances at runtime),
 			-- print 'GE_new<type-id>' functions to `current_file', and its signature to `header_file'.
 			-- 'GE_new<type-id>' creates a new instance of type type-id, with possible default
@@ -24016,7 +24016,7 @@ feature {NONE} -- Memory allocation
 			end
 		end
 
-	print_object_allocation_function (a_type: ET_DYNAMIC_TYPE) is
+	print_object_allocation_function (a_type: ET_DYNAMIC_TYPE)
 			-- Print 'GE_new<type-id>' function to `current_file', and its signature to `header_file'.
 			-- 'GE_new<type-id>' creates a new instance of type `a_type', with possible default
 			-- initialization depending on its argument. It also registers the 'dispose' feature
@@ -24284,7 +24284,7 @@ feature {NONE} -- Memory allocation
 			current_file.put_new_line
 		end
 
-	print_dispose_registration (an_object: ET_EXPRESSION; a_type: ET_DYNAMIC_TYPE) is
+	print_dispose_registration (an_object: ET_EXPRESSION; a_type: ET_DYNAMIC_TYPE)
 			-- Print to `current_file' the registration to the GC of the
 			-- 'dispose' feature, if it exists, to be called when the
 			-- object `an_object' of type `a_type' will be reclaimed.
@@ -24350,7 +24350,7 @@ feature {NONE} -- Memory allocation
 
 feature {NONE} -- Trace generation
 
-	print_feature_trace_message_call (in: BOOLEAN) is
+	print_feature_trace_message_call (in: BOOLEAN)
 			-- Print to `current_file' a call that will display to 'stderr' information
 			-- about the fact that we just entered (if `in' is True) or just exited
 			-- (if `in' is False) the current feature.
@@ -24417,7 +24417,7 @@ feature {NONE} -- Trace generation
 			end
 		end
 
-	print_agent_trace_message_call (an_agent: ET_AGENT; in: BOOLEAN) is
+	print_agent_trace_message_call (an_agent: ET_AGENT; in: BOOLEAN)
 			-- Print to `current_file' a call that will display to 'stderr' information
 			-- about the fact that we just entered (if `in' is True) or just exited
 			-- (if `in' is False) the agent `an_agent' appearing in current feature.
@@ -24496,7 +24496,7 @@ feature {NONE} -- Trace generation
 			end
 		end
 
-	print_feature_info_message_call (a_message: STRING) is
+	print_feature_info_message_call (a_message: STRING)
 			-- Print to `current_file' a call that will display to 'stderr' information
 			-- about the current feature of form: `a_message' TYPE.feature
 		require
@@ -24508,7 +24508,7 @@ feature {NONE} -- Trace generation
 			current_file.put_new_line
 		end
 
-	print_unindented_feature_info_message_call (a_message: STRING) is
+	print_unindented_feature_info_message_call (a_message: STRING)
 			-- Print to `current_file' a call that will display to 'stderr' information
 			-- about the current feature of form: `a_message' TYPE.feature
 			-- This call is not indented nor finished by a new-line.
@@ -24535,7 +24535,7 @@ feature {NONE} -- Trace generation
 			current_file.put_character (';')
 		end
 
-	print_info_message_call (a_message: STRING) is
+	print_info_message_call (a_message: STRING)
 			-- Print to `current_file' a call that will display to 'stderr'
 			-- information form: `a_message'
 		require
@@ -24557,7 +24557,7 @@ feature {NONE} -- Trace generation
 			current_file.put_new_line
 		end
 
-	print_show_console_call is
+	print_show_console_call
 			-- Print to `current_file' a call to 'GE_show_console' to make sure
 			-- that a DOS console is available for Windows applications.
 		do
@@ -24575,7 +24575,7 @@ feature {NONE} -- Trace generation
 
 feature {NONE} -- Type generation
 
-	print_types (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_types (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print declarations of types of `current_dynamic_system' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -24718,7 +24718,7 @@ feature {NONE} -- Type generation
 			print_eif_type_struct (a_file)
 		end
 
-	print_aliased_character_type_definition (a_universe: ET_UNIVERSE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_aliased_character_type_definition (a_universe: ET_UNIVERSE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the definition of aliased type "CHARACTER"
 			-- as specified in `a_universe'.
 		require
@@ -24764,7 +24764,7 @@ feature {NONE} -- Type generation
 			end
 		end
 
-	print_aliased_wide_character_type_definition (a_universe: ET_UNIVERSE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_aliased_wide_character_type_definition (a_universe: ET_UNIVERSE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the definition of aliased type "WIDE_CHARACTER"
 			-- as specified in `a_universe'.
 		require
@@ -24810,7 +24810,7 @@ feature {NONE} -- Type generation
 			end
 		end
 
-	print_aliased_integer_type_definition (a_universe: ET_UNIVERSE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_aliased_integer_type_definition (a_universe: ET_UNIVERSE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the definition of aliased type "INTEGER"
 			-- as specified in `a_universe'.
 		require
@@ -24886,7 +24886,7 @@ feature {NONE} -- Type generation
 			end
 		end
 
-	print_aliased_natural_type_definition (a_universe: ET_UNIVERSE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_aliased_natural_type_definition (a_universe: ET_UNIVERSE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the definition of aliased type "NATURAL"
 			-- as specified in `a_universe'.
 		require
@@ -24962,7 +24962,7 @@ feature {NONE} -- Type generation
 			end
 		end
 
-	print_aliased_real_type_definition (a_universe: ET_UNIVERSE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_aliased_real_type_definition (a_universe: ET_UNIVERSE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the definition of aliased type "REAL"
 			-- as specified in `a_universe'.
 		require
@@ -25008,7 +25008,7 @@ feature {NONE} -- Type generation
 			end
 		end
 
-	print_aliased_double_type_definition (a_universe: ET_UNIVERSE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_aliased_double_type_definition (a_universe: ET_UNIVERSE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the definition of aliased type "DOUBLE"
 			-- as specified in `a_universe'.
 		require
@@ -25054,7 +25054,7 @@ feature {NONE} -- Type generation
 			end
 		end
 
-	print_boolean_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_boolean_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the definition of type "BOOLEAN".
 		require
 			a_type_not_void: a_type /= Void
@@ -25068,7 +25068,7 @@ feature {NONE} -- Type generation
 			a_file.put_line (c_eif_boolean)
 		end
 
-	print_character_8_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_character_8_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the definition of type "CHARACTER_8".
 		require
 			a_type_not_void: a_type /= Void
@@ -25082,7 +25082,7 @@ feature {NONE} -- Type generation
 			a_file.put_line (c_eif_character_8)
 		end
 
-	print_character_32_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_character_32_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the definition of type "CHARACTER_32".
 		require
 			a_type_not_void: a_type /= Void
@@ -25096,7 +25096,7 @@ feature {NONE} -- Type generation
 			a_file.put_line (c_eif_character_32)
 		end
 
-	print_integer_8_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_integer_8_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the definition of type "INTEGER_8".
 		require
 			a_type_not_void: a_type /= Void
@@ -25110,7 +25110,7 @@ feature {NONE} -- Type generation
 			a_file.put_line (c_eif_integer_8)
 		end
 
-	print_integer_16_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_integer_16_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the definition of type "INTEGER_16".
 		require
 			a_type_not_void: a_type /= Void
@@ -25124,7 +25124,7 @@ feature {NONE} -- Type generation
 			a_file.put_line (c_eif_integer_16)
 		end
 
-	print_integer_32_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_integer_32_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the definition of type "INTEGER_32".
 		require
 			a_type_not_void: a_type /= Void
@@ -25138,7 +25138,7 @@ feature {NONE} -- Type generation
 			a_file.put_line (c_eif_integer_32)
 		end
 
-	print_integer_64_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_integer_64_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the definition of type "INTEGER_64".
 		require
 			a_type_not_void: a_type /= Void
@@ -25152,7 +25152,7 @@ feature {NONE} -- Type generation
 			a_file.put_line (c_eif_integer_64)
 		end
 
-	print_natural_8_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_natural_8_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the definition of type "NATURAL_8".
 		require
 			a_type_not_void: a_type /= Void
@@ -25166,7 +25166,7 @@ feature {NONE} -- Type generation
 			a_file.put_line (c_eif_natural_8)
 		end
 
-	print_natural_16_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_natural_16_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the definition of type "NATURAL_16".
 		require
 			a_type_not_void: a_type /= Void
@@ -25180,7 +25180,7 @@ feature {NONE} -- Type generation
 			a_file.put_line (c_eif_natural_16)
 		end
 
-	print_natural_32_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_natural_32_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the definition of type "NATURAL_32".
 		require
 			a_type_not_void: a_type /= Void
@@ -25194,7 +25194,7 @@ feature {NONE} -- Type generation
 			a_file.put_line (c_eif_natural_32)
 		end
 
-	print_natural_64_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_natural_64_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the definition of type "NATURAL_64".
 		require
 			a_type_not_void: a_type /= Void
@@ -25208,7 +25208,7 @@ feature {NONE} -- Type generation
 			a_file.put_line (c_eif_natural_64)
 		end
 
-	print_real_32_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_real_32_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the definition of type "REAL_32".
 		require
 			a_type_not_void: a_type /= Void
@@ -25222,7 +25222,7 @@ feature {NONE} -- Type generation
 			a_file.put_line (c_eif_real_32)
 		end
 
-	print_real_64_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_real_64_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the definition of type "REAL_64".
 		require
 			a_type_not_void: a_type /= Void
@@ -25236,7 +25236,7 @@ feature {NONE} -- Type generation
 			a_file.put_line (c_eif_real_64)
 		end
 
-	print_pointer_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_pointer_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the definition of type "POINTER".
 		require
 			a_type_not_void: a_type /= Void
@@ -25250,7 +25250,7 @@ feature {NONE} -- Type generation
 			a_file.put_line (c_eif_pointer)
 		end
 
-	print_type_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_type_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the definition of type "TYPE [X]".
 		require
 			a_type_not_void: a_type /= Void
@@ -25264,7 +25264,7 @@ feature {NONE} -- Type generation
 			a_file.put_line (c_eif_type)
 		end
 
-	print_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the definition of type `a_type'.
 		require
 			a_type_not_void: a_type /= Void
@@ -25282,7 +25282,7 @@ feature {NONE} -- Type generation
 			a_file.put_new_line
 		end
 
-	print_boxed_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_boxed_type_definition (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the type definition of the boxed version of `a_type'.
 			-- (The boxed version of a type makes sure that each object
 			-- of that type contains its type-id. It can be the type itself
@@ -25303,7 +25303,7 @@ feature {NONE} -- Type generation
 			a_file.put_new_line
 		end
 
-	print_type_struct (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_type_struct (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' declaration of C struct corresponding to `a_type', if_any.
 		require
 			a_type_not_void: a_type /= Void
@@ -25511,7 +25511,7 @@ feature {NONE} -- Type generation
 			end
 		end
 
-	print_boxed_type_struct (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_boxed_type_struct (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' declaration of C struct corresponding to boxed version of `a_type', if_any.
 			-- (The boxed version of a type makes sure that each object
 			-- of that type contains its type-id. It can be the type itself
@@ -25567,7 +25567,7 @@ feature {NONE} -- Type generation
 			end
 		end
 
-	print_eif_type_struct (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_eif_type_struct (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' declaration of C struct corresponding to 'EIF_TYPE', if_any.
 			-- Type EIF_TYPE represents Eiffel types.
 		require
@@ -25624,7 +25624,7 @@ feature {NONE} -- Type generation
 			a_file.put_new_line
 		end
 
-	print_types_array is
+	print_types_array
 			-- Print 'GE_types' array to `current_file' and its declaration to `header_file'.
 		local
 			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
@@ -25724,7 +25724,7 @@ feature {NONE} -- Type generation
 			current_file.put_new_line
 		end
 
-	print_type_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_type_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print name of `a_type' to `a_file'.
 		require
 			a_type_not_void: a_type /= Void
@@ -25742,7 +25742,7 @@ feature {NONE} -- Type generation
 			end
 		end
 
-	print_boxed_type_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_boxed_type_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print name of boxed version of `a_type' to `a_file'.
 			-- (The boxed version of a type makes sure that each object
 			-- of that type contains its type-id. It can be the type itself
@@ -25766,7 +25766,7 @@ feature {NONE} -- Type generation
 			end
 		end
 
-	print_struct_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_struct_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print name of C struct corresponding to `a_type' to `a_file'.
 		require
 			a_type_not_void: a_type /= Void
@@ -25784,7 +25784,7 @@ feature {NONE} -- Type generation
 			end
 		end
 
-	print_boxed_struct_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_boxed_struct_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print name of C struct corresponding to the boxed version of `a_type' to `a_file'.
 			-- (The boxed version of a type makes sure that each object
 			-- of that type contains its type-id. It can be the type itself
@@ -25808,7 +25808,7 @@ feature {NONE} -- Type generation
 			end
 		end
 
-	print_eif_any_type_name (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_eif_any_type_name (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print name of type 'EIF_ANY' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -25825,7 +25825,7 @@ feature {NONE} -- Type generation
 			end
 		end
 
-	print_type_declaration (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_type_declaration (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print declaration of `a_type' to `a_file'.
 		require
 			a_type_not_void: a_type /= Void
@@ -25840,7 +25840,7 @@ feature {NONE} -- Type generation
 			end
 		end
 
-	print_boxed_type_declaration (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_boxed_type_declaration (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print declaration of boxed version of `a_type' to `a_file'.
 			-- (The boxed version of a type makes sure that each object
 			-- of that type contains its type-id. It can be the type itself
@@ -25854,7 +25854,7 @@ feature {NONE} -- Type generation
 			a_file.put_character ('*')
 		end
 
-	print_type_cast (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_type_cast (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print type cast of `a_type' to `a_file'.
 		require
 			a_type_not_void: a_type /= Void
@@ -25869,7 +25869,7 @@ feature {NONE} -- Type generation
 			a_file.put_character (')')
 		end
 
-	print_boxed_type_cast (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_boxed_type_cast (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print type cast of boxed version of `a_type' to `a_file'.
 			-- (The boxed version of a type makes sure that each object
 			-- of that type contains its type-id. It can be the type itself
@@ -25887,7 +25887,7 @@ feature {NONE} -- Type generation
 
 feature {NONE} -- Default initialization values generation
 
-	print_default_declarations is
+	print_default_declarations
 			-- Print default initialization declaration of each type
 			-- to `current_file' and their signature to `header_file'.
 		local
@@ -25908,7 +25908,7 @@ feature {NONE} -- Default initialization values generation
 			end
 		end
 
-	print_default_declaration (a_type: ET_DYNAMIC_TYPE) is
+	print_default_declaration (a_type: ET_DYNAMIC_TYPE)
 			-- Print default initialization declaration of `a_type'
 			-- to `current_file' and their signature to `header_file'.
 		require
@@ -25932,7 +25932,7 @@ feature {NONE} -- Default initialization values generation
 			current_file.put_new_line
 		end
 
-	print_default_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_default_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' name of default initialization for object of type `a_type'.
 			-- (In case of expanded types being involved, this default initialization
 			-- does not take into account possible calls to 'default_create' which need
@@ -25953,7 +25953,7 @@ feature {NONE} -- Default initialization values generation
 			end
 		end
 
-	print_default_object_value (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_default_object_value (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' default initialization value for objects of type `a_type'.
 			-- (In case of expanded types being involved, this default initialization
 			-- does not take into account possible calls to 'default_create' which need
@@ -26048,7 +26048,7 @@ feature {NONE} -- Default initialization values generation
 			end
 		end
 
-	print_default_entity_value (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_default_entity_value (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' default initialization value for entities declared of type `a_type'.
 			-- Note that an entity can be a reference to an object, and in that case
 			-- its default initialization value is 'Void', and not a default initialized
@@ -26069,7 +26069,7 @@ feature {NONE} -- Default initialization values generation
 			end
 		end
 
-	print_default_attribute_value (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_default_attribute_value (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' default initialization value for attributes declared of type `a_type'.
 			-- Note that an attribute is a special kind of entity, and therefore
 			-- it can be a reference to an object, and in that case its default initialization
@@ -26093,7 +26093,7 @@ feature {NONE} -- Default initialization values generation
 
 feature {NONE} -- Feature name generation
 
-	print_routine_name (a_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_routine_name (a_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print name of `a_routine' from `a_type' to `a_file'.
 		require
 			a_routine_not_void: a_routine /= Void
@@ -26120,7 +26120,7 @@ feature {NONE} -- Feature name generation
 			end
 		end
 
-	print_static_routine_name (a_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_static_routine_name (a_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print name of static feature `a_feature' to `a_file'.
 		require
 			a_routine_not_void: a_routine /= Void
@@ -26148,7 +26148,7 @@ feature {NONE} -- Feature name generation
 			end
 		end
 
-	print_creation_procedure_name (a_procedure: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_creation_procedure_name (a_procedure: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print name of creation procedure `a_procedure' to `a_file'.
 		require
 			a_procedure_not_void: a_procedure /= Void
@@ -26169,7 +26169,7 @@ feature {NONE} -- Feature name generation
 			end
 		end
 
-	print_attribute_name (an_attribute: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_attribute_name (an_attribute: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the name of `an_attribute' for objects of type `a_type'.
 		require
 			an_attribute_not_void: an_attribute /= Void
@@ -26188,7 +26188,7 @@ feature {NONE} -- Feature name generation
 			end
 		end
 
-	print_attribute_type_id_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_attribute_type_id_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the name of the 'type_id' pseudo attribute for objects of type `a_type'
 		require
 			a_type_not_void: a_type /= Void
@@ -26205,7 +26205,7 @@ feature {NONE} -- Feature name generation
 			end
 		end
 
-	print_attribute_special_item_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_attribute_special_item_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the name of the 'item' pseudo attribute for 'SPECIAL' objects of type `a_type'.
 		require
 			a_type_not_void: a_type /= Void
@@ -26223,7 +26223,7 @@ feature {NONE} -- Feature name generation
 			end
 		end
 
-	print_attribute_special_capacity_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_attribute_special_capacity_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the name of the 'capacity' pseudo attribute for 'SPECIAL' objects of type `a_type'.
 		require
 			a_type_not_void: a_type /= Void
@@ -26248,7 +26248,7 @@ feature {NONE} -- Feature name generation
 			end
 		end
 
-	print_attribute_special_count_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_attribute_special_count_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the name of the 'count' pseudo attribute for 'SPECIAL' objects of type `a_type'.
 		require
 			a_type_not_void: a_type /= Void
@@ -26273,7 +26273,7 @@ feature {NONE} -- Feature name generation
 			end
 		end
 
-	print_attribute_tuple_item_name (i: INTEGER; a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_attribute_tuple_item_name (i: INTEGER; a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' then name of the `i'-th 'item' pseudo attribute for 'TUPLE' objects of type `a_type'.
 		require
 			a_type_not_void: a_type /= Void
@@ -26291,7 +26291,7 @@ feature {NONE} -- Feature name generation
 			end
 		end
 
-	print_attribute_routine_function_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_attribute_routine_function_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the name of the function pointer pseudo attribute for 'ROUTINE' objects of type `a_type'.
 		require
 			a_type_not_void: a_type /= Void
@@ -26308,7 +26308,7 @@ feature {NONE} -- Feature name generation
 			end
 		end
 
-	print_boxed_attribute_item_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_boxed_attribute_item_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' then name of the 'item' pseudo attribute of boxed version of `a_type'.
 			-- (The boxed version of a type makes sure that each object
 			-- of that type contains its type-id. It can be the type itself
@@ -26329,7 +26329,7 @@ feature {NONE} -- Feature name generation
 			end
 		end
 
-	print_call_name (a_call: ET_CALL_COMPONENT; a_caller: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_call_name (a_call: ET_CALL_COMPONENT; a_caller: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print name of `a_call' appearing in `a_caller' with `a_target_type' as target static type to `a_file'.
 		require
 			a_call_not_void: a_call /= Void
@@ -26386,7 +26386,7 @@ feature {NONE} -- Feature name generation
 			end
 		end
 
-	print_argument_name (a_name: ET_IDENTIFIER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_argument_name (a_name: ET_IDENTIFIER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print name of argument `a_name' to `a_file'.
 		require
 			a_name_not_void: a_name /= Void
@@ -26405,7 +26405,7 @@ feature {NONE} -- Feature name generation
 			end
 		end
 
-	print_local_name (a_name: ET_IDENTIFIER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_local_name (a_name: ET_IDENTIFIER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print name of local variable `a_name' to `a_file'.
 		require
 			a_name_not_void: a_name /= Void
@@ -26424,7 +26424,7 @@ feature {NONE} -- Feature name generation
 			end
 		end
 
-	print_object_test_local_name (a_name: ET_IDENTIFIER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_object_test_local_name (a_name: ET_IDENTIFIER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print name of object-test local `a_name' to `a_file'.
 		require
 			a_name_not_void: a_name /= Void
@@ -26443,7 +26443,7 @@ feature {NONE} -- Feature name generation
 			end
 		end
 
-	print_object_test_function_name (i: INTEGER; a_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_object_test_function_name (i: INTEGER; a_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print name of `i'-th object-test function appearing in `a_routine' from `a_type' to `a_file'.
 		require
 			a_routine_not_void: a_routine /= Void
@@ -26457,7 +26457,7 @@ feature {NONE} -- Feature name generation
 			a_file.put_integer (i)
 		end
 
-	print_equality_function_name (i: INTEGER; a_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_equality_function_name (i: INTEGER; a_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print name of `i'-th equality ('=' or '/=') function appearing in `a_routine' from `a_type' to `a_file'.
 			-- We need a function for equality when the dynamic type set of operands
 			-- contains expanded types.
@@ -26472,7 +26472,7 @@ feature {NONE} -- Feature name generation
 			a_file.put_integer (i)
 		end
 
-	print_object_equality_function_name (i: INTEGER; a_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_object_equality_function_name (i: INTEGER; a_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print name of `i'-th object-equality ('~' or '/~') function appearing in `a_routine' from `a_type' to `a_file'.
 		require
 			a_routine_not_void: a_routine /= Void
@@ -26486,7 +26486,7 @@ feature {NONE} -- Feature name generation
 			a_file.put_integer (i)
 		end
 
-	print_temp_name (a_name: ET_IDENTIFIER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_temp_name (a_name: ET_IDENTIFIER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print name of temporary variable `a_name' to `a_file'.
 		require
 			a_name_not_void: a_name /= Void
@@ -26505,7 +26505,7 @@ feature {NONE} -- Feature name generation
 			end
 		end
 
-	print_current_name (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_current_name (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print name of 'Current' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -26521,7 +26521,7 @@ feature {NONE} -- Feature name generation
 			end
 		end
 
-	print_result_name (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_result_name (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print name of 'Result' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -26537,7 +26537,7 @@ feature {NONE} -- Feature name generation
 			end
 		end
 
-	print_once_status_name (a_feature: ET_FEATURE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_once_status_name (a_feature: ET_FEATURE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print name of variable holding the status of execution
 			-- of the once-feature `a_feature' to `a_file'.
 		require
@@ -26554,7 +26554,7 @@ feature {NONE} -- Feature name generation
 			a_file.put_integer (a_feature.first_seed)
 		end
 
-	print_once_value_name (a_feature: ET_FEATURE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_once_value_name (a_feature: ET_FEATURE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print name of variable holding the value of first
 			-- execution of the once-feature `a_feature' to `a_file'.
 		require
@@ -26571,7 +26571,7 @@ feature {NONE} -- Feature name generation
 			a_file.put_integer (a_feature.first_seed)
 		end
 
-	print_agent_creation_name (i: INTEGER; a_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_agent_creation_name (i: INTEGER; a_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print name of creation function of `i'-th agent appearing in `a_routine' from `a_type' to `a_file'.
 		require
 			a_routine_not_void: a_routine /= Void
@@ -26585,7 +26585,7 @@ feature {NONE} -- Feature name generation
 			a_file.put_integer (i)
 		end
 
-	print_agent_function_name (i: INTEGER; a_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_agent_function_name (i: INTEGER; a_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print name of function associated with `i'-th agent appearing in `a_routine' from `a_type' to `a_file'.
 		require
 			a_routine_not_void: a_routine /= Void
@@ -26599,7 +26599,7 @@ feature {NONE} -- Feature name generation
 			a_file.put_integer (i)
 		end
 
-	print_inline_constant_name (a_constant: ET_INLINE_CONSTANT; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_inline_constant_name (a_constant: ET_INLINE_CONSTANT; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print name of variable holding the value of inline constant
 			-- `a_constant' (such as a once manifest string) to `a_file'.
 		require
@@ -26614,7 +26614,7 @@ feature {NONE} -- Feature name generation
 			a_file.put_integer (a_constant.id)
 		end
 
-	print_feature_name_comment (a_feature: ET_FEATURE; a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_feature_name_comment (a_feature: ET_FEATURE; a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print name of `a_feature' from `a_type' as a C comment to `a_file'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -26634,7 +26634,7 @@ feature {NONE} -- Feature name generation
 			a_file.put_new_line
 		end
 
-	print_call_name_comment (a_call: ET_CALL_COMPONENT; a_caller: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_call_name_comment (a_call: ET_CALL_COMPONENT; a_caller: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print name of `a_call', appearing in `a_caller' with `a_type' as target static type, as a C comment to `a_file'.
 		require
 			a_call_not_void: a_call /= Void
@@ -26687,7 +26687,7 @@ feature {NONE} -- Feature name generation
 
 feature {NONE} -- String generation
 
-	print_escaped_string (a_string: STRING) is
+	print_escaped_string (a_string: STRING)
 			-- Print escaped version of `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -26765,7 +26765,7 @@ feature {NONE} -- String generation
 			end
 		end
 
-	print_escaped_character (c: CHARACTER) is
+	print_escaped_character (c: CHARACTER)
 			-- Print escaped version of `c'.
 		local
 			l_code: INTEGER
@@ -26816,19 +26816,19 @@ feature {NONE} -- Indentation
 	indentation: INTEGER
 			-- Indentation in `current_file'
 
-	indent is
+	indent
 			-- Increment indentation.
 		do
 			indentation := indentation + 1
 		end
 
-	dedent is
+	dedent
 			-- Decrement indentation.
 		do
 			indentation := indentation - 1
 		end
 
-	print_indentation is
+	print_indentation
 			-- Print indentation to `current_file'.
 		local
 			i, nb: INTEGER
@@ -26842,7 +26842,7 @@ feature {NONE} -- Indentation
 
 feature {NONE} -- Convenience
 
-	print_indentation_assign_to_result is
+	print_indentation_assign_to_result
 			-- Print indentation followed by 'R = ' to `current_file'.
 		do
 			print_indentation
@@ -26852,14 +26852,14 @@ feature {NONE} -- Convenience
 			current_file.put_character (' ')
 		end
 
-	print_semicolon_newline is
+	print_semicolon_newline
 			-- Print a smicolon followed by a newline to `current_file'.
 		do
 			current_file.put_character (';')
 			current_file.put_new_line
 		end
 
-	print_start_extern_c (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_start_extern_c (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the beginning of 'extern "C"' section.
 		require
 			a_file_not_void: a_file /= Void
@@ -26871,7 +26871,7 @@ feature {NONE} -- Convenience
 			a_file.put_new_line
 		end
 
-	print_end_extern_c (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_end_extern_c (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the end of 'extern "C"' section.
 		require
 			a_file_not_void: a_file /= Void
@@ -26885,7 +26885,7 @@ feature {NONE} -- Convenience
 
 feature {NONE} -- Include files
 
-	include_file (a_filename: STRING; a_file: KI_TEXT_OUTPUT_STREAM) is
+	include_file (a_filename: STRING; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Include content of file `a_filename' to `a_file'.
 		require
 			a_filename_not_void: a_filename /= Void
@@ -26905,7 +26905,7 @@ feature {NONE} -- Include files
 			end
 		end
 
-	include_runtime_c_file (a_filename: STRING; a_file: KI_TEXT_OUTPUT_STREAM) is
+	include_runtime_c_file (a_filename: STRING; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Include content of runtime C file `a_filename' to `a_file'.
 		require
 			a_filename_not_void: a_filename /= Void
@@ -26919,7 +26919,7 @@ feature {NONE} -- Include files
 			include_file (l_full_pathname, a_file)
 		end
 
-	include_header_filename (a_filename: STRING; a_file: KI_TEXT_OUTPUT_STREAM) is
+	include_header_filename (a_filename: STRING; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Include header filename `a_filename' to `a_file'.
 		require
 			a_filename_not_void: a_filename /= Void
@@ -26963,7 +26963,7 @@ feature {NONE} -- Include files
 			end
 		end
 
-	include_runtime_header_file (a_filename: STRING; a_force: BOOLEAN; a_file: KI_TEXT_OUTPUT_STREAM) is
+	include_runtime_header_file (a_filename: STRING; a_force: BOOLEAN; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Include runtime header file `a_filename' to `a_file'.
 			-- `a_force' means that the file should be included now.
 		require
@@ -27058,12 +27058,12 @@ feature {NONE} -- Output files/buffers
 			-- The key is the filename without the extension,
 			-- the item is the file extension
 
-	open_c_file is
+	open_c_file
 			-- Open C file if necessary.
 		do
 		end
 
-	flush_to_c_file is
+	flush_to_c_file
 			-- Open C file if not already done, and then
 			-- flush to C file the code written in buffers.
 			-- Take into account where we are in `split_mode' or not.
@@ -27114,7 +27114,7 @@ feature {NONE} -- Output files/buffers
 			flushed2: not has_fatal_error implies current_function_body_buffer.string.is_empty
 		end
 
-	close_c_file is
+	close_c_file
 			-- Close C file if not already done.
 		do
 			if c_file /= Void and then not c_file.is_closed then
@@ -27135,12 +27135,12 @@ feature {NONE} -- Output files/buffers
 	cpp_file_size: INTEGER
 			-- Number of bytes already written to `cpp_file'
 
-	open_cpp_file is
+	open_cpp_file
 			-- Open C++ file if necessary.
 		do
 		end
 
-	flush_to_cpp_file is
+	flush_to_cpp_file
 			-- Open C++ file if not already done, and then
 			-- flush to C++ file the code written in buffers.
 			-- Take into account where we are in `split_mode' or not.
@@ -27191,7 +27191,7 @@ feature {NONE} -- Output files/buffers
 			flushed2: not has_fatal_error implies current_function_body_buffer.string.is_empty
 		end
 
-	close_cpp_file is
+	close_cpp_file
 			-- Close C++ file if not already done.
 		do
 			if cpp_file /= Void and then not cpp_file.is_closed then
@@ -27222,73 +27222,73 @@ feature {NONE} -- Output files/buffers
 
 feature {ET_AST_NODE} -- Processing
 
-	process_assigner_instruction (an_instruction: ET_ASSIGNER_INSTRUCTION) is
+	process_assigner_instruction (an_instruction: ET_ASSIGNER_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			print_assigner_instruction (an_instruction)
 		end
 
-	process_assignment (an_instruction: ET_ASSIGNMENT) is
+	process_assignment (an_instruction: ET_ASSIGNMENT)
 			-- Process `an_instruction'.
 		do
 			print_assignment (an_instruction)
 		end
 
-	process_assignment_attempt (an_instruction: ET_ASSIGNMENT_ATTEMPT) is
+	process_assignment_attempt (an_instruction: ET_ASSIGNMENT_ATTEMPT)
 			-- Process `an_instruction'.
 		do
 			print_assignment_attempt (an_instruction)
 		end
 
-	process_attribute (a_feature: ET_ATTRIBUTE) is
+	process_attribute (a_feature: ET_ATTRIBUTE)
 			-- Process `a_feature'.
 		do
 			print_attribute (a_feature)
 		end
 
-	process_bang_instruction (an_instruction: ET_BANG_INSTRUCTION) is
+	process_bang_instruction (an_instruction: ET_BANG_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			print_bang_instruction (an_instruction)
 		end
 
-	process_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT) is
+	process_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			print_binary_integer_constant (a_constant)
 		end
 
-	process_bit_constant (a_constant: ET_BIT_CONSTANT) is
+	process_bit_constant (a_constant: ET_BIT_CONSTANT)
 			-- Process `a_constant'.
 		do
 			print_bit_constant (a_constant)
 		end
 
-	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION) is
+	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			print_bracket_expression (an_expression)
 		end
 
-	process_c1_character_constant (a_constant: ET_C1_CHARACTER_CONSTANT) is
+	process_c1_character_constant (a_constant: ET_C1_CHARACTER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			print_character_constant (a_constant)
 		end
 
-	process_c2_character_constant (a_constant: ET_C2_CHARACTER_CONSTANT) is
+	process_c2_character_constant (a_constant: ET_C2_CHARACTER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			print_character_constant (a_constant)
 		end
 
-	process_c3_character_constant (a_constant: ET_C3_CHARACTER_CONSTANT) is
+	process_c3_character_constant (a_constant: ET_C3_CHARACTER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			print_character_constant (a_constant)
 		end
 
-	process_call_agent (an_expression: ET_CALL_AGENT) is
+	process_call_agent (an_expression: ET_CALL_AGENT)
 			-- Process `an_expression'.
 		do
 			if an_expression = current_agent then
@@ -27298,97 +27298,97 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_call_expression (an_expression: ET_CALL_EXPRESSION) is
+	process_call_expression (an_expression: ET_CALL_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			print_call_expression (an_expression)
 		end
 
-	process_call_instruction (an_instruction: ET_CALL_INSTRUCTION) is
+	process_call_instruction (an_instruction: ET_CALL_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			print_call_instruction (an_instruction)
 		end
 
-	process_check_instruction (an_instruction: ET_CHECK_INSTRUCTION) is
+	process_check_instruction (an_instruction: ET_CHECK_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			print_check_instruction (an_instruction)
 		end
 
-	process_constant_attribute (a_feature: ET_CONSTANT_ATTRIBUTE) is
+	process_constant_attribute (a_feature: ET_CONSTANT_ATTRIBUTE)
 			-- Process `a_feature'.
 		do
 			print_constant_attribute (a_feature)
 		end
 
-	process_convert_builtin_expression (an_expression: ET_CONVERT_BUILTIN_EXPRESSION) is
+	process_convert_builtin_expression (an_expression: ET_CONVERT_BUILTIN_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			print_convert_builtin_expression (an_expression)
 		end
 
-	process_convert_from_expression (an_expression: ET_CONVERT_FROM_EXPRESSION) is
+	process_convert_from_expression (an_expression: ET_CONVERT_FROM_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			print_convert_from_expression (an_expression)
 		end
 
-	process_convert_to_expression (an_expression: ET_CONVERT_TO_EXPRESSION) is
+	process_convert_to_expression (an_expression: ET_CONVERT_TO_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			print_convert_to_expression (an_expression)
 		end
 
-	process_create_expression (an_expression: ET_CREATE_EXPRESSION) is
+	process_create_expression (an_expression: ET_CREATE_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			print_create_expression (an_expression)
 		end
 
-	process_create_instruction (an_instruction: ET_CREATE_INSTRUCTION) is
+	process_create_instruction (an_instruction: ET_CREATE_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			print_create_instruction (an_instruction)
 		end
 
-	process_current (an_expression: ET_CURRENT) is
+	process_current (an_expression: ET_CURRENT)
 			-- Process `an_expression'.
 		do
 			print_current (an_expression)
 		end
 
-	process_current_address (an_expression: ET_CURRENT_ADDRESS) is
+	process_current_address (an_expression: ET_CURRENT_ADDRESS)
 			-- Process `an_expression'.
 		do
 			print_current_address (an_expression)
 		end
 
-	process_debug_instruction (an_instruction: ET_DEBUG_INSTRUCTION) is
+	process_debug_instruction (an_instruction: ET_DEBUG_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			print_debug_instruction (an_instruction)
 		end
 
-	process_deferred_function (a_feature: ET_DEFERRED_FUNCTION) is
+	process_deferred_function (a_feature: ET_DEFERRED_FUNCTION)
 			-- Process `a_feature'.
 		do
 			print_deferred_function (a_feature)
 		end
 
-	process_deferred_procedure (a_feature: ET_DEFERRED_PROCEDURE) is
+	process_deferred_procedure (a_feature: ET_DEFERRED_PROCEDURE)
 			-- Process `a_feature'.
 		do
 			print_deferred_procedure (a_feature)
 		end
 
-	process_do_function (a_feature: ET_DO_FUNCTION) is
+	process_do_function (a_feature: ET_DO_FUNCTION)
 			-- Process `a_feature'.
 		do
 			print_do_function (a_feature)
 		end
 
-	process_do_function_inline_agent (an_agent: ET_DO_FUNCTION_INLINE_AGENT) is
+	process_do_function_inline_agent (an_agent: ET_DO_FUNCTION_INLINE_AGENT)
 			-- Process `an_agent'.
 		do
 			if an_agent = current_agent then
@@ -27398,13 +27398,13 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_do_procedure (a_feature: ET_DO_PROCEDURE) is
+	process_do_procedure (a_feature: ET_DO_PROCEDURE)
 			-- Process `a_feature'.
 		do
 			print_do_procedure (a_feature)
 		end
 
-	process_do_procedure_inline_agent (an_agent: ET_DO_PROCEDURE_INLINE_AGENT) is
+	process_do_procedure_inline_agent (an_agent: ET_DO_PROCEDURE_INLINE_AGENT)
 			-- Process `an_agent'.
 		do
 			if an_agent = current_agent then
@@ -27414,31 +27414,31 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_equality_expression (an_expression: ET_EQUALITY_EXPRESSION) is
+	process_equality_expression (an_expression: ET_EQUALITY_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			print_equality_expression (an_expression)
 		end
 
-	process_expression_address (an_expression: ET_EXPRESSION_ADDRESS) is
+	process_expression_address (an_expression: ET_EXPRESSION_ADDRESS)
 			-- Process `an_expression'.
 		do
 			print_expression_address (an_expression)
 		end
 
-	process_extended_attribute (a_feature: ET_EXTENDED_ATTRIBUTE) is
+	process_extended_attribute (a_feature: ET_EXTENDED_ATTRIBUTE)
 			-- Process `a_feature'.
 		do
 			print_extended_attribute (a_feature)
 		end
 
-	process_external_function (a_feature: ET_EXTERNAL_FUNCTION) is
+	process_external_function (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Process `a_feature'.
 		do
 			print_external_function (a_feature)
 		end
 
-	process_external_function_inline_agent (an_agent: ET_EXTERNAL_FUNCTION_INLINE_AGENT) is
+	process_external_function_inline_agent (an_agent: ET_EXTERNAL_FUNCTION_INLINE_AGENT)
 			-- Process `an_agent'.
 		do
 			if an_agent = current_agent then
@@ -27448,13 +27448,13 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_external_procedure (a_feature: ET_EXTERNAL_PROCEDURE) is
+	process_external_procedure (a_feature: ET_EXTERNAL_PROCEDURE)
 			-- Process `a_feature'.
 		do
 			print_external_procedure (a_feature)
 		end
 
-	process_external_procedure_inline_agent (an_agent: ET_EXTERNAL_PROCEDURE_INLINE_AGENT) is
+	process_external_procedure_inline_agent (an_agent: ET_EXTERNAL_PROCEDURE_INLINE_AGENT)
 			-- Process `an_agent'.
 		do
 			if an_agent = current_agent then
@@ -27464,25 +27464,25 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_false_constant (a_constant: ET_FALSE_CONSTANT) is
+	process_false_constant (a_constant: ET_FALSE_CONSTANT)
 			-- Process `a_constant'.
 		do
 			print_false_constant (a_constant)
 		end
 
-	process_feature_address (an_expression: ET_FEATURE_ADDRESS) is
+	process_feature_address (an_expression: ET_FEATURE_ADDRESS)
 			-- Process `an_expression'.
 		do
 			print_feature_address (an_expression)
 		end
 
-	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT) is
+	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			print_hexadecimal_integer_constant (a_constant)
 		end
 
-	process_identifier (an_identifier: ET_IDENTIFIER) is
+	process_identifier (an_identifier: ET_IDENTIFIER)
 			-- Process `an_identifier'.
 		do
 			if an_identifier.is_argument then
@@ -27504,97 +27504,97 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_if_instruction (an_instruction: ET_IF_INSTRUCTION) is
+	process_if_instruction (an_instruction: ET_IF_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			print_if_instruction (an_instruction)
 		end
 
-	process_infix_cast_expression (an_expression: ET_INFIX_CAST_EXPRESSION) is
+	process_infix_cast_expression (an_expression: ET_INFIX_CAST_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			print_infix_cast_expression (an_expression)
 		end
 
-	process_infix_expression (an_expression: ET_INFIX_EXPRESSION) is
+	process_infix_expression (an_expression: ET_INFIX_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			print_infix_expression (an_expression)
 		end
 
-	process_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION) is
+	process_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			print_inspect_instruction (an_instruction)
 		end
 
-	process_loop_instruction (an_instruction: ET_LOOP_INSTRUCTION) is
+	process_loop_instruction (an_instruction: ET_LOOP_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			print_loop_instruction (an_instruction)
 		end
 
-	process_manifest_array (an_expression: ET_MANIFEST_ARRAY) is
+	process_manifest_array (an_expression: ET_MANIFEST_ARRAY)
 			-- Process `an_expression'.
 		do
 			print_manifest_array (an_expression)
 		end
 
-	process_manifest_tuple (an_expression: ET_MANIFEST_TUPLE) is
+	process_manifest_tuple (an_expression: ET_MANIFEST_TUPLE)
 			-- Process `an_expression'.
 		do
 			print_manifest_tuple (an_expression)
 		end
 
-	process_manifest_type (an_expression: ET_MANIFEST_TYPE) is
+	process_manifest_type (an_expression: ET_MANIFEST_TYPE)
 			-- Process `an_expression'.
 		do
 			print_manifest_type (an_expression)
 		end
 
-	process_named_object_test (an_expression: ET_NAMED_OBJECT_TEST) is
+	process_named_object_test (an_expression: ET_NAMED_OBJECT_TEST)
 			-- Process `an_expression'.
 		do
 			print_object_test (an_expression)
 		end
 
-	process_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION) is
+	process_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			print_object_equality_expression (an_expression)
 		end
 
-	process_object_test (an_expression: ET_OBJECT_TEST) is
+	process_object_test (an_expression: ET_OBJECT_TEST)
 			-- Process `an_expression'.
 		do
 			print_object_test (an_expression)
 		end
 
-	process_octal_integer_constant (a_constant: ET_OCTAL_INTEGER_CONSTANT) is
+	process_octal_integer_constant (a_constant: ET_OCTAL_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			print_octal_integer_constant (a_constant)
 		end
 
-	process_old_expression (an_expression: ET_OLD_EXPRESSION) is
+	process_old_expression (an_expression: ET_OLD_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			print_old_expression (an_expression)
 		end
 
-	process_old_object_test (an_expression: ET_OLD_OBJECT_TEST) is
+	process_old_object_test (an_expression: ET_OLD_OBJECT_TEST)
 			-- Process `an_expression'.
 		do
 			print_object_test (an_expression)
 		end
 
-	process_once_function (a_feature: ET_ONCE_FUNCTION) is
+	process_once_function (a_feature: ET_ONCE_FUNCTION)
 			-- Process `a_feature'.
 		do
 			print_once_function (a_feature)
 		end
 
-	process_once_function_inline_agent (an_agent: ET_ONCE_FUNCTION_INLINE_AGENT) is
+	process_once_function_inline_agent (an_agent: ET_ONCE_FUNCTION_INLINE_AGENT)
 			-- Process `an_agent'.
 		do
 			if an_agent = current_agent then
@@ -27604,19 +27604,19 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_once_manifest_string (an_expression: ET_ONCE_MANIFEST_STRING) is
+	process_once_manifest_string (an_expression: ET_ONCE_MANIFEST_STRING)
 			-- Process `an_expression'.
 		do
 			print_once_manifest_string (an_expression)
 		end
 
-	process_once_procedure (a_feature: ET_ONCE_PROCEDURE) is
+	process_once_procedure (a_feature: ET_ONCE_PROCEDURE)
 			-- Process `a_feature'.
 		do
 			print_once_procedure (a_feature)
 		end
 
-	process_once_procedure_inline_agent (an_agent: ET_ONCE_PROCEDURE_INLINE_AGENT) is
+	process_once_procedure_inline_agent (an_agent: ET_ONCE_PROCEDURE_INLINE_AGENT)
 			-- Process `an_agent'.
 		do
 			if an_agent = current_agent then
@@ -27626,127 +27626,127 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION) is
+	process_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			print_parenthesized_expression (an_expression)
 		end
 
-	process_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION) is
+	process_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			print_precursor_expression (an_expression)
 		end
 
-	process_precursor_instruction (an_instruction: ET_PRECURSOR_INSTRUCTION) is
+	process_precursor_instruction (an_instruction: ET_PRECURSOR_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			print_precursor_instruction (an_instruction)
 		end
 
-	process_prefix_expression (an_expression: ET_PREFIX_EXPRESSION) is
+	process_prefix_expression (an_expression: ET_PREFIX_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			print_prefix_expression (an_expression)
 		end
 
-	process_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT) is
+	process_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			print_regular_integer_constant (a_constant)
 		end
 
-	process_regular_manifest_string (a_string: ET_REGULAR_MANIFEST_STRING) is
+	process_regular_manifest_string (a_string: ET_REGULAR_MANIFEST_STRING)
 			-- Process `a_string'.
 		do
 			print_regular_manifest_string (a_string)
 		end
 
-	process_regular_real_constant (a_constant: ET_REGULAR_REAL_CONSTANT) is
+	process_regular_real_constant (a_constant: ET_REGULAR_REAL_CONSTANT)
 			-- Process `a_constant'.
 		do
 			print_regular_real_constant (a_constant)
 		end
 
-	process_result (an_expression: ET_RESULT) is
+	process_result (an_expression: ET_RESULT)
 			-- Process `an_expression'.
 		do
 			print_result (an_expression)
 		end
 
-	process_result_address (an_expression: ET_RESULT_ADDRESS) is
+	process_result_address (an_expression: ET_RESULT_ADDRESS)
 			-- Process `an_expression'.
 		do
 			print_result_address (an_expression)
 		end
 
-	process_retry_instruction (an_instruction: ET_RETRY_INSTRUCTION) is
+	process_retry_instruction (an_instruction: ET_RETRY_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			print_retry_instruction (an_instruction)
 		end
 
-	process_semicolon_symbol (a_symbol: ET_SEMICOLON_SYMBOL) is
+	process_semicolon_symbol (a_symbol: ET_SEMICOLON_SYMBOL)
 			-- Process `a_symbol'.
 		do
 			-- Do nothing.
 		end
 
-	process_special_manifest_string (a_string: ET_SPECIAL_MANIFEST_STRING) is
+	process_special_manifest_string (a_string: ET_SPECIAL_MANIFEST_STRING)
 			-- Process `a_string'.
 		do
 			print_special_manifest_string (a_string)
 		end
 
-	process_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION) is
+	process_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			print_static_call_expression (an_expression)
 		end
 
-	process_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION) is
+	process_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			print_static_call_instruction (an_instruction)
 		end
 
-	process_strip_expression (an_expression: ET_STRIP_EXPRESSION) is
+	process_strip_expression (an_expression: ET_STRIP_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			print_strip_expression (an_expression)
 		end
 
-	process_true_constant (a_constant: ET_TRUE_CONSTANT) is
+	process_true_constant (a_constant: ET_TRUE_CONSTANT)
 			-- Process `a_constant'.
 		do
 			print_true_constant (a_constant)
 		end
 
-	process_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT) is
+	process_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			print_underscored_integer_constant (a_constant)
 		end
 
-	process_underscored_real_constant (a_constant: ET_UNDERSCORED_REAL_CONSTANT) is
+	process_underscored_real_constant (a_constant: ET_UNDERSCORED_REAL_CONSTANT)
 			-- Process `a_constant'.
 		do
 			print_underscored_real_constant (a_constant)
 		end
 
-	process_unique_attribute (a_feature: ET_UNIQUE_ATTRIBUTE) is
+	process_unique_attribute (a_feature: ET_UNIQUE_ATTRIBUTE)
 			-- Process `a_feature'.
 		do
 			print_unique_attribute (a_feature)
 		end
 
-	process_verbatim_string (a_string: ET_VERBATIM_STRING) is
+	process_verbatim_string (a_string: ET_VERBATIM_STRING)
 			-- Process `a_string'.
 		do
 			print_verbatim_string (a_string)
 		end
 
-	process_void (an_expression: ET_VOID) is
+	process_void (an_expression: ET_VOID)
 			-- Process `an_expression'.
 		do
 			print_void (an_expression)
@@ -27754,7 +27754,7 @@ feature {ET_AST_NODE} -- Processing
 
 feature {NONE} -- Error handling
 
-	set_fatal_error is
+	set_fatal_error
 			-- Report a fatal error.
 		do
 			has_fatal_error := True
@@ -27762,7 +27762,7 @@ feature {NONE} -- Error handling
 			has_fatal_error: has_fatal_error
 		end
 
-	report_cannot_read_error (a_filename: STRING) is
+	report_cannot_read_error (a_filename: STRING)
 			-- Report that `a_filename' cannot be
 			-- opened in read mode.
 		require
@@ -27774,7 +27774,7 @@ feature {NONE} -- Error handling
 			error_handler.report_error (an_error)
 		end
 
-	report_cannot_write_error (a_filename: STRING) is
+	report_cannot_write_error (a_filename: STRING)
 			-- Report that `a_filename' cannot be
 			-- opened in write mode.
 		require
@@ -27797,7 +27797,7 @@ feature {NONE} -- Access
 	current_type: ET_DYNAMIC_TYPE
 			-- Type where `current_feature' belongs
 
-	current_universe: ET_UNIVERSE is
+	current_universe: ET_UNIVERSE
 			-- Universe where the base class of `current_type' is declared
 		do
 			Result := current_type.base_class.universe
@@ -27805,7 +27805,7 @@ feature {NONE} -- Access
 			current_universe_not_void: Result /= Void
 		end
 
-	current_universe_impl: ET_UNIVERSE is
+	current_universe_impl: ET_UNIVERSE
 			-- Universe where the class in which `current_feature' is written is declared
 		do
 			Result := current_feature.static_feature.implementation_class.universe
@@ -27863,7 +27863,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Dynamic type sets
 
-	dynamic_type_set (an_operand: ET_OPERAND): ET_DYNAMIC_TYPE_SET is
+	dynamic_type_set (an_operand: ET_OPERAND): ET_DYNAMIC_TYPE_SET
 			-- Dynamic type set associated with `an_operand' in feature being printed;
 			-- Report a fatal error if not known
 		require
@@ -27893,7 +27893,7 @@ feature {NONE} -- Dynamic type sets
 			dynamic_type_set_not_void: Result /= Void
 		end
 
-	dynamic_type_set_in_feature (an_operand: ET_OPERAND; a_feature: ET_DYNAMIC_FEATURE): ET_DYNAMIC_TYPE_SET is
+	dynamic_type_set_in_feature (an_operand: ET_OPERAND; a_feature: ET_DYNAMIC_FEATURE): ET_DYNAMIC_TYPE_SET
 			-- Dynamic type set associated with `an_operand' in `a_feature';
 			-- Report a fatal error if not known
 		require
@@ -27915,7 +27915,7 @@ feature {NONE} -- Dynamic type sets
 			dynamic_type_set_not_void: Result /= Void
 		end
 
-	argument_type_set (i: INTEGER): ET_DYNAMIC_TYPE_SET is
+	argument_type_set (i: INTEGER): ET_DYNAMIC_TYPE_SET
 			-- Dynamic type set of `i'-th argument of feature being printed;
 			-- Report a fatal error if not known
 		local
@@ -27938,7 +27938,7 @@ feature {NONE} -- Dynamic type sets
 			argument_type_set_not_void: Result /= Void
 		end
 
-	argument_type_set_in_feature (i: INTEGER; a_feature: ET_DYNAMIC_FEATURE): ET_DYNAMIC_TYPE_SET is
+	argument_type_set_in_feature (i: INTEGER; a_feature: ET_DYNAMIC_FEATURE): ET_DYNAMIC_TYPE_SET
 			-- Dynamic type set of `i'-th argument of `a_feature';
 			-- Report a fatal error if not known
 		require
@@ -27955,7 +27955,7 @@ feature {NONE} -- Dynamic type sets
 			argument_type_set_not_void: Result /= Void
 		end
 
-	result_type_set_in_feature (a_feature: ET_DYNAMIC_FEATURE): ET_DYNAMIC_TYPE_SET is
+	result_type_set_in_feature (a_feature: ET_DYNAMIC_FEATURE): ET_DYNAMIC_TYPE_SET
 			-- Dynamic type set of result of `a_feature';
 			-- Report a fatal error if not known
 		require
@@ -28011,7 +28011,7 @@ feature {NONE} -- Dynamic type sets
 			-- List of types that are part of the dynamic type set of both
 			-- operands in an equality expression ('=', '/=', '~' or '/~')
 
-	dynamic_type_id_sorter: DS_QUICK_SORTER [INTEGER] is
+	dynamic_type_id_sorter: DS_QUICK_SORTER [INTEGER]
 			-- Dynamic type id sorter
 		local
 			l_comparator: KL_COMPARABLE_COMPARATOR [INTEGER]
@@ -28028,7 +28028,7 @@ feature {NONE} -- Dynamic type sets
 
 feature {NONE} -- Temporary variables
 
-	new_temp_variable (a_type: ET_DYNAMIC_TYPE): ET_IDENTIFIER is
+	new_temp_variable (a_type: ET_DYNAMIC_TYPE): ET_IDENTIFIER
 			-- New temporary variable of type `a_type'
 		local
 			i, nb: INTEGER
@@ -28081,7 +28081,7 @@ feature {NONE} -- Temporary variables
 			not_frozen_variable: not is_temp_variable_frozen (Result)
 		end
 
-	is_temp_variable_known (a_temp: ET_IDENTIFIER): BOOLEAN is
+	is_temp_variable_known (a_temp: ET_IDENTIFIER): BOOLEAN
 			-- Is temporary variable `a_temp' under management?
 		require
 			a_temp_not_void: a_temp /= Void
@@ -28092,7 +28092,7 @@ feature {NONE} -- Temporary variables
 			Result := (l_seed >= 1 and l_seed <= used_temp_variables.count)
 		end
 
-	is_temp_variable_used (a_temp: ET_IDENTIFIER): BOOLEAN is
+	is_temp_variable_used (a_temp: ET_IDENTIFIER): BOOLEAN
 			-- Is temporary variable `a_temp' currently used?
 		require
 			a_temp_not_void: a_temp /= Void
@@ -28103,7 +28103,7 @@ feature {NONE} -- Temporary variables
 			definition: Result = (used_temp_variables.item (a_temp.seed) /= Void)
 		end
 
-	is_temp_variable_free (a_temp: ET_IDENTIFIER): BOOLEAN is
+	is_temp_variable_free (a_temp: ET_IDENTIFIER): BOOLEAN
 			-- Is temporary variable `a_temp' currently free?
 		require
 			a_temp_not_void: a_temp /= Void
@@ -28114,7 +28114,7 @@ feature {NONE} -- Temporary variables
 			definition: Result = (free_temp_variables.item (a_temp.seed) /= Void)
 		end
 
-	is_temp_variable_frozen (a_temp: ET_IDENTIFIER): BOOLEAN is
+	is_temp_variable_frozen (a_temp: ET_IDENTIFIER): BOOLEAN
 			-- Is temporary variable `a_temp' currently frozen?
 		require
 			a_temp_not_void: a_temp /= Void
@@ -28125,7 +28125,7 @@ feature {NONE} -- Temporary variables
 			definition: Result = (frozen_temp_variables.item (a_temp.seed) /= 0)
 		end
 
-	mark_temp_variable_used (a_temp: ET_IDENTIFIER) is
+	mark_temp_variable_used (a_temp: ET_IDENTIFIER)
 			-- Mark temporary variable `a_temp' as used.
 		require
 			a_temp_not_void: a_temp /= Void
@@ -28142,7 +28142,7 @@ feature {NONE} -- Temporary variables
 			a_temp_used: is_temp_variable_used (a_temp)
 		end
 
-	mark_temp_variable_free (a_temp: ET_IDENTIFIER) is
+	mark_temp_variable_free (a_temp: ET_IDENTIFIER)
 			-- Mark temporary variable `a_temp' as free.
 		require
 			a_temp_not_void: a_temp /= Void
@@ -28159,7 +28159,7 @@ feature {NONE} -- Temporary variables
 			a_temp_free: is_temp_variable_free (a_temp)
 		end
 
-	mark_temp_variable_frozen (a_temp: ET_IDENTIFIER) is
+	mark_temp_variable_frozen (a_temp: ET_IDENTIFIER)
 			-- Mark temporary variable `a_temp' as frozen.
 		require
 			a_temp_not_void: a_temp /= Void
@@ -28174,7 +28174,7 @@ feature {NONE} -- Temporary variables
 			a_temp_frozen_by_one_level: frozen_temp_variables.item (a_temp.seed) = old frozen_temp_variables.item (a_temp.seed) + 1
 		end
 
-	mark_temp_variable_unfrozen (a_temp: ET_IDENTIFIER) is
+	mark_temp_variable_unfrozen (a_temp: ET_IDENTIFIER)
 			-- Mark temporary variable `a_temp' as not frozen.
 		require
 			a_temp_not_void: a_temp /= Void
@@ -28189,7 +28189,7 @@ feature {NONE} -- Temporary variables
 			a_temp_unfrozen_by_one_level: frozen_temp_variables.item (a_temp.seed) = old frozen_temp_variables.item (a_temp.seed) - 1
 		end
 
-	mark_call_operands_frozen is
+	mark_call_operands_frozen
 			-- Mark temporary variables in `call_operands' as frozen.
 		local
 			i, nb: INTEGER
@@ -28205,7 +28205,7 @@ feature {NONE} -- Temporary variables
 			end
 		end
 
-	mark_call_operands_unfrozen is
+	mark_call_operands_unfrozen
 			-- Mark temporary variables in `call_operands' as unfrozen.
 		local
 			i, nb: INTEGER
@@ -28221,7 +28221,7 @@ feature {NONE} -- Temporary variables
 			end
 		end
 
-	mark_expressions_frozen (a_expressions: ET_EXPRESSIONS) is
+	mark_expressions_frozen (a_expressions: ET_EXPRESSIONS)
 			-- Mark temporary variables in `a_expressions' as frozen.
 		require
 			a_expressions_not_void: a_expressions /= Void
@@ -28239,7 +28239,7 @@ feature {NONE} -- Temporary variables
 			end
 		end
 
-	mark_expressions_unfrozen (a_expressions: ET_EXPRESSIONS) is
+	mark_expressions_unfrozen (a_expressions: ET_EXPRESSIONS)
 			-- Mark temporary variables in `a_expressions' as unfrozen.
 		require
 			a_expressions_not_void: a_expressions /= Void
@@ -28257,7 +28257,7 @@ feature {NONE} -- Temporary variables
 			end
 		end
 
-	reset_temp_variables is
+	reset_temp_variables
 			-- Reset temporary variables so that they can be used again in another function.
 		do
 			used_temp_variables.wipe_out
@@ -28282,7 +28282,7 @@ feature {NONE} -- Temporary variables (Implementation)
 			-- that we need to keep them in their current used/free state);
 			-- 0 means not frozen, N means that it was been frozen N times.
 
-	temp_variable: ET_IDENTIFIER is
+	temp_variable: ET_IDENTIFIER
 			-- Shared temporary variable, to be used in non-Eiffel features
 			-- such as 'GE_ms', 'GE_ma*' or 'main'.
 		once
@@ -28300,7 +28300,7 @@ feature {NONE} -- Temporary variables (Implementation)
 
 feature {NONE} -- Formal arguments
 
-	formal_argument (i: INTEGER): ET_IDENTIFIER is
+	formal_argument (i: INTEGER): ET_IDENTIFIER
 			-- Formal argument at index `i'
 			-- Note: to be used only in functions that are not the direct
 			-- translation of an Eiffel feature. Otherwise we should use
@@ -28344,7 +28344,7 @@ feature {NONE} -- Operand stack
 	call_operands: DS_ARRAYED_LIST [ET_EXPRESSION]
 			-- Operands of call being processed
 
-	fill_call_operands (nb: INTEGER) is
+	fill_call_operands (nb: INTEGER)
 			-- Fill `call_operands' with nb operands found in `operand_stack'.
 		require
 			nb_not_negative: nb >= 0
@@ -28386,7 +28386,7 @@ feature {NONE} -- Operand stack
 			filled: call_operands.count = nb
 		end
 
-	fill_call_formal_arguments (a_feature: ET_FEATURE) is
+	fill_call_formal_arguments (a_feature: ET_FEATURE)
 			-- Fill `call_operands' with 'Current' followed by the formal arguments of `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -28416,7 +28416,7 @@ feature {NONE} -- Operand stack
 
 feature {NONE} -- Tuple arguments in agent routines
 
-	new_agent_tuple_item_expression (i: INTEGER): ET_CALL_EXPRESSION is
+	new_agent_tuple_item_expression (i: INTEGER): ET_CALL_EXPRESSION
 			-- Expression to extract the `i'-th item of the tuple argument of an agent
 		require
 			i_large_enough: i >= 1
@@ -28502,7 +28502,7 @@ feature {NONE} -- Rescue clauses
 			-- (Can be either in the body or the rescue clause of the
 			-- current feature or inline agent.)
 
-	make_rescue_data is
+	make_rescue_data
 			-- Create data to determine the 'volatile' status of local variables
 			-- in features or inline agents with a rescue clause.
 		do
@@ -28518,7 +28518,7 @@ feature {NONE} -- Rescue clauses
 			locals_read := locals_read_in_body
 		end
 
-	reset_rescue_data is
+	reset_rescue_data
 			-- Reset data to determine the 'volatile' status of local variables
 			-- in features or inline agents with a rescue clause.
 		do
@@ -28537,7 +28537,7 @@ feature {NONE} -- Implementation
 	in_operand: BOOLEAN
 			-- Is an operand being processed?
 
-	in_target: BOOLEAN is
+	in_target: BOOLEAN
 			-- Is the target of a call being processed?
 		do
 			Result := (call_target_type /= Void)
@@ -28557,7 +28557,7 @@ feature {NONE} -- Implementation
 	assignment_target: ET_WRITABLE
 			-- Target of expression currently being processed, if any
 
-	same_declaration_types (a_type1, a_type2: ET_DYNAMIC_TYPE): BOOLEAN is
+	same_declaration_types (a_type1, a_type2: ET_DYNAMIC_TYPE): BOOLEAN
 			-- Do `a_type1' and `a_type2' have the same declaration type?
 		require
 			a_type1_not_void: a_type1 /= Void
@@ -28570,7 +28570,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	dummy_feature: ET_DYNAMIC_FEATURE is
+	dummy_feature: ET_DYNAMIC_FEATURE
 			-- Dummy feature
 		local
 			l_name: ET_FEATURE_NAME
@@ -28657,7 +28657,7 @@ feature {NONE} -- External regexp
 			-- \3: signature arguments
 			-- \5: signature result
 
-	make_external_regexps is
+	make_external_regexps
 			-- Create external regular expressions.
 		do
 				-- Regexp: C [blocking] [signature ["(" {<type> "," ...}* ")"] [":" <type>]] [use {<include> "," ...}+]
@@ -28720,148 +28720,148 @@ feature {NONE} -- External regexp
 
 feature {NONE} -- Constants
 
-	c_ac: STRING is "ac"
-	c_and_then: STRING is "&&"
-	c_arrow: STRING is "->"
-	c_break: STRING is "break"
-	c_case: STRING is "case"
-	c_char: STRING is "char"
-	c_default: STRING is "default"
-	c_define: STRING is "#define"
-	c_double: STRING is "double"
-	c_eif_any: STRING is "EIF_ANY"
-	c_eif_boolean: STRING is "EIF_BOOLEAN"
-	c_eif_boehm_gc: STRING is "EIF_BOEHM_GC"
-	c_eif_character: STRING is "EIF_CHARACTER"
-	c_eif_character_8: STRING is "EIF_CHARACTER_8"
-	c_eif_character_32: STRING is "EIF_CHARACTER_32"
-	c_eif_double: STRING is "EIF_DOUBLE"
-	c_eif_exception_trace: STRING is "EIF_EXCEPTION_TRACE"
-	c_eif_false: STRING is "EIF_FALSE"
-	c_eif_integer: STRING is "EIF_INTEGER"
-	c_eif_integer_8: STRING is "EIF_INTEGER_8"
-	c_eif_integer_16: STRING is "EIF_INTEGER_16"
-	c_eif_integer_32: STRING is "EIF_INTEGER_32"
-	c_eif_integer_64: STRING is "EIF_INTEGER_64"
-	c_eif_is_mac: STRING is "EIF_IS_MAC"
-	c_eif_is_unix: STRING is "EIF_IS_UNIX"
-	c_eif_is_vms: STRING is "EIF_IS_VMS"
-	c_eif_is_vxworks: STRING is "EIF_IS_VXWORKS"
-	c_eif_is_windows: STRING is "EIF_IS_WINDOWS"
-	c_eif_mem_free: STRING is "eif_mem_free"
-	c_eif_natural: STRING is "EIF_NATURAL"
-	c_eif_natural_8: STRING is "EIF_NATURAL_8"
-	c_eif_natural_16: STRING is "EIF_NATURAL_16"
-	c_eif_natural_32: STRING is "EIF_NATURAL_32"
-	c_eif_natural_64: STRING is "EIF_NATURAL_64"
-	c_eif_object: STRING is "EIF_OBJECT"
-	c_eif_pointer: STRING is "EIF_POINTER"
-	c_eif_real: STRING is "EIF_REAL"
-	c_eif_real_32: STRING is "EIF_REAL_32"
-	c_eif_real_64: STRING is "EIF_REAL_64"
-	c_eif_reference: STRING is "EIF_REFERENCE"
-	c_eif_test: STRING is "EIF_TEST"
-	c_eif_trace: STRING is "EIF_TRACE"
-	c_eif_true: STRING is "EIF_TRUE"
-	c_eif_type: STRING is "EIF_TYPE"
-	c_eif_void: STRING is "EIF_VOID"
-	c_eif_wide_char: STRING is "EIF_WIDE_CHAR"
-	c_eif_windows: STRING is "EIF_WINDOWS"
-	c_else: STRING is "else"
-	c_endif: STRING is "#endif"
-	c_equal: STRING is "=="
-	c_extern: STRING is "extern"
-	c_find_referers: STRING is "find_referers"
-	c_float: STRING is "float"
-	c_for: STRING is "for"
-	c_fprintf: STRING is "fprintf"
-	c_ge_alloc: STRING is "GE_alloc"
-	c_ge_alloc_atomic: STRING is "GE_alloc_atomic"
-	c_ge_alloc_cleared: STRING is "GE_alloc_cleared"
-	c_ge_alloc_atomic_cleared: STRING is "GE_alloc_atomic_cleared"
-	c_ge_argc: STRING is "GE_argc"
-	c_ge_argv: STRING is "GE_argv"
-	c_ge_bma: STRING is "GE_bma"
-	c_ge_boxed: STRING is "GE_boxed"
-	c_ge_call: STRING is "GE_call"
-	c_ge_catcall: STRING is "GE_catcall"
-	c_ge_ceiling: STRING is "GE_ceiling"
-	c_ge_const_init: STRING is "GE_const_init"
-	c_ge_deep: STRING is "GE_deep"
-	c_ge_deep_twin: STRING is "GE_deep_twin"
-	c_ge_default: STRING is "GE_default"
-	c_ge_dts: STRING is "GE_dts"
-	c_ge_floor: STRING is "GE_floor"
-	c_ge_id_object: STRING is "GE_id_object"
-	c_ge_int8: STRING is "GE_int8"
-	c_ge_int16: STRING is "GE_int16"
-	c_ge_int32: STRING is "GE_int32"
-	c_ge_int64: STRING is "GE_int64"
-	c_ge_ma: STRING is "GE_ma"
-	c_ge_ms8: STRING is "GE_ms8"
-	c_ge_ms32: STRING is "GE_ms32"
-	c_ge_mt: STRING is "GE_mt"
-	c_ge_nat8: STRING is "GE_nat8"
-	c_ge_nat16: STRING is "GE_nat16"
-	c_ge_nat32: STRING is "GE_nat32"
-	c_ge_nat64: STRING is "GE_nat64"
-	c_ge_new: STRING is "GE_new"
-	c_ge_object_id: STRING is "GE_object_id"
-	c_ge_object_id_free: STRING is "GE_object_id_free"
-	c_ge_power: STRING is "GE_power"
-	c_ge_raise: STRING is "GE_raise"
-	c_ge_register_dispose: STRING is "GE_register_dispose"
-	c_ge_rescue: STRING is "GE_rescue"
-	c_ge_retry: STRING is "GE_retry"
-	c_ge_setjmp: STRING is "GE_setjmp"
-	c_ge_show_console: STRING is "GE_show_console"
-	c_ge_types: STRING is "GE_types"
-	c_ge_void: STRING is "GE_void"
-	c_goto: STRING is "goto"
-	c_id: STRING is "id"
-	c_if: STRING is "if"
-	c_ifdef: STRING is "#ifdef"
-	c_ifndef: STRING is "#ifndef"
-	c_include: STRING is "#include"
-	c_initialize: STRING is "initialize"
-	c_int: STRING is "int"
-	c_int8_t: STRING is "int8_t"
-	c_int16_t: STRING is "int16_t"
-	c_int32_t: STRING is "int32_t"
-	c_int64_t: STRING is "int64_t"
-	c_is_special: STRING is "is_special"
-	c_memcmp: STRING is "memcmp"
-	c_memcpy: STRING is "memcpy"
-	c_memset: STRING is "memset"
-	c_not: STRING is "!"
-	c_not_equal: STRING is "!="
-	c_not_not: STRING is ""
-	c_or_else: STRING is "||"
-	c_return: STRING is "return"
-	c_sizeof: STRING is "sizeof"
-	c_stderr: STRING is "stderr"
-	c_struct: STRING is "struct"
-	c_switch: STRING is "switch"
-	c_tc: STRING is "tc"
-	c_tc_address: STRING is "&tc"
-	c_type_id: STRING is "type_id"
-	c_typedef: STRING is "typedef"
-	c_undef: STRING is "#undef"
-	c_unsigned: STRING is "unsigned"
-	c_void: STRING is "void"
-	c_volatile: STRING is "volatile"
-	c_while: STRING is "while"
+	c_ac: STRING = "ac"
+	c_and_then: STRING = "&&"
+	c_arrow: STRING = "->"
+	c_break: STRING = "break"
+	c_case: STRING = "case"
+	c_char: STRING = "char"
+	c_default: STRING = "default"
+	c_define: STRING = "#define"
+	c_double: STRING = "double"
+	c_eif_any: STRING = "EIF_ANY"
+	c_eif_boolean: STRING = "EIF_BOOLEAN"
+	c_eif_boehm_gc: STRING = "EIF_BOEHM_GC"
+	c_eif_character: STRING = "EIF_CHARACTER"
+	c_eif_character_8: STRING = "EIF_CHARACTER_8"
+	c_eif_character_32: STRING = "EIF_CHARACTER_32"
+	c_eif_double: STRING = "EIF_DOUBLE"
+	c_eif_exception_trace: STRING = "EIF_EXCEPTION_TRACE"
+	c_eif_false: STRING = "EIF_FALSE"
+	c_eif_integer: STRING = "EIF_INTEGER"
+	c_eif_integer_8: STRING = "EIF_INTEGER_8"
+	c_eif_integer_16: STRING = "EIF_INTEGER_16"
+	c_eif_integer_32: STRING = "EIF_INTEGER_32"
+	c_eif_integer_64: STRING = "EIF_INTEGER_64"
+	c_eif_is_mac: STRING = "EIF_IS_MAC"
+	c_eif_is_unix: STRING = "EIF_IS_UNIX"
+	c_eif_is_vms: STRING = "EIF_IS_VMS"
+	c_eif_is_vxworks: STRING = "EIF_IS_VXWORKS"
+	c_eif_is_windows: STRING = "EIF_IS_WINDOWS"
+	c_eif_mem_free: STRING = "eif_mem_free"
+	c_eif_natural: STRING = "EIF_NATURAL"
+	c_eif_natural_8: STRING = "EIF_NATURAL_8"
+	c_eif_natural_16: STRING = "EIF_NATURAL_16"
+	c_eif_natural_32: STRING = "EIF_NATURAL_32"
+	c_eif_natural_64: STRING = "EIF_NATURAL_64"
+	c_eif_object: STRING = "EIF_OBJECT"
+	c_eif_pointer: STRING = "EIF_POINTER"
+	c_eif_real: STRING = "EIF_REAL"
+	c_eif_real_32: STRING = "EIF_REAL_32"
+	c_eif_real_64: STRING = "EIF_REAL_64"
+	c_eif_reference: STRING = "EIF_REFERENCE"
+	c_eif_test: STRING = "EIF_TEST"
+	c_eif_trace: STRING = "EIF_TRACE"
+	c_eif_true: STRING = "EIF_TRUE"
+	c_eif_type: STRING = "EIF_TYPE"
+	c_eif_void: STRING = "EIF_VOID"
+	c_eif_wide_char: STRING = "EIF_WIDE_CHAR"
+	c_eif_windows: STRING = "EIF_WINDOWS"
+	c_else: STRING = "else"
+	c_endif: STRING = "#endif"
+	c_equal: STRING = "=="
+	c_extern: STRING = "extern"
+	c_find_referers: STRING = "find_referers"
+	c_float: STRING = "float"
+	c_for: STRING = "for"
+	c_fprintf: STRING = "fprintf"
+	c_ge_alloc: STRING = "GE_alloc"
+	c_ge_alloc_atomic: STRING = "GE_alloc_atomic"
+	c_ge_alloc_cleared: STRING = "GE_alloc_cleared"
+	c_ge_alloc_atomic_cleared: STRING = "GE_alloc_atomic_cleared"
+	c_ge_argc: STRING = "GE_argc"
+	c_ge_argv: STRING = "GE_argv"
+	c_ge_bma: STRING = "GE_bma"
+	c_ge_boxed: STRING = "GE_boxed"
+	c_ge_call: STRING = "GE_call"
+	c_ge_catcall: STRING = "GE_catcall"
+	c_ge_ceiling: STRING = "GE_ceiling"
+	c_ge_const_init: STRING = "GE_const_init"
+	c_ge_deep: STRING = "GE_deep"
+	c_ge_deep_twin: STRING = "GE_deep_twin"
+	c_ge_default: STRING = "GE_default"
+	c_ge_dts: STRING = "GE_dts"
+	c_ge_floor: STRING = "GE_floor"
+	c_ge_id_object: STRING = "GE_id_object"
+	c_ge_int8: STRING = "GE_int8"
+	c_ge_int16: STRING = "GE_int16"
+	c_ge_int32: STRING = "GE_int32"
+	c_ge_int64: STRING = "GE_int64"
+	c_ge_ma: STRING = "GE_ma"
+	c_ge_ms8: STRING = "GE_ms8"
+	c_ge_ms32: STRING = "GE_ms32"
+	c_ge_mt: STRING = "GE_mt"
+	c_ge_nat8: STRING = "GE_nat8"
+	c_ge_nat16: STRING = "GE_nat16"
+	c_ge_nat32: STRING = "GE_nat32"
+	c_ge_nat64: STRING = "GE_nat64"
+	c_ge_new: STRING = "GE_new"
+	c_ge_object_id: STRING = "GE_object_id"
+	c_ge_object_id_free: STRING = "GE_object_id_free"
+	c_ge_power: STRING = "GE_power"
+	c_ge_raise: STRING = "GE_raise"
+	c_ge_register_dispose: STRING = "GE_register_dispose"
+	c_ge_rescue: STRING = "GE_rescue"
+	c_ge_retry: STRING = "GE_retry"
+	c_ge_setjmp: STRING = "GE_setjmp"
+	c_ge_show_console: STRING = "GE_show_console"
+	c_ge_types: STRING = "GE_types"
+	c_ge_void: STRING = "GE_void"
+	c_goto: STRING = "goto"
+	c_id: STRING = "id"
+	c_if: STRING = "if"
+	c_ifdef: STRING = "#ifdef"
+	c_ifndef: STRING = "#ifndef"
+	c_include: STRING = "#include"
+	c_initialize: STRING = "initialize"
+	c_int: STRING = "int"
+	c_int8_t: STRING = "int8_t"
+	c_int16_t: STRING = "int16_t"
+	c_int32_t: STRING = "int32_t"
+	c_int64_t: STRING = "int64_t"
+	c_is_special: STRING = "is_special"
+	c_memcmp: STRING = "memcmp"
+	c_memcpy: STRING = "memcpy"
+	c_memset: STRING = "memset"
+	c_not: STRING = "!"
+	c_not_equal: STRING = "!="
+	c_not_not: STRING = ""
+	c_or_else: STRING = "||"
+	c_return: STRING = "return"
+	c_sizeof: STRING = "sizeof"
+	c_stderr: STRING = "stderr"
+	c_struct: STRING = "struct"
+	c_switch: STRING = "switch"
+	c_tc: STRING = "tc"
+	c_tc_address: STRING = "&tc"
+	c_type_id: STRING = "type_id"
+	c_typedef: STRING = "typedef"
+	c_undef: STRING = "#undef"
+	c_unsigned: STRING = "unsigned"
+	c_void: STRING = "void"
+	c_volatile: STRING = "volatile"
+	c_while: STRING = "while"
 			-- String constants
 
-	default_split_threshold: INTEGER is 1000000
+	default_split_threshold: INTEGER = 1000000
 			-- Default value for `split_threshold'
 
-	bat_file_extension: STRING is ".bat"
-	c_file_extension: STRING is ".c"
-	cfg_file_extension: STRING is ".cfg"
-	cpp_file_extension: STRING is ".cpp"
-	h_file_extension: STRING is ".h"
-	sh_file_extension: STRING is ".sh"
+	bat_file_extension: STRING = ".bat"
+	c_file_extension: STRING = ".c"
+	cfg_file_extension: STRING = ".cfg"
+	cpp_file_extension: STRING = ".cpp"
+	h_file_extension: STRING = ".h"
+	sh_file_extension: STRING = ".sh"
 			-- File extensions
 
 invariant

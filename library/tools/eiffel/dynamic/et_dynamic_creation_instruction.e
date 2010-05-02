@@ -26,7 +26,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_type_set: like source_type_set; a_creation: like creation_instruction;
-		a_current_feature: like current_feature; a_current_type: like current_type) is
+		a_current_feature: like current_feature; a_current_type: like current_type)
 			-- Create a new creation instruction.
 		require
 			a_type_set_not_void: a_type_set /= Void
@@ -50,13 +50,13 @@ feature -- Access
 	creation_instruction: ET_CREATION_INSTRUCTION
 			-- Creation instruction
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of attachment
 		do
 			Result := creation_instruction.target.position
 		end
 
-	description: STRING is "creation instruction"
+	description: STRING = "creation instruction"
 			-- Kind of attachment
 
 invariant

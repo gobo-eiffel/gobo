@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_filename: STRING) is
+	make (a_filename: STRING)
 			-- Create a new error reporting that file `a_filename'
 			-- does not contain an Xace document.
 		require
@@ -34,10 +34,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "'$1' is not an Xace file"
+	default_template: STRING = "'$1' is not an Xace file"
 			-- Default template used to built the error message
 
-	code: STRING is "XA0007"
+	code: STRING = "XA0007"
 			-- Error code
 
 invariant

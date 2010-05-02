@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize `Current' using current directory for base URI.
 		local
 			a_resolver_factory: XM_RESOLVER_FACTORY
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			well_known_uri_references.put_new (Xml_catalog_rng_1_0, Xml_catalog_rng_id_1_0)
 		end
 
-	make_with_base_uri (a_uri: UT_URI) is
+	make_with_base_uri (a_uri: UT_URI)
 			-- Initialize `Current' using `a_uri' for base URI.
 		require
 			a_uri_not_void: a_uri /= Void
@@ -75,31 +75,31 @@ feature -- Access
 	uri_scheme_resolver: XM_URI_EXTERNAL_RESOLVER
 			-- Resolver used for opening streams
 
-	Xml_catalog_xsd_id: STRING is "http://www.oasis-open.org/committees/entity/release/1.1/catalog.xsd"
+	Xml_catalog_xsd_id: STRING = "http://www.oasis-open.org/committees/entity/release/1.1/catalog.xsd"
 			-- URI of the latest W3C XML Schema for OASIS XML Catalog files
 
-	Xml_catalog_xsd_id_1_0: STRING is "http://www.oasis-open.org/committees/entity/release/1.0/catalog.xsd"
+	Xml_catalog_xsd_id_1_0: STRING = "http://www.oasis-open.org/committees/entity/release/1.0/catalog.xsd"
 			-- URI of the W3C XML Schema for OASIS XML Catalog files, version 1.0
 
-	Xml_catalog_rng_id: STRING is "http://www.oasis-open.org/committees/entity/release/1.1/catalog.rng"
+	Xml_catalog_rng_id: STRING = "http://www.oasis-open.org/committees/entity/release/1.1/catalog.rng"
 			-- URI of the RELAX NG Grammar for OASIS XML Catalog files
 
-	Xml_catalog_rng_id_1_0: STRING is "http://www.oasis-open.org/committees/entity/release/1.0/catalog.rng"
+	Xml_catalog_rng_id_1_0: STRING = "http://www.oasis-open.org/committees/entity/release/1.0/catalog.rng"
 			-- URI of the RELAX NG Grammar for OASIS XML Catalog files, version 1.0
 
-	Xml_catalog_public_id: STRING is "-//OASIS//DTD XML Catalogs V1.1//EN"
+	Xml_catalog_public_id: STRING = "-//OASIS//DTD XML Catalogs V1.1//EN"
 			-- Public identifier for OASIS XML Catalog files
 
-	Xml_catalog_public_id_1_0: STRING is "-//OASIS//DTD XML Catalogs V1.0//EN"
+	Xml_catalog_public_id_1_0: STRING = "-//OASIS//DTD XML Catalogs V1.0//EN"
 			-- Public identifier for OASIS XML Catalog files, version 1.0
 
-	Xml_catalog_system_id: STRING is "http://www.oasis-open.org/committees/entity/release/1.1/catalog.dtd"
+	Xml_catalog_system_id: STRING = "http://www.oasis-open.org/committees/entity/release/1.1/catalog.dtd"
 			-- System identifier for OASIS XML Catalog files
 
-	Xml_catalog_system_id_1_0: STRING is "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd"
+	Xml_catalog_system_id_1_0: STRING = "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd"
 			-- System identifier for OASIS XML Catalog files, version 1.0
 
-	Reserved_directory_path: STRING is
+	Reserved_directory_path: STRING
 			-- Path to directory containing latest schemas
 		once
 			Result := file_system.pathname ("${GOBO}", "misc")
@@ -108,7 +108,7 @@ feature -- Access
 			reserved_directory_path_not_void: Result /= Void
 		end
 
-	Xml_catalog_dtd: STRING is
+	Xml_catalog_dtd: STRING
 			-- OASIS XML Catalogs DTD
 		once
 			Result := "[
@@ -294,7 +294,7 @@ feature -- Access
 			xml_catalog_dtd_not_void: Result /= Void
 		end
 
-	Xml_catalog_dtd_1_0: STRING is
+	Xml_catalog_dtd_1_0: STRING
 			-- OASIS XML Catalogs DTD, version 1.09
 		once
 			Result := "[
@@ -455,7 +455,7 @@ feature -- Access
 			xml_catalog_dtd_not_void: Result /= Void
 		end
 
-	Xml_catalog_xsd: STRING is
+	Xml_catalog_xsd: STRING
 			-- OASIS XML Catalogs W3C schema
 		once
 			Result := "[
@@ -680,7 +680,7 @@ feature -- Access
 			xml_catalog_xsd_not_void: Result /= Void
 		end
 
-	Xml_catalog_xsd_1_0: STRING is
+	Xml_catalog_xsd_1_0: STRING
 			-- OASIS XML Catalogs W3C schema, version 1.0
 		once
 			Result := "[
@@ -876,7 +876,7 @@ feature -- Access
 			xml_catalog_xsd_not_void: Result /= Void
 		end
 
-	Xml_catalog_rng: STRING is
+	Xml_catalog_rng: STRING
 			-- Path to OASIS XML Catalogs RELAX NG grammar
 		once
 			Result := "[
@@ -1131,7 +1131,7 @@ feature -- Access
 			xml_catalog_rng_not_void: Result /= Void
 		end
 
-	Xml_catalog_rng_1_0: STRING is
+	Xml_catalog_rng_1_0: STRING
 			-- Path to OASIS XML Catalogs RELAX NG grammar, version 1.0
 		once
 			Result := "[
@@ -1389,7 +1389,7 @@ feature -- Access
 
 feature -- Action(s)
 
-	resolve (a_system: STRING) is
+	resolve (a_system: STRING)
 			-- Resolve a system identifier to an input stream
 			-- on behalf of an XML parser.
 		local
@@ -1416,7 +1416,7 @@ feature -- Action(s)
 			end
 		end
 
-	resolve_public (a_public: STRING; a_system: STRING) is
+	resolve_public (a_public: STRING; a_system: STRING)
 			-- Resolve a public/system identified pair to an input stream.
 			-- (Default implementation: resolve using system ID only.)
 		local
@@ -1446,7 +1446,7 @@ feature -- Action(s)
 			end
 		end
 
-	resolve_uri (a_uri_reference: STRING) is
+	resolve_uri (a_uri_reference: STRING)
 			-- Resolve `a_uri_reference' on behalf of an application.
 		local
 			a_system_id: STRING
@@ -1470,7 +1470,7 @@ feature -- Action(s)
 			create last_system_id.make (a_system_id)
 		end
 
-	resolve_finish is
+	resolve_finish
 		do
 			uri_scheme_resolver.resolve_finish
 		end
@@ -1480,13 +1480,13 @@ feature -- Result
 	last_stream: KI_CHARACTER_INPUT_STREAM
 			-- Last stream initialised from external entity.
 
-	has_error: BOOLEAN is
+	has_error: BOOLEAN
 			-- Did the last resolution attempt succeed?
 		do
 			Result := uri_scheme_resolver.has_error
 		end
 
-	last_error: STRING is
+	last_error: STRING
 			-- Last error message.
 		do
 			Result := uri_scheme_resolver.last_error
@@ -1498,13 +1498,13 @@ feature -- Result
 	last_system_id: UT_URI
 			-- System id used to actually open `last_uri_reference_stream'
 
-	has_uri_reference_error: BOOLEAN is
+	has_uri_reference_error: BOOLEAN
 			-- Did the last resolution attempt succeed?
 		do
 			Result := uri_scheme_resolver.has_error
 		end
 
-	last_uri_reference_error: STRING is
+	last_uri_reference_error: STRING
 			-- Last error message.
 		do
 			Result := uri_scheme_resolver.last_error

@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Use the singleton.
 		do
 			singleton.do_nothing

@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_1_0 is
+	make_1_0
 			-- Create with XML Schema 1.0 rules.
 		do
 			last_cached_date_string := ""
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			year_xero_is_not_valid: not is_year_zero_valid
 		end
 
-	make_1_1 is
+	make_1_1
 			-- Create with XML Schema 1.1 rules.
 		do
 			last_cached_date_string := ""
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_date (a_formatted_date: STRING): BOOLEAN is
+	is_date (a_formatted_date: STRING): BOOLEAN
 			-- Is `a_formatted_date' a valid date?
 		local
 			a_date: STRING
@@ -111,7 +111,7 @@ feature -- Access
 			date_cached: Result implies last_cached_date /= Void
 		end
 
-	is_zoned_date (a_formatted_date: STRING): BOOLEAN is
+	is_zoned_date (a_formatted_date: STRING): BOOLEAN
 			-- Is `a_formatted_date' a valid zoned date?
 		local
 			a_count: STRING
@@ -190,7 +190,7 @@ feature -- Access
 			date_cached: Result implies last_cached_zoned_date /= Void
 		end
 
-	is_date_time (a_formatted_date_time: STRING): BOOLEAN is
+	is_date_time (a_formatted_date_time: STRING): BOOLEAN
 			-- Is `a_formatted_date_time' a valid date-time?
 		local
 			a_splitter: ST_SPLITTER
@@ -240,7 +240,7 @@ feature -- Access
 			date_time_cached: Result implies last_cached_date_time /= Void
 		end
 
-	is_zoned_date_time (a_formatted_date_time: STRING): BOOLEAN is
+	is_zoned_date_time (a_formatted_date_time: STRING): BOOLEAN
 			-- Is `a_formatted_date_time' a valid zoned date-time?
 		local
 			a_count: STRING
@@ -317,7 +317,7 @@ feature -- Access
 			end
 		end
 
-	is_time (a_formatted_time: STRING): BOOLEAN is
+	is_time (a_formatted_time: STRING): BOOLEAN
 			-- Is `a_formatted_time' a valid time?
 		local
 			a_splitter: ST_SPLITTER
@@ -390,7 +390,7 @@ feature -- Access
 			time_cached: Result implies last_cached_time /= Void
 		end
 
-	is_zoned_time (a_formatted_time: STRING): BOOLEAN is
+	is_zoned_time (a_formatted_time: STRING): BOOLEAN
 			-- Is `a_formatted_time' a valid zoned time?
 		local
 			a_count: STRING
@@ -469,7 +469,7 @@ feature -- Access
 			time_cached: Result implies last_cached_zoned_time /= Void
 		end
 
-	is_year_month (a_formatted_date: STRING): BOOLEAN is
+	is_year_month (a_formatted_date: STRING): BOOLEAN
 			-- Is `a_formatted_date' a valid gYearMonth?
 		require
 			formatted_date_not_void: a_formatted_date /= Void
@@ -520,7 +520,7 @@ feature -- Access
 			year_month_cached: Result implies last_cached_date /= Void
 		end
 
-	is_zoned_year_month (a_formatted_date: STRING): BOOLEAN is
+	is_zoned_year_month (a_formatted_date: STRING): BOOLEAN
 			-- Is `a_formatted_date' a valid zoned gYearMonth?
 		local
 			a_count: STRING
@@ -599,7 +599,7 @@ feature -- Access
 			year_month_cached: Result implies last_cached_zoned_date /= Void
 		end
 
-	is_year (a_formatted_date: STRING): BOOLEAN is
+	is_year (a_formatted_date: STRING): BOOLEAN
 			-- Is `a_formatted_date' a valid gYear?
 		require
 			formatted_date_not_void: a_formatted_date /= Void
@@ -638,7 +638,7 @@ feature -- Access
 			year_cached: Result implies last_cached_date /= Void
 		end
 
-	is_zoned_year (a_formatted_date: STRING): BOOLEAN is
+	is_zoned_year (a_formatted_date: STRING): BOOLEAN
 			-- Is `a_formatted_date' a valid zoned gYear?
 		local
 			a_count: STRING
@@ -717,7 +717,7 @@ feature -- Access
 			year_cached: Result implies last_cached_zoned_date /= Void
 		end
 
-	is_month_day (a_formatted_date: STRING): BOOLEAN is
+	is_month_day (a_formatted_date: STRING): BOOLEAN
 			-- Is `a_formatted_date' a valid gMonthDay?
 		require
 			formatted_date_not_void: a_formatted_date /= Void
@@ -755,7 +755,7 @@ feature -- Access
 			month_day_cached: Result implies last_cached_date /= Void
 		end
 
-	is_zoned_month_day (a_formatted_date: STRING): BOOLEAN is
+	is_zoned_month_day (a_formatted_date: STRING): BOOLEAN
 			-- Is `a_formatted_date' a valid zoned gMonthDay?
 		local
 			a_count: STRING
@@ -834,7 +834,7 @@ feature -- Access
 			month_day_cached: Result implies last_cached_zoned_date /= Void
 		end
 
-	is_day (a_formatted_date: STRING): BOOLEAN is
+	is_day (a_formatted_date: STRING): BOOLEAN
 			-- Is `a_formatted_date' a valid gDay?
 		require
 			formatted_date_not_void: a_formatted_date /= Void
@@ -868,7 +868,7 @@ feature -- Access
 			day_cached: Result implies last_cached_date /= Void
 		end
 
-	is_zoned_day (a_formatted_date: STRING): BOOLEAN is
+	is_zoned_day (a_formatted_date: STRING): BOOLEAN
 			-- Is `a_formatted_date' a valid zoned gDay?
 		local
 			a_count: STRING
@@ -947,7 +947,7 @@ feature -- Access
 			day_cached: Result implies last_cached_zoned_date /= Void
 		end
 
-	is_month (a_formatted_date: STRING): BOOLEAN is
+	is_month (a_formatted_date: STRING): BOOLEAN
 			-- Is `a_formatted_date' a valid gMonth?
 		require
 			formatted_date_not_void: a_formatted_date /= Void
@@ -980,7 +980,7 @@ feature -- Access
 			month_cached: Result implies last_cached_date /= Void
 		end
 
-	is_zoned_month (a_formatted_date: STRING): BOOLEAN is
+	is_zoned_month (a_formatted_date: STRING): BOOLEAN
 			-- Is `a_formatted_date' a valid zoned gMonth?
 		local
 			a_count: STRING
@@ -1066,7 +1066,7 @@ feature -- Status_report
 
 feature -- Conversion
 
-	string_to_date (a_formatted_date: STRING): DT_DATE is
+	string_to_date (a_formatted_date: STRING): DT_DATE
 			-- Parsed date from `a_formatted_date'
 		local
 			valid: BOOLEAN
@@ -1094,7 +1094,7 @@ feature -- Conversion
 			Result := l_date
 		end
 
-	string_to_zoned_date (a_formatted_date: STRING): DT_FIXED_OFFSET_ZONED_DATE is
+	string_to_zoned_date (a_formatted_date: STRING): DT_FIXED_OFFSET_ZONED_DATE
 			-- Parsed date from `a_formatted_date'
 		local
 			valid: BOOLEAN
@@ -1122,7 +1122,7 @@ feature -- Conversion
 			Result := l_date
 		end
 
-	string_to_date_time (a_formatted_date_time: STRING): DT_DATE_TIME is
+	string_to_date_time (a_formatted_date_time: STRING): DT_DATE_TIME
 			-- Parsed date-time from `a_formatted_date_time'
 		local
 			valid: BOOLEAN
@@ -1150,7 +1150,7 @@ feature -- Conversion
 			Result := l_date_time
 		end
 
-	string_to_zoned_date_time (a_formatted_date_time: STRING): DT_FIXED_OFFSET_ZONED_DATE_TIME is
+	string_to_zoned_date_time (a_formatted_date_time: STRING): DT_FIXED_OFFSET_ZONED_DATE_TIME
 			-- Parsed date-time from `a_formatted_date_time'
 		local
 			valid: BOOLEAN
@@ -1178,7 +1178,7 @@ feature -- Conversion
 			Result := l_date_time
 		end
 
-	string_to_time (a_formatted_time: STRING): DT_TIME is
+	string_to_time (a_formatted_time: STRING): DT_TIME
 			-- Parsed time from `a_formatted_time'
 		local
 			valid: BOOLEAN
@@ -1206,7 +1206,7 @@ feature -- Conversion
 			Result := l_time
 		end
 
-	string_to_zoned_time (a_formatted_time: STRING): DT_FIXED_OFFSET_ZONED_TIME is
+	string_to_zoned_time (a_formatted_time: STRING): DT_FIXED_OFFSET_ZONED_TIME
 			-- Parsed time from `a_formatted_time'
 		local
 			valid: BOOLEAN
@@ -1234,7 +1234,7 @@ feature -- Conversion
 			Result := l_time
 		end
 
-	string_to_year_month (a_formatted_date: STRING): DT_DATE is
+	string_to_year_month (a_formatted_date: STRING): DT_DATE
 			-- Parsed gYearMonth from `a_formatted_date'
 		require
 			formatted_date_not_void: a_formatted_date /= Void
@@ -1269,7 +1269,7 @@ feature -- Conversion
 			day_is_one: Result.day = 1
 		end
 
-	string_to_zoned_year_month (a_formatted_date: STRING): DT_FIXED_OFFSET_ZONED_DATE is
+	string_to_zoned_year_month (a_formatted_date: STRING): DT_FIXED_OFFSET_ZONED_DATE
 			-- Parsed gYearMonth from `a_formatted_date'
 		require
 			formatted_date_not_void: a_formatted_date /= Void
@@ -1303,7 +1303,7 @@ feature -- Conversion
 			zoned_year_month_not_void: Result /= Void
 		end
 
-	string_to_year (a_formatted_date: STRING): DT_DATE is
+	string_to_year (a_formatted_date: STRING): DT_DATE
 			-- Parsed gYear from `a_formatted_date'
 		require
 			formatted_date_not_void: a_formatted_date /= Void
@@ -1339,7 +1339,7 @@ feature -- Conversion
 			day_is_one: Result.day = 1
 		end
 
-	string_to_zoned_year (a_formatted_date: STRING): DT_FIXED_OFFSET_ZONED_DATE is
+	string_to_zoned_year (a_formatted_date: STRING): DT_FIXED_OFFSET_ZONED_DATE
 			-- Parsed gYear from `a_formatted_date'
 		require
 			formatted_date_not_void: a_formatted_date /= Void
@@ -1373,7 +1373,7 @@ feature -- Conversion
 			zoned_year_not_void: Result /= Void
 		end
 
-	string_to_month_day (a_formatted_date: STRING): DT_DATE is
+	string_to_month_day (a_formatted_date: STRING): DT_DATE
 			-- Parsed gMonthDay from `a_formatted_date'
 		require
 			formatted_date_not_void: a_formatted_date /= Void
@@ -1408,7 +1408,7 @@ feature -- Conversion
 			year_is_one: Result.year = 1
 		end
 
-	string_to_zoned_month_day (a_formatted_date: STRING): DT_FIXED_OFFSET_ZONED_DATE is
+	string_to_zoned_month_day (a_formatted_date: STRING): DT_FIXED_OFFSET_ZONED_DATE
 			-- Parsed gMonthDay from `a_formatted_date'
 		require
 			formatted_date_not_void: a_formatted_date /= Void
@@ -1442,7 +1442,7 @@ feature -- Conversion
 			zoned_month_day_not_void: Result /= Void
 		end
 
-	string_to_day (a_formatted_date: STRING): DT_DATE is
+	string_to_day (a_formatted_date: STRING): DT_DATE
 			-- Parsed gDay from `a_formatted_date'
 		require
 			formatted_date_not_void: a_formatted_date /= Void
@@ -1478,7 +1478,7 @@ feature -- Conversion
 			month_is_one: Result.month = 1
 		end
 
-	string_to_zoned_day (a_formatted_date: STRING): DT_FIXED_OFFSET_ZONED_DATE is
+	string_to_zoned_day (a_formatted_date: STRING): DT_FIXED_OFFSET_ZONED_DATE
 			-- Parsed gMonthDay from `a_formatted_date'
 		require
 			formatted_date_not_void: a_formatted_date /= Void
@@ -1512,7 +1512,7 @@ feature -- Conversion
 			zoned_day_not_void: Result /= Void
 		end
 
-	string_to_month (a_formatted_date: STRING): DT_DATE is
+	string_to_month (a_formatted_date: STRING): DT_DATE
 			-- Parsed gMonth from `a_formatted_date'
 		require
 			formatted_date_not_void: a_formatted_date /= Void
@@ -1548,7 +1548,7 @@ feature -- Conversion
 			day_is_one: Result.day = 1
 		end
 
-	string_to_zoned_month (a_formatted_date: STRING): DT_FIXED_OFFSET_ZONED_DATE is
+	string_to_zoned_month (a_formatted_date: STRING): DT_FIXED_OFFSET_ZONED_DATE
 			-- Parsed gMonthMonth from `a_formatted_date'
 		require
 			formatted_date_not_void: a_formatted_date /= Void
@@ -1623,7 +1623,7 @@ feature {NONE} -- Implementation
 	last_cached_zoned_date_time: detachable DT_FIXED_OFFSET_ZONED_DATE_TIME
 			-- Last time validated by `is_zoned_date_time'
 
-	year_ok (a_year: STRING; is_negative: BOOLEAN): DS_PAIR [BOOLEAN, INTEGER] is
+	year_ok (a_year: STRING; is_negative: BOOLEAN): DS_PAIR [BOOLEAN, INTEGER]
 			-- Validated year number (0 = 1 BCE, -1 = 2 BCE etc.);
 			-- Note: `a_year' may be altered.
 		require
@@ -1659,7 +1659,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	month_ok (a_month: STRING): INTEGER is
+	month_ok (a_month: STRING): INTEGER
 			-- Validated month number, or zero;
 			-- Note: `a_month' may be altered.
 		require
@@ -1684,7 +1684,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	day_ok (a_day: STRING): INTEGER is
+	day_ok (a_day: STRING): INTEGER
 			-- Validated day number, or zero;
 			-- Note: `a_day' may be altered.
 		require
@@ -1709,7 +1709,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	milliseconds (some_milliseconds: STRING): INTEGER is
+	milliseconds (some_milliseconds: STRING): INTEGER
 			-- Number of milliseconds in `some_millseconds',
 			-- Note: `some_milliseconds' may be altered.
 		require

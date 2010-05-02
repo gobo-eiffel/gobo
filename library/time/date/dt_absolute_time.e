@@ -25,7 +25,7 @@ inherit
 
 feature -- Access
 
-	minus alias "-" (other: like Current): like duration is
+	minus alias "-" (other: like Current): like duration
 			-- Duration between `other' and `Current'
 		require
 			other_not_void: other /= Void
@@ -36,7 +36,7 @@ feature -- Access
 			definition: (other + Result).is_equal (Current)
 		end
 
-	plus alias "+" (a_duration: like duration): like Current is
+	plus alias "+" (a_duration: like duration): like Current
 			-- Addition of `a_duration' to `Current'
 			-- (Create a new object at each call.)
 		require
@@ -48,7 +48,7 @@ feature -- Access
 			addition_not_void: Result /= Void
 		end
 
-	duration (other: like Current): DT_DURATION is
+	duration (other: like Current): DT_DURATION
 			-- Duration between `other' and `Current'
 		require
 			other_not_void: other /= Void
@@ -60,7 +60,7 @@ feature -- Access
 
 feature -- Element change
 
-	add_duration (a_duration: like duration) is
+	add_duration (a_duration: like duration)
 			-- Add `a_duration' to `Current'.
 		require
 			a_duration_not_void: a_duration /= Void

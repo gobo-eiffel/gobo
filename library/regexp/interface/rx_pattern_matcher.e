@@ -23,7 +23,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new pattern matcher.
 		deferred
 		ensure
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Compilation
 
-	compile (a_pattern: STRING) is
+	compile (a_pattern: STRING)
 			-- Compile `a_pattern'. Set `is_compiled'
 			-- to True after successful compilation.
 		require
@@ -49,7 +49,7 @@ feature -- Compilation
 
 feature -- Resetting
 
-	reset is
+	reset
 			-- Reset the pattern.
 		deferred
 		ensure
@@ -59,7 +59,7 @@ feature -- Resetting
 			not_matching: not is_matching
 		end
 
-	wipe_out is
+	wipe_out
 			-- Get rid of last match.
 		do
 			match_count := 0
@@ -73,21 +73,21 @@ feature -- Resetting
 
 feature -- Status report
 
-	is_compiled: BOOLEAN is
+	is_compiled: BOOLEAN
 			-- Has pattern been sucessfully compiled?
 		deferred
 		ensure
 			pattern_not_void: Result implies pattern /= Void
 		end
 
-	is_matching: BOOLEAN is
+	is_matching: BOOLEAN
 			-- Have matching routines already been called?
 			-- (i.e. is there a subject available?)
 		do
 			Result := subject /= no_subject
 		end
 
-	has_matched: BOOLEAN is
+	has_matched: BOOLEAN
 			-- Was the last match attempt successful?
 		do
 			Result := match_count > 0
@@ -95,7 +95,7 @@ feature -- Status report
 			definition: Result = (match_count > 0)
 		end
 
-	is_captured_substring_defined (n: INTEGER): BOOLEAN is
+	is_captured_substring_defined (n: INTEGER): BOOLEAN
 			-- Is the `n'-th captured substring defined?
 			-- 'n = 0' represents the whole matched string.
 		require
@@ -108,7 +108,7 @@ feature -- Status report
 			captured_substring_empty: not Result implies is_captured_substring_empty (n)
 		end
 
-	is_captured_substring_empty (n: INTEGER): BOOLEAN is
+	is_captured_substring_empty (n: INTEGER): BOOLEAN
 			-- Is the `n'-th captured substring empty?
 			-- 'n = 0' represents the whole matched string.
 		require
@@ -119,7 +119,7 @@ feature -- Status report
 			Result := captured_start_position (n) > captured_end_position (n)
 		end
 
-	matches (a_subject: STRING): BOOLEAN is
+	matches (a_subject: STRING): BOOLEAN
 			-- Does `a_subject' include a token of the language
 			-- described by current pattern?
 		require
@@ -135,7 +135,7 @@ feature -- Status report
 			subject_end_set: subject_end = a_subject.count
 		end
 
-	recognizes (a_subject: STRING): BOOLEAN is
+	recognizes (a_subject: STRING): BOOLEAN
 			-- Is `a_subject' a token of the language
 			-- described by current pattern?
 		require
@@ -156,7 +156,7 @@ feature -- Status report
 
 feature -- Access
 
-	pattern: STRING is
+	pattern: STRING
 			-- Pattern being matched
 		deferred
 		end
@@ -176,7 +176,7 @@ feature -- Access
 			-- Number of matched pattern and subpatterns;
 			-- Result > 1 implies that captured substrings have been matched
 
-	captured_start_position (n: INTEGER): INTEGER is
+	captured_start_position (n: INTEGER): INTEGER
 			-- Start position of the `n'-th captured substring;
 			-- 'n = 0' represents the whole matched string.
 			-- Return 0 if undefined captured substring.
@@ -191,7 +191,7 @@ feature -- Access
 			position_small_enough: (Result <= subject_end) or (Result = subject_end + 1 and captured_end_position (n) = subject_end)
 		end
 
-	captured_end_position (n: INTEGER): INTEGER is
+	captured_end_position (n: INTEGER): INTEGER
 			-- End position of the `n'-th captured substring;
 			-- 'n = 0' represents the whole matched string.
 			-- Return -1 if undefined captured substring.
@@ -205,7 +205,7 @@ feature -- Access
 			position_small_enough: Result <= subject_end
 		end
 
-	captured_substring_count (n: INTEGER): INTEGER is
+	captured_substring_count (n: INTEGER): INTEGER
 			-- Size of `n'-th captured substring;
 			-- 'n = 0' represents the whole matched string.
 		require
@@ -226,7 +226,7 @@ feature -- Access
 			count_not_negative: Result >= 0
 		end
 
-	captured_substring (n: INTEGER): STRING is
+	captured_substring (n: INTEGER): STRING
 			-- `n'-th captured substring;
 			-- 'n = 0' represents the whole matched string.
 		require
@@ -250,7 +250,7 @@ feature -- Access
 
 feature -- Element change
 
-	append_captured_substring_to_string (a_string: STRING; n: INTEGER) is
+	append_captured_substring_to_string (a_string: STRING; n: INTEGER)
 			-- Append `n'-th captured substring to `a_string';
 			-- 'n = 0' represents the whole matched string.
 		require
@@ -271,7 +271,7 @@ feature -- Element change
 
 feature -- Matching
 
-	match (a_subject: STRING) is
+	match (a_subject: STRING)
 			-- Try to match `a_subject' with the current pattern.
 			-- Make result available in `has_matched' and the various
 			-- `*_captured_*' features.
@@ -287,7 +287,7 @@ feature -- Matching
 			subject_end_set: subject_end = a_subject.count
 		end
 
-	match_substring (a_subject: STRING; a_from, a_to: INTEGER) is
+	match_substring (a_subject: STRING; a_from, a_to: INTEGER)
 			-- Try to match the substring of `a_subject' between
 			-- positions `a_from' and `a_to' with the current pattern.
 			-- Make result available in `has_matched' and the various
@@ -306,7 +306,7 @@ feature -- Matching
 			subject_end_set: subject_end = a_to
 		end
 
-	match_unbounded_substring (a_subject: STRING; a_from, a_to: INTEGER) is
+	match_unbounded_substring (a_subject: STRING; a_from, a_to: INTEGER)
 			-- Try to match the substring of `a_subject' between
 			-- positions `a_from' and `a_to' with the current pattern.
 			-- Make result available in `has_matched' and the various
@@ -330,7 +330,7 @@ feature -- Matching
 
 feature -- Multiple matching
 
-	match_strings (an_input: DS_LINEAR [STRING]; an_output: DS_EXTENDIBLE [STRING]) is
+	match_strings (an_input: DS_LINEAR [STRING]; an_output: DS_EXTENDIBLE [STRING])
 			-- Put in `an_output' all strings of `an_input' that include
 			-- a token of the language described by current pattern.
 			-- (Strings are inserted in `an_output' in the same order
@@ -359,7 +359,7 @@ feature -- Multiple matching
 			end
 		end
 
-	recognize_strings (an_input: DS_LINEAR [STRING]; an_output: DS_EXTENDIBLE [STRING]) is
+	recognize_strings (an_input: DS_LINEAR [STRING]; an_output: DS_EXTENDIBLE [STRING])
 			-- Put in `an_output' all strings of `an_input' that are
 			-- tokens of the language described by current pattern.
 			-- (Strings are inserted in `an_output' in the same order
@@ -390,7 +390,7 @@ feature -- Multiple matching
 
 feature {NONE} -- Implementation
 
-	no_subject: STRING is ""
+	no_subject: STRING = ""
 			-- No subject marker
 
 invariant

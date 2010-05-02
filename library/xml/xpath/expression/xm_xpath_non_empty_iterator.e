@@ -37,7 +37,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_iterator: like base_iterator; a_role_locator: like role_locator; a_required_cardinality: INTEGER) is
+	make (a_iterator: like base_iterator; a_role_locator: like role_locator; a_required_cardinality: INTEGER)
 			-- Initialize `Current'.
 		require
 			a_iterator_not_void: a_iterator /= Void
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 
 	feature -- Access
 
-	item: XM_XPATH_ITEM is
+	item: XM_XPATH_ITEM
 			-- Value or node at the current position
 		do
 			Result := base_iterator.item
@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
 			Result := base_iterator.after
@@ -72,7 +72,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Move to first position
 		local
 			l_error: XM_XPATH_ERROR_VALUE
@@ -87,8 +87,8 @@ feature -- Cursor movement
 				set_last_error (l_error)
 			end
 		end
-			
-	forth is
+
+	forth
 			-- Move to next position
 		do
 			index := index + 1
@@ -97,7 +97,7 @@ feature -- Cursor movement
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original;
 			-- The new iterator will be repositioned at the start of the sequence
 		do
@@ -105,7 +105,7 @@ feature -- Duplication
 		end
 
 feature {NONE} -- Implementation
-	
+
 	base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			-- Base sequence
 
@@ -122,4 +122,4 @@ invariant
 	valid_cardinality_request: is_valid_required_cardinality (required_cardinality)
 
 end
-	
+

@@ -15,7 +15,7 @@ class KL_SHARED_EIFFEL_COMPILER
 
 feature -- Acess
 
-	eiffel_compiler: KL_EIFFEL_COMPILER is
+	eiffel_compiler: KL_EIFFEL_COMPILER
 			-- Eiffel compiler used to compile this program
 		once
 			create Result

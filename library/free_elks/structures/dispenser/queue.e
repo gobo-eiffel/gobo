@@ -1,7 +1,7 @@
 note
 
 	description: "[
-		Queues (first-in, first-out dispensers), without commitment 
+		Queues (first-in, first-out dispensers), without commitment
 		to a particular representation
 		]"
 	legal: "See notice at end of class."

@@ -27,14 +27,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new class parent list.
 		do
 			inherit_keyword := tokens.inherit_keyword
 			precursor
 		end
 
-	make_with_capacity (nb: INTEGER) is
+	make_with_capacity (nb: INTEGER)
 			-- Create a new class parent list with capacity `nb'.
 		do
 			inherit_keyword := tokens.inherit_keyword
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset convert parents as they were when they were last parsed.
 		local
 			i, nb: INTEGER
@@ -57,7 +57,7 @@ feature -- Initialization
 
 feature -- Access
 
-	parent (i: INTEGER): ET_PARENT is
+	parent (i: INTEGER): ET_PARENT
 			-- Class parent at index `i' in list
 		require
 			i_large_enough: i >= 1
@@ -71,7 +71,7 @@ feature -- Access
 	inherit_keyword: ET_KEYWORD
 			-- 'inherit' keyword
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -81,13 +81,13 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := inherit_keyword
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			if is_empty then
@@ -97,7 +97,7 @@ feature -- Access
 			end
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			if is_empty then
@@ -109,7 +109,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_inherit_keyword (an_inherit: like inherit_keyword) is
+	set_inherit_keyword (an_inherit: like inherit_keyword)
 			-- Set `inherit_keyword' to `an_inherit'.
 		require
 			an_inherit_not_void: an_inherit /= Void
@@ -121,7 +121,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_parent_list (Current)
@@ -129,7 +129,7 @@ feature -- Processing
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_PARENT_ITEM] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_PARENT_ITEM]
 			-- Fixed array routines
 		once
 			create Result

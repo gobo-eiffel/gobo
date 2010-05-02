@@ -25,7 +25,7 @@ create
 
 feature -- Status report
 
-	is_executable : BOOLEAN is
+	is_executable : BOOLEAN
 			-- Can command be executed?
 		do
 			Result := (name /= Void and then name.count > 0) and value /= Void
@@ -45,7 +45,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_name (a_name: like name) is
+	set_name (a_name: like name)
 			-- Set `name' to `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -56,7 +56,7 @@ feature -- Setting
 			name_set: name = a_name
 		end
 
-	set_value (a_value: like value) is
+	set_value (a_value: like value)
 			-- Set `value' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -68,7 +68,7 @@ feature -- Setting
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Put variable in project variables pool.
 		do
 			project.trace (<<"  [setenv] ", name, "=", value>>)

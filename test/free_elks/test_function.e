@@ -24,7 +24,7 @@ create
 
 feature -- Test
 
-	test_item_qualified1 is
+	test_item_qualified1
 			-- Test feature 'item' with a closed qualified target.
 		local
 			a: ARRAY [CHARACTER]
@@ -62,7 +62,7 @@ feature -- Test
 			assert_characters_equal ("item7", 'h', p3.item ([5, "gobo"]))
 		end
 
-	test_item_qualified2 is
+	test_item_qualified2
 			-- Test feature 'item' with a closed qualified target,
 			-- calling builtin features.
 		local
@@ -101,7 +101,7 @@ feature -- Test
 			assert_characters_equal ("item7", 'h', p3.item ([5, "gobo"]))
 		end
 
-	test_item_qualified3 is
+	test_item_qualified3
 			-- Test feature 'item' with a closed qualified target
 			-- which can be polymorphic.
 		local
@@ -194,7 +194,7 @@ feature -- Test
 			assert_equal ("item9c", "gobo", p4.item ([1, 'd']))
 		end
 
-	test_item_labeled_tuple1 is
+	test_item_labeled_tuple1
 			-- Test feature 'item' with a closed qualified target
 			-- which appears to be a labeled tuple.
 		local
@@ -244,7 +244,7 @@ feature -- Test
 			assert_characters_equal ("item10", 'h', p4.item ([t2, "gobo"]))
 		end
 
-	test_item_typed1 is
+	test_item_typed1
 			-- Test feature 'item' with an open target.
 		local
 			a: ARRAY [CHARACTER]
@@ -278,7 +278,7 @@ feature -- Test
 			assert_characters_equal ("item6", 'f', p3.item ([a, 5, "gobo"]))
 		end
 
-	test_item_typed2 is
+	test_item_typed2
 			-- Test feature 'item' with an open target,
 			-- calling builtin features.
 		local
@@ -313,7 +313,7 @@ feature -- Test
 			assert_characters_equal ("item6", 'f', p3.item ([a, 5, "gobo"]))
 		end
 
-	test_item_typed3 is
+	test_item_typed3
 			-- Test feature 'item' with an open target,
 			-- which can be polymorphic.
 		local
@@ -370,7 +370,7 @@ feature -- Test
 			assert_characters_equal ("item6b", 'e', p3.item ([a, 5, "gobo"]))
 		end
 
-	test_item_unqualified1 is
+	test_item_unqualified1
 			-- Test feature 'item' with a closed unqualified target.
 		local
 			a: ARRAY [CHARACTER]
@@ -413,7 +413,7 @@ feature -- Test
 			assert_characters_equal ("item8", 'f', p4.item ([5, "gobo"]))
 		end
 
-	test_item_attribute1 is
+	test_item_attribute1
 			-- Test feature 'item' with an agent on attribute.
 		local
 			s: STRING
@@ -434,7 +434,7 @@ feature -- Test
 			assert_integers_equal ("item3", 10, p3.item ([]))
 		end
 
-	test_item_do_function_inline_agent1 is
+	test_item_do_function_inline_agent1
 			-- Test feature 'item' with an inline agent with a do-function as associated feature.
 		local
 			s: STRING
@@ -450,7 +450,7 @@ feature -- Test
 			assert_integers_equal ("item2", 6, p2.item ([2]))
 		end
 
-	test_call_qualified1 is
+	test_call_qualified1
 			-- Test feature 'call' with a closed qualified target.
 		local
 			a: ARRAY [CHARACTER]
@@ -495,7 +495,7 @@ feature -- Test
 			assert_characters_equal ("last_result7", 'h', p3.last_result)
 		end
 
-	test_call_qualified2 is
+	test_call_qualified2
 			-- Test feature 'call' with a closed qualified target,
 			-- calling builtin features.
 		local
@@ -541,7 +541,7 @@ feature -- Test
 			assert_characters_equal ("last_result7", 'h', p3.last_result)
 		end
 
-	test_call_qualified3 is
+	test_call_qualified3
 			-- Test feature 'call' with a closed qualified target
 			-- which can be polymorphic.
 		local
@@ -620,7 +620,7 @@ feature -- Test
 			assert_characters_equal ("last_result7b", 'j', p3.last_result)
 		end
 
-	test_call_labeled_tuple1 is
+	test_call_labeled_tuple1
 			-- Test feature 'call' with a closed qualified target
 			-- which appears to be a labeled tuple.
 		local
@@ -680,7 +680,7 @@ feature -- Test
 			assert_characters_equal ("last_result10", 'h', p4.last_result)
 		end
 
-	test_call_typed1 is
+	test_call_typed1
 			-- Test feature 'call' with an open target.
 		local
 			a: ARRAY [CHARACTER]
@@ -720,7 +720,7 @@ feature -- Test
 			assert_characters_equal ("last_result6", 'f', p3.last_result)
 		end
 
-	test_call_typed2 is
+	test_call_typed2
 			-- Test feature 'call' with an open target,
 			-- calling builtin features.
 		local
@@ -761,7 +761,7 @@ feature -- Test
 			assert_characters_equal ("last_result6", 'f', p3.last_result)
 		end
 
-	test_call_typed3 is
+	test_call_typed3
 			-- Test feature 'call' with an open target,
 			-- which can be polymorphic.
 		local
@@ -830,7 +830,7 @@ feature -- Test
 			assert_characters_equal ("last_result6b", 'e', p3.last_result)
 		end
 
-	test_call_unqualified1 is
+	test_call_unqualified1
 			-- Test feature 'call' with a closed unqualified target.
 		local
 			a: ARRAY [CHARACTER]
@@ -881,7 +881,7 @@ feature -- Test
 			assert_characters_equal ("last_result8", 'f', p4.last_result)
 		end
 
-	test_call_attribute1 is
+	test_call_attribute1
 			-- Test feature 'call' with an agent on attribute.
 		local
 			s: STRING
@@ -905,7 +905,7 @@ feature -- Test
 			assert_integers_equal ("last_result3", 13, p3.last_result)
 		end
 
-	test_is_target_closed is
+	test_is_target_closed
 			-- Test feature 'is_target_closed'.
 		local
 			s: STRING
@@ -919,7 +919,7 @@ feature -- Test
 			assert ("is_closed", p2.is_target_closed)
 		end
 
-	test_set_target is
+	test_set_target
 			-- Test feature 'set_target'.
 		local
 			s1, s2: STRING
@@ -936,7 +936,7 @@ feature -- Test
 			end
 		end
 
-	test_boxed_operands is
+	test_boxed_operands
 			-- Test that the access to the items of the tuple argument
 			-- of 'item' is correctly done, with boxing of expanded
 			-- objects to reference when necessary.
@@ -970,7 +970,7 @@ feature -- Test
 			end
 		end
 
-	test_boxed_result is
+	test_boxed_result
 			-- Test that the access to the items of the tuple argument
 			-- of 'item' is correctly done, with boxing of expanded
 			-- objects to reference when necessary.
@@ -992,7 +992,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	f (a: ARRAY [CHARACTER]; i: INTEGER): CHARACTER is
+	f (a: ARRAY [CHARACTER]; i: INTEGER): CHARACTER
 			-- Item at index `i' in `a'
 		require
 			a_not_void: a /= Void
@@ -1003,7 +1003,7 @@ feature {NONE} -- Implementation
 			definition: Result = a.item (i)
 		end
 
-	g (a: ANY; i: INTEGER): BOOLEAN is
+	g (a: ANY; i: INTEGER): BOOLEAN
 			-- Do `a' and `i' have the same `out' object?
 		require
 			a_not_void: a /= Void
@@ -1011,7 +1011,7 @@ feature {NONE} -- Implementation
 			Result := a.out = i.out
 		end
 
-	h (a: ANY; i: ANY): BOOLEAN is
+	h (a: ANY; i: ANY): BOOLEAN
 			-- Do `a' and `i' have the same `out' object?
 		require
 			a_not_void: a /= Void

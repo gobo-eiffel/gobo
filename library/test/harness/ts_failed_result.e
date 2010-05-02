@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_test: like test; a_reason: like reason) is
+	make (a_test: like test; a_reason: like reason)
 			-- Create a new failed result associated with `a_test'.
 		require
 			a_test_not_void: a_test /= Void
@@ -45,12 +45,12 @@ feature -- Access
 
 feature -- Status report
 
-	failed: BOOLEAN is True
+	failed: BOOLEAN = True
 			-- Has `test' failed?
 
 feature -- Output
 
-	print_result (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_result (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print result to `a_file'.
 		do
 			a_file.put_string ("FAIL:  [")

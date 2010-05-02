@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new error handler using the standard
 			-- error file for error and warning reporting
 			-- and ignoring info messages.
@@ -44,13 +44,13 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	has_error: BOOLEAN is
+	has_error: BOOLEAN
 			-- Has an error been reported?
 		do
 			Result := (error_count > 0)
 		end
 
-	is_verbose: BOOLEAN is
+	is_verbose: BOOLEAN
 			-- Is `info_file' set to something other than
 			-- the null output stream?
 		do
@@ -63,7 +63,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_verbose is
+	enable_verbose
 			-- Set `is_verbose' to True.
 		do
 			warning_file := std.error
@@ -72,7 +72,7 @@ feature -- Status setting
 			verbose: is_verbose
 		end
 
-	disable_verbose is
+	disable_verbose
 			-- Set `is_verbose' to False.
 		do
 			warning_file := null_output_stream
@@ -88,7 +88,7 @@ feature -- Measurement
 
 feature -- Reporting errors
 
-	report_cannot_read_file_error (a_filename: STRING) is
+	report_cannot_read_file_error (a_filename: STRING)
 			-- Report that file `a_filename' cannot
 			-- be open in read mode.
 		local
@@ -98,7 +98,7 @@ feature -- Reporting errors
 			report_error (an_error)
 		end
 
-	report_cannot_write_file_error (a_filename: STRING) is
+	report_cannot_write_file_error (a_filename: STRING)
 			-- Report that file `a_filename' cannot
 			-- be open in write mode.
 		local
@@ -108,7 +108,7 @@ feature -- Reporting errors
 			report_error (an_error)
 		end
 
-	report_parser_error (a_message: STRING) is
+	report_parser_error (a_message: STRING)
 			-- Report an XML parser error.
 		local
 			an_error: UT_MESSAGE
@@ -117,7 +117,7 @@ feature -- Reporting errors
 			report_error (an_error)
 		end
 
-	report_not_xace_file_error (a_filename: STRING) is
+	report_not_xace_file_error (a_filename: STRING)
 			-- Report that file `a_filename' does not contain
 			-- an Xace document.
 		local
@@ -127,7 +127,7 @@ feature -- Reporting errors
 			report_error (an_error)
 		end
 
-	report_wrong_root_element_error (an_element_name: STRING; a_position: XM_POSITION) is
+	report_wrong_root_element_error (an_element_name: STRING; a_position: XM_POSITION)
 			-- Report that Xace file does not contain the
 			-- expected root element `an_element_name'.
 		local
@@ -137,7 +137,7 @@ feature -- Reporting errors
 			report_error (an_error)
 		end
 
-	report_missing_attribute_error (a_containing_element: XM_ELEMENT; an_attribute_name: STRING; a_position: XM_POSITION) is
+	report_missing_attribute_error (a_containing_element: XM_ELEMENT; an_attribute_name: STRING; a_position: XM_POSITION)
 			-- Report that attribute `an_attribute_name' is
 			-- missing in element `a_containing_element'.
 		local
@@ -147,7 +147,7 @@ feature -- Reporting errors
 			report_error (an_error)
 		end
 
-	report_missing_element_error (a_containing_element: XM_ELEMENT; an_element_name: STRING; a_position: XM_POSITION) is
+	report_missing_element_error (a_containing_element: XM_ELEMENT; an_element_name: STRING; a_position: XM_POSITION)
 			-- Report that element `an_element_name' is
 			-- missing in element `a_containing_element'.
 		local
@@ -157,7 +157,7 @@ feature -- Reporting errors
 			report_error (an_error)
 		end
 
-	report_unknown_element_error (a_containing_element: XM_ELEMENT; an_element: XM_ELEMENT; a_position: XM_POSITION) is
+	report_unknown_element_error (a_containing_element: XM_ELEMENT; an_element: XM_ELEMENT; a_position: XM_POSITION)
 			-- Report that element `an_element' is not
 			-- expected in element `a_containing_element'.
 		local
@@ -167,7 +167,7 @@ feature -- Reporting errors
 			report_error (an_error)
 		end
 
-	report_invalid_expression_error (an_invalid_expression: STRING; a_position: XM_POSITION) is
+	report_invalid_expression_error (an_invalid_expression: STRING; a_position: XM_POSITION)
 			-- Report that expression `an_invalid_expression'
 			-- is not valid.
 		local
@@ -178,7 +178,7 @@ feature -- Reporting errors
 		end
 
 	report_boolean_expected_error (an_element: XM_ELEMENT; an_attribute_name: STRING;
-		an_actual_value: STRING; a_position: XM_POSITION) is
+		an_actual_value: STRING; a_position: XM_POSITION)
 			-- Report that the value of attribute `an_attribute_name'
 			-- in element `an_element' should be a boolean value.
 		local
@@ -189,7 +189,7 @@ feature -- Reporting errors
 		end
 
 	report_positive_integer_expected_error (an_element: XM_ELEMENT; an_attribute_name: STRING;
-		an_actual_value: STRING; a_position: XM_POSITION) is
+		an_actual_value: STRING; a_position: XM_POSITION)
 			-- Report that the value of attribute `an_attribute_name'
 			-- in element `an_element' should be a positive integer.
 		local
@@ -200,7 +200,7 @@ feature -- Reporting errors
 		end
 
 	report_non_empty_attribute_expected_error (an_element: XM_ELEMENT;
-		an_attribute_name: STRING; a_position: XM_POSITION) is
+		an_attribute_name: STRING; a_position: XM_POSITION)
 			-- Report that the value of attribute `an_attribute_name'
 			-- in element `an_element' should be empty.
 		local
@@ -211,7 +211,7 @@ feature -- Reporting errors
 		end
 
 	report_wrong_attribute_value_error (an_element: XM_ELEMENT; an_attribute_name: STRING;
-		an_actual_value: STRING; an_expected_values: DS_LINEAR [STRING]; a_position: XM_POSITION) is
+		an_actual_value: STRING; an_expected_values: DS_LINEAR [STRING]; a_position: XM_POSITION)
 			-- Report that the value `an_actual_value' of attribute
 			-- `an_attribute_name' in element `an_element' should be
 			-- one of the `an_expected_values'.
@@ -222,7 +222,7 @@ feature -- Reporting errors
 			report_error (an_error)
 		end
 
-	report_multiple_library_prefix_error (a_mount1, a_mount2: ET_XACE_MOUNTED_LIBRARY) is
+	report_multiple_library_prefix_error (a_mount1, a_mount2: ET_XACE_MOUNTED_LIBRARY)
 			-- Report that a library has been mounted several times
 			-- with different prefixes.
 		local
@@ -232,7 +232,7 @@ feature -- Reporting errors
 			report_error (an_error)
 		end
 
-	report_error_message (an_error: STRING) is
+	report_error_message (an_error: STRING)
 			-- Report `an_error'.
 		do
 			error_count := error_count + 1
@@ -241,7 +241,7 @@ feature -- Reporting errors
 
 feature -- Reporting warnings
 
-	report_attribute_obsoleted_by_element_warning (an_element: XM_ELEMENT; an_attribute_name: STRING; a_new_element: STRING; a_position: XM_POSITION) is
+	report_attribute_obsoleted_by_element_warning (an_element: XM_ELEMENT; an_attribute_name: STRING; a_new_element: STRING; a_position: XM_POSITION)
 			-- Report that an attribute `an_attribute_name' of element `an_element'
 			-- is obsoleted by an element `a_new_element'.
 		local
@@ -251,7 +251,7 @@ feature -- Reporting warnings
 			report_warning (a_warning)
 		end
 
-	report_element_obsoleted_by_element_warning (an_element: XM_ELEMENT; a_new_element: STRING; a_position: XM_POSITION) is
+	report_element_obsoleted_by_element_warning (an_element: XM_ELEMENT; a_new_element: STRING; a_position: XM_POSITION)
 			-- Report that an element `an_element' is obsoleted
 			-- by an element `a_new_element'.
 		local
@@ -261,7 +261,7 @@ feature -- Reporting warnings
 			report_warning (a_warning)
 		end
 
-	report_obsolete_cluster_element_warning (a_position: XM_POSITION) is
+	report_obsolete_cluster_element_warning (a_position: XM_POSITION)
 			-- Report that a cluster element that groups clusters,
 			-- mounts and options is no longer used.
 		local
@@ -271,7 +271,7 @@ feature -- Reporting warnings
 			report_warning (a_warning)
 		end
 
-	report_obsolete_exclude_element_warning (a_position: XM_POSITION) is
+	report_obsolete_exclude_element_warning (a_position: XM_POSITION)
 			-- Report that an exclude element is obsoleted by if/unless attributes.
 		local
 			a_warning: ET_XACE_OBSOLETE_EXCLUDE_ELEMENT_WARNING
@@ -280,7 +280,7 @@ feature -- Reporting warnings
 			report_warning (a_warning)
 		end
 
-	report_unknown_option_warning (an_element: XM_ELEMENT; a_position: XM_POSITION) is
+	report_unknown_option_warning (an_element: XM_ELEMENT; a_position: XM_POSITION)
 			-- Report that the value of the attribute "name"
 			-- in the "option" elment `an_element' is unknown.
 		local

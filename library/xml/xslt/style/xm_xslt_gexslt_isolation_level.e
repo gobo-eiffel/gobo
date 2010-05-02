@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Status report
 
-	isolation_level: INTEGER is
+	isolation_level: INTEGER
 			-- Isolation-level
 		require
 			validation_complete: validated
@@ -50,7 +50,7 @@ feature -- Status report
 feature -- Element change
 
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -81,7 +81,7 @@ feature -- Element change
 			attributes_prepared := True
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 		local
 			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -118,7 +118,7 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (an_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		do
 			if principal_stylesheet = containing_stylesheet then

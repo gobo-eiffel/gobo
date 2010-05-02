@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_true is
+	make_true
 			-- Create a new variable and set it to true.
 		do
 			set_true
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			is_true: is_true
 		end
 
-	make_false is
+	make_false
 			-- Create a new variable and set it to false.
 		do
 			set_false
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			is_false: is_false
 		end
 
-	make_undefined is
+	make_undefined
 			-- Create a new variable and set it to undefined.
 		do
 			set_undefined
@@ -48,19 +48,19 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_true: BOOLEAN is
+	is_true: BOOLEAN
 			-- Is variable true?
 		do
 			Result := (value = 'T')
 		end
 
-	is_false: BOOLEAN is
+	is_false: BOOLEAN
 			-- Is variable false?
 		do
 			Result := (value = 'F')
 		end
 
-	is_undefined: BOOLEAN is
+	is_undefined: BOOLEAN
 			-- Is variable undefined?
 		do
 			Result := not (is_true or is_false)
@@ -68,7 +68,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_true is
+	set_true
 			-- Set variable to true.
 		do
 			value := 'T'
@@ -76,7 +76,7 @@ feature -- Status setting
 			is_true: is_true
 		end
 
-	set_false is
+	set_false
 			-- Set variable to false.
 		do
 			value := 'F'
@@ -84,7 +84,7 @@ feature -- Status setting
 			is_false: is_false
 		end
 
-	set_undefined is
+	set_undefined
 			-- Set variable to undefined.
 		do
 			value := 'U'

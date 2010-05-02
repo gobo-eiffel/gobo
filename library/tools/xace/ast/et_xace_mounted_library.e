@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_pathname: like pathname; a_library: like library; a_position: like position) is
+	make (a_pathname: like pathname; a_library: like library; a_position: like position)
 			-- Create a new mounted library.
 		require
 			a_pathname_not_void: a_pathname /= Void
@@ -49,7 +49,7 @@ feature -- Status report
 			-- Is current library mounted directly to the top level
 			-- system or library?
 
-	same_library_prefix (other: ET_XACE_MOUNTED_LIBRARY): BOOLEAN is
+	same_library_prefix (other: ET_XACE_MOUNTED_LIBRARY): BOOLEAN
 			-- Do `Current' and `other' have the same library prefix?
 		require
 			other_not_void: other /= Void
@@ -65,7 +65,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_root (b: BOOLEAN) is
+	set_root (b: BOOLEAN)
 			-- Set `is_root' to `b'.
 		do
 			is_root := b
@@ -92,7 +92,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_library_prefix (a_prefix: like library_prefix) is
+	set_library_prefix (a_prefix: like library_prefix)
 			-- Set `library_prefix' to `a_prefix'.
 		do
 			library_prefix := a_prefix

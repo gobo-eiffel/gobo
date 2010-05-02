@@ -1,15 +1,15 @@
 note
 
 	description:
-	
+
 		"Standard pipe of callbacks filter leading to construction of an XM_XPATH_TREE_DOCUMENT"
-	
+
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class XM_XPATH_TREE_CALLBACKS_PIPE
 
 inherit
@@ -23,14 +23,14 @@ inherit
 		-- It is not particularly suitable for use by documents to be used as input to
 		-- XSLT, as XSLT has more stringent white-space stripping rules, and
 		-- in addition, stylesheets must have their comments and PIs stripped.
-		
+
 create
 
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_parser: XM_PARSER; is_line_numbering: BOOLEAN; a_base_uri: STRING; a_document_uri: UT_URI) is
+	make (a_parser: XM_PARSER; is_line_numbering: BOOLEAN; a_base_uri: STRING; a_document_uri: UT_URI)
 			-- Create a new pipe.
 		require
 			a_parser_not_void: a_parser /= Void
@@ -69,7 +69,7 @@ feature -- Access
 
 	attributes: XM_ATTRIBUTE_DEFAULT_FILTER
 			-- Set attribute defaults from the DTD
-	
+
 	error: XM_PARSER_STOP_ON_ERROR_FILTER
 			-- Error collector
 
@@ -82,7 +82,7 @@ feature -- Access
 --	debugger: XM_PRETTY_PRINT_FILTER
 			-- Only used when debugging
 
-	document: XM_XPATH_TREE_DOCUMENT is
+	document: XM_XPATH_TREE_DOCUMENT
 			-- Document (from tree building filter)
 		require
 			not_error: not tree.has_error
@@ -90,7 +90,7 @@ feature -- Access
 			Result := tree.tree_document
 		end
 
-	last_error: STRING is
+	last_error: STRING
 			-- Error (from error filter)
 		require
 			error: tree.has_error

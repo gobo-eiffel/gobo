@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new object-test scope.
 		do
 			hidden_count := 0
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	has_local (a_name: ET_IDENTIFIER): BOOLEAN is
+	has_local (a_name: ET_IDENTIFIER): BOOLEAN
 			-- Are we currently in the scope of object-test local `a_name'?
 			-- (Ignore hidden object-test locals.)
 		require
@@ -53,7 +53,7 @@ feature -- Status report
 			end
 		end
 
-	has_hidden_local (a_name: ET_IDENTIFIER): BOOLEAN is
+	has_hidden_local (a_name: ET_IDENTIFIER): BOOLEAN
 			-- Are we currently in the scope of object-test local `a_name', although it has been hidden?
 			-- (We are probably currently analyzing an inline agent and `a_name' has
 			-- been declared in an enclosing feature or inline agent.)
@@ -75,7 +75,7 @@ feature -- Status report
 
 feature -- Access
 
-	object_test (a_name: ET_IDENTIFIER): ET_NAMED_OBJECT_TEST is
+	object_test (a_name: ET_IDENTIFIER): ET_NAMED_OBJECT_TEST
 			-- If we are currently in the scope of object-test local `a_name',
 			-- then return its associated object-test, otherwise Void
 			-- (Ignore hidden object-test locals.)
@@ -100,7 +100,7 @@ feature -- Access
 			object_test_not_void: has_local (a_name) = (Result /= Void)
 		end
 
-	hidden_object_test (a_name: ET_IDENTIFIER): ET_NAMED_OBJECT_TEST is
+	hidden_object_test (a_name: ET_IDENTIFIER): ET_NAMED_OBJECT_TEST
 			-- If we are currently in the scope of object-test local `a_name' although
 			-- it has been hidden, then return its associated object-test, otherwise Void
 			-- (We are probably currently analyzing an inline agent and `a_name'
@@ -131,7 +131,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of object-tests for which we are currently within scope of their locals
 			-- (Hidden object-tests are counted.)
 		do
@@ -149,7 +149,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	add_object_test (a_object_test: ET_NAMED_OBJECT_TEST) is
+	add_object_test (a_object_test: ET_NAMED_OBJECT_TEST)
 			-- Indicate that we are currently within the scope
 			-- of the local of `a_object_test'.
 		require
@@ -160,7 +160,7 @@ feature -- Element change
 			one_more: count = old count + 1
 		end
 
-	remove_object_tests (n: INTEGER) is
+	remove_object_tests (n: INTEGER)
 			-- Indicate that we are not in the scope of
 			-- the last `n' object-test locals.
 		require
@@ -173,7 +173,7 @@ feature -- Element change
 			removed: count = old count - n
 		end
 
-	keep_object_tests (n: INTEGER) is
+	keep_object_tests (n: INTEGER)
 			-- Indicate that we are now in the scope of
 			-- only the first `n' object-test locals.
 		require
@@ -186,7 +186,7 @@ feature -- Element change
 			kept: count = n
 		end
 
-	hide_object_tests (n: INTEGER) is
+	hide_object_tests (n: INTEGER)
 			-- Indicate that from now on we consider that we
 			-- are not in the scope of the first `n' object-test
 			-- locals. Useful when analyzing inline agents: we
@@ -202,7 +202,7 @@ feature -- Element change
 			same_count: count = old count
 		end
 
-	wipe_out is
+	wipe_out
 			-- Indicate that we are in the scope of no object-test local anymore.
 		do
 			hidden_count := 0

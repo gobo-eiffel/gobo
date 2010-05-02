@@ -23,7 +23,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_attribute_keyword (a_attribute: like attribute_keyword) is
+	set_attribute_keyword (a_attribute: like attribute_keyword)
 			-- Set `attribute_keyword' to `a_attribute'.
 		require
 			a_attribute_not_void: a_attribute /= Void

@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_invalid_expression: STRING; a_position: XM_POSITION) is
+	make (an_invalid_expression: STRING; a_position: XM_POSITION)
 			-- Create an error reporting that expression `an_invalid_expression'
 			-- is not valid.
 		require
@@ -36,10 +36,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "found invalid expression '$1' at $2"
+	default_template: STRING = "found invalid expression '$1' at $2"
 			-- Default template used to built the error message
 
-	code: STRING is "XA0008"
+	code: STRING = "XA0008"
 			-- Error code
 
 end

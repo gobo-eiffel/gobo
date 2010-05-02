@@ -25,15 +25,15 @@ create
 
 feature -- Access
 
-	program_name: STRING is "formatter"
+	program_name: STRING = "formatter"
 			-- Program name
 
-	library_name: STRING is "xml"
+	library_name: STRING = "xml"
 			-- Library name of example
 
 feature -- Test
 
-	test_formatter is
+	test_formatter
 			-- Test 'tree/formatter' example.
 		do
 			compile_program
@@ -41,7 +41,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	program_dirname: STRING is
+	program_dirname: STRING
 			-- Name of program source directory
 		do
 			Result := file_system.nested_pathname ("${GOBO}", <<"example", library_name, "tree", program_name>>)

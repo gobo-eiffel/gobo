@@ -38,7 +38,7 @@ feature -- Access
 	last_created_closure: XM_XPATH_VALUE
 			-- Result from `create_closure' or `create_sequence_extent'
 
-	parsed_expression: XM_XPATH_EXPRESSION is
+	parsed_expression: XM_XPATH_EXPRESSION
 			-- Parsed expression
 		require
 			no_parse_error: not is_parse_error
@@ -55,7 +55,7 @@ feature -- Status report
 
 feature -- Creation
 
-	make_expression (a_expression: STRING; a_context: XM_XPATH_STATIC_CONTEXT; a_start, a_terminator, a_line_number: INTEGER; a_system_id: STRING) is
+	make_expression (a_expression: STRING; a_context: XM_XPATH_STATIC_CONTEXT; a_start, a_terminator, a_line_number: INTEGER; a_system_id: STRING)
 			-- Parse an expression;
 			-- This performs the basic analysis of the expression against the grammar,
 			--  it binds variable references and function calls to variable definitions and
@@ -115,7 +115,7 @@ feature -- Creation
 			error_or_expression: internal_parsed_expression = Void implies parsed_error_value /= Void
 		end
 
-	created_treat_expression (a_sequence: XM_XPATH_EXPRESSION; a_sequence_type: XM_XPATH_SEQUENCE_TYPE): XM_XPATH_ITEM_CHECKER is
+	created_treat_expression (a_sequence: XM_XPATH_EXPRESSION; a_sequence_type: XM_XPATH_SEQUENCE_TYPE): XM_XPATH_ITEM_CHECKER
 			-- New treat expression
 		require
 			sequence_not_void: a_sequence /= Void
@@ -129,7 +129,7 @@ feature -- Creation
 			result_not_void: Result /= Void
 		end
 
-	created_position_iterator (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_min, a_max: INTEGER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	created_position_iterator (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_min, a_max: INTEGER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			-- New position iterator;
 			--  unless `a_base_sequence' is an array iterator, in which case create a:
 			-- New array iterator directly over underlying array.
@@ -149,7 +149,7 @@ feature -- Creation
 			iterator_created: Result /= Void
 		end
 
-	create_closure (a_expression: XM_XPATH_COMPUTED_EXPRESSION; a_context: XM_XPATH_CONTEXT; a_reference_count: INTEGER) is
+	create_closure (a_expression: XM_XPATH_COMPUTED_EXPRESSION; a_context: XM_XPATH_CONTEXT; a_reference_count: INTEGER)
 			-- New `XM_XPATH_CLOSURE' (or sometimes, an `XM_XPATH_SEQUENCE_EXTENT', or others).
 		require
 			expression_not_void: a_expression /= Void
@@ -165,7 +165,7 @@ feature -- Creation
 			last_created_closure_not_void: last_created_closure /= Void
 		end
 
-	create_sequence_extent (a_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
+	create_sequence_extent (a_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM])
 			-- Create an extensional value.
 		require
 			iterator_before: a_iterator /= Void and then not a_iterator.is_error and then a_iterator.before
@@ -180,7 +180,7 @@ feature -- Creation
 			last_created_closure_not_void: last_created_closure /= Void
 		end
 
-	created_cardinality_checker (a_sequence: XM_XPATH_EXPRESSION; a_requested_cardinality: INTEGER; a_role: XM_XPATH_ROLE_LOCATOR): XM_XPATH_COMPUTED_EXPRESSION is
+	created_cardinality_checker (a_sequence: XM_XPATH_EXPRESSION; a_requested_cardinality: INTEGER; a_role: XM_XPATH_ROLE_LOCATOR): XM_XPATH_COMPUTED_EXPRESSION
 			-- Cardinality checker or singleton atomizer over `a_sequence'
 		require
 			underlying_expression_not_void: a_sequence /= Void
@@ -202,7 +202,7 @@ feature -- Creation
 			created_cardinality_checker_not_void: Result /= Void
 		end
 
-	created_lazy_expression (a_expression: XM_XPATH_EXPRESSION): XM_XPATH_EXPRESSION is
+	created_lazy_expression (a_expression: XM_XPATH_EXPRESSION): XM_XPATH_EXPRESSION
 			-- Possible lazy expression
 		require
 			a_expression_not_void: a_expression /= Void

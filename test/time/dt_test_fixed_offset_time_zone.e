@@ -23,7 +23,7 @@ create
 
 feature -- Test
 
-	test_date_time_to_utc is
+	test_date_time_to_utc
 			-- Test feature `date_time_to_utc' class DT_FIXED_OFFSET_TIME_ZONE.
 		local
 			l_time_zone: DT_FIXED_OFFSET_TIME_ZONE
@@ -47,7 +47,7 @@ feature -- Test
 			assert_equal ("date_time_to_utc4", dt2, l_time_zone.date_time_to_utc (dt1))
 		end
 
-	test_date_time_from_utc is
+	test_date_time_from_utc
 			-- Test feature `date_time_from_utc' class DT_FIXED_OFFSET_TIME_ZONE.
 		local
 			l_time_zone: DT_FIXED_OFFSET_TIME_ZONE

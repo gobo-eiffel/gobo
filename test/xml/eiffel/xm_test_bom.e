@@ -16,7 +16,7 @@ class XM_TEST_BOM
 inherit
 
 	TS_TEST_CASE
-	
+
 	XM_RESOLVER_FACTORY
 		export {NONE} all end
 
@@ -26,7 +26,7 @@ create
 
 feature -- Test(s)
 
-	test_utf_bom is
+	test_utf_bom
 			-- Test BOM used as UTF-8 file marker.
 		local
 			l_uri: UT_URI
@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 	parser: XM_EIFFEL_PARSER
 			-- XML parser
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}", <<"test", "xml", "eiffel">>)

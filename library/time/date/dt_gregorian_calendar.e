@@ -21,7 +21,7 @@ inherit
 
 feature -- Status report
 
-	valid_week (a_week, a_year: INTEGER): BOOLEAN is
+	valid_week (a_week, a_year: INTEGER): BOOLEAN
 			-- Is `a_week' a valid ISO 8601 week in `a_year'?
 			-- Weeks start on Monday and week number 1 contains
 			-- the first Thursday of the year.
@@ -42,7 +42,7 @@ feature -- Status report
 
 feature -- Access
 
-	week_number (y, m, d: INTEGER): INTEGER is
+	week_number (y, m, d: INTEGER): INTEGER
 			-- Week number for date of year `y', month `m' and day `d',
 			-- using ISO 8601 specification: weeks start on Monday and
 			-- week number 1 contains the first Thursday of the year.

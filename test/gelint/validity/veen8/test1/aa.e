@@ -6,7 +6,7 @@ create
 
 feature
 
-	make is
+	make
 		local
 			bb: BB
 			s: ?STRING

@@ -32,7 +32,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_formal_args: like formal_arguments; a_type: like declared_type; an_actual_args: like actual_arguments) is
+	make (a_formal_args: like formal_arguments; a_type: like declared_type; an_actual_args: like actual_arguments)
 			-- Create a new inline agent whose associated feature is a function.
 		require
 			a_type_not_void: a_type /= Void

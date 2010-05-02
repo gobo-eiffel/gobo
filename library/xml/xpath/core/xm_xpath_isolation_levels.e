@@ -14,17 +14,17 @@ class	XM_XPATH_ISOLATION_LEVELS
 
 feature -- Access
 
-	Read_uncommitted: INTEGER is 1
+	Read_uncommitted: INTEGER = 1
 			-- As SQL 92 READ UNCOMMITTED
 
-	Read_committed: INTEGER is 2
+	Read_committed: INTEGER = 2
 			-- As SQL 92 READ COMMITTED
 
-	Repeatable_read: INTEGER is 3
+	Repeatable_read: INTEGER = 3
 			-- As SQL 92 REPEATABLE READ
 
-	Serializable: INTEGER is 4
+	Serializable: INTEGER = 4
 			-- as SQL 92 SERIALIZABLE
 
 end
-	
+

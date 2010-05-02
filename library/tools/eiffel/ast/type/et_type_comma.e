@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type: like type; a_comma: like comma) is
+	make (a_type: like type; a_comma: like comma)
 			-- Create a new type-comma.
 		require
 			a_type_not_void: a_type /= Void
@@ -43,26 +43,26 @@ feature -- Access
 	comma: ET_SYMBOL
 			-- Comma separator
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
 			Result := type.position
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := type.first_leaf
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := comma
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := comma.break
@@ -70,7 +70,7 @@ feature -- Access
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_type_comma (Current)

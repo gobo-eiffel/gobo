@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_receiver: XM_XPATH_RECEIVER) is
+	make (a_receiver: XM_XPATH_RECEIVER)
 			-- Establish invariant.
 		require
 			underlying_receiver_not_void: a_receiver /= Void
@@ -49,91 +49,91 @@ feature {NONE} -- Initialization
 
 feature -- Events
 
-	open is
+	open
 			-- Notify start of event stream.
 		do
 			Precursor {XM_XPATH_PROXY_RECEIVER}
 			previous_atomic := False
 		end
 
-	start_document is
+	start_document
 			-- New document
 		do
 			Precursor {XM_XPATH_PROXY_RECEIVER}
 			previous_atomic := False
 		end
-	
-	end_document is
+
+	end_document
 			-- Notify the end of the document
 		do
 			Precursor
 			previous_atomic := False
 		end
 
-	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
+	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER)
 			-- Notify the start of an element
 		do
 			Precursor (a_name_code, a_type_code, properties)
 			previous_atomic := False
 		end
 
-	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
+	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER)
 			-- Notify a namespace.
 		do
 			Precursor (a_namespace_code, properties)
 			previous_atomic := False
 		end
 
-	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
+	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER)
 			-- Notify an attribute.
 		do
 			Precursor (a_name_code, a_type_code, a_value, properties)
 			previous_atomic := False
 		end
 
-	start_content is
+	start_content
 			-- Notify the start of the content, that is, the completion of all attributes and namespaces.
 		do
 			Precursor
 			previous_atomic := False
 		end
 
-	end_element is
+	end_element
 			-- Notify the end of an element.
 		do
 			Precursor
 			previous_atomic := False
 		end
 
-	notify_characters (chars: STRING; properties: INTEGER) is
+	notify_characters (chars: STRING; properties: INTEGER)
 			-- Notify character data.
 		do
 			Precursor (chars, properties)
 			previous_atomic := False
 		end
 
-	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
+	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER)
 			-- Notify a processing instruction.
 		do
 			Precursor (a_name, a_data_string, properties)
 			previous_atomic := False
 		end
 
-	notify_comment (a_content_string: STRING; properties: INTEGER) is
+	notify_comment (a_content_string: STRING; properties: INTEGER)
 			-- Notify a comment.
 		do
 			Precursor (a_content_string, properties)
 			previous_atomic := False
 		end
 
-	close is
+	close
 			-- Notify end of event stream.
 		do
 			Precursor
 			previous_atomic := False
 		end
 
-	append_item (an_item: XM_XPATH_ITEM) is
+	append_item (an_item: XM_XPATH_ITEM)
 			-- Output an item (atomic value or node) to the sequence.
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -164,4 +164,4 @@ feature -- Events
 		end
 
 end
-	
+

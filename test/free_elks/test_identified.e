@@ -22,7 +22,7 @@ create
 
 feature -- Test
 
-	test_id_object is
+	test_id_object
 			-- Test feature 'id_object'.
 		local
 			l_identified: IDENTIFIED

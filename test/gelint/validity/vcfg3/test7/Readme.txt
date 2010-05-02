@@ -55,7 +55,7 @@ create
 
 feature
 
-	make is
+	make
 		local
 			b: BB
 		do
@@ -75,7 +75,7 @@ inherit
 
 feature
 
-	g is
+	g
 		do
 			!! item1
 			item2 := "gobo2"
@@ -90,7 +90,7 @@ feature
 	item1: G
 	item2: H
 
-	f is
+	f
 		do
 			if item1 /= Void then
 				item1.put (item1)
@@ -106,7 +106,7 @@ feature
 
 	item: G
 
-	put (v: G) is
+	put (v: G)
 		do
 			item := v
 		end

@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tree: XM_XPATH_TINY_FOREST) is
+	make (a_tree: XM_XPATH_TINY_FOREST)
 			-- Establish invariant.
 		require
 			tree_not_void: a_tree /= Void
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	has (an_attribute_number: INTEGER; an_idref: STRING): BOOLEAN is
+	has (an_attribute_number: INTEGER; an_idref: STRING): BOOLEAN
 			-- Is `an_attribute_number' mapped from `an_idref'?
 		require
 			idref_not_empty: an_idref /= Void and then not an_idref.is_empty
@@ -54,7 +54,7 @@ feature -- Access
 			end
 		end
 
-	new_iterator (some_idrefs: DS_LIST [STRING]): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	new_iterator (some_idrefs: DS_LIST [STRING]): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- New iterator over `some_idrefs'
 		require
 			idrefs_not_empty: some_idrefs /= Void and then not some_idrefs.is_empty
@@ -96,7 +96,7 @@ feature -- Access
 
 feature -- element change
 
-	register (an_attribute_number: INTEGER; an_idref: STRING) is
+	register (an_attribute_number: INTEGER; an_idref: STRING)
 			-- Register `an_attribute_number' against `an_idref'.
 		require
 			idref_not_empty: an_idref /= Void and then not an_idref.is_empty

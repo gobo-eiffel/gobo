@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (in_context: like in_trail_context) is
+	make (in_context: like in_trail_context)
 			-- Create a new NFA state.
 		do
 			in_trail_context := in_context
@@ -60,7 +60,7 @@ feature -- Status report
 	in_trail_context: BOOLEAN
 			-- Is state part of a trailing context?
 
-	is_accepting: BOOLEAN is
+	is_accepting: BOOLEAN
 			-- Is current state an accepting state?
 		do
 			Result := accepted_rule /= Void
@@ -68,7 +68,7 @@ feature -- Status report
 			definition: Result = (accepted_rule /= Void)
 		end
 
-	is_accepting_head: BOOLEAN is
+	is_accepting_head: BOOLEAN
 			-- Is current state an accepting state for the
 			-- head part of a trailing context rule?
 		do
@@ -77,7 +77,7 @@ feature -- Status report
 			is_accepting: Result implies is_accepting
 		end
 
-	has_transition: BOOLEAN is
+	has_transition: BOOLEAN
 			-- Is current state connected to another state?
 		do
 			Result := transition /= Void or epsilon_transition /= Void
@@ -85,7 +85,7 @@ feature -- Status report
 			has_transition: Result implies (transition /= Void or epsilon_transition /= Void)
 		end
 
-	has_epsilon_transition: BOOLEAN is
+	has_epsilon_transition: BOOLEAN
 			-- Is `transition' an epsilon transition?
 		local
 			xtion: LX_EPSILON_TRANSITION [LX_NFA_STATE]
@@ -98,7 +98,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is current state equal to `other'?
 		do
 				-- This routine has been redefined to follow
@@ -107,7 +107,7 @@ feature -- Comparison
 			Result := id = other.id
 		end
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current state less than `other'?
 			-- (This is used for optimization purposes
 			-- in routine `make' from LX_DFA_STATE.)
@@ -117,7 +117,7 @@ feature -- Comparison
 
 feature -- Setting
 
-	set_transition (xtion: like transition) is
+	set_transition (xtion: like transition)
 			-- Set `transition' to `xtion'.
 		do
 			transition := xtion
@@ -125,7 +125,7 @@ feature -- Setting
 			transition_set: transition = xtion
 		end
 
-	set_epsilon_transition (xtion: like epsilon_transition) is
+	set_epsilon_transition (xtion: like epsilon_transition)
 			-- Set `epsilon_transition' to `xtion'.
 		do
 			epsilon_transition := xtion
@@ -133,7 +133,7 @@ feature -- Setting
 			epsilon_transition_set: epsilon_transition = xtion
 		end
 
-	set_id (an_id: INTEGER) is
+	set_id (an_id: INTEGER)
 			-- Set `id' to `an_id'.
 			-- (This is used for optimization purposes in routines
 			-- `copy' from LX_NFA and `make' from LX_DFA_STATE.)
@@ -145,7 +145,7 @@ feature -- Setting
 
 feature -- Status setting
 
-	set_accepted_rule (a_rule: LX_RULE) is
+	set_accepted_rule (a_rule: LX_RULE)
 			-- Set `accepted_rule' to `a_rule'.
 		do
 			accepted_rule := a_rule
@@ -153,7 +153,7 @@ feature -- Status setting
 			accepted_rule_set: accepted_rule = a_rule
 		end
 
-	set_beginning_as_normal is
+	set_beginning_as_normal
 			-- Set each state of the epsilon closure as normal
 			-- (i.e not in trailing context).
 		local

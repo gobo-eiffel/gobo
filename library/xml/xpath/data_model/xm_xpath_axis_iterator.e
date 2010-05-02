@@ -22,33 +22,33 @@ inherit
 
 feature -- Access
 
-	item: G is
+	item: G
 			-- Value or node at the current position
 		do
 			Result := current_item
 		end
-	
+
 feature -- Status report
 
-	is_invulnerable: BOOLEAN is
+	is_invulnerable: BOOLEAN
 			-- Is `Current' guarenteed free of implicit errors?
 		do
 			Result := True
 		end
 
-	is_node_iterator: BOOLEAN is
+	is_node_iterator: BOOLEAN
 			-- Does `Current' yield a node_sequence?
 		do
 			Result := True
 		end
 
-	is_axis_iterator: BOOLEAN is
+	is_axis_iterator: BOOLEAN
 			-- Is `Current' an axis iterator?
 		do
 			Result := True
 		end
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
 			Result := not before and then current_item = Void
@@ -56,13 +56,13 @@ feature -- Status report
 
 feature -- Conversion
 
-	as_axis_iterator: XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
+	as_axis_iterator: XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as an axis iterator
 		do
 			Result ?= ANY_.to_any (Current)
 		end
 
-	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
 		do
 			Result ?= ANY_.to_any (Current)
@@ -73,10 +73,10 @@ feature {NONE} -- Implementation
 	current_item: like item
 			-- The item that the iterator is currently pointing to
 
-	advance is
+	advance
 			-- Move to the next position
 		deferred
 		end
 
 end
-	
+

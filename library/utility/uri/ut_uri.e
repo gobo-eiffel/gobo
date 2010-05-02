@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_reference: STRING) is
+	make (a_reference: STRING)
 			-- Parse URI from string.
 		require
 			a_reference_not_void: a_reference /= Void
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			parse_reference
 		end
 
-	make_resolve (a_base: UT_URI; a_reference: STRING) is
+	make_resolve (a_base: UT_URI; a_reference: STRING)
 			-- Parse `a_reference' URI and resolve it relatively to `a_base'.
 			-- The path component in `a_reference' will not contain
 			-- relative components like ".." if `a_reference' is not absolute.
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 				(not a_reference.is_empty and then a_reference.item (1) /= '/') implies is_path_resolved
 		end
 
-	make_resolve_uri (a_base: UT_URI; a_new: UT_URI) is
+	make_resolve_uri (a_base: UT_URI; a_new: UT_URI)
 			-- Resolve `a_new' relatively to `a_base'.
 		require
 			a_base_not_void: a_base /= Void
@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 			is_absolute: is_absolute
 		end
 
-	make_absolute (a_scheme: like scheme) is
+	make_absolute (a_scheme: like scheme)
 			-- Create empty absolute URI.
 		require
 			a_scheme_not_void: a_scheme /= Void
@@ -97,7 +97,7 @@ feature {NONE} -- Initialization
 			no_fragment: not has_fragment
 		end
 
-	make_relative is
+	make_relative
 			-- Create relative URI.
 			-- (empty, that is relative to current document)
 		do
@@ -114,7 +114,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	resolve_relative_to (a_base: UT_URI) is
+	resolve_relative_to (a_base: UT_URI)
 			-- Resolve current relative to `a_base'.
 		require
 			a_base_not_void: a_base /= Void
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 
 feature -- Status report
 
-	is_absolute: BOOLEAN is
+	is_absolute: BOOLEAN
 			-- Does this URI have a scheme?
 		do
 			Result := scheme /= Void
@@ -173,7 +173,7 @@ feature -- Status report
 			consistent: Result = not is_relative
 		end
 
-	is_path_resolved: BOOLEAN is
+	is_path_resolved: BOOLEAN
 			-- Does `path_items' not contain relative components like ".."?
 		local
 			a_cursor: DS_LINEAR_CURSOR [UT_URI_STRING]
@@ -200,7 +200,7 @@ feature -- Status report
 			end
 		end
 
-	has_path: BOOLEAN is
+	has_path: BOOLEAN
 			-- Is an explicit path defined?
 		do
 			Result := has_absolute_path or has_path_base or not path_items.is_empty
@@ -209,7 +209,7 @@ feature -- Status report
 			consistent_with_path: Result = not path.is_empty
 		end
 
-	has_path_base: BOOLEAN is
+	has_path_base: BOOLEAN
 			-- Does the path contain a base segment, that is:
 			-- False for s://host/a/b/
 			-- True for s://host/a/b
@@ -220,7 +220,7 @@ feature -- Status report
 			-- Commented out CPA 2006/10/06 as it fails for gex:/ : no_base: has_path implies (Result = (path.item (path.count) /= '/'))
 		end
 
-	is_relative: BOOLEAN is
+	is_relative: BOOLEAN
 			-- Is this a relative URI?
 			-- A relative URI is a URI without `scheme'.
 		do
@@ -229,7 +229,7 @@ feature -- Status report
 			consistent: Result = not is_absolute
 		end
 
-	is_opaque: BOOLEAN is
+	is_opaque: BOOLEAN
 			-- Is this an opaque (non-hierarchical) URI?
 		do
 			Result := is_absolute and then (not has_authority and not has_absolute_path)
@@ -237,7 +237,7 @@ feature -- Status report
 			consistent: Result = not is_hierarchical
 		end
 
-	is_hierarchical: BOOLEAN is
+	is_hierarchical: BOOLEAN
 			-- Is this a hierarchical URI?
 		do
 			Result := not is_opaque
@@ -245,7 +245,7 @@ feature -- Status report
 			consistent: Result = not is_opaque
 		end
 
-	has_valid_scheme: BOOLEAN is
+	has_valid_scheme: BOOLEAN
 			-- Is scheme set and containing valid characters?
 		local
 			l_scheme: like scheme
@@ -258,7 +258,7 @@ feature -- Status report
 			valid_scheme_characters: Result implies attached scheme as el_scheme2 and then Url_encoding.is_valid_scheme (el_scheme2)
 		end
 
-	has_authority: BOOLEAN is
+	has_authority: BOOLEAN
 			-- Is `authority' present?
 		do
 			Result := authority_item /= Void
@@ -267,7 +267,7 @@ feature -- Status report
 			authority_not_void: Result implies authority /= Void
 		end
 
-	has_query: BOOLEAN is
+	has_query: BOOLEAN
 			-- Is `query' present?
 		do
 			Result := query_item /= Void
@@ -276,7 +276,7 @@ feature -- Status report
 			query_not_void: Result implies query /= Void
 		end
 
-	has_fragment: BOOLEAN is
+	has_fragment: BOOLEAN
 			-- Is `fragment' present?
 		do
 			Result := fragment_item /= Void
@@ -290,7 +290,7 @@ feature -- Access
 	full_reference: STRING
 			-- Full URI reference (including fragment)
 
-	full_uri: STRING is
+	full_uri: STRING
 			-- Full URI (without fragment)
 		do
 			if has_fragment then
@@ -306,7 +306,7 @@ feature -- Access
 	scheme: detachable STRING
 			-- Scheme used, like "http" or "ftp", anything before the ':'
 
-	scheme_specific_part: STRING is
+	scheme_specific_part: STRING
 			-- Interpretation depends on scheme, everything after the ':'
 		local
 			l_scheme: like scheme
@@ -328,7 +328,7 @@ feature -- Access
 
 feature -- Components
 
-	authority: STRING is
+	authority: STRING
 			-- Authority component, dependent on scheme;
 			-- Use `parse_authority' to parse the [<userinfo>@]<host>[:<port>] form.
 		require
@@ -350,7 +350,7 @@ feature -- Components
 			not_next_fragment_separator: not Result.has ('#')
 		end
 
-	path: STRING is
+	path: STRING
 			-- Path reconstructed from items
 			-- (Item names are kept URL-encoded.)
 		local
@@ -380,7 +380,7 @@ feature -- Components
 			not_next_fragment_separator: not Result.has ('#')
 		end
 
-	path_base: STRING is
+	path_base: STRING
 			-- Base name of path, that is:
 			-- has_path_base = False for "s://host/a/b/"
 			-- path_base = "b" for "s://host/a/b"
@@ -401,7 +401,7 @@ feature -- Components
 			no_separator: not Result.has ('/')
 		end
 
-	query: STRING is
+	query: STRING
 			-- Anything after the '?' and before '#' if present
 		require
 			has_query: has_query
@@ -420,7 +420,7 @@ feature -- Components
 			not_next_separator: not Result.has ('#')
 		end
 
-	fragment: STRING is
+	fragment: STRING
 			-- The part after the '#' if present
 		require
 			has_fragment: has_fragment
@@ -472,7 +472,7 @@ feature -- If authority is <userinfo>@<host>:<port>
 --		ensure
 --			host_port_not_void: Result /= Void
 
-	has_parsed_authority: BOOLEAN is
+	has_parsed_authority: BOOLEAN
 			-- Has authority part been parsed?
 		do
 			Result := host_port /= Void
@@ -480,7 +480,7 @@ feature -- If authority is <userinfo>@<host>:<port>
 			host_port_not_void: Result implies host_port /= Void
 		end
 
-	has_user_info: BOOLEAN is
+	has_user_info: BOOLEAN
 			-- Is the user information part of authority set?
 		require
 			has_parsed_authority: has_parsed_authority
@@ -490,7 +490,7 @@ feature -- If authority is <userinfo>@<host>:<port>
 			user_info_not_void: Result implies user_info /= Void
 		end
 
-	is_server_authority: BOOLEAN is
+	is_server_authority: BOOLEAN
 			-- True if authority can be parsed as:
 			-- [ userinfo '@' ] host [ ':' port ]
 			-- and port, if present, is an integer.
@@ -504,7 +504,7 @@ feature -- If authority is <userinfo>@<host>:<port>
 			end
 		end
 
-	parse_authority (default_port: INTEGER) is
+	parse_authority (default_port: INTEGER)
 			-- Parse authority of that form:
 			-- [ userinfo '@' ] host [ ':' port ].
 			-- `default_port' = 0 means no default.
@@ -540,7 +540,7 @@ feature -- If authority is <userinfo>@<host>:<port>
 			host_occurs_in_authority: STRING_.substring_index (authority, host, 1) /= 0
 		end
 
-	host: STRING is
+	host: STRING
 			-- Hostname or IP4 address (RFC2396) or IP6 addresses (RFC2732)
 		require
 			has_authority: has_parsed_authority
@@ -558,7 +558,7 @@ feature -- If authority is <userinfo>@<host>:<port>
 			definition: attached host_port as el_host_port and then host = el_host_port.host
 		end
 
-	port: INTEGER is
+	port: INTEGER
 			-- Service port number
 		require
 			has_authority: has_parsed_authority
@@ -577,7 +577,7 @@ feature -- If authority is <userinfo>@<host>:<port>
 
 feature {NONE} -- Parsed authority
 
-	reset_parsed_authority is
+	reset_parsed_authority
 			-- Reset parsed version of `authority'.
 		do
 			user_info := Void
@@ -588,7 +588,7 @@ feature {NONE} -- Parsed authority
 
 feature -- Setting
 
-	set_from_uri (a_uri: UT_URI) is
+	set_from_uri (a_uri: UT_URI)
 			-- Set from other URI.
 		require
 			a_uri_not_void: a_uri /= Void
@@ -615,7 +615,7 @@ feature -- Setting
 			fragment_set: fragment_item = a_uri.fragment_item
 		end
 
-	set_authority (a_authority: like authority_item) is
+	set_authority (a_authority: like authority_item)
 			-- Set authority.
 		require
 			no_path_separators: a_authority /= Void implies not a_authority.encoded.has ('/')
@@ -630,7 +630,7 @@ feature -- Setting
 			authority_reset: not has_parsed_authority
 		end
 
-	set_path (a_path: STRING) is
+	set_path (a_path: STRING)
 			-- Set path.
 		require
 			a_path_not_void: a_path /= Void
@@ -666,7 +666,7 @@ feature -- Setting
 			path_set: STRING_.same_string (path, a_path)
 		end
 
-	set_path_items (a_has_absolute: BOOLEAN; some_items: like path_items) is
+	set_path_items (a_has_absolute: BOOLEAN; some_items: like path_items)
 			-- Set path items.
 		require
 			some_items_not_void: some_items /= Void
@@ -679,7 +679,7 @@ feature -- Setting
 			path_items_set: path_items = some_items
 		end
 
-	set_path_base (an_item: UT_URI_STRING) is
+	set_path_base (an_item: UT_URI_STRING)
 			-- Set path base (last segment, see `has_path_base').
 		require
 			an_item_not_void: an_item /= Void
@@ -690,7 +690,7 @@ feature -- Setting
 			path_base_set: path_base_item = an_item
 		end
 
-	set_path_from_uri (a_uri: UT_URI) is
+	set_path_from_uri (a_uri: UT_URI)
 			-- Set path from other uri.
 		require
 			a_uri_not_void: a_uri /= Void
@@ -703,7 +703,7 @@ feature -- Setting
 			path_set: STRING_.same_string (path, a_uri.path)
 		end
 
-	set_query (a_query: like query_item) is
+	set_query (a_query: like query_item)
 			-- Set query.
 		require
 			no_fragment_separators: a_query /= Void implies not a_query.encoded.has ('#')
@@ -714,7 +714,7 @@ feature -- Setting
 			query_set: query_item = a_query
 		end
 
-	set_fragment (a_fragment: like fragment_item) is
+	set_fragment (a_fragment: like fragment_item)
 			-- Set fragment.
 		do
 			fragment_item := a_fragment
@@ -724,7 +724,7 @@ feature -- Setting
 
 feature {NONE} -- Update cached attributes
 
-	new_full_uri: STRING is
+	new_full_uri: STRING
 			-- Reconstructed full URI (without fragment) from components
 		local
 			l_scheme: like scheme
@@ -753,7 +753,7 @@ feature {NONE} -- Update cached attributes
 			new_full_uri_not_void: Result /= Void
 		end
 
-	new_full_reference: STRING is
+	new_full_reference: STRING
 			-- Reconstructed full reference from components
 		do
 			Result := new_full_uri
@@ -767,15 +767,15 @@ feature {NONE} -- Update cached attributes
 
 feature {NONE} -- URI parsing
 
-	State_scheme: INTEGER is 1
-	State_authority_prefix: INTEGER is 2
-	State_authority: INTEGER is 3
-	State_path: INTEGER is 4
-	State_query: INTEGER is 5
-	State_fragment: INTEGER is 6
+	State_scheme: INTEGER = 1
+	State_authority_prefix: INTEGER = 2
+	State_authority: INTEGER = 3
+	State_path: INTEGER = 4
+	State_query: INTEGER = 5
+	State_fragment: INTEGER = 6
 			-- States uses in parsing the URI
 
-	reset is
+	reset
 			-- Reset all fields to their default state.
 		do
 			scheme := Void
@@ -795,7 +795,7 @@ feature {NONE} -- URI parsing
 			not_has_parsed_authority: not has_parsed_authority
 		end
 
-	parse_reference is
+	parse_reference
 			-- Parse reference according to "generic URI" syntax as
 			-- defined in RFC 2396.
 		require
@@ -923,7 +923,7 @@ feature {NONE} -- URI parsing
 			end
 		end
 
-	stop_scheme (start, stop: INTEGER) is
+	stop_scheme (start, stop: INTEGER)
 			-- Called when scheme part parsed.
 			-- Start is inclusive, stop is exclusive.
 		require
@@ -935,7 +935,7 @@ feature {NONE} -- URI parsing
 			end
 		end
 
-	stop_authority (start, stop: INTEGER) is
+	stop_authority (start, stop: INTEGER)
 			-- Start is inclusive, stop is exclusive.
 		require
 			valid_start: full_reference.valid_index (start)
@@ -950,7 +950,7 @@ feature {NONE} -- URI parsing
 			authority_set: has_authority
 		end
 
-	stop_path_item (start, stop: INTEGER) is
+	stop_path_item (start, stop: INTEGER)
 			-- Start is inclusive, stop is exclusive.
 		require
 			valid_start: full_reference.valid_index (start) or start = full_reference.count + 1
@@ -965,7 +965,7 @@ feature {NONE} -- URI parsing
 			path_item_added: path_items.count = old (path_items.count) + 1
 		end
 
-	stop_path_base (start, stop: INTEGER) is
+	stop_path_base (start, stop: INTEGER)
 			-- Start is inclusive, stop is exclusive.
 		require
 			valid_start: full_reference.valid_index (start) or start = full_reference.count + 1
@@ -977,7 +977,7 @@ feature {NONE} -- URI parsing
 			end
 		end
 
-	stop_query (start, stop: INTEGER) is
+	stop_query (start, stop: INTEGER)
 			-- Start is inclusive, stop is exclusive.
 		require
 			valid_start: full_reference.valid_index (start)
@@ -990,7 +990,7 @@ feature {NONE} -- URI parsing
 			query_set: has_query
 		end
 
-	stop_fragment (start, stop: INTEGER) is
+	stop_fragment (start, stop: INTEGER)
 			-- Start is inclusive, stop is exclusive.
 		require
 			valid_start: full_reference.valid_index (start)
@@ -1005,7 +1005,7 @@ feature {NONE} -- URI parsing
 
 feature {NONE} -- Resolve a relative-path reference
 
-	resolve_path (a_base: UT_URI) is
+	resolve_path (a_base: UT_URI)
 			-- Resolve path according to RFC 2396bis.
 			-- Abnormal cases are compensated for.
 		require
@@ -1070,7 +1070,7 @@ feature {NONE} -- Resolve a relative-path reference
 			path_resolved: is_path_resolved
 		end
 
-	is_empty (a_string: UT_URI_STRING): BOOLEAN is
+	is_empty (a_string: UT_URI_STRING): BOOLEAN
 			-- Is `a_string' an empty ''?
 		require
 			a_string_not_void: a_string /= Void
@@ -1080,7 +1080,7 @@ feature {NONE} -- Resolve a relative-path reference
 			definition: Result = a_string.encoded.is_empty
 		end
 
-	is_dot (a_string: UT_URI_STRING): BOOLEAN is
+	is_dot (a_string: UT_URI_STRING): BOOLEAN
 			-- Is `a_string a '.'?
 		require
 			a_string_not_void: a_string /= Void
@@ -1094,7 +1094,7 @@ feature {NONE} -- Resolve a relative-path reference
 			definition: Result = STRING_.same_string (a_string.encoded, ".")
 		end
 
-	is_dot_dot (a_string: UT_URI_STRING): BOOLEAN is
+	is_dot_dot (a_string: UT_URI_STRING): BOOLEAN
 			-- Is `a_string a '..'?
 		require
 			a_string_not_void: a_string /= Void

@@ -1,12 +1,12 @@
 note
 	Warning: "[
-		If you are precompiling a subset of EiffelBase, it is 
-		preferable NOT to remove this class from the subset. 
+		If you are precompiling a subset of EiffelBase, it is
+		preferable NOT to remove this class from the subset.
 		If you remove it you may see unnecessary recompilations
 		after changes.
 		]"
 	description: "[
-		Class used to ensure proper precompilation of EiffelBase. 
+		Class used to ensure proper precompilation of EiffelBase.
 		Not to be used otherwise.
 		]"
 	library: "Free implementation of ELKS library"

@@ -38,7 +38,7 @@ feature -- Result
 
 feature -- Position table
 
-	is_position_table_enabled: BOOLEAN is
+	is_position_table_enabled: BOOLEAN
 			-- Is position table enabled?
 		do
 			Result := last_position_table /= Void
@@ -47,7 +47,7 @@ feature -- Position table
 	last_position_table: XM_POSITION_TABLE
 			-- Position table
 
-	enable_position_table (a_source: XM_PARSER) is
+	enable_position_table (a_source: XM_PARSER)
 			-- Enable position table, store the position
 			-- for each node into 'last_position_table', using the
 			-- positions from the source of the callbacks.
@@ -59,7 +59,7 @@ feature -- Position table
 			create last_position_table.make
 		end
 
-	disable_position_table is
+	disable_position_table
 			-- Disable position table.
 		do
 			last_position_table := Void
@@ -67,18 +67,18 @@ feature -- Position table
 
 feature -- Document
 
-	on_start is
+	on_start
 			-- Reset.
 		do
 			create document.make
 			current_element := Void
-			
+
 			create namespace_cache.make_equal (0)
 		end
 
 feature -- Element
 
-	on_start_tag (namespace, ns_prefix, a_name: STRING) is
+	on_start_tag (namespace, ns_prefix, a_name: STRING)
 			-- called whenever the parser findes a start element.
 		local
 			an_element: XM_ELEMENT
@@ -86,7 +86,7 @@ feature -- Element
 			check
 				document_not_void: document /= Void
 			end
-				
+
 			if current_element = Void then
 					-- This is the first element in the document.
 				create an_element.make_root (document, a_name, new_namespace (namespace, ns_prefix))
@@ -104,7 +104,7 @@ feature -- Element
 			end
 		end
 
-	on_attribute (namespace, a_prefix, a_name: STRING; a_value: STRING) is
+	on_attribute (namespace, a_prefix, a_name: STRING; a_value: STRING)
 			-- Add attribute.
 		local
 			xml: XM_ATTRIBUTE
@@ -116,7 +116,7 @@ feature -- Element
 			handle_position (xml)
 		end
 
-	on_content (a_data: STRING) is
+	on_content (a_data: STRING)
 			-- Character data
 		local
 			xml: XM_CHARACTER_DATA
@@ -128,7 +128,7 @@ feature -- Element
 			handle_position (xml)
 		end
 
-	on_end_tag (a_namespace, a_ns_prefix, a_local_part: STRING) is
+	on_end_tag (a_namespace, a_ns_prefix, a_local_part: STRING)
 			-- End tag
 		do
 			check
@@ -141,7 +141,7 @@ feature -- Element
 			end
 		end
 
-	on_processing_instruction (target, data: STRING) is
+	on_processing_instruction (target, data: STRING)
 			-- Processing instruction.
 		local
 			xml: XM_PROCESSING_INSTRUCTION
@@ -154,7 +154,7 @@ feature -- Element
 			handle_position (xml)
 		end
 
-	on_comment (com: STRING) is
+	on_comment (com: STRING)
 			-- Processing comment.
 		local
 			xml: XM_COMMENT
@@ -174,11 +174,11 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	new_namespace (a_uri, a_prefix: STRING): XM_NAMESPACE is
+	new_namespace (a_uri, a_prefix: STRING): XM_NAMESPACE
 			-- Create namespace object.
 		do
 			create Result.make (a_prefix, a_uri)
-			
+
 			-- share namespace nodes
 			check cache_initialised: namespace_cache /= Void end
 			-- XM_NAMESPACE is hashable/equal on uri only,
@@ -194,12 +194,12 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
-	
+
 	namespace_cache: DS_HASH_SET [XM_NAMESPACE]
-	
+
 feature {NONE} -- Implementation (position)
 
-	handle_position (a_node: XM_NODE) is
+	handle_position (a_node: XM_NODE)
 			-- If desired, store position information of
 			-- node `a_node' in position table.
 		require
@@ -215,7 +215,7 @@ feature {NONE} -- Implementation (position)
 
 feature -- Events mode
 
-	has_resolved_namespaces: BOOLEAN is
+	has_resolved_namespaces: BOOLEAN
 			-- Namespaces required
 		do
 			Result := True

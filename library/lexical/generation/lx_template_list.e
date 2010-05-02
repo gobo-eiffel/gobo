@@ -62,7 +62,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (meta_equiv: like meta_equiv_classes) is
+	make (meta_equiv: like meta_equiv_classes)
 			-- Create a new list of templates used for
 			-- construction of compressed DFA tables.
 		do
@@ -79,7 +79,7 @@ feature -- Access
 			-- with identical transitions out of templates;
 			-- Void if meta equivalence classes are not to be used
 
-	equiv_template (template: like first): like first is
+	equiv_template (template: like first): like first
 			-- Conversion of `template' using the meta equivalence
 			-- class number in place of transition label
 		require
@@ -119,7 +119,7 @@ feature -- Access
 
 feature -- Element change
 
-	put (state, common_state: LX_DFA_STATE) is
+	put (state, common_state: LX_DFA_STATE)
 			-- Create a template entry based on `state',
 			-- and connect the state to it.
 		require

@@ -43,7 +43,7 @@ feature -- Access
 	slot_number: INTEGER
 			-- Slot number within local stack frame or all global variables
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Type of items yielded
 		do
 			Result := empty_item
@@ -53,7 +53,7 @@ feature -- Access
 			end
 		end
 
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions of `Current'
 		do
 			create Result.make (1)
@@ -74,7 +74,7 @@ feature -- Status report
 	is_tunnel_parameter: BOOLEAN
 			-- Is `Current' a tunnel paramter?
 
-	is_global: BOOLEAN is
+	is_global: BOOLEAN
 			-- Is binding global or local?
 		do
 			Result := False
@@ -82,7 +82,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_selector (a_select_expression: XM_XPATH_EXPRESSION) is
+	set_selector (a_select_expression: XM_XPATH_EXPRESSION)
 			-- Ensure `select_expression' = `a_select_expression'.
 		do
 			if select_expression /= a_select_expression then
@@ -96,7 +96,7 @@ feature -- Status setting
 			set: select_expression = a_select_expression
 		end
 
-	set_required_parameter (is_required: BOOLEAN) is
+	set_required_parameter (is_required: BOOLEAN)
 			-- Set required/optional parameter.
 		do
 			is_required_parameter := is_required
@@ -104,7 +104,7 @@ feature -- Status setting
 			set: is_required_parameter = is_required
 		end
 
-	set_implicitly_required_parameter (is_required: BOOLEAN) is
+	set_implicitly_required_parameter (is_required: BOOLEAN)
 			-- Set implicitly required parameter.
 		do
 			is_implicitly_required_parameter := is_required
@@ -112,7 +112,7 @@ feature -- Status setting
 			set: is_implicitly_required_parameter = is_required
 		end
 
-	set_tunnel_parameter (is_tunnel: BOOLEAN) is
+	set_tunnel_parameter (is_tunnel: BOOLEAN)
 			-- Set tunnel/optional parameter.
 		do
 			is_tunnel_parameter := is_tunnel
@@ -122,7 +122,7 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -142,7 +142,7 @@ feature -- Optimization
 			end
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -160,7 +160,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -178,7 +178,7 @@ feature -- Optimization
 			end
 		end
 
-	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this instruction.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -192,14 +192,14 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			generate_events (a_context)
 			a_result.put (Void)
 		end
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterator over the values of a sequence
 		local
 			l_item: DS_CELL [XM_XPATH_ITEM]
@@ -208,8 +208,8 @@ feature -- Evaluation
 			evaluate_item (l_item, a_context)
 			create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 		end
-	
-	select_value (a_context: XM_XSLT_EVALUATION_CONTEXT): XM_XPATH_VALUE is
+
+	select_value (a_context: XM_XSLT_EVALUATION_CONTEXT): XM_XPATH_VALUE
 			-- Value of `select_expression'
 		require
 			context_not_void: a_context /= Void
@@ -229,7 +229,7 @@ feature -- Evaluation
 
 feature -- Element change
 
-	initialize_variable (a_select_expression: XM_XPATH_EXPRESSION; a_required_type: XM_XPATH_SEQUENCE_TYPE; a_fingerprint: INTEGER) is
+	initialize_variable (a_select_expression: XM_XPATH_EXPRESSION; a_required_type: XM_XPATH_SEQUENCE_TYPE; a_fingerprint: INTEGER)
 			-- Set initial values.
 		do
 			set_selector (a_select_expression)
@@ -241,7 +241,7 @@ feature -- Element change
 			variable_fingerprint: variable_fingerprint = a_fingerprint
 		end
 
-	set_required_type (a_required_type: XM_XPATH_SEQUENCE_TYPE) is
+	set_required_type (a_required_type: XM_XPATH_SEQUENCE_TYPE)
 			-- Set `required_type'.
 		do
 			required_type := a_required_type
@@ -251,13 +251,13 @@ feature -- Element change
 
 feature -- Conversion
 
-	is_global_variable: BOOLEAN is
+	is_global_variable: BOOLEAN
 			-- Is `Current' a global xsl:variable/param?
 		do
 			Result := False
 		end
 
-	as_global_variable: XM_XSLT_GLOBAL_VARIABLE is
+	as_global_variable: XM_XSLT_GLOBAL_VARIABLE
 			-- `Current' seen as a global xsl:variable/param
 		require
 			global_variable: is_global_variable
@@ -268,7 +268,7 @@ feature -- Conversion
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 
@@ -278,14 +278,14 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 		end
 
 feature {NONE} -- Implementation
-	
-	check_against_required_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
+
+	check_against_required_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Check conformity against `required_type'.
 		require
 			static_context_not_void: a_context /= Void
 			not_in_error: not is_error
 			a_replacement_not_void: a_replacement /= Void
-			not_replaced: a_replacement.item = Void			
+			not_replaced: a_replacement.item = Void
 		local
 			l_role: XM_XPATH_ROLE_LOCATOR
 			l_type_checker: XM_XPATH_TYPE_CHECKER

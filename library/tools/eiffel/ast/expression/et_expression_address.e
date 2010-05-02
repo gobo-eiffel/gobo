@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (e: like expression) is
+	make (e: like expression)
 			-- Create a new expression address.
 		require
 			e_not_void: e /= Void
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset expression as it was just after it was last parsed.
 		do
 			expression.reset
@@ -49,13 +49,13 @@ feature -- Access
 	expression: ET_PARENTHESIZED_EXPRESSION
 			-- Expression
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := expression.last_leaf
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := expression.break
@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_expression_address (Current)

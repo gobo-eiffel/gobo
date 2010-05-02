@@ -24,7 +24,7 @@ create
 
 feature -- Tests
 
-	test_valid_code is
+	test_valid_code
 			-- Test code range routines.
 		do
 			assert ("ascii_negative", not unicode.valid_ascii_code (-1))
@@ -32,14 +32,14 @@ feature -- Tests
 			assert ("unicode_negative", not unicode.valid_code (-1))
 		end
 
-	test_ascii_string is
+	test_ascii_string
 			-- Test `is_ascii_string'.
 		do
 			assert ("ascii", unicode.is_ascii_string ("a"))
 			assert ("not_ascii", not unicode.is_ascii_string ("%/130/"))
 		end
 
-	test_code_to_string is
+	test_code_to_string
 			-- Test `code_to_string'.
 		do
 			assert ("code_to_string_ascii", unicode.code_to_string (97).item (1) = 'a')

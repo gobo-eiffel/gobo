@@ -14,7 +14,7 @@ class KL_SHARED_STANDARD_FILES
 
 feature -- Access
 
-	std: KL_STANDARD_FILES is
+	std: KL_STANDARD_FILES
 			-- Standard files
 		once
 			create Result

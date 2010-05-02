@@ -30,13 +30,13 @@ create {XM_XSLT_NODE_FACTORY}
 
 feature -- Status report
 
-	may_contain_sequence_constructor: BOOLEAN is
+	may_contain_sequence_constructor: BOOLEAN
 			-- Is `Current' allowed to contain a sequence constructor?
 		do
 			Result := True
 		end
 
-	is_permitted_child (a_style_element: XM_XSLT_STYLE_ELEMENT): BOOLEAN is
+	is_permitted_child (a_style_element: XM_XSLT_STYLE_ELEMENT): BOOLEAN
 			-- Is `a_style_element' a permitted child of `Current'?
 		do
 			Result := a_style_element.is_sort
@@ -44,7 +44,7 @@ feature -- Status report
 
 feature -- Element change
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -98,7 +98,7 @@ feature -- Element change
 			attributes_prepared := True
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 		local
 			l_role: XM_XPATH_ROLE_LOCATOR
@@ -161,7 +161,7 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (a_executable: XM_XSLT_EXECUTABLE) is
+	compile (a_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		local
 			l_algorithm: INTEGER
@@ -203,7 +203,7 @@ feature -- Element change
 
 feature -- Conversion
 
-	is_for_each_group: BOOLEAN is
+	is_for_each_group: BOOLEAN
 			-- Is `Current' an xsl:for-each-group?
 		do
 			Result := True
@@ -230,7 +230,7 @@ feature {NONE} -- Implementation
 			-- Group-ending-with pattern
 
 	prepare_attributes_2 (a_select_attribute, a_group_by_attribute, a_group_starting_with_attribute,
-								 a_group_adjacent_attribute,	a_group_ending_with_attribute, a_collation_attribute: STRING) is
+								 a_group_adjacent_attribute,	a_group_ending_with_attribute, a_collation_attribute: STRING)
 			-- Prepare attributes some more.
 		local
 			count_of_grouping_attributes: INTEGER

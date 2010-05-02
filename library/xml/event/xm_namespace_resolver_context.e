@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new context.
 		do
 			create context.make
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	add_default (a_namespace: STRING) is
+	add_default (a_namespace: STRING)
 			-- Add default namespace to context.
 		require
 			a_namespace_not_void: a_namespace /= Void
@@ -48,7 +48,7 @@ feature -- Element change
 			add (a_namespace, Default_pseudo_prefix)
 		end
 
-	add (a_namespace: STRING; a_prefix: STRING) is
+	add (a_namespace: STRING; a_prefix: STRING)
 			-- Add namespace to context.
 		require
 			a_namespace_not_void: a_namespace /= Void
@@ -61,7 +61,7 @@ feature -- Element change
 
 feature -- Status report
 
-	is_context_empty: BOOLEAN is
+	is_context_empty: BOOLEAN
 			-- Is context stack empty?
 		do
 			Result := context.is_empty
@@ -69,7 +69,7 @@ feature -- Status report
 			definition: Result = context.is_empty
 		end
 
-	shallow_has (a_prefix: STRING): BOOLEAN is
+	shallow_has (a_prefix: STRING): BOOLEAN
 			-- Is this prefix known at the current level?
 			-- (for duplicate declaration checks)
 		require
@@ -78,7 +78,7 @@ feature -- Status report
 			Result := context.count > 0 and then context.last.has (a_prefix)
 		end
 
-	has (a_prefix: STRING): BOOLEAN is
+	has (a_prefix: STRING): BOOLEAN
 			-- Is this prefix known?
 		require
 			a_prefix_not_void: a_prefix /= Void
@@ -98,7 +98,7 @@ feature -- Status report
 
 feature -- Access
 
-	resolve_default: STRING is
+	resolve_default: STRING
 			-- Resolve default namespace.
 		do
 			Result := resolve (Default_pseudo_prefix)
@@ -106,7 +106,7 @@ feature -- Access
 			resoled_not_void: Result /= Void
 		end
 
-	resolve (a_prefix: STRING): STRING is
+	resolve (a_prefix: STRING): STRING
 			-- Resolve a prefix.
 		require
 			a_prefix_not_void: a_prefix /= Void
@@ -129,13 +129,13 @@ feature -- Access
 
 feature -- Stack
 
-	push is
+	push
 			-- Push element context.
 		do
 			context.force_last (new_string_string_table)
 		end
 
-	pop is
+	pop
 			-- Pop element context.
 		do
 			if context.count > 0 then
@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	Default_pseudo_prefix: STRING is
+	Default_pseudo_prefix: STRING
 			-- Default pseudo prefix
 		once
 			create Result.make_empty
@@ -158,7 +158,7 @@ feature {NONE} -- Constants
 			prefix_not_void: Result /= Void
 		end
 
-	Default_namespace: STRING is
+	Default_namespace: STRING
 			-- Default namespace (empty)
 		once
 			create Result.make_empty

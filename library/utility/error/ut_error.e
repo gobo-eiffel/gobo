@@ -23,7 +23,7 @@ inherit
 
 feature -- Access
 
-	message (a_template: STRING): STRING is
+	message (a_template: STRING): STRING
 			-- Error message built using `a_template';
 			-- Occurrences of "$N" or "${N}" (where N stands
 			-- for [0-9]+) in the template are substituted by
@@ -148,7 +148,7 @@ feature -- Access
 			-- Parameters used for building the error message
 			-- (See header comment of `message' for details.)
 
-	default_message: STRING is
+	default_message: STRING
 			-- Default error message built using `default_template'
 		do
 			Result := message (default_template)
@@ -156,14 +156,14 @@ feature -- Access
 			default_message_not_void: Result /= Void
 		end
 
-	default_template: STRING is
+	default_template: STRING
 			-- Default template used to built the error message
 		deferred
 		ensure
 			default_template_not_void: Result /= Void
 		end
 
-	code: STRING is
+	code: STRING
 			-- Error code
 			-- (Might be useful to identify user-defined templates.)
 		deferred

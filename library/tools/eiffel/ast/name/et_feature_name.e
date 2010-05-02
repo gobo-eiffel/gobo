@@ -28,12 +28,12 @@ inherit
 
 feature -- Status report
 
-	is_feature_name: BOOLEAN is True
+	is_feature_name: BOOLEAN = True
 			-- Is current call name a feature name?
 
 feature -- Access
 
-	feature_name: ET_FEATURE_NAME is
+	feature_name: ET_FEATURE_NAME
 			-- Feature name
 		do
 			Result := Current
@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_feature_name (other: ET_FEATURE_NAME): BOOLEAN is
+	same_feature_name (other: ET_FEATURE_NAME): BOOLEAN
 			-- Are feature name and `other' the same feature name?
 			-- (case insensitive)
 		require

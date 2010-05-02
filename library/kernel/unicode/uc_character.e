@@ -56,7 +56,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_character (c: CHARACTER) is
+	make_from_character (c: CHARACTER)
 			-- Create a new unicode character from Latin-1 character `c'.
 		do
 			code := c.code
@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 			code_set: code = c.code
 		end
 
-	make_from_code (a_code: INTEGER) is
+	make_from_code (a_code: INTEGER)
 			-- Create a new unicode character with code `a_code'.
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -79,7 +79,7 @@ feature -- Access
 	code: INTEGER
 			-- Code of unicode character
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			Result := code
@@ -87,7 +87,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_ascii: BOOLEAN is
+	is_ascii: BOOLEAN
 			-- Is current character an ASCII character?
 		do
 			Result := (code <= unicode.maximum_ascii_character_code)
@@ -97,7 +97,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current object less than other?
 		do
 			Result := (code < other.code)
@@ -105,7 +105,7 @@ feature -- Comparison
 
 feature -- Conversion
 
-	as_lower, to_lower: like Current is
+	as_lower, to_lower: like Current
 			-- Lowercase value of current character
 			-- (Create a new object at each call.)
 		do
@@ -114,7 +114,7 @@ feature -- Conversion
 			to_lower_not_void: Result /= Void
 		end
 
-	as_upper, to_upper: like Current is
+	as_upper, to_upper: like Current
 			-- Uppercase value of current character
 			-- (Create a new object at each call.)
 		do
@@ -123,7 +123,7 @@ feature -- Conversion
 			to_upper_not_void: Result /= Void
 		end
 
-	to_character: CHARACTER is
+	to_character: CHARACTER
 			-- Character with code `code'
 		require
 			valid_code: code <= Platform.Maximum_character_code
@@ -135,7 +135,7 @@ feature -- Conversion
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- New STRING containing terse printable representation
 			-- of current character; Non-ascii characters are represented
 			-- with the %/code/ convention.

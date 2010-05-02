@@ -25,7 +25,7 @@ create
 
 feature -- Test
 
-	test_template is
+	test_template
 			-- Test simple string interpretion.
 		local
 			a_variables: GEANT_VARIABLES
@@ -44,7 +44,7 @@ feature -- Test
 
 feature -- Execution
 
-	set_up is
+	set_up
 			-- Setup for a test.
 		do
 			create si.make
@@ -52,7 +52,7 @@ feature -- Execution
 			si.set_variable_resolver (vr)
 		end
 
-	tear_down is
+	tear_down
 			-- Tear down after a test.
 		do
 			si := Void

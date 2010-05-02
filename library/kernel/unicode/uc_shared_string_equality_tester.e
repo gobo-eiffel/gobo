@@ -14,7 +14,7 @@ class UC_SHARED_STRING_EQUALITY_TESTER
 
 feature -- Access
 
-	string_equality_tester: UC_STRING_EQUALITY_TESTER is
+	string_equality_tester: UC_STRING_EQUALITY_TESTER
 			-- String equality tester
 		once
 			create Result

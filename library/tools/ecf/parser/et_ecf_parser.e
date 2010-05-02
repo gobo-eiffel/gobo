@@ -24,7 +24,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_factory (a_factory: like ast_factory; an_error_handler: like error_handler) is
+	make_with_factory (a_factory: like ast_factory; an_error_handler: like error_handler)
 			-- Create a new ECF parser using `a_factory' as AST factory.
 		do
 			precursor (a_factory, an_error_handler)
@@ -56,7 +56,7 @@ feature -- Access
 
 feature -- Parsing
 
-	parse_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+	parse_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Parse ECF file `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -114,7 +114,7 @@ feature -- Parsing
 
 feature -- Setting
 
-	set_parsed_libraries (a_libraries: like parsed_libraries) is
+	set_parsed_libraries (a_libraries: like parsed_libraries)
 			-- Set `parsed_libraries' to `a_libraries'.
 		require
 			a_libraries_not_void: a_libraries /= Void
@@ -127,7 +127,7 @@ feature -- Setting
 
 feature {NONE} -- Element change
 
-	build_system_config (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_filename: STRING) is
+	build_system_config (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_filename: STRING)
 			-- Build system config from `an_element'.
 		require
 			an_element_not_void: an_element /= Void

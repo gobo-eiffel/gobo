@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_id: INTEGER; a_type_mark: STRING; a_name: like name) is
+	make (an_id: INTEGER; a_type_mark: STRING; a_name: like name)
 			-- Create a new type named `a_name'.
 		require
 			valid_id: id >= 0
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			name_set: a_type_mark = Void implies name = a_name
 		end
 
-	make_generic (an_id: INTEGER; a_type_mark: STRING; a_name: like name; generics: DS_ARRAYED_LIST [PR_TYPE]) is
+	make_generic (an_id: INTEGER; a_type_mark: STRING; a_name: like name; generics: DS_ARRAYED_LIST [PR_TYPE])
 			-- Create a new generic type named `a_name' and generic
 			-- parameters `generics'.
 		require
@@ -95,7 +95,7 @@ feature {NONE} -- Initialization
 			id_set: id = an_id
 		end
 
-	make_labeled_tuple (an_id: INTEGER; a_type_mark: STRING; a_name: like name; generics: DS_ARRAYED_LIST [PR_LABELED_TYPE]) is
+	make_labeled_tuple (an_id: INTEGER; a_type_mark: STRING; a_name: like name; generics: DS_ARRAYED_LIST [PR_LABELED_TYPE])
 			-- Create a new labeled tuple type named `a_name' and generic
 			-- parameters `generics'.
 		require
@@ -155,7 +155,7 @@ feature {NONE} -- Initialization
 			id_set: id = an_id
 		end
 
-	make_anchored (an_id: INTEGER; a_type_mark: STRING; a_name: like name) is
+	make_anchored (an_id: INTEGER; a_type_mark: STRING; a_name: like name)
 			-- Create a new anchored type
 			-- of the form "like `a_name'".
 		require
@@ -180,7 +180,7 @@ feature {NONE} -- Initialization
 			id_set: id = an_id
 		end
 
-	make_like_current (an_id: INTEGER; a_type_mark: STRING) is
+	make_like_current (an_id: INTEGER; a_type_mark: STRING)
 			-- Create a new  type of the form "like Current".
 		require
 			valid_id: id >= 0
@@ -212,7 +212,7 @@ feature -- Access
 			-- Name to be used in `last_value_name', typically "last_<alias_name>_value".
 			-- Use `name' instead if `alias_name' is Void or empty.
 
-	last_value_name: STRING is
+	last_value_name: STRING
 			-- Name of last value entity
 		local
 			l_name: STRING
@@ -251,7 +251,7 @@ feature -- Access
 	id: INTEGER
 			-- Internal type id
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash value
 		do
 			Result := id
@@ -259,7 +259,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_alias_name (a_name: like alias_name) is
+	set_alias_name (a_name: like alias_name)
 			-- Set `alias_name' to `a_name'.
 		do
 			alias_name := a_name
@@ -269,7 +269,7 @@ feature -- Setting
 
 feature -- Output
 
-	append_dollar_n_to_string (n: INTEGER; nb_rhs: INTEGER; a_rule: PR_RULE; a_string: STRING) is
+	append_dollar_n_to_string (n: INTEGER; nb_rhs: INTEGER; a_rule: PR_RULE; a_string: STRING)
 			-- Append typed version of $`n' to `a_string'.
 			-- `nb_rhs' is the maximum number of symbols on the
 			-- right-hand-side of `a_rule' that can be accessed.
@@ -311,7 +311,7 @@ feature -- Output
 			end
 		end
 
-	append_dollar_dollar_to_string (a_string: STRING) is
+	append_dollar_dollar_to_string (a_string: STRING)
 			-- Append typed version of $$ to `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -320,7 +320,7 @@ feature -- Output
 			INTEGER_.append_decimal_integer (id, a_string)
 		end
 
-	print_yyvs_declaration (indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_yyvs_declaration (indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print declaration of "yyvs" to `a_file'.
 		require
 			indent_positive: indent >= 0
@@ -367,7 +367,7 @@ feature -- Output
 			a_file.put_line ("]")
 		end
 
-	print_create_yyvs (indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_create_yyvs (indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print "yyvs := yyspecial_routines.make (yyInitial_stack_size)" to `a_file'.
 		require
 			indent_positive: indent >= 0
@@ -400,7 +400,7 @@ feature -- Output
 			a_file.put_line (")")
 		end
 
-	print_clear_yyvs (indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_clear_yyvs (indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print "yyvs.clear_all" to `a_file'.
 		require
 			indent_positive: indent >= 0
@@ -423,7 +423,7 @@ feature -- Output
 			a_file.put_line ("end")
 		end
 
-	print_increment_yyvsp (nb: INTEGER; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_increment_yyvsp (nb: INTEGER; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print "yyvsp := yyvsp + `nb'" to `a_file'.
 		require
 			indent_positive: indent >= 0
@@ -445,7 +445,7 @@ feature -- Output
 			a_file.put_new_line
 		end
 
-	print_push_yyval (indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_push_yyval (indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print "yyvs.put (yyval, yyvsp)" to `a_file'.
 		require
 			indent_positive: indent >= 0
@@ -462,7 +462,7 @@ feature -- Output
 			a_file.put_line (")")
 		end
 
-	print_push_last_value (indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_push_last_value (indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print "yyvsp := yyvsp + 1; yyvs.put (last_value, yyvsp)" to `a_file'.
 		require
 			indent_positive: indent >= 0
@@ -486,7 +486,7 @@ feature -- Output
 			a_file.put_line (")")
 		end
 
-	print_pop_last_value (indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_pop_last_value (indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print "yyvsp := yyvsp - 1" to `a_file'.
 		require
 			indent_positive: indent >= 0
@@ -502,7 +502,7 @@ feature -- Output
 			a_file.put_line (" - 1")
 		end
 
-	print_resize_yyvs (indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_resize_yyvs (indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print "yyvs := yyspecial_routines.resize (yyvs, yyvsp + yyInitial_stack_size)" to `a_file'.
 		require
 			indent_positive: indent >= 0
@@ -552,7 +552,7 @@ feature -- Output
 			a_file.put_line ("end")
 		end
 
-	print_dollar_dollar_declaration (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_dollar_dollar_declaration (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print $$ declaration to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -564,7 +564,7 @@ feature -- Output
 			a_file.put_string (name)
 		end
 
-	print_indentation (indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_indentation (indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print `indent' tabs to `a_file'.
 		require
 			indent_positive: indent >= 0
@@ -585,7 +585,7 @@ feature -- Output
 
 feature -- Old typing output
 
-	old_append_dollar_n_to_string (n: INTEGER; nb_rhs: INTEGER; a_rule: PR_RULE; a_string: STRING) is
+	old_append_dollar_n_to_string (n: INTEGER; nb_rhs: INTEGER; a_rule: PR_RULE; a_string: STRING)
 			-- Append typed version of $`n' to `a_string' using the old typing mechanism.
 			-- `nb_rhs' is the maximum number of symbols on the
 			-- right-hand-side of `a_rule' that can be accessed.
@@ -619,7 +619,7 @@ feature -- Old typing output
 			end
 		end
 
-	old_append_dollar_dollar_to_string (a_string: STRING) is
+	old_append_dollar_dollar_to_string (a_string: STRING)
 			-- Append typed version of $$ to `a_string'
 			-- using the old typing mechanism.
 		require
@@ -631,7 +631,7 @@ feature -- Old typing output
 			end
 		end
 
-	old_print_conversion_routine (a_file: KI_TEXT_OUTPUT_STREAM) is
+	old_print_conversion_routine (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print conversion routine ANY->`name' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -641,7 +641,7 @@ feature -- Old typing output
 			a_file.put_integer (id)
 			a_file.put_string (" (v: ANY): ")
 			a_file.put_string (name)
-			a_file.put_string (" is%N%
+			a_file.put_string ("%N%
 				%%T%Trequire%N%
 				%%T%T%Tvalid_type: yyis_type")
 			a_file.put_integer (id)
@@ -653,7 +653,7 @@ feature -- Old typing output
 				%%T%Tend%N")
 			a_file.put_string ("%N%Tyyis_type")
 			a_file.put_integer (id)
-			a_file.put_string (" (v: ANY): BOOLEAN is%N%
+			a_file.put_string (" (v: ANY): BOOLEAN%N%
 				%%T%Tlocal%N%T%T%Tu: ")
 			a_file.put_string (name)
 			a_file.put_string ("%N%T%Tdo%N%
@@ -662,7 +662,7 @@ feature -- Old typing output
 				%%T%Tend%N")
 		end
 
-	old_print_dollar_dollar_initialization (a_file: KI_TEXT_OUTPUT_STREAM) is
+	old_print_dollar_dollar_initialization (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print $$ initialization to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -675,7 +675,7 @@ feature -- Old typing output
 			end
 		end
 
-	old_print_dollar_dollar_finalization (a_file: KI_TEXT_OUTPUT_STREAM) is
+	old_print_dollar_dollar_finalization (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print $$ finalization to `a_file'.
 		require
 			a_file_not_void: a_file /= Void

@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_variables: like variables; an_error_handler: like error_handler) is
+	make (a_variables: like variables; an_error_handler: like error_handler)
 			-- Create a new 'validate' command.
 		require
 			a_variables_not_void: a_variables /= Void
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute 'validate' command.
 		local
 			a_parser: ET_XACE_PARSER

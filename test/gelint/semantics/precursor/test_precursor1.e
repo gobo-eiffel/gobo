@@ -37,14 +37,14 @@ create
 
 feature -- Test
 
-	test_precursor is
+	test_precursor
 			-- Test precursor of precursor expression.
 		local
 			d: DD
 		do
 			create d
-			assert ("not_void", d.f /= Void) 
-			assert_integers_equal ("count", 2, d.f.count) 
+			assert ("not_void", d.f /= Void)
+			assert_integers_equal ("count", 2, d.f.count)
 		end
 
 end

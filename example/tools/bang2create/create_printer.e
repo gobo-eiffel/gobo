@@ -24,7 +24,7 @@ create
 
 feature -- Processing
 
-	process_bang_instruction (an_instruction: ET_BANG_INSTRUCTION) is
+	process_bang_instruction (an_instruction: ET_BANG_INSTRUCTION)
 			-- Process `an_instruction'.
 		local
 			a_type: ET_TYPE

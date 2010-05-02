@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_position: XM_POSITION) is
+	make (a_position: XM_POSITION)
 			-- Create a warning reporting that a cluster element that
 			-- groups clusters, mounts and options is no longer used.
 		require
@@ -34,10 +34,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "<cluster> at $1 is obsolete. Specify options, clusters and mounts directly under <system> instead"
+	default_template: STRING = "<cluster> at $1 is obsolete. Specify options, clusters and mounts directly under <system> instead"
 			-- Default template used to built the error message
 
-	code: STRING is "XA0014"
+	code: STRING = "XA0014"
 			-- Error code
 
 end

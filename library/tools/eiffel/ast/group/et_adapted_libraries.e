@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_library: like library) is
+	make (a_library: like library)
 			-- Create a new adapted library list with initially
 			-- one library `a_library'.
 		require
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			libraries_set: libraries.last = a_library
 		end
 
-	make_empty is
+	make_empty
 			-- Create a new empty adapted library list.
 		do
 			create libraries.make (Initial_libraries_capacity)
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is the list of libraries empty?
 		do
 			Result := (count = 0)
@@ -55,7 +55,7 @@ feature -- Status report
 
 feature -- Access
 
-	library (i: INTEGER): ET_ADAPTED_LIBRARY is
+	library (i: INTEGER): ET_ADAPTED_LIBRARY
 			-- `i'-th library
 		require
 			i_large_enough: i >= 1
@@ -66,7 +66,7 @@ feature -- Access
 			library_not_void: Result /= Void
 		end
 
-	adapted_library (a_library: ET_LIBRARY): ET_ADAPTED_LIBRARY is
+	adapted_library (a_library: ET_LIBRARY): ET_ADAPTED_LIBRARY
 			-- Adapted library corresponding to `a_library' in current list
 			--  if any, Void otherwise
 			--
@@ -97,7 +97,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of libraries
 		do
 			Result := libraries.count
@@ -107,7 +107,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	put_last (a_library: like library) is
+	put_last (a_library: like library)
 			-- Add `a_library' to the list of libraries.
 		require
 			a_library_not_void: a_library /= Void
@@ -120,7 +120,7 @@ feature -- Element change
 
 feature -- Iteration
 
-	do_all (an_action: PROCEDURE [ANY, TUPLE [ET_LIBRARY]]) is
+	do_all (an_action: PROCEDURE [ANY, TUPLE [ET_LIBRARY]])
 			-- Apply `an_action' to every library, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 		require
@@ -135,7 +135,7 @@ feature -- Iteration
 			end
 		end
 
-	universes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]) is
+	universes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]])
 			-- Apply `an_action' to every library (viewed as a universe), from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 		require
@@ -150,7 +150,7 @@ feature -- Iteration
 			end
 		end
 
-	universes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_test: FUNCTION [ANY, TUPLE [ET_UNIVERSE], BOOLEAN]) is
+	universes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_test: FUNCTION [ANY, TUPLE [ET_UNIVERSE], BOOLEAN])
 			-- Apply `an_action' to every library (viewed as a universe) that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 		require
@@ -170,7 +170,7 @@ feature -- Iteration
 			end
 		end
 
-	do_adapted (an_action: PROCEDURE [ANY, TUPLE [ET_ADAPTED_LIBRARY]]) is
+	do_adapted (an_action: PROCEDURE [ANY, TUPLE [ET_ADAPTED_LIBRARY]])
 			-- Apply `an_action' to every library, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 		require
@@ -179,7 +179,7 @@ feature -- Iteration
 			libraries.do_all (an_action)
 		end
 
-	do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_LIBRARY]]) is
+	do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_LIBRARY]])
 			-- Apply `an_action' to every library,
 			-- and to all libraries reachable from them.
 		require
@@ -194,7 +194,7 @@ feature -- Iteration
 
 feature {NONE} -- Constants
 
-	Initial_libraries_capacity: INTEGER is 50
+	Initial_libraries_capacity: INTEGER = 50
 			-- Initial capacity for `libraries'
 
 invariant

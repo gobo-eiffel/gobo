@@ -44,7 +44,7 @@ feature -- Comparison
 				set2.forth
 			end
 		end
-	
+
 feature -- Basic operations
 
 	symdif (set1, set2: TRAVERSABLE_SUBSET [G])
@@ -53,7 +53,7 @@ feature -- Basic operations
 		local
 			tmp_set: LINKED_LIST [G]
 		do
-			create tmp_set.make 
+			create tmp_set.make
 			if set1.object_comparison then
 				tmp_set.compare_objects
 			end
@@ -73,9 +73,9 @@ feature -- Basic operations
 			from tmp_set.start until tmp_set.after loop
 				set1.extend (tmp_set.item)
 				tmp_set.forth
-			end	
+			end
 		end
-	
+
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

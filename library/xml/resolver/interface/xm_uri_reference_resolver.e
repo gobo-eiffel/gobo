@@ -18,7 +18,7 @@ inherit
 
 feature -- Action
 
-	resolve_uri (a_uri_reference: STRING) is
+	resolve_uri (a_uri_reference: STRING)
 			-- Resolve `a_uri_reference' on behalf of an application.
 		require
 			uri_reference_not_void: a_uri_reference /= Void
@@ -27,7 +27,7 @@ feature -- Action
 
 feature -- Result
 
-	last_uri_reference_stream: KI_CHARACTER_INPUT_STREAM is
+	last_uri_reference_stream: KI_CHARACTER_INPUT_STREAM
 			-- Last stream initialised from URI reference.
 		require
 			not_error: not has_uri_reference_error
@@ -36,7 +36,7 @@ feature -- Result
 			not_void: Result /= Void
 		end
 
-	last_system_id: UT_URI is
+	last_system_id: UT_URI
 			-- System id used to actually open `last_uri_reference_stream'
 		require
 			not_error: not has_uri_reference_error
@@ -45,12 +45,12 @@ feature -- Result
 			not_void: Result /= Void
 		end
 
-	has_uri_reference_error: BOOLEAN is
+	has_uri_reference_error: BOOLEAN
 			-- Did the last resolution attempt succeed?
 		deferred
 		end
-		
-	last_uri_reference_error: STRING is
+
+	last_uri_reference_error: STRING
 			-- Last error message.
 		require
 			has_error: has_uri_reference_error
@@ -60,4 +60,4 @@ feature -- Result
 		end
 
 end
-	
+

@@ -53,7 +53,7 @@ class ARRAYED_STACK [G] inherit
 
 create
 	make
-	
+
 create {ARRAYED_STACK}
 	make_filled
 

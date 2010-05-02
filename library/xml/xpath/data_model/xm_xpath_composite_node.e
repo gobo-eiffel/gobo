@@ -21,7 +21,7 @@ inherit
 
 feature -- Access
 
-	first_child: XM_XPATH_NODE is
+	first_child: XM_XPATH_NODE
 			-- The first child of this node;
 			-- If there are no children, return `Void'.
 		local
@@ -34,7 +34,7 @@ feature -- Access
 			end
 		end
 
-	last_child: XM_XPATH_NODE is
+	last_child: XM_XPATH_NODE
 			-- The last child of this node;
 			-- If there are no children, return `Void'.
 		local

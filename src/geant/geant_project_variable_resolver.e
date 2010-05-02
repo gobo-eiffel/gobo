@@ -28,14 +28,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create new Project Variable resolver.
 		do
 		end
 
 feature -- Access
 
-	value (a_name: STRING): STRING is
+	value (a_name: STRING): STRING
 			-- Value of variable `a_name' as a result of searching in
 			-- current target's arguments, commandline variables, project variables, environment variables
 			-- in this order; Void if not found
@@ -90,7 +90,7 @@ feature -- Access
 
 		end
 
-	boolean_condition_value (a_condition: STRING): BOOLEAN is
+	boolean_condition_value (a_condition: STRING): BOOLEAN
 			-- Is `a_condition' True?;
 			-- used for "if" and "unless" attributes;
 			-- possible forms:
@@ -153,7 +153,7 @@ feature -- Access
 
 feature -- Status report
 
-	has (a_name: STRING): BOOLEAN is
+	has (a_name: STRING): BOOLEAN
 			-- Is there a variable named `a_name' in
 			-- current target's arguments, commandline variables, project variables, environment variables
 			-- (searched in this order)?
@@ -201,7 +201,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_variables (a_variables: like variables) is
+	set_variables (a_variables: like variables)
 			-- Set `variables' to `a_variables'.
 		require
 			a_variables_not_void: a_variables /= Void
@@ -213,7 +213,7 @@ feature -- Setting
 
 feature {NONE} -- Constants
 
-	True_attribute_value: STRING is
+	True_attribute_value: STRING
 			-- "true" attribute value
 		once
 			Result := "true"
@@ -221,7 +221,7 @@ feature {NONE} -- Constants
 			attribute_value_not_void: Result /= Void
 		end
 
-	False_attribute_value: STRING is
+	False_attribute_value: STRING
 			-- "false" attribute value
 		once
 			Result := "false"

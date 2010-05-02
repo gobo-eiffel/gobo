@@ -54,7 +54,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant.
 		do
 			create key_map.make_map_default
@@ -69,7 +69,7 @@ feature -- Access
 		-- Result from `generate_keyed_sequence'
 
 	generate_keyed_sequence (a_key_fingerprint: INTEGER; a_document: XM_XPATH_DOCUMENT; a_key_value: XM_XPATH_ATOMIC_VALUE;
-						  a_context: XM_XSLT_EVALUATION_CONTEXT) is
+						  a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Generate a sequence of nodes for a particular key value
 		require
 			strictly_positive_key_fingerprint: a_key_fingerprint > 0
@@ -138,7 +138,7 @@ feature -- Access
 			iterator_not_void: not a_context.transformer.is_error implies last_key_sequence /= Void -- of course, the iteration may well yield zero nodes
 		end
 
-	collation_uri (a_key_fingerprint: INTEGER): STRING is
+	collation_uri (a_key_fingerprint: INTEGER): STRING
 			-- Collation URI for the key defined by a_key_fingerprint'
 		require
 			key_defined: has_key (a_key_fingerprint)
@@ -148,7 +148,7 @@ feature -- Access
 			collation_uri_not_void: Result /= Void
 		end
 
-	key_definitions (a_key_fingerprint: INTEGER): XM_XSLT_KEY_SET is
+	key_definitions (a_key_fingerprint: INTEGER): XM_XSLT_KEY_SET
 			-- List of key definitions matching `a_key_fingerprint:'
 		require
 			key_defined: has_key (a_key_fingerprint)
@@ -160,13 +160,13 @@ feature -- Access
 
 feature -- Status report
 
-	has_key (a_key_fingerprint: INTEGER): BOOLEAN is
+	has_key (a_key_fingerprint: INTEGER): BOOLEAN
 			-- Is there a key definition for `a_key_fingerprint'?
 		do
 			Result := key_map.has (a_key_fingerprint)
 		end
 
-	is_same_collation (a_key_definition: XM_XSLT_KEY_DEFINITION; a_key_fingerprint: INTEGER): BOOLEAN is
+	is_same_collation (a_key_definition: XM_XSLT_KEY_DEFINITION; a_key_fingerprint: INTEGER): BOOLEAN
 			-- Does `a_key_definition' use the same collation as all keys defined to map to `a_key_fingerprint'?
 		require
 			key_definition_not_void: a_key_definition /= Void
@@ -180,7 +180,7 @@ feature -- Status report
 
 feature -- Element change
 
-	add_key_definition (a_key_definition: XM_XSLT_KEY_DEFINITION; a_key_fingerprint: INTEGER) is
+	add_key_definition (a_key_definition: XM_XSLT_KEY_DEFINITION; a_key_fingerprint: INTEGER)
 			-- Add a key definition.
 		require
 			key_definition_not_void: a_key_definition /= Void
@@ -206,7 +206,7 @@ feature -- Element change
 			key_definition_added: True -- TODO
 		end
 
-	allocate_slots is
+	allocate_slots
 			-- Allocate stack-frame slots in bodies of all key definitions.
 		local
 			l_table_cursor: DS_HASH_TABLE_CURSOR [XM_XSLT_KEY_SET, INTEGER]
@@ -242,7 +242,7 @@ feature {NONE} -- Implementation
 	last_built_index: XM_XSLT_KEY_INDEX
 			-- Result from `build_index'
 
-	build_index (a_key_fingerprint, a_item_type: INTEGER; a_document: XM_XPATH_DOCUMENT; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	build_index (a_key_fingerprint, a_item_type: INTEGER; a_document: XM_XPATH_DOCUMENT; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Build index for `a_document' for a named key.
 		require
 			document_not_void: a_document /= Void
@@ -281,7 +281,7 @@ feature {NONE} -- Implementation
 		end
 
 	construct_index (a_document: XM_XPATH_DOCUMENT; a_map: DS_HASH_TABLE [DS_ARRAYED_LIST [XM_XPATH_NODE], XM_XPATH_ATOMIC_VALUE];
-		a_key: XM_XSLT_KEY_DEFINITION; a_sought_item_type: INTEGER; a_context: XM_XSLT_EVALUATION_CONTEXT; is_first: BOOLEAN) is
+		a_key: XM_XSLT_KEY_DEFINITION; a_sought_item_type: INTEGER; a_context: XM_XSLT_EVALUATION_CONTEXT; is_first: BOOLEAN)
 			-- Fill in `a_map' for `a_key'.
 		require
 			document_not_void: a_document /= Void
@@ -370,7 +370,7 @@ feature {NONE} -- Implementation
 
 	process_key_node (a_node: XM_XPATH_NODE; a_use: XM_XPATH_EXPRESSION; a_sought_item_type: INTEGER;
 		a_collator: ST_COLLATOR; a_map: DS_HASH_TABLE [DS_ARRAYED_LIST [XM_XPATH_NODE], XM_XPATH_ATOMIC_VALUE];
-		a_context: XM_XSLT_EVALUATION_CONTEXT; a_is_first: BOOLEAN) is
+		a_context: XM_XSLT_EVALUATION_CONTEXT; a_is_first: BOOLEAN)
 			-- Process one matching node, adding entries to the index if appropriate.
 		require
 			node_not_void: a_node /= Void
@@ -454,7 +454,7 @@ feature {NONE} -- Implementation
 		end
 
 	add_node_to_index (a_node: XM_XPATH_NODE; a_map: DS_HASH_TABLE [DS_ARRAYED_LIST [XM_XPATH_NODE], XM_XPATH_ATOMIC_VALUE];
-							 a_value: XM_XPATH_ATOMIC_VALUE; a_is_first: BOOLEAN) is
+							 a_value: XM_XPATH_ATOMIC_VALUE; a_is_first: BOOLEAN)
 			-- Add `a_node' to `a_map'.
 		require
 			node_not_void: a_node /= Void
@@ -538,7 +538,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	put_index (a_document: XM_XPATH_DOCUMENT; a_key_fingerprint, an_item_type: INTEGER; an_index: XM_XSLT_KEY_INDEX) is
+	put_index (a_document: XM_XPATH_DOCUMENT; a_key_fingerprint, an_item_type: INTEGER; an_index: XM_XSLT_KEY_INDEX)
 			-- Save the index associated with `a_key_fingerprint', `an_item_type', and `a_document'.
 		require
 			document_not_void: a_document /= Void
@@ -569,7 +569,7 @@ feature {NONE} -- Implementation
 			index_exists: does_index_exist (a_document, a_key_fingerprint, an_item_type)
 		end
 
-	does_index_exist (a_document: XM_XPATH_DOCUMENT; a_key_fingerprint, an_item_type: INTEGER): BOOLEAN is
+	does_index_exist (a_document: XM_XPATH_DOCUMENT; a_key_fingerprint, an_item_type: INTEGER): BOOLEAN
 			-- Is there an index for `a_key_fingerprint', `an_item_type', and `a_document'?
 		require
 			document_not_void: a_document /= Void
@@ -584,7 +584,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	index (a_document: XM_XPATH_DOCUMENT; a_key_fingerprint, an_item_type: INTEGER): XM_XSLT_KEY_INDEX is
+	index (a_document: XM_XPATH_DOCUMENT; a_key_fingerprint, an_item_type: INTEGER): XM_XSLT_KEY_INDEX
 			-- Index associated with `a_key_fingerprint', `an_item_type', and `a_document'
 		require
 			document_not_void: a_document /= Void

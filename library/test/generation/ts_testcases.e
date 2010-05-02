@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_testgen: like testgen; an_error_handler: like error_handler) is
+	make (a_testgen: like testgen; an_error_handler: like error_handler)
 			-- Create a new testcases.
 		require
 			an_error_handler_not_void: an_error_handler /= Void
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	put (a_class: ET_CLASS; feature_names: DS_LIST [STRING]; class_prefix: STRING) is
+	put (a_class: ET_CLASS; feature_names: DS_LIST [STRING]; class_prefix: STRING)
 			-- Add (`class_name', `feature_names') to the list of testcases.
 		require
 			a_classnot_void: a_class /= Void
@@ -64,7 +64,7 @@ feature -- Element change
 
 feature -- Generation
 
-	generate_test_classes is
+	generate_test_classes
 			-- Generate test classes.
 		local
 			a_cursor: DS_HASH_TABLE_CURSOR [DS_PAIR [DS_LIST [STRING], STRING], ET_CLASS]
@@ -88,7 +88,7 @@ feature -- Generation
 			end
 		end
 
-	generate_test_class (a_class: ET_CLASS; feature_names: DS_LIST [STRING]; class_prefix: STRING) is
+	generate_test_class (a_class: ET_CLASS; feature_names: DS_LIST [STRING]; class_prefix: STRING)
 			-- Generate test class `class_name'.
 		require
 			a_class_not_void: a_class /= Void
@@ -155,7 +155,7 @@ feature -- Generation
 			end
 		end
 
-	generate_root_class (class_name: STRING) is
+	generate_root_class (class_name: STRING)
 			-- Generate root class `class_name'.
 		require
 			class_name_not_void: class_name /= Void
@@ -219,7 +219,7 @@ feature -- Generation
 				a_file.put_new_line
 				a_file.put_line ("feature -- Element change")
 				a_file.put_new_line
-				a_file.put_line ("%Tbuild_suite is")
+				a_file.put_line ("%Tbuild_suite")
 				a_file.put_line ("%T%T%T-- Add to `suite' the test cases that need to executed.")
 				a_cursor := testcases.new_cursor
 				from
@@ -333,7 +333,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_tester_parent (a_parent: like tester_parent) is
+	set_tester_parent (a_parent: like tester_parent)
 			-- Set `tester_parent' to `a_parent'.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -343,7 +343,7 @@ feature -- Setting
 			tester_parent_set: tester_parent = a_parent
 		end
 
-	set_version (a_version: like version) is
+	set_version (a_version: like version)
 			-- Set `version' to `a_version'.
 		require
 			a_version_not_void: a_version /= Void
@@ -355,7 +355,7 @@ feature -- Setting
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of testcases
 		local
 			a_cursor: DS_HASH_TABLE_CURSOR [DS_PAIR [DS_LIST [STRING], STRING], ET_CLASS]
@@ -383,7 +383,7 @@ feature {NONE} -- Implementation
 			-- Testcases (lists of feature names and
 			-- class prefix indexed by classes)
 
-	default_tester_parent: STRING is "TS_TESTER"
+	default_tester_parent: STRING = "TS_TESTER"
 			-- Default value for `tester_parent'
 
 invariant

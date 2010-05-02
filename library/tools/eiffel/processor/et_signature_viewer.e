@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_universe: like universe) is
+	make (a_universe: like universe)
 			-- Create a new signature viewer for classes in `a_universe'.
 		require
 			a_universe_not_void: a_universe /= Void
@@ -62,7 +62,7 @@ feature -- Access
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute signature viewer.
 		local
 			a_name: STRING
@@ -94,7 +94,7 @@ feature -- Execution
 
 feature {ET_AST_NODE} -- Processing
 
-	process_class (a_class: ET_CLASS) is
+	process_class (a_class: ET_CLASS)
 			-- Process `a_class'.
 		local
 			a_name: STRING
@@ -156,7 +156,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_query (a_query: ET_QUERY) is
+	process_query (a_query: ET_QUERY)
 			-- Process `a_query'.
 		require
 			a_query_not_void: a_query /= Void
@@ -186,7 +186,7 @@ feature {ET_AST_NODE} -- Processing
 			output_file.put_string (a_query.type.base_type (current_context).to_text)
 		end
 
-	process_procedure (a_procedure: ET_PROCEDURE) is
+	process_procedure (a_procedure: ET_PROCEDURE)
 			-- Process `a_procedure'.
 		require
 			a_procedure_not_void: a_procedure /= Void
@@ -216,7 +216,7 @@ feature {ET_AST_NODE} -- Processing
 
 feature {NONE} -- Implementation
 
-	base_type (a_name: STRING): ET_BASE_TYPE is
+	base_type (a_name: STRING): ET_BASE_TYPE
 			-- Build a class type or tuple type from `a_name',
 			-- or report error to `output_file'.
 		require
@@ -238,7 +238,7 @@ feature {NONE} -- Implementation
 			valid_context: Result /= Void implies Result.is_valid_context
 		end
 
-	parse_class (str: STRING; a_position: INTEGER): INTEGER is
+	parse_class (str: STRING; a_position: INTEGER): INTEGER
 			-- Parse class in `str' starting at `a_position'.
 			-- Make result available in `last_class', or Void
 			-- if an error was found (report error to `output_file'.
@@ -306,7 +306,7 @@ feature {NONE} -- Implementation
 			-- Last class parsed by `parse_class';
 			-- Void if an error was found when parsing
 
-	parse_base_type (str: STRING; a_position: INTEGER): INTEGER is
+	parse_base_type (str: STRING; a_position: INTEGER): INTEGER
 			-- Parse class type or tuple type in `str' starting at `a_position'.
 			-- Make result available in `last_base_type', or Void
 			-- if an error was found (report error to `output_file'.
@@ -417,7 +417,7 @@ feature {NONE} -- Implementation
 			-- Last class type or tuple type parsed by `parse_base_type';
 			-- Void if an error was found when parsing
 
-	parse_open_bracket (str: STRING; a_position: INTEGER): INTEGER is
+	parse_open_bracket (str: STRING; a_position: INTEGER): INTEGER
 			-- Parse '[' in `str' starting at `a_position'.
 			-- Return the new position in `str', or
 			-- 'str.count + 2' if no ']' was found.
@@ -458,7 +458,7 @@ feature {NONE} -- Implementation
 			valid_position: Result > a_position
 		end
 
-	parse_comma (str: STRING; a_position: INTEGER): INTEGER is
+	parse_comma (str: STRING; a_position: INTEGER): INTEGER
 			-- Parse ',' in `str' starting at `a_position'.
 			-- Return the new position in `str', or
 			-- 'str.count + 2' if no ']' was found.
@@ -499,7 +499,7 @@ feature {NONE} -- Implementation
 			valid_position: Result > a_position
 		end
 
-	parse_close_bracket (str: STRING; a_position: INTEGER): INTEGER is
+	parse_close_bracket (str: STRING; a_position: INTEGER): INTEGER
 			-- Parse ']' in `str' starting at `a_position'.
 			-- Return the new position in `str', or
 			-- 'str.count + 2' if no ']' was found.

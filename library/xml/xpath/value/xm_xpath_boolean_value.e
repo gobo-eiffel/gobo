@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_value: BOOLEAN) is
+	make (a_value: BOOLEAN)
 		do
 			make_atomic_value
 			value := a_value
@@ -39,19 +39,19 @@ feature -- Access
 	value: BOOLEAN
 			-- Value of expression
 
-	is_boolean_value: BOOLEAN is
+	is_boolean_value: BOOLEAN
 			-- Is `Current' a boolean value?
 		do
 			Result := True
 		end
 
-	as_boolean_value: XM_XPATH_BOOLEAN_VALUE is
+	as_boolean_value: XM_XPATH_BOOLEAN_VALUE
 			-- `Current' seen as a boolean value
 		do
 			Result := Current
 		end
-	
-	item_type: XM_XPATH_ITEM_TYPE is
+
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, where know
 		do
 			Result := type_factory.boolean_type
@@ -61,7 +61,7 @@ feature -- Access
 			end
 		end
 
-	string_value: STRING is
+	string_value: STRING
 			--Value of the item as a string
 		do
 			if value then
@@ -71,7 +71,7 @@ feature -- Access
 			end
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			if not value then Result := 1 end
@@ -79,15 +79,15 @@ feature -- Access
 
 feature -- Comparison
 
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Are `Current' and `other' the same expression?
 		do
 			if other.is_boolean_value then
 				Result := value = other.as_boolean_value.value
 			end
 		end
-	
-	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER is
+
+	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER
 			-- Compare `Current' to `other'
 		do
 			if value = other.as_boolean_value.value then
@@ -101,13 +101,13 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
+	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN
 			-- Is `other' comparable to `Current'?
 		do
 			Result := other.is_boolean_value
 		end
 
-	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN is
+	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN
 			-- Is `Current' convertible to `a_required_type'?
 		do
 			if	a_required_type = any_item or
@@ -126,7 +126,7 @@ feature -- Status report
 			end
 		end
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -139,16 +139,16 @@ feature -- Status report
 		end
 
 feature -- Evaluation
-	
-	calculate_effective_boolean_value (context: XM_XPATH_CONTEXT) is
+
+	calculate_effective_boolean_value (context: XM_XPATH_CONTEXT)
 			-- Effective boolean value of the expression
 		do
 			last_boolean_value := Current
 		end
 
 feature -- Conversions
-	
-	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE) is
+
+	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE)
 			-- Convert `Current' to `a_required_type'
 		local
 			l_value: INTEGER

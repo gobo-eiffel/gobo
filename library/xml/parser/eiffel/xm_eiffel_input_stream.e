@@ -42,7 +42,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING) is
+	make (a_name: STRING)
 			-- Create a new stream based on file `a_name'.
 		local
 			a_file: KL_TEXT_INPUT_FILE
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			make_from_stream (a_file)
 		end
 
-	make_from_stream (a_stream: like impl) is
+	make_from_stream (a_stream: like impl)
 			-- Create a new stream based on `a_stream'.
 		require
 			a_stream_not_void: a_stream /= Void
@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 
 feature -- Encoding
 
-	is_valid_encoding (an_encoding: STRING): BOOLEAN is
+	is_valid_encoding (an_encoding: STRING): BOOLEAN
 			-- Is this encoding known?
 		do
 			if an_encoding /= Void then
@@ -79,7 +79,7 @@ feature -- Encoding
 			end
 		end
 
-	is_applicable_encoding (an_encoding: STRING): BOOLEAN is
+	is_applicable_encoding (an_encoding: STRING): BOOLEAN
 			-- Can the current encoding be switched to `an_encoding'?
 		require
 			valid: is_valid_encoding (an_encoding)
@@ -102,7 +102,7 @@ feature -- Encoding
 			end
 		end
 
-	set_encoding (an_encoding: STRING) is
+	set_encoding (an_encoding: STRING)
 			-- Set encoding.
 		require
 			valid_encoding: is_valid_encoding (an_encoding)
@@ -125,14 +125,14 @@ feature -- Encoding
 
 feature {NONE} -- Encodings
 
-	Encoding_us_ascii: STRING is "us-ascii"
-	Encoding_latin_1: STRING is "iso-8859-1"
-	Encoding_utf_8: STRING is "utf-8"
-	Encoding_utf_16: STRING is "utf-16"
+	Encoding_us_ascii: STRING = "us-ascii"
+	Encoding_latin_1: STRING = "iso-8859-1"
+	Encoding_utf_8: STRING = "utf-8"
+	Encoding_utf_16: STRING = "utf-16"
 
 feature -- Input
 
-	read_character is
+	read_character
 			-- Read the next item in input stream.
 			-- Make the result available in `last_character'.
 		do
@@ -172,7 +172,7 @@ feature -- Input
 			end
 		end
 
-	read_string (nb: INTEGER) is
+	read_string (nb: INTEGER)
 			-- Read at most `nb' characters from input stream.
 			-- Make the characters that have actually been read
 			-- available in `last_string'.
@@ -201,7 +201,7 @@ feature -- Input
 			end
 		end
 
-	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
+	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER
 			-- Fill `a_string', starting at position `pos', with
 			-- at most `nb' characters read from input stream.
 			-- Return the number of characters actually read.
@@ -234,7 +234,7 @@ feature -- Input
 			end
 		end
 
-	unread_character (an_item: CHARACTER) is
+	unread_character (an_item: CHARACTER)
 			-- Put `an_item' back in input stream.
 			-- This item will be read first by the next
 			-- call to a read routine.
@@ -244,13 +244,13 @@ feature -- Input
 
 feature -- Status report
 
-	is_open_read: BOOLEAN is
+	is_open_read: BOOLEAN
 			-- Can items be read from input stream?
 		do
 			Result := impl.is_open_read
 		end
 
-	end_of_input: BOOLEAN is
+	end_of_input: BOOLEAN
 			-- Has the end of input stream been reached?
 		do
 			Result := utf_queue.count = 0 and impl.end_of_input
@@ -258,13 +258,13 @@ feature -- Status report
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Name of input stream
 		do
 			Result := impl.name
 		end
 
-	last_character: CHARACTER is
+	last_character: CHARACTER
 			-- Last character read.
 		do
 			if utf_queue.count > 0 then
@@ -286,12 +286,12 @@ feature {NONE} -- State
 	encoding: INTEGER
 			-- Input encoding, one of:
 
-	Utf_8: INTEGER is 1
-	Utf_8_or_compatible: INTEGER is 2
-	Latin_1: INTEGER is 3
-	Utf16_msb_first: INTEGER is 4
-	Utf16_msb_last: INTEGER is 5
-	Undetected: INTEGER is 6
+	Utf_8: INTEGER = 1
+	Utf_8_or_compatible: INTEGER = 2
+	Latin_1: INTEGER = 3
+	Utf16_msb_first: INTEGER = 4
+	Utf16_msb_last: INTEGER = 5
+	Undetected: INTEGER = 6
 			-- Utf_8_or_compatible: probably UTF-8 but charset may be changed
 			-- Utf_8: input already in UTF-8, will remain so
 			-- Latin_1: input in ISO 8859-1 (Latin-1)
@@ -307,7 +307,7 @@ feature {NONE} -- State
 
 feature {NONE} -- Input
 
-	noqueue_read_character is
+	noqueue_read_character
 			-- Read character after detection and when detection queue has
 			-- been flushed.
 		require
@@ -330,7 +330,7 @@ feature {NONE} -- Input
 
 feature {NONE} -- UTF16 implementation
 
-	utf16_detect_read_character is
+	utf16_detect_read_character
 			-- Read first two chars of file to establish
 			-- whether we are a UTF16 file.
 		require
@@ -391,7 +391,7 @@ feature {NONE} -- UTF16 implementation
 			end_or_set: encoding /= Undetected
 		end
 
-	utf16_read_character is
+	utf16_read_character
 			-- Read two characters at a time and fill queue with
 			-- UTF8 encoding of character.
 		require
@@ -452,7 +452,7 @@ feature {NONE} -- UTF16 implementation
 
 feature {NONE} -- Latin-1 implementation
 
-	latin1_read_character is
+	latin1_read_character
 			-- Read character from source and convert it to UTF8 if latin1
 			-- character (8th bit set).
 		require
@@ -468,7 +468,7 @@ feature {NONE} -- Latin-1 implementation
 
 feature {NONE} -- Implementation
 
-	append_character (a_char: INTEGER) is
+	append_character (a_char: INTEGER)
 			-- Append character from UTF16 code.
 		require
 			positive: a_char >= 0
@@ -495,7 +495,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	most_significant (first, second: CHARACTER): INTEGER is
+	most_significant (first, second: CHARACTER): INTEGER
 			-- Most significant byte from incoming bytes
 		do
 			if encoding = Utf16_msb_first then
@@ -508,7 +508,7 @@ feature {NONE} -- Implementation
 			first_or_second: Result = first.code or Result = second.code
 		end
 
-	least_significant (first, second: CHARACTER): INTEGER is
+	least_significant (first, second: CHARACTER): INTEGER
 			-- Least significant byte from incoming bytes
 		do
 			if encoding = Utf16_msb_first then
@@ -523,9 +523,9 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	Lt_char: CHARACTER is '<'
+	Lt_char: CHARACTER = '<'
 
-	utf8_buffer: STRING is
+	utf8_buffer: STRING
 			-- Buffer for UTF-8 encoding
 		once
 			create Result.make (6)

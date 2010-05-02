@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_qname: STRING) is
+	make (a_qname: STRING)
 			-- Establish invariant
 		require
 			qname_not_void: a_qname /= Void
@@ -68,7 +68,7 @@ feature -- Status report
 	too_many_colons: BOOLEAN
 			-- Were more than one colon prenet?
 
-	is_prefix_present: BOOLEAN is
+	is_prefix_present: BOOLEAN
 			-- Is a prefix present?
 		require
 			valid: is_valid
@@ -83,4 +83,4 @@ invariant
 	invalidity_contraint: too_many_colons implies not is_valid
 
 end
-	
+

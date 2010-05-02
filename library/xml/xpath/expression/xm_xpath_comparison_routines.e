@@ -21,7 +21,7 @@ inherit
 
 feature -- Status report
 
-	is_general_comparison_operator (an_operator: INTEGER): BOOLEAN is
+	is_general_comparison_operator (an_operator: INTEGER): BOOLEAN
 			-- is `an_operator' a general comparison operator
 		do
 			inspect
@@ -33,7 +33,7 @@ feature -- Status report
 			end
 		end
 
-	is_value_comparison_operator (an_operator: INTEGER): BOOLEAN is
+	is_value_comparison_operator (an_operator: INTEGER): BOOLEAN
 			-- is `an_operator' a value comparison operator
 		do
 			inspect
@@ -46,8 +46,8 @@ feature -- Status report
 		end
 
 feature -- Conversion
-	
-	singleton_value_operator (an_operator: INTEGER): INTEGER is
+
+	singleton_value_operator (an_operator: INTEGER): INTEGER
 			-- Singleton form of the general comparison operator, e.g. Fortran_equal_token for Equals_token, etc
 		require
 			valid_comparison_operator: is_general_comparison_operator (an_operator) or else is_value_comparison_operator (an_operator)
@@ -76,7 +76,7 @@ feature -- Conversion
 			value_comparsion: is_value_comparison_operator (Result)
 		end
 
-	inverse_operator (an_operator: INTEGER): INTEGER is
+	inverse_operator (an_operator: INTEGER): INTEGER
 			-- Inverse of `an_operator'
 		require
 			valid_comparison_operator: is_general_comparison_operator (an_operator) or else is_value_comparison_operator (an_operator)
@@ -105,4 +105,4 @@ feature -- Conversion
 		end
 
 end
-	
+

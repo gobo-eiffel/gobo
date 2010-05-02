@@ -24,7 +24,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	yy_initialize is
+	yy_initialize
 			-- Initialize lexical analyzer.
 		do
 			yy_build_tables
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset scanner before scanning next input source.
 			-- (This routine can be called in `wrap' before scanning
 			-- another input buffer.)
@@ -71,7 +71,7 @@ feature -- Initialization
 
 feature -- Scanning
 
-	read_token is
+	read_token
 			-- Read a token from `input_buffer'.
 			-- Make result available in `last_token'.
 		local
@@ -390,7 +390,7 @@ feature -- Scanning
 
 feature -- Element change
 
-	reject is
+	reject
 			-- Direct scanner to proceed on the second best rule
 			-- which matched the input (when '%option reject'
 			-- has been specified).
@@ -436,7 +436,7 @@ feature {NONE} -- Tables
 
 feature {NONE} -- Implementation
 
-	yy_set_content (a_content: like yy_content) is
+	yy_set_content (a_content: like yy_content)
 			-- Set `yy_content' to `a_content'.
 		local
 			nb: INTEGER
@@ -451,7 +451,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	yy_build_tables is
+	yy_build_tables
 			-- Build scanner tables.
 		deferred
 		ensure then
@@ -462,7 +462,7 @@ feature {NONE} -- Implementation
 			yy_accept_not_void: yy_accept /= Void
 		end
 
-	yy_previous_state: INTEGER is
+	yy_previous_state: INTEGER
 			-- State just before EOB character was reached
 		local
 			yy_cp, yy_nb: INTEGER
@@ -536,7 +536,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	yy_null_trans_state (yy_current_state: INTEGER): INTEGER is
+	yy_null_trans_state (yy_current_state: INTEGER): INTEGER
 			-- State reachable from `yy_current_state' through
 			-- a transition on NULL character; 0 if jammed
 		local
@@ -607,34 +607,34 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	yyJam_base: INTEGER is
+	yyJam_base: INTEGER
 			-- Position in `yy_nxt'/`yy_chk' tables where
 			-- default jam table starts
 		deferred
 		end
 
-	yyJam_state: INTEGER is
+	yyJam_state: INTEGER
 			-- State id corresponding to jam state
 		deferred
 		end
 
-	yyTemplate_mark: INTEGER is
+	yyTemplate_mark: INTEGER
 			-- Mark between normal state and templates
 		deferred
 		end
 
-	yyReject_used: BOOLEAN is
+	yyReject_used: BOOLEAN
 			-- Is `reject' called?
 		deferred
 		end
 
-	yyVariable_trail_context: BOOLEAN is
+	yyVariable_trail_context: BOOLEAN
 			-- Is there a regular expression with both leading
 			-- and trailing parts having variable length?
 		deferred
 		end
 
-	yyReject_or_variable_trail_context: BOOLEAN is
+	yyReject_or_variable_trail_context: BOOLEAN
 			-- Is `reject' called or is there a regular expression with
 			-- both leading and trailing parts having variable length?
 		deferred
@@ -642,23 +642,23 @@ feature {NONE} -- Constants
 			definition: Result = (yyReject_used or yyVariable_trail_context)
 		end
 
-	yyBacking_up: BOOLEAN is True
+	yyBacking_up: BOOLEAN = True
 			-- Compressed tables always back up
 
-	yyNb_rules: INTEGER is
+	yyNb_rules: INTEGER
 			-- Number of rules
 		deferred
 		end
 
-	yyNext_token: INTEGER is 1
+	yyNext_token: INTEGER = 1
 
-	yyMatch: INTEGER is 2
+	yyMatch: INTEGER = 2
 
-	yyFind_action: INTEGER is 3
+	yyFind_action: INTEGER = 3
 
-	yyDo_action: INTEGER is 4
+	yyDo_action: INTEGER = 4
 
-	yyFind_rule: INTEGER is 5
+	yyFind_rule: INTEGER = 5
 
 invariant
 

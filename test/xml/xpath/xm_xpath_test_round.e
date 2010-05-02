@@ -21,7 +21,7 @@ inherit
 		end
 
 	XM_XPATH_TYPE
-	
+
 	XM_XPATH_ERROR_TYPES
 
 	XM_XPATH_SHARED_CONFORMANCE
@@ -32,7 +32,7 @@ inherit
 
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
-	
+
 	UT_SHARED_FILE_URI_ROUTINES
 		export {NONE} all end
 
@@ -42,7 +42,7 @@ create
 
 feature -- Constants
 
-	two: MA_DECIMAL is
+	two: MA_DECIMAL
 			-- 2 as a decimal
 		once
 			create Result.make_from_integer (2)
@@ -50,7 +50,7 @@ feature -- Constants
 			two_not_void: Result /= Void
 		end
 
-	minus_two: MA_DECIMAL is
+	minus_two: MA_DECIMAL
 			-- -2 as a decimal
 		once
 			create Result.make_from_integer (-2)
@@ -58,7 +58,7 @@ feature -- Constants
 			minus_two_not_void: Result /= Void
 		end
 
-	three: MA_DECIMAL is
+	three: MA_DECIMAL
 			-- 3 as a decimal
 		once
 			create Result.make_from_integer (3)
@@ -68,7 +68,7 @@ feature -- Constants
 
 feature -- Tests
 
-	test_round_one is
+	test_round_one
 			-- Test fn:round (2.5) returns 3.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -88,7 +88,7 @@ feature -- Tests
 			assert ("Result is three", a_decimal_value.value.is_equal (three))
 		end
 
-	test_round_two is
+	test_round_two
 			-- Test fn:round (2.4999) returns 2.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -108,7 +108,7 @@ feature -- Tests
 			assert ("Result is two", a_decimal_value.value.is_equal (two))
 		end
 
-	test_round_three is
+	test_round_three
 			-- Test fn:round (-2.5) returns -2.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -128,7 +128,7 @@ feature -- Tests
 			assert ("Result is minus two", a_decimal_value.value.is_equal (minus_two))
 		end
 
-	test_round_double_one is
+	test_round_double_one
 			-- Test fn:round (2.5E0) returns 3E0.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -148,7 +148,7 @@ feature -- Tests
 			assert ("Result is three", a_double_value.value = 3.0)
 		end
 
-	test_round_double_two is
+	test_round_double_two
 			-- Test fn:round (2.4999E0) returns 2E0.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -168,7 +168,7 @@ feature -- Tests
 			assert ("Result is two", a_double_value.value = 2.0)
 		end
 
-	test_round_double_three is
+	test_round_double_three
 			-- Test fn:round (-2.5E0) returns -2.0.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -188,7 +188,7 @@ feature -- Tests
 			assert ("Result is minus two", a_double_value.value = -2.0)
 		end
 
-	test_round_float is
+	test_round_float
 			-- Test fn:round (xs:float(-2.5E0)) returns -2.0.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -208,14 +208,14 @@ feature -- Tests
 			assert ("Result is minus two", a_float_value.value = -2.0)
 		end
 
-	set_up is
+	set_up
 		do
 			conformance.set_basic_xslt_processor
 		end
 
 feature {NONE} -- Implementation
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}",
@@ -225,8 +225,8 @@ feature {NONE} -- Implementation
 			data_dirname_not_void: Result /= Void
 			data_dirname_not_empty: not Result.is_empty
 		end
-		
-	books_xml_uri: UT_URI is
+
+	books_xml_uri: UT_URI
 			-- URI of file 'books.xml'
 		local
 			a_path: STRING
@@ -239,4 +239,4 @@ feature {NONE} -- Implementation
 
 end
 
-			
+

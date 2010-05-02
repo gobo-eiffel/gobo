@@ -27,14 +27,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new note clause
 		do
 			indexing_keyword := tokens.indexing_keyword
 			precursor
 		end
 
-	make_with_capacity (nb: INTEGER) is
+	make_with_capacity (nb: INTEGER)
 			-- Create a new note clause with capacity `nb'.
 		do
 			indexing_keyword := tokens.indexing_keyword
@@ -46,7 +46,7 @@ feature -- Access
 	indexing_keyword: ET_KEYWORD
 			-- 'indexing' keyword
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -56,13 +56,13 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := indexing_keyword
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			if is_empty then
@@ -72,7 +72,7 @@ feature -- Access
 			end
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			if is_empty then
@@ -84,7 +84,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_indexing_keyword (an_indexing: like indexing_keyword) is
+	set_indexing_keyword (an_indexing: like indexing_keyword)
 			-- Set `indexing_keyword' to `an_indexing'.
 		require
 			an_indexing_not_void: an_indexing /= Void
@@ -96,7 +96,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_indexing_list (Current)
@@ -104,7 +104,7 @@ feature -- Processing
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_INDEXING_ITEM] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_INDEXING_ITEM]
 			-- Fixed array routines
 		once
 			create Result

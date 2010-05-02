@@ -53,20 +53,20 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_ise is
+	set_ise
 			-- Set `is_ise' to True.
 		do
 			is_ise := True
 		end
 
-	set_compilers is
+	set_compilers
 			-- Set `is_ise' and `is_ge' to True.
 		do
 			is_ise := True
 			is_ge := True
 		end
 
-	set_verbose (b: BOOLEAN) is
+	set_verbose (b: BOOLEAN)
 			-- Set `is_verbose' to `b'.
 		do
 			is_verbose := b
@@ -74,7 +74,7 @@ feature -- Status setting
 			verbose_set: is_verbose = b
 		end
 
-	set_benchmark_shown (b: BOOLEAN) is
+	set_benchmark_shown (b: BOOLEAN)
 			-- Set `benchmark_shown' to `b'.
 		do
 			benchmark_shown := b
@@ -82,7 +82,7 @@ feature -- Status setting
 			benchmark_shown_set: benchmark_shown = b
 		end
 
-	set_has_error (b: BOOLEAN) is
+	set_has_error (b: BOOLEAN)
 			-- Set `has_error' to `b'.
 		do
 			has_error := b
@@ -94,7 +94,7 @@ feature -- Status setting
 			has_error_set: has_error = b
 		end
 
-	set_has_eiffel_error (b: BOOLEAN) is
+	set_has_eiffel_error (b: BOOLEAN)
 			-- Set `has_eiffel_error' to `b'.
 		do
 			has_eiffel_error := b
@@ -105,7 +105,7 @@ feature -- Status setting
 			has_eiffel_error_set: has_eiffel_error = b
 		end
 
-	set_has_internal_error (b: BOOLEAN) is
+	set_has_internal_error (b: BOOLEAN)
 			-- Set `has_internal_error' to `b'.
 		do
 			has_internal_error := b
@@ -118,7 +118,7 @@ feature -- Status setting
 
 feature -- Compilation report
 
-	report_preparsing_status (a_group: ET_GROUP) is
+	report_preparsing_status (a_group: ET_GROUP)
 			-- Report that `a_group' is currently being preparsed.
 		require
 			a_group_not_void: a_group /= Void
@@ -138,7 +138,7 @@ feature -- Compilation report
 			end
 		end
 
-	report_compilation_status (a_processor: ET_AST_PROCESSOR; a_class: ET_CLASS) is
+	report_compilation_status (a_processor: ET_AST_PROCESSOR; a_class: ET_CLASS)
 			-- Report that `a_processor' is currently processing `a_class'.
 		require
 			a_processor_not_void: a_processor /= Void
@@ -175,7 +175,7 @@ feature -- Compilation report
 
 feature -- Cluster errors
 
-	report_cluster_error (an_error: ET_CLUSTER_ERROR) is
+	report_cluster_error (an_error: ET_CLUSTER_ERROR)
 			-- Report cluster error.
 		require
 			an_error_not_void: an_error /= Void
@@ -187,7 +187,7 @@ feature -- Cluster errors
 			end
 		end
 
-	report_gcaaa_error (a_cluster: ET_CLUSTER; a_dirname: STRING) is
+	report_gcaaa_error (a_cluster: ET_CLUSTER; a_dirname: STRING)
 			-- Report GCAAA error: cannot read
 			-- `a_cluster''s directory `a_dirname'.
 		require
@@ -202,7 +202,7 @@ feature -- Cluster errors
 			end
 		end
 
-	report_gcaab_error (a_cluster: ET_CLUSTER; a_filename: STRING) is
+	report_gcaab_error (a_cluster: ET_CLUSTER; a_filename: STRING)
 			-- Report GCAAB error: cannot read Eiffel file
 			-- `a_filename' in `a_cluster'.
 		require
@@ -217,7 +217,7 @@ feature -- Cluster errors
 			end
 		end
 
-	report_gcdep_error (a_cluster: ET_CLUSTER; a_class, a_dependant: ET_CLASS; a_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT) is
+	report_gcdep_error (a_cluster: ET_CLUSTER; a_class, a_dependant: ET_CLASS; a_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT)
 			-- Report GCDEP error: class `a_class' (recursively) from cluster
 			-- `a_cluster' has a dependant class `a_dependant' which is not
 			-- contained in the dependence constraint `a_constraint'.
@@ -237,7 +237,7 @@ feature -- Cluster errors
 			end
 		end
 
-	report_gcpro_error (a_cluster: ET_CLUSTER; a_class, a_provider: ET_CLASS; a_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT) is
+	report_gcpro_error (a_cluster: ET_CLUSTER; a_class, a_provider: ET_CLASS; a_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT)
 			-- Report GCPRO error: class `a_class' (recursively) from cluster
 			-- `a_cluster' has a provider class `a_provider' which is not
 			-- contained in the dependence constraint `a_constraint'.
@@ -257,7 +257,7 @@ feature -- Cluster errors
 			end
 		end
 
-	report_gcscm_error (a_cluster: ET_CLUSTER; a_message: STRING) is
+	report_gcscm_error (a_cluster: ET_CLUSTER; a_message: STRING)
 			-- Report GCSCM error: there was an error when retrieving the
 			-- SCM mapping description for `a_cluster', as explained in
 			-- `a_message'.
@@ -275,7 +275,7 @@ feature -- Cluster errors
 
 feature -- Cluster error status
 
-	reportable_gcaaa_error (a_cluster: ET_CLUSTER): BOOLEAN is
+	reportable_gcaaa_error (a_cluster: ET_CLUSTER): BOOLEAN
 			-- Can a GCAAA error be reported when it
 			-- appears in `a_cluster'?
 		require
@@ -284,7 +284,7 @@ feature -- Cluster error status
 			Result := True
 		end
 
-	reportable_gcaab_error (a_cluster: ET_CLUSTER): BOOLEAN is
+	reportable_gcaab_error (a_cluster: ET_CLUSTER): BOOLEAN
 			-- Can a GCAAB error be reported when it
 			-- appears in `a_cluster'?
 		require
@@ -293,7 +293,7 @@ feature -- Cluster error status
 			Result := True
 		end
 
-	reportable_gcdep_error (a_cluster: ET_CLUSTER): BOOLEAN is
+	reportable_gcdep_error (a_cluster: ET_CLUSTER): BOOLEAN
 			-- Can a GCDEP error be reported when it
 			-- appears in `a_cluster'?
 		require
@@ -302,7 +302,7 @@ feature -- Cluster error status
 			Result := True
 		end
 
-	reportable_gcpro_error (a_cluster: ET_CLUSTER): BOOLEAN is
+	reportable_gcpro_error (a_cluster: ET_CLUSTER): BOOLEAN
 			-- Can a GCPRO error be reported when it
 			-- appears in `a_cluster'?
 		require
@@ -311,7 +311,7 @@ feature -- Cluster error status
 			Result := True
 		end
 
-	reportable_gcscm_error (a_cluster: ET_CLUSTER): BOOLEAN is
+	reportable_gcscm_error (a_cluster: ET_CLUSTER): BOOLEAN
 			-- Can a GCSCM error be reported when it
 			-- appears in `a_cluster'?
 		require
@@ -322,7 +322,7 @@ feature -- Cluster error status
 
 feature -- Universe errors
 
-	report_universe_error (an_error: ET_UNIVERSE_ERROR) is
+	report_universe_error (an_error: ET_UNIVERSE_ERROR)
 			-- Report universe error.
 		require
 			an_error_not_void: an_error /= Void
@@ -334,7 +334,7 @@ feature -- Universe errors
 			end
 		end
 
-	report_vscn0a_error (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_class1, a_class2: ET_NAMED_CLASS) is
+	report_vscn0a_error (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_class1, a_class2: ET_NAMED_CLASS)
 			-- Report VSCN error: two different classes `a_class1' and `a_class2'
 			-- with the same name corresponding to `a_current_class' in `a_universe'.
 			--
@@ -353,7 +353,7 @@ feature -- Universe errors
 			end
 		end
 
-	report_vscn0b_error (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_override_class: ET_NAMED_CLASS) is
+	report_vscn0b_error (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_override_class: ET_NAMED_CLASS)
 			-- Report VSCN error: built-in class "NONE" cannot be overridden
 			-- but `a_override_class' corresponding to `a_current_class' in `a_universe'.
 			--
@@ -371,7 +371,7 @@ feature -- Universe errors
 			end
 		end
 
-	report_vscn0c_error (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_class1, a_class2: ET_NAMED_CLASS) is
+	report_vscn0c_error (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_class1, a_class2: ET_NAMED_CLASS)
 			-- Report VSCN error:  class `a_class1' appearing in a .NET assembly
 			-- cannot be overridden by `a_class2' corresponding to `a_current_class'
 			-- in `a_universe'.
@@ -391,7 +391,7 @@ feature -- Universe errors
 			end
 		end
 
-	report_vscn0d_error (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_class1, a_class2: ET_MASTER_CLASS) is
+	report_vscn0d_error (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_class1, a_class2: ET_MASTER_CLASS)
 			-- Report VSCN error: class `a_current_class' in `a_universe' cannot
 			-- be overridden both by class `a_class1' and by class `a_class2'.
 			--
@@ -412,7 +412,7 @@ feature -- Universe errors
 
 feature -- Universe error status
 
-	reportable_vscn_error (a_universe: ET_UNIVERSE): BOOLEAN is
+	reportable_vscn_error (a_universe: ET_UNIVERSE): BOOLEAN
 			-- Can a VSCN error be reported when it
 			-- appears in `a_universe'?
 		require
@@ -423,7 +423,7 @@ feature -- Universe error status
 
 feature -- .NET assembly errors
 
-	report_assembly_error (an_error: ET_DOTNET_ASSEMBLY_ERROR) is
+	report_assembly_error (an_error: ET_DOTNET_ASSEMBLY_ERROR)
 			-- Report .NET assembly error.
 		require
 			an_error_not_void: an_error /= Void
@@ -435,7 +435,7 @@ feature -- .NET assembly errors
 			end
 		end
 
-	report_gaaaa_error (an_assembly: ET_DOTNET_ASSEMBLY) is
+	report_gaaaa_error (an_assembly: ET_DOTNET_ASSEMBLY)
 			-- Report GAAAA error: .NET assemblies not supported.
 		require
 			an_assembly_not_void: an_assembly /= Void
@@ -448,7 +448,7 @@ feature -- .NET assembly errors
 			end
 		end
 
-	report_gazzz_error (an_assembly: ET_DOTNET_ASSEMBLY; a_message: STRING) is
+	report_gazzz_error (an_assembly: ET_DOTNET_ASSEMBLY; a_message: STRING)
 			-- Report GAZZZ error: error explained as plain text in `a_message'.
 		require
 			an_assembly_not_void: an_assembly /= Void
@@ -464,7 +464,7 @@ feature -- .NET assembly errors
 
 feature -- .NET assembly error status
 
-	reportable_gaaaa_error (an_assembly: ET_DOTNET_ASSEMBLY): BOOLEAN is
+	reportable_gaaaa_error (an_assembly: ET_DOTNET_ASSEMBLY): BOOLEAN
 			-- Can a GAAAA error be reported when it
 			-- appears in `an_assembly'?
 		require
@@ -473,7 +473,7 @@ feature -- .NET assembly error status
 			Result := True
 		end
 
-	reportable_gazzz_error (an_assembly: ET_DOTNET_ASSEMBLY): BOOLEAN is
+	reportable_gazzz_error (an_assembly: ET_DOTNET_ASSEMBLY): BOOLEAN
 			-- Can a GAZZZ error be reported when it
 			-- appears in `an_assembly'?
 		require
@@ -484,7 +484,7 @@ feature -- .NET assembly error status
 
 feature -- Syntax errors
 
-	report_syntax_error (a_filename: STRING; p: ET_POSITION) is
+	report_syntax_error (a_filename: STRING; p: ET_POSITION)
 			-- Report a syntax error.
 		require
 			a_filename_not_void: a_filename /= Void
@@ -497,7 +497,7 @@ feature -- Syntax errors
 			report_info (an_error)
 		end
 
-	report_SCAC_error (a_filename: STRING; p: ET_POSITION) is
+	report_SCAC_error (a_filename: STRING; p: ET_POSITION)
 			-- Missing ASCII code in special character
 			-- specification %/code/ in character constant.
 			-- (SCAC: Syntax Character Ascii Code)
@@ -508,7 +508,7 @@ feature -- Syntax errors
 			report_syntax_error (a_filename, p)
 		end
 
-	report_SCAO_error (a_filename: STRING; p: ET_POSITION) is
+	report_SCAO_error (a_filename: STRING; p: ET_POSITION)
 			-- ASCII code too big in special character
 			-- specification %/code/ in character constant.
 			-- (SCAO: Syntax Character Ascii-code Overflow)
@@ -519,7 +519,7 @@ feature -- Syntax errors
 			report_syntax_error (a_filename, p)
 		end
 
-	report_SCAS_error (a_filename: STRING; p: ET_POSITION) is
+	report_SCAS_error (a_filename: STRING; p: ET_POSITION)
 			-- Missing character / at end of special character
 			-- specification %/code/ in character constant.
 			-- (SCAS: Syntax Character Ascii-code Slash)
@@ -530,7 +530,7 @@ feature -- Syntax errors
 			report_syntax_error (a_filename, p)
 		end
 
-	report_SCCU_error (a_filename: STRING; p: ET_POSITION) is
+	report_SCCU_error (a_filename: STRING; p: ET_POSITION)
 			-- Special character specification %l where l is a letter
 			-- code should be in upper-case in character constant.
 			-- (SSCU: Syntax Character special-Character Upper-case)
@@ -541,7 +541,7 @@ feature -- Syntax errors
 			report_syntax_error (a_filename, p)
 		end
 
-	report_SCEQ_error (a_filename: STRING; p: ET_POSITION) is
+	report_SCEQ_error (a_filename: STRING; p: ET_POSITION)
 			-- Missing quote at end of character constant.
 			-- (SCEQ: Syntax Character End Quote)
 		require
@@ -551,7 +551,7 @@ feature -- Syntax errors
 			report_syntax_error (a_filename, p)
 		end
 
-	report_SCQQ_error (a_filename: STRING; p: ET_POSITION) is
+	report_SCQQ_error (a_filename: STRING; p: ET_POSITION)
 			-- Missing character between quotes in character constant.
 			-- (SCQQ: Syntax Character Quote Quote)
 		require
@@ -561,7 +561,7 @@ feature -- Syntax errors
 			report_syntax_error (a_filename, p)
 		end
 
-	report_SCSC_error (a_filename: STRING; p: ET_POSITION) is
+	report_SCSC_error (a_filename: STRING; p: ET_POSITION)
 			-- Invalid special character %l in character constant.
 			-- (SCSC: Syntax Character Special Character)
 		require
@@ -571,7 +571,7 @@ feature -- Syntax errors
 			report_syntax_error (a_filename, p)
 		end
 
-	report_SCTQ_error (a_filename: STRING; p: ET_POSITION) is
+	report_SCTQ_error (a_filename: STRING; p: ET_POSITION)
 			-- Character quote should be declared as '%''
 			-- and not as ''' in character constant.
 			-- (SCTQ: Syntax Character Triple-Quote)
@@ -582,7 +582,7 @@ feature -- Syntax errors
 			report_syntax_error (a_filename, p)
 		end
 
-	report_SIFU_error (a_filename: STRING; p: ET_POSITION) is
+	report_SIFU_error (a_filename: STRING; p: ET_POSITION)
 			-- An underscore may not be the first character
 			-- of an integer constant. (ETL2 p.420)
 			-- (SIFU: Syntax Integer First Underscore)
@@ -593,7 +593,7 @@ feature -- Syntax errors
 			report_syntax_error (a_filename, p)
 		end
 
-	report_SILU_error (a_filename: STRING; p: ET_POSITION) is
+	report_SILU_error (a_filename: STRING; p: ET_POSITION)
 			-- An underscore may not be the last character
 			-- of an integer constant. (ECMA p.157)
 			-- (SILU: Syntax Integer Last Underscore)
@@ -604,7 +604,7 @@ feature -- Syntax errors
 			report_syntax_error (a_filename, p)
 		end
 
-	report_SSAC_error (a_filename: STRING; p: ET_POSITION) is
+	report_SSAC_error (a_filename: STRING; p: ET_POSITION)
 			-- Missing ASCII code in special character
 			-- specification %/code/ in manifest string.
 			-- (SSAC: Syntax String Ascii Code)
@@ -615,7 +615,7 @@ feature -- Syntax errors
 			report_syntax_error (a_filename, p)
 		end
 
-	report_SSAO_error (a_filename: STRING; p: ET_POSITION) is
+	report_SSAO_error (a_filename: STRING; p: ET_POSITION)
 			-- ASCII code too big in special character
 			-- specification %/code/ in manifest string.
 			-- (SSAO: Syntax String Ascii-code Overflow)
@@ -626,7 +626,7 @@ feature -- Syntax errors
 			report_syntax_error (a_filename, p)
 		end
 
-	report_SSAS_error (a_filename: STRING; p: ET_POSITION) is
+	report_SSAS_error (a_filename: STRING; p: ET_POSITION)
 			-- Missing character / at end of special character
 			-- specification %/code/ in manifest string.
 			-- (SSAS: Syntax String Ascii-code Slash)
@@ -637,7 +637,7 @@ feature -- Syntax errors
 			report_syntax_error (a_filename, p)
 		end
 
-	report_SSCU_error (a_filename: STRING; p: ET_POSITION) is
+	report_SSCU_error (a_filename: STRING; p: ET_POSITION)
 			-- Special character specification %l where l is a letter
 			-- code should be in upper-case in manifest strings.
 			-- (SSCU: Syntax String special-Character Upper-case)
@@ -648,7 +648,7 @@ feature -- Syntax errors
 			report_syntax_error (a_filename, p)
 		end
 
-	report_SSEL_error (a_filename: STRING; p: ET_POSITION) is
+	report_SSEL_error (a_filename: STRING; p: ET_POSITION)
 			-- Empty line in middle of multi-line manifest string.
 			-- (SSEL: Syntax String Empty Line)
 		require
@@ -660,7 +660,7 @@ feature -- Syntax errors
 			report_syntax_error (a_filename, p)
 		end
 
-	report_SSEQ_error (a_filename: STRING; p: ET_POSITION) is
+	report_SSEQ_error (a_filename: STRING; p: ET_POSITION)
 			-- Missing double quote at end of manifest string.
 			-- (SSEQ: Syntax String End double-Quote)
 		require
@@ -670,7 +670,7 @@ feature -- Syntax errors
 			report_syntax_error (a_filename, p)
 		end
 
-	report_SSNL_error (a_filename: STRING; p: ET_POSITION) is
+	report_SSNL_error (a_filename: STRING; p: ET_POSITION)
 			-- Invalid new-line in middle of manifest string.
 			-- (SSNL: Syntax String New-Line)
 		require
@@ -680,7 +680,7 @@ feature -- Syntax errors
 			report_syntax_error (a_filename, p)
 		end
 
-	report_SSNP_error (a_filename: STRING; p: ET_POSITION) is
+	report_SSNP_error (a_filename: STRING; p: ET_POSITION)
 			-- Missing character % at beginning of
 			-- line in multi-line manifest string.
 			-- (SSNP: Syntax String New-line Percent)
@@ -691,7 +691,7 @@ feature -- Syntax errors
 			report_syntax_error (a_filename, p)
 		end
 
-	report_SSSC_error (a_filename: STRING; p: ET_POSITION) is
+	report_SSSC_error (a_filename: STRING; p: ET_POSITION)
 			-- Invalid special character %l in manifest strings.
 			-- (SSSC: Syntax String Special Character)
 		require
@@ -703,7 +703,7 @@ feature -- Syntax errors
 
 feature -- System errors
 
-	report_system_error (an_error: ET_SYSTEM_ERROR) is
+	report_system_error (an_error: ET_SYSTEM_ERROR)
 			-- Report system error.
 		require
 			an_error_not_void: an_error /= Void
@@ -715,7 +715,7 @@ feature -- System errors
 			end
 		end
 
-	report_catcall_error (an_error: STRING) is
+	report_catcall_error (an_error: STRING)
 			-- Report CAT-call error.
 		require
 			an_error_not_void: an_error /= Void
@@ -724,7 +724,7 @@ feature -- System errors
 			report_info_message (an_error)
 		end
 
-	report_vsrc1a_error (a_class: ET_CLASS) is
+	report_vsrc1a_error (a_class: ET_CLASS)
 			-- Report VSRC-1 error: root class `a_class' should not be generic.
 			--
 			-- ETL2: p.36
@@ -739,7 +739,7 @@ feature -- System errors
 			end
 		end
 
-	report_gvknl1a_error (a_class: ET_CLASS) is
+	report_gvknl1a_error (a_class: ET_CLASS)
 			-- Report GVKNL-1 error: unknown kernel class `a_class'.
 			--
 			-- Not in ETL
@@ -755,7 +755,7 @@ feature -- System errors
 			end
 		end
 
-	report_gvsrc3a_error is
+	report_gvsrc3a_error
 			-- Report GVSRC-3 error: missing root class.
 			--
 			-- Not in ETL
@@ -769,7 +769,7 @@ feature -- System errors
 			end
 		end
 
-	report_gvsrc4a_error (a_class: ET_CLASS) is
+	report_gvsrc4a_error (a_class: ET_CLASS)
 			-- Report GVSRC-4 error: unknown root class `a_class'.
 			--
 			-- Not in ETL
@@ -785,7 +785,7 @@ feature -- System errors
 			end
 		end
 
-	report_gvsrc5a_error (a_class: ET_CLASS; a_feature_name: ET_FEATURE_NAME) is
+	report_gvsrc5a_error (a_class: ET_CLASS; a_feature_name: ET_FEATURE_NAME)
 			-- Report GVSRC-5 error: root creation procedure `a_feature_name'
 			-- is not a feature of root class `a_class'.
 			--
@@ -803,7 +803,7 @@ feature -- System errors
 			end
 		end
 
-	report_gvsrc6a_error (a_class: ET_CLASS; a_feature_name: ET_FEATURE_NAME) is
+	report_gvsrc6a_error (a_class: ET_CLASS; a_feature_name: ET_FEATURE_NAME)
 			-- Report GVSRC-6 error: root creation feature `a_feature_name'
 			-- is not declared as publicly available creation procedure
 			-- in root class `a_class'.
@@ -824,37 +824,37 @@ feature -- System errors
 
 feature -- System error status
 
-	reportable_vsrc1_error: BOOLEAN is
+	reportable_vsrc1_error: BOOLEAN
 			-- Can a VSRC-1 error be reported?
 		do
 			Result := True
 		end
 
-	reportable_gvknl1_error: BOOLEAN is
+	reportable_gvknl1_error: BOOLEAN
 			-- Can a GVKNL-1 error be reported?
 		do
 			Result := True
 		end
 
-	reportable_gvsrc3_error: BOOLEAN is
+	reportable_gvsrc3_error: BOOLEAN
 			-- Can a GVSRC-3 error be reported?
 		do
 			Result := True
 		end
 
-	reportable_gvsrc4_error: BOOLEAN is
+	reportable_gvsrc4_error: BOOLEAN
 			-- Can a GVSRC-4 error be reported?
 		do
 			Result := True
 		end
 
-	reportable_gvsrc5_error: BOOLEAN is
+	reportable_gvsrc5_error: BOOLEAN
 			-- Can a GVSRC-5 error be reported?
 		do
 			Result := True
 		end
 
-	reportable_gvsrc6_error: BOOLEAN is
+	reportable_gvsrc6_error: BOOLEAN
 			-- Can a GVSRC-6 error be reported?
 		do
 			Result := True
@@ -862,7 +862,7 @@ feature -- System error status
 
 feature -- Validity errors
 
-	report_validity_error (an_error: ET_VALIDITY_ERROR) is
+	report_validity_error (an_error: ET_VALIDITY_ERROR)
 			-- Report validity error.
 		require
 			an_error_not_void: an_error /= Void
@@ -879,7 +879,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vaol1a_error (a_class: ET_CLASS; an_expression: ET_OLD_EXPRESSION) is
+	report_vaol1a_error (a_class: ET_CLASS; an_expression: ET_OLD_EXPRESSION)
 			-- Report VAOL-1 error: `an_expression', found in `a_class',
 			-- does not appear in a postcondition.
 			--
@@ -897,7 +897,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vape0a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_pre_feature: ET_FEATURE; a_client: ET_CLIENT) is
+	report_vape0a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_pre_feature: ET_FEATURE; a_client: ET_CLIENT)
 			-- Report VAPE error: `a_feature' named `a_name', appearing in an unqualified
 			-- call in a precondition of `a_pre_feature' in `a_class_impl' and view from
 			-- one of its descendants `a_class' (possibly itself), is not exported to class
@@ -921,7 +921,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vape0b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLIENT) is
+	report_vape0b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLIENT)
 			-- Report VAPE error: `a_feature' named `a_name', appearing in a qualified
 			-- call with target's base class `a_target_class' in a precondition of
 			-- `a_pre_feature' in `a_class_impl' and view from one of its descendants
@@ -947,7 +947,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vave0a_error (a_class, a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE) is
+	report_vave0a_error (a_class, a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE)
 			-- Report VAVE error: the expression `an_expression' of a
 			-- loop variant in `a_class_impl' and viewed from one of
 			-- its descendants `a_class' (possibly itself) is of type
@@ -969,7 +969,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vbac1a_error (a_class, a_class_impl: ET_CLASS; an_assigner: ET_ASSIGNER_INSTRUCTION; a_source_type, a_target_type: ET_NAMED_TYPE) is
+	report_vbac1a_error (a_class, a_class_impl: ET_CLASS; an_assigner: ET_ASSIGNER_INSTRUCTION; a_source_type, a_target_type: ET_NAMED_TYPE)
 			-- Report VBAC-1 error: the source expression of `an_assigner' in
 			-- `a_class_impl' and viewed from one of its descendants `a_class'
 			-- (possibly itself) does not conform nor convert to its target.
@@ -993,7 +993,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vbac2a_error (a_class: ET_CLASS; an_assigner: ET_ASSIGNER_INSTRUCTION; a_query: ET_QUERY; a_query_class: ET_CLASS) is
+	report_vbac2a_error (a_class: ET_CLASS; an_assigner: ET_ASSIGNER_INSTRUCTION; a_query: ET_QUERY; a_query_class: ET_CLASS)
 			-- Report VBAC-2 error: `a_query' from class `a_query_class', used
 			-- as query of the call in the assigner instruction `an_assigner', has
 			-- no associated assigner command.
@@ -1014,7 +1014,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vcch1a_error (a_class: ET_CLASS; f: ET_FEATURE) is
+	report_vcch1a_error (a_class: ET_CLASS; f: ET_FEATURE)
 			-- Report VCCH-1 error: `a_class' has deferred features
 			-- but is not declared as deferred. `f' is one of these deferred
 			-- feature, written in `a_class'.
@@ -1035,7 +1035,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vcch1b_error (a_class: ET_CLASS; f: ET_INHERITED_FEATURE) is
+	report_vcch1b_error (a_class: ET_CLASS; f: ET_INHERITED_FEATURE)
 			-- Report VCCH-1 error: `a_class' has deferred features
 			-- but is not declared as deferred. `f' is one of these deferred
 			-- feature, inherited from a parent of `a_class'.
@@ -1056,7 +1056,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vcch2a_error (a_class: ET_CLASS) is
+	report_vcch2a_error (a_class: ET_CLASS)
 			-- Report VCCH-2 error: `a_class' is marked as deferred
 			-- but has no deferred feature.
 			--
@@ -1075,7 +1075,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vcfg1a_error (a_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; other_class: ET_CLASS) is
+	report_vcfg1a_error (a_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; other_class: ET_CLASS)
 			-- Report VCFG-1 error: the formal generic parameter `a_formal'
 			-- in `a_class' has the same name as class `other_class' in the
 			-- surrounding universe.
@@ -1097,7 +1097,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vcfg2a_error (a_class: ET_CLASS; a_formal1, a_formal2: ET_FORMAL_PARAMETER) is
+	report_vcfg2a_error (a_class: ET_CLASS; a_formal1, a_formal2: ET_FORMAL_PARAMETER)
 			-- Report VCFG-2 error: a formal generic name is declared
 			-- twice in generic class `a_class'.
 			--
@@ -1117,7 +1117,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vcfg3a_error (a_class: ET_CLASS; a_type: ET_BIT_FEATURE) is
+	report_vcfg3a_error (a_class: ET_CLASS; a_type: ET_BIT_FEATURE)
 			-- Report VCFG-3 error: invalid type `a_type' in
 			-- constraint of formal generic parameter of `a_class'.
 			--
@@ -1136,7 +1136,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vcfg3b_error (a_class: ET_CLASS; a_type: ET_BIT_N) is
+	report_vcfg3b_error (a_class: ET_CLASS; a_type: ET_BIT_N)
 			-- Report VCFG-3 error: invalid type `a_type' in
 			-- constraint of formal generic parameter of `a_class'.
 			--
@@ -1156,7 +1156,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vcfg3c_error (a_class: ET_CLASS; a_type: ET_LIKE_TYPE) is
+	report_vcfg3c_error (a_class: ET_CLASS; a_type: ET_LIKE_TYPE)
 			-- Report VCFG-3 error: invalid type `a_type' in
 			-- constraint of formal generic parameter of `a_class'.
 			--
@@ -1174,7 +1174,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vcfg3d_error (a_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_constraint: ET_FORMAL_PARAMETER_TYPE) is
+	report_vcfg3d_error (a_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_constraint: ET_FORMAL_PARAMETER_TYPE)
 			-- Report VCFG-3 error: the constraint of `a_formal'
 			-- in `a_class' is the formal generic parameter itself.
 			--
@@ -1200,7 +1200,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vcfg3e_error (a_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_constraint: ET_FORMAL_PARAMETER_TYPE) is
+	report_vcfg3e_error (a_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_constraint: ET_FORMAL_PARAMETER_TYPE)
 			-- Report VCFG-3 error: the constraint of `a_formal'
 			-- in `a_class' is another formal generic parameter
 			-- appearing before `a_formal' in the list of formal
@@ -1224,7 +1224,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vcfg3f_error (a_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_constraint: ET_FORMAL_PARAMETER_TYPE) is
+	report_vcfg3f_error (a_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_constraint: ET_FORMAL_PARAMETER_TYPE)
 			-- Report VCFG-3 error: the constraint of `a_formal'
 			-- in `a_class' is another formal generic parameter
 			-- appearing after `a_formal' in the list of formal
@@ -1247,7 +1247,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vcfg3g_error (a_class: ET_CLASS; a_cycle: DS_LIST [ET_FORMAL_PARAMETER]) is
+	report_vcfg3g_error (a_class: ET_CLASS; a_cycle: DS_LIST [ET_FORMAL_PARAMETER])
 			-- Report VCFG-3 error: the constraints of the formal
 			-- generic parameters `a_cycle' of `a_class' are
 			-- involved in a cycle.
@@ -1269,7 +1269,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vcfg3h_error (a_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_type: ET_FORMAL_PARAMETER_TYPE) is
+	report_vcfg3h_error (a_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_type: ET_FORMAL_PARAMETER_TYPE)
 			-- Report VCFG-3 error: the constraint of `a_formal'
 			-- in `a_class' contains the formal generic parameter
 			-- itself.
@@ -1299,7 +1299,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vcfg3i_error (a_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_type: ET_FORMAL_PARAMETER_TYPE) is
+	report_vcfg3i_error (a_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_type: ET_FORMAL_PARAMETER_TYPE)
 			-- Report VCFG-3 error: the constraint of `a_formal' in
 			-- `a_class' contains another formal generic parameter
 			-- appearing after `a_formal' in the list of formal
@@ -1321,7 +1321,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vcfg3j_error (a_class: ET_CLASS; a_cycle: DS_LIST [ET_FORMAL_PARAMETER]) is
+	report_vcfg3j_error (a_class: ET_CLASS; a_cycle: DS_LIST [ET_FORMAL_PARAMETER])
 			-- Report VCFG-3 error: the constraints of the formal
 			-- generic parameters `a_cycle' of `a_class' are
 			-- involved in a cycle.
@@ -1344,7 +1344,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdjr0a_error (a_class: ET_CLASS; f1, f2: ET_PARENT_FEATURE) is
+	report_vdjr0a_error (a_class: ET_CLASS; f1, f2: ET_PARENT_FEATURE)
 			-- Report VDJR error: Features `f1' and `f2'
 			-- don't have the same number of arguments when
 			-- joining these two deferred features in `a_class'.
@@ -1364,7 +1364,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdjr0b_error (a_class: ET_CLASS; f1, f2: ET_PARENT_FEATURE; arg: INTEGER) is
+	report_vdjr0b_error (a_class: ET_CLASS; f1, f2: ET_PARENT_FEATURE; arg: INTEGER)
 			-- Report VDJR error: the type of the `arg'-th
 			-- argument is not identical in `f1' and `f2' when
 			-- joining these two deferred features in `a_class'.
@@ -1384,7 +1384,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdjr0c_error (a_class: ET_CLASS; f1, f2: ET_PARENT_FEATURE) is
+	report_vdjr0c_error (a_class: ET_CLASS; f1, f2: ET_PARENT_FEATURE)
 			-- Resport VDJR error: the type of the result is
 			-- not identical in `f1' and `f2' when joining these
 			-- two deferred features in `a_class'.
@@ -1404,7 +1404,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdjr2a_error (a_class: ET_CLASS; f1, f2: ET_PARENT_FEATURE) is
+	report_vdjr2a_error (a_class: ET_CLASS; f1, f2: ET_PARENT_FEATURE)
 			-- Report VDJR-2 error: features `f1' and `f2' are joined/merged,
 			-- but `f1' has an alias and not `f2'.
 			--
@@ -1425,7 +1425,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdjr2b_error (a_class: ET_CLASS; f1, f2: ET_PARENT_FEATURE) is
+	report_vdjr2b_error (a_class: ET_CLASS; f1, f2: ET_PARENT_FEATURE)
 			-- Report VDJR-2 error: features `f1' and `f2' are joined/merged,
 			-- they both have an alias but it is not the same.
 			--
@@ -1447,7 +1447,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdpr1a_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR_INSTRUCTION) is
+	report_vdpr1a_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR_INSTRUCTION)
 			-- Report VDPR-1 error: instruction `a_precursor' does not
 			-- appear in a routine body in `a_class'.
 			--
@@ -1465,7 +1465,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdpr1b_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR_EXPRESSION) is
+	report_vdpr1b_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR_EXPRESSION)
 			-- Report VDPR-1 error: expression `a_precursor' does not
 			-- appear in a routine body in `a_class'.
 			--
@@ -1483,7 +1483,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdpr2a_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR) is
+	report_vdpr2a_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR)
 			-- Report VDPR-2 error: the parent name specified in `a_precursor'
 			-- is not the name of a parent of `a_class'.
 			--
@@ -1502,7 +1502,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdpr3a_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR; a_redefined_feature: ET_FEATURE; f1, f2: ET_PARENT_FEATURE) is
+	report_vdpr3a_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR; a_redefined_feature: ET_FEATURE; f1, f2: ET_PARENT_FEATURE)
 			-- Report VDPR-3 error: two effective features `f1' and `f2' redefined into
 			-- the same feature `a_redefined_feature' containing `a_precursor' in `a_class'.
 			--
@@ -1523,7 +1523,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdpr3b_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR; a_redefined_feature: ET_FEATURE; an_inherited_feature: ET_PARENT_FEATURE) is
+	report_vdpr3b_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR; a_redefined_feature: ET_FEATURE; an_inherited_feature: ET_PARENT_FEATURE)
 			-- Report VDPR-3 error: feature `a_redefined_feature' where `a_precursor' appears
 			-- is the redefinition of a deferred feature `an_inherited_feature' in `a_class'.
 			--
@@ -1543,7 +1543,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdpr3c_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR; a_redefined_feature: ET_FEATURE) is
+	report_vdpr3c_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR; a_redefined_feature: ET_FEATURE)
 			-- Report VDPR-3 error: feature `a_redefined_feature' where `a_precursor' appears
 			-- is not the redefinition of a feature inherited from `a_precursor.parent_name'
 			-- in `a_class'.
@@ -1564,7 +1564,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdpr3d_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR; a_feature: ET_FEATURE) is
+	report_vdpr3d_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR; a_feature: ET_FEATURE)
 			-- Report VDPR-3 error: `a_precursor' appears in `a_feature' in `a_class',
 			-- but `a_feature' is not a redeclared feature.
 			--
@@ -1583,7 +1583,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdpr3e_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR; an_agent: ET_INLINE_AGENT; a_feature: ET_STANDALONE_CLOSURE) is
+	report_vdpr3e_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR; an_agent: ET_INLINE_AGENT; a_feature: ET_STANDALONE_CLOSURE)
 			-- Report VDPR-3 error: `a_precursor' appears in inline agent `an_agent'
 			-- of `a_feature' in `a_class', but the associated feature of inline
 			-- agents cannot be redefined.
@@ -1602,7 +1602,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdpr4a_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR_KEYWORD; a_feature: ET_FEATURE; a_parent: ET_CLASS) is
+	report_vdpr4a_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR_KEYWORD; a_feature: ET_FEATURE; a_parent: ET_CLASS)
 			-- Report VDPR-4A error: the number of actual arguments in
 			-- the precursor call `a_precursor' appearing in `a_class' is
 			-- not the same as the number of formal arguments of `a_feature'
@@ -1624,7 +1624,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdpr4b_error (a_class, a_class_impl: ET_CLASS; a_precursor: ET_PRECURSOR_KEYWORD; a_feature: ET_FEATURE; a_parent: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
+	report_vdpr4b_error (a_class, a_class_impl: ET_CLASS; a_precursor: ET_PRECURSOR_KEYWORD; a_feature: ET_FEATURE; a_parent: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE)
 			-- Report VDPR-4B error: the `arg'-th actual argument in the precursor
 			-- call `a_precursor' appearing in `a_class_impl' and viewed from one of its
 			-- descendants `a_class' (possibly itself) does not conform to the corresponding
@@ -1651,7 +1651,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrd2a_error (a_class: ET_CLASS; f1: ET_FEATURE; f2: ET_PARENT_FEATURE) is
+	report_vdrd2a_error (a_class: ET_CLASS; f1: ET_FEATURE; f2: ET_PARENT_FEATURE)
 			-- Report VDRD-2 error: the feature `f2' is redeclared
 			-- as `f1' in `a_class', but the signature of `f1' in `a_class'
 			-- does not conform to the signature of `f2' in its parent class.
@@ -1672,7 +1672,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrd2b_error (a_class: ET_CLASS; f1, f2: ET_PARENT_FEATURE) is
+	report_vdrd2b_error (a_class: ET_CLASS; f1, f2: ET_PARENT_FEATURE)
 			-- Report VDRD-2 error: the feature `f2' is redeclared
 			-- by being merged to `f1' in `a_class', but the signature of
 			-- `f1' in `a_class' does not conform to the signature of
@@ -1694,7 +1694,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrd2c_error (a_class: ET_CLASS; f1: ET_FEATURE; f2: ET_PARENT_FEATURE) is
+	report_vdrd2c_error (a_class: ET_CLASS; f1: ET_FEATURE; f2: ET_PARENT_FEATURE)
 			-- Report VDRD-2 error: the inherited feature `f2', replicated
 			-- in `a_class', is implicitly redeclared to the selected redeclared
 			-- feature `f1' in `a_class', but the signature of `f1' in `a_class'
@@ -1716,7 +1716,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrd2d_error (a_class: ET_CLASS; f1, f2: ET_PARENT_FEATURE) is
+	report_vdrd2d_error (a_class: ET_CLASS; f1, f2: ET_PARENT_FEATURE)
 			-- Report VDRD-2 error: the inherited feature `f2', replicated
 			-- in `a_class', is implicitly redeclared to the selected
 			-- inherited feature `f1' in `a_class', but the signature of
@@ -1739,7 +1739,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrd3a_error (a_class: ET_CLASS; p: ET_PRECONDITIONS; f: ET_FEATURE) is
+	report_vdrd3a_error (a_class: ET_CLASS; p: ET_PRECONDITIONS; f: ET_FEATURE)
 			-- Report VDRD-3 error: the feature `f' is redeclared
 			-- in `a_class', but its preconditions do not begin with
 			-- 'require else'.
@@ -1760,7 +1760,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrd3b_error (a_class: ET_CLASS; p: ET_POSTCONDITIONS; f: ET_FEATURE) is
+	report_vdrd3b_error (a_class: ET_CLASS; p: ET_POSTCONDITIONS; f: ET_FEATURE)
 			-- Report VDRD-3 error: the feature `f' is redeclared
 			-- in `a_class', but its postconditions do not begin with
 			-- 'ensure then'.
@@ -1781,7 +1781,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrd4a_error (a_class: ET_CLASS; f1: ET_PARENT_FEATURE; f2: ET_FEATURE) is
+	report_vdrd4a_error (a_class: ET_CLASS; f1: ET_PARENT_FEATURE; f2: ET_FEATURE)
 			-- Report VDRD-4 error: the deferred feature `f1'
 			-- is redefined into the deferred feature `f2' in `a_class'
 			-- but is not listed in the Redefine subclause.
@@ -1806,7 +1806,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrd4b_error (a_class: ET_CLASS; f1: ET_PARENT_FEATURE; f2: ET_FEATURE) is
+	report_vdrd4b_error (a_class: ET_CLASS; f1: ET_PARENT_FEATURE; f2: ET_FEATURE)
 			-- Report VDRD-4 error: the effective feature `f1'
 			-- is redefined into the effective feature `f2' in `a_class'
 			-- but is not listed in the Redefine subclause.
@@ -1831,7 +1831,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrd4c_error (a_class: ET_CLASS; f1: ET_PARENT_FEATURE; f2: ET_FEATURE) is
+	report_vdrd4c_error (a_class: ET_CLASS; f1: ET_PARENT_FEATURE; f2: ET_FEATURE)
 			-- Report VDRD-4 error: the effective feature `f1'
 			-- is redefined into the deferred feature `f2' in `a_class'
 			-- but is not listed in the Undefine and Redefine subclauses.
@@ -1856,7 +1856,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrd5a_error (a_class: ET_CLASS; f1: ET_PARENT_FEATURE; f2: ET_FEATURE) is
+	report_vdrd5a_error (a_class: ET_CLASS; f1: ET_PARENT_FEATURE; f2: ET_FEATURE)
 			-- Report VDRD-5 error: the effective feature `f1'
 			-- is redefined into the deferred feature `f2' in
 			-- `a_class'.
@@ -1880,7 +1880,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrd6a_error (a_class: ET_CLASS; f1: ET_PARENT_FEATURE; f2: ET_FEATURE) is
+	report_vdrd6a_error (a_class: ET_CLASS; f1: ET_PARENT_FEATURE; f2: ET_FEATURE)
 			-- Report VDRD-6 error: the attribute `f1' is not redeclared into
 			-- an attribute in `a_class'.
 			--
@@ -1901,7 +1901,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrd6b_error (a_class: ET_CLASS; f1: ET_PARENT_FEATURE; f2: ET_FEATURE) is
+	report_vdrd6b_error (a_class: ET_CLASS; f1: ET_PARENT_FEATURE; f2: ET_FEATURE)
 			-- Report VDRD-6 error: the type of attribute `f1' has not the
 			-- same type expandedness as its redeclared version `f2' in `a_class'.
 			--
@@ -1922,7 +1922,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrd7a_error (a_class: ET_CLASS; f1: ET_PARENT_FEATURE; f2: ET_FEATURE) is
+	report_vdrd7a_error (a_class: ET_CLASS; f1: ET_PARENT_FEATURE; f2: ET_FEATURE)
 			-- Report VDRD-7 error: `f1' has no alias but its redeclared version
 			-- `f2' has one.
 			--
@@ -1943,7 +1943,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrd7b_error (a_class: ET_CLASS; f1: ET_PARENT_FEATURE; f2: ET_FEATURE) is
+	report_vdrd7b_error (a_class: ET_CLASS; f1: ET_PARENT_FEATURE; f2: ET_FEATURE)
 			-- Report VDRD-7 error: `f1' has an alias but its redeclared version
 			-- `f2' has none.
 			--
@@ -1964,7 +1964,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrd7c_error (a_class: ET_CLASS; f1: ET_PARENT_FEATURE; f2: ET_FEATURE) is
+	report_vdrd7c_error (a_class: ET_CLASS; f1: ET_PARENT_FEATURE; f2: ET_FEATURE)
 			-- Report VDRD-7 error: `f1' and its redeclared version `f2'
 			-- have both an alias, but it is not the same.
 			--
@@ -1986,7 +1986,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrs1a_error (a_class: ET_CLASS; a_parent: ET_PARENT; f: ET_FEATURE_NAME) is
+	report_vdrs1a_error (a_class: ET_CLASS; a_parent: ET_PARENT; f: ET_FEATURE_NAME)
 			-- Report VDRS-1 error: the Redefine subclause of `a_parent'
 			-- in `a_class' lists `f' which is not the final name in
 			-- `a_class' of a feature inherited from `a_parent'.
@@ -2007,7 +2007,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrs2a_error (a_class: ET_CLASS; a_parent: ET_PARENT; f: ET_FEATURE_NAME) is
+	report_vdrs2a_error (a_class: ET_CLASS; a_parent: ET_PARENT; f: ET_FEATURE_NAME)
 			-- Report VDRS-2 error: the Redefine subclause of `a_parent'
 			-- in `a_class' lists `f' which is the final name of a
 			-- frozen feature.
@@ -2028,7 +2028,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrs2b_error (a_class: ET_CLASS; a_parent: ET_PARENT; f: ET_FEATURE_NAME) is
+	report_vdrs2b_error (a_class: ET_CLASS; a_parent: ET_PARENT; f: ET_FEATURE_NAME)
 			-- Report VDRS-2 error: the Redefine subclause of `a_parent'
 			-- in `a_class' lists `f' which is the final name of a
 			-- constant attribute.
@@ -2049,7 +2049,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrs3a_error (a_class: ET_CLASS; a_parent: ET_PARENT; f1, f2: ET_FEATURE_NAME) is
+	report_vdrs3a_error (a_class: ET_CLASS; a_parent: ET_PARENT; f1, f2: ET_FEATURE_NAME)
 			-- Report VDRS-3 error: feature name `f2' appears twice in the
 			-- Redefine subclause of parent `a_parent' in `a_class'.
 			--
@@ -2070,7 +2070,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrs4a_error (a_class: ET_CLASS; a_feature: ET_PARENT_FEATURE) is
+	report_vdrs4a_error (a_class: ET_CLASS; a_feature: ET_PARENT_FEATURE)
 			-- Report VDRS-4 error: `a_feature' is not redefined
 			-- in `a_class' and therefore should not be listed in
 			-- the Redefine subclause.
@@ -2091,7 +2091,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrs4b_error (a_class: ET_CLASS; a_deferred: ET_PARENT_FEATURE; an_effective: ET_FEATURE) is
+	report_vdrs4b_error (a_class: ET_CLASS; a_deferred: ET_PARENT_FEATURE; an_effective: ET_FEATURE)
 			-- Report VDRS-4 error: deferred feature `a_deferred' should
 			-- not be listed in the Redefine subclause when being effected
 			-- to `an_effective' in `a_class'.
@@ -2116,7 +2116,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdus1a_error (a_class: ET_CLASS; a_parent: ET_PARENT; f: ET_FEATURE_NAME) is
+	report_vdus1a_error (a_class: ET_CLASS; a_parent: ET_PARENT; f: ET_FEATURE_NAME)
 			-- Report VDUS-1 error: the Undefine subclause
 			-- of `a_parent' in `a_class' lists `f' which is not
 			-- the final name in `a_class' of a feature inherited
@@ -2138,7 +2138,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdus2a_error (a_class: ET_CLASS; a_parent: ET_PARENT; f: ET_FEATURE_NAME) is
+	report_vdus2a_error (a_class: ET_CLASS; a_parent: ET_PARENT; f: ET_FEATURE_NAME)
 			-- Report VDUS-2 error: the Undefine subclause
 			-- of `a_parent' in `a_class' lists `f' which is the
 			-- final name of a frozen feature.
@@ -2159,7 +2159,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdus2b_error (a_class: ET_CLASS; a_parent: ET_PARENT; f: ET_FEATURE_NAME) is
+	report_vdus2b_error (a_class: ET_CLASS; a_parent: ET_PARENT; f: ET_FEATURE_NAME)
 			-- Report VDUS-2 error: the Undefine subclause of
 			-- `a_parent' in `a_class' lists `f' which is the final
 			-- name of an attribute.
@@ -2180,7 +2180,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdus3a_error (a_class: ET_CLASS; a_parent: ET_PARENT; f: ET_FEATURE_NAME) is
+	report_vdus3a_error (a_class: ET_CLASS; a_parent: ET_PARENT; f: ET_FEATURE_NAME)
 			-- Report VDUS-3 error: the Undefine subclause
 			-- of `a_parent' in `a_class' lists `f' which is not
 			-- the final name of an effective feature in `a_parent'.
@@ -2201,7 +2201,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdus4a_error (a_class: ET_CLASS; a_parent: ET_PARENT; f1, f2: ET_FEATURE_NAME) is
+	report_vdus4a_error (a_class: ET_CLASS; a_parent: ET_PARENT; f1, f2: ET_FEATURE_NAME)
 			-- Report VDUS-4 error: feature name `f2' appears
 			-- twice in the Undefine subclause of parent `a_parent'
 			-- in `a_class'.
@@ -2223,7 +2223,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_veen0a_error (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER; a_feature: ET_FEATURE) is
+	report_veen0a_error (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER; a_feature: ET_FEATURE)
 			-- Report VEEN error: `an_identifier', appearing in `a_feature'
 			-- of `a_class', is not the final name of a feature in `a_class'
 			-- nor the name of a local variable or a formal argument of
@@ -2245,7 +2245,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_veen0b_error (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT) is
+	report_veen0b_error (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT)
 			-- Report VEEN error: `an_identifier', appearing in inline
 			-- agent `an_agent' in `a_class', is not the final name of a feature
 			-- in `a_class' nor the name of a local variable or a formal argument of
@@ -2267,7 +2267,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_veen2a_error (a_class: ET_CLASS; a_result: ET_RESULT; a_feature: ET_FEATURE) is
+	report_veen2a_error (a_class: ET_CLASS; a_result: ET_RESULT; a_feature: ET_FEATURE)
 			-- Report VEEN-2 error: `a_result' appears in the body, postcondition
 			-- or rescue clause of `a_feature' in `a_class', but `a_feature' is
 			-- a procedure.
@@ -2288,7 +2288,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_veen2b_error (a_class: ET_CLASS; a_result: ET_RESULT; a_feature: ET_FEATURE) is
+	report_veen2b_error (a_class: ET_CLASS; a_result: ET_RESULT; a_feature: ET_FEATURE)
 			-- Report VEEN-2 error: `a_result' appears in the precondition
 			-- of `a_feature' in `a_class'.
 			--
@@ -2307,7 +2307,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_veen2c_error (a_class: ET_CLASS; a_local: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
+	report_veen2c_error (a_class: ET_CLASS; a_local: ET_FEATURE_NAME; a_feature: ET_FEATURE)
 			-- Report VEEN-2 error: the local variable `a_local' appears in the precondition
 			-- or postcondition of `a_feature' in `a_class'.
 			--
@@ -2327,7 +2327,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_veen2d_error (a_class: ET_CLASS; a_result: ET_RESULT) is
+	report_veen2d_error (a_class: ET_CLASS; a_result: ET_RESULT)
 			-- Report VEEN-2 error: `a_result' appears in the invariant
 			-- of `a_class'.
 			--
@@ -2345,7 +2345,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_veen2e_error (a_class: ET_CLASS; a_local: ET_FEATURE_NAME; an_agent: ET_INLINE_AGENT) is
+	report_veen2e_error (a_class: ET_CLASS; a_local: ET_FEATURE_NAME; an_agent: ET_INLINE_AGENT)
 			-- Report VEEN-2 error: the local variable `a_local' appears in the precondition
 			-- or postcondition of inline agent `an_agent' in `a_class'.
 			--
@@ -2365,7 +2365,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_veen2f_error (a_class: ET_CLASS; a_result: ET_RESULT; an_agent: ET_INLINE_AGENT) is
+	report_veen2f_error (a_class: ET_CLASS; a_result: ET_RESULT; an_agent: ET_INLINE_AGENT)
 			-- Report VEEN-2 error: `a_result' appears in the precondition
 			-- of inline agent `an_agent' in `a_class'.
 			--
@@ -2384,7 +2384,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_veen2g_error (a_class: ET_CLASS; a_result: ET_RESULT; an_agent: ET_INLINE_AGENT) is
+	report_veen2g_error (a_class: ET_CLASS; a_result: ET_RESULT; an_agent: ET_INLINE_AGENT)
 			-- Report VEEN-2 error: `a_result' appears in the body, postcondition
 			-- or rescue clause of inline agent `an_agent' in `a_class', but the
 			-- associated feature of `an_agent' is a procedure.
@@ -2405,7 +2405,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_veen8a_error (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER; a_feature: ET_FEATURE) is
+	report_veen8a_error (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER; a_feature: ET_FEATURE)
 			-- Report VEEN-8 error: `an_identifier', appearing in `a_feature'
 			-- of `a_class' or one of its (possibly nested) inline agents, is an
 			-- object-test local that is used outside of its scope.
@@ -2426,7 +2426,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_veen8b_error (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER) is
+	report_veen8b_error (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER)
 			-- Report VEEN-8 error: `an_identifier', appearing in the invariant
 			-- of `a_class' or one of its (possibly nested) inline agents, is an
 			-- object-test local that is used outside of its scope.
@@ -2446,7 +2446,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vfac1a_error (a_class: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY) is
+	report_vfac1a_error (a_class: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY)
 			-- Report VFAC-1 error: `a_query' has an assigner `an_assigner'
 			-- but there is not feature with that name in `a_class'.
 			--
@@ -2466,7 +2466,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vfac1b_error (a_class: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY) is
+	report_vfac1b_error (a_class: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY)
 			-- Report VFAC-1 error: `a_query' has an assigner `an_assigner'
 			-- but this feature is not a procedure.
 			--
@@ -2486,7 +2486,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vfac2a_error (a_class: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY; a_procedure: ET_PROCEDURE) is
+	report_vfac2a_error (a_class: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY; a_procedure: ET_PROCEDURE)
 			-- Report VFAC-2 error: the number of argument in the
 			-- assigner procedure `a_procedure' is not one more than the
 			-- number of arguments in `a_query'.
@@ -2508,7 +2508,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vfac3a_error (a_class, a_class_impl: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY; a_procedure: ET_PROCEDURE) is
+	report_vfac3a_error (a_class, a_class_impl: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY; a_procedure: ET_PROCEDURE)
 			-- Report VFAC-3 error: the type of the first argument of the
 			-- assigner procedure `a_procedure' in `a_class' and the result type
 			-- of `a_query' declared in `a_class_impl' (an ancestor of `a_class',
@@ -2535,7 +2535,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vfac4a_error (a_class, a_class_impl: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY; a_procedure: ET_PROCEDURE; arg: INTEGER) is
+	report_vfac4a_error (a_class, a_class_impl: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY; a_procedure: ET_PROCEDURE; arg: INTEGER)
 			-- Report VFAC-4 error: the type of the `arg'-th + 1 argument of the
 			-- assigner procedure `a_procedure' in `a_class' and the type of the
 			-- `arg'-th argument of `a_query' declared in `a_class_impl' (an ancestor
@@ -2566,7 +2566,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vfav1a_error (a_class: ET_CLASS; a_feature: ET_FEATURE) is
+	report_vfav1a_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
 			-- Report VFAV-1 error: `a_feature' has an infix operator alias
 			-- but is not a function with exactly one argument.
 			--
@@ -2587,7 +2587,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vfav1b_error (a_class: ET_CLASS; a_feature: ET_FEATURE) is
+	report_vfav1b_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
 			-- Report VFAV-1 error: `a_feature' has a prefix operator alias
 			-- but is not a query with no argument.
 			--
@@ -2608,7 +2608,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vfav1c_error (a_class: ET_CLASS; a_feature1, a_feature2: ET_FEATURE) is
+	report_vfav1c_error (a_class: ET_CLASS; a_feature1, a_feature2: ET_FEATURE)
 			-- Report VFAV-1 error: `a_feature1' and `a_feature2' have
 			-- the same unary operator alias.
 			--
@@ -2631,7 +2631,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vfav1d_error (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_feature2: ET_PARENT_FEATURE) is
+	report_vfav1d_error (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_feature2: ET_PARENT_FEATURE)
 			-- Report VFAV-1 error: `a_feature1' and `a_feature2' have
 			-- the same unary operator alias.
 			--
@@ -2654,7 +2654,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vfav1e_error (a_class: ET_CLASS; a_feature1, a_feature2: ET_PARENT_FEATURE) is
+	report_vfav1e_error (a_class: ET_CLASS; a_feature1, a_feature2: ET_PARENT_FEATURE)
 			-- Report VFAV-1 error: `a_feature1' and `a_feature2' have
 			-- the same unary operator alias.
 			--
@@ -2677,7 +2677,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vfav1f_error (a_class: ET_CLASS; a_feature1, a_feature2: ET_FEATURE) is
+	report_vfav1f_error (a_class: ET_CLASS; a_feature1, a_feature2: ET_FEATURE)
 			-- Report VFAV-1 error: `a_feature1' and `a_feature2' have
 			-- the same binary operator alias.
 			--
@@ -2700,7 +2700,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vfav1g_error (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_feature2: ET_PARENT_FEATURE) is
+	report_vfav1g_error (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_feature2: ET_PARENT_FEATURE)
 			-- Report VFAV-1 error: `a_feature1' and `a_feature2' have
 			-- the same binary operator alias.
 			--
@@ -2723,7 +2723,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vfav1h_error (a_class: ET_CLASS; a_feature1, a_feature2: ET_PARENT_FEATURE) is
+	report_vfav1h_error (a_class: ET_CLASS; a_feature1, a_feature2: ET_PARENT_FEATURE)
 			-- Report VFAV-1 error: `a_feature1' and `a_feature2' have
 			-- the same binary operator alias.
 			--
@@ -2746,7 +2746,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vfav2a_error (a_class: ET_CLASS; a_feature: ET_FEATURE) is
+	report_vfav2a_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
 			-- Report VFAV-2 error: `a_feature' has a bracket alias
 			-- but is not a function with at least one argument.
 			--
@@ -2767,7 +2767,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vfav2b_error (a_class: ET_CLASS; a_feature1, a_feature2: ET_FEATURE) is
+	report_vfav2b_error (a_class: ET_CLASS; a_feature1, a_feature2: ET_FEATURE)
 			-- Report VFAV-2 error: `a_feature1' and `a_feature2' have both
 			-- a bracket alias.
 			--
@@ -2790,7 +2790,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vfav2c_error (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_feature2: ET_PARENT_FEATURE) is
+	report_vfav2c_error (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_feature2: ET_PARENT_FEATURE)
 			-- Report VFAV-2 error: `a_feature1' and `a_feature2' have both
 			-- a bracket alias.
 			--
@@ -2813,7 +2813,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vfav2d_error (a_class: ET_CLASS; a_feature1, a_feature2: ET_PARENT_FEATURE) is
+	report_vfav2d_error (a_class: ET_CLASS; a_feature1, a_feature2: ET_PARENT_FEATURE)
 			-- Report VFAV-2 error: `a_feature1' and `a_feature2' have both
 			-- a bracket alias.
 			--
@@ -2836,7 +2836,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vffd4a_error (a_class: ET_CLASS; a_feature: ET_FEATURE) is
+	report_vffd4a_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
 			-- Report VFFD-4 error: deferred `a_feature' is marked as frozen.
 			--
 			-- ETL2: p.69
@@ -2855,7 +2855,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vffd5a_error (a_class: ET_CLASS; a_feature: ET_FEATURE) is
+	report_vffd5a_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
 			-- Report VFFD-5 error: `a_feature' has a prefix name but is
 			-- not an attribute or a function with no argument.
 			--
@@ -2875,7 +2875,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vffd6a_error (a_class: ET_CLASS; a_feature: ET_FEATURE) is
+	report_vffd6a_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
 			-- Report VFFD-6 error: `a_feature' has an infix name but is
 			-- not a function with exactly one argument.
 			--
@@ -2895,7 +2895,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vffd7a_error (a_class: ET_CLASS; a_feature: ET_FEATURE) is
+	report_vffd7a_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
 			-- Report VFFD-7 error: the type of the once function `a_feature'
 			-- contains an anchored type.
 			--
@@ -2915,7 +2915,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vffd7b_error (a_class: ET_CLASS; a_feature: ET_FEATURE) is
+	report_vffd7b_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
 			-- Report VFFD-7 error: the type of the once function `a_feature'
 			-- contains an formal generic parameter.
 			--
@@ -2935,7 +2935,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vgcc1a_error (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_EXPRESSION; a_target: ET_CLASS) is
+	report_vgcc1a_error (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_EXPRESSION; a_target: ET_CLASS)
 			-- Report VGCC-1 error: the creation expression `a_creation',
 			-- appearing in `a_class_impl' and viewed from one
 			-- of its descendants `a_class' (possibly itself), has no
@@ -2958,7 +2958,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vgcc1b_error (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_INSTRUCTION; a_target: ET_CLASS) is
+	report_vgcc1b_error (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_INSTRUCTION; a_target: ET_CLASS)
 			-- Report VGCC-1 error: the creation instruction `a_creation',
 			-- appearing in `a_class_impl' and viewed from one of its
 			-- descendants `a_class' (possibly itself), has no Creation_call
@@ -2981,7 +2981,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vgcc3a_error (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_INSTRUCTION; a_creation_named_type, a_target_named_type: ET_NAMED_TYPE) is
+	report_vgcc3a_error (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_INSTRUCTION; a_creation_named_type, a_target_named_type: ET_NAMED_TYPE)
 			-- Report VGCC-3 error: the explicit creation type in creation instruction
 			-- `a_creation' appearing in `a_class_impl' does not conform to the declared
 			-- type of the target entity when viewed from one of its descendants
@@ -3007,7 +3007,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vgcc5a_error (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_EXPRESSION; a_target: ET_CLASS) is
+	report_vgcc5a_error (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_EXPRESSION; a_target: ET_CLASS)
 			-- Report VGCC-5 error: the creation expression `a_creation',
 			-- appearing in  `a_class_impl' and viewed from one
 			-- of its descendants `a_class' (possibly itself), has no
@@ -3030,7 +3030,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vgcc5b_error (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_INSTRUCTION; a_target: ET_CLASS) is
+	report_vgcc5b_error (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_INSTRUCTION; a_target: ET_CLASS)
 			-- Report VGCC-5 error: the creation instruction `a_creation',
 			-- appearing in `a_class_impl' and viewed from one of its
 			-- descendants `a_class' (possibly itself), has no Creation_call
@@ -3053,7 +3053,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vgcc6a_error (a_class: ET_CLASS; cp: ET_FEATURE_NAME; f: ET_FEATURE) is
+	report_vgcc6a_error (a_class: ET_CLASS; cp: ET_FEATURE_NAME; f: ET_FEATURE)
 			-- Report VGCC-6 error: creation procedure name
 			-- `cp' is the final name of a once-procedure in `a_class'.
 			--
@@ -3076,7 +3076,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vgcc6b_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+	report_vgcc6b_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS)
 			-- Report VGCC-6 error: the feature name `a_name', appearing
 			-- in a creation expression in `a_class', is not a procedure.
 			--
@@ -3096,7 +3096,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vgcc6c_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+	report_vgcc6c_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS)
 			-- Report VGCC-6 error: `a_feature' of class `a_target', appearing in
 			-- a creation expression with creation procedure name `a_name' in
 			-- `a_class_impl' and viewed from one of its descendants `a_class'
@@ -3119,7 +3119,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vgcc6d_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+	report_vgcc6d_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS)
 			-- Report VGCC-6 error: the feature name `a_name', appearing
 			-- in a creation instruction in `a_class', is not a procedure.
 			--
@@ -3139,7 +3139,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vgcc6e_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+	report_vgcc6e_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS)
 			-- Report VGCC-6 error: `a_feature' of class `a_target', appearing in
 			-- a creation instruction with creation procedure name `a_name' in
 			-- `a_class_impl' and viewed from one of its descendants `a_class'
@@ -3162,7 +3162,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vgcc8a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; a_formal: ET_FORMAL_PARAMETER) is
+	report_vgcc8a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; a_formal: ET_FORMAL_PARAMETER)
 			-- Report VGCC-8 error: `a_feature' of class `a_target', appearing in
 			-- a creation expression with creation procedure name `a_name' in `a_class_impl'
 			-- and viewed from one of its descendants `a_class' (possibly itself), is
@@ -3187,7 +3187,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vgcc8b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; a_formal: ET_FORMAL_PARAMETER) is
+	report_vgcc8b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; a_formal: ET_FORMAL_PARAMETER)
 			-- Report VGCC-8 error: `a_feature' of class `a_target', appearing in
 			-- a creation instruction with creation procedure name `a_name' in `a_class_impl'
 			-- and viewed from one of its descendants `a_class' (possibly itself), is
@@ -3211,7 +3211,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vgcp1a_error (a_class: ET_CLASS; a_creator: ET_CREATOR) is
+	report_vgcp1a_error (a_class: ET_CLASS; a_creator: ET_CREATOR)
 			-- Report VGCP-1 error: `a_class' is deferred
 			-- but has a Creation clause.
 			--
@@ -3229,7 +3229,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vgcp2a_error (a_class: ET_CLASS; cp: ET_FEATURE_NAME) is
+	report_vgcp2a_error (a_class: ET_CLASS; cp: ET_FEATURE_NAME)
 			-- Report VGCP-2 error: creation procedure name
 			-- `cp' is not the final name of a feature in `a_class'.
 			--
@@ -3247,7 +3247,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vgcp2b_error (a_class: ET_CLASS; cp: ET_FEATURE_NAME; f: ET_FEATURE) is
+	report_vgcp2b_error (a_class: ET_CLASS; cp: ET_FEATURE_NAME; f: ET_FEATURE)
 			-- Report VGCP-2 error: creation procedure name
 			-- `cp' is not the final name of a procedure in `a_class'.
 			--
@@ -3268,7 +3268,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vgcp3a_error (a_class: ET_CLASS; f1, f2: ET_FEATURE_NAME) is
+	report_vgcp3a_error (a_class: ET_CLASS; f1, f2: ET_FEATURE_NAME)
 			-- Report VGCP-3 error: procedure name
 			-- appears twice in creation Feature_list.
 			--
@@ -3287,7 +3287,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vgcp3b_error (a_class: ET_CLASS; f1, f2: ET_FEATURE_NAME) is
+	report_vgcp3b_error (a_class: ET_CLASS; f1, f2: ET_FEATURE_NAME)
 			-- Report VGCP-3 error: procedure name appears
 			-- in two different Creation clauses.
 			--
@@ -3306,7 +3306,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vgcp3c_error (a_class: ET_CLASS; f1, f2: ET_FEATURE_NAME) is
+	report_vgcp3c_error (a_class: ET_CLASS; f1, f2: ET_FEATURE_NAME)
 			-- Report VGCP-3 error: procedure name
 			-- appears twice in creation Feature_list of
 			-- a generic constraint.
@@ -3326,7 +3326,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vhay0a_error (a_class: ET_CLASS) is
+	report_vhay0a_error (a_class: ET_CLASS)
 			-- Report VHAY error: `a_class' implicitly inherits
 			-- from unknown class ANY.
 			--
@@ -3343,7 +3343,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vhpr1a_error (a_class: ET_CLASS; a_cycle: DS_LIST [ET_CLASS]) is
+	report_vhpr1a_error (a_class: ET_CLASS; a_cycle: DS_LIST [ET_CLASS])
 			-- Report VHPR-1 error: `a_class' is involved
 			-- in the inheritance cycle `a_cycle'.
 			--
@@ -3363,7 +3363,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vhpr1b_error (a_class: ET_CLASS; a_none: ET_BASE_TYPE) is
+	report_vhpr1b_error (a_class: ET_CLASS; a_none: ET_BASE_TYPE)
 			-- Report VHPR-1 error: `a_class' is involved
 			-- in the inheritance cycle: it inherits from NONE.
 			--
@@ -3381,7 +3381,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vhpr3a_error (a_class: ET_CLASS; a_type: ET_BIT_FEATURE) is
+	report_vhpr3a_error (a_class: ET_CLASS; a_type: ET_BIT_FEATURE)
 			-- Report VHPR-3 error: invalid type `a_type'
 			-- in parent clause of `a_class'.
 			--
@@ -3400,7 +3400,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vhpr3b_error (a_class: ET_CLASS; a_type: ET_BIT_N) is
+	report_vhpr3b_error (a_class: ET_CLASS; a_type: ET_BIT_N)
 			-- Report VHPR-3 error: invalid type `a_type'
 			-- in parent clause of `a_class'.
 			--
@@ -3419,7 +3419,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vhpr3c_error (a_class: ET_CLASS; a_type: ET_LIKE_TYPE) is
+	report_vhpr3c_error (a_class: ET_CLASS; a_type: ET_LIKE_TYPE)
 			-- Report VHPR-3 error: invalid type `a_type'
 			-- in parent clause of `a_class'.
 			--
@@ -3437,7 +3437,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vhrc1a_error (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME) is
+	report_vhrc1a_error (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME)
 			-- Report VHRC-1 error: the feature name appearing as first
 			-- element of the Rename_pair `a_rename' in Parent clause
 			-- `a_parent' in `a_class' is not the final name of a feature
@@ -3459,7 +3459,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vhrc2a_error (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename1, a_rename2: ET_RENAME) is
+	report_vhrc2a_error (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename1, a_rename2: ET_RENAME)
 			-- Report VHRC-2 error: a feature name appears more
 			-- than once (e.g. also in `a_rename1') as first element
 			-- of the Rename_pair `a_rename2' in Parent clause
@@ -3482,7 +3482,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vhrc4a_error (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE) is
+	report_vhrc4a_error (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE)
 			-- Report VHRC-4 error: the Rename_pair
 			-- `a_rename' has a new_name of the Prefix form,
 			-- but the corresponding feature `f' is not an
@@ -3504,7 +3504,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vhrc4b_error (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE) is
+	report_vhrc4b_error (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE)
 			-- Report VHRC-4 error: the Rename_pair
 			-- `a_rename' has a new_name with a bracket alias,
 			-- but the corresponding feature `f' is not a
@@ -3529,7 +3529,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vhrc4c_error (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE) is
+	report_vhrc4c_error (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE)
 			-- Report VHRC-4 error: the Rename_pair `a_rename' has
 			-- a new_name with a binary operator alias,
 			-- but the corresponding feature `f' is not a
@@ -3554,7 +3554,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vhrc4d_error (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE) is
+	report_vhrc4d_error (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE)
 			-- Report VHRC-4 error: the Rename_pair `a_rename' has
 			-- a new_name with a unary operator alias,
 			-- but the corresponding feature `f' is not a
@@ -3579,7 +3579,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vhrc5a_error (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE) is
+	report_vhrc5a_error (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE)
 			-- Report VHRC-5 error: the Rename_pair `a_rename' has
 			-- a new_name of the Infix form, but the corresponding feature
 			-- `f' is not a function with one argument.
@@ -3600,7 +3600,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vjar0a_error (a_class, a_class_impl: ET_CLASS; an_assignment: ET_ASSIGNMENT; a_source_type, a_target_type: ET_NAMED_TYPE) is
+	report_vjar0a_error (a_class, a_class_impl: ET_CLASS; an_assignment: ET_ASSIGNMENT; a_source_type, a_target_type: ET_NAMED_TYPE)
 			-- Report VJAR error: the source expression of `an_assignment' in `a_class_impl'
 			-- does not conform to its target entity when viewed from `one of its descendants
 			-- a_class' (possibly itself).
@@ -3624,7 +3624,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vjaw0a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
+	report_vjaw0a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE)
 			-- Report VJAW error: `a_name' is supposed to be a Writable but
 			-- the associated feature `a_feature' is not an attribute.
 			--
@@ -3643,7 +3643,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vjaw0b_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE) is
+	report_vjaw0b_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE)
 			-- Report VJAW error: `a_name' is supposed to be a Writable but
 			-- it is a formal argument name of `a_feature'.
 			--
@@ -3662,7 +3662,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vjaw0c_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT) is
+	report_vjaw0c_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT)
 			-- Report VJAW error: `a_name' is supposed to be a Writable but
 			-- it is a formal argument name of inline agent `an_agent'.
 			--
@@ -3681,7 +3681,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vjrv0a_error (a_class, a_class_impl: ET_CLASS; a_target: ET_WRITABLE; a_target_type: ET_NAMED_TYPE) is
+	report_vjrv0a_error (a_class, a_class_impl: ET_CLASS; a_target: ET_WRITABLE; a_target_type: ET_NAMED_TYPE)
 			-- Report VJRV error: the type `a_target_type' of the target
 			-- `a_target' of an assignment attempt appearing in `a_class_impl'
 			-- and viewed from one of its descedants `a_class' (possibly itself)
@@ -3704,7 +3704,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vkcn1a_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+	report_vkcn1a_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS)
 			-- Report VKCN-1 error: `a_feature' of class `a_target', appearing
 			-- in the qualified instruction call `a_name' in `a_class', is not
 			-- a procedure.
@@ -3725,7 +3725,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vkcn1c_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE) is
+	report_vkcn1c_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE)
 			-- Report VKCN-1 error: `a_feature' of `a_class', appearing
 			-- in the unqualified instruction call `a_name' in `a_class',
 			-- is not a procedure.
@@ -3745,7 +3745,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vkcn2a_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+	report_vkcn2a_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS)
 			-- Report VKCN-2 error: `a_feature' of class `a_target', appearing
 			-- in the qualified expression call `a_name' in `a_class', is not
 			-- an attribute or a function.
@@ -3766,7 +3766,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vkcn2c_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE) is
+	report_vkcn2c_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE)
 			-- Report VKCN-2 error: `a_feature' of `a_class', appearing
 			-- in the unqualified expression call `a_name' in `a_class', is not
 			-- an attribute or a function.
@@ -3786,7 +3786,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vlel1a_error (a_class: ET_CLASS; a_parent: ET_PARENT; all1, all2: ET_ALL_EXPORT) is
+	report_vlel1a_error (a_class: ET_CLASS; a_parent: ET_PARENT; all1, all2: ET_ALL_EXPORT)
 			-- Report VLEL-1 error: the 'all' keyword appears twice in the
 			-- Export subclause of parent `a_parent' in `a_class'.
 			--
@@ -3806,7 +3806,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vlel2a_error (a_class: ET_CLASS; a_parent: ET_PARENT; f: ET_FEATURE_NAME) is
+	report_vlel2a_error (a_class: ET_CLASS; a_parent: ET_PARENT; f: ET_FEATURE_NAME)
 			-- Report VLEL-2 error: the Export subclause of `a_parent'
 			-- in `a_class' lists `f' which is not the final name in
 			-- `a_class' of a feature inherited from `a_parent'.
@@ -3826,7 +3826,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vlel3a_error (a_class: ET_CLASS; a_parent: ET_PARENT; f1, f2: ET_FEATURE_NAME) is
+	report_vlel3a_error (a_class: ET_CLASS; a_parent: ET_PARENT; f1, f2: ET_FEATURE_NAME)
 			-- Report VLEL-3 error: feature name `f2' appears twice in the
 			-- Export subclause of parent `a_parent' in `a_class'.
 			--
@@ -3846,7 +3846,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vmfn0a_error (a_class: ET_CLASS; f1, f2: ET_FEATURE) is
+	report_vmfn0a_error (a_class: ET_CLASS; f1, f2: ET_FEATURE)
 			-- Report VMFN error: `a_class' introduced two features
 			-- `f1' and `f2' with the same name.
 			--
@@ -3866,7 +3866,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vmfn0b_error (a_class: ET_CLASS; f1: ET_PARENT_FEATURE; f2: ET_FEATURE) is
+	report_vmfn0b_error (a_class: ET_CLASS; f1: ET_PARENT_FEATURE; f2: ET_FEATURE)
 			-- Report VMFN error: `a_class' introduces feature `f2'
 			-- but `f1' has the same name.
 			--
@@ -3889,7 +3889,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vmfn0c_error (a_class: ET_CLASS; f1, f2: ET_PARENT_FEATURE) is
+	report_vmfn0c_error (a_class: ET_CLASS; f1, f2: ET_PARENT_FEATURE)
 			-- Report VMFN error: `a_class' inherits two effective
 			-- features `f1' and `f2' with the same name.
 			--
@@ -3913,7 +3913,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vmfn2a_error (a_class: ET_CLASS; f1, f2: ET_PARENT_FEATURE) is
+	report_vmfn2a_error (a_class: ET_CLASS; f1, f2: ET_PARENT_FEATURE)
 			-- Report VMFN-2 error: features `f1' and `f2' are shared,
 			-- but `f1' has an alias and not `f2'.
 			--
@@ -3934,7 +3934,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vmfn2b_error (a_class: ET_CLASS; f1, f2: ET_PARENT_FEATURE) is
+	report_vmfn2b_error (a_class: ET_CLASS; f1, f2: ET_PARENT_FEATURE)
 			-- Report VMFN-2 error: features `f1' and `f2' are shared,
 			-- they both have an alias but it is not the same.
 			--
@@ -3956,7 +3956,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vmrc2a_error (a_class: ET_CLASS; replicated_features: DS_LIST [ET_PARENT_FEATURE]) is
+	report_vmrc2a_error (a_class: ET_CLASS; replicated_features: DS_LIST [ET_PARENT_FEATURE])
 			-- Report VMRC-2 error: the replicated features in
 			-- `replicated_features' have not been selected in one of
 			-- the Parent clauses of `a_class'.
@@ -3978,7 +3978,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vmrc2b_error (a_class: ET_CLASS; replicated_features: DS_LIST [ET_PARENT_FEATURE]) is
+	report_vmrc2b_error (a_class: ET_CLASS; replicated_features: DS_LIST [ET_PARENT_FEATURE])
 			-- Report VMRC-2 error: the replicated features in
 			-- `replicated_features' have been selected in more than
 			-- one of the Parent clauses of `a_class'.
@@ -4001,7 +4001,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vmss1a_error (a_class: ET_CLASS; a_parent: ET_PARENT; f: ET_FEATURE_NAME) is
+	report_vmss1a_error (a_class: ET_CLASS; a_parent: ET_PARENT; f: ET_FEATURE_NAME)
 			-- Report VMSS-1 error: the Select subclause of `a_parent'
 			-- in `a_class' lists `f' which is not the final name in
 			-- `a_class' of a feature inherited from `a_parent'.
@@ -4017,7 +4017,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vmss2a_error (a_class: ET_CLASS; a_parent: ET_PARENT; f1, f2: ET_FEATURE_NAME) is
+	report_vmss2a_error (a_class: ET_CLASS; a_parent: ET_PARENT; f1, f2: ET_FEATURE_NAME)
 			-- Report VMSS-2 error: feature name `f2' appears twice
 			-- in the Select subclause of parent `a_parent' in `a_class'.
 			--
@@ -4038,7 +4038,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vmss3a_error (a_class: ET_CLASS; a_feature: ET_PARENT_FEATURE) is
+	report_vmss3a_error (a_class: ET_CLASS; a_feature: ET_PARENT_FEATURE)
 			-- Report VMSS-3 error: the Select subclause
 			-- of a parent of `a_class' lists `a_feature' which
 			-- is not replicated.
@@ -4059,7 +4059,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vomb1a_error (a_class, a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE) is
+	report_vomb1a_error (a_class, a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE)
 			-- Report VOMB-1 error: the inspect expression `an_expression'
 			-- in `a_class_impl' and viewed from one of its descendants `a_class'
 			-- (possibly itself) is of type `a_type' which is not "INTEGER"
@@ -4081,7 +4081,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vomb2a_error (a_class, a_class_impl: ET_CLASS; a_constant: ET_CHOICE_CONSTANT; a_constant_type, a_value_type: ET_NAMED_TYPE) is
+	report_vomb2a_error (a_class, a_class_impl: ET_CLASS; a_constant: ET_CHOICE_CONSTANT; a_constant_type, a_value_type: ET_NAMED_TYPE)
 			-- Report VOMB-2 error: the inspect constant `a_constant' in
 			-- `a_class_impl' and viewed from one of its descendants `a_class'
 			-- (possibly itself) is of type `a_constant_type' which is not
@@ -4104,7 +4104,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vomb2b_error (a_class, a_class_impl: ET_CLASS; a_constant: ET_CHOICE_CONSTANT) is
+	report_vomb2b_error (a_class, a_class_impl: ET_CLASS; a_constant: ET_CHOICE_CONSTANT)
 			-- Report VOMB-2 error: the inspect choice `a_constant' in
 			-- `a_class_impl' and viewed from one of its descendants `a_class'
 			-- (possibly itself) is not a constant attribute.
@@ -4124,7 +4124,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vpca1a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME) is
+	report_vpca1a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME)
 			-- Report VPCA-1 error: `a_name', appearing in an unqualified
 			-- call agent in `a_class', is not the final name of a feature
 			-- in `a_class'.
@@ -4145,7 +4145,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vpca1b_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_target: ET_CLASS) is
+	report_vpca1b_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_target: ET_CLASS)
 			-- Report VPCA-1 error: `a_name', appearing in a qualified
 			-- call agent in `a_class', is not the final name of a feature
 			-- in class `a_target'.
@@ -4167,7 +4167,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vpca2a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+	report_vpca2a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS)
 			-- Report VPCA-2 error: `a_feature' of class `a_target'
 			-- is not exported to `a_class', one of the descendants
 			-- of `a_class_impl' (possibly itself) where the qualified
@@ -4190,7 +4190,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vpca3a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+	report_vpca3a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS)
 			-- Report VPCA-3 error: the number of actual arguments in
 			-- the qualified call agent `a_name' appearing in `a_class' is not the
 			-- same as the number of formal arguments of `a_feature' in
@@ -4212,7 +4212,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vpca3b_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
+	report_vpca3b_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE)
 			-- Report VPCA-3 error: the number of actual arguments in
 			-- the unqualified call agent `a_name' appearing in `a_class' is not the
 			-- same as the number of formal arguments of `a_feature' in `a_class'.
@@ -4232,7 +4232,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vpca4a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
+	report_vpca4a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE)
 			-- Report VPCA-4 error: the `arg'-th actual argument in the qualified
 			-- call agent `a_name' appearing in `a_class_impl' and viewed from one of its
 			-- descendants `a_class' (possibly itself) does not conform to the
@@ -4259,7 +4259,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vpca4b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
+	report_vpca4b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE)
 			-- Report VPCA-4 error: the `arg'-th actual argument in the unqualified
 			-- call agent `a_name' appearing in `a_class_impl' and viewed from one of its
 			-- descendants `a_class' (possibly itself) does not conform to the corresponding
@@ -4285,7 +4285,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vpca5a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
+	report_vpca5a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE)
 			-- Report VPCA-5 error: the type specified for the `arg'-th actual
 			-- argument in the qualified call agent `a_name' appearing in
 			-- `a_class_impl' and viewed from one of its descendants `a_class'
@@ -4313,7 +4313,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vpca5b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
+	report_vpca5b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE)
 			-- Report VPCA-5 error: the type speciified for the `arg'-th actual
 			-- argument in the unqualified call agent `a_name' appearing in
 			-- `a_class_impl' and viewed from one of its descendants `a_class'
@@ -4340,7 +4340,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vpir1a_error (a_class: ET_CLASS; arg1: ET_FORMAL_ARGUMENT; an_agent: ET_INLINE_AGENT; arg2: ET_FORMAL_ARGUMENT) is
+	report_vpir1a_error (a_class: ET_CLASS; arg1: ET_FORMAL_ARGUMENT; an_agent: ET_INLINE_AGENT; arg2: ET_FORMAL_ARGUMENT)
 			-- Report VPIR-1 error: `arg1' in inline agent `an_agent' has the same
 			-- name as argument `arg2' of an enclosing feature or inline agent.
 			--
@@ -4360,7 +4360,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vpir1b_error (a_class: ET_CLASS; arg1: ET_FORMAL_ARGUMENT; an_agent: ET_INLINE_AGENT; a_local2: ET_LOCAL_VARIABLE) is
+	report_vpir1b_error (a_class: ET_CLASS; arg1: ET_FORMAL_ARGUMENT; an_agent: ET_INLINE_AGENT; a_local2: ET_LOCAL_VARIABLE)
 			-- Report VPIR-1 error: `arg1' in inline agent `an_agent' has the same
 			-- name as local variable `a_local2' of an enclosing feature or inline agent.
 			--
@@ -4380,7 +4380,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vpir1c_error (a_class: ET_CLASS; a_local1: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; arg2: ET_FORMAL_ARGUMENT) is
+	report_vpir1c_error (a_class: ET_CLASS; a_local1: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; arg2: ET_FORMAL_ARGUMENT)
 			-- Report VPIR-1 error: `a_local1' in inline agent `an_agent' has the same
 			-- name as argument `arg2' of an enclosing feature or inline agent.
 			--
@@ -4400,7 +4400,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vpir1d_error (a_class: ET_CLASS; a_local1: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; a_local2: ET_LOCAL_VARIABLE) is
+	report_vpir1d_error (a_class: ET_CLASS; a_local1: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; a_local2: ET_LOCAL_VARIABLE)
 			-- Report VPIR-1 error: `a_local1' in inline agent `an_agent' has the same
 			-- name as local variable `a_local2' of an enclosing feature or inline agent.
 			--
@@ -4420,7 +4420,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vpir1e_error (a_class: ET_CLASS; arg: ET_FORMAL_ARGUMENT; an_agent: ET_INLINE_AGENT; a_object_test: ET_NAMED_OBJECT_TEST) is
+	report_vpir1e_error (a_class: ET_CLASS; arg: ET_FORMAL_ARGUMENT; an_agent: ET_INLINE_AGENT; a_object_test: ET_NAMED_OBJECT_TEST)
 			-- Report VPIR-1 error: `arg' in inline agent `an_agent' has
 			-- the same name as object-test local `a_object_test' of an enclosing
 			-- feature or inline agent whose scope contains the inline agent.
@@ -4444,7 +4444,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vpir1f_error (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; a_object_test: ET_NAMED_OBJECT_TEST) is
+	report_vpir1f_error (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; a_object_test: ET_NAMED_OBJECT_TEST)
 			-- Report VPIR-1 error: `a_local' in inline agent `an_agent' has
 			-- the same name as object-test local `a_object_test' of an enclosing
 			-- feature or inline agent whose scope contains the inline agent.
@@ -4468,7 +4468,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vqmc1a_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+	report_vqmc1a_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE)
 			-- Report VQMC-1 error: `an_attribute', declared in `a_class_impl, introduces
 			-- a boolean constant but its type is not "BOOLEAN" when viewed from one of its
 			-- descendants `a_class' (possibly itself).
@@ -4489,7 +4489,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vqmc2a_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+	report_vqmc2a_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE)
 			-- Report VQMC-2 error: `an_attribute', declared in `a_class_impl', introduces
 			-- a character constant but its type is not "CHARACTER" when viewed from one of its
 			-- descendants `a_class' (possibly itself).
@@ -4510,7 +4510,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vqmc3a_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+	report_vqmc3a_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE)
 			-- Report VQMC-3 error: `an_attribute', declared in `a_class_impl', introduces
 			-- an integer constant but its type is not "INTEGER" when viewed from one of its
 			-- descendants `a_class' (possibly itself).
@@ -4532,7 +4532,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vqmc3b_error (a_class, a_class_impl: ET_CLASS; a_attribute: ET_CONSTANT_ATTRIBUTE; a_constant: ET_INTEGER_CONSTANT) is
+	report_vqmc3b_error (a_class, a_class_impl: ET_CLASS; a_attribute: ET_CONSTANT_ATTRIBUTE; a_constant: ET_INTEGER_CONSTANT)
 			-- Report VQMC-3 error: `a_attribute', declared in `a_class_impl', introduces
 			-- an integer constant `a_constant' but its value is not representable as an instance
 			-- of its integer type when viewed from one of its descendants `a_class' (possibly itself).
@@ -4554,7 +4554,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vqmc4a_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+	report_vqmc4a_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE)
 			-- Report VQMC-4 error: `an_attribute', declared in `a_class_imp', introduces
 			-- a real constant but its type is not "REAL" or "DOUBLE" when viewed from one of
 			-- its descendants `a_class' (possiby itself).
@@ -4575,7 +4575,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vqmc5a_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+	report_vqmc5a_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE)
 			-- Report VQMC-5 error: `an_attribute', declared in `a_class_impl', introduces
 			-- a string constant but its type is not "STRING" when viewed from one of its
 			-- descendants `a_class' (possibly itself).
@@ -4596,7 +4596,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vqmc6a_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+	report_vqmc6a_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE)
 			-- Report VQMC-6 error: `an_attribute', declared in `a_class_impl, introduces
 			-- a bit constant but its type is not a Bit_type when viewed from one of its
 			-- descendants `a_class' (possibly itself).
@@ -4617,7 +4617,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vqui0a_error (a_class, a_class_impl: ET_CLASS; a_unique: ET_UNIQUE_ATTRIBUTE) is
+	report_vqui0a_error (a_class, a_class_impl: ET_CLASS; a_unique: ET_UNIQUE_ATTRIBUTE)
 			-- Report VQUI error: the type of `a_unique', declared in `a_class_impl', is
 			-- not "INTEGER" when viewed from one of its descendants `a_class' (possibly itself).
 			--
@@ -4636,7 +4636,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vred0a_error (a_class: ET_CLASS; arg1, arg2: ET_FORMAL_ARGUMENT; f: ET_FEATURE) is
+	report_vred0a_error (a_class: ET_CLASS; arg1, arg2: ET_FORMAL_ARGUMENT; f: ET_FEATURE)
 			-- Report VRED error: `arg1' and `arg2' have the same
 			-- name in feature `f' in `a_class'.
 			--
@@ -4656,7 +4656,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vred0b_error (a_class: ET_CLASS; local1, local2: ET_LOCAL_VARIABLE; f: ET_FEATURE) is
+	report_vred0b_error (a_class: ET_CLASS; local1, local2: ET_LOCAL_VARIABLE; f: ET_FEATURE)
 			-- Report VRED error: `local1' and `local2' have the same
 			-- name in feature `f' in `a_class'.
 			--
@@ -4676,7 +4676,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vred0c_error (a_class: ET_CLASS; arg1, arg2: ET_FORMAL_ARGUMENT; an_agent: ET_INLINE_AGENT; f: ET_STANDALONE_CLOSURE) is
+	report_vred0c_error (a_class: ET_CLASS; arg1, arg2: ET_FORMAL_ARGUMENT; an_agent: ET_INLINE_AGENT; f: ET_STANDALONE_CLOSURE)
 			-- Report VRED error: `arg1' and `arg2' have the same
 			-- name in inline agent `an_agent' of feature `f' in `a_class'.
 			--
@@ -4697,7 +4697,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vred0d_error (a_class: ET_CLASS; local1, local2: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; f: ET_STANDALONE_CLOSURE) is
+	report_vred0d_error (a_class: ET_CLASS; local1, local2: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; f: ET_STANDALONE_CLOSURE)
 			-- Report VRED error: `local1' and `local2' have the same
 			-- name in inline agent `an_agent' of feature `f' in `a_class'.
 			--
@@ -4718,7 +4718,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vreg0a_error (a_class: ET_CLASS; arg1, arg2: ET_FORMAL_ARGUMENT; f: ET_FEATURE) is
+	report_vreg0a_error (a_class: ET_CLASS; arg1, arg2: ET_FORMAL_ARGUMENT; f: ET_FEATURE)
 			-- Report VREG error: `arg1' and `arg2' have the same
 			-- name in feature `f' in `a_class'.
 			--
@@ -4738,7 +4738,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vreg0b_error (a_class: ET_CLASS; local1, local2: ET_LOCAL_VARIABLE; f: ET_FEATURE) is
+	report_vreg0b_error (a_class: ET_CLASS; local1, local2: ET_LOCAL_VARIABLE; f: ET_FEATURE)
 			-- Report VREG error: `local1' and `local2' have the same
 			-- name in feature `f' in `a_class'.
 			--
@@ -4758,7 +4758,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vrfa0a_error (a_class: ET_CLASS; arg: ET_FORMAL_ARGUMENT; f1, f2: ET_FEATURE) is
+	report_vrfa0a_error (a_class: ET_CLASS; arg: ET_FORMAL_ARGUMENT; f1, f2: ET_FEATURE)
 			-- Report VRFA error: `arg' in feature `f1' has
 			-- the same name as feature `f2' in `a_class'.
 			--
@@ -4779,7 +4779,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vrfa0b_error (a_class: ET_CLASS; arg: ET_FORMAL_ARGUMENT; an_agent: ET_INLINE_AGENT; f1: ET_STANDALONE_CLOSURE; f2: ET_FEATURE) is
+	report_vrfa0b_error (a_class: ET_CLASS; arg: ET_FORMAL_ARGUMENT; an_agent: ET_INLINE_AGENT; f1: ET_STANDALONE_CLOSURE; f2: ET_FEATURE)
 			-- Report VRFA error: `arg' in inline agent `an_agent' of
 			-- feature `f1' has the same name as feature `f2' in `a_class'.
 			--
@@ -4800,7 +4800,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vrle1a_error (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; f1, f2: ET_FEATURE) is
+	report_vrle1a_error (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; f1, f2: ET_FEATURE)
 			-- Report VRLE-1 error: `a_local' in feature `f1' has
 			-- the same name as feature `f2' in `a_class'.
 			--
@@ -4820,7 +4820,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vrle2a_error (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; f: ET_FEATURE; arg: ET_FORMAL_ARGUMENT) is
+	report_vrle2a_error (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; f: ET_FEATURE; arg: ET_FORMAL_ARGUMENT)
 			-- Report VRLE-2 error: `a_local' in feature `f' has
 			-- the same name as formal argument `arg' of this feature
 			-- in `a_class'.
@@ -4841,7 +4841,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vrlv1a_error (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; f1, f2: ET_FEATURE) is
+	report_vrlv1a_error (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; f1, f2: ET_FEATURE)
 			-- Report VRLV-1 error: `a_local' in feature `f1' has
 			-- the same name as feature `f2' in `a_class'.
 			--
@@ -4861,7 +4861,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vrlv1b_error (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; f1: ET_STANDALONE_CLOSURE; f2: ET_FEATURE) is
+	report_vrlv1b_error (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; f1: ET_STANDALONE_CLOSURE; f2: ET_FEATURE)
 			-- Report VRLV-1 error: `a_local' in inline agent `an_agent' of
 			-- feature `f1' has the same name as feature `f2' in `a_class'.
 			--
@@ -4882,7 +4882,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vrlv2a_error (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; f: ET_FEATURE; arg: ET_FORMAL_ARGUMENT) is
+	report_vrlv2a_error (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; f: ET_FEATURE; arg: ET_FORMAL_ARGUMENT)
 			-- Report VRLV-2 error: `a_local' in feature `f' has
 			-- the same name as formal argument `arg' of this feature
 			-- in `a_class'.
@@ -4903,7 +4903,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vrlv2b_error (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; f: ET_STANDALONE_CLOSURE; arg: ET_FORMAL_ARGUMENT) is
+	report_vrlv2b_error (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; f: ET_STANDALONE_CLOSURE; arg: ET_FORMAL_ARGUMENT)
 			-- Report VRLV-2 error: `a_local' in inline agent `an_agent' of
 			-- feature `f' has the same name as formal argument `arg' of
 			-- this agent in `a_class'.
@@ -4925,7 +4925,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vtat1a_error (a_class: ET_CLASS; a_type: ET_LIKE_FEATURE) is
+	report_vtat1a_error (a_class: ET_CLASS; a_type: ET_LIKE_FEATURE)
 			-- Report VTAT-1 error: the anchor in the Anchored_type
 			-- must be the final name of a query in `a_class'.
 			--
@@ -4944,7 +4944,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vtat1b_error (a_class: ET_CLASS; a_feature: ET_FEATURE; a_type: ET_LIKE_FEATURE) is
+	report_vtat1b_error (a_class: ET_CLASS; a_feature: ET_FEATURE; a_type: ET_LIKE_FEATURE)
 			-- Report VTAT-1 error: the anchor in the
 			-- Anchored_type must be the final name of a query
 			-- in `a_class' or an argument of `a_feature'.
@@ -4965,7 +4965,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vtat1c_error (a_class: ET_CLASS; a_type: ET_QUALIFIED_LIKE_IDENTIFIER; other_class: ET_CLASS) is
+	report_vtat1c_error (a_class: ET_CLASS; a_type: ET_QUALIFIED_LIKE_IDENTIFIER; other_class: ET_CLASS)
 			-- Report VTAT-1 error: the anchor in the Anchored_type
 			-- must be the final name of a query in `other_class'.
 			--
@@ -4984,7 +4984,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vtat2a_error (a_class: ET_CLASS; a_cycle: DS_LIST [ET_LIKE_FEATURE]) is
+	report_vtat2a_error (a_class: ET_CLASS; a_cycle: DS_LIST [ET_LIKE_FEATURE])
 			-- Report VTAT-2 error: the anchors in `a_cycle'
 			-- are cyclic anchors in `a_class'.
 			--
@@ -5004,7 +5004,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vtat2b_error (a_class, a_class_impl: ET_CLASS; a_type: ET_LIKE_IDENTIFIER) is
+	report_vtat2b_error (a_class, a_class_impl: ET_CLASS; a_type: ET_LIKE_IDENTIFIER)
 			-- Report VTAT-2 error: the type of the anchor of `a_type' appearing in
 			-- a qualified anchored type in `a_class_impl' contains an anchored type
 			-- (other than 'like Current') when viewed from `a_class'.
@@ -5025,7 +5025,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vtbt0a_error (a_class: ET_CLASS; a_type: ET_BIT_FEATURE) is
+	report_vtbt0a_error (a_class: ET_CLASS; a_type: ET_BIT_FEATURE)
 			-- Report VTBT error: the identifier in Bit_type
 			-- must be the final name of a constant attribute of
 			-- type INTEGER.
@@ -5044,7 +5044,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vtbt0b_error (a_class: ET_CLASS; a_type: ET_BIT_FEATURE) is
+	report_vtbt0b_error (a_class: ET_CLASS; a_type: ET_BIT_FEATURE)
 			-- Report VTBT error: the identifier in
 			-- Bit_type must be the final name of a feature.
 			--
@@ -5062,7 +5062,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vtbt0c_error (a_class: ET_CLASS; a_type: ET_BIT_TYPE) is
+	report_vtbt0c_error (a_class: ET_CLASS; a_type: ET_BIT_TYPE)
 			-- Report VTBT error: size for Bit_type must
 			-- be a positive integer constant.
 			--
@@ -5082,7 +5082,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vtbt0d_error (a_class: ET_CLASS; a_type: ET_BIT_TYPE) is
+	report_vtbt0d_error (a_class: ET_CLASS; a_type: ET_BIT_TYPE)
 			-- Report VTBT error: size for Bit_type must
 			-- be a positive integer constant but it is actually
 			-- equal to -0.
@@ -5106,7 +5106,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vtcg3a_error (a_class, a_class_impl: ET_CLASS; a_type: ET_CLASS_TYPE; an_actual, a_constraint: ET_TYPE) is
+	report_vtcg3a_error (a_class, a_class_impl: ET_CLASS; a_type: ET_CLASS_TYPE; an_actual, a_constraint: ET_TYPE)
 			-- Report VTCG-3 error: actual generic paramater `an_actual'
 			-- of `a_type' appearing in `a_class_impl' and viewed from one of
 			-- its decendants `a_class' (possibly itself) does not conform to
@@ -5153,7 +5153,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vtcg4a_error (a_class, a_class_impl: ET_CLASS; a_position: ET_POSITION; an_actual_index: INTEGER; a_name: ET_FEATURE_NAME; an_actual_base_class, a_generic_class: ET_CLASS) is
+	report_vtcg4a_error (a_class, a_class_impl: ET_CLASS; a_position: ET_POSITION; an_actual_index: INTEGER; a_name: ET_FEATURE_NAME; an_actual_base_class, a_generic_class: ET_CLASS)
 			-- Report VTCG-4 error: `an_actual_base_class' does not make
 			-- feature `a_name' available as creation procedure to `a_generic_class'.
 			--
@@ -5175,7 +5175,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vtcg4b_error (a_class, a_class_impl: ET_CLASS; a_position: ET_POSITION; an_actual_index: INTEGER; a_name: ET_FEATURE_NAME; an_actual: ET_FORMAL_PARAMETER; a_generic_class: ET_CLASS) is
+	report_vtcg4b_error (a_class, a_class_impl: ET_CLASS; a_position: ET_POSITION; an_actual_index: INTEGER; a_name: ET_FEATURE_NAME; an_actual: ET_FORMAL_PARAMETER; a_generic_class: ET_CLASS)
 			-- Report VTCG-4 error: `an_actual', which is a formal generic parameter
 			-- of `a_class' does not list feature `a_name' as creation procedure.
 			--
@@ -5197,7 +5197,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vtct0a_error (a_class: ET_CLASS; a_type: ET_BASE_TYPE) is
+	report_vtct0a_error (a_class: ET_CLASS; a_type: ET_BASE_TYPE)
 			-- Report VTCT error: `a_type' based on unknown
 			-- class in class `a_class'.
 			--
@@ -5216,7 +5216,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vtgc0a_error (a_class: ET_CLASS; cp: ET_FEATURE_NAME; a_constraint: ET_CLASS) is
+	report_vtgc0a_error (a_class: ET_CLASS; cp: ET_FEATURE_NAME; a_constraint: ET_CLASS)
 			-- Report VTGC error: creation procedure name `cp'
 			-- is not the final name of a feature in the base class
 			-- `a_constraint' of a generic constraint of `a_class'.
@@ -5236,7 +5236,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vtgc0b_error (a_class: ET_CLASS; cp: ET_FEATURE_NAME; f: ET_FEATURE; a_constraint: ET_CLASS) is
+	report_vtgc0b_error (a_class: ET_CLASS; cp: ET_FEATURE_NAME; f: ET_FEATURE; a_constraint: ET_CLASS)
 			-- Report VTGC error: creation procedure name `cp'
 			-- is not the final name of a procedure in the base class
 			-- `a_constraint' of a generic constraint of `a_class'.
@@ -5259,7 +5259,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vtug1a_error (a_class: ET_CLASS; a_type: ET_CLASS_TYPE) is
+	report_vtug1a_error (a_class: ET_CLASS; a_type: ET_CLASS_TYPE)
 			-- Report VTUG-1 error: `a_type', which appears in
 			-- source code of `a_class', has actual generic parameters
 			-- but its base class is not generic.
@@ -5279,7 +5279,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vtug2a_error (a_class: ET_CLASS; a_type: ET_CLASS_TYPE) is
+	report_vtug2a_error (a_class: ET_CLASS; a_type: ET_CLASS_TYPE)
 			-- Report VTUG-2 error: `a_type', which appears
 			-- in source code of `a_class', has the wrong number
 			-- of actual generic parameters.
@@ -5299,7 +5299,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuar1a_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+	report_vuar1a_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS)
 			-- Report VUAR-1 error: the number of actual arguments in
 			-- the qualified call `a_name' appearing in `a_class' is not the
 			-- same as the number of formal arguments of `a_feature' in
@@ -5321,7 +5321,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuar1b_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE) is
+	report_vuar1b_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE)
 			-- Report VUAR-1 error: the number of actual arguments in
 			-- the unqualified call `a_name' appearing in `a_class' is not the
 			-- same as the number of formal arguments of `a_feature' in `a_class'.
@@ -5341,7 +5341,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuar1c_error (a_class: ET_CLASS; a_label: ET_CALL_NAME) is
+	report_vuar1c_error (a_class: ET_CLASS; a_label: ET_CALL_NAME)
 			-- Report VUAR-1 error: Tuple label calls cannot have arguments.
 		require
 			a_class_not_void: a_class /= Void
@@ -5357,7 +5357,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuar2a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
+	report_vuar2a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE)
 			-- Report VUAR-2 error: the `arg'-th actual argument in the qualified
 			-- call `a_name' appearing in `a_class_impl' and viewed from one of its
 			-- descendants `a_class' (possibly itself) does not conform to the
@@ -5384,7 +5384,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuar2b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
+	report_vuar2b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE)
 			-- Report VUAR-2 error: the `arg'-th actual argument in the unqualified
 			-- call `a_name' appearing in `a_class_impl' and viewed from one of its
 			-- descendants `a_class' (possibly itself) does not conform to the
@@ -5410,7 +5410,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuar4a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME) is
+	report_vuar4a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME)
 			-- Report VUAR-4 error: `a_name', appearing in an
 			-- expression of Address form $`a_name' in `a_class', is
 			-- not the final name of a feature in `a_class'.
@@ -5429,7 +5429,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuex1a_error (a_class: ET_CLASS; a_name: ET_CALL_NAME) is
+	report_vuex1a_error (a_class: ET_CLASS; a_name: ET_CALL_NAME)
 			-- Report VUEX-1 error: `a_name', appearing in an unqualified
 			-- call in `a_class', is not the final name of a feature
 			-- in `a_class'.
@@ -5450,7 +5450,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuex2a_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_target: ET_CLASS) is
+	report_vuex2a_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_target: ET_CLASS)
 			-- Report VUEX-2 error: `a_name', appearing in a qualified
 			-- call in `a_class', is not the final name of a feature
 			-- in class `a_target'.
@@ -5472,7 +5472,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuex2b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+	report_vuex2b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS)
 			-- Report VUEX-2 error: `a_feature' of class `a_target'
 			-- is not exported to `a_class', one of the descendants
 			-- of `a_class_impl' (possibly itself) where the qualified
@@ -5495,7 +5495,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuot1a_error (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST; a_feature: ET_FEATURE) is
+	report_vuot1a_error (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST; a_feature: ET_FEATURE)
 			-- Report VUOT-1 error: The local of `a_object_test' has the same
 			-- name as `a_feature' in `a_class'.
 			--
@@ -5514,7 +5514,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuot1b_error (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST; arg: ET_FORMAL_ARGUMENT) is
+	report_vuot1b_error (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST; arg: ET_FORMAL_ARGUMENT)
 			-- Report VUOT-1 error: The local of `a_object_test' has
 			-- the same name as argument `arg' of an enclosing feature or
 			-- inline agent.
@@ -5534,7 +5534,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuot1c_error (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST; a_local: ET_LOCAL_VARIABLE) is
+	report_vuot1c_error (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST; a_local: ET_LOCAL_VARIABLE)
 			-- Report VUOT-1 error: The local of `a_object_test' has
 			-- the same name as local variable `a_local' of an enclosing
 			-- feature or inline agent.
@@ -5554,7 +5554,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuot1d_error (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_NAMED_OBJECT_TEST) is
+	report_vuot1d_error (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_NAMED_OBJECT_TEST)
 			-- Report VUOT-1 error: `a_object_test1' appears in the scope
 			-- of the local of `a_object_test2' with the same local name.
 			--
@@ -5573,7 +5573,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuot1e_error (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_NAMED_OBJECT_TEST; a_expression: ET_EXPRESSION) is
+	report_vuot1e_error (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_NAMED_OBJECT_TEST; a_expression: ET_EXPRESSION)
 			-- Report VUOT-1 error: `a_object_test1' and `a_object_test2'
 			-- appearing in `a_expression' have the same local name.
 			--
@@ -5593,7 +5593,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuot3a_error (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_NAMED_OBJECT_TEST; a_feature: ET_FEATURE) is
+	report_vuot3a_error (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_NAMED_OBJECT_TEST; a_feature: ET_FEATURE)
 			-- Report VUOT-3 error: The local of `a_object_test1' has
 			-- the same name as the local of `a_object_test2' appearing in
 			-- the same `a_feature' of `a_class' or in the same inline agent.
@@ -5615,7 +5615,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuot3b_error (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_NAMED_OBJECT_TEST) is
+	report_vuot3b_error (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_NAMED_OBJECT_TEST)
 			-- Report VUOT-3 error: The local of `a_object_test1' has
 			-- the same name as the local of `a_object_test2' appearing in
 			-- the invariant of `a_class' or in the same inline agent.
@@ -5636,7 +5636,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuot4a_error (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST) is
+	report_vuot4a_error (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST)
 			-- Report VUOT-4 error: ISE does not support object-tests in preconditions.
 			--
 			-- Only in ISE.
@@ -5654,7 +5654,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuot4b_error (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST) is
+	report_vuot4b_error (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST)
 			-- Report VUOT-4 error: ISE does not support object-tests in check instructions.
 			--
 			-- Only in ISE.
@@ -5672,7 +5672,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vwbe0a_error (a_class, a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE) is
+	report_vwbe0a_error (a_class, a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE)
 			-- Report VWBE error: the boolean expression `an_expression'
 			-- in `a_class_impl' and viewed from one of its descendants
 			-- `a_class' (possibly itself) is of type `a_type' which is
@@ -5694,7 +5694,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vweq0a_error (a_class, a_class_impl: ET_CLASS; an_expression: ET_EQUALITY_EXPRESSION; a_type1, a_type2: ET_NAMED_TYPE) is
+	report_vweq0a_error (a_class, a_class_impl: ET_CLASS; an_expression: ET_EQUALITY_EXPRESSION; a_type1, a_type2: ET_NAMED_TYPE)
 			-- Report VWEQ error: none of the operands of the equality
 			-- expression `an_expression' appearing in `a_class_impl' and viewed
 			-- from one of its descendants `a_class' (possibly itself) conforms
@@ -5717,7 +5717,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vweq0b_error (a_class, a_class_impl: ET_CLASS; an_expression: ET_OBJECT_EQUALITY_EXPRESSION; a_type1, a_type2: ET_NAMED_TYPE) is
+	report_vweq0b_error (a_class, a_class_impl: ET_CLASS; an_expression: ET_OBJECT_EQUALITY_EXPRESSION; a_type1, a_type2: ET_NAMED_TYPE)
 			-- Report VWEQ error: none of the operands of the object-equality
 			-- expression `an_expression' appearing in `a_class_impl' and viewed
 			-- from one of its descendants `a_class' (possibly itself) conforms
@@ -5740,7 +5740,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vwmq0a_error (a_class, a_class_impl: ET_CLASS; a_constant: ET_INTEGER_CONSTANT) is
+	report_vwmq0a_error (a_class, a_class_impl: ET_CLASS; a_constant: ET_INTEGER_CONSTANT)
 			-- Report VWMQ error: the cast type of `a_constant' appearing in
 			-- `a_class_impl' and viewed from one of its descendants `a_class'
 			-- (possibly itself) is not one of the sized variants of "INTEGER".
@@ -5761,7 +5761,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vwmq0b_error (a_class, a_class_impl: ET_CLASS; a_constant: ET_REAL_CONSTANT) is
+	report_vwmq0b_error (a_class, a_class_impl: ET_CLASS; a_constant: ET_REAL_CONSTANT)
 			-- Report VWMQ error: the cast type of `a_constant' appearing in
 			-- `a_class_impl' and viewed from one of its descendants `a_class'
 			-- (possibly itself) is not one of the sized variants of "REAL".
@@ -5782,7 +5782,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vwmq0c_error (a_class, a_class_impl: ET_CLASS; a_constant: ET_CHARACTER_CONSTANT) is
+	report_vwmq0c_error (a_class, a_class_impl: ET_CLASS; a_constant: ET_CHARACTER_CONSTANT)
 			-- Report VWMQ error: the cast type of `a_constant' appearing in
 			-- `a_class_impl' and viewed from one of its descendants `a_class'
 			-- (possibly itself) is not one of the sized variants of "CHARACTER".
@@ -5803,7 +5803,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vwmq0d_error (a_class, a_class_impl: ET_CLASS; a_constant: ET_MANIFEST_STRING) is
+	report_vwmq0d_error (a_class, a_class_impl: ET_CLASS; a_constant: ET_MANIFEST_STRING)
 			-- Report VWMQ error: the cast type of `a_constant' appearing in
 			-- `a_class_impl' and viewed from one of its descendants `a_class'
 			-- (possibly itself) is not one of the sized variants of "STRING".
@@ -5824,7 +5824,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vwst1a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME) is
+	report_vwst1a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME)
 			-- Report VWST-1 error: `a_name', appearing in a strip
 			-- expression in `a_class', is not the final name of a feature
 			-- in `a_class'.
@@ -5843,7 +5843,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vwst1b_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
+	report_vwst1b_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE)
 			-- Report VWST-1 error: `a_feature', whose name `a_name' appears
 			-- in a strip expression in `a_class', is not the final name of
 			-- an attribute in `a_class'.
@@ -5863,7 +5863,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vwst2a_error (a_class: ET_CLASS; a_name1, a_name2: ET_FEATURE_NAME) is
+	report_vwst2a_error (a_class: ET_CLASS; a_name1, a_name2: ET_FEATURE_NAME)
 			-- Report VWST-2 error: an atttribute name appears twice in
 			-- a strip expression in `a_class'.
 			--
@@ -5882,7 +5882,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vxrt0a_error (a_class: ET_CLASS; a_retry: ET_RETRY_INSTRUCTION) is
+	report_vxrt0a_error (a_class: ET_CLASS; a_retry: ET_RETRY_INSTRUCTION)
 			-- Report VXRT error: instruction `a_retry' does not
 			-- appear in a rescue clause in `a_class'.
 			--
@@ -5900,7 +5900,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_gvagp0a_error (a_class: ET_CLASS; anc1, anc2: ET_BASE_TYPE) is
+	report_gvagp0a_error (a_class: ET_CLASS; anc1, anc2: ET_BASE_TYPE)
 			-- Report GVAGP error: `anc1' and `anc2' are two ancestors
 			-- of `a_class' with the same base class but different generic
 			-- parameters.
@@ -5921,7 +5921,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_gvhpr4a_error (a_class: ET_CLASS; a_parent: ET_BIT_N) is
+	report_gvhpr4a_error (a_class: ET_CLASS; a_parent: ET_BIT_N)
 			-- Report GVHPR-4 error: cannot inherit from Bit_type.
 			--
 			-- Not in ETL as validity error but as syntax error
@@ -5939,7 +5939,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_gvhpr5a_error (a_class: ET_CLASS; a_parent: ET_TUPLE_TYPE) is
+	report_gvhpr5a_error (a_class: ET_CLASS; a_parent: ET_TUPLE_TYPE)
 			-- Report GVHPR-5 error: cannot inherit from Tuple_type.
 			--
 			-- Not in ETL as validity error but as syntax error
@@ -5957,7 +5957,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_gvhso1a_error (a_class: ET_CLASS) is
+	report_gvhso1a_error (a_class: ET_CLASS)
 			-- Report GVHSO-1 error: `a_class' implicitly inherits
 			-- from unknown class SYSTEM_OBJECT.
 			--
@@ -5975,7 +5975,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_gvhso2a_error (a_class: ET_CLASS) is
+	report_gvhso2a_error (a_class: ET_CLASS)
 			-- Report GVHSO-2 error: `a_class' implicitly inherits
 			-- from class SYSTEM_OBJECT but SYSTEM_OBJECT is not a .NET class.
 			--
@@ -5993,7 +5993,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_gvkbs0a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE; a_expected_arguments: ARRAY [ET_TYPE]; a_expected_type: ET_TYPE) is
+	report_gvkbs0a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE; a_expected_arguments: ARRAY [ET_TYPE]; a_expected_type: ET_TYPE)
 			-- Report GVKBS error: wrong signature for built-in
 			-- routine `a_feature' in class `a_class'.
 			--
@@ -6014,7 +6014,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_gvkbu1a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+	report_gvkbu1a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE)
 			-- Report GVKBU-1 error: unknown built-in routine `a_feature'
 			-- in class `a_class'.
 			--
@@ -6034,7 +6034,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_gvkfe1a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME) is
+	report_gvkfe1a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME)
 			-- Report GVKFE-1 error: feature `a_name' is missing
 			-- in kernel class `a_class'.
 			--
@@ -6053,7 +6053,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_gvkfe2a_error (a_class: ET_CLASS; a_feature: ET_FEATURE) is
+	report_gvkfe2a_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
 			-- Report GVKFE-2 error: feature `a_feature' in kernel
 			-- class `a_class' is not an attribute.
 			--
@@ -6073,7 +6073,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_gvkfe3a_error (a_class: ET_CLASS; a_feature: ET_FEATURE; a_type: ET_BASE_TYPE) is
+	report_gvkfe3a_error (a_class: ET_CLASS; a_feature: ET_FEATURE; a_type: ET_BASE_TYPE)
 			-- Report GVKFE-3 error: attribute `a_feature' in kernel
 			-- class `a_class' has not the expected type `a_type'.
 			--
@@ -6095,7 +6095,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_gvkfe4a_error (a_class: ET_CLASS; a_feature: ET_FEATURE) is
+	report_gvkfe4a_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
 			-- Report GVKFE-4 error: feature `a_feature' in kernel
 			-- class `a_class' is not a procedure.
 			--
@@ -6115,7 +6115,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_gvkfe5a_error (a_class: ET_CLASS; a_feature: ET_FEATURE) is
+	report_gvkfe5a_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
 			-- Report GVKFE-5 error: feature `a_feature' in kernel
 			-- class `a_class' is not a query.
 			--
@@ -6135,7 +6135,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_gvscn1a_error (a_class: ET_CLASS; a_name: ET_CLASS_NAME) is
+	report_gvscn1a_error (a_class: ET_CLASS; a_name: ET_CLASS_NAME)
 			-- Report GVSCN-1 error: the file `a_class.filename' is
 			-- supposed to contain a class of name `a_class.name', but it
 			-- actually contains a class of name `a_name'.
@@ -6154,7 +6154,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_gvscn1b_error (a_class: ET_CLASS) is
+	report_gvscn1b_error (a_class: ET_CLASS)
 			-- Report GVSCN-1 error: the file `a_class.filename' is
 			-- supposed to contain a class of name `a_class.name', but it
 			-- does not.
@@ -6172,7 +6172,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_gvtcg5a_error (a_class: ET_CLASS; a_type: ET_CLASS_TYPE; an_actual: ET_TYPE; a_formal: ET_FORMAL_PARAMETER) is
+	report_gvtcg5a_error (a_class: ET_CLASS; a_type: ET_CLASS_TYPE; an_actual: ET_TYPE; a_formal: ET_FORMAL_PARAMETER)
 			-- Report GVTCG-5 error: actual generic paramater `an_actual' of `a_type' in
 			-- `a_class' is not a reference type but the corresponding formal parameter
 			-- `a_formal' is marked as reference.
@@ -6193,7 +6193,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_gvtcg5b_error (a_class: ET_CLASS; a_type: ET_CLASS_TYPE; an_actual: ET_TYPE; a_formal: ET_FORMAL_PARAMETER) is
+	report_gvtcg5b_error (a_class: ET_CLASS; a_type: ET_CLASS_TYPE; an_actual: ET_TYPE; a_formal: ET_FORMAL_PARAMETER)
 			-- Report GVTCG-5 error: actual generic paramater `an_actual' of `a_type' in
 			-- `a_class' is not expanded type but the corresponding formal parameter
 			-- `a_formal' is marked as expanded.
@@ -6214,7 +6214,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_gvuaa0a_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE) is
+	report_gvuaa0a_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE)
 			-- Report GVUAA error: `a_name' is a formal argument of
 			-- `a_feature' in `a_class', and hence cannot have actual
 			-- arguments.
@@ -6235,7 +6235,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_gvuaa0b_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT) is
+	report_gvuaa0b_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT)
 			-- Report GVUAA error: `a_name' is a formal argument of
 			-- inline agent `an_agent' in `a_class', and hence cannot
 			-- have actual arguments.
@@ -6256,7 +6256,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_gvual0a_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE) is
+	report_gvual0a_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE)
 			-- Report GVUAL error: `a_name' is a local variable of
 			-- `a_feature' in `a_class', and hence cannot have actual
 			-- arguments.
@@ -6277,7 +6277,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_gvual0b_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT) is
+	report_gvual0b_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT)
 			-- Report GVUAL error: `a_name' is a local variable of
 			-- inline agent `an_agent' in `a_class', and hence cannot
 			-- have actual arguments.
@@ -6298,7 +6298,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_gvuia0a_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE) is
+	report_gvuia0a_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE)
 			-- Report GVUIA error: `a_name' is a formal argument of
 			-- `a_feature' in `a_class', and hence cannot be an
 			-- instruction.
@@ -6318,7 +6318,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_gvuia0b_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT) is
+	report_gvuia0b_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT)
 			-- Report GVUIA error: `a_name' is a formal argument of
 			-- inline agent `an_agent' in `a_class', and hence cannot
 			-- be an instruction.
@@ -6338,7 +6338,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_gvuil0a_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE) is
+	report_gvuil0a_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE)
 			-- Report GVUIL error: `a_name' is a local variable of
 			-- `a_feature' in `a_class', and hence cannot be an
 			-- instruction.
@@ -6358,7 +6358,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_gvuil0b_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT) is
+	report_gvuil0b_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT)
 			-- Report GVUIL error: `a_name' is a local variable of
 			-- inline agent `an_agent' in `a_class', and hence cannot
 			-- be an instruction.
@@ -6378,7 +6378,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_gvwmc2a_error (a_class, a_class_impl: ET_CLASS; a_constant: ET_INTEGER_CONSTANT; a_type: ET_NAMED_TYPE) is
+	report_gvwmc2a_error (a_class, a_class_impl: ET_CLASS; a_constant: ET_INTEGER_CONSTANT; a_type: ET_NAMED_TYPE)
 			-- Report GVWMC-2 error: `a_constant' in `a_class_impl' and viewed
 			-- from one of its descendants `a_class' (possibly itself) is not
 			-- representable as an instance of the integer type `a_type'.
@@ -6401,7 +6401,7 @@ feature -- Validity errors
 
 feature -- Validity error status
 
-	reportable_vaol1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vaol1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VAOL-1 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6411,7 +6411,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vape_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vape_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VAPE error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6421,7 +6421,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vave_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vave_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VAVE error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6431,7 +6431,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vbac1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vbac1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VBAC-1 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6441,7 +6441,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vbac2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vbac2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VBAC-2 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6451,7 +6451,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vcch1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vcch1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VCCH-1 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6461,7 +6461,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vcch2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vcch2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VCCH-2 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6471,7 +6471,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vcfg1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vcfg1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VCFG-1 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6481,7 +6481,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vcfg2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vcfg2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VCFG-2 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6491,7 +6491,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vcfg3_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vcfg3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VCFG-3 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6501,7 +6501,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vdjr_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdjr_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDJR error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6511,7 +6511,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vdjr2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdjr2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDJR-2 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6521,7 +6521,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vdpr1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdpr1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDPR-1 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6531,7 +6531,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vdpr2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdpr2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDPR-2 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6541,7 +6541,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vdpr3_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdpr3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDPR-3 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6551,7 +6551,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vdpr4_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdpr4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDPR-4 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6561,7 +6561,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vdrd2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdrd2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDRD-2 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6571,7 +6571,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vdrd3_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdrd3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDRD-3 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6581,7 +6581,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vdrd4_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdrd4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDRD-4 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6591,7 +6591,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vdrd5_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdrd5_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDRD-5 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6601,7 +6601,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vdrd6_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdrd6_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDRD-6 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6611,7 +6611,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vdrd7_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdrd7_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDRD-7 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6621,7 +6621,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vdrs1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdrs1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDRS-1 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6631,7 +6631,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vdrs2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdrs2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDRS-2 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6641,7 +6641,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vdrs3_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdrs3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDRS-3 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6651,7 +6651,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vdrs4_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdrs4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDRS-4 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6661,7 +6661,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vdus1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdus1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDUS-1 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6671,7 +6671,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vdus2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdus2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDUS-2 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6681,7 +6681,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vdus3_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdus3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDUS-3 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6691,7 +6691,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vdus4_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vdus4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDUS-4 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6701,7 +6701,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_veen_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_veen_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VEEN error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6711,7 +6711,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_veen2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_veen2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VEEN-2 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6721,7 +6721,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_veen8_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_veen8_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VEEN-8 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6731,7 +6731,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vfac1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vfac1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VFAC-1 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6741,7 +6741,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vfac2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vfac2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VFAC-2 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6751,7 +6751,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vfac3_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vfac3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VFAC-3 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6761,7 +6761,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vfac4_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vfac4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VFAC-4 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6771,7 +6771,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vfav1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vfav1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VFAV-1 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6781,7 +6781,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vfav2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vfav2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VFAV-2 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6791,7 +6791,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vffd4_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vffd4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VFFD-4 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6801,7 +6801,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vffd5_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vffd5_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VFFD-5 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6811,7 +6811,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vffd6_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vffd6_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VFFD-6 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6821,7 +6821,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vffd7_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vffd7_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VFFD-7 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6831,7 +6831,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vgcc1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vgcc1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VGCC-1 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6841,7 +6841,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vgcc3_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vgcc3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VGCC-3 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6851,7 +6851,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vgcc5_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vgcc5_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VGCC-5 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6861,7 +6861,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vgcc6_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vgcc6_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VGCC-6 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6871,7 +6871,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vgcc8_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vgcc8_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VGCC-8 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6881,7 +6881,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vgcp1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vgcp1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VGCP-1 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6891,7 +6891,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vgcp2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vgcp2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VGCP-2 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6901,7 +6901,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vgcp3_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vgcp3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VGCP-3 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6911,7 +6911,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vhay_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vhay_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VHAY error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6921,7 +6921,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vhpr1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vhpr1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VHPR-1 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6931,7 +6931,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vhpr3_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vhpr3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VHPR-3 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6941,7 +6941,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vhrc1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vhrc1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VHRC-1 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6951,7 +6951,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vhrc2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vhrc2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VHRC-2 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6961,7 +6961,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vhrc4_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vhrc4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VHRC-4 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6971,7 +6971,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vhrc5_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vhrc5_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VHRC-5 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6981,7 +6981,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vjar_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vjar_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VJAR error be reported when it
 			-- appears in `a_class'?
 		require
@@ -6991,7 +6991,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vjaw_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vjaw_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VJAW error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7001,7 +7001,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vjrv_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vjrv_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VJRV error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7011,7 +7011,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vkcn1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vkcn1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VKCN-1 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7021,7 +7021,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vkcn2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vkcn2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VKCN-2 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7031,7 +7031,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vlel1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vlel1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VLEL-1 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7041,7 +7041,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vlel2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vlel2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VLEL-2 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7051,7 +7051,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vlel3_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vlel3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VLEL-3 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7061,7 +7061,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vmfn_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vmfn_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VMFN error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7071,7 +7071,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vmfn2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vmfn2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VMFN-2 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7081,7 +7081,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vmrc2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vmrc2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VMRC-2 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7091,7 +7091,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vmss1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vmss1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VMSS-1 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7101,7 +7101,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vmss2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vmss2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VMSS-2 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7111,7 +7111,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vmss3_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vmss3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VMSS-3 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7121,7 +7121,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vomb1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vomb1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VOMB-1 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7131,7 +7131,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vomb2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vomb2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VOMB-2 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7141,7 +7141,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vpca1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vpca1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VPCA-1 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7151,7 +7151,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vpca2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vpca2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VPCA-2 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7161,7 +7161,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vpca3_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vpca3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VPCA-3 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7171,7 +7171,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vpca4_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vpca4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VPCA-4 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7181,7 +7181,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vpca5_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vpca5_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VPCA-5 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7191,7 +7191,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vpir1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vpir1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VPIR-1 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7201,7 +7201,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vqmc1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vqmc1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VQMC-1 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7211,7 +7211,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vqmc2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vqmc2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VQMC-2 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7221,7 +7221,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vqmc3_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vqmc3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VQMC-3 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7231,7 +7231,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vqmc4_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vqmc4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VQMC-4 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7241,7 +7241,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vqmc5_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vqmc5_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VQMC-5 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7251,7 +7251,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vqmc6_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vqmc6_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VQMC-6 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7261,7 +7261,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vqui_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vqui_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VQUI error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7271,7 +7271,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vred_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vred_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VRED error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7281,7 +7281,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vreg_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vreg_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VREG error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7291,7 +7291,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vrfa_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vrfa_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VRFA error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7301,7 +7301,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vrle1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vrle1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VRLE-1 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7311,7 +7311,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vrle2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vrle2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VRLE-2 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7321,7 +7321,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vrlv1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vrlv1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VRLV-1 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7331,7 +7331,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vrlv2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vrlv2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VRLV-2 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7341,7 +7341,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vtat1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vtat1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VTAT-1 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7351,7 +7351,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vtat2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vtat2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VTAT-2 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7361,7 +7361,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vtbt_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vtbt_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VTBT error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7371,7 +7371,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vtcg3_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vtcg3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VTCG-3 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7381,7 +7381,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vtcg4_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vtcg4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VTCG-4 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7391,7 +7391,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vtct_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vtct_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VTCT error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7401,7 +7401,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vtgc_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vtgc_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VTGC error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7411,7 +7411,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vtug1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vtug1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VTUG-1 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7421,7 +7421,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vtug2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vtug2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VTUG-2 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7431,7 +7431,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vuar1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vuar1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VUAR-1 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7441,7 +7441,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vuar2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vuar2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VUAR-2 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7451,7 +7451,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vuar4_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vuar4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VUAR-4 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7461,7 +7461,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vuex1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vuex1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VUEX-1 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7471,7 +7471,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vuex2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vuex2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VUEX-2 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7481,7 +7481,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vuot1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vuot1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VUOT-1 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7491,7 +7491,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vuot3_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vuot3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VUOT-3 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7501,7 +7501,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vuot4_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vuot4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VUOT-4 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7511,7 +7511,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vwbe_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vwbe_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VWBE error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7521,7 +7521,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vweq_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vweq_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VWEQ error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7531,7 +7531,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vwmq_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vwmq_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VWMQ error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7541,7 +7541,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vwst1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vwst1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VWST-1 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7551,7 +7551,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vwst2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vwst2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VWST-2 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7561,7 +7561,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vxrt_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_vxrt_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VXRT error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7571,7 +7571,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_gvagp_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_gvagp_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVAGP error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7581,7 +7581,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_gvhpr4_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_gvhpr4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVHPR-4 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7591,7 +7591,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_gvhpr5_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_gvhpr5_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVHPR-5 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7601,7 +7601,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_gvhso1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_gvhso1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVHSO-1 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7611,7 +7611,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_gvhso2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_gvhso2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVHSO-2 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7621,7 +7621,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_gvkbs_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_gvkbs_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVKBS error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7631,7 +7631,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_gvkbu1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_gvkbu1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVKBU-1 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7641,7 +7641,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_gvkfe1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_gvkfe1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVKFE-1 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7651,7 +7651,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_gvkfe2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_gvkfe2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVKFE-2 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7661,7 +7661,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_gvkfe3_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_gvkfe3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVKFE-3 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7671,7 +7671,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_gvkfe4_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_gvkfe4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVKFE-4 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7681,7 +7681,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_gvkfe5_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_gvkfe5_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVKFE-5 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7691,7 +7691,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_gvscn1_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_gvscn1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVSCN-1 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7701,7 +7701,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_gvtcg5_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_gvtcg5_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVTCG-5 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7711,7 +7711,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_gvuaa_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_gvuaa_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVUAA error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7721,7 +7721,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_gvual_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_gvual_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVUAL error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7731,7 +7731,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_gvuia_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_gvuia_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVUIA error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7741,7 +7741,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_gvuil_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_gvuil_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVUIL error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7751,7 +7751,7 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_gvwmc2_error (a_class: ET_CLASS): BOOLEAN is
+	reportable_gvwmc2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVWMC-2 error be reported when it
 			-- appears in `a_class'?
 		require
@@ -7763,7 +7763,7 @@ feature -- Validity error status
 
 feature -- Internal errors
 
-	report_internal_error (an_error: ET_INTERNAL_ERROR) is
+	report_internal_error (an_error: ET_INTERNAL_ERROR)
 			-- Report internal error.
 		require
 			an_error_not_void: an_error /= Void
@@ -7775,7 +7775,7 @@ feature -- Internal errors
 			end
 		end
 
-	report_giaaa_error is
+	report_giaaa_error
 			-- Report GIAAA internal error.
 		local
 			an_error: ET_INTERNAL_ERROR
@@ -7786,7 +7786,7 @@ feature -- Internal errors
 
 feature -- Reporting
 
-	report_error_message (an_error: STRING) is
+	report_error_message (an_error: STRING)
 			-- Report `an_error'.
 		do
 			precursor (an_error)

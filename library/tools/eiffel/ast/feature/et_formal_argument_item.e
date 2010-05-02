@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	formal_argument: ET_FORMAL_ARGUMENT is
+	formal_argument: ET_FORMAL_ARGUMENT
 			-- Formal argument in semicolon-separated list
 		deferred
 		ensure
@@ -27,7 +27,7 @@ feature -- Access
 
 feature -- Duplication
 
-	cloned_argument: like Current is
+	cloned_argument: like Current
 			-- Cloned formal argument;
 			-- Do not recursively clone the type
 		deferred

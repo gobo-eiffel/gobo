@@ -24,24 +24,24 @@ inherit
 
 feature -- Access
 
-	Ancestor_axis: INTEGER is 1
-	Ancestor_or_self_axis: INTEGER is 2
-	Attribute_axis: INTEGER is 3
-	Child_axis: INTEGER is 4
-	Descendant_axis: INTEGER is 5
-	Descendant_or_self_axis: INTEGER is 6
-	Following_axis: INTEGER is 7
-	Following_sibling_axis: INTEGER is 8
-	Parent_axis: INTEGER is 9
-	Preceding_axis: INTEGER is 10
-	Preceding_sibling_axis: INTEGER is 11
-	Self_axis: INTEGER is 12
-	Namespace_axis: INTEGER is 13
+	Ancestor_axis: INTEGER = 1
+	Ancestor_or_self_axis: INTEGER = 2
+	Attribute_axis: INTEGER = 3
+	Child_axis: INTEGER = 4
+	Descendant_axis: INTEGER = 5
+	Descendant_or_self_axis: INTEGER = 6
+	Following_axis: INTEGER = 7
+	Following_sibling_axis: INTEGER = 8
+	Parent_axis: INTEGER = 9
+	Preceding_axis: INTEGER = 10
+	Preceding_sibling_axis: INTEGER = 11
+	Self_axis: INTEGER = 12
+	Namespace_axis: INTEGER = 13
 			-- Only valid in XPath 1.0 compatibility mode
-	Preceding_or_ancestor_axis: INTEGER is 14
+	Preceding_or_ancestor_axis: INTEGER = 14
 			-- Used internally by xsl:number implementation
 
-	axis_number (an_axis: STRING): INTEGER is
+	axis_number (an_axis: STRING): INTEGER
 			-- Numeric axis indication
 		require
 			valid_axis_name: is_axis_name_valid (an_axis)
@@ -77,7 +77,7 @@ feature -- Access
 			axis_number_in_range: Ancestor_axis <= Result and then Result < Preceding_or_ancestor_axis -- (can't be used in XPath expression)
 		end
 
-	axis_name (an_axis: INTEGER): STRING is
+	axis_name (an_axis: INTEGER): STRING
 			-- Name of axis
 		require
 			valid_axis: is_axis_valid (an_axis)
@@ -116,7 +116,7 @@ feature -- Access
 			correct_axis_name: axis_number (Result) = an_axis
 		end
 
-	axis_principal_node_type (an_axis: INTEGER): INTEGER is
+	axis_principal_node_type (an_axis: INTEGER): INTEGER
 		require
 			valid_axis: is_axis_valid (an_axis)
 		do
@@ -133,13 +133,13 @@ feature -- Access
 
 feature -- Status report
 
-	is_axis_valid (an_axis: INTEGER): BOOLEAN is
+	is_axis_valid (an_axis: INTEGER): BOOLEAN
 			-- Is `an_axis' a valid axis?
 		do
 			Result := an_axis >= Ancestor_axis and then an_axis <= Preceding_or_ancestor_axis
 		end
 
-	is_axis_name_valid (an_axis: STRING): BOOLEAN is
+	is_axis_name_valid (an_axis: STRING): BOOLEAN
 		require
 			axis_name_not_void: an_axis /= Void
 		do
@@ -171,10 +171,10 @@ feature -- Status report
 				Result := True
 			else
 				Result := False
-			end				
+			end
 		end
 
-	is_forward_axis (an_axis: INTEGER): BOOLEAN is
+	is_forward_axis (an_axis: INTEGER): BOOLEAN
 			-- Is `an_axis' traveresed in reverse document order?
 		require
 			valid_axis: is_axis_valid (an_axis)
@@ -202,7 +202,7 @@ feature -- Status report
 			end
 		end
 
-	is_reverse_axis (an_axis: INTEGER): BOOLEAN is
+	is_reverse_axis (an_axis: INTEGER): BOOLEAN
 			-- Is `an_axis' traveresed in reverse document order?
 		require
 			valid_axis: is_axis_valid (an_axis)
@@ -228,7 +228,7 @@ feature -- Status report
 			end
 		end
 
-	is_peer_axis (an_axis: INTEGER): BOOLEAN is
+	is_peer_axis (an_axis: INTEGER): BOOLEAN
 			-- Does `an_axis' not have any nodes which are ancestors of others on same axis?
 		require
 			valid_axis: is_axis_valid (an_axis)
@@ -242,7 +242,7 @@ feature -- Status report
 			when Following_sibling_axis then
 				Result := True
 			when Preceding_sibling_axis then
-				Result := True				
+				Result := True
 			when Self_axis then
 				Result := True
 			when Parent_axis then
@@ -254,7 +254,7 @@ feature -- Status report
 			end
 		end
 
-	is_subtree_axis (an_axis: INTEGER): BOOLEAN is
+	is_subtree_axis (an_axis: INTEGER): BOOLEAN
 			-- Is `an_axis' a sub-tree rooted at origin node?
 		require
 			valid_axis: is_axis_valid (an_axis)
@@ -278,7 +278,7 @@ feature -- Status report
 			end
 		end
 
-	is_axis_always_empty (an_axis, a_node_kind: INTEGER): BOOLEAN is
+	is_axis_always_empty (an_axis, a_node_kind: INTEGER): BOOLEAN
 			-- Is `an_axis' always empty of nodes of type `a_node_kind'?
 		require
 			valid_axis: is_axis_valid (an_axis)
@@ -287,7 +287,7 @@ feature -- Status report
 			Result := INTEGER_.bit_and (empty_axis_table.item (an_axis), INTEGER_.bit_shift_left (1, a_node_kind)) /= 0
 		end
 
-	axis_contains_node_kind (an_axis, a_node_kind: INTEGER): BOOLEAN is
+	axis_contains_node_kind (an_axis, a_node_kind: INTEGER): BOOLEAN
 			-- Does `an_axis' contain nodes of type `a_node_kind'?
 		require
 			valid_axis: is_axis_valid (an_axis)
@@ -295,53 +295,53 @@ feature -- Status report
 		do
 			Result :=  INTEGER_.bit_and (axis_node_kind_table.item (an_axis), INTEGER_.bit_shift_left (1, a_node_kind)) /= 0
 		end
-			
+
 feature {NONE} -- Implementation
 
 
-	document_kind: INTEGER is
+	document_kind: INTEGER
 		once
 			Result := INTEGER_.bit_shift_left (1, Document_node)
 		end
 
-	element_kind: INTEGER is
+	element_kind: INTEGER
 		once
 			Result := INTEGER_.bit_shift_left (1, Element_node)
 		end
 
-	attribute_kind: INTEGER is
+	attribute_kind: INTEGER
 		once
 			Result := INTEGER_.bit_shift_left (1, Attribute_node)
 		end
 
-	comment_kind: INTEGER is
+	comment_kind: INTEGER
 		once
 			Result := INTEGER_.bit_shift_left (1, Comment_node)
 		end
 
-	processing_instruction_kind: INTEGER is
+	processing_instruction_kind: INTEGER
 		once
 			Result := INTEGER_.bit_shift_left (1, Processing_instruction_node)
 		end
 
-	text_kind: INTEGER is
+	text_kind: INTEGER
 		once
 			Result := INTEGER_.bit_shift_left (1, Text_node)
 		end
 
-	namespace_kind: INTEGER is
+	namespace_kind: INTEGER
 		once
 			Result := INTEGER_.bit_shift_left (1, Namespace_node)
 		end
 
-	miscellaneous_kinds: INTEGER is
+	miscellaneous_kinds: INTEGER
 			-- Mask for commonly used multiple kinds
 		once
 			Result := INTEGER_.bit_or (comment_kind,
-												INTEGER_.bit_or (processing_instruction_kind, text_kind))														 
+												INTEGER_.bit_or (processing_instruction_kind, text_kind))
 		end
 
-	empty_axis_table: ARRAY [INTEGER] is
+	empty_axis_table: ARRAY [INTEGER]
 		-- Table used by `is_axis_always_empty'
 		once
 			create Result.make (Ancestor_axis, Preceding_or_ancestor_axis)
@@ -359,8 +359,8 @@ feature {NONE} -- Implementation
 			Result.put (INTEGER_.bit_or (namespace_kind, INTEGER_.bit_or (document_kind, attribute_kind)), Preceding_sibling_axis)
 			Result.put (0, Self_axis)
 		end
-	
-	axis_node_kind_table: ARRAY [INTEGER] is
+
+	axis_node_kind_table: ARRAY [INTEGER]
 		-- Table uses by `axis_contains_node_kind'
 		once
 			create Result.make (Ancestor_axis, Preceding_or_ancestor_axis)
@@ -378,6 +378,6 @@ feature {NONE} -- Implementation
 			Result.put (INTEGER_.bit_or (element_kind, miscellaneous_kinds), Preceding_sibling_axis)
 			Result.put (INTEGER_.bit_or (namespace_kind, INTEGER_.bit_or (attribute_kind, INTEGER_.bit_or (document_kind, INTEGER_.bit_or (element_kind, miscellaneous_kinds)))), Self_axis)
 		end
-	
+
 end
-	
+

@@ -14,7 +14,7 @@ deferred class ET_DYNAMIC_ATTACHMENT
 
 feature -- Status report
 
-	has_type (a_type: ET_DYNAMIC_TYPE): BOOLEAN is
+	has_type (a_type: ET_DYNAMIC_TYPE): BOOLEAN
 			-- Does `source_type' contain `a_type'?
 		require
 			a_type_not_void: a_type /= Void
@@ -22,7 +22,7 @@ feature -- Status report
 			Result := source_type_set.has_type (a_type)
 		end
 
-	is_null_attachment: BOOLEAN is
+	is_null_attachment: BOOLEAN
 			-- Should current attachment be ignored when reporting errors?
 		do
 			-- Result := False
@@ -34,7 +34,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_visited (b: BOOLEAN) is
+	set_visited (b: BOOLEAN)
 			-- Set `visited' to `b'.
 		do
 			visited := b
@@ -53,7 +53,7 @@ feature -- Access
 	current_type: ET_DYNAMIC_TYPE
 			-- Type to which `current_feature' belongs
 
-	attachment: ET_AST_NODE is
+	attachment: ET_AST_NODE
 			-- Attachment
 		require
 			not_null: not is_null_attachment
@@ -62,14 +62,14 @@ feature -- Access
 			attachment_not_void: Result /= Void
 		end
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of attachment
 		deferred
 		ensure
 			position_not_void: Result /= Void
 		end
 
-	description: STRING is
+	description: STRING
 			-- Kind of attachment
 		deferred
 		ensure
@@ -84,7 +84,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	propagate_types (a_target: ET_DYNAMIC_TARGET; a_system: ET_DYNAMIC_SYSTEM) is
+	propagate_types (a_target: ET_DYNAMIC_TARGET; a_system: ET_DYNAMIC_SYSTEM)
 			-- Propagate types to `a_target'.
 		require
 			a_target_not_void: a_target /= Void
@@ -117,7 +117,7 @@ feature -- Link
 	next_attachment: ET_DYNAMIC_ATTACHMENT
 			-- Next linked attachment in list of attachments
 
-	set_next_attachment (a_next: ET_DYNAMIC_ATTACHMENT) is
+	set_next_attachment (a_next: ET_DYNAMIC_ATTACHMENT)
 			-- Set `next_attachment' to `a_next'.
 		do
 			next_attachment := a_next

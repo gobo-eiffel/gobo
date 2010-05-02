@@ -208,7 +208,7 @@ feature -- Status report
 	filled_with (v: T; start_index, end_index: INTEGER): BOOLEAN
 			-- Are all items between index `start_index' and `end_index'
 			-- set to `v'?
-			-- (Use reference equality for comparison.)			
+			-- (Use reference equality for comparison.)
 		require
 			start_index_non_negative: start_index >= 0
 			start_index_not_too_big: start_index <= end_index + 1

@@ -36,7 +36,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make is
+	make
 			-- Establish invariant.
 		do
 			create sequence_numbers.make (10)
@@ -46,7 +46,7 @@ feature {NONE}  -- Initialization
 
 feature -- Access
 
-	system_id (a_node_number: INTEGER): STRING is
+	system_id (a_node_number: INTEGER): STRING
 			-- SYSTEM-ID for `a_node_number'
 		require
 			valid_node_number: True -- Can't check that here (?)
@@ -75,13 +75,13 @@ feature -- Access
 
 feature -- Measurement
 
-	number_allocated_uris: INTEGER is
+	number_allocated_uris: INTEGER
 			-- Number of SYSTEM IDs allocated
 		do
 			Result := uris.count
 		end
 
-	highest_sequence_number: INTEGER is
+	highest_sequence_number: INTEGER
 			-- Highest sequence number specifically allocated to a SYSTEM ID.
 		require
 			at_least_one_allocation: number_allocated_uris > 0
@@ -91,7 +91,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	set_system_id (a_node_number: INTEGER; a_uri: STRING) is
+	set_system_id (a_node_number: INTEGER; a_uri: STRING)
 			-- Set SYSTEM ID for `a_node_number' to `a_uri'.
 		require
 			higher_node_number: number_allocated_uris > 0 implies a_node_number > highest_sequence_number

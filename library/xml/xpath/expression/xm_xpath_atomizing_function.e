@@ -22,7 +22,7 @@ create {XM_XPATH_SHARED_ATOMIZING_FUNCTION}
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Do nothing.
 		do
 		end
@@ -32,7 +32,7 @@ feature -- Access
 	-- `new_atomizing_iterator' actually returns an iterator over XM_XPATH_ATOMIC_VALUE, but problems
 	--  with generics make this too much hassle to implement - nor is there a need.
 
-	new_atomizing_iterator (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	new_atomizing_iterator (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			-- New atomiziong iterator
 		require
 			base_iterator_not_void: a_base_iterator /= Void
@@ -41,10 +41,10 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 feature -- Evaluation
 
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
+	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT)
 			-- Map `an_item' to a sequence
 		do
 			if an_item.is_node then
@@ -56,4 +56,4 @@ feature -- Evaluation
 
 end
 
-	
+

@@ -38,7 +38,7 @@ create
 
 feature -- Test
 
-	test_use_when is
+	test_use_when
 			-- Test use-when
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -62,7 +62,7 @@ feature -- Test
 			l_transformer.set_initial_template ("first")
 			assert ("Initial template set", l_transformer.initial_template /= Void)
 			create l_output
-			l_output.set_output_to_string 
+			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (Void, l_result)
 			assert ("Transform successfull", not l_transformer.is_error)
@@ -71,7 +71,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}",
@@ -82,15 +82,15 @@ feature {NONE} -- Implementation
 			data_dirname_not_empty: not Result.is_empty
 		end
 
-	dummy_uri: UT_URI is
+	dummy_uri: UT_URI
 			-- Dummy URI
 		once
 			create Result.make ("dummy:")
 		ensure
 			dummy_uri_is_absolute: Result /= Void and then Result.is_absolute
 		end
-		
-	use_when_xsl_uri: UT_URI is
+
+	use_when_xsl_uri: UT_URI
 			-- URI of file 'use_when.xsl'
 		local
 			l_path: STRING
@@ -100,5 +100,5 @@ feature {NONE} -- Implementation
 		ensure
 			use_when_xsl_uri_not_void: Result /= Void
 		end
-		
+
 end

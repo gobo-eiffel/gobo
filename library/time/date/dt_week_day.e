@@ -26,7 +26,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_monday is
+	make_monday
 			-- Create a Monday.
 		do
 			make (monday_code)
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			is_monday: is_monday
 		end
 
-	make_tuesday is
+	make_tuesday
 			-- Create a Tuesday.
 		do
 			make (tuesday_code)
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			is_tuesday: is_tuesday
 		end
 
-	make_wednesday is
+	make_wednesday
 			-- Create a Wednesday.
 		do
 			make (wednesday_code)
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			is_wednesday: is_wednesday
 		end
 
-	make_thursday is
+	make_thursday
 			-- Create a Thursday.
 		do
 			make (thursday_code)
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 			is_thursday: is_thursday
 		end
 
-	make_friday is
+	make_friday
 			-- Create a Friday.
 		do
 			make (friday_code)
@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 			is_friday: is_friday
 		end
 
-	make_saturday is
+	make_saturday
 			-- Create a Saturday.
 		do
 			make (saturday_code)
@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 			is_saturday: is_saturday
 		end
 
-	make_sunday is
+	make_sunday
 			-- Create a Sunday.
 		do
 			make (sunday_code)
@@ -82,7 +82,7 @@ feature {NONE} -- Initialization
 			is_sunday: is_sunday
 		end
 
-	make (a_code: INTEGER) is
+	make (a_code: INTEGER)
 			-- Create a day with code `a_code'.
 		require
 			a_code_valid: a_code >= 1 and a_code <= Days_in_week
@@ -94,7 +94,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_monday: BOOLEAN is
+	is_monday: BOOLEAN
 			-- Is `Current' day a Monday?
 		do
 			Result := code = monday_code
@@ -102,7 +102,7 @@ feature -- Status report
 			definition: Result = (code = monday_code)
 		end
 
-	is_tuesday: BOOLEAN is
+	is_tuesday: BOOLEAN
 			-- Is `Current' day a Tuesday?
 		do
 			Result := code = tuesday_code
@@ -110,7 +110,7 @@ feature -- Status report
 			definition: Result = (code = tuesday_code)
 		end
 
-	is_wednesday: BOOLEAN is
+	is_wednesday: BOOLEAN
 			-- Is `Current' day a Wednesday?
 		do
 			Result := code = wednesday_code
@@ -118,7 +118,7 @@ feature -- Status report
 			definition: Result = (code = wednesday_code)
 		end
 
-	is_thursday: BOOLEAN is
+	is_thursday: BOOLEAN
 			-- Is `Current' day a Thursday?
 		do
 			Result := code = thursday_code
@@ -126,7 +126,7 @@ feature -- Status report
 			definition: Result = (code = thursday_code)
 		end
 
-	is_friday: BOOLEAN is
+	is_friday: BOOLEAN
 			-- Is `Current' day a Friday?
 		do
 			Result := code = friday_code
@@ -134,7 +134,7 @@ feature -- Status report
 			definition: Result = (code = friday_code)
 		end
 
-	is_saturday: BOOLEAN is
+	is_saturday: BOOLEAN
 			-- Is `Current' day a Saturday?
 		do
 			Result := code = saturday_code
@@ -142,7 +142,7 @@ feature -- Status report
 			definition: Result = (code = saturday_code)
 		end
 
-	is_sunday: BOOLEAN is
+	is_sunday: BOOLEAN
 			-- Is `Current' day a Sunday?
 		do
 			Result := code = sunday_code
@@ -152,14 +152,14 @@ feature -- Status report
 
 feature -- Comparison
 
-	same_week_day (other: DT_WEEK_DAY): BOOLEAN is
+	same_week_day (other: DT_WEEK_DAY): BOOLEAN
 			-- Are `Current' and `other' the same week day?
 		require
 			other_not_void: other /= Void
 		deferred
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Are `Current' and `other' the same week day?
 		do
 			if ANY_.same_types (Current, other) then
@@ -169,7 +169,7 @@ feature -- Comparison
 
 feature -- Access
 
-	next_day: like Current is
+	next_day: like Current
 			-- Week day after `Current' day
 		deferred
 		ensure
@@ -183,7 +183,7 @@ feature -- Access
 			saturday_definition: is_saturday implies Result.is_sunday
 		end
 
-	previous_day: like Current is
+	previous_day: like Current
 			-- Week day before `Current' day
 		deferred
 		ensure
@@ -200,44 +200,44 @@ feature -- Access
 	code: INTEGER
 			-- Code for `Current' day
 
-	monday_code: INTEGER is
+	monday_code: INTEGER
 			-- Code for Monday
 		deferred
 		end
 
-	tuesday_code: INTEGER is
+	tuesday_code: INTEGER
 			-- Code for Tuesday
 		deferred
 		end
 
-	wednesday_code: INTEGER is
+	wednesday_code: INTEGER
 			-- Code for Wednesday
 		deferred
 		end
 
-	thursday_code: INTEGER is
+	thursday_code: INTEGER
 			-- Code for Thursday
 		deferred
 		end
 
-	friday_code: INTEGER is
+	friday_code: INTEGER
 			-- Code for Friday
 		deferred
 		end
 
-	saturday_code: INTEGER is
+	saturday_code: INTEGER
 			-- Code for Saturday
 		deferred
 		end
 
-	sunday_code: INTEGER is
+	sunday_code: INTEGER
 			-- Code for Sunday
 		deferred
 		end
 
 feature -- Measurement
 
-	Days_in_week: INTEGER is
+	Days_in_week: INTEGER
 			-- Number of days in a week
 		deferred
 		ensure
@@ -246,7 +246,7 @@ feature -- Measurement
 
 feature -- Conversion
 
-	as_week_day_from_monday: DT_WEEK_DAY_FROM_MONDAY is
+	as_week_day_from_monday: DT_WEEK_DAY_FROM_MONDAY
 			-- Version of `Current' day in a week that starts on Monday
 		deferred
 		ensure
@@ -260,7 +260,7 @@ feature -- Conversion
 			is_sunday: is_sunday = Result.is_sunday
 		end
 
-	as_week_day_from_sunday: DT_WEEK_DAY_FROM_SUNDAY is
+	as_week_day_from_sunday: DT_WEEK_DAY_FROM_SUNDAY
 			-- Version of `Current' day in a week that starts on Sunday
 		deferred
 		ensure

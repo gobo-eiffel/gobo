@@ -15,8 +15,8 @@ class	XM_XSLT_MODE_CONSTANTS
 
 feature -- Access
 
-	Default_mode: INTEGER is -1
-	All_modes: INTEGER is -2
+	Default_mode: INTEGER = -1
+	All_modes: INTEGER = -2
 
 end
 

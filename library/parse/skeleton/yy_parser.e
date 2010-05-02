@@ -14,14 +14,14 @@ deferred class YY_PARSER
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new parser.
 		deferred
 		end
 
 feature -- Parsing
 
-	parse is
+	parse
 			-- Parse input stream.
 			-- Set `syntax_error' to True if
 			-- parsing has not been successful.
@@ -30,12 +30,12 @@ feature -- Parsing
 
 feature -- Status report
 
-	syntax_error: BOOLEAN is
+	syntax_error: BOOLEAN
 			-- Has last parsing been unsuccesful?
 		deferred
 		end
 
-	is_suspended: BOOLEAN is
+	is_suspended: BOOLEAN
 			-- Has parsing been suspended?
 			-- The next call to `parse' will resume parsing in the state
 			-- where the parser was when it was suspended. Note that a call
@@ -45,7 +45,7 @@ feature -- Status report
 
 feature -- Access
 
-	error_count: INTEGER is
+	error_count: INTEGER
 			-- Number of errors detected during last parsing
 			-- (`error_count' can be non-zero even though
 			-- `syntax_error' is false. This can happen when
@@ -57,14 +57,14 @@ feature -- Access
 
 feature -- Basic operations
 
-	accept is
+	accept
 			-- Stop parsing successfully.
 		deferred
 		ensure
 			accepted: not syntax_error
 		end
 
-	abort is
+	abort
 			-- Abort parsing.
 			-- Do not print error message.
 		deferred
@@ -72,7 +72,7 @@ feature -- Basic operations
 			aborted: syntax_error
 		end
 
-	clear_all is
+	clear_all
 			-- Clear temporary objects so that they can be collected
 			-- by the garbage collector. (This routine is called by
 			-- `parse' before exiting. It can be redefined in descendants.)
@@ -81,7 +81,7 @@ feature -- Basic operations
 
 feature {YY_PARSER_ACTION} -- Basic operations
 
-	suspend is
+	suspend
 			-- Suspend parsing.
 			-- The next call to `parse' will resume parsing in the state
 			-- where the parser was when it was suspended. Note that a call
@@ -91,19 +91,19 @@ feature {YY_PARSER_ACTION} -- Basic operations
 			suspended: is_suspended
 		end
 
-	raise_error is
+	raise_error
 			-- Raise a syntax error.
 			-- Report error using `report_error' and
 			-- perform normal error recovery if possible.
 		deferred
 		end
 
-	recover is
+	recover
 			-- Recover immediately after a parse error.
 		deferred
 		end
 
-	report_error (a_message: STRING) is
+	report_error (a_message: STRING)
 			-- Print error message.
 			-- (This routine is called by `parse' when it detects
 			-- a syntax error. It can be redefined in descendants.)
@@ -112,7 +112,7 @@ feature {YY_PARSER_ACTION} -- Basic operations
 		deferred
 		end
 
-	clear_token is
+	clear_token
 			-- Clear the previous lookahead token.
 			-- Used in error-recovery rule actions.
 		deferred
@@ -120,14 +120,14 @@ feature {YY_PARSER_ACTION} -- Basic operations
 
 feature {YY_PARSER_ACTION} -- Status report
 
-	is_recovering: BOOLEAN is
+	is_recovering: BOOLEAN
 			-- Is current parser recovering from a syntax error?
 		deferred
 		end
 
 feature {YY_PARSER_ACTION} -- Scanning
 
-	read_token is
+	read_token
 			-- Read a token from input stream.
 			-- Make result available in `last_token'.
 			-- (This routine is called by `parse' when it needs a
@@ -135,7 +135,7 @@ feature {YY_PARSER_ACTION} -- Scanning
 		deferred
 		end
 
-	last_token: INTEGER is
+	last_token: INTEGER
 			-- Last token read
 		deferred
 		end

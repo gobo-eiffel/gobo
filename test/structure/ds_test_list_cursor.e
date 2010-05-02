@@ -39,7 +39,7 @@ feature -- Fixture
 	triplet_llist: DS_LINKED_LIST [INTEGER]
 	triplet_blist: DS_BILINKED_LIST [INTEGER]
 
-	set_up is 
+	set_up
 			-- Create fixture objects.
 		do
 			create empty_alist.make (10)
@@ -56,7 +56,7 @@ feature -- Fixture
 			create triplet_blist.make_from_array (<<INTEGER_.to_integer (1), 2, 3>>)
 		end
 
-	tear_down is
+	tear_down
 			-- Release fixture objects for GC.
 		do
 			singleton_alist := Void
@@ -72,7 +72,7 @@ feature -- Fixture
 
 feature -- Test
 
-	test_for_defect_in_linked_list is
+	test_for_defect_in_linked_list
 			-- Demonstrate defect in DS_LINKED_LIST.cursor_back
 			-- by call back on a cursor for which is_first is true.
 			-- (ericb 02/07/05: this bug is now fixed.)
@@ -89,7 +89,7 @@ feature -- Test
 			assert ("not_before", not a_cursor.before)
 		end
 
-	test_for_defect_in_bilinked_list is
+	test_for_defect_in_bilinked_list
 			-- Verify that the defect is not present in DS_BILINKED_LIST.
 		local
 			a_list: DS_LIST [INTEGER]
@@ -104,7 +104,7 @@ feature -- Test
 			assert ("not_before", not a_cursor.before)
 		end
 
-	test_for_defect_in_arrayed_list is
+	test_for_defect_in_arrayed_list
 			-- Verify that the defect is not present in DS_ARRAYED_LIST.
 		local
 			a_list: DS_LIST [INTEGER]
@@ -119,7 +119,7 @@ feature -- Test
 			assert ("not_before", not a_cursor.before)
 		end
 
-	test_is_first is
+	test_is_first
 			-- Test feature `is_first'.
 		do
 			check_is_first_on_list (empty_alist)
@@ -136,7 +136,7 @@ feature -- Test
 			check_is_first_on_list (triplet_blist)
 		end
 
-	test_back is
+	test_back
 			-- Test feature `back'.
 		do
 			check_back_on_list (empty_alist)
@@ -155,7 +155,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	check_is_first_on_list (a_list: DS_LIST [INTEGER]) is
+	check_is_first_on_list (a_list: DS_LIST [INTEGER])
 			-- Test feature `is_first'.
 		require
 			a_list_not_void: a_list /= Void
@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 			assert ("start_after_xor_first", a_cursor.after /= a_cursor.is_first)
 		end
 
-	check_back_on_list (a_list: DS_LIST [INTEGER]) is
+	check_back_on_list (a_list: DS_LIST [INTEGER])
 			-- Test feature `back'.
 		require
 			a_list_not_void: a_list /= Void
@@ -195,7 +195,7 @@ feature {NONE} -- Implementation
 			check_back (a_cursor)
 		end
 
- 	check_back (a_cursor: DS_LIST_CURSOR [INTEGER]) is
+ 	check_back (a_cursor: DS_LIST_CURSOR [INTEGER])
 			-- Test feature `back'.
 		require
 			a_cursor_not_void: a_cursor /= Void

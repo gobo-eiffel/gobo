@@ -33,7 +33,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name) is
+	make (a_name: like name)
 			-- Create a new file named `a_name'.
 			-- (`a_name' should follow the pathname convention
 			-- of the underlying platform. For pathname conversion
@@ -57,7 +57,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_open_read: BOOLEAN is
+	is_open_read: BOOLEAN
 			-- Is file opened in read mode?
 		do
 			Result := old_is_open_read
@@ -68,7 +68,7 @@ feature -- Status report
 
 feature -- Input
 
-	read_character is
+	read_character
 			-- Read the next character in input file.
 			-- Make the result available in `last_character'.
 		local
@@ -86,7 +86,7 @@ feature -- Input
 			end
 		end
 
-	unread_character (a_character: CHARACTER) is
+	unread_character (a_character: CHARACTER)
 			-- Put `a_character' back in input file.
 			-- This character will be read first by the next
 			-- call to a read routine.
@@ -104,7 +104,7 @@ feature -- Input
 			end_of_file := False
 		end
 
-	read_string (nb: INTEGER) is
+	read_string (nb: INTEGER)
 			-- Read at most `nb' characters from input stream.
 			-- Make the characters that have actually been read
 			-- available in `last_string'.
@@ -133,7 +133,7 @@ feature -- Input
 			end_of_file := (last_string.count = 0)
 		end
 
-	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
+	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER
 			-- Fill `a_string', starting at position `pos' with
 			-- at most `nb' characters read from input file.
 			-- Return the number of characters actually read.
@@ -187,7 +187,7 @@ feature -- Input
 			Result := i
 		end
 
-	read_to_buffer (a_buffer: KI_BUFFER [CHARACTER]; pos, nb: INTEGER): INTEGER is
+	read_to_buffer (a_buffer: KI_BUFFER [CHARACTER]; pos, nb: INTEGER): INTEGER
 			-- Fill `a_buffer', starting at position `pos', with
 			-- at most `nb' characters read from input file.
 			-- Return the number of characters actually read.
@@ -207,7 +207,7 @@ feature -- Input
 
 feature -- Basic operations
 
-	open_read is
+	open_read
 			-- Open current file in read-only mode if
 			-- it can be opened, let it closed otherwise.
 		local
@@ -231,7 +231,7 @@ feature -- Basic operations
 			end
 		end
 
-	close is
+	close
 			-- Close current file if it is closable,
 			-- let it open otherwise.
 		local
@@ -253,13 +253,13 @@ feature {NONE} -- Implementation
 	character_buffer: detachable KL_LINKABLE [CHARACTER]
 			-- Unread characters
 
-	file_readable: BOOLEAN is
+	file_readable: BOOLEAN
 			-- Is there a current item that may be read?
 		do
 			Result := is_open_read
 		end
 
-	old_read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
+	old_read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER
 			-- Fill `a_string', starting at position `pos' with at
 			-- most `nb' characters read from current file.
 			-- Return the number of characters actually read.
@@ -277,10 +277,10 @@ feature {NONE} -- Implementation
 			character_read: not old_end_of_file implies Result > 0
 		end
 
-	dummy_string: STRING is ""
+	dummy_string: STRING = ""
 			-- Dummy string
 
-	dummy_kl_character_buffer: KL_CHARACTER_BUFFER is
+	dummy_kl_character_buffer: KL_CHARACTER_BUFFER
 			-- Dummy KL_CHARACTER_BUFFER
 		once
 			create Result.make (0)
@@ -288,14 +288,14 @@ feature {NONE} -- Implementation
 			dummy_not_void: Result /= Void
 		end
 
-	old_end_of_file: BOOLEAN is
+	old_end_of_file: BOOLEAN
 			-- Has an EOF been detected?
 		require
 			opened: not old_is_closed
 		deferred
 		end
 
-	old_read_character is
+	old_read_character
 			-- Read a new character.
 			-- Make result available in `last_character'.
 		require
@@ -303,12 +303,12 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	old_is_open_read: BOOLEAN is
+	old_is_open_read: BOOLEAN
 			-- Is file open for reading?
 		deferred
 		end
 
-	old_read_stream (nb_char: INTEGER) is
+	old_read_stream (nb_char: INTEGER)
 			-- Read a string of at most `nb_char' bound characters
 			-- or until end of file.
 			-- Make result available in `last_string'.
@@ -317,7 +317,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	old_open_read is
+	old_open_read
 			-- Open file in read-only mode.
 		require
 			is_closed: old_is_closed

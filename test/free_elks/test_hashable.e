@@ -22,7 +22,7 @@ create
 
 feature -- Test
 
-	test_hash_code1 is
+	test_hash_code1
 			-- Test feature `hash_code'.
 		local
 			s: STRING
@@ -30,20 +30,20 @@ feature -- Test
 		do
 			s := "foobar"
 			a_hashable := s.twin
-			assert ("hash_code1", a_hashable.hash_code = a_hashable.hash_code) 
+			assert ("hash_code1", a_hashable.hash_code = a_hashable.hash_code)
 			a_hashable2 := s.twin
-			assert ("hash_code2", a_hashable.hash_code = a_hashable2.hash_code) 
+			assert ("hash_code2", a_hashable.hash_code = a_hashable2.hash_code)
 		end
 
-	test_hash_code2 is
+	test_hash_code2
 			-- Test feature `hash_code'.
 		local
 			a_hashable, a_hashable2: INTEGER
 		do
 			a_hashable := 5
-			assert ("hash_code1", a_hashable.hash_code = a_hashable.hash_code) 
+			assert ("hash_code1", a_hashable.hash_code = a_hashable.hash_code)
 			a_hashable2 := 5
-			assert ("hash_code2", a_hashable.hash_code = a_hashable2.hash_code) 
+			assert ("hash_code2", a_hashable.hash_code = a_hashable2.hash_code)
 		end
 
 end

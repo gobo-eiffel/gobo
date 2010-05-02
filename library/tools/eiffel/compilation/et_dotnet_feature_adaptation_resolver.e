@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new feature adaptation resolver for .NET classes.
 		local
 			l_dotnet_signature_tester: ET_DOTNET_SIGNATURE_TESTER
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Feature adaptation resolving
 
-	resolve_feature_adaptations (a_class: ET_CLASS; a_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]) is
+	resolve_feature_adaptations (a_class: ET_CLASS; a_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME])
 			-- Resolve the feature inheritance of `a_class'
 			-- and put resulting features in `a_features'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -103,7 +103,7 @@ feature -- Feature adaptation resolving
 
 feature {NONE} -- Feature recording
 
-	add_current_features (a_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]) is
+	add_current_features (a_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME])
 			-- Add to `a_features' the .NET features of `current_class'
 			-- declared in its assembly.
 		require
@@ -156,7 +156,7 @@ feature {NONE} -- Feature recording
 			no_void_feature: not a_features.has_void_item
 		end
 
-	add_current_feature (a_feature: ET_DOTNET_FEATURE; a_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]) is
+	add_current_feature (a_feature: ET_DOTNET_FEATURE; a_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME])
 			-- Add to `a_features' the .NET feature `a_feature' of `current_class'
 			-- declared in its assembly.
 		require
@@ -199,7 +199,7 @@ feature {NONE} -- Feature recording
 			no_void_feature: not a_features.has_void_item
 		end
 
-	add_inherited_features (a_parent: ET_PARENT; a_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]) is
+	add_inherited_features (a_parent: ET_PARENT; a_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME])
 			-- Add to `a_features' the .NET features inherited from `a_parent'.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -278,7 +278,7 @@ feature {NONE} -- Feature recording
 			no_void_feature: not a_features.has_void_item
 		end
 
-	add_inherited_feature (a_parent: ET_PARENT; a_parent_feature, a_heir_feature: ET_DOTNET_FEATURE; a_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]) is
+	add_inherited_feature (a_parent: ET_PARENT; a_parent_feature, a_heir_feature: ET_DOTNET_FEATURE; a_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME])
 			-- Add to `a_features' .NET feature `a_parent_feature' inherited from `a_parent'
 			-- if we can figure out that its version in `current_class' is `a_heir_feature'.
 		require
@@ -342,7 +342,7 @@ feature {NONE} -- Feature recording
 			no_void_feature: not a_features.has_void_item
 		end
 
-	add_any_features (a_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]) is
+	add_any_features (a_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME])
 			-- Add to `a_features' features inherited from class "ANY".
 		require
 			a_features_not_void: a_features /= Void
@@ -454,7 +454,7 @@ feature {NONE} -- Features
 
 feature {NONE} -- Implementation
 
-	new_parent_feature (a_feature: ET_FEATURE; a_parent: ET_PARENT): ET_PARENT_FEATURE is
+	new_parent_feature (a_feature: ET_FEATURE; a_parent: ET_PARENT): ET_PARENT_FEATURE
 			-- New parent feature
 		require
 			a_feature_not_void: a_feature /= Void
@@ -473,7 +473,7 @@ feature {NONE} -- Implementation
 			parent_feature_not_void: Result /= Void
 		end
 
-	new_inherited_feature (a_parent_feature: ET_PARENT_FEATURE): ET_INHERITED_FEATURE is
+	new_inherited_feature (a_parent_feature: ET_PARENT_FEATURE): ET_INHERITED_FEATURE
 			-- New inherited feature
 		require
 			a_parent_feature_not_void: a_parent_feature /= Void
@@ -491,7 +491,7 @@ feature {NONE} -- Implementation
 			inherited_feature_not_void: Result /= Void
 		end
 
-	new_redeclared_feature (a_feature: ET_FEATURE; a_parent_feature: ET_PARENT_FEATURE): ET_REDECLARED_FEATURE is
+	new_redeclared_feature (a_feature: ET_FEATURE; a_parent_feature: ET_PARENT_FEATURE): ET_REDECLARED_FEATURE
 			-- New redeclared feature
 		require
 			a_feature_not_void: a_feature /= Void

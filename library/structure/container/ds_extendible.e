@@ -24,7 +24,7 @@ inherit
 
 feature -- Status report
 
-	extendible (n: INTEGER): BOOLEAN is
+	extendible (n: INTEGER): BOOLEAN
 			-- May container be extended with `n' items?
 		require
 			positive_n: n >= 0
@@ -33,7 +33,7 @@ feature -- Status report
 
 feature -- Element change
 
-	put (v: G) is
+	put (v: G)
 			-- Add `v' to container.
 		require
 			extendible: extendible (1)
@@ -42,14 +42,14 @@ feature -- Element change
 			added: has (v)
 		end
 
-	force (v: G) is
+	force (v: G)
 			-- Add `v' to container.
 		deferred
 		ensure
 			added: has (v)
 		end
 
-	extend (other: DS_LINEAR [G]) is
+	extend (other: DS_LINEAR [G])
 			-- Add items of `other' to container.
 			-- Add `other.first' first, etc.
 		require
@@ -58,7 +58,7 @@ feature -- Element change
 		deferred
 		end
 
-	append (other: DS_LINEAR [G]) is
+	append (other: DS_LINEAR [G])
 			-- Add items of `other' to container.
 			-- Add `other.first' first, etc.
 		require

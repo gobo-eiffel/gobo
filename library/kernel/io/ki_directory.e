@@ -41,7 +41,7 @@ inherit
 
 feature -- Access
 
-	last_entry: STRING is
+	last_entry: STRING
 			-- Last entry (file or subdirectory name) read
 			-- (Note: this query returns the new object after
 			-- each call to `read_entry'.)
@@ -50,7 +50,7 @@ feature -- Access
 			last_entry_not_void: Result /= Void
 		end
 
-	filenames: detachable ARRAY [STRING] is
+	filenames: detachable ARRAY [STRING]
 			-- Names of readable files in current directory;
 			-- Void if current directory could not be searched
 		deferred
@@ -59,7 +59,7 @@ feature -- Access
 --			no_empty_filename: Result /= Void implies forall s in Result, s.count > 0
 		end
 
-	directory_names: detachable ARRAY [STRING] is
+	directory_names: detachable ARRAY [STRING]
 			-- Names of readable subdirectories in current directory;
 			-- Void if current directory could not be searched
 			-- (Do not include parent and current directory names.)
@@ -71,14 +71,14 @@ feature -- Access
 
 feature -- Status report
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Does current directory contain no entry apart from
 			-- the parent and current directory entries?
 			-- Return False if not able to open current directory.
 		deferred
 		end
 
-	valid_unread_entry (an_entry: STRING): BOOLEAN is
+	valid_unread_entry (an_entry: STRING): BOOLEAN
 			-- Can `an_entry' be put back in input stream?
 		do
 			Result := an_entry /= Void and then an_entry.count > 0
@@ -89,7 +89,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	open_read is
+	open_read
 			-- Try to open directory in read mode.  Set `is_open_read'
 			-- to true and is ready to read first entry in directory
 			-- if operation was successful.
@@ -98,7 +98,7 @@ feature -- Basic operations
 			not_end_of_input: is_open_read implies not end_of_input
 		end
 
-	create_directory is
+	create_directory
 			-- Create current directory on disk.
 			-- Do nothing if the directory could not
 			-- be created, if it already existed or if
@@ -109,7 +109,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	recursive_create_directory is
+	recursive_create_directory
 			-- Create current directory on disk.
 			-- Create its parent directories if they do not exist yet.
 			-- Do nothing if the directory could not be created,
@@ -121,7 +121,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	recursive_delete is
+	recursive_delete
 			-- Delete current directory, its files
 			-- and its subdirectories recursively.
 			-- Do nothing if the directory could not
@@ -131,7 +131,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	recursive_copy_directory (new_name: STRING) is
+	recursive_copy_directory (new_name: STRING)
 			-- Copy recursively current directory to `new_name'.
 			-- Do nothing if the directory could not be copied,
 			-- if it did not exist, or if `new_name' already existed.
@@ -146,7 +146,7 @@ feature -- Basic operations
 
 feature -- Iteration
 
-	do_all (an_action: PROCEDURE [ANY, TUPLE [STRING]]) is
+	do_all (an_action: PROCEDURE [ANY, TUPLE [STRING]])
 			-- Apply `an_action' to every entry in the directory.
 			-- Do nothing if current directory could not be searched.
 			-- (Semantics not guaranteed if `an_action' changes the contents of the directory.)
@@ -155,7 +155,7 @@ feature -- Iteration
 		deferred
 		end
 
-	do_if (an_action: PROCEDURE [ANY, TUPLE [STRING]]; a_test: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]) is
+	do_if (an_action: PROCEDURE [ANY, TUPLE [STRING]]; a_test: FUNCTION [ANY, TUPLE [STRING], BOOLEAN])
 			-- Apply `an_action' to every entry in the directory that satisfies `a_test'.
 			-- Do nothing if current directory could not be searched.
 			-- (Semantics not guaranteed if `an_action' changes the contents of the directory.)
@@ -165,7 +165,7 @@ feature -- Iteration
 		deferred
 		end
 
-	there_exists (a_test: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]): BOOLEAN is
+	there_exists (a_test: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for at least one entry in the directory?
 			-- False if current directory could not be searched.
 			-- (Semantics not guaranteed if `an_action' changes the contents of the directory.)
@@ -174,7 +174,7 @@ feature -- Iteration
 		deferred
 		end
 
-	for_all (a_test: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]): BOOLEAN is
+	for_all (a_test: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for all entries in the directory?
 			-- False if current directory could not be searched.
 			-- (Semantics not guaranteed if `an_action' changes the contents of the directory.)
@@ -185,7 +185,7 @@ feature -- Iteration
 
 feature -- Input
 
-	read_entry is
+	read_entry
 			-- Read next entry in directory.
 			-- Make result available in `last_entry'.
 		deferred

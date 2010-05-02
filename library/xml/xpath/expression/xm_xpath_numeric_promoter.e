@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_sequence: XM_XPATH_EXPRESSION; a_required_type: INTEGER) is
+	make (a_sequence: XM_XPATH_EXPRESSION; a_required_type: INTEGER)
 			-- Establish invariant.
 		require
 			sequence_not_void: a_sequence /= Void
@@ -48,19 +48,19 @@ feature -- Access
 	required_type: INTEGER
 			-- Required type
 
-	is_numeric_promoter: BOOLEAN is
+	is_numeric_promoter: BOOLEAN
 			-- Is `Current' a numeric promoter?
 		do
 			Result := True
 		end
 
-	as_numeric_promoter: XM_XPATH_NUMERIC_PROMOTER is
+	as_numeric_promoter: XM_XPATH_NUMERIC_PROMOTER
 			-- `Current' seen as a numeric promoter
 		do
 			Result := Current
 		end
-	
-	item_type: XM_XPATH_ITEM_TYPE is
+
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Determine the data type of the expression, if possible
 		do
 			if required_type = Double_type_code then
@@ -76,21 +76,21 @@ feature -- Access
 
 feature -- Comparison
 
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Are `Current' and `other' the same expression?
 		local
 			other_promoter: XM_XPATH_NUMERIC_PROMOTER
 		do
 			if other.is_numeric_promoter then
 				other_promoter := other.as_numeric_promoter
-				Result := base_expression.same_expression (other_promoter.base_expression) 
+				Result := base_expression.same_expression (other_promoter.base_expression)
 					and then other_promoter.required_type = required_type
 			end
 		end
-	
-feature -- Optimization	
-	
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+
+feature -- Optimization
+
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -116,7 +116,7 @@ feature -- Optimization
 			end
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -133,7 +133,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -152,7 +152,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			base_expression.evaluate_item (a_result, a_context)
@@ -166,7 +166,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- An iterator over the values of a sequence
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -179,8 +179,8 @@ feature -- Evaluation
 				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current, Void)
 			end
 		end
-	
-	map (a_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
+
+	map (a_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT)
 			-- Map `an_item' to a sequence
 		local
 			l_result: DS_CELL [XM_XPATH_ITEM]
@@ -198,8 +198,8 @@ feature -- Evaluation
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
-	
-	display_operator: STRING is
+
+	display_operator: STRING
 			-- Format `operator' for display
 		do
 			Result := "promote items to " + item_type.conventional_name
@@ -207,7 +207,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 
-	promote_number (a_result: DS_CELL [XM_XPATH_ITEM]) is
+	promote_number (a_result: DS_CELL [XM_XPATH_ITEM])
 			-- Promote of `an_atomic_value'.
 		require
 			a_result_not_void: a_result /= Void

@@ -24,7 +24,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new processor for given classes.
 		do
 			current_class := tokens.unknown_class
@@ -35,7 +35,7 @@ feature -- Access
 	current_class: ET_CLASS
 			-- Class being processed
 
-	current_universe: ET_UNIVERSE is
+	current_universe: ET_UNIVERSE
 			-- Universe to which `current_class' belongs
 		do
 			Result := current_class.universe
@@ -43,7 +43,7 @@ feature -- Access
 			current_universe_not_void: Result /= Void
 		end
 
-	current_system: ET_SYSTEM is
+	current_system: ET_SYSTEM
 			-- Surrounding Eiffel system
 		do
 			Result := current_class.current_system
@@ -53,7 +53,7 @@ feature -- Access
 
 feature -- Error handling
 
-	error_handler: ET_ERROR_HANDLER is
+	error_handler: ET_ERROR_HANDLER
 			-- Error handler
 		do
 			Result := current_system.error_handler

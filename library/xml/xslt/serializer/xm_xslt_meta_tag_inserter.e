@@ -26,7 +26,7 @@ create make
 
 feature {NONE} -- Initialization
 
-	make (a_receiver: XM_XPATH_RECEIVER; some_properties: XM_XSLT_OUTPUT_PROPERTIES; xhtml: BOOLEAN) is
+	make (a_receiver: XM_XPATH_RECEIVER; some_properties: XM_XSLT_OUTPUT_PROPERTIES; xhtml: BOOLEAN)
 			-- Establish invariant.
 		require
 			receiver_not_void: a_receiver /= Void
@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 
 feature -- Events
 
-	start_element (a_name_code: INTEGER; a_type_code: INTEGER; a_properties: INTEGER) is
+	start_element (a_name_code: INTEGER; a_type_code: INTEGER; a_properties: INTEGER)
 			-- Notify the start of an element
 		local
 			l_finished: BOOLEAN
@@ -100,7 +100,7 @@ feature -- Events
 			mark_as_written
 		end
 
-	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; a_properties: INTEGER) is
+	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; a_properties: INTEGER)
 			-- Notify an attribute.
 		do
 			if in_meta_tag then
@@ -111,7 +111,7 @@ feature -- Events
 			mark_as_written
 		end
 
-	start_content is
+	start_content
 			-- Notify the start of the content, that is, the completion of all attributes and namespaces.
 		local
 			l_content_type: STRING
@@ -135,8 +135,8 @@ feature -- Events
 			end
 			mark_as_written
 		end
-	
-	end_element is
+
+	end_element
 			-- Notify the end of an element.
 		local
 			l_found: BOOLEAN
@@ -231,7 +231,7 @@ feature {NONE} -- Implementation
 	media_type: STRING
 			-- Content type
 
-	matches_name (a_name, a_standard_name: STRING): BOOLEAN is
+	matches_name (a_name, a_standard_name: STRING): BOOLEAN
 			-- Does `a_name' match against `a_standard_name'?
 		require
 			a_name_not_void: a_name /= Void

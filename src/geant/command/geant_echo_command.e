@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT) is
+	make (a_project: GEANT_PROJECT)
 			-- Initialize command.
 		do
 			Precursor (a_project)
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- Can command be executed?
 		local
 			a_is_valid: DS_CELL [BOOLEAN]
@@ -80,7 +80,7 @@ feature -- Access
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute command.
 		local
 			a_message: STRING
@@ -111,7 +111,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	write_message (a_message: STRING) is
+	write_message (a_message: STRING)
 			-- Write `a_message' to `project.log'
 		require
 			a_message_not_void: a_message /= Void
@@ -121,7 +121,7 @@ feature {NONE} -- Implementation
 			exit_code := 0
 		end
 
-	write_message_to_file (a_message: STRING; a_file: KL_TEXT_OUTPUT_FILE; a_append: BOOLEAN) is
+	write_message_to_file (a_message: STRING; a_file: KL_TEXT_OUTPUT_FILE; a_append: BOOLEAN)
 			-- Write `a_message' to `a_file'.
 			-- Note: `a_append' = True implies that `a_file' has been opened in append mode, otherwise
 			-- in normal write mode. `a_append' is passed in only as information in case

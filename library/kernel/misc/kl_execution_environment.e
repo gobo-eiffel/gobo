@@ -28,7 +28,7 @@ inherit
 
 feature -- Access
 
-	variable_value (a_variable: STRING): detachable STRING is
+	variable_value (a_variable: STRING): detachable STRING
 			-- Value of environment variable `a_variable',
 			-- Void if `a_variable' has not been set;
 			-- Note: If `a_variable' is a UC_STRING or descendant, then
@@ -40,7 +40,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_variable_value (a_variable, a_value: STRING) is
+	set_variable_value (a_variable, a_value: STRING)
 			-- Set environment variable `a_variable' to `a_value'.
 			-- (This setting may fail on certain platforms.)
 			-- Note: If `a_variable' or `a_value' are UC_STRING or
@@ -60,7 +60,7 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	environment_impl: EXECUTION_ENVIRONMENT is
+	environment_impl: EXECUTION_ENVIRONMENT
 			-- Execution environment impl
 		once
 			create Result

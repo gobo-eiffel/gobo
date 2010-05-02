@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_stream: like base_stream) is
+	make (a_stream: like base_stream)
 			-- Create a new base64 decoding stream.
 		do
 			create last_string.make_empty
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Input
 
-	read_string (nb: INTEGER) is
+	read_string (nb: INTEGER)
 			-- Read at most `nb' characters from input stream.
 			-- Make the characters that have actually been read
 			-- available in `last_string'.
@@ -66,7 +66,7 @@ feature -- Input
 			end_of_input := last_string.is_empty
 		end
 
-	read_character is
+	read_character
 			-- Read the next item in input stream.
 			-- Make the result available in `last_character'.
 		do
@@ -81,7 +81,7 @@ feature -- Input
 			end
 		end
 
-	unread_character (an_item: CHARACTER) is
+	unread_character (an_item: CHARACTER)
 			-- Put `an_item' back in input stream.
 			-- This item will be read first by the next
 			-- call to a read routine.
@@ -106,7 +106,7 @@ feature -- Status report
 	end_of_input: BOOLEAN
 			-- Has the end of input stream been reached?
 
-	valid_unread_character (a_character: CHARACTER): BOOLEAN is
+	valid_unread_character (a_character: CHARACTER): BOOLEAN
 			-- Can `a_character' be put back in input stream?
 		do
 				-- Not supported: too difficult to implement.
@@ -115,7 +115,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	close is
+	close
 			-- Try to close input stream if it is closable. Set
 			-- `is_open_read' to false if operation was successful.
 		do
@@ -127,7 +127,7 @@ feature -- Basic operations
 			end
 		end
 
-	rewind is
+	rewind
 			-- Move input position to the beginning of stream.
 		do
 			Precursor
@@ -150,13 +150,13 @@ feature {NONE} -- Implementation
 	codes: ARRAY [INTEGER]
 			-- Array of 4 6-bit codes
 
-	is_base64_character (c: CHARACTER): BOOLEAN is
+	is_base64_character (c: CHARACTER): BOOLEAN
 			-- Is `c' is a valid base64 character?
 		do
 			Result := decoded_character (c) >= 0
 		end
 
-	decoded_character (c: CHARACTER): INTEGER is
+	decoded_character (c: CHARACTER): INTEGER
 			-- Decoded character;
 			-- Returns -1 if `c' is an ignorable character.
 			-- Returns -2 if `c' is an invalid character.
@@ -235,7 +235,7 @@ feature {NONE} -- Implementation
 			valid_decoded_character: Result >= -2 and Result < 64
 		end
 
-	read_24_bits is
+	read_24_bits
 			-- Read the next four characters, decode them, and make the
 			-- decoded characters available in `decoded_triplet'.
 			-- Set `end_of_input' if premature end of input reached.
@@ -335,9 +335,9 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	shift_2_bits: INTEGER is 4
-	shift_4_bits: INTEGER is 16
-	shift_6_bits: INTEGER is 64
+	shift_2_bits: INTEGER = 4
+	shift_4_bits: INTEGER = 16
+	shift_6_bits: INTEGER = 64
 
 invariant
 

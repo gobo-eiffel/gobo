@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING) is
+	make (a_name: STRING)
 			-- Create a new ECF target.
 		require
 			a_name_not_void: a_name /= Void
@@ -70,7 +70,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_clusters (a_clusters: like clusters) is
+	set_clusters (a_clusters: like clusters)
 			-- Set `clusters' to `a_clusters'.
 		do
 			clusters := a_clusters
@@ -78,7 +78,7 @@ feature -- Setting
 			clusters_set: clusters = a_clusters
 		end
 
-	set_libraries (a_libraries: like libraries) is
+	set_libraries (a_libraries: like libraries)
 			-- Set `libraries' to `a_libraries'.
 		do
 			libraries := a_libraries
@@ -86,7 +86,7 @@ feature -- Setting
 			libraries_set: libraries = a_libraries
 		end
 
-	set_parent (a_parent: like parent) is
+	set_parent (a_parent: like parent)
 			-- Set `parent' to `a_parent'.
 		require
 			-- no_cycle: no cycle introduced
@@ -101,7 +101,7 @@ feature -- Setting
 			parent_set: parent = a_parent
 		end
 
-	set_root (a_root: like root) is
+	set_root (a_root: like root)
 			-- Set `root' to `a_root'.
 		do
 			root := a_root
@@ -109,7 +109,7 @@ feature -- Setting
 			root_set: root = a_root
 		end
 
-	set_file_rules (a_file_rules: like file_rules) is
+	set_file_rules (a_file_rules: like file_rules)
 			-- Set `file_rules' to `a_file_rules'.
 		do
 			file_rules := a_file_rules
@@ -117,7 +117,7 @@ feature -- Setting
 			file_rules_set: file_rules = a_file_rules
 		end
 
-	set_external_includes (a_external_includes: like external_includes) is
+	set_external_includes (a_external_includes: like external_includes)
 			-- Set `external_includes' to `a_external_includes'.
 		do
 			external_includes := a_external_includes
@@ -125,7 +125,7 @@ feature -- Setting
 			external_includes_set: external_includes = a_external_includes
 		end
 
-	set_external_objects (a_external_objects: like external_objects) is
+	set_external_objects (a_external_objects: like external_objects)
 			-- Set `external_objects' to `a_external_objects'.
 		do
 			external_objects := a_external_objects
@@ -133,7 +133,7 @@ feature -- Setting
 			external_objects_set: external_objects = a_external_objects
 		end
 
-	set_external_libraries (a_external_libraries: like external_libraries) is
+	set_external_libraries (a_external_libraries: like external_libraries)
 			-- Set `external_libraries' to `a_external_libraries'.
 		do
 			external_libraries := a_external_libraries
@@ -143,7 +143,7 @@ feature -- Setting
 
 feature -- Basic operations
 
-	update_state (a_state: ET_ECF_STATE) is
+	update_state (a_state: ET_ECF_STATE)
 			-- Update `a_state' with information found in
 			-- `parent' if any, and overridden by information
 			-- found in current target.
@@ -155,7 +155,7 @@ feature -- Basic operations
 			end
 		end
 
-	fill_universe (a_universe: ET_ECF_INTERNAL_UNIVERSE; a_state: ET_ECF_STATE) is
+	fill_universe (a_universe: ET_ECF_INTERNAL_UNIVERSE; a_state: ET_ECF_STATE)
 			-- Add to `a_universe' the clusters and libraries of current target,
 			-- and recursive its parent target if any, whose conditions satisfy
 			-- `a_state'.
@@ -222,7 +222,7 @@ feature -- Basic operations
 			end
 		end
 
-	fill_root (a_system: ET_ECF_SYSTEM) is
+	fill_root (a_system: ET_ECF_SYSTEM)
 			-- Fill `a_system' with root information.
 		require
 			a_system_not_void: a_system /= Void
@@ -234,7 +234,7 @@ feature -- Basic operations
 			end
 		end
 
-	fill_file_rules (a_file_rules: ET_ECF_FILE_RULES; a_state: ET_ECF_STATE) is
+	fill_file_rules (a_file_rules: ET_ECF_FILE_RULES; a_state: ET_ECF_STATE)
 			-- Add to `a_file_rules' the file rules current target, and recursive
 			-- its parent target if any, whose conditions satisfy `a_state'.
 		require

@@ -26,7 +26,7 @@ inherit
 
 feature -- Status report
 
-	valid_utf8 (a_string: STRING): BOOLEAN is
+	valid_utf8 (a_string: STRING): BOOLEAN
 			-- Are the bytes in `a_string' a valid UTF-8 encoding?
 		require
 			a_string_not_void: a_string /= Void
@@ -107,21 +107,21 @@ feature -- Status report
 			end
 		end
 
-	is_encoded_first_byte (a_byte: CHARACTER): BOOLEAN is
+	is_encoded_first_byte (a_byte: CHARACTER): BOOLEAN
 			-- Is `a_byte' the first byte in UTF-8 encoding?
 		do
 				-- All but 10xxxxxx and 1111111x
 			Result := (a_byte <= byte_127 or (byte_194 <= a_byte and a_byte <= byte_244))
 		end
 
-	is_encoded_next_byte (a_byte: CHARACTER): BOOLEAN is
+	is_encoded_next_byte (a_byte: CHARACTER): BOOLEAN
 			-- Is `a_byte' one of the next bytes in UTF-8 encoding?
 		do
 				-- 10xxxxxx
 			Result := (byte_127 < a_byte and a_byte <= byte_191)
 		end
 
-	is_encoded_second_byte (a_byte, a_first_byte: CHARACTER): BOOLEAN is
+	is_encoded_second_byte (a_byte, a_first_byte: CHARACTER): BOOLEAN
 			-- Is `a_byte' a valid second byte in UTF-8 encoding?
 		require
 			valid_first_byte: is_encoded_first_byte (a_first_byte)
@@ -140,7 +140,7 @@ feature -- Status report
 			end
 		end
 
-	is_endian_detection_character (a_first, a_second, a_third: CHARACTER): BOOLEAN is
+	is_endian_detection_character (a_first, a_second, a_third: CHARACTER): BOOLEAN
 			-- Is this sequence a UTF-8 Byte Order Marker (BOM)?
 		do
 			Result := is_endian_detection_character_start (a_first, a_second) and a_third = byte_bf
@@ -148,7 +148,7 @@ feature -- Status report
 			result_start: Result implies is_endian_detection_character_start (a_first, a_second)
 		end
 
-	is_endian_detection_character_start (a_first, a_second: CHARACTER): BOOLEAN is
+	is_endian_detection_character_start (a_first, a_second: CHARACTER): BOOLEAN
 			-- Are these characters the start of a UTF-8 encoded Byte Order Marker (BOM)?
 		do
 			Result := a_first = byte_ef and a_second = byte_bb
@@ -156,7 +156,7 @@ feature -- Status report
 
 feature -- Access
 
-	encoded_first_value (a_byte: CHARACTER): INTEGER is
+	encoded_first_value (a_byte: CHARACTER): INTEGER
 			-- Value encoded in first byte
 		require
 			is_encoded_first_byte: is_encoded_first_byte (a_byte)
@@ -179,7 +179,7 @@ feature -- Access
 			value_small_enough: Result < 128
 		end
 
-	encoded_next_value (a_byte: CHARACTER): INTEGER is
+	encoded_next_value (a_byte: CHARACTER): INTEGER
 			-- Value encoded in one of the next bytes
 		require
 			is_encoded_next_byte: is_encoded_next_byte (a_byte)
@@ -193,7 +193,7 @@ feature -- Access
 
 feature -- Measurement
 
-	encoded_byte_count (a_byte: CHARACTER): INTEGER is
+	encoded_byte_count (a_byte: CHARACTER): INTEGER
 			-- Number of bytes which were necessary to encode
 			-- the unicode character whose first byte is `a_byte'
 		require
@@ -217,7 +217,7 @@ feature -- Measurement
 			encoded_byte_code_small_enough: Result <= 4
 		end
 
-	substring_byte_count (a_string: READABLE_STRING_GENERAL; start_index, end_index: INTEGER): INTEGER is
+	substring_byte_count (a_string: READABLE_STRING_GENERAL; start_index, end_index: INTEGER): INTEGER
 			-- Number of bytes needed to encode characters  of
 			-- `a_string' between `start_index' and `end_index'
 			-- inclusive with the UTF-8 encoding
@@ -325,7 +325,7 @@ feature -- Measurement
 			substring_byte_count_positive: Result >= 0
 		end
 
-	code_byte_count (a_code: INTEGER): INTEGER is
+	code_byte_count (a_code: INTEGER): INTEGER
 			-- Number of bytes needed to encode unicode character
 			-- of code `a_code' with the UTF-8 encoding
 		require
@@ -351,7 +351,7 @@ feature -- Measurement
 			code_byte_count_small_enough: Result <= 4
 		end
 
-	character_byte_count (c: CHARACTER): INTEGER is
+	character_byte_count (c: CHARACTER): INTEGER
 			-- Number of bytes needed to encode character
 			-- `c' with the UTF-8 encoding
 		local
@@ -385,7 +385,7 @@ feature -- Measurement
 
 feature -- Conversion
 
-	to_utf8 (a_string: STRING): STRING is
+	to_utf8 (a_string: STRING): STRING
 			-- New STRING made up of bytes corresponding to
 			-- the UTF-8 representation of `a_string'
 		require
@@ -417,7 +417,7 @@ feature -- Conversion
 
 feature -- Element change
 
-	append_code_to_utf8 (a_utf8: STRING; a_code: INTEGER) is
+	append_code_to_utf8 (a_utf8: STRING; a_code: INTEGER)
 			-- Add UTF-8 encoded character of code `a_code'
 			-- at the end of `a_utf8'.
 		require
@@ -470,91 +470,91 @@ feature -- Element change
 
 feature {NONE} -- Constants
 
-	code_3: INTEGER is 3
+	code_3: INTEGER = 3
 			-- 111110xx (2^2 - 1 = 3)
 
-	code_7: INTEGER is 7
+	code_7: INTEGER = 7
 			-- 11110xxx (2^3 - 1 = 7)
 
-	code_15: INTEGER is 15
+	code_15: INTEGER = 15
 			-- 1110xxxx (2^4 - 1 = 15)
 
-	code_31: INTEGER is 31
+	code_31: INTEGER = 31
 			-- 110xxxxx (2^5 - 1 = 31)
 
-	byte_127: CHARACTER is '%/127/'
+	byte_127: CHARACTER = '%/127/'
 			-- Highest ASCII character/1st UTF-8 byte
 
-	code_127: INTEGER is 127
+	code_127: INTEGER = 127
 			-- 01111111
 
-	byte_143: CHARACTER is '%/143/'
+	byte_143: CHARACTER = '%/143/'
 
-	byte_159: CHARACTER is '%/159/'
+	byte_159: CHARACTER = '%/159/'
 
-	byte_191: CHARACTER is '%/191/'
+	byte_191: CHARACTER = '%/191/'
 			-- 10111111
 
-	code_191: INTEGER is 191
+	code_191: INTEGER = 191
 			-- 10111111
 
-	byte_194: CHARACTER is '%/194/'
+	byte_194: CHARACTER = '%/194/'
 
-	byte_223: CHARACTER is '%/223/'
+	byte_223: CHARACTER = '%/223/'
 			-- 11011111
 
-	code_223: INTEGER is 223
+	code_223: INTEGER = 223
 			-- 11011111
 
-	byte_224: CHARACTER is '%/224/'
+	byte_224: CHARACTER = '%/224/'
 
-	byte_237: CHARACTER is '%/237/'
+	byte_237: CHARACTER = '%/237/'
 
-	byte_239: CHARACTER is '%/239/'
+	byte_239: CHARACTER = '%/239/'
 			-- 11101111
 
-	code_239: INTEGER is 239
+	code_239: INTEGER = 239
 			-- 11101111
 
-	byte_240: CHARACTER is '%/240/'
+	byte_240: CHARACTER = '%/240/'
 
-	byte_244: CHARACTER is '%/244/'
+	byte_244: CHARACTER = '%/244/'
 
-	byte_247: CHARACTER is '%/247/'
+	byte_247: CHARACTER = '%/247/'
 			-- 11110111
 
-	code_247: INTEGER is 247
+	code_247: INTEGER = 247
 			-- 11110111
 
-	byte_251: CHARACTER is '%/251/'
+	byte_251: CHARACTER = '%/251/'
 			-- 11111011
 
-	code_251: INTEGER is 251
+	code_251: INTEGER = 251
 			-- 11111011
 
-	byte_253: CHARACTER is '%/253/'
+	byte_253: CHARACTER = '%/253/'
 			-- 11111101
 
-	code_253: INTEGER is 253
+	code_253: INTEGER = 253
 			-- 11111101
 
-	byte_255: CHARACTER is '%/255/'
+	byte_255: CHARACTER = '%/255/'
 
-	byte_ef: CHARACTER is '%/239/'
+	byte_ef: CHARACTER = '%/239/'
 			-- UTF-8 BOM first: EF
 
-	byte_bb: CHARACTER is '%/187/'
+	byte_bb: CHARACTER = '%/187/'
 			-- UTF-8 BOM second: BB
 
-	byte_bf: CHARACTER is '%/191/'
+	byte_bf: CHARACTER = '%/191/'
 			-- UTF-8 BOM third: BF
 
 feature {NONE} -- Implementation
 
-	dummy_string: STRING is ""
+	dummy_string: STRING = ""
 			-- Dummy string
 
-	dummy_uc_string: UC_STRING is
+	dummy_uc_string: UC_STRING
 			-- Dummy UC_STRING
 		once
 			create Result.make_empty

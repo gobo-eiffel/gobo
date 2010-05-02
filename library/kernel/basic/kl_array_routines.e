@@ -18,7 +18,7 @@ inherit
 
 feature -- Initialization
 
-	make_from_array (an_array: ARRAY [G]; min_index: INTEGER): ARRAY [G] is
+	make_from_array (an_array: ARRAY [G]; min_index: INTEGER): ARRAY [G]
 			-- Create a new array and initialize it
 			-- with items from `an_array'.
 		require
@@ -34,7 +34,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	has (an_array: ARRAY [G]; v: G): BOOLEAN is
+	has (an_array: ARRAY [G]; v: G): BOOLEAN
 			-- Does `v' appear in `an_array' (use '=' for item comparison).
 			-- Reasons why we don't use ARRAY.has directly:
 			-- * `has' is not in ELKS ARRAY 2000.
@@ -60,7 +60,7 @@ feature -- Status report
 			end
 		end
 
-	has_void (a_array: ARRAY [G]): BOOLEAN is
+	has_void (a_array: ARRAY [G]): BOOLEAN
 			-- Does 'Void' appear in `an_array' (use '=' for item comparison).
 			-- Reason why we don't use `has (Void)' directly:
 			-- * the actual generic parameter may be attached and
@@ -92,7 +92,7 @@ feature -- Status report
 
 feature -- Access
 
-	subarray (an_array: ARRAY [G]; start_pos, end_pos, min_index: INTEGER): ARRAY [G] is
+	subarray (an_array: ARRAY [G]; start_pos, end_pos, min_index: INTEGER): ARRAY [G]
 			-- Array made up of items from `an_array' within
 			-- bounds `start_pos' and `end_pos'
 			-- Reasons why we don't use ARRAY.subarray directly:
@@ -119,7 +119,7 @@ feature -- Access
 
 feature -- Duplication
 
-	cloned_array (an_array: ARRAY [G]): ARRAY [G] is
+	cloned_array (an_array: ARRAY [G]): ARRAY [G]
 			-- Clone of `an_array'
 		require
 			an_array_not_void: an_array /= Void
@@ -133,7 +133,7 @@ feature -- Duplication
 
 feature -- Element change
 
-	subcopy (an_array: ARRAY [G]; other: ARRAY [G]; start_pos, end_pos, index_pos: INTEGER) is
+	subcopy (an_array: ARRAY [G]; other: ARRAY [G]; start_pos, end_pos, index_pos: INTEGER)
 			-- Copy items of `other' within bounds `start_pos' and `end_pos'
 			-- to `an_array' starting at index `index_pos'.
 			-- Reasons why we don't use ARRAY.subcopy directly:
@@ -157,7 +157,7 @@ feature -- Element change
 
 feature -- Resizing
 
-	resize (an_array: ARRAY [G]; min_index, max_index: INTEGER) is
+	resize (an_array: ARRAY [G]; min_index, max_index: INTEGER)
 			-- Rearrange array so that it can accommodate
 			-- indices down to `min_index' and up to `max_index'.
 			-- Do not lose any previously entered item.

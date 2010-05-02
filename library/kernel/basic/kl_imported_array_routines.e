@@ -14,7 +14,7 @@ class KL_IMPORTED_ARRAY_ROUTINES
 
 feature -- Access
 
-	ANY_ARRAY_: KL_ARRAY_ROUTINES [detachable ANY] is
+	ANY_ARRAY_: KL_ARRAY_ROUTINES [detachable ANY]
 			-- Routines that ought to be in class ARRAY
 		once
 			create Result
@@ -22,7 +22,7 @@ feature -- Access
 			any_array_routines_not_void: Result /= Void
 		end
 
-	INTEGER_ARRAY_: KL_ARRAY_ROUTINES [INTEGER] is
+	INTEGER_ARRAY_: KL_ARRAY_ROUTINES [INTEGER]
 			-- Routines that ought to be in class ARRAY
 		once
 			create Result
@@ -30,7 +30,7 @@ feature -- Access
 			integer_array_routines_not_void: Result /= Void
 		end
 
-	BOOLEAN_ARRAY_: KL_ARRAY_ROUTINES [BOOLEAN] is
+	BOOLEAN_ARRAY_: KL_ARRAY_ROUTINES [BOOLEAN]
 			-- Routines that ought to be in class ARRAY
 		once
 			create Result
@@ -38,7 +38,7 @@ feature -- Access
 			boolean_array_routines_not_void: Result /= Void
 		end
 
-	STRING_ARRAY_: KL_ARRAY_ROUTINES [detachable STRING] is
+	STRING_ARRAY_: KL_ARRAY_ROUTINES [detachable STRING]
 			-- Routines that ought to be in class ARRAY
 		once
 			create Result
@@ -46,7 +46,7 @@ feature -- Access
 			string_array_routines_not_void: Result /= Void
 		end
 
-	ARRAY_SPECIAL_INTEGER_: KL_ARRAY_ROUTINES [detachable SPECIAL [INTEGER]] is
+	ARRAY_SPECIAL_INTEGER_: KL_ARRAY_ROUTINES [detachable SPECIAL [INTEGER]]
 			-- Routines that ought to be in class ARRAY
 		once
 			create Result

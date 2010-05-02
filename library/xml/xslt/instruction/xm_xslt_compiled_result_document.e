@@ -23,7 +23,7 @@ inherit
 
 	KL_SHARED_PLATFORM
 		export {NONE} all end
-		
+
 	UT_URL_ENCODING
 		export {NONE} all end
 
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 	make (an_executable: XM_XSLT_EXECUTABLE; a_global_property_set, a_local_property_set: XM_XSLT_OUTPUT_PROPERTIES; an_href, a_format: XM_XPATH_EXPRESSION;
 			a_base_uri: STRING; a_validation_action: INTEGER; a_schema_type: XM_XPATH_SCHEMA_TYPE;
 			some_formatting_attributes: DS_HASH_TABLE [XM_XPATH_EXPRESSION, INTEGER];
-			a_namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER; a_content: XM_XPATH_EXPRESSION) is
+			a_namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER; a_content: XM_XPATH_EXPRESSION)
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
@@ -87,7 +87,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
+
 	global_property_set: XM_XSLT_OUTPUT_PROPERTIES
 			-- Global output properties
 
@@ -116,7 +116,7 @@ feature -- Access
 	namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER
 			-- Optional namespace resolver
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, when known
 		do
 			Result := empty_item
@@ -126,7 +126,7 @@ feature -- Access
 			end
 		end
 
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions of `Current'
 		local
 			a_cursor: DS_HASH_TABLE_CURSOR [XM_XPATH_EXPRESSION, INTEGER]
@@ -147,7 +147,7 @@ feature -- Access
 
 feature -- Status report
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		do
 			std.error.put_string (STRING_.concat (indentation (a_level), "xsl:result-document"))
@@ -157,7 +157,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_http_method (a_method: like http_method) is
+	set_http_method (a_method: like http_method)
 			-- Set `http_method' to `a_method'.
 		require
 			a_method_not_void: a_method /= Void
@@ -169,7 +169,7 @@ feature -- Setting
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -222,7 +222,7 @@ feature -- Optimization
 		end
 
 	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
-		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -272,7 +272,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -323,7 +323,7 @@ feature -- Optimization
 			end
 		end
 
-	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this instruction.
 		local
 			l_cursor: DS_HASH_TABLE_CURSOR [XM_XPATH_EXPRESSION, INTEGER]
@@ -359,7 +359,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -463,7 +463,7 @@ feature {NONE} -- Implementation
 	computed_property_set: XM_XSLT_OUTPUT_PROPERTIES
 			-- Merged and computed output properties
 
-	set_content (a_content: XM_XPATH_EXPRESSION) is
+	set_content (a_content: XM_XPATH_EXPRESSION)
 			-- Ensure `content' = `a_content'.
 		do
 			if content /= a_content then
@@ -477,7 +477,7 @@ feature {NONE} -- Implementation
 			set: content = a_content
 		end
 
-	set_href (a_href: XM_XPATH_EXPRESSION) is
+	set_href (a_href: XM_XPATH_EXPRESSION)
 			-- Ensure `href' = `a_href'.
 		do
 			if href /= a_href then
@@ -491,7 +491,7 @@ feature {NONE} -- Implementation
 			set: href = a_href
 		end
 
-	set_format (a_format: XM_XPATH_EXPRESSION) is
+	set_format (a_format: XM_XPATH_EXPRESSION)
 			-- Ensure `format' = `a_format'.
 		do
 			if format /= a_format then
@@ -505,7 +505,7 @@ feature {NONE} -- Implementation
 			set: format = a_format
 		end
 
-	process_format_attribute (a_context: XM_XSLT_EVALUATION_CONTEXT; a_transformer: XM_XSLT_TRANSFORMER) is
+	process_format_attribute (a_context: XM_XSLT_EVALUATION_CONTEXT; a_transformer: XM_XSLT_TRANSFORMER)
 			-- Evaluate and process `format'.
 		require
 			format_not_void: format /= Void
@@ -556,7 +556,7 @@ feature {NONE} -- Implementation
 			error_or_computed_property_set_not_void: not a_transformer.is_error implies computed_property_set /= Void
 		end
 
-	process_formatting_attributes (a_context: XM_XSLT_EVALUATION_CONTEXT; a_transformer: XM_XSLT_TRANSFORMER) is
+	process_formatting_attributes (a_context: XM_XSLT_EVALUATION_CONTEXT; a_transformer: XM_XSLT_TRANSFORMER)
 			-- Merge formatting attributes from xsl:output and xsl:result-document (both static and AVTs).
 		require
 			context_not_void: a_context /= Void
@@ -567,11 +567,11 @@ feature {NONE} -- Implementation
 			a_fingerprint: INTEGER
 			an_expression: XM_XPATH_EXPRESSION
 			a_value: XM_XPATH_STRING_VALUE
-		do			
+		do
 			if format /= Void then
 				process_format_attribute (a_context, a_transformer)
 			else
-				computed_property_set := global_property_set.another			
+				computed_property_set := global_property_set.another
 			end
 			if not a_transformer.is_error then
 				merge_local_properties
@@ -601,7 +601,7 @@ feature {NONE} -- Implementation
 			error_or_computed_property_set_not_void: not a_transformer.is_error implies computed_property_set /= Void
 		end
 
-	merge_local_properties is
+	merge_local_properties
 			-- Merge `local_property_set' into `computed_property_set'.
 		require
 			computed_property_set_not_void: computed_property_set /= Void
@@ -656,7 +656,7 @@ feature {NONE} -- Implementation
 			computed_property_set.merge_character_maps (local_property_set.used_character_maps)
 		end
 
-	escaped_uri (a_uri_string: STRING): STRING is
+	escaped_uri (a_uri_string: STRING): STRING
 			-- Escaped version of `a_uri_string'
 		require
 			uri_string_not_void: a_uri_string /= Void
@@ -666,7 +666,7 @@ feature {NONE} -- Implementation
 			escaped_uri_not_void: Result /= Void
 		end
 
-	unescaped_iri_characters: DS_HASH_SET [CHARACTER] is
+	unescaped_iri_characters: DS_HASH_SET [CHARACTER]
 			-- Characters not to escaped for fn:iri-to-uri()
 		local
 			a_character_set: STRING

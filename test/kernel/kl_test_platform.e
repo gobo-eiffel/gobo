@@ -19,10 +19,10 @@ inherit
 
 	KL_SHARED_EIFFEL_COMPILER
 		export {NONE} all end
-	
+
 	KL_SHARED_OPERATING_SYSTEM
 		export {NONE} all end
-	
+
 	KL_IMPORTED_INTEGER_ROUTINES
 		export {NONE} all end
 
@@ -32,7 +32,7 @@ create
 
 feature -- Test
 
-	test_boolean_bits is
+	test_boolean_bits
 			-- Test feature `Boolean_bits'.
 		local
 			a_platform: KL_PLATFORM
@@ -42,7 +42,7 @@ feature -- Test
 			assert ("small_enough", a_platform.Boolean_bits <= a_platform.Boolean_bytes * a_platform.Byte_bits)
 		end
 
-	test_byte_bits is
+	test_byte_bits
 			-- Test feature `Byte_bits'.
 		local
 			a_platform: KL_PLATFORM
@@ -51,7 +51,7 @@ feature -- Test
 			assert_integers_equal ("definition", 8, a_platform.Byte_bits)
 		end
 
-	test_character_bits is
+	test_character_bits
 			-- Test feature `Character_bits'.
 		local
 			a_platform: KL_PLATFORM
@@ -73,7 +73,7 @@ feature -- Test
 --			assert ("more_than_real", a_platform.Double_bits >= a_platform.Real_bits)
 --		end
 
-	test_integer_bits is
+	test_integer_bits
 			-- Test feature `Integer_bits'.
 		local
 			a_platform: KL_PLATFORM
@@ -86,7 +86,7 @@ feature -- Test
 			assert ("more_than_32_bits", a_platform.Integer_bits >= 32)
 		end
 
-	test_pointer_bits is
+	test_pointer_bits
 			-- Test feature `Pointer_bits'.
 		local
 			a_platform: KL_PLATFORM
@@ -95,7 +95,7 @@ feature -- Test
 			assert_integers_equal ("definition", a_platform.Pointer_bytes * a_platform.Byte_bits, a_platform.Pointer_bits)
 		end
 
-	test_real_bits is
+	test_real_bits
 			-- Test feature `Real_bits'.
 		local
 			a_platform: KL_PLATFORM
@@ -104,7 +104,7 @@ feature -- Test
 			assert_integers_equal ("definition", a_platform.Real_bytes * a_platform.Byte_bits, a_platform.Real_bits)
 		end
 
-	test_boolean_bytes is
+	test_boolean_bytes
 			-- Test feature `Boolean_bytes'.
 		local
 			a_platform: KL_PLATFORM
@@ -113,7 +113,7 @@ feature -- Test
 			assert ("large_enough", a_platform.Boolean_bytes >= 1)
 		end
 
-	test_byte_bytes is
+	test_byte_bytes
 			-- Test feature `Byte_bytes'.
 		local
 			a_platform: KL_PLATFORM
@@ -122,7 +122,7 @@ feature -- Test
 			assert_integers_equal ("definition", 1, a_platform.Byte_bytes)
 		end
 
-	test_character_bytes is
+	test_character_bytes
 			-- Test feature `Character_bytes'.
 		local
 			a_platform: KL_PLATFORM
@@ -133,7 +133,7 @@ feature -- Test
 			assert ("more_than_byte", a_platform.Character_bytes >= a_platform.Byte_bytes)
 		end
 
-	test_double_bytes is
+	test_double_bytes
 			-- Test feature `Double_bytes'.
 		local
 			a_platform: KL_PLATFORM
@@ -143,7 +143,7 @@ feature -- Test
 			assert ("more_than_real", a_platform.Double_bytes >= a_platform.Real_bytes)
 		end
 
-	test_integer_bytes is
+	test_integer_bytes
 			-- Test feature `Integer_bytes'.
 		local
 			a_platform: KL_PLATFORM
@@ -156,7 +156,7 @@ feature -- Test
 			assert ("more_than_4_bytes", a_platform.Integer_bytes >= 4)
 		end
 
-	test_pointer_bytes is
+	test_pointer_bytes
 			-- Test feature `Pointer_bytes'.
 		local
 			a_platform: KL_PLATFORM
@@ -165,7 +165,7 @@ feature -- Test
 			assert ("large_enough", a_platform.Pointer_bytes >= 1)
 		end
 
-	test_real_bytes is
+	test_real_bytes
 			-- Test feature `Real_bytes'.
 		local
 			a_platform: KL_PLATFORM
@@ -174,7 +174,7 @@ feature -- Test
 			assert ("large_enough", a_platform.Real_bytes >= 1)
 		end
 
-	test_minimum_byte_code is
+	test_minimum_byte_code
 			-- Test feature `Minimum_byte_code'.
 		local
 			a_platform: KL_PLATFORM
@@ -183,7 +183,7 @@ feature -- Test
 			assert_integers_equal ("definition", 0, a_platform.Minimum_byte_code)
 		end
 
-	test_maximum_byte_code is
+	test_maximum_byte_code
 			-- Test feature `Maximum_byte_code'.
 		local
 			a_platform: KL_PLATFORM
@@ -192,7 +192,7 @@ feature -- Test
 			assert_integers_equal ("definition", 255, a_platform.Maximum_byte_code)
 		end
 
-	test_minimum_character_code is
+	test_minimum_character_code
 			-- Test feature `Minimum_character_code'.
 		local
 			a_platform: KL_PLATFORM
@@ -201,7 +201,7 @@ feature -- Test
 			assert_integers_equal ("definition", 0, a_platform.Minimum_character_code)
 		end
 
-	test_maximum_character_code is
+	test_maximum_character_code
 			-- Test feature `Maximum_character_code'.
 		local
 			a_platform: KL_PLATFORM
@@ -215,7 +215,7 @@ feature -- Test
 			end
 		end
 
-	test_minimum_integer is
+	test_minimum_integer
 			-- Test feature `Minimum_integer'.
 		local
 			a_platform: KL_PLATFORM
@@ -228,7 +228,7 @@ feature -- Test
 			end
 		end
 
-	test_maximum_integer is
+	test_maximum_integer
 			-- Test feature `Maximum_integer'.
 		local
 			a_platform: KL_PLATFORM

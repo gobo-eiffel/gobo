@@ -22,7 +22,7 @@ create
 
 feature -- Test
 
-	test_eif_id_object is
+	test_eif_id_object
 			-- Test feature 'eif_id_object'.
 		local
 			ir: IDENTIFIED_ROUTINES

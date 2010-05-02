@@ -22,7 +22,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_text: like text) is
+	make (a_text: like text)
 			-- Create a new token.
 		require
 			a_text_not_void: a_text /= Void
@@ -41,7 +41,7 @@ feature -- Access
 	text: STRING
 			-- Text of token
 
-	last_position: ET_POSITION is
+	last_position: ET_POSITION
 			-- Position of last character of current node in source code
 		do
 			create {ET_COMPRESSED_POSITION} Result.make (line, column + text.count - 1)
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_text (a_text: like text) is
+	set_text (a_text: like text)
 			-- Set `text' to `a_text'.
 		require
 			a_text_not_void: a_text /= Void

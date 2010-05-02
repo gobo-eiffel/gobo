@@ -36,12 +36,12 @@ create
 
 feature -- Access
 
-	expected_result: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?><setProperty name=%"user%" property=%"id%" value='<%%= %"id%" + idValue %%>'/>"
+	expected_result: STRING = "<?xml version=%"1.0%" encoding=%"UTF-8%"?><setProperty name=%"user%" property=%"id%" value='<%%= %"id%" + idValue %%>'/>"
 			-- Expected result for `test_character_map'
 
 feature -- Test
 
-	test_xml_character_map is
+	test_xml_character_map
 			-- Test use-character-maps with method=xml
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -72,7 +72,7 @@ feature -- Test
 			assert ("Correct result", STRING_.same_string (l_output.last_output, expected_result))
 		end
 
-	test_html_character_map is
+	test_html_character_map
 			-- Test use-character-maps with method=html
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -102,7 +102,7 @@ feature -- Test
 			assert ("Correct result", STRING_.same_string (l_output.last_output, last_utf8_string))
 		end
 
-	test_xhtml_character_map is
+	test_xhtml_character_map
 			-- Test use-character-maps with method=xhtml
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -132,7 +132,7 @@ feature -- Test
 			assert ("Correct result", STRING_.same_string (l_output.last_output, last_utf8_string))
 		end
 
-	test_text_character_map is
+	test_text_character_map
 			-- Test use-character-maps with method=text
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -162,7 +162,7 @@ feature -- Test
 			assert ("Correct result", STRING_.same_string (l_output.last_output, last_utf8_string))
 		end
 
-	test_xhtml_character_map_with_cdata is
+	test_xhtml_character_map_with_cdata
 			-- Test use-character-maps with method=xhtml
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -192,7 +192,7 @@ feature -- Test
 			assert ("Correct result", STRING_.same_string (l_output.last_output, last_utf8_string))
 		end
 
-	test_qname_method is
+	test_qname_method
 			-- Test use of a QName output method.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -227,7 +227,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	character_map6_results_filename: STRING is
+	character_map6_results_filename: STRING
 			-- Name of file containing expected results for `test_xhtml_character_map_with_cdata'
 		once
 			Result := "character_map6.out"
@@ -236,7 +236,7 @@ feature {NONE} -- Implementation
 			character_map6_results_filename_not_empty: not Result.is_empty
 		end
 
-	character_map2_results_filename: STRING is
+	character_map2_results_filename: STRING
 			-- Name of file containing expected results for `test_html_character_map'
 		once
 			Result := "character_map2.out"
@@ -245,7 +245,7 @@ feature {NONE} -- Implementation
 			character_map2_results_filename_not_empty: not Result.is_empty
 		end
 
-	character_map5_results_filename: STRING is
+	character_map5_results_filename: STRING
 			-- Name of file containing expected results for `test_test_character_map'
 		once
 			Result := "character_map5.out"
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 			character_map5_results_filename_not_empty: not Result.is_empty
 		end
 
-	character_map4_results_filename: STRING is
+	character_map4_results_filename: STRING
 			-- Name of file containing expected results for `test_xhtml_character_map'
 		once
 			Result := "character_map4.out"
@@ -263,7 +263,7 @@ feature {NONE} -- Implementation
 			character_map4_results_filename_not_empty: not Result.is_empty
 		end
 
-	qname_output_results_filename: STRING is
+	qname_output_results_filename: STRING
 			-- Name of file containing expected results for `test_qname_method'
 		once
 			Result := "qname_output.out"
@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 			qname_output_results_filename_not_empty: not Result.is_empty
 		end
 
-	dummy_uri: UT_URI is
+	dummy_uri: UT_URI
 			-- Dummy URI
 		once
 			create Result.make ("dummy:")
@@ -280,7 +280,7 @@ feature {NONE} -- Implementation
 			dummy_uri_is_absolute: Result /= Void and then Result.is_absolute
 		end
 
-	character_map_xsl_uri: UT_URI is
+	character_map_xsl_uri: UT_URI
 			-- URI of file 'character_map.xsl'
 		local
 			l_path: STRING
@@ -291,7 +291,7 @@ feature {NONE} -- Implementation
 			character_map_uri_not_void: Result /= Void
 		end
 
-	character_map2_xsl_uri: UT_URI is
+	character_map2_xsl_uri: UT_URI
 			-- URI of file 'character_map2.xsl'
 		local
 			l_path: STRING
@@ -302,7 +302,7 @@ feature {NONE} -- Implementation
 			character_map2_uri_not_void: Result /= Void
 		end
 
-	character_map4_xsl_uri: UT_URI is
+	character_map4_xsl_uri: UT_URI
 			-- URI of file 'character_map4.xsl'
 		local
 			l_path: STRING
@@ -313,7 +313,7 @@ feature {NONE} -- Implementation
 			character_map4_uri_not_void: Result /= Void
 		end
 
-	character_map5_xsl_uri: UT_URI is
+	character_map5_xsl_uri: UT_URI
 			-- URI of file 'character_map5.xsl'
 		local
 			l_path: STRING
@@ -324,7 +324,7 @@ feature {NONE} -- Implementation
 			character_map5_uri_not_void: Result /= Void
 		end
 
-	character_map6_xsl_uri: UT_URI is
+	character_map6_xsl_uri: UT_URI
 			-- URI of file 'character_map6.xsl'
 		local
 			l_path: STRING
@@ -335,7 +335,7 @@ feature {NONE} -- Implementation
 			character_map6_uri_not_void: Result /= Void
 		end
 
-	qname_output_xsl_uri: UT_URI is
+	qname_output_xsl_uri: UT_URI
 			-- URI of file 'qname_output.xsl'
 		local
 			l_path: STRING

@@ -18,7 +18,7 @@ inherit
 
 feature -- Status report
 
-	has (v: G): BOOLEAN is
+	has (v: G): BOOLEAN
 			-- Does container include `v'?
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -27,7 +27,7 @@ feature -- Status report
 			not_empty: Result implies not is_empty
 		end
 
-	has_void: BOOLEAN is
+	has_void: BOOLEAN
 			-- Does container include Void?
 		local
 			v: detachable G
@@ -41,7 +41,7 @@ feature -- Status report
 			not_empty: Result implies not is_empty
 		end
 
-	same_items (v, u: G): BOOLEAN is
+	same_items (v, u: G): BOOLEAN
 			-- Are `v' and `u' considered equal?
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -53,7 +53,7 @@ feature -- Status report
 			end
 		end
 
-	same_equality_tester (other: DS_SEARCHABLE [G]): BOOLEAN is
+	same_equality_tester (other: DS_SEARCHABLE [G]): BOOLEAN
 			-- Does container use the same comparison
 			-- criterion as `other'?
 		require
@@ -62,7 +62,7 @@ feature -- Status report
 			Result := equality_tester ~ other.equality_tester
 		end
 
-	equality_tester_settable (a_tester: like equality_tester): BOOLEAN is
+	equality_tester_settable (a_tester: like equality_tester): BOOLEAN
 			-- Can `set_equality_tester' be called with `a_tester'
 			-- as argument in current state of container?
 			-- (Default answer: True.)
@@ -72,7 +72,7 @@ feature -- Status report
 
 feature -- Measurement
 
-	occurrences (v: G): INTEGER is
+	occurrences (v: G): INTEGER
 			-- Number of times `v' appears in container
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -91,7 +91,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_equality_tester (a_tester: like equality_tester) is
+	set_equality_tester (a_tester: like equality_tester)
 			-- Set `equality_tester' to `a_tester'.
 			-- A void equality tester means that `='
 			-- will be used as comparison criterion.

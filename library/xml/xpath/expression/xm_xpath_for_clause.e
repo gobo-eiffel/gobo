@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_range_variable: XM_XPATH_RANGE_VARIABLE_DECLARATION; a_sequence_expression: XM_XPATH_EXPRESSION; a_line_number: INTEGER) is
+	make (a_range_variable: XM_XPATH_RANGE_VARIABLE_DECLARATION; a_sequence_expression: XM_XPATH_EXPRESSION; a_line_number: INTEGER)
 			-- Establish_invariant.
 		require
 			range_variable_not_void: a_range_variable /= Void
@@ -41,12 +41,12 @@ feature -- Access
 
 	sequence: XM_XPATH_EXPRESSION
 			-- In clause
-	
+
 	line_number: INTEGER
 			-- Line number
 
 invariant
-	
+
 	range_variable_not_void: range_variable /= Void
 	sequence_not_void: sequence /= Void
 	nearly_positive_line_number: line_number >= -1

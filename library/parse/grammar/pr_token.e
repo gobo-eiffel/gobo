@@ -26,10 +26,10 @@ create
 
 feature -- Status report
 
-	is_terminal: BOOLEAN is True
+	is_terminal: BOOLEAN = True
 			-- Is current symbol terminal?
 
-	has_identifier: BOOLEAN is
+	has_identifier: BOOLEAN
 			-- Is current token associated with an identifier?
 		local
 			c: CHARACTER
@@ -38,7 +38,7 @@ feature -- Status report
 			Result := c /= '%'' and c /= '%"'
 		end
 
-	is_left_associative: BOOLEAN is
+	is_left_associative: BOOLEAN
 			-- Is current token left associative?
 		do
 			Result := associativity = Left_assoc
@@ -46,7 +46,7 @@ feature -- Status report
 			associativity: Result implies not (is_right_associative or is_non_associative)
 		end
 
-	is_right_associative: BOOLEAN is
+	is_right_associative: BOOLEAN
 			-- Is current token right associative?
 		do
 			Result := associativity = Right_assoc
@@ -54,7 +54,7 @@ feature -- Status report
 			associativity: Result implies not (is_left_associative or is_non_associative)
 		end
 
-	is_non_associative: BOOLEAN is
+	is_non_associative: BOOLEAN
 			-- Is current token non-associative?
 		do
 			Result := associativity = Non_assoc
@@ -65,14 +65,14 @@ feature -- Status report
 	is_declared: BOOLEAN
 			-- Has current token been declared in a %token clause?
 
-	has_precedence: BOOLEAN is
+	has_precedence: BOOLEAN
 			-- Has a precedence level been
 			-- assigned to current token?
 		do
 			Result := precedence /= 0
 		end
 
-	has_token_id: BOOLEAN is
+	has_token_id: BOOLEAN
 			-- Has a `token_id' been assigned
 			-- to current token?
 		do
@@ -97,7 +97,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_token_id (i: INTEGER) is
+	set_token_id (i: INTEGER)
 			-- Set `token_id' to `i'.
 		require
 			i_positive: i >= 0
@@ -107,7 +107,7 @@ feature -- Setting
 			token_id_set: token_id = i
 		end
 
-	set_precedence (p: INTEGER) is
+	set_precedence (p: INTEGER)
 			-- Set `precedence' to `p'.
 		do
 			precedence := p
@@ -115,7 +115,7 @@ feature -- Setting
 			precedence_set: precedence = p
 		end
 
-	set_literal_string (a_string: STRING) is
+	set_literal_string (a_string: STRING)
 			-- Set `literal_string' to `a_string'.
 		do
 			literal_string := a_string
@@ -125,7 +125,7 @@ feature -- Setting
 
 feature -- Status setting
 
-	set_left_associative is
+	set_left_associative
 			-- Make current token left associative.
 		do
 			associativity := Left_assoc
@@ -133,7 +133,7 @@ feature -- Status setting
 			is_left_associative: is_left_associative
 		end
 
-	set_right_associative is
+	set_right_associative
 			-- Make current token right associative.
 		do
 			associativity := Right_assoc
@@ -141,7 +141,7 @@ feature -- Status setting
 			is_right_associative: is_right_associative
 		end
 
-	set_non_associative is
+	set_non_associative
 			-- Make current token non-associative.
 		do
 			associativity := Non_assoc
@@ -149,7 +149,7 @@ feature -- Status setting
 			is_non_associative: is_non_associative
 		end
 
-	set_declared is
+	set_declared
 			-- Make current token declared.
 		do
 			is_declared := True
@@ -159,7 +159,7 @@ feature -- Status setting
 
 feature -- Output
 
-	print_token (a_grammar: PR_GRAMMAR; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_token (a_grammar: PR_GRAMMAR; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print textual representation of current
 			-- token to `a_file' with rules where it
 			-- appears in `a_grammar'.
@@ -193,12 +193,12 @@ feature {NONE} -- Implementation
 	associativity: INTEGER
 			-- Associativity of current token
 
-	Left_assoc: INTEGER is 1
+	Left_assoc: INTEGER = 1
 			-- Code for left associativity
-	Right_assoc: INTEGER is 2
+	Right_assoc: INTEGER = 2
 			-- Code for right associativity
 
-	Non_assoc: INTEGER is 3
+	Non_assoc: INTEGER = 3
 			-- Code for non-associativity
 
 invariant

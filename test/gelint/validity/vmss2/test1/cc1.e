@@ -9,7 +9,7 @@ inherit
 
 feature
 
-	f is
+	f
 		do
 			print ("CC1%N")
 		end

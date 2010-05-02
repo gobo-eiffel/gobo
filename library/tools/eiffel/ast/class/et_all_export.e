@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_clients_clause: like clients_clause) is
+	make (a_clients_clause: like clients_clause)
 			-- Create a new 'all' export clause.
 		require
 			a_clients_clause_not_void: a_clients_clause /= Void
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	clients (a_name: ET_FEATURE_NAME): ET_CLIENTS is
+	clients (a_name: ET_FEATURE_NAME): ET_CLIENTS
 			-- Clients for feature `a_name'
 		do
 			Result := clients_clause
@@ -51,26 +51,26 @@ feature -- Access
 	all_keyword: ET_KEYWORD
 			-- 'all' keyword
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
 			Result := clients_clause.position
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := clients_clause.first_leaf
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := all_keyword
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := all_keyword.break
@@ -78,16 +78,16 @@ feature -- Access
 
 feature -- Status report
 
-	has_feature_name (a_name: ET_FEATURE_NAME): BOOLEAN is
+	has_feature_name (a_name: ET_FEATURE_NAME): BOOLEAN
 			-- Is `a_name' listed in current export clause?
 		do
 			Result := True
 		end
 
-	is_all: BOOLEAN is True
+	is_all: BOOLEAN = True
 			-- Is current export clause of the form 'export {CLIENT} all'?
 
-	is_none_all: BOOLEAN is
+	is_none_all: BOOLEAN
 			-- Is current export clause of the form 'export {NONE} all'?
 		do
 			Result := clients_clause.is_none
@@ -95,7 +95,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_all_keyword (an_all: like all_keyword) is
+	set_all_keyword (an_all: like all_keyword)
 			-- Set `all_keyword' to `an_all'.
 		require
 			an_all_not_void: an_all /= Void
@@ -107,7 +107,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_all_export (Current)

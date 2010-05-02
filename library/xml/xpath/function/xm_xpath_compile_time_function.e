@@ -21,7 +21,7 @@ inherit
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_message: STRING
@@ -30,13 +30,13 @@ feature -- Evaluation
 			a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string (l_message, Gexslt_eiffel_type_uri, "INTERNAL_ERROR", Dynamic_error))
 		end
 
-	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Pre-evaluate `Current' at compile time.
 		do
 			a_replacement.put (Current)
 		end
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- An iterator over the values of a sequence
 		local
 			a_message: STRING
@@ -45,7 +45,7 @@ feature -- Evaluation
 			create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string (a_message, Gexslt_eiffel_type_uri, "INTERNAL_ERROR", Dynamic_error)
 		end
 
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- An iterator over the values of a sequence
 		local
 			a_message: STRING

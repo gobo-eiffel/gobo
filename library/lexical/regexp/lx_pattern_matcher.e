@@ -21,7 +21,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new pattern matcher.
 		do
 			wipe_out
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	compile (a_pattern: STRING; i: BOOLEAN) is
+	compile (a_pattern: STRING; i: BOOLEAN)
 			-- Compile `a_regexp'. Make the matching engine
 			-- case-insensitive if `i' is set. Set `compiled'
 			-- to True after successful compilation.
@@ -43,7 +43,7 @@ feature -- Element change
 			not_matching: not is_matching
 		end
 
-	compile_case_sensitive (a_pattern: STRING) is
+	compile_case_sensitive (a_pattern: STRING)
 			-- Compile `a_pattern'. Make the matching engine
 			-- case-sensitive. Set `is_compiled' to True after
 			-- successful compilation.
@@ -53,7 +53,7 @@ feature -- Element change
 			case_sensitive: not is_case_insensitive
 		end
 
-	compile_case_insensitive (a_pattern: STRING) is
+	compile_case_insensitive (a_pattern: STRING)
 			-- Compile `a_pattern'. Make the matching engine
 			-- case-insensitive. Set `is_compiled' to True after
 			-- successful compilation.
@@ -73,7 +73,7 @@ feature -- Access
 	pattern: STRING
 			-- Pattern being matched
 
-	matched_position (a_string: STRING): DS_PAIR [INTEGER, INTEGER] is
+	matched_position (a_string: STRING): DS_PAIR [INTEGER, INTEGER]
 			-- Position of the longest-leftmost token matched
 			-- by current pattern in `a_string'
 		require

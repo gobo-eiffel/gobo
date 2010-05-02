@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant
 		do
 			name := "idref"; namespace_uri := Xpath_standard_functions_uri
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, where known
 		do
 			Result := any_node_test
@@ -58,7 +58,7 @@ feature -- Access
 
 feature -- Status report
 
-	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
+	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE
 			-- Type of argument number `argument_number'
 		do
 			inspect
@@ -67,12 +67,12 @@ feature -- Status report
 					create Result.make_string_sequence
 			when 2 then
 				create Result.make_single_node
-			end	
+			end
 		end
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations
 		do
 			Precursor (a_replacement)
@@ -84,7 +84,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create iterator over values of a sequence.
 		local
 			l_idrefs: DS_ARRAYED_LIST [STRING]
@@ -128,9 +128,9 @@ feature -- Evaluation
 						" the tree being searched must be one whose root is a document node", Xpath_errors_uri, "FODC0001", Dynamic_error)
 				end
 			end
-		end	
+		end
 
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create iterator over nodes of a sequence.
 		local
 			l_idrefs: DS_ARRAYED_LIST [STRING]
@@ -176,7 +176,7 @@ feature -- Evaluation
 			end
 		end
 
-	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Pre-evaluate `Current' at compile time.
 		do
 			a_replacement.put (Current)
@@ -184,7 +184,7 @@ feature -- Evaluation
 
 feature {XM_XPATH_FUNCTION_CALL} -- Local
 
-	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -201,13 +201,13 @@ feature {XM_XPATH_FUNCTION_CALL} -- Local
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_zero_or_more
 		end
 
-	compute_special_properties is
+	compute_special_properties
 			-- Compute special properties.
 		do
 			initialize_special_properties
@@ -220,4 +220,4 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 		end
 
 end
-	
+

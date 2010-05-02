@@ -34,7 +34,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_name: like extended_name; args: like arguments; a_type: like declared_type;
-		a_language: like language; a_class: like implementation_class) is
+		a_language: like language; a_class: like implementation_class)
 			-- Create a new external function.
 		require
 			a_name_not_void: a_name /= Void
@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 
 feature -- Duplication
 
-	new_synonym (a_name: like extended_name): like Current is
+	new_synonym (a_name: like extended_name): like Current
 			-- Synonym feature
 		do
 			create Result.make (a_name, arguments, declared_type, language, implementation_class)
@@ -90,7 +90,7 @@ feature -- Duplication
 
 feature -- Conversion
 
-	renamed_feature (a_name: like extended_name): like Current is
+	renamed_feature (a_name: like extended_name): like Current
 			-- Renamed version of current feature
 		do
 			create Result.make (a_name, arguments, declared_type, language, implementation_class)
@@ -118,7 +118,7 @@ feature -- Conversion
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_external_function (Current)

@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_node_test: XM_XPATH_NODE_TEST) is
+	make (a_node_test: XM_XPATH_NODE_TEST)
 			-- Establish invariant.
 		require
 			element_test_not_void: a_node_test /= Void
@@ -44,37 +44,37 @@ feature -- Access
 	element_test: XM_XPATH_NODE_TEST
 			-- Test for document element
 
-	is_document_node_test: BOOLEAN is
+	is_document_node_test: BOOLEAN
 			-- Is `Current' a document node test?
 		do
 			Result := True
 		end
 
-	as_document_node_test: XM_XPATH_DOCUMENT_NODE_TEST is
+	as_document_node_test: XM_XPATH_DOCUMENT_NODE_TEST
 			-- `Current' seen as a document node test
 		do
 			Result := Current
 		end
 
-	node_kind: INTEGER is
+	node_kind: INTEGER
 			-- Type of nodes matched
 		do
 			Result := Document_node
 		end
 
-	node_kind_mask: INTEGER is
+	node_kind_mask: INTEGER
 			-- Mask of types of nodes matched
 		do
 			Result := INTEGER_.bit_shift_left (1, node_kind)
 		end
 
-	fingerprint: INTEGER is
+	fingerprint: INTEGER
 			-- Determine the name fingerprint of nodes to which this pattern applies
 		do
 			Result := element_test.fingerprint
 		end
 
-	matches_item (a_item: XM_XPATH_ITEM; a_treat_uri_as_string: BOOLEAN): BOOLEAN is
+	matches_item (a_item: XM_XPATH_ITEM; a_treat_uri_as_string: BOOLEAN): BOOLEAN
 			-- Does `a_item' conform to `Current'?
 		local
 			l_node: XM_XPATH_NODE
@@ -115,7 +115,7 @@ feature -- Access
 			end
 		end
 
-	constraining_node_names: DS_SET [INTEGER] is
+	constraining_node_names: DS_SET [INTEGER]
 			-- Set of fingerprints of node names allowed
 		do
 			create {DS_HASH_SET [INTEGER]} Result.make (1)
@@ -124,7 +124,7 @@ feature -- Access
 
 feature -- Status report
 
-	allows_text_nodes: BOOLEAN is
+	allows_text_nodes: BOOLEAN
 			-- Does this node test allow text nodes?
 		do
 			Result := False
@@ -132,7 +132,7 @@ feature -- Status report
 
 feature -- Matching
 
-	matches_node (a_node_kind: INTEGER; a_fingerprint: INTEGER; a_node_type: INTEGER): BOOLEAN is
+	matches_node (a_node_kind: INTEGER; a_fingerprint: INTEGER; a_node_type: INTEGER): BOOLEAN
 			-- Is this node test satisfied by a given node?
 		do
 			if a_node_kind = Document_node then

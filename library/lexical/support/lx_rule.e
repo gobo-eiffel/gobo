@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_id: like id; a_pattern: like pattern; an_action: like action) is
+	make (an_id: like id; a_pattern: like pattern; an_action: like action)
 			-- Create a new rule.
 		require
 			a_pattern_not_void: a_pattern /= Void
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			action_set: action = an_action
 		end
 
-	make_default (an_id: like id) is
+	make_default (an_id: like id)
 			-- Create a default rule.
 		do
 			id := an_id
@@ -92,7 +92,7 @@ feature -- Status report
 	has_trail_context: BOOLEAN
 			-- Does rule have a trailing context?
 
-	variable_trail: BOOLEAN is
+	variable_trail: BOOLEAN
 			-- Has rule a trailing context with both
 			-- head and trail having variable size?
 		do
@@ -101,7 +101,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_action (an_action: like action) is
+	set_action (an_action: like action)
 			-- Set `action' to `an_action'.
 		require
 			an_action_not_void: an_action /= Void
@@ -111,7 +111,7 @@ feature -- Setting
 			action_set: action = an_action
 		end
 
-	set_pattern (a_pattern: like pattern) is
+	set_pattern (a_pattern: like pattern)
 			-- Set `pattern' to `a_pattern'.
 		require
 			a_pattern_not_void: a_pattern /= Void
@@ -121,7 +121,7 @@ feature -- Setting
 			pattern_set: pattern = a_pattern
 		end
 
-	set_id (an_id: like id) is
+	set_id (an_id: like id)
 			-- Set `id' to `an_id'.
 		do
 			id := an_id
@@ -129,7 +129,7 @@ feature -- Setting
 			id_set: id = an_id
 		end
 
-	set_line_nb (nb: like line_nb) is
+	set_line_nb (nb: like line_nb)
 			-- Set `line_nb' to `nb'.
 		do
 			line_nb := nb
@@ -137,7 +137,7 @@ feature -- Setting
 			line_nb_set: line_nb = nb
 		end
 
-	set_useful (b: BOOLEAN) is
+	set_useful (b: BOOLEAN)
 			-- Set `is_useful' to `b'.
 		do
 			is_useful := b
@@ -145,7 +145,7 @@ feature -- Setting
 			is_useful: is_useful = b
 		end
 
-	set_trail_context (b: BOOLEAN) is
+	set_trail_context (b: BOOLEAN)
 			-- Set `has_trail_context' to `b'.
 		do
 			has_trail_context := b
@@ -153,7 +153,7 @@ feature -- Setting
 			has_trail_context_set: has_trail_context = b
 		end
 
-	set_head_count (nb: INTEGER) is
+	set_head_count (nb: INTEGER)
 			-- Set `head_count' to `nb'.
 		do
 			head_count := nb
@@ -161,7 +161,7 @@ feature -- Setting
 			head_count_set: head_count = nb
 		end
 
-	set_trail_count (nb: INTEGER) is
+	set_trail_count (nb: INTEGER)
 			-- Set `trail_count' to `nb'.
 		do
 			trail_count := nb
@@ -169,7 +169,7 @@ feature -- Setting
 			trail_count_set: trail_count = nb
 		end
 
-	set_line_count (nb: INTEGER) is
+	set_line_count (nb: INTEGER)
 			-- Set `line_count' to `nb'.
 		do
 			line_count := nb
@@ -177,7 +177,7 @@ feature -- Setting
 			line_count_set: line_count = nb
 		end
 
-	set_column_count (nb: INTEGER) is
+	set_column_count (nb: INTEGER)
 			-- Set `column_count' to `nb'.
 		do
 			column_count := nb
@@ -187,7 +187,7 @@ feature -- Setting
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current rule less than `other'?
 		do
 			Result := id < other.id
@@ -195,7 +195,7 @@ feature -- Comparison
 
 feature {NONE} -- Implementation
 
-	Dummy_pattern: LX_NFA is
+	Dummy_pattern: LX_NFA
 			-- Dummy pattern
 		once
 			create Result.make_epsilon (False)
@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 			dummy_pattern_not_void: Result /= Void
 		end
 
-	Dummy_action: LX_ACTION is
+	Dummy_action: LX_ACTION
 			-- Dummy action
 		once
 			create Result.make ("")

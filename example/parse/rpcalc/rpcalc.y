@@ -50,7 +50,7 @@ exp: NUM			{ $$ := $1 }
 
 feature {NONE} -- Initialization
 
-	execute is
+	execute
 			-- Run calculator.
 		do
 			make
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Scanner
 
-	read_token is
+	read_token
 			-- Lexical analyzer returns a double floating point
 			-- number on the stack and the token NUM, or the ASCII
 			-- character read if not a number. Skips all blanks

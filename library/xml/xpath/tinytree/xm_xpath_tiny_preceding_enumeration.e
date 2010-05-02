@@ -11,27 +11,27 @@ note
 	revision: "$Revision$"
 
 class XM_XPATH_TINY_PRECEDING_ENUMERATION
-	
+
 inherit
 
 	XM_XPATH_AXIS_ITERATOR [XM_XPATH_TINY_NODE]
 		redefine
 			start, as_node_iterator
 		end
-	
+
 	XM_XPATH_NAME_UTILITIES
 		export {NONE} all end
 
 		-- This class also implements an extra Axis, preceding-or-ancestor,
 		-- which is used internally by xsl:number level="any"
-	
+
 create
 
 	make
-	
+
 feature {NONE} -- Initialization
 
-	make (a_document: XM_XPATH_TINY_FOREST; a_starting_node: XM_XPATH_TINY_NODE; a_node_test: XM_XPATH_NODE_TEST; ancestors: BOOLEAN) is
+	make (a_document: XM_XPATH_TINY_FOREST; a_starting_node: XM_XPATH_TINY_NODE; a_node_test: XM_XPATH_NODE_TEST; ancestors: BOOLEAN)
 			-- Establish invariant
 		require
 			document_not_void: a_document /= Void
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
 		local
 			a_tiny_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_TINY_NODE]
@@ -64,14 +64,14 @@ feature -- Access
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Move to next position
 		do
 			current_item := starting_node
 			forth
 		end
 
-	forth is
+	forth
 			-- Move to next position
 		local
 			l_next: INTEGER
@@ -127,12 +127,12 @@ feature -- Cursor movement
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 			create Result.make (document, starting_node, node_test, include_ancestors)
 		end
-	
+
 feature {NONE} -- Implementation
 
 	document: XM_XPATH_TINY_FOREST
@@ -148,18 +148,18 @@ feature {NONE} -- Implementation
 			-- Do we include ancestors in the enumeration
 
 	next_ancestor_depth: INTEGER
-	
-	advance is
+
+	advance
 			-- Move to the next matching node
 		do
 			-- not used
 		end
-	
+
 invariant
 
 	document_not_void: document /= Void
 	starting_node_not_void: starting_node /= Void
 	node_test_not_void: node_test /= Void
-	
+
 end
-	
+

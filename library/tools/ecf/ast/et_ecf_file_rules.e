@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_file_rule: like file_rule) is
+	make (a_file_rule: like file_rule)
 			-- Create a new file rule list with initially one rule `a_file_rule'.
 		require
 			a_file_rule_not_void: a_file_rule /= Void
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			file_rule_set: file_rules.last = a_file_rule
 		end
 
-	make_empty is
+	make_empty
 			-- Create a new empty file rule list.
 		do
 			create file_rules.make (Initial_file_rules_capacity)
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is the list of file rules empty?
 		do
 			Result := (count = 0)
@@ -48,7 +48,7 @@ feature -- Status report
 			definition: Result = (count = 0)
 		end
 
-	is_included (a_pathname: STRING): BOOLEAN is
+	is_included (a_pathname: STRING): BOOLEAN
 			-- Is `a_pathname' included according to the exclude/include rules?
 			-- That means it is either not excluded or it is included.
 		do
@@ -57,7 +57,7 @@ feature -- Status report
 
 feature -- Access
 
-	file_rule (i: INTEGER): ET_ECF_FILE_RULE is
+	file_rule (i: INTEGER): ET_ECF_FILE_RULE
 			-- `i'-th file rule
 		require
 			i_large_enough: i >= 1
@@ -73,7 +73,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of file rules
 		do
 			Result := file_rules.count
@@ -84,7 +84,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	put_last (a_file_rule: like file_rule) is
+	put_last (a_file_rule: like file_rule)
 			-- Add `a_file_rule' to the list of file rules.
 		require
 			a_file_rule_not_void: a_file_rule /= Void
@@ -95,7 +95,7 @@ feature -- Element change
 			file_rule_added: file_rules.last = a_file_rule
 		end
 
-	fill_file_rules (a_file_rules: ET_ECF_FILE_RULES; a_state: ET_ECF_STATE) is
+	fill_file_rules (a_file_rules: ET_ECF_FILE_RULES; a_state: ET_ECF_STATE)
 			-- Add to `a_file_rules' the current file rules
 			-- whose conditions satisfy `a_state'.
 		require
@@ -107,7 +107,7 @@ feature -- Element change
 
 feature {NONE} -- Constants
 
-	Initial_file_rules_capacity: INTEGER is 50
+	Initial_file_rules_capacity: INTEGER = 50
 			-- Initial capacity for `file_rules'
 
 invariant

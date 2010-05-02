@@ -21,24 +21,24 @@ inherit
 
 feature -- Access
 
-	type: ET_TYPE is
+	type: ET_TYPE
 			-- Creation type
 		deferred
 		ensure
 			type_not_void: Result /= Void
 		end
 
-	name: ET_FEATURE_NAME is
+	name: ET_FEATURE_NAME
 			-- Creation procedure name
 		deferred
 		end
 
-	arguments: ET_ACTUAL_ARGUMENTS is
+	arguments: ET_ACTUAL_ARGUMENTS
 			-- Arguments of creation call
 		deferred
 		end
 
-	type_position: ET_POSITION is
+	type_position: ET_POSITION
 			-- Position of `type'
 		deferred
 		ensure
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_never_void: BOOLEAN is True
+	is_never_void: BOOLEAN = True
 			-- Can current expression never be void?
 
 invariant

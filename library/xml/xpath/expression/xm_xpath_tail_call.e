@@ -18,7 +18,7 @@ inherit
 
 feature -- Evaluation
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XPATH_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XPATH_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		require
 			a_tail_not_void: a_tail /= Void
@@ -29,6 +29,6 @@ feature -- Evaluation
 		ensure
 			possible_tail_call: a_tail.item /= Void xor a_tail.item = Void
 		end
-	
+
 end
-	
+

@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant
 		do
 			name := "element-available"; namespace_uri := Xpath_standard_functions_uri
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, where known
 		do
 			Result := type_factory.boolean_type
@@ -51,7 +51,7 @@ feature -- Access
 
 feature -- Status report
 
-	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
+	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE
 			-- Type of argument number `argument_number'
 		do
 			create Result.make_single_string
@@ -59,7 +59,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate `Current' as a single item
 		local
 			l_uri, l_xml_prefix: STRING
@@ -103,7 +103,7 @@ feature -- Evaluation
 			end
 		end
 
-	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Pre-evaluate `Current' at compile time.
 		local
 			l_parser: XM_XPATH_QNAME_PARSER
@@ -127,7 +127,7 @@ feature -- Evaluation
 
 feature {XM_XPATH_FUNCTION_CALL} -- Local
 
-	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		local
 			namespaces_needed: BOOLEAN
@@ -154,7 +154,7 @@ feature {XM_XPATH_FUNCTION_CALL} -- Local
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
@@ -171,7 +171,7 @@ feature {NONE} -- Implementation
 	checked: BOOLEAN
 			-- Has `check_arguments' been called already?
 
-	is_element_available (a_uri, a_local_name: STRING; a_context: XM_XSLT_EVALUATION_CONTEXT): BOOLEAN is
+	is_element_available (a_uri, a_local_name: STRING; a_context: XM_XSLT_EVALUATION_CONTEXT): BOOLEAN
 			-- Is named instruction element available at run-time?
 		require
 			local_name_not_void: a_local_name /= Void
@@ -191,4 +191,4 @@ feature {NONE} -- Implementation
 		end
 
 end
-	
+

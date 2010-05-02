@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_encode_for_uri is
+	make_encode_for_uri
 			-- Create encode-for-uri funtion.
 		do
 			name := "encode-for-uri"; namespace_uri := Xpath_standard_functions_uri
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			initialized := True
 		end
 
-	make_iri_to_uri is
+	make_iri_to_uri
 			-- Create iri-to-uri funtion.
 		do
 			name := "iri-to-uri"; namespace_uri := Xpath_standard_functions_uri
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			initialized := True
 		end
 
-	make_escape_html_uri is
+	make_escape_html_uri
 			-- Create escape-html-uri funtion.
 		do
 			name := "escape-html-uri"; namespace_uri := Xpath_standard_functions_uri
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, where known
 		do
 			Result := type_factory.string_type
@@ -81,7 +81,7 @@ feature -- Access
 
 feature -- Status report
 
-	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
+	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE
 			-- Type of argument number `argument_number'
 		do
 			create Result.make_optional_string
@@ -89,7 +89,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_uri_string: STRING
@@ -107,7 +107,7 @@ feature -- Evaluation
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
@@ -115,7 +115,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 
-	escaped_uri (a_uri_string: STRING): STRING is
+	escaped_uri (a_uri_string: STRING): STRING
 			-- Escaped version of `a_uri_string'
 		require
 			uri_string_not_void: a_uri_string /= Void
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 	reserved_character_set: DS_HASH_SET [CHARACTER]
 			-- Characters not to be escaped
 
-	unescaped_uri_characters: DS_HASH_SET [CHARACTER] is
+	unescaped_uri_characters: DS_HASH_SET [CHARACTER]
 			-- Characters not to be escaped for fn:encode-for-uri()
 		local
 			a_character_set: STRING
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 			Result := new_character_set (a_character_set)
 		end
 
-	unescaped_iri_characters: DS_HASH_SET [CHARACTER] is
+	unescaped_iri_characters: DS_HASH_SET [CHARACTER]
 			-- Characters not to escaped for fn:iri-to-uri()
 		local
 			a_character_set: STRING
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 			Result := new_character_set (a_character_set)
 		end
 
-	unescaped_html_characters: DS_HASH_SET [CHARACTER] is
+	unescaped_html_characters: DS_HASH_SET [CHARACTER]
 			-- Characters to escape for fn:iri-to-uri()
 		local
 			an_index: INTEGER

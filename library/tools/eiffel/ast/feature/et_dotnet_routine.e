@@ -40,7 +40,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_deferred (b: BOOLEAN) is
+	set_deferred (b: BOOLEAN)
 			-- Set `is_deferred' to `b'.
 		do
 			is_deferred := b

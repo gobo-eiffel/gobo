@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_label: STRING; a_context: XM_XPATH_CONTEXT) is
+	make (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_label: STRING; a_context: XM_XPATH_CONTEXT)
 			-- Establish invariant.
 		require
 			base_iterator_before: a_base_iterator /= Void and then not a_base_iterator.is_error and then a_base_iterator.before
@@ -46,10 +46,10 @@ feature -- Access
 
 	item: XM_XPATH_ITEM
 			-- Value or node at the current position
-	
+
 feature -- Status report
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Are there no more items in the sequence?
 		do
 			Result := base_iterator.after
@@ -60,7 +60,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move to next position
 		local
 			a_label: STRING
@@ -72,7 +72,7 @@ feature -- Cursor movement
 			end
 			index := index + 1
 			if base_iterator.is_error then
-				set_last_error (base_iterator.error_value) 
+				set_last_error (base_iterator.error_value)
 			elseif not base_iterator.after then
 				is_empty_sequence := False
 				item := base_iterator.item
@@ -87,7 +87,7 @@ feature -- Cursor movement
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 			create Result.make (base_iterator.another, label, context)
@@ -111,4 +111,4 @@ invariant
 	context_not_void: context /= Void
 
 end
-	
+

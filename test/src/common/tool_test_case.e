@@ -17,7 +17,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	program_dirname: STRING is
+	program_dirname: STRING
 			-- Name of program source directory
 		do
 			Result := file_system.nested_pathname ("${GOBO}", <<"src", program_name>>)

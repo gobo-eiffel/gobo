@@ -15,7 +15,7 @@ deferred class DS_BINARY_SEARCH_TREE_CONTAINER_NODE [G, K]
 
 feature {DS_BINARY_SEARCH_TREE_CONTAINER, DS_BINARY_SEARCH_TREE_CONTAINER_NODE, DS_BINARY_SEARCH_TREE_CONTAINER_CURSOR} -- Access
 
-	item: G is
+	item: G
 			-- Item
 		deferred
 		end
@@ -36,7 +36,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER, DS_BINARY_SEARCH_TREE_CONTAINER_NODE} 
 
 feature {DS_BINARY_SEARCH_TREE_CONTAINER, DS_BINARY_SEARCH_TREE_CONTAINER_NODE} -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of nodes, including the current node and
 			-- recursively the number of nodes in its children
 		do
@@ -51,7 +51,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER, DS_BINARY_SEARCH_TREE_CONTAINER_NODE} 
 			count_positive: Result > 0
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of the branch in which `Current' is seen as root node
 		do
 			Result := height_of_left_child.max (height_of_right_child) + 1
@@ -59,7 +59,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER, DS_BINARY_SEARCH_TREE_CONTAINER_NODE} 
 			height_positive: Result > 0
 		end
 
-	height_of_left_child: INTEGER is
+	height_of_left_child: INTEGER
 			-- Height of the branch where `left_child' is seen as root node
 		do
 			if left_child /= Void then
@@ -70,7 +70,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER, DS_BINARY_SEARCH_TREE_CONTAINER_NODE} 
 			zero_iff_child_is_void: (left_child = Void) = (Result = 0)
 		end
 
-	height_of_right_child: INTEGER is
+	height_of_right_child: INTEGER
 			-- Height of branch where `right_child' is seen as root node
 		do
 			if right_child /= Void then
@@ -83,7 +83,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER, DS_BINARY_SEARCH_TREE_CONTAINER_NODE} 
 
 feature {DS_BINARY_SEARCH_TREE_CONTAINER, DS_BINARY_SEARCH_TREE_CONTAINER_NODE} -- Status report
 
-	sorted (a_comparator: KL_COMPARATOR [K]): BOOLEAN is
+	sorted (a_comparator: KL_COMPARATOR [K]): BOOLEAN
 			-- Definition: A binary search tree is sorted iff the `key' of the `left_child'
 			-- of every node in the tree is less than the `key' of the node itself and the `key'
 			-- of the `right_child' is greater than the `key' of the node itself. `Void' is
@@ -125,7 +125,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER, DS_BINARY_SEARCH_TREE_CONTAINER_NODE} 
 
 feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Duplication
 
-	copy_item_and_key_to (other: like Current) is
+	copy_item_and_key_to (other: like Current)
 			-- Copy `item' and `key' to `other'.
 		require
 			other_not_void: other /= Void
@@ -137,7 +137,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Duplication
 
 feature {DS_BINARY_SEARCH_TREE_CONTAINER, DS_BINARY_SEARCH_TREE_CONTAINER_NODE} -- Setting
 
-	set_key (a_key: like key) is
+	set_key (a_key: like key)
 			-- Set `key' to `a_key'.
 		do
 			key := a_key
@@ -145,14 +145,14 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER, DS_BINARY_SEARCH_TREE_CONTAINER_NODE} 
 			key_set: key = a_key
 		end
 
-	set_item (a_item: like item) is
+	set_item (a_item: like item)
 			-- Set `item' to `a_item'.
 		deferred
 		ensure
 			item_set: item = a_item
 		end
 
-	set_left_child (a_child: like parent) is
+	set_left_child (a_child: like parent)
 			-- Set `left_child' to `a_child'.
 		require
 			a_child_orphan: a_child /= Void implies a_child.parent = Void
@@ -171,7 +171,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER, DS_BINARY_SEARCH_TREE_CONTAINER_NODE} 
 			old_child_has_void_parent: (old left_child /= Void) implies (old left_child).parent = Void
 		end
 
-	set_right_child (a_child: like parent) is
+	set_right_child (a_child: like parent)
 			-- Set `right_child' to `a_child'.
 		require
 			a_child_orphan: a_child /= Void implies a_child.parent = Void
@@ -192,7 +192,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER, DS_BINARY_SEARCH_TREE_CONTAINER_NODE} 
 
 feature {DS_BINARY_SEARCH_TREE_CONTAINER_NODE} -- Setting
 
-	set_parent (a_parent: like parent) is
+	set_parent (a_parent: like parent)
 			-- Set `parent' to `a_parent'.
 		require
 			current_is_already_child_of_a_parent: a_parent /= Void implies (a_parent.left_child = Current or a_parent.right_child = Current)

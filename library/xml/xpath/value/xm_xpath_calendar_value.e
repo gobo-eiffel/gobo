@@ -23,7 +23,7 @@ inherit
 
 feature -- Access
 
-	utc_date_time: DT_DATE_TIME is
+	utc_date_time: DT_DATE_TIME
 			-- Date_Time adjusted to UTC
 		require
 			zoned: zoned
@@ -32,7 +32,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	implicitly_zoned_date_time (a_context: XM_XPATH_CONTEXT): DT_DATE_TIME is
+	implicitly_zoned_date_time (a_context: XM_XPATH_CONTEXT): DT_DATE_TIME
 			-- Date_Time adjusted to UTC via implicit time zone
 		require
 			not_zoned: not zoned
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_calendar_value: BOOLEAN is
+	is_calendar_value: BOOLEAN
 			-- Is `Current' a calendar value?
 		do
 			Result := True
@@ -52,7 +52,7 @@ feature -- Status report
 
 feature -- Conversion
 
-	as_calendar_value: XM_XPATH_CALENDAR_VALUE is
+	as_calendar_value: XM_XPATH_CALENDAR_VALUE
 			-- `Current' seen as a calendar value
 		do
 			Result := Current
@@ -60,7 +60,7 @@ feature -- Conversion
 
 feature -- Basic operations
 
-	plus (a_duration: XM_XPATH_DURATION_VALUE): like Current is
+	plus (a_duration: XM_XPATH_DURATION_VALUE): like Current
 			-- Addition of `a_duration' to `Current'
 		require
 			duration_not_void: a_duration /= Void
@@ -69,7 +69,7 @@ feature -- Basic operations
 			result_not_void: Result /= Void
 		end
 
-	minus (other: XM_XPATH_CALENDAR_VALUE; a_context: XM_XPATH_CONTEXT): XM_XPATH_SECONDS_DURATION_VALUE is
+	minus (other: XM_XPATH_CALENDAR_VALUE; a_context: XM_XPATH_CONTEXT): XM_XPATH_SECONDS_DURATION_VALUE
 			-- Subtraction of `other' from `Current'
 		require
 			other_not_void: other /= Void

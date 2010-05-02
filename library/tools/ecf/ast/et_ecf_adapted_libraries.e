@@ -26,7 +26,7 @@ create
 
 feature -- Access
 
-	library (i: INTEGER): ET_ECF_ADAPTED_LIBRARY is
+	library (i: INTEGER): ET_ECF_ADAPTED_LIBRARY
 			-- `i'-th library
 		do
 			Result := libraries.item (i)
@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Iteration
 
-	do_adapted (an_action: PROCEDURE [ANY, TUPLE [ET_ADAPTED_LIBRARY]]) is
+	do_adapted (an_action: PROCEDURE [ANY, TUPLE [ET_ADAPTED_LIBRARY]])
 			-- Apply `an_action' to every library, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 		local

@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER; chars: STRING) is
+	make (filename: STRING; line: INTEGER; chars: STRING)
 			-- Create a new error reporting that
 			-- `chars' is missing.
 		require
@@ -37,10 +37,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: missing $3"
+	default_template: STRING = "%"$1%", line $2: missing $3"
 			-- Default template used to built the error message
 
-	code: STRING is "PR0001"
+	code: STRING = "PR0001"
 			-- Error code
 
 invariant

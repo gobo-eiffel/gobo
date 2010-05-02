@@ -14,11 +14,11 @@ class XM_XPATH_SHARED_SERIAL_NUMBER_GENERATOR
 
 feature -- Access
 
-	shared_serial_number_generator: XM_XPATH_SERIAL_NUMBER_GENERATOR is
+	shared_serial_number_generator: XM_XPATH_SERIAL_NUMBER_GENERATOR
 			-- Shared serial number generator
 		once
 			create Result.make
 		end
-	
+
 end
-	
+

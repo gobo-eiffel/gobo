@@ -25,7 +25,7 @@ create
 
 feature -- Status report
 
-	is_file_executable: BOOLEAN is
+	is_file_executable: BOOLEAN
 			-- Can command be executed on a file?
 		do
 			Result := file /= Void and then file.count > 0
@@ -34,7 +34,7 @@ feature -- Status report
 			file_not_empty: Result implies file.count > 0
 		end
 
-	is_directory_executable: BOOLEAN is
+	is_directory_executable: BOOLEAN
 			-- Can command be executed on a directory?
 		do
 			Result := directory /= Void and then directory.count > 0
@@ -43,7 +43,7 @@ feature -- Status report
 			directory_not_empty: Result implies directory.count > 0
 		end
 
-	is_fileset_executable: BOOLEAN is
+	is_fileset_executable: BOOLEAN
 			-- Can command be executed on a fileset?
 		do
 			Result := fileset /= Void
@@ -51,7 +51,7 @@ feature -- Status report
 			fileset_not_void: Result implies fileset /= Void
 		end
 
-	is_directoryset_executable: BOOLEAN is
+	is_directoryset_executable: BOOLEAN
 			-- Can command be executed on a directoryset?
 		do
 			Result := directoryset /= Void
@@ -59,7 +59,7 @@ feature -- Status report
 			directoryset_not_void: Result implies directoryset /= Void
 		end
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- Can command be executed?
 		do
 			Result := BOOLEAN_.nxor (<<is_file_executable,
@@ -85,7 +85,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_directory (a_directory: like directory) is
+	set_directory (a_directory: like directory)
 			-- Set `directory' to `a_directory'.
 		require
 			a_directory_not_void: a_directory /= Void
@@ -96,7 +96,7 @@ feature -- Setting
 			directory_set: directory = a_directory
 		end
 
-	set_file (a_file: like file) is
+	set_file (a_file: like file)
 			-- Set `file' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -107,7 +107,7 @@ feature -- Setting
 			file_set: file = a_file
 		end
 
-	set_fileset (a_fileset: like fileset) is
+	set_fileset (a_fileset: like fileset)
 			-- Set `fileset' to `a_fileset'.
 		require
 			a_fileset_not_void: a_fileset /= Void
@@ -117,7 +117,7 @@ feature -- Setting
 			fileset_set: fileset = a_fileset
 		end
 
-	set_directoryset (a_directoryset: like directoryset) is
+	set_directoryset (a_directoryset: like directoryset)
 			-- Set `directoryset' to `a_directoryset'.
 		require
 			a_directoryset_not_void: a_directoryset /= Void
@@ -129,7 +129,7 @@ feature -- Setting
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute command.
 		local
 			a_name: STRING

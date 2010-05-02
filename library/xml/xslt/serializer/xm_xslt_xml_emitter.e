@@ -45,7 +45,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_serializer: XM_XSLT_SERIALIZER; an_outputter: XM_OUTPUT; some_output_properties: XM_XSLT_OUTPUT_PROPERTIES) is
+	make (a_serializer: XM_XSLT_SERIALIZER; an_outputter: XM_OUTPUT; some_output_properties: XM_XSLT_OUTPUT_PROPERTIES)
 			-- Initialize `Current'.
 		require
 			serializer_not_void: a_serializer /= Void
@@ -70,13 +70,13 @@ feature {NONE} -- Initialization
 
 feature -- Conversion
 
-	is_xml_emitter: BOOLEAN is
+	is_xml_emitter: BOOLEAN
 			-- Is `Current' an XML emitter?
 		do
 			Result := True
 		end
 
-	as_xml_emitter: XM_XSLT_XML_EMITTER is
+	as_xml_emitter: XM_XSLT_XML_EMITTER
 			-- `Current' seen as an XML emitter
 		do
 			Result := Current
@@ -84,13 +84,13 @@ feature -- Conversion
 
 feature -- Events
 
-	open is
+	open
 			-- Notify start of event stream.
 		do
 			is_open := True
 		end
 
-	start_document is
+	start_document
 			-- New document
 		do
 			is_document_started := True
@@ -98,13 +98,13 @@ feature -- Events
 			--  file is deferred until some content is written to it.
 		end
 
-	end_document is
+	end_document
 			-- Notify the end of the document
 		do
 			is_document_started := False
 		end
 
-	close is
+	close
 			-- Notify end of event stream.
 		do
 			if not is_error and not is_output_open and not is_no_declaration_on_close then
@@ -116,7 +116,7 @@ feature -- Events
 			is_open := False
 		end
 
-	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
+	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER)
 			-- Notify the start of an element
 		local
 			l_display_name, l_system_id, l_public_id: STRING
@@ -171,7 +171,7 @@ feature -- Events
 			mark_as_written
 		end
 
-	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
+	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER)
 			-- Notify a namespace declaration.
 		local
 			a_namespace_prefix, a_namespace_uri: STRING
@@ -203,7 +203,7 @@ feature -- Events
 			mark_as_written
 		end
 
-	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
+	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER)
 			-- Notify an attribute.
 		local
 			a_display_name: STRING
@@ -239,14 +239,14 @@ feature -- Events
 		end
 
 
-	start_content is
+	start_content
 			-- Notify the start of the content, that is, the completion of all attributes and namespaces.
 		do
 			-- Don't add ">" to the start tag until we know whether the element has content.
 			mark_as_written
 		end
 
-	end_element is
+	end_element
 			-- Notify the end of an element.
 		local
 			a_display_name: STRING
@@ -265,7 +265,7 @@ feature -- Events
 			mark_as_written
 		end
 
-	notify_characters (a_chars: STRING; a_properties: INTEGER) is
+	notify_characters (a_chars: STRING; a_properties: INTEGER)
 			-- Notify character data.
 		local
 			l_bad_character: INTEGER
@@ -309,7 +309,7 @@ feature -- Events
 			mark_as_written
 		end
 
-	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
+	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER)
 			-- Notify a processing instruction.
 		local
 			l_string, l_message: STRING
@@ -348,7 +348,7 @@ feature -- Events
 			mark_as_written
 		end
 
-	notify_comment (a_content_string: STRING; properties: INTEGER) is
+	notify_comment (a_content_string: STRING; properties: INTEGER)
 			-- Notify a comment.
 		local
 			l_bad_character_code: INTEGER
@@ -430,7 +430,7 @@ feature {NONE} -- Implementation
 	warning_issued: BOOLEAN
 			-- Has a warning for disabled character escaping problems been issued?
 
-	empty_tags_set: DS_HASH_SET [STRING] is
+	empty_tags_set: DS_HASH_SET [STRING]
 			-- Names of tags that should not be closed
 		once
 			create Result.make (13)
@@ -450,7 +450,7 @@ feature {NONE} -- Implementation
 			Result.put ("param")
 		end
 
-	is_empty_tag (a_tag: STRING): BOOLEAN is
+	is_empty_tag (a_tag: STRING): BOOLEAN
 			-- Is `a_tag' an empty tag?
 		require
 			tag_not_void: a_tag /= Void
@@ -458,19 +458,19 @@ feature {NONE} -- Implementation
 			Result := empty_tags_set.has (a_tag.as_lower)
 		end
 
-	specials_in_text: ARRAY [BOOLEAN] is
+	specials_in_text: ARRAY [BOOLEAN]
 			-- Lookup table for ASCII characters that need escaping in text
 		once
 			create Result.make (0, 127)
 		end
 
-	specials_in_attributes: ARRAY [BOOLEAN] is
+	specials_in_attributes: ARRAY [BOOLEAN]
 			-- Lookup table for ASCII characters that need escaping in attributes
 		once
 			create Result.make (0, 127)
 		end
 
-	make_specials is
+	make_specials
 			-- Initialize `specials_in_text' and `specials_in_attributes'.
 		local
 			i: INTEGER
@@ -496,7 +496,7 @@ feature {NONE} -- Implementation
 			specials_in_attributes.put (True, 34) -- '"'
 		end
 
-	write_declaration is
+	write_declaration
 			-- Write XML declaration
 		require
 			not_yet_written: not is_declaration_written
@@ -558,7 +558,7 @@ feature {NONE} -- Implementation
 			written: is_declaration_written
 		end
 
-	output (a_character_string: STRING) is
+	output (a_character_string: STRING)
 			-- Output `a_character_string'.
 		require
 			document_opened: is_output_open
@@ -572,7 +572,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	output_ignoring_error (a_character_string: STRING) is
+	output_ignoring_error (a_character_string: STRING)
 			-- Output `a_character_string', ignoring any error.
 		require
 			valid_string: outputter.is_valid_string (a_character_string)
@@ -581,7 +581,7 @@ feature {NONE} -- Implementation
 			outputter.output_ignoring_error (a_character_string)
 		end
 
-	output_attribute (a_element_name_code: INTEGER; a_attribute_qname: STRING; a_value: STRING; a_properties: INTEGER) is
+	output_attribute (a_element_name_code: INTEGER; a_attribute_qname: STRING; a_value: STRING; a_properties: INTEGER)
 			-- Output attribute.
 		require
 			attribute_name_is_qname: a_attribute_qname /= Void and then is_qname (a_attribute_qname)
@@ -613,7 +613,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	output_escape (a_character_string: STRING; a_is_attribute: BOOLEAN) is
+	output_escape (a_character_string: STRING; a_is_attribute: BOOLEAN)
 			-- Output `a_character_string', escaping special characters.
 		require
 			string_not_void: a_character_string /= Void
@@ -672,7 +672,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	maximal_ordinary_string (a_character_string: STRING; a_start_index: INTEGER; a_special_characters: ARRAY [BOOLEAN]): INTEGER is
+	maximal_ordinary_string (a_character_string: STRING; a_start_index: INTEGER; a_special_characters: ARRAY [BOOLEAN]): INTEGER
 			-- Maximal sequence of ordinary characters
 		require
 			string_not_void: a_character_string /= Void
@@ -708,7 +708,7 @@ feature {NONE} -- Implementation
 			Result := l_index
 		end
 
-	output_character_reference (a_code: INTEGER) is
+	output_character_reference (a_code: INTEGER)
 			-- Output a character reference.
 		require
 			strictly_positive_code: a_code > 0
@@ -730,7 +730,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	open_document is
+	open_document
 			-- Open output document.
 		require
 			document_not_yet_opened: not is_output_open
@@ -777,7 +777,7 @@ feature {NONE} -- Implementation
 			document_opened: is_error or is_output_open
 		end
 
-	write_doctype (a_type, a_system_id, a_public_id: STRING ) is
+	write_doctype (a_type, a_system_id, a_public_id: STRING )
 			-- Write DOCTYPE.
 		require
 			doctype_not_void: a_type /= Void
@@ -806,7 +806,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	bad_character_code (a_character_string: STRING): INTEGER is
+	bad_character_code (a_character_string: STRING): INTEGER
 			-- Code point of first bad character in `a_character_string' (or 0)
 		require
 			string_not_void: a_character_string /= Void
@@ -832,7 +832,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	close_start_tag (a_name: STRING; empty_tag: BOOLEAN) is
+	close_start_tag (a_name: STRING; empty_tag: BOOLEAN)
 		-- Close start tag.
 		require
 			name_not_void: a_name /= Void
@@ -848,7 +848,7 @@ feature {NONE} -- Implementation
 			start_tag_not_open: not is_open_start_tag
 		end
 
-	empty_element_tag_closer (a_name: STRING; a_name_code: INTEGER): STRING is
+	empty_element_tag_closer (a_name: STRING; a_name_code: INTEGER): STRING
 			-- String to close an empty tag
 		require
 			name_not_void: a_name /= Void

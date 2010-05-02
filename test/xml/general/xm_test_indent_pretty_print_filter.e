@@ -26,7 +26,7 @@ create
 
 feature -- Tests
 
-	test_simple_indent is
+	test_simple_indent
 			-- No namespaces.
 		do
 			assert_output ("simple",
@@ -41,7 +41,7 @@ feature -- Tests
 				"</doc>")
 		end
 
-	test_space_preserve is
+	test_space_preserve
 			-- Test xml:space
 		do
 			assert_output ("preserve",
@@ -53,19 +53,19 @@ feature -- Tests
 				"<doc xml:space='preserve'>  z <b> 1</b>x <c/> </doc>",
 				"<doc xml:space=%"preserve%">  z <b> 1</b>x <c></c> </doc>")
 		end
-		
+
 feature {NONE} -- Implementation
 
 	indent_pretty_print: XM_INDENT_PRETTY_PRINT_FILTER
 			-- Indent filter
-			
+
 	whitespace_normalizer: XM_WHITESPACE_NORMALIZER
 			-- Whitespace normalizer
-			
+
 	parser: XM_EIFFEL_PARSER
 			-- Parser
-			
-	assert_output (a_tag: STRING; a_in: STRING; a_out: STRING) is
+
+	assert_output (a_tag: STRING; a_in: STRING; a_out: STRING)
 			-- Assert output as expected.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -76,20 +76,20 @@ feature {NONE} -- Implementation
 			parser.parse_from_string (a_in)
 			assert ("parsed", parser.is_correct)
 			assert_equal (a_tag, a_out, indent_pretty_print.last_output)
-			
+
 			make_parser
 			parser.parse_from_string (a_out)
 			assert ("parsed_out_" + a_tag, parser.is_correct)
 			assert_equal ("idempotent_" + a_tag, a_out, indent_pretty_print.last_output)
 		end
-					
-	make_parser is
+
+	make_parser
 			-- Make parser.
 		do
 			create indent_pretty_print.make_null
 			indent_pretty_print.set_output_to_string
 			create whitespace_normalizer.set_next (indent_pretty_print)
-			
+
 			create parser.make
 			parser.set_callbacks (whitespace_normalizer)
 		end

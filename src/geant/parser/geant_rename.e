@@ -22,14 +22,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize 'rename'.
 		do
 		end
 
 feature -- Status report
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- Can element be executed?
 		do
 			Result := original_name /= Void and then original_name.count > 0 and
@@ -53,7 +53,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_original_name (a_original_name: like original_name) is
+	set_original_name (a_original_name: like original_name)
 			-- Set `original_name' to `a_original_name'.
 		require
 			a_original_name_not_void: a_original_name /= Void
@@ -64,7 +64,7 @@ feature -- Setting
 			original_name_set: original_name = a_original_name
 		end
 
-	set_new_name (a_new_name: like new_name) is
+	set_new_name (a_new_name: like new_name)
 			-- Set `new_name' to `a_new_name'.
 		require
 			a_new_name_not_void: a_new_name /= Void

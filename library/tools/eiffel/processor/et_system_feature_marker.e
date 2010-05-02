@@ -142,7 +142,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new system feature marker.
 		do
 			create used_features.make (500000)
@@ -157,7 +157,7 @@ feature {NONE} -- Initialization
 
 feature -- Processing
 
-	mark_system (a_feature: ET_FEATURE) is
+	mark_system (a_feature: ET_FEATURE)
 			-- Identify the features that `a_feature' (when viewed from
 			-- the class it has been written in -- its 'implementation_class')
 			-- recursively depends on (i.e. they might be executed if
@@ -188,7 +188,7 @@ feature -- Processing
 			a_feature_used: a_feature.implementation_feature.is_used
 		end
 
-	mark_system_until (a_feature: ET_FEATURE; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]) is
+	mark_system_until (a_feature: ET_FEATURE; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Identify the features that `a_feature' (when viewed from
 			-- the class it has been written in -- its 'implementation_class')
 			-- recursively depends on (i.e. they might be executed if
@@ -253,7 +253,7 @@ feature -- Processing
 			a_feature_used: a_feature.implementation_feature.is_used
 		end
 
-	mark_shallow (a_feature: ET_FEATURE) is
+	mark_shallow (a_feature: ET_FEATURE)
 			-- Identify the features that `a_feature' (when viewed from
 			-- the class it has been written in -- its 'implementation_class')
 			-- depends on (i.e. they might be called directly from `a_feature')
@@ -286,7 +286,7 @@ feature -- Processing
 			mark_shallow_no_unmark (a_feature)
 		end
 
-	mark_shallow_no_unmark (a_feature: ET_FEATURE) is
+	mark_shallow_no_unmark (a_feature: ET_FEATURE)
 			-- Identify the features that `a_feature' (when viewed from
 			-- the class it has been written in -- its 'implementation_class')
 			-- depends on (i.e. they might be called directly from `a_feature')
@@ -329,7 +329,7 @@ feature -- Processing
 			descendant_classes.reset
 		end
 
-	unmark_all (a_system: ET_SYSTEM) is
+	unmark_all (a_system: ET_SYSTEM)
 			-- Unmark all features of `a_system' as if none of them was used.
 		require
 			a_system_not_void: a_system /= Void
@@ -337,7 +337,7 @@ feature -- Processing
 			a_system.classes_do_recursive (agent {ET_CLASS}.features_do_declared (agent {ET_FEATURE}.set_used (False)))
 		end
 
-	is_dependent_recursive (a_caller_feature, a_callee_feature: ET_FEATURE): BOOLEAN is
+	is_dependent_recursive (a_caller_feature, a_callee_feature: ET_FEATURE): BOOLEAN
 			-- Does `a_caller_feature' (when viewed from the class it has been
 			-- written in -- its 'implementation_class') recursively depend on
 			-- `a_callee_feature' (either viewed from the class it has been
@@ -405,7 +405,7 @@ feature -- Processing
 
 feature {NONE} -- Event handling
 
-	report_polymorphic_feature_call (a_feature: ET_FEATURE; a_target_class: ET_CLASS) is
+	report_polymorphic_feature_call (a_feature: ET_FEATURE; a_target_class: ET_CLASS)
 			-- Report a call to `a_feature' where its versions in descendants of
 			-- `a_target_class' should be taken into account.
 		local
@@ -435,7 +435,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_monomorphic_feature_call (a_feature: ET_FEATURE; a_target_class: ET_CLASS) is
+	report_monomorphic_feature_call (a_feature: ET_FEATURE; a_target_class: ET_CLASS)
 			-- Report a call to `a_feature' where its versions in descendants of
 			-- `a_target_class' should not be taken into account.
 		do
@@ -444,7 +444,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_descendant_feature_call (a_feature: ET_FEATURE; a_target_class, a_descendant: ET_CLASS) is
+	report_descendant_feature_call (a_feature: ET_FEATURE; a_target_class, a_descendant: ET_CLASS)
 			-- Mark as used the version of this feature in `a_descendant'
 			-- which is supposed to be a descendant class of `a_target_class'.
 		require
@@ -482,7 +482,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	mark_called_feature (a_feature: ET_FEATURE) is
+	mark_called_feature (a_feature: ET_FEATURE)
 			-- Indicate that `a_feature' is being called by `current_feature'.
 		require
 			a_feature_not_void: a_feature /= Void

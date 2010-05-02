@@ -18,14 +18,14 @@ inherit
 
 feature -- Access
 
-	name: ET_IDENTIFIER is
+	name: ET_IDENTIFIER
 			-- Name
 		deferred
 		ensure
 			name_not_void: Result /= Void
 		end
 
-	type: ET_TYPE is
+	type: ET_TYPE
 			-- Type
 		deferred
 		ensure
@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_last_entity: BOOLEAN is
+	is_last_entity: BOOLEAN
 			-- Is current entity the last entity in an
 			-- entity declaration group?
 		do

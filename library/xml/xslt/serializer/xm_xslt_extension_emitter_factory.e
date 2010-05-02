@@ -18,13 +18,13 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
-	
+
 	XM_XPATH_STANDARD_NAMESPACES
 		export {NONE} all end
 
 feature -- Access
 
-	namespace_uri: STRING is 
+	namespace_uri: STRING
 			-- Namespace for QNames using this factory
 		deferred
 		ensure
@@ -33,7 +33,7 @@ feature -- Access
 				-- removed to allow in-built extension emitter factory - 23/07/2005: and then not STRING_.same_string (Result, Gexslt_eiffel_type_uri)
 		end
 
-	is_valid_output_method (a_method_local_name: STRING): BOOLEAN is
+	is_valid_output_method (a_method_local_name: STRING): BOOLEAN
 		-- Is `a_method_local_name' a valid output method?
 		require
 			method_local_name_not_void: a_method_local_name /= Void
@@ -42,7 +42,7 @@ feature -- Access
 
 	new_receiver (a_method_local_name: STRING; a_serializer: XM_XSLT_SERIALIZER;
 		a_result_stream: XM_OUTPUT; some_properties: XM_XSLT_OUTPUT_PROPERTIES;
-		a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]): XM_XPATH_RECEIVER is
+		a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]): XM_XPATH_RECEIVER
 			-- New receiver chain including an emitter
 		require
 			method_local_name_not_void: a_method_local_name /= Void
@@ -58,7 +58,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_defaults (a_method_local_name: STRING; some_properties: XM_XSLT_OUTPUT_PROPERTIES; an_import_precedence: INTEGER) is
+	set_defaults (a_method_local_name: STRING; some_properties: XM_XSLT_OUTPUT_PROPERTIES; an_import_precedence: INTEGER)
 			-- Set defaults for `a_method_local_name'.
 		require
 			method_local_name_not_void: a_method_local_name /= Void
@@ -68,4 +68,4 @@ feature -- Element change
 		end
 
 end
-	
+

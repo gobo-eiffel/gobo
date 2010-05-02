@@ -8,7 +8,7 @@ feature -- Access
 
 	name: STRING
 
-	f is
+	f
 		do
 			item := "gobo"
 		end

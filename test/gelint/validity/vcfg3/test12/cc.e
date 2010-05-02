@@ -5,7 +5,7 @@ feature
 	item1: G
 	item2: H
 
-	f is
+	f
 		do
 			if item1 /= Void then
 				print (item1.generator)

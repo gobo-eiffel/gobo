@@ -14,7 +14,7 @@ class ET_SHARED_CALL_NAME_TESTER
 
 feature -- Access
 
-	call_name_tester: ET_CALL_NAME_TESTER is
+	call_name_tester: ET_CALL_NAME_TESTER
 			-- Call name equality tester
 		once
 			create Result

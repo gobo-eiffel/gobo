@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER; a_name: STRING) is
+	make (filename: STRING; line: INTEGER; a_name: STRING)
 			-- Create a new error reporting that the start
 			-- symbol `a_name' has not been declared.
 		require
@@ -37,10 +37,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: unknown start symbol $3"
+	default_template: STRING = "%"$1%", line $2: unknown start symbol $3"
 			-- Default template used to built the error message
 
-	code: STRING is "PR0005"
+	code: STRING = "PR0005"
 			-- Error code
 
 invariant

@@ -26,7 +26,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_source_type_set: like source_type_set; an_assignment_attempt: like assignment_attempt;
-		a_current_feature: like current_feature; a_current_type: like current_type) is
+		a_current_feature: like current_feature; a_current_type: like current_type)
 			-- Create a new assignment attempt.
 		require
 			a_source_type_set_not_void: a_source_type_set /= Void
@@ -50,13 +50,13 @@ feature -- Access
 	assignment_attempt: ET_ASSIGNMENT_ATTEMPT
 			-- Assignment attempt instruction
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of attachment
 		do
 			Result := assignment_attempt.source.position
 		end
 
-	description: STRING is "assignment attempt"
+	description: STRING = "assignment attempt"
 			-- Kind of attachment
 
 invariant

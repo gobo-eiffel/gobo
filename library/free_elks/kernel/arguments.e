@@ -1,7 +1,7 @@
 note
 
 	description: "[
-		Access to command-line arguments. This class 
+		Access to command-line arguments. This class
 		may be used as ancestor by classes needing its facilities.
 		]"
 

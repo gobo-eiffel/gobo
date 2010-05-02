@@ -22,7 +22,7 @@ create
 
 feature -- Consuming
 
-	consume_class (a_class: ET_CLASS) is
+	consume_class (a_class: ET_CLASS)
 			-- Consume `a_class'.
 		do
 			a_class.set_parsed
@@ -32,13 +32,13 @@ feature -- Consuming
 
 feature {ET_DOTNET_ASSEMBLY} -- Consuming
 
-	consume_assembly (an_assembly: ET_DOTNET_ASSEMBLY) is
+	consume_assembly (an_assembly: ET_DOTNET_ASSEMBLY)
 			-- Eiffel classic compilers are not able to consume .NET assemblies.
 		do
 			error_handler.report_gaaaa_error (an_assembly)
 		end
 
-	consume_gac_assembly (an_assembly: ET_DOTNET_GAC_ASSEMBLY) is
+	consume_gac_assembly (an_assembly: ET_DOTNET_GAC_ASSEMBLY)
 			-- Eiffel classic compilers are not able to consume .NET assemblies.
 		do
 			error_handler.report_gaaaa_error (an_assembly)

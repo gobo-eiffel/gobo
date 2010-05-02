@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT; an_xml_element: XM_ELEMENT) is
+	make (a_project: GEANT_PROJECT; an_xml_element: XM_ELEMENT)
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
@@ -91,7 +91,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	build_command (a_project: GEANT_PROJECT) is
+	build_command (a_project: GEANT_PROJECT)
 			-- Create instance of `command'
 		do
 			create command.make (a_project)
@@ -104,7 +104,7 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Size_attribute_name: STRING is
+	Size_attribute_name: STRING
 			-- Name of xml attribute for size
 		once
 			Result := "size"
@@ -113,7 +113,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Backup_attribute_name: STRING is
+	Backup_attribute_name: STRING
 			-- Name of xml attribute for backup
 		once
 			Result := "backup"
@@ -122,7 +122,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Ecs_attribute_name: STRING is
+	Ecs_attribute_name: STRING
 			-- Name of xml attribute for ecs
 		once
 			Result := "ecs"
@@ -131,7 +131,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Full_attribute_name: STRING is
+	Full_attribute_name: STRING
 			-- Name of xml attribute for full
 		once
 			Result := "full"
@@ -140,7 +140,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Case_insensitive_attribute_name: STRING is
+	Case_insensitive_attribute_name: STRING
 			-- Name of xml attribute for case_insensitive
 		once
 			Result := "case_insensitive"
@@ -149,7 +149,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Meta_ecs_attribute_name: STRING is
+	Meta_ecs_attribute_name: STRING
 			-- Name of xml attribute for meta_ecs
 		once
 			Result := "meta_ecs"
@@ -158,7 +158,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	No_default_attribute_name: STRING is
+	No_default_attribute_name: STRING
 			-- Name of xml attribute for no_default
 		once
 			Result := "no_default"
@@ -167,7 +167,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	No_warn_attribute_name: STRING is
+	No_warn_attribute_name: STRING
 			-- Name of xml attribute for no_warn
 		once
 			Result := "no_warn"
@@ -176,7 +176,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Separate_actions_attribute_name: STRING is
+	Separate_actions_attribute_name: STRING
 			-- Name of xml attribute for separate_actions
 		once
 			Result := "separate_actions"
@@ -185,7 +185,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Output_filename_attribute_name: STRING is
+	Output_filename_attribute_name: STRING
 			-- Name of xml attribute for output_filename
 		once
 			Result := "output"
@@ -194,7 +194,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Input_filename_attribute_name: STRING is
+	Input_filename_attribute_name: STRING
 			-- Name of xml attribute for input_filename
 		once
 			Result := "input"

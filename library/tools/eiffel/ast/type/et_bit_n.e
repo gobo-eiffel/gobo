@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_constant: like constant; a_named_base_class: like named_base_class) is
+	make (a_constant: like constant; a_named_base_class: like named_base_class)
 			-- Create a new 'BIT N' type.
 		require
 			a_constant_not_void: a_constant /= Void
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -49,19 +49,19 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := bit_keyword
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := constant
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := constant.break
@@ -69,7 +69,7 @@ feature -- Access
 
 feature -- Output
 
-	append_to_string (a_string: STRING) is
+	append_to_string (a_string: STRING)
 			-- Append textual representation of
 			-- current type to `a_string'.
 		do
@@ -82,7 +82,7 @@ feature -- Output
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_bit_n (Current)

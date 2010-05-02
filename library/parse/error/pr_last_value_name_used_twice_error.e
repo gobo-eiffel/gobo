@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER; a_last_value_name: STRING; a_type1, a_type2: PR_TYPE) is
+	make (filename: STRING; line: INTEGER; a_last_value_name: STRING; a_type1, a_type2: PR_TYPE)
 			-- Create a new error reporting that `a_last_value_name' is the name of the variable
 			-- used to pass values for tokens both of type `a_type1' and `a_type2'.
 		require
@@ -41,10 +41,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: '$3' is the name of the variable used to pass values for tokens both of type '$4' and '$5'"
+	default_template: STRING = "%"$1%", line $2: '$3' is the name of the variable used to pass values for tokens both of type '$4' and '$5'"
 			-- Default template used to built the error message
 
-	code: STRING is "PR0031"
+	code: STRING = "PR0031"
 			-- Error code
 
 invariant

@@ -2,6 +2,6 @@ class CC
 
 feature
 
-	f: INTEGER is unique
+	f: INTEGER = unique
 
 end -- class CC

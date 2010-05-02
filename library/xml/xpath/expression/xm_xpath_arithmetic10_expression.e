@@ -31,7 +31,7 @@ create
 feature -- Access
 
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			--Determine the data type of the expression, if possible
 		do
 			Result := type_factory.any_atomic_type
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_sequence_type: XM_XPATH_SEQUENCE_TYPE
@@ -135,7 +135,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 			-- We only take this path if the type could not be determined statically.
 		local
@@ -192,7 +192,7 @@ feature -- Evaluation
 
 feature {NONE} -- Evaluation
 
-	evaluate_item_stage_2 (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT; a_first_operand, a_second_operand: XM_XPATH_ATOMIC_VALUE) is
+	evaluate_item_stage_2 (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT; a_first_operand, a_second_operand: XM_XPATH_ATOMIC_VALUE)
 			-- Evaluate `Current' as a single item.
 		require
 			a_result_not_void: a_result /= Void
@@ -237,7 +237,7 @@ feature {NONE} -- Evaluation
 
 feature {NONE} -- Implementation
 
-	converted_operand (a_expression: XM_XPATH_EXPRESSION; a_type: XM_XPATH_ITEM_TYPE): XM_XPATH_EXPRESSION is
+	converted_operand (a_expression: XM_XPATH_EXPRESSION; a_type: XM_XPATH_ITEM_TYPE): XM_XPATH_EXPRESSION
 			-- `a_expression' wrapped in conversion code
 		require
 			a_expression_not_void: a_expression /= Void

@@ -38,7 +38,7 @@ create
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Start 'gelint' execution.
 		local
 			a_filename: STRING
@@ -176,7 +176,7 @@ feature -- Access
 
 feature {NONE} -- Eiffel config file parsing
 
-	parse_ace_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+	parse_ace_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Read Ace file `a_file'.
 			-- Put result in `last_system' if no error occurred.
 		require
@@ -195,7 +195,7 @@ feature {NONE} -- Eiffel config file parsing
 			end
 		end
 
-	parse_xace_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+	parse_xace_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Read Xace file `a_file'.
 			-- Put result in `last_system' if no error occurred.
 		require
@@ -246,7 +246,7 @@ feature {NONE} -- Eiffel config file parsing
 			end
 		end
 
-	parse_ecf_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+	parse_ecf_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Read ECF file `a_file'.
 			-- Put result in `last_system' if no error occurred.
 		require
@@ -270,7 +270,7 @@ feature {NONE} -- Eiffel config file parsing
 
 feature {NONE} -- Processing
 
-	process_system (a_system: ET_SYSTEM) is
+	process_system (a_system: ET_SYSTEM)
 			-- Process `a_system'.
 		require
 			a_system_not_void: a_system /= Void
@@ -307,7 +307,7 @@ feature {NONE} -- Processing
 
 feature -- Error handling
 
-	report_cannot_read_error (a_filename: STRING) is
+	report_cannot_read_error (a_filename: STRING)
 			-- Report that `a_filename' cannot be
 			-- opened in read mode.
 		require
@@ -319,13 +319,13 @@ feature -- Error handling
 			error_handler.report_error (an_error)
 		end
 
-	report_usage_message is
+	report_usage_message
 			-- Report usage message.
 		do
 			error_handler.report_info (Usage_message)
 		end
 
-	report_version_number is
+	report_version_number
 			-- Report version number.
 		local
 			a_message: UT_VERSION_NUMBER
@@ -334,7 +334,7 @@ feature -- Error handling
 			error_handler.report_info (a_message)
 		end
 
-	Usage_message: UT_USAGE_MESSAGE is
+	Usage_message: UT_USAGE_MESSAGE
 			-- Gelint usage message.
 		once
 			create Result.make ("[--ecma][--ise[=major[.minor[.revision[.build]]]]][--define=variables]%N%

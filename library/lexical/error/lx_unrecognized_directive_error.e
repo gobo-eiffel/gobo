@@ -22,8 +22,8 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER) is
-			-- Create a new error reporting 
+	make (filename: STRING; line: INTEGER)
+			-- Create a new error reporting
 			-- an unrecoginzed '%' directive.
 		require
 			filename_not_void: filename /= Void
@@ -35,10 +35,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: unrecognized '%%' directive"
+	default_template: STRING = "%"$1%", line $2: unrecognized '%%' directive"
 			-- Default template used to built the error message
 
-	code: STRING is "LX0023"
+	code: STRING = "LX0023"
 			-- Error code
 
 invariant

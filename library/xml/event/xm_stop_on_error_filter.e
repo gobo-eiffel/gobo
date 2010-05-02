@@ -43,7 +43,7 @@ feature -- Status
 
 feature -- Document
 
-	on_start is
+	on_start
 			-- Called when parsing starts.
 		do
 			has_error := False
@@ -51,7 +51,7 @@ feature -- Document
 			Precursor
 		end
 
-	on_finish is
+	on_finish
 			-- Called when parsing finished.
 		do
 			if not has_error then
@@ -61,7 +61,7 @@ feature -- Document
 
 feature -- Errors
 
-	on_error (a_message: STRING) is
+	on_error (a_message: STRING)
 			-- Event producer detected an error.
 			-- Default: forward event to 'next'.
 		do
@@ -72,7 +72,7 @@ feature -- Errors
 
 feature -- Meta
 
-	on_processing_instruction (a_name: STRING; a_content: STRING) is
+	on_processing_instruction (a_name: STRING; a_content: STRING)
 			-- Processing instruction.
 			-- Default: forward event to 'next'.
 		do
@@ -81,7 +81,7 @@ feature -- Meta
 			end
 		end
 
-	on_comment (a_content: STRING) is
+	on_comment (a_content: STRING)
 			-- Processing comment.
 			-- Atomic: single comment produces single event
 			-- Default: forward event to 'next'.
@@ -93,7 +93,7 @@ feature -- Meta
 
 feature -- Tag
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Start of start tag.
 			-- Default: forward event to 'next'.
 		do
@@ -102,7 +102,7 @@ feature -- Tag
 			end
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
 			-- Attribute.
 			-- Default: forward event to 'next'.
 		do
@@ -111,7 +111,7 @@ feature -- Tag
 			end
 		end
 
-	on_start_tag_finish is
+	on_start_tag_finish
 			-- End of start tag.
 			-- Default: forward event to 'next'.
 		do
@@ -120,7 +120,7 @@ feature -- Tag
 			end
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- End tag.
 			-- Default: forward event to 'next'.
 		do
@@ -131,7 +131,7 @@ feature -- Tag
 
 feature -- Content
 
-	on_content (a_content: STRING) is
+	on_content (a_content: STRING)
 			-- Text content.
 			-- Default: forward event to 'next'.
 		do

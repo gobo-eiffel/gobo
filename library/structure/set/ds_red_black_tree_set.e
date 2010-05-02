@@ -51,7 +51,7 @@ create
 
 feature -- Access
 
-	new_cursor: DS_RED_BLACK_TREE_SET_CURSOR [G] is
+	new_cursor: DS_RED_BLACK_TREE_SET_CURSOR [G]
 			-- New external cursor
 		do
 			create Result.make (Current)

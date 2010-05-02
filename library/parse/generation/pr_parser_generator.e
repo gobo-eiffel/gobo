@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_machine: like machine) is
+	make (a_machine: like machine)
 			-- Create a new parser generator
 			-- associated with `a_machine'.
 		require
@@ -67,7 +67,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_input_filename (a_filename: like input_filename) is
+	set_input_filename (a_filename: like input_filename)
 			-- Set `input_filename' to `a_filename'.
 		require
 			a_filename_not_void: a_filename /= Void
@@ -79,7 +79,7 @@ feature -- Setting
 
 feature -- Status setting
 
-	set_old_typing (b: BOOLEAN) is
+	set_old_typing (b: BOOLEAN)
 			-- Set `old_typing' to `b'.
 		do
 			old_typing := b
@@ -87,7 +87,7 @@ feature -- Status setting
 			old_typing_set: old_typing = b
 		end
 
-	set_line_pragma (b: BOOLEAN) is
+	set_line_pragma (b: BOOLEAN)
 			-- Set `line_pragma' to `b'.
 		do
 			line_pragma := b
@@ -97,7 +97,7 @@ feature -- Status setting
 
 feature -- Generation
 
-	print_parser (tokens_needed, actions_separated: BOOLEAN; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_parser (tokens_needed, actions_separated: BOOLEAN; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print code for corresponding parser to `a_file'.
 			-- Print the token codes with the parser class text
 			-- if `tokens_needed' is true, and the semantic actions
@@ -156,7 +156,7 @@ feature -- Generation
 			print_eiffel_code (a_file)
 		end
 
-	print_token_class (class_name, version: STRING; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_token_class (class_name, version: STRING; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print class text with token code constants to `a_file'.
 			-- `class_name' is the name of the generated class
 			-- and `version' is the verrsion number of geyacc.
@@ -181,7 +181,7 @@ feature -- Generation
 
 feature {NONE} -- Generation
 
-	print_token_codes (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_token_codes (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print token codes to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -200,7 +200,7 @@ feature {NONE} -- Generation
 			tokens := machine.grammar.tokens
 			nb := tokens.count
 			a_file.put_string ("feature -- Access%N%N%
-				%%Ttoken_name (a_token: INTEGER): STRING is%N%
+				%%Ttoken_name (a_token: INTEGER): STRING%N%
 				%%T%T%T-- Name of token `a_token'%N%
 				%%T%Tdo%N%
 				%%T%T%Tinspect a_token%N%
@@ -247,7 +247,7 @@ feature {NONE} -- Generation
 					a_name := a_token.name
 					a_file.put_character ('%T')
 					a_file.put_string (a_name)
-					a_file.put_string (": INTEGER is ")
+					a_file.put_string (": INTEGER = ")
 					a_file.put_integer (a_token.token_id)
 					a_file.put_character ('%N')
 				end
@@ -255,7 +255,7 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_last_values (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_last_values (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print `last_..._value' declarations to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -303,7 +303,7 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_eiffel_header (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_eiffel_header (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print user-defined eiffel header to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -324,7 +324,7 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_eiffel_code (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_eiffel_code (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print user-defined eiffel code to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -338,13 +338,13 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_build_parser_tables (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_build_parser_tables (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print code for `yy_build_parser_tables' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
-			a_file.put_line ("%Tyy_build_parser_tables is")
+			a_file.put_line ("%Tyy_build_parser_tables")
 			a_file.put_line ("%T%T%T-- Build parser tables.")
 			a_file.put_line ("%T%Tdo")
 			a_file.put_line ("%T%T%Tyytranslate := yytranslate_template")
@@ -360,19 +360,19 @@ feature {NONE} -- Generation
 			a_file.put_line ("%T%Tend")
 		end
 
-	print_create_value_stacks (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_create_value_stacks (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print code for `yy_create_value_stacks' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
-			a_file.put_line ("%Tyy_create_value_stacks is")
+			a_file.put_line ("%Tyy_create_value_stacks")
 			a_file.put_line ("%T%T%T-- Create value stacks.")
 			a_file.put_line ("%T%Tdo")
 			a_file.put_line ("%T%Tend")
 		end
 
-	print_init_value_stacks (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_init_value_stacks (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print code for `yy_init_value_stacks' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -383,7 +383,7 @@ feature {NONE} -- Generation
 			a_type_id: INTEGER
 			i, nb: INTEGER
 		do
-			a_file.put_line ("%Tyy_init_value_stacks is")
+			a_file.put_line ("%Tyy_init_value_stacks")
 			a_file.put_line ("%T%T%T-- Initialize value stacks.")
 			a_file.put_line ("%T%Tdo")
 			types := machine.grammar.types
@@ -403,7 +403,7 @@ feature {NONE} -- Generation
 			a_file.put_line ("%T%Tend")
 		end
 
-	print_clear_value_stacks (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_clear_value_stacks (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print code for `yy_clear_value_stacks' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -415,7 +415,7 @@ feature {NONE} -- Generation
 		do
 			types := machine.grammar.types
 			nb := types.count
-			a_file.put_line ("%Tyy_clear_value_stacks is")
+			a_file.put_line ("%Tyy_clear_value_stacks")
 			a_file.put_line ("%T%T%T-- Clear objects in semantic value stacks so that")
 			a_file.put_line ("%T%T%T-- they can be collected by the garbage collector.")
 			if nb > 0 then
@@ -446,7 +446,7 @@ feature {NONE} -- Generation
 			a_file.put_line ("%T%Tend")
 		end
 
-	print_push_last_value (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_push_last_value (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print code for `yy_push_last_value' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -459,7 +459,7 @@ feature {NONE} -- Generation
 			i, nb: INTEGER
 			a_type: PR_TYPE
 		do
-			a_file.put_line ("%Tyy_push_last_value (yychar1: INTEGER) is")
+			a_file.put_line ("%Tyy_push_last_value (yychar1: INTEGER)")
 			a_file.put_line ("%T%T%T-- Push semantic value associated with token `last_token'")
 			a_file.put_line ("%T%T%T-- (with internal id `yychar1') on top of corresponding")
 			a_file.put_line ("%T%T%T-- value stack.")
@@ -521,7 +521,7 @@ feature {NONE} -- Generation
 			a_file.put_line ("%T%Tend")
 		end
 
-	print_push_error_value (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_push_error_value (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print code for `yy_push_error_value' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -532,7 +532,7 @@ feature {NONE} -- Generation
 			a_type: PR_TYPE
 			nb: INTEGER
 		do
-			a_file.put_line ("%Tyy_push_error_value is")
+			a_file.put_line ("%Tyy_push_error_value")
 			a_file.put_line ("%T%T%T-- Push semantic value associated with token 'error'")
 			a_file.put_line ("%T%T%T-- on top of corresponding value stack.")
 			tokens := machine.grammar.tokens
@@ -558,7 +558,7 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_pop_last_value (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_pop_last_value (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print code for `yy_pop_last_value' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -568,7 +568,7 @@ feature {NONE} -- Generation
 			a_type: PR_TYPE
 			i, nb: INTEGER
 		do
-			a_file.put_line ("%Tyy_pop_last_value (yystate: INTEGER) is")
+			a_file.put_line ("%Tyy_pop_last_value (yystate: INTEGER)")
 			a_file.put_line ("%T%T%T-- Pop semantic value from stack when in state `yystate'.")
 			a_file.put_line ("%T%Tlocal")
 			a_file.put_line ("%T%T%Tyy_type_id: INTEGER")
@@ -600,7 +600,7 @@ feature {NONE} -- Generation
 			a_file.put_line ("%T%Tend")
 		end
 
-	print_eiffel_tables (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_eiffel_tables (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print Eiffel code for parser tables to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -627,7 +627,7 @@ feature {NONE} -- Generation
 			print_eiffel_array ("yycheck_template", yycheck, a_file)
 		end
 
-	print_eiffel_array (a_name: STRING; a_table: ARRAY [INTEGER]; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_eiffel_array (a_name: STRING; a_table: ARRAY [INTEGER]; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print Eiffel code for `a_table' named `a_name' to `a_file'.
 		require
 			a_name_not_void: a_name /= Void
@@ -642,7 +642,7 @@ feature {NONE} -- Generation
 		do
 			a_file.put_character ('%T')
 			a_file.put_string (a_name)
-			a_file.put_string (": SPECIAL [INTEGER] is%N")
+			a_file.put_string (": SPECIAL [INTEGER]%N")
 			a_file.put_string ("%T%T%T-- ")
 			a_name_count := a_name.count
 			if a_name_count > 9 and then STRING_.same_string (a_name.substring (a_name_count - 8, a_name_count), "_template") then
@@ -693,7 +693,7 @@ feature {NONE} -- Generation
 					a_file.put_string (a_name)
 					a_file.put_character ('_')
 					a_file.put_integer (j)
-					a_file.put_line (" (an_array: ARRAY [INTEGER]) is")
+					a_file.put_line (" (an_array: ARRAY [INTEGER])")
 					a_file.put_string ("%T%T%T-- ")
 					if a_name_count > 9 and then STRING_.same_string (a_name.substring (a_name_count - 8, a_name_count), "_template") then
 						a_file.put_string ("Fill chunk #")
@@ -724,7 +724,7 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_actions (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_actions (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print code for actions to `a_file'.
 			-- Print all actions in one routine.
 		require
@@ -739,7 +739,7 @@ feature {NONE} -- Generation
 			a_rule: PR_RULE
 			a_type: PR_TYPE
 		do
-			a_file.put_line ("%Tyy_do_action (yy_act: INTEGER) is")
+			a_file.put_line ("%Tyy_do_action (yy_act: INTEGER)")
 			a_file.put_line ("%T%T%T-- Execute semantic action.")
 			nb_types := machine.grammar.types.count
 			create types.make (nb_types)
@@ -806,7 +806,7 @@ feature {NONE} -- Generation
 			a_file.put_line ("%T%Tend")
 		end
 
-	print_separated_actions (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_separated_actions (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print code for actions to `a_file'.
 			-- Print each action into an individual routine.
 		require
@@ -827,7 +827,7 @@ feature {NONE} -- Generation
 				-- several chunks which each have less than
 				-- `inspect_size' branches.
 			inspect_size := 200
-			a_file.put_line ("%Tyy_do_action (yy_act: INTEGER) is")
+			a_file.put_line ("%Tyy_do_action (yy_act: INTEGER)")
 			a_file.put_line ("%T%T%T-- Execute semantic action.")
 			a_file.put_line ("%T%Tdo")
 			rules := machine.grammar.rules
@@ -908,7 +908,7 @@ feature {NONE} -- Generation
 					a_file.put_integer (j)
 					a_file.put_character ('_')
 					a_file.put_integer (k)
-					a_file.put_line (" (yy_act: INTEGER) is")
+					a_file.put_line (" (yy_act: INTEGER)")
 					a_file.put_line ("%T%T%T-- Execute semantic action.")
 					a_file.put_line ("%T%Tdo")
 					a_file.put_line ("%T%T%Tinspect yy_act")
@@ -956,7 +956,7 @@ feature {NONE} -- Generation
 				a_file.put_new_line
 				a_file.put_string ("%Tyy_do_action_")
 				a_file.put_integer (i)
-				a_file.put_line (" is")
+				a_file.put_new_line
 				a_file.put_string ("%T%T%T--|#line ")
 				if line_pragma then
 					a_file.put_integer (a_rule.line_nb)
@@ -983,7 +983,7 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_error_actions (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_error_actions (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print code for actions to `a_file'.
 			-- Print all actions in one routine.
 		require
@@ -995,7 +995,7 @@ feature {NONE} -- Generation
 			a_state: PR_STATE
 			an_action: PR_ERROR_ACTION
 		do
-			a_file.put_line ("%Tyy_do_error_action (yy_act: INTEGER) is")
+			a_file.put_line ("%Tyy_do_error_action (yy_act: INTEGER)")
 			a_file.put_line ("%T%T%T-- Execute error action.")
 			a_file.put_line ("%T%Tdo")
 			a_file.put_line ("%T%T%Tinspect yy_act")
@@ -1050,7 +1050,7 @@ feature {NONE} -- Generation
 			a_file.put_line ("%T%Tend")
 		end
 
-	print_separated_error_actions (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_separated_error_actions (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print code for error actions to `a_file'.
 			-- Print each action into an individual routine.
 		require
@@ -1071,7 +1071,7 @@ feature {NONE} -- Generation
 				-- several chunks which each have less than
 				-- `inspect_size' branches.
 			inspect_size := 200
-			a_file.put_line ("%Tyy_do_error_action (yy_act: INTEGER) is")
+			a_file.put_line ("%Tyy_do_error_action (yy_act: INTEGER)")
 			a_file.put_line ("%T%T%T-- Execute error action.")
 			a_file.put_line ("%T%Tdo")
 			states := machine.states
@@ -1154,7 +1154,7 @@ feature {NONE} -- Generation
 					a_file.put_integer (j)
 					a_file.put_character ('_')
 					a_file.put_integer (k)
-					a_file.put_line (" (yy_act: INTEGER) is")
+					a_file.put_line (" (yy_act: INTEGER)")
 					a_file.put_line ("%T%T%T-- Execute error action.")
 					a_file.put_line ("%T%Tdo")
 					a_file.put_line ("%T%T%Tinspect yy_act")
@@ -1210,7 +1210,7 @@ feature {NONE} -- Generation
 					a_file.put_new_line
 					a_file.put_string ("%Tyy_do_error_action_")
 					a_file.put_integer (a_state.id)
-					a_file.put_line (" is")
+					a_file.put_new_line
 					a_file.put_string ("%T%T%T--|#line ")
 					if line_pragma then
 						a_file.put_integer (an_action.line_nb)
@@ -1239,7 +1239,7 @@ feature {NONE} -- Generation
 			end
 		end
 
-	old_print_conversion_routines (a_file: KI_TEXT_OUTPUT_STREAM) is
+	old_print_conversion_routines (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print code for type conversion routines to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -1268,7 +1268,7 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_stack_declarations (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_stack_declarations (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print declaration of typed value stacks.
 		require
 			a_file_not_void: a_file /= Void
@@ -1292,29 +1292,29 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_constants (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_constants (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print code for constants to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
-			a_file.put_string ("%TyyFinal: INTEGER is ")
+			a_file.put_string ("%TyyFinal: INTEGER = ")
 			a_file.put_integer (yyFinal)
 			a_file.put_string ("%N%T%T%T-- Termination state id%
-				%%N%N%TyyFlag: INTEGER is ")
+				%%N%N%TyyFlag: INTEGER = ")
 			a_file.put_integer (yyFlag)
 			a_file.put_string ("%N%T%T%T-- Most negative INTEGER%
-				%%N%N%TyyNtbase: INTEGER is ")
+				%%N%N%TyyNtbase: INTEGER = ")
 			a_file.put_integer (yyNtbase)
 			a_file.put_string ("%N%T%T%T-- Number of tokens%
-				%%N%N%TyyLast: INTEGER is ")
+				%%N%N%TyyLast: INTEGER = ")
 			a_file.put_integer (yyLast)
 			a_file.put_string ("%N%T%T%T-- Upper bound of `yytable' and `yycheck'%
-				%%N%N%TyyMax_token: INTEGER is ")
+				%%N%N%TyyMax_token: INTEGER = ")
 			a_file.put_integer (yyMax_token)
 			a_file.put_string ("%N%T%T%T-- Maximum token id%
 				%%N%T%T%T-- (upper bound of `yytranslate'.)%
-				%%N%N%TyyNsyms: INTEGER is ")
+				%%N%N%TyyNsyms: INTEGER = ")
 			a_file.put_integer (yyNsyms)
 			a_file.put_string ("%N%T%T%T-- Number of symbols%
 				%%N%T%T%T-- (terminal and nonterminal)%N")
@@ -1322,7 +1322,7 @@ feature {NONE} -- Generation
 
 feature {NONE} -- Building
 
-	build_yytranslate is
+	build_yytranslate
 			-- Build `yytranslate'.
 		local
 			tokens: DS_ARRAYED_LIST [PR_TOKEN]
@@ -1375,7 +1375,7 @@ feature {NONE} -- Building
 			yytranslate_not_void: yytranslate /= Void
 		end
 
-	build_yyr1 is
+	build_yyr1
 			-- Build `yyr1'.
 		local
 			rules: DS_ARRAYED_LIST [PR_RULE]
@@ -1398,7 +1398,7 @@ feature {NONE} -- Building
 			yyr1_not_void: yyr1 /= Void
 		end
 
-	build_yytypes1 is
+	build_yytypes1
 			-- Build `yytypes1'.
 		local
 			states: DS_ARRAYED_LIST [PR_STATE]
@@ -1421,7 +1421,7 @@ feature {NONE} -- Building
 			yytypes1_not_void: yytypes1 /= Void
 		end
 
-	build_yytypes2 is
+	build_yytypes2
 			-- Build `yytypes2'.
 		local
 			tokens: DS_ARRAYED_LIST [PR_TOKEN]
@@ -1445,7 +1445,7 @@ feature {NONE} -- Building
 			yytypes2_not_void: yytypes2 /= Void
 		end
 
-	build_action_tables is
+	build_action_tables
 			-- Build `yydefact', `yydefgoto', `yypact',
 			-- `yypgoto', `yytable' and `yycheck'.
 		local
@@ -1644,7 +1644,7 @@ feature {NONE} -- Building
 			yycheck_not_void: yycheck /= Void
 		end
 
-	put_yydefact (a_state: PR_STATE; portions: DS_LIST [PR_PORTION]) is
+	put_yydefact (a_state: PR_STATE; portions: DS_LIST [PR_PORTION])
 			-- Decide what to do for each token if seen as
 			-- the lookahead token in state `a_state'.
 		require
@@ -1830,7 +1830,7 @@ feature {NONE} -- Building
 			end
 		end
 
-	put_yydefgoto (a_variable: PR_VARIABLE; portions: DS_LIST [PR_PORTION]) is
+	put_yydefgoto (a_variable: PR_VARIABLE; portions: DS_LIST [PR_PORTION])
 			-- Figure out what to do after reducing with
 			-- each rule, depending on the saved state
 			-- from before beginning of parsing the
@@ -1927,15 +1927,15 @@ feature {NONE} -- Access
 
 feature {NONE} -- Constants
 
-	Initial_max_table_size: INTEGER is 500
+	Initial_max_table_size: INTEGER = 500
 			-- Initial capacity for `yytable' and `yycheck'
 
-	Max_table_size_increment: INTEGER is 500
+	Max_table_size_increment: INTEGER = 500
 			-- Increment when resizing `yytable' and `yycheck'
 
-	Indentation: STRING is "%T%T%T"
+	Indentation: STRING = "%T%T%T"
 
-	Portion_sorter: DS_BUBBLE_SORTER [PR_PORTION] is
+	Portion_sorter: DS_BUBBLE_SORTER [PR_PORTION]
 			-- Table portion sorter
 		local
 			a_comparator: KL_COMPARABLE_COMPARATOR [PR_PORTION]
@@ -1946,7 +1946,7 @@ feature {NONE} -- Constants
 			table_portion_sorter_not_void: Result /= Void
 		end
 
-	Default_input_filename: STRING is "standard input"
+	Default_input_filename: STRING = "standard input"
 			-- Default input filename
 
 invariant

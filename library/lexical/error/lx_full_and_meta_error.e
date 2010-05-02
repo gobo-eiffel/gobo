@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new error reporting that the use
 			-- of meta equivalence classes does not make
 			-- sense with full tables.
@@ -33,10 +33,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "$0: -f and -m don't make sense together"
+	default_template: STRING = "$0: -f and -m don't make sense together"
 			-- Default template used to built the error message
 
-	code: STRING is "LX0027"
+	code: STRING = "LX0027"
 			-- Error code
 
 invariant

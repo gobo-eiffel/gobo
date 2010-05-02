@@ -24,7 +24,7 @@ create
 
 feature -- Test
 
-	test_default_create is
+	test_default_create
 			-- Test feature 'default_create'.
 		local
 			b: BOOLEAN
@@ -32,7 +32,7 @@ feature -- Test
 			assert ("default", b = False)
 		end
 
-	test_out is
+	test_out
 			-- Test feature 'out'.
 		local
 			b: BOOLEAN
@@ -52,7 +52,7 @@ feature -- Test
 			assert ("new_string2", l_out /= b.out)
 		end
 
-	test_item is
+	test_item
 			-- Test feature 'item'.
 		local
 			b: BOOLEAN
@@ -65,7 +65,7 @@ feature -- Test
 			assert ("item4", (True).item = True)
 		end
 
-	test_set_item___fail_ise is
+	test_set_item___fail_ise
 			-- Test feature 'set_item'.
 			-- Does not work with ISE Eiffel.
 		local
@@ -89,7 +89,7 @@ feature -- Test
 			end
 		end
 
-	test_is_hashable is
+	test_is_hashable
 			-- Test feature 'is_hashable'.
 		local
 			b: BOOLEAN
@@ -100,7 +100,7 @@ feature -- Test
 			assert ("false_hashable", b.is_hashable)
 		end
 
-	test_hash_code is
+	test_hash_code
 			-- Test feature 'hash_code'.
 		local
 			b1, b2: BOOLEAN
@@ -113,7 +113,7 @@ feature -- Test
 			assert ("hash_code2", b1.hash_code = b2.hash_code)
 		end
 
-	test_to_integer is
+	test_to_integer
 			-- Test feature 'to_integer'.
 		local
 			b: BOOLEAN
@@ -124,7 +124,7 @@ feature -- Test
 			assert_integers_equal ("to_integer2", 0, b.to_integer)
 		end
 
-	test_to_reference is
+	test_to_reference
 			-- Test feature 'to_reference'.
 		local
 			b: BOOLEAN
@@ -140,7 +140,7 @@ feature -- Test
 			assert ("item2", bref.item = False)
 		end
 
-	test_make_from_reference___fail_ise is
+	test_make_from_reference___fail_ise
 			-- Test feature 'make_from_reference'.
 			-- Does not work with ISE Eiffel.
 		local
@@ -159,7 +159,7 @@ feature -- Test
 			end
 		end
 
-	test_conjuncted is
+	test_conjuncted
 			-- Test feature 'conjuncted alias "and"'.
 		local
 			b1, b2, b3: BOOLEAN
@@ -182,7 +182,7 @@ feature -- Test
 			assert ("and4", b3 = False)
 		end
 
-	test_conjuncted_semistrict is
+	test_conjuncted_semistrict
 			-- Test feature 'conjuncted_semistrict alias "and then"'.
 		local
 			b1, b2, b3: BOOLEAN
@@ -205,7 +205,7 @@ feature -- Test
 			assert ("and_then4", b3 = False)
 		end
 
-	test_disjuncted is
+	test_disjuncted
 			-- Test feature 'disjuncted alias "or"'.
 		local
 			b1, b2, b3: BOOLEAN
@@ -228,7 +228,7 @@ feature -- Test
 			assert ("or4", b3 = False)
 		end
 
-	test_disjuncted_semistrict is
+	test_disjuncted_semistrict
 			-- Test feature 'disjuncted_semistrict alias "or else"'.
 		local
 			b1, b2, b3: BOOLEAN
@@ -251,7 +251,7 @@ feature -- Test
 			assert ("or_else4", b3 = False)
 		end
 
-	test_disjuncted_exclusive is
+	test_disjuncted_exclusive
 			-- Test feature 'disjuncted_exclusive alias "xor"'.
 		local
 			b1, b2, b3: BOOLEAN
@@ -274,7 +274,7 @@ feature -- Test
 			assert ("xor4", b3 = False)
 		end
 
-	test_implication is
+	test_implication
 			-- Test feature 'implication alias "implies"'.
 		local
 			b1, b2, b3: BOOLEAN
@@ -297,7 +297,7 @@ feature -- Test
 			assert ("implies4", b3 = True)
 		end
 
-	test_negated is
+	test_negated
 			-- Test feature 'negated alias "not"'.
 		local
 			b1, b2: BOOLEAN
@@ -310,7 +310,7 @@ feature -- Test
 			assert ("not1", b2 = True)
 		end
 
-	test_convert is
+	test_convert
 			-- Test conversion.
 		local
 			b: BOOLEAN

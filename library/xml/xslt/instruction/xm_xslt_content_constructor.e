@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_select_expression, a_separator_expression: XM_XPATH_EXPRESSION) is
+	make (a_select_expression, a_separator_expression: XM_XPATH_EXPRESSION)
 			-- Establish invariant.
 		require
 			select_expression_not_void: a_select_expression /= Void
@@ -52,7 +52,7 @@ feature -- Access
 	separator_expression: XM_XPATH_EXPRESSION
 			-- Separator expression
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, when known
 		do
 			Result := type_factory.string_type
@@ -62,7 +62,7 @@ feature -- Access
 			end
 		end
 
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions of `Current'
 		do
 			create Result.make (2)
@@ -73,7 +73,7 @@ feature -- Access
 
 feature -- Status report
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -83,13 +83,13 @@ feature -- Status report
 			select_expression.display (a_level + 1)
 			separator_expression.display (a_level + 1)
 		end
-	
+
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
-			-- Preform context-independent static optimizations.	
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+			-- Preform context-independent static optimizations.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]	
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			if not select_expression.is_error then
@@ -102,7 +102,7 @@ feature -- Optimization
 			a_replacement.put (Current)
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -131,7 +131,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -142,7 +142,7 @@ feature -- Optimization
 				set_select_expression (l_replacement.item)
 				if select_expression.is_error then
 					set_replacement (a_replacement, select_expression)
-				end	
+				end
 			end
 			if a_replacement.item = Void and not separator_expression.is_error then
 				l_replacement.put (Void)
@@ -154,10 +154,10 @@ feature -- Optimization
 			end
 			if a_replacement.item = Void then
 				a_replacement.put (Current)
-			end			
-		end	
+			end
+		end
 
-	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this subexpression.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -176,10 +176,10 @@ feature -- Optimization
 				set_separator_expression (l_replacement.item)
 			end
 		end
-		
+
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -189,7 +189,7 @@ feature -- Evaluation
 			elseif is_singleton then
 
 				-- common case, so optimize
-	
+
 				select_expression.evaluate_item (a_result, a_context)
 				if a_result.item /= Void then
 					if a_result.item.is_error then
@@ -218,24 +218,24 @@ feature -- Evaluation
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	native_implementations: INTEGER is
+	native_implementations: INTEGER
 			-- Natively-supported evaluation routines
 		do
 			Result := Supports_evaluate
 		end
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
 		end
 
 feature {NONE} -- Implementation
-	
+
 	is_singleton: BOOLEAN
 			-- Is `select_expression' a single item?
 
-	set_select_expression (a_select_expression: XM_XPATH_EXPRESSION) is
+	set_select_expression (a_select_expression: XM_XPATH_EXPRESSION)
 			-- Ensure `select_expression' = `a_select_expression'.
 		require
 			select_expression_not_void: a_select_expression /= Void
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 			set: select_expression = a_select_expression
 		end
 
-	set_separator_expression (a_separator_expression: XM_XPATH_EXPRESSION) is
+	set_separator_expression (a_separator_expression: XM_XPATH_EXPRESSION)
 			-- Ensure `separator_expression' = `a_separator_expression'.
 		require
 			separator_expression_not_void: a_separator_expression /= Void
@@ -263,7 +263,7 @@ feature {NONE} -- Implementation
 			set: separator_expression = a_separator_expression
 		end
 
-	evaluate_sequence (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT; a_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
+	evaluate_sequence (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT; a_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM])
 			-- Evaluate `a_iterator'.
 		require
 			a_result_not_void: a_result /= Void
@@ -342,7 +342,7 @@ feature {NONE} -- Implementation
 			item_evaluated_but_may_be_void: True
 		end
 
-	separator_value  (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT): STRING is
+	separator_value  (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT): STRING
 			-- Value of `separator_expression';
 			-- Trashes `a_result', so not pure.
 		require
@@ -362,7 +362,7 @@ feature {NONE} -- Implementation
 			no_error_implies_result_not_void: a_result.item = Void implies Result /= Void
 			error_implies_result_is_void: a_result.item /= Void implies a_result.item.is_error and then Result = Void
 		end
-	
+
 invariant
 
 	select_expression_not_void: initialized implies select_expression /= Void

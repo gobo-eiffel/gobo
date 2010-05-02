@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (nb: INTEGER) is
+	make (nb: INTEGER)
 			-- Create a new topological sorter.
 			-- Set initial capacity to `nb'.
 		require
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			capacity_set: capacity = nb
 		end
 
-	make_default is
+	make_default
 			-- Create a new topological sorter.
 			-- Set initial capacity to a default value.
 		do
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	index_of (v: G): INTEGER is
+	index_of (v: G): INTEGER
 			-- Index of `v' in the list of items to be sorted;
 			-- Return 'count + 1' if `v' is not in the list yet
 		do
@@ -66,7 +66,7 @@ feature -- Access
 			-- (Note: the items in `cycle' are stored in reverse order
 			-- and the first item is repeated at the end of the list.)
 
-	equality_tester: KL_EQUALITY_TESTER [G] is
+	equality_tester: KL_EQUALITY_TESTER [G]
 			-- Equality tester to compare items to be sorted;
 			-- A void equality tester means that `=' will be
 			-- used as comparison criterion.
@@ -76,7 +76,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items to be sorted
 		do
 			Result := items.count
@@ -84,7 +84,7 @@ feature -- Measurement
 			count_positive: Result >= 0
 		end
 
-	capacity: INTEGER is
+	capacity: INTEGER
 			-- Maximum number of items to be sorted
 		do
 			Result := items.capacity
@@ -94,7 +94,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Are there no items yet to be sorted?
 		do
 			Result := (count = 0)
@@ -102,19 +102,19 @@ feature -- Status report
 			definition: Result = (count = 0)
 		end
 
-	has (v: G): BOOLEAN is
+	has (v: G): BOOLEAN
 			-- Is `v' included in the list of items to be sorted?
 		do
 			Result := items.has (v)
 		end
 
-	has_void: BOOLEAN is
+	has_void: BOOLEAN
 			-- Is Void included in the list of items to be sorted?
 		do
 			Result := items.has_void
 		end
 
-	is_sorted: BOOLEAN is
+	is_sorted: BOOLEAN
 			-- Have items been sorted?
 		do
 			Result := (sorted_items /= Void)
@@ -122,7 +122,7 @@ feature -- Status report
 			definition: Result = (sorted_items /= Void)
 		end
 
-	has_cycle: BOOLEAN is
+	has_cycle: BOOLEAN
 			-- Has a cycle been detected?
 		do
 			Result := (cycle /= Void and then not cycle.is_empty)
@@ -130,7 +130,7 @@ feature -- Status report
 			definition: Result = (cycle /= Void and then not cycle.is_empty)
 		end
 
-	equality_tester_settable (a_tester: like equality_tester): BOOLEAN is
+	equality_tester_settable (a_tester: like equality_tester): BOOLEAN
 			-- Can `set_equality_tester' be called with `a_tester'
 			-- as argument in current state of the sorter?
 		do
@@ -141,7 +141,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_equality_tester (a_tester: like equality_tester) is
+	set_equality_tester (a_tester: like equality_tester)
 			-- Set `equality_tester' to `a_tester'.
 			-- A void equality tester means that `='
 			-- will be used as comparison criterion.
@@ -155,7 +155,7 @@ feature -- Setting
 
 feature -- Element change
 
-	put (v: G) is
+	put (v: G)
 			-- Add `v' to the list of items to be sorted.
 		require
 			not_has: not has (v)
@@ -170,7 +170,7 @@ feature -- Element change
 			last: index_of (v) = count
 		end
 
-	force (v: G) is
+	force (v: G)
 			-- Add `v' to the list of items to be sorted.
 			-- Resize the list of items if needed.
 		require
@@ -191,7 +191,7 @@ feature -- Element change
 			last: index_of (v) = count
 		end
 
-	put_relation (u, v: G) is
+	put_relation (u, v: G)
 			-- Specify that item `u' should appear
 			-- before item `v' in the sorted list.
 		require
@@ -201,7 +201,7 @@ feature -- Element change
 			put_indexed_relation (index_of (u), index_of (v))
 		end
 
-	force_relation (u, v: G) is
+	force_relation (u, v: G)
 			-- Specify that item `u' should appear
 			-- before item `v' in the sorted list.
 			-- Insert `u' and `v' in the list of items
@@ -220,7 +220,7 @@ feature -- Element change
 			put_indexed_relation (iu, iv)
 		end
 
-	put_indexed_relation (i, j: INTEGER) is
+	put_indexed_relation (i, j: INTEGER)
 			-- Specify that item at index `i' should
 			-- appear before item at index `j' in
 			-- the sorted list.
@@ -244,7 +244,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove (v: G) is
+	remove (v: G)
 			-- Remove `v' to the list of items to be sorted.
 			-- Keep the order relation for the sorting though.
 		require
@@ -327,7 +327,7 @@ feature -- Removal
 			removed: not has (v)
 		end
 
-	reset is
+	reset
 			-- Discard result of last sort.
 		do
 			sorted_items := Void
@@ -337,7 +337,7 @@ feature -- Removal
 			no_cycle: not has_cycle
 		end
 
-	wipe_out is
+	wipe_out
 			-- Wipe out items.
 		do
 			reset
@@ -352,7 +352,7 @@ feature -- Removal
 
 feature -- Sort
 
-	sort is
+	sort
 			-- Sort items held in `items' according to the
 			-- relations which have been recorded.
 		local

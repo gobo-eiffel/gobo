@@ -23,7 +23,7 @@ inherit
 		end
 
 	XM_XPATH_ROLE
-	
+
 	XM_XPATH_PROMOTION_ACTIONS
 
 	XM_XPATH_TAIL_CALL
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_range_variable: XM_XPATH_RANGE_VARIABLE_DECLARATION; a_sequence_expression: XM_XPATH_EXPRESSION; a_action: XM_XPATH_EXPRESSION) is
+	make (a_range_variable: XM_XPATH_RANGE_VARIABLE_DECLARATION; a_sequence_expression: XM_XPATH_EXPRESSION; a_action: XM_XPATH_EXPRESSION)
 		require
 			a_range_variable_not_void: a_range_variable /= Void
 			a_sequence_expression_not_void: a_sequence_expression /= Void
@@ -57,26 +57,26 @@ feature -- Access
 
 	reference_count: INTEGER
 			-- Estimate of number of references to `Current', set by `optimize'
-		
-	is_let_expression: BOOLEAN is
+
+	is_let_expression: BOOLEAN
 			-- Is `Current' a let expression?
 		do
 			Result := True
 		end
 
-	as_let_expression: XM_XPATH_LET_EXPRESSION is
+	as_let_expression: XM_XPATH_LET_EXPRESSION
 			-- `Current' seen as a let expression
 		do
 			Result := Current
 		end
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Determine the data type of the expression, if possible
 		do
 			Result := action.item_type
 		end
 
-	required_type: XM_XPATH_SEQUENCE_TYPE is
+	required_type: XM_XPATH_SEQUENCE_TYPE
 			-- Static type of variable
 		do
 			create Result.make (sequence.item_type, sequence.cardinality)
@@ -84,13 +84,13 @@ feature -- Access
 
 feature -- Status report
 
-	is_tail_call: BOOLEAN is
+	is_tail_call: BOOLEAN
 			-- Is `Current' an XPath tail call?
 		do
 			Result := True
 		end
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -106,7 +106,7 @@ feature -- Status report
 			action.display (a_level + 1)
 		end
 
-	contains_recursive_tail_function_calls (a_name_code, a_arity: INTEGER): UT_TRISTATE is
+	contains_recursive_tail_function_calls (a_name_code, a_arity: INTEGER): UT_TRISTATE
 			-- Does `Current' contains recursive tail calls of stylesheet functions?
 			-- `Undecided' means it contains a tail call to another function.
 		do
@@ -115,15 +115,15 @@ feature -- Status report
 
 feature -- Status setting
 
-	mark_tail_function_calls is
+	mark_tail_function_calls
 			-- Mark tail-recursive calls on stylesheet functions.
 		do
 			action.mark_tail_function_calls
 		end
-	  
+
 feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_expression: XM_XPATH_EXPRESSION
@@ -181,7 +181,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_try_count: INTEGER
@@ -191,9 +191,9 @@ feature -- Optimization
 			if declaration /= Void then
 				reference_count := declaration.reference_count (Current)
 				if reference_count = 0 then
-					
+
 					-- variable is not used - no need to evaluate it
-					
+
 					set_replacement (a_replacement, action)
 					l_optimized := True
 					-- TODO elseif reference_count = 1 or sequence is a literal (neither in a loop) then
@@ -245,7 +245,7 @@ feature -- Optimization
 			end
 		end
 
-	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this subexpression.
 		local
 			l_promotion: XM_XPATH_EXPRESSION
@@ -330,7 +330,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_let_expression: XM_XPATH_LET_EXPRESSION
@@ -338,7 +338,7 @@ feature -- Evaluation
 			l_finished: BOOLEAN
 			l_result: DS_CELL [XM_XPATH_VALUE]
 		do
-						
+
 			--  Minimize stack consumption by evaluating nested LET expressions iteratively
 
 			from
@@ -368,7 +368,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterator over the values of a sequence
 		local
 			l_let_expression: XM_XPATH_LET_EXPRESSION
@@ -376,7 +376,7 @@ feature -- Evaluation
 			l_finished: BOOLEAN
 			l_result: DS_CELL [XM_XPATH_VALUE]
 		do
-						
+
 			--  Minimize stack consumption by evaluating nested LET expressions iteratively
 
 			from
@@ -407,7 +407,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterator over the values of a node sequence
 		local
 			l_let_expression: XM_XPATH_LET_EXPRESSION
@@ -415,7 +415,7 @@ feature -- Evaluation
 			l_finished: BOOLEAN
 			l_result: DS_CELL [XM_XPATH_VALUE]
 		do
-						
+
 			--  Minimize stack consumption by evaluating nested LET expressions iteratively
 
 			from
@@ -446,7 +446,7 @@ feature -- Evaluation
 			end
 		end
 
-	generate_events (a_context: XM_XPATH_CONTEXT) is
+	generate_events (a_context: XM_XPATH_CONTEXT)
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_let_expression: XM_XPATH_LET_EXPRESSION
@@ -454,7 +454,7 @@ feature -- Evaluation
 			l_finished: BOOLEAN
 			l_result: DS_CELL [XM_XPATH_VALUE]
 		do
-						
+
 			--  Minimize stack consumption by evaluating nested LET expressions iteratively
 
 			from
@@ -486,7 +486,7 @@ feature -- Evaluation
 			end
 		end
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XPATH_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XPATH_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_let_expression: XM_XPATH_LET_EXPRESSION
@@ -494,7 +494,7 @@ feature -- Evaluation
 			l_finished: BOOLEAN
 			l_result: DS_CELL [XM_XPATH_VALUE]
 		do
-			
+
 			--  Minimize stack consumption by evaluating nested LET expressions iteratively
 
 			from
@@ -531,7 +531,7 @@ feature -- Evaluation
 
 feature -- Conversion
 
-	as_tail_call: XM_XPATH_TAIL_CALL is
+	as_tail_call: XM_XPATH_TAIL_CALL
 			-- `Current' seen as an XPath tail call
 		do
 			Result := Current
@@ -539,7 +539,7 @@ feature -- Conversion
 
 feature {XM_XPATH_LET_EXPRESSION} -- Local
 
-	evaluate_let_expression (a_result: DS_CELL [XM_XPATH_VALUE]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_let_expression (a_result: DS_CELL [XM_XPATH_VALUE]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate `Current'.
 		require
 			a_result_not_void: a_result /= Void
@@ -553,7 +553,7 @@ feature {XM_XPATH_LET_EXPRESSION} -- Local
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_special_properties is
+	compute_special_properties
 			-- Compute special properties.
 		do
 			clone_special_properties (action)
@@ -564,7 +564,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality (action.cardinality)
@@ -573,9 +573,9 @@ feature {NONE} -- Implementation
 	evaluation_mode: INTEGER
 			-- Method used for evaluating `Current'
 
-	Maximum_optimization_attempts: INTEGER is 5
+	Maximum_optimization_attempts: INTEGER = 5
 
-	replace_variable (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_var_ref: XM_XPATH_VARIABLE_REFERENCE) is
+	replace_variable (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_var_ref: XM_XPATH_VARIABLE_REFERENCE)
 			-- Replace `a_var_ref' with it's value.
 		require
 			reference_not_void: a_var_ref /= Void
@@ -601,6 +601,6 @@ invariant
 	operator_is_let: operator = Let_token
 	evaluation_mode_large_enough: evaluation_mode >= Evaluation_method_undecided
 	evaluation_mode_small_enough: evaluation_mode <= Create_memo_closure
-	
+
 end
 

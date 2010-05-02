@@ -21,7 +21,7 @@ inherit
 
 feature -- Access
 
-	zero: MA_DECIMAL is
+	zero: MA_DECIMAL
 			-- Neutral element for "+" and "-"
 		once
 			create Result.make (1)
@@ -30,7 +30,7 @@ feature -- Access
 			zero_not_void: Result /= Void
 		end
 
-	negative_zero: MA_DECIMAL is
+	negative_zero: MA_DECIMAL
 			-- Negative zero
 		once
 			Result := zero.negative_zero
@@ -38,7 +38,7 @@ feature -- Access
 			negative_zero_not_void: Result /= Void
 		end
 
-	one: MA_DECIMAL is
+	one: MA_DECIMAL
 			-- Neutral element for "*" and "/"
 		once
 			Result := zero.one
@@ -46,7 +46,7 @@ feature -- Access
 			one_not_void: Result /= Void
 		end
 
-	minus_one: MA_DECIMAL is
+	minus_one: MA_DECIMAL
 			-- Minus one
 		once
 			Result := zero.minus_one
@@ -54,7 +54,7 @@ feature -- Access
 			minus_not_void: Result /= Void
 		end
 
-	infinity: MA_DECIMAL is
+	infinity: MA_DECIMAL
 			-- Infinity
 		once
 			Result := zero.infinity
@@ -62,7 +62,7 @@ feature -- Access
 			infinity_not_void: Result /= Void
 		end
 
-	negative_infinity: MA_DECIMAL is
+	negative_infinity: MA_DECIMAL
 			-- Negative infinity
 		once
 			Result := zero.negative_infinity
@@ -70,7 +70,7 @@ feature -- Access
 			negative_infinity_not_void: Result /= Void
 		end
 
-	not_a_number: MA_DECIMAL is
+	not_a_number: MA_DECIMAL
 			-- Not a Number
 		once
 			Result := zero.nan
@@ -78,7 +78,7 @@ feature -- Access
 			not_a_number: Result /= Void
 		end
 
-	signaling_not_a_number: MA_DECIMAL is
+	signaling_not_a_number: MA_DECIMAL
 			-- Signaling Not a Number
 		once
 			Result := zero.snan
@@ -86,7 +86,7 @@ feature -- Access
 			signaling_not_a_number: Result /= Void
 		end
 
-	minimum_integer: MA_DECIMAL is
+	minimum_integer: MA_DECIMAL
 			-- Minimum value convertible to integer
 		local
 			ctx: MA_DECIMAL_CONTEXT
@@ -97,7 +97,7 @@ feature -- Access
 			minimum_integer_not_void: Result /= Void
 		end
 
-	maximum_integer: MA_DECIMAL is
+	maximum_integer: MA_DECIMAL
 			-- Maximum value convertible to integer
 		local
 			ctx: MA_DECIMAL_CONTEXT

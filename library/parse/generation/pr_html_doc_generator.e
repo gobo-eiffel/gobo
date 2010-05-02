@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Generation
 
-	print_grammar_header (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_grammar_header (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print grammar documentation header to `a_file'.
 		do
 			a_file.put_line ("<html>")
@@ -37,27 +37,27 @@ feature {NONE} -- Generation
 			a_file.put_line ("<body>")
 		end
 
-	print_grammar_footer (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_grammar_footer (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print grammar documentation footer to `a_file'.
 		do
 			a_file.put_line ("</body>")
 			a_file.put_line ("</html>")
 		end
 
-	print_rule_header (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_rule_header (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print rule documentation header to `a_file'.
 		do
 			a_file.put_line ("<div class=%"rule%">")
 		end
 
-	print_rule_footer (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_rule_footer (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print rule documentation footer to `a_file'.
 		do
 			a_file.put_line ("</div>")
 			a_file.put_new_line
 		end
 
-	print_lhs (a_variable: PR_VARIABLE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_lhs (a_variable: PR_VARIABLE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print `a_variable' (when it appears on the left-hand side of a rule) to `a_file'.
 		do
 			a_file.put_line ("<div class=%"lhs%">")
@@ -70,33 +70,33 @@ feature {NONE} -- Generation
 			a_file.put_line ("</div>")
 		end
 
-	print_first_rhs_header (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_first_rhs_header (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print first rhs documentation header to `a_file'.
 		do
 			a_file.put_line ("<div class=%"rhs%">")
 			a_file.put_string ("&nbsp; ")
 		end
 
-	print_first_rhs_footer (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_first_rhs_footer (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print first rhs documentation footer to `a_file'.
 		do
 			a_file.put_line ("</div>")
 		end
 
-	print_next_rhs_header (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_next_rhs_header (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print next rhs documentation header to `a_file'.
 		do
 			a_file.put_line ("<div class=%"rhs%">")
 			a_file.put_string ("| ")
 		end
 
-	print_next_rhs_footer (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_next_rhs_footer (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print next rhs documentation footer to `a_file'.
 		do
 			a_file.put_line ("</div>")
 		end
 
-	print_token (a_token: PR_TOKEN; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_token (a_token: PR_TOKEN; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print `a_token' to `a_file'.
 		do
 			if a_token.literal_string /= Void then
@@ -121,7 +121,7 @@ feature {NONE} -- Generation
 			a_file.put_string ("</span>")
 		end
 
-	print_variable (a_variable: PR_VARIABLE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_variable (a_variable: PR_VARIABLE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print `a_variable' (when it appears on the right-hand side of a rule) to `a_file'.
 		do
 			a_file.put_string ("<span class=%"rhs_variable%">")
@@ -133,13 +133,13 @@ feature {NONE} -- Generation
 			a_file.put_string ("</span>")
 		end
 
-	print_empty_rhs (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_empty_rhs (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print an right-hand side of a rule to `a_file'.
 		do
 			a_file.put_string ("<span class=%"empty%">-/-</span>")
 		end
 
-	print_css (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_css (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print CSS to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -193,7 +193,7 @@ feature {NONE} -- Generation
 			a_file.put_line ("%T}")
 		end
 
-	print_escaped (a_string: STRING; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_escaped (a_string: STRING; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print `a_string' with escaped HTML characters to `a_file'.
 		require
 			a_file_not_void: a_file /= Void

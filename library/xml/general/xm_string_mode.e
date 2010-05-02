@@ -15,13 +15,13 @@ class XM_STRING_MODE
 inherit
 
 	ANY
-	
+
 	KL_IMPORTED_BOOLEAN_ROUTINES
 		export {NONE} all end
 
 feature -- Status report
 
-	is_string_mode_ascii: BOOLEAN is
+	is_string_mode_ascii: BOOLEAN
 			-- Is string mode set to ascii only?
 			-- This means that all strings issued by this source
 			-- will be of dynamic type STRING.
@@ -29,7 +29,7 @@ feature -- Status report
 			Result := string_mode = String_mode_ascii
 		end
 
-	is_string_mode_latin1: BOOLEAN is
+	is_string_mode_latin1: BOOLEAN
 			-- Is string mode set to latin-1 only?
 			-- This means that all strings issued by this source
 			-- will be of dynamic type STRING.
@@ -37,7 +37,7 @@ feature -- Status report
 			Result := string_mode = String_mode_latin1
 		end
 
-	is_string_mode_mixed: BOOLEAN is
+	is_string_mode_mixed: BOOLEAN
 			-- Is string mode set to polymorphic strings?
 			-- This means that strings issued by this source will
 			-- be of dynamic type STRING for ascii, and dynamic
@@ -47,7 +47,7 @@ feature -- Status report
 			Result := string_mode = String_mode_mixed
 		end
 
-	is_string_mode_unicode: BOOLEAN is
+	is_string_mode_unicode: BOOLEAN
 			-- Is string mode set to UC_STRING only?
 			-- This means that all strings issued by this source
 			-- will be of a dynamic type UC_STRING or descendant.
@@ -57,7 +57,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_string_mode_ascii is
+	set_string_mode_ascii
 			-- Set all strings issued by this source to be ascii
 			-- (all characters <= 127) and be of dynamic type STRING.
 			-- The source will be in an error state if it has
@@ -68,7 +68,7 @@ feature -- Status setting
 			string_mode_set: is_string_mode_ascii
 		end
 
-	set_string_mode_latin1 is
+	set_string_mode_latin1
 			-- Set all strings issued by this source to be latin-1
 			-- (all characters <= 255) and be of dynamic type STRING.
 			-- The source will be in an error state if it has
@@ -78,8 +78,8 @@ feature -- Status setting
 		ensure
 			string_mode_set: is_string_mode_latin1
 		end
-			 
-	set_string_mode_mixed is
+
+	set_string_mode_mixed
 			-- Set all strings issued by this source to be either of
 			-- type UC_STRING or descendant if they contain characters
 			-- >127 or of dynamic type STRING otherwise.
@@ -92,7 +92,7 @@ feature -- Status setting
 			string_mode_set: is_string_mode_mixed
 		end
 
-	set_string_mode_unicode is
+	set_string_mode_unicode
 			-- Set all strings issued by this source to be of
 			-- dynamic type UC_STRING or descendant.
 		do
@@ -103,7 +103,7 @@ feature -- Status setting
 
 feature -- Copy
 
-	copy_string_mode (other: XM_STRING_MODE) is
+	copy_string_mode (other: XM_STRING_MODE)
 			-- Copy string mode.
 		require
 			other_not_void: other /= Void
@@ -115,14 +115,14 @@ feature -- Copy
 
 feature -- Status report
 
-	same_string_mode (other: XM_STRING_MODE): BOOLEAN is
+	same_string_mode (other: XM_STRING_MODE): BOOLEAN
 			-- Is `other' with the same string mode?
 		require
 			other_not_void: other /= Void
 		do
 			Result := string_mode = other.string_mode
 		end
-		
+
 feature {XM_STRING_MODE} -- Implementation
 
 	string_mode: INTEGER
@@ -130,10 +130,10 @@ feature {XM_STRING_MODE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	String_mode_latin1: INTEGER is 0
-	String_mode_unicode: INTEGER is 1
-	String_mode_mixed: INTEGER is 2
-	String_mode_ascii: INTEGER is 3
+	String_mode_latin1: INTEGER = 0
+	String_mode_unicode: INTEGER = 1
+	String_mode_mixed: INTEGER = 2
+	String_mode_ascii: INTEGER = 3
 			-- Values
 
 invariant

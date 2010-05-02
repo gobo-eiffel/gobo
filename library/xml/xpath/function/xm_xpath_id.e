@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant
 		do
 			name := "id"; namespace_uri := Xpath_standard_functions_uri
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, where known
 		do
 			Result := element_node_kind_test
@@ -55,7 +55,7 @@ feature -- Access
 
 feature -- Status report
 
-	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
+	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE
 			-- Type of argument number `argument_number'
 		do
 			inspect
@@ -64,12 +64,12 @@ feature -- Status report
 					create Result.make_string_sequence
 			when 2 then
 				create Result.make_single_node
-			end	
+			end
 		end
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations
 		do
 			Precursor (a_replacement)
@@ -82,7 +82,7 @@ feature -- Optimization
 feature -- Evaluation
 
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- An iterator over the values of a sequence
 		local
 			l_node: XM_XPATH_NODE
@@ -139,7 +139,7 @@ feature -- Evaluation
 					else
 						create l_id_mapping_function.make (l_node.as_document)
 						create l_mapping_iterator.make (arguments.item (1).last_iterator, l_id_mapping_function, Void)
-						create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} last_iterator.make (l_mapping_iterator, l_local_order_comparer) 
+						create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} last_iterator.make (l_mapping_iterator, l_local_order_comparer)
 					end
 				end
 			else
@@ -150,13 +150,13 @@ feature -- Evaluation
 			node_iterator: last_iterator.is_node_iterator
 		end
 
-	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Pre-evaluate `Current' at compile time.
 		do
 			a_replacement.put (Current)
 		end
-	
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over a node sequence
 		do
 			create_iterator (a_context)
@@ -165,7 +165,7 @@ feature -- Evaluation
 
 feature {XM_XPATH_FUNCTION_CALL} -- Local
 
-	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -183,13 +183,13 @@ feature {XM_XPATH_FUNCTION_CALL} -- Local
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_zero_or_more
 		end
 
-	compute_special_properties is
+	compute_special_properties
 			-- Compute special properties.
 		do
 			initialize_special_properties
@@ -207,4 +207,4 @@ feature {NONE} -- Implementation
 			-- Is only one IDREFS value supplied?
 
 end
-	
+

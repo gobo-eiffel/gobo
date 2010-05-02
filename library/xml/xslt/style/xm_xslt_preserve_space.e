@@ -29,7 +29,7 @@ create {XM_XSLT_NODE_FACTORY}
 
 feature -- Element change
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -63,7 +63,7 @@ feature -- Element change
 			attributes_prepared := True
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 		do
 			check_empty
@@ -71,7 +71,7 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (a_executable: XM_XSLT_EXECUTABLE) is
+	compile (a_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to a excutable instruction.
 		local
 			is_preserving: BOOLEAN
@@ -108,19 +108,19 @@ feature {NONE} -- Implementation
 	elements: STRING
 			-- Names tests of elements to be stripped/preserved
 
-	minus_one_half: MA_DECIMAL is
+	minus_one_half: MA_DECIMAL
 			-- -0.5
 		once
 			create Result.make_from_string ("-0.5")
 		end
 
-	minus_one_quarter: MA_DECIMAL is
+	minus_one_quarter: MA_DECIMAL
 			-- -0.25
 		once
 			create Result.make_from_string ("-0.25")
 		end
 
-	compile_stripper_rules (a_executable: XM_XSLT_EXECUTABLE; a_token: STRING; is_preserving: BOOLEAN; stripper_rules: XM_XSLT_MODE) is
+	compile_stripper_rules (a_executable: XM_XSLT_EXECUTABLE; a_token: STRING; is_preserving: BOOLEAN; stripper_rules: XM_XSLT_MODE)
 			-- Compile a stripper rule for `a_token'.
 		require
 		a_executable_not_void: a_executable /= Void

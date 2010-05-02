@@ -53,7 +53,7 @@ create {DT_DATE_HANDLER}
 
 feature {NONE} -- Initialization
 
-	make (y, m, d: INTEGER) is
+	make (y, m, d: INTEGER)
 			-- Create a new date.
 		require
 			m_large_enough: m >= January
@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 			day_set: day = d
 		end
 
-	make_from_day_count (d: INTEGER) is
+	make_from_day_count (d: INTEGER)
 			-- Create a new date from the number
 			-- of days since epoch (1 Jan 1970).
 		do
@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 			day_count_set: day_count = d
 		end
 
-	make_from_storage (a_storage: INTEGER) is
+	make_from_storage (a_storage: INTEGER)
 			-- Create a new date from `a_storage'.
 		do
 			storage := a_storage
@@ -87,7 +87,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	year: INTEGER is
+	year: INTEGER
 			-- Year
 		do
 			if storage < 0 then
@@ -97,7 +97,7 @@ feature -- Access
 			end
 		end
 
-	month: INTEGER is
+	month: INTEGER
 			-- Month
 		do
 			if storage < 0 then
@@ -110,7 +110,7 @@ feature -- Access
 			month_small_enough: Result <= December
 		end
 
-	day: INTEGER is
+	day: INTEGER
 			-- Day
 		do
 			if storage < 0 then
@@ -123,7 +123,7 @@ feature -- Access
 			day_small_enough: Result <= days_in_month (month, year)
 		end
 
-	year_day: INTEGER is
+	year_day: INTEGER
 			-- Day in current year
 		do
 			Result := days_at_month (month, year) + day
@@ -132,7 +132,7 @@ feature -- Access
 			leap_year: is_leap_year implies (Result >= 1 and Result <= Days_in_leap_year)
 		end
 
-	week: INTEGER is
+	week: INTEGER
 			-- Week number for `Current' using ISO 8601 specification:
 			-- weeks start on Monday and week number 1 contains the
 			-- first Thursday of the year. Dates before the first week
@@ -142,7 +142,7 @@ feature -- Access
 			Result := week_number (year, month, day)
 		end
 
-	day_of_week: DT_WEEK_DAY is
+	day_of_week: DT_WEEK_DAY
 			-- Day of week for `Current'
 		do
 			Result := week_days_from_monday.week_day_from_date (Current)
@@ -150,7 +150,7 @@ feature -- Access
 			day_of_week_not_void: Result /= Void
 		end
 
-	duration (other: like Current): DT_DATE_DURATION is
+	duration (other: like Current): DT_DATE_DURATION
 			-- Duration between `other' and `Current'
 		do
 			Result := date_duration (other)
@@ -158,7 +158,7 @@ feature -- Access
 			definite_duration: Result.is_definite
 		end
 
-	canonical_duration (other: like Current): like duration is
+	canonical_duration (other: like Current): like duration
 			-- Canonical duration between `other' and `Current'
 		require
 			other_not_void: other /= Void
@@ -170,7 +170,7 @@ feature -- Access
 			definition: (other + Result).is_equal (Current)
 		end
 
-	date_duration (other: like Current): DT_DATE_DURATION is
+	date_duration (other: like Current): DT_DATE_DURATION
 			-- Duration between `other' and `Current'
 		require
 			other_not_void: other /= Void
@@ -182,13 +182,13 @@ feature -- Access
 			definition: (other &@ Result).same_date (Current)
 		end
 
-	day_count: INTEGER is
+	day_count: INTEGER
 			-- Number of days since epoch (1 Jan 1970)
 		do
 			Result := epoch_days (year, month, day)
 		end
 
-	days_in_current_month: INTEGER is
+	days_in_current_month: INTEGER
 			-- Number of days in `Current''s month
 		do
 			Result := days_in_month (month, year)
@@ -197,7 +197,7 @@ feature -- Access
 			max_days_in_month: Result <= Max_days_in_month
 		end
 
-	days_in_previous_month: INTEGER is
+	days_in_previous_month: INTEGER
 			-- Number of days in `Current''s previous month
 		local
 			mm, yy: INTEGER
@@ -214,7 +214,7 @@ feature -- Access
 			max_days_in_month: Result <= Max_days_in_month
 		end
 
-	plus_date_duration alias "&@" (a_duration: like date_duration): like Current is
+	plus_date_duration alias "&@" (a_duration: like date_duration): like Current
 			-- Addition of `a_duration' to `Current'
 			-- (Create a new object at each call.)
 		require
@@ -226,7 +226,7 @@ feature -- Access
 			addition_not_void: Result /= Void
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code
 		do
 			Result := storage
@@ -237,7 +237,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_leap_year: BOOLEAN is
+	is_leap_year: BOOLEAN
 			-- Is `year' a leap year?
 		do
 			Result := leap_year (year)
@@ -245,7 +245,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_date (a_date: DT_DATE) is
+	set_date (a_date: DT_DATE)
 			-- Set `year', `month' and `day' from `a_date'.
 		require
 			a_date_not_void: a_date /= Void
@@ -257,7 +257,7 @@ feature -- Setting
 			day_set: day = a_date.day
 		end
 
-	set_year_month_day (y, m, d: INTEGER) is
+	set_year_month_day (y, m, d: INTEGER)
 			-- Set `year' to `y', `month' to `m' and `day' to `d'.
 		require
 			m_large_enough: m >= January
@@ -276,7 +276,7 @@ feature -- Setting
 			day_set: day = d
 		end
 
-	set_year (y: INTEGER) is
+	set_year (y: INTEGER)
 			-- Set `year' to `y'.
 		require
 			leap_year_aware: day <= days_in_month (month, y)
@@ -309,7 +309,7 @@ feature -- Setting
 			same_day: day = old day
 		end
 
-	set_month (m: INTEGER) is
+	set_month (m: INTEGER)
 			-- Set `month' to `m'.
 		require
 			m_large_enough: m >= January
@@ -331,7 +331,7 @@ feature -- Setting
 			same_day: day = old day
 		end
 
-	set_day (d: INTEGER) is
+	set_day (d: INTEGER)
 			-- Set `day' to `d'.
 		require
 			d_large_enough: d >= 1
@@ -348,7 +348,7 @@ feature -- Setting
 			same_month: month = old month
 		end
 
-	set_day_count (d: INTEGER) is
+	set_day_count (d: INTEGER)
 			-- Set `day_count' to `d'.
 		do
 			set_from_epoch_days (d)
@@ -358,7 +358,7 @@ feature -- Setting
 
 feature -- Element change
 
-	add_duration (a_duration: like duration) is
+	add_duration (a_duration: like duration)
 			-- Add `a_duration' to `Current'.
 			-- (Add `a_duration.year' and `a_duration.month' first, then
 			-- set `day' to `day.min (days_in_month (new_month, new_year))'
@@ -367,7 +367,7 @@ feature -- Element change
 			add_date_duration (a_duration)
 		end
 
-	add_date_duration (a_duration: like date_duration) is
+	add_date_duration (a_duration: like date_duration)
 			-- Add `a_duration' to `Current'.
 			-- (Add `a_duration.year' and `a_duration.month' first, then
 			-- set `day' to `day.min (days_in_month (new_month, new_year))'
@@ -378,7 +378,7 @@ feature -- Element change
 			add_years_months_days (a_duration.year, a_duration.month, a_duration.day)
 		end
 
-	add_years_months_days (y, m, d: INTEGER) is
+	add_years_months_days (y, m, d: INTEGER)
 			-- Add `y' years, `m' months and `d' days to `Current'.
 			-- (Add `y' and `m' first, then set `day' to
 			-- `day.min (days_in_month (new_month, new_year))'
@@ -421,7 +421,7 @@ feature -- Element change
 			end
 		end
 
-	add_years (y: INTEGER) is
+	add_years (y: INTEGER)
 			-- Add `y' years to `Current'.
 		local
 			yy, mm, dd: INTEGER
@@ -441,7 +441,7 @@ feature -- Element change
 			day_adjusted: day = (old day).min (days_in_month (month, year))
 		end
 
-	add_months (m: INTEGER) is
+	add_months (m: INTEGER)
 			-- Add `m' months to `Current'.
 		local
 			yy, mm, dd: INTEGER
@@ -468,7 +468,7 @@ feature -- Element change
 			day_adjusted: day = (old day).min (days_in_month (month, year))
 		end
 
-	add_days (d: INTEGER) is
+	add_days (d: INTEGER)
 			-- Add `d' days to `Current'.
 		local
 			yy, mm, dd: INTEGER
@@ -489,13 +489,13 @@ feature -- Element change
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is `Current' before `other' on the time axis?
 		do
 			Result := storage < other.storage
 		end
 
-	same_date (other: DT_DATE): BOOLEAN is
+	same_date (other: DT_DATE): BOOLEAN
 			-- Is `Current' date equal to `other'?
 		require
 			other_not_void: other /= Void
@@ -505,7 +505,7 @@ feature -- Comparison
 
 feature -- Output
 
-	append_date_to_string (a_string: STRING) is
+	append_date_to_string (a_string: STRING)
 			-- Append printable representation to `a_string'.
 			-- The day and month parts are printing with exactly two digits.
 		local
@@ -533,7 +533,7 @@ feature {DT_DATE_HANDLER} -- Implementation
 			-- Compact version of `Current'
 			-- (INTEGER should have at least 32 bits.)
 
-	set_storage (a_storage: INTEGER) is
+	set_storage (a_storage: INTEGER)
 			-- Set `storage' to `a_storage'.
 		do
 			storage := a_storage
@@ -543,7 +543,7 @@ feature {DT_DATE_HANDLER} -- Implementation
 
 feature {NONE} -- Implementation
 
-	set_from_epoch_days (d: INTEGER) is
+	set_from_epoch_days (d: INTEGER)
 			-- Set `Current' from number of
 			-- days `d' since epoch (1 Jan 1970).
 		local
@@ -637,10 +637,10 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	Month_shift: INTEGER is 32
+	Month_shift: INTEGER = 32
 			-- 2^5
 
-	Year_shift: INTEGER is 512
+	Year_shift: INTEGER = 512
 			-- 2^9 (= 16*32)
 
 end

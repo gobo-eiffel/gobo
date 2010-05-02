@@ -21,7 +21,7 @@ inherit
 
 feature -- Status report
 
-	is_agent_type: BOOLEAN is True
+	is_agent_type: BOOLEAN = True
 			-- Is current type an agent type?
 
 feature -- Access
@@ -29,7 +29,7 @@ feature -- Access
 	open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			-- Type sets of open operands
 
-	result_type_set: ET_DYNAMIC_TYPE_SET is
+	result_type_set: ET_DYNAMIC_TYPE_SET
 			-- Type set of result, if any
 		deferred
 		end

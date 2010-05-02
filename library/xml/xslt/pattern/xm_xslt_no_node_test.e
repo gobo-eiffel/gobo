@@ -20,7 +20,7 @@ inherit
 		redefine
 			default_priority, match
 		end
-	
+
 	XM_XPATH_NO_NODE_TEST
 		rename
 			make as make_xpath
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant
 		do
 			initialize_dependencies
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-		frozen default_priority: MA_DECIMAL is
+		frozen default_priority: MA_DECIMAL
 			--  Determine the default priority to use if this pattern appears as a match pattern for a template with no explicit priority attribute.
 		do
 			create Result.make_from_string ("-0.5")
@@ -51,11 +51,11 @@ feature -- Access
 
 feature -- Matching
 
-	frozen match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	frozen match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Determine whether this Pattern matches the given Node;
 		do
 			internal_last_match_result := False
 		end
 
 end
-	
+

@@ -31,26 +31,26 @@ create {XM_XPATH_SHARED_ANY_NODE_TEST}
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			original_text := "node()"
 		end
-	
+
 feature -- Access
 
-	matches_item (a_item: XM_XPATH_ITEM; a_treat_uri_as_string: BOOLEAN): BOOLEAN is
+	matches_item (a_item: XM_XPATH_ITEM; a_treat_uri_as_string: BOOLEAN): BOOLEAN
 			-- Does `a_item' conform to `Current'?
 		do
 			Result := a_item.is_node
 		end
 
-	super_type: XM_XPATH_ITEM_TYPE is
+	super_type: XM_XPATH_ITEM_TYPE
 			-- Type from which this item type is derived by restriction
 		do
 			Result := any_item
 		end
 
-	node_kind_mask: INTEGER is
+	node_kind_mask: INTEGER
 			-- Mask of types of nodes matched
 		do
 			Result := INTEGER_.bit_or (INTEGER_.bit_shift_left (1, Element_node), INTEGER_.bit_shift_left (1, Attribute_node))
@@ -62,7 +62,7 @@ feature -- Access
 
 feature -- Status report
 
-	allows_text_nodes: BOOLEAN is
+	allows_text_nodes: BOOLEAN
 			-- Does this node test allow text nodes?
 		do
 			Result := True
@@ -70,7 +70,7 @@ feature -- Status report
 
 feature -- Matching
 
-	matches_node (a_node_kind: INTEGER; a_fingerprint: INTEGER; a_node_type: INTEGER): BOOLEAN is
+	matches_node (a_node_kind: INTEGER; a_fingerprint: INTEGER; a_node_type: INTEGER): BOOLEAN
 			-- Is this node test satisfied by a given node?
 		do
 			Result := True

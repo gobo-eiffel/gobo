@@ -54,7 +54,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Run 'ascii2ps' pretty-printer.
 		local
 			i, nb: INTEGER
@@ -181,13 +181,13 @@ feature -- Access
 			-- Will the PostScript output be printed on
 			-- double side paper (i.e. recto-verso)?
 
-	usage_message: STRING is
+	usage_message: STRING =
 			"usage: ascii2ps [-h] [-n] [-d date] [-t time]%N%
 				%T[-l] [-2] [filename | -] [filename | -]%N"
 
 feature -- Generation
 
-	print_postscript is
+	print_postscript
 			-- Print PostScript format of `input_buffer'
 			-- to `output_file'.
 		do
@@ -586,7 +586,7 @@ feature -- Generation
 
 feature {NONE} -- Implementation
 
-	escaped_string (a_string: STRING): STRING is
+	escaped_string (a_string: STRING): STRING
 			-- Escaped version of `a_string' according
 			-- to PostScript rules
 		require
@@ -613,7 +613,7 @@ feature {NONE} -- Implementation
 			escaped_string_not_void: Result /= Void
 		end
 
-	basename (a_filename: STRING): STRING is
+	basename (a_filename: STRING): STRING
 			-- Basename of filename `a_filename'
 			-- (Use '/' and '\' as filename separator)
 		require
@@ -645,7 +645,7 @@ feature -- Output
 	output_file: KI_TEXT_OUTPUT_STREAM
 			-- Output file
 
-	set_output_file (a_file: like output_file) is
+	set_output_file (a_file: like output_file)
 			-- Set `output_file' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -656,7 +656,7 @@ feature -- Output
 			output_file_set: output_file = a_file
 		end
 
-	output (a_text: like text) is
+	output (a_text: like text)
 			-- Output `a_text' to `output_file'.
 		do
 			output_file.put_string (a_text)

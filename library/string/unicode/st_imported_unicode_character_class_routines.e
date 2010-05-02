@@ -14,7 +14,7 @@ class ST_IMPORTED_UNICODE_CHARACTER_CLASS_ROUTINES
 
 feature -- Access
 
-	unicode_character_class: ST_UNICODE_CHARACTER_CLASS_ROUTINES is
+	unicode_character_class: ST_UNICODE_CHARACTER_CLASS_ROUTINES
 			-- Unicode character class routines
 		once
 			create Result

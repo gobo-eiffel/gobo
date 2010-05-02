@@ -62,7 +62,7 @@ create
 
 feature -- Element change
 
-	compile (a_pattern: STRING; i: BOOLEAN) is
+	compile (a_pattern: STRING; i: BOOLEAN)
 			-- Compile `a_pattern'. Make the matching engine
 			-- case-insensitive if `i' is set. Set `compiled'
 			-- to True after successful compilation.

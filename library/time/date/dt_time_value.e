@@ -32,29 +32,29 @@ inherit
 
 feature -- Access
 
-	hour: INTEGER is
+	hour: INTEGER
 			-- Hour
 		deferred
 		end
 
-	minute: INTEGER is
+	minute: INTEGER
 			-- Minute
 		deferred
 		end
 
-	second: INTEGER is
+	second: INTEGER
 			-- Second
 		deferred
 		end
 
-	millisecond: INTEGER is
+	millisecond: INTEGER
 			-- Millisecond
 		deferred
 		end
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Printable representation (hour:minute:second[.millisecond])
 			-- (The millisecond part appears only when not zero.)
 		do
@@ -62,7 +62,7 @@ feature -- Output
 			append_to_string (Result)
 		end
 
-	precise_out: STRING is
+	precise_out: STRING
 			-- Printable representation (hour:minute:second.millisecond)
 		do
 			create Result.make (12)
@@ -71,7 +71,7 @@ feature -- Output
 			precise_out_not_void: Result /= Void
 		end
 
-	time_out: STRING is
+	time_out: STRING
 			-- Printable representation (hour:minute:second[.millisecond])
 			-- (The millisecond part appears only when not zero.)
 		do
@@ -81,7 +81,7 @@ feature -- Output
 			time_out_not_void: Result /= Void
 		end
 
-	precise_time_out: STRING is
+	precise_time_out: STRING
 			-- Printable representation (hour:minute:second.millisecond)
 		do
 			create Result.make (12)
@@ -90,7 +90,7 @@ feature -- Output
 			precise_time_out_not_void: Result /= Void
 		end
 
-	append_to_string (a_string: STRING) is
+	append_to_string (a_string: STRING)
 			-- Append printable representation
 			-- (hour:minute:second[.millisecond]) to `a_string'.
 			-- (The millisecond part appears only when not zero.)
@@ -100,7 +100,7 @@ feature -- Output
 			append_time_to_string (a_string)
 		end
 
-	append_time_to_string (a_string: STRING) is
+	append_time_to_string (a_string: STRING)
 			-- Append printable representation
 			-- (hour:minute:second[.millisecond]) to `a_string'.
 			-- (The millisecond part appears only when not zero.)
@@ -118,7 +118,7 @@ feature -- Output
 			end
 		end
 
-	append_precise_to_string (a_string: STRING) is
+	append_precise_to_string (a_string: STRING)
 			-- Append printable representation (hour:minute:second.millisecond)
 			-- to `a_string'.
 		require
@@ -127,7 +127,7 @@ feature -- Output
 			append_precise_time_to_string (a_string)
 		end
 
-	append_precise_time_to_string (a_string: STRING) is
+	append_precise_time_to_string (a_string: STRING)
 			-- Append printable representation (hour:minute:second.millisecond)
 			-- to `a_string'.
 		require

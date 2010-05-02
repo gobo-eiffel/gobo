@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name_id; a_pathname: like pathname_id; a_system: ET_SYSTEM) is
+	make (a_name: like name_id; a_pathname: like pathname_id; a_system: ET_SYSTEM)
 			-- Create a new assembly.
 		require
 			a_name_not_void: a_name /= Void
@@ -58,7 +58,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_classname_prefix_id (a_prefix: like classname_prefix_id) is
+	set_classname_prefix_id (a_prefix: like classname_prefix_id)
 			-- Set `classname_prefix_id' to `a_prefix'.
 		local
 			l_classname_prefix: STRING

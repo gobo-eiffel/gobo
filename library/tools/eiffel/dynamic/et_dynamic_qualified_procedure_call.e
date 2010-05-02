@@ -23,7 +23,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_call: like static_call; a_target_type_set: like target_type_set;
-		a_current_feature: like current_feature; a_current_type: like current_type) is
+		a_current_feature: like current_feature; a_current_type: like current_type)
 			-- Create a new dynamic procedure call.
 		require
 			a_call_not_void: a_call /= Void
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	static_feature: ET_PROCEDURE is
+	static_feature: ET_PROCEDURE
 			-- Static feature of the call;
 			-- Void if no such feature found
 		local
@@ -57,7 +57,7 @@ feature -- Access
 
 feature {ET_DYNAMIC_TYPE_SET_BUILDER} -- Access
 
-	seeded_dynamic_feature (a_type: ET_DYNAMIC_TYPE; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE is
+	seeded_dynamic_feature (a_type: ET_DYNAMIC_TYPE; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE
 			-- Run-time procedure in `a_type' corresponding to current call;
 			-- Void if no such procedure
 		do
@@ -66,7 +66,7 @@ feature {ET_DYNAMIC_TYPE_SET_BUILDER} -- Access
 
 feature {ET_DYNAMIC_TYPE_BUILDER} -- Implementation
 
-	put_type_with_tuple_label (a_type: ET_DYNAMIC_TYPE; a_builder: ET_DYNAMIC_TYPE_SET_BUILDER) is
+	put_type_with_tuple_label (a_type: ET_DYNAMIC_TYPE; a_builder: ET_DYNAMIC_TYPE_SET_BUILDER)
 			-- Add `a_type' to current set when the current call is a call to a Tuple label.
 		do
 			a_builder.propagate_tuple_label_setter_dynamic_types (Current, a_type)

@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new Xace library.
 		do
 			library_prefix := empty_prefix
@@ -46,7 +46,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_name (a_name: like name) is
+	set_name (a_name: like name)
 			-- Set `name' to `a_name'.
 		do
 			name := a_name
@@ -54,7 +54,7 @@ feature -- Setting
 			name_set: name = a_name
 		end
 
-	set_options (an_options: like options) is
+	set_options (an_options: like options)
 			-- Set `options' to `an_options'.
 		do
 			options := an_options
@@ -62,7 +62,7 @@ feature -- Setting
 			options_set: options = an_options
 		end
 
-	set_clusters (a_clusters: like clusters) is
+	set_clusters (a_clusters: like clusters)
 			-- Set `a_clusters' to `clusters'.
 		do
 			clusters := a_clusters
@@ -73,7 +73,7 @@ feature -- Setting
 			clusters_set: clusters = a_clusters
 		end
 
-	set_libraries (a_libraries: like libraries) is
+	set_libraries (a_libraries: like libraries)
 			-- Set `libraries' to `a_libraries'.
 		do
 			libraries := a_libraries
@@ -81,7 +81,7 @@ feature -- Setting
 			libraries_set: libraries = a_libraries
 		end
 
-	set_library_prefix (a_prefix: like library_prefix) is
+	set_library_prefix (a_prefix: like library_prefix)
 			-- Set `library_prefix' to `a_prefix'.
 		require
 			a_prefix_not_void: a_prefix /= Void
@@ -96,7 +96,7 @@ feature -- Setting
 
 feature -- Basic operations
 
-	mount_libraries is
+	mount_libraries
 			-- Add clusters `libraries' to `clusters'.
 			-- Mark these clusters as mounted.
 		do
@@ -108,7 +108,7 @@ feature -- Basic operations
 			end
 		end
 
-	merge_libraries (a_libraries: ET_XACE_MOUNTED_LIBRARIES; an_error_handler: ET_XACE_ERROR_HANDLER) is
+	merge_libraries (a_libraries: ET_XACE_MOUNTED_LIBRARIES; an_error_handler: ET_XACE_ERROR_HANDLER)
 			-- Add `libraries' to `a_libraries'.
 			-- Report any error (e.g. incompatible prefixes) in `an_error_handler'.
 		require
@@ -120,7 +120,7 @@ feature -- Basic operations
 			end
 		end
 
-	merge_externals (an_externals: ET_XACE_EXTERNALS) is
+	merge_externals (an_externals: ET_XACE_EXTERNALS)
 			-- Merge current library's externals, and those of
 			-- all clusters and subclusters, to `an_externals'.
 		require
@@ -154,7 +154,7 @@ feature -- Basic operations
 			end
 		end
 
-	merge_exported_features (an_export: DS_LIST [ET_XACE_EXPORTED_FEATURE]) is
+	merge_exported_features (an_export: DS_LIST [ET_XACE_EXPORTED_FEATURE])
 			-- Merge current library's exported features and those
 			-- all clusters and subclusters to `an_export'.
 		require
@@ -170,7 +170,7 @@ feature -- Basic operations
 
 feature {NONE} -- Constants
 
-	empty_prefix: STRING is ""
+	empty_prefix: STRING = ""
 			-- Empty prefix
 
 invariant

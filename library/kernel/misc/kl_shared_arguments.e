@@ -15,7 +15,7 @@ class KL_SHARED_ARGUMENTS
 
 feature -- Access
 
-	Arguments: KL_ARGUMENTS is
+	Arguments: KL_ARGUMENTS
 			-- Command-line arguments
 		once
 			create Result.make

@@ -22,7 +22,7 @@ create
 
 feature -- Test
 
-	test_echo is
+	test_echo
 			-- Test task 'echo' in it's simplest form.
 		do
 			tasks := "<echo message='hello world'/>"
@@ -31,7 +31,7 @@ feature -- Test
 			basic_test ("test_echo")
 		end
 
-	test_echo_2 is
+	test_echo_2
 			-- Test task 'echo' with message in content.
 		do
 			tasks := "<echo>hello world</echo>"
@@ -40,7 +40,7 @@ feature -- Test
 			basic_test ("test_echo_2")
 		end
 
-	test_echo_verbose is
+	test_echo_verbose
 			-- Test task 'echo' in it's simples form with verbose output.
 		do
   			verbose := True
@@ -53,7 +53,7 @@ feature -- Test
 			basic_test ("test_echo_verbose")
 		end
 
-	test_echo_to_file is
+	test_echo_to_file
 			-- Test task 'echo' with attribute 'to_file'.
 		do
 			tasks := "<echo message='hello world' to_file='out.txt'/>"
@@ -64,7 +64,7 @@ feature -- Test
 			basic_test ("test_echo_to_file")
 		end
 
-	test_echo_env_var is
+	test_echo_env_var
 			-- Test if task 'echo' resolves envrionment variables correctly.
 		do
 			if operating_system.is_windows then
@@ -81,7 +81,7 @@ feature -- Test
 
 		end
 
-	test_built_in_var is
+	test_built_in_var
 			-- Test if task 'echo' resolves built-in variables correctly.
 		do
 			if operating_system.is_unix then
@@ -94,7 +94,7 @@ feature -- Test
 			assert_files_equal ("test_built_in_var2", "out.txt", "out2.txt")
 		end
 
-	test_echo_validation_0 is
+	test_echo_validation_0
 			-- Test task 'echo''s validation
 		do
 			expected_exit_code := 1
@@ -111,7 +111,7 @@ feature -- Test
 			basic_test ("test_echo_validation_0")
 		end
 
-	test_echo_validation_1 is
+	test_echo_validation_1
 			-- Test task 'echo''s validation
 		do
 			expected_exit_code := 1

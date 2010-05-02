@@ -26,7 +26,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_alias_clause (an_alias: like alias_clause) is
+	set_alias_clause (an_alias: like alias_clause)
 			-- Set `alias_clause' to `an_alias'.
 		do
 			alias_clause := an_alias

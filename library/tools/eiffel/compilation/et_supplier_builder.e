@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new client/supplier relationship builder.
 		do
 			current_class := tokens.unknown_class
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	set (a_class: like current_class; a_suppliers: like supplier_classes) is
+	set (a_class: like current_class; a_suppliers: like supplier_classes)
 			-- Start a new build where supplier classes of `a_class'
 			-- will be stored in `a_suppliers'.
 		require
@@ -59,7 +59,7 @@ feature -- Access
 
 feature -- Reporting
 
-	report_expression_supplier (a_supplier: ET_TYPE_CONTEXT; a_client: ET_BASE_TYPE; a_feature: ET_STANDALONE_CLOSURE) is
+	report_expression_supplier (a_supplier: ET_TYPE_CONTEXT; a_client: ET_BASE_TYPE; a_feature: ET_STANDALONE_CLOSURE)
 			-- Report the fact that `a_supplier' is the type of an expression
 			-- in `a_feature' in type `a_client'.
 			-- (Note that `a_supplier' may be altered after the execution of
@@ -71,7 +71,7 @@ feature -- Reporting
 			end
 		end
 
-	report_argument_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_routine: ET_ROUTINE) is
+	report_argument_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_routine: ET_ROUTINE)
 			-- Report the fact that `a_supplier' is the type of a formal argument
 			-- of `a_routine' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
@@ -82,7 +82,7 @@ feature -- Reporting
 			end
 		end
 
-	report_result_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_query: ET_QUERY) is
+	report_result_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_query: ET_QUERY)
 			-- Report the fact that `a_supplier' is the type of the result
 			-- of `a_query' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
@@ -93,7 +93,7 @@ feature -- Reporting
 			end
 		end
 
-	report_static_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_STANDALONE_CLOSURE) is
+	report_static_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_STANDALONE_CLOSURE)
 			-- Report the fact that `a_supplier' is the type of a static call
 			-- in `a_feature' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
@@ -104,7 +104,7 @@ feature -- Reporting
 			end
 		end
 
-	report_create_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_STANDALONE_CLOSURE) is
+	report_create_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_STANDALONE_CLOSURE)
 			-- Report the fact that `a_supplier' is the explicit type of a
 			-- creation instruction or expression in `a_feature' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
@@ -115,7 +115,7 @@ feature -- Reporting
 			end
 		end
 
-	report_local_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_FEATURE) is
+	report_local_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_FEATURE)
 			-- Report the fact that `a_supplier' is the type of a local variable
 			-- of `a_feature' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
@@ -126,7 +126,7 @@ feature -- Reporting
 			end
 		end
 
-	report_inline_agent_argument_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_STANDALONE_CLOSURE) is
+	report_inline_agent_argument_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_STANDALONE_CLOSURE)
 			-- Report the fact that `a_supplier' is the type of a formal argument
 			-- of an inline agent in `a_feature' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
@@ -137,7 +137,7 @@ feature -- Reporting
 			end
 		end
 
-	report_inline_agent_local_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_STANDALONE_CLOSURE) is
+	report_inline_agent_local_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_STANDALONE_CLOSURE)
 			-- Report the fact that `a_supplier' is the type of a local variable
 			-- of an inline agent in `a_feature' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
@@ -148,7 +148,7 @@ feature -- Reporting
 			end
 		end
 
-	report_inline_agent_result_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_STANDALONE_CLOSURE) is
+	report_inline_agent_result_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_STANDALONE_CLOSURE)
 			-- Report the fact that `a_supplier' is the type of the result of
 			-- an inline agent in `a_feature' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
@@ -159,7 +159,7 @@ feature -- Reporting
 			end
 		end
 
-	report_qualified_anchored_type_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE) is
+	report_qualified_anchored_type_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE)
 			-- Report the fact that `a_supplier' is the target type of a
 			-- qualified anchored type in a feature or invariant in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
@@ -172,7 +172,7 @@ feature -- Reporting
 
 feature {NONE} -- Element change
 
-	add_supplier (a_class: ET_NAMED_CLASS) is
+	add_supplier (a_class: ET_NAMED_CLASS)
 			-- Add `a_class' to `supplier_classes' if it is not the class "NONE".
 		require
 			a_class_not_void: a_class /= Void
@@ -184,7 +184,7 @@ feature {NONE} -- Element change
 
 feature {NONE} -- Implementation
 
-	dummy_suppliers: DS_HASH_SET [ET_NAMED_CLASS] is
+	dummy_suppliers: DS_HASH_SET [ET_NAMED_CLASS]
 			-- Dummy suppliers
 		once
 			create Result.make (0)

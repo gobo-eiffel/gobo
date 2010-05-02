@@ -26,7 +26,7 @@ create
 
 feature -- Test
 
-	test_make is
+	test_make
 			-- Test feature `make'.
 		local
 			a_directory: KL_DIRECTORY
@@ -47,7 +47,7 @@ feature -- Test
 			assert ("is_closed2", a_directory.is_closed)
 		end
 
-	test_exists1 is
+	test_exists1
 			-- Test feature `exists'.
 		local
 			a_directory: KL_DIRECTORY
@@ -62,7 +62,7 @@ feature -- Test
 			assert ("not_exists2", not a_directory.exists)
 		end
 
-	test_exists2 is
+	test_exists2
 			-- Test feature `exists'.
 		local
 			a_directory: KL_DIRECTORY
@@ -115,7 +115,7 @@ feature -- Test
 			assert ("not_exists6", not a_directory.exists)
 		end
 
-	test_is_readable1 is
+	test_is_readable1
 			-- Test feature `is_readable'.
 		local
 			a_directory: KL_DIRECTORY
@@ -130,7 +130,7 @@ feature -- Test
 			assert ("not_readable2", not a_directory.is_readable)
 		end
 
-	test_is_readable2 is
+	test_is_readable2
 			-- Test feature `is_readable'.
 		local
 			a_directory: KL_DIRECTORY
@@ -183,7 +183,7 @@ feature -- Test
 			assert ("not_readable6", not a_directory.is_readable)
 		end
 
-	test_open_read is
+	test_open_read
 			-- Test feature `open_read'.
 		local
 			a_directory: KL_DIRECTORY
@@ -206,7 +206,7 @@ feature -- Test
 			assert ("not_opened", not a_directory.is_open_read)
 		end
 
-	test_read_entry is
+	test_read_entry
 			-- Test feature `read_entry'.
 		local
 			a_directory: KL_DIRECTORY
@@ -255,7 +255,7 @@ feature -- Test
 			end
 		end
 
-	test_empty_read_entry is
+	test_empty_read_entry
 			-- Test feature `read_entry' on empty directory.
 		local
 			a_directory: KL_DIRECTORY
@@ -303,7 +303,7 @@ feature -- Test
 			assert ("not_readable2", not file_system.is_directory_readable (a_name))
 		end
 
-	test_create_directory1 is
+	test_create_directory1
 			-- Test feature `create_directory'.
 			-- Create non-existing directory.
 		local
@@ -319,7 +319,7 @@ feature -- Test
 			assert ("not_readable2", not file_system.is_directory_readable (a_name))
 		end
 
-	test_create_directory2 is
+	test_create_directory2
 			-- Test feature `create_directory'.
 			-- Create existing directory.
 		local
@@ -354,7 +354,7 @@ feature -- Test
 			end
 		end
 
-	test_create_directory3 is
+	test_create_directory3
 			-- Test feature `create_directory'.
 			-- Create nested directory.
 		local
@@ -384,7 +384,7 @@ feature -- Test
 			assert ("not_readable8", not file_system.is_directory_readable (a_name))
 		end
 
-	test_recursive_create_directory is
+	test_recursive_create_directory
 			-- Test feature `recursive_create_directory'.
 		local
 			a_directory: KL_DIRECTORY
@@ -404,7 +404,7 @@ feature -- Test
 			assert ("not_readable4", not file_system.is_directory_readable (a_parent))
 		end
 
-	test_delete1 is
+	test_delete1
 			-- Test feature `delete'.
 			-- Empty directory.
 		local
@@ -420,7 +420,7 @@ feature -- Test
 			assert ("not_readable2", not file_system.is_directory_readable (a_name))
 		end
 
-	test_delete2 is
+	test_delete2
 			-- Test feature `delete'.
 			-- Non-existing directory.
 		local
@@ -434,7 +434,7 @@ feature -- Test
 			assert ("not_readable2", not file_system.is_directory_readable (a_name))
 		end
 
-	test_delete3 is
+	test_delete3
 			-- Test feature `delete'.
 			-- Non-empty directory.
 		local
@@ -467,7 +467,7 @@ feature -- Test
 			end
 		end
 
-	test_delete4 is
+	test_delete4
 			-- Test feature `delete'.
 			-- Nested directory.
 		local
@@ -494,7 +494,7 @@ feature -- Test
 			assert ("not_readable6", not file_system.is_directory_readable (a_name))
 		end
 
-	test_recursive_delete is
+	test_recursive_delete
 			-- Test feature `recursive_delete'.
 		local
 			a_directory, a_parent_directory: KL_DIRECTORY
@@ -523,7 +523,7 @@ feature -- Test
 			assert ("not_readable6", not file_system.is_directory_readable (a_name))
 		end
 
-	test_filenames is
+	test_filenames
 			-- Test feature `filenames'.
 		local
 			a_directory: KL_DIRECTORY
@@ -558,7 +558,7 @@ feature -- Test
 			assert_arrays_equal ("entries", expected_entries, filenames)
 		end
 
-	test_directory_names is
+	test_directory_names
 			-- Test feature `directory_names'.
 		local
 			a_directory, a_parent_directory: KL_DIRECTORY

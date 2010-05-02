@@ -24,7 +24,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_value is
+	make_value
 			-- Establish static properties
 		do
 			initialize_special_properties
@@ -36,32 +36,32 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_value: BOOLEAN is
+	is_value: BOOLEAN
 			-- Is `Current' a value?
 		do
 			Result := True
 		end
 
-	as_value: XM_XPATH_VALUE is
+	as_value: XM_XPATH_VALUE
 			-- `Current' seen as a value
 		do
 			Result := Current
 		end
 
-	frozen sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+	frozen sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions of `Current'
 		do
 			create Result.make_default
 			Result.set_equality_tester (expression_tester)
 		end
 
-	frozen container: XM_XPATH_EXPRESSION_CONTAINER is
+	frozen container: XM_XPATH_EXPRESSION_CONTAINER
 			-- Containing parent
 		do
 			-- `Void'
 		end
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items in `Current';
 			-- Not 100% pure - may put `Current' into error.
 			-- N.B. Limited to INTEGER_32 (and hence XPath sequences) by `{DS_ARRAYED_LIST}.count'
@@ -97,7 +97,7 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-	item_at (a_index: INTEGER) :XM_XPATH_ITEM is
+	item_at (a_index: INTEGER) :XM_XPATH_ITEM
 			-- Item at `a_index'
 		require
 			index_in_range: a_index > 0 and then a_index <= count
@@ -137,13 +137,13 @@ feature -- Access
 			item_may_be_void: True
 		end
 
-	lazy_evaluation_mode: INTEGER is
+	lazy_evaluation_mode: INTEGER
 			-- Method used for lazy evaluation of `Current'
 		do
 			Result := No_evaluation_needed
 		end
 
-	eager_evaluation_mode: INTEGER is
+	eager_evaluation_mode: INTEGER
 			-- Method used for eager evaluation of `Current'
 		do
 			Result := No_evaluation_needed
@@ -154,38 +154,38 @@ feature -- Status report
 	last_reduced_value: XM_XPATH_VALUE
 			-- Result of last call to `reduce'
 
-	is_convertible_to_item (a_context: XM_XPATH_CONTEXT): BOOLEAN is
+	is_convertible_to_item (a_context: XM_XPATH_CONTEXT): BOOLEAN
 			-- Can `Current' be converted to an `XM_XPATH_ITEM'?
 		deferred
 		end
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		do
 			a_replacement.put (Current)
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			a_replacement.put (Current)
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			a_replacement.put (Current)
 		end
 
-	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this subexpression.
 		do
 			a_replacement.put (Current)
 		end
 
-	reduce is
+	reduce
 			-- Reduce a value to its simplest form.
 		require
 			not_in_error: not is_error
@@ -198,7 +198,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	generate_events (a_context: XM_XPATH_CONTEXT) is
+	generate_events (a_context: XM_XPATH_CONTEXT)
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_receiver: XM_XPATH_SEQUENCE_RECEIVER
@@ -220,7 +220,7 @@ feature -- Evaluation
 			end
 		end
 
-	processed_eager_evaluation (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
+	processed_eager_evaluation (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE
 			-- Eager evaluation via `generate_events'
 		do
 			Result := Current
@@ -228,7 +228,7 @@ feature -- Evaluation
 
 feature -- Conversion
 
-	as_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+	as_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM
 			-- `Current' seen as an item
 		require
 			is_convertible_to_item (a_context)
@@ -239,7 +239,7 @@ feature -- Conversion
 
 feature {NONE} -- Implementation
 
-	trimmed_white_space (a_string: STRING): STRING is
+	trimmed_white_space (a_string: STRING): STRING
 			-- Remove all leading and trailing characters below character code 33;
 			-- Only usable for values that do not permit internal white space
 		require

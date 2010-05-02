@@ -15,7 +15,7 @@ class KL_SHARED_EXCEPTIONS
 
 feature -- Access
 
-	Exceptions: KL_EXCEPTIONS is
+	Exceptions: KL_EXCEPTIONS
 			-- Exception handling
 		once
 			create Result

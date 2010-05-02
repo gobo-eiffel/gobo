@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new result summary.
 		do
 			create results.make
@@ -31,7 +31,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_successful: BOOLEAN is
+	is_successful: BOOLEAN
 			-- Have all tests been successful?
 		do
 			Result := failure_count = 0 and abort_count = 0
@@ -50,7 +50,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_fail_on_rescue (b: BOOLEAN) is
+	set_fail_on_rescue (b: BOOLEAN)
 			-- Set `fail_on_rescue' to `b'.
 		do
 			fail_on_rescue := b
@@ -58,7 +58,7 @@ feature -- Status setting
 			fail_on_rescue_set: fail_on_rescue = b
 		end
 
-	set_enabled_test_cases (a_regexp: like enabled_test_cases) is
+	set_enabled_test_cases (a_regexp: like enabled_test_cases)
 			-- Set `enabled_test_cases' to `a_regexp'.
 		require
 			compiled: a_regexp /= Void implies a_regexp.is_compiled
@@ -70,7 +70,7 @@ feature -- Status setting
 
 feature -- Measurement
 
-	test_count: INTEGER is
+	test_count: INTEGER
 			-- Number of tests executed
 		do
 			Result := success_count + failure_count + abort_count
@@ -92,7 +92,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	put_success (a_test: TS_TEST) is
+	put_success (a_test: TS_TEST)
 			-- Add successful test `a_test'.
 		require
 			a_test_not_void: a_test /= Void
@@ -104,7 +104,7 @@ feature -- Element change
 			success_count := success_count + 1
 		end
 
-	put_failure (a_test: TS_TEST; a_reason: STRING) is
+	put_failure (a_test: TS_TEST; a_reason: STRING)
 			-- Add failed test `a_test'.
 		require
 			a_test_not_void: a_test /= Void
@@ -117,7 +117,7 @@ feature -- Element change
 			failure_count := failure_count + 1
 		end
 
-	put_abort (a_test: TS_TEST; a_reason: STRING) is
+	put_abort (a_test: TS_TEST; a_reason: STRING)
 			-- Add aborted test `a_test'.
 		require
 			a_test_not_void: a_test /= Void
@@ -130,7 +130,7 @@ feature -- Element change
 			abort_count := abort_count + 1
 		end
 
-	start_test (a_test: TS_TEST) is
+	start_test (a_test: TS_TEST)
 			-- Inform Current that a test will be started.
 		require
 			a_test_not_void: a_test /= Void
@@ -138,7 +138,7 @@ feature -- Element change
 				-- Do nothing.
 		end
 
-	end_test (a_test: TS_TEST; asserts: INTEGER) is
+	end_test (a_test: TS_TEST; asserts: INTEGER)
 			-- Inform Current that a test was completed with
 			-- `asserts' assertions run.
 		do
@@ -147,7 +147,7 @@ feature -- Element change
 
 feature -- Output
 
-	print_summary (a_test: TS_TEST; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_summary (a_test: TS_TEST; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print summary for `a_test' to `a_file'.
 		require
 			a_test_not_void: a_test /= Void
@@ -206,7 +206,7 @@ feature -- Output
 			a_file.put_new_line
 		end
 
-	print_errors (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_errors (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print failed or aborted results to `a_file'.
 		require
 			not_successful: not is_successful
@@ -232,7 +232,7 @@ feature -- Output
 			end
 		end
 
-	print_results (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_results (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print all results to `a_file'.
 		require
 			a_file_not_void: a_file /= Void

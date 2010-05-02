@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (min, max: INTEGER) is
+	make (min, max: INTEGER)
 			-- Create a new transition table for labels
 			-- between `min' and `max'.
 		do
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	valid_label (a_label: INTEGER): BOOLEAN is
+	valid_label (a_label: INTEGER): BOOLEAN
 			-- Is `a_label' a valid label?
 		do
 			Result := storage.valid_index (a_label)
@@ -56,7 +56,7 @@ feature -- Status report
 
 feature -- Access
 
-	target (a_label: INTEGER): G is
+	target (a_label: INTEGER): G
 			-- Target reached through transition `a_label';
 			-- Void if no such transition exists
 		require
@@ -65,11 +65,11 @@ feature -- Access
 			Result := storage.item (a_label)
 		end
 
-	difference (other: like Current; null: like target): like Current is
+	difference (other: like Current; null: like target): like Current
 			-- Difference between current transitions and `other';
 			-- Differences are either marked with current's target,
 			-- if it exists, or `null' otherwise. Common targets are
-			-- marked with a void target 
+			-- marked with a void target
 		require
 			other_not_void: other /= Void
 			same_lower: lower = other.lower
@@ -101,7 +101,7 @@ feature -- Access
 			difference_upper: Result.upper = upper
 		end
 
-	minimum_label: INTEGER is
+	minimum_label: INTEGER
 			-- Smallest label with an out-transition
 		require
 			not_empty: count > 0
@@ -123,7 +123,7 @@ feature -- Access
 --				target (i) = Void or else target (i) = target (i).default
 		end
 
-	maximum_label: INTEGER is
+	maximum_label: INTEGER
 			-- Largest label with an out-transition
 		require
 			not_empty: count > 0
@@ -145,13 +145,13 @@ feature -- Access
 --				target (i) = Void or else target (i) = target (i).default
 		end
 
-	lower: INTEGER is
+	lower: INTEGER
 			-- Smallest label allowed
 		do
 			Result := storage.lower
 		end
 
-	upper: INTEGER is
+	upper: INTEGER
 			-- Largest label allowed
 		do
 			Result := storage.upper
@@ -162,7 +162,7 @@ feature -- Measurement
 	count: INTEGER
 			-- Number of transitions in table
 
-	capacity: INTEGER is
+	capacity: INTEGER
 			-- Maximum number of transitions
 		do
 			Result := storage.count
@@ -170,7 +170,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	set_target (state: like target; label: INTEGER) is
+	set_target (state: like target; label: INTEGER)
 			-- Add a transition labeled `label' to `state'.
 		require
 			valid_label: valid_label (label)
@@ -189,7 +189,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove (label: INTEGER) is
+	remove (label: INTEGER)
 			-- Remove transition labeled `label'.
 		require
 			valid_label: valid_label (label)
@@ -205,7 +205,7 @@ feature -- Removal
 			removed: target (label) = Void or else target (label) = target (label).default
 		end
 
-	clear_all is
+	clear_all
 			-- Remove all transitions.
 		do
 			count := 0
@@ -216,7 +216,7 @@ feature -- Removal
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Copy `other' to current transition table.
 		do
 			standard_copy (other)
@@ -225,7 +225,7 @@ feature -- Duplication
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is current transition table equal to `other'?
 		local
 			old_storage: like storage

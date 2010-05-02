@@ -22,7 +22,7 @@ inherit
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset current feature as it was just after it was last parsed.
 		local
 			l_assigner: ET_ASSIGNER
@@ -36,7 +36,7 @@ feature -- Initialization
 
 feature -- Access
 
-	type: ET_TYPE is
+	type: ET_TYPE
 			-- Return type
 		do
 			Result := declared_type.type
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_assigner (an_assigner: like assigner) is
+	set_assigner (an_assigner: like assigner)
 			-- Set `assigner' to `an_assigner'.
 		do
 			assigner := an_assigner
@@ -62,7 +62,7 @@ feature -- Setting
 
 feature -- Conversion
 
-	undefined_feature (a_name: like extended_name): ET_DEFERRED_FUNCTION is
+	undefined_feature (a_name: like extended_name): ET_DEFERRED_FUNCTION
 			-- Undefined version of current feature
 		do
 			create Result.make (a_name, arguments, declared_type, implementation_class)

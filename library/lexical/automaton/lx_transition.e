@@ -27,7 +27,7 @@ feature -- Access
 
 feature -- Setting
 
-	make, set_target (state: like target) is
+	make, set_target (state: like target)
 			-- Set `target' to `state'.
 		require
 			state_not_void: state /= Void
@@ -39,14 +39,14 @@ feature -- Setting
 
 feature -- Status report
 
-	labeled (symbol: INTEGER): BOOLEAN is
+	labeled (symbol: INTEGER): BOOLEAN
 			-- Is current transition labeled `symbol'?
 		do
 		end
 
 feature -- Equivalence classes
 
-	record (equiv_classes: LX_EQUIVALENCE_CLASSES) is
+	record (equiv_classes: LX_EQUIVALENCE_CLASSES)
 			-- Update set label equivalence classes `equiv_classes'
 			-- with transition labels, if any.
 		require
@@ -56,7 +56,7 @@ feature -- Equivalence classes
 		do
 		end
 
-	recordable (equiv_classes: LX_EQUIVALENCE_CLASSES): BOOLEAN is
+	recordable (equiv_classes: LX_EQUIVALENCE_CLASSES): BOOLEAN
 			-- May current transition be recorded in `equiv_classes'?
 		require
 			equiv_classes_not_void: equiv_classes /= Void

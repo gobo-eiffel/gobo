@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER; a_string: STRING) is
+	make (filename: STRING; line: INTEGER; a_string: STRING)
 			-- Create a new error reporting that the literal
 			-- `a_string' has not been defined as a token.
 		require
@@ -37,10 +37,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: undefined literal string token $3"
+	default_template: STRING = "%"$1%", line $2: undefined literal string token $3"
 			-- Default template used to built the error message
 
-	code: STRING is "PR0021"
+	code: STRING = "PR0021"
 			-- Error code
 
 invariant

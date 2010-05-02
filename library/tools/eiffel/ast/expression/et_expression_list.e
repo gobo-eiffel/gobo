@@ -20,7 +20,7 @@ inherit
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset expressions as they were when they were last parsed.
 		local
 			i, nb: INTEGER
@@ -34,7 +34,7 @@ feature -- Initialization
 
 feature -- Access
 
-	expression (i: INTEGER): ET_EXPRESSION is
+	expression (i: INTEGER): ET_EXPRESSION
 			-- Expression at index `i' in list
 		require
 			i_large_enough: i >= 1
@@ -51,7 +51,7 @@ feature -- Access
 	right_symbol: ET_SYMBOL
 			-- Symbols after expression list
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -61,19 +61,19 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := left_symbol
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := right_symbol
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := right_symbol.break
@@ -81,7 +81,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_left_symbol (l: like left_symbol) is
+	set_left_symbol (l: like left_symbol)
 			-- Set `left_symbol' to `l'.
 		require
 			l_not_void: l /= Void
@@ -91,7 +91,7 @@ feature -- Setting
 			left_symbol_set: left_symbol = l
 		end
 
-	set_right_symbol (r: like right_symbol) is
+	set_right_symbol (r: like right_symbol)
 			-- Set `right_symbol' to `r'.
 		require
 			r_not_void: r /= Void
@@ -103,7 +103,7 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_EXPRESSION_ITEM] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_EXPRESSION_ITEM]
 			-- Fixed array routines
 		once
 			create Result

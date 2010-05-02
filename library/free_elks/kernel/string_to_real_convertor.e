@@ -91,7 +91,7 @@ feature -- Status reporting
 		end
 
 	is_integral_real: BOOLEAN
-			-- Is character sequence that has been parsed represents a valid real?	
+			-- Is character sequence that has been parsed represents a valid real?
 		do
 			Result := is_integral_double
 		end
@@ -192,7 +192,7 @@ feature -- Parse
 				-- Integer_literal = [Sign] Integer
 				-- Sign			= "+" | "-"
 				-- Integer		= Digit | Digit Integer
-				-- Digit		= "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9".			
+				-- Digit		= "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9".
 
 					-- last_state = 0 : waiting sign or double value.
 					-- last_state = 1 : sign read, waiting double value.
@@ -200,7 +200,7 @@ feature -- Parse
 					-- last_state = 3 : decimal point read
 					-- last_state = 4 : in fractional part
 					-- last_state = 5 : read 'E' or 'e' for scientific notation
-					-- last_state = 6 : sign of exponent read, waiting for digit.				
+					-- last_state = 6 : sign of exponent read, waiting for digit.
 					-- last_state = 7 : in exponent
 					-- last_state = 8 : after the number.
 					-- last_state = 9 : error state.

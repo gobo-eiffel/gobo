@@ -20,19 +20,19 @@ inherit
 
 feature -- Access
 
-	string_kinds: INTEGER is
+	string_kinds: INTEGER
 			-- Node kinds whose typed value is always string
 		once
 			Result := INTEGER_.bit_or (INTEGER_.bit_shift_left (1, Processing_instruction_node), INTEGER_.bit_shift_left (1, Comment_node))
 		end
 
-	untyped_kinds: INTEGER is
+	untyped_kinds: INTEGER
 			-- Node kinds whose typed value is always untypedAtomic
 		once
 			Result := INTEGER_.bit_or (INTEGER_.bit_shift_left (1, Document_node), INTEGER_.bit_shift_left (1, Text_node))
 		end
 
-	child_kinds: INTEGER is
+	child_kinds: INTEGER
 			-- Possible child nodes
 		once
 			Result := INTEGER_.bit_or (INTEGER_.bit_shift_left (1, Element_node), INTEGER_.bit_shift_left (1, Text_node))
@@ -40,7 +40,7 @@ feature -- Access
 			Result := INTEGER_.bit_or (Result, INTEGER_.bit_shift_left (1, Processing_instruction_node))
 		end
 
-	untyped_if_untyped_kinds: INTEGER is
+	untyped_if_untyped_kinds: INTEGER
 			-- Node kinds whose typed value is conditionally untypedAtomic
 		once
 			Result := INTEGER_.bit_or (INTEGER_.bit_shift_left (1, Document_node), INTEGER_.bit_shift_left (1, Text_node))

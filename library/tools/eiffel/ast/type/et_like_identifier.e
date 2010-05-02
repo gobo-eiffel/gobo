@@ -21,14 +21,14 @@ inherit
 
 feature -- Access
 
-	name: ET_FEATURE_NAME is
+	name: ET_FEATURE_NAME
 			-- Name of the feature associated with current type
 		deferred
 		ensure
 			name_not_void: Result /= Void
 		end
 
-	seed: INTEGER is
+	seed: INTEGER
 			-- Feature ID of one of the seeds of the
 			-- feature associated with current type;
 			-- 0 if not resolved yet
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_identifier_anchored_type: BOOLEAN is
+	has_identifier_anchored_type: BOOLEAN
 			-- Does current type contain an identifier anchored type
 			-- (i.e. an anchored type other than 'like Current')?
 		do

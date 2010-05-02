@@ -23,7 +23,7 @@ create
 
 feature -- Test
 
-	test_sparse_set1 is
+	test_sparse_set1
 			-- Test features of DS_SPARSE_SET.
 		local
 			a_set: DS_SPARSE_SET [INTEGER]
@@ -42,7 +42,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	check_integer_set1 (a_set: DS_SPARSE_SET [INTEGER]) is
+	check_integer_set1 (a_set: DS_SPARSE_SET [INTEGER])
 			-- Test features of set `a_set'.
 		require
 			a_set_not_void: a_set /= Void
@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 			assert_iarrays_same ("items6", <<INTEGER_.to_integer (1), 2, 5, 4>>, a_set.to_array)
 			a_set.put (7)
 			assert_iarrays_same ("items7", <<INTEGER_.to_integer (1), 2, 5, 4, 7>>, a_set.to_array)
-			
+
 			a_set.wipe_out
 			assert ("empty2", a_set.is_empty)
 			a_set.put (8)

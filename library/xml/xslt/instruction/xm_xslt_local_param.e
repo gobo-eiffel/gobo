@@ -24,8 +24,8 @@ create
 	make
 
 feature -- Access
-	
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions of `Current'
 		do
 			create Result.make (2)
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Status report
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -50,7 +50,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_conversion (a_conversion: like conversion) is
+	set_conversion (a_conversion: like conversion)
 			-- Set type conversion.
 		do
 			conversion := a_conversion
@@ -61,7 +61,7 @@ feature -- Element change
 
 feature -- Evaluation
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_was_supplied: BOOLEAN
@@ -102,4 +102,4 @@ feature {NONE} -- Implementation
 			-- Type conversion to be applied
 
 end
-	
+

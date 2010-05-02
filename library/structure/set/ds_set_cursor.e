@@ -22,7 +22,7 @@ inherit
 
 feature -- Access
 
-	container: DS_SET [G] is
+	container: DS_SET [G]
 			-- Set traversed
 		deferred
 		end

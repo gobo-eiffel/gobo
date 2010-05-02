@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_static_context: XM_XPATH_STATIC_CONTEXT; a_pattern_one, a_pattern_two: XM_XSLT_PATTERN) is
+	make (a_static_context: XM_XPATH_STATIC_CONTEXT; a_pattern_one, a_pattern_two: XM_XSLT_PATTERN)
 			-- Establish invariant.
 		require
 				pattern_one_not_void: a_pattern_one /= Void
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			line_number_set: line_number = a_static_context.line_number
 			static_context_stored: static_context = a_static_context
 		end
-	
+
 feature -- Access
 
 	left_hand_side, right_hand_side: XM_XSLT_PATTERN
@@ -61,7 +61,7 @@ feature -- Access
 	original_text: STRING
 			-- Original text
 
-	node_test: XM_XSLT_NODE_TEST is
+	node_test: XM_XSLT_NODE_TEST
 			-- Retrieve an `XM_XSLT_NODE_TEST' that all nodes matching this pattern must satisfy
 		do
 			if node_type = Any_node then
@@ -73,7 +73,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_union_pattern: BOOLEAN is
+	is_union_pattern: BOOLEAN
 			-- Is `Current' a union pattern?
 		do
 			Result := True
@@ -81,7 +81,7 @@ feature -- Status report
 
 feature -- Conversion
 
-	as_union_pattern: XM_XSLT_UNION_PATTERN is
+	as_union_pattern: XM_XSLT_UNION_PATTERN
 			-- `Current' seen as a union pattern
 		do
 			Result := Current
@@ -89,14 +89,14 @@ feature -- Conversion
 
 feature -- Analysis
 
-	simplified_pattern: XM_XSLT_PATTERN is
+	simplified_pattern: XM_XSLT_PATTERN
 			-- Simplify a pattern by applying any context-independent optimizations;
 			-- Default implementation does nothing
 		do
 			create {XM_XSLT_UNION_PATTERN} Result.make (static_context, left_hand_side.simplified_pattern, right_hand_side.simplified_pattern)
 		end
 
-	type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Type-check the pattern;
 			-- Default implementation does nothing. This is only needed for patterns that contain
 			-- variable references or function calls.
@@ -114,7 +114,7 @@ feature -- Analysis
 
 feature -- Matching
 
-	match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Attempt to match `Current' againast `a_node'.
 		do
 			left_hand_side.match (a_node, a_context)
@@ -146,6 +146,6 @@ invariant
 	pattern_one_not_void: left_hand_side /= Void
 	pattern_two_not_void: right_hand_side /= Void
 	static_context_not_void: static_context /= Void
-	
+
 end
-	
+

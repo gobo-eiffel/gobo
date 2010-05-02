@@ -11,7 +11,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class 
+deferred class
 	SUBSET_STRATEGY [G]
 
 feature -- Comparison
@@ -23,7 +23,7 @@ feature -- Comparison
 			same_rule: set1.object_comparison = set2.object_comparison
 		deferred
 		end
-	
+
 feature -- Basic operations
 
 	symdif (set1, set2: TRAVERSABLE_SUBSET [G])
@@ -34,7 +34,7 @@ feature -- Basic operations
 			same_rule: set1.object_comparison = set2.object_comparison
 		deferred
 		end
-	
+
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

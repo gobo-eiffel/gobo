@@ -33,7 +33,7 @@ inherit
 
 feature -- Status report
 
-	is_boolean_constant: BOOLEAN is True
+	is_boolean_constant: BOOLEAN = True
 			-- Is current constant a BOOLEAN constant?
 
 end

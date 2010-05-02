@@ -31,7 +31,7 @@ create {DS_RED_BLACK_TREE_SET}
 
 feature {NONE} -- Initialization
 
-	make (a_item: like item) is
+	make (a_item: like item)
 			-- Create a red-black tree node.
 		do
 			item := a_item

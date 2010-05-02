@@ -53,7 +53,7 @@ create
 
 feature
 
-	make is
+	make
 		local
 			b: BB
 		do
@@ -73,7 +73,7 @@ inherit
 
 feature
 
-	f is
+	f
 		deferred
 		end
 
@@ -83,7 +83,7 @@ deferred class CC
 
 feature
 
-	f is
+	f
 		deferred
 		end
 

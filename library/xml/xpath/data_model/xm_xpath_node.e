@@ -48,18 +48,18 @@ inherit
 		export {NONE} all end
 
 		-- This class represents a node in gexslt's object model.
-		-- It combines the features of the XPath data model, 
+		-- It combines the features of the XPath data model,
 		--  with some of the features from the W3C's dom::Node (for convenience),
 		--  along with additional features to make life easier.
 
 feature -- Access
 
-	document: XM_XPATH_DOCUMENT is
+	document: XM_XPATH_DOCUMENT
 			-- Document that owns this node
 		deferred
 		end
 
-	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE is
+	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE
 			-- Node sequence number (in document order);
 			-- Sequence numbers are monotonic but not consecutive.
 			-- The sequence number must be unique within the document.
@@ -67,15 +67,15 @@ feature -- Access
 		ensure
 			strictly_positive_sequence_number: Result /= Void and then Result.is_positive
 		end
-	
-	document_number: INTEGER is
+
+	document_number: INTEGER
 			-- Uniquely identifies the owning document.
 		deferred
 		ensure
 			strictly_positive_result: Result > 0
 		end
 
-	base_uri: STRING is
+	base_uri: STRING
 			-- Base URI as per W3C XML:base REC
 		require
 			not_in_error: not is_error
@@ -90,7 +90,7 @@ feature -- Access
 	node_type: INTEGER
 			-- `node_kind' expressed as an integer
 
-	node_kind: STRING is
+	node_kind: STRING
 			-- Kind of node
 			-- Must be one of:
 			-- "document", "element", "attribute",
@@ -103,7 +103,7 @@ feature -- Access
 			node_kind_not_void: Result /= Void
 		end
 
-	node_name: STRING is
+	node_name: STRING
 			-- Qualified name
 		require
 			not_in_error: not is_error
@@ -112,7 +112,7 @@ feature -- Access
 			node_name_may_be_void: True
 		end
 
-	parent: XM_XPATH_COMPOSITE_NODE is
+	parent: XM_XPATH_COMPOSITE_NODE
 			-- Parent of current node;
 			-- `Void' if current node is root, or for orphan nodes
 		require
@@ -122,8 +122,8 @@ feature -- Access
 			parent_may_be_void: True
 			not_current_node: Result /= Void implies not is_same_node (Result)
 		end
-	
-	root: XM_XPATH_NODE is
+
+	root: XM_XPATH_NODE
 			-- The root node for `Current';
 			-- This is not necessarily a Document node.
 		require
@@ -133,7 +133,7 @@ feature -- Access
 			root_node_not_void: Result /= Void
 		end
 
-	type_annotation: INTEGER is
+	type_annotation: INTEGER
 			-- Type annotation of this node
 		require
 			not_in_error: not is_error
@@ -141,7 +141,7 @@ feature -- Access
 			Result := type_factory.untyped_atomic_type.fingerprint
 		end
 
-	fingerprint: INTEGER is
+	fingerprint: INTEGER
 			-- Fingerprint of this node - used in matching names
 		local
 			l_name_code: INTEGER
@@ -153,15 +153,15 @@ feature -- Access
 				Result := fingerprint_from_name_code (l_name_code)
 			end
 		end
-	
-	name_code: INTEGER is
+
+	name_code: INTEGER
 			-- Name code this node - used in displaying names
 		require
 			not_in_error: not is_error
 		deferred
 		end
 
-	local_part: STRING is
+	local_part: STRING
 			-- Local part of the name;
 			-- For nodeless names, return the empty string
 		do
@@ -173,7 +173,7 @@ feature -- Access
 		end
 
 
-	uri: STRING is
+	uri: STRING
 			-- Namespace URI part of the name of this node;
 			-- This is the URI corresponding to the prefix,
 			--  or the URI of the default namespace if appropriate.
@@ -187,7 +187,7 @@ feature -- Access
 			uri_not_void: Result /= Void
 		end
 
-	path: STRING is
+	path: STRING
 			-- XPath expression for location within document;
 			-- Used for reporting purposes.
 		deferred
@@ -195,7 +195,7 @@ feature -- Access
 			path_not_void: Result /= Void
 		end
 
-	simple_number: STRING is
+	simple_number: STRING
 			-- Position of `Current' amongst it's siblings
 		require
 			no_previous_error: not is_error
@@ -224,7 +224,7 @@ feature -- Access
 			strictly_positive_integer: Result /= Void and then Result.is_integer and then Result.to_integer > 0
 		end
 
-	document_root: XM_XPATH_DOCUMENT is
+	document_root: XM_XPATH_DOCUMENT
 			-- The document node for `Current';
 			-- If `Current' is in a document fragment, then return Void
 		require
@@ -232,7 +232,7 @@ feature -- Access
 		deferred
 		end
 
-	first_child: XM_XPATH_NODE is
+	first_child: XM_XPATH_NODE
 			-- The first child of this node;
 			-- If there are no children, return `Void'
 		require
@@ -241,7 +241,7 @@ feature -- Access
 			Result := Void
 		end
 
-	last_child: XM_XPATH_NODE is
+	last_child: XM_XPATH_NODE
 			-- The last child of this node;
 			-- If there are no children, return `Void'
 		require
@@ -250,7 +250,7 @@ feature -- Access
 			Result := Void
 		end
 
-	previous_sibling: XM_XPATH_NODE is
+	previous_sibling: XM_XPATH_NODE
 			-- The previous sibling of this node;
 			-- If there is no such node, return `Void'.
 		require
@@ -264,8 +264,8 @@ feature -- Access
 				Result := l_iterator.item
 			end
 		end
-	
-	next_sibling: XM_XPATH_NODE is
+
+	next_sibling: XM_XPATH_NODE
 			-- The next sibling of this node;
 			-- If there is no such node, return `Void'.
 		require
@@ -279,8 +279,8 @@ feature -- Access
 				Result := l_iterator.item
 			end
 		end
-	
-	document_element: XM_XPATH_ELEMENT is
+
+	document_element: XM_XPATH_ELEMENT
 			-- The top-level element;
 			-- If the document is not well-formed
 			-- (i.e. it is a document fragment), then
@@ -302,8 +302,8 @@ feature -- Access
 				end
 			end
 		end
-	
-	typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE] is
+
+	typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE]
 			-- Typed value
 		local
 			l_type: INTEGER
@@ -319,14 +319,14 @@ feature -- Access
 			end
 		end
 
-	atomized_value: XM_XPATH_VALUE is
+	atomized_value: XM_XPATH_VALUE
 			-- Typed value as atomic value or (unusually) sequence of atomic values.
 		deferred
 		ensure
 			atomized_value_not_void: Result /= Void
 		end
-			
-	type_name: STRING is
+
+	type_name: STRING
 			-- Type name for diagnostic purposes
 		do
 			inspect
@@ -356,7 +356,7 @@ feature -- Access
 			end
 		end
 
-	new_axis_iterator (a_axis_type: INTEGER): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
+	new_axis_iterator (a_axis_type: INTEGER): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
 			-- An enumeration over the nodes reachable by `a_axis_type' from this node
 		require
 			not_in_error: not is_error
@@ -367,7 +367,7 @@ feature -- Access
 			invulnerable: Result.is_invulnerable
 		end
 
-	new_axis_iterator_with_node_test (a_axis_type: INTEGER; a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
+	new_axis_iterator_with_node_test (a_axis_type: INTEGER; a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
 			-- An enumeration over the nodes reachable by `a_axis_type' from this node;
 			-- Only nodes that match the pattern specified by `a_node_test' will be selected.
 		require
@@ -383,7 +383,7 @@ feature -- Access
 	generated_id: STRING
 			-- Unique identifier (across all documents)
 
-	 is_ancestor_or_self (a_node: XM_XPATH_NODE): BOOLEAN is
+	 is_ancestor_or_self (a_node: XM_XPATH_NODE): BOOLEAN
 		 -- Is `Current' an ancestor of `a_node', or the same node?
 		require
 			a_node_not_void: a_node /= Void
@@ -403,10 +403,10 @@ feature -- Access
 				end
 			end
 		end
-	 
+
 feature -- Comparison
 
-	is_same_node (a_other: XM_XPATH_NODE): BOOLEAN is
+	is_same_node (a_other: XM_XPATH_NODE): BOOLEAN
 			-- Does `Current' represent the same node in the tree as `a_other'?
 		require
 			not_in_error: not is_error
@@ -414,7 +414,7 @@ feature -- Comparison
 		deferred
 		end
 
-	three_way_comparison (a_other: XM_XPATH_NODE): INTEGER is
+	three_way_comparison (a_other: XM_XPATH_NODE): INTEGER
 			-- If current object equal to other, 0;
 			-- if smaller, -1; if greater, 1
 		require
@@ -439,7 +439,7 @@ feature -- Status report
 	error_value: XM_XPATH_ERROR_VALUE
 			-- Error value
 
-	is_nilled: BOOLEAN is
+	is_nilled: BOOLEAN
 			-- Is current node "nilled"? (i.e. xsi: nill="true");
 			-- This cannot be `True' until we have schema-aware version.
 		require
@@ -448,7 +448,7 @@ feature -- Status report
 			Result := False
 		end
 
-	has_attributes: BOOLEAN is
+	has_attributes: BOOLEAN
 			-- Does `Current' have any attributes?
 		require
 			not_in_error: not is_error
@@ -456,7 +456,7 @@ feature -- Status report
 			Result := False
 		end
 
-	has_child_nodes: BOOLEAN is
+	has_child_nodes: BOOLEAN
 			-- Does `Current' have any children?
 		require
 			not_in_error: not is_error
@@ -464,25 +464,25 @@ feature -- Status report
 			Result := False -- overriden for composite nodes
 		end
 
-	is_node: BOOLEAN is
+	is_node: BOOLEAN
 			-- Is `Current' a node?
 		do
 			Result := True
 		end
 
-	is_namespace: BOOLEAN is
+	is_namespace: BOOLEAN
 			-- Is `Current' a namespace?
 		do
 			Result := False
 		end
 
-	is_tiny_node: BOOLEAN is
+	is_tiny_node: BOOLEAN
 			-- Is `Current' a tiny-tree node?
 		do
 			Result := False
 		end
 
-	is_tree_node: BOOLEAN is
+	is_tree_node: BOOLEAN
 			-- Is `Current' a standard (linked) tree node?
 		do
 			Result := False
@@ -490,14 +490,14 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_last_error (a_error_value: XM_XPATH_ERROR_VALUE) is
+	set_last_error (a_error_value: XM_XPATH_ERROR_VALUE)
 			-- Set `error_value'.
 		do
 			is_error := True
 			error_value := a_error_value
 		end
 
-	set_last_error_from_string (a_message, a_namespace_uri, a_code: STRING; a_error_type: INTEGER) is
+	set_last_error_from_string (a_message, a_namespace_uri, a_code: STRING; a_error_type: INTEGER)
 			-- Set `error_value'.
 		do
 			is_error := True
@@ -505,20 +505,20 @@ feature -- Status setting
 		end
 
 feature -- Conversion
-	
-	as_item_value: XM_XPATH_VALUE is
+
+	as_item_value: XM_XPATH_VALUE
 			-- `Current' seen as a value
 		do
 			create {XM_XPATH_SINGLETON_NODE} Result.make (Current)
 		end
-	
-	as_node: XM_XPATH_NODE is
+
+	as_node: XM_XPATH_NODE
 			-- `Current' seen as a node
 		do
 			Result := Current
 		end
-	
-	as_namespace: XM_XPATH_NAMESPACE_NODE is
+
+	as_namespace: XM_XPATH_NAMESPACE_NODE
 			-- `Current' seen as a node
 		require
 			namespace: is_namespace
@@ -527,27 +527,27 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_tiny_node: XM_XPATH_TINY_NODE is
+	as_tiny_node: XM_XPATH_TINY_NODE
 			-- `Current' seen as a tiny-tree node
 		require
 			tiny_node: is_tiny_node
 		do
 		ensure
-			same_object: ANY_.same_objects (Result, Current)			
+			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_tree_node: XM_XPATH_TREE_NODE is
+	as_tree_node: XM_XPATH_TREE_NODE
 			-- `Current' seen as a tree node
 		require
 			tree_node: is_tree_node
 		do
 		ensure
-			same_object: ANY_.same_objects (Result, Current)			
+			same_object: ANY_.same_objects (Result, Current)
 		end
 
 feature -- Basic operations
-	
-	generate_id is
+
+	generate_id
 			-- Generate a unique id for `Current'
 		require
 			no_generated_id_yet: generated_id = Void
@@ -559,12 +559,12 @@ feature -- Basic operations
 
 feature -- Duplication
 
-	copy_node (a_receiver: XM_XPATH_RECEIVER; a_which_namespaces: INTEGER; a_copy_annotations: BOOLEAN) is
+	copy_node (a_receiver: XM_XPATH_RECEIVER; a_which_namespaces: INTEGER; a_copy_annotations: BOOLEAN)
 			-- Copy `Current' to `a_receiver'.
 		require
 			receiver_not_void: a_receiver /= Void
 			a_which_namespaces_valid: a_which_namespaces = No_namespaces
-				or a_which_namespaces = Local_namespaces or a_which_namespaces = All_namespaces 
+				or a_which_namespaces = Local_namespaces or a_which_namespaces = All_namespaces
 		deferred
 		end
 

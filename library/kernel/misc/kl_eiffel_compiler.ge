@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	vendor: STRING is
+	vendor: STRING
 			-- Vendor of Eiffel compiler used to compiled this program
 		once
 #ifdef GE
@@ -34,16 +34,16 @@ feature -- Access
 			vendor_not_void: Result /= Void
 		end
 
-	ge_vendor: STRING is "ge"
+	ge_vendor: STRING = "ge"
 			-- Gobo Eiffel vendor
 
-	ise_vendor: STRING is "ise"
+	ise_vendor: STRING = "ise"
 			-- ISE Eiffel vendor
 
-	unknown_vendor: STRING is "unknown"
+	unknown_vendor: STRING = "unknown"
 			-- Unknown Eiffel vendor
 
-	se_vendor: STRING is
+	se_vendor: STRING
 			-- SmartEiffel vendor
 		obsolete
 			"[080724] SE not supported anymore."
@@ -53,7 +53,7 @@ feature -- Access
 			vendor_not_void: Result /= Void
 		end
 
-	ve_vendor: STRING is
+	ve_vendor: STRING
 			-- Visual Eiffel vendor
 		obsolete
 			"[080419] VE not supported anymore."
@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_ge: BOOLEAN is
+	is_ge: BOOLEAN
 			-- Has this program been compiled with Gobo Eiffel?
 		once
 			Result := (vendor = ge_vendor)
@@ -73,7 +73,7 @@ feature -- Status report
 			definition: Result = (vendor = ge_vendor)
 		end
 
-	is_ise: BOOLEAN is
+	is_ise: BOOLEAN
 			-- Has this program been compiled with ISE Eiffel?
 		once
 			Result := (vendor = ise_vendor)
@@ -81,7 +81,7 @@ feature -- Status report
 			definition: Result = (vendor = ise_vendor)
 		end
 
-	is_se: BOOLEAN is
+	is_se: BOOLEAN
 			-- Has this program been compiled with SmartEiffel?
 		obsolete
 			"[080724] SE not supported anymore."
@@ -91,7 +91,7 @@ feature -- Status report
 			definition: not Result
 		end
 
-	is_ve: BOOLEAN is
+	is_ve: BOOLEAN
 			-- Has this program been compiled with Visual Eiffel?
 		obsolete
 			"[080419] VE not supported anymore."

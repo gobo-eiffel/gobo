@@ -52,7 +52,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type_mark: like type_mark; a_name: like name; an_index: INTEGER; a_class: ET_CLASS) is
+	make (a_type_mark: like type_mark; a_name: like name; an_index: INTEGER; a_class: ET_CLASS)
 			-- Create a new formal generic parameter type.
 		require
 			a_name_not_void: a_name /= Void
@@ -84,7 +84,7 @@ feature -- Access
 	implementation_class: ET_CLASS
 			-- Class where the current formal generic parameter appears
 
-	named_base_class (a_context: ET_TYPE_CONTEXT): ET_NAMED_CLASS is
+	named_base_class (a_context: ET_TYPE_CONTEXT): ET_NAMED_CLASS
 			-- Same as `base_class' except that it returns information about this
 			-- class (e.g. its name) as known from the universe it is used from
 			-- (instead of from the universe it is written in).
@@ -153,7 +153,7 @@ feature -- Access
 			end
 		end
 
-	base_type (a_context: ET_TYPE_CONTEXT): ET_BASE_TYPE is
+	base_type (a_context: ET_TYPE_CONTEXT): ET_BASE_TYPE
 			-- Base type of current type, when it appears in `a_context',
 			-- only made up of class names and generic formal parameters
 			-- when the root type of `a_context' is a generic type not
@@ -232,7 +232,7 @@ feature -- Access
 			end
 		end
 
-	shallow_base_type (a_context: ET_BASE_TYPE): ET_BASE_TYPE is
+	shallow_base_type (a_context: ET_BASE_TYPE): ET_BASE_TYPE
 			-- Base type of current type, when it appears in `a_context',
 			-- but where the actual generic parameters are not replaced
 			-- by their named version and should still be considered as
@@ -307,7 +307,7 @@ feature -- Access
 			end
 		end
 
-	base_type_actual (i: INTEGER; a_context: ET_TYPE_CONTEXT): ET_NAMED_TYPE is
+	base_type_actual (i: INTEGER; a_context: ET_TYPE_CONTEXT): ET_NAMED_TYPE
 			-- `i'-th actual generic parameter's type of the base type of current
 			-- type when it appears in `a_context'
 		local
@@ -367,7 +367,7 @@ feature -- Access
 			end
 		end
 
-	base_type_actual_parameter (i: INTEGER; a_context: ET_TYPE_CONTEXT): ET_ACTUAL_PARAMETER is
+	base_type_actual_parameter (i: INTEGER; a_context: ET_TYPE_CONTEXT): ET_ACTUAL_PARAMETER
 			-- `i'-th actual generic parameter of the base type of current
 			-- type when it appears in `a_context'
 		local
@@ -427,7 +427,7 @@ feature -- Access
 			end
 		end
 
-	base_type_index_of_label (a_label: ET_IDENTIFIER; a_context: ET_TYPE_CONTEXT): INTEGER is
+	base_type_index_of_label (a_label: ET_IDENTIFIER; a_context: ET_TYPE_CONTEXT): INTEGER
 			-- Index of actual generic parameter with label `a_label' in
 			-- the base type of current type when it appears in `a_context';
 			-- 0 if it does not exist
@@ -488,7 +488,7 @@ feature -- Access
 			end
 		end
 
-	named_type (a_context: ET_TYPE_CONTEXT): ET_NAMED_TYPE is
+	named_type (a_context: ET_TYPE_CONTEXT): ET_NAMED_TYPE
 			-- Same as `base_type' except when current type is still
 			-- a formal generic parameter after having been replaced
 			-- by its actual counterpart in `a_context'. Return this
@@ -521,7 +521,7 @@ feature -- Access
 			end
 		end
 
-	shallow_named_type (a_context: ET_BASE_TYPE): ET_NAMED_TYPE is
+	shallow_named_type (a_context: ET_BASE_TYPE): ET_NAMED_TYPE
 			-- Same as `shallow_base_type' except when current type is still
 			-- a formal generic parameter after having been replaced
 			-- by its actual counterpart in `a_context'. Return this
@@ -560,7 +560,7 @@ feature -- Access
 			end
 		end
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -572,7 +572,7 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			if type_mark /= Void then
@@ -582,13 +582,13 @@ feature -- Access
 			end
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := name
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := name.break
@@ -596,7 +596,7 @@ feature -- Access
 
 feature -- Measurement
 
-	base_type_actual_count (a_context: ET_TYPE_CONTEXT): INTEGER is
+	base_type_actual_count (a_context: ET_TYPE_CONTEXT): INTEGER
 			-- Number of actual generic parameters of the base type of current type
 		local
 			an_actual: ET_NAMED_TYPE
@@ -666,7 +666,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	is_type_expanded (a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	is_type_expanded (a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Is current type expanded when viewed from `a_context'?
 		local
 			an_actual: ET_NAMED_TYPE
@@ -714,7 +714,7 @@ feature -- Status report
 			end
 		end
 
-	is_type_reference (a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	is_type_reference (a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Is current type reference when viewed from `a_context'?
 		local
 			an_actual: ET_NAMED_TYPE
@@ -762,7 +762,7 @@ feature -- Status report
 			end
 		end
 
-	has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does current type contain a formal generic parameter
 			-- when viewed from `a_context'?
 		local
@@ -801,7 +801,7 @@ feature -- Status report
 			end
 		end
 
-	named_type_is_formal_type (a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	named_type_is_formal_type (a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Is named type of current type, or if it is a qualified type
 			-- is the named type of its  target type (recursively),
 			-- a formal parameter when viewed from `a_context'?
@@ -841,7 +841,7 @@ feature -- Status report
 			end
 		end
 
-	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does the base type of current type contain `a_class'
 			-- when it appears in `a_context'?
 		local
@@ -907,7 +907,7 @@ feature -- Status report
 			end
 		end
 
-	named_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	named_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does the named type of current type contain `a_class'
 			-- when it appears in `a_context'?
 		local
@@ -946,7 +946,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	same_syntactical_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_syntactical_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the base types here!
@@ -990,7 +990,7 @@ feature -- Comparison
 			end
 		end
 
-	same_named_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_named_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		local
@@ -1029,7 +1029,7 @@ feature -- Comparison
 			end
 		end
 
-	same_base_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_base_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 		local
@@ -1070,7 +1070,7 @@ feature -- Comparison
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
-	same_syntactical_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_syntactical_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the base types here!
@@ -1114,7 +1114,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_syntactical_class_type (other: ET_CLASS_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_syntactical_class_type (other: ET_CLASS_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the base types here!
@@ -1159,7 +1159,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_syntactical_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_syntactical_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the base types here!
@@ -1203,7 +1203,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_syntactical_like_current (other: ET_LIKE_CURRENT; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_syntactical_like_current (other: ET_LIKE_CURRENT; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the base types here!
@@ -1247,7 +1247,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_syntactical_like_feature (other: ET_LIKE_FEATURE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_syntactical_like_feature (other: ET_LIKE_FEATURE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the base types here!
@@ -1291,7 +1291,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_syntactical_qualified_like_identifier (other: ET_QUALIFIED_LIKE_IDENTIFIER; other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_syntactical_qualified_like_identifier (other: ET_QUALIFIED_LIKE_IDENTIFIER; other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the base types here!
@@ -1336,7 +1336,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_syntactical_tuple_type (other: ET_TUPLE_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_syntactical_tuple_type (other: ET_TUPLE_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the base types here!
@@ -1380,7 +1380,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_named_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_named_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		local
@@ -1419,7 +1419,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_named_class_type (other: ET_CLASS_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_named_class_type (other: ET_CLASS_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		local
@@ -1458,7 +1458,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_named_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_named_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		local
@@ -1497,7 +1497,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_named_tuple_type (other: ET_TUPLE_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_named_tuple_type (other: ET_TUPLE_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		local
@@ -1536,7 +1536,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_base_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_base_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 		local
@@ -1575,7 +1575,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_base_class_type (other: ET_CLASS_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_base_class_type (other: ET_CLASS_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 		local
@@ -1614,7 +1614,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_base_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_base_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 		local
@@ -1653,7 +1653,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_base_tuple_type (other: ET_TUPLE_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_base_tuple_type (other: ET_TUPLE_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 		local
@@ -1694,7 +1694,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
 feature -- Conformance
 
-	conforms_to_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	conforms_to_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does current type appearing in `a_context' conform
 			-- to `other' type appearing in `other_context'?
 			-- (Note: 'current_system.ancestor_builder' is used on classes on
@@ -1738,7 +1738,7 @@ feature -- Conformance
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
-	conforms_from_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	conforms_from_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- (Note: 'current_system.ancestor_builder' is used on classes on
@@ -1779,7 +1779,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			end
 		end
 
-	conforms_from_class_type (other: ET_CLASS_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	conforms_from_class_type (other: ET_CLASS_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- (Note: 'current_system.ancestor_builder' is used on classes on
@@ -1822,7 +1822,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			end
 		end
 
-	conforms_from_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	conforms_from_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- (Note: 'current_system.ancestor_builder' is used on classes on
@@ -1942,7 +1942,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			end
 		end
 
-	conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- (Note: 'current_system.ancestor_builder' is used on classes on
@@ -1985,7 +1985,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
 feature -- Type processing
 
-	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_TYPE is
+	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_TYPE
 			-- Version of current type where the formal generic
 			-- parameter types have been replaced by their actual
 			-- counterparts in `a_parameters'
@@ -2007,7 +2007,7 @@ feature -- Type processing
 
 feature -- Type context
 
-	is_valid_context_type (a_root_context: ET_BASE_TYPE): BOOLEAN is
+	is_valid_context_type (a_root_context: ET_BASE_TYPE): BOOLEAN
 			-- Is current type only made up of class names and
 			-- formal generic parameter names, and are the actual
 			-- parameters of these formal parameters themselves
@@ -2025,7 +2025,7 @@ feature -- Type context
 
 feature -- Output
 
-	append_to_string (a_string: STRING) is
+	append_to_string (a_string: STRING)
 			-- Append textual representation of
 			-- current type to `a_string'.
 		do
@@ -2034,7 +2034,7 @@ feature -- Output
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_formal_parameter_type (Current)

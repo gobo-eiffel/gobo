@@ -13,7 +13,7 @@ note
 class XM_XPATH_POSITION
 
 inherit
-	
+
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
 			pre_evaluate, evaluate_item, compute_intrinsic_dependencies, is_position_function
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant.
 		do
 			name := "position"; namespace_uri := Xpath_standard_functions_uri
@@ -39,13 +39,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_position_function: BOOLEAN is
+	is_position_function: BOOLEAN
 			-- Is `Current' an XPath position() function?
 		do
 			Result := True
 		end
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Determine the data type of the expression, if possible
 		do
 			Result := type_factory.integer_type
@@ -57,7 +57,7 @@ feature -- Access
 
 feature -- Status report
 
-	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
+	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE
 			-- Type of argument number `argument_number'
 		do
 
@@ -69,7 +69,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	compute_intrinsic_dependencies is
+	compute_intrinsic_dependencies
 			-- Determine the intrinsic dependencies of an expression.
 		do
 			set_intrinsically_depends_upon_position
@@ -77,7 +77,7 @@ feature -- Status setting
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_context_position: INTEGER
@@ -100,7 +100,7 @@ feature -- Evaluation
 		end
 
 
-	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Pre-evaluate `Current' at compile time.
 		do
 			a_replacement.put (Current)
@@ -108,14 +108,14 @@ feature -- Evaluation
 			--  the value of `Current' depends upon the dynamic context.
 
 		end
-	
+
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
 		end
-		
+
 end
 

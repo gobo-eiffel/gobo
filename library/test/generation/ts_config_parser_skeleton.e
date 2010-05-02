@@ -35,7 +35,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_variables: like variables; an_error_handler: like error_handler) is
+	make (a_variables: like variables; an_error_handler: like error_handler)
 			-- Create a new config parser.
 		require
 			a_variables_not_void: a_variables /= Void
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 feature -- Parsing
 
-	parse (a_file: KI_CHARACTER_INPUT_STREAM) is
+	parse (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Parse Ace file `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -113,7 +113,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_compiler_ise (b: BOOLEAN) is
+	set_compiler_ise (b: BOOLEAN)
 			-- Set `compiler_ise' to `b'.
 		do
 			compiler_ise := b
@@ -121,7 +121,7 @@ feature -- Status setting
 			compiler_ise_set: compiler_ise = b
 		end
 
-	set_compiler_ge (b: BOOLEAN) is
+	set_compiler_ge (b: BOOLEAN)
 			-- Set `compiler_ge' to `b'.
 		do
 			compiler_ge := b
@@ -129,7 +129,7 @@ feature -- Status setting
 			compiler_ge_set: compiler_ge = b
 		end
 
-	set_fail_on_rescue (b: BOOLEAN) is
+	set_fail_on_rescue (b: BOOLEAN)
 			-- Set `fail_on_rescue' to `b'.
 		do
 			fail_on_rescue := b
@@ -139,7 +139,7 @@ feature -- Status setting
 
 feature -- AST factory
 
-	new_config (a_root_class: STRING; a_testgen: STRING; a_compile: STRING; an_execute: STRING; a_clusters: DS_LIST [TS_CLUSTER]): TS_CONFIG is
+	new_config (a_root_class: STRING; a_testgen: STRING; a_compile: STRING; an_execute: STRING; a_clusters: DS_LIST [TS_CLUSTER]): TS_CONFIG
 			-- New config
 		require
 			a_root_class_not_void: a_root_class /= Void
@@ -153,7 +153,7 @@ feature -- AST factory
 			config_not_void: Result /= Void
 		end
 
-	new_cluster (a_name: ET_IDENTIFIER; a_pathname: ET_IDENTIFIER): TS_CLUSTER is
+	new_cluster (a_name: ET_IDENTIFIER; a_pathname: ET_IDENTIFIER): TS_CLUSTER
 			-- New cluster
 		require
 			a_name_not_void: a_name /= Void
@@ -167,7 +167,7 @@ feature -- AST factory
 			cluster_not_void: Result /= Void
 		end
 
-	new_regexp (a_regexp: ET_IDENTIFIER): LX_REGULAR_EXPRESSION is
+	new_regexp (a_regexp: ET_IDENTIFIER): LX_REGULAR_EXPRESSION
 			-- New regular expression;
 			-- Void if there is a syntax error in `a_regexp'
 		require
@@ -184,7 +184,7 @@ feature -- AST factory
 
 feature -- Defaults
 
-	set_defaults (root_class: STRING) is
+	set_defaults (root_class: STRING)
 			-- Set default values if not already set.
 		require
 			root_class_not_void: root_class /= Void
@@ -212,7 +212,7 @@ feature -- Defaults
 			execute_not_void: execute /= Void
 		end
 
-	default_compile (root_class: STRING): STRING is
+	default_compile (root_class: STRING): STRING
 			-- Default compilation command-line
 		require
 			root_class_not_void: root_class /= Void
@@ -228,7 +228,7 @@ feature -- Defaults
 			default_compile_not_void: Result /= Void
 		end
 
-	default_execute (root_class: STRING): STRING is
+	default_execute (root_class: STRING): STRING
 			-- Default execute command-line
 		require
 			root_class_not_void: root_class /= Void
@@ -258,7 +258,7 @@ feature -- Defaults
 			default_execute_not_void: Result /= Void
 		end
 
-	default_cluster: TS_CLUSTER is
+	default_cluster: TS_CLUSTER
 			-- Default cluster
 		require
 			class_regexp_not_void: class_regexp /= Void
@@ -272,7 +272,7 @@ feature -- Defaults
 
 feature -- Error handling
 
-	report_error (a_message: STRING) is
+	report_error (a_message: STRING)
 			-- Print error message.
 		do
 			error_handler.report_config_syntax_error (filename, current_position)

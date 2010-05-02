@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Setting
 
-	select_target (a_target: ET_ECF_TARGET; a_state: ET_ECF_STATE) is
+	select_target (a_target: ET_ECF_TARGET; a_state: ET_ECF_STATE)
 			-- Select `a_target' in `a_state'.
 			-- Update `clusters' and `libraries' accordingly.
 		require

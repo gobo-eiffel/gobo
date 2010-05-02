@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_declaration: XM_XPATH_VARIABLE_DECLARATION) is
+	make (a_declaration: XM_XPATH_VARIABLE_DECLARATION)
 			-- Register `Current' with `a_declaration'
 			-- When the variable declaration is compiled,
 			--  the declaration will call our fix_up routine.
@@ -52,19 +52,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_variable_reference: BOOLEAN is
+	is_variable_reference: BOOLEAN
 			-- Is `Current' a variable reference?
 		do
 			Result := True
 		end
 
-	as_variable_reference: XM_XPATH_VARIABLE_REFERENCE is
+	as_variable_reference: XM_XPATH_VARIABLE_REFERENCE
 			-- `Current' seen as a variable reference
 		do
 			Result := Current
 		end
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, where known
 		do
 			if static_type = Void then
@@ -82,13 +82,13 @@ feature -- Access
 			-- Binding for variable;
 			-- will be `Void' until `fix_up' is called.
 
-	lazy_evaluation_mode: INTEGER is
+	lazy_evaluation_mode: INTEGER
 			-- Method used for lazy evaluation of `Current'
 		do
 			Result := Call_evaluate_variable
 		end
 
-	eager_evaluation_mode: INTEGER is
+	eager_evaluation_mode: INTEGER
 			-- Method used for eager evaluation of `Current'
 		do
 			Result := Evaluate_and_materialize_variable
@@ -96,7 +96,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Are `Current' and `other' the same expression?
 			-- (Note, we only compare expressions that
 			--  have the same static and dynamic context).
@@ -116,7 +116,7 @@ feature -- Status report
 	last_evaluated_binding: XM_XPATH_VALUE
 			-- Value from calling `evaluate_variable'
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -127,7 +127,7 @@ feature -- Status report
 				std.error.put_new_line
 			else
 				a_string := STRING_.appended_string (indentation (a_level), "$")
-				a_string := STRING_.appended_string (a_string, display_name)				
+				a_string := STRING_.appended_string (a_string, display_name)
 				std.error.put_string (a_string)
 				std.error.put_new_line
 			end
@@ -135,7 +135,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	compute_intrinsic_dependencies is
+	compute_intrinsic_dependencies
 			-- Determine the intrinsic dependencies of an expression.
 		do
 			if binding = Void or else not binding.is_global then
@@ -147,7 +147,7 @@ feature -- Status setting
 
 feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			if constant_value /= Void then
@@ -161,7 +161,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			-- Note that `set_static_type' might be called after type-checking, so:
@@ -174,7 +174,7 @@ feature -- Optimization
 			end
 		end
 
-	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this subexpression.
 		local
 			l_promotion: XM_XPATH_EXPRESSION
@@ -195,7 +195,7 @@ feature -- Optimization
 feature -- Evaluation
 
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over the values of a sequence
 		local
 			l_binding: like last_evaluated_binding
@@ -210,7 +210,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over the values of a sequence
 		do
 			evaluate_variable (a_context)
@@ -222,7 +222,7 @@ feature -- Evaluation
 			end
 		end
 
-	generate_events (a_context: XM_XPATH_CONTEXT) is
+	generate_events (a_context: XM_XPATH_CONTEXT)
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		do
 			evaluate_variable (a_context)
@@ -232,8 +232,8 @@ feature -- Evaluation
 				last_evaluated_binding.generate_events (a_context)
 			end
 		end
-	
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			evaluate_variable (a_context)
@@ -244,7 +244,7 @@ feature -- Evaluation
 			end
 		end
 
-	evaluate_variable (a_context: XM_XPATH_CONTEXT) is
+	evaluate_variable (a_context: XM_XPATH_CONTEXT)
 			-- Evaluate variable
 		require
 			binding_not_void: binding /= Void
@@ -252,12 +252,12 @@ feature -- Evaluation
 			binding.evaluate_variable (a_context)
 			last_evaluated_binding := binding.last_evaluated_binding
 		ensure
-			evaluation: last_evaluated_binding /= Void			
+			evaluation: last_evaluated_binding /= Void
 		end
 
 feature -- Element change
 
-	set_static_type (a_type: XM_XPATH_SEQUENCE_TYPE; a_constant_value: XM_XPATH_VALUE; a_properties: XM_XPATH_STATIC_PROPERTY) is
+	set_static_type (a_type: XM_XPATH_SEQUENCE_TYPE; a_constant_value: XM_XPATH_VALUE; a_properties: XM_XPATH_STATIC_PROPERTY)
 			-- Fix up the static type of this variable reference
 			-- Optionally, supply a constant value for the variable.
 			-- Also supplies other static properties of the expression to which the variable is bound,
@@ -272,17 +272,17 @@ feature -- Element change
 			constant_value := a_constant_value
 			if	a_properties /= Void then
 				merge_dependencies (a_properties)
-				set_cardinality (add_cardinality (a_properties.cardinality, a_type.cardinality))			
+				set_cardinality (add_cardinality (a_properties.cardinality, a_type.cardinality))
 				clone_special_properties (a_properties)
 
 				-- Although the variable may be a context document node-set at the point it is defined,
 				--  the context at the point of use may be different, so this property cannot be transferred.
-				
+
 				reset_context_document_nodeset
 			end
 		end
 
-	fix_up (a_required_binding: XM_XPATH_BINDING) is
+	fix_up (a_required_binding: XM_XPATH_BINDING)
 			-- Fix up this binding reference to a binding.
 		require
 			binding_not_void: a_required_binding /= Void
@@ -304,13 +304,13 @@ feature {NONE} -- Implementation
 	constant_value: XM_XPATH_VALUE
 			-- Optional constant value
 
-	native_implementations: INTEGER is
+	native_implementations: INTEGER
 			-- Natively-supported evaluation routines
 		do
 				Result := Supports_process + Supports_evaluate + Supports_iterator
 		end
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		local
 			l_assignation: XM_XPATH_ASSIGNATION
@@ -335,14 +335,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	compute_special_properties is
+	compute_special_properties
 			-- Compute special properties.
 		do
 			Precursor
 			set_non_creating
 		end
 
-	accumulate_slots_used (a_set: DS_HASH_SET [INTEGER]) is
+	accumulate_slots_used (a_set: DS_HASH_SET [INTEGER])
 			-- Add all slot numbers used by `an_expression' to `a_set'.
 		local
 			a_slot_number: INTEGER

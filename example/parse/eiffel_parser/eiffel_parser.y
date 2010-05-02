@@ -350,12 +350,12 @@ Declaration_body: Formal_arguments_opt Type_mark_opt Constant_or_routine_opt
 	;
 
 Constant_or_routine_opt: -- Empty
-	| E_IS Feature_value
-	;
-
-Feature_value: Manifest_constant
-	| E_UNIQUE
+	| E_IS Routine
 	| Routine
+	| '=' Manifest_constant
+	| E_IS Manifest_constant
+	| '=' E_UNIQUE
+	| E_IS E_UNIQUE
 	;
 
 --------------------------------------------------------------------------------
@@ -814,14 +814,14 @@ Identifier: E_IDENTIFIER
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new Eiffel parser.
 		do
 			make_eiffel_scanner
 			make_parser_skeleton
 		end
 
-	execute is
+	execute
 			-- Parse Eiffel files `arguments (1..argument_count)'.
 		local
 			j, n: INTEGER
@@ -853,7 +853,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	benchmark is
+	benchmark
 			-- Parse Eiffel file `argument (2)' `argument (1)' times.
 		local
 			j, n: INTEGER
@@ -891,7 +891,7 @@ feature {NONE} -- Initialization
 
 feature -- Error handling
 
-	report_error (a_message: STRING) is
+	report_error (a_message: STRING)
 			-- Print error message.
 		local
 			f_buffer: YY_FILE_BUFFER

@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_prefix: like ns_prefix; a_uri: like uri) is
+	make (a_prefix: like ns_prefix; a_uri: like uri)
 			-- Create a new namespace declaration.
 		require
 			uri_not_void: a_uri /= Void
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			uri_set: uri = a_uri
 		end
 
-	make_default is
+	make_default
 			-- Make default namespace (empty URI)
 		do
 			make ("", "")
@@ -66,7 +66,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Are the two namespaces equal?
 		do
 			Result := (uri = other.uri) or else
@@ -75,13 +75,13 @@ feature -- Status report
 			definition: Result = STRING_.same_string (uri, other.uri)
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code of URI
 		do
 			Result := uri.hash_code
 		end
 
-	out: STRING is
+	out: STRING
 			-- Out
 		do
 			Result := uri
@@ -89,7 +89,7 @@ feature -- Status report
 
 feature -- Status report
 
-	same_prefix (other: XM_NAMESPACE): BOOLEAN is
+	same_prefix (other: XM_NAMESPACE): BOOLEAN
 			-- Same
 		do
 			Result := is_equal (other) and then
@@ -101,7 +101,7 @@ feature -- Status report
 				(ns_prefix = other.ns_prefix or else STRING_.same_string (ns_prefix, other.ns_prefix))
 		end
 
-	has_prefix: BOOLEAN is
+	has_prefix: BOOLEAN
 			-- Is there an explicit prefix?
 			-- (not a default namespace declaration)
 		do

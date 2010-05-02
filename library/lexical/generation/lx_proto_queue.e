@@ -54,7 +54,7 @@ create
 
 feature -- Element change
 
-	put (state_id: INTEGER; transitions: LX_TRANSITION_TABLE [LX_DFA_STATE]; common_state: LX_DFA_STATE) is
+	put (state_id: INTEGER; transitions: LX_TRANSITION_TABLE [LX_DFA_STATE]; common_state: LX_DFA_STATE)
 			-- Create a new proto and insert it in the proto queue.
 			-- Remove less recently used proto if queue is full.
 		require
@@ -70,7 +70,7 @@ feature -- Element change
 			put_first (proto)
 		end
 
-	move_to_front (a_cursor: like new_cursor) is
+	move_to_front (a_cursor: like new_cursor)
 			-- Move proto at `a_cursor' position to front of queue.
 		require
 			not_empty: not is_empty
@@ -89,7 +89,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	capacity: INTEGER is 50
+	capacity: INTEGER = 50
 			-- Maximum number of protos in queue
 
 invariant

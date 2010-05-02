@@ -27,7 +27,7 @@ inherit
 
 feature -- Access
 
-	new_cursor: DS_BILINEAR_SET_CURSOR [G] is
+	new_cursor: DS_BILINEAR_SET_CURSOR [G]
 			-- New external cursor for traversal
 		deferred
 		end

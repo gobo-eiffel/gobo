@@ -21,7 +21,7 @@ create
 
 feature -- Test
 
-	test_integer is
+	test_integer
 			-- Test equality with integers.
 		local
 			a, b: ANY
@@ -33,7 +33,7 @@ feature -- Test
 			assert ("equal2", a = b)
 		end
 
-	test_string is
+	test_string
 			-- Test equality with strings.
 		local
 			s1, s2: STRING
@@ -46,7 +46,7 @@ feature -- Test
 			assert ("not_equal3", s1 /= s2)
 		end
 
-	test_void is
+	test_void
 			-- Test equality with Void.
 		local
 			a: ANY
@@ -59,7 +59,7 @@ feature -- Test
 			assert ("not_equal4", a /= "gobo")
 		end
 
-	test_polymorphic is
+	test_polymorphic
 			-- Test equality with polymorphic operands.
 		local
 			a, b: ANY
@@ -95,7 +95,7 @@ feature -- Test
 			assert ("not_equal9", x /= y)
 		end
 
-	test_conversion is
+	test_conversion
 			-- Test equality with conversion of operands.
 		do
 				-- With conversion.

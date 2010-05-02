@@ -6,12 +6,12 @@ create
 
 feature
 
-	make is
+	make
 		do
 			f
 		end
 
-	f is
+	f
 		local
 			s1, s2: detachable STRING
 		do

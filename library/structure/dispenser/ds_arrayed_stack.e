@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Create an empty stack and allocate
 			-- memory space for at least `n' items.
 			-- Use `=' as comparison criterion.
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			capacity_set: capacity = n
 		end
 
-	make_equal (n: INTEGER) is
+	make_equal (n: INTEGER)
 			-- Create an empty stack and allocate
 			-- memory space for at least `n' items.
 			-- Use `equal' as comparison criterion.
@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 			capacity_set: capacity = n
 		end
 
-	make_default is
+	make_default
 			-- Create an empty stack and allocate memory
 			-- space for at least `default_capacity' items.
 			-- Use `=' as comparison criterion.
@@ -73,7 +73,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	has (v: G): BOOLEAN is
+	has (v: G): BOOLEAN
 			-- Does stack include `v'?
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -114,7 +114,7 @@ feature -- Status report
 			end
 		end
 
-	extendible (n: INTEGER): BOOLEAN is
+	extendible (n: INTEGER): BOOLEAN
 			-- May stack be extended with `n' items?
 		do
 			Result := capacity >= count + n
@@ -124,13 +124,13 @@ feature -- Status report
 
 feature -- Access
 
-	item: G is
+	item: G
 			-- Item at top of stack
 		do
 			Result := storage.item (count)
 		end
 
-	i_th (i: INTEGER): G is
+	i_th (i: INTEGER): G
 			-- Item at index `i'
 		require
 			i_large_enough: i >= 1
@@ -147,7 +147,7 @@ feature -- Measurement
 	capacity: INTEGER
 			-- Maximum number of items in stack
 
-	occurrences (v: G): INTEGER is
+	occurrences (v: G): INTEGER
 			-- Number of times `v' appears in stack
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -184,7 +184,7 @@ feature -- Measurement
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Copy `other' to current stack.
 		do
 			if other /= Current then
@@ -195,7 +195,7 @@ feature -- Duplication
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is current stack equal to `other'?
 		local
 			i, nb: INTEGER
@@ -220,14 +220,14 @@ feature -- Comparison
 
 feature -- Element change
 
-	put (v: G) is
+	put (v: G)
 			-- Push `v' on stack.
 		do
 			count := count + 1
 			storage.put (v, count)
 		end
 
-	force (v: G) is
+	force (v: G)
 			-- Push `v' on stack.
 			-- Resize stack if needed.
 		do
@@ -238,13 +238,13 @@ feature -- Element change
 			storage.put (v, count)
 		end
 
-	replace (v: G) is
+	replace (v: G)
 			-- Replace top item by `v'.
 		do
 			storage.put (v, count)
 		end
 
-	extend (other: DS_LINEAR [G]) is
+	extend (other: DS_LINEAR [G])
 			-- Add items of `other' to stack.
 			-- Add `other.first' first, etc.
 		local
@@ -265,7 +265,7 @@ feature -- Element change
 			count := count + other.count
 		end
 
-	append (other: DS_LINEAR [G]) is
+	append (other: DS_LINEAR [G])
 			-- Add items of `other' to stack.
 			-- Add `other.first' first, etc.
 			-- Resize stack if needed.
@@ -281,7 +281,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove is
+	remove
 			-- Remove top item from stack.
 		local
 			dead_item: G
@@ -290,21 +290,21 @@ feature -- Removal
 			count := count - 1
 		end
 
-	prune (n: INTEGER) is
+	prune (n: INTEGER)
 			-- Remove `n' items from stack.
 		do
 			clear_items (count - n + 1, count)
 			count := count - n
 		end
 
-	keep (n: INTEGER) is
+	keep (n: INTEGER)
 			-- Keep `n' items in stack.
 		do
 			clear_items (n + 1, count)
 			count := n
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items from stack.
 		do
 			clear_items (1, count)
@@ -313,7 +313,7 @@ feature -- Removal
 
 feature -- Resizing
 
-	resize (n: INTEGER) is
+	resize (n: INTEGER)
 			-- Resize stack so that it can contain
 			-- at least `n' items. Do not lose any item.
 		do
@@ -323,7 +323,7 @@ feature -- Resizing
 
 feature -- Iteration
 
-	do_all (an_action: PROCEDURE [ANY, TUPLE [G]]) is
+	do_all (an_action: PROCEDURE [ANY, TUPLE [G]])
 			-- Apply `an_action' to every item, from last to first inserted.
 			-- (Semantics not guaranteed if `an_action' changes the structure.)
 		local
@@ -339,7 +339,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
+	do_if (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test', from last to first inserted.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
 		local
@@ -359,7 +359,7 @@ feature -- Iteration
 			end
 		end
 
-	there_exists (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+	there_exists (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for at least one item?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		local
@@ -380,7 +380,7 @@ feature -- Iteration
 			end
 		end
 
-	for_all (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+	for_all (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for all items?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		local
@@ -409,7 +409,7 @@ feature {DS_ARRAYED_STACK} -- Implementation
 
 feature {NONE} -- Implementation
 
-	clear_items (s, e: INTEGER) is
+	clear_items (s, e: INTEGER)
 			-- Clear items in `storage' within bounds `s'..`e'.
 		require
 			s_large_enough: s >= 1

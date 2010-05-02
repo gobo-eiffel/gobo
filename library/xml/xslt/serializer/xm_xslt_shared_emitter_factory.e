@@ -14,7 +14,7 @@ class XM_XSLT_SHARED_EMITTER_FACTORY
 
 feature -- Access
 
-	emitter_factory: XM_XSLT_EMITTER_FACTORY is
+	emitter_factory: XM_XSLT_EMITTER_FACTORY
 			-- Singletom emitter factory
 		once
 			create Result.make
@@ -23,4 +23,4 @@ feature -- Access
 		end
 
 end
-	
+

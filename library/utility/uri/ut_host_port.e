@@ -23,7 +23,7 @@ create
 
 feature -- Setting
 
-	make, parse (a_string: STRING; a_default_port: INTEGER) is
+	make, parse (a_string: STRING; a_default_port: INTEGER)
 			-- Parse <hostname> [ ':' <port> ] (tolerant).
 		require
 			a_string_not_void: a_string /= Void
@@ -33,7 +33,7 @@ feature -- Setting
 			a_port: STRING
 		do
 			port := a_default_port
-			i := a_string.index_of (Port_separator, 1) 
+			i := a_string.index_of (Port_separator, 1)
 			if i /= 0 then
 				host := a_string.substring (1, i - 1)
 				a_port := a_string.substring (i + 1, a_string.count)
@@ -50,7 +50,7 @@ feature -- Setting
 			end
 		end
 
-	set_host (a_host: STRING) is
+	set_host (a_host: STRING)
 			-- Set host.
 		require
 			a_host_not_void: a_host /= Void
@@ -60,7 +60,7 @@ feature -- Setting
 			host_set: host = a_host
 		end
 
-	set_port (a_port: INTEGER) is
+	set_port (a_port: INTEGER)
 			-- Set port.
 		require
 			a_port_valid: is_valid_port (a_port)

@@ -38,7 +38,7 @@ inherit
 
 feature -- Access
 
-	at alias "@", item (v: G): G is
+	at alias "@", item (v: G): G
 			-- Item equal to `v' held in set
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -49,14 +49,14 @@ feature -- Access
 			definition: same_items (Result, v)
 		end
 
-	new_cursor: DS_SET_CURSOR [G] is
+	new_cursor: DS_SET_CURSOR [G]
 			-- New external cursor for traversal
 		deferred
 		end
 
 feature -- Status report
 
-	is_subset (other: DS_SET [G]): BOOLEAN is
+	is_subset (other: DS_SET [G]): BOOLEAN
 			-- Are all items of current set included in `other'?
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -66,7 +66,7 @@ feature -- Status report
 		deferred
 		end
 
-	is_superset (other: DS_SET [G]): BOOLEAN is
+	is_superset (other: DS_SET [G]): BOOLEAN
 			-- Does current set include all items of `other'?
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -79,7 +79,7 @@ feature -- Status report
 			definition: Result = other.is_subset (Current)
 		end
 
-	is_disjoint (other: DS_SET [G]): BOOLEAN is
+	is_disjoint (other: DS_SET [G]): BOOLEAN
 			-- Are none of the items of current set included in `other'?
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -89,7 +89,7 @@ feature -- Status report
 		deferred
 		end
 
-	equality_tester_settable (a_tester: like equality_tester): BOOLEAN is
+	equality_tester_settable (a_tester: like equality_tester): BOOLEAN
 			-- Can `set_equality_tester' be called with `a_tester'
 			-- as argument in current state of container?
 			-- (Answer: the set has to be empty.)
@@ -99,7 +99,7 @@ feature -- Status report
 
 feature -- Measurement
 
-	occurrences (v: G): INTEGER is
+	occurrences (v: G): INTEGER
 			-- Number of times `v' appears in set
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -114,7 +114,7 @@ feature -- Measurement
 
 feature -- Access
 
-	union (other: DS_SET [G]): like Current is
+	union (other: DS_SET [G]): like Current
 			-- Clone of current set to which all items
 			-- of `other' have been added
 			-- (Use `equality_tester''s comparison criterion
@@ -130,7 +130,7 @@ feature -- Access
 			is_superset: Result.is_superset (other)
 		end
 
-	intersection (other: DS_SET [G]): like Current is
+	intersection (other: DS_SET [G]): like Current
 			-- Clone of current set from with all items
 			-- not included in `other' have been removed
 			-- (Use `equality_tester''s comparison criterion
@@ -146,7 +146,7 @@ feature -- Access
 			is_subset: Result.is_subset (other)
 		end
 
-	subtraction (other: DS_SET [G]): like Current is
+	subtraction (other: DS_SET [G]): like Current
 			-- Clone of current set from which all items
 			-- also included in `other' have been removed
 			-- (Use `equality_tester''s comparison criterion
@@ -162,7 +162,7 @@ feature -- Access
 			is_disjoint: Result.is_disjoint (other)
 		end
 
-	symdifference (other: DS_SET [G]): like Current is
+	symdifference (other: DS_SET [G]): like Current
 			-- Clone of current clone to which items of `other'
 			-- which are not included in current set have been
 			-- added and from which those which are current set
@@ -181,7 +181,7 @@ feature -- Access
 
 feature -- Element change
 
-	put (v: G) is
+	put (v: G)
 			-- Add `v' to set, replacing any existing item.
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -194,7 +194,7 @@ feature -- Element change
 			one_more: (not old has (v)) implies (count = old count + 1)
 		end
 
-	put_new (v: G) is
+	put_new (v: G)
 			-- Add `v' to set.
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -207,7 +207,7 @@ feature -- Element change
 			inserted: has (v) and then item (v) = v
 		end
 
-	put_last (v: G) is
+	put_last (v: G)
 			-- Add `v' to set, replacing any existing item.
 			-- If `v' was not included yet, insert it at
 			-- last position if implementation permits.
@@ -222,7 +222,7 @@ feature -- Element change
 			one_more: (not old has (v)) implies (count = old count + 1)
 		end
 
-	force (v: G) is
+	force (v: G)
 			-- Add `v' to set, replacing any existing item.
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -233,7 +233,7 @@ feature -- Element change
 			one_more: (not old has (v)) implies (count = old count + 1)
 		end
 
-	force_new (v: G) is
+	force_new (v: G)
 			-- Add `v' to set.
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -245,7 +245,7 @@ feature -- Element change
 			inserted: has (v) and then item (v) = v
 		end
 
-	force_last (v: G) is
+	force_last (v: G)
 			-- Add `v' to set, replacing any existing item.
 			-- If `v' was not included yet, insert it at
 			-- last position if implementation permits.
@@ -258,7 +258,7 @@ feature -- Element change
 			one_more: (not old has (v)) implies (count = old count + 1)
 		end
 
-	extend (other: DS_LINEAR [G]) is
+	extend (other: DS_LINEAR [G])
 			-- Add items of `other' to set, replacing any existing item.
 			-- Add `other.first' first, etc.
 		require
@@ -267,7 +267,7 @@ feature -- Element change
 		deferred
 		end
 
-	extend_last (other: DS_LINEAR [G]) is
+	extend_last (other: DS_LINEAR [G])
 			-- Add items of `other' to set, replacing any existing item.
 			-- Add `other.first' first, etc.
 			-- If items of `other' were not included yet, insert
@@ -275,7 +275,7 @@ feature -- Element change
 		deferred
 		end
 
-	append (other: DS_LINEAR [G]) is
+	append (other: DS_LINEAR [G])
 			-- Add items of `other' to set, replacing any existing item.
 			-- Add `other.first' first, etc.
 		require
@@ -283,7 +283,7 @@ feature -- Element change
 		deferred
 		end
 
-	append_last (other: DS_LINEAR [G]) is
+	append_last (other: DS_LINEAR [G])
 			-- Add items of `other' to set, replacing any existing item.
 			-- Add `other.first' first, etc.
 			-- If items of `other' were not included yet, insert
@@ -293,7 +293,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove (v: G) is
+	remove (v: G)
 			-- Remove item equal to `v' from set.
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -306,7 +306,7 @@ feature -- Removal
 
 feature -- Basic operations
 
-	merge (other: DS_SET [G]) is
+	merge (other: DS_SET [G])
 			-- Add all items of `other' to current set.
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -318,7 +318,7 @@ feature -- Basic operations
 			is_superset: is_superset (other)
 		end
 
-	intersect (other: DS_SET [G]) is
+	intersect (other: DS_SET [G])
 			-- Remove all items not included in `other'.
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -330,7 +330,7 @@ feature -- Basic operations
 			is_subset: is_subset (other)
 		end
 
-	subtract (other: DS_SET [G]) is
+	subtract (other: DS_SET [G])
 			-- Remove all items also included in `other'.
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -342,7 +342,7 @@ feature -- Basic operations
 			is_disjoint: is_disjoint (other)
 		end
 
-	symdif (other: DS_SET [G]) is
+	symdif (other: DS_SET [G])
 			-- Add items of `other' which are not included
 			-- in current set and remove those which are.
 			-- (Use `equality_tester''s comparison criterion

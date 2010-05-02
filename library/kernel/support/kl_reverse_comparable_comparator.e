@@ -25,7 +25,7 @@ create
 
 feature -- Status report
 
-	less_than (u, v: G): BOOLEAN is
+	less_than (u, v: G): BOOLEAN
 			-- Is `u' considered less than `v'?
 		do
 			Result := (v < u)

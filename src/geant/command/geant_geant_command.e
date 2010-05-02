@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT) is
+	make (a_project: GEANT_PROJECT)
 			-- Initialize command by setting `project' to `a_project'.
 		do
 			precursor (a_project)
@@ -57,7 +57,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_filename_executable: BOOLEAN is
+	is_filename_executable: BOOLEAN
 			-- Can command be executed on a project file?
 		do
 			Result := filename /= Void and then filename.count > 0
@@ -66,7 +66,7 @@ feature -- Status report
 			filename_not_empty: Result implies filename.count > 0
 		end
 
-	is_target_executable: BOOLEAN is
+	is_target_executable: BOOLEAN
 			-- Can command be executed on a target?
 		do
 			Result := start_target_name /= Void and then start_target_name.count > 0
@@ -75,7 +75,7 @@ feature -- Status report
 			target_not_empty: Result implies start_target_name.count > 0
 		end
 
-	is_fileset_executable: BOOLEAN is
+	is_fileset_executable: BOOLEAN
 			-- Can command be executed on fileset `fileset'?
 		do
 			Result := fileset /= Void
@@ -83,7 +83,7 @@ feature -- Status report
 			fileset_not_void: Result implies fileset /= Void
 		end
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- Can command be executed?
 		do
 			Result := is_filename_executable or is_target_executable
@@ -96,7 +96,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_filename (a_filename: like filename) is
+	set_filename (a_filename: like filename)
 			-- Set `filename' to `a_filename'.
 		require
 			a_filename_not_void: a_filename /= Void
@@ -108,7 +108,7 @@ feature -- Setting
 			filename_set: filename = a_filename
 		end
 
-	set_fileset (a_fileset: like fileset) is
+	set_fileset (a_fileset: like fileset)
 			-- Set `fileset' to `a_fileset'.
 		require
 			a_fileset_not_void: a_fileset /= Void
@@ -118,7 +118,7 @@ feature -- Setting
 			fileset_set: fileset = a_fileset
 		end
 
-	set_reuse_variables(a_reuse_variables: BOOLEAN) is
+	set_reuse_variables(a_reuse_variables: BOOLEAN)
 			-- Set `reuse_variables' to `a_reuse_variables'
 		do
 			reuse_variables := a_reuse_variables
@@ -126,7 +126,7 @@ feature -- Setting
 			reuse_variables_set: reuse_variables = a_reuse_variables
 		end
 
-	set_fork (a_fork: BOOLEAN) is
+	set_fork (a_fork: BOOLEAN)
 			-- Set `fork' to `a_fork'
 		do
 			fork := a_fork
@@ -135,7 +135,7 @@ feature -- Setting
 			fork_set: fork = a_fork and has_fork_been_set
 		end
 
-	set_start_target_name (a_start_target_name: like start_target_name) is
+	set_start_target_name (a_start_target_name: like start_target_name)
 			-- Set `start_target_name' to `a_start_target_name'.
 		require
 			a_start_target_name_not_void: a_start_target_name /= Void
@@ -147,7 +147,7 @@ feature -- Setting
 			start_target_name_set: start_target_name = a_start_target_name
 		end
 
-	set_exit_code_variable_name (a_exit_code_variable_name: like exit_code_variable_name) is
+	set_exit_code_variable_name (a_exit_code_variable_name: like exit_code_variable_name)
 			-- Set `exit_code_variable_name' to `a_exit_code_variable_name'.
 		require
 			a_exit_code_variable_name_not_void: a_exit_code_variable_name /= Void
@@ -160,7 +160,7 @@ feature -- Setting
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute command.
 		local
 			a_filename: STRING
@@ -209,7 +209,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	execute_forked_with_filename_and_target (a_filename: STRING; a_target_name: STRING) is
+	execute_forked_with_filename_and_target (a_filename: STRING; a_target_name: STRING)
 			-- Spawn new geant process to execute scriptfile named `a_filename';
 			-- If `a_target_name' is not Void and not empty pass it as start target name.
 			-- TODO: support filesets
@@ -250,7 +250,7 @@ feature {NONE} -- Implementation
 			execute_shell (cmd)
 		end
 
-	execute_forked_with_target (a_target_name: STRING) is
+	execute_forked_with_target (a_target_name: STRING)
 			-- Spawn new geant process for current buildscript and execute target named `a_target_name'.
 			-- TODO: support filesets
 		local
@@ -274,7 +274,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	execute_with_filename (a_filename: STRING) is
+	execute_with_filename (a_filename: STRING)
 			-- Create new project for scriptfile named `a_filename' and run it's build process.
 		local
 			a_project_loader: GEANT_PROJECT_LOADER
@@ -337,7 +337,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	execute_with_target (a_target_name: STRING) is
+	execute_with_target (a_target_name: STRING)
 			-- Call target named `a_target_name' of current project.
 		require
 			target_executable: is_target_executable
@@ -370,7 +370,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	options_and_arguments_for_cmdline: STRING is
+	options_and_arguments_for_cmdline: STRING
 			-- All options and arguments (without built-in ones) as STRINGs for
 			-- geant commandline call
 		local

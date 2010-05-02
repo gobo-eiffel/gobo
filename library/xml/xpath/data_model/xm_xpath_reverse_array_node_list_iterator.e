@@ -25,16 +25,16 @@ create
 
 feature -- Access
 
-	is_node_iterator: BOOLEAN is
+	is_node_iterator: BOOLEAN
 			-- Does `Current' yield a node_sequence?
 		do
 			Result := True
 		end
 
-	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
 		do
 			Result ?= ANY_.to_any (Current)
 		end
-	
+
 end

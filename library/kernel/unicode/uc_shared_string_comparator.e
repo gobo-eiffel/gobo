@@ -14,7 +14,7 @@ class UC_SHARED_STRING_COMPARATOR
 
 feature -- Access
 
-	string_comparator: UC_STRING_COMPARATOR is
+	string_comparator: UC_STRING_COMPARATOR
 			-- String comparator
 		once
 			create Result

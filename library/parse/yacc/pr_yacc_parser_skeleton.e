@@ -31,7 +31,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (handler: like error_handler) is
+	make (handler: like error_handler)
 			-- Create a new grammar description parser.
 		require
 			handler_not_void: handler /= Void
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset parser before parsing next input.
 		do
 			reset_yacc_scanner
@@ -66,7 +66,7 @@ feature -- Initialization
 
 feature -- Parsing
 
-	parse_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+	parse_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Parse grammar description from `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -76,7 +76,7 @@ feature -- Parsing
 			parse
 		end
 
-	parse_string (a_string: STRING) is
+	parse_string (a_string: STRING)
 			-- Parse grammar description from `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -95,7 +95,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_action_factory (a_factory: like action_factory) is
+	set_action_factory (a_factory: like action_factory)
 			-- Set `action_factory' to `a_factory'.
 		require
 			a_factory_not_void: a_factory /= Void
@@ -107,7 +107,7 @@ feature -- Setting
 
 feature {NONE} -- Factory
 
-	new_rule (lhs: PR_VARIABLE): PR_RULE is
+	new_rule (lhs: PR_VARIABLE): PR_RULE
 			-- New rule with `lhs' as left-hand-side
 		require
 			lhs_not_void: lhs /= Void
@@ -125,7 +125,7 @@ feature {NONE} -- Factory
 			no_action: Result.action = No_action
 		end
 
-	new_terminal (a_name: STRING; a_type: PR_TYPE): PR_TOKEN is
+	new_terminal (a_name: STRING; a_type: PR_TYPE): PR_TOKEN
 			-- Terminal symbol declared as:
 			--   %token <a_type> a_name
 		require
@@ -150,7 +150,7 @@ feature {NONE} -- Factory
 			type_set: Result.type = a_type
 		end
 
-	new_char_terminal (a_char: STRING; a_type: PR_TYPE): PR_TOKEN is
+	new_char_terminal (a_char: STRING; a_type: PR_TYPE): PR_TOKEN
 			-- Terminal symbol declared as:
 			--   %token <a_type> a_char
 		require
@@ -170,7 +170,7 @@ feature {NONE} -- Factory
 			type_set: Result.type = a_type
 		end
 
-	new_left_terminal (a_name: STRING; a_precedence: INTEGER): PR_TOKEN is
+	new_left_terminal (a_name: STRING; a_precedence: INTEGER): PR_TOKEN
 			-- Terminal symbol declared as:
 			--   %left a_name
 		require
@@ -191,7 +191,7 @@ feature {NONE} -- Factory
 			precedence_set: Result.precedence = a_precedence
 		end
 
-	new_left_char_terminal (a_char: STRING; a_precedence: INTEGER): PR_TOKEN is
+	new_left_char_terminal (a_char: STRING; a_precedence: INTEGER): PR_TOKEN
 			-- Terminal symbol declared as:
 			--   %left a_char
 		require
@@ -207,7 +207,7 @@ feature {NONE} -- Factory
 			precedence_set: Result.precedence = a_precedence
 		end
 
-	new_right_terminal (a_name: STRING; a_precedence: INTEGER): PR_TOKEN is
+	new_right_terminal (a_name: STRING; a_precedence: INTEGER): PR_TOKEN
 			-- Terminal symbol declared as:
 			--   %right a_name
 		require
@@ -228,7 +228,7 @@ feature {NONE} -- Factory
 			precedence_set: Result.precedence = a_precedence
 		end
 
-	new_right_char_terminal (a_char: STRING; a_precedence: INTEGER): PR_TOKEN is
+	new_right_char_terminal (a_char: STRING; a_precedence: INTEGER): PR_TOKEN
 			-- Terminal symbol declared as:
 			--   %right a_char
 		require
@@ -244,7 +244,7 @@ feature {NONE} -- Factory
 			precedence_set: Result.precedence = a_precedence
 		end
 
-	new_nonassoc_terminal (a_name: STRING; a_precedence: INTEGER): PR_TOKEN is
+	new_nonassoc_terminal (a_name: STRING; a_precedence: INTEGER): PR_TOKEN
 			-- Terminal symbol declared as:
 			--   %nonassoc a_name
 		require
@@ -265,7 +265,7 @@ feature {NONE} -- Factory
 			precedence_set: Result.precedence = a_precedence
 		end
 
-	new_nonassoc_char_terminal (a_char: STRING; a_precedence: INTEGER): PR_TOKEN is
+	new_nonassoc_char_terminal (a_char: STRING; a_precedence: INTEGER): PR_TOKEN
 			-- Terminal symbol declared as:
 			--   %nonassoc a_char
 		require
@@ -281,7 +281,7 @@ feature {NONE} -- Factory
 			precedence_set: Result.precedence = a_precedence
 		end
 
-	new_nonterminal (a_name: STRING; a_type: PR_TYPE): PR_VARIABLE is
+	new_nonterminal (a_name: STRING; a_type: PR_TYPE): PR_VARIABLE
 			-- Nonterminal symbol declared as:
 			-- %type <a_type> a_name
 		require
@@ -304,7 +304,7 @@ feature {NONE} -- Factory
 			type_set: Result.type = a_type
 		end
 
-	new_token (a_name: STRING): PR_TOKEN is
+	new_token (a_name: STRING): PR_TOKEN
 			-- Terminal symbol named `a_name';
 			-- Create a new symbol if it does not exist
 			-- yet, and add it to the list of tokens of
@@ -333,7 +333,7 @@ feature {NONE} -- Factory
 			token_not_void: Result /= Void
 		end
 
-	new_char_token (a_char: STRING): PR_TOKEN is
+	new_char_token (a_char: STRING): PR_TOKEN
 			-- Terminal symbol associated with `a_char';
 			-- Create a new symbol if it does not exist
 			-- yet, and add it to the list of tokens of
@@ -425,7 +425,7 @@ feature {NONE} -- Factory
 			token_not_void: Result /= Void
 		end
 
-	new_string_token (a_string: STRING): PR_TOKEN is
+	new_string_token (a_string: STRING): PR_TOKEN
 			-- Terminal symbol associated with `a_string';
 			-- Report an error if there is no token associated
 			-- with this string.
@@ -452,7 +452,7 @@ feature {NONE} -- Factory
 			token_not_void: Result /= Void
 		end
 
-	new_variable (a_name: STRING): PR_VARIABLE is
+	new_variable (a_name: STRING): PR_VARIABLE
 			-- Nonterminal symbol named `a_name';
 			-- Create a new symbol if it does not exist
 			-- yet, and add it to the list of variables
@@ -480,7 +480,7 @@ feature {NONE} -- Factory
 			variable_not_void: Result /= Void
 		end
 
-	new_dummy_variable: PR_VARIABLE is
+	new_dummy_variable: PR_VARIABLE
 			-- New dummy nonterminal symbol used for mid-rule
 			-- semantic actions (Use unique symbol names.)
 		local
@@ -499,7 +499,7 @@ feature {NONE} -- Factory
 			dummy_variable_not_void: Result /= Void
 		end
 
-	new_symbol (a_name: STRING): PR_SYMBOL is
+	new_symbol (a_name: STRING): PR_SYMBOL
 			-- Symbol named `a_name'; Create a new nonterminal
 			-- symbol if it does not exist yet, and add it to
 			-- the list of variables of `last_grammar'.
@@ -529,7 +529,7 @@ feature {NONE} -- Factory
 			symbol_not_void: Result /= Void
 		end
 
-	new_type (a_type_mark: STRING; a_name: STRING): PR_TYPE is
+	new_type (a_type_mark: STRING; a_name: STRING): PR_TYPE
 			-- Type named `a_name'; Create a new type if
 			-- it does not exist yet.
 		require
@@ -563,7 +563,7 @@ feature {NONE} -- Factory
 			type_not_void: Result /= Void
 		end
 
-	new_basic_type (a_type_mark: STRING; a_name: STRING): PR_TYPE is
+	new_basic_type (a_type_mark: STRING; a_name: STRING): PR_TYPE
 			-- Basic type named `a_name'; Create a new type if
 			-- it does not exist yet.
 		require
@@ -597,7 +597,7 @@ feature {NONE} -- Factory
 			type_not_void: Result /= Void
 		end
 
-	new_generic_type (a_type_mark: STRING; a_name: STRING; generics: DS_ARRAYED_LIST [PR_TYPE]): PR_TYPE is
+	new_generic_type (a_type_mark: STRING; a_name: STRING; generics: DS_ARRAYED_LIST [PR_TYPE]): PR_TYPE
 			-- Type named `a_name' with generic parameters `generics';
 			-- Create a new type if it does not exist yet.
 		require
@@ -629,7 +629,7 @@ feature {NONE} -- Factory
 			type_not_void: Result /= Void
 		end
 
-	new_labeled_tuple_type (a_type_mark: STRING; a_name: STRING; generics: DS_ARRAYED_LIST [PR_LABELED_TYPE]): PR_TYPE is
+	new_labeled_tuple_type (a_type_mark: STRING; a_name: STRING; generics: DS_ARRAYED_LIST [PR_LABELED_TYPE]): PR_TYPE
 			-- Labeled Tuple type named `a_name' with generic parameters `generics';
 			-- Create a new type if it does not exist yet.
 		require
@@ -661,7 +661,7 @@ feature {NONE} -- Factory
 			type_not_void: Result /= Void
 		end
 
-	new_anchored_type (a_type_mark: STRING; a_name: STRING): PR_TYPE is
+	new_anchored_type (a_type_mark: STRING; a_name: STRING): PR_TYPE
 			-- Anchored type of the form "like `a_name'";
 			-- Create a new type if it does not exist yet.
 		require
@@ -695,7 +695,7 @@ feature {NONE} -- Factory
 			type_not_void: Result /= Void
 		end
 
-	new_like_current_type (a_type_mark: STRING): PR_TYPE is
+	new_like_current_type (a_type_mark: STRING): PR_TYPE
 			-- Anchored type of the form "like Current";
 			-- Create a new type if it does not exist yet.
 		require
@@ -727,7 +727,7 @@ feature {NONE} -- Factory
 			type_not_void: Result /= Void
 		end
 
-	new_labeled_type (a_label: STRING; a_type: PR_TYPE): PR_LABELED_TYPE is
+	new_labeled_type (a_label: STRING; a_type: PR_TYPE): PR_LABELED_TYPE
 			-- New labeled type
 		require
 			a_label_not_void: a_label /= Void
@@ -744,7 +744,7 @@ feature {NONE} -- Factory
 			type_set: Result.type = a_type
 		end
 
-	new_action (a_text: STRING): DP_COMMAND is
+	new_action (a_text: STRING): DP_COMMAND
 			-- Action associated with `a_text'
 		require
 			a_text_not_void: a_text /= Void
@@ -754,7 +754,7 @@ feature {NONE} -- Factory
 			action_not_void: Result /= Void
 		end
 
-	new_error_action (a_text: STRING; a_line: INTEGER): PR_ERROR_ACTION is
+	new_error_action (a_text: STRING; a_line: INTEGER): PR_ERROR_ACTION
 			-- Error action associated with `a_text'
 		require
 			a_text_not_void: a_text /= Void
@@ -766,7 +766,7 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Implementation
 
-	initialize_grammar is
+	initialize_grammar
 			-- Initialize input grammar.
 		local
 			a_token: PR_TOKEN
@@ -786,7 +786,7 @@ feature {NONE} -- Implementation
 			a_token.set_useful (True)
 		end
 
-	put_rule (a_rule: PR_RULE) is
+	put_rule (a_rule: PR_RULE)
 			-- Add `a_rule' to `last_grammar'.
 		require
 			a_rule_not_void: a_rule /= Void
@@ -794,7 +794,7 @@ feature {NONE} -- Implementation
 			last_grammar.put_rule (a_rule)
 		end
 
-	put_symbol (rhs: PR_SYMBOL; a_rule: PR_RULE) is
+	put_symbol (rhs: PR_SYMBOL; a_rule: PR_RULE)
 			-- Add `rhs' to the right-hand-side part of `a_rule'.
 		require
 			rhs_not_void: rhs /= Void
@@ -819,7 +819,7 @@ feature {NONE} -- Implementation
 			inserted: a_rule.rhs.last = rhs
 		end
 
-	put_action (an_action: DP_COMMAND; a_rule: PR_RULE) is
+	put_action (an_action: DP_COMMAND; a_rule: PR_RULE)
 			-- Set semantic action of `a_rule' to `an_action'.
 		require
 			an_action_not_void: an_action /= Void
@@ -843,7 +843,7 @@ feature {NONE} -- Implementation
 			inserted: a_rule.action = an_action
 		end
 
-	put_error_action (an_action: PR_ERROR_ACTION; i: INTEGER; a_rule: PR_RULE) is
+	put_error_action (an_action: PR_ERROR_ACTION; i: INTEGER; a_rule: PR_RULE)
 			-- Set syntax error action associated with `i'-th
 			-- symbol in `a_rule' to `an_action'.
 		require
@@ -856,7 +856,7 @@ feature {NONE} -- Implementation
 			inserted: a_rule.error_actions.item (i) = an_action
 		end
 
-	set_start_symbol is
+	set_start_symbol
 			-- Set the start symbol of `last_grammar'.
 		local
 			a_symbol: PR_VARIABLE
@@ -879,7 +879,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_precedence (a_token: PR_TOKEN; a_precedence: INTEGER) is
+	set_precedence (a_token: PR_TOKEN; a_precedence: INTEGER)
 			-- Set precedence of `a_token' to `a_precedence'.
 		require
 			a_token_not_void: a_token /= Void
@@ -892,7 +892,7 @@ feature {NONE} -- Implementation
 			precedence_set: a_token.precedence = a_precedence
 		end
 
-	set_alias_name (a_type: PR_TYPE; a_name: STRING) is
+	set_alias_name (a_type: PR_TYPE; a_name: STRING)
 			-- Set alias name of `a_type' to `a_name'.
 		require
 			a_type_not_void: a_type /= Void
@@ -927,7 +927,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_no_alias_name (a_type: PR_TYPE) is
+	set_no_alias_name (a_type: PR_TYPE)
 			-- Set no alias name to `a_type'.
 		require
 			a_type_not_void: a_type /= Void
@@ -956,7 +956,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_token_id (a_token: PR_TOKEN; an_id: INTEGER) is
+	set_token_id (a_token: PR_TOKEN; an_id: INTEGER)
 			-- Set `token_id' of `a_token' to `an_id'.
 		require
 			a_token_not_void: a_token /= Void
@@ -970,7 +970,7 @@ feature {NONE} -- Implementation
 			token_id_set: a_token.token_id = an_id
 		end
 
-	set_literal_string (a_token: PR_TOKEN; a_string: STRING) is
+	set_literal_string (a_token: PR_TOKEN; a_string: STRING)
 			-- Set `literal_string' of `a_token' to `a_string'.
 		require
 			a_token_not_void: a_token /= Void
@@ -988,7 +988,7 @@ feature {NONE} -- Implementation
 			literal_string_set: a_token.literal_string = a_string
 		end
 
-	process_rule (a_rule: PR_RULE) is
+	process_rule (a_rule: PR_RULE)
 			-- Set associativity and precedence of `a_rule'.
 			-- Use `precedence_token' (%prec) or the last token
 			-- specified in the right-hand-side of the rule.
@@ -1025,7 +1025,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_symbols is
+	process_symbols
 			-- Assign ids to symbols and report any
 			-- undefined symbol error.
 		local
@@ -1118,7 +1118,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Status report
 
-	is_terminal (a_name: STRING): BOOLEAN is
+	is_terminal (a_name: STRING): BOOLEAN
 			-- Is there a terminal symbol named `a_name'?
 		require
 			a_name_not_void: a_name /= Void
@@ -1129,7 +1129,7 @@ feature {NONE} -- Status report
 			Result := terminal_symbols.has (lower_name)
 		end
 
-	is_nonterminal (a_name: STRING): BOOLEAN is
+	is_nonterminal (a_name: STRING): BOOLEAN
 			-- Is there a nonterminal symbol named `a_name'?
 		require
 			a_name_not_void: a_name /= Void
@@ -1142,7 +1142,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Error handling
 
-	report_error (a_message: STRING) is
+	report_error (a_message: STRING)
 			-- Report a syntax error.
 		local
 			an_error: UT_SYNTAX_ERROR
@@ -1154,7 +1154,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_alias_name_defined_twice_error (a_type: PR_TYPE; a_old_alias_name, a_new_alias_name: STRING) is
+	report_alias_name_defined_twice_error (a_type: PR_TYPE; a_old_alias_name, a_new_alias_name: STRING)
 			-- Report that the alias name for token type `a_type' has been defined twice.
 			-- The same alias name should be repeated in each %token declaration with a given type.
 		require
@@ -1171,7 +1171,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_alias_name_not_defined_error (a_type: PR_TYPE; a_new_alias_name: STRING) is
+	report_alias_name_not_defined_error (a_type: PR_TYPE; a_new_alias_name: STRING)
 			-- Report that the alias name for token type `a_type',
 			-- which was not defined so far, is now being defined as `a_new_alias_name'.
 			-- The alias name should be repeated in each %token declaration with a given type.
@@ -1188,7 +1188,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_alias_name_undefined_error (a_type: PR_TYPE; a_old_alias_name: STRING) is
+	report_alias_name_undefined_error (a_type: PR_TYPE; a_old_alias_name: STRING)
 			-- Report that the alias name for token type `a_type',
 			-- which was defined as `a_old_alias_name', is being undefined.
 			-- The alias name should be repeated in each %token declaration with a given type.
@@ -1206,7 +1206,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_last_value_name_used_twice_error (a_last_value_name: STRING; a_type1, a_type2: PR_TYPE) is
+	report_last_value_name_used_twice_error (a_last_value_name: STRING; a_type1, a_type2: PR_TYPE)
 			-- Report that `a_last_value_name' is the name of the variable
 			-- used to pass values for tokens both of type `a_type1' and `a_type2'.
 		require
@@ -1223,7 +1223,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_start_symbol_token_error is
+	report_start_symbol_token_error
 			-- Report that `start_symbol' is a token
 			-- instead of a nonterminal symbol.
 		require
@@ -1242,7 +1242,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_unknown_start_symbol_error is
+	report_unknown_start_symbol_error
 			-- Report that `start_symbol' has not been declared.
 		require
 			start_symbol_not_void: start_symbol /= Void
@@ -1260,7 +1260,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_lhs_symbol_token_error (a_name: STRING) is
+	report_lhs_symbol_token_error (a_name: STRING)
 			-- Report that the left-hand-side symbol `a_name'
 			-- is a token instead of a nonterminal symbol.
 		require
@@ -1275,7 +1275,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_multiple_start_declarations_error is
+	report_multiple_start_declarations_error
 			-- Report multiple %start declarations.
 		local
 			an_error: PR_MULTIPLE_START_DECLARATIONS_ERROR
@@ -1287,7 +1287,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_precedence_defined_twice_error (a_name: STRING) is
+	report_precedence_defined_twice_error (a_name: STRING)
 			-- Report multiple precedence definition
 			-- for token `a_name'.
 		require
@@ -1302,7 +1302,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_prec_specified_twice_error is
+	report_prec_specified_twice_error
 			-- Report that %prec has been specified twice
 			-- in the same rule.
 		local
@@ -1315,7 +1315,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_prec_not_token_error (a_name: STRING) is
+	report_prec_not_token_error (a_name: STRING)
 			-- Report that the symbol `a_name' specified
 			-- in the %prec clause is not a token.
 		require
@@ -1330,7 +1330,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_invalid_error_n_error (n: INTEGER) is
+	report_invalid_error_n_error (n: INTEGER)
 			-- Report that %error(`n') has been used in a rule but `n'
 			-- is not a valid index for the rhs of the corresponding rule.
 		local
@@ -1343,7 +1343,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_token_declared_twice_error (a_name: STRING) is
+	report_token_declared_twice_error (a_name: STRING)
 			-- Report that the token `a_name' has been
 			-- declared twice.
 		require
@@ -1358,7 +1358,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_variable_declared_twice_error (a_name: STRING) is
+	report_variable_declared_twice_error (a_name: STRING)
 			-- Report that the variable `a_name' has been
 			-- declared twice.
 		require
@@ -1373,7 +1373,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_variable_declared_as_token_error (a_name: STRING) is
+	report_variable_declared_as_token_error (a_name: STRING)
 			-- Report that the variable `a_name' has already
 			-- been declared as a token.
 		require
@@ -1388,7 +1388,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_token_declared_as_variable_error (a_name: STRING) is
+	report_token_declared_as_variable_error (a_name: STRING)
 			-- Report that the token `a_name' has already
 			-- been declared as a variable.
 		require
@@ -1403,7 +1403,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_no_rules_error is
+	report_no_rules_error
 			-- Report that no rules has been specified
 			-- in the input grammar.
 		local
@@ -1416,7 +1416,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_undefined_symbol_error (a_name: STRING) is
+	report_undefined_symbol_error (a_name: STRING)
 			-- Report that the symbol `a_name' has not
 			-- been defined as a token or in a rule.
 		require
@@ -1431,7 +1431,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_undefined_string_token_error (a_string: STRING) is
+	report_undefined_string_token_error (a_string: STRING)
 			-- Report that the literal `a_string' has not
 			-- been defined as a token.
 		require
@@ -1446,7 +1446,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_string_token_defined_twice_error (a_string: STRING; token1, token2: STRING) is
+	report_string_token_defined_twice_error (a_string: STRING; token1, token2: STRING)
 			-- Report that the literal `a_string' has
 			-- been defined twice.
 		require
@@ -1463,7 +1463,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_two_strings_token_error (a_token: STRING; string1, string2: STRING) is
+	report_two_strings_token_error (a_token: STRING; string1, string2: STRING)
 			-- Report that the token `a_token' has been
 			-- associated with two different literal strings.
 		require
@@ -1480,7 +1480,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_two_token_ids_token_error (a_token: STRING; id1, id2: INTEGER) is
+	report_two_token_ids_token_error (a_token: STRING; id1, id2: INTEGER)
 			-- Report that the token `a_token' has been
 			-- given two different token ids.
 		require
@@ -1495,7 +1495,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_rule_declared_twice_warning (a_name: STRING) is
+	report_rule_declared_twice_warning (a_name: STRING)
 			-- Report that the rule `a_name' has been
 			-- declared twice.
 		require
@@ -1507,7 +1507,7 @@ feature {NONE} -- Error handling
 			error_handler.report_warning (an_error)
 		end
 
-	report_token_id_used_twice_warning (token1, token2: PR_TOKEN) is
+	report_token_id_used_twice_warning (token1, token2: PR_TOKEN)
 			-- Report that `token1' and `token2' have been
 			-- assigned the same token id.
 		require
@@ -1522,19 +1522,19 @@ feature {NONE} -- Error handling
 
 feature {NONE} -- Constants
 
-	Initial_max_nb_tokens: INTEGER is 100
+	Initial_max_nb_tokens: INTEGER = 100
 			-- Initial maximum number of terminal symbols
 
-	Initial_max_nb_variables: INTEGER is 300
+	Initial_max_nb_variables: INTEGER = 300
 			-- Initial maximum number of nonterminal symbols
 
-	Initial_max_nb_types: INTEGER is 300
+	Initial_max_nb_types: INTEGER = 300
 			-- Initial maximum number of types
 
-	like_current_lower_name: STRING is "like current"
+	like_current_lower_name: STRING = "like current"
 			-- Type name for 'like Current', in lower-case
 
-	No_action: DP_COMMAND is
+	No_action: DP_COMMAND
 			-- Do nothing semantic action
 		once
 			Result := action_factory.new_action ("")
@@ -1542,7 +1542,7 @@ feature {NONE} -- Constants
 			no_action_not_void: Result /= Void
 		end
 
-	No_type: PR_TYPE is
+	No_type: PR_TYPE
 			-- Type used when no type has been specified:
 			--   %token token_name
 		do
@@ -1551,7 +1551,7 @@ feature {NONE} -- Constants
 			no_type_not_void: Result /= Void
 		end
 
-	Unknown_type: PR_TYPE is
+	Unknown_type: PR_TYPE
 			-- Type used when type is not known
 		do
 			Result := new_type (Void, "ANY")

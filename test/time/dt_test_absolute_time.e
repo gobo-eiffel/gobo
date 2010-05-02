@@ -23,7 +23,7 @@ create
 
 feature -- Test
 
-	test_date1 is
+	test_date1
 			-- Test features of DT_ABSOLUTE_TIME using DT_DATE.
 		local
 			t1: DT_ABSOLUTE_TIME
@@ -42,7 +42,7 @@ feature -- Test
 			assert_equal ("add_duration", t2, t1)
 		end
 
-	test_date2 is
+	test_date2
 			-- Test features of DT_ABSOLUTE_TIME using DT_DATE.
 		local
 			t1: DT_ABSOLUTE_TIME
@@ -62,7 +62,7 @@ feature -- Test
 			assert_equal ("add_duration", t2, t1)
 		end
 
-	test_date3 is
+	test_date3
 			-- Test features of DT_ABSOLUTE_TIME using DT_DATE.
 		local
 			t1: DT_ABSOLUTE_TIME
@@ -81,7 +81,7 @@ feature -- Test
 			assert ("infix_less2", not (t2 < t1))
 		end
 
-	test_time1 is
+	test_time1
 			-- Test features of DT_ABSOLUTE_TIME using DT_TIME.
 		local
 			t1: DT_ABSOLUTE_TIME
@@ -100,7 +100,7 @@ feature -- Test
 			assert_equal ("add_duration", t2, t1)
 		end
 
-	test_time2 is
+	test_time2
 			-- Test features of DT_ABSOLUTE_TIME using DT_TIME.
 		local
 			t1: DT_ABSOLUTE_TIME
@@ -120,7 +120,7 @@ feature -- Test
 			assert_equal ("add_duration", t2, t1)
 		end
 
-	test_time3 is
+	test_time3
 			-- Test features of DT_ABSOLUTE_TIME using DT_TIME.
 		local
 			t1: DT_ABSOLUTE_TIME
@@ -139,7 +139,7 @@ feature -- Test
 			assert ("infix_less2", not (t2 < t1))
 		end
 
-	test_date_time1 is
+	test_date_time1
 			-- Test features of DT_ABSOLUTE_TIME using DT_DATE_TIME.
 		local
 			t1: DT_ABSOLUTE_TIME
@@ -158,7 +158,7 @@ feature -- Test
 			assert_equal ("add_duration", t2, t1)
 		end
 
-	test_date_time2 is
+	test_date_time2
 			-- Test features of DT_ABSOLUTE_TIME using DT_DATE_TIME.
 		local
 			t1: DT_ABSOLUTE_TIME
@@ -178,7 +178,7 @@ feature -- Test
 			assert_equal ("add_duration", t2, t1)
 		end
 
-	test_date_time3 is
+	test_date_time3
 			-- Test features of DT_ABSOLUTE_TIME using DT_DATE_TIME.
 		local
 			t1: DT_ABSOLUTE_TIME

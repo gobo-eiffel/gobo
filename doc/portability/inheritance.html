@@ -78,8 +78,8 @@ Eiffel and Halstenbach:</p>
 
 <em><strong>feature</strong></em> -- Access
 
-    <em>Minimum_character_code</em>: <em>INTEGER</em> <em><strong>is</strong></em> <em>0</em>
-    <em>Maximum_character_code</em>: <em>INTEGER</em> <em><strong>is</strong></em> <em>255</em>
+    <em>Minimum_character_code</em>: <em>INTEGER</em> <em><strong>=</strong></em> <em>0</em>
+    <em>Maximum_character_code</em>: <em>INTEGER</em> <em><strong>=</strong></em> <em>255</em>
             -- Smallest and largest supported codes for CHARACTER values
 
 <em><strong>end</strong></em></font></pre>
@@ -117,7 +117,7 @@ following class:</p>
 
 <em><strong>feature</strong></em> -- Basic operations
 
-    <em>die</em> (<em>a_code</em>: <em>INTEGER</em>) <em><strong>is</strong></em>
+    <em>die</em> (<em>a_code</em>: <em>INTEGER</em>)
             -- Terminate execution with exit status <em>a_code</em>
             -- without triggering an exception.
         <em><strong>do</strong></em>
@@ -254,9 +254,9 @@ the client/supplier relationship, gets around these problems.</p>
             <strong>Last Updated:</strong> 21 February 2005</font><br>
             <!--webbot bot="PurpleText"
             preview="
-$Date$ 
+$Date$
 $Revision$"
-            --> 
+            -->
         </address>
         </td>
         <td align="right" valign="top"><a

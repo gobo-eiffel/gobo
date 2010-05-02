@@ -38,7 +38,7 @@ create
 
 feature -- Test
 
-	test_schematron_basic is
+	test_schematron_basic
 			-- Tests compiling schematron-basic
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -120,7 +120,7 @@ feature -- Test
 			assert ("Results same as test file", STRING_.same_string (l_test_string, l_second_output.last_output))
 		end
 
-	test_schematron_conformance is
+	test_schematron_conformance
 			-- Tests compiling conformance1-5.xsl
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -147,7 +147,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}", <<"test", "xml", "xslt", "data">>)
@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 			data_dirname_not_empty: not Result.is_empty
 		end
 
-	dummy_uri: UT_URI is
+	dummy_uri: UT_URI
 			-- Dummy URI
 		once
 			create Result.make ("dummy:")
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 			dummy_uri_is_absolute: Result /= Void and then Result.is_absolute
 		end
 
-	schematron_basic_uri: UT_URI is
+	schematron_basic_uri: UT_URI
 			-- URI of file 'schematron-basic.xsl'
 		local
 			l_path: STRING
@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 			schematron_basic_uri_not_void: Result /= Void
 		end
 
-	schematron_conformance_uri: UT_URI is
+	schematron_conformance_uri: UT_URI
 			-- URI of file 'conformance1-5.xsl'
 		local
 			l_path: STRING
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 			schematron_conformance_uri_not_void: Result /= Void
 		end
 
-	wai_schema_uri: UT_URI is
+	wai_schema_uri: UT_URI
 			-- URI of schema for WAI
 		local
 			l_path: STRING
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 			wai_schema_uri_not_void: Result /= Void
 		end
 
-	evil_wai_uri: UT_URI is
+	evil_wai_uri: UT_URI
 			-- URI of file 'evil_wai.xml'
 		local
 			l_path: STRING
@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 			evil_wai_uri_not_void: Result /= Void
 		end
 
-	expected_report_filename: STRING is
+	expected_report_filename: STRING
 			-- Pathname of file 'expected_report.txt'
 		once
 			Result := file_system.pathname (data_dirname, "expected_report.txt")

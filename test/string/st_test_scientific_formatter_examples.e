@@ -26,7 +26,7 @@ create
 
 feature -- Test
 
-	test_string_examples is
+	test_string_examples
 			-- Some basic format strings.
 		do
 			assert_equal ("test1", "Hello, John", format ("$10s", <<"Hello, John">>))
@@ -36,7 +36,7 @@ feature -- Test
 			assert_equal ("test5", "Hello, John", format ("$s", <<"Hello, John">>))
 		end
 
-	test_double_examples is
+	test_double_examples
 			-- Test double examples.
 		do
 			assert_equal ("test1", "    3", format ("$5.0f", <<double_cell (3.1245621)>>))

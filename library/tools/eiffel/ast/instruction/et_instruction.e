@@ -18,14 +18,14 @@ inherit
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset instruction as it was just after it was last parsed.
 		do
 		end
 
 feature -- Status report
 
-	is_semicolon: BOOLEAN is
+	is_semicolon: BOOLEAN
 			-- Is current node a semicolon?
 		do
 			-- Result := False

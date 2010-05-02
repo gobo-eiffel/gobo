@@ -27,7 +27,7 @@ inherit
 
 feature -- Parsing
 
-	parse_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
+	parse_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM)
 			-- Parse XML document from input stream.
 		require
 			a_stream_not_void: a_stream /= Void
@@ -35,21 +35,21 @@ feature -- Parsing
 		deferred
 		end
 
-	parse_from_string (a_string: STRING) is
+	parse_from_string (a_string: STRING)
 			-- Parse XML document from `a_string'.
 		require
 			a_string_not_void: a_string /= Void
 		deferred
 		end
 
-	parse_from_system (a_system: STRING) is
+	parse_from_system (a_system: STRING)
 			-- Parse from system identifier using resolver.
 		require
 			a_system_not_void: a_system /= Void
 		deferred
 		end
 
-	parse_from_public (a_public: STRING; a_system: STRING) is
+	parse_from_public (a_public: STRING; a_system: STRING)
 			-- Parse from public/system identifier using resolver.
 		require
 			a_public_not_void: a_public /= Void;
@@ -59,7 +59,7 @@ feature -- Parsing
 
 feature -- Incremental parsing
 
-	parse_incremental_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
+	parse_incremental_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM)
 			-- Parse partial XML document from input stream.
 			-- After the last part of the data has been fed into the parser,
 			-- call `finish_incremental' to get any pending error messages.
@@ -70,7 +70,7 @@ feature -- Incremental parsing
 		deferred
 		end
 
-	parse_incremental_from_string (a_data: STRING) is
+	parse_incremental_from_string (a_data: STRING)
 			-- Parse partial XML document from 'a_data'.
 			-- Note: You can call `parse_incremental_from_string' multiple
 			-- times and give the parse the document in parts only.
@@ -82,7 +82,7 @@ feature -- Incremental parsing
 		deferred
 		end
 
-	finish_incremental is
+	finish_incremental
 			-- Call this routine after `parse_incremental_xxxx' to tell
 			-- the parser that the document has been completely parsed
 			-- and no input is coming anymore.
@@ -91,7 +91,7 @@ feature -- Incremental parsing
 		deferred
 		end
 
-	set_end_of_document is
+	set_end_of_document
 			-- Old name for `finish_incremental'.
 		obsolete "Use finish_incremental instead."
 		do
@@ -100,7 +100,7 @@ feature -- Incremental parsing
 
 feature -- Status report
 
-	is_incremental: BOOLEAN is
+	is_incremental: BOOLEAN
 			-- Can parser handle incremental input? If yes, you can feed
 			-- the parser with a document in several steps. You must use
 			-- the special parsing routines (the ones that contain
@@ -111,7 +111,7 @@ feature -- Status report
 
 feature -- Resolving external entity
 
-	set_resolver (a_resolver: like dtd_resolver) is
+	set_resolver (a_resolver: like dtd_resolver)
 			-- Set both entity and DTD resolvers to the same one.
 		require
 			not_void: a_resolver /= Void
@@ -123,7 +123,7 @@ feature -- Resolving external entity
 			dtd_resolver_set: dtd_resolver = a_resolver
 		end
 
-	set_dtd_resolver (a_resolver: like dtd_resolver) is
+	set_dtd_resolver (a_resolver: like dtd_resolver)
 			-- Set resolver for external DTD.
 		require
 			not_void: a_resolver /= Void
@@ -133,7 +133,7 @@ feature -- Resolving external entity
 			dtd_resolver_set: dtd_resolver = a_resolver
 		end
 
-	set_entity_resolver (a_resolver: like entity_resolver) is
+	set_entity_resolver (a_resolver: like entity_resolver)
 			-- Set resolver for external entities.
 		require
 			not_void: a_resolver /= Void
@@ -151,21 +151,21 @@ feature -- Resolving external entity
 
 feature -- Access
 
-	source: XM_SOURCE is
+	source: XM_SOURCE
 			-- Source of the XML document being parsed.
 		deferred
 		ensure
 			source_not_void: Result /= Void
 		end
 
-	position: XM_POSITION is
+	position: XM_POSITION
 			-- Current position in the XML entity being parsed.
 		deferred
 		ensure
 			position_not_void: Result /= Void
 		end
 
-	positions: DS_LIST [XM_POSITION] is
+	positions: DS_LIST [XM_POSITION]
 			-- Current position from the XML entity being parsed, and
 			-- the position where it was included.
 		deferred
@@ -176,7 +176,7 @@ feature -- Access
 
 feature -- Error reporting
 
-	is_correct: BOOLEAN is
+	is_correct: BOOLEAN
 			-- Has no error been detected?
 		deferred
 		ensure
@@ -184,20 +184,20 @@ feature -- Error reporting
 			-- error_flag_set2: (Result = False) implies (last_error /= Xml_error_none)
 		end
 
-	last_error: INTEGER is
+	last_error: INTEGER
 			-- Code of last error
 			-- (See XM_ERROR_CODES.)
 		deferred
 		end
 
-	last_error_description: STRING is
+	last_error_description: STRING
 			-- Textual description of last error
 		require
 			has_error: not is_correct
 		deferred
 		end
 
-	last_error_extended_description: STRING is
+	last_error_extended_description: STRING
 			-- Verbose textual description of last error
 		require
 			has_error: not is_correct
@@ -215,7 +215,7 @@ feature -- Error reporting
 			description_not_void: Result /= Void
 		end
 
-	new_stop_on_error_filter: XM_PARSER_STOP_ON_ERROR_FILTER is
+	new_stop_on_error_filter: XM_PARSER_STOP_ON_ERROR_FILTER
 			-- Create a stop on error filter that not only
 			-- stops forwarding events but also stops the
 			-- parser if the error comes from the preceding
@@ -228,7 +228,7 @@ feature -- Error reporting
 			result_not_void: Result /= Void
 		end
 
-	new_stop_on_error_filter_next (a_next: XM_CALLBACKS): XM_PARSER_STOP_ON_ERROR_FILTER is
+	new_stop_on_error_filter_next (a_next: XM_CALLBACKS): XM_PARSER_STOP_ON_ERROR_FILTER
 			-- Like 'new_stop_on_error_filter' with next
 			-- filter.
 		require
@@ -241,7 +241,7 @@ feature -- Error reporting
 
 feature {XM_PARSER_STOP_ON_ERROR_FILTER} -- Error reporting
 
-	force_unreported_error (an_error: STRING) is
+	force_unreported_error (an_error: STRING)
 			-- Force error but do not report it to event listeners.
 		require
 			an_error_not_void: an_error /= Void
@@ -250,7 +250,7 @@ feature {XM_PARSER_STOP_ON_ERROR_FILTER} -- Error reporting
 
 feature {NONE} -- Implementation
 
-	safe_error_component (a_string: STRING): STRING is
+	safe_error_component (a_string: STRING): STRING
 			-- Return a string that can safely be included in an error
 			-- message
 		local
@@ -286,7 +286,7 @@ feature {NONE} -- Implementation
 			--result_no_special_chars: Result.for_all (agent is_safe_error_character)
 		end
 
-	is_safe_error_character (a_char: CHARACTER): BOOLEAN is
+	is_safe_error_character (a_char: CHARACTER): BOOLEAN
 			-- Is character acceptable for error component display?
 		do
 			Result := (a_char >= '/' and a_char < '9')
@@ -295,13 +295,13 @@ feature {NONE} -- Implementation
 				-- (This covers a_char.code = 0 for UC_STRING unicode characters.)
 		end
 
-	Safe_error_component_maximum_size: INTEGER is 100
+	Safe_error_component_maximum_size: INTEGER = 100
 			-- Safe error component maximum size
 
-	Safe_error_component_too_big: STRING is "(TRUNCATED)"
+	Safe_error_component_too_big: STRING = "(TRUNCATED)"
 			-- Error component too big error
 
-	Safe_error_component_undefined: STRING is "undefined"
+	Safe_error_component_undefined: STRING = "undefined"
 			-- Error component undefined
 
 invariant

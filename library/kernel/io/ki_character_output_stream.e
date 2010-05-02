@@ -26,7 +26,7 @@ inherit
 
 feature -- Output
 
-	put_string (a_string: STRING) is
+	put_string (a_string: STRING)
 			-- Write `a_string' to output stream.
 		require
 			is_open_write: is_open_write
@@ -34,7 +34,7 @@ feature -- Output
 		deferred
 		end
 
-	put_substring (a_string: STRING; s, e: INTEGER) is
+	put_substring (a_string: STRING; s, e: INTEGER)
 			-- Write substring of `a_string' between indexes
 			-- `s' and `e' to output stream.
 		require
@@ -49,7 +49,7 @@ feature -- Output
 			end
 		end
 
-	put_integer (i: INTEGER) is
+	put_integer (i: INTEGER)
 			-- Write decimal representation
 			-- of `i' to output stream.
 			-- Regexp: 0|(-?[1-9][0-9]*)
@@ -59,7 +59,7 @@ feature -- Output
 			put_integer_64 (i)
 		end
 
-	put_integer_8 (i: INTEGER_8) is
+	put_integer_8 (i: INTEGER_8)
 			-- Write decimal representation
 			-- of `i' to output stream.
 			-- Regexp: 0|(-?[1-9][0-9]*)
@@ -69,7 +69,7 @@ feature -- Output
 			put_integer_64 (i)
 		end
 
-	put_integer_16 (i: INTEGER_16) is
+	put_integer_16 (i: INTEGER_16)
 			-- Write decimal representation
 			-- of `i' to output stream.
 			-- Regexp: 0|(-?[1-9][0-9]*)
@@ -79,7 +79,7 @@ feature -- Output
 			put_integer_64 (i)
 		end
 
-	put_integer_32 (i: INTEGER_32) is
+	put_integer_32 (i: INTEGER_32)
 			-- Write decimal representation
 			-- of `i' to output stream.
 			-- Regexp: 0|(-?[1-9][0-9]*)
@@ -89,7 +89,7 @@ feature -- Output
 			put_integer_64 (i)
 		end
 
-	put_integer_64 (i: INTEGER_64) is
+	put_integer_64 (i: INTEGER_64)
 			-- Write decimal representation
 			-- of `i' to output stream.
 			-- Regexp: 0|(-?[1-9][0-9]*)
@@ -186,7 +186,7 @@ feature -- Output
 			end
 		end
 
-	put_natural_8 (i: NATURAL_8) is
+	put_natural_8 (i: NATURAL_8)
 			-- Write decimal representation
 			-- of `i' to output stream.
 			-- Regexp: 0|([1-9][0-9]*)
@@ -196,7 +196,7 @@ feature -- Output
 			put_natural_64 (i)
 		end
 
-	put_natural_16 (i: NATURAL_16) is
+	put_natural_16 (i: NATURAL_16)
 			-- Write decimal representation
 			-- of `i' to output stream.
 			-- Regexp: 0|([1-9][0-9]*)
@@ -206,7 +206,7 @@ feature -- Output
 			put_natural_64 (i)
 		end
 
-	put_natural_32 (i: NATURAL_32) is
+	put_natural_32 (i: NATURAL_32)
 			-- Write decimal representation
 			-- of `i' to output stream.
 			-- Regexp: 0|([1-9][0-9]*)
@@ -216,7 +216,7 @@ feature -- Output
 			put_natural_64 (i)
 		end
 
-	put_natural_64 (i: NATURAL_64) is
+	put_natural_64 (i: NATURAL_64)
 			-- Write decimal representation
 			-- of `i' to output stream.
 			-- Regexp: 0|([1-9][0-9]*)
@@ -258,7 +258,7 @@ feature -- Output
 			end
 		end
 
-	put_boolean (b: BOOLEAN) is
+	put_boolean (b: BOOLEAN)
 			-- Write "True" to output stream if
 			-- `b' is true, "False" otherwise.
 		require
@@ -271,7 +271,7 @@ feature -- Output
 			end
 		end
 
-	append (an_input_stream: KI_INPUT_STREAM [CHARACTER]) is
+	append (an_input_stream: KI_INPUT_STREAM [CHARACTER])
 			-- Read items of `an_input_stream' until the end
 			-- of input is reached, and write these items to
 			-- current output stream.
@@ -297,7 +297,7 @@ feature -- Output
 
 feature -- Basic operations
 
-	flush is
+	flush
 			-- Flush buffered data to disk.
 		require
 			is_open_write: is_open_write
@@ -306,10 +306,10 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	True_constant: STRING is "True"
+	True_constant: STRING = "True"
 			-- String representation of boolean value 'True'
 
-	False_constant: STRING is "False"
+	False_constant: STRING = "False"
 			-- String representation of boolean value 'False'
 
 end

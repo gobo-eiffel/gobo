@@ -43,7 +43,7 @@ create {DT_WEEK_DAYS_FROM_MONDAY}
 
 feature -- Access
 
-	next_day: like Current is
+	next_day: like Current
 			-- Week day after `Current' day
 		do
 			if is_sunday then
@@ -53,7 +53,7 @@ feature -- Access
 			end
 		end
 
-	previous_day: like Current is
+	previous_day: like Current
 			-- Week day before `Current' day
 		do
 			if is_monday then
@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_week_day (other: DT_WEEK_DAY): BOOLEAN is
+	same_week_day (other: DT_WEEK_DAY): BOOLEAN
 			-- Are `Current' and `other' the same week day?
 		do
 			if ANY_.same_types (Current, other) then
@@ -92,7 +92,7 @@ feature -- Comparison
 
 feature -- Conversion
 
-	as_week_day_from_sunday: DT_WEEK_DAY_FROM_SUNDAY is
+	as_week_day_from_sunday: DT_WEEK_DAY_FROM_SUNDAY
 			-- Version of `Current' day in a week that starts on Sunday
 		do
 			if is_sunday then
@@ -102,7 +102,7 @@ feature -- Conversion
 			end
 		end
 
-	as_week_day_from_monday: DT_WEEK_DAY_FROM_MONDAY is
+	as_week_day_from_monday: DT_WEEK_DAY_FROM_MONDAY
 			-- Version of `Current' day in a week that starts on monday
 		do
 			Result := Current

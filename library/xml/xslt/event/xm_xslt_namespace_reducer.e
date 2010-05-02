@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_underlying_receiver: XM_XPATH_RECEIVER) is
+	make (an_underlying_receiver: XM_XPATH_RECEIVER)
 			-- Establish invariant.
 		require
 			underlying_receiver_not_void: an_underlying_receiver /= Void
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 
 feature -- Events
 
-	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
+	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER)
 			-- Notify the start of an element
 		do
 			Precursor (a_name_code, a_type_code, properties)
@@ -92,7 +92,7 @@ feature -- Events
 			end
 		end
 
-	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
+	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER)
 			-- Notify a namespace.
 		local
 			l_prefix_code: INTEGER --_16
@@ -110,7 +110,7 @@ feature -- Events
 			mark_as_written
 		end
 
-	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
+	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER)
 			-- Notify an attribute.
 		local
 			new_properties: INTEGER
@@ -146,7 +146,7 @@ feature -- Events
 			Precursor (a_name_code, a_type_code, a_value, new_properties)
 		end
 
-	start_content is
+	start_content
 			-- Notify the start of the content, that is, the completion of all attributes and namespaces.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -171,7 +171,7 @@ feature -- Events
 			Precursor
 		end
 
-	end_element is
+	end_element
 			-- Notify the end of an element.
 		local
 			a_namespace_count: INTEGER
@@ -206,7 +206,7 @@ feature {NONE} -- Implementation
 	disinherit_stack: DS_ARRAYED_LIST [BOOLEAN]
 			-- Should namespaces be disinherited at next level?
 
-	cancel_pending_undeclarations (a_prefix_code: INTEGER) is
+	cancel_pending_undeclarations (a_prefix_code: INTEGER)
 			-- Cancel any pending undeclarations for `a_prefix_code'.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_needed (a_namespace_code, a_prefix_code: INTEGER): BOOLEAN is
+	is_needed (a_namespace_code, a_prefix_code: INTEGER): BOOLEAN
 			-- Is declaration for `a_namespace_code' needed?
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -269,7 +269,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	check_qname_prefix (a_qname: STRING) is
+	check_qname_prefix (a_qname: STRING)
 			-- Check prefix of `a_qname' against namespace context in result tree
 		require
 			qname_not_void: a_qname /= Void

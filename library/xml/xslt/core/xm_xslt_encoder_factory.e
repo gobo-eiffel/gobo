@@ -21,7 +21,7 @@ inherit
 
 feature -- Access
 
-	outputter (an_encoding: STRING; a_raw_outputter: XM_OUTPUT): XM_XSLT_OUTPUT_ENCODER is
+	outputter (an_encoding: STRING; a_raw_outputter: XM_OUTPUT): XM_XSLT_OUTPUT_ENCODER
 			-- Output encoder for `an_encoding'
 		require
 			encoding_not_void: an_encoding /= Void

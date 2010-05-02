@@ -4,7 +4,7 @@ feature
 
 	item: G
 
-	set_item (v: G) is
+	set_item (v: G)
 		do
 			item := v
 		ensure

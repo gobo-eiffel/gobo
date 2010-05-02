@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (start_conditions: LX_START_CONDITIONS; min, max: INTEGER) is
+	make (start_conditions: LX_START_CONDITIONS; min, max: INTEGER)
 			-- Create a new DFA using `start_conditions' to build
 			-- the start states. Symbols handled by the DFA should
 			-- be in range `min' .. `max'.
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			state_states_count_set: start_states_count = 2 * start_conditions.count
 		end
 
-	initialize (start_conditions: LX_START_CONDITIONS; min, max: INTEGER) is
+	initialize (start_conditions: LX_START_CONDITIONS; min, max: INTEGER)
 			-- Initialize current DFA using `start_conditions' to build
 			-- the start states. Symbols handled by the DFA should
 			-- be in range `min' .. `max'.
@@ -74,13 +74,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	start_state: LX_DFA_STATE is
+	start_state: LX_DFA_STATE
 			-- DFA "INITIAL" start state
 		do
 			Result := states.first
 		end
 
-	start_states: DS_ARRAYED_LIST [LX_DFA_STATE] is
+	start_states: DS_ARRAYED_LIST [LX_DFA_STATE]
 			-- Start states in DFA
 		local
 			i: INTEGER
@@ -114,7 +114,7 @@ feature -- Access
 
 feature -- Element change
 
-	build is
+	build
 			-- Build DFA.
 		local
 			i: INTEGER
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 	partitions: LX_SYMBOL_PARTITIONS
 			-- Partitions of symbols with same out-transitions
 
-	set_nfa_state_ids (start_conditions: LX_START_CONDITIONS) is
+	set_nfa_state_ids (start_conditions: LX_START_CONDITIONS)
 			-- Give unique ids to each NFA state of each pattern
 			-- in each start condition of `start_conditions'.
 			-- (This is for optimization purposes in features
@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	put_start_condition (start_condition: LX_START_CONDITION) is
+	put_start_condition (start_condition: LX_START_CONDITION)
 			-- Add start states associated with `start_condition'.
 		require
 			not_full: states.count + 2 <= states.capacity
@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 			state.set_id (states.count)
 		end
 
-	build_transitions (state: LX_DFA_STATE) is
+	build_transitions (state: LX_DFA_STATE)
 			-- Build `state''s out-transitions
 			-- and add reachable states to DFA.
 		require
@@ -313,7 +313,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_state (state: LX_DFA_STATE): LX_DFA_STATE is
+	new_state (state: LX_DFA_STATE): LX_DFA_STATE
 			-- Occurrence of `state' in DFA if present;
 			-- otherwise insert `state' into DFA
 		require
@@ -347,7 +347,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Resizing
 
-	resize (n: INTEGER) is
+	resize (n: INTEGER)
 			-- Resize DFA so that it can contain upto `n' states.
 			-- Do not lose any states.
 		require
@@ -358,10 +358,10 @@ feature {NONE} -- Resizing
 
 feature {NONE} -- Constants
 
-	Initial_max_dfas: INTEGER is 1000
+	Initial_max_dfas: INTEGER = 1000
 			-- Initial capacity for `states'
 
-	Max_dfas_increment: INTEGER is 1000
+	Max_dfas_increment: INTEGER = 1000
 			-- Increment when resizing `states'
 
 invariant

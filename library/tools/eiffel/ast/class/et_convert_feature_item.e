@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	convert_feature: ET_CONVERT_FEATURE is
+	convert_feature: ET_CONVERT_FEATURE
 			-- Conversion feature in comma-separated list
 		deferred
 		ensure

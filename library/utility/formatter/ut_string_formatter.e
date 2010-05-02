@@ -23,7 +23,7 @@ inherit
 
 feature -- Access
 
-	eiffel_string_out (a_string: STRING): STRING is
+	eiffel_string_out (a_string: STRING): STRING
 			-- Formatted version of `a_string', where all
 			-- non-printable characters are replaced by their
 			-- escaped character sequence as described in
@@ -39,7 +39,7 @@ feature -- Access
 			eiffel_string_out_not_void: Result /= Void
 		end
 
-	quoted_eiffel_string_out (a_string: STRING): STRING is
+	quoted_eiffel_string_out (a_string: STRING): STRING
 			-- Formatted version of `a_string', surrounded
 			-- by double quotes, where all non-printable
 			-- characters are replaced by their escaped
@@ -56,7 +56,7 @@ feature -- Access
 			quoted_eiffel_string_out_not_void: Result /= Void
 		end
 
-	left_padded_string_out (a_string: STRING; a_length: INTEGER; c: CHARACTER): STRING is
+	left_padded_string_out (a_string: STRING; a_length: INTEGER; c: CHARACTER): STRING
 			-- Clone of `a_string', padded on the left with `c' characters
 			-- if `a_string' is less than `a_length' characters long;
 			-- Return a new string at each call.
@@ -79,7 +79,7 @@ feature -- Access
 
 feature -- String handling
 
-	append_eiffel_string (a_target: STRING; a_string: STRING) is
+	append_eiffel_string (a_target: STRING; a_string: STRING)
 			-- Append `a_string' to `a_target', where all
 			-- non-printable characters are replaced by their
 			-- escaped character sequence as described in
@@ -134,7 +134,7 @@ feature -- String handling
 			end
 		end
 
-	append_quoted_eiffel_string (a_target: STRING; a_string: STRING) is
+	append_quoted_eiffel_string (a_target: STRING; a_string: STRING)
 			-- Append `a_string', surrounded by double quotes, to
 			-- `a_target', where all non-printable characters are
 			-- replaced by their escaped character sequence as
@@ -148,7 +148,7 @@ feature -- String handling
 			a_target.append_character ('%"')
 		end
 
-	append_left_padded_string (a_target: STRING; a_string: STRING; a_length: INTEGER; c: CHARACTER) is
+	append_left_padded_string (a_target: STRING; a_string: STRING; a_length: INTEGER; c: CHARACTER)
 			-- Append `a_string' to `a_target', padded on the
 			-- left with `c' characters if `a_string' is less
 			-- than `a_length' character long.
@@ -170,7 +170,7 @@ feature -- String handling
 
 feature -- File handling
 
-	put_eiffel_string (a_file: KI_CHARACTER_OUTPUT_STREAM; a_string: STRING) is
+	put_eiffel_string (a_file: KI_CHARACTER_OUTPUT_STREAM; a_string: STRING)
 			-- Write `a_string' to `a_file', where all
 			-- non-printable characters are replaced by their
 			-- escaped character sequence as described in
@@ -216,7 +216,7 @@ feature -- File handling
 			end
 		end
 
-	put_quoted_eiffel_string (a_file: KI_CHARACTER_OUTPUT_STREAM; a_string: STRING) is
+	put_quoted_eiffel_string (a_file: KI_CHARACTER_OUTPUT_STREAM; a_string: STRING)
 			-- Write `a_string', surrounded by double quotes, to
 			-- `a_file', where all non-printable characters are
 			-- replaced by their escaped character sequence as
@@ -231,7 +231,7 @@ feature -- File handling
 			a_file.put_character ('%"')
 		end
 
-	put_left_padded_string (a_file: KI_CHARACTER_OUTPUT_STREAM; a_string: STRING; a_length: INTEGER; c: CHARACTER) is
+	put_left_padded_string (a_file: KI_CHARACTER_OUTPUT_STREAM; a_string: STRING; a_length: INTEGER; c: CHARACTER)
 			-- Write `a_string' to `a_file', padded on the left with `c'
 			-- characters if `a_string' is less than `a_length' characters long.
 			-- Note: If `a_string' is a UC_STRING or descendant, then

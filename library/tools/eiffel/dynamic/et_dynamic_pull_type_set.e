@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type: like static_type) is
+	make (a_type: like static_type)
 			-- Create a new empty dynamic type set.
 			-- Set `first_type' to `a_type' if it is expanded.
 		require
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Element change
 
-	put_source (a_source: ET_DYNAMIC_ATTACHMENT; a_system: ET_DYNAMIC_SYSTEM) is
+	put_source (a_source: ET_DYNAMIC_ATTACHMENT; a_system: ET_DYNAMIC_SYSTEM)
 			-- Add `a_source' to current set.
 			-- (Sources are subsets of current set.)
 		local

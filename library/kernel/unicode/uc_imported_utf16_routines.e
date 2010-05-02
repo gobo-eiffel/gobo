@@ -14,7 +14,7 @@ class UC_IMPORTED_UTF16_ROUTINES
 
 feature -- Access
 
-	utf16: UC_UTF16_ROUTINES is
+	utf16: UC_UTF16_ROUTINES
 			-- UTF-16 encoding routines
 		once
 			create Result

@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant
 		do
 			name := "format-number"; namespace_uri := Xpath_standard_functions_uri
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, where known
 		do
 			Result := type_factory.string_type
@@ -53,7 +53,7 @@ feature -- Access
 
 feature -- Status report
 
-	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
+	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE
 			-- Type of argument number `argument_number'
 		do
 			inspect
@@ -69,14 +69,14 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			evaluate_as_string (a_context)
 			a_result.put (last_evaluated_string)
 		end
 
-	evaluate_as_string (a_context: XM_XPATH_CONTEXT) is
+	evaluate_as_string (a_context: XM_XPATH_CONTEXT)
 			-- Evaluate `Current' as a String
 		local
 			l_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
@@ -176,7 +176,7 @@ feature -- Evaluation
 			end
 		end
 
-	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Pre-evaluate `Current' at compile time.
 		do
 			-- Suppress compile-time evaluation
@@ -185,7 +185,7 @@ feature -- Evaluation
 
 feature -- Element change
 
-	fixup (a_format: XM_XSLT_DECIMAL_FORMAT_ENTRY) is
+	fixup (a_format: XM_XSLT_DECIMAL_FORMAT_ENTRY)
 			-- Fixup pictures (callback from manager).
 		require
 			format_not_void: a_format /= Void
@@ -206,7 +206,7 @@ feature -- Element change
 
 feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 
-	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		local
 			l_uri: STRING
@@ -220,9 +220,9 @@ feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 				Precursor (a_replacement, a_context)
 				if a_replacement.item = Void then
 					if arguments.item (2).is_string_value then
-						
+
 						-- picture is known statically - optimize for this common case
-						
+
 						picture := arguments.item (2).as_string_value.string_value
 					end
 					l_expression_context ?= a_context
@@ -231,14 +231,14 @@ feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 					end
 					if arguments.count = 3 then
 						if arguments.item (3).is_string_value then
-							
+
 							-- common case, decimal format name is supplied as a string literal
-							
+
 							create l_parser.make (arguments.item (3).as_string_value.string_value)
 							if l_parser.is_valid then
 								l_dfm := l_expression_context.style_sheet.decimal_format_manager
 								is_fixup_required := True
-								
+
 								if l_parser.is_prefix_present then
 									if a_context.is_prefix_declared (l_parser.optional_prefix) then
 										l_uri := a_context.uri_for_prefix (l_parser.optional_prefix)
@@ -261,15 +261,15 @@ feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 									Xpath_errors_uri, "XTDE1280", Static_error)
 							end
 						else
-							
+
 							-- we need to save the namespace context
-							
+
 							namespace_resolver := a_context.namespace_resolver
 						end
 					else
-						
+
 						-- two arguments only: it uses the default decimal format
-						
+
 						l_dfm := l_expression_context.style_sheet.decimal_format_manager
 						l_dfm.register_usage (-1, Current)
 					end
@@ -279,7 +279,7 @@ feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
@@ -306,7 +306,7 @@ feature {NONE} -- Implementation
 	is_fixup_required: BOOLEAN
 			-- Is an unknown decimal format name used?
 
-	analyzed_sub_pictures (a_picture: STRING; a_format: XM_XSLT_DECIMAL_FORMAT_ENTRY): ARRAY [XM_XSLT_SUB_PICTURE] is
+	analyzed_sub_pictures (a_picture: STRING; a_format: XM_XSLT_DECIMAL_FORMAT_ENTRY): ARRAY [XM_XSLT_SUB_PICTURE]
 			-- Sub-pictures
 		require
 			picture_string_not_void:	 a_picture /= Void
@@ -358,7 +358,7 @@ feature {NONE} -- Implementation
 			no_error: not is_error implies Result /= Void
 		end
 
-	formatted_number (a_number: XM_XPATH_NUMERIC_VALUE): STRING is
+	formatted_number (a_number: XM_XPATH_NUMERIC_VALUE): STRING
 			-- Formatted version of `a_number'
 		require
 			number_not_in_error: a_number /= Void and then not a_number.is_error
@@ -382,10 +382,10 @@ feature {NONE} -- Implementation
 			else
 				a_sub_picture:= sub_pictures.item (1)
 			end
-			Result := a_sub_picture.formatted_number (an_absolute_number, decimal_format, a_minus_sign) 
+			Result := a_sub_picture.formatted_number (an_absolute_number, decimal_format, a_minus_sign)
 		ensure
 			may_be_in_error: Result /= Void
 		end
 
 end
-	
+

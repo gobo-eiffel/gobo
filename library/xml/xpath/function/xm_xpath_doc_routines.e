@@ -24,7 +24,7 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
-		
+
 	UT_URL_ENCODING
 		export {NONE} all end
 
@@ -37,8 +37,8 @@ feature -- Access
 			-- Possible media-type set by `parse_document'
 
 feature -- Evaluation
-	
-	parse_document (a_uri_reference: STRING; a_base_uri: UT_URI; a_context: XM_XPATH_CONTEXT) is
+
+	parse_document (a_uri_reference: STRING; a_base_uri: UT_URI; a_context: XM_XPATH_CONTEXT)
 			-- Parse `a_uri_reference' as a document'.
 		require
 			uri_reference_not_void: a_uri_reference /= Void -- and then has no fragment-id
@@ -82,16 +82,16 @@ feature -- Evaluation
 				end
 			end
 		end
-	
-	uri_encoding: UT_URL_ENCODING is
+
+	uri_encoding: UT_URL_ENCODING
 			-- Encoding/decoding routines and tests
 		once
 			create Result
 		ensure
 			uri_encoding_not_void: Result /= Void
 		end
-		
-	escaped_uri (a_uri_string: STRING): STRING is
+
+	escaped_uri (a_uri_string: STRING): STRING
 			-- Escaped version of `a_uri_string'
 		require
 			uri_string_not_void: a_uri_string /= Void
@@ -101,7 +101,7 @@ feature -- Evaluation
 			escaped_uri_not_void: Result /= Void
 		end
 
-	unescaped_iri_characters: DS_HASH_SET [CHARACTER] is
+	unescaped_iri_characters: DS_HASH_SET [CHARACTER]
 			-- Characters not to escaped for fn:iri-to-uri()
 		local
 			a_character_set: STRING
@@ -117,4 +117,4 @@ feature -- Evaluation
 		end
 
 end
-	
+

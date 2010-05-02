@@ -13,7 +13,7 @@ note
 class XM_XPATH_DESCENDING_COMPARER
 
 inherit
-	
+
 	KL_PART_COMPARATOR [XM_XPATH_ITEM]
 
 create
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_base_comparer: KL_PART_COMPARATOR [XM_XPATH_ITEM]) is
+	make (a_base_comparer: KL_PART_COMPARATOR [XM_XPATH_ITEM])
 			-- Establish invariant.
 		require
 			base_comparer_not_void: a_base_comparer /= Void
@@ -38,7 +38,7 @@ feature -- Access
 
 feature -- Comparison
 
-	less_than (u, v: XM_XPATH_ITEM): BOOLEAN is
+	less_than (u, v: XM_XPATH_ITEM): BOOLEAN
 			-- Is `u' considered less than `v'?
 		do
 			Result := base_comparer.less_than (v, u)
@@ -49,4 +49,4 @@ invariant
 	base_comparer_not_void: base_comparer /= Void
 
 end
-	
+

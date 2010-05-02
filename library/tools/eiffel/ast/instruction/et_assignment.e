@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target: like target; a_source: like source) is
+	make (a_target: like target; a_source: like source)
 			-- Create a new assignment instruction.
 		require
 			a_target_not_void: a_target /= Void
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset instruction as it was just after it was last parsed.
 		local
 			l_convert: ET_CONVERT_EXPRESSION
@@ -65,26 +65,26 @@ feature -- Access
 	assign_symbol: ET_SYMBOL
 			-- ':=' symbol
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
 			Result := target.position
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := target.first_leaf
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := source.last_leaf
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := source.break
@@ -92,7 +92,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_source (a_source: like source) is
+	set_source (a_source: like source)
 			-- Set `source' to `a_source'.
 		require
 			a_source_not_void: a_source /= Void
@@ -102,7 +102,7 @@ feature -- Setting
 			source_set: source = a_source
 		end
 
-	set_assign_symbol (an_assign: like assign_symbol) is
+	set_assign_symbol (an_assign: like assign_symbol)
 			-- Set `assign_symbol' to `an_assign'.
 		require
 			an_assign_not_void: an_assign /= Void
@@ -114,7 +114,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_assignment (Current)

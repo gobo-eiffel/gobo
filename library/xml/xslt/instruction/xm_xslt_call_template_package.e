@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target: XM_XSLT_COMPILED_TEMPLATE; some_parameters, some_tunnel_parameters: XM_XSLT_PARAMETER_SET; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	make (a_target: XM_XSLT_COMPILED_TEMPLATE; some_parameters, some_tunnel_parameters: XM_XSLT_PARAMETER_SET; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Establish invariant.
 		require
 			target_not_void: a_target /= Void
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Evaluation
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_new_context: XM_XSLT_EVALUATION_CONTEXT
@@ -56,7 +56,7 @@ feature -- Evaluation
 		end
 
 feature {NONE} -- Implementation
-	
+
 	target: XM_XSLT_COMPILED_TEMPLATE
 			-- Target template
 
@@ -75,6 +75,6 @@ invariant
 	saved_context_not_void: execution_context /= Void
 	parameters_not_void: actual_parameters /= Void
 	tunnel_parameters_not_void: tunnel_parameters /= Void
-	
+
 end
-	
+

@@ -24,7 +24,7 @@ feature -- Access
 	static_call: ET_CALL_COMPONENT
 			-- Static call
 
-	static_feature: ET_FEATURE is
+	static_feature: ET_FEATURE
 			-- Static feature of the call;
 			-- Void if no such feature found
 		deferred
@@ -39,7 +39,7 @@ feature -- Access
 	current_type: ET_DYNAMIC_TYPE
 			-- Type to which `current_feature' belongs
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of call
 		do
 			Result := static_call.position
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Static report
 
-	is_tuple_label: BOOLEAN is
+	is_tuple_label: BOOLEAN
 			-- Is current call a call to a Tuple label?
 		do
 			Result := static_call.is_tuple_label
@@ -63,7 +63,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM) is
+	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM)
 			-- Add `a_type' coming from `a_type_set' to current target.
 		local
 			l_dynamic_feature: like seeded_dynamic_feature
@@ -89,7 +89,7 @@ feature -- Element change
 			end
 		end
 
-	propagate_types (a_builder: ET_DYNAMIC_TYPE_SET_BUILDER) is
+	propagate_types (a_builder: ET_DYNAMIC_TYPE_SET_BUILDER)
 			-- Propagate types from `target_type_set' using `a_builder'.
 		require
 			a_builder_not_void: a_builder /= Void
@@ -121,7 +121,7 @@ feature -- Element change
 			end
 		end
 
-	propagate_type (a_type: ET_DYNAMIC_TYPE; a_builder: ET_DYNAMIC_TYPE_SET_BUILDER) is
+	propagate_type (a_type: ET_DYNAMIC_TYPE; a_builder: ET_DYNAMIC_TYPE_SET_BUILDER)
 			-- Propagate `a_type' from `target_type_set' using `a_builder'.
 		require
 			a_type_not_void: a_type /= Void
@@ -152,7 +152,7 @@ feature -- Element change
 
 feature {ET_DYNAMIC_TYPE_SET_BUILDER} -- Access
 
-	seeded_dynamic_feature (a_type: ET_DYNAMIC_TYPE; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE is
+	seeded_dynamic_feature (a_type: ET_DYNAMIC_TYPE; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE
 			-- Run-time feature in `a_type' corresponding to current call;
 			-- Void if no such feature
 		require
@@ -164,7 +164,7 @@ feature {ET_DYNAMIC_TYPE_SET_BUILDER} -- Access
 
 feature {NONE} -- Implementation
 
-	put_type_with_feature (a_type: ET_DYNAMIC_TYPE; a_feature: like seeded_dynamic_feature; a_system: ET_DYNAMIC_SYSTEM) is
+	put_type_with_feature (a_type: ET_DYNAMIC_TYPE; a_feature: like seeded_dynamic_feature; a_system: ET_DYNAMIC_SYSTEM)
 			-- Add `a_type' to current set.
 			-- `a_feature' is the feature in `a_type' corresponding to current call.
 		require
@@ -285,7 +285,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	propagate_type_with_feature (a_type: ET_DYNAMIC_TYPE; a_feature: like seeded_dynamic_feature; a_builder: ET_DYNAMIC_TYPE_SET_BUILDER) is
+	propagate_type_with_feature (a_type: ET_DYNAMIC_TYPE; a_feature: like seeded_dynamic_feature; a_builder: ET_DYNAMIC_TYPE_SET_BUILDER)
 			-- Propagate `a_type' from `target_type_set' using `a_builder'.
 			-- `a_feature' is the feature in `a_type' corresponding to current call.
 		require
@@ -416,7 +416,7 @@ feature {NONE} -- Implementation
 
 feature {ET_DYNAMIC_TYPE_BUILDER} -- Implementation
 
-	put_type_with_tuple_label (a_type: ET_DYNAMIC_TYPE; a_builder: ET_DYNAMIC_TYPE_SET_BUILDER) is
+	put_type_with_tuple_label (a_type: ET_DYNAMIC_TYPE; a_builder: ET_DYNAMIC_TYPE_SET_BUILDER)
 			-- Add `a_type' to current set when the current call is a call to a Tuple label.
 		require
 			tuple_label: is_tuple_label
@@ -430,7 +430,7 @@ feature -- Link
 	next: like Current
 			-- Next call with the same target static type
 
-	set_next (a_next: like Current) is
+	set_next (a_next: like Current)
 			-- Set `next' to `a_next'.
 		do
 			next := a_next

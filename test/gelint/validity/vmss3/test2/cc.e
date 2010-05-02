@@ -2,7 +2,7 @@ deferred class CC
 
 feature
 
-	f is
+	f
 		deferred
 		end
 

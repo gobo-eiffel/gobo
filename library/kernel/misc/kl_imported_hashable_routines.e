@@ -14,7 +14,7 @@ class KL_IMPORTED_HASHABLE_ROUTINES
 
 feature -- Access
 
-	HASHABLE_: KL_HASHABLE_ROUTINES is
+	HASHABLE_: KL_HASHABLE_ROUTINES
 			-- Routines that ought to be in class HASHABLE
 		once
 			create Result

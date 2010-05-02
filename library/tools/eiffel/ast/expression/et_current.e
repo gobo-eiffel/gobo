@@ -36,15 +36,15 @@ create
 
 feature -- Status report
 
-	is_current: BOOLEAN is True
+	is_current: BOOLEAN = True
 			-- Is current expression the 'Current' entity (possibly parenthesized)?
 
-	is_never_void: BOOLEAN is True
+	is_never_void: BOOLEAN = True
 			-- Can current expression never be void?
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_current (Current)

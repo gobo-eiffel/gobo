@@ -22,14 +22,14 @@ inherit
 
 feature -- Access
 
-	key: K is
+	key: K
 			-- Key at cursor position
 		require
 			not_off: not off
 		deferred
 		end
 
-	container: DS_BILINEAR_TABLE [G, K] is
+	container: DS_BILINEAR_TABLE [G, K]
 			-- Bilinear table traversed
 		deferred
 		end

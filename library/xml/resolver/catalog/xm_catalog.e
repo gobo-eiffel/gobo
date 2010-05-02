@@ -39,7 +39,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_base_uri: UT_URI) is
+	make (a_base_uri: UT_URI)
 			-- Establish invariant.
 		require
 			base_uri_not_void: a_base_uri /= Void
@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	resolved_fpi (a_public_id: STRING; prefer_public_required: BOOLEAN): STRING is
+	resolved_fpi (a_public_id: STRING; prefer_public_required: BOOLEAN): STRING
 			-- Resolved URI for `a_public_id'
 		require
 			public_id_not_void: a_public_id /= Void -- TODO and then is normalized
@@ -124,7 +124,7 @@ feature -- Access
 			result_may_be_void_if_not_match: True
 		end
 
-	resolved_fsi (a_system_id: STRING): STRING is
+	resolved_fsi (a_system_id: STRING): STRING
 			-- Resolved URI for `a_system_id'
 		require
 			system_id_not_void: a_system_id /= Void -- TODO and then is normalized
@@ -199,7 +199,7 @@ feature -- Access
 		end
 
 
-	resolved_uri (a_uri_reference: STRING): STRING is
+	resolved_uri (a_uri_reference: STRING): STRING
 			-- Resolved URI for `a_uri_reference'
 		require
 			uri_reference_not_void: a_uri_reference /= Void -- TODO and then is normalized
@@ -284,7 +284,7 @@ feature -- Status report
 
 feature -- Events
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Start of start tag.
 		do
 			if not is_error then
@@ -316,7 +316,7 @@ feature -- Events
 			end
 		end
 
-	on_start_tag_finish is
+	on_start_tag_finish
 			-- End of start tag.
 		do
 			if not is_error and then ignoring_depth = 0 then
@@ -361,7 +361,7 @@ feature -- Events
 			end
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
 			-- Start of attribute
 		do
 			if not is_error and then ignoring_depth = 0 then
@@ -371,7 +371,7 @@ feature -- Events
 			end
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- End tag.
 		do
 			if not is_error then
@@ -390,7 +390,7 @@ feature -- Events
 			end
 		end
 
-	on_content (a_content: STRING) is
+	on_content (a_content: STRING)
 			-- Text content.
 		do
 			if not is_error and then in_catalog and then ignoring_depth = 0 then
@@ -404,7 +404,7 @@ feature -- Events
 			end
 		end
 
-feature {NONE} -- Implementation	
+feature {NONE} -- Implementation
 
 	base_uri: UT_URI
 			-- Base URI of `Current';
@@ -435,7 +435,7 @@ feature {NONE} -- Implementation
 	element_name_stack: DS_ARRAYED_STACK [STRING]
 			-- Stack of element local names
 
-	current_element_name: STRING is
+	current_element_name: STRING
 			-- Name of start tag currently being parsed
 		do
 			if not element_name_stack.is_empty then
@@ -446,12 +446,12 @@ feature {NONE} -- Implementation
 	attribute_namespaces, attribute_local_parts, attribute_values: DS_ARRAYED_LIST [STRING]
 			-- Triples for the attributes on current element
 
-	oasis_etrc_namespace: STRING is "urn:oasis:names:tc:entity:xmlns:xml:catalog"
+	oasis_etrc_namespace: STRING = "urn:oasis:names:tc:entity:xmlns:xml:catalog"
 
-	xml_namespace: STRING is "http://www.w3.org/XML/1998/namespace"
+	xml_namespace: STRING = "http://www.w3.org/XML/1998/namespace"
 			-- namespace for "xml" prefix
 
-	parser: XM_EIFFEL_PARSER is
+	parser: XM_EIFFEL_PARSER
 			-- XML Parser
 		local
 			a_namespace_resolver: XM_NAMESPACE_RESOLVER
@@ -503,14 +503,14 @@ feature {NONE} -- Implementation
 			-- This will only have an entry for a given key if `public_entries'
 			--  also has an entry for the same key, with `prefer_public' set to `False'.
 
-	read is
+	read
 			-- Read in catalog file, changing internals accordingly.
 		do
 			is_error := False
 			parser.parse_from_system (system_id)
 		end
 
-	set_catalog_attributes (is_document_element: BOOLEAN) is
+	set_catalog_attributes (is_document_element: BOOLEAN)
 			-- Set `base_uri' and `prefer_public' at catalog or group level.
 		require
 			current_element_is_catalog_or_group: STRING_.same_string (current_element_name, Catalog_entry)
@@ -567,7 +567,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_system_entry is
+	add_system_entry
 			-- Add a `system' entry.
 		require
 			within_catalog_or_group: in_catalog and then (group_depth = 0 or else group_depth = 1)
@@ -636,7 +636,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_uri_entry is
+	add_uri_entry
 			-- Add a `uri' entry.
 		require
 			within_catalog_or_group: in_catalog and then (group_depth = 0 or else group_depth = 1)
@@ -701,7 +701,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_public_entry is
+	add_public_entry
 			-- Add a `public' entry.
 		require
 			within_catalog_or_group: in_catalog and then (group_depth = 0 or else group_depth = 1)
@@ -787,7 +787,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_next_catalog is
+	add_next_catalog
 			-- Add a `nextCatalog' entry.
 		require
 			within_catalog_or_group: in_catalog and then (group_depth = 0 or else group_depth = 1)
@@ -837,7 +837,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_rewrite_rule (is_system_rule: BOOLEAN) is
+	add_rewrite_rule (is_system_rule: BOOLEAN)
 			-- Add a `rewriteSystem' or `rewriteURI' entry.
 		require
 			within_catalog_or_group: in_catalog and then (group_depth = 0 or else group_depth = 1)
@@ -904,7 +904,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_suffix (is_system_rule: BOOLEAN) is
+	add_suffix (is_system_rule: BOOLEAN)
 			-- Add a `systemSuffix' or `uriSuffix' entry.
 		require
 			within_catalog_or_group: in_catalog and then (group_depth = 0 or else group_depth = 1)
@@ -971,7 +971,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_system_delegate is
+	add_system_delegate
 			-- Add a `delegateSystem' entry.
 		require
 			within_catalog_or_group: in_catalog and then (group_depth = 0 or else group_depth = 1)
@@ -1027,7 +1027,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_uri_delegate is
+	add_uri_delegate
 			-- Add a `delegateUri' entry.
 		require
 			within_catalog_or_group: in_catalog and then (group_depth = 0 or else group_depth = 1)
@@ -1083,7 +1083,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_public_delegate is
+	add_public_delegate
 			-- Add a `delegatePublic' entry.
 		require
 			within_catalog_or_group: in_catalog and then (group_depth = 0 or else group_depth = 1)
@@ -1142,7 +1142,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	insert_system_delegate (a_start_string: STRING; a_target: UT_URI) is
+	insert_system_delegate (a_start_string: STRING; a_target: UT_URI)
 			-- Insert a system delegate entry.
 		require
 			system_id_start_string_not_void: a_start_string /= Void
@@ -1187,7 +1187,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	insert_uri_delegate (a_start_string: STRING; a_target: UT_URI) is
+	insert_uri_delegate (a_start_string: STRING; a_target: UT_URI)
 			-- Insert a uri delegate entry.
 		require
 			uri_start_string_not_void: a_start_string /= Void
@@ -1232,7 +1232,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	insert_public_delegate (a_start_string: STRING; a_target: UT_URI; a_prefer_public: BOOLEAN) is
+	insert_public_delegate (a_start_string: STRING; a_target: UT_URI; a_prefer_public: BOOLEAN)
 			-- Insert a public delegate entry.
 		require
 			public_id_start_string_not_void: a_start_string /= Void
@@ -1290,7 +1290,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	insert_system_rewrite_rule (a_start_string: STRING; a_target: UT_URI) is
+	insert_system_rewrite_rule (a_start_string: STRING; a_target: UT_URI)
 			-- Insert a rewrite sytem entry.
 		require
 			system_id_start_string_not_void: a_start_string /= Void
@@ -1335,7 +1335,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	insert_uri_rewrite_rule (a_start_string: STRING; a_target: UT_URI) is
+	insert_uri_rewrite_rule (a_start_string: STRING; a_target: UT_URI)
 			-- Insert a rewrite sytem entry.
 		require
 			uri_start_string_not_void: a_start_string /= Void
@@ -1380,7 +1380,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	insert_system_suffix_rule (a_suffix_string: STRING; a_target: UT_URI) is
+	insert_system_suffix_rule (a_suffix_string: STRING; a_target: UT_URI)
 			-- Insert a system suffix entry.
 		require
 			system_suffix_string_not_void: a_suffix_string /= Void
@@ -1426,7 +1426,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	insert_uri_suffix_rule (a_suffix_string: STRING; a_target: UT_URI) is
+	insert_uri_suffix_rule (a_suffix_string: STRING; a_target: UT_URI)
 			-- Insert a URI  suffix entry.
 		require
 			system_suffix_string_not_void: a_suffix_string /= Void
@@ -1471,7 +1471,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	resolved_suffixed_fsi (a_system_id: STRING): STRING is
+	resolved_suffixed_fsi (a_system_id: STRING): STRING
 			-- Resolved URI for `a_system_id' from suffix rules
 		require
 			system_id_not_void: a_system_id /= Void -- TODO and then is normalized
@@ -1499,7 +1499,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	resolved_suffixed_uri (a_uri: STRING): STRING is
+	resolved_suffixed_uri (a_uri: STRING): STRING
 			-- Resolved URI for `a_uri' from suffix rules
 		require
 			uri_reference_not_void: a_uri /= Void -- TODO and then is normalized
@@ -1527,7 +1527,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	resolved_delegated_fsi (a_system_id: STRING): STRING is
+	resolved_delegated_fsi (a_system_id: STRING): STRING
 			-- Resolved URI for `a_system_id' from delegate catalogs
 		require
 			system_id_not_void: a_system_id /= Void -- TODO and then is normalized
@@ -1567,7 +1567,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	resolved_delegated_uri (a_uri_reference: STRING): STRING is
+	resolved_delegated_uri (a_uri_reference: STRING): STRING
 			-- Resolved URI for `a_uri_reference' from delegate catalogs
 		require
 			uri_id_not_void: a_uri_reference /= Void -- TODO and then is normalized
@@ -1607,7 +1607,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	resolved_delegated_fpi (a_public_id: STRING; prefer_public_required: BOOLEAN): STRING is
+	resolved_delegated_fpi (a_public_id: STRING; prefer_public_required: BOOLEAN): STRING
 			-- Resolved URI for `a_public_id' from delegate catalogs
 		require
 			public_id_not_void: a_public_id /= Void -- TODO and then is normalized
@@ -1650,7 +1650,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	write_missing_rewrite_prefix_attribute (is_system_rule: BOOLEAN) is
+	write_missing_rewrite_prefix_attribute (is_system_rule: BOOLEAN)
 			-- Write a missing-rewrite-prefix error
 		local
 			a_message: STRING
@@ -1665,7 +1665,7 @@ feature {NONE} -- Implementation
 			shared_catalog_manager.debug_message (1, STRING_.appended_string (a_message, "'"), system_id)
 		end
 
-	write_missing_start_string_attribute (is_system_rule: BOOLEAN) is
+	write_missing_start_string_attribute (is_system_rule: BOOLEAN)
 			-- Write a missing-start-string error
 		local
 			a_message: STRING
@@ -1685,7 +1685,7 @@ feature {NONE} -- Implementation
 			shared_catalog_manager.debug_message (1, a_message, system_id)
 		end
 
-	write_rewrite_rule_debug_message (a_start_string: STRING; a_target: UT_URI; is_system_rule: BOOLEAN) is
+	write_rewrite_rule_debug_message (a_start_string: STRING; a_target: UT_URI; is_system_rule: BOOLEAN)
 			-- Write debug messages for adding rewrite rule.
 		require
 			system_id_start_string_not_void: a_start_string /= Void
@@ -1709,7 +1709,7 @@ feature {NONE} -- Implementation
 			shared_catalog_manager.debug_message (5, a_message, a_start_string)
 		end
 
-	write_missing_suffix_reference_attribute (is_system_rule: BOOLEAN) is
+	write_missing_suffix_reference_attribute (is_system_rule: BOOLEAN)
 			-- Write a missing-suffix-uri error
 		local
 			a_message: STRING
@@ -1724,7 +1724,7 @@ feature {NONE} -- Implementation
 			shared_catalog_manager.debug_message (1, STRING_.appended_string (a_message, "'"), system_id)
 		end
 
-	write_missing_suffix_string_attribute (is_system_rule: BOOLEAN) is
+	write_missing_suffix_string_attribute (is_system_rule: BOOLEAN)
 			-- Write a missing-suffix-string error
 		local
 			a_message: STRING
@@ -1744,7 +1744,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	write_suffix_debug_message (a_suffix_string: STRING; a_target: UT_URI; is_system_rule: BOOLEAN) is
+	write_suffix_debug_message (a_suffix_string: STRING; a_target: UT_URI; is_system_rule: BOOLEAN)
 			-- Write debug messages for adding suffix rule.
 		require
 			suffix_string_not_void: a_suffix_string /= Void
@@ -1770,30 +1770,30 @@ feature {NONE} -- Implementation
 
 	-- Element and attribute names follow:
 
-	Catalog_entry, Catalog_attribute: STRING is "catalog"
-	Group_entry: STRING is "group"
-	System_entry: STRING is "system"
-	Public_entry: STRING is "public"
-	Uri_entry, Uri_attribute: STRING is "uri"
-	Uri_suffix_entry, Uri_suffix_attribute: STRING is "uriSuffix"
-	System_suffix_entry: STRING is "systemSuffix"
-	System_id_suffix_attribute: STRING is "systemIdSuffix"
-	Rewrite_prefix_attribute: STRING is "rewritePrefix"
-	Rewrite_system_entry: STRING is "rewriteSystem"
-	Rewrite_uri_entry: STRING is "rewriteURI"
-	System_id_start_string_attribute: STRING is "systemIdStartString"
-	Uri_start_string_attribute: STRING is "uriStartString"
-	Public_id_start_string_attribute: STRING is "publicIdStartString"
-	Delegate_system_entry: STRING is "delegateSystem"
-	Delegate_uri_entry: STRING is "delegateUri"
-	Delegate_public_entry: STRING is "delegatePublic"
-	Next_catalog_entry: STRING is "nextCatalog"
-	Base_attribute: STRING is "base"
-	Prefer_attribute: STRING is "prefer"
-	Id_attribute: STRING is "id"
-	System_id_attribute: STRING is "systemId"
-	Public_id_attribute: STRING is "publicId"
-	Name_attribute: STRING is "name"
+	Catalog_entry, Catalog_attribute: STRING = "catalog"
+	Group_entry: STRING = "group"
+	System_entry: STRING = "system"
+	Public_entry: STRING = "public"
+	Uri_entry, Uri_attribute: STRING = "uri"
+	Uri_suffix_entry, Uri_suffix_attribute: STRING = "uriSuffix"
+	System_suffix_entry: STRING = "systemSuffix"
+	System_id_suffix_attribute: STRING = "systemIdSuffix"
+	Rewrite_prefix_attribute: STRING = "rewritePrefix"
+	Rewrite_system_entry: STRING = "rewriteSystem"
+	Rewrite_uri_entry: STRING = "rewriteURI"
+	System_id_start_string_attribute: STRING = "systemIdStartString"
+	Uri_start_string_attribute: STRING = "uriStartString"
+	Public_id_start_string_attribute: STRING = "publicIdStartString"
+	Delegate_system_entry: STRING = "delegateSystem"
+	Delegate_uri_entry: STRING = "delegateUri"
+	Delegate_public_entry: STRING = "delegatePublic"
+	Next_catalog_entry: STRING = "nextCatalog"
+	Base_attribute: STRING = "base"
+	Prefer_attribute: STRING = "prefer"
+	Id_attribute: STRING = "id"
+	System_id_attribute: STRING = "systemId"
+	Public_id_attribute: STRING = "publicId"
+	Name_attribute: STRING = "name"
 
 invariant
 

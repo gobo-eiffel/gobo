@@ -35,7 +35,7 @@ create
 
 feature -- Test
 
-	test_pretty_printer is
+	test_pretty_printer
 			-- Test pretty-printer with some Eiffel classes.
 		local
 			a_system: ET_SYSTEM
@@ -66,7 +66,7 @@ feature -- Test
 
 feature {NONE} -- Test
 
-	check_class (a_class: ET_CLASS) is
+	check_class (a_class: ET_CLASS)
 			-- Check that after parsing `a_class' and printing back its AST,
 			-- we get two files containing the same text.
 		require
@@ -99,7 +99,7 @@ feature {NONE} -- Test
 
 feature -- Execution
 
-	set_up is
+	set_up
 			-- Setup for a test.
 		local
 			a_testdir: STRING
@@ -112,7 +112,7 @@ feature -- Execution
 			file_system.cd (a_testdir)
 		end
 
-	tear_down is
+	tear_down
 			-- Tear down after a test.
 		do
 			if old_cwd /= Void then
@@ -127,10 +127,10 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	testdir: STRING is "Ttools"
+	testdir: STRING = "Ttools"
 			-- Name of temporary directory where to run the test
 
-	input_filename1: STRING is
+	input_filename1: STRING
 			-- Filename of Eiffel class to be pretty-printed
 		once
 			Result := file_system.nested_pathname ("${GOBO}", <<"test", "tools", "data", "pretty_printed1.txt">>)

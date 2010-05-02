@@ -37,7 +37,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_stream: like base_stream; output_line_breaks, normalize_line_breaks: BOOLEAN) is
+	make (a_stream: like base_stream; output_line_breaks, normalize_line_breaks: BOOLEAN)
 			-- Create a new base64 encoding stream.
 		do
 			make_base (a_stream)
@@ -59,7 +59,7 @@ feature -- Status report
 	is_normalizing: BOOLEAN
 			-- Are line-breaks normalized to CRLF before encoding?
 
-	is_closable: BOOLEAN is
+	is_closable: BOOLEAN
 			-- Can current output stream be closed?
 		do
 			Result := True
@@ -67,7 +67,7 @@ feature -- Status report
 
 feature -- Output
 
-	put_character (c: CHARACTER) is
+	put_character (c: CHARACTER)
 			-- Write `c' to output stream.
 		do
 			if not is_normalizing then
@@ -96,7 +96,7 @@ feature -- Output
 			end
 		end
 
-	put_string (a_string: STRING) is
+	put_string (a_string: STRING)
 			-- Write `a_string' to output stream.
 		local
 			i, nb: INTEGER
@@ -110,7 +110,7 @@ feature -- Output
 
 feature -- Basic operations
 
-	close is
+	close
 			-- Try to close output stream if it is closable. Set
 			-- `is_open_write' to false if operation was successful.
 		do
@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 	is_pending_line_break: BOOLEAN
 			-- Has the CR of a CRLF pair been written out?
 
-	buffer_character (c: CHARACTER) is
+	buffer_character (c: CHARACTER)
 			-- Write `c' to `triplet'.
 		require
 			not_full: triplet_count < 3
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 			not_full: triplet_count < 3
 		end
 
-	write_quartet is
+	write_quartet
 			-- Write a quartet (padded, if necessary) to `base_stream'.
 		require
 			is_open_write: is_open_write
@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 			triplet_empty: triplet_count = 0
 		end
 
-	write_character (c: INTEGER) is
+	write_character (c: INTEGER)
 			-- Write `c' to the output stream.
 		do
 			base_stream.put_character (base64_alphabet.item (c))
@@ -206,17 +206,17 @@ feature {NONE} -- Implementation
 
 feature -- Constants
 
-	full_line_count: INTEGER is 76
+	full_line_count: INTEGER = 76
 			-- Maximum line length
 
-	shift_2_bits: INTEGER is 4
-	shift_4_bits: INTEGER is 16
-	shift_6_bits: INTEGER is 64
+	shift_2_bits: INTEGER = 4
+	shift_4_bits: INTEGER = 16
+	shift_6_bits: INTEGER = 64
 
-	padding: INTEGER is 64
+	padding: INTEGER = 64
 			-- Pad character ('=')
 
-	base64_alphabet: ARRAY [CHARACTER] is
+	base64_alphabet: ARRAY [CHARACTER]
 			-- Base64 alphabet
 		once
 			create Result.make (0, 64)

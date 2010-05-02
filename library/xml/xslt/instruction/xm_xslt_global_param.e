@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_executable: XM_XSLT_EXECUTABLE; a_name: STRING; a_slot_number: INTEGER) is
+	make (an_executable: XM_XSLT_EXECUTABLE; a_name: STRING; a_slot_number: INTEGER)
 			-- Establish invariant.
 		do
 			Precursor (an_executable, a_name, a_slot_number)
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Status report
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -53,7 +53,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_static_context (a_static_context: like static_context) is
+	set_static_context (a_static_context: like static_context)
 			-- Set `static_context'.
 		require
 			static_context_not_void: a_static_context /= Void
@@ -65,7 +65,7 @@ feature -- Element change
 
 feature -- Evaluation
 
-	evaluate_variable (a_context: XM_XPATH_CONTEXT) is 
+	evaluate_variable (a_context: XM_XPATH_CONTEXT)
 			-- Evaluate variable
 		local
 			l_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
@@ -95,7 +95,7 @@ feature -- Evaluation
 																														 Xpath_errors_uri, "XTDE0050", Dynamic_error)
 					end
 				else
-					
+
 					-- This is the first reference to a global parameter; try to evaluate it now.
 					-- But first set a flag to stop looping.
 
@@ -139,4 +139,4 @@ feature -- Evaluation
 		end
 
 end
-	
+

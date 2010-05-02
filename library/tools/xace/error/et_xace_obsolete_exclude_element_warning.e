@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_position: XM_POSITION) is
+	make (a_position: XM_POSITION)
 			-- Create a warning reporting that an exclude element
 			-- is obsoleted by if/unless attributes.
 		require
@@ -34,10 +34,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "<exclude> at $1 is obsolete, use 'if'/'unless' attributes instead"
+	default_template: STRING = "<exclude> at $1 is obsolete, use 'if'/'unless' attributes instead"
 			-- Default template used to built the error message
 
-	code: STRING is "XA0015"
+	code: STRING = "XA0015"
 			-- Error code
 
 end

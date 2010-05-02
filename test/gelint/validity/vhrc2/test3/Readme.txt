@@ -58,7 +58,7 @@ create
 
 feature
 
-	make is
+	make
 		local
 			b: BB
 		do
@@ -84,12 +84,12 @@ deferred class CC
 
 feature
 
-	f is
+	f
 		do
 			print ("f%N")
 		end
 
-	g is
+	g
 		deferred
 		end
 

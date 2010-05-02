@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_flag: STRING) is
+	make (a_flag: STRING)
 			-- Create a new error reporting that
 			-- `a_flag' is an unknown flag.
 		require
@@ -34,10 +34,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "$0: unknown flag '$1'"
+	default_template: STRING = "$0: unknown flag '$1'"
 			-- Default template used to built the error message
 
-	code: STRING is "UT0002"
+	code: STRING = "UT0002"
 			-- Error code
 
 invariant

@@ -124,10 +124,10 @@ to its features, as shown below:</p>
 color="#008080" size="2" face="Courier New"><em> </em></font>have
 been made secret since this class is inherited for implementation
 only.) The disadvantage of this method is that it rapidly pollutes
-the name space in the application classes. A possible way to handle 
+the name space in the application classes. A possible way to handle
 this problem would be to declare facility classes, such as
 <font color="#008080"><em><tt>KL_INTEGER_ROUTINES</tt></em></font>, as
-expanded and use them in local variables:  
+expanded and use them in local variables:
 
 <blockquote>
     <pre><font color="#008080"><em><strong>class</strong></em> <em>KL_INTEGER_ROUTINES</em>
@@ -144,7 +144,7 @@ expanded and use them in local variables:
 
 <em><strong>feature</strong></em> -- Basic operations
 
-    <em>do_something</em> <em><strong>is</strong></em>
+    <em>do_something</em>
             -- Do something with a character obtained from
             -- its ASCII code provided as input by the user.
         <em><strong>local</strong></em><em>
@@ -177,7 +177,7 @@ following class will be provided:</p>
 
 <em><strong>feature</strong></em> -- Access
 
-    <em>INTEGER_</em>: <em>KL_INTEGER_ROUTINES <strong>is</strong></em>
+    <em>INTEGER_</em>: <em>KL_INTEGER_ROUTINES</em>
             -- Routines that ought to be in class INTEGER
         <em><strong>once</strong></em>
             <em><strong>create</strong></em> <em>Result
@@ -200,7 +200,7 @@ will become:</p>
 
 <em><strong>feature</strong></em> -- Basic operations
 
-    <em>do_something</em> <em><strong>is</strong></em>
+    <em>do_something<</em>
             -- Do something with a character obtained from
             -- its ASCII code provided as input by the user.
         <em><strong>local</strong></em><em>
@@ -265,9 +265,9 @@ href="gepp.html">preprocessor</a> will help in such situations.</p>
             <strong>Last Updated:</strong> 21 February 2005</font><br>
             <!--webbot bot="PurpleText"
             preview="
-$Date$ 
+$Date$
 $Revision$"
-            --> 
+            -->
         </address>
         </td>
         <td align="right" valign="top"><a

@@ -24,7 +24,7 @@ create
 
 feature -- Tests
 
-	test_valid is
+	test_valid
 			-- Test feature `valid_utf8' when valid.
 		do
 			assert ("empty", utf8.valid_utf8 (""))
@@ -54,7 +54,7 @@ feature -- Tests
 			assert ("0xf4_0x8f_0xbf_0xbf", utf8.valid_utf8 ("%/244/%/143/%/191/%/191/"))
 		end
 
-	test_invalid is
+	test_invalid
 			-- Test feature `valid_utf8' when invalid.
 		do
 			assert ("0x80", not utf8.valid_utf8 ("%/128/"))

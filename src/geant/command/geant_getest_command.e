@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT) is
+	make (a_project: GEANT_PROJECT)
 			-- Create a new 'getest' command.
 		local
 			a_tester: UC_STRING_EQUALITY_TESTER
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- Can command be executed?
 		do
 			Result := config_filename /= Void and then config_filename.count > 0
@@ -88,7 +88,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_verbose (b: BOOLEAN) is
+	set_verbose (b: BOOLEAN)
 			-- Set `verbose' to `an_options'.
 		do
 			verbose := b
@@ -96,7 +96,7 @@ feature -- Setting
 			verbose_set: verbose = b
 		end
 
-	set_config_filename (a_filename: STRING) is
+	set_config_filename (a_filename: STRING)
 			-- Set `config_filename' to `a_filename'
 		require
 			a_filename_not_void: a_filename /= Void
@@ -107,7 +107,7 @@ feature -- Setting
 			config_filename_set: config_filename = a_filename
 		end
 
-	set_compile (a_compile: like compile) is
+	set_compile (a_compile: like compile)
 			-- Set `compile' to `a_compile'.
 		require
 			a_compile_not_void: a_compile /= Void
@@ -117,7 +117,7 @@ feature -- Setting
 			compile_set: compile = a_compile
 		end
 
-	set_class_regexp (a_regexp: like class_regexp) is
+	set_class_regexp (a_regexp: like class_regexp)
 			-- Set `class_regexp' to `a_regexp'.
 		require
 			a_regexp_not_void: a_regexp /= Void
@@ -127,7 +127,7 @@ feature -- Setting
 			class_regexp_set: class_regexp = a_regexp
 		end
 
-	set_feature_regexp (a_regexp: like feature_regexp) is
+	set_feature_regexp (a_regexp: like feature_regexp)
 			-- Set `feature_regexp' to `a_regexp'.
 		require
 			a_regexp_not_void: a_regexp /= Void
@@ -137,7 +137,7 @@ feature -- Setting
 			feature_regexp_set: feature_regexp = a_regexp
 		end
 
-	set_default_test_included (b: BOOLEAN) is
+	set_default_test_included (b: BOOLEAN)
 			-- Set `default_test_included' to `b'.
 		do
 			default_test_included := b
@@ -145,7 +145,7 @@ feature -- Setting
 			default_test_included_set: default_test_included = b
 		end
 
-	set_generation (b: BOOLEAN) is
+	set_generation (b: BOOLEAN)
 			-- Set `generation' to `b'.
 		do
 			generation := b
@@ -153,7 +153,7 @@ feature -- Setting
 			generation_set: generation = b
 		end
 
-	set_compilation (b: BOOLEAN) is
+	set_compilation (b: BOOLEAN)
 			-- Set `compilation' to `b'.
 		do
 			compilation := b
@@ -161,7 +161,7 @@ feature -- Setting
 			compilation_set: compilation = b
 		end
 
-	set_execution (b: BOOLEAN) is
+	set_execution (b: BOOLEAN)
 			-- Set `execution' to `b'.
 		do
 			execution := b
@@ -169,7 +169,7 @@ feature -- Setting
 			execution_set: execution = b
 		end
 
-	set_abort (b: BOOLEAN) is
+	set_abort (b: BOOLEAN)
 			-- Set `abort' to `b'.
 		do
 			abort := b
@@ -179,7 +179,7 @@ feature -- Setting
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute command.
 		local
 			cmd: STRING

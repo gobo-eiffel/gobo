@@ -38,7 +38,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_comparator: KL_COMPARATOR [K]) is
+	make (a_comparator: KL_COMPARATOR [K])
 			-- Create a new binary search tree node.
 			-- `a_comparator' is used for the comparison of keys.
 		require
@@ -51,33 +51,33 @@ feature {NONE} -- Initialization
 			comparator_set: key_comparator = a_comparator
 		end
 
-	make_default is
+	make_default
 			-- Cannot be used as a `comparator' is needed.
 		do
 		end
 
 feature -- Access
 
-	first: G is
+	first: G
 			-- First item in container
 		do
 			Result := first_node.item
 		end
 
-	last: G is
+	last: G
 			-- Last item in container
 		do
 			Result := last_node.item
 		end
 
-	new_cursor: DS_BINARY_SEARCH_TREE_CONTAINER_CURSOR [G, K] is
+	new_cursor: DS_BINARY_SEARCH_TREE_CONTAINER_CURSOR [G, K]
 			-- New external cursor
 		deferred
 		end
 
 feature {NONE} -- Access
 
-	at alias "@", item (k: K): G is
+	at alias "@", item (k: K): G
 			-- Item associated with key `k'
 			-- (Performance: O(height).)
 		require
@@ -90,7 +90,7 @@ feature {NONE} -- Access
 			Result := found_node.item
 		end
 
-	value (k: K): G is
+	value (k: K): G
 			-- Item associated with key `k', if `k' exists;
 			-- Default value otherwise
 			-- (Performance: O(height).)
@@ -104,7 +104,7 @@ feature {NONE} -- Access
 			end
 		end
 
-	key_comparator: KL_COMPARATOR [K] is
+	key_comparator: KL_COMPARATOR [K]
 			-- Comparison criterion for keys
 		deferred
 		ensure
@@ -117,7 +117,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Access
 			-- Left most binary tree node;
 			-- The `key' of this node is less than the `key' of all other nodes in the tree.
 
-	successor (v: like root_node): like root_node is
+	successor (v: like root_node): like root_node
 			-- Successor of `v' if it exists, Void otherwise
 			-- (Performance: O(height).)
 		require
@@ -152,7 +152,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Access
 			successor_in_same_tree: Result /= Void implies are_nodes_in_same_tree (Result, v)
 		end
 
-	successor_for_removal (v: like root_node): like root_node is
+	successor_for_removal (v: like root_node): like root_node
 			-- Successor of `v'. Used by `remove'.
 			-- (Performance: O(height).)
 		require
@@ -181,7 +181,7 @@ feature {NONE} -- Access
 	found_node: like root_node
 			-- Node used as result for `search_node' and `search_insert_position'
 
-	predecessor (v: like root_node): like root_node is
+	predecessor (v: like root_node): like root_node
 			-- Predecessor of `v' if it exists, Void otherwise
 			-- (Performance: O(height).)
 		require
@@ -219,7 +219,7 @@ feature {NONE} -- Access
 			predecessor_is_in_tree: Result /= Void implies is_node_in_tree (Result)
 		end
 
-	new_tree_node (a_item: G; a_key: K): like root_node is
+	new_tree_node (a_item: G; a_key: K): like root_node
 			-- New tree node where `a_item' is associated with `a_key'
 		deferred
 		ensure
@@ -235,7 +235,7 @@ feature -- Measurement
 	count: INTEGER
 			-- Number of items in container
 
-	height: INTEGER is
+	height: INTEGER
 			-- Maximum height of the binary search tree
 			-- (Performance: O(count).)
 		do
@@ -249,7 +249,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	sorted: BOOLEAN is
+	sorted: BOOLEAN
 			-- Is the binary search tree sorted?
 		do
 			if root_node = Void then
@@ -261,7 +261,7 @@ feature -- Status report
 
 feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Status report
 
-	has_key (a_key: K): BOOLEAN is
+	has_key (a_key: K): BOOLEAN
 			-- Is there an item associated with `a_key'?
 			-- (Performance: O(height).)
 		do
@@ -273,13 +273,13 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Status report
 
 feature {NONE} -- Status report
 
-	valid_key (k: K): BOOLEAN is
+	valid_key (k: K): BOOLEAN
 			-- Is `k' a valid key?
 		do
 			Result := True
 		end
 
-	has_void_key: BOOLEAN is
+	has_void_key: BOOLEAN
 			-- Is there an item associated with Void?
 			-- (Performance: O(height).)
 		local
@@ -292,7 +292,7 @@ feature {NONE} -- Status report
 			end
 		end
 
-	key_comparator_settable (a_comparator: like key_comparator): BOOLEAN is
+	key_comparator_settable (a_comparator: like key_comparator): BOOLEAN
 			-- Can `set_key_comparator' be called with `a_comparator'
 			-- as argument in current state of container?
 		do
@@ -303,7 +303,7 @@ feature {NONE} -- Status report
 
 feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Status report
 
-	is_node_in_tree (a_node: like root_node): BOOLEAN is
+	is_node_in_tree (a_node: like root_node): BOOLEAN
 			-- Is `a_node' in current tree?
 		require
 			a_node_not_void: a_node /= Void
@@ -313,7 +313,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Status report
 			end
 		end
 
-	are_nodes_in_same_tree (a_node_1, a_node_2: like root_node): BOOLEAN is
+	are_nodes_in_same_tree (a_node_1, a_node_2: like root_node): BOOLEAN
 			-- Has `a_node_1' the same `root_node' as `a_node_2'?
 		require
 			a_node_1_not_void: a_node_1 /= Void
@@ -344,7 +344,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Status report
 
 feature {NONE} -- Status report
 
-	is_first_node_correct: BOOLEAN is
+	is_first_node_correct: BOOLEAN
 			-- Is the first node correctly set?
 		local
 			l_node: like root_node
@@ -363,7 +363,7 @@ feature {NONE} -- Status report
 			end
 		end
 
-	is_last_node_correct: BOOLEAN is
+	is_last_node_correct: BOOLEAN
 			-- Is the last node correctly set?
 		local
 			l_node: like root_node
@@ -401,7 +401,7 @@ feature {NONE} -- Status report
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is container considered equal to `other'?
 			-- Does not take cursor positions or
 			-- `equality_tester' into account.
@@ -428,7 +428,7 @@ feature -- Comparison
 
 feature {NONE} -- Setting
 
-	set_key_comparator (a_comparator: like key_comparator) is
+	set_key_comparator (a_comparator: like key_comparator)
 			-- Set `key_comparator' to `a_comparator'.
 		require
 			key_comparator_settable: key_comparator_settable (a_comparator)
@@ -437,7 +437,7 @@ feature {NONE} -- Setting
 			key_comparator_set: key_comparator = a_comparator
 		end
 
-	internal_set_key_comparator (a_comparator: like key_comparator) is
+	internal_set_key_comparator (a_comparator: like key_comparator)
 			-- Set `key_comparator' to `a_comparator'.
 			-- (No "settable" precondition, to be used internally only.)
 		require
@@ -449,19 +449,19 @@ feature {NONE} -- Setting
 
 feature {DS_CURSOR} -- Cursor implementation
 
-	cursor_item (a_cursor: like new_cursor): G is
+	cursor_item (a_cursor: like new_cursor): G
 			-- Item at `a_cursor' position.
 		do
 			Result := a_cursor.position.item
 		end
 
-	cursor_key (a_cursor: like new_cursor): K is
+	cursor_key (a_cursor: like new_cursor): K
 			-- Key at `a_cursor' position.
 		do
 			Result := a_cursor.position.key
 		end
 
-	cursor_same_position (a_cursor, other: like new_cursor): BOOLEAN is
+	cursor_same_position (a_cursor, other: like new_cursor): BOOLEAN
 			-- Is `a_cursor' at same position as `other'?
 		do
 			Result := a_cursor.position = other.position
@@ -470,7 +470,7 @@ feature {DS_CURSOR} -- Cursor implementation
 			end
 		end
 
-	cursor_go_to (a_cursor, other: like new_cursor) is
+	cursor_go_to (a_cursor, other: like new_cursor)
 			-- Move `a_cursor' to `other''s position.
 		local
 			l_was_off: BOOLEAN
@@ -491,7 +491,7 @@ feature {DS_CURSOR} -- Cursor implementation
 
 feature {DS_LINEAR_CURSOR} -- Cursor implementation
 
-	cursor_is_first (a_cursor: like new_cursor): BOOLEAN is
+	cursor_is_first (a_cursor: like new_cursor): BOOLEAN
 			-- Is `a_cursor' on first item?
 		do
 			if first_node /= Void then
@@ -499,13 +499,13 @@ feature {DS_LINEAR_CURSOR} -- Cursor implementation
 			end
 		end
 
-	cursor_after (a_cursor: like new_cursor): BOOLEAN is
+	cursor_after (a_cursor: like new_cursor): BOOLEAN
 			-- Is there no valid position to right of `a_cursor'?
 		do
 			Result := a_cursor.position = Void and then not a_cursor.is_before
 		end
 
-	cursor_start (a_cursor: like new_cursor) is
+	cursor_start (a_cursor: like new_cursor)
 			-- Move `a_cursor' to first position.
 		local
 			l_was_off: BOOLEAN
@@ -521,7 +521,7 @@ feature {DS_LINEAR_CURSOR} -- Cursor implementation
 			end
 		end
 
-	cursor_forth (a_cursor: like new_cursor) is
+	cursor_forth (a_cursor: like new_cursor)
 			-- Move `a_cursor' to next position.
 		local
 			l_position: like root_node
@@ -548,7 +548,7 @@ feature {DS_LINEAR_CURSOR} -- Cursor implementation
 			end
 		end
 
-	cursor_search_forth (a_cursor: like new_cursor; v: G) is
+	cursor_search_forth (a_cursor: like new_cursor; v: G)
 			-- Move `a_cursor' to first position at or after its current
 			-- position where `cursor_item (a_cursor)' and `v' are equal.
 			-- (Use `equality_tester''s comparison criterion
@@ -583,7 +583,7 @@ feature {DS_LINEAR_CURSOR} -- Cursor implementation
 			end
 		end
 
-	cursor_go_after (a_cursor: like new_cursor) is
+	cursor_go_after (a_cursor: like new_cursor)
 			-- Move `a_cursor' to `after' position.
 		local
 			l_was_off: BOOLEAN
@@ -597,7 +597,7 @@ feature {DS_LINEAR_CURSOR} -- Cursor implementation
 
 feature {DS_BILINEAR_CURSOR} -- Cursor implementation
 
-	cursor_is_last (a_cursor: like new_cursor): BOOLEAN is
+	cursor_is_last (a_cursor: like new_cursor): BOOLEAN
 			-- Is `a_cursor' on last item?
 		do
 			if last_node /= Void then
@@ -605,13 +605,13 @@ feature {DS_BILINEAR_CURSOR} -- Cursor implementation
 			end
 		end
 
-	cursor_before (a_cursor: like new_cursor): BOOLEAN is
+	cursor_before (a_cursor: like new_cursor): BOOLEAN
 			-- Is there no valid position to left of `a_cursor'?
 		do
 			Result := a_cursor.position = Void and then a_cursor.is_before
 		end
 
-	cursor_finish (a_cursor: like new_cursor) is
+	cursor_finish (a_cursor: like new_cursor)
 			-- Move `a_cursor' to last position.
 		local
 			l_was_off: BOOLEAN
@@ -627,7 +627,7 @@ feature {DS_BILINEAR_CURSOR} -- Cursor implementation
 			end
 		end
 
-	cursor_back (a_cursor: like new_cursor) is
+	cursor_back (a_cursor: like new_cursor)
 			-- Move `a_cursor' to previous position.
 		local
 			l_position: like root_node
@@ -654,7 +654,7 @@ feature {DS_BILINEAR_CURSOR} -- Cursor implementation
 			end
 		end
 
-	cursor_search_back (a_cursor: like new_cursor; v: G) is
+	cursor_search_back (a_cursor: like new_cursor; v: G)
 			-- Move `a_cursor' to first position at or before its current
 			-- position where `cursor_item (a_cursor)' and `v' are equal.
 			-- (Use `equality_tester''s comparison criterion
@@ -689,7 +689,7 @@ feature {DS_BILINEAR_CURSOR} -- Cursor implementation
 			end
 		end
 
-	cursor_go_before (a_cursor: like new_cursor) is
+	cursor_go_before (a_cursor: like new_cursor)
 			-- Move `a_cursor' to `before' position.
 		local
 			l_was_off: BOOLEAN
@@ -703,7 +703,7 @@ feature {DS_BILINEAR_CURSOR} -- Cursor implementation
 
 feature {DS_BINARY_SEARCH_TREE_CONTAINER_CURSOR} -- Cursor implementation
 
-	cursor_go_at_or_before_key (a_cursor: like new_cursor; k: K) is
+	cursor_go_at_or_before_key (a_cursor: like new_cursor; k: K)
 			-- Move `a_cursor' to last position with a smaller key than `k'.
 		require
 			a_cursor_not_void: a_cursor /= Void
@@ -735,7 +735,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER_CURSOR} -- Cursor implementation
 			a_cursor_not_after: not a_cursor.after
 		end
 
-	cursor_go_at_or_after_key (a_cursor: like new_cursor; k: K) is
+	cursor_go_at_or_after_key (a_cursor: like new_cursor; k: K)
 			-- Move `a_cursor' to first position with a greater key than `k'.
 		require
 			a_cursor_not_void: a_cursor /= Void
@@ -767,7 +767,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER_CURSOR} -- Cursor implementation
 
 feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Cursor implementation
 
-	predecessor_for_cursor (v: like root_node): like root_node is
+	predecessor_for_cursor (v: like root_node): like root_node
 			-- Predecessor of `v' if it exists, Void otherwise
 			-- (Performance: O(height).)
 		require
@@ -805,7 +805,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Cursor implementation
 			predecessor_is_in_tree: Result /= Void implies is_node_in_tree (Result)
 		end
 
-	successor_for_cursor (v: like root_node): like root_node is
+	successor_for_cursor (v: like root_node): like root_node
 			-- Successor of `v' if it exists, Void otherwise
 			-- (Performance: O(height).)
 		require
@@ -840,7 +840,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Cursor implementation
 			successor_in_same_tree: Result /= Void implies are_nodes_in_same_tree (Result, v)
 		end
 
-	set_internal_cursor (c: like internal_cursor) is
+	set_internal_cursor (c: like internal_cursor)
 			-- Set `internal_cursor' to `c'.
 		do
 			internal_cursor := c
@@ -851,7 +851,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Cursor implementation
 
 feature {NONE} -- Cursor movement
 
-	move_cursors_after (a_last_position: like root_node) is
+	move_cursors_after (a_last_position: like root_node)
 			-- Move `after' all cursors at last position.
 		require
 			a_last_position_not_void: a_last_position /= Void
@@ -878,7 +878,7 @@ feature {NONE} -- Cursor movement
 			end
 		end
 
-	move_all_cursors (a_old_node, a_new_node: like root_node) is
+	move_all_cursors (a_old_node, a_new_node: like root_node)
 			-- Move all cursors at position `a_old_node' to `a_new_node'.
 		require
 			a_old_node_not_void: a_old_node /= Void
@@ -898,7 +898,7 @@ feature {NONE} -- Cursor movement
 			end
 		end
 
-	move_all_cursors_after is
+	move_all_cursors_after
 			-- Move `after' all cursors.
 		local
 			l_cursor: like new_cursor
@@ -918,7 +918,7 @@ feature {NONE} -- Cursor movement
 
 feature -- Iteration
 
-	do_all (an_action: PROCEDURE [ANY, TUPLE [G]]) is
+	do_all (an_action: PROCEDURE [ANY, TUPLE [G]])
 			-- Apply `an_action' to every item, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the structure.)
 		local
@@ -934,7 +934,7 @@ feature -- Iteration
 			end
 		end
 
-	do_all_with_index (an_action: PROCEDURE [ANY, TUPLE [G, INTEGER]]) is
+	do_all_with_index (an_action: PROCEDURE [ANY, TUPLE [G, INTEGER]])
 			-- Apply `an_action' to every item, from first to last.
 			-- `an_action' receives the item and its index.
 			-- (Semantics not guaranteed if `an_action' changes the structure.)
@@ -954,7 +954,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
+	do_if (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
 		local
@@ -972,7 +972,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if_with_index (an_action: PROCEDURE [ANY, TUPLE [G, INTEGER]]; a_test: FUNCTION [ANY, TUPLE [G, INTEGER], BOOLEAN]) is
+	do_if_with_index (an_action: PROCEDURE [ANY, TUPLE [G, INTEGER]]; a_test: FUNCTION [ANY, TUPLE [G, INTEGER], BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
 			-- `an_action' and `a_test' receive the item and its index.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
@@ -994,7 +994,7 @@ feature -- Iteration
 			end
 		end
 
-	there_exists (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+	there_exists (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for at least one item?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		local
@@ -1013,7 +1013,7 @@ feature -- Iteration
 			end
 		end
 
-	for_all (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+	for_all (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for all items?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		local
@@ -1035,7 +1035,7 @@ feature -- Iteration
 
 feature {NONE} -- Iteration
 
-	do_all_with_key (an_action: PROCEDURE [ANY, TUPLE [G, K]]) is
+	do_all_with_key (an_action: PROCEDURE [ANY, TUPLE [G, K]])
 			-- Apply `an_action' to every item, from first to last.
 			-- `an_action' receives the item and its key.
 			-- (Semantics not guaranteed if `an_action' changes the structure.)
@@ -1054,7 +1054,7 @@ feature {NONE} -- Iteration
 			end
 		end
 
-	do_if_with_key (an_action: PROCEDURE [ANY, TUPLE [G, K]]; a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN]) is
+	do_if_with_key (an_action: PROCEDURE [ANY, TUPLE [G, K]]; a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
 			-- `an_action' and `a_test' receive the item and its key.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
@@ -1076,7 +1076,7 @@ feature {NONE} -- Iteration
 			end
 		end
 
-	there_exists_with_key (a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN]): BOOLEAN is
+	there_exists_with_key (a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for at least one item and its key?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		require
@@ -1097,7 +1097,7 @@ feature {NONE} -- Iteration
 			end
 		end
 
-	for_all_with_key (a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN]): BOOLEAN is
+	for_all_with_key (a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for all items and their keys?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		require
@@ -1121,7 +1121,7 @@ feature {NONE} -- Iteration
 
 feature {NONE} -- Element change
 
-	internal_put (v: G; k: K) is
+	internal_put (v: G; k: K)
 			-- Associate `v' with key `k'.
 			-- (Performance: O(height).)
 		require
@@ -1176,7 +1176,7 @@ feature {NONE} -- Element change
 			one_more: (not old has_key (k)) implies (count = old count + 1)
 		end
 
-	internal_put_new (v: G; k: K) is
+	internal_put_new (v: G; k: K)
 			-- Associate `v' with key `k'.
 			-- (Performance: O(height).)
 		require
@@ -1225,7 +1225,7 @@ feature {NONE} -- Element change
 
 feature {NONE} -- Element change
 
-	on_node_added (a_node: like root_node) is
+	on_node_added (a_node: like root_node)
 			-- `a_node' was just added to the binary search tree.
 			-- This feature is basically used by balanced binary
 			-- search tree variants. They are informed which
@@ -1240,7 +1240,7 @@ feature {NONE} -- Element change
 
 feature -- Removal
 
-	remove (v: K) is
+	remove (v: K)
 			-- Remove the item with key `v'.
 			-- (Performance: O(height).)
 		local
@@ -1260,7 +1260,7 @@ feature -- Removal
 			not_is_removing: not is_removing
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items and move all
 			-- cursors `off'.
 		do
@@ -1274,7 +1274,7 @@ feature -- Removal
 
 feature {NONE} -- Removal
 
-	remove_node (a_node: like root_node) is
+	remove_node (a_node: like root_node)
 			-- Remove `a_node' from the tree.
 		require
 			a_node_not_void: a_node /= Void
@@ -1316,7 +1316,7 @@ feature {NONE} -- Removal
 			end
 		end
 
-	remove_successor_node (a_successor: like root_node) is
+	remove_successor_node (a_successor: like root_node)
 			-- Remove `a_successor'. Take care that the child
 			-- is not lost.
 		require
@@ -1350,7 +1350,7 @@ feature {NONE} -- Removal
 			a_successor_has_no_right_child: a_successor.right_child = Void
 		end
 
-	remove_childless_node (a_node: like root_node): like root_node is
+	remove_childless_node (a_node: like root_node): like root_node
 			-- Remove `a_node' from the tree and
 			-- return its successor.
 		require
@@ -1389,7 +1389,7 @@ feature {NONE} -- Removal
 			end
 		end
 
-	remove_node_with_left_child (a_node: like root_node): like root_node is
+	remove_node_with_left_child (a_node: like root_node): like root_node
 			-- Remove `a_node' from the tree and return
 			-- its successor.
 		require
@@ -1424,7 +1424,7 @@ feature {NONE} -- Removal
 			end
 		end
 
-	on_node_for_removal_not_found (a_key: K) is
+	on_node_for_removal_not_found (a_key: K)
 			-- There is no node in the tree which
 			-- has `a_key' as key.
 		do
@@ -1432,7 +1432,7 @@ feature {NONE} -- Removal
 
 feature {NONE} -- Removal
 
-	on_root_node_removed is
+	on_root_node_removed
 			-- The node that was previsously the `root_node'
 			-- was removed. The old `root_node' had only
 			-- one child and this child is now the `root_node'.
@@ -1443,7 +1443,7 @@ feature {NONE} -- Removal
 		deferred
 		end
 
-	on_node_removed (a_old_node, a_node: like root_node; a_was_left_child: BOOLEAN) is
+	on_node_removed (a_old_node, a_node: like root_node; a_was_left_child: BOOLEAN)
 			-- `a_old_node' was just removed from the tree.
 			-- The parent of `a_old_node' was `a_node'.
 			-- Depending on `a_was_left_child' `a_old_node'
@@ -1461,7 +1461,7 @@ feature {NONE} -- Removal
 
 feature {NONE} -- Basic operation
 
-	rotate_right (a_node: like root_node) is
+	rotate_right (a_node: like root_node)
 			-- Apply a right rotation to `a_node'. The tree height
 			-- is decreased on the left and increased on the right
 			-- hand side.
@@ -1523,7 +1523,7 @@ feature {NONE} -- Basic operation
 			root_node_corrected: (a_node = root_node) = old (a_node.parent = root_node)
 		end
 
-	rotate_left (a_node: like root_node) is
+	rotate_left (a_node: like root_node)
 			-- Apply a left rotation to `a_node'. The tree height
 			-- is decreased on the right and increased on the left
 			-- hand side.
@@ -1585,7 +1585,7 @@ feature {NONE} -- Basic operation
 			root_node_corrected: (a_node = root_node) = old (a_node.parent = root_node)
 		end
 
-	rotate_right_left (a_node: like root_node) is
+	rotate_right_left (a_node: like root_node)
 			--
 			-- (grand_parent)       (grand_parent)
 			--      (|)                  (|)
@@ -1653,7 +1653,7 @@ feature {NONE} -- Basic operation
 			d_correct: a_node.right_child = old (a_node.right_child)
 		end
 
-	rotate_left_right (a_node: like root_node) is
+	rotate_left_right (a_node: like root_node)
 			--  (grand_parent)       (grand_parent)
 			--       (|)                  (|)
 			--     parent                child
@@ -1720,7 +1720,7 @@ feature {NONE} -- Basic operation
 			d_correct: a_node.parent.right_child.right_child = old (a_node.parent.right_child)
 		end
 
-	search_node, search_node_for_removal (a_key: K) is
+	search_node, search_node_for_removal (a_key: K)
 			-- Set `found_node' to the node whose `key' is
 			-- neither less nor greater than `a_key'.
 			-- (Performance: O(height).)
@@ -1763,7 +1763,7 @@ feature {NONE} -- Basic operation
 			found_node := l_found_node
 		end
 
-	search_insert_position (a_key: K) is
+	search_insert_position (a_key: K)
 			-- Where would `a_key' need to be inserted?
 			-- If there is a node in the tree whose
 			-- `key' is `order_equal' to `a_key', then
@@ -1840,7 +1840,7 @@ feature {NONE} -- Basic operation
 			no_right_child: not insert_position_is_left and not exact_insert_position_found implies found_node.right_child = Void
 		end
 
-	unset_found_node is
+	unset_found_node
 			-- Set `found_node' to Void.
 		do
 			found_node := Void

@@ -32,7 +32,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	parse (packed_string: STRING) is
+	parse (packed_string: STRING)
 			-- Parse `packed_string'.
 		local
 			zero_code: INTEGER

@@ -37,14 +37,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new external ID.
 		do
 		end
 
 feature -- Status report
 
-	is_public: BOOLEAN is
+	is_public: BOOLEAN
 			-- Is public_id defined?
 		do
 			Result := public_id /= Void
@@ -61,7 +61,7 @@ feature -- Access
 	public_id: STRING
 			-- PUBLIC
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code
 		do
 			if public_id /= Void then
@@ -74,7 +74,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_base (a_base: like base) is
+	set_base (a_base: like base)
 			-- Set base URI.
 		do
 			base := a_base
@@ -82,7 +82,7 @@ feature -- Setting
 			base_set: base = a_base
 		end
 
-	set_system (a_system_id: like system_id) is
+	set_system (a_system_id: like system_id)
 			-- Set SYSTEM.
 		do
 			system_id := a_system_id
@@ -90,7 +90,7 @@ feature -- Setting
 			system_id_set: system_id = a_system_id
 		end
 
-	set_public (a_public_id: like public_id) is
+	set_public (a_public_id: like public_id)
 			-- Set PUBLIC.
 		do
 			public_id := a_public_id
@@ -100,14 +100,14 @@ feature -- Setting
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Print as in input.
 		do
 			if public_id /= Void then
 				Result := STRING_.cloned_string ("PUBLIC ")
 				Result := STRING_.appended_string (Result, public_id)
 			end
-			
+
 			if system_id /= Void then
 				if Result = Void then
 					Result := STRING_.cloned_string ("SYSTEM")

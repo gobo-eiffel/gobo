@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_vscn0a (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_class1, a_class2: ET_NAMED_CLASS) is
+	make_vscn0a (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_class1, a_class2: ET_NAMED_CLASS)
 			-- Create a new VSCN error: two different classes `a_class1'
 			-- and `a_class2' with the same name corresponding to `a_current_class'
 			-- in `a_universe'.
@@ -86,7 +86,7 @@ feature {NONE} -- Initialization
 			-- dollar12: $12 = second class filename if any
 		end
 
-	make_vscn0b (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_override_class: ET_NAMED_CLASS) is
+	make_vscn0b (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_override_class: ET_NAMED_CLASS)
 			-- Create a new VSCN error: built-in class "NONE" cannot be overridden
 			-- but `a_override_class' corresponding to `a_current_class' in `a_universe'.
 			--
@@ -131,7 +131,7 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = override class filename if any
 		end
 
-	make_vscn0c (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_class1, a_class2: ET_NAMED_CLASS) is
+	make_vscn0c (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_class1, a_class2: ET_NAMED_CLASS)
 			-- Create a new VSCN error:  class `a_class1' appearing in a .NET assembly
 			-- cannot be overridden by `a_class2' corresponding to `a_current_class'
 			-- in `a_universe'.
@@ -190,7 +190,7 @@ feature {NONE} -- Initialization
 			-- dollar11: $11 = second class filename if any
 		end
 
-	make_vscn0d (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_class1, a_class2: ET_MASTER_CLASS) is
+	make_vscn0d (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_class1, a_class2: ET_MASTER_CLASS)
 			-- Create a new VSCN error: class `a_current_class' in `a_universe' cannot
 			-- be overridden both by class `a_class1' and by class `a_class2'.
 			--
@@ -238,7 +238,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_universe (a_universe: like universe) is
+	set_universe (a_universe: like universe)
 			-- Set `universe' to `a_universe'.
 		require
 			a_universe_not_void: a_universe /= Void
@@ -250,19 +250,19 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	vscn0a_default_template: STRING is "[$1] $2 $3: class $4 name clash between class $5 in $6 '$7'$8 and class $9 in $10 '$11'$12."
-	vscn0b_default_template: STRING is "[$1] $2 $3: built-in class NONE cannot be overridden by class $5 in $6 '$7'$8."
-	vscn0c_default_template: STRING is "[$1] $2 $3: assembly class $4 appearing as class $5 in assembly '$6' cannot be overridden by class $8 in $9 '$10'$11."
-	vscn0d_default_template: STRING is "[$1] $2 $3: class $4 cannot be overridden both by class $5 in $6 '$7' and by class $8 in $9 '$10'."
+	vscn0a_default_template: STRING = "[$1] $2 $3: class $4 name clash between class $5 in $6 '$7'$8 and class $9 in $10 '$11'$12."
+	vscn0b_default_template: STRING = "[$1] $2 $3: built-in class NONE cannot be overridden by class $5 in $6 '$7'$8."
+	vscn0c_default_template: STRING = "[$1] $2 $3: assembly class $4 appearing as class $5 in assembly '$6' cannot be overridden by class $8 in $9 '$10'$11."
+	vscn0d_default_template: STRING = "[$1] $2 $3: class $4 cannot be overridden both by class $5 in $6 '$7' and by class $8 in $9 '$10'."
 			-- Default templates
 
-	vscn_etl_code: STRING is "VSCN"
+	vscn_etl_code: STRING = "VSCN"
 			-- ETL validity codes
 
-	vscn0a_template_code: STRING is "vscn0a"
-	vscn0b_template_code: STRING is "vscn0b"
-	vscn0c_template_code: STRING is "vscn0c"
-	vscn0d_template_code: STRING is "vscn0d"
+	vscn0a_template_code: STRING = "vscn0a"
+	vscn0b_template_code: STRING = "vscn0b"
+	vscn0c_template_code: STRING = "vscn0c"
+	vscn0d_template_code: STRING = "vscn0d"
 			-- Template error codes
 
 invariant

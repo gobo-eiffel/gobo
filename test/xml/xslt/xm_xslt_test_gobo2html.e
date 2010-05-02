@@ -29,7 +29,7 @@ create
 
 feature -- Test
 
-	test_transform2html is
+	test_transform2html
 			-- Transform structure-index.xml with gobo2html.xsl.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -63,7 +63,7 @@ feature -- Test
 			assert ("Correct result", STRING_.same_string (l_output.last_output + "%N", last_latin1_string))
 		end
 
-	test_transform2xml is
+	test_transform2xml
 			-- Transform structure-index.xml with gobo2xml.xsl.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -96,7 +96,7 @@ feature -- Test
 			assert ("Correct result", STRING_.same_string (l_output.last_output, last_latin1_string))
 		end
 
-	test_transform2xhtml is
+	test_transform2xhtml
 			-- Transform structure-index.xml with gobo2xhtml.xsl.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -132,7 +132,7 @@ feature -- Test
 
 feature {NONE} -- Debug
 
-	hexadecimal_string (l_string: STRING): STRING is
+	hexadecimal_string (l_string: STRING): STRING
 			-- Version of `l_string' where every character is converted to it's code's hex representation
 		require
 			string_not_void: l_string /= Void
@@ -155,7 +155,7 @@ feature {NONE} -- Debug
 			result_not_void: Result /= Void
 		end
 
-	dummy_uri: UT_URI is
+	dummy_uri: UT_URI
 			-- Dummy URI
 		once
 			create Result.make ("dummy:")
@@ -163,7 +163,7 @@ feature {NONE} -- Debug
 			dummy_uri_is_absolute: Result /= Void and then Result.is_absolute
 		end
 
-	gobo2html_xsl_uri: UT_URI is
+	gobo2html_xsl_uri: UT_URI
 			-- URI of file 'gobo2html.xsl'
 		local
 			l_path: STRING
@@ -174,7 +174,7 @@ feature {NONE} -- Debug
 			gobo2html_xsl_uri_not_void: Result /= Void
 		end
 
-	structure_index_xml_uri: UT_URI is
+	structure_index_xml_uri: UT_URI
 			-- URI of file 'structure-index.xml'
 		local
 			l_path: STRING
@@ -185,7 +185,7 @@ feature {NONE} -- Debug
 			structure_index_xml_uri_not_void: Result /= Void
 		end
 
-	from_saxon_html_filename: STRING is
+	from_saxon_html_filename: STRING
 			-- Filename 'from-saxon.html'
 		once
 			Result := "from-saxon.html"
@@ -194,7 +194,7 @@ feature {NONE} -- Debug
 			from_saxon_html_filename_not_empty: not Result.is_empty
 		end
 
-	gobo2xml_xsl_uri: UT_URI is
+	gobo2xml_xsl_uri: UT_URI
 			-- URI of file 'gobo2xml.xsl'
 		local
 			l_path: STRING
@@ -205,7 +205,7 @@ feature {NONE} -- Debug
 			gobo2xml_xsl_uri_not_void: Result /= Void
 		end
 
-	from_saxon_xml_filename: STRING is
+	from_saxon_xml_filename: STRING
 			-- Filename 'from-saxon.xml'
 		once
 			Result := "from-saxon.xml"
@@ -214,7 +214,7 @@ feature {NONE} -- Debug
 			from_saxon_xml_filename_not_empty: not Result.is_empty
 		end
 
-	structure_index_xhtml_filename: STRING is
+	structure_index_xhtml_filename: STRING
 			-- Filename 'structure-index.xhtml'
 		once
 			Result := "structure-index.xhtml"
@@ -223,7 +223,7 @@ feature {NONE} -- Debug
 			structure_index_xhtml_filename_not_empty: not Result.is_empty
 		end
 
-	gobo2xhtml_xsl_uri: UT_URI is
+	gobo2xhtml_xsl_uri: UT_URI
 			-- URI of file 'gobo2xhtml.xsl'
 		local
 			l_path: STRING

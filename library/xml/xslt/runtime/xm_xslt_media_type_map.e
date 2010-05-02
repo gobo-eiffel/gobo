@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Do nothing for now.
 		do
 		end
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Element change
 
-	check_fragment_processing_rules (a_media_type: UT_MEDIA_TYPE; is_xhtml_spoofing: BOOLEAN) is
+	check_fragment_processing_rules (a_media_type: UT_MEDIA_TYPE; is_xhtml_spoofing: BOOLEAN)
 			-- Check which fragment-identifier processing rules apply to `a_media_type'
 		require
 			media_type_not_void:  a_media_type /= Void

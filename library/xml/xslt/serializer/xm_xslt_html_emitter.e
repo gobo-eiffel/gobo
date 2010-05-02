@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_serializer: XM_XSLT_SERIALIZER; a_outputter: XM_OUTPUT; a_output_properties: XM_XSLT_OUTPUT_PROPERTIES) is
+	make (a_serializer: XM_XSLT_SERIALIZER; a_outputter: XM_OUTPUT; a_output_properties: XM_XSLT_OUTPUT_PROPERTIES)
 			-- Initialize `Current'.
 		require
 			serializer_not_void: a_serializer /= Void
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 
 feature -- Events
 
-	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
+	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER)
 			-- Notify the start of an element
 		do
 			Precursor (a_name_code, a_type_code, properties)
@@ -74,7 +74,7 @@ feature -- Events
 			end
 		end
 
-	start_content is
+	start_content
 			-- Notify the start of the content, that is, the completion of all attributes and namespaces.
 		do
 			if is_open_start_tag then
@@ -83,7 +83,7 @@ feature -- Events
 			mark_as_written
 		end
 
-	end_element is
+	end_element
 			-- Notify the end of an element.
 		do
 			in_script := in_script - 1
@@ -97,7 +97,7 @@ feature -- Events
 			mark_as_written
 		end
 
-	notify_characters (a_chars: STRING; a_properties: INTEGER) is
+	notify_characters (a_chars: STRING; a_properties: INTEGER)
 			-- Notify character data.
 		local
 			l_options: INTEGER
@@ -111,7 +111,7 @@ feature -- Events
 			Precursor (a_chars, l_options)
 		end
 
-	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
+	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER)
 			-- Notify a processing instruction.
 		local
 			a_string: STRING
@@ -136,7 +136,7 @@ feature -- Events
 
 feature {NONE} -- Implementation
 
-	boolean_attributes_set: DS_HASH_SET [STRING] is
+	boolean_attributes_set: DS_HASH_SET [STRING]
 			-- Names of attributes that are sometimes boolean valued
 
 		once
@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 			Result.set_equality_tester (string_equality_tester)
 		end
 
-	boolean_combinations_set: DS_HASH_SET [STRING] is
+	boolean_combinations_set: DS_HASH_SET [STRING]
 		-- Names of elements-attribute pairs that are boolean valued
 		once
 			create Result.make (24)
@@ -157,10 +157,10 @@ feature {NONE} -- Implementation
 	escape_uri_attributes: BOOLEAN
 			-- Should the html and xhtml methods escape non-ASCII charaters in URI attribute values?
 
-	Native_representation: INTEGER is 1
-	Entity_representation: INTEGER is 2
-	Decimal_representation: INTEGER is 3
-	Hexadecimal_representation: INTEGER is 4
+	Native_representation: INTEGER = 1
+	Entity_representation: INTEGER = 2
+	Decimal_representation: INTEGER = 3
+	Hexadecimal_representation: INTEGER = 4
 			-- Character representation methods
 
 	non_ascii_representation: INTEGER
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 	element_uri_code: INTEGER -- _16
 			-- Namespace URI of current element
 
-	latin1_entities: ARRAY [STRING] is
+	latin1_entities: ARRAY [STRING]
 			-- latin-1 entity names
 		once
 			create Result.make (161, 255)
@@ -279,7 +279,7 @@ feature {NONE} -- Implementation
 			Result.put ("yuml", 255)
 		end
 
-	set_boolean_attribute (an_element, an_attribute: STRING) is
+	set_boolean_attribute (an_element, an_attribute: STRING)
 			-- Mark `an_attribute' as boolean when used with `an_element'.
 		require
 			element_name_not_void: an_element /= Void
@@ -291,7 +291,7 @@ feature {NONE} -- Implementation
 			boolean_combinations_set.put ((an_element + "+" + an_attribute).as_lower)
 		end
 
-	is_boolean_attribute (an_element, an_attribute, a_value: STRING): BOOLEAN is
+	is_boolean_attribute (an_element, an_attribute, a_value: STRING): BOOLEAN
 			-- Is `an_attribute' boolean valued?
 		require
 			element_name_not_void: an_element /= Void
@@ -305,7 +305,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	make_boolean_attributes is
+	make_boolean_attributes
 			-- Build sets for determining boolean-valued attributes
 		once
 			set_boolean_attribute ("area", "nohref")
@@ -334,7 +334,7 @@ feature {NONE} -- Implementation
 			set_boolean_attribute ("ul", "compact")
 		end
 
-	open_document is
+	open_document
 			-- Open output document.
 		local
 			a_system_id, a_public_id: STRING
@@ -405,7 +405,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	representation_code (a_representation: STRING; for_excluded: BOOLEAN): INTEGER is
+	representation_code (a_representation: STRING; for_excluded: BOOLEAN): INTEGER
 			-- Representation code for character representations
 		require
 			representation_string_not_void: a_representation /= Void
@@ -423,7 +423,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	output_attribute (an_element_name_code: INTEGER; an_attribute_qname: STRING; a_value: STRING; properties: INTEGER) is
+	output_attribute (an_element_name_code: INTEGER; an_attribute_qname: STRING; a_value: STRING; properties: INTEGER)
 			-- Output attribute.
 			-- Overrides the XML behaviour if the name and value are the same
 			--  (we assume this is a boolean attribute to be minimised), or if the value is a URL.
@@ -439,10 +439,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	hex_characters: STRING is "0123456789ABCDEF"
+	hex_characters: STRING = "0123456789ABCDEF"
 			-- Hexadecimal characters
 
-	output_escape (a_character_string: STRING; in_attribute: BOOLEAN) is
+	output_escape (a_character_string: STRING; in_attribute: BOOLEAN)
 			-- Output `a_character_string', escaping special characters.
 		local
 			disabled: BOOLEAN
@@ -501,7 +501,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	output_special_ascii (a_character_code, a_second_character_code: INTEGER; in_attribute: BOOLEAN) is
+	output_special_ascii (a_character_code, a_second_character_code: INTEGER; in_attribute: BOOLEAN)
 			-- Output `a_character_code'.
 		do
 			if in_attribute then
@@ -522,7 +522,7 @@ feature {NONE} -- Implementation
 				elseif a_character_code = 13 then
 					output ("&#xD;")                -- CR
 				elseif a_character_code = 9 then
-					output ("&#9;")                 -- TAB					
+					output ("&#9;")                 -- TAB
 				end
 			else -- not in attribute
 				if a_character_code = 60 then
@@ -537,7 +537,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	output_non_ascii (a_character_code: INTEGER; in_attribute: BOOLEAN) is
+	output_non_ascii (a_character_code: INTEGER; in_attribute: BOOLEAN)
 			-- Output non-ASCII character.
 		require
 			non_ascii_character: a_character_code > 127
@@ -566,7 +566,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	maximal_ordinary_string (a_character_string: STRING; a_start_index: INTEGER; special_characters: ARRAY [BOOLEAN]): INTEGER is
+	maximal_ordinary_string (a_character_string: STRING; a_start_index: INTEGER; special_characters: ARRAY [BOOLEAN]): INTEGER
 			-- Maximal sequence of ordinary characters
 		local
 			an_index, a_code: INTEGER

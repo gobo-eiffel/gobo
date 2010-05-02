@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant.
 		do
 			create format_map.make_map (5)
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_decimal_format: XM_XSLT_DECIMAL_FORMAT_ENTRY is
+	default_decimal_format: XM_XSLT_DECIMAL_FORMAT_ENTRY
 			-- Default decimal format
 		do
 			if default_format /= Void then
@@ -39,7 +39,7 @@ feature -- Access
 			default_decimal_format_not_void: Result /= Void
 		end
 
-	named_format (a_fingerprint: INTEGER): XM_XSLT_DECIMAL_FORMAT_ENTRY is
+	named_format (a_fingerprint: INTEGER): XM_XSLT_DECIMAL_FORMAT_ENTRY
 			-- Decimal-format named by `a_fingerprint'
 		require
 			positive_fingerprint: a_fingerprint > -1
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_named_format (a_fingerprint: INTEGER): BOOLEAN is
+	has_named_format (a_fingerprint: INTEGER): BOOLEAN
 		-- Does `Current' have a decimal format named by `a_fingerprint'?
 		require
 			nearly_positive_fingerprint: a_fingerprint > -2
@@ -62,7 +62,7 @@ feature -- Status report
 			end
 		end
 
-	has (a_fingerprint: INTEGER): BOOLEAN is
+	has (a_fingerprint: INTEGER): BOOLEAN
 			-- Does `Current' have an entry for `a_fingerprint'?
 		require
 			nearly_positive_fingerprint: a_fingerprint > -2
@@ -70,13 +70,13 @@ feature -- Status report
 			Result := format_map.has (a_fingerprint)
 		end
 
-	is_default_format_set: BOOLEAN is
+	is_default_format_set: BOOLEAN
 			-- Has the default decimal format been declared yet?
 		do
 			Result := default_format /= Void
 		end
 
-	is_different_from_default_format (a_default_format: XM_XSLT_DECIMAL_FORMAT_ENTRY): BOOLEAN is
+	is_different_from_default_format (a_default_format: XM_XSLT_DECIMAL_FORMAT_ENTRY): BOOLEAN
 			-- Does `a_default_format' differ from `default_decimal_format' by any value?
 		require
 			is_a_default_format: a_default_format /= Void and then a_default_format.fingerprint = -1
@@ -88,7 +88,7 @@ feature -- Status report
 			end
 		end
 
-	is_duplicate_format (a_format: XM_XSLT_DECIMAL_FORMAT_ENTRY): BOOLEAN is
+	is_duplicate_format (a_format: XM_XSLT_DECIMAL_FORMAT_ENTRY): BOOLEAN
 			-- Does `a_format' differ from all other formats by any value?
 		require
 			is_not_a_default_format: a_format /= Void and then a_format.fingerprint > - 1 and then has_named_format (a_format.fingerprint)
@@ -98,7 +98,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_default_format (a_default_format: XM_XSLT_DECIMAL_FORMAT_ENTRY) is
+	set_default_format (a_default_format: XM_XSLT_DECIMAL_FORMAT_ENTRY)
 			-- Set the default decimal_format
 		require
 			is_a_default_format: a_default_format /= Void and then a_default_format.fingerprint = -1
@@ -112,7 +112,7 @@ feature -- Element change
 			default_format_set: default_format = a_default_format
 		end
 
-	set_named_format (a_format: XM_XSLT_DECIMAL_FORMAT_ENTRY) is
+	set_named_format (a_format: XM_XSLT_DECIMAL_FORMAT_ENTRY)
 			-- Add a named decimal format.
 			-- Duplicates are not allowed unless the values are all equal,
 			-- or there is another of higher precedence.
@@ -148,7 +148,7 @@ feature -- Element change
 			named_format_added: has_named_format (a_format.fingerprint)
 		end
 
-	fixup_default_default is
+	fixup_default_default
 			-- Call at the end of stylesheet compilation to fix up any format-number() calls
 			--  to the "default default" decimal format.
 		do
@@ -157,7 +157,7 @@ feature -- Element change
 			end
 		end
 
-	register_usage (a_fingerprint: INTEGER; a_callback: XM_XSLT_FORMAT_NUMBER) is
+	register_usage (a_fingerprint: INTEGER; a_callback: XM_XSLT_FORMAT_NUMBER)
 			-- Register a format-number() function call that uses a particular decimal format.
 			-- This allows early compile time resolution where possible,
 			--  even in the case of a forwards reference
@@ -204,7 +204,7 @@ feature {NONE} -- Implementation
 	default_format: XM_XSLT_DECIMAL_FORMAT_ENTRY
 			-- Default format
 
-	all_defaults: XM_XSLT_DECIMAL_FORMAT_ENTRY is
+	all_defaults: XM_XSLT_DECIMAL_FORMAT_ENTRY
 			-- Default default format
 		once
 			create Result.make (-1, -1000000)

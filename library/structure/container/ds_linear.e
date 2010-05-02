@@ -25,7 +25,7 @@ inherit
 
 feature -- Access
 
-	first: G is
+	first: G
 			-- First item in container
 		require
 			not_empty: not is_empty
@@ -34,14 +34,14 @@ feature -- Access
 			has_first: has (Result)
 		end
 
-	new_cursor: DS_LINEAR_CURSOR [G] is
+	new_cursor: DS_LINEAR_CURSOR [G]
 			-- New external cursor for traversal
 		deferred
 		end
 
 feature -- Status report
 
-	is_first: BOOLEAN is
+	is_first: BOOLEAN
 			-- Is internal cursor on first item?
 		do
 			Result := cursor_is_first (internal_cursor)
@@ -51,13 +51,13 @@ feature -- Status report
 			definition: Result implies (item_for_iteration = first)
 		end
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Is there no valid position to right of internal cursor?
 		do
 			Result := cursor_after (internal_cursor)
 		end
 
-	has (v: G): BOOLEAN is
+	has (v: G): BOOLEAN
 			-- Does container include `v'?
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -75,7 +75,7 @@ feature -- Status report
 
 feature -- Measurement
 
-	occurrences (v: G): INTEGER is
+	occurrences (v: G): INTEGER
 			-- Number of times `v' appears in container
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -98,7 +98,7 @@ feature -- Measurement
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Move internal cursor to first position.
 		do
 			cursor_start (internal_cursor)
@@ -107,7 +107,7 @@ feature -- Cursor movement
 			not_empty_behavior: not is_empty implies is_first
 		end
 
-	forth is
+	forth
 			-- Move internal cursor to next position.
 		require
 			not_after: not after
@@ -115,7 +115,7 @@ feature -- Cursor movement
 			cursor_forth (internal_cursor)
 		end
 
-	search_forth (v: G) is
+	search_forth (v: G)
 			-- Move internal cursor to first position at or after current
 			-- position where `item_for_iteration' and `v' are equal.
 			-- (Use `equality_tester''s comparison criterion
@@ -127,7 +127,7 @@ feature -- Cursor movement
 			cursor_search_forth (internal_cursor, v)
 		end
 
-	go_after is
+	go_after
 			-- Move internal cursor to `after' position.
 		do
 			cursor_go_after (internal_cursor)
@@ -137,13 +137,13 @@ feature -- Cursor movement
 
 feature -- Iteration
 
-	do_all (an_action: PROCEDURE [ANY, TUPLE [G]]) is
+	do_all (an_action: PROCEDURE [ANY, TUPLE [G]])
 			-- Apply `an_action' to every item, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the structure.)
 		deferred
 		end
 
-	do_all_with_index (an_action: PROCEDURE [ANY, TUPLE [G, INTEGER]]) is
+	do_all_with_index (an_action: PROCEDURE [ANY, TUPLE [G, INTEGER]])
 			-- Apply `an_action' to every item, from first to last.
 			-- `an_action' receives the item and its index.
 			-- (Semantics not guaranteed if `an_action' changes the structure.)
@@ -152,13 +152,13 @@ feature -- Iteration
 		deferred
 		end
 
-	do_if (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
+	do_if (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
 		deferred
 		end
 
-	do_if_with_index (an_action: PROCEDURE [ANY, TUPLE [G, INTEGER]]; a_test: FUNCTION [ANY, TUPLE [G, INTEGER], BOOLEAN]) is
+	do_if_with_index (an_action: PROCEDURE [ANY, TUPLE [G, INTEGER]]; a_test: FUNCTION [ANY, TUPLE [G, INTEGER], BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
 			-- `an_action' and `a_test' receive the item and its index.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
@@ -170,7 +170,7 @@ feature -- Iteration
 
 feature -- Duplication
 
-	to_array: ARRAY [G] is
+	to_array: ARRAY [G]
 			-- Array containing the same items as current
 			-- container in the same order
 		local
@@ -195,7 +195,7 @@ feature -- Duplication
 
 feature {DS_CURSOR} -- Cursor implementation
 
-	cursor_off (a_cursor: like new_cursor): BOOLEAN is
+	cursor_off (a_cursor: like new_cursor): BOOLEAN
 			-- Is there no item at `a_cursor' position?
 		do
 			Result := cursor_after (a_cursor)
@@ -203,7 +203,7 @@ feature {DS_CURSOR} -- Cursor implementation
 
 feature {DS_LINEAR_CURSOR} -- Cursor implementation
 
-	cursor_is_first (a_cursor: like new_cursor): BOOLEAN is
+	cursor_is_first (a_cursor: like new_cursor): BOOLEAN
 			-- Is `a_cursor' on first item?
 		require
 			a_cursor_not_void: a_cursor /= Void
@@ -215,7 +215,7 @@ feature {DS_LINEAR_CURSOR} -- Cursor implementation
 			definition: Result implies (cursor_item (a_cursor) = first)
 		end
 
-	cursor_after (a_cursor: like new_cursor): BOOLEAN is
+	cursor_after (a_cursor: like new_cursor): BOOLEAN
 			-- Is there no valid position to right of `a_cursor'?
 		require
 			a_cursor_not_void: a_cursor /= Void
@@ -223,7 +223,7 @@ feature {DS_LINEAR_CURSOR} -- Cursor implementation
 		deferred
 		end
 
-	cursor_start (a_cursor: like new_cursor) is
+	cursor_start (a_cursor: like new_cursor)
 			-- Move `a_cursor' to first position.
 		require
 			a_cursor_not_void: a_cursor /= Void
@@ -234,7 +234,7 @@ feature {DS_LINEAR_CURSOR} -- Cursor implementation
 			not_empty_behavior: not is_empty implies cursor_is_first (a_cursor)
 		end
 
-	cursor_forth (a_cursor: like new_cursor) is
+	cursor_forth (a_cursor: like new_cursor)
 			-- Move `a_cursor' to next position.
 		require
 			a_cursor_not_void: a_cursor /= Void
@@ -243,7 +243,7 @@ feature {DS_LINEAR_CURSOR} -- Cursor implementation
 		deferred
 		end
 
-	cursor_search_forth (a_cursor: like new_cursor; v: G) is
+	cursor_search_forth (a_cursor: like new_cursor; v: G)
 			-- Move `a_cursor' to first position at or after its current
 			-- position where `cursor_item (a_cursor)' and `v' are equal.
 			-- (Use `equality_tester''s comparison criterion
@@ -256,7 +256,7 @@ feature {DS_LINEAR_CURSOR} -- Cursor implementation
 		deferred
 		end
 
-	cursor_go_after (a_cursor: like new_cursor) is
+	cursor_go_after (a_cursor: like new_cursor)
 			-- Move `a_cursor' to `after' position.
 		require
 			a_cursor_not_void: a_cursor /= Void

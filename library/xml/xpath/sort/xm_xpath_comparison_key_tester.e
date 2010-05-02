@@ -21,7 +21,7 @@ inherit
 
 feature -- Status report
 
-	test (v, u: XM_XPATH_COMPARISON_KEY): BOOLEAN is
+	test (v, u: XM_XPATH_COMPARISON_KEY): BOOLEAN
 			-- Are `v' and `u' considered equal?
 		do
 			if v = u then
@@ -34,6 +34,6 @@ feature -- Status report
 				Result := v.same_key (u)
 			end
 		end
-	
+
 end
-	
+

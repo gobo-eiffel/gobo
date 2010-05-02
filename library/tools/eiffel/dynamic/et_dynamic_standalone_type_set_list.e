@@ -25,7 +25,7 @@ create
 
 feature -- Access
 
-	item (i: INTEGER): ET_DYNAMIC_STANDALONE_TYPE_SET is
+	item (i: INTEGER): ET_DYNAMIC_STANDALONE_TYPE_SET
 			-- Item at index `i' in list
 		do
 			Result := storage.item (i)
@@ -33,7 +33,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_DYNAMIC_STANDALONE_TYPE_SET] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_DYNAMIC_STANDALONE_TYPE_SET]
 			-- Fixed array routines
 		once
 			create Result

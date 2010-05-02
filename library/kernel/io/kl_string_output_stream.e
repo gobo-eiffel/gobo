@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_string: STRING) is
+	make (a_string: STRING)
 			-- Create output to an existing string.
 		require
 			a_string_not_void: a_string /= Void
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			string_set: string = a_string
 		end
 
-	make_empty is
+	make_empty
 			-- Create string for output.
 		do
 			create string.make (256)
@@ -48,18 +48,18 @@ feature -- Access
 	string: STRING
 			-- String into which the output is stored
 
-	name: STRING is
+	name: STRING
 			-- Name of output stream
 		once
 			Result := "STRING"
 		end
 
-	eol: STRING is "%N"
+	eol: STRING = "%N"
 			-- Line separator
 
 feature -- Setting
 
-	set_string (a_string: STRING) is
+	set_string (a_string: STRING)
 			-- Set `string' to `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -71,7 +71,7 @@ feature -- Setting
 
 feature -- Status report
 
-	is_open_write: BOOLEAN is
+	is_open_write: BOOLEAN
 			-- Can characters be written to output stream?
 		do
 			Result := True
@@ -79,13 +79,13 @@ feature -- Status report
 
 feature -- Output
 
-	put_character (c: CHARACTER) is
+	put_character (c: CHARACTER)
 			-- Write `c' to output stream.
 		do
 			string.append_character (c)
 		end
 
-	put_string (a_string: STRING) is
+	put_string (a_string: STRING)
 			-- Write `a_string' to output stream.
 			-- Note: If `a_string' is a UC_STRING or descendant, then
 			-- write the bytes of its associated UTF unicode encoding.
@@ -95,7 +95,7 @@ feature -- Output
 
 feature -- Basic operations
 
-	flush is
+	flush
 			-- Do nothing (operation does not apply to string).
 		do
 		end

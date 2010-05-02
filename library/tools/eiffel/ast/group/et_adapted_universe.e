@@ -14,7 +14,7 @@ deferred class ET_ADAPTED_UNIVERSE
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_universe: like universe) is
+	make (a_name: STRING; a_universe: like universe)
 			-- Create a new adapted view of `a_universe'.
 		require
 			a_name_not_void: a_name /= Void
@@ -33,7 +33,7 @@ feature -- Access
 	name: STRING
 			-- Name of universe
 
-	lower_name: STRING is
+	lower_name: STRING
 			-- Lower-name of universe
 			-- (May return the same object as `name' if already in lower case.)
 		local
@@ -70,7 +70,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_classname_prefix (a_prefix: like classname_prefix) is
+	set_classname_prefix (a_prefix: like classname_prefix)
 			-- Set `classname_prefix' to `a_prefix'.
 		do
 			classname_prefix := a_prefix
@@ -78,7 +78,7 @@ feature -- Setting
 			classname_prefix_set: classname_prefix = a_prefix
 		end
 
-	set_class_renamings (a_renamings: like class_renamings) is
+	set_class_renamings (a_renamings: like class_renamings)
 			-- Set `class_renamings' to `a_renamings'.
 		require
 			no_void_old_class_renamings: a_renamings /= Void implies not a_renamings.has (Void)
@@ -91,7 +91,7 @@ feature -- Setting
 
 feature -- Exporting classes
 
-	export_classes (other_universe: ET_UNIVERSE) is
+	export_classes (other_universe: ET_UNIVERSE)
 			-- Export non-hidden classes locally declared in `universe'
 			-- so that they can be used in classes of `other_universe'.
 		require

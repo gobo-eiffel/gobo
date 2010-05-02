@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_element: like element; a_namespace_code: like namespace_code; a_position: like position) is
+	make (an_element: like element; a_namespace_code: like namespace_code; a_position: like position)
 			-- Establish invariant.
 		require
 			element_not_void: an_element /= Void
@@ -70,69 +70,69 @@ feature -- Access
 	name_code: INTEGER
 			-- Name code
 
-	is_namespace: BOOLEAN is
+	is_namespace: BOOLEAN
 			-- Is `Current' a namespace?
 		do
 			Result := True
 		end
-	
-	as_namespace: XM_XPATH_NAMESPACE_NODE is
+
+	as_namespace: XM_XPATH_NAMESPACE_NODE
 			-- `Current' seen as a node
 		do
 			Result := Current
 		end
 
-	string_value: STRING is
+	string_value: STRING
 		-- Value of the item as a string
 		do
 			Result := shared_name_pool.uri_from_namespace_code (namespace_code)
 		end
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Type
 		do
 			Result := namespace_node_kind_test
 		end
 
-	document: XM_XPATH_DOCUMENT is
+	document: XM_XPATH_DOCUMENT
 			-- Document that owns this node
 		do
 			Result := element.document
 		end
 
-	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE is
+	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE
 			-- Node sequence number (in document order);
 			-- Sequence numbers are monotonic but not consecutive.
 			-- The sequence number must be unique within the document.
 		do
 			create Result.make_from_sequence_number_with_double_offset (element.sequence_number, position)
 		end
-	
-	document_number: INTEGER is
+
+	document_number: INTEGER
 			-- Uniquely identifies the owning document.
 		do
 			Result := element.document_number
 		end
 
-	base_uri: STRING is
+	base_uri: STRING
 			-- Base URI
 		do
 			Result := Void
 		end
 
-	system_id: STRING is
+	system_id: STRING
 			-- SYSTEM identifier
 		do
 			Result := element.system_id
 		end
 
-	line_number: INTEGER is
+	line_number: INTEGER
 			-- Line number
 		do
 			Result := element.line_number
 		end
 
-	node_kind: STRING is
+	node_kind: STRING
 			-- Kind of node
 			-- Must be one of:
 			-- "document", "element", "attribute",
@@ -142,7 +142,7 @@ feature -- Access
 			Result := "namespace"
 		end
 
-	node_name: STRING is
+	node_name: STRING
 			-- Qualified name
 		do
 			if name_code /= -1 then
@@ -150,19 +150,19 @@ feature -- Access
 			end
 		end
 
-	parent: XM_XPATH_COMPOSITE_NODE is
+	parent: XM_XPATH_COMPOSITE_NODE
 			-- Parent of current node
 		do
 			Result := element
 		end
-	
-	root: XM_XPATH_NODE is
+
+	root: XM_XPATH_NODE
 			-- The root node for `Current'
 		do
 			Result := element.root
 		end
 
-	uri: STRING is
+	uri: STRING
 			-- URI part of the name of this node;
 			-- This is the URI corresponding to the prefix,
 			--  or the URI of the default namespace if appropriate.
@@ -170,25 +170,25 @@ feature -- Access
 			Result := ""
 		end
 
-	document_root: XM_XPATH_DOCUMENT is
+	document_root: XM_XPATH_DOCUMENT
 			-- The document node for `Current'
 		do
 			Result := element.document_root
 		end
 
-	atomized_value: XM_XPATH_VALUE is
+	atomized_value: XM_XPATH_VALUE
 			-- Typed value as atomic value or (unusually) sequence of atomic values.
 		do
 			create {XM_XPATH_STRING_VALUE} Result.make (string_value)
 		end
 
-	new_axis_iterator (an_axis_type: INTEGER): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
+	new_axis_iterator (an_axis_type: INTEGER): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
 			-- An enumeration over the nodes reachable by `an_axis_type' from this node
 		do
 			Result := new_axis_iterator_with_node_test (an_axis_type, any_node_test)
 		end
 
-	new_axis_iterator_with_node_test (an_axis_type: INTEGER; a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
+	new_axis_iterator_with_node_test (an_axis_type: INTEGER; a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
 			-- An enumeration over the nodes reachable by `an_axis_type' from this node;
 			-- Only nodes that match the pattern specified by `a_node_test' will be selected.
 		do
@@ -228,7 +228,7 @@ feature -- Access
 			end
 		end
 
-	path: STRING is
+	path: STRING
 			-- XPath expression for location within document;
 			-- Used for reporting purposes.
 		local
@@ -238,7 +238,7 @@ feature -- Access
 			if l_test.is_empty then
 
 				-- Default namespace: need a node-test that selects unnamed nodes only
-				
+
 				l_test := "*[not(local-name()]"
 			end
 			Result := STRING_.concat (parent.path, "/namespace::")
@@ -247,7 +247,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_same_node (other: XM_XPATH_NODE): BOOLEAN is
+	is_same_node (other: XM_XPATH_NODE): BOOLEAN
 			-- Does `Current' represent the same node in the tree as `other'?
 		do
 			Result := other.is_namespace
@@ -255,7 +255,7 @@ feature -- Comparison
 				and then namespace_code = other.as_namespace.namespace_code
 		end
 
-	three_way_comparison (other: XM_XPATH_NODE): INTEGER is
+	three_way_comparison (other: XM_XPATH_NODE): INTEGER
 			-- If current object equal to other, 0;
 			-- if smaller, -1; if greater, 1
 		do
@@ -276,7 +276,7 @@ feature -- Comparison
 
 feature -- Duplication
 
-	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
+	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN)
 			-- Copy `Current' to `a_receiver'.
 		do
 			a_receiver.notify_namespace (namespace_code, 0)
@@ -287,7 +287,7 @@ feature {XM_XPATH_NODE} -- Local
 	position: INTEGER
 			-- Position on namespace axis
 
-	is_possible_child: BOOLEAN is
+	is_possible_child: BOOLEAN
 			-- Can this node be a child of a document or element node?
 		do
 			Result := False

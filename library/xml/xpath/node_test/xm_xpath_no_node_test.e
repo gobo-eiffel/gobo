@@ -25,30 +25,30 @@ create {XM_XPATH_SHARED_NO_NODE_TEST}
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			original_text := "empty-sequence()"
 		end
 
 feature -- Access
 
-	is_no_node_test: BOOLEAN is
+	is_no_node_test: BOOLEAN
 			-- Is `Current' a no-node test?
 		do
 			Result := True
 		end
 
-	node_kind_mask: INTEGER is
+	node_kind_mask: INTEGER
 			-- Mask of types of nodes matched
 		do
 			Result := 0
 		end
-	
+
 feature -- Status report
 
 	-- Not sure if this next feature is needed
 
-	allows_text_nodes: BOOLEAN is
+	allows_text_nodes: BOOLEAN
 			-- Does this node test allow text nodes?
 		do
 			Result := False
@@ -56,7 +56,7 @@ feature -- Status report
 
 feature -- Matching
 
-	matches_node (a_node_kind: INTEGER; a_fingerprint: INTEGER; a_node_type: INTEGER): BOOLEAN is
+	matches_node (a_node_kind: INTEGER; a_fingerprint: INTEGER; a_node_type: INTEGER): BOOLEAN
 			-- Is this node test satisfied by a given node?
 		do
 			Result := False

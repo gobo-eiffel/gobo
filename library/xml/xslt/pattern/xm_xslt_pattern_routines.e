@@ -36,7 +36,7 @@ inherit
 
 feature {XM_XSLT_PATTERN} -- Implementation
 
-	xpath_to_xslt_node_test (a_xpath_node_test: XM_XPATH_NODE_TEST; a_context: XM_XPATH_STATIC_CONTEXT): XM_XSLT_NODE_TEST is
+	xpath_to_xslt_node_test (a_xpath_node_test: XM_XPATH_NODE_TEST; a_context: XM_XPATH_STATIC_CONTEXT): XM_XSLT_NODE_TEST
 			-- XSLT node-test-pattern from XPath node-test
 		require
 			node_test_not_void: a_xpath_node_test /= Void

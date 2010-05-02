@@ -21,7 +21,7 @@ inherit
 
 feature -- Status report
 
-	test (v, u: ET_ALIAS_NAME): BOOLEAN is
+	test (v, u: ET_ALIAS_NAME): BOOLEAN
 			-- Are `v' and `u' considered equal?
 			-- (Take infix and prefix properties into account.)
 		do

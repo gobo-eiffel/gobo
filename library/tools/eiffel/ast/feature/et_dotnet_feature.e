@@ -22,7 +22,7 @@ inherit
 
 feature -- Status report
 
-	is_frozen: BOOLEAN is
+	is_frozen: BOOLEAN
 			-- Has feature been declared as frozen?
 		do
 			Result := (frozen_keyword /= Void or not is_virtual)
@@ -34,7 +34,7 @@ feature -- Status report
 	is_static: BOOLEAN
 			-- Has feature been declared as static?
 
-	is_dotnet: BOOLEAN is True
+	is_dotnet: BOOLEAN = True
 			-- Is current feature a .NET feature?
 
 feature -- Access
@@ -48,7 +48,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_virtual (b: BOOLEAN) is
+	set_virtual (b: BOOLEAN)
 			-- Set `is_virtual' to `b'.
 		do
 			is_virtual := b
@@ -56,7 +56,7 @@ feature -- Status setting
 			virtual_set: is_virtual = b
 		end
 
-	set_static (b: BOOLEAN) is
+	set_static (b: BOOLEAN)
 			-- Set `is_static' to `b'.
 		do
 			is_static := b
@@ -66,7 +66,7 @@ feature -- Status setting
 
 feature -- Setting
 
-	set_dotnet_name (a_name: like dotnet_name) is
+	set_dotnet_name (a_name: like dotnet_name)
 			-- Set `dotnet_name' to `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -77,7 +77,7 @@ feature -- Setting
 			dotnet_name_set: dotnet_name = a_name
 		end
 
-	set_overloaded_extended_name (a_name: like overloaded_extended_name) is
+	set_overloaded_extended_name (a_name: like overloaded_extended_name)
 			-- Set `overloaded_extended_name' to `a_name'.
 		require
 			a_name_not_void: a_name /= Void

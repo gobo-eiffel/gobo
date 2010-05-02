@@ -2,7 +2,7 @@ class DD
 
 feature
 
-	f is
+	f
 		do
 			print ("DD%N")
 		end

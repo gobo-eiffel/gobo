@@ -1,7 +1,7 @@
 note
 
 	description:
-	
+
 		"PE entity definition and scanner"
 
 	library: "Gobo Eiffel XML Library"
@@ -27,7 +27,7 @@ create
 
 feature -- Scanner
 
-	read_token is
+	read_token
 			-- Redefine token routine to add space before and
 			-- after PE entity.
 		do
@@ -47,7 +47,7 @@ feature -- Scanner
 			end
 		end
 
-	reset is
+	reset
 			-- Reset sent.
 		do
 			Precursor
@@ -56,7 +56,7 @@ feature -- Scanner
 
 feature {NONE} -- Implementation
 
-	reset_sent is
+	reset_sent
 			-- Reset `*_sent' flags.
 		do
 			pre_sent := False

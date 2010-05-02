@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_variables: like variables; an_error_handler: like error_handler) is
+	make (a_variables: like variables; an_error_handler: like error_handler)
 			-- Create a new 'library' command.
 		require
 			a_variables_not_void: a_variables /= Void
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute 'library' command.
 		local
 			a_parser: ET_XACE_LIBRARY_CONFIG_PARSER
@@ -67,7 +67,7 @@ feature -- Execution
 			end
 		end
 
-	execute_generators (a_library: ET_XACE_LIBRARY_CONFIG) is
+	execute_generators (a_library: ET_XACE_LIBRARY_CONFIG)
 			-- Execute Ace file generators.
 		require
 			a_library_not_void: a_library /= Void

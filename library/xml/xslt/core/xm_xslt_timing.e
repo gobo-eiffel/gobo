@@ -22,17 +22,17 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize `start_time'
 		do
 			start_time := system_clock.time_now
 		end
-	
+
 feature -- Access
 
 	start_time: DT_TIME
 			-- Time at start of compilation
-	
+
 	build_start_time: DT_TIME
 			-- Time at start of building document
 
@@ -45,7 +45,7 @@ feature -- Access
 	finish_time: DT_TIME
 			-- Time at ebd of transformation
 
-	compile_time: DT_TIME_DURATION is
+	compile_time: DT_TIME_DURATION
 			-- Time taken to compile stylesheet modules
 		require
 			finish_compiling_time_not_void: finish_compiling_time /= Void
@@ -54,8 +54,8 @@ feature -- Access
 		ensure
 			compile_time_not_void: Result /= Void
 		end
-		
-	document_build_time: DT_TIME_DURATION is
+
+	document_build_time: DT_TIME_DURATION
 			-- Time taken to buiuld an XML document tree.
 		require
 			build_start_time_not_void: build_start_time /= Void
@@ -66,11 +66,11 @@ feature -- Access
 			document_build_time_not_void: Result /= Void
 		end
 
-	transformation_time: DT_TIME_DURATION is
+	transformation_time: DT_TIME_DURATION
 			-- Time taken to perform transformation
 		require
 			finish_compiling_time_not_void: finish_compiling_time /= Void
-			finish_time_not_void: finish_time /= Void			
+			finish_time_not_void: finish_time /= Void
 		do
 			if build_finish_time = Void then
 				Result := finish_time.canonical_duration (finish_compiling_time)
@@ -81,43 +81,43 @@ feature -- Access
 			transformation_time_not_void: Result /= Void
 		end
 
-	total_time: DT_TIME_DURATION is
+	total_time: DT_TIME_DURATION
 			-- Time taken to compile stylesheet modules and perform transformation.
 		require
-			finish_time_not_void: finish_time /= Void			
+			finish_time_not_void: finish_time /= Void
 		do
 			Result := finish_time.canonical_duration (start_time)
 		ensure
 			compile_time_not_void: Result /= Void
 		end
-	
+
 feature -- Basic operations
 
-	mark_compilation_finished is
+	mark_compilation_finished
 			-- Set `finish_compiling_time' to now.
 		do
 			finish_compiling_time := system_clock.time_now
 		ensure
 			finish_compiling_time_not_void: finish_compiling_time /= Void
 		end
-	
-	mark_transformation_finished is
+
+	mark_transformation_finished
 				-- Set `finish_time' to now.
 		do
 			finish_time := system_clock.time_now
 		ensure
 			finish_time_not_void: finish_time /= Void
 		end
-	
-	time_document_building is
+
+	time_document_building
 			-- Perform timing to parse an XML document and construct an XDM tree.
 		do
 			build_start_time := system_clock.time_now
 		ensure
 			build_start_time_not_void: build_start_time /= Void
 		end
-	
-	mark_document_built is
+
+	mark_document_built
 			-- Set `build_finish_time' to now.
 		do
 			build_finish_time := system_clock.time_now

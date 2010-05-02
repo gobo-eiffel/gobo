@@ -128,7 +128,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new feature validity checker.
 		do
 			create type_checker.make
@@ -159,7 +159,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	implementation_checked (a_feature: ET_STANDALONE_CLOSURE): BOOLEAN is
+	implementation_checked (a_feature: ET_STANDALONE_CLOSURE): BOOLEAN
 			-- Has the implementation of `a_feature' been checked?
 		require
 			a_feature_not_void: a_feature /= Void
@@ -171,7 +171,7 @@ feature -- Status report
 			end
 		end
 
-	has_implementation_error (a_feature: ET_STANDALONE_CLOSURE): BOOLEAN is
+	has_implementation_error (a_feature: ET_STANDALONE_CLOSURE): BOOLEAN
 			-- Has a fatal error occurred during checking
 			-- of implementation of `a_feature'?
 		require
@@ -186,7 +186,7 @@ feature -- Status report
 
 feature -- Validity checking
 
-	check_feature_validity (a_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE) is
+	check_feature_validity (a_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE)
 			-- Check validity of `a_feature' in `a_current_type'.
 			-- Do not check assertions, call `check_preconditions_validity'
 			-- and `check_postconditions_validity' for that.
@@ -267,7 +267,7 @@ feature -- Validity checking
 			end
 		end
 
-	check_precursor_feature_validity (a_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE) is
+	check_precursor_feature_validity (a_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE)
 			-- Check validity of `a_feature' which is the precursor of a feature from `a_current_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -285,7 +285,7 @@ feature -- Validity checking
 		end
 
 	check_preconditions_validity (a_preconditions: ET_PRECONDITIONS;
-		a_current_feature_impl, a_current_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE) is
+		a_current_feature_impl, a_current_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE)
 			-- Check validity of `a_preconditions' of `a_current_feature'
 			-- (written in `a_current_feature_impl') in `a_current_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -401,7 +401,7 @@ feature -- Validity checking
 		end
 
 	check_postconditions_validity (a_postconditions: ET_POSTCONDITIONS;
-		a_current_feature_impl, a_current_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE) is
+		a_current_feature_impl, a_current_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE)
 			-- Check validity of `a_postconditions' of `a_current_feature'
 			-- (written in `a_current_feature_impl') in `a_current_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -509,7 +509,7 @@ feature -- Validity checking
 			end
 		end
 
-	check_invariants_validity (an_invariants: ET_INVARIANTS; a_current_type: ET_BASE_TYPE) is
+	check_invariants_validity (an_invariants: ET_INVARIANTS; a_current_type: ET_BASE_TYPE)
 			-- Check validity of `an_invariants' in `a_current_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -620,7 +620,7 @@ feature -- Validity checking
 
 feature {NONE} -- Feature validity
 
-	check_attribute_validity (a_feature: ET_ATTRIBUTE) is
+	check_attribute_validity (a_feature: ET_ATTRIBUTE)
 			-- Check validity of `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -652,7 +652,7 @@ feature {NONE} -- Feature validity
 			has_fatal_error := had_error
 		end
 
-	check_constant_attribute_validity (a_feature: ET_CONSTANT_ATTRIBUTE) is
+	check_constant_attribute_validity (a_feature: ET_CONSTANT_ATTRIBUTE)
 			-- Check validity of `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -805,7 +805,7 @@ feature {NONE} -- Feature validity
 			has_fatal_error := has_fatal_error or had_error
 		end
 
-	check_deferred_function_validity (a_feature: ET_DEFERRED_FUNCTION) is
+	check_deferred_function_validity (a_feature: ET_DEFERRED_FUNCTION)
 			-- Check validity of `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -843,7 +843,7 @@ feature {NONE} -- Feature validity
 			has_fatal_error := had_error
 		end
 
-	check_deferred_procedure_validity (a_feature: ET_DEFERRED_PROCEDURE) is
+	check_deferred_procedure_validity (a_feature: ET_DEFERRED_PROCEDURE)
 			-- Check validity of `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -868,7 +868,7 @@ feature {NONE} -- Feature validity
 			has_fatal_error := had_error
 		end
 
-	check_do_function_validity (a_feature: ET_DO_FUNCTION) is
+	check_do_function_validity (a_feature: ET_DO_FUNCTION)
 			-- Check validity of `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -925,7 +925,7 @@ feature {NONE} -- Feature validity
 			has_fatal_error := had_error
 		end
 
-	check_do_procedure_validity (a_feature: ET_DO_PROCEDURE) is
+	check_do_procedure_validity (a_feature: ET_DO_PROCEDURE)
 			-- Check validity of `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -969,7 +969,7 @@ feature {NONE} -- Feature validity
 			has_fatal_error := had_error
 		end
 
-	check_dotnet_attribute_validity (a_feature: ET_DOTNET_ATTRIBUTE) is
+	check_dotnet_attribute_validity (a_feature: ET_DOTNET_ATTRIBUTE)
 			-- Check validity of `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -979,7 +979,7 @@ feature {NONE} -- Feature validity
 			check_attribute_validity (a_feature)
 		end
 
-	check_dotnet_constant_attribute_validity (a_feature: ET_DOTNET_CONSTANT_ATTRIBUTE) is
+	check_dotnet_constant_attribute_validity (a_feature: ET_DOTNET_CONSTANT_ATTRIBUTE)
 			-- Check validity of `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -989,7 +989,7 @@ feature {NONE} -- Feature validity
 			check_constant_attribute_validity (a_feature)
 		end
 
-	check_dotnet_function_validity (a_feature: ET_DOTNET_FUNCTION) is
+	check_dotnet_function_validity (a_feature: ET_DOTNET_FUNCTION)
 			-- Check validity of `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1027,7 +1027,7 @@ feature {NONE} -- Feature validity
 			has_fatal_error := had_error
 		end
 
-	check_dotnet_procedure_validity (a_feature: ET_DOTNET_PROCEDURE) is
+	check_dotnet_procedure_validity (a_feature: ET_DOTNET_PROCEDURE)
 			-- Check validity of `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1052,7 +1052,7 @@ feature {NONE} -- Feature validity
 			has_fatal_error := had_error
 		end
 
-	check_extended_attribute_validity (a_feature: ET_EXTENDED_ATTRIBUTE) is
+	check_extended_attribute_validity (a_feature: ET_EXTENDED_ATTRIBUTE)
 			-- Check validity of `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1062,7 +1062,7 @@ feature {NONE} -- Feature validity
 			check_attribute_validity (a_feature)
 		end
 
-	check_external_function_validity (a_feature: ET_EXTERNAL_FUNCTION) is
+	check_external_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Check validity of `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1100,7 +1100,7 @@ feature {NONE} -- Feature validity
 			has_fatal_error := had_error
 		end
 
-	check_external_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE) is
+	check_external_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE)
 			-- Check validity of `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1125,7 +1125,7 @@ feature {NONE} -- Feature validity
 			has_fatal_error := had_error
 		end
 
-	check_once_function_validity (a_feature: ET_ONCE_FUNCTION) is
+	check_once_function_validity (a_feature: ET_ONCE_FUNCTION)
 			-- Check validity of `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1182,7 +1182,7 @@ feature {NONE} -- Feature validity
 			has_fatal_error := had_error
 		end
 
-	check_once_procedure_validity (a_feature: ET_ONCE_PROCEDURE) is
+	check_once_procedure_validity (a_feature: ET_ONCE_PROCEDURE)
 			-- Check validity of `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1226,7 +1226,7 @@ feature {NONE} -- Feature validity
 			has_fatal_error := had_error
 		end
 
-	check_unique_attribute_validity (a_feature: ET_UNIQUE_ATTRIBUTE) is
+	check_unique_attribute_validity (a_feature: ET_UNIQUE_ATTRIBUTE)
 			-- Check validity of `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1281,7 +1281,7 @@ feature {NONE} -- Feature validity
 
 feature {NONE} -- Locals/Formal arguments validity
 
-	check_formal_arguments_validity (an_arguments: ET_FORMAL_ARGUMENT_LIST; a_feature: ET_ROUTINE) is
+	check_formal_arguments_validity (an_arguments: ET_FORMAL_ARGUMENT_LIST; a_feature: ET_ROUTINE)
 			-- Check validity of `an_arguments' of `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1328,7 +1328,7 @@ feature {NONE} -- Locals/Formal arguments validity
 			has_fatal_error := has_fatal_error or had_error
 		end
 
-	check_inline_agent_formal_arguments_validity (an_arguments: ET_FORMAL_ARGUMENT_LIST; an_agent: ET_INLINE_AGENT) is
+	check_inline_agent_formal_arguments_validity (an_arguments: ET_FORMAL_ARGUMENT_LIST; an_agent: ET_INLINE_AGENT)
 			-- Check validity of `an_arguments' of `an_agent'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1460,7 +1460,7 @@ feature {NONE} -- Locals/Formal arguments validity
 			has_fatal_error := has_fatal_error or had_error
 		end
 
-	check_locals_validity (a_locals: ET_LOCAL_VARIABLE_LIST; a_feature: ET_FEATURE) is
+	check_locals_validity (a_locals: ET_LOCAL_VARIABLE_LIST; a_feature: ET_FEATURE)
 			-- Check validity of `a_locals' of `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1545,7 +1545,7 @@ feature {NONE} -- Locals/Formal arguments validity
 			has_fatal_error := has_fatal_error or had_error
 		end
 
-	check_inline_agent_locals_validity (a_locals: ET_LOCAL_VARIABLE_LIST; an_agent: ET_INLINE_AGENT) is
+	check_inline_agent_locals_validity (a_locals: ET_LOCAL_VARIABLE_LIST; an_agent: ET_INLINE_AGENT)
 			-- Check validity of `a_locals' of `an_agent'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1687,7 +1687,7 @@ feature {NONE} -- Locals/Formal arguments validity
 			has_fatal_error := has_fatal_error or had_error
 		end
 
-	check_object_tests_validity (a_object_tests: ET_OBJECT_TEST_LIST; a_feature: ET_FEATURE) is
+	check_object_tests_validity (a_object_tests: ET_OBJECT_TEST_LIST; a_feature: ET_FEATURE)
 			-- Check validity of `a_object_tests' of `a_feature'.
 			-- These are all the named object-tests declared in `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1732,7 +1732,7 @@ feature {NONE} -- Locals/Formal arguments validity
 			end
 		end
 
-	check_inline_agent_object_tests_validity (a_object_tests: ET_OBJECT_TEST_LIST; an_agent: ET_INLINE_AGENT) is
+	check_inline_agent_object_tests_validity (a_object_tests: ET_OBJECT_TEST_LIST; an_agent: ET_INLINE_AGENT)
 			-- Check validity of `a_object_tests' of `an_agent'.
 			-- These are all the object-tests declared in `an_agent'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1779,7 +1779,7 @@ feature {NONE} -- Locals/Formal arguments validity
 
 feature {NONE} -- Type checking
 
-	check_signature_type_validity (a_type: ET_TYPE) is
+	check_signature_type_validity (a_type: ET_TYPE)
 			-- Check validity of `a_type' when it appears in signatures.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1818,7 +1818,7 @@ feature {NONE} -- Type checking
 			end
 		end
 
-	check_local_type_validity (a_type: ET_TYPE) is
+	check_local_type_validity (a_type: ET_TYPE)
 			-- Check validity of `a_type' when it appears
 			-- in local variable declarations.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1849,7 +1849,7 @@ feature {NONE} -- Type checking
 			end
 		end
 
-	check_type_validity (a_type: ET_TYPE) is
+	check_type_validity (a_type: ET_TYPE)
 			-- Check validity of `a_type' when it appears in the
 			-- body, assertions or rescue clause of a feature.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1863,7 +1863,7 @@ feature {NONE} -- Type checking
 			end
 		end
 
-	check_creation_type_validity (a_type: ET_CLASS_TYPE; a_position: ET_POSITION) is
+	check_creation_type_validity (a_type: ET_CLASS_TYPE; a_position: ET_POSITION)
 			-- Check validity of `a_type' as a creation type in `current_type'.
 			-- Note that `a_type' should already be a valid type by itself
 			-- (call `check_type_validity' for that).
@@ -1884,7 +1884,7 @@ feature {NONE} -- Type checking
 
 feature {NONE} -- Instruction validity
 
-	check_assigner_instruction_validity (an_instruction: ET_ASSIGNER_INSTRUCTION) is
+	check_assigner_instruction_validity (an_instruction: ET_ASSIGNER_INSTRUCTION)
 			-- Check validity of `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 			--
@@ -2284,7 +2284,7 @@ feature {NONE} -- Instruction validity
 			free_context (l_target_context)
 		end
 
-	check_assignment_validity (an_instruction: ET_ASSIGNMENT) is
+	check_assignment_validity (an_instruction: ET_ASSIGNMENT)
 			-- Check validity of `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 			--
@@ -2363,7 +2363,7 @@ feature {NONE} -- Instruction validity
 			free_context (l_target_context)
 		end
 
-	check_assignment_attempt_validity (an_instruction: ET_ASSIGNMENT_ATTEMPT) is
+	check_assignment_attempt_validity (an_instruction: ET_ASSIGNMENT_ATTEMPT)
 			-- Check validity of `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 			--
@@ -2439,7 +2439,7 @@ feature {NONE} -- Instruction validity
 			free_context (l_target_context)
 		end
 
-	check_bang_instruction_validity (an_instruction: ET_BANG_INSTRUCTION) is
+	check_bang_instruction_validity (an_instruction: ET_BANG_INSTRUCTION)
 			-- Check validity of `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -2448,7 +2448,7 @@ feature {NONE} -- Instruction validity
 			check_creation_instruction_validity (an_instruction)
 		end
 
-	check_call_instruction_validity (an_instruction: ET_CALL_INSTRUCTION) is
+	check_call_instruction_validity (an_instruction: ET_CALL_INSTRUCTION)
 			-- Check validity of `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -2461,7 +2461,7 @@ feature {NONE} -- Instruction validity
 			end
 		end
 
-	check_check_instruction_validity (an_instruction: ET_CHECK_INSTRUCTION) is
+	check_check_instruction_validity (an_instruction: ET_CHECK_INSTRUCTION)
 			-- Check validity of `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -2502,7 +2502,7 @@ feature {NONE} -- Instruction validity
 			in_check_instruction := False
 		end
 
-	check_create_instruction_validity (an_instruction: ET_CREATE_INSTRUCTION) is
+	check_create_instruction_validity (an_instruction: ET_CREATE_INSTRUCTION)
 			-- Check validity of `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -2511,7 +2511,7 @@ feature {NONE} -- Instruction validity
 			check_creation_instruction_validity (an_instruction)
 		end
 
-	check_creation_instruction_validity (an_instruction: ET_CREATION_INSTRUCTION) is
+	check_creation_instruction_validity (an_instruction: ET_CREATION_INSTRUCTION)
 			-- Check validity of `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -2861,7 +2861,7 @@ feature {NONE} -- Instruction validity
 			free_context (l_target_context)
 		end
 
-	check_debug_instruction_validity (an_instruction: ET_DEBUG_INSTRUCTION) is
+	check_debug_instruction_validity (an_instruction: ET_DEBUG_INSTRUCTION)
 			-- Check validity of `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -2877,7 +2877,7 @@ feature {NONE} -- Instruction validity
 			end
 		end
 
-	check_if_instruction_validity (an_instruction: ET_IF_INSTRUCTION) is
+	check_if_instruction_validity (an_instruction: ET_IF_INSTRUCTION)
 			-- Check validity of `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -2969,7 +2969,7 @@ feature {NONE} -- Instruction validity
 			end
 		end
 
-	check_inspect_instruction_validity (an_instruction: ET_INSPECT_INSTRUCTION) is
+	check_inspect_instruction_validity (an_instruction: ET_INSPECT_INSTRUCTION)
 			-- Check validity of `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -3189,7 +3189,7 @@ feature {NONE} -- Instruction validity
 			end
 		end
 
-	choice_constant (a_choice_constant: ET_CHOICE_CONSTANT): ET_CONSTANT is
+	choice_constant (a_choice_constant: ET_CHOICE_CONSTANT): ET_CONSTANT
 			-- Constant value of the inspect choice `a_choice_constant',
 			-- or Void if it appears not to be a constant after all
 			--
@@ -3253,7 +3253,7 @@ feature {NONE} -- Instruction validity
 			has_fatal_error := l_old_has_fatal_error
 		end
 
-	check_loop_instruction_validity (an_instruction: ET_LOOP_INSTRUCTION) is
+	check_loop_instruction_validity (an_instruction: ET_LOOP_INSTRUCTION)
 			-- Check validity of `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -3319,7 +3319,7 @@ feature {NONE} -- Instruction validity
 			end
 		end
 
-	check_loop_invariant_validity (an_invariant: ET_LOOP_INVARIANTS) is
+	check_loop_invariant_validity (an_invariant: ET_LOOP_INVARIANTS)
 			-- Check validity of `an_invariant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -3356,7 +3356,7 @@ feature {NONE} -- Instruction validity
 			free_context (l_expression_context)
 		end
 
-	check_loop_variant_validity (a_variant: ET_VARIANT) is
+	check_loop_variant_validity (a_variant: ET_VARIANT)
 			-- Check validity of `a_variant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -3387,7 +3387,7 @@ feature {NONE} -- Instruction validity
 			end
 		end
 
-	check_precursor_instruction_validity (an_instruction: ET_PRECURSOR_INSTRUCTION) is
+	check_precursor_instruction_validity (an_instruction: ET_PRECURSOR_INSTRUCTION)
 			-- Check validity of `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -3524,7 +3524,7 @@ feature {NONE} -- Instruction validity
 			end
 		end
 
-	check_qualified_call_instruction_validity (a_call: ET_FEATURE_CALL_INSTRUCTION) is
+	check_qualified_call_instruction_validity (a_call: ET_FEATURE_CALL_INSTRUCTION)
 			-- Check validity of qualified call.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -3692,7 +3692,7 @@ feature {NONE} -- Instruction validity
 			free_context (l_context)
 		end
 
-	check_retry_instruction_validity (an_instruction: ET_RETRY_INSTRUCTION) is
+	check_retry_instruction_validity (an_instruction: ET_RETRY_INSTRUCTION)
 			-- Check validity of `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -3715,7 +3715,7 @@ feature {NONE} -- Instruction validity
 			end
 		end
 
-	check_static_call_instruction_validity (an_instruction: ET_STATIC_CALL_INSTRUCTION) is
+	check_static_call_instruction_validity (an_instruction: ET_STATIC_CALL_INSTRUCTION)
 			-- Check validity of `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -3885,7 +3885,7 @@ feature {NONE} -- Instruction validity
 			free_context (l_context)
 		end
 
-	check_unqualified_call_instruction_validity (a_call: ET_FEATURE_CALL_INSTRUCTION) is
+	check_unqualified_call_instruction_validity (a_call: ET_FEATURE_CALL_INSTRUCTION)
 			-- Check validity of unqualified call.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -4063,7 +4063,7 @@ feature {NONE} -- Instruction validity
 			end
 		end
 
-	check_instructions_validity (a_compound: ET_COMPOUND) is
+	check_instructions_validity (a_compound: ET_COMPOUND)
 			-- Check validity of `a_coumpound'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -4085,7 +4085,7 @@ feature {NONE} -- Instruction validity
 			end
 		end
 
-	check_rescue_validity (a_compound: ET_COMPOUND) is
+	check_rescue_validity (a_compound: ET_COMPOUND)
 			-- Check validity of `a_coumpound' in rescue clause.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -4101,7 +4101,7 @@ feature {NONE} -- Instruction validity
 
 feature {NONE} -- Expression validity
 
-	check_binary_integer_constant_validity (a_constant: ET_BINARY_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_binary_integer_constant_validity (a_constant: ET_BINARY_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_constant'.
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
@@ -4113,7 +4113,7 @@ feature {NONE} -- Expression validity
 			check_integer_constant_validity (a_constant, a_context)
 		end
 
-	check_bit_constant_validity (a_constant: ET_BIT_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_bit_constant_validity (a_constant: ET_BIT_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_constant'.
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
@@ -4132,7 +4132,7 @@ feature {NONE} -- Expression validity
 			report_bit_constant (a_constant)
 		end
 
-	check_bracket_expression_validity (an_expression: ET_BRACKET_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_bracket_expression_validity (an_expression: ET_BRACKET_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
@@ -4144,7 +4144,7 @@ feature {NONE} -- Expression validity
 			check_qualified_call_expression_validity (an_expression, a_context)
 		end
 
-	check_c1_character_constant_validity (a_constant: ET_C1_CHARACTER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_c1_character_constant_validity (a_constant: ET_C1_CHARACTER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_constant'.
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
@@ -4156,7 +4156,7 @@ feature {NONE} -- Expression validity
 			check_character_constant_validity (a_constant, a_context)
 		end
 
-	check_c2_character_constant_validity (a_constant: ET_C2_CHARACTER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_c2_character_constant_validity (a_constant: ET_C2_CHARACTER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_constant'.
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
@@ -4168,7 +4168,7 @@ feature {NONE} -- Expression validity
 			check_character_constant_validity (a_constant, a_context)
 		end
 
-	check_c3_character_constant_validity (a_constant: ET_C3_CHARACTER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_c3_character_constant_validity (a_constant: ET_C3_CHARACTER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_constant'.
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
@@ -4180,7 +4180,7 @@ feature {NONE} -- Expression validity
 			check_character_constant_validity (a_constant, a_context)
 		end
 
-	check_call_expression_validity (an_expression: ET_CALL_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_call_expression_validity (an_expression: ET_CALL_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
@@ -4196,7 +4196,7 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_character_constant_validity (a_constant: ET_CHARACTER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_character_constant_validity (a_constant: ET_CHARACTER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_constant'.
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
@@ -4261,7 +4261,7 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_convert_builtin_expression_validity (an_expression: ET_CONVERT_BUILTIN_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_convert_builtin_expression_validity (an_expression: ET_CONVERT_BUILTIN_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
@@ -4281,7 +4281,7 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_convert_from_expression_validity (an_expression: ET_CONVERT_FROM_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_convert_from_expression_validity (an_expression: ET_CONVERT_FROM_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
@@ -4293,7 +4293,7 @@ feature {NONE} -- Expression validity
 			check_creation_expression_validity (an_expression, a_context)
 		end
 
-	check_convert_to_expression_validity (an_expression: ET_CONVERT_TO_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_convert_to_expression_validity (an_expression: ET_CONVERT_TO_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
@@ -4305,7 +4305,7 @@ feature {NONE} -- Expression validity
 			check_qualified_call_expression_validity (an_expression, a_context)
 		end
 
-	check_create_expression_validity (an_expression: ET_CREATE_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_create_expression_validity (an_expression: ET_CREATE_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
@@ -4317,7 +4317,7 @@ feature {NONE} -- Expression validity
 			check_creation_expression_validity (an_expression, a_context)
 		end
 
-	check_creation_expression_validity (an_expression: ET_CREATION_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_creation_expression_validity (an_expression: ET_CREATION_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
@@ -4573,7 +4573,7 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_current_validity (an_expression: ET_CURRENT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_current_validity (an_expression: ET_CURRENT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
@@ -4587,7 +4587,7 @@ feature {NONE} -- Expression validity
 			report_current (an_expression)
 		end
 
-	check_current_address_validity (an_expression: ET_CURRENT_ADDRESS; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_current_address_validity (an_expression: ET_CURRENT_ADDRESS; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
@@ -4622,7 +4622,7 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_equality_expression_validity (an_expression: ET_EQUALITY_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_equality_expression_validity (an_expression: ET_EQUALITY_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
@@ -4703,7 +4703,7 @@ feature {NONE} -- Expression validity
 			free_context (l_left_context)
 		end
 
-	check_expression_address_validity (an_expression: ET_EXPRESSION_ADDRESS; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_expression_address_validity (an_expression: ET_EXPRESSION_ADDRESS; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
@@ -4762,7 +4762,7 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_false_constant_validity (a_constant: ET_FALSE_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_false_constant_validity (a_constant: ET_FALSE_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_constant'.
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
@@ -4779,7 +4779,7 @@ feature {NONE} -- Expression validity
 			report_boolean_constant (a_constant, l_type)
 		end
 
-	check_feature_address_validity (an_expression: ET_FEATURE_ADDRESS; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_feature_address_validity (an_expression: ET_FEATURE_ADDRESS; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
@@ -4983,19 +4983,19 @@ feature {NONE} -- Expression validity
 								-- For example:
 								--    deferred class A
 								--    feature
-								--       f (a: ANY) is
+								--       f (a: ANY)
 								--           require
 								--               pre: g ($a)
 								--           deferred
 								--           end
-								--      g (a: TYPED_POINTER [ANY]): BOOLEAN is deferred end
+								--      g (a: TYPED_POINTER [ANY]): BOOLEAN deferred end
 								--    end
 								--    class B
 								--    inherit
 								--        A
 								--    feature
-								--        f (a: STRING) is do ... end
-								--        g (a: TYPED_POINTER [STRING]): BOOLEAN is do ... end
+								--        f (a: STRING) do ... end
+								--        g (a: TYPED_POINTER [STRING]): BOOLEAN do ... end
 								--    end
 								-- `a' in the inherited precondition "pre" should be considered
 								-- of type STRING (and not ANY) is class B.
@@ -5212,7 +5212,7 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_formal_argument_validity (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_formal_argument_validity (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of formal argument `a_name'.
 			-- `a_context' represents the type in which `a_name' appears.
 			-- It will be altered on exit to represent the type of `a_name'.
@@ -5243,19 +5243,19 @@ feature {NONE} -- Expression validity
 						-- For example:
 						--    deferred class A
 						--    feature
-						--       f (a: ANY) is
+						--       f (a: ANY)
 						--           require
 						--               pre: g (a)
 						--           deferred
 						--           end
-						--      g (a: ANY): BOOLEAN is deferred end
+						--      g (a: ANY): BOOLEAN deferred end
 						--    end
 						--    class B
 						--    inherit
 						--        A
 						--    feature
-						--        f (a: STRING) is do ... end
-						--        g (a: STRING): BOOLEAN is do ... end
+						--        f (a: STRING) do ... end
+						--        g (a: STRING): BOOLEAN do ... end
 						--    end
 						-- `a' in the inherited precondition "pre" should be considered
 						-- of type STRING (and not ANY) is class B.
@@ -5279,7 +5279,7 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_hexadecimal_integer_constant_validity (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_hexadecimal_integer_constant_validity (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_constant'.
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
@@ -5291,7 +5291,7 @@ feature {NONE} -- Expression validity
 			check_integer_constant_validity (a_constant, a_context)
 		end
 
-	check_infix_cast_expression_validity (an_expression: ET_INFIX_CAST_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_infix_cast_expression_validity (an_expression: ET_INFIX_CAST_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
@@ -5311,7 +5311,7 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_infix_expression_validity (an_expression: ET_INFIX_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_infix_expression_validity (an_expression: ET_INFIX_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
@@ -5785,7 +5785,7 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_integer_constant_validity (a_constant: ET_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_integer_constant_validity (a_constant: ET_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_constant'.
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
@@ -5969,7 +5969,7 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_local_variable_validity (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_local_variable_validity (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of local variable `a_name'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -6029,7 +6029,7 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_manifest_array_validity (an_expression: ET_MANIFEST_ARRAY; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_manifest_array_validity (an_expression: ET_MANIFEST_ARRAY; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
@@ -6203,7 +6203,7 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_manifest_string_validity (a_string: ET_MANIFEST_STRING; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_manifest_string_validity (a_string: ET_MANIFEST_STRING; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_string'.
 			-- `a_context' represents the type in which `a_string' appears.
 			-- It will be altered on exit to represent the type of `a_string'.
@@ -6268,7 +6268,7 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_manifest_tuple_validity (an_expression: ET_MANIFEST_TUPLE; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_manifest_tuple_validity (an_expression: ET_MANIFEST_TUPLE; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
@@ -6353,7 +6353,7 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_manifest_type_validity (an_expression: ET_MANIFEST_TYPE; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_manifest_type_validity (an_expression: ET_MANIFEST_TYPE; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
@@ -6388,7 +6388,7 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_named_object_test_validity (an_expression: ET_NAMED_OBJECT_TEST; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_named_object_test_validity (an_expression: ET_NAMED_OBJECT_TEST; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
@@ -6551,7 +6551,7 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_object_equality_expression_validity (an_expression: ET_OBJECT_EQUALITY_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_object_equality_expression_validity (an_expression: ET_OBJECT_EQUALITY_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
@@ -6633,7 +6633,7 @@ feature {NONE} -- Expression validity
 			free_context (l_left_context)
 		end
 
-	check_object_test_validity (an_expression: ET_OBJECT_TEST; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_object_test_validity (an_expression: ET_OBJECT_TEST; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
@@ -6672,7 +6672,7 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_object_test_local_validity (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_object_test_local_validity (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of object-test local `a_name'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -6751,7 +6751,7 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_octal_integer_constant_validity (a_constant: ET_OCTAL_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_octal_integer_constant_validity (a_constant: ET_OCTAL_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_constant'.
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
@@ -6763,7 +6763,7 @@ feature {NONE} -- Expression validity
 			check_integer_constant_validity (a_constant, a_context)
 		end
 
-	check_old_expression_validity (an_expression: ET_OLD_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_old_expression_validity (an_expression: ET_OLD_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
@@ -6793,7 +6793,7 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_once_manifest_string_validity (an_expression: ET_ONCE_MANIFEST_STRING; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_once_manifest_string_validity (an_expression: ET_ONCE_MANIFEST_STRING; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
@@ -6809,7 +6809,7 @@ feature {NONE} -- Expression validity
 			an_expression.set_index (l_string.index)
 		end
 
-	check_parenthesized_expression_validity (an_expression: ET_PARENTHESIZED_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_parenthesized_expression_validity (an_expression: ET_PARENTHESIZED_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
@@ -6825,7 +6825,7 @@ feature {NONE} -- Expression validity
 			an_expression.set_index (l_expression.index)
 		end
 
-	check_precursor_expression_validity (an_expression: ET_PRECURSOR_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_precursor_expression_validity (an_expression: ET_PRECURSOR_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
@@ -6969,7 +6969,7 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_prefix_expression_validity (an_expression: ET_PREFIX_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_prefix_expression_validity (an_expression: ET_PREFIX_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
@@ -6983,7 +6983,7 @@ feature {NONE} -- Expression validity
 			check_qualified_call_expression_validity (an_expression, a_context)
 		end
 
-	check_qualified_call_expression_validity (a_call: ET_FEATURE_CALL_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_qualified_call_expression_validity (a_call: ET_FEATURE_CALL_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of qualified call.
 			-- `a_context' represents the type in which `a_call' appears.
 			-- It will be altered on exit to represent the type of `a_call'.
@@ -7274,7 +7274,7 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_real_constant_validity (a_constant: ET_REAL_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_real_constant_validity (a_constant: ET_REAL_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_constant'.
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
@@ -7340,7 +7340,7 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_regular_integer_constant_validity (a_constant: ET_REGULAR_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_regular_integer_constant_validity (a_constant: ET_REGULAR_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_constant'.
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
@@ -7352,7 +7352,7 @@ feature {NONE} -- Expression validity
 			check_integer_constant_validity (a_constant, a_context)
 		end
 
-	check_regular_manifest_string_validity (a_string: ET_REGULAR_MANIFEST_STRING; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_regular_manifest_string_validity (a_string: ET_REGULAR_MANIFEST_STRING; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_string'.
 			-- `a_context' represents the type in which `a_string' appears.
 			-- It will be altered on exit to represent the type of `a_string'.
@@ -7364,7 +7364,7 @@ feature {NONE} -- Expression validity
 			check_manifest_string_validity (a_string, a_context)
 		end
 
-	check_regular_real_constant_validity (a_constant: ET_REGULAR_REAL_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_regular_real_constant_validity (a_constant: ET_REGULAR_REAL_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_constant'.
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
@@ -7376,7 +7376,7 @@ feature {NONE} -- Expression validity
 			check_real_constant_validity (a_constant, a_context)
 		end
 
-	check_result_validity (an_expression: ET_RESULT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_result_validity (an_expression: ET_RESULT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
@@ -7429,19 +7429,19 @@ feature {NONE} -- Expression validity
 						-- For example:
 						--    deferred class A
 						--    feature
-						--       f: ANY is
+						--       f: ANY
 						--           deferred
 						--           ensure
 						--              post: g (Result)
 						--           end
-						--      g (a: ANY): BOOLEAN is deferred end
+						--      g (a: ANY): BOOLEAN deferred end
 						--    end
 						--    class B
 						--    inherit
 						--        A
 						--    feature
-						--        f: STRING is do ... end
-						--        g (a: STRING): BOOLEAN is do ... end
+						--        f: STRING do ... end
+						--        g (a: STRING): BOOLEAN do ... end
 						--    end
 						-- 'Result' in the inherited postcondition "post" should be considered
 						-- of type STRING (and not ANY) is class B..
@@ -7472,7 +7472,7 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_result_address_validity (an_expression: ET_RESULT_ADDRESS; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_result_address_validity (an_expression: ET_RESULT_ADDRESS; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
@@ -7529,19 +7529,19 @@ feature {NONE} -- Expression validity
 						-- For example:
 						--    deferred class A
 						--    feature
-						--       f: ANY is
+						--       f: ANY
 						--           deferred
 						--           ensure
 						--              post: g ($Result)
 						--           end
-						--      g (a: TYPED_POINTER [ANY]): BOOLEAN is deferred end
+						--      g (a: TYPED_POINTER [ANY]): BOOLEAN deferred end
 						--    end
 						--    class B
 						--    inherit
 						--        A
 						--    feature
-						--        f: STRING is do ... end
-						--        g (a: TYPED_POINTER [STRING]): BOOLEAN is do ... end
+						--        f: STRING do ... end
+						--        g (a: TYPED_POINTER [STRING]): BOOLEAN do ... end
 						--    end
 						-- 'Result' in the inherited postcondition "post" should be considered
 						-- of type STRING (and not ANY) is class B.
@@ -7591,7 +7591,7 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_special_manifest_string_validity (a_string: ET_SPECIAL_MANIFEST_STRING; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_special_manifest_string_validity (a_string: ET_SPECIAL_MANIFEST_STRING; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_string'.
 			-- `a_context' represents the type in which `a_string' appears.
 			-- It will be altered on exit to represent the type of `a_string'.
@@ -7603,7 +7603,7 @@ feature {NONE} -- Expression validity
 			check_manifest_string_validity (a_string, a_context)
 		end
 
-	check_static_call_expression_validity (an_expression: ET_STATIC_CALL_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_static_call_expression_validity (an_expression: ET_STATIC_CALL_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
@@ -7776,7 +7776,7 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_strip_expression_validity (an_expression: ET_STRIP_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_strip_expression_validity (an_expression: ET_STRIP_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
@@ -7887,7 +7887,7 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_true_constant_validity (a_constant: ET_TRUE_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_true_constant_validity (a_constant: ET_TRUE_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_constant'.
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
@@ -7904,7 +7904,7 @@ feature {NONE} -- Expression validity
 			report_boolean_constant (a_constant, l_type)
 		end
 
-	check_underscored_integer_constant_validity (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_underscored_integer_constant_validity (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_constant'.
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
@@ -7916,7 +7916,7 @@ feature {NONE} -- Expression validity
 			check_integer_constant_validity (a_constant, a_context)
 		end
 
-	check_underscored_real_constant_validity (a_constant: ET_UNDERSCORED_REAL_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_underscored_real_constant_validity (a_constant: ET_UNDERSCORED_REAL_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_constant'.
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
@@ -7928,7 +7928,7 @@ feature {NONE} -- Expression validity
 			check_real_constant_validity (a_constant, a_context)
 		end
 
-	check_unqualified_call_expression_validity (a_call: ET_FEATURE_CALL_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_unqualified_call_expression_validity (a_call: ET_FEATURE_CALL_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of unqualified call.
 			-- `a_context' represents the type in which `a_call' appears.
 			-- It will be altered on exit to represent the type of `a_call'.
@@ -8149,7 +8149,7 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_verbatim_string_validity (a_string: ET_VERBATIM_STRING; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_verbatim_string_validity (a_string: ET_VERBATIM_STRING; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_string'.
 			-- `a_context' represents the type in which `a_string' appears.
 			-- It will be altered on exit to represent the type of `a_string'.
@@ -8161,7 +8161,7 @@ feature {NONE} -- Expression validity
 			check_manifest_string_validity (a_string, a_context)
 		end
 
-	check_void_validity (an_expression: ET_VOID; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_void_validity (an_expression: ET_VOID; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
@@ -8175,7 +8175,7 @@ feature {NONE} -- Expression validity
 			report_void_constant (an_expression)
 		end
 
-	check_writable_validity (a_writable: ET_WRITABLE; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_writable_validity (a_writable: ET_WRITABLE; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_writable' in `current_feature' of `current_class'.
 			-- Set `has_fatal_error' is a fatal error occurred. Otherwise
 			-- the type of `a_writable' is appended to `a_context'.
@@ -8348,7 +8348,7 @@ feature {NONE} -- Expression validity
 			type_appended_to_context: not has_fatal_error implies (a_context.count = old (a_context.count) + 1)
 		end
 
-	check_qualified_vape_validity (a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_class: ET_CLASS) is
+	check_qualified_vape_validity (a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_class: ET_CLASS)
 			-- Check VAPE validity rule when there is a qualified call to `a_feature'
 			-- named `a_name' in a precondition of `current_feature' in `current_class'.
 			-- `a_class' is the base class of the target.
@@ -8393,7 +8393,7 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_unqualified_vape_validity (a_name: ET_CALL_NAME; a_feature: ET_FEATURE) is
+	check_unqualified_vape_validity (a_name: ET_CALL_NAME; a_feature: ET_FEATURE)
 			-- Check VAPE validity rule when there is an unqualified call to `a_feature'
 			-- named `a_name' in a precondition of `current_feature' in `current_class'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -8436,7 +8436,7 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_expression_validity (an_expression: ET_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT) is
+	check_expression_validity (an_expression: ET_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT)
 			-- Check validity of `an_expression' (whose possible attachment target
 			-- is of type `a_target_type') in `current_feature' of `current_type'.
 			-- Set `has_fatal_error' if a fatal error occurred. Otherwise
@@ -8471,7 +8471,7 @@ feature {NONE} -- Expression validity
 			current_target_type := old_target_type
 		end
 
-	check_expressions_validity (an_expressions: ET_EXPRESSIONS) is
+	check_expressions_validity (an_expressions: ET_EXPRESSIONS)
 			-- Check validity of `an_expressions' (without any indication
 			-- about the type of the possible attachment target)
 			-- in `current_feature' of `current_type'.
@@ -8498,7 +8498,7 @@ feature {NONE} -- Expression validity
 		end
 
 	check_actual_arguments_validity (an_actuals: ET_ACTUAL_ARGUMENTS; a_context: ET_NESTED_TYPE_CONTEXT;
-		a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_class: ET_CLASS) is
+		a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_class: ET_CLASS)
 			-- Check actual arguments validity when calling `a_feature' named `a_name'
 			-- in context of its target `a_context'. `a_class' is the base class of the
 			-- target, or void in case of an unqualified call.
@@ -8632,7 +8632,7 @@ feature {NONE} -- Expression validity
 
 feature {NONE} -- Agent validity
 
-	check_call_agent_validity (an_expression: ET_CALL_AGENT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_call_agent_validity (an_expression: ET_CALL_AGENT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -8663,7 +8663,7 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	check_unqualified_call_agent_validity (an_expression: ET_CALL_AGENT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_unqualified_call_agent_validity (an_expression: ET_CALL_AGENT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of unqualified call agent.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -8771,7 +8771,7 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	check_unqualified_query_call_agent_validity (an_expression: ET_CALL_AGENT; a_query: ET_QUERY; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_unqualified_query_call_agent_validity (an_expression: ET_CALL_AGENT; a_query: ET_QUERY; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of unqualified query call agent.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -8827,7 +8827,7 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	check_unqualified_procedure_call_agent_validity (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_unqualified_procedure_call_agent_validity (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of unqualified procedure call agent.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -8871,7 +8871,7 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	check_qualified_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_qualified_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of qualified call agent.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -9070,7 +9070,7 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	check_qualified_query_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_EXPRESSION; a_query: ET_QUERY; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_qualified_query_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_EXPRESSION; a_query: ET_QUERY; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of qualified query call agent.
 			-- `a_context' represents the type of the target.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -9139,7 +9139,7 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	check_qualified_procedure_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_EXPRESSION; a_procedure: ET_PROCEDURE; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_qualified_procedure_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_EXPRESSION; a_procedure: ET_PROCEDURE; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of qualified procedure call agent.
 			-- `a_context' represents the type of the target.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -9196,7 +9196,7 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	check_qualified_tuple_label_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_EXPRESSION; a_target_class: ET_CLASS; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_qualified_tuple_label_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_EXPRESSION; a_target_class: ET_CLASS; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of qualified tuple label call agent.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -9263,7 +9263,7 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	check_typed_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_AGENT_OPEN_TARGET; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_typed_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_AGENT_OPEN_TARGET; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of typed call agent.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -9449,7 +9449,7 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	check_typed_query_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_AGENT_OPEN_TARGET; a_query: ET_QUERY; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_typed_query_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_AGENT_OPEN_TARGET; a_query: ET_QUERY; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of typed query call agent.
 			-- `a_context' represents the type of the target.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -9520,7 +9520,7 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	check_typed_procedure_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_AGENT_OPEN_TARGET; a_procedure: ET_PROCEDURE; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_typed_procedure_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_AGENT_OPEN_TARGET; a_procedure: ET_PROCEDURE; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of typed procedure call agent.
 			-- `a_context' represents the type of the target.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -9582,7 +9582,7 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	check_typed_tuple_label_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_AGENT_OPEN_TARGET; a_target_class: ET_CLASS; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_typed_tuple_label_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_AGENT_OPEN_TARGET; a_target_class: ET_CLASS; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of typed tuple label call agent.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -9654,7 +9654,7 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	check_do_function_inline_agent_validity (an_expression: ET_DO_FUNCTION_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_do_function_inline_agent_validity (an_expression: ET_DO_FUNCTION_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -9729,7 +9729,7 @@ feature {NONE} -- Agent validity
 			has_fatal_error := has_fatal_error or had_error
 		end
 
-	check_do_procedure_inline_agent_validity (an_expression: ET_DO_PROCEDURE_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_do_procedure_inline_agent_validity (an_expression: ET_DO_PROCEDURE_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -9796,7 +9796,7 @@ feature {NONE} -- Agent validity
 			has_fatal_error := has_fatal_error or had_error
 		end
 
-	check_external_function_inline_agent_validity (an_expression: ET_EXTERNAL_FUNCTION_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_external_function_inline_agent_validity (an_expression: ET_EXTERNAL_FUNCTION_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -9852,7 +9852,7 @@ feature {NONE} -- Agent validity
 			has_fatal_error := has_fatal_error or had_error
 		end
 
-	check_external_procedure_inline_agent_validity (an_expression: ET_EXTERNAL_PROCEDURE_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_external_procedure_inline_agent_validity (an_expression: ET_EXTERNAL_PROCEDURE_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -9900,7 +9900,7 @@ feature {NONE} -- Agent validity
 			has_fatal_error := has_fatal_error or had_error
 		end
 
-	check_once_function_inline_agent_validity (an_expression: ET_ONCE_FUNCTION_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_once_function_inline_agent_validity (an_expression: ET_ONCE_FUNCTION_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -9975,7 +9975,7 @@ feature {NONE} -- Agent validity
 			has_fatal_error := has_fatal_error or had_error
 		end
 
-	check_once_procedure_inline_agent_validity (an_expression: ET_ONCE_PROCEDURE_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_once_procedure_inline_agent_validity (an_expression: ET_ONCE_PROCEDURE_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -10042,7 +10042,7 @@ feature {NONE} -- Agent validity
 			has_fatal_error := has_fatal_error or had_error
 		end
 
-	check_query_inline_agent_validity (an_expression: ET_QUERY_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_query_inline_agent_validity (an_expression: ET_QUERY_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of call agent equivalent form of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -10090,7 +10090,7 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	check_procedure_inline_agent_validity (an_expression: ET_PROCEDURE_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_procedure_inline_agent_validity (an_expression: ET_PROCEDURE_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of call agent equivalent form of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -10124,7 +10124,7 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	set_implicit_agent_open_arguments (an_agent: ET_AGENT; a_formals: ET_FORMAL_ARGUMENT_LIST) is
+	set_implicit_agent_open_arguments (an_agent: ET_AGENT; a_formals: ET_FORMAL_ARGUMENT_LIST)
 			-- If we have 'agent f' and 'f' has two formal arguments,
 			-- then make the open arguments explicit 'agent f (?, ?)'.
 			-- Only do that if `current_class' is the class where this
@@ -10157,7 +10157,7 @@ feature {NONE} -- Agent validity
 		end
 
 	check_agent_arguments_validity (an_agent: ET_AGENT; a_formals: ET_FORMAL_ARGUMENT_LIST;
-		a_feature: ET_FEATURE; an_open_operands: ET_ACTUAL_PARAMETER_LIST; a_context: ET_NESTED_TYPE_CONTEXT) is
+		a_feature: ET_FEATURE; an_open_operands: ET_ACTUAL_PARAMETER_LIST; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of actual arguments of `an_agent' with the corresponding formal arguments `a_formals'.
 			-- `a_feature' is the feature of the call when `an_agent' is a call agent.
 			-- `a_context' represents the type of the target of the agent.
@@ -10346,7 +10346,7 @@ feature {NONE} -- Agent validity
 
 feature {NONE} -- Event handling
 
-	report_assignment (an_instruction: ET_ASSIGNMENT) is
+	report_assignment (an_instruction: ET_ASSIGNMENT)
 			-- Report that an assignment instruction has been processed.
 		require
 			no_error: not has_fatal_error
@@ -10354,7 +10354,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_assignment_attempt (an_instruction: ET_ASSIGNMENT_ATTEMPT) is
+	report_assignment_attempt (an_instruction: ET_ASSIGNMENT_ATTEMPT)
 			-- Report that an assignment attempt instruction has been processed.
 		require
 			no_error: not has_fatal_error
@@ -10362,7 +10362,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_attribute_address (an_expression: ET_FEATURE_ADDRESS; an_attribute: ET_QUERY) is
+	report_attribute_address (an_expression: ET_FEATURE_ADDRESS; an_attribute: ET_QUERY)
 			-- Report that attribute `an_attribute' has been processed
 			-- as target of feature address `an_expression'.
 		require
@@ -10373,7 +10373,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_attribute_assignment_target (a_writable: ET_WRITABLE; an_attribute: ET_QUERY) is
+	report_attribute_assignment_target (a_writable: ET_WRITABLE; an_attribute: ET_QUERY)
 			-- Report that attribute `a_writable' has been processed
 			-- as target of an assignment (attempt).
 		require
@@ -10384,7 +10384,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_bit_constant (a_constant: ET_BIT_CONSTANT) is
+	report_bit_constant (a_constant: ET_BIT_CONSTANT)
 			-- Report that a bit constant has been processed.
 		require
 			no_error: not has_fatal_error
@@ -10392,7 +10392,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_boolean_constant (a_constant: ET_BOOLEAN_CONSTANT; a_type: ET_CLASS_TYPE) is
+	report_boolean_constant (a_constant: ET_BOOLEAN_CONSTANT; a_type: ET_CLASS_TYPE)
 			-- Report that a boolean of type `a_type' in the context
 			-- of `current_type' has been processed.
 		require
@@ -10402,7 +10402,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_character_8_constant (a_constant: ET_CHARACTER_CONSTANT; a_type: ET_CLASS_TYPE) is
+	report_character_8_constant (a_constant: ET_CHARACTER_CONSTANT; a_type: ET_CLASS_TYPE)
 			-- Report that a character_8 of type `a_type' in the context
 			-- of `current_type' has been processed.
 		require
@@ -10412,7 +10412,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_character_32_constant (a_constant: ET_CHARACTER_CONSTANT; a_type: ET_CLASS_TYPE) is
+	report_character_32_constant (a_constant: ET_CHARACTER_CONSTANT; a_type: ET_CLASS_TYPE)
 			-- Report that a character_32 of type `a_type' in the context
 			-- of `current_type' has been processed.
 		require
@@ -10422,7 +10422,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_builtin_conversion (an_expression: ET_CONVERT_BUILTIN_EXPRESSION; a_target_type: ET_TYPE) is
+	report_builtin_conversion (an_expression: ET_CONVERT_BUILTIN_EXPRESSION; a_target_type: ET_TYPE)
 			-- Report that a built-in convert expression has been processed,
 			-- where `a_target_type' in  the context of `current_type' is
 			-- the type of the expression after the conversion occurred.
@@ -10433,7 +10433,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_creation_expression (an_expression: ET_CREATION_EXPRESSION; a_creation_type: ET_TYPE; a_procedure: ET_PROCEDURE) is
+	report_creation_expression (an_expression: ET_CREATION_EXPRESSION; a_creation_type: ET_TYPE; a_procedure: ET_PROCEDURE)
 			-- Report that a creation expression, with creation type
 			-- `a_creation_type' in context of `current_type', has
 			-- been processed.
@@ -10445,7 +10445,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_creation_instruction (an_instruction: ET_CREATION_INSTRUCTION; a_creation_type: ET_TYPE; a_procedure: ET_PROCEDURE) is
+	report_creation_instruction (an_instruction: ET_CREATION_INSTRUCTION; a_creation_type: ET_TYPE; a_procedure: ET_PROCEDURE)
 			-- Report that a creation instruction, with creation type
 			-- `a_creation_type' in context of `current_type', has
 			-- been processed.
@@ -10457,7 +10457,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_current (an_expression: ET_CURRENT) is
+	report_current (an_expression: ET_CURRENT)
 			-- Report that the current entity has been processed.
 		require
 			no_error: not has_fatal_error
@@ -10465,7 +10465,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_current_type_needed is
+	report_current_type_needed
 			-- Report that the current type is needed to execute the feature being analyzed.
 			-- This might be needed for optimization purposes.
 		require
@@ -10473,7 +10473,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_equality_expression (an_expression: ET_EQUALITY_EXPRESSION) is
+	report_equality_expression (an_expression: ET_EQUALITY_EXPRESSION)
 			-- Report that an equality expression has been processed.
 		require
 			no_error: not has_fatal_error
@@ -10481,7 +10481,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_formal_argument (a_name: ET_IDENTIFIER; a_formal: ET_FORMAL_ARGUMENT) is
+	report_formal_argument (a_name: ET_IDENTIFIER; a_formal: ET_FORMAL_ARGUMENT)
 			-- Report that a call to formal argument `a_name' has been processed.
 		require
 			no_error: not has_fatal_error
@@ -10490,7 +10490,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_formal_argument_declaration (a_formal: ET_FORMAL_ARGUMENT) is
+	report_formal_argument_declaration (a_formal: ET_FORMAL_ARGUMENT)
 			-- Report that the declaration of the formal
 			-- argument `a_formal' of a feature has been processed.
 		require
@@ -10499,7 +10499,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_function_address (an_expression: ET_FEATURE_ADDRESS; a_query: ET_QUERY) is
+	report_function_address (an_expression: ET_FEATURE_ADDRESS; a_query: ET_QUERY)
 			-- Report that function `a_query' has been processed
 			-- as target of feature address `an_expression'.
 		require
@@ -10510,7 +10510,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_inline_agent_formal_argument_declaration (a_formal: ET_FORMAL_ARGUMENT) is
+	report_inline_agent_formal_argument_declaration (a_formal: ET_FORMAL_ARGUMENT)
 			-- Report that the declaration of the formal argument `a_formal'
 			-- of an inline agent has been processed.
 		require
@@ -10519,7 +10519,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_inline_agent_local_variable_declaration (a_local: ET_LOCAL_VARIABLE) is
+	report_inline_agent_local_variable_declaration (a_local: ET_LOCAL_VARIABLE)
 			-- Report that the declaration of the local variable `a_local'
 			-- of an inline agent has been processed.
 		require
@@ -10528,7 +10528,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_inline_agent_result_declaration (a_type: ET_TYPE) is
+	report_inline_agent_result_declaration (a_type: ET_TYPE)
 			-- Report that the declaration of the "Result" entity,
 			-- of type `a_type', of an inline agent has been processed.
 		require
@@ -10537,7 +10537,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_integer_8_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE) is
+	report_integer_8_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE)
 			-- Report that a integer_8 of type `a_type' in the context
 			-- of `current_type' has been processed.
 		require
@@ -10547,7 +10547,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_integer_16_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE) is
+	report_integer_16_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE)
 			-- Report that a integer_16 of type `a_type' in the context
 			-- of `current_type' has been processed.
 		require
@@ -10557,7 +10557,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_integer_32_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE) is
+	report_integer_32_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE)
 			-- Report that a integer_32 of type `a_type' in the context
 			-- of `current_type' has been processed.
 		require
@@ -10567,7 +10567,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_integer_64_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE) is
+	report_integer_64_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE)
 			-- Report that a integer_64 of type `a_type' in the context
 			-- of `current_type' has been processed.
 		require
@@ -10577,7 +10577,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_local_assignment_target (a_name: ET_IDENTIFIER; a_local: ET_LOCAL_VARIABLE) is
+	report_local_assignment_target (a_name: ET_IDENTIFIER; a_local: ET_LOCAL_VARIABLE)
 			-- Report that the local variable `a_name' has been
 			-- processed as target of an assignment (attempt).
 		require
@@ -10587,7 +10587,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_local_variable (a_name: ET_IDENTIFIER; a_local: ET_LOCAL_VARIABLE) is
+	report_local_variable (a_name: ET_IDENTIFIER; a_local: ET_LOCAL_VARIABLE)
 			-- Report that a call to local variable `a_name' has been processed.
 		require
 			no_error: not has_fatal_error
@@ -10596,7 +10596,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_local_variable_declaration (a_local: ET_LOCAL_VARIABLE) is
+	report_local_variable_declaration (a_local: ET_LOCAL_VARIABLE)
 			-- Report that the declaration of the local variable `a_local'
 			-- of a feature has been processed.
 		require
@@ -10605,7 +10605,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_manifest_array (an_expression: ET_MANIFEST_ARRAY; a_type: ET_TYPE) is
+	report_manifest_array (an_expression: ET_MANIFEST_ARRAY; a_type: ET_TYPE)
 			-- Report that a manifest array of type `a_type' in context
 			-- of `current_type' has been processed.
 		require
@@ -10615,7 +10615,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_manifest_tuple (an_expression: ET_MANIFEST_TUPLE; a_type: ET_TYPE) is
+	report_manifest_tuple (an_expression: ET_MANIFEST_TUPLE; a_type: ET_TYPE)
 			-- Report that a manifest tuple of type `a_type' in context of
 			-- `current_type' has been processed.
 		require
@@ -10625,7 +10625,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_manifest_type (an_expression: ET_MANIFEST_TYPE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+	report_manifest_type (an_expression: ET_MANIFEST_TYPE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
 			-- Report that a manifest type of type `a_type'
 			-- in `a_context' has been processed.
 		require
@@ -10637,7 +10637,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_named_object_test (a_object_test: ET_NAMED_OBJECT_TEST; a_local_type: ET_TYPE_CONTEXT) is
+	report_named_object_test (a_object_test: ET_NAMED_OBJECT_TEST; a_local_type: ET_TYPE_CONTEXT)
 			-- Report that the object-test `a_object_test' with local
 			-- of type `a_local_type' has been processed.
 		require
@@ -10648,7 +10648,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_natural_8_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE) is
+	report_natural_8_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE)
 			-- Report that a natural_8 of type `a_type' in the context
 			-- of `current_type' has been processed.
 		require
@@ -10658,7 +10658,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_natural_16_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE) is
+	report_natural_16_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE)
 			-- Report that a natural_16 of type `a_type' in the context
 			-- of `current_type' has been processed.
 		require
@@ -10668,7 +10668,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_natural_32_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE) is
+	report_natural_32_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE)
 			-- Report that a natural_32 of type `a_type' in the context
 			-- of `current_type' has been processed.
 		require
@@ -10678,7 +10678,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_natural_64_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE) is
+	report_natural_64_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE)
 			-- Report that a natural_64 of type `a_type' in the context
 			-- of `current_type' has been processed.
 		require
@@ -10688,7 +10688,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION) is
+	report_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION)
 			-- Report that an object equality expression has been processed.
 		require
 			no_error: not has_fatal_error
@@ -10696,7 +10696,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_object_test (a_object_test: ET_OBJECT_TEST) is
+	report_object_test (a_object_test: ET_OBJECT_TEST)
 			-- Report that the object-test `a_object_test' has been processed.
 		require
 			no_error: not has_fatal_error
@@ -10704,7 +10704,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_object_test_local (a_name: ET_IDENTIFIER; a_object_test: ET_NAMED_OBJECT_TEST) is
+	report_object_test_local (a_name: ET_IDENTIFIER; a_object_test: ET_NAMED_OBJECT_TEST)
 			-- Report that a call to object-test local `a_name' has been processed.
 		require
 			no_error: not has_fatal_error
@@ -10713,7 +10713,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_pointer_expression (an_expression: ET_ADDRESS_EXPRESSION; a_type: ET_CLASS_TYPE) is
+	report_pointer_expression (an_expression: ET_ADDRESS_EXPRESSION; a_type: ET_CLASS_TYPE)
 			-- Report that a pointer expression of type `a_type' in the context
 			-- of `current_type' has been processed.
 		require
@@ -10723,7 +10723,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION; a_parent_type: ET_BASE_TYPE; a_query: ET_QUERY) is
+	report_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION; a_parent_type: ET_BASE_TYPE; a_query: ET_QUERY)
 			-- Report that a precursor expression has been processed.
 			-- `a_parent_type' is viewed in the context of `current_type'
 			-- and `a_query' is the precursor feature.
@@ -10735,7 +10735,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_precursor_instruction (an_instruction: ET_PRECURSOR_INSTRUCTION; a_parent_type: ET_BASE_TYPE; a_procedure: ET_PROCEDURE) is
+	report_precursor_instruction (an_instruction: ET_PRECURSOR_INSTRUCTION; a_parent_type: ET_BASE_TYPE; a_procedure: ET_PROCEDURE)
 			-- Report that a precursor instruction has been processed.
 			-- `a_parent_type' is viewed in the context of `current_type'
 			-- and `a_procedure' is the precursor feature.
@@ -10747,7 +10747,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_procedure_address (an_expression: ET_FEATURE_ADDRESS; a_procedure: ET_PROCEDURE) is
+	report_procedure_address (an_expression: ET_FEATURE_ADDRESS; a_procedure: ET_PROCEDURE)
 			-- Report that function `a_procedure' has been processed
 			-- as target of feature address `an_expression'.
 		require
@@ -10757,7 +10757,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_procedure_inline_agent (an_expression: ET_PROCEDURE_INLINE_AGENT; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+	report_procedure_inline_agent (an_expression: ET_PROCEDURE_INLINE_AGENT; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
 			-- Report that procedure inline agent of type `a_type' in `a_context' has been processed.
 		require
 			no_error: not has_fatal_error
@@ -10768,7 +10768,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_qualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_target_type: ET_TYPE_CONTEXT; a_query: ET_QUERY) is
+	report_qualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_target_type: ET_TYPE_CONTEXT; a_query: ET_QUERY)
 			-- Report that a qualified call expression has been processed.
 		require
 			no_error: not has_fatal_error
@@ -10780,7 +10780,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_qualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_target_type: ET_TYPE_CONTEXT; a_procedure: ET_PROCEDURE) is
+	report_qualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_target_type: ET_TYPE_CONTEXT; a_procedure: ET_PROCEDURE)
 			-- Report that a qualified call instruction has been processed.
 		require
 			no_error: not has_fatal_error
@@ -10792,7 +10792,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_qualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE; an_agent_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+	report_qualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE; an_agent_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
 			-- Report that a qualified procedure call (to `a_procedure') agent
 			-- of type `an_agent_type' in `a_context' has been processed.
 		require
@@ -10807,7 +10807,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_qualified_query_call_agent (an_expression: ET_CALL_AGENT; a_query: ET_QUERY; an_agent_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+	report_qualified_query_call_agent (an_expression: ET_CALL_AGENT; a_query: ET_QUERY; an_agent_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
 			-- Report that a qualified query call (to `a_query') agent
 			-- of type `an_agent_type' in `a_context' has been processed.
 		require
@@ -10822,7 +10822,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_query_inline_agent (an_expression: ET_QUERY_INLINE_AGENT; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+	report_query_inline_agent (an_expression: ET_QUERY_INLINE_AGENT; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
 			-- Report that a query inline agent of type `a_type' in `a_context' has been processed.
 		require
 			no_error: not has_fatal_error
@@ -10833,7 +10833,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_real_32_constant (a_constant: ET_REAL_CONSTANT; a_type: ET_CLASS_TYPE) is
+	report_real_32_constant (a_constant: ET_REAL_CONSTANT; a_type: ET_CLASS_TYPE)
 			-- Report that a real_32 of type `a_type' in the context
 			-- of `current_type' has been processed.
 		require
@@ -10843,7 +10843,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_real_64_constant (a_constant: ET_REAL_CONSTANT; a_type: ET_CLASS_TYPE) is
+	report_real_64_constant (a_constant: ET_REAL_CONSTANT; a_type: ET_CLASS_TYPE)
 		-- Report that a real_64 of type `a_type' in the context
 			-- of `current_type' has been processed.
 		require
@@ -10853,7 +10853,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_result (an_expression: ET_RESULT) is
+	report_result (an_expression: ET_RESULT)
 			-- Report that the result entity has been processed.
 		require
 			no_error: not has_fatal_error
@@ -10861,7 +10861,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_result_assignment_target (a_result: ET_RESULT) is
+	report_result_assignment_target (a_result: ET_RESULT)
 			-- Report that the result entity has been processed
 			-- as target of an assignment (attempt).
 		require
@@ -10870,7 +10870,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_result_declaration (a_type: ET_TYPE) is
+	report_result_declaration (a_type: ET_TYPE)
 			-- Report that the declaration of the "Result" entity,
 			-- of type `a_type', of a feature has been processed.
 		require
@@ -10879,7 +10879,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION; a_type: ET_TYPE; a_query: ET_QUERY) is
+	report_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION; a_type: ET_TYPE; a_query: ET_QUERY)
 			-- Report that a static call expression has been processed.
 		require
 			no_error: not has_fatal_error
@@ -10889,7 +10889,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION; a_type: ET_TYPE; a_procedure: ET_PROCEDURE) is
+	report_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION; a_type: ET_TYPE; a_procedure: ET_PROCEDURE)
 			-- Report that a static call instruction has been processed.
 		require
 			no_error: not has_fatal_error
@@ -10899,7 +10899,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_string_8_constant (a_string: ET_MANIFEST_STRING; a_type: ET_CLASS_TYPE) is
+	report_string_8_constant (a_string: ET_MANIFEST_STRING; a_type: ET_CLASS_TYPE)
 			-- Report that a string_8 of type `a_type' in the context
 			-- of `current_type' has been processed.
 		require
@@ -10909,7 +10909,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_string_32_constant (a_string: ET_MANIFEST_STRING; a_type: ET_CLASS_TYPE) is
+	report_string_32_constant (a_string: ET_MANIFEST_STRING; a_type: ET_CLASS_TYPE)
 			-- Report that a string_32 of type `a_type' in the context
 			-- of `current_type' has been processed.
 		require
@@ -10919,7 +10919,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_strip_expression (an_expression: ET_STRIP_EXPRESSION; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+	report_strip_expression (an_expression: ET_STRIP_EXPRESSION; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
 			-- Report that a strip expression of type `a_type'
 			-- in `a_context' has been processed.
 		require
@@ -10931,7 +10931,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_tuple_label_call_agent (an_expression: ET_CALL_AGENT; an_agent_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+	report_tuple_label_call_agent (an_expression: ET_CALL_AGENT; an_agent_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
 			-- Report that a tuple label call agent of type `an_agent_type'
 			-- in `a_context' has been processed.
 		require
@@ -10946,7 +10946,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_tuple_label_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_target_type: ET_TYPE_CONTEXT) is
+	report_tuple_label_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_target_type: ET_TYPE_CONTEXT)
 			-- Report that a call to a tuple label has been processed.
 		require
 			no_error: not has_fatal_error
@@ -10958,7 +10958,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_tuple_label_setter (an_assigner: ET_ASSIGNER_INSTRUCTION; a_target_type: ET_TYPE_CONTEXT) is
+	report_tuple_label_setter (an_assigner: ET_ASSIGNER_INSTRUCTION; a_target_type: ET_TYPE_CONTEXT)
 			-- Report that a call to the setter of a tuple label has been processed.
 		require
 			no_error: not has_fatal_error
@@ -10969,7 +10969,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_typed_pointer_expression (an_expression: ET_ADDRESS_EXPRESSION; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+	report_typed_pointer_expression (an_expression: ET_ADDRESS_EXPRESSION; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
 			-- Report that a typed pointer expression of type `a_type'
 			-- in `a_context' has been processed.
 		require
@@ -10981,7 +10981,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_unqualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_query: ET_QUERY) is
+	report_unqualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_query: ET_QUERY)
 			-- Report that an unqualified call expression has been processed.
 		require
 			no_error: not has_fatal_error
@@ -10991,7 +10991,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_unqualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_procedure: ET_PROCEDURE) is
+	report_unqualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_procedure: ET_PROCEDURE)
 			-- Report that an unqualified call instruction has been processed.
 		require
 			no_error: not has_fatal_error
@@ -11001,7 +11001,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_unqualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+	report_unqualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
 			-- Report that an unqualified procedure call (to `a_procedure') agent
 			-- of type `a_type' in `a_context' has been processed.
 		require
@@ -11016,7 +11016,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_unqualified_query_call_agent (an_expression: ET_CALL_AGENT; a_query: ET_QUERY; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+	report_unqualified_query_call_agent (an_expression: ET_CALL_AGENT; a_query: ET_QUERY; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
 			-- Report that an unqualified query call (to `a_query') agent
 			-- of type `a_type' in `a_context' has been processed.
 		require
@@ -11031,7 +11031,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_void_constant (an_expression: ET_VOID) is
+	report_void_constant (an_expression: ET_VOID)
 			-- Report that a Void has been processed.
 		require
 			no_error: not has_fatal_error
@@ -11044,7 +11044,7 @@ feature -- Client/Supplier relationship
 	supplier_handler: ET_SUPPLIER_HANDLER
 			-- Supplier handler
 
-	set_supplier_handler (a_handler: like supplier_handler) is
+	set_supplier_handler (a_handler: like supplier_handler)
 			-- Set `supplier_handler' to `a_handler'.
 		do
 			supplier_handler := a_handler
@@ -11055,7 +11055,7 @@ feature -- Client/Supplier relationship
 
 feature {NONE} -- Client/Supplier relationship
 
-	report_expression_supplier (a_supplier: ET_TYPE_CONTEXT; a_client: ET_BASE_TYPE; a_feature: ET_STANDALONE_CLOSURE) is
+	report_expression_supplier (a_supplier: ET_TYPE_CONTEXT; a_client: ET_BASE_TYPE; a_feature: ET_STANDALONE_CLOSURE)
 			-- Report the fact that `a_supplier' is the type of an expression
 			-- in `a_feature' in type `a_client'.
 			-- (Note that `a_supplier' may be altered after the execution of
@@ -11073,7 +11073,7 @@ feature {NONE} -- Client/Supplier relationship
 			end
 		end
 
-	report_argument_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_routine: ET_ROUTINE) is
+	report_argument_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_routine: ET_ROUTINE)
 			-- Report the fact that `a_supplier' is the type of a formal argument
 			-- of `a_routine' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
@@ -11089,7 +11089,7 @@ feature {NONE} -- Client/Supplier relationship
 			end
 		end
 
-	report_result_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_query: ET_QUERY) is
+	report_result_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_query: ET_QUERY)
 			-- Report the fact that `a_supplier' is the type of the result
 			-- of `a_query' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
@@ -11105,7 +11105,7 @@ feature {NONE} -- Client/Supplier relationship
 			end
 		end
 
-	report_static_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_STANDALONE_CLOSURE) is
+	report_static_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_STANDALONE_CLOSURE)
 			-- Report the fact that `a_supplier' is the type of a static call
 			-- in `a_feature' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
@@ -11121,7 +11121,7 @@ feature {NONE} -- Client/Supplier relationship
 			end
 		end
 
-	report_create_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_STANDALONE_CLOSURE) is
+	report_create_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_STANDALONE_CLOSURE)
 			-- Report the fact that `a_supplier' is the explicit type of a
 			-- creation instruction or expression in `a_feature' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
@@ -11137,7 +11137,7 @@ feature {NONE} -- Client/Supplier relationship
 			end
 		end
 
-	report_local_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_FEATURE) is
+	report_local_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_FEATURE)
 			-- Report the fact that `a_supplier' is the type of a local variable
 			-- of `a_feature' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
@@ -11156,7 +11156,7 @@ feature {NONE} -- Client/Supplier relationship
 			end
 		end
 
-	report_inline_agent_argument_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_STANDALONE_CLOSURE) is
+	report_inline_agent_argument_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_STANDALONE_CLOSURE)
 			-- Report the fact that `a_supplier' is the type of a formal argument
 			-- of an inline agent in `a_feature' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
@@ -11175,7 +11175,7 @@ feature {NONE} -- Client/Supplier relationship
 			end
 		end
 
-	report_inline_agent_local_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_STANDALONE_CLOSURE) is
+	report_inline_agent_local_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_STANDALONE_CLOSURE)
 			-- Report the fact that `a_supplier' is the type of a local variable
 			-- of an inline agent in `a_feature' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
@@ -11194,7 +11194,7 @@ feature {NONE} -- Client/Supplier relationship
 			end
 		end
 
-	report_inline_agent_result_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_STANDALONE_CLOSURE) is
+	report_inline_agent_result_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE; a_feature: ET_STANDALONE_CLOSURE)
 			-- Report the fact that `a_supplier' is the type of the result of
 			-- an inline agent in `a_feature' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
@@ -11215,7 +11215,7 @@ feature {NONE} -- Client/Supplier relationship
 
 feature {NONE} -- Conversion
 
-	convert_expression (a_source: ET_EXPRESSION; a_source_type, a_target_type: ET_TYPE_CONTEXT): ET_CONVERT_EXPRESSION is
+	convert_expression (a_source: ET_EXPRESSION; a_source_type, a_target_type: ET_TYPE_CONTEXT): ET_CONVERT_EXPRESSION
 			-- Conversion expresion to convert `a_source' of type `a_source_type' to `a_target_type';
 			-- Void if no such conversion expression.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -11301,271 +11301,271 @@ feature {NONE} -- Conversion
 
 feature {ET_AST_NODE} -- Processing
 
-	process_assigner_instruction (an_instruction: ET_ASSIGNER_INSTRUCTION) is
+	process_assigner_instruction (an_instruction: ET_ASSIGNER_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			check_assigner_instruction_validity (an_instruction)
 		end
 
-	process_assignment (an_instruction: ET_ASSIGNMENT) is
+	process_assignment (an_instruction: ET_ASSIGNMENT)
 			-- Process `an_instruction'.
 		do
 			check_assignment_validity (an_instruction)
 		end
 
-	process_assignment_attempt (an_instruction: ET_ASSIGNMENT_ATTEMPT) is
+	process_assignment_attempt (an_instruction: ET_ASSIGNMENT_ATTEMPT)
 			-- Process `an_instruction'.
 		do
 			check_assignment_attempt_validity (an_instruction)
 		end
 
-	process_attribute (a_feature: ET_ATTRIBUTE) is
+	process_attribute (a_feature: ET_ATTRIBUTE)
 			-- Process `a_feature'.
 		do
 			check_attribute_validity (a_feature)
 		end
 
-	process_bang_instruction (an_instruction: ET_BANG_INSTRUCTION) is
+	process_bang_instruction (an_instruction: ET_BANG_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			check_bang_instruction_validity (an_instruction)
 		end
 
-	process_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT) is
+	process_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			check_binary_integer_constant_validity (a_constant, current_context)
 		end
 
-	process_bit_constant (a_constant: ET_BIT_CONSTANT) is
+	process_bit_constant (a_constant: ET_BIT_CONSTANT)
 			-- Process `a_constant'.
 		do
 			check_bit_constant_validity (a_constant, current_context)
 		end
 
-	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION) is
+	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			check_bracket_expression_validity (an_expression, current_context)
 		end
 
-	process_c1_character_constant (a_constant: ET_C1_CHARACTER_CONSTANT) is
+	process_c1_character_constant (a_constant: ET_C1_CHARACTER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			check_c1_character_constant_validity (a_constant, current_context)
 		end
 
-	process_c2_character_constant (a_constant: ET_C2_CHARACTER_CONSTANT) is
+	process_c2_character_constant (a_constant: ET_C2_CHARACTER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			check_c2_character_constant_validity (a_constant, current_context)
 		end
 
-	process_c3_character_constant (a_constant: ET_C3_CHARACTER_CONSTANT) is
+	process_c3_character_constant (a_constant: ET_C3_CHARACTER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			check_c3_character_constant_validity (a_constant, current_context)
 		end
 
-	process_call_agent (an_expression: ET_CALL_AGENT) is
+	process_call_agent (an_expression: ET_CALL_AGENT)
 			-- Process `an_expression'.
 		do
 			check_call_agent_validity (an_expression, current_context)
 		end
 
-	process_call_expression (an_expression: ET_CALL_EXPRESSION) is
+	process_call_expression (an_expression: ET_CALL_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			check_call_expression_validity (an_expression, current_context)
 		end
 
-	process_call_instruction (an_instruction: ET_CALL_INSTRUCTION) is
+	process_call_instruction (an_instruction: ET_CALL_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			check_call_instruction_validity (an_instruction)
 		end
 
-	process_check_instruction (an_instruction: ET_CHECK_INSTRUCTION) is
+	process_check_instruction (an_instruction: ET_CHECK_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			check_check_instruction_validity (an_instruction)
 		end
 
-	process_constant_attribute (a_feature: ET_CONSTANT_ATTRIBUTE) is
+	process_constant_attribute (a_feature: ET_CONSTANT_ATTRIBUTE)
 			-- Process `a_feature'.
 		do
 			check_constant_attribute_validity (a_feature)
 		end
 
-	process_convert_builtin_expression (an_expression: ET_CONVERT_BUILTIN_EXPRESSION) is
+	process_convert_builtin_expression (an_expression: ET_CONVERT_BUILTIN_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			check_convert_builtin_expression_validity (an_expression, current_context)
 		end
 
-	process_convert_from_expression (an_expression: ET_CONVERT_FROM_EXPRESSION) is
+	process_convert_from_expression (an_expression: ET_CONVERT_FROM_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			check_convert_from_expression_validity (an_expression, current_context)
 		end
 
-	process_convert_to_expression (an_expression: ET_CONVERT_TO_EXPRESSION) is
+	process_convert_to_expression (an_expression: ET_CONVERT_TO_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			check_convert_to_expression_validity (an_expression, current_context)
 		end
 
-	process_create_expression (an_expression: ET_CREATE_EXPRESSION) is
+	process_create_expression (an_expression: ET_CREATE_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			check_create_expression_validity (an_expression, current_context)
 		end
 
-	process_create_instruction (an_instruction: ET_CREATE_INSTRUCTION) is
+	process_create_instruction (an_instruction: ET_CREATE_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			check_create_instruction_validity (an_instruction)
 		end
 
-	process_current (an_expression: ET_CURRENT) is
+	process_current (an_expression: ET_CURRENT)
 			-- Process `an_expression'.
 		do
 			check_current_validity (an_expression, current_context)
 		end
 
-	process_current_address (an_expression: ET_CURRENT_ADDRESS) is
+	process_current_address (an_expression: ET_CURRENT_ADDRESS)
 			-- Process `an_expression'.
 		do
 			check_current_address_validity (an_expression, current_context)
 		end
 
-	process_debug_instruction (an_instruction: ET_DEBUG_INSTRUCTION) is
+	process_debug_instruction (an_instruction: ET_DEBUG_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			check_debug_instruction_validity (an_instruction)
 		end
 
-	process_deferred_function (a_feature: ET_DEFERRED_FUNCTION) is
+	process_deferred_function (a_feature: ET_DEFERRED_FUNCTION)
 			-- Process `a_feature'.
 		do
 			check_deferred_function_validity (a_feature)
 		end
 
-	process_deferred_procedure (a_feature: ET_DEFERRED_PROCEDURE) is
+	process_deferred_procedure (a_feature: ET_DEFERRED_PROCEDURE)
 			-- Process `a_feature'.
 		do
 			check_deferred_procedure_validity (a_feature)
 		end
 
-	process_do_function (a_feature: ET_DO_FUNCTION) is
+	process_do_function (a_feature: ET_DO_FUNCTION)
 			-- Process `a_feature'.
 		do
 			check_do_function_validity (a_feature)
 		end
 
-	process_do_function_inline_agent (an_expression: ET_DO_FUNCTION_INLINE_AGENT) is
+	process_do_function_inline_agent (an_expression: ET_DO_FUNCTION_INLINE_AGENT)
 			-- Process `an_expression'.
 		do
 			check_do_function_inline_agent_validity (an_expression, current_context)
 		end
 
-	process_do_procedure (a_feature: ET_DO_PROCEDURE) is
+	process_do_procedure (a_feature: ET_DO_PROCEDURE)
 			-- Process `a_feature'.
 		do
 			check_do_procedure_validity (a_feature)
 		end
 
-	process_do_procedure_inline_agent (an_expression: ET_DO_PROCEDURE_INLINE_AGENT) is
+	process_do_procedure_inline_agent (an_expression: ET_DO_PROCEDURE_INLINE_AGENT)
 			-- Process `an_expression'.
 		do
 			check_do_procedure_inline_agent_validity (an_expression, current_context)
 		end
 
-	process_dotnet_attribute (a_feature: ET_DOTNET_ATTRIBUTE) is
+	process_dotnet_attribute (a_feature: ET_DOTNET_ATTRIBUTE)
 			-- Process `a_feature'.
 		do
 			check_dotnet_attribute_validity (a_feature)
 		end
 
-	process_dotnet_constant_attribute (a_feature: ET_DOTNET_CONSTANT_ATTRIBUTE) is
+	process_dotnet_constant_attribute (a_feature: ET_DOTNET_CONSTANT_ATTRIBUTE)
 			-- Process `a_feature'.
 		do
 			check_dotnet_constant_attribute_validity (a_feature)
 		end
 
-	process_dotnet_function (a_feature: ET_DOTNET_FUNCTION) is
+	process_dotnet_function (a_feature: ET_DOTNET_FUNCTION)
 			-- Process `a_feature'.
 		do
 			check_dotnet_function_validity (a_feature)
 		end
 
-	process_dotnet_procedure (a_feature: ET_DOTNET_PROCEDURE) is
+	process_dotnet_procedure (a_feature: ET_DOTNET_PROCEDURE)
 			-- Process `a_feature'.
 		do
 			check_dotnet_procedure_validity (a_feature)
 		end
 
-	process_equality_expression (an_expression: ET_EQUALITY_EXPRESSION) is
+	process_equality_expression (an_expression: ET_EQUALITY_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			check_equality_expression_validity (an_expression, current_context)
 		end
 
-	process_expression_address (an_expression: ET_EXPRESSION_ADDRESS) is
+	process_expression_address (an_expression: ET_EXPRESSION_ADDRESS)
 			-- Process `an_expression'.
 		do
 			check_expression_address_validity (an_expression, current_context)
 		end
 
-	process_extended_attribute (a_feature: ET_EXTENDED_ATTRIBUTE) is
+	process_extended_attribute (a_feature: ET_EXTENDED_ATTRIBUTE)
 			-- Process `a_feature'.
 		do
 			check_extended_attribute_validity (a_feature)
 		end
 
-	process_external_function (a_feature: ET_EXTERNAL_FUNCTION) is
+	process_external_function (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Process `a_feature'.
 		do
 			check_external_function_validity (a_feature)
 		end
 
-	process_external_function_inline_agent (an_expression: ET_EXTERNAL_FUNCTION_INLINE_AGENT) is
+	process_external_function_inline_agent (an_expression: ET_EXTERNAL_FUNCTION_INLINE_AGENT)
 			-- Process `an_expression'.
 		do
 			check_external_function_inline_agent_validity (an_expression, current_context)
 		end
 
-	process_external_procedure (a_feature: ET_EXTERNAL_PROCEDURE) is
+	process_external_procedure (a_feature: ET_EXTERNAL_PROCEDURE)
 			-- Process `a_feature'.
 		do
 			check_external_procedure_validity (a_feature)
 		end
 
-	process_external_procedure_inline_agent (an_expression: ET_EXTERNAL_PROCEDURE_INLINE_AGENT) is
+	process_external_procedure_inline_agent (an_expression: ET_EXTERNAL_PROCEDURE_INLINE_AGENT)
 			-- Process `an_expression'.
 		do
 			check_external_procedure_inline_agent_validity (an_expression, current_context)
 		end
 
-	process_false_constant (a_constant: ET_FALSE_CONSTANT) is
+	process_false_constant (a_constant: ET_FALSE_CONSTANT)
 			-- Process `a_constant'.
 		do
 			check_false_constant_validity (a_constant, current_context)
 		end
 
-	process_feature_address (an_expression: ET_FEATURE_ADDRESS) is
+	process_feature_address (an_expression: ET_FEATURE_ADDRESS)
 			-- Process `an_expression'.
 		do
 			check_feature_address_validity (an_expression, current_context)
 		end
 
-	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT) is
+	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			check_hexadecimal_integer_constant_validity (a_constant, current_context)
 		end
 
-	process_identifier (an_identifier: ET_IDENTIFIER) is
+	process_identifier (an_identifier: ET_IDENTIFIER)
 			-- Process `an_identifier'.
 		do
 			if an_identifier.is_argument then
@@ -11581,241 +11581,241 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_if_instruction (an_instruction: ET_IF_INSTRUCTION) is
+	process_if_instruction (an_instruction: ET_IF_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			check_if_instruction_validity (an_instruction)
 		end
 
-	process_infix_cast_expression (an_expression: ET_INFIX_CAST_EXPRESSION) is
+	process_infix_cast_expression (an_expression: ET_INFIX_CAST_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			check_infix_cast_expression_validity (an_expression, current_context)
 		end
 
-	process_infix_expression (an_expression: ET_INFIX_EXPRESSION) is
+	process_infix_expression (an_expression: ET_INFIX_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			check_infix_expression_validity (an_expression, current_context)
 		end
 
-	process_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION) is
+	process_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			check_inspect_instruction_validity (an_instruction)
 		end
 
-	process_loop_instruction (an_instruction: ET_LOOP_INSTRUCTION) is
+	process_loop_instruction (an_instruction: ET_LOOP_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			check_loop_instruction_validity (an_instruction)
 		end
 
-	process_manifest_array (an_expression: ET_MANIFEST_ARRAY) is
+	process_manifest_array (an_expression: ET_MANIFEST_ARRAY)
 			-- Process `an_expression'.
 		do
 			check_manifest_array_validity (an_expression, current_context)
 		end
 
-	process_manifest_tuple (an_expression: ET_MANIFEST_TUPLE) is
+	process_manifest_tuple (an_expression: ET_MANIFEST_TUPLE)
 			-- Process `an_expression'.
 		do
 			check_manifest_tuple_validity (an_expression, current_context)
 		end
 
-	process_manifest_type (an_expression: ET_MANIFEST_TYPE) is
+	process_manifest_type (an_expression: ET_MANIFEST_TYPE)
 			-- Process `an_expression'.
 		do
 			check_manifest_type_validity (an_expression, current_context)
 		end
 
-	process_named_object_test (an_expression: ET_NAMED_OBJECT_TEST) is
+	process_named_object_test (an_expression: ET_NAMED_OBJECT_TEST)
 			-- Process `an_expression'.
 		do
 			check_named_object_test_validity (an_expression, current_context)
 		end
 
-	process_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION) is
+	process_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			check_object_equality_expression_validity (an_expression, current_context)
 		end
 
-	process_object_test (an_expression: ET_OBJECT_TEST) is
+	process_object_test (an_expression: ET_OBJECT_TEST)
 			-- Process `an_expression'.
 		do
 			check_object_test_validity (an_expression, current_context)
 		end
 
-	process_octal_integer_constant (a_constant: ET_OCTAL_INTEGER_CONSTANT) is
+	process_octal_integer_constant (a_constant: ET_OCTAL_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			check_octal_integer_constant_validity (a_constant, current_context)
 		end
 
-	process_old_expression (an_expression: ET_OLD_EXPRESSION) is
+	process_old_expression (an_expression: ET_OLD_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			check_old_expression_validity (an_expression, current_context)
 		end
 
-	process_old_object_test (an_expression: ET_OLD_OBJECT_TEST) is
+	process_old_object_test (an_expression: ET_OLD_OBJECT_TEST)
 			-- Process `an_expression'.
 		do
 			check_named_object_test_validity (an_expression, current_context)
 		end
 
-	process_once_function (a_feature: ET_ONCE_FUNCTION) is
+	process_once_function (a_feature: ET_ONCE_FUNCTION)
 			-- Process `a_feature'.
 		do
 			check_once_function_validity (a_feature)
 		end
 
-	process_once_function_inline_agent (an_expression: ET_ONCE_FUNCTION_INLINE_AGENT) is
+	process_once_function_inline_agent (an_expression: ET_ONCE_FUNCTION_INLINE_AGENT)
 			-- Process `an_expression'.
 		do
 			check_once_function_inline_agent_validity (an_expression, current_context)
 		end
 
-	process_once_manifest_string (an_expression: ET_ONCE_MANIFEST_STRING) is
+	process_once_manifest_string (an_expression: ET_ONCE_MANIFEST_STRING)
 			-- Process `an_expression'.
 		do
 			check_once_manifest_string_validity (an_expression, current_context)
 		end
 
-	process_once_procedure (a_feature: ET_ONCE_PROCEDURE) is
+	process_once_procedure (a_feature: ET_ONCE_PROCEDURE)
 			-- Process `a_feature'.
 		do
 			check_once_procedure_validity (a_feature)
 		end
 
-	process_once_procedure_inline_agent (an_expression: ET_ONCE_PROCEDURE_INLINE_AGENT) is
+	process_once_procedure_inline_agent (an_expression: ET_ONCE_PROCEDURE_INLINE_AGENT)
 			-- Process `an_expression'.
 		do
 			check_once_procedure_inline_agent_validity (an_expression, current_context)
 		end
 
-	process_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION) is
+	process_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			check_parenthesized_expression_validity (an_expression, current_context)
 		end
 
-	process_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION) is
+	process_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			check_precursor_expression_validity (an_expression, current_context)
 		end
 
-	process_precursor_instruction (an_instruction: ET_PRECURSOR_INSTRUCTION) is
+	process_precursor_instruction (an_instruction: ET_PRECURSOR_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			check_precursor_instruction_validity (an_instruction)
 		end
 
-	process_prefix_expression (an_expression: ET_PREFIX_EXPRESSION) is
+	process_prefix_expression (an_expression: ET_PREFIX_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			check_prefix_expression_validity (an_expression, current_context)
 		end
 
-	process_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT) is
+	process_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			check_regular_integer_constant_validity (a_constant, current_context)
 		end
 
-	process_regular_manifest_string (a_string: ET_REGULAR_MANIFEST_STRING) is
+	process_regular_manifest_string (a_string: ET_REGULAR_MANIFEST_STRING)
 			-- Process `a_string'.
 		do
 			check_regular_manifest_string_validity (a_string, current_context)
 		end
 
-	process_regular_real_constant (a_constant: ET_REGULAR_REAL_CONSTANT) is
+	process_regular_real_constant (a_constant: ET_REGULAR_REAL_CONSTANT)
 			-- Process `a_constant'.
 		do
 			check_regular_real_constant_validity (a_constant, current_context)
 		end
 
-	process_result (an_expression: ET_RESULT) is
+	process_result (an_expression: ET_RESULT)
 			-- Process `an_expression'.
 		do
 			check_result_validity (an_expression, current_context)
 		end
 
-	process_result_address (an_expression: ET_RESULT_ADDRESS) is
+	process_result_address (an_expression: ET_RESULT_ADDRESS)
 			-- Process `an_expression'.
 		do
 			check_result_address_validity (an_expression, current_context)
 		end
 
-	process_retry_instruction (an_instruction: ET_RETRY_INSTRUCTION) is
+	process_retry_instruction (an_instruction: ET_RETRY_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			check_retry_instruction_validity (an_instruction)
 		end
 
-	process_semicolon_symbol (a_symbol: ET_SEMICOLON_SYMBOL) is
+	process_semicolon_symbol (a_symbol: ET_SEMICOLON_SYMBOL)
 			-- Process `a_symbol'.
 		do
 			has_fatal_error := False
 		end
 
-	process_special_manifest_string (a_string: ET_SPECIAL_MANIFEST_STRING) is
+	process_special_manifest_string (a_string: ET_SPECIAL_MANIFEST_STRING)
 			-- Process `a_string'.
 		do
 			check_special_manifest_string_validity (a_string, current_context)
 		end
 
-	process_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION) is
+	process_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			check_static_call_expression_validity (an_expression, current_context)
 		end
 
-	process_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION) is
+	process_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			check_static_call_instruction_validity (an_instruction)
 		end
 
-	process_strip_expression (an_expression: ET_STRIP_EXPRESSION) is
+	process_strip_expression (an_expression: ET_STRIP_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			check_strip_expression_validity (an_expression, current_context)
 		end
 
-	process_true_constant (a_constant: ET_TRUE_CONSTANT) is
+	process_true_constant (a_constant: ET_TRUE_CONSTANT)
 			-- Process `a_constant'.
 		do
 			check_true_constant_validity (a_constant, current_context)
 		end
 
-	process_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT) is
+	process_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			check_underscored_integer_constant_validity (a_constant, current_context)
 		end
 
-	process_underscored_real_constant (a_constant: ET_UNDERSCORED_REAL_CONSTANT) is
+	process_underscored_real_constant (a_constant: ET_UNDERSCORED_REAL_CONSTANT)
 			-- Process `a_constant'.
 		do
 			check_underscored_real_constant_validity (a_constant, current_context)
 		end
 
-	process_unique_attribute (a_feature: ET_UNIQUE_ATTRIBUTE) is
+	process_unique_attribute (a_feature: ET_UNIQUE_ATTRIBUTE)
 			-- Process `a_feature'.
 		do
 			check_unique_attribute_validity (a_feature)
 		end
 
-	process_verbatim_string (a_string: ET_VERBATIM_STRING) is
+	process_verbatim_string (a_string: ET_VERBATIM_STRING)
 			-- Process `a_string'.
 		do
 			check_verbatim_string_validity (a_string, current_context)
 		end
 
-	process_void (an_expression: ET_VOID) is
+	process_void (an_expression: ET_VOID)
 			-- Process `an_expression'.
 		do
 			check_void_validity (an_expression, current_context)
@@ -11833,19 +11833,19 @@ feature {NONE} -- Access
 			-- processing inherited assertions. For example:
 			--    deferred class A
 			--    feature
-			--       f (a: ANY) is
+			--       f (a: ANY)
 			--           require
 			--               pre: g (a)
 			--           deferred
 			--           end
-			--      g (a: ANY): BOOLEAN is deferred end
+			--      g (a: ANY): BOOLEAN deferred end
 			--    end
 			--    class B
 			--    inherit
 			--        A
 			--    feature
-			--        f (a: STRING) is do ... end
-			--        g (a: STRING): BOOLEAN is do ... end
+			--        f (a: STRING) do ... end
+			--        g (a: STRING): BOOLEAN do ... end
 			--    end
 			-- When processing the inherited precondition 'pre' in B.f,
 			-- `current_feature' is B.f and `current_feature_impl' is A.f
@@ -11857,7 +11857,7 @@ feature {NONE} -- Access
 	enclosing_inline_agents: DS_ARRAYED_LIST [ET_INLINE_AGENT]
 			-- Enclosing inline agents of `current_inline_agent' if any
 
-	current_closure: ET_CLOSURE is
+	current_closure: ET_CLOSURE
 			-- Inner closure being processed
 		do
 			if current_inline_agent /= Void then
@@ -11871,7 +11871,7 @@ feature {NONE} -- Access
 			not_in_agent: current_inline_agent = Void implies Result = current_feature
 		end
 
-	current_closure_impl: ET_CLOSURE is
+	current_closure_impl: ET_CLOSURE
 			-- Inner closure where the code being processed has been written
 		do
 			if current_inline_agent /= Void then
@@ -11897,7 +11897,7 @@ feature {NONE} -- Access
 	current_class_impl: ET_CLASS
 			-- Class where `current_feature_impl' has been written
 
-	current_universe_impl: ET_UNIVERSE is
+	current_universe_impl: ET_UNIVERSE
 			-- Universe to which `current_class_impl' belongs
 		do
 			Result := current_class_impl.universe
@@ -11959,7 +11959,7 @@ feature -- Precursors
 			-- Procedures associated with precursor instructions succesfully processed
 			-- will be added to this set when not Void
 
-	set_precursor_queries (a_query_set: like precursor_queries) is
+	set_precursor_queries (a_query_set: like precursor_queries)
 			-- Set `precursor_queries' to `a_query_set'.
 		do
 			precursor_queries := a_query_set
@@ -11967,7 +11967,7 @@ feature -- Precursors
 			precursor_queries_set: precursor_queries = a_query_set
 		end
 
-	set_precursor_procedures (a_procedure_set: like precursor_procedures) is
+	set_precursor_procedures (a_procedure_set: like precursor_procedures)
 			-- Set `precursor_procedures' to `a_procedure_set'.
 		do
 			precursor_procedures := a_procedure_set
@@ -11977,7 +11977,7 @@ feature -- Precursors
 
 feature {NONE} -- Overloading (useful in .NET)
 
-	keep_best_overloaded_features (a_features: DS_ARRAYED_LIST [ET_FEATURE]; an_actuals: ET_ACTUAL_ARGUMENTS; a_target_context: ET_NESTED_TYPE_CONTEXT) is
+	keep_best_overloaded_features (a_features: DS_ARRAYED_LIST [ET_FEATURE]; an_actuals: ET_ACTUAL_ARGUMENTS; a_target_context: ET_NESTED_TYPE_CONTEXT)
 			-- Remove from `a_features' the features whose signature cannot
 			-- accommodate `an_actuals'. As a result `a_features' can be
 			-- empty if no feature is applicable.
@@ -12274,7 +12274,7 @@ feature {NONE} -- Overloading (useful in .NET)
 
 feature {NONE} -- Type contexts
 
-	new_context (a_root_context: ET_BASE_TYPE): ET_NESTED_TYPE_CONTEXT is
+	new_context (a_root_context: ET_BASE_TYPE): ET_NESTED_TYPE_CONTEXT
 			-- New nested type context
 		require
 			a_root_context_not_void: a_root_context /= Void
@@ -12293,7 +12293,7 @@ feature {NONE} -- Type contexts
 			is_empty: Result.is_empty
 		end
 
-	free_context (a_context: ET_NESTED_TYPE_CONTEXT) is
+	free_context (a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Free `a_context' so that it can be reused.
 		require
 			a_context_not_void: a_context /= Void
@@ -12307,7 +12307,7 @@ feature {NONE} -- Type contexts
 
 feature {NONE} -- Constants
 
-	dummy_feature: ET_FEATURE is
+	dummy_feature: ET_FEATURE
 			-- Dummy feature
 		local
 			a_name: ET_FEATURE_NAME
@@ -12318,7 +12318,7 @@ feature {NONE} -- Constants
 			dummy_feature_not_void: Result /= Void
 		end
 
-	dummy_expression: ET_EXPRESSION is
+	dummy_expression: ET_EXPRESSION
 			-- Dummy expression
 		once
 			create {ET_CURRENT} Result.make

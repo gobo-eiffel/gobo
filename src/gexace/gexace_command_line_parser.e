@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new command-line parser.
 		do
 			reset
@@ -33,14 +33,14 @@ feature {NONE} -- Initialization
 
 feature -- Operations
 
-	reset is
+	reset
 			-- Reset internal option position to first option
 			-- must be called before first use.
 		do
 			next_option_position := 1
 		end
 
-	consume_option is
+	consume_option
 			-- Move `next_token_position' to the next token position.
 		do
 			next_option_position := next_option_position + 1
@@ -48,13 +48,13 @@ feature -- Operations
 
 feature -- Status report
 
-	has_next_option: BOOLEAN is
+	has_next_option: BOOLEAN
 			-- Is there an unconsumed token left?
 		do
 			Result := is_valid_option_position (next_option_position)
 		end
 
-	is_next_option_long_option: BOOLEAN is
+	is_next_option_long_option: BOOLEAN
 			-- Is the next option a long option (with or without a value)?
 		local
 			arg: STRING
@@ -66,7 +66,7 @@ feature -- Status report
 			end
 		end
 
-	has_next_option_value: BOOLEAN is
+	has_next_option_value: BOOLEAN
 			-- Has the next option a value?
 		require
 			has_next_option: has_next_option
@@ -82,7 +82,7 @@ feature -- Status report
 
 feature -- Access
 
-	next_option: STRING is
+	next_option: STRING
 			-- Next option on command-line
 		require
 			has_next_option: has_next_option
@@ -92,7 +92,7 @@ feature -- Access
 			next_option_not_void: Result /= Void
 		end
 
-	next_option_value: STRING is
+	next_option_value: STRING
 			-- Value of next option
 		require
 			next_option_is_long_option: is_next_option_long_option
@@ -110,7 +110,7 @@ feature -- Access
 
 feature -- Matching
 
-	match_long_option (an_option_name: STRING): BOOLEAN is
+	match_long_option (an_option_name: STRING): BOOLEAN
 			-- Is there a next option on the command-line and
 			-- is this option a long option whose name is
 			-- `an_option_name' (Note that `an_option_name'
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 	next_option_position: INTEGER
 			-- Index of next option
 
-	is_valid_option_position (i: INTEGER): BOOLEAN is
+	is_valid_option_position (i: INTEGER): BOOLEAN
 			-- Is `i' a valid token position?
 		do
 			Result := (i >= 1 and i <= Arguments.argument_count)

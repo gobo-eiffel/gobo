@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER;  a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
+		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration)
 			-- Establish invariant.
 		do
 			is_instruction := True
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	may_contain_sequence_constructor: BOOLEAN is
+	may_contain_sequence_constructor: BOOLEAN
 			-- Is `Current' allowed to contain a sequence constructor?
 		do
 			Result := True
@@ -56,7 +56,7 @@ feature -- Access
 
 feature -- Element change
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -157,7 +157,7 @@ feature -- Element change
 			attributes_prepared := True
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 		local
 			l_cursor: DS_HASH_TABLE_CURSOR [XM_XPATH_EXPRESSION, INTEGER]
@@ -196,7 +196,7 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (an_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		local
 			l_global_property_set, l_local_property_set: XM_XSLT_OUTPUT_PROPERTIES
@@ -251,7 +251,7 @@ feature -- Element change
 			end
 		end
 
-	build_local_properties (a_local_property_set: XM_XSLT_OUTPUT_PROPERTIES) is
+	build_local_properties (a_local_property_set: XM_XSLT_OUTPUT_PROPERTIES)
 			-- Add properties defined on `Current'.
 		require
 			local_properties_not_void: a_local_property_set /= Void
@@ -309,7 +309,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	Formatting_attributes_count: INTEGER is 17
+	Formatting_attributes_count: INTEGER = 17
 			-- Number of formatting attributes
 
 	output_fingerprint: INTEGER
@@ -327,7 +327,7 @@ feature {NONE} -- Implementation
 	formatting_attributes: DS_HASH_TABLE [XM_XPATH_EXPRESSION, INTEGER]
 			-- Overrides of xsl:output attributes
 
-	formatting_attribute_names: DS_HASH_SET [STRING] is
+	formatting_attribute_names: DS_HASH_SET [STRING]
 			-- Names of formatting attributes permitted as AVTs;
 			-- `Use_character_maps_attribute' is also permitted, but not as an AVT.
 		once

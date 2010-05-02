@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER; a_type: PR_TYPE; a_old_alias_name, a_new_alias_name: STRING) is
+	make (filename: STRING; line: INTEGER; a_type: PR_TYPE; a_old_alias_name, a_new_alias_name: STRING)
 			-- Create a new error reporting that the alias name for token type `a_type' has been defined twice.
 			-- The same alias name should be repeated in each %token declaration with a given type.
 		require
@@ -41,10 +41,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: each %%token declaration with type '$3' should have the same alias name which has already been defined as '$4'"
+	default_template: STRING = "%"$1%", line $2: each %%token declaration with type '$3' should have the same alias name which has already been defined as '$4'"
 			-- Default template used to built the error message
 
-	code: STRING is "PR0028"
+	code: STRING = "PR0028"
 			-- Error code
 
 invariant

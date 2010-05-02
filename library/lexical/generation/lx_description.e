@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize with default values.
 		do
 			equiv_classes_used := True
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset scanner description with default values.
 		do
 			equiv_classes_used := True
@@ -169,7 +169,7 @@ feature -- User-defined options
 
 feature -- Option setting
 
-	set_array_size (i: INTEGER) is
+	set_array_size (i: INTEGER)
 			-- Set `array_size' to `i'.
 		require
 			i_positive: i >= 0
@@ -179,7 +179,7 @@ feature -- Option setting
 			array_size_set: array_size = i
 		end
 
-	set_backing_up_report (b: BOOLEAN) is
+	set_backing_up_report (b: BOOLEAN)
 			-- Set `backing_up_report' to `b'.
 		do
 			backing_up_report := b
@@ -187,7 +187,7 @@ feature -- Option setting
 			backing_up_report_set: backing_up_report = b
 		end
 
-	set_backing_up_filename (a_filename: like backing_up_filename) is
+	set_backing_up_filename (a_filename: like backing_up_filename)
 			-- Set `backing_up_filename' to `a_filename'.
 		do
 			backing_up_filename := a_filename
@@ -195,7 +195,7 @@ feature -- Option setting
 			backing_up_filename_set: backing_up_filename = a_filename
 		end
 
-	set_case_insensitive (b: BOOLEAN) is
+	set_case_insensitive (b: BOOLEAN)
 			-- Set `case_insensitive' to `b'.
 		do
 			case_insensitive := b
@@ -203,7 +203,7 @@ feature -- Option setting
 			case_insensitive_set: case_insensitive = b
 		end
 
-	set_characters_count (nb: INTEGER) is
+	set_characters_count (nb: INTEGER)
 			-- Set `characters_count' to `nb'.
 		require
 			positive_nb: nb > 0
@@ -213,7 +213,7 @@ feature -- Option setting
 			characters_count_set: characters_count = nb
 		end
 
-	set_debug_mode (b: BOOLEAN) is
+	set_debug_mode (b: BOOLEAN)
 			-- Set `debug_mode' to `b'.
 		do
 			debug_mode := b
@@ -221,7 +221,7 @@ feature -- Option setting
 			debug_mode_set: debug_mode = b
 		end
 
-	set_equiv_classes_used (b: BOOLEAN) is
+	set_equiv_classes_used (b: BOOLEAN)
 			-- Set `equiv_classes_used' to `b'.
 		do
 			equiv_classes_used := b
@@ -229,7 +229,7 @@ feature -- Option setting
 			equiv_classes_used_set: equiv_classes_used = b
 		end
 
-	set_meta_equiv_classes_used (b: BOOLEAN) is
+	set_meta_equiv_classes_used (b: BOOLEAN)
 			-- Set `meta_equiv_classes_used' to `b'.
 		do
 			meta_equiv_classes_used := b
@@ -237,7 +237,7 @@ feature -- Option setting
 			meta_equiv_classes_used_set: meta_equiv_classes_used = b
 		end
 
-	set_full_table (b: BOOLEAN) is
+	set_full_table (b: BOOLEAN)
 			-- Set `full_table' to `b'.
 		do
 			full_table := b
@@ -245,7 +245,7 @@ feature -- Option setting
 			full_table_set: full_table = b
 		end
 
-	set_no_default_rule (b: BOOLEAN) is
+	set_no_default_rule (b: BOOLEAN)
 			-- Set `no_default_rule' to `b'.
 		do
 			no_default_rule := b
@@ -253,7 +253,7 @@ feature -- Option setting
 			no_default_rule_set: no_default_rule = b
 		end
 
-	set_no_warning (b: BOOLEAN) is
+	set_no_warning (b: BOOLEAN)
 			-- Set `no_warning' to `b'.
 		do
 			no_warning := b
@@ -261,7 +261,7 @@ feature -- Option setting
 			no_warning_set: no_warning = b
 		end
 
-	set_actions_separated (b: BOOLEAN) is
+	set_actions_separated (b: BOOLEAN)
 			-- Set `actions_separated' to `b'.
 		do
 			actions_separated := b
@@ -269,7 +269,7 @@ feature -- Option setting
 			actions_separated_set: actions_separated = b
 		end
 
-	set_inspect_used (b: BOOLEAN) is
+	set_inspect_used (b: BOOLEAN)
 			-- Set `inspect_used' to `b'.
 		do
 			inspect_used := b
@@ -277,7 +277,7 @@ feature -- Option setting
 			inspect_used_set: inspect_used = b
 		end
 
-	set_reject_used (b: BOOLEAN) is
+	set_reject_used (b: BOOLEAN)
 			-- Set `reject_used' to `b'.
 		do
 			reject_used := b
@@ -285,7 +285,7 @@ feature -- Option setting
 			reject_used_set: reject_used = b
 		end
 
-	set_line_used (b: BOOLEAN) is
+	set_line_used (b: BOOLEAN)
 			-- Set `line_used' to `b'.
 		do
 			line_used := b
@@ -293,7 +293,7 @@ feature -- Option setting
 			line_used_set: line_used = b
 		end
 
-	set_position_used (b: BOOLEAN) is
+	set_position_used (b: BOOLEAN)
 			-- Set `position_used' to `b'.
 		do
 			position_used := b
@@ -301,7 +301,7 @@ feature -- Option setting
 			position_used_set: position_used = b
 		end
 
-	set_pre_action_used (b: BOOLEAN) is
+	set_pre_action_used (b: BOOLEAN)
 			-- Set `pre_action_used' to `b'.
 		do
 			pre_action_used := b
@@ -309,7 +309,7 @@ feature -- Option setting
 			pre_action_used_set: pre_action_used = b
 		end
 
-	set_post_action_used (b: BOOLEAN) is
+	set_post_action_used (b: BOOLEAN)
 			-- Set `post_action_used' to `b'.
 		do
 			post_action_used := b
@@ -317,7 +317,7 @@ feature -- Option setting
 			post_action_used_set: post_action_used = b
 		end
 
-	set_pre_eof_action_used (b: BOOLEAN) is
+	set_pre_eof_action_used (b: BOOLEAN)
 			-- Set `pre_eof_action_used' to `b'.
 		do
 			pre_eof_action_used := b
@@ -325,7 +325,7 @@ feature -- Option setting
 			pre_eof_action_used_set: pre_eof_action_used = b
 		end
 
-	set_post_eof_action_used (b: BOOLEAN) is
+	set_post_eof_action_used (b: BOOLEAN)
 			-- Set `post_eof_action_used' to `b'.
 		do
 			post_eof_action_used := b
@@ -333,7 +333,7 @@ feature -- Option setting
 			post_eof_action_used_set: post_eof_action_used = b
 		end
 
-	set_line_pragma (b: BOOLEAN) is
+	set_line_pragma (b: BOOLEAN)
 			-- Set `line_pragma' to `b'.
 		do
 			line_pragma := b
@@ -341,7 +341,7 @@ feature -- Option setting
 			line_pragma_set: line_pragma = b
 		end
 
-	set_input_filename (fn: like input_filename) is
+	set_input_filename (fn: like input_filename)
 			-- Set `input_filename' to `fn'.
 		do
 			input_filename := fn
@@ -349,7 +349,7 @@ feature -- Option setting
 			input_filename_set: input_filename = fn
 		end
 
-	set_output_filename (fn: like output_filename) is
+	set_output_filename (fn: like output_filename)
 			-- Set `output_filename' to `fn'.
 		do
 			output_filename := fn
@@ -393,7 +393,7 @@ feature -- User-defined Eiffel code
 
 feature -- Setting
 
-	set_start_conditions (scs: like start_conditions) is
+	set_start_conditions (scs: like start_conditions)
 			-- Set `start_conditions' to `scs'.
 		require
 			scs_not_void: scs /= Void
@@ -403,7 +403,7 @@ feature -- Setting
 			start_conditions_set: start_conditions = scs
 		end
 
-	set_rules (r: like rules) is
+	set_rules (r: like rules)
 			-- Set `rules' to `r'.
 		require
 			r_not_void: r /= Void
@@ -414,7 +414,7 @@ feature -- Setting
 			rules_set: rules = r
 		end
 
-	set_eof_rules (r: like eof_rules) is
+	set_eof_rules (r: like eof_rules)
 			-- Set `eof_rules' to `r'.
 		require
 			r_not_void: r /= Void
@@ -425,7 +425,7 @@ feature -- Setting
 			eof_rules_set: eof_rules = r
 		end
 
-	set_equiv_classes (ec: like equiv_classes) is
+	set_equiv_classes (ec: like equiv_classes)
 			-- Set `equiv_classes' to `ec'.
 		require
 			equiv_classes_used: ec /= Void implies equiv_classes_used
@@ -435,7 +435,7 @@ feature -- Setting
 			equiv_classes_set: equiv_classes = ec
 		end
 
-	create_equiv_classes is
+	create_equiv_classes
 			-- Create `equiv_classes'.
 		require
 			equiv_classes_used: equiv_classes_used
@@ -447,7 +447,7 @@ feature -- Setting
 			upper_set: equiv_classes.upper = characters_count
 		end
 
-	set_bol_needed (b: like bol_needed) is
+	set_bol_needed (b: like bol_needed)
 			-- Set `bol_needed' to `b'.
 		do
 			bol_needed := b
@@ -455,7 +455,7 @@ feature -- Setting
 			bol_needed_set: bol_needed = b
 		end
 
-	set_variable_trail_context (b: like variable_trail_context) is
+	set_variable_trail_context (b: like variable_trail_context)
 			-- Set `variable_trail_context' to `b'.
 		do
 			variable_trail_context := b
@@ -463,7 +463,7 @@ feature -- Setting
 			variable_trail_context_set: variable_trail_context = b
 		end
 
-	set_eiffel_code (code: like eiffel_code) is
+	set_eiffel_code (code: like eiffel_code)
 			-- Set `eiffel_code' to `code'.
 		do
 			eiffel_code := code
@@ -473,10 +473,10 @@ feature -- Setting
 
 feature {NONE} -- Constants
 
-	Initial_max_start_conditions: INTEGER is 40
+	Initial_max_start_conditions: INTEGER = 40
 			-- Maximum number of start conditions
 
-	Initial_max_rules: INTEGER is 250
+	Initial_max_rules: INTEGER = 250
 			-- Maximum number of rules
 
 invariant

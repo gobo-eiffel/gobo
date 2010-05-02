@@ -45,7 +45,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like extended_name; a_type: like declared_type; a_class: like implementation_class) is
+	make (a_name: like extended_name; a_type: like declared_type; a_class: like implementation_class)
 			-- Create a new attribute.
 		do
 			precursor (a_name, a_type, a_class)
@@ -58,7 +58,7 @@ feature -- Access
 	obsolete_message: ET_OBSOLETE
 			-- Obsolete message
 
-	header_break: ET_BREAK is
+	header_break: ET_BREAK
 			-- Break which appears where the header comment is expected
 		local
 			l_break: ET_BREAK
@@ -78,7 +78,7 @@ feature -- Access
 			end
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			if semicolon /= Void then
@@ -88,7 +88,7 @@ feature -- Access
 			end
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			if semicolon /= Void then
@@ -100,7 +100,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_obsolete_message (a_message: like obsolete_message) is
+	set_obsolete_message (a_message: like obsolete_message)
 			-- Set `obsolete_message' to `a_message'.
 		do
 			obsolete_message := a_message
@@ -110,7 +110,7 @@ feature -- Setting
 
 feature -- Duplication
 
-	new_synonym (a_name: like extended_name): like Current is
+	new_synonym (a_name: like extended_name): like Current
 			-- Synonym feature
 		do
 			create Result.make (a_name, declared_type, implementation_class)
@@ -130,7 +130,7 @@ feature -- Duplication
 
 feature -- Conversion
 
-	renamed_feature (a_name: like extended_name): like Current is
+	renamed_feature (a_name: like extended_name): like Current
 			-- Renamed version of current feature
 		do
 			create Result.make (a_name, declared_type, implementation_class)
@@ -156,7 +156,7 @@ feature -- Conversion
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 --			a_processor.process_extended_attribute (Current)

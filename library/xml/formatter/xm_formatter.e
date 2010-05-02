@@ -21,7 +21,7 @@ inherit
 
 	KL_SHARED_STREAMS
 		export {NONE} all end
-	
+
 	XM_MARKUP_CONSTANTS
 		export {NONE} all end
 
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new XML formatter.
 		do
 			last_output := null_output_stream
@@ -41,8 +41,8 @@ feature -- Access
 
 	last_output: KI_CHARACTER_OUTPUT_STREAM
 			-- Output stream
-			
-	set_output (an_output: like last_output) is
+
+	set_output (an_output: like last_output)
 			-- Set output stream.
 		require
 			not_void: an_output /= Void
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Initialization
 
-	wipe_out is
+	wipe_out
 			-- Clear `last_string'.
 		obsolete "Not meaningful now that streams are used"
 		do
@@ -60,7 +60,7 @@ feature -- Initialization
 
 feature -- Tree processor routines
 
-	process_document (a_document: XM_DOCUMENT) is
+	process_document (a_document: XM_DOCUMENT)
 			-- Process document using xmlns generator and pretty print filters.
 		local
 			pretty_print: XM_PRETTY_PRINT_FILTER
@@ -74,7 +74,7 @@ feature -- Tree processor routines
 
 feature -- Debugging options
 
-	include_position (a_pos_table: XM_POSITION_TABLE) is
+	include_position (a_pos_table: XM_POSITION_TABLE)
 			-- Specify that node positions will be kept in `a_pos_table'.
 		obsolete
 			"position not supported in filters"
@@ -85,16 +85,16 @@ feature -- Debugging options
 			position_included: is_position_included
 		end
 
-	exclude_position is
+	exclude_position
 			-- Specify that node positions will not be kept.
-		obsolete 
+		obsolete
 			"position not supported in filters"
 		do
 		ensure
 			position_included: not is_position_included
 		end
 
-	is_position_included: BOOLEAN is
+	is_position_included: BOOLEAN
 			-- Are node positions kept?
 		do
 		ensure

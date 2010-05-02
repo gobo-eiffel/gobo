@@ -23,7 +23,7 @@ create
 
 feature -- Test
 
-	test_date_duration1 is
+	test_date_duration1
 			-- Test features of DT_DATE_DURATION.
 		local
 			dd1, dd2, dd3: DT_DATE_DURATION
@@ -50,7 +50,7 @@ feature -- Test
 			assert_equal ("to_date_time_duration", dtd, dd1.to_date_time_duration)
 		end
 
-	test_date_duration2 is
+	test_date_duration2
 			-- Test features of DT_DATE_DURATION.
 		local
 			dd1, dd2: DT_DATE_DURATION
@@ -66,7 +66,7 @@ feature -- Test
 			assert_equal ("to_date_time_duration", dtd, dd2.to_date_time_duration)
 		end
 
-	test_date_duration3 is
+	test_date_duration3
 			-- Test features of DT_DATE_DURATION.
 		local
 			dd1, dd2, dd3: DT_DATE_DURATION
@@ -90,7 +90,7 @@ feature -- Test
 			assert_equal ("to_date_time_duration", dtd, dd2.to_date_time_duration)
 		end
 
-	test_date_duration4 is
+	test_date_duration4
 			-- Test features of DT_DATE_DURATION.
 		local
 			dd1, dd2, dd3: DT_DATE_DURATION
@@ -114,7 +114,7 @@ feature -- Test
 			assert_equal ("to_date_time_duration", dtd, dd2.to_date_time_duration)
 		end
 
-	test_date_duration5 is
+	test_date_duration5
 			-- Test features of DT_DATE_DURATION.
 		local
 			dd1, dd2: DT_DATE_DURATION
@@ -134,7 +134,7 @@ feature -- Test
 			assert_equal ("to_date_time_duration", dtd, dd1.to_date_time_duration)
 		end
 
-	test_date_duration6 is
+	test_date_duration6
 			-- Test features of DT_DATE_DURATION.
 		local
 			dd1, dd2: DT_DATE_DURATION
@@ -153,7 +153,7 @@ feature -- Test
 			assert_equal ("to_date_time_duration", dtd, dd1.to_date_time_duration)
 		end
 
-	test_date_duration7 is
+	test_date_duration7
 			-- Test features of DT_DATE_DURATION.
 		local
 			dd1, dd2: DT_DATE_DURATION
@@ -174,7 +174,7 @@ feature -- Test
 			assert_equal ("to_date_time_duration", dtd, dd1.to_date_time_duration)
 		end
 
-	test_date_duration8 is
+	test_date_duration8
 			-- Test features of DT_DATE_DURATION.
 		local
 			dd1, dd2: DT_DATE_DURATION
@@ -193,7 +193,7 @@ feature -- Test
 			assert_equal ("to_date_time_duration", dtd, dd1.to_date_time_duration)
 		end
 
-	test_date_duration9 is
+	test_date_duration9
 			-- Test features of DT_DATE_DURATION.
 		local
 			dd1, dd2: DT_DATE_DURATION
@@ -214,7 +214,7 @@ feature -- Test
 			assert_equal ("to_date_time_duration", dtd, dd1.to_date_time_duration)
 		end
 
-	test_date_duration10 is
+	test_date_duration10
 			-- Test features of DT_DATE_DURATION.
 		local
 			dd1, dd2: DT_DATE_DURATION
@@ -234,7 +234,7 @@ feature -- Test
 			assert_equal ("to_date_time_duration", dtd, dd1.to_date_time_duration)
 		end
 
-	test_date_duration11 is
+	test_date_duration11
 			-- Test features of DT_DATE_DURATION.
 		local
 			dd1, dd2: DT_DATE_DURATION
@@ -266,7 +266,7 @@ feature -- Test
 			assert_equal ("add_days", dd2, dd1)
 		end
 
-	test_date_duration12 is
+	test_date_duration12
 			-- Test features of DT_DATE_DURATION.
 		local
 			dd1, dd2: DT_DATE_DURATION

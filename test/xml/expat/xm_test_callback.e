@@ -21,7 +21,7 @@ inherit
 			make_test, set_up
 		end
 
-	XM_EXPAT_PARSER 
+	XM_EXPAT_PARSER
 		-- Note regular clients MUST NOT inherit from the parser
 		-- but should use callback classes instead.
 		rename
@@ -53,7 +53,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_test (an_id: INTEGER; a_variables: like variables) is
+	make_test (an_id: INTEGER; a_variables: like variables)
 			-- Create a new test case with id `an_id'.
 		do
 			precursor (an_id, a_variables)
@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 
 feature -- Execution
 
-	set_up is
+	set_up
 			-- Setup for a test.
 		do
 			make_expat
@@ -70,7 +70,7 @@ feature -- Execution
 
 feature -- Tests
 
-	test_callback is
+	test_callback
 		do
 			if not operating_system.is_dotnet then
 				do_test_callback
@@ -79,7 +79,7 @@ feature -- Tests
 
 feature {NONE} -- Test
 
-	do_test_callback is
+	do_test_callback
 		local
 			a_file: KL_TEXT_INPUT_FILE
 		do
@@ -168,69 +168,69 @@ feature -- State
 	on_content_called,
 	on_content_matches: BOOLEAN
 
-	Version10: UC_STRING is
+	Version10: UC_STRING
 		once
 			create Result.make_from_string ("1.0")
 		end
 
-	ISO_8859_1: UC_STRING is
+	ISO_8859_1: UC_STRING
 		once
 			create Result.make_from_string ("ISO-8859-1")
 		end
 
-	TestDTD: UC_STRING is
+	TestDTD: UC_STRING
 		once
 			create Result.make_from_string ("test.dtd")
 		end
 
-	EntityName: UC_STRING is
+	EntityName: UC_STRING
 		once
 			create Result.make_from_string ("filename")
 		end
 
-	Entity_notation: UC_STRING is
+	Entity_notation: UC_STRING
 		once
 			create Result.make_from_string ("gif")
 		end
 
-	Gimp: UC_STRING is
+	Gimp: UC_STRING
 		once
 			create Result.make_from_string ("gimp")
 		end
 
-	MyInstruction: UC_STRING is
+	MyInstruction: UC_STRING
 		once
 			create Result.make_from_string ("myinstruction")
 		end
 
-	MyData: UC_STRING is
+	MyData: UC_STRING
 		once
 			create Result.make_from_string ("mydata")
 		end
 
-	XMLSchema: UC_STRING is
+	XMLSchema: UC_STRING
 		once
 			create Result.make_from_string ("http://www.w3.org/2000/10/XMLSchema-instance")
 		end
 
-	Root: UC_STRING is
+	Root: UC_STRING
 		once
 			create Result.make_from_string ("root")
 		end
 
-	HelloWorld: UC_STRING is
+	HelloWorld: UC_STRING
 		once
 			create Result.make_from_string ("Hello World!")
 		end
 
-	Comment: UC_STRING is
+	Comment: UC_STRING
 		once
 			create Result.make_from_string (" yes, this is XML ")
 		end
 
 feature -- Handlers
 
-	on_element_declaration (a_name: STRING; a_model: XM_DTD_ELEMENT_CONTENT) is
+	on_element_declaration (a_name: STRING; a_model: XM_DTD_ELEMENT_CONTENT)
 		do
 			on_element_declaration_called := True
 			if on_element_declaration_matches then
@@ -249,14 +249,14 @@ feature -- Handlers
 			end
 		end
 
-	on_attribute_declaration (an_element_name, a_name: STRING; a_model: XM_DTD_ATTRIBUTE_CONTENT) is
+	on_attribute_declaration (an_element_name, a_name: STRING; a_model: XM_DTD_ATTRIBUTE_CONTENT)
 		do
 			on_attribute_declaration_called := True
 			on_attribute_declaration_matches :=
 				STRING_.same_string (an_element_name, Root)
 		end
 
-	on_xml_declaration (xml_version, encoding: STRING; is_standalone: BOOLEAN) is
+	on_xml_declaration (xml_version, encoding: STRING; is_standalone: BOOLEAN)
 		do
 			-- we need everything for this debug class
 			register_all_callbacks
@@ -272,7 +272,7 @@ feature -- Handlers
 			is_parameter_entity: BOOLEAN;
 			value: STRING;
 			an_id: XM_DTD_EXTERNAL_ID;
-			notation_name: STRING) is
+			notation_name: STRING)
 		do
 			on_entity_declaration_called := True
 			on_entity_declaration_matches :=
@@ -280,26 +280,26 @@ feature -- Handlers
 				STRING_.same_string (notation_name, Entity_notation)
 		end
 
-	on_start_tag (a_namespace, a_prefix, a_local_part: STRING) is
+	on_start_tag (a_namespace, a_prefix, a_local_part: STRING)
 		do
 			on_start_tag_called := True
 			on_start_tag_matches := STRING_.same_string (a_local_part, Root)
 		end
 
-	on_end_tag (a_namespace, a_prefix, a_local_part: STRING) is
+	on_end_tag (a_namespace, a_prefix, a_local_part: STRING)
 			-- called whenever the parser findes an end element
 		do
 			on_end_tag_called := True
 			on_end_tag_matches := STRING_.same_string (a_local_part, Root)
 		end
 
-	on_content (chr_data: STRING) is
+	on_content (chr_data: STRING)
 		do
 			on_content_called := True
 			on_content_matches := STRING_.same_string (chr_data, HelloWorld)
 		end
 
-	on_processing_instruction (target, data: STRING) is
+	on_processing_instruction (target, data: STRING)
 		do
 			on_processing_instruction_called := True
 			on_processing_instruction_matches :=
@@ -307,13 +307,13 @@ feature -- Handlers
 				STRING_.same_string (data, MyData)
 		end
 
-	on_comment (com: STRING) is
+	on_comment (com: STRING)
 		do
 			on_comment_called := True
 			on_comment_matches := STRING_.same_string (com, Comment)
 		end
 
-	on_doctype (name: STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN) is
+	on_doctype (name: STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN)
 		do
 			Precursor (name, an_id, has_internal_subset)
 			on_doctype_called := True
@@ -323,12 +323,12 @@ feature -- Handlers
 				has_internal_subset
 		end
 
-	on_end_doctype is
+	on_end_doctype
 		do
 			on_end_doctype_called := True
 		end
 
-	on_notation_declaration (notation_name: STRING; an_id: XM_DTD_EXTERNAL_ID) is
+	on_notation_declaration (notation_name: STRING; an_id: XM_DTD_EXTERNAL_ID)
 		do
 			on_notation_declaration_called := True
 			on_notation_declaration_matches :=
@@ -336,7 +336,7 @@ feature -- Handlers
 				STRING_.same_string (an_id.system_id, Gimp)
 		end
 
-	on_not_standalone: BOOLEAN is
+	on_not_standalone: BOOLEAN
 		do
 			-- error is no problem for this test
 			on_not_standalone_called := True

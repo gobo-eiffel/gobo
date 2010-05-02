@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_start_string: STRING; a_target_uri: UT_URI; a_prefer_public: BOOLEAN) is
+	make (a_start_string: STRING; a_target_uri: UT_URI; a_prefer_public: BOOLEAN)
 			-- Establish invariant.
 		require
 			target_uri_not_void: a_target_uri /= Void and then a_target_uri.is_absolute
@@ -46,4 +46,4 @@ feature -- Access
 
 
 end
-	
+

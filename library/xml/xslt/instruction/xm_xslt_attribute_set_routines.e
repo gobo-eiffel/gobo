@@ -14,7 +14,7 @@ class XM_XSLT_ATTRIBUTE_SET_ROUTINES
 
 feature {NONE} -- Implementation
 
-	expand_attribute_sets (a_executable: XM_XSLT_EXECUTABLE; a_set: DS_ARRAYED_LIST [INTEGER]; a_context: XM_XPATH_CONTEXT) is
+	expand_attribute_sets (a_executable: XM_XSLT_EXECUTABLE; a_set: DS_ARRAYED_LIST [INTEGER]; a_context: XM_XPATH_CONTEXT)
 			-- Expand attribute sets to their constituents.
 		require
 			a_executable_not_void: a_executable /= Void

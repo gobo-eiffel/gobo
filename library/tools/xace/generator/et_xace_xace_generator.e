@@ -25,13 +25,13 @@ create
 
 feature -- Access
 
-	default_system_output_filename: STRING is
+	default_system_output_filename: STRING
 			-- Name of generated Xace file
 		once
 			Result := compiler + ".xace"
 		end
 
-	default_library_output_filename: STRING is
+	default_library_output_filename: STRING
 			-- Name of generated library Xace file
 		once
 			Result := compiler + ".xace"
@@ -39,13 +39,13 @@ feature -- Access
 
 feature -- Output
 
-	generate_system (a_system: ET_XACE_SYSTEM_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM) is
+	generate_system (a_system: ET_XACE_SYSTEM_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Generate a new Xace file from `a_system'.
 		do
 			print_xace_system_file (a_system, a_file)
 		end
 
-	generate_library (a_library: ET_XACE_LIBRARY_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM) is
+	generate_library (a_library: ET_XACE_LIBRARY_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Generate a new Xace file from `a_library'.
 		do
 			print_xace_library_file (a_library, a_file)
@@ -53,7 +53,7 @@ feature -- Output
 
 feature {NONE} -- Output
 
-	print_xace_system_file (a_system: ET_XACE_SYSTEM_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_xace_system_file (a_system: ET_XACE_SYSTEM_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print Xace version of `a_system' to `a_file'.
 		require
 			a_system_not_void: a_system /= Void
@@ -97,7 +97,7 @@ feature {NONE} -- Output
 			a_file.put_line ("</system>")
 		end
 
-	print_xace_library_file (a_library: ET_XACE_LIBRARY_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_xace_library_file (a_library: ET_XACE_LIBRARY_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print Xace version of `a_library' to `a_file'.
 		require
 			a_library_not_void: a_library /= Void
@@ -139,7 +139,7 @@ feature {NONE} -- Output
 			a_file.put_line ("</library>")
 		end
 
-	print_options (an_option: ET_XACE_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_options (an_option: ET_XACE_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print `an_option' to `a_file'.
 		require
 			an_option_not_void: an_option /= Void
@@ -766,7 +766,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_console_application_option (an_option: ET_XACE_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_console_application_option (an_option: ET_XACE_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print option 'console_application' to `a_file' if not already done.
 		require
 			an_option_not_void: an_option /= Void
@@ -776,7 +776,7 @@ feature {NONE} -- Output
 		do
 		end
 
-	print_clusters (a_clusters: ET_XACE_CLUSTERS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_clusters (a_clusters: ET_XACE_CLUSTERS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print `a_clusters' to `a_file'.
 		require
 			a_clusters_not_void: a_clusters /= Void
@@ -800,7 +800,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_cluster (a_cluster: ET_XACE_CLUSTER; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_cluster (a_cluster: ET_XACE_CLUSTER; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print `a_cluster' to `a_file'.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -867,7 +867,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_class_options (an_option_list: DS_LINKED_LIST [ET_XACE_CLASS_OPTIONS]; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_class_options (an_option_list: DS_LINKED_LIST [ET_XACE_CLASS_OPTIONS]; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print class options `an_option_list' to `a_file'.
 		require
 			an_option_list_not_void: an_option_list /= Void
@@ -898,7 +898,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_feature_options (an_option_list: DS_LINKED_LIST [ET_XACE_FEATURE_OPTIONS]; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_feature_options (an_option_list: DS_LINKED_LIST [ET_XACE_FEATURE_OPTIONS]; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print feature options `an_option_list' to `a_file'.
 		require
 			an_option_list_not_void: an_option_list /= Void
@@ -924,7 +924,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_mounted_libraries (a_mounted_libraries: ET_XACE_MOUNTED_LIBRARIES; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_mounted_libraries (a_mounted_libraries: ET_XACE_MOUNTED_LIBRARIES; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print `a_mounted_libraries' to `a_file'.
 		require
 			a_mounted_libraries_not_void: a_mounted_libraries /= Void
@@ -952,7 +952,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_escaped_string (a_string: STRING; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_escaped_string (a_string: STRING; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print escaped version of `a_string' to `a_file'.
 		require
 			a_string_not_void: a_string /= Void
@@ -991,7 +991,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_quote_escaped_string (a_string: STRING; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_quote_escaped_string (a_string: STRING; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print escaped version of `a_string' (with quotes also
 			-- escaped for attribute values) to `a_file'.
 		require
@@ -1029,7 +1029,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_escaped_character (a_char: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_escaped_character (a_char: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print escaped version of `a_char' to `a_file'.
 		require
 			is_escaped: is_escaped (a_char)
@@ -1053,7 +1053,7 @@ feature {NONE} -- Output
 
 feature {NONE} -- Escaped
 
-	is_escaped (a_char: INTEGER): BOOLEAN is
+	is_escaped (a_char: INTEGER): BOOLEAN
 			-- Is this an escapable character?
 		do
 			Result := a_char = Lt_char.code

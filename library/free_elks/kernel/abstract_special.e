@@ -15,7 +15,7 @@ inherit
 feature -- Measurement
 
 	count: INTEGER
-			-- Count of special area		
+			-- Count of special area
 		deferred
 		ensure
 			count_non_negative: Result >= 0

@@ -109,7 +109,7 @@ _   </text><featurename>title</featurename>: <classname>STRING</classname>
 <text>
 </text>feature <comment>Setting</comment>
 <text>
-_   </text><featurename>set_title</featurename> (<argument>a_title</argument>: like <featurename>title</featurename>) is
+_   </text><featurename>set_title</featurename> (<argument>a_title</argument>: like <featurename>title</featurename>)
 <text>_   _   _   </text><comment>Set <featurename>title</featurename> to <argument>a_title</argument>.</comment>
 <text>_   _   </text>require
 <text>_   _   _   </text>a_title_not_void: <argument>a_title</argument> /= Void
@@ -150,7 +150,7 @@ they are used are:
 <itemizedlist>
 	<listitem><para>to separate formal arguments of routines:
 		<informalexample><programlisting>
-<featurename>f</featurename> (<argument>a_foo</argument>: <classname>FOO</classname>; <argument>a_bar</argument>: <classname>BAR</classname>) is</programlisting></informalexample>
+<featurename>f</featurename> (<argument>a_foo</argument>: <classname>FOO</classname>; <argument>a_bar</argument>: <classname>BAR</classname>)</programlisting></informalexample>
 	</para></listitem>
 	
 	<listitem><para>to separate several instructions on the same line, 

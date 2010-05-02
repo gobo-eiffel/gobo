@@ -22,15 +22,15 @@ create
 
 feature -- Access
 
-	program_name: STRING is "eiffel_scanner"
+	program_name: STRING = "eiffel_scanner"
 			-- Program name
 
-	library_name: STRING is "lexical"
+	library_name: STRING = "lexical"
 			-- Library name of example
 
 feature -- Test
 
-	test_eiffel_scanner is
+	test_eiffel_scanner
 			-- Test 'eiffel_scanner' example.
 		local
 			eiffel_scanner_exe: STRING
@@ -52,7 +52,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	sample_dirname: STRING is
+	sample_dirname: STRING
 			-- Name of directory where sample files are located
 		once
 			Result := file_system.nested_pathname ("${GOBO}", <<"test", "example", "lexical", "data">>)
@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 			sample_dirname_not_empty: Result.count > 0
 		end
 
-	sample_e_filename: STRING is
+	sample_e_filename: STRING
 			-- Name of sample Eiffel file
 		once
 			Result := file_system.pathname (sample_dirname, "sample.e")

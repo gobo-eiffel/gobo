@@ -14,7 +14,7 @@ note
 class KL_TEST_INTEGER_ROUTINES
 
 inherit
-	
+
 	KL_TEST_CASE
 
 	KL_IMPORTED_INTEGER_ROUTINES
@@ -28,7 +28,7 @@ create
 
 feature -- Test
 
-	test_div is
+	test_div
 			-- Test feature `div'.
 		do
 				-- Zero.
@@ -60,7 +60,7 @@ feature -- Test
 			assert_integers_equal ("div404", 1, INTEGER_.div (Platform.Minimum_integer, Platform.Minimum_integer))
 		end
 
-	test_mod is
+	test_mod
 			-- Test feature `mod'.
 		do
 				-- Zero.
@@ -92,7 +92,7 @@ feature -- Test
 			assert_integers_equal ("mod404", 0, INTEGER_.mod (Platform.Minimum_integer, Platform.Minimum_integer))
 		end
 
-	test_power is
+	test_power
 			-- Test feature `power'.
 		do
 				-- Zero.
@@ -109,7 +109,7 @@ feature -- Test
 			assert_integers_equal ("negative_even", 5764801,  INTEGER_.power (-7, 8))
 		end
 
-	test_bit_or is
+	test_bit_or
 			-- Test feature `bit_or'.
 		do
 				-- 00000000000000000000000000000001 = 1
@@ -118,7 +118,7 @@ feature -- Test
 			assert_integers_equal ("bit_or1", 5, INTEGER_.bit_or (1, 4))
 		end
 
-	test_bit_and is
+	test_bit_and
 			-- Test feature `bit_and'.
 		do
 				-- 00000000000000000000000000000010 = 2
@@ -127,7 +127,7 @@ feature -- Test
 			assert_integers_equal ("bit_and1", 2, INTEGER_.bit_and (2, 6))
 		end
 
-	test_bit_not is
+	test_bit_not
 			-- Test feature `bit_not'.
 		do
 				-- 00000000000000000000000000000010 = 2
@@ -135,7 +135,7 @@ feature -- Test
 			assert_integers_equal ("bit_not1", -3, INTEGER_.bit_not (2))
 		end
 
-	test_bit_shift_left is
+	test_bit_shift_left
 			-- Test feature `bit_shift_left'.
 		do
 				-- 00000000000000000000000000000001 = 1
@@ -155,7 +155,7 @@ feature -- Test
 			assert_integers_equal ("bit_shift_left5", Platform.Maximum_integer, INTEGER_.bit_shift_left (Platform.Maximum_integer, 0))
 		end
 
-	test_bit_shift_right is
+	test_bit_shift_right
 			-- Test feature `bit_shift_right'.
 		do
 				-- 00000000000000000000000000010000 = 16
@@ -175,7 +175,7 @@ feature -- Test
 			assert_integers_equal ("bit_shift_right5", 0, INTEGER_.bit_shift_right (Platform.Maximum_integer, 31))
 		end
 
-	test_is_even is
+	test_is_even
 			-- Test `is_even'.
 		do
 				-- Zero.

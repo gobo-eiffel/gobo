@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target: like target; a_name: like name; args: like arguments) is
+	make (a_target: like target; a_name: like name; args: like arguments)
 			-- Create a new bracket expression.
 		require
 			a_target_not_void: a_target /= Void
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset call as it was just after it was last parsed.
 		do
 			target.reset
@@ -63,20 +63,20 @@ feature -- Access
 	arguments: ET_BRACKET_ARGUMENT_LIST
 			-- Arguments
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
 			Result := target.position
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := target.first_leaf
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			if arguments /= Void then
@@ -86,7 +86,7 @@ feature -- Access
 			end
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			if arguments /= Void then
@@ -98,7 +98,7 @@ feature -- Access
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_bracket_expression (Current)

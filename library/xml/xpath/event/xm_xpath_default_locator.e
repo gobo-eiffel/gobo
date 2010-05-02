@@ -18,10 +18,10 @@ inherit
 
 feature -- Access
 
-	system_id: STRING is ""
+	system_id: STRING = ""
 			-- Current SYSTEM ID
 
-	line_number: INTEGER is 0
+	line_number: INTEGER = 0
 			-- Approximate line number of current event, or 0 if unknown
 
 end

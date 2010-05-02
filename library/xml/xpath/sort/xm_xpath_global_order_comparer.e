@@ -18,7 +18,7 @@ inherit
 
 feature -- Comparison
 
-		three_way_comparison (a_node, another_node: XM_XPATH_NODE): INTEGER is
+		three_way_comparison (a_node, another_node: XM_XPATH_NODE): INTEGER
 			-- If nodes are then same, 0;
 			-- if `a_node' smaller, -1; if greater, 1
 		local
@@ -34,4 +34,4 @@ feature -- Comparison
 		end
 
 end
-	
+

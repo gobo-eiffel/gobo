@@ -36,31 +36,31 @@ feature -- Access
 	document: XM_XPATH_TREE_DOCUMENT
 			-- Document that owns this node
 
-	is_non_white_following_sibling: BOOLEAN is
+	is_non_white_following_sibling: BOOLEAN
 			-- Is `Current' such that an immediate preceding-sibling all-whitspace text node should be stripped in xslt stylesheets?
 		do
 			Result := False
 		end
 
-	is_tree_node: BOOLEAN is
+	is_tree_node: BOOLEAN
 			-- Is `Current' a tree node?
 		do
 			Result := True
 		end
 
-	as_tree_node: XM_XPATH_TREE_NODE is
+	as_tree_node: XM_XPATH_TREE_NODE
 			-- `Current' seen as a tree node
 		do
 			Result := Current
 		end
 
-	is_tree_composite_node: BOOLEAN is
+	is_tree_composite_node: BOOLEAN
 			-- Is `Current' a composite node?
 		do
 			Result := False
 		end
 
-	as_tree_composite_node: XM_XPATH_TREE_COMPOSITE_NODE is
+	as_tree_composite_node: XM_XPATH_TREE_COMPOSITE_NODE
 			-- `Current' seen as a composite node
 		require
 			tree_composite: is_tree_composite_node
@@ -69,13 +69,13 @@ feature -- Access
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	is_tree_document: BOOLEAN is
+	is_tree_document: BOOLEAN
 			-- Is `Current' a document?
 		do
 			Result := False
 		end
 
-	as_tree_document: XM_XPATH_TREE_DOCUMENT is
+	as_tree_document: XM_XPATH_TREE_DOCUMENT
 			-- `Current' seen as a document
 		require
 			document: is_tree_document
@@ -84,13 +84,13 @@ feature -- Access
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	is_tree_element: BOOLEAN is
+	is_tree_element: BOOLEAN
 			-- Is `Current' an element?
 		do
 			Result := False
 		end
 
-	as_tree_element: XM_XPATH_TREE_ELEMENT is
+	as_tree_element: XM_XPATH_TREE_ELEMENT
 			-- `Current' seen as an element
 		require
 			element: is_tree_element
@@ -99,13 +99,13 @@ feature -- Access
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	is_tree_attribute: BOOLEAN is
+	is_tree_attribute: BOOLEAN
 			-- Is `Current' an attribute?
 		do
 			Result := False
 		end
 
-	as_tree_attribute: XM_XPATH_TREE_ATTRIBUTE is
+	as_tree_attribute: XM_XPATH_TREE_ATTRIBUTE
 			-- `Current' seen as an attribute
 		require
 			is_attribute: is_tree_attribute
@@ -114,13 +114,13 @@ feature -- Access
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	is_tree_text: BOOLEAN is
+	is_tree_text: BOOLEAN
 			-- Is `Current' a text node?
 		do
 			Result := False
 		end
 
-	as_tree_text: XM_XPATH_TREE_TEXT is
+	as_tree_text: XM_XPATH_TREE_TEXT
 			-- `Current' seen as a text node
 		require
 			text: is_tree_text
@@ -129,7 +129,7 @@ feature -- Access
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	system_id: STRING is
+	system_id: STRING
 			-- SYSTEM id of `Current'
 		do
 
@@ -142,7 +142,7 @@ feature -- Access
 			end
 		end
 
-	line_number: INTEGER is
+	line_number: INTEGER
 			-- Line number
 		do
 
@@ -151,7 +151,7 @@ feature -- Access
 			Result := parent.line_number
 		end
 
-	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE is
+	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE
 			-- Node sequence number (in document order)
 			-- In this implementation, parent nodes (elements and roots)
 			--  have a zero least-significant word, while namespaces,
@@ -183,7 +183,7 @@ feature -- Access
 
 		end
 
-	document_element: XM_XPATH_TREE_ELEMENT is
+	document_element: XM_XPATH_TREE_ELEMENT
 			-- The top-level element
 		local
 			an_element: XM_XPATH_ELEMENT
@@ -192,7 +192,7 @@ feature -- Access
 			if an_element /= Void then	Result := an_element.as_tree_node.as_tree_element end
 		end
 
-	document_number: INTEGER is
+	document_number: INTEGER
 			-- Uniquely identifies the owning document.
 		do
 			Result := document.document_number
@@ -201,13 +201,13 @@ feature -- Access
 	child_index: INTEGER
 			-- Position within `parent'
 
-	name_code: INTEGER is
+	name_code: INTEGER
 			-- Name code this node - used in displaying names;
 		do
 			Result := -1 -- default implementation for nameless nodes
 		end
 
-	node_name: STRING is
+	node_name: STRING
 			-- Qualified name
 		do
 			inspect
@@ -223,14 +223,14 @@ feature -- Access
 			end
 		end
 
-	parent: XM_XPATH_TREE_COMPOSITE_NODE is
+	parent: XM_XPATH_TREE_COMPOSITE_NODE
 			-- Parent of current node;
 			-- `Void' if current node is root, or for orphan nodes.
 		do
 			Result := parent_node
 		end
 
-	previous_sibling: XM_XPATH_NODE is
+	previous_sibling: XM_XPATH_NODE
 			-- The previous sibling of this node;
 			-- If there is no such node, return `Void'
 		do
@@ -239,7 +239,7 @@ feature -- Access
 			end
 		end
 
-	next_sibling: XM_XPATH_NODE is
+	next_sibling: XM_XPATH_NODE
 			-- The next sibling of this node;
 			-- If there is no such node, return `Void'
 		do
@@ -248,13 +248,13 @@ feature -- Access
 			end
 		end
 
-	root: XM_XPATH_NODE is
+	root: XM_XPATH_NODE
 			-- The root node for `Current'
 		do
 			Result := document_root
 		end
 
-	document_root: XM_XPATH_DOCUMENT is
+	document_root: XM_XPATH_DOCUMENT
 			-- The document node for `Current';
 			-- If `Current' is in a document fragment, then return Void
 		do
@@ -263,7 +263,7 @@ feature -- Access
 			end
 		end
 
-	new_axis_iterator (an_axis_type: INTEGER): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
+	new_axis_iterator (an_axis_type: INTEGER): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
 			-- An enumeration over the nodes reachable by `an_axis_type' from this node
 		do
 
@@ -280,7 +280,7 @@ feature -- Access
 			end
 		end
 
-	new_axis_iterator_with_node_test (an_axis_type: INTEGER; a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
+	new_axis_iterator_with_node_test (an_axis_type: INTEGER; a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
 			-- An enumeration over the nodes reachable by `an_axis_type' from this node;
 			-- Only nodes that match the pattern specified by `a_node_test' will be selected.
 		do
@@ -325,7 +325,7 @@ feature -- Access
 			end
 		end
 
-	atomized_value: XM_XPATH_VALUE is
+	atomized_value: XM_XPATH_VALUE
 			-- Typed value as atomic value or (unusually) sequence of atomic values.
 		do
 			create {XM_XPATH_STRING_VALUE} Result.make_untyped_atomic (string_value)
@@ -333,7 +333,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_same_node (other: XM_XPATH_NODE): BOOLEAN is
+	is_same_node (other: XM_XPATH_NODE): BOOLEAN
 			-- Does `Current' represent the same node in the tree as `other'?
 		do
 
@@ -346,7 +346,7 @@ feature -- Comparison
 
 feature -- Element change
 
-	set_parent (a_parent: XM_XPATH_TREE_COMPOSITE_NODE; an_index: INTEGER) is
+	set_parent (a_parent: XM_XPATH_TREE_COMPOSITE_NODE; an_index: INTEGER)
 			-- Set parent.
 		require
 			parent_not_void: a_parent /= void
@@ -359,7 +359,7 @@ feature -- Element change
 			parent_set: parent_node = a_parent
 		end
 
-	reduce_child_index (a_reduction: INTEGER) is
+	reduce_child_index (a_reduction: INTEGER)
 			-- Reduce `child_index' by `a_reduction'.
 		do
 			child_index := child_index - a_reduction
@@ -368,8 +368,8 @@ feature -- Element change
 		end
 
 feature {XM_XPATH_TREE_COMPOSITE_NODE} -- Element change
-	
-	set_child_index (a_index: INTEGER) is
+
+	set_child_index (a_index: INTEGER)
 			-- Set `child_index' to `a_index'.
 		require
 			strictly_positive_index: a_index > 0
@@ -382,7 +382,7 @@ feature {XM_XPATH_TREE_COMPOSITE_NODE} -- Element change
 
 feature {XM_XPATH_TREE_NODE, XM_XPATH_TREE_ENUMERATION} -- Restricted
 
-	previous_node_in_document_order: XM_XPATH_TREE_NODE is
+	previous_node_in_document_order: XM_XPATH_TREE_NODE
 			-- Previous node within the document
 		local
 			a_previous_node: XM_XPATH_NODE
@@ -401,7 +401,7 @@ feature {XM_XPATH_TREE_NODE, XM_XPATH_TREE_ENUMERATION} -- Restricted
 			end
 		end
 
-	next_node_in_document_order (an_anchor: XM_XPATH_TREE_NODE): XM_XPATH_TREE_NODE is
+	next_node_in_document_order (an_anchor: XM_XPATH_TREE_NODE): XM_XPATH_TREE_NODE
 			-- Next node within the document;
 			-- The scan stops if it encounters `an_anchor'
 		require
@@ -445,7 +445,7 @@ feature {XM_XPATH_TREE_NODE, XM_XPATH_TREE_ENUMERATION} -- Restricted
 			end
 		end
 
-	last_descendant_or_self: XM_XPATH_TREE_NODE is
+	last_descendant_or_self: XM_XPATH_TREE_NODE
 			-- Last descendant or `Current' if no descendants
 		local
 			a_last_descendant: XM_XPATH_NODE
@@ -467,7 +467,7 @@ feature {XM_XPATH_TREE_NODE} -- Local
 
 feature {NONE} -- Implementation
 
-	created_ancestor_axis_iterator (a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
+	created_ancestor_axis_iterator (a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
 			-- New ancestor axis iterator
 		require
 			node_test_not_void: a_node_test /= Void
@@ -481,7 +481,7 @@ feature {NONE} -- Implementation
 			ancestor_axis_iterator_not_void: Result /= Void
 		end
 
-	created_ancestor_or_self_axis_iterator (a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
+	created_ancestor_or_self_axis_iterator (a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
 			-- New ancestor-or-self axis iterator
 		require
 			node_test_not_void: a_node_test /= Void
@@ -499,7 +499,7 @@ feature {NONE} -- Implementation
 			ancestor_or_self_axis_iterator_not_void: Result /= Void
 		end
 
-	created_attribute_axis_iterator (a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
+	created_attribute_axis_iterator (a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
 			-- New attribute axis iterator
 		require
 			node_test_not_void: a_node_test /= Void
@@ -513,7 +513,7 @@ feature {NONE} -- Implementation
 			attribute_axis_iterator_not_void: Result /= Void
 		end
 
-	created_child_axis_iterator (a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
+	created_child_axis_iterator (a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
 			-- New child axis iterator
 		require
 			node_test_not_void: a_node_test /= Void
@@ -527,7 +527,7 @@ feature {NONE} -- Implementation
 			child_axis_iterator_not_void: Result /= Void
 		end
 
-	created_descendant_axis_iterator (a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
+	created_descendant_axis_iterator (a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
 			-- New descendant axis iterator
 		require
 			node_test_not_void: a_node_test /= Void
@@ -554,7 +554,7 @@ feature {NONE} -- Implementation
 			descendant_axis_iterator_not_void: Result /= Void
 		end
 
-	created_descendant_or_self_axis_iterator (a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
+	created_descendant_or_self_axis_iterator (a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
 			-- New descendant-or-self axis iterator
 		require
 			node_test_not_void: a_node_test /= Void
@@ -570,7 +570,7 @@ feature {NONE} -- Implementation
 			descendant_or_self_axis_iterator_not_void: Result /= Void
 		end
 
-	created_following_axis_iterator (a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
+	created_following_axis_iterator (a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
 			-- New following axis iterator
 		require
 			node_test_not_void: a_node_test /= Void
@@ -584,7 +584,7 @@ feature {NONE} -- Implementation
 			following_axis_iterator_not_void: Result /= Void
 		end
 
-	created_following_sibling_axis_iterator (a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
+	created_following_sibling_axis_iterator (a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
 			-- New following sibling axis iterator
 		require
 			node_test_not_void: a_node_test /= Void
@@ -598,7 +598,7 @@ feature {NONE} -- Implementation
 			following_sibling_axis_iterator_not_void: Result /= Void
 		end
 
-	created_parent_axis_iterator (a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
+	created_parent_axis_iterator (a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
 			-- New parent axis iterator
 		require
 			node_test_not_void: a_node_test /= Void
@@ -617,7 +617,7 @@ feature {NONE} -- Implementation
 			parent_axis_iterator_not_void: Result /= Void
 		end
 
-	created_preceding_axis_iterator (a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
+	created_preceding_axis_iterator (a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
 			-- New preceding axis iterator
 		require
 			node_test_not_void: a_node_test /= Void
@@ -631,7 +631,7 @@ feature {NONE} -- Implementation
 			preceding_axis_iterator_not_void: Result /= Void
 		end
 
-	created_preceding_sibling_axis_iterator (a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
+	created_preceding_sibling_axis_iterator (a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
 			-- New preceding sibling axis iterator
 		require
 			node_test_not_void: a_node_test /= Void
@@ -645,7 +645,7 @@ feature {NONE} -- Implementation
 			preceding_sibling_axis_iterator_not_void: Result /= Void
 		end
 
-	created_preceding_or_ancestor_axis_iterator (a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
+	created_preceding_or_ancestor_axis_iterator (a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
 			-- New preceding-or-ancestor axis iterator
 		require
 			node_test_not_void: a_node_test /= Void

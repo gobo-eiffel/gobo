@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_base_iterator, a_second_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; a_context: XM_XPATH_CONTEXT) is
+	make (a_base_iterator, a_second_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; a_context: XM_XPATH_CONTEXT)
 			-- Establish invariant.
 		require
 			base_iterator_before: a_base_iterator /= Void and then a_base_iterator.before
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item: XM_XPATH_NODE is
+	item: XM_XPATH_NODE
 			-- Node at the current position
 		do
 			Result := current_iterator.item
@@ -62,7 +62,7 @@ feature -- Access
 
 feature -- Status report
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
 			Result := not current_iterator.before and then current_iterator.after
@@ -71,7 +71,7 @@ feature -- Status report
 			end
 		end
 
-	is_node_iterator: BOOLEAN is
+	is_node_iterator: BOOLEAN
 			-- Does `Current' yield a node sequence?
 		do
 			Result := True
@@ -79,7 +79,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move to next position
 		do
 			index := index + 1
@@ -89,7 +89,7 @@ feature -- Cursor movement
 				if second_iterator.before then
 					second_iterator.start
 					current_iterator := second_iterator
-				end				
+				end
 			else
 				current_iterator.forth
 			end
@@ -104,7 +104,7 @@ feature -- Cursor movement
 
 feature -- Conversion
 
-	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
 		do
 			Result ?= ANY_.to_any (Current)
@@ -112,7 +112,7 @@ feature -- Conversion
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 			create Result.make (base_iterator.another, second_iterator.another, context)

@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type: like base_type; a_class: like base_class; an_open_operand_type_sets: like open_operand_type_sets) is
+	make (a_type: like base_type; a_class: like base_class; an_open_operand_type_sets: like open_operand_type_sets)
 			-- Create a new PROCEDURE type.
 		require
 			a_type_not_void: a_type /= Void
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	result_type_set: ET_DYNAMIC_TYPE_SET is
+	result_type_set: ET_DYNAMIC_TYPE_SET
 			-- Type set of result, if any
 		do
 			-- Result := Void
@@ -56,7 +56,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	new_dynamic_procedure (a_procedure: ET_PROCEDURE; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE is
+	new_dynamic_procedure (a_procedure: ET_PROCEDURE; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE
 			-- Run-time procedure associated with `a_procedure';
 			-- Create a new object at each call.
 		do

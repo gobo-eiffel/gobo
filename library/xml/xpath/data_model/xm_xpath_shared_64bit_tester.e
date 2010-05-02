@@ -11,10 +11,10 @@ note
 	revision: "$Revision$"
 
 class XM_XPATH_SHARED_64BIT_TESTER
-	
+
 feature -- Access
 
-	long_equality_tester: XM_XPATH_64BIT_TESTER is
+	long_equality_tester: XM_XPATH_64BIT_TESTER
 			-- 64bit equality tester
 		once
 			create Result

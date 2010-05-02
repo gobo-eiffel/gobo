@@ -24,7 +24,7 @@ inherit
 
 feature -- Access
 
-	new_unicode_string (a_string: STRING): UC_STRING is
+	new_unicode_string (a_string: STRING): UC_STRING
 			-- New unicode string made up of the characters from `a_string'
 		require
 			a_string_not_void: a_string /= Void
@@ -35,7 +35,7 @@ feature -- Access
 			count_set: Result.count = a_string.count
 		end
 
-	new_unicode_string_from_utf8 (a_string: STRING): UC_STRING is
+	new_unicode_string_from_utf8 (a_string: STRING): UC_STRING
 			-- New unicode string made up of the characters
 			-- from `a_string' encoded in UTF-8
 		require
@@ -48,7 +48,7 @@ feature -- Access
 			new_string_not_void: Result /= Void
 		end
 
-	new_unicode_string_from_utf16 (a_string: STRING): UC_STRING is
+	new_unicode_string_from_utf16 (a_string: STRING): UC_STRING
 			-- New unicode string made up of the characters
 			-- from `a_string' encoded in UTF-16
 		require
@@ -61,7 +61,7 @@ feature -- Access
 			new_string_not_void: Result /= Void
 		end
 
-	new_unicode_string_with_capacity (suggested_capacity: INTEGER): UC_STRING is
+	new_unicode_string_with_capacity (suggested_capacity: INTEGER): UC_STRING
 			-- New empty unicode string
 		require
 			non_negative_suggested_capacity: suggested_capacity >= 0
@@ -73,7 +73,7 @@ feature -- Access
 			byte_capacity_set: Result.byte_capacity >= suggested_capacity
 		end
 
-	new_unicode_string_empty: UC_STRING is
+	new_unicode_string_empty: UC_STRING
 			-- New empty unicode string
 		do
 			create {UC_UTF8_STRING} Result.make_empty
@@ -82,7 +82,7 @@ feature -- Access
 			empty: Result.count = 0
 		end
 
-	new_unicode_string_from_substring (a_string: STRING; start_index, end_index: INTEGER): UC_STRING is
+	new_unicode_string_from_substring (a_string: STRING; start_index, end_index: INTEGER): UC_STRING
 			-- New unicode string made up of the character sequence of
 			-- `a_string' between `start_index' and `end_index' inclusive
 		require
@@ -97,7 +97,7 @@ feature -- Access
 			count_set: Result.count = (end_index - start_index + 1)
 		end
 
-	new_unicode_string_filled (c: CHARACTER; n: INTEGER): UC_STRING is
+	new_unicode_string_filled (c: CHARACTER; n: INTEGER): UC_STRING
 			-- New unicode string of length `n' filled with character `c'
 		require
 			valid_count: n >= 0
@@ -109,7 +109,7 @@ feature -- Access
 			occurrences: Result.occurrences (c) = n
 		end
 
-	new_unicode_string_filled_unicode (c: UC_CHARACTER; n: INTEGER): UC_STRING is
+	new_unicode_string_filled_unicode (c: UC_CHARACTER; n: INTEGER): UC_STRING
 			-- New unicode string of length `n' filled with unicode character `c'
 		require
 			c_not_void: c /= Void
@@ -122,7 +122,7 @@ feature -- Access
 			occurrences: Result.unicode_occurrences (c) = n
 		end
 
-	new_unicode_string_filled_code (a_code: INTEGER; n: INTEGER): UC_STRING is
+	new_unicode_string_filled_code (a_code: INTEGER; n: INTEGER): UC_STRING
 			-- New unicode string of length `n' filled with unicode
 			-- character of code `a_code'
 		require
@@ -136,7 +136,7 @@ feature -- Access
 			occurrences: Result.code_occurrences (a_code) = n
 		end
 
-	new_unicode_character (a_char: CHARACTER): UC_CHARACTER is
+	new_unicode_character (a_char: CHARACTER): UC_CHARACTER
 			-- New unicode character from Latin-1 character `a_char'
 		do
 			create Result.make_from_character (a_char)

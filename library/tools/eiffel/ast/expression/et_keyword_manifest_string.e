@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_keyword: like keyword; a_string: like manifest_string) is
+	make (a_keyword: like keyword; a_string: like manifest_string)
 			-- Create a new keyword-manifest_string.
 		require
 			a_keyword_not_void: a_keyword /= Void
@@ -45,26 +45,26 @@ feature -- Access
 	manifest_string: ET_MANIFEST_STRING
 			-- Manifest string
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
 			Result := keyword.position
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := keyword
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := manifest_string
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := manifest_string.break
@@ -72,7 +72,7 @@ feature -- Access
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_keyword_manifest_string (Current)

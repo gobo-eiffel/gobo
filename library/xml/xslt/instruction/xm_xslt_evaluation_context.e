@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_transformer: XM_XSLT_TRANSFORMER) is
+	make (a_transformer: XM_XSLT_TRANSFORMER)
 			-- Establish invariant for major context.
 		require
 			transformer_not_void: a_transformer /= Void
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			not_pattern: not is_pattern
 		end
 
-	make_minor (a_transformer: XM_XSLT_TRANSFORMER) is
+	make_minor (a_transformer: XM_XSLT_TRANSFORMER)
 			-- Establish invariant for minor context.
 		require
 			transformer_not_void: a_transformer /= Void
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 			not_pattern: not is_pattern
 		end
 
-	make_restricted (a_static_context: like static_context; a_collation_map: like collation_map; a_configuration: like configuration) is
+	make_restricted (a_static_context: like static_context; a_collation_map: like collation_map; a_configuration: like configuration)
 			-- Create a restricted context for [xsl:]use-when.
 		require
 			static_context_not_void: a_static_context /= Void
@@ -97,7 +97,7 @@ feature -- Access
 	transformer: XM_XSLT_TRANSFORMER
 			-- Transformer
 
-	local_variable_frame: XM_XPATH_STACK_FRAME is
+	local_variable_frame: XM_XPATH_STACK_FRAME
 			-- Local variables in scope
 		do
 			if is_minor then
@@ -107,7 +107,7 @@ feature -- Access
 			end
 		end
 
-	current_mode: XM_XSLT_MODE is
+	current_mode: XM_XSLT_MODE
 			-- Current mode
 		do
 			if is_minor then
@@ -117,7 +117,7 @@ feature -- Access
 			end
 		end
 
-	current_template: XM_XSLT_RULE is
+	current_template: XM_XSLT_RULE
 			-- Rule for current template
 		do
 			if is_minor then
@@ -127,7 +127,7 @@ feature -- Access
 			end
 		end
 
-	current_group_iterator:  XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM] is
+	current_group_iterator:  XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM]
 			-- Current group iterator
 		do
 			if is_minor then
@@ -137,7 +137,7 @@ feature -- Access
 			end
 		end
 
-	current_regexp_iterator:  XM_XSLT_REGEXP_ITERATOR is
+	current_regexp_iterator:  XM_XSLT_REGEXP_ITERATOR
 			-- Current regexp iterator
 		do
 			if is_pattern then
@@ -150,8 +150,8 @@ feature -- Access
 		ensure then
 			current_regexp_iterator_void_for_patterns: is_pattern implies Result = Void
 		end
-	
-	tunnel_parameters:  XM_XSLT_PARAMETER_SET is
+
+	tunnel_parameters:  XM_XSLT_PARAMETER_SET
 			-- Tunnel parameters
 		do
 			if is_minor then
@@ -161,7 +161,7 @@ feature -- Access
 			end
 		end
 
-	local_parameters:  XM_XSLT_PARAMETER_SET is
+	local_parameters:  XM_XSLT_PARAMETER_SET
 			-- Tunnel parameters
 		do
 			if is_minor then
@@ -172,8 +172,8 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-	
-	is_local_parameter_supplied (a_fingerprint: INTEGER; is_tunnel: BOOLEAN): BOOLEAN is
+
+	is_local_parameter_supplied (a_fingerprint: INTEGER; is_tunnel: BOOLEAN): BOOLEAN
 			-- Does `a_fingerprint' represent a supplied local parameter?
 		local
 			a_parameter_set: XM_XSLT_PARAMETER_SET
@@ -196,8 +196,8 @@ feature -- Access
 
 	last_parsed_media_type: UT_MEDIA_TYPE
 			-- Auxiliary result from last call to `build_document'
-	
-	available_functions: XM_XPATH_FUNCTION_LIBRARY is
+
+	available_functions: XM_XPATH_FUNCTION_LIBRARY
 			-- Available functions
 		do
 			if is_restricted then
@@ -207,7 +207,7 @@ feature -- Access
 			end
 		end
 
-	available_documents: XM_XPATH_DOCUMENT_POOL is
+	available_documents: XM_XPATH_DOCUMENT_POOL
 			-- Available documents
 		do
 			if not is_restricted then
@@ -215,7 +215,7 @@ feature -- Access
 			end
 		end
 
-	implicit_timezone: DT_FIXED_OFFSET_TIME_ZONE is
+	implicit_timezone: DT_FIXED_OFFSET_TIME_ZONE
 			-- Implicit time zone for comparing unzoned times and dates
 		do
 			if is_restricted then
@@ -225,13 +225,13 @@ feature -- Access
 			end
 		end
 
-	security_manager: XM_XPATH_SECURITY_MANAGER is
+	security_manager: XM_XPATH_SECURITY_MANAGER
 			-- Security manager
 		do
 			Result := transformer.configuration.output_resolver.security_manager
 		end
 
-	current_date_time: DT_FIXED_OFFSET_ZONED_DATE_TIME is
+	current_date_time: DT_FIXED_OFFSET_ZONED_DATE_TIME
 			-- Current date-time
 		do
 			if not is_restricted then
@@ -241,7 +241,7 @@ feature -- Access
 			end
 		end
 
-	is_current_item_available: BOOLEAN is
+	is_current_item_available: BOOLEAN
 			-- May `current()' be called without error?
 		do
 			if not is_restricted then
@@ -263,19 +263,19 @@ feature -- Status report
 	is_pattern: BOOLEAN
 			-- Is `Current' used for pattern evaluation?
 
-	has_push_processing: BOOLEAN is
+	has_push_processing: BOOLEAN
 			-- Is push-processing to a receiver implemented?
 		do
 			Result := True
 		end
 
-	is_process_error: BOOLEAN is
+	is_process_error: BOOLEAN
 			-- Has a processing error occurred?
 		do
 			Result := transformer.is_error
 		end
 
-	is_uri_written (a_uri: STRING): BOOLEAN is
+	is_uri_written (a_uri: STRING): BOOLEAN
 			-- Has `a_uri' been written to yet?
 		do
 			Result := STRING_.same_string (a_uri, transformer.principal_result_uri) or else Precursor (a_uri)
@@ -283,7 +283,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_pattern is
+	set_pattern
 			-- Set `is_pattern' to `Trye'.
 		do
 			is_pattern := True
@@ -293,7 +293,7 @@ feature -- Status setting
 
 feature -- Creation
 
-	new_context: like Current is
+	new_context: like Current
 			-- Create a copy of `Current'
 		do
 			if is_minor then
@@ -303,8 +303,8 @@ feature -- Creation
 				--Result.set_caller (Current)
 			end
 		end
-	
-	new_major_context (a_minor_context: XM_XSLT_EVALUATION_CONTEXT): like Current is
+
+	new_major_context (a_minor_context: XM_XSLT_EVALUATION_CONTEXT): like Current
 			-- Create a copy of `Current'
 		require
 			minor_context_not_void: a_minor_context /= Void and then a_minor_context.is_minor
@@ -328,7 +328,7 @@ feature -- Creation
 			major_context: Result /= Void and then not Result.is_minor
 		end
 
-	new_minor_context: like Current is
+	new_minor_context: like Current
 			-- Create a minor copy of `Current'
 		do
 			create Result.make_minor (transformer)
@@ -344,7 +344,7 @@ feature -- Creation
 			pattern_status_preserved: Result.is_pattern = is_pattern
 		end
 
-	new_pattern_context: XM_XSLT_EVALUATION_CONTEXT is
+	new_pattern_context: XM_XSLT_EVALUATION_CONTEXT
 			-- Create a minor copy of `Current'
 		do
 			Result := new_minor_context
@@ -354,7 +354,7 @@ feature -- Creation
 			pattern_context: Result.is_pattern
 		end
 
-	new_clean_context: like Current is
+	new_clean_context: like Current
 			-- Created clean context (for XSLT function calls)
 		do
 			create Result.make (transformer)
@@ -362,14 +362,14 @@ feature -- Creation
 
 feature -- Element change
 
-	
-	set_stack_frame (a_local_variable_frame: like local_variable_frame) is
+
+	set_stack_frame (a_local_variable_frame: like local_variable_frame)
 			-- Set stack frame.
 		do
 			internal_local_variable_frame := a_local_variable_frame
 		end
 
-	reset_stack_frame_map (a_slot_manager: XM_XPATH_SLOT_MANAGER; a_parameter_count: INTEGER) is
+	reset_stack_frame_map (a_slot_manager: XM_XPATH_SLOT_MANAGER; a_parameter_count: INTEGER)
 			-- Reset `local_variable_frame.slot_manager' and conditionally resize `local_variable_frame.variables'.
 		require
 			a_slot_manager_not_void: a_slot_manager /= Void
@@ -383,7 +383,7 @@ feature -- Element change
 			correct_size: local_variable_frame.variables.count = a_slot_manager.number_of_variables
 		end
 
-	set_tail_call (a_function: XM_XSLT_COMPILED_USER_FUNCTION; a_variables: ARRAY [XM_XPATH_VALUE]) is
+	set_tail_call (a_function: XM_XSLT_COMPILED_USER_FUNCTION; a_variables: ARRAY [XM_XPATH_VALUE])
 			-- Set `a_function' as the next tail call, with `a_variables' on stack frame.
 		require
 			a_function_not_void: a_function /= Void
@@ -419,7 +419,7 @@ feature -- Element change
 			minimum_variables_count: local_variable_frame.variables.count >= a_variables.count
 		end
 
-	clear_tail_call_function is
+	clear_tail_call_function
 			-- Set `tail_call_function' to `Void'.
 		do
 			tail_call_function := Void
@@ -427,7 +427,7 @@ feature -- Element change
 			tail_call_function = Void
 		end
 
-	open_stack_frame (a_slot_manager: XM_XPATH_SLOT_MANAGER) is
+	open_stack_frame (a_slot_manager: XM_XPATH_SLOT_MANAGER)
 			-- Set stack frame.
 		local
 			an_array: ARRAY [XM_XPATH_VALUE]
@@ -437,7 +437,7 @@ feature -- Element change
 		end
 
 
-	open_sized_stack_frame (a_slot_count: INTEGER) is
+	open_sized_stack_frame (a_slot_count: INTEGER)
 			-- Set stack frame.
 		local
 			an_array: ARRAY [XM_XPATH_VALUE]
@@ -449,7 +449,7 @@ feature -- Element change
 			create internal_local_variable_frame.make (a_slot_manager, an_array)
 		end
 
-	set_caller (a_caller: like Current) is
+	set_caller (a_caller: like Current)
 			-- Set calling context.
 		require
 			caller_not_void: a_caller /= Void
@@ -459,15 +459,15 @@ feature -- Element change
 			set: caller = a_caller
 		end
 
-	set_last (a_last_value: INTEGER) is
+	set_last (a_last_value: INTEGER)
 			-- Set result of XPath last() function.
 		do
 			cached_last := a_last_value
 		ensure
 			set: cached_last = a_last_value
 		end
-			
-	set_local_variable (a_value: XM_XPATH_VALUE; a_slot_number: INTEGER) is
+
+	set_local_variable (a_value: XM_XPATH_VALUE; a_slot_number: INTEGER)
 			-- Set the value of a local variable.
 		do
 			if is_minor then
@@ -477,7 +477,7 @@ feature -- Element change
 			end
 		end
 
-	ensure_local_parameter_set (a_fingerprint: INTEGER; is_tunnel: BOOLEAN; a_slot_number: INTEGER) is
+	ensure_local_parameter_set (a_fingerprint: INTEGER; is_tunnel: BOOLEAN; a_slot_number: INTEGER)
 			-- Ensure local parameter is bound to local variable in slot `a_slot_number'.
 		require
 			local_variables_frame_not_void: local_variable_frame /= Void
@@ -506,7 +506,7 @@ feature -- Element change
 			end
 		end
 
-	set_local_parameters (a_parameter_set: like internal_local_parameters) is
+	set_local_parameters (a_parameter_set: like internal_local_parameters)
 			-- Set `local_parameters'.
 		require
 			parameter_set_not_void: a_parameter_set /= Void
@@ -516,8 +516,8 @@ feature -- Element change
 		ensure
 			set: local_parameters = a_parameter_set
 		end
-					 
-	set_tunnel_parameters (a_parameter_set: like internal_local_parameters) is
+
+	set_tunnel_parameters (a_parameter_set: like internal_local_parameters)
 			-- Set `tunnel_parameters'.
 		require
 			parameter_set_not_void: a_parameter_set /= Void
@@ -528,7 +528,7 @@ feature -- Element change
 			set: tunnel_parameters = a_parameter_set
 		end
 
-	set_current_group_iterator (an_iterator: like current_group_iterator) is
+	set_current_group_iterator (an_iterator: like current_group_iterator)
 			-- Set `current_iterator'.
 		do
 			internal_current_group_iterator := an_iterator
@@ -536,7 +536,7 @@ feature -- Element change
 			set: current_group_iterator = an_iterator
 		end
 
-	set_current_regexp_iterator (an_iterator: like current_regexp_iterator) is
+	set_current_regexp_iterator (an_iterator: like current_regexp_iterator)
 			-- Set `current_regexp_iterator'.
 		do
 			internal_current_regexp_iterator := an_iterator
@@ -544,7 +544,7 @@ feature -- Element change
 			set: current_regexp_iterator = an_iterator
 		end
 
-	set_current_mode (a_mode: like current_mode) is
+	set_current_mode (a_mode: like current_mode)
 			-- Set `current_mode'.
 		require
 			major_context: not is_minor
@@ -554,7 +554,7 @@ feature -- Element change
 			end
 		end
 
-	set_current_template (a_template: like current_template) is
+	set_current_template (a_template: like current_template)
 			-- Set `current_template'.
 		require
 			major_context: not is_minor
@@ -563,8 +563,8 @@ feature -- Element change
 		ensure
 			template_set: current_template = a_template
 		end
-	
-	build_document (a_uri_reference: STRING) is
+
+	build_document (a_uri_reference: STRING)
 			-- Build a document.
 		local
 			l_uri_resolver: XM_URI_REFERENCE_RESOLVER
@@ -609,7 +609,7 @@ feature -- Element change
 			transformer.configuration.reset_entity_resolver
 		end
 
-	change_to_sequence_output_destination (a_receiver: XM_XPATH_SEQUENCE_RECEIVER) is
+	change_to_sequence_output_destination (a_receiver: XM_XPATH_SEQUENCE_RECEIVER)
 			-- Change to a temporary destination
 		do
 			set_receiver (a_receiver)
@@ -618,7 +618,7 @@ feature -- Element change
 		end
 
 	change_output_destination (properties: XM_XSLT_OUTPUT_PROPERTIES; a_result: XM_XSLT_TRANSFORMATION_RESULT
-										is_final: BOOLEAN; validation: INTEGER; a_schema_type: XM_XPATH_SCHEMA_TYPE) is
+										is_final: BOOLEAN; validation: INTEGER; a_schema_type: XM_XPATH_SCHEMA_TYPE)
 			-- Set a new output destination, supplying the output format details.
 		require
 			result_not_void: a_result /= void
@@ -644,9 +644,9 @@ feature -- Element change
 				a_result.set_principal_receiver (a_receiver)
 				if not transformer.is_error and not a_receiver.is_open then
 					-- TODO: add a validator to the pipeline if required
-					
+
 					-- Add a filter to remove duplicate namespaces
-					
+
 					create a_namespace_reducer.make (a_receiver)
 					create a_complex_outputter.make (a_namespace_reducer)
 					a_complex_outputter.open
@@ -655,10 +655,10 @@ feature -- Element change
 			end
 		ensure
 			current_receiver_opened: not transformer.is_error implies current_receiver /= Void
-				and then current_receiver.is_open		
+				and then current_receiver.is_open
 		end
 
-	report_fatal_error (an_error: XM_XPATH_ERROR_VALUE) is
+	report_fatal_error (an_error: XM_XPATH_ERROR_VALUE)
 			-- Report a fatal error.
 		do
 			transformer.report_fatal_error (an_error)
@@ -669,7 +669,7 @@ feature {NONE} -- Implementation
 	saved_receiver: like current_receiver
 			-- Previous value for `current_receiver'
 
-	set_build_error (a_message: STRING) is
+	set_build_error (a_message: STRING)
 			-- Set `last_build_error'.
 		require
 			message_not_void: a_message /= Void
@@ -713,7 +713,7 @@ invariant
 	local_variables: is_minor implies internal_local_variable_frame = Void
 	local_variables_not_void: not is_minor implies internal_local_variable_frame /= Void
 	local_parameters: is_minor implies internal_local_parameters = Void
-	local_parameters_not_void: not is_minor implies internal_local_parameters /= Void	
+	local_parameters_not_void: not is_minor implies internal_local_parameters /= Void
 	tunnel_parameters: is_minor implies internal_tunnel_parameters = Void
 	group_iterator: is_minor implies internal_current_group_iterator = Void
 	mode: is_minor implies internal_current_mode = Void
@@ -721,6 +721,6 @@ invariant
 	regexp: is_minor implies internal_current_regexp_iterator = Void
 	pattern_context_implies_minor: is_pattern implies is_minor
 	configuration_not_void: configuration /= Void
-	
+
 end
-	
+

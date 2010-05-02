@@ -15,7 +15,7 @@ deferred class PR_SYMBOL
 
 feature {NONE} -- Initialization
 
-	make (an_id: INTEGER; a_name: like name; a_type: like type) is
+	make (an_id: INTEGER; a_name: like name; a_type: like type)
 			-- Create a new symbol named `a_name'.
 		require
 			valid_id: id >= 0
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_terminal: BOOLEAN is
+	is_terminal: BOOLEAN
 			-- Is current symbol terminal?
 		deferred
 		end
@@ -56,7 +56,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_useful (b: BOOLEAN) is
+	set_useful (b: BOOLEAN)
 			-- Set `is_useful' to `b'.
 		do
 			is_useful := b
@@ -66,7 +66,7 @@ feature -- Status setting
 
 feature -- Setting
 
-	set_type (a_type: like type) is
+	set_type (a_type: like type)
 			-- Set `a_type' to `type'.
 		require
 			a_type_not_void: a_type /= Void
@@ -76,7 +76,7 @@ feature -- Setting
 			type_set: type = a_type
 		end
 
-	set_id (i: INTEGER) is
+	set_id (i: INTEGER)
 			-- Set `id' to i'.
 		require
 			valid_id: i >= 0
@@ -88,7 +88,7 @@ feature -- Setting
 
 feature -- Output
 
-	print_symbol (a_grammar: PR_GRAMMAR; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_symbol (a_grammar: PR_GRAMMAR; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print textual representation of current
 			-- symbol to `a_file' with rules where it
 			-- appears in `a_grammar'.

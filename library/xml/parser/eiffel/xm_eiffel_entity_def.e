@@ -30,7 +30,7 @@ inherit
 			normalized_newline,
 			has_normalized_newline
 		end
-		
+
 	UC_IMPORTED_UTF8_ROUTINES
 		export {NONE} all end
 
@@ -42,7 +42,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_literal (a_name: STRING; a_value: STRING) is
+	make_literal (a_name: STRING; a_value: STRING)
 			-- Create a new literal entity definition from `a_value'.
 		require
 			a_name_not_void: a_name /= Void
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			value_set: value = a_value
 		end
 
-	make_external (a_resolver: like resolver; an_id: like external_id) is
+	make_external (a_resolver: like resolver; an_id: like external_id)
 			-- Create a new external entity definition from `a_value'.
 		require
 			a_resolver_not_void: a_resolver /= Void
@@ -73,7 +73,7 @@ feature {NONE} -- Initialization
 			resolver_set: resolver = a_resolver
 		end
 
-	make_def (other: XM_EIFFEL_ENTITY_DEF) is
+	make_def (other: XM_EIFFEL_ENTITY_DEF)
 			-- Create a new entity definition from `other'.
 		require
 			other_not_void: other /= Void
@@ -92,16 +92,16 @@ feature {NONE} -- Initialization
 feature -- Resolver
 
 	resolver: XM_EXTERNAL_RESOLVER
-	
+
 feature -- Status report
 
-	is_external: BOOLEAN is
+	is_external: BOOLEAN
 			-- Is current entity an external entity?
 		do
 			Result := external_id /= Void
 		end
-		
-	is_literal: BOOLEAN is
+
+	is_literal: BOOLEAN
 			-- Is current entity a literal entity?
 		do
 			Result := not is_external
@@ -119,7 +119,7 @@ feature -- Access
 	external_id: XM_DTD_EXTERNAL_ID
 			-- Resolve external value.
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 			-- (on the entity name aspect)
 		do
@@ -132,7 +132,7 @@ feature -- Access
 
 feature -- Scanner: set input buffer
 
-	apply_input_buffer is
+	apply_input_buffer
 			-- Set input buffer.
 		local
 			str_stream: KL_STRING_INPUT_STREAM
@@ -167,7 +167,7 @@ feature -- Scanner: set input buffer
 
 feature {NONE} -- Newline normalization
 
-	normalized_newline: STRING is
+	normalized_newline: STRING
 			-- Newline normalized text (2.11)
 		do
 				-- Newline normalization has already been applied
@@ -182,7 +182,7 @@ feature {NONE} -- Newline normalization
 			end
 		end
 
-	has_normalized_newline: BOOLEAN is
+	has_normalized_newline: BOOLEAN
 			-- Has newline normalization already been applied?
 		do
 				-- Newline normalization has already been applied
@@ -198,7 +198,7 @@ feature -- Scanner: events
 	in_use: BOOLEAN
 			-- Has the first token been processed?
 
-	read_token is
+	read_token
 			-- Ignore XML declaration that may be at the start of an external entity.
 			-- Also that places the content of an external DTD within
 			-- a (DOCTYPE_DECL_START, DOCTYPE_DECL_END) token pair.
@@ -255,7 +255,7 @@ feature -- Scanner: events
 
 feature -- Scanner: initialization
 
-	reset is
+	reset
 			-- Reset first seen status.
 		do
 			Precursor

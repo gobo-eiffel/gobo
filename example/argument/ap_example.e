@@ -19,9 +19,9 @@ create
 
 	make
 
-feature {NONE} -- Initialization 
+feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Run the application with options.
 		local
 			alternative_options_list: AP_ALTERNATIVE_OPTIONS_LIST
@@ -43,8 +43,8 @@ feature {NONE} -- Initialization
 			create example_string_option.make_with_long_form ("string")
 			example_string_option.set_description ("An option that takes a string as argument.")
 			parser.options.force_last (example_string_option)
-				-- We create another string option, this time making the 
-				-- parameter optional.			
+				-- We create another string option, this time making the
+				-- parameter optional.
 			create example_ostring_option.make_with_long_form ("ostring")
 			example_ostring_option.set_description ("An option that might take a string as argument.")
 			example_ostring_option.set_parameter_as_optional
@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 			display_results
 		end
 
-	display_results is
+	display_results
 			-- Display the results of the command line parsing.
 		do
 			if alt_flag.was_found then

@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_suffix_string: STRING; a_target_uri: UT_URI) is
+	make (a_suffix_string: STRING; a_target_uri: UT_URI)
 			-- Establish invariant.
 		require
 			target_uri_not_void: a_target_uri /= Void and then a_target_uri.is_absolute
@@ -35,12 +35,12 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	suffix_string: STRING
-			-- System-id or URI suffix 
+			-- System-id or URI suffix
 
 	count: INTEGER
 			-- length of `suffix_string'
 
-	target: STRING is
+	target: STRING
 			-- URI to be used
 		do
 			Result := target_uri.full_reference
@@ -60,4 +60,4 @@ invariant
 	correct_count: suffix_string.count = count
 
 end
-	
+

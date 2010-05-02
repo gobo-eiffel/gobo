@@ -43,7 +43,7 @@ create
 
 feature
 
-	make is
+	make
 		local
 			b: BB
 		do
@@ -69,7 +69,7 @@ deferred class CC
 
 feature
 
-	f is
+	f
 		deferred
 		end
 

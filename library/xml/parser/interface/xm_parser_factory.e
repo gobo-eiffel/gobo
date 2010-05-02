@@ -14,14 +14,14 @@ deferred class XM_PARSER_FACTORY
 
 feature -- Status report
 
-	is_parser_available: BOOLEAN is
+	is_parser_available: BOOLEAN
 			-- Is XML parser available?
 		deferred
 		end
 
 feature -- Access
 
-	new_parser: XM_PARSER is
+	new_parser: XM_PARSER
 			-- New XML parser
 		require
 			parser_available: is_parser_available

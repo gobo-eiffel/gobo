@@ -25,7 +25,7 @@ inherit
 
 feature -- Access
 
-	time_now: DT_TIME is
+	time_now: DT_TIME
 			-- Current time
 			-- (Create a new time object at each call.)
 		do
@@ -35,7 +35,7 @@ feature -- Access
 			time_now_not_void: Result /= Void
 		end
 
-	date_now: DT_DATE is
+	date_now: DT_DATE
 			-- Current date
 			-- (Create a new date object at each call.)
 		do
@@ -45,7 +45,7 @@ feature -- Access
 			date_now_not_void: Result /= Void
 		end
 
-	date_time_now: DT_DATE_TIME is
+	date_time_now: DT_DATE_TIME
 			-- Current date time
 			-- (Create a new date time object at each call.)
 		do
@@ -57,21 +57,21 @@ feature -- Access
 
 feature -- Setting
 
-	set_time_to_now (a_time: DT_TIME) is
+	set_time_to_now (a_time: DT_TIME)
 			-- Set `a_time' to current time.
 		require
 			a_time_not_void: a_time /= Void
 		deferred
 		end
 
-	set_date_to_now (a_date: DT_DATE) is
+	set_date_to_now (a_date: DT_DATE)
 			-- Set `a_date' to current date.
 		require
 			a_date_not_void: a_date /= Void
 		deferred
 		end
 
-	set_date_time_to_now (a_date_time: DT_DATE_TIME) is
+	set_date_time_to_now (a_date_time: DT_DATE_TIME)
 			-- Set `a_date_time' to current date time.
 		require
 			a_date_time_not_void: a_date_time /= Void

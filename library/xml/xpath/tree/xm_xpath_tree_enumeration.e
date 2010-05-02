@@ -14,7 +14,7 @@ deferred class XM_XPATH_TREE_ENUMERATION
 
 feature {NONE} -- Initialization
 
-	make_enumeration (a_starting_node: XM_XPATH_TREE_NODE; a_node_test: XM_XPATH_NODE_TEST) is
+	make_enumeration (a_starting_node: XM_XPATH_TREE_NODE; a_node_test: XM_XPATH_NODE_TEST)
 			-- Establish invariant
 		require
 			starting_node_not_void: a_starting_node /= Void
@@ -38,7 +38,7 @@ feature {NONE} -- Implmenentation
 	next_node: like starting_node
 			-- The first/next node to be returned by the enumeration
 
-	advance is
+	advance
 			-- Move to the next matching node
 		do
 			from
@@ -50,14 +50,14 @@ feature {NONE} -- Implmenentation
 			end
 		end
 
-	advance_one_step is
+	advance_one_step
 			-- Move to the next candidate node
 		require
 			next_node_not_void: next_node /= Void
 		deferred
 		end
 
-	is_conforming (a_node: like starting_node): BOOLEAN is
+	is_conforming (a_node: like starting_node): BOOLEAN
 			-- Does `a_node' conform to `node_test', or is it `Void'?
 		do
 			if a_node = Void then
@@ -68,9 +68,9 @@ feature {NONE} -- Implmenentation
 		end
 
 invariant
-	
+
 	starting_node_not_void: starting_node /= Void
 	node_test_not_void: node_test /= Void
 
 end
-	
+

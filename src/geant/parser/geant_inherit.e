@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT) is
+	make (a_project: GEANT_PROJECT)
 			-- Create a new fileset.
 		require
 			project_not_void: a_project /= Void
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- Can element be executed?
 		do
 			Result := True
@@ -57,7 +57,7 @@ feature -- Status report
 			always_true: Result = True
 		end
 
-	apply_selects is
+	apply_selects
 			-- Apply selects of all parents to current project.
 		do
 			project.trace_debug (<<"%NProject '", project.name, "': --> application of select clause:">>)
@@ -67,7 +67,7 @@ feature -- Status report
 			project.trace_debug (<<"Project '", project.name, "': <-- application of select clause done.">>)
 		end
 
-	validate_parent_selects is
+	validate_parent_selects
 			-- Check selects of all parents to make sure
 			-- they do not interfere with each other.
 		local
@@ -113,7 +113,7 @@ feature -- Status report
 			end
 		end
 
-	sort_out_selected_targets is
+	sort_out_selected_targets
 			-- Remove targets conflicting with selected targets.
 		local
 			a_parent_cursor: DS_LIST_CURSOR [GEANT_PARENT]
@@ -181,7 +181,7 @@ feature -- Status report
 			end
 		end
 
-	check_targets_for_conflicts is
+	check_targets_for_conflicts
 			-- Check `targets' for conflicts which have to be
 			-- resolved using 'select'.
 		local
@@ -213,7 +213,7 @@ feature -- Status report
 			end
 		end
 
-	merge_in_parent_project (a_parent: GEANT_PARENT) is
+	merge_in_parent_project (a_parent: GEANT_PARENT)
 			-- Load parent project defined in file named `a_filename'.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -227,7 +227,7 @@ feature -- Status report
 				a_parent.parent_project.name, "' done.%N">>)
 		end
 
-	merge_in_renamed_targets (a_parent: GEANT_PARENT) is
+	merge_in_renamed_targets (a_parent: GEANT_PARENT)
 			-- Merge renamed targets
 		require
 			a_parent_not_void: a_parent /= Void
@@ -270,7 +270,7 @@ feature -- Status report
 			end
 		end
 
-	merge_in_redefined_targets (a_parent: GEANT_PARENT) is
+	merge_in_redefined_targets (a_parent: GEANT_PARENT)
 			-- Load parent project defined in file named `a_filename'.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -311,7 +311,7 @@ feature -- Status report
 			end
 		end
 
-	merge_in_unchanged_targets (a_parent: GEANT_PARENT) is
+	merge_in_unchanged_targets (a_parent: GEANT_PARENT)
 				-- Merge unchanged targets.
 		require
 			a_parent_not_void: a_parent /= Void

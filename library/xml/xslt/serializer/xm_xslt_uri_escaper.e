@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_base: XM_XPATH_RECEIVER; a_is_xhtml: BOOLEAN) is
+	make (a_base: XM_XPATH_RECEIVER; a_is_xhtml: BOOLEAN)
 			-- Initialize `Current'.
 		require
 			base_receiver_not_void: a_base /= Void
@@ -51,14 +51,14 @@ feature {NONE} -- Initialization
 
 feature -- Events
 
-	start_element (a_name_code: INTEGER; a_type_code: INTEGER; a_properties: INTEGER) is
+	start_element (a_name_code: INTEGER; a_type_code: INTEGER; a_properties: INTEGER)
 			-- Notify the start of an element
 		do
 			current_element := a_name_code
 			Precursor (a_name_code, a_type_code, a_properties)
 		end
 
-	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; a_properties: INTEGER) is
+	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; a_properties: INTEGER)
 			-- Notify an attribute.
 		local
 			l_properties: INTEGER
@@ -82,14 +82,14 @@ feature {NONE} -- Implementation
 	normalizer: XM_XSLT_NFC_NORMALIZER
 			-- Unicode NFC normalizer
 
-	url_attributes_set: DS_HASH_SET [STRING] is
+	url_attributes_set: DS_HASH_SET [STRING]
 			-- Names of attributes that are sometimes URL valued
 		once
 			create Result.make (15)
 			Result.set_equality_tester (string_equality_tester)
 		end
 
-	url_combinations_set: DS_HASH_SET [STRING] is
+	url_combinations_set: DS_HASH_SET [STRING]
 			-- Names of elements-attribute pairs that are URL valued
 		once
 			create Result.make (37)
@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	unescaped_html_characters: DS_HASH_SET [CHARACTER] is
+	unescaped_html_characters: DS_HASH_SET [CHARACTER]
 			-- Characters to escape for fn:iri-to-uri()
 		local
 			an_index: INTEGER
@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	escaped_url (a_url: STRING): STRING is
+	escaped_url (a_url: STRING): STRING
 			-- Escaped version of `a_url' (first normalized to NFC).
 		require
 			url_not_void: a_url /= Void
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 			Result := escaped_xml (Result)
 		end
 
-	escaped_xml (a_string: STRING): STRING is
+	escaped_xml (a_string: STRING): STRING
 			-- Version of `a_string' with built-in XML entities substituted for <>&"
 		require
 			a_string_not_void: a_string /= Void
@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 			not_shorter: Result.count >= a_string.count
 		end
 
-	is_url_attribute (a_attribute: INTEGER): BOOLEAN is
+	is_url_attribute (a_attribute: INTEGER): BOOLEAN
 			-- Is `a_attribute' url-valued when used with `current_element'.?
 		local
 			l_attribute: STRING
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	html_uri: STRING is
+	html_uri: STRING
 			-- Uri for html elements
 		do
 			if is_xhtml then
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 			html_uri_not_void: Result /= Void
 		end
 
-	make_url_attributes is
+	make_url_attributes
 			-- Build sets for determining URL-valued attributes
 		once
 			set_url_attribute ("form", "action")
@@ -232,7 +232,7 @@ feature {NONE} -- Implementation
 			set_url_attribute ("object", "archive")
 		end
 
-	set_url_attribute (a_element, a_attribute: STRING) is
+	set_url_attribute (a_element, a_attribute: STRING)
 			-- Mark `a_attribute' as url-valued when used with `a_element'.
 		require
 			element_name_not_void: a_element /= Void

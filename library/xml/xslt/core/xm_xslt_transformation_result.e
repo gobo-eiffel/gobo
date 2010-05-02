@@ -22,7 +22,7 @@ create {XM_XSLT_OUTPUT_URI_RESOLVER, XM_XSLT_OUTPUT_URI_SCHEME_RESOLVER}
 
 feature {NONE} -- Initialization
 
-	make (a_stream: XM_OUTPUT; a_system_id:STRING) is
+	make (a_stream: XM_OUTPUT; a_system_id:STRING)
 			-- Create a stream result.
 		require
 			stream_not_void: a_stream /= Void
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			system_id_set: system_id = a_system_id
 		end
 
-	make_secondary_stream (a_stream: XM_OUTPUT; an_output_stream: KI_CHARACTER_OUTPUT_STREAM; a_system_id:STRING) is
+	make_secondary_stream (a_stream: XM_OUTPUT; an_output_stream: KI_CHARACTER_OUTPUT_STREAM; a_system_id:STRING)
 			-- Create a stream result.
 			-- This is used by XM_XSLT_OUTPUT_URI_FILE_SCHEME_RESOLVER
 			--  so that the file can be closed correctly.
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			output_stream_set: output_stream = an_output_stream
 		end
 
-	make_emitter (an_emitter: XM_XSLT_EMITTER) is
+	make_emitter (an_emitter: XM_XSLT_EMITTER)
 			-- Create an emitter result.
 		require
 			emitter_not_void: an_emitter /= Void
@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 			emitter_set: emitter = an_emitter
 		end
 
-	make_receiver (a_receiver: XM_XPATH_RECEIVER) is
+	make_receiver (a_receiver: XM_XPATH_RECEIVER)
 			-- Create a receiver result.
 		require
 			receiver_not_void: a_receiver /= Void
@@ -122,7 +122,7 @@ feature -- Status report
 	error_message: STRING
 			-- Possible error message from output resolver
 
-	is_document_started: BOOLEAN is
+	is_document_started: BOOLEAN
 			-- Has the result document been written to yet?
 		do
 			Result := principal_receiver /= Void and then principal_receiver.is_written
@@ -130,7 +130,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_principal_receiver (a_receiver: XM_XPATH_RECEIVER) is
+	set_principal_receiver (a_receiver: XM_XPATH_RECEIVER)
 			-- Set `principal_receiver'.
 		require
 			new_receiver_not_void: a_receiver /= Void
@@ -140,7 +140,7 @@ feature -- Element change
 			principal_receiver_set: principal_receiver = a_receiver
 		end
 
-	flush is
+	flush
 			-- Flush `stream'.
 		do
 			if stream /= Void then
@@ -148,7 +148,7 @@ feature -- Element change
 			end
 		end
 
-	close (some_properties: XM_XSLT_OUTPUT_PROPERTIES) is
+	close (some_properties: XM_XSLT_OUTPUT_PROPERTIES)
 			-- Close output stream.
 		require
 			stream_result: is_stream

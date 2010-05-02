@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_ns: like namespace; a_value: like value; a_parent: XM_ELEMENT) is
+	make (a_name: like name; a_ns: like namespace; a_value: like value; a_parent: XM_ELEMENT)
 			-- Create a new attribute.
 		require
 			a_name_not_void: a_name /= Void
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			value_set: value = a_value
 		end
 
-	make_last (a_name: like name; a_ns: like namespace; a_value: like value; a_parent: XM_ELEMENT) is
+	make_last (a_name: like name; a_ns: like namespace; a_value: like value; a_parent: XM_ELEMENT)
 			-- Create a new attribute,
 			-- and add it to parent..
 		require
@@ -70,10 +70,10 @@ feature {NONE} -- Initialization
 			ns_prefix_set: namespace = a_ns
 			value_set: value = a_value
 		end
-		
+
 feature -- Status report
 
-	is_namespace_declaration: BOOLEAN is
+	is_namespace_declaration: BOOLEAN
 			-- Is current attribute a namespace declaration?
 		do
 			if has_prefix then
@@ -85,7 +85,7 @@ feature -- Status report
 
 feature -- Access
 
-	namespace_declaration: XM_NAMESPACE is
+	namespace_declaration: XM_NAMESPACE
 			-- Namespace corresponding to the declaration
 			-- (Create a new object at each call)
 		require
@@ -111,7 +111,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_value (a_value: like value) is
+	set_value (a_value: like value)
 			-- Set `a_value' to `value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -123,7 +123,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: XM_NODE_PROCESSOR) is
+	process (a_processor: XM_NODE_PROCESSOR)
 			-- Process current node with `a_processor'.
 		do
 			a_processor.process_attribute (Current)

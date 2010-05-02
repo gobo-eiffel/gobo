@@ -31,7 +31,7 @@ create {XM_XPATH_DOCUMENT_ORDER_ITERATOR}
 
 feature {NONE} -- Initialization
 
-	make (an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; a_comparer: XM_XPATH_NODE_ORDER_COMPARER) is
+	make (an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; a_comparer: XM_XPATH_NODE_ORDER_COMPARER)
 			-- Establish invariant.
 		require
 			comparer_not_void: a_comparer /= Void
@@ -61,13 +61,13 @@ feature {NONE} -- Initialization
 			comparer_set: comparer = a_comparer
 		end
 
-	make_another (a_sequence: like sequence; a_comparer: XM_XPATH_NODE_ORDER_COMPARER) is
+	make_another (a_sequence: like sequence; a_comparer: XM_XPATH_NODE_ORDER_COMPARER)
 			-- Create another document order iterator (used by `another').
 		require
 			comparer_not_void: a_comparer /= Void
 			sequence_not_void: a_sequence /= Void
 		do
-			
+
 			-- No need to repeat the sort
 
 			create sequence.make_from_linear (a_sequence)
@@ -77,20 +77,20 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
-	item: XM_XPATH_NODE is
+
+	item: XM_XPATH_NODE
 			-- Value or node at the current position
 		do
 			Result := current_node
 		end
 
-	is_node_iterator: BOOLEAN is
+	is_node_iterator: BOOLEAN
 			-- Does `Current' yield a node_sequence?
 		do
 			Result := True
 		end
 
-	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
 		do
 			Result ?= ANY_.to_any (Current)
@@ -98,7 +98,7 @@ feature -- Access
 
 feature -- Status report
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
 			Result := sequence.after
@@ -106,7 +106,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Move to first position
 		do
 			sequence.start
@@ -118,7 +118,7 @@ feature -- Cursor movement
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move to next position, skipping over duplicates
 		local
 			finished: BOOLEAN
@@ -147,7 +147,7 @@ feature -- Cursor movement
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 			create Result.make_another (sequence, comparer)

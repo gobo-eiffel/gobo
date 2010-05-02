@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name_item; a_type: like declared_type) is
+	make (a_name: like name_item; a_type: like declared_type)
 			-- Create a new formal argument.
 		require
 			a_name_not_void: a_name /= Void
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset formal argument as it was when it was last parsed.
 		do
 			name.reset
@@ -46,13 +46,13 @@ feature -- Initialization
 
 feature -- Access
 
-	name: ET_IDENTIFIER is
+	name: ET_IDENTIFIER
 			-- Name
 		do
 			Result := name_item.identifier
 		end
 
-	type: ET_TYPE is
+	type: ET_TYPE
 			-- Type
 		do
 			Result := declared_type.type
@@ -64,32 +64,32 @@ feature -- Access
 	declared_type: ET_DECLARED_TYPE
 			-- Declared type (type preceded by a colon)
 
-	formal_argument: ET_FORMAL_ARGUMENT is
+	formal_argument: ET_FORMAL_ARGUMENT
 			-- Formal argument in semicolon-separated list
 		do
 			Result := Current
 		end
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
 			Result := name_item.position
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := name_item.first_leaf
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := declared_type.last_leaf
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := declared_type.break
@@ -102,7 +102,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_declared_type (a_type: like declared_type) is
+	set_declared_type (a_type: like declared_type)
 			-- Set `declared_type' to `a_type'.
 		require
 			a_type_not_void: a_type /= Void
@@ -114,7 +114,7 @@ feature -- Setting
 
 feature -- Status setting
 
-	set_used (b: BOOLEAN) is
+	set_used (b: BOOLEAN)
 			-- Set `is_used' to `b'.
 		do
 			is_used := b
@@ -124,7 +124,7 @@ feature -- Status setting
 
 feature -- Duplication
 
-	cloned_argument: like Current is
+	cloned_argument: like Current
 			-- Cloned formal argument;
 			-- Do not recursively clone the type
 		do
@@ -133,7 +133,7 @@ feature -- Duplication
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_formal_argument (Current)

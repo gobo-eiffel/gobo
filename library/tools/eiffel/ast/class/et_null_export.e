@@ -18,14 +18,14 @@ inherit
 
 feature -- Access
 
-	clients (a_name: ET_FEATURE_NAME): ET_CLIENTS is
+	clients (a_name: ET_FEATURE_NAME): ET_CLIENTS
 			-- Clients for feature `a_name'
 		do
 		end
 
 feature -- Status report
 
-	has_feature_name (a_name: ET_FEATURE_NAME): BOOLEAN is
+	has_feature_name (a_name: ET_FEATURE_NAME): BOOLEAN
 			-- Is `a_name' listed in current export clause?
 		do
 			Result := False

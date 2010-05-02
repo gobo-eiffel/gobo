@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		deferred
@@ -28,7 +28,7 @@ feature -- Access
 			position_not_void: Result /= Void
 		end
 
-	first_position: ET_POSITION is
+	first_position: ET_POSITION
 			-- Position of first character of current node in source code;
 			-- Null position is current node is empty
 		local
@@ -44,7 +44,7 @@ feature -- Access
 			first_position_not_void: Result /= Void
 		end
 
-	last_position: ET_POSITION is
+	last_position: ET_POSITION
 			-- Position of last character of current node in source code;
 			-- Null position is current node is empty
 		local
@@ -60,24 +60,24 @@ feature -- Access
 			last_position_not_void: Result /= Void
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		deferred
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		deferred
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		deferred
 		end
 
 feature -- Status report
 
-	has_break: BOOLEAN is
+	has_break: BOOLEAN
 			-- Is there a break after current node?
 		do
 			Result := (break /= Void)
@@ -85,7 +85,7 @@ feature -- Status report
 			definition: Result = (break /= Void)
 		end
 
-	has_comment: BOOLEAN is
+	has_comment: BOOLEAN
 			-- Is there a comment after current node?
 		local
 			a_break: like break
@@ -96,7 +96,7 @@ feature -- Status report
 			end
 		end
 
-	has_non_empty_comment: BOOLEAN is
+	has_non_empty_comment: BOOLEAN
 			-- Is there a non-empty comment after current node?
 			-- (Comments only made up of white characters or minus signs are not taken into account.)
 		local
@@ -110,7 +110,7 @@ feature -- Status report
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		require
 			a_processor_not_void: a_processor /= Void

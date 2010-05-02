@@ -14,7 +14,7 @@ class ET_SHARED_TARGETED_FEATURE_TESTER
 
 feature -- Access
 
-	targeted_feature_tester: ET_TARGETED_FEATURE_TESTER is
+	targeted_feature_tester: ET_TARGETED_FEATURE_TESTER
 			-- Targeted feature equality tester
 		once
 			create Result

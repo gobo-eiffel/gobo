@@ -25,7 +25,7 @@ create
 
 feature -- Test
 
-	test_glob_prefix is
+	test_glob_prefix
 			-- Test feature `glob_prefix'.
 		do
 			assert_equal ("glob_prefix1", "ab", sp.glob_prefix ("ab*.e"))
@@ -34,7 +34,7 @@ feature -- Test
 			assert_equal ("glob_prefix3", "ttt/ab", sp.glob_prefix ("ttt/ab*.e"))
 		end
 
-	test_glob_postfix is
+	test_glob_postfix
 			-- Test feature `glob_postfix'.
 		do
 			assert_equal ("glob_postfix1", ".e", sp.glob_postfix ("ab*.e"))
@@ -50,13 +50,13 @@ feature -- Test
 
 feature -- Execution
 
-	set_up is
+	set_up
 			-- Setup for a test.
 		do
 			create sp
 		end
 
-	tear_down is
+	tear_down
 			-- Tear down after a test.
 		do
 			sp := Void

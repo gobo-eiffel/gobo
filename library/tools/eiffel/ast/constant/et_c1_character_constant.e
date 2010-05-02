@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_value: CHARACTER) is
+	make (a_value: CHARACTER)
 			-- Create a new character constant.
 		do
 			value := a_value
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	last_position: ET_POSITION is
+	last_position: ET_POSITION
 			-- Position of last character of current node in source code
 		do
 			create {ET_COMPRESSED_POSITION} Result.make (line, column + 2)
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_c1_character_constant (Current)

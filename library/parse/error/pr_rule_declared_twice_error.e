@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER; a_rule: STRING) is
+	make (filename: STRING; line: INTEGER; a_rule: STRING)
 			-- Create a new error reporting that `a_rule'
 			-- has been declared twice.
 		require
@@ -37,10 +37,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "Warning, %"$1%", line $2: rule $3 declared twice"
+	default_template: STRING = "Warning, %"$1%", line $2: rule $3 declared twice"
 			-- Default template used to built the error message
 
-	code: STRING is "PR0012"
+	code: STRING = "PR0012"
 			-- Error code
 
 invariant

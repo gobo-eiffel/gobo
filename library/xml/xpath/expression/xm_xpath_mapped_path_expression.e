@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_start, a_step: like start; a_is_hybrid: BOOLEAN) is
+	make (a_start, a_step: like start; a_is_hybrid: BOOLEAN)
 			-- Initialize `Current'.
 		require
 			a_start_not_void: a_start /= Void
@@ -54,17 +54,17 @@ feature -- Access
 
 	start: XM_XPATH_EXPRESSION
 			-- Starting node-set
-	
+
 	step: XM_XPATH_EXPRESSION
 			-- Step from each node in starting node-set
-		
-	item_type: XM_XPATH_ITEM_TYPE is
+
+	item_type: XM_XPATH_ITEM_TYPE
 			--Determine the data type of the expression, if possible
 		do
 			Result := step.item_type
 		end
 
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions of `Current'
 		do
 			create Result.make (2)
@@ -75,7 +75,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_expression (a_other: XM_XPATH_EXPRESSION): BOOLEAN is
+	same_expression (a_other: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Are `Current' and `a_other' the same expression?
 		do
 			if a_other.is_mapped_path_expression then
@@ -88,13 +88,13 @@ feature -- Status report
 	is_hybrid: BOOLEAN
 			-- Is `Current' a potential hybrid of nodes and atomic values?
 
-	is_mapped_path_expression: BOOLEAN is
+	is_mapped_path_expression: BOOLEAN
 			-- Is `Current' a mapped path expression?
 		do
 			Result := True
 		end
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			l_string: STRING
@@ -108,7 +108,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	compute_dependencies is
+	compute_dependencies
 			-- Compute dependencies on context.
 		do
 			if not are_intrinsic_dependencies_computed then
@@ -119,17 +119,17 @@ feature -- Status setting
 				set_depends_upon_xslt_context
 			end
 		end
-	
+
 feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			-- Original path expression has been checked already
 			a_replacement.put (Current)
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_offer: XM_XPATH_PROMOTION_OFFER
@@ -160,7 +160,7 @@ feature -- Optimization
 			end
 		end
 
-	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this subexpression.
 		local
 			l_promotion: XM_XPATH_EXPRESSION
@@ -194,7 +194,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create iterator over the values of a sequence.
 		local
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -234,7 +234,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over a node sequence
 		local
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -255,14 +255,14 @@ feature -- Evaluation
 			end
 		end
 
-	map (a_context: XM_XPATH_CONTEXT) is
+	map (a_context: XM_XPATH_CONTEXT)
 			-- Map `a_context.context_item' to a sequence
 		do
 			step.create_iterator (a_context)
 			last_mapped_sequence := step.last_iterator
 		end
 
-	map_nodes (a_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
+	map_nodes (a_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT)
 			-- Map `a_item' to a sequence
 		do
 			step.create_node_iterator (a_context)
@@ -271,7 +271,7 @@ feature -- Evaluation
 
 feature {XM_XPATH_PATH_EXPRESSION} -- Local
 
-	set_start (a_start: XM_XPATH_EXPRESSION) is
+	set_start (a_start: XM_XPATH_EXPRESSION)
 			-- Set `start'.
 		require
 			start_not_void: a_start /= Void
@@ -282,7 +282,7 @@ feature {XM_XPATH_PATH_EXPRESSION} -- Local
 			start_set: start = a_start
 		end
 
-	set_step (a_step: XM_XPATH_EXPRESSION) is
+	set_step (a_step: XM_XPATH_EXPRESSION)
 			-- Set `start'.
 		require
 			step_not_void: a_step /= Void
@@ -295,15 +295,15 @@ feature {XM_XPATH_PATH_EXPRESSION} -- Local
 
 feature -- Conversion
 
-	as_mapped_path_expression: XM_XPATH_MAPPED_PATH_EXPRESSION is
+	as_mapped_path_expression: XM_XPATH_MAPPED_PATH_EXPRESSION
 			-- `Current' seen as a mapped path expression
 		do
 			Result := Current
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
-	
-	compute_cardinality is
+
+	compute_cardinality
 			-- Compute cardinality.
 		local
 			c1, c2: INTEGER
@@ -327,11 +327,11 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			set_cardinality (multiply_cardinality (c1, c2))
 			are_cardinalities_computed := True
 		end
-	
+
 feature {NONE} -- Implementation
 
 	promote_sub_expressions (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
-		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE; a_offer: XM_XPATH_PROMOTION_OFFER) is
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote any subexpressions within the step are not dependent on the focus.
 			-- This causes them to be evaluated once, outside the path  expression.
 		require
@@ -365,7 +365,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	compute_special_properties is
+	compute_special_properties
 			-- Compute special properties.
 		local
 			l_expression: XM_XPATH_COMPUTED_EXPRESSION

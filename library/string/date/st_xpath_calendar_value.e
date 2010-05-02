@@ -27,7 +27,7 @@ inherit
 
 feature -- Access
 
-	year: INTEGER is
+	year: INTEGER
 			-- Year component
 		require
 			not_time_value: not is_xpath_time
@@ -39,7 +39,7 @@ feature -- Access
 			end
 		end
 
-	absolute_year: INTEGER is
+	absolute_year: INTEGER
 			-- Year component, ignoring sign
 		require
 			not_time_value: not is_xpath_time
@@ -53,7 +53,7 @@ feature -- Access
 			strictly_positive_result: Result > 0
 		end
 
-	month: INTEGER is
+	month: INTEGER
 			-- Month component
 		require
 			not_time_value: not is_xpath_time
@@ -67,7 +67,7 @@ feature -- Access
 			result_in_range: Result >= 1 and then Result <= 12
 		end
 
-	day_in_month: INTEGER is
+	day_in_month: INTEGER
 			-- Day within month
 		require
 			not_time_value: not is_xpath_time
@@ -81,7 +81,7 @@ feature -- Access
 			result_in_range: Result >= 1 and then Result <= 31
 		end
 
-	day_in_year: INTEGER is
+	day_in_year: INTEGER
 			-- Day within year
 		require
 			not_time_value: not is_xpath_time
@@ -95,7 +95,7 @@ feature -- Access
 			result_in_range: Result >= 1 and then Result <= 366
 		end
 
-	week_day_number: INTEGER is
+	week_day_number: INTEGER
 			-- ISO 8601 day within week;
 			-- Monday = 1; Sunday = 7
 		require
@@ -110,7 +110,7 @@ feature -- Access
 			result_in_range: Result >= 1 and then Result <= 7
 		end
 
-	week_in_year: INTEGER is
+	week_in_year: INTEGER
 			-- ISO 8601 week within year
 		require
 			not_time_value: not is_xpath_time
@@ -120,7 +120,7 @@ feature -- Access
 			result_in_range: Result >= 1 and then Result <= 53
 		end
 
-	week_in_month: INTEGER is
+	week_in_month: INTEGER
 			-- Week within month
 		require
 			not_time_value: not is_xpath_time
@@ -130,7 +130,7 @@ feature -- Access
 			result_in_range: Result >= 1 and then Result <= 5
 		end
 
-	hour: INTEGER is
+	hour: INTEGER
 			-- Hour within day
 		require
 			not_date_value: not is_xpath_date
@@ -144,7 +144,7 @@ feature -- Access
 			result_in_range: Result >= 0 and then Result <= 23
 		end
 
-	half_day_hour: INTEGER is
+	half_day_hour: INTEGER
 			-- Hour within half-day
 		require
 			not_date_value: not is_xpath_date
@@ -160,7 +160,7 @@ feature -- Access
 			result_in_range: Result >= 1 and then Result <= 12
 		end
 
-	minutes_in_day: INTEGER is
+	minutes_in_day: INTEGER
 			-- Minutes within day
 		require
 			not_date_value: not is_xpath_date
@@ -170,7 +170,7 @@ feature -- Access
 			result_in_range: Result >= 0 and then Result <= 1439
 		end
 
-	minute: INTEGER is
+	minute: INTEGER
 			-- Minutes within hour
 		require
 			not_date_value: not is_xpath_date
@@ -184,7 +184,7 @@ feature -- Access
 			result_in_range: Result >= 0 and then Result <= 59
 		end
 
-	second: INTEGER is
+	second: INTEGER
 			-- Seconds within minute
 		require
 			not_date_value: not is_xpath_date
@@ -198,7 +198,7 @@ feature -- Access
 			result_in_range: Result >= 0 and then Result <= 59
 		end
 
-	millisecond: INTEGER is
+	millisecond: INTEGER
 			-- Milliseconds within second
 		require
 			not_date_value: not is_xpath_date
@@ -212,7 +212,7 @@ feature -- Access
 			result_in_range: Result >= 0 and then Result <= 999
 		end
 
-	time_zone_description: STRING is
+	time_zone_description: STRING
 			-- Description of time zone in format [+|-]hh:mm
 		require
 			zoned_value: zoned
@@ -266,19 +266,19 @@ feature -- Status report
 	zoned: BOOLEAN
 			-- Is `Current' zoned?
 
-	is_xpath_time: BOOLEAN is
+	is_xpath_time: BOOLEAN
 			-- Does `Current' have a time component and no date component?
 		do
 			Result := False
 		end
 
-	is_xpath_date: BOOLEAN is
+	is_xpath_date: BOOLEAN
 			-- Does `Current' have a date component and no time component?
 		do
 			Result := False
 		end
 
-	is_xpath_date_time: BOOLEAN is
+	is_xpath_date_time: BOOLEAN
 			-- Does `Current' have both a time component and a date component?
 		do
 			Result := False
@@ -286,7 +286,7 @@ feature -- Status report
 
 feature -- Conversion
 
-	as_xpath_time: ST_XPATH_TIME_VALUE is
+	as_xpath_time: ST_XPATH_TIME_VALUE
 			-- `Current' seen as a time value
 		require
 			is_xpath_time_value: is_xpath_time
@@ -302,7 +302,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_xpath_date: ST_XPATH_DATE_VALUE is
+	as_xpath_date: ST_XPATH_DATE_VALUE
 			-- `Current' seen as a date value
 		require
 			is_xpath_date_value: is_xpath_date
@@ -318,7 +318,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_xpath_date_time: ST_XPATH_DATE_TIME_VALUE is
+	as_xpath_date_time: ST_XPATH_DATE_TIME_VALUE
 			-- `Current' seen as a date-time value
 		require
 			is_xpath_date_time_value: is_xpath_date_time

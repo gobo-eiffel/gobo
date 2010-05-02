@@ -25,7 +25,7 @@ create
 
 feature -- Access
 
-	comparison_key (a_key: XM_XPATH_ATOMIC_VALUE): XM_XPATH_COMPARISON_KEY is
+	comparison_key (a_key: XM_XPATH_ATOMIC_VALUE): XM_XPATH_COMPARISON_KEY
 			-- Comparison key for `a_key'
 		require
 			key_not_void: a_key /= Void
@@ -54,7 +54,7 @@ feature -- Access
 
 feature -- Comparison
 
-	three_way_comparison (an_atomic_value, another_atomic_value: XM_XPATH_ATOMIC_VALUE): INTEGER is
+	three_way_comparison (an_atomic_value, another_atomic_value: XM_XPATH_ATOMIC_VALUE): INTEGER
 			-- Comparison of two atomic values
 		local
 			compared: BOOLEAN
@@ -86,7 +86,7 @@ feature -- Comparison
 					end
 				end
 			end
-			
+
 			if not compared then
 
 				-- Neither operand is xdt:untypedAtomic
@@ -101,6 +101,6 @@ feature -- Comparison
 				end
 			end
 		end
-	
+
 end
-	
+

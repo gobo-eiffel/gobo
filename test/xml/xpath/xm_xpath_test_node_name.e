@@ -21,7 +21,7 @@ inherit
 		end
 
 	XM_XPATH_TYPE
-	
+
 	XM_XPATH_ERROR_TYPES
 
 	XM_XPATH_SHARED_CONFORMANCE
@@ -32,7 +32,7 @@ inherit
 
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
-	
+
 	UT_SHARED_FILE_URI_ROUTINES
 		export {NONE} all end
 
@@ -42,7 +42,7 @@ create
 
 feature -- Test
 
-	test_empty_sequence is
+	test_empty_sequence
 			-- Test fn:node-name(()).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -58,7 +58,7 @@ feature -- Test
 			assert ("No evaluated items", evaluated_items /= Void and then evaluated_items.count = 0)
 		end
 
-	test_type_error is
+	test_type_error
 			-- Test fn:node-name("").
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -71,7 +71,7 @@ feature -- Test
 			assert ("Evaluation error", an_evaluator.is_error)
 		end
 
-	test_pi is
+	test_pi
 			-- Test fn:node-name(/*[1]/processing-instruction()[1])..
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -93,7 +93,7 @@ feature -- Test
 			assert ("correct name", STRING_.same_string (a_qname.local_name, "testpi3"))
 		end
 
-	test_element is
+	test_element
 			-- Test fn:node-name(/*[1])..
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -115,7 +115,7 @@ feature -- Test
 			assert ("correct name", STRING_.same_string (a_qname.local_name, "BOOKS"))
 		end
 
-	test_attribute_node is
+	test_attribute_node
 			-- Test fn:node-name(/*/*[6]/attribute::*[local-name() eq 'base'])..
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -137,7 +137,7 @@ feature -- Test
 			assert ("correct name", STRING_.same_string (a_qname.local_name, "base"))
 		end
 
-	test_text_node is
+	test_text_node
 			-- Test fn:node-name(/*[1]/*[1]/*[1]/text()[1]).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -153,14 +153,14 @@ feature -- Test
 			assert ("No evaluated items", evaluated_items /= Void and then evaluated_items.count = 0)
 		end
 
-	set_up is
+	set_up
 		do
 			conformance.set_basic_xslt_processor
 		end
 
 feature {NONE} -- Implementation
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}",
@@ -170,8 +170,8 @@ feature {NONE} -- Implementation
 			data_dirname_not_void: Result /= Void
 			data_dirname_not_empty: not Result.is_empty
 		end
-		
-	books_xml_uri: UT_URI is
+
+	books_xml_uri: UT_URI
 			-- URI of file 'books.xml'
 		local
 			a_path: STRING
@@ -181,8 +181,8 @@ feature {NONE} -- Implementation
 		ensure
 			books_xml_uri_not_void: Result /= Void
 		end
-		
-	booklist_xml_uri: UT_URI is
+
+	booklist_xml_uri: UT_URI
 			-- URI of file 'booklist.xml'
 		local
 			a_path: STRING
@@ -195,4 +195,4 @@ feature {NONE} -- Implementation
 
 end
 
-			
+

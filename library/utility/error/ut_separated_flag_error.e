@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_flag: STRING) is
+	make (a_flag: STRING)
 			-- Create a new error reporting that flag
 			-- `a_flag' must be given separately.
 		require
@@ -34,10 +34,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "$0: $1 flag must be given separately"
+	default_template: STRING = "$0: $1 flag must be given separately"
 			-- Default template used to built the error message
 
-	code: STRING is "UT0001"
+	code: STRING = "UT0001"
 			-- Error code
 
 invariant

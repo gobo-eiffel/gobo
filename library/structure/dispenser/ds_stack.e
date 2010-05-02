@@ -22,21 +22,21 @@ inherit
 
 feature -- Element change
 
-	put (v: G) is
+	put (v: G)
 			-- Push `v' on stack.
 		deferred
 		ensure then
 			pushed: item = v
 		end
 
-	force (v: G) is
+	force (v: G)
 			-- Push `v' on stack.
 		deferred
 		ensure then
 			pushed: item = v
 		end
 
-	replace (v: G) is
+	replace (v: G)
 			-- Replace top item by `v'.
 		require
 			not_empty: not is_empty

@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_option: AP_OPTION) is
+	make (an_option: AP_OPTION)
 			-- Initialize with `an_option' as the `introduction_option'.
 		require
 			an_option_not_void: an_option /= Void
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_introduction_option (an_option: AP_OPTION) is
+	set_introduction_option (an_option: AP_OPTION)
 			-- Set `introduction_option' to `an_option'.
 		require
 			an_option_not_void: an_option /= Void
@@ -57,7 +57,7 @@ feature -- Element change
 			option_set: introduction_option = an_option
 		end
 
-	set_parameters_description (a_string: STRING) is
+	set_parameters_description (a_string: STRING)
 			-- Set the description for parameters to `a_string'.
 		require
 			a_string_not_void: a_string /= Void

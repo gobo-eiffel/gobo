@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_duration: STRING) is
+	make (a_duration: STRING)
 			-- Create from lexical duration.
 		local
 			a_parser: XM_XPATH_DURATION_PARSER
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			normalize
 		end
 
-	make_from_duration (a_duration: like duration) is
+	make_from_duration (a_duration: like duration)
 			-- Create from duration.
 		require
 			zero_days_and_time: a_duration.day = 0 and then a_duration.millisecond_count = 0
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, where know
 		do
 			Result := type_factory.year_month_duration_type
@@ -68,7 +68,7 @@ feature -- Access
 			end
 		end
 
-	string_value: STRING is
+	string_value: STRING
 			--Value of the item as a string
 		local
 			total_months, a_year, a_month: INTEGER
@@ -92,13 +92,13 @@ feature -- Access
 			end
 		end
 
-	months: INTEGER is
+	months: INTEGER
 			-- total number of months
 		do
 			Result := 12 * duration.year + duration.month
 		end
 
-	seconds: MA_DECIMAL is
+	seconds: MA_DECIMAL
 			-- Seconds component (including milliseconds)
 		do
 			create Result.make_zero
@@ -106,7 +106,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Are `Current' and `other' the same expression?
 		local
 			a_duration: like duration
@@ -119,7 +119,7 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_duration (a_duration: STRING): BOOLEAN is
+	is_duration (a_duration: STRING): BOOLEAN
 			-- Is `a_duration' a valid duration?
 		local
 			a_parser: XM_XPATH_DURATION_PARSER
@@ -128,13 +128,13 @@ feature -- Status report
 			Result := a_parser.is_months_duration (a_duration)
 		end
 
-	is_months_duration: BOOLEAN is
+	is_months_duration: BOOLEAN
 			-- Is `Current' an xdt:yearMonthDuration value?
 		do
 			Result := True
 		end
 
-	is_normal: BOOLEAN is
+	is_normal: BOOLEAN
 			-- Is `duration' in normal form?
 		do
 			Result := duration.month = 0 or
@@ -142,7 +142,7 @@ feature -- Status report
 				(duration.month.sign = duration.year.sign)
 		end
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -154,7 +154,7 @@ feature -- Status report
 			std.error.put_new_line
 		end
 
-	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
+	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN
 			-- Is `other' comparable to `Current'?
 		do
 			Result := other.is_months_duration
@@ -162,16 +162,16 @@ feature -- Status report
 
 feature -- Conversions
 
-	as_months_duration: XM_XPATH_MONTHS_DURATION_VALUE is
+	as_months_duration: XM_XPATH_MONTHS_DURATION_VALUE
 			-- `Current' seen as an xdt:yearMonthDuration value
 		do
 			Result := Current
 		end
-	
+
 
 feature -- Basic operations
 
-	plus (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM is
+	plus (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM
 			-- Addition of `other' to `Current'
 		do
 			if other.is_months_duration then
@@ -181,7 +181,7 @@ feature -- Basic operations
 			end
 		end
 
-	minus (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM is
+	minus (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM
 			-- Subtraction of `other' from `Current'
 		do
 			if other.is_months_duration then
@@ -190,8 +190,8 @@ feature -- Basic operations
 				create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Both operands must be the same type for duration subtraction", Gexslt_eiffel_type_uri, "MIXED-DURATIONS", Dynamic_error)
 			end
 		end
-		
-	multiply (a_scalar: DOUBLE): XM_XPATH_ITEM is
+
+	multiply (a_scalar: DOUBLE): XM_XPATH_ITEM
 			-- Multiplication of `Current' by `a_scalar'
 		local
 			a_duration: like duration
@@ -211,14 +211,14 @@ feature -- Basic operations
 				create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Arithmetic overflow in duration multiplication", Xpath_errors_uri, "FODT0002", Dynamic_error)
 			end
 		end
-		
-	scalar_divide (a_scalar: DOUBLE): XM_XPATH_ITEM is
+
+	scalar_divide (a_scalar: DOUBLE): XM_XPATH_ITEM
 			-- Division of `Current' by `a_scalar'
 		do
 			Result := multiply (1.0 / a_scalar)
 		end
-		
-	divide (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM is
+
+	divide (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM
 			-- Division of `other' into `Current'
 		local
 			a_decimal, another_decimal: MA_DECIMAL
@@ -239,7 +239,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	normalize is
+	normalize
 			-- Normalize `duration'
 		local
 			l_total_months: INTEGER

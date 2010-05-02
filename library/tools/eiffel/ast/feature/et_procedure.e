@@ -18,7 +18,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_name: like extended_name; args: like arguments; a_class: like implementation_class) is
+	make (a_name: like extended_name; args: like arguments; a_class: like implementation_class)
 			-- Create a new procedure.
 		require
 			a_name_not_void: a_name /= Void
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Conversion
 
-	undefined_feature (a_name: like extended_name): ET_DEFERRED_PROCEDURE is
+	undefined_feature (a_name: like extended_name): ET_DEFERRED_PROCEDURE
 			-- Undefined version of current feature
 		do
 			create Result.make (a_name, arguments, implementation_class)
@@ -62,7 +62,7 @@ feature -- Conversion
 
 feature -- Access
 
-	header_break: ET_BREAK is
+	header_break: ET_BREAK
 			-- Break which appears where the header comment is expected
 		local
 			l_synonym: ET_FEATURE

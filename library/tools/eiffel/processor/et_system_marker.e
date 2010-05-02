@@ -133,7 +133,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_system: ET_SYSTEM) is
+	make (a_system: ET_SYSTEM)
 			-- Create a new system marker for `a_system'.
 		require
 			a_system_not_void: a_system /= Void
@@ -152,7 +152,7 @@ feature -- Access
 
 feature -- Processing
 
-	mark_system (a_class: ET_CLASS) is
+	mark_system (a_class: ET_CLASS)
 			-- Identify the classes that `a_class' recursively depends on
 			-- (see definition in ETL page 35) and mark them as being part
 			-- of the system. Mark `a_class' as well.
@@ -165,7 +165,7 @@ feature -- Processing
 			a_class_in_system: a_class.in_system
 		end
 
-	mark_system_no_unmark (a_class: ET_CLASS) is
+	mark_system_no_unmark (a_class: ET_CLASS)
 			-- Identify the classes that `a_class' recursively depends on
 			-- (see definition in ETL page 35) and mark them as being part
 			-- of the system. Mark `a_class' as well. (Do not call `unmark_all'
@@ -180,7 +180,7 @@ feature -- Processing
 			a_class_in_system: a_class.in_system
 		end
 
-	mark_shallow (a_class: ET_CLASS) is
+	mark_shallow (a_class: ET_CLASS)
 			-- Identify the classes that `a_class' directly depends on
 			-- (see definition in ETL page 35) and mark them as being part
 			-- of the system. Do not mark `a_class' if it does not
@@ -192,7 +192,7 @@ feature -- Processing
 			mark_shallow_no_unmark (a_class)
 		end
 
-	mark_shallow_no_unmark (a_class: ET_CLASS) is
+	mark_shallow_no_unmark (a_class: ET_CLASS)
 			-- Identify the classes that `a_class' directly depends on
 			-- (see definition in ETL page 35) and mark them as being part
 			-- of the system. Do not mark `a_class' if it does not
@@ -205,7 +205,7 @@ feature -- Processing
 			process_class (a_class)
 		end
 
-	unmark_all is
+	unmark_all
 			-- Unmark all classes of `current_system' as if none of them
 			-- was in the system.
 		do
@@ -214,7 +214,7 @@ feature -- Processing
 
 feature {ET_AST_NODE} -- Processing
 
-	process_actual_arguments (a_list: ET_ACTUAL_ARGUMENTS) is
+	process_actual_arguments (a_list: ET_ACTUAL_ARGUMENTS)
 			-- Process `a_list'.
 		require
 			a_list_not_void: a_list /= Void
@@ -228,7 +228,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_actual_parameter_list (a_list: ET_ACTUAL_PARAMETER_LIST) is
+	process_actual_parameter_list (a_list: ET_ACTUAL_PARAMETER_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -240,7 +240,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_agent_argument_operand_list (a_list: ET_AGENT_ARGUMENT_OPERAND_LIST) is
+	process_agent_argument_operand_list (a_list: ET_AGENT_ARGUMENT_OPERAND_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -252,19 +252,19 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_agent_open_target (a_target: ET_AGENT_OPEN_TARGET) is
+	process_agent_open_target (a_target: ET_AGENT_OPEN_TARGET)
 			-- Process `a_target'.
 		do
 			process_type (a_target.type)
 		end
 
-	process_agent_typed_open_argument (an_argument: ET_AGENT_TYPED_OPEN_ARGUMENT) is
+	process_agent_typed_open_argument (an_argument: ET_AGENT_TYPED_OPEN_ARGUMENT)
 			-- Process `an_argument'.
 		do
 			process_type (an_argument.type)
 		end
 
-	process_assertion (an_assertion: ET_ASSERTION) is
+	process_assertion (an_assertion: ET_ASSERTION)
 			-- Process `an_assertion'.
 		require
 			an_assertion_not_void: an_assertion /= Void
@@ -272,7 +272,7 @@ feature {ET_AST_NODE} -- Processing
 			an_assertion.process (Current)
 		end
 
-	process_assertions (a_list: ET_ASSERTIONS) is
+	process_assertions (a_list: ET_ASSERTIONS)
 			-- Process `a_list'.
 		require
 			a_list_not_void: a_list /= Void
@@ -286,44 +286,44 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_assigner_instruction (an_instruction: ET_ASSIGNER_INSTRUCTION) is
+	process_assigner_instruction (an_instruction: ET_ASSIGNER_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			process_feature_call (an_instruction.call)
 			process_expression (an_instruction.source)
 		end
 
-	process_assignment (an_instruction: ET_ASSIGNMENT) is
+	process_assignment (an_instruction: ET_ASSIGNMENT)
 			-- Process `an_instruction'.
 		do
 			process_expression (an_instruction.source)
 		end
 
-	process_assignment_attempt (an_instruction: ET_ASSIGNMENT_ATTEMPT) is
+	process_assignment_attempt (an_instruction: ET_ASSIGNMENT_ATTEMPT)
 			-- Process `an_instruction'.
 		do
 			process_expression (an_instruction.source)
 		end
 
-	process_attribute (a_feature: ET_ATTRIBUTE) is
+	process_attribute (a_feature: ET_ATTRIBUTE)
 			-- Process `a_feature'.
 		do
 			process_type (a_feature.type)
 		end
 
-	process_bang_instruction (an_instruction: ET_BANG_INSTRUCTION) is
+	process_bang_instruction (an_instruction: ET_BANG_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			process_creation_instruction (an_instruction)
 		end
 
-	process_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT) is
+	process_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			process_integer_constant (a_constant)
 		end
 
-	process_braced_type_list (a_list: ET_BRACED_TYPE_LIST) is
+	process_braced_type_list (a_list: ET_BRACED_TYPE_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -335,31 +335,31 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION) is
+	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			process_feature_call (an_expression)
 		end
 
-	process_c1_character_constant (a_constant: ET_C1_CHARACTER_CONSTANT) is
+	process_c1_character_constant (a_constant: ET_C1_CHARACTER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			process_character_constant (a_constant)
 		end
 
-	process_c2_character_constant (a_constant: ET_C2_CHARACTER_CONSTANT) is
+	process_c2_character_constant (a_constant: ET_C2_CHARACTER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			process_character_constant (a_constant)
 		end
 
-	process_c3_character_constant (a_constant: ET_C3_CHARACTER_CONSTANT) is
+	process_c3_character_constant (a_constant: ET_C3_CHARACTER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			process_character_constant (a_constant)
 		end
 
-	process_call_agent (an_expression: ET_CALL_AGENT) is
+	process_call_agent (an_expression: ET_CALL_AGENT)
 			-- Process `an_expression'.
 		local
 			a_target: ET_AGENT_TARGET
@@ -373,19 +373,19 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_call_expression (an_expression: ET_CALL_EXPRESSION) is
+	process_call_expression (an_expression: ET_CALL_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			process_feature_call (an_expression)
 		end
 
-	process_call_instruction (an_instruction: ET_CALL_INSTRUCTION) is
+	process_call_instruction (an_instruction: ET_CALL_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			process_feature_call (an_instruction)
 		end
 
-	process_character_constant (a_constant: ET_CHARACTER_CONSTANT) is
+	process_character_constant (a_constant: ET_CHARACTER_CONSTANT)
 			-- Process `a_constant'.
 		require
 			a_constant_not_void: a_constant /= Void
@@ -398,13 +398,13 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_check_instruction (an_instruction: ET_CHECK_INSTRUCTION) is
+	process_check_instruction (an_instruction: ET_CHECK_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			process_assertions (an_instruction)
 		end
 
-	process_choice_list (a_list: ET_CHOICE_LIST) is
+	process_choice_list (a_list: ET_CHOICE_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -416,14 +416,14 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_choice_range (a_choice: ET_CHOICE_RANGE) is
+	process_choice_range (a_choice: ET_CHOICE_RANGE)
 			-- Process `a_choice'.
 		do
 			process_expression (a_choice.lower)
 			process_expression (a_choice.upper)
 		end
 
-	process_class (a_class: ET_CLASS) is
+	process_class (a_class: ET_CLASS)
 			-- Process `a_class'.
 		local
 			a_formal_parameters: ET_FORMAL_PARAMETER_LIST
@@ -468,7 +468,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_class_type (a_type: ET_CLASS_TYPE) is
+	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
 		local
 			a_class: ET_CLASS
@@ -482,7 +482,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_compound (a_list: ET_COMPOUND) is
+	process_compound (a_list: ET_COMPOUND)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -494,7 +494,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_constant_attribute (a_feature: ET_CONSTANT_ATTRIBUTE) is
+	process_constant_attribute (a_feature: ET_CONSTANT_ATTRIBUTE)
 			-- Process `a_feature'.
 		do
 			process_type (a_feature.type)
@@ -502,19 +502,19 @@ feature {ET_AST_NODE} -- Processing
 			a_feature.constant.process (Current)
 		end
 
-	process_constrained_formal_parameter (a_parameter: ET_CONSTRAINED_FORMAL_PARAMETER) is
+	process_constrained_formal_parameter (a_parameter: ET_CONSTRAINED_FORMAL_PARAMETER)
 			-- Process `a_parameter'.
 		do
 			process_type  (a_parameter.constraint)
 		end
 
-	process_convert_builtin_expression (an_expression: ET_CONVERT_BUILTIN_EXPRESSION) is
+	process_convert_builtin_expression (an_expression: ET_CONVERT_BUILTIN_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			process_expression (an_expression.expression)
 		end
 
-	process_convert_feature_list (a_list: ET_CONVERT_FEATURE_LIST) is
+	process_convert_feature_list (a_list: ET_CONVERT_FEATURE_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -526,31 +526,31 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_convert_function (a_convert_function: ET_CONVERT_FUNCTION) is
+	process_convert_function (a_convert_function: ET_CONVERT_FUNCTION)
 			-- Process `a_convert_function'.
 		do
 			a_convert_function.types.process (Current)
 		end
 
-	process_convert_from_expression (an_expression: ET_CONVERT_FROM_EXPRESSION) is
+	process_convert_from_expression (an_expression: ET_CONVERT_FROM_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			process_expression (an_expression.expression)
 		end
 
-	process_convert_procedure (a_convert_procedure: ET_CONVERT_PROCEDURE) is
+	process_convert_procedure (a_convert_procedure: ET_CONVERT_PROCEDURE)
 			-- Process `a_convert_procedure'.
 		do
 			a_convert_procedure.types.process (Current)
 		end
 
-	process_convert_to_expression (an_expression: ET_CONVERT_TO_EXPRESSION) is
+	process_convert_to_expression (an_expression: ET_CONVERT_TO_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			process_expression (an_expression.expression)
 		end
 
-	process_create_expression (an_expression: ET_CREATE_EXPRESSION) is
+	process_create_expression (an_expression: ET_CREATE_EXPRESSION)
 			-- Process `an_expression'.
 		local
 			a_call: ET_QUALIFIED_CALL
@@ -566,13 +566,13 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_create_instruction (an_instruction: ET_CREATE_INSTRUCTION) is
+	process_create_instruction (an_instruction: ET_CREATE_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			process_creation_instruction (an_instruction)
 		end
 
-	process_creation_instruction (an_instruction: ET_CREATION_INSTRUCTION) is
+	process_creation_instruction (an_instruction: ET_CREATION_INSTRUCTION)
 			-- Process `an_instruction'.
 		require
 			an_instruction_not_void: an_instruction /= Void
@@ -594,7 +594,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_debug_instruction (an_instruction: ET_DEBUG_INSTRUCTION) is
+	process_debug_instruction (an_instruction: ET_DEBUG_INSTRUCTION)
 			-- Process `an_instruction'.
 		local
 			a_compound: ET_COMPOUND
@@ -605,19 +605,19 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_deferred_function (a_feature: ET_DEFERRED_FUNCTION) is
+	process_deferred_function (a_feature: ET_DEFERRED_FUNCTION)
 			-- Process `a_feature'.
 		do
 			process_deferred_routine (a_feature)
 		end
 
-	process_deferred_procedure (a_feature: ET_DEFERRED_PROCEDURE) is
+	process_deferred_procedure (a_feature: ET_DEFERRED_PROCEDURE)
 			-- Process `a_feature'.
 		do
 			process_deferred_routine (a_feature)
 		end
 
-	process_deferred_routine (a_feature: ET_DEFERRED_ROUTINE) is
+	process_deferred_routine (a_feature: ET_DEFERRED_ROUTINE)
 			-- Process `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -645,43 +645,43 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_do_function (a_feature: ET_DO_FUNCTION) is
+	process_do_function (a_feature: ET_DO_FUNCTION)
 			-- Process `a_feature'.
 		do
 			process_internal_routine (a_feature)
 		end
 
-	process_do_function_inline_agent (an_expression: ET_DO_FUNCTION_INLINE_AGENT) is
+	process_do_function_inline_agent (an_expression: ET_DO_FUNCTION_INLINE_AGENT)
 			-- Process `an_expression'.
 		do
 			process_internal_routine_inline_agent (an_expression)
 		end
 
-	process_do_procedure (a_feature: ET_DO_PROCEDURE) is
+	process_do_procedure (a_feature: ET_DO_PROCEDURE)
 			-- Process `a_feature'.
 		do
 			process_internal_routine (a_feature)
 		end
 
-	process_do_procedure_inline_agent (an_expression: ET_DO_PROCEDURE_INLINE_AGENT) is
+	process_do_procedure_inline_agent (an_expression: ET_DO_PROCEDURE_INLINE_AGENT)
 			-- Process `an_expression'.
 		do
 			process_internal_routine_inline_agent (an_expression)
 		end
 
-	process_dotnet_attribute (a_feature: ET_DOTNET_ATTRIBUTE) is
+	process_dotnet_attribute (a_feature: ET_DOTNET_ATTRIBUTE)
 			-- Process `a_feature'.
 		do
 			process_attribute (a_feature)
 		end
 
-	process_dotnet_constant_attribute (a_feature: ET_DOTNET_CONSTANT_ATTRIBUTE) is
+	process_dotnet_constant_attribute (a_feature: ET_DOTNET_CONSTANT_ATTRIBUTE)
 			-- Process `a_feature'.
 		do
 			process_constant_attribute (a_feature)
 		end
 
-	process_dotnet_function (a_feature: ET_DOTNET_FUNCTION) is
+	process_dotnet_function (a_feature: ET_DOTNET_FUNCTION)
 			-- Process `a_feature'.
 		local
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
@@ -693,7 +693,7 @@ feature {ET_AST_NODE} -- Processing
 			process_type (a_feature.type)
 		end
 
-	process_dotnet_procedure (a_feature: ET_DOTNET_PROCEDURE) is
+	process_dotnet_procedure (a_feature: ET_DOTNET_PROCEDURE)
 			-- Process `a_feature'.
 		local
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
@@ -704,7 +704,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_elseif_part (an_elseif_part: ET_ELSEIF_PART) is
+	process_elseif_part (an_elseif_part: ET_ELSEIF_PART)
 			-- Process `an_elseif_part'.
 		local
 			a_compound: ET_COMPOUND
@@ -716,7 +716,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_elseif_part_list (a_list: ET_ELSEIF_PART_LIST) is
+	process_elseif_part_list (a_list: ET_ELSEIF_PART_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -728,14 +728,14 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_equality_expression (an_expression: ET_EQUALITY_EXPRESSION) is
+	process_equality_expression (an_expression: ET_EQUALITY_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			process_expression (an_expression.left)
 			process_expression (an_expression.right)
 		end
 
-	process_expression (a_expression: ET_EXPRESSION) is
+	process_expression (a_expression: ET_EXPRESSION)
 			-- Process `a_expression'.
 		require
 			a_expression_not_void: a_expression /= Void
@@ -743,13 +743,13 @@ feature {ET_AST_NODE} -- Processing
 			a_expression.process (Current)
 		end
 
-	process_expression_address (an_expression: ET_EXPRESSION_ADDRESS) is
+	process_expression_address (an_expression: ET_EXPRESSION_ADDRESS)
 			-- Process `an_expression'.
 		do
 			process_expression (an_expression.expression)
 		end
 
-	process_expression_list (a_list: ET_EXPRESSION_LIST) is
+	process_expression_list (a_list: ET_EXPRESSION_LIST)
 			-- Process `a_list'.
 		require
 			a_list_not_void: a_list /= Void
@@ -763,7 +763,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_extended_attribute (a_feature: ET_EXTENDED_ATTRIBUTE) is
+	process_extended_attribute (a_feature: ET_EXTENDED_ATTRIBUTE)
 			-- Process `a_feature'.
 		local
 			a_preconditions: ET_PRECONDITIONS
@@ -780,31 +780,31 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_external_function (a_feature: ET_EXTERNAL_FUNCTION) is
+	process_external_function (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Process `a_feature'.
 		do
 			process_external_routine (a_feature)
 		end
 
-	process_external_function_inline_agent (an_expression: ET_EXTERNAL_FUNCTION_INLINE_AGENT) is
+	process_external_function_inline_agent (an_expression: ET_EXTERNAL_FUNCTION_INLINE_AGENT)
 			-- Process `an_expression'.
 		do
 			process_external_routine_inline_agent (an_expression)
 		end
 
-	process_external_procedure (a_feature: ET_EXTERNAL_PROCEDURE) is
+	process_external_procedure (a_feature: ET_EXTERNAL_PROCEDURE)
 			-- Process `a_feature'.
 		do
 			process_external_routine (a_feature)
 		end
 
-	process_external_procedure_inline_agent (an_expression: ET_EXTERNAL_PROCEDURE_INLINE_AGENT) is
+	process_external_procedure_inline_agent (an_expression: ET_EXTERNAL_PROCEDURE_INLINE_AGENT)
 			-- Process `an_expression'.
 		do
 			process_external_routine_inline_agent (an_expression)
 		end
 
-	process_external_routine (a_feature: ET_EXTERNAL_ROUTINE) is
+	process_external_routine (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Process `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -812,7 +812,7 @@ feature {ET_AST_NODE} -- Processing
 			process_external_routine_closure (a_feature)
 		end
 
-	process_external_routine_closure (a_feature: ET_EXTERNAL_ROUTINE_CLOSURE) is
+	process_external_routine_closure (a_feature: ET_EXTERNAL_ROUTINE_CLOSURE)
 			-- Process `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -840,7 +840,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_external_routine_inline_agent (an_expression: ET_EXTERNAL_ROUTINE_INLINE_AGENT) is
+	process_external_routine_inline_agent (an_expression: ET_EXTERNAL_ROUTINE_INLINE_AGENT)
 			-- Process `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -854,7 +854,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_feature_call (a_call: ET_FEATURE_CALL) is
+	process_feature_call (a_call: ET_FEATURE_CALL)
 			-- Process `a_call'.
 		local
 			a_target: ET_EXPRESSION
@@ -870,7 +870,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_features (a_class: ET_CLASS) is
+	process_features (a_class: ET_CLASS)
 			-- Process features of `a_class'.
 		require
 			a_class_not_void: a_class /= Void
@@ -893,7 +893,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_formal_argument (an_argument: ET_FORMAL_ARGUMENT) is
+	process_formal_argument (an_argument: ET_FORMAL_ARGUMENT)
 			-- Process `an_argument'.
 		do
 			if an_argument.is_last_entity then
@@ -901,7 +901,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_formal_argument_list (a_list: ET_FORMAL_ARGUMENT_LIST) is
+	process_formal_argument_list (a_list: ET_FORMAL_ARGUMENT_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -913,7 +913,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_formal_parameter_list (a_list: ET_FORMAL_PARAMETER_LIST) is
+	process_formal_parameter_list (a_list: ET_FORMAL_PARAMETER_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -925,20 +925,20 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE) is
+	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
 			-- Process `a_type'.
 		do
 			process_class_type (a_type)
 			process_actual_parameter_list (a_type.actual_parameters)
 		end
 
-	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT) is
+	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			process_integer_constant (a_constant)
 		end
 
-	process_if_instruction (an_instruction: ET_IF_INSTRUCTION) is
+	process_if_instruction (an_instruction: ET_IF_INSTRUCTION)
 			-- Process `an_instruction'.
 		local
 			an_elseif_parts: ET_ELSEIF_PART_LIST
@@ -959,20 +959,20 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_infix_cast_expression (an_expression: ET_INFIX_CAST_EXPRESSION) is
+	process_infix_cast_expression (an_expression: ET_INFIX_CAST_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			process_expression (an_expression.expression)
 		end
 
-	process_infix_expression (an_expression: ET_INFIX_EXPRESSION) is
+	process_infix_expression (an_expression: ET_INFIX_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			process_expression (an_expression.left)
 			process_expression (an_expression.right)
 		end
 
-	process_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION) is
+	process_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION)
 			-- Process `an_instruction'.
 		local
 			a_when_parts: ET_WHEN_PART_LIST
@@ -989,7 +989,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_integer_constant (a_constant: ET_INTEGER_CONSTANT) is
+	process_integer_constant (a_constant: ET_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		require
 			a_constant_not_void: a_constant /= Void
@@ -1002,7 +1002,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_internal_routine (a_feature: ET_INTERNAL_ROUTINE) is
+	process_internal_routine (a_feature: ET_INTERNAL_ROUTINE)
 			-- Process `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -1010,7 +1010,7 @@ feature {ET_AST_NODE} -- Processing
 			process_internal_routine_closure (a_feature)
 		end
 
-	process_internal_routine_closure (a_feature: ET_INTERNAL_ROUTINE_CLOSURE) is
+	process_internal_routine_closure (a_feature: ET_INTERNAL_ROUTINE_CLOSURE)
 			-- Process `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -1052,7 +1052,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_internal_routine_inline_agent (an_expression: ET_INTERNAL_ROUTINE_INLINE_AGENT) is
+	process_internal_routine_inline_agent (an_expression: ET_INTERNAL_ROUTINE_INLINE_AGENT)
 			-- Process `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -1066,13 +1066,13 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_invariants (a_list: ET_INVARIANTS) is
+	process_invariants (a_list: ET_INVARIANTS)
 			-- Process `a_list'.
 		do
 			process_assertions (a_list)
 		end
 
-	process_local_variable (a_local: ET_LOCAL_VARIABLE) is
+	process_local_variable (a_local: ET_LOCAL_VARIABLE)
 			-- Process `a_local'.
 		do
 			if a_local.is_last_entity then
@@ -1080,7 +1080,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_local_variable_list (a_list: ET_LOCAL_VARIABLE_LIST) is
+	process_local_variable_list (a_list: ET_LOCAL_VARIABLE_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -1092,7 +1092,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_loop_instruction (an_instruction: ET_LOOP_INSTRUCTION) is
+	process_loop_instruction (an_instruction: ET_LOOP_INSTRUCTION)
 			-- Process `an_instruction'.
 		local
 			an_invariant_part: ET_LOOP_INVARIANTS
@@ -1118,19 +1118,19 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_loop_invariants (a_list: ET_LOOP_INVARIANTS) is
+	process_loop_invariants (a_list: ET_LOOP_INVARIANTS)
 			-- Process `a_list'.
 		do
 			process_assertions (a_list)
 		end
 
-	process_manifest_array (an_expression: ET_MANIFEST_ARRAY) is
+	process_manifest_array (an_expression: ET_MANIFEST_ARRAY)
 			-- Process `an_expression'.
 		do
 			process_expression_list (an_expression)
 		end
 
-	process_manifest_string (a_string: ET_MANIFEST_STRING) is
+	process_manifest_string (a_string: ET_MANIFEST_STRING)
 			-- Process `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -1143,32 +1143,32 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_manifest_tuple (an_expression: ET_MANIFEST_TUPLE) is
+	process_manifest_tuple (an_expression: ET_MANIFEST_TUPLE)
 			-- Process `an_expression'.
 		do
 			process_expression_list (an_expression)
 		end
 
-	process_manifest_type (an_expression: ET_MANIFEST_TYPE) is
+	process_manifest_type (an_expression: ET_MANIFEST_TYPE)
 			-- Process `an_expression'.
 		do
 			process_type (an_expression.type)
 		end
 
-	process_named_object_test (an_expression: ET_NAMED_OBJECT_TEST) is
+	process_named_object_test (an_expression: ET_NAMED_OBJECT_TEST)
 			-- Process `an_expression'.
 		do
 			process_object_test (an_expression)
 		end
 
-	process_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION) is
+	process_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			process_expression (an_expression.left)
 			process_expression (an_expression.right)
 		end
 
-	process_object_test (an_expression: ET_OBJECT_TEST) is
+	process_object_test (an_expression: ET_OBJECT_TEST)
 			-- Process `an_expression'.
 		local
 			l_type: ET_TYPE
@@ -1180,67 +1180,67 @@ feature {ET_AST_NODE} -- Processing
 			process_expression (an_expression.expression)
 		end
 
-	process_octal_integer_constant (a_constant: ET_OCTAL_INTEGER_CONSTANT) is
+	process_octal_integer_constant (a_constant: ET_OCTAL_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			process_integer_constant (a_constant)
 		end
 
-	process_old_expression (an_expression: ET_OLD_EXPRESSION) is
+	process_old_expression (an_expression: ET_OLD_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			process_expression (an_expression.expression)
 		end
 
-	process_old_object_test (an_expression: ET_OLD_OBJECT_TEST) is
+	process_old_object_test (an_expression: ET_OLD_OBJECT_TEST)
 			-- Process `an_expression'.
 		do
 			process_object_test (an_expression)
 		end
 
-	process_once_function (a_feature: ET_ONCE_FUNCTION) is
+	process_once_function (a_feature: ET_ONCE_FUNCTION)
 			-- Process `a_feature'.
 		do
 			process_internal_routine (a_feature)
 		end
 
-	process_once_function_inline_agent (an_expression: ET_ONCE_FUNCTION_INLINE_AGENT) is
+	process_once_function_inline_agent (an_expression: ET_ONCE_FUNCTION_INLINE_AGENT)
 			-- Process `an_expression'.
 		do
 			process_internal_routine_inline_agent (an_expression)
 		end
 
-	process_once_manifest_string (a_string: ET_ONCE_MANIFEST_STRING) is
+	process_once_manifest_string (a_string: ET_ONCE_MANIFEST_STRING)
 			-- Process `a_string'.
 		do
 			process_manifest_string (a_string.manifest_string)
 		end
 
-	process_once_procedure (a_feature: ET_ONCE_PROCEDURE) is
+	process_once_procedure (a_feature: ET_ONCE_PROCEDURE)
 			-- Process `a_feature'.
 		do
 			process_internal_routine (a_feature)
 		end
 
-	process_once_procedure_inline_agent (an_expression: ET_ONCE_PROCEDURE_INLINE_AGENT) is
+	process_once_procedure_inline_agent (an_expression: ET_ONCE_PROCEDURE_INLINE_AGENT)
 			-- Process `an_expression'.
 		do
 			process_internal_routine_inline_agent (an_expression)
 		end
 
-	process_parent (a_parent: ET_PARENT) is
+	process_parent (a_parent: ET_PARENT)
 			-- Process `a_parent'.
 		do
 			a_parent.type.process (Current)
 		end
 
-	process_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION) is
+	process_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			process_expression (an_expression.expression)
 		end
 
-	process_parent_list (a_list: ET_PARENT_LIST) is
+	process_parent_list (a_list: ET_PARENT_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -1252,19 +1252,19 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_postconditions (a_list: ET_POSTCONDITIONS) is
+	process_postconditions (a_list: ET_POSTCONDITIONS)
 			-- Process `a_list'.
 		do
 			process_assertions (a_list)
 		end
 
-	process_preconditions (a_list: ET_PRECONDITIONS) is
+	process_preconditions (a_list: ET_PRECONDITIONS)
 			-- Process `a_list'.
 		do
 			process_assertions (a_list)
 		end
 
-	process_precursor_call (a_call: ET_PRECURSOR) is
+	process_precursor_call (a_call: ET_PRECURSOR)
 			-- Process `a_call'.
 		require
 			a_call_not_void: a_call /= Void
@@ -1279,37 +1279,37 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION) is
+	process_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			process_precursor_call (an_expression)
 		end
 
-	process_precursor_instruction (an_instruction: ET_PRECURSOR_INSTRUCTION) is
+	process_precursor_instruction (an_instruction: ET_PRECURSOR_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			process_precursor_call (an_instruction)
 		end
 
-	process_prefix_expression (an_expression: ET_PREFIX_EXPRESSION) is
+	process_prefix_expression (an_expression: ET_PREFIX_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			process_expression (an_expression.expression)
 		end
 
-	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE) is
+	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE)
 			-- Process `a_type'.
 		do
 			process_type (a_type.target_type)
 		end
 
-	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
+	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE)
 			-- Process `a_type'.
 		do
 			process_type (a_type.target_type)
 		end
 
-	process_real_constant (a_constant: ET_REAL_CONSTANT) is
+	process_real_constant (a_constant: ET_REAL_CONSTANT)
 			-- Process `a_constant'.
 		local
 			a_type: ET_TARGET_TYPE
@@ -1320,31 +1320,31 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT) is
+	process_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			process_integer_constant (a_constant)
 		end
 
-	process_regular_manifest_string (a_string: ET_REGULAR_MANIFEST_STRING) is
+	process_regular_manifest_string (a_string: ET_REGULAR_MANIFEST_STRING)
 			-- Process `a_string'.
 		do
 			process_manifest_string (a_string)
 		end
 
-	process_regular_real_constant (a_constant: ET_REGULAR_REAL_CONSTANT) is
+	process_regular_real_constant (a_constant: ET_REGULAR_REAL_CONSTANT)
 			-- Process `a_constant'.
 		do
 			process_real_constant (a_constant)
 		end
 
-	process_special_manifest_string (a_string: ET_SPECIAL_MANIFEST_STRING) is
+	process_special_manifest_string (a_string: ET_SPECIAL_MANIFEST_STRING)
 			-- Process `a_string'.
 		do
 			process_manifest_string (a_string)
 		end
 
-	process_static_feature_call (a_call: ET_STATIC_FEATURE_CALL) is
+	process_static_feature_call (a_call: ET_STATIC_FEATURE_CALL)
 			-- Process `a_call'.
 		require
 			a_call_not_void: a_call /= Void
@@ -1358,19 +1358,19 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION) is
+	process_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			process_static_feature_call (an_expression)
 		end
 
-	process_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION) is
+	process_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			process_static_feature_call (an_instruction)
 		end
 
-	process_tagged_assertion (an_assertion: ET_TAGGED_ASSERTION) is
+	process_tagged_assertion (an_assertion: ET_TAGGED_ASSERTION)
 			-- Process `an_assertion'.
 		local
 			an_expression: ET_EXPRESSION
@@ -1381,7 +1381,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_tuple_type (a_type: ET_TUPLE_TYPE) is
+	process_tuple_type (a_type: ET_TUPLE_TYPE)
 			-- Process `a_type'.
 		local
 			a_class: ET_CLASS
@@ -1400,7 +1400,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_type (a_type: ET_TYPE) is
+	process_type (a_type: ET_TYPE)
 			-- Process `a_type'.
 		require
 			a_type_not_void: a_type /= Void
@@ -1408,37 +1408,37 @@ feature {ET_AST_NODE} -- Processing
 			a_type.process (Current)
 		end
 
-	process_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT) is
+	process_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			process_integer_constant (a_constant)
 		end
 
-	process_underscored_real_constant (a_constant: ET_UNDERSCORED_REAL_CONSTANT) is
+	process_underscored_real_constant (a_constant: ET_UNDERSCORED_REAL_CONSTANT)
 			-- Process `a_constant'.
 		do
 			process_real_constant (a_constant)
 		end
 
-	process_unique_attribute (a_feature: ET_UNIQUE_ATTRIBUTE) is
+	process_unique_attribute (a_feature: ET_UNIQUE_ATTRIBUTE)
 			-- Process `a_feature'.
 		do
 			process_type (a_feature.type)
 		end
 
-	process_variant (a_variant: ET_VARIANT) is
+	process_variant (a_variant: ET_VARIANT)
 			-- Process `a_variant'.
 		do
 			process_expression (a_variant.expression)
 		end
 
-	process_verbatim_string (a_string: ET_VERBATIM_STRING) is
+	process_verbatim_string (a_string: ET_VERBATIM_STRING)
 			-- Process `a_string'.
 		do
 			process_manifest_string (a_string)
 		end
 
-	process_when_part (a_when_part: ET_WHEN_PART) is
+	process_when_part (a_when_part: ET_WHEN_PART)
 			-- Process `a_when_part'.
 		local
 			a_compound: ET_COMPOUND
@@ -1450,7 +1450,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_when_part_list (a_list: ET_WHEN_PART_LIST) is
+	process_when_part_list (a_list: ET_WHEN_PART_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER

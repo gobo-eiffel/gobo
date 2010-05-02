@@ -14,7 +14,7 @@ class KL_STANDARD_FILES
 
 feature -- Access
 
-	input: KL_STDIN_FILE is
+	input: KL_STDIN_FILE
 			-- Standard input file
 		once
 			create Result.make
@@ -23,7 +23,7 @@ feature -- Access
 			file_open_read: Result.is_open_read
 		end
 
-	output: KL_STDOUT_FILE is
+	output: KL_STDOUT_FILE
 			-- Standard output file
 		once
 			create Result.make
@@ -32,7 +32,7 @@ feature -- Access
 			file_open_write: Result.is_open_write
 		end
 
-	error: KL_STDERR_FILE is
+	error: KL_STDERR_FILE
 			-- Standard error file
 		once
 			create Result.make

@@ -14,7 +14,7 @@ class XM_FORMAL_PUBLIC_IDENTIFIER_ROUTINES
 
 feature -- Conversion
 
-	normalized_fpi (an_fpi: STRING): STRING is
+	normalized_fpi (an_fpi: STRING): STRING
 			-- Normalized version of `an_fpi'.
 		require
 			public_identifier_is_ascii: an_fpi /= Void -- and then an_fpi.is_ascii
@@ -47,7 +47,7 @@ feature -- Conversion
 			Result.right_adjust
 		end
 
-	urn_to_fpi (a_publicid_urn: STRING) : STRING is
+	urn_to_fpi (a_publicid_urn: STRING) : STRING
 			-- Unwrapped urn:publicid: URN
 		require
 			public_id_urn: a_publicid_urn /= Void and then a_publicid_urn.substring_index ("urn:publicid:", 1) = 1

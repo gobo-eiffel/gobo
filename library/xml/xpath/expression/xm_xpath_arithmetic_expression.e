@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; an_operand_two: XM_XPATH_EXPRESSION) is
+	make (an_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; an_operand_two: XM_XPATH_EXPRESSION)
 			-- Establish invariant
 		do
 			Precursor (an_operand_one, a_token, an_operand_two)
@@ -39,19 +39,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_arithmetic_expression: BOOLEAN is
+	is_arithmetic_expression: BOOLEAN
 			-- Is `Current' a arithmetic expression?
 		do
 			Result := True
 		end
 
-	as_arithmetic_expression: XM_XPATH_ARITHMETIC_EXPRESSION is
+	as_arithmetic_expression: XM_XPATH_ARITHMETIC_EXPRESSION
 			-- `Current' seen as a arithmetic expression
 		do
 			Result := Current
 		end
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			--Determine the data type of the expression, if possible
 		local
 			l_type, l_other_type: XM_XPATH_ITEM_TYPE
@@ -98,7 +98,7 @@ feature -- Status report
 	is_backwards_compatible_mode: BOOLEAN
 			-- Is XPath 1.0 Backwards Compatible Mode used?
 
-	is_valid_operator (a_operator: INTEGER): BOOLEAN is
+	is_valid_operator (a_operator: INTEGER): BOOLEAN
 			-- Is `a_operator' valid for `Current'?
 		do
 			Result := is_arithmetic_operator	(a_operator)
@@ -106,7 +106,7 @@ feature -- Status report
 
 feature -- Status_setting
 
-	set_backwards_compatible_mode is
+	set_backwards_compatible_mode
 			-- Set `is_backwards_compatible_mode' to `True'.
 		do
 			is_backwards_compatible_mode := True
@@ -117,7 +117,7 @@ feature -- Status_setting
 
 feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_sequence_type: XM_XPATH_SEQUENCE_TYPE
@@ -178,7 +178,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 			-- We only take this path if the type could not be determined statically.
 		local
@@ -228,9 +228,9 @@ feature -- Evaluation
 								create {XM_XPATH_DATE_DIFFERENCE} l_expression.make (l_atomic_value, operator, l_other_atomic_value)
 								l_expression.evaluate_item (a_result, a_context)
 							else
-								
+
 								-- Types are not known yet. Force to numeric if in 1.0 mode
-								
+
 								if is_backwards_compatible_mode then
 									if l_atomic_value.is_convertible (type_factory.numeric_type) and l_other_atomic_value.is_convertible (type_factory.numeric_type) then
 										l_atomic_value.convert_to_type (type_factory.numeric_type)
@@ -264,7 +264,7 @@ feature -- Evaluation
 
 feature {XM_XPATH_ARITHMETIC_EXPRESSION} -- Local
 
-	type_check_arithmetic_expression  (a_context: XM_XPATH_STATIC_CONTEXT) is
+	type_check_arithmetic_expression  (a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Perform static type checking of `Current' and its subexpressions.
 			-- TODO: this is currently a no-op. review.
 		require
@@ -290,7 +290,7 @@ feature {XM_XPATH_ARITHMETIC_EXPRESSION} -- Local
 			when Duration_multiplication_action then
 				create {XM_XPATH_DURATION_MULTIPLICATION} l_expression.make (first_operand, operator, second_operand)
 			when Duration_division_action then
-				create {XM_XPATH_DURATION_DIVISION} l_expression.make (first_operand, operator, second_operand)				
+				create {XM_XPATH_DURATION_DIVISION} l_expression.make (first_operand, operator, second_operand)
 			when Date_and_duration_action then
 				create {XM_XPATH_DATE_AND_DURATION} l_expression.make (first_operand, operator, second_operand)
 			when Date_difference_action then
@@ -313,8 +313,8 @@ feature {XM_XPATH_ARITHMETIC_EXPRESSION} -- Local
 				end
 			end
 		end
-			
-	common_item_type (t1, t2: XM_XPATH_ITEM_TYPE): XM_XPATH_ITEM_TYPE is
+
+	common_item_type (t1, t2: XM_XPATH_ITEM_TYPE): XM_XPATH_ITEM_TYPE
 			-- Common type to use for arithmetic
 		require
 			first_type_not_void: t1 /= Void
@@ -337,7 +337,7 @@ feature {XM_XPATH_ARITHMETIC_EXPRESSION} -- Local
 			common_item_type_not_void: Result /= Void
 		end
 
-	common_item_type_for_modulus (t1, t2: XM_XPATH_ITEM_TYPE): XM_XPATH_ITEM_TYPE is
+	common_item_type_for_modulus (t1, t2: XM_XPATH_ITEM_TYPE): XM_XPATH_ITEM_TYPE
 			-- Common type to use for modulus arithmetic
 		require
 			first_type_not_void: t1 /= Void
@@ -351,7 +351,7 @@ feature {XM_XPATH_ARITHMETIC_EXPRESSION} -- Local
 			end
 		end
 
-	common_item_type_for_division (t1, t2: XM_XPATH_ITEM_TYPE): XM_XPATH_ITEM_TYPE is
+	common_item_type_for_division (t1, t2: XM_XPATH_ITEM_TYPE): XM_XPATH_ITEM_TYPE
 			-- Common type to use for division
 		require
 			first_type_not_void: t1 /= Void
@@ -366,8 +366,8 @@ feature {XM_XPATH_ARITHMETIC_EXPRESSION} -- Local
 				Result := type_factory.any_atomic_type -- Type is not known statically
 			end
 		end
-	
-	common_item_type_for_multiplication (t1, t2: XM_XPATH_ITEM_TYPE): XM_XPATH_ITEM_TYPE is
+
+	common_item_type_for_multiplication (t1, t2: XM_XPATH_ITEM_TYPE): XM_XPATH_ITEM_TYPE
 			-- Common type to use for multiplication
 		require
 			first_type_not_void: t1 /= Void
@@ -385,7 +385,7 @@ feature {XM_XPATH_ARITHMETIC_EXPRESSION} -- Local
 			end
 		end
 
-	common_item_type_for_addition (t1, t2: XM_XPATH_ITEM_TYPE): XM_XPATH_ITEM_TYPE is
+	common_item_type_for_addition (t1, t2: XM_XPATH_ITEM_TYPE): XM_XPATH_ITEM_TYPE
 			-- Common type to use for addition
 		require
 			first_type_not_void: t1 /= Void
@@ -405,17 +405,17 @@ feature {XM_XPATH_ARITHMETIC_EXPRESSION} -- Local
 			elseif t1 = type_factory.date_time_type and t2 = type_factory.date_time_type then
 				Result := type_factory.date_time_type
 			elseif t1 = type_factory.date_time_type and (t2 = type_factory.year_month_duration_type or t2 = type_factory.day_time_duration_type) then
-				Result := type_factory.date_time_type					
+				Result := type_factory.date_time_type
 			elseif t1= type_factory.year_month_duration_type and t2 = type_factory.year_month_duration_type then
-				Result := t1 
+				Result := t1
 			elseif t1 = type_factory.day_time_duration_type and t2 = type_factory.day_time_duration_type then
 				Result := t1
 			else
 				Result := type_factory.any_atomic_type -- Type is not known statically
-			end	
+			end
 		end
 
-	common_item_type_for_subtraction (t1, t2: XM_XPATH_ITEM_TYPE): XM_XPATH_ITEM_TYPE is
+	common_item_type_for_subtraction (t1, t2: XM_XPATH_ITEM_TYPE): XM_XPATH_ITEM_TYPE
 			-- Common type to use for subtraction
 		require
 			first_type_not_void: t1 /= Void
@@ -437,15 +437,15 @@ feature {XM_XPATH_ARITHMETIC_EXPRESSION} -- Local
 			elseif t1 = type_factory.date_time_type and (t2 = type_factory.year_month_duration_type or t2 = type_factory.day_time_duration_type) then
 				Result := type_factory.date_time_type
 			elseif t1= type_factory.year_month_duration_type and t2 = type_factory.year_month_duration_type then
-				Result := t1 
+				Result := t1
 			elseif t1 = type_factory.day_time_duration_type and t2 = type_factory.day_time_duration_type then
 				Result := t1
 			else
 				Result := type_factory.any_atomic_type -- Type is not known statically
-			end			
+			end
 		end
 
-	lowest_commom_promotion_super_type (t1, t2: XM_XPATH_ITEM_TYPE): XM_XPATH_ITEM_TYPE is
+	lowest_commom_promotion_super_type (t1, t2: XM_XPATH_ITEM_TYPE): XM_XPATH_ITEM_TYPE
 			-- Lowest common supertype of two numeric values for promotion purposes
 	require
 			first_type_not_void: t1 /= Void
@@ -471,7 +471,7 @@ feature {XM_XPATH_ARITHMETIC_EXPRESSION} -- Local
 
 feature {NONE} -- Optimization
 
-	create_1_0_expression (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	create_1_0_expression (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Create XPath 1.0 compatibility expression.
 		require
 			no_previous_error: not is_error
@@ -479,7 +479,7 @@ feature {NONE} -- Optimization
 			a_context_not_void: a_context /= Void
 			a_context_item_type_not_void: a_context_item_type /= Void
 			a_replacement_not_void: a_replacement /= Void
-			not_replaced: a_replacement.item = Void			
+			not_replaced: a_replacement.item = Void
 		local
 			l_nan: XM_XPATH_DOUBLE_VALUE
 			l_backwards: XM_XPATH_ARITHMETIC10_EXPRESSION
@@ -498,4 +498,4 @@ invariant
 	valid_operator: is_arithmetic_operator (operator)
 
 end
-	
+

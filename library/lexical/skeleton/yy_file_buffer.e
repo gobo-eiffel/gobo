@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_file: like file) is
+	make (a_file: like file)
 			-- Create a new buffer for `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			beginning_of_line: beginning_of_line
 		end
 
-	make_with_size (a_file: like file; size: INTEGER) is
+	make_with_size (a_file: like file; size: INTEGER)
 			-- Create a new buffer of capacity `size' for `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Name of buffer
 		do
 			Result := file.name
@@ -81,7 +81,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_file (a_file: like file) is
+	set_file (a_file: like file)
 			-- Set `file' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -98,7 +98,7 @@ feature -- Setting
 
 feature -- Status setting
 
-	set_end_of_file is
+	set_end_of_file
 			-- Set `end_of_file' to True.
 		do
 			end_of_file := True
@@ -108,7 +108,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	fill is
+	fill
 			-- Fill buffer with characters from `file'.
 			-- Do not lose unprocessed characters in buffer.
 			-- Resize buffer if necessary. Set `filled' to True
@@ -160,7 +160,7 @@ feature -- Element change
 			end
 		end
 
-	wipe_out is
+	wipe_out
 			-- Wipe out buffer.
 		do
 			flush
@@ -172,7 +172,7 @@ feature -- Element change
 
 feature {NONE} -- Constants
 
-	Read_buffer_capacity: INTEGER is 8192
+	Read_buffer_capacity: INTEGER = 8192
 			-- Maximum number of characters to
 			-- be read at a time
 

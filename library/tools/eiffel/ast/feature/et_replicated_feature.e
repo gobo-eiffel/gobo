@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (f1, f2: ET_ADAPTED_FEATURE) is
+	make (f1, f2: ET_ADAPTED_FEATURE)
 			-- Create a new replicated feature, where
 			-- `f1' and `f2' have a common seed.
 		require
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	replicated_feature: ET_REPLICATED_FEATURE is
+	replicated_feature: ET_REPLICATED_FEATURE
 			-- Replicated feature
 		do
 			Result := Current
@@ -49,7 +49,7 @@ feature -- Access
 	features: DS_LINKED_LIST [ET_ADAPTED_FEATURE]
 			-- Inherited features with the same seed
 
-	first_feature: ET_ADAPTED_FEATURE is
+	first_feature: ET_ADAPTED_FEATURE
 			-- First inherited feature with the same seed
 		do
 			Result := features.first
@@ -62,12 +62,12 @@ feature -- Measurement
 
 feature -- Status report
 
-	has_replication: BOOLEAN is True
+	has_replication: BOOLEAN = True
 			-- Is current feature replicated?
 
 feature -- Element change
 
-	put_feature (a_feature: ET_ADAPTED_FEATURE) is
+	put_feature (a_feature: ET_ADAPTED_FEATURE)
 			-- Add `a_feature' to `features'.
 		require
 			a_feature_not_void: a_feature /= Void

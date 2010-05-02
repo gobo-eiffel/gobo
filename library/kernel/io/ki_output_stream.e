@@ -14,14 +14,14 @@ deferred class KI_OUTPUT_STREAM [G]
 
 feature -- Output
 
-	put (v: G) is
+	put (v: G)
 			-- Write `v' to output stream.
 		require
 			is_open_write: is_open_write
 		deferred
 		end
 
-	append (an_input_stream: KI_INPUT_STREAM [G]) is
+	append (an_input_stream: KI_INPUT_STREAM [G])
 			-- Read items of `an_input_stream' until the end
 			-- of input is reached, and write these items to
 			-- current output stream.
@@ -46,12 +46,12 @@ feature -- Output
 
 feature -- Status report
 
-	is_open_write: BOOLEAN is
+	is_open_write: BOOLEAN
 			-- Can items be written to output stream?
 		deferred
 		end
 
-	is_closable: BOOLEAN is
+	is_closable: BOOLEAN
 			-- Can current output stream be closed?
 		do
 			Result := False
@@ -61,7 +61,7 @@ feature -- Status report
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Name of output stream
 		deferred
 		ensure
@@ -70,7 +70,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	close is
+	close
 			-- Try to close output stream if it is closable. Set
 			-- `is_open_write' to false if operation was successful.
 		require

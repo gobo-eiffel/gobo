@@ -25,13 +25,13 @@ create {XM_XSLT_NODE_FACTORY}
 
 feature -- Status_report
 
-	may_contain_sequence_constructor: BOOLEAN is
+	may_contain_sequence_constructor: BOOLEAN
 			-- Is `Current' allowed to contain a sequence constructor?
 		do
 			Result := True
 		end
 
-	is_fallback: BOOLEAN is
+	is_fallback: BOOLEAN
 			-- Is `Current' an xsl:fallback?
 		do
 			Result := True
@@ -39,7 +39,7 @@ feature -- Status_report
 
 feature -- Element change
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -64,7 +64,7 @@ feature -- Element change
 			attributes_prepared := True
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 		local
 			a_parent: XM_XSLT_STYLE_ELEMENT
@@ -78,7 +78,7 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (an_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		do
 

@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_executable: XM_XSLT_EXECUTABLE; a_conditions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]; a_actions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]) is
+	make (a_executable: XM_XSLT_EXECUTABLE; a_conditions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]; a_actions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION])
 			-- Establish invariant.
 		require
 			executable_not_void: a_executable /= Void
@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, when known
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -84,7 +84,7 @@ feature -- Access
 			end
 		end
 
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions of `Current'
 		do
 			create Result.make (conditions.count + actions.count)
@@ -95,7 +95,7 @@ feature -- Access
 
 feature -- Status report
 
-	creates_new_nodes: BOOLEAN is
+	creates_new_nodes: BOOLEAN
 			-- Can `Current' create new nodes?
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -110,7 +110,7 @@ feature -- Status report
 			end
 		end
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -136,7 +136,7 @@ feature -- Status report
 			end
 		end
 
-	contains_recursive_tail_function_calls (a_name_code, a_arity: INTEGER): UT_TRISTATE is
+	contains_recursive_tail_function_calls (a_name_code, a_arity: INTEGER): UT_TRISTATE
 			-- Does `Current' contains recursive tail calls of stylesheet functions?
 			-- `Undecided' means it contains a tail call to another function.
 		local
@@ -165,7 +165,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	mark_tail_function_calls is
+	mark_tail_function_calls
 			-- Mark tail-recursive calls on stylesheet functions.
 		do
 			actions.do_all (agent {XM_XPATH_EXPRESSION}.mark_tail_function_calls)
@@ -173,7 +173,7 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -216,7 +216,7 @@ feature -- Optimization
 			same_condition_count: conditions.count = old conditions.count
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -259,7 +259,7 @@ feature -- Optimization
 			same_condition_count: conditions.count = old conditions.count
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -287,7 +287,7 @@ feature -- Optimization
 						l_boolean := l_expression.last_boolean_value.value
 						l_index := l_cursor.index
 						if l_boolean then
-							-- if condition is always true, remove all the subsequent conditions and actions		
+							-- if condition is always true, remove all the subsequent conditions and actions
 							if l_index = 1 then
 								set_replacement (a_replacement, actions.item (1))
 							else
@@ -339,7 +339,7 @@ feature -- Optimization
 			end
 		end
 
-	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this instruction.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -400,7 +400,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterate over the values of a sequence
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -442,7 +442,7 @@ feature -- Evaluation
 			if last_iterator = Void then create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make end
 		end
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -479,7 +479,7 @@ feature -- Evaluation
 			end
 		end
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -527,7 +527,7 @@ feature {NONE} -- Implementation
 	actions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Actions
 
-	native_implementations: INTEGER is
+	native_implementations: INTEGER
 			-- Natively-supported evaluation routines
 		do
 				Result := Supports_process + Supports_evaluate + Supports_iterator

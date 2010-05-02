@@ -18,7 +18,7 @@ inherit
 
 feature -- Status report
 
-	is_result: BOOLEAN is
+	is_result: BOOLEAN
 			-- Is current expression the 'Result' entity?
 		do
 			-- Result := False

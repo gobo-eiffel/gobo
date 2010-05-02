@@ -25,15 +25,15 @@ create
 
 feature -- Access
 
-	program_name: STRING is "do_nothing"
+	program_name: STRING = "do_nothing"
 			-- Program name
 
-	library_name: STRING is "pattern"
+	library_name: STRING = "pattern"
 			-- Library name of example
 
 feature -- Test
 
-	test_do_nothing is
+	test_do_nothing
 			-- Test 'singleton/do_nothing' example.
 		local
 			do_nothing_exe: STRING
@@ -60,14 +60,14 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	program_dirname: STRING is
+	program_dirname: STRING
 			-- Name of program source directory
 		do
 			Result := file_system.nested_pathname ("${GOBO}", <<"example", library_name, "singleton", program_name>>)
 			Result := Execution_environment.interpreted_string (Result)
 		end
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory where data files are located
 		once
 			Result := file_system.nested_pathname ("${GOBO}", <<"test", "example", "pattern", "data">>)
@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 			data_dirname_not_empty: Result.count > 0
 		end
 
-	do_nothing_log_filename: STRING is
+	do_nothing_log_filename: STRING
 			-- Name of file containing expected output
 		once
 			Result := file_system.pathname (data_dirname, "do_nothing.log")
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 			do_nothing_log_filename_not_empty: Result.count > 0
 		end
 
-	freeise_do_nothing_log_filename: STRING is "output2.log"
+	freeise_do_nothing_log_filename: STRING = "output2.log"
 			-- Name of file containing expected output
 			-- when run with the free version of ISE Eiffel
 			-- under Linux/Unix

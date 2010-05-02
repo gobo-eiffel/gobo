@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_escape (c: CHARACTER) is
+	make_with_escape (c: CHARACTER)
 			-- Create new scientific formatter with `c' as escape character.
 		do
 			precursor (c)
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Parameter formatters
 
-	internal_parameter_formatter (a_typechar: CHARACTER): detachable ST_PARAMETER_FORMATTER is
+	internal_parameter_formatter (a_typechar: CHARACTER): detachable ST_PARAMETER_FORMATTER
 			-- Formatter for parameter of type `a_typechar';
 			-- Void if no such parameter formatter
 		local

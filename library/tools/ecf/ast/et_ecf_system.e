@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name, a_filename: STRING) is
+	make (a_name, a_filename: STRING)
 			-- Create a new ECF system.
 		do
 			precursor (a_name, a_filename)
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_root_class_name (a_name: STRING) is
+	set_root_class_name (a_name: STRING)
 			-- Set root class name to `a_name'.
 		local
 			an_identifier: ET_IDENTIFIER
@@ -65,7 +65,7 @@ feature -- Setting
 			end
 		end
 
-	set_creation_procedure_name (a_name: STRING) is
+	set_creation_procedure_name (a_name: STRING)
 			-- Set `creation_procedure_name' to `a_name'.
 		local
 			an_identifier: ET_IDENTIFIER

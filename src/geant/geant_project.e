@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_variables: GEANT_PROJECT_VARIABLES; a_options: GEANT_PROJECT_OPTIONS; a_name: STRING) is
+	make (a_variables: GEANT_PROJECT_VARIABLES; a_options: GEANT_PROJECT_OPTIONS; a_name: STRING)
 			-- Create a new project.
 		require
 			a_variables_not_void: a_variables /= Void
@@ -80,7 +80,7 @@ feature -- Access
 	variables: GEANT_PROJECT_VARIABLES
 			-- Project variables
 
-	aggregated_variables_array: ARRAY [GEANT_VARIABLES] is
+	aggregated_variables_array: ARRAY [GEANT_VARIABLES]
 			-- Array of available variables sets
 			-- i.e: arguments, locals, variables
 		do
@@ -101,7 +101,7 @@ feature -- Access
 	selected_targets: DS_HASH_TABLE [GEANT_TARGET, STRING]
 			-- Targets selected in heir
 
-	preferred_start_target: GEANT_TARGET is
+	preferred_start_target: GEANT_TARGET
 			-- Preferred target to start build process
 		do
 			if start_target_name /= Void and then start_target_name.count > 0 then
@@ -111,7 +111,7 @@ feature -- Access
 			end
 		end
 
-	default_target: GEANT_TARGET is
+	default_target: GEANT_TARGET
 			-- Target to start build process in case `preferred_start_target' is Void
 		do
 			if default_target_name /= Void and then default_target_name.count > 0 then
@@ -121,7 +121,7 @@ feature -- Access
 			end
 		end
 
-	start_target: GEANT_TARGET is
+	start_target: GEANT_TARGET
 			-- `preferred_start_target' if not Void; `default_target' otherwise
 		do
 			Result := default_target
@@ -149,7 +149,7 @@ feature -- Access
 			-- Was current defined via old inheritance mechanism?
 			-- TODO: remove after obsolete period
 
-	target_name (a_target: GEANT_TARGET): STRING is
+	target_name (a_target: GEANT_TARGET): STRING
 			-- Name of target `a_target' within context of current project
 		require
 			a_target_not_void: a_target /= Void
@@ -180,7 +180,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_parent_with_name (a_name: STRING): BOOLEAN is
+	has_parent_with_name (a_name: STRING): BOOLEAN
 			-- Does current project have a parent project named `a_name'?
 		local
 			i, nb: INTEGER
@@ -206,7 +206,7 @@ feature -- Status report
 			end
 		end
 
-	is_builtin_variable_name (a_name: STRING): BOOLEAN is
+	is_builtin_variable_name (a_name: STRING): BOOLEAN
 			-- Is `a_name' the name of a built-in variable?
 		require
 			a_name_not_void: a_name /= Void
@@ -221,7 +221,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_description (a_description: STRING) is
+	set_description (a_description: STRING)
 			-- Set `description' to `a_description'.
 		require
 			a_description_not_void: a_description /= Void
@@ -232,7 +232,7 @@ feature -- Setting
 			description_set: description = a_description
 		end
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- Set `name' to `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -243,7 +243,7 @@ feature -- Setting
 			name_set: name = a_name
 		end
 
-	set_start_target_name (a_start_target_name: STRING) is
+	set_start_target_name (a_start_target_name: STRING)
 			-- Set `start_target_name' to `a_start_target_name'.
 		require
 			a_start_target_name_not_void: a_start_target_name /= Void
@@ -255,7 +255,7 @@ feature -- Setting
 			start_target_name_set: start_target_name = a_start_target_name
 		end
 
-	set_default_target_name (a_default_target_name: STRING) is
+	set_default_target_name (a_default_target_name: STRING)
 			-- Set `default_target_name' to `a_default_target_name'.
 		require
 			a_default_target_name_not_void: a_default_target_name /= Void
@@ -266,7 +266,7 @@ feature -- Setting
 			default_target_name_set: default_target_name = a_default_target_name
 		end
 
-	set_targets (a_targets: like targets) is
+	set_targets (a_targets: like targets)
 			-- Set `targets' to `a_targets'.
 		require
 			a_targets_not_void: a_targets /= Void
@@ -276,7 +276,7 @@ feature -- Setting
 			targets_set: targets = a_targets
 		end
 
-	set_variables (a_variables: like variables) is
+	set_variables (a_variables: like variables)
 			-- Set `variables' to `a_variables'.
 		require
 			a_variables_not_void: a_variables /= Void
@@ -286,7 +286,7 @@ feature -- Setting
 			variables_set: variables = a_variables
 		end
 
-	set_options (a_options: like options) is
+	set_options (a_options: like options)
 			-- Set `options' to `a_options'.
 		require
 			a_options_not_void: a_options /= Void
@@ -296,7 +296,7 @@ feature -- Setting
 			options_set: options = a_options
 		end
 
-	set_inherit_clause (a_inherit_clause: like inherit_clause) is
+	set_inherit_clause (a_inherit_clause: like inherit_clause)
 			-- Set `inherit_clause' to `a_inherit_clause'.
 		require
 			a_inherit_clause_not_void: a_inherit_clause /= Void
@@ -306,7 +306,7 @@ feature -- Setting
 			inherit_clause_set: inherit_clause = a_inherit_clause
 		end
 
-	set_old_inherit (a_old_inherit: BOOLEAN) is
+	set_old_inherit (a_old_inherit: BOOLEAN)
 			-- Set `old_inherit' to `a_old_inherit'.
 			-- TODO: remove after obsolete period
 		do
@@ -315,7 +315,7 @@ feature -- Setting
 			old_inherit_set: old_inherit = a_old_inherit
 		end
 
-	set_position_table (a_position_table: like position_table) is
+	set_position_table (a_position_table: like position_table)
 			-- Set `position_table' to `a_position_table'.
 		require
 			a_position_table_not_void: a_position_table /= Void
@@ -327,7 +327,7 @@ feature -- Setting
 
 feature {GEANT_GROUP, GEANT_TARGET} -- Task factory
 
-	new_task (a_xml_element: XM_ELEMENT): GEANT_TASK is
+	new_task (a_xml_element: XM_ELEMENT): GEANT_TASK
 			-- New GEANT_TASK for `a_xml_element'
 		require
 			task_factory_not_void: task_factory /= Void
@@ -340,7 +340,7 @@ feature {GEANT_GROUP, GEANT_TARGET} -- Task factory
 
 feature -- Processing
 
-	merge_in_parent_projects is
+	merge_in_parent_projects
 			-- Load parent projects if present.
 		local
 			a_parent: GEANT_PARENT
@@ -382,7 +382,7 @@ feature -- Processing
 			end
 		end
 
-	calculate_depend_order (a_depend_targets: DS_ARRAYED_STACK [GEANT_TARGET]) is
+	calculate_depend_order (a_depend_targets: DS_ARRAYED_STACK [GEANT_TARGET])
 			-- Setup `build_targets' according to target dependencies.
 		require
 			loaded: targets /= Void
@@ -404,7 +404,7 @@ feature -- Processing
 			end
 		end
 
-	build (a_arguments: GEANT_ARGUMENT_VARIABLES) is
+	build (a_arguments: GEANT_ARGUMENT_VARIABLES)
 			-- Build project: execute project's tasks.
 		require
 			targets_not_void: targets /= Void
@@ -419,7 +419,7 @@ feature -- Processing
 			build_target (a_target, a_arguments)
 		end
 
-	show_target_info is
+	show_target_info
 			-- Print list of name and description for all targets of project.
 		require
 			targets_not_void: targets /= Void
@@ -441,7 +441,7 @@ feature -- Processing
 			end
 		end
 
-	build_target (a_target: GEANT_TARGET; a_arguments: GEANT_ARGUMENT_VARIABLES) is
+	build_target (a_target: GEANT_TARGET; a_arguments: GEANT_ARGUMENT_VARIABLES)
 			-- Analyze dependencies and execute `a_target'.
 		require
 			a_target_not_void: a_target /= Void
@@ -469,7 +469,7 @@ feature -- Processing
 			target_arguments_stack.remove
 		end
 
-	execute_target (a_target: GEANT_TARGET; a_arguments: GEANT_ARGUMENT_VARIABLES; a_force: BOOLEAN; a_polymorph: BOOLEAN) is
+	execute_target (a_target: GEANT_TARGET; a_arguments: GEANT_ARGUMENT_VARIABLES; a_force: BOOLEAN; a_polymorph: BOOLEAN)
 			-- Execute `a_target' if not executed before;
 			-- Execute anyway if `a_force' is True.
 		require
@@ -508,7 +508,7 @@ feature -- Processing
 
 feature -- Output
 
-	trace (a_message: ARRAY [STRING]) is
+	trace (a_message: ARRAY [STRING])
 			-- Write `a_message' to standard output unless `verbose' = False.
 		require
 			a_message_not_void: a_message /= Void
@@ -529,7 +529,7 @@ feature -- Output
 			end
 		end
 
-	log (a_message: ARRAY [STRING]) is
+	log (a_message: ARRAY [STRING])
 			-- Write `a_message' to standard output.
 		require
 			a_message_not_void: a_message /= Void
@@ -548,7 +548,7 @@ feature -- Output
 			output_file.flush
 		end
 
-	trace_debug (a_message: ARRAY [STRING]) is
+	trace_debug (a_message: ARRAY [STRING])
 			-- Write `a_message' to standard output unless `debug_mode' = False.
 		require
 			a_message_not_void: a_message /= Void
@@ -572,7 +572,7 @@ feature -- Output
 	output_file: KI_TEXT_OUTPUT_STREAM
 			-- Output file
 
-	set_output_file (a_file: like output_file) is
+	set_output_file (a_file: like output_file)
 			-- Set `output_file' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -585,7 +585,7 @@ feature -- Output
 
 feature {GEANT_COMMAND} -- Change variable
 
-	set_variable_value (a_name, a_value: STRING_8) is
+	set_variable_value (a_name, a_value: STRING_8)
 			-- Set value of variable `a_name' to `a_value'.
 			-- Either local or global depending the case.
 		require
@@ -603,7 +603,7 @@ feature {GEANT_COMMAND} -- Change variable
 			vars.set_variable_value (a_name, a_value)
 		end
 
-	unset_variable (a_name: STRING_8) is
+	unset_variable (a_name: STRING_8)
 			-- Unset variable `a_name'
 			-- Either local or global depending the case.
 		require
@@ -622,7 +622,7 @@ feature {GEANT_COMMAND} -- Change variable
 			end
 		end
 
-	is_local_variable (a_name: STRING): BOOLEAN is
+	is_local_variable (a_name: STRING): BOOLEAN
 			-- Is variable `a_name' local ?
 		require
 			a_name_not_void: a_name /= Void
@@ -642,7 +642,7 @@ feature {GEANT_COMMAND} -- Access GEANT_COMMAND
 	targets_stack: DS_STACK [GEANT_TARGET]
 			-- Stack of targets
 
-	current_target: GEANT_TARGET is
+	current_target: GEANT_TARGET
 			-- Currently executing target;
 			-- Set during processing `execute_target'
 		do

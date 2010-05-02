@@ -14,7 +14,7 @@ class UT_SHARED_TEMPLATE_EXPANDER
 
 feature -- Access
 
-	template_expander: UT_TEMPLATE_EXPANDER is
+	template_expander: UT_TEMPLATE_EXPANDER
 			-- Shared template expander
 		once
 			create Result.make

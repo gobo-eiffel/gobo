@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_collator: ST_COLLATOR) is
+	make (a_collator: ST_COLLATOR)
 			-- Establish invariant.
 		require
 			collator_not_void: a_collator /= void
@@ -45,7 +45,7 @@ feature -- Access
 
 feature -- Comparison
 
-	three_way_comparison (an_atomic_value, another_atomic_value: XM_XPATH_ATOMIC_VALUE): INTEGER is
+	three_way_comparison (an_atomic_value, another_atomic_value: XM_XPATH_ATOMIC_VALUE): INTEGER
 			-- Comparison of two atomic values
 		require
 			first_value_not_void: an_atomic_value /= Void
@@ -80,7 +80,7 @@ feature -- Comparison
 			three_way_comparison: Result >= -1 and Result <= 1
 		end
 
-	less_than (u, v: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
+	less_than (u, v: XM_XPATH_ATOMIC_VALUE): BOOLEAN
 			-- Is `u' considered less than `v'?
 		do
 			if are_comparable (u, v) then
@@ -92,7 +92,7 @@ feature -- Comparison
 
 feature -- Status report
 
-	are_comparable (an_atomic_value, another_atomic_value: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
+	are_comparable (an_atomic_value, another_atomic_value: XM_XPATH_ATOMIC_VALUE): BOOLEAN
 			-- Are `an_atomic_value' and `another_atomic_value' comparable?
 		require
 			first_value_not_void: an_atomic_value /= Void
@@ -103,7 +103,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_dynamic_context (a_context: XM_XPATH_CONTEXT) is
+	set_dynamic_context (a_context: XM_XPATH_CONTEXT)
 			-- Set dynamic context for use in calendar-values comparisons.
 		require
 			context_not_void: a_context /= Void

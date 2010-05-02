@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT; an_xml_element: XM_ELEMENT) is
+	make (a_project: GEANT_PROJECT; an_xml_element: XM_ELEMENT)
 			-- Create a new task with information held in `an_element'.
 		local
 			a_name: STRING
@@ -141,7 +141,7 @@ feature {NONE} -- Initialization
 
 		end
 
-	build_command (a_project: GEANT_PROJECT) is
+	build_command (a_project: GEANT_PROJECT)
 			-- Create instance of `command'
 		do
 			create command.make (a_project)
@@ -154,7 +154,7 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Input_filename_attribute_name: STRING is
+	Input_filename_attribute_name: STRING
 			-- Name of xml attribute for input_filename
 		once
 			Result := "input"
@@ -163,7 +163,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Output_filename_attribute_name: STRING is
+	Output_filename_attribute_name: STRING
 			-- Name of xml attribute for output_filename
 		once
 			Result := "output"
@@ -172,7 +172,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Stylesheet_filename_attribute_name: STRING is
+	Stylesheet_filename_attribute_name: STRING
 			-- Name of xml attribute for stylesheet_filename
 		once
 			Result := "stylesheet"
@@ -181,7 +181,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Force_attribute_name: STRING is
+	Force_attribute_name: STRING
 			-- Name of xml attribute for force
 		once
 			Result := "force"
@@ -190,7 +190,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Processor_attribute_name: STRING is
+	Processor_attribute_name: STRING
 			-- Name of xml attribute for processor
 		once
 			Result := "processor"
@@ -199,7 +199,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Processor_attribute_value_xalan_cpp: STRING is
+	Processor_attribute_value_xalan_cpp: STRING
 			-- value of xml attribute for xalan cpp processor
 		once
 			Result := "xalan_cpp"
@@ -208,7 +208,7 @@ feature {NONE} -- Constants
 			atribute_value_not_empty: Result.count > 0
 		end
 
-	Processor_attribute_value_xalan_java: STRING is
+	Processor_attribute_value_xalan_java: STRING
 			-- value of xml attribute for xalan java processor
 		once
 			Result := "xalan_java"
@@ -217,7 +217,7 @@ feature {NONE} -- Constants
 			atribute_value_not_empty: Result.count > 0
 		end
 
-	Processor_attribute_value_xsltproc: STRING is
+	Processor_attribute_value_xsltproc: STRING
 			-- value of xml attribute for xsltproc processor
 		once
 			Result := "xsltproc"
@@ -226,7 +226,7 @@ feature {NONE} -- Constants
 			atribute_value_not_empty: Result.count > 0
 		end
 
-	Processor_attribute_value_gexslt: STRING is
+	Processor_attribute_value_gexslt: STRING
 			-- value of xml attribute for gexslt processor
 		once
 			Result := "gexslt"
@@ -235,7 +235,7 @@ feature {NONE} -- Constants
 			atribute_value_not_empty: Result.count > 0
 		end
 
-	Format_attribute_name: STRING is
+	Format_attribute_name: STRING
 			-- Name of xml attribute for format
 		once
 			Result := "format"
@@ -244,7 +244,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Indent_attribute_name: STRING is
+	Indent_attribute_name: STRING
 			-- Name of xml attribute for indent
 		once
 			Result := "indent"
@@ -253,7 +253,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Extdirs_attribute_name: STRING is
+	Extdirs_attribute_name: STRING
 			-- Name of xml attribute for extdirs
 		once
 			Result := "extdirs"
@@ -262,7 +262,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Classpath_attribute_name: STRING is
+	Classpath_attribute_name: STRING
 			-- Name of xml attribute for classpath
 		once
 			Result := "classpath"
@@ -271,7 +271,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Parameter_element_name: STRING is
+	Parameter_element_name: STRING
 			-- Name of xml subelement for parameter
 		once
 			Result := "parameter"
@@ -280,7 +280,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Value_attribute_name: STRING is
+	Value_attribute_name: STRING
 			-- Name of xml attribute for value
 		once
 			Result := "value"

@@ -15,7 +15,7 @@ note
 
 deferred class
 	ITERATOR [G]
-	
+
 feature -- Initialization
 
 	set (s: like target)
@@ -110,14 +110,14 @@ feature -- Iteration
 			test_exists: test /= Void
 		deferred
 		end
-		
+
 	for_all (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
 			-- Is `test' true for all items of `target'?
 		require
 			test_exists: test /= Void
 		deferred
 		end
-		
+
 invariant
 
 	traversable_exists: target /= Void

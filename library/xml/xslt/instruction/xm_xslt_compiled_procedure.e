@@ -19,7 +19,7 @@ create
 feature {NONE} -- Initialization
 
 	make_procedure (an_executable: like executable; a_body: like body;
-						 a_line_number: like line_number; a_system_id: like system_id; a_slot_manager: like slot_manager) is
+						 a_line_number: like line_number; a_system_id: like system_id; a_slot_manager: like slot_manager)
 			-- Establish invariant
 		require
 			executable_not_void: an_executable /= Void
@@ -63,7 +63,7 @@ feature -- Status report
 
 	initialized: BOOLEAN
 			-- Hae `make_procedure' been called yet?
-	
+
 invariant
 
 	executable_not_void: initialized implies executable /= Void
@@ -73,4 +73,4 @@ invariant
 
 end
 
-	
+

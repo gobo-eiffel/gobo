@@ -39,7 +39,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new signature checker for features of  given classes.
 		do
 			precursor {ET_CLASS_SUBPROCESSOR}
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature -- Signature validity
 
-	check_signature_vtct_validity (a_feature: ET_FEATURE; a_class: ET_CLASS) is
+	check_signature_vtct_validity (a_feature: ET_FEATURE; a_class: ET_CLASS)
 			-- Check whether the types in the signature of `a_feature'
 			-- (declared in `a_class') are based on known classes.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -84,7 +84,7 @@ feature -- Signature validity
 			current_class := old_class
 		end
 
-	check_signature_validity (a_feature: ET_FLATTENED_FEATURE; a_class: ET_CLASS; a_report: BOOLEAN) is
+	check_signature_validity (a_feature: ET_FLATTENED_FEATURE; a_class: ET_CLASS; a_report: BOOLEAN)
 			-- Check signature validity of `a_feature' for redeclarations and joinings in `a_class'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 			-- `a_report' indicates whether error messages should be emitted or not.
@@ -168,7 +168,7 @@ feature -- Signature validity
 
 feature {NONE} -- Signature validity
 
-	check_redeclared_signature_validity (a_feature: ET_ADAPTED_FEATURE; other: ET_PARENT_FEATURE; a_report: BOOLEAN) is
+	check_redeclared_signature_validity (a_feature: ET_ADAPTED_FEATURE; other: ET_PARENT_FEATURE; a_report: BOOLEAN)
 			-- Check whether the signature of `a_feature' conforms
 			-- to the signature of `other'. This check has to be done
 			-- when `a_feature' is a redeclaration in `current_class'
@@ -325,7 +325,7 @@ feature {NONE} -- Signature validity
 			end
 		end
 
-	check_selected_signature_validity (a_feature: ET_ADAPTED_FEATURE; other: ET_PARENT_FEATURE; a_report: BOOLEAN) is
+	check_selected_signature_validity (a_feature: ET_ADAPTED_FEATURE; other: ET_PARENT_FEATURE; a_report: BOOLEAN)
 			-- Check whether the signature of `a_feature' conforms
 			-- to the signature of `other'. This check has to be done
 			-- when `a_feature' is the selected version in `current_class'
@@ -449,7 +449,7 @@ feature {NONE} -- Signature validity
 			end
 		end
 
-	check_joined_signature_validity (a_feature: ET_INHERITED_FEATURE; other: ET_PARENT_FEATURE; a_report: BOOLEAN) is
+	check_joined_signature_validity (a_feature: ET_INHERITED_FEATURE; other: ET_PARENT_FEATURE; a_report: BOOLEAN)
 			-- Check that `a_feature' and `other' have the same signature
 			-- when viewed from `current_class'. This check has to be done
 			-- when joining two or more deferred features, the `a_feature'
@@ -521,7 +521,7 @@ feature {NONE} -- Signature validity
 
 feature {NONE} -- VTCT Validity checking
 
-	check_bit_feature_vtct_validity (a_type: ET_BIT_FEATURE) is
+	check_bit_feature_vtct_validity (a_type: ET_BIT_FEATURE)
 			-- Check whether `a_type' is based on known classes.
 		require
 			a_type_not_void: a_type /= Void
@@ -530,7 +530,7 @@ feature {NONE} -- VTCT Validity checking
 			-- No validity rule to be checked.
 		end
 
-	check_bit_n_vtct_validity (a_type: ET_BIT_N) is
+	check_bit_n_vtct_validity (a_type: ET_BIT_N)
 			-- Check whether `a_type' is based on known classes.
 		require
 			a_type_not_void: a_type /= Void
@@ -539,7 +539,7 @@ feature {NONE} -- VTCT Validity checking
 			-- No validity rule to be checked.
 		end
 
-	check_class_type_vtct_validity (a_type: ET_CLASS_TYPE) is
+	check_class_type_vtct_validity (a_type: ET_CLASS_TYPE)
 			-- Check whether `a_type' is based on known classes.
 		require
 			a_type_not_void: a_type /= Void
@@ -566,7 +566,7 @@ feature {NONE} -- VTCT Validity checking
 			end
 		end
 
-	check_qualified_like_identifier_vtct_validity (a_type: ET_QUALIFIED_LIKE_IDENTIFIER) is
+	check_qualified_like_identifier_vtct_validity (a_type: ET_QUALIFIED_LIKE_IDENTIFIER)
 			-- Check whether `a_type' is based on known classes.
 		require
 			a_type_not_void: a_type /= Void
@@ -574,7 +574,7 @@ feature {NONE} -- VTCT Validity checking
 			a_type.target_type.process (Current)
 		end
 
-	check_tuple_type_vtct_validity (a_type: ET_TUPLE_TYPE) is
+	check_tuple_type_vtct_validity (a_type: ET_TUPLE_TYPE)
 			-- Check whether `a_type' is based on known classes.
 		require
 			a_type_not_void: a_type /= Void
@@ -595,49 +595,49 @@ feature {NONE} -- VTCT Validity checking
 
 feature {ET_AST_NODE} -- Type processing
 
-	process_bit_feature (a_type: ET_BIT_FEATURE) is
+	process_bit_feature (a_type: ET_BIT_FEATURE)
 			-- Process `a_type'.
 		do
 			check_bit_feature_vtct_validity (a_type)
 		end
 
-	process_bit_n (a_type: ET_BIT_N) is
+	process_bit_n (a_type: ET_BIT_N)
 			-- Process `a_type'.
 		do
 			check_bit_n_vtct_validity (a_type)
 		end
 
-	process_class (a_type: ET_CLASS) is
+	process_class (a_type: ET_CLASS)
 			-- Process `a_type'.
 		do
 			process_class_type (a_type)
 		end
 
-	process_class_type (a_type: ET_CLASS_TYPE) is
+	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
 		do
 			check_class_type_vtct_validity (a_type)
 		end
 
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE) is
+	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
 			-- Process `a_type'.
 		do
 			process_class_type (a_type)
 		end
 
-	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE) is
+	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE)
 			-- Process `a_type'.
 		do
 			check_qualified_like_identifier_vtct_validity (a_type)
 		end
 
-	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
+	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE)
 			-- Process `a_type'.
 		do
 			check_qualified_like_identifier_vtct_validity (a_type)
 		end
 
-	process_tuple_type (a_type: ET_TUPLE_TYPE) is
+	process_tuple_type (a_type: ET_TUPLE_TYPE)
 			-- Process `a_type'.
 		do
 			check_tuple_type_vtct_validity (a_type)

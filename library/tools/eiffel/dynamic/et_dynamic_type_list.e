@@ -33,7 +33,7 @@ create
 
 feature -- Element change
 
-	append_last (other: ET_DYNAMIC_TYPES) is
+	append_last (other: ET_DYNAMIC_TYPES)
 			-- Add items of `other' to the end of list.
 			-- Keep items of `other' in the same order.
 			-- Resize list if necessary.
@@ -60,7 +60,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_DYNAMIC_TYPE] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_DYNAMIC_TYPE]
 			-- Fixed array routines
 		once
 			create Result

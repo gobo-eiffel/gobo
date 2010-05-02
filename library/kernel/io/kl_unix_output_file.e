@@ -30,7 +30,7 @@ create
 
 feature -- Access
 
-	eol: STRING is "%N"
+	eol: STRING = "%N"
 			-- Line separator
 
 end

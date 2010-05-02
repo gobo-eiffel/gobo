@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_escape (c: CHARACTER) is
+	make_with_escape (c: CHARACTER)
 			-- Create new formatter with `c' as escape character.
 		do
 			precursor (c)
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Parameter formatters
 
-	has_parameter_formatter (a_typechar: CHARACTER): BOOLEAN is
+	has_parameter_formatter (a_typechar: CHARACTER): BOOLEAN
 			-- Is there a formatter for parameters of type `a_typechar'?
 		require
 			valid_typechar: (a_typechar >= 'a' and a_typechar <= 'z') or (a_typechar >= 'A' and a_typechar <= 'Z')
@@ -44,7 +44,7 @@ feature -- Parameter formatters
 			Result := parameter_formatters.has (a_typechar)
 		end
 
-	parameter_formatter (a_typechar: CHARACTER): ST_PARAMETER_FORMATTER is
+	parameter_formatter (a_typechar: CHARACTER): ST_PARAMETER_FORMATTER
 			-- Formatter for parameters of type `a_typechar'
 		require
 			valid_typechar: (a_typechar >= 'a' and a_typechar <= 'z') or (a_typechar >= 'A' and a_typechar <= 'Z')
@@ -55,7 +55,7 @@ feature -- Parameter formatters
 			parameter_formatter_not_void: Result /= Void
 		end
 
-	put_parameter_formatter (a_formatter: ST_PARAMETER_FORMATTER; a_typechar: CHARACTER) is
+	put_parameter_formatter (a_formatter: ST_PARAMETER_FORMATTER; a_typechar: CHARACTER)
 			-- Add `a_formatter' for parameters of type `a_typechar'.
 		require
 			a_formatter_not_void: a_formatter /= Void
@@ -66,7 +66,7 @@ feature -- Parameter formatters
 			has_parameter_formatter: has_parameter_formatter (a_typechar)
 		end
 
-	put_scientific_parameter_formatters is
+	put_scientific_parameter_formatters
 			-- Add scientific parameter formatters.
 		local
 			a_boolean_formatter: ST_BOOLEAN_FORMATTER
@@ -111,7 +111,7 @@ feature -- Parameter formatters
 			parameter_formatters.force (a_string_formatter, 's')
 		end
 
-	remove_parameter_formatter (a_formatter: ST_PARAMETER_FORMATTER; a_typechar: CHARACTER) is
+	remove_parameter_formatter (a_formatter: ST_PARAMETER_FORMATTER; a_typechar: CHARACTER)
 			-- Added `a_formatter' for parameters of type `a_typechar'.
 		require
 			valid_typechar: (a_typechar >= 'a' and a_typechar <= 'z') or (a_typechar >= 'A' and a_typechar <= 'Z')
@@ -123,7 +123,7 @@ feature -- Parameter formatters
 
 feature {NONE} -- Parameter formatters
 
-	internal_parameter_formatter (a_typechar: CHARACTER): detachable ST_PARAMETER_FORMATTER is
+	internal_parameter_formatter (a_typechar: CHARACTER): detachable ST_PARAMETER_FORMATTER
 			-- Formatter for parameter of type `a_typechar';
 			-- Void if no such parameter formatter
 		do

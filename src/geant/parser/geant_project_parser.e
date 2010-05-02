@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_variables: GEANT_PROJECT_VARIABLES; a_options: GEANT_PROJECT_OPTIONS; a_build_filename: STRING) is
+	make (a_variables: GEANT_PROJECT_VARIABLES; a_options: GEANT_PROJECT_OPTIONS; a_build_filename: STRING)
 			-- Initialize project parser.
 		require
 			a_variables_not_void: a_variables /= Void
@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Parsing
 
-	parse_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+	parse_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Parse eant file `a_file'.
 		local
 			a_document: XM_DOCUMENT

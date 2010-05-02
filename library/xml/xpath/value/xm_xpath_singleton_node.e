@@ -13,7 +13,7 @@ note
 class XM_XPATH_SINGLETON_NODE
 
 inherit
-	
+
 	XM_XPATH_VALUE
 		redefine
 			generate_events, is_singleton_node, as_singleton_node, count,
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_node: XM_XPATH_NODE) is
+	make (a_node: XM_XPATH_NODE)
 			-- Create `Current'.
 		do
 			make_value
@@ -47,19 +47,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_singleton_node: BOOLEAN is
+	is_singleton_node: BOOLEAN
 			-- Is `Current' a singleton node?
 		do
 			Result := True
 		end
 
-	as_singleton_node: XM_XPATH_SINGLETON_NODE is
+	as_singleton_node: XM_XPATH_SINGLETON_NODE
 			-- `Current' seen as a singleton node
 		do
 			Result := Current
 		end
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type
 		do
 			Result := any_node_test
@@ -68,12 +68,12 @@ feature -- Access
 				-- that `Result' is not optimized away.
 			end
 		end
-	
+
 	node: XM_XPATH_NODE
 			-- Optional node
 
-	
-	count: INTEGER is
+
+	count: INTEGER
 			-- Number of items in `Current'
 		do
 			if node = Void then
@@ -83,7 +83,7 @@ feature -- Access
 			end
 		end
 
-	item_at (an_index: INTEGER) :XM_XPATH_ITEM is
+	item_at (an_index: INTEGER) :XM_XPATH_ITEM
 			-- Item at `an_index'
 		do
 			Result := node
@@ -91,7 +91,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Are `Current' and `other' the same expression?
 		do
 			if	not other.is_singleton_node then
@@ -103,13 +103,13 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_convertible_to_item (a_context: XM_XPATH_CONTEXT): BOOLEAN is
+	is_convertible_to_item (a_context: XM_XPATH_CONTEXT): BOOLEAN
 			-- Can `Current' be converted to an `XM_XPATH_ITEM'?
 		do
 			Result := True
 		end
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		do
 				std.error.put_string (indentation (a_level))
@@ -124,19 +124,19 @@ feature -- Status report
 
 feature -- Evaluation
 
-	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT)
 			-- Effective boolean value;
 		do
 			create last_boolean_value.make (node /= Void)
 		end
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			a_result.put (node)
 		end
 
-	evaluate_as_string (a_context: XM_XPATH_CONTEXT) is
+	evaluate_as_string (a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a String
 		do
 			if node = Void then
@@ -146,19 +146,19 @@ feature -- Evaluation
 			end
 		end
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- An iterator over the values of a sequence
 		do
 			create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (node)
 		end
 
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over a node sequence
 		do
 			create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_node_iterator.make (node)
 		end
 
-	generate_events (a_context: XM_XPATH_CONTEXT) is
+	generate_events (a_context: XM_XPATH_CONTEXT)
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		do
 			if node /= Void then
@@ -168,7 +168,7 @@ feature -- Evaluation
 
 feature -- Conversion
 
-	as_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+	as_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM
 			-- Convert to an item
 		do
 			Result := node
@@ -176,10 +176,10 @@ feature -- Conversion
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	native_implementations: INTEGER is
+	native_implementations: INTEGER
 			-- Natively-supported evaluation routines
 		do
 			Result := Supports_evaluate
 		end
-	
+
 end

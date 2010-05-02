@@ -27,7 +27,7 @@ inherit
 
 feature -- Status report
 
-	is_current_file_system: BOOLEAN is
+	is_current_file_system: BOOLEAN
 			-- Is file system the file system of the underlying platform?
 		do
 			Result := ANY_.same_types (Current, file_system)
@@ -35,7 +35,7 @@ feature -- Status report
 
 feature -- File handling
 
-	is_file_readable (a_filename: STRING): BOOLEAN is
+	is_file_readable (a_filename: STRING): BOOLEAN
 			-- Can file named `a_filename' be opened in read mode?
 			-- (`a_filename' should follow the pathname convention
 			-- of the underlying platform. For pathname conversion
@@ -45,7 +45,7 @@ feature -- File handling
 			Result := tmp_file.is_readable
 		end
 
-	file_exists (a_filename: STRING): BOOLEAN is
+	file_exists (a_filename: STRING): BOOLEAN
 			-- Does file named `a_filename' physically exist on disk?
 			-- (`a_filename' should follow the pathname convention
 			-- of the underlying platform. For pathname conversion
@@ -55,7 +55,7 @@ feature -- File handling
 			Result := tmp_file.exists
 		end
 
-	file_count (a_filename: STRING): INTEGER is
+	file_count (a_filename: STRING): INTEGER
 			-- Number of bytes in file named `a_filename';
 			-- Return -1 if the number of bytes was not available,
 			-- if the file did not exist for example.
@@ -67,7 +67,7 @@ feature -- File handling
 			Result := tmp_file.count
 		end
 
-	file_time_stamp (a_filename: STRING): INTEGER is
+	file_time_stamp (a_filename: STRING): INTEGER
 			-- Time stamp (number of seconds since 1 January 1970
 			-- at 00:00:00 UTC) of last modification to file `a_filename';
 			-- Return -1 if the time stamp was not available, if the
@@ -82,7 +82,7 @@ feature -- File handling
 			Result := tmp_file.time_stamp
 		end
 
-	same_physical_file (a_filename1, a_filename2: STRING): BOOLEAN is
+	same_physical_file (a_filename1, a_filename2: STRING): BOOLEAN
 			-- Are files named `a_filename1' and `a_filename2'
 			-- the same physical file? Return False if one
 			-- or both files don't exist. (Return True if
@@ -97,7 +97,7 @@ feature -- File handling
 			Result := tmp_file.same_physical_file (a_filename2)
 		end
 
-	same_text_files (a_filename1, a_filename2: STRING): BOOLEAN is
+	same_text_files (a_filename1, a_filename2: STRING): BOOLEAN
 			-- Do files named `a_filename1' and `a_filename2'
 			-- contain the same number of lines and are these
 			-- lines equal? Return False if one or both files
@@ -151,7 +151,7 @@ feature -- File handling
 			end
 		end
 
-	same_binary_files (a_filename1, a_filename2: STRING): BOOLEAN is
+	same_binary_files (a_filename1, a_filename2: STRING): BOOLEAN
 			-- Do files named `a_filename1' and `a_filename2'
 			-- contain the same number of characters and are these
 			-- characters equal? Return False if one or both files
@@ -239,7 +239,7 @@ feature -- File handling
 			end
 		end
 
-	rename_file (old_name, new_name: STRING) is
+	rename_file (old_name, new_name: STRING)
 			-- Rename file named `old_name' as `new_name'.
 			-- Do nothing if the file could not be renamed, if
 			-- it did not exist or if `new_name' is physically
@@ -253,7 +253,7 @@ feature -- File handling
 			tmp_file.change_name (new_name)
 		end
 
-	copy_file (old_name, new_name: STRING) is
+	copy_file (old_name, new_name: STRING)
 			-- Copy file named `old_name' to `new_name'.
 			-- Do nothing if the file could not be copied, if it
 			-- did not exist or if `new_name' is physically
@@ -267,7 +267,7 @@ feature -- File handling
 			tmp_file.copy_file (new_name)
 		end
 
-	concat_files (a_target_filename, a_source_filename: STRING) is
+	concat_files (a_target_filename, a_source_filename: STRING)
 			-- Copy content of file `a_source_filename' to the end of file
 			-- `a_target_filename'. Do nothing if file `a_source_filename'
 			-- does not exist. Create file `a_target_filename' if it does
@@ -284,7 +284,7 @@ feature -- File handling
 			tmp_file.concat (a_source_filename)
 		end
 
-	delete_file (a_filename: STRING) is
+	delete_file (a_filename: STRING)
 			-- Delete file named `a_filename'.
 			-- Do nothing if the file could not be
 			-- deleted or if it did not exist.
@@ -298,7 +298,7 @@ feature -- File handling
 
 feature -- Directory handling
 
-	is_directory_readable (a_dirname: STRING): BOOLEAN is
+	is_directory_readable (a_dirname: STRING): BOOLEAN
 			-- Can directory named `a_dirname' be opened in read mode?
 			-- (`a_dirname' should follow the pathname convention
 			-- of the underlying platform. For pathname conversion
@@ -308,7 +308,7 @@ feature -- Directory handling
 			Result := tmp_directory.is_readable
 		end
 
-	directory_exists (a_dirname: STRING): BOOLEAN is
+	directory_exists (a_dirname: STRING): BOOLEAN
 			-- Does directory named `a_dirname' physically exist on disk?
 			-- (`a_dirname' should follow the pathname convention
 			-- of the underlying platform. For pathname conversion
@@ -318,7 +318,7 @@ feature -- Directory handling
 			Result := tmp_directory.exists
 		end
 
-	is_directory_empty (a_dirname: STRING): BOOLEAN is
+	is_directory_empty (a_dirname: STRING): BOOLEAN
 			-- Does directory named `a_dirname' contain no entry apart
 			-- from the parent and current directory entries?
 			-- Return False if not able to open current directory.
@@ -330,7 +330,7 @@ feature -- Directory handling
 			Result := tmp_directory.is_empty
 		end
 
-	create_directory (a_dirname: STRING) is
+	create_directory (a_dirname: STRING)
 			-- Create a new directory named `a_dirname'.
 			-- Do nothing if the directory could not
 			-- be created, if it already existed or if
@@ -344,7 +344,7 @@ feature -- Directory handling
 			tmp_directory.create_directory
 		end
 
-	recursive_create_directory (a_dirname: STRING) is
+	recursive_create_directory (a_dirname: STRING)
 			-- Create a new directory named `a_dirname' on disk.
 			-- Create its parent directories if they do not exist yet.
 			-- Do nothing if the directory could not be created,
@@ -359,7 +359,7 @@ feature -- Directory handling
 			tmp_directory.recursive_create_directory
 		end
 
-	delete_directory (a_dirname: STRING) is
+	delete_directory (a_dirname: STRING)
 			-- Delete directory named `a_dirname'.
 			-- Do nothing if the directory could not be deleted,
 			-- if it did not exist or if it is not empty.
@@ -371,7 +371,7 @@ feature -- Directory handling
 			tmp_directory.delete
 		end
 
-	recursive_delete_directory (a_dirname: STRING) is
+	recursive_delete_directory (a_dirname: STRING)
 			-- Delete directory named `a_dirname', its files
 			-- and its subdirectories recursively. Do nothing if
 			-- the directory could not be deleted, if it did not exist.
@@ -383,7 +383,7 @@ feature -- Directory handling
 			tmp_directory.recursive_delete
 		end
 
-	recursive_copy_directory (old_name, new_name: STRING) is
+	recursive_copy_directory (old_name, new_name: STRING)
 			-- Copy recursively directory named `old_name' to `new_name'.
 			-- Do nothing if the directory could not be copied,
 			-- if it did not exist, or if `new_name' already existed.
@@ -397,7 +397,7 @@ feature -- Directory handling
 
 feature -- Working directory
 
-	cwd, current_working_directory: STRING is
+	cwd, current_working_directory: STRING
 			-- Name of current working directory;
 			-- Return absolute pathname with the naming
 			-- convention of the underlying file system
@@ -406,7 +406,7 @@ feature -- Working directory
 			Result := execution_environment.current_working_directory
 		end
 
-	cd, set_current_working_directory (a_dirname: STRING) is
+	cd, set_current_working_directory (a_dirname: STRING)
 			-- Set current working directory to `a_dirname'.
 			-- Do nothing if the current working directory could not
 			-- be changed or if directory `a_dirname' did not exist.
@@ -432,7 +432,7 @@ feature -- Working directory
 
 feature {NONE} -- Implementation
 
-	tmp_file: KL_TEXT_INPUT_FILE is
+	tmp_file: KL_TEXT_INPUT_FILE
 			-- Temporary file object
 		once
 			create Result.make (dummy_name)
@@ -441,7 +441,7 @@ feature {NONE} -- Implementation
 			file_closed: Result.is_closed
 		end
 
-	tmp_directory: KL_DIRECTORY is
+	tmp_directory: KL_DIRECTORY
 			-- Temporary directory object
 		once
 			create Result.make (dummy_name)
@@ -450,10 +450,10 @@ feature {NONE} -- Implementation
 			directory_closed: Result.is_closed
 		end
 
-	dummy_name: STRING is "dummy"
+	dummy_name: STRING = "dummy"
 			-- Dummy name
 
-	execution_environment: EXECUTION_ENVIRONMENT is
+	execution_environment: EXECUTION_ENVIRONMENT
 			-- Execution environment implementation
 		once
 			create Result

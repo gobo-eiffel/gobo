@@ -29,7 +29,7 @@ feature -- Access
 
 feature -- Status report
 
-	parent_element: XM_ELEMENT is
+	parent_element: XM_ELEMENT
 			-- Parent element.
 		require
 			not_root_node: not is_root_node
@@ -45,7 +45,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	root_node: XM_DOCUMENT is
+	root_node: XM_DOCUMENT
 			-- Root node of current node
 		do
 			check not_root_node: not is_root_node end
@@ -56,7 +56,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	level: INTEGER is
+	level: INTEGER
 			-- Depth at which current node appears relative to its root
 			-- (The root node has the level 1.)
 		do
@@ -69,7 +69,7 @@ feature -- Status report
 			root_level: is_root_node implies (Result = 1)
 		end
 
-	is_root_node: BOOLEAN is
+	is_root_node: BOOLEAN
 			-- Is current node the root node?
 		do
 			Result := (parent = Void)
@@ -77,7 +77,7 @@ feature -- Status report
 			definition: Result = (parent = Void)
 		end
 
-	is_first: BOOLEAN is
+	is_first: BOOLEAN
 			-- Is this node the first in its parent's child list,
 			-- or the root node?
 		do
@@ -86,7 +86,7 @@ feature -- Status report
 			definition: Result = (is_root_node or else (parent.first = Current))
 		end
 
-	is_last: BOOLEAN is
+	is_last: BOOLEAN
 			-- Is this node the last in its parent's child list,
 			-- or the root node?
 		do
@@ -97,7 +97,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_parent (a_parent: like parent) is
+	set_parent (a_parent: like parent)
 			-- Set `parent' to `a_parent'.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -110,7 +110,7 @@ feature -- Element change
 
 feature {XM_COMPOSITE} -- Element change
 
-	node_set_parent (a_parent: like parent) is
+	node_set_parent (a_parent: like parent)
 			-- Set `parent' to `a_parent'.
 		do
 			parent := a_parent
@@ -120,7 +120,7 @@ feature {XM_COMPOSITE} -- Element change
 
 feature {NONE} -- Implementation
 
-	Default_ns: XM_NAMESPACE is
+	Default_ns: XM_NAMESPACE
 			-- Shared default namespace constant object.
 		once
 			create Result.make_default
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 
 feature -- Processing
 
-	process (a_processor: XM_NODE_PROCESSOR) is
+	process (a_processor: XM_NODE_PROCESSOR)
 			-- Process current node with `a_processor'.
 		require
 			a_processor_not_void: a_processor /= Void

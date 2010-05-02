@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_base_iterator: like base_iterator; a_mapping_function: like mapping_function) is
+	make (a_base_iterator: like base_iterator; a_mapping_function: like mapping_function)
 			-- Establish invariant.
 		require
 			base_iterator_before: a_base_iterator /= Void and then not a_base_iterator.is_error and then a_base_iterator.before
@@ -48,13 +48,13 @@ feature -- Access
 
 feature -- Status report
 
-	is_node_iterator: BOOLEAN is
+	is_node_iterator: BOOLEAN
 			-- Does `Current' yield a node_sequence?
 		do
 			Result := True
 		end
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
 			Result := base_iterator.after
@@ -62,7 +62,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move to next position
 		do
 			index := index + 1
@@ -84,15 +84,15 @@ feature -- Cursor movement
 
 feature -- Conversion
 
-	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
 		do
 			Result ?= ANY_.to_any (Current)
 		end
-	
+
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 			create Result.make (base_iterator.another, mapping_function)

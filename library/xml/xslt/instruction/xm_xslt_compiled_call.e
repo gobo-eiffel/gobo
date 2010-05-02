@@ -11,7 +11,7 @@ note
 class XM_XSLT_COMPILED_CALL
 
 inherit
-	
+
 	XM_XSLT_INSTRUCTION
 		redefine
 			sub_expressions, generate_events, creates_new_nodes, promote_instruction,
@@ -27,7 +27,7 @@ create
 feature {NONE} -- Initialization
 
 	make (an_executable: XM_XSLT_EXECUTABLE; a_target: XM_XSLT_COMPILED_TEMPLATE; an_actual_parameter_list, a_tunnel_parameter_list: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM];
-			a_use_tail_recursion: BOOLEAN) is
+			a_use_tail_recursion: BOOLEAN)
 			-- Establish invariant.
 		require
 			an_executable_not_void: an_executable /= Void
@@ -51,8 +51,8 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions of `Current'
 		do
 			Result := xpath_expressions (actual_parameter_list)
@@ -62,13 +62,13 @@ feature -- Access
 
 feature -- Status report
 
-	creates_new_nodes: BOOLEAN is
+	creates_new_nodes: BOOLEAN
 			-- Can `Current' create new nodes?
 		do
 			Result := True
 		end
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -83,8 +83,8 @@ feature -- Status report
 		end
 
 feature -- Status setting
-	
-	compute_intrinsic_dependencies is
+
+	compute_intrinsic_dependencies
 			-- Determine the intrinsic dependencies of an expression.
 		do
 
@@ -94,11 +94,11 @@ feature -- Status setting
 			set_intrinsically_depends_upon_xslt_context
 			set_intrinsically_depends_upon_focus
 		end
-			
+
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations
 		do
 			simplify_with_params (actual_parameter_list)
@@ -106,7 +106,7 @@ feature -- Optimization
 			a_replacement.put (Current)
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			check_with_params (actual_parameter_list, a_context, a_context_item_type)
@@ -114,7 +114,7 @@ feature -- Optimization
 			a_replacement.put (Current)
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			optimize_with_params (actual_parameter_list, a_context, a_context_item_type)
@@ -122,7 +122,7 @@ feature -- Optimization
 			a_replacement.put (Current)
 		end
 
-	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this instruction.
 		do
 			promote_with_params (actual_parameter_list, a_offer)
@@ -131,7 +131,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	generate_events (a_context: XM_XPATH_CONTEXT) is
+	generate_events (a_context: XM_XPATH_CONTEXT)
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_tail: DS_CELL [XM_XPATH_TAIL_CALL]
@@ -162,7 +162,7 @@ feature -- Evaluation
 			end
 		end
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_tunnel_parameters: XM_XSLT_PARAMETER_SET
@@ -206,7 +206,7 @@ feature -- Evaluation
 		end
 
 feature {NONE} -- Implementation
-	
+
 	target: XM_XSLT_COMPILED_TEMPLATE
 			-- Target template
 
@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 
 	tunnel_parameter_list: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM]
 			-- Tunnel parameters
-	
+
 	use_tail_recursion: BOOLEAN
 			-- Is tail recursion used?
 
@@ -224,6 +224,6 @@ invariant
 	target_not_void: initialized implies target /= Void
 	actual_parameter_list_not_void: initialized implies actual_parameter_list /= Void
 	tunnel_parameter_list_not_void: initialized implies tunnel_parameter_list /= Void
-	
+
 end
-	
+

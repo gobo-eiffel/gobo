@@ -21,7 +21,7 @@ feature -- Error handling
 	has_fatal_error: BOOLEAN
 			-- Has a fatal error occurred?
 
-	set_fatal_error is
+	set_fatal_error
 			-- Report a fatal error.
 		do
 			has_fatal_error := True
@@ -29,7 +29,7 @@ feature -- Error handling
 			has_fatal_error: has_fatal_error
 		end
 
-	reset_fatal_error (b: BOOLEAN) is
+	reset_fatal_error (b: BOOLEAN)
 			-- Set `has_fatal_error' to `b'.
 		do
 			has_fatal_error := b

@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_regexp: STRING; filename: STRING; line: INTEGER) is
+	make (a_regexp: STRING; filename: STRING; line: INTEGER)
 			-- Create a new error reporting a syntax error
 			-- in regular expression `a_regexp'.
 		require
@@ -37,10 +37,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$2%", line $3: syntax error in regular expression %"$1%""
+	default_template: STRING = "%"$2%", line $3: syntax error in regular expression %"$1%""
 			-- Default template used to built the error message
 
-	code: STRING is "TS0001"
+	code: STRING = "TS0001"
 			-- Error code
 
 invariant

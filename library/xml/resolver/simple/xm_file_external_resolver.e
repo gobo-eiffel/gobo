@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Make.
 		do
 			last_error := "no stream"
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Action(s)
 
-	resolve (a_system_name: STRING) is
+	resolve (a_system_name: STRING)
 			-- Open file with corresponding name.
 		do
 			last_error := Void
@@ -53,7 +53,7 @@ feature -- Result
 	last_error: STRING
 			-- Error
 
-	has_error: BOOLEAN is
+	has_error: BOOLEAN
 			-- Is there an error?
 		do
 			Result := last_error /= Void

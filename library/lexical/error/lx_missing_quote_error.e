@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER) is
+	make (filename: STRING; line: INTEGER)
 			-- Create a new error reporting a missing quote.
 		require
 			filename_not_void: filename /= Void
@@ -34,10 +34,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: missing quote"
+	default_template: STRING = "%"$1%", line $2: missing quote"
 			-- Default template used to built the error message
 
-	code: STRING is "LX0013"
+	code: STRING = "LX0013"
 			-- Error code
 
 invariant

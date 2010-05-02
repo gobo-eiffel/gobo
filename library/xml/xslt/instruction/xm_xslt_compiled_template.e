@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create un-initialized so compiling xsl:call-template instructions can forward-reference `Current'.
 		do
 			-- do nothing
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	initialize (an_executable: like executable; a_body: like body; a_fingerprint, a_precedence, a_minimum_import_precedence: INTEGER;
-					a_system_id: STRING; a_line_number: INTEGER; a_slot_manager: like slot_manager) is
+					a_system_id: STRING; a_line_number: INTEGER; a_slot_manager: like slot_manager)
 			-- Initialize.
 		require
 			not_yet_initialized: not initialized
@@ -72,7 +72,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_stack_frame_needed: BOOLEAN is
+	is_stack_frame_needed: BOOLEAN
 			-- Does `Current' need a stack frame?
 		do
 			Result := slot_manager.number_of_variables > 0
@@ -83,7 +83,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_has_required_parameters (a_status: BOOLEAN) is
+	set_has_required_parameters (a_status: BOOLEAN)
 			-- Set `has_required_parameters' to `a_status'.
 		do
 			has_required_parameters := a_status
@@ -93,7 +93,7 @@ feature -- Status setting
 
 feature -- Evaluation
 
-	generate_events (a_rule: XM_XSLT_RULE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_events (a_rule: XM_XSLT_RULE; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Process `Current', without returning any tail calls
 		require
 			a_rule_not_void: a_rule /= Void
@@ -115,7 +115,7 @@ feature -- Evaluation
 			end
 		end
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_rule: XM_XSLT_RULE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_rule: XM_XSLT_RULE; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		require
 			a_rule_not_void: a_rule /= Void
@@ -132,7 +132,7 @@ feature -- Evaluation
 			end
 		end
 
-	expand (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	expand (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Expand the template.
 			-- Called when the template is invoked using xsl:call-template or xsl:apply-templates.
 		require

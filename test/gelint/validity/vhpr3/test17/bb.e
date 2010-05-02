@@ -11,7 +11,7 @@ feature -- Access
 
 	name: BB
 
-	f is
+	f
 		do
 			item := Current
 		end

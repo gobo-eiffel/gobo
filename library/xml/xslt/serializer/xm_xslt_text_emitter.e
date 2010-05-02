@@ -28,13 +28,13 @@ create
 
 feature -- Events
 
-	start_document is
+	start_document
 			-- New document
 		do
 			is_document_started := True
 		end
 
-	open is
+	open
 			-- Notify start of event stream.
 		do
 			-- Prevent `open_document' from writing an XML declaration.
@@ -43,9 +43,9 @@ feature -- Events
 			open_document
 
 			if is_output_open then
-				
+
 				-- Write a BOM if requested
-				
+
 				if outputter.byte_order_mark_permitted then
 					if output_properties.byte_order_mark_required
 						or (not output_properties.is_byte_order_mark_set and outputter.is_byte_order_mark_default) then
@@ -56,7 +56,7 @@ feature -- Events
 			is_open := True
 		end
 
-	notify_characters (chars: STRING; properties: INTEGER) is
+	notify_characters (chars: STRING; properties: INTEGER)
 			-- Notify character data.
 			-- Special characters are not escaped
 		local
@@ -87,37 +87,37 @@ feature -- Events
 
 	-- Remaining events are no-ops
 
-	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
+	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER)
 			-- Notify the start of an element
 		do
 			mark_as_written
 		end
 
-	end_element is
+	end_element
 			-- Notify the end of an element.
 		do
 			mark_as_written
 		end
 
-	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
+	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER)
 			-- Notify a namespace declaration.
 		do
 			mark_as_written
 		end
-	
-	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
+
+	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER)
 			-- Notify an attribute.
 		do
 			mark_as_written
 		end
 
-	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
+	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER)
 			-- Notify a processing instruction.
 		do
 			mark_as_written
 		end
 
-	notify_comment (a_content_string: STRING; properties: INTEGER) is
+	notify_comment (a_content_string: STRING; properties: INTEGER)
 			-- Notify a comment.
 		do
 			mark_as_written
@@ -125,11 +125,11 @@ feature -- Events
 
 feature {NONE} -- Implementation
 
-	write_declaration is
+	write_declaration
 			-- Write XML declaration
 		do
 			-- No declaration is ever written for text method.
 		end
 
 end
-	
+

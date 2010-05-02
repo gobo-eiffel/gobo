@@ -18,35 +18,35 @@ inherit
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset choice as it was when it was last parsed.
 		do
 		end
 
 feature -- Status report
 
-	is_range: BOOLEAN is
+	is_range: BOOLEAN
 			-- Is current choice a range?
 		do
 			-- Result := False
 		end
 feature -- Access
 
-	lower: ET_CHOICE_CONSTANT is
+	lower: ET_CHOICE_CONSTANT
 			-- Lower bound
 		deferred
 		ensure
 			lower_not_void: Result /= Void
 		end
 
-	upper: ET_CHOICE_CONSTANT is
+	upper: ET_CHOICE_CONSTANT
 			-- Upper bound
 		deferred
 		ensure
 			upper_not_void: Result /= Void
 		end
 
-	choice: ET_CHOICE is
+	choice: ET_CHOICE
 			-- Choice in comma-separated list
 		do
 			Result := Current

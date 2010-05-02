@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_static_context: XM_XPATH_STATIC_CONTEXT; a_node_type: INTEGER; a_name_code: INTEGER; an_original_text: STRING) is
+	make (a_static_context: XM_XPATH_STATIC_CONTEXT; a_node_type: INTEGER; a_name_code: INTEGER; an_original_text: STRING)
 			-- Create from name and type.
 		require
 			static_context_not_void: a_static_context /= Void
@@ -52,8 +52,8 @@ feature {NONE} -- Initialization
 			line_number_set: line_number = a_static_context.line_number
 		end
 
-	make_same_type (a_static_context: XM_XPATH_STATIC_CONTEXT; a_node: XM_XPATH_NODE) is
-			-- Create like `a_node'. 
+	make_same_type (a_static_context: XM_XPATH_STATIC_CONTEXT; a_node: XM_XPATH_NODE)
+			-- Create like `a_node'.
 		require
 			static_context_not_void: a_static_context /= Void
 			node_not_void: a_node /= Void
@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 			line_number_set: line_number = a_static_context.line_number
 		end
 
-	make_without_location (a_node: XM_XPATH_NODE) is
+	make_without_location (a_node: XM_XPATH_NODE)
 			-- Create  like `a_node', without location.
 		require
 			node_not_void: a_node /= Void
@@ -80,14 +80,14 @@ feature {NONE} -- Initialization
 			same_type: node_kind = a_node.node_type
 			same_fingerprint: fingerprint = a_node.fingerprint
 		end
-	
+
 feature -- Access
 
-		frozen default_priority: MA_DECIMAL is
+		frozen default_priority: MA_DECIMAL
 			--  Determine the default priority to use if this pattern appears as a match pattern for a template with no explicit priority attribute.
 		do
 				create Result.make_zero
 		end
 
 end
-	
+

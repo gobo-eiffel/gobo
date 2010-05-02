@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new empty list of called features.
 		do
 			create polymorphic_features.make (initial_polymorphic_features_capacity)
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	add_polymorphic_feature (a_feature: ET_FEATURE; a_target_class: ET_CLASS) is
+	add_polymorphic_feature (a_feature: ET_FEATURE; a_target_class: ET_CLASS)
 			-- Add called feature `a_feature' knowing that all versions of this
 			-- feature in the descendants of `a_target_class' will need to be
 			-- taken into account.
@@ -41,7 +41,7 @@ feature -- Element change
 			polymorphic_feature_target_classes.force_last (a_target_class)
 		end
 
-	add_monomorphic_feature (a_feature: ET_FEATURE; a_target_class: ET_CLASS) is
+	add_monomorphic_feature (a_feature: ET_FEATURE; a_target_class: ET_CLASS)
 			-- Add called feature `a_feature' knowing that the versions of this
 			-- feature in the descendants of `a_target_class' should not be
 			-- taken into account.
@@ -55,7 +55,7 @@ feature -- Element change
 
 feature -- Removal
 
-	wipe_out is
+	wipe_out
 			-- Wipe out all polymorphic and monomorphic features.
 		do
 			polymorphic_features.wipe_out
@@ -66,7 +66,7 @@ feature -- Removal
 
 feature -- Iteration
 
-	do_all_polymorphic (a_action: PROCEDURE [ANY, TUPLE [ET_FEATURE, ET_CLASS]]) is
+	do_all_polymorphic (a_action: PROCEDURE [ANY, TUPLE [ET_FEATURE, ET_CLASS]])
 			-- Apply `a_action' to every polymorphic feature and its target class
 			-- (Semantics not guaranteed if `a_action' changes the structure.)
 		require
@@ -81,7 +81,7 @@ feature -- Iteration
 			end
 		end
 
-	do_all_monomorphic (a_action: PROCEDURE [ANY, TUPLE [ET_FEATURE, ET_CLASS]]) is
+	do_all_monomorphic (a_action: PROCEDURE [ANY, TUPLE [ET_FEATURE, ET_CLASS]])
 			-- Apply `a_action' to every monomorphic feature and its target class
 			-- (Semantics not guaranteed if `a_action' changes the structure.)
 		require
@@ -117,10 +117,10 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	initial_polymorphic_features_capacity: INTEGER is 100
+	initial_polymorphic_features_capacity: INTEGER = 100
 			-- Default initial capacity for `polymorphic_features' and `polymorphic_feature_target_classes'
 
-	initial_monomorphic_features_capacity: INTEGER is 100
+	initial_monomorphic_features_capacity: INTEGER = 100
 			-- Default initial capacity for `monomorphic_features' and `monomorphic_feature_target_classes'
 
 invariant

@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_integer, another_integer: INTEGER) is
+	make (an_integer, another_integer: INTEGER)
 			-- Establish invariant.
 		require
 			non_negative_lower_bound: an_integer >= 0
@@ -41,10 +41,10 @@ feature {NONE} -- Initialization
 			minumum_set: minimum_position = an_integer
 			maxumum_set: maximum_position = another_integer
 		end
-			
+
 feature -- Access
-	
-	item_type: XM_XPATH_ITEM_TYPE is
+
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Determine the data type of the expression, if possible
 		do
 			Result := type_factory.boolean_type
@@ -60,13 +60,13 @@ feature -- Access
 	maximum_position: INTEGER
 			-- Maximum position
 
-	is_position_range: BOOLEAN is
+	is_position_range: BOOLEAN
 			-- Is `Current' a position range?
 		do
 			Result := True
 		end
 
-	as_position_range: XM_XPATH_POSITION_RANGE is
+	as_position_range: XM_XPATH_POSITION_RANGE
 			-- `Current' seen as a position range
 		do
 			Result := Current
@@ -74,7 +74,7 @@ feature -- Access
 
 feature -- Status report
 
-	display (level: INTEGER) is
+	display (level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -90,21 +90,21 @@ feature -- Status report
 
 feature -- Status setting
 
-	compute_intrinsic_dependencies is
+	compute_intrinsic_dependencies
 			-- Determine the intrinsic dependencies of an expression.
 		do
-			set_intrinsically_depends_upon_position			
+			set_intrinsically_depends_upon_position
 		end
 
 feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			a_replacement.put (Current)
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			a_replacement.put (Current)
@@ -112,7 +112,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			p: INTEGER
@@ -122,14 +122,14 @@ feature -- Evaluation
 		end
 
 feature {NONE} -- Implementation
-	
-	compute_cardinality is
+
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
 		end
 
-	compute_special_properties is
+	compute_special_properties
 			-- Compute special properties.
 		do
 			Precursor
@@ -139,6 +139,6 @@ feature {NONE} -- Implementation
 invariant
 
 	minimum_position: minimum_position >= 0
-	proper_range: maximum_position >= minimum_position 
+	proper_range: maximum_position >= minimum_position
 
 end

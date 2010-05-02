@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Execute example.
 		do
 			some_simple_matches
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Examples
 
-	some_simple_matches is
+	some_simple_matches
 			-- Some simple examples.
 		local
 			regexp: RX_PCRE_REGULAR_EXPRESSION
@@ -145,7 +145,7 @@ feature -- Examples
 			std.output.put_line ("----------------")
 		end
 
-	localization is
+	localization
 			-- Example with localization.
 		local
 			case_mapping: RX_CASE_MAPPING

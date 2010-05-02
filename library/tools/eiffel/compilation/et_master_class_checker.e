@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new master class checker.
 		do
 			create current_class.make (tokens.unknown_class_name, tokens.unknown_system)
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Validity checking
 
-	check_master_class_validity (a_class: ET_MASTER_CLASS) is
+	check_master_class_validity (a_class: ET_MASTER_CLASS)
 			-- Check validity of `a_class'.
 			-- In particular, look for class name clashes.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -57,7 +57,7 @@ feature -- Validity checking
 
 feature {NONE} -- Validity checking
 
-	check_intrinsic_classes_validity is
+	check_intrinsic_classes_validity
 			-- Check validity of intrinsic classes.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -120,7 +120,7 @@ feature {NONE} -- Validity checking
 			end
 		end
 
-	check_overridden_class_validity (a_overridden_class: ET_NAMED_CLASS; a_override_class: ET_CLASS) is
+	check_overridden_class_validity (a_overridden_class: ET_NAMED_CLASS; a_override_class: ET_CLASS)
 			-- Check validity when `a_overridden_class' is overridden by `a_override_class'.
 		require
 			a_overridden_class_not_void: a_overridden_class /= Void
@@ -140,7 +140,7 @@ feature {NONE} -- Validity checking
 			end
 		end
 
-	check_overriding_classes_validity is
+	check_overriding_classes_validity
 			-- Check validity of overriding classes.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -166,7 +166,7 @@ feature -- Access
 	current_class: ET_MASTER_CLASS
 			-- Class being processed
 
-	current_universe: ET_UNIVERSE is
+	current_universe: ET_UNIVERSE
 			-- Universe to which `current_class' belongs
 		do
 			Result := current_class.universe
@@ -174,7 +174,7 @@ feature -- Access
 			current_universe_not_void: Result /= Void
 		end
 
-	current_system: ET_SYSTEM is
+	current_system: ET_SYSTEM
 			-- Surrounding Eiffel system
 		do
 			Result := current_universe.current_system
@@ -187,7 +187,7 @@ feature -- Error handling
 	has_fatal_error: BOOLEAN
 			-- Has a fatal error occurred?
 
-	set_fatal_error is
+	set_fatal_error
 			-- Report a fatal error.
 		do
 			has_fatal_error := True
@@ -195,7 +195,7 @@ feature -- Error handling
 			has_fatal_error: has_fatal_error
 		end
 
-	reset_fatal_error (b: BOOLEAN) is
+	reset_fatal_error (b: BOOLEAN)
 			-- Set `has_fatal_error' to `b'.
 		do
 			has_fatal_error := b
@@ -203,7 +203,7 @@ feature -- Error handling
 			fatal_error_set: has_fatal_error = b
 		end
 
-	error_handler: ET_ERROR_HANDLER is
+	error_handler: ET_ERROR_HANDLER
 			-- Error handler
 		do
 			Result := current_system.error_handler
@@ -213,7 +213,7 @@ feature -- Error handling
 
 feature {ET_MASTER_CLASS} -- Processing
 
-	process_master_class (a_class: ET_MASTER_CLASS) is
+	process_master_class (a_class: ET_MASTER_CLASS)
 			-- Process `a_class'.
 		do
 			check_master_class_validity (a_class)

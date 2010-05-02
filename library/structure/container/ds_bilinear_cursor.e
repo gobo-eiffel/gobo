@@ -22,14 +22,14 @@ inherit
 
 feature -- Access
 
-	container: DS_BILINEAR [G] is
+	container: DS_BILINEAR [G]
 			-- Data structure traversed
 		deferred
 		end
 
 feature -- Status report
 
-	is_last: BOOLEAN is
+	is_last: BOOLEAN
 			-- Is cursor on last item?
 		do
 			Result := container.cursor_is_last (Current)
@@ -38,7 +38,7 @@ feature -- Status report
 			not_off: Result implies not off
 		end
 
-	before: BOOLEAN is
+	before: BOOLEAN
 			-- Is there no valid position to left of cursor?
 		do
 			Result := container.cursor_before (Current)
@@ -46,7 +46,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	finish is
+	finish
 			-- Move cursor to last position.
 		do
 			container.cursor_finish (Current)
@@ -55,7 +55,7 @@ feature -- Cursor movement
 			last_or_before: is_last xor before
 		end
 
-	back is
+	back
 			-- Move cursor to previous position.
 		require
 			not_before: not before
@@ -63,7 +63,7 @@ feature -- Cursor movement
 			container.cursor_back (Current)
 		end
 
-	search_back (v: G) is
+	search_back (v: G)
 			-- Move to first position at or before current
 			-- position where `item' and `v' are equal.
 			-- (Use `equality_tester''s criterion from `container'
@@ -75,7 +75,7 @@ feature -- Cursor movement
 			container.cursor_search_back (Current, v)
 		end
 
-	go_before is
+	go_before
 			-- Move cursor to `before' position.
 		do
 			container.cursor_go_before (Current)

@@ -18,7 +18,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_min, a_max: UT_VERSION) is
+	make (a_min, a_max: UT_VERSION)
 			-- Create a new version condition where version
 			-- has to be included within `a_min' and `a_max'.
 		do
@@ -39,7 +39,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	is_included (a_version: UT_VERSION): BOOLEAN is
+	is_included (a_version: UT_VERSION): BOOLEAN
 			-- Is `a_version' included within the bounds?
 		require
 			a_version_not_void: a_version /= Void

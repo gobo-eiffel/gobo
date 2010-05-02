@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT) is
+	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT)
 			-- Create new fileset element with information held in `a_xml_element'.
 		local
 			a_value: STRING
@@ -67,7 +67,7 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Type_attribute_name: STRING is
+	Type_attribute_name: STRING
 			-- Name of xml attribute for type
 		once
 			Result := "type"
@@ -76,7 +76,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	From_attribute_name: STRING is
+	From_attribute_name: STRING
 			-- Name of xml attribute for from
 		once
 			Result := "from"
@@ -85,7 +85,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	To_attribute_name: STRING is
+	To_attribute_name: STRING
 			-- Name of xml attribute for to
 		once
 			Result := "to"
@@ -94,7 +94,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Map_element_name: STRING is
+	Map_element_name: STRING
 			-- Name of xml subelement for map
 		once
 			Result := "map"

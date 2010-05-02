@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_cluster: like current_cluster; a_names: like group_names) is
+	make (a_cluster: like current_cluster; a_names: like group_names)
 			-- Create a dependence constraint for `a_cluster'.
 			-- `a_names' are the names of groups that should be the
 			-- only providers or the only dependants of `a_cluster'.
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			group_names_set: group_names = a_names
 		end
 
-	make_with_pathnames (a_cluster: like current_cluster; a_pathnames: DS_ARRAYED_LIST [STRING]) is
+	make_with_pathnames (a_cluster: like current_cluster; a_pathnames: DS_ARRAYED_LIST [STRING])
 			-- Create a dependence constraint for `a_cluster'.
 			-- `a_pathnames' are the pathnames, possibly with wildcards,
 			-- of groups that should be the only providers or the only
@@ -102,7 +102,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	has_group (a_group: ET_GROUP): BOOLEAN is
+	has_group (a_group: ET_GROUP): BOOLEAN
 			-- Is `a_group' or one of its ancestors part of
 			-- the current dependence constraint?
 		require
@@ -159,7 +159,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	matches_pathname (a_group: ET_GROUP; a_pathname: STRING; a_wildcard: LX_WILDCARD): BOOLEAN is
+	matches_pathname (a_group: ET_GROUP; a_pathname: STRING; a_wildcard: LX_WILDCARD): BOOLEAN
 			-- Does `a_wildcard' match `a_pathname', where `a_pathname' is the unix
 			-- equivalent of the pathname of `a_group?
 		require
@@ -193,7 +193,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	replace_backslashes (a_string: STRING) is
+	replace_backslashes (a_string: STRING)
 			-- Replace all '\' characters in `a_string' by '/' characters.
 		require
 			a_string_not_void: a_string /= Void
@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	group_pathname (a_group: ET_GROUP): STRING is
+	group_pathname (a_group: ET_GROUP): STRING
 			-- Absolute pathname of `a_group' where all '\' characters have been replaced by '/'
 			--
 			-- Note: Always return the same object, only its characters are changed
@@ -231,7 +231,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	pathname_buffer_initial_capacity: INTEGER is 512
+	pathname_buffer_initial_capacity: INTEGER = 512
 			-- Initial capacity for `pathname_buffer'
 
 invariant

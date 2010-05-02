@@ -29,7 +29,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_dynamic_context (a_context_item: XM_XPATH_ITEM) is
+	make_dynamic_context (a_context_item: XM_XPATH_ITEM)
 			-- Establish invariant for stand-alone contexts.
 		require
 			context_item_not_void: a_context_item /= Void
@@ -61,19 +61,19 @@ feature -- Access
 	current_receiver: XM_XPATH_SEQUENCE_RECEIVER
 			-- Receiver to which output is currently being written.
 
-	configuration: XM_XPATH_CONFIGURATION is
+	configuration: XM_XPATH_CONFIGURATION
 			-- System configuration
 		deferred
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	local_variable_frame: XM_XPATH_STACK_FRAME is
+	local_variable_frame: XM_XPATH_STACK_FRAME
 			-- Local variables in scope
 		deferred
 		end
 
-	next_available_slot: INTEGER is
+	next_available_slot: INTEGER
 			-- Next available local variable slot
 		require
 			local_variables_frame_not_void: local_variable_frame /= Void
@@ -83,14 +83,14 @@ feature -- Access
 			strictly_positive_result: Result > 0
 		end
 
-	available_functions: XM_XPATH_FUNCTION_LIBRARY is
+	available_functions: XM_XPATH_FUNCTION_LIBRARY
 			-- Available functions
 		deferred
 		ensure
 			available_functions_not_void: Result /= Void
 		end
 
-	available_documents: XM_XPATH_DOCUMENT_POOL is
+	available_documents: XM_XPATH_DOCUMENT_POOL
 			-- Available documents
 		deferred
 		ensure
@@ -98,27 +98,27 @@ feature -- Access
 			restricted_implies_none_available: is_restricted implies Result = Void
 		end
 
-	security_manager: XM_XPATH_SECURITY_MANAGER is
+	security_manager: XM_XPATH_SECURITY_MANAGER
 			-- Security manager
 		deferred
 		ensure
 			security_manager_not_void: Result /= Void
 		end
 
-	current_date_time: DT_FIXED_OFFSET_ZONED_DATE_TIME is
+	current_date_time: DT_FIXED_OFFSET_ZONED_DATE_TIME
 			-- Current date-time
 		do
 			Result := internal_date_time
 		end
 
-	implicit_timezone: DT_FIXED_OFFSET_TIME_ZONE is
+	implicit_timezone: DT_FIXED_OFFSET_TIME_ZONE
 			-- Implicit time zone for comparing unzoned times and dates
 		deferred
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	context_item: XM_XPATH_ITEM is
+	context_item: XM_XPATH_ITEM
 			-- The context item (".")
 		do
 			if current_iterator /= Void then
@@ -133,7 +133,7 @@ feature -- Access
 			restricted_implies_undefined: is_restricted implies Result = Void
 		end
 
-	context_position: INTEGER is
+	context_position: INTEGER
 			-- Context position;
 			-- (the position of the context node in the context node list)
 		require
@@ -145,7 +145,7 @@ feature -- Access
 			restricted_implies_undefined: is_restricted implies Result = 0
 		end
 
-	last: INTEGER is
+	last: INTEGER
 			-- Context size;
 			-- (the position of the last item in the current node list)
 		require
@@ -177,7 +177,7 @@ feature -- Access
 			restricted_implies_undefined: is_restricted implies Result = 0
 		end
 
-	collator (a_collation_name: STRING): ST_COLLATOR is
+	collator (a_collation_name: STRING): ST_COLLATOR
 			-- Named collation
 		require
 			collation_name_not_void: a_collation_name /= Void
@@ -186,14 +186,14 @@ feature -- Access
 			Result := collation_map.item (a_collation_name)
 		end
 
-	unicode_codepoint_collator: ST_COLLATOR is
+	unicode_codepoint_collator: ST_COLLATOR
 		do
 			Result := collator (Unicode_codepoint_collation_uri)
 		ensure
 			unicode_codepoint_collator_available: Result /= Void
 		end
 
-	last_parsed_document: XM_XPATH_DOCUMENT is
+	last_parsed_document: XM_XPATH_DOCUMENT
 			-- Result from last call to `build_document'
 		require
 			no_build_error: not is_build_document_error
@@ -201,8 +201,8 @@ feature -- Access
 		ensure
 			last_parsed_document_not_void: Result /= Void
 		end
-	
-	last_parsed_media_type: UT_MEDIA_TYPE is
+
+	last_parsed_media_type: UT_MEDIA_TYPE
 			-- Auxiliary result from last call to `build_document'
 		require
 			no_build_error: not is_build_document_error
@@ -210,7 +210,7 @@ feature -- Access
 		ensure
 			last_parsed_media_type_may_be_void: True
 		end
-	
+
 feature -- Status report
 
 	is_restricted: BOOLEAN
@@ -219,17 +219,17 @@ feature -- Status report
 	is_temporary_destination: BOOLEAN
 			-- Is `current_receiver' a temporary tree?
 
-	has_push_processing: BOOLEAN is
+	has_push_processing: BOOLEAN
 			-- Is push-processing to a sequence receiver implemented?
 		deferred
 		end
 
-	is_minor: BOOLEAN is
+	is_minor: BOOLEAN
 			-- Is `Current' limited in what it may change?
 		deferred
 		end
 
-	is_known_collation (a_collation_name: STRING): BOOLEAN is
+	is_known_collation (a_collation_name: STRING): BOOLEAN
 			-- Is `a_collation_name' a statically know collation?
 		require
 			collation_name_not_void: a_collation_name /= Void
@@ -237,7 +237,7 @@ feature -- Status report
 			Result := collation_map.has (a_collation_name)
 		end
 
-	is_context_position_set: BOOLEAN is
+	is_context_position_set: BOOLEAN
 			-- Is the context position available?
 		do
 			Result := current_iterator /= Void and then not current_iterator.is_error
@@ -245,7 +245,7 @@ feature -- Status report
 			restricted_implies_false: is_restricted implies Result = False
 		end
 
-	is_valid_local_variable (a_slot_number: INTEGER): BOOLEAN is
+	is_valid_local_variable (a_slot_number: INTEGER): BOOLEAN
 			-- Is a_slot_number a valid local variable index?
 		require
 			local_variables_frame_not_void: local_variable_frame /= Void
@@ -253,7 +253,7 @@ feature -- Status report
 			Result := a_slot_number > 0 and then a_slot_number <= local_variable_frame.variables.count
 		end
 
-	is_at_last: BOOLEAN is
+	is_at_last: BOOLEAN
 			-- Is position() = last()?
 		require
 			context_position_set: is_context_position_set
@@ -264,19 +264,19 @@ feature -- Status report
 	is_build_document_error: BOOLEAN
 			-- Was last call to `build_document' in error?
 
-	last_build_error: STRING is
+	last_build_error: STRING
 			-- Error message from last call to `build_document'
 		require
 			build_error: is_build_document_error
 		deferred
 		end
 
-	is_process_error: BOOLEAN is
+	is_process_error: BOOLEAN
 			-- Has a processing error occurred?
 		deferred
 		end
 
-	is_uri_written (a_uri: STRING): BOOLEAN is
+	is_uri_written (a_uri: STRING): BOOLEAN
 			-- Has `a_uri' been written to yet?
 		require
 			a_uri_not_void: a_uri /= Void
@@ -286,7 +286,7 @@ feature -- Status report
 
 feature -- Creation
 
-	new_context: like Current is
+	new_context: like Current
 			-- Created copy of `Current'.
 		do
 
@@ -297,7 +297,7 @@ feature -- Creation
 			major_context: Result /= Void and then not Result.is_minor
 		end
 
-	new_minor_context: like Current is
+	new_minor_context: like Current
 			-- Created minor copy of `Current'
 		require
 			push_processing_available: has_push_processing
@@ -306,7 +306,7 @@ feature -- Creation
 			minor_context: Result /= Void and then Result.is_minor
 		end
 
-	new_clean_context: like Current is
+	new_clean_context: like Current
 			-- Created clean context (for XSLT function calls)
 		require
 			push_processing_available: has_push_processing
@@ -317,7 +317,7 @@ feature -- Creation
 
 feature -- Evaluation
 
-	evaluated_local_variable (a_slot_number: INTEGER): XM_XPATH_VALUE is
+	evaluated_local_variable (a_slot_number: INTEGER): XM_XPATH_VALUE
 			-- Value of a local variable, identified by its slot number
 		require
 			local_variables_frame_not_void: local_variable_frame /= Void
@@ -327,10 +327,10 @@ feature -- Evaluation
 		ensure
 			evaluation_not_void: Result /= Void
 		end
-	
+
 feature 	-- Element change
 
-	set_current_iterator (an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
+	set_current_iterator (an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM])
 			-- Set `current_iterator'.
 		do
 			current_iterator := an_iterator
@@ -339,7 +339,7 @@ feature 	-- Element change
 			set: current_iterator = an_iterator
 		end
 
-	set_current_receiver (a_receiver: like current_receiver) is
+	set_current_receiver (a_receiver: like current_receiver)
 			-- Set `current_receiver'.
 		do
 			current_receiver := a_receiver
@@ -347,7 +347,7 @@ feature 	-- Element change
 			set: current_receiver = a_receiver
 		end
 
-	set_temporary_destination (a_status: BOOLEAN) is
+	set_temporary_destination (a_status: BOOLEAN)
 			-- Set `is_temporary_destination'.
 		do
 			is_temporary_destination := a_status
@@ -355,7 +355,7 @@ feature 	-- Element change
 			set: is_temporary_destination = a_status
 		end
 
-	set_local_variable (a_value: XM_XPATH_VALUE; a_slot_number: INTEGER) is
+	set_local_variable (a_value: XM_XPATH_VALUE; a_slot_number: INTEGER)
 			-- Set the value of a local variable.
 		require
 			local_variables_frame_not_void: local_variable_frame /= Void
@@ -364,7 +364,7 @@ feature 	-- Element change
 			local_variable_frame.set_variable (a_value, a_slot_number)
 		end
 
-	set_stack_frame (a_local_variable_frame: like local_variable_frame) is
+	set_stack_frame (a_local_variable_frame: like local_variable_frame)
 			-- Set stack frame.
 		require
 			local_variable_frame_not_void: a_local_variable_frame /= Void
@@ -375,7 +375,7 @@ feature 	-- Element change
 			local_variables_frame_not_void: local_variable_frame /= Void
 		end
 
-	open_stack_frame (a_slot_manager: XM_XPATH_SLOT_MANAGER) is
+	open_stack_frame (a_slot_manager: XM_XPATH_SLOT_MANAGER)
 			-- Set stack frame.
 		require
 			slot_manager_not_void: a_slot_manager /= Void
@@ -386,7 +386,7 @@ feature 	-- Element change
 		end
 
 
-	open_sized_stack_frame (a_slot_count: INTEGER) is
+	open_sized_stack_frame (a_slot_count: INTEGER)
 			-- Set stack frame.
 		require
 			strictly_positive_slot_count: a_slot_count > 0
@@ -395,7 +395,7 @@ feature 	-- Element change
 			local_variables_frame_not_void: local_variable_frame /= Void
 		end
 
-	set_receiver (a_receiver: XM_XPATH_SEQUENCE_RECEIVER) is
+	set_receiver (a_receiver: XM_XPATH_SEQUENCE_RECEIVER)
 			-- Set receiver to which output is currently being written.
 		require
 			receiver_not_void: a_receiver /= Void
@@ -407,7 +407,7 @@ feature 	-- Element change
 		end
 
 
-	build_document (a_uri_reference: STRING) is
+	build_document (a_uri_reference: STRING)
 			-- Build a document.
 		require
 			absolute_uri: a_uri_reference /= Void -- and then a_uri_reference.is_absolute
@@ -418,7 +418,7 @@ feature 	-- Element change
 			document_built: not is_build_document_error implies last_parsed_document /= Void
 		end
 
-	change_to_sequence_output_destination (a_receiver: XM_XPATH_SEQUENCE_RECEIVER) is
+	change_to_sequence_output_destination (a_receiver: XM_XPATH_SEQUENCE_RECEIVER)
 			-- Change to a temporary destination
 		require
 			receiver_not_void: a_receiver /= Void
@@ -429,8 +429,8 @@ feature 	-- Element change
 			receiver_open: current_receiver.is_open
 			temporary_destination: is_temporary_destination
 		end
-	
-	report_fatal_error (an_error: XM_XPATH_ERROR_VALUE) is
+
+	report_fatal_error (an_error: XM_XPATH_ERROR_VALUE)
 			-- Report a fatal error.
 		require
 			push_processing: has_push_processing
@@ -442,14 +442,14 @@ feature {XM_XPATH_CONTEXT} -- Local
 	cached_last: INTEGER
 			-- Used by `last'
 
-	clear_last_cache is
+	clear_last_cache
 			-- Clear caching of `last'.
 		do
 			cached_last := -1
 		ensure
 			last_cached: cached_last = -1
 		end
-			
+
 feature {NONE} -- Implementation
 
 	internal_date_time: like current_date_time

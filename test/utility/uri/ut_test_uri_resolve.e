@@ -23,7 +23,7 @@ create
 
 feature -- Tests
 
-	test_normal_cases is
+	test_normal_cases
 			-- Test sample cases from RFC.
 		local
 			uri: UT_URI
@@ -98,7 +98,7 @@ feature -- Tests
 			check_uri (uri, "http", "a", "/g", Void, Void, "http://a/g")
 		end
 
-	test_rfc293_bis_cases is
+	test_rfc293_bis_cases
 			-- See http://www.apache.org/~fielding/uri/rev-2002/rfc2396bis.html.
 		local
 			my_base: UT_URI
@@ -109,7 +109,7 @@ feature -- Tests
 			check_uri (uri, "http", "a", "/b", Void, Void, "http://a/b")
 		end
 
-	test_abnormal_cases is
+	test_abnormal_cases
 			-- Test error cases from standard.
 		local
 			uri: UT_URI
@@ -175,7 +175,7 @@ feature -- Tests
 			check_uri (uri, "http", "a", "/b/c/g", Void, "s/../x", "http://a/b/c/g#s/../x")
 		end
 
-	test_empty is
+	test_empty
 			-- Test empty base URI.
 		local
 			a_base: UT_URI
@@ -188,7 +188,7 @@ feature -- Tests
 
 feature {NONE} -- Implementation
 
-	check_uri (uri: UT_URI; scheme, authority, path, query, fragment, a_reference: STRING) is
+	check_uri (uri: UT_URI; scheme, authority, path, query, fragment, a_reference: STRING)
 			-- Check parsed URI.
 		require
 			uri_not_void: uri /= Void

@@ -123,7 +123,7 @@ feature -- Test
 
 feature {NONE} -- Debug
 
-	hexadecimal_string (a_string: STRING): STRING is
+	hexadecimal_string (a_string: STRING): STRING
 			-- Version of `a_string' where every character is converted to it's code's hex representation
 		require
 			string_not_void: a_string /= Void

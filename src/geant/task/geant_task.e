@@ -24,7 +24,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_project: like project; an_xml_element: XM_ELEMENT) is
+	make (a_project: like project; an_xml_element: XM_ELEMENT)
 			-- Create new GEANT_INTERPRETING_ELEMENT from `a_project' and `an_xml_element'.
 		require
 			a_project_not_void: a_project /= Void
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			command.log_validation_messages_agent_cell.put (agent log_validation_messages)
 		end
 
-	make_from_interpreting_element (a_ie: GEANT_INTERPRETING_ELEMENT) is
+	make_from_interpreting_element (a_ie: GEANT_INTERPRETING_ELEMENT)
 			-- Create new GEANT_INTERPRETING_ELEMENT from `a_ie'.
 		require
 			a_ie_not_void: a_ie /= Void
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			make (a_ie.project, a_ie.xml_element)
 		end
 
-	make_with_command (a_command: like command; a_xml_element: XM_ELEMENT) is
+	make_with_command (a_command: like command; a_xml_element: XM_ELEMENT)
 			-- Create new task with information held in `an_element'.
 		require
 			a_command_not_void: a_command /= Void
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			interpreting_element_make (a_command.project, a_xml_element)
 		end
 
-	build_command (a_project: GEANT_PROJECT) is
+	build_command (a_project: GEANT_PROJECT)
 			-- Create instance of `command'
 		require
 			a_project_not_void: a_project /= Void
@@ -71,19 +71,19 @@ feature -- Access
 
 feature -- Status report
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- Can task be executed?
 		do
 			Result := command.is_executable
 		end
 
-	exit_code: INTEGER is
+	exit_code: INTEGER
 			-- Exit code of last execution
 		do
 			Result := command.exit_code
 		end
 
-	is_exit_command: BOOLEAN is
+	is_exit_command: BOOLEAN
 			-- Is associated command the exit command?
 		do
 			Result := command.is_exit_command
@@ -91,7 +91,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_command (a_command: like command) is
+	set_command (a_command: like command)
 			-- Set `command' to `a_command'.
 		do
 			command := a_command
@@ -101,7 +101,7 @@ feature -- Setting
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute command.
 		require
 			is_executable: is_executable
@@ -133,7 +133,7 @@ feature -- Execution
 
 feature -- Errorhandling
 
-	log_validation_messages is
+	log_validation_messages
 			-- Log entries in validation_messages'.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [STRING]

@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Execute 'hello world'.
 		do
 			print ("Hello World%N")

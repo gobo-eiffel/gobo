@@ -14,11 +14,11 @@ class XM_XPATH_SHARED_REGEXP_CACHE
 
 feature -- Access
 
-	shared_regexp_cache: XM_XPATH_REGEXP_CACHE is
+	shared_regexp_cache: XM_XPATH_REGEXP_CACHE
 			-- Shared instance
 		once
 			create Result.make
 		end
-	
+
 end
-	
+

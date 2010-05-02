@@ -28,7 +28,7 @@ inherit
 
 feature -- Access
 
-	container: DS_BILINEAR_SET [G] is
+	container: DS_BILINEAR_SET [G]
 			-- Bilinear set traversed
 		deferred
 		end

@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_expression: XM_XPATH_EXPRESSION) is
+	make (a_expression: XM_XPATH_EXPRESSION)
 			-- Establish invariant.
 		require
 			a_expression_not_void: a_expression /= Void
@@ -40,13 +40,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_reverser: BOOLEAN is
+	is_reverser: BOOLEAN
 			-- Is `Current' a reverser?
 		do
 			Result := True
 		end
 
-	as_reverser: XM_XPATH_REVERSER is
+	as_reverser: XM_XPATH_REVERSER
 			-- `Current' seen as a reverser
 		do
 			Result := Current
@@ -54,7 +54,7 @@ feature -- Access
 
 feature -- Optimization
 
-	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this subexpression.
 		local
 			l_promotion: XM_XPATH_EXPRESSION
@@ -77,7 +77,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterator over the values of a sequence
 		local
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -95,7 +95,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterator over a sequence of nodes
 		local
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -113,8 +113,8 @@ feature -- Evaluation
 			end
 		end
 
-	
-	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
+
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT)
 			-- Effective boolean value
 		do
 			base_expression.calculate_effective_boolean_value (a_context)
@@ -123,7 +123,7 @@ feature -- Evaluation
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_special_properties is
+	compute_special_properties
 			-- Compute special properties.
 		do
 			clone_special_properties (base_expression)
@@ -137,12 +137,12 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 
 feature {XM_XPATH_UNARY_EXPRESSION} -- Restricted
-	
-	display_operator: STRING is
+
+	display_operator: STRING
 			-- Format `operator' for display
 		do
 			Result := "reverse order"
 		end
 
 end
-	
+

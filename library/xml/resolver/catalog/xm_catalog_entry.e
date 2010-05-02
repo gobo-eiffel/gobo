@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target_uri: UT_URI) is
+	make (a_target_uri: UT_URI)
 			-- Establish invariant.
 		require
 			target_uri_not_void: a_target_uri /= Void and then a_target_uri.is_absolute
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	target: STRING is
+	target: STRING
 			-- URI to be used
 		do
 			Result := target_uri.full_reference
@@ -48,4 +48,4 @@ invariant
 	target_uri_is_absolute: target_uri /= Void and then target_uri.is_absolute
 
 end
-	
+

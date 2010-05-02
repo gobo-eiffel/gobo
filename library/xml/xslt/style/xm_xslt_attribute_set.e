@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
+		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration)
 			-- Establish invariant.
 		do
 			create slot_manager.make
@@ -54,7 +54,7 @@ feature -- Access
 
 feature -- Element change
 
-	increment_reference_count is
+	increment_reference_count
 			-- Increment `reference_count'.
 		do
 			reference_count := reference_count + 1
@@ -62,7 +62,7 @@ feature -- Element change
 			reference_count_incremented: reference_count = old reference_count + 1
 		end
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -112,7 +112,7 @@ feature -- Element change
 			attributes_prepared := True
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 			-- This is called once for each element, after the entire tree has been built.
 			-- As well as validation, it can perform first-time initialisation.
@@ -165,7 +165,7 @@ feature -- Element change
 			validated := True
 		end
 
-	check_circularity (an_origin: like Current) is
+	check_circularity (an_origin: like Current)
 			-- Check for circularity of reference.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_ATTRIBUTE_SET]
@@ -196,7 +196,7 @@ feature -- Element change
 			end
 		end
 
-	compile (a_executable: XM_XSLT_EXECUTABLE) is
+	compile (a_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		local
 			l_body: XM_XPATH_EXPRESSION
@@ -234,13 +234,13 @@ feature -- Element change
 
 feature -- Conversion
 
-	is_attribute_set: BOOLEAN is
+	is_attribute_set: BOOLEAN
 			-- Is `Current' an xsl:attribute-set?
 		do
 			Result := True
 		end
 
-	as_attribute_set: XM_XSLT_ATTRIBUTE_SET is
+	as_attribute_set: XM_XSLT_ATTRIBUTE_SET
 			-- `Current' seen as an xsl:attribute-set
 		do
 			Result := Current

@@ -34,7 +34,7 @@ create
 
 feature -- Tests
 
-	test_resolve_public is
+	test_resolve_public
 			-- Test resolving an fpi via nextCatalog
 		local
 			a_uri: STRING
@@ -44,7 +44,7 @@ feature -- Tests
 			assert ("PUBLIC resolved", a_uri /= Void and then a_uri.count > 34 and then STRING_.same_string (a_uri.substring (a_uri.count - 34, a_uri.count), "/xml-dtd-4.2-1.0-24/ent/iso-box.ent"))
 		end
 
-	test_resolve_public_delegate is
+	test_resolve_public_delegate
 			-- Test resolving an fpi via delegated catalog
 		local
 			a_uri: STRING
@@ -56,7 +56,7 @@ feature -- Tests
 
 	--  TODO - add tests for prefer=public versus prefer=system (requires more complex test catalog structure)
 
-	test_resolve_system is
+	test_resolve_system
 			-- Test resolving an fsi via nextCatalog with base URI
 		local
 			a_uri: STRING
@@ -66,8 +66,8 @@ feature -- Tests
 			assert ("SYSTEM resolved", a_uri /= Void and then STRING_.same_string (a_uri, "http://colina.demon.co.uk/gobo/system-id-one"))
 		end
 
-	test_rewrite_system is
-			-- Test resolving an fsi via nextCatalog with rewriteSystem and group base URI 
+	test_rewrite_system
+			-- Test resolving an fsi via nextCatalog with rewriteSystem and group base URI
 		local
 			a_uri: STRING
 		do
@@ -76,7 +76,7 @@ feature -- Tests
 			assert ("SYSTEM resolved via rewrite", a_uri /= Void and then STRING_.same_string (a_uri, "ftp://ftp.gobosoft.com/pub/xml-dtd-4.1.2-1.0-24/test.system"))
 		end
 
-	test_system_suffix is
+	test_system_suffix
 			-- Test resolving an fsi based on systemSuffix records.
 		local
 			a_uri: STRING
@@ -86,7 +86,7 @@ feature -- Tests
 			assert ("SYSTEM resolved via suffix", a_uri /= Void and then STRING_.same_string (a_uri, "file:///share/doctypes/xml/4.3/docbookx.dtd"))
 		end
 
-	test_uri_suffix is
+	test_uri_suffix
 			-- Test resolving a uri reference based on uriSuffix records.
 		local
 			a_uri: STRING
@@ -96,7 +96,7 @@ feature -- Tests
 			assert ("SYSTEM resolved via suffix", a_uri /= Void and then STRING_.same_string (a_uri, "file:///share/doctypes/xml/4.3/docbookx.dtd"))
 		end
 
-	test_resolve_system_delegate is
+	test_resolve_system_delegate
 			-- Test resolving an fsi via delegated catalog
 		local
 			a_uri: STRING
@@ -106,7 +106,7 @@ feature -- Tests
 			assert ("SYSTEM resolved via delegation", a_uri /= Void and then STRING_.same_string (a_uri, "ftp://colina.demon.co.uk/gobo/system-id-two"))
 		end
 
-	test_resolve_uri is
+	test_resolve_uri
 			-- Test resolving a uri reference via nextCatalog with base URI
 		local
 			a_uri: STRING
@@ -116,8 +116,8 @@ feature -- Tests
 			assert ("URI reference resolved", a_uri /= Void and then STRING_.same_string (a_uri, "http://colina.demon.co.uk/gobo/system-id-one"))
 		end
 
-	test_rewrite_uri is
-			-- Test resolving a uri reference via nextCatalog with rewriteuri and group base URI 
+	test_rewrite_uri
+			-- Test resolving a uri reference via nextCatalog with rewriteuri and group base URI
 		local
 			a_uri: STRING
 		do
@@ -126,7 +126,7 @@ feature -- Tests
 			assert ("URI reference resolved via rewrite", a_uri /= Void and then STRING_.same_string (a_uri, "ftp://ftp.gobosoft.com/pub/xml-dtd-4.1.2-1.0-24/test.system"))
 		end
 
-	test_resolve_uri_delegate is
+	test_resolve_uri_delegate
 			-- Test resolving a uri reference via delegated catalog
 		local
 			a_uri: STRING
@@ -136,19 +136,19 @@ feature -- Tests
 			assert ("URI reference resolved via delegation", a_uri /= Void and then STRING_.same_string (a_uri, "ftp://colina.demon.co.uk/gobo/system-id-two"))
 		end
 
-	
+
 feature -- Setting
 
-	set_up is
+	set_up
 			-- <Precursor>.
 		local
-			l_path: STRING	
+			l_path: STRING
 		do
 			l_path := Execution_environment.interpreted_string (
 				file_system.nested_pathname ("${GOBO}", <<"test", "xml", "general", "data", "test-catalog-1.xml">>))
 			Execution_environment.set_variable_value ("XML_CATALOG_FILES", l_path)
 			shared_catalog_manager.reinit
 		end
-		
+
 end
-	
+

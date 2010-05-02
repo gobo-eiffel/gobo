@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	eiffel_boolean_out (b: BOOLEAN): STRING is
+	eiffel_boolean_out (b: BOOLEAN): STRING
 			-- Formatted version of `b';
 			-- Return a new string at each call.
 			-- Regexp: true|false
@@ -31,7 +31,7 @@ feature -- Access
 
 feature -- String handling
 
-	append_eiffel_boolean (a_string: STRING; b: BOOLEAN) is
+	append_eiffel_boolean (a_string: STRING; b: BOOLEAN)
 			-- Append formatted version of `b' to `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -45,7 +45,7 @@ feature -- String handling
 
 feature -- File handling
 
-	put_eiffel_boolean (a_file: KI_CHARACTER_OUTPUT_STREAM; b: BOOLEAN) is
+	put_eiffel_boolean (a_file: KI_CHARACTER_OUTPUT_STREAM; b: BOOLEAN)
 			-- Write formatted version of `b' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -60,7 +60,7 @@ feature -- File handling
 
 feature {NONE} -- Constants
 
-	True_string: STRING is "true"
-	False_string: STRING is "false"
+	True_string: STRING = "true"
+	False_string: STRING = "false"
 
 end

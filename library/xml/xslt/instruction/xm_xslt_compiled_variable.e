@@ -18,7 +18,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (an_executable: XM_XSLT_EXECUTABLE; a_name: STRING; a_slot_number: INTEGER) is
+	make (an_executable: XM_XSLT_EXECUTABLE; a_name: STRING; a_slot_number: INTEGER)
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void

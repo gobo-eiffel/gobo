@@ -37,7 +37,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_import_precedence: INTEGER) is
+	make (an_import_precedence: INTEGER)
 			-- Make with defaults for XML method (apart from method itself).
 		do
 			initialize
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			precedence_property_map.remove (Method_attribute)
 		end
 
-	initialize is
+	initialize
 			-- Initialize.
 		do
 			create extension_attributes.make_with_equality_testers (1, string_equality_tester, string_equality_tester)
@@ -73,7 +73,7 @@ feature -- Access
 	method: STRING
 			-- Output method: "xml", "html", "xhtml", "text" or a QName
 
-	version: STRING is
+	version: STRING
 			-- Text of version attribute on xml declaration
 		do
 			if string_property_map.has (Version_attribute) then
@@ -103,7 +103,7 @@ feature -- Access
 	doctype_system: STRING
 			-- Value of the SYSTEM identifier to be written on the DOCTYPE
 
-	indent: BOOLEAN is
+	indent: BOOLEAN
 			-- Should the serializer add additional whitespace?
 		do
 			if boolean_property_map.has (Indent_attribute) then
@@ -113,7 +113,7 @@ feature -- Access
 			end
 		end
 
-	media_type: STRING is
+	media_type: STRING
 			-- MIME type to be written
 		do
 			if string_property_map.has (Media_type_attribute) then
@@ -125,7 +125,7 @@ feature -- Access
 			media_type_not_void: Result /= Void
 		end
 
-	is_higher_precedence (an_import_precedence: INTEGER; a_property: STRING): BOOLEAN is
+	is_higher_precedence (an_import_precedence: INTEGER; a_property: STRING): BOOLEAN
 			-- Is `an_import_precedence' greater than the import precednece used when previously defining `a_property'?
 		require
 			valid_property_name: a_property /= Void and then a_property.count > 0
@@ -137,7 +137,7 @@ feature -- Access
 			end
 		end
 
-	is_lower_precedence (an_import_precedence: INTEGER; a_property: STRING): BOOLEAN is
+	is_lower_precedence (an_import_precedence: INTEGER; a_property: STRING): BOOLEAN
 			-- Is `an_import_precedence' lower than the import precednece used when previously defining `a_property'?
 		require
 			valid_property_name: a_property /= Void and then a_property.count > 0
@@ -174,7 +174,7 @@ feature -- Access
 	byte_order_mark_required: BOOLEAN
 			-- Should emitter write a BOM?
 
-	character_representation: STRING is
+	character_representation: STRING
 			-- How should characters be represented (a gexslt extension)?
 		do
 			if string_property_map.has (Gexslt_character_representation_attribute) then
@@ -187,7 +187,7 @@ feature -- Access
 			valid_character_representation: is_valid_character_representation (Result)
 		end
 
-	is_valid_character_representation (a_character_representation: STRING): BOOLEAN is
+	is_valid_character_representation (a_character_representation: STRING): BOOLEAN
 			-- Is `a_character_representation' valid for `character_representation'?
 		require
 			character_representation_not_void: a_character_representation /= Void
@@ -249,19 +249,19 @@ feature -- Status report
 	duplicate_attribute_name: STRING
 			-- Name of attribute that caused a duplication error
 
-	is_default_version: BOOLEAN is
+	is_default_version: BOOLEAN
 			-- Is `version' returning `default_version'?
 		do
 			Result := not string_property_map.has (Version_attribute)
 		end
 
-	is_default_media_type: BOOLEAN is
+	is_default_media_type: BOOLEAN
 			-- Is `media_type' returning `default_media_type'?
 		do
 			Result := not string_property_map.has (Media_type_attribute)
 		end
 
-	is_default_indent: BOOLEAN is
+	is_default_indent: BOOLEAN
 			-- Is `indent' returning `default_indent'?
 		do
 			Result := not boolean_property_map.has (Indent_attribute)
@@ -290,7 +290,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_duplication_error (a_attribute_name: STRING) is
+	set_duplication_error (a_attribute_name: STRING)
 			-- Indicate `a_attribute_name' is invalidly specified twice.
 		require
 			attribute_name_not_void: a_attribute_name /= Void and then a_attribute_name.count > 0
@@ -304,7 +304,7 @@ feature -- Status setting
 			name_set: STRING_.same_string (duplicate_attribute_name, a_attribute_name)
 		end
 
-	set_general_error (a_error_message: STRING) is
+	set_general_error (a_error_message: STRING)
 			-- Set a general error, other than a duplication error.
 		require
 			error_message_not_void: a_error_message /= Void
@@ -319,7 +319,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_xml_defaults (a_import_precedence: INTEGER) is
+	set_xml_defaults (a_import_precedence: INTEGER)
 			-- Set defaults suitable for xml method.
 		require
 			higher_precedence: is_higher_precedence (a_import_precedence, Method_attribute)
@@ -334,7 +334,7 @@ feature -- Element change
 			hex_character_representation: STRING_.same_string (default_character_representation, "hex")
 		end
 
-	set_html_defaults (a_import_precedence: INTEGER) is
+	set_html_defaults (a_import_precedence: INTEGER)
 			-- Set defaults suitable for html method.
 		require
 			higher_precedence: is_higher_precedence (a_import_precedence, Method_attribute)
@@ -349,7 +349,7 @@ feature -- Element change
 			character_representation: STRING_.same_string (default_character_representation, "entity;decimal")
 		end
 
-	set_xhtml_defaults (a_import_precedence: INTEGER) is
+	set_xhtml_defaults (a_import_precedence: INTEGER)
 			-- Set defaults suitable for xhtml method.
 		require
 			higher_precedence: is_higher_precedence (a_import_precedence, Method_attribute)
@@ -364,7 +364,7 @@ feature -- Element change
 			hex_character_representation: STRING_.same_string (default_character_representation, "hex")
 		end
 
-	set_text_defaults (a_import_precedence: INTEGER) is
+	set_text_defaults (a_import_precedence: INTEGER)
 			-- Set defaults suitable for text method.
 		require
 			higher_precedence: is_higher_precedence (a_import_precedence, Method_attribute)
@@ -376,7 +376,7 @@ feature -- Element change
 			text_plain: STRING_.same_string (default_media_type, "text/plain")
 		end
 
-	set_method (a_expanded_name: STRING ; a_import_precedence: INTEGER) is
+	set_method (a_expanded_name: STRING ; a_import_precedence: INTEGER)
 			-- Set `method'.
 		require
 			higher_precedence: is_higher_precedence (a_import_precedence, Version_attribute)
@@ -407,7 +407,7 @@ feature -- Element change
 			method_set: STRING_.same_string (method, a_expanded_name)
 		end
 
-	set_version (a_version: STRING; a_import_precedence: INTEGER) is
+	set_version (a_version: STRING; a_import_precedence: INTEGER)
 			--	Set `version'.
 		require
 			version_not_void: a_version /= Void -- and then
@@ -420,7 +420,7 @@ feature -- Element change
 			version_set: string_property_map.has (Version_attribute) and then STRING_.same_string (string_property_map.item (Version_attribute), a_version)
 		end
 
-	set_indent (a_indent_value: BOOLEAN; a_import_precedence: INTEGER) is
+	set_indent (a_indent_value: BOOLEAN; a_import_precedence: INTEGER)
 			-- Set `indent'.
 		require
 			higher_precedence: is_higher_precedence (a_import_precedence, Indent_attribute)
@@ -432,7 +432,7 @@ feature -- Element change
 			indent_set: boolean_property_map.has (Indent_attribute) and then boolean_property_map.item (Indent_attribute) = a_indent_value
 		end
 
-	set_omit_xml_declaration (a_omit_xml_declaration_value: BOOLEAN; a_import_precedence: INTEGER) is
+	set_omit_xml_declaration (a_omit_xml_declaration_value: BOOLEAN; a_import_precedence: INTEGER)
 			-- Set `omit_xml_declaration'.
 		require
 			higher_precedence: is_higher_precedence (a_import_precedence, Omit_xml_declaration_attribute)
@@ -445,7 +445,7 @@ feature -- Element change
 			omit_xml_declaration_set: omit_xml_declaration = a_omit_xml_declaration_value and is_omit_xml_declaration_set
 		end
 
-	set_standalone (a_standalone_value: STRING; a_import_precedence: INTEGER) is
+	set_standalone (a_standalone_value: STRING; a_import_precedence: INTEGER)
 			-- Set `standalone'.
 		require
 			higher_precedence: is_higher_precedence (a_import_precedence, Standalone_attribute)
@@ -463,7 +463,7 @@ feature -- Element change
 			flagged: is_standalone_set
 		end
 
-	set_indent_spaces (a_number: INTEGER; a_import_precedence: INTEGER) is
+	set_indent_spaces (a_number: INTEGER; a_import_precedence: INTEGER)
 			-- Set `indent_spaces'
 		require
 			strictly_positive: a_number > 0
@@ -476,7 +476,7 @@ feature -- Element change
 			indent_spaces_set: indent_spaces = a_number
 		end
 
-	set_next_in_chain (a_uri: STRING; a_import_precedence: INTEGER) is
+	set_next_in_chain (a_uri: STRING; a_import_precedence: INTEGER)
 			-- Set `next_in_chain'
 		require
 			next_in_chain_not_void: a_uri /= Void
@@ -489,7 +489,7 @@ feature -- Element change
 			next_in_chain_set: 	next_in_chain = a_uri
 		end
 
-	set_next_in_chain_base_uri (a_uri: STRING) is
+	set_next_in_chain_base_uri (a_uri: STRING)
 			-- Set `next_in_chain_base_uri'
 		require
 			next_in_chain_base_uri_not_void: a_uri /= Void
@@ -499,7 +499,7 @@ feature -- Element change
 			next_in_chain_set: 	next_in_chain_base_uri = a_uri
 		end
 
-	set_encoding (a_encoding: STRING; a_import_precedence: INTEGER) is
+	set_encoding (a_encoding: STRING; a_import_precedence: INTEGER)
 			-- Set `encoding'.
 		require
 			encoding_not_void: a_encoding /= Void
@@ -516,7 +516,7 @@ feature -- Element change
 			encoding_set: STRING_.same_string (encoding, a_encoding.as_upper) and is_encoding_set = True
 		end
 
-	set_media_type (a_media_type: STRING; a_import_precedence: INTEGER) is
+	set_media_type (a_media_type: STRING; a_import_precedence: INTEGER)
 			-- Set `media_type'.
 		require
 			higher_precedence: is_higher_precedence (a_import_precedence, Media_type_attribute)
@@ -531,7 +531,7 @@ feature -- Element change
 			media_type_set: STRING_.same_string (media_type , a_media_type)
 		end
 
-	set_normalization_form (a_form: STRING; a_import_precedence: INTEGER) is
+	set_normalization_form (a_form: STRING; a_import_precedence: INTEGER)
 			-- Set `normalization_form'.
 		require
 			higher_precedence: is_higher_precedence (a_import_precedence, Normalization_form_attribute)
@@ -544,7 +544,7 @@ feature -- Element change
 			normalization_form_set: STRING_.same_string (a_form, normalization_form)
 		end
 
-	set_doctype_system (a_system_id: STRING; a_import_precedence: INTEGER) is
+	set_doctype_system (a_system_id: STRING; a_import_precedence: INTEGER)
 			-- Set `doctype_system'.
 		require
 			higher_precedence: is_higher_precedence (a_import_precedence, Doctype_system_attribute)
@@ -557,7 +557,7 @@ feature -- Element change
 			doctype_system_set: STRING_.same_string (a_system_id, doctype_system)
 		end
 
-	set_doctype_public (a_public_id: STRING; a_import_precedence: INTEGER) is
+	set_doctype_public (a_public_id: STRING; a_import_precedence: INTEGER)
 			-- Set `doctype_public'.
 		require
 			higher_precedence: is_higher_precedence (a_import_precedence, Doctype_public_attribute)
@@ -570,7 +570,7 @@ feature -- Element change
 			doctype_public_set: STRING_.same_string (a_public_id, doctype_public)
 		end
 
-	set_cdata_sections (a_cdata_section_expanded_names:  DS_ARRAYED_LIST [STRING]) is
+	set_cdata_sections (a_cdata_section_expanded_names:  DS_ARRAYED_LIST [STRING])
 			-- Set `cdata_section_elements' by merger form `a_cdata_section_expanded_names'.
 		require
 			cdata_section_expanded_names_not_void: a_cdata_section_expanded_names /= Void
@@ -596,7 +596,7 @@ feature -- Element change
 			end
 		end
 
-	merge_cdata_sections (some_cdata_sections: like cdata_section_elements) is
+	merge_cdata_sections (some_cdata_sections: like cdata_section_elements)
 			-- Merge `some_cdata_sections' with `cdata_section_elements'.
 		require
 			cdata_sections_not_void: some_cdata_sections /= Void
@@ -612,7 +612,7 @@ feature -- Element change
 			end
 		end
 
-	set_undeclare_prefixes (a_undeclare_prefixes_value: BOOLEAN; a_import_precedence: INTEGER) is
+	set_undeclare_prefixes (a_undeclare_prefixes_value: BOOLEAN; a_import_precedence: INTEGER)
 			-- Set `undeclare_prefixes'.
 		require
 			higher_precedence: is_higher_precedence (a_import_precedence, Undeclare_prefixes_attribute)
@@ -625,7 +625,7 @@ feature -- Element change
 			undeclare_prefixes_set: undeclare_prefixes = a_undeclare_prefixes_value and is_undeclare_prefixes_set
 		end
 
-	set_character_representation (a_character_representation: STRING; a_import_precedence: INTEGER) is
+	set_character_representation (a_character_representation: STRING; a_import_precedence: INTEGER)
 			-- Set `character_representation'.
 		require
 			higher_precedence: is_higher_precedence (a_import_precedence, Gexslt_character_representation_attribute)
@@ -641,7 +641,7 @@ feature -- Element change
 			character_representation_set: STRING_.same_string (character_representation , a_character_representation)
 		end
 
-	set_include_content_type (a_include_content_type_value: BOOLEAN; a_import_precedence: INTEGER) is
+	set_include_content_type (a_include_content_type_value: BOOLEAN; a_import_precedence: INTEGER)
 			-- Set `include_content_type'.
 		require
 			higher_precedence: is_higher_precedence (a_import_precedence, Include_content_type_attribute)
@@ -654,7 +654,7 @@ feature -- Element change
 			include_content_type_set: include_content_type = a_include_content_type_value and is_include_content_type_set
 		end
 
-	set_escape_uri_attributes (a_escape_uri_attributes_value: BOOLEAN; a_import_precedence: INTEGER) is
+	set_escape_uri_attributes (a_escape_uri_attributes_value: BOOLEAN; a_import_precedence: INTEGER)
 			-- Set `escape_uri_attributes'.
 		require
 			higher_precedence: is_higher_precedence (a_import_precedence, Escape_uri_attributes_attribute)
@@ -667,7 +667,7 @@ feature -- Element change
 			escape_uri_attributes_set: escape_uri_attributes = a_escape_uri_attributes_value and is_escape_uri_attributes_set
 		end
 
-	set_byte_order_mark_required (a_byte_order_mark_required_value: BOOLEAN; a_import_precedence: INTEGER) is
+	set_byte_order_mark_required (a_byte_order_mark_required_value: BOOLEAN; a_import_precedence: INTEGER)
 			-- Set `byte_order_mark_required'.
 		require
 			higher_precedence: is_higher_precedence (a_import_precedence, Byte_order_mark_attribute)
@@ -680,7 +680,7 @@ feature -- Element change
 			byte_order_mark_required_set: byte_order_mark_required = a_byte_order_mark_required_value and is_byte_order_mark_set
 		end
 
-	merge_extension_attributes (some_extension_attributes: like extension_attributes) is
+	merge_extension_attributes (some_extension_attributes: like extension_attributes)
 			-- Merge in any extension attributes.
 		require
 			extension_attributes_not_void: some_extension_attributes /= Void
@@ -697,7 +697,7 @@ feature -- Element change
 			end
 		end
 
-	set_property (a_fingerprint: INTEGER; a_value: STRING; a_namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER) is
+	set_property (a_fingerprint: INTEGER; a_value: STRING; a_namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER)
 			-- Set any property identified by `a_fingerprint'.
 			-- This is used by xsl:result-document to override an output definition.
 		require
@@ -721,7 +721,7 @@ feature -- Element change
 			error_message_set: is_error implies error_message /= Void
 		end
 
-	merge_character_maps (some_maps: like used_character_maps) is
+	merge_character_maps (some_maps: like used_character_maps)
 			-- Merge `some_maps' with `used_character_maps'.
 		require
 			character_maps_not_void: some_maps /= Void
@@ -739,7 +739,7 @@ feature -- Element change
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Deep clone of `Current'
 		do
 			Result := cloned_object
@@ -754,7 +754,7 @@ feature -- Duplication
 
 feature {XM_XSLT_OUTPUT_PROPERTIES} -- Local
 
-	clone_cdata_section_elements (some_cdata_section_elements: like cdata_section_elements) is
+	clone_cdata_section_elements (some_cdata_section_elements: like cdata_section_elements)
 			-- Deeply clone `cdata_section_elements'.
 		require
 			cdata_section_elements_not_empty: some_cdata_section_elements /= Void
@@ -771,7 +771,7 @@ feature {XM_XSLT_OUTPUT_PROPERTIES} -- Local
 			end
 		end
 
-	clone_used_character_maps (some_used_character_maps: like used_character_maps) is
+	clone_used_character_maps (some_used_character_maps: like used_character_maps)
 			-- Deeply clone `used_character_maps'.
 		require
 			used_character_maps_not_empty: some_used_character_maps /= Void
@@ -788,7 +788,7 @@ feature {XM_XSLT_OUTPUT_PROPERTIES} -- Local
 			end
 		end
 
-	clone_string_property_map (a_string_property_map: like string_property_map) is
+	clone_string_property_map (a_string_property_map: like string_property_map)
 			-- Deeply clone `string_property_map'.
 		require
 			string_property_map_not_empty: a_string_property_map /= Void
@@ -805,7 +805,7 @@ feature {XM_XSLT_OUTPUT_PROPERTIES} -- Local
 			end
 		end
 
-	clone_boolean_property_map (a_boolean_property_map: like boolean_property_map) is
+	clone_boolean_property_map (a_boolean_property_map: like boolean_property_map)
 			-- Deeply clone `boolean_property_map'.
 		require
 			boolean_property_map_not_empty: a_boolean_property_map /= Void
@@ -821,7 +821,7 @@ feature {XM_XSLT_OUTPUT_PROPERTIES} -- Local
 			end
 		end
 
-	clone_precedence_property_map (a_precedence_property_map: like precedence_property_map) is
+	clone_precedence_property_map (a_precedence_property_map: like precedence_property_map)
 			-- Deeply clone `precedence_property_map'.
 		require
 			precedence_property_map_not_empty: a_precedence_property_map /= Void
@@ -837,7 +837,7 @@ feature {XM_XSLT_OUTPUT_PROPERTIES} -- Local
 			end
 		end
 
-	set_extension_property (a_uri, a_local_name, a_value: STRING) is
+	set_extension_property (a_uri, a_local_name, a_value: STRING)
 			-- Set any property identified by `a_uri, a_local_name'.
 			-- This is used by xsl:result-document to override an output definition.
 		require
@@ -851,7 +851,7 @@ feature {XM_XSLT_OUTPUT_PROPERTIES} -- Local
 
 feature {XM_XSLT_EXTENSION_EMITTER_FACTORY} -- Restricted
 
-	set_default_indent (a_indent_value: BOOLEAN) is
+	set_default_indent (a_indent_value: BOOLEAN)
 			-- Set `default_indent'.
 		do
 			default_indent := a_indent_value
@@ -859,7 +859,7 @@ feature {XM_XSLT_EXTENSION_EMITTER_FACTORY} -- Restricted
 			default_indent_set: default_indent = a_indent_value
 		end
 
-	set_default_version (a_version: STRING) is
+	set_default_version (a_version: STRING)
 			--	Set `default_version'.
 		require
 			version_not_void: a_version /= Void -- and then
@@ -869,7 +869,7 @@ feature {XM_XSLT_EXTENSION_EMITTER_FACTORY} -- Restricted
 			version_set: default_version = a_version
 		end
 
-	set_default_media_type (a_media_type: STRING) is
+	set_default_media_type (a_media_type: STRING)
 			-- Set `default_media_type'.
 		require
 			media_type_not_void: a_media_type /= Void --and then a_media_type.count > 0
@@ -879,7 +879,7 @@ feature {XM_XSLT_EXTENSION_EMITTER_FACTORY} -- Restricted
 			media_type_set: default_media_type = a_media_type
 		end
 
-	set_default_character_representation (a_character_representation: STRING) is
+	set_default_character_representation (a_character_representation: STRING)
 			-- Set `default_character_representation'.
 		require
 			character_representation_not_void: a_character_representation /= Void
@@ -890,7 +890,7 @@ feature {XM_XSLT_EXTENSION_EMITTER_FACTORY} -- Restricted
 			character_representation_set: default_character_representation = a_character_representation
 		end
 
-	set_default_indent_spaces (a_number: INTEGER) is
+	set_default_indent_spaces (a_number: INTEGER)
 			-- Set default for `indent_spaces'
 		require
 			strictly_positive: a_number > 0
@@ -900,7 +900,7 @@ feature {XM_XSLT_EXTENSION_EMITTER_FACTORY} -- Restricted
 			indent_spaces_set: indent_spaces = a_number
 		end
 
-	set_default_encoding (a_encoding: STRING) is
+	set_default_encoding (a_encoding: STRING)
 			-- Set `encoding'.
 		require
 			encoding_not_void: a_encoding /= Void
@@ -910,7 +910,7 @@ feature {XM_XSLT_EXTENSION_EMITTER_FACTORY} -- Restricted
 			encoding_set: STRING_.same_string (encoding, a_encoding.as_upper)
 		end
 
-	set_default_byte_order_mark (a_byte_order_mark_required_value: BOOLEAN) is
+	set_default_byte_order_mark (a_byte_order_mark_required_value: BOOLEAN)
 			-- Set `byte_order_mark_required'.
 		do
 			byte_order_mark_required := a_byte_order_mark_required_value
@@ -918,7 +918,7 @@ feature {XM_XSLT_EXTENSION_EMITTER_FACTORY} -- Restricted
 			byte_order_mark_required_set: byte_order_mark_required = a_byte_order_mark_required_value
 		end
 
-	set_default_escape_uri_attributes (a_escape_uri_attributes_value: BOOLEAN) is
+	set_default_escape_uri_attributes (a_escape_uri_attributes_value: BOOLEAN)
 			-- Set `escape_uri_attributes'.
 		do
 			escape_uri_attributes := a_escape_uri_attributes_value
@@ -926,7 +926,7 @@ feature {XM_XSLT_EXTENSION_EMITTER_FACTORY} -- Restricted
 			escape_uri_attributes_set: escape_uri_attributes = a_escape_uri_attributes_value
 		end
 
-	set_default_include_content_type (a_include_content_type_value: BOOLEAN) is
+	set_default_include_content_type (a_include_content_type_value: BOOLEAN)
 			-- Set `include_content_type'.
 		do
 			include_content_type := a_include_content_type_value
@@ -959,7 +959,7 @@ feature {NONE} -- Implementation
 	default_character_representation: STRING
 			-- How should characters be represented (a gexslt extension)?
 
-	set_standard_property (a_local_name, a_value: STRING; a_namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER) is
+	set_standard_property (a_local_name, a_value: STRING; a_namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER)
 			-- Set the standard XSLT property `a_local_name'.
 		require
 			local_name_not_void: a_local_name /= Void
@@ -1017,7 +1017,7 @@ feature {NONE} -- Implementation
 			error_message_set: is_error implies error_message /= Void
 		end
 
-	set_gexslt_property (a_local_name, a_value: STRING) is
+	set_gexslt_property (a_local_name, a_value: STRING)
 			-- Set the gexslt extension property `a_local_name'.
 		require
 			local_name_not_void: a_local_name /= Void
@@ -1042,7 +1042,7 @@ feature {NONE} -- Implementation
 	last_yes_no_value: BOOLEAN
 			-- Last value set by `set_yes_no_property'
 
-	set_yes_no_property (a_name, a_value: STRING) is
+	set_yes_no_property (a_name, a_value: STRING)
 			-- Interpret `a_value' as a boolean then set `a_name'.
 		require
 			name_not_void: a_name /= Void
@@ -1066,7 +1066,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Satisfying interface only
 
-	report_compile_error (a_error: XM_XPATH_ERROR_VALUE) is
+	report_compile_error (a_error: XM_XPATH_ERROR_VALUE)
 			-- Report a compile error.
 		do
 			any_compile_errors := True
@@ -1075,12 +1075,12 @@ feature {NONE} -- Satisfying interface only
 	any_compile_errors: BOOLEAN
 			-- Have any compile errors been reported?
 
-	uri_for_prefix (a_xml_prefix: STRING; a_use_default_namespace: BOOLEAN): STRING is
+	uri_for_prefix (a_xml_prefix: STRING; a_use_default_namespace: BOOLEAN): STRING
 			-- URI for `a_xml_prefix' using the in-scope namespaces
 		do
 		end
 
-	principal_stylesheet: XM_XSLT_STYLESHEET is
+	principal_stylesheet: XM_XSLT_STYLESHEET
 			-- Top-level stylesheet
 		do
 		end

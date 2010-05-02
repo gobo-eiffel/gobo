@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new anchored type checker.
 		do
 			precursor {ET_CLASS_SUBPROCESSOR}
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature -- Type checking
 
-	check_signatures (a_class: ET_CLASS) is
+	check_signatures (a_class: ET_CLASS)
 			-- Check whether there is no cycle in the anchored types
 			-- held in the types of all signatures of `a_class'.
 			-- Do not try to follow qualified anchored types.
@@ -121,7 +121,7 @@ feature -- Type checking
 
 feature {NONE} -- Type checking
 
-	add_like_feature_to_sorter (a_type: ET_LIKE_FEATURE) is
+	add_like_feature_to_sorter (a_type: ET_LIKE_FEATURE)
 			-- Add to `anchored_type_sorter' anchored types whose
 			-- anchors' types are (or contain) also anchored types.
 		local
@@ -164,7 +164,7 @@ feature {NONE} -- Type checking
 			end
 		end
 
-	add_qualified_like_identifier_to_sorter (a_type: ET_QUALIFIED_LIKE_IDENTIFIER) is
+	add_qualified_like_identifier_to_sorter (a_type: ET_QUALIFIED_LIKE_IDENTIFIER)
 			-- Add to `anchored_type_sorter' anchored types whose
 			-- anchors' types are (or contain) also anchored types.
 		do
@@ -173,7 +173,7 @@ feature {NONE} -- Type checking
 			a_type.target_type.process (Current)
 		end
 
-	add_actual_parameters_to_sorter (a_parameters: ET_ACTUAL_PARAMETER_LIST) is
+	add_actual_parameters_to_sorter (a_parameters: ET_ACTUAL_PARAMETER_LIST)
 			-- Add to `anchored_type_sorter' anchored types whose
 			-- anchors' types are (or contain) also anchored types.
 		require
@@ -197,13 +197,13 @@ feature {NONE} -- Type checking
 
 feature {ET_AST_NODE} -- Type processing
 
-	process_class (a_type: ET_CLASS) is
+	process_class (a_type: ET_CLASS)
 			-- Process `a_type'.
 		do
 			process_class_type (a_type)
 		end
 
-	process_class_type (a_type: ET_CLASS_TYPE) is
+	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
 		local
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
@@ -214,31 +214,31 @@ feature {ET_AST_NODE} -- Type processing
 			end
 		end
 
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE) is
+	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
 			-- Process `a_type'.
 		do
 			process_class_type (a_type)
 		end
 
-	process_like_feature (a_type: ET_LIKE_FEATURE) is
+	process_like_feature (a_type: ET_LIKE_FEATURE)
 			-- Process `a_type'.
 		do
 			add_like_feature_to_sorter (a_type)
 		end
 
-	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE) is
+	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE)
 			-- Process `a_type'.
 		do
 			add_qualified_like_identifier_to_sorter (a_type)
 		end
 
-	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
+	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE)
 			-- Process `a_type'.
 		do
 			add_qualified_like_identifier_to_sorter (a_type)
 		end
 
-	process_tuple_type (a_type: ET_TUPLE_TYPE) is
+	process_tuple_type (a_type: ET_TUPLE_TYPE)
 			-- Process `a_type'.
 		local
 			a_parameters: ET_ACTUAL_PARAMETER_LIST

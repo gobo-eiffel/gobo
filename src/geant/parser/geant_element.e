@@ -24,14 +24,14 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
-	
+
 create
 
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_xml_element: like xml_element) is
+	make (a_xml_element: like xml_element)
 			-- Initialize element by setting `xml_element' to 'a_xml_element'.
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -50,7 +50,7 @@ feature -- Access
 	position: XM_POSITION
 			-- Position of element in source document
 
-	elements_by_name (a_name: STRING): DS_LINKED_LIST [XM_ELEMENT] is
+	elements_by_name (a_name: STRING): DS_LINKED_LIST [XM_ELEMENT]
 			-- Direct children elements with name `a_name'
 		require
 			a_name_not_void: a_name /= Void
@@ -75,7 +75,7 @@ feature -- Access
 
 feature -- Status report
 
-	valid_xml_element (an_xml_element: like xml_element): BOOLEAN is
+	valid_xml_element (an_xml_element: like xml_element): BOOLEAN
 			-- Is `an_xml_element' a valid xml element?
 		require
 			an_xml_element_not_void: an_xml_element /= Void
@@ -85,7 +85,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_xml_element (a_xml_element: like xml_element) is
+	set_xml_element (a_xml_element: like xml_element)
 			-- Set `xml_element' to `a_xml_element'.
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -96,7 +96,7 @@ feature -- Setting
 			xml_element_set: xml_element = a_xml_element
 		end
 
-	set_position (a_position: like position) is
+	set_position (a_position: like position)
 			-- Set `position' to `a_position'.
 		require
 			a_position_not_void: a_position /= Void
@@ -108,7 +108,7 @@ feature -- Setting
 
 feature -- Access/XML attribute values
 
-	attribute_value_or_default (an_attr_name: STRING; a_default_value: STRING): STRING is
+	attribute_value_or_default (an_attr_name: STRING; a_default_value: STRING): STRING
 			-- Value of attribue `an_attr_name',
 			-- or `a_default_value' of no such attribute
 		require
@@ -125,7 +125,7 @@ feature -- Access/XML attribute values
 			attribute_value_or_default_not_void: Result /= Void
 		end
 
-	attribute_value (an_attr_name: STRING): STRING is
+	attribute_value (an_attr_name: STRING): STRING
 			-- Value of attribue `an_attr_name'
 		require
 			an_attr_name_not_void: an_attr_name /= Void
@@ -135,7 +135,7 @@ feature -- Access/XML attribute values
 			Result := xml_element.attribute_by_name (an_attr_name).value
 		end
 
-	attribute_value_if_existing (a_attribute_name: STRING): STRING is
+	attribute_value_if_existing (a_attribute_name: STRING): STRING
 			-- Value of attribute `a_attribute_name' if existing; Void otherwise
         require
             a_attribute_name_not_void: a_attribute_name /= Void
@@ -146,7 +146,7 @@ feature -- Access/XML attribute values
 			end
 		end
 
-	content: STRING is
+	content: STRING
 			-- Content of element if any; Void otherwise
 		do
 			Result := xml_element.text
@@ -155,7 +155,7 @@ feature -- Access/XML attribute values
 			content_void_if_xml_text_void: xml_element.text = Void implies Result = Void
 		end
 
-	attribute_or_content_value (a_attribute_name: STRING): STRING is
+	attribute_or_content_value (a_attribute_name: STRING): STRING
 			-- String value of attribute `a_attribute_name' if existing, `content'
 			-- NOTE: an error will be raised if
 			-- - both attribute and content are specified
@@ -205,7 +205,7 @@ feature -- Access/XML attribute values
  			end
 		end
 
-	boolean_value_or_default (an_attr_name: STRING; a_default_value: BOOLEAN): BOOLEAN is
+	boolean_value_or_default (an_attr_name: STRING; a_default_value: BOOLEAN): BOOLEAN
 			-- Value of attribue `an_attr_name',
 			-- or `a_default_value' of no such attribute
 		require
@@ -219,7 +219,7 @@ feature -- Access/XML attribute values
 			end
 		end
 
-	boolean_value (an_attr_name: STRING): BOOLEAN is
+	boolean_value (an_attr_name: STRING): BOOLEAN
 			-- Value of attribue `an_attr_name'
 		require
 			an_attr_name_not_void: an_attr_name /= Void
@@ -243,7 +243,7 @@ feature -- Access/XML attribute values
 			end
 		end
 
-	has_attribute (an_attr_name: STRING): BOOLEAN is
+	has_attribute (an_attr_name: STRING): BOOLEAN
 			-- Is `an_attr_name' an attribute of Current element?
 		require
 			an_attr_name_not_void: an_attr_name /= Void
@@ -254,7 +254,7 @@ feature -- Access/XML attribute values
 
 feature {NONE} -- Constants
 
-	Description_element_name: STRING is
+	Description_element_name: STRING
 			-- "description" element name
 		once
 			Result := "description"
@@ -263,7 +263,7 @@ feature {NONE} -- Constants
 			element_name_not_empty: Result.count > 0
 		end
 
-	True_attribute_value: STRING is
+	True_attribute_value: STRING
 			-- "true" attribute value
 		once
 			Result := "true"
@@ -271,7 +271,7 @@ feature {NONE} -- Constants
 			attribute_value_not_void: Result /= Void
 		end
 
-	False_attribute_value: STRING is
+	False_attribute_value: STRING
 			-- "false" attribute value
 		once
 			Result := "false"

@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; an_assembly_name: like assembly_name; a_system: ET_SYSTEM) is
+	make (a_name: like name; an_assembly_name: like assembly_name; a_system: ET_SYSTEM)
 			-- Create a new GAC assembly.
 		require
 			a_name_not_void: a_name /= Void
@@ -60,7 +60,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_assembly_version (a_version: like assembly_version) is
+	set_assembly_version (a_version: like assembly_version)
 			-- Set `assembly_version' to `a_version'.
 		do
 			assembly_version := a_version
@@ -68,7 +68,7 @@ feature -- Setting
 			assembly_version_set: assembly_version = a_version
 		end
 
-	set_assembly_culture (a_culture: like assembly_culture) is
+	set_assembly_culture (a_culture: like assembly_culture)
 			-- Set `assembly_culture' to `a_culture'.
 		do
 			assembly_culture := a_culture
@@ -76,7 +76,7 @@ feature -- Setting
 			assembly_culture_set: assembly_culture = a_culture
 		end
 
-	set_assembly_public_key_token (a_public_key_token: like assembly_public_key_token) is
+	set_assembly_public_key_token (a_public_key_token: like assembly_public_key_token)
 			-- Set `assembly_version' to `a_public_key_token'.
 		do
 			assembly_public_key_token := a_public_key_token
@@ -86,7 +86,7 @@ feature -- Setting
 
 feature {ET_DOTNET_ASSEMBLY_CONSUMER} -- Consuming
 
-	consume (a_consumer: ET_DOTNET_ASSEMBLY_CONSUMER) is
+	consume (a_consumer: ET_DOTNET_ASSEMBLY_CONSUMER)
 			-- Consume current assembly using `a_consumer'.
 		do
 			a_consumer.consume_gac_assembly (Current)

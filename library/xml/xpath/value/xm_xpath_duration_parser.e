@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make is
+	make
 			-- Establish invariant..
 		do
 			last_parsed_duration := ""
@@ -33,7 +33,7 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	is_duration (a_duration: STRING): BOOLEAN is
+	is_duration (a_duration: STRING): BOOLEAN
 			-- Does `a_duration' represent an xs:duration?
 		require
 			duration_not_void: a_duration /= Void
@@ -55,7 +55,7 @@ feature -- Access
 			if Result then last_parsed_duration := a_pattern end
 		end
 
-	is_months_duration (a_duration: STRING): BOOLEAN is
+	is_months_duration (a_duration: STRING): BOOLEAN
 			-- Does `a_duration' represent an xdt:yearMonthDuration?
 		require
 			duration_not_void: a_duration /= Void
@@ -77,7 +77,7 @@ feature -- Access
 			if Result then last_parsed_duration := a_pattern end
 		end
 
-	is_seconds_duration (a_duration: STRING): BOOLEAN is
+	is_seconds_duration (a_duration: STRING): BOOLEAN
 			-- Does `a_duration' represent an xdt:dayTimeDuration?
 		require
 			duration_not_void: a_duration /= Void
@@ -101,7 +101,7 @@ feature -- Access
 
 feature -- Conversion
 
-	string_to_duration (a_duration: STRING): DT_DATE_TIME_DURATION is
+	string_to_duration (a_duration: STRING): DT_DATE_TIME_DURATION
 			-- Parsed signed duration from `a_duration'
 		require
 			valid_duration: a_duration /= Void and then is_duration (a_duration)
@@ -125,7 +125,7 @@ feature -- Conversion
 			result_not_void: Result /= Void
 		end
 
-	string_to_months_duration (a_duration: STRING): DT_DATE_TIME_DURATION is
+	string_to_months_duration (a_duration: STRING): DT_DATE_TIME_DURATION
 			-- Parsed signed xdt:yearMonthDuration from `a_duration'
 		require
 			valid_duration: a_duration /= Void and then is_months_duration (a_duration)
@@ -149,7 +149,7 @@ feature -- Conversion
 			result_not_void: Result /= Void
 		end
 
-	string_to_seconds_duration (a_duration: STRING): DT_DATE_TIME_DURATION is
+	string_to_seconds_duration (a_duration: STRING): DT_DATE_TIME_DURATION
 			-- Parsed signed xdt:dayTimeDuration from `a_duration'
 		require
 			valid_duration: a_duration /= Void and then is_seconds_duration (a_duration)
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 	current_year, current_month, current_day, current_hour, current_minute: INTEGER
 			-- Values stored during parsing
 
-	is_absolute_duration (a_duration: STRING): BOOLEAN is
+	is_absolute_duration (a_duration: STRING): BOOLEAN
 			-- Does `a_duration' represent a positive xs:duration?
 		require
 			duration_not_void: a_duration /= Void
@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_absolute_months_duration (a_duration: STRING): BOOLEAN is
+	is_absolute_months_duration (a_duration: STRING): BOOLEAN
 			-- Does `a_duration' represent a positive xdt:yearMonthDuration?
 		require
 			duration_not_void: a_duration /= Void
@@ -250,7 +250,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_absolute_seconds_duration (a_duration: STRING): BOOLEAN is
+	is_absolute_seconds_duration (a_duration: STRING): BOOLEAN
 			-- Does `a_duration' represent a positive xdt:dayTimeDuration?
 		require
 			duration_not_void: a_duration /= Void
@@ -280,13 +280,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_duration_after_year (a_duration: STRING): BOOLEAN is
+	is_duration_after_year (a_duration: STRING): BOOLEAN
 			-- Does `a_duration' represent a positive xs:duration following optional Y designator?
 		require
 			duration_not_void: a_duration /= Void
 		local
 			a_string: STRING
-			an_index, a_time_designator: INTEGER			
+			an_index, a_time_designator: INTEGER
 		do
 			if a_duration.is_empty then
 				Result := any_designator_found
@@ -319,13 +319,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_months_duration_after_year (a_duration: STRING): BOOLEAN is
+	is_months_duration_after_year (a_duration: STRING): BOOLEAN
 			-- Does `a_duration' represent a positive xdt:yearMonthDuration following optional Y designator?
 		require
 			duration_not_void: a_duration /= Void
 		local
 			a_string: STRING
-			an_index: INTEGER			
+			an_index: INTEGER
 		do
 			if a_duration.is_empty then
 				Result := any_designator_found
@@ -341,19 +341,19 @@ feature {NONE} -- Implementation
 					if Result then
 						current_month := a_string.to_integer
 						if is_negative then current_month := 0 - current_month end
-						create last_cached_duration.make (current_year, current_month, 0, 0, 0, 0)					
+						create last_cached_duration.make (current_year, current_month, 0, 0, 0, 0)
 					end
 				end
 			end
 		end
 
-	is_duration_after_month (a_duration: STRING): BOOLEAN is
+	is_duration_after_month (a_duration: STRING): BOOLEAN
 			-- Does `a_duration' represent a positive xs:duration following optional M designator?
 		require
 			duration_not_void: a_duration /= Void
 		local
 			a_string: STRING
-			an_index: INTEGER			
+			an_index: INTEGER
 		do
 			if a_duration.is_empty then
 				Result := any_designator_found
@@ -378,13 +378,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_duration_after_day (a_duration: STRING): BOOLEAN is
+	is_duration_after_day (a_duration: STRING): BOOLEAN
 			-- Does `a_duration' represent a positive xs:duration following optional D designator?
 		require
 			duration_not_void: a_duration /= Void
 		local
 			a_string: STRING
-			an_index: INTEGER			
+			an_index: INTEGER
 		do
 			if a_duration.is_empty then
 				Result := any_designator_found
@@ -412,13 +412,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_duration_after_hour (a_duration: STRING): BOOLEAN is
+	is_duration_after_hour (a_duration: STRING): BOOLEAN
 			-- Does `a_duration' represent a positive xs:duration following optional H designator?
 		require
 			duration_not_void: a_duration /= Void
 		local
 			a_string: STRING
-			an_index: INTEGER			
+			an_index: INTEGER
 		do
 			if a_duration.is_empty then
 				Result := any_designator_found
@@ -443,7 +443,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_duration_after_minute (a_duration: STRING): BOOLEAN is
+	is_duration_after_minute (a_duration: STRING): BOOLEAN
 			-- Does `a_duration' represent a positive xs:duration following optional M designator?
 		require
 			duration_not_void: a_duration /= Void
@@ -500,6 +500,6 @@ feature {NONE} -- Implementation
 invariant
 
 	last_parsed_duration_not_void: last_parsed_duration /= Void
-	
+
 end
-	
+

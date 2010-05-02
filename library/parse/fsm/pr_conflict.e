@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_state: like state; a_rule: like rule; a_token: like token; a_resolution: like resolution) is
+	make (a_state: like state; a_rule: like rule; a_token: like token; a_resolution: like resolution)
 			-- Create a new shift/reduce conflict in `a_state'
 			-- between `a_rule' and `a_token' resolved as
 			-- `a_resolution'.
@@ -55,7 +55,7 @@ feature -- Access
 
 feature -- Output
 
-	print_conflict (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_conflict (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print textual representation of
 			-- current conflict to `a_file.
 		require

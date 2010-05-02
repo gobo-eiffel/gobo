@@ -30,7 +30,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Create an empty container and allocate
 			-- memory space for at least `n' items.
 			-- Use `=' as comparison criterion.
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	found_item: G is
+	found_item: G
 			-- Item found by last call to `search'
 		require
 			item_found: found
@@ -64,7 +64,7 @@ feature -- Access
 			Result := item_storage_item (found_position)
 		end
 
-	first: G is
+	first: G
 			-- First item in container
 		local
 			i: INTEGER
@@ -79,7 +79,7 @@ feature -- Access
 			Result := item_storage_item (i)
 		end
 
-	last: G is
+	last: G
 			-- Last item in container
 		local
 			i: INTEGER
@@ -94,7 +94,7 @@ feature -- Access
 			Result := item_storage_item (i)
 		end
 
-	new_cursor: DS_SPARSE_CONTAINER_CURSOR [G, K] is
+	new_cursor: DS_SPARSE_CONTAINER_CURSOR [G, K]
 			-- New external cursor for traversal
 		do
 			create Result.make (Current)
@@ -108,7 +108,7 @@ feature -- Measurement
 	capacity: INTEGER
 			-- Maximum number of items in container
 
-	occurrences (v: G): INTEGER is
+	occurrences (v: G): INTEGER
 			-- Number of times `v' appears in container
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -148,7 +148,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	has (v: G): BOOLEAN is
+	has (v: G): BOOLEAN
 			-- Does container include `v'?
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -188,7 +188,7 @@ feature -- Status report
 			end
 		end
 
-	found: BOOLEAN is
+	found: BOOLEAN
 			-- Did last call to `search' succeed?
 		do
 			Result := found_position /= No_position
@@ -198,7 +198,7 @@ feature -- Status report
 
 feature -- Iteration
 
-	do_all (an_action: PROCEDURE [ANY, TUPLE [G]]) is
+	do_all (an_action: PROCEDURE [ANY, TUPLE [G]])
 			-- Apply `an_action' to every item, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the structure.)
 		local
@@ -216,7 +216,7 @@ feature -- Iteration
 			end
 		end
 
-	do_all_with_index (an_action: PROCEDURE [ANY, TUPLE [G, INTEGER]]) is
+	do_all_with_index (an_action: PROCEDURE [ANY, TUPLE [G, INTEGER]])
 			-- Apply `an_action' to every item, from first to last.
 			-- `an_action' receives the item and its index.
 			-- (Semantics not guaranteed if `an_action' changes the structure.)
@@ -236,7 +236,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
+	do_if (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
 		local
@@ -258,7 +258,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if_with_index (an_action: PROCEDURE [ANY, TUPLE [G, INTEGER]]; a_test: FUNCTION [ANY, TUPLE [G, INTEGER], BOOLEAN]) is
+	do_if_with_index (an_action: PROCEDURE [ANY, TUPLE [G, INTEGER]]; a_test: FUNCTION [ANY, TUPLE [G, INTEGER], BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
 			-- `an_action' and `a_test' receive the item and its index.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
@@ -282,7 +282,7 @@ feature -- Iteration
 			end
 		end
 
-	there_exists (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+	there_exists (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for at least one item?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		local
@@ -304,7 +304,7 @@ feature -- Iteration
 			end
 		end
 
-	for_all (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+	for_all (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for all items?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		local
@@ -329,7 +329,7 @@ feature -- Iteration
 
 feature -- Search
 
-	search (k: K) is
+	search (k: K)
 			-- Search for item at key `k'.
 			-- If found, set `found' to true, and set
 			-- `found_item' to item associated with `k'.
@@ -338,7 +338,7 @@ feature -- Search
 			found_position := position
 		end
 
-	unset_found_item is
+	unset_found_item
 			-- Get rid of `found_item'.
 		do
 			found_position := No_position
@@ -349,7 +349,7 @@ feature -- Search
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Copy `other' to current container.
 			-- Move all cursors `off' (unless `other = Current').
 		local
@@ -378,7 +378,7 @@ feature -- Duplication
 
 feature -- Removal
 
-	remove (k: K) is
+	remove (k: K)
 			-- Remove item associated with `k'.
 			-- Move any cursors at this position `forth'.
 		do
@@ -389,7 +389,7 @@ feature -- Removal
 			end
 		end
 
-	remove_found_item is
+	remove_found_item
 			-- Remove item found by last call to `search'.
 			-- Move any cursors at this position `forth'.
 		require
@@ -401,7 +401,7 @@ feature -- Removal
 			one_less: count = old count - 1
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items from container.
 			-- Move all cursors `off'.
 		do
@@ -421,7 +421,7 @@ feature -- Removal
 
 feature -- Resizing
 
-	resize (n: INTEGER) is
+	resize (n: INTEGER)
 			-- Resize container so that it can contain
 			-- at least `n' items. Do not lose any item.
 			-- Do not move cursors.
@@ -462,7 +462,7 @@ feature -- Resizing
 
 feature -- Optimization
 
-	compress is
+	compress
 			-- Remove holes between stored items. May avoid
 			-- resizing when calling `force_last' for example.
 			-- Do not lose any item. Do not move cursors.
@@ -529,7 +529,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Implementation
 			-- All slots to the right of this position
 			-- are guaranteed to be free
 
-	item_storage_item (i: INTEGER): G is
+	item_storage_item (i: INTEGER): G
 			-- Item at position `i' in `item_storage'
 		require
 			i_large_enough: i >= 1
@@ -537,7 +537,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Implementation
 		deferred
 		end
 
-	item_storage_put (v: G; i: INTEGER) is
+	item_storage_put (v: G; i: INTEGER)
 			-- Put `v' at position `i' in `item_storage'.
 		require
 			i_large_enough: i >= 1
@@ -547,7 +547,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Implementation
 			inserted: item_storage_item (i) = v
 		end
 
-	key_storage_item (i: INTEGER): K is
+	key_storage_item (i: INTEGER): K
 			-- Item at position `i' in `key_storage'
 		require
 			i_large_enough: i >= 1
@@ -555,7 +555,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Implementation
 		deferred
 		end
 
-	clashes_item (i: INTEGER): INTEGER is
+	clashes_item (i: INTEGER): INTEGER
 			-- Item at position `i' in `clashes'
 		require
 			i_large_enough: i >= 1
@@ -563,7 +563,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Implementation
 		deferred
 		end
 
-	valid_position (i: INTEGER): BOOLEAN is
+	valid_position (i: INTEGER): BOOLEAN
 			-- Is there a slot at position `i'?
 		do
 			Result := 1 <= i and i <= capacity
@@ -571,7 +571,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Implementation
 			definition: Result = (1 <= i and i <= capacity)
 		end
 
-	valid_slot (i: INTEGER): BOOLEAN is
+	valid_slot (i: INTEGER): BOOLEAN
 			-- Is there an item at position `i'?
 		require
 			valid_i: valid_position (i)
@@ -581,7 +581,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Implementation
 
 feature {NONE} -- Implementation
 
-	search_position (k: K) is
+	search_position (k: K)
 			-- Search for position where key is equal to `k'.
 			-- or to possible insertion position otherwise.
 			-- (Use `key_equality_tester''s comparison criterion
@@ -656,14 +656,14 @@ feature {NONE} -- Implementation
 					(slots_item (slots_position) = position)
 		end
 
-	key_equality_tester: KL_EQUALITY_TESTER [K] is
+	key_equality_tester: KL_EQUALITY_TESTER [K]
 			-- Equality tester for keys;
 			-- A void equality tester means that `='
 			-- will be used as comparison criterion.
 		deferred
 		end
 
-	internal_set_key_equality_tester (a_tester: like key_equality_tester) is
+	internal_set_key_equality_tester (a_tester: like key_equality_tester)
 			-- Set `key_equality_tester' to `a_tester'.
 			-- (No precondition, to be used internally only.)
 		deferred
@@ -671,7 +671,7 @@ feature {NONE} -- Implementation
 			key_equality_tester_set: key_equality_tester = a_tester
 		end
 
-	hash_position (k: K): INTEGER is
+	hash_position (k: K): INTEGER
 			-- Hash position of `k' in `slots'
 		deferred
 		ensure
@@ -679,7 +679,7 @@ feature {NONE} -- Implementation
 			void_position: (k = Void) = (Result = modulus)
 		end
 
-	remove_position (i: INTEGER) is
+	remove_position (i: INTEGER)
 			-- Remove item at position `i'.
 			-- Move any cursors at this position `forth'.
 		require
@@ -725,7 +725,7 @@ feature {NONE} -- Implementation
 			one_less: count = old count - 1
 		end
 
-	make_item_storage (n: INTEGER) is
+	make_item_storage (n: INTEGER)
 			-- Create storage for items of the table indexed
 			-- from 0 to `n-1' (position 0 is not used).
 		require
@@ -733,24 +733,24 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	clone_item_storage is
+	clone_item_storage
 			-- Clone `item_storage'.
 		deferred
 		end
 
-	item_storage_resize (n: INTEGER) is
+	item_storage_resize (n: INTEGER)
 			-- Resize `item_storage'.
 		require
 			n_large_enough: n > capacity
 		deferred
 		end
 
-	item_storage_wipe_out is
+	item_storage_wipe_out
 			-- Wipe out items in `item_storage'.
 		deferred
 		end
 
-	make_key_storage (n: INTEGER) is
+	make_key_storage (n: INTEGER)
 			-- Create storage for keys of the set indexed
 			-- from 0 to `n-1' (position 0 is not used).
 		require
@@ -758,7 +758,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	key_storage_put (k: K; i: INTEGER) is
+	key_storage_put (k: K; i: INTEGER)
 			-- Put `k' at position `i' in `key_storage'.
 		require
 			i_large_enough: i >= 1
@@ -766,24 +766,24 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	clone_key_storage is
+	clone_key_storage
 			-- Clone `key_storage'.
 		deferred
 		end
 
-	key_storage_resize (n: INTEGER) is
+	key_storage_resize (n: INTEGER)
 			-- Resize `key_storage'.
 		require
 			n_large_enough: n > capacity
 		deferred
 		end
 
-	key_storage_wipe_out is
+	key_storage_wipe_out
 			-- Wipe out items in `key_storage'.
 		deferred
 		end
 
-	make_clashes (n: INTEGER) is
+	make_clashes (n: INTEGER)
 			-- Create table of indexes in `item_storage' and `key_storage' when there are
 			-- clashes in `slots'. Each entry points to the next alternative
 			-- until `No_position' is reached. Also keep track of free
@@ -794,7 +794,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	clashes_put (v: INTEGER; i: INTEGER) is
+	clashes_put (v: INTEGER; i: INTEGER)
 			-- Put `v' at position `i' in `clashes'.
 		require
 			i_large_enough: i >= 1
@@ -804,24 +804,24 @@ feature {NONE} -- Implementation
 			inserted: clashes_item (i) = v
 		end
 
-	clone_clashes is
+	clone_clashes
 			-- Clone `clashes'.
 		deferred
 		end
 
-	clashes_resize (n: INTEGER) is
+	clashes_resize (n: INTEGER)
 			-- Resize `clashes'.
 		require
 			n_large_enough: n > capacity
 		deferred
 		end
 
-	clashes_wipe_out is
+	clashes_wipe_out
 			-- Wipe out items in `clashes'.
 		deferred
 		end
 
-	make_slots (n: INTEGER) is
+	make_slots (n: INTEGER)
 			-- Create table of indexes in `item_storage' and `key_storage', indexed
 			-- by hash codes from 0 to `n-1' (the entry at index
 			-- `n-1' being reserved for void keys)
@@ -830,7 +830,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	slots_item (i: INTEGER): INTEGER is
+	slots_item (i: INTEGER): INTEGER
 			-- Item at position `i' in `slots'
 		require
 			i_large_enough: i >= 0
@@ -838,7 +838,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	slots_put (v: INTEGER; i: INTEGER) is
+	slots_put (v: INTEGER; i: INTEGER)
 			-- Put `v' at position `i' in `slots'.
 		require
 			i_large_enough: i >= 0
@@ -848,19 +848,19 @@ feature {NONE} -- Implementation
 			inserted: slots_item (i) = v
 		end
 
-	clone_slots is
+	clone_slots
 			-- Clone `slots'.
 		deferred
 		end
 
-	slots_resize (n: INTEGER) is
+	slots_resize (n: INTEGER)
 			-- Resize `slots'.
 		require
 			n_large_enough: n > modulus
 		deferred
 		end
 
-	slots_wipe_out is
+	slots_wipe_out
 			-- Wipe out items in `slots'.
 		deferred
 		end
@@ -890,19 +890,19 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	No_position: INTEGER is 0
+	No_position: INTEGER = 0
 			-- Not valid position mark
 
-	Free_watermark: INTEGER is -1
+	Free_watermark: INTEGER = -1
 			-- Limit between free and occupied slots in `clashes'
 
-	Free_offset: INTEGER is -1
+	Free_offset: INTEGER = -1
 			-- Offset used to make sure that free slot indexes
 			-- are below `Free_watermark' in `clashes'
 
 feature {NONE} -- Cursor movements
 
-	set_internal_cursor (c: like internal_cursor) is
+	set_internal_cursor (c: like internal_cursor)
 			-- Set `internal_cursor' to `c'.
 		do
 			internal_cursor := c
@@ -911,7 +911,7 @@ feature {NONE} -- Cursor movements
 	internal_cursor: like new_cursor
 			-- Internal cursor
 
-	move_all_cursors_after is
+	move_all_cursors_after
 			-- Move `after' all cursors.
 		local
 			a_cursor, next_cursor: like new_cursor
@@ -928,7 +928,7 @@ feature {NONE} -- Cursor movements
 			end
 		end
 
-	move_all_cursors (old_position, new_position: INTEGER) is
+	move_all_cursors (old_position, new_position: INTEGER)
 			-- Move all cursors at position `old_position'
 			-- to position `new_position'.
 		require
@@ -949,7 +949,7 @@ feature {NONE} -- Cursor movements
 			end
 		end
 
-	move_cursors_after (old_position: INTEGER) is
+	move_cursors_after (old_position: INTEGER)
 			-- Move `after' all cursors at position `old_position'.
 		require
 			valid_old_position: valid_position (old_position)
@@ -979,7 +979,7 @@ feature {NONE} -- Cursor movements
 			end
 		end
 
-	move_cursors_forth (old_position: INTEGER) is
+	move_cursors_forth (old_position: INTEGER)
 			-- Move `forth' all cursors at position `old_position'.
 		require
 			valid_old_position: valid_position (old_position)
@@ -1004,25 +1004,25 @@ feature {NONE} -- Cursor movements
 
 feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 
-	cursor_item (a_cursor: like new_cursor): G is
+	cursor_item (a_cursor: like new_cursor): G
 			-- Item at `a_cursor' position
 		do
 			Result := item_storage_item (a_cursor.position)
 		end
 
-	cursor_after (a_cursor: like new_cursor): BOOLEAN is
+	cursor_after (a_cursor: like new_cursor): BOOLEAN
 			-- Is there no valid position to right of `a_cursor'?
 		do
 			Result := (a_cursor.position = after_position)
 		end
 
-	cursor_before (a_cursor: like new_cursor): BOOLEAN is
+	cursor_before (a_cursor: like new_cursor): BOOLEAN
 			-- Is there no valid position to left of `a_cursor'?
 		do
 			Result := (a_cursor.position = before_position)
 		end
 
-	cursor_is_first (a_cursor: like new_cursor): BOOLEAN is
+	cursor_is_first (a_cursor: like new_cursor): BOOLEAN
 			-- Is `a_cursor' on first item?
 		local
 			i: INTEGER
@@ -1039,7 +1039,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			end
 		end
 
-	cursor_is_last (a_cursor: like new_cursor): BOOLEAN is
+	cursor_is_last (a_cursor: like new_cursor): BOOLEAN
 			-- Is `a_cursor' on last item?
 		local
 			i: INTEGER
@@ -1056,19 +1056,19 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			end
 		end
 
-	cursor_off (a_cursor: like new_cursor): BOOLEAN is
+	cursor_off (a_cursor: like new_cursor): BOOLEAN
 			-- Is there no item at `a_cursor' position?
 		do
 			Result := (a_cursor.position < 0)
 		end
 
-	cursor_same_position (a_cursor, other: like new_cursor): BOOLEAN is
+	cursor_same_position (a_cursor, other: like new_cursor): BOOLEAN
 			-- Is `a_cursor' at same position as `other'?
 		do
 			Result := (a_cursor.position = other.position)
 		end
 
-	cursor_start (a_cursor: like new_cursor) is
+	cursor_start (a_cursor: like new_cursor)
 			-- Move `a_cursor' to first position.
 		local
 			i, nb: INTEGER
@@ -1100,7 +1100,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			end
 		end
 
-	cursor_finish (a_cursor: like new_cursor) is
+	cursor_finish (a_cursor: like new_cursor)
 			-- Move `a_cursor' to last position.
 		local
 			i: INTEGER
@@ -1131,7 +1131,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			end
 		end
 
-	cursor_forth (a_cursor: like new_cursor) is
+	cursor_forth (a_cursor: like new_cursor)
 			-- Move `a_cursor' to next position.
 		local
 			i, nb: INTEGER
@@ -1166,7 +1166,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			end
 		end
 
-	cursor_back (a_cursor: like new_cursor) is
+	cursor_back (a_cursor: like new_cursor)
 			-- Move `a_cursor' to previous position.
 		local
 			i: INTEGER
@@ -1200,7 +1200,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			end
 		end
 
-	cursor_search_forth (a_cursor: like new_cursor; v: G) is
+	cursor_search_forth (a_cursor: like new_cursor; v: G)
 			-- Move `a_cursor' to first position at or after its current
 			-- position where `cursor_item (a_cursor)' and `v' are equal.
 			-- (Use `equality_tester''s comparison criterion
@@ -1228,7 +1228,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			end
 		end
 
-	cursor_search_back (a_cursor: like new_cursor; v: G) is
+	cursor_search_back (a_cursor: like new_cursor; v: G)
 			-- Move `a_cursor' to first position at or before its current
 			-- position where `cursor_item (a_cursor)' and `v' are equal.
 			-- (Use `equality_tester''s comparison criterion
@@ -1256,7 +1256,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			end
 		end
 
-	cursor_go_after (a_cursor: like new_cursor) is
+	cursor_go_after (a_cursor: like new_cursor)
 			-- Move `a_cursor' to `after' position.
 		local
 			was_off: BOOLEAN
@@ -1268,7 +1268,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			end
 		end
 
-	cursor_go_before (a_cursor: like new_cursor) is
+	cursor_go_before (a_cursor: like new_cursor)
 			-- Move `a_cursor' to `before' position.
 		local
 			was_off: BOOLEAN
@@ -1280,7 +1280,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			end
 		end
 
-	cursor_go_to (a_cursor, other: like new_cursor) is
+	cursor_go_to (a_cursor, other: like new_cursor)
 			-- Move `a_cursor' to `other''s position.
 		local
 			was_off: BOOLEAN
@@ -1296,22 +1296,22 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			end
 		end
 
-	before_position: INTEGER is -1
+	before_position: INTEGER = -1
 			-- Special value for before cursor position
 
-	after_position: INTEGER is -2
+	after_position: INTEGER = -2
 			-- Special values for after cursor position
 
 feature {NONE} -- Configuration
 
-	new_capacity (n: INTEGER): INTEGER is
+	new_capacity (n: INTEGER): INTEGER
 			-- New capacity which could accommodate at least
 			-- `n' items (Used as argument of `resize'.)
 		do
 			Result := 2 * n
 		end
 
-	new_modulus (a_capacity: INTEGER): INTEGER is
+	new_modulus (a_capacity: INTEGER): INTEGER
 			-- Value for `modulus' which can accommodate
 			-- `a_capacity' items
 		require

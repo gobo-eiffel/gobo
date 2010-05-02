@@ -27,7 +27,7 @@ create {XM_XPATH_INDEX_OF, XM_XPATH_INDEX_ITERATOR}
 
 feature {NONE} -- Initialization
 
-	make (a_base_sequence: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_search_value: XM_XPATH_ATOMIC_VALUE; an_atomic_comparer: XM_XPATH_ATOMIC_COMPARER) is
+	make (a_base_sequence: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_search_value: XM_XPATH_ATOMIC_VALUE; an_atomic_comparer: XM_XPATH_ATOMIC_COMPARER)
 			-- Establish invariant.
 		require
 			base_sequence_before: a_base_sequence /= Void and then not a_base_sequence.is_error and then a_base_sequence.before
@@ -50,14 +50,14 @@ feature -- Access
 
 feature -- Status report
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
 			Result := base_sequence.after or else item = Void
 		end
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move to next position
 		local
 			an_atomic_value: XM_XPATH_ATOMIC_VALUE
@@ -71,7 +71,7 @@ feature -- Cursor movement
 			end
 			item := Void
 			if base_sequence.is_error then
-				set_last_error (base_sequence.error_value) 
+				set_last_error (base_sequence.error_value)
 			else
 				from
 				until
@@ -106,7 +106,7 @@ feature -- Cursor movement
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original;
 		do
 			create Result.make (base_sequence.another, search_value, atomic_comparer)
@@ -133,4 +133,4 @@ invariant
 	atomic_comparer_not_void: atomic_comparer /= Void
 
 end
-	
+

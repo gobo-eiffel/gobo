@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_element: XM_ELEMENT; a_position: XM_POSITION) is
+	make (an_element: XM_ELEMENT; a_position: XM_POSITION)
 			-- Create a warning reporting that the value of the attribute "name"
 			-- in the "option" elment `an_element' is unknown.
 		require
@@ -43,10 +43,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "option name '$1' in option-element is unknown $2"
+	default_template: STRING = "option name '$1' in option-element is unknown $2"
 			-- Default template used to built the error message
 
-	code: STRING is "XA0012"
+	code: STRING = "XA0012"
 			-- Error code
 
 end

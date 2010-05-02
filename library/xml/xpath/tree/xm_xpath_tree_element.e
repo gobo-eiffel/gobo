@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 	make (a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER) is
+		a_name_code: INTEGER; a_sequence_number: INTEGER)
 			-- Establish invariant.
 		require
 			document_not_void: a_document /= Void
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			name_code_set: name_code = a_name_code
 		end
 
-	make_in_error_state (a_document: XM_XPATH_TREE_DOCUMENT; a_message: STRING) is
+	make_in_error_state (a_document: XM_XPATH_TREE_DOCUMENT; a_message: STRING)
 			-- Create an element in an error state (used for reporting errors by the node factory).
 		require
 			document_not_void: a_document /= Void
@@ -76,31 +76,31 @@ feature -- Access
 	attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION
 			-- Attributes
 
-	is_tree_element: BOOLEAN is
+	is_tree_element: BOOLEAN
 			-- Is `Current' an element?
 		do
 			Result := True
 		end
 
-	as_tree_element: XM_XPATH_TREE_ELEMENT is
+	as_tree_element: XM_XPATH_TREE_ELEMENT
 			-- `Current' seen as an element
 		do
 			Result := Current
 		end
 
-	system_id: STRING is
+	system_id: STRING
 			-- SYSTEM id of `Current', or `Void' if not known
 		do
 			Result := document.system_id_for_node (sequence_number_high_word)
 		end
 
-	line_number: INTEGER is
+	line_number: INTEGER
 			-- Line number of node in original source document, or -1 if not known
 		do
 			Result := document.line_number_for_node (sequence_number_high_word)
 		end
 
-	closing_line_number: INTEGER is
+	closing_line_number: INTEGER
 			-- Line number of element end tag (or 0 if not known)
 		do
 			Result := document.closing_line_number_for_node (sequence_number_high_word)
@@ -110,7 +110,7 @@ feature -- Access
 			-- Name code of this node - used in displaying names
 
 
-	attribute_value (a_fingerprint: INTEGER): STRING is
+	attribute_value (a_fingerprint: INTEGER): STRING
 			-- Value of attribute identified by `a_fingerprint'
 		do
 			if attribute_collection /= Void then
@@ -118,7 +118,7 @@ feature -- Access
 			end
 		end
 
-	attribute_value_by_name (a_uri: STRING; a_local_name:STRING): STRING is
+	attribute_value_by_name (a_uri: STRING; a_local_name:STRING): STRING
 			-- Value of named attribute
 		do
 			if attribute_collection /= Void then
@@ -126,7 +126,7 @@ feature -- Access
 			end
 		end
 
-	uri_code_for_prefix_code (a_prefix_code: INTEGER): INTEGER is
+	uri_code_for_prefix_code (a_prefix_code: INTEGER): INTEGER
 			-- URI code for `a_prefix_code'
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -173,7 +173,7 @@ feature -- Access
 			end
 		end
 
-	prefix_for_uri (a_uri: STRING): STRING is
+	prefix_for_uri (a_uri: STRING): STRING
 			-- Prefix bound to `a_uri'
 		require
 			uri_not_void: a_uri /= Void
@@ -195,7 +195,7 @@ feature -- Access
 			end
 		end
 
-	prefix_for_uri_code (a_uri_code: INTEGER): STRING is
+	prefix_for_uri_code (a_uri_code: INTEGER): STRING
 			-- Prefix bound to namespace indicated by `a_uri_code'
 		require
 			valid_uri_code: shared_name_pool.is_valid_uri_code (a_uri_code)
@@ -219,7 +219,7 @@ feature -- Access
 			end
 		end
 
-	declared_namespaces: DS_ARRAYED_LIST [INTEGER] is
+	declared_namespaces: DS_ARRAYED_LIST [INTEGER]
 			-- Codes for namespaces declared on `Current'
 		do
 			Result := namespace_code_list
@@ -228,7 +228,7 @@ feature -- Access
 	accumulated_namespace_codes: DS_ARRAYED_LIST [INTEGER]
 			-- Namespace codes in scope
 
-	namespace_codes_in_scope: DS_ARRAYED_LIST [INTEGER] is
+	namespace_codes_in_scope: DS_ARRAYED_LIST [INTEGER]
 			-- Namespace codes in scope for `Current'
 		local
 			some_excluded_prefixes: DS_HASH_SET [INTEGER] -- _16
@@ -243,7 +243,7 @@ feature -- Access
 			namespace_codes_accumulated: accumulated_namespace_codes /= Void
 		end
 
-	is_idrefs (an_attribute: INTEGER): BOOLEAN is
+	is_idrefs (an_attribute: INTEGER): BOOLEAN
 			-- Value of is-idrefs property for `an_attribute'
 		require
 			attribute_collection_not_void: attribute_collection /= Void
@@ -254,7 +254,7 @@ feature -- Access
 
 feature -- Measurement
 
-	number_of_attributes: INTEGER is
+	number_of_attributes: INTEGER
 			-- Number of attributes in `Current'
 		do
 			if attribute_collection /= Void then
@@ -266,7 +266,7 @@ feature -- Measurement
 
 feature -- Status setting
 
-	set_name_code (a_name_code: INTEGER) is
+	set_name_code (a_name_code: INTEGER)
 			-- Set `name_code'.
 		do
 			name_code := a_name_code
@@ -274,7 +274,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	output_namespace_nodes (a_receiver: XM_XPATH_RECEIVER; include_ancestors: BOOLEAN) is
+	output_namespace_nodes (a_receiver: XM_XPATH_RECEIVER; include_ancestors: BOOLEAN)
 			-- Output all namespace nodes associated with this element.
 		local
 			l_parent: XM_XPATH_COMPOSITE_NODE
@@ -304,7 +304,7 @@ feature -- Element change
 			end
 		end
 
-	add_namespace (a_namespace_code: INTEGER) is
+	add_namespace (a_namespace_code: INTEGER)
 			-- Add a namespace definition.
 		require
 			valid_namespace_code: shared_name_pool.is_valid_namespace_code (a_namespace_code)
@@ -321,7 +321,7 @@ feature -- Element change
 			namespace_added: namespace_code_list /= Void and then namespace_code_list.has (a_namespace_code)
 		end
 
-	add_attribute (a_name_code, a_type_code: INTEGER; a_value: STRING; a_properties: INTEGER) is
+	add_attribute (a_name_code, a_type_code: INTEGER; a_value: STRING; a_properties: INTEGER)
 			-- Add an attribute.
 		require
 			valid_name_code: shared_name_pool.is_valid_name_code (a_name_code)
@@ -333,7 +333,7 @@ feature -- Element change
 			attribute_collection.add_attribute (a_name_code, a_type_code, a_value, a_properties)
 		end
 
-	set_attribute_collection (a_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION) is
+	set_attribute_collection (a_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION)
 			-- Set all attributes.
 		require
 			attribute_collection_not_void: a_attribute_collection /= Void
@@ -347,7 +347,7 @@ feature -- Element change
 
 feature -- Duplication
 
-	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
+	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN)
 				-- Copy `Current' to `a_receiver'.
 		local
 			a_type_code, an_index, child_namespaces: INTEGER
@@ -365,7 +365,7 @@ feature -- Duplication
 				output_namespace_nodes (a_receiver, which_namespaces = All_namespaces)
 			end
 
-         -- output attributes																																	
+         -- output attributes
 
 			if attribute_collection /= Void then
 				from
@@ -383,7 +383,7 @@ feature -- Duplication
 				end
 			end
 
-        	-- output children																																
+        	-- output children
 
 			if which_namespaces /= No_namespaces then
             child_namespaces := Local_namespaces
@@ -404,7 +404,7 @@ feature -- Duplication
 
 feature {XM_XPATH_TREE_ELEMENT} -- Local
 
-	accumulate_namespace_codes (an_owner: XM_XPATH_TREE_ELEMENT; an_accumulation_list: DS_ARRAYED_LIST [INTEGER]; add_xml: BOOLEAN; some_excluded_prefixes: DS_HASH_SET [INTEGER]) is
+	accumulate_namespace_codes (an_owner: XM_XPATH_TREE_ELEMENT; an_accumulation_list: DS_ARRAYED_LIST [INTEGER]; add_xml: BOOLEAN; some_excluded_prefixes: DS_HASH_SET [INTEGER])
 			-- Accumulate namespace codes in scope.
 		require
 			list_owner_not_void: an_owner /= Void
@@ -461,14 +461,14 @@ feature {XM_XPATH_TREE_ELEMENT} -- Local
 
 feature {XM_XPATH_TREE_ATTRIBUTE, XM_XPATH_TREE_ATTRIBUTE_ENUMERATION, XM_XPATH_TREE_DOCUMENT} -- Restricted
 
-	is_attribute_index_valid (an_attribute_index: INTEGER): BOOLEAN is
+	is_attribute_index_valid (an_attribute_index: INTEGER): BOOLEAN
 		do
 			if attribute_collection /= Void then
 				Result := attribute_collection.is_attribute_index_valid (an_attribute_index)
 			end
 		end
 
-	attribute_value_by_index (an_attribute_index: INTEGER): STRING is
+	attribute_value_by_index (an_attribute_index: INTEGER): STRING
 		require
 			valid_attribute_index: is_attribute_index_valid (an_attribute_index)
 		do
@@ -477,21 +477,21 @@ feature {XM_XPATH_TREE_ATTRIBUTE, XM_XPATH_TREE_ATTRIBUTE_ENUMERATION, XM_XPATH_
 			attribute_value_not_void: Result /= Void
 		end
 
-	attribute_name_code (an_attribute_index: INTEGER): INTEGER is
+	attribute_name_code (an_attribute_index: INTEGER): INTEGER
 		require
 			valid_attribute_index: is_attribute_index_valid (an_attribute_index)
 		do
 			Result := attribute_collection.attribute_name_code (an_attribute_index)
 		end
 
-	attribute_type_code (an_attribute_index: INTEGER): INTEGER is
+	attribute_type_code (an_attribute_index: INTEGER): INTEGER
 		require
 			valid_attribute_index: is_attribute_index_valid (an_attribute_index)
 		do
 			Result := attribute_collection.attribute_type_code (an_attribute_index)
 		end
 
-	is_id (an_attribute_index: INTEGER): BOOLEAN is
+	is_id (an_attribute_index: INTEGER): BOOLEAN
 		require
 			valid_attribute_index: is_attribute_index_valid (an_attribute_index)
 		do

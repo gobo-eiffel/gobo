@@ -23,7 +23,7 @@ create
 
 feature -- Tests
 
-	test_make is
+	test_make
 			-- Can we make a parser?
 		local
 			p: AP_PARSER
@@ -34,7 +34,7 @@ feature -- Tests
 			assert_integers_equal ("has_one_option", 1, p.all_options.count)
 		end
 
-	test_make_empty is
+	test_make_empty
 			-- Can we make an empty parser?
 		local
 			p: AP_PARSER
@@ -45,7 +45,7 @@ feature -- Tests
 			assert_integers_equal ("has_no_options", 0, p.all_options.count)
 		end
 
-	test_parse_array is
+	test_parse_array
 			-- Can we parse a given array of arguments?
 		local
 			p: AP_PARSER
@@ -60,7 +60,7 @@ feature -- Tests
 			assert_strings_equal ("x_is_parameter", "x", p.parameters.first)
 		end
 
-	test_parse_list is
+	test_parse_list
 			-- Can we parse a given list of arguments?
 		local
 			p: AP_PARSER
@@ -77,7 +77,7 @@ feature -- Tests
 			assert ("foo_was_found", o1.was_found)
 		end
 
-	test_complex_parse is
+	test_complex_parse
 			-- Can we parse more complex sets of argument?
 		local
 			p: AP_PARSER
@@ -99,7 +99,7 @@ feature -- Tests
 			assert_strings_equal ("bar_has_XXX_as_option", "XXX", o2.parameter)
 		end
 
-	test_parse_flags is
+	test_parse_flags
 			-- Can we parse flags?
 		local
 			p: AP_PARSER
@@ -115,8 +115,8 @@ feature -- Tests
 			p.parse_array (<< "--flag" >>)
 			assert ("flag_was_found", o1.was_found)
 		end
-	
-	test_parse_string_options is
+
+	test_parse_string_options
 			-- Can we parse string options?
 		local
 			p: AP_PARSER
@@ -141,7 +141,7 @@ feature -- Tests
 			assert ("option_was_not_found", not o1.was_found)
 		end
 
-	test_parse_option_with_optional_parameter is
+	test_parse_option_with_optional_parameter
 			-- Can we parse an option that has an optional parameter?
 		local
 			p: AP_PARSER
@@ -162,7 +162,7 @@ feature -- Tests
 			assert ("option_was_not_found", not o1.was_found)
 		end
 
-	test_parse_integer_options is
+	test_parse_integer_options
 			-- Can we parse integer options?
 		local
 			p: AP_PARSER
@@ -187,7 +187,7 @@ feature -- Tests
 			assert ("option_was_not_found", not o1.was_found)
 		end
 
-	test_parse_boolean_options is
+	test_parse_boolean_options
 			-- Can we parse boolean options?
 		local
 			p: AP_PARSER
@@ -228,7 +228,7 @@ feature -- Tests
 			assert_false ("n was passed", o1.parameter)
 		end
 
-	test_parse_enumeration_option is
+	test_parse_enumeration_option
 			-- Can we parse enumeration options?
 		local
 			p: AP_PARSER
@@ -245,7 +245,7 @@ feature -- Tests
 			assert_strings_equal ("one_was_passed", "one", o1.parameter)
 		end
 
-	test_parse_alternative_options_lists is
+	test_parse_alternative_options_lists
 			-- Can we parse alternative options lists?
 		local
 			p: AP_PARSER
@@ -278,7 +278,7 @@ feature -- Tests
 			assert ("c_was_not_found", not o3.was_found)
 		end
 
-	test_set_unset_mandatory is
+	test_set_unset_mandatory
 			-- Can we set and unset the mandatory flag?
 		local
 			a: AP_FLAG

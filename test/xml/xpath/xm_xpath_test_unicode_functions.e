@@ -21,7 +21,7 @@ inherit
 		end
 
 	XM_XPATH_TYPE
-	
+
 	XM_XPATH_ERROR_TYPES
 
 	XM_XPATH_SHARED_CONFORMANCE
@@ -44,7 +44,7 @@ create
 
 feature -- Tests
 
-	test_upper_case is
+	test_upper_case
 			-- Test fn:upper-case().
 		local
 			l_evaluator: XM_XPATH_EVALUATOR
@@ -63,7 +63,7 @@ feature -- Tests
 			assert ("Correct result", STRING_.same_string (Upper_essen, l_evaluated_items.item (1).as_string_value.string_value))
 		end
 
-	test_lower_case is
+	test_lower_case
 			-- Test fn:lower-case().
 		local
 			l_evaluator: XM_XPATH_EVALUATOR
@@ -79,8 +79,8 @@ feature -- Tests
 			assert ("String value", l_evaluated_items.item (1).is_string_value)
 			assert ("Correct result", STRING_.same_string (Unorthodox_essen, l_evaluated_items.item (1).as_string_value.string_value))
 		end
-	
-	test_codepoints_to_string is
+
+	test_codepoints_to_string
 			-- Test fn:codepoints-to-string((2309, 2358, 2378, 2325)).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -96,7 +96,7 @@ feature -- Tests
 			assert ("String value", evaluated_items.item (1).is_string_value)
 		end
 
-	test_string_to_codepoints is
+	test_string_to_codepoints
 			-- Test fn:string-to-codepoints ("Thérèse")
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -132,7 +132,7 @@ feature -- Tests
 					  and then  evaluated_items.item (7).as_integer_value.as_integer = 101)
 		end
 
-	test_codepoint_equal is
+	test_codepoint_equal
 			-- Test fn:codepoint-equal ("abc", "ab").
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -148,7 +148,7 @@ feature -- Tests
 			assert ("Boolean value false", evaluated_items.item (1).is_boolean_value and then not evaluated_items.item (1).as_boolean_value.value)
 		end
 
-	test_normalize_unicode is
+	test_normalize_unicode
 			-- Test fn:normaize-unicode().
 		local
 			an_expression: STRING
@@ -232,14 +232,14 @@ feature -- Tests
 			assert_strings_equal ("Decomposed string under NFKD", decomposed_affin, evaluated_items.item (1).as_string_value.string_value)
 		end
 
-	set_up is
+	set_up
 		do
 			conformance.set_basic_xslt_processor
 		end
 
 feature {NONE} -- Implementation
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}",
@@ -249,8 +249,8 @@ feature {NONE} -- Implementation
 			data_dirname_not_void: Result /= Void
 			data_dirname_not_empty: not Result.is_empty
 		end
-		
-	books_xml_uri: UT_URI is
+
+	books_xml_uri: UT_URI
 			-- URI of file 'books.xml'
 		local
 			a_path: STRING
@@ -261,7 +261,7 @@ feature {NONE} -- Implementation
 			books_xml_uri_not_void: Result /= Void
 		end
 
-	raw_affin: STRING is
+	raw_affin: STRING
 			-- Test string
 		once
 			Result := STRING_.concat (unicode.code_to_string (196), "ffin")
@@ -269,7 +269,7 @@ feature {NONE} -- Implementation
 			five_characters: Result /= Void and then Result.count = 5
 		end
 
-	decomposed_affin: STRING is
+	decomposed_affin: STRING
 			-- Test string
 		once
 			Result := STRING_.concat ("A", unicode.code_to_string (776))
@@ -278,7 +278,7 @@ feature {NONE} -- Implementation
 			six_characters: Result /= Void and then Result.count = 6
 		end
 
-	affin_with_ligature: STRING is
+	affin_with_ligature: STRING
 			-- Test string
 		once
 			Result := STRING_.concat (unicode.code_to_string (196), unicode.code_to_string (64259))
@@ -287,7 +287,7 @@ feature {NONE} -- Implementation
 			three_characters: Result /= Void and then Result.count = 3
 		end
 
-	canonically_decomposed_affin_with_ligature: STRING is
+	canonically_decomposed_affin_with_ligature: STRING
 			-- Test string
 		once
 			Result := STRING_.concat ("A", unicode.code_to_string (776))
@@ -297,15 +297,15 @@ feature {NONE} -- Implementation
 			four_characters: Result /= Void and then Result.count = 4
 		end
 
-	Lower_essen: STRING is "e%/223/en"
+	Lower_essen: STRING = "e%/223/en"
 			-- German verb meaning 'to eat'
 
-	Upper_essen: STRING is "ESSEN"
+	Upper_essen: STRING = "ESSEN"
 			-- German verb meaning 'to eat'
 
-	Unorthodox_essen: STRING is "essen"
+	Unorthodox_essen: STRING = "essen"
 			-- German verb meaning 'to eat' with unorthodox spelling
 
 end
 
-			
+

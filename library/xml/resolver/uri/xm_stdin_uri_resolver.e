@@ -35,13 +35,13 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create with content type of application/xml.
 		do
 			make_with_media_type ("application", "xml")
 		end
 
-	make_with_media_type (a_type, a_subtype: STRING) is
+	make_with_media_type (a_type, a_subtype: STRING)
 			-- Create with alternative content type.
 		require
 			a_type_not_void: a_type /= Void
@@ -56,12 +56,12 @@ feature -- Initialization
 
 feature -- Status report
 
-	scheme: STRING is "stdin"
+	scheme: STRING = "stdin"
 			-- Scheme
 
 feature -- Action(s)
 
-	resolve (a_uri: UT_URI) is
+	resolve (a_uri: UT_URI)
 			-- Resolve file URI.
 		do
 			if not a_uri.is_absolute then
@@ -90,13 +90,13 @@ feature -- Result
 	last_error: STRING
 			-- Error
 
-	has_error: BOOLEAN is
+	has_error: BOOLEAN
 			-- Is there an error?
 		do
 			Result := last_error /= Void
 		end
 
-	has_media_type: BOOLEAN is
+	has_media_type: BOOLEAN
 			-- Is the media type available.
 		do
 			Result := True
@@ -107,7 +107,7 @@ feature -- Result
 
 feature {NONE} -- Implementation
 
-	Valid_uri_message: STRING is "The only acceptable lexical form for the stdin scheme is 'stdin:' (with optional fragment identifier). Found "
+	Valid_uri_message: STRING = "The only acceptable lexical form for the stdin scheme is 'stdin:' (with optional fragment identifier). Found "
 			-- Prefix for error messages
 
 invariant

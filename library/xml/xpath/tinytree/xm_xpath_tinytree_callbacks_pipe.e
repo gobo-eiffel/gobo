@@ -1,15 +1,15 @@
 note
 
 	description:
-	
+
 		"Standard pipe of callbacks filter leading to construction of an XM_XPATH_TINY_DOCUMENT"
-	
+
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class XM_XPATH_TINYTREE_CALLBACKS_PIPE
 
 inherit
@@ -25,14 +25,14 @@ inherit
 		-- It is not particularly suitable for use by documents to be used as input to
 		-- XSLT, as XSLT has more stringent white-space stripping rules, and
 		-- in addition, stylesheets must have their comments and PIs stripped.
-		
+
 create
 
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_parser: XM_PARSER; is_line_numbering: BOOLEAN; a_base_uri: STRING; a_document_uri: UT_URI) is
+	make (a_parser: XM_PARSER; is_line_numbering: BOOLEAN; a_base_uri: STRING; a_document_uri: UT_URI)
 			-- Create a new pipe.
 		require
 			a_parser_not_void: a_parser /= Void
@@ -79,7 +79,7 @@ feature -- Access
 	tree: XM_XPATH_TINY_BUILDER
 			-- Tree construction
 
-	document: XM_XPATH_TINY_DOCUMENT is
+	document: XM_XPATH_TINY_DOCUMENT
 			-- Document (from tree building filter)
 		require
 			not_error: not error.has_error
@@ -87,7 +87,7 @@ feature -- Access
 			Result := tree.tiny_document
 		end
 
-	last_error: STRING is
+	last_error: STRING
 			-- Error (from error filter)
 		require
 			error: error.has_error

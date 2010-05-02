@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_external_object: like external_object) is
+	make (a_external_object: like external_object)
 			-- Create a new external object list with initially one object `a_external_object'.
 		require
 			a_external_object_not_void: a_external_object /= Void
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			external_object_set: external_objects.last = a_external_object
 		end
 
-	make_empty is
+	make_empty
 			-- Create a new empty external object list.
 		do
 			create external_objects.make (Initial_external_objects_capacity)
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is the list of external objects empty?
 		do
 			Result := (count = 0)
@@ -50,7 +50,7 @@ feature -- Status report
 
 feature -- Access
 
-	external_object (i: INTEGER): ET_ECF_EXTERNAL_OBJECT is
+	external_object (i: INTEGER): ET_ECF_EXTERNAL_OBJECT
 			-- `i'-th external object
 		require
 			i_large_enough: i >= 1
@@ -66,7 +66,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of external objects
 		do
 			Result := external_objects.count
@@ -77,7 +77,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	put_last (a_external_object: like external_object) is
+	put_last (a_external_object: like external_object)
 			-- Add `a_external_object' to the list of external objects.
 		require
 			a_external_object_not_void: a_external_object /= Void
@@ -88,7 +88,7 @@ feature -- Element change
 			external_object_added: external_objects.last = a_external_object
 		end
 
-	fill_external_objects (a_system: ET_SYSTEM; a_state: ET_ECF_STATE) is
+	fill_external_objects (a_system: ET_SYSTEM; a_state: ET_ECF_STATE)
 			-- Add to `a_system' the current external objects
 			-- whose conditions satisfy `a_state'.
 		require
@@ -100,7 +100,7 @@ feature -- Element change
 
 feature {NONE} -- Constants
 
-	Initial_external_objects_capacity: INTEGER is 50
+	Initial_external_objects_capacity: INTEGER = 50
 			-- Initial capacity for `external_objects'
 
 invariant

@@ -46,7 +46,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_file: like file) is
+	make (a_file: like file)
 			-- Create a new AST printer, using `a_file' as output file.
 		require
 			a_file_not_void: a_file /= Void
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			file_set: file = a_file
 		end
 
-	make_null is
+	make_null
 			-- Create a new AST printer, initialized with a null output stream.
 		do
 			make (null_output_stream)
@@ -72,7 +72,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_file (a_file: like file) is
+	set_file (a_file: like file)
 			-- Set `file' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -83,7 +83,7 @@ feature -- Setting
 			file_set: file = a_file
 		end
 
-	set_null_file is
+	set_null_file
 			-- Set `file' to `null_output_stream'.
 		do
 			file := null_output_stream
@@ -93,7 +93,7 @@ feature -- Setting
 
 feature {ET_AST_NODE} -- Processing
 
-	process_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT) is
+	process_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			precursor (a_constant)
@@ -101,14 +101,14 @@ feature {ET_AST_NODE} -- Processing
 			process_break (a_constant.break)
 		end
 
-	process_bit_constant (a_constant: ET_BIT_CONSTANT) is
+	process_bit_constant (a_constant: ET_BIT_CONSTANT)
 			-- Process `a_constant'.
 		do
 			file.put_string (a_constant.literal)
 			process_break (a_constant.break)
 		end
 
-	process_break (a_break: ET_BREAK) is
+	process_break (a_break: ET_BREAK)
 			-- Process `a_break'.
 		do
 			if a_break /= Void then
@@ -116,7 +116,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_c1_character_constant (a_constant: ET_C1_CHARACTER_CONSTANT) is
+	process_c1_character_constant (a_constant: ET_C1_CHARACTER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			precursor (a_constant)
@@ -126,7 +126,7 @@ feature {ET_AST_NODE} -- Processing
 			process_break (a_constant.break)
 		end
 
-	process_c2_character_constant (a_constant: ET_C2_CHARACTER_CONSTANT) is
+	process_c2_character_constant (a_constant: ET_C2_CHARACTER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			precursor (a_constant)
@@ -137,7 +137,7 @@ feature {ET_AST_NODE} -- Processing
 			process_break (a_constant.break)
 		end
 
-	process_c3_character_constant (a_constant: ET_C3_CHARACTER_CONSTANT) is
+	process_c3_character_constant (a_constant: ET_C3_CHARACTER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			precursor (a_constant)
@@ -150,7 +150,7 @@ feature {ET_AST_NODE} -- Processing
 			process_break (a_constant.break)
 		end
 
-	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT) is
+	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			precursor (a_constant)
@@ -158,7 +158,7 @@ feature {ET_AST_NODE} -- Processing
 			process_break (a_constant.break)
 		end
 
-	process_octal_integer_constant (a_constant: ET_OCTAL_INTEGER_CONSTANT) is
+	process_octal_integer_constant (a_constant: ET_OCTAL_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			precursor (a_constant)
@@ -166,7 +166,7 @@ feature {ET_AST_NODE} -- Processing
 			process_break (a_constant.break)
 		end
 
-	process_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT) is
+	process_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			precursor (a_constant)
@@ -174,7 +174,7 @@ feature {ET_AST_NODE} -- Processing
 			process_break (a_constant.break)
 		end
 
-	process_regular_manifest_string (a_string: ET_REGULAR_MANIFEST_STRING) is
+	process_regular_manifest_string (a_string: ET_REGULAR_MANIFEST_STRING)
 			-- Process `a_string'.
 		do
 			precursor (a_string)
@@ -184,7 +184,7 @@ feature {ET_AST_NODE} -- Processing
 			process_break (a_string.break)
 		end
 
-	process_regular_real_constant (a_constant: ET_REGULAR_REAL_CONSTANT) is
+	process_regular_real_constant (a_constant: ET_REGULAR_REAL_CONSTANT)
 			-- Process `a_constant'.
 		do
 			precursor (a_constant)
@@ -192,7 +192,7 @@ feature {ET_AST_NODE} -- Processing
 			process_break (a_constant.break)
 		end
 
-	process_special_manifest_string (a_string: ET_SPECIAL_MANIFEST_STRING) is
+	process_special_manifest_string (a_string: ET_SPECIAL_MANIFEST_STRING)
 			-- Process `a_string'.
 		do
 			precursor (a_string)
@@ -202,21 +202,21 @@ feature {ET_AST_NODE} -- Processing
 			process_break (a_string.break)
 		end
 
-	process_symbol (a_symbol: ET_SYMBOL) is
+	process_symbol (a_symbol: ET_SYMBOL)
 			-- Process `a_symbol'.
 		do
 			file.put_string (a_symbol.text)
 			process_break (a_symbol.break)
 		end
 
-	process_token (a_token: ET_TOKEN) is
+	process_token (a_token: ET_TOKEN)
 			-- Process `a_token'.
 		do
 			file.put_string (a_token.text)
 			process_break (a_token.break)
 		end
 
-	process_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT) is
+	process_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
 			precursor (a_constant)
@@ -224,7 +224,7 @@ feature {ET_AST_NODE} -- Processing
 			process_break (a_constant.break)
 		end
 
-	process_underscored_real_constant (a_constant: ET_UNDERSCORED_REAL_CONSTANT) is
+	process_underscored_real_constant (a_constant: ET_UNDERSCORED_REAL_CONSTANT)
 			-- Process `a_constant'.
 		do
 			precursor (a_constant)
@@ -232,7 +232,7 @@ feature {ET_AST_NODE} -- Processing
 			process_break (a_constant.break)
 		end
 
-	process_verbatim_string (a_string: ET_VERBATIM_STRING) is
+	process_verbatim_string (a_string: ET_VERBATIM_STRING)
 			-- Process `a_string'.
 		do
 			precursor (a_string)

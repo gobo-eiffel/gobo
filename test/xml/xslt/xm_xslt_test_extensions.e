@@ -35,7 +35,7 @@ create
 
 feature -- Test
 
-	test_gexslt_collation is
+	test_gexslt_collation
 			-- Test gexslt:collation
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -59,13 +59,13 @@ feature -- Test
 			l_transformer.set_initial_template ("first")
 			assert ("Initial template set", l_transformer.initial_template /= Void)
 			create l_output
-			l_output.set_output_to_string 
+			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (Void, l_result)
 			assert ("Transform successfull", not l_transformer.is_error)
 		end
 
-	test_fallback is
+	test_fallback
 			-- Test fallback
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -89,14 +89,14 @@ feature -- Test
 			l_transformer.set_initial_template ("first")
 			assert ("Initial template set", l_transformer.initial_template /= Void)
 			create l_output
-			l_output.set_output_to_string 
+			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (Void, l_result)
 			assert ("Transform successfull", not l_transformer.is_error)
 			assert ("Correct result", STRING_.same_string (l_output.last_output, "OK"))
 		end
 
-	test_no_fallback is
+	test_no_fallback
 			-- Test absent extension instruction
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -120,7 +120,7 @@ feature -- Test
 			l_transformer.set_initial_template ("first")
 			assert ("Initial template set", l_transformer.initial_template /= Void)
 			create l_output
-			l_output.set_output_to_string 
+			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (Void, l_result)
 			assert ("In error", l_transformer.is_error)
@@ -129,7 +129,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing schematron data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}",
@@ -140,15 +140,15 @@ feature {NONE} -- Implementation
 			data_dirname_not_empty: not Result.is_empty
 		end
 
-	dummy_uri: UT_URI is
+	dummy_uri: UT_URI
 			-- Dummy URI
 		once
 			create Result.make ("dummy:")
 		ensure
 			dummy_uri_is_absolute: Result /= Void and then Result.is_absolute
 		end
-		
-	collations_xsl_uri: UT_URI is
+
+	collations_xsl_uri: UT_URI
 			-- URI of file 'collations.xsl'
 		local
 			l_path: STRING
@@ -158,8 +158,8 @@ feature {NONE} -- Implementation
 		ensure
 			collations_xsl_uri_not_void: Result /= Void
 		end
-		
-	fallback_xsl_uri: UT_URI is
+
+	fallback_xsl_uri: UT_URI
 			-- URI of file 'fallback.xsl'
 		local
 			l_path: STRING
@@ -169,8 +169,8 @@ feature {NONE} -- Implementation
 		ensure
 			fallback_xsl_uri_not_void: Result /= Void
 		end
-		
-	no_fallback_xsl_uri: UT_URI is
+
+	no_fallback_xsl_uri: UT_URI
 			-- URI of file 'no_fallback.xsl'
 		local
 			l_path: STRING
@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 			no_fallback_xsl_uri_not_void: Result /= Void
 		end
 
-	xtde1450: STRING is
+	xtde1450: STRING
 			-- Error XTDE1450
 		once
 			Result := Xpath_errors_uri + "#" + "XTDE1450"

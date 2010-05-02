@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT) is
+	make (a_project: GEANT_PROJECT)
 			-- Initialize command by setting `project' to `a_project'.
 		do
 			precursor (a_project)
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- Can command be executed?
 		do
 			check current_target_not_void: project.current_target /= Void end
@@ -59,7 +59,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_parent (a_parent: like parent) is
+	set_parent (a_parent: like parent)
 			-- Set `parent' to `a_parent'.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -71,7 +71,7 @@ feature -- Setting
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute command.
 		local
 			a_precursor_target: GEANT_TARGET

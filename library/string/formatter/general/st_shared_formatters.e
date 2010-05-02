@@ -14,7 +14,7 @@ class ST_SHARED_FORMATTERS
 
 feature -- Access
 
-	formatter: ST_SCIENTIFIC_FORMATTER is
+	formatter: ST_SCIENTIFIC_FORMATTER
 			-- Shared scientific formatter
 		once
 			Result := scientific_formatter
@@ -22,7 +22,7 @@ feature -- Access
 			formatter_not_void: Result /= Void
 		end
 
-	scientific_formatter: ST_SCIENTIFIC_FORMATTER is
+	scientific_formatter: ST_SCIENTIFIC_FORMATTER
 			-- Shared scientific formatter
 		once
 			create Result.make

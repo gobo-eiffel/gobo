@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_pattern is
+	make_pattern
 			-- Initialize `Current' as an XSLT pattern parser.
 		do
 			is_pattern_parser := True
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	last_parsed_pattern: XM_XSLT_PATTERN is
+	last_parsed_pattern: XM_XSLT_PATTERN
 			-- Last successfully parsed pattern
 		require
 			no_parse_error: not is_parse_error
@@ -47,7 +47,7 @@ feature -- Status report
 			pattern_not_void: Result /= Void
 		end
 
-	last_parsed_sequence: XM_XPATH_SEQUENCE_TYPE is
+	last_parsed_sequence: XM_XPATH_SEQUENCE_TYPE
 			-- Last expression sucessfully parsed by `parse_sequence_type'
 		require
 			no_parse_error: not is_parse_error
@@ -59,7 +59,7 @@ feature -- Status report
 
 feature -- Parsers
 
-	parse_pattern (a_pattern_text: STRING; a_context: XM_XPATH_STATIC_CONTEXT; a_line_number: INTEGER) is
+	parse_pattern (a_pattern_text: STRING; a_context: XM_XPATH_STATIC_CONTEXT; a_line_number: INTEGER)
 			-- Parse `a_pattern_text', which represents an XSLT pattern
 		require
 			pattern_text_not_void: a_pattern_text /= Void
@@ -99,7 +99,7 @@ feature -- Parsers
 			static_context_not_void: environment /= Void
 		end
 
-	parse_sequence_type (a_sequence_type_string: STRING; a_context: XM_XPATH_STATIC_CONTEXT; a_line_number: INTEGER) is
+	parse_sequence_type (a_sequence_type_string: STRING; a_context: XM_XPATH_STATIC_CONTEXT; a_line_number: INTEGER)
 			-- Parse `a_sequence_type_string';
 			-- SequenceType ::= (ItemType OccurrenceIndicator?) | ("empty-sequence" "(" ")")
 		require
@@ -130,7 +130,7 @@ feature -- Parsers
 
 feature {NONE} -- Implementation
 
-	parse_union_pattern is
+	parse_union_pattern
 			-- Parse a Union Pattern;
 			--  pathPattern ( | pathPattern )*
 		require
@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 			pattern_not_void_unless_error: not is_parse_error implies internal_last_parsed_pattern /= Void
 		end
 
-	parse_path_pattern is
+	parse_path_pattern
 			-- Parse a Location Path Pattern:
 			-- PathPattern ::= RelativePathPattern
 			-- | '/' RelativePathPattern?
@@ -302,7 +302,7 @@ feature {NONE} -- Implementation
 						if tokenizer.is_lexical_error then
 							report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
 							l_finished := True
-						else						
+						else
 							parse_pattern_step (Attribute_node)
 							if is_parse_error then
 								l_finished := True
@@ -510,7 +510,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	parse_pattern_step (a_principal_node_type: INTEGER) is
+	parse_pattern_step (a_principal_node_type: INTEGER)
 			-- Parse a pattern step (after any axis name or @)
 		local
 			l_step: XM_XSLT_LOCATION_PATH_PATTERN
@@ -522,22 +522,22 @@ feature {NONE} -- Implementation
 			if not is_parse_error then
 				l_node_test := xpath_to_xslt_node_test (internal_last_parsed_node_test, environment)
 				if l_node_test = any_xslt_node_test then
-					
+
 					-- handle node() and @node() specially
-					
+
 					if a_principal_node_type = Element_node then
-						
+
 						-- We are on the Child::axis
-						
+
 						create {XM_XSLT_ANY_CHILD_NODE_PATTERN} l_node_test.make (environment)
 					else
-						
+
 						-- We are on the Attribute::axis
-						
+
 						create {XM_XSLT_NODE_KIND_TEST} l_node_test.make (environment, a_principal_node_type)
 					end
 				end
-				
+
 				-- Deal with nonsense patterns such as @comment() or child::attribute().
 				-- These are legal, but will never match anything.
 
@@ -560,7 +560,7 @@ feature {NONE} -- Implementation
 			pattern_not_void_unless_error: not is_parse_error implies last_parsed_pattern_step /= Void
 		end
 
-	parse_filters (a_step: XM_XSLT_LOCATION_PATH_PATTERN) is
+	parse_filters (a_step: XM_XSLT_LOCATION_PATH_PATTERN)
 			-- Test to see if there are filters for a Pattern, if so, parse them.
 		require
 			pattern_not_void: a_step /= Void
@@ -596,7 +596,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	check_valid_function (a_function: XM_XPATH_EXPRESSION) is
+	check_valid_function (a_function: XM_XPATH_EXPRESSION)
 			-- Check `a_function' is a valid function call.
 		do
 			if a_function.is_current_group then

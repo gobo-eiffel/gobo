@@ -29,7 +29,7 @@ create
 
 feature -- Processing
 
-	process_class (a_class: ET_CLASS) is
+	process_class (a_class: ET_CLASS)
 			-- Parse `a_class' if not already done. Then check
 			-- the dependence constraint of its cluster.
 		local
@@ -55,7 +55,7 @@ feature -- Processing
 
 feature -- Error handling
 
-	set_fatal_error (a_class: ET_CLASS) is
+	set_fatal_error (a_class: ET_CLASS)
 			-- Report a fatal error to `a_class'.
 		require
 			a_class_not_void: a_class /= Void
@@ -65,7 +65,7 @@ feature -- Error handling
 
 feature {NONE} -- Processing
 
-	internal_process_class (a_class: ET_CLASS) is
+	internal_process_class (a_class: ET_CLASS)
 			-- Parse `a_class' if not already done. Then check
 			-- the dependence constraint of its cluster.
 		require
@@ -89,7 +89,7 @@ feature {NONE} -- Processing
 
 feature {NONE} -- Cluster dependence constraints
 
-	check_cluster_dependence_constraints is
+	check_cluster_dependence_constraints
 			-- Check of cluster dependence constraints.
 		local
 			l_group: ET_GROUP

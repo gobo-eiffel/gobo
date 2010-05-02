@@ -18,14 +18,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new AST factory.
 		do
 		end
 
 feature -- AST factory
 
-	new_assembly (a_name: ET_IDENTIFIER; a_pathname: ET_IDENTIFIER; a_system: ET_SYSTEM): ET_LACE_DOTNET_ASSEMBLY is
+	new_assembly (a_name: ET_IDENTIFIER; a_pathname: ET_IDENTIFIER; a_system: ET_SYSTEM): ET_LACE_DOTNET_ASSEMBLY
 			-- New assembly
 		require
 			a_name_not_void: a_name /= Void
@@ -36,7 +36,7 @@ feature -- AST factory
 			assembly_not_void: Result /= Void
 		end
 
-	new_assemblies (an_assembly: ET_LACE_DOTNET_ASSEMBLY): ET_ADAPTED_DOTNET_ASSEMBLIES is
+	new_assemblies (an_assembly: ET_LACE_DOTNET_ASSEMBLY): ET_ADAPTED_DOTNET_ASSEMBLIES
 			-- New assembly list
 		require
 			an_assembly_not_void: an_assembly /= Void
@@ -46,7 +46,7 @@ feature -- AST factory
 			assemblies_not_void: Result /= Void
 		end
 
-	new_cluster (a_name: ET_IDENTIFIER; a_pathname: ET_IDENTIFIER; a_universe: ET_UNIVERSE): ET_LACE_CLUSTER is
+	new_cluster (a_name: ET_IDENTIFIER; a_pathname: ET_IDENTIFIER; a_universe: ET_UNIVERSE): ET_LACE_CLUSTER
 			-- New cluster
 		require
 			a_name_not_void: a_name /= Void
@@ -57,7 +57,7 @@ feature -- AST factory
 			cluster_not_void: Result /= Void
 		end
 
-	new_clusters (a_cluster: ET_LACE_CLUSTER): ET_LACE_CLUSTERS is
+	new_clusters (a_cluster: ET_LACE_CLUSTER): ET_LACE_CLUSTERS
 			-- New cluster list
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -67,7 +67,7 @@ feature -- AST factory
 			clusters_not_void: Result /= Void
 		end
 
-	new_gac_assembly (a_name: ET_IDENTIFIER; an_assembly_name: ET_IDENTIFIER; a_system: ET_SYSTEM): ET_LACE_DOTNET_GAC_ASSEMBLY is
+	new_gac_assembly (a_name: ET_IDENTIFIER; an_assembly_name: ET_IDENTIFIER; a_system: ET_SYSTEM): ET_LACE_DOTNET_GAC_ASSEMBLY
 			-- New GAC assembly
 		require
 			a_name_not_void: a_name /= Void
@@ -79,7 +79,7 @@ feature -- AST factory
 			assembly_not_void: Result /= Void
 		end
 
-	new_system (a_name: STRING): ET_LACE_SYSTEM is
+	new_system (a_name: STRING): ET_LACE_SYSTEM
 			-- New Eiffel system
 		require
 			a_name_not_void: a_name /= Void
@@ -92,7 +92,7 @@ feature -- AST factory
 
 feature -- Eiffel AST factory
 
-	new_ast_factory: ET_AST_FACTORY is
+	new_ast_factory: ET_AST_FACTORY
 			-- New Eiffel AST factory
 		do
 			if ast_factory /= Void then
@@ -104,7 +104,7 @@ feature -- Eiffel AST factory
 			ast_factory_not_void: Result /= Void
 		end
 
-	new_error_handler: ET_ERROR_HANDLER is
+	new_error_handler: ET_ERROR_HANDLER
 			-- New error handler for Eiffel parser
 		do
 			if error_handler /= Void then
@@ -128,7 +128,7 @@ feature -- Configuration
 
 feature -- Configuration setting
 
-	set_ast_factory (a_factory: like ast_factory) is
+	set_ast_factory (a_factory: like ast_factory)
 			-- Set `ast_factory' to `a_factory'.
 		do
 			ast_factory := a_factory
@@ -136,7 +136,7 @@ feature -- Configuration setting
 			ast_factory_set: ast_factory = a_factory
 		end
 
-	set_error_handler (a_handler: like error_handler) is
+	set_error_handler (a_handler: like error_handler)
 			-- Set `error_handler' to `a_handler'.
 		do
 			error_handler := a_handler

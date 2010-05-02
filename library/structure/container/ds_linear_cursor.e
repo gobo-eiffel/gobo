@@ -22,14 +22,14 @@ inherit
 
 feature -- Access
 
-	container: DS_LINEAR [G] is
+	container: DS_LINEAR [G]
 			-- Data structure traversed
 		deferred
 		end
 
 feature -- Status report
 
-	is_first: BOOLEAN is
+	is_first: BOOLEAN
 			-- Is cursor on first item?
 		do
 			Result := container.cursor_is_first (Current)
@@ -38,7 +38,7 @@ feature -- Status report
 			not_off: Result implies not off
 		end
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Is there no valid position to right of cursor?
 		do
 			Result := container.cursor_after (Current)
@@ -46,7 +46,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Move cursor to first position.
 		do
 			container.cursor_start (Current)
@@ -55,7 +55,7 @@ feature -- Cursor movement
 			first_or_after: is_first xor after
 		end
 
-	forth is
+	forth
 			-- Move cursor to next position.
 		require
 			not_after: not after
@@ -63,7 +63,7 @@ feature -- Cursor movement
 			container.cursor_forth (Current)
 		end
 
-	search_forth (v: G) is
+	search_forth (v: G)
 			-- Move to first position at or after current
 			-- position where `item' and `v' are equal.
 			-- (Use `equality_tester''s criterion from `container'
@@ -75,7 +75,7 @@ feature -- Cursor movement
 			container.cursor_search_forth (Current, v)
 		end
 
-	go_after is
+	go_after
 			-- Move cursor to `after' position.
 		do
 			container.cursor_go_after (Current)

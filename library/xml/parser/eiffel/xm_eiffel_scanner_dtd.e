@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_scanner is
+	make_scanner
 			-- Make dtd scanner.
 		do
 			Precursor
@@ -40,7 +40,7 @@ feature {NONE} -- State
 
 feature -- Input
 
-	read_token is
+	read_token
 			-- Horrible hack that places the content of an external
 			-- DTD within a (DOCTYPE_DECL_START, DOCTYPE_DECL_END)
 			-- token pair.

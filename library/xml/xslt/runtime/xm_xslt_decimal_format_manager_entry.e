@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_decimal_format: XM_XSLT_DECIMAL_FORMAT_ENTRY) is
+	make (a_decimal_format: XM_XSLT_DECIMAL_FORMAT_ENTRY)
 			-- Create a decimal format entry.
 		require
 			decimal_format_not_void: a_decimal_format /= Void
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			decimal_format_set: decimal_format = a_decimal_format
 		end
 
-	make_list (a_list: DS_ARRAYED_LIST [XM_XSLT_FORMAT_NUMBER]) is
+	make_list (a_list: DS_ARRAYED_LIST [XM_XSLT_FORMAT_NUMBER])
 			-- Create a list of call-backs.
 		require
 			list_not_void: a_list /= Void
@@ -47,7 +47,7 @@ feature -- Access
 
 	list: DS_ARRAYED_LIST [XM_XSLT_FORMAT_NUMBER]
 			-- List of call-backs
-	
+
 feature -- Status report
 
 	is_list: BOOLEAN
@@ -63,4 +63,4 @@ invariant
 	list: is_list implies list /= Void
 
 end
-	
+

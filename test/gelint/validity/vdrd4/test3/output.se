@@ -1,9 +1,9 @@
 ****** Error : Invalid redefinition in BB. Missing redefine ?
 Line 9 column 2 in BB (b.e) :
-	f is
+	f
 	^
 Line 5 column 2 in CC (c.e) :
-	f is
+	f
 	^
 ------
 ****** Fatal Error : Bad instruction (when interpreted in AA).

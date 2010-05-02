@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant.
 		do
 			create regexp_cache.make_with_equality_testers (10, Void, string_equality_tester)
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	has (a_composed_key: STRING): BOOLEAN is
+	has (a_composed_key: STRING): BOOLEAN
 			-- Is there a compiled regexp for `a_composed_key' in cache?
 		require
 			composed_key_not_void: a_composed_key /= Void
@@ -41,7 +41,7 @@ feature -- Access
 			Result := regexp_cache.has (a_composed_key)
 		end
 
-	item (a_composed_key: STRING): XM_XPATH_REGEXP_CACHE_ENTRY is
+	item (a_composed_key: STRING): XM_XPATH_REGEXP_CACHE_ENTRY
 			-- Possible cache entry for `a_composed_key'
 		require
 			composed_key_not_void: a_composed_key /= Void
@@ -55,7 +55,7 @@ feature -- Access
 
 feature -- Element change
 
-	put (a_cache_entry: XM_XPATH_REGEXP_CACHE_ENTRY; a_composed_key: STRING) is
+	put (a_cache_entry: XM_XPATH_REGEXP_CACHE_ENTRY; a_composed_key: STRING)
 			-- Associate `a_cache_entry' with `a_composed_key'.
 		require
 			cache_entry_not_in_error: a_cache_entry /= Void and then not a_cache_entry.is_error

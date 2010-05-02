@@ -34,7 +34,7 @@ create
 
 feature -- Test
 
-	test_shorthand_pointer is
+	test_shorthand_pointer
 			-- Transform books3.xml with books1.xsl.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -66,7 +66,7 @@ feature -- Test
 			assert ("Correct output", STRING_.same_string (l_output.last_output, expected_output_1))
 		end
 
-	test_element_scheme_pointer is
+	test_element_scheme_pointer
 			-- Transform books3.xml with books1.xsl.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -98,7 +98,7 @@ feature -- Test
 			assert ("Correct output", STRING_.same_string (l_output.last_output, expected_output_1))
 		end
 
-	test_gexslt_xpath_scheme_pointer is
+	test_gexslt_xpath_scheme_pointer
 			-- Transform books3.xml with books1.xsl.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -131,7 +131,7 @@ feature -- Test
 			assert ("Correct output", STRING_.same_string (l_output.last_output, expected_output_2))
 		end
 
-	test_embedded_stylesheet is
+	test_embedded_stylesheet
 			-- Transform embedded.xml by itself, without using xml-stylesheet-pi
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -163,7 +163,7 @@ feature -- Test
 			assert ("Correct output", l_output.last_output.count = 173)
 		end
 
-	test_xml_stylesheet_pi_one is
+	test_xml_stylesheet_pi_one
 			-- Transform processing_instructions.xml via PIs.
 			-- For "print" medium, preferred style
 		local
@@ -200,7 +200,7 @@ feature -- Test
 			assert ("Correct output", l_output.last_output.count = 309)
 		end
 
-	test_xml_stylesheet_pi_two is
+	test_xml_stylesheet_pi_two
 			-- Transform processing_instructions.xml via PIs.
 			-- For "screen" and alternate style "Alternate"
 		local
@@ -237,7 +237,7 @@ feature -- Test
 			assert ("Correct output", l_output.last_output.count = 295)
 		end
 
-	test_next_in_chain is
+	test_next_in_chain
 			-- Test gexslt:next-in-chain
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -271,7 +271,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing schematron data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}",
@@ -282,7 +282,7 @@ feature {NONE} -- Implementation
 			data_dirname_not_empty: not Result.is_empty
 		end
 
-	dummy_uri: UT_URI is
+	dummy_uri: UT_URI
 			-- Dummy URI
 		once
 			create Result.make ("dummy:")
@@ -290,7 +290,7 @@ feature {NONE} -- Implementation
 			dummy_uri_is_absolute: Result /= Void and then Result.is_absolute
 		end
 
-	books1_xsl_uri: UT_URI is
+	books1_xsl_uri: UT_URI
 			-- URI of file 'books1.xsl'
 		local
 			l_path: STRING
@@ -301,7 +301,7 @@ feature {NONE} -- Implementation
 			books1_xsl_uri_not_void: Result /= Void
 		end
 
-	xpath_data_dirname: STRING is
+	xpath_data_dirname: STRING
 			-- Name of directory containing XPath data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}",
@@ -312,7 +312,7 @@ feature {NONE} -- Implementation
 			xpath_data_dirname_not_empty: not Result.is_empty
 		end
 
-	books3_xml_uri: UT_URI is
+	books3_xml_uri: UT_URI
 			-- URI of file 'books3.xml'
 		local
 			l_path: STRING
@@ -323,7 +323,7 @@ feature {NONE} -- Implementation
 			books3_xml_uri_not_void: Result /= Void
 		end
 
-	embedded_xml_uri: UT_URI is
+	embedded_xml_uri: UT_URI
 			-- URI of file 'embedded.xml'
 		local
 			l_path: STRING
@@ -334,7 +334,7 @@ feature {NONE} -- Implementation
 			embedded_xml_uri_not_void: Result /= Void
 		end
 
-	processing_instructions_xml_uri: UT_URI is
+	processing_instructions_xml_uri: UT_URI
 			-- URI of file 'processing_instructions.xml'
 		local
 			l_path: STRING
@@ -345,7 +345,7 @@ feature {NONE} -- Implementation
 			processing_instructions_xml_uri_not_void: Result /= Void
 		end
 
-	example0_xsl_uri: UT_URI is
+	example0_xsl_uri: UT_URI
 			-- URI of file 'example0.xsl'
 		local
 			l_path: STRING
@@ -356,10 +356,10 @@ feature {NONE} -- Implementation
 			example0_xsl_uri_not_void: Result /= Void
 		end
 
-	expected_output_1: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?><output>Number, the Language of Science</output>"
+	expected_output_1: STRING = "<?xml version=%"1.0%" encoding=%"UTF-8%"?><output>Number, the Language of Science</output>"
 			-- An expected output
 
-	expected_output_2: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?><output>Danzig</output>"
+	expected_output_2: STRING = "<?xml version=%"1.0%" encoding=%"UTF-8%"?><output>Danzig</output>"
 			-- An expected output
 
 end

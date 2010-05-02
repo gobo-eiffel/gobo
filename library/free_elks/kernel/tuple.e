@@ -25,7 +25,7 @@ create
 
 feature -- Creation
 
-	make is
+	make
 		obsolete
 			"Use no creation procedure to create a TUPLE instance"
 		do
@@ -33,7 +33,7 @@ feature -- Creation
 
 feature -- Access
 
-	item alias "[]", at alias "@" (index: INTEGER): ANY assign put is
+	item alias "[]", at alias "@" (index: INTEGER): ANY assign put
 			-- Entry of key `index'.
 		require
 			valid_index: valid_index (index)
@@ -57,7 +57,7 @@ feature -- Access
 			end
 		end
 
-	reference_item (index: INTEGER): ANY is
+	reference_item (index: INTEGER): ANY
 			-- Reference item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -66,7 +66,7 @@ feature -- Access
 			"built_in"
 		end
 
-	boolean_item (index: INTEGER): BOOLEAN is
+	boolean_item (index: INTEGER): BOOLEAN
 			-- Boolean item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -75,7 +75,7 @@ feature -- Access
 			"built_in"
 		end
 
-	character_8_item (index: INTEGER): CHARACTER_8 is
+	character_8_item (index: INTEGER): CHARACTER_8
 			-- Character item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -84,7 +84,7 @@ feature -- Access
 			"built_in"
 		end
 
-	character_item (index: INTEGER): CHARACTER_8 is
+	character_item (index: INTEGER): CHARACTER_8
 			-- Character item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -93,7 +93,7 @@ feature -- Access
 			Result := character_8_item (index)
 		end
 
-	character_32_item (index: INTEGER): CHARACTER_32 is
+	character_32_item (index: INTEGER): CHARACTER_32
 			-- Character item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -102,7 +102,7 @@ feature -- Access
 			"built_in"
 		end
 
-	wide_character_item (index: INTEGER): CHARACTER_32 is
+	wide_character_item (index: INTEGER): CHARACTER_32
 			-- Character item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -111,7 +111,7 @@ feature -- Access
 			Result := character_32_item (index)
 		end
 
-	real_64_item (index: INTEGER): REAL_64 is
+	real_64_item (index: INTEGER): REAL_64
 			-- Double item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -120,7 +120,7 @@ feature -- Access
 			"built_in"
 		end
 
-	double_item (index: INTEGER): REAL_64 is
+	double_item (index: INTEGER): REAL_64
 			-- Double item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -129,7 +129,7 @@ feature -- Access
 			Result := real_64_item (index)
 		end
 
-	natural_8_item (index: INTEGER): NATURAL_8 is
+	natural_8_item (index: INTEGER): NATURAL_8
 			-- NATURAL_8 item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -138,7 +138,7 @@ feature -- Access
 			"built_in"
 		end
 
-	natural_16_item (index: INTEGER): NATURAL_16 is
+	natural_16_item (index: INTEGER): NATURAL_16
 			-- NATURAL_16 item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -147,7 +147,7 @@ feature -- Access
 			"built_in"
 		end
 
-	natural_32_item (index: INTEGER): NATURAL_32 is
+	natural_32_item (index: INTEGER): NATURAL_32
 			-- NATURAL_32 item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -156,7 +156,7 @@ feature -- Access
 			"built_in"
 		end
 
-	natural_64_item (index: INTEGER): NATURAL_64 is
+	natural_64_item (index: INTEGER): NATURAL_64
 			-- NATURAL_64 item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -165,7 +165,7 @@ feature -- Access
 			"built_in"
 		end
 
-	integer_8_item (index: INTEGER): INTEGER_8 is
+	integer_8_item (index: INTEGER): INTEGER_8
 			-- INTEGER_8 item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -174,7 +174,7 @@ feature -- Access
 			"built_in"
 		end
 
-	integer_16_item (index: INTEGER): INTEGER_16 is
+	integer_16_item (index: INTEGER): INTEGER_16
 			-- INTEGER_16 item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -183,7 +183,7 @@ feature -- Access
 			"built_in"
 		end
 
-	integer_32_item (index: INTEGER): INTEGER_32 is
+	integer_32_item (index: INTEGER): INTEGER_32
 			-- INTEGER_32 item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -192,7 +192,7 @@ feature -- Access
 			"built_in"
 		end
 
-	integer_item (index: INTEGER): INTEGER_32 is
+	integer_item (index: INTEGER): INTEGER_32
 			-- INTEGER_32 item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -201,7 +201,7 @@ feature -- Access
 			Result := integer_32_item (index)
 		end
 
-	integer_64_item (index: INTEGER): INTEGER_64 is
+	integer_64_item (index: INTEGER): INTEGER_64
 			-- INTEGER_64 item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -210,7 +210,7 @@ feature -- Access
 			"built_in"
 		end
 
-	pointer_item (index: INTEGER): POINTER is
+	pointer_item (index: INTEGER): POINTER
 			-- Pointer item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -219,7 +219,7 @@ feature -- Access
 			"built_in"
 		end
 
-	real_32_item (index: INTEGER): REAL_32 is
+	real_32_item (index: INTEGER): REAL_32
 			-- real item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -228,7 +228,7 @@ feature -- Access
 			"built_in"
 		end
 
-	real_item (index: INTEGER): REAL_32 is
+	real_item (index: INTEGER): REAL_32
 			-- real item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -239,14 +239,14 @@ feature -- Access
 
 feature -- Comparison
 
-	object_comparison: BOOLEAN is
+	object_comparison: BOOLEAN
 			-- Must search operations use `equal' rather than `='
 			-- for comparing references? (Default: no, use `='.)
 		external
 			"built_in"
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		local
@@ -276,7 +276,7 @@ feature -- Comparison
 
 feature -- Status setting
 
-	compare_objects is
+	compare_objects
 			-- Ensure that future search operations will use `equal'
 			-- rather than `=' for comparing references.
 		do
@@ -285,7 +285,7 @@ feature -- Status setting
 			object_comparison: object_comparison
 		end
 
-	compare_references is
+	compare_references
 			-- Ensure that future search operations will use `='
 			-- rather than `equal' for comparing references.
 		do
@@ -296,7 +296,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		local
 			i, nb, l_hash: INTEGER
@@ -352,13 +352,13 @@ feature -- Status report
 			Result := Result.hash_code
 		end
 
-	valid_index (k: INTEGER): BOOLEAN is
+	valid_index (k: INTEGER): BOOLEAN
 			-- Is `k' a valid key?
 		do
 			Result := k >= 1 and then k <= count
 		end
 
-	valid_type_for_index (v: ANY; index: INTEGER): BOOLEAN is
+	valid_type_for_index (v: ANY; index: INTEGER): BOOLEAN
 			-- Is object `v' a valid target for element at position `index'?
 		require
 			valid_index: valid_index (index)
@@ -433,22 +433,22 @@ feature -- Status report
 			end
 		end
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of element in Current.
 		external
 			"built_in"
 		end
 
-	lower: INTEGER is 1
+	lower: INTEGER = 1
 			-- Lower bound of TUPLE.
 
-	upper: INTEGER is
+	upper: INTEGER
 			-- Upper bound of TUPLE.
 		do
 			Result := count
 		end
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is Current empty?
 		do
 			Result := count = 0
@@ -456,7 +456,7 @@ feature -- Status report
 
 feature -- Element change
 
-	put (v: ANY; index: INTEGER) is
+	put (v: ANY; index: INTEGER)
 			-- Insert `v' at position `index'.
 		require
 			valid_index: valid_index (index)
@@ -539,7 +539,7 @@ feature -- Element change
 			end
 		end
 
-	put_reference (v: ANY; index: INTEGER) is
+	put_reference (v: ANY; index: INTEGER)
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -549,7 +549,7 @@ feature -- Element change
 			"built_in"
 		end
 
-	put_boolean (v: BOOLEAN; index: INTEGER) is
+	put_boolean (v: BOOLEAN; index: INTEGER)
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -558,7 +558,7 @@ feature -- Element change
 			"built_in"
 		end
 
-	put_character_8 (v: CHARACTER_8; index: INTEGER) is
+	put_character_8 (v: CHARACTER_8; index: INTEGER)
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -567,7 +567,7 @@ feature -- Element change
 			"built_in"
 		end
 
-	put_character (v: CHARACTER_8; index: INTEGER) is
+	put_character (v: CHARACTER_8; index: INTEGER)
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -576,7 +576,7 @@ feature -- Element change
 			put_character_8 (v, index)
 		end
 
-	put_character_32 (v: CHARACTER_32; index: INTEGER) is
+	put_character_32 (v: CHARACTER_32; index: INTEGER)
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -585,7 +585,7 @@ feature -- Element change
 			"built_in"
 		end
 
-	put_wide_character (v: CHARACTER_32; index: INTEGER) is
+	put_wide_character (v: CHARACTER_32; index: INTEGER)
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -594,7 +594,7 @@ feature -- Element change
 			put_character_32 (v, index)
 		end
 
-	put_real_64 (v: REAL_64; index: INTEGER) is
+	put_real_64 (v: REAL_64; index: INTEGER)
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -603,7 +603,7 @@ feature -- Element change
 			"built_in"
 		end
 
-	put_double (v: REAL_64; index: INTEGER) is
+	put_double (v: REAL_64; index: INTEGER)
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -612,7 +612,7 @@ feature -- Element change
 			put_real_64 (v, index)
 		end
 
-	put_real_32 (v: REAL_32; index: INTEGER) is
+	put_real_32 (v: REAL_32; index: INTEGER)
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -621,7 +621,7 @@ feature -- Element change
 			"built_in"
 		end
 
-	put_real (v: REAL_32; index: INTEGER) is
+	put_real (v: REAL_32; index: INTEGER)
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -630,7 +630,7 @@ feature -- Element change
 			put_real_32 (v, index)
 		end
 
-	put_pointer (v: POINTER; index: INTEGER) is
+	put_pointer (v: POINTER; index: INTEGER)
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -639,7 +639,7 @@ feature -- Element change
 			"built_in"
 		end
 
-	put_natural_8 (v: NATURAL_8; index: INTEGER) is
+	put_natural_8 (v: NATURAL_8; index: INTEGER)
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -648,7 +648,7 @@ feature -- Element change
 			"built_in"
 		end
 
-	put_natural_16 (v: NATURAL_16; index: INTEGER) is
+	put_natural_16 (v: NATURAL_16; index: INTEGER)
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -657,7 +657,7 @@ feature -- Element change
 			"built_in"
 		end
 
-	put_natural_32 (v: NATURAL_32; index: INTEGER) is
+	put_natural_32 (v: NATURAL_32; index: INTEGER)
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -666,7 +666,7 @@ feature -- Element change
 			"built_in"
 		end
 
-	put_natural_64 (v: NATURAL_64; index: INTEGER) is
+	put_natural_64 (v: NATURAL_64; index: INTEGER)
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -675,7 +675,7 @@ feature -- Element change
 			"built_in"
 		end
 
-	put_integer_32 (v: INTEGER_32; index: INTEGER) is
+	put_integer_32 (v: INTEGER_32; index: INTEGER)
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -684,7 +684,7 @@ feature -- Element change
 			"built_in"
 		end
 
-	put_integer (v: INTEGER_32; index: INTEGER) is
+	put_integer (v: INTEGER_32; index: INTEGER)
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -693,7 +693,7 @@ feature -- Element change
 			put_integer_32 (v, index)
 		end
 
-	put_integer_8 (v: INTEGER_8; index: INTEGER) is
+	put_integer_8 (v: INTEGER_8; index: INTEGER)
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -702,7 +702,7 @@ feature -- Element change
 			"built_in"
 		end
 
-	put_integer_16 (v: INTEGER_16; index: INTEGER) is
+	put_integer_16 (v: INTEGER_16; index: INTEGER)
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -711,7 +711,7 @@ feature -- Element change
 			"built_in"
 		end
 
-	put_integer_64 (v: INTEGER_64; index: INTEGER) is
+	put_integer_64 (v: INTEGER_64; index: INTEGER)
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -722,7 +722,7 @@ feature -- Element change
 
 feature -- Type queries
 
-	is_boolean_item (index: INTEGER): BOOLEAN is
+	is_boolean_item (index: INTEGER): BOOLEAN
 			-- Is item at `index' a BOOLEAN?
 		require
 			valid_index: valid_index (index)
@@ -730,7 +730,7 @@ feature -- Type queries
 			Result := (item_code (index) = boolean_code)
 		end
 
-	is_character_8_item, is_character_item (index: INTEGER): BOOLEAN is
+	is_character_8_item, is_character_item (index: INTEGER): BOOLEAN
 			-- Is item at `index' a CHARACTER_8?
 		require
 			valid_index: valid_index (index)
@@ -738,7 +738,7 @@ feature -- Type queries
 			Result := (item_code (index) = character_8_code)
 		end
 
-	is_character_32_item, is_wide_character_item (index: INTEGER): BOOLEAN is
+	is_character_32_item, is_wide_character_item (index: INTEGER): BOOLEAN
 			-- Is item at `index' a CHARACTER_32?
 		require
 			valid_index: valid_index (index)
@@ -746,7 +746,7 @@ feature -- Type queries
 			Result := (item_code (index) = character_32_code)
 		end
 
-	is_double_item (index: INTEGER): BOOLEAN is
+	is_double_item (index: INTEGER): BOOLEAN
 			-- Is item at `index' a REAL_64?
 		require
 			valid_index: valid_index (index)
@@ -754,7 +754,7 @@ feature -- Type queries
 			Result := (item_code (index) = real_64_code)
 		end
 
-	is_natural_8_item (index: INTEGER): BOOLEAN is
+	is_natural_8_item (index: INTEGER): BOOLEAN
 			-- Is item at `index' an NATURAL_8?
 		require
 			valid_index: valid_index (index)
@@ -762,7 +762,7 @@ feature -- Type queries
 			Result := (item_code (index) = natural_8_code)
 		end
 
-	is_natural_16_item (index: INTEGER): BOOLEAN is
+	is_natural_16_item (index: INTEGER): BOOLEAN
 			-- Is item at `index' an NATURAL_16?
 		require
 			valid_index: valid_index (index)
@@ -770,7 +770,7 @@ feature -- Type queries
 			Result := (item_code (index) = natural_16_code)
 		end
 
-	is_natural_32_item (index: INTEGER): BOOLEAN is
+	is_natural_32_item (index: INTEGER): BOOLEAN
 			-- Is item at `index' an NATURAL_32?
 		require
 			valid_index: valid_index (index)
@@ -778,7 +778,7 @@ feature -- Type queries
 			Result := (item_code (index) = natural_32_code)
 		end
 
-	is_natural_64_item (index: INTEGER): BOOLEAN is
+	is_natural_64_item (index: INTEGER): BOOLEAN
 			-- Is item at `index' an NATURAL_64?
 		require
 			valid_index: valid_index (index)
@@ -786,7 +786,7 @@ feature -- Type queries
 			Result := (item_code (index) = natural_64_code)
 		end
 
-	is_integer_8_item (index: INTEGER): BOOLEAN is
+	is_integer_8_item (index: INTEGER): BOOLEAN
 			-- Is item at `index' an INTEGER_8?
 		require
 			valid_index: valid_index (index)
@@ -794,7 +794,7 @@ feature -- Type queries
 			Result := (item_code (index) = integer_8_code)
 		end
 
-	is_integer_16_item (index: INTEGER): BOOLEAN is
+	is_integer_16_item (index: INTEGER): BOOLEAN
 			-- Is item at `index' an INTEGER_16?
 		require
 			valid_index: valid_index (index)
@@ -802,7 +802,7 @@ feature -- Type queries
 			Result := (item_code (index) = integer_16_code)
 		end
 
-	is_integer_item, is_integer_32_item (index: INTEGER): BOOLEAN is
+	is_integer_item, is_integer_32_item (index: INTEGER): BOOLEAN
 			-- Is item at `index' an INTEGER_32?
 		require
 			valid_index: valid_index (index)
@@ -810,7 +810,7 @@ feature -- Type queries
 			Result := (item_code (index) = integer_32_code)
 		end
 
-	is_integer_64_item (index: INTEGER): BOOLEAN is
+	is_integer_64_item (index: INTEGER): BOOLEAN
 			-- Is item at `index' an INTEGER_64?
 		require
 			valid_index: valid_index (index)
@@ -818,7 +818,7 @@ feature -- Type queries
 			Result := (item_code (index) = integer_64_code)
 		end
 
-	is_pointer_item (index: INTEGER): BOOLEAN is
+	is_pointer_item (index: INTEGER): BOOLEAN
 			-- Is item at `index' a POINTER?
 		require
 			valid_index: valid_index (index)
@@ -826,7 +826,7 @@ feature -- Type queries
 			Result := (item_code (index) = pointer_code)
 		end
 
-	is_real_item (index: INTEGER): BOOLEAN is
+	is_real_item (index: INTEGER): BOOLEAN
 			-- Is item at `index' a REAL_32?
 		require
 			valid_index: valid_index (index)
@@ -834,7 +834,7 @@ feature -- Type queries
 			Result := (item_code (index) = real_32_code)
 		end
 
-	is_reference_item (index: INTEGER): BOOLEAN is
+	is_reference_item (index: INTEGER): BOOLEAN
 			-- Is item at `index' a REFERENCE?
 		require
 			valid_index: valid_index (index)
@@ -842,7 +842,7 @@ feature -- Type queries
 			Result := (item_code (index) = reference_code)
 		end
 
-	is_numeric_item (index: INTEGER): BOOLEAN is
+	is_numeric_item (index: INTEGER): BOOLEAN
 			-- Is item at `index' a number?
 		obsolete
 			"Use the precise type query instead."
@@ -863,7 +863,7 @@ feature -- Type queries
 			end
 		end
 
-	is_uniform: BOOLEAN is
+	is_uniform: BOOLEAN
 			-- Are all items of the same basic type or all of reference type?
 		do
 			Result := is_tuple_uniform (any_code)
@@ -871,7 +871,7 @@ feature -- Type queries
 			yes_if_empty: (count = 0) implies Result
 		end
 
-	is_uniform_boolean: BOOLEAN is
+	is_uniform_boolean: BOOLEAN
 			-- Are all items of type BOOLEAN?
 		do
 			Result := is_tuple_uniform (boolean_code)
@@ -879,7 +879,7 @@ feature -- Type queries
 			yes_if_empty: (count = 0) implies Result
 		end
 
-	is_uniform_character_8, is_uniform_character: BOOLEAN is
+	is_uniform_character_8, is_uniform_character: BOOLEAN
 			-- Are all items of type CHARACTER_8?
 		do
 			Result := is_tuple_uniform (character_8_code)
@@ -887,7 +887,7 @@ feature -- Type queries
 			yes_if_empty: (count = 0) implies Result
 		end
 
-	is_uniforme_character_32, is_uniform_wide_character: BOOLEAN is
+	is_uniforme_character_32, is_uniform_wide_character: BOOLEAN
 			-- Are all items of type CHARACTER_32?
 		do
 			Result := is_tuple_uniform (character_32_code)
@@ -895,7 +895,7 @@ feature -- Type queries
 			yes_if_empty: (count = 0) implies Result
 		end
 
-	is_uniform_double: BOOLEAN is
+	is_uniform_double: BOOLEAN
 			-- Are all items of type REAL_64?
 		do
 			Result := is_tuple_uniform (real_64_code)
@@ -903,7 +903,7 @@ feature -- Type queries
 			yes_if_empty: (count = 0) implies Result
 		end
 
-	is_uniform_natural_8: BOOLEAN is
+	is_uniform_natural_8: BOOLEAN
 			-- Are all items of type NATURAL_8?
 		do
 			Result := is_tuple_uniform (natural_8_code)
@@ -911,7 +911,7 @@ feature -- Type queries
 			yes_if_empty: (count = 0) implies Result
 		end
 
-	is_uniform_natural_16: BOOLEAN is
+	is_uniform_natural_16: BOOLEAN
 			-- Are all items of type NATURAL_16?
 		do
 			Result := is_tuple_uniform (natural_16_code)
@@ -919,7 +919,7 @@ feature -- Type queries
 			yes_if_empty: (count = 0) implies Result
 		end
 
-	is_uniform_natural_32: BOOLEAN is
+	is_uniform_natural_32: BOOLEAN
 			-- Are all items of type NATURAL_32?
 		do
 			Result := is_tuple_uniform (natural_32_code)
@@ -927,7 +927,7 @@ feature -- Type queries
 			yes_if_empty: (count = 0) implies Result
 		end
 
-	is_uniform_natural_64: BOOLEAN is
+	is_uniform_natural_64: BOOLEAN
 			-- Are all items of type NATURAL_64?
 		do
 			Result := is_tuple_uniform (natural_64_code)
@@ -935,7 +935,7 @@ feature -- Type queries
 			yes_if_empty: (count = 0) implies Result
 		end
 
-	is_uniform_integer_8: BOOLEAN is
+	is_uniform_integer_8: BOOLEAN
 			-- Are all items of type INTEGER_8?
 		do
 			Result := is_tuple_uniform (integer_8_code)
@@ -943,7 +943,7 @@ feature -- Type queries
 			yes_if_empty: (count = 0) implies Result
 		end
 
-	is_uniform_integer_16: BOOLEAN is
+	is_uniform_integer_16: BOOLEAN
 			-- Are all items of type INTEGER_16?
 		do
 			Result := is_tuple_uniform (integer_16_code)
@@ -951,7 +951,7 @@ feature -- Type queries
 			yes_if_empty: (count = 0) implies Result
 		end
 
-	is_uniform_integer, is_uniform_integer_32: BOOLEAN is
+	is_uniform_integer, is_uniform_integer_32: BOOLEAN
 			-- Are all items of type INTEGER?
 		do
 			Result := is_tuple_uniform (integer_32_code)
@@ -959,7 +959,7 @@ feature -- Type queries
 			yes_if_empty: (count = 0) implies Result
 		end
 
-	is_uniform_integer_64: BOOLEAN is
+	is_uniform_integer_64: BOOLEAN
 			-- Are all items of type INTEGER_64?
 		do
 			Result := is_tuple_uniform (integer_64_code)
@@ -967,7 +967,7 @@ feature -- Type queries
 			yes_if_empty: (count = 0) implies Result
 		end
 
-	is_uniform_pointer: BOOLEAN is
+	is_uniform_pointer: BOOLEAN
 			-- Are all items of type POINTER?
 		do
 			Result := is_tuple_uniform (pointer_code)
@@ -975,7 +975,7 @@ feature -- Type queries
 			yes_if_empty: (count = 0) implies Result
 		end
 
-	is_uniform_real: BOOLEAN is
+	is_uniform_real: BOOLEAN
 			-- Are all items of type REAL_32?
 		do
 			Result := is_tuple_uniform (real_32_code)
@@ -983,7 +983,7 @@ feature -- Type queries
 			yes_if_empty: (count = 0) implies Result
 		end
 
-	is_uniform_reference: BOOLEAN is
+	is_uniform_reference: BOOLEAN
 			-- Are all items of reference type?
 		do
 			Result := is_tuple_uniform (reference_code)
@@ -993,7 +993,7 @@ feature -- Type queries
 
 feature -- Type conversion queries
 
-	convertible_to_double: BOOLEAN is
+	convertible_to_double: BOOLEAN
 			-- Is current convertible to an array of doubles?
 		obsolete
 			"Will be removed in future releases"
@@ -1024,7 +1024,7 @@ feature -- Type conversion queries
 			yes_if_empty: (count = 0) implies Result
 		end
 
-	convertible_to_real: BOOLEAN is
+	convertible_to_real: BOOLEAN
 			-- Is current convertible to an array of reals?
 		obsolete
 			"Will be removed in future releases"
@@ -1057,7 +1057,7 @@ feature -- Type conversion queries
 
 feature -- Conversion
 
-	arrayed: ARRAY [ANY] is
+	arrayed: ARRAY [ANY]
 			-- Items of Current as array
 		obsolete
 			"Will be removed in future releases"
@@ -1080,7 +1080,7 @@ feature -- Conversion
 			same_items: -- Items are the same in same order
 		end
 
-	boolean_arrayed: ARRAY [BOOLEAN] is
+	boolean_arrayed: ARRAY [BOOLEAN]
 			-- Items of Current as array
 		obsolete
 			"Will be removed in future releases"
@@ -1105,7 +1105,7 @@ feature -- Conversion
 			same_items: -- Items are the same in same order
 		end
 
-	character_8_arrayed, character_arrayed: ARRAY [CHARACTER_8] is
+	character_8_arrayed, character_arrayed: ARRAY [CHARACTER_8]
 			-- Items of Current as array
 		obsolete
 			"Will be removed in future releases"
@@ -1130,7 +1130,7 @@ feature -- Conversion
 			same_items: -- Items are the same in same order
 		end
 
-	double_arrayed: ARRAY [REAL_64] is
+	double_arrayed: ARRAY [REAL_64]
 			-- Items of Current as array
 		obsolete
 			"Will be removed in future releases"
@@ -1155,7 +1155,7 @@ feature -- Conversion
 			same_items: -- Items are the same in same order
 		end
 
-	integer_arrayed: ARRAY [INTEGER] is
+	integer_arrayed: ARRAY [INTEGER]
 			-- Items of Current as array
 		obsolete
 			"Will be removed in future releases"
@@ -1180,7 +1180,7 @@ feature -- Conversion
 			same_items: -- Items are the same in same order
 		end
 
-	pointer_arrayed: ARRAY [POINTER] is
+	pointer_arrayed: ARRAY [POINTER]
 			-- Items of Current as array
 		obsolete
 			"Will be removed in future releases"
@@ -1205,7 +1205,7 @@ feature -- Conversion
 			same_items: -- Items are the same in same order
 		end
 
-	real_arrayed: ARRAY [REAL_32] is
+	real_arrayed: ARRAY [REAL_32]
 			-- Items of Current as array
 		obsolete
 			"Will be removed in future releases"
@@ -1230,7 +1230,7 @@ feature -- Conversion
 			same_items: -- Items are the same in same order
 		end
 
-	string_arrayed: ARRAY [STRING] is
+	string_arrayed: ARRAY [STRING]
 			-- Items of Current as array
 			-- NOTE: Items with a type not cconforming to
 			--       type STRING are set to Void.
@@ -1258,7 +1258,7 @@ feature -- Conversion
 
 feature -- Retrieval
 
-	correct_mismatch is
+	correct_mismatch
 			-- Attempt to correct object mismatch using `mismatch_information'.
 		local
 			l_area: SPECIAL [ANY]
@@ -1292,7 +1292,7 @@ feature -- Retrieval
 
 feature -- Access
 
-	item_code (index: INTEGER): NATURAL_8 is
+	item_code (index: INTEGER): NATURAL_8
 			-- Type code of item at `index'. Used for
 			-- argument processing in ROUTINE
 		require
@@ -1301,30 +1301,30 @@ feature -- Access
 			"built_in"
 		end
 
-	reference_code: NATURAL_8 is 0x00
-	boolean_code: NATURAL_8 is 0x01
-	character_8_code, character_code: NATURAL_8 is 0x02
-	real_64_code: NATURAL_8 is 0x03
-	real_32_code: NATURAL_8 is 0x04
-	pointer_code: NATURAL_8 is 0x05
-	integer_8_code: NATURAL_8 is 0x06
-	integer_16_code: NATURAL_8 is 0x07
-	integer_32_code: NATURAL_8 is 0x08
-	integer_64_code: NATURAL_8 is 0x09
-	natural_8_code: NATURAL_8 is 0x0A
-	natural_16_code: NATURAL_8 is 0x0B
-	natural_32_code: NATURAL_8 is 0x0C
-	natural_64_code: NATURAL_8 is 0x0D
-	character_32_code, wide_character_code: NATURAL_8 is 0x0E
-	any_code: NATURAL_8 is 0xFF
+	reference_code: NATURAL_8 = 0x00
+	boolean_code: NATURAL_8 = 0x01
+	character_8_code, character_code: NATURAL_8 = 0x02
+	real_64_code: NATURAL_8 = 0x03
+	real_32_code: NATURAL_8 = 0x04
+	pointer_code: NATURAL_8 = 0x05
+	integer_8_code: NATURAL_8 = 0x06
+	integer_16_code: NATURAL_8 = 0x07
+	integer_32_code: NATURAL_8 = 0x08
+	integer_64_code: NATURAL_8 = 0x09
+	natural_8_code: NATURAL_8 = 0x0A
+	natural_16_code: NATURAL_8 = 0x0B
+	natural_32_code: NATURAL_8 = 0x0C
+	natural_64_code: NATURAL_8 = 0x0D
+	character_32_code, wide_character_code: NATURAL_8 = 0x0E
+	any_code: NATURAL_8 = 0xFF
 			-- Code used to identify type in TUPLE.
 
 feature {NONE} -- Implementation
 
-	area_name: STRING is "area"
+	area_name: STRING = "area"
 			-- Name of attributes where TUPLE elements were stored.
 
-	is_tuple_uniform (code: like item_code): BOOLEAN is
+	is_tuple_uniform (code: like item_code): BOOLEAN
 			-- Are all items of type `code'?
 		local
 			i, nb: INTEGER
@@ -1352,13 +1352,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_primes: PRIMES is
+	internal_primes: PRIMES
 			-- For quick access to prime numbers.
 		once
 			create Result
 		end
 
-	set_object_comparison (b: BOOLEAN) is
+	set_object_comparison (b: BOOLEAN)
 			-- Set `object_comparison' to `b'.
 		external
 			"built_in"

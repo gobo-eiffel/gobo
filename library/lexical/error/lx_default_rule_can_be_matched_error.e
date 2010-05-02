@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING) is
+	make (filename: STRING)
 			-- Create a new error reporting that the rule
 			-- default can be matched despite the "nodefault"
 			-- or -s option.
@@ -36,10 +36,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "Warning, %"$1%": nodefault or -s option given but default rule can be matched"
+	default_template: STRING = "Warning, %"$1%": nodefault or -s option given but default rule can be matched"
 			-- Default template used to built the error message
 
-	code: STRING is "LX0031"
+	code: STRING = "LX0031"
 			-- Error code
 
 invariant

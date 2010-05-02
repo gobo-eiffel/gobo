@@ -25,7 +25,7 @@ create
 
 feature -- Initialization
 
-	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT) is
+	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT)
 			-- Create new select clause with information held in `an_xml_element'.
 		local
 			a_value: STRING
@@ -47,7 +47,7 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Target_attribute_name: STRING is
+	Target_attribute_name: STRING
 			-- "target" attribute name
 		once
 			Result := "target"

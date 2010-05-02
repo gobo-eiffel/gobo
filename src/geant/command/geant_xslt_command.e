@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT) is
+	make (a_project: GEANT_PROJECT)
 			-- Create a new 'xslt' command.
 		do
 			precursor (a_project)
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- Can command be executed?
 		do
 			Result := (input_filename /= Void and then input_filename.count > 0) and
@@ -90,7 +90,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_input_filename (a_filename: like input_filename) is
+	set_input_filename (a_filename: like input_filename)
 			-- Set `input_filename' to `a_filename'.
 		require
 			a_filename_not_void : a_filename /= Void
@@ -101,7 +101,7 @@ feature -- Setting
 			input_filename_set: input_filename = a_filename
 		end
 
-	set_output_filename (a_filename: like output_filename) is
+	set_output_filename (a_filename: like output_filename)
 			-- Set `output_filename' to `a_filename'.
 		require
 			a_filename_not_void : a_filename /= Void
@@ -112,7 +112,7 @@ feature -- Setting
 			output_filename_set: output_filename = a_filename
 		end
 
-	set_stylesheet_filename (a_filename: like stylesheet_filename) is
+	set_stylesheet_filename (a_filename: like stylesheet_filename)
 			-- Set `stylesheet_filename' to `a_filename'.
 		require
 			a_filename_not_void : a_filename /= Void
@@ -123,7 +123,7 @@ feature -- Setting
 			stylesheet_filename_set: stylesheet_filename = a_filename
 		end
 
-	set_processor_xalan_java is
+	set_processor_xalan_java
 			-- Set `processor' to `Processor_xalan_java'
 		do
 			set_processor (Processor_xalan_java)
@@ -131,7 +131,7 @@ feature -- Setting
 			processor_set_to_xalan_java: processor = Processor_xalan_java
 		end
 
-	set_processor_xalan_cpp is
+	set_processor_xalan_cpp
 			-- Set `processor' to `Processor_xalan_cpp'
 		do
 			set_processor (Processor_xalan_cpp)
@@ -139,7 +139,7 @@ feature -- Setting
 			processor_set_to_xalan_cpp: processor = Processor_xalan_cpp
 		end
 
-	set_processor_xsltproc is
+	set_processor_xsltproc
 			-- Set `processor' to `Processor_xsltproc'
 		do
 			set_processor (Processor_xsltproc)
@@ -147,7 +147,7 @@ feature -- Setting
 			processor_set_to_xsltproc: processor = Processor_xsltproc
 		end
 
-	set_processor_gexslt is
+	set_processor_gexslt
 			-- Set `processor' to `Processor_gexslt'
 		do
 			set_processor (Processor_gexslt)
@@ -155,7 +155,7 @@ feature -- Setting
 			processor_set_to_gexslt: processor = Processor_gexslt
 		end
 
-	set_format (a_format: like format) is
+	set_format (a_format: like format)
 			-- Set `format' to `a_format'.
 		require
 			a_format_not_void : a_format /= Void
@@ -166,7 +166,7 @@ feature -- Setting
 			format_set: format = a_format
 		end
 
-	set_indent (a_indent: STRING) is
+	set_indent (a_indent: STRING)
 			-- Set `indent' to `a_indent'.
 		require
 			a_indent_not_void : a_indent /= Void
@@ -178,7 +178,7 @@ feature -- Setting
 			indent_set: indent = a_indent
 		end
 
-	set_extdirs (a_extdirs: like extdirs) is
+	set_extdirs (a_extdirs: like extdirs)
 			-- Set `extdirs' to `a_extdirs'.
 		require
 			a_extdirs_not_void : a_extdirs /= Void
@@ -189,7 +189,7 @@ feature -- Setting
 			extdirs_set: extdirs = a_extdirs
 		end
 
-	set_classpath (a_classpath: like classpath) is
+	set_classpath (a_classpath: like classpath)
 			-- Set `classpath' to `a_classpath'.
 		require
 			a_classpath_not_void : a_classpath /= Void
@@ -200,7 +200,7 @@ feature -- Setting
 			classpath_set: classpath = a_classpath
 		end
 
-	set_force (b: BOOLEAN) is
+	set_force (b: BOOLEAN)
 			-- Set `force' to `b'.
 		do
 			force := b
@@ -210,7 +210,7 @@ feature -- Setting
 
 feature -- Setting / Implementation
 
-	set_processor (a_processor: INTEGER) is
+	set_processor (a_processor: INTEGER)
 			-- Set `processor' to `a_processor'.
 		require
 			a_processor_valid : a_processor = Processor_xalan_cpp or a_processor = Processor_xalan_java or a_processor = Processor_xsltproc or a_processor = Processor_gexslt
@@ -222,7 +222,7 @@ feature -- Setting / Implementation
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute command.
 		local
 			a_input_filename: STRING
@@ -265,7 +265,7 @@ feature -- Execution
 			end
 		end
 
-	execute_xalan_cpp (a_variables: GEANT_VARIABLES) is
+	execute_xalan_cpp (a_variables: GEANT_VARIABLES)
 			-- Execute command using xalan C++ processor.
 		local
 			cmd: STRING
@@ -300,7 +300,7 @@ feature -- Execution
 			execute_shell (cmd)
 		end
 
-	execute_xalan_java (a_variables: GEANT_VARIABLES) is
+	execute_xalan_java (a_variables: GEANT_VARIABLES)
 			-- Execute command using xalan java processor.
 		local
 			cmd: STRING
@@ -347,7 +347,7 @@ feature -- Execution
 			execute_shell (cmd)
 		end
 
-	execute_xsltproc (a_variables: GEANT_VARIABLES) is
+	execute_xsltproc (a_variables: GEANT_VARIABLES)
 			-- Execute command using libxslt processor.
 		local
 			cmd: STRING
@@ -382,7 +382,7 @@ feature -- Execution
 		end
 
 
-	execute_gexslt (a_variables: GEANT_VARIABLES) is
+	execute_gexslt (a_variables: GEANT_VARIABLES)
 			-- Execute command using Gobo Eiffel xslt processor.
 		local
 			cmd: STRING
@@ -418,16 +418,16 @@ feature -- Execution
 
 feature -- Constants
 
-	Processor_xalan_cpp: INTEGER is 1
+	Processor_xalan_cpp: INTEGER = 1
 			-- Identifier for Xalan C++ processor
 
-	Processor_xalan_java: INTEGER is 2
+	Processor_xalan_java: INTEGER = 2
 			-- Identifier for Xalan Java processor
 
-	Processor_xsltproc: INTEGER is 3
+	Processor_xsltproc: INTEGER = 3
 			-- Identifier for libxslt processor
 
-	Processor_gexslt: INTEGER is 4
+	Processor_gexslt: INTEGER = 4
 			-- Identifier for Gobo Eiffel xslt processor
 
 end

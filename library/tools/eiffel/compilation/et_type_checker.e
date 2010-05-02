@@ -44,7 +44,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new type checker.
 		do
 			precursor {ET_CLASS_SUBPROCESSOR}
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 
 feature -- Validity checking
 
-	check_type_validity (a_type: ET_TYPE; a_current_feature_impl: ET_CLOSURE; a_current_class_impl: ET_CLASS; a_current_type: ET_BASE_TYPE) is
+	check_type_validity (a_type: ET_TYPE; a_current_feature_impl: ET_CLOSURE; a_current_class_impl: ET_CLASS; a_current_type: ET_BASE_TYPE)
 			-- Check validity of `a_type' written in `a_current_feature_impl' in
 			-- `a_current_class_impl' viewed from `a_current_type'. Resolve
 			-- identifiers (such as 'like identifier', 'BIT identifier',
@@ -93,7 +93,7 @@ feature -- Validity checking
 			current_feature_impl := old_feature_impl
 		end
 
-	check_creation_type_validity (a_type: ET_CLASS_TYPE; a_current_class_impl: ET_CLASS; a_current_type: ET_BASE_TYPE; a_position: ET_POSITION) is
+	check_creation_type_validity (a_type: ET_CLASS_TYPE; a_current_class_impl: ET_CLASS; a_current_type: ET_BASE_TYPE; a_position: ET_POSITION)
 			-- Check validity of `a_type' as a creation type written in `a_current_class_impl'
 			-- and viewed from `a_current_type'. Note that `a_type' should already be a valid
 			-- type by itself (call `check_type_validity' for that).
@@ -201,7 +201,7 @@ feature -- Validity checking
 												--
 												--   class A [G -> B create default_create end]
 												--   feature
-												--     f is
+												--     f
 												--       local
 												--         b: G
 												--       do
@@ -212,7 +212,7 @@ feature -- Validity checking
 												--
 												--   deferred class B
 												--   feature
-												--     f is
+												--     f
 												--        local
 												--          a: A [like Current]
 												--        do
@@ -229,7 +229,7 @@ feature -- Validity checking
 												--
 												--   deferred class B
 												--   feature
-												--     f is
+												--     f
 												--        local
 												--          a: like a1
 												--        do
@@ -243,7 +243,7 @@ feature -- Validity checking
 												--
 												--   deferred class B
 												--   feature
-												--     f is
+												--     f
 												--        local
 												--          a: A [like b]
 												--        do
@@ -311,7 +311,7 @@ feature -- Validity checking
 
 feature -- Type conversion
 
-	convert_feature (a_source_type: ET_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT): ET_CONVERT_FEATURE is
+	convert_feature (a_source_type: ET_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT): ET_CONVERT_FEATURE
 			-- Feature to convert `a_source_type' to `a_target_type';
 			-- Void if no such feature
 		require
@@ -352,7 +352,7 @@ feature -- Type conversion
 
 feature {NONE} -- Validity checking
 
-	check_bit_feature_validity (a_type: ET_BIT_FEATURE) is
+	check_bit_feature_validity (a_type: ET_BIT_FEATURE)
 			-- Check validity of `a_type'.
 			-- Resolve identifier in 'BIT identifier' if not already done.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -423,7 +423,7 @@ feature {NONE} -- Validity checking
 			end
 		end
 
-	check_bit_n_validity (a_type: ET_BIT_N) is
+	check_bit_n_validity (a_type: ET_BIT_N)
 			-- Check validity of `a_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -436,7 +436,7 @@ feature {NONE} -- Validity checking
 			-- already been checked during the parsing.
 		end
 
-	check_bit_type_validity (a_type: ET_BIT_TYPE) is
+	check_bit_type_validity (a_type: ET_BIT_TYPE)
 			-- Check validity of the integer constant.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -465,7 +465,7 @@ feature {NONE} -- Validity checking
 			end
 		end
 
-	check_class_type_validity (a_type: ET_CLASS_TYPE) is
+	check_class_type_validity (a_type: ET_CLASS_TYPE)
 			-- Check validity of `a_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -616,7 +616,7 @@ feature {NONE} -- Validity checking
 			end
 		end
 
-	check_like_current_validity (a_type: ET_LIKE_CURRENT) is
+	check_like_current_validity (a_type: ET_LIKE_CURRENT)
 			-- Check validity of `a_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -627,7 +627,7 @@ feature {NONE} -- Validity checking
 			-- No validity rule to be checked.
 		end
 
-	check_like_feature_validity (a_type: ET_LIKE_FEATURE) is
+	check_like_feature_validity (a_type: ET_LIKE_FEATURE)
 			-- Check validity of `a_type'.
 			-- Resolve identifer in 'like identifier' if not already done.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -776,7 +776,7 @@ feature {NONE} -- Validity checking
 			end
 		end
 
-	check_qualified_like_identifier_validity (a_type: ET_QUALIFIED_LIKE_IDENTIFIER) is
+	check_qualified_like_identifier_validity (a_type: ET_QUALIFIED_LIKE_IDENTIFIER)
 			-- Check validity of `a_type'.
 			-- Resolve 'identifier' in 'like identifier.b', 'like a.identifier'
 			-- or 'like {A}.identifier' if not already done.
@@ -860,7 +860,7 @@ feature {NONE} -- Validity checking
 			in_qualified_anchored_type := old_in_qualified_anchored_type
 		end
 
-	check_tuple_type_validity (a_type: ET_TUPLE_TYPE) is
+	check_tuple_type_validity (a_type: ET_TUPLE_TYPE)
 			-- Check validity of `a_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -892,7 +892,7 @@ feature -- Client/Supplier relationship
 	supplier_handler: ET_SUPPLIER_HANDLER
 			-- Supplier handler
 
-	set_supplier_handler (a_handler: like supplier_handler) is
+	set_supplier_handler (a_handler: like supplier_handler)
 			-- Set `supplier_handler' to `a_handler'.
 		do
 			supplier_handler := a_handler
@@ -902,7 +902,7 @@ feature -- Client/Supplier relationship
 
 feature {NONE} -- Client/Supplier relationship
 
-	report_qualified_anchored_type_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE) is
+	report_qualified_anchored_type_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE)
 			-- Report the fact that `a_supplier' is the target type of a
 			-- qualified anchored type in a feature or invariant in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
@@ -919,61 +919,61 @@ feature {NONE} -- Client/Supplier relationship
 
 feature {ET_AST_NODE} -- Type processing
 
-	process_bit_feature (a_type: ET_BIT_FEATURE) is
+	process_bit_feature (a_type: ET_BIT_FEATURE)
 			-- Process `a_type'.
 		do
 			check_bit_feature_validity (a_type)
 		end
 
-	process_bit_n (a_type: ET_BIT_N) is
+	process_bit_n (a_type: ET_BIT_N)
 			-- Process `a_type'.
 		do
 			check_bit_n_validity (a_type)
 		end
 
-	process_class (a_type: ET_CLASS) is
+	process_class (a_type: ET_CLASS)
 			-- Process `a_type'.
 		do
 			process_class_type (a_type)
 		end
 
-	process_class_type (a_type: ET_CLASS_TYPE) is
+	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
 		do
 			check_class_type_validity (a_type)
 		end
 
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE) is
+	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
 			-- Process `a_type'.
 		do
 			process_class_type (a_type)
 		end
 
-	process_like_current (a_type: ET_LIKE_CURRENT) is
+	process_like_current (a_type: ET_LIKE_CURRENT)
 			-- Process `a_type'.
 		do
 			check_like_current_validity (a_type)
 		end
 
-	process_like_feature (a_type: ET_LIKE_FEATURE) is
+	process_like_feature (a_type: ET_LIKE_FEATURE)
 			-- Process `a_type'.
 		do
 			check_like_feature_validity (a_type)
 		end
 
-	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE) is
+	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE)
 			-- Process `a_type'.
 		do
 			check_qualified_like_identifier_validity (a_type)
 		end
 
-	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
+	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE)
 			-- Process `a_type'.
 		do
 			check_qualified_like_identifier_validity (a_type)
 		end
 
-	process_tuple_type (a_type: ET_TUPLE_TYPE) is
+	process_tuple_type (a_type: ET_TUPLE_TYPE)
 			-- Process `a_type'.
 		do
 			check_tuple_type_validity (a_type)
@@ -1000,7 +1000,7 @@ feature {NONE} -- Implementation
 	constraint_context: ET_NESTED_TYPE_CONTEXT
 			-- Constraint context for type conformance checking
 
-	dummy_feature: ET_FEATURE is
+	dummy_feature: ET_FEATURE
 			-- Dummy feature
 		local
 			a_name: ET_FEATURE_NAME

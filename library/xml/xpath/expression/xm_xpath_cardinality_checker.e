@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 	-- TODO - possible singleton atomizer
 
-	make (a_sequence: XM_XPATH_EXPRESSION; a_request: INTEGER; a_role_locator: XM_XPATH_ROLE_LOCATOR) is
+	make (a_sequence: XM_XPATH_EXPRESSION; a_request: INTEGER; a_role_locator: XM_XPATH_ROLE_LOCATOR)
 			-- Establish invariant.
 		require
 			underlying_expression_not_void: a_sequence /= Void
@@ -57,7 +57,7 @@ feature -- Access
 
 feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -78,7 +78,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -94,14 +94,14 @@ feature -- Optimization
 				elseif base_expression.cardinality_subsumed_by (required_cardinality) then
 					set_replacement (a_replacement, base_expression)
 				else
-					a_replacement.put (Current)					
+					a_replacement.put (Current)
 				end
 			end
 		end
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -162,7 +162,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterator over the values of a sequence
 		local
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -177,14 +177,14 @@ feature -- Evaluation
 						create {XM_XPATH_NON_EMPTY_ITERATOR} last_iterator.make (l_iterator, role_locator, required_cardinality)
 					end
 				else
-					last_iterator := l_iterator 
+					last_iterator := l_iterator
 				end
 			else
-				last_iterator := l_iterator 
+				last_iterator := l_iterator
 			end
 		end
 
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over a node sequence.
 		local
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -195,24 +195,24 @@ feature -- Evaluation
 				if not is_cardinality_allows_zero (required_cardinality) then
 					create {XM_XPATH_NON_EMPTY_NODE_ITERATOR} last_node_iterator.make (l_iterator.as_node_iterator, role_locator, required_cardinality)
 				else
-					last_node_iterator := l_iterator 
+					last_node_iterator := l_iterator
 				end
 			else
-				last_node_iterator := l_iterator 
+				last_node_iterator := l_iterator
 			end
 		end
 
 feature {XM_XPATH_UNARY_EXPRESSION} -- Restricted
-	
-	display_operator: STRING is
+
+	display_operator: STRING
 			-- Format `operator' for display
 		do
 			Result := "checkCardinality (" + cardinality_in_english (required_cardinality) + ")"
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
-	
-	compute_cardinality is
+
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality (required_cardinality)

@@ -14,9 +14,9 @@ class XM_XSLT_FOR_EACH_GROUP_CONSTANTS
 
 feature -- Access
 
-	Group_by_algorithm: INTEGER is 1
-	Group_adjacent_algorithm: INTEGER is 2
-	Group_starting_with_algorithm: INTEGER is 3
-	Group_ending_with_algorithm: INTEGER is 4
+	Group_by_algorithm: INTEGER = 1
+	Group_adjacent_algorithm: INTEGER = 2
+	Group_starting_with_algorithm: INTEGER = 3
+	Group_ending_with_algorithm: INTEGER = 4
 
 end

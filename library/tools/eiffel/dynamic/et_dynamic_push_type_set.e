@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type: like static_type) is
+	make (a_type: like static_type)
 			-- Create a new empty dynamic type set.
 			-- Set `first_type' to `a_type' if it is expanded.
 		require
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Element change
 
-	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM) is
+	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM)
 			-- Add `a_type' coming from `a_type_set' to current target.
 		local
 			old_count: INTEGER
@@ -68,7 +68,7 @@ feature -- Element change
 			end
 		end
 
-	put_target (a_target: ET_DYNAMIC_TARGET; a_system: ET_DYNAMIC_SYSTEM) is
+	put_target (a_target: ET_DYNAMIC_TARGET; a_system: ET_DYNAMIC_SYSTEM)
 			-- Add `a_target' to current set.
 			-- (Targets are supersets of current set.)
 		local
@@ -95,7 +95,7 @@ feature -- Element change
 			end
 		end
 
-	propagate_can_be_void (a_type_set: ET_DYNAMIC_TYPE_SET) is
+	propagate_can_be_void (a_type_set: ET_DYNAMIC_TYPE_SET)
 			-- Propagate the information that `a_type_set', from which types
 			-- are propagated, is the dynamic type set of an expression which
 			-- can be void at some point during execution.

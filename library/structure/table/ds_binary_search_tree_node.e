@@ -23,7 +23,7 @@ create {DS_BINARY_SEARCH_TREE}
 
 feature {NONE} -- Initialization
 
-	make (a_item: like item; a_key: like key) is
+	make (a_item: like item; a_key: like key)
 			-- Create a binary search tree node which associates
 			-- `a_key' with `a_item'.
 		do
@@ -41,7 +41,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER, DS_BINARY_SEARCH_TREE_CONTAINER_NODE, 
 
 feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Duplication
 
-	copy_item_and_key_to (other: like Current) is
+	copy_item_and_key_to (other: like Current)
 			-- Copy `item' and `key' to `other'.
 		do
 			other.set_item (item)
@@ -50,7 +50,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Duplication
 
 feature {DS_BINARY_SEARCH_TREE_CONTAINER, DS_BINARY_SEARCH_TREE_CONTAINER_NODE} -- Status setting
 
-	set_item (a_item: like item) is
+	set_item (a_item: like item)
 			-- Set `item' to `a_item'.
 		do
 			item := a_item

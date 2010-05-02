@@ -57,7 +57,7 @@ feature -- Status report
 	sort_needed: BOOLEAN
 			-- Should the symbol class be sorted?
 
-	valid_symbols (min, max: INTEGER): BOOLEAN is
+	valid_symbols (min, max: INTEGER): BOOLEAN
 			-- Are symbols in current class within
 			-- bounds `min' and `max'?
 		require
@@ -71,7 +71,7 @@ feature -- Status report
 			end
 		end
 
-	has (symbol: INTEGER): BOOLEAN is
+	has (symbol: INTEGER): BOOLEAN
 			-- Does current class include `symbol'?
 			-- (Does not take into account `negated'.)
 		local
@@ -105,7 +105,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_negated (b: BOOLEAN) is
+	set_negated (b: BOOLEAN)
 			-- Set `negated' to `b'.
 		do
 			negated := b
@@ -115,7 +115,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	put (symbol: INTEGER) is
+	put (symbol: INTEGER)
 			-- Add `symbol' to symbol class.
 		do
 			if not has (symbol) then
@@ -130,7 +130,7 @@ feature -- Element change
 
 feature -- Convertion
 
-	convert_to_equivalence (classes: LX_EQUIVALENCE_CLASSES) is
+	convert_to_equivalence (classes: LX_EQUIVALENCE_CLASSES)
 			-- Convert symbol class to class made of its
 			-- symbols' equivalence classes.
 		require
@@ -159,7 +159,7 @@ feature -- Convertion
 
 feature -- Sort
 
-	sort is
+	sort
 			-- Sort symbols in class.
 			-- Use a shell sort since the list
 			-- of symbols could be large.
@@ -170,7 +170,7 @@ feature -- Sort
 			sorted: not sort_needed
 		end
 
-	sorter: DS_SHELL_SORTER [INTEGER] is
+	sorter: DS_SHELL_SORTER [INTEGER]
 			-- Shell sorter
 		local
 			a_comparator: KL_COMPARABLE_COMPARATOR [INTEGER]

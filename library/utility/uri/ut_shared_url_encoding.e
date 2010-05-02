@@ -1,6 +1,6 @@
 note
 
-	description: 
+	description:
 
 		"Shared instance of UT_URL_ENCODING"
 
@@ -13,7 +13,7 @@ class UT_SHARED_URL_ENCODING
 
 feature -- Access
 
-	Url_encoding: UT_URL_ENCODING is
+	Url_encoding: UT_URL_ENCODING
 			-- Shared instance of URL encoding routines
 		once
 			create Result

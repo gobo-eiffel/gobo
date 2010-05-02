@@ -32,7 +32,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT) is
+	make (a_project: GEANT_PROJECT)
 			-- Initialize command by setting `project' to `a_project'.
 		require
 			project_not_void: a_project /= Void
@@ -48,7 +48,7 @@ feature -- Status report
 	exit_code: INTEGER
 			-- Exit code of last execution
 
-	is_exit_command: BOOLEAN is
+	is_exit_command: BOOLEAN
 			-- Is current command the exit command?
 		do
 			Result := False
@@ -64,7 +64,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_project (a_project: like project) is
+	set_project (a_project: like project)
 			-- Set `project' to `a_project'.
 		require
 			project_not_void: a_project /= Void
@@ -74,7 +74,7 @@ feature -- Setting
 			project_set: project = a_project
 		end
 
-	set_exit_code (a_exit_code: INTEGER) is
+	set_exit_code (a_exit_code: INTEGER)
 			-- Set `exit_code' to `a_exit_code'.
 		do
 			exit_code := a_exit_code
@@ -84,7 +84,7 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	validate_condition (a_condition: BOOLEAN; a_message: STRING; a_is_valid: DS_CELL [BOOLEAN]) is
+	validate_condition (a_condition: BOOLEAN; a_message: STRING; a_is_valid: DS_CELL [BOOLEAN])
 			-- If `a_is_valid' and then not `a_condition' add `a_message' to `validation_messages' and set `a_is_valid' to False.
 		require
 			a_message_not_void: a_message /= Void
@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
  			validation_message_set_if_condition_false: not a_condition implies validation_messages.last = a_message
 		end
 
-	execute_shell (a_command: STRING) is
+	execute_shell (a_command: STRING)
 			-- Execute shell command `a_command'.
 		require
 			a_command_not_void: a_command /= Void

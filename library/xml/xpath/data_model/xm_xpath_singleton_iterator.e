@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SEQUENCE_ITERATOR [G]
 		redefine
-			is_reversible_iterator, reverse_iterator, 
+			is_reversible_iterator, reverse_iterator,
 			is_singleton_iterator, as_singleton_iterator,
 			is_last_position_finder, is_invulnerable, last_position,
 			is_realizable_iterator, realize
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_value: G) is
+	make (a_value: G)
 		do
 			value := a_value
 			gone := (a_value = Void)
@@ -40,15 +40,15 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item: G is
+	item: G
 			-- Value or node at the current position
 		do
 			if index = 1 then
 				Result := value
-			end			
+			end
 		end
-	
-	last_position: INTEGER is
+
+	last_position: INTEGER
 			-- Last position (= number of items in sequence)
 		do
 			if value = Void then
@@ -58,44 +58,44 @@ feature -- Access
 			end
 		end
 
-	reverse_iterator: like Current is
+	reverse_iterator: like Current
 		do
 			create Result.make (value)
 		end
 
 feature -- Status report
 
-	is_singleton_iterator: BOOLEAN is
+	is_singleton_iterator: BOOLEAN
 			-- Is `Current' a singleton iterator?
 		do
 			Result := True
 		end
 
-	is_realizable_iterator: BOOLEAN is
+	is_realizable_iterator: BOOLEAN
 			-- Is `Current' a realizable iterator?
 		do
 			Result := True
 		end
 
-	is_reversible_iterator: BOOLEAN is
+	is_reversible_iterator: BOOLEAN
 			-- Does `Current' yield a reversible_sequence?
 		do
 			Result := True
 		end
 
-	is_last_position_finder: BOOLEAN is
+	is_last_position_finder: BOOLEAN
 			-- Can `Current' find the last position?
 		do
 			Result := True
 		end
 
-	is_invulnerable: BOOLEAN is
+	is_invulnerable: BOOLEAN
 			-- Is `Current' guarenteed free of implicit errors?
 		do
 			Result := True
 		end
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
 			Result := gone
@@ -103,7 +103,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move to next position
 		do
 			index := index + 1
@@ -114,7 +114,7 @@ feature -- Cursor movement
 
 feature -- Evaluation
 
-	realize is
+	realize
 			-- Realize the sequence as a value.
 		do
 			if value.is_atomic_value then
@@ -129,7 +129,7 @@ feature -- Evaluation
 
 feature -- Conversion
 
-	as_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [G] is
+	as_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [G]
 			-- `Current' seen as a singleton iterator
 		do
 			Result := Current
@@ -137,7 +137,7 @@ feature -- Conversion
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original;
 			-- The new iterator will be repositioned at the start of the sequence
 		do

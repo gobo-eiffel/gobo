@@ -13,7 +13,7 @@ revision: "$Revision$"
 class XM_XPATH_DATE_AND_DURATION
 
 inherit
-	
+
 	XM_XPATH_ARITHMETIC_EXPRESSION
 		redefine
 			make, evaluate_item
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; a_operand_two: XM_XPATH_EXPRESSION) is
+	make (a_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; a_operand_two: XM_XPATH_EXPRESSION)
 			-- Establish invariant
 		do
 
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 			-- We only take this path if the type could not be determined statically.
 		local
@@ -84,4 +84,4 @@ invariant
 		second_operand_is_duration: initialized implies is_sub_type (second_operand.item_type, type_factory.duration_type)
 
 end
-	
+

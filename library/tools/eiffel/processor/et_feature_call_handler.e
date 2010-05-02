@@ -133,7 +133,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new feature call handler.
 		do
 			create expression_type_finder.make
@@ -149,7 +149,7 @@ feature {NONE} -- Initialization
 
 feature -- Processing
 
-	process_feature (a_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE) is
+	process_feature (a_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE)
 			-- Traverse `a_feature' in `a_current_type' and report when feature calls
 			-- are found using 'report_*' features that can be redefined in descendants.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -224,7 +224,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_assertions_enabled (b: BOOLEAN) is
+	set_assertions_enabled (b: BOOLEAN)
 			-- Set `assertions_enabled' to `b'.
 		do
 			assertions_enabled := b
@@ -232,7 +232,7 @@ feature -- Status setting
 			assertions_enabled_set: assertions_enabled = b
 		end
 
-	set_debug_instructions_enabled (b: BOOLEAN) is
+	set_debug_instructions_enabled (b: BOOLEAN)
 			-- Set `debug_instructions_enabled' to `b'.
 		do
 			debug_instructions_enabled := b
@@ -240,7 +240,7 @@ feature -- Status setting
 			debug_instructions_enabled_set: debug_instructions_enabled = b
 		end
 
-	set_anchored_types_enabled (b: BOOLEAN) is
+	set_anchored_types_enabled (b: BOOLEAN)
 			-- Set `anchored_types_enabled' to `b'.
 		do
 			anchored_types_enabled := b
@@ -248,7 +248,7 @@ feature -- Status setting
 			anchored_types_enabled_set: anchored_types_enabled = b
 		end
 
-	set_internal_error_enabled (b: BOOLEAN) is
+	set_internal_error_enabled (b: BOOLEAN)
 			-- Set `internal_error_enabled' to `b'.
 		do
 			internal_error_enabled := b
@@ -259,7 +259,7 @@ feature -- Status setting
 
 feature {NONE} -- Event handling
 
-	report_polymorphic_feature_call (a_feature: ET_FEATURE; a_target_class: ET_CLASS) is
+	report_polymorphic_feature_call (a_feature: ET_FEATURE; a_target_class: ET_CLASS)
 			-- Report a call to `a_feature' where its versions in descendants of
 			-- `a_target_class' should be taken into account.
 		require
@@ -268,7 +268,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_monomorphic_feature_call (a_feature: ET_FEATURE; a_target_class: ET_CLASS) is
+	report_monomorphic_feature_call (a_feature: ET_FEATURE; a_target_class: ET_CLASS)
 			-- Report a call to `a_feature' where its versions in descendants of
 			-- `a_target_class' should not be taken into account.
 		require
@@ -277,7 +277,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_anchored_type (a_type: ET_LIKE_FEATURE; a_query: ET_QUERY) is
+	report_anchored_type (a_type: ET_LIKE_FEATURE; a_query: ET_QUERY)
 			-- Report that the anchored type `a_type' has been processed
 			-- with `a_query' as its anchor.
 		require
@@ -288,7 +288,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_attribute_address (an_expression: ET_FEATURE_ADDRESS; an_attribute: ET_QUERY) is
+	report_attribute_address (an_expression: ET_FEATURE_ADDRESS; an_attribute: ET_QUERY)
 			-- Report that attribute `an_attribute' has been processed
 			-- as target of feature address `an_expression'.
 		require
@@ -300,7 +300,7 @@ feature {NONE} -- Event handling
 			report_polymorphic_feature_call (an_attribute, current_class)
 		end
 
-	report_attribute_assignment_target (a_writable: ET_WRITABLE; an_attribute: ET_QUERY) is
+	report_attribute_assignment_target (a_writable: ET_WRITABLE; an_attribute: ET_QUERY)
 			-- Report that attribute `an_attribute' has been processed
 			-- as target `a_writable' of an assignment (attempt).
 		require
@@ -312,7 +312,7 @@ feature {NONE} -- Event handling
 			report_polymorphic_feature_call (an_attribute, current_class)
 		end
 
-	report_attribute_not_stripped (an_expression: ET_STRIP_EXPRESSION; an_attribute: ET_QUERY) is
+	report_attribute_not_stripped (an_expression: ET_STRIP_EXPRESSION; an_attribute: ET_QUERY)
 			-- Report that attribute `an_attribute' has not been stripped
 			-- when processing the strip expression `an_expression'.
 		require
@@ -323,7 +323,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_bit_feature_type (a_type: ET_BIT_FEATURE; a_query: ET_QUERY) is
+	report_bit_feature_type (a_type: ET_BIT_FEATURE; a_query: ET_QUERY)
 			-- Report that the bit type `a_type' (of the form "BIT feature_name")
 			-- has not been processed with `a_query' as its feature.
 		require
@@ -334,7 +334,7 @@ feature {NONE} -- Event handling
 		end
 
 	report_creation_expression (an_expression: ET_EXPRESSION; a_creation_type: ET_TYPE_CONTEXT;
-		a_procedure: ET_PROCEDURE; an_actuals: ET_ACTUAL_ARGUMENTS) is
+		a_procedure: ET_PROCEDURE; an_actuals: ET_ACTUAL_ARGUMENTS)
 			-- Report that a creation expression `an_expression' has been processed,
 			-- where `a_creation_type' is the creation type and `a_procedure' is the creation procedure.
 		require
@@ -350,7 +350,7 @@ feature {NONE} -- Event handling
 			report_polymorphic_feature_call (a_procedure, l_base_class)
 		end
 
-	report_creation_instruction (an_instruction: ET_CREATION_INSTRUCTION; a_creation_type: ET_TYPE_CONTEXT; a_procedure: ET_PROCEDURE) is
+	report_creation_instruction (an_instruction: ET_CREATION_INSTRUCTION; a_creation_type: ET_TYPE_CONTEXT; a_procedure: ET_PROCEDURE)
 			-- Report that a creation instruction `an_instruction' has been processed,
 			-- where `a_creation_type' is the creation type and `a_procedure' is the creation procedure.
 		require
@@ -366,7 +366,7 @@ feature {NONE} -- Event handling
 			report_polymorphic_feature_call (a_procedure, l_base_class)
 		end
 
-	report_function_address (an_expression: ET_FEATURE_ADDRESS; a_query: ET_QUERY) is
+	report_function_address (an_expression: ET_FEATURE_ADDRESS; a_query: ET_QUERY)
 			-- Report that function `a_query' has been processed
 			-- as target of feature address `an_expression'.
 		require
@@ -382,7 +382,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION; a_parent_type: ET_BASE_TYPE; a_query: ET_QUERY) is
+	report_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION; a_parent_type: ET_BASE_TYPE; a_query: ET_QUERY)
 			-- Report that a precursor expression has been processed.
 			-- `a_parent_type' is viewed in the context of `current_type'
 			-- and `a_query' is the precursor feature.
@@ -398,7 +398,7 @@ feature {NONE} -- Event handling
 			report_monomorphic_feature_call (a_query, l_base_class)
 		end
 
-	report_precursor_instruction (an_instruction: ET_PRECURSOR_INSTRUCTION; a_parent_type: ET_BASE_TYPE; a_procedure: ET_PROCEDURE) is
+	report_precursor_instruction (an_instruction: ET_PRECURSOR_INSTRUCTION; a_parent_type: ET_BASE_TYPE; a_procedure: ET_PROCEDURE)
 			-- Report that a precursor instruction has been processed.
 			-- `a_parent_type' is viewed in the context of `current_type'
 			-- and `a_procedure' is the precursor feature.
@@ -414,7 +414,7 @@ feature {NONE} -- Event handling
 			report_monomorphic_feature_call (a_procedure, l_base_class)
 		end
 
-	report_procedure_address (an_expression: ET_FEATURE_ADDRESS; a_procedure: ET_PROCEDURE) is
+	report_procedure_address (an_expression: ET_FEATURE_ADDRESS; a_procedure: ET_PROCEDURE)
 			-- Report that procedure `a_procedure' has been processed
 			-- as target of feature address `an_expression'.
 		require
@@ -430,7 +430,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_qualified_anchored_type (a_type: ET_QUALIFIED_LIKE_IDENTIFIER; a_target_type: ET_TYPE_CONTEXT; a_query: ET_QUERY) is
+	report_qualified_anchored_type (a_type: ET_QUALIFIED_LIKE_IDENTIFIER; a_target_type: ET_TYPE_CONTEXT; a_query: ET_QUERY)
 			-- Report that the qualified anchored type `a_type' has been processed
 			-- with `a_query' from `a_target_type' as its anchor.
 		require
@@ -442,7 +442,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_qualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_target_type: ET_TYPE_CONTEXT; a_query: ET_QUERY) is
+	report_qualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_target_type: ET_TYPE_CONTEXT; a_query: ET_QUERY)
 			-- Report that a qualified call expression `an_expression' has been processed,
 			-- where `a_target_type' is the type of the target and `a_query' is the
 			-- query being called.
@@ -460,7 +460,7 @@ feature {NONE} -- Event handling
 			report_polymorphic_feature_call (a_query, l_base_class)
 		end
 
-	report_qualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_target_type: ET_TYPE_CONTEXT; a_procedure: ET_PROCEDURE) is
+	report_qualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_target_type: ET_TYPE_CONTEXT; a_procedure: ET_PROCEDURE)
 			-- Report that a qualified call instruction `an_instruction' has been processed,
 			-- where `a_target_type' is the type of the target and `a_procedure' is the
 			-- procedure being called.
@@ -478,7 +478,7 @@ feature {NONE} -- Event handling
 			report_polymorphic_feature_call (a_procedure, l_base_class)
 		end
 
-	report_qualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_target_type: ET_TYPE_CONTEXT; a_procedure: ET_PROCEDURE) is
+	report_qualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_target_type: ET_TYPE_CONTEXT; a_procedure: ET_PROCEDURE)
 			-- Report that a qualified procedure call agent `an_agent' has been processed,
 			-- where `a_procedure' is the procedure being called by the agent and
 			-- `a_target_type' is the type of the target of that call.
@@ -497,7 +497,7 @@ feature {NONE} -- Event handling
 			report_polymorphic_feature_call (a_procedure, l_base_class)
 		end
 
-	report_qualified_query_call_agent (an_expression: ET_CALL_AGENT; a_target_type: ET_TYPE_CONTEXT; a_query: ET_QUERY) is
+	report_qualified_query_call_agent (an_expression: ET_CALL_AGENT; a_target_type: ET_TYPE_CONTEXT; a_query: ET_QUERY)
 			-- Report that a qualified query call agent `an_expression' has been processed.
 			-- where `a_query' is the query being called by the agent and
 			-- `a_target_type' is the type of the target of that call.
@@ -516,7 +516,7 @@ feature {NONE} -- Event handling
 			report_polymorphic_feature_call (a_query, l_base_class)
 		end
 
-	report_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION; a_type: ET_TYPE; a_query: ET_QUERY) is
+	report_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION; a_type: ET_TYPE; a_query: ET_QUERY)
 			-- Report that a static call expression `an_expression' has been processed,
 			-- where `a_query' is the query being called anf `a_type' is the type
 			-- as declared in the class where `an_expression' was written.
@@ -532,7 +532,7 @@ feature {NONE} -- Event handling
 			report_polymorphic_feature_call (a_query, l_base_class)
 		end
 
-	report_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION; a_type: ET_TYPE; a_procedure: ET_PROCEDURE) is
+	report_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION; a_type: ET_TYPE; a_procedure: ET_PROCEDURE)
 			-- Report that a static call instruction `an_instruction' has been processed,
 			-- where `a_procedure' is the procedure being called anf `a_type' is the type
 			-- as declared in the class where `an_expression' was written.
@@ -548,7 +548,7 @@ feature {NONE} -- Event handling
 			report_polymorphic_feature_call (a_procedure, l_base_class)
 		end
 
-	report_unqualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_query: ET_QUERY) is
+	report_unqualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_query: ET_QUERY)
 			-- Report that an unqualified call expression `an_expression' has been processed,
 			-- where `a_query' is the query being called.
 		require
@@ -565,7 +565,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_unqualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_procedure: ET_PROCEDURE) is
+	report_unqualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_procedure: ET_PROCEDURE)
 			-- Report that an unqualified call instruction `an_instruction' has been processed,
 			-- where `a_procedure' is the procedure being called.
 		require
@@ -582,7 +582,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_unqualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE) is
+	report_unqualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE)
 			-- Report that an unqualified procedure call agent `an_expression' has been processed,
 			-- where `a_procedure' is the procedure being called by the agent.
 		require
@@ -600,7 +600,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_unqualified_query_call_agent (an_expression: ET_CALL_AGENT; a_query: ET_QUERY) is
+	report_unqualified_query_call_agent (an_expression: ET_CALL_AGENT; a_query: ET_QUERY)
 			-- Report that an unqualified query call agent `an_expression' has been processed,
 			-- where `a_query' is the query being called by the agent.
 		require
@@ -620,7 +620,7 @@ feature {NONE} -- Event handling
 
 feature {ET_AST_NODE} -- Processing
 
-	process_actual_arguments (a_list: ET_ACTUAL_ARGUMENTS) is
+	process_actual_arguments (a_list: ET_ACTUAL_ARGUMENTS)
 			-- Process `a_list'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -639,7 +639,7 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error)
 		end
 
-	process_actual_parameter_list (a_list: ET_ACTUAL_PARAMETER_LIST) is
+	process_actual_parameter_list (a_list: ET_ACTUAL_PARAMETER_LIST)
 			-- Process `a_list'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -658,7 +658,7 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error)
 		end
 
-	process_agent_argument_operand_list (a_list: ET_AGENT_ARGUMENT_OPERAND_LIST) is
+	process_agent_argument_operand_list (a_list: ET_AGENT_ARGUMENT_OPERAND_LIST)
 			-- Process `a_list'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -675,7 +675,7 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error)
 		end
 
-	process_agent_open_target (a_target: ET_AGENT_OPEN_TARGET) is
+	process_agent_open_target (a_target: ET_AGENT_OPEN_TARGET)
 			-- Process `a_target'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
@@ -685,7 +685,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_agent_typed_open_argument (an_argument: ET_AGENT_TYPED_OPEN_ARGUMENT) is
+	process_agent_typed_open_argument (an_argument: ET_AGENT_TYPED_OPEN_ARGUMENT)
 			-- Process `an_argument'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
@@ -695,7 +695,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_assertion (an_assertion: ET_ASSERTION) is
+	process_assertion (an_assertion: ET_ASSERTION)
 			-- Process `an_assertion'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -707,7 +707,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_assertions (a_list: ET_ASSERTIONS) is
+	process_assertions (a_list: ET_ASSERTIONS)
 			-- Process `a_list'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -728,14 +728,14 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error)
 		end
 
-	process_assigner_instruction (an_instruction: ET_ASSIGNER_INSTRUCTION) is
+	process_assigner_instruction (an_instruction: ET_ASSIGNER_INSTRUCTION)
 			-- Process `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_qualified_call_instruction (an_instruction)
 		end
 
-	process_assignment (an_instruction: ET_ASSIGNMENT) is
+	process_assignment (an_instruction: ET_ASSIGNMENT)
 			-- Process `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -748,7 +748,7 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error or has_fatal_error)
 		end
 
-	process_assignment_attempt (an_instruction: ET_ASSIGNMENT_ATTEMPT) is
+	process_assignment_attempt (an_instruction: ET_ASSIGNMENT_ATTEMPT)
 			-- Process `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -761,7 +761,7 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error or has_fatal_error)
 		end
 
-	process_attribute (a_feature: ET_ATTRIBUTE) is
+	process_attribute (a_feature: ET_ATTRIBUTE)
 			-- Process `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
@@ -771,21 +771,21 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_bang_instruction (an_instruction: ET_BANG_INSTRUCTION) is
+	process_bang_instruction (an_instruction: ET_BANG_INSTRUCTION)
 			-- Process `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_creation_instruction (an_instruction)
 		end
 
-	process_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT) is
+	process_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_integer_constant (a_constant)
 		end
 
-	process_bit_feature (a_type: ET_BIT_FEATURE) is
+	process_bit_feature (a_type: ET_BIT_FEATURE)
 			-- Process `a_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -807,35 +807,35 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION) is
+	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_qualified_call_expression (an_expression)
 		end
 
-	process_c1_character_constant (a_constant: ET_C1_CHARACTER_CONSTANT) is
+	process_c1_character_constant (a_constant: ET_C1_CHARACTER_CONSTANT)
 			-- Process `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_character_constant (a_constant)
 		end
 
-	process_c2_character_constant (a_constant: ET_C2_CHARACTER_CONSTANT) is
+	process_c2_character_constant (a_constant: ET_C2_CHARACTER_CONSTANT)
 			-- Process `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_character_constant (a_constant)
 		end
 
-	process_c3_character_constant (a_constant: ET_C3_CHARACTER_CONSTANT) is
+	process_c3_character_constant (a_constant: ET_C3_CHARACTER_CONSTANT)
 			-- Process `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_character_constant (a_constant)
 		end
 
-	process_call_agent (an_expression: ET_CALL_AGENT) is
+	process_call_agent (an_expression: ET_CALL_AGENT)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -865,7 +865,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_call_expression (an_expression: ET_CALL_EXPRESSION) is
+	process_call_expression (an_expression: ET_CALL_EXPRESSION)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
@@ -876,7 +876,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_call_instruction (an_instruction: ET_CALL_INSTRUCTION) is
+	process_call_instruction (an_instruction: ET_CALL_INSTRUCTION)
 			-- Process `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
@@ -887,7 +887,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_character_constant (a_constant: ET_CHARACTER_CONSTANT) is
+	process_character_constant (a_constant: ET_CHARACTER_CONSTANT)
 			-- Process `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -904,7 +904,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_check_instruction (an_instruction: ET_CHECK_INSTRUCTION) is
+	process_check_instruction (an_instruction: ET_CHECK_INSTRUCTION)
 			-- Process `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
@@ -914,7 +914,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_choice_list (a_list: ET_CHOICE_LIST) is
+	process_choice_list (a_list: ET_CHOICE_LIST)
 			-- Process `a_list'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -931,7 +931,7 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error)
 		end
 
-	process_choice_range (a_choice: ET_CHOICE_RANGE) is
+	process_choice_range (a_choice: ET_CHOICE_RANGE)
 			-- Process `a_choice'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -944,7 +944,7 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error or has_fatal_error)
 		end
 
-	process_compound (a_list: ET_COMPOUND) is
+	process_compound (a_list: ET_COMPOUND)
 			-- Process `a_list'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -961,7 +961,7 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error)
 		end
 
-	process_constant_attribute (a_feature: ET_CONSTANT_ATTRIBUTE) is
+	process_constant_attribute (a_feature: ET_CONSTANT_ATTRIBUTE)
 			-- Process `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -977,35 +977,35 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_convert_builtin_expression (an_expression: ET_CONVERT_BUILTIN_EXPRESSION) is
+	process_convert_builtin_expression (an_expression: ET_CONVERT_BUILTIN_EXPRESSION)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_expression (an_expression.expression)
 		end
 
-	process_convert_from_expression (an_expression: ET_CONVERT_FROM_EXPRESSION) is
+	process_convert_from_expression (an_expression: ET_CONVERT_FROM_EXPRESSION)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_creation_expression (an_expression)
 		end
 
-	process_convert_to_expression (an_expression: ET_CONVERT_TO_EXPRESSION) is
+	process_convert_to_expression (an_expression: ET_CONVERT_TO_EXPRESSION)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_qualified_call_expression (an_expression)
 		end
 
-	process_create_expression (an_expression: ET_CREATE_EXPRESSION) is
+	process_create_expression (an_expression: ET_CREATE_EXPRESSION)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_creation_expression (an_expression)
 		end
 
-	process_creation_expression (an_expression: ET_CREATION_EXPRESSION) is
+	process_creation_expression (an_expression: ET_CREATION_EXPRESSION)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1057,14 +1057,14 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_create_instruction (an_instruction: ET_CREATE_INSTRUCTION) is
+	process_create_instruction (an_instruction: ET_CREATE_INSTRUCTION)
 			-- Process `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_creation_instruction (an_instruction)
 		end
 
-	process_creation_instruction (an_instruction: ET_CREATION_INSTRUCTION) is
+	process_creation_instruction (an_instruction: ET_CREATION_INSTRUCTION)
 			-- Process `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1127,7 +1127,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_debug_instruction (an_instruction: ET_DEBUG_INSTRUCTION) is
+	process_debug_instruction (an_instruction: ET_DEBUG_INSTRUCTION)
 			-- Process `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -1142,21 +1142,21 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_deferred_function (a_feature: ET_DEFERRED_FUNCTION) is
+	process_deferred_function (a_feature: ET_DEFERRED_FUNCTION)
 			-- Process `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_deferred_routine (a_feature)
 		end
 
-	process_deferred_procedure (a_feature: ET_DEFERRED_PROCEDURE) is
+	process_deferred_procedure (a_feature: ET_DEFERRED_PROCEDURE)
 			-- Process `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_deferred_routine (a_feature)
 		end
 
-	process_deferred_routine (a_feature: ET_DEFERRED_ROUTINE) is
+	process_deferred_routine (a_feature: ET_DEFERRED_ROUTINE)
 			-- Process `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1196,49 +1196,49 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error)
 		end
 
-	process_do_function (a_feature: ET_DO_FUNCTION) is
+	process_do_function (a_feature: ET_DO_FUNCTION)
 			-- Process `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_internal_routine (a_feature)
 		end
 
-	process_do_function_inline_agent (an_expression: ET_DO_FUNCTION_INLINE_AGENT) is
+	process_do_function_inline_agent (an_expression: ET_DO_FUNCTION_INLINE_AGENT)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_internal_routine_inline_agent (an_expression)
 		end
 
-	process_do_procedure (a_feature: ET_DO_PROCEDURE) is
+	process_do_procedure (a_feature: ET_DO_PROCEDURE)
 			-- Process `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_internal_routine (a_feature)
 		end
 
-	process_do_procedure_inline_agent (an_expression: ET_DO_PROCEDURE_INLINE_AGENT) is
+	process_do_procedure_inline_agent (an_expression: ET_DO_PROCEDURE_INLINE_AGENT)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_internal_routine_inline_agent (an_expression)
 		end
 
-	process_dotnet_attribute (a_feature: ET_DOTNET_ATTRIBUTE) is
+	process_dotnet_attribute (a_feature: ET_DOTNET_ATTRIBUTE)
 			-- Process `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_attribute (a_feature)
 		end
 
-	process_dotnet_constant_attribute (a_feature: ET_DOTNET_CONSTANT_ATTRIBUTE) is
+	process_dotnet_constant_attribute (a_feature: ET_DOTNET_CONSTANT_ATTRIBUTE)
 			-- Process `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_constant_attribute (a_feature)
 		end
 
-	process_dotnet_function (a_feature: ET_DOTNET_FUNCTION) is
+	process_dotnet_function (a_feature: ET_DOTNET_FUNCTION)
 			-- Process `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -1257,7 +1257,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_dotnet_procedure (a_feature: ET_DOTNET_PROCEDURE) is
+	process_dotnet_procedure (a_feature: ET_DOTNET_PROCEDURE)
 			-- Process `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -1272,7 +1272,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_elseif_part (an_elseif_part: ET_ELSEIF_PART) is
+	process_elseif_part (an_elseif_part: ET_ELSEIF_PART)
 			-- Process `an_elseif_part'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -1289,7 +1289,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_elseif_part_list (a_list: ET_ELSEIF_PART_LIST) is
+	process_elseif_part_list (a_list: ET_ELSEIF_PART_LIST)
 			-- Process `a_list'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -1306,7 +1306,7 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error)
 		end
 
-	process_equality_expression (an_expression: ET_EQUALITY_EXPRESSION) is
+	process_equality_expression (an_expression: ET_EQUALITY_EXPRESSION)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -1319,7 +1319,7 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error or has_fatal_error)
 		end
 
-	process_expression (a_expression: ET_EXPRESSION) is
+	process_expression (a_expression: ET_EXPRESSION)
 			-- Process `a_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1329,14 +1329,14 @@ feature {ET_AST_NODE} -- Processing
 			a_expression.process (Current)
 		end
 
-	process_expression_address (an_expression: ET_EXPRESSION_ADDRESS) is
+	process_expression_address (an_expression: ET_EXPRESSION_ADDRESS)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_expression (an_expression.expression)
 		end
 
-	process_expression_list (a_list: ET_EXPRESSION_LIST) is
+	process_expression_list (a_list: ET_EXPRESSION_LIST)
 			-- Process `a_list'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1355,7 +1355,7 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error)
 		end
 
-	process_extended_attribute (a_feature: ET_EXTENDED_ATTRIBUTE) is
+	process_extended_attribute (a_feature: ET_EXTENDED_ATTRIBUTE)
 			-- Process `a_feature'.
 		local
 			l_preconditions: ET_PRECONDITIONS
@@ -1382,35 +1382,35 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error)
 		end
 
-	process_external_function (a_feature: ET_EXTERNAL_FUNCTION) is
+	process_external_function (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Process `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_external_routine (a_feature)
 		end
 
-	process_external_function_inline_agent (an_expression: ET_EXTERNAL_FUNCTION_INLINE_AGENT) is
+	process_external_function_inline_agent (an_expression: ET_EXTERNAL_FUNCTION_INLINE_AGENT)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_external_routine_inline_agent (an_expression)
 		end
 
-	process_external_procedure (a_feature: ET_EXTERNAL_PROCEDURE) is
+	process_external_procedure (a_feature: ET_EXTERNAL_PROCEDURE)
 			-- Process `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_external_routine (a_feature)
 		end
 
-	process_external_procedure_inline_agent (an_expression: ET_EXTERNAL_PROCEDURE_INLINE_AGENT) is
+	process_external_procedure_inline_agent (an_expression: ET_EXTERNAL_PROCEDURE_INLINE_AGENT)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_external_routine_inline_agent (an_expression)
 		end
 
-	process_external_routine (a_feature: ET_EXTERNAL_ROUTINE) is
+	process_external_routine (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Process `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1419,7 +1419,7 @@ feature {ET_AST_NODE} -- Processing
 			process_external_routine_closure (a_feature)
 		end
 
-	process_external_routine_closure (a_feature: ET_EXTERNAL_ROUTINE_CLOSURE) is
+	process_external_routine_closure (a_feature: ET_EXTERNAL_ROUTINE_CLOSURE)
 			-- Process `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1459,7 +1459,7 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error)
 		end
 
-	process_external_routine_inline_agent (an_expression: ET_EXTERNAL_ROUTINE_INLINE_AGENT) is
+	process_external_routine_inline_agent (an_expression: ET_EXTERNAL_ROUTINE_INLINE_AGENT)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1491,7 +1491,7 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error)
 		end
 
-	process_feature_address (an_expression: ET_FEATURE_ADDRESS) is
+	process_feature_address (an_expression: ET_FEATURE_ADDRESS)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -1534,7 +1534,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_formal_argument (an_argument: ET_FORMAL_ARGUMENT) is
+	process_formal_argument (an_argument: ET_FORMAL_ARGUMENT)
 			-- Process `an_argument'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
@@ -1546,7 +1546,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_formal_argument_list (a_list: ET_FORMAL_ARGUMENT_LIST) is
+	process_formal_argument_list (a_list: ET_FORMAL_ARGUMENT_LIST)
 			-- Process `a_list'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -1565,7 +1565,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE) is
+	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
 			-- Process `a_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
@@ -1575,14 +1575,14 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT) is
+	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_integer_constant (a_constant)
 		end
 
-	process_identifier (an_identifier: ET_IDENTIFIER) is
+	process_identifier (an_identifier: ET_IDENTIFIER)
 			-- Process `an_identifier'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
@@ -1600,7 +1600,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_if_instruction (an_instruction: ET_IF_INSTRUCTION) is
+	process_if_instruction (an_instruction: ET_IF_INSTRUCTION)
 			-- Process `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -1629,21 +1629,21 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error)
 		end
 
-	process_infix_cast_expression (an_expression: ET_INFIX_CAST_EXPRESSION) is
+	process_infix_cast_expression (an_expression: ET_INFIX_CAST_EXPRESSION)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_expression (an_expression.expression)
 		end
 
-	process_infix_expression (an_expression: ET_INFIX_EXPRESSION) is
+	process_infix_expression (an_expression: ET_INFIX_EXPRESSION)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_qualified_call_expression (an_expression)
 		end
 
-	process_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION) is
+	process_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION)
 			-- Process `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -1667,7 +1667,7 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error)
 		end
 
-	process_integer_constant (a_constant: ET_INTEGER_CONSTANT) is
+	process_integer_constant (a_constant: ET_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1684,7 +1684,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_internal_routine (a_feature: ET_INTERNAL_ROUTINE) is
+	process_internal_routine (a_feature: ET_INTERNAL_ROUTINE)
 			-- Process `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1693,7 +1693,7 @@ feature {ET_AST_NODE} -- Processing
 			process_internal_routine_closure (a_feature)
 		end
 
-	process_internal_routine_closure (a_feature: ET_INTERNAL_ROUTINE_CLOSURE) is
+	process_internal_routine_closure (a_feature: ET_INTERNAL_ROUTINE_CLOSURE)
 			-- Process `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1754,7 +1754,7 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error)
 		end
 
-	process_internal_routine_inline_agent (an_expression: ET_INTERNAL_ROUTINE_INLINE_AGENT) is
+	process_internal_routine_inline_agent (an_expression: ET_INTERNAL_ROUTINE_INLINE_AGENT)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1786,14 +1786,14 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error)
 		end
 
-	process_invariants (a_list: ET_INVARIANTS) is
+	process_invariants (a_list: ET_INVARIANTS)
 			-- Process `a_list'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_assertions (a_list)
 		end
 
-	process_like_feature (a_type: ET_LIKE_FEATURE) is
+	process_like_feature (a_type: ET_LIKE_FEATURE)
 			-- Process `a_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -1819,7 +1819,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_local_variable (a_local: ET_LOCAL_VARIABLE) is
+	process_local_variable (a_local: ET_LOCAL_VARIABLE)
 			-- Process `a_local'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
@@ -1831,7 +1831,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_local_variable_list (a_list: ET_LOCAL_VARIABLE_LIST) is
+	process_local_variable_list (a_list: ET_LOCAL_VARIABLE_LIST)
 			-- Process `a_list'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -1850,7 +1850,7 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error)
 		end
 
-	process_loop_instruction (an_instruction: ET_LOOP_INSTRUCTION) is
+	process_loop_instruction (an_instruction: ET_LOOP_INSTRUCTION)
 			-- Process `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -1889,7 +1889,7 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error)
 		end
 
-	process_loop_invariants (a_list: ET_LOOP_INVARIANTS) is
+	process_loop_invariants (a_list: ET_LOOP_INVARIANTS)
 			-- Process `a_list'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
@@ -1899,14 +1899,14 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_manifest_array (an_expression: ET_MANIFEST_ARRAY) is
+	process_manifest_array (an_expression: ET_MANIFEST_ARRAY)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_expression_list (an_expression)
 		end
 
-	process_manifest_string (a_string: ET_MANIFEST_STRING) is
+	process_manifest_string (a_string: ET_MANIFEST_STRING)
 			-- Process `a_string'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -1923,14 +1923,14 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_manifest_tuple (an_expression: ET_MANIFEST_TUPLE) is
+	process_manifest_tuple (an_expression: ET_MANIFEST_TUPLE)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_expression_list (an_expression)
 		end
 
-	process_manifest_type (an_expression: ET_MANIFEST_TYPE) is
+	process_manifest_type (an_expression: ET_MANIFEST_TYPE)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
@@ -1940,21 +1940,21 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_named_object_test (an_expression: ET_NAMED_OBJECT_TEST) is
+	process_named_object_test (an_expression: ET_NAMED_OBJECT_TEST)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_object_test (an_expression)
 		end
 
-	process_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION) is
+	process_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_qualified_call_expression (an_expression)
 		end
 
-	process_object_test (an_expression: ET_OBJECT_TEST) is
+	process_object_test (an_expression: ET_OBJECT_TEST)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -1973,70 +1973,70 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error or has_fatal_error)
 		end
 
-	process_octal_integer_constant (a_constant: ET_OCTAL_INTEGER_CONSTANT) is
+	process_octal_integer_constant (a_constant: ET_OCTAL_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_integer_constant (a_constant)
 		end
 
-	process_old_expression (an_expression: ET_OLD_EXPRESSION) is
+	process_old_expression (an_expression: ET_OLD_EXPRESSION)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_expression (an_expression.expression)
 		end
 
-	process_old_object_test (an_expression: ET_OLD_OBJECT_TEST) is
+	process_old_object_test (an_expression: ET_OLD_OBJECT_TEST)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_object_test (an_expression)
 		end
 
-	process_once_function (a_feature: ET_ONCE_FUNCTION) is
+	process_once_function (a_feature: ET_ONCE_FUNCTION)
 			-- Process `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_internal_routine (a_feature)
 		end
 
-	process_once_function_inline_agent (an_expression: ET_ONCE_FUNCTION_INLINE_AGENT) is
+	process_once_function_inline_agent (an_expression: ET_ONCE_FUNCTION_INLINE_AGENT)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_internal_routine_inline_agent (an_expression)
 		end
 
-	process_once_manifest_string (a_string: ET_ONCE_MANIFEST_STRING) is
+	process_once_manifest_string (a_string: ET_ONCE_MANIFEST_STRING)
 			-- Process `a_string'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_manifest_string (a_string.manifest_string)
 		end
 
-	process_once_procedure (a_feature: ET_ONCE_PROCEDURE) is
+	process_once_procedure (a_feature: ET_ONCE_PROCEDURE)
 			-- Process `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_internal_routine (a_feature)
 		end
 
-	process_once_procedure_inline_agent (an_expression: ET_ONCE_PROCEDURE_INLINE_AGENT) is
+	process_once_procedure_inline_agent (an_expression: ET_ONCE_PROCEDURE_INLINE_AGENT)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_internal_routine_inline_agent (an_expression)
 		end
 
-	process_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION) is
+	process_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_expression (an_expression.expression)
 		end
 
-	process_postconditions (a_list: ET_POSTCONDITIONS) is
+	process_postconditions (a_list: ET_POSTCONDITIONS)
 			-- Process `a_list'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
@@ -2046,7 +2046,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_preconditions (a_list: ET_PRECONDITIONS) is
+	process_preconditions (a_list: ET_PRECONDITIONS)
 			-- Process `a_list'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
@@ -2056,7 +2056,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION) is
+	process_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -2119,7 +2119,7 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error or has_fatal_error)
 		end
 
-	process_precursor_instruction (an_instruction: ET_PRECURSOR_INSTRUCTION) is
+	process_precursor_instruction (an_instruction: ET_PRECURSOR_INSTRUCTION)
 			-- Process `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -2181,14 +2181,14 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error or has_fatal_error)
 		end
 
-	process_prefix_expression (an_expression: ET_PREFIX_EXPRESSION) is
+	process_prefix_expression (an_expression: ET_PREFIX_EXPRESSION)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_qualified_call_expression (an_expression)
 		end
 
-	process_qualified_call_agent (an_expression: ET_CALL_AGENT; a_target: ET_EXPRESSION) is
+	process_qualified_call_agent (an_expression: ET_CALL_AGENT; a_target: ET_EXPRESSION)
 			-- Process a qualified call agent.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -2256,7 +2256,7 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error)
 		end
 
-	process_qualified_call_expression (a_call: ET_FEATURE_CALL_EXPRESSION) is
+	process_qualified_call_expression (a_call: ET_FEATURE_CALL_EXPRESSION)
 			-- Process `a_call'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -2305,7 +2305,7 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error or has_fatal_error)
 		end
 
-	process_qualified_call_instruction (a_call: ET_FEATURE_CALL_INSTRUCTION) is
+	process_qualified_call_instruction (a_call: ET_FEATURE_CALL_INSTRUCTION)
 			-- Process `a_call'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -2354,14 +2354,14 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error or has_fatal_error)
 		end
 
-	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE) is
+	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE)
 			-- Process `a_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_qualified_like_identifier (a_type)
 		end
 
-	process_qualified_like_identifier (a_type: ET_QUALIFIED_LIKE_IDENTIFIER) is
+	process_qualified_like_identifier (a_type: ET_QUALIFIED_LIKE_IDENTIFIER)
 			-- Process `a_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -2398,13 +2398,13 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
+	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE)
 			-- Process `a_type'.
 		do
 			process_qualified_like_identifier (a_type)
 		end
 
-	process_real_constant (a_constant: ET_REAL_CONSTANT) is
+	process_real_constant (a_constant: ET_REAL_CONSTANT)
 			-- Process `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -2421,35 +2421,35 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT) is
+	process_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_integer_constant (a_constant)
 		end
 
-	process_regular_manifest_string (a_string: ET_REGULAR_MANIFEST_STRING) is
+	process_regular_manifest_string (a_string: ET_REGULAR_MANIFEST_STRING)
 			-- Process `a_string'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_manifest_string (a_string)
 		end
 
-	process_regular_real_constant (a_constant: ET_REGULAR_REAL_CONSTANT) is
+	process_regular_real_constant (a_constant: ET_REGULAR_REAL_CONSTANT)
 			-- Process `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_real_constant (a_constant)
 		end
 
-	process_special_manifest_string (a_string: ET_SPECIAL_MANIFEST_STRING) is
+	process_special_manifest_string (a_string: ET_SPECIAL_MANIFEST_STRING)
 			-- Process `a_string'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_manifest_string (a_string)
 		end
 
-	process_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION) is
+	process_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -2487,7 +2487,7 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error or has_fatal_error)
 		end
 
-	process_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION) is
+	process_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION)
 			-- Process `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -2525,7 +2525,7 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error or has_fatal_error)
 		end
 
-	process_strip_expression (an_expression: ET_STRIP_EXPRESSION) is
+	process_strip_expression (an_expression: ET_STRIP_EXPRESSION)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -2559,7 +2559,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_tagged_assertion (an_assertion: ET_TAGGED_ASSERTION) is
+	process_tagged_assertion (an_assertion: ET_TAGGED_ASSERTION)
 			-- Process `an_assertion'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -2574,7 +2574,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_tuple_type (a_type: ET_TUPLE_TYPE) is
+	process_tuple_type (a_type: ET_TUPLE_TYPE)
 			-- Process `a_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -2589,7 +2589,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_type (a_type: ET_TYPE) is
+	process_type (a_type: ET_TYPE)
 			-- Process `a_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -2601,7 +2601,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_typed_call_agent (an_expression: ET_CALL_AGENT; a_target: ET_AGENT_OPEN_TARGET) is
+	process_typed_call_agent (an_expression: ET_CALL_AGENT; a_target: ET_AGENT_OPEN_TARGET)
 			-- Process a typed call agent.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -2672,21 +2672,21 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error)
 		end
 
-	process_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT) is
+	process_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_integer_constant (a_constant)
 		end
 
-	process_underscored_real_constant (a_constant: ET_UNDERSCORED_REAL_CONSTANT) is
+	process_underscored_real_constant (a_constant: ET_UNDERSCORED_REAL_CONSTANT)
 			-- Process `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_real_constant (a_constant)
 		end
 
-	process_unique_attribute (a_feature: ET_UNIQUE_ATTRIBUTE) is
+	process_unique_attribute (a_feature: ET_UNIQUE_ATTRIBUTE)
 			-- Process `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
@@ -2696,7 +2696,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_unqualified_call_agent (an_expression: ET_CALL_AGENT) is
+	process_unqualified_call_agent (an_expression: ET_CALL_AGENT)
 			-- Process an unqualified call agent.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -2746,7 +2746,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_unqualified_call_expression (a_call: ET_FEATURE_CALL_EXPRESSION) is
+	process_unqualified_call_expression (a_call: ET_FEATURE_CALL_EXPRESSION)
 			-- Process `a_call'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -2780,7 +2780,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_unqualified_call_instruction (a_call: ET_FEATURE_CALL_INSTRUCTION) is
+	process_unqualified_call_instruction (a_call: ET_FEATURE_CALL_INSTRUCTION)
 			-- Process `a_call'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -2813,7 +2813,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_variant (a_variant: ET_VARIANT) is
+	process_variant (a_variant: ET_VARIANT)
 			-- Process `a_variant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
@@ -2821,14 +2821,14 @@ feature {ET_AST_NODE} -- Processing
 			process_expression (a_variant.expression)
 		end
 
-	process_verbatim_string (a_string: ET_VERBATIM_STRING) is
+	process_verbatim_string (a_string: ET_VERBATIM_STRING)
 			-- Process `a_string'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_manifest_string (a_string)
 		end
 
-	process_when_part (a_when_part: ET_WHEN_PART) is
+	process_when_part (a_when_part: ET_WHEN_PART)
 			-- Process `a_when_part'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -2845,7 +2845,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_when_part_list (a_list: ET_WHEN_PART_LIST) is
+	process_when_part_list (a_list: ET_WHEN_PART_LIST)
 			-- Process `a_list'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -2862,7 +2862,7 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error)
 		end
 
-	process_writable (a_writable: ET_WRITABLE) is
+	process_writable (a_writable: ET_WRITABLE)
 			-- Process `a_writable'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -2912,19 +2912,19 @@ feature {NONE} -- Access
 			-- processing inherited assertions. For example:
 			--    deferred class A
 			--    feature
-			--       f (a: ANY) is
+			--       f (a: ANY)
 			--           require
 			--               pre: g (a)
 			--           deferred
 			--           end
-			--      g (a: ANY): BOOLEAN is deferred end
+			--      g (a: ANY): BOOLEAN deferred end
 			--    end
 			--    class B
 			--    inherit
 			--        A
 			--    feature
-			--        f (a: STRING) is do ... end
-			--        g (a: STRING): BOOLEAN is do ... end
+			--        f (a: STRING) do ... end
+			--        g (a: STRING): BOOLEAN do ... end
 			--    end
 			-- When processing the inherited precondition 'pre' in B.f,
 			-- `current_feature' is B.f and `current_feature_impl' is A.f
@@ -2936,7 +2936,7 @@ feature {NONE} -- Access
 	enclosing_inline_agents: DS_ARRAYED_LIST [ET_INLINE_AGENT]
 			-- Enclosing inline agents of `current_inline_agent' if any
 
-	current_closure: ET_CLOSURE is
+	current_closure: ET_CLOSURE
 			-- Inner closure being processed
 		do
 			if current_inline_agent /= Void then
@@ -2950,7 +2950,7 @@ feature {NONE} -- Access
 			not_in_agent: current_inline_agent = Void implies Result = current_feature
 		end
 
-	current_closure_impl: ET_CLOSURE is
+	current_closure_impl: ET_CLOSURE
 			-- Inner closure where the code being processed has been written
 		do
 			if current_inline_agent /= Void then
@@ -2981,7 +2981,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Expression types
 
-	find_expression_type (a_expression: ET_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_expression_type (a_expression: ET_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Considering that `a_expression' is viewed from `a_context',
 			-- alter `a_context' so that it represents the type of `a_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -3006,7 +3006,7 @@ feature {NONE} -- Expression types
 
 feature {NONE} -- Implementation
 
-	dummy_feature: ET_FEATURE is
+	dummy_feature: ET_FEATURE
 			-- Dummy feature
 		local
 			a_name: ET_FEATURE_NAME

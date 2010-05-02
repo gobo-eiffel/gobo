@@ -28,7 +28,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_capacity: INTEGER) is
+	make (a_capacity: INTEGER)
 			-- Make with `a_capacity'.
 		require
 			a_capacity_positive: a_capacity > 0
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			upper_set: upper = capacity - 1
 		end
 
-	make_copy (other: like Current) is
+	make_copy (other: like Current)
 			-- Make a copy of `other'.
 		require
 			other_not_void: other /= Void
@@ -52,14 +52,14 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item (index: INTEGER): INTEGER is
+	item (index: INTEGER): INTEGER
 			-- Item at `index'
 		require
 			valid_index: valid_index (index)
 		deferred
 		end
 
-	msd_index: INTEGER is
+	msd_index: INTEGER
 			-- Index of most significant (non-zero) digit
 		deferred
 		ensure
@@ -70,33 +70,33 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of decimal digits
 		deferred
 		end
 
-	lower: INTEGER is
+	lower: INTEGER
 			-- Lower index
 		deferred
 		ensure
 			definition: Result = 0
 		end
 
-	upper: INTEGER is
+	upper: INTEGER
 			-- Upper index
 		deferred
 		ensure
 			definition: Result <= capacity - 1
 		end
 
-	capacity: INTEGER is
+	capacity: INTEGER
 			-- Capacity
 		deferred
 		ensure
 			definition: capacity >= count
 		end
 
-	subcoefficient (index_start, index_end: INTEGER): MA_DECIMAL_COEFFICIENT is
+	subcoefficient (index_start, index_end: INTEGER): MA_DECIMAL_COEFFICIENT
 			-- Subcoefficient made of digits in range [index_start..index_end]
 		require
 			index_start_big_enough: index_start >= 0
@@ -109,7 +109,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	valid_index (index: INTEGER): BOOLEAN is
+	valid_index (index: INTEGER): BOOLEAN
 			-- Is `index' valid ?
 		do
 			Result := (index >= 0 and then index < count)
@@ -117,7 +117,7 @@ feature -- Status report
 			definition: Result = (index >= 0 and then index < count)
 		end
 
-	is_zero: BOOLEAN is
+	is_zero: BOOLEAN
 			-- Is this coefficient only composed of zeros?
 		local
 			i: INTEGER
@@ -137,7 +137,7 @@ feature -- Status report
 			end
 		end
 
-	is_one: BOOLEAN is
+	is_one: BOOLEAN
 			-- Is `Current' one?
 		do
 			Result := (msd_index = 0 and then item (0) = 1)
@@ -145,7 +145,7 @@ feature -- Status report
 			definition: Result = (msd_index = 0 and then item (0) = 1)
 		end
 
-	is_significant: BOOLEAN is
+	is_significant: BOOLEAN
 			-- Has `Current' any non-zero digit?
 		do
 			Result := not is_zero
@@ -155,7 +155,7 @@ feature -- Status report
 
 feature {MA_DECIMAL} -- Status setting
 
-	set_from_substring (s: STRING; coefficient_begin, coefficient_end: INTEGER) is
+	set_from_substring (s: STRING; coefficient_begin, coefficient_end: INTEGER)
 			-- Set from `s', skip the decimal point if it is present.
 		require
 			s_not_void: s /= Void
@@ -169,13 +169,13 @@ feature {MA_DECIMAL} -- Status setting
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is `Current' less than `other'?
 		do
 			Result := (three_way_comparison (other) = -1)
 		end
 
-	is_greater alias ">" (other: like Current): BOOLEAN is
+	is_greater alias ">" (other: like Current): BOOLEAN
 			-- Is `Current' greater than `other'?
 		do
 			Result := (three_way_comparison (other) = 1)
@@ -183,7 +183,7 @@ feature -- Comparison
 
 feature {MA_DECIMAL, MA_DECIMAL_PARSER, MA_DECIMAL_COEFFICIENT} -- Element change
 
-	put (v, index: INTEGER) is
+	put (v, index: INTEGER)
 			-- Put `v' at `index'-th item.
 		require
 			valid_index: index >= 0 and index < capacity
@@ -194,7 +194,7 @@ feature {MA_DECIMAL, MA_DECIMAL_PARSER, MA_DECIMAL_COEFFICIENT} -- Element chang
 			adapted_count: (index + 1 > old count) implies count = index + 1
 		end
 
-	grow (a_capacity: INTEGER) is
+	grow (a_capacity: INTEGER)
 			-- Grow coefficient so that it can contain up to `a_capacity' digits.
 		require
 			a_capacity_large_enough: a_capacity >= count
@@ -206,7 +206,7 @@ feature {MA_DECIMAL, MA_DECIMAL_PARSER, MA_DECIMAL_COEFFICIENT} -- Element chang
 
 feature -- Duplication
 
-	to_twin: like Current is
+	to_twin: like Current
 			-- Cloned version of `Current'
 		deferred
 		ensure
@@ -217,7 +217,7 @@ feature -- Duplication
 
 feature {MA_DECIMAL, MA_DECIMAL_COEFFICIENT} -- Basic operations
 
-	integer_add (other: like Current) is
+	integer_add (other: like Current)
 			-- Integer add of `other' to `Current'.
 		require
 			other_not_void: other /= Void
@@ -227,7 +227,7 @@ feature {MA_DECIMAL, MA_DECIMAL_COEFFICIENT} -- Basic operations
 			new_count: count >= old count
 		end
 
-	integer_multiply (a, b: like Current) is
+	integer_multiply (a, b: like Current)
 			-- Multiply `a', `b' into `Current'.
 		require
 			a_not_void: a /= Void
@@ -236,7 +236,7 @@ feature {MA_DECIMAL, MA_DECIMAL_COEFFICIENT} -- Basic operations
 		deferred
 		end
 
-	integer_quick_add_msd (other, digits_count: INTEGER) is
+	integer_quick_add_msd (other, digits_count: INTEGER)
 			-- Integer add of `other' (between 0 and 9) to `Current',
 			-- restricted to `digits_count' most significant digits.
 		require
@@ -248,7 +248,7 @@ feature {MA_DECIMAL, MA_DECIMAL_COEFFICIENT} -- Basic operations
 --			stripped_zeroes: count > 1 implies item (count - 1) /= 0
 		end
 
-	integer_subtract (other: like Current) is
+	integer_subtract (other: like Current)
 			-- Integer subtract of `other' to `Current',
 			-- provided that result will not be negative.
 		require
@@ -257,7 +257,7 @@ feature {MA_DECIMAL, MA_DECIMAL_COEFFICIENT} -- Basic operations
 		deferred
 		end
 
-	integer_quick_subtract_msd (other, digits_count: INTEGER) is
+	integer_quick_subtract_msd (other, digits_count: INTEGER)
 			-- Integer subtract of `other' (between 0 and 9) to `Current'
 			-- restricted to `digits_count' most significant digits.
 		require
@@ -269,7 +269,7 @@ feature {MA_DECIMAL, MA_DECIMAL_COEFFICIENT} -- Basic operations
 --			stripped_zeroes: count > 1 implies item (count - 1) /= 0
 		end
 
-	keep_head (a_count: INTEGER) is
+	keep_head (a_count: INTEGER)
 			-- Keep head of 'a_count' digits.
 		require
 			a_count_valid: a_count > 0 and a_count <= count
@@ -293,7 +293,7 @@ feature {MA_DECIMAL, MA_DECIMAL_COEFFICIENT} -- Basic operations
 --			non_zero_item: item (count - 1) /= 0
 --		end
 
-	strip_leading_zeroes is
+	strip_leading_zeroes
 			-- Strip leading zeroes.
 		local
 			index: INTEGER
@@ -304,7 +304,7 @@ feature {MA_DECIMAL, MA_DECIMAL_COEFFICIENT} -- Basic operations
 			no_leading_zero: count > 1 implies item (count - 1) /= 0
 		end
 
-	shift_left (a_count: INTEGER) is
+	shift_left (a_count: INTEGER)
 			-- Shift items left.
 		require
 			a_count_greater_zero: a_count > 0
@@ -315,7 +315,7 @@ feature {MA_DECIMAL, MA_DECIMAL_COEFFICIENT} -- Basic operations
 			zero_shifted: item (0) = 0
 		end
 
-	shift_right (a_count: INTEGER) is
+	shift_right (a_count: INTEGER)
 			-- Shift items right.
 		require
 			a_count_greater_zero: a_count > 0
@@ -328,7 +328,7 @@ feature {MA_DECIMAL, MA_DECIMAL_COEFFICIENT} -- Basic operations
 
 feature {MA_DECIMAL} -- Implementation
 
-	set_count (a_count: INTEGER) is
+	set_count (a_count: INTEGER)
 			-- Set `count' to `a_count'.
 		require
 			a_count_small_enough: a_count <= capacity

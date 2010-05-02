@@ -15,7 +15,7 @@ class XM_XPATH_SERIAL_NUMBER_GENERATOR
 inherit
 
 	KL_SHARED_EXCEPTIONS
-	
+
 	-- CAUTION: this implementation is limited to no more than 2x Platform.Maximum_integer
 	--          differing ids
 
@@ -25,7 +25,7 @@ create {XM_XPATH_SHARED_SERIAL_NUMBER_GENERATOR}
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Do nothing
 		do
 		end
@@ -37,8 +37,8 @@ feature -- Access
 
 feature -- Element change
 
-	
-	generate_next_serial_number is
+
+	generate_next_serial_number
 			-- Generate next number in sequence
 		do
 			last_generated_serial_number := last_generated_serial_number + 1
@@ -46,6 +46,6 @@ feature -- Element change
 				Exceptions.raise ("Wrap around of serial number generator")
 			end
 		end
-	
+
 end
-	
+

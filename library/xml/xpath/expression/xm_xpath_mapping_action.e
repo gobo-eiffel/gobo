@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_context: XM_XPATH_CONTEXT; a_slot_number: INTEGER; an_action: XM_XPATH_EXPRESSION) is
+	make (a_context: XM_XPATH_CONTEXT; a_slot_number: INTEGER; an_action: XM_XPATH_EXPRESSION)
 			-- Establish invariant.
 		require
 			context_not_void: a_context /= Void
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Evaluation
 
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
+	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT)
 			-- Map `an_item' to a sequence
 		do
 			context.set_local_variable (an_item.as_item_value, slot_number)

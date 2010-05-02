@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_library: ET_XACE_MOUNTED_LIBRARY) is
+	make (a_library: ET_XACE_MOUNTED_LIBRARY)
 			-- Create a new mounted library list with initially
 			-- one library `a_library'.
 		require
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			libraries_set: libraries.last = a_library
 		end
 
-	make_empty is
+	make_empty
 			-- Create a new empty mounted library list.
 		do
 			create libraries.make (Initial_libraries_capacity)
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item (a_pathname: STRING): ET_XACE_MOUNTED_LIBRARY is
+	item (a_pathname: STRING): ET_XACE_MOUNTED_LIBRARY
 			-- Mounted library in `libraries' with pathname
 			-- `a_pathname'; Void if not found
 		require
@@ -75,7 +75,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_root (b: BOOLEAN) is
+	set_root (b: BOOLEAN)
 			-- For each library in `libraries', set `is_root' to `b'.
 		local
 			i, nb: INTEGER
@@ -91,7 +91,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	put_last (a_library: ET_XACE_MOUNTED_LIBRARY) is
+	put_last (a_library: ET_XACE_MOUNTED_LIBRARY)
 			-- Add `a_library' to the list of libraries.
 		require
 			a_library_not_void: a_library /= Void
@@ -104,7 +104,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	mount_libraries (a_clusters: ET_XACE_CLUSTERS) is
+	mount_libraries (a_clusters: ET_XACE_CLUSTERS)
 			-- Add clusters of current libraries to `a_clusters'.
 			-- Mark these clusters as mounted.
 		require
@@ -133,7 +133,7 @@ feature -- Basic operations
 			end
 		end
 
-	merge_libraries (a_libraries: ET_XACE_MOUNTED_LIBRARIES; an_error_handler: ET_XACE_ERROR_HANDLER) is
+	merge_libraries (a_libraries: ET_XACE_MOUNTED_LIBRARIES; an_error_handler: ET_XACE_ERROR_HANDLER)
 			-- Add current libraries to `a_libraries'.
 			-- Report any error (e.g. incompatible prefixes) in `an_error_handler'.
 		require
@@ -164,7 +164,7 @@ feature -- Basic operations
 			end
 		end
 
-	merge_externals (an_externals: ET_XACE_EXTERNALS) is
+	merge_externals (an_externals: ET_XACE_EXTERNALS)
 			-- Merge libraries' externals to `an_externals'.
 		require
 			an_externals_not_void: an_externals /= Void
@@ -200,7 +200,7 @@ feature -- Basic operations
 
 feature {NONE} -- Constants
 
-	Initial_libraries_capacity: INTEGER is 10
+	Initial_libraries_capacity: INTEGER = 10
 			-- Initial capacity for `libraries'
 
 invariant

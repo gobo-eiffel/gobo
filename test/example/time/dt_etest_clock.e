@@ -22,15 +22,15 @@ create
 
 feature -- Access
 
-	program_name: STRING is "clock"
+	program_name: STRING = "clock"
 			-- Program name
 
-	library_name: STRING is "time"
+	library_name: STRING = "time"
 			-- Library name of example
 
 feature -- Test
 
-	test_clock is
+	test_clock
 			-- Test 'clock' example.
 		local
 			clock_exe: STRING

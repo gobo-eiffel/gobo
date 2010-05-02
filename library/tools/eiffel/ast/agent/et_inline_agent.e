@@ -30,7 +30,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (an_actual_args: like actual_arguments) is
+	make (an_actual_args: like actual_arguments)
 			-- Create a new inline agent.
 		do
 			agent_keyword := tokens.agent_keyword
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset inline agent as it was just after it was last parsed.
 		local
 			l_actuals: ET_AGENT_ARGUMENT_OPERAND_LIST
@@ -78,26 +78,26 @@ feature -- Initialization
 
 feature -- Access
 
-	preconditions: ET_PRECONDITIONS is
+	preconditions: ET_PRECONDITIONS
 			-- Preconditions;
 			-- Void if associated feature is not a routine or is a routine with no preconditions
 		do
 		end
 
-	postconditions: ET_POSTCONDITIONS is
+	postconditions: ET_POSTCONDITIONS
 			-- Postconditions;
 			-- Void if associated feature is not a routine or is a routine with no postconditions
 		do
 		end
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
 			Result := agent_keyword.position
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := agent_keyword
@@ -105,13 +105,13 @@ feature -- Access
 
 feature -- Status report
 
-	is_qualified_call: BOOLEAN is False
+	is_qualified_call: BOOLEAN = False
 			-- Is current call qualified?
 
-	is_inline_agent: BOOLEAN is True
+	is_inline_agent: BOOLEAN = True
 			-- Is `Current' an inline agent?
 
-	is_procedure: BOOLEAN is
+	is_procedure: BOOLEAN
 			-- Is the associated feature a procedure?
 		do
 			Result := (type = Void)
@@ -121,7 +121,7 @@ feature -- Status report
 
 feature {ET_AGENT_IMPLICIT_CURRENT_TARGET} -- Implicit node positions
 
-	implicit_target_position: ET_AST_NODE is
+	implicit_target_position: ET_AST_NODE
 			-- Node used to provide a position to the implicit target if any
 		do
 			Result := first_leaf
@@ -129,7 +129,7 @@ feature {ET_AGENT_IMPLICIT_CURRENT_TARGET} -- Implicit node positions
 
 feature {ET_AGENT_IMPLICIT_OPEN_ARGUMENT} -- Implicit node positions
 
-	implicit_argument_position: ET_AST_NODE is
+	implicit_argument_position: ET_AST_NODE
 			-- Node used to provide a position to implicit open arguments if any
 		do
 			Result := last_leaf

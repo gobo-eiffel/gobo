@@ -29,7 +29,7 @@ feature -- Deviant tests
 	-- this section includes tests which do not behave as expected
 	-- in the test suite with for each test a justification why.
 
-	test_deviant_entity_limits is
+	test_deviant_entity_limits
 			-- Test that elements do not span entity boundaries, that
 			-- is do not start outside the entity and ends in it.
 			-- (parser tolerates more than the standard allows)
@@ -42,7 +42,7 @@ feature -- Deviant tests
 				"<doc>&#10;<foo></foo><foo></foo>&#10;</doc>")
 		end
 
-	test_deviant_bad_unicode_in_unused_entity is
+	test_deviant_bad_unicode_in_unused_entity
 			-- Incorrect unicode within declaration of unused entity.
 			-- (could check earlier than on the event flow, or
 			-- should provide an interface to entities)
@@ -53,7 +53,7 @@ feature -- Deviant tests
 		end
 
 
-	test_deviant_attribute_default_value_order is
+	test_deviant_attribute_default_value_order
 			-- Expansion of default attribute values in different
 			-- order when one in external and other in internal part
 			-- of DTD. semantics unchanged.
@@ -63,16 +63,16 @@ feature -- Deviant tests
 					"<doc a2=%"v2%" a1=%"v1%"></doc>", -- a1 a2 swapped
 					valid_not_sa_externals)
 		end
-	
-	test_deviant_attribute_default_value_external_override is
+
+	test_deviant_attribute_default_value_external_override
 			-- Externally declared implied attribute value does
 			-- not hide internal default value declaration.
 		do
 			-- should be output test when correct
 			assert_valid_external ("xmltest, valid, stand alone, 097", xmltest_valid_sa_097, sa_externals)
 		end
-		
-	test_deviant_invalid is
+
+	test_deviant_invalid
 			-- Detection of invalid fragmentation with PE entities,
 			-- when not strictly necessary for a non validating parser.
 		do
@@ -80,10 +80,10 @@ feature -- Deviant tests
 			assert_invalid_external ("xmltest, invalid but well formed, 003", xmltest_invalid_003, invalid_externals)
 			assert_invalid_external ("xmltest, invalid but well formed, 004", xmltest_invalid_004, invalid_externals)
 		end
-		
+
 feature -- Deviant tests due to limitation of test framework
 
-	test_deviant_notation is
+	test_deviant_notation
 			-- This are output tests in XMLCONF with a DTD including the
 			-- notation declaration. Proper tests should check output
 			-- of DTD notation event in some way.
@@ -98,15 +98,15 @@ feature -- Deviant tests due to limitation of test framework
 feature -- Test
 
 
-	test_invalid_but_well_formed is
+	test_invalid_but_well_formed
 			-- Test invalid documents that are well formed.
 		do
 			assert_valid_external ("xmltest, invalid but well formed, 002", xmltest_invalid_002, invalid_externals)
 			assert_valid_external ("xmltest, invalid but well formed, 005", xmltest_invalid_005, invalid_externals)
 			assert_valid_external ("xmltest, invalid but well formed, 006", xmltest_invalid_006, invalid_externals)
 		end
-		
-	test_not_wf_ext_sa is
+
+	test_not_wf_ext_sa
 			-- Not well formed with external DTD.
 		do
 			assert_invalid_external ("xmltest, not well formed, external stand alone, 001", xmltest_not_wf_ext_sa_001, not_wf_ext_sa_externals)
@@ -114,7 +114,7 @@ feature -- Test
 			assert_invalid_external ("xmltest, not well formed, external stand alone, 003", xmltest_not_wf_ext_sa_003, not_wf_ext_sa_externals)
 		end
 
-	test_not_wf_not_sa is
+	test_not_wf_not_sa
 			-- Not well formed with not stand alone.
 		do
 			assert_invalid_external ("xmltest, not well formed, not stand alone, 001", xmltest_not_wf_not_sa_001, not_wf_not_sa_externals)
@@ -126,8 +126,8 @@ feature -- Test
 			assert_invalid_external ("xmltest, not well formed, not stand alone, 007", xmltest_not_wf_not_sa_007, not_wf_not_sa_externals)
 			assert_invalid_external ("xmltest, not well formed, not stand alone, 008", xmltest_not_wf_not_sa_008, not_wf_not_sa_externals)
 		end
-		
-	test_valid_ext_sa is
+
+	test_valid_ext_sa
 			-- Valid with external DTD.
 		do
 			assert_output_external ("xmltest, valid, external stand alone, 001", xmltest_valid_ext_sa_001, xmltest_valid_ext_sa_out_001, valid_ext_sa_externals)
@@ -146,7 +146,7 @@ feature -- Test
 			assert_output_external ("xmltest, valid, external stand alone, 014", xmltest_valid_ext_sa_014, xmltest_valid_ext_sa_out_014, valid_ext_sa_externals)
 		end
 
-	test_valid_not_sa is
+	test_valid_not_sa
 			-- Tests valid documents with external entities.
 		do
 			assert_output_external ("xmltest, valid, not stand alone, 001", xmltest_valid_not_sa_001, xmltest_valid_not_sa_out_001, valid_not_sa_externals)
@@ -180,8 +180,8 @@ feature -- Test
 			assert_output_external ("xmltest, valid, not stand alone, 030", xmltest_valid_not_sa_030, xmltest_valid_not_sa_out_030, valid_not_sa_externals)
 			assert_output_external ("xmltest, valid, not stand alone, 031", xmltest_valid_not_sa_031, xmltest_valid_not_sa_out_031, valid_not_sa_externals)
 		end
-		
-	test_not_wf_sa is
+
+	test_not_wf_sa
 			-- Tests not well formed stand alone documents are correctly
 			-- detected.
 		do
@@ -368,7 +368,7 @@ feature -- Test
 			assert_invalid ("xmltest, not well formed, stand alone, 186", xmltest_not_wf_sa_186)
 		end
 
-	test_valid_sa_utf16 is
+	test_valid_sa_utf16
 			-- Test valid output for UTF16 constants.
 			-- This does not really test that the parser correctly detects UTF16 on an input stream.
 		do
@@ -376,15 +376,15 @@ feature -- Test
 			assert_output_utf16 ("xmltest, valid, stand alone, 050", xmltest_valid_sa_050, xmltest_valid_sa_out_050)
 			assert_output_utf16 ("xmltest, valid, stand alone, 051", xmltest_valid_sa_051, xmltest_valid_sa_out_051)
 		end
-		
-	test_valid_sa_notnamespace is
+
+	test_valid_sa_notnamespace
 			-- ":" is a valid name (when not using namespace)
 			-- This requires calling XM_EIFFEL_PARSER.disable_namespaces.
 		do
 			assert_output ("xmltest, valid, stand alone, 012", xmltest_valid_sa_012, xmltest_valid_sa_out_012)
 		end
-		
-	test_valid_sa is
+
+	test_valid_sa
 			-- Test valid output.
 		do
 			assert_output ("xmltest, valid, stand alone, 001", xmltest_valid_sa_001, xmltest_valid_sa_out_001)
@@ -500,7 +500,7 @@ feature -- Test
 
 feature {NONE} -- External entities
 
-	valid_not_sa_externals: XM_TEST_STRING_EXTERNAL_RESOLVER is
+	valid_not_sa_externals: XM_TEST_STRING_EXTERNAL_RESOLVER
 			-- valid not stand alone entities.
 		once
 			create Result.make
@@ -537,11 +537,11 @@ feature {NONE} -- External entities
 			Result.strings.force (xmltest_valid_not_sa_028_ent, "028.ent")
 			Result.strings.force (xmltest_valid_not_sa_029_ent, "029.ent")
 			Result.strings.force (xmltest_valid_not_sa_030_ent, "030.ent")
-			Result.strings.force (xmltest_valid_not_sa_031_1_ent, "031-1.ent")		
-			Result.strings.force (xmltest_valid_not_sa_031_2_ent, "031-2.ent")		
+			Result.strings.force (xmltest_valid_not_sa_031_1_ent, "031-1.ent")
+			Result.strings.force (xmltest_valid_not_sa_031_2_ent, "031-2.ent")
 		end
-		
-	valid_ext_sa_externals: XM_TEST_STRING_EXTERNAL_RESOLVER is
+
+	valid_ext_sa_externals: XM_TEST_STRING_EXTERNAL_RESOLVER
 			-- valid ext sa stand alone entities.
 		once
 			create Result.make
@@ -561,15 +561,15 @@ feature {NONE} -- External entities
 			Result.strings.force (xmltest_valid_ext_sa_014_ent, "014.ent")
 		end
 
-	not_wf_ext_sa_externals: XM_TEST_STRING_EXTERNAL_RESOLVER is
+	not_wf_ext_sa_externals: XM_TEST_STRING_EXTERNAL_RESOLVER
 		once
 			create Result.make
 			Result.strings.force (xmltest_not_wf_ext_sa_001_ent, "001.ent")
 			Result.strings.force (xmltest_not_wf_ext_sa_002_ent, "002.ent")
 			Result.strings.force (xmltest_not_wf_ext_sa_003_ent, "003.ent")
 		end
-		
-	not_wf_not_sa_externals: XM_TEST_STRING_EXTERNAL_RESOLVER is
+
+	not_wf_not_sa_externals: XM_TEST_STRING_EXTERNAL_RESOLVER
 		once
 			create Result.make
 			Result.strings.force (xmltest_not_wf_not_sa_001_ent, "001.ent")
@@ -580,8 +580,8 @@ feature {NONE} -- External entities
 			Result.strings.force (xmltest_not_wf_not_sa_007_ent, "007.ent")
 			Result.strings.force (xmltest_not_wf_not_sa_008_ent, "008.ent")
 		end
-		
-	invalid_externals: XM_TEST_STRING_EXTERNAL_RESOLVER is
+
+	invalid_externals: XM_TEST_STRING_EXTERNAL_RESOLVER
 		once
 			create Result.make
 			Result.strings.force (xmltest_invalid_001_ent, "001.ent")
@@ -592,10 +592,10 @@ feature {NONE} -- External entities
 			Result.strings.force (xmltest_invalid_006_ent, "006.ent")
 		end
 
-	sa_externals: XM_TEST_STRING_EXTERNAL_RESOLVER is
+	sa_externals: XM_TEST_STRING_EXTERNAL_RESOLVER
 		once
 			create Result.make
 			Result.strings.force (xmltest_valid_sa_097_ent, "097.ent")
 		end
-		
+
 end

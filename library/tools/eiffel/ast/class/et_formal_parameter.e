@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_class: ET_CLASS) is
+	make (a_name: like name; a_class: ET_CLASS)
 			-- Create a new formal generic parameter.
 		require
 			a_name_not_void: a_name /= Void
@@ -53,13 +53,13 @@ feature -- Access
 	type_mark: ET_KEYWORD
 			-- 'expanded', 'reference' keyword
 
-	constraint: ET_TYPE is
+	constraint: ET_TYPE
 			-- Generic constraint
 		do
 			-- Result := Void
 		end
 
-	creation_procedures: ET_CONSTRAINT_CREATOR is
+	creation_procedures: ET_CONSTRAINT_CREATOR
 			-- Creation procedures expected in `constraint'
 		do
 			-- Result := Void
@@ -67,7 +67,7 @@ feature -- Access
 			constraint_not_void: Result /= Void implies constraint /= Void
 		end
 
-	constraint_base_type: ET_BASE_TYPE is
+	constraint_base_type: ET_BASE_TYPE
 			-- Base type of constraint;
 			-- Void means that there is no explicit constraint
 			-- (i.e. the implicit constraint is "ANY"), or there
@@ -78,13 +78,13 @@ feature -- Access
 			-- Result := Void
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			Result := index
 		end
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -95,7 +95,7 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			if type_mark /= Void then
@@ -105,7 +105,7 @@ feature -- Access
 			end
 		end
 
-	formal_parameter: ET_FORMAL_PARAMETER is
+	formal_parameter: ET_FORMAL_PARAMETER
 			-- Formal generic parameter in comma-separated list
 		do
 			Result := Current
@@ -113,13 +113,13 @@ feature -- Access
 
 feature -- Status report
 
-	is_expanded: BOOLEAN is
+	is_expanded: BOOLEAN
 			-- Has formal parameter been declared as expanded?
 		do
 			Result := type_mark /= Void and then type_mark.is_expanded
 		end
 
-	is_reference: BOOLEAN is
+	is_reference: BOOLEAN
 			-- Has formal parameter been declared as reference?
 		do
 			Result := type_mark /= Void and then type_mark.is_reference
@@ -127,7 +127,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_index (an_index: INTEGER) is
+	set_index (an_index: INTEGER)
 			-- Set `index' to `an_index'.
 		require
 			an_index_positive: an_index >= 1
@@ -137,7 +137,7 @@ feature -- Setting
 			index_set: index = an_index
 		end
 
-	set_type_mark (a_keyword: like type_mark) is
+	set_type_mark (a_keyword: like type_mark)
 			-- Set `type_mark' to `a_keyword'.
 		do
 			type_mark := a_keyword
@@ -145,7 +145,7 @@ feature -- Setting
 			type_mark_set: type_mark = a_keyword
 		end
 
-	set_constraint_base_type (a_type: like constraint_base_type) is
+	set_constraint_base_type (a_type: like constraint_base_type)
 			-- Set `constraint_base_type' to `a_type'.
 		require
 			constrained: constraint /= Void
@@ -159,7 +159,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_formal_parameter (Current)

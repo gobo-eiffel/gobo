@@ -33,7 +33,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new parser.
 		do
 			yyss := SPECIAL_INTEGER_.make (yyInitial_stack_size)
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Parsing
 
-	parse is
+	parse
 			-- Parse input stream.
 			-- Set `syntax_error' to True if
 			-- parsing has not been successful.
@@ -353,7 +353,7 @@ feature -- Parsing
 
 feature -- Status report
 
-	syntax_error: BOOLEAN is
+	syntax_error: BOOLEAN
 			-- Has last parsing been unsuccesful?
 			-- This query may return false if errors have been recovered.
 			-- Note that the result of this query is undefined within
@@ -362,7 +362,7 @@ feature -- Status report
 			Result := yy_parsing_status = yyAborted
 		end
 
-	is_suspended: BOOLEAN is
+	is_suspended: BOOLEAN
 			-- Has parsing been suspended?
 			-- The next call to `parse' will resume parsing in the state
 			-- where the parser was when it was suspended. Note that a call
@@ -380,20 +380,20 @@ feature -- Access
 
 feature -- Basic operations
 
-	accept is
+	accept
 			-- Stop parsing successfully.
 		do
 			yy_parsing_status := yyAccepted
 		end
 
-	abort is
+	abort
 			-- Abort parsing.
 			-- Do not print error message.
 		do
 			yy_parsing_status := yyAborted
 		end
 
-	clear_all is
+	clear_all
 			-- Clear temporary objects so that they can be collected
 			-- by the garbage collector. (This routine is called by
 			-- `parse' before exiting. It can be redefined in descendants.)
@@ -402,7 +402,7 @@ feature -- Basic operations
 			clear_stacks
 		end
 
-	clear_stacks is
+	clear_stacks
 			-- Clear objects in internal stacks so that they can
 			-- be collected by the garbage collector.
 		do
@@ -411,7 +411,7 @@ feature -- Basic operations
 
 feature {YY_PARSER_ACTION} -- Basic operations
 
-	suspend is
+	suspend
 			-- Suspend parsing.
 			-- The next call to `parse' will resume parsing in the state
 			-- where the parser was when it was suspended. Note that a call
@@ -420,7 +420,7 @@ feature {YY_PARSER_ACTION} -- Basic operations
 			yy_parsing_status := yySuspended
 		end
 
-	raise_error is
+	raise_error
 			-- Raise a syntax error.
 			-- Report error using the error action %error associated
 			-- with current parsing state or `report_error' by default,
@@ -429,14 +429,14 @@ feature {YY_PARSER_ACTION} -- Basic operations
 			yy_parsing_status := yyError_raised
 		end
 
-	recover is
+	recover
 			-- Recover immediately after a parse error.
 		do
 			yyerrstatus := 0
 			yy_parsing_status := yyContinue
 		end
 
-	report_error (a_message: STRING) is
+	report_error (a_message: STRING)
 			-- Print error message.
 			-- (This routine is called by default by `parse' when it
 			-- detects a syntax error and there is no error action
@@ -446,7 +446,7 @@ feature {YY_PARSER_ACTION} -- Basic operations
 			std.error.put_new_line
 		end
 
-	report_eof_expected_error is
+	report_eof_expected_error
 			-- Report that an end-of-file is expected.
 			-- (This routine is called by default by `parse' when it detects
 			-- such syntax error and can be redefined in descendants.)
@@ -454,7 +454,7 @@ feature {YY_PARSER_ACTION} -- Basic operations
 			report_error ("parse error")
 		end
 
-	clear_token is
+	clear_token
 			-- Clear the previous lookahead token.
 			-- Used in error-recovery rule actions.
 		do
@@ -463,13 +463,13 @@ feature {YY_PARSER_ACTION} -- Basic operations
 
 feature {YY_PARSER_ACTION} -- Status report
 
-	is_recovering: BOOLEAN is
+	is_recovering: BOOLEAN
 			-- Is current parser recovering from a syntax error?
 		do
 			Result := yyerrstatus /= 0
 		end
 
-	is_expected_token (a_token: INTEGER): BOOLEAN is
+	is_expected_token (a_token: INTEGER): BOOLEAN
 			-- Is `a_token' a possible input at this stage of parsing?
 			-- (This routine can be called from one of the error actions
 			-- %error or from `report_error' in order to find out what
@@ -554,7 +554,7 @@ feature {YY_PARSER_ACTION} -- Status report
 
 feature {YY_PARSER_ACTION} -- Access
 
-	expected_tokens: ARRAY [INTEGER] is
+	expected_tokens: ARRAY [INTEGER]
 			-- List of token codes that are a possible input at this stage
 			-- of parsing. (This routine can be called from the error actions
 			-- %error or from `report_error' in order to build a meaningful
@@ -689,17 +689,17 @@ feature {NONE} -- Suspended state
 
 feature {NONE} -- Implementation
 
-	yy_do_action (yy_act: INTEGER) is
+	yy_do_action (yy_act: INTEGER)
 			-- Execute semantic action.
 		deferred
 		end
 
-	yy_do_error_action (yy_act: INTEGER) is
+	yy_do_error_action (yy_act: INTEGER)
 			-- Execute error action.
 		deferred
 		end
 
-	yy_build_parser_tables is
+	yy_build_parser_tables
 			-- Build parser tables.
 		deferred
 		ensure
@@ -713,23 +713,23 @@ feature {NONE} -- Implementation
 			yycheck_not_void: yycheck /= Void
 		end
 
-	yy_create_value_stacks is
+	yy_create_value_stacks
 			-- Create value stacks.
 		deferred
 		end
 
-	yy_init_value_stacks is
+	yy_init_value_stacks
 			-- Initialize value stacks.
 		deferred
 		end
 
-	yy_clear_value_stacks is
+	yy_clear_value_stacks
 			-- Clear objects in semantic value stacks so that
 			-- they can be collected by the garbage collector.
 		deferred
 		end
 
-	yy_push_last_value (yychar1: INTEGER) is
+	yy_push_last_value (yychar1: INTEGER)
 			-- Push semantic value associated with token `last_token'
 			-- (with internal id `yychar1') on top of corresponding
 			-- value stack.
@@ -739,18 +739,18 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	yy_push_error_value is
+	yy_push_error_value
 			-- Push semantic value associated with token 'error'
 			-- on top of corresponding value stack.
 		deferred
 		end
 
-	yy_pop_last_value (yystate: INTEGER) is
+	yy_pop_last_value (yystate: INTEGER)
 			-- Pop semantic value from stack when in state `yystate'.
 		deferred
 		end
 
-	yyfixed_array (an_array: ARRAY [INTEGER]): SPECIAL [INTEGER] is
+	yyfixed_array (an_array: ARRAY [INTEGER]): SPECIAL [INTEGER]
 			-- Zero-based array containing items of `an_array'
 		require
 			an_array_not_void: an_array /= Void
@@ -762,7 +762,7 @@ feature {NONE} -- Implementation
 --			same_items: forall i in 0 .. (an_array.count - 1), Result.item (i) = an_array.item (an_array.lower + i)
 		end
 
-	yyarray_subcopy (an_array: ARRAY [INTEGER]; other: ARRAY [INTEGER]; start_pos, end_pos, index_pos: INTEGER) is
+	yyarray_subcopy (an_array: ARRAY [INTEGER]; other: ARRAY [INTEGER]; start_pos, end_pos, index_pos: INTEGER)
 			-- Copy items of `other' within bounds `start_pos' and `end_pos'
 			-- to `an_array' starting at index `index_pos'.
 		require
@@ -796,7 +796,7 @@ feature {NONE} -- Implementation
 	yy_parsing_status: INTEGER
 			-- Parsing status
 
-	yy_clear_all is
+	yy_clear_all
 			-- Clear temporary objects so that they can be collected
 			-- by the garbage collector. This routine is called by
 			-- `parse' before exiting.
@@ -806,84 +806,84 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	yyNewstate: INTEGER is 1
+	yyNewstate: INTEGER = 1
 			-- Goto constant
 
-	yyDefault: INTEGER is 2
+	yyDefault: INTEGER = 2
 			-- Goto constant
 
-	yyReduce: INTEGER is 3
+	yyReduce: INTEGER = 3
 			-- Goto constant
 
-	yyErrlab: INTEGER is 4
+	yyErrlab: INTEGER = 4
 			-- Goto constant
 
-	yyErrhandle: INTEGER is 5
+	yyErrhandle: INTEGER = 5
 			-- Goto constant
 
-	yyErrpop: INTEGER is 6
+	yyErrpop: INTEGER = 6
 			-- Goto constant
 
-	yyAccepted: INTEGER is 101
+	yyAccepted: INTEGER = 101
 			-- Parsing status
 
-	yyAborted: INTEGER is 102
+	yyAborted: INTEGER = 102
 			-- Parsing status
 
-	yyError_raised: INTEGER is 103
+	yyError_raised: INTEGER = 103
 			-- Parsing status
 
-	yyContinue: INTEGER is 104
+	yyContinue: INTEGER = 104
 			-- Parsing status
 
-	yySuspended: INTEGER is 105
+	yySuspended: INTEGER = 105
 			-- Parsing status
 
-	yyTerror: INTEGER is 1
+	yyTerror: INTEGER = 1
 			-- Grammar-independent constant
 
-	yyEof: INTEGER is 0
+	yyEof: INTEGER = 0
 			-- Grammar-independent constant
 
-	yyFinal: INTEGER is
+	yyFinal: INTEGER
 			-- Termination state id
 		deferred
 		end
 
-	yyFlag: INTEGER is
+	yyFlag: INTEGER
 			-- Most negative INTEGER
 		deferred
 		end
 
-	yyNtbase: INTEGER is
+	yyNtbase: INTEGER
 			-- Number of tokens
 		deferred
 		end
 
-	yyLast: INTEGER is
+	yyLast: INTEGER
 			-- Upper bound of `yytable' and `yycheck'
 		deferred
 		end
 
-	yyMax_token: INTEGER is
+	yyMax_token: INTEGER
 			-- Maximum token id
 			-- (upper bound of `yytranslate'.)
 		deferred
 		end
 
-	yyNsyms: INTEGER is
+	yyNsyms: INTEGER
 		deferred
 		end
 			-- Number of symbols
 			-- (terminal and nonterminal)
 
-	yyInitial_stack_size: INTEGER is 200
+	yyInitial_stack_size: INTEGER = 200
 			-- Initial size of parser's stacks
 
-	yyInitial_yyvs_size: INTEGER is 10
+	yyInitial_yyvs_size: INTEGER = 10
 			-- Initial size of parser's stacks
 
-	yyDummy: INTEGER is 2147483647
+	yyDummy: INTEGER = 2147483647
 			-- To be inserted in manifest arrays
 			-- in order to make SE 2.1b1 happy
 

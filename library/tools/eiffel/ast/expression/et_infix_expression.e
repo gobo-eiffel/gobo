@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_left: like left; a_name: like name; a_right: like right) is
+	make (a_left: like left; a_name: like name; a_right: like right)
 			-- Create a new infix feature call.
 		require
 			a_left_not_void: a_left /= Void
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset expression as it was just after it was last parsed.
 		local
 			l_cast: ET_INFIX_CAST_EXPRESSION
@@ -88,7 +88,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_boolean_operator (b: BOOLEAN) is
+	set_boolean_operator (b: BOOLEAN)
 			-- Set `is_boolean_operator' to `b'.
 		do
 			is_boolean_operator := b
@@ -98,7 +98,7 @@ feature -- Status setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_infix_expression (Current)

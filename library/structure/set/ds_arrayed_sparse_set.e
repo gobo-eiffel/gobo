@@ -28,7 +28,7 @@ inherit
 
 feature -- Access
 
-	new_cursor: DS_ARRAYED_SPARSE_SET_CURSOR [G] is
+	new_cursor: DS_ARRAYED_SPARSE_SET_CURSOR [G]
 			-- New external cursor for traversal
 		do
 			create Result.make (Current)
@@ -36,13 +36,13 @@ feature -- Access
 
 feature {DS_ARRAYED_SPARSE_SET_CURSOR} -- Implementation
 
-	item_storage_item (i: INTEGER): G is
+	item_storage_item (i: INTEGER): G
 			-- Item at position `i' in `item_storage'
 		do
 			Result := item_storage.item (i)
 		end
 
-	clashes_item (i: INTEGER): INTEGER is
+	clashes_item (i: INTEGER): INTEGER
 			-- Item at position `i' in `clashes'
 		do
 			Result := clashes.item (i)
@@ -53,32 +53,32 @@ feature {NONE} -- Implementation
 	item_storage: SPECIAL [G]
 			-- Storage for items of the set indexed from 1 to `capacity'
 
-	make_item_storage (n: INTEGER) is
+	make_item_storage (n: INTEGER)
 			-- Create `item_storage'.
 		do
 			create special_item_routines
 			item_storage := special_item_routines.make (n)
 		end
 
-	item_storage_put (v: G; i: INTEGER) is
+	item_storage_put (v: G; i: INTEGER)
 			-- Put `v' at position `i' in `item_storage'.
 		do
 			item_storage.put (v, i)
 		end
 
-	clone_item_storage is
+	clone_item_storage
 			-- Clone `item_storage'.
 		do
 			item_storage := item_storage.twin
 		end
 
-	item_storage_resize (n: INTEGER) is
+	item_storage_resize (n: INTEGER)
 			-- Resize `item_storage'.
 		do
 			item_storage := special_item_routines.resize (item_storage, n)
 		end
 
-	item_storage_wipe_out is
+	item_storage_wipe_out
 			-- Wipe out items in `item_storage'.
 		local
 			i: INTEGER
@@ -101,31 +101,31 @@ feature {NONE} -- Implementation
 			-- slot positions located before or at `last_position' with
 			-- indexes less that or equal to `Free_watermark'.
 
-	make_clashes (n: INTEGER) is
+	make_clashes (n: INTEGER)
 			-- Create `clashes'.
 		do
 			clashes := SPECIAL_INTEGER_.make (n)
 		end
 
-	clashes_put (v: INTEGER; i: INTEGER) is
+	clashes_put (v: INTEGER; i: INTEGER)
 			-- Put `v' at position `i' in `clashes'.
 		do
 			clashes.put (v, i)
 		end
 
-	clone_clashes is
+	clone_clashes
 			-- Clone `clashes'.
 		do
 			clashes := clashes.twin
 		end
 
-	clashes_resize (n: INTEGER) is
+	clashes_resize (n: INTEGER)
 			-- Resize `clashes'.
 		do
 			clashes := SPECIAL_INTEGER_.resize (clashes, n)
 		end
 
-	clashes_wipe_out is
+	clashes_wipe_out
 			-- Wipe out items in `clashes'.
 		local
 			i: INTEGER
@@ -145,37 +145,37 @@ feature {NONE} -- Implementation
 			-- from 0 to `modulus' (the entry at index `modulus'
 			-- being reserved for void items)
 
-	make_slots (n: INTEGER) is
+	make_slots (n: INTEGER)
 			-- Create `slots'.
 		do
 			slots := SPECIAL_INTEGER_.make (n)
 		end
 
-	slots_item (i: INTEGER): INTEGER is
+	slots_item (i: INTEGER): INTEGER
 			-- Item at position `i' in `slots'
 		do
 			Result := slots.item (i)
 		end
 
-	slots_put (v: INTEGER; i: INTEGER) is
+	slots_put (v: INTEGER; i: INTEGER)
 			-- Put `v' at position `i' in `slots'.
 		do
 			slots.put (v, i)
 		end
 
-	clone_slots is
+	clone_slots
 			-- Clone `slots'.
 		do
 			slots := slots.twin
 		end
 
-	slots_resize (n: INTEGER) is
+	slots_resize (n: INTEGER)
 			-- Resize `slots'.
 		do
 			slots := SPECIAL_INTEGER_.resize (slots, n)
 		end
 
-	slots_wipe_out is
+	slots_wipe_out
 			-- Wipe out items in `slots'.
 		local
 			i: INTEGER

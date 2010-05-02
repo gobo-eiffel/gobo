@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_fingerprint: INTEGER; a_required_type: XM_XPATH_SEQUENCE_TYPE) is
+	make (a_name: STRING; a_fingerprint: INTEGER; a_required_type: XM_XPATH_SEQUENCE_TYPE)
 			-- Establish invariant
 		require
 			name_not_void: a_name /= Void and then a_name.count > 0
@@ -56,7 +56,7 @@ feature -- Access
 	required_type: XM_XPATH_SEQUENCE_TYPE
 			-- Sequence type required for this variable
 
-	reference_count (a_binding: XM_XPATH_BINDING): INTEGER is
+	reference_count (a_binding: XM_XPATH_BINDING): INTEGER
 			-- Reference count
 		require
 			binding_not_void: a_binding /= Void
@@ -66,7 +66,7 @@ feature -- Access
 
 feature -- Element change
 
-	register_reference (a_reference: XM_XPATH_VARIABLE_REFERENCE) is
+	register_reference (a_reference: XM_XPATH_VARIABLE_REFERENCE)
 			-- Register `a_reference' as a reference to this variable for fix-up.
 		do
 			if not references.extendible (1) then
@@ -75,7 +75,7 @@ feature -- Element change
 			references.put_last (a_reference)
 		end
 
-	set_reference_list (a_reference_list: like references) is
+	set_reference_list (a_reference_list: like references)
 			-- Set references.
 		require
 			reference_list_not_void: a_reference_list /= Void
@@ -85,7 +85,7 @@ feature -- Element change
 			set: references = a_reference_list
 		end
 
-	set_required_type (a_required_type: XM_XPATH_SEQUENCE_TYPE) is
+	set_required_type (a_required_type: XM_XPATH_SEQUENCE_TYPE)
 			-- Set `required_type.
 		require
 			required_type_not_void: a_required_type /= Void
@@ -95,7 +95,7 @@ feature -- Element change
 			required_type_set: required_type = a_required_type
 		end
 
-	fix_up_references (a_binding: XM_XPATH_BINDING) is
+	fix_up_references (a_binding: XM_XPATH_BINDING)
 			-- Fix up binding references.
 		require
 			a_binding_not_void: a_binding /= Void
@@ -104,7 +104,7 @@ feature -- Element change
 		end
 
 	refine_type_information (a_type: XM_XPATH_ITEM_TYPE; a_constant_value: XM_XPATH_VALUE;
-									 a_properties: XM_XPATH_STATIC_PROPERTY) is
+									 a_properties: XM_XPATH_STATIC_PROPERTY)
 			-- Set static type in the binding reference more accurately.
 		require
 			a_type_not_void: a_type /= Void
@@ -114,10 +114,10 @@ feature -- Element change
 		end
 
 	refine_type (a_variable_reference: XM_XPATH_VARIABLE_REFERENCE; a_type: XM_XPATH_ITEM_TYPE;
-		a_constant_value: XM_XPATH_VALUE; a_properties: XM_XPATH_STATIC_PROPERTY) is
+		a_constant_value: XM_XPATH_VALUE; a_properties: XM_XPATH_STATIC_PROPERTY)
 			-- Set static type in the binding reference more accurately.
 		require
-			a_variable_reference_not_void: a_variable_reference /= Void			
+			a_variable_reference_not_void: a_variable_reference /= Void
 		local
 			l_sequence_type: XM_XPATH_SEQUENCE_TYPE
 			l_old_item_type, l_new_item_type: like a_type
@@ -136,16 +136,16 @@ feature {NONE} -- Implementation
 	references: DS_ARRAYED_LIST [XM_XPATH_VARIABLE_REFERENCE]
 			-- All references to `Current'
 
-	fix_up_reference (a_binding: XM_XPATH_BINDING; a_reference: XM_XPATH_VARIABLE_REFERENCE) is
+	fix_up_reference (a_binding: XM_XPATH_BINDING; a_reference: XM_XPATH_VARIABLE_REFERENCE)
 			-- Fix up `a_reference' to `a_binding'.
 		require
 			a_binding_not_void: a_binding /= Void
 			a_reference_not_void: a_reference /= Void
 		do
-	
+
 				-- We supply the static properties of the expression later
 				-- in the call to refine_type_information
-				
+
 				a_reference.set_static_type (required_type, Void, Void)
 				a_reference.fix_up (a_binding)
 		end
@@ -158,4 +158,4 @@ invariant
 	required_type_not_void: required_type /= Void
 
 end
-	
+

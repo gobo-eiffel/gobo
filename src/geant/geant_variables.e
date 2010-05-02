@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create new variables.
 		local
 			a_tester: UC_STRING_EQUALITY_TESTER
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	has_same_keys (a_other: like Current): BOOLEAN is
+	has_same_keys (a_other: like Current): BOOLEAN
 			-- Has `a_other' the same key entries?
 		require
 			a_other_not_void: a_other /= Void
@@ -63,7 +63,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_variable_value (a_name, a_value : STRING) is
+	set_variable_value (a_name, a_value : STRING)
 			-- Set value of variable `a_name' to `a_value'.
 			-- Ignored when `a_name' is already defined.
 		require

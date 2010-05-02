@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new address of 'Result'.
 		do
 			dollar := tokens.dollar_symbol
@@ -34,13 +34,13 @@ feature -- Access
 	result_keyword: ET_RESULT
 			-- 'Result' keyword
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := result_keyword
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := result_keyword.break
@@ -48,7 +48,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_result_keyword (a_result: like result_keyword) is
+	set_result_keyword (a_result: like result_keyword)
 			-- Set `result_keyword' to `a_keyword'.
 		require
 			a_result_not_void: a_result /= Void
@@ -60,7 +60,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_result_address (Current)

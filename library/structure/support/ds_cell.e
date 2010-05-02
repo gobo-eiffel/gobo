@@ -23,7 +23,7 @@ feature -- Access
 
 feature -- Element change
 
-	put, make (v: G) is
+	put, make (v: G)
 			-- Insert `v' in cell.
 		do
 			item := v

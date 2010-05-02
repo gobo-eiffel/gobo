@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_expression: XM_XPATH_EXPRESSION) is
+	make (a_expression: XM_XPATH_EXPRESSION)
 		require
 			a_expression_not_void: a_expression /= Void
 			a_expression_initialized: a_expression.are_static_properties_computed
@@ -46,26 +46,26 @@ feature -- Access
 	comparer: XM_XPATH_NODE_ORDER_COMPARER
 			-- Comparer
 
-	is_document_sorter: BOOLEAN is
+	is_document_sorter: BOOLEAN
 			-- Is `Current' a document sorter?
 		do
 			Result := True
 		end
 
-	as_document_sorter: XM_XPATH_DOCUMENT_SORTER is
+	as_document_sorter: XM_XPATH_DOCUMENT_SORTER
 			-- `Current' seen as a document sorter
 		do
 			Result := Current
 		end
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, when known
 		do
 			Result := base_expression.item_type
 		end
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -80,7 +80,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -95,7 +95,7 @@ feature -- Optimization
 			end
 		end
 
-	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this subexpression.
 		local
 			l_promotion: XM_XPATH_EXPRESSION
@@ -118,7 +118,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterator over the values of a sequence
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -140,7 +140,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterator over a node sequence
 		local
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -154,7 +154,7 @@ feature -- Evaluation
 			end
 		end
 
-	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT)
 			-- Effective boolean value
 		do
 			base_expression.calculate_effective_boolean_value (a_context)
@@ -163,18 +163,18 @@ feature -- Evaluation
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_special_properties is
+	compute_special_properties
 			-- Compute special properties.
 		do
 			clone_special_properties (base_expression)
 			set_ordered_nodeset
 		end
-	
-	display_operator: STRING is
+
+	display_operator: STRING
 			-- Format `operator' for display
 		do
 			Result := "sort unique"
 		end
 
 end
-	
+

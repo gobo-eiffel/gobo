@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parameter: like actual_parameter; a_comma: like comma) is
+	make (a_parameter: like actual_parameter; a_comma: like comma)
 			-- Create a new actual_parameter-comma.
 		require
 			a_parameter_not_void: a_parameter /= Void
@@ -46,7 +46,7 @@ feature -- Access
 	comma: ET_SYMBOL
 			-- Comma separator
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -56,7 +56,7 @@ feature -- Access
 feature -- Conversion
 
 	resolved_syntactical_constraint_with_type (a_type: ET_TYPE;
-		a_parser: ET_EIFFEL_PARSER_SKELETON): ET_ACTUAL_PARAMETER_ITEM is
+		a_parser: ET_EIFFEL_PARSER_SKELETON): ET_ACTUAL_PARAMETER_ITEM
 			-- Version of current actual parameter, where its type has
 			-- been replaced by `a_type'
 		do

@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_clients: like clients) is
+	make (a_clients: like clients)
 			-- Create a new creation clause.
 		require
 			a_clients_not_void: a_clients /= Void
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			capacity_set: capacity = 0
 		end
 
-	make_with_capacity (a_clients: like clients; nb: INTEGER) is
+	make_with_capacity (a_clients: like clients; nb: INTEGER)
 			-- Create a new creation clause with capacity `nb'.
 		require
 			a_clients_not_void: a_clients /= Void
@@ -63,13 +63,13 @@ feature -- Access
 	clients: ET_CLIENT_LIST
 			-- Clients
 
-	clients_clause: ET_CLIENTS is
+	clients_clause: ET_CLIENTS
 			-- Clients clause
 		do
 			Result ?= clients
 		end
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		local
@@ -86,13 +86,13 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := creation_keyword
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		local
 			a_clients_clause: ET_CLIENTS
@@ -109,7 +109,7 @@ feature -- Access
 			end
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		local
 			a_clients_clause: ET_CLIENTS
@@ -128,7 +128,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_exported_to (a_name: ET_FEATURE_NAME; a_class: ET_CLASS): BOOLEAN is
+	is_exported_to (a_name: ET_FEATURE_NAME; a_class: ET_CLASS): BOOLEAN
 			-- Is feature name listed in current creation clause
 			-- and is it exported to `a_class'?
 			-- (Note: Use `current_system.ancestor_builder' on the classes whose ancestors
@@ -144,7 +144,7 @@ feature -- Status report
 			end
 		end
 
-	is_directly_exported_to (a_name: ET_FEATURE_NAME; a_class: ET_CLASS): BOOLEAN is
+	is_directly_exported_to (a_name: ET_FEATURE_NAME; a_class: ET_CLASS): BOOLEAN
 			-- Is feature name listed in current creation clause
 			-- and is it directly exported to `a_class'?
 			-- This is different from `is_exported_to' where `a_class' can
@@ -164,7 +164,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_creation_keyword (a_creation: like creation_keyword) is
+	set_creation_keyword (a_creation: like creation_keyword)
 			-- Set `creation_keyword' to `a_creation'.
 		require
 			a_creation_not_void: a_creation /= Void
@@ -176,7 +176,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_creator (Current)

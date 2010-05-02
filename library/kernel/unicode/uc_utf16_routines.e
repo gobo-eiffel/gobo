@@ -22,7 +22,7 @@ inherit
 
 feature -- Status report
 
-	valid_utf16 (a_string: STRING): BOOLEAN is
+	valid_utf16 (a_string: STRING): BOOLEAN
 			-- Are the bytes in `a_string' a valid UTF-16 encoding?
 			-- 'a_string' has one byte per character.
 			-- Default to big endian when no BOM.
@@ -60,7 +60,7 @@ feature -- Status report
 			utf16_even_count: Result implies ((a_string.count \\ 2) = 0)
 		end
 
-	valid_utf16be (a_string: STRING): BOOLEAN is
+	valid_utf16be (a_string: STRING): BOOLEAN
 			-- Are the bytes in `a_string' valid UTF-16BE?
 			-- 'a_string' has one byte per character.
 		require
@@ -92,7 +92,7 @@ feature -- Status report
 			utf16_even_count: Result implies ((a_string.count \\ 2) = 0)
 		end
 
-	valid_utf16le (a_string: STRING): BOOLEAN is
+	valid_utf16le (a_string: STRING): BOOLEAN
 			-- Are the bytes in `a_string' valid UTF-16LE?
 			-- 'a_string' has one byte per character.
 		require
@@ -125,7 +125,7 @@ feature -- Status report
 
 feature -- Endian-ness detection
 
-	bom_be: STRING is
+	bom_be: STRING
 			-- BOM in big-endian format
 		once
 			Result := "%/254/%/255/"
@@ -136,7 +136,7 @@ feature -- Endian-ness detection
 			second_byte: Result.item_code (2) = Hex_ff
 		end
 
-	bom_le: STRING is
+	bom_le: STRING
 			-- BOM in little-endian format
 		once
 			Result := "%/255/%/254/"
@@ -147,7 +147,7 @@ feature -- Endian-ness detection
 			second_byte: Result.item_code (2) = Hex_fe
 		end
 
-	is_endian_detection_character_most_first (first, second: INTEGER): BOOLEAN is
+	is_endian_detection_character_most_first (first, second: INTEGER): BOOLEAN
 			-- Do the two bytes `first' and `second' represent the character
 			-- 0xFEFF with `first' being the most significant byte?
 		require
@@ -160,7 +160,7 @@ feature -- Endian-ness detection
 			definition: Result = (is_endian_detection_character (first, second) and (first = Hex_fe))
 		end
 
-	is_endian_detection_character_least_first (first, second: INTEGER): BOOLEAN is
+	is_endian_detection_character_least_first (first, second: INTEGER): BOOLEAN
 			-- Do the two bytes `first' and `second' represent the character
 			-- 0xFEFF with `first' being the least significant byte?
 		require
@@ -173,7 +173,7 @@ feature -- Endian-ness detection
 			definition: Result = (is_endian_detection_character (first, second) and (first = Hex_ff))
 		end
 
-	is_endian_detection_character (a_byte, other_byte: INTEGER): BOOLEAN is
+	is_endian_detection_character (a_byte, other_byte: INTEGER): BOOLEAN
 			-- Can these two bytes represent ZERO WIDTH NON-BREAKING SPACE?
 			-- (It has to be unicode character 0xFEFF, because 0xFFFE is not a valid character.)
 		require
@@ -187,7 +187,7 @@ feature -- Endian-ness detection
 
 feature -- Surrogate
 
-	is_surrogate (a_most: INTEGER): BOOLEAN is
+	is_surrogate (a_most: INTEGER): BOOLEAN
 			-- Is this a high surrogate byte?
 		require
 			byte: is_byte (a_most)
@@ -195,7 +195,7 @@ feature -- Surrogate
 			Result := a_most >= Hex_d8 and a_most < Hex_e0
 		end
 
-	is_high_surrogate (a_most: INTEGER): BOOLEAN is
+	is_high_surrogate (a_most: INTEGER): BOOLEAN
 			-- Is this a high surrogate byte?
 		require
 			byte: is_byte (a_most)
@@ -203,7 +203,7 @@ feature -- Surrogate
 			Result := a_most >= Hex_d8 and a_most < Hex_dc
 		end
 
-	is_low_surrogate (a_most: INTEGER): BOOLEAN is
+	is_low_surrogate (a_most: INTEGER): BOOLEAN
 			-- Is this a low surrogate byte?
 		require
 			byte: is_byte (a_most)
@@ -211,7 +211,7 @@ feature -- Surrogate
 			Result := a_most >= Hex_dc and a_most < Hex_e0
 		end
 
-	least_10_bits (msb, lsb: INTEGER): INTEGER is
+	least_10_bits (msb, lsb: INTEGER): INTEGER
 			-- UTF16 least 10 bytes of a byte pair
 		require
 			msb_byte: is_byte (msb)
@@ -223,7 +223,7 @@ feature -- Surrogate
 			ten_bits: Result >= 0 and Result < Hex_400
 		end
 
-	surrogate (a_high_10: INTEGER; a_low_10: INTEGER): INTEGER is
+	surrogate (a_high_10: INTEGER; a_low_10: INTEGER): INTEGER
 			-- Supplementary code point from high and low values
 		require
 			high_10: a_high_10 >= 0 and a_high_10 < 1024
@@ -234,7 +234,7 @@ feature -- Surrogate
 			more_than_16bits: Result >= Hex_10000
 		end
 
-	surrogate_from_bytes (a_high_most, a_high_least, a_low_most, a_low_least: INTEGER): INTEGER is
+	surrogate_from_bytes (a_high_most, a_high_least, a_low_most, a_low_least: INTEGER): INTEGER
 			-- Supplementary code point from bytes
 		require
 			surrogate_high: is_high_surrogate (a_high_most)
@@ -247,7 +247,7 @@ feature -- Surrogate
 			more_than_16bits: Result >= Hex_10000
 		end
 
-	is_byte (a: INTEGER): BOOLEAN is
+	is_byte (a: INTEGER): BOOLEAN
 			-- Is `a' a byte?
 		do
 			Result := a >= 0 and a < Hex_100
@@ -255,7 +255,7 @@ feature -- Surrogate
 			definition: Result = (a >= 0 and a < Hex_100)
 		end
 
-	supplementary_to_high_surrogate (a_code: INTEGER): INTEGER is
+	supplementary_to_high_surrogate (a_code: INTEGER): INTEGER
 			-- High surrogate for `a_code'
 		require
 			code_high_enough: a_code > maximum_bmp_character_code
@@ -267,7 +267,7 @@ feature -- Surrogate
 			not_too_big: Result < 256 * Hex_dc
 		end
 
-	supplementary_to_low_surrogate (a_code: INTEGER): INTEGER is
+	supplementary_to_low_surrogate (a_code: INTEGER): INTEGER
 			-- Low surrogate for `a_code'
 		require
 			code_high_enough: a_code > maximum_bmp_character_code
@@ -281,37 +281,37 @@ feature -- Surrogate
 
 feature {NONE} -- Constants
 
-	Hex_400: INTEGER is 1024
+	Hex_400: INTEGER = 1024
 			-- 2 ^ 10
 
-	Hex_100: INTEGER is 256
+	Hex_100: INTEGER = 256
 			-- 2 ^ 8
 
-	Hex_fe: INTEGER is 254
+	Hex_fe: INTEGER = 254
 			-- Endian detection character
 
-	Hex_ff: INTEGER is 255
+	Hex_ff: INTEGER = 255
 			-- Endian detection character
 
-	Hex_d8: INTEGER is 216
+	Hex_d8: INTEGER = 216
 			-- Hex_D800: start of so-called high-half zone or high surrogate area
 
-	Hex_dc: INTEGER is 220
+	Hex_dc: INTEGER = 220
 			-- Hex_DC00: start of so-called low-half zone or low surrogate area
 
-	Hex_e0: INTEGER is 224
+	Hex_e0: INTEGER = 224
 			-- Hex_E000: end (exclusive) of surrogate area
 
-	Hex_10000: INTEGER is 65536
+	Hex_10000: INTEGER = 65536
 			-- Base of surrogates
 
-	Hex_d7c0: INTEGER is 55232
+	Hex_d7c0: INTEGER = 55232
 			-- Hex D7C0
 
-	Hex_3ff: INTEGER is 1023
+	Hex_3ff: INTEGER = 1023
 			-- Hex 3FF
 
-	Hex_dc00: INTEGER is 56320
+	Hex_dc00: INTEGER = 56320
 			-- Hex_DC00: start of so-called low-half zone or low surrogate area
 
 end

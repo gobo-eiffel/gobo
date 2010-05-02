@@ -32,7 +32,7 @@ inherit
 feature -- Comparison
 
 	check_correct_general_relation_xpath1 (a_atomic_value: XM_XPATH_ATOMIC_VALUE; a_operator: INTEGER;
-		a_atomic_comparer: XM_XPATH_ATOMIC_COMPARER; a_other_atomic_value: XM_XPATH_ATOMIC_VALUE) is
+		a_atomic_comparer: XM_XPATH_ATOMIC_COMPARER; a_other_atomic_value: XM_XPATH_ATOMIC_VALUE)
 			-- Compare two atomic values for XPath 1.0 compatibility.
 		require
 			first_value_not_void: a_atomic_value /= Void
@@ -91,15 +91,15 @@ feature -- Comparison
 						create last_type_error.make_from_string ("Could not convert second operand of general comparison in XPath 1.0 compatibility mode operand to dynamic type of first operand",
 							Xpath_errors_uri, "FORG0001", Type_error)
 					end
-				end					
+				end
 			end
 			if not is_comparison_type_error then
 				check_correct_value_relation (l_atomic_value_one, a_operator, a_atomic_comparer, l_atomic_value_two)
 			end
 		end
-	
+
 	check_correct_general_relation_xpath2 (a_atomic_value: XM_XPATH_ATOMIC_VALUE; a_operator: INTEGER;
-		a_atomic_comparer: XM_XPATH_ATOMIC_COMPARER; a_other_atomic_value: XM_XPATH_ATOMIC_VALUE) is
+		a_atomic_comparer: XM_XPATH_ATOMIC_COMPARER; a_other_atomic_value: XM_XPATH_ATOMIC_VALUE)
 			-- Compare two atomic values for XPath 2.0.
 		require
 			first_value_not_void: a_atomic_value /= Void
@@ -160,7 +160,7 @@ feature -- Comparison
 		end
 
 	check_correct_value_relation (a_atomic_value: XM_XPATH_ATOMIC_VALUE; a_operator: INTEGER;
-											a_atomic_comparer: XM_XPATH_ATOMIC_COMPARER; a_other_atomic_value: XM_XPATH_ATOMIC_VALUE) is
+											a_atomic_comparer: XM_XPATH_ATOMIC_COMPARER; a_other_atomic_value: XM_XPATH_ATOMIC_VALUE)
 			-- Compare two atomic values
 		require
 			first_value_not_void: a_atomic_value /= Void
@@ -210,4 +210,4 @@ feature -- Status report
 			-- Result from `check_correct_value_relation' if no type error
 
 end
-	
+

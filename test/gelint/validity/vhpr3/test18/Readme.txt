@@ -47,7 +47,7 @@ create
 
 feature
 
-	make is
+	make
 		local
 			b: BB
 		do
@@ -66,7 +66,7 @@ inherit
 
 feature -- Access
 
-	f is
+	f
 		local
 			b: BB
 			c: CC [BB]

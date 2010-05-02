@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	line: INTEGER is
+	line: INTEGER
 			-- Line number
 			-- (0 means unknow line number or overflow)
 		deferred
@@ -28,7 +28,7 @@ feature -- Access
 			line_positive: Result >= 0
 		end
 
-	column: INTEGER is
+	column: INTEGER
 			-- Column number
 			-- (0 means unknow column number or overflow)
 		deferred
@@ -38,7 +38,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_null: BOOLEAN is
+	is_null: BOOLEAN
 			-- Is current position null?
 		do
 			Result := (line = no_line)
@@ -48,7 +48,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	is_less alias "<" (other: ET_POSITION): BOOLEAN is
+	is_less alias "<" (other: ET_POSITION): BOOLEAN
 			-- Is current position less than `other'?
 		require
 			other_not_void: other /= Void
@@ -62,22 +62,22 @@ feature -- Comparison
 
 feature -- Constants
 
-	no_line: INTEGER is 0
+	no_line: INTEGER = 0
 			-- Unknown line number or overflow
 
-	no_column: INTEGER is 0
+	no_column: INTEGER = 0
 			-- Unknown column number or overflow
 
 feature -- Output
 
-	to_text: STRING is
+	to_text: STRING
 			-- Textual representation
 		do
 			create Result.make (50)
 			append_to_string (Result)
 		end
 
-	append_to_string (a_string: STRING) is
+	append_to_string (a_string: STRING)
 			-- Append `to_text' to `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -88,7 +88,7 @@ feature -- Output
 			INTEGER_.append_decimal_integer (column, a_string)
 		end
 
-	append_to_string_with_filename (a_filename: STRING; a_string: STRING) is
+	append_to_string_with_filename (a_filename: STRING; a_string: STRING)
 			-- Append `to_text' to `a_string'.
 		require
 			a_filename_not_void: a_filename /= Void
@@ -104,7 +104,7 @@ feature -- Output
 			append_context_to_string (a_filename, a_string)
 		end
 
-	append_context_to_string (a_filename: STRING; a_string: STRING) is
+	append_context_to_string (a_filename: STRING; a_string: STRING)
 			-- Append position's context to `a_string'.
 		require
 			a_filename_not_void: a_filename /= Void
@@ -179,7 +179,7 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	append_line_to_string (a_file: KI_CHARACTER_INPUT_STREAM; a_string: STRING) is
+	append_line_to_string (a_file: KI_CHARACTER_INPUT_STREAM; a_string: STRING)
 			-- Append to `a_string' current line in `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -206,7 +206,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	skip_lines (a_file: KI_CHARACTER_INPUT_STREAM; nb: INTEGER) is
+	skip_lines (a_file: KI_CHARACTER_INPUT_STREAM; nb: INTEGER)
 			-- Skip `nb' lines in `a_file'.
 		require
 			a_file_not_void: a_file /= Void

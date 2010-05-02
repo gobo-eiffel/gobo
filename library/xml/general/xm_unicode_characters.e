@@ -14,7 +14,7 @@ deferred class XM_UNICODE_CHARACTERS
 
 feature -- Strings
 
-	is_string (a_string: STRING): BOOLEAN is
+	is_string (a_string: STRING): BOOLEAN
 			-- Is `a_string' a string containing no invalid XML characters?
 		require
 			a_string_not_void: a_string /= Void
@@ -35,7 +35,7 @@ feature -- Strings
 			empty: (a_string.count = 0) implies Result
 		end
 
-	is_name (a_name: STRING): BOOLEAN is
+	is_name (a_name: STRING): BOOLEAN
 			-- Is `a_name' a valid XML 'Name'?
 		require
 			a_name_not_void: a_name /= Void
@@ -60,7 +60,7 @@ feature -- Strings
 			empty_not_name: a_name.is_empty implies not Result
 		end
 
-	is_nmtoken (a_name: STRING): BOOLEAN is
+	is_nmtoken (a_name: STRING): BOOLEAN
 			-- Is `a_name' a valid XML 'Nmtoken'?
 		require
 			a_name_not_void: a_name /= Void
@@ -79,7 +79,7 @@ feature -- Strings
 			end
 		end
 
-	is_ncname (a_name: STRING): BOOLEAN is
+	is_ncname (a_name: STRING): BOOLEAN
 			-- Is `a_name' a valid XML Namespace 'NCName'?
 		require
 			a_name_not_void: a_name /= Void
@@ -104,7 +104,7 @@ feature -- Strings
 			empty_not_name: a_name.is_empty implies not Result
 		end
 
-	is_qname (a_name: STRING): BOOLEAN is
+	is_qname (a_name: STRING): BOOLEAN
 			-- Is `a_name' a valid XML Namespace 'Qname'?
 			-- Qname := [NCName ':']? NCName
 		require
@@ -125,29 +125,29 @@ feature -- Strings
 
 feature -- Characters
 
-	is_char (a: INTEGER): BOOLEAN is
+	is_char (a: INTEGER): BOOLEAN
 			-- Valid content character?
 		deferred
 		end
 
-	is_name_char (a: INTEGER): BOOLEAN is
+	is_name_char (a: INTEGER): BOOLEAN
 			-- Character for name?
 		deferred
 		end
 
-	is_name_first (a: INTEGER): BOOLEAN is
+	is_name_first (a: INTEGER): BOOLEAN
 			-- Valid first character of name?
 		deferred
 		end
 
-	is_space (a: INTEGER): BOOLEAN is
+	is_space (a: INTEGER): BOOLEAN
 			-- Space character?
 		deferred
 		end
 
 feature -- Namespace characters
 
-	is_ncname_char (a: INTEGER): BOOLEAN is
+	is_ncname_char (a: INTEGER): BOOLEAN
 			-- Is this a valid 'NCName' character?
 		do
 			Result := a /= (':').code and then is_name_char (a)
@@ -155,7 +155,7 @@ feature -- Namespace characters
 			definition: Result = (a /= (':').code and is_name_char (a))
 		end
 
-	is_ncname_first(a: INTEGER): BOOLEAN is
+	is_ncname_first(a: INTEGER): BOOLEAN
 			-- Is this a valid first character of a 'NCName'?
 		do
 			Result := a /= (':').code and then is_name_first (a)

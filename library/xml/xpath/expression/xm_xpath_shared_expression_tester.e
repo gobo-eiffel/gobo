@@ -11,10 +11,10 @@ note
 	revision: "$Revision$"
 
 class XM_XPATH_SHARED_EXPRESSION_TESTER
-	
+
 feature -- Access
 
-	expression_tester: XM_XPATH_EXPRESSION_TESTER is
+	expression_tester: XM_XPATH_EXPRESSION_TESTER
 			-- Expression equality tester
 		once
 			create Result

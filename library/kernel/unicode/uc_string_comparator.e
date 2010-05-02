@@ -20,7 +20,7 @@ inherit
 
 feature -- Status report
 
-	less_than (u, v: STRING): BOOLEAN is
+	less_than (u, v: STRING): BOOLEAN
 			-- Is `u' considered less than `v'?
 		do
 			Result := STRING_.three_way_comparison (u, v) = -1

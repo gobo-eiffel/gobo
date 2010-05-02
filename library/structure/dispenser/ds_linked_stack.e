@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create an empty stack.
 			-- Use `=' as comparison criterion.
 		do
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			empty: is_empty
 		end
 
-	make_equal is
+	make_equal
 			-- Create an empty stack.
 			-- Use `equal' as comparison criterion.
 		do
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			empty: is_empty
 		end
 
-	make_default is
+	make_default
 			-- Create an empty stack.
 			-- Use `=' as comparison criterion.
 		do
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	has (v: G): BOOLEAN is
+	has (v: G): BOOLEAN
 			-- Does stack include `v'?
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -98,7 +98,7 @@ feature -- Status report
 			end
 		end
 
-	extendible (n: INTEGER): BOOLEAN is
+	extendible (n: INTEGER): BOOLEAN
 			-- May stack be extended with `n' items?
 		do
 			Result := True
@@ -108,7 +108,7 @@ feature -- Status report
 
 feature -- Access
 
-	item: G is
+	item: G
 			-- Item at top of stack
 		do
 			Result := first_cell.item
@@ -119,7 +119,7 @@ feature -- Measurement
 	count: INTEGER
 			-- Number of items in stack
 
-	occurrences (v: G): INTEGER is
+	occurrences (v: G): INTEGER
 			-- Number of times `v' appears in stack
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -155,7 +155,7 @@ feature -- Measurement
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Copy `other' to current stack.
 		local
 			a_cell, new_cell, old_cell: like first_cell
@@ -182,7 +182,7 @@ feature -- Duplication
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is current stack equal to `other'?
 		local
 			a_cell, other_cell: like first_cell
@@ -211,7 +211,7 @@ feature -- Comparison
 
 feature -- Element change
 
-	put, force (v: G) is
+	put, force (v: G)
 			-- Push `v' on stack.
 		local
 			a_cell: like first_cell
@@ -224,13 +224,13 @@ feature -- Element change
 			count := count + 1
 		end
 
-	replace (v: G) is
+	replace (v: G)
 			-- Replace top item by `v'.
 		do
 			first_cell.put (v)
 		end
 
-	extend, append (other: DS_LINEAR [G]) is
+	extend, append (other: DS_LINEAR [G])
 			-- Add items of `other' to stack.
 			-- Add `other.first' first, etc.
 		local
@@ -262,14 +262,14 @@ feature -- Element change
 
 feature -- Removal
 
-	remove is
+	remove
 			-- Remove top item from stack.
 		do
 			first_cell := first_cell.right
 			count := count - 1
 		end
 
-	prune (n: INTEGER) is
+	prune (n: INTEGER)
 			-- Remove `n' items from stack.
 		local
 			i: INTEGER
@@ -292,13 +292,13 @@ feature -- Removal
 			end
 		end
 
-	keep (n: INTEGER) is
+	keep (n: INTEGER)
 			-- Keep `n' items in stack.
 		do
 			prune (count - n)
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items from stack.
 		do
 			first_cell := Void
@@ -307,7 +307,7 @@ feature -- Removal
 
 feature -- Iteration
 
-	do_all (an_action: PROCEDURE [ANY, TUPLE [G]]) is
+	do_all (an_action: PROCEDURE [ANY, TUPLE [G]])
 			-- Apply `an_action' to every item, from last to first inserted.
 			-- (Semantics not guaranteed if `an_action' changes the structure.)
 		local
@@ -323,7 +323,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
+	do_if (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test', from last to first inserted.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
 		local
@@ -343,7 +343,7 @@ feature -- Iteration
 			end
 		end
 
-	there_exists (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+	there_exists (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for at least one item?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		local
@@ -364,7 +364,7 @@ feature -- Iteration
 			end
 		end
 
-	for_all (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+	for_all (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for all items?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		local

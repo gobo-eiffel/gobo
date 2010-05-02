@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_serializer: XM_XSLT_SERIALIZER; a_receiver: XM_XSLT_EMITTER; some_output_properties: XM_XSLT_OUTPUT_PROPERTIES) is
+	make (a_serializer: XM_XSLT_SERIALIZER; a_receiver: XM_XSLT_EMITTER; some_output_properties: XM_XSLT_OUTPUT_PROPERTIES)
 			-- Establish invariant.
 		require
 			serializer_not_void: a_serializer /= Void
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature -- Events
 
-	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
+	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER)
 			-- Notify the start of an element
 		local
 			a_property: INTEGER
@@ -67,7 +67,7 @@ feature -- Events
 			is_after_formatted := False
 		end
 
-	end_element is
+	end_element
 			-- Notify the end of an element.
 		local
 			a_property: INTEGER
@@ -93,7 +93,7 @@ feature -- Events
 			same_line := False
 		end
 
-	notify_characters (a_chars: STRING; a_properties: INTEGER) is
+	notify_characters (a_chars: STRING; a_properties: INTEGER)
 			-- Notify character data.
 		local
 			a_last_newline, an_index: INTEGER
@@ -132,7 +132,7 @@ feature -- Events
 			is_after_inline := False
 		end
 
-	notify_comment (a_content_string: STRING; a_properties: INTEGER) is
+	notify_comment (a_content_string: STRING; a_properties: INTEGER)
 			-- Notify a comment.
 		do
 			indent
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 	same_line, is_inline_tag, in_formatted_tag, is_after_inline, is_after_formatted: BOOLEAN
 			-- Flags that affect the decision to indent
 
-	indentation_characters: STRING is "                                                                                   "
+	indentation_characters: STRING = "                                                                                   "
 			--
 
 	level: INTEGER
@@ -156,13 +156,13 @@ feature {NONE} -- Implementation
 	property_stack: DS_ARRAYED_STACK [INTEGER]
 			-- Stack of element properties
 
-	Inline_tag: INTEGER is 1
+	Inline_tag: INTEGER = 1
 			-- Inline property for an element
 
-	Formatted_tag: INTEGER is 2
+	Formatted_tag: INTEGER = 2
 			-- Formatted property for an element
 
-	inline_tags: DS_HASH_SET [STRING] is
+	inline_tags: DS_HASH_SET [STRING]
 			-- Tags to be treated as an inline elements;
 			-- List of inline tags is from the HTML 4.0 (loose) spec.
 			-- The significance is that we mustn't add spaces
@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 			inline_tags_not_void: Result /= Void
 		end
 
-	formatted_tags: DS_HASH_SET [STRING] is
+	formatted_tags: DS_HASH_SET [STRING]
 			-- Table of preformatted elements
 		once
 			create Result.make (5)
@@ -236,7 +236,7 @@ feature {NONE} -- Implementation
 			formatted_tags_not_void: Result /= Void
 		end
 
-	indent is
+	indent
 			-- Output white space to reflect the current indentation level.
 		local
 			a_spaces_count: INTEGER
@@ -253,7 +253,7 @@ feature {NONE} -- Implementation
 			same_line := False
 		end
 
-	tag_properties (a_name_code: INTEGER): INTEGER is
+	tag_properties (a_name_code: INTEGER): INTEGER
 			-- Properties for element named by `a_name_code'
 		require
 			valid_name_code: shared_name_pool.is_valid_name_code (a_name_code)
@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 			result_in_range: Result >= 0 and then Result <= (Inline_tag + Formatted_tag)
 		end
 
-	is_inline_property (a_property: INTEGER): BOOLEAN is
+	is_inline_property (a_property: INTEGER): BOOLEAN
 			-- Does `a_property' encompass inline-tag?
 		require
 			property_in_range: a_property >= 0 and then a_property <= (Inline_tag + Formatted_tag)
@@ -280,7 +280,7 @@ feature {NONE} -- Implementation
 			Result := a_property = Inline_tag or else a_property = Inline_tag + Formatted_tag
 		end
 
-	is_formatted_property (a_property: INTEGER): BOOLEAN is
+	is_formatted_property (a_property: INTEGER): BOOLEAN
 			-- Does `a_property' encompass formatted-tag?
 		require
 			property_in_range: a_property >= 0 and then a_property <= (Inline_tag + Formatted_tag)

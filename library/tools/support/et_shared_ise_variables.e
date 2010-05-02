@@ -15,7 +15,7 @@ class ET_SHARED_ISE_VARIABLES
 
 feature -- Acess
 
-	ise_variables: ET_ISE_VARIABLES is
+	ise_variables: ET_ISE_VARIABLES
 			-- Environment variables defined and used in ISE's tools
 		once
 			create Result

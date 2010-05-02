@@ -24,27 +24,27 @@ inherit
 
 feature -- Access
 
-	as_integer: INTEGER is
+	as_integer: INTEGER
 		-- Value converted to an `INTEGER'
 		require
 			convertible_to_integer: is_platform_integer
 		deferred
 		end
 
-	as_double: DOUBLE is
+	as_double: DOUBLE
 			-- Value converted to a `DOUBLE'
 		require
 			convertible_to_double: is_double
 		deferred
 		end
-	
-	is_numeric_value: BOOLEAN is
+
+	is_numeric_value: BOOLEAN
 			-- Is `Current' a numeric value?
 		do
 			Result := True
 		end
 
-	as_numeric_value: XM_XPATH_NUMERIC_VALUE is
+	as_numeric_value: XM_XPATH_NUMERIC_VALUE
 			-- `Current' seen as a numeric value
 		do
 			Result := Current
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Are `Current' and `other' the same expression?
 		local
 			l_first, l_second: MA_DECIMAL
@@ -82,7 +82,7 @@ feature -- Comparison
 			end
 		end
 
-	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER is
+	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER
 			-- Compare `Current' to `other'
 		local
 			a_double_value, another_double_value: DOUBLE
@@ -105,48 +105,48 @@ feature -- Comparison
 
 feature -- Status_report
 
-	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
+	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN
 			-- Is `other' comparable to `Current'?
 		do
 			Result := other.is_numeric_value
 		end
 
-	is_nan: BOOLEAN is
+	is_nan: BOOLEAN
 			-- Is value Not-a-number?
 		deferred
 		end
 
-	is_zero: BOOLEAN is
+	is_zero: BOOLEAN
 			-- Is value zero?
 		deferred
 		end
 
-	is_negative: BOOLEAN is
+	is_negative: BOOLEAN
 			-- Is value less than zero?
 		deferred
 		end
 
-	is_infinite: BOOLEAN is
+	is_infinite: BOOLEAN
 			-- Is value infinite?
 		deferred
 		end
 
-	is_whole_number: BOOLEAN is
+	is_whole_number: BOOLEAN
 			-- Is value integral?
 		deferred
 		end
 
-	is_platform_integer: BOOLEAN is
+	is_platform_integer: BOOLEAN
 			-- Can value be represented by an `INTEGER'?
 		deferred
 		end
 
-	is_double: BOOLEAN is
+	is_double: BOOLEAN
 			-- Can value be converted to a `DOUBLE'?
 		deferred
 		end
 
-	is_valid_arithmetic_operator (an_operator: INTEGER): BOOLEAN is
+	is_valid_arithmetic_operator (an_operator: INTEGER): BOOLEAN
 			-- Is `an_operator' valid for arithmetic?
 		do
 			inspect
@@ -160,15 +160,15 @@ feature -- Status_report
 
 feature -- Evaluation
 
-	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT)
 			-- Effective boolean value
 		do
 			create last_boolean_value.make (not (is_nan or else is_zero))
 		end
-	
+
 feature -- Basic operations
 
-	arithmetic (an_operator: INTEGER; other: XM_XPATH_NUMERIC_VALUE): XM_XPATH_NUMERIC_VALUE is
+	arithmetic (an_operator: INTEGER; other: XM_XPATH_NUMERIC_VALUE): XM_XPATH_NUMERIC_VALUE
 			-- Arithmetic calculation
 		require
 			other_value_not_void: other /= Void
@@ -178,13 +178,13 @@ feature -- Basic operations
 
 feature -- Conversions
 
-	rounded_value: like Current is
+	rounded_value: like Current
 			-- `a_numeric_value' rounded towards the nearest whole number (0.5 rounded up);
 			-- Implements XPath round().
 		deferred
 		end
 
-	rounded_half_even (a_scale: INTEGER): XM_XPATH_NUMERIC_VALUE is
+	rounded_half_even (a_scale: INTEGER): XM_XPATH_NUMERIC_VALUE
 			-- `a_numeric_value' rounded towards the nearest even number;
 			-- Implements XPath round-to-half-even().
 		deferred
@@ -192,7 +192,7 @@ feature -- Conversions
 			same_xpath_type: Result.item_type.is_same_type (old item_type)
 		end
 
-	floor: like Current is
+	floor: like Current
 			-- Value rounded towards minus infinity;
 			-- Implements XPath floor().
 		deferred
@@ -201,7 +201,7 @@ feature -- Conversions
 			same_nan: old is_nan implies Result.is_nan
 		end
 
-	ceiling: like Current is
+	ceiling: like Current
 			-- Value rounded towards plus infinity;
 			-- Implements XPath ceiling().
 		deferred
@@ -210,7 +210,7 @@ feature -- Conversions
 			same_nan: old is_nan implies Result.is_nan
 		end
 
-	negated_value: like Current is
+	negated_value: like Current
 			-- Same abaolute value but opposite sign
 		deferred
 		ensure

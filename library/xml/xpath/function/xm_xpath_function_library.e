@@ -15,7 +15,7 @@ deferred class XM_XPATH_FUNCTION_LIBRARY
 inherit
 
 	ANY -- For SE 2.x, so that `is_equal' is exported
-	
+
 	XM_XPATH_SHARED_NAME_POOL
 		export {NONE} all end
 
@@ -25,7 +25,7 @@ inherit
 		-- In all cases, an arity value of -1 means ignore the arity
 		-- In all cases, if `is_restricted' is set to `True', then
 		--  only functions allowed within xsl:use-when are considered.
-	
+
 		-- The creation procedure MUST allocate name codes for all
 		--  functions in the library, if they are not already allocated,
 		--  as the expression parser will not bother to call
@@ -39,8 +39,8 @@ inherit
 
 feature -- Access
 
-	is_function_available (a_fingerprint, an_arity: INTEGER; is_restricted: BOOLEAN): BOOLEAN is
-			-- Does `a_fingerprint' represent an available function with `an_arity'? 
+	is_function_available (a_fingerprint, an_arity: INTEGER; is_restricted: BOOLEAN): BOOLEAN
+			-- Does `a_fingerprint' represent an available function with `an_arity'?
 		require
 			valid_arity: an_arity > -2
 			strictly_positive_fingerprint: a_fingerprint > 0
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Element change
 
-	bind_function (a_fingerprint: INTEGER; some_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]; is_restricted: BOOLEAN) is
+	bind_function (a_fingerprint: INTEGER; some_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]; is_restricted: BOOLEAN)
 			-- Bind `a_fingerprint' to it's definition as `last_bound_function', setting the arguments to `some_arguments'.
 		require
 			strictly_positive_fingerprint: a_fingerprint > 0
@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 	last_established_fingerprint: INTEGER
 			-- Last fingerprint set by `establish_fingerprint'
 
-	establish_fingerprint (a_conventional_prefix, a_namespace_uri, a_local_name: STRING) is
+	establish_fingerprint (a_conventional_prefix, a_namespace_uri, a_local_name: STRING)
 			-- Make fingerprint available in `last_established_fingerprint'.
 		require
 			conventional_prefix_not_void: a_conventional_prefix /= Void

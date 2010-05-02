@@ -23,7 +23,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_type_set: like source_type_set; an_attachment: like attachment;
-		a_current_feature: like current_feature; a_current_type: like current_type) is
+		a_current_feature: like current_feature; a_current_type: like current_type)
 			-- Create a new Agent 'closed_operands' tuple attribute setting.
 		require
 			a_type_set_not_void: a_type_set /= Void
@@ -47,13 +47,13 @@ feature -- Access
 	attachment: ET_AGENT
 			-- Agent from which the closed operands come from
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of attachment
 		do
 			Result := attachment.position
 		end
 
-	description: STRING is "agent closed operands tuple"
+	description: STRING = "agent closed operands tuple"
 			-- Kind of attachment
 
 invariant

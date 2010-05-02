@@ -9,7 +9,7 @@ inherit
 
 feature
 
-	f: INTEGER is
+	f: INTEGER
 		do
 			Result := 4
 		end

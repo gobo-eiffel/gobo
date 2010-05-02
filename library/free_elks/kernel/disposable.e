@@ -32,5 +32,5 @@ feature {NONE} -- Status report
 		alias
 			"return eif_is_in_final_collect;"
 		end
-	
+
 end

@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant
 		do
 			name := "max"; namespace_uri := Xpath_standard_functions_uri
@@ -36,4 +36,4 @@ feature {NONE} -- Initialization
 		end
 
 end
-	
+

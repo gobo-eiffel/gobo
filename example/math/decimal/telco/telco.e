@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Start telco benchmark.
 		do
 			std.output.put_line ("-- telco application")
@@ -94,7 +94,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	do_benchmark is
+	do_benchmark
 			-- Do actual benchmarks.
 		local
 			sum_t, sum_b, sum_d: MA_DECIMAL
@@ -214,7 +214,7 @@ feature -- Basic operations
 			std.output.put_line (sum_d.to_scientific_string)
 		end
 
-	read_arguments is
+	read_arguments
 			-- Read command-line arguments.
 		local
 			i, nb: INTEGER
@@ -258,7 +258,7 @@ feature -- Basic operations
 			end
 		end
 
-	read_number_from_bcd (a_file: KL_BINARY_INPUT_FILE) is
+	read_number_from_bcd (a_file: KL_BINARY_INPUT_FILE)
 			-- Read number from `a_file' in packed decimal representation
 			-- and make it available in `last_number'.
 		require
@@ -288,7 +288,7 @@ feature -- Basic operations
 
 feature -- Error handling
 
-	print_usage is
+	print_usage
 			-- Print usage message.
 		do
 			std.error.put_line ("Usage : telco [-input <filename>] [-output <filename>] [-nocalc] [-notax]")
@@ -300,7 +300,7 @@ feature -- Error handling
 
 feature {NONE} -- Constants
 
-	telco_dirname: STRING is
+	telco_dirname: STRING
 			-- Full directory name of "$GOBO/example/math/decimal/telco/data"
 		do
 				-- Bug in ISE 5.6 for .NET: use a do-function rather than

@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_uri: STRING) is
+	make (a_uri: STRING)
 			-- Create a new URI.
 		require
 			a_uri_not_void: a_uri /= Void

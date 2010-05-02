@@ -25,11 +25,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create intrinsic dependencies.
 		do
 			initialize_intrinsic_dependencies
-			set_intrinsically_depends_upon_context_item												
+			set_intrinsically_depends_upon_context_item
 			compute_static_properties
 			initialized := True
 		ensure
@@ -38,19 +38,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_parent_node_expression: BOOLEAN is
+	is_parent_node_expression: BOOLEAN
 			-- Is `Current' a parent node expression?
 		do
 			Result := True
 		end
 
-	as_parent_node_expression: XM_XPATH_PARENT_NODE_EXPRESSION is
+	as_parent_node_expression: XM_XPATH_PARENT_NODE_EXPRESSION
 			-- `Current' seen as a parent node expression
 		do
-			Result := Current 
+			Result := Current
 		end
 
-	node (a_context: XM_XPATH_CONTEXT): XM_XPATH_NODE is
+	node (a_context: XM_XPATH_CONTEXT): XM_XPATH_NODE
 			-- The single node
 		local
 			an_item: XM_XPATH_ITEM
@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Are `Current' and `other' the same expression?
 		do
 			Result := other.is_parent_node_expression
@@ -73,13 +73,13 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_valid_context_for_node (a_context: XM_XPATH_CONTEXT): BOOLEAN is
+	is_valid_context_for_node (a_context: XM_XPATH_CONTEXT): BOOLEAN
 			-- Is the dynamic context in a suitable condition to call `node'?
 		do
 			Result := a_context /= Void and then a_context.context_item /= Void
 		end
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -91,7 +91,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	dynamic_error_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_ERROR_VALUE is
+	dynamic_error_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_ERROR_VALUE
 			-- Dynamic error value
 		do
 			if a_context = Void then

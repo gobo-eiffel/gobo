@@ -15,7 +15,7 @@ class XM_XPATH_ERROR_VALUE
 inherit
 
 	XM_XPATH_LOCATOR
-	
+
 	XM_XPATH_STANDARD_NAMESPACES
 		export {NONE} all end
 
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_description, a_namespace_uri, a_error_code: STRING; a_value: like value; a_error_type: like type) is
+	make (a_description, a_namespace_uri, a_error_code: STRING; a_value: like value; a_error_type: like type)
 			-- Create a general error value.
 		require
 			namespace_uri_not_void: a_namespace_uri /= Void
@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			type_set: type = a_error_type
 		end
 
-	make_empty (a_namespace_uri, a_error_code: STRING a_error_type: INTEGER) is
+	make_empty (a_namespace_uri, a_error_code: STRING a_error_type: INTEGER)
 			-- Create an empty-sequence error value
 		require
 			valid_error_type: a_error_type = Static_error or a_error_type = Type_error or a_error_type = Dynamic_error
@@ -81,7 +81,7 @@ feature {NONE} -- Initialization
 			type_set: type = a_error_type
 		end
 
-	make_from_string (a_description, a_namespace_uri, a_error_code: STRING; a_error_type: like type) is
+	make_from_string (a_description, a_namespace_uri, a_error_code: STRING; a_error_type: like type)
 			-- Create from `a_string'.
 		require
 			namespace_uri_not_void: a_namespace_uri /= Void
@@ -104,7 +104,7 @@ feature {NONE} -- Initialization
 			type_set: type = a_error_type
 		end
 
-	make_unknown is
+	make_unknown
 			-- Create an unknown error
 		local
 			l_empty_sequence: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]
@@ -113,7 +113,7 @@ feature {NONE} -- Initialization
 			make ("Unknown error", Xpath_errors_uri, "FOER0000", l_empty_sequence, Dynamic_error)
 		end
 
-	initialize_location is
+	initialize_location
 			-- Initialize location to unknown.
 		do
 			system_id := ""
@@ -142,8 +142,8 @@ feature -- Access
 
 	line_number: INTEGER
 			-- Approximate line number of current event, or 0 if unknown
-		
-	error_message: STRING is
+
+	error_message: STRING
 			-- Textual error message
 		local
 			l_message: STRING
@@ -160,7 +160,7 @@ feature -- Access
 			error_message_not_void: Result /= Void
 		end
 
-	error_identifier: STRING is
+	error_identifier: STRING
 			-- Identifier for error condition
 		do
 			Result := namespace_uri + "#" + code
@@ -170,15 +170,15 @@ feature -- Access
 
 feature -- Status report
 
-	is_location_known: BOOLEAN is
+	is_location_known: BOOLEAN
 			-- is the location of the error known?
 		do
 			Result := not system_id.is_empty
 		end
-	
+
 feature -- Comparison
 
-	same_error (other: XM_XPATH_ERROR_VALUE): BOOLEAN is
+	same_error (other: XM_XPATH_ERROR_VALUE): BOOLEAN
 			-- Are `Current' and `other' the same error?
 		require
 			other_not_void: other /= Void
@@ -193,7 +193,7 @@ feature -- Comparison
 
 feature -- Element change
 
-	set_location (a_system_id: like system_id; a_line_number: like line_number) is
+	set_location (a_system_id: like system_id; a_line_number: like line_number)
 			-- Set location information.
 		require
 			system_id_known: not a_system_id.is_empty
@@ -206,7 +206,7 @@ feature -- Element change
 			line_number_set: a_line_number > 0 implies line_number = a_line_number
 		end
 
-	set_code (a_code: like code) is
+	set_code (a_code: like code)
 			--	Set `code' to `a_code'.
 		require
 			a_code_not_void: a_code /= Void
@@ -225,4 +225,4 @@ invariant
 	error_type: type = Static_error or type = Type_error or type = Dynamic_error
 
 end
-	
+

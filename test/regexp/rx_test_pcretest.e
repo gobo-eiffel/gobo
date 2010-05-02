@@ -29,7 +29,7 @@ create
 
 feature -- Test
 
-	test_test1 is
+	test_test1
 			-- Run first test.
 		local
 			l_tester: PCRETEST
@@ -39,7 +39,7 @@ feature -- Test
 			assert_files_equal ("diff1", testoutput1_filename, "out1")
 		end
 
-	test_test2 is
+	test_test2
 			-- Run second test.
 		local
 			l_tester: PCRETEST
@@ -49,7 +49,7 @@ feature -- Test
 			assert_files_equal ("diff2", testoutput2_filename, "out2")
 		end
 
-	test_test3 is
+	test_test3
 			-- Run third test.
 		local
 			l_tester: PCRETEST
@@ -61,7 +61,7 @@ feature -- Test
 
 feature -- Execution
 
-	set_up is
+	set_up
 			-- Setup for a test.
 		local
 			a_testdir: STRING
@@ -74,7 +74,7 @@ feature -- Execution
 			file_system.cd (a_testdir)
 		end
 
-	tear_down is
+	tear_down
 			-- Tear down after a test.
 		do
 			if old_cwd /= Void then
@@ -89,12 +89,12 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	testdir: STRING is "Tpcretest"
+	testdir: STRING = "Tpcretest"
 			-- Name of temporary directory where to run the test
 
 feature {NONE} -- Filenames
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing expected output files
 		once
 			Result := file_system.nested_pathname ("${GOBO}", <<"test", "regexp", "pcretest", "data">>)
@@ -104,7 +104,7 @@ feature {NONE} -- Filenames
 			data_dirname_not_empty: Result.count > 0
 		end
 
-	testinput1_filename: STRING is
+	testinput1_filename: STRING
 			-- Name of first test input file
 		once
 			Result := file_system.pathname (data_dirname, "testinput1")
@@ -113,7 +113,7 @@ feature {NONE} -- Filenames
 			testinput1_filename_not_empty: Result.count > 0
 		end
 
-	testinput2_filename: STRING is
+	testinput2_filename: STRING
 			-- Name of second test input file
 		once
 			Result := file_system.pathname (data_dirname, "testinput2")
@@ -122,7 +122,7 @@ feature {NONE} -- Filenames
 			testinput2_filename_not_empty: Result.count > 0
 		end
 
-	testinput3_filename: STRING is
+	testinput3_filename: STRING
 			-- Name of third test input file
 		once
 			Result := file_system.pathname (data_dirname, "testinput3")
@@ -131,7 +131,7 @@ feature {NONE} -- Filenames
 			testinput3_filename_not_empty: Result.count > 0
 		end
 
-	testinput4_filename: STRING is
+	testinput4_filename: STRING
 			-- Name of forth test input file
 		once
 			Result := file_system.pathname (data_dirname, "testinput4")
@@ -140,7 +140,7 @@ feature {NONE} -- Filenames
 			testinput4_filename_not_empty: Result.count > 0
 		end
 
-	testinput5_filename: STRING is
+	testinput5_filename: STRING
 			-- Name of fifth test input file
 		once
 			Result := file_system.pathname (data_dirname, "testinput5")
@@ -149,7 +149,7 @@ feature {NONE} -- Filenames
 			testinput5_filename_not_empty: Result.count > 0
 		end
 
-	testinput6_filename: STRING is
+	testinput6_filename: STRING
 			-- Name of sixth test input file
 		once
 			Result := file_system.pathname (data_dirname, "testinput6")
@@ -158,7 +158,7 @@ feature {NONE} -- Filenames
 			testinput6_filename_not_empty: Result.count > 0
 		end
 
-	testoutput1_filename: STRING is
+	testoutput1_filename: STRING
 			-- Name of first test expected output file
 		once
 			Result := file_system.pathname (data_dirname, "testoutput1")
@@ -167,7 +167,7 @@ feature {NONE} -- Filenames
 			testoutput1_filename_not_empty: Result.count > 0
 		end
 
-	testoutput2_filename: STRING is
+	testoutput2_filename: STRING
 			-- Name of second test expected output file
 		once
 			Result := file_system.pathname (data_dirname, "testoutput2")
@@ -176,7 +176,7 @@ feature {NONE} -- Filenames
 			testoutput2_filename_not_empty: Result.count > 0
 		end
 
-	testoutput3_filename: STRING is
+	testoutput3_filename: STRING
 			-- Name of third test expected output file
 		once
 			Result := file_system.pathname (data_dirname, "testoutput3")
@@ -185,7 +185,7 @@ feature {NONE} -- Filenames
 			testoutput3_filename_not_empty: Result.count > 0
 		end
 
-	testoutput4_filename: STRING is
+	testoutput4_filename: STRING
 			-- Name of forth test expected output file
 		once
 			Result := file_system.pathname (data_dirname, "testoutput4")
@@ -194,7 +194,7 @@ feature {NONE} -- Filenames
 			testoutput4_filename_not_empty: Result.count > 0
 		end
 
-	testoutput5_filename: STRING is
+	testoutput5_filename: STRING
 			-- Name of fifth test expected output file
 		once
 			Result := file_system.pathname (data_dirname, "testoutput5")
@@ -203,7 +203,7 @@ feature {NONE} -- Filenames
 			testoutput5_filename_not_empty: Result.count > 0
 		end
 
-	testoutput6_filename: STRING is
+	testoutput6_filename: STRING
 			-- Name of sixth test expected output file
 		once
 			Result := file_system.pathname (data_dirname, "testoutput6")

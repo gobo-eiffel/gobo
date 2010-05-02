@@ -49,7 +49,7 @@ create
 
 feature
 
-	make is
+	make
 		local
 			b: BB
 		do

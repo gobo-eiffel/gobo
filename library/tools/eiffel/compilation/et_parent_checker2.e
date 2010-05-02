@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new signature checker for features of  given classes.
 		do
 			precursor {ET_CLASS_SUBPROCESSOR}
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Validity checking
 
-	check_parents_validity (a_class: ET_CLASS) is
+	check_parents_validity (a_class: ET_CLASS)
 			-- Second pass of the validity check of parents of `a_class'.
 			-- Do not try to check the creation procedures of formal parameters
 			-- (this is done after the features have been flattened during
@@ -73,7 +73,7 @@ feature -- Validity checking
 
 feature {NONE} -- Parent validity
 
-	check_class_type_validity (a_type: ET_CLASS_TYPE) is
+	check_class_type_validity (a_type: ET_CLASS_TYPE)
 			-- Check validity of `a_type' when it appears in the parent
 			-- clause `a_parent' in `current_class'. Check whether the
 			-- actual generic parameters of `a_type' conform to their
@@ -130,7 +130,7 @@ feature {NONE} -- Parent validity
 			end
 		end
 
-	check_tuple_type_validity (a_type: ET_TUPLE_TYPE) is
+	check_tuple_type_validity (a_type: ET_TUPLE_TYPE)
 			-- Check validity of `a_type' when it appears in the parent
 			-- clause `a_parent' in `current_class'. Check whether the
 			-- actual generic parameters of `a_type' conform to their
@@ -156,25 +156,25 @@ feature {NONE} -- Parent validity
 
 feature {ET_AST_NODE} -- Type dispatcher
 
-	process_class (a_class: ET_CLASS) is
+	process_class (a_class: ET_CLASS)
 			-- Process `a_class'.
 		do
 			process_class_type (a_class)
 		end
 
-	process_class_type (a_type: ET_CLASS_TYPE) is
+	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
 		do
 			check_class_type_validity (a_type)
 		end
 
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE) is
+	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
 			-- Process `a_type'.
 		do
 			process_class_type (a_type)
 		end
 
-	process_tuple_type (a_type: ET_TUPLE_TYPE) is
+	process_tuple_type (a_type: ET_TUPLE_TYPE)
 			-- Process `a_type'.
 		do
 			check_tuple_type_validity (a_type)

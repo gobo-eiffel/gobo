@@ -39,7 +39,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create and execute a new 'gexace'.
 		local
 			a_cursor: DS_LINKED_LIST_CURSOR [GEXACE_COMMAND]
@@ -74,7 +74,7 @@ feature -- Access
 
 feature {NONE} -- Command-line processing
 
-	process_arguments is
+	process_arguments
 			-- Process command-line arguments.
 		do
 			process_define
@@ -82,7 +82,7 @@ feature {NONE} -- Command-line processing
 			process_command
 		end
 
-	process_define is
+	process_define
 			-- Process define option.
 		do
 			if match_long_option ("define") then
@@ -97,7 +97,7 @@ feature {NONE} -- Command-line processing
 			end
 		end
 
-	process_options is
+	process_options
 			-- Process general options.
 		do
 			if match_long_option ("verbose") then
@@ -117,7 +117,7 @@ feature {NONE} -- Command-line processing
 			end
 		end
 
-	process_command is
+	process_command
 			-- Process command.
 			-- One and only one command must be specified.
 		do
@@ -134,7 +134,7 @@ feature {NONE} -- Command-line processing
 			end
 		end
 
-	process_system is
+	process_system
 			-- Process 'system' command.
 		require
 			is_system: match_long_option ("system")
@@ -159,7 +159,7 @@ feature {NONE} -- Command-line processing
 			end
 		end
 
-	process_library is
+	process_library
 			-- Process 'library' command.
 		require
 			is_library: match_long_option ("library")
@@ -184,7 +184,7 @@ feature {NONE} -- Command-line processing
 			end
 		end
 
-	process_validate is
+	process_validate
 			-- Process 'validate' command.
 		require
 			is_validate: match_long_option ("validate")
@@ -198,7 +198,7 @@ feature {NONE} -- Command-line processing
 			process_xace_file (a_command)
 		end
 
-	process_compilers (a_command: GEXACE_BUILD_COMMAND; a_compiler: STRING) is
+	process_compilers (a_command: GEXACE_BUILD_COMMAND; a_compiler: STRING)
 			-- Process compiler name.
 			-- Possible values are: "ge", "ise".
 			-- The variable GOBO_EIFFEL will automatically be defined.
@@ -243,7 +243,7 @@ feature {NONE} -- Command-line processing
 			end
 		end
 
-	process_format (a_command: GEXACE_BUILD_COMMAND) is
+	process_format (a_command: GEXACE_BUILD_COMMAND)
 			-- Process format option
 			-- ('--format=<a_format>).
 		require
@@ -261,7 +261,7 @@ feature {NONE} -- Command-line processing
 			end
 		end
 
-	process_output (a_command: GEXACE_BUILD_COMMAND) is
+	process_output (a_command: GEXACE_BUILD_COMMAND)
 			-- Process output filename option
 			-- ('--output=<filename>).
 		require
@@ -282,7 +282,7 @@ feature {NONE} -- Command-line processing
 			end
 		end
 
-	process_define_string (s: STRING) is
+	process_define_string (s: STRING)
 			-- Process `s' and set variables accordingly.
 			-- `s' is the content of a --define option.
 		require
@@ -305,7 +305,7 @@ feature {NONE} -- Command-line processing
 			end
 		end
 
-	process_xace_file (a_command: GEXACE_COMMAND) is
+	process_xace_file (a_command: GEXACE_COMMAND)
 			-- Process xace filename.
 		require
 			a_command_not_void: a_command /= Void
@@ -323,13 +323,13 @@ feature {NONE} -- Command-line options
 
 feature {NONE} -- Usage message
 
-	report_usage_error is
+	report_usage_error
 			-- Report usage error.
 		do
 			error_handler.report_error (Usage_message)
 		end
 
-	Usage_message: UT_USAGE_MESSAGE is
+	Usage_message: UT_USAGE_MESSAGE
 			-- Gexace usage message
 		once
 			create Result.make ("[defines][options] command [xace-file]%N%

@@ -21,7 +21,7 @@ inherit
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset instruction as it was just after it was last parsed.
 		local
 			l_type: ET_TYPE
@@ -41,7 +41,7 @@ feature -- Access
 	target: ET_WRITABLE
 			-- Target of the creation
 
-	type: ET_TYPE is
+	type: ET_TYPE
 			-- Creation type
 		deferred
 		end
@@ -49,7 +49,7 @@ feature -- Access
 	creation_call: ET_QUALIFIED_CALL
 			-- Call to creation procedure
 
-	arguments: ET_ACTUAL_ARGUMENT_LIST is
+	arguments: ET_ACTUAL_ARGUMENT_LIST
 			-- Arguments of creation call
 		do
 			if creation_call /= Void then

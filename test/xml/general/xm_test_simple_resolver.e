@@ -26,7 +26,7 @@ create
 
 feature -- Test
 
-	test_balanced is
+	test_balanced
 			-- Test resolve/resolve_finish calls are balanced.
 		local
 			string_resolver: TEST_STRING_EXTERNAL_RESOLVER
@@ -48,7 +48,7 @@ feature -- Test
 			assert_integers_equal ("balanced second time",  0, string_resolver.depth)
 		end
 
-	test_file is
+	test_file
 			-- Test file URI resolver.
 		do
 			create parser.make
@@ -62,7 +62,7 @@ feature -- Test
 			assert ("parsed second time", parser.is_correct)
 		end
 
-	test_non_existing is
+	test_non_existing
 			-- Test non existing.
 		do
 			create parser.make
@@ -76,7 +76,7 @@ feature -- Test
 			assert ("parsed second time", parser.is_correct)
 		end
 
-	test_file_error is
+	test_file_error
 			-- Test file error resolver.
 		do
 			create parser.make
@@ -95,7 +95,7 @@ feature -- Test
 			assert ("ok", parser.is_correct)
 		end
 
-	test_stream is
+	test_stream
 			-- Test parse_from_stream and resolver interaction.
 		local
 			a_stream: KL_STRING_INPUT_STREAM
@@ -115,7 +115,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	assert_position (a_prefix: STRING; a_position: XM_POSITION; a_row: INTEGER; a_column: INTEGER) is
+	assert_position (a_prefix: STRING; a_position: XM_POSITION; a_row: INTEGER; a_column: INTEGER)
 			-- Test position.
 		require
 			a_prefix_not_void: a_prefix /= Void
@@ -128,16 +128,16 @@ feature {NONE} -- Implementation
 	parser: XM_EIFFEL_PARSER
 			-- XML parser
 
-	Relative_xml: STRING is "<!DOCTYPE doc [ <!ELEMENT doc (child*)> <!ELEMENT child EMPTY> <!ENTITY e SYSTEM 'data/relative2.xml'> ]><doc>&e;</doc>"
+	Relative_xml: STRING = "<!DOCTYPE doc [ <!ELEMENT doc (child*)> <!ELEMENT child EMPTY> <!ENTITY e SYSTEM 'data/relative2.xml'> ]><doc>&e;</doc>"
 			-- Top level doc for stream test.
 
-	Relative_data: STRING is "data/relative.xml"
+	Relative_data: STRING = "data/relative.xml"
 			-- Data filename "relative.xml"
 
-	Brokensub_data: STRING is "data/brokensub.xml"
+	Brokensub_data: STRING = "data/brokensub.xml"
 			-- Data filename "brokensub.xml"
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of parent of directory containing data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}", <<"test", "xml", "general">>)
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 			data_dirname_not_empty: not Result.is_empty
 		end
 
-	data_uri: UT_URI is
+	data_uri: UT_URI
 			-- Base URI for data files
 		once
 			Result := File_uri.filename_to_uri (file_system.pathname (data_dirname, "dummy.xml"))

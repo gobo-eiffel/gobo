@@ -40,7 +40,7 @@ create
 
 feature -- Test
 
-	test_simple is
+	test_simple
 			-- Simple tree.
 		local
 			document: XM_XPATH_TREE_DOCUMENT
@@ -90,7 +90,7 @@ feature -- Test
 			assert_strings_equal ("Previous sibling name", "a", a_name)
 		end
 
-	test_with_dtd is
+	test_with_dtd
 			-- Read a file with a DTD
 		local
 			system_id: STRING
@@ -292,7 +292,7 @@ feature -- Test
 
 		end
 
-	test_with_namespaces is
+	test_with_namespaces
 			-- Read a file with namespaces
 		local
 			system_id: STRING
@@ -316,7 +316,7 @@ feature -- Test
 			assert_strings_equal ("root name", "BOOKLIST", a_name)
 		end
 
-	test_document_in_error is
+	test_document_in_error
 			-- Test production of error messages.
 		do
 			conformance.set_basic_xslt_processor
@@ -327,7 +327,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	make_parser (a_base_uri: STRING) is
+	make_parser (a_base_uri: STRING)
 			-- Create XML parser.
 		require
 			a_base_uri_not_void: a_base_uri /= Void
@@ -353,7 +353,7 @@ feature {NONE} -- Implementation
 	tree_pipe: XM_XPATH_TREE_CALLBACKS_PIPE
 			-- Tree pipe
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}", <<"test", "xml", "xpath", "data">>)
@@ -363,7 +363,7 @@ feature {NONE} -- Implementation
 			data_dirname_not_empty: not Result.is_empty
 		end
 
-	books_xml_uri: UT_URI is
+	books_xml_uri: UT_URI
 			-- URI of file 'books.xml'
 		local
 			a_path: STRING

@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_value: STRING) is
+	make (a_value: STRING)
 			-- Create a new condition where platform should be equal to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			not_excluded: not is_excluded
 		end
 
-	make_excluded (a_value: STRING) is
+	make_excluded (a_value: STRING)
 			-- Create a new condition where platform should not be equal to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -62,7 +62,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_enabled (a_state: ET_ECF_STATE): BOOLEAN is
+	is_enabled (a_state: ET_ECF_STATE): BOOLEAN
 			-- Does `a_state' fulfill current condition?
 		local
 			l_expected_value: STRING

@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER) is
+	make (filename: STRING; line: INTEGER)
 			-- Create a new error reporting that a rule
 			-- cannot be matched.
 		require
@@ -35,10 +35,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "Warning, %"$1%", line $2: rule cannot be matched"
+	default_template: STRING = "Warning, %"$1%", line $2: rule cannot be matched"
 			-- Default template used to built the error message
 
-	code: STRING is "LX0030"
+	code: STRING = "LX0030"
 			-- Error code
 
 invariant

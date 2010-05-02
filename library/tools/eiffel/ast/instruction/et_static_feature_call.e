@@ -28,7 +28,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_type: like static_type; a_name: like qualified_name; args: like arguments) is
+	make (a_type: like static_type; a_name: like qualified_name; args: like arguments)
 			-- Create a new static feature call.
 		require
 			a_type_not_void: a_type /= Void
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset call as it was when it was last parsed.
 		do
 			Precursor
@@ -55,13 +55,13 @@ feature -- Initialization
 
 feature -- Status report
 
-	is_expression: BOOLEAN is
+	is_expression: BOOLEAN
 			-- Is current call an expression?
 		do
 			-- Result := False
 		end
 
-	is_instruction: BOOLEAN is
+	is_instruction: BOOLEAN
 			-- Is current call an instruction?
 		do
 			-- Result := False
@@ -75,7 +75,7 @@ feature -- Access
 	static_type: ET_TARGET_TYPE
 			-- Declared static type surrounded by braces
 
-	type: ET_TYPE is
+	type: ET_TYPE
 			-- Static type
 		do
 			Result := static_type.type
@@ -83,7 +83,7 @@ feature -- Access
 			type_not_void: Result /= Void
 		end
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -94,7 +94,7 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			if feature_keyword /= Void then
@@ -106,7 +106,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_feature_keyword (a_feature: like feature_keyword) is
+	set_feature_keyword (a_feature: like feature_keyword)
 			-- Set `feature_keyword' to `a_feature'.
 		do
 			feature_keyword := a_feature
@@ -116,7 +116,7 @@ feature -- Setting
 
 feature -- Conversion
 
-	as_expression: ET_STATIC_CALL_EXPRESSION is
+	as_expression: ET_STATIC_CALL_EXPRESSION
 			-- `Current' viewed as an expression
 		require
 			is_expression: is_expression
@@ -125,7 +125,7 @@ feature -- Conversion
 			definition: ANY_.same_objects (Result, Current)
 		end
 
-	as_instruction: ET_STATIC_CALL_INSTRUCTION is
+	as_instruction: ET_STATIC_CALL_INSTRUCTION
 			-- `Current' viewed as an instruction
 		require
 			is_instruction: is_instruction

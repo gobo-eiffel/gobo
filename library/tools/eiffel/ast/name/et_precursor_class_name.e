@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	class_name: ET_CLASS_NAME is
+	class_name: ET_CLASS_NAME
 			-- Class name
 		deferred
 		ensure

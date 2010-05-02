@@ -33,7 +33,7 @@ create
 
 feature -- Callbacks
 
-	on_doctype (a_name: STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN) is
+	on_doctype (a_name: STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN)
 			-- Document type declaration.
 		do
 			has_error := False
@@ -41,7 +41,7 @@ feature -- Callbacks
 			Precursor (a_name, an_id, has_internal_subset)
 		end
 
-	on_attribute_declaration (an_element_name, a_name: STRING; a_model: XM_DTD_ATTRIBUTE_CONTENT) is
+	on_attribute_declaration (an_element_name, a_name: STRING; a_model: XM_DTD_ATTRIBUTE_CONTENT)
 			-- Attribute declaration, one event per attribute.
 		do
 			if a_name.same_string (Xml_id_with_prefix) and then not a_model.is_id then
@@ -55,13 +55,13 @@ feature -- Callbacks
 
 feature -- ID callbacks
 
-	on_invalid_id_declaration is
+	on_invalid_id_declaration
 			-- An invalid xml:id declaration has another type has occurred
 		do
 			has_error := True
 		end
 
-	on_id_attribute_declaration  (an_element_name, a_name: STRING) is
+	on_id_attribute_declaration  (an_element_name, a_name: STRING)
 			-- An attribute has been declared of type ID.
 		require
 			an_element_name_not_void: an_element_name /= Void
@@ -91,7 +91,7 @@ feature -- Access
 	id_attributes: DS_HASH_TABLE [DS_SET [STRING], STRING]
 			-- List of ID attributes other than xml:id
 
-	is_id_attribute (an_element_name, a_name: STRING): BOOLEAN is
+	is_id_attribute (an_element_name, a_name: STRING): BOOLEAN
 			-- Is this attribute declared with type ID?
 		require
 			an_element_name_not_void: an_element_name /= Void

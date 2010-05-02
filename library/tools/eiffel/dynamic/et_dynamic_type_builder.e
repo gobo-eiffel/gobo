@@ -118,7 +118,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_system: like current_dynamic_system) is
+	make (a_system: like current_dynamic_system)
 			-- Create a new dynamic type set builder.
 		require
 			a_system_not_void: a_system /= Void
@@ -140,7 +140,7 @@ feature {NONE} -- Initialization
 
 feature -- Factory
 
-	new_dynamic_type_set (a_type: ET_DYNAMIC_TYPE): ET_DYNAMIC_TYPE_SET is
+	new_dynamic_type_set (a_type: ET_DYNAMIC_TYPE): ET_DYNAMIC_TYPE_SET
 			-- New dynamic type set
 		do
 			Result := a_type.conforming_dynamic_types
@@ -154,7 +154,7 @@ feature -- Status report
 
 feature -- Generation
 
-	build_dynamic_type_sets is
+	build_dynamic_type_sets
 			-- Build dynamic type sets for `current_dynamic_system'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -372,7 +372,7 @@ feature -- Generation
 
 feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 
-	propagate_call_type (a_type: ET_DYNAMIC_TYPE; a_call: ET_DYNAMIC_QUALIFIED_CALL) is
+	propagate_call_type (a_type: ET_DYNAMIC_TYPE; a_call: ET_DYNAMIC_QUALIFIED_CALL)
 			-- Propagate `a_type' from target type set `a_call'.
 		local
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
@@ -400,7 +400,7 @@ feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 
 feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 
-	propagate_tuple_label_expression_dynamic_types (a_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL; a_type: ET_DYNAMIC_TYPE) is
+	propagate_tuple_label_expression_dynamic_types (a_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL; a_type: ET_DYNAMIC_TYPE)
 			-- Propagate dynamic types of the label in tuple `a_type' to
 			-- the dynamic type set of the result type of `a_call'.
 		local
@@ -439,7 +439,7 @@ feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 			current_dynamic_type := old_type
 		end
 
-	propagate_tuple_label_setter_dynamic_types (a_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL; a_type: ET_DYNAMIC_TYPE) is
+	propagate_tuple_label_setter_dynamic_types (a_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL; a_type: ET_DYNAMIC_TYPE)
 			-- Propagate dynamic types of the source of tuple label setter `a_call'
 			-- to the dynamic type set of the corresponding tuple label in `a_type'.
 		local
@@ -484,7 +484,7 @@ feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 
 feature {ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION, ET_DYNAMIC_EQUALITY_EXPRESSION} -- Generation
 
-	propagate_is_equal_argument_type (a_type: ET_DYNAMIC_TYPE; a_feature: ET_DYNAMIC_FEATURE) is
+	propagate_is_equal_argument_type (a_type: ET_DYNAMIC_TYPE; a_feature: ET_DYNAMIC_FEATURE)
 			-- Propagate `a_type' as argument of `a_feature', the feature being the
 			-- feature 'is_equal' possibly used internally in object equality ('~' and '/~')
 			-- or in equality ('=' and '/=') when the target type is expanded.
@@ -499,7 +499,7 @@ feature {ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION, ET_DYNAMIC_EQUALITY_EXPRESSION} 
 
 feature {ET_DYNAMIC_SYSTEM} -- Generation
 
-	propagate_type_of_type_result_type (a_type: ET_DYNAMIC_TYPE; a_feature: ET_DYNAMIC_FEATURE) is
+	propagate_type_of_type_result_type (a_type: ET_DYNAMIC_TYPE; a_feature: ET_DYNAMIC_FEATURE)
 			-- Propagate `a_type' to the dynamic type set of the result of the
 			-- built-in feature `a_feature' corresponding to "INTERNAL.type_of_type".
 		do
@@ -508,13 +508,13 @@ feature {ET_DYNAMIC_SYSTEM} -- Generation
 
 feature {ET_DYNAMIC_TUPLE_TYPE} -- Generation
 
-	build_tuple_item (a_tuple_type: ET_DYNAMIC_TUPLE_TYPE; an_item_feature: ET_DYNAMIC_FEATURE) is
+	build_tuple_item (a_tuple_type: ET_DYNAMIC_TUPLE_TYPE; an_item_feature: ET_DYNAMIC_FEATURE)
 			-- Build type set of result type of `an_item_feature' from `a_tuple_type'.
 		do
 			-- Do nothing.
 		end
 
-	build_tuple_put (a_tuple_type: ET_DYNAMIC_TUPLE_TYPE; a_put_feature: ET_DYNAMIC_FEATURE) is
+	build_tuple_put (a_tuple_type: ET_DYNAMIC_TUPLE_TYPE; a_put_feature: ET_DYNAMIC_FEATURE)
 			-- Build type set of argument type of `a_put_feature' from `a_tuple_type'.
 		do
 			-- Do nothing.
@@ -522,7 +522,7 @@ feature {ET_DYNAMIC_TUPLE_TYPE} -- Generation
 
 feature {ET_DYNAMIC_ROUTINE_TYPE} -- Generation
 
-	build_agent_call (an_agent_type: ET_DYNAMIC_ROUTINE_TYPE; a_call_feature: ET_DYNAMIC_FEATURE) is
+	build_agent_call (an_agent_type: ET_DYNAMIC_ROUTINE_TYPE; a_call_feature: ET_DYNAMIC_FEATURE)
 			-- Build type set of argument type of `a_call_feature' from `an_agent_type'.
 		do
 			-- Do nothing
@@ -539,7 +539,7 @@ feature {NONE} -- Generation
 	is_built: BOOLEAN
 			-- Have the dynamic type sets of `current_dynamic_system' all been built?
 
-	build_feature_dynamic_type_sets (a_feature: ET_DYNAMIC_FEATURE; a_current_dynamic_type: ET_DYNAMIC_TYPE) is
+	build_feature_dynamic_type_sets (a_feature: ET_DYNAMIC_FEATURE; a_current_dynamic_type: ET_DYNAMIC_TYPE)
 			-- Build dynamic type sets for `a_feature' in `a_current_dynamic_type'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -604,7 +604,7 @@ feature {NONE} -- Generation
 
 feature {NONE} -- CAT-calls
 
-	check_catcall_validity is
+	check_catcall_validity
 			-- Check CAT-call validity.
 		local
 			i, nb: INTEGER
@@ -638,7 +638,7 @@ feature {NONE} -- CAT-calls
 			end
 		end
 
-	check_catcall_call_validity (a_call: ET_DYNAMIC_QUALIFIED_CALL) is
+	check_catcall_call_validity (a_call: ET_DYNAMIC_QUALIFIED_CALL)
 			-- Check CAT-call validity of `a_call'.
 		require
 			a_call_not_void: a_call /= Void
@@ -654,7 +654,7 @@ feature {NONE} -- CAT-calls
 			end
 		end
 
-	check_catcall_target_validity (a_type: ET_DYNAMIC_TYPE; a_call: ET_DYNAMIC_QUALIFIED_CALL) is
+	check_catcall_target_validity (a_type: ET_DYNAMIC_TYPE; a_call: ET_DYNAMIC_QUALIFIED_CALL)
 			-- Check whether target type `a_type' introduces CAT-calls in `a_call'.
 		require
 			a_type_not_void: a_type /= Void
@@ -767,7 +767,7 @@ feature {NONE} -- CAT-calls
 
 	report_catcall_error (a_target_type: ET_DYNAMIC_TYPE; a_dynamic_feature: ET_DYNAMIC_FEATURE;
 		arg: INTEGER; a_formal_type: ET_DYNAMIC_TYPE; a_formal_type_set: ET_DYNAMIC_TYPE_SET;
-		an_actual_type: ET_DYNAMIC_TYPE; an_actual_type_set: ET_DYNAMIC_TYPE_SET; a_call: ET_DYNAMIC_QUALIFIED_CALL) is
+		an_actual_type: ET_DYNAMIC_TYPE; an_actual_type_set: ET_DYNAMIC_TYPE_SET; a_call: ET_DYNAMIC_QUALIFIED_CALL)
 			-- Report a CAT-call error in `a_call'. When the target is of type `a_target_type', we
 			-- try to pass to the corresponding feature `a_dynamic_feature' an actual argument of
 			-- type `an_actual_type' (which is one of the types of `an_actual_type_set') which
@@ -800,7 +800,7 @@ feature {NONE} -- CAT-calls
 
 	append_catcall_error_message (a_message: STRING; a_target_type: ET_DYNAMIC_TYPE; a_dynamic_feature: ET_DYNAMIC_FEATURE;
 		arg: INTEGER; a_formal_type: ET_DYNAMIC_TYPE; a_formal_type_set: ET_DYNAMIC_TYPE_SET;
-		an_actual_type: ET_DYNAMIC_TYPE; an_actual_type_set: ET_DYNAMIC_TYPE_SET; a_call: ET_DYNAMIC_QUALIFIED_CALL) is
+		an_actual_type: ET_DYNAMIC_TYPE; an_actual_type_set: ET_DYNAMIC_TYPE_SET; a_call: ET_DYNAMIC_QUALIFIED_CALL)
 			-- Append to `a_message' the error message of a CAT-call error in `a_call'.
 			-- When the target is of type `a_target_type', we try to pass to the corresponding
 			-- feature `a_dynamic_feature' an actual argument of type `an_actual_type' (which
@@ -855,7 +855,7 @@ feature {NONE} -- CAT-calls
 			a_message.append_string ("%'")
 		end
 
-	shared_error_message: STRING is
+	shared_error_message: STRING
 			-- Shared error message (used in `report_catcall_error')
 		once
 			create Result.make (200)
@@ -865,7 +865,7 @@ feature {NONE} -- CAT-calls
 
 feature {NONE} -- Feature validity
 
-	check_external_function_validity (a_feature: ET_EXTERNAL_FUNCTION) is
+	check_external_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Check validity of `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -888,7 +888,7 @@ feature {NONE} -- Feature validity
 			end
 		end
 
-	check_external_builtin_function_validity (a_feature: ET_EXTERNAL_FUNCTION) is
+	check_external_builtin_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Check validity of `a_feature'.
 			-- `a_feature' is a built-in function.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -963,7 +963,7 @@ feature {NONE} -- Feature validity
 			end
 		end
 
-	check_external_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE) is
+	check_external_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE)
 			-- Check validity of `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
@@ -975,7 +975,7 @@ feature {NONE} -- Feature validity
 			end
 		end
 
-	check_external_builtin_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE) is
+	check_external_builtin_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE)
 			-- Check validity of `a_feature'.
 			-- `a_feature' is a built-in procedure.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1009,7 +1009,7 @@ feature {NONE} -- Feature validity
 
 feature {NONE} -- Instruction validity
 
-	check_check_instruction_validity (an_instruction: ET_CHECK_INSTRUCTION) is
+	check_check_instruction_validity (an_instruction: ET_CHECK_INSTRUCTION)
 			-- Check validity of `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
@@ -1020,7 +1020,7 @@ feature {NONE} -- Instruction validity
 			end
 		end
 
-	check_debug_instruction_validity (an_instruction: ET_DEBUG_INSTRUCTION) is
+	check_debug_instruction_validity (an_instruction: ET_DEBUG_INSTRUCTION)
 			-- Check validity of `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
@@ -1031,7 +1031,7 @@ feature {NONE} -- Instruction validity
 			end
 		end
 
-	check_loop_invariant_validity (an_invariant: ET_LOOP_INVARIANTS) is
+	check_loop_invariant_validity (an_invariant: ET_LOOP_INVARIANTS)
 			-- Check validity of `an_invariant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
@@ -1042,7 +1042,7 @@ feature {NONE} -- Instruction validity
 			end
 		end
 
-	check_loop_variant_validity (a_variant: ET_VARIANT) is
+	check_loop_variant_validity (a_variant: ET_VARIANT)
 			-- Check validity of `a_variant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
@@ -1055,7 +1055,7 @@ feature {NONE} -- Instruction validity
 
 feature {NONE} -- Event handling
 
-	report_assignment (an_instruction: ET_ASSIGNMENT) is
+	report_assignment (an_instruction: ET_ASSIGNMENT)
 			-- Report that an assignment instruction has been processed.
 		do
 			if current_type = current_dynamic_type.base_type then
@@ -1063,7 +1063,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_assignment_attempt (an_instruction: ET_ASSIGNMENT_ATTEMPT) is
+	report_assignment_attempt (an_instruction: ET_ASSIGNMENT_ATTEMPT)
 			-- Report that an assignment attempt instruction has been processed.
 		do
 			if current_type = current_dynamic_type.base_type then
@@ -1071,7 +1071,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_attribute_address (an_expression: ET_FEATURE_ADDRESS; an_attribute: ET_QUERY) is
+	report_attribute_address (an_expression: ET_FEATURE_ADDRESS; an_attribute: ET_QUERY)
 			-- Report that attribute `an_attribute' has been processed
 			-- as target of feature address `an_expression'.
 		local
@@ -1084,7 +1084,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_attribute_assignment_target (a_writable: ET_WRITABLE; an_attribute: ET_QUERY) is
+	report_attribute_assignment_target (a_writable: ET_WRITABLE; an_attribute: ET_QUERY)
 			-- Report that attribute `a_writable' has been processed
 			-- as target of an assignment (attempt).
 		local
@@ -1102,7 +1102,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_bit_constant (a_constant: ET_BIT_CONSTANT) is
+	report_bit_constant (a_constant: ET_BIT_CONSTANT)
 			-- Report that a bit constant has been processed.
 		local
 			l_type: ET_DYNAMIC_TYPE
@@ -1114,28 +1114,28 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_boolean_constant (a_constant: ET_BOOLEAN_CONSTANT; a_type: ET_CLASS_TYPE) is
+	report_boolean_constant (a_constant: ET_BOOLEAN_CONSTANT; a_type: ET_CLASS_TYPE)
 			-- Report that a boolean of type `a_type' in the context
 			-- of `current_type' has been processed.
 		do
 			report_constant_expression (a_constant, a_type)
 		end
 
-	report_character_8_constant (a_constant: ET_CHARACTER_CONSTANT; a_type: ET_CLASS_TYPE) is
+	report_character_8_constant (a_constant: ET_CHARACTER_CONSTANT; a_type: ET_CLASS_TYPE)
 			-- Report that a character_8 of type `a_type' in the context
 			-- of `current_type' has been processed.
 		do
 			report_constant_expression (a_constant, a_type)
 		end
 
-	report_character_32_constant (a_constant: ET_CHARACTER_CONSTANT; a_type: ET_CLASS_TYPE) is
+	report_character_32_constant (a_constant: ET_CHARACTER_CONSTANT; a_type: ET_CLASS_TYPE)
 			-- Report that a character_32 of type `a_type' in the context
 			-- of `current_type' has been processed.
 		do
 			report_constant_expression (a_constant, a_type)
 		end
 
-	report_builtin_conversion (an_expression: ET_CONVERT_BUILTIN_EXPRESSION; a_target_type: ET_TYPE) is
+	report_builtin_conversion (an_expression: ET_CONVERT_BUILTIN_EXPRESSION; a_target_type: ET_TYPE)
 			-- Report that a built-in convert expression has been processed,
 			-- where `a_target_type' in  the context of `current_type' is
 			-- the type of the expression after the conversion occurred.
@@ -1165,7 +1165,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_constant_expression (a_expression: ET_EXPRESSION; a_type: ET_CLASS_TYPE) is
+	report_constant_expression (a_expression: ET_EXPRESSION; a_type: ET_CLASS_TYPE)
 			-- Report that `a_expression', whose type is always `a_type'
 			-- in the context of `current_type', has been processed.
 		require
@@ -1189,7 +1189,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_creation_expression (an_expression: ET_CREATION_EXPRESSION; a_creation_type: ET_TYPE; a_procedure: ET_PROCEDURE) is
+	report_creation_expression (an_expression: ET_CREATION_EXPRESSION; a_creation_type: ET_TYPE; a_procedure: ET_PROCEDURE)
 			-- Report that a creation expression, with creation type
 			-- `a_creation_type' in context of `current_type', has
 			-- been processed.
@@ -1218,7 +1218,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_creation_instruction (an_instruction: ET_CREATION_INSTRUCTION; a_creation_type: ET_TYPE; a_procedure: ET_PROCEDURE) is
+	report_creation_instruction (an_instruction: ET_CREATION_INSTRUCTION; a_creation_type: ET_TYPE; a_procedure: ET_PROCEDURE)
 			-- Report that a creation instruction, with creation type
 			-- `a_creation_type' in context of `current_type', has
 			-- been processed.
@@ -1247,7 +1247,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_current (an_expression: ET_CURRENT) is
+	report_current (an_expression: ET_CURRENT)
 			-- Report that the current entity has been processed.
 		do
 			if current_type = current_dynamic_type.base_type then
@@ -1261,7 +1261,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_current_type_needed is
+	report_current_type_needed
 			-- Report that the current type is needed to execute the feature being analyzed.
 			-- This might be needed for optimization purposes.
 		do
@@ -1270,7 +1270,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_equality_expression (an_expression: ET_EQUALITY_EXPRESSION) is
+	report_equality_expression (an_expression: ET_EQUALITY_EXPRESSION)
 			-- Report that an equality expression has been processed.
 		local
 			l_equality: ET_DYNAMIC_EQUALITY_EXPRESSION
@@ -1292,7 +1292,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_formal_argument (a_name: ET_IDENTIFIER; a_formal: ET_FORMAL_ARGUMENT) is
+	report_formal_argument (a_name: ET_IDENTIFIER; a_formal: ET_FORMAL_ARGUMENT)
 			-- Report that a call to formal argument `a_name' has been processed.
 		do
 			if current_type = current_dynamic_type.base_type then
@@ -1300,7 +1300,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_formal_argument_declaration (a_formal: ET_FORMAL_ARGUMENT) is
+	report_formal_argument_declaration (a_formal: ET_FORMAL_ARGUMENT)
 			-- Report that the declaration of the formal
 			-- argument `a_formal' of a feature has been processed.
 		do
@@ -1309,7 +1309,7 @@ feature {NONE} -- Event handling
 			-- feature (see ET_DYNAMIC_FEATURE.make).
 		end
 
-	report_function_address (an_expression: ET_FEATURE_ADDRESS; a_query: ET_QUERY) is
+	report_function_address (an_expression: ET_FEATURE_ADDRESS; a_query: ET_QUERY)
 			-- Report that function `a_query' has been processed
 			-- as target of feature address `an_expression'.
 		local
@@ -1323,7 +1323,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_inline_agent (an_expression: ET_INLINE_AGENT; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+	report_inline_agent (an_expression: ET_INLINE_AGENT; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
 			-- Report that an inline agent of type `a_type' in `a_context' has been processed.
 		require
 			no_error: not has_fatal_error
@@ -1423,7 +1423,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_inline_agent_formal_argument_declaration (a_formal: ET_FORMAL_ARGUMENT) is
+	report_inline_agent_formal_argument_declaration (a_formal: ET_FORMAL_ARGUMENT)
 			-- Report that the declaration of the formal argument `a_formal'
 			-- of an inline agent has been processed.
 		local
@@ -1440,7 +1440,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_inline_agent_local_variable_declaration (a_local: ET_LOCAL_VARIABLE) is
+	report_inline_agent_local_variable_declaration (a_local: ET_LOCAL_VARIABLE)
 			-- Report that the declaration of the local variable `a_local'
 			-- of an inline agent has been processed.
 		local
@@ -1454,7 +1454,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_inline_agent_result_declaration (a_type: ET_TYPE) is
+	report_inline_agent_result_declaration (a_type: ET_TYPE)
 			-- Report that the declaration of the "Result" entity,
 			-- of type `a_type', of an inline agent has been processed.
 		local
@@ -1475,35 +1475,35 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_integer_8_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE) is
+	report_integer_8_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE)
 			-- Report that an integer_8 of type `a_type' in the context
 			-- of `current_type' has been processed.
 		do
 			report_constant_expression (a_constant, a_type)
 		end
 
-	report_integer_16_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE) is
+	report_integer_16_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE)
 			--- Report that an integer_16 of type `a_type' in the context
 			-- of `current_type' has been processed.
 		do
 			report_constant_expression (a_constant, a_type)
 		end
 
-	report_integer_32_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE) is
+	report_integer_32_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE)
 			-- Report that an integer_32 of type `a_type' in the context
 			-- of `current_type' has been processed.
 		do
 			report_constant_expression (a_constant, a_type)
 		end
 
-	report_integer_64_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE) is
+	report_integer_64_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE)
 			-- Report that an integer_64 of type `a_type' in the context
 			-- of `current_type' has been processed.
 		do
 			report_constant_expression (a_constant, a_type)
 		end
 
-	report_local_assignment_target (a_name: ET_IDENTIFIER; a_local: ET_LOCAL_VARIABLE) is
+	report_local_assignment_target (a_name: ET_IDENTIFIER; a_local: ET_LOCAL_VARIABLE)
 			-- Report that the local variable `a_name' has been
 			-- processed as target of an assignment (attempt).
 		do
@@ -1512,7 +1512,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_local_variable (a_name: ET_IDENTIFIER; a_local: ET_LOCAL_VARIABLE) is
+	report_local_variable (a_name: ET_IDENTIFIER; a_local: ET_LOCAL_VARIABLE)
 			-- Report that a call to local variable `a_name' has been processed.
 		do
 			if current_type = current_dynamic_type.base_type then
@@ -1520,7 +1520,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_local_variable_declaration (a_local: ET_LOCAL_VARIABLE) is
+	report_local_variable_declaration (a_local: ET_LOCAL_VARIABLE)
 			-- Report that the declaration of the local variable `a_local'
 			-- of a feature has been processed.
 		local
@@ -1534,7 +1534,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_manifest_array (an_expression: ET_MANIFEST_ARRAY; a_type: ET_TYPE) is
+	report_manifest_array (an_expression: ET_MANIFEST_ARRAY; a_type: ET_TYPE)
 			-- Report that a manifest array of type `a_type' in context
 			-- of `current_type' has been processed.
 		local
@@ -1585,7 +1585,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_manifest_tuple (an_expression: ET_MANIFEST_TUPLE; a_type: ET_TYPE) is
+	report_manifest_tuple (an_expression: ET_MANIFEST_TUPLE; a_type: ET_TYPE)
 			-- Report that a manifest tuple of type `a_type' in context of
 			-- `current_type' has been processed.
 		local
@@ -1598,7 +1598,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_manifest_type (an_expression: ET_MANIFEST_TYPE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+	report_manifest_type (an_expression: ET_MANIFEST_TYPE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
 			-- Report that a manifest type of type `a_type' in context of
 			-- in `a_context' has been processed.
 		local
@@ -1611,7 +1611,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_named_object_test (a_object_test: ET_NAMED_OBJECT_TEST; a_local_type: ET_TYPE_CONTEXT) is
+	report_named_object_test (a_object_test: ET_NAMED_OBJECT_TEST; a_local_type: ET_TYPE_CONTEXT)
 			-- Report that the object-test `a_object_test' with local
 			-- of type `a_local_type' has been processed.
 		local
@@ -1631,35 +1631,35 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_natural_8_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE) is
+	report_natural_8_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE)
 			-- Report that a natural_8 of type `a_type' in the context
 			-- of `current_type' has been processed.
 		do
 			report_constant_expression (a_constant, a_type)
 		end
 
-	report_natural_16_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE) is
+	report_natural_16_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE)
 			-- Report that a natural_16 of type `a_type' in the context
 			-- of `current_type' has been processed.
 		do
 			report_constant_expression (a_constant, a_type)
 		end
 
-	report_natural_32_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE) is
+	report_natural_32_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE)
 			-- Report that a natural_32 of type `a_type' in the context
 			-- of `current_type' has been processed.
 		do
 			report_constant_expression (a_constant, a_type)
 		end
 
-	report_natural_64_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE) is
+	report_natural_64_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE)
 			-- Report that a natural_64 of type `a_type' in the context
 			-- of `current_type' has been processed.
 		do
 			report_constant_expression (a_constant, a_type)
 		end
 
-	report_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION) is
+	report_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION)
 			-- Report that an object equality expression has been processed.
 		local
 			l_object_equality: ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION
@@ -1681,13 +1681,13 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_object_test (a_object_test: ET_OBJECT_TEST) is
+	report_object_test (a_object_test: ET_OBJECT_TEST)
 			-- Report that the object-test `a_object_test' has been processed.
 		do
 			report_constant_expression (a_object_test, current_universe_impl.boolean_type)
 		end
 
-	report_object_test_local (a_name: ET_IDENTIFIER; a_object_test: ET_NAMED_OBJECT_TEST) is
+	report_object_test_local (a_name: ET_IDENTIFIER; a_object_test: ET_NAMED_OBJECT_TEST)
 			-- Report that a call to object-test local `a_name' has been processed.
 		do
 			if current_type = current_dynamic_type.base_type then
@@ -1695,14 +1695,14 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_pointer_expression (an_expression: ET_ADDRESS_EXPRESSION; a_type: ET_CLASS_TYPE) is
+	report_pointer_expression (an_expression: ET_ADDRESS_EXPRESSION; a_type: ET_CLASS_TYPE)
 			-- Report that a pointer expression of type `a_type' in the context
 			-- of `current_type' has been processed.
 		do
 			report_constant_expression (an_expression, a_type)
 		end
 
-	report_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION; a_parent_type: ET_BASE_TYPE; a_query: ET_QUERY) is
+	report_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION; a_parent_type: ET_BASE_TYPE; a_query: ET_QUERY)
 			-- Report that a precursor expression has been processed.
 			-- `a_parent_type' is viewed in the context of `current_type'
 			-- and `a_query' is the precursor feature.
@@ -1737,7 +1737,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_precursor_instruction (an_instruction: ET_PRECURSOR_INSTRUCTION; a_parent_type: ET_BASE_TYPE; a_procedure: ET_PROCEDURE) is
+	report_precursor_instruction (an_instruction: ET_PRECURSOR_INSTRUCTION; a_parent_type: ET_BASE_TYPE; a_procedure: ET_PROCEDURE)
 			-- Report that a precursor instruction has been processed.
 			-- `a_parent_type' is viewed in the context of `current_type'
 			-- and `a_procedure' is the precursor feature.
@@ -1763,7 +1763,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_procedure_address (an_expression: ET_FEATURE_ADDRESS; a_procedure: ET_PROCEDURE) is
+	report_procedure_address (an_expression: ET_FEATURE_ADDRESS; a_procedure: ET_PROCEDURE)
 			-- Report that function `a_procedure' has been processed
 			-- as target of feature address `an_expression'.
 		local
@@ -1777,7 +1777,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_procedure_inline_agent (an_expression: ET_PROCEDURE_INLINE_AGENT; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+	report_procedure_inline_agent (an_expression: ET_PROCEDURE_INLINE_AGENT; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
 			-- Report that procedure inline agent of type `a_type' in `a_context' has been processed.
 		do
 			if current_type = current_dynamic_type.base_type then
@@ -1785,7 +1785,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_qualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_target_type: ET_TYPE_CONTEXT; a_query: ET_QUERY) is
+	report_qualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_target_type: ET_TYPE_CONTEXT; a_query: ET_QUERY)
 			-- Report that a qualified call expression has been processed.
 		local
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
@@ -1841,7 +1841,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_qualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_target_type: ET_TYPE_CONTEXT; a_procedure: ET_PROCEDURE) is
+	report_qualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_target_type: ET_TYPE_CONTEXT; a_procedure: ET_PROCEDURE)
 			-- Report that a qualified call instruction has been processed.
 		local
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
@@ -1864,7 +1864,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_qualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE; an_agent_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+	report_qualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE; an_agent_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
 			-- Report that a qualified procedure call (to `a_procedure') agent
 			-- of type `an_agent_type' in `a_context' has been processed.
 		do
@@ -1873,7 +1873,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_qualified_query_call_agent (an_expression: ET_CALL_AGENT; a_query: ET_QUERY; an_agent_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+	report_qualified_query_call_agent (an_expression: ET_CALL_AGENT; a_query: ET_QUERY; an_agent_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
 			-- Report that a qualified query call (to `a_query') agent
 			-- of type `an_agent_type' in `a_context' has been processed.
 		do
@@ -1882,7 +1882,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_qualified_call_agent (an_expression: ET_CALL_AGENT; a_feature: ET_FEATURE; an_agent_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+	report_qualified_call_agent (an_expression: ET_CALL_AGENT; a_feature: ET_FEATURE; an_agent_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
 			-- Report that a qualified  call (to `a_feature') agent
 			-- of type `an_agent_type' in `a_context' has been processed.
 		local
@@ -1978,7 +1978,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_agent_qualified_query_call (an_expression: ET_CALL_AGENT; a_target_type_set: ET_DYNAMIC_TYPE_SET; a_result_type_set: ET_DYNAMIC_TYPE_SET) is
+	report_agent_qualified_query_call (an_expression: ET_CALL_AGENT; a_target_type_set: ET_DYNAMIC_TYPE_SET; a_result_type_set: ET_DYNAMIC_TYPE_SET)
 			-- Report the agent `an_expression' makes a qualified query call
 			-- on `a_target_type_set' and returns `a_result_type_set'.
 		require
@@ -1995,7 +1995,7 @@ feature {NONE} -- Event handling
 			propagate_qualified_call_target_dynamic_types (l_dynamic_query_call)
 		end
 
-	report_query_inline_agent (an_expression: ET_QUERY_INLINE_AGENT; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+	report_query_inline_agent (an_expression: ET_QUERY_INLINE_AGENT; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
 			-- Report that a query inline agent of type `a_type' in `a_context' has been processed.
 		do
 			if current_type = current_dynamic_type.base_type then
@@ -2003,21 +2003,21 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_real_32_constant (a_constant: ET_REAL_CONSTANT; a_type: ET_CLASS_TYPE) is
+	report_real_32_constant (a_constant: ET_REAL_CONSTANT; a_type: ET_CLASS_TYPE)
 			-- Report that a real_32 of type `a_type' in the context
 			-- of `current_type' has been processed.
 		do
 			report_constant_expression (a_constant, a_type)
 		end
 
-	report_real_64_constant (a_constant: ET_REAL_CONSTANT; a_type: ET_CLASS_TYPE) is
+	report_real_64_constant (a_constant: ET_REAL_CONSTANT; a_type: ET_CLASS_TYPE)
 			-- Report that a real_64 of type `a_type' in the context
 			-- of `current_type' has been processed.
 		do
 			report_constant_expression (a_constant, a_type)
 		end
 
-	report_result (an_expression: ET_RESULT) is
+	report_result (an_expression: ET_RESULT)
 			-- Report that the result entity has been processed.
 		local
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
@@ -2054,7 +2054,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_result_assignment_target (a_result: ET_RESULT) is
+	report_result_assignment_target (a_result: ET_RESULT)
 			-- Report that the result entity has been processed
 			-- as target of an assignment (attempt).
 		local
@@ -2092,7 +2092,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION; a_type: ET_TYPE; a_query: ET_QUERY) is
+	report_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION; a_type: ET_TYPE; a_query: ET_QUERY)
 			-- Report that a static call expression has been processed.
 		local
 			i, nb: INTEGER
@@ -2127,7 +2127,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION; a_type: ET_TYPE; a_procedure: ET_PROCEDURE) is
+	report_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION; a_type: ET_TYPE; a_procedure: ET_PROCEDURE)
 			-- Report that a static call instruction has been processed.
 		local
 			i, nb: INTEGER
@@ -2153,7 +2153,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_string_constant (a_string: ET_MANIFEST_STRING; a_type: ET_CLASS_TYPE) is
+	report_string_constant (a_string: ET_MANIFEST_STRING; a_type: ET_CLASS_TYPE)
 			-- Report that `a_string', whose type is always `a_type'
 			-- in the context of `current_type', has been processed.
 		require
@@ -2198,21 +2198,21 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_string_8_constant (a_string: ET_MANIFEST_STRING; a_type: ET_CLASS_TYPE) is
+	report_string_8_constant (a_string: ET_MANIFEST_STRING; a_type: ET_CLASS_TYPE)
 			-- Report that a string_8 of type `a_type' in the context
 			-- of `current_type' has been processed.
 		do
 			report_string_constant (a_string, a_type)
 		end
 
-	report_string_32_constant (a_string: ET_MANIFEST_STRING; a_type: ET_CLASS_TYPE) is
+	report_string_32_constant (a_string: ET_MANIFEST_STRING; a_type: ET_CLASS_TYPE)
 			-- Report that a string_8 of type `a_type' in the context
 			-- of `current_type' has been processed.
 		do
 			report_string_constant (a_string, a_type)
 		end
 
-	report_strip_expression (an_expression: ET_STRIP_EXPRESSION; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+	report_strip_expression (an_expression: ET_STRIP_EXPRESSION; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
 			-- Report that a strip expression of type `a_type'
 			-- in `a_context' has been processed.
 		local
@@ -2225,7 +2225,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_tuple_label_call_agent (an_expression: ET_CALL_AGENT; an_agent_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+	report_tuple_label_call_agent (an_expression: ET_CALL_AGENT; an_agent_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
 			-- Report that a tuple label call agent of type `an_agent_type'
 			-- in `a_context' has been processed.
 		local
@@ -2279,7 +2279,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_tuple_label_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_target_type: ET_TYPE_CONTEXT) is
+	report_tuple_label_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_target_type: ET_TYPE_CONTEXT)
 			-- Report that a call to a tuple label has been processed.
 		local
 			l_target: ET_EXPRESSION
@@ -2329,7 +2329,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_tuple_label_setter (an_assigner: ET_ASSIGNER_INSTRUCTION; a_target_type: ET_TYPE_CONTEXT) is
+	report_tuple_label_setter (an_assigner: ET_ASSIGNER_INSTRUCTION; a_target_type: ET_TYPE_CONTEXT)
 			-- Report that a call to the setter of a tuple label has been processed.
 		local
 			l_dynamic_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
@@ -2354,7 +2354,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_typed_pointer_expression (an_expression: ET_ADDRESS_EXPRESSION; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+	report_typed_pointer_expression (an_expression: ET_ADDRESS_EXPRESSION; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
 			-- Report that a typed pointer expression of type `a_type'
 			-- in `a_context' has been processed.
 		local
@@ -2367,7 +2367,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_unqualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_query: ET_QUERY) is
+	report_unqualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_query: ET_QUERY)
 			-- Report that an unqualified call expression has been processed.
 		local
 			i, nb: INTEGER
@@ -2466,7 +2466,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_unqualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_procedure: ET_PROCEDURE) is
+	report_unqualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_procedure: ET_PROCEDURE)
 			-- Report that an unqualified call instruction has been processed.
 		local
 			i, nb: INTEGER
@@ -2532,7 +2532,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_unqualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+	report_unqualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
 			-- Report that an unqualified procedure call (to `a_procedure') agent
 			-- of type `a_type' in `a_context' has been processed.
 		local
@@ -2544,7 +2544,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_unqualified_query_call_agent (an_expression: ET_CALL_AGENT; a_query: ET_QUERY; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+	report_unqualified_query_call_agent (an_expression: ET_CALL_AGENT; a_query: ET_QUERY; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
 			-- Report that an unqualified query call (to `a_query') agent
 			-- of type `a_type' in `a_context' has been processed.
 		local
@@ -2557,7 +2557,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_unqualified_call_agent (an_expression: ET_CALL_AGENT; a_feature: ET_DYNAMIC_FEATURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+	report_unqualified_call_agent (an_expression: ET_CALL_AGENT; a_feature: ET_DYNAMIC_FEATURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
 			-- Report that an unqualified call (to `a_feature') agent
 			-- of type `a_type' in `a_context' has been processed.
 		require
@@ -2682,7 +2682,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_void_constant (an_expression: ET_VOID) is
+	report_void_constant (an_expression: ET_VOID)
 			-- Report that a Void has been processed.
 		local
 			l_type: ET_DYNAMIC_TYPE
@@ -2701,7 +2701,7 @@ feature {NONE} -- Event handling
 
 feature {NONE} -- Built-in features
 
-	report_builtin_function (a_feature: ET_EXTERNAL_FUNCTION) is
+	report_builtin_function (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Report that a built-in function that returns an object of the same
 			-- type as its declared type is being analyzed.
 		require
@@ -2725,7 +2725,7 @@ feature {NONE} -- Built-in features
 			end
 		end
 
-	report_builtin_procedure (a_feature: ET_EXTERNAL_PROCEDURE) is
+	report_builtin_procedure (a_feature: ET_EXTERNAL_PROCEDURE)
 			-- Report that a built-in procedure is being analyzed.
 		require
 			no_error: not has_fatal_error
@@ -2734,7 +2734,7 @@ feature {NONE} -- Built-in features
 			-- Do nothing.
 		end
 
-	report_builtin_any_twin (a_feature: ET_EXTERNAL_FUNCTION) is
+	report_builtin_any_twin (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Report that built-in feature 'ANY.twin' is being analyzed.
 		require
 			no_error: not has_fatal_error
@@ -2759,7 +2759,7 @@ feature {NONE} -- Built-in features
 			end
 		end
 
-	report_builtin_function_item (a_feature: ET_EXTERNAL_FUNCTION) is
+	report_builtin_function_item (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Report that built-in feature 'FUNCTION.item' is being analyzed.
 		require
 			no_error: not has_fatal_error
@@ -2782,7 +2782,7 @@ feature {NONE} -- Built-in features
 			end
 		end
 
-	report_builtin_identified_eif_id_object (a_feature: ET_EXTERNAL_FUNCTION) is
+	report_builtin_identified_eif_id_object (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Report that built-in feature 'IDENTIFIED.eif_id_object' is being analyzed.
 		require
 			no_error: not has_fatal_error
@@ -2791,7 +2791,7 @@ feature {NONE} -- Built-in features
 			-- Do nothing.
 		end
 
-	report_builtin_identified_eif_object_id (a_feature: ET_EXTERNAL_FUNCTION) is
+	report_builtin_identified_eif_object_id (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Report that built-in feature 'IDENTIFIED.eif_object_id' is being analyzed.
 		require
 			no_error: not has_fatal_error
@@ -2800,7 +2800,7 @@ feature {NONE} -- Built-in features
 			-- Do nothing.
 		end
 
-	report_builtin_internal_type_of_type (a_feature: ET_EXTERNAL_FUNCTION) is
+	report_builtin_internal_type_of_type (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Report that built-in feature 'INTERNAL.type_of_type' is being analyzed.
 		require
 			no_error: not has_fatal_error
@@ -2809,7 +2809,7 @@ feature {NONE} -- Built-in features
 			-- Do nothing.
 		end
 
-	report_builtin_special_item (a_feature: ET_EXTERNAL_FUNCTION) is
+	report_builtin_special_item (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Report that built-in feature 'SPECIAL.item' is being analyzed.
 		require
 			no_error: not has_fatal_error
@@ -2830,7 +2830,7 @@ feature {NONE} -- Built-in features
 			end
 		end
 
-	report_builtin_tuple_put_reference (a_feature: ET_EXTERNAL_PROCEDURE) is
+	report_builtin_tuple_put_reference (a_feature: ET_EXTERNAL_PROCEDURE)
 			-- Report that built-in feature 'TUPLE.put_reference' is being analyzed.
 		require
 			no_error: not has_fatal_error
@@ -2863,7 +2863,7 @@ feature {NONE} -- Built-in features
 			end
 		end
 
-	report_builtin_tuple_reference_item (a_feature: ET_EXTERNAL_FUNCTION) is
+	report_builtin_tuple_reference_item (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Report that built-in feature 'TUPLE.reference_item' is being analyzed.
 		require
 			no_error: not has_fatal_error
@@ -2896,7 +2896,7 @@ feature {NONE} -- Built-in features
 			end
 		end
 
-	report_builtin_type_field_count (a_feature: ET_EXTERNAL_FUNCTION) is
+	report_builtin_type_field_count (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Report that built-in feature 'TYPE.field_count' is being analyzed.
 		require
 			no_error: not has_fatal_error
@@ -2923,7 +2923,7 @@ feature {NONE} -- Built-in features
 			end
 		end
 
-	report_builtin_type_field (a_feature: ET_EXTERNAL_FUNCTION) is
+	report_builtin_type_field (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Report that built-in feature 'TYPE.field' is being analyzed.
 		require
 			no_error: not has_fatal_error
@@ -2962,7 +2962,7 @@ feature {NONE} -- Built-in features
 			end
 		end
 
-	report_builtin_type_field_static_type (a_feature: ET_EXTERNAL_FUNCTION) is
+	report_builtin_type_field_static_type (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Report that built-in feature 'TYPE.field_static_type' is being analyzed.
 		require
 			no_error: not has_fatal_error
@@ -3006,7 +3006,7 @@ feature {NONE} -- Built-in features
 			end
 		end
 
-	report_builtin_type_generic_parameter (a_feature: ET_EXTERNAL_FUNCTION) is
+	report_builtin_type_generic_parameter (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Report that built-in feature 'TYPE.generic_parameter' is being analyzed.
 		require
 			no_error: not has_fatal_error
@@ -3047,7 +3047,7 @@ feature {NONE} -- Built-in features
 			end
 		end
 
-	report_builtin_type_set_reference_field (a_feature: ET_EXTERNAL_PROCEDURE) is
+	report_builtin_type_set_reference_field (a_feature: ET_EXTERNAL_PROCEDURE)
 			-- Report that built-in feature 'TYPE.set_reference_field' is being analyzed.
 		require
 			no_error: not has_fatal_error
@@ -3108,7 +3108,7 @@ feature {ET_FEATURE_CHECKER} -- Access
 
 feature {NONE} -- Implementation
 
-	propagate_agent_closed_operands_dynamic_types (an_agent: ET_AGENT; an_agent_type: ET_DYNAMIC_ROUTINE_TYPE) is
+	propagate_agent_closed_operands_dynamic_types (an_agent: ET_AGENT; an_agent_type: ET_DYNAMIC_ROUTINE_TYPE)
 			-- Propagate dynamic types of closed operands of `an_agent' to the
 			-- dynamic type set of the attribute 'closed_operands' of `an_agent_type'.
 		require
@@ -3118,7 +3118,7 @@ feature {NONE} -- Implementation
 			-- Do nothing.
 		end
 
-	propagate_argument_dynamic_types (an_actual: ET_ARGUMENT_OPERAND; a_formal_type_set: ET_DYNAMIC_TYPE_SET) is
+	propagate_argument_dynamic_types (an_actual: ET_ARGUMENT_OPERAND; a_formal_type_set: ET_DYNAMIC_TYPE_SET)
 			-- Propagate dynamic types of actual argument `an_actual'
 			-- to the dynamic type set `a_formal_type_set' of the
 			-- corresponding formal argument.
@@ -3129,7 +3129,7 @@ feature {NONE} -- Implementation
 			-- Do nothing.
 		end
 
-	propagate_argument_operand_dynamic_types (an_actual: ET_ARGUMENT_OPERAND; a_formal: INTEGER; a_callee: ET_DYNAMIC_FEATURE) is
+	propagate_argument_operand_dynamic_types (an_actual: ET_ARGUMENT_OPERAND; a_formal: INTEGER; a_callee: ET_DYNAMIC_FEATURE)
 			-- Propagate dynamic types of actual argument `an_actual'
 			-- to the dynamic type set of the corresponding formal
 			-- argument at index `a_formal' in `a_callee'.
@@ -3140,7 +3140,7 @@ feature {NONE} -- Implementation
 			-- Do nothing.
 		end
 
-	propagate_assignment_dynamic_types (an_assignment: ET_ASSIGNMENT) is
+	propagate_assignment_dynamic_types (an_assignment: ET_ASSIGNMENT)
 			-- Propagate dynamic types of the source of `an_assignment'
 			-- to the dynamic type set of the target of `an_assignment'.
 		require
@@ -3149,7 +3149,7 @@ feature {NONE} -- Implementation
 			-- Do nothing.
 		end
 
-	propagate_assignment_attempt_dynamic_types (an_assignment_attempt: ET_ASSIGNMENT_ATTEMPT) is
+	propagate_assignment_attempt_dynamic_types (an_assignment_attempt: ET_ASSIGNMENT_ATTEMPT)
 			-- Propagate dynamic types of the source of `an_assignment_attempt'
 			-- to the dynamic type set of the target of `an_assignment_attempt'.
 		require
@@ -3158,7 +3158,7 @@ feature {NONE} -- Implementation
 			-- Do nothing.
 		end
 
-	propagate_builtin_actual_argument_dynamic_types (a_source_type_set: ET_DYNAMIC_TYPE_SET; a_formal: INTEGER; a_callee: ET_DYNAMIC_FEATURE) is
+	propagate_builtin_actual_argument_dynamic_types (a_source_type_set: ET_DYNAMIC_TYPE_SET; a_formal: INTEGER; a_callee: ET_DYNAMIC_FEATURE)
 			-- Propagate dynamic types of `a_source_type_set' to the dynamic type set
 			-- of the formal argument at index `a_formal' in `a_callee' when involved
 			-- in built-in feature `current_dynamic_feature'.
@@ -3169,7 +3169,7 @@ feature {NONE} -- Implementation
 			-- Do nothing.
 		end
 
-	propagate_builtin_formal_argument_dynamic_types (a_formal: INTEGER; a_target_type_set: ET_DYNAMIC_TYPE_SET) is
+	propagate_builtin_formal_argument_dynamic_types (a_formal: INTEGER; a_target_type_set: ET_DYNAMIC_TYPE_SET)
 			-- Propagate dynamic types of the dynamic type set of the formal argument
 			-- at index `a_formal' in built-in feature `current_dynamic_feature'
 			-- to `a_target_type_set'.
@@ -3179,7 +3179,7 @@ feature {NONE} -- Implementation
 			-- Do nothing.
 		end
 
-	propagate_builtin_result_dynamic_types (a_source_type_set: ET_DYNAMIC_TYPE_SET; a_query: ET_DYNAMIC_FEATURE) is
+	propagate_builtin_result_dynamic_types (a_source_type_set: ET_DYNAMIC_TYPE_SET; a_query: ET_DYNAMIC_FEATURE)
 			-- Propagate dynamic types of `a_source_type_set' to the dynamic type set
 			-- of the result of the built-in feature `a_query'.
 		require
@@ -3189,7 +3189,7 @@ feature {NONE} -- Implementation
 			-- Do nothing.
 		end
 
-	propagate_call_agent_result_dynamic_types (an_agent: ET_CALL_AGENT; a_query: ET_DYNAMIC_FEATURE; a_result_type_set: ET_DYNAMIC_TYPE_SET) is
+	propagate_call_agent_result_dynamic_types (an_agent: ET_CALL_AGENT; a_query: ET_DYNAMIC_FEATURE; a_result_type_set: ET_DYNAMIC_TYPE_SET)
 			-- Propagate dynamic types of the result of `a_query' to the dynamic type set
 			-- `a_result_type_set' of the result of type of `an_agent' (probably a FUNCTION
 			-- or a PREDICATE).
@@ -3201,7 +3201,7 @@ feature {NONE} -- Implementation
 			-- Do nothing.
 		end
 
-	propagate_creation_dynamic_type (a_creation_type: ET_DYNAMIC_TYPE; a_creation: ET_CREATION_INSTRUCTION) is
+	propagate_creation_dynamic_type (a_creation_type: ET_DYNAMIC_TYPE; a_creation: ET_CREATION_INSTRUCTION)
 			-- Propagate the creation type `a_creation_type' of `a_creation'
 			-- to the dynamic type set of the target of `a_creation'.
 		require
@@ -3211,7 +3211,7 @@ feature {NONE} -- Implementation
 			-- Do nothing.
 		end
 
-	propagate_inline_agent_result_dynamic_types (an_agent: ET_INLINE_AGENT; a_result_type_set: ET_DYNAMIC_TYPE_SET) is
+	propagate_inline_agent_result_dynamic_types (an_agent: ET_INLINE_AGENT; a_result_type_set: ET_DYNAMIC_TYPE_SET)
 			-- Propagate dynamic types of the result of the associated feature of `an_agent'
 			-- to the dynamic type set `a_result_type_set' of the result of type of `an_agent'
 			-- (probably a FUNCTION or a PREDICATE).
@@ -3222,7 +3222,7 @@ feature {NONE} -- Implementation
 			-- Do nothing.
 		end
 
-	propagate_like_argument_dynamic_types (a_call: ET_FEATURE_CALL_EXPRESSION; a_formal_type_set, an_actual_type_set: ET_DYNAMIC_TYPE_SET) is
+	propagate_like_argument_dynamic_types (a_call: ET_FEATURE_CALL_EXPRESSION; a_formal_type_set, an_actual_type_set: ET_DYNAMIC_TYPE_SET)
 			-- When `a_call' is a call to a query whose type is of the form "like argument",
 			-- propagate dynamic types `a_formal_type_set' of the result of that query
 			-- to the dynamic type set `an_actual_type_set' of the call.
@@ -3236,7 +3236,7 @@ feature {NONE} -- Implementation
 			-- Do nothing.
 		end
 
-	propagate_manifest_string_area_dynamic_type (a_area_type: ET_DYNAMIC_TYPE; a_area_type_set: ET_DYNAMIC_TYPE_SET; a_string: ET_MANIFEST_STRING) is
+	propagate_manifest_string_area_dynamic_type (a_area_type: ET_DYNAMIC_TYPE; a_area_type_set: ET_DYNAMIC_TYPE_SET; a_string: ET_MANIFEST_STRING)
 			-- Propagate the dynamic type of the 'area' of manifest string `a_string'
 			-- to its dynamic type set `a_area_type_set'.
 		require
@@ -3247,7 +3247,7 @@ feature {NONE} -- Implementation
 			-- Do nothing.
 		end
 
-	propagate_named_object_test_dynamic_types (a_object_test: ET_NAMED_OBJECT_TEST) is
+	propagate_named_object_test_dynamic_types (a_object_test: ET_NAMED_OBJECT_TEST)
 			-- Propagate dynamic types of the expression of `a_object_test'
 			-- to the dynamic type set of the local of `a_object_test'.
 		require
@@ -3256,7 +3256,7 @@ feature {NONE} -- Implementation
 			-- Do nothing.
 		end
 
-	propagate_qualified_call_target_dynamic_types (a_call: ET_DYNAMIC_QUALIFIED_CALL) is
+	propagate_qualified_call_target_dynamic_types (a_call: ET_DYNAMIC_QUALIFIED_CALL)
 			-- Propagate the dynamic types of the target of `a_call' to the call itself.
 		require
 			a_call_not_void: a_call /= Void
@@ -3264,7 +3264,7 @@ feature {NONE} -- Implementation
 			-- Do nothing.
 		end
 
-	propagate_equality_expression_target_dynamic_types (a_equality: ET_DYNAMIC_EQUALITY_EXPRESSION) is
+	propagate_equality_expression_target_dynamic_types (a_equality: ET_DYNAMIC_EQUALITY_EXPRESSION)
 			-- Propagate the dynamic types of the target of `a_equality' to the equality itself.
 		require
 			a_equality_not_void: a_equality /= Void
@@ -3272,7 +3272,7 @@ feature {NONE} -- Implementation
 			-- Do nothing.
 		end
 
-	propagate_object_equality_expression_target_dynamic_types (a_equality: ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION) is
+	propagate_object_equality_expression_target_dynamic_types (a_equality: ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION)
 			-- Propagate the dynamic types of the target of `a_equality' to the object-equality itself.
 		require
 			a_equality_not_void: a_equality /= Void
@@ -3280,7 +3280,7 @@ feature {NONE} -- Implementation
 			-- Do nothing.
 		end
 
-	propagate_tuple_label_argument_dynamic_types (a_label_type_set: ET_DYNAMIC_TYPE_SET; a_assigner: ET_ASSIGNER_INSTRUCTION) is
+	propagate_tuple_label_argument_dynamic_types (a_label_type_set: ET_DYNAMIC_TYPE_SET; a_assigner: ET_ASSIGNER_INSTRUCTION)
 			-- Propagate dynamic types of the source of tuple label setter `a_assigner'
 			-- to the dynamic type set `a_label_type_set' of the corresponding tuple label.
 		require
@@ -3290,7 +3290,7 @@ feature {NONE} -- Implementation
 			-- Do nothing.
 		end
 
-	propagate_tuple_label_result_dynamic_types (a_label_type_set, a_result_type_set: ET_DYNAMIC_TYPE_SET) is
+	propagate_tuple_label_result_dynamic_types (a_label_type_set, a_result_type_set: ET_DYNAMIC_TYPE_SET)
 			-- Propagate dynamic types `a_label_type_set' of a tuple label
 			-- to the dynamic type set `a_result_type_set' of the result type
 			-- of the associated qualified call.
@@ -3301,7 +3301,7 @@ feature {NONE} -- Implementation
 			-- Do nothing.
 		end
 
-	dynamic_type_set (an_operand: ET_OPERAND): ET_DYNAMIC_TYPE_SET is
+	dynamic_type_set (an_operand: ET_OPERAND): ET_DYNAMIC_TYPE_SET
 			-- Dynamic type set associated with `an_operand';
 			-- Void if unknown yet
 		require
@@ -3315,7 +3315,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	result_type_set: ET_DYNAMIC_TYPE_SET is
+	result_type_set: ET_DYNAMIC_TYPE_SET
 			-- Dynamic type set associated with result of feature being processed;
 			-- Report a fatal error if not known
 		local
@@ -3334,7 +3334,7 @@ feature {NONE} -- Implementation
 			result_type_set_not_void: Result /= Void
 		end
 
-	set_dynamic_type_set (a_dynamic_type_set: ET_DYNAMIC_TYPE_SET; an_operand: ET_OPERAND) is
+	set_dynamic_type_set (a_dynamic_type_set: ET_DYNAMIC_TYPE_SET; an_operand: ET_OPERAND)
 			-- Set dynamic type set associated with `an_operand' to `a_dynamic_type_set'.
 		require
 			a_dynamic_type_set_not_void: a_dynamic_type_set /= Void
@@ -3368,7 +3368,7 @@ feature {NONE} -- Implementation
 	dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			-- Dynamic type sets of expressions within current feature
 
-	dummy_dynamic_type: ET_DYNAMIC_TYPE is
+	dummy_dynamic_type: ET_DYNAMIC_TYPE
 			-- Dummy dynamic type
 		once
 			create Result.make (current_type, current_class)
@@ -3376,7 +3376,7 @@ feature {NONE} -- Implementation
 			dummy_dynamic_type_not_void: Result /= Void
 		end
 
-	dummy_dynamic_feature: ET_DYNAMIC_FEATURE is
+	dummy_dynamic_feature: ET_DYNAMIC_FEATURE
 			-- Dummy dynamic feature
 		once
 			create Result.make (dummy_feature, dummy_dynamic_type, current_dynamic_system)

@@ -22,15 +22,15 @@ create
 
 feature -- Access
 
-	program_name: STRING is "gegrep"
+	program_name: STRING = "gegrep"
 			-- Program name
 
-	library_name: STRING is "lexical"
+	library_name: STRING = "lexical"
 			-- Library name of example
 
 feature -- Test
 
-	test_gegrep is
+	test_gegrep
 			-- Test 'gegrep' example.
 		do
 			compile_program

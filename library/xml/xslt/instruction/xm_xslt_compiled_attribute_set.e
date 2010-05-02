@@ -26,7 +26,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_name_code: like name_code; some_used_attribute_sets: like used_attribute_sets; an_executable: XM_XSLT_EXECUTABLE; a_body: XM_XPATH_EXPRESSION;
-			a_line_number: INTEGER; a_system_id: STRING; a_slot_manager: like slot_manager) is
+			a_line_number: INTEGER; a_system_id: STRING; a_slot_manager: like slot_manager)
 			-- Establish invariant.
 		require
 			used_attribute_sets_not_void: some_used_attribute_sets /= Void
@@ -55,8 +55,8 @@ feature -- Access
 
 feature -- Evaluation
 
-	
-	expand (a_executable: XM_XSLT_EXECUTABLE; a_context: XM_XPATH_CONTEXT) is
+
+	expand (a_executable: XM_XSLT_EXECUTABLE; a_context: XM_XPATH_CONTEXT)
 			-- Expand `Current' to it's constituents.
 		require
 			a_executable_not_void: a_executable /= Void
@@ -82,14 +82,14 @@ feature {NONE} -- Initialization
 	used_attribute_sets: DS_ARRAYED_LIST [INTEGER]
 			-- Attribute sets used by `Current'
 
-	is_stack_frame_needed: BOOLEAN is
+	is_stack_frame_needed: BOOLEAN
 			-- Is a stack frame needed?
 		do
 			Result := slot_manager.number_of_variables > 0
 		end
 
 invariant
-	
+
 	used_attribute_sets_not_void: used_attribute_sets /= Void
 
 end

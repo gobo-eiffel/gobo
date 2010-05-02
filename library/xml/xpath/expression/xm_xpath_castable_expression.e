@@ -33,12 +33,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_source: XM_XPATH_EXPRESSION; a_target: XM_XPATH_SEQUENCE_TYPE) is
+	make (a_source: XM_XPATH_EXPRESSION; a_target: XM_XPATH_SEQUENCE_TYPE)
 			-- Establish invariant
 		do
 			make_unary (a_source)
 			target_type := a_target.primary_type
-			is_empty_allowed := a_target.cardinality = Required_cardinality_optional 
+			is_empty_allowed := a_target.cardinality = Required_cardinality_optional
 			compute_static_properties
 		ensure
 			base_expression_set: base_expression = a_source
@@ -46,26 +46,26 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
+
 	is_empty_allowed: BOOLEAN
 			-- Empty sequence allowed?
 
 	target_type: XM_XPATH_ITEM_TYPE
-			-- Target type 
+			-- Target type
 
-	is_castable_expression: BOOLEAN is
+	is_castable_expression: BOOLEAN
 			-- Is `Current' a castable expression?
 		do
 			Result := True
 		end
 
-	as_castable_expression: XM_XPATH_CASTABLE_EXPRESSION is
+	as_castable_expression: XM_XPATH_CASTABLE_EXPRESSION
 			-- `Current' seen as a castable expression
 		do
 			Result := Current
 		end
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			--Determine the data type of the expression, if possible
 		do
 			Result := type_factory.boolean_type
@@ -77,14 +77,14 @@ feature -- Access
 
 feature -- Comparison
 
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Are `Current' and `other' the same expression?
 		local
 			other_castable: XM_XPATH_CASTABLE_EXPRESSION
 		do
 			if other.is_castable_expression then
 				other_castable := other.as_castable_expression
-				Result := base_expression.same_expression (other_castable.base_expression) 
+				Result := base_expression.same_expression (other_castable.base_expression)
 					and then other_castable.is_empty_allowed = is_empty_allowed
 					and then other_castable.target_type = target_type
 			end
@@ -92,15 +92,15 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_node_sequence: BOOLEAN is
+	is_node_sequence: BOOLEAN
 			-- Is `Current' a sequence of zero or more nodes?
 		do
 			Result := False
 		end
 
-feature -- Optimization	
+feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -119,8 +119,8 @@ feature -- Optimization
 				end
 			end
 		end
-	
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_type_checker: XM_XPATH_TYPE_CHECKER
@@ -159,7 +159,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -175,22 +175,22 @@ feature -- Optimization
 					set_replacement (a_replacement, last_boolean_value)
 				else
 					a_replacement.put (Current)
-				end	
+				end
 			end
 		end
 
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			calculate_effective_boolean_value (a_context)
 			a_result.put (last_boolean_value)
 		end
 
-	
-	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
+
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT)
 			-- Effective boolean value
 		local
 			l_result: DS_CELL [XM_XPATH_ITEM]
@@ -205,22 +205,22 @@ feature -- Evaluation
 		end
 
 feature {XM_XPATH_UNARY_EXPRESSION} -- Restricted
-	
-	display_operator: STRING is
+
+	display_operator: STRING
 			-- Format `operator' for display
 		do
 			Result := "castable as " + target_type.conventional_name
 		end
 
 feature {NONE} -- Implementation
-	
-	compute_cardinality is
+
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
 		end
 
-	compute_special_properties is
+	compute_special_properties
 			-- Compute special properties.
 		do
 			Precursor

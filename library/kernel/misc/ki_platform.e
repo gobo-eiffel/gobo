@@ -14,7 +14,7 @@ deferred class KI_PLATFORM
 
 feature -- Bits
 
-	Boolean_bits: INTEGER is
+	Boolean_bits: INTEGER
 			-- Number of bits in a value of type BOOLEAN
 		deferred
 		ensure
@@ -24,10 +24,10 @@ feature -- Bits
 --			small_enough: Result <= Boolean_bytes * Byte_bits
 		end
 
-	Byte_bits: INTEGER is 8
+	Byte_bits: INTEGER = 8
 			-- Number of bits in a byte
 
-	Character_bits: INTEGER is
+	Character_bits: INTEGER
 			-- Number of bits in a value of type CHARACTER
 		deferred
 		ensure
@@ -37,7 +37,7 @@ feature -- Bits
 			more_than_byte: Result >= Byte_bits
 		end
 
-	Double_bits: INTEGER is
+	Double_bits: INTEGER
 			-- Number of bits in a value of type DOUBLE
 		deferred
 		ensure
@@ -47,7 +47,7 @@ feature -- Bits
 			more_than_real: Result >= Real_bits
 		end
 
-	Integer_bits: INTEGER is
+	Integer_bits: INTEGER
 			-- Number of bits in a value of type INTEGER
 		deferred
 		ensure
@@ -57,7 +57,7 @@ feature -- Bits
 			more_than_character: Result >= Character_bits
 		end
 
-	Pointer_bits: INTEGER is
+	Pointer_bits: INTEGER
 			-- Number of bits in a value of type POINTER
 		deferred
 		ensure
@@ -66,7 +66,7 @@ feature -- Bits
 --			definition: Result = Pointer_bytes * Byte_bits
 		end
 
-	Real_bits: INTEGER is
+	Real_bits: INTEGER
 			-- Number of bits in a value of type REAL
 		deferred
 		ensure
@@ -77,17 +77,17 @@ feature -- Bits
 
 feature -- Bytes
 
-	Boolean_bytes: INTEGER is
+	Boolean_bytes: INTEGER
 			-- Number of bytes in a value of type BOOLEAN
 		deferred
 		ensure
 			meaningful: Result >= 1
 		end
 
-	Byte_bytes: INTEGER is 1
+	Byte_bytes: INTEGER = 1
 			-- Number of bytes in a byte
 
-	Character_bytes: INTEGER is
+	Character_bytes: INTEGER
 			-- Number of bytes in a value of type CHARACTER
 		deferred
 		ensure
@@ -95,7 +95,7 @@ feature -- Bytes
 			more_than_byte: Result >= Byte_bytes
 		end
 
-	Double_bytes: INTEGER is
+	Double_bytes: INTEGER
 			-- Number of bytes in a value of type DOUBLE
 		deferred
 		ensure
@@ -103,7 +103,7 @@ feature -- Bytes
 			more_than_real: Result >= Real_bytes
 		end
 
-	Integer_bytes: INTEGER is
+	Integer_bytes: INTEGER
 			-- Number of bytes in a value of type INTEGER
 		deferred
 		ensure
@@ -111,14 +111,14 @@ feature -- Bytes
 			more_than_character: Result >= Character_bytes
 		end
 
-	Pointer_bytes: INTEGER is
+	Pointer_bytes: INTEGER
 			-- Number of bytes in a value of type POINTER
 		deferred
 		ensure
 			meaningful: Result >= 1
 		end
 
-	Real_bytes: INTEGER is
+	Real_bytes: INTEGER
 			-- Number of bytes in a value of type REAL
 		deferred
 		ensure
@@ -127,20 +127,20 @@ feature -- Bytes
 
 feature -- Values
 
-	Minimum_byte_code: INTEGER is 0
+	Minimum_byte_code: INTEGER = 0
 			-- Smallest supported code for a byte
 
-	Maximum_byte_code: INTEGER is 255
+	Maximum_byte_code: INTEGER = 255
 			-- Largest supported code for a byte
 
-	Minimum_character_code: INTEGER is
+	Minimum_character_code: INTEGER
 			-- Smallest supported code for CHARACTER values
 		deferred
 		ensure
 			meaningful: Result = 0
 		end
 
-	Maximum_character_code: INTEGER is
+	Maximum_character_code: INTEGER
 			-- Largest supported code for CHARACTER values
 		deferred
 		ensure
@@ -149,7 +149,7 @@ feature -- Values
 --			definition: Result = (2 ^ Character_bits) - 1
 		end
 
-	Minimum_integer: INTEGER is
+	Minimum_integer: INTEGER
 			-- Smallest supported value of type INTEGER
 		deferred
 		ensure
@@ -158,7 +158,7 @@ feature -- Values
 			definition: Result = (2 ^ (Integer_bits - 2)) * -2
 		end
 
-	Maximum_integer: INTEGER is
+	Maximum_integer: INTEGER
 			-- Largest supported value of type INTEGER
 		deferred
 		ensure

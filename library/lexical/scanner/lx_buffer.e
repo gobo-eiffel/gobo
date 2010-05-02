@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_string: STRING) is
+	make (a_string: STRING)
 			-- Create a new buffer for `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_index (i: INTEGER) is
+	set_index (i: INTEGER)
 			-- Set `index' to `i'.
 		require
 			i_large_enough: i >= 1
@@ -51,7 +51,7 @@ feature -- Setting
 
 feature -- Element change
 
-	refill is
+	refill
 			-- Refill buffer.
 		do
 			index := content.count + 1

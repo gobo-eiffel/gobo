@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_base: XM_XSLT_REGEXP_ITERATOR; a_context: XM_XSLT_EVALUATION_CONTEXT; a_matching, a_non_matching: XM_XPATH_EXPRESSION) is
+	make (a_base: XM_XSLT_REGEXP_ITERATOR; a_context: XM_XSLT_EVALUATION_CONTEXT; a_matching, a_non_matching: XM_XPATH_EXPRESSION)
 			-- Initialize `Current'.
 		require
 			a_base_not_void: a_base /= Void
@@ -45,7 +45,7 @@ feature -- Access
 
 feature -- Evaluation
 
-	map_nodes (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
+	map_nodes (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT)
 			-- Map `an_item' to a sequence
 		do
 			if base_iterator.is_matching and matching_block /= Void then

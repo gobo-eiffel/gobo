@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; token1, token2: STRING; token_id: INTEGER) is
+	make (filename: STRING; token1, token2: STRING; token_id: INTEGER)
 			-- Create a new error reporting that `token1' and
 			-- `token2' have been assigned the same token id.
 		require
@@ -39,10 +39,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "Warning, %"$1%": tokens $2 and $3 both assigned number $4"
+	default_template: STRING = "Warning, %"$1%": tokens $2 and $3 both assigned number $4"
 			-- Default template used to built the error message
 
-	code: STRING is "PR0013"
+	code: STRING = "PR0013"
 			-- Error code
 
 invariant

@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_label: like label_item; a_type: like declared_type) is
+	make (a_label: like label_item; a_type: like declared_type)
 			-- Create a new labeled actual generic parameter.
 		require
 			a_label_not_void: a_label /= Void
@@ -47,13 +47,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	type: ET_TYPE is
+	type: ET_TYPE
 			-- Type of `actual_parameter'
 		do
 			Result := declared_type.type
 		end
 
-	label: ET_IDENTIFIER is
+	label: ET_IDENTIFIER
 			-- Label of `actual_parameter';
 			-- Useful when part of a labeled tuple, Void if no label
 		do
@@ -66,7 +66,7 @@ feature -- Access
 	declared_type: ET_DECLARED_TYPE
 			-- Declared type (type preceded by a colon)
 
-	named_parameter (a_context: ET_TYPE_CONTEXT): ET_ACTUAL_PARAMETER is
+	named_parameter (a_context: ET_TYPE_CONTEXT): ET_ACTUAL_PARAMETER
 			-- Same as current actual parameter but its type
 			-- replaced by its named type
 		local
@@ -82,7 +82,7 @@ feature -- Access
 			end
 		end
 
-	named_parameter_with_type (a_type: ET_NAMED_TYPE): ET_ACTUAL_PARAMETER is
+	named_parameter_with_type (a_type: ET_NAMED_TYPE): ET_ACTUAL_PARAMETER
 			-- Same as current actual parameter but its type
 			-- replaced by `a_type'
 		local
@@ -96,26 +96,26 @@ feature -- Access
 			end
 		end
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
 			Result := label_item.position
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := label_item.first_leaf
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := declared_type.last_leaf
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := declared_type.break
@@ -123,7 +123,7 @@ feature -- Access
 
 feature -- Status report
 
-	named_parameter_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	named_parameter_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does the named parameter of current type contain `a_class'
 			-- when it appears in `a_context'?
 		do
@@ -132,7 +132,7 @@ feature -- Status report
 
 feature -- Type processing
 
-	resolved_formal_parameters_with_type (a_type: ET_TYPE): ET_LABELED_ACTUAL_PARAMETER is
+	resolved_formal_parameters_with_type (a_type: ET_TYPE): ET_LABELED_ACTUAL_PARAMETER
 			-- Version of current actual parameter where its type
 			-- is replaced by `a_type'
 		local
@@ -148,7 +148,7 @@ feature -- Type processing
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_labeled_actual_parameter (Current)

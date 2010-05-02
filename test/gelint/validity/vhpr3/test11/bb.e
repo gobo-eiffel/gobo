@@ -8,7 +8,7 @@ feature
 
 	name: STRING
 
-	f is
+	f
 		local
 			d: DD [like name]
 		do

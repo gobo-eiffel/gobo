@@ -55,7 +55,7 @@ create {XM_XPATH_EXPRESSION_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make (an_expression: XM_XPATH_COMPUTED_EXPRESSION; a_context: XM_XPATH_CONTEXT) is
+	make (an_expression: XM_XPATH_COMPUTED_EXPRESSION; a_context: XM_XPATH_CONTEXT)
 			-- Establish invariant.
 		local
 			l_count: INTEGER
@@ -83,13 +83,13 @@ feature {NONE} -- Initialization
 			Precursor (an_expression, a_context)
 		end
 
-	is_memo_closure: BOOLEAN is
+	is_memo_closure: BOOLEAN
 			-- Is `Current' a memo-closure?
 		do
 			Result := True
 		end
 
-	as_memo_closure: XM_XPATH_MEMO_CLOSURE is
+	as_memo_closure: XM_XPATH_MEMO_CLOSURE
 			-- `Current' seen as a closure
 		do
 			Result := Current
@@ -97,7 +97,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items in `Current'
 		do
 			if state = All_read_state then
@@ -111,7 +111,7 @@ feature -- Access
 			end
 		end
 
-	item_at (an_index: INTEGER) :XM_XPATH_ITEM is
+	item_at (an_index: INTEGER) :XM_XPATH_ITEM
 			-- Item at `an_index'
 		local
 			a_reservoir: like reservoir
@@ -179,7 +179,7 @@ feature -- Access
 			end
 		end
 
-	materialized: XM_XPATH_SEQUENCE_EXTENT is
+	materialized: XM_XPATH_SEQUENCE_EXTENT
 			-- `Current' materialized as a sequence extent
 		require
 			all_read: is_all_read
@@ -198,7 +198,7 @@ feature -- Status report
 	is_node_sequence: BOOLEAN
 			-- Do we deliver a node sequence?
 
-	is_all_read: BOOLEAN is
+	is_all_read: BOOLEAN
 			-- Is `Current' in `All_read_state'?
 		do
 			Result := state = All_read_state
@@ -206,7 +206,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Are `Current' and `other' the same expression?
 		do
 			Result := other = Current
@@ -214,7 +214,7 @@ feature -- Comparison
 
 feature -- Evaluation
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- An iterator over the values of a sequence
 		local
 			l_reservoir: like reservoir
@@ -276,7 +276,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over a node sequence
 		do
 			last_node_iterator := Void
@@ -318,7 +318,7 @@ feature -- Evaluation
 			end
 		end
 
-	generate_events (a_context: XM_XPATH_CONTEXT) is
+	generate_events (a_context: XM_XPATH_CONTEXT)
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_error: XM_XPATH_ERROR_VALUE
@@ -356,10 +356,10 @@ feature {XM_XPATH_MEMO_CLOSURE, XM_XPATH_PROGRESSIVE_ITERATOR, XM_XPATH_PROGRESS
 	state: INTEGER
 			-- Information on items read
 
-	Unread_state: INTEGER is 1
-	Maybe_more_state: INTEGER is 2
-	All_read_state: INTEGER is 3
-	Busy_state: INTEGER is 4
+	Unread_state: INTEGER = 1
+	Maybe_more_state: INTEGER = 2
+	All_read_state: INTEGER = 3
+	Busy_state: INTEGER = 4
 			-- TODO - optimize by adding Empty_state
 
 feature {XM_XPATH_MEMO_CLOSURE} -- Local
@@ -372,7 +372,7 @@ feature {XM_XPATH_MEMO_CLOSURE} -- Local
 
 feature {XM_XPATH_PROGRESSIVE_ITERATOR, XM_XPATH_PROGRESSIVE_NODE_ITERATOR, XM_XPATH_EXPRESSION} -- Restricted
 
-	mark_as_all_read is
+	mark_as_all_read
 			-- Set `Current' to `All_read_state'.
 		require
 			maybe_more: state =	Maybe_more_state

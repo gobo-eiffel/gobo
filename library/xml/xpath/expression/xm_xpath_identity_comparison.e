@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; an_operand_two: XM_XPATH_EXPRESSION) is
+	make (an_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; an_operand_two: XM_XPATH_EXPRESSION)
 			-- Establish invariant
 		do
 			Precursor (an_operand_one, a_token, an_operand_two)
@@ -41,7 +41,7 @@ feature -- Access
 	generate_id_emulation_mode: BOOLEAN
 			-- Emulation mode for generate-id() comparisons
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Determine the data type of the expression, if possible
 		do
 			Result := type_factory.boolean_type
@@ -51,9 +51,9 @@ feature -- Access
 			end
 		end
 
-feature -- Optimization	
+feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_role, l_other_role: XM_XPATH_ROLE_LOCATOR
@@ -96,7 +96,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT)
 			-- Effective boolean value
 		local
 			l_result: DS_CELL [XM_XPATH_ITEM]
@@ -134,7 +134,7 @@ feature -- Evaluation
 			end
 		end
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_node: XM_XPATH_NODE
@@ -172,17 +172,17 @@ feature -- Evaluation
 
 feature -- Element change
 
-	set_generate_id_emulation is
+	set_generate_id_emulation
 			-- Turn on generate-id() emulation mode
 		do
 			generate_id_emulation_mode := True
 		ensure
-			generate_id_emulation_mode_set: generate_id_emulation_mode			
+			generate_id_emulation_mode_set: generate_id_emulation_mode
 		end
 
 feature {NONE} -- Implementation
 
-	identity_comparison (a_node, another_node: XM_XPATH_NODE): BOOLEAN is
+	identity_comparison (a_node, another_node: XM_XPATH_NODE): BOOLEAN
 			-- Is `a_node' in `operator' relation to `another_node'?
 		require
 			first_node_not_void: a_node /= Void
@@ -204,4 +204,4 @@ invariant
 	document_order_operator: operator = Is_token or else operator = Precedes_token or else operator = Follows_token
 
 end
-	
+

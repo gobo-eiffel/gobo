@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_source: XM_XPATH_EXPRESSION; a_target_type: XM_XPATH_SEQUENCE_TYPE) is
+	make (a_source: XM_XPATH_EXPRESSION; a_target_type: XM_XPATH_SEQUENCE_TYPE)
 			-- Establish invariant.
 		require
 			source_expression_not_void: a_source /= Void
@@ -47,19 +47,19 @@ feature -- Access
 	target_type: XM_XPATH_SEQUENCE_TYPE
 			-- Target sequence type
 
-	is_instance_of_expression: BOOLEAN is
+	is_instance_of_expression: BOOLEAN
 			-- Is `Current' an instance-of expression?
 		do
 			Result := True
 		end
 
-	as_instance_of_expression: XM_XPATH_INSTANCE_OF_EXPRESSION is
+	as_instance_of_expression: XM_XPATH_INSTANCE_OF_EXPRESSION
 			-- `Current' seen as an instance-of expression
 		do
 			Result := Current
 		end
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Determine the data type of the expression, if possible
 		do
 			Result := type_factory.boolean_type
@@ -71,14 +71,14 @@ feature -- Access
 
 feature -- Comparison
 
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Are `Current' and `other' the same expression?
 		local
 			other_instance_of: XM_XPATH_INSTANCE_OF_EXPRESSION
 		do
 			if other.is_instance_of_expression then
 				other_instance_of := other.as_instance_of_expression
-				Result := base_expression.same_expression (other_instance_of.base_expression) 
+				Result := base_expression.same_expression (other_instance_of.base_expression)
 					and then other_instance_of.target_type = target_type
 					and then other_instance_of.cardinality = cardinality
 			end
@@ -86,7 +86,7 @@ feature -- Comparison
 
 feature -- Status report
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -104,7 +104,7 @@ feature -- Status report
 feature -- Optimization
 
 	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
-		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static analysis of `Current' and its subexpressions
 		local
 			l_expression: XM_XPATH_EXPRESSION
@@ -125,9 +125,9 @@ feature -- Optimization
 						set_replacement (a_replacement, l_result.item.as_atomic_value)
 					end
 				else
-					
+
 					-- See if we can get the answer by static analysis.
-					
+
 					if target_type.cardinality_subsumes (base_expression.cardinality) then
 						l_relation := type_relationship (base_expression.item_type, target_type.primary_type)
 						if l_relation = Same_item_type or else l_relation = Subsumed_type then
@@ -152,7 +152,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT)
 			-- Effective boolean value
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -192,7 +192,7 @@ feature -- Evaluation
 			end
 		end
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			calculate_effective_boolean_value (a_context)
@@ -200,14 +200,14 @@ feature -- Evaluation
 		end
 
 feature {NONE} -- Implementation
-	
-	compute_cardinality is
+
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
 		end
-	
-	display_operator: STRING is
+
+	display_operator: STRING
 			-- Format `operator' for display
 		do
 			-- not used

@@ -26,7 +26,7 @@ inherit
 
 feature -- Status report
 
-	is_adapted: BOOLEAN is True
+	is_adapted: BOOLEAN = True
 			-- Is current feature being either inherited or redeclared?
 			-- Note that this feature only make sense when flattening the features.
 			-- Otherwise, features that are declared or redeclared in a class
@@ -34,7 +34,7 @@ feature -- Status report
 			-- range 1 to `declared_count', and (non-redeclared) inherited features
 			-- from range `declared_count' + 1 to `count'.
 
-	is_immediate: BOOLEAN is False
+	is_immediate: BOOLEAN = False
 			-- Is current feature immediate?
 			-- Note that this feature only make sense when flattening the features.
 			-- Otherwise, features that are declared or redeclared in a class
@@ -42,7 +42,7 @@ feature -- Status report
 			-- range 1 to `declared_count', and (non-redeclared) inherited features
 			-- from range `declared_count' + 1 to `count'.
 
-	is_dotnet: BOOLEAN is
+	is_dotnet: BOOLEAN
 			-- Is current feature a .NET feature?
 		do
 			Result := flattened_feature.is_dotnet
@@ -54,7 +54,7 @@ feature -- Status report
 			-- Has an inherited feature been selected
 			-- to solve a replication conflict?
 
-	is_replicated: BOOLEAN is
+	is_replicated: BOOLEAN
 			-- Has current feature been replicated?
 		do
 			Result := replicated_seeds /= Void
@@ -62,7 +62,7 @@ feature -- Status report
 			definition: Result = (replicated_seeds /= Void)
 		end
 
-	has_selected_feature: BOOLEAN is
+	has_selected_feature: BOOLEAN
 			-- Does current inherited feature or one of its merged
 			-- or joined features appear in a Select clause?
 		do
@@ -71,7 +71,7 @@ feature -- Status report
 			definition: Result = (selected_feature /= Void)
 		end
 
-	is_other_seeds_shared: BOOLEAN is
+	is_other_seeds_shared: BOOLEAN
 			-- Is `other_seeds' object shared with one of
 			-- the precursors? (If shared, then we need to
 			-- clone it before modifying it.)
@@ -81,7 +81,7 @@ feature -- Status report
 
 feature -- Access
 
-	type: ET_TYPE is
+	type: ET_TYPE
 			-- Return type;
 			-- Void for procedures
 		do
@@ -90,7 +90,7 @@ feature -- Access
 			definition: Result = flattened_feature.type
 		end
 
-	arguments: ET_FORMAL_ARGUMENT_LIST is
+	arguments: ET_FORMAL_ARGUMENT_LIST
 			-- Formal arguments;
 			-- Void if not a routine or a routine with no arguments
 		do
@@ -105,7 +105,7 @@ feature -- Access
 	parent_feature: ET_PARENT_FEATURE
 			-- Feature in `parent'
 
-	seeded_feature (a_seed: INTEGER): ET_PARENT_FEATURE is
+	seeded_feature (a_seed: INTEGER): ET_PARENT_FEATURE
 			-- Either current parent feature or one of its merged or joined
 			-- features whose precursor feature has `a_seed' as seed
 		require
@@ -129,7 +129,7 @@ feature -- Access
 			has_seed: Result.has_seed (a_seed)
 		end
 
-	selected_feature: ET_PARENT_FEATURE is
+	selected_feature: ET_PARENT_FEATURE
 			-- Either current parent feature or one of its merged or
 			-- joined features that appears in a Select clause?
 		local
@@ -151,14 +151,14 @@ feature -- Access
 			has_select: Result /= Void implies Result.has_select
 		end
 
-	adapted_feature: ET_ADAPTED_FEATURE is
+	adapted_feature: ET_ADAPTED_FEATURE
 			-- Version of current feature where none of its
 			-- inherited components are flattened
 		do
 			Result := Current
 		end
 
-	first_feature: ET_ADAPTED_FEATURE is
+	first_feature: ET_ADAPTED_FEATURE
 			-- First feature with a given seed
 		do
 			Result := Current
@@ -166,7 +166,7 @@ feature -- Access
 			definition: Result = Current
 		end
 
-	selected_count: INTEGER is
+	selected_count: INTEGER
 			-- Number of selected features
 		do
 			if has_selected_feature then
@@ -186,7 +186,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_first_seed (a_seed: INTEGER) is
+	set_first_seed (a_seed: INTEGER)
 			-- Set `first_seed' to `a_seed'.
 		require
 			a_seed_positive: a_seed > 0
@@ -196,7 +196,7 @@ feature -- Setting
 			first_seed_set: first_seed = a_seed
 		end
 
-	set_other_seeds (a_seeds: like other_seeds) is
+	set_other_seeds (a_seeds: like other_seeds)
 			-- Set `other_seeds' to `a_seeds'.
 		do
 			other_seeds := a_seeds
@@ -206,7 +206,7 @@ feature -- Setting
 
 feature -- Status setting
 
-	set_replicated (a_seed: INTEGER) is
+	set_replicated (a_seed: INTEGER)
 			-- Set `is_replicated' to True.
 			-- `a_seed' is the seed which needs replication.
 		require
@@ -221,7 +221,7 @@ feature -- Status setting
 			is_replicated: is_replicated
 		end
 
-	set_selected is
+	set_selected
 			-- Set `is_selected' to True.
 		do
 			is_selected := True
@@ -231,7 +231,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	put_parent_feature (a_feature: ET_PARENT_FEATURE) is
+	put_parent_feature (a_feature: ET_PARENT_FEATURE)
 			-- Add `a_feature' to the merged/joined features.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -281,7 +281,7 @@ feature -- Element change
 			end
 		end
 
-	add_replicated_feature (a_feature: ET_PARENT_FEATURE) is
+	add_replicated_feature (a_feature: ET_PARENT_FEATURE)
 			-- Add `a_feature' to `replicated_features'.
 		require
 			is_selected: is_selected
@@ -298,7 +298,7 @@ feature -- Link
 	next: like Current
 			-- Next linked feature if list of features
 
-	set_next (a_next: like Current) is
+	set_next (a_next: like Current)
 			-- Set `next' to `a_next'.
 		do
 			next := a_next

@@ -37,7 +37,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_description: LX_DESCRIPTION) is
+	make (a_description: LX_DESCRIPTION)
 			-- Create a new compressed table DFA using `start_conditions'
 			-- from `a_description' to build the start states and
 			-- user-defined options held in `a_description'.
@@ -55,13 +55,13 @@ feature {NONE} -- Initialization
 
 feature -- Generation
 
-	new_scanner: LX_COMPRESSED_SCANNER is
+	new_scanner: LX_COMPRESSED_SCANNER
 			-- New scanner corresponding to current DFA
 		do
 			create Result.make (Current)
 		end
 
-	print_backing_up_report (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_backing_up_report (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print a backing up report to `a_file'.
 		do
 			Precursor (a_file)
@@ -70,11 +70,11 @@ feature -- Generation
 
 feature -- Access
 
-	dangerous_variable_trail_rules: DS_ARRAYED_LIST [LX_RULE] is
+	dangerous_variable_trail_rules: DS_ARRAYED_LIST [LX_RULE]
 			-- Rules containing "dangerous" variable trailing context.
-			-- A trailing context is dangerous if both the head and the 
+			-- A trailing context is dangerous if both the head and the
 			-- trailing part are of variable size and there is a DFA
-			-- state which contains both an accepting state for the 
+			-- state which contains both an accepting state for the
 			-- rule and NFA states which occur after the beginning
 			-- of the trailing context.
 			-- When such a rule is matched, it is impossible to tell
@@ -133,10 +133,10 @@ feature -- Access
 
 feature {NONE} -- Generation
 
-	print_build_tables (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_build_tables (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print code for `yy_build_tables' to `a_file'.
 		do
-			a_file.put_string ("%Tyy_build_tables is%N%
+			a_file.put_string ("%Tyy_build_tables%N%
 				%%T%T%T-- Build scanner tables.%N%T%Tdo%N")
 			a_file.put_string (Indentation)
 			a_file.put_string ("yy_nxt := yy_nxt_template%N")
@@ -163,7 +163,7 @@ feature {NONE} -- Generation
 			a_file.put_string ("%T%Tend%N")
 		end
 
-	print_eiffel_tables (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_eiffel_tables (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print Eiffel code for compressed tables to `a_file'.
 		do
 			print_eiffel_array ("yy_nxt_template", yy_nxt, a_file)
@@ -189,31 +189,31 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_constants (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_constants (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print code for constants to `a_file'.
 		do
-			a_file.put_string ("%TyyJam_base: INTEGER is ")
+			a_file.put_string ("%TyyJam_base: INTEGER = ")
 			a_file.put_integer (yyJam_base)
 			a_file.put_string ("%N%T%T%T-- Position in `yy_nxt'/`yy_chk' tables%
 				%%N%T%T%T-- where default jam table starts%N%N%
-				%%TyyJam_state: INTEGER is ")
+				%%TyyJam_state: INTEGER = ")
 			a_file.put_integer (yyJam_state)
 			a_file.put_string ("%N%T%T%T-- State id corresponding to jam state%
-				%%N%N%TyyTemplate_mark: INTEGER is ")
+				%%N%N%TyyTemplate_mark: INTEGER = ")
 			a_file.put_integer (yyTemplate_mark)
 			a_file.put_string ("%N%T%T%T-- Mark between normal states and templates%N%N%
-				%%TyyNull_equiv_class: INTEGER is ")
+				%%TyyNull_equiv_class: INTEGER = ")
 			a_file.put_integer (yyNull_equiv_class)
 			a_file.put_string ("%N%T%T%T-- Equivalence code for NULL character%
-				%%N%N%TyyReject_used: BOOLEAN is ")
+				%%N%N%TyyReject_used: BOOLEAN = ")
 			BOOLEAN_FORMATTER_.put_eiffel_boolean (a_file, yyReject_used)
 			a_file.put_string ("%N%T%T%T-- Is `reject' called?%N%N%
-				%%TyyVariable_trail_context: BOOLEAN is ")
+				%%TyyVariable_trail_context: BOOLEAN = ")
 			BOOLEAN_FORMATTER_.put_eiffel_boolean (a_file, yyVariable_trail_context)
 			a_file.put_string ("%N%T%T%T-- Is there a regular expression with%N%
 				%%T%T%T-- both leading and trailing parts having%N%
 				%%T%T%T-- variable length?%N%N%
-				%%TyyReject_or_variable_trail_context: BOOLEAN is ")
+				%%TyyReject_or_variable_trail_context: BOOLEAN = ")
 			BOOLEAN_FORMATTER_.put_eiffel_boolean (a_file, yyReject_used or yyVariable_trail_context)
 			a_file.put_string ("%N%T%T%T-- Is `reject' called or is there a%N%
 				%%T%T%T-- regular expression with both leading%N%
@@ -223,7 +223,7 @@ feature {NONE} -- Generation
 
 feature -- Building
 
-	build is
+	build
 			-- Build current DFA.
 		local
 			i: INTEGER
@@ -297,7 +297,7 @@ feature -- Building
 
 feature {NONE} -- Building
 
-	build_nxt_chk_tables is
+	build_nxt_chk_tables
 			-- Build `yy_nxt' and `yy_chk' tables.
 		require
 			valid_yy_nxt: yy_nxt.upper >= table_end
@@ -327,7 +327,7 @@ feature {NONE} -- Building
 			yy_chk_not_void: yy_chk /= Void
 		end
 
-	build_base_def_tables is
+	build_base_def_tables
 			-- Build `yy_base' and `yy_def' tables.
 		require
 			valid_yy_base: yy_base.upper >= states.count + templates_count
@@ -357,7 +357,7 @@ feature {NONE} -- Building
 			yy_def_not_void: yy_def /= Void
 		end
 
-	build_accept_tables is
+	build_accept_tables
 			-- Build `yy_accept' and `yy_acclist' tables.
 		local
 			i, j, nb: INTEGER
@@ -468,7 +468,7 @@ feature {NONE} -- Building
 
 feature {NONE} -- Resizing
 
-	resize (n: INTEGER) is
+	resize (n: INTEGER)
 			-- Resize DFA, `yy_base' and `yy_def' so that they can
 			-- contain upto `n' states. Do not lose any states.
 		do
@@ -479,7 +479,7 @@ feature {NONE} -- Resizing
 
 feature {NONE} -- Compression
 
-	put_state (state: LX_DFA_STATE) is
+	put_state (state: LX_DFA_STATE)
 			-- Build table entries for `state'.
 		require
 			state_not_void: state /= Void
@@ -641,7 +641,7 @@ feature {NONE} -- Compression
 			end
 		end
 
-	put_entry (state_id, default_id: INTEGER; transitions: LX_TRANSITION_TABLE [LX_DFA_STATE]) is
+	put_entry (state_id, default_id: INTEGER; transitions: LX_TRANSITION_TABLE [LX_DFA_STATE])
 			-- Create base/default and next/check entries for
 			-- `transitions' out of state `state_id'.
 		require
@@ -785,7 +785,7 @@ feature {NONE} -- Compression
 			end
 		end
 
-	put_singleton (singleton: LX_SINGLETON) is
+	put_singleton (singleton: LX_SINGLETON)
 			-- Create table entry for `singleton', which
 			-- represents a state with only one out-transition.
 		require
@@ -830,7 +830,7 @@ feature {NONE} -- Compression
 			end
 		end
 
-	put_templates is
+	put_templates
 			-- Create compressed template entries.
 		require
 			templates_not_void: templates /= Void
@@ -873,7 +873,7 @@ feature {NONE} -- Compression
 			end
 		end
 
-	put_singletons is
+	put_singletons
 			-- Create table entries for `singletons', which
 			-- represent states with only one out-transition.
 		require
@@ -891,7 +891,7 @@ feature {NONE} -- Compression
 			end
 		end
 
-	put_jam_state is
+	put_jam_state
 			-- Create the default "jam" table entries.
 		local
 			i, nb, max_index: INTEGER
@@ -997,7 +997,7 @@ feature {NONE} -- Compression data
 			-- future states will also go to the same destination state
 			-- on basically the same symbol set. These homogeneous states
 			-- are so common when dealing with large rule sets that they
-			-- merit special attention. If the transition table were 
+			-- merit special attention. If the transition table were
 			-- simply made into a proto, then (typically) each subsequent,
 			-- similar state will differ from the proto for two
 			-- out-transitions. One of these out-transitions will be that
@@ -1021,7 +1021,7 @@ feature {NONE} -- Compression data
 			-- Number of templates
 			-- (takes `jam_state' into account)
 
-	null_state: LX_DFA_STATE is
+	null_state: LX_DFA_STATE
 			-- DFA state used to identify null transitions
 		local
 			nfa_states: DS_ARRAYED_LIST [LX_NFA_STATE]
@@ -1036,26 +1036,26 @@ feature {NONE} -- Compression data
 
 feature {NONE} -- Constants
 
-	Jam_id: INTEGER is -32766
+	Jam_id: INTEGER = -32766
 			-- Id of the state that always jams
 
-	Initial_max_xpairs: INTEGER is 2000
+	Initial_max_xpairs: INTEGER = 2000
 			-- Initial capacity for the arrays of next/check pairs for non-templates
 
-	Max_xpairs_increment: INTEGER is 2000
+	Max_xpairs_increment: INTEGER = 2000
 			-- Increment when resizing the arrays of next/check pairs for non-templates
 
-	Singletons_capacity: INTEGER is 500
+	Singletons_capacity: INTEGER = 500
 			-- Maximum number of states with only one out-transition
 			-- kept in memory for later insertion in table
 
-	Acceptable_diff_percentage: INTEGER is 50
+	Acceptable_diff_percentage: INTEGER = 50
 			-- Percentage the number of differences between a state's
 			-- transition table and the most similar proto must be of
 			-- the state's total number of out-transitions to use the
 			-- proto as an aceeptable close match
 
-	Check_common_percentage: INTEGER is 50
+	Check_common_percentage: INTEGER = 50
 			-- Percentage the number of homogeneous out-transitions
 			-- of a state must be of the number of total out-transitions
 			-- of the state in order  that the state's transition table
@@ -1063,37 +1063,37 @@ feature {NONE} -- Constants
 			-- common out-transition instead of with the first proto
 			-- in the proto queue
 
-	First_match_diff_percentage: INTEGER is 10
+	First_match_diff_percentage: INTEGER = 10
 			-- Percentage of number of differences between a state's
 			-- transition table and the proto it was compared with must
 			-- be of the total number of out-transitions of the state in
 			-- order to keep the first proto as a good match and not
 			-- search any further
 
-	Interior_fit_percentage: INTEGER is 15
+	Interior_fit_percentage: INTEGER = 15
 			-- Percentage the total number of out-transitions of a state
 			-- must be of the number of equivalence classes in order to
 			-- consider trying to fit the transition table into holes
 			-- inside the next/check tables
 
-	New_proto_diff_percentage: INTEGER is 20
+	New_proto_diff_percentage: INTEGER = 20
 			-- Percentage the number of differences between a state's
 			-- transition table and the most similar proto must be of
 			-- the state's total number of out-transitions to create
 			-- a new proto from the state
 
-	Proto_size_percentage: INTEGER is 15
+	Proto_size_percentage: INTEGER = 15
 			-- Percentage the number of out-transitions a state must be
-			-- of the number of equivalence classes in order to be 
+			-- of the number of equivalence classes in order to be
 			-- considered for table compaction by using protos
 
-	Template_same_percentage: INTEGER is 60
+	Template_same_percentage: INTEGER = 60
 			-- Percentage the number of homogeneous out-transitions of
 			-- a state must be of the number of total out-transitions
 			-- of the state in order to consider making a template from
 			-- the state
 
-	Rule_sorter: DS_BUBBLE_SORTER [LX_RULE] is
+	Rule_sorter: DS_BUBBLE_SORTER [LX_RULE]
 			-- Rule sorter
 		local
 			a_comparator: KL_COMPARABLE_COMPARATOR [LX_RULE]

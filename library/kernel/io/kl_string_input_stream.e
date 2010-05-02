@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_string: like string) is
+	make (a_string: like string)
 			-- Create a new string input stream.
 		require
 			a_string_not_void: a_string /= Void
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_open_read: BOOLEAN is
+	is_open_read: BOOLEAN
 			-- Can characters be read from input stream?
 		do
 			Result := True
@@ -52,7 +52,7 @@ feature -- Status report
 	end_of_input: BOOLEAN
 			-- Has the end of input stream been reached?
 
-	valid_unread_character (a_character: CHARACTER): BOOLEAN is
+	valid_unread_character (a_character: CHARACTER): BOOLEAN
 			-- Can `a_character' be put back in input stream?
 		do
 			Result := (location >= 1 and location <= string.count) and then (a_character = string.item (location))
@@ -60,7 +60,7 @@ feature -- Status report
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Name of input stream
 		once
 			Result := "STRING"
@@ -76,12 +76,12 @@ feature -- Access
 			-- is to be kept beyond the next call to this feature.
 			-- However `last_string' is not shared between file objects.)
 
-	eol: STRING is "%N"
+	eol: STRING = "%N"
 			-- Line separator
 
 feature -- Input
 
-	read_character is
+	read_character
 			-- Read the next character in input stream.
 			-- Make the result available in `last_character'.
 		do
@@ -93,7 +93,7 @@ feature -- Input
 			end
 		end
 
-	unread_character (a_character: CHARACTER) is
+	unread_character (a_character: CHARACTER)
 			-- Put `a_character' back in input stream.
 			-- This item will be read first by the next
 			-- call to a read routine.
@@ -103,7 +103,7 @@ feature -- Input
 			last_character := a_character
 		end
 
-	read_string (nb: INTEGER) is
+	read_string (nb: INTEGER)
 			-- Read at most `nb' characters from input stream.
 			-- Make the characters that have actually been read
 			-- available in `last_string'.
@@ -131,7 +131,7 @@ feature -- Input
 			end_of_input := (last_string.count = 0)
 		end
 
-	read_line is
+	read_line
 			-- Read characters from input stream until a line separator
 			-- or end of input is reached. Make the characters that have
 			-- been read available in `last_string' and discard the line
@@ -165,7 +165,7 @@ feature -- Input
 			end_of_input := is_eof
 		end
 
-	read_new_line is
+	read_new_line
 			-- Read a line separator from input stream.
 			-- Make the characters making up the recognized
 			-- line separator available in `last_string',

@@ -2,12 +2,12 @@ deferred class CC
 
 feature
 
-	f is
+	f
 		do
 			print ("f%N")
 		end
 
-	g is
+	g
 		deferred
 		end
 

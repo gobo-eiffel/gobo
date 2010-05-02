@@ -14,14 +14,14 @@ class XM_XPATH_CARDINALITY
 
 feature -- Access
 
-	Required_cardinality_empty: INTEGER is 1
-	Required_cardinality_optional: INTEGER is 2
-	Required_cardinality_exactly_one: INTEGER is 3
-	Required_cardinality_one_or_more: INTEGER is 4
-	Required_cardinality_zero_or_more: INTEGER is 5
-	Required_cardinality_many: INTEGER is 6
+	Required_cardinality_empty: INTEGER = 1
+	Required_cardinality_optional: INTEGER = 2
+	Required_cardinality_exactly_one: INTEGER = 3
+	Required_cardinality_one_or_more: INTEGER = 4
+	Required_cardinality_zero_or_more: INTEGER = 5
+	Required_cardinality_many: INTEGER = 6
 
-	multiply_cardinality (c1, c2: INTEGER): INTEGER is
+	multiply_cardinality (c1, c2: INTEGER): INTEGER
 			-- Multiply two cardinalities
 		do
 			if c1 = Required_cardinality_empty or  c2 = Required_cardinality_empty then
@@ -39,7 +39,7 @@ feature -- Access
 			valid_cardinality: is_valid_required_cardinality (Result)
 		end
 
-	add_cardinality (c1, c2: INTEGER): INTEGER is
+	add_cardinality (c1, c2: INTEGER): INTEGER
 			-- Addition of two cardinalities
 		require
 			valid_c1: is_valid_required_cardinality (c1)
@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_valid_required_cardinality (a_request: INTEGER): BOOLEAN is
+	is_valid_required_cardinality (a_request: INTEGER): BOOLEAN
 			-- Is `a_request' a valid cardinality requirement?
 		do
 			Result := a_request = Required_cardinality_empty or
@@ -76,13 +76,13 @@ feature -- Status report
 				a_request = Required_cardinality_many
 		end
 
-	is_cardinality_allows_many (a_request: INTEGER): BOOLEAN is
+	is_cardinality_allows_many (a_request: INTEGER): BOOLEAN
 			-- Does `a_request' subsume allows many?
 		do
 			Result := a_request = Required_cardinality_one_or_more or a_request = Required_cardinality_zero_or_more or a_request = Required_cardinality_many
 		end
 
-	is_cardinality_allows_zero (a_request: INTEGER): BOOLEAN is
+	is_cardinality_allows_zero (a_request: INTEGER): BOOLEAN
 			-- Does `a_request' subsume allow zero?
 		do
 			Result := a_request = Required_cardinality_empty or a_request = Required_cardinality_optional or a_request = Required_cardinality_zero_or_more
@@ -90,7 +90,7 @@ feature -- Status report
 
 feature -- Conversion
 
-	cardinalities_to_integer (a_zero, a_one, a_many: BOOLEAN): INTEGER is
+	cardinalities_to_integer (a_zero, a_one, a_many: BOOLEAN): INTEGER
 			-- Compressed cardinalities
 		do
 			if a_zero and a_one and a_many then
@@ -110,7 +110,7 @@ feature -- Conversion
 			strictly_positive_result: Result > 0
 		end
 
-	cardinality_in_english (a_cardinality: INTEGER): STRING is
+	cardinality_in_english (a_cardinality: INTEGER): STRING
 			-- English description
 		require
 			cardinality_in_range: Required_cardinality_empty <= a_cardinality and then a_cardinality <= Required_cardinality_zero_or_more
@@ -135,4 +135,4 @@ feature -- Conversion
 		end
 
 end
-	
+

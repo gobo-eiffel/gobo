@@ -19,7 +19,7 @@ inherit
 feature -- File handling
 
 	put_integer_array (a_file: KI_TEXT_OUTPUT_STREAM;
-		an_array: ARRAY [INTEGER]; start_pos, end_pos: INTEGER) is
+		an_array: ARRAY [INTEGER]; start_pos, end_pos: INTEGER)
 			-- Write code for `an_array''s items within bounds
 			-- `start_pos' and `end_pos' to `a_file'.
 		require
@@ -68,15 +68,15 @@ feature -- File handling
 
 feature {NONE} -- Constants
 
-	Two_spaces: STRING is "  "
-	Three_spaces: STRING is "   "
-	Four_spaces: STRING is "    "
-	Indentation: STRING is "%T%T%T"
+	Two_spaces: STRING = "  "
+	Three_spaces: STRING = "   "
+	Four_spaces: STRING = "    "
+	Indentation: STRING = "%T%T%T"
 
-	Max_nb_line: INTEGER is 10
+	Max_nb_line: INTEGER = 10
 			-- Maximum number of lines before one is skipped
 
-	Max_nb_colon: INTEGER is 10
+	Max_nb_colon: INTEGER = 10
 			-- Maximum number of entries per line
 
 end

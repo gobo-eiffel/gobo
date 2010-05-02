@@ -6,7 +6,7 @@ inherit
 
 feature
 
-	g is
+	g
 		do
 			create item1
 			item2 := "gobo2"

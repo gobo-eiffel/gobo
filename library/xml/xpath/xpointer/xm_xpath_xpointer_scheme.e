@@ -14,7 +14,7 @@ deferred class XM_XPATH_XPOINTER_SCHEME
 
 feature -- Access
 
-	expanded_name: STRING is
+	expanded_name: STRING
 			-- Expanded name of implemented scheme;
 			-- Expanded name is {namespace-uri}local-name for non-W3C schemes,
 			--  or just local-name for W3C schemes.
@@ -23,7 +23,7 @@ feature -- Access
 			expanded_name_not_empty: Result /= Void and then Result.count > 0
 		end
 
-	value: XM_XPATH_VALUE is
+	value: XM_XPATH_VALUE
 			-- Result of last call to `evaluate'
 		deferred
 		ensure
@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Status report
 
-	were_resources_found: BOOLEAN is
+	were_resources_found: BOOLEAN
 			-- Were any XML resoureces found by last call to `evaluate'?
 		require
 			evaluate_called: evaluated
@@ -42,7 +42,7 @@ feature -- Status report
 			no_error: Result implies not is_error
 		end
 
-	is_error: BOOLEAN is
+	is_error: BOOLEAN
 			-- Did a syntax or evaluation error occur?
 		require
 			evaluated: evaluated
@@ -50,13 +50,13 @@ feature -- Status report
 		ensure
 			error_value_set: Result implies value /= Void and then value.is_error
 		end
-			
+
 	evaluated: BOOLEAN
 			-- Has `evaluate' been called since creation?
-		
+
 feature -- Element change
 
-	evaluate (a_resource: XM_XPATH_DOCUMENT; a_namespace_context: XM_XPOINTER_NAMESPACE_CONTEXT; some_data: STRING) is
+	evaluate (a_resource: XM_XPATH_DOCUMENT; a_namespace_context: XM_XPOINTER_NAMESPACE_CONTEXT; some_data: STRING)
 			-- Evaluate `some_data' against `a_resource' within `a_namespace_context'.
 		require
 			xml_resource_not_void: a_resource /= Void
@@ -69,4 +69,4 @@ feature -- Element change
 		end
 
 end
-	
+

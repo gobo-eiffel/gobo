@@ -423,7 +423,7 @@ feature {ARRAYED_TREE} -- Implementation
 			l_arrayed_list := arrayed_list
 				-- Perform copy.
 			standard_copy (n)
-				-- Restore values that we wanted to preserve.			
+				-- Restore values that we wanted to preserve.
 			arrayed_list := l_arrayed_list
 			parent := Void
 		end

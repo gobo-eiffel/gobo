@@ -30,7 +30,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_scanner is
+	make_scanner
 			-- Create a new scanner.
 		do
 			create character_entity.make
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Reset
 
-	reset is
+	reset
 			-- Reset.
 		do
 			Precursor
@@ -49,7 +49,7 @@ feature -- Reset
 			create start_conditions.make
 		end
 
-	push_start_condition_dtd_ignore is
+	push_start_condition_dtd_ignore
 			-- Push start condition 'dtd_ignore' to the stack.
 		do
 			push_start_condition (dtd_ignore)
@@ -57,7 +57,7 @@ feature -- Reset
 
 feature -- Input
 
-	set_input_buffer (a_buffer: like input_buffer) is
+	set_input_buffer (a_buffer: like input_buffer)
 			-- Set `input_buffer' to `a_buffer'.
 		do
 			Precursor (a_buffer)
@@ -66,7 +66,7 @@ feature -- Input
 			name_set: input_name = a_buffer.name
 		end
 
-	set_input_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
+	set_input_stream (a_stream: KI_CHARACTER_INPUT_STREAM)
 			-- Set input buffer from a stream.
 			-- This class is then in charge of closing it.
 		require
@@ -83,7 +83,7 @@ feature -- Input
 			input_resolver_reset: input_resolver = Void
 		end
 
-	set_input_from_resolver (a_resolver: XM_EXTERNAL_RESOLVER) is
+	set_input_from_resolver (a_resolver: XM_EXTERNAL_RESOLVER)
 			-- Set input buffer from a resolver's last resolved
 			-- stream and remember resolver to close it.
 		require
@@ -97,7 +97,7 @@ feature -- Input
 			input_resolver_reset: input_resolver = a_resolver
 		end
 
-	close_input is
+	close_input
 			-- Close input buffer if needed.
 		do
 			if input_stream /= Void then
@@ -128,7 +128,7 @@ feature {NONE} -- Input
 
 feature -- Encoding
 
-	is_applicable_encoding (an_encoding: STRING): BOOLEAN is
+	is_applicable_encoding (an_encoding: STRING): BOOLEAN
 			-- Is this encoding known?
 		do
 			check filter_set: input_filter /= Void end
@@ -136,7 +136,7 @@ feature -- Encoding
 				and then input_filter.is_applicable_encoding (an_encoding)
 		end
 
-	set_encoding (an_encoding: STRING) is
+	set_encoding (an_encoding: STRING)
 			-- Set encoding.
 		require
 			valid_encoding: is_applicable_encoding (an_encoding)
@@ -147,14 +147,14 @@ feature -- Encoding
 
 feature {NONE} -- Encodings
 
-	Encoding_us_ascii: STRING is "us-ascii"
-	Encoding_latin_1: STRING is "iso-8859-1"
-	Encoding_utf_8: STRING is "utf-8"
-	Encoding_utf_16: STRING is "utf-16"
+	Encoding_us_ascii: STRING = "us-ascii"
+	Encoding_latin_1: STRING = "iso-8859-1"
+	Encoding_utf_8: STRING = "utf-8"
+	Encoding_utf_16: STRING = "utf-16"
 
 feature -- Error reporting
 
-	has_error: BOOLEAN is
+	has_error: BOOLEAN
 			-- Was there an error?
 		do
 			Result := last_error /= Void
@@ -163,13 +163,13 @@ feature -- Error reporting
 	last_error: STRING
 			-- Last error
 
-	fatal_error (a_message: STRING) is
+	fatal_error (a_message: STRING)
 			-- A fatal error occurred.
 		do
 			last_error := a_message
 		end
 
-	error_position: XM_DEFAULT_POSITION is
+	error_position: XM_DEFAULT_POSITION
 			-- Position.
 		do
 			create Result.make (input_name, position, column, line)
@@ -192,14 +192,14 @@ feature {NONE} -- Character entity
 
 feature {NONE} -- Start condition stack
 
-	push_start_condition (a_condition: INTEGER) is
+	push_start_condition (a_condition: INTEGER)
 			-- Set start condition and add previous to stack.
 		do
 			start_conditions.force (start_condition)
 			set_start_condition (a_condition)
 		end
 
-	pop_start_condition is
+	pop_start_condition
 			-- Restore previous start condition.
 		do
 			if not start_conditions.is_empty then
@@ -217,7 +217,7 @@ feature {NONE} -- Start condition stack
 
 feature {NONE} -- System literal
 
-	system_literal_text: STRING is
+	system_literal_text: STRING
 			-- Find last quoted substring in scanner text.
 			-- (this is microparsing, justified above)
 		require
@@ -244,12 +244,12 @@ feature {NONE} -- System literal
 
 feature {NONE} -- Constants
 
-	dtd_ignore: INTEGER is
+	dtd_ignore: INTEGER
 			-- Code for start condition 'dtd_ignore'
 		deferred
 		end
 
-	normalized_newline: STRING is
+	normalized_newline: STRING
 			-- Newline normalized text (2.11)
 		once
 			Result := "%N"
@@ -257,16 +257,16 @@ feature {NONE} -- Constants
 			normalized_newline_not_void: Result /= Void
 		end
 
-	has_normalized_newline: BOOLEAN is
+	has_normalized_newline: BOOLEAN
 			-- Has newline normalization already been applied?
 		do
 			Result := False
 		end
 
-	normalized_space: STRING is " "
+	normalized_space: STRING = " "
 			-- Normalized space
 
-	two_normalized_spaces: STRING is "  "
+	two_normalized_spaces: STRING = "  "
 			-- Two normalized spaces
 
 invariant

@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_list: like container) is
+	make (a_list: like container)
 			-- Create a new cursor for `a_list'.
 		require
 			a_list_not_void: a_list /= Void
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Element change
 
-	replace (v: G) is
+	replace (v: G)
 			-- Replace item at cursor position by `v'.
 			-- (Performance: O(1).)
 		do
@@ -58,7 +58,7 @@ feature {DS_ARRAYED_LIST, DS_ARRAYED_LIST_CURSOR} -- Implementation
 
 feature {DS_ARRAYED_LIST} -- Implementation
 
-	set_position (i: INTEGER) is
+	set_position (i: INTEGER)
 			-- Set `position' to `i'.
 		require
 			valid_i: valid_position (i)
@@ -68,7 +68,7 @@ feature {DS_ARRAYED_LIST} -- Implementation
 			position_set: position = i
 		end
 
-	set_after is
+	set_after
 			-- Set `position' to after position.
 		do
 			position := container.after_position
@@ -76,7 +76,7 @@ feature {DS_ARRAYED_LIST} -- Implementation
 			after: after
 		end
 
-	set_before is
+	set_before
 			-- Set `position' to before position.
 		do
 			position := 0
@@ -84,7 +84,7 @@ feature {DS_ARRAYED_LIST} -- Implementation
 			before: before
 		end
 
-	valid_position (p: INTEGER): BOOLEAN is
+	valid_position (p: INTEGER): BOOLEAN
 			-- Is `p' a valid value for `position'?
 		do
 			Result := p = container.after_position or (0 <= p and p <= container.count)

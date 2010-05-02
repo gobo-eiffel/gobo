@@ -31,12 +31,12 @@ create
 
 feature -- Access
 
-	expected_result: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?><div style=%"border: solid red%"><pre/></div>"
+	expected_result: STRING = "<?xml version=%"1.0%" encoding=%"UTF-8%"?><div style=%"border: solid red%"><pre/></div>"
 			-- Expected result.
 
 feature -- Test
 
-	test_apply_imports is
+	test_apply_imports
 			-- Test xsl:apply-imports.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -70,7 +70,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing schematron data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}",
@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 			data_dirname_not_empty: not Result.is_empty
 		end
 
-	dummy_uri: UT_URI is
+	dummy_uri: UT_URI
 			-- Dummy URI
 		once
 			create Result.make ("dummy:")
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 			dummy_uri_is_absolute: Result /= Void and then Result.is_absolute
 		end
 
-	example_xsl_uri: UT_URI is
+	example_xsl_uri: UT_URI
 			-- URI of file 'example.xsl'
 		local
 			l_path: STRING
@@ -99,8 +99,8 @@ feature {NONE} -- Implementation
 		ensure
 			example_xsl_uri_not_void: Result /= Void
 		end
-		
-	example_xml_uri: UT_URI is
+
+	example_xml_uri: UT_URI
 			-- URI of file 'example.xml'
 		local
 			l_path: STRING
@@ -110,5 +110,5 @@ feature {NONE} -- Implementation
 		ensure
 			example_xml_uri_not_void: Result /= Void
 		end
-		
+
 end

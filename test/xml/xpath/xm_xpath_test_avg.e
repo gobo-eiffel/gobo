@@ -21,7 +21,7 @@ inherit
 		end
 
 	XM_XPATH_TYPE
-	
+
 	XM_XPATH_ERROR_TYPES
 
 	XM_XPATH_SHARED_CONFORMANCE
@@ -32,7 +32,7 @@ inherit
 
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
-	
+
 	UT_SHARED_FILE_URI_ROUTINES
 		export {NONE} all end
 
@@ -42,7 +42,7 @@ create
 
 feature -- Constant
 
-	four: MA_DECIMAL is
+	four: MA_DECIMAL
 			-- 4 as a decimal
 		once
 			create Result.make_from_integer (4)
@@ -52,7 +52,7 @@ feature -- Constant
 
 feature -- Test
 
-	test_avg_one is
+	test_avg_one
 			-- Test fn:avg((3, 4, 5)) returns 4.0.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -72,7 +72,7 @@ feature -- Test
 			assert ("Result is four", a_decimal_value.value.is_equal (four))
 		end
 
-	test_avg_empty is
+	test_avg_empty
 			-- Test fn:avg(()) returns ().
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -88,7 +88,7 @@ feature -- Test
 			assert ("No evaluated items", evaluated_items /= Void and then evaluated_items.count = 0)
 		end
 
-	test_avg_nan is
+	test_avg_nan
 			-- Test fn:avg((xs:double ("INF"), xs:double ("-INF"))) returns xs:double ("NaN").
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -107,7 +107,7 @@ feature -- Test
 			assert ("NaN", a_double_value /= Void and then a_double_value.is_nan)
 		end
 
-	test_avg_error is
+	test_avg_error
 			-- Test fn:avg(('a', 5)) returns error FORG0006.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -121,7 +121,7 @@ feature -- Test
 			assert_strings_equal ("FORG0006", "FORG0006", an_evaluator.error_value.code)
 		end
 
-	test_avg_error_two is
+	test_avg_error_two
 			-- Test fn:avg(((3, 4, 5), xs:yearMonthDuration('P10M'))) returns error FORG0006.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -135,7 +135,7 @@ feature -- Test
 			assert_strings_equal ("FORG0006", "FORG0006", an_evaluator.error_value.code)
 		end
 
-	test_avg_year_month is
+	test_avg_year_month
 			-- Test fn:avg((xs:yearMonthDuration('P20Y'), xs:yearMonthDuration('P10M'))) returns a yearMonthDuration with value 125 months.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -155,7 +155,7 @@ feature -- Test
 			assert ("125 Months", a_ymd.months = 125)
 		end
 
-	test_sum_one is
+	test_sum_one
 			-- Test fn:sum((3, 4, 5)) returns 12.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -175,7 +175,7 @@ feature -- Test
 			assert ("Result is 12", an_integer_value.as_integer = 12)
 		end
 
-	test_sum_empty_is_zero is
+	test_sum_empty_is_zero
 			-- Test fn:sum(()) returns 0.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -195,7 +195,7 @@ feature -- Test
 			assert ("Result is 0", an_integer_value.is_zero)
 		end
 
-	test_sum_empty is
+	test_sum_empty
 			-- Test fn:sum((), ()) returns ().
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -211,7 +211,7 @@ feature -- Test
 			assert ("Empty", evaluated_items /= Void and then evaluated_items.count = 0)
 		end
 
-	test_filtered_sum_empty_is_zero is
+	test_filtered_sum_empty_is_zero
 			-- Test fn:sum((1 to 100)[.<0], 0) returns 0.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -231,7 +231,7 @@ feature -- Test
 			assert ("Result is 0", an_integer_value.is_zero)
 		end
 
-	test_sum_year_month is
+	test_sum_year_month
 			-- Test fn:sum((xs:yearMonthDuration('P20Y'), xs:yearMonthDuration('P10M'))) returns a yearMonthDuration with value 125 months.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -251,7 +251,7 @@ feature -- Test
 			assert ("250 Months", a_ymd.months = 250)
 		end
 
-	test_mixed_sum_error is
+	test_mixed_sum_error
 			-- Test fn:sum((xs:yearMonthDuration('P20Y'), 9E1)) returns error FORG0006.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -265,7 +265,7 @@ feature -- Test
 			assert_strings_equal ("FORG0006", "FORG0006", an_evaluator.error_value.code)
 		end
 
-	test_max_one is
+	test_max_one
 			-- Test fn:max((3, 4, 5)) returns 5.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -285,7 +285,7 @@ feature -- Test
 			assert ("Result is 5", an_integer_value.as_integer = 5)
 		end
 
-	test_max_mixed_numeric is
+	test_max_mixed_numeric
 			-- Test fn:max((5, 5.0e0)) returns 5.0e0.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -305,7 +305,7 @@ feature -- Test
 			assert ("Result is 5.0", a_double_value.as_double = 5.0)
 		end
 
-	test_mixed_max_error is
+	test_mixed_max_error
 			-- Test fn:max((3,4,"Zero")) returns error FORG0006.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -319,7 +319,7 @@ feature -- Test
 			assert_strings_equal ("FORG0006", "FORG0006", an_evaluator.error_value.code)
 		end
 
-	test_max_mixed_zones is
+	test_max_mixed_zones
 			-- Test implicit time zone on dateTimes.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -344,7 +344,7 @@ feature -- Test
 			assert ("Local hour is 0", a_dt.local_date_time.time.hour = 0)
 		end
 
-	test_max_strings is
+	test_max_strings
 			-- Test fn:max(("a", "b", "c")) returns "c".
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -364,7 +364,7 @@ feature -- Test
 			assert_strings_equal ("Result is c", "c", a_string_value.string_value)
 		end
 
-	test_min_one is
+	test_min_one
 			-- Test fn:min((3, 4, 5)) returns 3.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -384,7 +384,7 @@ feature -- Test
 			assert ("Result is 5", an_integer_value.as_integer = 3)
 		end
 
-	test_min_mixed_numeric is
+	test_min_mixed_numeric
 			-- Test fn:min((5, 5.0e0)) returns 5.0e0.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -404,7 +404,7 @@ feature -- Test
 			assert ("Result is 5.0", a_double_value.as_double = 5.0)
 		end
 
-	test_mixed_min_error is
+	test_mixed_min_error
 			-- Test fn:min((3,4,"Zero")) returns error FORG0006.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -418,7 +418,7 @@ feature -- Test
 			assert_strings_equal ("FORG0006", "FORG0006", an_evaluator.error_value.code)
 		end
 
-	test_min_mixed_zones is
+	test_min_mixed_zones
 			-- Test implicit time zone on dateTimes.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -443,7 +443,7 @@ feature -- Test
 			assert ("Local hour is 4", a_dt.zoned_date_time.date_time.hour = 4)
 		end
 
-	test_min_strings is
+	test_min_strings
 			-- Test fn:min(("a", "b", "c")) returns "a".
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -463,14 +463,14 @@ feature -- Test
 			assert_strings_equal ("Result is a", "a", a_string_value.string_value)
 		end
 
-	set_up is
+	set_up
 		do
 			conformance.set_basic_xslt_processor
 		end
 
 feature {NONE} -- Implementation
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}", <<"test", "xml", "xpath", "data">>)
@@ -479,8 +479,8 @@ feature {NONE} -- Implementation
 			data_dirname_not_void: Result /= Void
 			data_dirname_not_empty: not Result.is_empty
 		end
-		
-	books_xml_uri: UT_URI is
+
+	books_xml_uri: UT_URI
 			-- URI of file 'books.xml'
 		local
 			a_path: STRING
@@ -493,4 +493,4 @@ feature {NONE} -- Implementation
 
 end
 
-			
+

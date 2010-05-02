@@ -21,7 +21,7 @@ inherit
 		end
 
 	XM_XPATH_TYPE
-	
+
 	XM_XPATH_ERROR_TYPES
 
 	XM_XPATH_SHARED_CONFORMANCE
@@ -32,7 +32,7 @@ inherit
 
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
-	
+
 	UT_SHARED_FILE_URI_ROUTINES
 		export {NONE} all end
 
@@ -42,7 +42,7 @@ create
 
 feature -- Constant
 
-	ten_and_a_half: MA_DECIMAL is
+	ten_and_a_half: MA_DECIMAL
 			-- 10.5 as a decimal
 		once
 			create Result.make_from_string ("10.5")
@@ -52,7 +52,7 @@ feature -- Constant
 
 feature -- Test
 
-	test_positive_abs is
+	test_positive_abs
 			-- Test fn:abs (10.5) returns 10.5.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -72,7 +72,7 @@ feature -- Test
 			assert ("Result is 10.5", a_decimal_value.value.is_equal (ten_and_a_half))
 		end
 
-	test_negative_abs is
+	test_negative_abs
 			-- Test fn:abs (-10.5) returns 10.5.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -92,7 +92,7 @@ feature -- Test
 			assert ("Result is 10.5", a_decimal_value.value.is_equal (ten_and_a_half))
 		end
 
-	test_positive_double_abs is
+	test_positive_double_abs
 			-- Test fn:abs (10.5E0) returns 10.5.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -112,7 +112,7 @@ feature -- Test
 			assert ("Result is 10.5", a_double_value.value = 10.5)
 		end
 
-	test_negative_double_abs is
+	test_negative_double_abs
 			-- Test fn:abs (-10.5) returns 10.5.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -132,7 +132,7 @@ feature -- Test
 			assert ("Result is 10.5", a_double_value.value = 10.5)
 		end
 
-	test_positive_float_abs is
+	test_positive_float_abs
 			-- Test fn:abs (xs:float(10.5E0)) returns 10.5.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -152,7 +152,7 @@ feature -- Test
 			assert ("Result is 10.5", a_float_value.value = 10.5)
 		end
 
-	test_negative_float_abs is
+	test_negative_float_abs
 			-- Test fn:abs ((xs:float(-10.5)) returns 10.5.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -172,14 +172,14 @@ feature -- Test
 			assert ("Result is 10.5", a_float_value.value = 10.5)
 		end
 
-	set_up is
+	set_up
 		do
 			conformance.set_basic_xslt_processor
 		end
 
 feature {NONE} -- Implementation
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}",
@@ -189,8 +189,8 @@ feature {NONE} -- Implementation
 			data_dirname_not_void: Result /= Void
 			data_dirname_not_empty: not Result.is_empty
 		end
-		
-	books_xml_uri: UT_URI is
+
+	books_xml_uri: UT_URI
 			-- URI of file 'books.xml'
 		local
 			a_path: STRING
@@ -200,7 +200,7 @@ feature {NONE} -- Implementation
 		ensure
 			books_xml_uri_not_void: Result /= Void
 		end
-			
+
 end
 
-			
+

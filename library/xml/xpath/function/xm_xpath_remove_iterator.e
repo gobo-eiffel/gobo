@@ -27,7 +27,7 @@ create {XM_XPATH_REMOVE, XM_XPATH_REMOVE_ITERATOR}
 
 feature {NONE} -- Initialization
 
-	make (a_base_sequence: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_removal_position: INTEGER) is
+	make (a_base_sequence: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_removal_position: INTEGER)
 			-- Establish invariant.
 		require
 			base_sequence_before: a_base_sequence /= Void and then not a_base_sequence.is_error and then a_base_sequence.before
@@ -46,14 +46,14 @@ feature -- Access
 
 feature -- Status report
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
 			Result := base_sequence.after or else item = Void
 		end
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move to next position
 		do
 			index := index + 1
@@ -84,7 +84,7 @@ feature -- Cursor movement
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original;
 		do
 			create Result.make (base_sequence.another, removal_position)
@@ -103,4 +103,4 @@ invariant
 	base_sequence_not_void: base_sequence /= Void
 
 end
-	
+

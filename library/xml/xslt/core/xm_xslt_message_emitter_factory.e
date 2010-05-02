@@ -18,8 +18,8 @@ feature -- Access
 			-- Destination for xsl:message output
 
 feature -- Element change
-	
-	set_outputter (a_outputter: like outputter) is
+
+	set_outputter (a_outputter: like outputter)
 			-- Set `outputter' to `a_outputter'.
 		require
 			a_outputter_not_void: a_outputter /= Void
@@ -31,7 +31,7 @@ feature -- Element change
 
 feature -- Creation
 
-	new_message_emitter (a_transformer: XM_XSLT_TRANSFORMER; a_properties: XM_XSLT_OUTPUT_PROPERTIES): XM_XPATH_RECEIVER is
+	new_message_emitter (a_transformer: XM_XSLT_TRANSFORMER; a_properties: XM_XSLT_OUTPUT_PROPERTIES): XM_XPATH_RECEIVER
 			-- New destination for xsl:message
 		require
 			a_transformer_not_void: a_transformer /= Void
@@ -47,4 +47,4 @@ feature -- Creation
 		end
 
 end
-	
+

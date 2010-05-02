@@ -27,7 +27,7 @@ inherit
 
 feature -- Access
 
-	token_name (a_token: INTEGER): STRING is
+	token_name (a_token: INTEGER): STRING
 			-- Name of token `a_token'
 		deferred
 		ensure
@@ -36,7 +36,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	yy_character_token_name (a_token: INTEGER): STRING is
+	yy_character_token_name (a_token: INTEGER): STRING
 			-- Name of character token `a_token'
 		local
 			c: CHARACTER

@@ -30,18 +30,18 @@ create
 
 feature -- Status report
 
-	is_instruction: BOOLEAN is True
+	is_instruction: BOOLEAN = True
 			-- Is current call an instruction?
 
 feature -- Conversion
 
-	as_expression: ET_STATIC_CALL_EXPRESSION is
+	as_expression: ET_STATIC_CALL_EXPRESSION
 			-- `Current' viewed as an expression
 		do
 			check not_expression: False end
 		end
 
-	as_instruction: ET_STATIC_CALL_INSTRUCTION is
+	as_instruction: ET_STATIC_CALL_INSTRUCTION
 			-- `Current' viewed as an instruction
 		do
 			Result := Current
@@ -49,7 +49,7 @@ feature -- Conversion
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_static_call_instruction (Current)

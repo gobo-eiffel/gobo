@@ -25,15 +25,15 @@ create
 
 feature -- Access
 
-	program_name: STRING is "ap_example"
+	program_name: STRING = "ap_example"
 			-- Program name
 
-	library_name: STRING is "argument"
+	library_name: STRING = "argument"
 			-- Library name of example
 
 feature -- Test
 
-	test_argument is
+	test_argument
 			-- Test argument parsing example.
 		local
 			app_exe: STRING
@@ -54,14 +54,14 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	program_dirname: STRING is
+	program_dirname: STRING
 			-- Name of program source directory
 		do
 			Result := file_system.nested_pathname ("${GOBO}", <<"example", library_name>>)
 			Result := Execution_environment.interpreted_string (Result)
 		end
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory where data files are located
 		once
 			Result := file_system.nested_pathname ("${GOBO}", <<"test", "example", "argument", "data">>)
@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 			data_dirname_not_empty: Result.count > 0
 		end
 
-	output1_filename: STRING is
+	output1_filename: STRING
 			-- Name of expected output file #1
 		once
 			Result := file_system.pathname (data_dirname, "output1.txt")
@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 			output1_filename_not_empty: Result.count > 0
 		end
 
-	output2_filename: STRING is
+	output2_filename: STRING
 			-- Name of expected output file #2
 		once
 			Result := file_system.pathname (data_dirname, "output2.txt")

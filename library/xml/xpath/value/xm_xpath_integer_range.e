@@ -13,7 +13,7 @@ note
 class XM_XPATH_INTEGER_RANGE
 
 inherit
-	
+
 	XM_XPATH_SEQUENCE_VALUE
 		redefine
 			is_integer_range, as_integer_range,
@@ -27,10 +27,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_start, an_end: INTEGER) is
+	make (a_start, an_end: INTEGER)
 			-- Establish invariant.
 		require
-			ascending_range: an_end > a_start		
+			ascending_range: an_end > a_start
 		do
 			make_value
 			minimum := a_start; maximum := an_end
@@ -47,19 +47,19 @@ feature -- Access
 	maximum: INTEGER
 			-- End of range
 
-	is_integer_range: BOOLEAN is
+	is_integer_range: BOOLEAN
 			-- Is `Current' an integer range?
 		do
 			Result := True
 		end
 
-	as_integer_range: XM_XPATH_INTEGER_RANGE is
+	as_integer_range: XM_XPATH_INTEGER_RANGE
 			-- `Current' seen as an integer range
 		do
 			Result := Current
 		end
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type
 		do
 			Result := type_factory.integer_type
@@ -68,14 +68,14 @@ feature -- Access
 				-- that `Result' is not optimized away.
 			end
 		end
-	
-	count: INTEGER is
+
+	count: INTEGER
 			-- Number of items in `Current'
 		do
 			Result := maximum - minimum + 1
 		end
 
-	item_at (an_index: INTEGER) :XM_XPATH_ITEM is
+	item_at (an_index: INTEGER) :XM_XPATH_ITEM
 			-- Item at `an_index'
 		do
 			create {XM_XPATH_MACHINE_INTEGER_VALUE} Result.make ((minimum + an_index - 1).to_integer_64)
@@ -83,7 +83,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Are `Current' and `other' the same expression?
 		do
 			if	not other.is_integer_range then
@@ -95,13 +95,13 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_convertible_to_item (a_context: XM_XPATH_CONTEXT): BOOLEAN is
+	is_convertible_to_item (a_context: XM_XPATH_CONTEXT): BOOLEAN
 			-- Can `Current' be converted to an `XM_XPATH_ITEM'?
 		do
 			Result := False
 		end
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		do
 			std.error.put_string (indentation (a_level))
@@ -110,13 +110,13 @@ feature -- Status report
 
 feature -- Evaluation
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- An iterator over the values of a sequence
 		do
 			create {XM_XPATH_RANGE_ITERATOR} last_iterator.make (minimum, maximum)
 		end
 
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over a node sequence
 		do
 			-- precondition is never met
@@ -124,7 +124,7 @@ feature -- Evaluation
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	native_implementations: INTEGER is
+	native_implementations: INTEGER
 			-- Natively-supported evaluation routines
 		do
 			Result := Supports_iterator

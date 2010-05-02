@@ -55,7 +55,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_name (a_name: like name) is
+	make_name (a_name: like name)
 			-- Create a new name node.
 		require
 			a_name_not_void: a_name /= Void
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 			name_set: name = a_name
 		end
 
-	make_list is
+	make_list
 			-- Create a new list node.
 		do
 			create {DS_BILINKED_LIST [XM_DTD_ELEMENT_CONTENT]} items.make
@@ -76,7 +76,7 @@ feature {NONE} -- Initialization
 			not_name: not is_name
 		end
 
-	set_default is
+	set_default
 			-- Set default for repetition and type.
 		do
 			set_sequence
@@ -85,7 +85,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Initialization (derived)
 
-	make_empty is
+	make_empty
 			-- Create a new empty content model.
 		do
 			make_list
@@ -95,7 +95,7 @@ feature {NONE} -- Initialization (derived)
 			set: is_content_empty
 		end
 
-	make_any is
+	make_any
 			-- Create a new any content model.
 		do
 			make_list
@@ -105,7 +105,7 @@ feature {NONE} -- Initialization (derived)
 			set: is_content_any
 		end
 
-	make_choice is
+	make_choice
 			-- Create a new choice list.
 		do
 			make_list
@@ -115,7 +115,7 @@ feature {NONE} -- Initialization (derived)
 			set: is_choice
 		end
 
-	make_sequence is
+	make_sequence
 			-- Create a new sequence list.
 		do
 			make_list
@@ -125,7 +125,7 @@ feature {NONE} -- Initialization (derived)
 			set: is_sequence
 		end
 
-	make_mixed is
+	make_mixed
 			-- Create a new mixed content.
 		do
 			make_list
@@ -159,7 +159,7 @@ feature {NONE} -- Data (implementation)
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Output as in DTD.
 		local
 			a_cursor: DS_LINEAR_CURSOR [XM_DTD_ELEMENT_CONTENT]
@@ -196,7 +196,7 @@ feature -- Output
 
 feature -- Sequence/leaf
 
-	is_name: BOOLEAN is
+	is_name: BOOLEAN
 			-- Is this node a name leaf (list node otherwise)?
 		do
 			Result := name /= Void
@@ -207,31 +207,31 @@ feature -- Sequence/leaf
 
 feature -- Repetition
 
-	is_one: BOOLEAN is
+	is_one: BOOLEAN
 			-- One occurrence exactly.
 		do
 			Result := repetition = ' '
 		end
 
-	is_one_or_more: BOOLEAN is
+	is_one_or_more: BOOLEAN
 			-- One or more occurrences.
 		do
 			Result := repetition = '+'
 		end
 
-	is_zero_or_one: BOOLEAN is
+	is_zero_or_one: BOOLEAN
 			-- Zero or one occurrences.
 		do
 			Result := repetition = '?'
 		end
 
-	is_zero_or_more: BOOLEAN is
+	is_zero_or_more: BOOLEAN
 			-- Zero or more occurrences.
 		do
 			Result := repetition = '*'
 		end
 
-	set_one is
+	set_one
 			-- One occurrence.
 		do
 			repetition := ' '
@@ -239,7 +239,7 @@ feature -- Repetition
 			set: is_one
 		end
 
-	set_one_or_more is
+	set_one_or_more
 			-- One or more occurrences.
 		do
 			repetition := '+'
@@ -247,7 +247,7 @@ feature -- Repetition
 			set: is_one_or_more
 		end
 
-	set_zero_or_one is
+	set_zero_or_one
 			-- Zero or one occurrences.
 		do
 			repetition := '?'
@@ -255,7 +255,7 @@ feature -- Repetition
 			set: is_zero_or_one
 		end
 
-	set_zero_or_more is
+	set_zero_or_more
 			-- Zero or more occurrences.
 		do
 			repetition := '*'
@@ -265,7 +265,7 @@ feature -- Repetition
 
 feature -- Repetition (derived)
 
-	minimum_occurrences: INTEGER is
+	minimum_occurrences: INTEGER
 			-- Minimum occurrences
 		do
 			if is_one or is_one_or_more then
@@ -280,7 +280,7 @@ feature -- Repetition (derived)
 			zero_or_more: is_zero_or_more implies (Result = 0)
 		end
 
-	maximum_occurrences: INTEGER is
+	maximum_occurrences: INTEGER
 			-- Maximum occurrences
 		do
 			Result := 1
@@ -298,19 +298,19 @@ feature -- Repetition (derived)
 
 feature -- Content (compound)
 
-	is_choice: BOOLEAN is
+	is_choice: BOOLEAN
 			-- Choice.
 		do
 			Result := type = '|'
 		end
 
-	is_sequence: BOOLEAN is
+	is_sequence: BOOLEAN
 			-- Sequence.
 		do
 			Result := type = ','
 		end
 
-	set_choice is
+	set_choice
 			-- Choice.
 		do
 			type := '|'
@@ -318,7 +318,7 @@ feature -- Content (compound)
 			set: is_choice
 		end
 
-	set_sequence is
+	set_sequence
 			-- Sequence.
 		do
 			type := ','
@@ -328,7 +328,7 @@ feature -- Content (compound)
 
 feature -- Content (final)
 
-	is_content_any: BOOLEAN is
+	is_content_any: BOOLEAN
 			-- ANY content.
 		do
 			Result := type = '?'
@@ -337,7 +337,7 @@ feature -- Content (final)
 			chardata: Result implies is_character_data_allowed
 		end
 
-	is_content_empty: BOOLEAN is
+	is_content_empty: BOOLEAN
 			-- EMPTY content.
 		do
 			Result := type = '0'
@@ -345,7 +345,7 @@ feature -- Content (final)
 			empty: Result implies (not is_name and items.count = 0)
 		end
 
-	set_content_any is
+	set_content_any
 			-- ANY content.
 		require
 			list: not is_name
@@ -356,7 +356,7 @@ feature -- Content (final)
 			set: is_content_any
 		end
 
-	set_content_empty is
+	set_content_empty
 			-- EMPTY content.
 		require
 			list: not is_name
@@ -368,7 +368,7 @@ feature -- Content (final)
 
 feature -- Content (mixed)
 
-	is_content_mixed: BOOLEAN is
+	is_content_mixed: BOOLEAN
 			-- Is this mixed content?
 		do
 			Result := is_choice and is_character_data_allowed
@@ -376,7 +376,7 @@ feature -- Content (mixed)
 			empty: Result implies (not is_name)
 		end
 
-	set_content_mixed is
+	set_content_mixed
 			-- Set mixed #PCDATA content.
 		require
 			list: not is_name

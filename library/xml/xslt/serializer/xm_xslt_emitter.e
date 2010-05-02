@@ -31,13 +31,13 @@ feature -- Access
 	output_properties: XM_XSLT_OUTPUT_PROPERTIES
 			-- Output properties
 
-	is_xml_emitter: BOOLEAN is
+	is_xml_emitter: BOOLEAN
 			-- Is `Current' an XML emitter?
 		do
 			Result := False
 		end
 
-	as_xml_emitter: XM_XSLT_XML_EMITTER is
+	as_xml_emitter: XM_XSLT_XML_EMITTER
 			-- `Current' seen as an XML emitter
 		require
 			xml_emitter: is_xml_emitter
@@ -53,7 +53,7 @@ feature -- Status report
 
 feature -- Events
 
-	on_error (a_message: STRING) is
+	on_error (a_message: STRING)
 			-- Event producer detected an error.
 		local
 			l_error: XM_XPATH_ERROR_VALUE
@@ -91,7 +91,7 @@ feature -- Events
 			is_error := True
 		end
 
-	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING) is
+	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING)
 			-- Notify an unparsed entity URI.
 		do
 			mark_as_written
@@ -99,13 +99,13 @@ feature -- Events
 
 feature -- Element change
 
-	set_document_locator (a_locator: XM_XPATH_LOCATOR) is
+	set_document_locator (a_locator: XM_XPATH_LOCATOR)
 			-- Set the locator.
 		do
 			-- Not used by emitters
 		end
 
-	set_output_properties (some_output_properties: XM_XSLT_OUTPUT_PROPERTIES) is
+	set_output_properties (some_output_properties: XM_XSLT_OUTPUT_PROPERTIES)
 			-- Set `output_properties'.
 		require
 			output_properties_not_void: some_output_properties /= Void
@@ -125,7 +125,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	suppress_late_open is
+	suppress_late_open
 			-- Suppress writing of XML declaration on close.
 		do
 			is_no_declaration_on_close := True

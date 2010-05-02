@@ -14,7 +14,7 @@ class MA_SHARED_DECIMAL_CONSTANTS
 
 feature -- Access
 
-	decimal: MA_DECIMAL_CONSTANTS is
+	decimal: MA_DECIMAL_CONSTANTS
 			-- Decimal constants
 		once
 			create Result

@@ -15,16 +15,16 @@ class XM_DEFAULT_POSITION
 inherit
 
 	XM_POSITION
-	
+
 	XM_STREAM_POSITION -- obsolete
-		
+
 create
 
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_source: like source_name; a_byte_index, a_column, a_row: INTEGER) is
+	make (a_source: like source_name; a_byte_index, a_column, a_row: INTEGER)
 			-- Create a new position.
 		require
 			a_source_not_void: a_source /= Void

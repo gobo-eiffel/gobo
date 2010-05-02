@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_pathname: like pathname; cregexp: like class_regexp; fregexp: like feature_regexp; a_prefix: like class_prefix) is
+	make (a_name: like name; a_pathname: like pathname; cregexp: like class_regexp; fregexp: like feature_regexp; a_prefix: like class_prefix)
 			-- Create a new cluster.
 		require
 			a_name_not_void: a_name /= Void
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			class_prefix_set: class_prefix = a_prefix
 		end
 
-	make_default is
+	make_default
 			-- Create a new default cluster.
 		do
 			name := Default_cluster_name
@@ -82,7 +82,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_testcase_class (a_class: ET_CLASS): BOOLEAN is
+	is_testcase_class (a_class: ET_CLASS): BOOLEAN
 			-- Is `a_class' considered as a testcase class?
 			-- Its name should match `class_regexp'.
 		require
@@ -93,7 +93,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_class_regexp (a_regexp: like class_regexp) is
+	set_class_regexp (a_regexp: like class_regexp)
 			-- Set `class_regexp' to `a_regexp'.
 		require
 			a_regexp_not_void: a_regexp /= Void
@@ -104,7 +104,7 @@ feature -- Setting
 			class_regexp_set: class_regexp = a_regexp
 		end
 
-	set_feature_regexp (a_regexp: like feature_regexp) is
+	set_feature_regexp (a_regexp: like feature_regexp)
 			-- Set `feature_regexp' to `a_regexp'.
 		require
 			a_regexp_not_void: a_regexp /= Void
@@ -115,7 +115,7 @@ feature -- Setting
 			feature_regexp_set: feature_regexp = a_regexp
 		end
 
-	set_default_test_included (b: BOOLEAN) is
+	set_default_test_included (b: BOOLEAN)
 			-- Set `default_test_included' to `b'.
 		do
 			default_test_included := b
@@ -125,7 +125,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (testcases: TS_TESTCASES; an_error_handler: TS_ERROR_HANDLER) is
+	process (testcases: TS_TESTCASES; an_error_handler: TS_ERROR_HANDLER)
 			-- Process current cluster.
 		require
 			testcases_not_void: testcases /= Void
@@ -146,7 +146,7 @@ feature -- Processing
 			a_system.classes_do_if_recursive (agent process_class (?, testcases), agent is_testcase_class)
 		end
 
-	process_class (a_class: ET_CLASS; testcases: TS_TESTCASES) is
+	process_class (a_class: ET_CLASS; testcases: TS_TESTCASES)
 			-- Process `a_class'.
 		require
 			a_class_not_void: a_class /= Void

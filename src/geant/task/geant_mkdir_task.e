@@ -27,14 +27,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_interpreting_element (a_ie: GEANT_INTERPRETING_ELEMENT) is
+	make_from_interpreting_element (a_ie: GEANT_INTERPRETING_ELEMENT)
 			-- Create new task with information held in `a_ie'.
 		do
 			Precursor {GEANT_TASK} (a_ie)
 			command.directory.set_string_value_agent (agent a_ie.attribute_value ("directory"))
 		end
 
-	build_command (a_project: GEANT_PROJECT) is
+	build_command (a_project: GEANT_PROJECT)
 			-- Create instance of `command'
 		do
 			create command.make (a_project)

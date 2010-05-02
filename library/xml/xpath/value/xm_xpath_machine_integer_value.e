@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_value: like value) is
+	make (a_value: like value)
 		do
 			make_atomic_value
 			value := a_value
@@ -45,37 +45,37 @@ feature -- Access
 	value: INTEGER_64
 			-- Raw value
 
-	is_machine_integer_value: BOOLEAN is
+	is_machine_integer_value: BOOLEAN
 			-- Is `Current' a machine integer value?
 		do
 			Result := True
 		end
 
-	as_machine_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE is
+	as_machine_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 			-- `Current' seen as a machine integer value
 		do
 			Result := Current
 		end
 
-	as_integer: INTEGER is
+	as_integer: INTEGER
 			-- Value converted to an `INTEGER'
 		do
 			Result := value.to_integer_32
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			Result := value.hash_code
 		end
 
-	as_double: DOUBLE is
+	as_double: DOUBLE
 			-- Value converted to a double
 		do
 			Result := value.to_double
 		end
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type
 		do
 			Result := type_factory.integer_type
@@ -85,7 +85,7 @@ feature -- Access
 			end
 		end
 
-	string_value: STRING is
+	string_value: STRING
 			--Value of the item as a string
 		do
 			Result := value.out
@@ -93,7 +93,7 @@ feature -- Access
 
 feature -- Comparison
 
-	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER is
+	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER
 			-- Compare `Current' to `other'
 		local
 			l_decimal: MA_DECIMAL
@@ -116,7 +116,7 @@ feature -- Comparison
 
 feature -- Status report
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -128,7 +128,7 @@ feature -- Status report
 			std.error.put_new_line
 		end
 
-	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN is
+	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN
 			-- Is `Current' convertible to `a_required_type'?
 		do
 			if	a_required_type = any_item or
@@ -147,49 +147,49 @@ feature -- Status report
 			end
 		end
 
-	is_whole_number: BOOLEAN is
+	is_whole_number: BOOLEAN
 			-- Is value integral?
 		do
 			Result := True
 		end
 
-	is_platform_integer: BOOLEAN is
+	is_platform_integer: BOOLEAN
 			-- Can value be represented by an `INTEGER'?
 		do
 			Result := True
 		end
 
-	is_double: BOOLEAN is
+	is_double: BOOLEAN
 			-- Can value be converted to a `DOUBLE'?
 		do
 			Result := True
 		end
 
-	is_nan: BOOLEAN is
+	is_nan: BOOLEAN
 			-- Is value Not-a-number?
 		do
 			Result := False
 		end
 
-	is_zero: BOOLEAN is
+	is_zero: BOOLEAN
 			-- Is value zero?
 		do
 			Result := value = 0
 		end
 
-	is_negative: BOOLEAN is
+	is_negative: BOOLEAN
 			-- Is value less than zero?
 		do
 			Result := value < 0
 		end
 
-	is_infinite: BOOLEAN is
+	is_infinite: BOOLEAN
 			-- Is value infinite?
 		do
 			Result := False
 		end
 
-	is_strictly_positive: BOOLEAN is
+	is_strictly_positive: BOOLEAN
 			-- Is `Current' strictly greater than zero?
 		do
 			Result := not is_negative and not is_zero
@@ -199,7 +199,7 @@ feature -- Status report
 
 feature -- Conversion
 
-	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE) is
+	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE)
 			-- Convert `Current' to `a_required_type'
 		do
 			if a_required_type = type_factory.boolean_type  then
@@ -225,13 +225,13 @@ feature -- Conversion
 			end
 		end
 
-	rounded_value: like Current is
+	rounded_value: like Current
 			-- `a_numeric_value' rounded towards the nearest whole number (0.5 rounded up)
 		do
 			Result := Current
 		end
 
-	rounded_half_even (a_scale: INTEGER): XM_XPATH_NUMERIC_VALUE is
+	rounded_half_even (a_scale: INTEGER): XM_XPATH_NUMERIC_VALUE
 			-- `a_numeric_value' rounded towards the nearest even number;
 		local
 			l_decimal: XM_XPATH_DECIMAL_VALUE
@@ -269,19 +269,19 @@ feature -- Conversion
 			end
 		end
 
-	floor: like Current is
+	floor: like Current
 			-- Value rounded towards minus infinity
 		do
 			Result := Current
 		end
 
-	ceiling: like Current is
+	ceiling: like Current
 			-- Value rounded towards plus infinity
 		do
 			Result := Current
 		end
 
-	negated_value: like Current is
+	negated_value: like Current
 			-- Same abaolute value but opposite sign
 		do
 			create Result.make (-value)
@@ -289,7 +289,7 @@ feature -- Conversion
 
 feature -- Basic operations
 
-	arithmetic (a_operator: INTEGER; other: XM_XPATH_NUMERIC_VALUE): XM_XPATH_NUMERIC_VALUE is
+	arithmetic (a_operator: INTEGER; other: XM_XPATH_NUMERIC_VALUE): XM_XPATH_NUMERIC_VALUE
 			-- Arithmetic calculation
 		local
 			l_numeric_value: XM_XPATH_NUMERIC_VALUE

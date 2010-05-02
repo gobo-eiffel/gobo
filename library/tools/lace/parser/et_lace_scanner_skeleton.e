@@ -32,7 +32,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_filename: STRING; an_error_handler: like error_handler) is
+	make (a_filename: STRING; an_error_handler: like error_handler)
 			-- Create a new Lace scanner.
 		require
 			a_filename_not_void: a_filename /= Void
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset scanner before scanning next input.
 		do
 			reset_compressed_scanner_skeleton
@@ -72,7 +72,7 @@ feature -- Access
 	eif_lineno: INTEGER
 			-- Current line number
 
-	current_position: ET_POSITION is
+	current_position: ET_POSITION
 			-- Current position
 			-- (Create a new object at each call.)
 		do
@@ -86,7 +86,7 @@ feature -- Access
 
 feature -- AST factory
 
-	new_identifier (a_text: STRING): ET_IDENTIFIER is
+	new_identifier (a_text: STRING): ET_IDENTIFIER
 			-- New identifier
 		require
 			a_text_not_void: a_text /= Void
@@ -100,7 +100,7 @@ feature -- AST factory
 
 feature {NONE} -- Constants
 
-	Init_buffer_size: INTEGER is 256
+	Init_buffer_size: INTEGER = 256
 				-- Initial size for `eif_buffer'
 
 invariant

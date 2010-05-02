@@ -328,7 +328,7 @@ feature{NONE} -- Implementation
 		end
 
 	part1, part2: like max_natural_type
-			-- Naturals used for conversion	
+			-- Naturals used for conversion
 
 	internal_overflowed: BOOLEAN
 			-- Internal overflow flag

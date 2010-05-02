@@ -41,7 +41,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new feature flattener for given classes.
 		do
 			precursor {ET_CLASS_PROCESSOR}
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 
 feature -- Error handling
 
-	set_fatal_error (a_class: ET_CLASS) is
+	set_fatal_error (a_class: ET_CLASS)
 			-- Report a fatal error to `a_class'.
 		require
 			a_class_not_void: a_class /= Void
@@ -81,7 +81,7 @@ feature -- Error handling
 
 feature -- Processing
 
-	process_class (a_class: ET_CLASS) is
+	process_class (a_class: ET_CLASS)
 			-- Build ancestors of `a_class' if not already done.
 			-- Then run second pass of the formal generic parameters
 			-- validity check of `a_class', and the second pass of
@@ -112,7 +112,7 @@ feature -- Processing
 
 feature {NONE} -- Processing
 
-	internal_process_class (a_class: ET_CLASS) is
+	internal_process_class (a_class: ET_CLASS)
 			-- Build ancestors of `a_class' if not already done.
 			-- Then run second pass of the formal generic parameters
 			-- validity check of `a_class', and the second pass of
@@ -202,7 +202,7 @@ feature {NONE} -- Feature adaptation
 	dotnet_feature_adaptation_resolver: ET_DOTNET_FEATURE_ADAPTATION_RESOLVER
 			-- Feature adaptation resolver for .NET classes
 
-	resolve_feature_adaptations is
+	resolve_feature_adaptations
 			-- Resolve the feature adaptations of the inheritance clause of
 			-- `current_class' and put resulting features in `named_features'.
 		do
@@ -221,7 +221,7 @@ feature {NONE} -- Feature adaptation
 
 feature {NONE} -- Feature flattening
 
-	flatten_features is
+	flatten_features
 			-- Flatten inherited features into `current_class'.
 		local
 			a_named_feature: ET_FLATTENED_FEATURE
@@ -564,7 +564,7 @@ feature {NONE} -- Feature flattening
 
 feature {NONE} -- Feature processing
 
-	flatten_feature (a_feature: ET_FLATTENED_FEATURE) is
+	flatten_feature (a_feature: ET_FLATTENED_FEATURE)
 			-- Flatten `a_feature' and process its feature adaptation clause.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -589,7 +589,7 @@ feature {NONE} -- Feature processing
 			end
 		end
 
-	flatten_immediate_feature (a_feature: ET_FEATURE) is
+	flatten_immediate_feature (a_feature: ET_FEATURE)
 			-- Flatten `a_feature' and process its feature adaptation clause.
 			-- `a_feature' has been introduced in `current_class' (ETL2, p. 56).
 		require
@@ -602,7 +602,7 @@ feature {NONE} -- Feature processing
 			end
 		end
 
-	flatten_redeclared_feature (a_feature: ET_REDECLARED_FEATURE) is
+	flatten_redeclared_feature (a_feature: ET_REDECLARED_FEATURE)
 			-- Flatten `a_feature' and process its feature adaptation clause.
 			-- `a_feature' is an inherited feature which has been given a new
 			-- declaration in `current_class'.
@@ -706,7 +706,7 @@ feature {NONE} -- Feature processing
 			end
 		end
 
-	flatten_inherited_feature (a_feature: ET_INHERITED_FEATURE) is
+	flatten_inherited_feature (a_feature: ET_INHERITED_FEATURE)
 			-- Flatten `a_feature' and process its feature adaptation clause.
 			-- `a_feature' is an inherited feature which has not been given
 			-- a new declaration in `current_class'.
@@ -973,7 +973,7 @@ feature {NONE} -- Feature processing
 
 feature {NONE} -- Replication
 
-	process_replicated_seeds (a_feature: ET_ADAPTED_FEATURE; a_new_seed: INTEGER) is
+	process_replicated_seeds (a_feature: ET_ADAPTED_FEATURE; a_new_seed: INTEGER)
 			-- Process the seeds of replicated feature `a_feature'.
 			-- Remove seeds in `a_feature.replicated_seeds' and
 			-- add `a_new_seed'.
@@ -1063,7 +1063,7 @@ feature {NONE} -- Clients
 	client_classes: DS_HASH_TABLE [ET_CLIENT, ET_CLASS]
 			-- Clients indexed by classes
 
-	inherited_clients (a_feature: ET_INHERITED_FEATURE): ET_CLIENT_LIST is
+	inherited_clients (a_feature: ET_INHERITED_FEATURE): ET_CLIENT_LIST
 			-- Clients inherited by the not redeclared feature `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -1194,7 +1194,7 @@ feature {NONE} -- Clients
 feature {NONE} -- Feature adaptation validity
 
 	check_redeclaration_validity (a_parent_feature: ET_PARENT_FEATURE;
-		a_redeclared_feature: ET_FEATURE; has_redefine: BOOLEAN) is
+		a_redeclared_feature: ET_FEATURE; has_redefine: BOOLEAN)
 			-- Check validity when `a_parent_feature' has been
 			-- given a new declaration `a_redeclared_feature' in
 			-- `current_class'. `has_redefine' indicates whether the
@@ -1274,7 +1274,7 @@ feature {NONE} -- Feature adaptation validity
 			end
 		end
 
-	check_no_redeclaration_validity (a_parent_feature: ET_PARENT_FEATURE) is
+	check_no_redeclaration_validity (a_parent_feature: ET_PARENT_FEATURE)
 			-- Check validity when `a_parent_feature' has not been given a new
 			-- declaration in `current_class'.
 		require
@@ -1290,7 +1290,7 @@ feature {NONE} -- Feature adaptation validity
 			end
 		end
 
-	check_rename_clause_validity (a_parent_feature: ET_PARENT_FEATURE) is
+	check_rename_clause_validity (a_parent_feature: ET_PARENT_FEATURE)
 			-- Check validity of rename clause for `a_parent_feature'.
 		require
 			a_parent_feature_not_void: a_parent_feature /= Void
@@ -1360,7 +1360,7 @@ feature {NONE} -- Feature adaptation validity
 			end
 		end
 
-	check_undefine_clause_validity (a_parent_feature: ET_PARENT_FEATURE) is
+	check_undefine_clause_validity (a_parent_feature: ET_PARENT_FEATURE)
 			-- Check validity of undefine clause for `a_parent_feature'.
 		require
 			a_parent_feature_not_void: a_parent_feature /= Void
@@ -1388,7 +1388,7 @@ feature {NONE} -- Feature adaptation validity
 			end
 		end
 
-	check_redefine_clause_validity (a_parent_feature: ET_PARENT_FEATURE) is
+	check_redefine_clause_validity (a_parent_feature: ET_PARENT_FEATURE)
 			-- Check validity of redefine clause for `a_parent_feature'.
 		require
 			a_parent_feature_not_void: a_parent_feature /= Void
@@ -1413,7 +1413,7 @@ feature {NONE} -- Feature adaptation validity
 
 feature {NONE} -- Precursor validity
 
-	check_precursor_validity (a_feature: ET_REDECLARED_FEATURE) is
+	check_precursor_validity (a_feature: ET_REDECLARED_FEATURE)
 			-- Check validity of Precursor constructs in `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -1429,7 +1429,7 @@ feature {NONE} -- Precursor validity
 
 feature {NONE} -- Signature resolving
 
-	resolve_identifier_signature (a_feature: ET_FEATURE) is
+	resolve_identifier_signature (a_feature: ET_FEATURE)
 			-- Resolve identifier types (e.g. "like identifier"
 			-- or "BIT identifier") in signature of `a_feature'
 			-- in `current_class'. Do not try to resolve qualified
@@ -1499,7 +1499,7 @@ feature {NONE} -- Signature resolving
 
 feature {NONE} -- Signature validity
 
-	check_anchored_signatures is
+	check_anchored_signatures
 			-- Check whether there is no cycle in the anchored types
 			-- held in the types of all signatures of `current_class'.
 			-- Do not try to follow qualified anchored types. This is done
@@ -1516,7 +1516,7 @@ feature {NONE} -- Signature validity
 	anchored_type_checker: ET_ANCHORED_TYPE_CHECKER
 			-- Anchored type checker
 
-	check_signature_vtct_validity (a_feature: ET_FEATURE) is
+	check_signature_vtct_validity (a_feature: ET_FEATURE)
 			-- Check whether the types in the signature of `a_feature'
 			-- (declared in `current_class') are based on known classes.
 		require
@@ -1529,7 +1529,7 @@ feature {NONE} -- Signature validity
 			end
 		end
 
-	check_signature_validity (a_feature: ET_FLATTENED_FEATURE) is
+	check_signature_validity (a_feature: ET_FLATTENED_FEATURE)
 			-- Check signature validity for redeclarations and joinings.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -1563,7 +1563,7 @@ feature {NONE} -- Signature validity
 
 feature {NONE} -- Built-in feature validity
 
-	check_builtin_feature_validity (a_feature: ET_FEATURE) is
+	check_builtin_feature_validity (a_feature: ET_FEATURE)
 			-- Check whether `a_feature' is a known built-in feature,
 			-- and if yes, check the validity of its signature.
 		require
@@ -1580,7 +1580,7 @@ feature {NONE} -- Built-in feature validity
 
 feature {NONE} -- Kernel feature validity
 
-	check_kernel_features_validity is
+	check_kernel_features_validity
 			-- Check validity of kernel features declared in `current_class'.
 			-- Keep track of their seeds if needed.
 		local
@@ -1681,7 +1681,7 @@ feature {NONE} -- Kernel feature validity
 
 feature {NONE} -- Formal parameters validity
 
-	check_formal_parameters_validity is
+	check_formal_parameters_validity
 			-- Check validity of formal parameters of `current_class'.
 		do
 			formal_parameter_checker.check_formal_parameters_validity (current_class)
@@ -1695,7 +1695,7 @@ feature {NONE} -- Formal parameters validity
 
 feature {NONE} -- Parents validity
 
-	check_parents_validity is
+	check_parents_validity
 			-- Check validity of parents of `current_class'.
 		do
 			parent_checker.check_parents_validity (current_class)
@@ -1709,7 +1709,7 @@ feature {NONE} -- Parents validity
 
 feature {NONE} -- Creators validity
 
-	check_creators_validity is
+	check_creators_validity
 			-- Check validity of creators of `current_class'.
 		local
 			a_creators: ET_CREATOR_LIST
@@ -1789,7 +1789,7 @@ feature {NONE} -- Creators validity
 
 feature {NONE} -- Convert validity
 
-	check_convert_validity is
+	check_convert_validity
 			-- Check validity of convert clause of `current_class'.
 		local
 			a_convert_features: ET_CONVERT_FEATURE_LIST
@@ -1823,7 +1823,7 @@ feature {NONE} -- Convert validity
 
 feature -- Assigner validity
 
-	check_assigners_validity is
+	check_assigners_validity
 			-- Check validity of assigner clauses of queries of `current_class'.
 		local
 			l_queries: ET_QUERY_LIST
@@ -1980,7 +1980,7 @@ feature -- Assigner validity
 
 feature {NONE} -- Constants
 
-	query_sorter: DS_QUICK_SORTER [ET_QUERY] is
+	query_sorter: DS_QUICK_SORTER [ET_QUERY]
 			-- Query sorter by increasing first seed values
 		local
 			l_comparator: ET_SEEDED_QUERY_COMPARATOR
@@ -1991,7 +1991,7 @@ feature {NONE} -- Constants
 			query_sorter_not_void: Result /= Void
 		end
 
-	procedure_sorter: DS_QUICK_SORTER [ET_PROCEDURE] is
+	procedure_sorter: DS_QUICK_SORTER [ET_PROCEDURE]
 			-- Procedure sorter by increasing first seed values
 		local
 			l_comparator: ET_SEEDED_PROCEDURE_COMPARATOR

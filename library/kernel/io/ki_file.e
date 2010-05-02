@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	time_stamp: INTEGER is
+	time_stamp: INTEGER
 			-- Time stamp (number of seconds since 1 January 1970
 			-- at 00:00:00 UTC) of last modification to current file;
 			-- Return -1 if the time stamp was not available, if the
@@ -32,7 +32,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of bytes in current file;
 			-- Return -1 if the number of bytes was not available,
 			-- if the file did not exist for example.
@@ -45,9 +45,9 @@ feature -- Measurement
 
 feature -- Status report
 
-	same_physical_file (other_name: STRING): BOOLEAN is
+	same_physical_file (other_name: STRING): BOOLEAN
 			-- Are current file and file named `other_name'
-			-- the same physical file? Return False if one 
+			-- the same physical file? Return False if one
 			-- or both files don't exist. (Return True if
 			-- it was impossible to determine whether the
 			-- files were physically the same files.)
@@ -62,7 +62,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	change_name (new_name: STRING) is
+	change_name (new_name: STRING)
 			-- Rename current file as `new_name'.
 			-- Do nothing if the file could not be renamed, if
 			-- it did not exist or if `new_name' is physically
@@ -78,7 +78,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	copy_file (new_name: STRING) is
+	copy_file (new_name: STRING)
 			-- Copy current file to `new_name'.
 			-- Do nothing if the file could not be copied, if it
 			-- did not exist or if `new_name' is physically
@@ -93,7 +93,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	concat (a_filename: STRING) is
+	concat (a_filename: STRING)
 			-- Copy content of file `a_filename' to the end of current file.
 			-- Do nothing if file `a_filename' does not exist. Create
 			-- current file if it does not exist yet. If file `a_filename'

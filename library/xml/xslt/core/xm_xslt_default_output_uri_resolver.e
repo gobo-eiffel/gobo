@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_security_manager: like security_manager) is
+	make (a_security_manager: like security_manager)
 			-- Establish invariant.
 		require
 			security_manager_not_void: a_security_manager /= Void
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			create a_file_resolver.make
 			register_scheme (a_file_resolver, "file")
 			create a_string_resolver.make
-			register_scheme (a_string_resolver, "string")			
+			register_scheme (a_string_resolver, "string")
 			create output_destinations.make_with_equality_testers (10, Void, string_equality_tester)
 		ensure
 			security_manager_set: security_manager = a_security_manager
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_scheme_registered (a_scheme: STRING): BOOLEAN is
+	is_scheme_registered (a_scheme: STRING): BOOLEAN
 			-- Is a resolver registered for `a_scheme'?
 		require
 			scheme_not_void: a_scheme /= Void and then a_scheme.count > 0
@@ -62,7 +62,7 @@ feature -- Status report
 
 feature -- Action
 
-	resolve (a_uri: UT_URI) is
+	resolve (a_uri: UT_URI)
 			-- Resolve `a_uri' relative to `a_base_uri'.
 		local
 			l_scheme, l_uri_to_use: STRING
@@ -91,7 +91,7 @@ feature -- Action
 			end
 		end
 
-	close (a_result: XM_XSLT_TRANSFORMATION_RESULT; some_properties: XM_XSLT_OUTPUT_PROPERTIES) is
+	close (a_result: XM_XSLT_TRANSFORMATION_RESULT; some_properties: XM_XSLT_OUTPUT_PROPERTIES)
 			-- Close output destination.
 		do
 			if a_result.is_stream then
@@ -99,7 +99,7 @@ feature -- Action
 			end
 		end
 
-	register_scheme (a_resolver: XM_XSLT_OUTPUT_URI_SCHEME_RESOLVER; a_scheme: STRING) is
+	register_scheme (a_resolver: XM_XSLT_OUTPUT_URI_SCHEME_RESOLVER; a_scheme: STRING)
 			-- Register `a_resolver' as the handler for `a_scheme'.
 		require
 			scheme_not_void: a_scheme /= Void and then a_scheme.count > 0
@@ -111,7 +111,7 @@ feature -- Action
 			scheme_registered: is_scheme_registered (a_scheme)
 			correct_resolver: scheme_resolvers.item (a_scheme) = a_resolver
 		end
-		
+
 feature -- Result
 
 	last_result: XM_XSLT_TRANSFORMATION_RESULT
@@ -127,4 +127,4 @@ invariant
 	scheme_resolvers /= Void
 
 end
-	
+

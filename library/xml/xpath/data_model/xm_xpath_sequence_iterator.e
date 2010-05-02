@@ -24,7 +24,7 @@ inherit
 
 feature -- Access
 
-	item: G is
+	item: G
 			-- Value or node at the current position
 		require
 			not_in_error: not is_error
@@ -42,7 +42,7 @@ feature -- Access
 	last_realized_value: XM_XPATH_VALUE
 			-- Result from calling `realize'
 
-	last_position: INTEGER is
+	last_position: INTEGER
 			-- Last position (= number of items in sequence)
 		require
 			last_position_finder: is_last_position_finder
@@ -52,18 +52,18 @@ feature -- Access
 		end
 
 
-	reverse_iterator: XM_XPATH_SEQUENCE_ITERATOR [G] is
+	reverse_iterator: XM_XPATH_SEQUENCE_ITERATOR [G]
 			-- Iterator over same sequence as `Current', but in reverse order
 		require
-			reversible_iterator: is_reversible_iterator			
+			reversible_iterator: is_reversible_iterator
 		do
 		ensure
 			reverse_iterator_not_void: Result /= Void
 		end
-	
+
 feature -- Status report
 
-	before: BOOLEAN is
+	before: BOOLEAN
 			-- Has `start' been called yet on this sequence?
 		require
 			not_in_error: not is_error
@@ -73,7 +73,7 @@ feature -- Status report
 			before_first_position: Result = True implies index = 0
 		end
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		require
 			not_in_error: not is_error
@@ -81,7 +81,7 @@ feature -- Status report
 		deferred
 		end
 
-	off: BOOLEAN is
+	off: BOOLEAN
 			-- Is there an `item' to be retrieved?
 		require
 			not_in_error: not is_error
@@ -89,7 +89,7 @@ feature -- Status report
 			Result := before or else after
 		end
 
-	is_invulnerable: BOOLEAN is
+	is_invulnerable: BOOLEAN
 			-- Is `Current' guarenteed free of implicit errors?
 		do
 			Result := False
@@ -106,49 +106,49 @@ feature -- Status report
 	is_error: BOOLEAN
 			-- Is `Current' in error?
 
-	is_singleton_iterator: BOOLEAN is
+	is_singleton_iterator: BOOLEAN
 			-- Is `Current' a singleton iterator?
 		do
 			Result := False
 		end
 
-	is_realizable_iterator: BOOLEAN is
+	is_realizable_iterator: BOOLEAN
 			-- Is `Current' a realizable iterator?
 		do
 			Result := False
 		end
 
-	is_node_iterator: BOOLEAN is
+	is_node_iterator: BOOLEAN
 			-- Does `Current' yield a node sequence?
 		do
 			Result := False
 		end
 
-	is_array_iterator: BOOLEAN is
+	is_array_iterator: BOOLEAN
 			-- Is `Current' an iterator over an array?
 		do
 			Result := False
 		end
 
-	is_axis_iterator: BOOLEAN is
+	is_axis_iterator: BOOLEAN
 			-- Is `Current' an axis iterator?
 		do
 			Result := False
 		end
 
-	is_empty_iterator: BOOLEAN is
+	is_empty_iterator: BOOLEAN
 			-- Is `Current' an iterator over a guarenteed empty sequence?
 		do
 			Result := False
 		end
 
-	is_reversible_iterator: BOOLEAN is
+	is_reversible_iterator: BOOLEAN
 			-- Does `Current' yield a reversible_sequence?
 		do
 			Result := False
 		end
 
-	is_last_position_finder: BOOLEAN is
+	is_last_position_finder: BOOLEAN
 			-- Can `Current' find the last position?
 		do
 			Result := False
@@ -156,7 +156,7 @@ feature -- Status report
 
 feature -- Status_setting
 
-	set_last_error (an_error: XM_XPATH_ERROR_VALUE) is
+	set_last_error (an_error: XM_XPATH_ERROR_VALUE)
 			-- Set last error value.
 		require
 			error_value_not_void: an_error /= void
@@ -170,7 +170,7 @@ feature -- Status_setting
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Move to first position
 		require
 			not_in_error: not is_error
@@ -181,8 +181,8 @@ feature -- Cursor movement
 			not_before: not is_error implies not before
 			error_free: is_invulnerable implies not is_error
 		end
-			
-	forth is
+
+	forth
 			-- Move to next position
 		require
 			not_in_error: not is_error
@@ -195,7 +195,7 @@ feature -- Cursor movement
 
 feature -- Conversion
 
-	as_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [G] is
+	as_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [G]
 			-- `Current' seen as a singleton iterator
 		require
 			singleton_iterator: is_singleton_iterator
@@ -204,7 +204,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
 		require
 			node_iterator: is_node_iterator
@@ -213,7 +213,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_array_iterator: XM_XPATH_ARRAY_LIST_ITERATOR [G] is
+	as_array_iterator: XM_XPATH_ARRAY_LIST_ITERATOR [G]
 			-- `Current' seen as an array iterator
 		require
 			array_iterator: is_array_iterator
@@ -222,7 +222,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_axis_iterator: XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
+	as_axis_iterator: XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as an axis iterator
 		require
 			axis_iterator: is_axis_iterator
@@ -231,7 +231,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_empty_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE] is
+	as_empty_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as an empty iterator
 		require
 			empty_iterator: is_empty_iterator
@@ -242,7 +242,7 @@ feature -- Conversion
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original;
 			-- The new iterator will be repositioned at the start of the sequence
 		require
@@ -257,7 +257,7 @@ feature -- Duplication
 
 feature -- Evaluation
 
-	realize is
+	realize
 			-- Realize the sequence as a value.
 		require
 			realizable_iterator: is_realizable_iterator
@@ -275,4 +275,4 @@ invariant
 	off_or_valid_item: not is_error and then not off implies item /= Void
 
 end
-	
+

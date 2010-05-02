@@ -27,14 +27,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new convert clause
 		do
 			convert_keyword := tokens.convert_keyword
 			precursor
 		end
 
-	make_with_capacity (nb: INTEGER) is
+	make_with_capacity (nb: INTEGER)
 			-- Create a new convert clause with capacity `nb'.
 		do
 			convert_keyword := tokens.convert_keyword
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset convert features as they were when they were last parsed.
 		local
 			i, nb: INTEGER
@@ -60,7 +60,7 @@ feature -- Access
 	convert_keyword: ET_KEYWORD
 			-- 'convert' keyword
 
-	convert_feature (i: INTEGER): ET_CONVERT_FEATURE is
+	convert_feature (i: INTEGER): ET_CONVERT_FEATURE
 			-- `i'-th conversion feature
 		require
 			i_large_enough: i >= 1
@@ -71,7 +71,7 @@ feature -- Access
 			convert_feature_not_void: Result /= Void
 		end
 
-	index_of (a_name: ET_FEATURE_NAME): INTEGER is
+	index_of (a_name: ET_FEATURE_NAME): INTEGER
 			-- Index of convert feature named `a_name';
 			-- 0 if it does not exist
 		require
@@ -93,7 +93,7 @@ feature -- Access
 			index_small_enough: Result <= count
 		end
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -103,13 +103,13 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := convert_keyword
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			if is_empty then
@@ -119,7 +119,7 @@ feature -- Access
 			end
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			if is_empty then
@@ -131,7 +131,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_convert_keyword (a_convert: like convert_keyword) is
+	set_convert_keyword (a_convert: like convert_keyword)
 			-- Set `convert_keyword' to `a_convert'.
 		require
 			a_convert_not_void: a_convert /= Void
@@ -143,7 +143,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_convert_feature_list (Current)
@@ -151,7 +151,7 @@ feature -- Processing
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_CONVERT_FEATURE_ITEM] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_CONVERT_FEATURE_ITEM]
 			-- Fixed array routines
 		once
 			create Result

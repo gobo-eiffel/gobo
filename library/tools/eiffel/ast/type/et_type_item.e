@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	type: ET_TYPE is
+	type: ET_TYPE
 			-- Type in comma-separated list
 		deferred
 		ensure

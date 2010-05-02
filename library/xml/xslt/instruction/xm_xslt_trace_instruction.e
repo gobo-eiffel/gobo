@@ -22,11 +22,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_child: like child; an_executable: like executable; some_details: like trace_details) is
+	make (a_child: like child; an_executable: like executable; some_details: like trace_details)
 			-- Establish invariant.
 		require
 			child_not_void: a_child /= Void
-			
+
 		do
 			executable := an_executable
 			trace_details := some_details
@@ -45,4 +45,4 @@ feature {NONE} -- Implementation
 			-- Trace details
 
 end
-	
+

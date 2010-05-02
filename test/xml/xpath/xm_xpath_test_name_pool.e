@@ -32,12 +32,12 @@ create
 
 feature -- Access
 
-	testing_namespace: STRING is "http://colina.demon.co.uk/gobo/xml/xpath/tests"
+	testing_namespace: STRING = "http://colina.demon.co.uk/gobo/xml/xpath/tests"
 			-- Namespace-URI for these tests
 
 feature -- Test
 
-	test_allocations is
+	test_allocations
 		local
 			a_uri_code, another_uri_code, prefix_code: INTEGER -- should be INTEGER_16
 			counter, namespace_code: INTEGER
@@ -75,7 +75,7 @@ feature -- Test
 			assert ("Prefix code 2", prefix_code >= 11)
 		end
 
-	test_conversions is
+	test_conversions
 		local
 			name_code, namespace_code, uri_code, prefix_code: INTEGER
 			an_xml_prefix, namespace_uri, local_name, display_name: STRING
@@ -112,7 +112,7 @@ feature -- Test
 			assert_strings_equal ("Prefix 2", "test3", an_xml_prefix)
 		end
 
-	test_name_code_consistency is
+	test_name_code_consistency
 		local
 			name_code, original_name_code: INTEGER
 			local_name: STRING
@@ -126,7 +126,7 @@ feature -- Test
 			assert ("Name codes equal", name_code = original_name_code)
 		end
 
-	test_miscellaneous is
+	test_miscellaneous
 		local
 			suggestion: STRING
 			fingerprint, fingerprint2: INTEGER
@@ -145,7 +145,7 @@ feature -- Test
 
 feature -- Setting
 
-	set_up is
+	set_up
 		do
 			conformance.set_basic_xslt_processor
 		end

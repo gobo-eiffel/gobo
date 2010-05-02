@@ -24,7 +24,7 @@ inherit
 
 feature -- Status report
 
-	valid_utf32 (a_string: STRING): BOOLEAN is
+	valid_utf32 (a_string: STRING): BOOLEAN
 			-- Are the bytes in `a_string' a valid UTF-32 encoding?
 			-- 'a_string' has one byte per character.
 			-- Default to big endian when no BOM.
@@ -62,7 +62,7 @@ feature -- Status report
 
 feature -- Endian-ness detection
 
-	bom_be: STRING is
+	bom_be: STRING
 			-- BOM in big-endian format
 		once
 			Result := "%/0/%/0/%/254/%/255/"
@@ -75,7 +75,7 @@ feature -- Endian-ness detection
 			fourth_byte: Result.item_code (4) = Hex_ff
 		end
 
-	bom_le: STRING is
+	bom_le: STRING
 			-- BOM in little-endian format
 		once
 			Result := "%/255/%/254/%/0/%/0/"
@@ -88,7 +88,7 @@ feature -- Endian-ness detection
 			fourth_byte: Result.item_code (4) = 0
 		end
 
-	is_endian_detection_character_most_first (first, second, third, fourth: INTEGER): BOOLEAN is
+	is_endian_detection_character_most_first (first, second, third, fourth: INTEGER): BOOLEAN
 			-- Do the four bytes represent the character
 			-- 0xFEFF with `first' being the most significant byte?
 		require
@@ -103,7 +103,7 @@ feature -- Endian-ness detection
 			definition: Result = (first = 0 and second = 0 and third = Hex_fe and fourth = Hex_ff)
 		end
 
-	is_endian_detection_character_least_first (first, second, third, fourth: INTEGER): BOOLEAN is
+	is_endian_detection_character_least_first (first, second, third, fourth: INTEGER): BOOLEAN
 			-- Do the four bytes represent the character
 			-- 0xFEFF with `first' being the least significant byte?
 		require
@@ -118,7 +118,7 @@ feature -- Endian-ness detection
 			definition: Result = (first = Hex_ff and second = Hex_fe and third = 0 and fourth = 0)
 		end
 
-	is_byte (a: INTEGER): BOOLEAN is
+	is_byte (a: INTEGER): BOOLEAN
 			-- Is `a' a byte?
 		do
 			Result := a >= 0 and a < Hex_100
@@ -128,7 +128,7 @@ feature -- Endian-ness detection
 
 feature -- Access
 
-	code (first, second, third, fourth: INTEGER; least_endian: BOOLEAN): INTEGER is
+	code (first, second, third, fourth: INTEGER; least_endian: BOOLEAN): INTEGER
 			-- Code point represented by four bytes
 		require
 			first_is_byte: is_byte (first)
@@ -147,19 +147,19 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Hex_100: INTEGER is 256
+	Hex_100: INTEGER = 256
 			-- 2 ^ 8
 
-	Hex_fe: INTEGER is 254
+	Hex_fe: INTEGER = 254
 			-- Endian detection character
 
-	Hex_ff: INTEGER is 255
+	Hex_ff: INTEGER = 255
 			-- Endian detection character
 
-	Two_byte_offset: INTEGER is 65536
+	Two_byte_offset: INTEGER = 65536
 			-- 256 * 256
 
-	Three_byte_offset: INTEGER is 16777216
+	Three_byte_offset: INTEGER = 16777216
 			-- 256 * 256 * 256
 
 end

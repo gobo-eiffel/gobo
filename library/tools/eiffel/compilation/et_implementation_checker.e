@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new implementation checker for given classes.
 		local
 			l_feature_checker: ET_FEATURE_CHECKER
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			make_with_feature_checker (l_feature_checker)
 		end
 
-	make_with_feature_checker (a_feature_checker: like feature_checker) is
+	make_with_feature_checker (a_feature_checker: like feature_checker)
 			-- Create a new implementation checker for given classes
 			-- using `a_feature_checker' to check the feature implementation
 			-- and their assertions.
@@ -83,7 +83,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_flat_mode (b: BOOLEAN) is
+	set_flat_mode (b: BOOLEAN)
 			-- Set `flat_mode' to `b'.
 		do
 			flat_mode := b
@@ -91,7 +91,7 @@ feature -- Status setting
 			flat_mode_set: flat_mode = b
 		end
 
-	set_flat_dbc_mode (b: BOOLEAN) is
+	set_flat_dbc_mode (b: BOOLEAN)
 			-- Set `flat_dbc_mode' to `b'.
 		do
 			flat_dbc_mode := b
@@ -99,7 +99,7 @@ feature -- Status setting
 			flat_dbc_mode_set: flat_dbc_mode = b
 		end
 
-	set_short_mode (b: BOOLEAN) is
+	set_short_mode (b: BOOLEAN)
 			-- Set `short_mode' to `b'.
 		do
 			short_mode := b
@@ -107,7 +107,7 @@ feature -- Status setting
 			short_mode_set: short_mode = b
 		end
 
-	set_suppliers_enabled (b: BOOLEAN) is
+	set_suppliers_enabled (b: BOOLEAN)
 			-- Set `suppliersproviders_enabled' to `b'.
 		do
 			suppliers_enabled := b
@@ -117,7 +117,7 @@ feature -- Status setting
 
 feature -- Processing
 
-	process_class (a_class: ET_CLASS) is
+	process_class (a_class: ET_CLASS)
 			-- Check interface of `a_class' is not already done.
 			-- Then check the implementation of the immediate and redeclared features
 			-- of `a_class' and its invariants after having done so for its parent
@@ -160,7 +160,7 @@ feature -- Processing
 
 feature -- Error handling
 
-	set_fatal_error (a_class: ET_CLASS) is
+	set_fatal_error (a_class: ET_CLASS)
 			-- Report a fatal error to `a_class'.
 		require
 			a_class_not_void: a_class /= Void
@@ -174,7 +174,7 @@ feature -- Error handling
 
 feature {NONE} -- Processing
 
-	internal_process_class (a_class: ET_CLASS) is
+	internal_process_class (a_class: ET_CLASS)
 			-- Check interface of `a_class' is not already done.
 			-- Then check the implementation of the immediate and redeclared features
 			-- of `a_class' and its invariants after having done so for its parent
@@ -253,7 +253,7 @@ feature {NONE} -- Processing
 
 feature {NONE} -- Feature validity
 
-	check_features_validity (an_error_in_parent: BOOLEAN) is
+	check_features_validity (an_error_in_parent: BOOLEAN)
 			-- Check validity of immediate and redeclared features
 			-- of `current_class' and check validity of inherited features
 			-- of `current_class' if in flat mode (unless `an_error_in_parent' is True).
@@ -310,7 +310,7 @@ feature {NONE} -- Feature validity
 			end
 		end
 
-	check_query_validity (a_query: ET_QUERY; an_error_in_parent: BOOLEAN) is
+	check_query_validity (a_query: ET_QUERY; an_error_in_parent: BOOLEAN)
 			-- Check validity of `a_query' and, if in flat mode (unless
 			-- `an_error_in_parent' is True), recusively of the queries
 			-- associated with its precursor expressions if any.
@@ -335,7 +335,7 @@ feature {NONE} -- Feature validity
 			end
 		end
 
-	check_procedure_validity (a_procedure: ET_PROCEDURE; an_error_in_parent: BOOLEAN) is
+	check_procedure_validity (a_procedure: ET_PROCEDURE; an_error_in_parent: BOOLEAN)
 			-- Check validity of `a_procedure' and, if in flat mode (unless
 			-- `an_error_in_parent' is True), recusively of the procedures
 			-- associated with its precursor instructions if any.
@@ -365,7 +365,7 @@ feature {NONE} -- Feature validity
 
 feature {NONE} -- Precursor validity
 
-	check_precursor_query_validity (a_query: ET_QUERY; an_error_in_parent: BOOLEAN) is
+	check_precursor_query_validity (a_query: ET_QUERY; an_error_in_parent: BOOLEAN)
 			-- Check validity of `a_query' when associated with a precursor
 			-- expression appearing in a query of `current_class'.
 		require
@@ -384,7 +384,7 @@ feature {NONE} -- Precursor validity
 				-- the precursor expression appeared.
 		end
 
-	check_precursor_procedure_validity (a_procedure: ET_PROCEDURE; an_error_in_parent: BOOLEAN) is
+	check_precursor_procedure_validity (a_procedure: ET_PROCEDURE; an_error_in_parent: BOOLEAN)
 			-- Check validity of `a_procedure' when associated with a precursor
 			-- instruction appearing in a procedure of `current_class'.
 		require
@@ -413,7 +413,7 @@ feature {NONE} -- Precursor validity
 
 feature {NONE} -- Assertion validity
 
-	check_assertions_validity (a_feature_impl, a_feature: ET_FEATURE; an_error_in_parent: BOOLEAN) is
+	check_assertions_validity (a_feature_impl, a_feature: ET_FEATURE; an_error_in_parent: BOOLEAN)
 			-- Check validity of pre- and postconditions of `a_feature_impl' in `current_class'.
 			-- `a_feature' is the version of `a_feature_impl' in `current_class' (useful
 			-- when processing inherited assertions).
@@ -468,7 +468,7 @@ feature {NONE} -- Assertion validity
 			end
 		end
 
-	check_invariants_validity (an_error_in_parent: BOOLEAN) is
+	check_invariants_validity (an_error_in_parent: BOOLEAN)
 			-- Check validity of invariants of `current_class',
 			-- and of its proper ancestors in flat mode (unless `an_error_in_parent' is True).
 		local

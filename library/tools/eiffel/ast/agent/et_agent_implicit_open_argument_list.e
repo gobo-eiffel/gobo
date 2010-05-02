@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_AGENT_IMPLICIT_OPEN_ARGUMENT] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_AGENT_IMPLICIT_OPEN_ARGUMENT]
 			-- Fixed array routines
 		once
 			create Result

@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like extended_name; a_type: like declared_type; a_constant: like constant; a_class: like implementation_class) is
+	make (a_name: like extended_name; a_type: like declared_type; a_constant: like constant; a_class: like implementation_class)
 			-- Create a new .NET constant attribute.
 		do
 			precursor (a_name, a_type, a_constant, a_class)
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature -- Duplication
 
-	new_synonym (a_name: like extended_name): like Current is
+	new_synonym (a_name: like extended_name): like Current
 			-- Synonym feature
 		do
 			Result := precursor (a_name)
@@ -58,7 +58,7 @@ feature -- Duplication
 
 feature -- Conversion
 
-	renamed_feature (a_name: like extended_name): like Current is
+	renamed_feature (a_name: like extended_name): like Current
 			-- Renamed version of current feature
 		do
 			Result := precursor (a_name)
@@ -68,7 +68,7 @@ feature -- Conversion
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_dotnet_constant_attribute (Current)

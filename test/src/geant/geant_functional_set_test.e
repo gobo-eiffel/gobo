@@ -22,7 +22,7 @@ create
 
 feature -- Test
 
-	test_set_simple is
+	test_set_simple
 			-- Test task 'set' in it's simplest form.
 		do
  			verbose := True
@@ -36,7 +36,7 @@ feature -- Test
 			basic_test ("test_set_simple")
 		end
 
-	test_set_var is
+	test_set_var
 			-- Test task 'set'
 		do
  			verbose := True
@@ -52,7 +52,7 @@ feature -- Test
 			basic_test ("test_set_var")
 		end
 
-	test_reset_var is
+	test_reset_var
 			-- Test task 'set'
 		do
  			verbose := True
@@ -69,7 +69,7 @@ feature -- Test
 			basic_test ("test_reset_var")
 		end
 
-	test_unset_var is
+	test_unset_var
 			-- Test task 'unset'
 		do
  			verbose := True
@@ -90,7 +90,7 @@ feature -- Test
 			basic_test ("test_unset_var")
 		end
 
-	test_two_levels is
+	test_two_levels
 			-- Test task 'set'
 		do
  			verbose := True
@@ -118,7 +118,7 @@ feature -- Test
 			basic_test ("test_two_levels")
 		end
 
-	test_template0 is
+	test_template0
 			-- Test task 'set'
 		do
  			verbose := True
@@ -135,7 +135,7 @@ feature -- Test
 			basic_test ("test_template0")
 		end
 
-	test_template1 is
+	test_template1
 			-- Test task 'set'
 		do
  			verbose := True
@@ -165,7 +165,7 @@ feature -- Test
 			basic_test ("test_template1")
 		end
 
-	test_template2 is
+	test_template2
 			-- Test task 'set'
 		do
  			verbose := True

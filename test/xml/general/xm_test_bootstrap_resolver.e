@@ -36,7 +36,7 @@ create
 
 feature -- Access
 
-	catalog_name: STRING is 
+	catalog_name: STRING
 			-- URI of test catalog
 		once
 			Result := file_system.nested_pathname ("${GOBO}", <<"test", "xml", "general", "data", "test-catalog-2.xml">>)
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Tests
 
-	test_bootstrap_resolution is
+	test_bootstrap_resolution
 			-- Test parsing a catalog file
 		local
 			a_catalog: XM_CATALOG
@@ -60,6 +60,6 @@ feature -- Tests
 			a_catalog := shared_catalog_manager.retrieved_catalog (catalog_name)
 			assert ("Catalog parsed successfully", a_catalog /= Void)
 		end
-		
+
 end
-	
+

@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; an_operand_two: XM_XPATH_EXPRESSION; a_collator: ST_COLLATOR) is
+	make (an_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; an_operand_two: XM_XPATH_EXPRESSION; a_collator: ST_COLLATOR)
 			-- Establish invariant
 		require
 			operand_1_not_void: an_operand_one /= Void
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Determine the data type of the expression, if possible
 		do
 			Result := type_factory.boolean_type
@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Evaluation
 
-	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT)
 			-- Effective boolean value
 		local
 			l_comparison_checker: XM_XPATH_COMPARISON_CHECKER
@@ -106,23 +106,23 @@ feature -- Evaluation
 			end
 		end
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			calculate_effective_boolean_value (a_context)
 			a_result.put (last_boolean_value)
 		end
-	
+
 feature {NONE} -- Implementation
 
 	atomic_comparer: XM_XPATH_ATOMIC_COMPARER
 			-- Comparer for atomic values
 
-	display_operator: STRING is
+	display_operator: STRING
 			-- Format `operator' for display
 		do
 			Result := STRING_.appended_string ("singleton ", Precursor)
 		end
-	
+
 end
-	
+

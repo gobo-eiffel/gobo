@@ -1,7 +1,7 @@
 note
-	
+
 	description:
-	
+
 		"Objects that receive the results of one transformation, and pass them to another"
 
 	library: "Gobo Eiffel XSLT Library"
@@ -11,7 +11,7 @@ note
 	revision: "$Revision$"
 
 class	XM_XSLT_TRANSFORMER_RECEIVER
-	
+
 inherit
 
 	XM_XPATH_TRANSFORMER
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_transformer: like transformer; a_system_id: like base_uri; a_destination: like next_destination) is
+	make (a_transformer: like transformer; a_system_id: like base_uri; a_destination: like next_destination)
 			-- Establish invariant.
 		require
 			transformer_not_void: a_transformer /= Void
@@ -59,15 +59,15 @@ feature -- Access
 	builder: XM_XPATH_BUILDER
 			-- Document builder
 
-	document_pool: XM_XPATH_DOCUMENT_POOL is
+	document_pool: XM_XPATH_DOCUMENT_POOL
 			-- Document pool
 		do
 			Result := transformer.document_pool
 		end
 
 feature -- Events
-	
-	close is
+
+	close
 			-- Notify the end of event stream.
 		local
 			a_document: XM_XPATH_DOCUMENT
@@ -88,8 +88,8 @@ feature -- Events
 		end
 
 invariant
-	
+
 	transformer_not_void: transformer /= Void
 
 end
-	
+

@@ -22,7 +22,7 @@ create
 
 feature -- Status report
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- Can command be executed?
 		do
 			Result := (executable /= Void and then executable.count > 0) and
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_executable (an_executable: like executable) is
+	set_executable (an_executable: like executable)
 			-- Set `executable' to `an_executable'.
 		require
 			an_executable_not_void: an_executable /= Void
@@ -55,7 +55,7 @@ feature -- Setting
 			executable_set: executable = an_executable
 		end
 
-	set_source_filename (a_filename: like source_filename) is
+	set_source_filename (a_filename: like source_filename)
 			-- Set `source_filename' to `a_filename'.
 		require
 			a_filename_not_void: a_filename /= Void
@@ -68,7 +68,7 @@ feature -- Setting
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute command.
 		local
 			cmd: STRING

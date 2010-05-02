@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_pathname: like pathname) is
+	make (a_pathname: like pathname)
 			-- Create a new external include.
 		require
 			a_pathname_not_void: a_pathname /= Void
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Element change
 
-	fill_external_includes (a_system: ET_SYSTEM; a_state: ET_ECF_STATE) is
+	fill_external_includes (a_system: ET_SYSTEM; a_state: ET_ECF_STATE)
 			-- Add to `a_system' the current external include pathname
 			-- of conditions satisfy `a_state'.
 		require

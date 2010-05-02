@@ -22,7 +22,7 @@ create
 
 feature -- Test
 
-	test_default_create is
+	test_default_create
 			-- Test feature 'default_create'.
 		local
 			bref: BOOLEAN_REF
@@ -32,7 +32,7 @@ feature -- Test
 			assert ("default", bref.item = False)
 		end
 
-	test_out is
+	test_out
 			-- Test feature 'out'.
 		local
 			bref: BOOLEAN_REF
@@ -52,7 +52,7 @@ feature -- Test
 			assert ("new_string2", l_out /= bref.out)
 		end
 
-	test_item is
+	test_item
 			-- Test feature 'item'.
 		local
 			bref: BOOLEAN_REF
@@ -63,7 +63,7 @@ feature -- Test
 			assert ("item2", bref.item = False)
 		end
 
-	test_set_item is
+	test_set_item
 			-- Test feature 'set_item'.
 		local
 			bref: BOOLEAN_REF
@@ -75,7 +75,7 @@ feature -- Test
 			assert ("item2", bref.item = False)
 		end
 
-	test_is_hashable is
+	test_is_hashable
 			-- Test feature 'is_hashable'.
 		local
 			bref: BOOLEAN_REF
@@ -86,7 +86,7 @@ feature -- Test
 			assert ("false_hashable", bref.is_hashable)
 		end
 
-	test_hash_code is
+	test_hash_code
 			-- Test feature 'hash_code'.
 		local
 			bref1, bref2: BOOLEAN_REF
@@ -99,7 +99,7 @@ feature -- Test
 			assert ("hash_code2", bref1.hash_code = bref2.hash_code)
 		end
 
-	test_to_integer is
+	test_to_integer
 			-- Test feature 'to_integer'.
 		local
 			bref: BOOLEAN_REF
@@ -110,7 +110,7 @@ feature -- Test
 			assert_integers_equal ("to_integer2", 0, bref.to_integer)
 		end
 
-	test_to_reference is
+	test_to_reference
 			-- Test feature 'to_reference'.
 		local
 			bref1, bref2: BOOLEAN_REF
@@ -125,7 +125,7 @@ feature -- Test
 			assert ("item2", bref2.item = False)
 		end
 
-	test_conjuncted is
+	test_conjuncted
 			-- Test feature 'conjuncted alias "and"'.
 		local
 			b1, b2: BOOLEAN_REF
@@ -149,7 +149,7 @@ feature -- Test
 			assert ("and4", b3 = False)
 		end
 
-	test_conjuncted_semistrict is
+	test_conjuncted_semistrict
 			-- Test feature 'conjuncted_semistrict alias "and then"'.
 		local
 			b1, b2: BOOLEAN_REF
@@ -173,7 +173,7 @@ feature -- Test
 			assert ("and_then4", b3 = False)
 		end
 
-	test_disjuncted is
+	test_disjuncted
 			-- Test feature 'disjuncted alias "or"'.
 		local
 			b1, b2: BOOLEAN_REF
@@ -197,7 +197,7 @@ feature -- Test
 			assert ("or4", b3 = False)
 		end
 
-	test_disjuncted_semistrict is
+	test_disjuncted_semistrict
 			-- Test feature 'disjuncted_semistrict alias "or else"'.
 		local
 			b1, b2: BOOLEAN_REF
@@ -221,7 +221,7 @@ feature -- Test
 			assert ("or_else4", b3 = False)
 		end
 
-	test_disjuncted_exclusive is
+	test_disjuncted_exclusive
 			-- Test feature 'disjuncted_exclusive alias "xor"'.
 		local
 			b1, b2: BOOLEAN_REF
@@ -245,7 +245,7 @@ feature -- Test
 			assert ("xor4", b3 = False)
 		end
 
-	test_implication is
+	test_implication
 			-- Test feature 'implication alias "implies"'.
 		local
 			b1, b2: BOOLEAN_REF
@@ -269,7 +269,7 @@ feature -- Test
 			assert ("implies4", b3 = True)
 		end
 
-	test_negated is
+	test_negated
 			-- Test feature 'negated alias "not"'.
 		local
 			bref1, bref2: BOOLEAN_REF

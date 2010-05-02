@@ -22,7 +22,7 @@ feature -- Access
 			-- Current cluster for which the SCM mapping
 			-- have been specified
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			Result := current_cluster.hash_code

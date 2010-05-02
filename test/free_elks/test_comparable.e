@@ -22,34 +22,34 @@ create
 
 feature -- Test
 
-	test_is_equal1 is
+	test_is_equal1
 			-- Test feature `is_equal'.
 		local
 			a_comparable: COMPARABLE
 		do
 			a_comparable := "bar"
-			assert ("is_equal1", a_comparable.is_equal ("bar")) 
-			assert ("not_is_equal1", not a_comparable.is_equal ("foo")) 
-			assert ("not_is_equal2", not a_comparable.is_equal ("ba")) 
-			assert ("not_is_equal3", not a_comparable.is_equal ("bart")) 
+			assert ("is_equal1", a_comparable.is_equal ("bar"))
+			assert ("not_is_equal1", not a_comparable.is_equal ("foo"))
+			assert ("not_is_equal2", not a_comparable.is_equal ("ba"))
+			assert ("not_is_equal3", not a_comparable.is_equal ("bart"))
 			a_comparable := ""
-			assert ("is_equal2", a_comparable.is_equal ("")) 
-			assert ("not_is_equal4", not a_comparable.is_equal ("foo")) 
+			assert ("is_equal2", a_comparable.is_equal (""))
+			assert ("not_is_equal4", not a_comparable.is_equal ("foo"))
 		end
 
-	test_is_equal2 is
+	test_is_equal2
 			-- Test feature `is_equal'.
 		local
 			a_comparable: INTEGER
 		do
 			a_comparable := 10
-			assert ("is_equal1", a_comparable.is_equal (10)) 
-			assert ("not_is_equal1", not a_comparable.is_equal (5)) 
-			assert ("not_is_equal2", not a_comparable.is_equal (11)) 
-			assert ("not_is_equal3", not a_comparable.is_equal (0)) 
+			assert ("is_equal1", a_comparable.is_equal (10))
+			assert ("not_is_equal1", not a_comparable.is_equal (5))
+			assert ("not_is_equal2", not a_comparable.is_equal (11))
+			assert ("not_is_equal3", not a_comparable.is_equal (0))
 		end
 
-	test_is_less1 is
+	test_is_less1
 			-- Test feature `is_less alias "<"'.
 		local
 			a_comparable, a_comparable2: COMPARABLE
@@ -73,7 +73,7 @@ feature -- Test
 			assert ("not_less6", not (a_comparable2 < a_comparable))
 		end
 
-	test_is_less2 is
+	test_is_less2
 			-- Test feature `is_less alias "<"'.
 		local
 			a_comparable, a_comparable2: INTEGER
@@ -97,7 +97,7 @@ feature -- Test
 			assert ("not_less6", not (a_comparable2 < a_comparable))
 		end
 
-	test_is_less_equal1 is
+	test_is_less_equal1
 			-- Test feature `is_less_equal alias "<="'.
 		local
 			a_comparable, a_comparable2: COMPARABLE
@@ -121,7 +121,7 @@ feature -- Test
 			assert ("less6", a_comparable2 <= a_comparable)
 		end
 
-	test_is_less_equal2 is
+	test_is_less_equal2
 			-- Test feature `is_less_equal alias "<="'.
 		local
 			a_comparable, a_comparable2: INTEGER
@@ -145,7 +145,7 @@ feature -- Test
 			assert ("less6", a_comparable2 <= a_comparable)
 		end
 
-	test_is_greater1 is
+	test_is_greater1
 			-- Test feature `is_greater alias ">"'.
 		local
 			a_comparable, a_comparable2: COMPARABLE
@@ -169,7 +169,7 @@ feature -- Test
 			assert ("not_greater6", not (a_comparable2 > a_comparable))
 		end
 
-	test_is_greater2 is
+	test_is_greater2
 			-- Test feature `is_greater alias ">"'.
 		local
 			a_comparable, a_comparable2: INTEGER
@@ -193,7 +193,7 @@ feature -- Test
 			assert ("not_greater6", not (a_comparable2 > a_comparable))
 		end
 
-	test_is_greater_equal1 is
+	test_is_greater_equal1
 			-- Test feature `is_greater_equal alias ">="'.
 		local
 			a_comparable, a_comparable2: COMPARABLE
@@ -217,7 +217,7 @@ feature -- Test
 			assert ("greater6", a_comparable2 >= a_comparable)
 		end
 
-	test_is_greater_equal2 is
+	test_is_greater_equal2
 			-- Test feature `is_greater_equal alias ">="'.
 		local
 			a_comparable, a_comparable2: INTEGER
@@ -241,7 +241,7 @@ feature -- Test
 			assert ("greater6", a_comparable2 >= a_comparable)
 		end
 
-	test_min1 is
+	test_min1
 			-- Test feature `min'.
 		local
 			a_comparable, a_comparable2: STRING
@@ -261,10 +261,10 @@ feature -- Test
 			assert_same ("min7", a_comparable2, a_comparable2.min (a_comparable))
 		end
 
-	test_min2 is
+	test_min2
 			-- Test feature `min'.
 		local
-			a_comparable, a_comparable2: INTEGER 
+			a_comparable, a_comparable2: INTEGER
 		do
 			a_comparable := 5
 			a_comparable2 := 10
@@ -281,7 +281,7 @@ feature -- Test
 			assert_integers_equal ("min7", a_comparable2, a_comparable2.min (a_comparable))
 		end
 
-	test_max1 is
+	test_max1
 			-- Test feature `max'.
 		local
 			a_comparable, a_comparable2: STRING
@@ -301,7 +301,7 @@ feature -- Test
 			assert_same ("max7", a_comparable2, a_comparable2.max (a_comparable))
 		end
 
-	test_max2 is
+	test_max2
 			-- Test feature `max'.
 		local
 			a_comparable, a_comparable2: INTEGER
@@ -321,7 +321,7 @@ feature -- Test
 			assert_integers_equal ("max7", a_comparable2, a_comparable2.max (a_comparable))
 		end
 
-	test_three_way_comparison1 is
+	test_three_way_comparison1
 			-- Test feature `three_way_comparison'.
 		local
 			a_comparable, a_comparable2: COMPARABLE
@@ -341,7 +341,7 @@ feature -- Test
 			assert_integers_equal ("compare7", 0, a_comparable2.three_way_comparison (a_comparable))
 		end
 
-	test_three_way_comparison2 is
+	test_three_way_comparison2
 			-- Test feature `three_way_comparison'.
 		local
 			a_comparable, a_comparable2: INTEGER

@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER; n: INTEGER) is
+	make (filename: STRING; line: INTEGER; n: INTEGER)
 			-- Create a new error reporting that %error(`n') has
 			-- been used in a rule but `n' is not a valid index
 			-- for the rhs of the corresponding rule.
@@ -37,10 +37,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: invalid use of %%error($3) in rule"
+	default_template: STRING = "%"$1%", line $2: invalid use of %%error($3) in rule"
 			-- Default template used to built the error message
 
-	code: STRING is "PR0025"
+	code: STRING = "PR0025"
 			-- Error code
 
 invariant

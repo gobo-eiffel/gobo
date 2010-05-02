@@ -24,7 +24,7 @@ create
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset creators as they were when they were last parsed.
 		local
 			i, nb: INTEGER
@@ -38,7 +38,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	is_exported_to (a_name: ET_FEATURE_NAME; a_client: ET_CLASS): BOOLEAN is
+	is_exported_to (a_name: ET_FEATURE_NAME; a_client: ET_CLASS): BOOLEAN
 			-- Is feature name listed in current creation clauses
 			-- and is it exported to `a_client'?
 			-- (Note: Use `current_system.ancestor_builder' on the classes whose ancestors
@@ -60,7 +60,7 @@ feature -- Status report
 			end
 		end
 
-	is_directly_exported_to (a_name: ET_FEATURE_NAME; a_client: ET_CLASS): BOOLEAN is
+	is_directly_exported_to (a_name: ET_FEATURE_NAME; a_client: ET_CLASS): BOOLEAN
 			-- Is feature name listed in current creation clauses
 			-- and is it directly_exported to `a_client'?
 			-- This is different from `is_exported_to' where `a_client' can
@@ -86,7 +86,7 @@ feature -- Status report
 
 feature -- Access
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -97,7 +97,7 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			if not is_empty then
@@ -105,7 +105,7 @@ feature -- Access
 			end
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			if not is_empty then
@@ -113,7 +113,7 @@ feature -- Access
 			end
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			if not is_empty then
@@ -123,7 +123,7 @@ feature -- Access
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_creator_list (Current)
@@ -131,7 +131,7 @@ feature -- Processing
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_CREATOR] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_CREATOR]
 			-- Fixed array routines
 		once
 			create Result

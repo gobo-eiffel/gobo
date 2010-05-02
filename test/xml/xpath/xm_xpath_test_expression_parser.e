@@ -33,7 +33,7 @@ create
 
 feature -- Test
 
-	test_simple_filtered_path is
+	test_simple_filtered_path
 		local
 			an_expression: XM_XPATH_EXPRESSION
 			a_path: XM_XPATH_PATH_EXPRESSION
@@ -106,10 +106,10 @@ feature -- Test
 			an_expression := sub_exprs_4.item (2)
 			a_string_value ?= an_expression
 			assert ("String-value is Jim", a_string_value /= Void and then STRING_.same_string (a_string_value.string_value, "Jim"))
-			
+
 		end
 
-	test_filtered_path_two is
+	test_filtered_path_two
 		local
 			an_expression: XM_XPATH_EXPRESSION
 			a_path: XM_XPATH_PATH_EXPRESSION
@@ -184,7 +184,7 @@ feature -- Test
 			assert ("Last function", a_last_function /= Void)
 		end
 
-	test_parse_error is
+	test_parse_error
 			-- Test detection of parse errors
 		local
 			a_context: XM_XPATH_STAND_ALONE_CONTEXT

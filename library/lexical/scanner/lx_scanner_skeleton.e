@@ -14,7 +14,7 @@ deferred class LX_SCANNER_SKELETON
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new scanner with
 			-- standard input as input file.
 		do
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset scanner before scanning next input source.
 		do
 		end
@@ -42,7 +42,7 @@ feature -- Access
 
 feature -- Status report
 
-	end_of_file: BOOLEAN is
+	end_of_file: BOOLEAN
 			-- Has the end of input buffer been reached?
 			-- This means that `last_token' has been set
 			-- to 0 indicating "all done".
@@ -50,19 +50,19 @@ feature -- Status report
 			Result := (last_token = 0)
 		end
 
-	scanning_error: BOOLEAN is
+	scanning_error: BOOLEAN
 			-- Has an error occurred during scanning?
 			-- This can occur when too many `reject' are called (and hence
 			-- nothing can be matched anymore) or when the option "nodefault"
 			-- (or option -s) has been specified but the default rule is
-			-- matched nevertheless. 
+			-- matched nevertheless.
 		do
 			Result := (last_token < 0)
 		end
 
 feature -- Setting
 
-	set_last_token (a_token: INTEGER) is
+	set_last_token (a_token: INTEGER)
 			-- Set `last_token' to `a_token'.
 		do
 			last_token := a_token
@@ -72,7 +72,7 @@ feature -- Setting
 
 feature -- Scanning
 
-	scan is
+	scan
 			-- Scan `input_buffer' until end of file is found.
 		do
 			from
@@ -86,7 +86,7 @@ feature -- Scanning
 			end_of_file: not scanning_error implies end_of_file
 		end
 
-	read_token is
+	read_token
 			-- Read a token from `input_buffer'.
 			-- Make result available in `last_token'.
 		deferred
@@ -94,7 +94,7 @@ feature -- Scanning
 
 feature -- Element change
 
-	read_character is
+	read_character
 			-- Read next character in `input_buffer'.
 			-- Make result available in `last_character'.
 		do
@@ -121,7 +121,7 @@ feature -- Input
 	input_buffer: LX_BUFFER
 			-- Input buffer
 
-	set_input_buffer (a_buffer: like input_buffer) is
+	set_input_buffer (a_buffer: like input_buffer)
 			-- Set `input_buffer' to `a_buffer'.
 		require
 			a_buffer_not_void: a_buffer /= Void
@@ -142,7 +142,7 @@ feature -- Input
 			input_buffer_set: input_buffer = a_buffer
 		end
 
-	new_file_buffer (a_file: KI_CHARACTER_INPUT_STREAM): LX_FILE_BUFFER is
+	new_file_buffer (a_file: KI_CHARACTER_INPUT_STREAM): LX_FILE_BUFFER
 			-- New input buffer for `a_file'
 		require
 			a_file_not_void: a_file /= Void
@@ -153,7 +153,7 @@ feature -- Input
 			new_buffer_not_void: Result /= Void
 		end
 
-	new_string_buffer (a_string: STRING): LX_BUFFER is
+	new_string_buffer (a_string: STRING): LX_BUFFER
 			-- New input buffer for `a_string'
 		require
 			a_string_not_void: a_string /= Void
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 	yy_count: INTEGER
 			-- Number of characters in `yy_content'
 
-	yy_refill_input_buffer is
+	yy_refill_input_buffer
 			-- Refill `input_buffer'.
 		do
 			input_buffer.refill
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	EOF: CHARACTER is '%U'
+	EOF: CHARACTER = '%U'
 			-- Enf of file character
 			-- (Do not use '%/255/' because of a bug in ISE 4.2.)
 

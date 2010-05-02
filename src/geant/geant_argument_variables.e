@@ -22,7 +22,7 @@ create
 
 feature -- Status report
 
-	has_numbered_keys: BOOLEAN is
+	has_numbered_keys: BOOLEAN
 			-- Do entries exist which indicate that Current contains only numbered entries?
 		do
 			Result := has ("1")

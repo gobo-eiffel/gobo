@@ -27,14 +27,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new character entity.
 		do
 		end
 
 feature -- Initialization
 
-	from_decimal (a_string: STRING) is
+	from_decimal (a_string: STRING)
 			-- Set entity from decimal representation.
 		require
 			a_string_not_void: a_string /= Void
@@ -43,7 +43,7 @@ feature -- Initialization
 			code := a_string.to_integer
 		end
 
-	from_hexadecimal (a_string: STRING) is
+	from_hexadecimal (a_string: STRING)
 			-- Set entity from hexadecimal representation.
 		require
 			a_string_not_void: a_string /= Void
@@ -52,7 +52,7 @@ feature -- Initialization
 			code := STRING_.hexadecimal_to_integer (a_string)
 		end
 
-	from_code (a_code: INTEGER) is
+	from_code (a_code: INTEGER)
 			-- Set entity from integer code.
 		require
 			a_code_positive: a_code >= 0
@@ -69,7 +69,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is this entity representing a valid XML character?
 		do
 			if unicode.valid_non_surrogate_code (code) then
@@ -85,7 +85,7 @@ feature -- Status report
 			valid_unicode: Result implies unicode.valid_code (code)
 		end
 
-	is_ascii: BOOLEAN is
+	is_ascii: BOOLEAN
 			-- Is this entity representing an ASCII character?
 		do
 			Result := code <= 127
@@ -95,7 +95,7 @@ feature -- Status report
 
 feature -- Conversion
 
-	to_character: CHARACTER is
+	to_character: CHARACTER
 			-- Character represented by entity
 		require
 			is_valid: is_valid
@@ -106,7 +106,7 @@ feature -- Conversion
 			same_code: Result.code = code
 		end
 
-	to_utf8: STRING is
+	to_utf8: STRING
 			-- UTF-8 string from character code
 		require
 			valid: is_valid

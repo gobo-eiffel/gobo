@@ -51,7 +51,7 @@ create
 
 feature {NONE} -- Inialization
 
-	make (a_name: like name; a_pathname: like pathname; a_system: ET_SYSTEM) is
+	make (a_name: like name; a_pathname: like pathname; a_system: ET_SYSTEM)
 			-- Create a new .NET assembly.
 		require
 			a_name_not_void: a_name /= Void
@@ -69,16 +69,16 @@ feature {NONE} -- Inialization
 
 feature -- Status report
 
-	is_dotnet_assembly: BOOLEAN is True
+	is_dotnet_assembly: BOOLEAN = True
 			-- Is current group a .NET assembly?
 
-	is_override: BOOLEAN is False
+	is_override: BOOLEAN = False
 			-- Is current group an override group?
 			-- In other words, do classes in this group and other override
 			-- groups take precedence over classes with same names but in
 			-- non-override group? (see 'override_cluster' in ISE's LACE.)
 
-	is_read_only: BOOLEAN is True
+	is_read_only: BOOLEAN = True
 			-- Is current group a read-only group?
 			-- In other words, are changes in this group and in its classes
 			-- not taken into account when repreparsing or reparsing
@@ -101,7 +101,7 @@ feature -- Access
 	referenced_assemblies: ET_DOTNET_ASSEMBLIES
 			-- .NET assemblies that current universe depends on
 
-	adapted_universe (a_universe: ET_UNIVERSE): ET_ADAPTED_UNIVERSE is
+	adapted_universe (a_universe: ET_UNIVERSE): ET_ADAPTED_UNIVERSE
 			-- Adapted version of `a_universe' viewed from current universe
 			-- when it depends on it, Void otherwise
 			--
@@ -120,7 +120,7 @@ feature -- Access
 	dotnet_assembly: ET_DOTNET_ASSEMBLY
 			-- .NET assembly being adapted
 
-	universe: ET_UNIVERSE is
+	universe: ET_UNIVERSE
 			-- Surrounding universe
 		do
 			Result := Current
@@ -128,7 +128,7 @@ feature -- Access
 			definition: Result = Current
 		end
 
-	kind_name: STRING is
+	kind_name: STRING
 			-- Name of the kind of group or universe (e.g. "cluster", "assembly", "library", etc.)
 		once
 			Result := "assembly"
@@ -136,7 +136,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_implicit (b: BOOLEAN) is
+	set_implicit (b: BOOLEAN)
 			-- Set `is_implicit' to `b'.
 		do
 			is_implicit := b
@@ -146,7 +146,7 @@ feature -- Status setting
 
 feature -- Setting
 
-	set_classname_mapping (a_mapping: like classname_mapping) is
+	set_classname_mapping (a_mapping: like classname_mapping)
 			-- Set `classname_mapping' to `a_mapping'.
 		require
 			no_void_classname: a_mapping /= Void implies not a_mapping.has_void_item
@@ -156,7 +156,7 @@ feature -- Setting
 			classname_mapping_set: classname_mapping = a_mapping
 		end
 
-	set_referenced_assemblies (a_assemblies: like referenced_assemblies) is
+	set_referenced_assemblies (a_assemblies: like referenced_assemblies)
 			-- Set `referenced_assemblies' to `a_assemblies'.
 		require
 			a_assemblies_not_void: a_assemblies /= Void
@@ -168,7 +168,7 @@ feature -- Setting
 
 feature -- Nested
 
-	parent: ET_DOTNET_ASSEMBLY is
+	parent: ET_DOTNET_ASSEMBLY
 			-- Parent group
 		do
 			-- Result := Void
@@ -176,13 +176,13 @@ feature -- Nested
 
 feature -- Iteration
 
-	universes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]) is
+	universes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]])
 			-- Apply `an_action' to every universe that current universe depends on.
 		do
 			referenced_assemblies.universes_do_all (an_action)
 		end
 
-	universes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_test: FUNCTION [ANY, TUPLE [ET_UNIVERSE], BOOLEAN]) is
+	universes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_test: FUNCTION [ANY, TUPLE [ET_UNIVERSE], BOOLEAN])
 			-- Apply `an_action' to every universe that current universe depends on and
 			-- which satisfies `a_test'.
 		do
@@ -191,7 +191,7 @@ feature -- Iteration
 
 feature -- Relations
 
-	add_universe_recursive (a_visited: DS_HASH_SET [ET_UNIVERSE]) is
+	add_universe_recursive (a_visited: DS_HASH_SET [ET_UNIVERSE])
 			-- Add current universe to `a_visited' and
 			-- recursively the universes it depends on.
 		do
@@ -201,7 +201,7 @@ feature -- Relations
 			end
 		end
 
-	add_dotnet_assembly_recursive (a_visited: DS_HASH_SET [ET_DOTNET_ASSEMBLY]) is
+	add_dotnet_assembly_recursive (a_visited: DS_HASH_SET [ET_DOTNET_ASSEMBLY])
 			-- Add current .NET assembly to `a_visited' and
 			-- recursively the .NET assemblies it depends on.
 		require
@@ -215,7 +215,7 @@ feature -- Relations
 
 feature {ET_DOTNET_ASSEMBLY_CONSUMER} -- Parsing
 
-	set_preparsed (b: BOOLEAN) is
+	set_preparsed (b: BOOLEAN)
 			-- Set `is_preparsed' to `b'.
 		do
 			is_preparsed := b
@@ -225,7 +225,7 @@ feature {ET_DOTNET_ASSEMBLY_CONSUMER} -- Parsing
 
 feature {ET_UNIVERSE} -- Parsing
 
-	import_classes is
+	import_classes
 			-- Import classes made available (i.e. exported) by other universes.
 		do
 			import_kernel_classes
@@ -236,7 +236,7 @@ feature {ET_UNIVERSE} -- Parsing
 			end
 		end
 
-	import_kernel_classes is
+	import_kernel_classes
 			-- Import kernel classes.
 		do
 			import_kernel_class (tokens.any_class_name)
@@ -258,7 +258,7 @@ feature {ET_UNIVERSE} -- Parsing
 			import_kernel_class (tokens.native_array_class_name)
 		end
 
-	import_kernel_class (a_class_name: ET_CLASS_NAME) is
+	import_kernel_class (a_class_name: ET_CLASS_NAME)
 			-- Import kernel class `a_class_name'.
 		require
 			a_class_name_not_void: a_class_name /= Void
@@ -275,7 +275,7 @@ feature {ET_UNIVERSE} -- Parsing
 
 feature {ET_DOTNET_ASSEMBLY_CONSUMER} -- Consuming
 
-	consume (a_consumer: ET_DOTNET_ASSEMBLY_CONSUMER) is
+	consume (a_consumer: ET_DOTNET_ASSEMBLY_CONSUMER)
 			-- Consume current assembly using `a_consumer'.
 		require
 			a_consumer_not_void: a_consumer /= Void

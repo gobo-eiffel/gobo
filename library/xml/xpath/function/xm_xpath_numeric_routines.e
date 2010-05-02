@@ -21,7 +21,7 @@ inherit
 
 feature -- Conversion
 
-	item_to_double (a_item: XM_XPATH_ITEM): XM_XPATH_DOUBLE_VALUE is
+	item_to_double (a_item: XM_XPATH_ITEM): XM_XPATH_DOUBLE_VALUE
 			-- `an_item' as a double
 		do
 			if a_item = Void then

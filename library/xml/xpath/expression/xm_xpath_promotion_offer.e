@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_requested_action: INTEGER; a_binding_list: DS_LIST [XM_XPATH_BINDING]; containing: XM_XPATH_EXPRESSION; eliminate: BOOLEAN; dependent: BOOLEAN) is
+	make (a_requested_action: INTEGER; a_binding_list: DS_LIST [XM_XPATH_BINDING]; containing: XM_XPATH_EXPRESSION; eliminate: BOOLEAN; dependent: BOOLEAN)
 			-- Set defaults.
 		require
 			action: a_requested_action = Range_independent
@@ -102,7 +102,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	disallow_promoting_xslt_functions is
+	disallow_promoting_xslt_functions
 			-- Disallow promotion of XSLT functions such as current().
 		do
 			may_promote_xslt_functions := False
@@ -112,7 +112,7 @@ feature -- Status setting
 
 feature -- Optimization
 
-	accept (a_child_expression: XM_XPATH_EXPRESSION) is
+	accept (a_child_expression: XM_XPATH_EXPRESSION)
 			-- Test whether a subexpression qualifies for promotion, and if so, accept the promotion
 		require
 			sub_expression_dependencies_and_cardinalities_computed: a_child_expression /= Void and then a_child_expression.are_dependencies_computed and then a_child_expression.are_cardinalities_computed
@@ -178,7 +178,7 @@ feature -- Optimization
 
 feature -- Element change
 
-	set_containing_expression (exp:  XM_XPATH_EXPRESSION) is
+	set_containing_expression (exp:  XM_XPATH_EXPRESSION)
 			-- Set `containing_expression'.
 		require
 			expression_not_void: exp /= Void
@@ -188,7 +188,7 @@ feature -- Element change
 			set: containing_expression = exp
 		end
 
-	set_binding_list (a_list: like binding_list) is
+	set_binding_list (a_list: like binding_list)
 			-- Set `binding_list'
 		require
 			list_not_empty: a_list /= Void and then a_list.count > 0
@@ -204,7 +204,7 @@ feature {NONE} -- Implementation
 	promoted_expression: XM_XPATH_EXPRESSION
 			-- Result from `promote'
 
-	promote (a_child_expression: XM_XPATH_EXPRESSION) is
+	promote (a_child_expression: XM_XPATH_EXPRESSION)
 			-- Promote `a_child_expression'
 		require
 			sub_expression_cardinalities_computed: a_child_expression /= Void and then a_child_expression.are_cardinalities_computed
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 			set_containing_expression (a_let_expression)
 		end
 
-	depends_upon_variable (a_child_expression: XM_XPATH_EXPRESSION; a_binding_list: DS_LIST [XM_XPATH_BINDING]):BOOLEAN is
+	depends_upon_variable (a_child_expression: XM_XPATH_EXPRESSION; a_binding_list: DS_LIST [XM_XPATH_BINDING]):BOOLEAN
 			-- Does `a_child_expression' depend upon `a_binding'?
 		require
 			child_not_void: a_child_expression /= Void

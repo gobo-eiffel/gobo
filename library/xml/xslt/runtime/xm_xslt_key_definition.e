@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 	make (an_executable: like executable; a_match: XM_XSLT_PATTERN; a_usage_expression: like body;
 			a_collator: ST_COLLATOR; a_collation_uri: STRING; a_line_number: like line_number;
-			a_system_id: like system_id; a_slot_manager: like slot_manager) is
+			a_system_id: like system_id; a_slot_manager: like slot_manager)
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
@@ -69,22 +69,22 @@ feature -- Access
 
 feature -- Setting
 
-	set_backwards_compatible is
+	set_backwards_compatible
 			-- Set `is_backwards_compatible_mode' to `True'.
 		do
 			is_backwards_compatible_mode := True
 		ensure
 			set: is_backwards_compatible_mode
 		end
-				
+
 feature -- Element change
-	
-	allocate_slots is
+
+	allocate_slots
 			-- Allocate slot numbers for all range variable in `body' and it's sub-expresions.
 		do
 			body.allocate_slots (1, slot_manager)
 		end
-											  
+
 invariant
 
 	match: match /= Void

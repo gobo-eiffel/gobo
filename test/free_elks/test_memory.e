@@ -24,7 +24,7 @@ create
 
 feature -- Test
 
-	test_is_in_final_collect is
+	test_is_in_final_collect
 			-- Test feature 'is_in_final_collect'.
 		do
 			assert ("is_in_final_collect1", not is_in_final_collect)

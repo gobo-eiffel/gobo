@@ -25,7 +25,7 @@ create {XM_XPATH_VENN_EXPRESSION, XM_XPATH_INTERSECTION_ENUMERATION}
 
 feature {NONE} -- Initialization
 
-	make (a_iterator, a_other_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; a_comparer: XM_XPATH_GLOBAL_ORDER_COMPARER) is
+	make (a_iterator, a_other_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; a_comparer: XM_XPATH_GLOBAL_ORDER_COMPARER)
 		require
 			first_iterator_before: a_iterator /= Void and then not a_iterator.is_error and then a_iterator.before
 			second_iterator_before: a_other_iterator /= Void and then not a_other_iterator.is_error and then a_other_iterator.before
@@ -53,17 +53,17 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
+
 	item: XM_XPATH_NODE
 			-- Value or node at the current position
 
-	is_node_iterator: BOOLEAN is
+	is_node_iterator: BOOLEAN
 			-- Does `Current' yield a node_sequence?
 		do
 			Result := True
 		end
 
-	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
 		do
 			Result ?= ANY_.to_any (Current)
@@ -71,7 +71,7 @@ feature -- Access
 
 feature -- Status report
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
 			Result := not before and item = Void
@@ -79,7 +79,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move to next position
 		local
 			l_comparison: INTEGER
@@ -137,14 +137,14 @@ feature -- Cursor movement
 						item := Void
 					else
 						second_node := second_iterator.item
-					end					
+					end
 				end
 			end
 		end
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 			create Result.make (first_iterator.another, second_iterator.another, comparer)
@@ -163,10 +163,10 @@ feature {NONE} -- Implementation
 
 	first_node: XM_XPATH_NODE
 			-- Last inspected node from `first_iterator'
-	
+
 	second_node: XM_XPATH_NODE
 			-- Last inspected node from `second_iterator'
-	
+
 invariant
 
 	first_iterator_not_void: first_iterator /= Void

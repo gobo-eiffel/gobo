@@ -24,13 +24,13 @@ create
 
 feature -- Status report
 
-	write_to_console: BOOLEAN is False
+	write_to_console: BOOLEAN = False
 			-- Set this boolean to true to have this
 			-- test actually write to the console.
 
 feature -- Test
 
-	test_make is
+	test_make
 			-- Test feature `make'.
 		local
 			a_file: KL_STDOUT_FILE
@@ -41,7 +41,7 @@ feature -- Test
 			assert ("is_open", a_file.is_open_write)
 		end
 
-	test_eol is
+	test_eol
 			-- Test feature `eol'.
 		local
 			a_file: KL_STDOUT_FILE
@@ -50,7 +50,7 @@ feature -- Test
 			assert_equal ("eol", "%N", a_file.eol)
 		end
 
-	test_put_character is
+	test_put_character
 			-- Test feature `put_character'.
 		local
 			a_file: KL_STDOUT_FILE
@@ -78,7 +78,7 @@ feature -- Test
 			end
 		end
 
-	test_put_string is
+	test_put_string
 			-- Test feature `put_string'.
 		local
 			a_file: KL_STDOUT_FILE
@@ -100,7 +100,7 @@ feature -- Test
 			end
 		end
 
-	test_put_integer is
+	test_put_integer
 			-- Test feature `put_integer'.
 		local
 			a_file: KL_STDOUT_FILE
@@ -127,7 +127,7 @@ feature -- Test
 			end
 		end
 
-	test_put_boolean is
+	test_put_boolean
 			-- Test feature `put_boolean'.
 		local
 			a_file: KL_STDOUT_FILE
@@ -150,7 +150,7 @@ feature -- Test
 			end
 		end
 
-	test_put_line is
+	test_put_line
 			-- Test feature `put_line'.
 		local
 			a_file: KL_STDOUT_FILE
@@ -175,7 +175,7 @@ feature -- Test
 			end
 		end
 
-	test_put_new_line is
+	test_put_new_line
 			-- Test feature `put_new_line'.
 		local
 			a_file: KL_STDOUT_FILE
@@ -202,7 +202,7 @@ feature -- Test
 			end
 		end
 
-	test_flush is
+	test_flush
 			-- Test feature `flush'.
 		local
 			a_file: KL_STDOUT_FILE

@@ -56,7 +56,7 @@ create
 
 feature
 
-	make is
+	make
 		local
 			b: BB
 		do
@@ -75,7 +75,7 @@ inherit
 
 feature
 
-	f is
+	f
 		local
 			d: DD [BIT name]
 		do
@@ -89,7 +89,7 @@ class CC [G -> DD [BIT name]]
 
 feature -- Access
 
-	name: INTEGER is 32
+	name: INTEGER = 32
 
 	item: G
 

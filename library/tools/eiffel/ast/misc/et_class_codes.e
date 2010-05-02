@@ -24,7 +24,7 @@ inherit
 
 feature -- Status report
 
-	is_basic (a_code: NATURAL_8): BOOLEAN is
+	is_basic (a_code: NATURAL_8): BOOLEAN
 			-- Does `a_code' correspond to a basic class?
 			--
 			-- Note: a basic class is one of "BOOLEAN", "CHARACTER_8",
@@ -35,7 +35,7 @@ feature -- Status report
 			Result := boolean_class_code <= a_code and a_code <= pointer_class_code
 		end
 
-	is_numeric (a_code: NATURAL_8): BOOLEAN is
+	is_numeric (a_code: NATURAL_8): BOOLEAN
 			-- Does `a_code' correspond to a numeric class?
 			--
 			-- Note: a basic class is one of "INTEGER_8", "INTEGER_16",
@@ -47,7 +47,7 @@ feature -- Status report
 
 feature -- Access
 
-	class_code (a_class_name: ET_CLASS_NAME): NATURAL_8 is
+	class_code (a_class_name: ET_CLASS_NAME): NATURAL_8
 			-- Code corresponding to class with name `a_class_name'
 		require
 			a_class_name_not_void: a_class_name /= Void
@@ -65,88 +65,88 @@ feature -- Access
 
 feature -- Codes
 
-	no_class_code: NATURAL_8 is 0
+	no_class_code: NATURAL_8 = 0
 			-- Not a special class
 
-	boolean_class_code: NATURAL_8 is 1
+	boolean_class_code: NATURAL_8 = 1
 			-- Code for class "BOOLEAN"
 
-	character_8_class_code: NATURAL_8 is 11
+	character_8_class_code: NATURAL_8 = 11
 			-- Code for class "CHARACTER_8"
 
-	character_32_class_code: NATURAL_8 is 12
+	character_32_class_code: NATURAL_8 = 12
 			-- Code for class "CHARACTER_32"
 
-	integer_8_class_code: NATURAL_8 is 21
+	integer_8_class_code: NATURAL_8 = 21
 			-- Code for class "INTEGER_8"
 
-	integer_16_class_code: NATURAL_8 is 22
+	integer_16_class_code: NATURAL_8 = 22
 			-- Code for class "INTEGER_16"
 
-	integer_32_class_code: NATURAL_8 is 23
+	integer_32_class_code: NATURAL_8 = 23
 			-- Code for class "INTEGER_32"
 
-	integer_64_class_code: NATURAL_8 is 24
+	integer_64_class_code: NATURAL_8 = 24
 			-- Code for class "INTEGER_64"
 
-	natural_8_class_code: NATURAL_8 is 31
+	natural_8_class_code: NATURAL_8 = 31
 			-- Code for class "NATURAL_8"
 
-	natural_16_class_code: NATURAL_8 is 32
+	natural_16_class_code: NATURAL_8 = 32
 			-- Code for class "NATURAL_16"
 
-	natural_32_class_code: NATURAL_8 is 33
+	natural_32_class_code: NATURAL_8 = 33
 			-- Code for class "NATURAL_32"
 
-	natural_64_class_code: NATURAL_8 is 34
+	natural_64_class_code: NATURAL_8 = 34
 			-- Code for class "NATURAL_64"
 
-	real_32_class_code: NATURAL_8 is 41
+	real_32_class_code: NATURAL_8 = 41
 			-- Code for class "REAL_32"
 
-	real_64_class_code: NATURAL_8 is 42
+	real_64_class_code: NATURAL_8 = 42
 			-- Code for class "REAL_64"
 
-	pointer_class_code: NATURAL_8 is 51
+	pointer_class_code: NATURAL_8 = 51
 			-- Code for class "POINTER"
 
-	tuple_class_code: NATURAL_8 is 61
+	tuple_class_code: NATURAL_8 = 61
 			-- Code for class "TUPLE"
 
-	function_class_code: NATURAL_8 is 71
+	function_class_code: NATURAL_8 = 71
 			-- Code for class "FUNCTION"
 
-	predicate_class_code: NATURAL_8 is 72
+	predicate_class_code: NATURAL_8 = 72
 			-- Code for class "PREDICATE"
 
-	procedure_class_code: NATURAL_8 is 73
+	procedure_class_code: NATURAL_8 = 73
 			-- Code for class "PROCEDURE"
 
-	routine_class_code: NATURAL_8 is 74
+	routine_class_code: NATURAL_8 = 74
 			-- Code for class "ROUTINE"
 
-	special_class_code: NATURAL_8 is 101
+	special_class_code: NATURAL_8 = 101
 			-- Code for class "SPECIAL"
 
-	type_class_code: NATURAL_8 is 102
+	type_class_code: NATURAL_8 = 102
 			-- Code for class "TYPE"
 
-	typed_pointer_class_code: NATURAL_8 is 103
+	typed_pointer_class_code: NATURAL_8 = 103
 			-- Code for class "TYPED_POINTER"
 
-	array_class_code: NATURAL_8 is 104
+	array_class_code: NATURAL_8 = 104
 			-- Code for class "ARRAY"
 
-	any_class_code: NATURAL_8 is 105
+	any_class_code: NATURAL_8 = 105
 			-- Code for class "ANY"
 
-	system_object_class_code: NATURAL_8 is 106
+	system_object_class_code: NATURAL_8 = 106
 			-- Code for class "SYSTEM_OBJECT"
 
-	disposable_class_code: NATURAL_8 is 107
+	disposable_class_code: NATURAL_8 = 107
 			-- Code for class "DISPOSABLE"
 
-	codes_by_name: DS_HASH_TABLE [NATURAL_8, ET_CLASS_NAME] is
+	codes_by_name: DS_HASH_TABLE [NATURAL_8, ET_CLASS_NAME]
 			-- Class codes indexed by class names
 		once
 			create Result.make_map (26)

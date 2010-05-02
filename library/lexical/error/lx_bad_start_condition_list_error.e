@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER) is
+	make (filename: STRING; line: INTEGER)
 			-- Create a new error reporting that
 			-- the start condition list is bad.
 		require
@@ -35,10 +35,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: bad start condition list"
+	default_template: STRING = "%"$1%", line $2: bad start condition list"
 			-- Default template used to built the error message
 
-	code: STRING is "LX0007"
+	code: STRING = "LX0007"
 			-- Error code
 
 invariant

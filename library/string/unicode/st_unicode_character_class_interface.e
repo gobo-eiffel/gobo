@@ -24,7 +24,7 @@ inherit
 
 feature -- Access
 
-	is_upper_case (a_code: INTEGER): BOOLEAN is
+	is_upper_case (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' an upper-case letter?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -32,7 +32,7 @@ feature -- Access
 			Result := upper_case_property (a_code)
 		end
 
-	is_lower_case (a_code: INTEGER): BOOLEAN is
+	is_lower_case (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' a lower-case letter?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -40,7 +40,7 @@ feature -- Access
 			Result := lower_case_property (a_code)
 		end
 
-	is_title_case (a_code: INTEGER): BOOLEAN is
+	is_title_case (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' a title-case letter?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -48,7 +48,7 @@ feature -- Access
 			Result := character_class (a_code) = Titlecase_letter_category
 		end
 
-	is_modifier_letter (a_code: INTEGER): BOOLEAN is
+	is_modifier_letter (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' a modifier letter?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -56,7 +56,7 @@ feature -- Access
 			Result := character_class (a_code) = Modifier_letter_category
 		end
 
-	is_other_letter (a_code: INTEGER): BOOLEAN is
+	is_other_letter (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' an other letter?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -64,7 +64,7 @@ feature -- Access
 			Result := character_class (a_code) = Other_letter_category
 		end
 
-	is_letter (a_code: INTEGER): BOOLEAN is
+	is_letter (a_code: INTEGER): BOOLEAN
 			-- Does `a_code' belong to the letter category?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -80,7 +80,7 @@ feature -- Access
 			end
 		end
 
-	is_alphabetic (a_code: INTEGER): BOOLEAN is
+	is_alphabetic (a_code: INTEGER): BOOLEAN
 			-- Does `a_code' posses the Alphabetic property?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -88,7 +88,7 @@ feature -- Access
 			Result := alphabetic_property (a_code)
 		end
 
-	is_nonspacing_mark (a_code: INTEGER): BOOLEAN is
+	is_nonspacing_mark (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' a non-spacing mark?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -96,7 +96,7 @@ feature -- Access
 			Result := character_class (a_code) = Non_spacing_mark_category
 		end
 
-	is_combining_spacing_mark (a_code: INTEGER): BOOLEAN is
+	is_combining_spacing_mark (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' a combining-spacing mark?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -104,7 +104,7 @@ feature -- Access
 			Result := character_class (a_code) = Spacing_combining_mark_category
 		end
 
-	is_enclosing_mark (a_code: INTEGER): BOOLEAN is
+	is_enclosing_mark (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' an enclosing mark?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -112,7 +112,7 @@ feature -- Access
 			Result := character_class (a_code) = Enclosing_mark_category
 		end
 
-	is_mark (a_code: INTEGER): BOOLEAN is
+	is_mark (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' a mark?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -125,7 +125,7 @@ feature -- Access
 			end
 		end
 
-	is_decimal_digit (a_code: INTEGER): BOOLEAN is
+	is_decimal_digit (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' a decimal digit?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -133,7 +133,7 @@ feature -- Access
 			Result := character_class (a_code) = Decimal_digit_number_category
 		end
 
-	is_letter_number (a_code: INTEGER): BOOLEAN is
+	is_letter_number (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' a letter number?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -141,7 +141,7 @@ feature -- Access
 			Result := character_class (a_code) = Letter_number_category
 		end
 
-	is_other_number (a_code: INTEGER): BOOLEAN is
+	is_other_number (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' an other number?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -149,7 +149,7 @@ feature -- Access
 			Result := character_class (a_code) = Other_number_category
 		end
 
-	is_number (a_code: INTEGER): BOOLEAN is
+	is_number (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' a number?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -162,7 +162,7 @@ feature -- Access
 			end
 		end
 
-	is_connector_punctuation (a_code: INTEGER): BOOLEAN is
+	is_connector_punctuation (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' a connector?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -170,7 +170,7 @@ feature -- Access
 			Result := character_class (a_code) = Connector_punctuation_category
 		end
 
-	is_dash_punctuation (a_code: INTEGER): BOOLEAN is
+	is_dash_punctuation (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' a dash?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -178,7 +178,7 @@ feature -- Access
 			Result := character_class (a_code) = Dash_punctuation_category
 		end
 
-	is_open_punctuation (a_code: INTEGER): BOOLEAN is
+	is_open_punctuation (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' an opening punctuation mark?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -186,7 +186,7 @@ feature -- Access
 			Result := character_class (a_code) = Open_punctuation_category
 		end
 
-	is_close_punctuation (a_code: INTEGER): BOOLEAN is
+	is_close_punctuation (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' a closing punctuation mark?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -194,7 +194,7 @@ feature -- Access
 			Result := character_class (a_code) = Close_punctuation_category
 		end
 
-	is_initial_quote_punctuation (a_code: INTEGER): BOOLEAN is
+	is_initial_quote_punctuation (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' an initial quote?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -202,7 +202,7 @@ feature -- Access
 			Result := character_class (a_code) = Initial_quote_punctuation_category
 		end
 
-	is_final_quote_punctuation (a_code: INTEGER): BOOLEAN is
+	is_final_quote_punctuation (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' a final quote?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -210,7 +210,7 @@ feature -- Access
 			Result := character_class (a_code) = Final_quote_punctuation_category
 		end
 
-	is_other_punctuation (a_code: INTEGER): BOOLEAN is
+	is_other_punctuation (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' an other punctuation mark?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -218,7 +218,7 @@ feature -- Access
 			Result := character_class (a_code) = Other_punctuation_category
 		end
 
-	is_punctuation (a_code: INTEGER): BOOLEAN is
+	is_punctuation (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' a punctuation mark?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -236,7 +236,7 @@ feature -- Access
 			end
 		end
 
-	is_math_symbol (a_code: INTEGER): BOOLEAN is
+	is_math_symbol (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' a maths symbol?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -244,7 +244,7 @@ feature -- Access
 			Result := math_property (a_code)
 		end
 
-	is_currency_symbol (a_code: INTEGER): BOOLEAN is
+	is_currency_symbol (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' a currency symbol?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -252,7 +252,7 @@ feature -- Access
 			Result := character_class (a_code) = Currency_symbol_category
 		end
 
-	is_modifier_symbol (a_code: INTEGER): BOOLEAN is
+	is_modifier_symbol (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' a modifier symbol?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -260,7 +260,7 @@ feature -- Access
 			Result := character_class (a_code) = Modifier_symbol_category
 		end
 
-	is_other_symbol (a_code: INTEGER): BOOLEAN is
+	is_other_symbol (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' an other symbol?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -268,7 +268,7 @@ feature -- Access
 			Result := character_class (a_code) = Other_symbol_category
 		end
 
-	is_symbol (a_code: INTEGER): BOOLEAN is
+	is_symbol (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' a symbol?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -281,7 +281,7 @@ feature -- Access
 			end
 		end
 
-	is_space_separator (a_code: INTEGER): BOOLEAN is
+	is_space_separator (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' a space?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -289,7 +289,7 @@ feature -- Access
 			Result := character_class (a_code) = Space_separator_category
 		end
 
-	is_line_separator (a_code: INTEGER): BOOLEAN is
+	is_line_separator (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' a line separator?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -297,7 +297,7 @@ feature -- Access
 			Result := character_class (a_code) = Line_separator_category
 		end
 
-	is_paragraph_separator (a_code: INTEGER): BOOLEAN is
+	is_paragraph_separator (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' a paragraph separator?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -305,7 +305,7 @@ feature -- Access
 			Result := character_class (a_code) = Paragraph_separator_category
 		end
 
-	is_separator (a_code: INTEGER): BOOLEAN is
+	is_separator (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' a separator?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -318,7 +318,7 @@ feature -- Access
 			end
 		end
 
-	is_control (a_code: INTEGER): BOOLEAN is
+	is_control (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' a control character?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -326,7 +326,7 @@ feature -- Access
 			Result := character_class (a_code) = Control_other_category
 		end
 
-	is_format (a_code: INTEGER): BOOLEAN is
+	is_format (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' a format character?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -334,7 +334,7 @@ feature -- Access
 			Result := character_class (a_code) = Format_other_category
 		end
 
-	is_surrogate (a_code: INTEGER): BOOLEAN is
+	is_surrogate (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' a surrogate character?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -342,7 +342,7 @@ feature -- Access
 			Result := character_class (a_code) = Surrogate_other_category
 		end
 
-	is_private_use (a_code: INTEGER): BOOLEAN is
+	is_private_use (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' a private use character?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -350,7 +350,7 @@ feature -- Access
 			Result := character_class (a_code) = Private_other_category
 		end
 
-	is_non_character (a_code: INTEGER): BOOLEAN is
+	is_non_character (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' a non-character?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -375,7 +375,7 @@ feature -- Access
 				a_code = 1114110 or a_code = 1114111
 		end
 
-	decimal_digit_value (a_code: INTEGER): INTEGER_8 is
+	decimal_digit_value (a_code: INTEGER): INTEGER_8
 			-- Decimal digit value for `a_code'
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -393,7 +393,7 @@ feature -- Access
 			decimal_value_small_enough: Result <= 9
 		end
 
-	character_class (a_code: INTEGER): INTEGER is
+	character_class (a_code: INTEGER): INTEGER
 			-- Character class for `a_code'
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -412,7 +412,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	upper_case_property (a_code: INTEGER): BOOLEAN is
+	upper_case_property (a_code: INTEGER): BOOLEAN
 			-- Does `a_code' have the upper case property?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -426,7 +426,7 @@ feature {NONE} -- Implementation
 			Result := upper_case_properties.item (i).item (j).item (k + 1)
 		end
 
-	lower_case_property (a_code: INTEGER): BOOLEAN is
+	lower_case_property (a_code: INTEGER): BOOLEAN
 			-- Does `a_code' have the lower case property?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -440,7 +440,7 @@ feature {NONE} -- Implementation
 			Result := lower_case_properties.item (i).item (j).item (k + 1)
 		end
 
-	alphabetic_property (a_code: INTEGER): BOOLEAN is
+	alphabetic_property (a_code: INTEGER): BOOLEAN
 			-- Does `a_code' have the alphabetic property?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -454,7 +454,7 @@ feature {NONE} -- Implementation
 			Result := alphabetic_properties.item (i).item (j).item (k + 1)
 		end
 
-	math_property (a_code: INTEGER): BOOLEAN is
+	math_property (a_code: INTEGER): BOOLEAN
 			-- Does `a_code' have the math property?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -468,7 +468,7 @@ feature {NONE} -- Implementation
 			Result := math_properties.item (i).item (j).item (k + 1)
 		end
 
-	string_to_array8 (a_string: STRING): ARRAY [INTEGER_8] is
+	string_to_array8 (a_string: STRING): ARRAY [INTEGER_8]
 			-- Zero-indexed byte array interpretation of `a_string'
 		require
 			string_not_void: a_string /= Void
@@ -491,7 +491,7 @@ feature {NONE} -- Implementation
 			correct_count: Result.upper = 255
 		end
 
-	character_classes: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]] is
+	character_classes: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]]
 			-- Character classes for each code point
 		deferred
 		ensure
@@ -499,7 +499,7 @@ feature {NONE} -- Implementation
 --			no_void_character_class: not Result.has (Void)
 		end
 
-	decimal_values: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]] is
+	decimal_values: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]]
 			-- Decimal value for each code point
 		deferred
 		ensure
@@ -507,7 +507,7 @@ feature {NONE} -- Implementation
 --			no_void_decimal_value: not Result.has (Void)
 		end
 
-	upper_case_properties: SPECIAL [SPECIAL [ARRAY [BOOLEAN]]] is
+	upper_case_properties: SPECIAL [SPECIAL [ARRAY [BOOLEAN]]]
 			-- Upper case property for each code point
 		deferred
 		ensure
@@ -515,7 +515,7 @@ feature {NONE} -- Implementation
 --			no_void_upper_case_property: not Result.has (Void)
 		end
 
-	lower_case_properties: SPECIAL [SPECIAL [ARRAY [BOOLEAN]]] is
+	lower_case_properties: SPECIAL [SPECIAL [ARRAY [BOOLEAN]]]
 			-- Lower case property for each code point
 		deferred
 		ensure
@@ -523,7 +523,7 @@ feature {NONE} -- Implementation
 --			no_void_lower_case_property: not Result.has (Void)
 		end
 
-	alphabetic_properties: SPECIAL [SPECIAL [ARRAY [BOOLEAN]]] is
+	alphabetic_properties: SPECIAL [SPECIAL [ARRAY [BOOLEAN]]]
 			-- Alphabetic property for each code point
 		deferred
 		ensure
@@ -531,7 +531,7 @@ feature {NONE} -- Implementation
 --			no_void_alphabetic_property: not Result.has (Void)
 		end
 
-	math_properties: SPECIAL [SPECIAL [ARRAY [BOOLEAN]]] is
+	math_properties: SPECIAL [SPECIAL [ARRAY [BOOLEAN]]]
 			-- Math property for each code point
 		deferred
 		ensure

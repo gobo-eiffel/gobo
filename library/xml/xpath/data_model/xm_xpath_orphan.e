@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_node_type: INTEGER; a_string_value: STRING) is
+	make (a_node_type: INTEGER; a_string_value: STRING)
 			-- Establish invariant.
 		require
 			valid_node_kind: a_node_type = Element_node or else
@@ -47,41 +47,41 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Type
 		do
 			create {XM_XPATH_NODE_KIND_TEST} Result.make (node_type)
 		end
 
-	document: XM_XPATH_DOCUMENT is
+	document: XM_XPATH_DOCUMENT
 			-- Document that owns this node
 		do
 			-- `Void' - by definition of an orphan
 		end
 
-	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE is
+	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE
 			-- Node sequence number (in document order).
 		do
 			create Result.make (0, 0)
 		end
-	
+
 	document_number: INTEGER
 
 	string_value: STRING
 			-- String value
 
-	base_uri: STRING is
+	base_uri: STRING
 			-- Base URI
 		do
 			Result := Void
 		end
 
 	system_id: STRING
-		
-	line_number: INTEGER is -1
+
+	line_number: INTEGER = -1
 
 
-	node_kind: STRING is
+	node_kind: STRING
 			-- "attribute", "element",
 			-- "namespace", "processing-instruction",
 			-- "comment", or "text".
@@ -105,17 +105,17 @@ feature -- Access
 
 	parent: XM_XPATH_COMPOSITE_NODE
 			-- Parent of current node
-	
-	root: XM_XPATH_NODE is
+
+	root: XM_XPATH_NODE
 			-- The root node for `Current'
 		do
 			Result := Current
 		end
-	
+
 	name_code: INTEGER
 			-- Name code this node - used in displaying names
 
-	node_name: STRING is
+	node_name: STRING
 			-- Qualified name
 		do
 			if name_code = -1 then
@@ -125,13 +125,13 @@ feature -- Access
 			end
 		end
 
-	document_root: XM_XPATH_DOCUMENT is
+	document_root: XM_XPATH_DOCUMENT
 			-- The document node for `Current'
 		do
 			Result := Void
 		end
 
-	typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE] is
+	typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE]
 			-- Typed value
 		local
 			l_string_value: XM_XPATH_STRING_VALUE
@@ -155,7 +155,7 @@ feature -- Access
 			end
 		end
 
-	atomized_value: XM_XPATH_VALUE is
+	atomized_value: XM_XPATH_VALUE
 			-- Typed value as atomic value or (unusually) sequence of atomic values.
 		do
 			inspect
@@ -170,24 +170,24 @@ feature -- Access
 				else
 					-- schema-aware
 					todo ("atomized_value", True)
-				end				
+				end
 			end
 		end
-			
-	new_axis_iterator (an_axis_type: INTEGER): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
+
+	new_axis_iterator (an_axis_type: INTEGER): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
 			-- An enumeration over the nodes reachable by `an_axis_type' from this node
 		do
 			todo ("new_axis_iterator", False)
 		end
 
-	new_axis_iterator_with_node_test (an_axis_type: INTEGER; a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
+	new_axis_iterator_with_node_test (an_axis_type: INTEGER; a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
 			-- An enumeration over the nodes reachable by `an_axis_type' from this node;
 			-- Only nodes that match the pattern specified by `a_node_test' will be selected.
 		do
 			todo ("new_axis_iterator with node test", False)
 		end
 
-	path: STRING is
+	path: STRING
 			-- XPath expression for location within document;
 			-- Used for reporting purposes.
 		do
@@ -196,7 +196,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_same_node (other: XM_XPATH_NODE): BOOLEAN is
+	is_same_node (other: XM_XPATH_NODE): BOOLEAN
 			-- Does `Current' represent the same node in the tree as `other'?
 		do
 			Result := Current = other
@@ -204,7 +204,7 @@ feature -- Comparison
 
 feature -- Element change
 
-	set_name_code (a_name_code: INTEGER) is
+	set_name_code (a_name_code: INTEGER)
 			-- Set name code.
 		require
 			positive_name_code: a_name_code >= 0
@@ -214,7 +214,7 @@ feature -- Element change
 			name_code_set: name_code = a_name_code
 		end
 
-	generate_id is
+	generate_id
 			-- Generate a unique id for `Current'
 		do
 			shared_serial_number_generator.generate_next_serial_number
@@ -227,7 +227,7 @@ feature -- Element change
 
 feature -- Duplication
 
-	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
+	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN)
 			-- Copy `Current' to `a_receiver'.
 		local
 			l_type_annotation, l_code: INTEGER

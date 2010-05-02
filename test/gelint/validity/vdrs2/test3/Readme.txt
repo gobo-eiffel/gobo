@@ -44,7 +44,7 @@ create
 
 feature
 
-	make is
+	make
 		local
 			b: BB
 		do
@@ -65,7 +65,7 @@ inherit
 
 feature
 
-	f: INTEGER is
+	f: INTEGER
 		do
 			Result := 4
 		end
@@ -76,7 +76,7 @@ class CC
 
 feature
 
-	f: INTEGER is unique
+	f: INTEGER = unique
 
 end -- class CC
 ----------------------------------------------------------------------

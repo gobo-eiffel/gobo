@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_system: like current_system) is
+	make (a_system: like current_system)
 			-- Create a new dynamic system.
 		require
 			a_system_not_void: a_system /= Void
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			current_system_set: current_system = a_system
 		end
 
-	make_basic_types is
+	make_basic_types
 			-- Create basic types.
 		local
 			l_unknown_class: ET_CLASS
@@ -126,7 +126,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_catcall_error_mode (b: BOOLEAN) is
+	set_catcall_error_mode (b: BOOLEAN)
 			-- Set `catcall_error_mode' to `b'.
 		do
 			catcall_error_mode := b
@@ -134,7 +134,7 @@ feature -- Status setting
 			catcall_error_mode_set: catcall_error_mode = b
 		end
 
-	set_catcall_warning_mode (b: BOOLEAN) is
+	set_catcall_warning_mode (b: BOOLEAN)
 			-- Set `catcall_warning_mode' to `b'.
 		do
 			catcall_warning_mode := b
@@ -142,7 +142,7 @@ feature -- Status setting
 			catcall_warning_mode_set: catcall_warning_mode = b
 		end
 
-	set_full_class_checking (b: BOOLEAN) is
+	set_full_class_checking (b: BOOLEAN)
 			-- Set `full_class_checking' to `b'.
 		do
 			full_class_checking := b
@@ -215,7 +215,7 @@ feature -- Types
 	unknown_type: ET_DYNAMIC_TYPE
 			-- Type "*UNKNOWN*"
 
-	dynamic_type (a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT): ET_DYNAMIC_TYPE is
+	dynamic_type (a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT): ET_DYNAMIC_TYPE
 			-- Dynamic type corresponding to `a_type' in `a_context';
 			-- Create a new one if it does not exist yet
 		require
@@ -341,7 +341,7 @@ feature -- Types
 			dynamic_type_not_void: Result /= Void
 		end
 
-	meta_type (a_type: ET_DYNAMIC_TYPE): ET_DYNAMIC_TYPE is
+	meta_type (a_type: ET_DYNAMIC_TYPE): ET_DYNAMIC_TYPE
 			-- Dynamic type corresponding to the meta type of `a_type';
 			-- Create a new one if it does not exist yet
 			--
@@ -373,7 +373,7 @@ feature -- Types
 
 feature {NONE} -- Types
 
-	new_dynamic_type (a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT): ET_DYNAMIC_TYPE is
+	new_dynamic_type (a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT): ET_DYNAMIC_TYPE
 			-- New dynamic type corresponding to `a_type' in `a_context'
 		require
 			a_type_not_void: a_type /= Void
@@ -411,7 +411,7 @@ feature {NONE} -- Types
 			new_dynamic_type_not_void: Result /= Void
 		end
 
-	new_special_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE is
+	new_special_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE
 			-- New dynamic "SPECIAL" type corresponding to `a_base_type'
 		require
 			a_base_type_not_void: a_base_type /= Void
@@ -445,7 +445,7 @@ feature {NONE} -- Types
 			new_special_type_not_void: Result /= Void
 		end
 
-	new_tuple_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE is
+	new_tuple_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE
 			-- New dynamic "TUPLE" type corresponding to `a_base_type'
 		require
 			a_base_type_not_void: a_base_type /= Void
@@ -484,7 +484,7 @@ feature {NONE} -- Types
 			new_tuple_type_not_void: Result /= Void
 		end
 
-	new_array_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE is
+	new_array_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE
 			-- New dynamic "ARRAY" type corresponding to `a_base_type'
 		require
 			a_base_type_not_void: a_base_type /= Void
@@ -511,7 +511,7 @@ feature {NONE} -- Types
 			new_array_type_not_void: Result /= Void
 		end
 
-	new_typed_pointer_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE is
+	new_typed_pointer_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE
 			-- New dynamic "TYPED_POINTER" type corresponding to `a_base_type'
 		require
 			a_base_type_not_void: a_base_type /= Void
@@ -532,7 +532,7 @@ feature {NONE} -- Types
 			new_typed_pointer_type_not_void: Result /= Void
 		end
 
-	new_type_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE is
+	new_type_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE
 			-- New dynamic "TYPE" type corresponding to `a_base_type'
 		require
 			a_base_type_not_void: a_base_type /= Void
@@ -568,7 +568,7 @@ feature {NONE} -- Types
 			new_type_type_not_void: Result /= Void
 		end
 
-	new_procedure_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE is
+	new_procedure_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE
 			-- New dynamic "PROCEDURE" type corresponding to `a_base_type'
 		require
 			a_base_type_not_void: a_base_type /= Void
@@ -627,7 +627,7 @@ feature {NONE} -- Types
 			new_procedure_type_not_void: Result /= Void
 		end
 
-	new_function_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE is
+	new_function_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE
 			-- New dynamic "FUNCTION" type corresponding to `a_base_type'
 		require
 			a_base_type_not_void: a_base_type /= Void
@@ -693,7 +693,7 @@ feature {NONE} -- Types
 			new_function_type_not_void: Result /= Void
 		end
 
-	new_predicate_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE is
+	new_predicate_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE
 			-- New dynamic "PREDICATE" type corresponding to `a_base_type'
 		require
 			a_base_type_not_void: a_base_type /= Void
@@ -753,7 +753,7 @@ feature {NONE} -- Types
 			new_predicate_type_not_void: Result /= Void
 		end
 
-	propagate_type_of_type_result_type (a_type: ET_DYNAMIC_TYPE) is
+	propagate_type_of_type_result_type (a_type: ET_DYNAMIC_TYPE)
 			-- Propagate `a_type' to the dynamic type set of the result of the
 			-- built-in feature corresponding to "INTERNAL.type_of_type".
 		local
@@ -769,7 +769,7 @@ feature {NONE} -- Types
 			end
 		end
 
-	create_meta_type (a_type: ET_DYNAMIC_TYPE) is
+	create_meta_type (a_type: ET_DYNAMIC_TYPE)
 			-- Make sure that the meta type of `a_type' has been created,
 			-- and if not then create it.
 		require
@@ -796,7 +796,7 @@ feature {ET_DYNAMIC_FEATURE} -- Types
 	type_of_type_feature: ET_DYNAMIC_FEATURE
 			-- Feature corresponding to "INTERNAL.type_of_type"
 
-	set_type_of_type_feature (a_feature: ET_DYNAMIC_FEATURE) is
+	set_type_of_type_feature (a_feature: ET_DYNAMIC_FEATURE)
 			-- Set `type_of_type_feature' to `a_feature'.
 		local
 			i: INTEGER
@@ -824,7 +824,7 @@ feature {ET_DYNAMIC_FEATURE} -- Types
 
 feature -- Compilation
 
-	compile is
+	compile
 			-- Compile current system.
 			-- Set `has_fatal_error' if a fatal error occurred.
 			--
@@ -846,7 +846,7 @@ feature -- Compilation
 			end
 		end
 
-	compile_system is
+	compile_system
 			-- Compile all code reachable from the root creation procedure of the root class.
 			-- Set `has_fatal_error' if a fatal error occurred.
 			--
@@ -954,7 +954,7 @@ feature -- Compilation
 			end
 		end
 
-	compile_all is
+	compile_all
 			-- Compile all classes in the Eiffel system.
 			-- Set `has_fatal_error' if a fatal error occurred.
 			--
@@ -980,7 +980,7 @@ feature -- Compilation
 			end
 		end
 
-	compile_feature (a_feature_name: ET_FEATURE_NAME; a_class: ET_CLASS) is
+	compile_feature (a_feature_name: ET_FEATURE_NAME; a_class: ET_CLASS)
 			-- Compile all code reachable from the feature `a_feature_name' from `a_class'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 			--
@@ -1056,7 +1056,7 @@ feature -- Compilation
 
 feature {NONE} -- Compilation
 
-	compile_kernel is
+	compile_kernel
 			-- Compile kernel classes.
 			--
 			-- Note that this operation will be interrupted if a stop request
@@ -1546,7 +1546,7 @@ feature {NONE} -- Compilation
 			end
 		end
 
-	compile_all_features (a_class: ET_CLASS) is
+	compile_all_features (a_class: ET_CLASS)
 			-- Make sure that all features of non-deferred non-generic classes
 			-- will be included in the compilation: their dynamic type sets
 			-- will be computed.
@@ -1584,7 +1584,7 @@ feature {NONE} -- Compilation
 			end
 		end
 
-	build_dynamic_type_sets is
+	build_dynamic_type_sets
 			-- Build dynamic type sets for current system.
 			--
 			-- Note that this operation will be interrupted if a stop request
@@ -1611,7 +1611,7 @@ feature -- Error handling
 	has_fatal_error: BOOLEAN
 			-- Has a fatal error occurred?
 
-	set_fatal_error is
+	set_fatal_error
 			-- Report a fatal error.
 		do
 			has_fatal_error := True
@@ -1619,7 +1619,7 @@ feature -- Error handling
 			has_fatal_error: has_fatal_error
 		end
 
-	error_handler: ET_ERROR_HANDLER is
+	error_handler: ET_ERROR_HANDLER
 			-- Error handler
 		do
 			Result := current_system.error_handler
@@ -1635,7 +1635,7 @@ feature -- Processors
 	null_dynamic_type_set_builder: ET_DYNAMIC_NULL_TYPE_SET_BUILDER
 			-- Null builder of dynamic type sets
 
-	activate_dynamic_type_set_builder is
+	activate_dynamic_type_set_builder
 			-- Activate dynamic type set builder.
 		do
 			if dynamic_type_set_builder = null_dynamic_type_set_builder then
@@ -1645,7 +1645,7 @@ feature -- Processors
 			end
 		end
 
-	set_dynamic_type_set_builder (a_builder: like dynamic_type_set_builder) is
+	set_dynamic_type_set_builder (a_builder: like dynamic_type_set_builder)
 			-- Set `dynamic_type_set_builder' to `a_builder'.
 		require
 			a_builder_not_void: a_builder /= Void
@@ -1682,7 +1682,7 @@ feature {NONE} -- Features
 
 feature {NONE} -- Implementation
 
-	empty_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST is
+	empty_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			-- Empty dynamic type set list
 		once
 			create Result.make

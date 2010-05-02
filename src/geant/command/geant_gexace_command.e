@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT) is
+	make (a_project: GEANT_PROJECT)
 			-- Create a new 'gexace' command.
 		local
 			a_tester: UC_STRING_EQUALITY_TESTER
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- Can command be executed?
 		do
 			Result := BOOLEAN_.nxor (<<is_validate_executable,
@@ -51,7 +51,7 @@ feature -- Status report
 				is_system_executable, is_library_executable>>)
 		end
 
-	is_validate_executable: BOOLEAN is
+	is_validate_executable: BOOLEAN
 			-- Can 'validate' command be execute?
 		do
 			Result := (validate_command and output_filename = Void)
@@ -60,7 +60,7 @@ feature -- Status report
 			output_filename_void: Result implies output_filename = Void
 		end
 
-	is_system_executable: BOOLEAN is
+	is_system_executable: BOOLEAN
 			-- Can 'system' command be executed?
 		do
 			Result := (system_command /= Void and then system_command.count > 0)
@@ -69,7 +69,7 @@ feature -- Status report
 			system_command_not_empty: Result implies system_command.count > 0
 		end
 
-	is_library_executable: BOOLEAN is
+	is_library_executable: BOOLEAN
 			-- Can 'library' command be executed?
 		do
 			Result := (library_command /= Void and then library_command.count > 0)
@@ -107,7 +107,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_verbose (b: BOOLEAN) is
+	set_verbose (b: BOOLEAN)
 			-- Set `verbose' to `an_options'.
 		do
 			verbose := b
@@ -115,7 +115,7 @@ feature -- Setting
 			verbose_set: verbose = b
 		end
 
-	set_validate_command (b: BOOLEAN) is
+	set_validate_command (b: BOOLEAN)
 			-- Set `validate_command' to `b'.
 		do
 			validate_command := b
@@ -123,7 +123,7 @@ feature -- Setting
 			validate_command_set: validate_command = b
 		end
 
-	set_system_command (a_command: like system_command) is
+	set_system_command (a_command: like system_command)
 			-- Set `system_command' to `a_command'.
 		require
 			a_command_not_void: a_command /= Void
@@ -134,7 +134,7 @@ feature -- Setting
 			system_command_set: system_command = a_command
 		end
 
-	set_library_command (a_command: like library_command) is
+	set_library_command (a_command: like library_command)
 			-- Set `library_command' to `a_command'.
 		require
 			a_command_not_void: a_command /= Void
@@ -145,7 +145,7 @@ feature -- Setting
 			library_command_set: library_command = a_command
 		end
 
-	set_format (a_format: like format) is
+	set_format (a_format: like format)
 			-- Set `format' to `a_format'.
 		require
 			a_format_not_void: a_format /= Void
@@ -156,7 +156,7 @@ feature -- Setting
 			format_set: format = a_format
 		end
 
-	set_xace_filename (a_filename: like xace_filename) is
+	set_xace_filename (a_filename: like xace_filename)
 			-- Set `xace_filename' to `a_filename'.
 		require
 			a_filename_not_void: a_filename /= Void
@@ -167,7 +167,7 @@ feature -- Setting
 			xace_filename_set: xace_filename = a_filename
 		end
 
-	set_output_filename (a_filename: like output_filename) is
+	set_output_filename (a_filename: like output_filename)
 			-- Set `output_filename' to `a_filename'.
 		require
 			a_filename_not_void: a_filename /= Void
@@ -180,7 +180,7 @@ feature -- Setting
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute command.
 		local
 			cmd: STRING

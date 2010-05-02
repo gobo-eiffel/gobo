@@ -42,7 +42,7 @@ create
 
 feature -- Access
 
-	new_cursor: DS_BINARY_SEARCH_TREE_CURSOR [G, K] is
+	new_cursor: DS_BINARY_SEARCH_TREE_CURSOR [G, K]
 			-- New external cursor
 		do
 			create Result.make (Current)
@@ -53,7 +53,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	new_tree_node (a_item: G; a_key: K): like root_node is
+	new_tree_node (a_item: G; a_key: K): like root_node
 			-- Returns a new tree node instance where `a_item' is
 			-- associated with `a_key'.
 		do
@@ -62,7 +62,7 @@ feature {NONE} -- Access
 
 feature -- Setting
 
-	set_key_comparator (a_comparator: like key_comparator) is
+	set_key_comparator (a_comparator: like key_comparator)
 			-- Set `key_comparator' to `a_comparator'.
 		do
 			key_comparator := a_comparator
@@ -70,7 +70,7 @@ feature -- Setting
 
 feature {NONE} -- Setting
 
-	internal_set_key_comparator (a_comparator: like key_comparator) is
+	internal_set_key_comparator (a_comparator: like key_comparator)
 			-- Set `key_comparator' to `a_comparator'.
 			-- (No "settable" precondition, to be used internally only.)
 		do
@@ -79,7 +79,7 @@ feature {NONE} -- Setting
 
 feature -- Element change
 
-	replace (v: G; k: K) is
+	replace (v: G; k: K)
 			-- Replace item associated with `k' by `v'.
 			-- (Performance: O(height).)
 		local
@@ -93,21 +93,21 @@ feature -- Element change
 			l_node.set_item (v)
 		end
 
-	put (v: G; k: K) is
+	put (v: G; k: K)
 			-- Associate `v' with key `k'.
 			-- (Performance: O(height).)
 		do
 			internal_put (v, k)
 		end
 
-	put_new (v: G; k: K) is
+	put_new (v: G; k: K)
 			-- Associate `v' with key `k'.
 			-- (Performance: O(height).)
 		do
 			internal_put_new (v, k)
 		end
 
-	force (v: G; k: K) is
+	force (v: G; k: K)
 			-- Associate `v' with key `k'.
 			-- (Performance: O(height).)
 		do
@@ -118,7 +118,7 @@ feature -- Element change
 			one_more: (not old has (k)) implies (count = old count + 1)
 		end
 
-	force_new (v: G; k: K) is
+	force_new (v: G; k: K)
 			-- Associate `v' with key `k'.
 			-- (Performance: O(height).)
 		require
@@ -132,7 +132,7 @@ feature -- Element change
 
 feature {NONE} -- Element change
 
-	on_node_added (a_node: like root_node) is
+	on_node_added (a_node: like root_node)
 			-- `a_node' was just added to the binary search tree.
 			-- This feature is basically used by balanced binary
 			-- search tree variants. They are informed which
@@ -143,7 +143,7 @@ feature {NONE} -- Element change
 
 feature {NONE} -- Removal
 
-	on_root_node_removed is
+	on_root_node_removed
 			-- The node that was previsously the `root_node'
 			-- was removed. The old `root_node' had only
 			-- one child and this child is now the `root_node'.
@@ -152,7 +152,7 @@ feature {NONE} -- Removal
 		do
 		end
 
-	on_node_removed (a_old_node, a_node: like root_node; a_was_left_child: BOOLEAN) is
+	on_node_removed (a_old_node, a_node: like root_node; a_was_left_child: BOOLEAN)
 			-- `a_old_node' was just removed from the tree.
 			-- The parent of `a_old_node' was `a_node'.
 			-- Depending on `a_was_left_child' `a_old_node'
@@ -164,7 +164,7 @@ feature {NONE} -- Removal
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Copy `other' to current.
 		local
 			l_other_node: like root_node

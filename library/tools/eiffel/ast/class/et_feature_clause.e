@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_clients: like clients) is
+	make (a_clients: like clients)
 			-- Create a new feature clause.
 		require
 			a_clients_not_void: a_clients /= Void
@@ -41,13 +41,13 @@ feature -- Access
 	clients: ET_CLIENT_LIST
 			-- Clients
 
-	clients_clause: ET_CLIENTS is
+	clients_clause: ET_CLIENTS
 			-- Clients clause
 		do
 			Result ?= clients
 		end
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		local
@@ -62,13 +62,13 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := feature_keyword
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		local
 			a_clients_clause: ET_CLIENTS
@@ -81,7 +81,7 @@ feature -- Access
 			end
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		local
 			a_clients_clause: ET_CLIENTS
@@ -94,7 +94,7 @@ feature -- Access
 			end
 		end
 
-	header_break: ET_BREAK is
+	header_break: ET_BREAK
 			-- Break which appears where the header comment is expected
 		do
 			Result := break
@@ -102,7 +102,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_header_comment: BOOLEAN is
+	has_header_comment: BOOLEAN
 			-- Does current feature clause have a header comment?
 		local
 			a_break: like break
@@ -113,7 +113,7 @@ feature -- Status report
 			end
 		end
 
-	has_non_empty_header_comment: BOOLEAN is
+	has_non_empty_header_comment: BOOLEAN
 			-- Does current feature clause have a non-empty header comment?
 			-- (Comments only made up of white characters or minus signs are not taken into account.)
 		local
@@ -127,7 +127,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_feature_keyword (a_feature: like feature_keyword) is
+	set_feature_keyword (a_feature: like feature_keyword)
 			-- Set `feature_keyword' to `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -139,7 +139,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_feature_clause (Current)

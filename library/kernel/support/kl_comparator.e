@@ -23,7 +23,7 @@ inherit
 
 feature -- Status report
 
-	order_equal (u, v: G): BOOLEAN is
+	order_equal (u, v: G): BOOLEAN
 			-- Are `u' and `v' considered equal?
 		require
 			u_not_void: u /= Void
@@ -34,7 +34,7 @@ feature -- Status report
 			definition: Result = (not less_than (u, v) and not greater_than (u, v))
 		end
 
-	less_equal (u, v: G): BOOLEAN is
+	less_equal (u, v: G): BOOLEAN
 			-- Is `u' considered less than or equal to `v'?
 		require
 			u_not_void: u /= Void
@@ -45,7 +45,7 @@ feature -- Status report
 			definition: Result = (less_than (u, v) or order_equal (u, v))
 		end
 
-	greater_equal (u, v: G): BOOLEAN is
+	greater_equal (u, v: G): BOOLEAN
 			-- Is `u' considered greater than or equal to `v'?
 		require
 			u_not_void: u /= Void
@@ -56,7 +56,7 @@ feature -- Status report
 			definition: Result = (greater_than (u, v) or order_equal (u, v))
 		end
 
-	test (v, u: detachable G): BOOLEAN is
+	test (v, u: detachable G): BOOLEAN
 			-- Are `v' and `u' considered equal?
 		do
 			if v = u then

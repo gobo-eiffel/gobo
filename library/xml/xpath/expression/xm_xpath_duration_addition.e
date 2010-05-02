@@ -13,7 +13,7 @@ revision: "$Revision$"
 class XM_XPATH_DURATION_ADDITION
 
 inherit
-	
+
 	XM_XPATH_ARITHMETIC_EXPRESSION
 		redefine
 			evaluate_item
@@ -25,7 +25,7 @@ create
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 			-- We only take this path if the type could not be determined statically.
 		local
@@ -59,4 +59,4 @@ invariant
 	operator_plus_or_minus: operator = Plus_token xor operator = Minus_token
 
 end
-	
+

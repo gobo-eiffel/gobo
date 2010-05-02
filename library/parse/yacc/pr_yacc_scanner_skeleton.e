@@ -30,7 +30,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (handler: like error_handler) is
+	make (handler: like error_handler)
 			-- Create a new grammar description scanner.
 		require
 			handler_not_void: handler /= Void
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset scanner before scanning next input.
 		do
 			reset_compressed_scanner_skeleton
@@ -72,7 +72,7 @@ feature -- Access
 	line_nb: INTEGER
 			-- Current line number
 
-	filename: STRING is
+	filename: STRING
 			-- Name of file being parsed
 		local
 			file_buffer: YY_FILE_BUFFER
@@ -89,7 +89,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_error_handler (handler: like error_handler) is
+	set_error_handler (handler: like error_handler)
 			-- Set `error_handler' to `handler'.
 		require
 			handler_not_void: handler /= Void
@@ -99,7 +99,7 @@ feature -- Setting
 			error_handler_set: error_handler = handler
 		end
 
-	set_old_typing (b: BOOLEAN) is
+	set_old_typing (b: BOOLEAN)
 			-- Set `old_typing' to `b'.
 		do
 			old_typing := b
@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 	rule: PR_RULE
 			-- Rule being parsed
 
-	process_dollar_n (n: INTEGER; max: INTEGER; a_rule: PR_RULE) is
+	process_dollar_n (n: INTEGER; max: INTEGER; a_rule: PR_RULE)
 			-- Process $`n' in semantic actions where at most
 			-- `max' symbols on the right-hand-side can be accessed.
 		require
@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_dollar_dollar (a_rule: PR_RULE) is
+	process_dollar_dollar (a_rule: PR_RULE)
 			-- Process $$ in semantic actions.
 		require
 			a_rule_not_void: a_rule /= Void
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	cloned_string (a_string: STRING): STRING is
+	cloned_string (a_string: STRING): STRING
 			-- Cloned version of `a_string'
 		require
 			a_string /= Void
@@ -180,7 +180,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Error handling
 
-	report_missing_characters_error (chars: STRING) is
+	report_missing_characters_error (chars: STRING)
 			-- Report that `chars' is missing.
 		require
 			chars_not_void: chars /= Void
@@ -194,7 +194,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_null_integer_error is
+	report_null_integer_error
 			-- Report that the integer just read
 			-- cannot be null.
 		local
@@ -207,7 +207,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_invalid_dollar_n_error (n: INTEGER) is
+	report_invalid_dollar_n_error (n: INTEGER)
 			-- Report that $`n' has been used in a semantic
 			-- action but `n' is not a valid index for the
 			-- rhs of the corresponding rule.
@@ -221,7 +221,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_invalid_dollar_dollar_error is
+	report_invalid_dollar_dollar_error
 			-- Report that $$ has been used in an error action.
 		local
 			an_error: PR_INVALID_DOLLAR_DOLLAR_ERROR
@@ -233,7 +233,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_integer_too_large_error (an_int: STRING) is
+	report_integer_too_large_error (an_int: STRING)
 			-- Report that integer `an_int' is too large (implementation limitation).
 		require
 			an_int_not_void: an_int /= Void
@@ -247,8 +247,8 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_invalid_string_token_error (a_string: STRING) is
-			-- Report that a literal string token must 
+	report_invalid_string_token_error (a_string: STRING)
+			-- Report that a literal string token must
 			-- have at least two characters.
 		require
 			a_string_not_void: a_string /= Void
@@ -262,7 +262,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_dangerous_dollar_n_warning (n: INTEGER) is
+	report_dangerous_dollar_n_warning (n: INTEGER)
 			-- Report that $`n' has been used in a semantic
 			-- action but `n' is not a valid index for the
 			-- rhs of the corresponding rule and therefore
@@ -276,7 +276,7 @@ feature {NONE} -- Error handling
 
 feature {NONE} -- Constants
 
-	Init_buffer_size: INTEGER is 256
+	Init_buffer_size: INTEGER = 256
 			-- Initial size for `action_buffer'
 
 invariant

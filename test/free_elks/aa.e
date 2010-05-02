@@ -4,7 +4,7 @@ feature
 
 	foo: INTEGER
 
-	set_foo (a_foo: INTEGER) is
+	set_foo (a_foo: INTEGER)
 		do
 			foo := a_foo
 		ensure

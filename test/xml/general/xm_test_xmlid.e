@@ -23,14 +23,14 @@ create
 
 feature -- Test
 
-	test is
+	test
 			-- Test ID.
 		do
 			make_parser
-			
+
 			parser.parse_from_string ("<doc xml:id='a'><c xml:id='a'/></doc>")
 			assert ("duplicate_id", error.has_error)
-			
+
 			parser.parse_from_string ("<doc xml:id='123abc'/>")
 			assert ("not_nc_name", error.has_error)
 
@@ -38,7 +38,7 @@ feature -- Test
 			assert ("valid", not error.has_error)
 		end
 
-	test_normalize is
+	test_normalize
 			-- Test ID normalisation.
 		do
 			make_parser
@@ -46,7 +46,7 @@ feature -- Test
 			parser.parse_from_string ("<doc xml:id='  abc    '/>")
 			assert ("valid", not error.has_error)
 			assert_strings_equal ("normalized", pretty_print.last_output, "<doc xml:id=%"abc%"></doc>")
-		
+
 			pretty_print.set_output_to_string
 			parser.parse_from_string ("<doc xml:id='  a   bc  '/>")
 			assert ("parsed", parser.is_correct)
@@ -54,7 +54,7 @@ feature -- Test
 			assert_strings_equal ("normalized", pretty_print.last_output, "<doc xml:id=%"a bc%"></doc>")
 		end
 
-	test_dtd is
+	test_dtd
 			-- Test DTD validation.
 		do
 			make_parser
@@ -70,7 +70,7 @@ feature -- Test
 
 feature -- Test
 
-	test_conformance is
+	test_conformance
 			-- W3C test suite
 		do
 			make_parser
@@ -89,7 +89,7 @@ feature -- Test
 			assert ("dtd_ok", not dtd.has_error)
 
 			-- test 004_schema does not apply without XML Schema
-			
+
 			parser.parse_from_string (xml_005_errdtdbad)
 			assert ("parsed", parser.is_correct)
 			assert ("ok", not error.has_error)
@@ -108,7 +108,7 @@ feature -- Test
 			assert ("ok", not error.has_error)
 
 			-- test 009_ok11 XML 1.1 not supported yet
-			
+
 			parser.parse_from_string (xml_010_okxref)
 			assert ("parsed", parser.is_correct)
 			assert ("ok", not error.has_error)
@@ -119,31 +119,31 @@ feature -- Test
 			assert ("parsed", parser.is_correct)
 			assert ("ok", not error.has_error)
 			assert_strings_equal ("normalized", pretty_print.last_output, "<doc>%N <p xml:id=%"anid%"></p>%N</doc>")
-			 
+
 		end
 
 feature {NONE} -- W3C test suite
 
-	xml_001_normalize: STRING is "<doc>%N  <para xml:id=%" te  st %">MATCH</para>%N</doc>%N"
-	xml_002_undecl: STRING is "<doc>%N  <para xml:id=%"test%">MATCH</para>%N</doc>%N"
-	xml_003_dtd: STRING is "<!DOCTYPE doc [%N<!ATTLIST para%N xml:id	ID	#IMPLIED%N >%N ]>%N<doc>%N <para xml:id=%"id%">MATCH</para>%N</doc>%N"
-	xml_005_errdtdbad: STRING is "<!DOCTYPE doc [%N <!ATTLIST para xml:id	NMTOKENS	#IMPLIED >%N]>%N<doc>%N <para xml:id=%"id%">BADDECL</para>%N</doc>%N"
-	xml_005_errdup: STRING is "<doc> <para xml:id=%"dup%">DUPLICATE</para> <para xml:id=%"dup%">DUPLICATE</para> </doc>"
-	xml_007_errdup: STRING is " <!DOCTYPE doc [%N <!ATTLIST para id ID #IMPLIED>%N]>%N<doc>%N <para id=%"id1%" xml:id=%"id1%"/>%N</doc>%N"
-	xml_008_ok10: STRING is "<doc>%N <p xml:id=%"anid%"/>%N</doc>%N"
-	xml_010_okxref: STRING is "<!DOCTYPE doc [%N <!ATTLIST para id ID #IMPLIED ref IDREF #IMPLIED >%N]>%N<doc>%N <para id=%"id1%" xml:id=%"id2%"/>%N <para ref=%"is2%"/>%N</doc>%N"
-	xml_011_oknormalize: STRING is "<doc>%N <p xml:id=%"  anid  %"/>%N</doc>%N"
+	xml_001_normalize: STRING = "<doc>%N  <para xml:id=%" te  st %">MATCH</para>%N</doc>%N"
+	xml_002_undecl: STRING = "<doc>%N  <para xml:id=%"test%">MATCH</para>%N</doc>%N"
+	xml_003_dtd: STRING = "<!DOCTYPE doc [%N<!ATTLIST para%N xml:id	ID	#IMPLIED%N >%N ]>%N<doc>%N <para xml:id=%"id%">MATCH</para>%N</doc>%N"
+	xml_005_errdtdbad: STRING = "<!DOCTYPE doc [%N <!ATTLIST para xml:id	NMTOKENS	#IMPLIED >%N]>%N<doc>%N <para xml:id=%"id%">BADDECL</para>%N</doc>%N"
+	xml_005_errdup: STRING = "<doc> <para xml:id=%"dup%">DUPLICATE</para> <para xml:id=%"dup%">DUPLICATE</para> </doc>"
+	xml_007_errdup: STRING = " <!DOCTYPE doc [%N <!ATTLIST para id ID #IMPLIED>%N]>%N<doc>%N <para id=%"id1%" xml:id=%"id1%"/>%N</doc>%N"
+	xml_008_ok10: STRING = "<doc>%N <p xml:id=%"anid%"/>%N</doc>%N"
+	xml_010_okxref: STRING = "<!DOCTYPE doc [%N <!ATTLIST para id ID #IMPLIED ref IDREF #IMPLIED >%N]>%N<doc>%N <para id=%"id1%" xml:id=%"id2%"/>%N <para ref=%"is2%"/>%N</doc>%N"
+	xml_011_oknormalize: STRING = "<doc>%N <p xml:id=%"  anid  %"/>%N</doc>%N"
 
 feature {NONE} -- Implementation
 
-	make_parser is
+	make_parser
 			-- Set parser.
 		local
 			namespace_resolver: XM_NAMESPACE_RESOLVER
 			xml_id: XM_XMLID_VALIDATOR
 		do
 			create {XM_EIFFEL_PARSER} parser.make
-			
+
 				-- filters: namespace_resolver -> xml_id -> pretty_print -> error
 			create error.make_null
 			create pretty_print.set_next (error)
@@ -173,6 +173,6 @@ feature {NONE} -- Implementation
 
 	dtd: XM_DTD_XMLID_VALIDATOR
 			-- DTD callbacks
-			
+
 end
 

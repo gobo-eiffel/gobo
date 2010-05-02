@@ -22,7 +22,7 @@ create
 
 feature -- Sort
 
-	subsort_with_comparator (a_container: DS_INDEXABLE [G]; a_comparator: KL_PART_COMPARATOR [G]; lower, upper: INTEGER) is
+	subsort_with_comparator (a_container: DS_INDEXABLE [G]; a_comparator: KL_PART_COMPARATOR [G]; lower, upper: INTEGER)
 			-- Sort `a_container' according to `a_comparator''s comparison criterion within bounds `lower'..`upper'.
 			-- Build a heap into container, where `lower' is the root, then iterate k from `upper' to `lower',
 			-- swapping root element with k-th, and maintaining the heap property of [`lower'..k-1] .
@@ -47,7 +47,7 @@ feature -- Sort
 
 feature {NONE} -- Implementation
 
-	add_root (a_container: DS_INDEXABLE [G]; a_comparator: KL_PART_COMPARATOR [G]; root, upper: INTEGER) is
+	add_root (a_container: DS_INDEXABLE [G]; a_comparator: KL_PART_COMPARATOR [G]; root, upper: INTEGER)
 			-- Make element `root' the root of a heap, by arranging and swapping values so that
 			-- value at `root' is larger than the value of its leaves and of the leaves of its leaves...
 			-- Leaves of node k are located at 2*k and 2*k+1 .
@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_heap (a_container: DS_INDEXABLE [G]; a_comparator: KL_PART_COMPARATOR [G]; lower, upper: INTEGER) is
+	build_heap (a_container: DS_INDEXABLE [G]; a_comparator: KL_PART_COMPARATOR [G]; lower, upper: INTEGER)
 			-- Arrange elements of `a_container[lower..upper]' into a heap.
 			-- i.e. each node in [lower..upper//2] is greater than the values of its leaves;
 			-- Leaves of a node k are located at 2*k, 2*k+1 .

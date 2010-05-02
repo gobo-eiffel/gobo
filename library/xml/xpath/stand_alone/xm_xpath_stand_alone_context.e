@@ -43,7 +43,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (warnings: BOOLEAN; backwards: BOOLEAN; a_base_uri: UT_URI; a_function_library: XM_XPATH_FUNCTION_LIBRARY) is
+	make (warnings: BOOLEAN; backwards: BOOLEAN; a_base_uri: UT_URI; a_function_library: XM_XPATH_FUNCTION_LIBRARY)
 			-- Establish invariant.
 		require
 			warnings_implies_backwards_compatibility: warnings implies backwards
@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 			function_library_set: available_functions = a_function_library
 		end
 
-	make_upon_node is
+	make_upon_node
 			-- TODO
 		do
 			print ("{XM_XPATH_STAND_ALONE_CONTEXT}.make_upon_node not implemented!%N")
@@ -80,7 +80,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	host_language: STRING is
+	host_language: STRING
 			-- Name of host language
 		do
 
@@ -105,13 +105,13 @@ feature -- Access
 	line_number: INTEGER
 			-- Line number
 
-	default_element_namespace: STRING is
+	default_element_namespace: STRING
 			-- Default XPath namespace uri
 		do
 			Result := ""
 		end
 
-	default_function_namespace_uri: STRING is
+	default_function_namespace_uri: STRING
 			-- Namespace for non-prefixed XPath functions
 		do
 			Result := Xpath_standard_functions_uri
@@ -126,14 +126,14 @@ feature -- Access
 	default_collation_name: STRING
 			-- URI naming the default collation
 
-	uri_for_prefix (an_xml_prefix: STRING): STRING is
+	uri_for_prefix (an_xml_prefix: STRING): STRING
 			-- URI for a namespace prefix;
 			-- The default namespace is NOT used when the prefix is empty.
 		do
 			Result := namespaces.item (an_xml_prefix)
 		end
 
-	uri_for_defaulted_prefix (a_prefix: STRING; use_default_namespace: BOOLEAN): STRING is
+	uri_for_defaulted_prefix (a_prefix: STRING; use_default_namespace: BOOLEAN): STRING
 			-- Namespace URI corresponding to a given prefix
 		do
 			if a_prefix.count = 0 and then not use_default_namespace then
@@ -144,7 +144,7 @@ feature -- Access
 		end
 
 
-	fingerprint (a_qname: STRING; use_default_namespace: BOOLEAN): INTEGER is
+	fingerprint (a_qname: STRING; use_default_namespace: BOOLEAN): INTEGER
 			-- Fingerprint of `a_qname'
 		do
 			Result := qname_to_fingerprint (a_qname)
@@ -157,7 +157,7 @@ feature -- Access
 	is_backwards_compatible_mode: BOOLEAN
 			-- Is Backwards Compatible Mode used?
 
-	namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER is
+	namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER
 			-- Resolver for lexical QNames
 		do
 			Result := Current
@@ -165,19 +165,19 @@ feature -- Access
 
 feature -- Status report
 
-	is_prefix_declared (an_xml_prefix: STRING): BOOLEAN is
+	is_prefix_declared (an_xml_prefix: STRING): BOOLEAN
 			-- Is `an_xml_prefix' allocated to a namespace?
 		do
 			Result := namespaces.has (an_xml_prefix)
 		end
 
-	is_variable_declared (a_fingerprint: INTEGER): BOOLEAN is
+	is_variable_declared (a_fingerprint: INTEGER): BOOLEAN
 			-- Does `a_fingerprint' represent a variable declared in the static context?
 		do
 			Result := variables.has (a_fingerprint)
 		end
 
-	is_qname_variable_declared (a_qname: STRING): BOOLEAN is
+	is_qname_variable_declared (a_qname: STRING): BOOLEAN
 			-- Does `a_qname' represent a variable declared in the static context?
 		require
 			valid_name: a_qname /= Void and then is_qname (a_qname)
@@ -192,7 +192,7 @@ feature -- Status report
 			end
 		end
 
-	is_data_type_valid (a_fingerprint: INTEGER): BOOLEAN is
+	is_data_type_valid (a_fingerprint: INTEGER): BOOLEAN
 			-- Does `a_fingerprint' represent a data-type in `Current'?
 		do
 			Result := False
@@ -203,7 +203,7 @@ feature -- Status report
 
 		end
 
-	is_element_available (a_qname: STRING): BOOLEAN is
+	is_element_available (a_qname: STRING): BOOLEAN
 			-- Is element name `a_qname' available?
 		do
 			Result := False
@@ -211,7 +211,7 @@ feature -- Status report
 
 feature -- Creation
 
-	new_compile_time_context: XM_XPATH_CONTEXT is
+	new_compile_time_context: XM_XPATH_CONTEXT
 			-- Restricted dynamic context
 		do
 			create {XM_XPATH_STAND_ALONE_DYNAMIC_CONTEXT} Result.make_restricted (available_functions)
@@ -219,7 +219,7 @@ feature -- Creation
 
 feature -- Element change
 
-	declare_namespace (an_xml_prefix, a_uri: STRING) is
+	declare_namespace (an_xml_prefix, a_uri: STRING)
 		require
 			prefix_not_void: an_xml_prefix /= Void
 			uri_not_void: a_uri /= Void
@@ -230,7 +230,7 @@ feature -- Element change
 			set: namespaces.has (an_xml_prefix) and then STRING_.same_string (a_uri, namespaces.item (an_xml_prefix))
 		end
 
-	declare_variable (a_qname: STRING; an_initial_value: XM_XPATH_VALUE) is
+	declare_variable (a_qname: STRING; an_initial_value: XM_XPATH_VALUE)
 			-- Declare `a_qname' as a variable.
 		require
 			valid_name: a_qname /= Void and then is_qname (a_qname)
@@ -256,7 +256,7 @@ feature -- Element change
 			variable_declared: is_qname_variable_declared (a_qname)
 		end
 
-	clear_namespaces is
+	clear_namespaces
 			-- Clear all the declared namespaces, except for the standard ones.
 		do
 			clear_all_namespaces
@@ -266,13 +266,13 @@ feature -- Element change
 			declare_namespace ("", Null_uri)
 		end
 
-	clear_all_namespaces is
+	clear_all_namespaces
 			-- Clear all the declared namespaces.
 		do
 			create namespaces.make_with_equality_testers (10, string_equality_tester, string_equality_tester)
 		end
 
-	bind_variable (a_fingerprint: INTEGER) is
+	bind_variable (a_fingerprint: INTEGER)
 			-- Bind variable to it's declaration.
 		local
 			var: XM_XPATH_VARIABLE
@@ -285,7 +285,7 @@ feature -- Element change
 
 feature -- Output
 
-	issue_warning (a_warning: STRING) is
+	issue_warning (a_warning: STRING)
 			-- Issue a warning message
 		do
 			if warnings_to_std_error then
@@ -299,7 +299,7 @@ feature {NONE} -- Implementation
 	variables:  DS_HASH_TABLE [XM_XPATH_VARIABLE, INTEGER]
 			-- Variable-bindings
 
-	qname_to_fingerprint (a_qname: STRING): INTEGER is
+	qname_to_fingerprint (a_qname: STRING): INTEGER
 		require
 			valid_name: a_qname /= Void and then is_qname (a_qname)
 		local

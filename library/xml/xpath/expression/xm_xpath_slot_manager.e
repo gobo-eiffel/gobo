@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Nothing to do.
 		do
 		end
@@ -30,7 +30,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_number_of_variables (a_number: INTEGER) is
+	set_number_of_variables (a_number: INTEGER)
 			-- Set number of allocated variables.
 		require
 			positive_variable_count: a_number >= 0
@@ -40,7 +40,7 @@ feature -- Element change
 			set: number_of_variables = a_number
 		end
 
-	allocate_slot_number (a_variable_name: STRING) is
+	allocate_slot_number (a_variable_name: STRING)
 			-- Allocate a slot number for variable named by `a_variable_name'.
 			-- Allocated slot number is available as `number_of_variables'.
 			-- `a_variable_name' is provided for use in a descendant (e.g. in a debugger).
@@ -57,4 +57,4 @@ invariant
 	positive_variable_count: number_of_variables >= 0
 
 end
-	
+

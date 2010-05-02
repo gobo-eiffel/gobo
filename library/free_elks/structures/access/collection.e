@@ -1,7 +1,7 @@
 note
 
 	description: "[
-		General container data structures, 
+		General container data structures,
 		characterized by the membership properties of their items.
 		]"
 	legal: "See notice at end of class."
@@ -31,7 +31,7 @@ feature -- Status report
 
 	is_inserted (v: G): BOOLEAN
 			-- Has `v' been inserted by the most recent insertion?
-			-- (By default, the value returned is equivalent to calling 
+			-- (By default, the value returned is equivalent to calling
 			-- `has (v)'. However, descendants might be able to provide more
 			-- efficient implementations.)
 		do

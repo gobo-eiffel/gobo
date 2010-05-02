@@ -25,14 +25,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new empty feature name list.
 		do
 			keyword := tokens.redefine_keyword
 			precursor
 		end
 
-	make_with_capacity (nb: INTEGER) is
+	make_with_capacity (nb: INTEGER)
 			-- Create a new empty feature name list with capacity `nb'.
 		do
 			keyword := tokens.redefine_keyword
@@ -44,7 +44,7 @@ feature -- Access
 	keyword: ET_KEYWORD
 			-- Keyword preceding the list of feature names
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -54,13 +54,13 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := keyword
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			if is_empty then
@@ -70,7 +70,7 @@ feature -- Access
 			end
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			if is_empty then
@@ -82,7 +82,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_keyword (a_keyword: like keyword) is
+	set_keyword (a_keyword: like keyword)
 			-- Set `keyword' to `a_keyword'.
 		require
 			a_keyword_not_void: a_keyword /= Void
@@ -94,7 +94,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_keyword_feature_name_list (Current)

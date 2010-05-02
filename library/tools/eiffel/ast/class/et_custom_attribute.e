@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_creation: like creation_expression; a_settings: like settings) is
+	make (a_creation: like creation_expression; a_settings: like settings)
 			-- Create a new custom attribute.
 		require
 			a_creation_not_void: a_creation /= Void
@@ -46,26 +46,26 @@ feature -- Access
 	end_keyword: ET_KEYWORD
 			-- 'end' keyword
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
 			Result := creation_expression.position
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := creation_expression.first_leaf
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := end_keyword
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := end_keyword.break
@@ -73,7 +73,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_end_keyword (an_end: like end_keyword) is
+	set_end_keyword (an_end: like end_keyword)
 			-- Set `end_keyword' to `an_end'.
 		require
 			an_end_not_void: an_end /= Void
@@ -85,7 +85,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_custom_attribute (Current)

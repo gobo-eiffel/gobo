@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_feature: like flattened_feature; a_parent_feature: like parent_feature) is
+	make (a_feature: like flattened_feature; a_parent_feature: like parent_feature)
 			-- Create a new redeclared feature.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset (a_feature: like flattened_feature; a_parent_feature: like parent_feature) is
+	reset (a_feature: like flattened_feature; a_parent_feature: like parent_feature)
 			-- Reset redeclared feature.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -68,7 +68,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	is_redeclared: BOOLEAN is True
+	is_redeclared: BOOLEAN = True
 			-- Is current feature being redeclared?
 			-- Note that this feature only make sense when flattening the features.
 			-- Otherwise, features that are declared or redeclared in a class
@@ -78,7 +78,7 @@ feature -- Status report
 
 feature -- Access
 
-	name: ET_FEATURE_NAME is
+	name: ET_FEATURE_NAME
 			-- Feature name
 		do
 			Result := flattened_feature.name
@@ -86,7 +86,7 @@ feature -- Access
 			definition: Result = flattened_feature.name
 		end
 
-	redeclared_feature: ET_REDECLARED_FEATURE is
+	redeclared_feature: ET_REDECLARED_FEATURE
 			-- Current feature viewed as a redeclared feature
 		do
 			Result := Current

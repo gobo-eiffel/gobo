@@ -237,7 +237,7 @@ anchor technique.</p>
 
 </em><em><strong>feature</strong></em> -- Access
 
-    <em>INPUT_STREAM_</em>: <em>KL_INPUT_STREAM_ROUTINES</em> <em><strong>is</strong></em>
+    <em>INPUT_STREAM_</em>: <em>KL_INPUT_STREAM_ROUTINES</em>
             -- Routines that ought to be in class INPUT_STREAM
         <em><strong>once</strong></em>
             <em><strong>create</strong> Result</em>
@@ -250,17 +250,17 @@ color="#008080"><em>
 
 </font><font color="#0000FF">#ifdef</font><font color="#008080"> </font><font
 color="#800080">ISE </font><font color="#008080">
-    <em>INPUT_STREAM_TYPE</em>: <em>IO_MEDIUM</em> <em><strong>is do end</strong></em>
+    <em>INPUT_STREAM_TYPE</em>: <em>IO_MEDIUM</em> <em><strong>do end</strong></em>
 </font><font color="#0000FF">#else
 #ifdef</font><font color="#008080"> </font><font color="#800080">SE</font><font
 color="#008080">
-    <em>INPUT_STREAM_TYPE</em>: <em>INPUT_STREAM</em> <em><strong>is do end</strong></em>
+    <em>INPUT_STREAM_TYPE</em>: <em>INPUT_STREAM</em> <em><strong>do end</strong></em>
 </font><font color="#0000FF">#else
 #ifdef</font><font color="#008080"> </font><font color="#800080">TOWER</font><font
 color="#008080">
-    <em>INPUT_STREAM_TYPE</em>: <em>TEXT_STREAM</em> <em><strong>is do end</strong></em>
+    <em>INPUT_STREAM_TYPE</em>: <em>TEXT_STREAM</em> <em><strong>do end</strong></em>
 </font><font color="#0000FF">#else</font><font color="#008080">
-    <em>INPUT_STREAM_TYPE</em>: <em>FILE</em> <em><strong>is do end</strong></em>
+    <em>INPUT_STREAM_TYPE</em>: <em>FILE</em> <em><strong>do end</strong></em>
 </font><font color="#0000FF">#endif
 #endif
 #endif</font><font color="#008080">
@@ -286,7 +286,7 @@ through the once function of the class above.</p>
 
 </em><em><strong>feature</strong></em> -- Initialization
 
-    <em>make_file_open_read</em> (<em>a_filename</em>: <em>STRING</em>): <em><strong>like</strong></em><em> INPUT_STREAM_TYPE </em><em><strong>is</strong></em>
+    <em>make_file_open_read</em> (<em>a_filename</em>: <em>STRING</em>): <em><strong>like</strong></em><em> INPUT_STREAM_TYPE</em>
             -- Create a new file object with <em>a_filename</em> as
             -- file name and try to open it in read-only mode.
             -- <em>is_open_read</em> (<em>Result</em>) is set to True
@@ -346,7 +346,7 @@ color="#008080">
 
 <em><strong>feature</strong></em> -- Status report
 
-    <em>is_open_read</em> (<em>a_stream</em>: <em><strong>like</strong></em> <em>INPUT_STREAM_TYPE</em>): <em>BOOLEAN</em> <em><strong>is</strong></em>
+    <em>is_open_read</em> (<em>a_stream</em>: <em><strong>like</strong></em> <em>INPUT_STREAM_TYPE</em>): <em>BOOLEAN</em>
             -- Is <em>a_stream</em> open in read mode?
         <em><strong>require</strong></em>
             <em>a_stream_void</em>: <em>a_stream</em> /= <em>Void</em>
@@ -373,7 +373,7 @@ end</strong></em></font></pre>
 
 </em><em><strong>feature</strong></em><em>
 
-    parse_from_file</em> (<em>a_file</em>: <em><strong>like</strong></em> <em>INPUT_STREAM</em>_TYPE) <em><strong>is</strong></em>
+    parse_from_file</em> (<em>a_file</em>: <em><strong>like</strong></em> <em>INPUT_STREAM</em>_TYPE)</em>
             -- Parse data from <em>a_file</em>.
         <em><strong>require</strong></em>
             <em>a_file_not_void</em>: <em>a_file</em> /= <em>Void</em>
@@ -382,7 +382,7 @@ end</strong></em></font></pre>
             ...
         <em><strong>end</strong></em>
 
-    <em>execute</em> <em><strong>is</strong></em>
+    <em>execute</em>
             -- Ask for a file name and parse it.
         <em><strong>local</strong></em>
             <em>a_file</em>: <em><strong>like</strong></em> <em>INPUT_STREAM</em>_TYPE
@@ -441,13 +441,13 @@ class from <font size="2">ELKS</font>:</p>
 
 </font><font color="#0000FF">#ifdef</font><font color="#008080"> </font><font
 color="#800080">SE</font><font color="#008080">
-    <em>input</em>: <em>STD_INPUT</em> <em><strong>is</strong></em>
+    <em>input</em>: <em>STD_INPUT</em>
 </font><font color="#0000FF">#else
 #ifdef</font><font color="#008080"> </font><font color="#800080">TOWER</font><font
 color="#008080">
-    <em>input</em>: <em>TEXT_STREAM</em> <em><strong>is</strong></em>
+    <em>input</em>: <em>TEXT_STREAM</em>
 </font><font color="#0000FF">#else</font><font color="#008080">
-    <em>input</em>: <em>FILE</em> <em><strong>is</strong></em>
+    <em>input</em>: <em>FILE</em>
 </font><font color="#0000FF">#endif
 #endif</font><font color="#008080">
             -- Standard input file
@@ -482,7 +482,7 @@ color="#008080"><em><tt>GENERAL</tt></em></font>:</p>
 
 </em><em><strong>feature</strong></em> -- Access
 
-    <em>std</em>: <em>KL_STANDARD_FILES</em> <em><strong>is</strong></em>
+    <em>std</em>: <em>KL_STANDARD_FILES</em>
             -- Standard files
         <em><strong>once</strong></em>
             <em><strong>create</strong></em> Result
@@ -510,7 +510,7 @@ way as in the following example:</p>
 
 </em><em><strong>feature</strong></em><em>
 
-    parse_from_file</em> (<em>a_file</em>: <em><strong>like</strong></em> <em>INPUT_STREAM_TYPE</em>) <em><strong>is</strong></em>
+    parse_from_file</em> (<em>a_file</em>: <em><strong>like</strong></em> <em>INPUT_STREAM_TYPE</em>)
             -- Parse data from <em>a_file</em>.
         <em><strong>require</strong></em>
             <em>a_file_not_void</em>: <em>a_file</em> /= <em>Void</em>
@@ -519,7 +519,7 @@ way as in the following example:</p>
             ...
         <em><strong>end</strong></em>
 
-    <em>execute</em> <em><strong>is</strong></em>
+    <em>execute</em>
             -- Ask for a file name and parse it.
         <em><strong>local</strong></em>
             <em>a_file</em>: <em><strong>like</strong></em> <em>INPUT_STREAM_TYPE</em>
@@ -569,7 +569,7 @@ color="#008080"><em><tt>KL_STRING_ROUTINES</tt></em></font> will
 provide the following portable feature:</p>
 
 <blockquote>
-    <pre><font color="#008080">    <em>is_integer</em> (<em>a_string</em>: <em>STRING</em>): <em>BOOLEAN</em> <em><strong>is</strong></em>
+    <pre><font color="#008080">    <em>is_integer</em> (<em>a_string</em>: <em>STRING</em>): <em>BOOLEAN</em>
             -- Is <em>a_string</em> only made up of digits?
         <em><strong>require</strong></em>
             <em>a_string_not_void</em>: <em>a_string</em> /= <em>Void</em>
@@ -628,7 +628,7 @@ color="#008080"><em><tt>KL_STRING_ROUTINES</tt></em></font> will
 hence have the following function:</p>
 
 <blockquote>
-    <pre><font color="#008080">    <em>make</em> (<em>n</em>: <em>INTEGER</em>): <em>STRING</em> <em><strong>is</strong></em>
+    <pre><font color="#008080">    <em>make</em> (<em>n</em>: <em>INTEGER</em>): <em>STRING</em>
             -- Create an empty string. Try to allocate space
             -- for at least <em>n</em> characters.
         <em><strong>require</strong></em>
@@ -678,9 +678,9 @@ color="#008080">
             <strong>Last Updated:</strong> 21 February 2005</font><br>
             <!--webbot bot="PurpleText"
             preview="
-$Date$ 
+$Date$
 $Revision$"
-            --> 
+            -->
         </address>
         </td>
         <td align="right" valign="top"><a

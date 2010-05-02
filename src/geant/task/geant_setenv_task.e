@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT; an_xml_element: XM_ELEMENT) is
+	make (a_project: GEANT_PROJECT; an_xml_element: XM_ELEMENT)
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	build_command (a_project: GEANT_PROJECT) is
+	build_command (a_project: GEANT_PROJECT)
 			-- Create instance of `command'
 		do
 			create command.make (a_project)
@@ -61,7 +61,7 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Name_attribute_name: STRING is
+	Name_attribute_name: STRING
 			-- "name" attribute name
 		once
 			Result := "name"
@@ -70,7 +70,7 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Value_attribute_name: STRING is
+	Value_attribute_name: STRING
 			-- Name of xml attribute for value
 		once
 			Result := "value"

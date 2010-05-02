@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant
 		do
 			name := "transformation"; namespace_uri := Gexslt_eiffel_type_uri
@@ -42,15 +42,15 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, where known
 		do
-			Result := any_item			
+			Result := any_item
 		end
 
 feature -- Status report
 
-	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
+	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE
 			-- Type of argument number `argument_number'
 		do
 			inspect
@@ -77,7 +77,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			static_context ?= a_context
@@ -86,7 +86,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterator over the values of a sequence
 		local
 			l_context: XM_XSLT_EVALUATION_CONTEXT
@@ -117,7 +117,7 @@ feature -- Evaluation
 			end
 		end
 
-	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Pre-evaluate `Current' at compile time.
 		do
 			a_replacement.put (Current)
@@ -125,7 +125,7 @@ feature -- Evaluation
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_one_or_more
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 	initial_context: XM_XPATH_NODE
 			-- Optional initial context
 
-	evaluate_arguments (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	evaluate_arguments (a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Evaluate and validate arguments to function call.
 		require
 			last_error_is_void: last_error = Void
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 			no_error_implies_transformer_not_void: last_error = Void implies transformer /= Void
 		end
 
-	evaluate_optional_arguments (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	evaluate_optional_arguments (a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Evaluate arguments beyond second argument.
 		require
 			last_error_is_void: last_error = Void
@@ -248,7 +248,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_parameters (a_names, a_values: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
+	process_parameters (a_names, a_values: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM])
 			-- Process global stylesheet parameters.
 		require
 			a_names_not_void: a_names /= Void
@@ -288,7 +288,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	result_iterator: XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM] is
+	result_iterator: XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]
 			-- Iterator over result documents
 		require
 			last_error_is_void: last_error = Void
@@ -312,7 +312,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	qname_value_iterator: XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM] is
+	qname_value_iterator: XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]
 			-- Iterator over components of `last_error'
 		require
 			last_error_not_void: last_error /= Void
@@ -348,7 +348,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	arbitrary_qname_prefix (a_uri: STRING): STRING is
+	arbitrary_qname_prefix (a_uri: STRING): STRING
 			-- Arbitrary XML prefix
 		require
 			a_uri_not_void: a_uri /= Void
@@ -386,5 +386,5 @@ feature {NONE} -- Implementation
 		end
 
 end
-	
+
 

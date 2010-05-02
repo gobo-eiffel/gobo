@@ -20,7 +20,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make is
+	make
 			-- Establish invariant.
 		do
 			create sequence_numbers.make (1000)
@@ -29,7 +29,7 @@ feature {NONE}  -- Initialization
 
 feature -- Access
 
-	line_number (a_node_number: INTEGER): INTEGER is
+	line_number (a_node_number: INTEGER): INTEGER
 			-- Line number
 		require
 			valid_node_number: True -- Can't check that here (?)
@@ -56,13 +56,13 @@ feature -- Access
 
 feature -- Measurement
 
-	number_allocated_line_numbers: INTEGER is
+	number_allocated_line_numbers: INTEGER
 			-- Number of line numbers allocated
 		do
 			Result := line_numbers.count
 		end
 
-	highest_sequence_number: INTEGER is
+	highest_sequence_number: INTEGER
 			-- Highest sequence number specifically allocated to a line number
 		require
 			at_least_one_allocation: number_allocated_line_numbers > 0
@@ -72,7 +72,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	set_line_number (a_node_number: INTEGER; a_line_number: INTEGER) is
+	set_line_number (a_node_number: INTEGER; a_line_number: INTEGER)
 			-- Set line_number for `a_node_number' to `a_line_number'.
 		require
 			higher_node_number: number_allocated_line_numbers > 0 implies a_node_number > highest_sequence_number

@@ -18,13 +18,13 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Perform the common initialization steps.
 		do
 			description := ""
 		end
 
-	make (a_short_form: CHARACTER; a_long_form: STRING) is
+	make (a_short_form: CHARACTER; a_long_form: STRING)
 			-- Make an option that has `a_short_form' as short form and `a_long_form'
 			-- as long form.
 		require
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			no_optional_parameter: not parameter_is_optional
 		end
 
-	make_with_short_form (a_short_form: CHARACTER) is
+	make_with_short_form (a_short_form: CHARACTER)
 			-- Make an option that has `a_short_form' as short form.
 		do
 			initialize
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			no_optional_parameter: not parameter_is_optional
 		end
 
-	make_with_long_form (a_long_form: STRING) is
+	make_with_long_form (a_long_form: STRING)
 			-- Make an option that `a_long_form' as long form.
 		require
 			a_long_form_not_void: a_long_form /= Void
@@ -70,7 +70,7 @@ feature -- Access
 	description: STRING
 			-- Description of this option
 
-	example: STRING is
+	example: STRING
 			-- Example for the usage of the option (short preferred)
 		local
 			l_long_form: like long_form
@@ -101,7 +101,7 @@ feature -- Access
 	long_form: detachable STRING
 			-- Long form
 
-	name: STRING is
+	name: STRING
 			-- Name of the option (short or long from)
 		local
 			l_long_form: like long_form
@@ -119,7 +119,7 @@ feature -- Access
 			name_not_void: Result /= Void
 		end
 
-	names: STRING is
+	names: STRING
 			-- Names of the option (short and long)
 		local
 			s: detachable STRING
@@ -152,7 +152,7 @@ feature -- Access
 			names_not_void: Result /= Void
 		end
 
-	occurrences: INTEGER is
+	occurrences: INTEGER
 			-- Number of times this flag was encountered
 		deferred
 		end
@@ -166,12 +166,12 @@ feature -- Access
 
 feature -- Status report
 
-	allows_parameter: BOOLEAN is
+	allows_parameter: BOOLEAN
 			-- Does this option allow a parameter?
 		deferred
 		end
 
-	has_long_form: BOOLEAN is
+	has_long_form: BOOLEAN
 			-- Does this option have a long form?
 		do
 			Result := (long_form /= Void)
@@ -188,12 +188,12 @@ feature -- Status report
 	is_mandatory: BOOLEAN
 			-- Is the option not optional?
 
-	needs_parameter: BOOLEAN is
+	needs_parameter: BOOLEAN
 			-- Does this option need a parameter?
 		deferred
 		end
 
-	parameter_is_optional: BOOLEAN is
+	parameter_is_optional: BOOLEAN
 			-- Is the parameter allowed, but optional?
 		do
 			Result := allows_parameter and not needs_parameter
@@ -201,7 +201,7 @@ feature -- Status report
 			definition: Result = (allows_parameter and not needs_parameter)
 		end
 
-	was_found: BOOLEAN is
+	was_found: BOOLEAN
 			-- Was the option found during the last parse?
 		do
 			Result := occurrences > 0
@@ -211,7 +211,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_description (a_string: STRING) is
+	set_description (a_string: STRING)
 			-- Let the text `a_string' describe the option.
 		require
 			a_string_not_void: a_string /= Void
@@ -221,7 +221,7 @@ feature -- Element change
 			description_set: description = a_string
 		end
 
-	set_long_form (a_long_form: STRING) is
+	set_long_form (a_long_form: STRING)
 			-- Make `a_long_form' the long form.
 		require
 			a_long_form_not_void: a_long_form /= Void
@@ -232,7 +232,7 @@ feature -- Element change
 			long_form_set: long_form = a_long_form
 		end
 
-	set_short_form (a_short_form: CHARACTER) is
+	set_short_form (a_short_form: CHARACTER)
 			-- Make `a_short_form' the short form.
 		require
 			no_optional_parameter: not parameter_is_optional
@@ -244,7 +244,7 @@ feature -- Element change
 			short_form_set: short_form = a_short_form
 		end
 
-	set_maximum_occurrences (a_value: INTEGER) is
+	set_maximum_occurrences (a_value: INTEGER)
 			-- Set the maximal allowed number of occurrences to `a_value',
 			-- or `0' to disable the upper bound.
 		require
@@ -255,7 +255,7 @@ feature -- Element change
 			maximum_occurrences_set: maximum_occurrences = a_value
 		end
 
-	enable_mandatory is
+	enable_mandatory
 			-- Make the option mandatory.
 		do
 			is_mandatory := True
@@ -263,7 +263,7 @@ feature -- Element change
 			mandatory: is_mandatory
 		end
 
-	disable_mandatory is
+	disable_mandatory
 			-- Make the option not mandatory.
 		do
 			is_mandatory := False
@@ -271,7 +271,7 @@ feature -- Element change
 			not_mandatory: not is_mandatory
 		end
 
-	hide_in_help_text is
+	hide_in_help_text
 			-- Hide the option in help texts.
 		do
 			is_hidden := True
@@ -279,7 +279,7 @@ feature -- Element change
 			is_hidden: is_hidden
 		end
 
-	show_in_help_text is
+	show_in_help_text
 			-- Show the option in help texts.
 		do
 			is_hidden := False
@@ -289,7 +289,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_long_form is
+	remove_long_form
 			-- Remove the long form.
 		require
 			has_short_form: has_short_form
@@ -299,7 +299,7 @@ feature -- Removal
 			long_form_remove: not has_long_form
 		end
 
-	remove_short_form is
+	remove_short_form
 			-- Remove the short form.
 		require
 			has_long: has_long_form
@@ -311,7 +311,7 @@ feature -- Removal
 
 feature {AP_PARSER} -- Parser Interface
 
-	record_occurrence (a_parser: AP_PARSER) is
+	record_occurrence (a_parser: AP_PARSER)
 			-- This option was found during parsing by `a_parser'.
 		require
 			a_parser_not_void: a_parser /= Void
@@ -321,7 +321,7 @@ feature {AP_PARSER} -- Parser Interface
 			occurrences_increased: occurrences = old occurrences + 1
 		end
 
-	reset is
+	reset
 			-- Reset the option to a clean state before parsing.
 		deferred
 		ensure

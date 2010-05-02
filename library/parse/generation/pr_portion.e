@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_state (state_id: INTEGER; f: like froms; t: like tos) is
+	make_state (state_id: INTEGER; f: like froms; t: like tos)
 			-- Create a new portion of table associated
 			-- with the state `state_id'.
 		require
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			is_state: is_state
 		end
 
-	make_symbol (symbol_id: INTEGER; f: like froms; t: like tos) is
+	make_symbol (symbol_id: INTEGER; f: like froms; t: like tos)
 			-- Create a new portion of table associated
 			-- with the nonterminal symbol `symbol_id'.
 		require
@@ -109,7 +109,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_position (p: INTEGER) is
+	set_position (p: INTEGER)
 			-- Set `position' to `p'.
 		do
 			position := p
@@ -119,7 +119,7 @@ feature -- Setting
 
 feature -- Comparison
 
-	same_portion (other: like Current): BOOLEAN is
+	same_portion (other: like Current): BOOLEAN
 			-- Are current portion and `other' considered
 			-- the same? (Do not redefine `is_equal' here
 			-- because it is incompatible with the semantic
@@ -153,7 +153,7 @@ feature -- Comparison
 			same_category: Result implies (is_state = other.is_state)
 		end
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current table portion considered
 			-- less than `other'?
 		do
@@ -170,7 +170,7 @@ feature -- Comparison
 			end
 		end
 
-	order_is_equal (other: like Current): BOOLEAN is
+	order_is_equal (other: like Current): BOOLEAN
 			-- Are current portion and `other' considered
 			-- equal according to the order relationship?
 		do
@@ -179,7 +179,7 @@ feature -- Comparison
 			definition: Result = not (Current < other or other < Current)
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Are current portion and `other' considered
 			-- equal according to the order relationship?
 		do
@@ -190,7 +190,7 @@ feature -- Comparison
 
 feature -- Constants
 
-	Integer_sorter: DS_BUBBLE_SORTER [INTEGER] is
+	Integer_sorter: DS_BUBBLE_SORTER [INTEGER]
 			-- Integer sorter
 		local
 			a_comparator: KL_COMPARABLE_COMPARATOR [INTEGER]

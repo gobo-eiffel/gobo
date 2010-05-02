@@ -21,7 +21,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_from_tables (other: like to_tables) is
+	make_from_tables (other: like to_tables)
 			-- Make new scanner tables from `other'.
 		require
 			other_not_void: other /= Void
@@ -68,7 +68,7 @@ feature -- Constants
 
 feature -- Conversion
 
-	from_tables (other: like to_tables) is
+	from_tables (other: like to_tables)
 			-- Set current tables with those of `other'.
 		require
 			other_not_void: other /= Void
@@ -77,7 +77,7 @@ feature -- Conversion
 --			set: forall attribute, attribute = other.attribute
 		end
 
-	to_tables: LX_TABLES is
+	to_tables: LX_TABLES
 			-- New scanner tables made from current tables
 		deferred
 		ensure

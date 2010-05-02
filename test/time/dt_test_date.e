@@ -24,7 +24,7 @@ create
 
 feature -- Test
 
-	test_date1 is
+	test_date1
 			-- Test features of DT_DATE.
 		local
 			d1, d2: DT_DATE
@@ -45,7 +45,7 @@ feature -- Test
 			assert ("infix_less2", not (d1 < d2))
 		end
 
-	test_date2 is
+	test_date2
 			-- Test features of DT_DATE.
 		local
 			d1, d2: DT_DATE
@@ -69,7 +69,7 @@ feature -- Test
 			assert ("infix_less2", not (d2 < d1))
 		end
 
-	test_date3 is
+	test_date3
 			-- Test features of DT_DATE.
 		local
 			d1, d2: DT_DATE
@@ -87,7 +87,7 @@ feature -- Test
 			assert_equal ("add_date_duration", d2, d1)
 		end
 
-	test_date4 is
+	test_date4
 			-- Test features of DT_DATE.
 		local
 			d1, d2: DT_DATE
@@ -105,7 +105,7 @@ feature -- Test
 			assert_equal ("add_date_duration", d2, d1)
 		end
 
-	test_date5 is
+	test_date5
 			-- Test features of DT_DATE.
 		local
 			d1: DT_DATE
@@ -124,7 +124,7 @@ feature -- Test
 			assert_integers_equal ("day_count3", -677, d1.day_count)
 		end
 
-	test_date6 is
+	test_date6
 			-- Test features of DT_DATE.
 		local
 			d1, d2: DT_DATE
@@ -144,7 +144,7 @@ feature -- Test
 			assert_equal ("canonical_duration2", dd1, d2.canonical_duration (d1))
 		end
 
-	test_date7 is
+	test_date7
 			-- Test features of DT_DATE.
 		local
 			d1, d2: DT_DATE
@@ -164,7 +164,7 @@ feature -- Test
 			assert_equal ("canonical_duration2", dd1, d2.canonical_duration (d1))
 		end
 
-	test_date8 is
+	test_date8
 			-- Test features of DT_DATE.
 		local
 			d1: DT_DATE
@@ -246,7 +246,7 @@ feature -- Test
 			assert_integers_equal ("days_in_previous_month25", 31, d1.days_in_previous_month)
 		end
 
-	test_date9 is
+	test_date9
 			-- Test features of DT_DATE.
 		local
 			d1: DT_DATE
@@ -263,7 +263,7 @@ feature -- Test
 			assert ("is_leap_year5", not d1.is_leap_year)
 		end
 
-	test_date10 is
+	test_date10
 			-- Test features of DT_DATE.
 		local
 			d1, d2: DT_DATE
@@ -295,7 +295,7 @@ feature -- Test
 			assert_equal ("add_days", d2, d1)
 		end
 
-	test_date11 is
+	test_date11
 			-- Test features of DT_DATE.
 		local
 			d1, d2: DT_DATE
@@ -311,7 +311,7 @@ feature -- Test
 			assert_equal ("add_months", d2, d1)
 		end
 
-	test_date12 is
+	test_date12
 			-- Test features of DT_DATE.
 		local
 			d1, d2: DT_DATE
@@ -328,7 +328,7 @@ feature -- Test
 			assert_equal ("set_day_count3", d2, d1)
 		end
 
-	test_date13 is
+	test_date13
 			-- Test features of DT_DATE.
 			-- (Regression test written after finding a bug in feature
 			-- `set_from_epoch_days'; Reported by Emmanuel Bouyer.)
@@ -348,7 +348,7 @@ feature -- Test
 			assert_equal ("add_date_duration", d2, d1)
 		end
 
-	test_week is
+	test_week
 			-- Test feature `week' of class DT_DATE.
 		local
 			a_date: DT_DATE

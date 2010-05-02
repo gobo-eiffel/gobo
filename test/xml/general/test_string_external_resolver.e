@@ -31,7 +31,7 @@ feature -- Access
 
 feature -- Actions
 
-	resolve (a: STRING) is
+	resolve (a: STRING)
 			-- Resolve a system identifier to an input stream
 			-- on behalf of an XML parser.
 		do
@@ -39,7 +39,7 @@ feature -- Actions
 			Precursor (a)
 		end
 
-	resolve_finish is
+	resolve_finish
 			-- The parser has finished with the last resolved entity.
 			-- The previously resolved entity becomes the last resolved one.
 			-- Note: `last_stream' is not required to be restored accordingly.

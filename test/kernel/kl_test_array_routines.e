@@ -23,7 +23,7 @@ create
 
 feature -- Test
 
-	test_has is
+	test_has
 			-- Test feature `has'.
 		local
 			l_ri: KL_ARRAY_ROUTINES [INTEGER]
@@ -49,7 +49,7 @@ feature -- Test
 			assert ("as_not_has_clone_foo", not l_rs.has (l_as, "foo"))
 		end
 
-	test_subarray is
+	test_subarray
 			-- Test feature `subarray'.
 		local
 			l_ri: KL_ARRAY_ROUTINES [INTEGER]
@@ -75,7 +75,7 @@ feature -- Test
 			assert_integers_equal ("upper_set3", 1, l_ai2.upper)
 		end
 
-	test_subcopy is
+	test_subcopy
 			-- Test feature `subcopy'.
 		local
 			l_ri: KL_ARRAY_ROUTINES [INTEGER]

@@ -24,7 +24,7 @@ inherit
 
 feature -- Status report
 
-	valid_format_and_parameters (a_format: STRING; a_parameters: ARRAY [ANY]): BOOLEAN is
+	valid_format_and_parameters (a_format: STRING; a_parameters: ARRAY [ANY]): BOOLEAN
 			-- Does `a_format' contain valid formatting specifications and
 			-- do `a_parameters' comply to these formatting specifications?
 		require
@@ -35,7 +35,7 @@ feature -- Status report
 
 feature -- Access
 
-	format (a_format: STRING; a_parameters: ARRAY [ANY]): STRING is
+	format (a_format: STRING; a_parameters: ARRAY [ANY]): STRING
 			-- Copy of `a_format' where the formatting specifications
 			-- have been replaced by their corresponding formatted
 			-- parameters from `a_parameters'
@@ -56,7 +56,7 @@ feature -- Access
 			same_type: ANY_.same_types (a_format, Result)
 		end
 
-	format_single (a_format: STRING; a_parameter: ANY): STRING is
+	format_single (a_format: STRING; a_parameter: ANY): STRING
 			-- Copy of `a_format' where the single formatting specification
 			-- have been replaced by formatted version of `a_parameter'
 			--
@@ -75,7 +75,7 @@ feature -- Access
 
 feature -- Convenience
 
-	integer_cell (an_integer: INTEGER): DS_CELL [INTEGER] is
+	integer_cell (an_integer: INTEGER): DS_CELL [INTEGER]
 			-- New 'DS_CELL [INTEGER]' for use in input array
 			-- (Necessary because SE does not support INTEGER_REF
 			-- or 'reference INTEGER' anymore.)
@@ -86,7 +86,7 @@ feature -- Convenience
 			item_set: Result.item = an_integer
 		end
 
-	double_cell (a_double: DOUBLE): DS_CELL [DOUBLE] is
+	double_cell (a_double: DOUBLE): DS_CELL [DOUBLE]
 			-- New 'DS_CELL [DOUBLE]' for use in input array
 			-- (Necessary because SE does not support DOUBLE_REF
 			-- or 'reference DOUBLE' anymore.)
@@ -97,7 +97,7 @@ feature -- Convenience
 			item_set: Result.item = a_double
 		end
 
-	character_cell (a_char: CHARACTER): DS_CELL [CHARACTER] is
+	character_cell (a_char: CHARACTER): DS_CELL [CHARACTER]
 			-- New 'DS_CELL [CHARACTER]' for use in input array
 			-- (Necessary because SE does not support CHARACTER_REF
 			-- or 'reference CHARACTER' anymore.)
@@ -108,7 +108,7 @@ feature -- Convenience
 			item_set: Result.item = a_char
 		end
 
-	boolean_cell (a_boolean: BOOLEAN): DS_CELL [BOOLEAN] is
+	boolean_cell (a_boolean: BOOLEAN): DS_CELL [BOOLEAN]
 			-- New 'DS_CELL [BOOLEAN]' for use in input array
 			-- (Necessary because SE does not support BOOLEAN_REF
 			-- or 'reference BOOLEAN' anymore.)

@@ -18,26 +18,26 @@ inherit
 
 feature -- Status report
 
-	is_incremental: BOOLEAN is False
+	is_incremental: BOOLEAN = False
 			-- Non incremental parser
 
 feature -- Incremental parsing
 
-	parse_incremental_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
+	parse_incremental_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM)
 			-- Precondition always false.
 		do
 		ensure then
 			not_possible: False
 		end
 
-	parse_incremental_from_string (data: STRING) is
+	parse_incremental_from_string (data: STRING)
 			-- Precondition always false.
 		do
 		ensure then
 			not_possible: False
 		end
 
-	finish_incremental is
+	finish_incremental
 			-- Precondition always false.
 		do
 		ensure then

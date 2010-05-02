@@ -45,7 +45,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new formal parameter first pass checker.
 		do
 			precursor {ET_CLASS_SUBPROCESSOR}
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 
 feature -- Validity checking
 
-	check_formal_parameters_validity (a_class: ET_CLASS) is
+	check_formal_parameters_validity (a_class: ET_CLASS)
 			-- First pass of the validity check of the formal generic
 			-- parameters of `a_class'. Do not try to do any conformance
 			-- checking (this is done after the ancestors have been built
@@ -110,7 +110,7 @@ feature -- Validity checking
 
 feature {NONE} -- Constraint validity
 
-	check_constraint_validity (a_formal: ET_FORMAL_PARAMETER) is
+	check_constraint_validity (a_formal: ET_FORMAL_PARAMETER)
 			-- Check whether the constraint of `a_formal' is a valid
 			-- constraint in `current_class'. Record any dependences
 			-- between formal parameters to check for cycles later on.
@@ -132,7 +132,7 @@ feature {NONE} -- Constraint validity
 			end
 		end
 
-	check_bit_feature_constraint (a_type: ET_BIT_FEATURE; a_formal: ET_FORMAL_PARAMETER) is
+	check_bit_feature_constraint (a_type: ET_BIT_FEATURE; a_formal: ET_FORMAL_PARAMETER)
 			-- Check whether `a_type' is valid when appearing in a
 			-- constraint of `a_formal' in `current_class'. Record
 			-- any dependences between formal parameters to check for
@@ -150,7 +150,7 @@ feature {NONE} -- Constraint validity
 			error_handler.report_vcfg3a_error (current_class, a_type)
 		end
 
-	check_bit_n_constraint (a_type: ET_BIT_N; a_formal: ET_FORMAL_PARAMETER) is
+	check_bit_n_constraint (a_type: ET_BIT_N; a_formal: ET_FORMAL_PARAMETER)
 			-- Check whether `a_type' is valid when appearing in a
 			-- constraint of `a_formal' in `current_class'. Record
 			-- any dependences between formal parameters to check for
@@ -173,7 +173,7 @@ feature {NONE} -- Constraint validity
 			end
 		end
 
-	check_class_type_constraint (a_type: ET_CLASS_TYPE; a_formal: ET_FORMAL_PARAMETER) is
+	check_class_type_constraint (a_type: ET_CLASS_TYPE; a_formal: ET_FORMAL_PARAMETER)
 			-- Check whether `a_type' is valid when appearing in a
 			-- constraint of `a_formal' in `current_class'. Record
 			-- any dependences between formal parameters to check for
@@ -255,7 +255,7 @@ feature {NONE} -- Constraint validity
 			end
 		end
 
-	check_formal_parameter_type_constraint (a_type: ET_FORMAL_PARAMETER_TYPE; a_formal: ET_FORMAL_PARAMETER) is
+	check_formal_parameter_type_constraint (a_type: ET_FORMAL_PARAMETER_TYPE; a_formal: ET_FORMAL_PARAMETER)
 			-- Check whether `a_type' is valid when appearing in a
 			-- constraint of `a_formal' in `current_class'. Record
 			-- any dependences between formal parameters to check for
@@ -356,7 +356,7 @@ feature {NONE} -- Constraint validity
 			end
 		end
 
-	check_like_type_constraint (a_type: ET_LIKE_TYPE; a_formal: ET_FORMAL_PARAMETER) is
+	check_like_type_constraint (a_type: ET_LIKE_TYPE; a_formal: ET_FORMAL_PARAMETER)
 			-- Check whether `a_type' is valid when appearing in a
 			-- constraint of `a_formal' in `current_class'. Record
 			-- any dependences between formal parameters to check for
@@ -374,7 +374,7 @@ feature {NONE} -- Constraint validity
 			error_handler.report_vcfg3c_error (current_class, a_type)
 		end
 
-	check_tuple_type_constraint (a_type: ET_TUPLE_TYPE; a_formal: ET_FORMAL_PARAMETER) is
+	check_tuple_type_constraint (a_type: ET_TUPLE_TYPE; a_formal: ET_FORMAL_PARAMETER)
 			-- Check whether `a_type' is valid when appearing in a
 			-- constraint of `a_formal' in `current_class'. Record
 			-- any dependences between formal parameters to check for
@@ -414,7 +414,7 @@ feature {NONE} -- Constraint validity
 
 feature {NONE} -- Constraint cycles
 
-	check_constraint_cycles is
+	check_constraint_cycles
 			-- Check for cycles in the constraints of the formal
 			-- generic parameters of `current_class'.
 			-- Set `has_fatal_error' if an error occurred.
@@ -511,7 +511,7 @@ feature {NONE} -- Constraint cycles
 
 feature {ET_AST_NODE} -- Type dispatcher
 
-	process_bit_feature (a_type: ET_BIT_FEATURE) is
+	process_bit_feature (a_type: ET_BIT_FEATURE)
 			-- Process `a_type'.
 		do
 			if current_formal /= Void then
@@ -519,7 +519,7 @@ feature {ET_AST_NODE} -- Type dispatcher
 			end
 		end
 
-	process_bit_n (a_type: ET_BIT_N) is
+	process_bit_n (a_type: ET_BIT_N)
 			-- Process `a_type'.
 		do
 			if current_formal /= Void then
@@ -527,13 +527,13 @@ feature {ET_AST_NODE} -- Type dispatcher
 			end
 		end
 
-	process_class (a_class: ET_CLASS) is
+	process_class (a_class: ET_CLASS)
 			-- Process `a_class'.
 		do
 			process_class_type (a_class)
 		end
 
-	process_class_type (a_type: ET_CLASS_TYPE) is
+	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
 		do
 			if current_formal /= Void then
@@ -541,7 +541,7 @@ feature {ET_AST_NODE} -- Type dispatcher
 			end
 		end
 
-	process_formal_parameter_type (a_type: ET_FORMAL_PARAMETER_TYPE) is
+	process_formal_parameter_type (a_type: ET_FORMAL_PARAMETER_TYPE)
 			-- Process `a_type'.
 		do
 			if current_formal /= Void then
@@ -549,25 +549,25 @@ feature {ET_AST_NODE} -- Type dispatcher
 			end
 		end
 
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE) is
+	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
 			-- Process `a_type'.
 		do
 			process_class_type (a_type)
 		end
 
-	process_like_current (a_type: ET_LIKE_CURRENT) is
+	process_like_current (a_type: ET_LIKE_CURRENT)
 			-- Process `a_type'.
 		do
 			process_like_type (a_type)
 		end
 
-	process_like_feature (a_type: ET_LIKE_FEATURE) is
+	process_like_feature (a_type: ET_LIKE_FEATURE)
 			-- Process `a_type'.
 		do
 			process_like_type (a_type)
 		end
 
-	process_like_type (a_type: ET_LIKE_TYPE) is
+	process_like_type (a_type: ET_LIKE_TYPE)
 			-- Process `a_type'.
 		require
 			a_type_not_void: a_type /= Void
@@ -577,19 +577,19 @@ feature {ET_AST_NODE} -- Type dispatcher
 			end
 		end
 
-	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE) is
+	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE)
 			-- Process `a_type'.
 		do
 			process_like_type (a_type)
 		end
 
-	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
+	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE)
 			-- Process `a_type'.
 		do
 			process_like_type (a_type)
 		end
 
-	process_tuple_type (a_type: ET_TUPLE_TYPE) is
+	process_tuple_type (a_type: ET_TUPLE_TYPE)
 			-- Process `a_type'.
 		do
 			if current_formal /= Void then

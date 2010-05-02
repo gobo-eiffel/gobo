@@ -24,7 +24,7 @@ inherit
 
 feature -- Access
 
-	constant: ET_CONSTANT is
+	constant: ET_CONSTANT
 			-- Constant value
 		deferred
 		ensure
@@ -34,7 +34,7 @@ feature -- Access
 	id: INTEGER
 			-- Constant id in surrounding universe
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code
 		do
 			Result := id
@@ -42,12 +42,12 @@ feature -- Access
 
 feature -- Status report
 
-	is_never_void: BOOLEAN is True
+	is_never_void: BOOLEAN = True
 			-- Can current expression never be void?
 
 feature -- Setting
 
-	set_id (i: INTEGER) is
+	set_id (i: INTEGER)
 			-- Set `id' to `i'.
 		require
 			i_not_negative: i >= 0

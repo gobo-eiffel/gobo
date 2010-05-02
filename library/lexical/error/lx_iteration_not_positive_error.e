@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER) is
+	make (filename: STRING; line: INTEGER)
 			-- Create a new error reporting that the
 			-- iteration value in a regular expression
 			-- must be positive.
@@ -36,10 +36,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: iteration value must be positive"
+	default_template: STRING = "%"$1%", line $2: iteration value must be positive"
 			-- Default template used to built the error message
 
-	code: STRING is "LX0011"
+	code: STRING = "LX0011"
 			-- Error code
 
 invariant

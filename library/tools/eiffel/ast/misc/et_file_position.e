@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_filename: like filename; a_line, a_column: INTEGER) is
+	make (a_filename: like filename; a_line, a_column: INTEGER)
 			-- Create a new position in `a_filename'.
 		require
 			a_filename_not_void: a_filename /= Void
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			no_column_set: a_column > maximum_column implies column = 0
 		end
 
-	make_default is
+	make_default
 			-- Create a new default position.
 		do
 			make (no_filename, no_line, no_column)
@@ -62,7 +62,7 @@ feature -- Access
 
 feature -- Output
 
-	append_to_string (a_string: STRING) is
+	append_to_string (a_string: STRING)
 			-- Append `to_text' to `a_string'.
 		do
 			append_to_string_with_filename (filename, a_string)
@@ -70,7 +70,7 @@ feature -- Output
 
 feature -- Constants
 
-	no_filename: STRING is ""
+	no_filename: STRING = ""
 			-- Filename used in `make_default'
 
 invariant

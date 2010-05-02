@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_action: like action; a_line: INTEGER) is
+	make (an_action: like action; a_line: INTEGER)
 			-- Create a new error action.
 		require
 			an_action_not_void: an_action /= Void
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Are `Current' and `other' considered equal?
 		do
 			if ANY_.same_types (Current, other) then

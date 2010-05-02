@@ -28,7 +28,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Create a new character buffer being able
 			-- to contain `n' characters.
 		require
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			count_set: count = n
 		end
 
-	make_from_string (a_string: STRING) is
+	make_from_string (a_string: STRING)
 			-- Create a new character buffer with
 			-- characters from `a_string'.
 			-- (The newly created buffer and `a_string'
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	substring (s, e: INTEGER): STRING is
+	substring (s, e: INTEGER): STRING
 			-- New string made up of characters held in
 			-- buffer between indexes `s' and `e'
 		require
@@ -72,7 +72,7 @@ feature -- Access
 
 feature -- Conversion
 
-	to_text: STRING is
+	to_text: STRING
 			-- New string made up of characters held in buffer
 		do
 			Result := substring (1, count)
@@ -82,7 +82,7 @@ feature -- Conversion
 			same_count: Result.count = count
 		end
 
-	as_special: detachable SPECIAL [CHARACTER] is
+	as_special: detachable SPECIAL [CHARACTER]
 			-- 'SPECIAL [CHARACTER]' version of current character buffer;
 			-- Characters are indexed starting at 1;
 			-- Note that the result may share the internal data with `Current'.
@@ -91,7 +91,7 @@ feature -- Conversion
 
 feature -- Element change
 
-	append_substring_to_string (s, e: INTEGER; a_string: STRING) is
+	append_substring_to_string (s, e: INTEGER; a_string: STRING)
 			-- Append string made up of characters held in buffer
 			-- between indexes `s' and `e' to `a_string'.
 		require
@@ -108,7 +108,7 @@ feature -- Element change
 			characters_set: s <= e implies STRING_.same_string (a_string.substring (old (a_string.count) + 1, a_string.count), substring (s, e))
 		end
 
-	fill_from_string (a_string: STRING; pos: INTEGER) is
+	fill_from_string (a_string: STRING; pos: INTEGER)
 			-- Copy characters of `a_string' to buffer
 			-- starting at position `pos'.
 		require
@@ -137,7 +137,7 @@ feature -- Element change
 			charaters_set: substring (pos, a_string.count + pos - 1).is_equal (a_string)
 		end
 
-	fill_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM; pos, nb: INTEGER): INTEGER is
+	fill_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM; pos, nb: INTEGER): INTEGER
 			-- Fill buffer, starting at position `pos', with
 			-- at most `nb' items read from `a_stream'.
 			-- Return the number of items actually read.
@@ -147,7 +147,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	dummy_string: STRING is ""
+	dummy_string: STRING = ""
 			-- Dummy string
 
 end

@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_element: XM_ELEMENT; an_attribute_name: STRING; a_new_element: STRING; a_position: XM_POSITION) is
+	make (an_element: XM_ELEMENT; an_attribute_name: STRING; a_new_element: STRING; a_position: XM_POSITION)
 			-- Create a warning reporting that an attribute `an_attribute_name' of element `an_element'
 			-- is obsoleted by an element `a_new_element'.
 		require
@@ -39,10 +39,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "attribute '$2' of element <$1> at $4 is obsolete, use element $3 instead"
+	default_template: STRING = "attribute '$2' of element <$1> at $4 is obsolete, use element $3 instead"
 			-- Default template used to built the error message
 
-	code: STRING is "XA0016"
+	code: STRING = "XA0016"
 			-- Error code
 
 end

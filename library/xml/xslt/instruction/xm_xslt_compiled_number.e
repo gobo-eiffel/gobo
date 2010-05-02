@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 	make (an_executable: XM_XSLT_EXECUTABLE; a_select_expression: XM_XPATH_EXPRESSION; a_level, a_hash_code: INTEGER; a_count_pattern, a_from_pattern: XM_XSLT_PATTERN;
 		a_value_expression, a_format, a_grouping_size, a_grouping_separator, a_letter_value, an_ordinal, a_language: XM_XPATH_EXPRESSION;
-		a_formatter: XM_XSLT_NUMBER_FORMATTER;	a_numberer: ST_XSLT_NUMBERER; a_variables_in_patterns, a_backwards: BOOLEAN) is
+		a_formatter: XM_XSLT_NUMBER_FORMATTER;	a_numberer: ST_XSLT_NUMBERER; a_variables_in_patterns, a_backwards: BOOLEAN)
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
@@ -93,7 +93,7 @@ feature -- Access
 	hash_code: INTEGER
 			-- Hash code value
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, when known
 		do
 			Result := type_factory.string_type
@@ -103,7 +103,7 @@ feature -- Access
 			end
 		end
 
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions of `Current'
 		local
 			l_bridge: XM_XSLT_PATTERN_BRIDGE
@@ -125,7 +125,7 @@ feature -- Access
 			if from_pattern /= Void then
 				create l_bridge.make (from_pattern, Current)
 				Result.put_last (l_bridge)
-			end			
+			end
 		end
 
 feature -- Status report
@@ -133,7 +133,7 @@ feature -- Status report
 	is_backwards_compatible: BOOLEAN
 			-- Is in backwards compatible mode?
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		do
 			std.error.put_string (STRING_.appended_string (indentation (a_level), "xsl:number"))
@@ -143,7 +143,7 @@ feature -- Status report
 
 feature -- Status setting
 
-		compute_intrinsic_dependencies is
+		compute_intrinsic_dependencies
 			-- Determine the intrinsic dependencies of an expression.
 		do
 			initialize_intrinsic_dependencies
@@ -154,10 +154,10 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]		
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			if select_expression /= Void then
@@ -237,7 +237,7 @@ feature -- Optimization
 			end
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -317,10 +317,10 @@ feature -- Optimization
 			end
 			if a_replacement.item = Void then
 				a_replacement.put (Current)
-			end			
+			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -400,10 +400,10 @@ feature -- Optimization
 			end
 			if a_replacement.item = Void then
 				a_replacement.put (Current)
-			end			
+			end
 		end
 
-	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this subexpression.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -495,8 +495,8 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
-			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.	
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
+			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_receiver: XM_XPATH_SEQUENCE_RECEIVER
 			l_letter: STRING
@@ -513,9 +513,9 @@ feature -- Evaluation
 			if not transformer.is_error then
 				calculate_ordinal (a_context)
 				if atomic_vector = Void and then format = Void and then group_size = 0 and then language = Void then
-					
+
 					-- fast path for the simple case
-					
+
 					l_receiver.notify_characters (value.out, 0)
 				else
 					if numberer = Void then
@@ -564,7 +564,7 @@ feature -- Evaluation
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
@@ -632,7 +632,7 @@ feature {NONE} -- Implementation
 	ordinal_value: STRING
 			-- Ordinal
 
-	set_select_expression (a_select_expression: XM_XPATH_EXPRESSION) is
+	set_select_expression (a_select_expression: XM_XPATH_EXPRESSION)
 			-- Ensure `select_expression' = `a_select_expression'.
 		do
 			if select_expression /= a_select_expression then
@@ -646,7 +646,7 @@ feature {NONE} -- Implementation
 			set: select_expression = a_select_expression
 		end
 
-	set_value_expression (a_value_expression: XM_XPATH_EXPRESSION) is
+	set_value_expression (a_value_expression: XM_XPATH_EXPRESSION)
 			-- Ensure `value_expression' = `a_value_expression'.
 		do
 			if value_expression /= a_value_expression then
@@ -660,7 +660,7 @@ feature {NONE} -- Implementation
 			set: value_expression = a_value_expression
 		end
 
-	set_format (a_format: XM_XPATH_EXPRESSION) is
+	set_format (a_format: XM_XPATH_EXPRESSION)
 			-- Ensure `format' = `a_format'.
 		do
 			if format /= a_format then
@@ -674,7 +674,7 @@ feature {NONE} -- Implementation
 			set: format = a_format
 		end
 
-	set_grouping_size (a_grouping_size: XM_XPATH_EXPRESSION) is
+	set_grouping_size (a_grouping_size: XM_XPATH_EXPRESSION)
 			-- Ensure `grouping_size' = `a_grouping_size'.
 		do
 			if grouping_size /= a_grouping_size then
@@ -688,7 +688,7 @@ feature {NONE} -- Implementation
 			set: grouping_size = a_grouping_size
 		end
 
-	set_grouping_separator (a_grouping_separator: XM_XPATH_EXPRESSION) is
+	set_grouping_separator (a_grouping_separator: XM_XPATH_EXPRESSION)
 			-- Ensure `grouping_separator' = `a_grouping_separator'.
 		do
 			if grouping_separator /= a_grouping_separator then
@@ -702,7 +702,7 @@ feature {NONE} -- Implementation
 			set: grouping_separator = a_grouping_separator
 		end
 
-	set_language (a_language: XM_XPATH_EXPRESSION) is
+	set_language (a_language: XM_XPATH_EXPRESSION)
 			-- Ensure `language' = `a_language'.
 		do
 			if language /= a_language then
@@ -716,7 +716,7 @@ feature {NONE} -- Implementation
 			set: language = a_language
 		end
 
-	set_ordinal (a_ordinal: XM_XPATH_EXPRESSION) is
+	set_ordinal (a_ordinal: XM_XPATH_EXPRESSION)
 			-- Ensure `ordinal' = `a_ordinal'.
 		do
 			if ordinal /= a_ordinal then
@@ -730,7 +730,7 @@ feature {NONE} -- Implementation
 			set: ordinal = a_ordinal
 		end
 
-	set_letter_value (a_letter_value: XM_XPATH_EXPRESSION) is
+	set_letter_value (a_letter_value: XM_XPATH_EXPRESSION)
 			-- Ensure `letter_value' = `a_letter_value'.
 		do
 			if letter_value /= a_letter_value then
@@ -744,8 +744,8 @@ feature {NONE} -- Implementation
 			set: letter_value = a_letter_value
 		end
 
-	
-	calculate_ordinal (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+
+	calculate_ordinal (a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Calculate `ordinal_value'
 		require
 			context_not_void: a_context /= Void
@@ -762,7 +762,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	calculate_group_separator (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	calculate_group_separator (a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Calculate `group_separator'
 		require
 			context_not_void: a_context /= Void
@@ -785,7 +785,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	calculate_group_size (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	calculate_group_size (a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Calculate `group_size'
 		require
 			context_not_void: a_context /= Void
@@ -820,7 +820,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	calculate_vector (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	calculate_vector (a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Calculate `atomic_vector' or `value'.
 		require
 			context_not_void: a_context /= Void
@@ -887,7 +887,7 @@ feature {NONE} -- Implementation
 			error_or_value_or_atomic_vector: not transformer.is_error implies (value > 0 or atomic_vector /= Void)
 		end
 
-	calculate_value (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	calculate_value (a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Calculate `value'.
 		require
 			context_not_void: a_context /= Void
@@ -976,7 +976,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	simple_number (a_node: XM_XPATH_NODE): INTEGER_64 is
+	simple_number (a_node: XM_XPATH_NODE): INTEGER_64
 			-- Simple number of `a_node';
 			-- This is defined as one plus the number of previous siblings
 			--  of the same node type and name.
@@ -1025,7 +1025,7 @@ feature {NONE} -- Implementation
 	last_single_number: INTEGER_64
 			-- Result from `calculate_single_number' or `calculate_any_number'
 
-	calculate_single_number (a_node: XM_XPATH_NODE; a_count_pattern, a_from_pattern: XM_XSLT_PATTERN; a_context: XM_XSLT_EVALUATION_CONTEXT) is 
+	calculate_single_number (a_node: XM_XPATH_NODE; a_count_pattern, a_from_pattern: XM_XSLT_PATTERN; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- One plus the number of previous siblings
 			--  of the nearest ancestor-or-self, that match `count_pattern'.
 		require
@@ -1076,7 +1076,7 @@ feature {NONE} -- Implementation
 						end
 					end
 					if last_single_number = -1 then
-						
+
 						-- We've found the ancestor to count from
 
 						already_checked := a_count.is_node_test
@@ -1102,7 +1102,7 @@ feature {NONE} -- Implementation
 			positive_integer: not transformer.is_error implies last_single_number >= 0
 		end
 
-	calculate_any_number (a_node: XM_XPATH_NODE; a_count: XM_XSLT_PATTERN; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	calculate_any_number (a_node: XM_XPATH_NODE; a_count: XM_XSLT_PATTERN; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- One plus number of previous nodes that match `count_pattern'
 		require
 			source_node_not_void: a_node /= Void
@@ -1187,8 +1187,8 @@ feature {NONE} -- Implementation
 
 	multi_level_number: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]
 			-- Result from `calculate_multi_level_number'
-	
-	calculate_multi_level_number (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+
+	calculate_multi_level_number (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Hirerarchic position of `a_node'
 		require
 			source_node_not_void: a_node /= Void

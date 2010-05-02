@@ -25,15 +25,15 @@ create
 
 feature -- Access
 
-	program_name: STRING is "tagcount"
+	program_name: STRING = "tagcount"
 			-- Program name
 
-	library_name: STRING is "xml"
+	library_name: STRING = "xml"
 			-- Library name of example
 
 feature -- Test
 
-	test_print is
+	test_print
 			-- Test 'event/tagcount' example.
 		do
 			compile_program
@@ -41,7 +41,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	program_dirname: STRING is
+	program_dirname: STRING
 			-- Name of program source directory
 		do
 			Result := file_system.nested_pathname ("${GOBO}", <<"example", library_name, "event", program_name>>)

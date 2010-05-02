@@ -24,7 +24,7 @@ inherit
 
 feature -- Access
 
-	type: ET_CONSTRAINT_TYPE is
+	type: ET_CONSTRAINT_TYPE
 			-- Type
 		do
 			Result := Current
@@ -35,7 +35,7 @@ feature -- Access
 feature -- Conversion
 
 	resolved_syntactical_constraint (a_formals: ET_FORMAL_PARAMETER_LIST;
-		a_class: ET_CLASS; a_parser: ET_EIFFEL_PARSER_SKELETON): ET_TYPE is
+		a_class: ET_CLASS; a_parser: ET_EIFFEL_PARSER_SKELETON): ET_TYPE
 			-- Version of current type, appearing in the constraint of one
 			-- of the formal generic parameters in `a_formals' of `a_class',
 			-- where class names and formal generic parameter names have been
@@ -49,7 +49,7 @@ feature -- Conversion
 		end
 
 	resolved_syntactical_constraint_with_type (a_type: ET_TYPE;
-		a_parser: ET_EIFFEL_PARSER_SKELETON): ET_TYPE is
+		a_parser: ET_EIFFEL_PARSER_SKELETON): ET_TYPE
 			-- Version of current actual parameter, where its type has
 			-- been replaced by `a_type'
 		do

@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new Xace system.
 		do
 		end
@@ -45,7 +45,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_system_name (a_name: like system_name) is
+	set_system_name (a_name: like system_name)
 			-- Set `system_name' to `a_name'.
 		do
 			system_name := a_name
@@ -53,7 +53,7 @@ feature -- Setting
 			system_name_set: system_name = a_name
 		end
 
-	set_root_class_name (a_name: like root_class_name) is
+	set_root_class_name (a_name: like root_class_name)
 			-- Set `root_class_name' to `a_name'.
 		do
 			root_class_name := a_name
@@ -61,7 +61,7 @@ feature -- Setting
 			root_class_name_set: root_class_name = a_name
 		end
 
-	set_creation_procedure_name (a_name: like creation_procedure_name) is
+	set_creation_procedure_name (a_name: like creation_procedure_name)
 			-- Set `creation_procedure_name' to `a_name'.
 		do
 			creation_procedure_name := a_name
@@ -69,7 +69,7 @@ feature -- Setting
 			creation_procedure_name_set: creation_procedure_name = a_name
 		end
 
-	set_options (an_options: like options) is
+	set_options (an_options: like options)
 			-- Set `options' to `an_options'.
 		do
 			options := an_options
@@ -77,7 +77,7 @@ feature -- Setting
 			options_set: options = an_options
 		end
 
-	set_clusters (a_clusters: like clusters) is
+	set_clusters (a_clusters: like clusters)
 			-- Set `a_clusters' to `clusters'.
 		do
 			clusters := a_clusters
@@ -85,7 +85,7 @@ feature -- Setting
 			clusters_set: clusters = a_clusters
 		end
 
-	set_libraries (a_libraries: like libraries) is
+	set_libraries (a_libraries: like libraries)
 			-- Set `a_libraries' to `libraries'.
 		do
 			libraries := a_libraries
@@ -95,7 +95,7 @@ feature -- Setting
 
 feature -- Basic operations
 
-	mount_libraries is
+	mount_libraries
 			-- Add clusters `libraries' to `clusters'.
 			-- Mark these clusters as mounted.
 		do
@@ -107,7 +107,7 @@ feature -- Basic operations
 			end
 		end
 
-	merge_externals (an_externals: ET_XACE_EXTERNALS) is
+	merge_externals (an_externals: ET_XACE_EXTERNALS)
 			-- Merge current system's externals, and those of
 			-- all clusters and subclusters, to `an_externals'.
 		require
@@ -141,7 +141,7 @@ feature -- Basic operations
 			end
 		end
 
-	merge_exported_features (an_export: DS_LIST [ET_XACE_EXPORTED_FEATURE]) is
+	merge_exported_features (an_export: DS_LIST [ET_XACE_EXPORTED_FEATURE])
 			-- Merge current system's exported features and those
 			-- all clusters and subclusters to `an_export'.
 		require

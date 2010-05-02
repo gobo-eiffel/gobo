@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT) is
+	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT)
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	build_command (a_project: GEANT_PROJECT) is
+	build_command (a_project: GEANT_PROJECT)
 			-- Create instance of `command'
 		do
 			create command.make (a_project)
@@ -90,7 +90,7 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Source_attribute_name: STRING is
+	Source_attribute_name: STRING
 			-- Name of xml attribute for source
 		once
 			Result := "source"
@@ -99,7 +99,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Target_attribute_name: STRING is
+	Target_attribute_name: STRING
 			-- Name of xml attribute for target
 		once
 			Result := "target"
@@ -108,7 +108,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Variable_attribute_name: STRING is
+	Variable_attribute_name: STRING
 			-- Name of xml attribute for variable
 		once
 			Result := "variable"
@@ -117,7 +117,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	True_value_attribute_name: STRING is
+	True_value_attribute_name: STRING
 			-- Name of xml attribute for true_value
 		once
 			Result := "true_value"
@@ -126,7 +126,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	False_value_attribute_name: STRING is
+	False_value_attribute_name: STRING
 			-- Name of xml attribute for false_value
 		once
 			Result := "false_value"
@@ -135,7 +135,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Fileset_element_name: STRING is
+	Fileset_element_name: STRING
 			-- Name of xml subelement for fileset
 		once
 			Result := "fileset"

@@ -3,7 +3,7 @@ note
 	description:
 	"[
 		Tables using AVL tree algorithm.
-		
+
 		AVL trees are a height balanced variant of binary search trees.
 		It is guaranteed that `height' is always about `log_2 (count)'.
 	]"
@@ -42,7 +42,7 @@ create
 
 feature -- Access
 
-	new_cursor: DS_AVL_TREE_CURSOR [G, K] is
+	new_cursor: DS_AVL_TREE_CURSOR [G, K]
 			-- New external cursor
 		do
 			create Result.make (Current)

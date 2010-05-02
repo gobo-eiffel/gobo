@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_value: STRING) is
+	make (a_value: STRING)
 			-- Initialize `Current' with formatted value.
 		require
 			a_value_not_void: a_value /= Void
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			value_set: value = a_value
 		end
 
-	make_error (a_message, a_code: STRING) is
+	make_error (a_message, a_code: STRING)
 			-- Initialize `Current' with error.
 		require
 			a_code_not_void: a_code /= Void

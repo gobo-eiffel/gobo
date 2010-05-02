@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initializate `Current'.
 		do
 			create attribute_set_table.make_default
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	has (a_name_code: INTEGER): BOOLEAN is
+	has (a_name_code: INTEGER): BOOLEAN
 			-- Does `Current' have an attribute set named by `a_name_code'?
 		require
 			valid_name_code: shared_name_pool.is_valid_name_code (a_name_code)
@@ -38,7 +38,7 @@ feature -- Access
 			Result := attribute_set_table.has (a_name_code)
 		end
 
-	attribute_sets (a_name_code: INTEGER): DS_LINKED_LIST [XM_XSLT_COMPILED_ATTRIBUTE_SET] is
+	attribute_sets (a_name_code: INTEGER): DS_LINKED_LIST [XM_XSLT_COMPILED_ATTRIBUTE_SET]
 			-- All partial attribute sets named by `a_name_code'
 		require
 			valid_name_code: shared_name_pool.is_valid_name_code (a_name_code)
@@ -51,7 +51,7 @@ feature -- Access
 
 feature -- Element change
 
-	add_attributes (a_attribute_set: XM_XSLT_COMPILED_ATTRIBUTE_SET; a_name_code: INTEGER) is
+	add_attributes (a_attribute_set: XM_XSLT_COMPILED_ATTRIBUTE_SET; a_name_code: INTEGER)
 			-- Add attributes defined in `a_attribute_set' to set named by `a_name_code'.
 		require
 			a_attribute_set_not_void: a_attribute_set /= Void
@@ -82,4 +82,4 @@ invariant
 
 end
 
-	
+

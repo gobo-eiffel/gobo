@@ -14,7 +14,7 @@ class ET_SHARED_FEATURE_NAME_TESTER
 
 feature -- Access
 
-	feature_name_tester: ET_FEATURE_NAME_TESTER is
+	feature_name_tester: ET_FEATURE_NAME_TESTER
 			-- Feature name equality tester
 		once
 			create Result

@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new windows file system object.
 			-- Accept both \ and / directory separators
 			-- as input, and use \ as output.
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			secondary_directory_separator := '/'
 		end
 
-	make_backslash_only is
+	make_backslash_only
 			-- Create a new windows file system object.
 			-- Accept only \ as directory separator.
 		do
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- File handling
 
-	new_input_file (a_name: STRING): KL_WINDOWS_INPUT_FILE is
+	new_input_file (a_name: STRING): KL_WINDOWS_INPUT_FILE
 			-- New input text file in current file system
 			-- (`a_name' should follow the pathname convention
 			-- of the underlying platform. For pathname conversion
@@ -54,7 +54,7 @@ feature -- File handling
 			create Result.make (a_name)
 		end
 
-	new_output_file (a_name: STRING): KL_WINDOWS_OUTPUT_FILE is
+	new_output_file (a_name: STRING): KL_WINDOWS_OUTPUT_FILE
 			-- New output text file in current file system
 			-- (`a_name' should follow the pathname convention
 			-- of the underlying platform. For pathname conversion
@@ -63,12 +63,12 @@ feature -- File handling
 			create Result.make (a_name)
 		end
 
-	eol: STRING is "%R%N"
+	eol: STRING = "%R%N"
 			-- Line separator in current file system
 
 feature -- Pathname handling
 
-	is_absolute_pathname (a_pathname: STRING): BOOLEAN is
+	is_absolute_pathname (a_pathname: STRING): BOOLEAN
 			-- Is `a_pathname' an absolute pathname (it needs
 			-- to include the drive letter or the hostname)?
 			-- (`a_pathname' should follow the Windows pathname convention.
@@ -121,7 +121,7 @@ feature -- Pathname handling
 			end
 		end
 
-	is_relative_pathname (a_pathname: STRING): BOOLEAN is
+	is_relative_pathname (a_pathname: STRING): BOOLEAN
 			-- Is `a_pathname' a relative pathname (relative
 			-- to the current working directory)?
 			-- (`a_pathname' should follow the Windows pathname convention.
@@ -132,7 +132,7 @@ feature -- Pathname handling
 			end
 		end
 
-	is_root_directory (a_dirname: STRING): BOOLEAN is
+	is_root_directory (a_dirname: STRING): BOOLEAN
 			-- Is `a_dirname' a root directory (i.e. it has no parent directory)?
 			-- (`a_dirname' should follow the Windows pathname convention.
 			-- For pathname conversion use `pathname_from_file_system'.)
@@ -229,7 +229,7 @@ feature -- Pathname handling
 			end
 		end
 
-	same_pathnames (a_pathname1, a_pathname2: STRING): BOOLEAN is
+	same_pathnames (a_pathname1, a_pathname2: STRING): BOOLEAN
 			-- Are `a_pathname1' and `a_pathname2' considered equal when
 			-- viewed from the current file system?
 			-- (`a_pathname1' and `a_pathname2' should follow
@@ -248,7 +248,7 @@ feature -- Pathname handling
 			Result := p1.same_case_insensitive (p2)
 		end
 
-	same_canonical_pathnames (a_pathname1, a_pathname2: STRING): BOOLEAN is
+	same_canonical_pathnames (a_pathname1, a_pathname2: STRING): BOOLEAN
 			-- Are the canonical versions of `a_pathname1' and `a_pathname2'
 			-- considered equal when viewed from the current file system?
 			-- (`a_pathname1' and `a_pathname2' should follow
@@ -269,7 +269,7 @@ feature -- Pathname handling
 			Result := p1.same_case_insensitive (p2)
 		end
 
-	is_subpathname (a_pathname1, a_pathname2: STRING): BOOLEAN is
+	is_subpathname (a_pathname1, a_pathname2: STRING): BOOLEAN
 			-- Is `a_pathname1' considered as a subpathname of `a_pathname2'
 			-- when viewed from the current file system?
 			-- (`a_pathname1' and `a_pathname2' should follow
@@ -288,7 +288,7 @@ feature -- Pathname handling
 			Result := p1.is_case_insensitive_subpathname (p2)
 		end
 
-	is_canonical_subpathname (a_pathname1, a_pathname2: STRING): BOOLEAN is
+	is_canonical_subpathname (a_pathname1, a_pathname2: STRING): BOOLEAN
 			-- Is the canonical version of `a_pathname1' considered as
 			-- a subpathname of the canonical version of `a_pathname2'
 			-- when viewed from the current file system?
@@ -310,7 +310,7 @@ feature -- Pathname handling
 			Result := p1.is_case_insensitive_subpathname (p2)
 		end
 
-	basename (a_pathname: STRING): STRING is
+	basename (a_pathname: STRING): STRING
 			-- Pathname with any leading directory components removed
 			-- (`a_pathname' should follow the Windows pathname convention.
 			-- The result also follows this pathname convention. For
@@ -345,7 +345,7 @@ feature -- Pathname handling
 			end
 		end
 
-	dirname (a_pathname: STRING): STRING is
+	dirname (a_pathname: STRING): STRING
 			-- Pathname containing only the leading directory components so
 			-- that 'pathname (dirname (a_pathname), basename (a_pathname))'
 			-- is equivalent to `a_pathname'; Return `relative_current_directory'
@@ -399,7 +399,7 @@ feature -- Pathname handling
 			end
 		end
 
-	pathname (a_dirname, a_pathname: STRING): STRING is
+	pathname (a_dirname, a_pathname: STRING): STRING
 			-- Pathname made up of relative pathname
 			-- `a_pathname' in directory `a_dirname'
 			-- (`a_dirname' and `a_pathname' should follow the Windows pathname
@@ -418,7 +418,7 @@ feature -- Pathname handling
 			end
 		end
 
-	nested_pathname (a_dirname: STRING; a_pathnames: ARRAY [STRING]): STRING is
+	nested_pathname (a_dirname: STRING; a_pathnames: ARRAY [STRING]): STRING
 			-- Pathname made up of relative pathnames
 			-- `a_pathnames' in directory `a_dirname'
 			-- (`a_dirname' and `a_pathnames' should follow the Windows pathname
@@ -447,17 +447,17 @@ feature -- Pathname handling
 			end
 		end
 
-	relative_current_directory: STRING is "."
+	relative_current_directory: STRING = "."
 			-- Relative pathname of current directory
 			-- (The result follows the Windows pathname convention. For
 			-- pathname conversion use `pathname_from_file_system'.)
 
-	relative_parent_directory: STRING is ".."
+	relative_parent_directory: STRING = ".."
 			-- Relative pathname of current parent directory
 			-- (The result follows the Windows pathname convention. For
 			-- pathname conversion use `pathname_from_file_system'.)
 
-	root_directory: STRING is
+	root_directory: STRING
 			-- Pathname of current root directory;
 			-- Does not include current drive (please
 			-- use `absolute_root_directory' otherwise)
@@ -467,7 +467,7 @@ feature -- Pathname handling
 			Result := "\"
 		end
 
-	absolute_pathname (a_pathname: STRING): STRING is
+	absolute_pathname (a_pathname: STRING): STRING
 			-- Absolute pathname of `a_pathname'
 			-- (`a_pathname' should follow the Windows pathname convention.
 			-- For pathname conversion use `pathname_from_file_system'.)
@@ -481,7 +481,7 @@ feature -- Pathname handling
 			end
 		end
 
-	absolute_parent_directory (a_pathname: STRING): STRING is
+	absolute_parent_directory (a_pathname: STRING): STRING
 			-- Absolute pathname of parent directory of `a_pathname';
 			-- If `a_pathname' is a root directory (i.e. has no parent)
 			-- then return `a_pathname' itself if it is an absolute pathname,
@@ -526,7 +526,7 @@ feature -- Pathname handling
 			end
 		end
 
-	absolute_root_directory: STRING is
+	absolute_root_directory: STRING
 			-- Absolute pathname of current root directory;
 			-- Includes current drive letter
 			-- (The result follows the Windows pathname convention. For
@@ -535,7 +535,7 @@ feature -- Pathname handling
 			Result := STRING_.concat (current_drive, root_directory)
 		end
 
-	string_to_pathname (a_pathname: STRING): KL_PATHNAME is
+	string_to_pathname (a_pathname: STRING): KL_PATHNAME
 			-- Convert string to pathname
 			-- (`a_pathname' should follow the Windows pathname convention.
 			-- For pathname conversion use `pathname_from_file_system'.)
@@ -612,7 +612,7 @@ feature -- Pathname handling
 			end
 		end
 
-	pathname_to_string (a_pathname: KI_PATHNAME): STRING is
+	pathname_to_string (a_pathname: KI_PATHNAME): STRING
 			-- Convert pathname to string
 			-- (The result follows the Windows pathname convention. For
 			-- pathname conversion use `pathname_from_file_system'.)
@@ -672,7 +672,7 @@ feature -- Pathname handling
 			end
 		end
 
-	has_extension (a_filename, an_extension: STRING): BOOLEAN is
+	has_extension (a_filename, an_extension: STRING): BOOLEAN
 			-- Is `an_extension' a file extension of `a_filename'?
 			-- (`a_filename' should follow the Windows pathname convention.
 			-- For pathname conversion use `pathname_from_file_system'.)
@@ -690,7 +690,7 @@ feature -- Pathname handling
 			end
 		end
 
-	extension (a_filename: STRING): STRING is
+	extension (a_filename: STRING): STRING
 			-- File extension of `a_filename' (include the leading '.')
 			-- (`a_filename' should follow the Windows pathname convention.
 			-- For pathname conversion use `pathname_from_file_system'.)
@@ -727,10 +727,10 @@ feature -- Pathname handling
 			end
 		end
 
-	exe_extension: STRING is ".exe"
+	exe_extension: STRING = ".exe"
 			-- Executable file extension ('.exe' under Windows)
 
-	is_directory_separator (c: CHARACTER): BOOLEAN is
+	is_directory_separator (c: CHARACTER): BOOLEAN
 			-- Is `c' a directory separator?
 		do
 			Result := (c = directory_separator or c = secondary_directory_separator)
@@ -738,13 +738,13 @@ feature -- Pathname handling
 			definition: Result = (c = directory_separator or c = secondary_directory_separator)
 		end
 
-	directory_separator: CHARACTER is '\'
+	directory_separator: CHARACTER = '\'
 			-- Primary directory separator
 
 	secondary_directory_separator: CHARACTER
 			-- Secondary directory separator
 
-	current_drive: STRING is
+	current_drive: STRING
 			-- Current drive (include the ':' but not the '\')
 		require
 			is_current_file_system: is_current_file_system

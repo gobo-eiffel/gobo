@@ -13,7 +13,7 @@ note
 class XM_XSLT_RUNTIME_FUNCTION_LIBRARY
 
 inherit
-	
+
 	XM_XPATH_FUNCTION_LIBRARY
 
 		-- This class is to support function-available when
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant.
 		do
 			create function_table.make_default
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_function_available (a_fingerprint, an_arity: INTEGER; is_restricted: BOOLEAN): BOOLEAN is
+	is_function_available (a_fingerprint, an_arity: INTEGER; is_restricted: BOOLEAN): BOOLEAN
 			-- Does `a_fingerprint' represent an available function with `an_arity'?
 		local
 			a_key: XM_XPATH_64BIT_NUMERIC_CODE
@@ -67,7 +67,7 @@ feature -- Access
 
 feature -- Element change
 
-	add_function (a_user_function: XM_XSLT_FUNCTION) is
+	add_function (a_user_function: XM_XSLT_FUNCTION)
 			-- Add `a_user_function' to `function_table'.
 		require
 			user_function_not_void: a_user_function /= Void
@@ -78,12 +78,12 @@ feature -- Element change
 			function_table.force (a_user_function, a_key)
 		end
 
-	bind_function (a_fingerprint: INTEGER; some_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]; is_restricted: BOOLEAN) is
+	bind_function (a_fingerprint: INTEGER; some_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]; is_restricted: BOOLEAN)
 			-- Bind `a_fingerprint' to it's definition as `last_bound_function', setting the arguments to `some_arguments'.
 		do
 			check
 				never_called: False
-				-- `bind_function' is only called during stylesheet-compilation 
+				-- `bind_function' is only called during stylesheet-compilation
 			end
 		end
 
@@ -97,4 +97,4 @@ invariant
 	function_table_not_void: function_table /= Void
 
 end
-	
+

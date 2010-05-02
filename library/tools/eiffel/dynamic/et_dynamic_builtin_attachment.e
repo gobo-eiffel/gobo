@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type_set: like source_type_set; a_current_feature: like current_feature; a_current_type: like current_type) is
+	make (a_type_set: like source_type_set; a_current_feature: like current_feature; a_current_type: like current_type)
 			-- Create a new attachment in built-in feature.
 		require
 			a_type_set_not_void: a_type_set /= Void
@@ -40,19 +40,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	attachment: ET_AST_NODE is
+	attachment: ET_AST_NODE
 			-- Attachment
 		do
 			Result := current_feature.static_feature
 		end
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of attachment
 		do
 			Result := current_feature.static_feature.position
 		end
 
-	description: STRING is "built-in"
+	description: STRING = "built-in"
 			-- Kind of attachment
 
 end

@@ -21,14 +21,14 @@ inherit
 
 	XM_RESOLVER_FACTORY
 		export {NONE} all end
-		
+
 create
 
 	make
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Run.
 		do
 			Arguments.set_program_name ("print")
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Processing
 
-	process_data_file is
+	process_data_file
 			-- Parse file.
 		require
 			filename_not_void: filename /= Void
@@ -52,10 +52,10 @@ feature -- Processing
 		do
 			error_handler.report_info_message ("parsing data...")
 			a_parser := event_parser
-			
+
 			a_parser.set_dtd_resolver (new_file_resolver_current_directory)
 			a_parser.set_entity_resolver (new_file_resolver_current_directory)
-				
+
 			create a_dtd_printer.make_null
 			a_parser.set_dtd_callbacks (a_dtd_printer)
 			a_parser.set_callbacks (standard_callbacks_pipe (<<new_pretty_print>>))
@@ -69,7 +69,7 @@ feature -- Processing
 			error_handler.report_info_message ("exiting...")
 		end
 
-	process_arguments is
+	process_arguments
 			-- Parse command line.
 		local
 			parser_switch: STRING
@@ -107,7 +107,7 @@ feature -- Processing
 
 feature -- Parser
 
-	fact: XM_EXPAT_PARSER_FACTORY is
+	fact: XM_EXPAT_PARSER_FACTORY
 			-- Expat XML parser factory
 		once
 			create Result
@@ -131,7 +131,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	Usage_message: UT_USAGE_MESSAGE is
+	Usage_message: UT_USAGE_MESSAGE
 			-- Usage message
 		local
 			a_message: STRING

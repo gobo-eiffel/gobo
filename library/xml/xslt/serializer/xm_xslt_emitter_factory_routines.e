@@ -23,7 +23,7 @@ feature {NONE} -- Implementation
 
 	character_map_expander (a_receiver: XM_XPATH_RECEIVER; a_properties: XM_XSLT_OUTPUT_PROPERTIES;
 									a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER];
-									a_null_characters_used: BOOLEAN): XM_XSLT_CHARACTER_MAP_EXPANDER is
+									a_null_characters_used: BOOLEAN): XM_XSLT_CHARACTER_MAP_EXPANDER
 			-- Character mapping filter
 		require
 			a_receiver_not_void: a_receiver /= Void

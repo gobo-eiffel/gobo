@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parameter_set: XM_XSLT_PARAMETER_SET) is
+	make (a_parameter_set: XM_XSLT_PARAMETER_SET)
 			-- Create as a copy of `a_parameter_set'.
 		require
 			parameter_set_not_void: a_parameter_set /= Void
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			map.copy (a_parameter_set.map)
 		end
 
-	make_empty is
+	make_empty
 			-- Create an empty parameter set.
 		do
 			create map.make_map_default
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	value (a_fingerprint: INTEGER): XM_XPATH_VALUE is
+	value (a_fingerprint: INTEGER): XM_XPATH_VALUE
 			-- Value of parameter referenced by `a_fingerprint'
 		require
 			parameter_bound: has (a_fingerprint)
@@ -45,7 +45,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of parameters in `Current'
 		do
 			Result := map.count
@@ -53,7 +53,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	has (a_fingerprint: INTEGER): BOOLEAN is
+	has (a_fingerprint: INTEGER): BOOLEAN
 			-- Does `a_fingerprint'represent a bound parameter in `Current'?
 		do
 			Result := map.has (a_fingerprint)
@@ -61,7 +61,7 @@ feature -- Status report
 
 feature -- Element change
 
-	put (a_value: XM_XPATH_VALUE; a_fingerprint: INTEGER) is
+	put (a_value: XM_XPATH_VALUE; a_fingerprint: INTEGER)
 			-- Add a parameter to `Current'.
 		do
 			map.search (a_fingerprint)

@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_test_agent: like test_agent) is
+	make (a_test_agent: like test_agent)
 			-- Create a new equality tester implemented using `a_test_agent'.
 		require
 			a_test_agent_not_void: a_test_agent /= Void
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	test (v, u: G): BOOLEAN is
+	test (v, u: G): BOOLEAN
 			-- Are `v' and `u' considered equal?
 			-- (Use `equal' by default.)
 		do

@@ -14,7 +14,7 @@ class XM_XSLT_SHARED_NO_NODE_TEST
 
 feature -- Access
 
-	xslt_empty_item: XM_XSLT_NO_NODE_TEST is
+	xslt_empty_item: XM_XSLT_NO_NODE_TEST
 			-- Singleton
 		once
 			create Result.make

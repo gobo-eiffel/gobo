@@ -49,7 +49,7 @@ create
 
 feature {NONE} -- Implementation
 
-	yy_build_tables is
+	yy_build_tables
 			-- Build scanner tables.
 		local
 			an_array: ARRAY [INTEGER]

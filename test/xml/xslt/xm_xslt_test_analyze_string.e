@@ -33,7 +33,7 @@ create
 
 feature -- Tests
 
-	test_replacing_characters is
+	test_replacing_characters
 			-- Test replacing all newline characters in the abstract element by empty br elements.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -65,7 +65,7 @@ feature -- Tests
 			assert ("Correct result", STRING_.same_string (l_output.last_output.out, expected_result_string_one))
 		end
 
-	test_regex_group_one is
+	test_regex_group_one
 			-- Test simple use of fn:regex-group().
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -97,7 +97,7 @@ feature -- Tests
 			assert ("Correct result", STRING_.same_string (l_output.last_output.out, expected_result_string_two))
 		end
 
-	test_regex_group_two is
+	test_regex_group_two
 			-- Test use of fn:regex-group() for formatting dates.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -113,7 +113,7 @@ feature -- Tests
 			create l_error_listener.make (l_configuration.recovery_policy)
 			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.set_line_numbering (True)
-			l_configuration.use_tiny_tree_model (True)			
+			l_configuration.use_tiny_tree_model (True)
 			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (dates_xsl_uri.full_reference)
 			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
@@ -129,18 +129,18 @@ feature -- Tests
 			assert ("Correct result", STRING_.same_string (l_output.last_output.out, expected_result_string_three))
 		end
 
-	expected_result_string_one: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?>%N  <abstract><br/>    Line 1<br/>    Line 2<br/>    Line 3 and last<br/>  </abstract>%N"
+	expected_result_string_one: STRING = "<?xml version=%"1.0%" encoding=%"UTF-8%"?>%N  <abstract><br/>    Line 1<br/>    Line 2<br/>    Line 3 and last<br/>  </abstract>%N"
 			-- Expected result from `test_replacing_characters'
 
-	expected_result_string_two: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?><body>%N    For abc see <cite>ABC of somehting or other</cite>.%N    For edf see <cite>More on the alphabet</cite>, but don't believe it too much!%N    Otherwise, just go home.%N  </body>"
+	expected_result_string_two: STRING = "<?xml version=%"1.0%" encoding=%"UTF-8%"?><body>%N    For abc see <cite>ABC of somehting or other</cite>.%N    For edf see <cite>More on the alphabet</cite>, but don't believe it too much!%N    Otherwise, just go home.%N  </body>"
 	      -- Expected result from `test_regex_group_one'
 
-	expected_result_string_three: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?><doc>%N  <date>2002-03-23</date>%N  <date>2005-04-01</date>%N  <date>2004-07-31</date>%N</doc>"
+	expected_result_string_three: STRING = "<?xml version=%"1.0%" encoding=%"UTF-8%"?><doc>%N  <date>2002-03-23</date>%N  <date>2005-04-01</date>%N  <date>2004-07-31</date>%N</doc>"
 			-- Expected result from `test_regex_group_two'
 
 feature {NONE} -- Implementation
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}",
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 			data_dirname_not_empty: not Result.is_empty
 		end
 
-	dummy_uri: UT_URI is
+	dummy_uri: UT_URI
 			-- Dummy URI
 		once
 			create Result.make ("dummy:")
@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 			dummy_uri_is_absolute: Result /= Void and then Result.is_absolute
 		end
 
-	abstract_xsl_uri: UT_URI is
+	abstract_xsl_uri: UT_URI
 			-- URI of file 'abstract.xsl'
 		local
 			l_path: STRING
@@ -169,8 +169,8 @@ feature {NONE} -- Implementation
 		ensure
 			abstract_xsl_uri_not_void: Result /= Void
 		end
-		
-	abstract_xml_uri: UT_URI is
+
+	abstract_xml_uri: UT_URI
 			-- URI of file 'abstract.xml'
 		local
 			l_path: STRING
@@ -180,8 +180,8 @@ feature {NONE} -- Implementation
 		ensure
 			abstract_xml_uri_not_void: Result /= Void
 		end
-		
-	cite_xsl_uri: UT_URI is
+
+	cite_xsl_uri: UT_URI
 			-- URI of file 'cite.xsl'
 		local
 			l_path: STRING
@@ -191,8 +191,8 @@ feature {NONE} -- Implementation
 		ensure
 			cite_xsl_uri_not_void: Result /= Void
 		end
-		
-	cite_xml_uri: UT_URI is
+
+	cite_xml_uri: UT_URI
 			-- URI of file 'cite.xml'
 		local
 			l_path: STRING
@@ -202,8 +202,8 @@ feature {NONE} -- Implementation
 		ensure
 			cite_xml_uri_not_void: Result /= Void
 		end
-		
-	dates_xsl_uri: UT_URI is
+
+	dates_xsl_uri: UT_URI
 			-- URI of file 'dates.xsl'
 		local
 			l_path: STRING
@@ -213,8 +213,8 @@ feature {NONE} -- Implementation
 		ensure
 			dates_xsl_uri_not_void: Result /= Void
 		end
-		
-	dates_xml_uri: UT_URI is
+
+	dates_xml_uri: UT_URI
 			-- URI of file 'dates.xml'
 		local
 			l_path: STRING

@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant
 		do
 			name := "system-property"
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, where known
 		do
 			Result := type_factory.string_type
@@ -58,7 +58,7 @@ feature -- Access
 
 feature -- Status report
 
-	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
+	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE
 			-- Type of argument number `argument_number'
 		do
 			create Result.make_single_string
@@ -66,7 +66,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_uri: STRING
@@ -108,7 +108,7 @@ feature -- Evaluation
 		end
 
 
-	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Pre-evaluate `Current' at compile time.
 		local
 			l_uri: STRING
@@ -143,10 +143,10 @@ feature -- Evaluation
 				end
 			end
 		end
-	
+
 feature {XM_XPATH_FUNCTION_CALL} -- Local
 
-	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		local
 			l_expression_context: XM_XSLT_EXPRESSION_CONTEXT
@@ -154,9 +154,9 @@ feature {XM_XPATH_FUNCTION_CALL} -- Local
 			Precursor (a_replacement, a_context)
 			if a_replacement.item = Void then
 				if not arguments.item (1).is_string_value then
-					
+
 					-- we need to save the namespace context
-					
+
 					l_expression_context ?= a_context
 					check
 						expression_context: l_expression_context /= Void
@@ -169,7 +169,7 @@ feature {XM_XPATH_FUNCTION_CALL} -- Local
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 	vendor_url: STRING
 			-- Web page for `vendor_name'
 
-	read_configuration (a_configuration: XM_XPATH_CONFIGURATION) is
+	read_configuration (a_configuration: XM_XPATH_CONFIGURATION)
 			-- Read configuration to get values for `product_name' etc.
 		require
 			a_configuration_not_void: a_configuration /= Void
@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 			vendor_url := a_configuration.vendor_url
 		end
 
-	system_property (a_namespace_uri, a_local_name: STRING; a_configuration: XM_XPATH_CONFIGURATION): STRING is
+	system_property (a_namespace_uri, a_local_name: STRING; a_configuration: XM_XPATH_CONFIGURATION): STRING
 			-- Value of system-property named by {`a_namespace_uri'}`a_local_name'
 		require
 			namespace_uri_not_void: a_namespace_uri /= Void
@@ -271,4 +271,4 @@ feature {NONE} -- Implementation
 		end
 
 end
-	
+

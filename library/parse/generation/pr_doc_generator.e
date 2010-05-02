@@ -18,7 +18,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_grammar: like grammar) is
+	make (a_grammar: like grammar)
 			-- Create a new documentation generator
 			-- associated with `a_grammar'.
 		require
@@ -37,7 +37,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_lhs_shared (b: BOOLEAN) is
+	set_lhs_shared (b: BOOLEAN)
 			-- Set `lhs_shared' to `b'.
 		do
 			lhs_shared := b
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Generation
 
-	print_grammar (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_grammar (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print documentation about `grammar' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -65,7 +65,7 @@ feature -- Generation
 
 feature {NONE} -- Generation
 
-	print_grammar_header (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_grammar_header (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print grammar documentation header to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -73,7 +73,7 @@ feature {NONE} -- Generation
 		deferred
 		end
 
-	print_grammar_footer (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_grammar_footer (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print grammar documentation footer to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -81,7 +81,7 @@ feature {NONE} -- Generation
 		deferred
 		end
 
-	print_rules (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_rules (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print rules to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -129,7 +129,7 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_rule_header (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_rule_header (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print rule documentation header to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -137,7 +137,7 @@ feature {NONE} -- Generation
 		deferred
 		end
 
-	print_rule_footer (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_rule_footer (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print rule documentation footer to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -145,7 +145,7 @@ feature {NONE} -- Generation
 		deferred
 		end
 
-	print_lhs (a_variable: PR_VARIABLE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_lhs (a_variable: PR_VARIABLE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print `a_variable' (when it appears on the left-hand side of a rule) to `a_file'.
 		require
 			a_variable_not_void: a_variable /= Void
@@ -154,7 +154,7 @@ feature {NONE} -- Generation
 		deferred
 		end
 
-	print_rhs (a_rhs: DS_ARRAYED_LIST [PR_SYMBOL]; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_rhs (a_rhs: DS_ARRAYED_LIST [PR_SYMBOL]; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print `a_rhs' to `a_file'.
 		require
 			a_rhs_not_void: a_rhs /= Void
@@ -190,7 +190,7 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_first_rhs_header (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_first_rhs_header (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print first rhs documentation header to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -198,7 +198,7 @@ feature {NONE} -- Generation
 		deferred
 		end
 
-	print_first_rhs_footer (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_first_rhs_footer (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print first rhs documentation footer to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -206,7 +206,7 @@ feature {NONE} -- Generation
 		deferred
 		end
 
-	print_next_rhs_header (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_next_rhs_header (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print next rhs documentation header to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -214,7 +214,7 @@ feature {NONE} -- Generation
 		deferred
 		end
 
-	print_next_rhs_footer (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_next_rhs_footer (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print next rhs documentation footer to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -222,7 +222,7 @@ feature {NONE} -- Generation
 		deferred
 		end
 
-	print_token (a_token: PR_TOKEN; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_token (a_token: PR_TOKEN; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print `a_token' to `a_file'.
 		require
 			a_token_not_void: a_token /= Void
@@ -231,7 +231,7 @@ feature {NONE} -- Generation
 		deferred
 		end
 
-	print_variable (a_variable: PR_VARIABLE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_variable (a_variable: PR_VARIABLE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print `a_variable' (when it appears on the right-hand side of a rule) to `a_file'.
 		require
 			a_variable_not_void: a_variable /= Void
@@ -240,7 +240,7 @@ feature {NONE} -- Generation
 		deferred
 		end
 
-	print_empty_rhs (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_empty_rhs (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print an right-hand side of a rule to `a_file'.
 		require
 			a_file_not_void: a_file /= Void

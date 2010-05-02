@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_DYNAMIC_TYPE_SET] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_DYNAMIC_TYPE_SET]
 			-- Fixed array routines
 		once
 			create Result

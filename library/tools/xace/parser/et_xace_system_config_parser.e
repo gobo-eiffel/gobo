@@ -26,7 +26,7 @@ create
 
 feature -- Parsing
 
-	parse_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+	parse_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Parse Xace file `a_file'.
 		local
 			a_document: XM_DOCUMENT

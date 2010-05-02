@@ -14,7 +14,7 @@ class KL_IMPORTED_INTEGER_ROUTINES
 
 feature -- Access
 
-	INTEGER_: KL_INTEGER_ROUTINES is
+	INTEGER_: KL_INTEGER_ROUTINES
 			-- Routines that ought to be in class INTEGER
 		once
 			create Result

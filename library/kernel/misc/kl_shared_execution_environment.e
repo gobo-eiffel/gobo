@@ -15,7 +15,7 @@ class KL_SHARED_EXECUTION_ENVIRONMENT
 
 feature -- Access
 
-	Execution_environment: KL_EXECUTION_ENVIRONMENT is
+	Execution_environment: KL_EXECUTION_ENVIRONMENT
 			-- Execution environment
 		once
 			create Result

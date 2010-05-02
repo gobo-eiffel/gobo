@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	shared_decimal_context: MA_DECIMAL_CONTEXT is
+	shared_decimal_context: MA_DECIMAL_CONTEXT
 			-- Decimal context for operations where it does not explicitly appear in the signature;
 			-- Return `default_context' by default, but can be changed by calling `set_shared_decimal_context'
 		do
@@ -27,7 +27,7 @@ feature -- Access
 			shared_decimal_context_not_void: Result /= Void
 		end
 
-	default_context: MA_DECIMAL_CONTEXT is
+	default_context: MA_DECIMAL_CONTEXT
 			-- Default context for general purpose arithmetic
 		once
 			create Result.make_default
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_shared_decimal_context (new_context: MA_DECIMAL_CONTEXT) is
+	set_shared_decimal_context (new_context: MA_DECIMAL_CONTEXT)
 			-- Set `shared_decimal_context' to `new_context'.
 			-- It is best practice to call this routine once and for all
 			-- at the beginning of the application to avoid unexpected
@@ -52,7 +52,7 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	cell: KL_CELL [MA_DECIMAL_CONTEXT] is
+	cell: KL_CELL [MA_DECIMAL_CONTEXT]
 			-- Cell containing shared decimal context
 		once
 			create Result.make (default_context)

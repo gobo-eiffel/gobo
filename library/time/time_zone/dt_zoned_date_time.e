@@ -40,7 +40,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_date_time: like date_time; a_time_zone: like time_zone) is
+	make (a_date_time: like date_time; a_time_zone: like time_zone)
 			-- Create a new date-time `a_date_time' in time zone `a_time_zone'.
 		require
 			date_time_not_void: a_date_time /= Void
@@ -58,7 +58,7 @@ feature -- Access
 	date_time: DT_DATE_TIME
 			-- Date-time within `time_zone'
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code
 		do
 			Result := date_time.hash_code
@@ -66,13 +66,13 @@ feature -- Access
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is `Current' before `other' on the time axis?
 		do
 			Result := date_time_to_utc < other.date_time_to_utc
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `Current' date-time equal to `other'?
 		do
 			if ANY_.same_types (Current, other) then
@@ -80,7 +80,7 @@ feature -- Comparison
 			end
 		end
 
-	same_date_time (other: DT_ZONED_DATE_TIME): BOOLEAN is
+	same_date_time (other: DT_ZONED_DATE_TIME): BOOLEAN
 			-- Is `Current' date-time equal to `other'?
 		require
 			other_not_void: other /= Void
@@ -90,7 +90,7 @@ feature -- Comparison
 
 feature -- Conversion
 
-	date_time_to_utc: DT_DATE_TIME is
+	date_time_to_utc: DT_DATE_TIME
 			-- Convert `date_time' into the same date-time but relative to UTC.
 			-- (Create a new date-time object at each call.)
 		do

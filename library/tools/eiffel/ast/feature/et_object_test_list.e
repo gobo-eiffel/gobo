@@ -22,7 +22,7 @@ create
 
 feature -- Access
 
-	object_test (i: INTEGER): ET_NAMED_OBJECT_TEST is
+	object_test (i: INTEGER): ET_NAMED_OBJECT_TEST
 			-- Object-test at index `i' in list
 		require
 			i_large_enough: i >= 1
@@ -33,7 +33,7 @@ feature -- Access
 			object_test_not_void: Result /= Void
 		end
 
-	index_of_name (a_name: ET_IDENTIFIER): INTEGER is
+	index_of_name (a_name: ET_IDENTIFIER): INTEGER
 			-- Index of object-test with local named `a_name';
 			-- 0 if it does not exist
 		require
@@ -56,7 +56,7 @@ feature -- Access
 
 feature -- Duplication
 
-	cloned_object_test_list: ET_OBJECT_TEST_LIST is
+	cloned_object_test_list: ET_OBJECT_TEST_LIST
 			-- Cloned version of current list
 		local
 			i, nb: INTEGER
@@ -75,7 +75,7 @@ feature -- Duplication
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_NAMED_OBJECT_TEST] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_NAMED_OBJECT_TEST]
 			-- Fixed array routines
 		once
 			create Result

@@ -14,7 +14,7 @@ deferred class ET_ECF_CONDITION
 
 feature -- Status report
 
-	is_enabled (a_state: ET_ECF_STATE): BOOLEAN is
+	is_enabled (a_state: ET_ECF_STATE): BOOLEAN
 			-- Does `a_state' fulfill current condition?
 		require
 			a_state_not_void: a_state /= Void

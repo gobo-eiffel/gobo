@@ -49,7 +49,7 @@ create {DT_TIME_HANDLER}
 
 feature {NONE} -- Initialization
 
-	make (h, m, s: INTEGER) is
+	make (h, m, s: INTEGER)
 			-- Create a new time.
 		require
 			h_large_enough: h >= 0
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 			millisecond_set: millisecond = 0
 		end
 
-	make_precise (h, m, s, ms: INTEGER) is
+	make_precise (h, m, s, ms: INTEGER)
 			-- Create a new time with millisecond precision.
 		require
 			h_large_enough: h >= 0
@@ -87,7 +87,7 @@ feature {NONE} -- Initialization
 			millisecond_set: millisecond = ms
 		end
 
-	make_from_second_count (s: INTEGER) is
+	make_from_second_count (s: INTEGER)
 			-- Create a new time from the number
 			-- seconds since midnight.
 		require
@@ -99,7 +99,7 @@ feature {NONE} -- Initialization
 			second_count_set: second_count = s
 		end
 
-	make_from_millisecond_count (ms: INTEGER) is
+	make_from_millisecond_count (ms: INTEGER)
 			-- Create a new time from the number
 			-- milliseconds since midnight.
 		require
@@ -111,7 +111,7 @@ feature {NONE} -- Initialization
 			millisecond_count_set: millisecond_count = ms
 		end
 
-	make_from_storage (a_storage: INTEGER) is
+	make_from_storage (a_storage: INTEGER)
 			-- Create a new time from `a_storage'.
 		do
 			storage := a_storage
@@ -121,7 +121,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	hour: INTEGER is
+	hour: INTEGER
 			-- Hour
 		do
 			Result := storage // Hour_shift
@@ -130,7 +130,7 @@ feature -- Access
 			hour_small_enough: Result < Hours_in_day
 		end
 
-	minute: INTEGER is
+	minute: INTEGER
 			-- Minute
 		do
 			Result := (storage // Minute_shift) \\ 60
@@ -139,7 +139,7 @@ feature -- Access
 			minute_small_enough: Result < Minutes_in_hour
 		end
 
-	second: INTEGER is
+	second: INTEGER
 			-- Second
 		do
 			Result := (storage // Second_shift) \\ 60
@@ -148,7 +148,7 @@ feature -- Access
 			second_small_enough: Result < Seconds_in_minute
 		end
 
-	millisecond: INTEGER is
+	millisecond: INTEGER
 			-- Millisecond
 		do
 			Result := storage \\ 1000
@@ -157,7 +157,7 @@ feature -- Access
 			millisecond_small_enough: Result < 1000
 		end
 
-	second_count: INTEGER is
+	second_count: INTEGER
 			-- Number of seconds since midnight
 		do
 			Result := storage // 1000
@@ -165,7 +165,7 @@ feature -- Access
 			definition: Result = (((hour * Minutes_in_hour) + minute) * Seconds_in_minute + second)
 		end
 
-	millisecond_count: INTEGER is
+	millisecond_count: INTEGER
 			-- Number of milliseconds since midnight
 		do
 			Result := storage
@@ -173,13 +173,13 @@ feature -- Access
 			definition: Result = ((((hour * Minutes_in_hour) + minute) * Seconds_in_minute + second) * 1000 + millisecond)
 		end
 
-	duration (other: like Current): DT_TIME_DURATION is
+	duration (other: like Current): DT_TIME_DURATION
 			-- Duration between `other' and `Current'
 		do
 			Result := time_duration (other)
 		end
 
-	canonical_duration (other: like Current): like duration is
+	canonical_duration (other: like Current): like duration
 			-- Canonical duration between `other' and `Current'
 		require
 			other_not_void: other /= Void
@@ -191,7 +191,7 @@ feature -- Access
 			definition: (other + Result).is_equal (Current)
 		end
 
-	time_duration (other: like Current): DT_TIME_DURATION is
+	time_duration (other: like Current): DT_TIME_DURATION
 			-- Duration between `other' and `Current'
 		require
 			other_not_void: other /= Void
@@ -202,7 +202,7 @@ feature -- Access
 			definition: (other &| Result).same_time (Current)
 		end
 
-	plus_time_duration alias "&|" (a_duration: like time_duration): like Current is
+	plus_time_duration alias "&|" (a_duration: like time_duration): like Current
 			-- Addition of `a_duration' to `Current'
 			-- (Create a new object at each call.)
 		require
@@ -214,7 +214,7 @@ feature -- Access
 			addition_not_void: Result /= Void
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code
 		do
 			Result := storage
@@ -222,7 +222,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_time (a_time: DT_TIME) is
+	set_time (a_time: DT_TIME)
 			-- Set `hour', `minute', `second' and `millisecond' from `a_time'.
 		require
 			a_time_not_void: a_time /= Void
@@ -235,7 +235,7 @@ feature -- Setting
 			millisecond_set: millisecond = a_time.millisecond
 		end
 
-	set_hour_minute_second (h, m, s: INTEGER) is
+	set_hour_minute_second (h, m, s: INTEGER)
 			-- Set `hour' to `h', `minute' to `m' and `second' to `s'.
 		require
 			h_large_enough: h >= 0
@@ -253,7 +253,7 @@ feature -- Setting
 			millisecond_set: millisecond = 0
 		end
 
-	set_precise_hour_minute_second (h, m, s, ms: INTEGER) is
+	set_precise_hour_minute_second (h, m, s, ms: INTEGER)
 			-- Set `hour' to `h', `minute' to `m', `second'
 			-- to `s', and `millisecond' to `ms'.
 		require
@@ -274,7 +274,7 @@ feature -- Setting
 			millisecond_set: millisecond = ms
 		end
 
-	set_hour (h: INTEGER) is
+	set_hour (h: INTEGER)
 			-- Set `hour' to `h'.
 		require
 			h_large_enough: h >= 0
@@ -288,7 +288,7 @@ feature -- Setting
 			same_millisecond: millisecond = old millisecond
 		end
 
-	set_minute (m: INTEGER) is
+	set_minute (m: INTEGER)
 			-- Set `minute' to `m'.
 		require
 			m_large_enough: m >= 0
@@ -302,7 +302,7 @@ feature -- Setting
 			same_millisecond: millisecond = old millisecond
 		end
 
-	set_second (s: INTEGER) is
+	set_second (s: INTEGER)
 			-- Set `second' to `s'.
 		require
 			s_large_enough: s >= 0
@@ -316,7 +316,7 @@ feature -- Setting
 			same_millisecond: millisecond = old millisecond
 		end
 
-	set_millisecond (ms: INTEGER) is
+	set_millisecond (ms: INTEGER)
 			-- Set `millisecond' to `ms'.
 		require
 			ms_large_enough: ms >= 0
@@ -330,7 +330,7 @@ feature -- Setting
 			same_second: second = old second
 		end
 
-	set_second_count (s: INTEGER) is
+	set_second_count (s: INTEGER)
 			-- Set `second_count' to `s'.
 		require
 			s_large_enough: s >= 0
@@ -341,7 +341,7 @@ feature -- Setting
 			second_count_set: second_count = s
 		end
 
-	set_millisecond_count (ms: INTEGER) is
+	set_millisecond_count (ms: INTEGER)
 			-- Set `millisecond_count' to `ms'.
 		require
 			ms_large_enough: ms >= 0
@@ -354,13 +354,13 @@ feature -- Setting
 
 feature -- Element change
 
-	add_duration (a_duration: like duration) is
+	add_duration (a_duration: like duration)
 			-- Add `a_duration' to `Current'.
 		do
 			add_time_duration (a_duration)
 		end
 
-	add_time_duration (a_duration: like time_duration) is
+	add_time_duration (a_duration: like time_duration)
 			-- Add `a_duration' to `Current'.
 		require
 			a_duration_not_void: a_duration /= Void
@@ -368,21 +368,21 @@ feature -- Element change
 			add_milliseconds (a_duration.millisecond_count)
 		end
 
-	add_hours_minutes_seconds (h, m, s: INTEGER) is
+	add_hours_minutes_seconds (h, m, s: INTEGER)
 			-- Add `h' hours, `m' minutes and
 			-- `s' seconds to `Current'.
 		do
 			add_seconds ((h * Minutes_in_hour + m) * Seconds_in_minute + s)
 		end
 
-	add_precise_hours_minutes_seconds (h, m, s, ms: INTEGER) is
+	add_precise_hours_minutes_seconds (h, m, s, ms: INTEGER)
 			-- Add `h' hours, `m' minutes, `s' seconds
 			-- and `ms' milliseconds to `Current'.
 		do
 			add_milliseconds (((h * Minutes_in_hour + m) * Seconds_in_minute + s) * 1000 + ms)
 		end
 
-	add_hours (h: INTEGER) is
+	add_hours (h: INTEGER)
 			-- Add `h' hours to `Current'.
 		do
 			if h /= 0 then
@@ -395,7 +395,7 @@ feature -- Element change
 			end
 		end
 
-	add_minutes (m: INTEGER) is
+	add_minutes (m: INTEGER)
 			-- Add `m' minutes to `Current'.
 		do
 			if m /= 0 then
@@ -408,7 +408,7 @@ feature -- Element change
 			end
 		end
 
-	add_seconds (s: INTEGER) is
+	add_seconds (s: INTEGER)
 			-- Add `s' seconds to `Current'.
 		do
 			if s /= 0 then
@@ -421,7 +421,7 @@ feature -- Element change
 			end
 		end
 
-	add_milliseconds (ms: INTEGER) is
+	add_milliseconds (ms: INTEGER)
 			-- Add `ms' milliseconds to `Current'.
 		do
 			if ms /= 0 then
@@ -436,13 +436,13 @@ feature -- Element change
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is `Current' before `other' on the time axis?
 		do
 			Result := storage < other.storage
 		end
 
-	same_time (other: DT_TIME): BOOLEAN is
+	same_time (other: DT_TIME): BOOLEAN
 			-- Is `Current' time equal to `other'?
 		require
 			other_not_void: other /= Void
@@ -452,7 +452,7 @@ feature -- Comparison
 
 feature -- Output
 
-	append_time_to_string (a_string: STRING) is
+	append_time_to_string (a_string: STRING)
 			-- Append printable representation
 			-- (hh:mm:ss[.sss]) to `a_string'.
 			-- (The millisecond part appears only when not zero.)
@@ -489,7 +489,7 @@ feature -- Output
 			end
 		end
 
-	append_precise_time_to_string (a_string: STRING) is
+	append_precise_time_to_string (a_string: STRING)
 			-- Append printable representation (hh:mm:ss.sss)
 			-- to `a_string'.
 		do
@@ -508,7 +508,7 @@ feature {DT_TIME_HANDLER} -- Implementation
 			-- Compact version of `Current'
 			-- (INTEGER should have at least 32 bits.)
 
-	set_storage (a_storage: INTEGER) is
+	set_storage (a_storage: INTEGER)
 			-- Set `storage' to `a_storage'.
 		do
 			storage := a_storage
@@ -518,16 +518,16 @@ feature {DT_TIME_HANDLER} -- Implementation
 
 feature {NONE} -- Constants
 
-	Day_shift: INTEGER is 86400000
+	Day_shift: INTEGER = 86400000
 			-- 1d = 24*60*60*1000ms
 
-	Hour_shift: INTEGER is 3600000
+	Hour_shift: INTEGER = 3600000
 			-- 1h = 60*60*1000ms
 
-	Minute_shift: INTEGER is 60000
+	Minute_shift: INTEGER = 60000
 			-- 1m = 60*1000ms
 
-	Second_shift: INTEGER is 1000
+	Second_shift: INTEGER = 1000
 			-- 1s = 1000ms
 
 invariant

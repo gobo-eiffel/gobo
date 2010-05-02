@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_variables: like variables; an_error_handler: like error_handler) is
+	make (a_variables: like variables; an_error_handler: like error_handler)
 			-- Create a new 'system' command.
 		require
 			a_variables_not_void: a_variables /= Void
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute 'system' command.
 		local
 			a_parser: ET_XACE_SYSTEM_CONFIG_PARSER
@@ -69,7 +69,7 @@ feature -- Execution
 			end
 		end
 
-	execute_generators (a_system: ET_XACE_SYSTEM_CONFIG) is
+	execute_generators (a_system: ET_XACE_SYSTEM_CONFIG)
 			-- Execute Ace file generators.
 		require
 			a_system_not_void: a_system /= Void

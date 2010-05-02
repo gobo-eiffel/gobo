@@ -26,7 +26,7 @@ create {XM_XSLT_NODE_FACTORY}
 
 feature -- Status setting
 
-	mark_tail_calls is
+	mark_tail_calls
 			-- Mark tail-recursive calls on templates and functions.
 		local
 			a_last_instruction: XM_XSLT_STYLE_ELEMENT
@@ -41,13 +41,13 @@ feature -- Status setting
 
 feature -- Status report
 
-	may_contain_sequence_constructor: BOOLEAN is
+	may_contain_sequence_constructor: BOOLEAN
 			-- Is `Current' allowed to contain a sequence constructor?
 		do
 			Result := False
 		end
 
-	may_contain_fallback: BOOLEAN is
+	may_contain_fallback: BOOLEAN
 			-- Is `Current' allowed to contain an xsl:fallback?
 		do
 			Result := True
@@ -55,7 +55,7 @@ feature -- Status report
 
 feature -- Element change
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -92,7 +92,7 @@ feature -- Element change
 			attributes_prepared := True
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -105,7 +105,7 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (an_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		do
 			if select_expression.is_computed_expression then
@@ -116,7 +116,7 @@ feature -- Element change
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
 
-	returned_item_type: XM_XPATH_ITEM_TYPE is
+	returned_item_type: XM_XPATH_ITEM_TYPE
 			-- Type of item returned by this instruction
 		do
 			if select_expression /= Void then

@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	manifest_string: ET_MANIFEST_STRING is
+	manifest_string: ET_MANIFEST_STRING
 			-- Manifest string in comma-separated list
 		deferred
 		ensure

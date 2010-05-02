@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT) is
+	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT)
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
@@ -91,7 +91,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	build_command (a_project: GEANT_PROJECT) is
+	build_command (a_project: GEANT_PROJECT)
 			-- Create instance of `command'
 		do
 			create command.make (a_project)
@@ -104,7 +104,7 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	File_attribute_name: STRING is
+	File_attribute_name: STRING
 			-- Name of xml attribute file.
 		once
 			Result := "file"
@@ -113,7 +113,7 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	To_file_attribute_name: STRING is
+	To_file_attribute_name: STRING
 			-- Name of xml attribute to_file.
 		once
 			Result := "to_file"
@@ -122,7 +122,7 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	To_directory_attribute_name: STRING is
+	To_directory_attribute_name: STRING
 			-- Name of xml attribute to_directory.
 		once
 			Result := "to_directory"
@@ -131,7 +131,7 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Match_attribute_name: STRING is
+	Match_attribute_name: STRING
 			-- Name of xml attribute match.
 		once
 			Result := "match"
@@ -140,7 +140,7 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Token_attribute_name: STRING is
+	Token_attribute_name: STRING
 			-- Name of xml attribute token.
 		once
 			Result := "token"
@@ -149,7 +149,7 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Variable_pattern_attribute_name: STRING is
+	Variable_pattern_attribute_name: STRING
 			-- Name of xml attribute variable pattern.
 		once
 			Result := "variable_pattern"
@@ -158,7 +158,7 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Replace_attribute_name: STRING is
+	Replace_attribute_name: STRING
 			-- Name of xml attribute replace.
 		once
 			Result := "replace"
@@ -167,7 +167,7 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Flags_attribute_name: STRING is
+	Flags_attribute_name: STRING
 			-- Name of xml attribute flags.
 		once
 			Result := "flags"
@@ -176,7 +176,7 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Fileset_element_name: STRING is
+	Fileset_element_name: STRING
 			-- Name of xml element fileset.
 		once
 			Result := "fileset"

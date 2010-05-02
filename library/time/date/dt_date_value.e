@@ -32,31 +32,31 @@ inherit
 
 feature -- Access
 
-	year: INTEGER is
+	year: INTEGER
 			-- Year
 		deferred
 		end
 
-	month: INTEGER is
+	month: INTEGER
 			-- Month
 		deferred
 		end
 
-	day: INTEGER is
+	day: INTEGER
 			-- Day
 		deferred
 		end
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Printable representation (year/month/day)
 		do
 			create Result.make (10)
 			append_to_string (Result)
 		end
 
-	date_out: STRING is
+	date_out: STRING
 			-- Printable representation (year/month/day)
 		do
 			create Result.make (10)
@@ -65,7 +65,7 @@ feature -- Output
 			date_out_not_void: Result /= Void
 		end
 
-	append_to_string (a_string: STRING) is
+	append_to_string (a_string: STRING)
 			-- Append printable representation
 			-- (year/month/day) to `a_string'.
 		require
@@ -74,7 +74,7 @@ feature -- Output
 			append_date_to_string (a_string)
 		end
 
-	append_date_to_string (a_string: STRING) is
+	append_date_to_string (a_string: STRING)
 			-- Append printable representation
 			-- (year/month/day) to `a_string'.
 		require

@@ -32,7 +32,7 @@ create
 
 feature -- Processing
 
-	process_class (a_class: ET_CLASS) is
+	process_class (a_class: ET_CLASS)
 			-- Check whether the implementation of `a_class' needs to be checked
 			-- again after some classes have been modified in the Eiffel system.
 			-- Parent classes will be checked recursively beforehand.
@@ -65,7 +65,7 @@ feature -- Processing
 
 feature -- Error handling
 
-	set_fatal_error (a_class: ET_CLASS) is
+	set_fatal_error (a_class: ET_CLASS)
 			-- Report a fatal error to `a_class'.
 		require
 			a_class_not_void: a_class /= Void
@@ -77,7 +77,7 @@ feature -- Error handling
 
 feature {NONE} -- Processing
 
-	internal_process_class (a_class: ET_CLASS) is
+	internal_process_class (a_class: ET_CLASS)
 			-- Check whether the implementation of `a_class' needs to be checked
 			-- again after some classes have been modified in the Eiffel system.
 			-- Parent classes will be checked recursively beforehand.
@@ -137,7 +137,7 @@ feature {NONE} -- Processing
 
 feature {NONE} -- Suppliers and providers validity
 
-	check_suppliers_validity is
+	check_suppliers_validity
 			-- Check whether none of the supplier classes
 			-- of `current_class' has been modified.
 		local
@@ -169,7 +169,7 @@ feature {NONE} -- Suppliers and providers validity
 			end
 		end
 
-	check_providers_validity is
+	check_providers_validity
 			-- Check whether none of the provider classes
 			-- of `current_class' has been modified.
 		local

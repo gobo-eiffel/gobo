@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_template: XM_XSLT_COMPILED_TEMPLATE) is
+	make (a_template: XM_XSLT_COMPILED_TEMPLATE)
 			-- Create a template rule.
 		require
 			template_not_void: a_template /= Void
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			template_set: is_template and then template_value = a_template
 		end
 
-	make_boolean (a_boolean: BOOLEAN) is
+	make_boolean (a_boolean: BOOLEAN)
 			-- Create a boolean rule
 		do
 			is_boolean := True
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	as_boolean: BOOLEAN is
+	as_boolean: BOOLEAN
 			-- Value as a `BOOLEAN'
 		require
 			is_boolean: is_boolean
@@ -48,7 +48,7 @@ feature -- Access
 			Result := boolean_value
 		end
 
-	as_template: XM_XSLT_COMPILED_TEMPLATE is
+	as_template: XM_XSLT_COMPILED_TEMPLATE
 			-- Value as an `XM_XSLT_COMPILED_TEMPLATE'
 		require
 			is_template: is_template
@@ -80,4 +80,4 @@ invariant
 	template: is_template implies template_value /= Void
 
 end
-	
+

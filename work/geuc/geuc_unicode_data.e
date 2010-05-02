@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_code: INTEGER; a_name: STRING; some_fields: DS_LIST [STRING]) is
+	make (a_code: INTEGER; a_name: STRING; some_fields: DS_LIST [STRING])
 			-- Create a new unicode data for `a_code'.
 		require
 			code_large_enough: a_code >= 0
@@ -125,7 +125,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	Highest_combining_class: INTEGER is 240
+	Highest_combining_class: INTEGER = 240
 			-- Highest combining class in current version of Unicode
 
 	code: INTEGER
@@ -155,7 +155,7 @@ feature -- Access
 	decomposition_mapping: DS_ARRAYED_LIST [INTEGER]
 			-- Decomposition mapping;
 
-	lower_mapping: DS_ARRAYED_LIST [INTEGER] is
+	lower_mapping: DS_ARRAYED_LIST [INTEGER]
 			-- Full mapping to lower case
 		do
 			Result := optional_lower_mapping
@@ -167,7 +167,7 @@ feature -- Access
 			end
 		end
 
-	title_mapping: DS_ARRAYED_LIST [INTEGER] is
+	title_mapping: DS_ARRAYED_LIST [INTEGER]
 			-- Full mapping to title case
 		do
 			Result := optional_title_mapping
@@ -179,7 +179,7 @@ feature -- Access
 			end
 		end
 
-	upper_mapping: DS_ARRAYED_LIST [INTEGER] is
+	upper_mapping: DS_ARRAYED_LIST [INTEGER]
 			-- Full mapping to upper case
 		do
 			Result := optional_upper_mapping
@@ -191,7 +191,7 @@ feature -- Access
 			end
 		end
 
-	decimal_digit_value: INTEGER_8 is
+	decimal_digit_value: INTEGER_8
 			-- Value of `Current' as a decimal digit
 		require
 			decimal_digit: general_category = Decimal_digit_number_category
@@ -201,7 +201,7 @@ feature -- Access
 			value_in_range: Result >= 0 and Result < 10
 		end
 
-	category (a_category: STRING): INTEGER is
+	category (a_category: STRING): INTEGER
 			-- Coded version of `a_category', or `Unassigned_other_category' if unrecognized
 		require
 			category_not_void: a_category /= Void
@@ -269,7 +269,7 @@ feature -- Access
 			end
 		end
 
-	encoded_decomposition_type (a_string: STRING): INTEGER is
+	encoded_decomposition_type (a_string: STRING): INTEGER
 			-- Decomposition type
 		require
 			string_not_void: a_string /= Void
@@ -324,7 +324,7 @@ feature -- Access
 			end
 		end
 
-	mapped_decomposition (a_string: STRING): DS_ARRAYED_LIST [INTEGER] is
+	mapped_decomposition (a_string: STRING): DS_ARRAYED_LIST [INTEGER]
 			-- Decomposition mapping
 		require
 			string_not_void: a_string /= Void
@@ -368,7 +368,7 @@ feature -- Status report
 	internal_decimal_digit_value: INTEGER_8
 			-- Decimal digit value
 
-	is_valid_decomposition_type (a_string: STRING): BOOLEAN is
+	is_valid_decomposition_type (a_string: STRING): BOOLEAN
 			-- Does `a_string' start with a valid decomposition type?
 		require
 			string_not_void: a_string /= Void
@@ -399,13 +399,13 @@ feature -- Status report
 					STRING_.same_string ("<small>", a_type) or
 					STRING_.same_string ("<square>", a_type) or
 					STRING_.same_string ("<fraction>", a_type) or
-					STRING_.same_string ("<compat>", a_type) 
+					STRING_.same_string ("<compat>", a_type)
 			end
 		end
 
 feature -- Setting
 
-	set_special_case_mappings (a_lower, a_title, a_upper: STRING) is
+	set_special_case_mappings (a_lower, a_title, a_upper: STRING)
 			-- Set `lower_mapping', `title_mapping' and `upper_mapping' from `a_lower', `a_title' and `a_upper' respectively.
 		require
 			a_lower_not_void: a_lower /= Void
@@ -440,7 +440,7 @@ feature {NONE} -- Implementation
 	optional_upper_mapping: DS_ARRAYED_LIST [INTEGER]
 			-- Optional special mapping to upper case
 
-	create_special_casing_codes (a_result: DS_CELL [DS_ARRAYED_LIST [INTEGER]]; a_string: STRING) is
+	create_special_casing_codes (a_result: DS_CELL [DS_ARRAYED_LIST [INTEGER]]; a_string: STRING)
 			-- Create sequence of code-points decoded from `a_string' and place in `a_result'.
 		require
 			a_result_not_void: a_result /= Void
@@ -465,7 +465,7 @@ feature {NONE} -- Implementation
 			special_casing_codes_created: a_result.item /= Void
 		end
 
-	append_code_point (a_result: DS_ARRAYED_LIST [INTEGER]; a_field: STRING) is
+	append_code_point (a_result: DS_ARRAYED_LIST [INTEGER]; a_field: STRING)
 			-- Decode and append `a_field' onto `a_result'.
 			-- Set `is_valid' to `False' if decoding fails.
 		require
@@ -480,7 +480,7 @@ feature {NONE} -- Implementation
 		ensure
 			one_more_or_invalid: (a_result.count = old a_result.count + 1) or not is_valid
 		end
-	
+
 invariant
 
 	code_large_enough: code >= 0

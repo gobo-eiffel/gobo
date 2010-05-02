@@ -6,6 +6,6 @@ inherit
 
 feature -- Access
 
-	name: INTEGER is 32
+	name: INTEGER = 32
 
 end -- class BB

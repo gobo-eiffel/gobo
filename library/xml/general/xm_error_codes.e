@@ -14,10 +14,10 @@ class XM_ERROR_CODES
 
 feature -- Constants
 
-	Xml_err_none: INTEGER is 0
+	Xml_err_none: INTEGER = 0
 			-- No error occurred
 
-	Xml_err_unknown: INTEGER is 1
+	Xml_err_unknown: INTEGER = 1
 			-- An unknown error occurred
 
 end

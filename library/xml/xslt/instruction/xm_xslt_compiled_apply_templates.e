@@ -11,7 +11,7 @@ note
 class XM_XSLT_COMPILED_APPLY_TEMPLATES
 
 inherit
-	
+
 	XM_XSLT_INSTRUCTION
 		redefine
 			sub_expressions, promote_instruction, generate_events, creates_new_nodes
@@ -28,7 +28,7 @@ create
 feature {NONE} -- Initialization
 
 	make (an_executable: XM_XSLT_EXECUTABLE; a_select_expression: XM_XPATH_EXPRESSION; some_actual_parameters, some_tunnel_parameters: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM];
-			use_current_mode, use_tail_recusrion: BOOLEAN; a_mode: XM_XSLT_MODE; a_defaulted: BOOLEAN) is
+			use_current_mode, use_tail_recusrion: BOOLEAN; a_mode: XM_XSLT_MODE; a_defaulted: BOOLEAN)
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
@@ -66,7 +66,7 @@ feature -- Access
 	is_select_defaulted: BOOLEAN
 			-- `True' if select attribute was omitted
 
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions of `Current'
 		do
 			create Result.make_default
@@ -78,13 +78,13 @@ feature -- Access
 
 feature -- Status report
 
-	creates_new_nodes: BOOLEAN is
+	creates_new_nodes: BOOLEAN
 			-- Can `Current' create new nodes?
 		do
 			Result := True
 		end
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -131,10 +131,10 @@ feature -- Status report
 				end
 			end
 		end
-	
+
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		local
 			l_code: STRING
@@ -156,11 +156,11 @@ feature -- Optimization
 			elseif select_expression.is_empty_sequence then
 				set_replacement (a_replacement, select_expression)
 			else
-				a_replacement.put (Current)	
-			end			
+				a_replacement.put (Current)
+			end
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_code: STRING
@@ -182,11 +182,11 @@ feature -- Optimization
 			elseif select_expression.is_empty_sequence then
 				set_replacement (a_replacement, select_expression)
 			else
-				a_replacement.put (Current)				
+				a_replacement.put (Current)
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -230,7 +230,7 @@ feature -- Optimization
 			end
 		end
 
-	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this instruction.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -244,7 +244,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	generate_events (a_context: XM_XPATH_CONTEXT) is
+	generate_events (a_context: XM_XPATH_CONTEXT)
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_tail: DS_CELL [XM_XPATH_TAIL_CALL]
@@ -259,14 +259,14 @@ feature -- Evaluation
 			apply (l_tail, l_context, False)
 		end
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
 			apply (a_tail, a_context, is_tail_recursion_used)
 		end
 
 feature {NONE} -- Implementation
-	
+
 	select_expression: XM_XPATH_EXPRESSION
 			-- Nodes to be selected
 
@@ -281,11 +281,11 @@ feature {NONE} -- Implementation
 
 	is_tail_recursion_used: BOOLEAN
 			-- Should we make taiul-recursive calls?
-	
+
 	mode: XM_XSLT_MODE
 			-- Mode to use
 
-	set_select_expression (a_expression: XM_XPATH_EXPRESSION) is
+	set_select_expression (a_expression: XM_XPATH_EXPRESSION)
 			-- Ensure `select_expression' is `a_expression'.
 		require
 			a_expression_not_void: a_expression /= Void
@@ -299,7 +299,7 @@ feature {NONE} -- Implementation
 			select_expression_set: select_expression = a_expression
 		end
 
-	apply (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT; returns_tail_call: BOOLEAN) is
+	apply (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT; returns_tail_call: BOOLEAN)
 			-- Apply `Current'.
 		require
 			context_not_void: a_context /= void
@@ -350,9 +350,9 @@ feature {NONE} -- Implementation
 					a_context.transformer.report_fatal_error (l_iterator.error_value)
 				else
 					-- quick exit if the iterator is empty
-					
+
 					if not l_iterator.is_empty_iterator then
-						
+
 						-- Process the selected nodes now.
 
 						from
@@ -379,4 +379,4 @@ invariant
 	current_mode: initialized and then not is_current_mode_used implies mode /= Void
 
 end
-	
+

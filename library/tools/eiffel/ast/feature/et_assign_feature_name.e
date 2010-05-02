@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like feature_name) is
+	make (a_name: like feature_name)
 			-- Create a new assign-feature_name pair.
 		require
 			a_name_not_void: a_name /= Void
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset assigner as it was just after it was last parsed.
 		do
 			feature_name.reset
@@ -49,7 +49,7 @@ feature -- Access
 	assign_keyword: ET_KEYWORD
 			-- 'assign' keyword
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -59,19 +59,19 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := assign_keyword
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := feature_name.last_leaf
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := feature_name.break
@@ -79,7 +79,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_assign_keyword (a_keyword: like assign_keyword) is
+	set_assign_keyword (a_keyword: like assign_keyword)
 			-- Set `a_keyword' to `assign_keyword'.
 		require
 			a_keyword_not_void: a_keyword /= Void
@@ -91,7 +91,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_assign_feature_name (Current)

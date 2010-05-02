@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_receiver: like base_receiver; a_character_map_list: DS_ARRAYED_LIST [DS_HASH_TABLE [STRING, INTEGER]]; a_use_null_characters: BOOLEAN) is
+	make (a_receiver: like base_receiver; a_character_map_list: DS_ARRAYED_LIST [DS_HASH_TABLE [STRING, INTEGER]]; a_use_null_characters: BOOLEAN)
 			-- Establish invariant.
 		require
 			a_receiver_not_void: a_receiver /= Void
@@ -79,7 +79,7 @@ feature {NONE} -- Initialization
 
 feature -- Events
 
-	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; a_properties: INTEGER) is
+	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; a_properties: INTEGER)
 			-- Notify an attribute.
 		local
 			l_value: STRING
@@ -96,7 +96,7 @@ feature -- Events
 			end
 		end
 
-	notify_characters (a_chars: STRING; a_properties: INTEGER) is
+	notify_characters (a_chars: STRING; a_properties: INTEGER)
 			-- Notify character data.
 		local
 			l_value: STRING
@@ -121,7 +121,7 @@ feature {NONE} -- Implementation
 	are_null_characters_used: BOOLEAN
 			-- Should we surround expanded characters with ASCII NUL markers?
 
-	mapped_string (a_unmapped_string: STRING): STRING is
+	mapped_string (a_unmapped_string: STRING): STRING
 			-- Expanded version of `a_unmapped_string'
 		require
 			input_string_not_void: a_unmapped_string /= Void

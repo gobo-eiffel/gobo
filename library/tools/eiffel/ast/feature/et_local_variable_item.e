@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	local_variable: ET_LOCAL_VARIABLE is
+	local_variable: ET_LOCAL_VARIABLE
 			-- Local variable in semicolon-separated list
 		deferred
 		ensure

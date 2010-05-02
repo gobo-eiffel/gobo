@@ -23,7 +23,7 @@ create
 
 feature -- Test
 
-	test_leap_year is
+	test_leap_year
 			-- Test feature `leap_year' of class DT_GREGORIAN_CALENDAR.
 		local
 			gc: DT_GREGORIAN_CALENDAR
@@ -101,7 +101,7 @@ feature -- Test
 			assert ("leap_year_2008", gc.leap_year (2008))
 		end
 
-	test_max_days_in_month is
+	test_max_days_in_month
 			-- Test feature `max_days_in_month' of class DT_GREGORIAN_CALENDAR.
 		local
 			gc: DT_GREGORIAN_CALENDAR
@@ -110,7 +110,7 @@ feature -- Test
 			assert_integers_equal ("max_days_in_month", 31, gc.Max_days_in_month)
 		end
 
-	test_days_in_month is
+	test_days_in_month
 			-- Test feature `days_in_month' of class DT_GREGORIAN_CALENDAR.
 		local
 			gc: DT_GREGORIAN_CALENDAR
@@ -144,7 +144,7 @@ feature -- Test
 			assert_integers_equal ("december_2000", 31, gc.days_in_month (gc.December, 2000))
 		end
 
-	test_days_at_month is
+	test_days_at_month
 			-- Test feature `days_at_month' of class DT_GREGORIAN_CALENDAR.
 		local
 			gc: DT_GREGORIAN_CALENDAR
@@ -180,7 +180,7 @@ feature -- Test
 			assert_integers_equal ("december_2000", 335, gc.days_at_month (gc.December, 2000))
 		end
 
-	test_epoch_days is
+	test_epoch_days
 			-- Test feature `epoch_days' of class DT_GREGORIAN_CALENDAR.
 		local
 			gc: DT_GREGORIAN_CALENDAR
@@ -194,7 +194,7 @@ feature -- Test
 			assert_integers_equal ("epoch_1_jan_1969", -365, gc.epoch_days (1969, 1, 1))
 		end
 
-	test_days_and_months_in_year is
+	test_days_and_months_in_year
 			-- Test features `months_in_year', `days_in_year' and
 			-- `days_in_leap_year' of class DT_GREGORIAN_CALENDAR.
 		local
@@ -206,7 +206,7 @@ feature -- Test
 			assert_integers_equal ("days_in_leap_year", 366, gc.Days_in_leap_year)
 		end
 
-	test_month_numbers is
+	test_month_numbers
 			-- Test month number features of class DT_GREGORIAN_CALENDAR.
 		local
 			gc: DT_GREGORIAN_CALENDAR
@@ -226,7 +226,7 @@ feature -- Test
 			assert_integers_equal ("december", 12, gc.December)
 		end
 
-	test_days_in_week is
+	test_days_in_week
 			-- Test feature `days_in_week' of class DT_GREGORIAN_CALENDAR.
 		local
 			gc: DT_GREGORIAN_CALENDAR
@@ -235,7 +235,7 @@ feature -- Test
 			assert_integers_equal ("days_in_week", 7, gc.Days_in_week)
 		end
 
-	test_time_constants is
+	test_time_constants
 			-- Test time constants of class DT_GREGORIAN_CALENDAR.
 		local
 			gc: DT_GREGORIAN_CALENDAR
@@ -249,7 +249,7 @@ feature -- Test
 			assert_integers_equal ("hours_in_day", 24, gc.Hours_in_day)
 		end
 
-	test_week_number is
+	test_week_number
 			-- Test feature `week_number' of class DT_GREGORIAN_CALENDAR.
 		local
 			gc: DT_GREGORIAN_CALENDAR

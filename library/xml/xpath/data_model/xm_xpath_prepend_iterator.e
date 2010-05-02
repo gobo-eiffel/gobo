@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_node: G; a_base_iterator: XM_XPATH_AXIS_ITERATOR [G]) is
+	make (a_node: G; a_base_iterator: XM_XPATH_AXIS_ITERATOR [G])
 			-- Establish invariant.
 		require
 			starting_node_not_void: a_node /= Void
@@ -45,22 +45,22 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
-			Result := base_iterator.after 
+			Result := base_iterator.after
 		end
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Move to first position
 		do
 			index := 1
 			current_item := starting_node
 		end
-			
-	forth is
+
+	forth
 			-- Move to next position
 		local
 			l_default: G
@@ -81,7 +81,7 @@ feature -- Cursor movement
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 			create Result.make (starting_node, base_iterator.another)
@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 	base_iterator: XM_XPATH_AXIS_ITERATOR [G]
 			-- Base iterator
 
-	advance is
+	advance
 			-- Move to the next position
 		do
 			--	not used
@@ -107,4 +107,4 @@ invariant
 	base_iterator_not_void: base_iterator /= Void
 
 end
-	
+

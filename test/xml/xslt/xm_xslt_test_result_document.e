@@ -33,7 +33,7 @@ create
 
 feature -- Test
 
-	test_splitting_xhtml_document is
+	test_splitting_xhtml_document
 			-- Test splitting an XHTML document into h1 sections.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -66,7 +66,7 @@ feature -- Test
 			assert ("Section 3", l_configuration.output_resolver.output_destinations.item ("string:/section3.html").stream.last_output.count = 420)
 		end
 
-	test_implicit_duplicate_destination_error is
+	test_implicit_duplicate_destination_error
 			-- Test error XT1490 due to implict result tree.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -80,7 +80,7 @@ feature -- Test
 			conformance.set_basic_xslt_processor
 			create l_configuration.make_with_defaults
 			create l_error_listener.make (l_configuration.recovery_policy)
-			l_configuration.set_error_listener (l_error_listener)			
+			l_configuration.set_error_listener (l_error_listener)
 			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make (xt1490_xsl_uri.full_reference)
 			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
@@ -96,7 +96,7 @@ feature -- Test
 			assert ("XTDE1490", l_error_listener.has (xtde1490))
 		end
 
-	test_duplicate_destination_error is
+	test_duplicate_destination_error
 			-- Test error XT1490 due to multiple result-documents.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -128,7 +128,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing schematron data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}",
@@ -139,15 +139,15 @@ feature {NONE} -- Implementation
 			data_dirname_not_empty: not Result.is_empty
 		end
 
-	dummy_uri: UT_URI is
+	dummy_uri: UT_URI
 			-- Dummy URI
 		once
 			create Result.make ("dummy:")
 		ensure
 			dummy_uri_is_absolute: Result /= Void and then Result.is_absolute
 		end
-		
-	xhtml_splitter_xsl_uri: UT_URI is
+
+	xhtml_splitter_xsl_uri: UT_URI
 			-- URI of file 'xhtml-splitter.xsl'
 		local
 			l_path: STRING
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 			xhtml_splitter_xsl_uri_not_void: Result /= Void
 		end
 
-	document_xhtml_uri: UT_URI is
+	document_xhtml_uri: UT_URI
 			-- URI of file 'document.xhtml'
 		local
 			l_path: STRING
@@ -168,8 +168,8 @@ feature {NONE} -- Implementation
 		ensure
 			document_xhtml_uri_not_void: Result /= Void
 		end
-		
-	xt1490_xsl_uri: UT_URI is
+
+	xt1490_xsl_uri: UT_URI
 			-- URI of file 'xt1490.xsl'
 		local
 			l_path: STRING
@@ -179,8 +179,8 @@ feature {NONE} -- Implementation
 		ensure
 			xt1490_xsl_uri_not_void: Result /= Void
 		end
-		
-	xt1490_2_xsl_uri: UT_URI is
+
+	xt1490_2_xsl_uri: UT_URI
 			-- URI of file 'xt1490-2.xsl'
 		local
 			l_path: STRING
@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 			xt1490_2_xsl_uri_not_void: Result /= Void
 		end
 
-	xtde1490: STRING is
+	xtde1490: STRING
 			-- Error XTDE0430
 		once
 			Result := Xpath_errors_uri + "#" + "XTDE1490"

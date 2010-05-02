@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_node_kind: INTEGER; a_type: XM_XPATH_SCHEMA_TYPE) is
+	make (a_node_kind: INTEGER; a_type: XM_XPATH_SCHEMA_TYPE)
 		require
 			valid_node_type: a_node_kind = Element_node or else a_node_kind = Attribute_node
 			valid_type: a_type /= Void
@@ -50,7 +50,7 @@ feature -- Access
 	node_kind: INTEGER
 			-- Type of nodes to which this pattern applies
 
-	node_kind_mask: INTEGER is
+	node_kind_mask: INTEGER
 			-- Mask of types of nodes matched
 		do
 			Result := INTEGER_.bit_shift_left (1, node_kind)
@@ -59,13 +59,13 @@ feature -- Access
 	content_type: XM_XPATH_SCHEMA_TYPE
 			-- Content type
 
-	is_content_test: BOOLEAN is
+	is_content_test: BOOLEAN
 			-- Is `Current' a content test?
 		do
 			Result := True
 		end
 
-	as_content_test: XM_XPATH_CONTENT_TYPE_TEST is
+	as_content_test: XM_XPATH_CONTENT_TYPE_TEST
 			-- `Current' seen as a content test
 		do
 			Result := Current
@@ -76,7 +76,7 @@ feature -- Status report
 	is_nillable: BOOLEAN
 			-- Can `Current' match nillable nodes?
 
-	allows_text_nodes: BOOLEAN is
+	allows_text_nodes: BOOLEAN
 			-- Does this node test allow text nodes?
 		do
 			Result := False
@@ -84,7 +84,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_nillable (a_nillable: BOOLEAN) is
+	set_nillable (a_nillable: BOOLEAN)
 			-- Set `is_nillable' to `a_nillable'.
 		do
 			is_nillable := a_nillable
@@ -94,7 +94,7 @@ feature -- Status setting
 
 feature -- Matching
 
-	matches_node (a_node_kind: INTEGER; a_name_code: INTEGER; a_node_type: INTEGER): BOOLEAN is
+	matches_node (a_node_kind: INTEGER; a_name_code: INTEGER; a_node_type: INTEGER): BOOLEAN
 			-- Is this node test satisfied by a given node?
 		local
 			l_schema_type: XM_XPATH_SCHEMA_TYPE

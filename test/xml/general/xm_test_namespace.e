@@ -1,10 +1,10 @@
 note
-	
+
 	description:
-	
+
 		"Test namespace resolving"
-	
-	test_status: "ok_to_run"	
+
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
 	license: "MIT License"
@@ -32,14 +32,14 @@ create
 
 feature -- Test printed
 
-	test_printed is
+	test_printed
 		do
 			assert_namespace_printed  ("element",
 				"<ns:doc xmlns:ns='uri'/>",
 				"<{uri}doc></{uri}doc>")
 		end
 
-	test_with_xmlns is
+	test_with_xmlns
 		do
 			assert_namespace_with_xmlns ("element",
 				"<ns:doc xmlns:ns='uri'/>",
@@ -52,21 +52,21 @@ feature -- Test printed
 
 feature -- Test resolved
 
-	test_simple is
+	test_simple
 		do
 			assert_namespace ("simple",
 				"<a xmlns='uri1'/>",
 				<<"uri1">>)
 		end
-		
-	test_all is
+
+	test_all
 		do
 			assert_namespace  ("all",
 				"<a><b xmlns='uri1' xmlns:n2='uri2' n2:a='bar' c='foo'><z/></b><c/></a>",
 				<<"", "uri1", "uri2", "", "uri1", "">>)
 		end
-		
-	test_element is
+
+	test_element
 		do
 			assert_namespace ("default ns",
 				"<doc><a xmlns='uri1'/></doc>",
@@ -96,8 +96,8 @@ feature -- Test resolved
 				"<doc xmlns:n1='uri1'><n1:a xmlns:n1='uri2'/><n1:c/></doc>",
 				<<"", "uri2", "uri1">>)
 		end
-		
-	test_attribute is
+
+	test_attribute
 		do
 			assert_namespace ("simple",
 				"<doc xmlns='uri1' a='t'/>",
@@ -111,32 +111,32 @@ feature -- Test resolved
 			assert_namespace ("default down",
 				"<doc xmlns='uri1' xmlns:n='uri2'><a n:a='t' a='t'/></doc>",
 				<<"uri1", "uri1", "uri2", "">>)
-				
+
 			assert_namespace ("together",
 				"<a xmlns:n1='uri1' xmlns:n2='uri2'><n2:b n1:a1='foo' n2:a1='bar' d='bar'/></a>",
 				<<"", "uri2", "uri1", "uri2", "">>)
 		end
 
-	test_implicit is
+	test_implicit
 		do
 			assert_namespace ("xml_prefix",
 				"<doc xml:space='default'/>",
 				<<"", Xml_prefix_namespace >>)
 		end
-		
+
 feature {NONE} -- Implementation
 
-	assert_namespace_with_xmlns (a_name: STRING; a_xml: STRING; a_parsed: STRING) is
+	assert_namespace_with_xmlns (a_name: STRING; a_xml: STRING; a_parsed: STRING)
 		do
 			assert_namespace_impl (a_name, True, a_xml, a_parsed)
 		end
-		
-	assert_namespace_printed (a_name: STRING; a_xml: STRING; a_parsed: STRING) is
+
+	assert_namespace_printed (a_name: STRING; a_xml: STRING; a_parsed: STRING)
 		do
 			assert_namespace_impl (a_name, False, a_xml, a_parsed)
 		end
-	
-	assert_namespace_impl (a_name: STRING; with_xmlns: BOOLEAN; a_xml: STRING; a_parsed: STRING) is
+
+	assert_namespace_impl (a_name: STRING; with_xmlns: BOOLEAN; a_xml: STRING; a_parsed: STRING)
 			-- Test resolved namespaces and pretty printed as expected.
 		require
 			a_name_not_void: a_name /= Void
@@ -154,17 +154,17 @@ feature {NONE} -- Implementation
 			create a_stop.set_next (a_printer)
 			create a_resolver.set_next (a_stop)
 			a_resolver.set_forward_xmlns (with_xmlns)
-			
+
 			create a_parser.make
 			a_parser.set_callbacks (a_resolver)
-			
+
 			a_parser.parse_from_string (a_xml)
-			
+
 			assert ("parsing ok for "+a_name, a_parser.is_correct)
 			assert_equal (a_name, a_parsed, a_printer.last_output)
 		end
 
-	assert_namespace (a_name: STRING; a_in: STRING; a_ns: ARRAY[STRING]) is
+	assert_namespace (a_name: STRING; a_in: STRING; a_ns: ARRAY[STRING])
 			-- Test that an XML document sequence of namespace
 			-- events (excluding xmlns, flattened) is correct.
 		require
@@ -180,14 +180,14 @@ feature {NONE} -- Implementation
 			a_checker.set (a_ns)
 			a_parser.set_callbacks (standard_callbacks_pipe (<<a_checker>>))
 			a_parser.parse_from_string (a_in)
-			
+
 			debug ("xml_parser")
 				if a_checker.has_failed then
 					std.output.put_string ("failed: "+ a_checker.failed)
 					std.output.put_new_line
 				end
 			end
-			
+
 			assert ("parsing ok for "+a_name, a_parser.is_correct)
 			assert (a_name, not a_checker.has_failed)
 		end

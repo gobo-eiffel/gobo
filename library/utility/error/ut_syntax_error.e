@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER) is
+	make (filename: STRING; line: INTEGER)
 			-- Create a new syntax error.
 		require
 			filename_not_void: filename /= Void
@@ -34,10 +34,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "Syntax error in %"$1%" at line $2"
+	default_template: STRING = "Syntax error in %"$1%" at line $2"
 			-- Default template used to built the error message
 
-	code: STRING is "UT0007"
+	code: STRING = "UT0007"
 			-- Error code
 
 invariant

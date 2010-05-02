@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_format: STRING) is
+	make (a_format: STRING)
 			-- Tokenize `a_format' into alternating alphanumeric and non-alphanumeric tokens.
 		require
 			format_string_not_void: a_format /= Void
@@ -93,7 +93,7 @@ feature -- Access
 
 	formatted_string (a_numbers: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE];
 							a_group_size: INTEGER; a_group_separator, a_letter, an_ordinal: STRING;
-							a_numberer: ST_XSLT_NUMBERER): STRING is
+							a_numberer: ST_XSLT_NUMBERER): STRING
 			-- Formatted string
 		require
 			a_numbers_not_void: a_numbers /= Void

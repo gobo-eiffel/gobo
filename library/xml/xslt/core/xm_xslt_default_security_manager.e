@@ -27,13 +27,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create with low security.
 		do
 			-- do_nothing
 		end
 
-	make_highly_secure is
+	make_highly_secure
 			-- Create with high security.
 		do
 			is_highly_secure := True
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_output_uri_permitted (an_absolute_uri: UT_URI): BOOLEAN is
+	is_output_uri_permitted (an_absolute_uri: UT_URI): BOOLEAN
 			-- Is writing permitted to `an_absolute_uri'?
 		do
 			if is_highly_secure then
@@ -53,4 +53,4 @@ feature -- Access
 		end
 
 end
-	
+

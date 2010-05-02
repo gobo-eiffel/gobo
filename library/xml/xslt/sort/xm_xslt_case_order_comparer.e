@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_comparer: like comparer; a_upper_first: BOOLEAN) is
+	make (a_comparer: like comparer; a_upper_first: BOOLEAN)
 			-- Initialize `Current'.
 		require
 			a_comparer_not_void: a_comparer /= Void
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Comparison
 
-	less_than (u, v: XM_XPATH_ITEM): BOOLEAN is
+	less_than (u, v: XM_XPATH_ITEM): BOOLEAN
 			-- Is `u' considered less than `v'?
 			-- Not efficient.
 		local
@@ -107,4 +107,4 @@ invariant
 	comparer_not_void: comparer /= Void
 
 end
-	
+

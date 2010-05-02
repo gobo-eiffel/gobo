@@ -12,7 +12,7 @@ note
 
 
 class XM_XPATH_INVALID_ITERATOR
-	
+
 inherit
 
 	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_error: XM_XPATH_ERROR_VALUE) is
+	make (a_error: XM_XPATH_ERROR_VALUE)
 			-- Establish invariant.
 		require
 			error_not_void: a_error /= Void
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			error_set: error_value = a_error
 		end
 
-	make_from_string (a_string, a_namespace_uri, a_error_code: STRING; a_error_type: INTEGER) is
+	make_from_string (a_string, a_namespace_uri, a_error_code: STRING; a_error_type: INTEGER)
 			-- Create from `a_string'.
 		require
 			valid_error_type: a_error_type = Static_error or a_error_type = Type_error or a_error_type = Dynamic_error
@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item: XM_XPATH_ITEM is
+	item: XM_XPATH_ITEM
 			-- Value or node at the current position
 		do
 			check
@@ -71,7 +71,7 @@ feature -- Access
 
 feature -- Status report
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
 			check
@@ -82,7 +82,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move to next position
 		do
 			check
@@ -93,7 +93,7 @@ feature -- Cursor movement
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 			check
@@ -107,4 +107,4 @@ invariant
 	in_error: is_error
 
 end
-	
+

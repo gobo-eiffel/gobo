@@ -25,14 +25,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new invariant clause.
 		do
 			invariant_keyword := tokens.invariant_keyword
 			precursor
 		end
 
-	make_with_capacity (nb: INTEGER) is
+	make_with_capacity (nb: INTEGER)
 			-- Create a new invariant clause with capacity `nb'.
 		do
 			invariant_keyword := tokens.invariant_keyword
@@ -44,7 +44,7 @@ feature -- Access
 	invariant_keyword: ET_KEYWORD
 			-- 'invariant' keyword
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -54,13 +54,13 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := invariant_keyword
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			if not is_empty then
@@ -70,7 +70,7 @@ feature -- Access
 			end
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			if not is_empty then
@@ -82,7 +82,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_invariant_keyword (an_invariant: like invariant_keyword) is
+	set_invariant_keyword (an_invariant: like invariant_keyword)
 			-- Set `invariant_keyword' to `an_invariant'.
 		require
 			an_invariant_not_void: an_invariant /= Void
@@ -94,7 +94,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_loop_invariants (Current)

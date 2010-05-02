@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	manifest_string: ET_MANIFEST_STRING is
+	manifest_string: ET_MANIFEST_STRING
 			-- Obsolete message
 		deferred
 		ensure

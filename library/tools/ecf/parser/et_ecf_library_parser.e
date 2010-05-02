@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_factory (a_factory: like ast_factory; an_error_handler: like error_handler) is
+	make_with_factory (a_factory: like ast_factory; an_error_handler: like error_handler)
 			-- Create a new ECF parser using `a_factory' as AST factory.
 		do
 			create adapted_library.make (create {ET_IDENTIFIER}.make ("*unknown*"), create {ET_IDENTIFIER}.make ("*unknown*"), create {ET_ECF_SYSTEM}.make ("*unknown*", "*unknown*"))
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Parsing
 
-	parse_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+	parse_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Parse ECF file `a_file'.
 		local
 			l_old_library: ET_LIBRARY
@@ -54,7 +54,7 @@ feature -- Parsing
 			adapted_library.set_library (l_old_library)
 		end
 
-	parse_adapted_library (a_file: KI_CHARACTER_INPUT_STREAM; a_adapted_library: ET_ECF_ADAPTED_LIBRARY) is
+	parse_adapted_library (a_file: KI_CHARACTER_INPUT_STREAM; a_adapted_library: ET_ECF_ADAPTED_LIBRARY)
 			-- Parse ECF file `a_file' containing the library being adapted by `a_adapted_library'.
 		require
 			a_file_not_void: a_file /= Void
@@ -76,7 +76,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Element change
 
-	build_system_config (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_filename: STRING) is
+	build_system_config (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_filename: STRING)
 			-- Build system config from `an_element'.
 		local
 			l_library: ET_ECF_LIBRARY

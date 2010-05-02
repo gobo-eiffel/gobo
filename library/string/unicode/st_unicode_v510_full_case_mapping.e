@@ -20,7 +20,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	lower_case_mapping_plane_0_segment_0: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	lower_case_mapping_plane_0_segment_0: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	lower_case_mapping_plane_0_segment_1: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	lower_case_mapping_plane_0_segment_1: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	lower_case_mapping_plane_0_segment_2: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	lower_case_mapping_plane_0_segment_2: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -276,7 +276,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	lower_case_mapping_plane_0_segment_3: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	lower_case_mapping_plane_0_segment_3: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -346,7 +346,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	lower_case_mapping_plane_0_segment_4: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	lower_case_mapping_plane_0_segment_4: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -479,7 +479,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	lower_case_mapping_plane_0_segment_5: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	lower_case_mapping_plane_0_segment_5: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -548,7 +548,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	all_empty_lower_case_mapping_segment: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	all_empty_lower_case_mapping_segment: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -557,7 +557,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	lower_case_mapping_plane_0_segment_16: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	lower_case_mapping_plane_0_segment_16: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -614,7 +614,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	lower_case_mapping_plane_0_segment_30: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	lower_case_mapping_plane_0_segment_30: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -752,7 +752,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	lower_case_mapping_plane_0_segment_31: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	lower_case_mapping_plane_0_segment_31: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -922,7 +922,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	lower_case_mapping_plane_0_segment_33: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	lower_case_mapping_plane_0_segment_33: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -952,7 +952,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	lower_case_mapping_plane_0_segment_36: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	lower_case_mapping_plane_0_segment_36: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -987,7 +987,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	lower_case_mapping_plane_0_segment_44: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	lower_case_mapping_plane_0_segment_44: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -1107,7 +1107,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	lower_case_mapping_plane_0_segment_166: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	lower_case_mapping_plane_0_segment_166: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -1150,7 +1150,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	lower_case_mapping_plane_0_segment_167: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	lower_case_mapping_plane_0_segment_167: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -1206,7 +1206,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	lower_case_mapping_plane_0_segment_251: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	lower_case_mapping_plane_0_segment_251: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -1244,7 +1244,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	lower_case_mapping_plane_0_segment_255: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	lower_case_mapping_plane_0_segment_255: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -1279,7 +1279,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	lower_case_mapping_plane_0: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is
+	lower_case_mapping_plane_0: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]
 			-- Generated array plane
 		once
 			create Result.make_filled (Void, 256)
@@ -1544,7 +1544,7 @@ feature {NONE} -- Implementation
 			sub_arrays_not_void: True --not Result.has (Void)
 		end
 
-	lower_case_mapping_plane_1_segment_4: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	lower_case_mapping_plane_1_segment_4: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -1593,7 +1593,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	lower_case_mapping_plane_1: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is
+	lower_case_mapping_plane_1: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]
 			-- Generated array plane
 		once
 			create Result.make_filled (Void, 256)
@@ -1858,7 +1858,7 @@ feature {NONE} -- Implementation
 			sub_arrays_not_void: True --not Result.has (Void)
 		end
 
-	all_empty_lower_case_mapping_plane: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is
+	all_empty_lower_case_mapping_plane: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]
 			-- Generated array plane
 		once
 			create Result.make_filled (Void, 256)
@@ -2123,7 +2123,7 @@ feature {NONE} -- Implementation
 			sub_arrays_not_void: True --not Result.has (Void)
 		end
 
-	lower_case_mappings: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]] is
+	lower_case_mappings: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]]
 			-- Full lower case mapping for each code point
 		once
 			create Result.make_filled (Void, 17)
@@ -2146,7 +2146,7 @@ feature {NONE} -- Implementation
 			Result.put (all_empty_lower_case_mapping_plane, 16)
 		end
 
-	title_case_mapping_plane_0_segment_0: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	title_case_mapping_plane_0_segment_0: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -2214,7 +2214,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	title_case_mapping_plane_0_segment_1: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	title_case_mapping_plane_0_segment_1: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -2345,7 +2345,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	title_case_mapping_plane_0_segment_2: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	title_case_mapping_plane_0_segment_2: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -2412,7 +2412,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	title_case_mapping_plane_0_segment_3: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	title_case_mapping_plane_0_segment_3: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -2489,7 +2489,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	title_case_mapping_plane_0_segment_4: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	title_case_mapping_plane_0_segment_4: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -2622,7 +2622,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	title_case_mapping_plane_0_segment_5: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	title_case_mapping_plane_0_segment_5: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -2702,7 +2702,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	all_empty_title_case_mapping_segment: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	all_empty_title_case_mapping_segment: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -2711,7 +2711,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	title_case_mapping_plane_0_segment_29: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	title_case_mapping_plane_0_segment_29: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -2722,7 +2722,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	title_case_mapping_plane_0_segment_30: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	title_case_mapping_plane_0_segment_30: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -2860,7 +2860,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	title_case_mapping_plane_0_segment_31: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	title_case_mapping_plane_0_segment_31: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -3030,7 +3030,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	title_case_mapping_plane_0_segment_33: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	title_case_mapping_plane_0_segment_33: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -3057,7 +3057,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	title_case_mapping_plane_0_segment_36: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	title_case_mapping_plane_0_segment_36: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -3092,7 +3092,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	title_case_mapping_plane_0_segment_44: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	title_case_mapping_plane_0_segment_44: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -3207,7 +3207,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	title_case_mapping_plane_0_segment_45: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	title_case_mapping_plane_0_segment_45: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -3264,7 +3264,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	title_case_mapping_plane_0_segment_166: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	title_case_mapping_plane_0_segment_166: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -3413,7 +3413,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	title_case_mapping_plane_0_segment_167: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	title_case_mapping_plane_0_segment_167: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -3578,7 +3578,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	title_case_mapping_plane_0_segment_251: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	title_case_mapping_plane_0_segment_251: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -3616,7 +3616,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	title_case_mapping_plane_0_segment_255: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	title_case_mapping_plane_0_segment_255: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -3651,7 +3651,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	title_case_mapping_plane_0: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is
+	title_case_mapping_plane_0: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]
 			-- Generated array plane
 		once
 			create Result.make_filled (Void, 256)
@@ -3916,7 +3916,7 @@ feature {NONE} -- Implementation
 			sub_arrays_not_void: True --not Result.has (Void)
 		end
 
-	title_case_mapping_plane_1_segment_4: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	title_case_mapping_plane_1_segment_4: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -3965,7 +3965,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	title_case_mapping_plane_1: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is
+	title_case_mapping_plane_1: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]
 			-- Generated array plane
 		once
 			create Result.make_filled (Void, 256)
@@ -4230,7 +4230,7 @@ feature {NONE} -- Implementation
 			sub_arrays_not_void: True --not Result.has (Void)
 		end
 
-	all_empty_title_case_mapping_plane: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is
+	all_empty_title_case_mapping_plane: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]
 			-- Generated array plane
 		once
 			create Result.make_filled (Void, 256)
@@ -4495,7 +4495,7 @@ feature {NONE} -- Implementation
 			sub_arrays_not_void: True --not Result.has (Void)
 		end
 
-	title_case_mappings: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]] is
+	title_case_mappings: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]]
 			-- Full title case mapping for each code point
 		once
 			create Result.make_filled (Void, 17)
@@ -4518,7 +4518,7 @@ feature {NONE} -- Implementation
 			Result.put (all_empty_title_case_mapping_plane, 16)
 		end
 
-	upper_case_mapping_plane_0_segment_0: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	upper_case_mapping_plane_0_segment_0: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -4586,7 +4586,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	upper_case_mapping_plane_0_segment_1: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	upper_case_mapping_plane_0_segment_1: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -4713,7 +4713,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	upper_case_mapping_plane_0_segment_2: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	upper_case_mapping_plane_0_segment_2: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -4780,7 +4780,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	upper_case_mapping_plane_0_segment_3: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	upper_case_mapping_plane_0_segment_3: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -4857,7 +4857,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	upper_case_mapping_plane_0_segment_4: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	upper_case_mapping_plane_0_segment_4: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -4990,7 +4990,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	upper_case_mapping_plane_0_segment_5: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	upper_case_mapping_plane_0_segment_5: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -5070,7 +5070,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	all_empty_upper_case_mapping_segment: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	all_empty_upper_case_mapping_segment: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -5079,7 +5079,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	upper_case_mapping_plane_0_segment_29: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	upper_case_mapping_plane_0_segment_29: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -5090,7 +5090,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	upper_case_mapping_plane_0_segment_30: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	upper_case_mapping_plane_0_segment_30: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -5228,7 +5228,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	upper_case_mapping_plane_0_segment_31: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	upper_case_mapping_plane_0_segment_31: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -5398,7 +5398,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	upper_case_mapping_plane_0_segment_33: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	upper_case_mapping_plane_0_segment_33: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -5425,7 +5425,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	upper_case_mapping_plane_0_segment_36: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	upper_case_mapping_plane_0_segment_36: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -5460,7 +5460,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	upper_case_mapping_plane_0_segment_44: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	upper_case_mapping_plane_0_segment_44: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -5575,7 +5575,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	upper_case_mapping_plane_0_segment_45: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	upper_case_mapping_plane_0_segment_45: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -5632,7 +5632,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	upper_case_mapping_plane_0_segment_166: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	upper_case_mapping_plane_0_segment_166: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -5781,7 +5781,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	upper_case_mapping_plane_0_segment_167: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	upper_case_mapping_plane_0_segment_167: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -5946,7 +5946,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	upper_case_mapping_plane_0_segment_251: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	upper_case_mapping_plane_0_segment_251: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -5984,7 +5984,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	upper_case_mapping_plane_0_segment_255: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	upper_case_mapping_plane_0_segment_255: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -6019,7 +6019,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	upper_case_mapping_plane_0: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is
+	upper_case_mapping_plane_0: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]
 			-- Generated array plane
 		once
 			create Result.make_filled (Void, 256)
@@ -6284,7 +6284,7 @@ feature {NONE} -- Implementation
 			sub_arrays_not_void: True --not Result.has (Void)
 		end
 
-	upper_case_mapping_plane_1_segment_4: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
+	upper_case_mapping_plane_1_segment_4: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
 			create Result.make (0, 255)
@@ -6333,7 +6333,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	upper_case_mapping_plane_1: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is
+	upper_case_mapping_plane_1: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]
 			-- Generated array plane
 		once
 			create Result.make_filled (Void, 256)
@@ -6598,7 +6598,7 @@ feature {NONE} -- Implementation
 			sub_arrays_not_void: True --not Result.has (Void)
 		end
 
-	all_empty_upper_case_mapping_plane: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is
+	all_empty_upper_case_mapping_plane: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]
 			-- Generated array plane
 		once
 			create Result.make_filled (Void, 256)
@@ -6863,7 +6863,7 @@ feature {NONE} -- Implementation
 			sub_arrays_not_void: True --not Result.has (Void)
 		end
 
-	upper_case_mappings: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]] is
+	upper_case_mappings: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]]
 			-- Full upper case mapping for each code point
 		once
 			create Result.make_filled (Void, 17)

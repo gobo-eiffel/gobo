@@ -61,7 +61,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new Eiffel parser.
 		do
 			precursor {ET_CLASS_PROCESSOR}
@@ -84,7 +84,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset parser before parsing next input.
 		do
 			precursor
@@ -113,7 +113,7 @@ feature -- Access
 
 feature -- Status report
 
-	providers_enabled: BOOLEAN is
+	providers_enabled: BOOLEAN
 			-- Should providers be built when parsing a class?
 		do
 			Result := current_system.providers_enabled
@@ -121,7 +121,7 @@ feature -- Status report
 
 feature -- Parsing
 
-	parse_file (a_file: KI_CHARACTER_INPUT_STREAM; a_filename: STRING; a_time_stamp: INTEGER; a_cluster: ET_CLUSTER) is
+	parse_file (a_file: KI_CHARACTER_INPUT_STREAM; a_filename: STRING; a_time_stamp: INTEGER; a_cluster: ET_CLUSTER)
 			-- Parse all classes in `a_file' within cluster `a_cluster'.
 			-- `a_filename' is the filename of `a_file' and `a_time_stamp'
 			-- its time stamp just before it was open.
@@ -157,7 +157,7 @@ feature -- Parsing
 			reset
 		end
 
-	parse_cluster (a_cluster: ET_CLUSTER) is
+	parse_cluster (a_cluster: ET_CLUSTER)
 			-- Traverse `a_cluster' (recursively) and parse the classes
 			-- it contains. Classes are added to `universe.classes'.
 			--
@@ -259,7 +259,7 @@ feature -- Parsing
 			group := old_group
 		end
 
-	parse_clusters (a_clusters: ET_CLUSTERS) is
+	parse_clusters (a_clusters: ET_CLUSTERS)
 			-- Traverse `a_clusters' (recursively) and parse the classes
 			-- they contain. Classes are added to `universe.classes'.
 			--
@@ -300,7 +300,7 @@ feature -- Parsing
 
 feature -- AST processing
 
-	process_class (a_class: ET_CLASS) is
+	process_class (a_class: ET_CLASS)
 			-- Parse `a_class'.
 			-- The class may end up with a syntax error status if its
 			-- `filename' didn't contain this class after all (i.e.
@@ -382,7 +382,7 @@ feature -- AST processing
 			is_parsed: a_class.is_parsed
 		end
 
-	process_cluster (a_cluster: ET_CLUSTER) is
+	process_cluster (a_cluster: ET_CLUSTER)
 			-- Traverse `a_cluster' (recursively) and parse the classes
 			-- it contains. Classes are added to `universe.classes'.
 			--
@@ -395,7 +395,7 @@ feature -- AST processing
 
 feature {NONE} -- Basic operations
 
-	register_query (a_query: ET_QUERY) is
+	register_query (a_query: ET_QUERY)
 			-- Register `a_query' in `last_class'.
 		do
 			if a_query /= Void then
@@ -413,7 +413,7 @@ feature {NONE} -- Basic operations
 			wipe_out_last_object_tests_stack
 		end
 
-	register_query_synonym (a_query: ET_QUERY) is
+	register_query_synonym (a_query: ET_QUERY)
 			-- Register `a_query' in `last_class'.
 		do
 			if a_query /= Void then
@@ -426,7 +426,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	register_procedure (a_procedure: ET_PROCEDURE) is
+	register_procedure (a_procedure: ET_PROCEDURE)
 			-- Register `a_procedure' in `last_class'.
 		do
 			if a_procedure /= Void then
@@ -444,7 +444,7 @@ feature {NONE} -- Basic operations
 			wipe_out_last_object_tests_stack
 		end
 
-	register_procedure_synonym (a_procedure: ET_PROCEDURE) is
+	register_procedure_synonym (a_procedure: ET_PROCEDURE)
 			-- Register `a_procedure' in `last_class'.
 		do
 			if a_procedure /= Void then
@@ -457,7 +457,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	register_constraint (a_constraint: ET_CONSTRAINT_TYPE) is
+	register_constraint (a_constraint: ET_CONSTRAINT_TYPE)
 			-- Register generic constraint.
 		do
 			constraints.force_last (a_constraint)
@@ -466,7 +466,7 @@ feature {NONE} -- Basic operations
 			registered: constraints.last = a_constraint
 		end
 
-	dummy_constraint (a_constraint: ET_CONSTRAINT_TYPE): ET_TYPE is
+	dummy_constraint (a_constraint: ET_CONSTRAINT_TYPE): ET_TYPE
 			-- Dummy type, or Void if `a_constraint' is Void
 		do
 			if a_constraint /= Void then
@@ -477,7 +477,7 @@ feature {NONE} -- Basic operations
 			non_void_type: a_constraint /= Void implies Result /= Void
 		end
 
-	set_formal_parameters (a_parameters: ET_FORMAL_PARAMETER_LIST) is
+	set_formal_parameters (a_parameters: ET_FORMAL_PARAMETER_LIST)
 			-- Set formal generic parameters of `last_class'.
 		require
 			no_constraint: a_parameters = Void implies constraints.is_empty
@@ -516,7 +516,7 @@ feature {NONE} -- Basic operations
 			constraints.wipe_out
 		end
 
-	set_class_features is
+	set_class_features
 			-- Set features of `last_class'.
 		local
 			a_class: like last_class
@@ -547,7 +547,7 @@ feature {NONE} -- Basic operations
 			procedures.wipe_out
 		end
 
-	set_class_providers is
+	set_class_providers
 			-- Set providers of `last_class' (when enabled).
 		local
 			l_providers: DS_HASH_SET [ET_NAMED_CLASS]
@@ -570,7 +570,7 @@ feature {NONE} -- Basic operations
 	set_class_to_end (a_class: ET_CLASS; an_obsolete: ET_OBSOLETE; a_parents: ET_PARENT_LIST;
 		a_creators: ET_CREATOR_LIST; a_convert_features: ET_CONVERT_FEATURE_LIST;
 		a_feature_clauses: ET_FEATURE_CLAUSE_LIST; an_invariants: ET_INVARIANTS;
-		a_second_indexing: ET_INDEXING_LIST; an_end: ET_KEYWORD) is
+		a_second_indexing: ET_INDEXING_LIST; an_end: ET_KEYWORD)
 			-- Set various elements to `a_class'.
 		do
 			if a_class /= Void then
@@ -587,7 +587,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	set_class_to_inheritance_end (a_class: ET_CLASS; an_obsolete: ET_OBSOLETE; a_parents: ET_PARENT_LIST) is
+	set_class_to_inheritance_end (a_class: ET_CLASS; an_obsolete: ET_OBSOLETE; a_parents: ET_PARENT_LIST)
 			-- Set various elements to `a_class'.
 			-- Note: This is the case where the following class declaration:
 			--		class FOO inherit BAR end
@@ -613,7 +613,7 @@ feature {NONE} -- Basic operations
 			set_class_to_end (a_class, an_obsolete, a_parents, Void, Void, Void, Void, Void, an_end)
 		end
 
-	add_expression_assertion (an_expression: ET_EXPRESSION; a_semicolon: ET_SYMBOL) is
+	add_expression_assertion (an_expression: ET_EXPRESSION; a_semicolon: ET_SYMBOL)
 			-- Add `an_expression' assertion, optionally followed
 			-- by `a_semicolon', to `assertions'.
 		local
@@ -652,7 +652,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	add_tagged_assertion (a_tag: ET_IDENTIFIER; a_colon: ET_SYMBOL; a_semicolon: ET_SYMBOL) is
+	add_tagged_assertion (a_tag: ET_IDENTIFIER; a_colon: ET_SYMBOL; a_semicolon: ET_SYMBOL)
 			-- Add tagged assertion, optionally followed
 			-- by `a_semicolon', to `assertions'.
 		local
@@ -691,7 +691,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	add_to_actual_parameter_list (a_parameter: ET_ACTUAL_PARAMETER_ITEM; a_list: ET_ACTUAL_PARAMETER_LIST) is
+	add_to_actual_parameter_list (a_parameter: ET_ACTUAL_PARAMETER_ITEM; a_list: ET_ACTUAL_PARAMETER_LIST)
 			-- Add `a_parameter' at the beginning of `a_list'.
 		do
 			if a_list /= Void and a_parameter /= Void then
@@ -699,7 +699,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	add_to_constraint_actual_parameter_list (a_parameter: ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM; a_list: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST) is
+	add_to_constraint_actual_parameter_list (a_parameter: ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM; a_list: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST)
 			-- Add `a_parameter' at the beginning of `a_list'.
 		do
 			if a_list /= Void and a_parameter /= Void then
@@ -707,7 +707,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	set_start_closure (a_formal_arguments: ET_FORMAL_ARGUMENT_LIST) is
+	set_start_closure (a_formal_arguments: ET_FORMAL_ARGUMENT_LIST)
 			-- Indicate the we just parsed the formal arguments of a
 			-- new closure (i.e. feature, invariant or inline agent).
 			-- Keep track of the values of `last_formal_arguments',
@@ -729,7 +729,7 @@ feature {NONE} -- Basic operations
 			last_object_tests := Void
 		end
 
-	set_end_closure is
+	set_end_closure
 			-- Indicate that the end of the closure (i.e. feature, invariant
 			-- or inline agent) being parsed has been reached. Restore
 			-- `last_formal_arguments', `last_local_variables' and
@@ -758,7 +758,7 @@ feature {NONE} -- Basic operations
 feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIST} -- Generic constraints
 
 	resolved_constraint_named_type (a_constraint: ET_CONSTRAINT_NAMED_TYPE;
-		a_formals: ET_FORMAL_PARAMETER_LIST; a_class: ET_CLASS): ET_TYPE is
+		a_formals: ET_FORMAL_PARAMETER_LIST; a_class: ET_CLASS): ET_TYPE
 			-- Version of `a_constraint', appearing in the constraint of one
 			-- of the formal generic parameters in `a_formals' of `a_class',
 			-- where class names and formal generic parameter names have been
@@ -810,7 +810,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 		end
 
 	resolved_constraint_generic_named_type (a_constraint: ET_CONSTRAINT_GENERIC_NAMED_TYPE;
-		a_formals: ET_FORMAL_PARAMETER_LIST; a_class: ET_CLASS): ET_TYPE is
+		a_formals: ET_FORMAL_PARAMETER_LIST; a_class: ET_CLASS): ET_TYPE
 			-- Version `a_constraint', appearing in the constraint of one
 			-- of the formal generic parameters in `a_formals' of `a_class',
 			-- where class names and formal generic parameter names have been
@@ -866,7 +866,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 		end
 
 	resolved_constraint_actual_parameter_list (a_constraint: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST;
-		a_formals: ET_FORMAL_PARAMETER_LIST; a_class: ET_CLASS): ET_ACTUAL_PARAMETER_LIST is
+		a_formals: ET_FORMAL_PARAMETER_LIST; a_class: ET_CLASS): ET_ACTUAL_PARAMETER_LIST
 			-- Version of `a_constraint', appearing in the constraint of one
 			-- of the formal generic parameters in `a_formals' of `a_class',
 			-- where class names and formal generic parameter names have been
@@ -903,7 +903,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 		end
 
 	resolved_constraint_actual_parameter_comma (a_constraint: ET_CONSTRAINT_ACTUAL_PARAMETER_COMMA;
-		a_type: ET_TYPE): ET_ACTUAL_PARAMETER_ITEM is
+		a_type: ET_TYPE): ET_ACTUAL_PARAMETER_ITEM
 			-- Version of `a_constraint', where its type has been replaced by `a_type'
 		require
 			a_constraint_not_void: a_constraint /= Void
@@ -915,7 +915,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 		end
 
 	resolved_constraint_labeled_actual_parameter (a_constraint: ET_CONSTRAINT_LABELED_ACTUAL_PARAMETER;
-		a_type: ET_TYPE): ET_LABELED_ACTUAL_PARAMETER is
+		a_type: ET_TYPE): ET_LABELED_ACTUAL_PARAMETER
 			-- Version of `a_constraint', where its type has been replaced by `a_type'
 		require
 			a_constraint_not_void: a_constraint /= Void
@@ -924,7 +924,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 		end
 
 	resolved_constraint_labeled_comma_actual_parameter (a_constraint: ET_CONSTRAINT_LABELED_COMMA_ACTUAL_PARAMETER;
-		a_type: ET_TYPE): ET_LABELED_ACTUAL_PARAMETER is
+		a_type: ET_TYPE): ET_LABELED_ACTUAL_PARAMETER
 			-- Version of `a_constraint', where its type has been replaced by `a_type'
 		require
 			a_constraint_not_void: a_constraint /= Void
@@ -933,7 +933,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 		end
 
 	resolved_constraint_labeled_actual_parameter_semicolon (a_constraint: ET_CONSTRAINT_LABELED_ACTUAL_PARAMETER_SEMICOLON;
-		a_type: ET_TYPE): ET_ACTUAL_PARAMETER_ITEM is
+		a_type: ET_TYPE): ET_ACTUAL_PARAMETER_ITEM
 			-- Version of `a_constraint', where its type has been replaced by `a_type'
 		require
 			a_constraint_not_void: a_constraint /= Void
@@ -946,7 +946,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 
 feature {NONE} -- AST factory
 
-	new_agent_identifier_target (an_identifier: ET_IDENTIFIER): ET_IDENTIFIER is
+	new_agent_identifier_target (an_identifier: ET_IDENTIFIER): ET_IDENTIFIER
 			-- New agent identifier target
 		local
 			a_seed: INTEGER
@@ -976,7 +976,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_alias_free_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_FREE_NAME is
+	new_alias_free_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_FREE_NAME
 			-- New alias free feature name
 		do
 			if a_string /= Void then
@@ -990,7 +990,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_any_clients (a_keyword: ET_KEYWORD): ET_CLIENT_LIST is
+	new_any_clients (a_keyword: ET_KEYWORD): ET_CLIENT_LIST
 			-- Implicit client list (when preceded by `a_keyword')
 			-- with only one client: "ANY"
 		local
@@ -1012,7 +1012,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_bit_feature (a_bit: ET_IDENTIFIER; an_id: ET_IDENTIFIER): ET_BIT_FEATURE is
+	new_bit_feature (a_bit: ET_IDENTIFIER; an_id: ET_IDENTIFIER): ET_BIT_FEATURE
 			-- New 'BIT Identifier' type
 		local
 			a_class: ET_CLASS
@@ -1021,7 +1021,7 @@ feature {NONE} -- AST factory
 			Result := ast_factory.new_bit_feature (a_bit, an_id, a_class)
 		end
 
-	new_bit_n (a_bit: ET_IDENTIFIER; an_int: ET_INTEGER_CONSTANT): ET_BIT_N is
+	new_bit_n (a_bit: ET_IDENTIFIER; an_int: ET_INTEGER_CONSTANT): ET_BIT_N
 			-- New 'BIT N' type
 		local
 			a_class: ET_CLASS
@@ -1048,7 +1048,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_check_instruction (a_check: ET_KEYWORD; an_end: ET_KEYWORD): ET_CHECK_INSTRUCTION is
+	new_check_instruction (a_check: ET_KEYWORD; an_end: ET_KEYWORD): ET_CHECK_INSTRUCTION
 			-- New check instruction
 		local
 			i: INTEGER
@@ -1068,7 +1068,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_choice_attribute_constant (a_name: ET_IDENTIFIER): ET_IDENTIFIER is
+	new_choice_attribute_constant (a_name: ET_IDENTIFIER): ET_IDENTIFIER
 			-- New choice constant which is supposed to be the name of
 			-- a constant attribute or unique attribute
 		local
@@ -1101,7 +1101,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_client (a_name: ET_CLASS_NAME): ET_CLIENT is
+	new_client (a_name: ET_CLASS_NAME): ET_CLIENT
 			-- New client
 		local
 			l_base_class: ET_MASTER_CLASS
@@ -1110,7 +1110,7 @@ feature {NONE} -- AST factory
 			Result := ast_factory.new_client (a_name, l_base_class)
 		end
 
-	new_client_comma (a_name: ET_CLASS_NAME; a_comma: ET_SYMBOL): ET_CLIENT_ITEM is
+	new_client_comma (a_name: ET_CLASS_NAME; a_comma: ET_SYMBOL): ET_CLIENT_ITEM
 			-- New client followed by a comma
 		local
 			l_base_class: ET_MASTER_CLASS
@@ -1120,7 +1120,7 @@ feature {NONE} -- AST factory
 		end
 
 	new_constraint_named_type (a_type_mark: ET_TYPE_MARK; a_name: ET_IDENTIFIER;
-		a_parameters: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST): ET_CONSTRAINT_NAMED_TYPE is
+		a_parameters: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST): ET_CONSTRAINT_NAMED_TYPE
 			-- New Eiffel class type or formal generic paramater
 			-- appearing in a generic constraint
 		do
@@ -1136,7 +1136,7 @@ feature {NONE} -- AST factory
 		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS; a_language: ET_EXTERNAL_LANGUAGE;
 		an_alias: ET_EXTERNAL_ALIAS; a_postconditions: ET_POSTCONDITIONS;
 		an_end: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLIENT_LIST;
-		a_feature_clause: ET_FEATURE_CLAUSE; a_class: ET_CLASS): ET_EXTERNAL_FUNCTION is
+		a_feature_clause: ET_FEATURE_CLAUSE; a_class: ET_CLASS): ET_EXTERNAL_FUNCTION
 			-- New external function
 		do
 			Result := ast_factory.new_external_function (a_name, args, a_type, an_assigner, an_is, a_first_indexing,
@@ -1149,7 +1149,7 @@ feature {NONE} -- AST factory
 		a_preconditions: ET_PRECONDITIONS; a_language: ET_EXTERNAL_LANGUAGE; an_alias: ET_EXTERNAL_ALIAS;
 		a_postconditions: ET_POSTCONDITIONS; an_end: ET_KEYWORD;
 		a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLIENT_LIST;
-		a_feature_clause: ET_FEATURE_CLAUSE; a_class: ET_CLASS): ET_EXTERNAL_PROCEDURE is
+		a_feature_clause: ET_FEATURE_CLAUSE; a_class: ET_CLASS): ET_EXTERNAL_PROCEDURE
 			-- New external procedure
 		do
 			Result := ast_factory.new_external_procedure (a_name, args, an_is, a_first_indexing,
@@ -1157,7 +1157,7 @@ feature {NONE} -- AST factory
 				an_end, a_semicolon, a_clients, a_feature_clause, a_class)
 		end
 
-	new_feature_address (d: ET_SYMBOL; a_name: ET_FEATURE_NAME): ET_FEATURE_ADDRESS is
+	new_feature_address (d: ET_SYMBOL; a_name: ET_FEATURE_NAME): ET_FEATURE_ADDRESS
 			-- New feature address
 		local
 			l_identifier: ET_IDENTIFIER
@@ -1191,7 +1191,7 @@ feature {NONE} -- AST factory
 			Result := ast_factory.new_feature_address (d, a_name)
 		end
 
-	new_formal_arguments (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_FORMAL_ARGUMENT_LIST is
+	new_formal_arguments (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_FORMAL_ARGUMENT_LIST
 			-- New formal argument list with given capacity
 		require
 			nb_positive: nb >= 0
@@ -1199,28 +1199,28 @@ feature {NONE} -- AST factory
 			Result := ast_factory.new_formal_arguments (a_left, a_right, nb)
 		end
 
-	new_invalid_alias_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_FREE_NAME is
+	new_invalid_alias_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_FREE_NAME
 			-- New invalid alias feature name
 		do
 -- ERROR
 			Result := new_alias_free_name (an_alias, a_string)
 		end
 
-	new_invalid_infix_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_FREE_NAME is
+	new_invalid_infix_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_FREE_NAME
 			-- New invalid infix feature name
 		do
 -- ERROR
 			Result := new_infix_free_name (an_infix, an_operator)
 		end
 
-	new_invalid_prefix_name (a_prefix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_PREFIX_FREE_NAME is
+	new_invalid_prefix_name (a_prefix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_PREFIX_FREE_NAME
 			-- New invalid prefix feature name
 		do
 -- ERROR
 			Result := new_prefix_free_name (a_prefix, an_operator)
 		end
 
-	new_infix_free_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_FREE_NAME is
+	new_infix_free_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_FREE_NAME
 			-- New infix free feature name
 		do
 			if an_operator /= Void then
@@ -1234,7 +1234,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_invariants (an_invariant: ET_KEYWORD): ET_INVARIANTS is
+	new_invariants (an_invariant: ET_KEYWORD): ET_INVARIANTS
 			-- New class invariants
 		local
 			i: INTEGER
@@ -1262,7 +1262,7 @@ feature {NONE} -- AST factory
 			wipe_out_last_object_tests_stack
 		end
 
-	new_local_variables (a_local: ET_KEYWORD; nb: INTEGER): ET_LOCAL_VARIABLE_LIST is
+	new_local_variables (a_local: ET_KEYWORD; nb: INTEGER): ET_LOCAL_VARIABLE_LIST
 			-- New local variable list with given capacity
 		require
 			nb_positive: nb >= 0
@@ -1271,7 +1271,7 @@ feature {NONE} -- AST factory
 			last_local_variables := Result
 		end
 
-	new_loop_invariants (an_invariant: ET_KEYWORD): ET_LOOP_INVARIANTS is
+	new_loop_invariants (an_invariant: ET_KEYWORD): ET_LOOP_INVARIANTS
 			-- New loop invariants
 		local
 			i: INTEGER
@@ -1291,7 +1291,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_named_object_test (a_attached: ET_KEYWORD; a_type: ET_TARGET_TYPE; a_expression: ET_EXPRESSION; a_as: ET_KEYWORD; a_name: ET_IDENTIFIER): ET_NAMED_OBJECT_TEST is
+	new_named_object_test (a_attached: ET_KEYWORD; a_type: ET_TARGET_TYPE; a_expression: ET_EXPRESSION; a_as: ET_KEYWORD; a_name: ET_IDENTIFIER): ET_NAMED_OBJECT_TEST
 			-- New named object-test expression
 		local
 			l_name: ET_IDENTIFIER
@@ -1308,7 +1308,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_named_type (a_type_mark: ET_TYPE_MARK; a_name: ET_IDENTIFIER; a_generics: ET_ACTUAL_PARAMETER_LIST): ET_TYPE is
+	new_named_type (a_type_mark: ET_TYPE_MARK; a_name: ET_IDENTIFIER; a_generics: ET_ACTUAL_PARAMETER_LIST): ET_TYPE
 			-- New Eiffel class type or formal generic paramater
 		local
 			a_parameter: ET_FORMAL_PARAMETER
@@ -1343,7 +1343,7 @@ feature {NONE} -- AST factory
 
 	new_parent (a_name: ET_IDENTIFIER; a_generic_parameters: ET_ACTUAL_PARAMETER_LIST;
 		a_renames: ET_RENAME_LIST; an_exports: ET_EXPORT_LIST; an_undefines, a_redefines,
-		a_selects: ET_KEYWORD_FEATURE_NAME_LIST; an_end: ET_KEYWORD): ET_PARENT is
+		a_selects: ET_KEYWORD_FEATURE_NAME_LIST; an_end: ET_KEYWORD): ET_PARENT
 			-- New parent
 		local
 			a_type: ET_CLASS_TYPE
@@ -1370,7 +1370,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_old_object_test (a_left_brace: ET_SYMBOL; a_name: ET_IDENTIFIER; a_colon: ET_SYMBOL; a_type: ET_TYPE; a_right_brace: ET_SYMBOL; a_expression: ET_EXPRESSION): ET_OLD_OBJECT_TEST is
+	new_old_object_test (a_left_brace: ET_SYMBOL; a_name: ET_IDENTIFIER; a_colon: ET_SYMBOL; a_type: ET_TYPE; a_right_brace: ET_SYMBOL; a_expression: ET_EXPRESSION): ET_OLD_OBJECT_TEST
 			-- New object-test expression
 		local
 			l_name: ET_IDENTIFIER
@@ -1387,7 +1387,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_once_manifest_string (a_once: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ONCE_MANIFEST_STRING is
+	new_once_manifest_string (a_once: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ONCE_MANIFEST_STRING
 			-- New once manifest string
 		do
 			Result := ast_factory.new_once_manifest_string (a_once, a_string)
@@ -1396,7 +1396,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_postconditions (an_ensure: ET_KEYWORD; a_then: ET_KEYWORD): ET_POSTCONDITIONS is
+	new_postconditions (an_ensure: ET_KEYWORD; a_then: ET_KEYWORD): ET_POSTCONDITIONS
 			-- New postconditions
 		local
 			i: INTEGER
@@ -1416,7 +1416,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_preconditions (a_require: ET_KEYWORD; an_else: ET_KEYWORD): ET_PRECONDITIONS is
+	new_preconditions (a_require: ET_KEYWORD; an_else: ET_KEYWORD): ET_PRECONDITIONS
 			-- New preconditions
 		local
 			i: INTEGER
@@ -1436,7 +1436,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_prefix_free_name (a_prefix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_PREFIX_FREE_NAME is
+	new_prefix_free_name (a_prefix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_PREFIX_FREE_NAME
 			-- New prefix free feature name
 		do
 			if an_operator /= Void then
@@ -1450,7 +1450,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_prefix_minus_expression (a_sign: ET_SYMBOL_OPERATOR; an_expression: ET_EXPRESSION): ET_EXPRESSION is
+	new_prefix_minus_expression (a_sign: ET_SYMBOL_OPERATOR; an_expression: ET_EXPRESSION): ET_EXPRESSION
 			-- New prefix minus expression
 		local
 			l_integer: ET_INTEGER_CONSTANT
@@ -1478,7 +1478,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_prefix_plus_expression (a_sign: ET_SYMBOL_OPERATOR; an_expression: ET_EXPRESSION): ET_EXPRESSION is
+	new_prefix_plus_expression (a_sign: ET_SYMBOL_OPERATOR; an_expression: ET_EXPRESSION): ET_EXPRESSION
 			-- New prefix plus expression
 		local
 			l_integer: ET_INTEGER_CONSTANT
@@ -1506,7 +1506,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_tuple_type (a_type_mark: ET_TYPE_MARK; a_tuple: ET_IDENTIFIER; a_generics: ET_ACTUAL_PARAMETER_LIST): ET_TUPLE_TYPE is
+	new_tuple_type (a_type_mark: ET_TYPE_MARK; a_tuple: ET_IDENTIFIER; a_generics: ET_ACTUAL_PARAMETER_LIST): ET_TUPLE_TYPE
 			-- New 'TUPLE' type
 		local
 			a_class: ET_NAMED_CLASS
@@ -1519,7 +1519,7 @@ feature {NONE} -- AST factory
 			Result := ast_factory.new_tuple_type (a_type_mark, a_tuple, a_generics, a_class)
 		end
 
-	new_unqualified_call_expression (a_name: ET_IDENTIFIER; args: ET_ACTUAL_ARGUMENT_LIST): ET_EXPRESSION is
+	new_unqualified_call_expression (a_name: ET_IDENTIFIER; args: ET_ACTUAL_ARGUMENT_LIST): ET_EXPRESSION
 			-- New unqualified call expression
 		local
 			a_seed: INTEGER
@@ -1553,7 +1553,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_unqualified_call_instruction (a_name: ET_IDENTIFIER; args: ET_ACTUAL_ARGUMENT_LIST): ET_INSTRUCTION is
+	new_unqualified_call_instruction (a_name: ET_IDENTIFIER; args: ET_ACTUAL_ARGUMENT_LIST): ET_INSTRUCTION
 			-- New unqualified call instruction
 		do
 			if args /= Void then
@@ -1564,7 +1564,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_writable (a_name: ET_IDENTIFIER): ET_WRITABLE is
+	new_writable (a_name: ET_IDENTIFIER): ET_WRITABLE
 			-- New writable
 		local
 			a_seed: INTEGER
@@ -1582,7 +1582,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_class (a_name: ET_IDENTIFIER): ET_CLASS is
+	new_class (a_name: ET_IDENTIFIER): ET_CLASS
 			-- New Eiffel class
 		local
 			old_current_class: ET_CLASS
@@ -1653,7 +1653,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_query_synonym (a_name: ET_EXTENDED_FEATURE_NAME; a_query: ET_QUERY): ET_QUERY is
+	new_query_synonym (a_name: ET_EXTENDED_FEATURE_NAME; a_query: ET_QUERY): ET_QUERY
 			-- New synomym for feature `a_query'
 		require
 			a_name_not_void: a_name /= Void
@@ -1664,7 +1664,7 @@ feature {NONE} -- AST factory
 			synonym_not_void: Result /= Void
 		end
 
-	new_procedure_synonym (a_name: ET_EXTENDED_FEATURE_NAME; a_procedure: ET_PROCEDURE): ET_PROCEDURE is
+	new_procedure_synonym (a_name: ET_EXTENDED_FEATURE_NAME; a_procedure: ET_PROCEDURE): ET_PROCEDURE
 			-- New synomym for feature `a_procedure'
 		require
 			a_name_not_void: a_name /= Void
@@ -1677,13 +1677,13 @@ feature {NONE} -- AST factory
 
 feature -- Error handling
 
-	report_error (a_message: STRING) is
+	report_error (a_message: STRING)
 			-- Print error message.
 		do
 			report_syntax_error (current_position)
 		end
 
-	set_syntax_error is
+	set_syntax_error
 			-- Set syntax error flag in class being parsed, if already known.
 		do
 			if last_class /= Void then
@@ -1691,7 +1691,7 @@ feature -- Error handling
 			end
 		end
 
-	set_fatal_error (a_class: ET_CLASS) is
+	set_fatal_error (a_class: ET_CLASS)
 			-- Report a fatal error to `a_class'.
 		require
 			a_class_not_void: a_class /= Void
@@ -1743,7 +1743,7 @@ feature {NONE} -- Local variables
 			-- for the enclosing closures (i.e. feature or
 			-- inline agents) of the closure being parsed
 
-	wipe_out_last_local_variables_stack is
+	wipe_out_last_local_variables_stack
 			-- Wipe out `last_local_variables_stack' and
 			-- set `last_local_variables' to Void.
 		do
@@ -1769,7 +1769,7 @@ feature {NONE} -- Object-tests
 			-- Pool of object-test lists available for usage
 			-- whenever needed
 
-	new_object_test_list: ET_OBJECT_TEST_LIST is
+	new_object_test_list: ET_OBJECT_TEST_LIST
 			-- New object-test list;
 			-- Reuse items from `last_object_tests_pool' if available.
 		do
@@ -1783,7 +1783,7 @@ feature {NONE} -- Object-tests
 			new_object_test_list_not_void: Result /= Void
 		end
 
-	wipe_out_last_object_tests_stack is
+	wipe_out_last_object_tests_stack
 			-- Wipe out `last_object_tests_stack' and
 			-- set `last_object_tests' to Void.
 		local
@@ -1821,7 +1821,7 @@ feature {NONE} -- Formal arguments
 			-- for the enclosing closures (i.e. feature or
 			-- inline agents) of the closure being parsed
 
-	wipe_out_last_formal_arguments_stack is
+	wipe_out_last_formal_arguments_stack
 			-- Wipe out `last_formal_arguments_stack' and
 			-- set `last_formal_arguments' to Void.
 		do
@@ -1834,7 +1834,7 @@ feature {NONE} -- Formal arguments
 
 feature {NONE} -- Last keyword
 
-	last_keyword: ET_KEYWORD is
+	last_keyword: ET_KEYWORD
 			-- Last keyword read
 		require
 			last_keywords_not_empty: not last_keywords.is_empty
@@ -1842,7 +1842,7 @@ feature {NONE} -- Last keyword
 			Result := last_keywords.item
 		end
 
-	add_keyword (a_keyword: ET_KEYWORD) is
+	add_keyword (a_keyword: ET_KEYWORD)
 			-- Add `a_keyword' to `last_keywords'.
 		do
 			last_keywords.force (a_keyword)
@@ -1851,7 +1851,7 @@ feature {NONE} -- Last keyword
 			keyword_added: last_keyword = a_keyword
 		end
 
-	remove_keyword is
+	remove_keyword
 			-- Remove `last_keyword' from `last_keywords'.
 		require
 			last_keywords_not_empty: not last_keywords.is_empty
@@ -1866,7 +1866,7 @@ feature {NONE} -- Last keyword
 
 feature {NONE} -- Last symbol
 
-	last_symbol: ET_SYMBOL is
+	last_symbol: ET_SYMBOL
 			-- Last symbol read
 		require
 			last_symbols_not_empty: not last_symbols.is_empty
@@ -1874,7 +1874,7 @@ feature {NONE} -- Last symbol
 			Result := last_symbols.item
 		end
 
-	add_symbol (a_symbol: ET_SYMBOL) is
+	add_symbol (a_symbol: ET_SYMBOL)
 			-- Add `a_symbol' to `last_symbols'.
 		do
 			last_symbols.force (a_symbol)
@@ -1883,7 +1883,7 @@ feature {NONE} -- Last symbol
 			keyword_added: last_symbol = a_symbol
 		end
 
-	remove_symbol is
+	remove_symbol
 			-- Remove `last_symbol' from `last_symbols'.
 		require
 			last_symbols_not_empty: not last_symbols.is_empty
@@ -1898,7 +1898,7 @@ feature {NONE} -- Last symbol
 
 feature {NONE} -- Counters
 
-	counter_value: INTEGER is
+	counter_value: INTEGER
 			-- Value of the last counter registered
 		require
 			counters_not_empty: not counters.is_empty
@@ -1908,7 +1908,7 @@ feature {NONE} -- Counters
 			value_positive: Result >= 0
 		end
 
-	add_counter is
+	add_counter
 			-- Register a new counter.
 		do
 			counters.force (0)
@@ -1917,7 +1917,7 @@ feature {NONE} -- Counters
 			value_zero: counter_value = 0
 		end
 
-	remove_counter is
+	remove_counter
 			-- Unregister last registered counter.
 		require
 			counters_not_empty: not counters.is_empty
@@ -1927,7 +1927,7 @@ feature {NONE} -- Counters
 			one_less: counters.count = old counters.count - 1
 		end
 
-	increment_counter is
+	increment_counter
 			-- Increment `counter_value'.
 		require
 			counters_not_empty: not counters.is_empty
@@ -1952,43 +1952,43 @@ feature {NONE} -- Input buffer
 
 feature {NONE} -- Constants
 
-	Initial_eiffel_buffer_size: INTEGER is 50000
+	Initial_eiffel_buffer_size: INTEGER = 50000
 			-- Initial size for `eiffel_buffer'
 
-	Initial_counters_capacity: INTEGER is 10
+	Initial_counters_capacity: INTEGER = 10
 			-- Initial capacity for `counters'
 
-	Initial_last_formal_arguments_stack_capacity: INTEGER is 5
+	Initial_last_formal_arguments_stack_capacity: INTEGER = 5
 			-- Initial capacity for `last_formal_arguments_stack'
 
-	Initial_last_local_variables_stack_capacity: INTEGER is 5
+	Initial_last_local_variables_stack_capacity: INTEGER = 5
 			-- Initial capacity for `last_local_variables_stack'
 
-	Initial_last_keywords_capacity: INTEGER is 5
+	Initial_last_keywords_capacity: INTEGER = 5
 			-- Initial capacity for `last_keywords'
 
-	Initial_last_symbols_capacity: INTEGER is 5
+	Initial_last_symbols_capacity: INTEGER = 5
 			-- Initial capacity for `last_symbols'
 
-	Initial_last_object_tests_capacity: INTEGER is 50
+	Initial_last_object_tests_capacity: INTEGER = 50
 			-- Initial capacity for `last_object_tests'
 
-	Initial_assertions_capacity: INTEGER is 20
+	Initial_assertions_capacity: INTEGER = 20
 			-- Initial capacity for `assertions'
 
-	Initial_queries_capacity: INTEGER is 100
+	Initial_queries_capacity: INTEGER = 100
 			-- Initial capacity for `queries'
 
-	Initial_procedures_capacity: INTEGER is 100
+	Initial_procedures_capacity: INTEGER = 100
 			-- Initial capacity for `procedures'
 
-	Initial_constraints_capacity: INTEGER is 10
+	Initial_constraints_capacity: INTEGER = 10
 			-- Initial capacity for `constraints'
 
-	Initial_providers_capacity: INTEGER is 100
+	Initial_providers_capacity: INTEGER = 100
 			-- Initial capacity for `providers'
 
-	dummy_type: ET_TYPE is
+	dummy_type: ET_TYPE
 			-- Dummy type
 		once
 			Result := tokens.unknown_class
@@ -1998,7 +1998,7 @@ feature {NONE} -- Constants
 
 feature {NONE} -- Implementation
 
-	tmp_directory: KL_DIRECTORY is
+	tmp_directory: KL_DIRECTORY
 			-- Temporary directory object
 		do
 			Result := shared_directory
@@ -2010,7 +2010,7 @@ feature {NONE} -- Implementation
 			directory_closed: Result.is_closed
 		end
 
-	shared_directory: KL_DIRECTORY is
+	shared_directory: KL_DIRECTORY
 			-- Shared directory object
 		once
 			create Result.make (dummy_name)

@@ -14,7 +14,7 @@ deferred class KI_FILE_SYSTEM_ENTRY
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING) is
+	make (a_name: STRING)
 			-- Create a new file system entry object.
 			-- (`a_name' should follow the pathname convention
 			-- of the underlying platform. For pathname conversion
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset (a_name: STRING) is
+	reset (a_name: STRING)
 			-- Reuse current Eiffel object memory to
 			-- represent a new file system entry.
 			-- (`a_name' should follow the pathname convention
@@ -47,7 +47,7 @@ feature -- Initialization
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- File system entry name
 		deferred
 		ensure
@@ -56,33 +56,33 @@ feature -- Access
 
 feature -- Status report
 
-	is_open: BOOLEAN is
+	is_open: BOOLEAN
 			-- Has file system entry been opened?
 		deferred
 		end
 
-	is_closed: BOOLEAN is
+	is_closed: BOOLEAN
 			-- Is file system entry closed?
 		deferred
 		ensure
 			definition: Result = not is_open
 		end
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Does file system entry physically exist on disk?
 			-- (Note that with SmartEiffel this routine actually
 			-- returns `is_readable'.)
 		deferred
 		end
 
-	is_readable: BOOLEAN is
+	is_readable: BOOLEAN
 			-- Can file system entry be opened in read mode?
 		deferred
 		ensure
 			exists: Result implies exists
 		end
 
-	is_closable: BOOLEAN is
+	is_closable: BOOLEAN
 			-- Can current file system entry be closed?
 		do
 			Result := is_open
@@ -92,7 +92,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	open is
+	open
 			-- Try to open file system entry. Set `is_open'
 			-- to true if operation was successful.
 		require
@@ -100,7 +100,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	close is
+	close
 			-- Try to close file system entry. Set `is_closed'
 			-- to true if operation was successful.
 		require
@@ -108,7 +108,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	delete is
+	delete
 			-- Delete current file system entry.
 			-- Do nothing if the entry could not be deleted
 			-- (for example if the entry does not exist or

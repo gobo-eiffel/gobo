@@ -25,7 +25,7 @@ inherit
 			is_first as list_is_first,
 			is_last as list_is_last
 		end
-			
+
 	KL_IMPORTED_STRING_ROUTINES
 		undefine
 			is_equal, copy
@@ -33,7 +33,7 @@ inherit
 
 feature -- Access
 
-	element_by_name (a_name: STRING): XM_ELEMENT is
+	element_by_name (a_name: STRING): XM_ELEMENT
 			-- Direct child element with name `a_name';
 			-- If there are more than one element with that name, anyone may be returned.
 			-- Return Void if no element with that name is a child of current node.
@@ -45,7 +45,7 @@ feature -- Access
 			--namespace: Result /= Void implies same_namespace (Result)
 		end
 
-	element_by_qualified_name (a_uri: STRING; a_name: STRING): XM_ELEMENT is
+	element_by_qualified_name (a_uri: STRING; a_name: STRING): XM_ELEMENT
 			-- Direct child element with given qualified name;
 			-- If there are more than one element with that name, anyone may be returned.
 			-- Return Void if no element with that name is a child of current node.
@@ -56,16 +56,16 @@ feature -- Access
 		ensure
 			element_not_void: has_element_by_qualified_name (a_uri, a_name) = (Result /= Void)
 		end
-		
-	has_element_by_name (a_name: STRING): BOOLEAN is
+
+	has_element_by_name (a_name: STRING): BOOLEAN
 			-- Has current node at least one direct child
 			-- element with the name `a_name'?
 		require
 			a_name_not_void: a_name /= Void
 		deferred
 		end
-		
-	has_element_by_qualified_name (a_uri: STRING; a_name: STRING): BOOLEAN is
+
+	has_element_by_qualified_name (a_uri: STRING; a_name: STRING): BOOLEAN
 			-- Has current node at least one direct child
 			-- element with given qualified name ?
 		require
@@ -73,8 +73,8 @@ feature -- Access
 			a_name_not_void: a_name /= Void
 		deferred
 		end
-		
-	elements: DS_LIST [XM_ELEMENT] is
+
+	elements: DS_LIST [XM_ELEMENT]
 			-- List of all direct child elements in current element
 			-- (Create a new list at each call.)
 		local
@@ -97,7 +97,7 @@ feature -- Access
 
 feature -- Text
 
-	text: STRING is
+	text: STRING
 			-- Concatenation of all texts directly found in
 			-- current element; Void if no text found
 			-- (Return a new string at each call.)
@@ -120,22 +120,22 @@ feature -- Text
 			end
 		end
 
-	join_text_nodes is
+	join_text_nodes
 			-- Join sequences of text nodes.
 		deferred
 		end
 
 feature {XM_NODE} -- Removal
 
-	equality_delete (v: XM_NODE) is
+	equality_delete (v: XM_NODE)
 			-- Delete node if it is in current node, using
 			-- object identity.
 		deferred
 		end
-		
+
 feature -- Processing
 
-	process_children (a_processor: XM_NODE_PROCESSOR) is
+	process_children (a_processor: XM_NODE_PROCESSOR)
 			-- Process direct children.
 		require
 			a_processor_not_void: a_processor /= Void
@@ -149,7 +149,7 @@ feature -- Processing
 			end
 		end
 
-	process_children_recursive (a_processor: XM_NODE_PROCESSOR) is
+	process_children_recursive (a_processor: XM_NODE_PROCESSOR)
 			-- Process direct and indirect children.
 		require
 			processor_not_void: a_processor /= Void
@@ -168,5 +168,5 @@ feature -- Processing
 				a_cursor.forth
 			end
 		end
-		
+
 end

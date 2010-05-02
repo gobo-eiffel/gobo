@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Do nothing.
 		do
 		end
@@ -48,39 +48,39 @@ feature -- Status report
 
 feature -- Events
 
-	start_tracing is
+	start_tracing
 			-- Start tracing.
 		do
 			is_tracing := True
 		end
 
-	stop_tracing is
+	stop_tracing
 			-- Stop tracing.
 		do
 			is_tracing := False
 		end
 
-	trace_instruction_entry (some_trace_details: XM_XSLT_TRACE_DETAILS) is
+	trace_instruction_entry (some_trace_details: XM_XSLT_TRACE_DETAILS)
 			--  Trace start of instruction execution.
 		do
 		end
 
-	trace_instruction_exit (some_trace_details: XM_XSLT_TRACE_DETAILS) is
+	trace_instruction_exit (some_trace_details: XM_XSLT_TRACE_DETAILS)
 			--  Trace end of instruction execution.
 		do
 		end
 
-	trace_current_item_start (a_current_item: XM_XPATH_ITEM) is
+	trace_current_item_start (a_current_item: XM_XPATH_ITEM)
 			-- Trace making new item current.
 		do
 		end
 
-	trace_current_item_finish (a_current_item: XM_XPATH_ITEM) is
+	trace_current_item_finish (a_current_item: XM_XPATH_ITEM)
 			-- Trace leaving current item.
 		do
 		end
 
-	trace_user_entry (a_value, a_label: STRING) is
+	trace_user_entry (a_value, a_label: STRING)
 			-- Trace user entry (e.g. XPath trace() function).
 		do
 		end

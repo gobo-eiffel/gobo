@@ -24,7 +24,7 @@ create
 
 feature -- Test
 
-	test_valid is
+	test_valid
 			-- Test feature `valid_utf16' when valid.
 		do
 			assert ("empty", utf16.valid_utf16 (""))
@@ -36,7 +36,7 @@ feature -- Test
 			assert ("valid_no_byte_order_marker", utf16.valid_utf16 ("%/0/a%/216/b%/223/c%/0/d"))
 		end
 
-	test_invalid is
+	test_invalid
 			-- Test feature `valid_utf16' when invalid.
 		do
 			assert ("odd", not utf16.valid_utf16 (Big_endian + "a"))
@@ -50,7 +50,7 @@ feature -- Test
 			assert ("surrogate_low_at_end", not utf16.valid_utf16 (Big_endian + "%/0/a%/221/a"))
 		end
 
-	test_is_endian_detection_character is
+	test_is_endian_detection_character
 			-- Test feature `is_endian_detection_character'.
 		do
 			assert ("big_endian_char", utf16.is_endian_detection_character (Big_endian.item_code (1), Big_endian.item_code (2)))
@@ -58,7 +58,7 @@ feature -- Test
 			assert ("endian_not", not utf16.is_endian_detection_character (255, 255))
 		end
 
-	test_surrogate is
+	test_surrogate
 			-- Test feature `surrogate_from_bytes'.
 		do
 				-- Surrogate 0x10000.
@@ -69,7 +69,7 @@ feature -- Test
 			assert_integers_equal ("surrogate_0x10ffff", utf16.surrogate_from_bytes (219, 255, 223, 255), 1114111)
 		end
 
-	test_supplementary is
+	test_supplementary
 			-- Test features `supplementary_to_high' and `supplementary_low_surrogate'.
 		do
 			-- Surrogates for 0x10000.
@@ -83,7 +83,7 @@ feature -- Test
 			assert_integers_equal ("low_surrogate_0x10ffff", 57343, utf16.supplementary_to_low_surrogate (1114111))
 		end
 
-	test_utf16_bytes_to_utf8 is
+	test_utf16_bytes_to_utf8
 			-- Test creating UTF-8 strings from UTF-16 byte sequences.
 		local
 			l_utf8: UC_UTF8_STRING
@@ -98,17 +98,17 @@ feature -- Test
 
 feature {NONE} -- Constants
 
-	Big_endian: STRING is "%/254/%/255/"
+	Big_endian: STRING = "%/254/%/255/"
 			-- Big-endian BOM
 
-	Little_endian: STRING is "%/255/%/254/"
+	Little_endian: STRING = "%/255/%/254/"
 			-- Little-endian BOM
 
-	Big_endian_test_string: STRING is "%/0/a%/216/b%/223/c%/0/d"
+	Big_endian_test_string: STRING = "%/0/a%/216/b%/223/c%/0/d"
 			-- UTF-16BE string
 
-	Little_endian_test_string: STRING is "2%U0%U1%U7%U3%U4%U2%U %U2%U0%U0%U7%U0%U7%U1%U8%U %UU%U"
+	Little_endian_test_string: STRING = "2%U0%U1%U7%U3%U4%U2%U %U2%U0%U0%U7%U0%U7%U1%U8%U %UU%U"
 			-- UTF-16LE string
 
-	
+
 end

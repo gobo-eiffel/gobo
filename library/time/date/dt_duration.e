@@ -22,7 +22,7 @@ inherit
 
 feature -- Access
 
-	absolute_time (a_time: DT_ABSOLUTE_TIME): DT_ABSOLUTE_TIME is
+	absolute_time (a_time: DT_ABSOLUTE_TIME): DT_ABSOLUTE_TIME
 			-- Addition of current duration to `a_time'
 			-- (Create a new object at each call.)
 		require
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	plus alias "+" (other: like Current): like Current is
+	plus alias "+" (other: like Current): like Current
 			-- Sum of current duration with `other'
 		require
 			other_not_void: other /= Void
@@ -45,7 +45,7 @@ feature -- Basic operations
 			addition_not_void: Result /= Void
 		end
 
-	minus alias "-" (other: like Current): like Current is
+	minus alias "-" (other: like Current): like Current
 			-- Difference with `other'
 		require
 			other_not_void: other /= Void
@@ -54,7 +54,7 @@ feature -- Basic operations
 			subtraction_not_void: Result /= Void
 		end
 
-	identity alias "+": like Current is
+	identity alias "+": like Current
 			-- Unary plus
 		do
 			Result := Current
@@ -63,7 +63,7 @@ feature -- Basic operations
 			same_object: Result = Current
 		end
 
-	opposite alias "-": like Current is
+	opposite alias "-": like Current
 			-- Unary minus
 		deferred
 		ensure

@@ -14,7 +14,7 @@ class XM_XPATH_SHARED_ANY_NODE_TEST
 
 feature -- Access
 
-	any_node_test: XM_XPATH_ANY_NODE_TEST is
+	any_node_test: XM_XPATH_ANY_NODE_TEST
 			-- Singleton
 		once
 			create Result.make

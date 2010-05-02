@@ -26,7 +26,7 @@ create
 
 feature -- Status report
 
-	is_last_entity: BOOLEAN is
+	is_last_entity: BOOLEAN
 			-- Is current entity the last entity in an
 			-- entity declaration group?
 		do
@@ -35,13 +35,13 @@ feature -- Status report
 
 feature -- Access
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := name_item.last_leaf
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := name_item.break
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_formal_comma_argument (Current)

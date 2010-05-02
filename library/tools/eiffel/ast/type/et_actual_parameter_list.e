@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create an empty actual generic parameter list.
 		do
 			left_bracket := tokens.left_bracket_symbol
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			precursor
 		end
 
-	make_with_capacity (nb: INTEGER) is
+	make_with_capacity (nb: INTEGER)
 			-- Create an empty actual generic parameter list with capacity `nb'.
 		do
 			left_bracket := tokens.left_bracket_symbol
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset actual parameters as they were when they were last parsed.
 		local
 			i, nb: INTEGER
@@ -59,7 +59,7 @@ feature -- Initialization
 			end
 		end
 
-	reset_qualified_anchored_types is
+	reset_qualified_anchored_types
 			-- Reset qualified anchored types contained in current actual parameters
 			-- as they were just after they were last parsed.
 		local
@@ -74,7 +74,7 @@ feature -- Initialization
 
 feature -- Access
 
-	actual_parameter (i: INTEGER): ET_ACTUAL_PARAMETER is
+	actual_parameter (i: INTEGER): ET_ACTUAL_PARAMETER
 			-- Actual parameter of `i'-th item in list
 		require
 			i_large_enough: i >= 1
@@ -85,7 +85,7 @@ feature -- Access
 			actual_parameter_not_void: Result /= Void
 		end
 
-	type (i: INTEGER): ET_TYPE is
+	type (i: INTEGER): ET_TYPE
 			-- Type of `i'-th item in list
 		require
 			i_large_enough: i >= 1
@@ -102,7 +102,7 @@ feature -- Access
 	right_bracket: ET_SYMBOL
 			-- Right bracket
 
-	named_types (a_context: ET_TYPE_CONTEXT): ET_ACTUAL_PARAMETER_LIST is
+	named_types (a_context: ET_TYPE_CONTEXT): ET_ACTUAL_PARAMETER_LIST
 			-- Named types of current parameters, when they appear in `a_context',
 			-- only made up of class names and generic formal parameters when the
 			-- root type of `a_context' is a generic type not fully derived
@@ -149,7 +149,7 @@ feature -- Access
 			-- types_named: forall i in 1..count, Result.type (i).is_named_type
 		end
 
-	index_of_label (a_label: ET_IDENTIFIER): INTEGER is
+	index_of_label (a_label: ET_IDENTIFIER): INTEGER
 			-- Index of actual generic parameter with label `a_label';
 			-- 0 if it does not exist
 		require
@@ -173,7 +173,7 @@ feature -- Access
 			index_small_enough: Result <= count
 		end
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -183,19 +183,19 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := left_bracket
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := right_bracket
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := right_bracket.break
@@ -203,7 +203,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_anchored_type: BOOLEAN is
+	has_anchored_type: BOOLEAN
 			-- Does one of current types contain an anchored type?
 		local
 			i, nb: INTEGER
@@ -219,7 +219,7 @@ feature -- Status report
 			end
 		end
 
-	has_identifier_anchored_type: BOOLEAN is
+	has_identifier_anchored_type: BOOLEAN
 			-- Does one of current types contain an identifier anchored type
 			-- (i.e. an anchored type other than 'like Current')?
 		local
@@ -236,7 +236,7 @@ feature -- Status report
 			end
 		end
 
-	has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does one of the current types contain a formal generic
 			-- parameter when viewed from `a_context'?
 		require
@@ -257,7 +257,7 @@ feature -- Status report
 			end
 		end
 
-	named_types_have_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	named_types_have_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does one of the named types of current parameters contain
 			-- `a_class' when it appears in `a_context'?
 		require
@@ -283,7 +283,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	same_syntactical_types (other: ET_ACTUAL_PARAMETER_LIST; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_syntactical_types (other: ET_ACTUAL_PARAMETER_LIST; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Are current types appearing in `a_context' and `other'
 			-- types appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the basic types here!
@@ -321,7 +321,7 @@ feature -- Comparison
 			end
 		end
 
-	same_named_types (other: ET_ACTUAL_PARAMETER_LIST; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_named_types (other: ET_ACTUAL_PARAMETER_LIST; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current types appearing in `a_context' and `other' types
 			-- appearing in `other_context' have the same named types?
 		require
@@ -356,7 +356,7 @@ feature -- Comparison
 
 feature -- Conformance
 
-	conforms_to_types (other: ET_ACTUAL_PARAMETER_LIST; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	conforms_to_types (other: ET_ACTUAL_PARAMETER_LIST; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does current actual parameters appearing in `a_context' conform
 			-- to `other' actual parameters appearing in `other_context'?
 			-- (Note: 'current_system.ancestor_builder' is used on classes on
@@ -392,7 +392,7 @@ feature -- Conformance
 			end
 		end
 
-	agent_conforms_to_types (other: ET_ACTUAL_PARAMETER_LIST; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	agent_conforms_to_types (other: ET_ACTUAL_PARAMETER_LIST; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does current actual parameters (of an Agent type) appearing in `a_context'
 			-- conform to `other' actual parameters appearing in `other_context'?
 			-- Use SmartEiffel agent type conformance semantics, where the conformance
@@ -441,7 +441,7 @@ feature -- Conformance
 			end
 		end
 
-	tuple_conforms_to_types (other: ET_ACTUAL_PARAMETER_LIST; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	tuple_conforms_to_types (other: ET_ACTUAL_PARAMETER_LIST; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does current actual parameters (of a Tuple_type) appearing in `a_context'
 			-- conform to `other' actual parameters appearing in `other_context'?
 			-- (Note: 'current_system.ancestor_builder' is used on classes on
@@ -478,7 +478,7 @@ feature -- Conformance
 
 feature -- Type processing
 
-	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_ACTUAL_PARAMETER_LIST is
+	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_ACTUAL_PARAMETER_LIST
 			-- Version of current types where the formal generic
 			-- parameter types have been replaced by their actual
 			-- counterparts in `a_parameters'
@@ -521,7 +521,7 @@ feature -- Type processing
 
 feature -- Setting
 
-	set_left_bracket (l: like left_bracket) is
+	set_left_bracket (l: like left_bracket)
 			-- Set `left_bracket' to `l'.
 		require
 			l_not_void: l /= Void
@@ -531,7 +531,7 @@ feature -- Setting
 			left_bracket_set: left_bracket = l
 		end
 
-	set_right_bracket (r: like right_bracket) is
+	set_right_bracket (r: like right_bracket)
 			-- Set `right_bracket' to `r'.
 		require
 			r_not_void: r /= Void
@@ -543,7 +543,7 @@ feature -- Setting
 
 feature -- Output
 
-	append_to_string (a_string: STRING) is
+	append_to_string (a_string: STRING)
 			-- Append textual representation of
 			-- current actual parameters to `a_string'.
 		require
@@ -567,7 +567,7 @@ feature -- Output
 			a_string.append_character (']')
 		end
 
-	append_unaliased_to_string (a_string: STRING) is
+	append_unaliased_to_string (a_string: STRING)
 			-- Append textual representation of unaliased
 			-- version of current actual parameters to `a_string'.
 			-- An unaliased version if when aliased types such as INTEGER
@@ -595,7 +595,7 @@ feature -- Output
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_actual_parameter_list (Current)
@@ -603,7 +603,7 @@ feature -- Processing
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_ACTUAL_PARAMETER_ITEM] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_ACTUAL_PARAMETER_ITEM]
 			-- Fixed array routines
 		once
 			create Result

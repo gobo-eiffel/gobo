@@ -30,7 +30,7 @@ create
 
 feature -- Tests
 
-	test_resolve_system is
+	test_resolve_system
 			-- Test call to `resolved_external_entity' with a SYSTEM id.
 		local
 			a_uri: STRING
@@ -39,7 +39,7 @@ feature -- Tests
 			assert ("SYSTEM resolved", a_uri /= Void and then STRING_.same_string (a_uri, "http://colina.demon.co.uk/gobo/system-id-one"))
 		end
 
-	test_resolve_public is
+	test_resolve_public
 			-- Test call to `resolved_external_entity' without a SYSTEM id.
 		local
 			a_uri: STRING
@@ -48,7 +48,7 @@ feature -- Tests
 			assert ("PUBLIC resolved via delegation", a_uri /= Void and then a_uri.count > 32 and then STRING_.same_string (a_uri.substring (a_uri.count - 32, a_uri.count), "/xml-dtd-4.1.2-1.0-24/dbcentx.mod"))
 		end
 
-	test_resolve_uri is
+	test_resolve_uri
 			-- Test call to `resolved_uri_reference'.
 		local
 			a_uri: STRING
@@ -56,13 +56,13 @@ feature -- Tests
 			a_uri := shared_catalog_manager.resolved_uri_reference ("http://www.oasis-open.org/docbook/xml/4.1.2/test.system")
 			assert ("URI reference resolved via rewrite", a_uri /= Void and then STRING_.same_string (a_uri, "ftp://ftp.gobosoft.com/pub/xml-dtd-4.1.2-1.0-24/test.system"))
 		end
-		
+
 feature -- Setting
 
-	set_up is
+	set_up
 			-- <Precursor>.
 		local
-			l_path: STRING	
+			l_path: STRING
 		do
 			l_path := Execution_environment.interpreted_string (
 				file_system.nested_pathname ("${GOBO}", <<"test", "xml", "general", "data", "test-catalog-1.xml">>))
@@ -71,4 +71,4 @@ feature -- Setting
 		end
 
 end
-	
+

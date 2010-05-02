@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_expression: like expression) is
+	make (a_expression: like expression)
 			-- Create a new empty list object-tests appearing in `a_expression'.
 		require
 			a_expression_not_void: a_expression /= Void
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset (a_expression: like expression) is
+	reset (a_expression: like expression)
 			-- Reset an empty list of object-tests appearing in `a_expression'.
 		require
 			a_expression_not_void: a_expression /= Void
@@ -52,7 +52,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	has_object_test (a_name: ET_IDENTIFIER): BOOLEAN is
+	has_object_test (a_name: ET_IDENTIFIER): BOOLEAN
 			-- Does an object-test with local name `a_name' already appears in `expression'?
 		require
 			a_name_not_void: a_name /= Void
@@ -65,7 +65,7 @@ feature -- Access
 	expression: ET_EXPRESSION
 				-- Expression where object-tests appear
 
-	object_test (a_name: ET_IDENTIFIER): ET_NAMED_OBJECT_TEST is
+	object_test (a_name: ET_IDENTIFIER): ET_NAMED_OBJECT_TEST
 			-- Object-test with local name `a_name'
 		require
 			a_name_not_void: a_name /= Void
@@ -81,7 +81,7 @@ feature -- Access
 
 feature -- Element change
 
-	add_object_test (a_object_test: ET_NAMED_OBJECT_TEST) is
+	add_object_test (a_object_test: ET_NAMED_OBJECT_TEST)
 			-- Indicate that `a_object_test' appears in `expression'.
 		require
 			a_object_test_not_void: a_object_test /= Void
@@ -92,7 +92,7 @@ feature -- Element change
 			has_object_test: has_object_test (a_object_test.name)
 		end
 
-	wipe_out is
+	wipe_out
 			-- Indiciate that no object-test appears in `expression'.
 		do
 			object_tests.wipe_out

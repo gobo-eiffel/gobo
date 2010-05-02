@@ -21,7 +21,7 @@ feature -- Access
 	current_class: ET_CLASS
 			-- Class where current error occurred
 
-	class_impl: ET_CLASS is
+	class_impl: ET_CLASS
 			-- Class where current error was written
 		do
 			Result := current_class
@@ -30,7 +30,7 @@ feature -- Access
 	position: ET_POSITION
 			-- Position of current error in `class_impl'
 
-	filename: STRING is
+	filename: STRING
 			-- Name of file where current error occurred
 		deferred
 		ensure
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_position (a_position: like position) is
+	set_position (a_position: like position)
 			-- Set `position' to `a_position'.
 		require
 			a_position_not_void: a_position /= Void
@@ -69,7 +69,7 @@ feature -- Status report
 			-- instead (e.g. compiler or runtime crash, incorrect
 			-- execution behavior, etc.)?
 
-	all_reported: BOOLEAN is
+	all_reported: BOOLEAN
 			-- Is current error reported by all Eiffel compilers?
 		do
 			Result := ise_reported and ge_reported
@@ -77,7 +77,7 @@ feature -- Status report
 			definition: Result = (ise_reported and ge_reported)
 		end
 
-	all_fatal: BOOLEAN is
+	all_fatal: BOOLEAN
 			-- Is current error considered as fatal by all Eiffel compilers?
 		do
 			Result := ise_fatal and ge_fatal
@@ -87,7 +87,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_ise_reported (b: BOOLEAN) is
+	set_ise_reported (b: BOOLEAN)
 			-- Set `ise_reported' to `b'.
 		do
 			ise_reported := b
@@ -95,7 +95,7 @@ feature -- Status setting
 			ise_reported: ise_reported = b
 		end
 
-	set_ise_fatal (b: BOOLEAN) is
+	set_ise_fatal (b: BOOLEAN)
 			-- Set `ise_fatal' to `b'.
 		do
 			ise_fatal := b
@@ -103,7 +103,7 @@ feature -- Status setting
 			ise_fatal: ise_fatal = b
 		end
 
-	set_ge_reported (b: BOOLEAN) is
+	set_ge_reported (b: BOOLEAN)
 			-- Set `ge_reported' to `b'.
 		do
 			ge_reported := b
@@ -111,7 +111,7 @@ feature -- Status setting
 			ge_reported: ge_reported = b
 		end
 
-	set_ge_fatal (b: BOOLEAN) is
+	set_ge_fatal (b: BOOLEAN)
 			-- Set `ge_fatal' to `b'.
 		do
 			ge_fatal := b
@@ -119,7 +119,7 @@ feature -- Status setting
 			ge_fatal: ge_fatal = b
 		end
 
-	set_compilers (b: BOOLEAN) is
+	set_compilers (b: BOOLEAN)
 			-- Set all Eiffel compilers status to `b'.
 		do
 			ise_reported := b
@@ -135,7 +135,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	null_position: ET_POSITION is
+	null_position: ET_POSITION
 			-- Null position
 		once
 			create {ET_COMPRESSED_POSITION} Result.make_default

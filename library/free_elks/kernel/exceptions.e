@@ -106,7 +106,7 @@ feature -- Status report
 			"eelclass"
 		end
 
-	exception: INTEGER is
+	exception: INTEGER
 			-- Code of last exception that occurred
 		external
 			"C use %"eif_except.h%""
@@ -140,7 +140,7 @@ feature -- Status report
 			"eeocode"
 		end
 
-	original_recipient_name: STRING is
+	original_recipient_name: STRING
 			-- Name of the routine whose execution was
 			-- interrupted by original form of last exception
 		external

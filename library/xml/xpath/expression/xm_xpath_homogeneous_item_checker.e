@@ -28,7 +28,7 @@ create {XM_XPATH_MAPPED_PATH_EXPRESSION}
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant.
 		do
 			-- nothing to do
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	mapped_item (a_item: XM_XPATH_ITEM): XM_XPATH_ITEM is
+	mapped_item (a_item: XM_XPATH_ITEM): XM_XPATH_ITEM
 			-- `a_item' mapped to zero or one items
 		do
 			check

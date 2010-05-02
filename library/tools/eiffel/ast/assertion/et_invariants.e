@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class: like implementation_class) is
+	make (a_class: like implementation_class)
 			-- Create a new invariant clause.
 		require
 			a_class_not_void: a_class /= Void
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			implementation_class_set: implementation_class = a_class
 		end
 
-	make_with_capacity (a_class: like implementation_class; nb: INTEGER) is
+	make_with_capacity (a_class: like implementation_class; nb: INTEGER)
 			-- Create a new invariant clause with capacity `nb'.
 		require
 			a_class_not_void: a_class /= Void
@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset invariants as they were just after they were last parsed.
 		do
 			if assertions_checked or implementation_checked then
@@ -76,7 +76,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	is_invariants: BOOLEAN is True
+	is_invariants: BOOLEAN = True
 			-- Is `Current' class invariants?
 
 feature -- Access
@@ -84,7 +84,7 @@ feature -- Access
 	invariant_keyword: ET_KEYWORD
 			-- 'invariant' keyword
 
-	first_precursor: ET_INVARIANTS is
+	first_precursor: ET_INVARIANTS
 			-- First precursor;
 			-- Void if the feature has no precursor.
 			-- Useful to build the flat preconditions and
@@ -96,7 +96,7 @@ feature -- Access
 			-- Class where implementation of current invariants
 			-- have been provided
 
-	implementation_feature: ET_INVARIANTS is
+	implementation_feature: ET_INVARIANTS
 			-- Current feature in `implementation_class'
 		do
 			Result := Current
@@ -104,19 +104,19 @@ feature -- Access
 			definition: Result = Current
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			Result := 1
 		end
 
-	header_break: ET_BREAK is
+	header_break: ET_BREAK
 			-- Break which appears where the header comment is expected
 		do
 			-- Result := Void
 		end
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -126,13 +126,13 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := invariant_keyword
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			if not is_empty then
@@ -142,7 +142,7 @@ feature -- Access
 			end
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			if not is_empty then
@@ -154,7 +154,7 @@ feature -- Access
 
 feature -- Export status
 
-	clients: ET_CLIENT_LIST is
+	clients: ET_CLIENT_LIST
 			-- Clients to which feature is exported
 		do
 			if implementation_class.is_preparsed then
@@ -166,7 +166,7 @@ feature -- Export status
 
 feature -- Setting
 
-	set_invariant_keyword (an_invariant: like invariant_keyword) is
+	set_invariant_keyword (an_invariant: like invariant_keyword)
 			-- Set `invariant_keyword' to `an_invariant'.
 		require
 			an_invariant_not_void: an_invariant /= Void
@@ -176,7 +176,7 @@ feature -- Setting
 			invariant_keyword_not_void: invariant_keyword = an_invariant
 		end
 
-	set_implementation_class (a_class: like implementation_class) is
+	set_implementation_class (a_class: like implementation_class)
 			-- Set `implementation_class' to `a_class'.
 		require
 			a_class_not_void: a_class /= Void
@@ -188,7 +188,7 @@ feature -- Setting
 
 feature -- Conversion
 
-	as_invariants: ET_INVARIANTS is
+	as_invariants: ET_INVARIANTS
 			-- `Current' viewed as class invariants
 		do
 			Result := Current
@@ -196,7 +196,7 @@ feature -- Conversion
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_invariants (Current)

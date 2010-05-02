@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new namespace formatter.
 		do
 			create last_string.make (0)
@@ -40,7 +40,7 @@ feature -- Access
 
 feature -- Resetting
 
-	wipe_out is
+	wipe_out
 			-- Clear `last_string'.
 		do
 			last_string.wipe_out
@@ -50,7 +50,7 @@ feature -- Resetting
 
 feature -- Debugging options
 
-	include_position (a_pos_table: XM_POSITION_TABLE) is
+	include_position (a_pos_table: XM_POSITION_TABLE)
 			-- Use `a_pos_table' as node positions.
 		require
 			a_pos_table_not_void: a_pos_table /= Void
@@ -60,7 +60,7 @@ feature -- Debugging options
 			position_included: is_position_included = True
 		end
 
-	exclude_position is
+	exclude_position
 			-- Forget about node positions.
 		do
 			position_table := Void
@@ -68,7 +68,7 @@ feature -- Debugging options
 			position_included: is_position_included = False
 		end
 
-	is_position_included: BOOLEAN is
+	is_position_included: BOOLEAN
 			-- Are node positions available?
 		do
 			Result := position_table /= Void
@@ -76,7 +76,7 @@ feature -- Debugging options
 
 feature -- Standard processing
 
-	process_element (el: XM_ELEMENT) is
+	process_element (el: XM_ELEMENT)
 			-- Process element `el.
 		do
 			append ("Element: ")
@@ -86,7 +86,7 @@ feature -- Standard processing
 			process_composite (el)
 		end
 
-	process_element2 (el: XM_ELEMENT) is
+	process_element2 (el: XM_ELEMENT)
 			-- Process element `el.
 		require
 			el_not_void: el /= Void
@@ -115,26 +115,26 @@ feature -- Standard processing
 			process_composite (el)
 		end
 
-	process_document (doc: XM_DOCUMENT) is
+	process_document (doc: XM_DOCUMENT)
 			-- Process document `doc'.
 		do
 			try_process_position (doc)
 			process_composite (doc)
 		end
 
-	process_attributes (e: XM_ELEMENT) is
+	process_attributes (e: XM_ELEMENT)
 			-- Process attributes of element `e'.
 		do
 		end
 
-	process_attribute (att: XM_ATTRIBUTE) is
+	process_attribute (att: XM_ATTRIBUTE)
 			-- Process attribute `att'.
 		do
 		end
 
 feature -- Non-standard processing
 
-	process_composite (c: XM_COMPOSITE) is
+	process_composite (c: XM_COMPOSITE)
 			-- Process composite `c'.
 		require
 			c_not_void: c /= Void
@@ -148,7 +148,7 @@ feature -- Non-standard processing
 			end
 		end
 
-	try_process_position (node: XM_NODE) is
+	try_process_position (node: XM_NODE)
 			-- Process position of `node' if available.
 		require
 			node_not_void: node /= Void
@@ -158,7 +158,7 @@ feature -- Non-standard processing
 			end
 		end
 
-	process_position (node: XM_NODE) is
+	process_position (node: XM_NODE)
 			-- Process position of `node'.
 		require
 			node_not_void: node /= Void
@@ -178,7 +178,7 @@ feature -- Non-standard processing
 			append ("-->%N")
 		end
 
-	process_named (n: XM_NAMED_NODE) is
+	process_named (n: XM_NAMED_NODE)
 			-- Process named node `n'.
 		require
 			n_not_void: n /= Void
@@ -202,7 +202,7 @@ feature -- Non-standard processing
 
 feature {NONE} -- Implementation
 
-	append (str: STRING) is
+	append (str: STRING)
 			-- Write `str' to `last_string'.
 		require
 			str_not_void: str /= Void

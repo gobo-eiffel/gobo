@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Run.
 		do
 			Arguments.set_program_name ("formatter")
@@ -45,7 +45,7 @@ feature -- Access
 	use_stdout: BOOLEAN
 			-- Only if this is True, we write to stdout
 			-- otherwise we write to out_filename
-			
+
 	has_error: BOOLEAN
 			-- Error during processing?
 
@@ -54,7 +54,7 @@ feature -- Access
 
 feature -- Parser
 
-	fact: XM_EXPAT_PARSER_FACTORY is
+	fact: XM_EXPAT_PARSER_FACTORY
 			-- Expat XML parser factory
 		once
 			create Result
@@ -70,7 +70,7 @@ feature -- Parser
 
 feature -- Basic operations
 
-	process_data_file is
+	process_data_file
 			-- Do the real work (parse and output).
 		require
 			in_filename_not_void: in_filename /= Void
@@ -100,7 +100,7 @@ feature -- Basic operations
 				else
 					error_handler.report_info_message ("- printing document...")
 					create formatter.make
-					
+
 					if use_stdout then
 						formatter.set_output (std.output)
 						formatter.process_document (tree_pipe.document)
@@ -122,7 +122,7 @@ feature -- Basic operations
 			error_handler.report_info_message ("exiting...")
 		end
 
-	process_arguments is
+	process_arguments
 			-- Read command line arguments.
 		local
 			parser_switch: STRING
@@ -168,7 +168,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	Usage_message: UT_USAGE_MESSAGE is
+	Usage_message: UT_USAGE_MESSAGE
 			-- Usage message
 		local
 			a_message: STRING

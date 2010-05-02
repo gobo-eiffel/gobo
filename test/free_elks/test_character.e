@@ -22,7 +22,7 @@ create
 
 feature -- Test
 
-	test_default_create is
+	test_default_create
 			-- Test feature 'default_create'.
 		local
 			c: CHARACTER
@@ -30,7 +30,7 @@ feature -- Test
 			assert ("default", c = '%U')
 		end
 
-	test_is_less is
+	test_is_less
 			-- Test feature 'is_less alias "<"'.
 		local
 			c1, c2: CHARACTER
@@ -46,7 +46,7 @@ feature -- Test
 			assert ("not_less_than2", not (c1 < c2))
 		end
 
-	test_is_less_equal is
+	test_is_less_equal
 			-- Test feature 'is_less_equal alias "<="'.
 		local
 			c1, c2: CHARACTER
@@ -62,7 +62,7 @@ feature -- Test
 			assert ("less_equal2", c1 <= c2)
 		end
 
-	test_is_greater is
+	test_is_greater
 			-- Test feature 'is_greater alias ">"'.
 		local
 			c1, c2: CHARACTER
@@ -78,7 +78,7 @@ feature -- Test
 			assert ("not_greater_than2", not (c1 > c2))
 		end
 
-	test_is_greater_equal is
+	test_is_greater_equal
 			-- Test feature 'is_greater_equal alias ">="'.
 		local
 			c1, c2: CHARACTER

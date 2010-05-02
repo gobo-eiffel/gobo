@@ -11,7 +11,7 @@ note
 class XM_XSLT_COMPILED_ANALYZE_STRING
 
 inherit
-	
+
 	XM_XSLT_INSTRUCTION
 		redefine
 			sub_expressions, promote_instruction,
@@ -35,7 +35,7 @@ create
 feature {NONE} -- Initialization
 
 	make (an_executable: XM_XSLT_EXECUTABLE; a_select_expression, a_regex_expression, a_flags_expression: XM_XPATH_EXPRESSION;
-			a_regexp_cache_entry: XM_XPATH_REGEXP_CACHE_ENTRY; a_matching_block, a_non_matching_block: XM_XPATH_EXPRESSION) is
+			a_regexp_cache_entry: XM_XPATH_REGEXP_CACHE_ENTRY; a_matching_block, a_non_matching_block: XM_XPATH_EXPRESSION)
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, when known
 		do
 			if matching_block /= Void then
@@ -92,7 +92,7 @@ feature -- Access
 			end
 		end
 
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions of `Current'
 		do
 			create Result.make (5)
@@ -110,7 +110,7 @@ feature -- Access
 
 feature -- Status report
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		do
 			std.error.put_string (STRING_.concat (indentation (a_level), "xsl:analyze-string"))
@@ -119,7 +119,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	compute_dependencies is
+	compute_dependencies
 			-- Compute dependencies on context.
 		local
 			l_dummy: XM_XPATH_STATIC_PROPERTY
@@ -171,7 +171,7 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Preform context-independent static optimizations
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -217,7 +217,7 @@ feature -- Optimization
 			end
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -227,7 +227,7 @@ feature -- Optimization
 			set_select_expression (l_replacement.item)
 			if select_expression.is_error then
 				set_replacement (a_replacement, select_expression)
-			else			
+			else
 				l_replacement.put (Void)
 				regex_expression.check_static_type (l_replacement, a_context, a_context_item_type)
 				set_regex_expression (l_replacement.item)
@@ -261,10 +261,10 @@ feature -- Optimization
 			end
 			if a_replacement.item = Void then
 				a_replacement.put (Current)
-			end			
+			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -273,7 +273,7 @@ feature -- Optimization
 			select_expression.optimize (l_replacement, a_context, a_context_item_type)
 			if select_expression.is_error then
 				set_replacement (a_replacement, select_expression)
-			else			
+			else
 				l_replacement.put (Void)
 				regex_expression.optimize (l_replacement, a_context, a_context_item_type)
 				if regex_expression.is_error then
@@ -306,13 +306,13 @@ feature -- Optimization
 			end
 			if a_replacement.item = Void then
 				a_replacement.put (Current)
-			end			
+			end
 		end
 
-	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this instruction.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]	
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			select_expression.promote (l_replacement, a_offer)
@@ -338,7 +338,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterate over the values of a sequence.
 		local
 			l_regexp_iterator: XM_XSLT_REGEXP_ITERATOR
@@ -359,8 +359,8 @@ feature -- Evaluation
 				create {XM_XPATH_CONTEXT_MAPPING_ITERATOR} last_iterator.make (create {XM_XSLT_ANALYZE_MAPPING_FUNCTION}.make (l_regexp_iterator, l_new_context, matching_block, non_matching_block), l_new_context)
 			end
 		end
-		
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterate over the nodes of a sequence.
 		local
 			l_regexp_iterator: XM_XSLT_REGEXP_ITERATOR
@@ -381,8 +381,8 @@ feature -- Evaluation
 				create {XM_XPATH_NODE_MAPPING_ITERATOR} last_node_iterator.make (l_regexp_iterator, create {XM_XSLT_ANALYZE_NODE_MAPPING_FUNCTION}.make (l_regexp_iterator, l_new_context, matching_block, non_matching_block), l_new_context)
 			end
 		end
-		
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_regexp_iterator: XM_XSLT_REGEXP_ITERATOR
@@ -412,7 +412,7 @@ feature -- Evaluation
 		end
 
 feature {NONE} -- Implementation
-	
+
 	select_expression: XM_XPATH_EXPRESSION
 			-- Select expression
 
@@ -427,14 +427,14 @@ feature {NONE} -- Implementation
 
 	matching_block: XM_XPATH_EXPRESSION
 			-- Expression called for matching substrings
-	
+
 	non_matching_block: XM_XPATH_EXPRESSION
 			-- Expression called for non-matching substrings
 
 	context_item_type: XM_XPATH_ITEM_TYPE
 			-- Known context item type for xsl:(non-)matching-substring
 
-	set_select_expression (a_expression: XM_XPATH_EXPRESSION) is
+	set_select_expression (a_expression: XM_XPATH_EXPRESSION)
 			-- Ensure `select_expression' is `a_expression'.
 		require
 			a_expression_not_void: a_expression /= Void
@@ -448,7 +448,7 @@ feature {NONE} -- Implementation
 			select_expression_set: select_expression = a_expression
 		end
 
-	set_regex_expression (a_expression: XM_XPATH_EXPRESSION) is
+	set_regex_expression (a_expression: XM_XPATH_EXPRESSION)
 			-- Ensure `regex_expression' is `a_expression'.
 		require
 			a_expression_not_void: a_expression /= Void
@@ -456,13 +456,13 @@ feature {NONE} -- Implementation
 			if regex_expression /= a_expression then
 				regex_expression := a_expression
 				adopt_child_expression (regex_expression)
-				reset_static_properties				
+				reset_static_properties
 			end
 		ensure
 			regex_expression_set: regex_expression = a_expression
 		end
 
-	set_flags_expression (a_expression: XM_XPATH_EXPRESSION) is
+	set_flags_expression (a_expression: XM_XPATH_EXPRESSION)
 			-- Ensure `flags_expression' is `a_expression'.
 		require
 			a_expression_not_void: a_expression /= Void
@@ -470,14 +470,14 @@ feature {NONE} -- Implementation
 			if flags_expression /= a_expression then
 				flags_expression := a_expression
 				adopt_child_expression (flags_expression)
-				reset_static_properties				
+				reset_static_properties
 			end
 		ensure
 			flags_expression_set: flags_expression = a_expression
 		end
 
 
-	set_matching_block (a_expression: XM_XPATH_EXPRESSION) is
+	set_matching_block (a_expression: XM_XPATH_EXPRESSION)
 			-- Ensure `matching_block' is `a_expression'.
 		require
 			a_expression_not_void: a_expression /= Void
@@ -485,14 +485,14 @@ feature {NONE} -- Implementation
 			if matching_block /= a_expression then
 				matching_block := a_expression
 				adopt_child_expression (matching_block)
-				reset_static_properties				
+				reset_static_properties
 			end
 		ensure
 			matching_block_set: matching_block = a_expression
 		end
 
 
-	set_non_matching_block (a_expression: XM_XPATH_EXPRESSION) is
+	set_non_matching_block (a_expression: XM_XPATH_EXPRESSION)
 			-- Ensure `non_matching_block' is `a_expression'.
 		require
 			a_expression_not_void: a_expression /= Void
@@ -500,14 +500,14 @@ feature {NONE} -- Implementation
 			if non_matching_block /= a_expression then
 				non_matching_block := a_expression
 				adopt_child_expression (non_matching_block)
-				reset_static_properties				
+				reset_static_properties
 			end
 		ensure
 			non_matching_block_set: non_matching_block = a_expression
 		end
 
 
-	regexp_iterator (a_context: XM_XSLT_EVALUATION_CONTEXT): XM_XSLT_REGEXP_ITERATOR is
+	regexp_iterator (a_context: XM_XSLT_EVALUATION_CONTEXT): XM_XSLT_REGEXP_ITERATOR
 			-- Iterator over substrings in regular expression;
 		require
 			context_not_void: a_context /= Void
@@ -551,7 +551,7 @@ feature {NONE} -- Implementation
 					end
 				end
 				if not a_context.transformer.is_error then
-					
+
 					-- we don't examine the cache for xsl:analyze-string - TODO: possible improvement
 
 					create Result.make (an_input, regexp_cache_entry.regexp)
@@ -569,4 +569,4 @@ invariant
 	at_least_one_block: matching_block = Void implies non_matching_block /= Void
 
 end
-	
+

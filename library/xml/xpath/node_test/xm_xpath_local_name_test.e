@@ -18,7 +18,7 @@ inherit
 		redefine
 			node_kind, is_local_name_test, as_local_name_test
 		end
-	
+
 	XM_XPATH_SHARED_NAME_POOL
 		export {NONE} all end
 
@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_node_type: INTEGER; a_local_name, a_original_text: STRING) is
+	make (a_node_type: INTEGER; a_local_name, a_original_text: STRING)
 		require
 			valid_node_type: is_node_type (a_node_type)
 			valid_local_name: a_local_name /= Void and then is_ncname (a_local_name)
@@ -59,19 +59,19 @@ feature -- Access
 	local_name: STRING
 			-- Local name (NCName)
 
-	node_kind_mask: INTEGER is
+	node_kind_mask: INTEGER
 			-- Mask of types of nodes matched
 		do
 			Result := INTEGER_.bit_shift_left (1, node_kind)
 		end
 
-	is_local_name_test: BOOLEAN is
+	is_local_name_test: BOOLEAN
 			-- Is `Current' a local-name test?
 		do
 			Result := True
 		end
 
-	as_local_name_test: XM_XPATH_LOCAL_NAME_TEST is
+	as_local_name_test: XM_XPATH_LOCAL_NAME_TEST
 			-- `Current' seen as a local-name test
 		do
 			Result := Current
@@ -79,15 +79,15 @@ feature -- Access
 
 feature -- Status report
 
-	allows_text_nodes: BOOLEAN is
+	allows_text_nodes: BOOLEAN
 			-- Does this node test allow text nodes?
 		do
 			Result := False
 		end
-	
+
 feature -- Matching
 
-	matches_node (a_node_kind: INTEGER; a_name_code: INTEGER; a_node_type: INTEGER): BOOLEAN is
+	matches_node (a_node_kind: INTEGER; a_name_code: INTEGER; a_node_type: INTEGER): BOOLEAN
 			-- Is this node test satisfied by a given node?
 		do
 			if a_name_code = -1 then

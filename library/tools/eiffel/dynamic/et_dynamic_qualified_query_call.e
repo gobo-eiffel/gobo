@@ -27,7 +27,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_call: like static_call; a_target_type_set: like target_type_set; a_result_type_set: like result_type_set;
-		a_current_feature: like current_feature; a_current_type: like current_type) is
+		a_current_feature: like current_feature; a_current_type: like current_type)
 			-- Create a new dynamic query call.
 		require
 			a_call_not_void: a_call /= Void
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	static_feature: ET_QUERY is
+	static_feature: ET_QUERY
 			-- Static feature of the call;
 			-- Void if no such feature found
 		local
@@ -67,7 +67,7 @@ feature -- Access
 
 feature {ET_DYNAMIC_TYPE_SET_BUILDER} -- Access
 
-	seeded_dynamic_feature (a_type: ET_DYNAMIC_TYPE; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE is
+	seeded_dynamic_feature (a_type: ET_DYNAMIC_TYPE; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE
 			-- Run-time query in `a_type' corresponding to current call;
 			-- Void if no such query
 		do
@@ -76,7 +76,7 @@ feature {ET_DYNAMIC_TYPE_SET_BUILDER} -- Access
 
 feature {NONE} -- Implementation
 
-	put_type_with_feature (a_type: ET_DYNAMIC_TYPE; a_feature: like seeded_dynamic_feature; a_system: ET_DYNAMIC_SYSTEM) is
+	put_type_with_feature (a_type: ET_DYNAMIC_TYPE; a_feature: like seeded_dynamic_feature; a_system: ET_DYNAMIC_SYSTEM)
 			-- Add `a_type' to current set.
 			-- `a_feature' is the feature in `a_type' corresponding to current call.
 		local
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	propagate_type_with_feature (a_type: ET_DYNAMIC_TYPE; a_feature: like seeded_dynamic_feature; a_builder: ET_DYNAMIC_TYPE_SET_BUILDER) is
+	propagate_type_with_feature (a_type: ET_DYNAMIC_TYPE; a_feature: like seeded_dynamic_feature; a_builder: ET_DYNAMIC_TYPE_SET_BUILDER)
 			-- Propagate `a_type' from `target_type_set' using `a_builder'.
 			-- `a_feature' is the feature in `a_type' corresponding to current call.
 		local
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 
 feature {ET_DYNAMIC_TYPE_BUILDER} -- Implementation
 
-	put_type_with_tuple_label (a_type: ET_DYNAMIC_TYPE; a_builder: ET_DYNAMIC_TYPE_SET_BUILDER) is
+	put_type_with_tuple_label (a_type: ET_DYNAMIC_TYPE; a_builder: ET_DYNAMIC_TYPE_SET_BUILDER)
 			-- Add `a_type' to current set when the current call is a call to a Tuple label.
 		do
 			a_builder.propagate_tuple_label_expression_dynamic_types (Current, a_type)

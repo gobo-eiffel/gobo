@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_interpreting_element (a_ie: GEANT_INTERPRETING_ELEMENT) is
+	make_from_interpreting_element (a_ie: GEANT_INTERPRETING_ELEMENT)
 			-- Create a new task with information held in `a_ie'.
 		local
 			a_xml_subelement: XM_ELEMENT
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	build_command (a_project: GEANT_PROJECT) is
+	build_command (a_project: GEANT_PROJECT)
 			-- Create instance of `command'
 		do
 			create command.make (a_project)
@@ -58,7 +58,7 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Fileset_element_name: STRING is
+	Fileset_element_name: STRING
 			-- Name of xml subelement for fileset
 		once
 			Result := "fileset"

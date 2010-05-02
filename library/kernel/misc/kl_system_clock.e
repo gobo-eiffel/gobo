@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new system clock.
 		do
 		end
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_local_time is
+	set_local_time
 			-- Set clock to current local time.
 		local
 			l_clock: detachable C_DATE
@@ -73,7 +73,7 @@ feature -- Setting
 			millisecond := l_clock.millisecond_now
 		end
 
-	set_utc_time is
+	set_utc_time
 			-- Set clock to current UTC time.
 		local
 			l_clock: detachable C_DATE

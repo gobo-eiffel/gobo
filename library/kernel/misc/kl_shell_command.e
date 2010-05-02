@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_command: like command) is
+	make (a_command: like command)
 			-- Create a new shell command.
 		do
 			string_command := STRING_.as_string (a_command)
@@ -62,7 +62,7 @@ feature -- Status report
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Ask operating system to execute `command'. Wait until
 			-- termination. Make exit status available in `exit_code',
 			-- `is_user_code' and `is_system_code'.

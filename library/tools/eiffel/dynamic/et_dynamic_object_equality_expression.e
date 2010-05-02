@@ -27,7 +27,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_equality: like static_equality; a_target_type_set: like target_type_set
-		a_current_feature: like current_feature; a_current_type: like current_type) is
+		a_current_feature: like current_feature; a_current_type: like current_type)
 			-- Create a new dynamic object-equality expression.
 		require
 			a_equality_not_void: a_equality /= Void
@@ -60,7 +60,7 @@ feature -- Access
 	current_type: ET_DYNAMIC_TYPE
 			-- Type to which `current_feature' belongs
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of the object-equality expression
 		do
 			Result := static_equality.position
@@ -76,13 +76,13 @@ feature -- Measurement
 
 feature -- Element change
 
-	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM) is
+	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM)
 			-- Add `a_type' coming from `a_type_set' to current target.
 		do
 			propagate_type (a_type, a_system, a_system.dynamic_type_set_builder)
 		end
 
-	propagate_types (a_builder: ET_DYNAMIC_TYPE_SET_BUILDER) is
+	propagate_types (a_builder: ET_DYNAMIC_TYPE_SET_BUILDER)
 			-- Propagate types from `target_type_set' using `a_builder'.
 		require
 			a_builder_not_void: a_builder /= Void
@@ -116,7 +116,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	propagate_type (a_type: ET_DYNAMIC_TYPE; a_system: ET_DYNAMIC_SYSTEM; a_builder: ET_DYNAMIC_TYPE_SET_BUILDER) is
+	propagate_type (a_type: ET_DYNAMIC_TYPE; a_system: ET_DYNAMIC_SYSTEM; a_builder: ET_DYNAMIC_TYPE_SET_BUILDER)
 			-- Propagate `a_type' from `target_type_set' using `a_builder'.
 		require
 			a_type_not_void: a_type /= Void
@@ -150,7 +150,7 @@ feature -- Link
 	next: like Current
 			-- Next object-equality with the same target static type
 
-	set_next (a_next: like Current) is
+	set_next (a_next: like Current)
 			-- Set `next' to `a_next'.
 		do
 			next := a_next

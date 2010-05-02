@@ -25,15 +25,15 @@ create
 
 feature -- Access
 
-	program_name: STRING is "schematron"
+	program_name: STRING = "schematron"
 			-- Program name
 
-	library_name: STRING is "xml"
+	library_name: STRING = "xml"
 			-- Library name of example
 
 feature -- Test
 
-	test_schematron is
+	test_schematron
 			-- Test 'xslt/schematron' example.
 		local
 			schematron_exe: STRING
@@ -48,14 +48,14 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	program_dirname: STRING is
+	program_dirname: STRING
 			-- Name of program source directory
 		do
 			Result := file_system.nested_pathname ("${GOBO}", <<"example", library_name, "xslt", program_name>>)
 			Result := Execution_environment.interpreted_string (Result)
 		end
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of program data directory
 		do
 			Result := file_system.nested_pathname ("${GOBO}", <<"example", library_name, "xslt", program_name, "data">>)
@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 			data_dirname_not_empty: not Result.is_empty
 		end
 
-	schema_filename: STRING is
+	schema_filename: STRING
 			-- Path for 'wai.xml'
 		once
 			Result := file_system.pathname (data_dirname, "wai.xml")
@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 			schema_filename_not_empty: not Result.is_empty
 		end
 
-	data_filename: STRING is
+	data_filename: STRING
 			-- Path for 'evil_wai.xml'
 		once
 			Result := file_system.pathname (data_dirname, "evil_wai.xml")
@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 			data_filename_not_empty: not Result.is_empty
 		end
 
-	report_filename: STRING is
+	report_filename: STRING
 			-- Path for 'report.txt'
 		once
 			Result := file_system.pathname (data_dirname, "report.txt")

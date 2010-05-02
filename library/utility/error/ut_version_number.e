@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (version: STRING) is
+	make (version: STRING)
 			-- Create a new program version number message.
 		require
 			version_not_void: version /= Void
@@ -33,10 +33,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "$0 version $1"
+	default_template: STRING = "$0 version $1"
 			-- Default template used to built the error message
 
-	code: STRING is "UT0006"
+	code: STRING = "UT0006"
 			-- Error code
 
 invariant

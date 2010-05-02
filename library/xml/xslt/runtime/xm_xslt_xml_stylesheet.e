@@ -1,7 +1,7 @@
 note
-	
+
 	description:
-	
+
 		"Objects that summarize an xml-stylsheet PI"
 
 	library: "Gobo Eiffel XSLT Library"
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_uri: like uri; a_mime_type: like mime_type; a_character_set: like character_set; a_title: like title; some_applicable_media: like applicable_media; alternate: BOOLEAN) is
+	make (a_uri: like uri; a_mime_type: like mime_type; a_character_set: like character_set; a_title: like title; some_applicable_media: like applicable_media; alternate: BOOLEAN)
 			-- Establish invariant.
 		require
 			uri_not_void: a_uri /= Void
@@ -63,13 +63,13 @@ feature -- Access
 	is_alternate: BOOLEAN
 			-- Is `Current' intended as an alternative to a preferred style?
 
-	is_persistent: BOOLEAN is
+	is_persistent: BOOLEAN
 			-- Is `Current' a persistent stylesheet?
 		do
 			Result := title.count = 0
 		end
 
-	is_preferred: BOOLEAN is
+	is_preferred: BOOLEAN
 			-- Is `Current' a preferred stylesheet?
 		do
 			Result := not is_persistent and then not is_alternate
@@ -85,4 +85,4 @@ invariant
 	alternate:  is_alternate implies title.count > 0
 
 end
-	
+

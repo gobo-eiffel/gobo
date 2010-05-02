@@ -26,7 +26,7 @@ inherit
 
 feature -- Escape/unescape data characters
 
-	unescape_string (a_string: STRING): STRING is
+	unescape_string (a_string: STRING): STRING
 			-- Replace the URI hexadecimal escape sequences in `a_string'
 			-- with the corresponding Latin-1 characters.
 		require
@@ -61,7 +61,7 @@ feature -- Escape/unescape data characters
 			unescaped_string_cannot_be_larger: Result.count <= a_string.count
 		end
 
-	unescape_utf8 (a_string: STRING): detachable STRING is
+	unescape_utf8 (a_string: STRING): detachable STRING
 			-- Unescaped version of `a_string';
 			-- It is assumed that non-ASCII characters are represented by
 			--  percent-encoding their UTF-8 byte sequence.
@@ -95,7 +95,7 @@ feature -- Escape/unescape data characters
 			unescape_utf8_cannot_be_larger: Result /= Void implies Result.count <= a_string.count
 		end
 
-	escape_string (a_string: STRING): STRING is
+	escape_string (a_string: STRING): STRING
 			-- Escape reserved characters in `a_string' and return a new string.
 		require
 			a_string_not_void: a_string /= Void
@@ -115,7 +115,7 @@ feature -- Escape/unescape data characters
 			escape_string_cannot_be_smaller: Result.count >= a_string.count
 		end
 
-	escape_utf8 (a_string: STRING): STRING is
+	escape_utf8 (a_string: STRING): STRING
 			-- Escape reserved characters in `a_string' and return a new
 			-- string. Characters above 128 are converted to UTF8
 			-- representation before being encoded.
@@ -136,7 +136,7 @@ feature -- Escape/unescape data characters
 			escape_utf8_cannot_be_smaller: Result.count >= a_string.count
 		end
 
-	escape_custom (a_string: STRING; unescaped_chars: DS_SET [CHARACTER]; escape_space_as_plus: BOOLEAN): STRING is
+	escape_custom (a_string: STRING; unescaped_chars: DS_SET [CHARACTER]; escape_space_as_plus: BOOLEAN): STRING
 			-- Escape all characters except those in `unescaped_chars' in
 			-- `a_string' and return a new string.
 		require
@@ -173,7 +173,7 @@ feature -- Escape/unescape data characters
 
 feature -- Character sets
 
-	maximum_character_code_in_string (a_string: STRING): INTEGER is
+	maximum_character_code_in_string (a_string: STRING): INTEGER
 			-- Maximum character code used in string
 		require
 			a_string_not_void: a_string /= Void
@@ -194,7 +194,7 @@ feature -- Character sets
 			empty_zero: a_string.is_empty implies Result = 0
 		end
 
-	new_character_set (some_characters: STRING): DS_HASH_SET [CHARACTER] is
+	new_character_set (some_characters: STRING): DS_HASH_SET [CHARACTER]
 			-- New set of characters for use with `escape_custom'
 		require
 			some_characters_not_void: some_characters /= Void
@@ -213,7 +213,7 @@ feature -- Character sets
 			count_set: Result.count = some_characters.count
 		end
 
-	Default_unescaped: DS_HASH_SET [CHARACTER] is
+	Default_unescaped: DS_HASH_SET [CHARACTER]
 			-- Default character set not to escape
 		local
 			l_default_unescaped: DS_HASH_SET [CHARACTER]
@@ -226,27 +226,27 @@ feature -- Character sets
 			Result := l_default_unescaped
 		end
 
-	Rfc_lowalpha_characters: STRING is "abcdefghijklmnopqrstuvwxyz"
+	Rfc_lowalpha_characters: STRING = "abcdefghijklmnopqrstuvwxyz"
 			-- RFC 2396 'lowalpha' characters
 
-	Rfc_upalpha_characters: STRING is "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	Rfc_upalpha_characters: STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 			-- RFC 2396 'lowalpha' characters
 
-	Rfc_digit_characters: STRING is "0123456789"
+	Rfc_digit_characters: STRING = "0123456789"
 			-- RFC 2396 'digit' characters
 
-	Rfc_mark_characters: STRING is "-_.!~*%'()"
+	Rfc_mark_characters: STRING = "-_.!~*%'()"
 			-- RFC 2396 'mark' characters
 
-	Rfc_reserved_characters: STRING is ";/?:@&=+$,"
+	Rfc_reserved_characters: STRING = ";/?:@&=+$,"
 			-- RFC 2396 'reserved' characters
 
-	Rfc_extra_reserved_characters: STRING is "[]"
+	Rfc_extra_reserved_characters: STRING = "[]"
 			-- RFC 2732 addition to 'reserved' characters
 
 feature -- Valid characters
 
-	has_excluded_characters (s: STRING): BOOLEAN is
+	has_excluded_characters (s: STRING): BOOLEAN
 			-- Does `s' contain excluded characters?
 			-- Note that the escape character '%' is not considered excluded.
 		require
@@ -284,7 +284,7 @@ feature -- Valid characters
 			end
 		end
 
-	has_excluded_iri_codes (s: STRING): BOOLEAN is
+	has_excluded_iri_codes (s: STRING): BOOLEAN
 			-- Does `s' contain code points dis-allowed in IRIs?
 		require
 			s_not_void: s /= Void
@@ -342,7 +342,7 @@ feature -- Valid characters
 			end
 		end
 
-	is_valid_scheme (a_scheme: detachable STRING): BOOLEAN is
+	is_valid_scheme (a_scheme: detachable STRING): BOOLEAN
 			-- Is `a_scheme' a valid scheme?
 		local
 			i, nb: INTEGER

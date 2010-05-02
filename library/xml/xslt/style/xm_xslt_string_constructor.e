@@ -22,7 +22,7 @@ inherit
 
 feature -- Access
 
-	select_and_content_error: STRING is
+	select_and_content_error: STRING
 			-- Error code when both select expression and content are mutually exclusive
 		deferred
 		ensure
@@ -32,15 +32,15 @@ feature -- Access
 
 feature -- Status report
 
-	may_contain_sequence_constructor: BOOLEAN is
+	may_contain_sequence_constructor: BOOLEAN
 			-- Is `Current' allowed to contain a sequence_constructor?
 		do
 			Result := True
 		end
 
 feature -- Element change
-	
-	validate is
+
+	validate
 			-- Check that the stylesheet element is valid
 		local
 			a_message: STRING
@@ -77,9 +77,9 @@ feature -- Element change
 				end
 			end
 			validated := True
-		end	
+		end
 
-	compile_content (an_executable: XM_XSLT_EXECUTABLE; a_string_constructor: XM_XSLT_TEXT_CONSTRUCTOR; a_separator_expression: XM_XPATH_EXPRESSION) is
+	compile_content (an_executable: XM_XSLT_EXECUTABLE; a_string_constructor: XM_XSLT_TEXT_CONSTRUCTOR; a_separator_expression: XM_XPATH_EXPRESSION)
 			-- Compile content.
 		require
 			executable_not_void: an_executable /= Void
@@ -108,4 +108,4 @@ feature {NONE} -- Implementation
 			-- Value of 'select' attribute
 
 end
-	
+

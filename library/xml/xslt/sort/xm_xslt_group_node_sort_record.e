@@ -28,7 +28,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_node: XM_XPATH_NODE; a_key_list: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]; a_count: INTEGER;
-			a_current_grouping_key: XM_XPATH_ATOMIC_VALUE; a_current_group_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]) is
+			a_current_grouping_key: XM_XPATH_ATOMIC_VALUE; a_current_group_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE])
 			-- Establish invariant.
 		require
 			node_not_void: a_node /= Void
@@ -58,13 +58,13 @@ feature -- Access
 
 feature -- Conversion
 
-	is_group_node_sort_record: BOOLEAN is
+	is_group_node_sort_record: BOOLEAN
 			-- Is `Current' a group node sort record?
 		do
 			Result := True
 		end
 
-	as_group_node_sort_record: XM_XSLT_GROUP_NODE_SORT_RECORD is
+	as_group_node_sort_record: XM_XSLT_GROUP_NODE_SORT_RECORD
 			-- `Current' seen as a group node sort record
 		do
 			Result := Current
@@ -76,4 +76,4 @@ invariant
 	current_group_iterator_not_void: current_group_iterator /= Void
 
 end
-	
+

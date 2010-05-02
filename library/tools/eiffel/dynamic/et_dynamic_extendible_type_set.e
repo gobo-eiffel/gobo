@@ -28,7 +28,7 @@ feature -- Status report
 			-- set should also be non-empty. Therefore it is recommended to
 			-- use 'not can_be_void'.)
 
-	has_type (a_type: ET_DYNAMIC_TYPE): BOOLEAN is
+	has_type (a_type: ET_DYNAMIC_TYPE): BOOLEAN
 			-- Do current dynamic types contain `a_type'?
 		local
 			i: INTEGER
@@ -49,7 +49,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_never_void is
+	set_never_void
 			-- Set `is_never_void' to True.
 		do
 			is_never_void := True
@@ -60,13 +60,13 @@ feature -- Access
 	static_type: ET_DYNAMIC_TYPE
 			-- Type at compilation time
 
-	dynamic_type (i: INTEGER): ET_DYNAMIC_TYPE is
+	dynamic_type (i: INTEGER): ET_DYNAMIC_TYPE
 			-- Dynamic type at index `i'
 		do
 			Result := dynamic_types.dynamic_type (i)
 		end
 
-	index_of (a_type: ET_DYNAMIC_TYPE): INTEGER is
+	index_of (a_type: ET_DYNAMIC_TYPE): INTEGER
 			-- Index of first occurrence of `a_type'?
 		local
 			i: INTEGER
@@ -92,7 +92,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	put_type (a_type: ET_DYNAMIC_TYPE) is
+	put_type (a_type: ET_DYNAMIC_TYPE)
 			-- Add `a_type' to current set.
 			-- Do not check for type conformance with `static_type' and do not propagate to targets.
 		require
@@ -134,7 +134,7 @@ feature -- Element change
 			has_type: has_type (a_type)
 		end
 
-	put_types (other: ET_DYNAMIC_TYPES) is
+	put_types (other: ET_DYNAMIC_TYPES)
 			-- Add types of `other' to current set.
 			-- Do not check for type conformance with `static_type' and do not propagate to targets.
 		require
@@ -149,7 +149,7 @@ feature -- Element change
 			end
 		end
 
-	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM) is
+	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM)
 			-- Add `a_type' coming from `a_type_set' to current target.
 		local
 			l_dynamic_type_list: ET_DYNAMIC_TYPE_HASH_LIST
@@ -216,7 +216,7 @@ feature -- Element change
 			end
 		end
 
-	propagate_can_be_void (a_type_set: ET_DYNAMIC_TYPE_SET) is
+	propagate_can_be_void (a_type_set: ET_DYNAMIC_TYPE_SET)
 			-- Propagate the information that `a_type_set', from which types
 			-- are propagated, is the dynamic type set of an expression which
 			-- can be void at some point during execution.

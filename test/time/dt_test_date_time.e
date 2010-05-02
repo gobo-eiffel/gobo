@@ -24,7 +24,7 @@ create
 
 feature -- Test
 
-	test_date_duration is
+	test_date_duration
 			-- Test feature `date_duration'.
 		local
 			dt1, dt2: DT_DATE_TIME
@@ -37,7 +37,7 @@ feature -- Test
 			assert_equal ("date_duration2", dd1, dt1.date_duration (dt2))
 		end
 
-	test_time_duration is
+	test_time_duration
 			-- Test feature `time_duration'.
 		local
 			dt1, dt2: DT_DATE_TIME

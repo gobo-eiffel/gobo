@@ -1,7 +1,7 @@
 note
 
 	description: "[
-		Objects that are able to iterate over cursor trees, 
+		Objects that are able to iterate over cursor trees,
 		on which they can perform repeated actions and tests according
 		to a number of predefined control structures such as ``if'',
 		``until'' and others.

@@ -24,20 +24,20 @@ inherit
 
 feature -- Status report
 
-	supports_registering_schemes: BOOLEAN is
+	supports_registering_schemes: BOOLEAN
 			-- Does `Current' support registering scheme resolvers?
 		deferred
 		end
-	
-	was_error: BOOLEAN is
+
+	was_error: BOOLEAN
 			-- Was last call to `resolve' in error?
 		do
 			Result := last_error /= Void
 		ensure
 			error: Result implies last_error /= Void
 		end
-	
-	last_collection: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+
+	last_collection: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Last collection retrieved by `resolve'
 		require
 			no_error: not was_error
@@ -46,7 +46,7 @@ feature -- Status report
 			iterator_at_start: Result /= Void and then Result.before
 		end
 
-	last_error: XM_XPATH_ERROR_VALUE is
+	last_error: XM_XPATH_ERROR_VALUE
 			-- Last error set by `resolve'
 		deferred
 		ensure
@@ -56,8 +56,8 @@ feature -- Status report
 		end
 
 feature -- Element change
-	
-	resolve (a_uri: UT_URI; a_context: XM_XPATH_CONTEXT) is
+
+	resolve (a_uri: UT_URI; a_context: XM_XPATH_CONTEXT)
 			-- Resolve `a_uri' to a sequence of nodes.
 		require
 			absolute_base_uri_not_void: a_uri /= Void and then a_uri.is_absolute
@@ -68,7 +68,7 @@ feature -- Element change
 			error_or_collection: not was_error implies last_collection /= Void
 		end
 
-	register_scheme (a_scheme: XM_XPATH_COLLECTION_SCHEME_RESOLVER) is
+	register_scheme (a_scheme: XM_XPATH_COLLECTION_SCHEME_RESOLVER)
 			-- Register scheme.
 		require
 			a_scheme_not_void: a_scheme /= Void

@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new exclude clause.
 		do
 			create identifiers.make (identifiers_initial_capacity)
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	has (a_name: STRING): BOOLEAN is
+	has (a_name: STRING): BOOLEAN
 			-- Does current exclude clause list `a_name'?
 		require
 			a_name_not_void: a_name /= Void
@@ -51,7 +51,7 @@ feature -- Status report
 			end
 		end
 
-	has_case_insensitive (a_name: STRING): BOOLEAN is
+	has_case_insensitive (a_name: STRING): BOOLEAN
 			-- Does current exclude clause list `a_name'?
 			-- Case-insensitive version.
 		require
@@ -72,7 +72,7 @@ feature -- Status report
 
 feature -- Access
 
-	item (i: INTEGER): ET_IDENTIFIER is
+	item (i: INTEGER): ET_IDENTIFIER
 			-- `i'-th identifier in current exclude clause
 		require
 			i_large_enough: i >= 1
@@ -85,7 +85,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of identifers in current exclude clause
 		do
 			Result := identifiers.count
@@ -95,7 +95,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	put_last (an_item: like item) is
+	put_last (an_item: like item)
 			-- Add `an_item' to the end of current exclude clause.
 		require
 			an_item_not_void: an_item /= Void
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	identifiers_initial_capacity: INTEGER is 4
+	identifiers_initial_capacity: INTEGER = 4
 			-- Initial capacity for `identifiers'
 
 invariant

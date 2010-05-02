@@ -6,9 +6,9 @@ inherit
 
 feature -- Access
 
-	name: INTEGER is 32
+	name: INTEGER = 32
 
-	f is
+	f
 		local
 			b32: BIT 32
 		do

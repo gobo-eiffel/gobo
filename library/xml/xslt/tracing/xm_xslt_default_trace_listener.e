@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_trace_reporter: UT_ERROR_HANDLER; add_timings: BOOLEAN) is
+	make (a_trace_reporter: UT_ERROR_HANDLER; add_timings: BOOLEAN)
 			-- Establish invariant.
 		do
 			reporter := a_trace_reporter
@@ -50,7 +50,7 @@ feature -- Access
 	reporter: UT_ERROR_HANDLER
 			-- Reporter
 
-	opening_namespace_declarations: STRING is
+	opening_namespace_declarations: STRING
 			-- XML namespace declarations
 		do
 			Result := "xmlns=%"http://www.gobosoft.com/eiffel/gobo/gexslt/trace%" xmlns:xsl=%"" + Xslt_uri + "%""
@@ -74,7 +74,7 @@ feature -- Status report
 
 feature -- Events
 
-	start_tracing is
+	start_tracing
 			-- Start tracing.
 		do
 			is_tracing := True
@@ -88,7 +88,7 @@ feature -- Events
 			end
 		end
 
-	stop_tracing is
+	stop_tracing
 			-- Stop tracing.
 		local
 			a_duration: DT_TIME_DURATION
@@ -105,7 +105,7 @@ feature -- Events
 			is_tracing := False
 		end
 
-	trace_instruction_entry (some_trace_details: XM_XSLT_TRACE_DETAILS) is
+	trace_instruction_entry (some_trace_details: XM_XSLT_TRACE_DETAILS)
 			--  Trace start of instruction execution.
 		local
 			a_property_name: STRING
@@ -151,7 +151,7 @@ feature -- Events
 			reporter.report_info_message ("%">")
 		end
 
-	trace_instruction_exit (some_trace_details: XM_XSLT_TRACE_DETAILS) is
+	trace_instruction_exit (some_trace_details: XM_XSLT_TRACE_DETAILS)
 			--  Trace end of instruction execution.
 		local
 			a_duration: DT_TIME_DURATION
@@ -172,7 +172,7 @@ feature -- Events
 			indentation := indentation - 1
 		end
 
-	trace_current_item_start (a_current_item: XM_XPATH_ITEM) is
+	trace_current_item_start (a_current_item: XM_XPATH_ITEM)
 			-- Trace making new item current.
 		local
 			a_node: XM_XPATH_NODE
@@ -209,7 +209,7 @@ feature -- Events
 			end
 		end
 
-	trace_current_item_finish (a_current_item: XM_XPATH_ITEM) is
+	trace_current_item_finish (a_current_item: XM_XPATH_ITEM)
 			-- Trace leaving current item.
 		local
 			a_duration: DT_TIME_DURATION
@@ -234,7 +234,7 @@ feature -- Events
 			indentation := indentation - 1
 		end
 
-	trace_user_entry (a_label, a_value: STRING) is
+	trace_user_entry (a_label, a_value: STRING)
 			-- Trace user entry (e.g. XPath trace() function).
 		do
 			reporter.info_file.put_string (spaces (indentation + 1))
@@ -247,7 +247,7 @@ feature -- Events
 
 feature {NONE} -- Implementation
 
-	spaces (a_number: INTEGER): STRING is
+	spaces (a_number: INTEGER): STRING
 			-- produce `a_number' spaces
 		do
 			create Result.make_filled (' ', a_number)
@@ -257,7 +257,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	tag_name (some_trace_details: XM_XSLT_TRACE_DETAILS): STRING is
+	tag_name (some_trace_details: XM_XSLT_TRACE_DETAILS): STRING
 			-- Tag name
 		require
 			trace_details_not_void: some_trace_details /= Void

@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	shared_node_kind_test (a_node_type: INTEGER): XM_XPATH_NODE_KIND_TEST is
+	shared_node_kind_test (a_node_type: INTEGER): XM_XPATH_NODE_KIND_TEST
 			-- Shared node-kind test for `a_node_type'
 		require
 			a_node_type_valid: is_node_type (a_node_type)
@@ -44,43 +44,43 @@ feature -- Access
 			shared_node_kind_test_not_void: Result /= Void
 		end
 
-	document_node_kind_test: XM_XPATH_NODE_KIND_TEST is
+	document_node_kind_test: XM_XPATH_NODE_KIND_TEST
 			-- Document test
 		once
 			create Result.make_document_test
 		end
 
-	element_node_kind_test: XM_XPATH_NODE_KIND_TEST is
+	element_node_kind_test: XM_XPATH_NODE_KIND_TEST
 			-- Element test
 		once
 			create Result.make_element_test
 		end
 
-	attribute_node_kind_test: XM_XPATH_NODE_KIND_TEST is
+	attribute_node_kind_test: XM_XPATH_NODE_KIND_TEST
 			-- Attribute test
 		once
 			create Result.make_attribute_test
 		end
 
-	text_node_kind_test: XM_XPATH_NODE_KIND_TEST is
+	text_node_kind_test: XM_XPATH_NODE_KIND_TEST
 			-- Text test
 		once
 			create Result.make_text_test
 		end
 
-	processing_instruction_node_kind_test: XM_XPATH_NODE_KIND_TEST is
+	processing_instruction_node_kind_test: XM_XPATH_NODE_KIND_TEST
 			-- Processing instruction test
 		once
 			create Result.make_processing_instruction_test
 		end
 
-	comment_node_kind_test: XM_XPATH_NODE_KIND_TEST is
+	comment_node_kind_test: XM_XPATH_NODE_KIND_TEST
 			-- Comment test
 		once
 			create Result.make_comment_test
 		end
 
-	namespace_node_kind_test: XM_XPATH_NODE_KIND_TEST is
+	namespace_node_kind_test: XM_XPATH_NODE_KIND_TEST
 			-- Namespace test
 		once
 			create Result.make_namespace_test

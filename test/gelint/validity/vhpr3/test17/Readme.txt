@@ -46,7 +46,7 @@ create
 
 feature
 
-	make is
+	make
 		local
 			b: BB
 		do
@@ -70,7 +70,7 @@ feature -- Access
 
 	name: BB
 
-	f is
+	f
 		do
 			item := Current
 		end

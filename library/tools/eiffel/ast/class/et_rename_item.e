@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	rename_pair: ET_RENAME is
+	rename_pair: ET_RENAME
 			-- Rename pair in comma-separated list
 		deferred
 		ensure

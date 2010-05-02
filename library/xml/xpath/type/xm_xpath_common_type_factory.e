@@ -21,7 +21,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Populate types map.
 		require
 			types_not_populated: not types_created
@@ -42,7 +42,7 @@ feature -- Access
 	types_created: BOOLEAN
 			-- Have all types been created yet?
 
-	schema_type (a_fingerprint: INTEGER): XM_XPATH_SCHEMA_TYPE is
+	schema_type (a_fingerprint: INTEGER): XM_XPATH_SCHEMA_TYPE
 			-- Schema type with fingerprint of `a_fingerprint'
 		do
 			if type_map.has (a_fingerprint) then
@@ -50,7 +50,7 @@ feature -- Access
 			end
 		end
 
-	standard_fingerprint (a_uri, a_local_name: STRING): INTEGER is
+	standard_fingerprint (a_uri, a_local_name: STRING): INTEGER
 			-- Fingerprint of a standard name
 		local
 			an_expanded_qname: STRING
@@ -63,7 +63,7 @@ feature -- Access
 			end
 		end
 
-	standard_local_name (a_fingerprint: INTEGER): STRING is
+	standard_local_name (a_fingerprint: INTEGER): STRING
 			-- Extracted local name
 		do
 				check
@@ -73,163 +73,163 @@ feature -- Access
 			Result := local_names.item (a_fingerprint)
 		end
 
-	any_simple_type: XM_XPATH_ANY_SIMPLE_TYPE is
+	any_simple_type: XM_XPATH_ANY_SIMPLE_TYPE
 			-- xs:anySimpleType
 		once
 			create Result.make
 		end
 
-	any_atomic_type: XM_XPATH_ATOMIC_TYPE is
+	any_atomic_type: XM_XPATH_ATOMIC_TYPE
 			-- xs:anyAtomicType
 		once
 			create Result.make (Xml_schema_uri, "anyAtomicType", any_simple_type, Any_atomic_type_code)
 		end
 
-	numeric_type: XM_XPATH_ATOMIC_TYPE is
+	numeric_type: XM_XPATH_ATOMIC_TYPE
 			-- Implementation convenience type: gexslt:numeric
 		once
 			create Result.make (Gexslt_eiffel_type_uri, "numeric", any_atomic_type, Numeric_type_code)
 		end
 
-	string_type: XM_XPATH_ATOMIC_TYPE is
+	string_type: XM_XPATH_ATOMIC_TYPE
 			-- xs:string
 		once
 			create Result.make (Xml_schema_uri, "string", any_atomic_type, String_type_code)
 		end
 
-	boolean_type: XM_XPATH_ATOMIC_TYPE is
+	boolean_type: XM_XPATH_ATOMIC_TYPE
 			-- xs:boolean
 		once
 			create Result.make (Xml_schema_uri, "boolean", any_atomic_type, Boolean_type_code)
 		end
 
-	date_time_type: XM_XPATH_ATOMIC_TYPE is
+	date_time_type: XM_XPATH_ATOMIC_TYPE
 			-- xs:dateTime
 		once
 			create Result.make (Xml_schema_uri, "dateTime", any_atomic_type, Date_time_type_code)
 		end
 
-	date_type: XM_XPATH_ATOMIC_TYPE is
+	date_type: XM_XPATH_ATOMIC_TYPE
 			-- xs:date
 		once
 			create Result.make (Xml_schema_uri, "date", any_atomic_type, Date_type_code)
 		end
 
-	time_type: XM_XPATH_ATOMIC_TYPE is
+	time_type: XM_XPATH_ATOMIC_TYPE
 			-- xs:time
 		once
 			create Result.make (Xml_schema_uri, "time", any_atomic_type, Time_type_code)
 		end
 
-	any_uri_type: XM_XPATH_ATOMIC_TYPE is
+	any_uri_type: XM_XPATH_ATOMIC_TYPE
 			-- xs:anyURI
 		once
 			create Result.make (Xml_schema_uri, "anyURI", any_atomic_type, Any_uri_type_code)
 		end
 
-	qname_type: XM_XPATH_ATOMIC_TYPE is
+	qname_type: XM_XPATH_ATOMIC_TYPE
 			-- xs:QName
 		once
 			create Result.make (Xml_schema_uri, "QName", any_atomic_type, Qname_type_code)
 		end
 
-	untyped_atomic_type: XM_XPATH_ATOMIC_TYPE is
+	untyped_atomic_type: XM_XPATH_ATOMIC_TYPE
 			-- xs:untypedAtomic
 		once
 			create Result.make (Xml_schema_uri, "untypedAtomic", any_atomic_type, Untyped_atomic_type_code)
 		end
 
-	decimal_type: XM_XPATH_ATOMIC_TYPE is
+	decimal_type: XM_XPATH_ATOMIC_TYPE
 			-- xs:decimal
 		once
 			create Result.make (Xml_schema_uri, "decimal", numeric_type, Decimal_type_code)
 		end
 
-	float_type: XM_XPATH_ATOMIC_TYPE is
+	float_type: XM_XPATH_ATOMIC_TYPE
 			-- xs:float
 		once
 			create Result.make (Xml_schema_uri, "float", numeric_type, Float_type_code)
 		end
 
-	double_type: XM_XPATH_ATOMIC_TYPE is
+	double_type: XM_XPATH_ATOMIC_TYPE
 			-- xs:double
 		once
 			create Result.make (Xml_schema_uri, "double", numeric_type, Double_type_code)
 		end
 
-	integer_type: XM_XPATH_ATOMIC_TYPE is
+	integer_type: XM_XPATH_ATOMIC_TYPE
 			-- xs:integer
 		once
 			create Result.make (Xml_schema_uri, "integer", decimal_type, Integer_type_code)
 		end
 
-	any_type: XM_XPATH_ANY_TYPE is
+	any_type: XM_XPATH_ANY_TYPE
 			-- xs:anyType
 		once
 			create Result.make
 		end
 
-	untyped_type: XM_XPATH_UNTYPED_TYPE is
+	untyped_type: XM_XPATH_UNTYPED_TYPE
 			-- xs:untyped
 		once
 			create Result.make
 		end
 
-	duration_type: XM_XPATH_ATOMIC_TYPE is
+	duration_type: XM_XPATH_ATOMIC_TYPE
 			-- xs:duration
 		once
 			create Result.make (Xml_schema_uri, "duration", any_atomic_type, Duration_type_code)
 		end
 
-	year_month_duration_type: XM_XPATH_ATOMIC_TYPE is
+	year_month_duration_type: XM_XPATH_ATOMIC_TYPE
 			-- xs:yearMonthDuration
 		once
 			create Result.make (Xml_schema_uri, "yearMonthDuration", duration_type, Year_month_duration_type_code)
 		end
 
-	day_time_duration_type: XM_XPATH_ATOMIC_TYPE is
+	day_time_duration_type: XM_XPATH_ATOMIC_TYPE
 			-- xs:dayTimeDuration
 		once
 			create Result.make (Xml_schema_uri, "dayTimeDuration", duration_type, Day_time_duration_type_code)
 		end
 
-	g_year_month_type: XM_XPATH_ATOMIC_TYPE is
+	g_year_month_type: XM_XPATH_ATOMIC_TYPE
 			-- xs:gYearMonth
 		once
 			create Result.make (Xml_schema_uri, "gYearMonth", any_atomic_type, G_year_month_type_code)
 		end
 
-	g_month_type: XM_XPATH_ATOMIC_TYPE is
+	g_month_type: XM_XPATH_ATOMIC_TYPE
 			-- xs:gMonth
 		once
 			create Result.make (Xml_schema_uri, "gMonth", any_atomic_type, G_month_type_code)
 		end
 
-	g_month_day_type: XM_XPATH_ATOMIC_TYPE is
+	g_month_day_type: XM_XPATH_ATOMIC_TYPE
 			-- xs:gMonthDay
 		once
 			create Result.make (Xml_schema_uri, "gMonthDay", any_atomic_type, G_month_day_type_code)
 		end
 
-	g_year_type: XM_XPATH_ATOMIC_TYPE is
+	g_year_type: XM_XPATH_ATOMIC_TYPE
 			-- xs:gYear
 		once
 			create Result.make (Xml_schema_uri, "gYear", any_atomic_type, G_year_type_code)
 		end
 
-	g_day_type: XM_XPATH_ATOMIC_TYPE is
+	g_day_type: XM_XPATH_ATOMIC_TYPE
 			-- xs:gDay
 		once
 			create Result.make (Xml_schema_uri, "gDay", any_atomic_type, G_day_type_code)
 		end
 
-	hex_binary_type: XM_XPATH_ATOMIC_TYPE is
+	hex_binary_type: XM_XPATH_ATOMIC_TYPE
 			-- xs:hexBinary
 		once
 			create Result.make (Xml_schema_uri, "hexBinary", any_atomic_type, Hex_binary_type_code)
 		end
 
-	base64_binary_type: XM_XPATH_ATOMIC_TYPE is
+	base64_binary_type: XM_XPATH_ATOMIC_TYPE
 			-- xs:base64Binary
 		once
 			create Result.make (Xml_schema_uri, "base64Binary", any_atomic_type, Base64_binary_type_code)
@@ -237,7 +237,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	type_map: DS_HASH_TABLE [XM_XPATH_SCHEMA_TYPE, INTEGER] is
+	type_map: DS_HASH_TABLE [XM_XPATH_SCHEMA_TYPE, INTEGER]
 			-- Table of built-in types, keyed on fingerprint
 		once
 			create Result.make_map (Maximum_built_in_fingerprint)
@@ -304,20 +304,20 @@ feature {NONE} -- Implementation
 			no_void_type: not Result.has_void_item
 		end
 
-	fingerprint_map: DS_HASH_TABLE [INTEGER, STRING] is
+	fingerprint_map: DS_HASH_TABLE [INTEGER, STRING]
 			-- Table of standard fingerprints, keyed on expanded QName
 		once
 			create Result.make_with_equality_testers (1024, Void, string_equality_tester)
 		end
 
-	local_names: DS_HASH_TABLE [STRING, INTEGER] is
+	local_names: DS_HASH_TABLE [STRING, INTEGER]
 			-- Table of standard local names, keyed on fingerprint
 		once
 			create Result.make_map (Maximum_built_in_fingerprint)
 			Result.set_equality_tester (string_equality_tester)
 		end
 
-	expanded_qname (a_uri, a_local_name: STRING): STRING is
+	expanded_qname (a_uri, a_local_name: STRING): STRING
 			-- The expanded QName (Clark name) of `a_uri' paired with `a_local_name'
 		require
 			namespace_not_void: a_uri /= Void
@@ -328,7 +328,7 @@ feature {NONE} -- Implementation
 			correct_length: Result.count = a_uri.count + a_local_name.count + 1
 		end
 
-	bind_xml_name (a_fingerprint: INTEGER; a_local_name: STRING) is
+	bind_xml_name (a_fingerprint: INTEGER; a_local_name: STRING)
 			-- Bind `a_local_name' to `a_fingerprint' in the XML namespace.
 		require
 			local_name_not_void: a_local_name /= void and then a_local_name.count > 0
@@ -343,7 +343,7 @@ feature {NONE} -- Implementation
 			name_bound: fingerprint_map.has (expanded_qname (Xml_uri, a_local_name)) and then fingerprint_map.item (expanded_qname (Xml_uri, a_local_name)) = a_fingerprint
 		end
 
-	bind_xslt_name (a_fingerprint: INTEGER; a_local_name: STRING) is
+	bind_xslt_name (a_fingerprint: INTEGER; a_local_name: STRING)
 			-- Bind `a_local_name' to `a_fingerprint' in the XSLT namespace.
 		require
 			local_name_not_void: a_local_name /= void and then a_local_name.count > 0
@@ -358,7 +358,7 @@ feature {NONE} -- Implementation
 			name_bound: fingerprint_map.has (expanded_qname (Xslt_uri, a_local_name)) and then fingerprint_map.item (expanded_qname (Xslt_uri, a_local_name)) = a_fingerprint
 		end
 
-	bind_xs_name (a_fingerprint: INTEGER; a_local_name: STRING) is
+	bind_xs_name (a_fingerprint: INTEGER; a_local_name: STRING)
 			-- Bind `a_local_name' to `a_fingerprint' in the XML Schema namespace.
 		require
 			local_name_not_void: a_local_name /= void and then a_local_name.count > 0
@@ -373,7 +373,7 @@ feature {NONE} -- Implementation
 			local_name: local_names.has (a_fingerprint) and then STRING_.same_string (local_names.item (a_fingerprint), a_local_name)
 		end
 
-	bind_xsi_name (a_fingerprint: INTEGER; a_local_name: STRING) is
+	bind_xsi_name (a_fingerprint: INTEGER; a_local_name: STRING)
 			-- Bind `a_local_name' to `a_fingerprint' in the XML Schema Instance namespace.
 		require
 			local_name_not_void: a_local_name /= void and then a_local_name.count > 0
@@ -388,7 +388,7 @@ feature {NONE} -- Implementation
 			local_name: local_names.has (a_fingerprint) and then STRING_.same_string (local_names.item (a_fingerprint), a_local_name)
 		end
 
-	bind_fn_name (a_fingerprint: INTEGER; a_local_name: STRING) is
+	bind_fn_name (a_fingerprint: INTEGER; a_local_name: STRING)
 			-- Bind `a_local_name' to `a_fingerprint' in the XPath functionss namespace.
 		require
 			local_name_not_void: a_local_name /= void and then a_local_name.count > 0
@@ -403,7 +403,7 @@ feature {NONE} -- Implementation
 			local_name: local_names.has (a_fingerprint) and then STRING_.same_string (local_names.item (a_fingerprint), a_local_name)
 		end
 
-	bind_gexslt_name (a_fingerprint: INTEGER; a_local_name: STRING) is
+	bind_gexslt_name (a_fingerprint: INTEGER; a_local_name: STRING)
 			-- Bind `a_local_name' to `a_fingerprint' in the gexslt extensions namespace.
 		require
 			local_name_not_void: a_local_name /= void and then a_local_name.count > 0
@@ -418,7 +418,7 @@ feature {NONE} -- Implementation
 			local_name: local_names.has (a_fingerprint) and then STRING_.same_string (local_names.item (a_fingerprint), a_local_name)
 		end
 
-	make_common_types is
+	make_common_types
 			-- Populate types map with types common to all environments.
 		require
 			types_not_populated: not types_created
@@ -435,7 +435,7 @@ feature {NONE} -- Implementation
 			a_type := untyped_type; a_type := any_type
 		end
 
-	make_time_types is
+	make_time_types
 			-- Populate types map with time-related types.
 		require
 			types_not_populated: not types_created
@@ -448,7 +448,7 @@ feature {NONE} -- Implementation
 			a_type := year_month_duration_type; a_type := day_time_duration_type
 		end
 
-	make_numeric_types is
+	make_numeric_types
 			-- Populate types map with numeric types.
 		require
 			types_not_populated: not types_created
@@ -465,7 +465,7 @@ feature {NONE} -- Implementation
 			a_type := unsigned_byte_type
 		end
 
-	make_string_types is
+	make_string_types
 			-- Populate types map with string types.
 		require
 			types_not_populated: not types_created
@@ -481,7 +481,7 @@ feature {NONE} -- Implementation
 			a_type := nmtokens_type
 		end
 
-	bind_names is
+	bind_names
 			-- Bind all standard names to their fingerprints.
 		do
 			bind_xslt_names
@@ -492,7 +492,7 @@ feature {NONE} -- Implementation
 			bind_xml_schema_names
 		end
 
-	bind_gexslt_names is
+	bind_gexslt_names
 			-- Bind names specific to Gobo to their fingerprints.
 		do
 			bind_gexslt_name (Numeric_type_code, "numeric")
@@ -512,7 +512,7 @@ feature {NONE} -- Implementation
 			bind_gexslt_name (Gexslt_method_type_code, "method")
 		end
 
-	bind_fn_names is
+	bind_fn_names
 			-- Bind names in the XPath functions namespace to their fingerprints.
 		do
 			bind_fn_name (Abs_function_type_code, "abs")
@@ -647,7 +647,7 @@ feature {NONE} -- Implementation
 			bind_fn_name (Unparsed_text_available_function_type_code, "unparsed-text-available")
 		end
 
-	bind_xsi_names is
+	bind_xsi_names
 			-- Bind names in the XML Schema Instance namespace to their fingerprints.
 		do
 			bind_xsi_name (Xsi_type_type_code, "type")
@@ -656,7 +656,7 @@ feature {NONE} -- Implementation
 			bind_xsi_name (Xsi_no_namespace_schema_location_type_code, "noNamespaceSchemaLocation")
 		end
 
-	bind_xml_names is
+	bind_xml_names
 			-- Bind names in the XML namespace to their fingerprints.
 		do
 			bind_xml_name (Xml_base_type_code, "base")
@@ -665,7 +665,7 @@ feature {NONE} -- Implementation
 			bind_xml_name (Xml_id_type_code, "id")
 		end
 
-	bind_xslt_names is
+	bind_xslt_names
 			-- Bind names in the XSLT namespace to their fingerprints.
 		do
 			bind_xslt_name (Xslt_analyze_string_type_code, "analyze-string")
@@ -729,7 +729,7 @@ feature {NONE} -- Implementation
 			bind_xslt_name (Xslt_version_type_code, "version")
 		end
 
-	bind_xml_schema_names is
+	bind_xml_schema_names
 			-- Bind names in XML Schema namespace to their fingerprints.
 		do
 			bind_xs_name (String_type_code, "string")

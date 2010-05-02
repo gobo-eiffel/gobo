@@ -25,7 +25,7 @@ create
 
 feature -- Status report
 
-	is_replace_executable: BOOLEAN is
+	is_replace_executable: BOOLEAN
 			-- Can command be executed using `match' xor `token' ?
 		do
 			Result := (match /= Void and then match.count > 0)
@@ -37,7 +37,7 @@ feature -- Status report
 				(variable_pattern /= Void and then variable_pattern.count > 0)
 		end
 
-	is_file_to_file_executable: BOOLEAN is
+	is_file_to_file_executable: BOOLEAN
 			-- Can command be executed on sourcefile `file' to targetfile `to_file'
 			-- with `match' ?
 		do
@@ -51,7 +51,7 @@ feature -- Status report
 			to_file_not_empty: Result implies (to_file = Void or else to_file.count > 0)
 		end
 
-	is_fileset_to_directory_executable: BOOLEAN is
+	is_fileset_to_directory_executable: BOOLEAN
 			-- Can command be executed on source fileset `fileset' to targetdirectory `to_directory'?
 		do
 			Result := fileset /= Void
@@ -59,7 +59,7 @@ feature -- Status report
 			fileset_not_void: Result implies fileset /= Void
 		end
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- Can command be executed?
 		do
 			Result := BOOLEAN_.nxor (<<is_file_to_file_executable, is_fileset_to_directory_executable>>)
@@ -98,7 +98,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_file (a_file: like file) is
+	set_file (a_file: like file)
 			-- Set `file' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -109,7 +109,7 @@ feature -- Setting
 			file_set: file = a_file
 		end
 
-	set_to_file (a_to_file: like to_file) is
+	set_to_file (a_to_file: like to_file)
 			-- Set `to_file' to `a_to_file'.
 		require
 			a_to_file_not_void: a_to_file /= Void
@@ -120,7 +120,7 @@ feature -- Setting
 			to_file_set: to_file = a_to_file
 		end
 
-	set_to_directory (a_to_directory: like to_directory) is
+	set_to_directory (a_to_directory: like to_directory)
 			-- Set `to_directory' to `a_to_directory'.
 		require
 			a_to_directory_not_void: a_to_directory /= Void
@@ -131,7 +131,7 @@ feature -- Setting
 			to_directory_set: to_directory = a_to_directory
 		end
 
-	set_token (a_token: like token) is
+	set_token (a_token: like token)
 			-- Set `token' to `a_token'.
 		require
 			a_token_not_void: a_token /= Void
@@ -142,7 +142,7 @@ feature -- Setting
 			token_set: token = a_token
 		end
 
-	set_variable_pattern (a_variable_pattern: like variable_pattern) is
+	set_variable_pattern (a_variable_pattern: like variable_pattern)
 			-- Set `variable_pattern' to `a_variable_pattern'.
 		require
 			a_variable_pattern_not_void: a_variable_pattern /= Void
@@ -153,7 +153,7 @@ feature -- Setting
 			variable_pattern_set: variable_pattern = a_variable_pattern
 		end
 
-	set_match (a_match: like match) is
+	set_match (a_match: like match)
 			-- Set `match' to `a_match'.
 		require
 			a_match_not_void: a_match /= Void
@@ -164,7 +164,7 @@ feature -- Setting
 			match_set: match = a_match
 		end
 
-	set_replace (a_replace: like replace) is
+	set_replace (a_replace: like replace)
 			-- Set `replace' to `a_replace'.
 		require
 			a_replace_not_void: a_replace /= Void
@@ -175,7 +175,7 @@ feature -- Setting
 			replace_set: replace = a_replace
 		end
 
-	set_flags (a_flags: like flags) is
+	set_flags (a_flags: like flags)
 			-- Set `flags' to `a_flags'.
 		require
 			a_flags_not_void: a_flags /= Void
@@ -186,7 +186,7 @@ feature -- Setting
 			flags_set: flags = a_flags
 		end
 
-	set_fileset (a_fileset: like fileset) is
+	set_fileset (a_fileset: like fileset)
 			-- Set `fileset' to `a_fileset'.
 		require
 			a_fileset_not_void: a_fileset /= Void
@@ -198,7 +198,7 @@ feature -- Setting
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute command.
 		local
 			a_from_file: like file
@@ -242,7 +242,7 @@ feature -- Execution
 			end
 		end
 
-	execute_replace (a_filename, a_to_filename: like file) is
+	execute_replace (a_filename, a_to_filename: like file)
 		require
 			a_filename_valid: a_filename /= Void and then a_filename.count > 0
 		local
@@ -261,7 +261,7 @@ feature -- Execution
 			end
 		end
 
-	execute_replace_variable_pattern (a_filename, a_to_filename: like file) is
+	execute_replace_variable_pattern (a_filename, a_to_filename: like file)
 			-- Replace variables on the basis of the variable pattern
 		require
 			a_filename_nod_void: a_filename /= Void
@@ -366,7 +366,7 @@ feature -- Execution
 			end
 		end
 
-	execute_replace_token (a_filename, a_to_filename: like file) is
+	execute_replace_token (a_filename, a_to_filename: like file)
 			-- Replace `token' with `replace'
 		require
 			a_filename_nod_void: a_filename /= Void
@@ -452,7 +452,7 @@ feature -- Execution
 			end
 		end
 
-	execute_replace_regexp (a_filename, a_to_filename: like file) is
+	execute_replace_regexp (a_filename, a_to_filename: like file)
 			-- Replace `match' with `replace'
 		require
 			a_filename_nod_void: a_filename /= Void
@@ -552,7 +552,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	tmp_input_file: KL_TEXT_INPUT_FILE is
+	tmp_input_file: KL_TEXT_INPUT_FILE
 			-- Temporary file object
 		once
 			create Result.make (dummy_name)
@@ -561,7 +561,7 @@ feature {NONE} -- Implementation
 			file_closed: Result.is_closed
 		end
 
-	tmp_output_file: KL_TEXT_OUTPUT_FILE is
+	tmp_output_file: KL_TEXT_OUTPUT_FILE
 			-- Temporary file object
 		once
 			create Result.make (dummy_name)
@@ -570,10 +570,10 @@ feature {NONE} -- Implementation
 			file_closed: Result.is_closed
 		end
 
-	dummy_name: STRING is "_dummy_"
+	dummy_name: STRING = "_dummy_"
 
-	placeholder_character: CHARACTER is '_'
+	placeholder_character: CHARACTER = '_'
 
-	read_chunk_size: INTEGER is 4096
+	read_chunk_size: INTEGER = 4096
 
 end

@@ -41,7 +41,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_serializer: XM_XSLT_SERIALIZER; a_outputter: XM_OUTPUT; a_output_properties: XM_XSLT_OUTPUT_PROPERTIES;
-		a_character_map_index: like character_map_index; a_factory: like emitter_factory) is
+		a_character_map_index: like character_map_index; a_factory: like emitter_factory)
 			-- Initialize `Current'.
 		require
 			serializer_not_void: a_serializer /= Void
@@ -67,20 +67,20 @@ feature {NONE} -- Initialization
 
 feature -- Events
 
-	open is
+	open
 			-- Notify start of event stream.
 		do
 			is_open := True
 		end
 
-	close is
+	close
 			-- Notify end of event stream.
 		do
 			is_open := False
 			base_receiver.close
 		end
 
-	start_document is
+	start_document
 			-- New document
 		do
 			is_document_started := True
@@ -89,7 +89,7 @@ feature -- Events
 			end
 		end
 
-	end_document is
+	end_document
 			-- Notify the end of the document
 		do
 			if not committed then
@@ -107,7 +107,7 @@ feature -- Events
 			committed: committed
 		end
 
-	notify_characters (chars: STRING; properties: INTEGER) is
+	notify_characters (chars: STRING; properties: INTEGER)
 			-- Notify character data.
 		local
 			a_pending_event: XM_XSLT_PENDING_EVENT
@@ -125,7 +125,7 @@ feature -- Events
 			mark_as_written
 		end
 
-	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
+	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER)
 			-- Notify a processing instruction.
 		local
 			a_pending_event: XM_XSLT_PENDING_EVENT
@@ -140,7 +140,7 @@ feature -- Events
 			mark_as_written
 		end
 
-	notify_comment (a_content_string: STRING; properties: INTEGER) is
+	notify_comment (a_content_string: STRING; properties: INTEGER)
 			-- Notify a comment.
 		local
 			a_pending_event: XM_XSLT_PENDING_EVENT
@@ -155,7 +155,7 @@ feature -- Events
 			mark_as_written
 		end
 
-	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
+	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER)
 			-- Notify the start of an element
 		local
 			a_name: STRING
@@ -183,7 +183,7 @@ feature -- Events
 			committed: committed
 		end
 
-	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
+	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER)
 			-- Notify a namespace declaration.
 		do
 			check
@@ -195,7 +195,7 @@ feature -- Events
 			committed: committed
 		end
 
-	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
+	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER)
 			-- Notify an attribute.
 		do
 			check
@@ -207,7 +207,7 @@ feature -- Events
 			committed: committed
 		end
 
-	start_content is
+	start_content
 			-- Notify the start of the content, that is, the completion of all attributes and namespaces.
 		do
 			check
@@ -219,7 +219,7 @@ feature -- Events
 			committed: committed
 		end
 
-	end_element is
+	end_element
 			-- Notify the end of an element.
 		do
 			check
@@ -233,7 +233,7 @@ feature -- Events
 
 feature -- Basic operations
 
-	suppress_late_open is
+	suppress_late_open
 			-- Suppress writing of XML declaration on close.
 		do
 			is_no_declaration_on_close := True
@@ -265,7 +265,7 @@ feature {NONE} -- Implementation
 	pending_event_list: DS_ARRAYED_LIST [XM_XSLT_PENDING_EVENT]
 			-- Pending events
 
-	check_pending_event_list is
+	check_pending_event_list
 			-- Ensure `pending_event_list' is created.
 		do
 			if pending_event_list = Void then
@@ -275,7 +275,7 @@ feature {NONE} -- Implementation
 			pending_event_list_not_void: pending_event_list /= Void
 		end
 
-	switch_to_xml is
+	switch_to_xml
 			-- Switch to an XML emitter.
 		require
 			not_yet_committed: not committed
@@ -291,7 +291,7 @@ feature {NONE} -- Implementation
 			committed: committed
 		end
 
-	switch_to_html is
+	switch_to_html
 			-- Switch to an HTML emitter.
 		require
 			not_yet_committed: not committed
@@ -307,7 +307,7 @@ feature {NONE} -- Implementation
 			committed: committed
 		end
 
-	switch_to_xhtml is
+	switch_to_xhtml
 			-- Switch to an XHTML emitter.
 		require
 			not_yet_committed: not committed
@@ -323,7 +323,7 @@ feature {NONE} -- Implementation
 			committed: committed
 		end
 
-	switch is
+	switch
 			-- Switch to using `base_receiver'.
 		require
 			base_receiver_not_void: base_receiver /= Void

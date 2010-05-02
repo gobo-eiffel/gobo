@@ -21,83 +21,83 @@ inherit
 
 feature -- Year
 
-	leap_year (y: INTEGER): BOOLEAN is
+	leap_year (y: INTEGER): BOOLEAN
 			-- Is `y' a leap year?
 		do
 			Result := (y \\ 4 = 0) and ((y \\ 100 /= 0) or (y \\ 400 = 0))
 		end
 
-	Months_in_year: INTEGER is 12
+	Months_in_year: INTEGER = 12
 			-- Number of months in a year
 --		ensure
 --			definition: Result = (December - Januray + 1)
 
-	Days_in_year: INTEGER is 365
+	Days_in_year: INTEGER = 365
 			-- Number of days in a non-leap year
 
-	Days_in_leap_year: INTEGER is 366
+	Days_in_leap_year: INTEGER = 366
 			-- Number of days in a leap year
 
-	Days_in_400_years: INTEGER is 146097
+	Days_in_400_years: INTEGER = 146097
 			-- Number of days in 400 years
 
-	Days_in_100_years: INTEGER is 36524
+	Days_in_100_years: INTEGER = 36524
 			-- Number of days in 100 years
 
-	Days_in_4_years: INTEGER is 1461
+	Days_in_4_years: INTEGER = 1461
 			-- Number of days in 4 years
 
-	Days_in_3_years: INTEGER is 1095
+	Days_in_3_years: INTEGER = 1095
 			-- Number of days in 3 years with no leap year
 
-	Days_in_3_leap_years: INTEGER is 1096
+	Days_in_3_leap_years: INTEGER = 1096
 			-- Number of days in 3 years with a leap year
 
-	Days_in_2_years: INTEGER is 730
+	Days_in_2_years: INTEGER = 730
 			-- Number of days in 2 years with no leap year
 
-	Days_in_2_leap_years: INTEGER is 731
+	Days_in_2_leap_years: INTEGER = 731
 			-- Number of days in 2 years with a leap year
 
 feature -- Month
 
-	January: INTEGER is 1
+	January: INTEGER = 1
 			-- Code for January
 
-	February: INTEGER is 2
+	February: INTEGER = 2
 			-- Code for February
 
-	March: INTEGER is 3
+	March: INTEGER = 3
 			-- Code for March
 
-	April: INTEGER is 4
+	April: INTEGER = 4
 			-- Code for April
 
-	May: INTEGER is 5
+	May: INTEGER = 5
 			-- Code for May
 
-	June: INTEGER is 6
+	June: INTEGER = 6
 			-- Code for June
 
-	July: INTEGER is 7
+	July: INTEGER = 7
 			-- Code for July
 
-	August: INTEGER is 8
+	August: INTEGER = 8
 			-- Code for August
 
-	September: INTEGER is 9
+	September: INTEGER = 9
 			-- Code for September
 
-	October: INTEGER is 10
+	October: INTEGER = 10
 			-- Code for October
 
-	November: INTEGER is 11
+	November: INTEGER = 11
 			-- Code for November
 
-	December: INTEGER is 12
+	December: INTEGER = 12
 			-- Code for December
 
-	days_in_month (m, y: INTEGER): INTEGER is
+	days_in_month (m, y: INTEGER): INTEGER
 			-- Number of days in month `m' of year `y'
 		require
 			m_large_enough: m >= January
@@ -120,10 +120,10 @@ feature -- Month
 			max_days_in_month: Result <= Max_days_in_month
 		end
 
-	Max_days_in_month: INTEGER is 31
+	Max_days_in_month: INTEGER = 31
 			-- Maximum number of days in a month
 
-	days_at_month (m, y: INTEGER): INTEGER is
+	days_at_month (m, y: INTEGER): INTEGER
 			-- Number of days from beginning of year
 			-- `y' until beginning of month `m'
 		require
@@ -165,39 +165,39 @@ feature -- Month
 
 feature -- Week day
 
-	Days_in_week: INTEGER is 7
+	Days_in_week: INTEGER = 7
 			-- Number of days in a week
 
 feature -- Time
 
-	Seconds_in_minute: INTEGER is 60
+	Seconds_in_minute: INTEGER = 60
 			-- Number of seconds in a minute
 
-	Seconds_in_hour: INTEGER is 3600
+	Seconds_in_hour: INTEGER = 3600
 			-- Number of seconds in an hour
 
-	Seconds_in_day: INTEGER is 86400
+	Seconds_in_day: INTEGER = 86400
 			-- Number of seconds in a day
 
-	Milliseconds_in_day: INTEGER is 86400000
+	Milliseconds_in_day: INTEGER = 86400000
 			-- Number of milliseconds in a day
 
-	Minutes_in_hour: INTEGER is 60
+	Minutes_in_hour: INTEGER = 60
 			-- Number of minutes in an hour
 
-	Hours_in_day: INTEGER is 24
+	Hours_in_day: INTEGER = 24
 			-- Number of hours in a day
 
 feature -- Epoch
 
-	Epoch_year: INTEGER is 1970
+	Epoch_year: INTEGER = 1970
 
-	Epoch_month: INTEGER is 1
+	Epoch_month: INTEGER = 1
 
-	Epoch_day: INTEGER is 1
+	Epoch_day: INTEGER = 1
 			-- Epoch date (1 Jan 1970)
 
-	epoch_days (y, m, d: INTEGER): INTEGER is
+	epoch_days (y, m, d: INTEGER): INTEGER
 			-- Number of days since epoch date (1 Jan 1970)
 		require
 			m_large_enough: m >= January
@@ -214,14 +214,14 @@ feature -- Epoch
 
 feature {NONE} -- Epoch
 
-	Epoch_leap_years: INTEGER is
+	Epoch_leap_years: INTEGER
 			-- Number of leap years between year '1'
 			-- and year 'Epoch_year - 1'
 		once
 			Result := ((Epoch_year - 1) // 4) - ((Epoch_year - 1) // 100) + ((Epoch_year - 1) // 400)
 		end
 
-	Epoch_days_at_month: INTEGER is
+	Epoch_days_at_month: INTEGER
 			-- Number of days from beginning of year `Epoch_year'
 			-- until beginning of month `Epoch_month' exclusive
 		once
@@ -230,7 +230,7 @@ feature {NONE} -- Epoch
 			days_positive: Result >= 0
 		end
 
-	Epoch_to_Y2K_days: INTEGER is
+	Epoch_to_Y2K_days: INTEGER
 			-- Number of days between epoch (1 Jan 1970)
 			-- and Y2K (1 Jan 2000)
 		once

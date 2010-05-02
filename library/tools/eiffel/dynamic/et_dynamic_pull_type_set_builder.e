@@ -50,7 +50,7 @@ create
 
 feature -- Factory
 
-	new_dynamic_type_set (a_type: ET_DYNAMIC_TYPE): ET_DYNAMIC_TYPE_SET is
+	new_dynamic_type_set (a_type: ET_DYNAMIC_TYPE): ET_DYNAMIC_TYPE_SET
 			-- New dynamic type set
 		do
 			if a_type.is_expanded then
@@ -67,7 +67,7 @@ feature -- Factory
 
 feature -- Generation
 
-	build_dynamic_type_sets is
+	build_dynamic_type_sets
 			-- Build dynamic type sets for `current_dynamic_system'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -266,7 +266,7 @@ feature -- Generation
 
 feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 
-	propagate_call_type (a_type: ET_DYNAMIC_TYPE; a_call: ET_DYNAMIC_QUALIFIED_CALL) is
+	propagate_call_type (a_type: ET_DYNAMIC_TYPE; a_call: ET_DYNAMIC_QUALIFIED_CALL)
 			-- Propagate `a_type' from target type set `a_call'.
 		do
 			a_call.propagate_type (a_type, Current)
@@ -274,7 +274,7 @@ feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 
 feature {ET_DYNAMIC_TUPLE_TYPE} -- Generation
 
-	build_tuple_item (a_tuple_type: ET_DYNAMIC_TUPLE_TYPE; an_item_feature: ET_DYNAMIC_FEATURE) is
+	build_tuple_item (a_tuple_type: ET_DYNAMIC_TUPLE_TYPE; an_item_feature: ET_DYNAMIC_FEATURE)
 			-- Build type set of result type of `an_item_feature' from `a_tuple_type'.
 		local
 			i, nb: INTEGER
@@ -294,7 +294,7 @@ feature {ET_DYNAMIC_TUPLE_TYPE} -- Generation
 			end
 		end
 
-	build_tuple_put (a_tuple_type: ET_DYNAMIC_TUPLE_TYPE; a_put_feature: ET_DYNAMIC_FEATURE) is
+	build_tuple_put (a_tuple_type: ET_DYNAMIC_TUPLE_TYPE; a_put_feature: ET_DYNAMIC_FEATURE)
 			-- Build type set of argument type of `a_put_feature' from `a_tuple_type'.
 		local
 			i, nb: INTEGER
@@ -322,7 +322,7 @@ feature {ET_DYNAMIC_TUPLE_TYPE} -- Generation
 
 feature {ET_DYNAMIC_ROUTINE_TYPE} -- Generation
 
-	build_agent_call (an_agent_type: ET_DYNAMIC_ROUTINE_TYPE; a_call_feature: ET_DYNAMIC_FEATURE) is
+	build_agent_call (an_agent_type: ET_DYNAMIC_ROUTINE_TYPE; a_call_feature: ET_DYNAMIC_FEATURE)
 			-- Build type set of argument type of `a_call_feature' from `an_agent_type'.
 		local
 			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
@@ -341,7 +341,7 @@ feature {ET_DYNAMIC_ROUTINE_TYPE} -- Generation
 
 feature {NONE} -- Generation
 
-	propagate_types (a_type_sets: ET_DYNAMIC_TYPE_SET_LIST) is
+	propagate_types (a_type_sets: ET_DYNAMIC_TYPE_SET_LIST)
 			-- Propagates types in `a_type_sets'.
 		require
 			a_type_sets_not_void: a_type_sets /= Void
@@ -362,7 +362,7 @@ feature {NONE} -- Generation
 			end
 		end
 
-	propagate_feature_types (a_feature: ET_DYNAMIC_FEATURE) is
+	propagate_feature_types (a_feature: ET_DYNAMIC_FEATURE)
 			-- Propagated types in dynamic type sets of `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -438,7 +438,7 @@ feature {NONE} -- CAT-calls
 
 	append_catcall_error_message (a_message: STRING; a_target_type: ET_DYNAMIC_TYPE; a_dynamic_feature: ET_DYNAMIC_FEATURE;
 		arg: INTEGER; a_formal_type: ET_DYNAMIC_TYPE; a_formal_type_set: ET_DYNAMIC_TYPE_SET;
-		an_actual_type: ET_DYNAMIC_TYPE; an_actual_type_set: ET_DYNAMIC_TYPE_SET; a_call: ET_DYNAMIC_QUALIFIED_CALL) is
+		an_actual_type: ET_DYNAMIC_TYPE; an_actual_type_set: ET_DYNAMIC_TYPE_SET; a_call: ET_DYNAMIC_QUALIFIED_CALL)
 			-- Append to `a_message' the error message of a CAT-call error in `a_call'.
 			-- When the target is of type `a_target_type', we try to pass to the corresponding
 			-- feature `a_dynamic_feature' an actual argument of type `an_actual_type' (which
@@ -699,7 +699,7 @@ feature {NONE} -- CAT-calls
 			l_source_stack.wipe_out
 		end
 
-	shared_visited_sources: DS_ARRAYED_LIST [ET_DYNAMIC_ATTACHMENT] is
+	shared_visited_sources: DS_ARRAYED_LIST [ET_DYNAMIC_ATTACHMENT]
 			-- Shared visited sources (used in `report_catcall_error')
 		once
 			create Result.make (20)
@@ -707,7 +707,7 @@ feature {NONE} -- CAT-calls
 			shared_visited_sources_not_void: Result /= Void
 		end
 
-	shared_source_stack: DS_ARRAYED_STACK [ET_DYNAMIC_ATTACHMENT] is
+	shared_source_stack: DS_ARRAYED_STACK [ET_DYNAMIC_ATTACHMENT]
 			-- Shared stack of sources (used in `report_catcall_error')
 		once
 			create Result.make (20)
@@ -717,7 +717,7 @@ feature {NONE} -- CAT-calls
 
 feature {NONE} -- Event handling
 
-	report_agent_qualified_query_call (an_expression: ET_CALL_AGENT; a_target_type_set: ET_DYNAMIC_TYPE_SET; a_result_type_set: ET_DYNAMIC_TYPE_SET) is
+	report_agent_qualified_query_call (an_expression: ET_CALL_AGENT; a_target_type_set: ET_DYNAMIC_TYPE_SET; a_result_type_set: ET_DYNAMIC_TYPE_SET)
 			-- Report the agent `an_expression' makes a qualified query call
 			-- on `a_target_type_set' and returns `a_result_type_set'.
 		local
@@ -738,7 +738,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_manifest_array (an_expression: ET_MANIFEST_ARRAY; a_type: ET_TYPE) is
+	report_manifest_array (an_expression: ET_MANIFEST_ARRAY; a_type: ET_TYPE)
 			-- Report that a manifest array of type `a_type' in context
 			-- of `current_type' has been processed.
 		local
@@ -825,7 +825,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_manifest_tuple (an_expression: ET_MANIFEST_TUPLE; a_type: ET_TYPE) is
+	report_manifest_tuple (an_expression: ET_MANIFEST_TUPLE; a_type: ET_TYPE)
 			-- Report that a manifest tuple of type `a_type' in context of
 			-- `current_type' has been processed.
 		local
@@ -880,7 +880,7 @@ feature {NONE} -- Event handling
 
 feature {NONE} -- Implementation
 
-	propagate_agent_closed_operands_dynamic_types (an_agent: ET_AGENT; an_agent_type: ET_DYNAMIC_ROUTINE_TYPE) is
+	propagate_agent_closed_operands_dynamic_types (an_agent: ET_AGENT; an_agent_type: ET_DYNAMIC_ROUTINE_TYPE)
 			-- Propagate dynamic types of closed operands of `an_agent' to the
 			-- dynamic type set of the attribute 'closed_operands' of `an_agent_type'.
 		local
@@ -1003,7 +1003,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	propagate_argument_dynamic_types (an_actual: ET_ARGUMENT_OPERAND; a_formal_type_set: ET_DYNAMIC_TYPE_SET) is
+	propagate_argument_dynamic_types (an_actual: ET_ARGUMENT_OPERAND; a_formal_type_set: ET_DYNAMIC_TYPE_SET)
 			-- Propagate dynamic types of actual argument `an_actual'
 			-- to the dynamic type set `a_formal_type_set' of the
 			-- corresponding formal argument.
@@ -1023,7 +1023,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	propagate_argument_operand_dynamic_types (an_actual: ET_ARGUMENT_OPERAND; a_formal: INTEGER; a_callee: ET_DYNAMIC_FEATURE) is
+	propagate_argument_operand_dynamic_types (an_actual: ET_ARGUMENT_OPERAND; a_formal: INTEGER; a_callee: ET_DYNAMIC_FEATURE)
 			-- Propagate dynamic types of actual argument `an_actual'
 			-- to the dynamic type set of the corresponding formal
 			-- argument at index `a_formal' in `a_callee'.
@@ -1050,7 +1050,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	propagate_assignment_dynamic_types (an_assignment: ET_ASSIGNMENT) is
+	propagate_assignment_dynamic_types (an_assignment: ET_ASSIGNMENT)
 			-- Propagate dynamic types of the source of `an_assignment'
 			-- to the dynamic type set of the target of `an_assignment'.
 		local
@@ -1076,7 +1076,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	propagate_assignment_attempt_dynamic_types (an_assignment_attempt: ET_ASSIGNMENT_ATTEMPT) is
+	propagate_assignment_attempt_dynamic_types (an_assignment_attempt: ET_ASSIGNMENT_ATTEMPT)
 			-- Propagate dynamic types of the source of `an_assignment_attempt'
 			-- to the dynamic type set of the target of `an_assignment_attempt'.
 		local
@@ -1102,7 +1102,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	propagate_builtin_actual_argument_dynamic_types (a_source_type_set: ET_DYNAMIC_TYPE_SET; a_formal: INTEGER; a_callee: ET_DYNAMIC_FEATURE) is
+	propagate_builtin_actual_argument_dynamic_types (a_source_type_set: ET_DYNAMIC_TYPE_SET; a_formal: INTEGER; a_callee: ET_DYNAMIC_FEATURE)
 			-- Propagate dynamic types of `a_source_type_set' to the dynamic type set
 			-- of the formal argument at index `a_formal' in `a_callee' when involved
 			-- in built-in feature `current_dynamic_feature'.
@@ -1122,7 +1122,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	propagate_builtin_formal_argument_dynamic_types (a_formal: INTEGER; a_target_type_set: ET_DYNAMIC_TYPE_SET) is
+	propagate_builtin_formal_argument_dynamic_types (a_formal: INTEGER; a_target_type_set: ET_DYNAMIC_TYPE_SET)
 			-- Propagate dynamic types of the dynamic type set of the formal argument
 			-- at index `a_formal' in built-in feature `current_dynamic_feature'
 			-- to `a_target_type_set'.
@@ -1142,7 +1142,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	propagate_builtin_result_dynamic_types (a_source_type_set: ET_DYNAMIC_TYPE_SET; a_query: ET_DYNAMIC_FEATURE) is
+	propagate_builtin_result_dynamic_types (a_source_type_set: ET_DYNAMIC_TYPE_SET; a_query: ET_DYNAMIC_FEATURE)
 			-- Propagate dynamic types of `a_source_type_set' to the dynamic type set
 			-- of the result of the built-in feature `a_query'.
 		local
@@ -1162,7 +1162,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	propagate_call_agent_result_dynamic_types (an_agent: ET_CALL_AGENT; a_query: ET_DYNAMIC_FEATURE; a_result_type_set: ET_DYNAMIC_TYPE_SET) is
+	propagate_call_agent_result_dynamic_types (an_agent: ET_CALL_AGENT; a_query: ET_DYNAMIC_FEATURE; a_result_type_set: ET_DYNAMIC_TYPE_SET)
 			-- Propagate dynamic types of the result of `a_query' to the dynamic type set
 			-- `a_result_type_set' of the result of type of `an_agent' (probably a FUNCTION
 			-- or a PREDICATE).
@@ -1181,7 +1181,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	propagate_creation_dynamic_type (a_creation_type: ET_DYNAMIC_TYPE; a_creation: ET_CREATION_INSTRUCTION) is
+	propagate_creation_dynamic_type (a_creation_type: ET_DYNAMIC_TYPE; a_creation: ET_CREATION_INSTRUCTION)
 			-- Propagate the creation type `a_creation_type' of `a_creation'
 			-- to the dynamic type set of the target of `a_creation'.
 		local
@@ -1200,7 +1200,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	propagate_inline_agent_result_dynamic_types (an_agent: ET_INLINE_AGENT; a_result_type_set: ET_DYNAMIC_TYPE_SET) is
+	propagate_inline_agent_result_dynamic_types (an_agent: ET_INLINE_AGENT; a_result_type_set: ET_DYNAMIC_TYPE_SET)
 			-- Propagate dynamic types of the result of the associated feature of `an_agent'
 			-- to the dynamic type set `a_result_type_set' of the result of type of `an_agent'
 			-- (probably a FUNCTION or a PREDICATE).
@@ -1229,7 +1229,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	propagate_like_argument_dynamic_types (a_call: ET_FEATURE_CALL_EXPRESSION; a_formal_type_set, an_actual_type_set: ET_DYNAMIC_TYPE_SET) is
+	propagate_like_argument_dynamic_types (a_call: ET_FEATURE_CALL_EXPRESSION; a_formal_type_set, an_actual_type_set: ET_DYNAMIC_TYPE_SET)
 			-- When `a_call' is a call to a query whose type is of the form "like argument",
 			-- propagate dynamic types `a_formal_type_set' of the result of that query
 			-- to the dynamic type set `an_actual_type_set' of the call.
@@ -1244,7 +1244,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	propagate_manifest_string_area_dynamic_type (a_area_type: ET_DYNAMIC_TYPE; a_area_type_set: ET_DYNAMIC_TYPE_SET; a_string: ET_MANIFEST_STRING) is
+	propagate_manifest_string_area_dynamic_type (a_area_type: ET_DYNAMIC_TYPE; a_area_type_set: ET_DYNAMIC_TYPE_SET; a_string: ET_MANIFEST_STRING)
 			-- Propagate the dynamic type of the 'area' of manifest string `a_string'
 			-- to its dynamic type set `a_area_type_set'.
 		local
@@ -1256,7 +1256,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	propagate_named_object_test_dynamic_types (a_object_test: ET_NAMED_OBJECT_TEST) is
+	propagate_named_object_test_dynamic_types (a_object_test: ET_NAMED_OBJECT_TEST)
 			-- Propagate dynamic types of the expression of `a_object_test'
 			-- to the dynamic type set of the local of `a_object_test'.
 		local
@@ -1282,7 +1282,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	propagate_tuple_label_argument_dynamic_types (a_label_type_set: ET_DYNAMIC_TYPE_SET; a_assigner: ET_ASSIGNER_INSTRUCTION) is
+	propagate_tuple_label_argument_dynamic_types (a_label_type_set: ET_DYNAMIC_TYPE_SET; a_assigner: ET_ASSIGNER_INSTRUCTION)
 			-- Propagate dynamic types of the source of tuple label setter `a_assigner'
 			-- to the dynamic type set `a_label_type_set' of the corresponding tuple label.
 		local
@@ -1301,7 +1301,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	propagate_tuple_label_result_dynamic_types (a_label_type_set, a_result_type_set: ET_DYNAMIC_TYPE_SET) is
+	propagate_tuple_label_result_dynamic_types (a_label_type_set, a_result_type_set: ET_DYNAMIC_TYPE_SET)
 			-- Propagate dynamic types `a_label_type_set' of a tuple label
 			-- to the dynamic type set `a_result_type_set' of the result type
 			-- of the associated qualified call.

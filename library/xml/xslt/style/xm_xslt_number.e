@@ -29,7 +29,7 @@ create {XM_XSLT_NODE_FACTORY}
 
 feature -- Element change
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -85,7 +85,7 @@ feature -- Element change
 			attributes_prepared := True
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 		local
 			l_role: XM_XPATH_ROLE_LOCATOR
@@ -153,7 +153,7 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (an_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		local
 			l_compiler: XM_XSLT_STYLESHEET_COMPILER
@@ -176,7 +176,7 @@ feature -- Element change
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
 
-	returned_item_type: XM_XPATH_ITEM_TYPE is
+	returned_item_type: XM_XPATH_ITEM_TYPE
 			-- Type of item returned by this instruction
 		do
 			Result := text_node_kind_test
@@ -226,7 +226,7 @@ feature {NONE} -- Implementation
 	prepare_attributes_2 (a_select_attribute, an_ordinal_attribute, a_value_attribute: STRING;
 										 a_count_attribute,a_lang_attribute, a_from_attribute: STRING;
 										 a_level_attribute, a_letter_value_attribute, a_grouping_size_attribute: STRING;
-										 a_grouping_separator_attribute, a_format_attribute: STRING) is
+										 a_grouping_separator_attribute, a_format_attribute: STRING)
 			-- Prepare attributes some more.
 		local
 			an_error: XM_XPATH_ERROR_VALUE
@@ -292,7 +292,7 @@ feature {NONE} -- Implementation
 		end
 
 	prepare_attributes_3 (an_ordinal_attribute, a_lang_attribute, a_letter_value_attribute: STRING;
-		a_grouping_size_attribute, a_grouping_separator_attribute, a_format_attribute: STRING) is
+		a_grouping_size_attribute, a_grouping_separator_attribute, a_format_attribute: STRING)
 			-- Prepare attributes even more.
 		do
 			if a_format_attribute /= Void then

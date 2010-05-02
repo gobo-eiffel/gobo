@@ -14,7 +14,7 @@ class XM_XSLT_SHARED_FUNCTION_LIBRARY
 
 feature -- Access
 
-	shared_function_library: XM_XPATH_FUNCTION_LIBRARY_MANAGER is
+	shared_function_library: XM_XPATH_FUNCTION_LIBRARY_MANAGER
 			-- Establish invariant
 		local
 			a_function_library: XM_XPATH_FUNCTION_LIBRARY
@@ -26,4 +26,4 @@ feature -- Access
 			Result.add_function_library (a_function_library)
 		end
 end
-	
+

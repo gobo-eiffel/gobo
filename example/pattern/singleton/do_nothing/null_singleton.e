@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a singleton object.
 		require
 			singleton_not_created: not singleton_created

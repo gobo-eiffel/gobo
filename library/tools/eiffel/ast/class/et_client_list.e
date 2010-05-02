@@ -25,7 +25,7 @@ create
 
 feature -- Access
 
-	client (i: INTEGER): ET_CLIENT is
+	client (i: INTEGER): ET_CLIENT
 			-- Client at index `i' in list
 		require
 			i_large_enough: i >= 1
@@ -38,7 +38,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_none: BOOLEAN is
+	is_none: BOOLEAN
 			-- Does current client list only contain the
 			-- class name "NONE" or is empty?
 		do
@@ -49,7 +49,7 @@ feature -- Status report
 			end
 		end
 
-	has_class (a_class: ET_CLASS): BOOLEAN is
+	has_class (a_class: ET_CLASS): BOOLEAN
 			-- Does the `a_class' appear in current list?
 		require
 			a_class_not_void: a_class /= Void
@@ -67,7 +67,7 @@ feature -- Status report
 			end
 		end
 
-	has_descendant (a_class: ET_CLASS): BOOLEAN is
+	has_descendant (a_class: ET_CLASS): BOOLEAN
 			-- Is `a_class' a descendant of any of classes in list?
 			-- True if `a_class' is "NONE", even if current list is empty.
 			-- (Note: Use `current_system.ancestor_builder' on the classes
@@ -107,7 +107,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	same_clients (other: ET_CLIENT_LIST): BOOLEAN is
+	same_clients (other: ET_CLIENT_LIST): BOOLEAN
 			-- Do current list and `other' contain the same set of clients?
 		require
 			other_not_void: other /= Void
@@ -145,7 +145,7 @@ feature -- Comparison
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_CLIENT_ITEM] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_CLIENT_ITEM]
 			-- Fixed array routines
 		once
 			create Result

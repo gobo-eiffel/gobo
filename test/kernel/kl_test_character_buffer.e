@@ -25,7 +25,7 @@ create
 
 feature -- Test
 
-	test_make is
+	test_make
 			-- Test feature `make'.
 		local
 			a_buffer: KL_CHARACTER_BUFFER
@@ -35,7 +35,7 @@ feature -- Test
 			assert_integers_equal ("count_set", 5, a_buffer.count)
 		end
 
-	test_make_from_string is
+	test_make_from_string
 			-- Test feature `make_from_string'.
 		local
 			a_buffer: KL_CHARACTER_BUFFER
@@ -46,7 +46,7 @@ feature -- Test
 			assert_equal ("characters_set", "my buffer", a_buffer.to_text)
 		end
 
-	test_put is
+	test_put
 			-- Test feature `put'.
 		local
 			a_buffer: KL_CHARACTER_BUFFER
@@ -60,7 +60,7 @@ feature -- Test
 			assert_equal ("put3", "fuby", a_buffer.to_text)
 		end
 
-	test_item is
+	test_item
 			-- Test feature `item'.
 		local
 			a_buffer: KL_CHARACTER_BUFFER
@@ -72,7 +72,7 @@ feature -- Test
 			assert_characters_equal ("item4", 'o', a_buffer.item (4))
 		end
 
-	test_substring is
+	test_substring
 			-- Test feature `substring'.
 		local
 			a_buffer: KL_CHARACTER_BUFFER
@@ -85,7 +85,7 @@ feature -- Test
 			assert_equal ("sub5", "", a_buffer.substring (2, 1))
 		end
 
-	test_to_text is
+	test_to_text
 			-- Test feature `to_text'.
 		local
 			a_buffer: KL_CHARACTER_BUFFER
@@ -94,7 +94,7 @@ feature -- Test
 			assert_equal ("to_text", "gobo", a_buffer.to_text)
 		end
 
-	test_append_substring_to_string is
+	test_append_substring_to_string
 			-- Test feature `append_substring_to_string'.
 		local
 			a_buffer: KL_CHARACTER_BUFFER
@@ -118,7 +118,7 @@ feature -- Test
 			assert_equal ("appended7", "gobo one two threeone two three", a_string)
 		end
 
-	test_fill_from_string is
+	test_fill_from_string
 			-- Test feature `fill_from_string'.
 		local
 			a_buffer: KL_CHARACTER_BUFFER
@@ -132,7 +132,7 @@ feature -- Test
 			assert_equal ("filled", "gofoobar", a_buffer.to_text)
 		end
 
-	test_fill_from_stream is
+	test_fill_from_stream
 			-- Test feature `fill_from_stream'.
 		local
 			a_file: KL_TEXT_INPUT_FILE
@@ -161,7 +161,7 @@ feature -- Test
 			end
 		end
 
-	test_move_left is
+	test_move_left
 			-- Test feature `move_left'.
 		local
 			a_buffer: KL_CHARACTER_BUFFER
@@ -171,7 +171,7 @@ feature -- Test
 			assert_equal ("moved", "eiffeliffel", a_buffer.to_text)
 		end
 
-	test_move_right is
+	test_move_right
 			-- Test feature `move_right'.
 		local
 			a_buffer: KL_CHARACTER_BUFFER
@@ -181,7 +181,7 @@ feature -- Test
 			assert_equal ("moved", "gobo obofel", a_buffer.to_text)
 		end
 
-	test_resize is
+	test_resize
 			-- Test feature `resize'.
 		local
 			a_buffer: KL_CHARACTER_BUFFER

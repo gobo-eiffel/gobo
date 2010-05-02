@@ -22,7 +22,7 @@ create
 
 feature -- Access
 
-	value: STRING is
+	value: STRING
 			-- String value
 		do
 			Result := string_value

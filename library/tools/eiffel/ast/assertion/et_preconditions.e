@@ -25,14 +25,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new precondition clause.
 		do
 			require_keyword := tokens.require_keyword
 			precursor
 		end
 
-	make_with_capacity (nb: INTEGER) is
+	make_with_capacity (nb: INTEGER)
 			-- Create a new precondition clause with capacity `nb'.
 		do
 			require_keyword := tokens.require_keyword
@@ -47,7 +47,7 @@ feature -- Access
 	else_keyword: ET_KEYWORD
 			-- 'else' keyword
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -57,13 +57,13 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := require_keyword
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			if not is_empty then
@@ -75,7 +75,7 @@ feature -- Access
 			end
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			if not is_empty then
@@ -89,7 +89,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_require_else: BOOLEAN is
+	is_require_else: BOOLEAN
 			-- Has precondition clause been declared with "require else"?
 		do
 			Result := (else_keyword /= Void)
@@ -97,7 +97,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_require_keyword (a_require: like require_keyword) is
+	set_require_keyword (a_require: like require_keyword)
 			-- Set `require_keyword' to `a_require'.
 		require
 			a_require_not_void: a_require /= Void
@@ -107,7 +107,7 @@ feature -- Setting
 			require_keyword_set: require_keyword = a_require
 		end
 
-	set_else_keyword (an_else: like else_keyword) is
+	set_else_keyword (an_else: like else_keyword)
 			-- Set `else_keyword' to `an_else'.
 		do
 			else_keyword := an_else
@@ -117,7 +117,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_preconditions (Current)

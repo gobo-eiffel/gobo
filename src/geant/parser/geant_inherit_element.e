@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT) is
+	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT)
 			-- Create new inherit element with information held in `a_xml_element'.
 		local
 			a_parent_elements: DS_LINKED_LIST [XM_ELEMENT]
@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	make_old (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT) is
+	make_old (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT)
 			-- Create new element with information held in `a_xml_element'.
 			-- (Only to suppport old form of inheritance)
 			-- TODO: remove after obsolete period
@@ -90,7 +90,7 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Parent_element_name: STRING is
+	Parent_element_name: STRING
 			-- "parent" element name
 		once
 			Result := "parent"

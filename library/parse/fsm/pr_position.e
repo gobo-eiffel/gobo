@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_rule: like rule; an_index: INTEGER) is
+	make (a_rule: like rule; an_index: INTEGER)
 			-- Create a new position in `a_rule'
 			-- at index `an_index'.
 		require
@@ -50,7 +50,7 @@ feature -- Access
 	index: INTEGER
 			-- Index in `rule'
 
-	symbol: PR_SYMBOL is
+	symbol: PR_SYMBOL
 			-- Symbol at current position
 		require
 			not_after: not after
@@ -60,7 +60,7 @@ feature -- Access
 			symbol_not_void: Result /= Void
 		end
 
-	next: like Current is
+	next: like Current
 			-- Next position in `rule'
 		require
 			not_after: not after
@@ -72,7 +72,7 @@ feature -- Access
 			next_position: Result.index = index + 1
 		end
 
-	error_action: PR_ERROR_ACTION is
+	error_action: PR_ERROR_ACTION
 			-- Action to be executed when a syntax error
 			-- occurs at current position; Void is none
 		do
@@ -81,7 +81,7 @@ feature -- Access
 			end
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash value
 		do
 			Result := index * rule.id
@@ -89,14 +89,14 @@ feature -- Access
 
 feature -- Status report
 
-	before: BOOLEAN is
+	before: BOOLEAN
 			-- Is current position before the first
 			-- symbol of the right-hand-side of `rule'?
 		do
 			Result := index = 1
 		end
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Is current position after the last symbol
 			-- of the right-hand-side of `rule'?
 		do
@@ -105,7 +105,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current position considered
 			-- less than `other'?
 		do
@@ -118,10 +118,10 @@ feature -- Comparison
 			rule_comparison: Result implies (rule <= other.rule)
 		end
 
-	same_position (other: like Current): BOOLEAN is
+	same_position (other: like Current): BOOLEAN
 			-- Are current position and `other' considered the same?
 			-- (Do not redefine `is_equal' here because it is
-			-- incompatible with the semantic inherited from 
+			-- incompatible with the semantic inherited from
 			-- COMPARABLE.)
 		require
 			other_not_void: other /= Void
@@ -134,7 +134,7 @@ feature -- Comparison
 
 feature -- Output
 
-	print_position (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_position (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print textual representation of
 			-- current position to `a_file'.
 		require

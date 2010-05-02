@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT) is
+	make (a_project: GEANT_PROJECT)
 			-- Initialize command.
 		do
 			Precursor (a_project)
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- Can command be executed on sourcefile `resource_name'?
 		local
 			a_is_valid: DS_CELL [BOOLEAN]
@@ -81,7 +81,7 @@ feature -- Access
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute command.
 		local
 			a_exists: BOOLEAN
@@ -102,7 +102,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	is_resource_existing (a_resource_name: STRING): BOOLEAN is
+	is_resource_existing (a_resource_name: STRING): BOOLEAN
 			-- Is resource named `a_resource_name' existing?
 		require
 			a_resource_name_not_void: a_resource_name /= Void

@@ -14,7 +14,7 @@ deferred class XM_XPATH_VARIABLE_DECLARATION
 
 feature -- Access
 
-	variable_name: STRING is
+	variable_name: STRING
 			-- Name of variable;
 			-- For use in diagnostics - lexically, a QName
 		deferred
@@ -22,14 +22,14 @@ feature -- Access
 			name_not_void: Result /= Void
 		end
 
-	variable_fingerprint: INTEGER is
+	variable_fingerprint: INTEGER
 			-- Fingerprint of variable name from name pool
 		deferred
 		end
 
 feature -- Element change
 
-	register_reference (a_reference: XM_XPATH_VARIABLE_REFERENCE) is
+	register_reference (a_reference: XM_XPATH_VARIABLE_REFERENCE)
 			-- Register `ref' as a reference to this variable for fix-up.
 			-- This routine is called by the XPath parser when
 			-- each reference to the variable is enountered.
@@ -42,4 +42,4 @@ feature -- Element change
 		end
 
 end
-	
+

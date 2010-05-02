@@ -25,7 +25,7 @@ create
 
 feature -- Access
 
-	cluster (i: INTEGER): ET_XACE_CLUSTER is
+	cluster (i: INTEGER): ET_XACE_CLUSTER
 			-- `i'-th cluster
 		do
 			Result := clusters.item (i)
@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_library_prefix (a_prefix: STRING) is
+	set_library_prefix (a_prefix: STRING)
 			-- Set the library prefix of current clusters, and
 			-- recursively in the subclusters, to `a_prefix'.
 		require
@@ -48,7 +48,7 @@ feature -- Setting
 			end
 		end
 
-	set_mounted (b: BOOLEAN) is
+	set_mounted (b: BOOLEAN)
 			-- Set `is_mounted' in current clusters, and
 			-- recursively in the subclusters, to `b'.
 		local
@@ -63,7 +63,7 @@ feature -- Setting
 
 feature -- Basic operations
 
-	mount_libraries (a_clusters: ET_XACE_CLUSTERS; a_prefix: STRING) is
+	mount_libraries (a_clusters: ET_XACE_CLUSTERS; a_prefix: STRING)
 			-- Add current clusters to `a_clusters'. Mark these clusters as
 			-- mounted and recursively set their library prefix to `a_prefix'.
 		require
@@ -83,7 +83,7 @@ feature -- Basic operations
 			end
 		end
 
-	merge_libraries (a_libraries: ET_XACE_MOUNTED_LIBRARIES; an_error_handler: ET_XACE_ERROR_HANDLER) is
+	merge_libraries (a_libraries: ET_XACE_MOUNTED_LIBRARIES; an_error_handler: ET_XACE_ERROR_HANDLER)
 			-- Add recursively the libraries of current clusters to `a_libraries'.
 			-- Report any error (e.g. incompatible prefixes) in `an_error_handler'.
 		require
@@ -99,7 +99,7 @@ feature -- Basic operations
 			end
 		end
 
-	merge_externals (an_externals: ET_XACE_EXTERNALS) is
+	merge_externals (an_externals: ET_XACE_EXTERNALS)
 			-- Merge clusters' externals and those
 			-- of subclusters to `an_externals'.
 		require
@@ -114,7 +114,7 @@ feature -- Basic operations
 			end
 		end
 
-	merge_exported_features (an_export: DS_LIST [ET_XACE_EXPORTED_FEATURE]) is
+	merge_exported_features (an_export: DS_LIST [ET_XACE_EXPORTED_FEATURE])
 			-- Merge current clusters' exported features and those
 			-- of subclusters to `an_export'.
 		require
@@ -132,7 +132,7 @@ feature -- Basic operations
 			no_void_export: not an_export.has_void
 		end
 
-	merge_components (a_components: DS_LIST [ET_XACE_COMPONENT]) is
+	merge_components (a_components: DS_LIST [ET_XACE_COMPONENT])
 			-- Merge current clusters' components and those
 			-- of subclusters to `a_components'.
 		require
@@ -150,7 +150,7 @@ feature -- Basic operations
 			no_void_component: not a_components.has_void
 		end
 
-	merge_assemblies (an_assemblies: DS_LIST [ET_XACE_ASSEMBLY]) is
+	merge_assemblies (an_assemblies: DS_LIST [ET_XACE_ASSEMBLY])
 			-- Merge current clusters' assemblies and those
 			-- of subclusters to `an_assemblies'.
 		require
@@ -168,7 +168,7 @@ feature -- Basic operations
 			no_void_assembly: not an_assemblies.has_void
 		end
 
-	merge_override_clusters (an_override_clusters: DS_LIST [ET_XACE_CLUSTER]) is
+	merge_override_clusters (an_override_clusters: DS_LIST [ET_XACE_CLUSTER])
 			-- Add current clusters and any of their subclusters to
 			-- `an_override_clusters' if they are top level override clusters.
 		require
@@ -186,7 +186,7 @@ feature -- Basic operations
 			no_void_override_cluster: not an_override_clusters.has_void
 		end
 
-	merge_ecf_clusters (an_ecf_clusters: DS_LIST [ET_XACE_CLUSTER]) is
+	merge_ecf_clusters (an_ecf_clusters: DS_LIST [ET_XACE_CLUSTER])
 			-- Add current clusters and any of their subclusters to
 			-- `an_ecf_clusters' if they are the root of a library
 			-- that is otherwise described by the ECF file.

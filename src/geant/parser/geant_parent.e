@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT) is
+	make (a_project: GEANT_PROJECT)
 			-- Create a new parent.
 		require
 			project_not_void: a_project /= Void
@@ -78,7 +78,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- Can element be executed?
 		do
 			Result := parent_project /= Void
@@ -86,7 +86,7 @@ feature -- Status report
 			parent_project_not_void: Result implies parent_project /= Void
 		end
 
-	has_rename: BOOLEAN is
+	has_rename: BOOLEAN
 			-- Does parent clause specify at least one 'rename' clause?
 		do
 			Result := renames.count > 0
@@ -94,7 +94,7 @@ feature -- Status report
 			definition: Result implies renames.count > 0
 		end
 
-	has_redefine: BOOLEAN is
+	has_redefine: BOOLEAN
 			-- Does parent clause specify at least one 'redefine' clause?
 		do
 			Result := redefines.count > 0
@@ -102,7 +102,7 @@ feature -- Status report
 			definition: Result implies redefines.count > 0
 		end
 
-	has_select: BOOLEAN is
+	has_select: BOOLEAN
 			-- Does parent clause specify at least one 'select' clause?
 		do
 			Result := selects.count > 0
@@ -112,7 +112,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_parent_project (a_parent_project: like parent_project) is
+	set_parent_project (a_parent_project: like parent_project)
 			-- Set `parent_project' to `a_parent_project'.
 		require
 			a_parent_project_not_void: a_parent_project /= Void
@@ -124,7 +124,7 @@ feature -- Setting
 
 feature -- Processing
 
-	prepare_project is
+	prepare_project
 			-- Prepare current parent for inheritance into `project'.
 		require
 			parent_project_not_void: parent_project /= Void
@@ -145,7 +145,7 @@ feature -- Processing
 
 feature {NONE} -- Processing
 
-	apply_renames is
+	apply_renames
 			-- Apply rename clauses.
 		require
 			parent_project_not_void: parent_project /= Void
@@ -181,7 +181,7 @@ feature {NONE} -- Processing
 			end
 		end
 
-	apply_redefines is
+	apply_redefines
 			-- Apply redefine clauses to `project'.
 		require
 			parent_project_not_void: parent_project /= Void
@@ -220,7 +220,7 @@ feature {NONE} -- Processing
 			end
 		end
 
-	apply_unchangeds is
+	apply_unchangeds
 			-- Temporarily store not redeclared targets.
 		local
 			a_target_cursor: DS_HASH_TABLE_CURSOR [GEANT_TARGET, STRING]
@@ -241,7 +241,7 @@ feature {NONE} -- Processing
 			end
 		end
 
-	apply_undeclared_redefines is
+	apply_undeclared_redefines
 			-- Move targets from `unchanged_targets' to redefined
 			-- targets having a name equal to a target in `project.targets'
 			-- if old inheritance form has been used for `project'
@@ -268,7 +268,7 @@ feature {NONE} -- Processing
 			end
 		end
 
-	apply_selects is
+	apply_selects
 			-- Apply select clauses to `project'.
 		local
 			a_select_cursor: DS_LINEAR_CURSOR [GEANT_SELECT]

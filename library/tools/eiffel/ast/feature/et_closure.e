@@ -18,19 +18,19 @@ inherit
 
 feature -- Access
 
-	type: ET_TYPE is
+	type: ET_TYPE
 			-- Return type;
 			-- Void for procedures
 		do
 		end
 
-	arguments: ET_FORMAL_ARGUMENT_LIST is
+	arguments: ET_FORMAL_ARGUMENT_LIST
 			-- Formal arguments;
 			-- Void if no arguments
 		do
 		end
 
-	locals: ET_LOCAL_VARIABLE_LIST is
+	locals: ET_LOCAL_VARIABLE_LIST
 			-- Local variables;
 			-- Void if no local variables
 		do
@@ -40,7 +40,7 @@ feature -- Access
 			-- Object-tests declared in current closure;
 			-- Void if none
 
-	implementation_closure: ET_CLOSURE is
+	implementation_closure: ET_CLOSURE
 			-- Current closure viewed from the class where it has been implemented
 			--
 			-- Useful for interpreting feature calls and type anchors (that might
@@ -53,7 +53,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_object_tests (a_object_tests: like object_tests) is
+	set_object_tests (a_object_tests: like object_tests)
 			-- Set `object_tests' to `a_object_tests'.
 		do
 			object_tests := a_object_tests

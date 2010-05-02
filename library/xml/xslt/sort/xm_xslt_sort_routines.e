@@ -21,11 +21,11 @@ inherit
 
 	XM_XPATH_STANDARD_NAMESPACES
 		export {NONE} all end
-	
+
 feature -- Optimization
 
 	check_sort_key (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_key: XM_XSLT_SORT_KEY_DEFINITION;
-		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Check `a_key' for more than one item.
 			-- TODO: also perform early evaluation of comparators.
 		require
@@ -59,7 +59,7 @@ feature -- Optimization
 
 feature -- Setting
 
-		set_replacement (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_expression: XM_XPATH_EXPRESSION) is
+		set_replacement (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_expression: XM_XPATH_EXPRESSION)
 			-- Set replacement for `Current'.
 		require
 			a_replacement_not_void: a_replacement /= Void

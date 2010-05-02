@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER) is
+	make (filename: STRING; line: INTEGER)
 			-- Create a new error reporting the presence
 			-- of a bad character inside {}'s.
 		require
@@ -35,10 +35,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: bad character inside {}'s"
+	default_template: STRING = "%"$1%", line $2: bad character inside {}'s"
 			-- Default template used to built the error message
 
-	code: STRING is "LX0005"
+	code: STRING = "LX0005"
 			-- Error code
 
 invariant

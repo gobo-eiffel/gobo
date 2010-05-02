@@ -35,7 +35,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_http_method (a_method: like http_method) is
+	set_http_method (a_method: like http_method)
 			-- Set `http_method' to `a_method'.
 		require
 			a_method_not_void: a_method /= Void
@@ -45,7 +45,7 @@ feature -- Setting
 			http_method_set: http_method = a_method
 		end
 
-	set_security_manager (a_security_manager: like security_manager) is
+	set_security_manager (a_security_manager: like security_manager)
 			-- Set `security_manager'.
 		require
 			security_manager_not_void: a_security_manager /= Void
@@ -57,7 +57,7 @@ feature -- Setting
 
 feature -- Action
 
-	resolve (a_uri: UT_URI) is
+	resolve (a_uri: UT_URI)
 			-- Resolve `a_uri'.
 		require
 			uri_is_absolute: a_uri /= Void and then a_uri.is_absolute
@@ -69,7 +69,7 @@ feature -- Action
 				and then output_destinations.item (a_uri.full_reference) = last_result
 		end
 
-	close (a_result: XM_XSLT_TRANSFORMATION_RESULT; some_properties: XM_XSLT_OUTPUT_PROPERTIES) is
+	close (a_result: XM_XSLT_TRANSFORMATION_RESULT; some_properties: XM_XSLT_OUTPUT_PROPERTIES)
 			-- Close output destination.
 		require
 			transformation_result_not_void: a_result /= Void
@@ -79,7 +79,7 @@ feature -- Action
 
 feature -- Result
 
-	last_result: XM_XSLT_TRANSFORMATION_RESULT is
+	last_result: XM_XSLT_TRANSFORMATION_RESULT
 			-- Result object from last call to `resolve'
 		deferred
 		end
@@ -90,4 +90,4 @@ invariant
 	output_destinations_not_void: output_destinations /= Void
 
 end
-	
+

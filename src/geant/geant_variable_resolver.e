@@ -18,10 +18,10 @@ inherit
 
 feature -- Status report
 
-	has (k: STRING): BOOLEAN is
+	has (k: STRING): BOOLEAN
 			-- Is there an item associated with `k'?
 		require
-			k_not_void: k /= Void 
+			k_not_void: k /= Void
 			k_not_empty: not k.is_empty
 		deferred
 		end

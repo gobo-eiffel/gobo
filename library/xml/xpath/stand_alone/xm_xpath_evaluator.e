@@ -39,7 +39,7 @@ create
 
 feature {NONE} -- Initializtion
 
-	make (digits: INTEGER; on_or_off: BOOLEAN) is
+	make (digits: INTEGER; on_or_off: BOOLEAN)
 			-- Set precision for decimal arithmetic, and line numbering status.
 		require
 			sufficient_precision: digits >= 18
@@ -50,7 +50,7 @@ feature {NONE} -- Initializtion
 			precision_set: shared_decimal_context.digits = digits
 			line_numbering_set: is_line_numbering = on_or_off
 		end
-	
+
 feature -- Access
 
 	static_context: XM_XPATH_STAND_ALONE_CONTEXT
@@ -79,7 +79,7 @@ feature -- Status report
 	was_build_error: BOOLEAN
 			-- Did an error occur building the static context?
 
-	error_message: STRING is
+	error_message: STRING
 			-- Error message from build process
 		require
 			build_error: was_build_error
@@ -92,7 +92,7 @@ feature -- Status report
 	is_error: BOOLEAN
 			-- Did last call to `evaluate' end in error?
 
-	error_value: XM_XPATH_ERROR_VALUE is
+	error_value: XM_XPATH_ERROR_VALUE
 			-- Error result from last call to `evaluate'
 		require
 			evaluation_error: is_error
@@ -103,8 +103,8 @@ feature -- Status report
 		end
 
 feature -- Element change
-	
-	build_static_context (a_source_uri: STRING; xpath_one_compatibility, warnings, use_tiny_tree_model, compact_tree: BOOLEAN) is
+
+	build_static_context (a_source_uri: STRING; xpath_one_compatibility, warnings, use_tiny_tree_model, compact_tree: BOOLEAN)
 			-- Create a new static_context by parsing `a_source_uri'
 		require
 			valid_uri: a_source_uri /= Void -- and then ... for now - is a relative file uri - TODO
@@ -155,7 +155,7 @@ feature -- Element change
 			source_uri_set: source_uri /= Void
 		end
 
-	set_static_context (a_static_context: XM_XPATH_STAND_ALONE_CONTEXT) is
+	set_static_context (a_static_context: XM_XPATH_STAND_ALONE_CONTEXT)
 			-- Set the static context for compiling XPath expressions.
 			-- This provides control over the environment in which the expression is compiled.
 			-- For example it allows namespace prefixes to be declared,
@@ -170,7 +170,7 @@ feature -- Element change
 			static_context_set: static_context = a_static_context
 		end
 
-	set_context_item (an_item: XM_XPATH_ITEM) is
+	set_context_item (an_item: XM_XPATH_ITEM)
 			-- Set the context item.
 		require
 			item_not_void: an_item /= void
@@ -180,7 +180,7 @@ feature -- Element change
 			context_item_set: context_item = an_item
 		end
 
-	set_implicit_timezone (an_implicit_timezone: like implicit_timezone) is
+	set_implicit_timezone (an_implicit_timezone: like implicit_timezone)
 			-- Set `implicit_timezone'.
 		require
 			implicit_timezone_not_void: an_implicit_timezone /= Void
@@ -190,7 +190,7 @@ feature -- Element change
 			set: implicit_timezone = an_implicit_timezone
 		end
 
-	reset_errors is
+	reset_errors
 			-- Reset to no errors.
 		do
 			internal_error_message := Void
@@ -201,7 +201,7 @@ feature -- Element change
 
 feature -- Evaluation
 
-	evaluate (a_expression_text: STRING) is
+	evaluate (a_expression_text: STRING)
 			-- Evaluate `a_expression_text' against `context_item'.
 		require
 			expression_not_void: a_expression_text /= Void
@@ -259,7 +259,7 @@ feature {NONE} -- Implementation
 	media_type: UT_MEDIA_TYPE
 			-- Media type of `source_uri'
 
-	make_parser (use_tiny_tree_model: BOOLEAN; a_base_uri: STRING; a_document_uri: UT_URI) is
+	make_parser (use_tiny_tree_model: BOOLEAN; a_base_uri: STRING; a_document_uri: UT_URI)
 		local
 			entity_resolver: XM_URI_EXTERNAL_RESOLVER
 		do
@@ -293,7 +293,7 @@ feature {NONE} -- Implementation
 	tree_pipe: XM_XPATH_TREE_CALLBACKS_PIPE
 		-- Tree builder
 
-	evaluate_post_analysis (a_expression: XM_XPATH_EXPRESSION; a_slot_manager: XM_XPATH_SLOT_MANAGER) is
+	evaluate_post_analysis (a_expression: XM_XPATH_EXPRESSION; a_slot_manager: XM_XPATH_SLOT_MANAGER)
 			-- perform evaluation on `a_expression'.
 		require
 			a_expression_checked_and_optimized_without_error: a_expression /= Void and then not a_expression.is_error
@@ -313,7 +313,7 @@ feature {NONE} -- Implementation
 			l_context.open_stack_frame (a_slot_manager)
 			a_expression.create_iterator (l_context)
 			l_sequence_iterator := a_expression.last_iterator
-			
+
 			if l_sequence_iterator.is_error then
 				is_error := True
 				internal_error_value := l_sequence_iterator.error_value
@@ -339,7 +339,7 @@ feature {NONE} -- Implementation
 					else
 						evaluated_items.put_last (l_item)
 					end
-					
+
 					l_sequence_iterator.forth
 					if l_sequence_iterator.is_error then
 						is_error := True
@@ -350,9 +350,9 @@ feature {NONE} -- Implementation
 		ensure
 			error_or_item_list: not is_error implies evaluated_items /= Void
 		end
-				
+
 invariant
-	
+
 	build_error_implies_error_message: was_build_error implies error_message /= Void
-				
+
 end

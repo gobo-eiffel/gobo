@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_label: like label; a_colon: like colon; a_type: like type) is
+	make (a_label: like label; a_colon: like colon; a_type: like type)
 			-- Create a new labeled actual parameter.
 		require
 			a_label_not_void: a_label /= Void
@@ -54,7 +54,7 @@ feature -- Access
 	type: ET_CONSTRAINT_TYPE
 			-- Type
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -64,7 +64,7 @@ feature -- Access
 feature -- Conversion
 
 	resolved_syntactical_constraint_with_type (a_type: ET_TYPE;
-		a_parser: ET_EIFFEL_PARSER_SKELETON): ET_LABELED_ACTUAL_PARAMETER is
+		a_parser: ET_EIFFEL_PARSER_SKELETON): ET_LABELED_ACTUAL_PARAMETER
 			-- Version of current actual parameter, where its type has
 			-- been replaced by `a_type'
 		do

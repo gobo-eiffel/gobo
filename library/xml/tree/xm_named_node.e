@@ -17,10 +17,10 @@ inherit
 	XM_ELEMENT_NODE
 
 	KL_IMPORTED_STRING_ROUTINES
-	
+
 feature -- Status report
 
-	has_namespace: BOOLEAN is
+	has_namespace: BOOLEAN
 			-- Has the name of current node been defined with namespace?
 		do
 			Result := (namespace /= Void)
@@ -28,7 +28,7 @@ feature -- Status report
 			definition: Result = (namespace /= Void)
 		end
 
-	has_prefix: BOOLEAN is
+	has_prefix: BOOLEAN
 			-- Has a prefix been used to define the namespace?
 			-- (It could also be that the namespace used was the default namespace)
 		do
@@ -36,8 +36,8 @@ feature -- Status report
 		ensure
 			definition: Result = (ns_prefix /= Void and then ns_prefix.count > 0)
 		end
-		
-	same_namespace (other: XM_NAMED_NODE): BOOLEAN is
+
+	same_namespace (other: XM_NAMED_NODE): BOOLEAN
 			-- Has current node same namespace as other?
 		require
 			other_not_void: other /= Void
@@ -48,8 +48,8 @@ feature -- Status report
 			equal_namespaces: Result implies (((not has_namespace) and (not other.has_namespace))
 				or else namespace.is_equal (other.namespace))
 		end
-	
-	same_name (other: XM_NAMED_NODE): BOOLEAN is
+
+	same_name (other: XM_NAMED_NODE): BOOLEAN
 			-- Has current node same name and namespace as other?
 		require
 			other_not_void: other /= Void
@@ -60,7 +60,7 @@ feature -- Status report
 			definition: Result = (same_namespace (other) and same_name (other))
 		end
 
-	has_qualified_name (a_uri: STRING; a_name: STRING): BOOLEAN is
+	has_qualified_name (a_uri: STRING; a_name: STRING): BOOLEAN
 			-- Does this node match the qualified name?
 		require
 			a_uri_not_void: a_uri /= Void
@@ -72,7 +72,7 @@ feature -- Status report
 			definition: Result = (STRING_.same_string (a_uri, namespace.uri)
 					and STRING_.same_string (a_name, name))
 		end
-	
+
 feature -- Access
 
 	name: STRING
@@ -80,10 +80,10 @@ feature -- Access
 
 	namespace: XM_NAMESPACE
 			-- Namespace of the name of current node
-	
+
 feature -- Access
 
-	ns_prefix: STRING is
+	ns_prefix: STRING
 			-- Namespace prefix used to declare the namespace of the
 			-- name of current node
 		require
@@ -93,8 +93,8 @@ feature -- Access
 		ensure
 			definition: Result = namespace.ns_prefix
 		end
-		
-	ns_uri: STRING is
+
+	ns_uri: STRING
 			-- URI of namespace.
 		require
 			has_ns: has_namespace
@@ -103,10 +103,10 @@ feature -- Access
 		ensure
 			definition: Result = namespace.uri
 		end
-		
+
 feature -- Element change
 
-	set_name (a_name: like name) is
+	set_name (a_name: like name)
 			-- Set `name' to `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -117,7 +117,7 @@ feature -- Element change
 			name_set: name = a_name
 		end
 
-	set_namespace (a_namespace: like namespace) is
+	set_namespace (a_namespace: like namespace)
 			-- Set `namespace' to `a_namespace'.
 		require
 			a_namespace_not_void: a_namespace /= Void

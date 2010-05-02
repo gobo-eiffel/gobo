@@ -38,7 +38,7 @@ create
 
 feature -- Formatting
 
-	double_format_to (a_parameter: DOUBLE; a_stream: KI_CHARACTER_OUTPUT_STREAM) is
+	double_format_to (a_parameter: DOUBLE; a_stream: KI_CHARACTER_OUTPUT_STREAM)
 			-- Format `a_parameter' to `a_stream'.
 		local
 			fa: DOUBLE

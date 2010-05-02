@@ -30,14 +30,14 @@ create
 
 feature -- Document
 
-	on_start is
+	on_start
 			-- Initialize.
 		do
 			create actual.make
 			next.on_start
 		end
 
-	on_start_tag (a_ns, a_pre, a_local: STRING) is
+	on_start_tag (a_ns, a_pre, a_local: STRING)
 			-- Start of start tag.
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		do
@@ -45,7 +45,7 @@ feature -- Document
 			next.on_start_tag (a_ns, a_pre, a_local)
 		end
 
-	on_attribute (a_ns, a_pre, a_local: STRING; a_value: STRING) is
+	on_attribute (a_ns, a_pre, a_local: STRING; a_value: STRING)
 			-- Start of attribute.
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		do
@@ -60,7 +60,7 @@ feature {NONE} -- Implemenation
 
 feature -- Element change
 
-	set (a: like expected) is
+	set (a: like expected)
 			-- Set expected URI list.
 		do
 			expected := a
@@ -71,7 +71,7 @@ feature -- Element change
 
 feature -- Status
 
-	has_failed: BOOLEAN is
+	has_failed: BOOLEAN
 			-- Is there a failed index?
 		local
 			i: INTEGER

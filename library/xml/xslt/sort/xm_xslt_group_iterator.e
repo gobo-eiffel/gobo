@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	current_grouping_key: XM_XPATH_ATOMIC_VALUE is
+	current_grouping_key: XM_XPATH_ATOMIC_VALUE
 			-- Grouping key for current group;
 			-- (or `Void' for group-starting/ending-with)
 		deferred
@@ -28,7 +28,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_group_node_iterator: BOOLEAN is
+	is_group_node_iterator: BOOLEAN
 			-- Is `Current' a group-node-iterator?
 		do
 			Result := False
@@ -36,14 +36,14 @@ feature -- Status report
 
 feature -- Evaluation
 
-	current_group_iterator: XM_XPATH_SEQUENCE_ITERATOR [G] is
+	current_group_iterator: XM_XPATH_SEQUENCE_ITERATOR [G]
 			-- Iterator over the members of the current group, in population order.
 		deferred
 		end
 
 feature -- Conversion
 
-	as_group_node_iterator: XM_XSLT_GROUP_NODE_ITERATOR is
+	as_group_node_iterator: XM_XSLT_GROUP_NODE_ITERATOR
 			-- `Current' seen as a group-node-iterator.
 		require
 			group_node_iterator: is_group_node_iterator
@@ -53,4 +53,4 @@ feature -- Conversion
 		end
 
 end
-	
+

@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_kind: INTEGER; a_container: STRING; an_operand: INTEGER; a_namespace_uri, an_error_code: STRING) is
+	make (a_kind: INTEGER; a_container: STRING; an_operand: INTEGER; a_namespace_uri, an_error_code: STRING)
 		require
 			strictly_positive_operand: an_operand > 0
 			container_not_void: a_container /= Void and then a_container.count > 0
@@ -45,10 +45,10 @@ feature {NONE} -- Initialization
 			namespace_uri_set: namespace_uri = a_namespace_uri
 			error_code_set: error_code = an_error_code
 		end
-	
+
 feature  -- Access
 
-	message: STRING is
+	message: STRING
 			-- Description of `operand' and it's role within `container'
 		local
 			a_string, instruction_name, attribute_name: STRING
@@ -104,7 +104,7 @@ feature  -- Access
 
 feature {NONE} -- Implementation
 
-	ordinal (an_integer: INTEGER): STRING is
+	ordinal (an_integer: INTEGER): STRING
 			-- Text of `an_integer' expressed as an ordinal number
 		require
 			integer_in_range: an_integer > 0
@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 				--  but their appearance is going to be extremely rare,
 				--  even in the concat() function.
 				-- And then, it is probably computer-generated code.
-				
+
 				Result := STRING_.appended_string (an_integer.out, "th")
 			end
 		ensure

@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; e: like expression) is
+	make (a_name: like name; e: like expression)
 			-- Create a new prefix feature call.
 		require
 			a_name_not_void: a_name /= Void
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset expression as it was just after it was last parsed.
 		do
 			name.reset
@@ -62,20 +62,20 @@ feature -- Access
 	name: ET_OPERATOR
 			-- Feature name
 
-	arguments: ET_ACTUAL_ARGUMENTS is
+	arguments: ET_ACTUAL_ARGUMENTS
 			-- Arguments
 		do
 		ensure then
 			no_arguments: Result = Void
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := name.first_leaf
 		end
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -88,12 +88,12 @@ feature -- Status report
 			-- Is current prefix expression a boolean operator
 			-- on a boolean expression?
 
-	is_prefix_expression: BOOLEAN is True
+	is_prefix_expression: BOOLEAN = True
 			-- Is current expression a prefix expression?
 
 feature -- Status setting
 
-	set_boolean_operator (b: BOOLEAN) is
+	set_boolean_operator (b: BOOLEAN)
 			-- Set `is_boolean_operator' to `b'.
 		do
 			is_boolean_operator := b
@@ -103,7 +103,7 @@ feature -- Status setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_prefix_expression (Current)

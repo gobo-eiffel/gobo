@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 	make (a_population: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM];
 			a_key: XM_XPATH_EXPRESSION;
 			a_context: XM_XSLT_EVALUATION_CONTEXT;
-			a_collator: ST_COLLATOR) is
+			a_collator: ST_COLLATOR)
 			-- Establish invariant.
 		require
 			population_before: a_population /= Void and then not a_population.is_error and then a_population.before
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	current_grouping_key: XM_XPATH_ATOMIC_VALUE is
+	current_grouping_key: XM_XPATH_ATOMIC_VALUE
 			-- Grouping key for current group;
 		do
 			if after then
@@ -62,7 +62,7 @@ feature -- Access
 			end
 		end
 
-	item: XM_XPATH_ITEM is
+	item: XM_XPATH_ITEM
 			-- Initial item of current group
 		do
 			Result := current_members.first
@@ -72,10 +72,10 @@ feature -- Status report
 
 	after: BOOLEAN
 			-- Are there any more items in the sequence?
-	
+
 feature -- Evaluation
 
-	current_group_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	current_group_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			-- Iterator over the members of the current group, in population order.
 		do
 			if current_members /= Void then
@@ -89,7 +89,7 @@ feature -- Evaluation
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move to next position
 		do
 			index := index + 1
@@ -106,15 +106,15 @@ feature -- Cursor movement
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 			create Result.make (population.another, key_expression, base_context, stored_collator)
 		end
-		
+
 feature {NONE} -- Implementation
 
-	Estimated_group_size: INTEGER is 20
+	Estimated_group_size: INTEGER = 20
 			-- Initial size for `current_members'
 
 	population: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 	current_key, next_key: like current_grouping_key
 			-- Current and next grouping key to consider
 
-	advance is
+	advance
 			-- Advance iterator to next item.
 		local
 			l_finished: BOOLEAN
@@ -218,7 +218,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	
+
 invariant
 
 	population_not_void: population /= Void
@@ -228,4 +228,4 @@ invariant
 	comparer_not_void: comparer /= Void
 
 end
-	
+

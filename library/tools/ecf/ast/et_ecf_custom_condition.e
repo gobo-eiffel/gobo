@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name, a_value: STRING) is
+	make (a_name, a_value: STRING)
 			-- Create a new custom condition where variable `a_name' should be equal to `a_value'.
 		require
 			a_name_not_void: a_name /= Void
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			not_excluded: not is_excluded
 		end
 
-	make_excluded (a_name, a_value: STRING) is
+	make_excluded (a_name, a_value: STRING)
 			-- Create a new custom condition where variable `a_name' should not be equal to `a_value'.
 		require
 			a_name_not_void: a_name /= Void
@@ -70,7 +70,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_enabled (a_state: ET_ECF_STATE): BOOLEAN is
+	is_enabled (a_state: ET_ECF_STATE): BOOLEAN
 			-- Does `a_state' fulfill current condition?
 		local
 			l_variable: STRING

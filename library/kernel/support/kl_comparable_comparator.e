@@ -22,14 +22,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new comparator.
 		do
 		end
 
 feature -- Status report
 
-	less_than (u, v: G): BOOLEAN is
+	less_than (u, v: G): BOOLEAN
 			-- Is `u' considered less than `v'?
 		do
 			Result := (u < v)

@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset features at index 1 to `declared_count' as they were just after they were last parsed.
 		local
 			i, nb: INTEGER
@@ -36,7 +36,7 @@ feature -- Initialization
 			end
 		end
 
-	reset_after_features_flattened is
+	reset_after_features_flattened
 			-- Reset features at index 1 to `declared_count' as they were just after they were last flattened.
 		local
 			i, nb: INTEGER
@@ -52,7 +52,7 @@ feature -- Initialization
 
 feature -- Access
 
-	named_feature (a_name: ET_CALL_NAME): like item is
+	named_feature (a_name: ET_CALL_NAME): like item
 			-- Feature named `a_name';
 			-- Void if no such feature
 		require
@@ -102,7 +102,7 @@ feature -- Access
 			end
 		end
 
-	named_declared_feature (a_name: ET_CALL_NAME): like item is
+	named_declared_feature (a_name: ET_CALL_NAME): like item
 			-- Feature named `a_name' declared in the underlying class;
 			-- Void if no such feature
 		require
@@ -150,7 +150,7 @@ feature -- Access
 			end
 		end
 
-	seeded_feature (a_seed: INTEGER): like item is
+	seeded_feature (a_seed: INTEGER): like item
 			-- Feature with seed `a_seed';
 			-- Void if no such feature
 		local
@@ -225,7 +225,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_declared_feature (a_feature: ET_FEATURE): BOOLEAN is
+	has_declared_feature (a_feature: ET_FEATURE): BOOLEAN
 			-- Is `a_feature' part of the declared features?
 		require
 			a_feature_not_void: a_feature /= Void
@@ -244,7 +244,7 @@ feature -- Status report
 			end
 		end
 
-	has_inherited_feature (a_feature: ET_FEATURE): BOOLEAN is
+	has_inherited_feature (a_feature: ET_FEATURE): BOOLEAN
 			-- Is `a_feature' part of the (non-redeclared) inherited features?
 		require
 			a_feature_not_void: a_feature /= Void
@@ -274,7 +274,7 @@ feature -- Measurement
 
 feature -- Setting
 
-	set_declared_count (a_count: INTEGER) is
+	set_declared_count (a_count: INTEGER)
 			-- Set `declared_count' to `a_count'.
 		require
 			a_count_large_enough: a_count >= 0
@@ -287,7 +287,7 @@ feature -- Setting
 
 feature -- Basic operations
 
-	add_overloaded_features (a_name: ET_CALL_NAME; a_list: DS_ARRAYED_LIST [like item]) is
+	add_overloaded_features (a_name: ET_CALL_NAME; a_list: DS_ARRAYED_LIST [like item])
 			-- Add to `a_list' features whose name or overloaded name is `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -340,7 +340,7 @@ feature -- Basic operations
 
 feature -- Iteration
 
-	do_declared (an_action: PROCEDURE [ANY, TUPLE [like item]]) is
+	do_declared (an_action: PROCEDURE [ANY, TUPLE [like item]])
 			-- Apply `an_action' to every feature declared in the
 			-- corresponding class, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
@@ -360,7 +360,7 @@ feature -- Iteration
 			end
 		end
 
-	do_declared_if (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN]) is
+	do_declared_if (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN])
 			-- Apply `an_action' to every feature declared in the corresponding
 			-- class that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
@@ -385,7 +385,7 @@ feature -- Iteration
 			end
 		end
 
-	do_inherited (an_action: PROCEDURE [ANY, TUPLE [like item]]) is
+	do_inherited (an_action: PROCEDURE [ANY, TUPLE [like item]])
 			-- Apply `an_action' to every feature inherited without being explicitly
 			-- redeclared in the corresponding class, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
@@ -405,7 +405,7 @@ feature -- Iteration
 			end
 		end
 
-	do_inherited_if (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN]) is
+	do_inherited_if (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN])
 			-- Apply `an_action' to every feature inherited without being explicitly
 			-- redeclared in the corresponding class that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
@@ -430,7 +430,7 @@ feature -- Iteration
 			end
 		end
 
-	features_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]) is
+	features_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]])
 			-- Apply `an_action' to every feature, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 		require
@@ -448,7 +448,7 @@ feature -- Iteration
 			end
 		end
 
-	features_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]) is
+	features_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN])
 			-- Apply `an_action' to every feature that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
 		require
@@ -471,7 +471,7 @@ feature -- Iteration
 			end
 		end
 
-	features_do_declared (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]) is
+	features_do_declared (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]])
 			-- Apply `an_action' to every feature declared in the
 			-- corresponding class, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
@@ -491,7 +491,7 @@ feature -- Iteration
 			end
 		end
 
-	features_do_declared_if (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]) is
+	features_do_declared_if (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN])
 			-- Apply `an_action' to every feature declared in the corresponding
 			-- class that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
@@ -516,7 +516,7 @@ feature -- Iteration
 			end
 		end
 
-	features_do_inherited (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]) is
+	features_do_inherited (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]])
 			-- Apply `an_action' to every feature inherited without being explicitly
 			-- redeclared in the corresponding class, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
@@ -536,7 +536,7 @@ feature -- Iteration
 			end
 		end
 
-	features_do_inherited_if (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]) is
+	features_do_inherited_if (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN])
 			-- Apply `an_action' to every feature inherited without being explicitly
 			-- redeclared in the corresponding class that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
@@ -563,7 +563,7 @@ feature -- Iteration
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_FEATURE] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_FEATURE]
 			-- Fixed array routines
 		once
 			create Result

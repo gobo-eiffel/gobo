@@ -14,7 +14,7 @@ deferred class XM_DTD_CALLBACKS_SOURCE
 
 feature
 
-	set_dtd_callbacks (a_callback: XM_DTD_CALLBACKS) is
+	set_dtd_callbacks (a_callback: XM_DTD_CALLBACKS)
 			-- Client will receive callbacks to.
 		require
 			a_callback_not_void: a_callback /= Void

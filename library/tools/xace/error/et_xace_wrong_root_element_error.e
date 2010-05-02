@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_element_name: STRING; a_position: XM_POSITION) is
+	make (an_element_name: STRING; a_position: XM_POSITION)
 			-- Create a new error reporting that Xace file does not
 			-- contain the expected root element `an_element_name'.
 		require
@@ -37,10 +37,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "Xace document must have a '$1' root-element $2"
+	default_template: STRING = "Xace document must have a '$1' root-element $2"
 			-- Default template used to built the error message
 
-	code: STRING is "XA0001"
+	code: STRING = "XA0001"
 			-- Error code
 
 end

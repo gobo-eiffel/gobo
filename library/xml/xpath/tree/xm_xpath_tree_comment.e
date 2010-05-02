@@ -11,9 +11,9 @@ note
 	revision: "$Revision$"
 
 class XM_XPATH_TREE_COMMENT
-	
+
 inherit
-	
+
 	XM_XPATH_COMMENT
 		undefine
 			document_element, next_sibling, previous_sibling, local_part, is_tree_node, as_tree_node
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_document: XM_XPATH_TREE_DOCUMENT; a_string_value: STRING) is
+	make (a_document: XM_XPATH_TREE_DOCUMENT; a_string_value: STRING)
 			-- Create `string_value'.
 		require
 			string_value_not_void: a_string_value /= Void
@@ -49,11 +49,11 @@ feature -- Access
 
 feature -- Duplication
 
-	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
+	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN)
 			-- Copy `Current' to `a_receiver'.
 		do
 			a_receiver.notify_comment (string_value, 0)
 		end
 
 end
-	
+

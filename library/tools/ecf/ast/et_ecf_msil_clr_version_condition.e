@@ -22,7 +22,7 @@ create
 
 feature -- Status report
 
-	is_enabled (a_state: ET_ECF_STATE): BOOLEAN is
+	is_enabled (a_state: ET_ECF_STATE): BOOLEAN
 			-- Does `a_state' fulfill current condition?
 		local
 			l_version: UT_VERSION

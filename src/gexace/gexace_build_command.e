@@ -30,7 +30,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_format (a_format: like format) is
+	set_format (a_format: like format)
 			-- Set `format' to `a_format'.
 		do
 			format := a_format
@@ -38,7 +38,7 @@ feature -- Setting
 			format_set: format = a_format
 		end
 
-	set_output_filename (a_filename: like output_filename) is
+	set_output_filename (a_filename: like output_filename)
 			-- Set `output_filename' to `a_filename'.
 		do
 			output_filename := a_filename

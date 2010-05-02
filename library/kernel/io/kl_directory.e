@@ -49,7 +49,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING) is
+	make (a_name: STRING)
 			-- Create a new directory object.
 			-- (`a_name' should follow the pathname convention
 			-- of the underlying platform. For pathname conversion
@@ -73,7 +73,7 @@ feature -- Access
 			-- (Note: this query returns the new object after
 			-- each call to `read_entry'.)
 
-	filenames: detachable ARRAY [STRING] is
+	filenames: detachable ARRAY [STRING]
 			-- Names of readable files in current directory;
 			-- Void if current directory could not be searched
 		local
@@ -120,7 +120,7 @@ feature -- Access
 			end
 		end
 
-	directory_names: detachable ARRAY [STRING] is
+	directory_names: detachable ARRAY [STRING]
 			-- Names of readable subdirectories in current directory;
 			-- Void if current directory could not be searched
 			-- (Do not include parent and current directory names.)
@@ -175,7 +175,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_open_read: BOOLEAN is
+	is_open_read: BOOLEAN
 			-- Has directory been opened in read mode?
 		do
 			Result := not is_closed
@@ -184,7 +184,7 @@ feature -- Status report
 	end_of_input: BOOLEAN
 			-- Have all entries been read?
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Does directory physically exist on disk?
 		do
 			if string_name.count > 0 then
@@ -192,7 +192,7 @@ feature -- Status report
 			end
 		end
 
-	is_readable: BOOLEAN is
+	is_readable: BOOLEAN
 			-- Can directory be opened in read mode?
 		do
 			if string_name.count > 0 then
@@ -200,7 +200,7 @@ feature -- Status report
 			end
 		end
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Does current directory contain no entry apart from
 			-- the parent and current directory entries?
 			-- Return False if not able to open current directory.
@@ -236,7 +236,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	open_read is
+	open_read
 			-- Try to open directory in read mode. Set `is_open_read'
 			-- to true and is ready to read first entry in directory
 			-- if operation was successful.
@@ -262,7 +262,7 @@ feature -- Basic operations
 			end
 		end
 
-	close is
+	close
 			-- Close directory if it is closable,
 			-- let it open otherwise.
 		local
@@ -281,7 +281,7 @@ feature -- Basic operations
 			end
 		end
 
-	create_directory is
+	create_directory
 			-- Create current directory on disk.
 			-- Do nothing if the directory could not
 			-- be created, if it already existed or if
@@ -304,7 +304,7 @@ feature -- Basic operations
 			end
 		end
 
-	recursive_create_directory is
+	recursive_create_directory
 			-- Create current directory on disk.
 			-- Create its parent directories if they do not exist yet.
 			-- Do nothing if the directory could not be created,
@@ -332,7 +332,7 @@ feature -- Basic operations
 			end
 		end
 
-	delete is
+	delete
 			-- Delete current directory.
 			-- Do nothing if the directory could not
 			-- be deleted, if it did not exist or if
@@ -354,7 +354,7 @@ feature -- Basic operations
 			end
 		end
 
-	recursive_delete is
+	recursive_delete
 			-- Delete current directory, its files
 			-- and its subdirectories recursively.
 			-- Do nothing if the directory could not
@@ -376,7 +376,7 @@ feature -- Basic operations
 			end
 		end
 
-	recursive_copy_directory (new_name: STRING) is
+	recursive_copy_directory (new_name: STRING)
 			-- Copy recursively current directory to `new_name'.
 			-- Do nothing if the directory could not be copied,
 			-- if it did not exist, or if `new_name' already existed.
@@ -433,7 +433,7 @@ feature -- Basic operations
 
 feature -- Iteration
 
-	do_all (an_action: PROCEDURE [ANY, TUPLE [STRING]]) is
+	do_all (an_action: PROCEDURE [ANY, TUPLE [STRING]])
 			-- Apply `an_action' to every entry in the directory.
 			-- Do nothing if current directory could not be searched.
 			-- (Semantics not guaranteed if `an_action' changes the contents of the directory.)
@@ -465,7 +465,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if (an_action: PROCEDURE [ANY, TUPLE [STRING]]; a_test: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]) is
+	do_if (an_action: PROCEDURE [ANY, TUPLE [STRING]]; a_test: FUNCTION [ANY, TUPLE [STRING], BOOLEAN])
 			-- Apply `an_action' to every entry in the directory that satisfies `a_test'.
 			-- Do nothing if current directory could not be searched.
 			-- (Semantics not guaranteed if `an_action' changes the contents of the directory.)
@@ -499,7 +499,7 @@ feature -- Iteration
 			end
 		end
 
-	there_exists (a_test: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]): BOOLEAN is
+	there_exists (a_test: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for at least one entry in the directory?
 			-- False if current directory could not be searched.
 			-- (Semantics not guaranteed if `an_action' changes the contents of the directory.)
@@ -533,7 +533,7 @@ feature -- Iteration
 			end
 		end
 
-	for_all (a_test: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]): BOOLEAN is
+	for_all (a_test: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for all entries in the directory?
 			-- False if current directory could not be searched.
 			-- (Semantics not guaranteed if `an_action' changes the contents of the directory.)
@@ -570,7 +570,7 @@ feature -- Iteration
 
 feature -- Input
 
-	read_entry is
+	read_entry
 			-- Read next entry in directory.
 			-- Make result available in `last_entry'.
 		local
@@ -595,7 +595,7 @@ feature -- Input
 			end
 		end
 
-	unread_entry (an_entry: STRING) is
+	unread_entry (an_entry: STRING)
 			-- Put `an_entry' back in input stream.
 			-- This entry will be read first by the next
 			-- call to a read routine.
@@ -618,7 +618,7 @@ feature {NONE} -- Implementation
 	entry_buffer: detachable KL_LINKABLE [STRING]
 			-- Unread entries
 
-	valid_entry_buffer (a_buffer: like entry_buffer): BOOLEAN is
+	valid_entry_buffer (a_buffer: like entry_buffer): BOOLEAN
 			-- Is `a_buffer' a valid buffer for unread entries?
 		do
 			Result := a_buffer /= Void implies valid_unread_entry (a_buffer.item)
@@ -626,14 +626,14 @@ feature {NONE} -- Implementation
 			definition: Result = (a_buffer /= Void implies valid_unread_entry (a_buffer.item))
 		end
 
-	old_end_of_input: BOOLEAN is
+	old_end_of_input: BOOLEAN
 			-- Have all entries been read
 			-- (do not take `unread_entry' into account)?
 		do
 			Result := (lastentry = Void)
 		end
 
-	tmp_file: KL_TEXT_INPUT_FILE is
+	tmp_file: KL_TEXT_INPUT_FILE
 			-- Temporary file object
 		once
 			create Result.make (dummy_name)
@@ -642,7 +642,7 @@ feature {NONE} -- Implementation
 			file_closed: Result.is_closed
 		end
 
-	tmp_directory: KL_DIRECTORY is
+	tmp_directory: KL_DIRECTORY
 			-- Temporary directory object
 		once
 			create Result.make (dummy_name)
@@ -651,10 +651,10 @@ feature {NONE} -- Implementation
 			directory_closed: Result.is_closed
 		end
 
-	dummy_name: STRING is "dummy"
+	dummy_name: STRING = "dummy"
 			-- Dummy name
 
-	Dummy_entry: STRING is ""
+	Dummy_entry: STRING = ""
 			-- Dummy entry
 
 invariant

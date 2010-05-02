@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Inisitalization
 
-	make (a_string: STRING) is
+	make (a_string: STRING)
 			-- Create a string with copy-on-write semantics.
 		require
 			a_string_not_void: a_string /= Void
@@ -38,7 +38,7 @@ feature -- Access
 	item: STRING
 			-- String
 
-	safe_item: STRING is
+	safe_item: STRING
 			-- Version of `item' that is safe for editing
 		do
 			clone_if_unchanged
@@ -50,7 +50,7 @@ feature -- Access
 
 feature -- Element change
 
-	put (c: CHARACTER; i: INTEGER) is
+	put (c: CHARACTER; i: INTEGER)
 			-- Replace character at index `i' by `c'
 		require
 			valid_index: item.valid_index (i)
@@ -63,7 +63,7 @@ feature -- Element change
 			safe_to_edit: changed
 		end
 
-	append_character (c: CHARACTER) is
+	append_character (c: CHARACTER)
 			-- Append `c' at end.
 		do
 			clone_if_unchanged
@@ -74,7 +74,7 @@ feature -- Element change
 			safe_to_edit: changed
 		end
 
-	append_string (s: STRING) is
+	append_string (s: STRING)
 			-- Append a copy of `s' at end.
 		require
 			s_not_void: s /= Void
@@ -90,7 +90,7 @@ feature -- Element change
 			safe_to_edit: changed
 		end
 
-	fill_with (c: CHARACTER) is
+	fill_with (c: CHARACTER)
 			-- Replace every character with `c'.
 		do
 			clone_if_unchanged
@@ -101,7 +101,7 @@ feature -- Element change
 			safe_to_edit: changed
 		end
 
-	insert_character (c: CHARACTER; i: INTEGER) is
+	insert_character (c: CHARACTER; i: INTEGER)
 			-- Insert `c' at index `i', shifting characters between
 			-- ranks `i' and `count' rightwards.
 		require
@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 	changed: BOOLEAN
 			-- Has `item' been changed since creation of `Current'?
 
-	clone_if_unchanged is
+	clone_if_unchanged
 			-- Clone `item' if unchanged.
 		do
 			if not changed then

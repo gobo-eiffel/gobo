@@ -91,7 +91,7 @@ create
 
 feature -- Element change
 
-	compile (a_regexp: STRING; i: BOOLEAN) is
+	compile (a_regexp: STRING; i: BOOLEAN)
 			-- Compile `a_regexp'. Make the matching engine
 			-- case-insensitive if `i' is set. Set `compiled'
 			-- to True after successful compilation.
@@ -173,7 +173,7 @@ feature -- Element change
 
 feature -- Status report
 
-	matches (a_string: STRING): BOOLEAN is
+	matches (a_string: STRING): BOOLEAN
 			-- Does `a_string' include a token of the language
 			-- described by current regular expression?
 		local
@@ -244,7 +244,7 @@ feature -- Status report
 
 feature -- Matching
 
-	match_substring (a_subject: STRING; a_from, a_to: INTEGER) is
+	match_substring (a_subject: STRING; a_from, a_to: INTEGER)
 			-- Try to match the substring of `a_subject' between
 			-- positions `a_from' and `a_to' with the current pattern.
 			-- Make result available in `has_matched' and the various
@@ -310,7 +310,7 @@ feature -- Matching
 			end
 		end
 
-	match_unbounded_substring (a_subject: STRING; a_from, a_to: INTEGER) is
+	match_unbounded_substring (a_subject: STRING; a_from, a_to: INTEGER)
 			-- Try to match the substring of `a_subject' between
 			-- positions `a_from' and `a_to' with the current pattern.
 			-- Make result available in `has_matched' and the various

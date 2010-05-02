@@ -31,7 +31,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (tables: like to_tables) is
+	make (tables: like to_tables)
 			-- Create a new scanner with standard input as input file.
 			-- Build the scanner with information contained in `tables'.
 		require
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			make_scanner_skeleton
 		end
 
-	make_with_file (a_file: KI_CHARACTER_INPUT_STREAM; tables: like to_tables) is
+	make_with_file (a_file: KI_CHARACTER_INPUT_STREAM; tables: like to_tables)
 			-- Create a new scanner with `a_file' as input file.
 			-- Build the scanner with information contained in `tables'.
 		require
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			make_scanner_with_file_skeleton (a_file)
 		end
 
-	make_with_buffer (a_buffer: like input_buffer; tables: like to_tables) is
+	make_with_buffer (a_buffer: like input_buffer; tables: like to_tables)
 			-- Create a new scanner with `a_buffer' as input buffer.
 			-- Build the scanner with information contained in `tables'.
 		require
@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	valid_start_condition (sc: INTEGER): BOOLEAN is
+	valid_start_condition (sc: INTEGER): BOOLEAN
 			-- Is `sc' a valid start condition?
 		do
 			Result := (0 <= sc and sc <= (yy_start_conditions.count - 1))
@@ -76,7 +76,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	yy_execute_action (yy_act: INTEGER) is
+	yy_execute_action (yy_act: INTEGER)
 			-- Execute semantic action.
 		local
 			yy_rule: LX_RULE
@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	yy_execute_eof_action (yy_sc: INTEGER) is
+	yy_execute_eof_action (yy_sc: INTEGER)
 			-- Execute EOF semantic action.
 		local
 			yy_rule: LX_RULE

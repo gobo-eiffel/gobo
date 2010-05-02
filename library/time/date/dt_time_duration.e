@@ -51,7 +51,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (h, m, s: INTEGER) is
+	make (h, m, s: INTEGER)
 			-- Create a new time duration.
 		do
 			hour := h
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 			millisecond_set: millisecond = 0
 		end
 
-	make_precise (h, m, s, ms: INTEGER) is
+	make_precise (h, m, s, ms: INTEGER)
 			-- Create a new time duration with millisecond precision.
 		do
 			hour := h
@@ -79,7 +79,7 @@ feature {NONE} -- Initialization
 			millisecond_set: millisecond = ms
 		end
 
-	make_canonical (s: INTEGER) is
+	make_canonical (s: INTEGER)
 			-- Create a canonical time duration.
 		local
 			fs: INTEGER
@@ -103,7 +103,7 @@ feature {NONE} -- Initialization
 			millisecond_set: millisecond = 0
 		end
 
-	make_precise_canonical (ms: INTEGER) is
+	make_precise_canonical (ms: INTEGER)
 			-- Create a canonical time duration
 			-- with millisecond precision.
 		local
@@ -132,7 +132,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_canonical: BOOLEAN is
+	is_canonical: BOOLEAN
 			-- Has current duration a canonical form?
 		do
 			if millisecond_count > 0 then
@@ -173,7 +173,7 @@ feature -- Access
 	millisecond: INTEGER
 			-- Millisecond part
 
-	second_count: INTEGER is
+	second_count: INTEGER
 			-- Total number of seconds
 		do
 			Result := (hour * Minutes_in_hour + minute) * Seconds_in_minute + second
@@ -186,7 +186,7 @@ feature -- Access
 			definition: Result = ((hour * Minutes_in_hour + minute) * Seconds_in_minute + second + INTEGER_.div (millisecond, 1000))
 		end
 
-	millisecond_count: INTEGER is
+	millisecond_count: INTEGER
 			-- Total number of milliseconds
 		do
 			Result := ((hour * Minutes_in_hour + minute) * Seconds_in_minute + second) * 1000 + millisecond
@@ -194,7 +194,7 @@ feature -- Access
 			definition: Result = (((hour * Minutes_in_hour + minute) * Seconds_in_minute + second) * 1000 + millisecond)
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code
 		do
 			Result := millisecond_count
@@ -203,7 +203,7 @@ feature -- Access
 			end
 		end
 
-	time (a_time: DT_TIME): DT_TIME is
+	time (a_time: DT_TIME): DT_TIME
 			-- Addition of current duration to `a_time'
 			-- (Create a new object at each call.)
 		do
@@ -212,7 +212,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_canonical is
+	set_canonical
 			-- Set time duration to be canonical.
 		do
 			make_precise_canonical (millisecond_count)
@@ -223,7 +223,7 @@ feature -- Status setting
 
 feature -- Setting
 
-	set_hour_minute_second (h, m, s: INTEGER) is
+	set_hour_minute_second (h, m, s: INTEGER)
 			-- Set `hour' to `h', `minute' to `m' and `second' to `s'.
 		do
 			hour := h
@@ -237,7 +237,7 @@ feature -- Setting
 			millisecond_set: millisecond = 0
 		end
 
-	set_precise_hour_minute_second (h, m, s, ms: INTEGER) is
+	set_precise_hour_minute_second (h, m, s, ms: INTEGER)
 			-- Set `hour' to `h', `minute' to `m',
 			-- `second' to `s' and `millisecond' to `ms'.
 		do
@@ -252,7 +252,7 @@ feature -- Setting
 			millisecond_set: millisecond = ms
 		end
 
-	set_hour (h: INTEGER) is
+	set_hour (h: INTEGER)
 			-- Set `hour' to `h'.
 		do
 			hour := h
@@ -263,7 +263,7 @@ feature -- Setting
 			same_millisecond: millisecond = old millisecond
 		end
 
-	set_minute (m: INTEGER) is
+	set_minute (m: INTEGER)
 			-- Set `minute' to `m'.
 		do
 			minute := m
@@ -274,7 +274,7 @@ feature -- Setting
 			same_millisecond: millisecond = old millisecond
 		end
 
-	set_second (s: INTEGER) is
+	set_second (s: INTEGER)
 			-- Set `second' to `s'.
 		do
 			second := s
@@ -285,7 +285,7 @@ feature -- Setting
 			same_millisecond: millisecond = old millisecond
 		end
 
-	set_millisecond (ms: INTEGER) is
+	set_millisecond (ms: INTEGER)
 			-- Set `millisecond' to `ms'.
 		do
 			millisecond := ms
@@ -298,7 +298,7 @@ feature -- Setting
 
 feature -- Element change
 
-	add_hours_minutes_seconds (h, m, s: INTEGER) is
+	add_hours_minutes_seconds (h, m, s: INTEGER)
 			-- Add `h' hours, `m' minutes and `s' seconds
 			-- to current duration.
 		do
@@ -311,7 +311,7 @@ feature -- Element change
 			second_added: second = old second + s
 		end
 
-	add_precise_hours_minutes_seconds (h, m, s, ms: INTEGER) is
+	add_precise_hours_minutes_seconds (h, m, s, ms: INTEGER)
 			-- Add `h' hours, `m' minutes, `s' seconds and
 			-- `ms' milliseconds to current duration.
 		do
@@ -326,7 +326,7 @@ feature -- Element change
 			millisecond_added: millisecond = old millisecond + ms
 		end
 
-	add_hours (h: INTEGER) is
+	add_hours (h: INTEGER)
 			-- Add `h' hours to current duration.
 		do
 			hour := hour + h
@@ -334,7 +334,7 @@ feature -- Element change
 			hour_added: hour = old hour + h
 		end
 
-	add_minutes (m: INTEGER) is
+	add_minutes (m: INTEGER)
 			-- Add `m' minutes to current duration.
 		do
 			minute := minute + m
@@ -342,7 +342,7 @@ feature -- Element change
 			minute_added: minute = old minute + m
 		end
 
-	add_seconds (s: INTEGER) is
+	add_seconds (s: INTEGER)
 			-- Add `s' seconds to current duration.
 		do
 			second := second + s
@@ -350,7 +350,7 @@ feature -- Element change
 			second_added: second = old second + s
 		end
 
-	add_milliseconds (ms: INTEGER) is
+	add_milliseconds (ms: INTEGER)
 			-- Add `ms' milliseconds to current duration.
 		do
 			millisecond := millisecond + ms
@@ -360,21 +360,21 @@ feature -- Element change
 
 feature -- Basic operations
 
-	plus alias "+" (other: like Current): like Current is
+	plus alias "+" (other: like Current): like Current
 			-- Sum of current duration with `other'
 		do
 			Result := cloned_object
 			Result.add_precise_hours_minutes_seconds (other.hour, other.minute, other.second, other.millisecond)
 		end
 
-	minus alias "-" (other: like Current): like Current is
+	minus alias "-" (other: like Current): like Current
 			-- Difference with `other'
 		do
 			Result := cloned_object
 			Result.add_precise_hours_minutes_seconds (-other.hour, -other.minute, -other.second, -other.millisecond)
 		end
 
-	opposite alias "-": like Current is
+	opposite alias "-": like Current
 			-- Unary minus
 		do
 			Result := cloned_object
@@ -383,13 +383,13 @@ feature -- Basic operations
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current time duration less than `other'?
 		do
 			Result := millisecond_count < other.millisecond_count
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is current time duration equal to `other'?
 		do
 			if ANY_.same_types (Current, other) then
@@ -397,7 +397,7 @@ feature -- Comparison
 			end
 		end
 
-	same_time_duration (other: DT_TIME_DURATION): BOOLEAN is
+	same_time_duration (other: DT_TIME_DURATION): BOOLEAN
 			-- Is current time duration equal to `other'?
 		require
 			other_not_void: other /= Void
@@ -409,7 +409,7 @@ feature -- Comparison
 
 feature -- Conversion
 
-	to_date_time_duration: DT_DATE_TIME_DURATION is
+	to_date_time_duration: DT_DATE_TIME_DURATION
 			-- Date time duration equivalent to current time duration
 		do
 			create Result.make_precise (0, 0, 0, hour, minute, second, millisecond)
@@ -424,7 +424,7 @@ feature -- Conversion
 			millisecond_set: Result.millisecond = millisecond
 		end
 
-	to_canonical: like Current is
+	to_canonical: like Current
 			-- Canonical version of current time duration
 		do
 			create Result.make_precise_canonical (millisecond_count)

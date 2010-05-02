@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_zoned_date (a_date: DT_FIXED_OFFSET_ZONED_DATE) is
+	make_from_zoned_date (a_date: DT_FIXED_OFFSET_ZONED_DATE)
 			-- Create a new date-time from `a_date' at zero time.
 		require
 			date_not_void: a_date /= Void
@@ -43,7 +43,7 @@ feature -- Access
 	time_zone: DT_FIXED_OFFSET_TIME_ZONE
 			-- Time zone
 
-	zoned_date: DT_FIXED_OFFSET_ZONED_DATE is
+	zoned_date: DT_FIXED_OFFSET_ZONED_DATE
 			-- Date with time zone
 		do
 			create Result.make (date_time.date, time_zone)
@@ -51,7 +51,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	zoned_time: DT_FIXED_OFFSET_ZONED_TIME is
+	zoned_time: DT_FIXED_OFFSET_ZONED_TIME
 			-- Time with time zone
 		do
 			create Result.make (date_time.time, time_zone)

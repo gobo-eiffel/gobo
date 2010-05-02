@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create new String Interpreter.
 		do
 		end
@@ -45,7 +45,7 @@ feature -- Access
 	variable_resolver: GEANT_VARIABLE_RESOLVER
 			-- Variable resolver used for interpretation of `source_string'
 
-	interpreted_source_string: STRING is
+	interpreted_source_string: STRING
 			-- `interpreted_string(source_string)'
 		require
 			source_string_not_void: source_string /= Void
@@ -53,7 +53,7 @@ feature -- Access
 			Result := interpreted_string (source_string)
 		end
 
-	interpreted_string (a_string: STRING): STRING is
+	interpreted_string (a_string: STRING): STRING
 			-- String where the variables have been
 			-- replaced by their values. The variables
 			-- are considered to be either ${[^}]*} or $[a-zA-Z0-9_]+
@@ -148,7 +148,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_source_string (a_source_string: STRING) is
+	set_source_string (a_source_string: STRING)
 			-- Set `source_string' to `a_source_string'.
 		require
 			a_source_string_not_void: a_source_string /= Void
@@ -159,7 +159,7 @@ feature -- Setting
 			source_string_set: source_string = a_source_string
 		end
 
-	set_variable_resolver (a_variable_resolver: like variable_resolver) is
+	set_variable_resolver (a_variable_resolver: like variable_resolver)
 			-- Set `variable_resolver' to `a_variable_resolver'.
 		require
 			a_variable_resolver_not_void: a_variable_resolver /= Void
@@ -171,7 +171,7 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	variable_value (a_name: STRING): STRING is
+	variable_value (a_name: STRING): STRING
 			-- Value of variable `a_name';
 			-- `${a_name}' if `a_name' has not been set.
 		require
@@ -195,7 +195,7 @@ feature {NONE} -- Implementation
 			variable_value_not_void: Result /= Void
 		end
 
-	expanded_variable_value (a_value : STRING) : STRING is
+	expanded_variable_value (a_value : STRING) : STRING
 			-- Expanded variable value of `a_value'
 		require
 			a_value_not_void: a_value /= Void
@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 			expanded_variable_value_not_void : Result /= Void
 		end
 
-	default_variable_value (a_name: STRING): STRING is
+	default_variable_value (a_name: STRING): STRING
 			-- `${`a_name'}'
 		require
 			a_name_not_void: a_name /= Void

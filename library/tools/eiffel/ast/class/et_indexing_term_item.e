@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	indexing_term: ET_INDEXING_TERM is
+	indexing_term: ET_INDEXING_TERM
 			-- Note term in comma-separated list
 		deferred
 		ensure

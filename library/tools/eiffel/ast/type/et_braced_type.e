@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type: like type) is
+	make (a_type: like type)
 			-- Create a new type surrounded by braces.
 		require
 			a_type_not_void: a_type /= Void
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset braced type as it was when it was last parsed.
 		do
 			type.reset
@@ -53,7 +53,7 @@ feature -- Access
 	right_brace: ET_SYMBOL
 			-- '}' symbol
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -63,19 +63,19 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := left_brace
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := right_brace
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := right_brace.break
@@ -83,7 +83,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_left_brace (a_brace: like left_brace) is
+	set_left_brace (a_brace: like left_brace)
 			-- Set `left_brace' to `a_brace'.
 		require
 			a_brace_not_void: a_brace /= Void
@@ -93,7 +93,7 @@ feature -- Setting
 			left_brace_set: left_brace = a_brace
 		end
 
-	set_right_brace (a_brace: like right_brace) is
+	set_right_brace (a_brace: like right_brace)
 			-- Set `right_brace' to `a_brace'.
 		require
 			a_brace_not_void: a_brace /= Void
@@ -105,7 +105,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_braced_type (Current)

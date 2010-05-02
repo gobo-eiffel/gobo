@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_id: INTEGER; a_name: like name; a_type: like type) is
+	make (an_id: INTEGER; a_name: like name; a_type: like type)
 			-- Create a new variable named `a_name'.
 			-- (Variables are indexed from 0.)
 		do
@@ -51,14 +51,14 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_terminal: BOOLEAN is False
+	is_terminal: BOOLEAN = False
 			-- Is current symbol terminal?
 
 	is_nullable: BOOLEAN
 			-- Can current variable be expanded
 			-- into an empty string?
 
-	has_transition (a_state: PR_STATE): BOOLEAN is
+	has_transition (a_state: PR_STATE): BOOLEAN
 			-- Is there a transition from `a_state'
 			-- through current symbol?
 		require
@@ -108,7 +108,7 @@ feature -- Access
 	transitions: DS_LINKED_LIST [PR_TRANSITION]
 			-- Transitions through current symbol
 
-	transition (a_state: PR_STATE): PR_TRANSITION is
+	transition (a_state: PR_STATE): PR_TRANSITION
 			-- Transition from `a_state' through current symbol
 		require
 			a_state_not_void: a_state /= Void
@@ -138,7 +138,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_nullable is
+	set_nullable
 			-- Set `is_nullable' to true.
 		do
 			is_nullable := True
@@ -148,7 +148,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	put_rule (a_rule: PR_RULE) is
+	put_rule (a_rule: PR_RULE)
 			-- Add `a_rule' to the list of rules with
 			-- current variable as left-hand-side.
 		require
@@ -163,7 +163,7 @@ feature -- Element change
 			rule_added: rules.has (a_rule)
 		end
 
-	put_transition (a_transition: PR_TRANSITION) is
+	put_transition (a_transition: PR_TRANSITION)
 			-- Add `a_transition' to the list of
 			-- transitions through current symbol.
 		require
@@ -177,7 +177,7 @@ feature -- Element change
 
 feature -- Output
 
-	print_variable (a_grammar: PR_GRAMMAR; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_variable (a_grammar: PR_GRAMMAR; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print textual representation of current
 			-- variable to `a_file' with rules where it
 			-- appears in `a_grammar'.
@@ -229,21 +229,21 @@ feature -- Output
 
 feature {NONE} -- Constants
 
-	Initial_max_nb_rules: INTEGER is 5
+	Initial_max_nb_rules: INTEGER = 5
 			-- Initial capacity for `rules'
 
-	Max_nb_rules_increment: INTEGER is 5
+	Max_nb_rules_increment: INTEGER = 5
 			-- Increment when resizing `rules'
 
 feature {DS_NESTED_LIST_FLATTENER} -- Implementation
 
-	set_derives (a_derives: like derives) is
+	set_derives (a_derives: like derives)
 			-- Set `derives' to `a_derives'.
 		do
 			derives := a_derives
 		end
 
-	add_derive (a_derive: PR_RULE) is
+	add_derive (a_derive: PR_RULE)
 			-- Add `a_derive' to `derives'.
 		do
 			derives.force_last (a_derive)

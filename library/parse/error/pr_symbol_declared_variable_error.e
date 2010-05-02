@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER; a_name: STRING) is
+	make (filename: STRING; line: INTEGER; a_name: STRING)
 			-- Create a new error reporting that symbol
 			-- `a_name' has already been declared as a variable.
 		require
@@ -37,10 +37,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: symbol $3 is already declared as a nonterminal"
+	default_template: STRING = "%"$1%", line $2: symbol $3 is already declared as a nonterminal"
 			-- Default template used to built the error message
 
-	code: STRING is "PR0018"
+	code: STRING = "PR0018"
 			-- Error code
 
 invariant

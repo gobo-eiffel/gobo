@@ -29,14 +29,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new called features builder.
 		do
 			create called_features.make
 			make_with_called_features (called_features)
 		end
 
-	make_with_called_features (a_called_features: like called_features) is
+	make_with_called_features (a_called_features: like called_features)
 			-- Create a new called features builder using `a_called_features'.
 		require
 			a_called_features_not_void: a_called_features /= Void
@@ -54,7 +54,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_called_features (a_called_features: like called_features) is
+	set_called_features (a_called_features: like called_features)
 			-- Set `called_features' to `a_called_features'.
 		require
 			a_called_features_not_void: a_called_features /= Void
@@ -66,7 +66,7 @@ feature -- Setting
 
 feature -- Processing
 
-	build_called_features (a_feature: ET_FEATURE) is
+	build_called_features (a_feature: ET_FEATURE)
 			-- Identify the features that `a_feature' (when viewed from
 			-- the class it has been written in -- its 'implementation_class')
 			-- depends on (i.e. they might be called directly from `a_feature')
@@ -90,7 +90,7 @@ feature -- Processing
 			process_feature (l_feature, l_class)
 		end
 
-	unmark_all (a_system: ET_SYSTEM) is
+	unmark_all (a_system: ET_SYSTEM)
 			-- Unmark all features of `a_system' as if none of them was used.
 		require
 			a_system_not_void: a_system /= Void
@@ -100,14 +100,14 @@ feature -- Processing
 
 feature {NONE} -- Event handling
 
-	report_polymorphic_feature_call (a_feature: ET_FEATURE; a_target_class: ET_CLASS) is
+	report_polymorphic_feature_call (a_feature: ET_FEATURE; a_target_class: ET_CLASS)
 			-- Report a call to `a_feature' where its versions in descendants of
 			-- `a_target_class' should be taken into account.
 		do
 			called_features.add_polymorphic_feature (a_feature, a_target_class)
 		end
 
-	report_monomorphic_feature_call (a_feature: ET_FEATURE; a_target_class: ET_CLASS) is
+	report_monomorphic_feature_call (a_feature: ET_FEATURE; a_target_class: ET_CLASS)
 			-- Report a call to `a_feature' where its versions in descendants of
 			-- `a_target_class' should not be taken into account.
 		do

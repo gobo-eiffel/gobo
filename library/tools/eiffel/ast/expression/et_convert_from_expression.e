@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type: like type; a_feature: like convert_feature; e: like expression) is
+	make (a_type: like type; a_feature: like convert_feature; e: like expression)
 			-- Create a new conversion expression.
 		require
 			a_type_not_void: a_type /= Void
@@ -50,7 +50,7 @@ feature -- Access
 	type: ET_TYPE
 			-- Creation type
 
-	name: ET_FEATURE_NAME is
+	name: ET_FEATURE_NAME
 			-- Feature name
 		do
 			Result := convert_feature.name
@@ -58,7 +58,7 @@ feature -- Access
 			definition: Result = convert_feature.name
 		end
 
-	arguments: ET_ACTUAL_ARGUMENTS is
+	arguments: ET_ACTUAL_ARGUMENTS
 			-- Arguments
 		do
 			Result := expression
@@ -66,7 +66,7 @@ feature -- Access
 			defintion: Result = expression
 		end
 
-	type_position: ET_POSITION is
+	type_position: ET_POSITION
 			-- Position of `type';
 			-- Because the type does not appear explicitly in the class text,
 			-- use the position of `expression' instead.
@@ -76,7 +76,7 @@ feature -- Access
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_convert_from_expression (Current)

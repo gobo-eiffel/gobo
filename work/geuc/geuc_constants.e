@@ -17,10 +17,10 @@ inherit
 
 feature -- Access
 
-	Field_count: INTEGER is 15
+	Field_count: INTEGER = 15
 			-- Number of fields in UnicodeData.txt
 
-	Bad_decimal_value: INTEGER_8 is 127
+	Bad_decimal_value: INTEGER_8 = 127
 			-- Decimal value for code points which are not category Nd
 
 end

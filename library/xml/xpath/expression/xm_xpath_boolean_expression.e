@@ -20,16 +20,16 @@ inherit
 			is_boolean_expression, as_boolean_expression,
 			is_node_sequence, create_node_iterator
 		end
-	
+
 	XM_XPATH_TOKENS
-	
+
 create
 
 	make
 
 feature {NONE} -- Initialization
 
-	make (an_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; an_operand_two: XM_XPATH_EXPRESSION) is
+	make (an_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; an_operand_two: XM_XPATH_EXPRESSION)
 			-- Establish invariant
 		do
 			Precursor (an_operand_one, a_token, an_operand_two)
@@ -37,20 +37,20 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
-	is_boolean_expression: BOOLEAN is
+
+	is_boolean_expression: BOOLEAN
 			-- Is `Current' a boolean expression?
 		do
 			Result := True
 		end
 
-	as_boolean_expression: XM_XPATH_BOOLEAN_EXPRESSION is
+	as_boolean_expression: XM_XPATH_BOOLEAN_EXPRESSION
 			-- `Current' seen as a boolean expression
 		do
 			Result := Current
 		end
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			--Determine the data type of the expression, if possible
 		do
 			Result := type_factory.boolean_type
@@ -62,7 +62,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_node_sequence: BOOLEAN is
+	is_node_sequence: BOOLEAN
 			-- Is `Current' a sequence of zero or more nodes?
 		do
 			Result := False
@@ -70,7 +70,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT)
 			-- Effective boolean value
 		local
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
@@ -100,18 +100,18 @@ feature -- Evaluation
 			end
 		end
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			calculate_effective_boolean_value (a_context)
 			a_result.put (last_boolean_value)
 		end
 
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over a node sequence.
 		do
 			-- pre-condition is never met
 		end
 
 end
-	
+

@@ -11,10 +11,10 @@ note
 	revision: "$Revision$"
 
 class XM_XPATH_SHARED_NAME_POOL
-	
+
 feature -- Access
 
-	shared_name_pool: XM_XPATH_NAME_POOL is
+	shared_name_pool: XM_XPATH_NAME_POOL
 			-- Shared name pool
 		once
 			create Result.make
@@ -23,4 +23,4 @@ feature -- Access
 		end
 
 end
-	
+

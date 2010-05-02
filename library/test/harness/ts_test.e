@@ -14,14 +14,14 @@ deferred class TS_TEST
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Name
 		deferred
 		ensure
 			name_not_void: Result /= Void
 		end
 
-	variables: TS_VARIABLES is
+	variables: TS_VARIABLES
 			-- Defined variables
 		deferred
 		ensure
@@ -30,7 +30,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of test cases
 		deferred
 		ensure
@@ -39,7 +39,7 @@ feature -- Measurement
 
 feature -- Execution
 
-	execute (a_summary: TS_SUMMARY) is
+	execute (a_summary: TS_SUMMARY)
 			-- Run test and put results in `a_summary'.
 		require
 			a_summary_not_void: a_summary /= Void

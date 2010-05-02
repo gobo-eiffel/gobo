@@ -22,7 +22,7 @@ create
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Print current date and time.
 		do
 			std.output.put_string ("Time Now: ")

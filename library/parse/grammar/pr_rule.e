@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_id: INTEGER; a_lhs: like lhs; an_action: like action) is
+	make (an_id: INTEGER; a_lhs: like lhs; an_action: like action)
 			-- Create a new grammar rule with `a_lhs'
 			-- as left-hand-side and `an_action' as
 			-- semantic action.
@@ -71,7 +71,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_action (an_action: like action) is
+	set_action (an_action: like action)
 			-- Set `action' to `an_action'.
 		require
 			an_action_not_void: an_action /= Void
@@ -81,7 +81,7 @@ feature -- Setting
 			action_set: action = an_action
 		end
 
-	set_error_action (an_action: PR_ERROR_ACTION; i: INTEGER) is
+	set_error_action (an_action: PR_ERROR_ACTION; i: INTEGER)
 			-- Set error action associated with `i'-th symbol to `an_action'.
 		require
 			i_large_enough: i >= 1
@@ -92,7 +92,7 @@ feature -- Setting
 			error_action_set: error_actions.item (i) = an_action
 		end
 
-	set_precedence (p: INTEGER) is
+	set_precedence (p: INTEGER)
 			-- Set `precedence' to `p'.
 		do
 			precedence := p
@@ -100,7 +100,7 @@ feature -- Setting
 			precedence_set: precedence = p
 		end
 
-	set_line_nb (nb: like line_nb) is
+	set_line_nb (nb: like line_nb)
 			-- Set `line_nb' to `nb'.
 		do
 			line_nb := nb
@@ -108,7 +108,7 @@ feature -- Setting
 			line_nb_set: line_nb = nb
 		end
 
-	set_id (i: INTEGER) is
+	set_id (i: INTEGER)
 			-- Set `id' to i'.
 		require
 			valid_id: i >= 1
@@ -120,7 +120,7 @@ feature -- Setting
 
 feature -- Element change
 
-	put_symbol (a_symbol: PR_SYMBOL) is
+	put_symbol (a_symbol: PR_SYMBOL)
 			-- Add `a_symbol' at the end of the
 			-- right-hand-side list of symbols.
 		require
@@ -143,7 +143,7 @@ feature -- Element change
 
 feature -- Status report
 
-	is_left_associative: BOOLEAN is
+	is_left_associative: BOOLEAN
 			-- Is current rule left associative?
 		do
 			Result := associativity = Left_assoc
@@ -151,7 +151,7 @@ feature -- Status report
 			associativity: Result implies not (is_right_associative or is_non_associative)
 		end
 
-	is_right_associative: BOOLEAN is
+	is_right_associative: BOOLEAN
 			-- Is current rule right associative?
 		do
 			Result := associativity = Right_assoc
@@ -159,7 +159,7 @@ feature -- Status report
 			associativity: Result implies not (is_left_associative or is_non_associative)
 		end
 
-	is_non_associative: BOOLEAN is
+	is_non_associative: BOOLEAN
 			-- Is current rule non-associative?
 		do
 			Result := associativity = Non_assoc
@@ -167,7 +167,7 @@ feature -- Status report
 			associativity: Result implies not (is_left_associative or is_right_associative)
 		end
 
-	has_precedence: BOOLEAN is
+	has_precedence: BOOLEAN
 			-- Has a precedence level been
 			-- assigned to current rule?
 		do
@@ -179,7 +179,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_left_associative is
+	set_left_associative
 			-- Make current rule left associative.
 		do
 			associativity := Left_assoc
@@ -187,7 +187,7 @@ feature -- Status setting
 			is_left_associative: is_left_associative
 		end
 
-	set_right_associative is
+	set_right_associative
 			-- Make current rule right associative.
 		do
 			associativity := Right_assoc
@@ -195,7 +195,7 @@ feature -- Status setting
 			is_right_associative: is_right_associative
 		end
 
-	set_non_associative is
+	set_non_associative
 			-- Make current rule non-associative.
 		do
 			associativity := Non_assoc
@@ -203,7 +203,7 @@ feature -- Status setting
 			is_non_associative: is_non_associative
 		end
 
-	set_useful (b: BOOLEAN) is
+	set_useful (b: BOOLEAN)
 			-- Set `is_useful' to `b'.
 		do
 			is_useful := b
@@ -213,7 +213,7 @@ feature -- Status setting
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current rule considered less than `other'?
 		do
 			Result := id < other.id
@@ -223,7 +223,7 @@ feature -- Comparison
 
 feature -- Output
 
-	print_rule (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_rule (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print textual representation of
 			-- current rule to `a_file'.
 		require
@@ -253,7 +253,7 @@ feature -- Output
 			end
 		end
 
-	print_action (input_filename: STRING; a_line_pragma: BOOLEAN; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_action (input_filename: STRING; a_line_pragma: BOOLEAN; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print semantic action to `a_file'.
 			-- `input_filename' is the name of the file where
 			-- the action text as been specified.
@@ -332,7 +332,7 @@ feature -- Output
 			a_file.put_line ("end")
 		end
 
-	old_print_action (input_filename: STRING; a_line_pragma: BOOLEAN; a_file: KI_TEXT_OUTPUT_STREAM) is
+	old_print_action (input_filename: STRING; a_line_pragma: BOOLEAN; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print semantic action to `a_file' using the old typing mechanism.
 			-- `input_filename' is the name of the file where
 			-- the action text as been specified.
@@ -410,21 +410,21 @@ feature {NONE} -- Implementation
 	associativity: INTEGER
 			-- Associativity of current rule
 
-	Left_assoc: INTEGER is 1
+	Left_assoc: INTEGER = 1
 			-- Code for left associativity
 
-	Right_assoc: INTEGER is 2
+	Right_assoc: INTEGER = 2
 			-- Code for right associativity
 
-	Non_assoc: INTEGER is 3
+	Non_assoc: INTEGER = 3
 			-- Code for no associativity
 
 feature {NONE} -- Constants
 
-	Initial_max_nb_rhs: INTEGER is 20
+	Initial_max_nb_rhs: INTEGER = 20
 			-- Initial capacity for `rhs'
 
-	Max_nb_rhs_increment: INTEGER is 20
+	Max_nb_rhs_increment: INTEGER = 20
 			-- Increment when resizing `rhs'
 
 invariant

@@ -40,7 +40,7 @@ feature -- Status report
 
 feature -- Validity checking
 
-	check_type_validity (a_type: ET_TYPE) is
+	check_type_validity (a_type: ET_TYPE)
 			-- Check whether all classes that appear in
 			-- `a_type' exist and have already been parsed.
 			-- Set `has_fatal_error' to True otherwise.
@@ -53,7 +53,7 @@ feature -- Validity checking
 
 feature {NONE} -- Type validity
 
-	check_bit_type_validity (a_type: ET_BIT_TYPE) is
+	check_bit_type_validity (a_type: ET_BIT_TYPE)
 			-- Check whether all classes that appear in
 			-- `a_type' exist and have already been parsed.
 			-- Set `has_fatal_error' to True otherwise.
@@ -70,7 +70,7 @@ feature {NONE} -- Type validity
 			end
 		end
 
-	check_class_type_validity (a_type: ET_CLASS_TYPE) is
+	check_class_type_validity (a_type: ET_CLASS_TYPE)
 			-- Check whether all classes that appear in
 			-- `a_type' exist and have already been parsed.
 			-- Set `has_fatal_error' to True otherwise.
@@ -101,7 +101,7 @@ feature {NONE} -- Type validity
 			end
 		end
 
-	check_qualified_like_identifier_validity (a_type: ET_QUALIFIED_LIKE_IDENTIFIER) is
+	check_qualified_like_identifier_validity (a_type: ET_QUALIFIED_LIKE_IDENTIFIER)
 			-- Check whether all classes that appear in
 			-- `a_type' exist and have already been parsed.
 			-- Set `has_fatal_error' to True otherwise.
@@ -111,7 +111,7 @@ feature {NONE} -- Type validity
 			a_type.target_type.process (Current)
 		end
 
-	check_tuple_type_validity (a_type: ET_TUPLE_TYPE) is
+	check_tuple_type_validity (a_type: ET_TUPLE_TYPE)
 			-- Check whether all classes that appear in
 			-- `a_type' exist and have already been parsed.
 			-- Set `has_fatal_error' to True otherwise.
@@ -144,49 +144,49 @@ feature {NONE} -- Type validity
 
 feature {ET_AST_NODE} -- Type dispatcher
 
-	process_bit_feature (a_type: ET_BIT_FEATURE) is
+	process_bit_feature (a_type: ET_BIT_FEATURE)
 			-- Process `a_type'.
 		do
 			check_bit_type_validity (a_type)
 		end
 
-	process_bit_n (a_type: ET_BIT_N) is
+	process_bit_n (a_type: ET_BIT_N)
 			-- Process `a_type'.
 		do
 			check_bit_type_validity (a_type)
 		end
 
-	process_class (a_class: ET_CLASS) is
+	process_class (a_class: ET_CLASS)
 			-- Process `a_class'.
 		do
 			process_class_type (a_class)
 		end
 
-	process_class_type (a_type: ET_CLASS_TYPE) is
+	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
 		do
 			check_class_type_validity (a_type)
 		end
 
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE) is
+	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
 			-- Process `a_type'.
 		do
 			process_class_type (a_type)
 		end
 
-	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE) is
+	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE)
 			-- Process `a_type'.
 		do
 			check_qualified_like_identifier_validity (a_type)
 		end
 
-	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
+	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE)
 			-- Process `a_type'.
 		do
 			check_qualified_like_identifier_validity (a_type)
 		end
 
-	process_tuple_type (a_type: ET_TUPLE_TYPE) is
+	process_tuple_type (a_type: ET_TUPLE_TYPE)
 			-- Process `a_type'.
 		do
 			check_tuple_type_validity (a_type)
@@ -194,7 +194,7 @@ feature {ET_AST_NODE} -- Type dispatcher
 
 feature {NONE} -- Error handling
 
-	set_fatal_error is
+	set_fatal_error
 			-- Report a fatal error.
 		do
 			has_fatal_error := True

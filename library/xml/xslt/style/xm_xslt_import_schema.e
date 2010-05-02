@@ -22,7 +22,7 @@ create
 
 feature -- Element change
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			an_error: XM_XPATH_ERROR_VALUE
@@ -32,10 +32,10 @@ feature -- Element change
 			attributes_prepared := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (an_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		do
 		end
 
-end	
+end
 

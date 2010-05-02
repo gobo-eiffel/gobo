@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_option: STRING; a_regexp: STRING) is
+	make (an_option: STRING; a_regexp: STRING)
 			-- Create a new error reporting a syntax error
 			-- in regular expression `a_regexp'.
 		require
@@ -36,10 +36,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "option %"$1%": syntax error in regular expression %"$2%""
+	default_template: STRING = "option %"$1%": syntax error in regular expression %"$2%""
 			-- Default template used to built the error message
 
-	code: STRING is "TS0003"
+	code: STRING = "TS0003"
 			-- Error code
 
 invariant

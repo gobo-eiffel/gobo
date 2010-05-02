@@ -35,12 +35,12 @@ inherit
 
 feature -- Access
 
-	Not_comparable_exception: STRING is "Not comparable"
+	Not_comparable_exception: STRING = "Not comparable"
 			-- Exception error text for non-comparable atomic values
 
 feature -- Status report
 
-	is_non_comparable_exception: BOOLEAN is
+	is_non_comparable_exception: BOOLEAN
 			-- Is the exception a signal that two atomic values are not comparable?
 		do
 			Result := Exceptions.is_developer_exception_of_name (Not_comparable_exception)
@@ -48,7 +48,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	raise_non_comparable_exception is
+	raise_non_comparable_exception
 			-- Signal two atomic values are not comparable.
 		do
 			Exceptions.raise (Not_comparable_exception)

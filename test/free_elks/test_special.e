@@ -22,7 +22,7 @@ create
 
 feature -- Test
 
-	test_make_filled is
+	test_make_filled
 			-- Test feature 'make_filled'.
 		local
 			sp1: SPECIAL [INTEGER]
@@ -39,7 +39,7 @@ feature -- Test
 			assert_integers_equal ("count3", 0, sp2.count)
 		end
 
-	test_count is
+	test_count
 			-- Test feature 'count'.
 		local
 			sp1: SPECIAL [BOOLEAN]
@@ -53,7 +53,7 @@ feature -- Test
 			assert_integers_equal ("count3", 0, sp2.count)
 		end
 
-	test_capacity is
+	test_capacity
 			-- Test feature 'capacity'.
 		local
 			sp1: SPECIAL [BOOLEAN]
@@ -67,7 +67,7 @@ feature -- Test
 			assert_integers_equal ("capacity3", 0, sp2.capacity)
 		end
 
-	test_lower is
+	test_lower
 			-- Test feature 'lower'.
 		local
 			sp1: SPECIAL [CHARACTER]
@@ -81,7 +81,7 @@ feature -- Test
 			assert_integers_equal ("lower3", 0, sp1.lower)
 		end
 
-	test_upper is
+	test_upper
 			-- Test feature 'upper'.
 		local
 			sp1: SPECIAL [INTEGER]
@@ -95,7 +95,7 @@ feature -- Test
 			assert_integers_equal ("upper3", 6, sp2.upper)
 		end
 
-	test_item_address is
+	test_item_address
 			-- Test feature 'item_address'.
 		local
 			sp1: SPECIAL [INTEGER_32]
@@ -109,7 +109,7 @@ feature -- Test
 			assert ("item_address2", sp2.item_address (1) = sp2.base_address + l_platform.Pointer_bytes)
 		end
 
-	test_item is
+	test_item
 			-- Test feature 'item'.
 		local
 			sp1: SPECIAL [INTEGER]
@@ -130,7 +130,7 @@ feature -- Test
 			assert_equal ("item7", "bar", sp2.item (2))
 		end
 
-	test_alias_bracket is
+	test_alias_bracket
 			-- Test feature 'alias "[]"'.
 		local
 			sp1: SPECIAL [INTEGER]
@@ -151,7 +151,7 @@ feature -- Test
 			assert_equal ("item7", "bar", sp2 [2])
 		end
 
-	test_infix_at is
+	test_infix_at
 			-- Test feature 'infx "@"'.
 		local
 			sp1: SPECIAL [INTEGER]
@@ -172,7 +172,7 @@ feature -- Test
 			assert_equal ("item7", "bar", sp2 @ 2)
 		end
 
-	test_index_of is
+	test_index_of
 			-- Test feature 'index_of'.
 		local
 			sp1: SPECIAL [INTEGER]
@@ -198,7 +198,7 @@ feature -- Test
 			assert_integers_equal ("index11", 2, sp2.index_of ("bar", 0))
 		end
 
-	test_same_items is
+	test_same_items
 			-- Test feature 'index_of'.
 		local
 			sp1, sp2: SPECIAL [INTEGER]
@@ -240,7 +240,7 @@ feature -- Test
 			assert ("same_items13", sp4.same_items (sp4, 0, 0, 2))
 		end
 
-	test_valid_index is
+	test_valid_index
 			-- Test feature 'valid_index'.
 		local
 			sp1: SPECIAL [INTEGER]
@@ -259,7 +259,7 @@ feature -- Test
 			assert ("not_valid4", not sp2.valid_index (3))
 		end
 
-	test_put is
+	test_put
 			-- Test feature 'put'.
 		local
 			sp1: SPECIAL [INTEGER]
@@ -294,7 +294,7 @@ feature -- Test
 			assert_equal ("put12", 5, sp3.item (2))
 		end
 
-	test_fill_with is
+	test_fill_with
 			-- Test feature 'fill_with'.
 		local
 			sp1: SPECIAL [INTEGER]
@@ -325,7 +325,7 @@ feature -- Test
 			assert_same ("fill7", s, sp2.item (2))
 		end
 
-	test_copy_data is
+	test_copy_data
 			-- Test feature 'copy_data'.
 		local
 			sp1, sp2: SPECIAL [CHARACTER]
@@ -368,7 +368,7 @@ feature -- Test
 			assert_same ("copied18", s1, sp4.item (2))
 		end
 
-	test_move_data is
+	test_move_data
 			-- Test feature 'move_data'.
 		local
 			sp1: SPECIAL [CHARACTER]
@@ -414,7 +414,7 @@ feature -- Test
 			assert_same ("moved21", s2, sp2.item (2))
 		end
 
-	test_aliased_resized_area_with_default is
+	test_aliased_resized_area_with_default
 			-- Test feature 'aliased_resized_area_with_default'.
 		local
 			sp1, sp2: SPECIAL [CHARACTER]

@@ -31,7 +31,7 @@ create
 
 feature -- Tests
 
-	test_single_singleton is
+	test_single_singleton
 			-- Can we create a singleton?
 		local
 			s1: SINGLETON1
@@ -43,7 +43,7 @@ feature -- Tests
 			end
 		end
 
-	test_two_singletons_in_system is
+	test_two_singletons_in_system
 			-- What if we have two singleton classes in our system?
 		local
 			s2: SINGLETON2
@@ -55,7 +55,7 @@ feature -- Tests
 			end
 		end
 
-	test_singleton_accessor is
+	test_singleton_accessor
 			-- Does the accessor work?
 		local
 			first, second: SINGLETON3
@@ -66,7 +66,7 @@ feature -- Tests
 			assert ("singleton3_pattern", first = second)
 		end
 
-	test_another_singleton_accessor is
+	test_another_singleton_accessor
 			-- Do two singleton accessors work?
 		local
 			first, second: SINGLETON4

@@ -18,7 +18,7 @@ inherit
 		redefine
 			notify_characters, notify_attribute
 		end
-	
+
 	XM_XSLT_NORMALIZATION_SETTER
 		rename
 			make as make_normalizer
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_receiver: like base_receiver; a_serializer: like serializer; a_output_properties: like output_properties) is
+	make (a_receiver: like base_receiver; a_serializer: like serializer; a_output_properties: like output_properties)
 			-- Initialize `Current'
 		require
 			a_receiver_not_void: a_receiver /= Void
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 
 feature -- Events
 
-	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; a_properties: INTEGER) is
+	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; a_properties: INTEGER)
 			-- Notify an attribute.
 		local
 			l_value: STRING
@@ -66,7 +66,7 @@ feature -- Events
 			end
 		end
 
-	notify_characters (a_chars: STRING; a_properties: INTEGER) is
+	notify_characters (a_chars: STRING; a_properties: INTEGER)
 			-- Notify character data.
 		local
 			l_value: STRING
@@ -84,4 +84,4 @@ feature -- Events
 		end
 
 end
-	
+

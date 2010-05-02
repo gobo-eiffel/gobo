@@ -14,17 +14,17 @@ note
 	revision: "$Revision$"
 
 deferred class XM_XPATH_NODE_MAPPING_FUNCTION
-	
+
 feature -- Access
 
-	last_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	last_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Result from `map_nodes'
 		deferred
 		end
 
 feature -- Evaluation
 
-	map_nodes (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
+	map_nodes (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT)
 			-- Map `an_item' to a sequence
 		require
 			item_not_void: an_item /= Void

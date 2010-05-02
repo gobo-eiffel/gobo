@@ -2,7 +2,7 @@ class CC
 
 feature
 
-	f (a, b: ANY) is
+	f (a, b: ANY)
 		do
 			print ("CC%N")
 		end

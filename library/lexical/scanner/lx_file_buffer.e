@@ -27,7 +27,7 @@ create
 
 feature -- Initialization
 
-	make (a_file: like file) is
+	make (a_file: like file)
 			-- Create a new buffer for `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -51,7 +51,7 @@ feature -- Status report
 
 feature -- Element change
 
-	refill is
+	refill
 			-- Refill buffer with characters from `file'.
 		do
 			if not file.end_of_input then

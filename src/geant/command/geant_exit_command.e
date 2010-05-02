@@ -26,7 +26,7 @@ create
 
 feature -- Status report
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- Can command be executed?
 		do
 			Result := True
@@ -34,7 +34,7 @@ feature -- Status report
 			always_executable: Result
 		end
 
-	is_exit_command: BOOLEAN is True
+	is_exit_command: BOOLEAN = True
 			-- Is current command the exit command?
 
 feature -- Access
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_code (a_code: INTEGER) is
+	set_code (a_code: INTEGER)
 			-- Set `code' to `a_code'.
 		do
 			code := a_code
@@ -54,7 +54,7 @@ feature -- Setting
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute command.
 		do
 			project.trace (<<"  [exit] code: ", code.out>>)

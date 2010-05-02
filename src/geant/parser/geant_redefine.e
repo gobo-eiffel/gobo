@@ -18,14 +18,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize 'redefine'.
 		do
 		end
 
 feature -- Status report
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- Can element be executed?
 		do
 			Result := name /= Void and then name.count > 0
@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_name (a_name: like name) is
+	set_name (a_name: like name)
 			-- Set `name' to `a_name'.
 		require
 			a_name_not_void: a_name /= Void

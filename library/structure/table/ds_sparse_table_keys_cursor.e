@@ -30,7 +30,7 @@ create {DS_SPARSE_TABLE_KEYS}
 
 feature {NONE} -- Initialization
 
-	make (a_container: like container) is
+	make (a_container: like container)
 			-- Create a new cursor for `a_container'.
 		require
 			a_container_not_void: a_container /= Void

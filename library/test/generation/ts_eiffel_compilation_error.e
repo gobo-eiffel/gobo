@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new error reporting that an Eiffel
 			-- compilation error occurred.
 		do
@@ -31,10 +31,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "Eiffel compilation error"
+	default_template: STRING = "Eiffel compilation error"
 			-- Default template used to built the error message
 
-	code: STRING is "TS0002"
+	code: STRING = "TS0002"
 			-- Error code
 
 invariant

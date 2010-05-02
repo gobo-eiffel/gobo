@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	expression: ET_EXPRESSION is
+	expression: ET_EXPRESSION
 			-- Conditional expression
 		deferred
 		ensure

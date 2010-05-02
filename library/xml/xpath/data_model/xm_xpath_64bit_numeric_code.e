@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_high_word, a_low_word: INTEGER) is
+	make (a_high_word, a_low_word: INTEGER)
 			-- Establish invariant
 		require
 			components_positive: a_high_word >= 0 and then a_low_word >= 0
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			low_word_set: low_word = a_low_word
 		end
 
-	make_with_offset (a_high_word, a_low_word: INTEGER) is
+	make_with_offset (a_high_word, a_low_word: INTEGER)
 			-- Establish invariant
 		require
 			components_positive: a_high_word >= 0 and then a_low_word >= 0 and then a_low_word + offset <= Platform.Maximum_integer
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			low_word_set: low_word = a_low_word + offset
 		end
 
-	make_from_sequence_number_with_double_offset (a_sequence_number: XM_XPATH_64BIT_NUMERIC_CODE; an_offset: INTEGER) is
+	make_from_sequence_number_with_double_offset (a_sequence_number: XM_XPATH_64BIT_NUMERIC_CODE; an_offset: INTEGER)
 				-- Establish invariant
 		require
 			sequence_number_not_void: a_sequence_number /= Void
@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 			low_word_set: low_word = a_sequence_number.low_word + offset + an_offset
 		end
 
-	make_with_large_offset (a_high_word, a_low_word: INTEGER) is
+	make_with_large_offset (a_high_word, a_low_word: INTEGER)
 			-- Establish invariant
 		require
 			components_positive: a_high_word >= 0 and then a_low_word >= 0 and then a_low_word + large_offset <= Platform.Maximum_integer
@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 			low_word_set: low_word = a_low_word + large_offset
 		end
 
-	make_from_integer (a_low_word: INTEGER) is
+	make_from_integer (a_low_word: INTEGER)
 			-- Establish invariant
 		require
 			component_positive: a_low_word >= 0
@@ -91,16 +91,16 @@ feature -- Access
 	high_word, low_word: INTEGER
 			-- Component integers
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			Result := high_word.hash_code // 2 + low_word.hash_code // 2
 		end
-		
+
 feature -- Comparison
 
 
-	is_less alias "<" (other: XM_XPATH_64BIT_NUMERIC_CODE): BOOLEAN is
+	is_less alias "<" (other: XM_XPATH_64BIT_NUMERIC_CODE): BOOLEAN
 			-- Is `Current' less than `other'?
 		require
 			other_not_void: other /= Void
@@ -114,7 +114,7 @@ feature -- Comparison
 			asymmetric: Result implies not (other < Current)
 		end
 
-	is_greater alias ">" (other:  XM_XPATH_64BIT_NUMERIC_CODE): BOOLEAN is
+	is_greater alias ">" (other:  XM_XPATH_64BIT_NUMERIC_CODE): BOOLEAN
 			-- Is `Current' greater than 'other'?
 		require
 			other_not_void: other /= Void
@@ -128,7 +128,7 @@ feature -- Comparison
 			definition: Result = (other < Current)
 		end
 
-	ie_equal (other:  XM_XPATH_64BIT_NUMERIC_CODE): BOOLEAN is
+	ie_equal (other:  XM_XPATH_64BIT_NUMERIC_CODE): BOOLEAN
 			-- Is `other` equal to `Current'?
 		require
 			other_not_void: other /= Void
@@ -138,7 +138,7 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_positive: BOOLEAN is
+	is_positive: BOOLEAN
 			-- Is the number positive?
 		do
 			Result := low_word > 0 or else high_word > 0
@@ -146,15 +146,15 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	offset: INTEGER is 32768
+	offset: INTEGER = 32768
 			-- 16th-bit offset
 
-	large_offset: INTEGER is 1048576
+	large_offset: INTEGER = 1048576
 			-- 20th-bit offset
 
 invariant
 
 	components_positive: high_word >= 0 and then low_word >= 0
-	
+
 end
-	
+

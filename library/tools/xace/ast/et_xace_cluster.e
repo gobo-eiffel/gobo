@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_pathname: like pathname; a_universe: ET_UNIVERSE) is
+	make (a_name: like name; a_pathname: like pathname; a_universe: ET_UNIVERSE)
 			-- Create a new cluster.
 		require
 			a_name_not_void: a_name /= Void
@@ -58,7 +58,7 @@ feature -- Access
 	name: STRING
 			-- Name
 
-	prefixed_name: STRING is
+	prefixed_name: STRING
 			-- Cluster name with possible prefixes
 		do
 			if library_prefix.count > 0 then
@@ -105,7 +105,7 @@ feature -- Status report
 	is_mounted: BOOLEAN
 			-- Has cluster been mounted?
 
-	is_fully_ecf_abstract: BOOLEAN is
+	is_fully_ecf_abstract: BOOLEAN
 			-- Are current cluster and recursively all its subclusters either abstract,
 			-- override, or the root of a library otherwise described by an ECF file?
 			-- Useful when generating ECF files out of Xace because this kind of cluster
@@ -135,7 +135,7 @@ feature -- Status report
 			end
 		end
 
-	is_valid_eiffel_filename (a_filename: STRING): BOOLEAN is
+	is_valid_eiffel_filename (a_filename: STRING): BOOLEAN
 			-- Is `a_filename' an Eiffel filename which has
 			-- not been excluded?
 		local
@@ -155,7 +155,7 @@ feature -- Status report
 			end
 		end
 
-	is_valid_directory_name (a_dirname: STRING): BOOLEAN is
+	is_valid_directory_name (a_dirname: STRING): BOOLEAN
 			-- Is `a_dirname' a directory name other than "." and
 			-- ".." and which has not been excluded?
 		local
@@ -185,7 +185,7 @@ feature -- Nested
 
 feature -- Setting
 
-	set_libraries (a_libraries: like libraries) is
+	set_libraries (a_libraries: like libraries)
 			-- Set `libraries' to `a_libraries'.
 		do
 			libraries := a_libraries
@@ -193,7 +193,7 @@ feature -- Setting
 			libraries_set: libraries = a_libraries
 		end
 
-	set_options (an_options: like options) is
+	set_options (an_options: like options)
 			-- Set `options' to `an_options'.
 		do
 			options := an_options
@@ -201,7 +201,7 @@ feature -- Setting
 			options_set: options = an_options
 		end
 
-	set_library_prefix (a_prefix: STRING) is
+	set_library_prefix (a_prefix: STRING)
 			-- Set `library_prefix' to `a_prefix',
 			-- and recursively in the subclusters.
 		require
@@ -215,7 +215,7 @@ feature -- Setting
 			library_prefix_set: library_prefix = a_prefix
 		end
 
-	set_cluster_prefix (a_prefix: STRING) is
+	set_cluster_prefix (a_prefix: STRING)
 			-- Set `cluster_prefix' to `a_prefix'.
 		require
 			a_prefix_not_void: a_prefix /= Void
@@ -227,7 +227,7 @@ feature -- Setting
 
 feature -- Element change
 
-	put_class_option (an_option: ET_XACE_CLASS_OPTIONS) is
+	put_class_option (an_option: ET_XACE_CLASS_OPTIONS)
 			-- Add `an_option' to `class_options'.
 		require
 			an_option_not_void: an_option /= Void
@@ -240,7 +240,7 @@ feature -- Element change
 
 feature -- Status setting
 
-	set_mounted (b: BOOLEAN) is
+	set_mounted (b: BOOLEAN)
 			-- Set `is_mounted' to `b'.
 		do
 			is_mounted := b
@@ -253,7 +253,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	merge_libraries (a_libraries: ET_XACE_MOUNTED_LIBRARIES; an_error_handler: ET_XACE_ERROR_HANDLER) is
+	merge_libraries (a_libraries: ET_XACE_MOUNTED_LIBRARIES; an_error_handler: ET_XACE_ERROR_HANDLER)
 			-- Add `libraries', and recursively the libraries of subclusters, to `a_libraries'.
 			-- Report any error (e.g. incompatible prefixes) in `an_error_handler'.
 		require
@@ -268,7 +268,7 @@ feature -- Basic operations
 			end
 		end
 
-	merge_externals (an_externals: ET_XACE_EXTERNALS) is
+	merge_externals (an_externals: ET_XACE_EXTERNALS)
 			-- Merge current cluster's externals and those
 			-- of subclusters to `an_externals'.
 		require
@@ -299,7 +299,7 @@ feature -- Basic operations
 			end
 		end
 
-	merge_exported_features (an_export: DS_LIST [ET_XACE_EXPORTED_FEATURE]) is
+	merge_exported_features (an_export: DS_LIST [ET_XACE_EXPORTED_FEATURE])
 			-- Merge current cluster's exported features and those
 			-- of subclusters to `an_export'.
 		require
@@ -341,7 +341,7 @@ feature -- Basic operations
 			no_void_export: not an_export.has_void
 		end
 
-	merge_components (a_components: DS_LIST [ET_XACE_COMPONENT]) is
+	merge_components (a_components: DS_LIST [ET_XACE_COMPONENT])
 			-- Merge current cluster's components and those
 			-- of subclusters to `a_components'.
 		require
@@ -363,7 +363,7 @@ feature -- Basic operations
 			no_void_component: not a_components.has_void
 		end
 
-	merge_assemblies (an_assemblies: DS_LIST [ET_XACE_ASSEMBLY]) is
+	merge_assemblies (an_assemblies: DS_LIST [ET_XACE_ASSEMBLY])
 			-- Merge current cluster's assemblies and those
 			-- of subclusters to `an_assemblies'.
 		require
@@ -389,7 +389,7 @@ feature -- Basic operations
 			no_void_assembly: not an_assemblies.has_void
 		end
 
-	merge_override_clusters (an_override_clusters: DS_LIST [ET_XACE_CLUSTER]) is
+	merge_override_clusters (an_override_clusters: DS_LIST [ET_XACE_CLUSTER])
 			-- Add current cluster to `an_override_clusters' if it is an
 			-- override cluster. Otherwise add top level override clusters
 			-- found recursively in its subclusters.
@@ -406,7 +406,7 @@ feature -- Basic operations
 			no_void_override_cluster: not an_override_clusters.has_void
 		end
 
-	merge_ecf_clusters (an_ecf_clusters: DS_LIST [ET_XACE_CLUSTER]) is
+	merge_ecf_clusters (an_ecf_clusters: DS_LIST [ET_XACE_CLUSTER])
 			-- Add current cluster and any of its subclusters to
 			-- `an_ecf_clusters' if they are the root of a library
 			-- that is otherwise described by the ECF file.
@@ -426,7 +426,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	new_recursive_cluster (a_name: STRING): like Current is
+	new_recursive_cluster (a_name: STRING): like Current
 			-- New recursive cluster
 		do
 			create Result.make (a_name, Void, universe)
@@ -439,7 +439,7 @@ feature {NONE} -- Implementation
 			Result.set_use_obsolete_syntax (use_obsolete_syntax)
 		end
 
-	has_case_insensitive (a_set: DS_HASH_SET [STRING]; v: STRING): BOOLEAN is
+	has_case_insensitive (a_set: DS_HASH_SET [STRING]; v: STRING): BOOLEAN
 			-- Does `a_set' contain `v' in a case-insensitive way?
 		require
 			a_set_not_void: a_set /= Void
@@ -461,7 +461,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	empty_prefix: STRING is ""
+	empty_prefix: STRING = ""
 			-- Empty prefix
 
 invariant

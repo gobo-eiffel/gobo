@@ -1,5 +1,5 @@
 note
-	
+
 	description:
 
 		"URI resolver:handles relative URI resolution, delegates scheme specific URL resolution"
@@ -28,10 +28,10 @@ create
 
 	make,
 	make_with_base
-	
+
 feature {NONE} -- Creation
 
-	make is
+	make
 			-- Create `uris'.
 			-- (Useful to descendant to establish invariant.)
 		do
@@ -39,8 +39,8 @@ feature {NONE} -- Creation
 			create schemes.make_map_default
 			schemes.set_key_equality_tester (string_equality_tester)
 		end
-		
-	make_with_base (a_uri: UT_URI) is
+
+	make_with_base (a_uri: UT_URI)
 			-- Create resolver with specified base URI.
 		require
 			a_uri_not_void: a_uri /= Void
@@ -53,22 +53,22 @@ feature -- Status report
 
 	uris: DS_STACK [UT_URI]
 			-- Base URI stack.
-			-- (A client or descendant may be entitled to put in and remove 
+			-- (A client or descendant may be entitled to put in and remove
 			-- intermediate values directly.)
 
-	supports_registering_schemes: BOOLEAN is
+	supports_registering_schemes: BOOLEAN
 			-- Does `Current' support resgitering scheme resolvers?
 		do
 			Result := True
 		end
 
-	is_stack_empty: BOOLEAN is
+	is_stack_empty: BOOLEAN
 			-- Is URI stack empty?
 		do
-			Result := uris.is_empty 
+			Result := uris.is_empty
 		end
 
-	uri: UT_URI is
+	uri: UT_URI
 			-- Current URI.
 		do
 			Result := uris.item
@@ -76,10 +76,10 @@ feature -- Status report
 
 	schemes: DS_HASH_TABLE [XM_URI_RESOLVER, STRING]
 			-- Registered scheme resolvers.
-			
+
 feature -- Setting
 
-	register_scheme (a_scheme: XM_URI_RESOLVER) is
+	register_scheme (a_scheme: XM_URI_RESOLVER)
 			-- Register scheme.
 		do
 			schemes.force (a_scheme, a_scheme.scheme)
@@ -87,13 +87,13 @@ feature -- Setting
 
 feature -- Element change
 
-	push_uri (a_uri: UT_URI ) is
+	push_uri (a_uri: UT_URI )
 			-- Push `a_uri' onto the stack.
 		do
 			uris.put (a_uri)
 		end
 
-	clear_uri_stack is
+	clear_uri_stack
 			-- Empty the URI stack.
 		do
 			uris.wipe_out
@@ -101,7 +101,7 @@ feature -- Element change
 
 feature -- Operation(s)
 
-	resolve (a_string_uri: STRING) is
+	resolve (a_string_uri: STRING)
 			-- Resolve a URI into the context of the base URI.
 		local
 			a_uri: UT_URI
@@ -124,7 +124,7 @@ feature -- Operation(s)
 			debug ("xml_resolver")
 				io.put_string ("resolve ")
 				io.put_string (a_string_uri)
-				if has_error then 
+				if has_error then
 					io.put_string (" failed")
 				else
 					io.put_string (" ok")
@@ -133,13 +133,13 @@ feature -- Operation(s)
 			end
 		end
 
-	resolve_uri (a_uri_reference: STRING) is
+	resolve_uri (a_uri_reference: STRING)
 			-- Resolve `a_uri_reference' on behalf of an application.
 		do
 			resolve (a_uri_reference)
 		end
 
-	resolve_finish is
+	resolve_finish
 			-- Get out of current URI scope.
 		do
 			check balanced: not uris.is_empty end
@@ -154,7 +154,7 @@ feature -- Operation(s)
 
 feature -- URI
 
-	resolve_absolute_uri (an_uri: UT_URI) is
+	resolve_absolute_uri (an_uri: UT_URI)
 			-- Resolve an absolute URI.
 		require
 			an_uri_not_void: an_uri /= Void
@@ -173,13 +173,13 @@ feature {NONE} -- Implementation
 
 feature -- Result
 
-	last_stream: KI_CHARACTER_INPUT_STREAM is
+	last_stream: KI_CHARACTER_INPUT_STREAM
 			-- Last stream initialised from external entity.
 		do
 			Result := last_resolver.last_stream
 		end
 
-	has_error: BOOLEAN is
+	has_error: BOOLEAN
 			-- Did the last resolution attempt succeed?
 		do
 			if last_resolver /= Void then
@@ -188,8 +188,8 @@ feature -- Result
 				Result := True
 			end
 		end
-	
-	last_error: STRING is
+
+	last_error: STRING
 			-- Last error message.
 		do
 			if last_resolver /= Void then
@@ -199,37 +199,37 @@ feature -- Result
 			end
 		end
 
-	last_uri_reference_stream: KI_CHARACTER_INPUT_STREAM is
+	last_uri_reference_stream: KI_CHARACTER_INPUT_STREAM
 			-- Last stream initialised from URI reference.
 		do
 			Result := last_stream
 		end
 
-	last_system_id: UT_URI is
+	last_system_id: UT_URI
 			-- System id used to actually open `last_uri_reference_stream'
 		do
 			Result := uri
 		end
 
-	has_uri_reference_error: BOOLEAN is
+	has_uri_reference_error: BOOLEAN
 			-- Did the last resolution attempt succeed?
 		do
 			Result := has_error
 		end
-		
-	last_uri_reference_error: STRING is
+
+	last_uri_reference_error: STRING
 			-- Last error message.
 		do
 			Result := last_error
 		end
 
-	has_media_type: BOOLEAN is
+	has_media_type: BOOLEAN
 			-- Is the media type available.
 		do
 			Result := last_resolver.has_media_type
 		end
 
-	last_media_type: UT_MEDIA_TYPE is
+	last_media_type: UT_MEDIA_TYPE
 			-- Media type, if available.
 		do
 			Result := last_resolver.last_media_type
@@ -237,10 +237,10 @@ feature -- Result
 
 feature {NONE} -- Errors
 
-	Unknown_scheme_error: STRING is "No handler for URL scheme"
+	Unknown_scheme_error: STRING = "No handler for URL scheme"
 
 invariant
 
 	uris_not_void: uris /= Void
-	
+
 end

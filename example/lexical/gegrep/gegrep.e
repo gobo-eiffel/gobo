@@ -23,7 +23,7 @@ create
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Start 'gegrep' execution.
 		local
 			i, nb: INTEGER
@@ -98,7 +98,7 @@ feature -- Execution
 
 feature -- Parsing
 
-	parse_file (a_file: KI_TEXT_INPUT_STREAM; a_filename: STRING) is
+	parse_file (a_file: KI_TEXT_INPUT_STREAM; a_filename: STRING)
 			-- Parse `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -128,14 +128,14 @@ feature -- Parsing
 
 feature -- Access
 
-	Usage_message: STRING is "usage: gegrep [-i] regexp [filename...]"
+	Usage_message: STRING = "usage: gegrep [-i] regexp [filename...]"
 
 	regexp: LX_DFA_REGULAR_EXPRESSION
 			-- Regular expression
 
 feature {NONE} -- Implementation
 
-	resurrect_code is
+	resurrect_code
 			-- Make sure that SmartEiffel does not complain about possible
 			-- "calls on a Void target in the living Eiffel code".
 		local

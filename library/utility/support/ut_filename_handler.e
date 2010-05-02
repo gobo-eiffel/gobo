@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new filename handler.
 		do
 			directory_separators := "/\"
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	pathname (a_dirname, a_filename: STRING): STRING is
+	pathname (a_dirname, a_filename: STRING): STRING
 			-- Pathname made up of `a_dirname' and `a_filename'
 			-- and separated by the first directory separator
 		require
@@ -61,7 +61,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_directory_separators (separators: STRING) is
+	set_directory_separators (separators: STRING)
 			-- Set `directory_separators' to `separators'.
 		require
 			separators_not_void: separators /= Void

@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type: like type) is
+	make (a_type: like type)
 			-- Create a new built-in conversion feature.
 		require
 			a_type_not_void: a_type /= Void
@@ -39,13 +39,13 @@ feature -- Access
 	type: ET_TYPE
 			-- Target type
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := types.last_leaf
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := types.break
@@ -53,7 +53,7 @@ feature -- Access
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			-- Do nothing.

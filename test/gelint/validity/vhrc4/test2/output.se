@@ -1,6 +1,6 @@
 ****** Fatal Error : Feature found is a procedure.
 Line 5 column 2 in CC (c.e) :
-	f (a, b: ANY) is
+	f (a, b: ANY)
 	^
 Line 14 column 11 in AA (a.e) :
 			print (+b)

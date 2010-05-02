@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT) is
+	make (a_project: GEANT_PROJECT)
 			-- Create a new 'gelex' command.
 		do
 			precursor (a_project)
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- Can command be executed?
 		do
 			Result := input_filename /= Void and then input_filename.count > 0 and
@@ -89,7 +89,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_size (a_size: STRING) is
+	set_size (a_size: STRING)
 			-- Set `size' to `a_size'.
 		require
 			a_size_not_void: a_size /= Void
@@ -100,7 +100,7 @@ feature -- Setting
 			size_set: size = a_size
 		end
 
-	set_backup (b: BOOLEAN) is
+	set_backup (b: BOOLEAN)
 			-- Set `backup' to `b'.
 		do
 			backup := b
@@ -108,7 +108,7 @@ feature -- Setting
 			backup_set: backup = b
 		end
 
-	set_ecs (b : BOOLEAN) is
+	set_ecs (b : BOOLEAN)
 			-- Set `ecs' to `b'.
 		do
 			ecs := b
@@ -116,7 +116,7 @@ feature -- Setting
 			ecs_set: ecs = b
 		end
 
-	set_full (b: BOOLEAN) is
+	set_full (b: BOOLEAN)
 			-- Set `full' to `b'.
 		do
 			full := b
@@ -124,7 +124,7 @@ feature -- Setting
 			full_set: full = b
 		end
 
-	set_case_insensitive (b: BOOLEAN) is
+	set_case_insensitive (b: BOOLEAN)
 			-- Set `case_insensitive' to `b'.
 		do
 			case_insensitive := b
@@ -132,7 +132,7 @@ feature -- Setting
 			case_insensitive_set: case_insensitive = b
 		end
 
-	set_meta_ecs (b: BOOLEAN) is
+	set_meta_ecs (b: BOOLEAN)
 			-- Set `meta_ecs' to `b'.
 		do
 			meta_ecs := b
@@ -140,7 +140,7 @@ feature -- Setting
 			meta_ecs_set: meta_ecs = b
 		end
 
-	set_no_default (b: BOOLEAN) is
+	set_no_default (b: BOOLEAN)
 			-- Set `no_default' to `b'.
 		do
 			no_default := b
@@ -148,7 +148,7 @@ feature -- Setting
 			no_default_set: no_default = b
 		end
 
-	set_no_warn (b: BOOLEAN) is
+	set_no_warn (b: BOOLEAN)
 			-- Set `no_warn' to `b'.
 		do
 			no_warn := b
@@ -156,7 +156,7 @@ feature -- Setting
 			no_warn_set: no_warn = b
 		end
 
-	set_separate_actions (b: BOOLEAN) is
+	set_separate_actions (b: BOOLEAN)
 			-- Set `separate_actions' to `b'.
 		do
 			separate_actions := b
@@ -164,7 +164,7 @@ feature -- Setting
 			separate_actions_set: separate_actions = b
 		end
 
-	set_output_filename (a_filename: like output_filename ) is
+	set_output_filename (a_filename: like output_filename )
 			-- Set `output_filename' to `a_filename'.
 		require
 			a_filename_not_void: a_filename /= Void
@@ -175,7 +175,7 @@ feature -- Setting
 			output_filename_set: output_filename = a_filename
 		end
 
-	set_input_filename (a_filename: like input_filename) is
+	set_input_filename (a_filename: like input_filename)
 			-- Set `input_filename' to `a_filename'.
 		require
 			a_filename_not_void: a_filename /= Void
@@ -188,7 +188,7 @@ feature -- Setting
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute command.
 		local
 			cmd: STRING

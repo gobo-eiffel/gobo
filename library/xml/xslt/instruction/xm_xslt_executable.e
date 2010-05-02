@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 	make (a_rule_manager: XM_XSLT_RULE_MANAGER; a_key_manager: XM_XSLT_KEY_MANAGER;
 			a_decimal_format_manager: XM_XSLT_DECIMAL_FORMAT_MANAGER;
 			a_collation_map: DS_HASH_TABLE [ST_COLLATOR, STRING]; a_name_pool: like name_pool;
-			a_module_list: DS_ARRAYED_LIST [STRING]; a_function_library: XM_XPATH_FUNCTION_LIBRARY_MANAGER) is
+			a_module_list: DS_ARRAYED_LIST [STRING]; a_function_library: XM_XPATH_FUNCTION_LIBRARY_MANAGER)
 			-- Establish invariant.
 		require
 			rule_manager_not_void: a_rule_manager /= Void
@@ -88,7 +88,7 @@ feature -- Access
 
 	default_output_properties: XM_XSLT_OUTPUT_PROPERTIES
 			-- Default output properties (for the unnamed output format)
-	
+
 	compiled_templates_index: DS_HASH_TABLE [XM_XSLT_COMPILED_TEMPLATE, INTEGER]
 			-- Index of named templates by `template_fingerprint'
 
@@ -104,7 +104,7 @@ feature -- Access
 	attribute_set_manager: XM_XSLT_ATTRIBUTE_SET_MANAGER
 			-- Manager for attribute set
 
-	system_id (a_module_number: INTEGER): STRING is
+	system_id (a_module_number: INTEGER): STRING
 			-- SYSTEM id for stylesheet module `a_module_number'
 		require
 			valid_module_number: is_valid_module_number (a_module_number)
@@ -114,7 +114,7 @@ feature -- Access
 			system_id_not_void: Result /= Void
 		end
 
-	module_system_ids: DS_LIST [STRING] is
+	module_system_ids: DS_LIST [STRING]
 			-- System-IDs of all compiled stylesheet modules
 		do
 			Result := module_list
@@ -122,7 +122,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	output_properties (a_fingerprint: INTEGER): XM_XSLT_OUTPUT_PROPERTIES is
+	output_properties (a_fingerprint: INTEGER): XM_XSLT_OUTPUT_PROPERTIES
 			-- Output properties set named by `a_fingerprint'?
 		require
 			valid_fingerprint: name_pool.is_valid_name_code (a_fingerprint)
@@ -145,7 +145,7 @@ feature -- Status report
 	is_strips_whitespace: BOOLEAN
 			-- Does `Current' strip any whitespace at all?
 
-	is_valid_module_number (a_module_number: INTEGER): BOOLEAN is
+	is_valid_module_number (a_module_number: INTEGER): BOOLEAN
 			-- is `a_module_number' a valid module number?
 		do
 			if a_module_number > 0 then Result := a_module_number <= module_list.count end
@@ -154,7 +154,7 @@ feature -- Status report
 	are_slots_allocated: BOOLEAN
 			-- Have variable slots been allocated yet?
 
-	has_output_properties (a_fingerprint: INTEGER): BOOLEAN is
+	has_output_properties (a_fingerprint: INTEGER): BOOLEAN
 			-- Does the executable have an output properties set named by `a_fingerprint'?
 		require
 			valid_fingerprint: name_pool.is_valid_name_code (a_fingerprint)
@@ -162,7 +162,7 @@ feature -- Status report
 			Result := output_properties_map.has (a_fingerprint)
 		end
 
-	missing_required_global_parameters (a_parameters: XM_XSLT_PARAMETER_SET): DS_LINKED_LIST [STRING] is
+	missing_required_global_parameters (a_parameters: XM_XSLT_PARAMETER_SET): DS_LINKED_LIST [STRING]
 			-- Required global parameters not supplied
 		require
 			a_parameters_not_void: a_parameters /= Void
@@ -189,7 +189,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_whitespace_stripping (a_status: BOOLEAN) is
+	set_whitespace_stripping (a_status: BOOLEAN)
 			-- Set whitespace stripping status.
 		do
 			is_strips_whitespace := a_status
@@ -197,7 +197,7 @@ feature -- Status setting
 			set: is_strips_whitespace = a_status
 		end
 
-	set_strips_input_type_annotations (a_status: BOOLEAN) is
+	set_strips_input_type_annotations (a_status: BOOLEAN)
 			-- Set type-annotations stripping status status.
 		do
 			is_strips_type_annotation := a_status
@@ -207,7 +207,7 @@ feature -- Status setting
 
 feature -- Creation
 
-	new_stripper (a_transformer: XM_XSLT_TRANSFORMER; a_builder: XM_XPATH_BUILDER): XM_XSLT_STRIPPER is
+	new_stripper (a_transformer: XM_XSLT_TRANSFORMER; a_builder: XM_XPATH_BUILDER): XM_XSLT_STRIPPER
 			-- Stripper configured to implement the whitespace stripping rules
 		require
 			transformer_not_void: a_transformer /= Void
@@ -221,7 +221,7 @@ feature -- Creation
 			stripper_not_void: Result /= Void
 		end
 
-	new_bindery: XM_XSLT_BINDERY is
+	new_bindery: XM_XSLT_BINDERY
 			-- New variable bindings
 		require
 			slots_allocated: are_slots_allocated
@@ -230,10 +230,10 @@ feature -- Creation
 		ensure
 			bindery_not_void: Result /= Void
 		end
-		
+
 feature -- Element change
 
-	set_function_library (a_function_library: XM_XPATH_FUNCTION_LIBRARY_MANAGER) is
+	set_function_library (a_function_library: XM_XPATH_FUNCTION_LIBRARY_MANAGER)
 			-- Set the function library.
 		require
 			function_library_not_void: a_function_library /= Void
@@ -243,7 +243,7 @@ feature -- Element change
 			function_library_set: function_library = a_function_library
 		end
 
-	set_named_template_table (a_compiled_templates_index: DS_HASH_TABLE [XM_XSLT_COMPILED_TEMPLATE, INTEGER]) is
+	set_named_template_table (a_compiled_templates_index: DS_HASH_TABLE [XM_XSLT_COMPILED_TEMPLATE, INTEGER])
 			-- Set map of compiled templates.
 		require
 			map_not_void: a_compiled_templates_index /= Void
@@ -253,7 +253,7 @@ feature -- Element change
 			map_set: compiled_templates_index = a_compiled_templates_index
 		end
 
-	set_pattern_slot_space (a_pattern_slot_count: INTEGER) is
+	set_pattern_slot_space (a_pattern_slot_count: INTEGER)
 			-- Set space requirements for pattern variables and allocate slots for key expressions.
 		require
 			positive_pattern_slot_count: a_pattern_slot_count >= 0
@@ -266,7 +266,7 @@ feature -- Element change
 			slots_allocated: are_slots_allocated and then largest_pattern_stack_frame = a_pattern_slot_count
 		end
 
-	set_default_output_properties (a_property_set: XM_XSLT_OUTPUT_PROPERTIES) is
+	set_default_output_properties (a_property_set: XM_XSLT_OUTPUT_PROPERTIES)
 			-- Set output properties for the unnamed format.
 		require
 			output_properties_not_void: a_property_set /= Void
@@ -276,7 +276,7 @@ feature -- Element change
 			default_output_properties_set: default_output_properties = a_property_set
 		end
 
-	set_output_properties (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_fingerprint: INTEGER) is
+	set_output_properties (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_fingerprint: INTEGER)
 			-- Set output properties named by `a_fingerprint'?
 		require
 			valid_fingerprint: name_pool.is_valid_name_code (a_fingerprint)
@@ -288,7 +288,7 @@ feature -- Element change
 			property_set_known: has_output_properties (a_fingerprint)
 		end
 
-	save_static_context (a_static_context: XM_XSLT_EXPRESSION_CONTEXT) is
+	save_static_context (a_static_context: XM_XSLT_EXPRESSION_CONTEXT)
 			-- Save static context of principal stylesheet.
 			-- For XPath-valued global parameter setting
 		require
@@ -298,8 +298,8 @@ feature -- Element change
 		ensure
 			static_context_saved: static_context = a_static_context
 		end
-	
-	set_stripper_rules (a_stripper_rules_set: XM_XSLT_MODE) is
+
+	set_stripper_rules (a_stripper_rules_set: XM_XSLT_MODE)
 			-- Set strip/preserve whitespace rules
 		do
 			stripper_rules := a_stripper_rules_set
@@ -307,7 +307,7 @@ feature -- Element change
 			stripper_rules_set: stripper_rules = a_stripper_rules_set
 		end
 
-	set_isolation_level (an_isolation_level: INTEGER) is
+	set_isolation_level (an_isolation_level: INTEGER)
 			-- Set isolation-level to `an_isolation_level'.
 		require
 			isolation_level_small_enough: an_isolation_level <= Serializable
@@ -318,7 +318,7 @@ feature -- Element change
 			isolation_level_set: isolation_level = an_isolation_level
 		end
 
-	add_required_parameter (a_fingerprint: INTEGER) is
+	add_required_parameter (a_fingerprint: INTEGER)
 			-- Add `a_fingerprint' to `required_parameters'.
 		do
 			required_parameters.force (a_fingerprint)
@@ -332,7 +332,7 @@ feature {XM_XSLT_EVALUATION_CONTEXT} -- Access
 			-- Map of collation names to collators
 
 feature {NONE} -- Implementation
-	
+
 	stripper_rules: XM_XSLT_MODE
 			-- Whitespace stripping rules
 
@@ -354,11 +354,11 @@ invariant
 	collation_map_not_void: collation_map /= Void
 	module_list_not_void: module_list /= Void
 	character_map_index_not_void: character_map_index /= Void
-	function_library_not_void: function_library /= Void	
+	function_library_not_void: function_library /= Void
 	isolation_level_small_enough: isolation_level <= Serializable
 	isolation_level_large_enough: isolation_level >= Read_uncommitted
 	attribute_set_manager_not_void: attribute_set_manager /= Void
 	required_parameters_not_void: required_parameters /= Void
 
 end
-	
+

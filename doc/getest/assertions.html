@@ -136,14 +136,14 @@ feature</strong></em></font><em> </em><font color="#008000">-- Access
 </em><font color="#000080"><em><strong>feature</strong></em></font><em> </em><font
 color="#008000">-- Setting</font><em>
 
-    set_up </em><font color="#000080"><em><strong>is</strong></em></font><em>
+    set_up
 </em><font color="#008000">            -- Connect to the database.</font><em>
         </em><font color="#000080"><em><strong>do</strong></em></font><em>
             </em><font color="#000080"><em><strong>create</strong></em></font><em> db</em>.<em>make
             db</em>.<em>connect
         </em><font color="#000080"><em><strong>end</strong></em></font><em>
 
-    tear_down </em><font color="#000080"><em><strong>is</strong></em></font><em>
+    tear_down
 </em><font color="#008000">            -- Disconnect from the database.</font><em>
         </em><font color="#000080"><em><strong>do</strong></em></font><em>
             db</em>.<em>disconnect
@@ -153,7 +153,7 @@ color="#008000">-- Setting</font><em>
 </em><font color="#000080"><em><strong>feature</strong></em></font><em> </em><font
 color="#008000">-- Test</font><em>
 
-    test_connection </em><font color="#000080"><em><strong>is</strong></em></font><em>
+    test_connection
 </em><font color="#008000">            -- Test database connection.</font><em>
         </em><font color="#000080"><em><strong>do</strong></em></font><em>
             assert </em>(<font color="#800000"><em>&quot;db_not_void&quot;</em></font>,<em> db </em>/=<em> </em><font
@@ -161,7 +161,7 @@ color="#008080"><em>Void</em></font>)<em>
             assert </em>(<font color="#800000"><em>&quot;db_connected&quot;</em></font>,<em> db</em>.<em>is_connected</em>)<em>
         </em><font color="#000080"><em><strong>end</strong></em></font><em>
 
-    test_insertion </em><font color="#000080"><em><strong>is</strong></em></font><em>
+    test_insertion
 </em><font color="#008000">            -- Test insertion in database.</font><em>
         </em><font color="#000080"><em><strong>do</strong></em></font><em>
             db.put </em>(<font color="#800000"><em>&quot;gobo&quot;</em></font>,<em> </em><font
@@ -194,9 +194,9 @@ color="#800000"><em>&quot;name&quot;</em></font>))<em>
             <strong>Last Updated:</strong> 13 February 2008</font><br>
             <!--webbot bot="PurpleText"
             preview="
-$Date$ 
+$Date$
 $Revision$"
-            --> 
+            -->
         </address>
         </td>
         <td align="right" valign="top"><a

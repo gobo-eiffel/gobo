@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (msg: STRING) is
+	make (msg: STRING)
 			-- Create a new command-line usage message.
 		require
 			msg_not_void: msg /= Void
@@ -33,10 +33,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "usage: $0 $1"
+	default_template: STRING = "usage: $0 $1"
 			-- Default template used to built the error message
 
-	code: STRING is "UT0005"
+	code: STRING = "UT0005"
 			-- Error code
 
 invariant

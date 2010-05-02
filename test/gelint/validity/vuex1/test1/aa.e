@@ -6,12 +6,12 @@ create
 
 feature
 
-	make is
+	make
 		do
 			f ("gobo")
 		end
 
-	f (a: ANY) is
+	f (a: ANY)
 		local
 			p: PROCEDURE [ANY, TUPLE]
 		do

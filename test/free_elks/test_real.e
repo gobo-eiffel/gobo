@@ -24,7 +24,7 @@ create
 
 feature -- Test
 
-	test_default_create is
+	test_default_create
 			-- Test feature 'default_create'.
 		local
 			r: REAL
@@ -32,7 +32,7 @@ feature -- Test
 			assert ("default", r = {REAL} 0.0)
 		end
 
-	test_is_less is
+	test_is_less
 			-- Test feature 'is_less alias "<"'.
 		local
 			r1, r2: REAL
@@ -48,7 +48,7 @@ feature -- Test
 			assert ("not_less_than2", not (r1 < r2))
 		end
 
-	test_is_less_equal is
+	test_is_less_equal
 			-- Test feature 'is_less_equal alias "<="'.
 		local
 			r1, r2: REAL
@@ -64,7 +64,7 @@ feature -- Test
 			assert ("less_equal2", r1 <= r2)
 		end
 
-	test_is_greater is
+	test_is_greater
 			-- Test feature 'is_greater alias ">"'.
 		local
 			r1, r2: REAL
@@ -80,7 +80,7 @@ feature -- Test
 			assert ("not_greater_than2", not (r1 > r2))
 		end
 
-	test_is_greater_equal is
+	test_is_greater_equal
 			-- Test feature 'is_greater_equal alias ">="'.
 		local
 			r1, r2: REAL
@@ -96,7 +96,7 @@ feature -- Test
 			assert ("greater_equal2", r1 >= r2)
 		end
 
-	test_out is
+	test_out
 			-- Test feature 'out'.
 		local
 			r: REAL
@@ -116,7 +116,7 @@ feature -- Test
 			assert ("new_string2", l_out /= r.out)
 		end
 
-	test_item is
+	test_item
 			-- Test feature 'item'.
 		local
 			r: REAL
@@ -129,7 +129,7 @@ feature -- Test
 			assert ("item4", ({REAL} -100.0).item = {REAL} -100.0)
 		end
 
-	test_set_item___fail_ise is
+	test_set_item___fail_ise
 			-- Test feature 'set_item'.
 			-- Does not work with ISE Eiffel.
 		local
@@ -153,7 +153,7 @@ feature -- Test
 			end
 		end
 
-	test_to_reference is
+	test_to_reference
 			-- Test feature 'to_reference'.
 		local
 			r: REAL
@@ -169,7 +169,7 @@ feature -- Test
 			assert ("item2", rref.item = {REAL} -10.2)
 		end
 
-	test_make_from_reference___fail_ise is
+	test_make_from_reference___fail_ise
 			-- Test feature 'make_from_reference'.
 			-- Does not work with ISE Eiffel.
 		local
@@ -188,7 +188,7 @@ feature -- Test
 			end
 		end
 
-	test_plus is
+	test_plus
 			-- Test feature 'plus alias "+"'.
 		local
 			r1, r2, r3, r4: REAL
@@ -204,7 +204,7 @@ feature -- Test
 			assert ("plus1", r4 = r3)
 		end
 
-	test_minus is
+	test_minus
 			-- Test feature 'minus alias "-"'.
 		local
 			r1, r2, r3: REAL
@@ -215,7 +215,7 @@ feature -- Test
 			assert ("minus1", r1 - r2 = r3)
 		end
 
-	test_product is
+	test_product
 			-- Test feature 'product alias "*"'.
 		local
 			r1, r2, r3: REAL
@@ -226,7 +226,7 @@ feature -- Test
 			assert ("times1", r1 * r2 = r3)
 		end
 
-	test_quotient is
+	test_quotient
 			-- Test feature 'quotient alias "/"'.
 		local
 			r1, r2, r3: REAL
@@ -237,7 +237,7 @@ feature -- Test
 			assert ("divide1", r1 / r2 = r3)
 		end
 
-	test_power is
+	test_power
 			-- Test feature 'power alias "^"'.
 		local
 			r1: REAL
@@ -253,7 +253,7 @@ feature -- Test
 			assert ("power2", r1 ^ r2 = r3)
 		end
 
-	test_opposite is
+	test_opposite
 			-- Test feature 'opposite alias "-"'.
 		local
 			r1, r2: REAL
@@ -263,7 +263,7 @@ feature -- Test
 			assert ("minus1", -r1 = r2)
 		end
 
-	test_identity is
+	test_identity
 			-- Test feature 'identity alias "+"'.
 		local
 			r1, r2: REAL
@@ -273,7 +273,7 @@ feature -- Test
 			assert ("plus1", +r1 = r2)
 		end
 
-	test_truncated_to_integer is
+	test_truncated_to_integer
 			-- Test feature 'truncated_to_integer'.
 		local
 			r: REAL
@@ -284,7 +284,7 @@ feature -- Test
 			assert ("truncated_to_integer1", r.truncated_to_integer = i)
 		end
 
-	test_truncated_to_integer_64 is
+	test_truncated_to_integer_64
 			-- Test feature 'truncated_to_integer_64'.
 		local
 			r: REAL
@@ -295,7 +295,7 @@ feature -- Test
 			assert ("truncated_to_integer_64_1", r.truncated_to_integer_64 = i)
 		end
 
-	test_to_double is
+	test_to_double
 			-- Test feature 'to_double'.
 		local
 			r: REAL
@@ -306,7 +306,7 @@ feature -- Test
 			assert ("to_double1", r.to_double = d)
 		end
 
-	test_ceiling_real_32 is
+	test_ceiling_real_32
 			-- Test feature 'ceiling_real_32'.
 		local
 			r1, r2: REAL
@@ -316,7 +316,7 @@ feature -- Test
 			assert ("ceiling_real_32_1", r1.ceiling_real_32 = r2)
 		end
 
-	test_floor_real_32 is
+	test_floor_real_32
 			-- Test feature 'floor_real_32'.
 		local
 			r1, r2: REAL
@@ -326,7 +326,7 @@ feature -- Test
 			assert ("floor_real_32_1", r1.floor_real_32 = r2)
 		end
 
-	test_abs is
+	test_abs
 			-- Test feature 'abs'.
 		local
 			r1, r2: REAL
@@ -339,7 +339,7 @@ feature -- Test
 			assert ("abs1", r1.abs = r2)
 		end
 
-	test_convert is
+	test_convert
 			-- Test conversion.
 		local
 			r: REAL

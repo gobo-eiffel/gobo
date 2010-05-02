@@ -21,7 +21,7 @@ inherit
 
 	XM_XPATH_RECEIVER_OPTIONS
 		export {NONE} all end
-		
+
 	XM_XPATH_SHARED_NODE_KIND_TESTS
 		export {NONE} all end
 
@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_executable: XM_XSLT_EXECUTABLE; a_name_code: INTEGER; a_validation_action: INTEGER; a_simple_type: XM_XPATH_SIMPLE_TYPE; a_type_annotation: INTEGER) is
+	make (an_executable: XM_XSLT_EXECUTABLE; a_name_code: INTEGER; a_validation_action: INTEGER; a_simple_type: XM_XPATH_SIMPLE_TYPE; a_type_annotation: INTEGER)
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
@@ -57,8 +57,8 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
-	item_type: XM_XPATH_ITEM_TYPE is
+
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, when known
 		do
 			Result := attribute_node_kind_test
@@ -70,7 +70,7 @@ feature -- Access
 
 feature -- Status_report
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -81,10 +81,10 @@ feature -- Status_report
 			std.error.put_string (a_string)
 			std.error.put_string (shared_name_pool.display_name_from_name_code (name_code)); std.error.put_new_line
 		end
-	
+
 feature -- Status_setting
 
-	set_no_special_characters is
+	set_no_special_characters
 			-- Certify free of special characters.
 		do
 			if not are_no_special_characters (options) then
@@ -96,7 +96,7 @@ feature -- Status_setting
 
 feature -- Optimization
 
-	type_check (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	type_check (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type checking
 		do
 			-- do nothing
@@ -104,7 +104,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_receiver: XM_XPATH_RECEIVER
@@ -115,7 +115,7 @@ feature -- Evaluation
 			an_annotation := type_annotation
 
 			-- We may need to change the namespace prefix if the one we chose is
-			--  already in use with a different namespace URI. 
+			--  already in use with a different namespace URI.
 			-- This is done behind the scenes by the Outputter
 
 			expand_children (a_context)
@@ -131,10 +131,10 @@ feature -- Evaluation
 				a_receiver.notify_attribute (name_code, an_annotation, last_string_value, some_receiver_options)
 			end
 		end
-	
+
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 	options: INTEGER
 			-- Receiver options
 
-	evaluate_name_code (a_context: XM_XPATH_CONTEXT) is
+	evaluate_name_code (a_context: XM_XPATH_CONTEXT)
 			-- Evaluate name code.
 		do
 			last_name_code := name_code
@@ -168,4 +168,4 @@ invariant
 	validation: initialized implies validation_action >= Validation_strict  and then Validation_strip >= validation_action
 
 end
-	
+

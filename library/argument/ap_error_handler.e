@@ -29,7 +29,7 @@ feature -- Error detection
 	has_error: BOOLEAN
 			-- Has an error been detected?
 
-	reset is
+	reset
 			-- Reset `has_errors' to false.
 		do
 			has_error := False
@@ -39,7 +39,7 @@ feature -- Error detection
 
 feature -- Error reporting
 
-	report_error_message (an_error: STRING) is
+	report_error_message (an_error: STRING)
 			-- Report `an_error'.
 		do
 			has_error := True

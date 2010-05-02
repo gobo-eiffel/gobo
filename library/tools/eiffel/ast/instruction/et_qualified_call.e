@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like qualified_name; args: like arguments) is
+	make (a_name: like qualified_name; args: like arguments)
 			-- Create a new qualified call.
 		require
 			a_name_not_void: a_name /= Void
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset call as it was when it was last parsed.
 		do
 			name.reset
@@ -50,7 +50,7 @@ feature -- Access
 	qualified_name: ET_QUALIFIED_FEATURE_NAME
 			-- Qualified feature name
 
-	name: ET_FEATURE_NAME is
+	name: ET_FEATURE_NAME
 			-- Feature name
 		do
 			Result := qualified_name.feature_name
@@ -61,20 +61,20 @@ feature -- Access
 	arguments: ET_ACTUAL_ARGUMENT_LIST
 			-- Arguments
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
 			Result := qualified_name.position
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := qualified_name.first_leaf
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			if arguments /= Void then
@@ -84,7 +84,7 @@ feature -- Access
 			end
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			if arguments /= Void then
@@ -96,7 +96,7 @@ feature -- Access
 
 feature -- Measurement
 
-	arguments_count: INTEGER is
+	arguments_count: INTEGER
 			-- Number of arguments
 		local
 			l_arguments: like arguments
@@ -110,10 +110,10 @@ feature -- Measurement
 			no_argument: arguments = Void implies Result = 0
 			with_arguments: arguments /= Void implies Result = arguments.count
 		end
-		
+
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_qualified_call (Current)

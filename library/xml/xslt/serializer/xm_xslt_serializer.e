@@ -30,14 +30,14 @@ feature -- Access
 	last_error: XM_XPATH_ERROR_VALUE
 		-- Last reported fatal or non-recovered error
 
-	error_listener: XM_XSLT_ERROR_LISTENER is
+	error_listener: XM_XSLT_ERROR_LISTENER
 			-- Destination for error messages and warnings
 		deferred
 		ensure
 			error_listener_not_void: Result /= Void
 		end
 
-	encoder_factory: XM_XSLT_ENCODER_FACTORY is
+	encoder_factory: XM_XSLT_ENCODER_FACTORY
 			-- Factory for output encoders
 		deferred
 		ensure
@@ -51,7 +51,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	report_warning (a_message: STRING; a_locator: XM_XPATH_LOCATOR) is
+	report_warning (a_message: STRING; a_locator: XM_XPATH_LOCATOR)
 			-- Report a warning.
 		require
 			a_message_not_void: a_message /= Void
@@ -59,7 +59,7 @@ feature -- Basic operations
 			error_listener.warning (a_message, a_locator)
 		end
 
-	report_recoverable_error (a_error: XM_XPATH_ERROR_VALUE) is
+	report_recoverable_error (a_error: XM_XPATH_ERROR_VALUE)
 			-- Report a recoverable error.
 		require
 			a_error_not_void: a_error /= Void
@@ -76,7 +76,7 @@ feature -- Basic operations
 			end
 		end
 
-	report_fatal_error (a_error: XM_XPATH_ERROR_VALUE) is
+	report_fatal_error (a_error: XM_XPATH_ERROR_VALUE)
 			-- Report a recoverable error.
 		require
 			error_not_void: a_error /= Void
@@ -99,4 +99,4 @@ invariant
 	is_error_implies_error_value: is_error implies last_error /= Void
 
 end
-	
+

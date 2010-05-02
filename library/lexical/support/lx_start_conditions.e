@@ -29,8 +29,8 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_initial (a_capacity: INTEGER) is
-			-- Create a new start condition list and 
+	make_with_initial (a_capacity: INTEGER)
+			-- Create a new start condition list and
 			-- insert the "INITIAL" start condition.
 		require
 			a_capacity_positive: a_capacity > 0
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	has_start_condition (a_name: STRING): BOOLEAN is
+	has_start_condition (a_name: STRING): BOOLEAN
 			-- Does current list include a start condition named `a_name'?
 			-- (Start condition names are case insensitive.)
 		require
@@ -70,7 +70,7 @@ feature -- Status report
 
 feature -- Access
 
-	start_condition (a_name: STRING): LX_START_CONDITION is
+	start_condition (a_name: STRING): LX_START_CONDITION
 			-- Start condition named `a_name'
 			-- (Start condition names are case insensitive.)
 		require
@@ -97,7 +97,7 @@ feature -- Access
 			start_condition_not_void: Result /= Void
 		end
 
-	names: ARRAY [STRING] is
+	names: ARRAY [STRING]
 			-- Names of the start conditions held in current list
 		local
 			i, nb: INTEGER
@@ -121,7 +121,7 @@ feature -- Access
 
 feature -- Element change
 
-	force_new_start_condition (a_name: STRING; is_exclusive: BOOLEAN) is
+	force_new_start_condition (a_name: STRING; is_exclusive: BOOLEAN)
 			-- Create a new start condition named `a_name' and insert
 			-- it at the end of list.
 		require
@@ -140,7 +140,7 @@ feature -- Element change
 			is_exclusive_set: last.is_exclusive = is_exclusive
 		end
 
-	append_start_conditions (other: LX_START_CONDITIONS) is
+	append_start_conditions (other: LX_START_CONDITIONS)
 			-- Insert `other''s start conditions which are not
 			-- inserted yet at the end of list.
 		require
@@ -163,7 +163,7 @@ feature -- Element change
 			end
 		end
 
-	append_non_eof_start_conditions (other: LX_START_CONDITIONS) is
+	append_non_eof_start_conditions (other: LX_START_CONDITIONS)
 			-- Insert `other''s start conditions which have no
 			-- EOF rule yet at the end of list.
 		require
@@ -188,7 +188,7 @@ feature -- Element change
 
 feature -- Traversal
 
-	add_nfa_to_all (a_nfa: LX_NFA) is
+	add_nfa_to_all (a_nfa: LX_NFA)
 			-- Add `a_nfa' to `patterns' of all start
 			-- conditions in current list.
 		require
@@ -207,7 +207,7 @@ feature -- Traversal
 			end
 		end
 
-	add_nfa_to_non_exclusive (a_nfa: LX_NFA) is
+	add_nfa_to_non_exclusive (a_nfa: LX_NFA)
 			-- Add `a_nfa' to `patterns' of all non-exclusive
 			-- start conditions in current list.
 		require
@@ -230,7 +230,7 @@ feature -- Traversal
 			end
 		end
 
-	add_bol_nfa_to_all (a_nfa: LX_NFA) is
+	add_bol_nfa_to_all (a_nfa: LX_NFA)
 			-- Add `a_nfa' to `bol_patterns' of all start
 			-- conditions in current list.
 		require
@@ -249,7 +249,7 @@ feature -- Traversal
 			end
 		end
 
-	add_bol_nfa_to_non_exclusive (a_nfa: LX_NFA) is
+	add_bol_nfa_to_non_exclusive (a_nfa: LX_NFA)
 			-- Add `a_nfa' to `bol_patterns' of all non-exclusive
 			-- start conditions in current list.
 		require

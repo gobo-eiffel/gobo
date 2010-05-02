@@ -20,30 +20,30 @@ feature -- Access
 
 	left: ET_EXPRESSION
 			-- Left-hand-side
-	
+
 	right: ET_EXPRESSION
 			-- Right-hand-side
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
 			Result := left.position
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := left.first_leaf
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := right.last_leaf
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := right.break
@@ -51,7 +51,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_left (a_left: like left) is
+	set_left (a_left: like left)
 			-- Set `left' to `a_left'.
 		require
 			a_left_not_void: a_left /= Void
@@ -61,7 +61,7 @@ feature -- Setting
 			left_set: left = a_left
 		end
 
-	set_right (a_right: like right) is
+	set_right (a_right: like right)
 			-- Set `right' to `a_right'.
 		require
 			a_right_not_void: a_right /= Void

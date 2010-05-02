@@ -18,7 +18,7 @@ obsolete
 
 feature {DP_INTERFACE} -- Status report
 
-	can_implement (an_interface: DP_INTERFACE): BOOLEAN is
+	can_implement (an_interface: DP_INTERFACE): BOOLEAN
 			-- Can current implementation implement `an_interface'?
 		require
 			an_interface_not_void: an_interface /= Void
@@ -28,7 +28,7 @@ feature {DP_INTERFACE} -- Status report
 
 feature {DP_INTERFACE} -- Setting
 
-	implement (an_interface: DP_INTERFACE) is
+	implement (an_interface: DP_INTERFACE)
 			-- Tell current implementation to implement `an_interface'?
 		require
 			an_interface_not_void: an_interface /= Void

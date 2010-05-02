@@ -14,7 +14,7 @@ deferred class KL_PART_COMPARATOR [G]
 
 feature -- Status report
 
-	less_than (u, v: G): BOOLEAN is
+	less_than (u, v: G): BOOLEAN
 			-- Is `u' considered less than `v'?
 		require
 			u_not_void: u /= Void
@@ -24,7 +24,7 @@ feature -- Status report
 			asymmetric: Result implies not less_than (v, u)
 		end
 
-	greater_than (u, v: G): BOOLEAN is
+	greater_than (u, v: G): BOOLEAN
 			-- Is `u' considered greater than `v'?
 		require
 			u_not_void: u /= Void

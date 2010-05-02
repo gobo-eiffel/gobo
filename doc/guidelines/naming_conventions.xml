@@ -281,7 +281,7 @@ as in the following example:
 <para>
 
 <programlisting>
-<text>_   </text><featurename>new_foo</featurename> (<argument>a_string</argument>: <classname>STRING</classname>): <returnvalue><classname>FOO</classname></returnvalue> is
+<text>_   </text><featurename>new_foo</featurename> (<argument>a_string</argument>: <classname>STRING</classname>): <returnvalue><classname>FOO</classname></returnvalue>
 <text>_   _   _   </text><comment>Foo made up of characters of <argument>a_string</argument></comment>
 <text>_   _   _   </text><comment>(Create a new objet at each call.)</comment>
 <text>_   _   </text>require

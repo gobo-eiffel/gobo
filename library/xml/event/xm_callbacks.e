@@ -14,17 +14,17 @@ deferred class XM_CALLBACKS
 
 feature -- Document
 
-	on_start is
+	on_start
 			-- Called when parsing starts.
 		deferred
 		end
 
-	on_finish is
+	on_finish
 			-- Called when parsing finished.
 		deferred
 		end
 
-	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN) is
+	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN)
 			-- XML declaration.
 		require
 			a_version_not_void: a_version /= Void
@@ -34,7 +34,7 @@ feature -- Document
 
 feature -- Errors
 
-	on_error (a_message: STRING) is
+	on_error (a_message: STRING)
 			-- Event producer detected an error.
 		require
 			not_void: a_message /= Void
@@ -43,7 +43,7 @@ feature -- Errors
 
 feature -- Meta
 
-	on_processing_instruction (a_name: STRING; a_content: STRING) is
+	on_processing_instruction (a_name: STRING; a_content: STRING)
 			-- Processing instruction.
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		require
@@ -52,7 +52,7 @@ feature -- Meta
 		deferred
 		end
 
-	on_comment (a_content: STRING) is
+	on_comment (a_content: STRING)
 			-- Processing a comment.
 			-- Atomic: single comment produces single event
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
@@ -63,7 +63,7 @@ feature -- Meta
 
 feature -- Tag
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Start of start tag.
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		require
@@ -72,7 +72,7 @@ feature -- Tag
 		deferred
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
 			-- Start of attribute.
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		require
@@ -82,12 +82,12 @@ feature -- Tag
 		deferred
 		end
 
-	on_start_tag_finish is
+	on_start_tag_finish
 			-- End of start tag.
 		deferred
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- End tag.
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		require
@@ -98,7 +98,7 @@ feature -- Tag
 
 feature -- Content
 
-	on_content (a_content: STRING) is
+	on_content (a_content: STRING)
 			-- Text content.
 			-- NOT atomic: two on_content events may follow each other
 			-- without a markup event in between.
@@ -111,19 +111,19 @@ feature -- Content
 
 feature -- Support
 
-	has_prefix (a: STRING): BOOLEAN is
+	has_prefix (a: STRING): BOOLEAN
 			-- Is prefix in use?
 		do
 			Result := a /= Void and then a.count > 0
 		end
 
-	has_namespace (a: STRING): BOOLEAN is
+	has_namespace (a: STRING): BOOLEAN
 			-- Is namespace resolved?
 		do
 			Result := a /= Void
 		end
 
-	is_local_part (a: STRING): BOOLEAN is
+	is_local_part (a: STRING): BOOLEAN
 			-- Is this a valid local part string?
 		do
 			Result := a /= Void and then a.count > 0
@@ -133,11 +133,11 @@ feature -- Support
 
 feature -- Assertion
 
-	has_resolved_namespaces: BOOLEAN is
+	has_resolved_namespaces: BOOLEAN
 			-- Does this callback event consumer expect resolved
-			-- namespaces? 
-			-- If True, it must be located downstream of a filter 
-			-- or source producing resolved namespaces such 
+			-- namespaces?
+			-- If True, it must be located downstream of a filter
+			-- or source producing resolved namespaces such
 			-- as XM_NAMESPACE_RESOLVER.
 		do
 		end

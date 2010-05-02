@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_variables: like variables; an_error_handler: like error_handler) is
+	make (a_variables: like variables; an_error_handler: like error_handler)
 			-- Create a new Xace XML preprocessor.
 			-- Use `a_variables' for variable expansion.
 			-- Use `a_variables' to decide whether "if" and "unless"
@@ -56,7 +56,7 @@ feature -- Access
 
 feature -- Preprocessing
 
-	preprocess_element (a_composite: XM_ELEMENT; a_position_table: XM_POSITION_TABLE) is
+	preprocess_element (a_composite: XM_ELEMENT; a_position_table: XM_POSITION_TABLE)
 			-- Expand variables in all attributes from `a_composite' and strip
 			-- elements if they have "if" or "unless" attributes which do not
 			-- evaluate to `True'.
@@ -90,7 +90,7 @@ feature -- Preprocessing
 
 feature {NONE} -- Implementation
 
-	should_strip_element (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): BOOLEAN is
+	should_strip_element (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): BOOLEAN
 			-- Does `an_element' contain an "if" attribute which evaluates
 			-- to false or an "unless" attribute which evaluates to true?
 		require
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_valid_expression (a_string: STRING): BOOLEAN is
+	is_valid_expression (a_string: STRING): BOOLEAN
 			-- Is expression `a_string' valid according to the syntax
 			-- rules of expressions in "if" and "unless" expresssions?
 		require
@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_expression_true (a_string: STRING): BOOLEAN is
+	is_expression_true (a_string: STRING): BOOLEAN
 			-- Does the expression `a_string' evaluate to `True'?
 			-- Use `variables' to look up the values of variables
 			-- occurring in `a_string'.
@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	expand_attribute_variables (a_composite: XM_COMPOSITE) is
+	expand_attribute_variables (a_composite: XM_COMPOSITE)
 			-- Replace all variables with their values in all
 			-- attributes of `a_composite'.
 			-- Use `variables' to look up the values of all variables

@@ -37,7 +37,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize (a_description: LX_DESCRIPTION) is
+	initialize (a_description: LX_DESCRIPTION)
 			-- Initialize DFA with information found in `a_description'.
 		require
 			a_description_not_void: a_description /= Void
@@ -82,7 +82,7 @@ feature {NONE} -- Initialization
 			initialize_dfa (a_description.start_conditions, 1, max)
 		end
 
-	put_eob_state is
+	put_eob_state
 			-- Create an end-of-buffer state and insert it to current DFA.
 		require
 			not_built: states.count = start_states_count
@@ -102,14 +102,14 @@ feature {NONE} -- Initialization
 
 feature -- Generation
 
-	new_scanner: YY_SCANNER is
+	new_scanner: YY_SCANNER
 			-- New scanner corresponding to current DFA
 		deferred
 		ensure
 			scanner_not_void: Result /= Void
 		end
 
-	print_scanner (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_scanner (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print code for corresponding scanner to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -132,7 +132,7 @@ feature -- Generation
 			print_eiffel_code (a_file)
 		end
 
-	print_backing_up_report (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_backing_up_report (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print a backing-up report to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -165,7 +165,7 @@ feature -- Generation
 
 feature {NONE} -- Generation
 
-	print_eiffel_header (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_eiffel_header (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print user-defined eiffel header to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -186,13 +186,13 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_status_report_routines (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_status_report_routines (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print code for `valid_start_condition' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
-			a_file.put_string ("%Tvalid_start_condition (sc: INTEGER): BOOLEAN is%N%
+			a_file.put_string ("%Tvalid_start_condition (sc: INTEGER): BOOLEAN%N%
 				%%T%T%T-- Is `sc' a valid start condition?%N%
 				%%T%Tdo%N%
 				%%T%T%TResult := ")
@@ -213,7 +213,7 @@ feature {NONE} -- Generation
 			a_file.put_string ("%N%T%Tend%N")
 		end
 
-	print_build_tables (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_build_tables (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print code for `yy_build_tables' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -221,7 +221,7 @@ feature {NONE} -- Generation
 		deferred
 		end
 
-	print_actions (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_actions (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print code for actions to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -229,7 +229,7 @@ feature {NONE} -- Generation
 		local
 			i, nb: INTEGER
 		do
-			a_file.put_string ("%Tyy_execute_action (yy_act: INTEGER) is%N%
+			a_file.put_string ("%Tyy_execute_action (yy_act: INTEGER)%N%
 				%%T%T%T-- Execute semantic action.%N%
 				%%T%Tdo%N")
 			if inspect_used then
@@ -258,7 +258,7 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_inspect_actions (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_inspect_actions (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print code for actions to `a_file'.
 			-- The generated code uses an inspect instruction
 			-- to find out which action to execute.
@@ -321,7 +321,7 @@ feature {NONE} -- Generation
 				%%T%T%Tend%N")
 		end
 
-	print_binary_search_actions (a_file: KI_TEXT_OUTPUT_STREAM; l, u: INTEGER) is
+	print_binary_search_actions (a_file: KI_TEXT_OUTPUT_STREAM; l, u: INTEGER)
 			-- Print code for actions indexed from `l' to `u'
 			-- to `a_file'. The generated code uses binary search
 			-- to find out which action to execute.
@@ -356,7 +356,7 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_action_call (a_file: KI_TEXT_OUTPUT_STREAM; a_rule: LX_RULE) is
+	print_action_call (a_file: KI_TEXT_OUTPUT_STREAM; a_rule: LX_RULE)
 			-- Print code for `a_rule's action call to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -380,7 +380,7 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_action_routine (a_file: KI_TEXT_OUTPUT_STREAM; a_rule: LX_RULE) is
+	print_action_routine (a_file: KI_TEXT_OUTPUT_STREAM; a_rule: LX_RULE)
 			-- Print code for `a_rule's action routine to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -389,7 +389,7 @@ feature {NONE} -- Generation
 		do
 			a_file.put_string ("%Tyy_execute_action_")
 			a_file.put_integer (a_rule.id)
-			a_file.put_string (" is%N%T%T%T--|#line ")
+			a_file.put_string ("%N%T%T%T--|#line ")
 			if line_pragma then
 				a_file.put_integer (a_rule.line_nb)
 			else
@@ -402,7 +402,7 @@ feature {NONE} -- Generation
 			a_file.put_string ("%N%T%Tend%N")
 		end
 
-	print_action_body (a_file: KI_TEXT_OUTPUT_STREAM; a_rule: LX_RULE) is
+	print_action_body (a_file: KI_TEXT_OUTPUT_STREAM; a_rule: LX_RULE)
 			-- Print code for `a_rule's action body to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -510,7 +510,7 @@ feature {NONE} -- Generation
 			a_file.put_new_line
 		end
 
-	print_eof_actions (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_eof_actions (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print code for end-of-file actions to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -525,7 +525,7 @@ feature {NONE} -- Generation
 			rule_list: DS_LINKED_LIST [LX_RULE]
 			rule_cursor: DS_LINKED_LIST_CURSOR [LX_RULE]
 		do
-			a_file.put_string ("%Tyy_execute_eof_action (yy_sc: INTEGER) is%N%
+			a_file.put_string ("%Tyy_execute_eof_action (yy_sc: INTEGER)%N%
 				%%T%T%T-- Execute EOF semantic action.%N%T%Tdo%N")
 			if pre_eof_action_used then
 				a_file.put_string ("%T%T%Tpre_eof_action%N")
@@ -620,7 +620,7 @@ feature {NONE} -- Generation
 			a_file.put_string ("%T%Tend%N")
 		end
 
-	print_eiffel_tables (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_eiffel_tables (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print Eiffel code for DFA tables to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -628,7 +628,7 @@ feature {NONE} -- Generation
 		deferred
 		end
 
-	print_constants (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_constants (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print code for constants to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -636,16 +636,16 @@ feature {NONE} -- Generation
 		local
 			i, nb: INTEGER
 		do
-			a_file.put_string ("%TyyNb_rules: INTEGER is ")
+			a_file.put_string ("%TyyNb_rules: INTEGER = ")
 			a_file.put_integer (yyNb_rules)
 			a_file.put_string ("%N%T%T%T-- Number of rules%N%N%
-					%%TyyEnd_of_buffer: INTEGER is ")
+					%%TyyEnd_of_buffer: INTEGER = ")
 			a_file.put_integer (yyEnd_of_buffer)
 			a_file.put_string ("%N%T%T%T-- End of buffer rule code%N%N%
-					%%TyyLine_used: BOOLEAN is ")
+					%%TyyLine_used: BOOLEAN = ")
 			BOOLEAN_FORMATTER_.put_eiffel_boolean (a_file, yyLine_used)
 			a_file.put_string ("%N%T%T%T-- Are line and column numbers used?%N%N%
-					%%TyyPosition_used: BOOLEAN is ")
+					%%TyyPosition_used: BOOLEAN = ")
 			BOOLEAN_FORMATTER_.put_eiffel_boolean (a_file, yyPosition_used)
 			a_file.put_string ("%N%T%T%T-- Is `position' used?%N%N")
 			nb := yy_start_conditions.upper
@@ -656,7 +656,7 @@ feature {NONE} -- Generation
 			loop
 				a_file.put_character ('%T')
 				a_file.put_string (yy_start_conditions.item (i))
-				a_file.put_string (": INTEGER is ")
+				a_file.put_string (": INTEGER = ")
 				a_file.put_integer (i)
 				a_file.put_character ('%N')
 				i := i + 1
@@ -664,7 +664,7 @@ feature {NONE} -- Generation
 			a_file.put_string ("%T%T%T-- Start condition codes%N")
 		end
 
-	print_eiffel_code (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_eiffel_code (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print user-defined eiffel code to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -675,7 +675,7 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_eiffel_array (a_name: STRING; a_table: ARRAY [INTEGER]; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_eiffel_array (a_name: STRING; a_table: ARRAY [INTEGER]; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print Eiffel code for `a_table' named `a_name' to `a_file'.
 		require
 			a_name_not_void: a_name /= Void
@@ -689,7 +689,7 @@ feature {NONE} -- Generation
 		do
 			a_file.put_character ('%T')
 			a_file.put_string (a_name)
-			a_file.put_string (": SPECIAL [INTEGER] is%N")
+			a_file.put_string (": SPECIAL [INTEGER]%N")
 			if array_size = 0 then
 				nb := 1
 			else
@@ -730,7 +730,7 @@ feature {NONE} -- Generation
 					a_file.put_string (a_name)
 					a_file.put_character ('_')
 					a_file.put_integer (j)
-					a_file.put_string (" (an_array: ARRAY [INTEGER]) is%N%
+					a_file.put_string (" (an_array: ARRAY [INTEGER])%N%
 						%%T%Tdo%N%T%T%Tyy_array_subcopy (an_array, <<%N")
 					k := a_table_upper.min (i + array_size - 1)
 					ARRAY_FORMATTER_.put_integer_array (a_file, a_table, i, k)
@@ -747,8 +747,8 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_rule_line_numbers (a_state: LX_DFA_STATE; a_file: KI_TEXT_OUTPUT_STREAM) is
-			-- Print the (sorted) list of the line numbers of 
+	print_rule_line_numbers (a_state: LX_DFA_STATE; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print the (sorted) list of the line numbers of
 			-- the rules associated to the NFA states making up
 			-- `a_state' to `a_file'.
 		require
@@ -806,7 +806,7 @@ feature {NONE} -- Generation
 			a_file.put_character ('%N')
 		end
 
-	print_transitions (a_state: LX_DFA_STATE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_transitions (a_state: LX_DFA_STATE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print out- and jam-transitions from `a_state'
 			-- in a human-readable form (i.e. not using
 			-- equivalence classes) to `a_file'.
@@ -911,7 +911,7 @@ feature {NONE} -- Generation
 			a_file.put_string ("]%N")
 		end
 
-	print_readable_character (i: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_readable_character (i: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print a human-readable form of the character
 			-- of ASCII code `i' to `a_file'. Print octal value
 			-- if the corresponding character is not printable.
@@ -972,7 +972,7 @@ feature {NONE} -- Generation
 
 feature {NONE} -- Building
 
-	build_rules (rules: DS_ARRAYED_LIST [LX_RULE]) is
+	build_rules (rules: DS_ARRAYED_LIST [LX_RULE])
 			-- Build `yy_rules'.
 		require
 			rules_not_void: rules /= Void
@@ -994,7 +994,7 @@ feature {NONE} -- Building
 			yy_rules_not_void: yy_rules /= Void
 		end
 
-	build_eof_rules (rules: DS_ARRAYED_LIST [LX_RULE]; l, u: INTEGER) is
+	build_eof_rules (rules: DS_ARRAYED_LIST [LX_RULE]; l, u: INTEGER)
 			-- Build `yy_eof_rules'.
 			-- Rules are indexed by rule ids.
 		require
@@ -1072,9 +1072,9 @@ feature {NONE} -- Access
 
 feature {NONE} -- Constants
 
-	Indentation: STRING is "%T%T%T"
+	Indentation: STRING = "%T%T%T"
 
-	Integer_sorter: DS_BUBBLE_SORTER [INTEGER] is
+	Integer_sorter: DS_BUBBLE_SORTER [INTEGER]
 			-- Integer sorter
 		local
 			a_comparator: KL_COMPARABLE_COMPARATOR [INTEGER]
@@ -1085,7 +1085,7 @@ feature {NONE} -- Constants
 			sorter_not_void: Result /= Void
 		end
 
-	Default_input_filename: STRING is "standard input"
+	Default_input_filename: STRING = "standard input"
 			-- Default input filename
 
 invariant

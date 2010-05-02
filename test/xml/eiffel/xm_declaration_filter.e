@@ -25,7 +25,7 @@ create
 
 feature -- Document
 
-	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN) is
+	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN)
 			-- XML declaration.
 		do
 			version := a_version

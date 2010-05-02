@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER; an_int: STRING) is
+	make (filename: STRING; line: INTEGER; an_int: STRING)
 			-- Create a new error reporting `an_int' is too large.
 		require
 			filename_not_void: filename /= Void
@@ -36,10 +36,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: integer $3 too large (implementation limitation)"
+	default_template: STRING = "%"$1%", line $2: integer $3 too large (implementation limitation)"
 			-- Default template used to built the error message
 
-	code: STRING is "LX0032"
+	code: STRING = "LX0032"
 			-- Error code
 
 invariant

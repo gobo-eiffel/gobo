@@ -26,7 +26,7 @@ create
 
 feature {ANY} -- Initialization
 
-	make_empty is
+	make_empty
 			-- Create an empty character set.
 		do
 			set := SPECIAL_BOOLEAN_.make (256)
@@ -34,7 +34,7 @@ feature {ANY} -- Initialization
 			is_empty: is_empty
 		end
 
-	make (a_string: STRING) is
+	make (a_string: STRING)
 			-- Create new character set and add characters
 			-- included in `a_string'.
 		require
@@ -48,7 +48,7 @@ feature {ANY} -- Initialization
 
 feature -- Status report
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is character set empty?
 		local
 			i: INTEGER
@@ -69,7 +69,7 @@ feature -- Status report
 			end
 		end
 
-	has (a_code: INTEGER): BOOLEAN is
+	has (a_code: INTEGER): BOOLEAN
 			-- Is character with code `a_code' included in character set?
 		require
 			a_code_positive: a_code >= 0
@@ -81,7 +81,7 @@ feature -- Status report
 
 feature -- Element Change
 
-	add_string (a_string: STRING) is
+	add_string (a_string: STRING)
 			-- Add all characters of `a_string' to character set.
 		require
 			a_string_not_void: a_string /= Void
@@ -101,7 +101,7 @@ feature -- Element Change
 			not_empty: a_string.count > 0 implies not is_empty
 		end
 
-	add_character (a_code: INTEGER) is
+	add_character (a_code: INTEGER)
 			-- Add character with code `a_code' to character set.
 		require
 			a_code_positive: a_code >= 0
@@ -115,7 +115,7 @@ feature -- Element Change
 			not_empty: not is_empty
 		end
 
-	add_set (other: like Current) is
+	add_set (other: like Current)
 			-- Add characters of `other' to current character set.
 		require
 			other_not_void: other /= Void
@@ -136,7 +136,7 @@ feature -- Element Change
 			end
 		end
 
-	add_negated_set (other: like Current) is
+	add_negated_set (other: like Current)
 			-- Add characters which are not in `other' to current character set.
 		require
 			other_not_void: other /= Void
@@ -159,7 +159,7 @@ feature -- Element Change
 
 feature -- Removal
 
-	wipe_out is
+	wipe_out
 			-- Remove all characters.
 		local
 			i: INTEGER

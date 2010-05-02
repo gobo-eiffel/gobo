@@ -25,7 +25,7 @@ create
 
 feature -- Processing
 
-	execute is
+	execute
 			-- Start 'gepp' execution.
 		do
 			if False then resurrect_code end
@@ -39,7 +39,7 @@ feature -- Processing
 			preprocess
 		end
 
-	preprocess is
+	preprocess
 			-- Preprocess `in_filename' and put
 			-- results to `out_filename'.
 		local
@@ -82,7 +82,7 @@ feature -- Processing
 			end
 		end
 
-	read_arguments is
+	read_arguments
 			-- Read command-line arguments.
 		local
 			an_arg: STRING
@@ -167,7 +167,7 @@ feature -- Access
 
 feature -- Error handling
 
-	report_cannot_read_error (a_filename: STRING) is
+	report_cannot_read_error (a_filename: STRING)
 			-- Report that `a_filename' cannot be
 			-- opened in read mode.
 		require
@@ -179,7 +179,7 @@ feature -- Error handling
 			error_handler.report_error (an_error)
 		end
 
-	report_cannot_write_error (a_filename: STRING) is
+	report_cannot_write_error (a_filename: STRING)
 			-- Report that `a_filename' cannot be
 			-- opened in write mode.
 		require
@@ -191,19 +191,19 @@ feature -- Error handling
 			error_handler.report_error (an_error)
 		end
 
-	report_usage_error is
+	report_usage_error
 			-- Report usage error.
 		do
 			error_handler.report_error (Usage_message)
 		end
 
-	report_usage_message is
+	report_usage_message
 			-- Report usage message.
 		do
 			error_handler.report_info (Usage_message)
 		end
 
-	report_version_number is
+	report_version_number
 			-- Report version number.
 		local
 			a_message: UT_VERSION_NUMBER
@@ -212,7 +212,7 @@ feature -- Error handling
 			error_handler.report_info (a_message)
 		end
 
-	Usage_message: UT_USAGE_MESSAGE is
+	Usage_message: UT_USAGE_MESSAGE
 			-- Gepp usage message.
 		once
 			create Result.make
@@ -224,7 +224,7 @@ feature -- Error handling
 
 feature {NONE} -- Implementation
 
-	resurrect_code is
+	resurrect_code
 			-- Make sure that SmartEiffel does not complain about possible
 			-- "calls on a Void target in the living Eiffel code".
 		local

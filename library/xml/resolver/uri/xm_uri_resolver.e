@@ -1,5 +1,5 @@
 note
-	
+
 	description:
 
 		"Interface for absolute URI resolver"
@@ -15,20 +15,20 @@ deferred class XM_URI_RESOLVER
 inherit
 
 	ANY
-	
+
 	KL_IMPORTED_STRING_ROUTINES
-	
+
 feature -- Operation(s)
 
-	scheme: STRING is
+	scheme: STRING
 			-- Scheme name (constant).
 		deferred
 		ensure
 			result_not_void: Result /= Void
 			result_not_empty: not Result.is_empty
 		end
-		
-	resolve (a_uri: UT_URI) is
+
+	resolve (a_uri: UT_URI)
 			-- Resolve URI to stream.
 		require
 			a_uri_not_void: a_uri /= Void
@@ -38,10 +38,10 @@ feature -- Operation(s)
 		ensure
 			stream_open_on_success: not has_error implies last_stream.is_open_read
 		end
-		
+
 feature -- Result
 
-	last_stream: KI_CHARACTER_INPUT_STREAM is
+	last_stream: KI_CHARACTER_INPUT_STREAM
 			-- Last stream initialised from external entity
 		require
 			not_error: not has_error
@@ -49,13 +49,13 @@ feature -- Result
 		ensure
 			not_void: Result /= Void
 		end
-	
-	has_error: BOOLEAN is
+
+	has_error: BOOLEAN
 			-- Did the last resolution attempt succeed?
 		deferred
 		end
-		
-	last_error: STRING is
+
+	last_error: STRING
 			-- Last error message
 		require
 			has_error: has_error
@@ -64,12 +64,12 @@ feature -- Result
 			not_void: Result /= Void
 		end
 
-	has_media_type: BOOLEAN is
+	has_media_type: BOOLEAN
 			-- Is the media type available.
 		deferred
 		end
 
-	last_media_type: UT_MEDIA_TYPE is
+	last_media_type: UT_MEDIA_TYPE
 			-- Media type, if available.
 		require
 			has_media_type: has_media_type

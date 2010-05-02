@@ -20,97 +20,97 @@ class RX_PCRE_BYTE_CODE_CONSTANTS
 
 feature -- End of pattern
 
-	op_end: INTEGER is 0
+	op_end: INTEGER = 0
 			-- End of pattern;
 			-- This opcode is standalone (i.e. does not need to be followed
 			-- by something else in the byte code).
 
 feature -- Backslashed metacharacters
 
-	op_sod: INTEGER is 1
+	op_sod: INTEGER = 1
 			-- Start of data: \A;
 			-- This opcode is standalone (i.e. does not need to be followed
 			-- by something else in the byte code).
 
-	op_not_word_boundary: INTEGER is 2
+	op_not_word_boundary: INTEGER = 2
 			-- \B;
 			-- This opcode is standalone (i.e. does not need to be followed
 			-- by something else in the byte code).
 
-	op_word_boundary: INTEGER is 3
+	op_word_boundary: INTEGER = 3
 			-- \b;
 			-- This opcode is standalone (i.e. does not need to be followed
 			-- by something else in the byte code).
 
-	op_not_digit: INTEGER is 4
+	op_not_digit: INTEGER = 4
 			-- \D;
 			-- This opcode is standalone (i.e. does not need to be followed
 			-- by something else in the byte code).
 
-	op_digit: INTEGER is 5
+	op_digit: INTEGER = 5
 			-- \d;
 			-- This opcode is standalone (i.e. does not need to be followed
 			-- by something else in the byte code).
 
-	op_not_whitespace: INTEGER is 6
+	op_not_whitespace: INTEGER = 6
 			-- \S;
 			-- This opcode is standalone (i.e. does not need to be followed
 			-- by something else in the byte code).
 
-	op_whitespace: INTEGER is 7
+	op_whitespace: INTEGER = 7
 			-- \s;
 			-- This opcode is standalone (i.e. does not need to be followed
 			-- by something else in the byte code).
 
-	op_not_wordchar: INTEGER is 8
+	op_not_wordchar: INTEGER = 8
 			-- \W;
 			-- This opcode is standalone (i.e. does not need to be followed
 			-- by something else in the byte code).
 
-	op_wordchar: INTEGER is 9
+	op_wordchar: INTEGER = 9
 			-- \w;
 			-- This opcode is standalone (i.e. does not need to be followed
 			-- by something else in the byte code).
 
-	op_eodn: INTEGER is 10
+	op_eodn: INTEGER = 10
 			-- End of data or \n at end of data: \Z;
 			-- This opcode is standalone (i.e. does not need to be followed
 			-- by something else in the byte code).
 
-	op_eod: INTEGER is 11
+	op_eod: INTEGER = 11
 			-- End of data: \z;
 			-- This opcode is standalone (i.e. does not need to be followed
 			-- by something else in the byte code).
 
 feature -- Metacharacters
 
-	op_opt: INTEGER is 12
+	op_opt: INTEGER = 12
 			-- Set runtime options;
 			-- This opcode is followed by an integer (originally a byte,
 			-- i.e. 8 bits) in which the options are encoded.
 
-	op_circ: INTEGER is 13
+	op_circ: INTEGER = 13
 			-- Start of line - varies with multiline switch;
 			-- This opcode is standalone (i.e. does not need to be followed
 			-- by something else in the byte code).
 
-	op_doll: INTEGER is 14
+	op_doll: INTEGER = 14
 			-- End of line - varies with multiline switch;
 			-- This opcode is standalone (i.e. does not need to be followed
 			-- by something else in the byte code).
 
-	op_any: INTEGER is 15
+	op_any: INTEGER = 15
 			-- Match any character;
 			-- This opcode is standalone (i.e. does not need to be followed
 			-- by something else in the byte code).
 
-	op_chars: INTEGER is 16
+	op_chars: INTEGER = 16
 			-- Match string of characters;
 			-- This opcode is followed by an integer (originally an int8)
 			-- corresponding to the number of characters (originally bytes)
 			-- making up the string and which follows on the byte code.
 
-	op_not: INTEGER is 17
+	op_not: INTEGER = 17
 			-- Match anything but the following character;
 			-- This opcode is followed by a character code (originally a
 			-- character) corresponding to the character this opcode is
@@ -118,50 +118,50 @@ feature -- Metacharacters
 
 feature -- Maximizing and minimizing applied to single characters
 
-	op_star: INTEGER is 18
+	op_star: INTEGER = 18
 			-- This opcode is followed by a character code (originally a
 			-- character) corresponding to the character this opcode is
 			-- applied to.
 
-	op_minstar: INTEGER is 19
+	op_minstar: INTEGER = 19
 			-- This opcode is followed by a character code (originally a
 			-- character) corresponding to the character this opcode is
 			-- applied to.
 
-	op_plus: INTEGER is 20
+	op_plus: INTEGER = 20
 			-- This opcode is followed by a character code (originally a
 			-- character) corresponding to the character this opcode is
 			-- applied to.
 
-	op_minplus: INTEGER is 21
+	op_minplus: INTEGER = 21
 			-- This opcode is followed by a character code (originally a
 			-- character) corresponding to the character this opcode is
 			-- applied to.
 
-	op_query: INTEGER is 22
+	op_query: INTEGER = 22
 			-- This opcode is followed by a character code (originally a
 			-- character) corresponding to the character this opcode is
 			-- applied to.
 
-	op_minquery: INTEGER is 23
+	op_minquery: INTEGER = 23
 			-- This opcode is followed by a character code (originally a
 			-- character) corresponding to the character this opcode is
 			-- applied to.
 
-	op_upto: INTEGER is 24
+	op_upto: INTEGER = 24
 			-- From 0 to n matches;
 			-- This opcode is followed by an integer (originally an int16)
 			-- corresponding to the number of matches, and then a character
 			-- code (originally a character) corresponding to the character
 			-- this opcode is applied to.
 
-	op_minupto: INTEGER is 25
+	op_minupto: INTEGER = 25
 			-- This opcode is followed by an integer (originally an int16)
 			-- corresponding to the number of matches, and then a character
 			-- code (originally a character) corresponding to the character
 			-- this opcode is applied to.
 
-	op_exact: INTEGER is 26
+	op_exact: INTEGER = 26
 			-- Exactly n matches;
 			-- This opcode is followed by an integer (originally an int16)
 			-- corresponding to the number of matches, and then a character
@@ -170,50 +170,50 @@ feature -- Maximizing and minimizing applied to single characters
 
 feature -- Maximizing and minimizing applied to "not" single characters
 
-	op_notstar: INTEGER is 27
+	op_notstar: INTEGER = 27
 			-- This opcode is followed by a character code (originally a
 			-- character) corresponding to the character this opcode is
 			-- applied to.
 
-	op_notminstar: INTEGER is 28
+	op_notminstar: INTEGER = 28
 			-- This opcode is followed by a character code (originally a
 			-- character) corresponding to the character this opcode is
 			-- applied to.
 
-	op_notplus: INTEGER is 29
+	op_notplus: INTEGER = 29
 			-- This opcode is followed by a character code (originally a
 			-- character) corresponding to the character this opcode is
 			-- applied to.
 
-	op_notminplus: INTEGER is 30
+	op_notminplus: INTEGER = 30
 			-- This opcode is followed by a character code (originally a
 			-- character) corresponding to the character this opcode is
 			-- applied to.
 
-	op_notquery: INTEGER is 31
+	op_notquery: INTEGER = 31
 			-- This opcode is followed by a character code (originally a
 			-- character) corresponding to the character this opcode is
 			-- applied to.
 
-	op_notminquery: INTEGER is 32
+	op_notminquery: INTEGER = 32
 			-- This opcode is followed by a character code (originally a
 			-- character) corresponding to the character this opcode is
 			-- applied to.
 
-	op_notupto: INTEGER is 33
+	op_notupto: INTEGER = 33
 			-- From 0 to n matches;
 			-- This opcode is followed by an integer (originally an int16)
 			-- corresponding to the number of matches, and then a character
 			-- code (originally a character) corresponding to the character
 			-- this opcode is applied to.
 
-	op_notminupto: INTEGER is 34
+	op_notminupto: INTEGER = 34
 			-- This opcode is followed by an integer (originally an int16)
 			-- corresponding to the number of matches, and then a character
 			-- code (originally a character) corresponding to the character
 			-- this opcode is applied to.
 
-	op_notexact: INTEGER is 35
+	op_notexact: INTEGER = 35
 			-- Exactly n matches;
 			-- This opcode is followed by an integer (originally an int16)
 			-- corresponding to the number of matches, and then a character
@@ -222,50 +222,50 @@ feature -- Maximizing and minimizing applied to "not" single characters
 
 feature -- Maximizing and minimizing applied to character types such as \d
 
-	op_typestar: INTEGER is 36
+	op_typestar: INTEGER = 36
 			-- This opcode is followed by an opcode (originally a character)
 			-- corresponding to the character type (such as \d) this opcode
 			-- is applied to.
 
-	op_typeminstar: INTEGER is 37
+	op_typeminstar: INTEGER = 37
 			-- This opcode is followed by an opcode (originally a character)
 			-- corresponding to the character type (such as \d) this opcode
 			-- is applied to.
 
-	op_typeplus: INTEGER is 38
+	op_typeplus: INTEGER = 38
 			-- This opcode is followed by an opcode (originally a character)
 			-- corresponding to the character type (such as \d) this opcode
 			-- is applied to.
 
-	op_typeminplus: INTEGER is 39
+	op_typeminplus: INTEGER = 39
 			-- This opcode is followed by an opcode (originally a character)
 			-- corresponding to the character type (such as \d) this opcode
 			-- is applied to.
 
-	op_typequery: INTEGER is 40
+	op_typequery: INTEGER = 40
 			-- This opcode is followed by an opcode (originally a character)
 			-- corresponding to the character type (such as \d) this opcode
 			-- is applied to.
 
-	op_typeminquery: INTEGER is 41
+	op_typeminquery: INTEGER = 41
 			-- This opcode is followed by an opcode (originally a character)
 			-- corresponding to the character type (such as \d) this opcode
 			-- is applied to.
 
-	op_typeupto: INTEGER is 42
+	op_typeupto: INTEGER = 42
 			-- From 0 to n matches;
 			-- This opcode is followed by an integer (originally an int16)
 			-- corresponding to the number of matches, and then an opcode
 			-- (originally a character) corresponding to the character type
 			-- (such as \d) this opcode is applied to.
 
-	op_typeminupto: INTEGER is 43
+	op_typeminupto: INTEGER = 43
 			-- This opcode is followed by an integer (originally an int16)
 			-- corresponding to the number of matches, and then an opcode
 			-- (originally a character) corresponding to the character type
 			-- (such as \d) this opcode is applied to.
 
-	op_typeexact: INTEGER is 44
+	op_typeexact: INTEGER = 44
 			-- Exactly n matches;
 			-- This opcode is followed by an integer (originally an int16)
 			-- corresponding to the number of matches, and then an opcode
@@ -274,43 +274,43 @@ feature -- Maximizing and minimizing applied to character types such as \d
 
 feature -- Maximizing and minimizing applied to character classes and back refs
 
-	op_crstar: INTEGER is 45
+	op_crstar: INTEGER = 45
 			-- This opcode is standalone (i.e. does not need to be followed
 			-- by something else in the byte code).
 
-	op_crminstar: INTEGER is 46
+	op_crminstar: INTEGER = 46
 			-- This opcode is standalone (i.e. does not need to be followed
 			-- by something else in the byte code).
 
-	op_crplus: INTEGER is 47
+	op_crplus: INTEGER = 47
 			-- This opcode is standalone (i.e. does not need to be followed
 			-- by something else in the byte code).
 
-	op_crminplus: INTEGER is 48
+	op_crminplus: INTEGER = 48
 			-- This opcode is standalone (i.e. does not need to be followed
 			-- by something else in the byte code).
 
-	op_crquery: INTEGER is 49
+	op_crquery: INTEGER = 49
 			-- This opcode is standalone (i.e. does not need to be followed
 			-- by something else in the byte code).
 
-	op_crminquery: INTEGER is 50
+	op_crminquery: INTEGER = 50
 			-- This opcode is standalone (i.e. does not need to be followed
 			-- by something else in the byte code).
 
-	op_crrange: INTEGER is 51
+	op_crrange: INTEGER = 51
 			-- `op_crrange' and `op_crminrange' are different to the three sets above.
 			-- This opcode is followed by two integers (originally two int16)
 			-- corresponding to the lower and upper bounds of the range.
 
-	op_crminrange: INTEGER is 52
+	op_crminrange: INTEGER = 52
 			-- `op_crrange' and `op_crminrange' are different to the three sets above.
 			-- This opcode is followed by two integers (originally two int16)
 			-- corresponding to the lower and upper bounds of the range.
 
 feature -- Miscellaneous
 
-	op_class: INTEGER is 53
+	op_class: INTEGER = 53
 			-- Match a character class;
 			-- This opcode is followed by an integer corresponding to an
 			-- offset in the array of character sets. Furthermore, this
@@ -318,7 +318,7 @@ feature -- Miscellaneous
 			-- `op_crstar', `op_crminstar', `op_crplus', `op_crminplus',
 			-- `op_crquery', `op_crminquery', `op_crrange', `op_crminrange'.
 
-	op_ref: INTEGER is 54
+	op_ref: INTEGER = 54
 			-- Match a back reference;
 			-- This opcode is followed by an integer (originally an int8)
 			-- corresponding to the id of the back reference. Furthermore,
@@ -326,106 +326,106 @@ feature -- Miscellaneous
 			-- `op_crstar', `op_crminstar', `op_crplus', `op_crminplus',
 			-- `op_crquery', `op_crminquery', `op_crrange', `op_crminrange'.
 
-	op_recurse: INTEGER is 55
+	op_recurse: INTEGER = 55
 			-- Match this pattern recursively;
 			-- This opcode is standalone (i.e. does not need to be followed
 			-- by something else in the byte code).
 
-	op_alt: INTEGER is 56
+	op_alt: INTEGER = 56
 			-- Start of alternation;
 			-- This opcode is followed by an integer (originally an int16) corresponding
 			-- to the length of the underlying branch in the byte code.
 
-	op_ket: INTEGER is 57
+	op_ket: INTEGER = 57
 			-- End of group that doesn't have an unbounded repeat;
 			-- This opcode is followed by an integer (originally an int16) corresponding
 			-- to the length of the whole bracket branch in the byte code.
 
-	op_ketrmax: INTEGER is 58
+	op_ketrmax: INTEGER = 58
 			-- `op_ketrmax' and `op_ketrmin' must remain together and
 			-- in this order. They are for groups that repeat forever.
 			-- This opcode is followed by an integer (originally an int16).
 
-	op_ketrmin: INTEGER is 59
+	op_ketrmin: INTEGER = 59
 			-- `op_ketrmax' and `op_ketrmin' must remain together and
 			-- in this order. They are for groups that repeat forever.
 			-- This opcode is followed by an integer (originally an int16).
 
-	op_assert: INTEGER is 60
+	op_assert: INTEGER = 60
 			-- Positive lookahead assertion;
 			-- This opcode is followed by an integer (originally an int16) corresponding
 			-- to the length of the underlying branch in the byte code.
 			-- (Assertions must come before `op_once' and `op_cond'.)
 
-	op_assert_not: INTEGER is 61
+	op_assert_not: INTEGER = 61
 			-- Negative lookahead assertion;
 			-- This opcode is followed by an integer (originally an int16) corresponding
 			-- to the length of the underlying branch in the byte code.
 			-- (Assertions must come before `op_once' and `op_cond'.)
 
-	op_assertback: INTEGER is 62
+	op_assertback: INTEGER = 62
 			-- Positive lookbehind assertion;
 			-- This opcode is followed by an integer (originally an int16) corresponding
 			-- to the length of the underlying branch in the byte code.
 			-- (Assertions must come before `op_once' and `op_cond'.)
 
-	op_assertback_not: INTEGER is 63
+	op_assertback_not: INTEGER = 63
 			-- Negative lookbehind assertion;
 			-- This opcode is followed by an integer (originally an int16) corresponding
 			-- to the length of the underlying branch in the byte code.
 			-- (Assertions must come before `op_once' and `op_cond'.)
 
-	op_reverse: INTEGER is 64
+	op_reverse: INTEGER = 64
 			-- Move pointer back - used in lookbehind assertions;
 			-- This opcode is followed by an integer (originally an int16) corresponding
 			-- to the fixed-length of the string that underlying branch matches.
 
-	op_once: INTEGER is 65
+	op_once: INTEGER = 65
 			-- Once matched, don't back up into the subpattern;
 			-- This opcode is followed by an integer (originally an int16) corresponding
 			-- to the length of the underlying branch in the byte code.
 			-- (`op_once' and `op_cond' must come after the assertions, with `op_once' first,
 			-- as there is a test for >= `op_once' for a subpattern that isn't an assertion.)
 
-	op_cond: INTEGER is 66
+	op_cond: INTEGER = 66
 			-- Conditional group;
 			-- This opcode is followed by an integer (originally an int16) corresponding
 			-- to the length of the underlying branch in the byte code.
 			-- (`op_once' and `op_cond' must come after the assertions, with `op_once' first,
 			-- as there is a test for >= `op_once' for a subpattern that isn't an assertion.)
 
-	op_cref: INTEGER is 67
+	op_cref: INTEGER = 67
 			-- At the start of a reference-based conditional group;
 			-- This opcode is followed by an integer (originally an int8)
 			-- corresponding to the reference number.
 
-	op_brazero: INTEGER is 68
+	op_brazero: INTEGER = 68
 			-- `op_brazero' and `op_braminzero' must remain together and in this order.
 			-- This opcode is standalone (i.e. does not need to be followed
 			-- by something else in the byte code).
 
-	op_braminzero: INTEGER is 69
+	op_braminzero: INTEGER = 69
 			-- `op_brazero' and `op_braminzero' must remain together and in this order.
 			-- This opcode is standalone (i.e. does not need to be followed
 			-- by something else in the byte code).
 
-	op_bra: INTEGER is 70
+	op_bra: INTEGER = 70
 			-- This and greater values are used for brackets that extract substrings.
 			-- Opcodes greater than or equal to `op_bra' are followed by an integer
 			-- (originally an int16) corresponding to the length of the underlying
 			-- branch in the byte code.
 
-	op_bra1: INTEGER is 71
+	op_bra1: INTEGER = 71
 
 feature -- Constants
 
-	extract_max: INTEGER is 99
+	extract_max: INTEGER = 99
 			-- Highest extraction number. This is limited by the number of opcodes left
 			-- after `op_bra', i.e. 255 - `op_bra'. It is actually set somewhat lower.
 
 feature -- Access
 
-	op_name (an_op: INTEGER): STRING is
+	op_name (an_op: INTEGER): STRING
 			-- Name associated with opcode `an_op'
 		do
 			inspect an_op

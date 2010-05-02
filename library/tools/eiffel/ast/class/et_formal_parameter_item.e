@@ -18,18 +18,18 @@ inherit
 
 feature -- Access
 
-	formal_parameter: ET_FORMAL_PARAMETER is
+	formal_parameter: ET_FORMAL_PARAMETER
 			-- Formal generic parameter in comma-separated list
 		deferred
 		end
 
-	actual_parameter: ET_ACTUAL_PARAMETER is
+	actual_parameter: ET_ACTUAL_PARAMETER
 			-- Actual parameter in comma-separated list
 		do
 			Result := type
 		end
 
-	type: ET_FORMAL_PARAMETER is
+	type: ET_FORMAL_PARAMETER
 			-- Type in comma-separated list
 			-- (Note: SE 1.0 does not like to have `type'
 			-- be renamed as `formal_parameter'. So we end
@@ -40,7 +40,7 @@ feature -- Access
 			definition: Result = formal_parameter
 		end
 
-	label: ET_IDENTIFIER is
+	label: ET_IDENTIFIER
 			-- Label of `actual_parameter';
 			-- Useful when part of a labeled tuple, Void if no label
 		do

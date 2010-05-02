@@ -9,7 +9,7 @@ note
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class XM_DOCUMENT_NODE
 
 inherit
@@ -19,5 +19,5 @@ inherit
 invariant
 
 	--document_parent_not_void: parent /= Void
-	
+
 end

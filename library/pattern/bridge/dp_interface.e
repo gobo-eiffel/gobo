@@ -18,7 +18,7 @@ obsolete
 
 feature {NONE} -- Initialization
 
-	make_from_implementation (an_implementation: like implementation) is
+	make_from_implementation (an_implementation: like implementation)
 			-- Create a new interface using
 			-- `an_implementation' as implementation.
 		require

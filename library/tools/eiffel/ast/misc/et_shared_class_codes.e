@@ -14,7 +14,7 @@ class ET_SHARED_CLASS_CODES
 
 feature -- Access
 
-	class_codes: ET_CLASS_CODES is
+	class_codes: ET_CLASS_CODES
 			-- Shared class codes
 		once
 			create Result

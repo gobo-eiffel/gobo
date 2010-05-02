@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_base_expression: XM_XPATH_EXPRESSION; a_start: INTEGER) is
+	make (a_base_expression: XM_XPATH_EXPRESSION; a_start: INTEGER)
 			-- Establish invariant.
 		require
 			base_expression_not_void: a_base_expression /= Void
@@ -43,22 +43,22 @@ feature {NONE} -- Initialization
 			base_expression_set: base_expression = a_base_expression
 			start_set: start = a_start
 		end
-		
+
 feature -- Access
-	
-	is_tail_expression: BOOLEAN is
+
+	is_tail_expression: BOOLEAN
 			-- Is `Current' a tail expression?
 		do
 			Result := True
 		end
 
-	as_tail_expression: XM_XPATH_TAIL_EXPRESSION is
+	as_tail_expression: XM_XPATH_TAIL_EXPRESSION
 			-- `Current' seen as a tail expression
 		do
 			Result := Current
 		end
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Determine the data type of the expression, if possible
 		do
 			Result := base_expression.item_type
@@ -74,7 +74,7 @@ feature -- Access
 	start: INTEGER
 			--  Offset of first item within `base_expression' to be included
 
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions of `Current'
 		do
 			create Result.make (1)
@@ -84,7 +84,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Are `Current' and `other' the same expression?
 		do
 			if other.is_tail_expression then
@@ -94,7 +94,7 @@ feature -- Comparison
 
 feature -- Status report
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -108,7 +108,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -123,7 +123,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -138,7 +138,7 @@ feature -- Optimization
 		end
 
 
-	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this subexpression.
 		local
 			l_promotion: XM_XPATH_EXPRESSION
@@ -161,7 +161,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over the values of a sequence
 		local
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -182,8 +182,8 @@ feature -- Evaluation
 				create {XM_XPATH_TAIL_ITERATOR} last_iterator.make (l_iterator, start)
 			end
 		end
-	
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over a node sequence
 		local
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -202,10 +202,10 @@ feature -- Evaluation
 				create {XM_XPATH_NODE_TAIL_ITERATOR} last_node_iterator.make (l_iterator, start)
 			end
 		end
-	
+
 feature -- Element change
 
-	set_base_expression (a_base_expression: XM_XPATH_EXPRESSION) is
+	set_base_expression (a_base_expression: XM_XPATH_EXPRESSION)
 			-- Set `base_expression.
 		require
 			base_expression_not_void: a_base_expression /= Void
@@ -214,17 +214,17 @@ feature -- Element change
 		ensure
 			base_expression_set: base_expression = a_base_expression
 		end
-	
+
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinalities (base_expression)
 			set_cardinality_allows_zero
 		end
 
-	compute_special_properties is
+	compute_special_properties
 			-- Compute special properties.
 		do
 			clone_special_properties (base_expression)

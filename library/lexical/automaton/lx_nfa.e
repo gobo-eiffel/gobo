@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (some_states: like states) is
+	make (some_states: like states)
 			-- Create a new NFA with `some_states' as states.
 		require
 			some_states_not_void: some_states /= Void
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			final_state_set: final_state = some_states.last
 		end
 
-	make_symbol (symbol: INTEGER; in_context: BOOLEAN) is
+	make_symbol (symbol: INTEGER; in_context: BOOLEAN)
 			-- Create a new NFA made of two states and
 			-- a symbol transition labeled `symbol'.
 		local
@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 			trail: in_trail_context = in_context
 		end
 
-	make_epsilon (in_context: BOOLEAN) is
+	make_epsilon (in_context: BOOLEAN)
 			-- Create a new NFA made of two states and
 			-- an epsilon transition.
 		local
@@ -87,7 +87,7 @@ feature {NONE} -- Initialization
 			trail: in_trail_context = in_context
 		end
 
-	make_symbol_class (symbols: LX_SYMBOL_CLASS; in_context: BOOLEAN) is
+	make_symbol_class (symbols: LX_SYMBOL_CLASS; in_context: BOOLEAN)
 			-- Create a new NFA made of two states and
 			-- a symbol class transition labeled `symbols'.
 		require
@@ -110,7 +110,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	start_state: LX_NFA_STATE is
+	start_state: LX_NFA_STATE
 			-- Automaton's start state
 		do
 			Result := states.first
@@ -118,7 +118,7 @@ feature -- Access
 			definition: Result = states.first
 		end
 
-	final_state: LX_NFA_STATE is
+	final_state: LX_NFA_STATE
 			-- Automaton's final state
 		do
 			Result := states.last
@@ -132,7 +132,7 @@ feature -- Access
 
 feature -- Status report
 
-	has (a_state: like start_state): BOOLEAN is
+	has (a_state: like start_state): BOOLEAN
 			-- Is `a_state' part of current automaton?
 		require
 			a_state_not_void: a_state /= Void
@@ -147,7 +147,7 @@ feature -- Status report
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Copy `other' to current automaton.
 		local
 			old_states: like states
@@ -196,11 +196,11 @@ feature -- Duplication
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is current automaton equal to `other'?
 		do
 			if ANY_.same_types (Current, other) then
-					-- This routine has been redefined to follow 
+					-- This routine has been redefined to follow
 					-- the redefinition of `copy'. The new implementation
 					-- is not really impressive but a better implementation
 					-- would take too much effort to write for little
@@ -211,7 +211,7 @@ feature -- Comparison
 
 feature -- Setting
 
-	set_accepted_rule (a_rule: LX_RULE) is
+	set_accepted_rule (a_rule: LX_RULE)
 			-- Make `final_state' be an accepting state
 			-- for `a_rule'.
 		do
@@ -220,7 +220,7 @@ feature -- Setting
 			accepted_rule_set: final_state.accepted_rule = a_rule
 		end
 
-	set_beginning_as_normal is
+	set_beginning_as_normal
 			-- Set each state of the epsilon closure of
 			-- `start_state' as normal (i.e. not in trailing
 			-- context).
@@ -230,7 +230,7 @@ feature -- Setting
 
 feature -- Operations
 
-	build_concatenation (other: like Current) is
+	build_concatenation (other: like Current)
 			-- Produce automaton which will pattern-match first the
 			-- current automaton and then `other', and will fail if
 			-- either of the sub-patterns fails
@@ -247,7 +247,7 @@ feature -- Operations
 			states.append_last (other.states)
 		end
 
-	build_union (other: like Current) is
+	build_union (other: like Current)
 			-- Produce automaton which matches either current NFA or `other'
 			-- (`other' might be altered!)
 			-- Regexp: Current | other
@@ -302,7 +302,7 @@ feature -- Operations
 			end
 		end
 
-	build_optional is
+	build_optional
 			-- Produce automaton which optionally matches wathever
 			-- current NFA matched
 			-- Regexp: Current ?
@@ -327,7 +327,7 @@ feature -- Operations
 			end
 		end
 
-	build_closure is
+	build_closure
 			-- Produce closure of current automaton
 			-- Regexp: Current *
 		do
@@ -335,7 +335,7 @@ feature -- Operations
 			build_optional
 		end
 
-	build_positive_closure is
+	build_positive_closure
 			-- Produce positive closure of current automaton
 			-- Regexp: Current +
 		local
@@ -357,7 +357,7 @@ feature -- Operations
 			states.force_last (state3)
 		end
 
-	build_iteration (nb: INTEGER) is
+	build_iteration (nb: INTEGER)
 			-- Produce automaton that matches whatever current
 			-- NFA matched `nb' number of times
 			-- Regexp: Current {nb}
@@ -381,7 +381,7 @@ feature -- Operations
 			end
 		end
 
-	build_unbounded_iteration (nb: INTEGER) is
+	build_unbounded_iteration (nb: INTEGER)
 			-- Produce automaton which matches `nb' or more
 			-- occurrences of current automaton
 			-- Regexp: Current {nb,}
@@ -396,7 +396,7 @@ feature -- Operations
 			build_concatenation (a_nfa)
 		end
 
-	build_bounded_iteration (lb, ub: INTEGER) is
+	build_bounded_iteration (lb, ub: INTEGER)
 			-- Produce automaton that matches whatever matched current automaton
 			-- from `lb' number of times to `ub' number of times
 			-- Regexp: Current {lb,ub}
@@ -430,7 +430,7 @@ feature -- Operations
 
 feature -- Functions
 
-	concatenation (other: like Current): like Current is
+	concatenation (other: like Current): like Current
 			-- Concatenation of the current automaton with `other' to
 			-- produce an automaton which will pattern-match first the
 			-- current automaton and then `other', and will fail if
@@ -447,7 +447,7 @@ feature -- Functions
 			automaton: Result = Current
 		end
 
-	union (other: like Current): like Current is
+	union (other: like Current): like Current
 			-- Automaton which matches either current NFA or `other'
 			-- (`other' might be altered!)
 			-- Regexp: Current | other
@@ -461,7 +461,7 @@ feature -- Functions
 			automaton: Result = Current
 		end
 
-	optional: like Current is
+	optional: like Current
 			-- Automaton which optionally matches wathever
 			-- current NFA matched
 			-- Regexp: Current ?
@@ -472,7 +472,7 @@ feature -- Functions
 			automaton: Result = Current
 		end
 
-	closure: like Current is
+	closure: like Current
 			-- Closure of current automaton
 			-- Regexp: Current *
 		do
@@ -482,7 +482,7 @@ feature -- Functions
 			automaton: Result = Current
 		end
 
-	positive_closure: like Current is
+	positive_closure: like Current
 			-- Positive closure of current automaton
 			-- Regexp: Current +
 		do
@@ -492,7 +492,7 @@ feature -- Functions
 			automaton: Result = Current
 		end
 
-	iteration (nb: INTEGER): like Current is
+	iteration (nb: INTEGER): like Current
 			-- Automaton that matches whatever current
 			-- NFA matched `nb' number of times
 			-- Regexp: Current {nb}
@@ -505,7 +505,7 @@ feature -- Functions
 			automaton: Result = Current
 		end
 
-	unbounded_iteration (nb: INTEGER): like Current is
+	unbounded_iteration (nb: INTEGER): like Current
 			-- Automaton which matches `nb' or more
 			-- occurrences of current automaton
 			-- Regexp: Current {nb,}
@@ -518,7 +518,7 @@ feature -- Functions
 			automaton: Result = Current
 		end
 
-	bounded_iteration (lb, ub: INTEGER): like Current is
+	bounded_iteration (lb, ub: INTEGER): like Current
 			-- Automaton that matches whatever matched current automaton
 			-- from `lb' number of times to `ub' number of times
 			-- Regexp: Current {lb,ub}
@@ -534,7 +534,7 @@ feature -- Functions
 
 feature {NONE} -- Constants
 
-	Initial_max_state_nb: INTEGER is 100
+	Initial_max_state_nb: INTEGER = 100
 			-- Initial maximum number of states
 
 invariant

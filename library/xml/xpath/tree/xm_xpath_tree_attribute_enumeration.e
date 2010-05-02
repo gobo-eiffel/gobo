@@ -11,7 +11,7 @@ note
 	revision: "$Revision$"
 
 class XM_XPATH_TREE_ATTRIBUTE_ENUMERATION
-	
+
 inherit
 
 	XM_XPATH_AXIS_ITERATOR [XM_XPATH_TREE_ATTRIBUTE]
@@ -25,10 +25,10 @@ inherit
 create
 
 	make
-	
+
 feature {NONE} -- Initialization
 
-	make (an_element: XM_XPATH_TREE_ELEMENT; a_node_test: XM_XPATH_NODE_TEST) is
+	make (an_element: XM_XPATH_TREE_ELEMENT; a_node_test: XM_XPATH_NODE_TEST)
 			-- Establish invariant
 		require
 			element_not_void: an_element /= Void
@@ -45,8 +45,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
-			-- Does `Current' yield a node_sequence?	
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			-- Does `Current' yield a node_sequence?
 		local
 			a_tree_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_TREE_ATTRIBUTE]
 		do
@@ -56,13 +56,13 @@ feature -- Access
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move to next position
 		do
 			if attribute_index = -1 then
 				current_item := Void
 				index := index + 1
-			else			
+			else
 				advance
 				index := index + 1
 				if parent_element.is_attribute_index_valid (attribute_index) then
@@ -75,10 +75,10 @@ feature -- Cursor movement
 				end
 			end
 		end
-	
+
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 			create Result.make (parent_element, node_test)
@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 	attribute_index: INTEGER
 			-- Index of an attribute within `parent_element'
 
-	advance is
+	advance
 			-- Move to the next matching node
 		local
 			finished: BOOLEAN
@@ -113,6 +113,6 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-	
+
 end
-	
+

@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_types: like types) is
+	make (a_name: like name; a_types: like types)
 			-- Create a new conversion function.
 		require
 			a_name_not_void: a_name /= Void
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_convert_to: BOOLEAN is True
+	is_convert_to: BOOLEAN = True
 			-- Is it a conversion to another type?
 
 feature -- Access
@@ -50,13 +50,13 @@ feature -- Access
 			-- Colon symbol
 
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := types.last_leaf
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := types.break
@@ -64,7 +64,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_colon (a_colon: like colon) is
+	set_colon (a_colon: like colon)
 			-- Set `colon' to `a_colon'.
 		require
 			a_colon_not_void: a_colon /= Void
@@ -76,7 +76,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_convert_function (Current)

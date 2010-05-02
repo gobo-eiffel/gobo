@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new ancestor builder status checker for given classes.
 		do
 			precursor {ET_CLASS_PROCESSOR}
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Processing
 
-	process_class (a_class: ET_CLASS) is
+	process_class (a_class: ET_CLASS)
 			-- Check whether the ancestor table of `a_class' needs to be rebuilt
 			-- after some classes have been modified in the Eiffel system. Also
 			-- check whether none of the classes appearing in the parent types
@@ -79,7 +79,7 @@ feature -- Processing
 
 feature -- Error handling
 
-	set_fatal_error (a_class: ET_CLASS) is
+	set_fatal_error (a_class: ET_CLASS)
 			-- Report a fatal error to `a_class'.
 		require
 			a_class_not_void: a_class /= Void
@@ -91,7 +91,7 @@ feature -- Error handling
 
 feature {NONE} -- Processing
 
-	internal_process_class (a_class: ET_CLASS) is
+	internal_process_class (a_class: ET_CLASS)
 			-- Check whether the ancestor table of `a_class' needs to be rebuilt
 			-- after some classes have been modified in the Eiffel system. Also
 			-- check whether none of the classes appearing in the parent types
@@ -156,7 +156,7 @@ feature {NONE} -- Processing
 
 feature {NONE} -- Formal parameters and parents validity
 
-	check_formal_parameters_validity is
+	check_formal_parameters_validity
 			-- Check whether none of the classes appearing in the
 			-- formal generic parameter constraints of `current_class'
 			-- has been modified.
@@ -184,7 +184,7 @@ feature {NONE} -- Formal parameters and parents validity
 			end
 		end
 
-	check_parents_validity is
+	check_parents_validity
 			-- Check whether none of the classes appearing in the
 			-- parent types of `current_class' has been modified.
 		local

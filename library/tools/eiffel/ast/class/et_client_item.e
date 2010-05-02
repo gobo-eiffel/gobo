@@ -18,14 +18,14 @@ inherit
 
 feature -- Access
 
-	client: ET_CLIENT is
+	client: ET_CLIENT
 			-- Client in comma-separated list
 		deferred
 		ensure
 			client_not_void: Result /= Void
 		end
 
-	name: ET_CLASS_NAME is
+	name: ET_CLASS_NAME
 			-- Name of client
 		do
 			Result := client.name
@@ -33,7 +33,7 @@ feature -- Access
 			definition: Result = client.name
 		end
 
-	base_class: ET_CLASS is
+	base_class: ET_CLASS
 			-- Base class of client
 		do
 			Result := client.base_class

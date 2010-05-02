@@ -12,7 +12,7 @@ note
 	revision: "$Revision$"
 
 class XM_XSLT_ANY_CHILD_NODE_PATTERN
-	
+
 inherit
 
 	XM_XSLT_NODE_TEST
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_static_context: XM_XPATH_STATIC_CONTEXT) is
+	make (a_static_context: XM_XPATH_STATIC_CONTEXT)
 			-- Set original_text.
 		require
 			static_context_not_void: a_static_context /= Void
@@ -42,13 +42,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen default_priority: MA_DECIMAL is
+	frozen default_priority: MA_DECIMAL
 			--  Determine the default priority to use if this pattern appears as a match pattern for a template with no explicit priority attribute.
 		do
 			create Result.make_from_string ("-0.5")
 		end
 
-	node_kind_mask: INTEGER is
+	node_kind_mask: INTEGER
 			-- Mask of types of nodes matched
 		do
 			Result := INTEGER_.bit_or (INTEGER_.bit_shift_left (1, Element_node), INTEGER_.bit_shift_left (1, Comment_node))
@@ -58,7 +58,7 @@ feature -- Access
 
 feature -- Status report
 
-	allows_text_nodes: BOOLEAN is
+	allows_text_nodes: BOOLEAN
 			-- Does this node test allow text nodes?
 		do
 			Result := True
@@ -66,7 +66,7 @@ feature -- Status report
 
 feature -- Matching
 
-	matches_node (a_node_kind: INTEGER; a_fingerprint: INTEGER; a_node_type: INTEGER): BOOLEAN is
+	matches_node (a_node_kind: INTEGER; a_fingerprint: INTEGER; a_node_type: INTEGER): BOOLEAN
 			-- Is this node test satisfied by a given node?
 		do
 			Result := a_node_kind = Element_node
@@ -76,4 +76,4 @@ feature -- Matching
 		end
 
 end
-	
+

@@ -18,21 +18,21 @@ inherit
 
 feature -- Access
 
-	actual_parameter: ET_ACTUAL_PARAMETER is
+	actual_parameter: ET_ACTUAL_PARAMETER
 			-- Actual parameter in comma-separated list
 		deferred
 		ensure
 			actual_parameter_not_void: Result /= Void
 		end
 
-	type: ET_TYPE is
+	type: ET_TYPE
 			-- Type of `actual_parameter'
 		deferred
 		ensure
 			type_not_void: Result /= Void
 		end
 
-	label: ET_IDENTIFIER is
+	label: ET_IDENTIFIER
 			-- Label of `actual_parameter';
 			-- Useful when part of a labeled tuple, Void if no label
 		deferred
@@ -40,7 +40,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_last_entity: BOOLEAN is
+	is_last_entity: BOOLEAN
 			-- Is current entity the last entity in an
 			-- entity declaration group?
 		require
@@ -51,7 +51,7 @@ feature -- Status report
 
 feature -- Type processing
 
-	resolved_formal_parameters_with_type (a_type: ET_TYPE): ET_ACTUAL_PARAMETER_ITEM is
+	resolved_formal_parameters_with_type (a_type: ET_TYPE): ET_ACTUAL_PARAMETER_ITEM
 			-- Version of current actual parameter where its type
 			-- is replaced by `a_type'
 		require

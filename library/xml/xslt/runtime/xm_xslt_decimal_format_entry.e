@@ -21,14 +21,14 @@ inherit
 
 	UC_UNICODE_FACTORY
 		export {NONE} all end
-	
+
 create
 
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_fingerprint, a_precedence: INTEGER) is
+	make (a_fingerprint, a_precedence: INTEGER)
 			-- Establish default settings.
 		require
 			nearly_positive_fingerprint : a_fingerprint > -2
@@ -81,7 +81,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_different_from (a_format: XM_XSLT_DECIMAL_FORMAT_ENTRY): BOOLEAN is
+	is_different_from (a_format: XM_XSLT_DECIMAL_FORMAT_ENTRY): BOOLEAN
 			-- Does `a_format' differ from `Current' by any value?
 		require
 			format_not_void: a_format /= Void
@@ -99,7 +99,7 @@ feature -- Status report
 				or else not STRING_.same_string (digit_sign, a_format.digit_sign)
 		end
 
-	are_all_distinct: BOOLEAN is
+	are_all_distinct: BOOLEAN
 			-- Are all important picture characters distinct?
 		local
 			a_set: DS_HASH_SET [INTEGER]
@@ -148,7 +148,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_decimal_separator (a_decimal_separator: STRING) is
+	set_decimal_separator (a_decimal_separator: STRING)
 			-- Set `decimal_separator'.
 		require
 			decimal_separator_is_one_character: a_decimal_separator /= Void and then a_decimal_separator.count = 1
@@ -158,7 +158,7 @@ feature -- Element change
 			decimal_separator_set: decimal_separator = a_decimal_separator
 		end
 
-	set_grouping_separator (a_grouping_separator: STRING) is
+	set_grouping_separator (a_grouping_separator: STRING)
 			-- Set `grouping_separator'.
 		require
 			grouping_separator_is_one_character: a_grouping_separator /= Void and then a_grouping_separator.count = 1
@@ -168,7 +168,7 @@ feature -- Element change
 			grouping_separator_set: grouping_separator = a_grouping_separator
 		end
 
-	set_pattern_separator (a_pattern_separator: STRING) is
+	set_pattern_separator (a_pattern_separator: STRING)
 			-- Set `pattern_separator'.
 		require
 			pattern_separator_is_one_character: a_pattern_separator /= Void and then a_pattern_separator.count = 1
@@ -178,7 +178,7 @@ feature -- Element change
 			pattern_separator_set: pattern_separator = a_pattern_separator
 		end
 
-	set_minus_sign (a_minus_sign: STRING) is
+	set_minus_sign (a_minus_sign: STRING)
 			-- Set `minus_sign'.
 		require
 			minus_sign_is_one_character: a_minus_sign /= Void and then a_minus_sign.count = 1
@@ -188,7 +188,7 @@ feature -- Element change
 			minus_sign_set: minus_sign = a_minus_sign
 		end
 
-	set_percent (a_percent: STRING) is
+	set_percent (a_percent: STRING)
 			-- Set `percent'.
 		require
 			percent_is_one_character: a_percent /= Void and then a_percent.count = 1
@@ -198,7 +198,7 @@ feature -- Element change
 			percent_set: percent = a_percent
 		end
 
-	set_per_mille (a_per_mille: STRING) is
+	set_per_mille (a_per_mille: STRING)
 			-- Set `per_mille'.
 		require
 			per_mille_is_one_character: a_per_mille /= Void and then a_per_mille.count = 1
@@ -208,7 +208,7 @@ feature -- Element change
 			per_mille_set: per_mille = a_per_mille
 		end
 
-	set_zero_digit (a_zero_digit: STRING) is
+	set_zero_digit (a_zero_digit: STRING)
 			-- Set `zero_digit'.
 		require
 			zero_digit_is_one_character: a_zero_digit /= Void and then a_zero_digit.count = 1
@@ -219,7 +219,7 @@ feature -- Element change
 		end
 
 
-	set_digit_sign (a_digit: STRING) is
+	set_digit_sign (a_digit: STRING)
 			-- Set `digit_sign'.
 		require
 			digit_sign_is_one_character: a_digit /= Void and then a_digit.count = 1
@@ -229,7 +229,7 @@ feature -- Element change
 			digit_sign_set: digit_sign = a_digit
 		end
 
-	set_infinity (an_infinity: STRING) is
+	set_infinity (an_infinity: STRING)
 			-- Set `infinity'.
 		require
 			infinity_not_void: an_infinity /= Void
@@ -239,7 +239,7 @@ feature -- Element change
 			infinity_set: infinity = an_infinity
 		end
 
-	set_nan (an_nan: STRING) is
+	set_nan (an_nan: STRING)
 			-- Set `nan'.
 		require
 			nan_not_void: an_nan /= Void
@@ -249,7 +249,7 @@ feature -- Element change
 			nan_set: nan = an_nan
 		end
 
-	set_defaults is
+	set_defaults
 			-- Set all attributes to their defaults.
 		do
 			decimal_separator := "."

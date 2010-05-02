@@ -14,7 +14,7 @@ deferred class ET_ECF_CONDITIONED
 
 feature -- Status report
 
-	is_enabled (a_state: ET_ECF_STATE): BOOLEAN is
+	is_enabled (a_state: ET_ECF_STATE): BOOLEAN
 			-- Does `a_state' fulfill current condition?
 		require
 			a_state_not_void: a_state /= Void
@@ -29,7 +29,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_condition (a_condition: like condition) is
+	set_condition (a_condition: like condition)
 			-- Set `condition' to `a_condition'.
 		do
 			condition := a_condition

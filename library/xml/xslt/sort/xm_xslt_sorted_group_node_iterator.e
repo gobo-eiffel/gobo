@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 
 	make (a_context: XM_XSLT_EVALUATION_CONTEXT;
 			a_base_iterator: XM_XSLT_GROUP_NODE_ITERATOR;
-			some_sort_keys: DS_ARRAYED_LIST [XM_XSLT_FIXED_SORT_KEY_DEFINITION]) is
+			some_sort_keys: DS_ARRAYED_LIST [XM_XSLT_FIXED_SORT_KEY_DEFINITION])
 			-- Establish invariant
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_FIXED_SORT_KEY_DEFINITION]
@@ -93,7 +93,7 @@ feature -- Access
 	error_value: XM_XPATH_ERROR_VALUE
 			-- Last error
 
-	current_grouping_key: XM_XPATH_ATOMIC_VALUE is
+	current_grouping_key: XM_XPATH_ATOMIC_VALUE
 			-- Grouping key for current group;
 			-- (or `Void' for group-starting/ending-with)
 		do
@@ -102,7 +102,7 @@ feature -- Access
 
 feature -- Evaluation
 
-	current_group_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	current_group_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Iterator over the members of the current group, in population order.
 		do
 			check
@@ -114,7 +114,7 @@ feature -- Evaluation
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 	group_iterator: XM_XSLT_GROUP_NODE_ITERATOR
 			-- Sequence to be sorted
 
-	build_array is
+	build_array
 			-- Build `node_keys'.
 		local
 			l_item: DS_CELL [XM_XPATH_ITEM]

@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_tester is
+	make_tester
 			-- Create a new PCRE tester.
 		do
 			create error_handler.make_standard
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			create get_string_mask.make (1, 32)
 		end
 
-	make is
+	make
 			-- Create a new PCRE tester and execute it.
 		do
 			Arguments.set_program_name ("pcretest")
@@ -66,7 +66,7 @@ feature -- Access
 
 feature -- Execution
 
-	execute_test (an_input_filename, an_output_filename: STRING; a_show_info: BOOLEAN) is
+	execute_test (an_input_filename, an_output_filename: STRING; a_show_info: BOOLEAN)
 			-- Process `an_input_filename', execute the corresponding test
 			-- and put the result in `an_output_filename'. Use standard input
 			-- file if `an_input_filename ' is Void and standard output file
@@ -120,7 +120,7 @@ feature -- Execution
 
 feature {NONE} -- Processing
 
-	process_input_file (an_input_file: KI_TEXT_INPUT_STREAM; an_output_file: KI_TEXT_OUTPUT_STREAM; a_show_info: BOOLEAN) is
+	process_input_file (an_input_file: KI_TEXT_INPUT_STREAM; an_output_file: KI_TEXT_OUTPUT_STREAM; a_show_info: BOOLEAN)
 			-- Process the input file of regexp patterns and related subjects.
 			-- Put the results in the output file.
 		require
@@ -256,7 +256,7 @@ feature {NONE} -- Processing
 
 feature {NONE} -- Output
 
-	print_matches (a_regexp: RX_PCRE_REGULAR_EXPRESSION; an_output_file: KI_TEXT_OUTPUT_STREAM) is
+	print_matches (a_regexp: RX_PCRE_REGULAR_EXPRESSION; an_output_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print matched (sub-)expression(s) and extra information
 			-- needed to fit a given output format. Note, that the restrictions
 			-- suggested by this messages are not really limitations in the
@@ -376,7 +376,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_pattern_info (a_regexp: RX_PCRE_REGULAR_EXPRESSION; an_output_file: KI_TEXT_OUTPUT_STREAM) is
+	print_pattern_info (a_regexp: RX_PCRE_REGULAR_EXPRESSION; an_output_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print all wanted info from a given regular expression
 			-- to the output character stream.
 		require
@@ -397,7 +397,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_error (a_regexp: RX_PCRE_REGULAR_EXPRESSION; an_output_file: KI_TEXT_OUTPUT_STREAM) is
+	print_error (a_regexp: RX_PCRE_REGULAR_EXPRESSION; an_output_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print a readable error message, the native one or
 			-- else a POSIX conformant one.
 		require
@@ -493,7 +493,7 @@ feature {NONE} -- Output
 			an_output_file.put_new_line
 		end
 
-	print_substring (a_string: STRING; a_from, a_to: INTEGER; a_stop_at_binary_null: BOOLEAN; an_output_file: KI_TEXT_OUTPUT_STREAM) is
+	print_substring (a_string: STRING; a_from, a_to: INTEGER; a_stop_at_binary_null: BOOLEAN; an_output_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print substring of `a_str' between positions `a_from'
 			-- and `a_to' to `a_file'.
 		require
@@ -528,7 +528,7 @@ feature {NONE} -- Output
 
 feature {NONE} -- Input
 
-	read_pattern (a_file: KI_TEXT_INPUT_STREAM; a_text, a_pattern: STRING) is
+	read_pattern (a_file: KI_TEXT_INPUT_STREAM; a_text, a_pattern: STRING)
 			-- Read a pattern enclosed in the first character
 			-- read. Read until behind the last delimiter.
 		require
@@ -560,7 +560,7 @@ feature {NONE} -- Input
 			end
 		end
 
-	read_pattern_options (a_file: KI_TEXT_INPUT_STREAM; a_regexp: RX_PCRE_REGULAR_EXPRESSION; a_text, a_pattern: STRING) is
+	read_pattern_options (a_file: KI_TEXT_INPUT_STREAM; a_regexp: RX_PCRE_REGULAR_EXPRESSION; a_text, a_pattern: STRING)
 			-- Read the optional options after the pattern.
 			-- Read behind the eol.
 		require
@@ -633,7 +633,7 @@ feature {NONE} -- Input
 			end
 		end
 
-	read_subject (a_file: KI_TEXT_INPUT_STREAM; a_regexp: RX_PCRE_REGULAR_EXPRESSION; a_text, a_subject: STRING) is
+	read_subject (a_file: KI_TEXT_INPUT_STREAM; a_regexp: RX_PCRE_REGULAR_EXPRESSION; a_text, a_subject: STRING)
 			-- Read a subject string from the file.
 			-- Read behind eol.
 		require
@@ -785,7 +785,7 @@ feature {NONE} -- Input
 			not_has_subject: not has_subject implies a_subject.count = 0
 		end
 
-	read_decimal_integer (a_file: KI_TEXT_INPUT_STREAM; a_text: STRING): INTEGER is
+	read_decimal_integer (a_file: KI_TEXT_INPUT_STREAM; a_text: STRING): INTEGER
 			-- Read a decimal integer from `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -804,7 +804,7 @@ feature {NONE} -- Input
 			end
 		end
 
-	skip_spaces (a_file: KI_TEXT_INPUT_STREAM; a_text: STRING) is
+	skip_spaces (a_file: KI_TEXT_INPUT_STREAM; a_text: STRING)
 			-- Skip space characters in `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -821,7 +821,7 @@ feature {NONE} -- Input
 			end
 		end
 
-	skip_non_printable (a_file: KI_TEXT_INPUT_STREAM; a_text: STRING) is
+	skip_non_printable (a_file: KI_TEXT_INPUT_STREAM; a_text: STRING)
 			-- Skip non-printable characters in `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -838,7 +838,7 @@ feature {NONE} -- Input
 			end
 		end
 
-	skip_after_blank_lines (a_file: KI_TEXT_INPUT_STREAM; a_text: STRING) is
+	skip_after_blank_lines (a_file: KI_TEXT_INPUT_STREAM; a_text: STRING)
 			-- Skip to end of line and following blank lines in `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -878,19 +878,19 @@ feature {NONE} -- Input
 
 feature {NONE} -- Status report
 
-	is_space (a_ch: CHARACTER): BOOLEAN is
+	is_space (a_ch: CHARACTER): BOOLEAN
 			-- Is `a_ch' a space character?
 		do
 			Result := a_ch = '%/9/' or else a_ch = ' '
 		end
 
-	is_octal (a_ch: CHARACTER): BOOLEAN is
+	is_octal (a_ch: CHARACTER): BOOLEAN
 			-- Is `a_ch' an octal digit?
 		do
 			Result := a_ch >= '0' and then a_ch <= '7'
 		end
 
-	is_hex (a_ch: CHARACTER): BOOLEAN is
+	is_hex (a_ch: CHARACTER): BOOLEAN
 			-- Is `a_ch' an hexadecimal digit?
 		do
 			inspect a_ch
@@ -957,7 +957,7 @@ feature {NONE} -- Save temporarily the options of a regular expression
 	saved_is_eol: BOOLEAN
 	saved_is_anchored: BOOLEAN
 
-	save_options (a_regexp: RX_PCRE_REGULAR_EXPRESSION) is
+	save_options (a_regexp: RX_PCRE_REGULAR_EXPRESSION)
 			-- Save temporarily the options of `a_regexp'.
 		require
 			need_regexp: a_regexp /= Void
@@ -971,7 +971,7 @@ feature {NONE} -- Save temporarily the options of a regular expression
 			saved_is_anchored := a_regexp.is_anchored
 		end
 
-	restore_options(a_regexp: RX_PCRE_REGULAR_EXPRESSION) is
+	restore_options(a_regexp: RX_PCRE_REGULAR_EXPRESSION)
 			-- Restore the options to `a_regexp'.
 		require
 			need_regexp: a_regexp /= Void
@@ -987,7 +987,7 @@ feature {NONE} -- Save temporarily the options of a regular expression
 
 feature {NONE} -- Filenames
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing input files
 		do
 				-- Bug in ISE 5.6 for .NET: use a do-function rather than
@@ -1000,7 +1000,7 @@ feature {NONE} -- Filenames
 			data_dirname_not_empty: Result.count > 0
 		end
 
-	testinput1_filename: STRING is
+	testinput1_filename: STRING
 			-- Name of first test input file
 		once
 			Result := file_system.pathname (data_dirname, "testinput1")
@@ -1009,7 +1009,7 @@ feature {NONE} -- Filenames
 			testinput1_filename_not_empty: Result.count > 0
 		end
 
-	testinput2_filename: STRING is
+	testinput2_filename: STRING
 			-- Name of second test input file
 		once
 			Result := file_system.pathname (data_dirname, "testinput2")
@@ -1018,7 +1018,7 @@ feature {NONE} -- Filenames
 			testinput2_filename_not_empty: Result.count > 0
 		end
 
-	testinput3_filename: STRING is
+	testinput3_filename: STRING
 			-- Name of third test input file
 		once
 			Result := file_system.pathname (data_dirname, "testinput3")
@@ -1027,7 +1027,7 @@ feature {NONE} -- Filenames
 			testinput3_filename_not_empty: Result.count > 0
 		end
 
-	testinput4_filename: STRING is
+	testinput4_filename: STRING
 			-- Name of forth test input file
 		once
 			Result := file_system.pathname (data_dirname, "testinput4")
@@ -1036,7 +1036,7 @@ feature {NONE} -- Filenames
 			testinput4_filename_not_empty: Result.count > 0
 		end
 
-	testinput5_filename: STRING is
+	testinput5_filename: STRING
 			-- Name of fifth test input file
 		once
 			Result := file_system.pathname (data_dirname, "testinput5")
@@ -1045,7 +1045,7 @@ feature {NONE} -- Filenames
 			testinput5_filename_not_empty: Result.count > 0
 		end
 
-	testinput6_filename: STRING is
+	testinput6_filename: STRING
 			-- Name of sixth test input file
 		once
 			Result := file_system.pathname (data_dirname, "testinput6")

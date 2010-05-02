@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; an_operand_two: XM_XPATH_EXPRESSION) is
+	make (an_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; an_operand_two: XM_XPATH_EXPRESSION)
 			-- Establish invariant
 		do
 			Precursor (an_operand_one, a_token, an_operand_two)
@@ -44,19 +44,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_range_expression: BOOLEAN is
+	is_range_expression: BOOLEAN
 			-- Is `Current' a range expression?
 		do
 			Result := True
 		end
 
-	as_range_expression: XM_XPATH_RANGE_EXPRESSION is
+	as_range_expression: XM_XPATH_RANGE_EXPRESSION
 			-- `Current' seen as a range expression
 		do
 			Result := Current
 		end
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			--Determine the data type of the expression, if possible
 		do
 			Result := type_factory.integer_type
@@ -66,21 +66,21 @@ feature -- Access
 			end
 		end
 
-	lower_bound: XM_XPATH_EXPRESSION is
+	lower_bound: XM_XPATH_EXPRESSION
 			-- Inclusive lower bound
 		do
 			Result := first_operand
 		end
 
-	upper_bound: XM_XPATH_EXPRESSION is
+	upper_bound: XM_XPATH_EXPRESSION
 			-- Inclusive upper bound
 		do
 			Result := second_operand
 		end
 
-feature -- Optimization	
+feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_role, l_other_role: XM_XPATH_ROLE_LOCATOR
@@ -121,7 +121,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_integer, l_other_integer: INTEGER_64
@@ -149,7 +149,7 @@ feature -- Optimization
 						elseif l_integer = l_other_integer then
 							create l_integer_value.make (l_integer)
 							set_replacement (a_replacement, l_integer_value)
-						elseif l_integer.abs <=  Platform.Maximum_integer and l_other_integer.abs <=  Platform.Maximum_integer then 
+						elseif l_integer.abs <=  Platform.Maximum_integer and l_other_integer.abs <=  Platform.Maximum_integer then
 							create l_integer_range.make (l_integer.to_integer_32, l_other_integer.to_integer_32)
 							set_replacement (a_replacement, l_integer_range)
 						else
@@ -164,7 +164,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterator over the values of a sequence
 		local
 			l_integer_value, l_other_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
@@ -221,10 +221,10 @@ feature -- Evaluation
 
 feature {NONE} -- Implementation
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_zero_or_more
 		end
-	
+
 end

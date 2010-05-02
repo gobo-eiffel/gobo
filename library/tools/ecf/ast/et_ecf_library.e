@@ -37,7 +37,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name, a_filename: STRING; a_system: ET_SYSTEM) is
+	make (a_name, a_filename: STRING; a_system: ET_SYSTEM)
 			-- Create a new ECF library.
 		require
 			a_name_not_void: a_name /= Void

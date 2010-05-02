@@ -27,19 +27,19 @@ inherit
 
 feature -- Access
 
-	Single_level: INTEGER is 1
+	Single_level: INTEGER = 1
 			-- Level-numbering value from xsl:number
 
-	Multiple_levels: INTEGER is 2
+	Multiple_levels: INTEGER = 2
 			-- Level-numbering value from xsl:number
 
-	Any_level: INTEGER is 3
+	Any_level: INTEGER = 3
 			-- Level-numbering value from xsl:number
 
-	Simple_numbering: INTEGER is 4
+	Simple_numbering: INTEGER = 4
 			-- Level-numbering value from xsl:number
 
-	selected_numberer (a_language: STRING): detachable ST_XSLT_NUMBERER is
+	selected_numberer (a_language: STRING): detachable ST_XSLT_NUMBERER
 			-- Numberer corresponding to `a_language'
 		require
 			language_not_void: a_language /= Void
@@ -54,7 +54,7 @@ feature -- Access
 			end
 		end
 
-	is_zeros_plus_one (a_picture: STRING): BOOLEAN is
+	is_zeros_plus_one (a_picture: STRING): BOOLEAN
 			-- Does `a_picture' consist of zero or more zeros followed by a one?
 		require
 			picture_not_empty: a_picture /= Void and then not a_picture.is_empty
@@ -79,7 +79,7 @@ feature -- Access
 			end
 		end
 
-	decimal_digits_set (a_picture: STRING): STRING is
+	decimal_digits_set (a_picture: STRING): STRING
 			-- Set of decimal digits from 0 to 9
 		require
 			picture_not_empty: a_picture /= Void and then not a_picture.is_empty
@@ -103,7 +103,7 @@ feature -- Access
 			ten_digits: Result.count = 10
 		end
 
-	is_one (an_integer: INTEGER): BOOLEAN is
+	is_one (an_integer: INTEGER): BOOLEAN
 			-- Is `an_integer' a Unicode code-point of decimal value 1?
 		do
 			Result := unicode_character_class.is_decimal_digit (an_integer) and then unicode_character_class.decimal_digit_value (an_integer) = 1

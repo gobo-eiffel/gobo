@@ -1,7 +1,7 @@
 note
-	
+
 	description:
-	
+
 		"Event filter that removes comment events"
 
 	library: "Gobo Eiffel XML Library"
@@ -9,7 +9,7 @@ note
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
-		
+
 class XM_NO_COMMENT_FILTER
 
 inherit
@@ -18,17 +18,17 @@ inherit
 		redefine
 			on_comment
 		end
-		
+
 create
 
 	make_null,
 	set_next
-	
+
 feature -- Event(s)
 
-	on_comment (a: STRING) is
+	on_comment (a: STRING)
 			-- Do not forward comment event.
 		do
 		end
-		
+
 end

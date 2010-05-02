@@ -42,7 +42,7 @@ create
 
 feature {NONE} -- Initalization
 
-	set_next (a_callback: XM_CALLBACKS; a_dtd_callback: XM_DTD_CALLBACKS) is
+	set_next (a_callback: XM_CALLBACKS; a_dtd_callback: XM_DTD_CALLBACKS)
 			-- Set forward chains.
 		require
 			callbacks_not_void: a_callback /= Void
@@ -54,7 +54,7 @@ feature {NONE} -- Initalization
 
 feature -- Tag
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Start of start tag.
 		do
 			is_disallowed := True
@@ -63,7 +63,7 @@ feature -- Tag
 
 feature -- Meta
 
-	on_processing_instruction (a_name: STRING; a_content: STRING) is
+	on_processing_instruction (a_name: STRING; a_content: STRING)
 			-- Processing instruction.
 		local
 			a_catalog_name: STRING
@@ -77,7 +77,7 @@ feature -- Meta
 					if is_doubtful then
 						shared_catalog_manager.debug_message (2, "Oasis-xml-catalog processing instruction might be erroneous as it appears after other PI", other_pi)
 					end
-					if a_content.substring_index ("catalog=%"", 1) = 1 and then a_content.count > 11 and then a_content.index_of ('"', a_content.count) > 0 then 
+					if a_content.substring_index ("catalog=%"", 1) = 1 and then a_content.count > 11 and then a_content.index_of ('"', a_content.count) > 0 then
 						a_catalog_name := a_content.substring (10, a_content.count - 1)
 						shared_catalog_manager.add_pi_catalog (a_catalog_name)
 					else
@@ -93,14 +93,14 @@ feature -- Meta
 
 feature -- Document type definition callbacks
 
-	on_dtd_end is
+	on_dtd_end
 			-- End of DTD.
 		do
 			is_disallowed := True
 			Precursor
 		end
 
-	on_dtd_processing_instruction (a_name, a_content: STRING) is
+	on_dtd_processing_instruction (a_name, a_content: STRING)
 			-- PI.
 		do
 			if STRING_.same_string (a_name, "oasis-xml-catalog") then
@@ -109,7 +109,7 @@ feature -- Document type definition callbacks
 			is_disallowed := True
 			Precursor (a_name, a_content)
 		end
-	
+
 
 feature {NONE} -- Implementation
 
@@ -123,5 +123,5 @@ feature {NONE} -- Implementation
 			-- Processing instruction which raised doubtful status
 
 invariant
-	
+
 end

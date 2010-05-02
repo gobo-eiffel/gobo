@@ -18,14 +18,14 @@ inherit
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset operand as it was just after it was last parsed.
 		do
 		end
 
 feature -- Status setting
 
-	is_open_operand: BOOLEAN is
+	is_open_operand: BOOLEAN
 			-- Is current operand open?
 		do
 			-- Result := False
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_index (i: INTEGER) is
+	set_index (i: INTEGER)
 			-- Set `index' to `i'.
 		require
 			i_nonnegative: i >= 0

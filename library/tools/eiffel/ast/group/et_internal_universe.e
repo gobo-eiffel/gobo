@@ -31,7 +31,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize universe.
 		do
 			precursor
@@ -42,14 +42,14 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	has_cluster (a_cluster: ET_CLUSTER): BOOLEAN is
+	has_cluster (a_cluster: ET_CLUSTER): BOOLEAN
 			-- Is `a_cluster' one of the clusters or recursively
 			-- subclusters of current universe?
 		do
 			Result := clusters.has_subcluster (a_cluster)
 		end
 
-	has_cluster_by_name (a_names: ARRAY [STRING]): BOOLEAN is
+	has_cluster_by_name (a_names: ARRAY [STRING]): BOOLEAN
 			-- Is there a cluster named `a_names' in universe?
 			-- Do not take into account missing implicit subclusters.
 		require
@@ -60,7 +60,7 @@ feature -- Status report
 			Result := clusters.has_subcluster_by_name (a_names)
 		end
 
-	has_cluster_with_absolute_pathname (a_pathname: STRING): BOOLEAN is
+	has_cluster_with_absolute_pathname (a_pathname: STRING): BOOLEAN
 			-- Is there a cluster with absolute pathname `a_pathname' in universe?
 			--
 			-- `a_pathname' is expected to be a canonical absolute pathname.
@@ -83,7 +83,7 @@ feature -- Access
 	dotnet_assemblies: ET_ADAPTED_DOTNET_ASSEMBLIES
 			-- .NET assemblies that current universe depends on
 
-	cluster_by_name (a_names: ARRAY [STRING]): ET_CLUSTER is
+	cluster_by_name (a_names: ARRAY [STRING]): ET_CLUSTER
 			-- Cluster named `a_names' in current universe
 			--
 			-- Add missing implicit subclusters if needed.
@@ -98,7 +98,7 @@ feature -- Access
 			not_void_if_has: has_cluster_by_name (a_names) implies Result /= Void
 		end
 
-	cluster_with_absolute_pathname (a_pathname: STRING): ET_CLUSTER is
+	cluster_with_absolute_pathname (a_pathname: STRING): ET_CLUSTER
 			-- Cluster with absolute pathname `a_pathname' in current universe
 			--
 			-- `a_pathname' is expected to be a canonical absolute pathname.
@@ -113,7 +113,7 @@ feature -- Access
 			not_void_if_has: has_cluster_with_absolute_pathname (a_pathname) implies Result /= Void
 		end
 
-	adapted_universe (a_universe: ET_UNIVERSE): ET_ADAPTED_UNIVERSE is
+	adapted_universe (a_universe: ET_UNIVERSE): ET_ADAPTED_UNIVERSE
 			-- Adapted version of `a_universe' viewed from current universe
 			-- when it depends on it, Void otherwise
 			--
@@ -137,7 +137,7 @@ feature -- Access
 
 feature -- Measurement
 
-	cluster_count: INTEGER is
+	cluster_count: INTEGER
 			-- Number of non-abstract clusters and recursively subclusters in current universe
 		do
 			Result := clusters.count
@@ -145,7 +145,7 @@ feature -- Measurement
 			cluster_count_not_negavite: Result >= 0
 		end
 
-	cluster_count_recursive: INTEGER is
+	cluster_count_recursive: INTEGER
 			-- Number of non-abstract clusters and recursively subclusters in current universe
 			-- and recursively in the universes it depends on
 		local
@@ -161,7 +161,7 @@ feature -- Measurement
 			cluster_count_not_negavite: Result >= 0
 		end
 
-	override_cluster_count: INTEGER is
+	override_cluster_count: INTEGER
 			-- Number of non-abstract non-read-only override clusters and recursively subclusters
 			-- in current universe
 		do
@@ -170,7 +170,7 @@ feature -- Measurement
 			override_cluster_count_not_negavite: Result >= 0
 		end
 
-	override_cluster_count_recursive: INTEGER is
+	override_cluster_count_recursive: INTEGER
 			-- Number of non-abstract non-read-only override clusters and recursively subclusters
 			-- in current universe and recursively in the universes it depends on
 		local
@@ -186,7 +186,7 @@ feature -- Measurement
 			override_cluster_count_not_negavite: Result >= 0
 		end
 
-	read_write_cluster_count: INTEGER is
+	read_write_cluster_count: INTEGER
 			-- Number of non-abstract non-read-only clusters and recursively subclusters
 			-- in current universe
 		do
@@ -195,7 +195,7 @@ feature -- Measurement
 			read_write_cluster_count_not_negavite: Result >= 0
 		end
 
-	read_write_cluster_count_recursive: INTEGER is
+	read_write_cluster_count_recursive: INTEGER
 			-- Number of non-abstract non-read-only clusters and recursively subclusters
 			-- in current universe and recursively in the universes it depends on
 		local
@@ -213,7 +213,7 @@ feature -- Measurement
 
 feature -- Setting
 
-	set_clusters (a_clusters: like clusters) is
+	set_clusters (a_clusters: like clusters)
 			-- Set `a_clusters' to `clusters'.
 		require
 			a_clusters_not_void: a_clusters /= Void
@@ -223,7 +223,7 @@ feature -- Setting
 			clusters_set: clusters = a_clusters
 		end
 
-	set_libraries (a_libraries: like libraries) is
+	set_libraries (a_libraries: like libraries)
 			-- Set `a_libraries' to `libraries'.
 		require
 			a_libraries_not_void: a_libraries /= Void
@@ -233,7 +233,7 @@ feature -- Setting
 			libraries_set: libraries = a_libraries
 		end
 
-	set_dotnet_assemblies (a_assemblies: like dotnet_assemblies) is
+	set_dotnet_assemblies (a_assemblies: like dotnet_assemblies)
 			-- Set `a_assemblies' to `dotnet_assemblies'.
 		require
 			a_assemblies_not_void: a_assemblies /= Void
@@ -245,7 +245,7 @@ feature -- Setting
 
 feature -- Element change
 
-	add_implicit_subclusters is
+	add_implicit_subclusters
 			-- Add to current universe implicit subclusters (recursively) when clusters are recursive.
 			-- Note that these subclusters will otherwise be added when running
 			-- one of the `preparse*' or `parse_all*' routines.
@@ -253,7 +253,7 @@ feature -- Element change
 			clusters.add_implicit_subclusters
 		end
 
-	add_implicit_subclusters_recursive is
+	add_implicit_subclusters_recursive
 			-- Add to current universe and recursively the universes it depends on
 			-- implicit subclusters (recursively) when clusters are recursive.
 			-- Note that these subclusters will otherwise be added when running
@@ -264,7 +264,7 @@ feature -- Element change
 
 feature -- Iteration
 
-	clusters_do_explicit (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]]) is
+	clusters_do_explicit (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]])
 			-- Apply `an_action' to every non-implicit cluster of current universe
 			-- and recursively their subclusters.
 			-- (Semantics not guaranteed if `an_action' adds or removes clusters.)
@@ -272,7 +272,7 @@ feature -- Iteration
 			clusters.do_explicit (an_action)
 		end
 
-	clusters_do_explicit_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]]) is
+	clusters_do_explicit_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]])
 			-- Apply `an_action' to every non-implicit cluster of current universe
 			-- and recursively their subclusters, as well as on the clusters and
 			-- subclusters that are declared in the universes it depends on recursively.
@@ -281,14 +281,14 @@ feature -- Iteration
 			internal_universes_do_recursive (agent {ET_INTERNAL_UNIVERSE}.clusters_do_explicit (an_action))
 		end
 
-	universes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]) is
+	universes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]])
 			-- Apply `an_action' to every universe that current universe depends on.
 		do
 			libraries.universes_do_all (an_action)
 			dotnet_assemblies.universes_do_all (an_action)
 		end
 
-	universes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_test: FUNCTION [ANY, TUPLE [ET_UNIVERSE], BOOLEAN]) is
+	universes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_test: FUNCTION [ANY, TUPLE [ET_UNIVERSE], BOOLEAN])
 			-- Apply `an_action' to every universe that current universe depends on and
 			-- which satisfies `a_test'.
 		do
@@ -296,7 +296,7 @@ feature -- Iteration
 			dotnet_assemblies.universes_do_if (an_action, a_test)
 		end
 
-	internal_universes_do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_INTERNAL_UNIVERSE]]) is
+	internal_universes_do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_INTERNAL_UNIVERSE]])
 			-- Apply `an_action' on current universe and recursively on
 			-- the internal universes it depends on.
 		require
@@ -309,7 +309,7 @@ feature -- Iteration
 			l_visited.do_all (an_action)
 		end
 
-	internal_universes_do_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_INTERNAL_UNIVERSE]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]) is
+	internal_universes_do_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_INTERNAL_UNIVERSE]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' on current universe and recursively on
 			-- the internal universes it depends on.
 			--
@@ -339,7 +339,7 @@ feature -- Iteration
 
 feature -- Relations
 
-	add_universe_recursive (a_visited: DS_HASH_SET [ET_UNIVERSE]) is
+	add_universe_recursive (a_visited: DS_HASH_SET [ET_UNIVERSE])
 			-- Add current universe to `a_visited' and
 			-- recursively the universes it depends on.
 		do
@@ -350,7 +350,7 @@ feature -- Relations
 			end
 		end
 
-	add_internal_universe_recursive (a_visited: DS_HASH_SET [ET_INTERNAL_UNIVERSE]) is
+	add_internal_universe_recursive (a_visited: DS_HASH_SET [ET_INTERNAL_UNIVERSE])
 			-- Add current universe to `a_visited' and
 			-- recursively the internal universes it depends on.
 		require
@@ -364,7 +364,7 @@ feature -- Relations
 
 feature -- Parsing
 
-	preparse is
+	preparse
 			-- Build a mapping between class names and their filenames and
 			-- populate `classes', even if the classes have not been
 			-- parsed yet. If current universe had already been preparsed,
@@ -396,7 +396,7 @@ feature -- Parsing
 			end
 		end
 
-	preparse_recursive is
+	preparse_recursive
 			-- Build a mapping between class names and their filenames and
 			-- populate `master_classes', even if the classes have not been
 			-- parsed yet. If current universe had already been preparsed,
@@ -432,7 +432,7 @@ feature -- Parsing
 			end
 		end
 
-	parse_all is
+	parse_all
 			-- Parse all classes declared locally in the current universe.
 			-- There is no need to call one of the preparse routines
 			-- beforehand since the current routine will traverse all
@@ -467,7 +467,7 @@ feature -- Parsing
 			end
 		end
 
-	parse_all_recursive is
+	parse_all_recursive
 			-- Parse all classes declared locally in the current universe,
 			-- and recursively those that are declared in universes it
 			-- depends on. There is no need to call one of the preparse
@@ -507,7 +507,7 @@ feature -- Parsing
 
 feature {ET_UNIVERSE} -- Parsing
 
-	import_classes is
+	import_classes
 			-- Import classes made available (i.e. exported) by other universes.
 		do
 			master_classes_do_all (agent {ET_MASTER_CLASS}.remove_unknown_imported_classes)

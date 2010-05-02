@@ -58,7 +58,7 @@ feature -- Overflow checking
 
 	will_overflow (part1: like max_natural_type; part2: like max_natural_type; type: INTEGER; sign: INTEGER): BOOLEAN
 			-- Will `part1' * 10 + `part2' with `sign' overflow
-			-- if we convert it to an number of `type'?			
+			-- if we convert it to an number of `type'?
 		require
 			type_valid: integer_natural_type_valid (type)
 		local

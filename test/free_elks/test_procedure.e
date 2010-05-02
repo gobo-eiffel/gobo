@@ -24,7 +24,7 @@ create
 
 feature -- Test
 
-	test_call_qualified1 is
+	test_call_qualified1
 			-- Test feature 'call' with a closed qualified target.
 		local
 			a: ARRAY [CHARACTER]
@@ -67,7 +67,7 @@ feature -- Test
 			assert_characters_equal ("call8", 'f', a.item (1))
 		end
 
-	test_call_qualified2 is
+	test_call_qualified2
 			-- Test feature 'call' with a closed qualified target,
 			-- calling builtin features.
 		local
@@ -111,7 +111,7 @@ feature -- Test
 			assert_characters_equal ("call8", 'f', a.item (1))
 		end
 
-	test_call_qualified3 is
+	test_call_qualified3
 			-- Test feature 'call' with a closed qualified target
 			-- which can be polymorphic.
 		local
@@ -192,7 +192,7 @@ feature -- Test
 			assert_characters_equal ("call8b", 'e', a.item (1))
 		end
 
-	test_call_typed1 is
+	test_call_typed1
 			-- Test feature 'call' with an open target.
 		local
 			a: ARRAY [CHARACTER]
@@ -231,7 +231,7 @@ feature -- Test
 			assert_characters_equal ("call7", 'f', a.item (1))
 		end
 
-	test_call_typed2 is
+	test_call_typed2
 			-- Test feature 'call' with an open target,
 			-- calling builtin features.
 		local
@@ -271,7 +271,7 @@ feature -- Test
 			assert_characters_equal ("call7", 'f', a.item (1))
 		end
 
-	test_call_typed3 is
+	test_call_typed3
 			-- Test feature 'call' with an open target,
 			-- which can be polymorphic.
 		local
@@ -343,7 +343,7 @@ feature -- Test
 			assert_characters_equal ("call7b", 'e', a.item (1))
 		end
 
-	test_call_unqualified1 is
+	test_call_unqualified1
 			-- Test feature 'call' with a closed unqualified target.
 		local
 			a: ARRAY [CHARACTER]
@@ -386,7 +386,7 @@ feature -- Test
 			assert_characters_equal ("call8", 'f', a.item (1))
 		end
 
-	test_valid_operands is
+	test_valid_operands
 			-- Test feature 'valid_operands'.
 		local
 			p1: PROCEDURE [ANY, TUPLE]
@@ -411,7 +411,7 @@ feature -- Test
 			assert ("valid2", p1.valid_operands (t1))
 		end
 
-	test_is_target_closed is
+	test_is_target_closed
 			-- Test feature 'is_target_closed'.
 		local
 			s: STRING
@@ -425,7 +425,7 @@ feature -- Test
 			assert ("is_closed", p2.is_target_closed)
 		end
 
-	test_set_target is
+	test_set_target
 			-- Test feature 'set_target'.
 		local
 			s1, s2: STRING
@@ -440,7 +440,7 @@ feature -- Test
 			assert_strings_equal ("s2", "fooZ", s2)
 		end
 
-	test_boxed_operands is
+	test_boxed_operands
 			-- Test that the access to the items of the tuple argument
 			-- of 'call' is correctly done, with boxing of expanded
 			-- objects to reference when necessary.
@@ -481,7 +481,7 @@ feature -- Test
 			end
 		end
 
-	test_twin is
+	test_twin
 			-- Test feature 'twin'.
 		local
 			a: ARRAY [CHARACTER]
@@ -498,7 +498,7 @@ feature -- Test
 			assert_characters_equal ("item1b", 'f', a.item (1))
 		end
 
-	test_deep_twin is
+	test_deep_twin
 			-- Test feature 'deep_twin'.
 		local
 			a: ARRAY [CHARACTER]
@@ -515,7 +515,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	f (a: ARRAY [CHARACTER]; c: CHARACTER; i: INTEGER) is
+	f (a: ARRAY [CHARACTER]; c: CHARACTER; i: INTEGER)
 			-- Insert `c' at index `i' in `a'.
 		require
 			a_not_void: a /= Void

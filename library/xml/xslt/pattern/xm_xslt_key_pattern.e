@@ -24,10 +24,10 @@ inherit
 create
 
 	make
-	
+
 feature {NONE} -- Initialization
 
-	make (a_static_context: XM_XPATH_STATIC_CONTEXT; a_name_code: INTEGER; a_key: XM_XPATH_EXPRESSION) is
+	make (a_static_context: XM_XPATH_STATIC_CONTEXT; a_name_code: INTEGER; a_key: XM_XPATH_EXPRESSION)
 			-- Establish invariant
 		require
 			key_not_void: a_key /= Void
@@ -51,19 +51,19 @@ feature -- Access
 	key_expression: XM_XPATH_EXPRESSION
 			-- The expression
 
-	original_text: STRING is
+	original_text: STRING
 			-- Original text
 		do
 			Result :=  ("key()")
 		end
 
-	node_test: XM_XSLT_NODE_TEST is
+	node_test: XM_XSLT_NODE_TEST
 			-- Retrieve an `XM_XSLT_NODE_TEST' that all nodes matching this pattern must satisfy
 		do
 			create {XM_XSLT_ANY_NODE_TEST} Result.make
 		end
 
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions of `Current'
 		do
 			create Result.make (1)
@@ -71,7 +71,7 @@ feature -- Access
 			Result.put (key_expression, 1)
 		end
 
-	compute_dependencies is
+	compute_dependencies
 			-- Compute dependencies which restrict optimizations
 		do
 			if not key_expression.are_dependencies_computed and key_expression.is_computed_expression then
@@ -82,7 +82,7 @@ feature -- Access
 
 feature -- Optimization
 
-	type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Type-check the pattern;
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -95,7 +95,7 @@ feature -- Optimization
 			end
 		end
 
-	promote (a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote sub-expressions of `Current'.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -107,7 +107,7 @@ feature -- Optimization
 
 feature -- Matching
 
-	match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Attempt to match `Current' againast `a_node'.
 		local
 			l_doc: XM_XPATH_DOCUMENT
@@ -169,4 +169,4 @@ invariant
 	key_expression_not_void: key_expression /= Void
 
 end
-	
+

@@ -27,11 +27,11 @@ create
 
 feature -- Access
 
-	Docbook_fpi: STRING is "-//OASIS//DTD DocBook XML V4.1.2//EN"
-	
+	Docbook_fpi: STRING = "-//OASIS//DTD DocBook XML V4.1.2//EN"
+
 feature -- Tests
 
-	test_normalization is
+	test_normalization
 			-- Test normalizing an fpi
 		local
 			an_fpi: STRING
@@ -43,11 +43,11 @@ feature -- Tests
 			assert ("Idempotent", STRING_.same_string (an_fpi, Docbook_fpi))
 		end
 
-	test_urn_to_fpi is
+	test_urn_to_fpi
 			-- Test decoding a publicid URN.
 		do
 			assert ("URN decoded", STRING_.same_string (urn_to_fpi ("urn:publicid:-:OASIS:DTD+DocBook+XML+V4.1.2:EN"), "-//OASIS//DTD DocBook XML V4.1.2//EN"))
 		end
 
 end
-	
+

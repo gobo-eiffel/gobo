@@ -39,7 +39,7 @@ create
 
 feature -- Test
 
-	test_shorthand is
+	test_shorthand
 			-- Test parsing shorthand pointer
 		local
 			a_processor: XM_XPATH_XPOINTER
@@ -68,7 +68,7 @@ feature -- Test
 			assert ("Science cataegory", STRING_.same_string (an_element.attribute_value_by_name ("", "DESC"), "Science"))
 		end
 
-	test_element_scheme is
+	test_element_scheme
 			-- Test element() scheme and xmlns scheme gives no error
 		local
 			a_processor: XM_XPATH_XPOINTER
@@ -103,7 +103,7 @@ feature -- Test
 			assert ("Science cataegory", STRING_.same_string (an_element.attribute_value_by_name ("", "DESC"), "Science"))
 		end
 
-	test_gexslt_xpath_scheme is
+	test_gexslt_xpath_scheme
 			-- Test gexslt:xpath() scheme.
 			local
 			a_processor: XM_XPATH_XPOINTER
@@ -136,7 +136,7 @@ feature -- Test
 			assert ("Science cataegory", STRING_.same_string (an_element.attribute_value_by_name ("", "DESC"), "Science"))
 		end
 
-	test_xpath_scheme is
+	test_xpath_scheme
 			-- Test W3C xpath() scheme.
 			local
 			a_processor: XM_XPATH_XPOINTER
@@ -171,7 +171,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	make_parser (a_base_uri: STRING) is
+	make_parser (a_base_uri: STRING)
 		require
 			a_base_uri_not_void: a_base_uri /= Void
 		local
@@ -185,11 +185,11 @@ feature {NONE} -- Implementation
 			parser.set_dtd_callbacks (tree_pipe.emitter)
 			parser.set_string_mode_ascii
 		end
-		
+
 	parser: XM_EIFFEL_PARSER
 	tree_pipe: XM_XPATH_TREE_CALLBACKS_PIPE
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}",
@@ -199,8 +199,8 @@ feature {NONE} -- Implementation
 			data_dirname_not_void: Result /= Void
 			data_dirname_not_empty: not Result.is_empty
 		end
-		
-	books_xml_uri: UT_URI is
+
+	books_xml_uri: UT_URI
 			-- URI of file 'books.xml'
 		local
 			a_path: STRING
@@ -210,6 +210,6 @@ feature {NONE} -- Implementation
 		ensure
 			books_xml_uri_not_void: Result /= Void
 		end
-			
+
 end
-			
+

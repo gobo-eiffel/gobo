@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_string: STRING) is
+	make (a_string: STRING)
 			-- Create a new collation key.
 		require
 			a_string_not_void: a_string /= Void
@@ -42,7 +42,7 @@ feature -- Access
 
 feature -- Comparison
 
-	three_way_comparison (other: like Current): INTEGER is
+	three_way_comparison (other: like Current): INTEGER
 			-- Comparison of `Current' with `other'
 		do
 				-- This implementation directly compares the source values,

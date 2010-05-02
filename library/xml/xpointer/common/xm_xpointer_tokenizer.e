@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_input: STRING) is
+	make (an_input: STRING)
 			-- Prepare a string for tokenization.
 		require
 			input_string_not_void: an_input /= Void
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	last_token: INTEGER is
+	last_token: INTEGER
 			-- The number identifying the most recently read token
 		require
 			no_lexical_error: is_lexical_error = False
@@ -45,7 +45,7 @@ feature -- Access
 			Result := current_token
 		end
 
-	last_token_value: STRING is
+	last_token_value: STRING
 			-- The string value of the most recently read token
 		require
 			no_lexical_error: is_lexical_error = False
@@ -62,7 +62,7 @@ feature -- Access
 	input_length: INTEGER
 			-- Length of the input string
 
-	last_lexical_error: STRING is
+	last_lexical_error: STRING
 			-- Error text
 		require
 			lexical_error: is_lexical_error
@@ -79,8 +79,8 @@ feature -- Status report
 
 	is_whitespace_reporting: BOOLEAN
 			-- Are whitespace characters to be reported as a token?
-	
-	is_input_stream_exhausted: BOOLEAN is
+
+	is_input_stream_exhausted: BOOLEAN
 			-- Are there more characters to read?
 		do
 			Result := input_index > input_length
@@ -88,17 +88,17 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_whitespace_reporting (a_boolean: BOOLEAN) is
+	set_whitespace_reporting (a_boolean: BOOLEAN)
 			-- Set `is_whitespace_reporting'.
 		do
 			is_whitespace_reporting := a_boolean
 		ensure
 			whitespace_reporting_set: is_whitespace_reporting = a_boolean
 		end
-		
+
 feature --Element change
 
-	next is
+	next
 			-- Set `last_token' and `last_token_value' from `input'
 		require
 			no_previous_error: not is_lexical_error
@@ -160,8 +160,8 @@ feature --Element change
 		end
 
 feature {NONE} -- Implementation
-	
-	report_lexical_error (a_message: STRING) is
+
+	report_lexical_error (a_message: STRING)
 			-- Report a lexical error.
 		require
 			no_previous_error: not is_lexical_error
@@ -188,11 +188,11 @@ feature {NONE} -- Implementation
 
 	was_whitespace_found: BOOLEAN
 			-- Set when `eat_whitespace' finds whitespace characters
-	
-	whitespace: STRING is " %R%T%N"
+
+	whitespace: STRING = " %R%T%N"
 		-- White space charaters as per XML 1.0
 
-	eat_whitespace is
+	eat_whitespace
 			-- Consume all whitespace characters.
 		require
 			whitespace_reporting: is_whitespace_reporting
@@ -217,8 +217,8 @@ feature {NONE} -- Implementation
 			whitespace_not_found_unsets_token: not was_whitespace_found implies current_token_value = Void
 			next_character_not_whitespace: is_input_stream_exhausted or else not whitespace.has (input.item (input_index))
 		end
-	
-	accumulate_string_token is
+
+	accumulate_string_token
 			-- Accumulate characters and return a string.
 		require
 			input_stream_not_exhausted: not is_input_stream_exhausted
@@ -237,7 +237,7 @@ feature {NONE} -- Implementation
 					finished := True
 				else
 					inspect
-						input.item (input_index)						
+						input.item (input_index)
 					when '(', ')', '^' then
 						finished := True
 					else
@@ -255,4 +255,4 @@ feature {NONE} -- Implementation
 		end
 
 end
-	
+

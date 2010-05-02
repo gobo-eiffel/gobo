@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	trace_item (a_label: STRING; an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
+	trace_item (a_label: STRING; an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT)
 			-- Write trace record.
 		require
 			item_may_be_void: True
@@ -63,4 +63,4 @@ feature -- Access
 		end
 
 end
-	
+

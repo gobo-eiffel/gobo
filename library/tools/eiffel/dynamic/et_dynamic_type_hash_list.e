@@ -45,7 +45,7 @@ create
 
 feature -- Element change
 
-	append_last (other: ET_DYNAMIC_TYPES) is
+	append_last (other: ET_DYNAMIC_TYPES)
 			-- Add items of `other' to the end of list.
 			-- Keep items of `other' in the same order.
 			-- Resize list if necessary.

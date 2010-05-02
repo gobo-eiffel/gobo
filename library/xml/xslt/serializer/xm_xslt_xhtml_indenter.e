@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Implementation
 
-	tag_properties (a_name_code: INTEGER): INTEGER is
+	tag_properties (a_name_code: INTEGER): INTEGER
 			-- Properties for element named by `a_name_code'
 		local
 			is_formatted, is_inline: BOOLEAN
@@ -41,4 +41,4 @@ feature {NONE} -- Implementation
 		end
 
 end
-	
+

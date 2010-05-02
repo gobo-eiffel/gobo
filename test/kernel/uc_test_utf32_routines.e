@@ -24,7 +24,7 @@ create
 
 feature -- Tests
 
-	test_valid is
+	test_valid
 			-- Test feature `valid_utf32' when valid.
 		do
 			assert ("empty", utf32.valid_utf32 (""))
@@ -33,7 +33,7 @@ feature -- Tests
 			assert ("valid_no_byte_order_marker", utf32.valid_utf32 ("%/0/%/0/%/0/M"))
 		end
 
-	test_invalid is
+	test_invalid
 			-- Test feature `valid_utf32' when invalid.
 		do
 			assert ("only_3_bytes_be", not utf32.valid_utf32 (utf32.bom_be + "%/0/%/0/M"))

@@ -48,7 +48,7 @@ create
 
 feature
 
-	make is
+	make
 		local
 			b: BB
 		do
@@ -70,7 +70,7 @@ inherit
 
 feature -- Access
 
-	f is
+	f
 		do
 			item := "gobo"
 		end

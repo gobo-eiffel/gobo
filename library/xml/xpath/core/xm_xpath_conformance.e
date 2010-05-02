@@ -31,10 +31,10 @@ feature -- Status report
 
 	is_full_type_scheme: BOOLEAN
 			-- Does this processor implement the full xs:schema type scheme?
-	
+
 feature -- Status setting
 
-	set_basic_xslt_processor is
+	set_basic_xslt_processor
 			-- Declare this to be a Basic XSLT processor.
 		require
 			not_schema_aware: not schema_aware_processor
@@ -45,7 +45,7 @@ feature -- Status setting
 			set: basic_xslt_processor
 		end
 
-	set_customized_host_language is
+	set_customized_host_language
 			-- Declare this to be a customized host language.
 			-- A customized host language is a host language
 			--  that does not implement every data-type at a given level.
@@ -72,5 +72,5 @@ invariant
 	basic_xslt_processor: basic_xslt_processor implies not is_full_type_scheme
 	basic_xquery_processor: basic_xquery_processor implies xquery_processor
 	customized: customized_host_language implies basic_xslt_processor or else schema_aware_processor or else xquery_processor
-	
+
 end

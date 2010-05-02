@@ -31,7 +31,7 @@ create
 
 feature -- Test
 
-	test_infoset is
+	test_infoset
 			-- Transform same file to an infoset twice - one with and one without indenting. -- TODO - this last condition not yet tested
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -75,7 +75,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing schematron data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}",
@@ -86,15 +86,15 @@ feature {NONE} -- Implementation
 			data_dirname_not_empty: not Result.is_empty
 		end
 
-	dummy_uri: UT_URI is
+	dummy_uri: UT_URI
 			-- Dummy URI
 		once
 			create Result.make ("dummy:")
 		ensure
 			dummy_uri_is_absolute: Result /= Void and then Result.is_absolute
 		end
-		
-	infoset_xsl_uri: UT_URI is
+
+	infoset_xsl_uri: UT_URI
 			-- URI of file 'infoset.xsl'
 		local
 			l_path: STRING
@@ -104,8 +104,8 @@ feature {NONE} -- Implementation
 		ensure
 			infoset_xsl_uri_not_void: Result /= Void
 		end
-		
-	test1_xml_uri: UT_URI is
+
+	test1_xml_uri: UT_URI
 			-- URI of file 'test1.xml'
 		local
 			l_path: STRING

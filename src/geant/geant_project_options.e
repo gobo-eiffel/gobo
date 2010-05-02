@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize project options.
 		do
 		end
@@ -40,7 +40,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_verbose (a_verbose: BOOLEAN) is
+	set_verbose (a_verbose: BOOLEAN)
 			-- Set `verbose' to `a_verbose'
 		do
 			verbose := a_verbose
@@ -48,7 +48,7 @@ feature -- Setting
 			verbose_set: verbose = a_verbose
 		end
 
-	set_debug_mode (a_debug_mode: BOOLEAN) is
+	set_debug_mode (a_debug_mode: BOOLEAN)
 			-- Set `debug_mode' to `a_debug_mode'
 		do
 			debug_mode := a_debug_mode
@@ -56,7 +56,7 @@ feature -- Setting
 			debug_mode_set: debug_mode = a_debug_mode
 		end
 
-	set_no_exec (a_no_exec: BOOLEAN) is
+	set_no_exec (a_no_exec: BOOLEAN)
 			-- Set `no_exec' to `a_no_exec'
 		do
 			no_exec := a_no_exec
@@ -64,7 +64,7 @@ feature -- Setting
 			no_exec_set: no_exec = a_no_exec
 		end
 
-	set_variable_local_by_default (a_variable_local_by_default: BOOLEAN) is
+	set_variable_local_by_default (a_variable_local_by_default: BOOLEAN)
 			-- Set `variable_local_by_default' to `a_variable_local_by_default'
 		do
 			variable_local_by_default := a_variable_local_by_default

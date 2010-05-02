@@ -23,7 +23,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_buffer (a_buffer: like input_buffer) is
+	make_with_buffer (a_buffer: like input_buffer)
 			-- Create a new scanner with
 			-- `a_buffer' as input buffer.
 		do
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Scanning
 
-	read_token is
+	read_token
 			-- Read a token from `input_buffer'.
 			-- Make result available in `last_token'.
 		local
@@ -338,7 +338,7 @@ feature -- Scanning
 
 feature -- Input
 
-	set_input_buffer (a_buffer: like input_buffer) is
+	set_input_buffer (a_buffer: like input_buffer)
 			-- Set `input_buffer' to `a_buffer'.
 		do
 			if a_buffer /= input_buffer then

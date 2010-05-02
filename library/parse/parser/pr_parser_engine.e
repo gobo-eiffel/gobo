@@ -51,7 +51,7 @@ feature -- Tables
 			-- what to do after reducing a rule that derives
 			-- a variable, indexed by variable id - nb_tokens.
 			-- This portion is indexed by the parser state
-			-- number `s' as of before the text for this 
+			-- number `s' as of before the text for this
 			-- nonterminal was read. The value from `yytable'
 			-- is the state to go to if the corresponding
 			-- value in `yycheck' is `s'.
@@ -65,7 +65,7 @@ feature -- Tables
 			-- indicates, in a roundabout way, the bounds of
 			-- the portion you are triyng to examine. Suppose
 			-- that the portion of `yytable' starts at index
-			-- `p' and the index to be examined within the 
+			-- `p' and the index to be examined within the
 			-- portion is `i'. Then if `yycheck.item (p+i)/=i',
 			-- `i' is outside the bounds of what is actually
 			-- allocated, and the default (from `yydefact'

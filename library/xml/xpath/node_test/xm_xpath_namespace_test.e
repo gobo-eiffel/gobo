@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_node_type: INTEGER; a_uri, an_original_text: STRING) is
+	make (a_node_type: INTEGER; a_uri, an_original_text: STRING)
 		require
 			uri_not_void: a_uri /= Void
 			original_text_not_void: an_original_text /= Void
@@ -57,19 +57,19 @@ feature -- Access
 	uri_code: INTEGER
 			-- The uri code
 
-	node_kind_mask: INTEGER is
+	node_kind_mask: INTEGER
 			-- Mask of types of nodes matched
 		do
 			Result := INTEGER_.bit_shift_left (1, node_kind)
 		end
 
-	is_namespace_test: BOOLEAN is
+	is_namespace_test: BOOLEAN
 			-- Is `Current' a namespace test?
 		do
 			Result := True
 		end
 
-	as_namespace_test: XM_XPATH_NAMESPACE_TEST is
+	as_namespace_test: XM_XPATH_NAMESPACE_TEST
 			-- `Current' seen as a namespace test
 		do
 			Result := Current
@@ -77,15 +77,15 @@ feature -- Access
 
 feature -- Status report
 
-	allows_text_nodes: BOOLEAN is
+	allows_text_nodes: BOOLEAN
 			-- Does this node test allow text nodes?
 		do
 			Result := False
 		end
-	
+
 feature -- Matching
 
-	matches_node (a_node_kind: INTEGER; a_name_code: INTEGER; a_node_type: INTEGER): BOOLEAN is
+	matches_node (a_node_kind: INTEGER; a_name_code: INTEGER; a_node_type: INTEGER): BOOLEAN
 			-- Is this node test satisfied by a given node?
 		do
 			if a_name_code = - 1 then
@@ -96,5 +96,5 @@ feature -- Matching
 				Result := uri_code = shared_name_pool.uri_code_from_name_code (a_name_code)
 			end
 		end
-	
+
 end

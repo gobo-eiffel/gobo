@@ -2,7 +2,7 @@ class BB [G]
 
 feature
 
-	f: ARRAY [G] is
+	f: ARRAY [G]
 		do
 			create Result.make (1, 2)
 		ensure

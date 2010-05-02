@@ -24,7 +24,7 @@ create
 
 feature -- Events
 
-	end_document is
+	end_document
 			-- Notify the end of the document
 		do
 			if is_output_open then

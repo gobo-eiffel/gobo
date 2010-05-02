@@ -28,7 +28,7 @@ inherit
 
 feature {NONE} -- Access
 
-	successor_for_removal (v: like root_node): like root_node is
+	successor_for_removal (v: like root_node): like root_node
 			-- Successor of `v'
 			-- (Performance: O(height).)
 		do
@@ -43,7 +43,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Element change
 
-	on_node_added (a_node: like root_node) is
+	on_node_added (a_node: like root_node)
 			-- `a_node' was just added to the binary search tree.
 			-- If some modifications need to be made, they should
 			-- take place in here. So the algorithms stay as
@@ -57,7 +57,7 @@ feature {NONE} -- Element change
 
 feature {NONE} -- Removal
 
-	on_node_removed (a_old_node, a_node: like root_node; a_was_left_child: BOOLEAN) is
+	on_node_removed (a_old_node, a_node: like root_node; a_was_left_child: BOOLEAN)
 			-- The previsous `left_child' or `right_child' -
 			-- depending on `a_was_left_child' - of `a_node'
 			-- was just removed.
@@ -66,7 +66,7 @@ feature {NONE} -- Removal
 			root_node.set_is_red (False)
 		end
 
-	on_node_for_removal_not_found (a_key: K) is
+	on_node_for_removal_not_found (a_key: K)
 			-- The tree was modified during the search
 			-- of a node with `a_key'. Now it needs to
 			-- be fixed.
@@ -79,7 +79,7 @@ feature {NONE} -- Removal
 
 feature {NONE} -- Basic operation
 
-	search_node_for_removal (a_key: K) is
+	search_node_for_removal (a_key: K)
 			-- Set `found_node' to the node whose `key' is
 			-- neither less nor greater than `a_key'.
 			-- During the search the tree is manipulated as
@@ -164,7 +164,7 @@ feature {NONE} -- Basic operation
 			end
 		end
 
-	search_void_key_for_removal: like root_node is
+	search_void_key_for_removal: like root_node
 			-- Search the node with Void as key for the removal.
 		do
 			found_node := root_node
@@ -180,7 +180,7 @@ feature {NONE} -- Basic operation
 			result_correct: Result /= Void implies Result = first_node
 		end
 
-	fix_up (a_node, a_destination_node: like root_node) is
+	fix_up (a_node, a_destination_node: like root_node)
 			-- Fixup from `a_node' to and including `a_destination_node'.
 		require
 			a_node_not_void: a_node /= Void
@@ -223,7 +223,7 @@ feature {NONE} -- Basic operation
 			all_paths_have_same_number_of_black_nodes: all_paths_have_same_number_of_black_nodes
 		end
 
-	walk_left (a_node: like root_node): like root_node is
+	walk_left (a_node: like root_node): like root_node
 			-- Start at `a_node' and walk the left path down and stop
 			-- just before `Void' is reached. Return that node.
 		require
@@ -254,7 +254,7 @@ feature {NONE} -- Basic operation
 			result_is_red: Result.is_red
 		end
 
-	flip_colors (a_node: like root_node) is
+	flip_colors (a_node: like root_node)
 			-- Flip the colors of `a_node' and its children.
 		require
 			a_node_not_void: a_node /= Void
@@ -276,7 +276,7 @@ feature {NONE} -- Basic operation
 			right_child_flipped_color: (old a_node.right_child.is_red) = a_node.right_child.is_black
 		end
 
-	set_colors_after_rotation (a_node: like root_node) is
+	set_colors_after_rotation (a_node: like root_node)
 			-- After a simple left or right rotation after which
 			-- a child of `a_node' became its new parent, change
 			-- the colors according to that situation.
@@ -292,7 +292,7 @@ feature {NONE} -- Basic operation
 			a_node_is_red: a_node.is_red
 		end
 
-	move_red_left (a_node: like root_node): like root_node is
+	move_red_left (a_node: like root_node): like root_node
 			-- Move the red node to the left.
 		require
 			a_node_not_void: a_node /= Void
@@ -317,7 +317,7 @@ feature {NONE} -- Basic operation
 			end
 		end
 
-	move_red_right (a_node: like root_node): like root_node is
+	move_red_right (a_node: like root_node): like root_node
 			-- Move the red node to the right.
 		require
 			a_node_not_void: a_node /= Void
@@ -342,7 +342,7 @@ feature {NONE} -- Basic operation
 
 feature {NONE} -- Status report
 
-	is_left_leaning: BOOLEAN is
+	is_left_leaning: BOOLEAN
 			-- Are all nodes left-leaning?
 		local
 			l_node: like root_node
@@ -360,7 +360,7 @@ feature {NONE} -- Status report
 			end
 		end
 
-	two_reds_in_a_row: BOOLEAN is
+	two_reds_in_a_row: BOOLEAN
 			-- Are there two reds in a row?
 		local
 			l_node: like root_node

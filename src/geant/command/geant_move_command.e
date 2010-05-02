@@ -22,7 +22,7 @@ create
 
 feature -- Status report
 
-	is_file_to_file_executable: BOOLEAN is
+	is_file_to_file_executable: BOOLEAN
 			-- Can command be executed on sourcefile `file' to targetfile `to_file'?
 		do
 			Result := file /= Void and then file.count > 0 and then
@@ -34,7 +34,7 @@ feature -- Status report
 			to_file_not_empty: Result implies to_file.count > 0
 		end
 
-	is_file_to_directory_executable: BOOLEAN is
+	is_file_to_directory_executable: BOOLEAN
 			-- Can command be executed on sourcefile `file' to targetdirectory `to_directory'?
 		do
 			Result := file /= Void and then file.count > 0 and then
@@ -44,7 +44,7 @@ feature -- Status report
 			to_directory_not_empty: Result implies to_directory.count > 0
 		end
 
-	is_fileset_to_directory_executable: BOOLEAN is
+	is_fileset_to_directory_executable: BOOLEAN
 			-- Can command be executed on source fileset `fileset' to targetdirectory `to_directory'?
 		do
 			Result := fileset /= Void and then
@@ -55,7 +55,7 @@ feature -- Status report
 			to_directory_not_empty: Result implies to_directory.count > 0
 		end
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- Can command be executed?
 		do
 			Result :=
@@ -85,7 +85,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_file (a_file: like file) is
+	set_file (a_file: like file)
 			-- Set `file' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -96,7 +96,7 @@ feature -- Setting
 			file_set: file = a_file
 		end
 
-	set_to_file (a_to_file: like to_file) is
+	set_to_file (a_to_file: like to_file)
 			-- Set `to_file' to `a_to_file'.
 		require
 			a_to_file_not_void: a_to_file /= Void
@@ -107,7 +107,7 @@ feature -- Setting
 			to_file_set: to_file = a_to_file
 		end
 
-	set_to_directory (a_to_directory: like to_directory) is
+	set_to_directory (a_to_directory: like to_directory)
 			-- Set `to_directory' to `a_to_directory'.
 		require
 			a_to_directory_not_void: a_to_directory /= Void
@@ -118,7 +118,7 @@ feature -- Setting
 			to_directory_set: to_directory = a_to_directory
 		end
 
-	set_fileset (a_fileset: like fileset) is
+	set_fileset (a_fileset: like fileset)
 			-- Set `fileset' to `a_fileset'.
 		require
 			a_fileset_not_void: a_fileset /= Void
@@ -130,7 +130,7 @@ feature -- Setting
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute command.
 		local
 			a_from_file: STRING
@@ -178,7 +178,7 @@ feature -- Execution
 			end
 		end
 
-	move_file (a_source_file, a_target_file: STRING) is
+	move_file (a_source_file, a_target_file: STRING)
 			-- Move `a_source_file' to `a_target_file;
 			-- Set `exit_code' in case `a_source_file' does
 			-- not exist or could not be moved.

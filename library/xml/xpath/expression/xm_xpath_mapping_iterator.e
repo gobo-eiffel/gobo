@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_mapping_function: XM_XPATH_MAPPING_FUNCTION; a_context: XM_XPATH_CONTEXT) is
+	make (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_mapping_function: XM_XPATH_MAPPING_FUNCTION; a_context: XM_XPATH_CONTEXT)
 			-- Establish invariant.
 		require
 			base_iterator_before: a_base_iterator /= Void and then not a_base_iterator.is_error and then a_base_iterator.before
@@ -55,7 +55,7 @@ feature -- Access
 
 feature -- Status report
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
 			Result := not before and then item = Void
@@ -63,7 +63,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move to next position
 		do
 			index := index + 1
@@ -72,7 +72,7 @@ feature -- Cursor movement
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		local
 			new_base: like base_iterator
@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 	context: XM_XPATH_CONTEXT
 			-- Optional dynamic context
 
-	advance is
+	advance
 			-- Move to the next matching node
 		local
 			l_finished: BOOLEAN

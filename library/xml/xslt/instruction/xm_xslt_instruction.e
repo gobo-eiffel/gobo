@@ -48,13 +48,13 @@ feature -- Access
 	executable: XM_XSLT_EXECUTABLE
 			-- Compiled executable xsl:transform/xsl:stylesheet
 
-	system_id_from_module_number (a_module_number: INTEGER): STRING is
+	system_id_from_module_number (a_module_number: INTEGER): STRING
 			-- System identifier
 		do
 			Result := executable.system_id (a_module_number)
 		end
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Type of items yielded
 		do
 			Result := any_item
@@ -64,7 +64,7 @@ feature -- Access
 			end
 		end
 
-	assembled_parameters (a_context:XM_XSLT_EVALUATION_CONTEXT;  a_parameter_list: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM]): XM_XSLT_PARAMETER_SET is
+	assembled_parameters (a_context:XM_XSLT_EVALUATION_CONTEXT;  a_parameter_list: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM]): XM_XSLT_PARAMETER_SET
 			-- Assembled parameter set
 		require
 			context_not_void: a_context /= Void
@@ -89,7 +89,7 @@ feature -- Access
 			assembled_parameters_not_void: Result /= Void
 		end
 
-	assembled_tunnel_parameters (a_context:XM_XSLT_EVALUATION_CONTEXT;  a_parameter_list: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM]):  XM_XSLT_PARAMETER_SET is
+	assembled_tunnel_parameters (a_context:XM_XSLT_EVALUATION_CONTEXT;  a_parameter_list: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM]):  XM_XSLT_PARAMETER_SET
 			-- Assembled tunnel parameter set
 		require
 			context_not_void: a_context /= Void
@@ -122,13 +122,13 @@ feature -- Access
 
 feature -- Status report
 
-	creates_new_nodes: BOOLEAN is
+	creates_new_nodes: BOOLEAN
 			-- Can `Current' create new nodes?
 		do
 			Result := False
 		end
 
-	is_tail_call: BOOLEAN is
+	is_tail_call: BOOLEAN
 			-- Is `Current' an XPath tail call?
 		do
 			Result := True
@@ -136,7 +136,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this instruction.
 		require
 			promotion_offer_not_void: a_offer /= Void
@@ -147,7 +147,7 @@ feature -- Optimization
 			still_no_error: not is_error
 		end
 
-	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this subexpression.
 		do
 			a_offer.accept (Current)
@@ -161,7 +161,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	generate_events (a_context: XM_XPATH_CONTEXT) is
+	generate_events (a_context: XM_XPATH_CONTEXT)
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
@@ -188,7 +188,7 @@ feature -- Evaluation
 			no_tail_calls: not a_context.is_process_error implies True -- l_tail_call = Void
 		end
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_receiver: XM_XSLT_SEQUENCE_OUTPUTTER
@@ -225,7 +225,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterator over the values of a sequence
 		local
 			l_receiver: XM_XSLT_SEQUENCE_OUTPUTTER
@@ -276,14 +276,14 @@ feature -- Evaluation
 			end
 		end
 
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over a node sequence.
 		do
 			create_iterator (a_context)
 			last_node_iterator := last_iterator.as_node_iterator
 		end
 
-	processed_eager_evaluation (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
+	processed_eager_evaluation (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE
 			-- Eager evaluation via `generate_events'
 		local
 			l_receiver: XM_XSLT_SEQUENCE_OUTPUTTER
@@ -303,7 +303,7 @@ feature -- Evaluation
 
 feature -- Element change
 
-	set_executable (an_executable: XM_XSLT_EXECUTABLE) is
+	set_executable (an_executable: XM_XSLT_EXECUTABLE)
 			-- Set executable.
 		require
 			executable_not_void: an_executable /= Void
@@ -315,7 +315,7 @@ feature -- Element change
 
 feature -- Conversion
 
-	as_tail_call: XM_XPATH_TAIL_CALL is
+	as_tail_call: XM_XPATH_TAIL_CALL
 			-- `Current' seen as an XPath tail call
 		do
 			Result := Current
@@ -323,7 +323,7 @@ feature -- Conversion
 
 feature {XM_XSLT_INSTRUCTION} -- local
 
-	instruction_indentation (a_level: INTEGER): STRING is
+	instruction_indentation (a_level: INTEGER): STRING
 			-- Indentation string prefix, for diagnostic output
 		require
 			strictly_positive_level: a_level > 0
@@ -345,19 +345,19 @@ feature {XM_XSLT_INSTRUCTION} -- local
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	native_implementations: INTEGER is
+	native_implementations: INTEGER
 			-- Natively-supported evaluation routines
 		do
 			Result := Supports_process
 		end
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_zero_or_more
 		end
 
-	compute_special_properties is
+	compute_special_properties
 			-- Compute special properties.
 		do
 			Precursor

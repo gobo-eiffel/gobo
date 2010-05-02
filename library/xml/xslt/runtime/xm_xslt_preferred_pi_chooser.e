@@ -1,7 +1,7 @@
 note
-	
+
 	description:
-	
+
 		"Objects that select the preferred xml-stylsheet PI"
 
 	library: "Gobo Eiffel XSLT Library"
@@ -22,18 +22,18 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Nothing to do.
 		do
 		end
 
 feature -- Access
 
-	selected_index (a_list: DS_LIST [STRING]): INTEGER is
+	selected_index (a_list: DS_LIST [STRING]): INTEGER
 			-- Index of chosen xml-stylesheet from within `a_list'
 		do
 			Result := 1
 		end
 
 end
-	
+

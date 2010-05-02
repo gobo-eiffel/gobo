@@ -29,7 +29,7 @@ create
 
 feature -- Test
 
-	test_string is
+	test_string
 			-- Test string formatting.
 		local
 			empty_array: ARRAY[STRING]
@@ -46,13 +46,13 @@ feature -- Test
 			assert_equal ("test9", "#   #", format ("#$-3.3s#", <<"">>))
 		end
 
-	test_character is
+	test_character
 			-- Test character formatting.
 		do
 			assert_equal ("test1", "c", format ("$c", << character_cell ('c') >>))
 		end
 
-	test_boolean is
+	test_boolean
 			-- Test boolean formatting.
 		do
 			assert_equal ("test1", "True", format ("$B", << boolean_cell (True) >>))
@@ -61,7 +61,7 @@ feature -- Test
 			assert_equal ("test4", "false", format ("$b", << boolean_cell (False) >>))
 		end
 
-	test_integer is
+	test_integer
 			-- Test integer formatting.
 		do
 			assert_equal ("test1", "0", format ("$i", << integer_cell (0) >>))
@@ -80,14 +80,14 @@ feature -- Test
 			assert_equal ("test13", "-2147483648", format ("$d", <<integer_cell (-2147483648)>>))
 		end
 
-	test_unsigned_decimal is
+	test_unsigned_decimal
 			-- Test unsigned decimal formatting.
 		do
 			assert_equal ("test1", "1", format ("$u", << integer_cell (1) >>))
 			assert_equal ("test2", "00031", format ("$05u", << integer_cell (31) >>))
 		end
 
-	test_hexadecimal is
+	test_hexadecimal
 			-- Test hexadecimal formatting.
 		do
 			assert_equal ("test1", "0", format ("$x", << integer_cell (0) >>))
@@ -99,7 +99,7 @@ feature -- Test
 			assert_equal ("test7", "", format ("$.0x", << integer_cell (0) >>))
 		end
 
-	test_octal is
+	test_octal
 			-- Test octal formatting.
 		do
 			assert_equal ("test1", "0", format ("$o", << integer_cell (0) >>))
@@ -107,7 +107,7 @@ feature -- Test
 			assert_equal ("test3", "12", format ("$o", << integer_cell (10) >>))
 		end
 
-	test_floating_point is
+	test_floating_point
 			-- Test floating point formatting.
 		do
 			assert_equal ("test1", "1.000000e+00", format ("$e", << double_cell (1.0) >>))
@@ -123,7 +123,7 @@ feature -- Test
 			assert_equal ("test11", "-2.00e-01", format ("$.2e", << double_cell (-0.2) >>))
 		end
 
-	test_fixed_point is
+	test_fixed_point
 			-- Test fixed point formatting.
 		do
 			assert_equal ("test1", "1.000000", format ("$f", << double_cell (1.0) >>))
@@ -141,7 +141,7 @@ feature -- Test
 			assert_equal ("test13", "942.000000000", format ("$11.9f", << double_cell (941.99999999999817) >>))
 		end
 
-	test_mixed_point is
+	test_mixed_point
 			-- Test mixed point formatting.
 		do
 			assert_equal ("test1", "1.000000", format ("$g", << double_cell (1.0) >>))
@@ -162,7 +162,7 @@ feature -- Test
 			assert_equal ("test15", "+1.000000", format ("$+G", << double_cell (1.0) >>))
 		end
 
-	test_other_examples is
+	test_other_examples
 			-- Examples taken from original Formatter library.
 		local
 			s, s1: STRING
@@ -265,7 +265,7 @@ feature -- Test
 			assert_equal ("test10", "Hello$", format (a_format, empty_array))
 		end
 
-	test_custom_formats is
+	test_custom_formats
 			-- Test custom formatting.
 		local
 			width,
@@ -278,7 +278,7 @@ feature -- Test
 			assert_equal ("test3", "00123", format ("$.*i", <<precision, integer_cell (123) >>))
 		end
 
-	test_unicode_format is
+	test_unicode_format
 			-- Test with Unicode formats.
 		local
 			uc_format_string_1: UC_STRING
@@ -293,7 +293,7 @@ feature -- Test
 			assert_equal ("test3", uc_parameter_1, format (uc_format_string_1, <<uc_parameter_1>>))
 		end
 
-	test_unicode_parameter is
+	test_unicode_parameter
 			-- Test if unicode strings in parameters are flattened to UTF8 encoded strings.
 		local
 			uc_parameter_1_utf8: STRING
@@ -304,7 +304,7 @@ feature -- Test
 			assert ("test1", STRING_.same_string (uc_parameter_1_utf8, format ("$s", <<uc_parameter_1>>)))
 		end
 
-	test_wrong_formats is
+	test_wrong_formats
 			-- Test erroneous format.
 		do
 			assert ("test1", not valid_format_and_parameters ("nothing", <<"berend">>))

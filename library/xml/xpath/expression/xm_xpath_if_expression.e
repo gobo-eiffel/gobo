@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_condition: XM_XPATH_EXPRESSION; a_then_expression: XM_XPATH_EXPRESSION; an_else_expression: XM_XPATH_EXPRESSION) is
+	make (a_condition: XM_XPATH_EXPRESSION; a_then_expression: XM_XPATH_EXPRESSION; an_else_expression: XM_XPATH_EXPRESSION)
 			-- Establish invariant.
 		require
 				condition_not_void: a_condition /= Void
@@ -54,11 +54,11 @@ feature -- Access
 
 	else_expression: XM_XPATH_EXPRESSION
 			-- Else clause
-	
+
 	then_expression: XM_XPATH_EXPRESSION
 			-- Then clause
-	
-	item_type: XM_XPATH_ITEM_TYPE is
+
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Determine the data type of the expression, if possible
 		do
 			Result := common_super_type (then_expression.item_type, else_expression.item_type)
@@ -68,7 +68,7 @@ feature -- Access
 			end
 		end
 
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions of `Current'
 		do
 			create Result.make (3)
@@ -80,7 +80,7 @@ feature -- Access
 
 feature -- Status report
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -96,10 +96,10 @@ feature -- Status report
 			a_string := STRING_.appended_string (indentation (a_level), "else")
 			std.error.put_string (a_string)
 			std.error.put_new_line
-			else_expression.display (a_level + 1)				
+			else_expression.display (a_level + 1)
 		end
 
-	contains_recursive_tail_function_calls (a_name_code, a_arity: INTEGER): UT_TRISTATE is
+	contains_recursive_tail_function_calls (a_name_code, a_arity: INTEGER): UT_TRISTATE
 			-- Does `Current' contains recursive tail calls of stylesheet functions?
 			-- `Undecided' means it contains a tail call to another function.
 		local
@@ -117,8 +117,8 @@ feature -- Status report
 		end
 
 feature -- Status setting
-	
-	mark_tail_function_calls is
+
+	mark_tail_function_calls
   			-- Mark tail calls on stylesheet functions.
   		do
 			then_expression.mark_tail_function_calls
@@ -127,7 +127,7 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations
 		local
 			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
@@ -156,7 +156,7 @@ feature -- Optimization
 							set_replacement (a_replacement, l_replacement.item)
 						else
 							set_else_expression (l_replacement.item)
-						end						
+						end
 					end
 				else
 					then_expression.simplify (l_replacement)
@@ -180,7 +180,7 @@ feature -- Optimization
 		end
 
 	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
-		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -200,7 +200,7 @@ feature -- Optimization
 					else
 						else_expression.check_static_type (l_replacement, a_context, a_context_item_type)
 						set_replacement (a_replacement, l_replacement.item)
-					end					
+					end
 				else
 					then_expression.check_static_type (l_replacement, a_context, a_context_item_type)
 					if l_replacement.item.is_error then
@@ -219,11 +219,11 @@ feature -- Optimization
 			end
 			if a_replacement.item = Void then
 				a_replacement.put (Current)
-			end			
+			end
 		end
 
 	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
-		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -254,7 +254,7 @@ feature -- Optimization
 			end
 		end
 
-	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this subexpression.
 		local
 			l_promotion: XM_XPATH_EXPRESSION
@@ -285,14 +285,14 @@ feature -- Optimization
 					if else_expression /=  l_replacement.item then
 						set_else_expression (l_replacement.item)
 						reset_static_properties
-					end					
+					end
 				end
 			end
 		end
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
@@ -314,7 +314,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over the values of a sequence
 		local
 			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
@@ -338,7 +338,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over a node sequence
 		local
 			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
@@ -355,7 +355,7 @@ feature -- Evaluation
 					last_node_iterator := then_expression.last_node_iterator
 				end
 			elseif else_expression.is_error then
-				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (else_expression.error_value)				
+				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (else_expression.error_value)
 			else
 				else_expression.create_node_iterator (a_context)
 				last_node_iterator := else_expression.last_node_iterator
@@ -364,7 +364,7 @@ feature -- Evaluation
 
 feature -- Element change
 
-	set_condition (a_condition: XM_XPATH_EXPRESSION) is
+	set_condition (a_condition: XM_XPATH_EXPRESSION)
 			-- Set `condition'.
 		require
 			condition_not_void: a_condition /= Void
@@ -375,7 +375,7 @@ feature -- Element change
 			condition_set: condition = a_condition
 		end
 
-	set_then_expression (a_then_expression: XM_XPATH_EXPRESSION) is
+	set_then_expression (a_then_expression: XM_XPATH_EXPRESSION)
 			-- Set `then_expression'.
 		require
 			then_not_void: a_then_expression /= Void
@@ -386,7 +386,7 @@ feature -- Element change
 			then_set: then_expression = a_then_expression
 		end
 
-	set_else_expression (an_else_expression: XM_XPATH_EXPRESSION) is
+	set_else_expression (an_else_expression: XM_XPATH_EXPRESSION)
 			-- Set `else_expression'.
 		require
 			else_not_void: an_else_expression /= Void
@@ -395,19 +395,19 @@ feature -- Element change
 			adopt_child_expression (else_expression)
 		ensure
 			else_set: else_expression = an_else_expression
-		end	
+		end
 
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_special_properties is
+	compute_special_properties
 			-- Compute special properties.
 		do
 			clone_special_properties (then_expression)
 			mask_special_properties (else_expression)
 		end
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		local
 			a_cardinality: INTEGER
@@ -419,7 +419,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 				set_cardinality (a_cardinality)
 			end
 		end
-	
+
 invariant
 
 	condition_not_void: initialized implies condition /= Void
@@ -428,4 +428,4 @@ invariant
 
 end
 
-	
+

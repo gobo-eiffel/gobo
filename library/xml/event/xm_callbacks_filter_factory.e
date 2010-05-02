@@ -14,7 +14,7 @@ class XM_CALLBACKS_FILTER_FACTORY
 
 feature -- Filters
 
-	new_null: XM_CALLBACKS_NULL is
+	new_null: XM_CALLBACKS_NULL
 			-- New null callback consumer
 		do
 			create Result.make
@@ -22,7 +22,7 @@ feature -- Filters
 			null_callback_not_void: Result /= Void
 		end
 
-	new_pretty_print: XM_PRETTY_PRINT_FILTER is
+	new_pretty_print: XM_PRETTY_PRINT_FILTER
 			-- New pretty printer (to standard io)
 		do
 			create Result.make_null
@@ -30,7 +30,7 @@ feature -- Filters
 			pretty_print_not_void: Result /= Void
 		end
 
-	new_canonical_pretty_print: XM_CANONICAL_PRETTY_PRINT_FILTER is
+	new_canonical_pretty_print: XM_CANONICAL_PRETTY_PRINT_FILTER
 			-- James Clark' canonical XML output
 		do
 			create Result.make_null
@@ -38,15 +38,15 @@ feature -- Filters
 			pretty_print_not_void: Result /= Void
 		end
 
-	new_indent_pretty_print: XM_INDENT_PRETTY_PRINT_FILTER is
+	new_indent_pretty_print: XM_INDENT_PRETTY_PRINT_FILTER
 			-- Indenting pretty print filter
 		do
 			create Result.make_null
 		ensure
 			indent_pretty_print_not_void: Result /= Void
 		end
-		
-	new_end_tag_checker: XM_END_TAG_CHECKER is
+
+	new_end_tag_checker: XM_END_TAG_CHECKER
 			-- New end tag checker filter
 		obsolete "End tag checking is built into parser"
 		do
@@ -55,7 +55,7 @@ feature -- Filters
 			checker_not_void: Result /= Void
 		end
 
-	new_unicode_validation: XM_UNICODE_VALIDATION_FILTER is
+	new_unicode_validation: XM_UNICODE_VALIDATION_FILTER
 			-- New unicode validation filter
 		do
 			create Result.make_null
@@ -63,7 +63,7 @@ feature -- Filters
 			unicode_validation_not_void: Result /= Void
 		end
 
-	new_namespace_resolver: XM_NAMESPACE_RESOLVER is
+	new_namespace_resolver: XM_NAMESPACE_RESOLVER
 			-- New namespace resolver
 		do
 			create Result.make_null
@@ -71,15 +71,15 @@ feature -- Filters
 			namespace_resolver_not_void: Result /= Void
 		end
 
-	new_xmlns_generator: XM_XMLNS_GENERATOR is
+	new_xmlns_generator: XM_XMLNS_GENERATOR
 			-- New xmlns: generator (opposite of namespace resolver)
 		do
 			create Result.make_null
 		ensure
 			xmlns_generator_not_void: Result /= Void
 		end
-		
-	new_stop_on_error: XM_STOP_ON_ERROR_FILTER is
+
+	new_stop_on_error: XM_STOP_ON_ERROR_FILTER
 			-- New stop-on-error filter
 		do
 			create Result.make_null
@@ -87,15 +87,15 @@ feature -- Filters
 			stop_on_error_not_void: Result /= Void
 		end
 
-	new_content_concatenator: XM_CONTENT_CONCATENATOR is
+	new_content_concatenator: XM_CONTENT_CONCATENATOR
 			-- New content concatenation filter.
 		do
 			create Result.make_null
 		ensure
 			content_concatenator_not_void: Result /= Void
 		end
-		
-	new_whitespace_normalizer: XM_WHITESPACE_NORMALIZER is
+
+	new_whitespace_normalizer: XM_WHITESPACE_NORMALIZER
 			-- New whitespace normalizer.
 		do
 			create Result.make_null
@@ -103,7 +103,7 @@ feature -- Filters
 			whitespace_normalizer_not_void: Result /= Void
 		end
 
-	new_shared_strings: XM_SHARED_STRINGS_FILTER is
+	new_shared_strings: XM_SHARED_STRINGS_FILTER
 			-- New shared strings filter
 		do
 			create Result.make_null
@@ -111,7 +111,7 @@ feature -- Filters
 			shared_string_not_void: Result /= Void
 		end
 
-	new_tree_builder: XM_CALLBACKS_TO_TREE_FILTER is
+	new_tree_builder: XM_CALLBACKS_TO_TREE_FILTER
 			-- New tree construction filter
 		obsolete "See tree cluster, e.g. XM_TREE_CALLBACKS_PIPE"
 		do
@@ -122,7 +122,7 @@ feature -- Filters
 
 feature -- Pipes
 
-	callbacks_pipe (a: ARRAY [XM_CALLBACKS_FILTER]): XM_CALLBACKS is
+	callbacks_pipe (a: ARRAY [XM_CALLBACKS_FILTER]): XM_CALLBACKS
 			-- Make a pipe,
 			-- eg << new_tag_checker, new_pretty_print >>
 			-- return first item of pipe.
@@ -144,7 +144,7 @@ feature -- Pipes
 			pipe_not_void: Result /= Void
 		end
 
-	standard_callbacks_pipe (a: ARRAY [XM_CALLBACKS_FILTER]): XM_CALLBACKS is
+	standard_callbacks_pipe (a: ARRAY [XM_CALLBACKS_FILTER]): XM_CALLBACKS
 			-- Add elements to standard validation pipe, which
 			-- begins with:
 			--  namespace resolver -> stop on error

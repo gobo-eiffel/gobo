@@ -24,7 +24,7 @@ feature -- Access
 	outputter: XM_OUTPUT
 			-- Raw outputter
 
-	byte_order_mark: STRING is
+	byte_order_mark: STRING
 			-- XML BOM
 		require
 			byte_order_mark_permitted: byte_order_mark_permitted
@@ -38,26 +38,26 @@ feature -- Status report
 	is_error: BOOLEAN
 			-- has an error occurred
 
-	byte_order_mark_permitted: BOOLEAN is
+	byte_order_mark_permitted: BOOLEAN
 			--	Is a BOM permitted?
 		deferred
 		end
 
-	is_byte_order_mark_default: BOOLEAN is
+	is_byte_order_mark_default: BOOLEAN
 			-- Is emitting a BOM the default behaviour?
 		require
 			byte_order_mark_permitted: byte_order_mark_permitted
 		deferred
 		end
 
-	is_bad_character_code (a_code: INTEGER): BOOLEAN is
+	is_bad_character_code (a_code: INTEGER): BOOLEAN
 		-- Is `a_code' not representable in `encoding'?
 		require
 			valid_character_code: is_char (a_code)
 		deferred
 		end
 
-	is_valid_string (a_character_string: STRING): BOOLEAN is
+	is_valid_string (a_character_string: STRING): BOOLEAN
 			-- Is `a_character_string' valid for output prior to encoding?
 		local
 			l_index, l_code: INTEGER
@@ -83,14 +83,14 @@ feature -- Status report
 
 feature -- Element change
 
-	output (a_character_string: STRING) is
+	output (a_character_string: STRING)
 			-- Encode `a_character_string' and write it to `outputter'.
 		require
 			valid_character_string: is_valid_string (a_character_string)
 		deferred
 		end
 
-	output_ignoring_error (a_character_string: STRING) is
+	output_ignoring_error (a_character_string: STRING)
 			-- Output `a_character_string', ignoring any error.
 		require
 			valid_string: is_valid_string (a_character_string)

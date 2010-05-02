@@ -34,12 +34,12 @@ create
 
 feature -- Status report
 
-	is_open_operand: BOOLEAN is True
+	is_open_operand: BOOLEAN = True
 			-- Is current operand open?
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_question_mark_symbol (Current)

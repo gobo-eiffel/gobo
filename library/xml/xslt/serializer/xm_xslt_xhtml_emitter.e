@@ -24,13 +24,13 @@ inherit
 create
 
 	make
-	
+
 feature {NONE} -- Implementation
 
-	empty_element_tag_closer (a_name: STRING; a_name_code: INTEGER): STRING is
+	empty_element_tag_closer (a_name: STRING; a_name_code: INTEGER): STRING
 			-- String to close an empty tag
 		do
-			if is_empty_tag (a_name) and STRING_.same_string (shared_name_pool.namespace_uri_from_name_code (a_name_code), Xhtml_uri) then 
+			if is_empty_tag (a_name) and STRING_.same_string (shared_name_pool.namespace_uri_from_name_code (a_name_code), Xhtml_uri) then
 				Result := " />"
 			else
 				Result := STRING_.concat ("></", a_name)
@@ -43,4 +43,4 @@ invariant
 	empty_tags_set_not_void: empty_tags_set /= Void
 
 end
-	
+

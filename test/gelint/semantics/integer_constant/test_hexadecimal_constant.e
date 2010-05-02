@@ -21,7 +21,7 @@ create
 
 feature -- Test
 
-	test_generating_type is
+	test_generating_type
 			-- Test the generating type of hexadecimal integer manifest constants.
 			-- The general rule when there is not hint about its type of an integer
 			-- manifest constant is that if the value is representable as an INTEGER_32
@@ -108,7 +108,7 @@ feature -- Test
 			assert_strings_equal ("sixteen_digit_negative_2", "INTEGER_64", (-0x8000000000000000).generating_type.out)
 		end
 
-	test_value is
+	test_value
 			-- Test the value of hexadecimal integer manifest constants.
 		do
 			assert_equal ("one_digit_1", {INTEGER_32} 1, 0x1)
@@ -187,13 +187,13 @@ feature -- Test
 			assert_equal ("sixteen_digit_negative_2", {INTEGER_64} -9223372036854775808, -0x8000000000000000)
 		end
 
-	test_underscore is
+	test_underscore
 			-- Test the value of hexadecimal integer manifest constants with underscores.
 		do
 			assert_equal ("underscore_1", 0x1234, 0x12_34)
 		end
 
-	test_letter_case is
+	test_letter_case
 			-- Test the value of hexadecimal integer manifest constants with different letter-case.
 		do
 			assert_equal ("letter_case_1", 0xAA, 0xaa)
@@ -201,7 +201,7 @@ feature -- Test
 			assert_equal ("letter_case_3", 0xCC, 0xCc)
 		end
 
-	test_integer_8_type is
+	test_integer_8_type
 			-- Test the value of hexadecimal integer manifest constants
 			-- with the type cast "INTEGER_8".
 		do
@@ -211,7 +211,7 @@ feature -- Test
 			assert_equal ("integer_8_4", {INTEGER_8} -128, {INTEGER_8} 0x80)
 		end
 
-	test_integer_8_context is
+	test_integer_8_context
 			-- Test the value of hexadecimal integer manifest constants
 			-- with a context expecting an "INTEGER_8".
 		local
@@ -227,7 +227,7 @@ feature -- Test
 			assert_equal ("integer_8_4", {INTEGER_8} -128, i)
 		end
 
-	test_integer_8_constant is
+	test_integer_8_constant
 			-- Test the value of hexadecimal integer manifest constants
 			-- declared in constant attributes.
 		do
@@ -246,7 +246,7 @@ feature {NONE} -- Implementation
 			-- Note that writting '{INTEGER_8} 255' instead of '{INTEGER_8} 0xFF'
 			-- will be rejected by ISE compiler because 255 is not representable
 			-- as an INTEGER_8. So the compiler checks the validity of the manifest
-			-- constant, but just ignores what it just checked when it comes to 
+			-- constant, but just ignores what it just checked when it comes to
 			-- determine the value of the constant attribute.
 
 	cc2: INTEGER_8 = {INTEGER_16} 0x01

@@ -25,14 +25,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new tester.
 		do
 		end
 
 feature -- Status report
 
-	test (v, u: ET_DOTNET_FEATURE): BOOLEAN is
+	test (v, u: ET_DOTNET_FEATURE): BOOLEAN
 			-- Are `v' and `u' considered equal?
 			-- Do they have the same .NET name and the same signature?
 		local

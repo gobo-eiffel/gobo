@@ -23,7 +23,7 @@ inherit
 
 feature -- Access
 
-	index: INTEGER is
+	index: INTEGER
 			-- Index of current internal cursor position
 		do
 			Result := cursor_index (internal_cursor)
@@ -31,14 +31,14 @@ feature -- Access
 			valid_index: valid_index (Result)
 		end
 
-	new_cursor: DS_LIST_CURSOR [G] is
+	new_cursor: DS_LIST_CURSOR [G]
 			-- New external cursor for traversal
 		deferred
 		end
 
 feature -- Status report
 
-	valid_index (i: INTEGER): BOOLEAN is
+	valid_index (i: INTEGER): BOOLEAN
 			-- Is `i' a valid index value?
 		do
 			Result := 0 <= i and i <= (count + 1)
@@ -48,7 +48,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	go_i_th (i: INTEGER) is
+	go_i_th (i: INTEGER)
 			-- Move internal cursor to `i'-th position.
 		require
 			valid_index: valid_index (i)
@@ -60,7 +60,7 @@ feature -- Cursor movement
 
 feature -- Element change
 
-	put_left (v: G) is
+	put_left (v: G)
 			-- Add `v' to left of internal cursor position.
 			-- Do not move cursors.
 		require
@@ -72,7 +72,7 @@ feature -- Element change
 			one_more: count = old count + 1
 		end
 
-	put_left_cursor (v: G; a_cursor: like new_cursor) is
+	put_left_cursor (v: G; a_cursor: like new_cursor)
 			-- Add `v' to left of `a_cursor' position.
 			-- Do not move cursors.
 			-- (Synonym of `a_cursor.put_left (v)'.)
@@ -86,7 +86,7 @@ feature -- Element change
 			one_more: count = old count + 1
 		end
 
-	put_right (v: G) is
+	put_right (v: G)
 			-- Add `v' to right of internal cursor position.
 			-- Do not move cursors.
 		require
@@ -98,7 +98,7 @@ feature -- Element change
 			one_more: count = old count + 1
 		end
 
-	put_right_cursor (v: G; a_cursor: like new_cursor) is
+	put_right_cursor (v: G; a_cursor: like new_cursor)
 			-- Add `v' to right of `a_cursor' position.
 			-- Do not move cursors.
 			-- (Synonym of `a_cursor.put_right (v)'.)
@@ -112,7 +112,7 @@ feature -- Element change
 			one_more: count = old count + 1
 		end
 
-	force_left (v: G) is
+	force_left (v: G)
 			-- Add `v' to left of internal cursor position.
 			-- Do not move cursors.
 		require
@@ -123,7 +123,7 @@ feature -- Element change
 			one_more: count = old count + 1
 		end
 
-	force_left_cursor (v: G; a_cursor: like new_cursor) is
+	force_left_cursor (v: G; a_cursor: like new_cursor)
 			-- Add `v' to left of `a_cursor' position.
 			-- Do not move cursors.
 			-- (Synonym of `a_cursor.force_left (v)'.)
@@ -136,7 +136,7 @@ feature -- Element change
 			one_more: count = old count + 1
 		end
 
-	force_right (v: G) is
+	force_right (v: G)
 			-- Add `v' to right of internal cursor position.
 			-- Do not move cursors.
 		require
@@ -147,7 +147,7 @@ feature -- Element change
 			one_more: count = old count + 1
 		end
 
-	force_right_cursor (v: G; a_cursor: like new_cursor) is
+	force_right_cursor (v: G; a_cursor: like new_cursor)
 			-- Add `v' to right of `a_cursor' position.
 			-- Do not move cursors.
 			-- (Synonym of `a_cursor.force_right (v)'.)
@@ -160,7 +160,7 @@ feature -- Element change
 			one_more: count = old count + 1
 		end
 
-	replace_at (v: G) is
+	replace_at (v: G)
 			-- Replace item at internal cursor position by `v'.
 			-- Do not move cursors.
 		require
@@ -172,7 +172,7 @@ feature -- Element change
 			replaced: item_for_iteration = v
 		end
 
-	replace_at_cursor (v: G; a_cursor: like new_cursor) is
+	replace_at_cursor (v: G; a_cursor: like new_cursor)
 			-- Replace item at `a_cursor' position by `v'.
 			-- Do not move cursors.
 			-- (Synonym of `a_cursor.replace (v)'.)
@@ -187,7 +187,7 @@ feature -- Element change
 			replaced: a_cursor.item = v
 		end
 
-	extend_left (other: DS_LINEAR [G]) is
+	extend_left (other: DS_LINEAR [G])
 			-- Add items of `other' to left of internal cursor position.
 			-- Keep items of `other' in the same order.
 			-- Do not move cursors.
@@ -202,7 +202,7 @@ feature -- Element change
 			same_order: (not other.is_empty) implies (item (old index) = other.first)
 		end
 
-	extend_left_cursor (other: DS_LINEAR [G]; a_cursor: like new_cursor) is
+	extend_left_cursor (other: DS_LINEAR [G]; a_cursor: like new_cursor)
 			-- Add items of `other' to left of `a_cursor' position.
 			-- Keep items of `other' in the same order.
 			-- Do not move cursors.
@@ -219,7 +219,7 @@ feature -- Element change
 			same_order: (not other.is_empty) implies (item (old (a_cursor.index)) = other.first)
 		end
 
-	extend_right (other: DS_LINEAR [G]) is
+	extend_right (other: DS_LINEAR [G])
 			-- Add items of `other' to right of internal cursor position.
 			-- Keep items of `other' in the same order.
 			-- Do not move cursors.
@@ -234,7 +234,7 @@ feature -- Element change
 			same_order: (not other.is_empty) implies (item (index + 1) = other.first)
 		end
 
-	extend_right_cursor (other: DS_LINEAR [G]; a_cursor: like new_cursor) is
+	extend_right_cursor (other: DS_LINEAR [G]; a_cursor: like new_cursor)
 			-- Add items of `other' to right of `a_cursor' position.
 			-- Keep items of `other' in the same order.
 			-- Do not move cursors.
@@ -251,7 +251,7 @@ feature -- Element change
 			same_order: (not other.is_empty) implies (item (a_cursor.index + 1) = other.first)
 		end
 
-	append_left (other: DS_LINEAR [G]) is
+	append_left (other: DS_LINEAR [G])
 			-- Add items of `other' to left of internal cursor position.
 			-- Keep items of `other' in the same order.
 			-- Do not move cursors.
@@ -265,7 +265,7 @@ feature -- Element change
 			same_order: (not other.is_empty) implies (item (old index) = other.first)
 		end
 
-	append_left_cursor (other: DS_LINEAR [G]; a_cursor: like new_cursor) is
+	append_left_cursor (other: DS_LINEAR [G]; a_cursor: like new_cursor)
 			-- Add items of `other' to left of `a_cursor' position.
 			-- Keep items of `other' in the same order.
 			-- Do not move cursors.
@@ -281,7 +281,7 @@ feature -- Element change
 			same_order: (not other.is_empty) implies (item (old (a_cursor.index)) = other.first)
 		end
 
-	append_right (other: DS_LINEAR [G]) is
+	append_right (other: DS_LINEAR [G])
 			-- Add items of `other' to right of internal cursor position.
 			-- Keep items of `other' in the same order.
 			-- Do not move cursors.
@@ -295,7 +295,7 @@ feature -- Element change
 			same_order: (not other.is_empty) implies (item (index + 1) = other.first)
 		end
 
-	append_right_cursor (other: DS_LINEAR [G]; a_cursor: like new_cursor) is
+	append_right_cursor (other: DS_LINEAR [G]; a_cursor: like new_cursor)
 			-- Add items of `other' to right of `a_cursor' position.
 			-- Keep items of `other' in the same order.
 			-- Do not move cursors.
@@ -313,7 +313,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_at is
+	remove_at
 			-- Remove item at internal cursor position.
 			-- Move any cursors at this position `forth'.
 		require
@@ -324,7 +324,7 @@ feature -- Removal
 			one_less: count = old count - 1
 		end
 
-	remove_at_cursor (a_cursor: like new_cursor) is
+	remove_at_cursor (a_cursor: like new_cursor)
 			-- Remove item at `a_cursor' position.
 			-- Move any cursors at this position `forth'.
 			-- (Synonym of `a_cursor.remove'.)
@@ -337,7 +337,7 @@ feature -- Removal
 			one_less: count = old count - 1
 		end
 
-	remove_left is
+	remove_left
 			-- Remove item to left of internal cursor position.
 			-- Move any cursors at this position `forth'.
 		require
@@ -350,7 +350,7 @@ feature -- Removal
 			one_less: count = old count - 1
 		end
 
-	remove_left_cursor (a_cursor: like new_cursor) is
+	remove_left_cursor (a_cursor: like new_cursor)
 			-- Remove item to left of `a_cursor' position.
 			-- Move any cursors at this position `forth'.
 			-- (Synonym of `a_cursor.remove_left'.)
@@ -365,7 +365,7 @@ feature -- Removal
 			one_less: count = old count - 1
 		end
 
-	remove_right is
+	remove_right
 			-- Remove item to right of internal cursor position.
 			-- Move any cursors at this position `forth'.
 		require
@@ -378,7 +378,7 @@ feature -- Removal
 			one_less: count = old count - 1
 		end
 
-	remove_right_cursor (a_cursor: like new_cursor) is
+	remove_right_cursor (a_cursor: like new_cursor)
 			-- Remove item to right of `a_cursor' position.
 			-- Move any cursors at this position `forth'.
 			-- (Synonym of `a_cursor.remove_right'.)
@@ -393,7 +393,7 @@ feature -- Removal
 			one_less: count = old count - 1
 		end
 
-	prune_left (n: INTEGER) is
+	prune_left (n: INTEGER)
 			-- Remove `n' items to left of internal cursor position.
 			-- Move all cursors `off'.
 		require
@@ -404,7 +404,7 @@ feature -- Removal
 			new_count: count = old count - n
 		end
 
-	prune_left_cursor (n: INTEGER; a_cursor: like new_cursor) is
+	prune_left_cursor (n: INTEGER; a_cursor: like new_cursor)
 			-- Remove `n' items to left of `a_cursor' position.
 			-- Move all cursors `off'.
 			-- (Synonym of `a_cursor.prune_left (n)'.)
@@ -417,7 +417,7 @@ feature -- Removal
 			new_count: count = old count - n
 		end
 
-	prune_right (n: INTEGER) is
+	prune_right (n: INTEGER)
 			-- Remove `n' items to right of internal cursor position.
 			-- Move all cursors `off'.
 		require
@@ -428,7 +428,7 @@ feature -- Removal
 			new_count: count = old count - n
 		end
 
-	prune_right_cursor (n: INTEGER; a_cursor: like new_cursor) is
+	prune_right_cursor (n: INTEGER; a_cursor: like new_cursor)
 			-- Remove `n' items to right of `a_cursor' position.
 			-- Move all cursors `off'.
 			-- (Synonym of `a_cursor.prune_right (n)'.)
@@ -441,7 +441,7 @@ feature -- Removal
 			new_count: count = old count - n
 		end
 
-	delete (v: G) is
+	delete (v: G)
 			-- Remove all occurrences of `v'.
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -454,7 +454,7 @@ feature -- Removal
 
 feature {DS_LIST_CURSOR} -- Cursor implementation
 
-	cursor_index (a_cursor: like new_cursor): INTEGER is
+	cursor_index (a_cursor: like new_cursor): INTEGER
 			-- Index of `a_cursor''s current position
 		require
 			cursor_not_void: a_cursor /= Void
@@ -464,7 +464,7 @@ feature {DS_LIST_CURSOR} -- Cursor implementation
 			valid_index: valid_index (Result)
 		end
 
-	cursor_go_i_th (a_cursor: like new_cursor; i: INTEGER) is
+	cursor_go_i_th (a_cursor: like new_cursor; i: INTEGER)
 			-- Move `a_cursor' to `i'-th position.
 		require
 			cursor_not_void: a_cursor /= Void

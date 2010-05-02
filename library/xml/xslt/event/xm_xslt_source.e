@@ -21,21 +21,21 @@ inherit
 
 feature -- Access
 
-	system_id: STRING is
+	system_id: STRING
 			-- System-id of source
 		deferred
 		ensure
 			system_id_not_void: Result /= Void
 		end
 
-	fragment_identifier: STRING is
+	fragment_identifier: STRING
 			-- Possible decoded fragment identifier
 		deferred
 		ensure
 			may_be_void: True
 		end
 
-	uri_reference: STRING is
+	uri_reference: STRING
 			-- Full URI reference
 		do
 			if fragment_identifier = Void then
@@ -47,14 +47,14 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	media_type: UT_MEDIA_TYPE is
+	media_type: UT_MEDIA_TYPE
 			-- Media type of document entity
 		deferred
 		end
 
 feature -- Events
 
-	send (a_parser: XM_PARSER; a_receiver: XM_XPATH_RECEIVER; a_uri: UT_URI; is_stylesheet: BOOLEAN) is
+	send (a_parser: XM_PARSER; a_receiver: XM_XPATH_RECEIVER; a_uri: UT_URI; is_stylesheet: BOOLEAN)
 			-- Generate and send  events to `a_receiver'
 		require
 			parser_not_void: a_parser /= Void
@@ -74,7 +74,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	ignore_media_types is
+	ignore_media_types
 			-- Ignore media types when processing fragments.
 		do
 			are_media_type_ignored := True
@@ -84,7 +84,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_system_id (a_system_id: STRING) is
+	set_system_id (a_system_id: STRING)
 			-- Set `system_id'.
 		require
 			system_id_not_void: a_system_id /= Void

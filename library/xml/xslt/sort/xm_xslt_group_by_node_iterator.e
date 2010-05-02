@@ -24,7 +24,7 @@ inherit
 		--  order of first appearance. Note that an item can appear in several groups;
 		--  indeed, an item may be the leading item of more than one group, which means
 		--  that knowing the leading item is not enough to know the current group.
- 
+
 		-- It acts as a sequence iterator, where successive calls to `forth'
 		--  return the leading item of each group in turn. The current item of
 		--  the iterator is therefore the leading item of the current group. To get access
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 	make (a_population: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE];
 			a_key: XM_XPATH_EXPRESSION;
 			a_context: XM_XSLT_EVALUATION_CONTEXT;
-			a_collator: ST_COLLATOR) is
+			a_collator: ST_COLLATOR)
 			-- Establish invariant.
 		require
 			population_before: a_population /= Void and then not a_population.is_error and then a_population.before
@@ -67,21 +67,21 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item: XM_XPATH_NODE  is
+	item: XM_XPATH_NODE
 			-- Initial item of current group
 		do
 			Result := groups.item (index).item (1)
 		end
 
-	current_grouping_key: XM_XPATH_ATOMIC_VALUE is
+	current_grouping_key: XM_XPATH_ATOMIC_VALUE
 			-- Grouping key for current group
 		do
 			Result := group_keys.item (index)
 		end
-	
+
 feature -- Status report
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
 			Result := index > groups.count
@@ -89,7 +89,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	current_group_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	current_group_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Iterator over the members of the current group, in population order.
 		do
 			create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_NODE]} Result.make (groups.item (index))
@@ -97,7 +97,7 @@ feature -- Evaluation
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move to next position
 		do
 			index := index + 1
@@ -105,12 +105,12 @@ feature -- Cursor movement
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 			create Result.make (population.another, key_expression, key_context.new_context, stored_collator)
 		end
-	
+
 feature {NONE} -- Implementation
 
 	population: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 	stored_collator: ST_COLLATOR
 			-- Stored collator for use by `another'
 
-	build_indexed_groups is
+	build_indexed_groups
 			-- Build the grouping table forming groups of non-adjacent items with equal keys.
 		require
 			not_already_built: not indexed_groups_built
@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 			a_transformer: XM_XSLT_TRANSFORMER
 		do
 			create a_map.make_with_equality_testers (20, Void, comparison_key_tester)
-			a_context := key_context.new_minor_context			
+			a_context := key_context.new_minor_context
 			a_context.set_current_iterator (population)
 			a_transformer := a_context.transformer
 			from
@@ -189,7 +189,7 @@ feature {NONE} -- Implementation
 							end
 							a_group.put_last (an_item)
 						else
-							
+
 							-- If this is not the first key value for this item, we
 							--  check whether the item is already in this group before
 							--  adding it again.
@@ -239,4 +239,4 @@ invariant
 	group_keys_not_void: group_keys /= Void
 
 end
-	
+

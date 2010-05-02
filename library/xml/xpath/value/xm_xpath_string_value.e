@@ -8,7 +8,7 @@ note
         memory allocation costs when converting between the two types.
         These conversions happen in vast quantities.
        ]"
-	
+
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_value: STRING) is
+	make (a_value: STRING)
 			-- Create as string value.
 		require
 			value_not_void: a_value /= Void
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			static_properties_computed: are_static_properties_computed
 		end
 
-	make_untyped_atomic (a_value: STRING) is
+	make_untyped_atomic (a_value: STRING)
 			-- Create as untyped atomic value.
 		require
 			value_not_void: a_value /= Void
@@ -70,19 +70,19 @@ feature -- Access
 	is_untyped_atomic: BOOLEAN
 			-- Is `Current' an untyped atomic value?
 
-	is_string_value: BOOLEAN is
+	is_string_value: BOOLEAN
 			-- Is `Current' a string value?
 		do
 			Result := not is_untyped_atomic
 		end
 
-	string_value: STRING is
+	string_value: STRING
 			-- Value of the item as a string
 		do
 			Result := value
 		end
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type
 		do
 			if is_string_value then
@@ -94,7 +94,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_expression (a_other: XM_XPATH_EXPRESSION): BOOLEAN is
+	same_expression (a_other: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Are `Current' and `a_other' the same expression?
 		do
 			if is_string_value then
@@ -108,17 +108,17 @@ feature -- Comparison
 			end
 		end
 
-	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER is
+	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER
 			-- Compare `Current' to `other'
 		do
 
 			-- N.B. This implementatation won't be used, as ST_COLLATOR's version
 			-- will be used for comparing strings
-			
+
 			Result := STRING_.three_way_comparison (string_value, other.string_value)
 		end
 
-	three_way_comparison_using_collator (a_other: XM_XPATH_ATOMIC_VALUE; a_collator: ST_COLLATOR): INTEGER is
+	three_way_comparison_using_collator (a_other: XM_XPATH_ATOMIC_VALUE; a_collator: ST_COLLATOR): INTEGER
 			-- Comparison with `a_other'
 		require
 			untyped_atomic: is_untyped_atomic
@@ -137,7 +137,7 @@ feature -- Comparison
 			three_way_comparison: Result >= -1 and Result <= 1
 		end
 
-	same_atomic_value (a_other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
+	same_atomic_value (a_other: XM_XPATH_ATOMIC_VALUE): BOOLEAN
 			-- Are `Current' and `other' the same value?
 
 		do
@@ -149,10 +149,10 @@ feature -- Comparison
 				Result := Precursor (a_other)
 			end
 		end
-	
+
 feature -- Status report
 
-	is_comparable (a_other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
+	is_comparable (a_other: XM_XPATH_ATOMIC_VALUE): BOOLEAN
 			-- Is `a_other' comparable to `Current'?
 		do
 			if is_string_value then
@@ -169,8 +169,8 @@ feature -- Status report
 				end
 			end
 		end
-	
-	display (a_level: INTEGER) is
+
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			l_string: STRING
@@ -186,7 +186,7 @@ feature -- Status report
 			std.error.put_new_line
 		end
 
-	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN is
+	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN
 			-- Is `Current' convertible to `a_required_type'?
 		local
 			a_string: STRING
@@ -195,7 +195,7 @@ feature -- Status report
 		do
 			if a_required_type = type_factory.boolean_type then
 				a_string := trimmed_white_space (value)
-				if STRING_.same_string (a_string, "0") or else STRING_.same_string (a_string, "false") 
+				if STRING_.same_string (a_string, "0") or else STRING_.same_string (a_string, "false")
 					or else STRING_.same_string (a_string, "1") or else STRING_.same_string (a_string, "true") then
 					Result := True
 				end
@@ -287,7 +287,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-		calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
+		calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT)
 			-- Effective boolean value
 		do
 			create last_boolean_value.make (value.count > 0)
@@ -295,19 +295,19 @@ feature -- Evaluation
 
 feature -- Conversion
 
-	as_string_value: XM_XPATH_STRING_VALUE is
+	as_string_value: XM_XPATH_STRING_VALUE
 			-- `Current' seen as a string value
 		do
 			Result := Current
 		end
 
-	as_untyped_atomic: XM_XPATH_STRING_VALUE is
+	as_untyped_atomic: XM_XPATH_STRING_VALUE
 			-- `Current' seen as an untyped atomic
 		do
 			Result := Current
 		end
 
-	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE) is
+	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE)
 			-- Convert `Current' to `a_required_type'
 		local
 			l_value: STRING
@@ -399,7 +399,7 @@ feature {NONE} -- Implementation
 
 	last_decimal: MA_DECIMAL
 			-- Cached value from `is_convertible (type_factory.decimal_type)'
-	
+
 invariant
 
 	value_not_void: value /= Void

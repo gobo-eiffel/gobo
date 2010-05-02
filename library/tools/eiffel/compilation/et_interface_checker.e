@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new interface checker for given classes.
 		do
 			precursor {ET_CLASS_PROCESSOR}
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 feature -- Processing
 
-	process_class (a_class: ET_CLASS) is
+	process_class (a_class: ET_CLASS)
 			-- Flatten fetaures of `a_class' is not already done.
 			-- Then check validity of qualified anchored types appearing
 			-- in signatures, and check signature conformance in case of
@@ -85,7 +85,7 @@ feature -- Processing
 
 feature -- Error handling
 
-	set_fatal_error (a_class: ET_CLASS) is
+	set_fatal_error (a_class: ET_CLASS)
 			-- Report a fatal error to `a_class'.
 		require
 			a_class_not_void: a_class /= Void
@@ -99,7 +99,7 @@ feature -- Error handling
 
 feature {NONE} -- Processing
 
-	internal_process_class (a_class: ET_CLASS) is
+	internal_process_class (a_class: ET_CLASS)
 			-- Flatten features of `a_class' is not already done.
 			-- Then check validity of qualified anchored types appearing
 			-- in signatures, and check signature conformance in case of
@@ -183,7 +183,7 @@ feature {NONE} -- Processing
 
 feature {NONE} -- Signature validity
 
-	check_qualified_anchored_signatures_validity is
+	check_qualified_anchored_signatures_validity
 			-- Check validity of qualified anchored types involved in
 			-- the types of all signatures of `current_class'.
 			-- Resolve identifiers in qualified anchored types (such as in
@@ -199,7 +199,7 @@ feature {NONE} -- Signature validity
 	qualified_anchored_type_checker: ET_QUALIFIED_ANCHORED_TYPE_CHECKER
 			-- Qualified anchored type checker
 
-	check_signatures_validity is
+	check_signatures_validity
 			-- Check signature validity for redeclarations and joinings
 			-- for all features of `current_class'.
 		do
@@ -215,7 +215,7 @@ feature {NONE} -- Signature validity
 			named_features_wiped_out: named_features.is_empty
 		end
 
-	check_signature_validity (a_feature: ET_FLATTENED_FEATURE) is
+	check_signature_validity (a_feature: ET_FLATTENED_FEATURE)
 			-- Check signature validity for redeclarations and joinings for `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -240,7 +240,7 @@ feature {NONE} -- Feature adaptation
 	named_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]
 			-- Features indexed by name
 
-	resolve_feature_adaptations is
+	resolve_feature_adaptations
 			-- Resolve the feature adaptations of the inheritance clause of
 			-- `current_class' and put resulting features in `named_features'.
 		do
@@ -259,7 +259,7 @@ feature {NONE} -- Feature adaptation
 			resolve_inherited_features (current_class.procedures)
 		end
 
-	resolve_inherited_features (a_feature_list: ET_FEATURE_LIST) is
+	resolve_inherited_features (a_feature_list: ET_FEATURE_LIST)
 			-- We have to reconstruct `flattened_feature' and `flattened_parent'
 			-- objects of type ET_INHERITED_FEATURE (these are non-redeclared
 			-- inherited features) as they were when this was first done in
@@ -314,7 +314,7 @@ feature {NONE} -- Feature adaptation
 
 feature {NONE} -- Constraint creation validity
 
-	check_constraint_creations_validity is
+	check_constraint_creations_validity
 			-- Check validity of the constraint creations
 			-- of `current_class' if any.
 		local
@@ -331,7 +331,7 @@ feature {NONE} -- Constraint creation validity
 			end
 		end
 
-	check_constraint_creation_validity (a_formal: ET_FORMAL_PARAMETER) is
+	check_constraint_creation_validity (a_formal: ET_FORMAL_PARAMETER)
 			-- Check validity of the constraint creation
 			-- of `a_formal' if any.
 		require
@@ -402,7 +402,7 @@ feature {NONE} -- Constraint creation validity
 
 feature {NONE} -- Parents validity
 
-	check_parents_validity is
+	check_parents_validity
 			-- Check validity of parents of `current_class'.
 		do
 			parent_checker3.check_parents_validity (current_class)

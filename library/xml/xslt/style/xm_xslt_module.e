@@ -27,7 +27,7 @@ feature -- Access
 	included_document: XM_XPATH_TREE_DOCUMENT
 			-- Document node of loaded module
 
-	included_stylesheet (l_importer: XM_XSLT_STYLESHEET; a_precedence: INTEGER): XM_XSLT_STYLESHEET is
+	included_stylesheet (l_importer: XM_XSLT_STYLESHEET; a_precedence: INTEGER): XM_XSLT_STYLESHEET
 			-- Stylesheet included/imported from `href'
 		require
 			importer_not_void: l_importer /= Void
@@ -130,14 +130,14 @@ feature -- Access
 
 feature -- Status report
 
-	is_import: BOOLEAN is
+	is_import: BOOLEAN
 			-- Is this an xsl:import?
 		deferred
 		end
 
 feature -- Element change
 
-	create_static_context is
+	create_static_context
 			-- Create `static_context'
 		do
 			create static_context.make (Current, configuration)
@@ -145,7 +145,7 @@ feature -- Element change
 			static_context_created: static_context /= Void
 		end
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -186,7 +186,7 @@ feature -- Element change
 		end
 
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 		do
 
@@ -194,7 +194,7 @@ feature -- Element change
 
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (an_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		do
 			check
@@ -205,13 +205,13 @@ feature -- Element change
 
 feature -- Conversion
 
-	is_module: BOOLEAN is
+	is_module: BOOLEAN
 			-- Is `Current' an xsl:include/import?
 		do
 			Result := True
 		end
 
-	as_module: XM_XSLT_MODULE is
+	as_module: XM_XSLT_MODULE
 			-- `Current' seen as an xsl:include/import
 		do
 			Result := Current
@@ -219,7 +219,7 @@ feature -- Conversion
 
 feature {NONE} -- Implementation
 
-	uri_encoding: UT_URL_ENCODING is
+	uri_encoding: UT_URL_ENCODING
 			-- Encoding/decoding routines and tests
 		once
 			create Result
@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 			uri_encoding_not_void: Result /= Void
 		end
 
-	check_recursion (a_reference: STRING; a_stylesheet: XM_XSLT_STYLESHEET) is
+	check_recursion (a_reference: STRING; a_stylesheet: XM_XSLT_STYLESHEET)
 			-- Check for recursive import or include.
 		require
 			no_previous_error: not any_compile_errors

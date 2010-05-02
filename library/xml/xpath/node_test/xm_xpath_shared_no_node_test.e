@@ -14,7 +14,7 @@ class XM_XPATH_SHARED_NO_NODE_TEST
 
 feature -- Access
 
-	empty_item: XM_XPATH_NO_NODE_TEST is
+	empty_item: XM_XPATH_NO_NODE_TEST
 			-- Singleton
 		once
 			create Result.make

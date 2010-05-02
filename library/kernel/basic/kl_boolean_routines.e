@@ -14,7 +14,7 @@ class KL_BOOLEAN_ROUTINES
 
 feature -- Access
 
-	nxor (a_booleans: ARRAY [BOOLEAN]): BOOLEAN is
+	nxor (a_booleans: ARRAY [BOOLEAN]): BOOLEAN
 			-- N-ary exclusive or
 		require
 			a_booleans_not_void: a_booleans /= Void

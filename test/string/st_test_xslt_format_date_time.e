@@ -25,7 +25,7 @@ create
 
 feature -- Test
 
-	test_format_date_one is
+	test_format_date_one
 			-- Test formatting '2002-12-31' as '[Y0001]-[M01]-[D01]'.
 		local
 			l_date: DT_DATE
@@ -41,7 +41,7 @@ feature -- Test
 			assert_strings_equal ("Correct result", "2002-12-31", l_result.item.value)
 		end
 
-	test_format_date_two is
+	test_format_date_two
 			-- Test formatting '2002-12-31' as '[M]-[D]-[Y]'.
 		local
 			l_date: DT_DATE
@@ -57,7 +57,7 @@ feature -- Test
 			assert_strings_equal ("Correct result", "12-31-2002", l_result.item.value)
 		end
 
-	test_format_date_three is
+	test_format_date_three
 			-- Test formatting '2002-12-31' as '[D]-[M]-[Y]'.
 		local
 			l_date: DT_DATE
@@ -73,7 +73,7 @@ feature -- Test
 			assert_strings_equal ("Correct result", "31-12-2002", l_result.item.value)
 		end
 
-		test_format_date_four is
+		test_format_date_four
 			-- Test formatting '2002-12-31' as '[D1] [MI] [Y]'.
 		local
 			l_date: DT_DATE
@@ -89,7 +89,7 @@ feature -- Test
 			assert_strings_equal ("Correct result", "31-XII-2002", l_result.item.value)
 		end
 
-		test_format_date_five is
+		test_format_date_five
 			-- Test formatting '2002-12-31' as '[D1o] [MNn], [Y]'.
 		local
 			l_date: DT_DATE
@@ -105,7 +105,7 @@ feature -- Test
 			assert_strings_equal ("Correct result", "31st-December-2002", l_result.item.value)
 		end
 
-	test_format_date_six is
+	test_format_date_six
 			-- Test formatting '2002-12-31' as '[[[Y0001]-[M01]-[D01]]]'.
 		local
 			l_date: DT_DATE
@@ -121,7 +121,7 @@ feature -- Test
 			assert_strings_equal ("Correct result", "[2002-12-31]", l_result.item.value)
 		end
 
-	test_format_date_seven is
+	test_format_date_seven
 			-- Test formatting '2002-12-31' as '[YWw]'
 		local
 			l_date: DT_DATE
@@ -137,7 +137,7 @@ feature -- Test
 			assert_strings_equal ("Correct result", "Two Thousand and Two", l_result.item.value)
 		end
 
-	test_format_time_one is
+	test_format_time_one
 			-- Test formatting '15:58:45.762' as '[h]:[m01] [PN, *-2]'.
 		local
 			l_value: ST_XPATH_TIME_VALUE
@@ -151,7 +151,7 @@ feature -- Test
 			assert_strings_equal ("Correct result", "3:58 PM", l_result.item.value)
 		end
 
-	test_format_time_two is
+	test_format_time_two
 			-- Test formatting '15:58:45.762' as '[h]:[m01]:[s01] [Pn, 1-2]'.
 		local
 			l_value: ST_XPATH_TIME_VALUE
@@ -165,7 +165,7 @@ feature -- Test
 			assert_strings_equal ("Correct result", "3:58:45 pm", l_result.item.value)
 		end
 
-	test_format_time_three is
+	test_format_time_three
 			-- Test formatting '15:58:45.762' as '[H01]:[m01]:[s01].[f001]'.
 		local
 			l_value: ST_XPATH_TIME_VALUE
@@ -179,7 +179,7 @@ feature -- Test
 			assert_strings_equal ("Correct result", "15:58:45.762", l_result.item.value)
 		end
 
-	test_format_time_four is
+	test_format_time_four
 			-- Test formatting '15:58:45.762+02:00' as '[H01]:[m01]:[s01] [z]'.
 		local
 			l_value: ST_XPATH_TIME_VALUE
@@ -193,7 +193,7 @@ feature -- Test
 			assert_strings_equal ("Correct result", "15:58:45 GMT+02:00", l_result.item.value)
 		end
 
-	test_format_date_time_one is
+	test_format_date_time_one
 			-- Test formatting '2002-12-31T15:58:45.762+02:00' as '[h].[m01][Pn] on [FNn], [D1o] [MNn]'.
 		local
 			l_value: ST_XPATH_DATE_TIME_VALUE
@@ -207,7 +207,7 @@ feature -- Test
 			assert_strings_equal ("Correct result", "3.58p.m. on Tuesday, 31st December", l_result.item.value)
 		end
 
-	test_format_date_time_two is
+	test_format_date_time_two
 			-- Test formatting '2002-12-31T15:58:45.762+02:00' as '[M01]/[D01]/[Y0001] at [H01]:[m01]:[s01]').
 		local
 			l_value: ST_XPATH_DATE_TIME_VALUE

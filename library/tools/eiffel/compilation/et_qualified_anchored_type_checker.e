@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new qualified anchored type checker.
 		do
 			precursor {ET_CLASS_SUBPROCESSOR}
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature -- Validity checking
 
-	check_signatures_validity (a_class: ET_CLASS) is
+	check_signatures_validity (a_class: ET_CLASS)
 			-- Check validity of qualified anchored types involved in
 			-- the types of all signatures of `a_class'.
 			-- Resolve identifiers in qualified anchored types (such as in
@@ -124,7 +124,7 @@ feature -- Validity checking
 
 feature {NONE} -- Type validity
 
-	check_like_feature_validity (a_type: ET_LIKE_FEATURE) is
+	check_like_feature_validity (a_type: ET_LIKE_FEATURE)
 			-- Check validity of `a_type' when it appears in a qualified anchored type.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -197,7 +197,7 @@ feature {NONE} -- Type validity
 			end
 		end
 
-	check_qualified_like_identifier_validity (a_type: ET_QUALIFIED_LIKE_IDENTIFIER) is
+	check_qualified_like_identifier_validity (a_type: ET_QUALIFIED_LIKE_IDENTIFIER)
 			-- Check validity of qualified anchored types involved in `a_type'.
 			-- Resolve 'identifier' in 'like a.identifier' and 'like {A}.identifier' if not already done.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -288,7 +288,7 @@ feature {NONE} -- Type validity
 			in_qualified_anchored_type := old_in_qualified_anchored_type
 		end
 
-	check_actual_parameters_validity (a_parameters: ET_ACTUAL_PARAMETER_LIST) is
+	check_actual_parameters_validity (a_parameters: ET_ACTUAL_PARAMETER_LIST)
 			-- Check validity of qualified anchored types involved in `a_parameters'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -310,13 +310,13 @@ feature {NONE} -- Type validity
 
 feature {ET_AST_NODE} -- Type processing
 
-	process_class (a_type: ET_CLASS) is
+	process_class (a_type: ET_CLASS)
 			-- Process `a_type'.
 		do
 			process_class_type (a_type)
 		end
 
-	process_class_type (a_type: ET_CLASS_TYPE) is
+	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
 		local
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
@@ -327,31 +327,31 @@ feature {ET_AST_NODE} -- Type processing
 			end
 		end
 
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE) is
+	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
 			-- Process `a_type'.
 		do
 			process_class_type (a_type)
 		end
 
-	process_like_feature (a_type: ET_LIKE_FEATURE) is
+	process_like_feature (a_type: ET_LIKE_FEATURE)
 			-- Process `a_type'.
 		do
 			check_like_feature_validity (a_type)
 		end
 
-	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE) is
+	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE)
 			-- Process `a_type'.
 		do
 			check_qualified_like_identifier_validity (a_type)
 		end
 
-	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
+	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE)
 			-- Process `a_type'.
 		do
 			check_qualified_like_identifier_validity (a_type)
 		end
 
-	process_tuple_type (a_type: ET_TUPLE_TYPE) is
+	process_tuple_type (a_type: ET_TUPLE_TYPE)
 			-- Process `a_type'.
 		local
 			a_parameters: ET_ACTUAL_PARAMETER_LIST

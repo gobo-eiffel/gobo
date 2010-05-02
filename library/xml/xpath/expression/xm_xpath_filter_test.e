@@ -39,21 +39,21 @@ feature -- Access
 	base_iterator: XM_XPATH_SEQUENCE_ITERATOR [G]
 			-- The underlying iterator
 
-	error_value: XM_XPATH_ERROR_VALUE is
+	error_value: XM_XPATH_ERROR_VALUE
 			-- Error value
 		deferred
 		end
-	
+
 feature -- Status report
 
-	is_error: BOOLEAN is
+	is_error: BOOLEAN
 			-- Has item failed evaluation?
 		deferred
 		end
 
 feature -- Setting
 
-	set_last_error (a_error_value: XM_XPATH_ERROR_VALUE) is
+	set_last_error (a_error_value: XM_XPATH_ERROR_VALUE)
 			-- Set `error_value'.
 		require
 			item_not_in_error: not is_error
@@ -66,7 +66,7 @@ feature -- Setting
 
 feature -- Basic operations
 
-	test_match is
+	test_match
 			-- Test if the context item match the filter predicate?
 		require
 			filter_not_in_error: not filter.is_error

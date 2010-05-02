@@ -34,20 +34,20 @@ inherit
 
 feature -- Access
 
-	index: INTEGER is
+	index: INTEGER
 			-- Index of current position
 		do
 			Result := container.cursor_index (Current)
 		end
 
-	container: DS_LIST [G] is
+	container: DS_LIST [G]
 			-- List traversed
 		deferred
 		end
 
 feature -- Status report
 
-	valid_index (i: INTEGER): BOOLEAN is
+	valid_index (i: INTEGER): BOOLEAN
 			-- Is `i' a valid index value?
 		do
 			Result := (0 <= i and i <= (container.count + 1))
@@ -58,7 +58,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	go_i_th (i: INTEGER) is
+	go_i_th (i: INTEGER)
 			-- Move cursor to `i'-th position.
 		do
 			container.cursor_go_i_th (Current, i)
@@ -66,7 +66,7 @@ feature -- Cursor movement
 
 feature -- Element change
 
-	put_left (v: G) is
+	put_left (v: G)
 			-- Add `v' to left of cursor position.
 			-- Do not move cursors.
 		require
@@ -78,7 +78,7 @@ feature -- Element change
 			one_more: container.count = old container.count + 1
 		end
 
-	put_right (v: G) is
+	put_right (v: G)
 			-- Add `v' to right of cursor position.
 			-- Do not move cursors.
 		require
@@ -90,7 +90,7 @@ feature -- Element change
 			one_more: container.count = old container.count + 1
 		end
 
-	force_left (v: G) is
+	force_left (v: G)
 			-- Add `v' to left of cursor position.
 			-- Do not move cursors.
 		require
@@ -101,7 +101,7 @@ feature -- Element change
 			one_more: container.count = old container.count + 1
 		end
 
-	force_right (v: G) is
+	force_right (v: G)
 			-- Add `v' to right of cursor position.
 			-- Do not move cursors.
 		require
@@ -112,7 +112,7 @@ feature -- Element change
 			one_more: container.count = old container.count + 1
 		end
 
-	extend_left (other: DS_LINEAR [G]) is
+	extend_left (other: DS_LINEAR [G])
 			-- Add items of `other' to left of cursor position.
 			-- Keep items of `other' in the same order.
 			-- Do not move cursors.
@@ -126,7 +126,7 @@ feature -- Element change
 			new_count: container.count = old container.count + old other.count
 		end
 
-	extend_right (other: DS_LINEAR [G]) is
+	extend_right (other: DS_LINEAR [G])
 			-- Add items of `other' to right of cursor position.
 			-- Keep items of `other' in the same order.
 			-- Do not move cursors.
@@ -140,7 +140,7 @@ feature -- Element change
 			new_count: container.count = old container.count + old other.count
 		end
 
-	append_left (other: DS_LINEAR [G]) is
+	append_left (other: DS_LINEAR [G])
 			-- Add items of `other' to left of cursor position.
 			-- Keep items of `other' in the same order.
 			-- Do not move cursors.
@@ -153,7 +153,7 @@ feature -- Element change
 			new_count: container.count = old container.count + old other.count
 		end
 
-	append_right (other: DS_LINEAR [G]) is
+	append_right (other: DS_LINEAR [G])
 			-- Add items of `other' to right of cursor position.
 			-- Keep items of `other' in the same order.
 			-- Do not move cursors.
@@ -168,7 +168,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove is
+	remove
 			-- Remove item at cursor position.
 			-- Move any cursors at this position `forth'.
 		require
@@ -179,7 +179,7 @@ feature -- Removal
 			one_less: container.count = old container.count - 1
 		end
 
-	remove_left is
+	remove_left
 			-- Remove item to left of cursor position.
 			-- Move any cursors at this position `forth'.
 		require
@@ -192,7 +192,7 @@ feature -- Removal
 			one_less: container.count = old container.count - 1
 		end
 
-	remove_right is
+	remove_right
 			-- Remove item to right of cursor position.
 			-- Move any cursors at this position `forth'.
 		require
@@ -205,7 +205,7 @@ feature -- Removal
 			one_less: container.count = old container.count - 1
 		end
 
-	prune_left (n: INTEGER) is
+	prune_left (n: INTEGER)
 			-- Remove `n' items to left of cursor position.
 			-- Move all cursors `off'.
 		require
@@ -216,7 +216,7 @@ feature -- Removal
 			new_count: container.count = old container.count - n
 		end
 
-	prune_right (n: INTEGER) is
+	prune_right (n: INTEGER)
 			-- Remove `n' items to right of cursor position.
 			-- Move all cursors `off'.
 		require

@@ -24,7 +24,7 @@ create
 
 feature -- Test
 
-	test_labels is
+	test_labels
 			-- Test labeled tuples.
 		local
 			t1: TUPLE [l1: INTEGER; l2: STRING]
@@ -37,7 +37,7 @@ feature -- Test
 			assert_same ("l2", s1, t1.l2)
 		end
 
-	test_polymorphic_labels is
+	test_polymorphic_labels
 			-- Test polymorphic labeled tuples.
 		local
 			t1: TUPLE [l1: ANY]
@@ -68,7 +68,7 @@ feature -- Test
 			end
 		end
 
-	test_label_setters is
+	test_label_setters
 			-- Test labeled tuple setters.
 		local
 			t1: TUPLE [l1: INTEGER; l2: STRING]
@@ -86,7 +86,7 @@ feature -- Test
 			assert_same ("l2b", s2, t1.l2)
 		end
 
-	test_polymorphic_label_setters is
+	test_polymorphic_label_setters
 			-- Test polymorphic labeled tuple setters.
 		local
 			t1: TUPLE [l1: ANY; l2: CHARACTER]
@@ -115,7 +115,7 @@ feature -- Test
 			end
 		end
 
-	test_count is
+	test_count
 			-- Test feature 'count'.
 		local
 			t: TUPLE
@@ -132,7 +132,7 @@ feature -- Test
 			assert_integers_equal ("t2_two", 2, t2.count)
 		end
 
-	test_boolean_item is
+	test_boolean_item
 			-- Test feature 'boolean_item'.
 		local
 			t: TUPLE [STRING, BOOLEAN]
@@ -141,7 +141,7 @@ feature -- Test
 			assert_booleans_equal ("true", True, t.boolean_item (2))
 		end
 
-	test_character_8_item is
+	test_character_8_item
 			-- Test feature 'character_8_item'.
 		local
 			c: CHARACTER_8
@@ -152,7 +152,7 @@ feature -- Test
 			assert_characters_equal ("c", c, t.character_8_item (2))
 		end
 
-	test_integer_item is
+	test_integer_item
 			-- Test feature 'integer_tem'.
 		local
 			t: TUPLE [STRING, INTEGER]
@@ -161,7 +161,7 @@ feature -- Test
 			assert_integers_equal ("five", 5, t.integer_item (2))
 		end
 
-	test_reference_item is
+	test_reference_item
 			-- Test feature 'reference_item'.
 		local
 			s: STRING
@@ -172,7 +172,7 @@ feature -- Test
 			assert_same ("gobo", s, t.reference_item (1))
 		end
 
-	test_item is
+	test_item
 			-- Test feature 'item'.
 		local
 			s: STRING
@@ -185,7 +185,7 @@ feature -- Test
 			assert_equal ("true", True, t.item (3))
 		end
 
-	test_is_boolean_item is
+	test_is_boolean_item
 			-- Test feature 'is_boolean_item'.
 		local
 			t: TUPLE [BOOLEAN, ANY]
@@ -194,7 +194,7 @@ feature -- Test
 			assert ("is_boolean_item", t.is_boolean_item (1))
 		end
 
-	test_is_character_8_item is
+	test_is_character_8_item
 			-- Test feature 'is_character_8_item'.
 		local
 			t: TUPLE [CHARACTER_8, ANY]
@@ -203,7 +203,7 @@ feature -- Test
 			assert ("is_character_8_item", t.is_character_8_item (1))
 		end
 
-	test_is_integer_item is
+	test_is_integer_item
 			-- Test feature 'is_integer_item'.
 		local
 			t: TUPLE [INTEGER, ANY]
@@ -212,7 +212,7 @@ feature -- Test
 			assert ("is_integer_item", t.is_integer_item (1))
 		end
 
-	test_is_reference_item is
+	test_is_reference_item
 			-- Test feature 'is_reference_item'.
 		local
 			t: TUPLE [INTEGER, ANY]
@@ -221,7 +221,7 @@ feature -- Test
 			assert ("is_reference_item", t.is_reference_item (2))
 		end
 
-	test_put_boolean is
+	test_put_boolean
 			-- Test feature 'put_boolean'.
 		local
 			t: TUPLE [ANY, BOOLEAN, ANY]
@@ -231,7 +231,7 @@ feature -- Test
 			assert_booleans_equal ("true", True, t.boolean_item (2))
 		end
 
-	test_put_integer is
+	test_put_integer
 			-- Test feature 'put_integer'.
 		local
 			t: TUPLE [ANY, INTEGER, ANY]
@@ -241,7 +241,7 @@ feature -- Test
 			assert_integers_equal ("five", 5, t.integer_item (2))
 		end
 
-	test_put_reference is
+	test_put_reference
 			-- Test feature 'put_reference'.
 		local
 			t: TUPLE [ANY, STRING, ANY]
@@ -253,7 +253,7 @@ feature -- Test
 			assert_same ("gobo", s, t.reference_item (2))
 		end
 
-	test_put is
+	test_put
 			-- Test feature 'put'.
 		local
 			t: TUPLE [INTEGER, STRING, BOOLEAN]
@@ -269,7 +269,7 @@ feature -- Test
 			assert_booleans_equal ("true", True, t.boolean_item (3))
 		end
 
-	test_object_comparison is
+	test_object_comparison
 			-- Test feature 'object_comparison'.
 		local
 			t: TUPLE [ANY, STRING, ANY]
@@ -279,7 +279,7 @@ feature -- Test
 			assert ("object_comparison", t.object_comparison)
 		end
 
-	test_valid_type_for_index is
+	test_valid_type_for_index
 			-- Test feature 'valid_type_for_index'.
 		local
 			t: TUPLE [COMPARABLE]
@@ -293,7 +293,7 @@ feature -- Test
 			assert ("not_valid1", not t.valid_type_for_index (a, 1))
 		end
 
-	test_boxed_items is
+	test_boxed_items
 			-- Test that the access to the items of the tuple
 			-- is correctly done, with boxing of expanded
 			-- objects to reference when necessary.
@@ -325,7 +325,7 @@ feature -- Test
 			end
 		end
 
-	test_twin is
+	test_twin
 			-- Test feature 'twin'.
 		local
 			t1, t2: TUPLE [s: STRING; i: INTEGER]
@@ -337,7 +337,7 @@ feature -- Test
 			assert_integers_equal ("same_integer1", t1.i, t2.i)
 		end
 
-	test_deep_twin is
+	test_deep_twin
 			-- Test feature 'deep_twin'.
 		local
 			t1, t2: TUPLE [s: STRING; i: INTEGER]

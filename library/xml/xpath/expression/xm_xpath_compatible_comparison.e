@@ -45,7 +45,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; an_operand_two: XM_XPATH_EXPRESSION; a_collator: ST_COLLATOR) is
+	make (an_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; an_operand_two: XM_XPATH_EXPRESSION; a_collator: ST_COLLATOR)
 			-- Establish invariant
 		require
 			operand_1_not_void: an_operand_one /= Void
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Determine the data type of the expression, if possible
 		do
 			Result := type_factory.boolean_type
@@ -81,15 +81,15 @@ feature -- Access
 
 feature -- Status report
 
-	is_node_sequence: BOOLEAN is
+	is_node_sequence: BOOLEAN
 			-- Is `Current' a sequence of zero or more nodes?
 		do
 			Result := False
 		end
 
-feature -- Optimization	
+feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -112,7 +112,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_result: DS_CELL [XM_XPATH_ITEM]
@@ -159,7 +159,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT)
 			-- Effective boolean value
 		local
 			l_iterator, l_other_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -205,7 +205,7 @@ feature -- Evaluation
 			end
 		end
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			calculate_effective_boolean_value (a_context)
@@ -213,7 +213,7 @@ feature -- Evaluation
 		end
 
 
-	mapped_item (a_item: XM_XPATH_ITEM): XM_XPATH_ITEM is
+	mapped_item (a_item: XM_XPATH_ITEM): XM_XPATH_ITEM
 			-- Map `a_item' to another item
 		do
 			Result := item_to_double (a_item)
@@ -221,7 +221,7 @@ feature -- Evaluation
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
@@ -241,13 +241,13 @@ feature {NONE} -- Implementation
 	atomic_comparer: XM_XPATH_ATOMIC_COMPARER
 			-- Comparer for atomic values
 
-	display_operator: STRING is
+	display_operator: STRING
 			-- Format `operator' for display
 		do
 			Result := STRING_.appended_string ("many-to-many (1.0)", Precursor)
 		end
 
-	issue_warnings (a_type, another_type: XM_XPATH_ITEM_TYPE; a_context: XM_XPATH_STATIC_CONTEXT) is
+	issue_warnings (a_type, another_type: XM_XPATH_ITEM_TYPE; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Issue warnings about backwards compatibility.
 		require
 			context_not_void: a_context /= Void
@@ -265,7 +265,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	optimize_stage_2 (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize_stage_2 (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Optimize after operands have been optimized.
 		require
 			no_previous_error: not is_error
@@ -325,7 +325,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	calculate_effective_boolean_value_not_booleans (a_context: XM_XPATH_CONTEXT; a_iterator, a_other_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
+	calculate_effective_boolean_value_not_booleans (a_context: XM_XPATH_CONTEXT; a_iterator, a_other_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM])
 			-- Effective boolean value when neither operand is a boolean value.
 		require
 			first_iterator_before: a_iterator /= Void and then a_iterator.is_error or else a_iterator.before
@@ -402,7 +402,7 @@ feature {NONE} -- Implementation
 			value_not_void_but_may_be_in_error: last_boolean_value /= Void
 		end
 
-	compare_value_with_sequence (a_atomic_value: XM_XPATH_ATOMIC_VALUE; a_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_list: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]) is
+	compare_value_with_sequence (a_atomic_value: XM_XPATH_ATOMIC_VALUE; a_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_list: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE])
 			-- Compare `a_atomic_value' with all of `a_iterator'.
 		require
 			last_boolean_value_not_set: last_boolean_value = Void
@@ -442,7 +442,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	evaluate_possible_first_boolean_value  (a_cell: DS_CELL [XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_possible_first_boolean_value  (a_cell: DS_CELL [XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate `first_operand' as a boolean value.
 		require
 			a_cell_not_void: a_cell /= Void
@@ -490,7 +490,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	evaluate_possible_second_boolean_value  (a_cell: DS_CELL [XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_possible_second_boolean_value  (a_cell: DS_CELL [XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate `second_operand' as a boolean value.
 		require
 			a_cell_not_void: a_cell /= Void

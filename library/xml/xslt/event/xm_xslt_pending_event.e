@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_content_string, a_name: STRING; a_node_type, some_properties: INTEGER) is
+	make (a_content_string, a_name: STRING; a_node_type, some_properties: INTEGER)
 			-- Establish invariant.
 		require
 			content_not_void: a_content_string /= Void
@@ -62,4 +62,4 @@ invariant
 	valid_node_type: node_type = Text_node or else node_type = Comment_node or else node_type = Processing_instruction_node
 
 end
-	
+

@@ -13,12 +13,12 @@ note
 deferred class XM_XPATH_LOCATOR
 
 inherit
-	
+
 	ANY
 
 feature -- Access
 
-	system_id: STRING is
+	system_id: STRING
 			-- Current SYSTEM ID;
 			-- STRING interpretation of `base_uri' when available.
 		deferred
@@ -26,7 +26,7 @@ feature -- Access
 			system_id_not_void: Result /= Void
 		end
 
-	line_number: INTEGER is
+	line_number: INTEGER
 			-- Approximate line number of current event, or 0 if unknown
 		deferred
 		ensure

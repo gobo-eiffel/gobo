@@ -21,7 +21,7 @@ inherit
 
 feature -- Status report
 
-	test (v, u: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
+	test (v, u: XM_XPATH_ATOMIC_VALUE): BOOLEAN
 			-- Are `v' and `u' considered equal?
 		do
 			if v = u then

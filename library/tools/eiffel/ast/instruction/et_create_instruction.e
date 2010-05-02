@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type: like creation_type; a_target: like target; a_call: like creation_call) is
+	make (a_type: like creation_type; a_target: like target; a_call: like creation_call)
 			-- Create a new create instruction.
 		require
 			a_target_not_void: a_target /= Void
@@ -45,7 +45,7 @@ feature -- Access
 	creation_type: ET_TARGET_TYPE
 			-- Creation type surrounded by braces
 
-	type: ET_TYPE is
+	type: ET_TYPE
 			-- Creation type
 		do
 			if creation_type /= Void then
@@ -53,7 +53,7 @@ feature -- Access
 			end
 		end
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -66,13 +66,13 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := create_keyword
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			if creation_call /= Void then
@@ -82,7 +82,7 @@ feature -- Access
 			end
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			if creation_call /= Void then
@@ -94,7 +94,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_create_keyword (a_create: like create_keyword) is
+	set_create_keyword (a_create: like create_keyword)
 			-- Set `create_keyword' to `a_create'.
 		require
 			a_create_not_void: a_create /= Void
@@ -106,7 +106,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_create_instruction (Current)

@@ -23,7 +23,7 @@ create
 
 feature -- Test
 
-	test_do_all is
+	test_do_all
 			-- Test feature `do_all'.
 		local
 			a_table1: DS_HASH_TABLE [STRING, INTEGER]
@@ -45,7 +45,7 @@ feature -- Test
 			assert ("empty1", a_list2.is_empty)
 		end
 
-	test_do_all_with_index is
+	test_do_all_with_index
 			-- Test feature `do_all_with_index'.
 		local
 			a_table1: DS_HASH_TABLE [STRING, INTEGER]
@@ -67,7 +67,7 @@ feature -- Test
 			assert_iarrays_same ("items2", <<INTEGER_.to_integer (0), 0>>, an_array2)
 		end
 
-	test_do_if is
+	test_do_if
 			-- Test feature `do_if'.
 		local
 			a_table1: DS_HASH_TABLE [STRING, INTEGER]
@@ -89,7 +89,7 @@ feature -- Test
 			assert ("empty1", a_list2.is_empty)
 		end
 
-	test_do_if_with_index is
+	test_do_if_with_index
 			-- Test feature `do_if_with_index'.
 		local
 			a_table1: DS_HASH_TABLE [STRING, INTEGER]
@@ -111,7 +111,7 @@ feature -- Test
 			assert_iarrays_same ("items2", <<INTEGER_.to_integer (0), 0>>, an_array2)
 		end
 
-	test_there_exists is
+	test_there_exists
 			-- Test feature `there_exists'.
 		local
 			a_table1: DS_HASH_TABLE [STRING, INTEGER]
@@ -133,7 +133,7 @@ feature -- Test
 			assert ("there_dont_exist2", not a_table1.keys.there_exists (agent INTEGER_.is_even))
 		end
 
-	test_for_all is
+	test_for_all
 			-- Test feature `for_all'.
 		local
 			a_table1: DS_HASH_TABLE [STRING, INTEGER]
@@ -155,7 +155,7 @@ feature -- Test
 			assert ("for_all2", a_table1.keys.for_all (agent INTEGER_.is_even))
 		end
 
-	test_twin is
+	test_twin
 			-- Test feature `twin'.
 		local
 			l_table1: DS_HASH_TABLE [STRING, INTEGER]
@@ -187,7 +187,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	same_integers (i, j: INTEGER): BOOLEAN is
+	same_integers (i, j: INTEGER): BOOLEAN
 			-- Is `i' equal to `j'?
 			-- (Used as agent to test iterators.)
 		do

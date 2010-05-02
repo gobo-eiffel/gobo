@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_value: BOOLEAN) is
+	make (a_value: BOOLEAN)
 			-- Create a new condition where dynamic_runtime should be equal to `a_value'.
 		do
 			value := a_value
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_enabled (a_state: ET_ECF_STATE): BOOLEAN is
+	is_enabled (a_state: ET_ECF_STATE): BOOLEAN
 			-- Does `a_state' fulfill current condition?
 		do
 			Result := not value

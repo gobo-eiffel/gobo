@@ -30,23 +30,23 @@ feature -- Access
 	last_string_value: STRING
 			-- Result from `expand_children' or `check_content'
 
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions of `Current'
 		do
 			create Result.make (1)
 			Result.set_equality_tester (expression_tester)
 			if select_expression /= Void then Result.put (select_expression, 1) end
 		end
-	
+
 feature -- Status report
 
-	creates_new_nodes: BOOLEAN is
+	creates_new_nodes: BOOLEAN
 			-- Can `Current' create new nodes?
 		do
 			Result := True
 		end
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		do
 			if select_expression /= Void then
@@ -56,7 +56,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	type_check (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	type_check (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type checking
 		require
 			a_context_not_void: a_context /= Void
@@ -65,7 +65,7 @@ feature -- Optimization
 		deferred
 		end
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -78,7 +78,7 @@ feature -- Optimization
 			a_replacement.put (Current)
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_atomizer: XM_XPATH_ATOMIZER_EXPRESSION
@@ -108,7 +108,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -125,7 +125,7 @@ feature -- Optimization
 			end
 		end
 
-	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this instruction.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -140,7 +140,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_content: STRING
@@ -179,7 +179,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterator over the values of a sequence
 		local
 			l_item: DS_CELL [XM_XPATH_ITEM]
@@ -197,7 +197,7 @@ feature -- Evaluation
 			end
 		end
 
-	expand_children (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	expand_children (a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Calculate string value of subordinates.
 		require
 			context_not_void: a_context /= Void
@@ -228,7 +228,7 @@ feature -- Evaluation
 
 feature -- Element change
 
-	set_select_expression (a_select_expression: XM_XPATH_EXPRESSION) is
+	set_select_expression (a_select_expression: XM_XPATH_EXPRESSION)
 			-- Ensure `select_expression' = `a_select_expression'.
 		require
 			select_expression_not_void: a_select_expression /= Void
@@ -244,7 +244,7 @@ feature -- Element change
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_special_properties is
+	compute_special_properties
 			-- Compute special properties.
 		do
 			Precursor
@@ -256,7 +256,7 @@ feature {NONE} -- Implementation
 	last_name_code: INTEGER
 			-- Result from `evaluate_name_code'
 
-	check_content (a_content: STRING; a_context: XM_XPATH_CONTEXT) is
+	check_content (a_content: STRING; a_context: XM_XPATH_CONTEXT)
 			-- Check and possibly modify `a_content' for conformance to node kind.
 		require
 			content_not_void: a_content /= Void
@@ -266,7 +266,7 @@ feature {NONE} -- Implementation
 			error_or_string_value_not_void: is_error or else last_string_value /= Void
 		end
 
-	evaluate_name_code (a_context: XM_XPATH_CONTEXT) is
+	evaluate_name_code (a_context: XM_XPATH_CONTEXT)
 			-- Evaluate name code.
 		do
 			last_name_code := -1
@@ -275,4 +275,4 @@ feature {NONE} -- Implementation
 		end
 
 end
-	
+

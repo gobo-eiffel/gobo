@@ -27,7 +27,7 @@ create
 
 feature -- Conversion
 
-	date_to_string (a_date: DT_DATE): STRING is
+	date_to_string (a_date: DT_DATE): STRING
 			-- Formatted date
 		do
 			Result := year_string (a_date)
@@ -37,26 +37,26 @@ feature -- Conversion
 			Result.append_string (day_string (a_date))
 		end
 
-	zoned_date_to_string (a_date: DT_FIXED_OFFSET_ZONED_DATE): STRING is
+	zoned_date_to_string (a_date: DT_FIXED_OFFSET_ZONED_DATE): STRING
 			-- Formatted date with time zone
 		do
 			Result := date_to_string (a_date.date)
 			Result := Result + zone (a_date.time_zone)
 		end
 
-	date_time_to_string (a_date_time: DT_DATE_TIME): STRING is
+	date_time_to_string (a_date_time: DT_DATE_TIME): STRING
 			-- Formatted date-time
 		do
 			Result := date_to_string (a_date_time.date) + "T" + time_to_string (a_date_time.time)
 		end
 
-	zoned_date_time_to_string (a_date_time: DT_FIXED_OFFSET_ZONED_DATE_TIME): STRING is
+	zoned_date_time_to_string (a_date_time: DT_FIXED_OFFSET_ZONED_DATE_TIME): STRING
 			-- Formatted date-time with time zone
 		do
 			Result := date_time_to_string (a_date_time.date_time) + zone (a_date_time.time_zone)
 		end
 
-	time_to_string (a_time: DT_TIME): STRING is
+	time_to_string (a_time: DT_TIME): STRING
 			-- Formatted time
 		local
 			l_millisecond: STRING
@@ -85,15 +85,15 @@ feature -- Conversion
 			end
 		end
 
-	zoned_time_to_string (a_time: DT_FIXED_OFFSET_ZONED_TIME): STRING is
+	zoned_time_to_string (a_time: DT_FIXED_OFFSET_ZONED_TIME): STRING
 			-- Formatted time with time zone
 		do
 			Result := time_to_string (a_time.time)
 			Result := Result + zone (a_time.time_zone)
 		end
 
-	year_month_to_string (a_date: DT_DATE): STRING is
-			-- Date formatted as gYearMonth 
+	year_month_to_string (a_date: DT_DATE): STRING
+			-- Date formatted as gYearMonth
 		require
 			a_date_not_void: a_date /= Void
 		do
@@ -105,7 +105,7 @@ feature -- Conversion
 			valid_date_string: is_year_month (Result)
 		end
 
-	zoned_year_month_to_string (a_date: DT_FIXED_OFFSET_ZONED_DATE): STRING is
+	zoned_year_month_to_string (a_date: DT_FIXED_OFFSET_ZONED_DATE): STRING
 			-- Date formatted as gYearMonth with time zone
 		require
 			a_date_not_void: a_date /= Void
@@ -117,7 +117,7 @@ feature -- Conversion
 			valid_date_string: is_zoned_year_month (Result)
 		end
 
-	year_to_string (a_date: DT_DATE): STRING is
+	year_to_string (a_date: DT_DATE): STRING
 			-- Date formatted as gYear
 		require
 			a_date_not_void: a_date /= Void
@@ -128,7 +128,7 @@ feature -- Conversion
 			valid_date_string: is_year (Result)
 		end
 
-	zoned_year_to_string (a_date: DT_FIXED_OFFSET_ZONED_DATE): STRING is
+	zoned_year_to_string (a_date: DT_FIXED_OFFSET_ZONED_DATE): STRING
 			-- Date formatted as gYear with time zone
 		require
 			a_date_not_void: a_date /= Void
@@ -140,7 +140,7 @@ feature -- Conversion
 			valid_date_string: is_zoned_year (Result)
 		end
 
-	month_day_to_string (a_date: DT_DATE): STRING is
+	month_day_to_string (a_date: DT_DATE): STRING
 			-- Date formatted as gMonthDay
 		require
 			a_date_not_void: a_date /= Void
@@ -153,7 +153,7 @@ feature -- Conversion
 			valid_date_string: is_month_day (Result)
 		end
 
-	zoned_month_day_to_string (a_date: DT_FIXED_OFFSET_ZONED_DATE): STRING is
+	zoned_month_day_to_string (a_date: DT_FIXED_OFFSET_ZONED_DATE): STRING
 			-- Date formatted as gMonthDay with time zone
 		require
 			a_date_not_void: a_date /= Void
@@ -165,7 +165,7 @@ feature -- Conversion
 			valid_date_string: is_zoned_month_day (Result)
 		end
 
-	day_to_string (a_date: DT_DATE): STRING is
+	day_to_string (a_date: DT_DATE): STRING
 			-- Date formatted as gDay
 		require
 			a_date_not_void: a_date /= Void
@@ -176,7 +176,7 @@ feature -- Conversion
 			valid_date_string: is_day (Result)
 		end
 
-	zoned_day_to_string (a_date: DT_FIXED_OFFSET_ZONED_DATE): STRING is
+	zoned_day_to_string (a_date: DT_FIXED_OFFSET_ZONED_DATE): STRING
 			-- Date formatted as gDay with time zone
 		require
 			a_date_not_void: a_date /= Void
@@ -188,7 +188,7 @@ feature -- Conversion
 			valid_date_string: is_zoned_day (Result)
 		end
 
-	month_to_string (a_date: DT_DATE): STRING is
+	month_to_string (a_date: DT_DATE): STRING
 			-- Date formatted as gMonth
 		require
 			a_date_not_void: a_date /= Void
@@ -199,7 +199,7 @@ feature -- Conversion
 			valid_date_string: is_month (Result)
 		end
 
-	zoned_month_to_string (a_date: DT_FIXED_OFFSET_ZONED_DATE): STRING is
+	zoned_month_to_string (a_date: DT_FIXED_OFFSET_ZONED_DATE): STRING
 			-- Date formatted as gMonth with time zone
 		require
 			a_date_not_void: a_date /= Void
@@ -213,7 +213,7 @@ feature -- Conversion
 
 feature {NONE} -- Implementation
 
-	year_string (a_date: DT_DATE): STRING is
+	year_string (a_date: DT_DATE): STRING
 			-- New string describing year
 		require
 			a_date_not_void: a_date /= Void
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 			at_least_four_characters: Result.count >= 4
 		end
 
-	month_string (a_date: DT_DATE): STRING is
+	month_string (a_date: DT_DATE): STRING
 			-- New string describing month
 		require
 			a_date_not_void: a_date /= Void
@@ -267,7 +267,7 @@ feature {NONE} -- Implementation
 			two_characters: Result.count = 2
 		end
 
-	day_string (a_date: DT_DATE): STRING is
+	day_string (a_date: DT_DATE): STRING
 			-- New string describing day
 		require
 			a_date_not_void: a_date /= Void
@@ -285,7 +285,7 @@ feature {NONE} -- Implementation
 			two_characters: Result.count = 2
 		end
 
-	time_part_to_string (a_time_part: INTEGER): STRING is
+	time_part_to_string (a_time_part: INTEGER): STRING
 			-- New string formatting `a_time_part'
 		require
 			a_time_part_non_negative: a_time_part >= 0
@@ -303,7 +303,7 @@ feature {NONE} -- Implementation
 			two_characters: Result.count = 2
 		end
 
-	zone (a_time_zone: DT_FIXED_OFFSET_TIME_ZONE): STRING is
+	zone (a_time_zone: DT_FIXED_OFFSET_TIME_ZONE): STRING
 			-- New string describing time zone
 		require
 			a_time_zone_not_void: a_time_zone /= Void
@@ -326,7 +326,7 @@ feature {NONE} -- Implementation
 			zone_not_empty: not Result.is_empty
 		end
 
-	utc_offset: DT_TIME_DURATION is
+	utc_offset: DT_TIME_DURATION
 			-- Offset for UTC
 		once
 			create Result.make_canonical (0)

@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_global_variable_count: INTEGER) is
+	make (a_global_variable_count: INTEGER)
 			-- Establish invariant.
 		require
 			positive_global_count: a_global_variable_count >= 0
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	global_variable_value (a_slot_number: INTEGER): XM_XPATH_VALUE is
+	global_variable_value (a_slot_number: INTEGER): XM_XPATH_VALUE
 		require
 			valid_slot_number: a_slot_number > 0 and then a_slot_number <= global_variable_count
 		do
@@ -45,7 +45,7 @@ feature -- Access
 			value_void_if_not_yet_bound: True
 		end
 
-	global_parameter_value (a_fingerprint: INTEGER): XM_XPATH_VALUE is
+	global_parameter_value (a_fingerprint: INTEGER): XM_XPATH_VALUE
 		require
 			is_global_parameter_supplied (a_fingerprint)
 		do
@@ -55,7 +55,7 @@ feature -- Access
 		end
 
 feature -- Measurement
-	
+
 	global_variable_count: INTEGER
 			-- Number of global variables
 
@@ -64,7 +64,7 @@ feature -- Status report
 	is_circularity_error: BOOLEAN
 			-- Has a circular definition occurred
 
-	is_evaluated (a_slot_number: INTEGER): BOOLEAN is
+	is_evaluated (a_slot_number: INTEGER): BOOLEAN
 			-- Has global variable `a_slot_number' been evaluated yet?
 		require
 			valid_slot_number: a_slot_number > 0 and then a_slot_number <= global_variable_count
@@ -72,7 +72,7 @@ feature -- Status report
 			Result := global_variables.item (a_slot_number) /= Void
 		end
 
-	is_global_parameter_supplied (a_fingerprint: INTEGER): BOOLEAN is
+	is_global_parameter_supplied (a_fingerprint: INTEGER): BOOLEAN
 			-- Does `a_fingerprint' represent a supplied global parameter?
 		do
 			if global_parameters /= Void then
@@ -87,7 +87,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_executing (a_slot_number: INTEGER; executing: BOOLEAN) is
+	set_executing (a_slot_number: INTEGER; executing: BOOLEAN)
 			-- Set/Unset a flag to indicate that `a_slot_number' is currently being evaluated.
 		require
 			valid_slot_number: a_slot_number > 0 and then a_slot_number <= global_variable_count
@@ -105,7 +105,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	define_global_variable (a_slot_number: INTEGER; a_value: XM_XPATH_VALUE) is
+	define_global_variable (a_slot_number: INTEGER; a_value: XM_XPATH_VALUE)
 			-- Define global variable.
 		require
 			valid_slot_number: a_slot_number > 0 and then a_slot_number <= global_variable_count
@@ -117,7 +117,7 @@ feature -- Element change
 			global_variable_defined: is_evaluated (a_slot_number)
 		end
 
-	define_global_parameters (a_parameter_set: XM_XSLT_PARAMETER_SET) is
+	define_global_parameters (a_parameter_set: XM_XSLT_PARAMETER_SET)
 			-- Define global parameters (e.g. as suppiled on command line by user).
 		require
 			parameter_set_not_void: a_parameter_set /= Void
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 	busy_globals: ARRAY [BOOLEAN]
 			-- Flags used to indicate a global variable is being defined
 
-	allocate_globals (a_global_variable_count: INTEGER) is
+	allocate_globals (a_global_variable_count: INTEGER)
 			-- Allocate space for global variables
 		require
 			strictly_positive_global_count: a_global_variable_count > 0
@@ -153,4 +153,4 @@ invariant
 	busy_globals_not_void: busy_globals /= Void and then busy_globals.count = global_variables.count
 
 end
-	
+

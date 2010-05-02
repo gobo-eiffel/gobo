@@ -40,7 +40,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_filename: STRING) is
+	make (a_filename: STRING)
 			-- Create a new Eiffel scanner.
 		require
 			a_filename_not_void: a_filename /= Void
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset scanner before scanning next input.
 		do
 			last_literal_start := 1
@@ -76,7 +76,7 @@ feature -- Access
 	group: ET_GROUP
 			-- Group to which the class being parsed belongs
 
-	current_universe: ET_UNIVERSE is
+	current_universe: ET_UNIVERSE
 			-- Universe to which the class being parsed belongs
 		do
 			Result := group.universe
@@ -84,7 +84,7 @@ feature -- Access
 			current_universe_not_void: Result /= Void
 		end
 
-	current_system: ET_SYSTEM is
+	current_system: ET_SYSTEM
 			-- Surrounding Eiffel system
 		do
 			Result := group.current_system
@@ -92,7 +92,7 @@ feature -- Access
 			current_system_not_void: Result /= Void
 		end
 
-	current_position: ET_POSITION is
+	current_position: ET_POSITION
 			-- Current position
 			-- (Create a new object at each call.)
 		do
@@ -101,7 +101,7 @@ feature -- Access
 			current_position_not_void: Result /= Void
 		end
 
-	ast_factory: ET_AST_FACTORY is
+	ast_factory: ET_AST_FACTORY
 			-- Abstract Syntax Tree factory
 		do
 			Result := current_system.ast_factory
@@ -111,14 +111,14 @@ feature -- Access
 
 feature -- Status report
 
-	use_attached_keyword: BOOLEAN is
+	use_attached_keyword: BOOLEAN
 			-- Should 'attached' be considered as
 			-- a keyword (otherwise identifier)?
 		do
 			Result := current_system.use_attached_keyword
 		end
 
-	use_attribute_keyword: BOOLEAN is
+	use_attribute_keyword: BOOLEAN
 			-- Should 'attribute' be considered as
 			-- a keyword (otherwise identifier)?
 		do
@@ -129,14 +129,14 @@ feature -- Status report
 			end
 		end
 
-	use_detachable_keyword: BOOLEAN is
+	use_detachable_keyword: BOOLEAN
 			-- Should 'detachable' be considered as
 			-- a keyword (otherwise identifier)?
 		do
 			Result := current_system.use_detachable_keyword
 		end
 
-	use_note_keyword: BOOLEAN is
+	use_note_keyword: BOOLEAN
 			-- Should 'note' be considered as
 			-- a keyword (otherwise identifier)?
 		do
@@ -147,7 +147,7 @@ feature -- Status report
 			end
 		end
 
-	use_reference_keyword: BOOLEAN is
+	use_reference_keyword: BOOLEAN
 			-- Should 'reference' be considered as
 			-- a keyword (otherwise identifier)?
 		do
@@ -156,7 +156,7 @@ feature -- Status report
 
 feature -- Error handling
 
-	error_handler: ET_ERROR_HANDLER is
+	error_handler: ET_ERROR_HANDLER
 			-- Error handler
 		do
 			Result := current_system.error_handler
@@ -164,14 +164,14 @@ feature -- Error handling
 			error_handler_not_void: Result /= Void
 		end
 
-	fatal_error (a_message: STRING) is
+	fatal_error (a_message: STRING)
 			-- A fatal error occurred.
 			-- Print error message.
 		do
 			report_syntax_error (current_position)
 		end
 
-	report_syntax_error (a_position: ET_POSITION) is
+	report_syntax_error (a_position: ET_POSITION)
 			-- Report a syntax error at position `a_position'.
 		require
 			a_position_not_void: a_position /= Void
@@ -180,14 +180,14 @@ feature -- Error handling
 			error_handler.report_syntax_error (filename, a_position)
 		end
 
-	set_syntax_error is
+	set_syntax_error
 			-- Set syntax error flag in class being parsed, if already known.
 		do
 		end
 
 feature -- Cluster dependences
 
-	build_provider_constraint (a_cluster: ET_CLUSTER) is
+	build_provider_constraint (a_cluster: ET_CLUSTER)
 			-- Build `provider_constraint' of `a_cluster'.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -249,7 +249,7 @@ feature -- Cluster dependences
 			group := old_group
 		end
 
-	build_dependant_constraint (a_cluster: ET_CLUSTER) is
+	build_dependant_constraint (a_cluster: ET_CLUSTER)
 			-- Build `dependant_constraint' of `a_cluster'.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -313,7 +313,7 @@ feature -- Cluster dependences
 
 feature -- Tokens
 
-	has_break: BOOLEAN is
+	has_break: BOOLEAN
 			-- Has a break been scanned?
 		do
 			Result := last_break_end > last_text_count
@@ -321,7 +321,7 @@ feature -- Tokens
 			definition: Result = (last_break_end > last_text_count)
 		end
 
-	has_comment: BOOLEAN is
+	has_comment: BOOLEAN
 			-- Has a comment been scanned?
 		do
 			Result := last_comment_end > last_text_count
@@ -329,7 +329,7 @@ feature -- Tokens
 			definition: Result = (last_comment_end > last_text_count)
 		end
 
-	last_literal_count: INTEGER is
+	last_literal_count: INTEGER
 			-- Number of characters in `last_literal'
 		do
 			Result := last_literal_end - last_literal_start + 1
@@ -338,7 +338,7 @@ feature -- Tokens
 			definition: Result = last_literal.count
 		end
 
-	last_literal: STRING is
+	last_literal: STRING
 			-- Last literal scanned
 		do
 			Result := text_substring (last_literal_start, last_literal_end)
@@ -346,7 +346,7 @@ feature -- Tokens
 			last_literal_not_void: Result /= Void
 		end
 
-	last_identifier: ET_IDENTIFIER is
+	last_identifier: ET_IDENTIFIER
 			-- Last identifier scanned
 		require
 			last_literal_not_empty: last_literal_count > 0
@@ -378,7 +378,7 @@ feature -- Tokens
 			last_identifier_not_void: Result /= Void
 		end
 
-	last_c3_character_constant: ET_C3_CHARACTER_CONSTANT is
+	last_c3_character_constant: ET_C3_CHARACTER_CONSTANT
 			-- Last character constant scanned of the form '%/code/'
 		require
 			-- valid_literal: ([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]).recognizes (last_literal)
@@ -402,7 +402,7 @@ feature -- Tokens
 			last_c3_character_constant_not_void: Result /= Void
 		end
 
-	last_special_manifest_string: ET_SPECIAL_MANIFEST_STRING is
+	last_special_manifest_string: ET_SPECIAL_MANIFEST_STRING
 			-- Last special manifest string scanned
 		require
 			-- valid_literal: (([^"%\n]|%([^\n]|\/([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\/|[ \t\r]*\n[ \t\r\n]*%))*).recognizes (last_literal)
@@ -526,7 +526,7 @@ feature -- Tokens
 			last_special_manifest_string_not_void: Result /= Void
 		end
 
-	last_verbatim_string (a_marker, an_open, a_close: STRING; a_left_aligned: BOOLEAN): ET_VERBATIM_STRING is
+	last_verbatim_string (a_marker, an_open, a_close: STRING; a_left_aligned: BOOLEAN): ET_VERBATIM_STRING
 			-- Last verbatim string scanned
 		require
 			a_marker_not_void: a_marker /= Void
@@ -618,7 +618,7 @@ feature -- Tokens
 			last_verbatim_string_not_void: Result /= Void
 		end
 
-	last_break: STRING is
+	last_break: STRING
 			-- Last break scanned
 		require
 			has_break: has_break
@@ -629,7 +629,7 @@ feature -- Tokens
 			last_break_not_empty: Result.count > 0
 		end
 
-	last_comment: STRING is
+	last_comment: STRING
 			-- Last comment scanned
 		require
 			has_comment: has_comment
@@ -640,7 +640,7 @@ feature -- Tokens
 			last_comment_not_empty: Result.count > 0
 		end
 
-	text: STRING is
+	text: STRING
 			-- Text of last token read
 			-- (Share strings when already scanned.)
 		local
@@ -659,7 +659,7 @@ feature -- Tokens
 			end
 		end
 
-	text_substring (s, e: INTEGER): STRING is
+	text_substring (s, e: INTEGER): STRING
 			-- Substring of last token read
 			-- (Share strings when already scanned.)
 		local
@@ -697,7 +697,7 @@ feature {NONE} -- Positions
 
 feature {NONE} -- String handler
 
-	strings: DS_HASH_TABLE [INTEGER, STRING] is
+	strings: DS_HASH_TABLE [INTEGER, STRING]
 			-- Strings known by the current scanner, and the associated
 			-- hash codes when they are used as identifier
 		once
@@ -1070,7 +1070,7 @@ feature {NONE} -- String handler
 			no_void_string: not Result.has_void
 		end
 
-	string_buffer: STRING is
+	string_buffer: STRING
 			-- String buffer
 		once
 			create Result.make (30)
@@ -1095,7 +1095,7 @@ feature {NONE} -- Verbatim strings
 	verbatim_close_white_characters: STRING
 			-- White characters before ]xyz"
 
-	is_verbatim_string_closer (a_start, an_end: INTEGER): BOOLEAN is
+	is_verbatim_string_closer (a_start, an_end: INTEGER): BOOLEAN
 			-- Is string between indexes `a_start' and `an_end' the
 			-- end marker of the verbatim string currently scanned?
 		require
@@ -1149,74 +1149,74 @@ feature {NONE} -- Breaks
 			-- Kind of break being parsed when reading the
 			-- following break or comment
 
-	identifier_break: INTEGER is 1
+	identifier_break: INTEGER = 1
 			-- Internal code corresponding to a break that
 			-- follows an identifier
 
-	freeop_break: INTEGER is 2
+	freeop_break: INTEGER = 2
 			-- Internal code corresponding to a break that
 			-- follows a freeop
 
-	character_break: INTEGER is 3
+	character_break: INTEGER = 3
 			-- Internal code corresponding to a break that
 			-- follows a character
 
-	integer_break: INTEGER is 4
+	integer_break: INTEGER = 4
 			-- Internal code corresponding to a break that
 			-- follows an integer
 
-	uinteger_break: INTEGER is 5
+	uinteger_break: INTEGER = 5
 			-- Internal code corresponding to a break that
 			-- follows an integer with underscores
 
-	hinteger_break: INTEGER is 6
+	hinteger_break: INTEGER = 6
 			-- Internal code corresponding to a break that
 			-- follows an hexadecimal integer
 
-	ointeger_break: INTEGER is 7
+	ointeger_break: INTEGER = 7
 			-- Internal code corresponding to a break that
 			-- follows an octal integer
 
-	binteger_break: INTEGER is 8
+	binteger_break: INTEGER = 8
 			-- Internal code corresponding to a break that
 			-- follows binary integer
 
-	real_break: INTEGER is 9
+	real_break: INTEGER = 9
 			-- Internal code corresponding to a break that
 			-- follows a real
 
-	ureal_break: INTEGER is 10
+	ureal_break: INTEGER = 10
 			-- Internal code corresponding to a break that
 			-- follows a real with underscores
 
-	bit_break: INTEGER is 11
+	bit_break: INTEGER = 11
 			-- Internal code corresponding to a break that
 			-- follows a bit
 
-	string_break: INTEGER is 12
+	string_break: INTEGER = 12
 			-- Internal code corresponding to a break that
 			-- follows a manifest string
 
-	str_freeop_break: INTEGER is 13
+	str_freeop_break: INTEGER = 13
 			-- Internal code corresponding to a break that
 			-- follows a manifest string containing the
 			-- name of a freeop
 
-	str_special_break: INTEGER is 14
+	str_special_break: INTEGER = 14
 			-- Internal code corresponding to a break that
 			-- follows a manifest string with special characters
 
-	str_verbatim_break: INTEGER is 15
+	str_verbatim_break: INTEGER = 15
 			-- Internal code corresponding to a break that
 			-- follows a verbatim manifest string
 
-	str_left_aligned_verbatim_break: INTEGER is 16
+	str_left_aligned_verbatim_break: INTEGER = 16
 			-- Internal code corresponding to a break that
 			-- follows a left-aligned verbatim manifest string
 
 feature {NONE} -- Processing
 
-	process_identifier (nb: INTEGER) is
+	process_identifier (nb: INTEGER)
 			-- Process identifier with `nb' characters.
 			-- Detect keywords.
 		require
@@ -2983,7 +2983,7 @@ feature {NONE} -- Processing
 			end
 		end
 
-	process_one_char_symbol (c: CHARACTER) is
+	process_one_char_symbol (c: CHARACTER)
 			-- Process Eiffel symbol with made up of only
 			-- one character `c'.
 		require
@@ -3066,7 +3066,7 @@ feature {NONE} -- Processing
 			end
 		end
 
-	process_two_char_symbol (c1, c2: CHARACTER) is
+	process_two_char_symbol (c1, c2: CHARACTER)
 			-- Process Eiffel symbol with made up of exactly
 			-- two characters `c1' and `c2'.
 		require
@@ -3143,7 +3143,7 @@ feature {NONE} -- Processing
 			end
 		end
 
-	process_c1_character_constant (c: CHARACTER) is
+	process_c1_character_constant (c: CHARACTER)
 			-- Process character constant of the form 'A'.
 		require
 			c1_char: text_count >= 3
@@ -3164,7 +3164,7 @@ feature {NONE} -- Processing
 			last_et_character_constant_value := ast_factory.new_c1_character_constant (c, Current)
 		end
 
-	process_c2_character_constant (c: CHARACTER) is
+	process_c2_character_constant (c: CHARACTER)
 			-- Process character constant of the form '%A'.
 		require
 			c2_char: text_count >= 4
@@ -3357,7 +3357,7 @@ feature {NONE} -- Processing
 			last_et_character_constant_value := ast_factory.new_c2_character_constant (a_value, Current)
 		end
 
-	process_regular_manifest_string (nb: INTEGER) is
+	process_regular_manifest_string (nb: INTEGER)
 			-- Process regular manifest string of the form "..."
 			-- with length `nb' (including the two quotes).
 		require
@@ -3600,7 +3600,7 @@ feature {NONE} -- Processing
 			last_et_manifest_string_value := ast_factory.new_regular_manifest_string (Current)
 		end
 
-	process_break is
+	process_break
 			-- Process break.
 		do
 			inspect break_kind
@@ -3666,7 +3666,7 @@ feature {NONE} -- Processing
 
 feature {NONE} -- Implementation
 
-	tmp_file: KL_TEXT_INPUT_FILE is
+	tmp_file: KL_TEXT_INPUT_FILE
 			-- Temporary file object
 		do
 			Result := shared_file
@@ -3678,7 +3678,7 @@ feature {NONE} -- Implementation
 			file_closed: Result.is_closed
 		end
 
-	shared_file: KL_TEXT_INPUT_FILE is
+	shared_file: KL_TEXT_INPUT_FILE
 			-- Shared file object
 		once
 			create Result.make (dummy_name)
@@ -3686,7 +3686,7 @@ feature {NONE} -- Implementation
 			file_not_void: Result /= Void
 		end
 
-	dummy_name: STRING is "dummy"
+	dummy_name: STRING = "dummy"
 			-- Dummy name
 
 invariant

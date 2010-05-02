@@ -14,11 +14,11 @@ class XM_XSLT_SHARED_ANY_NODE_TEST
 
 feature -- Access
 
-	any_xslt_node_test: XM_XSLT_ANY_NODE_TEST is
+	any_xslt_node_test: XM_XSLT_ANY_NODE_TEST
 			-- Singleton
 		once
 			create Result.make
 		end
 
 end
-	
+

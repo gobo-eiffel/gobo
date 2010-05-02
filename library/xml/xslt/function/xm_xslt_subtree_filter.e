@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initializaion
 
-	make (a_node: like origin) is
+	make (a_node: like origin)
 			-- Initialize `Current'.
 		require
 			a_node_not_void: a_node /= Void
@@ -37,7 +37,7 @@ feature -- Access
 	origin: XM_XPATH_NODE
 			-- Root of sub-tree
 
-	mapped_node (a_node: XM_XPATH_NODE): XM_XPATH_NODE is
+	mapped_node (a_node: XM_XPATH_NODE): XM_XPATH_NODE
 			-- `a_node' mapped to zero or one nodes
 		do
 			if a_node = Void then

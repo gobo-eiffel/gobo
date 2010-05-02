@@ -31,7 +31,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create new formatter with default escape character '$'.
 		do
 			make_with_escape ('$')
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			escape_character_set: escape_character = '$'
 		end
 
-	make_with_escape (c: CHARACTER) is
+	make_with_escape (c: CHARACTER)
 			-- Create new formatter with `c' as escape character.
 		do
 			escape_character := c
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	valid_format_and_parameters (a_format: STRING; a_parameters: detachable ARRAY [detachable ANY]): BOOLEAN is
+	valid_format_and_parameters (a_format: STRING; a_parameters: detachable ARRAY [detachable ANY]): BOOLEAN
 			-- Does `a_format' contain valid formatting specifications and
 			-- do `a_parameters' comply to these formatting specifications?
 		require
@@ -67,7 +67,7 @@ feature -- Status report
 
 feature -- Formatting
 
-	format_to (a_format: STRING; a_parameters: ARRAY [ANY]; a_stream: KI_CHARACTER_OUTPUT_STREAM) is
+	format_to (a_format: STRING; a_parameters: ARRAY [ANY]; a_stream: KI_CHARACTER_OUTPUT_STREAM)
 			-- Append to `a_stream' the string `a_format' where the
 			-- formatting specifications have been replaced by their
 			-- corresponding formatted parameters from `a_parameters'.
@@ -87,7 +87,7 @@ feature -- Formatting
 			do_format_to (a_format, a_parameters, a_stream)
 		end
 
-	format (a_format: STRING; a_parameters: ARRAY [ANY]): STRING is
+	format (a_format: STRING; a_parameters: ARRAY [ANY]): STRING
 			-- Copy of `a_format' where the formatting specifications
 			-- have been replaced by their corresponding formatted
 			-- parameters from `a_parameters'
@@ -118,7 +118,7 @@ feature -- Formatting
 			same_type: ANY_.same_types (a_format, Result)
 		end
 
-	format_single (a_format: STRING; a_parameter: ANY): STRING is
+	format_single (a_format: STRING; a_parameter: ANY): STRING
 			-- Copy of `a_format' where the single formatting specification
 			-- have been replaced by formatted version of `a_parameter'
 			--
@@ -149,7 +149,7 @@ feature -- Formatting
 
 feature {NONE} -- Formatting
 
-	do_format_to (a_format: STRING; a_parameters: detachable ARRAY [detachable ANY]; a_stream: KI_CHARACTER_OUTPUT_STREAM) is
+	do_format_to (a_format: STRING; a_parameters: detachable ARRAY [detachable ANY]; a_stream: KI_CHARACTER_OUTPUT_STREAM)
 			-- Append to `a_stream' the string `a_format' where the
 			-- formatting specifications have been replaced by their
 			-- corresponding formatted parameters from `a_parameters'.
@@ -507,7 +507,7 @@ feature {NONE} -- Formatting
 
 feature {NONE} -- Parameter formatters
 
-	internal_parameter_formatter (a_typechar: CHARACTER): detachable ST_PARAMETER_FORMATTER is
+	internal_parameter_formatter (a_typechar: CHARACTER): detachable ST_PARAMETER_FORMATTER
 			-- Formatter for parameter of type `a_typechar';
 			-- Void if no such parameter formatter
 		deferred
@@ -515,22 +515,22 @@ feature {NONE} -- Parameter formatters
 
 feature {NONE} -- Constants
 
-	Left_flag: CHARACTER is '-'
+	Left_flag: CHARACTER = '-'
 		-- Flag
 
-	Center_flag: CHARACTER is '^'
+	Center_flag: CHARACTER = '^'
 		-- Flag
 
-	Zero_padding_flag: CHARACTER is '0'
+	Zero_padding_flag: CHARACTER = '0'
 		-- Flag
 
-	Plus_sign_flag: CHARACTER is '+'
+	Plus_sign_flag: CHARACTER = '+'
 		-- Flag
 
-	Space_flag: CHARACTER is ' '
+	Space_flag: CHARACTER = ' '
 		-- Flag
 
-	Dot_marker: CHARACTER is '.'
+	Dot_marker: CHARACTER = '.'
 			-- Character that separates width from precision
 
 	escape_character: CHARACTER
@@ -542,11 +542,11 @@ feature {NONE} -- Constants
 	single_parameter: ARRAY [detachable ANY]
 			-- Single parameter holder
 
-	empty_string: STRING is ""
+	empty_string: STRING = ""
 
 feature {NONE} -- Error handling
 
-	has_error: BOOLEAN is
+	has_error: BOOLEAN
 			-- Has an error been detected?
 		do
 			Result := error /= Void
@@ -559,7 +559,7 @@ feature {NONE} -- Error handling
 			-- invalid or if the parameters did not conform to the
 			-- specification
 
-	set_error (a_message: STRING) is
+	set_error (a_message: STRING)
 			-- Set `error' to `a_message'.
 		require
 			a_message_not_void: a_message /= Void
@@ -572,7 +572,7 @@ feature {NONE} -- Error handling
 			has_error: has_error
 		end
 
-	reset_error is
+	reset_error
 			-- Reset `error'.
 		do
 			error := Void

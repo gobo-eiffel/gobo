@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_function: like containing_function) is
+	make (a_function: like containing_function)
 			-- Initialize `Current'.
 		require
 			a_function_not_void: a_function /= Void
@@ -40,10 +40,10 @@ feature -- Access
 
 	containing_function: XM_XSLT_COMPILED_USER_FUNCTION
 			-- Parent xsl:function of `body'
-	
+
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_function: like containing_function
@@ -100,7 +100,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over the values of a sequence
 		local
 			l_function: like containing_function
@@ -156,7 +156,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over a node sequence
 		local
 			l_function: like containing_function
@@ -212,7 +212,7 @@ feature -- Evaluation
 			end
 		end
 
-	generate_events (a_context: XM_XPATH_CONTEXT) is
+	generate_events (a_context: XM_XPATH_CONTEXT)
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_function: like containing_function
@@ -259,13 +259,13 @@ feature -- Evaluation
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	display_operator: STRING is
+	display_operator: STRING
 			-- Format `operator' for display
 		do
 			Result := "tail-recursive function body"
 		end
 
-	native_implementations: INTEGER is
+	native_implementations: INTEGER
 			-- Natively-supported evaluation routines
 		do
 			Result := base_expression.native_implementations

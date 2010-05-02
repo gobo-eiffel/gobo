@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_left: like left; an_operator: like operator; a_right: like right) is
+	make (a_left: like left; an_operator: like operator; a_right: like right)
 			-- Create a new equality expression.
 		require
 			a_left_not_void: a_left /= Void
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset expression as it was just after it was last parsed.
 		local
 			l_convert: ET_CONVERT_EXPRESSION
@@ -67,7 +67,7 @@ feature -- Access
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_equality_expression (Current)

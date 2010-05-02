@@ -36,13 +36,13 @@ create {XM_XSLT_NODE_FACTORY}
 
 feature -- Access
 
-	may_contain_fallback: BOOLEAN is
+	may_contain_fallback: BOOLEAN
 			-- Is `Current' allowed to contain an xsl:fallback?
 		do
 			Result := True
 		end
 
-	returned_item_type: XM_XPATH_ITEM_TYPE is
+	returned_item_type: XM_XPATH_ITEM_TYPE
 			-- Type of item returned by this instruction
 		do
 			Result := common_child_item_type
@@ -50,7 +50,7 @@ feature -- Access
 
 feature -- Element change
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -110,7 +110,7 @@ feature -- Element change
 			attributes_prepared := True
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 		local
 			l_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -166,7 +166,7 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (an_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		local
 			l_matching_block, l_non_matching_block: XM_XPATH_EXPRESSION
@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 	non_matching_substring: XM_XSLT_NON_MATCHING_SUBSTRING
 			-- Non-matching substring child
 
-	check_regex_and_flags is
+	check_regex_and_flags
 			-- Check constraints upon `regex_expression' and `flags_expression'.
 		require
 			regex_expression_is_string: regex_expression /= Void and then regex_expression.is_string_value
@@ -268,7 +268,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	validate_stage_2 is
+	validate_stage_2
 			-- Continue validation.
 		require
 			nor_errors_yet: not any_compile_errors

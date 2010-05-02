@@ -22,15 +22,15 @@ create
 
 feature -- Access
 
-	program_name: STRING is "ascii2ps"
+	program_name: STRING = "ascii2ps"
 			-- Program name
 
-	library_name: STRING is "lexical"
+	library_name: STRING = "lexical"
 			-- Library name of example
 
 feature -- Test
 
-	test_ascii2ps is
+	test_ascii2ps
 			-- Test 'ascii2ps' example.
 		local
 			ascii2ps_exe: STRING
@@ -53,7 +53,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	sample_dirname: STRING is
+	sample_dirname: STRING
 			-- Name of directory where sample files are located
 		once
 			Result := file_system.nested_pathname ("${GOBO}", <<"test", "example", "lexical", "data">>)
@@ -63,7 +63,7 @@ feature {NONE} -- Implementation
 			sample_dirname_not_empty: Result.count > 0
 		end
 
-	sample_e_filename: STRING is
+	sample_e_filename: STRING
 			-- Name of sample Eiffel file
 		once
 			Result := file_system.pathname (sample_dirname, "sample.e")
@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 			sample_e_filename_not_empty: Result.count > 0
 		end
 
-	sample_ps_filename: STRING is
+	sample_ps_filename: STRING
 			-- Name of sample Postscrit file
 		once
 			Result := file_system.pathname (sample_dirname, "sample.ps")

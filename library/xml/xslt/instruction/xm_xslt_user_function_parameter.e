@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_required_type: XM_XPATH_SEQUENCE_TYPE; a_slot_number: INTEGER; a_variable_name: STRING) is
+	make (a_required_type: XM_XPATH_SEQUENCE_TYPE; a_slot_number: INTEGER; a_variable_name: STRING)
 			-- Establish invariant.
 		require
 			required_type_not_void: a_required_type /= Void
@@ -57,8 +57,8 @@ feature -- Access
 			-- Local variable slot number
 
 feature -- Status report
-	
-	is_global: BOOLEAN is
+
+	is_global: BOOLEAN
 			-- Is binding global or local?
 		do
 			-- Result := False
@@ -66,15 +66,15 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_variable (a_context: XM_XPATH_CONTEXT) is 
+	evaluate_variable (a_context: XM_XPATH_CONTEXT)
 			-- Evaluate variable
 		do
 			last_evaluated_binding := a_context.evaluated_local_variable (slot_number)
 		end
 
 feature -- Element change
-	
-	set_reference_count (some_references: DS_ARRAYED_LIST [XM_XPATH_VARIABLE_REFERENCE]) is
+
+	set_reference_count (some_references: DS_ARRAYED_LIST [XM_XPATH_VARIABLE_REFERENCE])
 			-- Set `reference_count'.
 		require
 			references_not_void: some_references /= Void

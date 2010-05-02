@@ -18,7 +18,7 @@ deferred class XM_XPATH_ITEM_MAPPING_FUNCTION
 
 feature -- Access
 
-	mapped_item (a_item: XM_XPATH_ITEM): XM_XPATH_ITEM is
+	mapped_item (a_item: XM_XPATH_ITEM): XM_XPATH_ITEM
 			-- `a_item' mapped to zero or one items
 		require
 			a_item_may_be_void: True

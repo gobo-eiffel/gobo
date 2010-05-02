@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_date: like date; a_time_zone: like time_zone) is
+	make (a_date: like date; a_time_zone: like time_zone)
 			-- Create a new date `a_date' in time zone `a_time_zone'.
 		require
 			date_not_void: a_date /= Void
@@ -57,7 +57,7 @@ feature -- Access
 	time_zone: DT_FIXED_OFFSET_TIME_ZONE
 			-- Time zone
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code
 		do
 			Result := date.hash_code
@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `Current' date equal to `other'?
 		do
 			if ANY_.same_types (Current, other) then
@@ -73,7 +73,7 @@ feature -- Comparison
 			end
 		end
 
-	same_date (other: DT_FIXED_OFFSET_ZONED_DATE): BOOLEAN is
+	same_date (other: DT_FIXED_OFFSET_ZONED_DATE): BOOLEAN
 			-- Is `Current' date equal to `other'?
 		require
 			other_not_void: other /= Void
@@ -83,7 +83,7 @@ feature -- Comparison
 
 feature -- Conversion
 
-	date_to_utc: DT_DATE is
+	date_to_utc: DT_DATE
 			-- Convert `date' into the same date but relative to UTC.
 			-- (Create a new date object at each call.)
 		do
@@ -97,7 +97,7 @@ feature -- Conversion
 
 feature {NONE} -- Implementation
 
-	tmp_date_time: DT_DATE_TIME is
+	tmp_date_time: DT_DATE_TIME
 			-- Temporary date-time used for time zone conversion
 		once
 			create Result.make (1970, 1, 1, 0, 0, 0)

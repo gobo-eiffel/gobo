@@ -26,10 +26,10 @@ create
 
 	make_null,
 	set_next
-	
+
 feature -- Tag
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Print start of start tag.
 		do
 			namespace := a_namespace
@@ -37,15 +37,15 @@ feature -- Tag
 			namespace := Void
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
 			-- Print attribute.
 		do
 			namespace := a_namespace
 			Precursor (a_namespace, a_prefix, a_local_part, a_value)
 			namespace := Void
 		end
-		
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Print start of start tag.
 		do
 			namespace := a_namespace
@@ -59,7 +59,7 @@ feature {NONE} -- Name output
 	namespace: STRING
 			-- Namespace stored for output
 
-	output_name (a_prefix: STRING; a_local_part: STRING) is
+	output_name (a_prefix: STRING; a_local_part: STRING)
 			-- Output prefix:name, with namespace annotation.
 		do
 			if namespace /= Void and then namespace.count > 0 then

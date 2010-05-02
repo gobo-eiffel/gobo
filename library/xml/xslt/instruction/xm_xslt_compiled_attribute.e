@@ -22,7 +22,7 @@ inherit
 
 	XM_XPATH_RECEIVER_OPTIONS
 		export {NONE} all end
-		
+
 	XM_XPATH_SHARED_NODE_KIND_TESTS
 		export {NONE} all end
 
@@ -35,7 +35,7 @@ create
 feature {NONE} -- Initialization
 
 	make (an_executable: XM_XSLT_EXECUTABLE; an_attribute_name, a_namespace: XM_XPATH_EXPRESSION; a_namespace_context: XM_XSLT_NAMESPACE_CONTEXT;
-			a_validation_action: INTEGER; a_simple_type: XM_XPATH_SCHEMA_TYPE; a_type_annotation: INTEGER) is
+			a_validation_action: INTEGER; a_simple_type: XM_XPATH_SCHEMA_TYPE; a_type_annotation: INTEGER)
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
@@ -65,8 +65,8 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
-	item_type: XM_XPATH_ITEM_TYPE is
+
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, when known
 		do
 			Result := attribute_node_kind_test
@@ -76,7 +76,7 @@ feature -- Access
 			end
 		end
 
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions of `Current'
 		local
 			an_index: INTEGER
@@ -97,7 +97,7 @@ feature -- Access
 
 feature -- Status report
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 				local
 			a_string: STRING
@@ -116,7 +116,7 @@ feature -- Status report
 
 feature -- Status_setting
 
-	set_attribute_name (a_name: like attribute_name) is
+	set_attribute_name (a_name: like attribute_name)
 			-- Set attribute name.
 		require
 			attribute_name_not_void: a_name /= Void
@@ -132,7 +132,7 @@ feature -- Status_setting
 			set: attribute_name = a_name
 		end
 
-	set_namespace (a_namespace: like namespace) is
+	set_namespace (a_namespace: like namespace)
 			-- Set attribute name.
 		do
 			if a_namespace /= namespace then
@@ -150,10 +150,10 @@ feature -- Status_setting
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]		
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			attribute_name.simplify (l_replacement)
@@ -176,15 +176,15 @@ feature -- Optimization
 			end
 		end
 
-	type_check (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	type_check (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type checking.
 		local
 			l_role: XM_XPATH_ROLE_LOCATOR
 			l_type_checker: XM_XPATH_TYPE_CHECKER
 			l_single_string_type: XM_XPATH_SEQUENCE_TYPE
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]		
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			create l_replacement.make (Void)		
+			create l_replacement.make (Void)
 			attribute_name.check_static_type (l_replacement, a_context, a_context_item_type)
 			set_attribute_name (l_replacement.item)
 			if attribute_name.is_error then
@@ -222,12 +222,12 @@ feature -- Optimization
 			end
 		end
 
-	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this instruction.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			create l_replacement.make (Void)		
+			create l_replacement.make (Void)
 			attribute_name.promote (l_replacement, a_offer)
 			set_attribute_name (l_replacement.item)
 			if namespace /= Void then
@@ -240,7 +240,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
 			evaluate_name_code (a_context)
@@ -253,10 +253,10 @@ feature -- Evaluation
 				a_context.transformer.report_fatal_error (error_value)
 			end
 		end
-	
+
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
@@ -285,7 +285,7 @@ feature {NONE} -- Implementation
 	namespace_context: XM_XSLT_NAMESPACE_CONTEXT
 			-- namespace context
 
-	evaluate_name_code (a_context: XM_XPATH_CONTEXT) is
+	evaluate_name_code (a_context: XM_XPATH_CONTEXT)
 			-- Evaluate name code.
 		local
 			l_item: DS_CELL [XM_XPATH_ITEM]
@@ -330,7 +330,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	evaluate_name_code_stage2 (a_prefix, a_local: STRING; a_context: XM_XPATH_CONTEXT) is
+	evaluate_name_code_stage2 (a_prefix, a_local: STRING; a_context: XM_XPATH_CONTEXT)
 			-- Complete evaluation of name code.
 		require
 			a_prefix_not_void: a_prefix /= Void
@@ -398,4 +398,4 @@ invariant
 	namespace_context_not_void: namespace = Void implies namespace_context /= Void
 
 end
-	
+

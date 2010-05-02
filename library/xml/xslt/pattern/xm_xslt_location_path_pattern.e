@@ -43,7 +43,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_static_context: XM_XPATH_STATIC_CONTEXT) is
+	make (a_static_context: XM_XPATH_STATIC_CONTEXT)
 			-- Establish invariant.
 		require
 			static_context_not_void: a_static_context /= Void
@@ -65,7 +65,7 @@ feature -- Access
 	ancestor_pattern: XM_XSLT_PATTERN
 			-- Ancestor pattern
 
-	node_test: XM_XSLT_NODE_TEST is
+	node_test: XM_XSLT_NODE_TEST
 			-- A node test that this pattern matches
 		do
 			if refined_node_test /= Void then
@@ -75,13 +75,13 @@ feature -- Access
 			end
 		end
 
-	node_kind: INTEGER is
+	node_kind: INTEGER
 			-- Type of nodes matched
 		do
 			Result := original_node_test.node_kind
 		end
 
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions of `Current'
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -104,7 +104,7 @@ feature -- Access
 			end
 		end
 
-	original_text: STRING is
+	original_text: STRING
 			-- Original text
 		do
 			if parent_pattern /= Void then
@@ -118,13 +118,13 @@ feature -- Access
 			end
 		end
 
-	fingerprint: INTEGER is
+	fingerprint: INTEGER
 			-- Determine the name fingerprint of nodes to which this pattern applies
 		do
 			Result := original_node_test.fingerprint
 		end
 
-	compute_dependencies is
+	compute_dependencies
 			-- Compute dependencies which restrict optimizations
 		local
 			l_depends: BOOLEAN
@@ -154,7 +154,7 @@ feature -- Status report
 	is_constructed: BOOLEAN
 			-- Has the pattern finished construction?
 
-	is_location_pattern: BOOLEAN is
+	is_location_pattern: BOOLEAN
 			-- Is `Current' a location-path pattern?
 		do
 			Result := True
@@ -162,7 +162,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	finish_construction is
+	finish_construction
 			-- Pattern is finished.
 		require
 			not_finished: not is_constructed
@@ -172,7 +172,7 @@ feature -- Status setting
 			finished: is_constructed
 		end
 
-	resolve_current (a_let_expression: XM_XPATH_LET_EXPRESSION; a_offer: XM_XPATH_PROMOTION_OFFER) is
+	resolve_current (a_let_expression: XM_XPATH_LET_EXPRESSION; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Resolve calls to fn:current().
 		require
 			a_let_expression_not_void: a_let_expression /= Void
@@ -207,7 +207,7 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplified_pattern: XM_XSLT_PATTERN is
+	simplified_pattern: XM_XSLT_PATTERN
 			-- Simplify a pattern by applying any context-independent optimizations;
 			-- Default implementation does nothing
 		local
@@ -258,7 +258,7 @@ feature -- Optimization
 			end
 		end
 
-	type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Type-check the pattern;
 		local
 			l_context: XM_XSLT_EXPRESSION_CONTEXT
@@ -392,7 +392,7 @@ feature -- Optimization
 			end
 		end
 
-	promote (a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote sub-expressions of `Current'.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -422,7 +422,7 @@ feature -- Optimization
 
 feature -- Matching
 
-	match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Does `Current' match `a_node'?
 		local
 			l_item: DS_CELL [XM_XPATH_ITEM]
@@ -440,7 +440,7 @@ feature -- Matching
 
 feature -- Element change
 
-	add_filter (a_filter_expression: XM_XPATH_EXPRESSION) is
+	add_filter (a_filter_expression: XM_XPATH_EXPRESSION)
 			-- Add `a_filter_expression' to the pattern (whilst under construction).
 		require
 			under_construction: not is_constructed
@@ -458,7 +458,7 @@ feature -- Element change
 			filters_present: filters /= Void
 		end
 
-	set_parent_pattern (p: XM_XSLT_PATTERN) is
+	set_parent_pattern (p: XM_XSLT_PATTERN)
 			-- Set `parent_pattern'.
 		do
 			parent_pattern := p
@@ -466,7 +466,7 @@ feature -- Element change
 			set: parent_pattern = p
 		end
 
-	set_ancestor_pattern (p: XM_XSLT_PATTERN) is
+	set_ancestor_pattern (p: XM_XSLT_PATTERN)
 			-- Set `ancestor_pattern'.
 		do
 			ancestor_pattern := p
@@ -474,7 +474,7 @@ feature -- Element change
 			set: ancestor_pattern = p
 		end
 
-	set_special_filter (b: BOOLEAN) is
+	set_special_filter (b: BOOLEAN)
 			-- Set `is_special_filter'.
 		do
 			is_special_filter := b
@@ -482,7 +482,7 @@ feature -- Element change
 			set: is_special_filter = b
 		end
 
-	set_filters (f: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]) is
+	set_filters (f: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION])
 			-- Set `filters'.
 		do
 			filters := f
@@ -490,7 +490,7 @@ feature -- Element change
 			set: filters = f
 		end
 
-	set_equivalent_expression (exp: XM_XPATH_EXPRESSION) is
+	set_equivalent_expression (exp: XM_XPATH_EXPRESSION)
 			-- Set `equivalent_expression'.
 		require
 			expression_not_void: exp /= Void
@@ -500,7 +500,7 @@ feature -- Element change
 			set: equivalent_expression = exp
 		end
 
-	set_node_test (a_node_test: XM_XSLT_NODE_TEST) is
+	set_node_test (a_node_test: XM_XSLT_NODE_TEST)
 			-- Set `original_node_test'.
 		require
 			node_test_not_void: a_node_test /= Void
@@ -512,7 +512,7 @@ feature -- Element change
 
 feature -- Conversion
 
-	as_location_pattern: XM_XSLT_LOCATION_PATH_PATTERN is
+	as_location_pattern: XM_XSLT_LOCATION_PATH_PATTERN
 			-- `Current' seen as a location-path pattern
 		do
 			Result := Current
@@ -523,7 +523,7 @@ feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local
 	filters: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Filters applied to `node_test`
 
-	set_first_element_pattern (f: BOOLEAN) is
+	set_first_element_pattern (f: BOOLEAN)
 			-- Set `is_first_element_pattern'.
 		do
 			is_first_element_pattern := f
@@ -531,7 +531,7 @@ feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local
 			set: is_first_element_pattern = f
 		end
 
-	set_last_element_pattern (l: BOOLEAN) is
+	set_last_element_pattern (l: BOOLEAN)
 			-- Set `is_last_element_pattern'.
 		do
 			is_last_element_pattern := l
@@ -539,7 +539,7 @@ feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local
 			set: is_last_element_pattern = l
 		end
 
-	make_equivalent_expression: XM_XPATH_PATH_EXPRESSION is
+	make_equivalent_expression: XM_XPATH_PATH_EXPRESSION
 			-- Make a nodeset expression equivalent to a positional filter
 		local
 			axis: INTEGER
@@ -570,7 +570,7 @@ feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local
 			create Result.make (parent_node, step)
 		end
 
-	is_positional: BOOLEAN is
+	is_positional: BOOLEAN
 			-- Does `Current' use positional filters?
 		local
 			type: INTEGER
@@ -625,7 +625,7 @@ feature {XM_XSLT_PATTERN} -- Implementation
 	variable_binding: XM_XPATH_EXPRESSION
 			-- Bound variable for replacing calls to fn:current()
 
-	internal_match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	internal_match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Does `Current' match `a_node'?
 		local
 			l_node: XM_XPATH_NODE
@@ -672,7 +672,7 @@ feature {XM_XSLT_PATTERN} -- Implementation
 
 feature {NONE} -- Implementation
 
-	confirm_match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	confirm_match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Check that `Current' is indeed a match for `a_node'.
 		require
 			a_node_not_void: a_node /= Void
@@ -733,7 +733,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	match_equivalent_expression (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	match_equivalent_expression (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Does `a_node' matches `equivalent_expression'?
 		require
 			node_not_void: a_node /= Void

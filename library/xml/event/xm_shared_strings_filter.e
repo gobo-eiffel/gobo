@@ -35,7 +35,7 @@ create
 
 feature -- Document events
 
-	on_start is
+	on_start
 			-- Called when parsing starts.
 		do
 			strings := new_string_set
@@ -44,13 +44,13 @@ feature -- Document events
 
 feature -- Meta information
 
-	on_processing_instruction (a_name: STRING; a_content: STRING) is
+	on_processing_instruction (a_name: STRING; a_content: STRING)
 			-- Processing instruction.
 		do
 			next.on_processing_instruction (shared_string (a_name), shared_string (a_content))
 		end
 
-	on_comment (a_content: STRING) is
+	on_comment (a_content: STRING)
 			-- Process comment.
 			-- Atomic: single comment produces single event
 		do
@@ -59,7 +59,7 @@ feature -- Meta information
 
 feature -- Tag
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Start of start tag.
 		do
 			next.on_start_tag (shared_string (a_namespace),
@@ -67,7 +67,7 @@ feature -- Tag
 				shared_string (a_local_part))
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
 			-- Start of start tag.
 		do
 			next.on_attribute (shared_string (a_namespace),
@@ -76,7 +76,7 @@ feature -- Tag
 				shared_string (a_value))
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- End tag.
 		do
 			next.on_end_tag (shared_string (a_namespace),
@@ -86,7 +86,7 @@ feature -- Tag
 
 feature -- Content
 
-	on_content (a_content: STRING) is
+	on_content (a_content: STRING)
 			-- Text content.
 			-- NOT atomic: successive content may be different.
 			-- Default: forward event to 'next'.
@@ -99,7 +99,7 @@ feature {NONE} -- Share
 	strings: DS_HASH_SET [STRING]
 			-- Strings to be shared
 
-	shared_string (a_string: STRING): STRING is
+	shared_string (a_string: STRING): STRING
 			-- If string known return the previous occurrence
 		do
 			if a_string /= Void then

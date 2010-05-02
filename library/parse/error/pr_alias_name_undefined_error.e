@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER; a_type: PR_TYPE; a_old_alias_name: STRING) is
+	make (filename: STRING; line: INTEGER; a_type: PR_TYPE; a_old_alias_name: STRING)
 			-- Create a new error reporting that the alias name for token type `a_type',
 			-- which was defined as `a_old_alias_name', is being undefined.
 			-- The alias name should be repeated in each %token declaration with a given type.
@@ -40,10 +40,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: alias name '$4' for type '$3' should be repeated in each %%token declaration with that type"
+	default_template: STRING = "%"$1%", line $2: alias name '$4' for type '$3' should be repeated in each %%token declaration with that type"
 			-- Default template used to built the error message
 
-	code: STRING is "PR0029"
+	code: STRING = "PR0029"
 			-- Error code
 
 invariant

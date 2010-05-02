@@ -33,14 +33,14 @@ feature {NONE} -- Implementation
 
 	is_empty_match_ok: BOOLEAN
 			-- Is matching the empty string OK?
-	
+
 	regexp_cache_entry: XM_XPATH_REGEXP_CACHE_ENTRY
 			-- Cached regular expression
 
 	regexp_error_value: XM_XPATH_ERROR_VALUE
 			-- Possible error set by `try_to_compile'
 
-	tolerate_empty_string_match is
+	tolerate_empty_string_match
 			-- Allow matching empty string.
 		do
 			is_empty_match_ok := True
@@ -48,7 +48,7 @@ feature {NONE} -- Implementation
 			may_match_empty_string: is_empty_match_ok = True
 		end
 
-	try_to_compile (a_flag_argument_position: INTEGER; arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]) is
+	try_to_compile (a_flag_argument_position: INTEGER; arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION])
 			-- Attempt to compile `regexp'.
 		require
 			flag_argument_number: a_flag_argument_position = 0
@@ -90,6 +90,6 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-	
+
 end
-	
+

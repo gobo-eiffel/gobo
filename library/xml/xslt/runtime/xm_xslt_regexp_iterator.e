@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_input: STRING; a_regexp: RX_PCRE_REGULAR_EXPRESSION) is
+	make (an_input: STRING; a_regexp: RX_PCRE_REGULAR_EXPRESSION)
 			-- Establish invariant.
 		require
 			input_not_void: an_input /= Void
@@ -46,13 +46,13 @@ feature -- Access
 	item: XM_XPATH_STRING_VALUE
 			-- Value or node at the current position
 
-	is_invulnerable: BOOLEAN is
+	is_invulnerable: BOOLEAN
 			-- Is `Current' guarenteed free of implicit errors?
 		do
 			Result := True
 		end
 
-	regex_group (a_group: INTEGER): STRING is
+	regex_group (a_group: INTEGER): STRING
 			-- Nth captured substring (zero means entire match)
 		require
 			currently_matching: is_matching
@@ -67,10 +67,10 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-	
+
 feature -- Status report
 
-	is_matching: BOOLEAN is
+	is_matching: BOOLEAN
 			-- Is `item' a matching substring?
 		require
 			not_in_error: not is_error
@@ -84,7 +84,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Move to first position
 		do
 			index := 1
@@ -108,8 +108,8 @@ feature -- Cursor movement
 				end
 			end
 		end
-			
-	forth is
+
+	forth
 			-- Move to next position
 		do
 			index := index + 1
@@ -136,7 +136,7 @@ feature -- Cursor movement
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 			create Result.make (input, regexp)
@@ -162,4 +162,4 @@ invariant
 	regular_expression_not_void: regexp /= Void
 
 end
-	
+

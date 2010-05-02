@@ -12,7 +12,7 @@ class XM_XSLT_WITH_PARAM_ROUTINES
 
 feature -- Access
 
-	xpath_expressions (a_parameters: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM]): DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+	xpath_expressions (a_parameters: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM]): DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- List of select expressions in `a_parameters'
 		require
 			parameter_list_not_void: a_parameters /= Void
@@ -40,7 +40,7 @@ feature -- Access
 
 feature -- Optimization
 
-	simplify_with_params (a_parameters: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM]) is
+	simplify_with_params (a_parameters: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM])
 			-- Perform context-independent static optimizations on all in `a_parameters'.
 		require
 			parameter_list_not_void: a_parameters /= Void
@@ -49,7 +49,7 @@ feature -- Optimization
 		end
 
 	check_with_params (a_parameters: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM];
-		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type checking of all in  `a_parameters'.
 		require
 			parameter_list_not_void: a_parameters /= Void
@@ -59,7 +59,7 @@ feature -- Optimization
 		end
 
 	optimize_with_params (a_parameters: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM]; a_context: XM_XPATH_STATIC_CONTEXT;
-		a_context_item_type: XM_XPATH_ITEM_TYPE) is
+		a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Optimize all in  `a_parameters'.
 		require
 			parameter_list_not_void: a_parameters /= Void
@@ -68,7 +68,7 @@ feature -- Optimization
 			a_parameters.do_all (agent optimize_parameter (?, a_context, a_context_item_type))
 		end
 
-	promote_with_params (a_parameters: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM]; a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote_with_params (a_parameters: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM]; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote all in `a_parameters'.
 		require
 			parameter_list_not_void: a_parameters /= Void
@@ -79,7 +79,7 @@ feature -- Optimization
 
 feature -- Element change
 
-	set_with_params_parent (a_parameters: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM]; l_expression_container: XM_XPATH_EXPRESSION_CONTAINER) is
+	set_with_params_parent (a_parameters: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM]; l_expression_container: XM_XPATH_EXPRESSION_CONTAINER)
 			-- Set `l_expression_container' to be parent of all in `a_parameters'.
 		require
 			parameter_list_not_void: a_parameters /= Void
@@ -101,7 +101,7 @@ feature -- Element change
 
 feature {NONE} -- Agents
 
-	simplify_parameter (a_parameter: XM_XSLT_COMPILED_WITH_PARAM) is
+	simplify_parameter (a_parameter: XM_XSLT_COMPILED_WITH_PARAM)
 			-- Simplify `select_expression' in `a_parameter'.
 		require
 			a_parameter_not_void: a_parameter /= Void
@@ -115,7 +115,7 @@ feature {NONE} -- Agents
 			a_parameter.set_selector (l_replacement.item)
 		end
 
-	check_parameter_static_type (a_parameter: XM_XSLT_COMPILED_WITH_PARAM; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_parameter_static_type (a_parameter: XM_XSLT_COMPILED_WITH_PARAM; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Check static type of `select_expression' in `a_parameter'.
 		require
 			a_parameter_not_void: a_parameter /= Void
@@ -130,7 +130,7 @@ feature {NONE} -- Agents
 			a_parameter.set_selector (l_replacement.item)
 		end
 
-	optimize_parameter (a_parameter: XM_XSLT_COMPILED_WITH_PARAM; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize_parameter (a_parameter: XM_XSLT_COMPILED_WITH_PARAM; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Optimize `select_expression' in `a_parameter'.
 		require
 			a_parameter_not_void: a_parameter /= Void
@@ -145,7 +145,7 @@ feature {NONE} -- Agents
 			a_parameter.set_selector (l_replacement.item)
 		end
 
-	promote_parameter (a_parameter: XM_XSLT_COMPILED_WITH_PARAM; a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote_parameter (a_parameter: XM_XSLT_COMPILED_WITH_PARAM; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote `select_expression' in `a_parameter'.
 		require
 			a_parameter_not_void: a_parameter /= Void

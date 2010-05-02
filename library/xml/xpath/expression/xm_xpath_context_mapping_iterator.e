@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_mapping_function: like mapping_function; a_context: like context) is
+	make (a_mapping_function: like mapping_function; a_context: like context)
 			-- Initialize `Current'.
 		require
 			a_mapping_function_not_void: a_mapping_function /= Void
@@ -47,15 +47,15 @@ feature -- Access
 
 feature -- Status report
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
 			Result := (item = Void)
 		end
 
 feature -- Cursor movement
-			
-	forth is
+
+	forth
 			-- Move to next position
 		local
 			l_finished: BOOLEAN
@@ -121,7 +121,7 @@ feature -- Cursor movement
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original;
 			-- The new iterator will be repositioned at the start of the sequence
 		local

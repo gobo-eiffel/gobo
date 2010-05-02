@@ -21,7 +21,7 @@ create
 
 feature -- Test
 
-	test_integer is
+	test_integer
 			-- Test object equality with integers.
 		local
 			a, b: ANY
@@ -33,7 +33,7 @@ feature -- Test
 			assert ("equal2", a ~ b)
 		end
 
-	test_string is
+	test_string
 			-- Test object equality with strings.
 		local
 			s1, s2: STRING
@@ -45,7 +45,7 @@ feature -- Test
 			assert ("equal2", s1 ~ s2)
 		end
 
-	test_void is
+	test_void
 			-- Test object equality with Void.
 		local
 			a: ANY
@@ -65,7 +65,7 @@ feature -- Test
 			assert ("not_equal6", s2 /~ s1)
 		end
 
-	test_polymorphic is
+	test_polymorphic
 			-- Test object equality with polymorphic operands.
 		local
 			a, b: ANY
@@ -89,7 +89,7 @@ feature -- Test
 			assert ("equal6", "gobo" ~ b)
 		end
 
-	test_conversion is
+	test_conversion
 			-- Test object equality with conversion of operands.
 		do
 				-- With conversion.
@@ -104,7 +104,7 @@ feature -- Test
 			assert ("equal5", {REAL_64} 6.5 ~ {REAL_32} 6.5)
 		end
 
-	test_no_explicit_is_equal_call is
+	test_no_explicit_is_equal_call
 			-- Test object equality when feature 'is_equal' is not
 			-- explicitly called otherwise in the system with
 			-- one of the dynamic types of the left operand as

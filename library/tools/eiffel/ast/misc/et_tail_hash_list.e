@@ -36,7 +36,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new empty list.
 		do
 			count := 0
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			clashes := Void
 		end
 
-	make_with_capacity (nb: INTEGER) is
+	make_with_capacity (nb: INTEGER)
 			-- Create a new empty list with capacity `nb'.
 		local
 			m: INTEGER
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	index_of (an_item: like item): INTEGER is
+	index_of (an_item: like item): INTEGER
 			-- Index of first occurrence of `an_item' if any, 0 otherwise
 			-- (Use `=' as comparison criterion.)
 		local
@@ -90,7 +90,7 @@ feature -- Access
 
 feature -- Status report
 
-	has (an_item: like item): BOOLEAN is
+	has (an_item: like item): BOOLEAN
 			-- Does list contain `an_item'?
 			-- (Use `=' as comparison criterion.)
 		local
@@ -116,7 +116,7 @@ feature -- Status report
 
 feature -- Element change
 
-	put_last (an_item: like item) is
+	put_last (an_item: like item)
 			-- Put `an_item' at last position in list.
 		local
 			i, h: INTEGER
@@ -129,7 +129,7 @@ feature -- Element change
 			count := i
 		end
 
-	force_last (an_item: like item) is
+	force_last (an_item: like item)
 			-- Put `an_item' at last position in list.
 			-- Resize list if necessary.
 		local
@@ -146,7 +146,7 @@ feature -- Element change
 			count := i
 		end
 
-	append_last (other: ET_TAIL_LIST [like item]) is
+	append_last (other: ET_TAIL_LIST [like item])
 			-- Add items of `other' to the end of list.
 			-- Keep items of `other' in the same order.
 			-- Resize list if necessary.
@@ -172,7 +172,7 @@ feature -- Element change
 			count := j
 		end
 
-	put (an_item: like item; i: INTEGER) is
+	put (an_item: like item; i: INTEGER)
 			-- Put `an_item' at index `i' in list.
 		local
 			j: INTEGER
@@ -204,7 +204,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_last is
+	remove_last
 			-- Remove last item.
 		local
 			j: INTEGER
@@ -233,7 +233,7 @@ feature -- Removal
 			count := count - 1
 		end
 
-	remove (i: INTEGER) is
+	remove (i: INTEGER)
 			-- Remove item at index `i'.
 		local
 			j, nb: INTEGER
@@ -281,7 +281,7 @@ feature -- Removal
 			count := count - 1
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		local
 			i: INTEGER
@@ -304,7 +304,7 @@ feature -- Removal
 
 feature -- Resizing
 
-	resize (nb: INTEGER) is
+	resize (nb: INTEGER)
 			-- Resize to accommodate at least `nb' items.
 		local
 			m: INTEGER
@@ -352,7 +352,7 @@ feature {NONE} -- Hashing
 			-- in `slots'. Each entry points to the next alternative
 			-- until `No_position' is reached.
 
-	modulus: INTEGER is
+	modulus: INTEGER
 			-- Upper bound of `slots'
 		require
 			capacity_positive: capacity > 0
@@ -362,7 +362,7 @@ feature {NONE} -- Hashing
 			modulus_positive: Result > 0
 		end
 
-	hash_position (a_item: like item): INTEGER is
+	hash_position (a_item: like item): INTEGER
 			-- Hash position of `k' in `slots'
 		require
 			a_item_not_void: a_item /= Void
@@ -375,7 +375,7 @@ feature {NONE} -- Hashing
 
 feature {NONE} -- Configuration
 
-	new_modulus (a_capacity: INTEGER): INTEGER is
+	new_modulus (a_capacity: INTEGER): INTEGER
 			-- Value for `modulus' which can accommodate
 			-- `a_capacity' items
 		require
@@ -388,7 +388,7 @@ feature {NONE} -- Configuration
 
 feature {NONE} -- Constants
 
-	No_position: INTEGER is 0
+	No_position: INTEGER = 0
 			-- Not valid position mark
 
 invariant

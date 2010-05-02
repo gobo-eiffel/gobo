@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER; char: STRING) is
+	make (filename: STRING; line: INTEGER; char: STRING)
 			-- Create a new error reporting the presence
 			-- of a bad character `char'.
 		require
@@ -37,10 +37,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: bad character: $3"
+	default_template: STRING = "%"$1%", line $2: bad character: $3"
 			-- Default template used to built the error message
 
-	code: STRING is "LX0003"
+	code: STRING = "LX0003"
 			-- Error code
 
 invariant

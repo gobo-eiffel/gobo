@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_base_expression: XM_XPATH_EXPRESSION) is
+	make (a_base_expression: XM_XPATH_EXPRESSION)
 			-- Establish invaraint.
 		require
 			base_expression_not_void: a_base_expression /= Void
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_first_item_expression: BOOLEAN is
+	is_first_item_expression: BOOLEAN
 			-- Is `Current' a first item expression?
 		do
 			Result := True
@@ -47,7 +47,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -62,7 +62,7 @@ feature -- Optimization
 			end
 		end
 
-	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this subexpression.
 		local
 			l_promotion: XM_XPATH_EXPRESSION
@@ -87,7 +87,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -114,16 +114,16 @@ feature -- Evaluation
 		end
 
 feature {XM_XPATH_UNARY_EXPRESSION} -- Restricted
-	
-	display_operator: STRING is
+
+	display_operator: STRING
 			-- Format `operator' for display
 		do
 			Result := "first item of"
 		end
 
 feature {NONE} -- Implementation
-	
-	compute_cardinality is
+
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinalities (base_expression)

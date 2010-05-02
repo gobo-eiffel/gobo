@@ -22,7 +22,7 @@ create
 
 feature -- Status report
 
-	valid_parameter (a_parameter: ANY): BOOLEAN is
+	valid_parameter (a_parameter: ANY): BOOLEAN
 			-- Is `a_parameter' a valid parameter for current formatter?
 		local
 			a_cell: detachable DS_CELL [BOOLEAN]
@@ -33,7 +33,7 @@ feature -- Status report
 
 feature -- Formatting
 
-	format_to (a_parameter: ANY; a_stream: KI_CHARACTER_OUTPUT_STREAM) is
+	format_to (a_parameter: ANY; a_stream: KI_CHARACTER_OUTPUT_STREAM)
 			-- Format `a_parameter' to `a_stream'.
 			-- (Use DS_CELL [BOOLEAN] because in SE 2.1
 			-- BOOLEAN does not conform to ANY.)
@@ -48,7 +48,7 @@ feature -- Formatting
 			boolean_format_to (a_cell.item, a_stream)
 		end
 
-	boolean_format_to (a_parameter: BOOLEAN; a_stream: KI_CHARACTER_OUTPUT_STREAM) is
+	boolean_format_to (a_parameter: BOOLEAN; a_stream: KI_CHARACTER_OUTPUT_STREAM)
 			-- Format `a_parameter' to `a_stream'.
 		require
 			a_stream_not_void: a_stream /= Void
@@ -71,12 +71,12 @@ feature -- Formatting
 
 feature {NONE} -- Constants
 
-	true_lowercase: STRING is "true"
+	true_lowercase: STRING = "true"
 
-	false_lowercase: STRING is "false"
+	false_lowercase: STRING = "false"
 
-	true_uppercase: STRING is "True"
+	true_uppercase: STRING = "True"
 
-	false_uppercase: STRING is "False"
+	false_uppercase: STRING = "False"
 
 end

@@ -26,7 +26,7 @@ create
 
 feature {NONE}
 
-	make (a_parser: like parser) is
+	make (a_parser: like parser)
 			-- Set parser.
 		require
 			a_parser_not_void: a_parser /= Void
@@ -35,7 +35,7 @@ feature {NONE}
 			make_null
 		end
 
-	make_next (a_parser: like parser; a_next: like next) is
+	make_next (a_parser: like parser; a_next: like next)
 			-- Set parser and next callbacks.
 		require
 			a_parser_not_void: a_parser /= Void
@@ -50,7 +50,7 @@ feature {NONE}
 
 feature -- Event(s)
 
-	on_error (a_message: STRING) is
+	on_error (a_message: STRING)
 			-- Error event.
 		do
 			if parser.is_correct or else (a_message /= parser.last_error_description) then

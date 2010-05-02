@@ -18,7 +18,7 @@ inherit
 
 feature {DS_RED_BLACK_TREE_CONTAINER, DS_RED_BLACK_TREE_CONTAINER_NODE} -- Access
 
-	grand_parent: like parent is
+	grand_parent: like parent
 			-- Parent of `parent';
 			-- May be Void
 		do
@@ -29,7 +29,7 @@ feature {DS_RED_BLACK_TREE_CONTAINER, DS_RED_BLACK_TREE_CONTAINER_NODE} -- Acces
 			end
 		end
 
-	uncle: like parent is
+	uncle: like parent
 			-- The other child of `grand_parent'
 		require
 			grand_parent_not_void: grand_parent /= Void
@@ -49,13 +49,13 @@ feature {DS_RED_BLACK_TREE_CONTAINER} -- Status report
 	is_red: BOOLEAN
 			-- Is the node red?
 
-	is_black: BOOLEAN is
+	is_black: BOOLEAN
 			-- Is the node black?
 		do
 			Result := not is_red
 		end
 
-	is_ancestor_of (a_node: like Current): BOOLEAN is
+	is_ancestor_of (a_node: like Current): BOOLEAN
 			-- Is `Current' an ancestor of `a_node'?
 		require
 			a_node_not_void: a_node /= Void
@@ -74,7 +74,7 @@ feature {DS_RED_BLACK_TREE_CONTAINER} -- Status report
 
 feature {DS_RED_BLACK_TREE_CONTAINER} -- Status setting
 
-	set_is_red (a_bool: BOOLEAN) is
+	set_is_red (a_bool: BOOLEAN)
 			-- Set `is_red' to `a_bool'.
 		do
 			is_red := a_bool
@@ -84,7 +84,7 @@ feature {DS_RED_BLACK_TREE_CONTAINER} -- Status setting
 
 feature {DS_RED_BLACK_TREE_CONTAINER, DS_RED_BLACK_TREE_CONTAINER_NODE} -- Measurement
 
-	number_of_black_nodes_in_branches: INTEGER is
+	number_of_black_nodes_in_branches: INTEGER
 			-- Number of black nodes in all branches if they are all equal,
 			-- otherwise -1
 		local

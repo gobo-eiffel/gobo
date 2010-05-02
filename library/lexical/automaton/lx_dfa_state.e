@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (nfa_states: DS_ARRAYED_LIST [LX_NFA_STATE]; min, max: INTEGER) is
+	make (nfa_states: DS_ARRAYED_LIST [LX_NFA_STATE]; min, max: INTEGER)
 			-- Create a DFA state made up of the epsilon closure of
 			-- `nfa_states'. The epsilon closure is the set of all NFA
 			-- states reachable by an arbitrary number of epsilon
@@ -129,7 +129,7 @@ feature -- Access
 			-- Transition table to next DFA states in automaton,
 			-- indexed by transitions' label
 
-	minimum_symbol: INTEGER is
+	minimum_symbol: INTEGER
 			-- Minimum value allowed for transition labels
 		do
 			Result := transitions.lower
@@ -137,7 +137,7 @@ feature -- Access
 			definition: Result = transitions.lower
 		end
 
-	maximum_symbol: INTEGER is
+	maximum_symbol: INTEGER
 			-- Maximum value allowed for transition labels
 		do
 			Result := transitions.upper
@@ -145,7 +145,7 @@ feature -- Access
 			definition: Result = transitions.upper
 		end
 
-	next_state (symbol: INTEGER): LX_DFA_STATE is
+	next_state (symbol: INTEGER): LX_DFA_STATE
 			-- Next DFA state reachable through transition labeled `symbol';
 			-- Void if no such transition exists
 		require
@@ -156,7 +156,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_id (i: like id) is
+	set_id (i: like id)
 			-- Set `id' to `i'.
 		do
 			id := i
@@ -166,7 +166,7 @@ feature -- Setting
 
 feature -- Status report
 
-	is_accepting: BOOLEAN is
+	is_accepting: BOOLEAN
 			-- Is current state an accepting state?
 		do
 			Result := not accepted_rules.is_empty
@@ -174,7 +174,7 @@ feature -- Status report
 			definition: Result = not accepted_rules.is_empty
 		end
 
-	is_accepting_head: BOOLEAN is
+	is_accepting_head: BOOLEAN
 			-- Does current state contain an accepting NFA
 			-- state for the head part of a trailing
 			-- context rule?
@@ -184,7 +184,7 @@ feature -- Status report
 			definition: Result = not accepted_head_rules.is_empty
 		end
 
-	valid_symbol (symbol: INTEGER): BOOLEAN is
+	valid_symbol (symbol: INTEGER): BOOLEAN
 			-- Is `symbol' a valid value for transition label?
 		do
 			Result := transitions.valid_label (symbol)
@@ -196,7 +196,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Are current state and `other' equal?
 		do
 			if ANY_.same_types (Current, other) and code = other.code then
@@ -206,7 +206,7 @@ feature -- Comparison
 
 feature {LX_DFA} -- DFA construction
 
-	new_state (symbol: INTEGER): LX_DFA_STATE is
+	new_state (symbol: INTEGER): LX_DFA_STATE
 			-- Newly created DFA state reachable from current
 			-- state through transition labeled `symbol'
 		local
@@ -234,7 +234,7 @@ feature {LX_DFA} -- DFA construction
 			maximum_symbol_set: Result.maximum_symbol = maximum_symbol
 		end
 
-	partition (equiv_classes: LX_EQUIVALENCE_CLASSES) is
+	partition (equiv_classes: LX_EQUIVALENCE_CLASSES)
 			-- Partition symbols with same out-transitions.
 		require
 			equiv_classes_not_void: equiv_classes /= Void
@@ -260,7 +260,7 @@ feature {LX_DFA} -- DFA construction
 
 feature {NONE} -- Sort
 
-	bubble_sorter: DS_BUBBLE_SORTER [LX_NFA_STATE] is
+	bubble_sorter: DS_BUBBLE_SORTER [LX_NFA_STATE]
 			-- NFA state bubble sorter
 		local
 			a_comparator: KL_COMPARABLE_COMPARATOR [LX_NFA_STATE]
@@ -271,7 +271,7 @@ feature {NONE} -- Sort
 			sorter_not_void: Result /= Void
 		end
 
-	rule_sorter: DS_BUBBLE_SORTER [LX_RULE] is
+	rule_sorter: DS_BUBBLE_SORTER [LX_RULE]
 			-- Rule bubble sorter
 		local
 			a_comparator: KL_COMPARABLE_COMPARATOR [LX_RULE]

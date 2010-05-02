@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT; an_xml_element: XM_ELEMENT) is
+	make (a_project: GEANT_PROJECT; an_xml_element: XM_ELEMENT)
 			-- Create a new task with information held in `an_xml_element'.
 		local
 			a_value: STRING
@@ -86,7 +86,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	build_command (a_project: GEANT_PROJECT) is
+	build_command (a_project: GEANT_PROJECT)
 			-- Create instance of `command'
 		do
 			create command.make (a_project)
@@ -99,7 +99,7 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Input_filename_attribute_name: STRING is
+	Input_filename_attribute_name: STRING
 			-- Name of xml attribute for input_filename
 		once
 			Result := "input"
@@ -108,7 +108,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Output_filename_attribute_name: STRING is
+	Output_filename_attribute_name: STRING
 			-- Name of xml attribute for output_filename
 		once
 			Result := "output"
@@ -117,7 +117,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Lines_attribute_name: STRING is
+	Lines_attribute_name: STRING
 			-- Name of xml attribute for lines
 		once
 			Result := "lines"
@@ -126,7 +126,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Define_element_name: STRING is
+	Define_element_name: STRING
 			-- Name of xml subelement for defines
 		once
 			Result := "define"
@@ -135,7 +135,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	To_directory_attribute_name: STRING is
+	To_directory_attribute_name: STRING
 			-- Name of xml attribute to_directory.
 		once
 			Result := "to_directory"
@@ -144,7 +144,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Force_attribute_name: STRING is
+	Force_attribute_name: STRING
 			-- Name of xml attribute for force
 		once
 			Result := "force"
@@ -153,7 +153,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Fileset_element_name: STRING is
+	Fileset_element_name: STRING
 			-- Name of xml subelement for fileset
 		once
 			Result := "fileset"

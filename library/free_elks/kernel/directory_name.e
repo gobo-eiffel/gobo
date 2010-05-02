@@ -35,7 +35,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.string_make (n)
 		end
-		
+
 feature {NONE} -- Externals
 
 	eif_is_directory_valid (p: POINTER): BOOLEAN

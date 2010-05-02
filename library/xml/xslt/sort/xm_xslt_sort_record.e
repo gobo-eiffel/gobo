@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_item: XM_XPATH_ITEM; a_key_list: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]; a_count: INTEGER) is
+	make (an_item: XM_XPATH_ITEM; a_key_list: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]; a_count: INTEGER)
 			-- Establish invariant.
 		require
 			item_not_void: an_item /= Void
@@ -53,13 +53,13 @@ feature -- Access
 
 feature -- Conversion
 
-	is_group_sort_record: BOOLEAN is
+	is_group_sort_record: BOOLEAN
 			-- Is `Current' a group_sort_record?
 		do
 			Result := False
 		end
 
-	as_group_sort_record: XM_XSLT_GROUP_SORT_RECORD is
+	as_group_sort_record: XM_XSLT_GROUP_SORT_RECORD
 			-- `Current' seen as a group_sort_record
 		require
 			group_sort_record: is_group_sort_record
@@ -75,4 +75,4 @@ invariant
 	strictly_positive_record_number: record_number > 0
 
 end
-	
+

@@ -61,7 +61,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new standard error file.
 		do
 			make_open_stderr ("stderr")
@@ -72,12 +72,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	eol: STRING is "%N"
+	eol: STRING = "%N"
 			-- Line separator
 
 feature -- Status report
 
-	is_open_write: BOOLEAN is
+	is_open_write: BOOLEAN
 			-- Is standard error file opened in write mode?
 		do
 			Result := old_is_open_write
@@ -85,13 +85,13 @@ feature -- Status report
 
 feature -- Output
 
-	put_character (c: CHARACTER) is
+	put_character (c: CHARACTER)
 			-- Write `c' to standard error file.
 		do
 			old_put_character (c)
 		end
 
-	put_string (a_string: STRING) is
+	put_string (a_string: STRING)
 			-- Write `a_string' to standard error file.
 			-- Note: If `a_string' is a UC_STRING or descendant, then
 			-- write the bytes of its associated UTF unicode encoding.
@@ -104,7 +104,7 @@ feature -- Output
 
 feature -- Basic operations
 
-	flush is
+	flush
 			-- Flush buffered data to disk.
 		do
 			old_flush

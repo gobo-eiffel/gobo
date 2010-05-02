@@ -16,7 +16,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	copy_attribute (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT; a_schema_type: ANY; a_validation_action: INTEGER) is
+	copy_attribute (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT; a_schema_type: ANY; a_validation_action: INTEGER)
 			-- Copy an attribute.
 		require
 			attribute_node_not_void: a_node /= Void and then a_node.node_type = Attribute_node
@@ -30,4 +30,4 @@ feature {NONE} -- Implementation
 		end
 
 end
-	
+

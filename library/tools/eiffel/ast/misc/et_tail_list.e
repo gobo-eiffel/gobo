@@ -14,7 +14,7 @@ deferred class ET_TAIL_LIST [G]
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new empty list.
 		do
 			count := 0
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			capacity_set: capacity = 0
 		end
 
-	make_with_capacity (nb: INTEGER) is
+	make_with_capacity (nb: INTEGER)
 			-- Create a new empty list with capacity `nb'.
 		require
 			nb_not_negative: nb >= 0
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item (i: INTEGER): G is
+	item (i: INTEGER): G
 			-- Item at index `i' in list
 		require
 			i_large_enough: i >= 1
@@ -53,7 +53,7 @@ feature -- Access
 			item_not_void: Result /= Void
 		end
 
-	first: like item is
+	first: like item
 			-- First item
 		require
 			not_empty: not is_empty
@@ -64,7 +64,7 @@ feature -- Access
 			definition: Result = item (1)
 		end
 
-	last: like item is
+	last: like item
 			-- Last item
 		require
 			not_empty: not is_empty
@@ -75,7 +75,7 @@ feature -- Access
 			definition: Result = item (count)
 		end
 
-	index_of (an_item: like item): INTEGER is
+	index_of (an_item: like item): INTEGER
 			-- Index of first occurrence of `an_item' if any, 0 otherwise
 			-- (Use `=' as comparison criterion.)
 		require
@@ -102,7 +102,7 @@ feature -- Measurement
 	count: INTEGER
 			-- Number of items in list
 
-	capacity: INTEGER is
+	capacity: INTEGER
 			-- Maximum number of items in list
 		do
 			if storage /= Void then
@@ -112,7 +112,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is there no item in list?
 		do
 			Result := (count = 0)
@@ -120,7 +120,7 @@ feature -- Status report
 			definition: Result = (count = 0)
 		end
 
-	has (an_item: like item): BOOLEAN is
+	has (an_item: like item): BOOLEAN
 			-- Does list contain `an_item'?
 			-- (Use `=' as comparison criterion.)
 		require
@@ -129,7 +129,7 @@ feature -- Status report
 			Result := index_of (an_item) /= 0
 		end
 
-	valid_index (i: INTEGER): BOOLEAN is
+	valid_index (i: INTEGER): BOOLEAN
 			-- Is there an item at index `i'?
 		do
 			Result := (1 <= i and i <= count)
@@ -139,7 +139,7 @@ feature -- Status report
 
 feature -- Element change
 
-	put_last (an_item: like item) is
+	put_last (an_item: like item)
 			-- Put `an_item' at last position in list.
 		require
 			an_item_not_void: an_item /= Void
@@ -152,7 +152,7 @@ feature -- Element change
 			last_set: last = an_item
 		end
 
-	force_last (an_item: like item) is
+	force_last (an_item: like item)
 			-- Put `an_item' at last position in list.
 			-- Resize list if necessary.
 		require
@@ -168,7 +168,7 @@ feature -- Element change
 			last_set: last = an_item
 		end
 
-	append_last (other: ET_TAIL_LIST [like item]) is
+	append_last (other: ET_TAIL_LIST [like item])
 			-- Add items of `other' to the end of list.
 			-- Keep items of `other' in the same order.
 			-- Resize list if necessary.
@@ -193,7 +193,7 @@ feature -- Element change
 			new_more: count = old (count + other.count)
 		end
 
-	put (an_item: like item; i: INTEGER) is
+	put (an_item: like item; i: INTEGER)
 			-- Put `an_item' at index `i' in list.
 		require
 			an_item_not_void: an_item /= Void
@@ -208,7 +208,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_last is
+	remove_last
 			-- Remove last item.
 		require
 			not_empty: not is_empty
@@ -221,7 +221,7 @@ feature -- Removal
 			one_less: count = old count - 1
 		end
 
-	remove (i: INTEGER) is
+	remove (i: INTEGER)
 			-- Remove item at index `i'.
 		require
 			i_large_enough: i >= 1
@@ -242,7 +242,7 @@ feature -- Removal
 			one_less: count = old count - 1
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		local
 			i: INTEGER
@@ -259,7 +259,7 @@ feature -- Removal
 
 feature -- Resizing
 
-	resize (nb: INTEGER) is
+	resize (nb: INTEGER)
 			-- Resize to accommodate at least `nb' items.
 		require
 			nb_not_negative: nb >= 0
@@ -277,7 +277,7 @@ feature -- Resizing
 
 feature -- Iteration
 
-	do_all (an_action: PROCEDURE [ANY, TUPLE [like item]]) is
+	do_all (an_action: PROCEDURE [ANY, TUPLE [like item]])
 			-- Apply `an_action' to every item, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 		require
@@ -292,7 +292,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN]) is
+	do_if (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
 		require
@@ -312,7 +312,7 @@ feature -- Iteration
 			end
 		end
 
-	there_exists (a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN]): BOOLEAN is
+	there_exists (a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for at least one item?
 			-- (Semantics not guaranteed if `a_test' changes the list.)
 		local
@@ -330,7 +330,7 @@ feature -- Iteration
 			end
 		end
 
-	for_all (a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN]): BOOLEAN is
+	for_all (a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for all items?
 			-- (Semantics not guaranteed if `a_test' changes the list.)
 		local
@@ -351,7 +351,7 @@ feature -- Iteration
 
 feature {NONE} -- Configuration
 
-	new_capacity (n: INTEGER): INTEGER is
+	new_capacity (n: INTEGER): INTEGER
 			-- New capacity which could accommodate at least
 			-- `n' items (Used as argument of `resize'.)
 		require
@@ -367,7 +367,7 @@ feature {NONE} -- Implementation
 	storage: SPECIAL [like item]
 			-- Internal storage
 
-	fixed_array: KL_SPECIAL_ROUTINES [G] is
+	fixed_array: KL_SPECIAL_ROUTINES [G]
 			-- Fixed array routines
 		deferred
 		ensure

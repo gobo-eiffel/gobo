@@ -3,7 +3,7 @@ note
 	description: "[
 			Garbage collector statistics.
 			This class may be used as ancestor by classes needing its facilities.
-			Time accounting is relevant only if `enable_time_accounting' 
+			Time accounting is relevant only if `enable_time_accounting'
 			(from MEMORY) has been called.
 		]"
 	library: "Free implementation of ELKS library"

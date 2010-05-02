@@ -23,7 +23,7 @@ create
 
 feature -- Test
 
-	test_year_month_day is
+	test_year_month_day
 			-- Test features `year', `month' and `day' of class DT_DATE_TIME_VALUE.
 		local
 			dtv: DT_DATE_TIME_VALUE
@@ -40,13 +40,13 @@ feature -- Test
 			assert_integers_equal ("year3", 3, dtv.year)
 			assert_integers_equal ("month3", -12, dtv.month)
 			assert_integers_equal ("day3", 123, dtv.day)
-			create {DT_DATE_TIME_DURATION} dtv.make_precise (0, 3, 2, 0, 4, 3, 456) 
+			create {DT_DATE_TIME_DURATION} dtv.make_precise (0, 3, 2, 0, 4, 3, 456)
 			assert_integers_equal ("year4", 0, dtv.year)
 			assert_integers_equal ("month4", 3, dtv.month)
 			assert_integers_equal ("day4", 2, dtv.day)
 		end
 
-	test_hour_minute_second_millisecond is
+	test_hour_minute_second_millisecond
 			-- Test features `hour', `minute', `second' and
 			-- `millisecond' of class DT_DATE_TIME_VALUE.
 		local
@@ -67,14 +67,14 @@ feature -- Test
 			assert_integers_equal ("minute3", -3, dtv.minute)
 			assert_integers_equal ("second3", 12, dtv.second)
 			assert_integers_equal ("millisecond3", -45, dtv.millisecond)
-			create {DT_DATE_TIME_DURATION} dtv.make_precise (0, 3, 2, 0, 4, 3, 456) 
+			create {DT_DATE_TIME_DURATION} dtv.make_precise (0, 3, 2, 0, 4, 3, 456)
 			assert_integers_equal ("hour4", 0, dtv.hour)
 			assert_integers_equal ("minute4", 4, dtv.minute)
 			assert_integers_equal ("second4", 3, dtv.second)
 			assert_integers_equal ("millisecond4", 456, dtv.millisecond)
 		end
 
-	test_date_time is
+	test_date_time
 			-- Test features `date' and `time' of class DT_DATE_TIME_VALUE.
 		local
 			dtv: DT_DATE_TIME_VALUE
@@ -96,14 +96,14 @@ feature -- Test
 			create {DT_TIME_DURATION} tv.make_precise (23, -3, 12, -45)
 			assert_equal ("date3", dv, dtv.date)
 			assert_equal ("time3", tv, dtv.time)
-			create {DT_DATE_TIME_DURATION} dtv.make_precise (0, 3, 2, 0, 4, 3, 456) 
+			create {DT_DATE_TIME_DURATION} dtv.make_precise (0, 3, 2, 0, 4, 3, 456)
 			create {DT_DATE_DURATION} dv.make (0, 3, 2)
 			create {DT_TIME_DURATION} tv.make_precise (0, 4, 3, 456)
 			assert_equal ("date4", dv, dtv.date)
 			assert_equal ("time4", tv, dtv.time)
 		end
 
-	test_out is
+	test_out
 			-- Test features `out' and `precise_out' of class DT_DATE_TIME_VALUE.
 		local
 			dtv: DT_DATE_TIME_VALUE
@@ -117,12 +117,12 @@ feature -- Test
 			create {DT_DATE_TIME_DURATION} dtv.make_precise (3, -12, 123, 23, -3, 12, -45)
 			assert_equal ("out3", "3/-12/123 23:-3:12.-45", dtv.out)
 			assert_equal ("precise_out3", "3/-12/123 23:-3:12.-45", dtv.precise_out)
-			create {DT_DATE_TIME_DURATION} dtv.make_precise (0, 3, 2, 0, 4, 3, 456) 
+			create {DT_DATE_TIME_DURATION} dtv.make_precise (0, 3, 2, 0, 4, 3, 456)
 			assert_equal ("out4", "0/3/2 0:4:3.456", dtv.out)
 			assert_equal ("precise_out4", "0/3/2 0:4:3.456", dtv.precise_out)
 		end
 
-	test_date_out is
+	test_date_out
 			-- Test feature `date_out' of class DT_DATE_TIME_VALUE.
 		local
 			dtv: DT_DATE_TIME_VALUE
@@ -133,11 +133,11 @@ feature -- Test
 			assert_strings_equal ("date_out2", "-156/08/16", dtv.date_out)
 			create {DT_DATE_TIME_DURATION} dtv.make_precise (3, -12, 123, 23, -3, 12, -45)
 			assert_strings_equal ("date_out3", "3/-12/123", dtv.date_out)
-			create {DT_DATE_TIME_DURATION} dtv.make_precise (0, 3, 2, 0, 4, 3, 456) 
+			create {DT_DATE_TIME_DURATION} dtv.make_precise (0, 3, 2, 0, 4, 3, 456)
 			assert_strings_equal ("date_out4", "0/3/2", dtv.date_out)
 		end
 
-	test_time_out is
+	test_time_out
 			-- Test features `time_out' and `precise_time_out' of class DT_DATE_TIME_VALUE.
 		local
 			dtv: DT_DATE_TIME_VALUE
@@ -151,12 +151,12 @@ feature -- Test
 			create {DT_DATE_TIME_DURATION} dtv.make_precise (3, -12, 123, 23, -3, 12, -45)
 			assert_strings_equal ("time_out3", "23:-3:12.-45", dtv.time_out)
 			assert_strings_equal ("precise_time_out3", "23:-3:12.-45", dtv.precise_time_out)
-			create {DT_DATE_TIME_DURATION} dtv.make_precise (0, 3, 2, 0, 4, 3, 456) 
+			create {DT_DATE_TIME_DURATION} dtv.make_precise (0, 3, 2, 0, 4, 3, 456)
 			assert_strings_equal ("time_out4", "0:4:3.456", dtv.time_out)
 			assert_strings_equal ("precise_time_out4", "0:4:3.456", dtv.precise_time_out)
 		end
 
-	test_append_to_string is
+	test_append_to_string
 			-- Test features `append_to_string' and
 			-- `append_precise_to_string' of class DT_DATE_TIME_VALUE.
 		local
@@ -193,7 +193,7 @@ feature -- Test
 			dtv.append_precise_to_string (a_string)
 			assert_equal ("append_precise_to_string3", "G#3/-12/123 23:-3:12.-45", a_string)
 
-			create {DT_DATE_TIME_DURATION} dtv.make_precise (0, 3, 2, 0, 4, 3, 456) 
+			create {DT_DATE_TIME_DURATION} dtv.make_precise (0, 3, 2, 0, 4, 3, 456)
 			create a_string.make (50)
 			a_string.append_string ("G#")
 			dtv.append_to_string (a_string)
@@ -204,7 +204,7 @@ feature -- Test
 			assert_strings_equal ("append_precise_to_string4", "G#0/3/2 0:4:3.456", a_string)
 		end
 
-	test_append_date_to_string is
+	test_append_date_to_string
 			-- Test feature `append_date_to_string' of class DT_DATE_TIME_VALUE.
 		local
 			dtv: DT_DATE_TIME_VALUE
@@ -228,15 +228,15 @@ feature -- Test
 			dtv.append_date_to_string (a_string)
 			assert_strings_equal ("append_date_to_string3", "G#3/-12/123", a_string)
 
-			create {DT_DATE_TIME_DURATION} dtv.make_precise (0, 3, 2, 0, 4, 3, 456) 
+			create {DT_DATE_TIME_DURATION} dtv.make_precise (0, 3, 2, 0, 4, 3, 456)
 			create a_string.make (50)
 			a_string.append_string ("G#")
 			dtv.append_date_to_string (a_string)
 			assert_strings_equal ("append_date_to_string4", "G#0/3/2", a_string)
 		end
 
-	test_append_time_to_string is
-			-- Test features `append_time_to_string' and 
+	test_append_time_to_string
+			-- Test features `append_time_to_string' and
 			-- `append_precise_time_to_string' of class DT_DATE_TIME_VALUE.
 		local
 			dtv: DT_DATE_TIME_VALUE
@@ -272,7 +272,7 @@ feature -- Test
 			dtv.append_precise_time_to_string (a_string)
 			assert_strings_equal ("append_precise_time_to_string3", "G#23:-3:12.-45", a_string)
 
-			create {DT_DATE_TIME_DURATION} dtv.make_precise (0, 3, 2, 0, 4, 3, 456) 
+			create {DT_DATE_TIME_DURATION} dtv.make_precise (0, 3, 2, 0, 4, 3, 456)
 			create a_string.make (50)
 			a_string.append_string ("G#")
 			dtv.append_time_to_string (a_string)

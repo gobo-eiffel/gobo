@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_iterator, another_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; a_comparer: XM_XPATH_GLOBAL_ORDER_COMPARER) is
+	make (an_iterator, another_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; a_comparer: XM_XPATH_GLOBAL_ORDER_COMPARER)
 			-- Establish invariant.
 		require
 			first_iterator_before: an_iterator /= Void and then not an_iterator.is_error and then an_iterator.before
@@ -40,17 +40,17 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
+
 	item: XM_XPATH_NODE
 			-- Value or node at the current position
 
-	is_node_iterator: BOOLEAN is
+	is_node_iterator: BOOLEAN
 			-- Does `Current' yield a node_sequence?
 		do
 			Result := True
 		end
 
-	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
 		do
 			Result ?= ANY_.to_any (Current)
@@ -58,7 +58,7 @@ feature -- Access
 
 feature -- Status report
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
 			Result := first_iterator.after and then second_iterator.after
@@ -66,7 +66,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move to next position
 		do
 			index := index + 1
@@ -143,7 +143,7 @@ feature -- Cursor movement
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 			create Result.make (first_iterator.another, second_iterator.another, comparer)
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 	first_node, second_node: XM_XPATH_NODE
 			-- Nodes for comparison by `compare_two_nodes'
 
-	compare_two_nodes is
+	compare_two_nodes
 			-- Compare two nodes.
 		require
 			first_node_not_void: first_node /= Void
@@ -189,7 +189,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	advance_first_iterator is
+	advance_first_iterator
 			-- Advance `first_iterator'.
 		do
 			if first_iterator.before then
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	advance_second_iterator is
+	advance_second_iterator
 			-- Advance `second_iterator'.
 		do
 			if second_iterator.before then

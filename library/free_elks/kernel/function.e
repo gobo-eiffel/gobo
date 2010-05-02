@@ -15,11 +15,11 @@ inherit
 	ROUTINE [BASE_TYPE, OPEN_ARGS]
 
 feature -- Access
-	
+
 	last_result: RESULT_TYPE
 			-- Result of last call, if any.
 
-	item (args: OPEN_ARGS): RESULT_TYPE is
+	item (args: OPEN_ARGS): RESULT_TYPE
 			-- Result of calling function with `args' as operands.
 		require
 			valid_operands: valid_operands (args)
@@ -30,7 +30,7 @@ feature -- Access
 
 feature -- Calls
 
-	call (args: OPEN_ARGS) is
+	call (args: OPEN_ARGS)
 			-- Call routine with operands `args'.
 		do
 			last_result := item (args)
@@ -38,7 +38,7 @@ feature -- Calls
 
 feature -- Obsolete
 
-	eval (args: OPEN_ARGS): RESULT_TYPE is
+	eval (args: OPEN_ARGS): RESULT_TYPE
 			-- Result of evaluating function for `args'.
 		obsolete
 			"Please use `item' instead"
@@ -51,7 +51,7 @@ feature -- Obsolete
 
 feature -- Removal
 
-	clear_last_result is
+	clear_last_result
 			-- Reset content of `last_result' to its default value.
 		local
 			l_result: RESULT_TYPE

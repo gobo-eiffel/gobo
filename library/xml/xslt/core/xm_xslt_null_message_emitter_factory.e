@@ -21,11 +21,11 @@ inherit
 
 feature -- Creation
 
-	new_message_emitter (a_transformer: XM_XSLT_TRANSFORMER;  a_properties: XM_XSLT_OUTPUT_PROPERTIES): XM_XPATH_RECEIVER is
+	new_message_emitter (a_transformer: XM_XSLT_TRANSFORMER;  a_properties: XM_XSLT_OUTPUT_PROPERTIES): XM_XPATH_RECEIVER
 			-- New destination for xsl:message
 		do
 			create {XM_XSLT_NULL_SEQUENCE_RECEIVER} Result.make
 		end
 
 end
-	
+

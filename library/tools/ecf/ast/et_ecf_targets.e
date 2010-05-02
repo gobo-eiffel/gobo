@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target: like target) is
+	make (a_target: like target)
 			-- Create a new target list with initially one target `a_target'.
 		require
 			a_target_not_void: a_target /= Void
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			targets_set: targets.last = a_target
 		end
 
-	make_empty is
+	make_empty
 			-- Create a new empty target list.
 		do
 			create targets.make (Initial_targets_capacity)
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is the list of targets empty?
 		do
 			Result := (count = 0)
@@ -55,7 +55,7 @@ feature -- Status report
 			definition: Result = (count = 0)
 		end
 
-	has_target (a_name: STRING): BOOLEAN is
+	has_target (a_name: STRING): BOOLEAN
 			-- Is there a target with name `a_name'?
 		require
 			a_name_not_void: a_name /= Void
@@ -72,7 +72,7 @@ feature -- Status report
 			end
 		end
 
-	has (a_target: like target): BOOLEAN is
+	has (a_target: like target): BOOLEAN
 			-- Is `a_target' included in current list of targets?
 		require
 			a_target_not_void: a_target /= Void
@@ -84,7 +84,7 @@ feature -- Status report
 
 feature -- Access
 
-	target (i: INTEGER): ET_ECF_TARGET is
+	target (i: INTEGER): ET_ECF_TARGET
 			-- `i'-th target
 		require
 			i_large_enough: i >= 1
@@ -95,7 +95,7 @@ feature -- Access
 			target_not_void: Result /= Void
 		end
 
-	target_by_name (a_name: STRING): like target is
+	target_by_name (a_name: STRING): like target
 			-- Target with name `a_name' if any, Void otherwise
 		require
 			a_name_not_void: a_name /= Void
@@ -121,7 +121,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of targets
 		do
 			Result := targets.count
@@ -132,7 +132,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	put_last (a_target: like target) is
+	put_last (a_target: like target)
 			-- Add `a_target' to the list of targets.
 		require
 			a_target_not_void: a_target /= Void
@@ -145,7 +145,7 @@ feature -- Element change
 
 feature -- Iteration
 
-	do_all (an_action: PROCEDURE [ANY, TUPLE [ET_ECF_TARGET]]) is
+	do_all (an_action: PROCEDURE [ANY, TUPLE [ET_ECF_TARGET]])
 			-- Apply `an_action' to every target, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 		require
@@ -156,7 +156,7 @@ feature -- Iteration
 
 feature {NONE} -- Constants
 
-	Initial_targets_capacity: INTEGER is 50
+	Initial_targets_capacity: INTEGER = 50
 			-- Initial capacity for `targets'
 
 invariant

@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_left: like left; an_operator: like operator; a_right: like right) is
+	make (a_left: like left; an_operator: like operator; a_right: like right)
 			-- Create a new object equality expression.
 		require
 			a_left_not_void: a_left /= Void
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset object expression as it was just after it was last parsed.
 		local
 			l_convert: ET_CONVERT_EXPRESSION
@@ -73,7 +73,7 @@ feature -- Access
 	operator: ET_SYMBOL
 			-- Operator symbol ('~' or '/~')
 
-	name: ET_FEATURE_NAME is
+	name: ET_FEATURE_NAME
 			-- Feature name when considered as a feature call to 'is_equal'
 		once
 			Result := tokens.is_equal_feature_name.twin
@@ -81,7 +81,7 @@ feature -- Access
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_object_equality_expression (Current)

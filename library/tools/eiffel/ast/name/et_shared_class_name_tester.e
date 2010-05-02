@@ -14,7 +14,7 @@ class ET_SHARED_CLASS_NAME_TESTER
 
 feature -- Access
 
-	class_name_tester: ET_CLASS_NAME_TESTER is
+	class_name_tester: ET_CLASS_NAME_TESTER
 			-- Class name equality tester
 		once
 			create Result

@@ -22,11 +22,11 @@ create
 
 feature -- Status report
 
-	is_import: BOOLEAN is
+	is_import: BOOLEAN
 			-- Is this an xsl:import?
 		do
 			-- False
 		end
 
 end
-	
+

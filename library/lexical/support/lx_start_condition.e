@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (nm: STRING; i: INTEGER; excl: BOOLEAN) is
+	make (nm: STRING; i: INTEGER; excl: BOOLEAN)
 			-- Create a new start condition named `nm'.
 		require
 			nm_not_void: nm /= Void
@@ -60,7 +60,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_has_eof (b: like has_eof) is
+	set_has_eof (b: like has_eof)
 			-- Set `has_eof' to `b'.
 		do
 			has_eof := b
@@ -70,7 +70,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	put_nfa (a_nfa: LX_NFA) is
+	put_nfa (a_nfa: LX_NFA)
 			-- Add `a_nfa' to `patterns'.
 		require
 			a_nfa_not_void: a_nfa /= Void
@@ -78,7 +78,7 @@ feature -- Element change
 			patterns.force_last (a_nfa)
 		end
 
-	put_bol_nfa (a_nfa: LX_NFA) is
+	put_bol_nfa (a_nfa: LX_NFA)
 			-- Add `a_nfa' to `bol_patterns'.
 		require
 			a_nfa_not_void: a_nfa /= Void

@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER; a_token: STRING; id1, id2: INTEGER) is
+	make (filename: STRING; line: INTEGER; a_token: STRING; id1, id2: INTEGER)
 			-- Create a new error reporting that the token `a_token'
 			-- has been given two different token_ids.
 		require
@@ -39,10 +39,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: token $3 has two different ids $4 and $5"
+	default_template: STRING = "%"$1%", line $2: token $3 has two different ids $4 and $5"
 			-- Default template used to built the error message
 
-	code: STRING is "PR0024"
+	code: STRING = "PR0024"
 			-- Error code
 
 invariant

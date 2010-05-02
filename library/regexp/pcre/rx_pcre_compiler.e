@@ -63,7 +63,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new regexp compiler.
 		do
 			create byte_code.make (1024)
@@ -79,7 +79,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_compiled: BOOLEAN is
+	is_compiled: BOOLEAN
 			-- Was last compilation successful?
 		do
 			Result := STRING_.same_string (error_message, err_msg_0)
@@ -87,7 +87,7 @@ feature -- Status report
 			pattern_not_void: Result implies pattern /= Void
 		end
 
-	is_case_insensitive: BOOLEAN is
+	is_case_insensitive: BOOLEAN
 			-- Do letters in the pattern match both upper- and lower-case letters?
 			-- This option cannot be changed after compilation.
 			-- (It is equivalent to Perl's /i option.)
@@ -216,7 +216,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_default_options is
+	set_default_options
 			-- Set default options.
 		require
 			not_compiled: not is_compiled
@@ -246,7 +246,7 @@ feature -- Status setting
 			strict_set: is_strict = False
 		end
 
-	set_case_insensitive (b: BOOLEAN) is
+	set_case_insensitive (b: BOOLEAN)
 			-- Set `is_case_insensitive' to `b'.
 		require
 			not_compiled: not is_compiled
@@ -256,7 +256,7 @@ feature -- Status setting
 			case_insensitive_set: is_case_insensitive = b
 		end
 
-	set_caseless (b: BOOLEAN) is
+	set_caseless (b: BOOLEAN)
 			-- Set `is_caseless' to `b'.
 		require
 			not_compiled: not is_compiled
@@ -266,7 +266,7 @@ feature -- Status setting
 			caseless_set: is_caseless = b
 		end
 
-	set_extended (b: BOOLEAN) is
+	set_extended (b: BOOLEAN)
 			-- Set `is_extended' to `b'.
 		require
 			not_compiled: not is_compiled
@@ -276,7 +276,7 @@ feature -- Status setting
 			extended_set: is_extended = b
 		end
 
-	set_greedy (b: BOOLEAN) is
+	set_greedy (b: BOOLEAN)
 			-- Set `is_greedy' to `b'.
 		require
 			not_compiled: not is_compiled
@@ -286,7 +286,7 @@ feature -- Status setting
 			greedy_set: is_greedy = b
 		end
 
-	set_strict (b: BOOLEAN) is
+	set_strict (b: BOOLEAN)
 			-- Set 'is_strict' to 'b'.
 		require
 			not_compiled: not is_compiled
@@ -296,7 +296,7 @@ feature -- Status setting
 			strict_set: is_strict = b
 		end
 
-	set_multiline (b: BOOLEAN) is
+	set_multiline (b: BOOLEAN)
 			-- Set `is_multiline' to `b'.
 		do
 			is_multiline := b
@@ -304,7 +304,7 @@ feature -- Status setting
 			multiline_set: is_multiline = b
 		end
 
-	set_dotall (b: BOOLEAN) is
+	set_dotall (b: BOOLEAN)
 			-- Set `is_dotall' to `b'.
 		do
 			is_dotall := b
@@ -312,7 +312,7 @@ feature -- Status setting
 			dotall_set: is_dotall = b
 		end
 
-	set_empty_allowed (b: BOOLEAN) is
+	set_empty_allowed (b: BOOLEAN)
 			-- Set `is_empty_allowed' to `b'.
 		do
 			is_empty_allowed := b
@@ -320,7 +320,7 @@ feature -- Status setting
 			empty_allowed_set: is_empty_allowed = b
 		end
 
-	set_dollar_endonly (b: BOOLEAN) is
+	set_dollar_endonly (b: BOOLEAN)
 			-- Set `is_dollar_endonly' to `b'.
 		do
 			is_dollar_endonly := b
@@ -328,7 +328,7 @@ feature -- Status setting
 			dollar_endonly_set: is_dollar_endonly = b
 		end
 
-	set_bol (b: BOOLEAN) is
+	set_bol (b: BOOLEAN)
 			-- Set `is_bol' to `b'.
 		do
 			is_bol := b
@@ -336,7 +336,7 @@ feature -- Status setting
 			bol_set: is_bol = b
 		end
 
-	set_eol (b: BOOLEAN) is
+	set_eol (b: BOOLEAN)
 			-- Set `is_eol' to `b'.
 		do
 			is_eol := b
@@ -344,7 +344,7 @@ feature -- Status setting
 			eol_set: is_eol = b
 		end
 
-	set_anchored (b: BOOLEAN) is
+	set_anchored (b: BOOLEAN)
 			-- Set `is_anchored' to `b'.
 		do
 			is_anchored := b
@@ -354,7 +354,7 @@ feature -- Status setting
 
 feature {RX_PCRE_MATCHER} -- Status setting
 
-	set_ims_options (an_option: INTEGER) is
+	set_ims_options (an_option: INTEGER)
 			-- Set `is_caseless', `is_multiline' and `is_dotall'
 			-- from values encoded in `an_option'.
 		do
@@ -369,7 +369,7 @@ feature {RX_PCRE_MATCHER} -- Status setting
 
 feature -- Setting
 
-	set_character_case_mapping (a_mapping: like character_case_mapping) is
+	set_character_case_mapping (a_mapping: like character_case_mapping)
 			-- Set `character_case_mapping' to `a_mapping'.
 		require
 			not_compiled: not is_compiled
@@ -380,7 +380,7 @@ feature -- Setting
 			character_case_mapping_set: character_case_mapping = a_mapping
 		end
 
-	set_word_set (a_set: like word_set) is
+	set_word_set (a_set: like word_set)
 			-- Set `word_set' to `a_set'.
 		require
 			not_compiled: not is_compiled
@@ -394,7 +394,7 @@ feature -- Setting
 
 feature -- Compilation
 
-	compile (a_pattern: STRING) is
+	compile (a_pattern: STRING)
 			-- Compile regular expression `a_pattern'.
 			-- The compilation is driven by the various option flags.
 			-- Set `is_compiled' to true if the pattern has been
@@ -492,7 +492,7 @@ feature -- Compilation
 			pattern_set: pattern = a_pattern
 		end
 
-	optimize is
+	optimize
 			-- This feature scans a compiled unanchored expression and attempts to build a
 			-- set of the initial characters. As time goes by, we may be able to get more clever
 			-- at doing this.
@@ -522,7 +522,7 @@ feature -- Error report
 
 feature {NONE} -- Error setting
 
-	set_error (a_message: like error_message; an_error_code, a_position: INTEGER) is
+	set_error (a_message: like error_message; an_error_code, a_position: INTEGER)
 			-- Set error reporting data.
 		require
 			a_message_not_void: a_message /= Void
@@ -539,7 +539,7 @@ feature {NONE} -- Error setting
 
 feature -- Reset
 
-	reset is
+	reset
 			-- Reset the pattern.
 			-- Do not change the options (see `set_default_options' for the list of options).
 		do
@@ -555,7 +555,7 @@ feature -- Reset
 
 feature -- Debugging
 
-	print_options (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_options (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print options to `a_file'. Only differences from
 			-- the default setting where stated.
 		require
@@ -599,7 +599,7 @@ feature -- Debugging
 			end
 		end
 
-	print_start_bits (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_start_bits (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print the starting character set of a compiled
 			-- expression in a preformatted form to `a_file'.
 		require
@@ -642,7 +642,7 @@ feature -- Debugging
 			a_file.put_new_line
 		end
 
-	print_compiled_pattern_code (a_file: KI_TEXT_OUTPUT_STREAM; a_native_code: BOOLEAN) is
+	print_compiled_pattern_code (a_file: KI_TEXT_OUTPUT_STREAM; a_native_code: BOOLEAN)
 			-- Print the compiled code in a readable form to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -1004,7 +1004,7 @@ feature -- Debugging
 			a_file.put_line ("------------------------------------------------------------------")
 		end
 
-	print_compiled_pattern_info (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_compiled_pattern_info (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print the compiled pattern info to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -1057,7 +1057,7 @@ feature -- Debugging
 
 feature {NONE} -- Debug helpers
 
-	map_position (a_position: INTEGER; a_position_map: like new_position_map): INTEGER is
+	map_position (a_position: INTEGER; a_position_map: like new_position_map): INTEGER
 			-- Position in the byte code of the original PCRE
 			-- package (coded with bytes) corresponding to
 			-- `a position' in byte code of the Gobo version
@@ -1073,7 +1073,7 @@ feature {NONE} -- Debug helpers
 			end
 		end
 
-	fill_position_map (a_position_map: like new_position_map) is
+	fill_position_map (a_position_map: like new_position_map)
 			-- Fill `a_position_map' with position mapping between
 			-- byte code in the original PCRE package (coded with bytes)
 			-- and the Gobo version (coded with int32).
@@ -1171,7 +1171,7 @@ feature {NONE} -- Debug helpers
 			a_position_map.force (byte_offset, i)
 		end
 
-	new_position_map: DS_HASH_TABLE [INTEGER, INTEGER] is
+	new_position_map: DS_HASH_TABLE [INTEGER, INTEGER]
 			-- Position mapping between byte code in the original
 			-- PCRE package (coded with bytes) and the Gobo version
 			-- (coded with int32)
@@ -1190,7 +1190,7 @@ feature {NONE} -- Status report
 
 	optchanged: INTEGER
 
-	ims_options: INTEGER is
+	ims_options: INTEGER
 			-- Encoded options containing `is_caseless',
 			-- `is_multiline' and `is_dotall'
 		do
@@ -1208,7 +1208,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Status setting
 
-	set_default_internal_options is
+	set_default_internal_options
 			-- Set default internal options.
 		do
 			set_startline (False)
@@ -1218,7 +1218,7 @@ feature {NONE} -- Status setting
 			ichanged_set: is_ichanged = False
 		end
 
-	set_startline (b: BOOLEAN) is
+	set_startline (b: BOOLEAN)
 			-- Set `startline' to `b'.
 		do
 			is_startline := b
@@ -1226,7 +1226,7 @@ feature {NONE} -- Status setting
 			startline_set: is_startline = b
 		end
 
-	set_ichanged (b: BOOLEAN) is
+	set_ichanged (b: BOOLEAN)
 			-- Set `ichanged' to `b'.
 		do
 			is_ichanged := b
@@ -1271,7 +1271,7 @@ feature {NONE} -- Access
 	regexp_countlits: INTEGER
 			-- Mandatory number of characters in literal
 
-	find_fixed_code_length (a_position: INTEGER): INTEGER is
+	find_fixed_code_length (a_position: INTEGER): INTEGER
 			-- Scan the byte code and compute the fixed length of input string that will match it,
 			-- if the length is fixed. This is needed for dealing with backward assertions.
 			-- `a_position' is the position of the `op_bra' opcode in the byte code.
@@ -1406,7 +1406,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Compilation
 
-	compile_regexp (a_changed_options: INTEGER; a_in_group, a_lookbehind: BOOLEAN; a_condref: INTEGER) is
+	compile_regexp (a_changed_options: INTEGER; a_in_group, a_lookbehind: BOOLEAN; a_condref: INTEGER)
 			-- On entry, `pattern_position' is pointing past the bracket character, but on
 			-- return it points to the closing bracket, or vertical bar, or end of string.
 			-- The `op_bra' opcode has already been appended to the byte code, but the following
@@ -1529,7 +1529,7 @@ feature {NONE} -- Compilation
 			end
 		end
 
-	compile_branch (a_in_group: BOOLEAN) is
+	compile_branch (a_in_group: BOOLEAN)
 			-- Scan the pattern, compiling it into the byte code.
 		local
 			bravalue, length, val: INTEGER
@@ -2011,7 +2011,7 @@ feature {NONE} -- Compilation
 			is_greedy := old_greedy
 		end
 
-	compile_character_class is
+	compile_character_class
 			-- Compile character class.
 		require
 			pattern_position_small_enough: pattern_position <= pattern_count
@@ -2249,7 +2249,7 @@ feature {NONE} -- Compilation
 			end
 		end
 
-	compile_repeats (a_min, a_max, a_previous, a_prevreqchar, a_subcountlits: INTEGER) is
+	compile_repeats (a_min, a_max, a_previous, a_prevreqchar, a_subcountlits: INTEGER)
 		local
 			repeat_type, op_type: INTEGER
 			repeat_min, repeat_max: INTEGER
@@ -2502,7 +2502,7 @@ feature {NONE} -- Compilation
 			end
 		end
 
-	compile_single_repeat (a_ch: INTEGER; a_previous, a_min, a_max, a_op_type, a_repeat_type: INTEGER) is
+	compile_single_repeat (a_ch: INTEGER; a_previous, a_min, a_max, a_op_type, a_repeat_type: INTEGER)
 		local
 			repeat_type: INTEGER
 			byte_code_count: INTEGER
@@ -2569,7 +2569,7 @@ feature {NONE} -- Compilation
 			byte_code.append_character (a_ch)
 		end
 
-	compile_counted_repeats (a_previous, a_prevreqchar, a_subcountlits: INTEGER): BOOLEAN is
+	compile_counted_repeats (a_previous, a_prevreqchar, a_subcountlits: INTEGER): BOOLEAN
 			-- Read an item of the form {n,m}. This is called only after is_counted_repeat() has
 			-- confirmed that a repeat-count quantifier exists, so the syntax is guaranteed to be
 			-- correct, but we need to check the values and then call `compile_repeats' feature.
@@ -2634,7 +2634,7 @@ feature {NONE} -- Compilation
 
 feature {NONE} -- Posix character classes
 
-	check_posix_syntax (a_pattern_position: INTEGER): INTEGER is
+	check_posix_syntax (a_pattern_position: INTEGER): INTEGER
 			-- This function is called when the sequence "[:" or "[." or "[=" is
 			-- encountered in a character class. It checks whether this is followed by an
 			-- optional ^ and then a sequence of letters, terminated by a matching ":]" or
@@ -2667,7 +2667,7 @@ feature {NONE} -- Posix character classes
 			valid_position: Result /= -1 implies pattern_buffer.valid_index (Result)
 		end
 
-	check_posix_name (a_pattern_position, a_len: INTEGER): INTEGER is
+	check_posix_name (a_pattern_position, a_len: INTEGER): INTEGER
 			-- This function is called to check the name given in a POSIX-style class entry
 			-- such as [:alnum:].
 			-- `a_pattern_position' points to the first letter in `pattern'.
@@ -2716,7 +2716,7 @@ feature {NONE} -- Posix character classes
 
 feature {NONE} -- Pattern scanning
 
-	scan_decimal_number (a_max_len: INTEGER): INTEGER is
+	scan_decimal_number (a_max_len: INTEGER): INTEGER
 			-- The actual pattern-character is the one after the digit sequence
 		local
 			c: INTEGER
@@ -2737,7 +2737,7 @@ feature {NONE} -- Pattern scanning
 			new_pattern_position: pattern_position <= old pattern_position + a_max_len
 		end
 
-	scan_octal_number (a_max_len: INTEGER): INTEGER is
+	scan_octal_number (a_max_len: INTEGER): INTEGER
 			-- The actual pattern-character is the one after the digit sequence
 		local
 			c: INTEGER
@@ -2758,7 +2758,7 @@ feature {NONE} -- Pattern scanning
 			new_pattern_position: pattern_position <= old pattern_position + a_max_len
 		end
 
-	scan_hex_number (a_max_len: INTEGER): INTEGER is
+	scan_hex_number (a_max_len: INTEGER): INTEGER
 			-- The actual pattern-character is the one after the digit sequence.
 		local
 			c: INTEGER
@@ -2785,7 +2785,7 @@ feature {NONE} -- Pattern scanning
 			new_pattern_position: pattern_position <= old pattern_position + a_max_len
 		end
 
-	scan_comment is
+	scan_comment
 			-- Skip comment.
 		local
 			i, j: INTEGER
@@ -2816,7 +2816,7 @@ feature {NONE} -- Pattern scanning
 			pattern_position := j
 		end
 
-	scan_escape (a_bra_count: INTEGER; a_isclass: BOOLEAN): INTEGER is
+	scan_escape (a_bra_count: INTEGER; a_isclass: BOOLEAN): INTEGER
 			-- This function is called when a \ has been encountered. It either returns a
 			-- positive value for a simple escape such as \n, or a negative value which
 			-- encodes one of the more complicated things such as \d. When unicode is enabled,
@@ -2935,7 +2935,7 @@ feature {NONE} -- Pattern scanning
 
 feature {NONE} -- Implementation
 
-	first_significant_code (a_options, a_optbit: INTEGER; a_optstop: BOOLEAN): INTEGER is
+	first_significant_code (a_options, a_optbit: INTEGER; a_optstop: BOOLEAN): INTEGER
 			-- This is called by several functions that scan a compiled expression looking
 			-- for a fixed first character, or an anchoring opcode etc. It skips over things
 			-- that do not influence this. For one application, a change of caseless option is
@@ -3020,7 +3020,7 @@ feature {NONE} -- Implementation
 			code_index_small_enough: code_index < byte_code.count
 		end
 
-	find_firstchar (a_options: INTEGER): INTEGER is
+	find_firstchar (a_options: INTEGER): INTEGER
 			-- Try to find out if there is a fixed first character. This is called for
 			-- unanchored expressions, as it speeds up their processing quite considerably.
 			-- Consider each alternative branch. If they all start with the same char, or with
@@ -3087,7 +3087,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	can_anchored (a_options: INTEGER): BOOLEAN is
+	can_anchored (a_options: INTEGER): BOOLEAN
 			-- Try to find out if this is an anchored regular expression. Consider each
 			-- alternative branch. If they all start with `op_sod' or `op_circ', or with a bracket
 			-- all of whose alternatives start with `op_sod' or `op_circ' (recurse ad lib), then
@@ -3132,7 +3132,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	has_startline: BOOLEAN is
+	has_startline: BOOLEAN
 			-- This is called to find out if every branch starts with ^ or .* so that
 			-- "first char" processing can be done to speed things up in multiline
 			-- matching and for non-DOTALL patterns that start with .* (which must start at
@@ -3172,7 +3172,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_start_bits (a_code_index: INTEGER; a_caseless: BOOLEAN) is
+	set_start_bits (a_code_index: INTEGER; a_caseless: BOOLEAN)
 			-- Create bitmap of starting characters.
 			-- This routine scans a compiled unanchored expression and
 			-- attempts to build a bitmap of the set of initial characters.
@@ -3458,7 +3458,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	empty_pattern_buffer: STRING is
+	empty_pattern_buffer: STRING
 			-- Dummy empty pattern buffer
 		once
 			Result := "T"
@@ -3469,7 +3469,7 @@ feature {NONE} -- Constants
 			end_of_pattern_buffer: Result.item (Result.count) = '%U'
 		end
 
-	actual_set: RX_CHARACTER_SET is
+	actual_set: RX_CHARACTER_SET
 			-- Shared buffer for charater set
 		once
 			create Result.make_empty
@@ -3477,13 +3477,13 @@ feature {NONE} -- Constants
 			actual_set_not_void: Result /= Void
 		end
 
-	infinity: INTEGER is
+	infinity: INTEGER
 			-- Positive infinity
 		once
 			Result := Platform.Maximum_integer
 		end
 
-	maxlit: INTEGER is
+	maxlit: INTEGER
 			-- Maximum number of characters supported in a literal character string
 		once
 			Result := Platform.Maximum_integer

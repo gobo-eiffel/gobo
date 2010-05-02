@@ -21,7 +21,7 @@ inherit
 
 feature -- Status report
 
-	test (v, u: ET_IDENTIFIER): BOOLEAN is
+	test (v, u: ET_IDENTIFIER): BOOLEAN
 			-- Are `v' and `u' considered equal?
 		do
 			if v = u then

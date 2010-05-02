@@ -14,7 +14,7 @@ class DT_SHARED_WEEK_DAYS_FROM_MONDAY
 
 feature -- Access
 
-	week_days_from_monday: DT_WEEK_DAYS_FROM_MONDAY is
+	week_days_from_monday: DT_WEEK_DAYS_FROM_MONDAY
 			-- Week days from monday
 		once
 			create Result

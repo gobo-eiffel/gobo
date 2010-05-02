@@ -25,16 +25,16 @@ feature -- Access
 			-- URI scheme supported by `Current'
 
 feature -- Status report
-	
-	was_error: BOOLEAN is
+
+	was_error: BOOLEAN
 			-- Was last call to `resolve' in error?
 		do
 			Result := last_error /= Void
 		ensure
 			error: Result implies last_error /= Void
 		end
-	
-	last_collection: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+
+	last_collection: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Last collection retrieved by `resolve'
 		require
 			no_error: not was_error
@@ -43,7 +43,7 @@ feature -- Status report
 			collection_at_start: Result /= Void and then Result.before
 		end
 
-	last_error: XM_XPATH_ERROR_VALUE is
+	last_error: XM_XPATH_ERROR_VALUE
 			-- Last error set by `resolve'
 		deferred
 		ensure
@@ -53,8 +53,8 @@ feature -- Status report
 		end
 
 feature -- Element change
-	
-	resolve (a_uri: UT_URI; a_context: XM_XPATH_CONTEXT) is
+
+	resolve (a_uri: UT_URI; a_context: XM_XPATH_CONTEXT)
 			-- Resolve `a_uri' to a sequence of nodes.
 		require
 			absolute_uri_not_void: a_uri /= Void and then a_uri.is_absolute

@@ -15,7 +15,7 @@ class KL_SHARED_MEMORY
 
 feature -- Access
 
-	memory: KL_MEMORY is
+	memory: KL_MEMORY
 			-- Garbage collection facilities
 		once
 			create Result

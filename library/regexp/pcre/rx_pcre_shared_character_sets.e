@@ -20,7 +20,7 @@ class RX_PCRE_SHARED_CHARACTER_SETS
 
 feature -- Defaults
 
-	default_character_case_mapping: RX_CASE_MAPPING is
+	default_character_case_mapping: RX_CASE_MAPPING
 			-- Default character lower- and upper-case mapping
 		once
 			create Result.make ("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz")
@@ -28,7 +28,7 @@ feature -- Defaults
 			default_character_case_mapping_not_void: Result /= Void
 		end
 
-	default_word_set: RX_CHARACTER_SET is
+	default_word_set: RX_CHARACTER_SET
 			-- Set of characters making up words
 		once
 			create Result.make ("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_")
@@ -39,7 +39,7 @@ feature -- Defaults
 
 feature -- Character sets
 
-	upper_set: RX_CHARACTER_SET is
+	upper_set: RX_CHARACTER_SET
 			-- Upper character set
 		once
 			create Result.make ("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
@@ -48,7 +48,7 @@ feature -- Character sets
 			upper_set_not_empty: not Result.is_empty
 		end
 
-	lower_set: RX_CHARACTER_SET is
+	lower_set: RX_CHARACTER_SET
 			-- Lower character set
 		once
 			create Result.make ("abcdefghijklmnopqrstuvwxyz")
@@ -57,7 +57,7 @@ feature -- Character sets
 			lower_set_not_empty: not Result.is_empty
 		end
 
-	alpha_set: RX_CHARACTER_SET is
+	alpha_set: RX_CHARACTER_SET
 			-- Alphabetical character set
 		once
 			create Result.make_empty
@@ -68,7 +68,7 @@ feature -- Character sets
 			alpha_set_not_empty: not Result.is_empty
 		end
 
-	digit_set: RX_CHARACTER_SET is
+	digit_set: RX_CHARACTER_SET
 			-- Digit character set
 		once
 			create Result.make ("0123456789")
@@ -77,7 +77,7 @@ feature -- Character sets
 			digit_set_not_empty: not Result.is_empty
 		end
 
-	alnum_set: RX_CHARACTER_SET is
+	alnum_set: RX_CHARACTER_SET
 			-- Alphanumeric character set
 		once
 			create Result.make_empty
@@ -88,7 +88,7 @@ feature -- Character sets
 			alnum_set_not_empty: not Result.is_empty
 		end
 
-	xdigit_set: RX_CHARACTER_SET is
+	xdigit_set: RX_CHARACTER_SET
 			-- Hexadecimal digit character set
 		once
 			create Result.make ("0123456789abcdefABCDEF")
@@ -97,7 +97,7 @@ feature -- Character sets
 			xdigit_set_not_empty: not Result.is_empty
 		end
 
-	cntrl_set: RX_CHARACTER_SET is
+	cntrl_set: RX_CHARACTER_SET
 			-- Control character set
 		local
 			i: INTEGER
@@ -117,7 +117,7 @@ feature -- Character sets
 			cntrl_set_not_empty: not Result.is_empty
 		end
 
-	graph_set: RX_CHARACTER_SET is
+	graph_set: RX_CHARACTER_SET
 			-- Graph character set
 		once
 			create Result.make ("!%"#$%%&%'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
@@ -126,7 +126,7 @@ feature -- Character sets
 			graph_set_not_empty: not Result.is_empty
 		end
 
-	print_set: RX_CHARACTER_SET is
+	print_set: RX_CHARACTER_SET
 			-- Printable character set
 		once
 			create Result.make (" !%"#$%%&%'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
@@ -135,7 +135,7 @@ feature -- Character sets
 			print_set_not_empty: not Result.is_empty
 		end
 
-	punct_set: RX_CHARACTER_SET is
+	punct_set: RX_CHARACTER_SET
 			-- Punctuation character set
 		once
 			create Result.make ("!%"#$%%&%'()*+,-./:;<=>?@[\]^_`{|}~")
@@ -144,7 +144,7 @@ feature -- Character sets
 			punct_set_not_empty: not Result.is_empty
 		end
 
-	ascii_set: RX_CHARACTER_SET is
+	ascii_set: RX_CHARACTER_SET
 			-- Ascii character set
 		local
 			i: INTEGER
@@ -163,7 +163,7 @@ feature -- Character sets
 			ascii_set_not_empty: not Result.is_empty
 		end
 
-	space_set: RX_CHARACTER_SET is
+	space_set: RX_CHARACTER_SET
 			-- Space character set
 		once
 			create Result.make ("%T%N%F%R%/11/ ")
@@ -172,7 +172,7 @@ feature -- Character sets
 			space_set_not_empty: not Result.is_empty
 		end
 
-	meta_set: RX_CHARACTER_SET is
+	meta_set: RX_CHARACTER_SET
 			-- Meta character set
 		once
 			create Result.make ("*+?{^.$|()[")
@@ -183,7 +183,7 @@ feature -- Character sets
 
 feature {NONE} -- Implementation
 
-	class_names: ARRAY [STRING] is
+	class_names: ARRAY [STRING]
 			-- Names of POSIX character classes. The first three must be "alpha",
 			-- "upper", "lower", as this is assumed for handling case independence.
 		once
@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 				"print", "punct", "space", "word", "xdigit">>
 		end
 
-	class_sets: ARRAY [RX_CHARACTER_SET] is
+	class_sets: ARRAY [RX_CHARACTER_SET]
 			-- Must correspond to the list `class_names' above
 		once
 			Result := <<alpha_set, lower_set, upper_set, alnum_set, ascii_set, cntrl_set,

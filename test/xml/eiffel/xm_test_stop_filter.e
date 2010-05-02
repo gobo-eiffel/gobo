@@ -23,7 +23,7 @@ create
 
 feature -- Test
 
-	test_stop is
+	test_stop
 			-- Test stop filter stops the parser.
 		local
 			error_filter: XM_STOP_ON_ERROR_FILTER

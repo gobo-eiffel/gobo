@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (v: INTEGER) is
+	make (v: INTEGER)
 			-- Create a new counter.
 		do
 			item := v
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset (v: INTEGER) is
+	reset (v: INTEGER)
 			-- Reset counter.
 		do
 			item := v
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	increment is
+	increment
 			-- Increment counter.
 		do
 			item := item + 1
@@ -55,7 +55,7 @@ feature -- Basic operations
 			incremented: item = old item + 1
 		end
 
-	decrement is
+	decrement
 			-- Decrement counter.
 		do
 			item := item - 1

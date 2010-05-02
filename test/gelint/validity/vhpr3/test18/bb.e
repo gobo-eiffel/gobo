@@ -6,7 +6,7 @@ inherit
 
 feature -- Access
 
-	f is
+	f
 		local
 			b: BB
 			c: CC [BB]

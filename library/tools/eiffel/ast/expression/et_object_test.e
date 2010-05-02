@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type: like declared_type; a_expression: like expression) is
+	make (a_type: like declared_type; a_expression: like expression)
 			-- Create a new object-test expression.
 		require
 			a_expression_not_void: a_expression /= Void
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset expression as it was just after it was last parsed.
 		local
 			l_type: ET_TYPE
@@ -60,7 +60,7 @@ feature -- Access
 	declared_type: ET_TARGET_TYPE
 			-- Type declared in the object test, surrounded by braces
 
-	type: ET_TYPE is
+	type: ET_TYPE
 			-- Type expected for the expression
 		do
 			if declared_type /= Void then
@@ -71,13 +71,13 @@ feature -- Access
 	expression: ET_EXPRESSION
 			-- Expression being tested
 
-	name: ET_IDENTIFIER is
+	name: ET_IDENTIFIER
 			-- Name of object-test local, if any
 		do
 			-- Result := Void
 		end
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -92,19 +92,19 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := attached_keyword
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := expression.last_leaf
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := expression.break
@@ -112,7 +112,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_attached_keyword (a_attached: like attached_keyword) is
+	set_attached_keyword (a_attached: like attached_keyword)
 			-- Set `attached_keyword' to `a_attached'.
 		require
 			a_attached_not_void: a_attached /= Void
@@ -124,7 +124,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_object_test (Current)

@@ -23,7 +23,7 @@ create
 
 feature -- Test
 
-	test_avl_tree is
+	test_avl_tree
 			-- Test the basic table features of binary search tree.
 		local
 			l_comparator: KL_COMPARABLE_COMPARATOR [INTEGER]
@@ -56,7 +56,7 @@ feature -- Test
 			assert ("empty2", l_tree.is_empty)
 		end
 
-	test_avl_tree_cursor is
+	test_avl_tree_cursor
 			-- Test the cursor implementation for binary search trees.
 		local
 			l_comparator: KL_COMPARABLE_COMPARATOR [INTEGER]
@@ -111,7 +111,7 @@ feature -- Test
 			assert ("before3", l_cursor_1.before)
 		end
 
-	test_void is
+	test_void
 			-- Test with Void keys.
 		local
 			l_tree: DS_AVL_TREE [INTEGER, STRING]
@@ -142,7 +142,7 @@ feature -- Test
 			l_tree.remove ("4")
 		end
 
-	test_do_all is
+	test_do_all
 			-- Test feature 'do_all'.
 		local
 			l_comparator: KL_COMPARABLE_COMPARATOR [STRING]
@@ -167,7 +167,7 @@ feature -- Test
 			assert ("empty", l_list.is_empty)
 		end
 
-	test_do_all_with_index is
+	test_do_all_with_index
 			-- Test feature 'do_all_with_index'.
 		local
 			l_comparator: KL_COMPARABLE_COMPARATOR [STRING]
@@ -193,7 +193,7 @@ feature -- Test
 			assert ("empty", l_list.is_empty)
 		end
 
-	test_do_all_with_key is
+	test_do_all_with_key
 			-- Test feature 'do_all_with_key'.
 		local
 			l_comparator: KL_COMPARABLE_COMPARATOR [STRING]
@@ -219,7 +219,7 @@ feature -- Test
 			assert ("empty", l_list.is_empty)
 		end
 
-	test_do_if is
+	test_do_if
 			-- Test feature 'do_if'.
 		local
 			l_comparator: KL_COMPARABLE_COMPARATOR [STRING]
@@ -245,7 +245,7 @@ feature -- Test
 			assert ("empty", l_list.is_empty)
 		end
 
-	test_do_if_with_index is
+	test_do_if_with_index
 			-- Test feature 'do_if_with_index'.
 		local
 			l_comparator: KL_COMPARABLE_COMPARATOR [STRING]
@@ -271,7 +271,7 @@ feature -- Test
 			assert_iarrays_same ("empty", <<INTEGER_.to_integer (0), 0, 0, 0, 0>>, l_list)
 		end
 
-	test_do_if_with_key is
+	test_do_if_with_key
 			-- Test feature 'do_if_with_key'.
 		local
 			l_comparator: KL_COMPARABLE_COMPARATOR [STRING]
@@ -297,7 +297,7 @@ feature -- Test
 			assert ("empty", l_list.is_empty)
 		end
 
-	test_there_exists is
+	test_there_exists
 			-- Test feature 'there_exists'.
 		local
 			l_comparator: KL_COMPARABLE_COMPARATOR [STRING]
@@ -323,7 +323,7 @@ feature -- Test
 			assert ("empty", not l_tree.there_exists (agent INTEGER_.is_even))
 		end
 
-	test_for_all is
+	test_for_all
 			-- Test feature 'for_all'.
 		local
 			l_comparator: KL_COMPARABLE_COMPARATOR [STRING]
@@ -349,7 +349,7 @@ feature -- Test
 			assert ("empty", l_tree.for_all (agent INTEGER_.is_even))
 		end
 
-	test_copy is
+	test_copy
 			-- Test features based on `copy'.
 		local
 			l_comparator: KL_COMPARABLE_COMPARATOR [STRING]
@@ -373,7 +373,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	same_integers (i, j: INTEGER): BOOLEAN is
+	same_integers (i, j: INTEGER): BOOLEAN
 			-- Is `i' equal to `j'?
 			-- (Used as agent to test iterators.)
 		do
@@ -382,7 +382,7 @@ feature {NONE} -- Implementation
 			definition: Result = (i = j)
 		end
 
-	add_key_to_array (a_item: INTEGER; a_key: STRING; a_array: DS_ARRAYED_LIST [INTEGER]) is
+	add_key_to_array (a_item: INTEGER; a_key: STRING; a_array: DS_ARRAYED_LIST [INTEGER])
 			-- Add `a_key' to `a_array'.
 			-- (Used as agent to test iterators.)
 		require
@@ -393,7 +393,7 @@ feature {NONE} -- Implementation
 			a_array.force_last (a_key.to_integer)
 		end
 
-	key_starts_with (a_item: INTEGER; a_key: STRING; a_character: CHARACTER): BOOLEAN is
+	key_starts_with (a_item: INTEGER; a_key: STRING; a_character: CHARACTER): BOOLEAN
 			-- Does `a_key' have `a_character' as first character?
 			-- (Used as agent to test iterators.)
 		require

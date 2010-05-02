@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type: like target_type; a_name: like qualified_name) is
+	make (a_type: like target_type; a_name: like qualified_name)
 			-- Create a new 'like a.b.c' type.
 		require
 			a_type_not_void: a_type /= Void
@@ -41,14 +41,14 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	type_mark: ET_TYPE_MARK is
+	type_mark: ET_TYPE_MARK
 			-- 'attached' or 'detachable' keyword,
 			-- or '!' or '?' symbol
 		do
 			Result := target_type.type_mark
 		end
 
-	like_keyword: ET_KEYWORD is
+	like_keyword: ET_KEYWORD
 			-- 'like' keyword
 		do
 			Result := target_type.like_keyword
@@ -59,7 +59,7 @@ feature -- Access
 
 feature -- Type processing
 
-	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_QUALIFIED_LIKE_TYPE is
+	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_QUALIFIED_LIKE_TYPE
 			-- Version of current type where the formal generic
 			-- parameter types have been replaced by their actual
 			-- counterparts in `a_parameters'
@@ -77,7 +77,7 @@ feature -- Type processing
 
 feature -- Output
 
-	append_to_string (a_string: STRING) is
+	append_to_string (a_string: STRING)
 			-- Append textual representation of
 			-- current type to `a_string'.
 		do
@@ -88,7 +88,7 @@ feature -- Output
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_qualified_like_type (Current)

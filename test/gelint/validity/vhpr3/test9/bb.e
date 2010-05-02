@@ -6,7 +6,7 @@ inherit
 
 feature
 
-	f is
+	f
 		local
 			d: DD [like Current]
 		do

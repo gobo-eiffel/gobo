@@ -23,7 +23,7 @@ create
 
 feature -- Test
 
-	test_make is
+	test_make
 			-- Test feature `make'.
 		local
 			a_pathname: KL_PATHNAME
@@ -33,7 +33,7 @@ feature -- Test
 			assert ("not_relative", not a_pathname.is_relative)
 		end
 
-	test_set_relative is
+	test_set_relative
 			-- Test feature `set_relative'.
 		local
 			a_pathname: KL_PATHNAME
@@ -46,7 +46,7 @@ feature -- Test
 			assert ("not_relative2", not a_pathname.is_relative)
 		end
 
-	test_set_drive is
+	test_set_drive
 			-- Test feature `set_drive'.
 		local
 			a_pathname: KL_PATHNAME
@@ -57,7 +57,7 @@ feature -- Test
 			assert_equal ("drive", "c:", a_pathname.drive)
 		end
 
-	test_set_hostname is
+	test_set_hostname
 			-- Test feature `set_hostname'.
 		local
 			a_pathname: KL_PATHNAME
@@ -68,7 +68,7 @@ feature -- Test
 			assert_equal ("hostname", "gobo", a_pathname.hostname)
 		end
 
-	test_append_name is
+	test_append_name
 			-- Test feature `append_name'.
 		local
 			a_pathname: KL_PATHNAME
@@ -86,7 +86,7 @@ feature -- Test
 			assert_equal ("bar2", "bar", a_pathname.item (2))
 		end
 
-	test_append_names is
+	test_append_names
 			-- Test feature `append_names'.
 		local
 			a_pathname: KL_PATHNAME
@@ -105,7 +105,7 @@ feature -- Test
 			assert_equal ("bar2", "bar", a_pathname.item (3))
 		end
 
-	test_append_current is
+	test_append_current
 			-- Test feature `append_current'.
 		local
 			a_pathname: KL_PATHNAME
@@ -136,7 +136,7 @@ feature -- Test
 			assert ("current4", a_pathname.is_current (1))
 		end
 
-	test_append_parent is
+	test_append_parent
 			-- Test feature `append_parent'.
 		local
 			a_pathname: KL_PATHNAME
@@ -167,7 +167,7 @@ feature -- Test
 			assert ("parent4", a_pathname.is_parent (1))
 		end
 
-	test_set_canonical1 is
+	test_set_canonical1
 			-- Test feature `set_canonical'.
 		local
 			a_pathname: KL_PATHNAME
@@ -215,7 +215,7 @@ feature -- Test
 			assert_equal ("gobo7", "gobo", a_pathname.item (2))
 		end
 
-	test_set_canonical2 is
+	test_set_canonical2
 			-- Test feature `set_canonical'.
 		local
 			a_pathname: KL_PATHNAME
@@ -234,7 +234,7 @@ feature -- Test
 			assert_equal ("bar", "bar", a_pathname.item (1))
 		end
 
-	test_set_canonical3 is
+	test_set_canonical3
 			-- Test feature `set_canonical'.
 		local
 			a_pathname: KL_PATHNAME
@@ -254,7 +254,7 @@ feature -- Test
 			assert_equal ("bar", "bar", a_pathname.item (3))
 		end
 
-	test_set_canonical4 is
+	test_set_canonical4
 			-- Test feature `set_canonical'.
 		local
 			a_pathname: KL_PATHNAME
@@ -273,7 +273,7 @@ feature -- Test
 			assert_equal ("bar", "bar", a_pathname.item (2))
 		end
 
-	test_set_canonical5 is
+	test_set_canonical5
 			-- Test feature `set_canonical'.
 		local
 			a_pathname: KL_PATHNAME
@@ -293,7 +293,7 @@ feature -- Test
 			assert_equal ("bar", "bar", a_pathname.item (2))
 		end
 
-	test_set_canonical6 is
+	test_set_canonical6
 			-- Test feature `set_canonical'.
 		local
 			a_pathname: KL_PATHNAME
@@ -313,7 +313,7 @@ feature -- Test
 			assert_equal ("bar", "bar", a_pathname.item (2))
 		end
 
-	test_set_canonical7 is
+	test_set_canonical7
 			-- Test feature `set_canonical'.
 		local
 			a_pathname: KL_PATHNAME
@@ -329,7 +329,7 @@ feature -- Test
 			assert ("current", a_pathname.is_current (1))
 		end
 
-	test_set_canonical8 is
+	test_set_canonical8
 			-- Test feature `set_canonical'.
 		local
 			a_pathname: KL_PATHNAME
@@ -343,7 +343,7 @@ feature -- Test
 			assert_integers_equal ("count2", 0, a_pathname.count)
 		end
 
-	test_set_canonical9 is
+	test_set_canonical9
 			-- Test feature `set_canonical'.
 		local
 			a_pathname: KL_PATHNAME
@@ -359,7 +359,7 @@ feature -- Test
 			assert ("parent", a_pathname.is_parent (1))
 		end
 
-	test_set_canonical10 is
+	test_set_canonical10
 			-- Test feature `set_canonical'.
 		local
 			a_pathname: KL_PATHNAME
@@ -376,7 +376,7 @@ feature -- Test
 			assert ("current", a_pathname.is_current (1))
 		end
 
-	test_set_canonical11 is
+	test_set_canonical11
 			-- Test feature `set_canonical'.
 		local
 			a_pathname: KL_PATHNAME
@@ -391,7 +391,7 @@ feature -- Test
 			assert_integers_equal ("count2", 0, a_pathname.count)
 		end
 
-	test_set_canonical12 is
+	test_set_canonical12
 			-- Test feature `set_canonical'.
 		local
 			a_pathname: KL_PATHNAME
@@ -409,7 +409,7 @@ feature -- Test
 			assert ("current", a_pathname.is_current (1))
 		end
 
-	test_set_canonical13 is
+	test_set_canonical13
 			-- Test feature `set_canonical'.
 		local
 			a_pathname: KL_PATHNAME
@@ -427,7 +427,7 @@ feature -- Test
 			assert ("current", a_pathname.is_current (1))
 		end
 
-	test_set_canonical14 is
+	test_set_canonical14
 			-- Test feature `set_canonical'.
 		local
 			a_pathname: KL_PATHNAME
@@ -444,7 +444,7 @@ feature -- Test
 			assert_equal ("foo", "foo", a_pathname.item (1))
 		end
 
-	test_same_pathname is
+	test_same_pathname
 			-- Test feature `same_pathname'.
 		local
 			a_pathname1, a_pathname2: KL_PATHNAME
@@ -487,7 +487,7 @@ feature -- Test
 			assert ("not_same_pathname2", not a_pathname1.same_pathname (a_pathname2))
 		end
 
-	test_same_case_insensitive is
+	test_same_case_insensitive
 			-- Test feature `same_case_insensitive'.
 		local
 			a_pathname1, a_pathname2: KL_PATHNAME
@@ -536,7 +536,7 @@ feature -- Test
 			assert ("same_case_insensitive5", a_pathname1.same_case_insensitive (a_pathname2))
 		end
 
-	test_is_parent is
+	test_is_parent
 			-- Test feature `is_parent'.
 		local
 			a_pathname: KL_PATHNAME
@@ -558,7 +558,7 @@ feature -- Test
 			assert ("not_parent3", not a_pathname.is_parent (4))
 		end
 
-	test_is_current is
+	test_is_current
 			-- Test feature `is_current'.
 		local
 			a_pathname: KL_PATHNAME
@@ -580,7 +580,7 @@ feature -- Test
 			assert ("not_current3", not a_pathname.is_current (4))
 		end
 
-	test_is_canonical is
+	test_is_canonical
 			-- Test feature `is_canonical'.
 		local
 			a_pathname: KL_PATHNAME

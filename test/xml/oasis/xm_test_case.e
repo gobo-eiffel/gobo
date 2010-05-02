@@ -27,7 +27,7 @@ inherit
 
 feature -- XML asserts
 
-	assert_valid (a_name: STRING; in: STRING) is
+	assert_valid (a_name: STRING; in: STRING)
 			-- Assert valid.
 		require
 			name_not_void: a_name /= Void
@@ -39,7 +39,7 @@ feature -- XML asserts
 			assert (a_name, not error.has_error)
 		end
 
-	assert_invalid (a_name: STRING; in: STRING) is
+	assert_invalid (a_name: STRING; in: STRING)
 			-- Assert invalid.
 		require
 			name_not_void: a_name /= Void
@@ -54,7 +54,7 @@ feature -- XML asserts
 		end
 
 
-	assert_output (a_name: STRING; in: STRING; an_out: STRING) is
+	assert_output (a_name: STRING; in: STRING; an_out: STRING)
 			-- Assert valid and compare output with expected.
 		require
 			name_not_void: a_name /= Void
@@ -64,14 +64,14 @@ feature -- XML asserts
 			reset_parser
 			parser.parse_from_string (new_unicode_string_from_utf8 (in))
 			debug ("xml_parser") print_parser_error end
-			
+
 			assert (STRING_.concat ("Valid: ", a_name), parser.is_correct)
 
 				-- Constants are in UTF8, so convert if UC_STRING.
 			assert (STRING_.concat ("Output: ", a_name), STRING_.same_string (new_unicode_string_from_utf8 (an_out), printer.last_output))
 		end
 
-	assert_output_utf16 (a_name: STRING; in_utf16: STRING; an_out: STRING) is
+	assert_output_utf16 (a_name: STRING; in_utf16: STRING; an_out: STRING)
 			-- Assert valid and compare output with expected.
 		require
 			name_not_void: a_name /= Void
@@ -81,12 +81,12 @@ feature -- XML asserts
 			reset_parser
 			parser.parse_from_string (new_unicode_string_from_utf16 (in_utf16))
 			debug ("xml_parser") print_parser_error end
-			
+
 			assert (STRING_.concat ("Valid: ", a_name), parser.is_correct)
 			assert (STRING_.concat ("Output: ", a_name), STRING_.same_string (new_unicode_string_from_utf8 (an_out), printer.last_output))
 		end
-	
-	assert_valid_external (a_name: STRING; in: STRING; a_resolver: XM_TEST_STRING_EXTERNAL_RESOLVER) is
+
+	assert_valid_external (a_name: STRING; in: STRING; a_resolver: XM_TEST_STRING_EXTERNAL_RESOLVER)
 			-- Assert valid with external entities.
 		require
 			name_not_void: a_name /= Void
@@ -98,12 +98,12 @@ feature -- XML asserts
 			parser.set_entity_resolver (a_resolver)
 			parser.parse_from_string (new_unicode_string_from_utf8 (in))
 			debug ("xml_parser") print_parser_error end
-			
+
 			assert (a_name, not error.has_error)
 			assert ("resolver_depth", a_resolver.depth = 0)
 		end
-		
-	assert_invalid_external (a_name: STRING; in: STRING; a_resolver: XM_EXTERNAL_RESOLVER) is
+
+	assert_invalid_external (a_name: STRING; in: STRING; a_resolver: XM_EXTERNAL_RESOLVER)
 			-- Assert invalid with external entities.
 		require
 			name_not_void: a_name /= Void
@@ -114,11 +114,11 @@ feature -- XML asserts
 			parser.set_entity_resolver (a_resolver)
 			parser.parse_from_string (new_unicode_string_from_utf8 (in))
 			debug ("xml_parser") print_parser_error end
-			
+
 			assert (a_name, error.has_error)
 		end
 
-	assert_output_external (a_name: STRING; in: STRING; an_out: STRING; a_resolver: XM_EXTERNAL_RESOLVER) is
+	assert_output_external (a_name: STRING; in: STRING; an_out: STRING; a_resolver: XM_EXTERNAL_RESOLVER)
 			-- Assert output valid with external.
 		require
 			name: a_name /= Void
@@ -136,7 +136,7 @@ feature -- XML asserts
 
 feature {NONE} -- Debug
 
-	print_parser_error is
+	print_parser_error
 			-- Debug: print error
 		do
 			if not parser.is_correct then
@@ -144,7 +144,7 @@ feature {NONE} -- Debug
 				std.output.put_new_line
 			end
 		end
-		
+
 feature {NONE} -- Parser
 
 	parser: XM_PARSER
@@ -152,11 +152,11 @@ feature {NONE} -- Parser
 
 	printer: XM_CANONICAL_PRETTY_PRINT_FILTER
 			-- Pretty print filter
-		
+
 	error: XM_STOP_ON_ERROR_FILTER
 			-- Error collector
 
-	new_parser: XM_EIFFEL_PARSER is
+	new_parser: XM_EIFFEL_PARSER
 			-- New parser
 			-- (Can be redefined to test another parser.)
 		do
@@ -164,7 +164,7 @@ feature {NONE} -- Parser
 			Result.disable_namespaces
 		end
 
-	reset_parser is
+	reset_parser
 			-- Reset parser.
 		local
 			an_attribute: XM_ATTRIBUTE_DEFAULT_FILTER

@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_isolation_level: INTEGER) is
+	make (an_isolation_level: INTEGER)
 			-- Establish invariant.
 		require
 			isolation_level_small_enough: an_isolation_level <= Serializable
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_collection_mapped (a_uri: STRING): BOOLEAN is
+	is_collection_mapped (a_uri: STRING): BOOLEAN
 			-- Has `a_uri' been mapped to a collection?
 		require
 			uri_not_void: a_uri /= Void-- and then is_absolute
@@ -55,7 +55,7 @@ feature -- Access
 			Result := collection_name_map.has (a_uri)
 		end
 
-	is_document_mapped (a_uri: STRING): BOOLEAN is
+	is_document_mapped (a_uri: STRING): BOOLEAN
 			-- Has `a_uri' been mapped to a document?
 		require
 			uri_not_void: a_uri /= Void -- and then is_absolute
@@ -66,7 +66,7 @@ feature -- Access
 		end
 
 
-	collection (a_uri: STRING): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	collection (a_uri: STRING): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Collection corresponding to `a_uri'
 		require
 			uri_not_void: a_uri /= Void  -- and then is_absolute
@@ -76,8 +76,8 @@ feature -- Access
 		ensure
 			collection_before:  isolation_level < Serializable implies Result /= Void and then Result.before
 		end
-	
-	document (a_uri: STRING): XM_XPATH_DOCUMENT is
+
+	document (a_uri: STRING): XM_XPATH_DOCUMENT
 			-- Document corresponding to `a_uri'
 		require
 			uri_not_void: a_uri /= Void  -- and then is_absolute
@@ -89,7 +89,7 @@ feature -- Access
 			document_not_void:  isolation_level < Serializable implies Result /= Void
 		end
 
-	media_type (a_uri: STRING): UT_MEDIA_TYPE is
+	media_type (a_uri: STRING): UT_MEDIA_TYPE
 			-- Media type corresponding to `a_uri'
 		require
 			uri_not_void: a_uri /= Void  -- and then is_absolute
@@ -105,7 +105,7 @@ feature -- Access
 
 feature -- Element change
 
-	add (a_document: XM_XPATH_DOCUMENT; a_media_type: UT_MEDIA_TYPE; a_uri: STRING) is
+	add (a_document: XM_XPATH_DOCUMENT; a_media_type: UT_MEDIA_TYPE; a_uri: STRING)
 			-- Add `a_document' to `Current'.
 		require
 			uri_not_void: a_uri /= Void  -- and then is_absolute
@@ -119,7 +119,7 @@ feature -- Element change
 			uri_mapped: is_document_mapped (a_uri)
 		end
 
-	add_collection (a_collection: XM_XPATH_SEQUENCE_EXTENT; a_uri: STRING) is
+	add_collection (a_collection: XM_XPATH_SEQUENCE_EXTENT; a_uri: STRING)
 			-- Add `a_document' to `Current'.
 		require
 			uri_not_void: a_uri /= Void  -- and then is_absolute
@@ -134,7 +134,7 @@ feature -- Element change
 
 feature {XM_XPATH_TRANSFORMER} -- Removal
 
-	remove (a_uri: STRING) is
+	remove (a_uri: STRING)
 			-- Remove `a_uri' from `Current'.
 			-- CAUTION: This breaks the guarentee of Unique URI to document mapping.
 			--          Hence the export restriction

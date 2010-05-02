@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT) is
+	make (a_project: GEANT_PROJECT)
 			-- Create a new 'geyacc' command.
 		do
 			precursor (a_project)
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- Can command be executed?
 		do
 			Result := input_filename /= Void and then input_filename.count > 0
@@ -72,7 +72,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_verbose_filename (a_filename: like verbose_filename) is
+	set_verbose_filename (a_filename: like verbose_filename)
 			-- Set `verbose_filename' to `a_filename'.
 		require
 			a_filename_not_void: a_filename /= Void
@@ -83,7 +83,7 @@ feature -- Setting
 			verbose_filename_set: verbose_filename = a_filename
 		end
 
-	set_separate_actions (b: BOOLEAN) is
+	set_separate_actions (b: BOOLEAN)
 			-- Set  `separate_actions' to `b'.
 		do
 			separate_actions := b
@@ -91,7 +91,7 @@ feature -- Setting
 			separate_actions_set: separate_actions = b
 		end
 
-	set_tokens_classname (a_classname: like tokens_classname) is
+	set_tokens_classname (a_classname: like tokens_classname)
 			-- Set `tokens_classname' to `a_classname'.
 		require
 			a_classname_not_void: a_classname /= Void
@@ -102,7 +102,7 @@ feature -- Setting
 			tokens_classname_set: tokens_classname = a_classname
 		end
 
-	set_tokens_filename (a_filename: like tokens_filename) is
+	set_tokens_filename (a_filename: like tokens_filename)
 			-- Set `tokens_filename' to `a_filename'.
 		require
 			a_filename_not_void: a_filename /= Void
@@ -113,7 +113,7 @@ feature -- Setting
 			tokens_filename_set: tokens_filename = a_filename
 		end
 
-	set_output_filename (a_filename: like output_filename) is
+	set_output_filename (a_filename: like output_filename)
 			-- Set `output_filename' to `a_filename'.
 		require
 			a_filename_not_void: a_filename /= Void
@@ -124,7 +124,7 @@ feature -- Setting
 			output_filename_set: output_filename = a_filename
 		end
 
-	set_input_filename (a_filename: like input_filename) is
+	set_input_filename (a_filename: like input_filename)
 			-- Set `input_filename' to `a_filename'.
 		require
 			a_filename_not_void: a_filename /= Void
@@ -135,7 +135,7 @@ feature -- Setting
 			input_filename_set: input_filename = a_filename
 		end
 
-	set_old_typing (b: BOOLEAN) is
+	set_old_typing (b: BOOLEAN)
 			-- Set `old_typing' to `b'.
 		do
 			old_typing := b
@@ -143,7 +143,7 @@ feature -- Setting
 			old_typing_set: old_typing = b
 		end
 
-	set_new_typing (b: BOOLEAN) is
+	set_new_typing (b: BOOLEAN)
 			-- Set `new_typing' to `b'.
 		do
 			new_typing := b
@@ -153,7 +153,7 @@ feature -- Setting
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute command.
 		local
 			cmd: STRING

@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER; sc: STRING) is
+	make (filename: STRING; line: INTEGER; sc: STRING)
 			-- Create a new error reporting that `sc'
 			-- is a bad start condition.
 		require
@@ -37,10 +37,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: bad <start condition>: $3"
+	default_template: STRING = "%"$1%", line $2: bad <start condition>: $3"
 			-- Default template used to built the error message
 
-	code: STRING is "LX0001"
+	code: STRING = "LX0001"
 			-- Error code
 
 invariant

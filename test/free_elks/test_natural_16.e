@@ -24,7 +24,7 @@ create
 
 feature -- Test
 
-	test_default_create is
+	test_default_create
 			-- Test feature 'default_create'.
 		local
 			i: NATURAL_16
@@ -32,7 +32,7 @@ feature -- Test
 			assert ("default", i = 0)
 		end
 
-	test_is_less is
+	test_is_less
 			-- Test feature 'is_less alias "<"'.
 		local
 			i1, i2: NATURAL_16
@@ -48,7 +48,7 @@ feature -- Test
 			assert ("not_less_than2", not (i1 < i2))
 		end
 
-	test_is_less_equal is
+	test_is_less_equal
 			-- Test feature 'is_less_equal alias "<="'.
 		local
 			i1, i2: NATURAL_16
@@ -64,7 +64,7 @@ feature -- Test
 			assert ("less_equal2", i1 <= i2)
 		end
 
-	test_is_greater is
+	test_is_greater
 			-- Test feature 'is_greater alias ">"'.
 		local
 			i1, i2: NATURAL_16
@@ -80,7 +80,7 @@ feature -- Test
 			assert ("not_greater_than2", not (i1 > i2))
 		end
 
-	test_is_greater_equal is
+	test_is_greater_equal
 			-- Test feature 'is_greater_equal alias ">="'.
 		local
 			i1, i2: NATURAL_16
@@ -96,7 +96,7 @@ feature -- Test
 			assert ("greater_equal2", i1 >= i2)
 		end
 
-	test_out is
+	test_out
 			-- Test feature 'out'.
 		local
 			i: NATURAL_16
@@ -128,7 +128,7 @@ feature -- Test
 			assert ("new_string4", l_out /= i.out)
 		end
 
-	test_item is
+	test_item
 			-- Test feature 'item'.
 		local
 			i: NATURAL_16
@@ -141,7 +141,7 @@ feature -- Test
 			assert ("item4", ({NATURAL_16} 100).item = 100)
 		end
 
-	test_set_item___fail_ise is
+	test_set_item___fail_ise
 			-- Test feature 'set_item'.
 			-- Does not work with ISE Eiffel.
 		local
@@ -165,7 +165,7 @@ feature -- Test
 			end
 		end
 
-	test_to_reference is
+	test_to_reference
 			-- Test feature 'to_reference'.
 		local
 			i: NATURAL_16
@@ -181,7 +181,7 @@ feature -- Test
 			assert ("item2", iref.item = 10)
 		end
 
-	test_make_from_reference___fail_ise is
+	test_make_from_reference___fail_ise
 			-- Test feature 'make_from_reference'.
 			-- Does not work with ISE Eiffel.
 		local
@@ -200,7 +200,7 @@ feature -- Test
 			end
 		end
 
-	test_plus is
+	test_plus
 			-- Test feature 'plus alias "+"'.
 		local
 			i1, i2, i3: NATURAL_16
@@ -211,7 +211,7 @@ feature -- Test
 			assert ("plus1", i1 + i2 = i3)
 		end
 
-	test_minus is
+	test_minus
 			-- Test feature 'minus alias "-"'.
 		local
 			i1, i2, i3: NATURAL_16
@@ -222,7 +222,7 @@ feature -- Test
 			assert ("minus1", i1 - i2 = i3)
 		end
 
-	test_product is
+	test_product
 			-- Test feature 'product alias "*"'.
 		local
 			i1, i2, i3: NATURAL_16
@@ -233,7 +233,7 @@ feature -- Test
 			assert ("times1", i1 * i2 = i3)
 		end
 
-	test_quotient is
+	test_quotient
 			-- Test feature 'quotient alias "/"'.
 		local
 			i1, i2: NATURAL_16
@@ -245,7 +245,7 @@ feature -- Test
 			assert ("divide1", i1 / i2 = d1)
 		end
 
-	test_integer_quotient is
+	test_integer_quotient
 			-- Test feature 'integer_quotient alias "//"'.
 		local
 			i1, i2, i3: NATURAL_16
@@ -256,7 +256,7 @@ feature -- Test
 			assert ("div1", i1 // i2 = i3)
 		end
 
-	test_integer_remainder is
+	test_integer_remainder
 			-- Test feature 'integer_remainder alias "\\"'.
 		local
 			i1, i2, i3: NATURAL_16
@@ -267,7 +267,7 @@ feature -- Test
 			assert ("mod1", i1 \\ i2 = i3)
 		end
 
-	test_power is
+	test_power
 			-- Test feature 'power alias "^"'.
 		local
 			i: NATURAL_16
@@ -283,7 +283,7 @@ feature -- Test
 			assert ("power2", i ^ d1 = d2)
 		end
 
-	test_identity is
+	test_identity
 			-- Test feature 'identity alias "+"'.
 		local
 			i1, i2: NATURAL_16
@@ -293,7 +293,7 @@ feature -- Test
 			assert ("plus1", +i1 = i2)
 		end
 
-	test_to_character_8 is
+	test_to_character_8
 			-- Test feature 'to_character_8'.
 		local
 			i: NATURAL_16
@@ -304,7 +304,7 @@ feature -- Test
 			assert ("to_character_8_1", i.to_character_8 = c)
 		end
 
-	test_to_real_32 is
+	test_to_real_32
 			-- Test feature 'to_real_32'.
 		local
 			i: NATURAL_16
@@ -315,7 +315,7 @@ feature -- Test
 			assert ("to_real_32_1", i.to_real_32 = r)
 		end
 
-	test_to_real_64 is
+	test_to_real_64
 			-- Test feature 'to_real_64'.
 		local
 			i: NATURAL_16
@@ -326,7 +326,7 @@ feature -- Test
 			assert ("to_real_64_1", i.to_real_64 = d)
 		end
 
-	test_as_natural_8 is
+	test_as_natural_8
 			-- Test feature 'as_natural_8'.
 		local
 			i1: NATURAL_16
@@ -337,7 +337,7 @@ feature -- Test
 			assert ("as_natural_8_1", i1.as_natural_8 = i2)
 		end
 
-	test_as_natural_16 is
+	test_as_natural_16
 			-- Test feature 'as_natural_16'.
 		local
 			i1: NATURAL_16
@@ -348,7 +348,7 @@ feature -- Test
 			assert ("as_natural_16_1", i1.as_natural_16 = i2)
 		end
 
-	test_as_natural_32 is
+	test_as_natural_32
 			-- Test feature 'as_natural_32'.
 		local
 			i1: NATURAL_16
@@ -359,7 +359,7 @@ feature -- Test
 			assert ("as_natural_32_1", i1.as_natural_32 = i2)
 		end
 
-	test_as_natural_64 is
+	test_as_natural_64
 			-- Test feature 'as_natural_64'.
 		local
 			i1: NATURAL_16
@@ -370,7 +370,7 @@ feature -- Test
 			assert ("as_natural_64_1", i1.as_natural_64 = i2)
 		end
 
-	test_as_integer_8 is
+	test_as_integer_8
 			-- Test feature 'as_integer_8'.
 		local
 			i1: NATURAL_16
@@ -381,7 +381,7 @@ feature -- Test
 			assert ("as_integer_8_1", i1.as_integer_8 = i2)
 		end
 
-	test_as_integer_16 is
+	test_as_integer_16
 			-- Test feature 'as_integer_16'.
 		local
 			i1: NATURAL_16
@@ -392,7 +392,7 @@ feature -- Test
 			assert ("as_integer_16_1", i1.as_integer_16 = i2)
 		end
 
-	test_as_integer_32 is
+	test_as_integer_32
 			-- Test feature 'as_integer_32'.
 		local
 			i1: NATURAL_16
@@ -403,7 +403,7 @@ feature -- Test
 			assert ("as_integer_32_1", i1.as_integer_32 = i2)
 		end
 
-	test_as_integer_64 is
+	test_as_integer_64
 			-- Test feature 'as_integer_64'.
 		local
 			i1: NATURAL_16
@@ -414,7 +414,7 @@ feature -- Test
 			assert ("as_integer_64_1", i1.as_integer_64 = i2)
 		end
 
-	test_bit_and is
+	test_bit_and
 			-- Test feature 'bit_and'.
 		local
 			i1, i2, i3: NATURAL_16
@@ -429,7 +429,7 @@ feature -- Test
 			assert ("bit_and2", i1.bit_and (i2) = i3)
 		end
 
-	test_bit_or is
+	test_bit_or
 			-- Test feature 'bit_or'.
 		local
 			i1, i2, i3: NATURAL_16
@@ -444,7 +444,7 @@ feature -- Test
 			assert ("bit_or2", i1.bit_or (i2) = i3)
 		end
 
-	test_bit_xor is
+	test_bit_xor
 			-- Test feature 'bit_xor'.
 		local
 			i1, i2, i3: NATURAL_16
@@ -459,7 +459,7 @@ feature -- Test
 			assert ("bit_xor2", i1.bit_xor (i2) = i3)
 		end
 
-	test_bit_not is
+	test_bit_not
 			-- Test feature 'bit_not'.
 		local
 			i1, i2: NATURAL_16
@@ -472,7 +472,7 @@ feature -- Test
 			assert ("bit_not2", i1.bit_not = i2)
 		end
 
-	test_bit_shift_left is
+	test_bit_shift_left
 			-- Test feature 'bit_shift_left'.
 		local
 			i1, i2: NATURAL_16
@@ -491,7 +491,7 @@ feature -- Test
 			assert ("bit_shift_left4", i1.bit_shift_left (1) = i2)
 		end
 
-	test_bit_shift_right is
+	test_bit_shift_right
 			-- Test feature 'bit_shift_right'.
 		local
 			i1, i2: NATURAL_16
@@ -504,7 +504,7 @@ feature -- Test
 			assert ("bit_shift_right2", i1.bit_shift_right (1) = i2)
 		end
 
-	test_convert is
+	test_convert
 			-- Test conversion.
 		local
 			i: NATURAL_16

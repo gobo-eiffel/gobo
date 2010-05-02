@@ -13,7 +13,7 @@ note
 class XM_XPATH_NAMESPACE_AXIS_ITERATOR
 
 inherit
-	
+
 	XM_XPATH_AXIS_ITERATOR [XM_XPATH_NAMESPACE_NODE]
 		redefine
 			item, before, after, start
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_element: XM_XPATH_ELEMENT; a_node_test: XM_XPATH_NODE_TEST) is
+	make (a_element: XM_XPATH_ELEMENT; a_node_test: XM_XPATH_NODE_TEST)
 			-- Establish invariant.
 		require
 			element_not_void: a_element /= Void
@@ -82,16 +82,16 @@ feature -- Access
 
 	item: XM_XPATH_NAMESPACE_NODE
 			-- Node at the current position
-	
+
 feature -- Status report
 
-	before: BOOLEAN is
+	before: BOOLEAN
 			-- Has `start' been called yet on this sequence?
 		do
 			Result := cursor.before
 		end
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
 			Result := cursor.after
@@ -99,7 +99,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Move to first position
 		do
 			cursor.start; position := 1
@@ -111,8 +111,8 @@ feature -- Cursor movement
 			end
 			index := 1
 		end
-			
-	forth is
+
+	forth
 			-- Move to next position
 		do
 			cursor.forth; position := position + 1
@@ -127,7 +127,7 @@ feature -- Cursor movement
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 			create Result.make (element, node_test)
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 	position: INTEGER
 			-- Position of namespace on axis, ignoring `node_test'
 
-	advance is
+	advance
 			-- Move to the next position
 		do
 			-- Not used
@@ -159,4 +159,4 @@ invariant
 	node_test_not_void: node_test /= Void
 
 end
-	
+

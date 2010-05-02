@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant
 		do
 			preceding_token := Unknown_token
@@ -48,7 +48,7 @@ feature -- Access
 	next_token_start_index: INTEGER
 			-- The position in the expression of the start of the next token
 
-	last_token: INTEGER is
+	last_token: INTEGER
 			-- The number identifying the most recently read token
 		require
 			no_lexical_error: is_lexical_error = False
@@ -56,7 +56,7 @@ feature -- Access
 			Result := current_token
 		end
 
-	last_token_value: STRING is
+	last_token_value: STRING
 			-- The string value of the most recently read token
 		require
 			no_lexical_error: is_lexical_error = False
@@ -72,7 +72,7 @@ feature -- Access
 	input_length: INTEGER
 			-- Length of the input string
 
-	last_lexical_error: STRING is
+	last_lexical_error: STRING
 			-- Error text
 		require
 			lexical_error: is_lexical_error
@@ -82,7 +82,7 @@ feature -- Access
 			text_not_void: Result /= Void
 		end
 
-	recent_text: STRING is
+	recent_text: STRING
 			-- Most recently read text;
 			-- (for use in an error message)
 		local
@@ -111,7 +111,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_input_stream_exhausted: BOOLEAN is
+	is_input_stream_exhausted: BOOLEAN
 			-- Are there more characters to read?
 		do
 			Result := input_index > input_length + 2 -- + 2 for the mythical EOF character
@@ -125,7 +125,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	tokenize (an_input: STRING; a_start, an_end, a_line_number: INTEGER) is
+	tokenize (an_input: STRING; a_start, an_end, a_line_number: INTEGER)
 			-- Prepare a string for tokenization.
 		require
 			input_string_not_void: an_input /= Void
@@ -153,7 +153,7 @@ feature -- Status setting
 		end
 
 
-	treat_current_as_operator is
+	treat_current_as_operator
 			-- Force the current token to be treated as an operator if possible
 		local
 			operator_type: INTEGER
@@ -174,7 +174,7 @@ feature -- Status setting
 
 feature --Element change
 
-	next is
+	next
 			-- Set `last_token' and `last_token_value' from `input'
 		require
 			no_previous_error: not is_lexical_error
@@ -364,7 +364,7 @@ feature {NONE} -- Status setting
 	-- The export status of this next routine may well change
 	-- to enable it to be called by an XQuery parser class
 
-	look_ahead is
+	look_ahead
 			-- Look ahead by one token;
 			-- This method does the real tokenization work;
 			-- The method is normally called internally, but an XQuery parser
@@ -824,10 +824,10 @@ feature {NONE} -- Implementation
 	preceding_token: INTEGER
 			-- The token number of the token that preceded the current token
 
-	whitespace: STRING is " %R%T%N"
+	whitespace: STRING = " %R%T%N"
 			-- White space charaters
 
-	binary_operator (a_string: STRING): INTEGER is
+	binary_operator (a_string: STRING): INTEGER
 			-- Identify a binary operator
 		require
 			string_not_void: a_string /= Void
@@ -900,7 +900,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-		function_type (a_string: STRING): INTEGER is
+		function_type (a_string: STRING): INTEGER
 			-- Distinguish nodekind names, "if", and function names, which are all followed by a "("
 		require
 			string_not_void: a_string /= Void
@@ -951,13 +951,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_operator: BOOLEAN is
+	is_operator: BOOLEAN
 			-- Test whether the previous token is an operator
 		do
 			Result := preceding_token <= Last_operator
 		end
 
-	double_keywords: DS_HASH_TABLE [INTEGER, STRING] is
+	double_keywords: DS_HASH_TABLE [INTEGER, STRING]
 			-- Lookup table for composite (two-keyword) tokens
 		once
 			create Result.make_with_equality_testers (30, Void, string_equality_tester)

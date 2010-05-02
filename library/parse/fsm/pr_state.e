@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_id: INTEGER; a_symbol: like accessing_symbol) is
+	make (an_id: INTEGER; a_symbol: like accessing_symbol)
 			-- Create a new FSM state.
 		require
 			valid_id: an_id >= 0
@@ -75,7 +75,7 @@ feature -- Access
 			-- (This list can be void if no error tokens
 			-- have been recorded.)
 
-	shift (a_symbol: PR_SYMBOL): PR_STATE is
+	shift (a_symbol: PR_SYMBOL): PR_STATE
 			-- State reached from current state through
 			-- the shift transition `a_symbol'
 		require
@@ -112,7 +112,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_shift (a_symbol: PR_SYMBOL): BOOLEAN is
+	has_shift (a_symbol: PR_SYMBOL): BOOLEAN
 			-- Is there a shift transition `a_symbol'
 			-- from current state?
 		require
@@ -146,7 +146,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	same_state (other: like Current): BOOLEAN is
+	same_state (other: like Current): BOOLEAN
 			-- Are current state and `other' considered equal?
 			-- (Do not redefine `is_equal' here because of the
 			-- extra preconditions.)
@@ -185,7 +185,7 @@ feature -- Comparison
 
 feature -- Status setting
 
-	set_lookahead_needed is
+	set_lookahead_needed
 			-- Find out whether a lookahead token is needed
 			-- and set `lookahead_needed' accordingly.
 		local
@@ -236,7 +236,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	put_position (a_position: PR_POSITION) is
+	put_position (a_position: PR_POSITION)
 			-- Add `a_position' to `positions'.
 		require
 			a_position_not_void: a_position /= Void
@@ -252,7 +252,7 @@ feature -- Element change
 			position_added: positions.has (a_position)
 		end
 
-	put_transition (a_transition: PR_TRANSITION; a_rule: PR_RULE) is
+	put_transition (a_transition: PR_TRANSITION; a_rule: PR_RULE)
 			-- Add `a_transition' to the list of transitions
 			-- leading to reduction of `a_rule' in current
 			-- state.
@@ -282,7 +282,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_shift (a_symbol: PR_SYMBOL) is
+	remove_shift (a_symbol: PR_SYMBOL)
 			-- Remove shift transition `a_symbol'
 			-- from current state?
 		require
@@ -310,7 +310,7 @@ feature -- Removal
 
 feature -- Setting
 
-	set_id (an_id: INTEGER) is
+	set_id (an_id: INTEGER)
 			-- Set `id' to `an_id'.
 		require
 			valid_id: an_id >= 0
@@ -320,7 +320,7 @@ feature -- Setting
 			id_set: id = an_id
 		end
 
-	set_error_action (an_action: like error_action) is
+	set_error_action (an_action: like error_action)
 			-- Set `error_action' to `an_action'.
 		do
 			error_action := an_action
@@ -330,7 +330,7 @@ feature -- Setting
 
 feature -- Conflicts
 
-	resolve_conflicts: DS_LINKED_LIST [PR_CONFLICT] is
+	resolve_conflicts: DS_LINKED_LIST [PR_CONFLICT]
 			-- Try to resolve any shift/reduce conflicts
 			-- using precedence levels. Set `has_conflict'
 			-- to true if a conflict could not be resolved.
@@ -457,7 +457,7 @@ feature -- Conflicts
 			no_void_conflict: not Result.has_void
 		end
 
-	shift_reduce_count: INTEGER is
+	shift_reduce_count: INTEGER
 			-- Number of shift/reduce conflicts in current state
 		local
 			tokens: DS_ARRAYED_LIST [PR_TOKEN]
@@ -504,7 +504,7 @@ feature -- Conflicts
 			positive_count: Result >= 0
 		end
 
-	reduce_reduce_count: INTEGER is
+	reduce_reduce_count: INTEGER
 			-- Number of reduce/reduce conflicts in current state
 		local
 			i, j: INTEGER
@@ -544,7 +544,7 @@ feature -- Conflicts
 
 feature -- Sorting
 
-	sort_positions is
+	sort_positions
 			-- Sort `positions' in increasing order.
 		do
 			positions.sort (Position_sorter)
@@ -552,7 +552,7 @@ feature -- Sorting
 			positions_sorted: positions_sorted
 		end
 
-	positions_sorted: BOOLEAN is
+	positions_sorted: BOOLEAN
 			-- Are `positions' sorted?
 		do
 			Result := positions.sorted (Position_sorter)
@@ -560,7 +560,7 @@ feature -- Sorting
 
 feature -- Output
 
-	print_state (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_state (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print textual representation of
 			-- current state to `a_file'.
 		require
@@ -673,7 +673,7 @@ feature -- Output
 			end
 		end
 
-	print_reductions (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_reductions (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print textual representation of current
 			-- state's reductions to `a_file'.
 		require
@@ -838,22 +838,22 @@ feature -- Output
 
 feature {NONE} -- Constants
 
-	Initial_max_nb_positions: INTEGER is 50
+	Initial_max_nb_positions: INTEGER = 50
 			-- Initial capacity for `positions'
 
-	Max_nb_positions_increment: INTEGER is 50
+	Max_nb_positions_increment: INTEGER = 50
 			-- Increment when resizing `positions'
 
-	Initial_max_nb_shifts: INTEGER is 50
+	Initial_max_nb_shifts: INTEGER = 50
 			-- Initial capacity for `transitions'
 
-	Initial_max_nb_reductions: INTEGER is 50
+	Initial_max_nb_reductions: INTEGER = 50
 			-- Increment when resizing `transitions'
 
-	Initial_max_nb_errors: INTEGER is 10
+	Initial_max_nb_errors: INTEGER = 10
 			-- Initial capacity for `errors'
 
-	Position_sorter: DS_BUBBLE_SORTER [PR_POSITION] is
+	Position_sorter: DS_BUBBLE_SORTER [PR_POSITION]
 			-- Position sorter
 		local
 			a_comparator: KL_COMPARABLE_COMPARATOR [PR_POSITION]

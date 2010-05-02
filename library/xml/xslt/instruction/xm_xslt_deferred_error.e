@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_error: XM_XPATH_ERROR_VALUE; a_instruction_name: STRING) is
+	make (a_error: XM_XPATH_ERROR_VALUE; a_instruction_name: STRING)
 			-- Establish invariant.
 		require
 			error_not_void: a_error /= Void
@@ -45,7 +45,7 @@ feature -- Access
 	instruction_name: STRING
 			-- Name of instruction, for diagnostics (??)
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, when known;
 		do
 			Result := any_item
@@ -57,14 +57,14 @@ feature -- Access
 
 feature -- Status report
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		do
 			std.error.put_string (STRING_.concat (indentation (a_level), "error"))
 			std.error.put_new_line
 		end
 
-	is_deferred_error: BOOLEAN is
+	is_deferred_error: BOOLEAN
 			-- Is `Current' a deferred error?
 		do
 			Result := True
@@ -72,42 +72,42 @@ feature -- Status report
 
 feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			a_replacement.put (Current)
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		do
-			a_replacement.put (Current)			
+			a_replacement.put (Current)
 		end
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			a_result.put (create {XM_XPATH_INVALID_ITEM}.make (error_value))
 		end
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterator over the values of a sequence
 		do
 			create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (error)
 		end
 
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create iterator over a sequence of nodes.
 		do
 			create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (error)
 		end
 
-	
+
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_zero_or_more
@@ -121,6 +121,6 @@ feature {NONE} -- Implementation
 invariant
 
 	error_not_void: initialized implies error /= Void
-	
+
 end
-	
+

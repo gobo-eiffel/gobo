@@ -25,7 +25,7 @@ create
 
 feature -- Processing
 
-	execute is
+	execute
 			-- Start 'gelex' execution.
 		local
 			command_line: GELEX_COMMAND_LINE
@@ -43,7 +43,7 @@ feature -- Processing
 			print_backing_up_report
 		end
 
-	parse_input_file is
+	parse_input_file
 			-- Parse input file.
 		local
 			parser: LX_LEX_PARSER
@@ -73,7 +73,7 @@ feature -- Processing
 			end
 		end
 
-	override_description (a_description: LX_DESCRIPTION) is
+	override_description (a_description: LX_DESCRIPTION)
 			-- Override options specified in the input file
 			-- by options specified on the command-line.
 		local
@@ -83,7 +83,7 @@ feature -- Processing
 			command_line.read_options (a_description)
 		end
 
-	build_dfa is
+	build_dfa
 			-- Build `dfa'.
 		local
 			compressed_dfa: LX_COMPRESSED_DFA
@@ -142,7 +142,7 @@ feature -- Processing
 			dfa_not_void: dfa /= Void
 		end
 
-	print_scanner is
+	print_scanner
 			-- Print scanner.
 		require
 			dfa_not_void: dfa /= Void
@@ -168,7 +168,7 @@ feature -- Processing
 			end
 		end
 
-	print_backing_up_report is
+	print_backing_up_report
 			-- Print backing up report.
 		require
 			dfa_not_void: dfa /= Void
@@ -204,12 +204,12 @@ feature -- Access
 	error_handler: UT_ERROR_HANDLER
 			-- Error handler
 
-	dfa: LX_GENERATABLE_DFA 
+	dfa: LX_GENERATABLE_DFA
 			-- Generated DFA
 
 feature {NONE} -- Implementation
 
-	resurrect_code is
+	resurrect_code
 			-- Make sure that SmartEiffel does not complain about possible
 			-- "calls on a Void target in the living Eiffel code".
 		local

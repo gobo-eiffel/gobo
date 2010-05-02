@@ -25,7 +25,7 @@ create
 
 feature -- Status report
 
-	is_executable : BOOLEAN is
+	is_executable : BOOLEAN
 			-- Can command be executed?
 		do
 			Result := (variable /= Void and then variable.count > 0) and message /= Void
@@ -52,7 +52,7 @@ feature -- Access
 			-- If set, input task will reject any input not defined here.
 			-- Validargs are compared case sensitive.
 			-- If you want 'a' and 'A' to be accepted you will need to define both arguments
-			-- within validargs		
+			-- within validargs
 
 	validregexp: STRING
 			-- validregexp
@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_variable (a_variable: like variable) is
+	set_variable (a_variable: like variable)
 			-- Set `variable' to `a_variable'.
 		require
 			a_variable_not_void: a_variable /= Void
@@ -74,7 +74,7 @@ feature -- Setting
 			variable_set: variable = a_variable
 		end
 
-	set_message (a_message: like message) is
+	set_message (a_message: like message)
 			-- Set `message' to `a_message'.
 		require
 			a_message_not_void: a_message /= Void
@@ -84,7 +84,7 @@ feature -- Setting
 			message_set: message = a_message
 		end
 
-	set_default_value (a_default_value: like default_value) is
+	set_default_value (a_default_value: like default_value)
 			-- Set `default_value' to `a_default_value'.
 		require
 			a_default_value_not_void: a_default_value /= Void
@@ -94,7 +94,7 @@ feature -- Setting
 			default_value_set: default_value = a_default_value
 		end
 
-	set_answer_required (a_answer_required: like answer_required) is
+	set_answer_required (a_answer_required: like answer_required)
 			-- Set `answer_required' to `a_answer_required'.
 		do
 			answer_required := a_answer_required
@@ -102,7 +102,7 @@ feature -- Setting
 			answer_required_set: answer_required = a_answer_required
 		end
 
-	set_validargs (a_validargs: like validargs) is
+	set_validargs (a_validargs: like validargs)
 			-- Set `validargs' to `a_validargs'.
 		require
 			a_validargs_not_void: a_validargs /= Void
@@ -112,7 +112,7 @@ feature -- Setting
 			validargs_set: validargs = a_validargs
 		end
 
-	set_validregexp (a_validregexp: like validregexp) is
+	set_validregexp (a_validregexp: like validregexp)
 			-- Set `validregexp' to `a_validregexp'.
 		require
 			a_validregexp_not_void: a_validregexp /= Void
@@ -124,7 +124,7 @@ feature -- Setting
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Put variable in project variables pool.
 		local
 			s: STRING

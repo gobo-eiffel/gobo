@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_value, a_base_uri: STRING) is
+	make (a_value, a_base_uri: STRING)
 			-- Establish invariant.
 		require
 			value_not_void: a_value /= Void
@@ -49,32 +49,32 @@ feature -- Access
 
 	line_number: INTEGER
 			-- Line number
-	
-	selected_id (an_id: STRING): XM_XPATH_ELEMENT is
+
+	selected_id (an_id: STRING): XM_XPATH_ELEMENT
 			-- Element with ID value of `id'
 		do
 			Result := Void
 		end
 
-	string_value: STRING is
+	string_value: STRING
 			--Value of the item as a string
 		do
 			Result := text
 		end
 
-	document_uri: UT_URI is
+	document_uri: UT_URI
 			-- Absoulte URI of the source from which the document was constructed
 		do
 			create Result.make (system_id)
 		end
 
-	idrefs_nodes (some_idrefs: DS_LIST [STRING]): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	idrefs_nodes (some_idrefs: DS_LIST [STRING]): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Sequence of nodes in document order with an IDREF in `some_idrefs'
 		do
 			create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} Result.make
 		end
 
-	new_axis_iterator (an_axis_type: INTEGER): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
+	new_axis_iterator (an_axis_type: INTEGER): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
 			-- An enumeration over the nodes reachable by `an_axis_type' from this node
 		local
 			a_node_list: DS_ARRAYED_LIST [XM_XPATH_NODE]
@@ -95,7 +95,7 @@ feature -- Access
 			end
 		end
 
-	new_axis_iterator_with_node_test (an_axis_type: INTEGER; a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
+	new_axis_iterator_with_node_test (an_axis_type: INTEGER; a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
 			-- An enumeration over the nodes reachable by `an_axis_type' from this node;
 			-- Only nodes that match the pattern specified by `a_node_test' will be selected.
 		local
@@ -125,28 +125,28 @@ feature -- Access
 				end
 			else
 				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} Result.make
-			end	
+			end
 		end
-	
-	unparsed_entity_system_id (an_entity_name: STRING): STRING is
+
+	unparsed_entity_system_id (an_entity_name: STRING): STRING
 			-- System identifier of an unparsed external entity
 		do
 			Result := Void
 		end
 
-	unparsed_entity_public_id (an_entity_name: STRING): STRING is
+	unparsed_entity_public_id (an_entity_name: STRING): STRING
 			-- Public identifier of an unparsed external entity
 		do
 			Result := Void
 		end
 
-	node_name: STRING is
+	node_name: STRING
 			-- Qualified name
 		do
 			Result := "#text fragment"
 		end
 
-	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE is
+	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE
 			-- Node sequence number (in document order);
 			-- Sequence numbers are monotonic but not consecutive.
 			-- The sequence number must be unique within the document.
@@ -154,46 +154,46 @@ feature -- Access
 			create Result.make (0, 1)
 		end
 
-	name_code: INTEGER is
+	name_code: INTEGER
 			-- Name code this node - used in displaying names
 		do
 			Result := -1
 		end
 
-	all_elements (a_fingerprint: INTEGER): DS_ARRAYED_LIST [XM_XPATH_ELEMENT] is
+	all_elements (a_fingerprint: INTEGER): DS_ARRAYED_LIST [XM_XPATH_ELEMENT]
 			-- An enumeration of all elements with a given name
 		do
 			create Result.make (0)
 		end
 
-	root: XM_XPATH_NODE is
+	root: XM_XPATH_NODE
 			-- The root node for `Current';
 			-- This is not necessarily a Document node.
 		do
 			Result := Current
 		end
 
-	document_root: XM_XPATH_DOCUMENT is
+	document_root: XM_XPATH_DOCUMENT
 			-- The document node for `Current';
 			-- If `Current' is in a document fragment, then return Void
 		do
 			Result := Current
 		end
 
-	parent: XM_XPATH_COMPOSITE_NODE is
+	parent: XM_XPATH_COMPOSITE_NODE
 			-- Parent of current node;
 			-- `Void' if current node is root, or for orphan nodes or namespaces.
 		do
 			Result := Void
 		end
 
-	document: XM_XPATH_DOCUMENT is
+	document: XM_XPATH_DOCUMENT
 			-- Document that owns this node
 		do
 			Result := Current
 		end
 
-	atomized_value: XM_XPATH_VALUE is
+	atomized_value: XM_XPATH_VALUE
 			-- Typed value as atomic value or (unusually) sequence of atomic values.
 		do
 			create {XM_XPATH_STRING_VALUE} Result.make_untyped_atomic (text)
@@ -201,7 +201,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_same_node (other: XM_XPATH_NODE): BOOLEAN is
+	is_same_node (other: XM_XPATH_NODE): BOOLEAN
 			-- Does `Current' represent the same node in the tree as `other'?
 		do
 			Result := other = Current
@@ -209,7 +209,7 @@ feature -- Comparison
 
 feature -- Duplication
 
-	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
+	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN)
 			-- Copy `Current' to `a_receiver'.
 		do
 			a_receiver.notify_characters (text, 0)
@@ -217,7 +217,7 @@ feature -- Duplication
 
 feature {XM_XPATH_NODE} -- Local
 
-	is_possible_child: BOOLEAN is
+	is_possible_child: BOOLEAN
 			-- Can this node be a child of a document or element node?
 		do
 			Result := False
@@ -231,7 +231,7 @@ feature {NONE} -- Implementation
 	cached_text_node: XM_XPATH_TEXT_FRAGMENT_NODE
 			-- Sole text node
 
-	child_text_node: XM_XPATH_TEXT_FRAGMENT_NODE is
+	child_text_node: XM_XPATH_TEXT_FRAGMENT_NODE
 			-- Sole text node
 		do
 			if cached_text_node = Void then
@@ -250,4 +250,4 @@ invariant
 	base_uri_not_void: base_uri /= Void
 
 end
-	
+

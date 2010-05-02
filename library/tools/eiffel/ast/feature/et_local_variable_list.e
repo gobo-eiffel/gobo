@@ -27,14 +27,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new local variable list.
 		do
 			local_keyword := tokens.local_keyword
 			precursor
 		end
 
-	make_with_capacity (nb: INTEGER) is
+	make_with_capacity (nb: INTEGER)
 			-- Create a new local variable list with capacity `nb'.
 		do
 			local_keyword := tokens.local_keyword
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset local variables as they were when they were last parsed.
 		local
 			i, nb: INTEGER
@@ -57,7 +57,7 @@ feature -- Initialization
 
 feature -- Access
 
-	local_variable (i: INTEGER): ET_LOCAL_VARIABLE is
+	local_variable (i: INTEGER): ET_LOCAL_VARIABLE
 			-- Local variable at index `i' in list
 		require
 			i_large_enough: i >= 1
@@ -71,7 +71,7 @@ feature -- Access
 	local_keyword: ET_KEYWORD
 			-- 'local' keyword
 
-	index_of (a_name: ET_IDENTIFIER): INTEGER is
+	index_of (a_name: ET_IDENTIFIER): INTEGER
 			-- Index of local variable `a_name';
 			-- 0 if it does not exist
 		require
@@ -93,7 +93,7 @@ feature -- Access
 			index_small_enough: Result <= count
 		end
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -103,13 +103,13 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := local_keyword
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			if is_empty then
@@ -119,7 +119,7 @@ feature -- Access
 			end
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			if is_empty then
@@ -131,7 +131,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_local_keyword (a_local: like local_keyword) is
+	set_local_keyword (a_local: like local_keyword)
 			-- Set `local_keyword' to `a_local'.
 		require
 			a_local_not_void: a_local /= Void
@@ -143,7 +143,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_local_variable_list (Current)
@@ -151,7 +151,7 @@ feature -- Processing
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_LOCAL_VARIABLE_ITEM] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_LOCAL_VARIABLE_ITEM]
 			-- Fixed array routines
 		once
 			create Result

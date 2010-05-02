@@ -27,21 +27,21 @@ inherit
 
 feature -- Access
 
-	closing_line_number: INTEGER is
+	closing_line_number: INTEGER
 			-- Line number of element end tag (or 0 if not known)
 		deferred
 		ensure
 			non_negative_result: Result >= 0
 		end
 
-	construct_type: INTEGER is
+	construct_type: INTEGER
 			-- Type of construct being traced
 		deferred
 		ensure
 			positive_result: Result >= 0
 		end
 
-	trace_property (an_expanded_name: STRING): STRING is
+	trace_property (an_expanded_name: STRING): STRING
 			-- Value of trace-property
 		require
 			name_not_empty: an_expanded_name /= Void and then an_expanded_name.count > 0
@@ -52,12 +52,12 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	trace_properties: DS_LIST [STRING] is
+	trace_properties: DS_LIST [STRING]
 			-- Names of trace-properties
 		deferred
 		ensure
 			properties_not_void: Result /= Void
-		end			
+		end
 
 end
-	
+

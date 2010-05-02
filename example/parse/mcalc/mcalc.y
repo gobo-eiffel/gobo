@@ -64,14 +64,14 @@ exp: NUM					{ $$ := $1 }
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new calculator with memory.
 		do
 			make_parser_skeleton
 			create memory_values.make (10)
 		end
 
-	execute is
+	execute
 			-- Run calculator.
 		do
 			make
@@ -80,7 +80,7 @@ feature {NONE} -- Initialization
 
 feature -- Memory management
 
-	memory_value (a_name: STRING): DOUBLE is
+	memory_value (a_name: STRING): DOUBLE
 			-- Value associated with memory a_name;
 			-- 0.0 if no value has been stored in a_name yet
 		require
@@ -93,7 +93,7 @@ feature -- Memory management
 			end
 		end
 
-	set_memory_value (a_value: DOUBLE; a_name: STRING) is
+	set_memory_value (a_value: DOUBLE; a_name: STRING)
 			-- Store a_value into a_name.
 		require
 			a_name_not_void: a_name /= Void
@@ -105,7 +105,7 @@ feature -- Memory management
 
 feature {NONE} -- Scanner
 
-	read_token is
+	read_token
 			-- Lexical analyzer returns a double floating point
 			-- number on the stack and the token NUM, a STRING and
 			-- and the token VAR, a token ASSIGNMENT, or the ASCII

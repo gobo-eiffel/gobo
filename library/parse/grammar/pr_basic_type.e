@@ -25,14 +25,14 @@ create
 
 feature -- Old typing output
 
-	old_print_conversion_routine (a_file: KI_TEXT_OUTPUT_STREAM) is
+	old_print_conversion_routine (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print conversion routine ANY->`name' to `a_file'.
 		do
 			a_file.put_string ("%Tyytype")
 			a_file.put_integer (id)
 			a_file.put_string (" (v: ANY): ")
 			a_file.put_string (name)
-			a_file.put_string (" is%N%
+			a_file.put_string ("%N%
 				%%T%Trequire%N%
 				%%T%T%Tvalid_type: yyis_type")
 			a_file.put_integer (id)
@@ -46,7 +46,7 @@ feature -- Old typing output
 				%%T%Tend%N")
 			a_file.put_string ("%N%Tyyis_type")
 			a_file.put_integer (id)
-			a_file.put_string (" (v: ANY): BOOLEAN is%N%
+			a_file.put_string (" (v: ANY): BOOLEAN%N%
 				%%T%Tlocal%N%T%T%Tu: ")
 			a_file.put_string (name)
 			a_file.put_string ("_REF%N%T%Tdo%N%

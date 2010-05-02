@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new empty actual argument list.
 		do
 			left_symbol := tokens.left_parenthesis_symbol
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			precursor
 		end
 
-	make_with_capacity (nb: INTEGER) is
+	make_with_capacity (nb: INTEGER)
 			-- Create a new empty actual argument list with capacity `nb'.
 		do
 			left_symbol := tokens.left_parenthesis_symbol
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset actual arguments as they were when they were last parsed.
 		local
 			l_actual: ET_EXPRESSION_ITEM
@@ -79,7 +79,7 @@ feature -- Initialization
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_actual_argument_list (Current)

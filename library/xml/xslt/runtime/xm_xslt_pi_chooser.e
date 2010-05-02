@@ -1,7 +1,7 @@
 note
-	
+
 	description:
-	
+
 		"Objects that select from alternate xml-stylsheet PIs"
 
 	library: "Gobo Eiffel XSLT Library"
@@ -14,7 +14,7 @@ deferred class	XM_XSLT_PI_CHOOSER
 
 feature -- Access
 
-	selected_index (a_list: DS_LIST [STRING]): INTEGER is
+	selected_index (a_list: DS_LIST [STRING]): INTEGER
 			-- Index of chosen xml-stylesheet from within `a_list';
 			-- The first entry in the list is the preferred stylesheet.
 		require
@@ -25,4 +25,4 @@ feature -- Access
 		end
 
 end
-	
+

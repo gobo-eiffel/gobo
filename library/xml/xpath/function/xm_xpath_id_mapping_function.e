@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_document: XM_XPATH_DOCUMENT) is
+	make (a_document: XM_XPATH_DOCUMENT)
 			-- Establish invariant.
 		require
 			document_not_void: a_document /= Void
@@ -44,8 +44,8 @@ feature -- Access
 			-- Result from `map_nodes'
 
 feature -- Evaluation
-	
-	map_nodes (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
+
+	map_nodes (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT)
 			-- Map `an_item' to a sequence
 		local
 			a_splitter: ST_SPLITTER

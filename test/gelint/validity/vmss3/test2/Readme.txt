@@ -54,7 +54,7 @@ create
 
 feature
 
-	make is
+	make
 		local
 			b: BB
 		do
@@ -85,7 +85,7 @@ deferred class CC
 
 feature
 
-	f is
+	f
 		deferred
 		end
 
@@ -99,12 +99,12 @@ inherit
 
 feature
 
-	f is
+	f
 		do
 			print ("DD.f%N")
 		end
 
-	g is
+	g
 		do
 			print ("DD.g%N")
 		end

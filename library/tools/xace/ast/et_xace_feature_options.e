@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like feature_name; an_options: like options) is
+	make (a_name: like feature_name; an_options: like options)
 			-- Create a new feature options for feature `a_name'.
 		require
 			a_name_not_void: a_name /= Void

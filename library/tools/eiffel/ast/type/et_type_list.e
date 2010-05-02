@@ -20,7 +20,7 @@ inherit
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset types as they were when they were last parsed.
 		local
 			i, nb: INTEGER
@@ -34,7 +34,7 @@ feature -- Initialization
 
 feature -- Access
 
-	type (i: INTEGER): ET_TYPE is
+	type (i: INTEGER): ET_TYPE
 			-- Type of `i'-th item in list
 		require
 			i_large_enough: i >= 1
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_named_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	has_named_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does one of current types appearing in `a_context' and `other'
 			-- type appearing in `other_context' have the same named type?
 		require
@@ -73,7 +73,7 @@ feature -- Status report
 
 feature -- Iteration
 
-	do_all_types (an_action: PROCEDURE [ANY, TUPLE [ET_TYPE]]) is
+	do_all_types (an_action: PROCEDURE [ANY, TUPLE [ET_TYPE]])
 			-- Apply `an_action' to every type, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 		require
@@ -91,7 +91,7 @@ feature -- Iteration
 			end
 		end
 
-	do_types_if (an_action: PROCEDURE [ANY, TUPLE [ET_TYPE]]; a_test: FUNCTION [ANY, TUPLE [ET_TYPE], BOOLEAN]) is
+	do_types_if (an_action: PROCEDURE [ANY, TUPLE [ET_TYPE]]; a_test: FUNCTION [ANY, TUPLE [ET_TYPE], BOOLEAN])
 			-- Apply `an_action' to every type that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
 		require
@@ -114,7 +114,7 @@ feature -- Iteration
 			end
 		end
 
-	there_exists_type (a_test: FUNCTION [ANY, TUPLE [ET_TYPE], BOOLEAN]): BOOLEAN is
+	there_exists_type (a_test: FUNCTION [ANY, TUPLE [ET_TYPE], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for at least one type?
 			-- (Semantics not guaranteed if `a_test' changes the list.)
 		local
@@ -135,7 +135,7 @@ feature -- Iteration
 			end
 		end
 
-	for_all_types (a_test: FUNCTION [ANY, TUPLE [ET_TYPE], BOOLEAN]): BOOLEAN is
+	for_all_types (a_test: FUNCTION [ANY, TUPLE [ET_TYPE], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for all types?
 			-- (Semantics not guaranteed if `a_test' changes the list.)
 		local
@@ -159,7 +159,7 @@ feature -- Iteration
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_TYPE_ITEM] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_TYPE_ITEM]
 			-- Fixed array routines
 		once
 			create Result

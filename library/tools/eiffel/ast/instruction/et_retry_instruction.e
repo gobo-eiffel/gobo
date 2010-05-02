@@ -18,7 +18,7 @@ inherit
 		undefine
 			first_position, last_position
 		end
-	
+
 	ET_KEYWORD
 		rename
 			make_retry as make
@@ -32,7 +32,7 @@ create
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_retry_instruction (Current)

@@ -48,7 +48,7 @@ create
 
 feature
 
-	make is
+	make
 		local
 			b: BB
 		do
@@ -69,7 +69,7 @@ feature -- Access
 
 	name: STRING
 
-	f is
+	f
 		do
 			item := "gobo"
 		end

@@ -59,7 +59,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_configuration: like configuration; a_executable: like executable; a_factory: like transformer_factory; a_timer: like timer) is
+	make (a_configuration: like configuration; a_executable: like executable; a_factory: like transformer_factory; a_timer: like timer)
 			-- Establish invariant.
 		require
 			a_configuration_not_void: a_configuration /= Void
@@ -112,7 +112,7 @@ feature -- Access
 
 	current_date_time: DT_FIXED_OFFSET_ZONED_DATE_TIME
 
-	key_manager: XM_XSLT_KEY_MANAGER is
+	key_manager: XM_XSLT_KEY_MANAGER
 			-- Key manager
 		do
 			Result := executable.key_manager
@@ -159,7 +159,7 @@ feature -- Access
 	implicit_timezone: DT_FIXED_OFFSET_TIME_ZONE
 			-- Implicit time zone for comparing unzoned times and dates
 
-	response_stream (a_uri: STRING): KI_CHARACTER_INPUT_STREAM is
+	response_stream (a_uri: STRING): KI_CHARACTER_INPUT_STREAM
 			-- Response body from `a_uri';
 			-- Caller must not close the stream, but instead call `discard_response'.
 		require
@@ -173,7 +173,7 @@ feature -- Access
 			response_stream_readable: Result.is_open_read
 		end
 
-	remembered_number (a_node: XM_XPATH_NODE; a_instruction: XM_XSLT_COMPILED_NUMBER): DS_CELL [INTEGER_64] is
+	remembered_number (a_node: XM_XPATH_NODE; a_instruction: XM_XSLT_COMPILED_NUMBER): DS_CELL [INTEGER_64]
 			-- Number of a node if it is the last remembered one for `a_instruction'
 		require
 			a_node_not_void: a_node /= Void
@@ -189,7 +189,7 @@ feature -- Access
 			end
 		end
 
-	function_results_cache (a_function: XM_XSLT_COMPILED_USER_FUNCTION): DS_HASH_TABLE [XM_XPATH_VALUE, STRING] is
+	function_results_cache (a_function: XM_XSLT_COMPILED_USER_FUNCTION): DS_HASH_TABLE [XM_XPATH_VALUE, STRING]
 			-- Value associated with `a_function'
 		require
 			function_not_void: a_function /= Void
@@ -199,7 +199,7 @@ feature -- Access
 			end
 		end
 
-	cached_unparsed_text (a_uri, an_encoding: STRING): STRING is
+	cached_unparsed_text (a_uri, an_encoding: STRING): STRING
 			-- Unparsed text cached by XPath unparsed-text-available(`a_uri', `an_encoding') function
 		require
 			uri_not_empty: a_uri /= Void and then not a_uri.is_empty
@@ -214,7 +214,7 @@ feature -- Access
 			end
 		end
 
-	encoder_factory: XM_XSLT_ENCODER_FACTORY is
+	encoder_factory: XM_XSLT_ENCODER_FACTORY
 			-- Factory for output encoders
 		do
 			Result := configuration.encoder_factory
@@ -222,13 +222,13 @@ feature -- Access
 
 feature -- Status report
 
-	is_tracing: BOOLEAN is
+	is_tracing: BOOLEAN
 			-- Is tracing enabled?
 		do
 			Result := trace_listener /= Void
 		end
 
-	has_response_from (a_uri: STRING): BOOLEAN is
+	has_response_from (a_uri: STRING): BOOLEAN
 			-- Is a response body avaialble as a result of an xsl:result-document call to `a_uri'?
 		require
 			a_uri_not_void: a_uri /= Void
@@ -239,7 +239,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_remembered_number (a_number: INTEGER_64; a_node: XM_XPATH_NODE; a_instruction: XM_XSLT_COMPILED_NUMBER) is
+	set_remembered_number (a_number: INTEGER_64; a_node: XM_XPATH_NODE; a_instruction: XM_XSLT_COMPILED_NUMBER)
 			-- Set remembered number.
 		require
 			node_not_void: a_node /= Void
@@ -255,7 +255,7 @@ feature -- Setting
 			correct_number: remembered_numbers.item (a_instruction).second = a_number
 		end
 
-	set_response_stream (a_response: KI_CHARACTER_INPUT_STREAM; a_uri: STRING) is
+	set_response_stream (a_response: KI_CHARACTER_INPUT_STREAM; a_uri: STRING)
 			-- Save `a_response' indexed by `a_uri'.
 		require
 			a_response_not_void: a_response /= Void
@@ -271,7 +271,7 @@ feature -- Setting
 
 feature -- Creation
 
-	new_message_emitter (a_properties: XM_XSLT_OUTPUT_PROPERTIES): XM_XPATH_RECEIVER is
+	new_message_emitter (a_properties: XM_XSLT_OUTPUT_PROPERTIES): XM_XPATH_RECEIVER
 			-- New destination for xsl:message
 		do
 			Result := configuration.new_message_emitter (Current, a_properties)
@@ -279,7 +279,7 @@ feature -- Creation
 			new_message_emitter_not_void: Result /= Void
 		end
 
-	new_xpath_context: XM_XSLT_EVALUATION_CONTEXT is
+	new_xpath_context: XM_XSLT_EVALUATION_CONTEXT
 			-- New dynamic context
 		do
 			create Result.make (Current)
@@ -287,7 +287,7 @@ feature -- Creation
 			Major_context_created: Result /= Void and then not Result.is_minor
 		end
 
-	new_stripper (a_builder: XM_XPATH_BUILDER): XM_XSLT_STRIPPER is
+	new_stripper (a_builder: XM_XPATH_BUILDER): XM_XSLT_STRIPPER
 			-- Stripper configured to implement the whitespace stripping rules
 		require
 			builder_not_void: a_builder /= Void
@@ -297,7 +297,7 @@ feature -- Creation
 			stripper_not_void: Result /= Void
 		end
 
-	new_parser: XM_PARSER is
+	new_parser: XM_PARSER
 			-- XML Parser
 		do
 			Result := parser_factory.new_eiffel_parser
@@ -311,7 +311,7 @@ feature -- Creation
 			parser_not_void: Result /= Void
 		end
 
-	new_builder (a_parser: XM_PARSER; a_base_uri: STRING; a_document_uri: UT_URI): XM_XPATH_BUILDER is
+	new_builder (a_parser: XM_PARSER; a_base_uri: STRING; a_document_uri: UT_URI): XM_XPATH_BUILDER
 			-- Builder for XML source.
 		require
 			a_parser_not_void: a_parser /= Void
@@ -340,7 +340,7 @@ feature -- Creation
 
 feature -- Basic operations
 
-	save_function_results (a_result_table: DS_HASH_TABLE [XM_XPATH_VALUE, STRING]; a_function: XM_XSLT_COMPILED_USER_FUNCTION) is
+	save_function_results (a_result_table: DS_HASH_TABLE [XM_XPATH_VALUE, STRING]; a_function: XM_XSLT_COMPILED_USER_FUNCTION)
 			-- User data associated with `an_object'
 		require
 			function_not_void: a_function /= Void
@@ -356,7 +356,7 @@ feature -- Basic operations
 			end
 		end
 
-	set_initial_template (a_template_name: STRING) is
+	set_initial_template (a_template_name: STRING)
 			-- Set initial template.
 		require
 			template_name_not_void: a_template_name /= Void
@@ -384,7 +384,7 @@ feature -- Basic operations
 			end
 		end
 
-	set_initial_mode (a_mode_name: STRING) is
+	set_initial_mode (a_mode_name: STRING)
 			-- Set initial mode.
 		require
 			mode_name_not_void: a_mode_name /= Void
@@ -402,7 +402,7 @@ feature -- Basic operations
 			end
 		end
 
-	clear_document_pool is
+	clear_document_pool
 			-- Empty `document_pool'.
 			-- This might need to be done between multiple
 			--  transformations, but you lose caching benefits if you do call it.
@@ -410,13 +410,13 @@ feature -- Basic operations
 			create document_pool.make (executable.isolation_level)
 		end
 
-	clear_parameters is
+	clear_parameters
 			-- Remove all global parameters.
 		do
 			parameters := Void
 		end
 
-	set_value_parameter (a_parameter_value: XM_XPATH_VALUE; a_parameter_name: STRING) is
+	set_value_parameter (a_parameter_value: XM_XPATH_VALUE; a_parameter_name: STRING)
 			-- Set an XPath value as a global parameter on the stylesheet.
 		require
 			parameter_name_not_void: a_parameter_name /= Void and then is_valid_expanded_name (a_parameter_name)
@@ -433,7 +433,7 @@ feature -- Basic operations
 			parameters.put (a_parameter_value, l_fingerprint) -- this does a replace of an existing parameter of the same name
 		end
 
-	set_string_parameter (a_parameter_value, a_parameter_name: STRING) is
+	set_string_parameter (a_parameter_value, a_parameter_name: STRING)
 			-- Set a global string-valued parameter on the stylesheet.
 		require
 			parameter_name_not_void: a_parameter_name /= Void and then is_valid_expanded_name (a_parameter_name)
@@ -453,7 +453,7 @@ feature -- Basic operations
 			parameters.put (l_string_value, l_fingerprint) -- this does a replace of an existing parameter of the same name
 		end
 
-	set_xpath_parameter (a_parameter_value, a_parameter_name: STRING) is
+	set_xpath_parameter (a_parameter_value, a_parameter_name: STRING)
 			-- Set a global xpath-valued parameter on the stylesheet.
 		require
 			parameter_name_not_void: a_parameter_name /= Void and then is_valid_expanded_name (a_parameter_name)
@@ -478,7 +478,7 @@ feature -- Basic operations
 			end
 		end
 
-	set_initial_context (a_expression: STRING) is
+	set_initial_context (a_expression: STRING)
 			-- Set initial context node from XPath in `a_expression'.
 		require
 			a_expression_not_void: a_expression /= Void
@@ -489,7 +489,7 @@ feature -- Basic operations
 			initial_context_expression_set: initial_context_expression = a_expression
 		end
 
-	register_document (a_document: XM_XPATH_DOCUMENT; a_media_type: UT_MEDIA_TYPE; a_uri: STRING) is
+	register_document (a_document: XM_XPATH_DOCUMENT; a_media_type: UT_MEDIA_TYPE; a_uri: STRING)
 			-- Register a document.
 		require
 			document_not_void: a_document /= Void
@@ -501,7 +501,7 @@ feature -- Basic operations
 			document_mapped: document_pool.is_document_mapped (a_uri)
 		end
 
-	resolve_next_destination (a_system_id, a_base_uri: STRING; a_result: XM_XSLT_TRANSFORMATION_RESULT) is
+	resolve_next_destination (a_system_id, a_base_uri: STRING; a_result: XM_XSLT_TRANSFORMATION_RESULT)
 			-- Resolve destination for transforming `a_result' via stylesheet `a_system_id'
 		require
 			system_id_not_void: a_system_id /= Void
@@ -532,7 +532,7 @@ feature -- Basic operations
 			error_or_destination_not_void: not is_error implies next_resolved_destination /= Void
 		end
 
-	cache_unparsed_text (a_text, a_uri, an_encoding: STRING) is
+	cache_unparsed_text (a_text, a_uri, an_encoding: STRING)
 			-- Cache results of XPath unparsed-text-available(`a_uri', `an_encoding') function.
 		require
 			text_not_void: a_text /= Void
@@ -547,7 +547,7 @@ feature -- Basic operations
 			encoding_saved: last_unparsed_encoding = an_encoding
 		end
 
-	clear_unparsed_text_cache is
+	clear_unparsed_text_cache
 			-- Clear cached results of XPath unparsed-text-available(`a_uri', `an_encoding') function.
 		do
 			last_unparsed_text_uri := Void
@@ -559,7 +559,7 @@ feature -- Basic operations
 			encoding_cleared: last_unparsed_encoding = Void
 		end
 
-	discard_principal_emitter is
+	discard_principal_emitter
 			-- Close principal receiver and ensure no XML declaration is written.
 		require
 			principal_receiver_not_void: principal_receiver /= Void
@@ -593,7 +593,7 @@ feature -- Basic operations
 
 feature -- Transformation
 
-	transform (a_source: XM_XSLT_SOURCE; a_result: XM_XSLT_TRANSFORMATION_RESULT) is
+	transform (a_source: XM_XSLT_SOURCE; a_result: XM_XSLT_TRANSFORMATION_RESULT)
 			-- Transform `a_source' to `a_result' using `executable'.
 		require
 			initial_template_or_source_not_void: a_source = Void implies initial_template /= Void
@@ -718,7 +718,7 @@ feature -- Transformation
 
 feature -- Removal
 
-	discard_response (a_uri: STRING) is
+	discard_response (a_uri: STRING)
 			-- Close and discard response from `a_uri'.
 		require
 			a_uri_not_void: a_uri /= Void
@@ -738,7 +738,7 @@ feature {NONE} -- Implementation
 	last_context_node: XM_XPATH_NODE
 			-- Result from `evaluate_initial_context_node'
 
-	evaluate_initial_context_node (a_start: XM_XPATH_NODE) is
+	evaluate_initial_context_node (a_start: XM_XPATH_NODE)
 			-- Evaluate `initial_context_expression' against `a_start' and set `last_context_node' to resulting node.
 		require
 			initial_context_expression_not_void: initial_context_expression /= Void
@@ -772,7 +772,7 @@ feature {NONE} -- Implementation
 
 feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER, XM_XSLT_TRANSFORMATION} -- Transformation internals
 
-	transform_document (a_start_node: XM_XPATH_NODE; a_result: XM_XSLT_TRANSFORMATION_RESULT) is
+	transform_document (a_start_node: XM_XPATH_NODE; a_result: XM_XSLT_TRANSFORMATION_RESULT)
 			-- Transform document supplied as in-memory tree.
 		require
 			initial_template_or_start_node_not_void: a_start_node = Void implies initial_template /= Void
@@ -861,7 +861,7 @@ feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER, XM_XSLT_TRANSFORMATI
 
 feature {XM_XSLT_TRANSFORMER} -- Transformation internals
 
-	perform_transformation (a_start_node: XM_XPATH_NODE) is
+	perform_transformation (a_start_node: XM_XPATH_NODE)
 			--  Perform transformation.
 		require
 			start_node_in_document: a_start_node /= Void and then a_start_node.document_root /= Void
@@ -941,7 +941,7 @@ feature -- Implementation
 	response_streams: DS_HASH_TABLE [KI_CHARACTER_INPUT_STREAM, STRING]
 			-- HTTP POST (for example) response bodies indexed by URI
 
-	static_context: XM_XSLT_EXPRESSION_CONTEXT is
+	static_context: XM_XSLT_EXPRESSION_CONTEXT
 			-- Static context from `executable'
 		do
 
@@ -957,7 +957,7 @@ feature -- Implementation
 			cached: cached_static_context /= Void
 		end
 
-	selected_receiver (a_result: XM_XSLT_TRANSFORMATION_RESULT; some_properties: XM_XSLT_OUTPUT_PROPERTIES): XM_XPATH_RECEIVER is
+	selected_receiver (a_result: XM_XSLT_TRANSFORMATION_RESULT; some_properties: XM_XSLT_OUTPUT_PROPERTIES): XM_XPATH_RECEIVER
 			-- Receiver selected according to inputs
 		require
 			result_not_void: a_result /= Void
@@ -1003,7 +1003,7 @@ feature -- Implementation
 			selected_receiver_not_void: Result /= Void or else is_error
 		end
 
-	initialize_transformer (a_start_node: XM_XPATH_NODE) is
+	initialize_transformer (a_start_node: XM_XPATH_NODE)
 			-- Initialize in preparation for a transformation.
 		local
 			l_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
@@ -1050,7 +1050,7 @@ feature -- Implementation
 			end
 		end
 
-	apply_xpath_parameters (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	apply_xpath_parameters (a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Set XPath values on global parameters.
 		require
 			context_not_void: a_context /= Void
@@ -1080,7 +1080,7 @@ feature -- Implementation
 			end
 		end
 
-	fragment_node (a_document: XM_XPATH_DOCUMENT; a_fragment_identifier: STRING): XM_XPATH_NODE is
+	fragment_node (a_document: XM_XPATH_DOCUMENT; a_fragment_identifier: STRING): XM_XPATH_NODE
 			-- Node identified by `a_fragment_identifier' via xpointer
 		require
 			fragment_identifier_not_void: a_fragment_identifier /= Void
@@ -1147,7 +1147,7 @@ feature -- Implementation
 			error_or_not_void: not is_error implies Result /= Void
 		end
 
-	missing_parameters_message (a_missing: DS_LIST [STRING]): STRING is
+	missing_parameters_message (a_missing: DS_LIST [STRING]): STRING
 			-- Text of message for error XTDE0050
 		require
 			a_missing_not_void: a_missing /= Void

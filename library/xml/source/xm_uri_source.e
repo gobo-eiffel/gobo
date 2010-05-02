@@ -19,14 +19,14 @@ inherit
 
 feature -- Access
 
-	uri: STRING is
+	uri: STRING
 			-- URI for the source of the XML document
 		deferred
 		end
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Textual representation
 		do
 			Result := uri

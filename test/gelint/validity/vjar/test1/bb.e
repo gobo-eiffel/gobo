@@ -2,7 +2,7 @@ class BB
 
 feature
 
-	f (s: STRING) is
+	f (s: STRING)
 		do
 			a := s
 		end

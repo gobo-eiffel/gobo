@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type: like type; a_target: like target; a_call: like creation_call) is
+	make (a_type: like type; a_target: like target; a_call: like creation_call)
 			-- Create a new bang creation instruction.
 		require
 			a_target_not_void: a_target /= Void
@@ -49,7 +49,7 @@ feature -- Access
 	right_bang: ET_SYMBOL
 			-- Right '!' symbol
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -62,13 +62,13 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := left_bang
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			if creation_call /= Void then
@@ -78,7 +78,7 @@ feature -- Access
 			end
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			if creation_call /= Void then
@@ -90,7 +90,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_left_bang (a_bang: like left_bang) is
+	set_left_bang (a_bang: like left_bang)
 			-- Set `left_bang' to `a_bang'.
 		require
 			a_bang_not_void: a_bang /= Void
@@ -100,7 +100,7 @@ feature -- Setting
 			left_bang_set: left_bang = a_bang
 		end
 
-	set_right_bang (a_bang: like right_bang) is
+	set_right_bang (a_bang: like right_bang)
 			-- Set `right_bang' to `a_bang'.
 		require
 			a_bang_not_void: a_bang /= Void
@@ -112,7 +112,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_bang_instruction (Current)

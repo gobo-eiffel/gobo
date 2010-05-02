@@ -24,7 +24,7 @@ create
 feature {NONE} -- Initialization
 
 	make (an_element: XM_ELEMENT; an_attribute_name: STRING; an_actual_value: STRING;
-		an_expected_values: DS_LINEAR [STRING]; a_position: XM_POSITION) is
+		an_expected_values: DS_LINEAR [STRING]; a_position: XM_POSITION)
 			-- Create an error reporting that the value `an_actual_value' of
 			-- attribute `an_attribute_name' in element `an_element' should be
 			-- one of the `an_expected_values'.
@@ -67,10 +67,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "attribute '$2' in element '$1' should have one of the following values: $4 $5"
+	default_template: STRING = "attribute '$2' in element '$1' should have one of the following values: $4 $5"
 			-- Default template used to built the error message
 
-	code: STRING is "XA0010"
+	code: STRING = "XA0010"
 			-- Error code
 
 end

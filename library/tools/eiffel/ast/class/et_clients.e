@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new empty client list.
 		do
 			left_brace := tokens.left_brace_symbol
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			precursor
 		end
 
-	make_with_capacity (nb: INTEGER) is
+	make_with_capacity (nb: INTEGER)
 			-- Create a new empty client list with capacity `nb'.
 		do
 			left_brace := tokens.left_brace_symbol
@@ -51,7 +51,7 @@ feature -- Access
 	right_brace: ET_SYMBOL
 			-- '}' symbol
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -61,19 +61,19 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := left_brace
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := right_brace
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := right_brace.break
@@ -81,7 +81,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_left_brace (l: like left_brace) is
+	set_left_brace (l: like left_brace)
 			-- Set `left_brace' to `l'.
 		require
 			l_not_void: l /= Void
@@ -91,7 +91,7 @@ feature -- Setting
 			left_brace_set: left_brace = l
 		end
 
-	set_right_brace (r: like right_brace) is
+	set_right_brace (r: like right_brace)
 			-- Set `right_brace' to `r'.
 		require
 			r_not_void: r /= Void
@@ -103,7 +103,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_clients (Current)

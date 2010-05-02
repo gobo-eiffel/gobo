@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT; an_xml_element: XM_ELEMENT) is
+	make (a_project: GEANT_PROJECT; an_xml_element: XM_ELEMENT)
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 
 		end
 
-	build_command (a_project: GEANT_PROJECT) is
+	build_command (a_project: GEANT_PROJECT)
 			-- Create instance of `command'
 		do
 			create command.make (a_project)
@@ -81,7 +81,7 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Variable_attribute_name: STRING is
+	Variable_attribute_name: STRING
 			-- "name" attribute name
 		once
 			Result := "variable"
@@ -90,7 +90,7 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Message_attribute_name: STRING is
+	Message_attribute_name: STRING
 			-- Name of xml attribute for message
 		once
 			Result := "message"
@@ -99,7 +99,7 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Defaultvalue_attribute_name: STRING is
+	Defaultvalue_attribute_name: STRING
 			-- Name of xml attribute for defaultvalue
 		once
 			Result := "defaultvalue"
@@ -108,7 +108,7 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Validargs_attribute_name: STRING is
+	Validargs_attribute_name: STRING
 			-- Name of xml attribute for validargs
 		once
 			Result := "validargs"
@@ -117,7 +117,7 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Validregexp_attribute_name: STRING is
+	Validregexp_attribute_name: STRING
 			-- Name of xml attribute for validregexp
 		once
 			Result := "validregexp"
@@ -126,7 +126,7 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Answer_required_attribute_name: STRING is
+	Answer_required_attribute_name: STRING
 			-- Name of xml attribute for answer_required
 		once
 			Result := "answer_required"

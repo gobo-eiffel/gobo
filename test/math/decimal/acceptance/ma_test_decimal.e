@@ -9,7 +9,7 @@ note
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class MA_TEST_DECIMAL
 
 inherit
@@ -33,7 +33,7 @@ create
 
 feature -- Test
 
-	test_new_dectest is
+	test_new_dectest
 			-- Run testcases designed for testing implementations of the general
 			-- purpose floating-point arithmetic defined in the General Decimal
 			-- Arithmetic Specification version 1.08.
@@ -42,7 +42,7 @@ feature -- Test
 			run_dectest ("new.decTest")
 		end
 
-	test_abs_dectest is
+	test_abs_dectest
 			-- Run testcases designed for testing implementations of the general
 			-- purpose floating-point arithmetic defined in the General Decimal
 			-- Arithmetic Specification version 1.08.
@@ -51,7 +51,7 @@ feature -- Test
 			run_dectest ("abs.decTest")
 		end
 
-	test_add_dectest is
+	test_add_dectest
 			-- Run testcases designed for testing implementations of the general
 			-- purpose floating-point arithmetic defined in the General Decimal
 			-- Arithmetic Specification version 1.08.
@@ -60,7 +60,7 @@ feature -- Test
 			run_dectest ("add.decTest")
 		end
 
-	test_base_dectest is
+	test_base_dectest
 			-- Run testcases designed for testing implementations of the general
 			-- purpose floating-point arithmetic defined in the General Decimal
 			-- Arithmetic Specification version 1.08.
@@ -69,7 +69,7 @@ feature -- Test
 			run_dectest ("base.decTest")
 		end
 
-	test_compare_dectest is
+	test_compare_dectest
 			-- Run testcases designed for testing implementations of the general
 			-- purpose floating-point arithmetic defined in the General Decimal
 			-- Arithmetic Specification version 1.08.
@@ -78,7 +78,7 @@ feature -- Test
 			run_dectest ("compare.decTest")
 		end
 
-	test_divide_dectest is
+	test_divide_dectest
 			-- Run testcases designed for testing implementations of the general
 			-- purpose floating-point arithmetic defined in the General Decimal
 			-- Arithmetic Specification version 1.08.
@@ -87,7 +87,7 @@ feature -- Test
 			run_dectest ("divide.decTest")
 		end
 
-	test_divideint_dectest is
+	test_divideint_dectest
 			-- Run testcases designed for testing implementations of the general
 			-- purpose floating-point arithmetic defined in the General Decimal
 			-- Arithmetic Specification version 1.08.
@@ -96,7 +96,7 @@ feature -- Test
 			run_dectest ("divideint.decTest")
 		end
 
-	test_double_dectest is
+	test_double_dectest
 			-- Run testcases designed for testing implementations of the general
 			-- purpose floating-point arithmetic defined in the General Decimal
 			-- Arithmetic Specification version 1.08.
@@ -105,7 +105,7 @@ feature -- Test
 			run_dectest ("double.decTest")
 		end
 
-	test_inexact_dectest is
+	test_inexact_dectest
 			-- Run testcases designed for testing implementations of the general
 			-- purpose floating-point arithmetic defined in the General Decimal
 			-- Arithmetic Specification version 1.08.
@@ -114,7 +114,7 @@ feature -- Test
 			run_dectest ("inexact.decTest")
 		end
 
-	test_integer_dectest is
+	test_integer_dectest
 			-- Run testcases designed for testing implementations of the general
 			-- purpose floating-point arithmetic defined in the General Decimal
 			-- Arithmetic Specification version 1.08.
@@ -123,7 +123,7 @@ feature -- Test
 			run_dectest ("integer.decTest")
 		end
 
-	test_max_dectest is
+	test_max_dectest
 			-- Run testcases designed for testing implementations of the general
 			-- purpose floating-point arithmetic defined in the General Decimal
 			-- Arithmetic Specification version 1.08.
@@ -132,7 +132,7 @@ feature -- Test
 			run_dectest ("max.decTest")
 		end
 
-	test_min_dectest is
+	test_min_dectest
 			-- Run testcases designed for testing implementations of the general
 			-- purpose floating-point arithmetic defined in the General Decimal
 			-- Arithmetic Specification version 1.08.
@@ -141,7 +141,7 @@ feature -- Test
 			run_dectest ("min.decTest")
 		end
 
-	test_minus_dectest is
+	test_minus_dectest
 			-- Run testcases designed for testing implementations of the general
 			-- purpose floating-point arithmetic defined in the General Decimal
 			-- Arithmetic Specification version 1.08.
@@ -150,7 +150,7 @@ feature -- Test
 			run_dectest ("minus.decTest")
 		end
 
-	test_multiply_dectest is
+	test_multiply_dectest
 			-- Run testcases designed for testing implementations of the general
 			-- purpose floating-point arithmetic defined in the General Decimal
 			-- Arithmetic Specification version 1.08.
@@ -159,7 +159,7 @@ feature -- Test
 			run_dectest ("multiply.decTest")
 		end
 
-	test_normalize_dectest is
+	test_normalize_dectest
 			-- Run testcases designed for testing implementations of the general
 			-- purpose floating-point arithmetic defined in the General Decimal
 			-- Arithmetic Specification version 1.08.
@@ -168,7 +168,7 @@ feature -- Test
 			run_dectest ("normalize.decTest")
 		end
 
-	test_plus_dectest is
+	test_plus_dectest
 			-- Run testcases designed for testing implementations of the general
 			-- purpose floating-point arithmetic defined in the General Decimal
 			-- Arithmetic Specification version 1.08.
@@ -177,7 +177,7 @@ feature -- Test
 			run_dectest ("plus.decTest")
 		end
 
-	test_randombound32_dectest is
+	test_randombound32_dectest
 			-- Run testcases designed for testing implementations of the general
 			-- purpose floating-point arithmetic defined in the General Decimal
 			-- Arithmetic Specification version 1.08.
@@ -186,7 +186,7 @@ feature -- Test
 			run_dectest ("randomBound32.decTest")
 		end
 
-	test_randomdouble_dectest is
+	test_randomdouble_dectest
 			-- Run testcases designed for testing implementations of the general
 			-- purpose floating-point arithmetic defined in the General Decimal
 			-- Arithmetic Specification version 1.08.
@@ -195,7 +195,7 @@ feature -- Test
 			run_dectest ("randomDouble.decTest")
 		end
 
-	test_randoms_dectest is
+	test_randoms_dectest
 			-- Run testcases designed for testing implementations of the general
 			-- purpose floating-point arithmetic defined in the General Decimal
 			-- Arithmetic Specification version 1.08.
@@ -204,7 +204,7 @@ feature -- Test
 			run_dectest ("randoms.decTest")
 		end
 
-	test_randomsingle_dectest is
+	test_randomsingle_dectest
 			-- Run testcases designed for testing implementations of the general
 			-- purpose floating-point arithmetic defined in the General Decimal
 			-- Arithmetic Specification version 1.08.
@@ -213,7 +213,7 @@ feature -- Test
 			run_dectest ("randomSingle.decTest")
 		end
 
-	test_remainder_dectest is
+	test_remainder_dectest
 			-- Run testcases designed for testing implementations of the general
 			-- purpose floating-point arithmetic defined in the General Decimal
 			-- Arithmetic Specification version 1.08.
@@ -222,7 +222,7 @@ feature -- Test
 			run_dectest ("remainder.decTest")
 		end
 
-	test_rescale_dectest is
+	test_rescale_dectest
 			-- Run testcases designed for testing implementations of the general
 			-- purpose floating-point arithmetic defined in the General Decimal
 			-- Arithmetic Specification version 1.08.
@@ -231,7 +231,7 @@ feature -- Test
 			run_dectest ("rescale.decTest")
 		end
 
-	test_rounding_dectest is
+	test_rounding_dectest
 			-- Run testcases designed for testing implementations of the general
 			-- purpose floating-point arithmetic defined in the General Decimal
 			-- Arithmetic Specification version 1.08.
@@ -240,7 +240,7 @@ feature -- Test
 			run_dectest ("rounding.decTest")
 		end
 
-	test_single_dectest is
+	test_single_dectest
 			-- Run testcases designed for testing implementations of the general
 			-- purpose floating-point arithmetic defined in the General Decimal
 			-- Arithmetic Specification version 1.08.
@@ -249,7 +249,7 @@ feature -- Test
 			run_dectest ("single.decTest")
 		end
 
-	test_subtract_dectest is
+	test_subtract_dectest
 			-- Run testcases designed for testing implementations of the general
 			-- purpose floating-point arithmetic defined in the General Decimal
 			-- Arithmetic Specification version 1.08.
@@ -260,7 +260,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	run_dectest (a_test_name: STRING) is
+	run_dectest (a_test_name: STRING)
 			-- Run testcases designed for testing implementations of the general
 			-- purpose floating-point arithmetic defined in the General Decimal
 			-- Arithmetic Specification version 1.08.
@@ -508,7 +508,7 @@ feature {NONE} -- Implementation
 			l_file.close
 		end
 
-	check_flags (a_tag: STRING; an_expected_flags, a_flags: ARRAY [BOOLEAN]) is
+	check_flags (a_tag: STRING; an_expected_flags, a_flags: ARRAY [BOOLEAN])
 			-- Check flags.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -547,7 +547,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_operand (s: STRING; a_ctx: MA_DECIMAL_CONTEXT): MA_DECIMAL is
+	new_operand (s: STRING; a_ctx: MA_DECIMAL_CONTEXT): MA_DECIMAL
 			-- New operand from `s'
 		require
 			s_not_void: s /= Void
@@ -557,14 +557,14 @@ feature {NONE} -- Implementation
 		do
 			conversion_ctx := a_ctx.cloned_object
 			conversion_ctx.set_digits (s.count + 1)
-			conversion_ctx.set_rounding_mode (Round_half_up) 
+			conversion_ctx.set_rounding_mode (Round_half_up)
 			create Result.make_from_string_ctx (s, conversion_ctx)
 			a_ctx.flags.copy (conversion_ctx.flags)
 		ensure
 			operand_not_void: Result /= Void
 		end
 
-	unquoted_operand (an_operand: STRING): STRING is
+	unquoted_operand (an_operand: STRING): STRING
 			-- Remove leading and trailing quotes
 		require
 			an_operand_not_void: an_operand /= Void
@@ -584,7 +584,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Full directory name of "$GOBO/test/math/decimal/data"
 		once
 			Result := file_system.nested_pathname ("$GOBO", <<"test", "math", "decimal", "acceptance", "data">>)

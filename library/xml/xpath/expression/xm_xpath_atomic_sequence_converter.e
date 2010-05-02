@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_sequence: XM_XPATH_EXPRESSION; a_required_type: XM_XPATH_ATOMIC_TYPE) is
+	make (a_sequence: XM_XPATH_EXPRESSION; a_required_type: XM_XPATH_ATOMIC_TYPE)
 			-- Establish invariant.
 		require
 			sequence_not_void: a_sequence /= Void
@@ -45,8 +45,8 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
-	item_type: XM_XPATH_ITEM_TYPE is
+
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Determine the data type of the expression, if possible
 		do
 			Result := required_type
@@ -58,15 +58,15 @@ feature -- Access
 
 feature -- Status report
 
-	is_node_sequence: BOOLEAN is
+	is_node_sequence: BOOLEAN
 			-- Is `Current' a sequence of zero or more nodes?
 		do
 			Result := False
 		end
 
-feature -- Optimization	
+feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		local
 			l_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
@@ -94,7 +94,7 @@ feature -- Optimization
 			end
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -120,7 +120,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			base_expression.evaluate_item (a_result, a_context)
@@ -133,7 +133,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- An iterator over the values of a base_expression
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -147,13 +147,13 @@ feature -- Evaluation
 			end
 		end
 
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over a node sequence.
 		do
 			-- pre-condition is never met
 		end
 
-	mapped_item (a_item: XM_XPATH_ITEM): XM_XPATH_ITEM is
+	mapped_item (a_item: XM_XPATH_ITEM): XM_XPATH_ITEM
 			-- `a_item' mapped to base_expression
 		do
 			if a_item /= Void then
@@ -166,17 +166,17 @@ feature -- Evaluation
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
-	
-	required_type: XM_XPATH_ATOMIC_TYPE
-			-- Target type 
 
-	display_operator: STRING is
+	required_type: XM_XPATH_ATOMIC_TYPE
+			-- Target type
+
+	display_operator: STRING
 			-- Format `operator' for display
 		do
 			Result := "convert items to " + required_type.conventional_name
 		end
 
-	compute_special_properties is
+	compute_special_properties
 			-- Compute special properties.
 		do
 			Precursor

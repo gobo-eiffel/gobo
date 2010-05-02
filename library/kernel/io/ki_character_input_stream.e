@@ -26,7 +26,7 @@ inherit
 
 feature -- Input
 
-	read_string (nb: INTEGER) is
+	read_string (nb: INTEGER)
 			-- Read at most `nb' characters from input stream.
 			-- Make the characters that have actually been read
 			-- available in `last_string'.
@@ -43,7 +43,7 @@ feature -- Input
 			character_read: not end_of_input implies last_string.count > 0
 		end
 
-	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
+	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER
 			-- Fill `a_string', starting at position `pos', with
 			-- at most `nb' characters read from input stream.
 			-- Return the number of characters actually read.
@@ -85,7 +85,7 @@ feature -- Input
 
 feature -- Access
 
-	last_string: STRING is
+	last_string: STRING
 			-- Last string read
 			-- (Note: this query always return the same object.
 			-- Therefore a clone should be used if the result
@@ -102,7 +102,7 @@ feature -- Access
 
 feature -- Status report
 
-	valid_unread_character (a_character: CHARACTER): BOOLEAN is
+	valid_unread_character (a_character: CHARACTER): BOOLEAN
 			-- Can `a_character' be put back in input stream?
 		do
 			Result := True

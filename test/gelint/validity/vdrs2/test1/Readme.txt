@@ -44,7 +44,7 @@ create
 
 feature
 
-	make is
+	make
 		local
 			b: BB
 		do
@@ -65,7 +65,7 @@ inherit
 
 feature
 
-	f is
+	f
 		do
 			print ("BB%N")
 		end
@@ -76,7 +76,7 @@ class CC
 
 feature
 
-	frozen f is
+	frozen f
 		do
 			print ("CC%N")
 		end

@@ -38,7 +38,7 @@ feature -- Status report
 	are_special_properties_computed: BOOLEAN
 			-- Have `special_properties' been computed yet?
 
-	are_static_properties_computed: BOOLEAN is
+	are_static_properties_computed: BOOLEAN
 			-- Have all static properties been computed?
 		do
 			Result := are_dependencies_computed and then are_cardinalities_computed and then are_special_properties_computed
@@ -46,7 +46,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	reinitialize_all_static_properties is
+	reinitialize_all_static_properties
 			-- Re-initialize all static properties to `False'
 		do
 			are_dependencies_computed := False
@@ -110,16 +110,16 @@ feature -- Dependencies
 
 	depends_upon_current_group: BOOLEAN
 		-- Expression depends upon value of fn:current-group() and/or fn:current-grouping-key()
-	
+
 	depends_upon_regexp_group: BOOLEAN
-		-- Expression depends upon value of fn:regexp-group() 
+		-- Expression depends upon value of fn:regexp-group()
 
 	depends_upon_local_variables: BOOLEAN
 		-- Expression depends upon values of local variables
-	
+
 	depends_upon_user_functions: BOOLEAN
 		-- Expression depends upon results from user functions
-	
+
 	depends_upon_implicit_timezone: BOOLEAN
 		-- Expression depends upon value of implicit time zone
 
@@ -143,23 +143,23 @@ feature -- Dependencies
 
 	intrinsically_depends_upon_current_group: BOOLEAN
 		-- Expression intrinsically depends upon value of fn:current-group() and/or fn:current-grouping-key()
-	
+
 	intrinsically_depends_upon_regexp_group: BOOLEAN
-		-- Expression intrinsically depends upon value of fn:regexp-group() 
+		-- Expression intrinsically depends upon value of fn:regexp-group()
 
 	intrinsically_depends_upon_local_variables: BOOLEAN
 		-- Expression intrinsically depends upon values of local variables
-	
+
 	intrinsically_depends_upon_user_functions: BOOLEAN
 		-- Expression intrinsically depends upon results from user functions
-	
+
 	intrinsically_depends_upon_implicit_timezone: BOOLEAN
 		-- Expression intrinsically depends upon value of implicit time zone
 
 	intrinsically_depends_upon_xslt_context: BOOLEAN
 			-- Expression intrinsically depends upon XSLT-specific parts of dynamic context
 
-	depends_upon_focus: BOOLEAN is
+	depends_upon_focus: BOOLEAN
 			-- Expression depends upon focus
 		require
 			dependencies_computed: are_dependencies_computed
@@ -170,7 +170,7 @@ feature -- Dependencies
 				or depends_upon_context_document
 		end
 
-	depends_upon_non_document_focus: BOOLEAN is
+	depends_upon_non_document_focus: BOOLEAN
 			-- Expression depends upon focus, but not the current document
 		require
 			dependencies_computed: are_dependencies_computed
@@ -182,7 +182,7 @@ feature -- Dependencies
 
 feature -- Setting dependencies
 
-	initialize_dependencies is
+	initialize_dependencies
 			-- Inititialize to no dependencies.
 		require
 			dependencies_not_computed: not are_dependencies_computed
@@ -204,7 +204,7 @@ feature -- Setting dependencies
 			independent_of_xslt_context: not depends_upon_xslt_context
 		end
 
-	initialize_intrinsic_dependencies is
+	initialize_intrinsic_dependencies
 			-- Inititialize to no intrinsic dependencies.
 		require
 			intrinsic_dependencies_not_computed: not are_intrinsic_dependencies_computed
@@ -226,7 +226,7 @@ feature -- Setting dependencies
 			independent_of_xslt_context: not intrinsically_depends_upon_xslt_context
 		end
 
-	initialize_dependencies_from_intrinsic_dependencies is
+	initialize_dependencies_from_intrinsic_dependencies
 			-- Set all dependencies to values of intrinsic dependencies
 		require
 			intrinsic_dependencies_computed: are_intrinsic_dependencies_computed
@@ -242,7 +242,7 @@ feature -- Setting dependencies
 			depends_upon_local_variables := intrinsically_depends_upon_local_variables
 			depends_upon_user_functions := intrinsically_depends_upon_user_functions
 			depends_upon_implicit_timezone := intrinsically_depends_upon_implicit_timezone
-			depends_upon_xslt_context := intrinsically_depends_upon_xslt_context			
+			depends_upon_xslt_context := intrinsically_depends_upon_xslt_context
 		ensure
 			dependencies_computed: are_dependencies_computed
 			depends_upon_current_item_set: depends_upon_current_item = intrinsically_depends_upon_current_item
@@ -255,10 +255,10 @@ feature -- Setting dependencies
 			depends_upon_local_variables_set: depends_upon_local_variables = intrinsically_depends_upon_local_variables
 			depends_upon_user_functions_set: depends_upon_user_functions = intrinsically_depends_upon_user_functions
 			depends_upon_implicit_timezone_set: depends_upon_implicit_timezone = intrinsically_depends_upon_implicit_timezone
-			depends_upon_xslt_context_set: depends_upon_xslt_context = intrinsically_depends_upon_xslt_context			
+			depends_upon_xslt_context_set: depends_upon_xslt_context = intrinsically_depends_upon_xslt_context
 		end
-	
-	set_dependencies (a_other: XM_XPATH_STATIC_PROPERTY) is
+
+	set_dependencies (a_other: XM_XPATH_STATIC_PROPERTY)
 			-- Set all dependencies from `a_other'.
 		require
 			a_other_not_void: a_other /= Void
@@ -290,7 +290,7 @@ feature -- Setting dependencies
 			depends_upon_xslt_context_set: depends_upon_xslt_context = a_other.depends_upon_xslt_context
 		end
 
-	merge_dependencies (a_other: XM_XPATH_STATIC_PROPERTY) is
+	merge_dependencies (a_other: XM_XPATH_STATIC_PROPERTY)
 		-- Merge all dependencies from `a_other' into current.
 		require
 			dependencies_not_void: a_other /= Void
@@ -342,8 +342,8 @@ feature -- Setting dependencies
 			depends_upon_implicit_timezone_set: (a_other.depends_upon_implicit_timezone or old depends_upon_implicit_timezone) implies depends_upon_implicit_timezone
 			depends_upon_xslt_context_set: (a_other.depends_upon_xslt_context or old depends_upon_xslt_context) implies depends_upon_xslt_context
 		end
-			
-	set_depends_upon_current_item is
+
+	set_depends_upon_current_item
 			-- Set expression to depend upon current item.
 		do
 			if not are_dependencies_computed then
@@ -355,7 +355,7 @@ feature -- Setting dependencies
 			depends_upon_current_item: depends_upon_current_item
 		end
 
-	set_intrinsically_depends_upon_current_item is
+	set_intrinsically_depends_upon_current_item
 			-- Set expression to depend upon current item.
 		do
 			if not are_intrinsic_dependencies_computed then
@@ -367,7 +367,7 @@ feature -- Setting dependencies
 			intrinsically_depends_upon_current_item: intrinsically_depends_upon_current_item
 		end
 
-	set_depends_upon_context_item is
+	set_depends_upon_context_item
 		-- Set expression to depend upon context item.
 		do
 			if not are_dependencies_computed then
@@ -379,7 +379,7 @@ feature -- Setting dependencies
 			depends_upon_context_item: depends_upon_context_item
 		end
 
-	set_context_item_independent is
+	set_context_item_independent
 			-- Set expression to be independent of context item.
 		require
 			dependencies_computed: are_dependencies_computed
@@ -389,7 +389,7 @@ feature -- Setting dependencies
 			context_item_independent: not depends_upon_context_item
 		end
 
-	set_intrinsically_depends_upon_context_item is
+	set_intrinsically_depends_upon_context_item
 			-- Set expression to depend upon context item.
 		do
 			if not are_intrinsic_dependencies_computed then
@@ -401,7 +401,7 @@ feature -- Setting dependencies
 			intrinsically_depends_upon_context_item: intrinsically_depends_upon_context_item
 		end
 
-	set_depends_upon_position is
+	set_depends_upon_position
 		-- Set expression to depend upon context position.
 		do
 			if not are_dependencies_computed then
@@ -413,7 +413,7 @@ feature -- Setting dependencies
 			depends_upon_position: depends_upon_position
 		end
 
-	set_position_independent is
+	set_position_independent
 			-- Set expression to be independent of context position.
 		require
 			dependencies_computed: are_dependencies_computed
@@ -422,8 +422,8 @@ feature -- Setting dependencies
 		ensure
 			position_independent: not depends_upon_position
 		end
-	
-	set_intrinsically_depends_upon_position is
+
+	set_intrinsically_depends_upon_position
 			-- Set expression to depend upon context position.
 		do
 			if not are_intrinsic_dependencies_computed then
@@ -435,7 +435,7 @@ feature -- Setting dependencies
 			intrinsically_depends_upon_position: intrinsically_depends_upon_position
 		end
 
-	set_depends_upon_last is
+	set_depends_upon_last
 		-- Set expression to depend upon last.
 		do
 			if not are_dependencies_computed then
@@ -447,7 +447,7 @@ feature -- Setting dependencies
 			depends_upon_last: depends_upon_last
 		end
 
-	set_intrinsically_depends_upon_last is
+	set_intrinsically_depends_upon_last
 			-- Set expression to depend upon last.
 		do
 			if not are_intrinsic_dependencies_computed then
@@ -459,7 +459,7 @@ feature -- Setting dependencies
 			intrinsically_depends_upon_last: intrinsically_depends_upon_last
 		end
 
-	set_last_independent is
+	set_last_independent
 			-- Set expression to be independent of last.
 		require
 			dependencies_computed: are_dependencies_computed
@@ -469,7 +469,7 @@ feature -- Setting dependencies
 			context_item_independent: not depends_upon_last
 		end
 
-	set_depends_upon_context_document is
+	set_depends_upon_context_document
 		-- Set expression to depend upon context document.
 		do
 			if not are_dependencies_computed then
@@ -481,7 +481,7 @@ feature -- Setting dependencies
 			depends_upon_context_document: depends_upon_context_document
 		end
 
-	set_intrinsically_depends_upon_context_document is
+	set_intrinsically_depends_upon_context_document
 			-- Set expression to depend upon context document.
 		do
 			if not are_intrinsic_dependencies_computed then
@@ -493,7 +493,7 @@ feature -- Setting dependencies
 			intrinsically_depends_upon_context_document: intrinsically_depends_upon_context_document
 		end
 
-	set_context_document_independent is
+	set_context_document_independent
 			-- Set expression to be independent of context document.
 		require
 			dependencies_computed: are_dependencies_computed
@@ -502,8 +502,8 @@ feature -- Setting dependencies
 		ensure
 			context_item_independent: not depends_upon_context_document
 		end
-			
-	set_depends_upon_current_group is
+
+	set_depends_upon_current_group
 			-- Set expression to depend upon current-group() and/or current-grouping-key() and/or regex-group().
 		do
 			if not are_dependencies_computed then
@@ -515,7 +515,7 @@ feature -- Setting dependencies
 			depends_upon_current_group: depends_upon_current_group
 		end
 
-	set_intrinsically_depends_upon_current_group is
+	set_intrinsically_depends_upon_current_group
 			-- Set expression to depend upon current-group() and/or current-grouping-key() and/or regex-group().
 		do
 			if not are_intrinsic_dependencies_computed then
@@ -527,7 +527,7 @@ feature -- Setting dependencies
 			intrinsically_depends_upon_current_group: intrinsically_depends_upon_current_group
 		end
 
-	set_current_group_independent is
+	set_current_group_independent
 			-- Set expression to be independent of current_group.
 		require
 			dependencies_computed: are_dependencies_computed
@@ -537,7 +537,7 @@ feature -- Setting dependencies
 			context_item_independent: not depends_upon_current_group
 		end
 
-	set_depends_upon_regexp_group is
+	set_depends_upon_regexp_group
 			-- Set expression to depend upon regexp-group().
 		do
 			if not are_dependencies_computed then
@@ -549,7 +549,7 @@ feature -- Setting dependencies
 			depends_upon_regexp_group: depends_upon_regexp_group
 		end
 
-	set_regexp_group_independent is
+	set_regexp_group_independent
 			-- Set expression to be independent of regexp-group().
 		require
 			dependencies_computed: are_dependencies_computed
@@ -559,7 +559,7 @@ feature -- Setting dependencies
 			regexp_group_independent: not depends_upon_regexp_group
 		end
 
-	set_intrinsically_depends_upon_regexp_group is
+	set_intrinsically_depends_upon_regexp_group
 			-- Set expression to depend upon regexp-group().
 		do
 			if not are_intrinsic_dependencies_computed then
@@ -571,7 +571,7 @@ feature -- Setting dependencies
 			intrinsically_depends_upon_regexp_group: intrinsically_depends_upon_regexp_group
 		end
 
-	set_depends_upon_local_variables is
+	set_depends_upon_local_variables
 			-- Set expression to depend upon local variables.
 		do
 			if not are_dependencies_computed then
@@ -583,7 +583,7 @@ feature -- Setting dependencies
 			depends_upon_local_variables: depends_upon_local_variables
 		end
 
-	set_intrinsically_depends_upon_local_variables is
+	set_intrinsically_depends_upon_local_variables
 			-- Set expression to depend upon local variables.
 		do
 			if not are_intrinsic_dependencies_computed then
@@ -595,7 +595,7 @@ feature -- Setting dependencies
 			intrinsically_depends_upon_local_variables: intrinsically_depends_upon_local_variables
 		end
 
-	set_depends_upon_user_functions is
+	set_depends_upon_user_functions
 			-- Set expression to depend upon user functions.
 		do
 			if not are_dependencies_computed then
@@ -607,7 +607,7 @@ feature -- Setting dependencies
 			depends_upon_user_functions: depends_upon_user_functions
 		end
 
-	set_intrinsically_depends_upon_user_functions is
+	set_intrinsically_depends_upon_user_functions
 			-- Set expression to depend upon user functions.
 		do
 			if not are_intrinsic_dependencies_computed then
@@ -619,7 +619,7 @@ feature -- Setting dependencies
 			intrinsically_depends_upon_user_functions: intrinsically_depends_upon_user_functions
 		end
 
-	set_depends_upon_implicit_timezone is
+	set_depends_upon_implicit_timezone
 			-- Set expression to depend upon implicit time zone.
 		do
 			if not are_dependencies_computed then
@@ -631,7 +631,7 @@ feature -- Setting dependencies
 			depends_upon_implicit_timezone: depends_upon_implicit_timezone
 		end
 
-	set_intrinsically_depends_upon_implicit_timezone is
+	set_intrinsically_depends_upon_implicit_timezone
 			-- Set expression to depend upon implicit time zone.
 		do
 			if not are_intrinsic_dependencies_computed then
@@ -643,7 +643,7 @@ feature -- Setting dependencies
 			intrinsically_depends_upon_implicit_timezone: intrinsically_depends_upon_implicit_timezone
 		end
 
-	set_depends_upon_xslt_context is
+	set_depends_upon_xslt_context
 			-- Set expression to depend upon XSLT context.
 		do
 				set_depends_upon_current_item
@@ -651,7 +651,7 @@ feature -- Setting dependencies
 				set_depends_upon_regexp_group
 		end
 
-	set_intrinsically_depends_upon_xslt_context is
+	set_intrinsically_depends_upon_xslt_context
 			-- Set expression to intrinsically depend upon XSLT context.
 		do
 				set_intrinsically_depends_upon_current_item
@@ -659,7 +659,7 @@ feature -- Setting dependencies
 				set_intrinsically_depends_upon_regexp_group
 		end
 
-	set_intrinsically_depends_upon_focus is
+	set_intrinsically_depends_upon_focus
 			-- Set expression to intrinsically depend upon focus.
 		do
 			set_intrinsically_depends_upon_context_item
@@ -668,7 +668,7 @@ feature -- Setting dependencies
 			set_intrinsically_depends_upon_context_document
 		end
 
-	set_focus_independent is
+	set_focus_independent
 			-- mark expression as having no dependence on the focus.
 		require
 			dependencies_computed: are_dependencies_computed
@@ -683,7 +683,7 @@ feature -- Setting dependencies
 
 feature -- Cardinality
 
-	cardinality: INTEGER is
+	cardinality: INTEGER
 			-- cardinality
 		require
 			cardinalities_computed: are_cardinalities_computed
@@ -720,7 +720,7 @@ feature -- Cardinality
 	cardinality_allows_many: BOOLEAN
 			-- `True' if multiple values are allowed
 
-	cardinality_is_empty: BOOLEAN is
+	cardinality_is_empty: BOOLEAN
 			-- `True' if only an empty sequence is allowed
 		require
 			cardinalities_computed: are_cardinalities_computed
@@ -732,7 +732,7 @@ feature -- Cardinality
 			definition: Result = (cardinality_allows_zero and not cardinality_allows_one and not cardinality_allows_many)
 		end
 
-	cardinality_allows_zero_or_one: BOOLEAN is
+	cardinality_allows_zero_or_one: BOOLEAN
 		do
 			Result := (cardinality_allows_one or cardinality_allows_zero)
 				and not cardinality_allows_many
@@ -740,7 +740,7 @@ feature -- Cardinality
 			definition: Result = (cardinality_allows_zero or cardinality_allows_one) and not cardinality_allows_many
 		end
 
-	cardinality_exactly_one: BOOLEAN is
+	cardinality_exactly_one: BOOLEAN
 			-- `True' iff a single value is allowed
 		require
 			cardinalities_computed: are_cardinalities_computed
@@ -752,7 +752,7 @@ feature -- Cardinality
 		end
 
 
-	cardinality_allows_one_or_more: BOOLEAN is
+	cardinality_allows_one_or_more: BOOLEAN
 			-- Occurrence indicator for one or more (+)
 		require
 			cardinalities_computed: are_cardinalities_computed
@@ -762,7 +762,7 @@ feature -- Cardinality
 				cardinality_allows_many)
 		end
 
-	cardinality_allows_zero_or_more: BOOLEAN is
+	cardinality_allows_zero_or_more: BOOLEAN
 			-- Occurrence indicator for zero or more (*)
 		require
 			cardinalities_computed: are_cardinalities_computed
@@ -774,7 +774,7 @@ feature -- Cardinality
 			definition: Result = (cardinality_allows_zero and cardinality_allows_one and cardinality_allows_many)
 		end
 
-	cardinality_subsumes (requested_cardinality: INTEGER): BOOLEAN is
+	cardinality_subsumes (requested_cardinality: INTEGER): BOOLEAN
 			-- Are all options of `requested_cardinality' permitted by `Current'?
 		do
 			inspect
@@ -794,13 +794,13 @@ feature -- Cardinality
 			end
 		end
 
-	cardinality_subsumed_by (requested_cardinality: INTEGER): BOOLEAN is
+	cardinality_subsumed_by (requested_cardinality: INTEGER): BOOLEAN
 			-- Are all cardinality options of `Current' permitted by `requested_cardinality'?
 		do
 			Result := INTEGER_.bit_or (requested_cardinality, cardinality) = requested_cardinality
 		end
 
-	occurrence_indicator: STRING is
+	occurrence_indicator: STRING
 			-- Text of the occurrence-indicator
 		do
 			if cardinality_allows_zero_or_more then
@@ -819,7 +819,7 @@ feature -- Cardinality
 
 feature -- Setting cardinality
 
-	merged_cardinalities (a_other: XM_XPATH_STATIC_PROPERTY): INTEGER is
+	merged_cardinalities (a_other: XM_XPATH_STATIC_PROPERTY): INTEGER
 			-- Merger of `cardinalities' with more_cardinalities'
 		require
 			a_other_not_void: a_other /= Void
@@ -834,7 +834,7 @@ feature -- Setting cardinality
 			valid_cardinality: is_valid_required_cardinality (Result)
 		end
 
-	set_cardinalities (a_other: XM_XPATH_STATIC_PROPERTY) is
+	set_cardinalities (a_other: XM_XPATH_STATIC_PROPERTY)
 		require
 			cardinalities_not_void: a_other /= Void
 		do
@@ -849,7 +849,7 @@ feature -- Setting cardinality
 			cardinality_allows_many_set: cardinality_allows_many = a_other.cardinality_allows_many
 		end
 
-	set_cardinality (a_cardinality: INTEGER) is
+	set_cardinality (a_cardinality: INTEGER)
 			-- Set cardinality to `a_cardinality'.
 		require
 			valid_cardinality: is_valid_required_cardinality (a_cardinality)
@@ -874,7 +874,7 @@ feature -- Setting cardinality
 			cardinality_set: cardinality = a_cardinality
 		end
 
-	set_cardinality_empty is
+	set_cardinality_empty
 			-- Allow no items
 		do
 			if not are_cardinalities_computed then
@@ -890,7 +890,7 @@ feature -- Setting cardinality
 			many_disallowed: cardinality_allows_many = False
 		end
 
-	set_cardinality_optional is
+	set_cardinality_optional
 			-- Allow zero or one items
 		do
 			if not are_cardinalities_computed then
@@ -906,7 +906,7 @@ feature -- Setting cardinality
 			many_disallowed: cardinality_allows_many = False
 		end
 
-	set_cardinality_zero_or_more is
+	set_cardinality_zero_or_more
 			-- Allow any number of items
 		do
 			if not are_cardinalities_computed then
@@ -922,7 +922,7 @@ feature -- Setting cardinality
 			many_allowed: cardinality_allows_many = True
 		end
 
-	set_cardinality_one_or_more is
+	set_cardinality_one_or_more
 			-- Allow any number of items other than zero
 		do
 			if not are_cardinalities_computed then
@@ -938,7 +938,7 @@ feature -- Setting cardinality
 			many_allowed: cardinality_allows_many = True
 		end
 
-	set_cardinality_many is
+	set_cardinality_many
 			-- Allow more than one item.
 		do
 			if not are_cardinalities_computed then
@@ -954,7 +954,7 @@ feature -- Setting cardinality
 			many_allowed: cardinality_allows_many = True
 		end
 
-	set_cardinality_exactly_one is
+	set_cardinality_exactly_one
 			-- Allow exactly one item
 		do
 			if not are_cardinalities_computed then
@@ -970,7 +970,7 @@ feature -- Setting cardinality
 			many_disallowed: cardinality_allows_many = False
 		end
 
-	set_cardinality_disallows_many is
+	set_cardinality_disallows_many
 			-- Forbid multiple items
 		require
 			cardinalities_computed: are_cardinalities_computed
@@ -980,7 +980,7 @@ feature -- Setting cardinality
 			many_disallowed: cardinality_allows_many = False
 		end
 
-	set_cardinality_allows_zero is
+	set_cardinality_allows_zero
 			-- Allow zero items
 		require
 			cardinalities_computed: are_cardinalities_computed
@@ -993,13 +993,13 @@ feature -- Setting cardinality
 feature -- Special properties
 
 		-- These attributes are only meaningfull if `are_special_properties_computed' = `True'
-	
+
 	context_document_nodeset: BOOLEAN
 			-- Expression property: this is `True' in the case of
 			-- an expression whose item type is node, when the nodes in the result are
 			-- guaranteed all to be in the same document as the context node. For
 			-- expressions that return values other than nodes, the setting is undefined.
-	
+
 	ordered_nodeset: BOOLEAN
 			-- Expression property: this is `True' in the case of
 			-- an expression whose item type is node, when the nodes
@@ -1042,7 +1042,7 @@ feature -- Special properties
 
 feature -- Setting special properties
 
-	initialize_special_properties is
+	initialize_special_properties
 			-- initialize `special_properties' to nothing special.
 		require
 			special_properties_not_computed: not are_special_properties_computed
@@ -1052,7 +1052,7 @@ feature -- Setting special properties
 			special_properties_computed: are_special_properties_computed
 		end
 
-	clone_special_properties (a_other: XM_XPATH_STATIC_PROPERTY) is
+	clone_special_properties (a_other: XM_XPATH_STATIC_PROPERTY)
 			-- Set special properties from `a_other'.
 		require
 			a_other_not_void: a_other /= Void
@@ -1079,7 +1079,7 @@ feature -- Setting special properties
 			single_document_nodeset_set: single_document_nodeset = a_other.single_document_nodeset
 		end
 
-	mask_special_properties (a_other: XM_XPATH_STATIC_PROPERTY) is
+	mask_special_properties (a_other: XM_XPATH_STATIC_PROPERTY)
 			-- `And' special properties from `a_other'.
 		require
 			special_properties_computed: are_special_properties_computed
@@ -1105,7 +1105,7 @@ feature -- Setting special properties
 			single_document_nodeset_masked: single_document_nodeset = (a_other.single_document_nodeset and old single_document_nodeset)
 		end
 
-	set_context_document_nodeset is
+	set_context_document_nodeset
 			-- Guarentee nodes in the result are all to be in the same document as the context node.
 		require
 			special_properties_computed: are_special_properties_computed
@@ -1115,7 +1115,7 @@ feature -- Setting special properties
 			context_document_nodeset: context_document_nodeset
 		end
 
-	reset_context_document_nodeset is
+	reset_context_document_nodeset
 			-- Don't guarentee nodes in the result are all to be in the same document as the context node.
 		require
 			special_properties_computed: are_special_properties_computed
@@ -1125,7 +1125,7 @@ feature -- Setting special properties
 			not_context_document_nodeset: not context_document_nodeset
 		end
 
-	set_ordered_nodeset is
+	set_ordered_nodeset
 			-- Guarentee nodes in the result are in document order.
 		require
 			special_properties_computed: are_special_properties_computed
@@ -1135,7 +1135,7 @@ feature -- Setting special properties
 			ordered_nodeset: ordered_nodeset
 		end
 
-	reset_ordered_nodeset is
+	reset_ordered_nodeset
 			-- Don't guarentee nodes in the result are in document order.
 		require
 			special_properties_computed: are_special_properties_computed
@@ -1145,7 +1145,7 @@ feature -- Setting special properties
 			not_ordered_nodeset: not ordered_nodeset
 		end
 
-	set_reverse_document_order is
+	set_reverse_document_order
 			-- Guarentee delivers items in reverse of correct order,
 			--  when unordered retrieval is requested.
 		require
@@ -1156,7 +1156,7 @@ feature -- Setting special properties
 			reverse_document_order: reverse_document_order
 		end
 
-	reset_reverse_document_order is
+	reset_reverse_document_order
 			-- Don't guarentee delivers items in reverse of correct order,
 			--  when unordered retrieval is requested.
 		require
@@ -1167,7 +1167,7 @@ feature -- Setting special properties
 			not_reverse_document_order: not reverse_document_order
 		end
 
-	set_peer_nodeset is
+	set_peer_nodeset
 			-- Guarentee that no node in the
 			-- set will be an ancestor of any other.
 		require
@@ -1178,7 +1178,7 @@ feature -- Setting special properties
 			peer_nodeset: peer_nodeset
 		end
 
-	set_subtree_nodeset is
+	set_subtree_nodeset
 			-- Guarentee every node in the result will be a descendant or self,
 			--  or attribute or namespace, of the context node
 		require
@@ -1187,9 +1187,9 @@ feature -- Setting special properties
 			subtree_nodeset := True
 		ensure
 			subtree_nodeset: subtree_nodeset
-		end	
+		end
 
-	set_attribute_ns_nodeset is
+	set_attribute_ns_nodeset
 			-- Guarentee every node in the result will be
 			--  an attribute or namespace of the context node
 		require
@@ -1200,7 +1200,7 @@ feature -- Setting special properties
 			attribute_ns_nodeset: attribute_ns_nodeset
 		end
 
-	set_non_creating is
+	set_non_creating
 			-- Mark `Current' as never creating new nodes.
 		require
 			special_properties_computed: are_special_properties_computed
@@ -1210,7 +1210,7 @@ feature -- Setting special properties
 			non_creating: non_creating
 		end
 
-	set_creating is
+	set_creating
 			-- Re-mark `Current' as possibly creating new nodes.
 		require
 			special_properties_computed: are_special_properties_computed
@@ -1220,7 +1220,7 @@ feature -- Setting special properties
 			creating: not non_creating
 		end
 
-	set_single_document_nodeset is
+	set_single_document_nodeset
 			-- Mark `Current' as a nodeset all contained by a single document.
 		require
 			special_properties_computed: are_special_properties_computed

@@ -6,12 +6,12 @@ create
 
 feature
 
-	make is
+	make
 		do
 			f
 		end
 
-	f is
+	f
 		local
 			p: PROCEDURE [ANY, TUPLE]
 			a: ANY

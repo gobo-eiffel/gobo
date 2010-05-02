@@ -27,7 +27,7 @@ create
 
 feature -- Test
 
-	test_decomposition is
+	test_decomposition
 			-- Test `decomposition_type_property' and `decomposition_mapping_property'.
 		local
 			a_string: STRING
@@ -53,7 +53,7 @@ feature -- Test
 			assert ("a_acute_c_acute_cedilla fifth character is acute", a_string.item_code (5) = 769)
 		end
 
-	test_normalization is
+	test_normalization
 			-- Test normalization routines using test data file.
 		local
 			a_file: KL_TEXT_INPUT_FILE
@@ -113,7 +113,7 @@ feature -- Test
 
 feature -- Access
 
-	a_acute_c_acute_cedilla: STRING is
+	a_acute_c_acute_cedilla: STRING
 			-- Partially composed string
 		once
 			Result := STRING_.concat (unicode.code_to_string (225), unicode.code_to_string (99))
@@ -124,12 +124,12 @@ feature -- Access
 			four_codes: Result.count = 4
 		end
 
-	Test_file_field_count: INTEGER is 6
+	Test_file_field_count: INTEGER = 6
 			-- Number of fields in "NormalizationTest.txt"
 
 feature {NONE} -- Implementation
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}", <<"test", "string", "data">>)
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 			data_dirname_not_empty: Result /= Void and then not Result.is_empty
 		end
 
-	normalization_test_filename: STRING is
+	normalization_test_filename: STRING
 			-- Pathname of file '.txt'
 		once
 			Result := file_system.pathname (data_dirname, "NormalizationTest.txt")
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 			normalization_test_filename_not_empty: not Result.is_empty
 		end
 
-	run_test_data (c1, c2, c3, c4, c5: STRING; a_line_number: INTEGER) is
+	run_test_data (c1, c2, c3, c4, c5: STRING; a_line_number: INTEGER)
 			-- Run tests against data from "NormalizationTest.txt".
 		require
 			column_one_not_empty: c1 /= Void and then not c1.is_empty
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 			assert_strings_equal ("NFKC (column 5) equals column 4 on line " + a_line_number.out + " in NormalizationTest.txt", c4, to_nfkc (c5))
 		end
 
-	check_all_normal_forms_identity (a_code: INTEGER) is
+	check_all_normal_forms_identity (a_code: INTEGER)
 			-- Check that NFX (`a_code') = `a_code' for all normal forms.
 		do
 			if unicode.valid_non_surrogate_code (a_code) then
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	decoded_string (a_column: STRING): STRING is
+	decoded_string (a_column: STRING): STRING
 			-- String decoded from code points in `a_column'
 		require
 			a_column_not_void: a_column /= Void

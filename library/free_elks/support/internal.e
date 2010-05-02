@@ -843,7 +843,7 @@ feature -- Element change
 
 feature -- Measurement
 
-	max_type_id: INTEGER is
+	max_type_id: INTEGER
 			-- Maximum value of valid type_id
 		external
 			"built_in"

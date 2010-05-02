@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_variable: STRING) is
+	make (a_variable: STRING)
 			-- Create a new error reporting that the environment
 			-- variable `a_variable' is not defined.
 		require
@@ -34,10 +34,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "$0: environment variable '$1' not defined"
+	default_template: STRING = "$0: environment variable '$1' not defined"
 			-- Default template used to built the error message
 
-	code: STRING is "UT0009"
+	code: STRING = "UT0009"
 			-- Error code
 
 invariant

@@ -19,14 +19,14 @@ deferred class DS_NESTED_LIST [G]
 
 feature -- Access
 
-	local_items: DS_LINEAR [G] is
+	local_items: DS_LINEAR [G]
 			-- Items held locally
 		deferred
 		ensure
 			local_items_not_void: Result /= Void
 		end
 
-	remote_items: DS_LINEAR [DS_NESTED_LIST [G]] is
+	remote_items: DS_LINEAR [DS_NESTED_LIST [G]]
 			-- Items held by other lists
 		deferred
 		ensure
@@ -40,7 +40,7 @@ feature {DS_NESTED_LIST_FLATTENER} -- Implementation
 			-- Index used to detect possible cycles
 			-- in the di-graph made of nested lists
 
-	set_index (i: INTEGER) is
+	set_index (i: INTEGER)
 			-- Set `index' to `i'.
 		do
 			index := i
@@ -48,7 +48,7 @@ feature {DS_NESTED_LIST_FLATTENER} -- Implementation
 			index_set: index = i
 		end
 
-	set_local_items (items: like local_items) is
+	set_local_items (items: like local_items)
 			-- Set `local_items' to `items'.
 		require
 			items_not_void: items /= Void
@@ -57,7 +57,7 @@ feature {DS_NESTED_LIST_FLATTENER} -- Implementation
 			local_items_set: local_items = items
 		end
 
-	add_local_item (an_item: G) is
+	add_local_item (an_item: G)
 			-- Add `an_item' to `local_items'.
 		deferred
 		ensure

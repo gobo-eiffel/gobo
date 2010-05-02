@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_sort_key, an_order, a_case_order, a_language, a_data_type, a_collation_name: XM_XPATH_EXPRESSION) is
+	make (a_sort_key, an_order, a_case_order, a_language, a_data_type, a_collation_name: XM_XPATH_EXPRESSION)
 			-- Establish invariant.
 		require
 			sort_key_not_void: a_sort_key /= Void
@@ -87,7 +87,7 @@ feature -- Access
 	data_type: STRING
 			-- Value of data-type attribute ("text" or "number" or a QName)
 
-	reduced_definition (a_context: XM_XSLT_EVALUATION_CONTEXT):  XM_XSLT_FIXED_SORT_KEY_DEFINITION is
+	reduced_definition (a_context: XM_XSLT_EVALUATION_CONTEXT):  XM_XSLT_FIXED_SORT_KEY_DEFINITION
 			-- Sort key definition without any dependencies on the context except for the sort key itself;
 			-- For the AVTs used to select data type, case order, language, it means
 			--  all dependencies: after reduction, these values will be constants.
@@ -108,18 +108,18 @@ feature -- Access
 
 feature -- Status_report
 
-	is_reducible: BOOLEAN is
+	is_reducible: BOOLEAN
 			-- May `reduced_definition' be called?
 		do
 			Result := order /= Void and
 			case_order /= Void and
 			language /= Void and
-			data_type /= Void			
+			data_type /= Void
 		end
 
 feature -- Element change
 
-	set_sort_key (a_key: like sort_key) is
+	set_sort_key (a_key: like sort_key)
 			-- Set `sort_key' to `a_key'.
 		require
 			a_key_not_void: a_key /= Void
@@ -129,7 +129,7 @@ feature -- Element change
 			sort_key_set: sort_key = a_key
 		end
 
-	evaluate_expressions (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	evaluate_expressions (a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Evaluate all AVTs
 		require
 			context_not_void: a_context /= Void
@@ -138,7 +138,7 @@ feature -- Element change
 			evaluate_case_order (a_context)
 			evaluate_language (a_context)
 			evaluate_data_type (a_context)
-			evaluate_collation_name (a_context)			
+			evaluate_collation_name (a_context)
 		ensure
 			order_not_void: order /= Void
 			case_order_not_void: case_order /= Void
@@ -148,13 +148,13 @@ feature -- Element change
 
 feature -- Conversion
 
-	is_fixed_sort_key: BOOLEAN is
+	is_fixed_sort_key: BOOLEAN
 			-- Is `Current' a fixed_sort_key?
 		do
 			Result := False
 		end
 
-	as_fixed_sort_key: XM_XSLT_FIXED_SORT_KEY_DEFINITION is
+	as_fixed_sort_key: XM_XSLT_FIXED_SORT_KEY_DEFINITION
 			-- `Current' seen as a fixed_sort_key
 		require
 			fixed_sort_key: is_fixed_sort_key
@@ -165,7 +165,7 @@ feature -- Conversion
 
 feature {NONE} -- Implementation
 
-	evaluate_collation_name (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	evaluate_collation_name (a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Evaluate `collation_name_expression'
 		require
 			context_not_void: a_context /= Void
@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	evaluate_order (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	evaluate_order (a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Evaluate `order_expression'
 		require
 			context_not_void: a_context /= Void
@@ -196,8 +196,8 @@ feature {NONE} -- Implementation
 		ensure
 			order_not_void: order /= Void
 		end
-	
-	evaluate_case_order (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+
+	evaluate_case_order (a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Evaluate `case_order_expression'
 		require
 			context_not_void: a_context /= Void
@@ -214,8 +214,8 @@ feature {NONE} -- Implementation
 		ensure
 			case_order_not_void: case_order /= Void
 		end
-	
-	evaluate_language (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+
+	evaluate_language (a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Evaluate `language_expression'
 		require
 			context_not_void: a_context /= Void
@@ -232,8 +232,8 @@ feature {NONE} -- Implementation
 		ensure
 			language_not_void: language /= Void
 		end
-	
-	evaluate_data_type (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+
+	evaluate_data_type (a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Evaluate `data_type_expression'
 		require
 			context_not_void: a_context /= Void
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 		ensure
 			data_type_not_void: data_type /= Void
 		end
-	
+
 invariant
 
 	sort_key_not_void: sort_key /= Void

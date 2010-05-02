@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant.
 		do
 			-- the following is only a placeholder. We ignore it for determining the URI to be resolved:
@@ -41,13 +41,13 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Status report
-	
+
 	last_error: XM_XPATH_ERROR_VALUE
 			-- Last error set by `resolve'
 
 feature -- Element change
-	
-	resolve (a_uri: UT_URI; a_context: XM_XPATH_CONTEXT) is
+
+	resolve (a_uri: UT_URI; a_context: XM_XPATH_CONTEXT)
 			-- Resolve `a_uri' to a sequence of nodes.
 		local
 			a_directory_name: STRING
@@ -61,7 +61,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	current_directory_base: UT_URI is
+	current_directory_base: UT_URI
 			-- URI of current directory
 		local
 			a_cwd: KI_PATHNAME

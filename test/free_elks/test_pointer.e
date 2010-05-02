@@ -24,7 +24,7 @@ create
 
 feature -- Test
 
-	test_default_create is
+	test_default_create
 			-- Test feature 'default_create'.
 		local
 			p: POINTER
@@ -32,7 +32,7 @@ feature -- Test
 			assert ("default", p = pointer_0x0)
 		end
 
-	test_plus is
+	test_plus
 			-- Test feature 'plus alias "+"'.
 		local
 			p1, p2: POINTER
@@ -43,7 +43,7 @@ feature -- Test
 			assert ("plus2", p2 = pointer_0x1000)
 		end
 
-	test_to_integer_32 is
+	test_to_integer_32
 			-- Test feature 'to_integer_32'.
 		local
 			p1: POINTER
@@ -56,7 +56,7 @@ feature -- Test
 			assert ("to_integer_32_3", p1.to_integer_32 = 4096)
 		end
 
-	test_out is
+	test_out
 			-- Test feature 'out'.
 		local
 			p1: POINTER
@@ -82,7 +82,7 @@ feature -- Test
 			assert ("new_string3", l_out /= p1.out)
 		end
 
-	test_hash_code is
+	test_hash_code
 			-- Test feature 'hash_code'.
 		local
 			p1: POINTER
@@ -95,7 +95,7 @@ feature -- Test
 			assert ("hash_code3", p1.hash_code = 4096)
 		end
 
-	test_memory_compare is
+	test_memory_compare
 			-- Test feature 'memory_compare'.
 		local
 			sp1, sp2: SPECIAL [INTEGER_8]
@@ -116,7 +116,7 @@ feature -- Test
 			assert ("memory_compare3", sp1.base_address.memory_compare (sp2.base_address, 2))
 		end
 
-	test_item is
+	test_item
 			-- Test feature 'item'.
 		local
 			p: POINTER
@@ -127,7 +127,7 @@ feature -- Test
 			assert ("item2", p.item = pointer_0x1000)
 		end
 
-	test_set_item___fail_ise is
+	test_set_item___fail_ise
 			-- Test feature 'set_item'.
 			-- Does not work with ISE Eiffel.
 		local
@@ -146,7 +146,7 @@ feature -- Test
 			end
 		end
 
-	test_to_reference is
+	test_to_reference
 			-- Test feature 'to_reference'.
 		local
 			p: POINTER
@@ -162,7 +162,7 @@ feature -- Test
 			assert ("item2", pref.item = pointer_0x1000)
 		end
 
-	test_make_from_reference___fail_ise is
+	test_make_from_reference___fail_ise
 			-- Test feature 'make_from_reference'.
 			-- Does not work with ISE Eiffel.
 		local
@@ -181,7 +181,7 @@ feature -- Test
 			end
 		end
 
-	test_convert is
+	test_convert
 			-- Test conversion.
 		local
 			p: POINTER
@@ -212,13 +212,13 @@ feature {NONE} -- Constants
 	pointer_0x0: POINTER
 			-- Null pointer
 
-	pointer_0x400: POINTER is
+	pointer_0x400: POINTER
 			-- Pointer 0x400
 		once
 			Result := Result + 1024
 		end
 
-	pointer_0x1000: POINTER is
+	pointer_0x1000: POINTER
 			-- Pointer 0x1000
 		once
 			Result := Result + 4096

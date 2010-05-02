@@ -22,7 +22,7 @@ create
 
 feature -- Access
 
-	base: INTEGER is 10
+	base: INTEGER = 10
 			-- Base used to format integer;
 			-- 8 for octal, 10 for decimal, 16 for hexadecimal, ...
 

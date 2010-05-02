@@ -37,7 +37,7 @@ create
 
 feature -- Test
 
-	test_ge is
+	test_ge
 			-- Test precompilation with Gobo Eiffel.
 		do
 			if eiffel_compiler.is_ge then
@@ -45,7 +45,7 @@ feature -- Test
 			end
 		end
 
-	test_ise is
+	test_ise
 			-- Test precompilation with ISE Eiffel.
 		do
 			if eiffel_compiler.is_ise then
@@ -55,7 +55,7 @@ feature -- Test
 
 feature -- Execution
 
-	tear_down is
+	tear_down
 			-- Tear down after a test.
 		do
 			if old_cwd /= Void then
@@ -69,7 +69,7 @@ feature -- Execution
 
 feature {NONE} -- Precompilation
 
-	precomp_ge is
+	precomp_ge
 			-- Test precompilation with Gobo Eiffel.
 		do
 			old_cwd := file_system.cwd
@@ -82,7 +82,7 @@ feature {NONE} -- Precompilation
 			assert_execute ("gelint --flat ge.xace" + output_log)
 		end
 
-	precomp_ise is
+	precomp_ise
 			-- Test precompilation with ISE Eiffel.
 		local
 			define_option: STRING
@@ -119,7 +119,7 @@ feature {NONE} -- Precompilation
 
 feature {NONE} -- Implementation
 
-	xace_filename: STRING is
+	xace_filename: STRING
 			-- Name of Xace file used for precompilation
 		once
 			Result := file_system.nested_pathname ("${GOBO}", <<"test", "precomp", "precomp.xace">>)
@@ -129,17 +129,17 @@ feature {NONE} -- Implementation
 			xace_filename_not_empty: Result.count > 0
 		end
 
-	testdir: STRING is "Tprecomp"
+	testdir: STRING = "Tprecomp"
 			-- Name of temporary directory where to launch
 			-- the precompilation
 
-	output_log_filename: STRING is "output.log"
+	output_log_filename: STRING = "output.log"
 			-- Output log filename
 
-	error_log_filename: STRING is "error.log"
+	error_log_filename: STRING = "error.log"
 			-- Error log filename
 
-	output_log: STRING is
+	output_log: STRING
 			-- Where and how to redirect output logs
 		once
 			Result := " > " + output_log_filename + " 2> " + error_log_filename

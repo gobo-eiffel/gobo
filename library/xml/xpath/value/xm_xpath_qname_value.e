@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name_code: INTEGER) is
+	make (a_name_code: INTEGER)
 			-- Establish invariant
 		require
 			valid_name_code: shared_name_pool.is_valid_name_code (a_name_code)
@@ -45,25 +45,25 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_qname_value: BOOLEAN is
+	is_qname_value: BOOLEAN
 			-- Is `Current' a QName value?
 		do
 			Result := True
 		end
 
-	as_qname_value: XM_XPATH_QNAME_VALUE is
+	as_qname_value: XM_XPATH_QNAME_VALUE
 			-- `Current' seen as a QName value
 		do
 			Result := Current
 		end
 
-	string_value: STRING is
+	string_value: STRING
 			--Value of the item as a string
 		do
 			Result := shared_name_pool.display_name_from_name_code (name_code)
 		end
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type
 		do
 			Result := type_factory.qname_type
@@ -73,7 +73,7 @@ feature -- Access
 			end
 		end
 
-	namespace_uri: STRING is
+	namespace_uri: STRING
 			-- Namespace of `Current'
 		do
 			Result := shared_name_pool.namespace_uri_from_name_code (name_code)
@@ -81,7 +81,7 @@ feature -- Access
 			namespace_uri_not_void: Result /= Void
 		end
 
-	local_name: STRING is
+	local_name: STRING
 			-- Local name of `Current'
 		do
 			Result := shared_name_pool.local_name_from_name_code (name_code)
@@ -89,7 +89,7 @@ feature -- Access
 			local_name_not_void: Result /= Void
 		end
 
-	optional_prefix: STRING is
+	optional_prefix: STRING
 			-- Optional prefix of `Current'
 		do
 			Result := shared_name_pool.prefix_from_name_code (name_code)
@@ -97,7 +97,7 @@ feature -- Access
 			prefix_not_void: Result /= Void
 		end
 
-	expanded_name: STRING is
+	expanded_name: STRING
 			-- Expanded name in namespace-uri#local-name format
 		local
 			l_uri: STRING
@@ -114,7 +114,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Are `Current' and `other' the same expression?
 			-- The prefix is irrelevant. Only the local part and the namespace-uri matter
 		local
@@ -127,7 +127,7 @@ feature -- Comparison
 			end
 		end
 
-	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER is
+	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER
 			-- Compare `Current' to `other'
 		local
 			a_qname_value: XM_XPATH_QNAME_VALUE
@@ -147,13 +147,13 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
+	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN
 			-- Is `other' comparable to `Current'?
 		do
 			Result := other.is_qname_value
 		end
-	
-	display (a_level: INTEGER) is
+
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -165,7 +165,7 @@ feature -- Status report
 			std.error.put_new_line
 		end
 
-	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN is
+	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN
 			-- Is `Current' convertible to `a_required_type'?
 		do
 			if a_required_type = type_factory.string_type or
@@ -177,7 +177,7 @@ feature -- Status report
 
 feature -- Conversion
 
-	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE) is
+	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE)
 			-- Convert `Current' to `a_required_type'
 		do
 			if a_required_type = type_factory.qname_type then

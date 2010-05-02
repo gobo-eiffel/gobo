@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_assembly: like dotnet_assembly) is
+	make (a_assembly: like dotnet_assembly)
 			-- Create a new adapted .NET assembly list with initially
 			-- one .NET assembly `a_assembly'.
 		require
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			dotnet_assembly_set: dotnet_assemblies.last = a_assembly
 		end
 
-	make_empty is
+	make_empty
 			-- Create a new empty adapted .NET assembly list.
 		do
 			create dotnet_assemblies.make (Initial_assemblies_capacity)
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is the list of .NET assemblies empty?
 		do
 			Result := (count = 0)
@@ -55,7 +55,7 @@ feature -- Status report
 
 feature -- Access
 
-	dotnet_assembly (i: INTEGER): ET_ADAPTED_DOTNET_ASSEMBLY is
+	dotnet_assembly (i: INTEGER): ET_ADAPTED_DOTNET_ASSEMBLY
 			-- `i'-th .NET assembly
 		require
 			i_large_enough: i >= 1
@@ -66,7 +66,7 @@ feature -- Access
 			dotnet_assembly_not_void: Result /= Void
 		end
 
-	adapted_dotnet_assembly (a_dotnet_assembly: ET_DOTNET_ASSEMBLY): ET_ADAPTED_DOTNET_ASSEMBLY is
+	adapted_dotnet_assembly (a_dotnet_assembly: ET_DOTNET_ASSEMBLY): ET_ADAPTED_DOTNET_ASSEMBLY
 			-- Adapted .NET assembly corresponding to `a_dotnet_assembly' in current list
 			--  if any, Void otherwise
 			--
@@ -97,7 +97,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of .NET assemblies
 		do
 			Result := dotnet_assemblies.count
@@ -107,7 +107,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	put_last (a_assembly: like dotnet_assembly) is
+	put_last (a_assembly: like dotnet_assembly)
 			-- Add `a_assembly' to the list of .NET assemblies.
 		require
 			a_assembly_not_void: a_assembly /= Void
@@ -120,7 +120,7 @@ feature -- Element change
 
 feature -- Iteration
 
-	do_all (an_action: PROCEDURE [ANY, TUPLE [ET_DOTNET_ASSEMBLY]]) is
+	do_all (an_action: PROCEDURE [ANY, TUPLE [ET_DOTNET_ASSEMBLY]])
 			-- Apply `an_action' to every .NET assembly, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 		require
@@ -135,7 +135,7 @@ feature -- Iteration
 			end
 		end
 
-	universes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]) is
+	universes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]])
 			-- Apply `an_action' to every .NET assembly (viewed as a universe), from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 		require
@@ -150,7 +150,7 @@ feature -- Iteration
 			end
 		end
 
-	universes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_test: FUNCTION [ANY, TUPLE [ET_UNIVERSE], BOOLEAN]) is
+	universes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_test: FUNCTION [ANY, TUPLE [ET_UNIVERSE], BOOLEAN])
 			-- Apply `an_action' to every .NET assembly (viewed as a universe) that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 		require
@@ -170,7 +170,7 @@ feature -- Iteration
 			end
 		end
 
-	do_adapted (an_action: PROCEDURE [ANY, TUPLE [ET_ADAPTED_DOTNET_ASSEMBLY]]) is
+	do_adapted (an_action: PROCEDURE [ANY, TUPLE [ET_ADAPTED_DOTNET_ASSEMBLY]])
 			-- Apply `an_action' to every .NET assembly, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 		require
@@ -179,7 +179,7 @@ feature -- Iteration
 			dotnet_assemblies.do_all (an_action)
 		end
 
-	do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_DOTNET_ASSEMBLY]]) is
+	do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_DOTNET_ASSEMBLY]])
 			-- Apply `an_action' to every .NET assemblies,
 			-- and to all .NET assemblies reachable from them.
 		require
@@ -194,7 +194,7 @@ feature -- Iteration
 
 feature {NONE} -- Constants
 
-	Initial_assemblies_capacity: INTEGER is 50
+	Initial_assemblies_capacity: INTEGER = 50
 			-- Initial capacity for `dotnet_assemblies'
 
 invariant

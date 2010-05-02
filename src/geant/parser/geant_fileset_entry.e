@@ -39,7 +39,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_filename, a_mapped_filename: STRING) is
+	make (a_filename, a_mapped_filename: STRING)
 			-- Initialize fileset entry by setting `filename' to `a_filename'
 			-- and `mapped_filename' to `a_mapped_filename'.
 		require
@@ -63,7 +63,7 @@ feature -- Access
 	mapped_filename: STRING
 			-- Mapped name for `filename'
 
-	filename_converted: STRING is
+	filename_converted: STRING
 			-- `filename' converted to current filesystem
 		do
 			Result := file_system.pathname_from_file_system (filename, unix_file_system)
@@ -71,7 +71,7 @@ feature -- Access
 			filename_converted_not_void: Result /= Void
 		end
 
-	mapped_filename_converted: STRING is
+	mapped_filename_converted: STRING
 			-- `mapped_filename' converted to current filesystem
 		do
 			Result := file_system.pathname_from_file_system (mapped_filename, unix_file_system)
@@ -79,7 +79,7 @@ feature -- Access
 			mapped_filename_converted_not_void: Result /= Void
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			Result := filename.hash_code
@@ -87,7 +87,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered equal
 			-- to current object?
 		do
@@ -96,7 +96,7 @@ feature -- Comparison
 
 feature -- Setting
 
-	set_filename (a_filename: like filename) is
+	set_filename (a_filename: like filename)
 			-- Set `filename' to `a_filename'.
 		require
 			a_filename_not_void: a_filename /= Void
@@ -107,7 +107,7 @@ feature -- Setting
 			filename_set: filename = a_filename
 		end
 
-	set_mapped_filename (a_mapped_filename: like mapped_filename) is
+	set_mapped_filename (a_mapped_filename: like mapped_filename)
 			-- Set `mapped_filename' to `a_mapped_filename'.
 		require
 			a_mapped_filename_not_void: a_mapped_filename /= Void

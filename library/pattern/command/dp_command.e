@@ -19,7 +19,7 @@ inherit
 
 feature -- Status report
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- Can current command be executed?
 			-- (Default: True.)
 		do
@@ -28,7 +28,7 @@ feature -- Status report
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute current command.
 		require
 			is_executable: is_executable

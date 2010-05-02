@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	formatted_string (a_number: MA_DECIMAL; a_picture: STRING; a_group_size: INTEGER; a_group_separator, a_letter, an_ordinal: STRING): STRING is
+	formatted_string (a_number: MA_DECIMAL; a_picture: STRING; a_group_size: INTEGER; a_group_separator, a_letter, an_ordinal: STRING): STRING
 			-- Formated number string
 		require
 			number_is_positive: a_number /= Void and then a_number.is_positive
@@ -32,7 +32,7 @@ feature -- Access
 			formatted_string_not_void: Result /= Void
 		end
 
-	month_name (a_month, a_minimum_width, a_maximum_width: INTEGER): STRING is
+	month_name (a_month, a_minimum_width, a_maximum_width: INTEGER): STRING
 			-- Month name or abbreviation
 		require
 				-- January = 1
@@ -43,7 +43,7 @@ feature -- Access
 --			is_capitalized: First letter upper-case, others in lower-case
 		end
 
-	day_name (a_day, a_minimum_width, a_maximum_width: INTEGER): STRING is
+	day_name (a_day, a_minimum_width, a_maximum_width: INTEGER): STRING
 			-- Name of day of week
 		require
 				-- Monday = 1
@@ -54,7 +54,7 @@ feature -- Access
 --			is_capitalized: First letter upper-case, others in lower-case
 		end
 
-	half_day_name (a_minute, a_minimum_width, a_maximum_width: INTEGER): STRING is
+	half_day_name (a_minute, a_minimum_width, a_maximum_width: INTEGER): STRING
 			-- A.M./P.M indicator
 		require
 			valid_minutes: a_minute >= 0 and then a_minute < 1440

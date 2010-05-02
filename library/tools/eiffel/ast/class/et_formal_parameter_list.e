@@ -27,13 +27,13 @@ create
 
 feature -- Access
 
-	item (i: INTEGER): ET_FORMAL_PARAMETER_ITEM is
+	item (i: INTEGER): ET_FORMAL_PARAMETER_ITEM
 			-- Item at index `i' in list
 		do
 			Result := storage.item (count - i)
 		end
 
-	formal_parameter (i: INTEGER): ET_FORMAL_PARAMETER is
+	formal_parameter (i: INTEGER): ET_FORMAL_PARAMETER
 			-- Type of `i'-th formal generic parameter
 		require
 			i_large_enough: i >= 1
@@ -44,7 +44,7 @@ feature -- Access
 			formal_parameter_not_void: Result /= Void
 		end
 
-	formal_parameter_by_name (a_name: ET_IDENTIFIER): ET_FORMAL_PARAMETER is
+	formal_parameter_by_name (a_name: ET_IDENTIFIER): ET_FORMAL_PARAMETER
 			-- Formal generic parameter with name `a_name';
 			-- Void if no such generic parameter
 		require
@@ -68,7 +68,7 @@ feature -- Access
 			same_name: Result /= Void implies Result.name.same_identifier (a_name)
 		end
 
-	named_types (a_context: ET_TYPE_CONTEXT): ET_FORMAL_PARAMETER_LIST is
+	named_types (a_context: ET_TYPE_CONTEXT): ET_FORMAL_PARAMETER_LIST
 			-- Named types of current parameters, when they appear in `a_context'
 			-- in `a_universe', only made up of class names and generic
 			-- formal parameters when the root type of `a_context' is a
@@ -81,7 +81,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_formal_parameter (a_name: ET_IDENTIFIER): BOOLEAN is
+	has_formal_parameter (a_name: ET_IDENTIFIER): BOOLEAN
 			-- Is `a_name' a formal generic parameter?
 		require
 			a_name_not_void: a_name /= Void
@@ -101,7 +101,7 @@ feature -- Status report
 
 feature -- Element change
 
-	put_first (an_item: like item) is
+	put_first (an_item: like item)
 			-- Put `an_item' at first position in list.
 		do
 			precursor (an_item)
@@ -110,7 +110,7 @@ feature -- Element change
 
 feature -- Type processing
 
-	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_FORMAL_PARAMETER_LIST is
+	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_FORMAL_PARAMETER_LIST
 			-- Version of current types where the formal generic
 			-- parameter types have been replaced by their actual
 			-- counterparts in `a_parameters'
@@ -120,7 +120,7 @@ feature -- Type processing
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_formal_parameter_list (Current)
@@ -128,7 +128,7 @@ feature -- Processing
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_FORMAL_PARAMETER_ITEM] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_FORMAL_PARAMETER_ITEM]
 			-- Fixed array routines
 		once
 			create Result

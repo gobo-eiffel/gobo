@@ -21,7 +21,7 @@ inherit
 		end
 
 	XM_XPATH_TYPE
-	
+
 	XM_XPATH_ERROR_TYPES
 
 	XM_XPATH_SHARED_CONFORMANCE
@@ -32,7 +32,7 @@ inherit
 
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
-	
+
 	UT_SHARED_FILE_URI_ROUTINES
 		export {NONE} all end
 
@@ -42,7 +42,7 @@ create
 
 feature -- Test
 
-	test_parsing_durations is
+	test_parsing_durations
 			-- Test parsing xs:duration literals.
 		local
 			a_parser: XM_XPATH_DURATION_PARSER
@@ -185,7 +185,7 @@ feature -- Test
 			assert ("P12M3D", not a_parser.is_seconds_duration ("P12M3D"))
 		end
 
-	test_years_from_duration is
+	test_years_from_duration
 			-- Test fn:years-from-duration.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -207,7 +207,7 @@ feature -- Test
 			assert ("Year count is -1", an_integer_value.as_integer = -1)
 		end
 
-	test_months_from_duration is
+	test_months_from_duration
 			-- Test fn:months-from-duration.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -229,7 +229,7 @@ feature -- Test
 			assert ("Month count is -6", an_integer_value.as_integer = -6)
 		end
 
-	test_days_from_duration is
+	test_days_from_duration
 			-- Test fn:days-from-duration.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -251,7 +251,7 @@ feature -- Test
 			assert ("Day count is 3", an_integer_value.as_integer = 3)
 		end
 
-	test_hours_from_duration is
+	test_hours_from_duration
 			-- Test fn:hours-from-duration.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -283,7 +283,7 @@ feature -- Test
 			assert ("Hour count is -10", an_integer_value.as_integer = -10)
 		end
 
-	test_minutes_from_duration is
+	test_minutes_from_duration
 			-- Test fn:minutes-from-duration.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -302,10 +302,10 @@ feature -- Test
 			assert ("No evaluation error 2", not an_evaluator.is_error)
 			an_integer_value ?= an_evaluator.evaluated_items.item (1)
 			assert ("Value is platform integer 2", an_integer_value /= Void and then an_integer_value.is_platform_integer)
-			assert ("Minute count is -30", an_integer_value.as_integer = -30)			
+			assert ("Minute count is -30", an_integer_value.as_integer = -30)
 		end
 
-	test_seconds_from_duration is
+	test_seconds_from_duration
 			-- Test fn:seconds-from-duration.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -322,7 +322,7 @@ feature -- Test
 			assert ("Seconds count is 12.5", a_decimal_value.value.is_equal (twelve_point_five))
 		end
 
-	test_year_from_date_time is
+	test_year_from_date_time
 			-- Test fn:year-from-dateTime(xs:dateTime('1999-05-31T21:30:00-05:00')).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -339,7 +339,7 @@ feature -- Test
 			assert ("Year is 1999", an_integer_value.as_integer = 1999)
 		end
 
-	test_month_from_date_time is
+	test_month_from_date_time
 			-- Test fn:month-from-dateTime(xs:dateTime('1999-05-31T21:30:00-05:00')).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -356,7 +356,7 @@ feature -- Test
 			assert ("Month is May", an_integer_value.as_integer = 5)
 		end
 
-	test_day_from_date_time is
+	test_day_from_date_time
 			-- Test fn:day-from-dateTime(xs:dateTime('1999-05-31T21:30:00-05:00')).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -373,7 +373,7 @@ feature -- Test
 			assert ("Day is 31st", an_integer_value.as_integer = 31)
 		end
 
-	test_hours_from_date_time is
+	test_hours_from_date_time
 			-- Test fn:hours-from-dateTime(xs:dateTime('1999-05-31T21:30:00-05:00')).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -389,8 +389,8 @@ feature -- Test
 			assert ("Value is platform integer", an_integer_value /= Void and then an_integer_value.is_platform_integer)
 			assert ("Nine p.m.", an_integer_value.as_integer = 21)
 		end
-	
-	test_minutes_from_date_time is
+
+	test_minutes_from_date_time
 			-- Test fn:minutes-from-dateTime(xs:dateTime('1999-05-31T21:30:00-05:00')).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -406,8 +406,8 @@ feature -- Test
 			assert ("Value is platform integer", an_integer_value /= Void and then an_integer_value.is_platform_integer)
 			assert ("Thirty minutes", an_integer_value.as_integer = 30)
 		end
-	
-	test_seconds_from_date_time is
+
+	test_seconds_from_date_time
 			-- Test fn:seconds-from-dateTime(xs:dateTime('1999-05-31T21:30:21.5647-05:00')).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -423,7 +423,7 @@ feature -- Test
 			assert ("21.565", a_decimal_value.value.is_equal (expected_seconds))
 		end
 
-	test_time_zone_from_date_time is
+	test_time_zone_from_date_time
 			-- Test fn:timezone-from-dateTime(xs:dateTime('1999-05-31T21:30:00-05:00')).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -439,8 +439,8 @@ feature -- Test
 			assert ("Value is duration", a_duration_value /= Void)
 			assert ("Minus five hours", STRING_.same_string (a_duration_value.string_value, "-PT5H"))
 		end
-	
-	test_year_from_date is
+
+	test_year_from_date
 			-- Test fn:year-from-date.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -461,8 +461,8 @@ feature -- Test
 			assert ("Value is platform integer 2", an_integer_value /= Void and then an_integer_value.is_platform_integer)
 			assert ("Year is 2000", an_integer_value.as_integer = 2000)
 		end
-	
-	test_month_from_date is
+
+	test_month_from_date
 			-- Test fn:month-from-date.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -483,8 +483,8 @@ feature -- Test
 			assert ("Value is platform integer 2", an_integer_value /= Void and then an_integer_value.is_platform_integer)
 			assert ("Month is 1", an_integer_value.as_integer = 1)
 		end
-	
-	test_day_from_date is
+
+	test_day_from_date
 			-- Test fn:day-from-date.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -506,7 +506,7 @@ feature -- Test
 			assert ("Day is 1", an_integer_value.as_integer = 1)
 		end
 
-	test_time_zone_from_date is
+	test_time_zone_from_date
 			-- Test fn:timezone-from-date(xs:date('1999-05-31T21:30:00-05:00')).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -528,7 +528,7 @@ feature -- Test
 			assert ("UTC", STRING_.same_string (a_duration_value.string_value, "PT0S"))
 		end
 
-	test_hours_from_time is
+	test_hours_from_time
 			-- Test fn:hours-from-time.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -560,7 +560,7 @@ feature -- Test
 			assert ("Eight p.m.", an_integer_value.as_integer = 20)
 		end
 
-	test_minutes_from_time is
+	test_minutes_from_time
 			-- Test fn:minutes-from-time.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -576,8 +576,8 @@ feature -- Test
 			assert ("Value is platform integer", an_integer_value /= Void and then an_integer_value.is_platform_integer)
 			assert ("Zero minutes", an_integer_value.as_integer = 0)
 		end
-	
-	test_seconds_from_time is
+
+	test_seconds_from_time
 			-- Test fn:seconds-from-time.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -593,7 +593,7 @@ feature -- Test
 			assert ("10.5", a_decimal_value.value.is_equal (expected_seconds_two))
 		end
 
-	test_time_zone_from_time is
+	test_time_zone_from_time
 			-- Test fn:timezone-from-time.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -613,7 +613,7 @@ feature -- Test
 			assert ("Empty sequence", an_evaluator.evaluated_items.count = 0)
 		end
 
-	test_adjust_date_time_to_timezone is
+	test_adjust_date_time_to_timezone
 			-- Test fn:adjust-dateTime-to-timezone.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -651,27 +651,27 @@ feature -- Test
 			a_dt ?= an_evaluator.evaluated_items.item (1)
 			assert ("Value is zoned dateTime 3", a_dt /= Void and then a_dt.zoned)
 			assert ("Local hour is 10 (2)", a_dt.zoned_date_time.date_time.time.hour = 10)
-			assert ("Zone hour is -10", a_dt.zoned_date_time.time_zone.fixed_offset.hour = -10)			
+			assert ("Zone hour is -10", a_dt.zoned_date_time.time_zone.fixed_offset.hour = -10)
 			an_evaluator.evaluate ("adjust-dateTime-to-timezone(xs:dateTime('2002-03-07T10:00:00-07:00'), xs:dayTimeDuration('-PT10H'))")
 			assert ("No evaluation error 5", not an_evaluator.is_error)
 			a_dt ?= an_evaluator.evaluated_items.item (1)
 			assert ("Value is zoned dateTime 4", a_dt /= Void and then a_dt.zoned)
 			assert ("Local hour is 7", a_dt.zoned_date_time.date_time.time.hour = 7)
-			assert ("Zone hour is -10 (2)", a_dt.zoned_date_time.time_zone.fixed_offset.hour = -10)			
+			assert ("Zone hour is -10 (2)", a_dt.zoned_date_time.time_zone.fixed_offset.hour = -10)
 			an_evaluator.evaluate ("adjust-dateTime-to-timezone(xs:dateTime('2002-03-07T10:00:00-07:00'), xs:dayTimeDuration('PT10H'))")
 			assert ("No evaluation error 6", not an_evaluator.is_error)
 			a_dt ?= an_evaluator.evaluated_items.item (1)
 			assert ("Value is zoned dateTime 5", a_dt /= Void and then a_dt.zoned)
 			assert ("Local hour is 3", a_dt.zoned_date_time.date_time.time.hour = 3)
 			assert ("Zone hour is 10", a_dt.zoned_date_time.time_zone.fixed_offset.hour = 10)
-			assert ("Day 8", a_dt.zoned_date_time.date_time.date.day = 8)			
+			assert ("Day 8", a_dt.zoned_date_time.date_time.date.day = 8)
 			an_evaluator.evaluate ("adjust-dateTime-to-timezone(xs:dateTime('2002-03-07T00:00:00+01:00'), xs:dayTimeDuration('-PT8H'))")
 			assert ("No evaluation error 7", not an_evaluator.is_error)
 			a_dt ?= an_evaluator.evaluated_items.item (1)
 			assert ("Value is zoned dateTime 6", a_dt /= Void and then a_dt.zoned)
 			assert ("Local hour is 15", a_dt.zoned_date_time.date_time.time.hour = 15)
 			assert ("Zone hour is -8", a_dt.zoned_date_time.time_zone.fixed_offset.hour = -8)
-			assert ("Day 6", a_dt.zoned_date_time.date_time.date.day = 6)			
+			assert ("Day 6", a_dt.zoned_date_time.date_time.date.day = 6)
 			an_evaluator.evaluate ("adjust-dateTime-to-timezone(xs:dateTime('2002-03-07T10:00:00'), ())")
 			assert ("No evaluation error 8", not an_evaluator.is_error)
 			a_dt ?= an_evaluator.evaluated_items.item (1)
@@ -684,8 +684,8 @@ feature -- Test
 			assert ("Local hour is 10 (4)", a_dt.local_date_time.time.hour = 10)
 		end
 
-	
-	test_adjust_date_to_timezone is
+
+	test_adjust_date_to_timezone
 			-- Test fn:adjust-date-to-timezone.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -736,8 +736,8 @@ feature -- Test
 			a_dt ?= an_evaluator.evaluated_items.item (1)
 			assert ("Value is unzoned date (2)", a_dt /= Void and then not a_dt.zoned)
 		end
-	
-	test_adjust_time_to_timezone is
+
+	test_adjust_time_to_timezone
 			-- Test fn:adjust-time-to-timezone.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -786,12 +786,12 @@ feature -- Test
 			assert ("No evaluation error 6", not an_evaluator.is_error)
 			a_dt ?= an_evaluator.evaluated_items.item (1)
 			assert ("Value is unzoned time", a_dt /= Void and then not a_dt.zoned)
-			assert ("Local hour is 10 (3)", a_dt.local_time.hour = 10)			
+			assert ("Local hour is 10 (3)", a_dt.local_time.hour = 10)
 			an_evaluator.evaluate ("adjust-time-to-timezone(xs:time('10:00:00-07:00'), ())")
 			assert ("No evaluation error 7", not an_evaluator.is_error)
 			a_dt ?= an_evaluator.evaluated_items.item (1)
 			assert ("Value is unzoned time (2)", a_dt /= Void and then not a_dt.zoned)
-			assert ("Local hour is 10 (4)", a_dt.local_time.hour = 10)			
+			assert ("Local hour is 10 (4)", a_dt.local_time.hour = 10)
 			an_evaluator.evaluate ("adjust-time-to-timezone(xs:time('10:00:00-07:00'), xs:dayTimeDuration('PT10H'))")
 			assert ("No evaluation error 8", not an_evaluator.is_error)
 			a_dt ?= an_evaluator.evaluated_items.item (1)
@@ -800,7 +800,7 @@ feature -- Test
 			assert ("Local hour is 3", a_dt.zoned_time.time.hour = 3)
 		end
 
-	test_date_time_equalities is
+	test_date_time_equalities
 			-- Test equalities on dateTime values.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -837,7 +837,7 @@ feature -- Test
 			assert ("Value is boolean true() 4", a_boolean_value /= Void and then a_boolean_value.value)
 		end
 
-	test_date_equalities is
+	test_date_equalities
 			-- Test equalities on date values.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -862,7 +862,7 @@ feature -- Test
 			assert ("Value is boolean true()", a_boolean_value /= Void and then a_boolean_value.value)
 		end
 
-	test_date_less_than is
+	test_date_less_than
 			-- Test lt on date values.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -886,8 +886,8 @@ feature -- Test
 			a_boolean_value ?= an_evaluator.evaluated_items.item (1)
 			assert ("Value is boolean true()", a_boolean_value /= Void and then a_boolean_value.value)
 		end
-	
-	test_date_greater_than is
+
+	test_date_greater_than
 			-- Test gt on date values.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -912,7 +912,7 @@ feature -- Test
 			assert ("Value is boolean true()", a_boolean_value /= Void and then a_boolean_value.value)
 		end
 
-	test_time_equalities is
+	test_time_equalities
 			-- Test equalities on time values.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -937,7 +937,7 @@ feature -- Test
 			assert ("Value is boolean false()", a_boolean_value /= Void and then not a_boolean_value.value)
 		end
 
-	test_time_less_than is
+	test_time_less_than
 			-- Test lt on time values.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -962,7 +962,7 @@ feature -- Test
 			assert ("Value is boolean false()", a_boolean_value /= Void and then not a_boolean_value.value)
 		end
 
-	test_time_greater_than is
+	test_time_greater_than
 			-- Test gt on time values.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -983,7 +983,7 @@ feature -- Test
 			assert ("Value is boolean false()", a_boolean_value /= Void and then not a_boolean_value.value)
 		end
 
-	test_duration_arithmetic is
+	test_duration_arithmetic
 			-- Test artihmetic on durations.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -1052,7 +1052,7 @@ feature -- Test
 			assert ("Value is decimal 2", a_decimal_value /= Void)
 		end
 
-	test_date_time_arithmetic is
+	test_date_time_arithmetic
 			-- Test artihmetic on dates and times.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -1128,13 +1128,13 @@ feature -- Test
 			a_dt ?= an_evaluator.evaluated_items.item (1)
 			assert ("Value is dateTime 3", a_dt /= Void)
 			assert ("1999-08-30T11:12:00", a_dt.date.year = 1999 and then a_dt.date.month = 8 and then a_dt.date.day = 30
-				and then a_dt.time.hour = 11 and then a_dt.time.minute = 12 and then a_dt.time.second = 0)			
+				and then a_dt.time.hour = 11 and then a_dt.time.minute = 12 and then a_dt.time.second = 0)
 			an_evaluator.evaluate ("xs:dateTime('2000-10-30T11:12:00') - xs:dayTimeDuration('P3DT1H15M')")
 			assert ("No evaluation error 11", not an_evaluator.is_error)
 			a_dt ?= an_evaluator.evaluated_items.item (1)
 			assert ("Value is dateTime 4", a_dt /= Void)
 			assert ("2000-10-27T09:57:00", a_dt.date.year = 2000 and then a_dt.date.month = 10 and then a_dt.date.day = 27
-				and then a_dt.time.hour = 9 and then a_dt.time.minute = 57 and then a_dt.time.second = 0)			
+				and then a_dt.time.hour = 9 and then a_dt.time.minute = 57 and then a_dt.time.second = 0)
 			an_evaluator.evaluate ("xs:date('2000-10-30') + xs:yearMonthDuration('P1Y2M')")
 			assert ("No evaluation error 12", not an_evaluator.is_error)
 			a_date ?= an_evaluator.evaluated_items.item (1)
@@ -1177,7 +1177,7 @@ feature -- Test
 			a_time ?= an_evaluator.evaluated_items.item (1)
 			assert ("Value is time 2", a_time /= Void)
 			assert ("02:27:00+03:00", a_time.time.hour = 2 and then a_time.time.minute = 27 and then a_time.time.second = 0
-				and then a_time.zoned and then a_time.zoned_time.time_zone.fixed_offset.hour = 3)			
+				and then a_time.zoned and then a_time.zoned_time.time_zone.fixed_offset.hour = 3)
 			an_evaluator.evaluate ("xs:time('11:12:00') - xs:dayTimeDuration('P3DT1H15M')")
 			assert ("No evaluation error 20", not an_evaluator.is_error)
 			a_time ?= an_evaluator.evaluated_items.item (1)
@@ -1188,35 +1188,35 @@ feature -- Test
 			a_time ?= an_evaluator.evaluated_items.item (1)
 			assert ("Value is time 4", a_time /= Void)
 			assert ("22:10:00-05:00", a_time.time.hour = 22 and then a_time.time.minute = 10 and then a_time.time.second = 0
-				and then a_time.zoned and then a_time.zoned_time.time_zone.fixed_offset.hour = -5)			
+				and then a_time.zoned and then a_time.zoned_time.time_zone.fixed_offset.hour = -5)
 		end
 
-	set_up is
+	set_up
 		do
 			conformance.set_basic_xslt_processor
 		end
 
 feature -- Results
 
-	expected_seconds: MA_DECIMAL is
+	expected_seconds: MA_DECIMAL
 			-- Expected seconds value
 		once
 			create Result.make_from_string ("21.565")
 		end
 
-	expected_seconds_two: MA_DECIMAL is
+	expected_seconds_two: MA_DECIMAL
 			-- Expected seconds value
 		once
 			create Result.make_from_string ("10.5")
 		end
 
-	twelve_point_five: MA_DECIMAL is
+	twelve_point_five: MA_DECIMAL
 			-- 12.5
 		once
 			create Result.make_from_string ("12.5")
 		end
 
-	minus_two_point_five: MA_DECIMAL is
+	minus_two_point_five: MA_DECIMAL
 			-- -2.5
 		once
 			create Result.make_from_string ("-2.5")
@@ -1224,7 +1224,7 @@ feature -- Results
 
 feature {NONE} -- Implementation
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}",
@@ -1234,8 +1234,8 @@ feature {NONE} -- Implementation
 			data_dirname_not_void: Result /= Void
 			data_dirname_not_empty: not Result.is_empty
 		end
-		
-	books_xml_uri: UT_URI is
+
+	books_xml_uri: UT_URI
 			-- URI of file 'books.xml'
 		local
 			a_path: STRING
@@ -1248,4 +1248,4 @@ feature {NONE} -- Implementation
 
 end
 
-			
+

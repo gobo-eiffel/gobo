@@ -18,14 +18,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new semantic action factory.
 		do
 		end
 
 feature -- Access
 
-	new_action (a_text: STRING): LX_ACTION is
+	new_action (a_text: STRING): LX_ACTION
 			-- New semantic action with `a_text'
 			-- as textual representation
 		require

@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_external_library: like external_library) is
+	make (a_external_library: like external_library)
 			-- Create a new external library list with initially one library `a_external_library'.
 		require
 			a_external_library_not_void: a_external_library /= Void
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			external_library_set: external_libraries.last = a_external_library
 		end
 
-	make_empty is
+	make_empty
 			-- Create a new empty external library list.
 		do
 			create external_libraries.make (Initial_external_libraries_capacity)
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is the list of external libraries empty?
 		do
 			Result := (count = 0)
@@ -66,7 +66,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of external libraries
 		do
 			Result := external_libraries.count
@@ -77,7 +77,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	put_last (a_external_library: like external_library) is
+	put_last (a_external_library: like external_library)
 			-- Add `a_external_library' to the list of external libraries.
 		require
 			a_external_library_not_void: a_external_library /= Void
@@ -88,7 +88,7 @@ feature -- Element change
 			external_library_added: external_libraries.last = a_external_library
 		end
 
-	fill_external_libraries (a_system: ET_SYSTEM; a_state: ET_ECF_STATE) is
+	fill_external_libraries (a_system: ET_SYSTEM; a_state: ET_ECF_STATE)
 			-- Add to `a_system' the current external libraries
 			-- whose conditions satisfy `a_state'.
 		require
@@ -100,7 +100,7 @@ feature -- Element change
 
 feature {NONE} -- Constants
 
-	Initial_external_libraries_capacity: INTEGER is 50
+	Initial_external_libraries_capacity: INTEGER = 50
 			-- Initial capacity for `external_libraries'
 
 invariant

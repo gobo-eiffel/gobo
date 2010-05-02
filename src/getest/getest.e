@@ -26,7 +26,7 @@ create
 
 feature -- Processing
 
-	execute is
+	execute
 			-- Start 'getest' execution.
 		local
 			a_config: TS_CONFIG
@@ -79,7 +79,7 @@ feature -- Processing
 			end
 		end
 
-	process (a_config: TS_CONFIG) is
+	process (a_config: TS_CONFIG)
 			-- Process `a_config'.
 		require
 			a_config_not_void: a_config /= Void
@@ -95,7 +95,7 @@ feature -- Processing
 			end
 		end
 
-	generate_test (a_config: TS_CONFIG; need_header: BOOLEAN) is
+	generate_test (a_config: TS_CONFIG; need_header: BOOLEAN)
 			-- Generate Eiffel classes.
 		require
 			a_config_not_void: a_config /= Void
@@ -125,7 +125,7 @@ feature -- Processing
 			end
 		end
 
-	compile_test (a_config: TS_CONFIG; need_header: BOOLEAN) is
+	compile_test (a_config: TS_CONFIG; need_header: BOOLEAN)
 			-- Compile generated testcases.
 		require
 			a_config_not_void: a_config /= Void
@@ -149,7 +149,7 @@ feature -- Processing
 			end
 		end
 
-	run_test (a_config: TS_CONFIG; need_header: BOOLEAN) is
+	run_test (a_config: TS_CONFIG; need_header: BOOLEAN)
 			-- Execute generated testcases.
 		require
 			a_config_not_void: a_config /= Void
@@ -221,7 +221,7 @@ feature -- Status report
 			-- Compiler specified on the command-line
 			-- (--ge or --ise)
 
-	compiler_specified: BOOLEAN is
+	compiler_specified: BOOLEAN
 			-- Has an Eiffel compiler been specified on the command-line?
 			-- (--ge or --ise)
 		do
@@ -239,7 +239,7 @@ feature -- Status report
 
 feature {NONE} -- Command line
 
-	read_command_line is
+	read_command_line
 			-- Read command line arguments.
 		local
 			i, nb: INTEGER
@@ -364,7 +364,7 @@ feature {NONE} -- Command line
 			config_filename_not_void: config_filename /= Void
 		end
 
-	set_defined_variable (arg: STRING) is
+	set_defined_variable (arg: STRING)
 			-- Set variable defined in `arg' with format <name>[=<value>].
 			-- Report usage error if invalid.
 		require
@@ -395,7 +395,7 @@ feature {NONE} -- Command line
 
 feature {NONE} -- Error handling
 
-	report_usage_error is
+	report_usage_error
 			-- Report usage error and then terminate
 			-- with exit status 1.
 		do
@@ -403,7 +403,7 @@ feature {NONE} -- Error handling
 			Exceptions.die (1)
 		end
 
-	report_undefined_environment_variable_error (a_variable: STRING) is
+	report_undefined_environment_variable_error (a_variable: STRING)
 			-- Report that environment variable `a_variable' is not
 			-- defined and then terminate with exit status 1.
 		require
@@ -416,7 +416,7 @@ feature {NONE} -- Error handling
 			Exceptions.die (1)
 		end
 
-	report_eiffel_compilation_error is
+	report_eiffel_compilation_error
 			-- Report that an Eiffel compilation error occurred
 			-- and then terminate with exit status 1.
 		do
@@ -424,14 +424,14 @@ feature {NONE} -- Error handling
 			Exceptions.die (1)
 		end
 
-	report_usage_message is
+	report_usage_message
 			-- Report usage message and exit.
 		do
 			error_handler.report_info (Usage_message)
 			Exceptions.die (0)
 		end
 
-	report_version_number is
+	report_version_number
 			-- Report version number and exit.
 		local
 			a_message: UT_VERSION_NUMBER
@@ -441,7 +441,7 @@ feature {NONE} -- Error handling
 			Exceptions.die (0)
 		end
 
-	Usage_message: UT_USAGE_MESSAGE is
+	Usage_message: UT_USAGE_MESSAGE
 			-- Getest usage message
 		once
 			create Result.make ("[-aceghvV?][--help][--version][--verbose]%N%
@@ -454,12 +454,12 @@ feature {NONE} -- Error handling
 
 feature {NONE} -- Constants
 
-	Getest_config_variable: STRING is "GETEST_CONFIG"
+	Getest_config_variable: STRING = "GETEST_CONFIG"
 			-- Environment variable
 
-	ISE_config_filename: STRING is "getest.ise"
-	GE_config_filename: STRING is "getest.ge"
-	cfg_config_filename: STRING is "getest.cfg"
+	ISE_config_filename: STRING = "getest.ise"
+	GE_config_filename: STRING = "getest.ge"
+	cfg_config_filename: STRING = "getest.cfg"
 			-- Default configuration filenames
 
 invariant

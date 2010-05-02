@@ -58,7 +58,7 @@ create
 
 feature {NONE} -- Initialization
 
-	yy_initialize is
+	yy_initialize
 			-- Initialize lexical analyzer.
 		do
 			yyReject_or_variable_trail_context := yyReject_used or yyVariable_trail_context
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	yy_build_tables is
+	yy_build_tables
 			-- Build scanner tables.
 		local
 			an_array: ARRAY [INTEGER]

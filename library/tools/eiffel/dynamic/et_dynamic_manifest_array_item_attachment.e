@@ -26,7 +26,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_type_set: like source_type_set; an_expression: like expression;
-		a_current_feature: like current_feature; a_current_type: like current_type) is
+		a_current_feature: like current_feature; a_current_type: like current_type)
 			-- Create a new manifest array item setting.
 		require
 			a_type_set_not_void: a_type_set /= Void
@@ -50,13 +50,13 @@ feature -- Access
 	expression: ET_EXPRESSION
 			-- Manifest array item
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of attachment
 		do
 			Result := expression.position
 		end
 
-	description: STRING is "manifest array item"
+	description: STRING = "manifest array item"
 			-- Kind of attachment
 
 invariant

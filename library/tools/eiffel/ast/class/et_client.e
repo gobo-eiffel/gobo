@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_named_base_class: like named_base_class) is
+	make (a_name: like name; a_named_base_class: like named_base_class)
 			-- Create a client named `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -49,7 +49,7 @@ feature -- Access
 			-- Note that this class may have been written in another library
 			-- with another name.
 
-	base_class: ET_CLASS is
+	base_class: ET_CLASS
 			-- Base class of client
 		do
 			Result := named_base_class.actual_class
@@ -57,7 +57,7 @@ feature -- Access
 			base_class_not_void: Result /= Void
 		end
 
-	client: ET_CLIENT is
+	client: ET_CLIENT
 			-- Client in comma-separated list
 		do
 			Result := Current
@@ -65,26 +65,26 @@ feature -- Access
 			definition: Result = Current
 		end
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
 			Result := name.position
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := name.first_leaf
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := name.last_leaf
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := name.break
@@ -92,7 +92,7 @@ feature -- Access
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_client (Current)

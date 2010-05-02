@@ -11,16 +11,16 @@ note
 	revision: "$Revision$"
 
 deferred class XM_XPATH_SCHEMA_TYPE
-	
+
 inherit
-	
+
 	XM_XPATH_ITEM_TYPE
 
 	XM_XPATH_STANDARD_NAMESPACES
 		export {NONE} all end
 
 	XM_XPATH_SHARED_TYPE_FACTORY
-	
+
 	XM_XPATH_SHARED_NAME_POOL
 		export {NONE} all end
 
@@ -38,7 +38,7 @@ feature -- Access
 	base_type: XM_XPATH_SCHEMA_TYPE
 			-- Base type
 
-	standard_display_name: STRING is
+	standard_display_name: STRING
 			-- Display name for a standard type
 		require
 			standard_type: type_factory.is_built_in_fingerprint (fingerprint)
@@ -48,7 +48,7 @@ feature -- Access
 			printable_result: Result /= Void and then Result.count > 0
 		end
 
-	description: STRING is
+	description: STRING
 			-- Description of type
 		do
 			if type_factory.is_built_in_fingerprint (fingerprint) then
@@ -60,13 +60,13 @@ feature -- Access
 			description_not_void: Result /= Void
 		end
 
-	is_simple_type: BOOLEAN is
+	is_simple_type: BOOLEAN
 			-- Is `Current' a simple type?
 		do
 			Result := False
 		end
 
-	as_simple_type: XM_XPATH_SIMPLE_TYPE is
+	as_simple_type: XM_XPATH_SIMPLE_TYPE
 			-- `Current' seen as a simple type
 		require
 			simple_type: is_simple_type
@@ -75,13 +75,13 @@ feature -- Access
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	is_complex_type: BOOLEAN is
+	is_complex_type: BOOLEAN
 			-- Is `Current' a complex type?
 		do
 			Result := False
 		end
 
-	as_complex_type: XM_XPATH_COMPLEX_TYPE is
+	as_complex_type: XM_XPATH_COMPLEX_TYPE
 			-- `Current' seen as a complex type
 		require
 			complex_type: is_complex_type

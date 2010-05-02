@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 
 	cdata_validation_error: XM_XPATH_ERROR_VALUE
 
-	validate_cdata_sections (a_cdata_section_elements: STRING; a_namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER) is
+	validate_cdata_sections (a_cdata_section_elements: STRING; a_namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER)
 			-- Validate cdata-section-elements attribute.
 		require
 			cdata_section_elements_not_void: a_cdata_section_elements /= Void
@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 			cdata_section_expanded_names_not_void: cdata_section_expanded_names /= Void
 		end
 
-	gather_used_character_maps_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+	gather_used_character_maps_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER)
 			-- Set used-character-maps property in `a_property_set'.
 		require
 			property_set_not_void: a_property_set /= Void
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 		end
 
 	extend_expanded_names (a_expanded_names: DS_ARRAYED_LIST [STRING]; a_splitter: ST_SPLITTER;
-		a_stylesheet: XM_XSLT_STYLESHEET; a_used_character_maps: DS_ARRAYED_LIST [STRING]; a_character_map: STRING) is
+		a_stylesheet: XM_XSLT_STYLESHEET; a_used_character_maps: DS_ARRAYED_LIST [STRING]; a_character_map: STRING)
 			-- Extend `a_expanded_names' with expanded name of `a_character_map'.
 		require
 			a_expanded_names_not_void: a_expanded_names /= void
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	no_compile_error_yet (a_character_map: STRING): BOOLEAN is
+	no_compile_error_yet (a_character_map: STRING): BOOLEAN
 			-- Have zero compile errors been reported?
 			-- Dummy argument `a_character_map' is present only to satisfy the interface of `do_if'.
 		do
@@ -171,7 +171,7 @@ feature {NONE} -- Implementation
 			definition: Result = not any_compile_errors
 		end
 
-	report_compile_error (a_error: XM_XPATH_ERROR_VALUE) is
+	report_compile_error (a_error: XM_XPATH_ERROR_VALUE)
 			-- Report a compile error.
 		require
 			validation_message_not_void: a_error /= Void
@@ -180,19 +180,19 @@ feature {NONE} -- Implementation
 			compile_errors: any_compile_errors
 		end
 
-	any_compile_errors: BOOLEAN is
+	any_compile_errors: BOOLEAN
 			-- Have any compile errors been reported?
 		deferred
 		end
 
-	uri_for_prefix (an_xml_prefix: STRING; use_default_namespace: BOOLEAN): STRING is
+	uri_for_prefix (an_xml_prefix: STRING; use_default_namespace: BOOLEAN): STRING
 			-- URI for `an_xml_prefix' using the in-scope namespaces
 		require
 			prefix_not_void: an_xml_prefix /= Void
 		deferred
 		end
 
-	principal_stylesheet: XM_XSLT_STYLESHEET is
+	principal_stylesheet: XM_XSLT_STYLESHEET
 			-- Top-level stylesheet
 		deferred
 		end

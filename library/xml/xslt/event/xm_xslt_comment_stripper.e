@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_underlying_receiver: XM_XPATH_RECEIVER) is
+	make (a_underlying_receiver: XM_XPATH_RECEIVER)
 			-- Initailize `Current'.
 		require
 			underlying_receiver_not_void: a_underlying_receiver /= Void
@@ -45,45 +45,45 @@ feature {NONE} -- Initialization
 
 feature -- Events
 
-	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
+	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER)
 			-- Notify the start of an element
 		do
 			flush
 			Precursor (a_name_code, a_type_code, properties)
 		end
 
-	end_element is
+	end_element
 			-- Notify the end of an element.
 		do
 			flush
 			Precursor
 		end
 
-	notify_characters (chars: STRING; properties: INTEGER) is
+	notify_characters (chars: STRING; properties: INTEGER)
 			-- Notify character data.
 		do
 			character_buffer := STRING_.appended_string (character_buffer, chars)
 			mark_as_written
 		end
 
-	notify_comment (a_content_string: STRING; properties: INTEGER) is
+	notify_comment (a_content_string: STRING; properties: INTEGER)
 			-- Notify a comment.
 		do
 			mark_as_written
 		end
 
-	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
+	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER)
 			-- Notify a processing instruction.
 		do
 			mark_as_written
 		end
-	
+
 feature {NONE} -- Implementation
 
 	character_buffer: STRING
 			-- Accumulated character data
-	
-	flush is
+
+	flush
 			-- Flush `character_buffer'.
 		do
 			if character_buffer /= Void and then not character_buffer.is_empty then
@@ -97,4 +97,4 @@ invariant
 	character_buffer_not_void: character_buffer /= Void
 
 end
-	
+

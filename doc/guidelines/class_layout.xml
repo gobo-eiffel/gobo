@@ -39,7 +39,7 @@ on the page. Here is a example:
 
 <para>
 <programlisting>
-<text>_   </text><featurename>set_foo</featurename> (<argument>a_foo</argument>: like <featurename>foo</featurename>) is
+<text>_   </text><featurename>set_foo</featurename> (<argument>a_foo</argument>: like <featurename>foo</featurename>)
 <text>_   _   _   </text><comment>Set <featurename>foo</featurename> to <argument>a_foo</argument>.</comment>
 <text>_   _   </text>require
 <text>_   _   _   </text>a_foo_not_void: <argument>a_foo</argument> /= Void
@@ -101,7 +101,7 @@ _   </text><featurename>make</featurename>, <featurename>make_from_string</featu
 <text>
 </text>feature {<classname>NONE</classname>} <comment>Initialization</comment>
 <text>
-_   </text><featurename>make</featurename> (<argument>a_foo</argument>: <classname>FOO</classname>) is
+_   </text><featurename>make</featurename> (<argument>a_foo</argument>: <classname>FOO</classname>)
 <text>_   _   _   </text><comment>Create a new bar.</comment>
 <text>_   _   </text>require
 <text>_   _   _   </text>a_foo_not_void: <argument>a_foo</argument> /= Void
@@ -115,7 +115,7 @@ _   </text><featurename>make</featurename> (<argument>a_foo</argument>: <classna
 					<expression><argument>a_foo</argument></expression></equal>
 <text>_   _   </text>end
 <text>
-_   </text><featurename>make_from_string</featurename> (<argument>a_string</argument>: <classname>STRING</classname>) is
+_   </text><featurename>make_from_string</featurename> (<argument>a_string</argument>: <classname>STRING</classname>)
 <text>_   _   _   </text><comment>Create a new bar from <argument>a_string</argument>.</comment>
 <text>_   _   </text>require
 <text>_   _   _   </text>a_string_not_void: <argument>a_string</argument> /= Void
@@ -134,7 +134,7 @@ _   </text><featurename>foo</featurename>: <classname>FOO</classname>
 <text>
 </text>feature <comment>Setting</comment>
 <text>
-_   </text><featurename>set_foo</featurename> (<argument>a_foo</argument>: like <featurename>foo</featurename>) is
+_   </text><featurename>set_foo</featurename> (<argument>a_foo</argument>: like <featurename>foo</featurename>)
 <text>_   _   _   </text><comment>Set <featurename>foo</featurename> to <argument>a_foo</argument>.</comment>
 <text>_   _   </text>require
 <text>_   _   _   </text>a_foo_not_void: <argument>a_foo</argument> /= Void

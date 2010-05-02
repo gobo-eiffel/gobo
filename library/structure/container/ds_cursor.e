@@ -28,7 +28,7 @@ inherit
 
 feature -- Access
 
-	item: G is
+	item: G
 			-- Item at cursor position
 		require
 			not_off: not off
@@ -36,20 +36,20 @@ feature -- Access
 			Result := container.cursor_item (Current)
 		end
 
-	container: DS_TRAVERSABLE [G] is
+	container: DS_TRAVERSABLE [G]
 			-- Data structure traversed
 		deferred
 		end
 
 feature -- Status report
 
-	off: BOOLEAN is
+	off: BOOLEAN
 			-- Is there no item at cursor position?
 		do
 			Result := container.cursor_off (Current)
 		end
 
-	same_position (other: like Current): BOOLEAN is
+	same_position (other: like Current): BOOLEAN
 			-- Is current cursor at same position as `other'?
 		require
 			other_not_void: other /= Void
@@ -57,7 +57,7 @@ feature -- Status report
 			Result := container.cursor_same_position (Current, other)
 		end
 
-	valid_cursor (other: like Current): BOOLEAN is
+	valid_cursor (other: like Current): BOOLEAN
 			-- Is `other' a valid cursor according
 			-- to current traversal strategy?
 		require
@@ -70,7 +70,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	go_to (other: like Current) is
+	go_to (other: like Current)
 			-- Move cursor to `other''s position.
 		require
 			other_not_void: other /= Void
@@ -83,7 +83,7 @@ feature -- Cursor movement
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Copy `other' to current cursor.
 		do
 			if container /= Void and then not off then
@@ -98,7 +98,7 @@ feature -- Duplication
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Are `other' and current cursor at the same position?
 		do
 			if ANY_.same_types (Current, other) then
@@ -114,7 +114,7 @@ feature {DS_TRAVERSABLE} -- Implementation
 			-- cursors (i.e. cursors associated with `container'
 			-- and which are not currently `off').)
 
-	set_next_cursor (a_cursor: like next_cursor) is
+	set_next_cursor (a_cursor: like next_cursor)
 			-- Set `next_cursor' to `a_cursor'.
 		do
 			next_cursor := a_cursor

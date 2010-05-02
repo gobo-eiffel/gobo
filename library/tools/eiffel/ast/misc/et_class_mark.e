@@ -18,7 +18,7 @@ inherit
 
 feature -- Status report
 
-	is_deferred: BOOLEAN is
+	is_deferred: BOOLEAN
 			-- Is current type mark 'deferred'?
 		do
 			-- Result := False

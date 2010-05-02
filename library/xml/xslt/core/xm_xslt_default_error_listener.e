@@ -31,10 +31,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_recovery_policy: INTEGER; a_error_reporter: UT_ERROR_HANDLER) is
+	make (a_recovery_policy: INTEGER; a_error_reporter: UT_ERROR_HANDLER)
 			-- Establish invariant.
 		require
-			recovery_policy: a_recovery_policy >= Recover_silently and then a_recovery_policy <= Do_not_recover			
+			recovery_policy: a_recovery_policy >= Recover_silently and then a_recovery_policy <= Do_not_recover
 			error_reporter_not_void: a_error_reporter /= Void
 		do
 			recovery_policy := a_recovery_policy
@@ -52,7 +52,7 @@ feature -- Access
 	warnings, errors, fatal_errors: INTEGER
 			-- Error counts
 
-	total_errors: INTEGER is
+	total_errors: INTEGER
 			-- Toal error count
 		do
 			Result := warnings + errors + fatal_errors
@@ -60,7 +60,7 @@ feature -- Access
 
 feature -- Events
 
-	warning (a_message: STRING; a_locator: XM_XPATH_LOCATOR) is
+	warning (a_message: STRING; a_locator: XM_XPATH_LOCATOR)
 			-- Receive notification of a warning.
 		local
 			l_error: XM_XPATH_ERROR_VALUE
@@ -78,7 +78,7 @@ feature -- Events
 			end
 		end
 
-	error (a_error: XM_XPATH_ERROR_VALUE) is
+	error (a_error: XM_XPATH_ERROR_VALUE)
 			-- Receive notification of a recoverable error.
 		local
 			l_msg: STRING
@@ -109,7 +109,7 @@ feature -- Events
 			end
 		end
 
-	fatal_error (a_error: XM_XPATH_ERROR_VALUE) is
+	fatal_error (a_error: XM_XPATH_ERROR_VALUE)
 			-- Receive notification of a non-recoverable error.
 		local
 			l_error: like a_error
@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 	error_reporter: UT_ERROR_HANDLER
 			-- Error reporter
 
-	display_location_information (a_locator: XM_XPATH_LOCATOR; is_an_error: BOOLEAN) is
+	display_location_information (a_locator: XM_XPATH_LOCATOR; is_an_error: BOOLEAN)
 			-- Display location information.
 		require
 			locator_not_void: a_locator /= Void
@@ -153,4 +153,4 @@ invariant
 	error_reporter_not_void: error_reporter /= Void
 
 end
-	
+

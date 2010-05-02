@@ -14,7 +14,7 @@ deferred class ET_EXPRESSIONS
 
 feature -- Access
 
-	expression (i: INTEGER): ET_EXPRESSION is
+	expression (i: INTEGER): ET_EXPRESSION
 			-- Expression at index `i'
 		require
 			i_large_enough: i >= 1
@@ -26,7 +26,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of expressions
 		deferred
 		ensure

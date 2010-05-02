@@ -6,7 +6,7 @@ create
 
 feature
 
-	make is
+	make
 		local
 			t: TYPE [ANY]
 		do

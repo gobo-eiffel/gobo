@@ -13,7 +13,7 @@ revision: "$Revision$"
 class XM_XSLT_GEXSLT_EXAMPLES_XML_EMITTER
 
 inherit
-	
+
 	XM_XSLT_XML_EMITTER
 		redefine
 			write_doctype, make
@@ -39,7 +39,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_serializer: XM_XSLT_SERIALIZER; a_outputter: XM_OUTPUT; a_output_properties: XM_XSLT_OUTPUT_PROPERTIES) is
+	make (a_serializer: XM_XSLT_SERIALIZER; a_outputter: XM_OUTPUT; a_output_properties: XM_XSLT_OUTPUT_PROPERTIES)
 			-- Initialize `Current'.
 		do
 			Precursor (a_serializer, a_outputter, a_output_properties)
@@ -50,13 +50,13 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	extension_attribute_expanded_name: STRING is "http://www.gobosoft.com/eiffel/gobo/gexslt/extension/example#internal-subset"
+	extension_attribute_expanded_name: STRING = "http://www.gobosoft.com/eiffel/gobo/gexslt/extension/example#internal-subset"
 			-- Name of extension attribute specifying DTD internal subset to be written
 
 	dtd_internal_subset: STRING
 			-- Text of internal subset to be written
 
-	write_doctype (a_type, a_system_id, a_public_id: STRING ) is
+	write_doctype (a_type, a_system_id, a_public_id: STRING )
 			-- Write DOCTYPE.
 		do
 			if is_declaration_written then
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	write_internal_subset is
+	write_internal_subset
 			-- Write DTD internal subset.
 		require
 			internal_subset_not_void: dtd_internal_subset /= Void
@@ -95,4 +95,4 @@ feature {NONE} -- Implementation
 		end
 
 end
-	
+

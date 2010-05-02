@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_nan is
+	make_nan
 			-- Establish invariant.
 		do
 			category := Numeric_type_code
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			nan: is_nan
 		end
 
-	make_numeric (a_numeric_value: XM_XPATH_NUMERIC_VALUE) is
+	make_numeric (a_numeric_value: XM_XPATH_NUMERIC_VALUE)
 			-- Establish invariant.
 		require
 			value_not_void: a_numeric_value /= Void
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			not_nan: not is_nan
 		end
 
-	make_with_collation_key (a_collation_key: ST_COLLATION_KEY) is
+	make_with_collation_key (a_collation_key: ST_COLLATION_KEY)
 			-- Establish invariant.
 		require
 			collation_key_not_void: a_collation_key /= Void
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			not_nan: not is_nan
 		end
 
-	make (a_atomic_value: XM_XPATH_ATOMIC_VALUE) is
+	make (a_atomic_value: XM_XPATH_ATOMIC_VALUE)
 		require
 			value_not_void: a_atomic_value /= Void
 		do
@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			if is_nan then
@@ -84,7 +84,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_key (other: XM_XPATH_COMPARISON_KEY): BOOLEAN is
+	same_key (other: XM_XPATH_COMPARISON_KEY): BOOLEAN
 			-- Are `Current' and `other' considered equal?
 		require
 			other_not_void: other /= Void
@@ -117,6 +117,6 @@ invariant
 	nan: is_nan implies value /= Void and then category = Numeric_type_code
 	value: collation_key = Void implies value /= Void
 	collation_key: collation_key /= Void implies value = Void
-	
+
 end
-	
+

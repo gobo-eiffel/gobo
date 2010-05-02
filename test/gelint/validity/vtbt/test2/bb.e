@@ -6,7 +6,7 @@ inherit
 
 feature
 
-	f is
+	f
 		local
 			b: BIT 32
 		do

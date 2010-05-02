@@ -14,7 +14,7 @@ note
 class XM_XPATH_PROGRESSIVE_ITERATOR
 
 inherit
-	
+
 	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		redefine
 			is_realizable_iterator, realize,
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_reservoir: DS_ARRAYED_LIST [XM_XPATH_ITEM]; a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_closure: like closure) is
+	make (a_reservoir: DS_ARRAYED_LIST [XM_XPATH_ITEM]; a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_closure: like closure)
 			-- Establish invariant.
 		require
 			reservoir_not_void: a_reservoir /= Void
@@ -46,13 +46,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item: XM_XPATH_ITEM is
+	item: XM_XPATH_ITEM
 			-- Value or node at the current position
 		do
 			Result := reservoir.item (index)
 		end
 
-	last_position: INTEGER is
+	last_position: INTEGER
 			-- Last position (= number of items in sequence)
 		do
 			if closure /= Void and then closure.is_all_read then
@@ -67,19 +67,19 @@ feature -- Access
 
 feature -- Status report
 
-	is_realizable_iterator: BOOLEAN is
+	is_realizable_iterator: BOOLEAN
 			-- Is `Current' a realizable iterator?
 		do
 			Result := True
 		end
 
-	is_last_position_finder: BOOLEAN is
+	is_last_position_finder: BOOLEAN
 			-- Can `Current' find the last position?
 		do
 			Result := True
 		end
-	
-	after: BOOLEAN is
+
+	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
 			if index > reservoir.count and then not base_iterator.is_error then
@@ -93,7 +93,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move to next position
 		do
 			index := index + 1
@@ -119,7 +119,7 @@ feature -- Cursor movement
 
 feature -- Evaluation
 
-	realize is
+	realize
 			-- Realize the sequence as a value.
 		do
 			if base_iterator.is_error then
@@ -134,13 +134,13 @@ feature -- Evaluation
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original;
 			-- The new iterator will be repositioned at the start of the sequence
 		do
 			create Result.make (reservoir, base_iterator, closure)
 		end
-	
+
 feature {NONE} -- Implementation
 
 	reservoir: DS_ARRAYED_LIST [XM_XPATH_ITEM]
@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 	closure: XM_XPATH_MEMO_CLOSURE
 			-- Closure over which `Current' iterates
 
-	fill_reservoir is
+	fill_reservoir
 			-- Fill `reservoir' from `base_iterator'
 		require
 			not_full: base_iterator.before or else not base_iterator.after
@@ -183,4 +183,4 @@ invariant
 	base_iterator_not_void: base_iterator /= Void
 
 end
-	
+

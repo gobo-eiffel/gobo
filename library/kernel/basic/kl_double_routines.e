@@ -27,7 +27,7 @@ inherit
 
 feature -- Logarithms
 
-	log (d: DOUBLE): DOUBLE is
+	log (d: DOUBLE): DOUBLE
 			-- Natural logarithm of `d'
 		require
 			d_positive: d > 0.0
@@ -35,7 +35,7 @@ feature -- Logarithms
 			Result := old_log (d)
 		end
 
-	log2 (d: DOUBLE): DOUBLE is
+	log2 (d: DOUBLE): DOUBLE
 			-- Base 2 logarithm of `d'
 		require
 			d_positive: d > 0.0
@@ -43,7 +43,7 @@ feature -- Logarithms
 			Result := log_2 (d)
 		end
 
-	log10 (d: DOUBLE): DOUBLE is
+	log10 (d: DOUBLE): DOUBLE
 			-- Base 10 logarithm of `d'
 		require
 			d_positive: d > 0.0
@@ -53,13 +53,13 @@ feature -- Logarithms
 
 feature -- Exponent
 
-	exp (d: DOUBLE): DOUBLE is
+	exp (d: DOUBLE): DOUBLE
 			-- Inverse of the natural logarithm
 		do
 			Result := old_exp (d)
 		end
 
-	nth_root (d, n: DOUBLE): DOUBLE is
+	nth_root (d, n: DOUBLE): DOUBLE
 			-- `n'-th root of `d'
 		require
 			divisible: (1.0).divisible (n)
@@ -69,7 +69,7 @@ feature -- Exponent
 
 feature -- Conversion
 
-	truncated_to_integer (d: DOUBLE): INTEGER is
+	truncated_to_integer (d: DOUBLE): INTEGER
 			-- Integer part (Same sign, largest absolute
 			-- value no greater than current object's)
 		require
@@ -79,7 +79,7 @@ feature -- Conversion
 			Result := d.truncated_to_integer
 		end
 
-	rounded_to_integer (d: DOUBLE): INTEGER is
+	rounded_to_integer (d: DOUBLE): INTEGER
 			-- Rounded integral value
 		require
 			d_large_enough: (d.abs + 0.5) >= Platform.Minimum_integer
@@ -90,7 +90,7 @@ feature -- Conversion
 			definition: Result = d.sign * floor_to_integer (d.abs + 0.5)
 		end
 
-	floor_to_integer (d: DOUBLE): INTEGER is
+	floor_to_integer (d: DOUBLE): INTEGER
 			-- INTEGER floor
 		require
 			d_large_enough: d >= Platform.Minimum_integer
@@ -106,7 +106,7 @@ feature -- Conversion
 
 feature -- NaN
 
-	is_nan (d: DOUBLE): BOOLEAN is
+	is_nan (d: DOUBLE): BOOLEAN
 			-- Does `d' correspond to a Not-A-Number?
 		local
 			p1: MANAGED_POINTER
@@ -141,7 +141,7 @@ feature -- NaN
 
 feature -- Infinity
 
-	is_plus_infinity (d: DOUBLE): BOOLEAN is
+	is_plus_infinity (d: DOUBLE): BOOLEAN
 			-- Does `d' correspond to positive infinity?
 		local
 			p1, p2: MANAGED_POINTER
@@ -160,7 +160,7 @@ feature -- Infinity
 			end
 		end
 
-	is_minus_infinity (d: DOUBLE): BOOLEAN is
+	is_minus_infinity (d: DOUBLE): BOOLEAN
 			-- Does `d' correspond to minus infinity?
 		local
 			p1, p2: MANAGED_POINTER
@@ -179,7 +179,7 @@ feature -- Infinity
 			end
 		end
 
-	plus_infinity: DOUBLE is
+	plus_infinity: DOUBLE
 			-- Positive infinity
 		local
 			p: MANAGED_POINTER
@@ -200,7 +200,7 @@ feature -- Infinity
 			positive: Result > 0
 		end
 
-	minus_infinity: DOUBLE is
+	minus_infinity: DOUBLE
 			-- Negative infinity
 		local
 			p: MANAGED_POINTER

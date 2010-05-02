@@ -23,7 +23,7 @@ create
 
 feature -- Test
 
-	test_has_dollar is
+	test_has_dollar
 			-- Test feature `has_dollar'.
 		local
 			l_regexp: LX_DFA_REGULAR_EXPRESSION
@@ -48,7 +48,7 @@ feature -- Test
 			assert ("has_dollar3d", not l_regexp.matches ("foo\\$"))
 		end
 
-	test_compile1 is
+	test_compile1
 			-- Test feature 'compile'.
 		local
 			a_regexp: LX_DFA_REGULAR_EXPRESSION
@@ -60,7 +60,7 @@ feature -- Test
 			assert ("not_recognizes1", not a_regexp.recognizes ("aaabbbcccddd"))
 		end
 
-	test_recognizes is
+	test_recognizes
 			-- Test feature `recognizes'.
 		local
 			a_regexp: LX_DFA_REGULAR_EXPRESSION
@@ -77,7 +77,7 @@ feature -- Test
 			assert ("recognizes3", a_regexp.recognizes ("eiffel"))
 		end
 
-	test_split1 is
+	test_split1
 			-- Test feature `split'.
 		local
 			a_regexp: LX_DFA_REGULAR_EXPRESSION
@@ -96,7 +96,7 @@ feature -- Test
 			assert_strings_equal ("split_item3", "two", a_split.item (3))
 		end
 
-	test_split2 is
+	test_split2
 			-- Test feature `split'.
 		local
 			a_regexp: LX_DFA_REGULAR_EXPRESSION
@@ -114,7 +114,7 @@ feature -- Test
 			assert_strings_equal ("split_item2", "b", a_split.item (2))
 		end
 
-	test_split3 is
+	test_split3
 			-- Test feature `split'.
 		local
 			a_regexp: LX_DFA_REGULAR_EXPRESSION
@@ -134,7 +134,7 @@ feature -- Test
 			assert_strings_equal ("split_item4", "o", a_split.item (4))
 		end
 
-	test_match1 is
+	test_match1
 			-- Test feature 'match'.
 		local
 			a_regexp: LX_DFA_REGULAR_EXPRESSION
@@ -147,7 +147,7 @@ feature -- Test
 			assert ("no_matched1", not a_regexp.has_matched)
 		end
 
-	test_match2 is
+	test_match2
 			-- Test feature 'match'.
 		local
 			a_regexp: LX_DFA_REGULAR_EXPRESSION
@@ -160,7 +160,7 @@ feature -- Test
 			assert ("no_matched1", not a_regexp.has_matched)
 		end
 
-	test_match_substring1 is
+	test_match_substring1
 			-- Test feature 'match_substring'.
 		local
 			a_regexp: LX_DFA_REGULAR_EXPRESSION
@@ -173,7 +173,7 @@ feature -- Test
 			assert ("matched1", a_regexp.has_matched)
 		end
 
-	test_match_substring2 is
+	test_match_substring2
 			-- Test feature 'match'.
 		local
 			a_regexp: LX_DFA_REGULAR_EXPRESSION
@@ -188,7 +188,7 @@ feature -- Test
 
 feature -- Test Input 1
 
-	test_input1_regexp1 is
+	test_input1_regexp1
 			-- Test first regexp in testinput1.
 		local
 			a_regexp: LX_DFA_REGULAR_EXPRESSION
@@ -217,7 +217,7 @@ feature -- Test Input 1
 
 feature -- Test replacement
 
-	test_replacement2 is
+	test_replacement2
 			-- Test replacement.
 			-- This is to test that there is no infinite loop
 			-- when replacing all occurrences of a pattern that

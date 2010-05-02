@@ -22,7 +22,7 @@ inherit
 --
 --inherit XF_CONVERSION_PRIVATE_ROUTINES
 --...
---process_line (a: STRING) is
+--process_line (a: STRING)
 --		-- Process a line from the standard text with a char class production.
 --	local
 --		last_number: STRING
@@ -40,7 +40,7 @@ inherit
 --			end
 --
 --			inspect	c
---			when '=' then io.put_string ("(a: INTEGER): BOOLEAN is%N%T%Tdo%N%T%T%TResult :=")
+--			when '=' then io.put_string ("(a: INTEGER): BOOLEAN%N%T%Tdo%N%T%T%TResult :=")
 --			when '[' then io.put_string ("(a >= ") in_group := True
 --			when '-' then io.put_string (" and a <= ")
 --			when ']' then io.put_string (")") in_group := False
@@ -63,7 +63,7 @@ inherit
 
 feature -- Valid characters (section 2.2)
 
-	is_char (a: INTEGER): BOOLEAN is
+	is_char (a: INTEGER): BOOLEAN
 			-- Valid content character?
 		do
 			Result := a = 9 or else
@@ -74,7 +74,7 @@ feature -- Valid characters (section 2.2)
 				(a >= 65536 and a <= 1114111)
 		end
 
-	is_name_char (a: INTEGER): BOOLEAN is
+	is_name_char (a: INTEGER): BOOLEAN
 			-- Character for name?
 		do
 			Result := is_name_first (a) or else
@@ -84,13 +84,13 @@ feature -- Valid characters (section 2.2)
 					is_extender (a)
 		end
 
-	is_name_first (a: INTEGER): BOOLEAN is
+	is_name_first (a: INTEGER): BOOLEAN
 			-- Valid first character of name?
 		do
 			Result := is_letter (a) or else a = ('_').code or else a = (':').code
 		end
 
-	is_space (a: INTEGER): BOOLEAN is
+	is_space (a: INTEGER): BOOLEAN
 			-- Space character?
 		do
 			Result := a = 32 or else a = 9 or else a = 10 or else a = 13
@@ -98,14 +98,14 @@ feature -- Valid characters (section 2.2)
 
 feature -- Character classes (appendix B)
 
-	is_letter (a: INTEGER): BOOLEAN is
+	is_letter (a: INTEGER): BOOLEAN
 			-- Letter class.
 		do
 			Result := is_base_char (a) or else
 				is_ideographic (a)
 		end
 
-	is_base_char (a: INTEGER): BOOLEAN is
+	is_base_char (a: INTEGER): BOOLEAN
 			-- Base char class.
 		do
 				-- Do not use a big expression with 'or' because with SE 1.0b6
@@ -524,7 +524,7 @@ feature -- Character classes (appendix B)
 			end
 		end
 
-	is_ideographic(a: INTEGER): BOOLEAN is
+	is_ideographic(a: INTEGER): BOOLEAN
 			-- Ideographic class.
 		do
 			Result := (a >= 19968 and a <= 40869) or
@@ -532,7 +532,7 @@ feature -- Character classes (appendix B)
 				(a >= 12321 and a <= 12329)
 		end
 
-	is_combining_char(a: INTEGER): BOOLEAN is
+	is_combining_char(a: INTEGER): BOOLEAN
 			-- Combining char class.
 		do
 			Result := (a >= 768 and a <= 837) or
@@ -632,7 +632,7 @@ feature -- Character classes (appendix B)
 				a = 12442
 		end
 
-	is_digit(a: INTEGER): BOOLEAN is
+	is_digit(a: INTEGER): BOOLEAN
 			-- Digit class.
 		do
 			Result := (a >= 48 and a <= 57) or
@@ -652,7 +652,7 @@ feature -- Character classes (appendix B)
 				(a >= 3872 and a <= 3881)
 		end
 
-	is_extender(a: INTEGER): BOOLEAN is
+	is_extender(a: INTEGER): BOOLEAN
 			-- Extender class.
 		do
 			Result := a = 183 or

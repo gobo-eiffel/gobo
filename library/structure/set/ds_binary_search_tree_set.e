@@ -50,7 +50,7 @@ create
 
 feature -- Access
 
-	new_cursor: DS_BINARY_SEARCH_TREE_SET_CURSOR [G] is
+	new_cursor: DS_BINARY_SEARCH_TREE_SET_CURSOR [G]
 			-- New external cursor
 		do
 			create Result.make (Current)
@@ -61,7 +61,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	new_tree_node (a_item, a_key: G): like root_node is
+	new_tree_node (a_item, a_key: G): like root_node
 			-- New tree node with `a_item'
 		do
 			check
@@ -72,7 +72,7 @@ feature {NONE} -- Access
 
 feature -- Status report
 
-	has_void: BOOLEAN is
+	has_void: BOOLEAN
 			-- Does container include Void?
 		do
 			if not is_empty then
@@ -80,7 +80,7 @@ feature -- Status report
 			end
 		end
 
-	is_subset (other: DS_SET [G]): BOOLEAN is
+	is_subset (other: DS_SET [G]): BOOLEAN
 			-- Are all items of current set included in `other'?
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -98,7 +98,7 @@ feature -- Status report
 			end
 		end
 
-	is_disjoint (other: DS_SET [G]): BOOLEAN is
+	is_disjoint (other: DS_SET [G]): BOOLEAN
 			-- Are none of the items of current set included in `other'?
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -116,7 +116,7 @@ feature -- Status report
 			end
 		end
 
-	extendible (n: INTEGER): BOOLEAN is
+	extendible (n: INTEGER): BOOLEAN
 			-- May container be extended with `n' items?
 		do
 			Result := True
@@ -124,7 +124,7 @@ feature -- Status report
 
 feature {NONE} -- Setting
 
-	internal_set_key_comparator (a_tester: like equality_tester) is
+	internal_set_key_comparator (a_tester: like equality_tester)
 			-- Set `equality_tester' to `a_tester'.
 			-- (No "settable" precondition, to be used internally only.)
 		do
@@ -133,7 +133,7 @@ feature {NONE} -- Setting
 
 feature {DS_LINEAR_CURSOR} -- Cursor implementation
 
-	cursor_search_forth (a_cursor: like new_cursor; v: G) is
+	cursor_search_forth (a_cursor: like new_cursor; v: G)
 			-- Move `a_cursor' to first position at or after its current
 			-- position where `cursor_item (a_cursor)' and `v' are equal.
 			-- (Use `equality_tester''s comparison criterion
@@ -150,7 +150,7 @@ feature {DS_LINEAR_CURSOR} -- Cursor implementation
 
 feature {DS_BILINEAR_CURSOR} -- Cursor implementation
 
-	cursor_search_back (a_cursor: like new_cursor; v: G) is
+	cursor_search_back (a_cursor: like new_cursor; v: G)
 			-- Move `a_cursor' to first position at or before its current
 			-- position where `cursor_item (a_cursor)' and `v' are equal.
 			-- (Use `equality_tester''s comparison criterion
@@ -167,7 +167,7 @@ feature {DS_BILINEAR_CURSOR} -- Cursor implementation
 
 feature -- Element change
 
-	put, put_last, force, force_last (v: G) is
+	put, put_last, force, force_last (v: G)
 			-- Add `v' to set, replacing any existing item.
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -175,7 +175,7 @@ feature -- Element change
 			internal_put (v, v)
 		end
 
-	put_new, force_new (v: G) is
+	put_new, force_new (v: G)
 			-- Add `v' to set.
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -183,7 +183,7 @@ feature -- Element change
 			internal_put_new (v, v)
 		end
 
-	extend, extend_last, append, append_last (other: DS_LINEAR [G]) is
+	extend, extend_last, append, append_last (other: DS_LINEAR [G])
 			-- Add items of `other' to set, replacing any existing item.
 			-- Add `other.first' first, etc.
 		local
@@ -208,7 +208,7 @@ feature -- Element change
 
 feature {NONE} -- Element change
 
-	on_node_added (a_node: like root_node) is
+	on_node_added (a_node: like root_node)
 			-- `a_node' was just added to the binary search tree.
 			-- This feature is basically used by balanced binary
 			-- search tree variants. They are informed which
@@ -219,7 +219,7 @@ feature {NONE} -- Element change
 
 feature {NONE} -- Removal
 
-	on_root_node_removed is
+	on_root_node_removed
 			-- The node that was previsously the `root_node'
 			-- was removed. The old `root_node' had only
 			-- one child and this child is now the `root_node'.
@@ -228,7 +228,7 @@ feature {NONE} -- Removal
 		do
 		end
 
-	on_node_removed (a_old_node, a_node: like root_node; a_was_left_child: BOOLEAN) is
+	on_node_removed (a_old_node, a_node: like root_node; a_was_left_child: BOOLEAN)
 			-- `a_old_node' was just removed from the tree.
 			-- The parent of `a_old_node' was `a_node'.
 			-- Depending on `a_was_left_child' `a_old_node'
@@ -240,7 +240,7 @@ feature {NONE} -- Removal
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Copy `other' to current.
 		local
 			l_other_node: like root_node
@@ -266,7 +266,7 @@ feature -- Duplication
 
 feature -- Basic operations
 
-	merge (other: DS_SET [G]) is
+	merge (other: DS_SET [G])
 			-- Add all items of `other' to current set.
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -290,7 +290,7 @@ feature -- Basic operations
 			end
 		end
 
-	intersect (other: DS_SET [G]) is
+	intersect (other: DS_SET [G])
 			-- Remove all items not included in `other'.
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -320,7 +320,7 @@ feature -- Basic operations
 			end
 		end
 
-	subtract (other: DS_SET [G]) is
+	subtract (other: DS_SET [G])
 			-- Remove all items also included in `other'.
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -350,7 +350,7 @@ feature -- Basic operations
 			end
 		end
 
-	symdif (other: DS_SET [G]) is
+	symdif (other: DS_SET [G])
 			-- Add items of `other' which are not included
 			-- in current set and remove those which are.
 			-- (Use `equality_tester''s comparison criterion

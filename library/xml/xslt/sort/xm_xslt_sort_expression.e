@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_select_expression: XM_XPATH_EXPRESSION; a_sort_key_list: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION]) is
+	make (a_select_expression: XM_XPATH_EXPRESSION; a_sort_key_list: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION])
 			-- Establish invariant.
 		require
 			select_expression_not_void: a_select_expression /= Void
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 		do
 			set_select_expression (a_select_expression)
 			sort_key_list := a_sort_key_list
--- removed, due to local variables in AVT - needs optimization			
+-- removed, due to local variables in AVT - needs optimization
 -- 			from
 -- 				fixed := True
 -- 				a_cursor := sort_key_list.new_cursor
@@ -86,19 +86,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, when known
 		do
 			Result := select_expression.item_type
 		end
 
-	is_repeated_sub_expression (a_child: XM_XPATH_EXPRESSION): BOOLEAN is
+	is_repeated_sub_expression (a_child: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Is `a_child' a repeatedly-evaluated sub-expression?
 		do
 			Result := is_sort_key (a_child)
 		end
 
-	is_sort_key (a_child: XM_XPATH_EXPRESSION): BOOLEAN is
+	is_sort_key (a_child: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Is `a_child' one of the sort-keys?
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_SORT_KEY_DEFINITION]
@@ -119,7 +119,7 @@ feature -- Access
 			end
 		end
 
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions of `Current'
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_SORT_KEY_DEFINITION]
@@ -152,7 +152,7 @@ feature -- Access
 
 feature -- Status report
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -163,7 +163,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform of context-independent static optimizations.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -177,7 +177,7 @@ feature -- Optimization
 			a_replacement.put (Current)
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -197,7 +197,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -214,7 +214,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterator over the values of a sequence
 		local
 			l_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -276,7 +276,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterator over the nodes of a sequence
 		local
 			l_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -336,7 +336,7 @@ feature -- Evaluation
 
 feature {XM_XSLT_SORT_EXPRESSION} -- Local
 
-	set_select_expression (a_select_expression: XM_XPATH_EXPRESSION) is
+	set_select_expression (a_select_expression: XM_XPATH_EXPRESSION)
 			-- Set `select_expression'.
 		require
 			underlying_expression_not_void: a_select_expression /= Void
@@ -354,13 +354,13 @@ feature {XM_XSLT_SORT_EXPRESSION} -- Local
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinalities (select_expression)
 		end
 
-	compute_special_properties is
+	compute_special_properties
 			-- Compute special properties.
 		do
 			initialize_special_properties

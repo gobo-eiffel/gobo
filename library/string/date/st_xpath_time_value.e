@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_lexical_time: STRING) is
+	make (a_lexical_time: STRING)
 			-- Create from lexical time.
 		require
 			lexical_time: a_lexical_time /= Void and then is_time (a_lexical_time)
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	make_from_time (a_time: DT_TIME) is
+	make_from_time (a_time: DT_TIME)
 			-- Create from time object.
 		require
 			time_not_void: a_time /= Void
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			local_time := a_time.twin
 		end
 
-	make_from_zoned_time (a_time: DT_FIXED_OFFSET_ZONED_TIME) is
+	make_from_zoned_time (a_time: DT_FIXED_OFFSET_ZONED_TIME)
 			-- Create from time object.
 		require
 			time_not_void: a_time /= Void
@@ -69,7 +69,7 @@ feature -- Access
 	local_time: detachable DT_TIME
 			-- Time value without zone
 
-	time: DT_TIME is
+	time: DT_TIME
 			-- Time components
 		local
 			l_time: detachable like time
@@ -96,13 +96,13 @@ feature -- Access
 
 feature -- Status report
 
-	is_xpath_time: BOOLEAN is
+	is_xpath_time: BOOLEAN
 			-- Does `Current' have a time component and no date component?
 		do
 			Result := True
 		end
 
-	is_time (a_lexical_time: STRING): BOOLEAN is
+	is_time (a_lexical_time: STRING): BOOLEAN
 			-- Is `a_lexical_time' a valid time?
 		require
 			lexical_time_not_void: a_lexical_time /= Void
@@ -115,7 +115,7 @@ feature -- Status report
 
 feature -- Conversion
 
-	as_xpath_time: ST_XPATH_TIME_VALUE is
+	as_xpath_time: ST_XPATH_TIME_VALUE
 			-- `Current' seen as a time value
 		do
 			Result := Current

@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_sequence: XM_XPATH_EXPRESSION; a_required_type: XM_XPATH_ITEM_TYPE) is
+	make (a_sequence: XM_XPATH_EXPRESSION; a_required_type: XM_XPATH_ITEM_TYPE)
 			-- Establish invariant.
 		require
 			sequence_not_void: a_sequence /= Void
@@ -47,8 +47,8 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
-	item_type: XM_XPATH_ITEM_TYPE is
+
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Determine the data type of the expression, if possible
 		do
 			Result := target_type
@@ -58,16 +58,16 @@ feature -- Access
 			-- Error code to use
 
 feature -- Status report
-	
-	is_untyped_atomic_converter: BOOLEAN is
+
+	is_untyped_atomic_converter: BOOLEAN
 			-- Is `Current' an `XM_XPATH_UNTYPED_ATOMIC_CONVERTER'?
 		do
 			Result := True
 		end
 
-feature -- Optimization	
+feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_type: XM_XPATH_ITEM_TYPE
@@ -92,10 +92,10 @@ feature -- Optimization
 				l_type := base_expression.item_type
 				if not is_sub_type (l_type, any_node_test) then
 					if not (l_type = any_item or else l_type = type_factory.any_atomic_type or else l_type = type_factory.untyped_atomic_type) then
-						
+
 						-- The base_expression can't contain any untyped atomic values,
 						--  so there's no need for a converter
-						
+
 						set_replacement (a_replacement, base_expression)
 					end
 				end
@@ -107,7 +107,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_message: STRING
@@ -128,7 +128,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- An iterator over the values of a sequence
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -141,8 +141,8 @@ feature -- Evaluation
 				create {XM_XPATH_ITEM_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current)
 			end
 		end
-	
-	mapped_item (a_item: XM_XPATH_ITEM): XM_XPATH_ITEM is
+
+	mapped_item (a_item: XM_XPATH_ITEM): XM_XPATH_ITEM
 			-- Converted version of `a_item'
 		local
 			l_untyped_atomic_value: XM_XPATH_STRING_VALUE
@@ -166,7 +166,7 @@ feature -- Evaluation
 
 feature -- Element change
 
-	set_error_code (a_code: like error_code) is
+	set_error_code (a_code: like error_code)
 			-- Set `eeror_code' to `a_code'
 		require
 			a_code_not_void: a_code /= Void
@@ -178,17 +178,17 @@ feature -- Element change
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
-	
-	target_type: XM_XPATH_ITEM_TYPE
-			-- Target type 
 
-	display_operator: STRING is
+	target_type: XM_XPATH_ITEM_TYPE
+			-- Target type
+
+	display_operator: STRING
 			-- Format `operator' for display
 		do
 			Result := "convert untyped atomic items to " + target_type.conventional_name
 		end
 
-	compute_special_properties is
+	compute_special_properties
 			-- Compute special properties.
 		do
 			Precursor

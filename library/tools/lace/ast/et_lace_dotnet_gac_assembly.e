@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name_id; an_assembly_name: like assembly_name_id; a_system: ET_SYSTEM) is
+	make (a_name: like name_id; an_assembly_name: like assembly_name_id; a_system: ET_SYSTEM)
 			-- Create a new GAC assembly.
 		require
 			a_name_not_void: a_name /= Void
@@ -62,7 +62,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_assembly_version_id (a_version: like assembly_version_id) is
+	set_assembly_version_id (a_version: like assembly_version_id)
 			-- Set `assembly_version_id' to `a_version'.
 		local
 			l_assembly_version: STRING
@@ -78,7 +78,7 @@ feature -- Setting
 			no_assembly_version_set: a_version = Void implies assembly_version = Void
 		end
 
-	set_assembly_culture_id (a_culture: like assembly_culture_id) is
+	set_assembly_culture_id (a_culture: like assembly_culture_id)
 			-- Set `assembly_culture_id' to `a_culture'.
 		local
 			l_assembly_culture: STRING
@@ -94,7 +94,7 @@ feature -- Setting
 			no_assembly_culture_set: a_culture = Void implies assembly_culture = Void
 		end
 
-	set_assembly_public_key_token_id (a_public_key_token: like assembly_public_key_token_id) is
+	set_assembly_public_key_token_id (a_public_key_token: like assembly_public_key_token_id)
 			-- Set `assembly_public_key_token_id' to `a_public_key_token'.
 		local
 			l_assembly_public_key_token: STRING

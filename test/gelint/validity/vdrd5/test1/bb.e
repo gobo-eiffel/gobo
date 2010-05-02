@@ -9,7 +9,7 @@ inherit
 
 feature
 
-	f is
+	f
 		deferred
 		end
 

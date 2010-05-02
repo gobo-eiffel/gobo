@@ -18,7 +18,7 @@ inherit
 
 feature -- Basic operations
 
-	split_string (s: STRING; c: CHARACTER): DS_LINKED_LIST [STRING] is
+	split_string (s: STRING; c: CHARACTER): DS_LINKED_LIST [STRING]
 			-- Split `s' on `c' and return token list
 		require
 			s_not_void: s /= Void
@@ -54,7 +54,7 @@ feature -- Basic operations
 			result_items_not_void: not Result.has_void
 		end
 
-	split_on_first (s: STRING; c: CHARACTER): DS_PAIR [STRING, STRING] is
+	split_on_first (s: STRING; c: CHARACTER): DS_PAIR [STRING, STRING]
 			-- Similar to `split' but return a pair consisting of the first item
 			-- and the rest; if `c' does not occur `Result.second' is Void.
 		require
@@ -97,7 +97,7 @@ feature -- Basic operations
 			first_not_void: Result.first /= Void
 		end
 
-	replace_all_characters (str: STRING; old_char, new_char: CHARACTER): STRING is
+	replace_all_characters (str: STRING; old_char, new_char: CHARACTER): STRING
 			-- Replace all occurrences of `old_char' in `str' by `new_char';
 			-- Return a new string.
 		require
@@ -117,7 +117,7 @@ feature -- Basic operations
 			str_not_void: str /= Void
 		end
 
-	remove_all_characters (str: STRING; char: CHARACTER): STRING is
+	remove_all_characters (str: STRING; char: CHARACTER): STRING
 			-- Remove all occurrences of `old_char';
 			-- Return a new string.
 		require
@@ -140,7 +140,7 @@ feature -- Basic operations
 			str_not_void: str /= Void
 		end
 
-	array_to_string (a: ARRAY [STRING]): STRING is
+	array_to_string (a: ARRAY [STRING]): STRING
 			-- Concatenate all array items into one string;
 			-- Return a new string every time.
 		require

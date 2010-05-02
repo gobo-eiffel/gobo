@@ -14,7 +14,7 @@ class ET_XACE_ELEMENT_NAMES
 
 feature -- Constants
 
-	uc_system: STRING is
+	uc_system: STRING
 			-- "system" element name
 		once
 			Result := "system"
@@ -23,7 +23,7 @@ feature -- Constants
 			uc_system_not_empty: Result.count > 0
 		end
 
-	uc_root: STRING is
+	uc_root: STRING
 			-- "root" element name
 		once
 			Result := "root"
@@ -32,7 +32,7 @@ feature -- Constants
 			uc_root_not_empty: Result.count > 0
 		end
 
-	uc_class: STRING is
+	uc_class: STRING
 			-- "class" element/attribute name
 		once
 			Result := "class"
@@ -41,7 +41,7 @@ feature -- Constants
 			uc_class_not_empty: Result.count > 0
 		end
 
-	uc_creation: STRING is
+	uc_creation: STRING
 			-- "creation" attribute name
 		once
 			Result := "creation"
@@ -50,7 +50,7 @@ feature -- Constants
 			uc_creation_not_empty: Result.count > 0
 		end
 
-	uc_library: STRING is
+	uc_library: STRING
 			-- "library" element name
 		once
 			Result := "library"
@@ -59,7 +59,7 @@ feature -- Constants
 			uc_library_not_empty: Result.count > 0
 		end
 
-	uc_cluster: STRING is
+	uc_cluster: STRING
 			-- "cluster" element name
 		once
 			Result := "cluster"
@@ -68,7 +68,7 @@ feature -- Constants
 			uc_cluster_not_empty: Result.count > 0
 		end
 
-	uc_name: STRING is
+	uc_name: STRING
 			-- "name" attribute name
 		once
 			Result := "name"
@@ -77,7 +77,7 @@ feature -- Constants
 			uc_name_not_empty: Result.count > 0
 		end
 
-	uc_value: STRING is
+	uc_value: STRING
 			-- "value" attribute name
 		once
 			Result := "value"
@@ -86,7 +86,7 @@ feature -- Constants
 			uc_value_not_empty: Result.count > 0
 		end
 
-	uc_abstract: STRING is
+	uc_abstract: STRING
 			-- "abstract" attribute name
 		once
 			Result := "abstract"
@@ -95,7 +95,7 @@ feature -- Constants
 			uc_abstract_not_empty: Result.count > 0
 		end
 
-	uc_relative: STRING is
+	uc_relative: STRING
 			-- "relative" attribute name
 		once
 			Result := "relative"
@@ -104,7 +104,7 @@ feature -- Constants
 			uc_relative_not_empty: Result.count > 0
 		end
 
-	uc_mount: STRING is
+	uc_mount: STRING
 			-- "mount" element name
 		once
 			Result := "mount"
@@ -113,7 +113,7 @@ feature -- Constants
 			uc_mount_not_empty: Result.count > 0
 		end
 
-	uc_location: STRING is
+	uc_location: STRING
 			-- "location" attribute name
 		once
 			Result := "location"
@@ -122,7 +122,7 @@ feature -- Constants
 			uc_location_not_empty: Result.count > 0
 		end
 
-	uc_prefix: STRING is
+	uc_prefix: STRING
 			-- "prefix" attribute name
 		once
 			Result := "prefix"
@@ -131,7 +131,7 @@ feature -- Constants
 			uc_prefix_not_empty: Result.count > 0
 		end
 
-	uc_description: STRING is
+	uc_description: STRING
 			-- "description" element name
 		once
 			Result := "description"
@@ -140,7 +140,7 @@ feature -- Constants
 			uc_description_not_empty: Result.count > 0
 		end
 
-	uc_option: STRING is
+	uc_option: STRING
 			-- "option" element name
 		once
 			Result := "option"
@@ -149,7 +149,7 @@ feature -- Constants
 			uc_option_not_empty: Result.count > 0
 		end
 
-	uc_external: STRING is
+	uc_external: STRING
 			-- "external" element name
 		once
 			Result := "external"
@@ -158,7 +158,7 @@ feature -- Constants
 			uc_external_not_empty: Result.count > 0
 		end
 
-	uc_enable: STRING is
+	uc_enable: STRING
 			-- "enable" attribute name
 		once
 			Result := "enable"
@@ -167,7 +167,7 @@ feature -- Constants
 			uc_enable_not_empty: Result.count > 0
 		end
 
-	uc_require: STRING is
+	uc_require: STRING
 			-- "require" element name
 		once
 			Result := "require"
@@ -176,7 +176,7 @@ feature -- Constants
 			uc_require_not_empty: Result.count > 0
 		end
 
-	uc_ensure: STRING is
+	uc_ensure: STRING
 			-- "ensure" element name
 		once
 			Result := "ensure"
@@ -185,7 +185,7 @@ feature -- Constants
 			uc_ensure_not_empty: Result.count > 0
 		end
 
-	uc_invariant: STRING is
+	uc_invariant: STRING
 			-- "invariant" element name
 		once
 			Result := "invariant"
@@ -194,7 +194,7 @@ feature -- Constants
 			uc_invariant_not_empty: Result.count > 0
 		end
 
-	uc_loop: STRING is
+	uc_loop: STRING
 			-- "loop" element name
 		once
 			Result := "loop"
@@ -203,7 +203,7 @@ feature -- Constants
 			uc_loop_not_empty: Result.count > 0
 		end
 
-	uc_check: STRING is
+	uc_check: STRING
 			-- "check" element name
 		once
 			Result := "check"
@@ -212,7 +212,7 @@ feature -- Constants
 			uc_check_not_empty: Result.count > 0
 		end
 
-	uc_debug: STRING is
+	uc_debug: STRING
 			-- "debug" element name
 		once
 			Result := "debug"
@@ -221,7 +221,7 @@ feature -- Constants
 			uc_debug_not_empty: Result.count > 0
 		end
 
-	uc_optimize: STRING is
+	uc_optimize: STRING
 			-- "optimize" element name
 		once
 			Result := "optimize"
@@ -230,7 +230,7 @@ feature -- Constants
 			uc_optimize_not_empty: Result.count > 0
 		end
 
-	uc_include_dir: STRING is
+	uc_include_dir: STRING
 			-- "include_dir" element name
 		once
 			Result := "include_dir"
@@ -239,7 +239,7 @@ feature -- Constants
 			uc_include_dir_not_empty: Result.count > 0
 		end
 
-	uc_export: STRING is
+	uc_export: STRING
 			-- "export" element name
 		once
 			Result := "export"
@@ -248,7 +248,7 @@ feature -- Constants
 			uc_export_not_empty: Result.count > 0
 		end
 
-	uc_alias: STRING is
+	uc_alias: STRING
 			-- "alias" attribute name
 		once
 			Result := "alias"
@@ -257,7 +257,7 @@ feature -- Constants
 			uc_alias_not_empty: Result.count > 0
 		end
 
-	uc_feature: STRING is
+	uc_feature: STRING
 			-- "feature" element name
 		once
 			Result := "feature"
@@ -266,7 +266,7 @@ feature -- Constants
 			uc_feature_not_empty: Result.count > 0
 		end
 
-	uc_link_library: STRING is
+	uc_link_library: STRING
 			-- "link_library" element name
 		once
 			Result := "link_library"
@@ -275,7 +275,7 @@ feature -- Constants
 			uc_link_library_not_empty: Result.count > 0
 		end
 
-	uc_exclude: STRING is
+	uc_exclude: STRING
 			-- "exclude" element name
 		once
 			Result := "exclude"
@@ -284,7 +284,7 @@ feature -- Constants
 			uc_exclude_not_empty: Result.count > 0
 		end
 
-	uc_if: STRING is
+	uc_if: STRING
 			-- "if" attribute name
 		once
 			Result := "if"
@@ -293,7 +293,7 @@ feature -- Constants
 			uc_if_not_empty: Result.count > 0
 		end
 
-	uc_unless: STRING is
+	uc_unless: STRING
 			-- "unless" attribute name
 		once
 			Result := "unless"

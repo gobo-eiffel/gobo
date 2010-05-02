@@ -24,7 +24,7 @@ inherit
 
 	KL_IMPORTED_INTEGER_ROUTINES
 		export {NONE} all end
-	
+
 	XM_XPATH_TYPE
 		export {NONE} all end
 
@@ -37,7 +37,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_transformer: XM_XSLT_TRANSFORMER; a_stripper_mode: XM_XSLT_MODE; an_underlying_receiver: XM_XPATH_RECEIVER) is
+	make (a_transformer: XM_XSLT_TRANSFORMER; a_stripper_mode: XM_XSLT_MODE; an_underlying_receiver: XM_XPATH_RECEIVER)
 			-- Establish invariant.
 		require
 			transformer_not_void: a_transformer /= Void
@@ -61,25 +61,25 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	Strip_default: INTEGER is 0
+	Strip_default: INTEGER = 0
 			-- Element is stripped of white space unless xml:space is "preserve"
 
-	Always_preserve: INTEGER is 1
+	Always_preserve: INTEGER = 1
 			-- Element is never stripped of white space
 
-	Always_strip: INTEGER is 2
+	Always_strip: INTEGER = 2
 			-- Element is always stripped of white space
 
-	Preserve_parent: INTEGER is 4
+	Preserve_parent: INTEGER = 4
 			-- Parent element requests preserve white space
 
-	Must_not_strip: INTEGER is 8
+	Must_not_strip: INTEGER = 8
 			-- Simple content model forbids stripping
 
 	found_space_preserving_mode: INTEGER
 			-- Result from `find_space_preserving_mode'
 
-	find_space_preserving_mode (a_name_code: INTEGER) is
+	find_space_preserving_mode (a_name_code: INTEGER)
 			-- Find space-preserving mode for element identitifed by `a_name_code'
 		require
 			valid_name_code: a_name_code > 0
@@ -114,13 +114,13 @@ feature -- Access
 		end
 
 feature -- Status report
-	
+
 	strip_all: BOOLEAN
 			-- Do all elements have whitespace stripped?
 
 feature -- Status setting
 
-	set_strip_all is
+	set_strip_all
 			-- Strip all whitespace nodes.
 		do
 			strip_all := True
@@ -131,14 +131,14 @@ feature -- Status setting
 
 feature -- Events
 
-	open is
+	open
 			-- New document
 		do
 			strip_stack.put (Always_preserve)
 			Precursor
 		end
 
-	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
+	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER)
 			-- Notify the start of an element
 		local
 			a_preservation_status, a_parent_preservation_status: INTEGER
@@ -162,7 +162,7 @@ feature -- Events
 			mark_as_written
 		end
 
-	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
+	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER)
 			-- Notify an attribute.
 		local
 			a_preservation_status: INTEGER
@@ -185,14 +185,14 @@ feature -- Events
 			Precursor (a_name_code, a_type_code, a_value, properties)
 		end
 
-	end_element is
+	end_element
 			-- Notify the end of an element.
 		do
 			Precursor
 			strip_stack.remove
 		end
 
-	notify_characters (chars: STRING; properties: INTEGER) is
+	notify_characters (chars: STRING; properties: INTEGER)
 			-- Notify character data.
 		do
 
@@ -211,7 +211,7 @@ feature -- Events
 
 feature -- Duplication
 
-	another: XM_XSLT_STRIPPER is
+	another: XM_XSLT_STRIPPER
 			-- A clean copu of `Current'
 		do
 			create Result.make (transformer, stripper_mode, base_receiver)
@@ -222,7 +222,7 @@ feature -- Duplication
 
 feature {XM_XSLT_STRIPPER} -- Local
 
-	clone_attributes (a_strip_all, a_preserve_all: BOOLEAN) is
+	clone_attributes (a_strip_all, a_preserve_all: BOOLEAN)
 		-- Clone space-preserving/stripping attributes.
 		do
 			strip_all := a_strip_all
@@ -235,7 +235,7 @@ feature {XM_XSLT_STRIPPER} -- Local
 	transformer: XM_XSLT_TRANSFORMER
 			-- Transformer - for pattern-evaluation and rule-conflict-reporting
 
-	is_local_invariant_met: BOOLEAN is
+	is_local_invariant_met: BOOLEAN
 			-- is the invariant met?
 		do
 			Result := transformer /= Void and then strip_stack /= Void and then
@@ -246,7 +246,7 @@ feature {NONE} -- Implementation
 
 	preserve_all: BOOLEAN
 			-- Do all elements have whitespace preserved?
-	
+
 	strip_stack: DS_ARRAYED_STACK [INTEGER]
 			-- Stack of strip-status flags
 
@@ -262,6 +262,6 @@ feature {NONE} -- Implementation
 invariant
 
 	local_invariant: is_local_invariant_met
-	
+
 end
-	
+

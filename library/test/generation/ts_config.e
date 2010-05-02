@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_root: like root_class; a_testgen: like testgen; a_compile: like compile; an_execute: like execute; a_clusters: like clusters) is
+	make (a_root: like root_class; a_testgen: like testgen; a_compile: like compile; an_execute: like execute; a_clusters: like clusters)
 			-- Create a new configuration.
 		require
 			a_root_not_void: a_root /= Void
@@ -60,7 +60,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_compile (a_compile: like compile) is
+	set_compile (a_compile: like compile)
 			-- Set `compile' to `a_compile'.
 		require
 			a_compile_not_void: a_compile /= Void
@@ -70,7 +70,7 @@ feature -- Setting
 			compile_set: compile = a_compile
 		end
 
-	set_class_regexp (a_regexp: LX_REGULAR_EXPRESSION) is
+	set_class_regexp (a_regexp: LX_REGULAR_EXPRESSION)
 			-- Set class regular expression to `a_regexp'.
 		require
 			a_regexp_not_void: a_regexp /= Void
@@ -89,7 +89,7 @@ feature -- Setting
 			end
 		end
 
-	set_feature_regexp (a_regexp: LX_REGULAR_EXPRESSION) is
+	set_feature_regexp (a_regexp: LX_REGULAR_EXPRESSION)
 			-- Set feature regular expression to `a_regexp'.
 		require
 			a_regexp_not_void: a_regexp /= Void
@@ -108,7 +108,7 @@ feature -- Setting
 			end
 		end
 
-	set_default_test_included (b: BOOLEAN) is
+	set_default_test_included (b: BOOLEAN)
 			-- Set to `b' whether 'default_test' should be included in generated testcases or not.
 		local
 			a_cursor: DS_LIST_CURSOR [TS_CLUSTER]
@@ -126,7 +126,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (testcases: TS_TESTCASES; an_error_handler: TS_ERROR_HANDLER) is
+	process (testcases: TS_TESTCASES; an_error_handler: TS_ERROR_HANDLER)
 			-- Process current config.
 		require
 			testcases_not_void: testcases /= Void

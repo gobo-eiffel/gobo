@@ -17,14 +17,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new string concatenator.
 		do
 		end
 
 feature -- Basic operations
 
-	concat (s1, s2: STRING): STRING is
+	concat (s1, s2: STRING): STRING
 			-- Concatenate `s1' and `s2'.
 		require
 			s1_not_void: s1 /= Void

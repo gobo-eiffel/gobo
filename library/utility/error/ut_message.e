@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (msg: STRING) is
+	make (msg: STRING)
 			-- Create a new message object.
 		require
 			msg_not_void: msg /= Void
@@ -33,10 +33,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "$1"
+	default_template: STRING = "$1"
 			-- Default template used to built the error message
 
-	code: STRING is "UT0008"
+	code: STRING = "UT0008"
 			-- Error code
 
 invariant

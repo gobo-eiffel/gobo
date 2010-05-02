@@ -11,7 +11,7 @@ inherit
 
 feature
 
-	f1 is
+	f1
 		do
 			print ("CC1%N")
 		end

@@ -28,7 +28,7 @@ inherit
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, where known
 		do
 			Result := type_factory.any_atomic_type
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Status report
 
-	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
+	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE
 			-- Type of argument number `argument_number'
 		do
 			if argument_number = 2 then
@@ -48,7 +48,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -100,7 +100,7 @@ feature -- Evaluation
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_optional
@@ -111,7 +111,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {XM_XPATH_FUNCTION_CALL} -- Local
 
-	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 			-- Used for communicating between `evaluate_item' and it's sub-routines
 
 
-	 establish_first_primitive_type (a_result: DS_CELL [XM_XPATH_ITEM]; a_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
+	 establish_first_primitive_type (a_result: DS_CELL [XM_XPATH_ITEM]; a_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM])
 			-- Establish primitive type of first operand.
 		require
 			a_result_not_void: a_result /= Void
@@ -194,7 +194,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	establish_next_primitive_type (a_result: DS_CELL [XM_XPATH_ITEM]; a_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
+	establish_next_primitive_type (a_result: DS_CELL [XM_XPATH_ITEM]; a_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM])
 			-- Establish primitive type of next operand.
 		require
 			a_result_not_void: a_result /= Void
@@ -243,8 +243,8 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			early_finish: already_finished implies a_result.item /= Void
-			no_result: not already_finished implies a_result.item = Void			
+			no_result: not already_finished implies a_result.item = Void
 		end
-	
+
 end
-	
+

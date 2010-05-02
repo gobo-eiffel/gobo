@@ -20,7 +20,7 @@ inherit
 
 feature -- Status report
 
-	is_expanded: BOOLEAN is
+	is_expanded: BOOLEAN
 			-- Is `static_type' expanded?
 		do
 			Result := static_type.is_expanded
@@ -28,7 +28,7 @@ feature -- Status report
 			definition: Result = static_type.is_expanded
 		end
 
-	is_never_void: BOOLEAN is
+	is_never_void: BOOLEAN
 			-- Can the expression of current dynamic type set never be void?
 			-- (Note that in order to be truly true, the current dynamic type
 			-- set should also be non-empty. Therefore it is recommended to
@@ -36,13 +36,13 @@ feature -- Status report
 		deferred
 		end
 
-	can_be_void: BOOLEAN is
+	can_be_void: BOOLEAN
 			-- Can the expression of current dynamic type set be void?
 		do
 			Result := not is_expanded and then (is_empty or not is_never_void)
 		end
 
-	is_subset (other: ET_DYNAMIC_TYPE_SET): BOOLEAN is
+	is_subset (other: ET_DYNAMIC_TYPE_SET): BOOLEAN
 			-- Is current dynamic type set at subset of `other'.
 		require
 			other_not_void: other /= Void
@@ -67,7 +67,7 @@ feature -- Status report
 
 feature --Status setting
 
-	set_never_void is
+	set_never_void
 			-- Set `is_never_void' to True.
 		deferred
 		ensure
@@ -76,14 +76,14 @@ feature --Status setting
 
 feature -- Access
 
-	static_type: ET_DYNAMIC_TYPE is
+	static_type: ET_DYNAMIC_TYPE
 			-- Type at compilation time
 		deferred
 		ensure
 			static_type_not_void: Result /= Void
 		end
 
-	sources: ET_DYNAMIC_ATTACHMENT is
+	sources: ET_DYNAMIC_ATTACHMENT
 			-- Subsets of current set
 		do
 			-- The current kind of type set is not pulling
@@ -92,7 +92,7 @@ feature -- Access
 
 feature -- Element change
 
-	put_target (a_target: ET_DYNAMIC_TARGET; a_system: ET_DYNAMIC_SYSTEM) is
+	put_target (a_target: ET_DYNAMIC_TARGET; a_system: ET_DYNAMIC_SYSTEM)
 			-- Add `a_target' to current set.
 			-- (Targets are supersets of current set.)
 		require
@@ -103,7 +103,7 @@ feature -- Element change
 			-- types to targets but pulling them from sources.
 		end
 
-	put_source (a_source: ET_DYNAMIC_ATTACHMENT; a_system: ET_DYNAMIC_SYSTEM) is
+	put_source (a_source: ET_DYNAMIC_ATTACHMENT; a_system: ET_DYNAMIC_SYSTEM)
 			-- Add `a_source' to current set.
 			-- (Sources are subsets of current set.)
 		require
@@ -114,7 +114,7 @@ feature -- Element change
 			-- types from sources.
 		end
 
-	propagate_types (a_system: ET_DYNAMIC_SYSTEM) is
+	propagate_types (a_system: ET_DYNAMIC_SYSTEM)
 			-- Propagate types from `sources'.
 		require
 			a_system_not_void: a_system /= Void
@@ -138,7 +138,7 @@ feature -- Element change
 
 feature {ET_DYNAMIC_TYPE_SET} -- Implementation
 
-	dynamic_types: ET_DYNAMIC_TYPES is
+	dynamic_types: ET_DYNAMIC_TYPES
 			-- Dynamic types in current set;
 			-- Void if no type in the set
 		deferred

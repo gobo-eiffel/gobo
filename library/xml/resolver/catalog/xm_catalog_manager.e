@@ -41,7 +41,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant.
 		do
 			reinit
@@ -52,9 +52,9 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	System_default_catalog: STRING is "file:///etc/xml/catalog"
+	System_default_catalog: STRING = "file:///etc/xml/catalog"
 
-	unescaped_uri_characters: DS_HASH_SET [CHARACTER] is
+	unescaped_uri_characters: DS_HASH_SET [CHARACTER]
 			-- Default character set not to escape
 		local
 			a_character_set: STRING
@@ -72,7 +72,7 @@ feature -- Access
 	bootstrap_resolver: XM_CATALOG_BOOTSTRAP_RESOLVER
 			-- Resolver used in bootstrap process, and for resolving catalog names
 
-	resolved_external_entity (a_public_id, a_system_id: STRING): STRING is
+	resolved_external_entity (a_public_id, a_system_id: STRING): STRING
 			-- Resolved URI reference for the external entity (`a_public_id', `a_system_id')
 		require
 			public_id_not_void: a_public_id /= Void
@@ -126,7 +126,7 @@ feature -- Access
 			resulting_uri_reference_not_void: Result /= Void -- but may be the original SYSTEM id, which may be zero length
 		end
 
-	resolved_uri_reference (a_uri_reference: STRING): STRING is
+	resolved_uri_reference (a_uri_reference: STRING): STRING
 			-- Resolved URI reference for `a_uri_reference'
 		require
 			uri_reference_not_void: a_uri_reference /= Void
@@ -170,7 +170,7 @@ feature -- Status report
 	debug_level: INTEGER
 			-- Debugging level
 
-	has (a_catalog_name: STRING): BOOLEAN is
+	has (a_catalog_name: STRING): BOOLEAN
 			-- Does `Current' have a parsed copy of `a_catalog_name'?
 		do
 			Result := all_known_catalogs.has (a_catalog_name)
@@ -178,7 +178,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	suppress_default_system_catalog_file is
+	suppress_default_system_catalog_file
 			-- Suppress use of `System_default_catalog'.
 		do
 			is_system_default_catalog_suppressed := True
@@ -188,7 +188,7 @@ feature -- Status setting
 			suppressed: is_system_default_catalog_suppressed
 		end
 
-	set_prefer_system is
+	set_prefer_system
 			-- Prefer passed fsi to fpi.
 		do
 			prefer_public := False
@@ -197,13 +197,13 @@ feature -- Status setting
 			prefer_system: not prefer_public
 		end
 
-	suppress_catalogs is
+	suppress_catalogs
 			-- Turn off catalog file access.
 		do
 			are_catalogs_disabled := True
 		end
 
-	suppress_processing_instructions is
+	suppress_processing_instructions
 			-- Do not allow oasis-xml-catalog PIs to be used.
 		do
 			are_processing_instructions_allowed := False
@@ -212,7 +212,7 @@ feature -- Status setting
 			processing_instructions_disallowed: not are_processing_instructions_allowed
 		end
 
-	set_debug_level (a_level: INTEGER) is
+	set_debug_level (a_level: INTEGER)
 			-- Set debugging level.
 		require
 			positive_debug_level: a_level >= 0
@@ -222,7 +222,7 @@ feature -- Status setting
 			debug_level_set: debug_level = a_level
 		end
 
-	set_search_chain_truncated is
+	set_search_chain_truncated
 			-- Indicate delagate catalog truncates serach chain.
 		do
 			search_chain_truncated := True
@@ -230,7 +230,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	reset_pi_catalogs is
+	reset_pi_catalogs
 			-- Clear `pi_catalog_files'.
 		do
 			pi_catalog_files.wipe_out
@@ -239,7 +239,7 @@ feature -- Element change
 			pi_catalog_list_empty: pi_catalog_files.is_empty
 		end
 
-	add_pi_catalog (a_catalog_name: STRING) is
+	add_pi_catalog (a_catalog_name: STRING)
 			-- Add `a_catalog_name' to `pi_catalog_files'.
 		require
 			processing_instructions_allowed: are_processing_instructions_allowed
@@ -251,7 +251,7 @@ feature -- Element change
 			catalog_name_added: pi_catalog_files.has (a_catalog_name)
 		end
 
-	parse_catalog_file (a_base_uri: UT_URI) is
+	parse_catalog_file (a_base_uri: UT_URI)
 			-- Parse `a_catalog_file'.
 		require
 			base_uri_is_absolute: a_base_uri /= Void and then a_base_uri.is_absolute
@@ -281,7 +281,7 @@ feature -- Element change
 			end
 		end
 
-	set_bootstrap_resolver (a_resolver: like bootstrap_resolver) is
+	set_bootstrap_resolver (a_resolver: like bootstrap_resolver)
 			-- Set `bootstrap_resolver' to `a_resolver'.
 		require
 			a_resolver_not_void: a_resolver /= Void
@@ -293,7 +293,7 @@ feature -- Element change
 
 feature -- Output
 
-	debug_message (a_level: INTEGER; a_message, an_argument: STRING) is
+	debug_message (a_level: INTEGER; a_message, an_argument: STRING)
 			--	Send a debugging message to standard error stream.
 			-- TODO better to use log4e, if it ever gets incorporated into gobo
 		require
@@ -311,7 +311,7 @@ feature -- Output
 
 feature {TS_TEST_CASE} -- initialization
 
-	reinit is
+	reinit
 			-- Establish system catalogs
 		do
 			create {DS_LINKED_LIST [STRING]} system_catalog_files.make_default
@@ -324,7 +324,7 @@ feature {TS_TEST_CASE} -- initialization
 
 feature {XM_CATALOG, TS_TEST_CASE} -- Implementation
 
-	retrieved_catalog (a_catalog_name: STRING): XM_CATALOG is
+	retrieved_catalog (a_catalog_name: STRING): XM_CATALOG
 			-- Parsed catalog named `a_catalog_name'
 		require
 			catalog_name_not_void: a_catalog_name /= Void
@@ -350,7 +350,7 @@ feature {XM_CATALOG, TS_TEST_CASE} -- Implementation
 			retrieved_catalog_may_be_void: True
 		end
 
-	resolved_fpi (a_public_id: STRING; prefer_public_required: BOOLEAN): STRING is
+	resolved_fpi (a_public_id: STRING; prefer_public_required: BOOLEAN): STRING
 			-- Resolved URI reference for `a_public_id'
 		require
 			public_id_not_void: a_public_id /= Void
@@ -418,7 +418,7 @@ feature {XM_CATALOG, TS_TEST_CASE} -- Implementation
 			result_may_be_void_if_not_match: True
 		end
 
-	resolved_fsi (a_system_id: STRING): STRING is
+	resolved_fsi (a_system_id: STRING): STRING
 			-- Resolved URI reference for `a_system_id'
 		require
 			system_id_not_void: a_system_id /= Void
@@ -486,7 +486,7 @@ feature {XM_CATALOG, TS_TEST_CASE} -- Implementation
 			result_may_be_void_if_not_match: True
 		end
 
-	resolved_uri (a_uri_reference: STRING): STRING is
+	resolved_uri (a_uri_reference: STRING): STRING
 			-- Resolved URI reference for `a_uri_reference'
 		require
 			system_id_not_void: a_uri_reference /= Void
@@ -567,7 +567,7 @@ feature {NONE} -- Implementation
 			-- This will contain `Void' values for catalogs that failed parsing,
 			--  so as not to waste time parsing them again.
 
-	current_directory_base: UT_URI is
+	current_directory_base: UT_URI
 			-- URI of current directory
 		local
 			a_cwd: KI_PATHNAME
@@ -576,7 +576,7 @@ feature {NONE} -- Implementation
 			Result := File_uri.pathname_to_uri (a_cwd)
 		end
 
-	establish_system_catalog_files is
+	establish_system_catalog_files
 			-- Establish list of catalogs to be searched for all documents
 		local
 			xml_catalog_files, l_separator: STRING

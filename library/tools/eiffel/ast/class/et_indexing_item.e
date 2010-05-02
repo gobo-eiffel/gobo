@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	indexing_clause: ET_INDEXING is
+	indexing_clause: ET_INDEXING
 			-- Note clause in semicolon-separated list
 		deferred
 		ensure

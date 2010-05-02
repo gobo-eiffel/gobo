@@ -22,7 +22,7 @@ create
 
 feature -- Test
 
-	test_field_count is
+	test_field_count
 			-- Test feature 'field_count'.
 		local
 			internal: INTERNAL
@@ -36,7 +36,7 @@ feature -- Test
 			assert_integers_equal ("fields_in_array", 4, internal.field_count (arr))
 		end
 
-	test_field_count_of_type is
+	test_field_count_of_type
 			-- Test feature 'field_count_of_type'.
 		local
 			internal: INTERNAL
@@ -48,7 +48,7 @@ feature -- Test
 			assert_integers_equal ("fields_in_array", 4, internal.field_count_of_type (({ARRAY [ANY]}).type_id))
 		end
 
-	test_type_of_type is
+	test_type_of_type
 			-- Test feature 'type_of_type'.
 		local
 			internal: INTERNAL
@@ -59,7 +59,7 @@ feature -- Test
 			assert_equal ("type_of_integer_16", {INTEGER_16}, internal.type_of_type (({INTEGER_16}).type_id))
 		end
 
-	test_type_of is
+	test_type_of
 			-- Test feature 'type_of'.
 		local
 			internal: INTERNAL
@@ -72,7 +72,7 @@ feature -- Test
 			assert_equal ("type_of_integer_16", {INTEGER_16}, internal.type_of (i))
 		end
 
-	test_dynamic_type_from_string is
+	test_dynamic_type_from_string
 			-- Test feature 'dynamic_type_from_string'.
 		local
 			internal: INTERNAL
@@ -83,7 +83,7 @@ feature -- Test
 			assert_integers_equal ("type_of_integer_16", ({INTEGER_16}).type_id, internal.dynamic_type_from_string ("INTEGER_16"))
 		end
 
-	test_is_instance_of is
+	test_is_instance_of
 			-- Test feature 'is_instance_of'.
 		local
 			internal: INTERNAL
@@ -100,7 +100,7 @@ feature -- Test
 			assert_false ("integer_16_is_not_string_8", internal.is_instance_of (i, ({STRING_8}).type_id))
 		end
 
-	test_type_conforms_to is
+	test_type_conforms_to
 			-- Test feature 'type_conforms_to'.
 		local
 			internal: INTERNAL
@@ -115,7 +115,7 @@ feature -- Test
 			assert ("arrays", internal.type_conforms_to (({ARRAY [INTEGER_16]}).type_id, ({ARRAY [ANY]}).type_id))
 		end
 
-	test_is_special_any_type is
+	test_is_special_any_type
 			-- Test feature 'is_special_any_type'.
 		local
 			internal: INTERNAL
@@ -127,7 +127,7 @@ feature -- Test
 			assert_false ("integer_16", internal.is_special_any_type (({INTEGER_16}).type_id))
 		end
 
-	test_is_special_type is
+	test_is_special_type
 			-- Test feature 'is_special_type'.
 		local
 			internal: INTERNAL
@@ -139,7 +139,7 @@ feature -- Test
 			assert_false ("integer_16", internal.is_special_type (({INTEGER_16}).type_id))
 		end
 
-	test_is_special is
+	test_is_special
 			-- Test feature 'is_special'.
 		local
 			internal: INTERNAL
@@ -158,7 +158,7 @@ feature -- Test
 			assert_false ("integer_16", internal.is_special (i))
 		end
 
-	test_is_tuple is
+	test_is_tuple
 			-- Test feature 'is_tuple'.
 		local
 			internal: INTERNAL
@@ -180,7 +180,7 @@ feature -- Test
 			assert_false ("integer_16", internal.is_tuple (i))
 		end
 
-	test_is_tuple_type is
+	test_is_tuple_type
 			-- Test feature 'is_tuple_type'.
 		local
 			internal: INTERNAL
@@ -193,7 +193,7 @@ feature -- Test
 			assert_false ("integer_16", internal.is_tuple_type (({INTEGER_16}).type_id))
 		end
 
-	test_class_name is
+	test_class_name
 			-- Test feature 'class_name'.
 		local
 			internal: INTERNAL
@@ -209,7 +209,7 @@ feature -- Test
 			assert_strings_equal ("array", "ARRAY", internal.class_name (arr))
 		end
 
-	test_class_name_of_type is
+	test_class_name_of_type
 			-- Test feature 'class_name_of_type'.
 		local
 			internal: INTERNAL
@@ -220,7 +220,7 @@ feature -- Test
 			assert_strings_equal ("array", "ARRAY", internal.class_name_of_type (({ARRAY [ANY]}).type_id))
 		end
 
-	test_type_name is
+	test_type_name
 			-- Test feature 'type_name'.
 		local
 			internal: INTERNAL
@@ -236,7 +236,7 @@ feature -- Test
 			assert_strings_equal ("array_any", "ARRAY [ANY]", internal.type_name (arr))
 		end
 
-	test_type_name_of_type is
+	test_type_name_of_type
 			-- Test feature 'type_name_of_type'.
 		local
 			internal: INTERNAL
@@ -247,7 +247,7 @@ feature -- Test
 			assert_strings_equal ("array_any", "ARRAY [ANY]", internal.type_name_of_type (({ARRAY [ANY]}).type_id))
 		end
 
-	test_dynamic_type is
+	test_dynamic_type
 			-- Test feature 'dynamic_type'.
 		local
 			internal: INTERNAL
@@ -263,7 +263,7 @@ feature -- Test
 			assert_integers_equal ("array_any", ({ARRAY [ANY]}).type_id, internal.dynamic_type (arr))
 		end
 
-	test_field_name is
+	test_field_name
 			-- Test feature 'field_name'.
 		local
 			internal: INTERNAL
@@ -275,7 +275,7 @@ feature -- Test
 			assert_strings_equal ("count", "count", internal.field_name (field_index ("count", s), s))
 		end
 
-	test_field_name_of_type is
+	test_field_name_of_type
 			-- Test feature 'field_name_of_type'.
 		local
 			internal: INTERNAL
@@ -287,7 +287,7 @@ feature -- Test
 			assert_strings_equal ("count", "count", internal.field_name_of_type (field_index ("count", s), ({STRING_8}).type_id))
 		end
 
-	test_field_type is
+	test_field_type
 			-- Test feature 'field_type'.
 		local
 			internal: INTERNAL
@@ -311,7 +311,7 @@ feature -- Test
 			assert_integers_equal ("any", {INTERNAL}.reference_type, internal.field_type (field_index ("any_1", Current), Current))
 		end
 
-	test_field_type_of_type is
+	test_field_type_of_type
 			-- Test feature 'field_type_of_type'.
 		local
 			internal: INTERNAL
@@ -335,7 +335,7 @@ feature -- Test
 			assert_integers_equal ("any", {INTERNAL}.reference_type, internal.field_type_of_type (field_index ("any_1", Current), ({like Current}).type_id))
 		end
 
-	test_field_static_type_of_type is
+	test_field_static_type_of_type
 			-- Test feature 'field_static_type_of_type'.
 		local
 			internal: INTERNAL
@@ -359,7 +359,7 @@ feature -- Test
 			assert_integers_equal ("any", ({ANY}).type_id, internal.field_static_type_of_type (field_index ("any_1", Current), ({like Current}).type_id))
 		end
 
-	test_field is
+	test_field
 			-- Test feature 'field'.
 		local
 			internal: INTERNAL
@@ -411,7 +411,7 @@ feature -- Test
 			assert_same ("any_1", arr, internal.field (field_index ("any_1", Current), Current))
 		end
 
-	test_boolean_field is
+	test_boolean_field
 			-- Test feature 'boolean_field'.
 		local
 			internal: INTERNAL
@@ -423,7 +423,7 @@ feature -- Test
 			assert ("false", internal.boolean_field (field_index ("boolean_1", Current), Current) = False)
 		end
 
-	test_character_8_field is
+	test_character_8_field
 			-- Test feature 'character_8_field'.
 		local
 			internal: INTERNAL
@@ -433,7 +433,7 @@ feature -- Test
 			assert ("character_8", internal.character_8_field (field_index ("character_8_1", Current), Current) = 'a')
 		end
 
-	test_character_32_field is
+	test_character_32_field
 			-- Test feature 'character_32_field'.
 		local
 			internal: INTERNAL
@@ -443,7 +443,7 @@ feature -- Test
 			assert ("character_32", internal.character_32_field (field_index ("character_32_1", Current), Current) = 'b')
 		end
 
-	test_integer_8_field is
+	test_integer_8_field
 			-- Test feature 'integer_8_field'.
 		local
 			internal: INTERNAL
@@ -453,7 +453,7 @@ feature -- Test
 			assert ("integer_8", internal.integer_8_field (field_index ("integer_8_1", Current), Current) = 9)
 		end
 
-	test_integer_16_field is
+	test_integer_16_field
 			-- Test feature 'integer_16_field'.
 		local
 			internal: INTERNAL
@@ -463,7 +463,7 @@ feature -- Test
 			assert ("integer_16", internal.integer_16_field (field_index ("integer_16_1", Current), Current) = 17)
 		end
 
-	test_integer_32_field is
+	test_integer_32_field
 			-- Test feature 'integer_32_field'.
 		local
 			internal: INTERNAL
@@ -473,7 +473,7 @@ feature -- Test
 			assert ("integer_32", internal.integer_32_field (field_index ("integer_32_1", Current), Current) = 33)
 		end
 
-	test_integer_64_field is
+	test_integer_64_field
 			-- Test feature 'integer_64_field'.
 		local
 			internal: INTERNAL
@@ -483,7 +483,7 @@ feature -- Test
 			assert ("integer_64", internal.integer_64_field (field_index ("integer_64_1", Current), Current) = 65)
 		end
 
-	test_natural_8_field is
+	test_natural_8_field
 			-- Test feature 'natural_8_field'.
 		local
 			internal: INTERNAL
@@ -493,7 +493,7 @@ feature -- Test
 			assert ("natural_8", internal.natural_8_field (field_index ("natural_8_1", Current), Current) = 9)
 		end
 
-	test_natural_16_field is
+	test_natural_16_field
 			-- Test feature 'natural_16_field'.
 		local
 			internal: INTERNAL
@@ -503,7 +503,7 @@ feature -- Test
 			assert ("natural_16", internal.natural_16_field (field_index ("natural_16_1", Current), Current) = 17)
 		end
 
-	test_natural_32_field is
+	test_natural_32_field
 			-- Test feature 'natural_32_field'.
 		local
 			internal: INTERNAL
@@ -513,7 +513,7 @@ feature -- Test
 			assert ("natural_32", internal.natural_32_field (field_index ("natural_32_1", Current), Current) = 33)
 		end
 
-	test_natural_64_field is
+	test_natural_64_field
 			-- Test feature 'natural_64_field'.
 		local
 			internal: INTERNAL
@@ -523,7 +523,7 @@ feature -- Test
 			assert ("natural_64", internal.natural_64_field (field_index ("natural_64_1", Current), Current) = 65)
 		end
 
-	test_pointer_field is
+	test_pointer_field
 			-- Test feature 'pointer_field'.
 		local
 			internal: INTERNAL
@@ -535,7 +535,7 @@ feature -- Test
 			assert ("pointer", internal.pointer_field (field_index ("pointer_1", Current), Current) = p)
 		end
 
-	test_real_32_field is
+	test_real_32_field
 			-- Test feature 'real_32_field'.
 		local
 			internal: INTERNAL
@@ -545,7 +545,7 @@ feature -- Test
 			assert ("real_32", internal.real_32_field (field_index ("real_32_1", Current), Current) = {REAL_32} 33.0)
 		end
 
-	test_real_64_field is
+	test_real_64_field
 			-- Test feature 'real_64_field'.
 		local
 			internal: INTERNAL
@@ -555,7 +555,7 @@ feature -- Test
 			assert ("real_64", internal.real_64_field (field_index ("real_64_1", Current), Current) = 65.0)
 		end
 
-	test_set_boolean_field is
+	test_set_boolean_field
 			-- Test feature 'set_boolean_field'.
 		local
 			internal: INTERNAL
@@ -567,7 +567,7 @@ feature -- Test
 			assert ("false", boolean_1 = False)
 		end
 
-	test_set_character_8_field is
+	test_set_character_8_field
 			-- Test feature 'set_character_8_field'.
 		local
 			internal: INTERNAL
@@ -577,7 +577,7 @@ feature -- Test
 			assert ("character_8", character_8_1 = 'x')
 		end
 
-	test_set_character_32_field is
+	test_set_character_32_field
 			-- Test feature 'set_character_32_field'.
 		local
 			internal: INTERNAL
@@ -587,7 +587,7 @@ feature -- Test
 			assert ("character_32", character_32_1 = 'y')
 		end
 
-	test_set_integer_8_field is
+	test_set_integer_8_field
 			-- Test feature 'set_integer_8_field'.
 		local
 			internal: INTERNAL
@@ -597,7 +597,7 @@ feature -- Test
 			assert ("integer_8", integer_8_1 = 10)
 		end
 
-	test_set_integer_16_field is
+	test_set_integer_16_field
 			-- Test feature 'set_integer_16_field'.
 		local
 			internal: INTERNAL
@@ -607,7 +607,7 @@ feature -- Test
 			assert ("integer_16", integer_16_1 = 18)
 		end
 
-	test_set_integer_32_field is
+	test_set_integer_32_field
 			-- Test feature 'set_integer_32_field'.
 		local
 			internal: INTERNAL
@@ -617,7 +617,7 @@ feature -- Test
 			assert ("integer_32", integer_32_1 = 34)
 		end
 
-	test_set_integer_64_field is
+	test_set_integer_64_field
 			-- Test feature 'set_integer_64_field'.
 		local
 			internal: INTERNAL
@@ -627,7 +627,7 @@ feature -- Test
 			assert ("integer_64", integer_64_1 = 66)
 		end
 
-	test_set_natural_8_field is
+	test_set_natural_8_field
 			-- Test feature 'set_natural_8_field'.
 		local
 			internal: INTERNAL
@@ -637,7 +637,7 @@ feature -- Test
 			assert ("natural_8", natural_8_1 = 10)
 		end
 
-	test_set_natural_16_field is
+	test_set_natural_16_field
 			-- Test feature 'set_natural_16_field'.
 		local
 			internal: INTERNAL
@@ -647,7 +647,7 @@ feature -- Test
 			assert ("natural_16", natural_16_1 = 18)
 		end
 
-	test_set_natural_32_field is
+	test_set_natural_32_field
 			-- Test feature 'set_natural_32_field'.
 		local
 			internal: INTERNAL
@@ -657,7 +657,7 @@ feature -- Test
 			assert ("natural_32", natural_32_1 = 34)
 		end
 
-	test_set_natural_64_field is
+	test_set_natural_64_field
 			-- Test feature 'set_natural_64_field'.
 		local
 			internal: INTERNAL
@@ -667,7 +667,7 @@ feature -- Test
 			assert ("natural_64", natural_64_1 = 66)
 		end
 
-	test_set_pointer_field is
+	test_set_pointer_field
 			-- Test feature 'set_pointer_field'.
 		local
 			internal: INTERNAL
@@ -679,7 +679,7 @@ feature -- Test
 			assert ("pointer", pointer_1 = p)
 		end
 
-	test_set_real_32_field is
+	test_set_real_32_field
 			-- Test feature 'set_real_32_field'.
 		local
 			internal: INTERNAL
@@ -689,7 +689,7 @@ feature -- Test
 			assert ("real_32", real_32_1 = {REAL_32} 34.0)
 		end
 
-	test_set_real_64_field is
+	test_set_real_64_field
 			-- Test feature 'set_real_64_field'.
 		local
 			internal: INTERNAL
@@ -699,7 +699,7 @@ feature -- Test
 			assert ("real_64", real_64_1 = 66.0)
 		end
 
-	test_set_reference_field is
+	test_set_reference_field
 			-- Test feature 'set_reference_field'.
 		local
 			internal: INTERNAL
@@ -715,7 +715,7 @@ feature -- Test
 			assert ("any_1", any_1 = arr)
 		end
 
-	test_generic_count is
+	test_generic_count
 			-- Test feature 'generic_count'.
 		local
 			internal: INTERNAL
@@ -729,7 +729,7 @@ feature -- Test
 			assert_integers_equal ("array", 1, internal.generic_count (arr))
 		end
 
-	test_generic_count_of_type is
+	test_generic_count_of_type
 			-- Test feature 'generic_count_of_type'.
 		local
 			internal: INTERNAL
@@ -739,7 +739,7 @@ feature -- Test
 			assert_integers_equal ("array", 1, internal.generic_count_of_type (({ARRAY [ANY]}).type_id))
 		end
 
-	test_generic_dynamic_type is
+	test_generic_dynamic_type
 			-- Test feature 'generic_dynamic_type'.
 		local
 			internal: INTERNAL
@@ -753,7 +753,7 @@ feature -- Test
 			assert_integers_equal ("integer_16", ({INTEGER_16}).type_id, internal.generic_dynamic_type (arr_i, 1))
 		end
 
-	test_generic_dynamic_type_of_type is
+	test_generic_dynamic_type_of_type
 			-- Test feature 'generic_dynamic_type_of_type'.
 		local
 			internal: INTERNAL
@@ -815,7 +815,7 @@ feature -- Attributes
 
 feature {NONE} -- Implementation
 
-	field_index (a_field_name: STRING; a_object: ANY): INTEGER is
+	field_index (a_field_name: STRING; a_object: ANY): INTEGER
 			-- Index of field `a_field_name' in `a_object';
 			-- 0 if not such field
 		require

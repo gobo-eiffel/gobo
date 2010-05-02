@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER; n: INTEGER) is
+	make (filename: STRING; line: INTEGER; n: INTEGER)
 			-- Create a new error reporting that $`n' has
 			-- been used in a semantic action but `n' is
 			-- not a valid index for the rhs of the
@@ -38,10 +38,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: invalid use of $$$3 in semantic action"
+	default_template: STRING = "%"$1%", line $2: invalid use of $$$3 in semantic action"
 			-- Default template used to built the error message
 
-	code: STRING is "PR0019"
+	code: STRING = "PR0019"
 			-- Error code
 
 invariant

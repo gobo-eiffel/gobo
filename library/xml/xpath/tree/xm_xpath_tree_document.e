@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_base_uri: like base_uri; a_document_uri: like document_uri) is
+	make (a_base_uri: like base_uri; a_document_uri: like document_uri)
 			-- Initialize `Current'.
 		do
 			cached_id_table := Void
@@ -59,13 +59,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_tree_document: BOOLEAN is
+	is_tree_document: BOOLEAN
 			-- Is `Current' a document?
 		do
 			Result := True
 		end
 
-	as_tree_document: XM_XPATH_TREE_DOCUMENT is
+	as_tree_document: XM_XPATH_TREE_DOCUMENT
 			-- `Current' seen as a document
 		do
 			Result := Current
@@ -74,13 +74,13 @@ feature -- Access
 	base_uri: STRING
 			-- Base URI
 
-	system_id: STRING is
+	system_id: STRING
 			-- SYSTEM id of `Current', or `Void' if not known
 		do
 			Result := system_id_map.system_id (sequence_number_high_word)
 		end
 
-	line_number: INTEGER is
+	line_number: INTEGER
 			-- Line number of node in original source document, or 0 if not known
 		do
 			Result := 0
@@ -89,34 +89,34 @@ feature -- Access
 	document_element: XM_XPATH_TREE_ELEMENT
 			-- Document element
 
-	previous_sibling: XM_XPATH_NODE is
+	previous_sibling: XM_XPATH_NODE
 			-- The previous sibling of this node;
 			-- If there is no such node, return `Void'
 		do
 			Result := Void
 		end
 
-	next_sibling: XM_XPATH_NODE is
+	next_sibling: XM_XPATH_NODE
 			-- The next sibling of this node;
 			-- If there is no such node, return `Void'
 		do
 			Result := Void
 		end
 
-	root: XM_XPATH_NODE is
+	root: XM_XPATH_NODE
 			-- The root node for `Current'
 		do
 			Result := Current
 		end
 
-	document_root: XM_XPATH_DOCUMENT is
+	document_root: XM_XPATH_DOCUMENT
 			-- The document node for `Current';
 			-- If `Current' is in a document fragment, then return Void
 		do
 			Result := Current
 		end
 
-	all_elements (a_fingerprint: INTEGER): DS_ARRAYED_LIST [XM_XPATH_TREE_ELEMENT] is
+	all_elements (a_fingerprint: INTEGER): DS_ARRAYED_LIST [XM_XPATH_TREE_ELEMENT]
 			-- An enumeration of all elements with a given name;
 			-- This is implemented as a memo function:
 			--  the first time it is called for a particular
@@ -157,7 +157,7 @@ feature -- Access
 			all_elements_cached: element_list.has (a_fingerprint)
 		end
 
-	unparsed_entity_system_id (an_entity_name: STRING): STRING is
+	unparsed_entity_system_id (an_entity_name: STRING): STRING
 			-- System identifier of an unparsed external entity
 		local
 			an_entity_table_entry: DS_ARRAYED_LIST [STRING]
@@ -176,7 +176,7 @@ feature -- Access
 			end
 		end
 
-	unparsed_entity_public_id (an_entity_name: STRING): STRING is
+	unparsed_entity_public_id (an_entity_name: STRING): STRING
 			-- Public identifier of an unparsed external entity
 		local
 			an_entity_table_entry: DS_ARRAYED_LIST [STRING]
@@ -198,7 +198,7 @@ feature -- Access
 	document_uri: UT_URI
 			-- Absolute URI of the source from which the document was constructed
 
-	selected_id (an_id: STRING): XM_XPATH_ELEMENT is
+	selected_id (an_id: STRING): XM_XPATH_ELEMENT
 			-- Element with ID value of `id'
 		do
 			if id_table.has (an_id) then
@@ -208,7 +208,7 @@ feature -- Access
 			end
 		end
 
-	system_id_for_node (a_node_number: INTEGER): STRING is
+	system_id_for_node (a_node_number: INTEGER): STRING
 			-- SYSTEM ID of element or processing-instruction referenced by `a_node_number'
 		require
 			valid_node_number: a_node_number > 0
@@ -218,7 +218,7 @@ feature -- Access
 			system_id_not_void: Result /= Void
 		end
 
-	line_number_for_node (a_node_number: INTEGER): INTEGER is
+	line_number_for_node (a_node_number: INTEGER): INTEGER
 			-- Line number of `a_node_number' in original source document, or 0 if not known
 		do
 			if line_number_map /= Void then
@@ -226,7 +226,7 @@ feature -- Access
 			end
 		end
 
-	closing_line_number_for_node (a_node_number: INTEGER): INTEGER is
+	closing_line_number_for_node (a_node_number: INTEGER): INTEGER
 			-- Line number of end of `a_node_number' in original source document, or 0 if not known
 		do
 			if closing_line_number_map /= Void then
@@ -234,7 +234,7 @@ feature -- Access
 			end
 		end
 
-	idrefs_nodes (some_idrefs: DS_LIST [STRING]): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	idrefs_nodes (some_idrefs: DS_LIST [STRING]): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Sequence of nodes in document order with an IDREF in `some_idrefs'
 		do
 			Result := attribute_idref_table.new_iterator (some_idrefs)
@@ -242,7 +242,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_line_numbering: BOOLEAN is
+	is_line_numbering: BOOLEAN
 			-- is line numbering turned on?
 		do
 			Result := line_number_map /= Void
@@ -250,7 +250,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_system_id (a_system_id: STRING) is
+	set_system_id (a_system_id: STRING)
 			-- Set the SYSTEM ID.
 		require
 			system_id_not_void: a_system_id /= Void
@@ -258,7 +258,7 @@ feature -- Element change
 			set_system_id_for_node (1, a_system_id)
 		end
 
-	set_system_id_for_node (a_node_number: INTEGER; a_system_id: STRING) is
+	set_system_id_for_node (a_node_number: INTEGER; a_system_id: STRING)
 			-- Set the SYSTEM ID for `a_node_number'.
 		require
 			system_id_not_void: a_system_id /= Void
@@ -267,7 +267,7 @@ feature -- Element change
 			system_id_map.set_system_id (a_node_number, a_system_id)
 		end
 
-	set_line_numbering is
+	set_line_numbering
 			-- Turn on line numbering
 		require
 			no_line_numbering: not is_line_numbering
@@ -280,7 +280,7 @@ feature -- Element change
 			closing_line_number_map_not_void: closing_line_number_map /= Void
 		end
 
-	set_line_number_for_node (a_node_number: INTEGER; a_line_number: INTEGER) is
+	set_line_number_for_node (a_node_number: INTEGER; a_line_number: INTEGER)
 			-- Set the line number for `a_node_number'.
 		require
 			valid_node_number: a_node_number > 0
@@ -291,7 +291,7 @@ feature -- Element change
 			end
 		end
 
-	set_closing_line_number_for_node (a_node_number: INTEGER; a_line_number: INTEGER) is
+	set_closing_line_number_for_node (a_node_number: INTEGER; a_line_number: INTEGER)
 			-- Set the closing line number for `a_node_number'.
 		require
 			valid_node_number: a_node_number > 0
@@ -302,7 +302,7 @@ feature -- Element change
 			end
 		end
 
-	set_document_element (an_element: XM_XPATH_TREE_ELEMENT) is
+	set_document_element (an_element: XM_XPATH_TREE_ELEMENT)
 			-- Set `document_element'.
 		require
 			document_element_not_void: an_element /= Void
@@ -312,7 +312,7 @@ feature -- Element change
 			document_element_not_void: document_element /= Void
 		end
 
-	set_unparsed_entity (a_name, a_system_id, a_public_id: STRING) is
+	set_unparsed_entity (a_name, a_system_id, a_public_id: STRING)
 			-- Save SYSTEM and PUBLIC ids for `a_name'.
 		require
 			entity_name_not_void: a_name /= Void
@@ -334,7 +334,7 @@ feature -- Element change
 
 feature -- Duplication
 
-	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
+	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN)
 			-- Copy `Current' to `a_receiver'.
 		local
 			a_node: XM_XPATH_NODE
@@ -363,7 +363,7 @@ feature {NONE} -- Implementation
 	cached_attribute_idref_table: like attribute_idref_table
 			-- Cache for `attribute_idref_table'
 
-	attribute_idref_table: XM_XPATH_TREE_ATTRIBUTE_IDREF_TABLE is
+	attribute_idref_table: XM_XPATH_TREE_ATTRIBUTE_IDREF_TABLE
 			-- Mapping of IDREFs to attributes
 		do
 			if cached_attribute_idref_table = Void then
@@ -376,7 +376,7 @@ feature {NONE} -- Implementation
 			attribute_idref_table_not_void: Result /= Void
 		end
 
-	id_table: DS_HASH_TABLE [XM_XPATH_TREE_ELEMENT, STRING] is
+	id_table: DS_HASH_TABLE [XM_XPATH_TREE_ELEMENT, STRING]
 			-- Mapping of IDs to elements.
 			-- Implemented as a memo function
 		local

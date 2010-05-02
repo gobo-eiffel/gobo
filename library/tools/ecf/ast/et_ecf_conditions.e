@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_anded (a_condition: like condition) is
+	make_anded (a_condition: like condition)
 			-- Create a new condition list with initially one condition `a_condition'.
 			-- Conditions will be and-ed when calling `is_enabled'.
 		require
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			is_anded: not is_ored
 		end
 
-	make_ored (a_condition: like condition) is
+	make_ored (a_condition: like condition)
 			-- Create a new condition list with initially one condition `a_condition'.
 			-- Conditions will be or-ed when calling `is_enabled'.
 		require
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			is_ored: is_ored
 		end
 
-	make_anded_empty is
+	make_anded_empty
 			-- Create a new empty condition list.
 			-- Conditions will be and-ed when calling `is_enabled'.
 		do
@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 			is_anded: not is_ored
 		end
 
-	make_ored_empty is
+	make_ored_empty
 			-- Create a new empty condition list.
 			-- Conditions will be or-ed when calling `is_enabled'.
 		do
@@ -79,7 +79,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_enabled (a_state: ET_ECF_STATE): BOOLEAN is
+	is_enabled (a_state: ET_ECF_STATE): BOOLEAN
 			-- Does `a_state' fulfill current condition?
 		local
 			i, nb: INTEGER
@@ -99,7 +99,7 @@ feature -- Status report
 	is_ored: BOOLEAN
 			-- Should the conditions be or-ed when calling `is_enabled'?
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is the list of conditions empty?
 		do
 			Result := (count = 0)
@@ -109,7 +109,7 @@ feature -- Status report
 
 feature -- Access
 
-	condition (i: INTEGER): ET_ECF_CONDITION is
+	condition (i: INTEGER): ET_ECF_CONDITION
 			-- `i'-th condition
 		require
 			i_large_enough: i >= 1
@@ -125,7 +125,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of conditions
 		do
 			Result := conditions.count
@@ -136,7 +136,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	put_last (a_condition: like condition) is
+	put_last (a_condition: like condition)
 			-- Add `a_condition' to the list of conditions.
 		require
 			a_condition_not_void: a_condition /= Void
@@ -149,7 +149,7 @@ feature -- Element change
 
 feature -- Iteration
 
-	do_all (an_action: PROCEDURE [ANY, TUPLE [ET_ECF_CONDITION]]) is
+	do_all (an_action: PROCEDURE [ANY, TUPLE [ET_ECF_CONDITION]])
 			-- Apply `an_action' to every condition, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 		require
@@ -160,7 +160,7 @@ feature -- Iteration
 
 feature {NONE} -- Constants
 
-	Initial_conditions_capacity: INTEGER is 50
+	Initial_conditions_capacity: INTEGER = 50
 			-- Initial capacity for `conditions'
 
 invariant

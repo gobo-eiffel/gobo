@@ -34,7 +34,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new formatter.
 		do
 			precursor
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset_options is
+	reset_options
 			-- Reset options to their default values.
 		do
 			precursor
@@ -52,7 +52,7 @@ feature -- Initialization
 
 feature -- Access
 
-	base: INTEGER is
+	base: INTEGER
 			-- Base used to format integer;
 			-- 8 for octal, 10 for decimal, 16 for hexadecimal, ...
 		deferred
@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Status report
 
-	valid_parameter (a_parameter: ANY): BOOLEAN is
+	valid_parameter (a_parameter: ANY): BOOLEAN
 			-- Is `a_parameter' a valid parameter for current formatter?
 		local
 			a_cell: detachable DS_CELL [INTEGER]
@@ -74,7 +74,7 @@ feature -- Status report
 
 feature -- Formatting
 
-	format_to (a_parameter: ANY; a_stream: KI_CHARACTER_OUTPUT_STREAM) is
+	format_to (a_parameter: ANY; a_stream: KI_CHARACTER_OUTPUT_STREAM)
 			-- Format `a_parameter' to `a_stream'.
 			-- (Use DS_CELL [INTEGER] because in SE 2.1
 			-- INTEGER does not conform to ANY.)
@@ -89,7 +89,7 @@ feature -- Formatting
 			integer_format_to (a_cell.item, a_stream)
 		end
 
-	integer_format_to (a_parameter: INTEGER; a_stream: KI_CHARACTER_OUTPUT_STREAM) is
+	integer_format_to (a_parameter: INTEGER; a_stream: KI_CHARACTER_OUTPUT_STREAM)
 			-- Format `a_parameter' to `a_stream'.
 		require
 			a_stream_not_void: a_stream /= Void
@@ -153,7 +153,7 @@ feature -- Formatting
 
 feature {NONE} -- Implementation
 
-	append_to_string (n: INTEGER; a_string: STRING) is
+	append_to_string (n: INTEGER; a_string: STRING)
 			-- Append value of `n' in base `base' to `a_string'.
 		require
 			n_not_negative: n >= 0
@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_abs_to_string (n: INTEGER; a_string: STRING) is
+	append_abs_to_string (n: INTEGER; a_string: STRING)
 			-- Append absolute value of `n' in base `base' to `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -190,9 +190,9 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	lower_digits: STRING is "0123456789abcdefghijklmnopqrstuvwxyz"
+	lower_digits: STRING = "0123456789abcdefghijklmnopqrstuvwxyz"
 
-	upper_digits: STRING is "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	upper_digits: STRING = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 	integer_buffer: STRING
 			-- Buffer used in `integer_format_to'

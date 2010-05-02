@@ -76,7 +76,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant
 		do
 			create hash_slots.make (0, Maximum_hash_chain_depth - 1)
@@ -137,10 +137,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	Maximum_hash_chain_depth: INTEGER is 2048
+	Maximum_hash_chain_depth: INTEGER = 2048
 			-- Maximum depth for same `hash_code' chains
 
-	namespace_code (an_xml_prefix: STRING; a_uri: STRING): INTEGER is
+	namespace_code (an_xml_prefix: STRING; a_uri: STRING): INTEGER
 			-- Return existing namespace code for a namespace prefix/URI pair
 		require
 			uri_allocated: a_uri /= Void
@@ -173,7 +173,7 @@ feature -- Access
 			valid_namespace_code: is_valid_namespace_code (Result)
 		end
 
-	code_for_uri (a_uri: STRING): INTEGER is -- should be INTEGER_16
+	code_for_uri (a_uri: STRING): INTEGER  -- should be INTEGER_16
 			-- Uri code for a given `uri';
 		require
 			uri_not_void: a_uri /= Void
@@ -209,7 +209,7 @@ feature -- Access
 			correct_uri: STRING_.same_string (uris.item (Result + 1), a_uri)
 		end
 
-	code_for_prefix (an_xml_prefix: STRING): INTEGER is -- should be INTEGER_16
+	code_for_prefix (an_xml_prefix: STRING): INTEGER  -- should be INTEGER_16
 			-- Prefix code for a given `an_xml_prefix'
 		require
 			an_xml_prefix_not_void: an_xml_prefix /= Void
@@ -249,7 +249,7 @@ feature -- Access
 			valid_result: Result >= 0
 		end
 
-	suggested_prefix_for_uri (a_uri: STRING): STRING is
+	suggested_prefix_for_uri (a_uri: STRING): STRING
 			-- Suggested prefix for a given `uri';
 			-- If there are several, it's undefined which one is returned.;
 			-- If there are no prefixes registered for this `uri', return `Void'
@@ -279,7 +279,7 @@ feature -- Access
 			end
 		end
 
-	name_code_to_prefix_index (a_name_code: INTEGER): INTEGER is
+	name_code_to_prefix_index (a_name_code: INTEGER): INTEGER
 			-- Extracted prefix index from `a_name_code'
 		do
 			check
@@ -292,7 +292,7 @@ feature -- Access
 			valid_prefix_index: Result >= 0 and Result < 255
 		end
 
-	prefix_with_index (a_uri_code: INTEGER; an_index: INTEGER): STRING is
+	prefix_with_index (a_uri_code: INTEGER; an_index: INTEGER): STRING
 			-- Get a prefix among all the prefixes used with a given URI, given its index
 		require
 			valid_code: a_uri_code >= 0 and a_uri_code <= 32000
@@ -363,7 +363,7 @@ feature -- Access
 			end
 		end
 
-	name_code (an_xml_prefix: STRING; a_uri: STRING; a_local_name: STRING): INTEGER is
+	name_code (an_xml_prefix: STRING; a_uri: STRING; a_local_name: STRING): INTEGER
 			-- Name code for `an_xml_prefix' allocated to `{a_uri}a_local_name'
 		require
 			prefix_not_void: an_xml_prefix /= Void
@@ -388,7 +388,7 @@ feature -- Access
 			valid_name_code: is_valid_name_code (Result)
 		end
 
-	fingerprint (a_uri: STRING; a_local_name: STRING): INTEGER is
+	fingerprint (a_uri: STRING; a_local_name: STRING): INTEGER
 			-- Fingerprint for the name with a given uri and local name;
 			-- The fingerprint has the property that if two fingerprint are the same,
 			-- the names are the same (i.e. same local name and same URI);
@@ -475,7 +475,7 @@ feature -- Access
 			valid_name_code:  Result = -1 or else is_valid_name_code (Result)
 		end
 
-	fingerprint_from_expanded_name (an_expanded_name: STRING): INTEGER is
+	fingerprint_from_expanded_name (an_expanded_name: STRING): INTEGER
 			-- Fingerprint for the name with a given uri and local name;
 		require
 			valid_expanded_name: an_expanded_name /= Void and then is_valid_expanded_name (an_expanded_name)
@@ -504,7 +504,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_valid_namespace_code (a_namespace_code: INTEGER): BOOLEAN is
+	is_valid_namespace_code (a_namespace_code: INTEGER): BOOLEAN
 			-- Does `a_namespace_code' represent a URI in `Current'?
 		do
 			Result :=  is_valid_uri_code (uri_code_from_namespace_code (a_namespace_code))
@@ -512,7 +512,7 @@ feature -- Status report
 			positive_true_result: Result implies a_namespace_code >= 0
 		end
 
-	is_valid_name_code (a_name_code: INTEGER): BOOLEAN is
+	is_valid_name_code (a_name_code: INTEGER): BOOLEAN
 			-- Does `a_name_code' represent a name in `Current'?
 		local
 			an_entry: XM_XPATH_NAME_ENTRY
@@ -532,13 +532,13 @@ feature -- Status report
 			end
 		end
 
-	is_standard_uri_code (a_uri_code: INTEGER): BOOLEAN is
+	is_standard_uri_code (a_uri_code: INTEGER): BOOLEAN
 			-- Does `a_uri_code' represent a standard URI?
 		do
 			Result := a_uri_code > Default_uri_code and then a_uri_code <= Xpath_standard_functions_uri_code
 		end
 
-	is_standard_name (a_uri, a_local_name: STRING): BOOLEAN is
+	is_standard_name (a_uri, a_local_name: STRING): BOOLEAN
 			-- Does `a_uri' paired with `a_local_name' represent a standard name?
 		require
 			uri_not_void: a_uri /= Void
@@ -548,13 +548,13 @@ feature -- Status report
 				and then type_factory.is_built_in_fingerprint (type_factory.standard_fingerprint (a_uri, a_local_name))
 		end
 
-	is_valid_uri_code (a_uri_code: INTEGER): BOOLEAN is
+	is_valid_uri_code (a_uri_code: INTEGER): BOOLEAN
 			-- Does `a_uri_code' represent a URI in `Current'?
 		do
 			Result := a_uri_code >= 0 and then a_uri_code < uris.count
 		end
 
-	is_code_for_uri_allocated (a_uri: STRING): BOOLEAN is
+	is_code_for_uri_allocated (a_uri: STRING): BOOLEAN
 			-- Has a code been allocated for `a_uri'?
 		require
 			uri_not_void: a_uri /= Void
@@ -594,7 +594,7 @@ feature -- Status report
 			end
 		end
 
-	is_code_for_prefix_allocated (an_xml_prefix: STRING): BOOLEAN is
+	is_code_for_prefix_allocated (an_xml_prefix: STRING): BOOLEAN
 			-- Has a code been allocated for `an_xml_prefix'?
 		require
 			prefix_not_void: an_xml_prefix /= Void
@@ -620,7 +620,7 @@ feature -- Status report
 			end
 		end
 
-	is_prefix_declared (a_qname: STRING): BOOLEAN is
+	is_prefix_declared (a_qname: STRING): BOOLEAN
 			-- Is prefix declared?
 		require
 			valid_qname: a_qname /= Void and then is_qname (a_qname)
@@ -637,7 +637,7 @@ feature -- Status report
 			Result := is_code_for_prefix_allocated (an_xml_prefix)
 		end
 
-	is_namespace_code_allocated (an_xml_prefix: STRING; a_uri: STRING): BOOLEAN is
+	is_namespace_code_allocated (an_xml_prefix: STRING; a_uri: STRING): BOOLEAN
 			-- Has a namespace code been allocated for `an_xml_prefix' with `a_uri'?
 		require
 			prefix_not_void: an_xml_prefix /= Void
@@ -653,7 +653,7 @@ feature -- Status report
 			end
 		end
 
-	is_namespace_code_allocated_for_name_code (a_name_code: INTEGER): BOOLEAN is
+	is_namespace_code_allocated_for_name_code (a_name_code: INTEGER): BOOLEAN
 			-- Has a namespace code been allocated corresponding to `a_name_code'?
 		require
 			valid_name_code: is_valid_name_code (a_name_code)
@@ -664,7 +664,7 @@ feature -- Status report
 			Result := is_code_for_prefix_allocated (a_prefix)
 		end
 
-	is_name_code_allocated (a_xml_prefix: STRING; a_uri: STRING; a_local_name: STRING): BOOLEAN is
+	is_name_code_allocated (a_xml_prefix: STRING; a_uri: STRING; a_local_name: STRING): BOOLEAN
 			-- Has a name code been allocated for `an_xml_prefix' with `a_uri' and `a_local_name'?
 		require
 			prefix_not_void: a_xml_prefix /= Void
@@ -689,7 +689,7 @@ feature -- Status report
 			end
 		end
 
-	is_name_code_allocated_using_uri_code (an_xml_prefix: STRING; a_uri_code: INTEGER; a_local_name: STRING): BOOLEAN is
+	is_name_code_allocated_using_uri_code (an_xml_prefix: STRING; a_uri_code: INTEGER; a_local_name: STRING): BOOLEAN
 			-- Has a name code been allocated for `an_xml_prefix' with `a_uri_code' and `a_local_name'?
 		require
 			prefix_not_void: an_xml_prefix /= Void
@@ -748,7 +748,7 @@ feature -- Status report
 			end
 		end
 
-	is_name_pool_full (a_uri, a_local_name: STRING): BOOLEAN is
+	is_name_pool_full (a_uri, a_local_name: STRING): BOOLEAN
 			--	Is `Current' full for `a_local_name', taking `a_uri' into consideration?
 		require
 			uri_not_void: a_uri /= Void
@@ -767,7 +767,7 @@ feature -- Status report
 			Result := is_name_pool_full_using_uri_code (a_uri_code, a_local_name)
 		end
 
-	is_name_pool_full_using_uri_code (a_uri_code: INTEGER; a_local_name: STRING): BOOLEAN is
+	is_name_pool_full_using_uri_code (a_uri_code: INTEGER; a_local_name: STRING): BOOLEAN
 			--	Is `Current' full for `a_local_name', taking `a_uri_code' into consideration?
 		require
 			valid_uri_code: is_valid_uri_code (a_uri_code) or else a_uri_code = -1
@@ -810,7 +810,7 @@ feature -- Status report
 			end
 		end
 
-	is_expanded_name_allocated (an_expanded_name: STRING): BOOLEAN is
+	is_expanded_name_allocated (an_expanded_name: STRING): BOOLEAN
 			-- Is `an_expanded_name' allocated?
 		require
 			valid_expanded_name: an_expanded_name /= Void and then is_valid_expanded_name (an_expanded_name)
@@ -822,7 +822,7 @@ feature -- Status report
 			Result := is_name_code_allocated ("", a_namespace_uri, a_local_name)
 		end
 
-	is_valid_prefix_for_uri (a_uri_code: INTEGER; an_xml_prefix: STRING): BOOLEAN is
+	is_valid_prefix_for_uri (a_uri_code: INTEGER; an_xml_prefix: STRING): BOOLEAN
 			-- Is `an_xml_prefix' valid for `a_uri_code'?
 		require
 			valid_uri_code: is_valid_uri_code (a_uri_code)
@@ -863,19 +863,19 @@ feature -- Status report
 			end
 		end
 
-	are_uris_all_used: BOOLEAN is
+	are_uris_all_used: BOOLEAN
 			-- Are all URIs in use?
 		do
 			Result := uris_used >= 32000
 		end
 
-	are_prefixes_all_used: BOOLEAN is
+	are_prefixes_all_used: BOOLEAN
 			-- Are all prefixes used?
 		do
 			Result := prefixes_used >= 32000
 		end
 
-	diagnostic_dump is
+	diagnostic_dump
 			-- Diagnostic print of the namepool contents
 		local
 			a_hash_code, a_depth, prefix_count, a_uri_count: INTEGER
@@ -954,7 +954,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	clear is
+	clear
 			-- Clear out all entries and reset to initial state.
 		do
 			make
@@ -962,7 +962,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	allocate_namespace_code (an_xml_prefix: STRING; a_uri: STRING) is
+	allocate_namespace_code (an_xml_prefix: STRING; a_uri: STRING)
 			--	Allocate the namespace code for a namespace prefix/URI pair;
 			-- WARNING - this code is not thread safe
 		require
@@ -1022,7 +1022,7 @@ feature -- Element change
 			namespace_code_allocated: is_namespace_code_allocated (an_xml_prefix, a_uri)
 		end
 
-	allocate_namespace_code_for_name_code (a_name_code: INTEGER) is
+	allocate_namespace_code_for_name_code (a_name_code: INTEGER)
 			-- Allocate a namespace code for a given name code.
 		require
 			namespace_code_not_allocated: not is_namespace_code_allocated_for_name_code (a_name_code)
@@ -1035,7 +1035,7 @@ feature -- Element change
 			namespace_code_allocated: is_namespace_code_allocated_for_name_code (a_name_code)
 		end
 
-	allocate_code_for_uri (a_uri: STRING) is
+	allocate_code_for_uri (a_uri: STRING)
 			-- Allocate the uri code for a given URI;
 			-- WARNING - this code is not thread safe
 		require
@@ -1096,7 +1096,7 @@ feature -- Element change
 			code_allocated: is_code_for_uri_allocated (a_uri)
 		end
 
-	allocate_code_for_prefix (an_xml_prefix: STRING) is
+	allocate_code_for_prefix (an_xml_prefix: STRING)
 			-- Allocate the uri code for a given `an_xml_prefix';
 			-- WARNING - this code is not thread safe
 		require
@@ -1117,7 +1117,7 @@ feature -- Element change
 			code_allocated: is_code_for_prefix_allocated (an_xml_prefix)
 		end
 
-	allocate_name (an_xml_prefix: STRING; a_uri: STRING; a_local_name: STRING) is
+	allocate_name (an_xml_prefix: STRING; a_uri: STRING; a_local_name: STRING)
 			-- Allocate a new name
 		require
 			prefix_not_void: an_xml_prefix /= Void
@@ -1162,7 +1162,7 @@ feature -- Element change
 			valid_name_code: is_valid_name_code (last_name_code)
 		end
 
-	allocate_name_using_uri_code (an_xml_prefix: STRING; a_uri_code: INTEGER; a_local_name: STRING) is
+	allocate_name_using_uri_code (an_xml_prefix: STRING; a_uri_code: INTEGER; a_local_name: STRING)
 			-- Allocate a name from the pool, or a new Name if there is not a matching one there
 		require
 			prefix_not_void: an_xml_prefix /= Void
@@ -1225,7 +1225,7 @@ feature -- Element change
 			valid_name_code: is_valid_name_code (last_name_code)
 		end
 
-	allocate_expanded_name (an_expanded_name: STRING) is
+	allocate_expanded_name (an_expanded_name: STRING)
 			-- Allocate a fingerprint for `an_expanded_name'
 		require
 			valid_expanded_name: an_expanded_name /= Void and then is_valid_expanded_name (an_expanded_name)
@@ -1242,7 +1242,7 @@ feature -- Element change
 
 feature -- Conversion
 
-	namespace_code_from_name_code (a_name_code: INTEGER): INTEGER is
+	namespace_code_from_name_code (a_name_code: INTEGER): INTEGER
 			-- Namespace code, given its name code
 		require
 			valid_name_code: is_valid_name_code (a_name_code)
@@ -1254,7 +1254,7 @@ feature -- Conversion
 			Result := (a_prefix_code * bits_16) + a_uri_code
 		end
 
-	namespace_uri_from_name_code (a_name_code: INTEGER): STRING is
+	namespace_uri_from_name_code (a_name_code: INTEGER): STRING
 			-- Namespace-URI of a name, given its name code or fingerprint
 		require
 			valid_name_code: is_valid_name_code (a_name_code)
@@ -1277,7 +1277,7 @@ feature -- Conversion
 			result_not_void: Result /= Void
 		end
 
-	uri_code_from_name_code (a_name_code: INTEGER): INTEGER is -- should be INTEGER_16
+	uri_code_from_name_code (a_name_code: INTEGER): INTEGER  -- should be INTEGER_16
 			-- URI code of a name, given its name code or fingerprint
 	require
 		valid_name_code: is_valid_name_code (a_name_code)
@@ -1298,7 +1298,7 @@ feature -- Conversion
 			end
 		end
 
-	local_name_from_name_code (a_name_code: INTEGER): STRING is
+	local_name_from_name_code (a_name_code: INTEGER): STRING
 			-- Local part of a name, given its name code or fingerprint
 		require
 			valid_name_code: is_valid_name_code (a_name_code)
@@ -1321,7 +1321,7 @@ feature -- Conversion
 			result_not_void: Result /= Void
 		end
 
-	prefix_from_name_code (a_name_code: INTEGER): STRING is
+	prefix_from_name_code (a_name_code: INTEGER): STRING
 			-- Xml prefix, given its name code
 		require
 			valid_name_code: is_valid_name_code (a_name_code)
@@ -1343,7 +1343,7 @@ feature -- Conversion
 			result_may_be_void: True
 		end
 
-	display_name_from_name_code (a_name_code: INTEGER): STRING is
+	display_name_from_name_code (a_name_code: INTEGER): STRING
 			-- Display form of a name (the QName), given its name code or fingerprint
 		require
 			valid_name_code: is_valid_name_code (a_name_code)
@@ -1381,7 +1381,7 @@ feature -- Conversion
 			result_not_void: Result /= Void
 		end
 
-	uri_from_namespace_code (a_namespace_code: INTEGER): STRING is
+	uri_from_namespace_code (a_namespace_code: INTEGER): STRING
 			-- Namespace URI from `a_namespace_code'
 		require
 			valid_code: is_valid_namespace_code (a_namespace_code)
@@ -1404,7 +1404,7 @@ feature -- Conversion
 			uri_not_void: Result /= Void
 		end
 
-	uri_from_uri_code (a_uri_code: INTEGER): STRING is
+	uri_from_uri_code (a_uri_code: INTEGER): STRING
 			-- Namespace URI from `a_uri_code'
 		require
 			valid_code: is_valid_uri_code (a_uri_code)
@@ -1412,7 +1412,7 @@ feature -- Conversion
 			Result := uris.item (a_uri_code + 1)
 		end
 
-	prefix_from_namespace_code (a_namespace_code: INTEGER): STRING is
+	prefix_from_namespace_code (a_namespace_code: INTEGER): STRING
 			-- Namespace prefix from `namespace_code'
 		require
 			valid_code: is_valid_namespace_code (a_namespace_code)
@@ -1426,7 +1426,7 @@ feature -- Conversion
 			Result := prefixes.item ((a_namespace_code // b16) + 1)
 		end
 
-	expanded_name_from_name_code (a_name_code: INTEGER): STRING is
+	expanded_name_from_name_code (a_name_code: INTEGER): STRING
 			-- Expanded name of `a_name_code'
 		require
 			positive_name_code: a_name_code >= 0
@@ -1453,7 +1453,7 @@ feature -- Conversion
 
 feature {NONE} -- Implementation
 
-	name_entry (a_name_code: INTEGER): XM_XPATH_NAME_ENTRY is
+	name_entry (a_name_code: INTEGER): XM_XPATH_NAME_ENTRY
 			-- Name entry corresponding to `a_name_code'
 		require
 			positive_name_code: a_name_code >= 0
@@ -1491,7 +1491,7 @@ feature {NONE} -- Implementation
 			Result := an_entry
 		end
 
-	prefix_index (a_uri_code: INTEGER; an_xml_prefix: STRING): INTEGER is
+	prefix_index (a_uri_code: INTEGER; an_xml_prefix: STRING): INTEGER
 			-- Index of a prefix among all the prefixes used with a given URI
 		require
 			prefix_not_void: an_xml_prefix /= Void
@@ -1545,7 +1545,7 @@ feature {NONE} -- Implementation
 			valid_result: -2 < Result and Result < 255
 		end
 
-	name_code_to_depth (a_name_code: INTEGER): INTEGER is
+	name_code_to_depth (a_name_code: INTEGER): INTEGER
 			-- Extract the depth from `a_name_code'
 		local
 			a_scaled_prefix_index: INTEGER
@@ -1558,7 +1558,7 @@ feature {NONE} -- Implementation
 			positive_result: Result >= 0 and Result < Maximum_hash_chain_depth
 		end
 
-	name_code_to_hash_code (a_name_code: INTEGER): INTEGER is
+	name_code_to_hash_code (a_name_code: INTEGER): INTEGER
 			-- Extract the depth from `a_name_code'
 		local
 			a_scaled_prefix_index, a_depth: INTEGER
@@ -1572,7 +1572,7 @@ feature {NONE} -- Implementation
 			positive_result: Result >= 0 and Result < Maximum_hash_chain_depth
 		end
 
-	allocate_prefix (a_uri_code: INTEGER; an_xml_prefix: STRING) is
+	allocate_prefix (a_uri_code: INTEGER; an_xml_prefix: STRING)
 			-- Allocate `an_xml_prefix' to `a_uri_code'.
 		require
 			prefix_not_allocated: prefix_index (a_uri_code, an_xml_prefix) < 0

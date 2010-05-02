@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_range_variable: XM_XPATH_RANGE_VARIABLE_DECLARATION; a_sequence_expression: XM_XPATH_EXPRESSION; a_action: XM_XPATH_EXPRESSION) is
+	make (a_range_variable: XM_XPATH_RANGE_VARIABLE_DECLARATION; a_sequence_expression: XM_XPATH_EXPRESSION; a_action: XM_XPATH_EXPRESSION)
 			-- Establish invariant
 		require
 			range_variable_not_void: a_range_variable /= Void
@@ -50,22 +50,22 @@ feature {NONE} -- Initialization
 			sequence_set: sequence = a_sequence_expression
 			action_set: action = a_action
 		end
-	
+
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			--Determine the data type of the expression, if possible
 		do
 			Result := action.item_type
 		end
 
-	required_type: XM_XPATH_SEQUENCE_TYPE is
+	required_type: XM_XPATH_SEQUENCE_TYPE
 			-- Static type of variable
 		do
 			create result.make_single_integer
 		end
 
-	is_repeated_sub_expression (a_child: XM_XPATH_EXPRESSION): BOOLEAN is
+	is_repeated_sub_expression (a_child: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Is `a_child' a repeatedly-evaluated sub-expression?
 		do
 			Result := a_child = action
@@ -73,7 +73,7 @@ feature -- Access
 
 feature -- Status report
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -89,7 +89,7 @@ feature -- Status report
 			action.display (a_level + 1)
 		end
 
-	contains_recursive_tail_function_calls (a_name_code, a_arity: INTEGER): UT_TRISTATE is
+	contains_recursive_tail_function_calls (a_name_code, a_arity: INTEGER): UT_TRISTATE
 			-- Does `Current' contains recursive tail calls of stylesheet functions?
 			-- `Undecided' means it contains a tail call to another function.
 		do
@@ -101,8 +101,8 @@ feature -- Status report
 		end
 
 feature -- Status setting
-	
-	mark_tail_function_calls is
+
+	mark_tail_function_calls
   			-- Mark tail calls on stylesheet functions.
   		do
   			if not sequence.cardinality_allows_many then
@@ -112,7 +112,7 @@ feature -- Status setting
 
 feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_sequence_type: XM_XPATH_SEQUENCE_TYPE
@@ -162,7 +162,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			a_replacement.put (Current)
@@ -171,14 +171,14 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over the values of a sequence
 		local
 			a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			a_mapping_function: XM_XPATH_MAPPING_ACTION
 			a_node_mapping_function: XM_XPATH_NODE_MAPPING_ACTION
 		do
-			
+
 			-- First create an iteration of the base sequence.
 
 			sequence.create_iterator (a_context)
@@ -187,7 +187,7 @@ feature -- Evaluation
 			if a_base_iterator.is_error then
 				last_iterator := a_base_iterator
 			else
-				
+
 				-- Then create a mapping iterator which applies a mapping function to each
 				--  item in the base sequence. The mapping function is essentially the "return"
 				--  expression, wrapped in a mapping action object that is responsible also for
@@ -203,13 +203,13 @@ feature -- Evaluation
 			end
 		end
 
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over a node sequence
 		local
 			a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			a_mapping_function: XM_XPATH_NODE_MAPPING_ACTION
 		do
-			
+
 			-- First create an iteration of the base sequence.
 
 			sequence.create_iterator (a_context)
@@ -218,7 +218,7 @@ feature -- Evaluation
 			if a_base_iterator.is_error then
 				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (a_base_iterator.error_value)
 			else
-				
+
 				-- Then create a mapping iterator which applies a mapping function to each
 				--  item in the base sequence. The mapping function is essentially the "return"
 				--  expression, wrapped in a mapping action object that is responsible also for
@@ -231,13 +231,13 @@ feature -- Evaluation
 
 feature {NONE} -- Implementation
 
-	native_implementations: INTEGER is
+	native_implementations: INTEGER
 			-- Natively-supported evaluation routines
 		do
 			Result := Supports_iterator
 		end
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality (multiply_cardinality (sequence.cardinality, action.cardinality))
@@ -248,4 +248,4 @@ invariant
 	valid_operator: operator = For_token
 
 end
-	
+

@@ -59,7 +59,7 @@ create
 
 feature
 
-	make is
+	make
 		local
 			b: BB
 		do
@@ -86,12 +86,12 @@ class CC
 
 feature
 
-	f is
+	f
 		do
 			print ("f%N")
 		end
 
-	g is
+	g
 		do
 			print ("g%N")
 		end

@@ -29,7 +29,7 @@ create
 
 feature -- Test
 
-	test_valid_tag is
+	test_valid_tag
 			-- Test valid tag.
 		do
 			assert_output(
@@ -43,7 +43,7 @@ feature -- Test
 				"<doc %/195/%/169/=%"%"></doc>")
 		end
 
-	test_valid_content is
+	test_valid_content
 			-- Test valid content.
 		do
 			assert_output(
@@ -54,7 +54,7 @@ feature -- Test
 				"<doc a=%"%/195/%/169/%"></doc>")
 		end
 
-	test_invalid_latin1 is
+	test_invalid_latin1
 			-- Test invalid Latin1.
 		do
 			assert_invalid ("<doc>%/195/</doc>") -- half of UTF8
@@ -62,7 +62,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	assert_invalid (a_in: STRING) is
+	assert_invalid (a_in: STRING)
 			-- Assert parsing OK and standalone declaration correctly read.
 		require
 			a_in_not_void: a_in /= Void
@@ -79,7 +79,7 @@ feature {NONE} -- Implementation
 			assert ("parse_fails", a_sink.has_error)
 		end
 
-	assert_output (a_in: STRING; a_out_utf8: STRING) is
+	assert_output (a_in: STRING; a_out_utf8: STRING)
 			-- Assert parsing OK and standalone declaration correctly read.
 		require
 			a_in_not_void: a_in /= Void
@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 			assert_equal ("output", a_out_utf8, STRING_.as_string (a_sink.last_output))
 		end
 
-	literal_stream (a_in: STRING): KL_STRING_INPUT_STREAM is
+	literal_stream (a_in: STRING): KL_STRING_INPUT_STREAM
 			-- Create an input stream that is not interpreted.
 		require
 			a_in_not_void: a_in /= Void

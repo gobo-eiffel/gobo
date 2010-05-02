@@ -54,7 +54,7 @@ create
 
 feature
 
-	make is
+	make
 		local
 			b: BB
 		do
@@ -73,7 +73,7 @@ inherit
 
 feature
 
-	f is
+	f
 		local
 			d: DD [STRING]
 		do

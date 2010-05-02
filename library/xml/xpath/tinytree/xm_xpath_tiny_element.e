@@ -37,7 +37,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_document: XM_XPATH_TINY_FOREST; a_node_number: INTEGER) is
+	make (a_document: XM_XPATH_TINY_FOREST; a_node_number: INTEGER)
 		require
 			valid_document: a_document /= Void
 			valid_node_number: a_node_number > 0 and a_node_number <= a_document.last_node_added
@@ -52,25 +52,25 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_tiny_element: BOOLEAN is
+	is_tiny_element: BOOLEAN
 			-- Is `Current' an element?
 		do
 			Result := True
 		end
 
-	as_tiny_element: XM_XPATH_TINY_ELEMENT is
+	as_tiny_element: XM_XPATH_TINY_ELEMENT
 			-- `Current' seen as an element
 		do
 			Result := Current
 		end
 
-	attribute_value_by_name (a_uri: STRING; a_local_name:STRING): STRING is
+	attribute_value_by_name (a_uri: STRING; a_local_name:STRING): STRING
 			-- Value of named attribute
 		do
 			Result := attribute_value (shared_name_pool.fingerprint (a_uri, a_local_name))
 		end
 
-	attribute_value (a_fingerprint: INTEGER): STRING is
+	attribute_value (a_fingerprint: INTEGER): STRING
 			-- Value of attribute identified by `a_fingerprint'
 		local
 			an_alpha_value, a_name_code: INTEGER
@@ -98,7 +98,7 @@ feature -- Access
 			end
 		end
 
-	uri_code_for_prefix_code (a_prefix_code: INTEGER): INTEGER is
+	uri_code_for_prefix_code (a_prefix_code: INTEGER): INTEGER
 			-- URI code for `a_prefix_code'
 		local
 			a_namespace_node, a_namespace_code: INTEGER
@@ -141,7 +141,7 @@ feature -- Access
 			end
 		end
 
-	declared_namespaces: DS_ARRAYED_LIST [INTEGER] is
+	declared_namespaces: DS_ARRAYED_LIST [INTEGER]
 			-- Codes for namespaces declared on `Current'
 		local
 			a_namespace_code, a_namespace_node: INTEGER
@@ -157,7 +157,7 @@ feature -- Access
 			end
 		end
 
-	namespace_codes_in_scope: DS_ARRAYED_LIST [INTEGER] is
+	namespace_codes_in_scope: DS_ARRAYED_LIST [INTEGER]
 			-- Namespace codes in scope for `Current'
 		do
 			create Result.make_default
@@ -167,7 +167,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_attributes: BOOLEAN is
+	has_attributes: BOOLEAN
 			-- Does `Current' have any attributes?
 		do
 			Result := tree.alpha_value (node_number) > 0
@@ -175,7 +175,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_name_code (a_name_code: INTEGER) is
+	set_name_code (a_name_code: INTEGER)
 			-- Set `name_code'.
 			-- Needed (indirectly, through `XM_XPATH_TINY_ELEMENT') by `XM_XSLT_STRIPPER'.
 		do
@@ -186,7 +186,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	output_namespace_nodes (a_receiver: XM_XPATH_RECEIVER; include_ancestors: BOOLEAN) is
+	output_namespace_nodes (a_receiver: XM_XPATH_RECEIVER; include_ancestors: BOOLEAN)
 			-- Output all namespace nodes associated with this element.
 		local
 			a_namespace_node: INTEGER
@@ -218,7 +218,7 @@ feature -- Element change
 
 feature -- Duplication
 
-	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
+	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN)
 			-- Copy `Current' to `a_receiver'.
 		local
 			a_level, a_node_level, a_start_level, a_next_node, a_start_index, a_node_count: INTEGER
@@ -289,7 +289,7 @@ feature -- Duplication
 
 feature {XM_XPATH_NODE} -- Restricted
 
-	is_possible_child: BOOLEAN is
+	is_possible_child: BOOLEAN
 			-- Can this node be a child of a document or element node?
 		do
 			Result := True
@@ -297,7 +297,7 @@ feature {XM_XPATH_NODE} -- Restricted
 
 feature {NONE} -- Implementation
 
-	copy_element (first: BOOLEAN; a_next_node: INTEGER; a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
+	copy_element (first: BOOLEAN; a_next_node: INTEGER; a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN)
 			-- Copy child element to `a_receiver'.
 		require
 			receiver_not_void: a_receiver /= Void
@@ -354,7 +354,7 @@ feature {NONE} -- Implementation
 			a_receiver.start_content
 		end
 
-	accumulate_namespace_codes (a_node_number: INTEGER; a_buffer: DS_ARRAYED_LIST [INTEGER]) is
+	accumulate_namespace_codes (a_node_number: INTEGER; a_buffer: DS_ARRAYED_LIST [INTEGER])
 			-- Accumulate namespace codes for `a_node_number' into a`_buffer'.
 		require
 			buffer_not_void: a_buffer /= Void

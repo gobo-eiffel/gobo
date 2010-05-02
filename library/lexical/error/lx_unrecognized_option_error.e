@@ -22,8 +22,8 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER; option: STRING) is
-			-- Create a new error reporting 
+	make (filename: STRING; line: INTEGER; option: STRING)
+			-- Create a new error reporting
 			-- unrecoginzed %option `option'.
 		require
 			filename_not_void: filename /= Void
@@ -37,10 +37,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: unrecognized %%option: $3"
+	default_template: STRING = "%"$1%", line $2: unrecognized %%option: $3"
 			-- Default template used to built the error message
 
-	code: STRING is "LX0024"
+	code: STRING = "LX0024"
 			-- Error code
 
 invariant

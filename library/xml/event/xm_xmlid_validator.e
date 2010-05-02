@@ -40,7 +40,7 @@ create
 
 feature -- Events
 
-	on_start is
+	on_start
 			-- Initialize ID set.
 		do
 			create ids.make_default
@@ -48,14 +48,14 @@ feature -- Events
 			Precursor
 		end
 
-	on_finish is
+	on_finish
 			-- Clear ID set.
 		do
 			ids := Void
 			Precursor
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
 			-- Normalize xml:id attribute and check it is unique.
 		local
 			an_id: STRING
@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	normalize (an_id: STRING): STRING is
+	normalize (an_id: STRING): STRING
 			-- Identifier attribute normalized
 			-- (duplicates spaces removed, head and trailing spaces removed)
 		require
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 			not_trailing_space: Result.is_empty or else not is_space (Result.item_code (Result.count))
 		end
 
-	is_space (a_char: INTEGER): BOOLEAN is
+	is_space (a_char: INTEGER): BOOLEAN
 			-- Is this character a space for the purpose of ID normalisation?
 		do
 			Result := characters_1_0.is_space (a_char)
@@ -153,10 +153,10 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	Duplicate_id_error: STRING is "duplicate xml:id declaration"
+	Duplicate_id_error: STRING = "duplicate xml:id declaration"
 			-- Duplicate ID
 
-	Id_not_ncname_error: STRING is "xml:id value is not an NCName"
+	Id_not_ncname_error: STRING = "xml:id value is not an NCName"
 			-- NCName error
 
 end

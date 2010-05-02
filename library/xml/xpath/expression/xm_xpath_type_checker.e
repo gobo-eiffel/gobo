@@ -62,7 +62,7 @@ inherit
 feature -- Access
 
 	checked_expression: XM_XPATH_EXPRESSION
-			-- Type-checked expression set by `static_type_check'	
+			-- Type-checked expression set by `static_type_check'
 
 feature -- Status_report
 
@@ -74,7 +74,7 @@ feature -- Status_report
 
 feature -- Optimization
 
-	static_type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_supplied_expression: XM_XPATH_EXPRESSION; a_required_type: XM_XPATH_SEQUENCE_TYPE; backwards_compatible: BOOLEAN; a_role_locator: XM_XPATH_ROLE_LOCATOR) is
+	static_type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_supplied_expression: XM_XPATH_EXPRESSION; a_required_type: XM_XPATH_SEQUENCE_TYPE; backwards_compatible: BOOLEAN; a_role_locator: XM_XPATH_ROLE_LOCATOR)
 			-- Check an expression against a required type, modifying it if necessary
 		require
 			supplied_expression_not_in_error: a_supplied_expression /= Void and then not a_supplied_expression.is_error
@@ -99,9 +99,9 @@ feature -- Optimization
 			if not item_type_ok then
 				handle_xpath_two_rules (a_context, a_role_locator)
 			end
-			
+
 			-- If both the cardinality and item type are statically OK, return now.
-			
+
 			if item_type_ok and cardinality_ok then
 				-- do_nothing - `checked_expression' has been set by `initialize'.
 			else
@@ -120,7 +120,7 @@ feature -- Optimization
 					-- do_nothing - `checked_expression' has been set by `initialize'.
 				else
 
-					-- If we haven't evaluated the item type of the supplied expression, do it now					
+					-- If we haven't evaluated the item type of the supplied expression, do it now
 
 					if supplied_item_type = Void then supplied_item_type := checked_expression.item_type end
 
@@ -129,9 +129,9 @@ feature -- Optimization
 					if supplied_cardinality = Required_cardinality_empty and then not is_cardinality_allows_zero (a_required_cardinality) then
 						report_error ("An empty sequence is not allowed as the ", a_role_locator)
 					else
-						
+
 						-- Try a static type check. We only throw it out if the call cannot possibly succeed.
-						
+
 						if conformance.customized_host_language and then static_context /= Void and then static_context.is_data_type_valid (supplied_item_type.as_atomic_type.fingerprint) then
 							report_type_check_error (a_role_locator)
 						else
@@ -156,13 +156,13 @@ feature -- Optimization
 								end
 							end
 						end
-						
+
 						if not is_static_type_check_error then
-							
+
 							-- Unless the type is guaranteed to match, add a dynamic type check,
 							--  unless the value is already known in which case we might
 							--  as well report the error now.
-							
+
 							if a_relationship /= Same_item_type and then a_relationship /= Subsumed_type then
 								an_expression := checked_expression
 								create an_item_checker.make (an_expression, required_item_type, a_role_locator)
@@ -179,14 +179,14 @@ feature -- Optimization
 									checked_expression := a_computed_expression
 								end
 							end
-						end				
+						end
 					end
 				end
 			end
 		ensure
 			no_static_error_implies_non_void_result: not is_static_type_check_error implies checked_expression /= Void
 			static_error_implies_void_result: is_static_type_check_error implies checked_expression = Void
-		end	
+		end
 
 feature {NONE} -- Implementation
 
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 
 	supplied_cardinality: INTEGER
 			-- Cardinality of supplied expression
-		
+
 	supplied_item_type: XM_XPATH_ITEM_TYPE
 			-- Item type of supplied expression.
 
@@ -207,11 +207,11 @@ feature {NONE} -- Implementation
 
 	cardinality_ok: BOOLEAN
 			-- Is the cardinality proven to be OK?
-		
+
 	item_type_ok: BOOLEAN
 			-- Is the item type been proven to be OK?
 
-	initialize (a_supplied_expression: XM_XPATH_EXPRESSION; a_required_type: XM_XPATH_SEQUENCE_TYPE) is
+	initialize (a_supplied_expression: XM_XPATH_EXPRESSION; a_required_type: XM_XPATH_SEQUENCE_TYPE)
 			-- Initial attributes
 		do
 			is_static_type_check_error := False
@@ -245,7 +245,7 @@ feature {NONE} -- Implementation
 			supplied_item_type: not item_type_ok implies supplied_item_type /= Void
 		end
 
-	report_error (a_message: STRING; a_role_locator: XM_XPATH_ROLE_LOCATOR) is
+	report_error (a_message: STRING; a_role_locator: XM_XPATH_ROLE_LOCATOR)
 			-- Report custom error message.
 		require
 			messaage_not_void: a_message /= Void
@@ -259,7 +259,7 @@ feature {NONE} -- Implementation
 			checked_expression := Void
 		end
 
-	handle_xpath_one_compatibility (backwards_compatible: BOOLEAN) is
+	handle_xpath_one_compatibility (backwards_compatible: BOOLEAN)
 			-- Handle the special rules for 1.0 compatibility mode
 		local
 			an_expression: XM_XPATH_EXPRESSION
@@ -281,11 +281,11 @@ feature {NONE} -- Implementation
 						or else required_item_type = type_factory.double_type then  -- Rule 3
 						wrap_in_number_function
 					end
-				end						
+				end
 			end
 		end
 
-	report_type_check_error (a_role_locator: XM_XPATH_ROLE_LOCATOR) is
+	report_type_check_error (a_role_locator: XM_XPATH_ROLE_LOCATOR)
 			-- Report failure of static type checking
 		require
 			role_locator_not_void: a_role_locator /= Void
@@ -307,7 +307,7 @@ feature {NONE} -- Implementation
 			checked_expression := Void
 		end
 
-	wrap_in_string_function is
+	wrap_in_string_function
 			-- Wrap an fn:string() function around `checked_expression'.
 		local
 			l_string_function: XM_XPATH_STRING
@@ -339,7 +339,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	wrap_in_number_function is
+	wrap_in_number_function
 			-- Wrap an fn:number() function around `checked_expression'.
 		local
 			l_number_function: XM_XPATH_NUMBER
@@ -371,7 +371,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	handle_xpath_two_rules (a_context: XM_XPATH_STATIC_CONTEXT; a_role_locator: XM_XPATH_ROLE_LOCATOR) is
+	handle_xpath_two_rules (a_context: XM_XPATH_STATIC_CONTEXT; a_role_locator: XM_XPATH_ROLE_LOCATOR)
 			-- Apply conversions needed in 2.0 mode.
 		require
 			a_context_not_void: a_context /= Void
@@ -420,14 +420,14 @@ feature {NONE} -- Implementation
 				 supplied_item_type := type_factory.string_type; item_type_ok := True
 
 				 -- We don't generate code to do a run-time type conversion; rather, we rely on
-				 --  operators and functions that accept a string to also accept an xs:anyURI. 
+				 --  operators and functions that accept a string to also accept an xs:anyURI.
              -- This relies on XM_XPATH_ANY_URI_VALUE being a descendant of XM_XPATH_STRING_VALUE
 
 				end
 			end
 		end
 
-	conditionally_atomize is
+	conditionally_atomize
 			-- Conditionally add an Atomizer
 		local
 			l_expression: XM_XPATH_EXPRESSION
@@ -446,7 +446,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	conditionally_add_untyped_converter (a_context: XM_XPATH_STATIC_CONTEXT; a_role_locator: XM_XPATH_ROLE_LOCATOR) is	
+	conditionally_add_untyped_converter (a_context: XM_XPATH_STATIC_CONTEXT; a_role_locator: XM_XPATH_ROLE_LOCATOR)
 			--  Conditionally add an Untyped Atomic Converter
 		require
 			a_context_not_void: a_context /= Void

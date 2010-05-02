@@ -66,7 +66,7 @@ create
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Start 'gexslt' execution.
 		local
 			i, nb: INTEGER
@@ -171,7 +171,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_string_parameter (a_string_parameter_option: STRING) is
+	set_string_parameter (a_string_parameter_option: STRING)
 			-- Set a string-valued parameter on the stylesheet.
 		require
 			non_zero_length_parameter: a_string_parameter_option /= Void and then a_string_parameter_option.count > 0
@@ -213,7 +213,7 @@ feature -- Setting
 			end
 		end
 
-	set_xpath_parameter (a_string_parameter_option: STRING) is
+	set_xpath_parameter (a_string_parameter_option: STRING)
 			-- Set an XPath-valued parameter on the stylesheet.
 		require
 			non_zero_length_parameter: a_string_parameter_option /= Void and then a_string_parameter_option.count > 0
@@ -248,7 +248,7 @@ feature -- Setting
 
 feature -- Access
 
-	program_name: STRING is
+	program_name: STRING
 			-- Program name
 		do
 			Result := "gexslt"
@@ -282,7 +282,7 @@ feature -- Access
 
 feature -- Error handling
 
-	report_cannot_read_error (a_filename: STRING) is
+	report_cannot_read_error (a_filename: STRING)
 			-- Report that `a_filename' cannot be
 			-- opened in read mode.
 		require
@@ -294,7 +294,7 @@ feature -- Error handling
 			error_handler.report_error (an_error)
 		end
 
-	report_not_yet_implemented (a_feature: STRING) is
+	report_not_yet_implemented (a_feature: STRING)
 			-- Report that `a_feature' is not yet implemented.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -305,7 +305,7 @@ feature -- Error handling
 			error_handler.report_error (an_error)
 		end
 
-	report_processing_error (a_category, a_message: STRING) is
+	report_processing_error (a_category, a_message: STRING)
 			-- Report a compilation or transformation error.
 		require
 			message_not_void: a_message /= Void
@@ -320,7 +320,7 @@ feature -- Error handling
 			error_handler.report_error (an_error)
 		end
 
-	report_unknown_option (an_option: STRING) is
+	report_unknown_option (an_option: STRING)
 			-- Report that `an_option' is unknown.
 		require
 			option_not_void: an_option /= Void
@@ -331,7 +331,7 @@ feature -- Error handling
 			error_handler.report_error (an_error)
 		end
 
-	report_string_parameter_option_syntax_message (a_string_parameter_option: STRING) is
+	report_string_parameter_option_syntax_message (a_string_parameter_option: STRING)
 			-- Report a syntax error with a string parameter option.
 		require
 			parameter_option_not_void: a_string_parameter_option /= Void
@@ -345,7 +345,7 @@ feature -- Error handling
 			error_handler.report_error (an_error)
 		end
 
-	report_xpath_parameter_option_syntax_message (a_parameter_option: STRING) is
+	report_xpath_parameter_option_syntax_message (a_parameter_option: STRING)
 			-- Report a syntax error with an XPath parameter option.
 		require
 			parameter_option_not_void: a_parameter_option /= Void
@@ -359,7 +359,7 @@ feature -- Error handling
 			error_handler.report_error (an_error)
 		end
 
-	report_parameter_name_syntax_message (a_parameter_name: STRING) is
+	report_parameter_name_syntax_message (a_parameter_name: STRING)
 			-- Report a syntax error with a parameter name.
 		require
 			parameter_name_not_void: a_parameter_name /= Void
@@ -373,7 +373,7 @@ feature -- Error handling
 			error_handler.report_error (an_error)
 		end
 
-	report_duplicate_parameter_name (a_parameter_name: STRING) is
+	report_duplicate_parameter_name (a_parameter_name: STRING)
 			-- Report a duplicate parameter name.
 		require
 			parameter_name_not_void: a_parameter_name /= Void
@@ -387,13 +387,13 @@ feature -- Error handling
 			error_handler.report_error (an_error)
 		end
 
-	report_usage_message is
+	report_usage_message
 			-- Report usage message.
 		do
 			error_handler.report_info (Usage_message)
 		end
 
-	report_version_number is
+	report_version_number
 			-- Report version number.
 		local
 			a_message: UT_VERSION_NUMBER
@@ -402,7 +402,7 @@ feature -- Error handling
 			error_handler.report_info (a_message)
 		end
 
-	report_general_message (a_message_string: STRING) is
+	report_general_message (a_message_string: STRING)
 			-- Report a miscellaneous message.
 		require
 			message_not_void: a_message_string /= Void
@@ -413,7 +413,7 @@ feature -- Error handling
 			error_handler.report_error (an_error)
 		end
 
-	Usage_message: UT_USAGE_MESSAGE is
+	Usage_message: UT_USAGE_MESSAGE
 			-- Gexslt usage message.
 		once
 			create Result.make ("[--file=|--uri=]stylesheet-URI [--file=|--uri=]source-document-URI [option]* [parameter-name=value]* %N" +
@@ -466,7 +466,7 @@ feature -- Error handling
 			usage_message_not_void: Result /= Void
 		end
 
-	additional_options: STRING is
+	additional_options: STRING
 			-- Additional supported options
 		do
 
@@ -500,7 +500,7 @@ feature {NONE} -- Implementation
 	title: STRING
 			-- Target style (for use with  xml-stylesheet PIs)
 
-	set_digits (a_value: STRING) is
+	set_digits (a_value: STRING)
 			-- Set precision or decimal and integer values.
 		require
 			a_value_not_void: a_value /= Void
@@ -519,7 +519,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_option (an_option: STRING) is
+	process_option (an_option: STRING)
 			-- Process `an_option'.
 		require
 			plausible_option: an_option /= Void and then an_option.count > 0
@@ -730,7 +730,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_file (a_file: STRING) is
+	process_file (a_file: STRING)
 			-- Convert `a_file' to a URI and add it to `uris'.
 		require
 			at_least_one_character: a_file /= Void and then a_file.count > 0
@@ -741,7 +741,7 @@ feature {NONE} -- Implementation
 			uris.put_last (a_uri.full_reference)
 		end
 
-	current_directory_base: UT_URI is
+	current_directory_base: UT_URI
 			-- URI of current directory
 		local
 			a_cwd: KI_PATHNAME
@@ -750,7 +750,7 @@ feature {NONE} -- Implementation
 			Result := File_uri.pathname_to_uri (a_cwd)
 		end
 
-	process_uri (a_uri: STRING) is
+	process_uri (a_uri: STRING)
 			-- Add a URI-valued argument to `uris'.
 		require
 			at_least_one_character: a_uri /= Void and then a_uri.count > 0
@@ -761,7 +761,7 @@ feature {NONE} -- Implementation
 			uris.put_last (l_uri.full_reference)
 		end
 
-	process_file_or_uri (a_file_or_uri: STRING) is
+	process_file_or_uri (a_file_or_uri: STRING)
 			-- Process `a_file_or_uri' as a file name or a URI.
 		require
 			at_least_one_character: a_file_or_uri /= Void and then a_file_or_uri.count > 0
@@ -781,7 +781,7 @@ feature {NONE} -- Implementation
 	transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			-- Transformer factory
 
-	process_uris is
+	process_uris
 			-- Read `uris' and perform transform(s).
 		require
 			uri_list_valid: uris /= Void
@@ -851,7 +851,7 @@ feature {NONE} -- Implementation
 			no_error: not transformer_factory.was_error
 		end
 
-	perform_transformation is
+	perform_transformation
 			-- Perform transformation.
 		require
 			transformer_factory_not_void: transformer_factory /= Void
@@ -908,7 +908,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_parameters (a_transformer: XM_XSLT_TRANSFORMER) is
+	process_parameters (a_transformer: XM_XSLT_TRANSFORMER)
 			-- Set any parameters onto the transformer.
 		require
 			transformer_not_void: a_transformer /= Void
@@ -938,7 +938,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_error_script (a_script: STRING) is
+	set_error_script (a_script: STRING)
 			-- Set error script to `a_script'.
 		require
 			script_not_void: a_script /= Void
@@ -947,7 +947,7 @@ feature {NONE} -- Implementation
 			Exceptions.die (1)
 		end
 
-	set_warning_file (a_filename: STRING) is
+	set_warning_file (a_filename: STRING)
 			-- Set warning output to `a_filename'.
 		require
 			file_name_not_void: a_filename /= Void
@@ -959,7 +959,7 @@ feature {NONE} -- Implementation
 			error_handler.set_warning_file (a_file)
 		end
 
-	set_error_file (a_filename: STRING) is
+	set_error_file (a_filename: STRING)
 			-- Set error output to `a_filename'.
 		require
 			file_name_not_void: a_filename /= Void
@@ -971,7 +971,7 @@ feature {NONE} -- Implementation
 			error_handler.set_error_file (a_file)
 		end
 
-	set_errors_and_warnings (a_filename: STRING) is
+	set_errors_and_warnings (a_filename: STRING)
 			-- Set error and warning output to `a_filename'.
 		require
 			file_name_not_void: a_filename /= Void
@@ -984,7 +984,7 @@ feature {NONE} -- Implementation
 			error_handler.set_warning_file (a_file)
 		end
 
-	set_trace_file (a_filename: STRING) is
+	set_trace_file (a_filename: STRING)
 			-- Set trace output to `a_filename'.
 		require
 			file_name_not_void: a_filename /= Void
@@ -994,7 +994,7 @@ feature {NONE} -- Implementation
 			error_handler.set_info_file (trace_file)
 		end
 
-	set_warning_threshold (a_warning_threshold: STRING) is
+	set_warning_threshold (a_warning_threshold: STRING)
 			-- Set warning threhold.
 		require
 			warning_threshold_not_void: a_warning_threshold /= Void and then a_warning_threshold.count > 0
@@ -1007,7 +1007,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_error_threshold (a_error_threshold: STRING) is
+	set_error_threshold (a_error_threshold: STRING)
 			-- Set recoverable error threhold.
 		require
 			error_threshold_not_void: a_error_threshold /= Void and then a_error_threshold.count > 0
@@ -1020,7 +1020,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_trace_handler is
+	set_trace_handler
 			-- Create and set trace listener.
 		require
 			tracing_requested: is_tracing
@@ -1031,7 +1031,7 @@ feature {NONE} -- Implementation
 			configuration.set_trace_listener (a_listener)
 		end
 
-	register_output_extensions is
+	register_output_extensions
 			-- Register output extensions.
 			-- Descendants are encouraged to redefine this routine.
 		require
@@ -1046,7 +1046,7 @@ feature {NONE} -- Implementation
 			emitter_factory.register_extension_emitter_factory (another_emitter_factory)
 		end
 
-	register_extension_functions is
+	register_extension_functions
 			-- Register extension functions.
 			-- Descendants are encouraged to redefine this routine.
 		require
@@ -1058,7 +1058,7 @@ feature {NONE} -- Implementation
 			configuration.add_extension_function_library (l_function_library)
 		end
 
-	register_non_network_protocols is
+	register_non_network_protocols
 			-- Register additional URI schemes which do not access the network.
 			-- Descendants are encouraged to redefine this routine.
 		require
@@ -1072,7 +1072,7 @@ feature {NONE} -- Implementation
 			shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.register_scheme (l_stdin_resolver)
 		end
 
-	register_network_protocols is
+	register_network_protocols
 			-- Register additional URI schemes which may access the network.
 			-- Descendants are encouraged to redefine this routine.
 		require
@@ -1082,7 +1082,7 @@ feature {NONE} -- Implementation
 		do
 		end
 
-	configure_system_properties is
+	configure_system_properties
 			-- Set additional system properties in the configuration.
 			-- Descendants are encouraged to redefine this routine.
 		do
@@ -1096,7 +1096,7 @@ feature {NONE} -- HTTP basic authentication
 	password: STRING
 			-- Password for HTTP basic authentication
 
-	is_authentication_requested: BOOLEAN is
+	is_authentication_requested: BOOLEAN
 			-- Is Basic HTTP authentication requested?
 		do
 			Result := user_name /= Void and password /= Void
@@ -1104,7 +1104,7 @@ feature {NONE} -- HTTP basic authentication
 			definition: Result implies ((user_name /= Void and then not user_name.is_empty) and (password /= Void and then not password.is_empty))
 		end
 
-	set_user_name (a_name: STRING) is
+	set_user_name (a_name: STRING)
 			-- Set `user_name' to `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -1115,7 +1115,7 @@ feature {NONE} -- HTTP basic authentication
 			user_name_set: user_name = a_name
 		end
 
-	set_password (a_password: STRING) is
+	set_password (a_password: STRING)
 			-- Set `password' to `a_password'.
 		require
 			a_password_not_void: a_password /= Void

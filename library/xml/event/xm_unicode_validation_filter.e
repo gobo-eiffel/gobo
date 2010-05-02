@@ -3,14 +3,14 @@ note
 	description:
 
 		"Filters that validate unicode character classes"
-		
+
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-	
+
 class XM_UNICODE_VALIDATION_FILTER
 
 inherit
@@ -34,14 +34,14 @@ create
 
 feature -- Actions (redirected)
 
-	on_comment (a_content: STRING) is
+	on_comment (a_content: STRING)
 			-- Comment.
 		do
 			validate (a_content)
 			Precursor (a_content)
 		end
-	
-	on_processing_instruction (a_name: STRING; a_content: STRING) is
+
+	on_processing_instruction (a_name: STRING; a_content: STRING)
 			-- Processing instruction.
 		do
 			validate_name (a_name)
@@ -49,7 +49,7 @@ feature -- Actions (redirected)
 			Precursor (a_name, a_content)
 		end
 
-	on_start_tag (a_namespace, a_prefix, a_local_part: STRING) is
+	on_start_tag (a_namespace, a_prefix, a_local_part: STRING)
 			-- Start tag.
 		do
 			if has_prefix (a_prefix) then
@@ -59,7 +59,7 @@ feature -- Actions (redirected)
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
 
-	on_attribute (a_namespace, a_prefix, a_local_part: STRING; a_value: STRING) is
+	on_attribute (a_namespace, a_prefix, a_local_part: STRING; a_value: STRING)
 			-- Start of attribute.
 		do
 			if has_prefix (a_prefix) then
@@ -70,7 +70,7 @@ feature -- Actions (redirected)
 			Precursor (a_namespace, a_prefix, a_local_part, a_value)
 		end
 
-	on_content (a_content: STRING) is
+	on_content (a_content: STRING)
 			-- Text content.
 		do
 			validate (a_content)
@@ -79,7 +79,7 @@ feature -- Actions (redirected)
 
 feature {NONE} -- Validation
 
-	validate (a_string: STRING) is
+	validate (a_string: STRING)
 			-- Validate `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -89,7 +89,7 @@ feature {NONE} -- Validation
 			end
 		end
 
-	validate_name (a_name: STRING) is
+	validate_name (a_name: STRING)
 			-- Validate `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -101,7 +101,7 @@ feature {NONE} -- Validation
 
 feature {NONE} -- Constants
 
-	Error_unicode_invalid_character: STRING is "Invalid unicode character"
+	Error_unicode_invalid_character: STRING = "Invalid unicode character"
 			-- Error message
 
 end

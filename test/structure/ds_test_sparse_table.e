@@ -23,7 +23,7 @@ create
 
 feature -- Test
 
-	test_sparse_table1 is
+	test_sparse_table1
 			-- Test features of DS_SPARSE_TABLE.
 		local
 			a_table: DS_SPARSE_TABLE [INTEGER, INTEGER]
@@ -42,7 +42,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	check_integer_table1 (a_table: DS_SPARSE_TABLE [INTEGER, INTEGER]) is
+	check_integer_table1 (a_table: DS_SPARSE_TABLE [INTEGER, INTEGER])
 			-- Test features of set `a_table'.
 		require
 			a_table_not_void: a_table /= Void

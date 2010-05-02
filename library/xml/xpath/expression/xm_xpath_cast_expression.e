@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_source: XM_XPATH_EXPRESSION; a_target_type: XM_XPATH_ATOMIC_TYPE; empty_ok: BOOLEAN) is
+	make (a_source: XM_XPATH_EXPRESSION; a_target_type: XM_XPATH_ATOMIC_TYPE; empty_ok: BOOLEAN)
 			-- Establish invariant.
 		do
 			make_unary (a_source)
@@ -45,24 +45,24 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	target_type: XM_XPATH_ATOMIC_TYPE
-			-- Target type 
+			-- Target type
 
 	is_empty_allowed: BOOLEAN
 			-- Is empty sequence allowed?
 
-	is_cast_expression: BOOLEAN is
+	is_cast_expression: BOOLEAN
 			-- Is `Current' a cast expression?
 		do
 			Result := True
 		end
 
-	as_cast_expression: XM_XPATH_CAST_EXPRESSION is
+	as_cast_expression: XM_XPATH_CAST_EXPRESSION
 			-- `Current' seen as a cast expression
 		do
 			Result := Current
 		end
-	
-	item_type: XM_XPATH_ITEM_TYPE is
+
+	item_type: XM_XPATH_ITEM_TYPE
 			--Determine the data type of the expression, if possible
 		do
 			Result := target_type
@@ -74,14 +74,14 @@ feature -- Access
 
 feature -- Comparison
 
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Are `Current' and `other' the same expression?
 		local
 			other_cast: XM_XPATH_CAST_EXPRESSION
 		do
 			if other.is_cast_expression then
 				other_cast := other.as_cast_expression
-				Result := base_expression.same_expression (other_cast.base_expression) 
+				Result := base_expression.same_expression (other_cast.base_expression)
 					and then other_cast.is_empty_allowed = is_empty_allowed
 					and then other_cast.target_type = target_type
 			end
@@ -89,15 +89,15 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_node_sequence: BOOLEAN is
+	is_node_sequence: BOOLEAN
 			-- Is `Current' a sequence of zero or more nodes?
 		do
 			Result := False
 		end
 
-feature -- Optimization	
+feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_role: XM_XPATH_ROLE_LOCATOR
@@ -163,7 +163,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			base_expression.evaluate_item (a_result, a_context)
@@ -188,17 +188,17 @@ feature -- Evaluation
 
 
 feature {XM_XPATH_UNARY_EXPRESSION} -- Restricted
-	
-	display_operator: STRING is
+
+	display_operator: STRING
 			-- Format `operator' for display
 		do
 			Result := "cast as " + target_type.conventional_name
 		end
 
-	
+
 feature {NONE} -- Implementation
-	
-	compute_cardinality is
+
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			if is_empty_allowed then
@@ -208,7 +208,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	compute_special_properties is
+	compute_special_properties
 			-- Compute special properties.
 		do
 			Precursor

@@ -71,7 +71,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_and (a_string: like alias_string) is
+	make_and (a_string: like alias_string)
 			-- Create a new 'alias "and"' feature name.
 		require
 			a_string_not_void: a_string /= Void
@@ -84,7 +84,7 @@ feature {NONE} -- Initialization
 			is_infix_and: is_infix_and
 		end
 
-	make_implies (a_string: like alias_string) is
+	make_implies (a_string: like alias_string)
 			-- Create a new 'alias "implies"' feature name.
 		require
 			a_string_not_void: a_string /= Void
@@ -97,7 +97,7 @@ feature {NONE} -- Initialization
 			is_infix_implies: is_infix_implies
 		end
 
-	make_or (a_string: like alias_string) is
+	make_or (a_string: like alias_string)
 			-- Create a new 'alias "or"' feature name.
 		require
 			a_string_not_void: a_string /= Void
@@ -110,7 +110,7 @@ feature {NONE} -- Initialization
 			is_infix_or: is_infix_or
 		end
 
-	make_xor (a_string: like alias_string) is
+	make_xor (a_string: like alias_string)
 			-- Create a new 'alias "xor"' feature name.
 		require
 			a_string_not_void: a_string /= Void
@@ -123,7 +123,7 @@ feature {NONE} -- Initialization
 			is_infix_xor: is_infix_xor
 		end
 
-	make_div (a_string: like alias_string) is
+	make_div (a_string: like alias_string)
 			-- Create a new 'alias "//"' feature name.
 		require
 			a_string_not_void: a_string /= Void
@@ -136,7 +136,7 @@ feature {NONE} -- Initialization
 			is_infix_div: is_infix_div
 		end
 
-	make_divide (a_string: like alias_string) is
+	make_divide (a_string: like alias_string)
 			-- Create a new 'alias "/"' feature name.
 		require
 			a_string_not_void: a_string /= Void
@@ -149,7 +149,7 @@ feature {NONE} -- Initialization
 			is_infix_divide: is_infix_divide
 		end
 
-	make_ge (a_string: like alias_string) is
+	make_ge (a_string: like alias_string)
 			-- Create a new 'alias ">="' feature name.
 		require
 			a_string_not_void: a_string /= Void
@@ -162,7 +162,7 @@ feature {NONE} -- Initialization
 			is_infix_ge: is_infix_ge
 		end
 
-	make_gt (a_string: like alias_string) is
+	make_gt (a_string: like alias_string)
 			-- Create a new 'alias ">"' feature name.
 		require
 			a_string_not_void: a_string /= Void
@@ -175,7 +175,7 @@ feature {NONE} -- Initialization
 			is_infix_gt: is_infix_gt
 		end
 
-	make_le (a_string: like alias_string) is
+	make_le (a_string: like alias_string)
 			-- Create a new 'alias "<="' feature name.
 		require
 			a_string_not_void: a_string /= Void
@@ -188,7 +188,7 @@ feature {NONE} -- Initialization
 			is_infix_le: is_infix_le
 		end
 
-	make_lt (a_string: like alias_string) is
+	make_lt (a_string: like alias_string)
 			-- Create a new 'alias "<"' feature name.
 		require
 			a_string_not_void: a_string /= Void
@@ -201,7 +201,7 @@ feature {NONE} -- Initialization
 			is_infix_lt: is_infix_lt
 		end
 
-	make_minus (a_string: like alias_string) is
+	make_minus (a_string: like alias_string)
 			-- Create a new 'alias "-"' feature name.
 		require
 			a_string_not_void: a_string /= Void
@@ -214,7 +214,7 @@ feature {NONE} -- Initialization
 			is_infix_minus: is_infix_minus
 		end
 
-	make_mod (a_string: like alias_string) is
+	make_mod (a_string: like alias_string)
 			-- Create a new 'alias "\\"' feature name.
 		require
 			a_string_not_void: a_string /= Void
@@ -227,7 +227,7 @@ feature {NONE} -- Initialization
 			is_infix_mod: is_infix_mod
 		end
 
-	make_plus (a_string: like alias_string) is
+	make_plus (a_string: like alias_string)
 			-- Create a new 'alias "+"' feature name.
 		require
 			a_string_not_void: a_string /= Void
@@ -240,7 +240,7 @@ feature {NONE} -- Initialization
 			is_infix_plus: is_infix_plus
 		end
 
-	make_power (a_string: like alias_string) is
+	make_power (a_string: like alias_string)
 			-- Create a new 'alias "^"' feature name.
 		require
 			a_string_not_void: a_string /= Void
@@ -253,7 +253,7 @@ feature {NONE} -- Initialization
 			is_infix_power: is_infix_power
 		end
 
-	make_times (a_string: like alias_string) is
+	make_times (a_string: like alias_string)
 			-- Create a new 'alias "*"' feature name.
 		require
 			a_string_not_void: a_string /= Void
@@ -266,7 +266,7 @@ feature {NONE} -- Initialization
 			is_infix_times: is_infix_times
 		end
 
-	make_and_then (a_string: like alias_string) is
+	make_and_then (a_string: like alias_string)
 			-- Create a new 'alias "and then"' feature name.
 		require
 			a_string_not_void: a_string /= Void
@@ -279,7 +279,7 @@ feature {NONE} -- Initialization
 			is_infix_and_then: is_infix_and_then
 		end
 
-	make_or_else (a_string: like alias_string) is
+	make_or_else (a_string: like alias_string)
 			-- Create a new 'alias "or else"' feature name.
 		require
 			a_string_not_void: a_string /= Void
@@ -292,7 +292,7 @@ feature {NONE} -- Initialization
 			is_infix_or_else: is_infix_or_else
 		end
 
-	make_dotdot (a_string: like alias_string) is
+	make_dotdot (a_string: like alias_string)
 			-- Create a new 'alias ".."' feature name.
 		require
 			a_string_not_void: a_string /= Void
@@ -305,7 +305,7 @@ feature {NONE} -- Initialization
 			is_infix_dotdot: is_infix_dotdot
 		end
 
-	make_not (a_string: like alias_string) is
+	make_not (a_string: like alias_string)
 			-- Create a new 'alias "not"' feature name.
 		require
 			a_string_not_void: a_string /= Void
@@ -318,7 +318,7 @@ feature {NONE} -- Initialization
 			is_prefix_not: is_prefix_not
 		end
 
-	make_bracket (a_string: like alias_string) is
+	make_bracket (a_string: like alias_string)
 			-- Create a new 'alias "[]"' feature name.
 		require
 			a_string_not_void: a_string /= Void
@@ -333,157 +333,157 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_alias: BOOLEAN is
+	is_alias: BOOLEAN
 			-- Is current feature name of the form 'alias "..."'?
 		do
 			Result := True
 		end
 
-	is_bracket: BOOLEAN is
+	is_bracket: BOOLEAN
 			-- Is current feature name of the form 'alias "[]"'?
 		do
 			Result := (code = tokens.alias_bracket_code)
 		end
 
-	is_infix: BOOLEAN is
+	is_infix: BOOLEAN
 			-- Is current feature name of the form 'infix ...'?
 		do
 			Result := (code >= tokens.min_infix_code and code <= tokens.max_infix_code)
 		end
 
-	is_infix_and: BOOLEAN is
+	is_infix_and: BOOLEAN
 			-- Is current feature name of the form 'infix "and"'?
 		do
 			Result := (code = tokens.infix_and_code)
 		end
 
-	is_infix_and_then: BOOLEAN is
+	is_infix_and_then: BOOLEAN
 			-- Is current feature name of the form 'infix "and then"'?
 		do
 			Result := (code = tokens.infix_and_then_code)
 		end
 
-	is_infix_div: BOOLEAN is
+	is_infix_div: BOOLEAN
 			-- Is current feature name of the form 'infix "//"'?
 		do
 			Result := (code = tokens.infix_div_code)
 		end
 
-	is_infix_divide: BOOLEAN is
+	is_infix_divide: BOOLEAN
 			-- Is current feature name of the form 'infix "/"'?
 		do
 			Result := (code = tokens.infix_divide_code)
 		end
 
-	is_infix_dotdot: BOOLEAN is
+	is_infix_dotdot: BOOLEAN
 			-- Is current feature name of the form 'infix ".."'?
 		do
 			Result := (code = tokens.infix_dotdot_code)
 		end
 
-	is_infix_ge: BOOLEAN is
+	is_infix_ge: BOOLEAN
 			-- Is current feature name of the form 'infix ">="'?
 		do
 			Result := (code = tokens.infix_ge_code)
 		end
 
-	is_infix_gt: BOOLEAN is
+	is_infix_gt: BOOLEAN
 			-- Is current feature name of the form 'infix ">"'?
 		do
 			Result := (code = tokens.infix_gt_code)
 		end
 
-	is_infix_implies: BOOLEAN is
+	is_infix_implies: BOOLEAN
 			-- Is current feature name of the form 'infix "implies"'?
 		do
 			Result := (code = tokens.infix_implies_code)
 		end
 
-	is_infix_le: BOOLEAN is
+	is_infix_le: BOOLEAN
 			-- Is current feature name of the form 'infix "<="'?
 		do
 			Result := (code = tokens.infix_le_code)
 		end
 
-	is_infix_lt: BOOLEAN is
+	is_infix_lt: BOOLEAN
 			-- Is current feature name of the form 'infix "<"'?
 		do
 			Result := (code = tokens.infix_lt_code)
 		end
 
-	is_infix_minus: BOOLEAN is
+	is_infix_minus: BOOLEAN
 			-- Is current feature name of the form 'infix "-"'?
 		do
 			Result := (code = tokens.infix_minus_code)
 		end
 
-	is_infix_mod: BOOLEAN is
+	is_infix_mod: BOOLEAN
 			-- Is current feature name of the form 'infix "\\"'?
 		do
 			Result := (code = tokens.infix_mod_code)
 		end
 
-	is_infix_or: BOOLEAN is
+	is_infix_or: BOOLEAN
 			-- Is current feature name of the form 'infix "or"'?
 		do
 			Result := (code = tokens.infix_or_code)
 		end
 
-	is_infix_or_else: BOOLEAN is
+	is_infix_or_else: BOOLEAN
 			-- Is current feature name of the form 'infix "or else"'?
 		do
 			Result := (code = tokens.infix_or_else_code)
 		end
 
-	is_infix_plus: BOOLEAN is
+	is_infix_plus: BOOLEAN
 			-- Is current feature name of the form 'infix "+"'?
 		do
 			Result := (code = tokens.infix_plus_code)
 		end
 
-	is_infix_power: BOOLEAN is
+	is_infix_power: BOOLEAN
 			-- Is current feature name of the form 'infix "^"'?
 		do
 			Result := (code = tokens.infix_power_code)
 		end
 
-	is_infix_times: BOOLEAN is
+	is_infix_times: BOOLEAN
 			-- Is current feature name of the form 'infix "*"'?
 		do
 			Result := (code = tokens.infix_times_code)
 		end
 
-	is_infix_xor: BOOLEAN is
+	is_infix_xor: BOOLEAN
 			-- Is current feature name of the form 'infix "xor"'?
 		do
 			Result := (code = tokens.infix_xor_code)
 		end
 
-	is_prefix: BOOLEAN is
+	is_prefix: BOOLEAN
 			-- Is current feature name of the form 'prefix ...'?
 		do
 			Result := (code >= tokens.min_prefix_code and code <= tokens.max_prefix_code)
 		end
 
-	is_prefix_minus: BOOLEAN is
+	is_prefix_minus: BOOLEAN
 			-- Is current feature name of the form 'prefix "-"'?
 		do
 			Result := (code = tokens.prefix_minus_code)
 		end
 
-	is_prefix_plus: BOOLEAN is
+	is_prefix_plus: BOOLEAN
 			-- Is current feature name of the form 'prefix "+"'?
 		do
 			Result := (code = tokens.prefix_plus_code)
 		end
 
-	is_prefix_not: BOOLEAN is
+	is_prefix_not: BOOLEAN
 			-- Is current feature name of the form 'prefix "not"'?
 		do
 			Result := (code = tokens.prefix_not_code)
 		end
 
-	is_prefixable: BOOLEAN is
+	is_prefixable: BOOLEAN
 			-- Can current alias be used as the name of a prefix feature?
 		do
 			Result := is_prefix or is_infix_plus or is_infix_minus
@@ -491,7 +491,7 @@ feature -- Status report
 			is_prefix: is_prefix implies Result
 		end
 
-	is_infixable: BOOLEAN is
+	is_infixable: BOOLEAN
 			-- Can current alias be used as the name of an infix feature?
 		do
 			Result := is_infix or is_prefix_plus or is_prefix_minus
@@ -501,13 +501,13 @@ feature -- Status report
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Name of feature
 		do
 			Result := alias_name
 		end
 
-	alias_name: STRING is
+	alias_name: STRING
 			-- Name of alias
 		do
 			inspect code
@@ -564,14 +564,14 @@ feature -- Access
 			alias_name_not_empty: Result.count > 0
 		end
 
-	lower_name: STRING is
+	lower_name: STRING
 			-- Lower-name of feature call
 			-- (May return the same object as `name' if already in lower case.)
 		do
 			Result := name
 		end
 
-	alias_lower_name: STRING is
+	alias_lower_name: STRING
 			-- Lower-name of alias
 			-- (May return the same object as `alias_name' if already in lower case.)
 		do
@@ -582,7 +582,7 @@ feature -- Access
 			definition: Result.is_equal (alias_name.as_lower)
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code
 		do
 			Result := code.code
@@ -594,7 +594,7 @@ feature -- Access
 	alias_string: ET_MANIFEST_STRING
 			-- Name of alias
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -604,19 +604,19 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := alias_keyword
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := alias_string
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := alias_string.break
@@ -624,7 +624,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_alias_keyword (an_alias: like alias_keyword) is
+	set_alias_keyword (an_alias: like alias_keyword)
 			-- Set `alias_keyword' to `an_alias'.
 		require
 			an_alias_not_void: an_alias /= Void
@@ -636,7 +636,7 @@ feature -- Setting
 
 feature -- Status setting
 
-	set_prefix is
+	set_prefix
 			-- Set current alias to prefix.
 		require
 			is_prefixable: is_prefixable
@@ -653,7 +653,7 @@ feature -- Status setting
 			is_prefix: is_prefix
 		end
 
-	set_infix is
+	set_infix
 			-- Set current alias to infix.
 		require
 			is_infixable: is_infixable
@@ -672,7 +672,7 @@ feature -- Status setting
 
 feature -- Comparison
 
-	same_call_name (other: ET_CALL_NAME): BOOLEAN is
+	same_call_name (other: ET_CALL_NAME): BOOLEAN
 			-- Are `Current' and `other' the same names of the same feature?
 			-- (case insensitive)
 		do
@@ -730,7 +730,7 @@ feature -- Comparison
 			end
 		end
 
-	same_alias_name (other: ET_ALIAS_NAME): BOOLEAN is
+	same_alias_name (other: ET_ALIAS_NAME): BOOLEAN
 			-- Are `Current' and `other' the same alias name?
 			-- Do not take "infix" and "prefix" properties into account.
 		require
@@ -758,7 +758,7 @@ feature -- Comparison
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_alias_name (Current)
@@ -766,7 +766,7 @@ feature -- Processing
 
 feature {NONE} -- Implementation
 
-	default_keyword: ET_KEYWORD is
+	default_keyword: ET_KEYWORD
 			-- Default keyword
 		once
 			Result := tokens.alias_keyword

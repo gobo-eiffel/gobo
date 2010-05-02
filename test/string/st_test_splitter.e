@@ -25,7 +25,7 @@ create
 
 feature -- Testing
 
-	test_simple is
+	test_simple
 			-- Simple test case.
 		do
 			create split.make
@@ -33,7 +33,7 @@ feature -- Testing
 			assert_split ("aabbcc", "aa bb cc", <<"aa", "bb","cc">>)
 		end
 
-	test_single is
+	test_single
 			-- Single token cases.
 		do
 			create split.make
@@ -42,15 +42,15 @@ feature -- Testing
 			assert_split ("left_separator", "a %T%R", <<"a">>)
 		end
 
-	test_no_escape is
+	test_no_escape
 			-- Test default no escape with common escape chars.
 		do
 			create split.make
 			assert_split ("backslash", "a\ b", << "a\", "b">>)
-			assert_split ("percent", "a%% b", << "a%%", "b">>) 
+			assert_split ("percent", "a%% b", << "a%%", "b">>)
 		end
 
-	test_escape is
+	test_escape
 			-- Test handling of escape character.
 		do
 			create split.make
@@ -66,7 +66,7 @@ feature -- Testing
 			assert_split ("escape_escape_before_separator", "a\\ b", <<"a\", "b">>)
 		end
 
-	test_empty is
+	test_empty
 			-- Empty case.
 		local
 			a_list: DS_LINKED_LIST [STRING]
@@ -79,7 +79,7 @@ feature -- Testing
 			assert_equal ("empty_join", "", split.join (a_list))
 		end
 
-	test_split_single is
+	test_split_single
 			-- Split were single character considered separator.
 		do
 			create split.make
@@ -92,7 +92,7 @@ feature -- Testing
 			assert_split_greedy ("single_separator", ",", <<"", "">>)
 		end
 
-	test_join is
+	test_join
 			-- Test join operation.
 		do
 			create split.make
@@ -102,7 +102,7 @@ feature -- Testing
 			assert_join ("join", <<"a", "b">>, "a b")
 		end
 
-	test_join_escape is
+	test_join_escape
 			-- Test join operation with escaping.
 		do
 			create split.make
@@ -113,7 +113,7 @@ feature -- Testing
 			assert_join ("escape", <<"a", "c\\\">>, "a c\\\\\\")
 		end
 
-	test_join_unescaped is
+	test_join_unescaped
 			-- Test join unescaped.
 		do
 			create split.make
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 	split: ST_SPLITTER
 			-- Object being tested
 
-	assert_split (a_tag: STRING; a_in: STRING; a_result: ARRAY [STRING]) is
+	assert_split (a_tag: STRING; a_in: STRING; a_result: ARRAY [STRING])
 			-- Test case for `split'.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 			assert_list_equal (a_tag, a_list, a_result)
 		end
 
-	assert_split_greedy (a_tag: STRING; a_in: STRING; a_result: ARRAY [STRING]) is
+	assert_split_greedy (a_tag: STRING; a_in: STRING; a_result: ARRAY [STRING])
 			-- Test case for `split_greedy'.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 			assert_list_equal (a_tag, a_list, a_result)
 		end
 
-	assert_list_equal (a_tag: STRING; a_list: DS_LIST [STRING]; a_result: ARRAY [STRING]) is
+	assert_list_equal (a_tag: STRING; a_list: DS_LIST [STRING]; a_result: ARRAY [STRING])
 			-- Assert list equal result.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	assert_join (a_tag: STRING; an_array: ARRAY [STRING]; a_result: STRING) is
+	assert_join (a_tag: STRING; an_array: ARRAY [STRING]; a_result: STRING)
 			-- Test case for `join'.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 			assert_strings_equal (a_tag, a_result, split.join (a_list))
 		end
 
-	assert_join_unescaped (a_tag: STRING; an_array: ARRAY [STRING]; a_result: STRING) is
+	assert_join_unescaped (a_tag: STRING; an_array: ARRAY [STRING]; a_result: STRING)
 			-- Test case for `join_unescaped'.
 		require
 			a_tag_not_void: a_tag /= Void

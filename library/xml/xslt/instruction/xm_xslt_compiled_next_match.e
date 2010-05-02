@@ -11,7 +11,7 @@ note
 class XM_XSLT_COMPILED_NEXT_MATCH
 
 inherit
-	
+
 	XM_XSLT_COMPILED_APPLY_IMPORTS
 		redefine
 			generate_tail_call
@@ -23,7 +23,7 @@ create
 
 feature -- Evaluation
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_transformer: XM_XSLT_TRANSFORMER
@@ -34,10 +34,10 @@ feature -- Evaluation
 			l_template: XM_XSLT_COMPILED_TEMPLATE
 			l_current_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			l_other_context: XM_XSLT_EVALUATION_CONTEXT
-			
+
 		do
 			l_transformer := a_context.transformer
-			
+
 			-- handle any parameters
 
 			l_parameters := assembled_parameters (a_context, actual_parameters)
@@ -69,9 +69,9 @@ feature -- Evaluation
 						if l_transformer.is_error then
 							-- nothing to do
 						elseif l_rule = Void then
-							
+
 							-- Use the default action for the node.
-							
+
 							perform_default_action (l_current_iterator.item.as_node, l_parameters, l_tunnel_parameters, a_context)
 						else
 							l_template := l_rule.handler.as_template
@@ -92,4 +92,4 @@ invariant
 	tunnel_parameters_not_void: initialized implies tunnel_parameters /= Void
 
 end
-	
+

@@ -21,7 +21,7 @@ create
 
 feature -- Test
 
-	test_and_then is
+	test_and_then
 			-- Test scope of object-test local when part of a semi-strict term of
 			-- a conjunctive expression. ECMA-367-2, 8.24.5-1.
 		do
@@ -31,7 +31,7 @@ feature -- Test
 			assert ("and_then4", not (not {x4: STRING} "gobo" or 1 /= 1) and then not x4.is_empty)
 		end
 
-	test_implies is
+	test_implies
 			-- Test scope of object-test local when part of a term of
 			-- an implicative expression. ECMA-367-2, 8.24.5-2.
 		do
@@ -41,7 +41,7 @@ feature -- Test
 			assert ("implies4", not (not {x4: STRING} "gobo" or 1 /= 1) implies not x4.is_empty)
 		end
 
-	test_or_else is
+	test_or_else
 			-- Test scope of object-test local when part of a semi-strict term of
 			-- a disjunctive expression. ECMA-367-2, 8.24.5-3.
 		do
@@ -51,7 +51,7 @@ feature -- Test
 			assert ("or_else4", (not {x4: STRING} "gobo" or 1 /= 1) or else not x4.is_empty)
 		end
 
-	test_if is
+	test_if
 			-- Test scope of object-test local when part of conditional of if instruction.
 			-- ECMA-367-2, 8.24.5-4 and 8.24.5-5.
 		do
@@ -67,7 +67,7 @@ feature -- Test
 			end
 		end
 
-	test_elseif is
+	test_elseif
 			-- Test scope of object-test local when part of conditional of elseif branches.
 			-- ECMA-367-2, 8.24.5-4 and 8.24.5-5.
 		do
@@ -92,7 +92,7 @@ feature -- Test
 			end
 		end
 
-	test_loop is
+	test_loop
 			-- Test scope of object-test local when part of exit clause of loop instruction.
 			-- ECMA-367-2, 8.24.5-6.
 		local

@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new empty agent actual argument list.
 		do
 			left_parenthesis := tokens.left_parenthesis_symbol
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			precursor
 		end
 
-	make_with_capacity (nb: INTEGER) is
+	make_with_capacity (nb: INTEGER)
 			-- Create a new empty agent actual argument list with capacity `nb'.
 		do
 			left_parenthesis := tokens.left_parenthesis_symbol
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset actual arguments as they were when they were last parsed.
 		local
 			l_actual: ET_AGENT_ARGUMENT_OPERAND_ITEM
@@ -79,7 +79,7 @@ feature -- Initialization
 
 feature -- Access
 
-	actual_argument (i: INTEGER): ET_AGENT_ARGUMENT_OPERAND is
+	actual_argument (i: INTEGER): ET_AGENT_ARGUMENT_OPERAND
 			-- Actual argument at index `i' in list
 		do
 			Result := item (i).agent_actual_argument
@@ -91,7 +91,7 @@ feature -- Access
 	right_parenthesis: ET_SYMBOL
 			-- Right parenthesis
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -101,19 +101,19 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := left_parenthesis
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := right_parenthesis
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := right_parenthesis.break
@@ -121,7 +121,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_left_parenthesis (l: like left_parenthesis) is
+	set_left_parenthesis (l: like left_parenthesis)
 			-- Set `left_parenthesis' to `l'.
 		require
 			l_not_void: l /= Void
@@ -131,7 +131,7 @@ feature -- Setting
 			left_parenthesis_set: left_parenthesis = l
 		end
 
-	set_right_parenthesis (r: like right_parenthesis) is
+	set_right_parenthesis (r: like right_parenthesis)
 			-- Set `right_parenthesis' to `r'.
 		require
 			r_not_void: r /= Void
@@ -143,7 +143,7 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_AGENT_ARGUMENT_OPERAND_ITEM] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_AGENT_ARGUMENT_OPERAND_ITEM]
 			-- Fixed array routines
 		once
 			create Result
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_agent_argument_operand_list (Current)

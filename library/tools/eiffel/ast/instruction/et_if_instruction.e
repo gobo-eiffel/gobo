@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_conditional: like conditional; a_compound: like then_compound) is
+	make (a_conditional: like conditional; a_compound: like then_compound)
 			-- Create a new if instruction.
 		require
 			a_conditional_not_void: a_conditional /= Void
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset instruction as it was just after it was last parsed.
 		do
 			expression.reset
@@ -60,7 +60,7 @@ feature -- Access
 	conditional: ET_CONDITIONAL
 			-- Condition
 
-	expression: ET_EXPRESSION is
+	expression: ET_EXPRESSION
 			-- Boolean expression
 		do
 			Result := conditional.expression
@@ -80,26 +80,26 @@ feature -- Access
 	end_keyword: ET_KEYWORD
 			-- 'end' keyword
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
 			Result := conditional.position
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := conditional.first_leaf
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := end_keyword
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := end_keyword.break
@@ -107,7 +107,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_elseif_parts (an_elseif_parts: like elseif_parts) is
+	set_elseif_parts (an_elseif_parts: like elseif_parts)
 			-- Set `elseif_parts' to `an_elseif_parts'.
 		do
 			elseif_parts := an_elseif_parts
@@ -115,7 +115,7 @@ feature -- Setting
 			elseif_parts_set: elseif_parts = an_elseif_parts
 		end
 
-	set_else_compound (a_compound: like else_compound) is
+	set_else_compound (a_compound: like else_compound)
 			-- Set `else_compound' to `a_compound'.
 		do
 			else_compound := a_compound
@@ -123,7 +123,7 @@ feature -- Setting
 			else_compound_set: else_compound = a_compound
 		end
 
-	set_end_keyword (an_end: like end_keyword) is
+	set_end_keyword (an_end: like end_keyword)
 			-- Set `end_keyword' to `an_end'.
 		require
 			an_end_not_void: an_end /= Void
@@ -135,7 +135,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_if_instruction (Current)

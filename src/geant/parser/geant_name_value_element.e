@@ -22,7 +22,7 @@ create
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Value of xml attribute named `Name_attribute_name' of `xml_element'
 		require
 			has_name: has_name
@@ -32,7 +32,7 @@ feature -- Access
 			name_not_void: name /= Void
 		end
 
-	value: STRING is
+	value: STRING
 			-- Value of xml attribute named `Value_attribute_name' of `xml_element'
 		require
 			has_value: has_value
@@ -44,13 +44,13 @@ feature -- Access
 
 feature -- Status report
 
-	has_name: BOOLEAN is
+	has_name: BOOLEAN
 			-- Does `xml_element' has an attribute named `Name_attribute_name'
 		do
 			Result := has_attribute (Name_attribute_name)
 		end
 
-	has_value: BOOLEAN is
+	has_value: BOOLEAN
 			-- Does `xml_element' has an attribute named `Value_attribute_name'
 		do
 			Result := has_attribute (Value_attribute_name)
@@ -58,7 +58,7 @@ feature -- Status report
 
 feature {NONE} -- Constants
 
-	Name_attribute_name: STRING is
+	Name_attribute_name: STRING
 			-- "name" attribute name
 		once
 			Result := "name"
@@ -67,7 +67,7 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Value_attribute_name: STRING is
+	Value_attribute_name: STRING
 			-- Name of xml attribute "value" of subelement <define>
 		once
 			Result := "value"

@@ -11,9 +11,9 @@ note
 	revision: "$Revision$"
 
 class XM_XPATH_TREE_PROCESSING_INSTRUCTION
-	
+
 inherit
-	
+
 	XM_XPATH_PROCESSING_INSTRUCTION
 		undefine
 			document_element, next_sibling, previous_sibling, base_uri, local_part, is_tree_node, as_tree_node
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_document: XM_XPATH_TREE_DOCUMENT; a_name_code: INTEGER; a_string_value: STRING) is
+	make (a_document: XM_XPATH_TREE_DOCUMENT; a_name_code: INTEGER; a_string_value: STRING)
 			-- Establish invariant.
 		require
 			string_value_not_void: a_string_value /= Void
@@ -62,7 +62,7 @@ feature -- Access
 	name_code: INTEGER
 			-- Name code this node - used in displaying names
 
-	base_uri: STRING is
+	base_uri: STRING
 			-- Base URI
 		local
 			l_initial_system_id: STRING
@@ -82,7 +82,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_location (a_system_id: STRING; a_line_number: INTEGER) is
+	set_location (a_system_id: STRING; a_line_number: INTEGER)
 			-- Set location information.
 		require
 			system_id_not_void: a_system_id /= void
@@ -96,19 +96,19 @@ feature -- Status setting
 
 feature -- Duplication
 
-	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
+	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN)
 			-- Copy `Current' to `a_receiver'.
 		do
 			a_receiver.notify_processing_instruction (node_name, string_value, 0)
 		end
-		
+
 feature {XM_XPATH_NODE} -- Restricted
 
-	is_possible_child: BOOLEAN is
+	is_possible_child: BOOLEAN
 			-- Can this node be a child of a document or element node?
 		do
 			Result := True
 		end
 
 end
-	
+

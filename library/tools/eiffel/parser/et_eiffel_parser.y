@@ -4199,7 +4199,7 @@ Add_counter: { add_counter }
 
 feature -- Parsing
 
-	yyparse is
+	yyparse
 			-- (NOTE: THIS IS THE COPY/PASTE VERSION OF THE CODE IN
 			-- THE YY_PARSER_SKELETON CLASS, FOR OPTIMISATION WITH
 			-- ISE EIFFEL (ALLOW INLINING NOT POSSIBLE IN

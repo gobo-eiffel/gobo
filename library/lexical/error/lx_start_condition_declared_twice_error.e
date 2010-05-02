@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER; sc: STRING) is
+	make (filename: STRING; line: INTEGER; sc: STRING)
 			-- Create a new error reporting that
 			-- `sc' has been declared twice.
 		require
@@ -37,10 +37,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: start condition $3 declared twice"
+	default_template: STRING = "%"$1%", line $2: start condition $3 declared twice"
 			-- Default template used to built the error message
 
-	code: STRING is "LX0017"
+	code: STRING = "LX0017"
 			-- Error code
 
 invariant

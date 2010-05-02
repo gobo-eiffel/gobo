@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class_name: like class_name; a_feature_name: like feature_name; a_external_name: like external_name) is
+	make (a_class_name: like class_name; a_feature_name: like feature_name; a_external_name: like external_name)
 				-- Create a new exported feature.
 		require
 			a_class_name_not_void: a_class_name /= Void

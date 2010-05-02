@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new built-in group for the class "*UNKNOWN*".
 		do
 			name := "unknown"
@@ -36,12 +36,12 @@ feature {NONE} -- Initialization
 
 feature -- status report
 
-	is_unknown: BOOLEAN is True
+	is_unknown: BOOLEAN = True
 			-- Is current group a built-in group for class "*UNKNOWN*"?
 
 feature -- Access
 
-	universe: ET_UNIVERSE is
+	universe: ET_UNIVERSE
 			-- Surrounding universe
 		do
 			Result := tokens.unknown_system

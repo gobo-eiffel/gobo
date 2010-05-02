@@ -22,50 +22,50 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Do nothing.
 		do
 		end
 
 feature -- Document type definuition callbacks
 
-	on_doctype (a_name: STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN) is
+	on_doctype (a_name: STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN)
 			-- Document type declaration.
 		do
 		end
 
-	on_element_declaration (a_name: STRING; a_model: XM_DTD_ELEMENT_CONTENT) is
+	on_element_declaration (a_name: STRING; a_model: XM_DTD_ELEMENT_CONTENT)
 			-- Element declaration.
 		do
 		end
 
-	on_attribute_declaration (an_element_name, a_name: STRING; a_model: XM_DTD_ATTRIBUTE_CONTENT) is
+	on_attribute_declaration (an_element_name, a_name: STRING; a_model: XM_DTD_ATTRIBUTE_CONTENT)
 			-- Attribute declaration, one event per attribute.
 		do
 		end
 
 	on_entity_declaration (entity_name: STRING; is_parameter: BOOLEAN; value: STRING;
-		an_id: XM_DTD_EXTERNAL_ID; notation_name: STRING) is
+		an_id: XM_DTD_EXTERNAL_ID; notation_name: STRING)
 			-- Entity declaration.
 		do
 		end
 
-	on_notation_declaration (notation_name: STRING; an_id: XM_DTD_EXTERNAL_ID) is
+	on_notation_declaration (notation_name: STRING; an_id: XM_DTD_EXTERNAL_ID)
 			-- Notation declaration.
 		do
 		end
 
-	on_dtd_processing_instruction (a_name, a_content: STRING) is
+	on_dtd_processing_instruction (a_name, a_content: STRING)
 			-- PI.
 		do
 		end
 
-	on_dtd_comment (a_content: STRING) is
+	on_dtd_comment (a_content: STRING)
 			-- Comment.
 		do
 		end
 
-	on_dtd_end is
+	on_dtd_end
 			-- End of DTD.
 		do
 		end

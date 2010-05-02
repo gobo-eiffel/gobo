@@ -28,29 +28,29 @@ inherit
 
 feature -- Access
 
-	source_name: STRING is
+	source_name: STRING
 			-- Name of source.
 		deferred
 		end
-		
-	byte_index: INTEGER is
+
+	byte_index: INTEGER
 			-- Byte index of token in stream
 		deferred
 		end
 
-	column: INTEGER is
+	column: INTEGER
 			-- Column of token in stream
 		deferred
 		end
 
-	row: INTEGER is
+	row: INTEGER
 			-- Row of token in stream
 		deferred
 		end
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Textual representation
 		do
 			create Result.make_empty
@@ -65,12 +65,12 @@ feature -- Output
 		end
 
 feature -- Obsolete
-			
-	source: XM_SOURCE is
+
+	source: XM_SOURCE
 			-- Source from where position is taken
 		obsolete "Use source_name"
 		do
-				-- The ID is likely to be only a relative id or '-', 
+				-- The ID is likely to be only a relative id or '-',
 				-- but should be sufficient for an obsolete routine.
 			create {XM_DEFAULT_URI_SOURCE} Result.make (source_name)
 		end
@@ -81,5 +81,5 @@ invariant
 	byte_index_positive: byte_index >= 0
 	column_positive: column >= 0
 	row_positive: row >= 0
-	
+
 end

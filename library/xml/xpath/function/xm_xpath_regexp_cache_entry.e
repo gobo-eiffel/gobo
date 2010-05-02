@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_pattern, a_flags_string: STRING) is
+	make (a_pattern, a_flags_string: STRING)
 			-- Establish invariant.
 		require
 			pattern_not_void: a_pattern /= Void
@@ -49,7 +49,7 @@ feature -- Access
 	regexp: RX_PCRE_REGULAR_EXPRESSION
 			-- Compiled regular expression
 
-	has_match_record (an_input_string: STRING): BOOLEAN is
+	has_match_record (an_input_string: STRING): BOOLEAN
 			-- Does `Current' have a previous match for `an_input_string'?
 		require
 			input_string_not_void: an_input_string /= Void
@@ -58,7 +58,7 @@ feature -- Access
 			Result := match_records.has (an_input_string)
 		end
 
-	match_record (an_input_string: STRING): XM_XPATH_REGEXP_MATCH_RECORD is
+	match_record (an_input_string: STRING): XM_XPATH_REGEXP_MATCH_RECORD
 			-- Possible previous match against `an_input_string'
 		require
 			input_string_not_void: an_input_string /= Void
@@ -78,7 +78,7 @@ feature -- Status report
 
 feature -- Element change
 
-	add_splitting_match (an_input_string: STRING; some_tokens: ARRAY [STRING]) is
+	add_splitting_match (an_input_string: STRING; some_tokens: ARRAY [STRING])
 			-- Add a splitting match record.
 		require
 			input_string_not_void: an_input_string /= Void
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 	match_records: DS_HASH_TABLE [XM_XPATH_REGEXP_MATCH_RECORD, STRING]
 			-- Records of previous matches
 
-	set_flags (a_flags_string: STRING) is
+	set_flags (a_flags_string: STRING)
 			-- Set regular expression flags.
 		require
 			flag_string_not_void: a_flags_string /= Void

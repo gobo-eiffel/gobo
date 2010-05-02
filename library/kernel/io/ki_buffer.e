@@ -14,7 +14,7 @@ deferred class KI_BUFFER [G]
 
 feature -- Access
 
-	item (i: INTEGER): G is
+	item (i: INTEGER): G
 			-- Item at position `i'
 		require
 			i_large_enough: i >= 1
@@ -35,7 +35,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items in buffer
 		deferred
 		ensure
@@ -44,7 +44,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	put (v: G; i: INTEGER) is
+	put (v: G; i: INTEGER)
 			-- Replace item at position `i' by `v'.
 		require
 			i_large_enough: i >= 1
@@ -58,7 +58,7 @@ feature -- Element change
 			inserted: item (i) = v
 		end
 
-	fill_from_stream (a_stream: KI_INPUT_STREAM [G]; pos, nb: INTEGER): INTEGER is
+	fill_from_stream (a_stream: KI_INPUT_STREAM [G]; pos, nb: INTEGER): INTEGER
 			-- Fill buffer, starting at position `pos', with
 			-- at most `nb' items read from `a_stream'.
 			-- Return the number of items actually read.
@@ -77,7 +77,7 @@ feature -- Element change
 			not_end_of_input: not a_stream.end_of_input implies Result > 0
 		end
 
-	move_left (old_pos, new_pos: INTEGER; nb: INTEGER) is
+	move_left (old_pos, new_pos: INTEGER; nb: INTEGER)
 			-- Copy `nb' items from `old_pos' to
 			-- `new_pos' in buffer.
 		require
@@ -105,7 +105,7 @@ feature -- Element change
 			end
 		end
 
-	move_right (old_pos, new_pos: INTEGER; nb: INTEGER) is
+	move_right (old_pos, new_pos: INTEGER; nb: INTEGER)
 			-- Copy `nb' items from `old_pos' to
 			-- `new_pos' in buffer.
 		require
@@ -134,7 +134,7 @@ feature -- Element change
 
 feature -- Resizing
 
-	resize (n: INTEGER) is
+	resize (n: INTEGER)
 			-- Resize buffer so that it contains `n' items.
 			-- Do not lose any previously entered items.
 		require

@@ -14,7 +14,7 @@ class ET_SHARED_IDENTIFIER_TESTER
 
 feature -- Access
 
-	identifier_tester: ET_IDENTIFIER_TESTER is
+	identifier_tester: ET_IDENTIFIER_TESTER
 			-- Identifier equality tester
 		once
 			create Result

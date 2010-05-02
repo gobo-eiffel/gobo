@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new error reporting that the use
 			-- of reject is incompatible with full tables.
 		do
@@ -31,10 +31,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "$0: `reject' cannot be used with -f"
+	default_template: STRING = "$0: `reject' cannot be used with -f"
 			-- Default template used to built the error message
 
-	code: STRING is "LX0028"
+	code: STRING = "LX0028"
 			-- Error code
 
 invariant

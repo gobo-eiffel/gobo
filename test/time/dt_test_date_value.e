@@ -23,7 +23,7 @@ create
 
 feature -- Test
 
-	test_year_month_day is
+	test_year_month_day
 			-- Test features `year', `month' and `day' of class DT_DATE_VALUE.
 		local
 			dv: DT_DATE_VALUE
@@ -56,13 +56,13 @@ feature -- Test
 			assert_integers_equal ("year7", 3, dv.year)
 			assert_integers_equal ("month7", -12, dv.month)
 			assert_integers_equal ("day7", 123, dv.day)
-			create {DT_DATE_TIME_DURATION} dv.make_precise (0, 3, 2, 0, 4, 3, 456) 
+			create {DT_DATE_TIME_DURATION} dv.make_precise (0, 3, 2, 0, 4, 3, 456)
 			assert_integers_equal ("year8", 0, dv.year)
 			assert_integers_equal ("month8", 3, dv.month)
 			assert_integers_equal ("day8", 2, dv.day)
 		end
 
-	test_out is
+	test_out
 			-- Test feature `out' of class DT_DATE_VALUE.
 		local
 			dv: DT_DATE_VALUE
@@ -81,11 +81,11 @@ feature -- Test
 			assert_strings_equal ("out6", "-156/08/16 23:12:03.002", dv.out)
 			create {DT_DATE_TIME_DURATION} dv.make_precise (3, -12, 123, 23, -3, 12, -45)
 			assert_strings_equal ("out7", "3/-12/123 23:-3:12.-45", dv.out)
-			create {DT_DATE_TIME_DURATION} dv.make_precise (0, 3, 2, 0, 4, 3, 456) 
+			create {DT_DATE_TIME_DURATION} dv.make_precise (0, 3, 2, 0, 4, 3, 456)
 			assert_strings_equal ("out8", "0/3/2 0:4:3.456", dv.out)
 		end
 
-	test_date_out is
+	test_date_out
 			-- Test feature `date_out' of class DT_DATE_VALUE.
 		local
 			dv: DT_DATE_VALUE
@@ -104,11 +104,11 @@ feature -- Test
 			assert_equal ("date_out6", "-156/08/16", dv.date_out)
 			create {DT_DATE_TIME_DURATION} dv.make_precise (3, -12, 123, 23, -3, 12, -45)
 			assert_equal ("date_out7", "3/-12/123", dv.date_out)
-			create {DT_DATE_TIME_DURATION} dv.make_precise (0, 3, 2, 0, 4, 3, 456) 
+			create {DT_DATE_TIME_DURATION} dv.make_precise (0, 3, 2, 0, 4, 3, 456)
 			assert_equal ("date_out8", "0/3/2", dv.date_out)
 		end
 
-	test_append_to_string is
+	test_append_to_string
 			-- Test feature `append_to_string' of class DT_DATE_VALUE.
 		local
 			dv: DT_DATE_VALUE
@@ -156,14 +156,14 @@ feature -- Test
 			dv.append_to_string (a_string)
 			assert_strings_equal ("append_to_string7", "G#3/-12/123 23:-3:12.-45", a_string)
 
-			create {DT_DATE_TIME_DURATION} dv.make_precise (0, 3, 2, 0, 4, 3, 456) 
+			create {DT_DATE_TIME_DURATION} dv.make_precise (0, 3, 2, 0, 4, 3, 456)
 			create a_string.make (50)
 			a_string.append_string ("G#")
 			dv.append_to_string (a_string)
 			assert_strings_equal ("append_to_string8", "G#0/3/2 0:4:3.456", a_string)
 		end
 
-	test_append_date_to_string is
+	test_append_date_to_string
 			-- Test feature `append_date_to_string' of class DT_DATE_VALUE.
 		local
 			dv: DT_DATE_VALUE
@@ -211,7 +211,7 @@ feature -- Test
 			dv.append_date_to_string (a_string)
 			assert_strings_equal ("append_date_to_string7", "G#3/-12/123", a_string)
 
-			create {DT_DATE_TIME_DURATION} dv.make_precise (0, 3, 2, 0, 4, 3, 456) 
+			create {DT_DATE_TIME_DURATION} dv.make_precise (0, 3, 2, 0, 4, 3, 456)
 			create a_string.make (50)
 			a_string.append_string ("G#")
 			dv.append_date_to_string (a_string)

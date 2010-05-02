@@ -42,7 +42,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_equal (n: INTEGER) is
+	make_equal (n: INTEGER)
 			-- Create an empty set and allocate
 			-- memory space for at least `n' items.
 			-- Use `equal' as comparison criterion.
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			before: before
 		end
 
-	make_default is
+	make_default
 			-- Create an empty set and allocate memory
 			-- space for at least `default_capacity' items.
 			-- Use `=' as comparison criterion.
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	at alias "@", item (v: G): G is
+	at alias "@", item (v: G): G
 			-- Item equal to `v' held in set
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -81,7 +81,7 @@ feature -- Access
 			Result := item_storage_item (position)
 		end
 
-	new_cursor: DS_SPARSE_SET_CURSOR [G] is
+	new_cursor: DS_SPARSE_SET_CURSOR [G]
 			-- New external cursor for traversal
 		do
 			create Result.make (Current)
@@ -89,7 +89,7 @@ feature -- Access
 
 feature -- Status report
 
-	has (v: G): BOOLEAN is
+	has (v: G): BOOLEAN
 			-- Does set include `v'?
 			-- (Use `equality_tester''s comparison criterion
 			-- if not Void, use `=' criterion otherwise.)
@@ -98,7 +98,7 @@ feature -- Status report
 			Result := position /= No_position
 		end
 
-	extendible (n: INTEGER): BOOLEAN is
+	extendible (n: INTEGER): BOOLEAN
 			-- May set be extended with `n' items?
 		do
 			Result := (capacity >= count + n)
@@ -106,7 +106,7 @@ feature -- Status report
 			enough_space: Result implies (capacity >= count + n)
 		end
 
-	is_subset (other: DS_SET [G]): BOOLEAN is
+	is_subset (other: DS_SET [G]): BOOLEAN
 			-- Are all items of current set included in `other'?
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -134,7 +134,7 @@ feature -- Status report
 			end
 		end
 
-	is_disjoint (other: DS_SET [G]): BOOLEAN is
+	is_disjoint (other: DS_SET [G]): BOOLEAN
 			-- Are none of the items of current set included in `other'?
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -162,7 +162,7 @@ feature -- Status report
 
 feature -- Search
 
-	search (v: G) is
+	search (v: G)
 			-- Search for item equal to `v'.
 			-- (Use `equality_tester''s comparison criterion
 			-- if not Void, use `=' criterion otherwise.)
@@ -178,7 +178,7 @@ feature -- Search
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is set equal to `other'?
 			-- Do not take cursor positions, and capacity into
 			-- account, but `equality_tester' should be the same.
@@ -206,7 +206,7 @@ feature -- Comparison
 
 feature -- Element change
 
-	put (v: G) is
+	put (v: G)
 			-- Add `v' to set, replacing any existing item.
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -234,7 +234,7 @@ feature -- Element change
 			end
 		end
 
-	put_new (v: G) is
+	put_new (v: G)
 			-- Add `v' to set.
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -257,7 +257,7 @@ feature -- Element change
 			count := count + 1
 		end
 
-	put_last (v: G) is
+	put_last (v: G)
 			-- Add `v' at the end of set if not already included,
 			-- or replace it otherwise.
 			-- (Use `equality_tester''s comparison criterion
@@ -287,7 +287,7 @@ feature -- Element change
 			last: (not old has (v)) implies last = v
 		end
 
-	force (v: G) is
+	force (v: G)
 			-- Add `v' to set, replacing any existing item.
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -321,7 +321,7 @@ feature -- Element change
 			end
 		end
 
-	force_new (v: G) is
+	force_new (v: G)
 			-- Add `v' to set.
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -348,7 +348,7 @@ feature -- Element change
 			count := count + 1
 		end
 
-	force_last (v: G) is
+	force_last (v: G)
 			-- Add `v' at the end of set if not already included,
 			-- or replace it otherwise.
 			-- (Use `equality_tester''s comparison criterion
@@ -381,7 +381,7 @@ feature -- Element change
 --			not_changed: old has (v) implies all items at the same position
 		end
 
-	extend (other: DS_LINEAR [G]) is
+	extend (other: DS_LINEAR [G])
 			-- Add items of `other' to set, replacing any existing item.
 			-- Add `other.first' first, etc.
 			-- Do not move cursors.
@@ -401,7 +401,7 @@ feature -- Element change
 			end
 		end
 
-	extend_last (other: DS_LINEAR [G]) is
+	extend_last (other: DS_LINEAR [G])
 			-- Add items of `other' to set, replacing any existing item.
 			-- Add `other.first' first, etc.
 			-- If items of `other' were not included yet, insert
@@ -423,7 +423,7 @@ feature -- Element change
 			end
 		end
 
-	append (other: DS_LINEAR [G]) is
+	append (other: DS_LINEAR [G])
 			-- Add items of `other' to set, replacing any existing item.
 			-- Add `other.first' first, etc.
 			-- Resize set if necessary.
@@ -438,7 +438,7 @@ feature -- Element change
 			extend (other)
 		end
 
-	append_last (other: DS_LINEAR [G]) is
+	append_last (other: DS_LINEAR [G])
 			-- Add items of `other' to set, replacing any existing item.
 			-- Add `other.first' first, etc.
 			-- If items of `other' were not included yet, insert
@@ -457,7 +457,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	merge (other: DS_SET [G]) is
+	merge (other: DS_SET [G])
 			-- Add all items of `other' to current set.
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -488,7 +488,7 @@ feature -- Basic operations
 			end
 		end
 
-	intersect (other: DS_SET [G]) is
+	intersect (other: DS_SET [G])
 			-- Remove all items not included in `other'.
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -521,7 +521,7 @@ feature -- Basic operations
 			end
 		end
 
-	subtract (other: DS_SET [G]) is
+	subtract (other: DS_SET [G])
 			-- Remove all items also included in `other'.
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -554,7 +554,7 @@ feature -- Basic operations
 			end
 		end
 
-	symdif (other: DS_SET [G]) is
+	symdif (other: DS_SET [G])
 			-- Add items of `other' which are not included
 			-- in current set and remove those which are.
 			-- (Use `equality_tester''s comparison criterion
@@ -599,7 +599,7 @@ feature -- Basic operations
 
 feature {DS_SPARSE_SET_CURSOR} -- Implementation
 
-	key_storage_item (i: INTEGER): G is
+	key_storage_item (i: INTEGER): G
 			-- Item at position `i' in `key_storage'
 		do
 			Result := item_storage_item (i)
@@ -607,7 +607,7 @@ feature {DS_SPARSE_SET_CURSOR} -- Implementation
 
 feature {NONE} -- Implementation
 
-	key_equality_tester: KL_EQUALITY_TESTER [G] is
+	key_equality_tester: KL_EQUALITY_TESTER [G]
 			-- Equality tester for keys;
 			-- A void equality tester means that `='
 			-- will be used as comparison criterion.
@@ -615,35 +615,35 @@ feature {NONE} -- Implementation
 			Result := equality_tester
 		end
 
-	internal_set_key_equality_tester (a_tester: like key_equality_tester) is
+	internal_set_key_equality_tester (a_tester: like key_equality_tester)
 			-- Set `key_equality_tester' to `a_tester'.
 			-- (No precondition, to be used internally only.)
 		do
 			equality_tester := a_tester
 		end
 
-	make_key_storage (n: INTEGER) is
+	make_key_storage (n: INTEGER)
 			-- Create storage for keys of the set indexed
 			-- from 0 to `n-1' (position 0 is not used).
 		do
 		end
 
-	key_storage_put (k: G; i: INTEGER) is
+	key_storage_put (k: G; i: INTEGER)
 			-- Put `k' at position `i' in `key_storage'.
 		do
 		end
 
-	clone_key_storage is
+	clone_key_storage
 			-- Clone `key_storage'.
 		do
 		end
 
-	key_storage_resize (n: INTEGER) is
+	key_storage_resize (n: INTEGER)
 			-- Resize `key_storage'.
 		do
 		end
 
-	key_storage_wipe_out is
+	key_storage_wipe_out
 			-- Wipe out items in `key_storage'.
 		do
 		end

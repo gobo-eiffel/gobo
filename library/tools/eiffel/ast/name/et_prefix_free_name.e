@@ -72,12 +72,12 @@ create
 
 feature -- Status report
 
-	is_prefix_freeop: BOOLEAN is True
+	is_prefix_freeop: BOOLEAN = True
 			-- Is current feature name of the form 'prefix "free-operator"'?
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Name of feature
 		do
 			create Result.make (free_operator_name.count + 9)
@@ -88,7 +88,7 @@ feature -- Access
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_prefix_free_name (Current)
@@ -96,7 +96,7 @@ feature -- Processing
 
 feature {NONE} -- Constants
 
-	prefix_double_quote: STRING is "prefix %""
+	prefix_double_quote: STRING = "prefix %""
 
 invariant
 

@@ -50,7 +50,7 @@ create
 
 feature
 
-	make is
+	make
 		local
 			b: BB
 		do
@@ -68,7 +68,7 @@ inherit
 
 feature -- Access
 
-	name: INTEGER is 32
+	name: INTEGER = 32
 
 end -- class BB
 ----------------------------------------------------------------------

@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER; a_token: STRING; string1, string2: STRING) is
+	make (filename: STRING; line: INTEGER; a_token: STRING; string1, string2: STRING)
 			-- Create a new error reporting that the token `a_token'
 			-- has been associated with two different literal strings.
 		require
@@ -41,10 +41,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: token $3 associated with two literal strings $4 and $5"
+	default_template: STRING = "%"$1%", line $2: token $3 associated with two literal strings $4 and $5"
 			-- Default template used to built the error message
 
-	code: STRING is "PR0023"
+	code: STRING = "PR0023"
 			-- Error code
 
 invariant

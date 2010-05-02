@@ -18,7 +18,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_parent_name: like parent_name; args: like arguments) is
+	make (a_parent_name: like parent_name; args: like arguments)
 			-- Create a new precursor call.
 		do
 			parent_name := a_parent_name
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset precursor as it was when it was last parsed.
 		do
 				-- Note: do not reset `parent_type' to Void. `parent_type'
@@ -61,7 +61,7 @@ feature -- Access
 			-- Parent type;
 			-- Void if not resolved yet.
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -72,7 +72,7 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			if is_parent_prefixed and parent_name /= Void then
@@ -82,7 +82,7 @@ feature -- Access
 			end
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			if arguments /= Void then
@@ -94,7 +94,7 @@ feature -- Access
 			end
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			if arguments /= Void then
@@ -108,7 +108,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_precursor_keyword (a_precursor: like precursor_keyword) is
+	set_precursor_keyword (a_precursor: like precursor_keyword)
 			-- Set `precursor_keyword' to `a_precursor'.
 		require
 			a_precursor_not_void: a_precursor /= Void
@@ -118,7 +118,7 @@ feature -- Setting
 			precursor_keyword_set: precursor_keyword = a_precursor
 		end
 
-	set_parent_type (a_parent_type: like parent_type) is
+	set_parent_type (a_parent_type: like parent_type)
 			-- Set `parent_type' to `a_parent_type'.
 		do
 			parent_type := a_parent_type
@@ -133,7 +133,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_parent_prefixed (b: BOOLEAN) is
+	set_parent_prefixed (b: BOOLEAN)
 			-- Set `is_parent_prefixed' to `b'.
 		do
 			is_parent_prefixed := b

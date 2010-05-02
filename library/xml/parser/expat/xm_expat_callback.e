@@ -14,14 +14,14 @@ deferred class XM_EXPAT_CALLBACK
 
 feature -- Callbacks
 
-	on_element_declaration_procedure (name_ptr: POINTER; model_ptr: POINTER) is
+	on_element_declaration_procedure (name_ptr: POINTER; model_ptr: POINTER)
 			-- This is called for an element declaration. It's the
 			-- caller's responsibility to free model when finished with
 			-- it.
 		deferred
 		end
 
-	on_attribute_declaration_procedure (elname_ptr, attname_ptr, att_type_ptr, dflt_ptr: POINTER; is_required: BOOLEAN) is
+	on_attribute_declaration_procedure (elname_ptr, attname_ptr, att_type_ptr, dflt_ptr: POINTER; is_required: BOOLEAN)
 			-- The Attlist declaration handler is called for *each*
 			-- attribute. So a single Attlist declaration with multiple
 			-- attributes declared will generate multiple calls to this
@@ -33,7 +33,7 @@ feature -- Callbacks
 		deferred
 		end
 
-	on_xml_declaration_procedure (version_ptr, encoding_ptr: POINTER; standalone: INTEGER) is
+	on_xml_declaration_procedure (version_ptr, encoding_ptr: POINTER; standalone: INTEGER)
 			-- The XML declaration handler is called for *both* XML
 			-- declarations and text declarations. The way to distinguish
 			-- is that the version parameter will be null for text
@@ -45,7 +45,7 @@ feature -- Callbacks
 		deferred
 		end
 
-	on_entity_declaration_procedure (entity_name_ptr: POINTER; is_parameter_entity: BOOLEAN; value_ptr: POINTER; value_length: INTEGER; base_ptr, system_id_ptr, public_id_ptr, notation_name_ptr: POINTER) is
+	on_entity_declaration_procedure (entity_name_ptr: POINTER; is_parameter_entity: BOOLEAN; value_ptr: POINTER; value_length: INTEGER; base_ptr, system_id_ptr, public_id_ptr, notation_name_ptr: POINTER)
 			-- This is called for entity declarations. The
 			-- `is_parameter_entity' argument will be non-zero if the
 			-- entity is a parameter entity, zero otherwise.
@@ -62,41 +62,41 @@ feature -- Callbacks
 		deferred
 		end
 
-	on_start_tag_procedure (tag_name_ptr, attribute_specifications_ptr: POINTER) is
+	on_start_tag_procedure (tag_name_ptr, attribute_specifications_ptr: POINTER)
 		require
 			tag_name_ptr_not_void: tag_name_ptr /= default_pointer
 			attribute_specifications_ptr_not_void: attribute_specifications_ptr /= default_pointer
 		deferred
 		end
 
-	on_end_tag_procedure (tag_name_ptr: POINTER) is
+	on_end_tag_procedure (tag_name_ptr: POINTER)
 		deferred
 		end
 
-	on_content_procedure (content_ptr: POINTER; len: INTEGER) is
+	on_content_procedure (content_ptr: POINTER; len: INTEGER)
 			-- `content_ptr' is not 0 terminated.
 		deferred
 		end
 
-	on_processing_instruction_procedure (target, data: POINTER) is
+	on_processing_instruction_procedure (target, data: POINTER)
 			-- `target' and `data' are 0 terminated.
 		deferred
 		end
 
-	on_comment_procedure (data: POINTER) is
+	on_comment_procedure (data: POINTER)
 			-- `data' is 0 terminated.
 		deferred
 		end
 
-	on_start_cdata_section_procedure is
+	on_start_cdata_section_procedure
 		deferred
 		end
 
-	on_end_cdata_section_procedure is
+	on_end_cdata_section_procedure
 		deferred
 		end
 
-	on_default_procedure (data_ptr: POINTER; len: INTEGER) is
+	on_default_procedure (data_ptr: POINTER; len: INTEGER)
 			-- This is called for any characters in the XML document for
 			-- which there is no applicable handler. This includes both
 			-- characters that are part of markup which is of a kind that
@@ -113,7 +113,7 @@ feature -- Callbacks
 		deferred
 		end
 
-	on_default_expanded_procedure (data_ptr: POINTER; len: INTEGER) is
+	on_default_expanded_procedure (data_ptr: POINTER; len: INTEGER)
 			-- This is called for any characters in the XML document for
 			-- which there is no applicable handler. This includes both
 			-- characters that are part of markup which is of a kind that
@@ -130,27 +130,27 @@ feature -- Callbacks
 		deferred
 		end
 
-	on_start_doctype_procedure (doctype_name_ptr, sysid_ptr, pubid_ptr: POINTER; has_internal_subset: BOOLEAN) is
+	on_start_doctype_procedure (doctype_name_ptr, sysid_ptr, pubid_ptr: POINTER; has_internal_subset: BOOLEAN)
 			-- This is called for the start of the DOCTYPE declaration,
 			-- before any DTD or internal subset is parsed.
 		deferred
 		end
 
-	on_end_doctype_procedure is
+	on_end_doctype_procedure
 			-- This is called for the start of the DOCTYPE declaration
 			-- when the closing > is encountered, but after processing
 			-- any external subset.
 		deferred
 		end
 
-	on_notation_declaration_procedure (notation_name_ptr, base_ptr, system_id_ptr, public_id_ptr: POINTER) is
+	on_notation_declaration_procedure (notation_name_ptr, base_ptr, system_id_ptr, public_id_ptr: POINTER)
 			-- This is called for a declaration of notation.
 			-- The `base_ptr' argument is whatever was set by XML_SetBase.
 			-- The `notation_name_ptr' will never be null. The other arguments can be.
 		deferred
 		end
 
-	on_start_namespace_declaration_procedure (prefix_ptr, uri_ptr: POINTER) is
+	on_start_namespace_declaration_procedure (prefix_ptr, uri_ptr: POINTER)
 			-- When namespace processing is enabled, these are called
 			-- once for each namespace declaration. The calls to the start
 			-- and end element handlers occur between the calls to the
@@ -160,11 +160,11 @@ feature -- Callbacks
 		deferred
 		end
 
-	on_end_namespace_declaration_procedure (prefix_ptr: POINTER) is
+	on_end_namespace_declaration_procedure (prefix_ptr: POINTER)
 		deferred
 		end
 
-	on_not_standalone_procedure: BOOLEAN is
+	on_not_standalone_procedure: BOOLEAN
 			-- This is called if the document is not standalone (it has
 			-- an external subset or a reference to a parameter entity,
 			-- but does not have standalone="yes"). If this handler
@@ -173,7 +173,7 @@ feature -- Callbacks
 		deferred
 		end
 
-	on_external_entity_reference_procedure (context_ptr, base_ptr, system_id_ptr, public_id_ptr: POINTER): BOOLEAN is
+	on_external_entity_reference_procedure (context_ptr, base_ptr, system_id_ptr, public_id_ptr: POINTER): BOOLEAN
 			-- This is called for a reference to an external parsed
 			-- general entity. The referenced entity is not
 			-- automatically parsed. The application can parse it

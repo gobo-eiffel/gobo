@@ -21,7 +21,7 @@ inherit
 		end
 
 	XM_XPATH_TYPE
-	
+
 	XM_XPATH_ERROR_TYPES
 
 	XM_XPATH_SHARED_CONFORMANCE
@@ -32,7 +32,7 @@ inherit
 
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
-	
+
 	UT_SHARED_FILE_URI_ROUTINES
 		export {NONE} all end
 
@@ -42,7 +42,7 @@ create
 
 feature -- Test
 
-	test_qname_in_null_namespace is
+	test_qname_in_null_namespace
 			-- Test fn:resolve-QName('hello', /*[1]).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -61,7 +61,7 @@ feature -- Test
 			assert ("correct name", STRING_.same_string (evaluated_items.item (1).as_qname_value.local_name, "hello"))
 		end
 
-	test_qname_in_declared_namespace is
+	test_qname_in_declared_namespace
 			-- Test fn:resolve-QName('eg:myFunc', /*[1]).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -80,7 +80,7 @@ feature -- Test
 			assert ("correct name", STRING_.same_string (evaluated_items.item (1).as_qname_value.local_name, "myFunc"))
 		end
 
-	test_qname is
+	test_qname
 			-- Test fn:QName("http://www.example.com/example", "ht:person").
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -99,7 +99,7 @@ feature -- Test
 			assert ("correct name", STRING_.same_string (evaluated_items.item (1).as_qname_value.local_name, "person"))
 		end
 
-	test_qname_no_prefix is
+	test_qname_no_prefix
 			-- Test fn:QName("http://www.example.com/example", "person").
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -118,7 +118,7 @@ feature -- Test
 			assert ("correct name", STRING_.same_string (evaluated_items.item (1).as_qname_value.local_name, "person"))
 		end
 
-	test_namespace_uri_from_qname is
+	test_namespace_uri_from_qname
 			-- Test fn:namespace-uri-from-QName(fn:QName("http://www.example.com/example", "person")).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -135,7 +135,7 @@ feature -- Test
 			assert ("Correct namespace", STRING_.same_string (evaluated_items.item (1).as_any_uri.string_value, "http://www.example.com/example"))
 		end
 
-	test_local_name_from_qname is
+	test_local_name_from_qname
 			-- Test fn:local-name-from-QName(fn:QName("http://www.example.com/example", "person")).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -152,7 +152,7 @@ feature -- Test
 			assert ("Correct name", STRING_.same_string (evaluated_items.item (1).string_value, "person"))
 		end
 
-	test_no_prefix_from_qname is
+	test_no_prefix_from_qname
 			-- Test fn:prefix-from-QName(fn:QName("http://www.example.com/example", "person")).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -167,7 +167,7 @@ feature -- Test
 			assert ("No evaluated items", evaluated_items /= Void and then evaluated_items.count = 0)
 		end
 
-	test_prefix_from_qname is
+	test_prefix_from_qname
 			-- Test fn:prefix-from-QName(fn:QName("http://www.example.com/example", "people:person")).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -184,14 +184,14 @@ feature -- Test
 			assert ("Correct name", STRING_.same_string (evaluated_items.item (1).string_value, "people"))
 		end
 
-	set_up is
+	set_up
 		do
 			conformance.set_basic_xslt_processor
 		end
 
 feature {NONE} -- Implementation
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}",
@@ -201,8 +201,8 @@ feature {NONE} -- Implementation
 			data_dirname_not_void: Result /= Void
 			data_dirname_not_empty: not Result.is_empty
 		end
-		
-	qnames_xml_uri: UT_URI is
+
+	qnames_xml_uri: UT_URI
 			-- URI of file 'qnames.xml'
 		local
 			a_path: STRING
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 		ensure
 			qnames_xml_uri_not_void: Result /= Void
 		end
-		
+
 end
 
-			
+

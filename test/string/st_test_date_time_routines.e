@@ -25,7 +25,7 @@ create
 
 feature -- Test
 
-	text_xslt_formatted_time is
+	text_xslt_formatted_time
 			-- Test feature `xslt_formatted_time'.
 		local
 			l_time: DT_TIME
@@ -40,7 +40,7 @@ feature -- Test
 			assert_strings_equal ("Correct result", "4:23 AM", l_result.value)
 		end
 
-	text_xslt_formatted_date is
+	text_xslt_formatted_date
 			-- Test feature `xslt_formatted_date'.
 		local
 			l_date: DT_DATE
@@ -55,7 +55,7 @@ feature -- Test
 			assert_strings_equal ("Correct result", "Saturday 1st of January, 2005", l_result.value)
 		end
 
-	text_xslt_formatted_date_time is
+	text_xslt_formatted_date_time
 			-- Test feature `xslt_formatted_date_time'.
 		local
 			l_date_time: DT_DATE_TIME

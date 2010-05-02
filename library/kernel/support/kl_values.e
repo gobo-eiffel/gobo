@@ -14,7 +14,7 @@ deferred class KL_VALUES [G, K]
 
 feature -- Access
 
-	value (k: K): detachable G is
+	value (k: K): detachable G
 			-- Item associated with `k';
 			-- Return default value if no such item
 		require

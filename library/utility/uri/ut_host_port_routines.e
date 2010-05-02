@@ -13,7 +13,7 @@ class UT_HOST_PORT_ROUTINES
 
 feature -- Status report
 
-	is_valid_host_port (a_string: STRING): BOOLEAN is
+	is_valid_host_port (a_string: STRING): BOOLEAN
 			-- Is the string a valid host name and port?
 			-- Matches [^:]+(:[0-9]+)?
 		local
@@ -31,7 +31,7 @@ feature -- Status report
 			end
 		end
 
-	is_valid_port (a_port: INTEGER): BOOLEAN is
+	is_valid_port (a_port: INTEGER): BOOLEAN
 			-- Is this port number allowed?
 		do
 			Result := a_port >= 0 and a_port < Maximum_port
@@ -41,10 +41,10 @@ feature -- Status report
 
 feature {NONE} -- Constants
 
-	Maximum_port: INTEGER is 65535
+	Maximum_port: INTEGER = 65535
 			-- Maximum port number
 
-	Port_separator: CHARACTER is ':'
+	Port_separator: CHARACTER = ':'
 			-- Port separator
 
 end

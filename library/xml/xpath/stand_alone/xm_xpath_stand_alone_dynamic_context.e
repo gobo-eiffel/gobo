@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_context_item: XM_XPATH_ITEM; a_document_pool: like available_documents; a_function_library: like available_functions) is
+	make (a_context_item: XM_XPATH_ITEM; a_document_pool: like available_documents; a_function_library: like available_functions)
 			-- Establish invariant.
 		require
 			context_item_not_void: a_context_item /= Void
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			available_functions_set: available_functions = a_function_library
 		end
 
-	make_restricted (a_function_library: like available_functions) is
+	make_restricted (a_function_library: like available_functions)
 			-- Initialize `Current' as restricted (compile-time) context.
 		local
 			l_date_time: DT_DATE_TIME
@@ -131,13 +131,13 @@ feature -- Status report
 
 feature -- Creation
 
-	new_minor_context: like Current is
+	new_minor_context: like Current
 			-- Create a minor copy of `Current'
 		do
 			-- pre-condition is never met
 		end
 
-	new_clean_context: like Current is
+	new_clean_context: like Current
 			-- Created clean context (for XSLT function calls)
 		do
 			-- pre-condition is never met
@@ -145,7 +145,7 @@ feature -- Creation
 
 feature 	-- Element change
 
-	set_implicit_timezone (an_implicit_timezone: like implicit_timezone) is
+	set_implicit_timezone (an_implicit_timezone: like implicit_timezone)
 			-- Set `implicit_timezone'.
 		require
 			implicit_timezone_not_void: an_implicit_timezone /= Void
@@ -155,13 +155,13 @@ feature 	-- Element change
 			set: implicit_timezone = an_implicit_timezone
 		end
 
-	set_stack_frame (a_local_variable_frame: like local_variable_frame) is
+	set_stack_frame (a_local_variable_frame: like local_variable_frame)
 			-- Set stack frame.
 		do
 			local_variable_frame := a_local_variable_frame
 		end
 
-	open_stack_frame (a_slot_manager: XM_XPATH_SLOT_MANAGER) is
+	open_stack_frame (a_slot_manager: XM_XPATH_SLOT_MANAGER)
 			-- Set stack frame.
 		local
 			an_array: ARRAY [XM_XPATH_VALUE]
@@ -171,7 +171,7 @@ feature 	-- Element change
 		end
 
 
-	open_sized_stack_frame (a_slot_count: INTEGER) is
+	open_sized_stack_frame (a_slot_count: INTEGER)
 			-- Set stack frame.
 		local
 			an_array: ARRAY [XM_XPATH_VALUE]
@@ -183,7 +183,7 @@ feature 	-- Element change
 			create local_variable_frame.make (a_slot_manager, an_array)
 		end
 
-	build_document (a_uri_reference: STRING) is
+	build_document (a_uri_reference: STRING)
 			-- Build a document.
 		local
 			l_entity_resolver: XM_URI_EXTERNAL_RESOLVER
@@ -223,13 +223,13 @@ feature 	-- Element change
 
 	-- The following routines are only for contexts capable of push-processing
 
-	change_to_sequence_output_destination (a_destination: XM_XPATH_SEQUENCE_RECEIVER) is
+	change_to_sequence_output_destination (a_destination: XM_XPATH_SEQUENCE_RECEIVER)
 			-- Change to a temporary destination
 		do
 			-- pre-condition is never met
 		end
 
-	report_fatal_error (an_error: XM_XPATH_ERROR_VALUE) is
+	report_fatal_error (an_error: XM_XPATH_ERROR_VALUE)
 			-- Report a fatal error.
 		do
 			-- pre-condition is never met
@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 	uri_resolver: XM_SIMPLE_URI_EXTERNAL_RESOLVER
 			-- URI reference resolver
 
-	set_build_error (a_message: STRING) is
+	set_build_error (a_message: STRING)
 			-- Set `last_build_error'.
 		require
 			message_not_void: a_message /= Void

@@ -18,35 +18,35 @@ inherit
 
 feature -- Events
 
-	append_item (an_item: XM_XPATH_ITEM) is
+	append_item (an_item: XM_XPATH_ITEM)
 			-- Output an item (atomic value or node) to the sequence.
 		require
 			item_not_void: an_item /= Void
 		deferred
 		end
 
-	open is
+	open
 			-- Notify start of event stream.
 		do
 			previous_atomic := False
 			is_open := True
 		end
 
-	start_document is
+	start_document
 			-- New document
 		do
 			is_document_started := True
 		end
 
-	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING) is
+	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING)
 			-- Notify an unparsed entity URI.
 		do
 			-- do nothing
 		end
-	
+
 feature {NONE} -- Implementation
 
 	previous_atomic: BOOLEAN
 
 end
-	
+

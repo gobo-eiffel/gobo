@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	alias_name: ET_ALIAS_NAME is
+	alias_name: ET_ALIAS_NAME
 			-- Alias name, if any
 		do
 		end

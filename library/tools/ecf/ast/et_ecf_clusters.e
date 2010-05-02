@@ -25,7 +25,7 @@ create
 
 feature -- Access
 
-	cluster (i: INTEGER): ET_ECF_CLUSTER is
+	cluster (i: INTEGER): ET_ECF_CLUSTER
 			-- `i'-th cluster
 		do
 			Result := clusters.item (i)

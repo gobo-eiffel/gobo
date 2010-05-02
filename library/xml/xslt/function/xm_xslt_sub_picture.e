@@ -40,7 +40,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_picture: STRING; a_format: XM_XSLT_DECIMAL_FORMAT_ENTRY) is
+	make (a_picture: STRING; a_format: XM_XSLT_DECIMAL_FORMAT_ENTRY)
 			-- Establish invariant.
 		require
 			picture_string_not_void: a_picture /= Void
@@ -88,7 +88,7 @@ feature -- Access
 	fractional_grouping_separator_positions: ARRAY [INTEGER]
 			-- Positions of grouping separators
 
-	formatted_number (a_value: XM_XPATH_NUMERIC_VALUE; a_decimal_format: XM_XSLT_DECIMAL_FORMAT_ENTRY; a_possible_minus: STRING): STRING is
+	formatted_number (a_value: XM_XPATH_NUMERIC_VALUE; a_decimal_format: XM_XSLT_DECIMAL_FORMAT_ENTRY; a_possible_minus: STRING): STRING
 			-- Formatted version of `a_value'
 		require
 			positive_number: a_value /= Void and then not a_value.is_error and then not a_value.is_negative
@@ -168,7 +168,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_last_error_from_string (a_message, a_namespace_uri, a_code: STRING; an_error_type: INTEGER) is
+	set_last_error_from_string (a_message, a_namespace_uri, a_code: STRING; an_error_type: INTEGER)
 			-- Set `error_value'.
 		require
 			valid_error_type: an_error_type = Static_error or an_error_type = Type_error or an_error_type = Dynamic_error
@@ -187,7 +187,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	scan_picture_string (a_picture: STRING; a_format: XM_XSLT_DECIMAL_FORMAT_ENTRY) is
+	scan_picture_string (a_picture: STRING; a_format: XM_XSLT_DECIMAL_FORMAT_ENTRY)
 			-- Scan picture string.
 		require
 			picture_string_not_void: a_picture /= Void
@@ -294,7 +294,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	calculate_grouping_positions is
+	calculate_grouping_positions
 			-- Sort out the grouping positions.
 		local
 			a_count, l_index, a_first_value: INTEGER
@@ -357,7 +357,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	formatted_decimal (a_value: XM_XPATH_DECIMAL_VALUE): STRING is
+	formatted_decimal (a_value: XM_XPATH_DECIMAL_VALUE): STRING
 			-- Formatted version of `a_value'
 		require
 			value_not_void: a_value /= Void
@@ -393,7 +393,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	formatted_integer (a_value: XM_XPATH_MACHINE_INTEGER_VALUE): STRING is
+	formatted_integer (a_value: XM_XPATH_MACHINE_INTEGER_VALUE): STRING
 			-- Formatted version of `a_value'
 		require
 			value_not_void: a_value /= Void
@@ -413,7 +413,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	formatted_double (a_value: DOUBLE): STRING is
+	formatted_double (a_value: DOUBLE): STRING
 			-- Formatted version of `a_value'
 		require
 			value_is_finite: True
@@ -450,7 +450,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	mapped_formatted_number (a_value: STRING; a_decimal_format: XM_XSLT_DECIMAL_FORMAT_ENTRY): STRING is
+	mapped_formatted_number (a_value: STRING; a_decimal_format: XM_XSLT_DECIMAL_FORMAT_ENTRY): STRING
 			-- Number with numerals and decimal point substituted
 		require
 			value_not_void: a_value /= Void
@@ -499,7 +499,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	grouped_formatted_number (a_value: STRING; a_decimal_format: XM_XSLT_DECIMAL_FORMAT_ENTRY): STRING is
+	grouped_formatted_number (a_value: STRING; a_decimal_format: XM_XSLT_DECIMAL_FORMAT_ENTRY): STRING
 			-- Number with grouping separators added
 		require
 			a_value_not_void: a_value /= Void
@@ -575,7 +575,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	truncated_leading_zeros (a_value: STRING; a_whole_characters: INTEGER; a_decimal_format: XM_XSLT_DECIMAL_FORMAT_ENTRY): STRING is
+	truncated_leading_zeros (a_value: STRING; a_whole_characters: INTEGER; a_decimal_format: XM_XSLT_DECIMAL_FORMAT_ENTRY): STRING
 			-- `a_value' without leading zeros
 		require
 			a_value_not_void: a_value /= Void
@@ -613,7 +613,7 @@ feature {NONE} -- Implementation
 			truncated_leading_zeros_not_void: Result /= Void
 		end
 
-	fractional_grouped_formatted_number (a_value: STRING; a_decimal_format: XM_XSLT_DECIMAL_FORMAT_ENTRY): STRING is
+	fractional_grouped_formatted_number (a_value: STRING; a_decimal_format: XM_XSLT_DECIMAL_FORMAT_ENTRY): STRING
 			-- Number with grouping separators added to fractional part
 		require
 			value_not_void: a_value /= Void

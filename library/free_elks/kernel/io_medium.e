@@ -445,7 +445,7 @@ feature -- Input
 			-- Functionally identical to `read_stream' but
 			-- won't prevent garbage collection from occurring
 			-- while blocked waiting for data, though data must
-			-- be copied an extra time.			
+			-- be copied an extra time.
 		require
 			is_readable: readable
 		do
@@ -472,7 +472,7 @@ feature -- Input
 			-- Functionally identical to `read_line' but
 			-- won't prevent garbage collection from occurring
 			-- while blocked waiting for data, though data must
-			-- be copied an extra time.			
+			-- be copied an extra time.
 		require
 			is_readable: readable
 		do

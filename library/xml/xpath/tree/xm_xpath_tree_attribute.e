@@ -11,9 +11,9 @@ note
 	revision: "$Revision$"
 
 class XM_XPATH_TREE_ATTRIBUTE
-	
+
 inherit
-	
+
 	XM_XPATH_ATTRIBUTE
 		undefine
 			document_element, next_sibling, previous_sibling, local_part, is_tree_node, as_tree_node
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_document: XM_XPATH_TREE_DOCUMENT; an_element: XM_XPATH_TREE_ELEMENT; an_index: INTEGER) is
+	make (a_document: XM_XPATH_TREE_DOCUMENT; an_element: XM_XPATH_TREE_ELEMENT; an_index: INTEGER)
 			-- Establish invariant
 		require
 			element_not_void: an_element /= Void
@@ -57,19 +57,19 @@ feature -- Access
 	name_code: INTEGER
 			-- Name code this node - used in displaying names
 
-	is_tree_attribute: BOOLEAN is
+	is_tree_attribute: BOOLEAN
 			-- Is `Current' an attribute?
 		do
 			Result := True
 		end
 
-	as_tree_attribute: XM_XPATH_TREE_ATTRIBUTE is
+	as_tree_attribute: XM_XPATH_TREE_ATTRIBUTE
 			-- `Current' seen as an attribute
 		do
 			Result := Current
 		end
 
-	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE is
+	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE
 			-- Node sequence number (in document order)
 			-- In this implementation, parent nodes (elements and roots)
 			--  have a zero least-significant word, while namespaces,
@@ -80,21 +80,21 @@ feature -- Access
 			create Result.make_from_sequence_number_with_double_offset (parent_node.sequence_number, child_index)
 		end
 
-	previous_sibling: XM_XPATH_NODE is
+	previous_sibling: XM_XPATH_NODE
 			-- The previous sibling of this node;
 			-- If there is no such node, return `Void'
 		do
 			Result := Void
 		end
-	
-	next_sibling: XM_XPATH_NODE is
+
+	next_sibling: XM_XPATH_NODE
 			-- The next sibling of this node;
 			-- If there is no such node, return `Void'
 		do
 			Result := Void
 		end
 
-	is_idrefs: BOOLEAN is
+	is_idrefs: BOOLEAN
 			-- Value of is-idrefs property
 		do
 			Result := parent_node.as_tree_element.is_idrefs (child_index)
@@ -102,7 +102,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_same_node (other: XM_XPATH_NODE): BOOLEAN is
+	is_same_node (other: XM_XPATH_NODE): BOOLEAN
 			-- Does `Current' represent the same node in the tree as `other'?
 		local
 			another_attribute: XM_XPATH_TREE_ATTRIBUTE
@@ -119,7 +119,7 @@ feature -- Comparison
 
 feature -- Duplication
 
-	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
+	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN)
 			-- Copy `Current' to `a_receiver'.
 		local
 			a_type_code: INTEGER
@@ -134,13 +134,13 @@ feature -- Duplication
 
 feature {XM_XPATH_TREE_NODE} -- Restricted
 
-	previous_node_in_document_order: XM_XPATH_TREE_NODE is
+	previous_node_in_document_order: XM_XPATH_TREE_NODE
 			-- Previous node within the document
 		do
 			Result := parent
 		end
 
-	next_node_in_document_order (an_anchor: XM_XPATH_TREE_NODE): XM_XPATH_TREE_NODE is
+	next_node_in_document_order (an_anchor: XM_XPATH_TREE_NODE): XM_XPATH_TREE_NODE
 			-- Next node within the document (skipping attributes);
 			-- The scan stops if it encounters `an_anchor'
 		do
@@ -151,7 +151,7 @@ feature {XM_XPATH_TREE_NODE} -- Restricted
 
 feature {XM_XPATH_NODE} -- Restricted
 
-	is_possible_child: BOOLEAN is
+	is_possible_child: BOOLEAN
 			-- Can this node be a child of a document or element node?
 		do
 			Result := False
@@ -162,4 +162,4 @@ invariant
 	parent_not_void: parent_node /= Void
 
 end
-	
+

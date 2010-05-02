@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	node_kind: STRING is
+	node_kind: STRING
 			-- Kind of node
 		do
 			Result := "text"
@@ -26,13 +26,13 @@ feature -- Access
 			node_kind_is_text: STRING_.same_string (Result, "text")
 		end
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Type
 		do
 			Result := text_node_kind_test
 		end
 
-	path: STRING is
+	path: STRING
 			-- XPath expression for location within document;
 			-- Used for reporting purposes.
 		local
@@ -51,5 +51,5 @@ feature -- Access
 invariant
 
 	type: item_type /= Void
-	
+
 end

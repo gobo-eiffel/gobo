@@ -33,27 +33,27 @@ create
 
 feature -- Constants
 
-	usage_header: STRING is "usage: "
+	usage_header: STRING = "usage: "
 			-- Text that is used to introduce usage instructions
 
-	text_before_description: STRING is "%N"
+	text_before_description: STRING = "%N"
 			-- Text that separates the usage instructions and the
 			-- application description
 
-	text_below_description: STRING is "%N"
+	text_below_description: STRING = "%N"
 			-- Text that separates the application description and the
 			-- list of options
 
-	text_before_options: STRING is "%NOptions:%N"
+	text_before_options: STRING = "%NOptions:%N"
 			-- Text that introduces the options
 
-	option_description_indentation: INTEGER is 1
+	option_description_indentation: INTEGER = 1
 			-- Number of characters for the indentation of the option
 			-- text
 
 feature {AP_PARSER} -- Parser Interface
 
-	record_occurrence (a_parser: AP_PARSER) is
+	record_occurrence (a_parser: AP_PARSER)
 			-- The option was found during parsing. Display the help text and
 			-- terminate the application.
 		do
@@ -62,14 +62,14 @@ feature {AP_PARSER} -- Parser Interface
 
 feature -- Help Display
 
-	display_help (a_parser: AP_PARSER) is
+	display_help (a_parser: AP_PARSER)
 			-- Display the help text for `a_parser' (and die afterwards).
 		do
 			a_parser.error_handler.report_info_message (full_help_text (a_parser))
 			Exceptions.die (0)
 		end
 
-	display_usage (a_parser: AP_PARSER) is
+	display_usage (a_parser: AP_PARSER)
 			-- Display only the usage instructions (and die afterwards).
 		do
 			a_parser.error_handler.report_info_message (full_usage_instruction (a_parser))
@@ -78,7 +78,7 @@ feature -- Help Display
 
 feature -- Text Generation
 
-	full_help_text (a_parser: AP_PARSER): STRING is
+	full_help_text (a_parser: AP_PARSER): STRING
 			-- Full help text for `a_parser'
 		require
 			a_parser_not_void: a_parser /= Void
@@ -130,7 +130,7 @@ feature -- Text Generation
 			full_help_text_not_void: Result /= Void
 		end
 
-	full_usage_instruction (a_parser: AP_PARSER): STRING is
+	full_usage_instruction (a_parser: AP_PARSER): STRING
 			-- Usage instruction for the programs standard and
 			-- alternative options
 		require
@@ -158,7 +158,7 @@ feature -- Text Generation
 
 feature {NONE} -- Implementation
 
-	usage_instruction (a_parser: AP_PARSER): STRING is
+	usage_instruction (a_parser: AP_PARSER): STRING
 			-- Short usage instruction for the programs standard options
 		require
 			a_parser_not_void: a_parser /= Void
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 			usage_instruction_not_void: Result /= Void
 		end
 
-	alternative_usage_instruction (a_parser: AP_PARSER; a_list: AP_ALTERNATIVE_OPTIONS_LIST): STRING is
+	alternative_usage_instruction (a_parser: AP_PARSER; a_list: AP_ALTERNATIVE_OPTIONS_LIST): STRING
 			-- Short usage instruction for the programs alternative options
 		require
 			a_parser_not_void: a_parser /= Void
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 			alternative_usage_instruction_not_void: Result /= Void
 		end
 
-	option_help_text (an_option: AP_OPTION; indent: INTEGER): STRING is
+	option_help_text (an_option: AP_OPTION; indent: INTEGER): STRING
 			-- Help text of `an_option', calculated from the option_names
 			-- and the description, assuming an indention of `indent' is
 			-- required for correct formating
@@ -252,7 +252,7 @@ feature {NONE} -- Implementation
 			option_help_text_not_void: Result /= Void
 		end
 
-	wrapper: ST_WORD_WRAPPER is
+	wrapper: ST_WORD_WRAPPER
 			-- A word wrapper for formating help texts
 		once
 			create Result.make

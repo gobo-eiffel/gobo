@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_list: like child_list; a_context: like context) is
+	make (a_list: like child_list; a_context: like context)
 			-- Establish invariant.
 		require
 			child_list_not_empty: a_list /= Void and then a_list.count > 0
@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Status report
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
 			Result := child_index >= child_list.count
@@ -50,7 +50,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move to next position
 		do
 			index := index + 1
@@ -97,7 +97,7 @@ feature -- Cursor movement
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 			create Result.make (child_list, context)

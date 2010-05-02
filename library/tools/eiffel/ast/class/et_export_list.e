@@ -27,14 +27,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new export clause
 		do
 			export_keyword := tokens.export_keyword
 			precursor
 		end
 
-	make_with_capacity (nb: INTEGER) is
+	make_with_capacity (nb: INTEGER)
 			-- Create a new export clause with capacity `nb'.
 		do
 			export_keyword := tokens.export_keyword
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset export clauses as they were when they were last parsed.
 		local
 			i, nb: INTEGER
@@ -57,7 +57,7 @@ feature -- Initialization
 
 feature -- Access
 
-	has_non_null_export: BOOLEAN is
+	has_non_null_export: BOOLEAN
 			-- Is there at least one non-null export in current export clause?
 		local
 			i, nb: INTEGER
@@ -75,7 +75,7 @@ feature -- Access
 			not_empty: Result implies not is_empty
 		end
 
-	is_none_all: BOOLEAN is
+	is_none_all: BOOLEAN
 			-- Is there only one non-null export clause of the form 'export {NONE} all'?
 		local
 			i, nb: INTEGER
@@ -104,7 +104,7 @@ feature -- Access
 	export_keyword: ET_KEYWORD
 			-- 'export' keyword
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -114,13 +114,13 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := export_keyword
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			if is_empty then
@@ -130,7 +130,7 @@ feature -- Access
 			end
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			if is_empty then
@@ -142,7 +142,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_export_keyword (an_export: like export_keyword) is
+	set_export_keyword (an_export: like export_keyword)
 			-- Set `export_keyword' to `an_export'.
 		require
 			an_export_not_void: an_export /= Void
@@ -154,7 +154,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_export_list (Current)
@@ -162,7 +162,7 @@ feature -- Processing
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_EXPORT] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_EXPORT]
 			-- Fixed array routines
 		once
 			create Result

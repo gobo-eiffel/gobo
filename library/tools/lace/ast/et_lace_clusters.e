@@ -25,7 +25,7 @@ create
 
 feature -- Access
 
-	cluster (i: INTEGER): ET_LACE_CLUSTER is
+	cluster (i: INTEGER): ET_LACE_CLUSTER
 			-- `i'-th cluster
 		do
 			Result := clusters.item (i)
@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Output
 
-	print_flat_clusters (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_flat_clusters (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print a flattened version of current
 			-- clusters in `a_file'.
 		require

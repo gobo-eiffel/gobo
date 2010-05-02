@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize current Target
 		local
 			a_xml_element: XM_ELEMENT
@@ -103,7 +103,7 @@ feature {NONE} -- Initialization
 						if formal_arguments.has (a_name) then
 							project.log (<<"  [local] name=", a_name, " warning: conflict with arguments variable." >>)
 						end
-							--| if a_local_element.has_value, the value will be set, when the element is processed						
+							--| if a_local_element.has_value, the value will be set, when the element is processed
 					end
 					cs.forth
 				end
@@ -120,7 +120,7 @@ feature {NONE} -- Initialization
 					if a_global_element.has_name and then a_global_element.name.count > 0 then
 						a_name := a_global_element.name
 						formal_globals.force_last (Void, a_name) --| this is formal variable, the value is ignored at this point.
-						--| if a_global_element.has_value, the value will be set, when the element is processed							
+						--| if a_global_element.has_value, the value will be set, when the element is processed
 						project.trace_debug (<<"found global declaration '", a_name, "'%N">>)
 						if formal_arguments.has (a_name) then
 							project.log (<<"  [global] name=", a_name, " warning: conflict with arguments variable." >>)
@@ -138,10 +138,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_target: BOOLEAN is True
+	is_target: BOOLEAN = True
 			-- Is Current a GEANT_TARGET ?
 
-	dependencies: STRING is
+	dependencies: STRING
 			-- STRING representation of dependencies
 		require
 			has_dependencies: has_dependencies
@@ -160,7 +160,7 @@ feature -- Access
 	exports: DS_ARRAYED_LIST [STRING]
 			-- Exports of target
 
-	origin: GEANT_PROJECT is
+	origin: GEANT_PROJECT
 			-- Origin of target (see ETL for definition)
 		do
 			Result := seed.project
@@ -168,13 +168,13 @@ feature -- Access
 			origin_not_void: Result /= Void
 		end
 
-	associated_target: GEANT_TARGET is
+	associated_target: GEANT_TARGET
 			-- Associated target
 		do
 			Result := Current
 		end
 
-	full_name: STRING is
+	full_name: STRING
 			-- `Name' prepended with (`project.name' + ".")
 		do
 			Result := STRING_.cloned_string (project.name)
@@ -193,7 +193,7 @@ feature -- Access
 			-- Redefining target of current target if present;
 			-- Used for polymorphic calls
 
-	seed: like Current is
+	seed: like Current
 			-- Original version of this target in most remote ancestor
 		do
 			from
@@ -210,7 +210,7 @@ feature -- Access
 			seed_has_no_precursor: Result.precursor_target = Void
 		end
 
-	final_target: like Current is
+	final_target: like Current
 			-- Final target of this target in redefinition chain
 		do
 			from
@@ -231,12 +231,12 @@ feature -- Access
 			-- Formal arguments of this target
 
 	formal_locals: GEANT_VARIABLES
-			-- Formal locals of this target	
+			-- Formal locals of this target
 
 	formal_globals: GEANT_VARIABLES
 			-- Formal globals of this target
 
-	prepared_arguments_from_formal_arguments (a_arguments: like formal_arguments): like formal_arguments is
+	prepared_arguments_from_formal_arguments (a_arguments: like formal_arguments): like formal_arguments
 			-- Prepared actual arguments arguments for `formal_arguments';
 			-- Numbered arguments are replaced by their associated named arguments according
 			-- to `formal_arguments';
@@ -261,7 +261,7 @@ feature -- Access
 			end
 		end
 
-	named_from_numbered_arguments (a_arguments: like formal_arguments): like formal_arguments is
+	named_from_numbered_arguments (a_arguments: like formal_arguments): like formal_arguments
 			-- Clone of `a_arguments' where number keys have been replaced by their
 			-- corresponding names from `formal_arguments'
 		require
@@ -285,7 +285,7 @@ feature -- Access
 			end
 		end
 
-	prepared_locals_from_formal_locals (a_locals: like formal_locals): like formal_locals is
+	prepared_locals_from_formal_locals (a_locals: like formal_locals): like formal_locals
 			-- Prepared actual locals for `formal_locals';
 		require
 			a_locals_not_void: a_locals /= Void
@@ -310,7 +310,7 @@ feature -- Status report
 	execute_once: BOOLEAN
 			-- Is this target supposed to be executed only once?
 
-	is_exported_to_any: BOOLEAN is
+	is_exported_to_any: BOOLEAN
 			-- Is this target exported to any project?
 		do
 			if exports /= Void then
@@ -320,7 +320,7 @@ feature -- Status report
 			definition: Result implies (exports /= Void and then exports.has (Project_name_any))
 		end
 
-	is_exported_to_project (a_project: GEANT_PROJECT): BOOLEAN is
+	is_exported_to_project (a_project: GEANT_PROJECT): BOOLEAN
 			-- Is this target exported to project named `a_project_name'?
 		require
 			a_project_not_void: a_project /= Void
@@ -347,7 +347,7 @@ feature -- Status report
 			end
 		end
 
-	has_dependencies: BOOLEAN is
+	has_dependencies: BOOLEAN
 			-- Has current target dependent on other targets?
 		do
 			Result := xml_element.has_attribute_by_name (Depend_attribute_name)
@@ -355,7 +355,7 @@ feature -- Status report
 			definition: Result = xml_element.has_attribute_by_name (Depend_attribute_name)
 		end
 
-	valid_xml_element (an_xml_element: like xml_element): BOOLEAN is
+	valid_xml_element (an_xml_element: like xml_element): BOOLEAN
 			-- Is `an_xml_element' a valid xml element?
 		do
 			Result := an_xml_element.has_attribute_by_name (Name_attribute_name) and then
@@ -365,7 +365,7 @@ feature -- Status report
 			has_non_empty_name_attribute: Result implies an_xml_element.attribute_by_name (Name_attribute_name).value.count > 0
 		end
 
-	conflicts_with (a_target: like Current): BOOLEAN is
+	conflicts_with (a_target: like Current): BOOLEAN
 			-- Does current target or one of it's precursors
 			-- have a `full_name' which is equal to the `full_name'
 			-- of `a_target' or one of it's precursors?
@@ -375,7 +375,7 @@ feature -- Status report
 			Result := STRING_.same_string (seed.full_name, a_target.seed.full_name)
 		end
 
-	formal_arguments_match (a_target: like Current): BOOLEAN is
+	formal_arguments_match (a_target: like Current): BOOLEAN
 			-- Does `formal_arguments' match `a_target.formal_arguments'?
 		require
 			a_target_not_void: a_target /= Void
@@ -383,7 +383,7 @@ feature -- Status report
 			Result := formal_arguments.has_same_keys (a_target.formal_arguments)
 		end
 
-	has_precursor_target (a_target: like Current): BOOLEAN is
+	has_precursor_target (a_target: like Current): BOOLEAN
 			-- Is current target or one of it's precursors `a_target'?
 		require
 			a_target_not_void: a_target /= Void
@@ -400,7 +400,7 @@ feature -- Status report
 			end
 		end
 
-	has_redefining_target (a_target: like Current): BOOLEAN is
+	has_redefining_target (a_target: like Current): BOOLEAN
 			-- Is current target or one of it's `redefining_target's `a_target'?
 		require
 			a_target_not_void: a_target /= Void
@@ -419,7 +419,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- Set `name' to `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -430,7 +430,7 @@ feature -- Setting
 			name_set: name = a_name
 		end
 
-	set_obsolete_message (a_obsolete_message: STRING) is
+	set_obsolete_message (a_obsolete_message: STRING)
 			-- Set `obsolete_message' to `a_obsolete_message'.
 		require
 			a_obsolete_message_not_void: a_obsolete_message /= Void
@@ -441,7 +441,7 @@ feature -- Setting
 			obsolete_message_set: obsolete_message = a_obsolete_message
 		end
 
-	set_exports (a_exports: like exports) is
+	set_exports (a_exports: like exports)
 			-- Set `exports' to `a_exports'.
 		require
 			a_exports_not_void: a_exports /= Void
@@ -451,7 +451,7 @@ feature -- Setting
 			exports_set: exports = a_exports
 		end
 
-	set_executed (a_is_executed: BOOLEAN) is
+	set_executed (a_is_executed: BOOLEAN)
 			-- Set `is_executed' to `a_is_executed'.
 		do
 			is_executed := a_is_executed
@@ -459,7 +459,7 @@ feature -- Setting
 			is_executed_set: is_executed = a_is_executed
 		end
 
-	set_execute_once (a_execute_once: BOOLEAN) is
+	set_execute_once (a_execute_once: BOOLEAN)
 			-- Set `execute_once' to `a_execute_once'.
 		do
 			execute_once := a_execute_once
@@ -467,7 +467,7 @@ feature -- Setting
 			execute_once_set: execute_once = a_execute_once
 		end
 
-	set_precursor_target (a_precursor_target: GEANT_TARGET) is
+	set_precursor_target (a_precursor_target: GEANT_TARGET)
 			-- Set `precursor_target' to `a_precursor_target'.
 		require
 			a_precursor_target_not_void: a_precursor_target /= Void
@@ -479,7 +479,7 @@ feature -- Setting
 			precursor_target_set: precursor_target = a_precursor_target
 		end
 
-	set_redefining_target (a_redefining_target: GEANT_TARGET) is
+	set_redefining_target (a_redefining_target: GEANT_TARGET)
 			-- Set `redefining_target' to `a_redefining_target'.
 		require
 			a_redefining_target_not_void: a_redefining_target /= Void
@@ -493,7 +493,7 @@ feature -- Setting
 
 feature -- Processing
 
-	show_precursors is
+	show_precursors
 			-- Show list of precursors.
 		local
 			a_precursor_target: like Current
@@ -517,7 +517,7 @@ feature -- Processing
 			project.trace_debug (a_message)
 		end
 
-	execute is
+	execute
 			-- Execute all tasks of `a_target' in sequential order.
 		do
 			if not execute_once or else not is_executed then
@@ -541,7 +541,7 @@ feature -- Processing
 
 feature {NONE} -- Execution implementation
 
-	prepare_variables_before_execution is
+	prepare_variables_before_execution
 			-- Prepare variables before tasks execution
 		local
 			a_arguments: GEANT_ARGUMENT_VARIABLES
@@ -583,7 +583,7 @@ feature {NONE} -- Execution implementation
 			Precursor {GEANT_GROUP}
 		end
 
-	execute_element (a_xml_element: XM_ELEMENT) is
+	execute_element (a_xml_element: XM_ELEMENT)
 			-- Execute  command defined through `a_xml_element'.
 		local
 			var_decl: GEANT_NAME_VALUE_ELEMENT
@@ -610,7 +610,7 @@ feature {NONE} -- Execution implementation
 
 feature -- Dependencies
 
-	dependent_targets: DS_ARRAYED_STACK [GEANT_TARGET] is
+	dependent_targets: DS_ARRAYED_STACK [GEANT_TARGET]
 			-- All dependent targets
 		local
 			a_dependent_target: GEANT_TARGET
@@ -641,7 +641,7 @@ feature -- Dependencies
 			dependent_targets_not_void: Result /= Void
 		end
 
-	show_dependent_targets (a_dependent_targets: DS_ARRAYED_LIST [STRING]) is
+	show_dependent_targets (a_dependent_targets: DS_ARRAYED_LIST [STRING])
 			-- Show dependent targets.
 		local
 			i: INTEGER
@@ -656,7 +656,7 @@ feature -- Dependencies
 
 feature {NONE} -- Constants
 
-	Obsolete_element_name: STRING is
+	Obsolete_element_name: STRING
 			-- Name of xml subelement for obsolete
 		once
 			Result := "obsolete"
@@ -665,7 +665,7 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Argument_element_name: STRING is
+	Argument_element_name: STRING
 			-- Name of xml subelement for arguments
 		once
 			Result := "argument"
@@ -674,7 +674,7 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Name_attribute_name: STRING is
+	Name_attribute_name: STRING
 			-- "name" attribute name
 		once
 			Result := "name"
@@ -683,7 +683,7 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Set_attribute_name: STRING is
+	Set_attribute_name: STRING
 			-- "set" attribute name
 		once
 			Result := "set"
@@ -692,7 +692,7 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Depend_attribute_name: STRING is
+	Depend_attribute_name: STRING
 			-- "depend" attribute name
 		once
 			Result := "depend"
@@ -701,7 +701,7 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Export_attribute_name: STRING is
+	Export_attribute_name: STRING
 			-- "export" attribute name
 		once
 			Result := "export"
@@ -710,7 +710,7 @@ feature {NONE} -- Constants
 			export_name_not_empty: Result.count > 0
 		end
 
-	Once_attribute_name: STRING is
+	Once_attribute_name: STRING
 			-- "once" attribute name
 		once
 			Result := "once"
@@ -719,7 +719,7 @@ feature {NONE} -- Constants
 			once_name_not_empty: Result.count > 0
 		end
 
-	Project_name_any: STRING is
+	Project_name_any: STRING
 			-- Project name "ANY"
 		once
 			Result := "ANY"

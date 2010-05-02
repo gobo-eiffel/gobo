@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_container: like container) is
+	make (a_container: like container)
 			-- Create a new cursor for `a_container'.
 		require
 			a_container_not_void: a_container /= Void
@@ -49,7 +49,7 @@ feature {DS_SPARSE_CONTAINER, DS_SPARSE_CONTAINER_CURSOR} -- Implementation
 
 feature {DS_SPARSE_CONTAINER} -- Implementation
 
-	set_position (p: INTEGER) is
+	set_position (p: INTEGER)
 			-- Set `position' to `p'.
 		require
 			valid_p: valid_position (p)
@@ -59,7 +59,7 @@ feature {DS_SPARSE_CONTAINER} -- Implementation
 			position_set: position = p
 		end
 
-	set_after is
+	set_after
 			-- Set `position' to after position
 		do
 			position := container.after_position
@@ -67,7 +67,7 @@ feature {DS_SPARSE_CONTAINER} -- Implementation
 			after: after
 		end
 
-	set_before is
+	set_before
 			-- Set `position' to before position
 		do
 			position := container.before_position
@@ -75,7 +75,7 @@ feature {DS_SPARSE_CONTAINER} -- Implementation
 			before: before
 		end
 
-	valid_position (p: INTEGER): BOOLEAN is
+	valid_position (p: INTEGER): BOOLEAN
 			-- Is `p' a valid value for `position'?
 		do
 			Result := (p = container.before_position or p = container.after_position) or

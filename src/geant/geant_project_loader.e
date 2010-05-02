@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_build_filename: STRING) is
+	make (a_build_filename: STRING)
 			-- Initialize project loader.
 		require
 			a_build_filename_not_void: a_build_filename /= Void
@@ -57,7 +57,7 @@ feature -- Access
 
 feature -- Processing
 
-	load (a_variables: GEANT_PROJECT_VARIABLES; a_options: GEANT_PROJECT_OPTIONS) is
+	load (a_variables: GEANT_PROJECT_VARIABLES; a_options: GEANT_PROJECT_OPTIONS)
 			-- Read current project's configuration from `build_filename'
 			-- and convert it into a 'GEANT_DOM'.
 		require

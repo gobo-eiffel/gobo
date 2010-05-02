@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 	make (a_from_compound: like from_compound;
 		an_until_conditional: like until_conditional;
-		a_loop_compound: like loop_compound) is
+		a_loop_compound: like loop_compound)
 			-- Create a new loop instruction.
 		require
 			an_until_conditional_not_void: an_until_conditional /= Void
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset instruction as it was just after it was last parsed.
 		do
 			if from_compound /= Void then
@@ -82,7 +82,7 @@ feature -- Access
 	until_conditional: ET_CONDITIONAL
 			-- Until conditional
 
-	until_expression: ET_EXPRESSION is
+	until_expression: ET_EXPRESSION
 			-- Until boolean expression
 		do
 			Result := until_conditional.expression
@@ -96,7 +96,7 @@ feature -- Access
 	end_keyword: ET_KEYWORD
 			-- 'end' keyword
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -111,7 +111,7 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			if from_compound /= Void then
@@ -125,13 +125,13 @@ feature -- Access
 			end
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := end_keyword
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := end_keyword.break
@@ -139,7 +139,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_has_old_variant_syntax (b: BOOLEAN) is
+	set_has_old_variant_syntax (b: BOOLEAN)
 			-- Set `has_old_variant_syntax' to `b'.
 		do
 			has_old_variant_syntax := b
@@ -149,7 +149,7 @@ feature -- Status setting
 
 feature -- Setting
 
-	set_invariant_part (an_invariant: like invariant_part) is
+	set_invariant_part (an_invariant: like invariant_part)
 			-- Set `invariant_part' to `an_invariant'.
 		do
 			invariant_part := an_invariant
@@ -157,7 +157,7 @@ feature -- Setting
 			invariant_part_set: invariant_part = an_invariant
 		end
 
-	set_variant_part (a_variant: like variant_part) is
+	set_variant_part (a_variant: like variant_part)
 			-- Set `variant_part' to `a_variant'.
 		do
 			variant_part := a_variant
@@ -165,7 +165,7 @@ feature -- Setting
 			variant_part_set: variant_part = a_variant
 		end
 
-	set_end_keyword (an_end: like end_keyword) is
+	set_end_keyword (an_end: like end_keyword)
 			-- Set `end_keyword' to `an_end'.
 		require
 			an_end_not_void: an_end /= Void
@@ -177,7 +177,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_loop_instruction (Current)

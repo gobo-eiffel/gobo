@@ -23,7 +23,7 @@ create
 
 feature -- Test
 
-	test_declaration is
+	test_declaration
 			-- DTD declaration.
 		do
 			assert_parsed ("<!DOCTYPE doc SYSTEM %"abc%"><doc/>",
@@ -32,7 +32,7 @@ feature -- Test
 				"<!DOCTYPE doc PUBLIC uri abc >%N")
 		end
 
-	test_simple is
+	test_simple
 			-- Simple DTDs.
 		do
 			-- DOCTYPE at the end in result because on_doctype is after end
@@ -45,7 +45,7 @@ feature -- Test
 				"<!DOCTYPE doc>%N<!ELEMENT doc EMPTY>%N")
 		end
 
-	test_attribute is
+	test_attribute
 			-- Simple DTD with attributes.
 		do
 			assert_parsed (
@@ -71,7 +71,7 @@ feature -- Test
 				"<!DOCTYPE doc>%N<!ELEMENT doc EMPTY>%N<!ATTLIST doc a (x|y|z) #IMPLIED>%N")
 		end
 
-	test_element_repetition is
+	test_element_repetition
 			-- Test sub element repetition.
 		do
 			assert_parsed (
@@ -85,7 +85,7 @@ feature -- Test
 				"<!DOCTYPE doc>%N<!ELEMENT doc (doc?)>%N")
 		end
 
-	test_element_group is
+	test_element_group
 			-- Test sub element groups.
 		do
 			assert_parsed (
@@ -102,7 +102,7 @@ feature -- Test
 
 feature {NONE} -- Assertions
 
-	new_resolver: XM_STRING_EXTERNAL_RESOLVER is
+	new_resolver: XM_STRING_EXTERNAL_RESOLVER
 			-- Dummy resolver for external DTD test.
 		do
 			create Result.make
@@ -111,7 +111,7 @@ feature {NONE} -- Assertions
 			not_void: Result /= Void
 		end
 
-	assert_parsed (a_in: STRING; a_out: STRING) is
+	assert_parsed (a_in: STRING; a_out: STRING)
 			-- Assert that `a_in' can be parsed correctly
 			-- and that the DTD parsed is equal to `a_out'.
 		require

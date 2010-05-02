@@ -25,7 +25,7 @@ create {XM_XSLT_NODE_FACTORY}
 
 feature -- Access
 
-	select_and_content_error: STRING is
+	select_and_content_error: STRING
 			-- Error code when both select expression and content are mutually exclusive
 		do
 			Result := "XTSE0870"
@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Element change
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -99,7 +99,7 @@ feature -- Element change
 			attributes_prepared := True
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -118,7 +118,7 @@ feature -- Element change
 			end
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (an_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		local
 			a_value_of: XM_XSLT_COMPILED_VALUE_OF
@@ -151,7 +151,7 @@ feature -- Element change
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
 
-	returned_item_type: XM_XPATH_ITEM_TYPE is
+	returned_item_type: XM_XPATH_ITEM_TYPE
 			-- Type of item returned by this instruction
 		do
 			Result := text_node_kind_test

@@ -39,7 +39,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new empty namespace table.
 		do
 			make_map (10)
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	has_default: BOOLEAN is
+	has_default: BOOLEAN
 			-- Has table a default namespace?
 			-- (Note: in any given table there must be at most one
 			-- default namespace)
@@ -60,7 +60,7 @@ feature -- Status report
 
 feature -- Access
 
-	default_ns: STRING is
+	default_ns: STRING
 			-- Default namespace
 		require
 			has_default: has_default
@@ -71,7 +71,7 @@ feature -- Access
 
 feature -- Element change
 
-	override_with_list (l: DS_BILINEAR [XM_NAMESPACE]) is
+	override_with_list (l: DS_BILINEAR [XM_NAMESPACE])
 			-- Add namespace declarations listed in `l'.
 			-- If `l' has an entry with a prefix that is already
 			-- in current table, override it with the entry from

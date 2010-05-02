@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; a_name: STRING) is
+	make (filename: STRING; a_name: STRING)
 			-- Create a new error reporting that the symbol
 			-- `a_name' has not been defined as a token or
 			-- in a rule.
@@ -37,10 +37,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%": undefined symbol $2"
+	default_template: STRING = "%"$1%": undefined symbol $2"
 			-- Default template used to built the error message
 
-	code: STRING is "PR0010"
+	code: STRING = "PR0010"
 			-- Error code
 
 invariant

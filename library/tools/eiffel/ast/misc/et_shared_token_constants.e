@@ -14,7 +14,7 @@ class ET_SHARED_TOKEN_CONSTANTS
 
 feature -- Access
 
-	tokens: ET_TOKEN_CONSTANTS is
+	tokens: ET_TOKEN_CONSTANTS
 			-- Shared token and symbol constants
 		once
 			create Result

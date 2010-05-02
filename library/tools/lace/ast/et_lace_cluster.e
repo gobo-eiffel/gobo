@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name_id; a_pathname: like pathname_id; a_universe: ET_UNIVERSE) is
+	make (a_name: like name_id; a_pathname: like pathname_id; a_universe: ET_UNIVERSE)
 			-- Create a new cluster.
 		require
 			a_name_not_void: a_name /= Void
@@ -48,13 +48,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Name
 		do
 			Result := name_id.name
 		end
 
-	pathname: STRING is
+	pathname: STRING
 			-- Directory pathname (may be Void)
 		do
 			if pathname_id /= Void then
@@ -70,7 +70,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_valid_eiffel_filename (a_filename: STRING): BOOLEAN is
+	is_valid_eiffel_filename (a_filename: STRING): BOOLEAN
 			-- Is `a_filename' an Eiffel filename which has
 			-- not been excluded?
 		do
@@ -83,7 +83,7 @@ feature -- Status report
 			end
 		end
 
-	is_valid_directory_name (a_dirname: STRING): BOOLEAN is
+	is_valid_directory_name (a_dirname: STRING): BOOLEAN
 			-- Is `a_dirname' a directory name other than "." and
 			-- ".." and which has not been excluded?
 		do
@@ -111,7 +111,7 @@ feature -- Options
 
 feature -- Setting
 
-	set_exclude (an_exclude: like exclude) is
+	set_exclude (an_exclude: like exclude)
 			-- Set `exclude' to `an_exclude'.
 		do
 			exclude := an_exclude
@@ -121,7 +121,7 @@ feature -- Setting
 
 feature -- Output
 
-	print_flat_cluster (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_flat_cluster (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print a flattened version of current cluster in `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -139,7 +139,7 @@ feature -- Output
 			end
 		end
 
-	print_flat_name (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_flat_name (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print a flattened version of current
 			-- cluster's name in `a_file'.
 		require
@@ -155,7 +155,7 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	new_recursive_cluster (a_name: STRING): like Current is
+	new_recursive_cluster (a_name: STRING): like Current
 			-- New recursive cluster
 		local
 			a_name_id: ET_IDENTIFIER

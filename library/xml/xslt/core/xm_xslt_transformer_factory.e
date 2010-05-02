@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_configuration: XM_XSLT_CONFIGURATION) is
+	make (a_configuration: XM_XSLT_CONFIGURATION)
 			-- Establish invariant.
 		require
 			configuration_not_void: a_configuration /= Void
@@ -55,7 +55,7 @@ feature -- Access
 	created_transformer: XM_XSLT_TRANSFORMER
 			-- Transformer from last call to `create_new_transformer'
 
-	is_stylesheet_cached (a_uri_reference: STRING): BOOLEAN is
+	is_stylesheet_cached (a_uri_reference: STRING): BOOLEAN
 			-- Is `a_uri_reference' cached?
 		require
 			uri_not_void: a_uri_reference /= Void
@@ -63,7 +63,7 @@ feature -- Access
 			Result := stylesheet_cache.has (a_uri_reference)
 		end
 
-	cached_stylesheet (a_uri_reference: STRING): XM_XSLT_EXECUTABLE is
+	cached_stylesheet (a_uri_reference: STRING): XM_XSLT_EXECUTABLE
 			-- Cached stylesheet
 		require
 				uri_not_void: a_uri_reference /= Void
@@ -84,7 +84,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_caching (on_or_off: BOOLEAN) is
+	set_caching (on_or_off: BOOLEAN)
 			-- Turn caching `on_or_off'.
 		do
 			is_caching := on_or_off
@@ -94,7 +94,7 @@ feature -- Status setting
 
 feature -- Creation
 
-	create_new_transformer (a_source: XM_XSLT_SOURCE; a_uri: UT_URI) is
+	create_new_transformer (a_source: XM_XSLT_SOURCE; a_uri: UT_URI)
 			-- New transformer
 		require
 			source_not_void: a_source /= Void
@@ -137,7 +137,7 @@ feature -- Creation
 			error_or_transformer_not_void: not was_error implies created_transformer /= Void
 		end
 
-	associated_stylesheet (a_uri: STRING; a_medium: STRING; a_chooser: XM_XSLT_PI_CHOOSER): XM_XSLT_SOURCE is
+	associated_stylesheet (a_uri: STRING; a_medium: STRING; a_chooser: XM_XSLT_PI_CHOOSER): XM_XSLT_SOURCE
 			-- Stylesheet associated with `a_uri'
 		require
 			source_uri_not_a_fragment: a_uri /= Void and then a_uri.index_of ('#', 1) = 0
@@ -212,7 +212,7 @@ feature -- Creation
 
 feature -- Removal
 
-	clear_stylesheet_cache is
+	clear_stylesheet_cache
 			-- Remove all compiled stylesheets from cache.
 		do
 			stylesheet_cache.wipe_out
@@ -220,7 +220,7 @@ feature -- Removal
 			empty_cache: stylesheet_cache.is_empty
 		end
 
-	remove_stylesheet (a_uri_reference: STRING) is
+	remove_stylesheet (a_uri_reference: STRING)
 			-- Remove `a_uri_reference' from cache?
 		require
 			uri_not_void: a_uri_reference /= Void
@@ -236,7 +236,7 @@ feature {NONE} -- Implementation
 	stylesheet_cache: DS_HASH_TABLE [XM_XSLT_EXECUTABLE, STRING]
 			-- Compiled stylesheets indexed by full URI (including any fragment)
 
-	composite_stylesheet (a_uri: UT_URI;  selected_stylesheets: DS_ARRAYED_LIST [XM_XSLT_XML_STYLESHEET]): XM_XSLT_SOURCE is
+	composite_stylesheet (a_uri: UT_URI;  selected_stylesheets: DS_ARRAYED_LIST [XM_XSLT_XML_STYLESHEET]): XM_XSLT_SOURCE
 			-- Stylesheet which xsl:imports all of `selected_stylesheets'
 		require
 			source_uri_absolute: a_uri /= Void and then a_uri.is_absolute
@@ -277,7 +277,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	trim_selected_stylesheets (selected_stylesheets: DS_ARRAYED_LIST [XM_XSLT_XML_STYLESHEET]; selectable_candidate_indices: DS_ARRAYED_LIST [INTEGER]) is
+	trim_selected_stylesheets (selected_stylesheets: DS_ARRAYED_LIST [XM_XSLT_XML_STYLESHEET]; selectable_candidate_indices: DS_ARRAYED_LIST [INTEGER])
 			-- Remove entries from `selected_stylesheets' by index.
 		require
 			multiple_selected_stylesheets: selected_stylesheets /= Void and then selected_stylesheets.count > 0

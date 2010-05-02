@@ -40,7 +40,7 @@ feature -- Access
 	obsolete_message: ET_OBSOLETE
 			-- Obsolete message
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			if semicolon /= Void then
@@ -50,7 +50,7 @@ feature -- Access
 			end
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			if semicolon /= Void then
@@ -62,7 +62,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_is_keyword (an_is: like is_keyword) is
+	set_is_keyword (an_is: like is_keyword)
 			-- Set `is_keyword' to `an_is'.
 		do
 			is_keyword := an_is
@@ -70,7 +70,7 @@ feature -- Setting
 			is_keyword_set: is_keyword = an_is
 		end
 
-	set_obsolete_message (a_message: like obsolete_message) is
+	set_obsolete_message (a_message: like obsolete_message)
 			-- Set `obsolete_message' to `a_message'.
 		do
 			obsolete_message := a_message

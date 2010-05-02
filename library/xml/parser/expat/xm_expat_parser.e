@@ -50,7 +50,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new parser.
 		do
 			init_api
@@ -65,14 +65,14 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_incremental: BOOLEAN is True
+	is_incremental: BOOLEAN = True
 			-- Can parser handle incremental input? If yes, you can feed
 			-- the parser with a document in several steps. You must use
 			-- the special parsing routines (the ones that contain
 			-- "incremental" in their name) to do this and call
 			-- `finish_incremental' after the last part has been fed.
 
-	is_parser_created: BOOLEAN is
+	is_parser_created: BOOLEAN
 			-- Has Expat parser handle been created?
 		do
 			Result := item /= default_pointer
@@ -82,27 +82,27 @@ feature -- Status report
 
 feature -- Access
 
-	source: XM_SOURCE is
+	source: XM_SOURCE
 			-- Source of the XML document beeing parsed
 		obsolete "Use position.source_name"
 		do
 			create {XM_FILE_SOURCE} Result.make (position.source_name)
 		end
 
-	position: XM_POSITION is
+	position: XM_POSITION
 			-- Current position in the source of the XML document
 		do
 			create {XM_DEFAULT_POSITION} Result.make ("source unknown", last_byte_index, last_column_number, last_line_number)
 		end
 
-	positions: DS_LINKED_LIST [XM_POSITION] is
+	positions: DS_LINKED_LIST [XM_POSITION]
 			-- To be implemented...
 		do
 			create Result.make
 			Result.force_last (position)
 		end
 
-	relative_uri_base: STRING is
+	relative_uri_base: STRING
 			-- Relative URI base
 		require
 			parser_created: is_parser_created
@@ -115,7 +115,7 @@ feature -- Access
 			relative_uri_base_not_void: Result /= Void
 		end
 
-	version: STRING is
+	version: STRING
 			-- Expat library version (e.g. "expat_1.95.5").
 		do
 			Result := new_uc_string_from_c_utf8_zero_terminated_string (exml_XML_ExpatVersion)
@@ -123,7 +123,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_relative_uri_base (a_base: STRING) is
+	set_relative_uri_base (a_base: STRING)
 			-- Set the base to be used for resolving URIs in
 			-- system identifiers in declarations.
 			-- Note: Is this applicable to all the different
@@ -146,7 +146,7 @@ feature -- Setting
 
 feature -- Parsing
 
-	parse_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
+	parse_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM)
 			-- Parse XML document from input stream.
 		do
 			if is_parser_created then
@@ -156,7 +156,7 @@ feature -- Parsing
 			finish_incremental
 		end
 
-	parse_from_string (a_string: STRING) is
+	parse_from_string (a_string: STRING)
 			-- Parse XML document from `a_string'.
 		do
 			if is_parser_created then
@@ -166,14 +166,14 @@ feature -- Parsing
 			finish_incremental
 		end
 
-	parse_from_system (a_system: STRING) is
+	parse_from_system (a_system: STRING)
 			-- Parse from system identifier using resolver.
 		do
 			entity_resolver.resolve (a_system)
 			parse_from_entity
 		end
 
-	parse_from_public (a_public: STRING; a_system: STRING) is
+	parse_from_public (a_public: STRING; a_system: STRING)
 			-- Parse from public/system identifier using resolver.
 		do
 			entity_resolver.resolve_public (a_public, a_system)
@@ -182,7 +182,7 @@ feature -- Parsing
 
 feature {NONE} -- Implementation
 
-	parse_from_entity is
+	parse_from_entity
 			-- Parse from entity resolver
 		do
 			-- TODO: plug entity_resolver into expat entity resolving scheme and use it
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 
 feature {XM_PARSER_STOP_ON_ERROR_FILTER} --
 
-	force_unreported_error (an_error: STRING) is
+	force_unreported_error (an_error: STRING)
 			-- Stop the parser without reporting the error to downstream events.
 		do
 			is_correct := False
@@ -200,7 +200,7 @@ feature {XM_PARSER_STOP_ON_ERROR_FILTER} --
 
 feature -- Incremental parsing
 
-	parse_incremental_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
+	parse_incremental_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM)
 			-- Parse partial XML document from input stream.
 			-- After the last part of the data has been fed into the parser,
 			-- call `finish_incremental' to get any pending error messages.
@@ -219,7 +219,7 @@ feature -- Incremental parsing
 			end
 		end
 
-	parse_incremental_from_string (a_data: STRING) is
+	parse_incremental_from_string (a_data: STRING)
 			-- Parse partial XML document from 'a_data'.
 			-- Note: You can call `parse_incremental_from_string' multiple
 			-- times and give the parse the document in parts only.
@@ -233,7 +233,7 @@ feature -- Incremental parsing
 			parse_string_and_set_error (a_data, False)
 		end
 
-	finish_incremental is
+	finish_incremental
 			-- Call this routine to tell the parser that the document
 			-- has been completely parsed and no input is coming anymore.
 			-- We also generate the `on_finish' callback.
@@ -250,7 +250,7 @@ feature -- Incremental parsing
 
 feature {NONE} -- Low-level parsing
 
-	parse_string_and_set_error (a_data: STRING; is_final: BOOLEAN) is
+	parse_string_and_set_error (a_data: STRING; is_final: BOOLEAN)
 			-- Parse `a_data' (which may be empty).
 			-- Set the error flags according to result.
 			-- `is_final' signals end of data input.
@@ -264,7 +264,7 @@ feature {NONE} -- Low-level parsing
 			set_error_from_parse_result (int_result)
 		end
 
-	set_error_from_parse_result (i: INTEGER) is
+	set_error_from_parse_result (i: INTEGER)
 			-- Set error flags according to `i', where `i' must
 			-- be the result of a call to Expat's XML_Parser function.
 		require
@@ -288,13 +288,13 @@ feature -- Error reporting
 	last_error: INTEGER
 			-- Code of last error
 
-	last_error_description: STRING is
+	last_error_description: STRING
 			-- Textual description of last error
 		do
 			Result := new_string_from_c_zero_terminated_string (exml_XML_ErrorString (last_internal_error))
 		end
 
-	last_line_number: INTEGER is
+	last_line_number: INTEGER
 			-- Current line number
 		do
 			if is_parser_created then
@@ -307,7 +307,7 @@ feature -- Error reporting
 			line_number_positive: Result >= 1
 		end
 
-	last_column_number: INTEGER is
+	last_column_number: INTEGER
 			-- Current column number
 		do
 			if is_parser_created then
@@ -320,7 +320,7 @@ feature -- Error reporting
 			column_number_positive: Result >= 1
 		end
 
-	last_byte_index: INTEGER is
+	last_byte_index: INTEGER
 			-- Current byte index
 		do
 			if is_parser_created then
@@ -343,7 +343,7 @@ feature {NONE} -- Parser handle
 	item: POINTER
 			-- Expat parser C-handle
 
-	create_default_parser is
+	create_default_parser
 			-- Create default parser.
 		do
 			debug ("EXPAT")
@@ -364,7 +364,7 @@ feature {NONE} -- Parser handle
 			parser_created: is_parser_created
 		end
 
-	create_new_parser is
+	create_new_parser
 			-- Create a new parser. Existing parser, if any, is freed.
 		do
 			is_correct := True
@@ -376,7 +376,7 @@ feature {NONE} -- Parser handle
 			parser_created: is_parser_created
 		end
 
-	free_parser is
+	free_parser
 			-- Free parser. Make callback, if any, available to GC.
 		require
 			parser_created: is_parser_created
@@ -394,7 +394,7 @@ feature {NONE} -- Parser handle
 
 feature -- Callback registering
 
-	register_default_callbacks is
+	register_default_callbacks
 			-- Register default callbacks.
 			-- (Override to register more or less handlers.)
 		require
@@ -410,7 +410,7 @@ feature -- Callback registering
 			exml_XML_SetCommentHandler (item, $on_comment_procedure)
 		end
 
-	register_all_callbacks is
+	register_all_callbacks
 			-- Register all callbacks.
 			-- (Mainly for debugging purposes.)
 		require
@@ -433,7 +433,7 @@ feature -- Callback registering
 			exml_XML_SetNotStandaloneHandler (item, $on_not_standalone_procedure)
 		end
 
-	register_doctype_handler is
+	register_doctype_handler
 			-- Register doctype handler.
 		require
 			parser_created: is_parser_created
@@ -441,7 +441,7 @@ feature -- Callback registering
 			exml_XML_SetDoctypeDeclHandler (item, $on_start_doctype_procedure, $on_end_doctype_procedure)
 		end
 
-	register_element_declaration_handler is
+	register_element_declaration_handler
 			-- Register element declaration handler.
 		require
 			parser_created: is_parser_created
@@ -449,7 +449,7 @@ feature -- Callback registering
 			exml_XML_SetElementDeclHandler (item, $on_element_declaration_procedure)
 		end
 
-	register_attribute_declaration_handler is
+	register_attribute_declaration_handler
 			-- Register attribute declaration handler.
 		require
 			parser_created: is_parser_created
@@ -459,7 +459,7 @@ feature -- Callback registering
 
 feature -- Callback unregistering
 
-	unregister_all_callbacks is
+	unregister_all_callbacks
 			-- Unregister all callbacks.
 			-- (Quite useful when an error has been found, and you want to
 			-- stop processing things. There doesn't seem to be a way to
@@ -488,7 +488,7 @@ feature -- Callback unregistering
 
 feature -- Parsing parameter entities including the external dtd subset
 
-	disable_parameter_entity_parsing is
+	disable_parameter_entity_parsing
 		require
 			parser_created: is_parser_created
 		local
@@ -498,7 +498,7 @@ feature -- Parsing parameter entities including the external dtd subset
 			exml_XML_SetExternalEntityRefHandler (item, default_pointer)
 		end
 
-	enable_parameter_entity_parsing is
+	enable_parameter_entity_parsing
 		require
 			parser_created: is_parser_created
 		local
@@ -513,7 +513,7 @@ feature -- Parsing parameter entities including the external dtd subset
 
 feature {NONE} -- Turn Expat DTD description into XM_DTD_ELEMENT_CONTENT
 
-	create_children (parent: XM_DTD_ELEMENT_CONTENT; model_ptr: POINTER) is
+	create_children (parent: XM_DTD_ELEMENT_CONTENT; model_ptr: POINTER)
 			-- Create the children by calling `create_element_content'
 			-- and put them in the parent items list.
 		require
@@ -535,7 +535,7 @@ feature {NONE} -- Turn Expat DTD description into XM_DTD_ELEMENT_CONTENT
 			children_created: parent.items.count > 0
 		end
 
-	create_element_content (model_ptr: POINTER): XM_DTD_ELEMENT_CONTENT is
+	create_element_content (model_ptr: POINTER): XM_DTD_ELEMENT_CONTENT
 			-- Recursively walk Expat XML_Content struct and copy it to
 			-- XM_DTD_ELEMENT_CONTENT cells.
 		require
@@ -578,7 +578,7 @@ feature {NONE} -- Turn Expat DTD description into XM_DTD_ELEMENT_CONTENT
 
 feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 
-	frozen on_element_declaration_procedure (name_ptr: POINTER; model_ptr: POINTER) is
+	frozen on_element_declaration_procedure (name_ptr: POINTER; model_ptr: POINTER)
 		do
 			on_element_declaration (new_uc_string_from_c_utf8_zero_terminated_string (name_ptr), create_element_content (model_ptr))
 				-- It is the caller's responsibility to free model when
@@ -586,7 +586,7 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 			exml_XML_FreeContentModel (item, model_ptr)
 		end
 
-	frozen on_attribute_declaration_procedure (elname_ptr, attname_ptr, att_type_ptr, dflt_ptr: POINTER; is_required: BOOLEAN) is
+	frozen on_attribute_declaration_procedure (elname_ptr, attname_ptr, att_type_ptr, dflt_ptr: POINTER; is_required: BOOLEAN)
 		local
 			elname, attname, dflt: STRING
 			att_type: STRING
@@ -639,14 +639,14 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 			on_attribute_declaration (elname, attname, a_model)
 		end
 
-	frozen on_xml_declaration_procedure (version_ptr, encoding_ptr: POINTER; standalone: INTEGER) is
+	frozen on_xml_declaration_procedure (version_ptr, encoding_ptr: POINTER; standalone: INTEGER)
 		do
 			on_xml_declaration (new_uc_string_from_c_utf8_zero_terminated_string (version_ptr),
 					new_uc_string_from_c_utf8_zero_terminated_string_safe (encoding_ptr),
 					standalone = 1)
 		end
 
-	frozen on_entity_declaration_procedure (entity_name_ptr: POINTER; is_parameter_entity: BOOLEAN; value_ptr: POINTER; value_length: INTEGER; base_ptr, system_id_ptr, public_id_ptr, notation_name_ptr: POINTER) is
+	frozen on_entity_declaration_procedure (entity_name_ptr: POINTER; is_parameter_entity: BOOLEAN; value_ptr: POINTER; value_length: INTEGER; base_ptr, system_id_ptr, public_id_ptr, notation_name_ptr: POINTER)
 		local
 			an_id: XM_DTD_EXTERNAL_ID
 		do
@@ -666,7 +666,7 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 					new_uc_string_from_c_utf8_zero_terminated_string_safe (notation_name_ptr))
 		end
 
-	frozen on_start_tag_procedure (tag_name_ptr, attribute_specifications_ptr: POINTER) is
+	frozen on_start_tag_procedure (tag_name_ptr, attribute_specifications_ptr: POINTER)
 		local
 			a_name: STRING
 			a_prefix: STRING
@@ -699,7 +699,7 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 			on_start_tag_finish
 		end
 
-	frozen on_end_tag_procedure (tag_name_ptr: POINTER) is
+	frozen on_end_tag_procedure (tag_name_ptr: POINTER)
 		local
 			a_name: STRING
 			a_prefix: STRING
@@ -716,12 +716,12 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 			on_end_tag (Void, a_prefix, a_name)
 		end
 
-	frozen on_content_procedure (chr_data_ptr: POINTER; len: INTEGER) is
+	frozen on_content_procedure (chr_data_ptr: POINTER; len: INTEGER)
 		do
 			on_content (new_uc_string_from_c_utf8_runlength_string (chr_data_ptr, len))
 		end
 
-	frozen on_processing_instruction_procedure (target_ptr, data_ptr: POINTER) is
+	frozen on_processing_instruction_procedure (target_ptr, data_ptr: POINTER)
 		local
 			data: STRING
 		do
@@ -733,33 +733,33 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 			on_processing_instruction (new_uc_string_from_c_utf8_zero_terminated_string_safe (target_ptr), data)
 		end
 
-	frozen on_comment_procedure (data_ptr: POINTER) is
+	frozen on_comment_procedure (data_ptr: POINTER)
 			-- Data is a 0 terminated C string.
 		do
 			on_comment (new_uc_string_from_c_utf8_zero_terminated_string (data_ptr))
 		end
 
-	frozen on_start_cdata_section_procedure is
+	frozen on_start_cdata_section_procedure
 		do
 			on_start_cdata_section
 		end
 
-	frozen on_end_cdata_section_procedure is
+	frozen on_end_cdata_section_procedure
 		do
 			on_end_cdata_section
 		end
 
-	frozen on_default_procedure (data_ptr: POINTER; len: INTEGER) is
+	frozen on_default_procedure (data_ptr: POINTER; len: INTEGER)
 		do
 			on_default (new_unicode_string_from_utf8 (new_string_from_c_runlength_string (data_ptr, len)))
 		end
 
-	frozen on_default_expanded_procedure (data_ptr: POINTER; len: INTEGER) is
+	frozen on_default_expanded_procedure (data_ptr: POINTER; len: INTEGER)
 		do
 			on_default_expanded (new_unicode_string_from_utf8 (new_string_from_c_runlength_string (data_ptr, len)))
 		end
 
-	frozen on_start_doctype_procedure (doctype_name_ptr, sysid_ptr, pubid_ptr: POINTER; has_internal_subset: BOOLEAN) is
+	frozen on_start_doctype_procedure (doctype_name_ptr, sysid_ptr, pubid_ptr: POINTER; has_internal_subset: BOOLEAN)
 		local
 			an_id: XM_DTD_EXTERNAL_ID
 		do
@@ -770,12 +770,12 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 				an_id, has_internal_subset)
 		end
 
-	frozen on_end_doctype_procedure is
+	frozen on_end_doctype_procedure
 		do
 			on_end_doctype
 		end
 
-	frozen on_notation_declaration_procedure (notation_name_ptr, base_ptr, system_id_ptr, public_id_ptr: POINTER) is
+	frozen on_notation_declaration_procedure (notation_name_ptr, base_ptr, system_id_ptr, public_id_ptr: POINTER)
 		local
 			an_id: XM_DTD_EXTERNAL_ID
 		do
@@ -786,25 +786,25 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 			on_notation_declaration (new_uc_string_from_c_utf8_zero_terminated_string (notation_name_ptr), an_id)
 		end
 
-	frozen on_start_namespace_declaration_procedure (prefix_ptr, uri_ptr: POINTER) is
+	frozen on_start_namespace_declaration_procedure (prefix_ptr, uri_ptr: POINTER)
 		do
 			on_start_namespace_declaration (
 				new_uc_string_from_c_utf8_zero_terminated_string_safe (prefix_ptr),
 				new_uc_string_from_c_utf8_zero_terminated_string_safe (uri_ptr))
 		end
 
-	frozen on_end_namespace_declaration_procedure (prefix_ptr: POINTER) is
+	frozen on_end_namespace_declaration_procedure (prefix_ptr: POINTER)
 		do
 			on_end_namespace_declaration (
 				new_uc_string_from_c_utf8_zero_terminated_string_safe (prefix_ptr))
 		end
 
-	frozen on_not_standalone_procedure: BOOLEAN is
+	frozen on_not_standalone_procedure: BOOLEAN
 		do
 			Result := on_not_standalone
 		end
 
-	frozen on_external_entity_reference_procedure (context_ptr, base_ptr, system_id_ptr, public_id_ptr: POINTER): BOOLEAN is
+	frozen on_external_entity_reference_procedure (context_ptr, base_ptr, system_id_ptr, public_id_ptr: POINTER): BOOLEAN
 			-- Return False if parsing of external entity was not
 			-- successfull. You only come here if you have called
 			-- `enable_parameter_entity_parsing'.
@@ -848,7 +848,7 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 
 feature {NONE} -- Encoding callback
 
-	on_unknown_encoding_procedure (name_ptr, info_ptr: POINTER): BOOLEAN is
+	on_unknown_encoding_procedure (name_ptr, info_ptr: POINTER): BOOLEAN
 		do
 				-- yep, what now?
 			Result := False
@@ -856,42 +856,42 @@ feature {NONE} -- Encoding callback
 
 feature {NONE} -- Orphan expat events
 
-	on_not_standalone: BOOLEAN is
+	on_not_standalone: BOOLEAN
 			-- TODO: routine with side-effect!
 		do
 		end
 
-	on_end_doctype is
+	on_end_doctype
 		do
 		end
 
-	on_start_namespace_declaration (a_prefix: STRING; a_uri: STRING) is
+	on_start_namespace_declaration (a_prefix: STRING; a_uri: STRING)
 		do
 		end
 
-	on_end_namespace_declaration (a_prefix: STRING) is
+	on_end_namespace_declaration (a_prefix: STRING)
 		do
 		end
 
-	on_default (a_data: STRING) is
+	on_default (a_data: STRING)
 		do
 		end
 
-	on_default_expanded (a_data: STRING) is
+	on_default_expanded (a_data: STRING)
 		do
 		end
 
-	on_start_cdata_section is
+	on_start_cdata_section
 		do
 		end
 
-	on_end_cdata_section is
+	on_end_cdata_section
 		do
 		end
 
 feature {NONE} -- GC
 
-	dispose is
+	dispose
 			-- Action to be executed just before garbage collector
 			-- reclaims the object.
 		do
@@ -902,12 +902,12 @@ feature {NONE} -- GC
 
 feature {NONE} -- Constants
 
-	read_block_size: INTEGER is 10240
+	read_block_size: INTEGER = 10240
 			-- 10 kB
 
 feature {NONE} -- Once strings
 
-	once_empty_string: STRING is ""
+	once_empty_string: STRING = ""
 			-- The empty string
 
 

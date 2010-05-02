@@ -11,9 +11,9 @@ note
 	revision: "$Revision$"
 
 deferred class XM_XPATH_COMPLEX_TYPE
-	
+
 inherit
-	
+
 	XM_XPATH_SCHEMA_TYPE
 		redefine
 			is_complex_type, as_complex_type
@@ -21,24 +21,24 @@ inherit
 
 feature -- Access
 
-	is_complex_type: BOOLEAN is
+	is_complex_type: BOOLEAN
 			-- Is `Current' a complex type?
 		do
 			Result := True
 		end
 
-	as_complex_type: XM_XPATH_COMPLEX_TYPE is
+	as_complex_type: XM_XPATH_COMPLEX_TYPE
 			-- `Current' seen as a simple type
 		do
 			Result := Current
 		end
 
-	is_simple_content: BOOLEAN is
+	is_simple_content: BOOLEAN
 			-- Is content simple?
 		deferred
 		end
 
-	simple_content_type: XM_XPATH_SIMPLE_TYPE is
+	simple_content_type: XM_XPATH_SIMPLE_TYPE
 			-- Simple content type
 		require
 			simple_content: is_simple_content

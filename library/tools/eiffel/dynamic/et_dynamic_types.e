@@ -14,7 +14,7 @@ deferred class ET_DYNAMIC_TYPES
 
 feature -- Access
 
-	dynamic_type (i: INTEGER): ET_DYNAMIC_TYPE is
+	dynamic_type (i: INTEGER): ET_DYNAMIC_TYPE
 			-- Dynamic type at index `i'
 		require
 			i_large_enough: i >= 1
@@ -24,7 +24,7 @@ feature -- Access
 			dynamic_type_not_void: Result /= Void
 		end
 
-	special_type: ET_DYNAMIC_TYPE is
+	special_type: ET_DYNAMIC_TYPE
 			-- One of the SPECIAL types contained in current dynamic types
 			-- if any, Void otherwise
 		local
@@ -43,7 +43,7 @@ feature -- Access
 			end
 		end
 
-	index_of (a_type: ET_DYNAMIC_TYPE): INTEGER is
+	index_of (a_type: ET_DYNAMIC_TYPE): INTEGER
 			-- Index of first occurrence of `a_type'?
 		require
 			a_type_not_void: a_type /= Void
@@ -66,7 +66,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of dynamic types
 		deferred
 		ensure
@@ -75,7 +75,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is there no dynamic type?
 		do
 			Result := (count = 0)
@@ -83,7 +83,7 @@ feature -- Status report
 			definition: Result = (count = 0)
 		end
 
-	has_type (a_type: ET_DYNAMIC_TYPE): BOOLEAN is
+	has_type (a_type: ET_DYNAMIC_TYPE): BOOLEAN
 			-- Do current dynamic types contain `a_type'?
 		require
 			a_type_not_void: a_type /= Void
@@ -91,7 +91,7 @@ feature -- Status report
 			Result := index_of (a_type) /= 0
 		end
 
-	has_special: BOOLEAN is
+	has_special: BOOLEAN
 			-- Do current dynamic types contain at least one SPECIAL type?
 		local
 			i, nb: INTEGER
@@ -107,7 +107,7 @@ feature -- Status report
 			end
 		end
 
-	has_expanded: BOOLEAN is
+	has_expanded: BOOLEAN
 			-- Do current dynamic types contain at least one expanded type?
 		local
 			i, nb: INTEGER

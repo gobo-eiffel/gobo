@@ -17,7 +17,7 @@ class ST_DATE_TIME_ROUTINES
 
 feature -- Access
 
-	xslt_formatted_date (a_date: DT_DATE; a_zone: detachable DT_FIXED_OFFSET_TIME_ZONE; a_picture: STRING; a_language, a_calendar, a_country: detachable STRING): ST_FORMAT_DATE_TIME_RESULT is
+	xslt_formatted_date (a_date: DT_DATE; a_zone: detachable DT_FIXED_OFFSET_TIME_ZONE; a_picture: STRING; a_language, a_calendar, a_country: detachable STRING): ST_FORMAT_DATE_TIME_RESULT
 			-- `a_date' formatted according to XSLT's format-date() function;
 			-- Passing `Void' for `a_language' defaults to "en".
 			-- Passing `Void' for `a_calendar' defaults to "CE".
@@ -67,7 +67,7 @@ feature -- Access
 			xslt_formatted_date_not_void: Result /= Void
 		end
 
-	xslt_formatted_time (a_time: DT_TIME; a_zone: detachable DT_FIXED_OFFSET_TIME_ZONE; a_picture: STRING; a_language, a_calendar, a_country: detachable STRING): ST_FORMAT_DATE_TIME_RESULT is
+	xslt_formatted_time (a_time: DT_TIME; a_zone: detachable DT_FIXED_OFFSET_TIME_ZONE; a_picture: STRING; a_language, a_calendar, a_country: detachable STRING): ST_FORMAT_DATE_TIME_RESULT
 			-- `a_time' formatted according to XSLT's format-time() function;
 			-- Passing `Void' for `a_language' defaults to "en".
 			-- Passing `Void' for `a_calendar' defaults to "CE".
@@ -118,7 +118,7 @@ feature -- Access
 		end
 
 	xslt_formatted_date_time (a_date_time: DT_DATE_TIME; a_zone: detachable DT_FIXED_OFFSET_TIME_ZONE;
-		a_picture: STRING; a_language, a_calendar, a_country: detachable STRING): ST_FORMAT_DATE_TIME_RESULT is
+		a_picture: STRING; a_language, a_calendar, a_country: detachable STRING): ST_FORMAT_DATE_TIME_RESULT
 			-- `a_date_time' formatted according to XSLT's format-date-time() function;
 			-- Passing `Void' for `a_language' defaults to "en".
 			-- Passing `Void' for `a_calendar' defaults to "CE".

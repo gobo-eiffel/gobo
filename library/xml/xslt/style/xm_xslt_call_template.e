@@ -26,7 +26,7 @@ create {XM_XSLT_NODE_FACTORY}
 
 feature -- Status setting
 
-	mark_tail_calls is
+	mark_tail_calls
 			-- Mark tail-recursive calls on templates and functions.
 		do
 			use_tail_recursion := True
@@ -34,7 +34,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -84,7 +84,7 @@ feature -- Element change
 			attributes_prepared := True
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 			-- This is called once for each element, after the entire tree has been built.
 			-- As well as validation, it can perform first-time initialisation.
@@ -95,7 +95,7 @@ feature -- Element change
 			validated := True
 		end
 
-	post_validate is
+	post_validate
 			-- Hook to allow additional validation of a parent element
 			--  immediately after its children have been validated.
 		local
@@ -182,7 +182,7 @@ feature -- Element change
 			post_validated := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (an_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		local
 			a_call: XM_XSLT_COMPILED_CALL
@@ -195,7 +195,7 @@ feature -- Element change
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
 
-	returned_item_type: XM_XPATH_ITEM_TYPE is
+	returned_item_type: XM_XPATH_ITEM_TYPE
 			-- Type of item returned by this instruction
 		do
 			if template = Void then
@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 	called_template_fingerprint: INTEGER
 			-- Fingerprint of named template to call
 
-	find_template is
+	find_template
 			-- Find `template' from `called_template_fingerprint'.
 		require
 			attributes_prepared: attributes_prepared

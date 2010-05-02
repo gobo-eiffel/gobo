@@ -3,7 +3,7 @@ note
 	description:
 
 		"Print DTD declaration events"
-		
+
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2003, Eric Bezault and others"
 	license: "MIT License"
@@ -13,7 +13,7 @@ note
 class XM_DTD_PRETTY_PRINT_FILTER
 
 inherit
-	
+
 	XM_DTD_CALLBACKS_FILTER
 		redefine
 			on_doctype,
@@ -22,9 +22,9 @@ inherit
 			on_entity_declaration,
 			on_notation_declaration
 		end
-	
+
 	XM_OUTPUT
-	
+
 create
 
 	make_null,
@@ -32,7 +32,7 @@ create
 
 feature -- Document type definition callbacks
 
-	on_doctype (a_name: STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN) is
+	on_doctype (a_name: STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN)
 			-- Document type declaration.
 		do
 			output ("<!DOCTYPE ")
@@ -45,8 +45,8 @@ feature -- Document type definition callbacks
 			output_new_line
 			Precursor (a_name, an_id, has_internal_subset)
 		end
-		
-	on_element_declaration (a_name: STRING; a_model: XM_DTD_ELEMENT_CONTENT) is
+
+	on_element_declaration (a_name: STRING; a_model: XM_DTD_ELEMENT_CONTENT)
 		do
 			output ("<!ELEMENT ")
 			output (a_name)
@@ -56,8 +56,8 @@ feature -- Document type definition callbacks
 			output_new_line
 			Precursor (a_name, a_model)
 		end
-		
-	on_attribute_declaration (an_element_name, a_name: STRING; a_model: XM_DTD_ATTRIBUTE_CONTENT) is
+
+	on_attribute_declaration (an_element_name, a_name: STRING; a_model: XM_DTD_ATTRIBUTE_CONTENT)
 			-- Attribute declaration, one event per attribute.
 		do
 			output ("<!ATTLIST ")
@@ -68,9 +68,9 @@ feature -- Document type definition callbacks
 			output_new_line
 			Precursor (an_element_name, a_name, a_model)
 		end
-		
+
 	on_entity_declaration (entity_name: STRING; is_parameter: BOOLEAN; value: STRING;
-		an_id: XM_DTD_EXTERNAL_ID; notation_name: STRING) is
+		an_id: XM_DTD_EXTERNAL_ID; notation_name: STRING)
 			-- Entity declaration.
 		do
 			output ("<!ENTITY ")
@@ -96,7 +96,7 @@ feature -- Document type definition callbacks
 			Precursor (entity_name, is_parameter, value, an_id, notation_name)
 		end
 
-	on_notation_declaration (notation_name: STRING; an_id: XM_DTD_EXTERNAL_ID) is
+	on_notation_declaration (notation_name: STRING; an_id: XM_DTD_EXTERNAL_ID)
 			-- Notation declaration.
 		do
 			output ("<!NOTATION ")
@@ -108,9 +108,9 @@ feature -- Document type definition callbacks
 
 feature {NONE} -- Output
 
-	output_new_line is
+	output_new_line
 		do
 			output ("%N")
 		end
-		
+
 end

@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_style_element: XM_XSLT_STYLE_ELEMENT; a_configuration: XM_XSLT_CONFIGURATION) is
+	make (a_style_element: XM_XSLT_STYLE_ELEMENT; a_configuration: XM_XSLT_CONFIGURATION)
 			-- Establish invariant.
 		require
 			style_element_not_void:	a_style_element /= Void
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			not_restricted: not is_restricted
 		end
 
-	make_restricted (a_style_element: XM_XSLT_STYLE_ELEMENT; a_configuration: XM_XSLT_CONFIGURATION) is
+	make_restricted (a_style_element: XM_XSLT_STYLE_ELEMENT; a_configuration: XM_XSLT_CONFIGURATION)
 			-- Create a restricted context for [xsl:]use-when processing..
 		require
 			style_element_not_void:	a_style_element /= Void
@@ -77,18 +77,18 @@ feature -- Access
 	style_element: XM_XSLT_STYLE_ELEMENT
 			-- Style element that provides the context
 
-	system_id: STRING is
+	system_id: STRING
 		do
 			Result := style_element.system_id
 		end
 
-	line_number: INTEGER is
+	line_number: INTEGER
 			-- Line number
 		do
 			Result := style_element.line_number
 		end
 
-	style_sheet: XM_XSLT_STYLESHEET is
+	style_sheet: XM_XSLT_STYLESHEET
 			-- Principal style sheet
 		do
 			Result := style_element.principal_stylesheet
@@ -96,7 +96,7 @@ feature -- Access
 			style_sheet_not_void: Result /= Void
 		end
 
-	available_functions: XM_XPATH_FUNCTION_LIBRARY is
+	available_functions: XM_XPATH_FUNCTION_LIBRARY
 			-- Available functions
 		local
 			l_function_library: XM_XPATH_FUNCTION_LIBRARY
@@ -122,7 +122,7 @@ feature -- Access
 			end
 		end
 
-	host_language: STRING is
+	host_language: STRING
 			-- Name of host language
 		do
 			Result := "XSLT"
@@ -130,38 +130,38 @@ feature -- Access
 
 	base_uri: UT_URI
 			-- Base URI
-	
-	default_element_namespace: STRING is
+
+	default_element_namespace: STRING
 			-- Default XPath namespace uri
 		do
 			Result := style_element.default_xpath_namespace
 		end
 
-	
-	default_function_namespace_uri: STRING is
+
+	default_function_namespace_uri: STRING
 			-- Namespace for non-prefixed XPath functions
 		do
 			Result := Xpath_standard_functions_uri
 		end
-	
+
 	default_collation_name: STRING
 			-- URI naming the default collation
 
-	uri_for_prefix (an_xml_prefix: STRING): STRING is
+	uri_for_prefix (an_xml_prefix: STRING): STRING
 			-- URI for a namespace prefix
 		do
 			Result := style_element.uri_for_prefix (an_xml_prefix, False)
 		end
 
-	is_backwards_compatible_mode: BOOLEAN is
+	is_backwards_compatible_mode: BOOLEAN
 			-- Is Backwards Compatible Mode used?
 		do
 			if not is_restricted then
 				Result := style_element.is_backwards_compatible_processing_enabled
 			end
 		end
-		
-	fingerprint (a_qname: STRING; use_default_namespace: BOOLEAN): INTEGER is
+
+	fingerprint (a_qname: STRING; use_default_namespace: BOOLEAN): INTEGER
 			-- Fingerprint for `a_qname', using this as the context for namespace resolution
 		local
 			a_parser: XM_XPATH_QNAME_PARSER
@@ -188,13 +188,13 @@ feature -- Access
 			end
 		end
 
-	namespace_context: XM_XSLT_NAMESPACE_CONTEXT is
+	namespace_context: XM_XSLT_NAMESPACE_CONTEXT
 			-- Namespace context
 		do
 			Result := style_element.namespace_context
 		end
 
-	namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER is
+	namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER
 			-- Resolver for lexical QNames
 		do
 			Result := namespace_context
@@ -202,19 +202,19 @@ feature -- Access
 
 feature -- Status report
 
-	is_prefix_declared (an_xml_prefix: STRING): BOOLEAN is
+	is_prefix_declared (an_xml_prefix: STRING): BOOLEAN
 			-- Is `an_xml_prefix' allocated to a namespace?
 		do
 			Result := style_element.uri_code_for_prefix (an_xml_prefix) /=  -1
 		end
 
-	is_variable_declared (a_fingerprint: INTEGER): BOOLEAN is
+	is_variable_declared (a_fingerprint: INTEGER): BOOLEAN
 			-- Does `a_fingerprint' represent a variable declared in the static context?
 		do
 			Result := style_element.is_variable_declared (a_fingerprint)
 		end
-	
-	is_data_type_valid (a_fingerprint: INTEGER): BOOLEAN is
+
+	is_data_type_valid (a_fingerprint: INTEGER): BOOLEAN
 			-- Does `a_fingerprint' represent a data-type in `Current'?
 		do
 			Result := False
@@ -222,10 +222,10 @@ feature -- Status report
 			-- Customized host languages must redefine this routine.
 			-- It is not called for host languages supported directly
 			--  by this library.
-			
+
 		end
 
-	is_element_available (a_qname: STRING): BOOLEAN is
+	is_element_available (a_qname: STRING): BOOLEAN
 			-- Is element name `a_qname' available?
 		local
 			l_parser: XM_XPATH_QNAME_PARSER
@@ -256,7 +256,7 @@ feature -- Status report
 
 feature -- Creation
 
-	new_compile_time_context: XM_XPATH_CONTEXT is
+	new_compile_time_context: XM_XPATH_CONTEXT
 			-- Restricted dynamic context
 		local
 			l_configuration: XM_XSLT_CONFIGURATION
@@ -272,7 +272,7 @@ feature -- Creation
 
 feature -- Element change
 
-	set_last_bound_variable (a_variable: XM_XSLT_VARIABLE_DECLARATION) is
+	set_last_bound_variable (a_variable: XM_XSLT_VARIABLE_DECLARATION)
 			-- Set `last_bound_variable'.
 		require
 			variable_not_void: a_variable /= Void
@@ -282,7 +282,7 @@ feature -- Element change
 			last_bound_variable_set: last_bound_variable = a_variable
 		end
 
-	bind_variable (a_fingerprint: INTEGER) is
+	bind_variable (a_fingerprint: INTEGER)
 			-- Bind variable to it's declaration.
 		do
 			style_element.bind_variable (a_fingerprint)
@@ -290,7 +290,7 @@ feature -- Element change
 
 feature -- Output
 
-	issue_warning (a_warning: STRING) is
+	issue_warning (a_warning: STRING)
 			-- Issue a warning message
 		do
 			style_element.report_compile_warning (a_warning)
@@ -304,13 +304,13 @@ feature {NONE} -- Implementation
 	cached_function_manager: XM_XPATH_FUNCTION_LIBRARY_MANAGER
 			-- Function library manager for use-when processing
 
-	code_point_collator: ST_COLLATOR is
+	code_point_collator: ST_COLLATOR
 			-- Unicode code-point collator
 		once
 			create Result
 		end
 
-	displayed_argument_count (a_count: INTEGER): STRING is
+	displayed_argument_count (a_count: INTEGER): STRING
 			-- Number of arguments, as error text
 		require
 			positive_count: a_count >= 0
@@ -328,7 +328,7 @@ feature {NONE} -- Implementation
 			displayed_argument_count_not_void: Result /= Void
 		end
 
-	add_function_library (a_manager: XM_XPATH_FUNCTION_LIBRARY_MANAGER; a_library: XM_XPATH_FUNCTION_LIBRARY) is
+	add_function_library (a_manager: XM_XPATH_FUNCTION_LIBRARY_MANAGER; a_library: XM_XPATH_FUNCTION_LIBRARY)
 			-- Add `a_library' to `a_manager'.
 		require
 			a_manager_not_void: a_manager /= Void

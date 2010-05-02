@@ -14,7 +14,7 @@ class KL_IMPORTED_BOOLEAN_ROUTINES
 
 feature -- Access
 
-	BOOLEAN_: KL_BOOLEAN_ROUTINES is
+	BOOLEAN_: KL_BOOLEAN_ROUTINES
 			-- Routines that ought to be in class BOOLEAN
 		once
 			create Result

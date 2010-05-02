@@ -2,7 +2,7 @@ class CC
 
 feature
 
-	f is
+	f
 		do
 			print ("f%N")
 		end

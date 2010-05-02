@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_feature: like static_feature; a_parent_type: like parent_type; a_current_feature: like current_feature; a_system: ET_DYNAMIC_SYSTEM) is
+	make (a_feature: like static_feature; a_parent_type: like parent_type; a_current_feature: like current_feature; a_system: ET_DYNAMIC_SYSTEM)
 			-- Create a new feature equipped with dynamic type sets,
 			-- associated with compilation-time precursor feature
 			-- `a_feature' of `a_current_feature' from parent type
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_precursor: BOOLEAN is True
+	is_precursor: BOOLEAN = True
 			-- Is current feature a precursor?
 
 feature -- Access
@@ -61,7 +61,7 @@ feature -- Access
 	current_feature: ET_DYNAMIC_FEATURE
 			-- Feature to which current precursor is a precursor
 
-	dynamic_precursor (a_feature: ET_FEATURE; a_parent_type: ET_DYNAMIC_TYPE; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_PRECURSOR is
+	dynamic_precursor (a_feature: ET_FEATURE; a_parent_type: ET_DYNAMIC_TYPE; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_PRECURSOR
 			-- Dynamic precursor of `current_feature';
 			-- `a_feature' is the precursor of `current_feaure' in `a_parent_type'
 		do

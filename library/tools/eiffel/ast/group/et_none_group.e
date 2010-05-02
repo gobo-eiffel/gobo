@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_universe: ET_UNIVERSE) is
+	make (a_universe: ET_UNIVERSE)
 			-- Create a new built-in group for class "NONE".
 		require
 			a_universe_not_void: a_universe /= Void
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- status report
 
-	is_none: BOOLEAN is True
+	is_none: BOOLEAN = True
 			-- Is current group a built-in group for class "NONE"?
 
 feature -- Access

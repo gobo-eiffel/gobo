@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	identifier: ET_IDENTIFIER is
+	identifier: ET_IDENTIFIER
 			-- Identifier
 		deferred
 		ensure

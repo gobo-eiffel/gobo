@@ -48,7 +48,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_from_system (a_name: STRING; a_system: ET_SYSTEM) is
+	make_from_system (a_name: STRING; a_system: ET_SYSTEM)
 			-- Create a new universe as being part of `a_system'.
 		require
 			a_name_not_void: a_name /= Void
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 			current_system_set: current_system = a_system
 		end
 
-	initialize is
+	initialize
 			-- Initialize universe.
 		do
 			create master_classes.make_map (3000)
@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset_classes is
+	reset_classes
 			-- Reset classes (declared locally in current universe)
 			-- as they were just after they were last parsed, or as
 			-- they were when they were last preparsed if there was
@@ -86,7 +86,7 @@ feature -- Initialization
 			master_classes_do_all (agent {ET_MASTER_CLASS}.local_classes_do_all (agent {ET_CLASS}.reset_after_parsed_and_errors))
 		end
 
-	reset_classes_recursive is
+	reset_classes_recursive
 			-- Reset classes (declared in current universe and
 			-- recursively in universes it depends on)
 			-- as they were just after they were last parsed, or as
@@ -99,7 +99,7 @@ feature -- Initialization
 			master_classes_do_recursive (agent {ET_MASTER_CLASS}.local_classes_do_all (agent {ET_CLASS}.reset_after_parsed_and_errors))
 		end
 
-	reset_classes_incremental_recursive is
+	reset_classes_incremental_recursive
 			-- Reset parts of the classes (declared in current universe and recursively in universes
 			-- it depends on) which may not be valid anymore because of changes in other
 			-- classes. Re-processing these classes will not affect the parts which didn't
@@ -185,7 +185,7 @@ feature -- Initialization
 			master_classes_do_recursive (agent {ET_MASTER_CLASS}.set_modified (False))
 		end
 
-	reset_errors is
+	reset_errors
 			-- Reset classes (declared locally in current universe) as they were
 			-- before their first error was reported.
 			-- Errors will be reported again if classes are processed again.
@@ -193,7 +193,7 @@ feature -- Initialization
 			master_classes_do_all (agent {ET_MASTER_CLASS}.local_classes_do_all (agent {ET_CLASS}.reset_errors))
 		end
 
-	reset_errors_recursive is
+	reset_errors_recursive
 			-- Reset classes (declared in current universe and recursively in universes
 			-- it depends on) as they were before their first error was reported.
 			-- Errors will be reported again if classes are processed again.
@@ -213,7 +213,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	has_master_class (a_name: ET_CLASS_NAME): BOOLEAN is
+	has_master_class (a_name: ET_CLASS_NAME): BOOLEAN
 			-- Is there a class named `a_name' when viewed from current universe?
 			-- Take into account both locally declared classes and
 			-- classes imported from other universes.
@@ -231,7 +231,7 @@ feature -- Status report
 			is_preparsed: Result implies master_class (a_name).is_preparsed
 		end
 
-	has_master_class_recursive (a_name: ET_CLASS_NAME): BOOLEAN is
+	has_master_class_recursive (a_name: ET_CLASS_NAME): BOOLEAN
 			-- Is there a class named `a_name' when viewed from current universe,
 			-- or recursively from one of the universes it depends on?
 			-- Take into account both locally declared classes and
@@ -246,7 +246,7 @@ feature -- Status report
 			Result := l_result.is_true
 		end
 
-	has_class (a_name: ET_CLASS_NAME): BOOLEAN is
+	has_class (a_name: ET_CLASS_NAME): BOOLEAN
 			-- Is there a class named `a_name' declared locally in current universe?
 			-- Do not take into account overridden classes.
 		require
@@ -263,7 +263,7 @@ feature -- Status report
 			end
 		end
 
-	has_class_recursive (a_name: ET_CLASS_NAME): BOOLEAN is
+	has_class_recursive (a_name: ET_CLASS_NAME): BOOLEAN
 			-- Is there a class named `a_name' declared locally in current universe,
 			-- or recursively in one of the universes it depends on?
 			-- Do not take into account overridden classes.
@@ -284,7 +284,7 @@ feature -- Access
 			-- Contains both locally declared classes and
 			-- classes imported from other universes.
 
-	master_class (a_name: ET_CLASS_NAME): ET_MASTER_CLASS is
+	master_class (a_name: ET_CLASS_NAME): ET_MASTER_CLASS
 			-- Class named `a_name' when viewed from current universe.
 			-- Add this class to universe if not found,
 			-- in which case it will refer to the unknown class.
@@ -309,7 +309,7 @@ feature -- Access
 			master_class_not_void: Result /= Void
 		end
 
-	master_class_by_name (a_name: STRING): ET_MASTER_CLASS is
+	master_class_by_name (a_name: STRING): ET_MASTER_CLASS
 			-- Class named `a_name' when viewed from current universe.
 			-- Take into account both locally declared classes and
 			-- classes imported from other universes.
@@ -331,7 +331,7 @@ feature -- Access
 			end
 		end
 
-	master_classes_by_name_recursive (a_name: STRING): DS_ARRAYED_LIST [ET_MASTER_CLASS] is
+	master_classes_by_name_recursive (a_name: STRING): DS_ARRAYED_LIST [ET_MASTER_CLASS]
 			-- Classes named `a_name' when viewed from current universe,
 			-- or recursively from one of the universes it depends on.
 			-- Take into account both locally declared classes and
@@ -348,7 +348,7 @@ feature -- Access
 			no_void_class: not Result.has_void
 		end
 
-	class_by_name (a_name: STRING): ET_CLASS is
+	class_by_name (a_name: STRING): ET_CLASS
 			-- Class named `a_name' declared locally in current universe.
 			-- Do not take into account overridden classes.
 			-- Void if not such class
@@ -370,7 +370,7 @@ feature -- Access
 			local_class: Result /= Void implies Result.universe = Current
 		end
 
-	classes_by_name_recursive (a_name: STRING): DS_ARRAYED_LIST [ET_CLASS] is
+	classes_by_name_recursive (a_name: STRING): DS_ARRAYED_LIST [ET_CLASS]
 			-- Class named `a_name' declared locally in current universe
 			-- or recursively in one of the universes it depends on.
 			-- Do not take into account overridden classes.
@@ -386,7 +386,7 @@ feature -- Access
 			no_void_class: not Result.has_void
 		end
 
-	classes_in_group (a_group: ET_GROUP): DS_ARRAYED_LIST [ET_CLASS] is
+	classes_in_group (a_group: ET_GROUP): DS_ARRAYED_LIST [ET_CLASS]
 			-- Classes declared locally in current universe which are in `a_group'.
 			-- Overridden classes are also taken into account.
 			-- Create a new list at each call.
@@ -400,7 +400,7 @@ feature -- Access
 			no_void_class: not Result.has_void
 		end
 
-	classes_in_group_recursive (a_group: ET_GROUP): DS_ARRAYED_LIST [ET_CLASS] is
+	classes_in_group_recursive (a_group: ET_GROUP): DS_ARRAYED_LIST [ET_CLASS]
 			-- Classes declared locally in current in universe which are in `a_group'
 			-- or recursively in one of its subgroups.
 			-- Overridden classes are also taken into account.
@@ -415,7 +415,7 @@ feature -- Access
 			no_void_class: not Result.has_void
 		end
 
-	classes_by_groups: DS_HASH_TABLE [DS_ARRAYED_LIST [ET_CLASS], ET_GROUP] is
+	classes_by_groups: DS_HASH_TABLE [DS_ARRAYED_LIST [ET_CLASS], ET_GROUP]
 			-- Classes, indexed by groups, declared locally in current universe.
 			-- Overridden classes are also taken into account.
 			-- Create a new data structure at each call.
@@ -429,7 +429,7 @@ feature -- Access
 			no_void_class: not Result.there_exists (agent {DS_ARRAYED_LIST [ET_CLASS]}.has_void)
 		end
 
-	classes_by_groups_recursive: DS_HASH_TABLE [DS_ARRAYED_LIST [ET_CLASS], ET_GROUP] is
+	classes_by_groups_recursive: DS_HASH_TABLE [DS_ARRAYED_LIST [ET_CLASS], ET_GROUP]
 			-- Classes, indexed by groups, declared locally in current universe
 			-- and recursively in universes it depends on.
 			-- Overridden classes are also taken into account.
@@ -447,7 +447,7 @@ feature -- Access
 	current_system: ET_SYSTEM
 			-- Surrounding Eiffel system
 
-	adapted_universe (a_universe: ET_UNIVERSE): ET_ADAPTED_UNIVERSE is
+	adapted_universe (a_universe: ET_UNIVERSE): ET_ADAPTED_UNIVERSE
 			-- Adapted version of `a_universe' viewed from current universe
 			-- when it depends on it, Void otherwise
 			--
@@ -461,7 +461,7 @@ feature -- Access
 			consistent: Result /= Void implies Result.universe = a_universe
 		end
 
-	shortest_path (a_other: ET_UNIVERSE): DS_ARRAYED_LIST [ET_ADAPTED_UNIVERSE] is
+	shortest_path (a_other: ET_UNIVERSE): DS_ARRAYED_LIST [ET_ADAPTED_UNIVERSE]
 			-- One of the shortest paths from current universe to `a_other' if
 			-- it recursively depends on `a_other', empty otherwise
 		require
@@ -529,7 +529,7 @@ feature -- Access
 			last: not Result.is_empty implies Result.last.universe = a_other
 		end
 
-	relative_name (a_universe: ET_UNIVERSE; a_separator: CHARACTER): STRING is
+	relative_name (a_universe: ET_UNIVERSE; a_separator: CHARACTER): STRING
 			-- Name of current universe relative to another universe
 			-- (use `a_separator' as separator between universes' names)
 			--
@@ -570,7 +570,7 @@ feature -- Access
 			relative_name_not_empty: Result.count > 0
 		end
 
-	relative_lower_name (a_universe: ET_UNIVERSE; a_separator: CHARACTER): STRING is
+	relative_lower_name (a_universe: ET_UNIVERSE; a_separator: CHARACTER): STRING
 			-- Lower-name of current universe relative to another universe
 			-- (use `a_separator' as separator between universes' names)
 			--
@@ -612,7 +612,7 @@ feature -- Access
 			definition: Result.same_string (relative_name (a_universe, a_separator).as_lower)
 		end
 
-	full_name (a_separator: CHARACTER): STRING is
+	full_name (a_separator: CHARACTER): STRING
 			-- Full name, which is the name relative to `current_system'
 			-- (use `a_separator' as separator between universes' names)
 		do
@@ -622,7 +622,7 @@ feature -- Access
 			full_name_not_empty: Result.count > 0
 		end
 
-	full_lower_name (a_separator: CHARACTER): STRING is
+	full_lower_name (a_separator: CHARACTER): STRING
 			-- Full lower-name, which is the name relative to `current_system'
 			-- (use `a_separator' as separator between universes' names)
 		do
@@ -633,13 +633,13 @@ feature -- Access
 			definition: Result.same_string (full_name (a_separator).as_lower)
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash value
 		do
 			Result := name.hash_code
 		end
 
-	kind_name: STRING is
+	kind_name: STRING
 			-- Name of the kind of universe (e.g. "library", "assembly", etc.)
 		once
 			Result := "universe"
@@ -649,7 +649,7 @@ feature -- Access
 
 feature -- Measurement
 
-	class_count: INTEGER is
+	class_count: INTEGER
 			-- Number of classes declared locally in current universe.
 			-- Do not take into account overridden classes.
 		local
@@ -662,7 +662,7 @@ feature -- Measurement
 			class_count_not_negative: Result >= 0
 		end
 
-	class_count_recursive: INTEGER is
+	class_count_recursive: INTEGER
 			-- Number of classes declared locally in current universe
 			-- and recursively in the universes it depends on.
 			-- Do not take into account overridden classes.
@@ -676,7 +676,7 @@ feature -- Measurement
 			class_count_not_negative: Result >= 0
 		end
 
-	parsed_class_count: INTEGER is
+	parsed_class_count: INTEGER
 			-- Number of classes parsed locally in current universe.
 			-- Do not take into account overridden classes.
 		local
@@ -689,7 +689,7 @@ feature -- Measurement
 			parsed_class_count_not_negative: Result >= 0
 		end
 
-	parsed_class_count_recursive: INTEGER is
+	parsed_class_count_recursive: INTEGER
 			-- Number of classes parsed locally in current universe
 			-- and recursively in the universes it depends on.
 			-- Do not take into account overridden classes.
@@ -825,7 +825,7 @@ feature -- Kernel types
 	wide_character_type: ET_CLASS_TYPE
 			-- Class type "WIDE_CHARACTER"
 
-	set_kernel_types is
+	set_kernel_types
 			-- Set kernel types.
 		do
 				-- Note: make sure to call `set_any_type' before calling `set_array_type',
@@ -875,7 +875,7 @@ feature -- Kernel types
 			set_wide_character_type
 		end
 
-	set_any_type is
+	set_any_type
 			-- Set type "ANY".
 		local
 			l_name: ET_CLASS_NAME
@@ -896,7 +896,7 @@ feature -- Kernel types
 			any_clients.put_first (l_any_client)
 		end
 
-	set_array_type is
+	set_array_type
 			-- Set type with base class "ARRAY".
 		local
 			l_name: ET_CLASS_NAME
@@ -912,7 +912,7 @@ feature -- Kernel types
 			create array_any_type.make (Void, l_name, l_parameters, l_master_class)
 		end
 
-	set_boolean_type is
+	set_boolean_type
 			-- Set type "BOOLEAN".
 		local
 			l_name: ET_CLASS_NAME
@@ -924,7 +924,7 @@ feature -- Kernel types
 			create boolean_type.make (Void, l_name, l_master_class)
 		end
 
-	set_character_type is
+	set_character_type
 			-- Set type "CHARACTER".
 		local
 			l_name: ET_CLASS_NAME
@@ -936,7 +936,7 @@ feature -- Kernel types
 			create character_type.make (Void, l_name, l_master_class)
 		end
 
-	set_character_8_type is
+	set_character_8_type
 			-- Set type "CHARACTER_8".
 			-- Update `character_8_convert_feature' accordingly.
 		local
@@ -951,7 +951,7 @@ feature -- Kernel types
 			create character_8_convert_feature.make (character_8_type)
 		end
 
-	set_character_32_type is
+	set_character_32_type
 			-- Set type "CHARACTER_32".
 			-- Update `character_32_convert_feature' accordingly.
 		local
@@ -966,7 +966,7 @@ feature -- Kernel types
 			create character_32_convert_feature.make (character_32_type)
 		end
 
-	set_double_type is
+	set_double_type
 			-- Set type "DOUBLE".
 		local
 			l_name: ET_CLASS_NAME
@@ -978,7 +978,7 @@ feature -- Kernel types
 			create double_type.make (Void, l_name, l_master_class)
 		end
 
-	set_function_type is
+	set_function_type
 			-- Set type with base class "FUNCTION".
 		local
 			l_name: ET_CLASS_NAME
@@ -995,7 +995,7 @@ feature -- Kernel types
 			create function_type.make (Void, l_name, l_parameters, l_master_class)
 		end
 
-	set_integer_type is
+	set_integer_type
 			-- Set type "INTEGER".
 		local
 			l_name: ET_CLASS_NAME
@@ -1007,7 +1007,7 @@ feature -- Kernel types
 			create integer_type.make (Void, l_name, l_master_class)
 		end
 
-	set_integer_8_type is
+	set_integer_8_type
 			-- Set type "INTEGER_8".
 			-- Update `integer_8_convert_feature' accordingly.
 		local
@@ -1022,7 +1022,7 @@ feature -- Kernel types
 			create integer_8_convert_feature.make (integer_8_type)
 		end
 
-	set_integer_16_type is
+	set_integer_16_type
 			-- Set type "INTEGER_16".
 			-- Update `integer_16_convert_feature' accordingly.
 		local
@@ -1037,7 +1037,7 @@ feature -- Kernel types
 			create integer_16_convert_feature.make (integer_16_type)
 		end
 
-	set_integer_32_type is
+	set_integer_32_type
 			-- Set type "INTEGER_32".
 			-- Update `integer_32_convert_feature' accordingly.
 		local
@@ -1052,7 +1052,7 @@ feature -- Kernel types
 			create integer_32_convert_feature.make (integer_32_type)
 		end
 
-	set_integer_64_type is
+	set_integer_64_type
 			-- Set type "INTEGER_64".
 			-- Update `integer_64_convert_feature' accordingly.
 		local
@@ -1067,7 +1067,7 @@ feature -- Kernel types
 			create integer_64_convert_feature.make (integer_64_type)
 		end
 
-	set_natural_type is
+	set_natural_type
 			-- Set type "NATURAL".
 		local
 			l_name: ET_CLASS_NAME
@@ -1079,7 +1079,7 @@ feature -- Kernel types
 			create natural_type.make (Void, l_name, l_master_class)
 		end
 
-	set_natural_8_type is
+	set_natural_8_type
 			-- Set type "NATURAL_8".
 			-- Update `natural_8_convert_feature' accordingly.
 		local
@@ -1094,7 +1094,7 @@ feature -- Kernel types
 			create natural_8_convert_feature.make (natural_8_type)
 		end
 
-	set_natural_16_type is
+	set_natural_16_type
 			-- Set type "NATURAL_16".
 			-- Update `natural_16_convert_feature' accordingly.
 		local
@@ -1109,7 +1109,7 @@ feature -- Kernel types
 			create natural_16_convert_feature.make (natural_16_type)
 		end
 
-	set_natural_32_type is
+	set_natural_32_type
 			-- Set type "NATURAL_32".
 			-- Update `natural_32_convert_feature' accordingly.
 		local
@@ -1124,7 +1124,7 @@ feature -- Kernel types
 			create natural_32_convert_feature.make (natural_32_type)
 		end
 
-	set_natural_64_type is
+	set_natural_64_type
 			-- Set type "NATURAL_64".
 			-- Update `natural_64_convert_feature' accordingly.
 		local
@@ -1139,7 +1139,7 @@ feature -- Kernel types
 			create natural_64_convert_feature.make (natural_64_type)
 		end
 
-	set_none_type is
+	set_none_type
 			-- Set type "NONE".
 		local
 			l_name: ET_CLASS_NAME
@@ -1154,7 +1154,7 @@ feature -- Kernel types
 			l_master_class.add_first_imported_class (l_none_class)
 		end
 
-	set_pointer_type is
+	set_pointer_type
 			-- Set type "POINTER".
 		local
 			l_name: ET_CLASS_NAME
@@ -1166,7 +1166,7 @@ feature -- Kernel types
 			create pointer_type.make (Void, l_name, l_master_class)
 		end
 
-	set_predicate_type is
+	set_predicate_type
 			-- Set type with base class "PREDICATE".
 		local
 			l_name: ET_CLASS_NAME
@@ -1182,7 +1182,7 @@ feature -- Kernel types
 			create predicate_type.make (Void, l_name, l_parameters, l_master_class)
 		end
 
-	set_procedure_type is
+	set_procedure_type
 			-- Set type with base class "PROCEDURE".
 		local
 			l_name: ET_CLASS_NAME
@@ -1198,7 +1198,7 @@ feature -- Kernel types
 			create procedure_type.make (Void, l_name, l_parameters, l_master_class)
 		end
 
-	set_real_type is
+	set_real_type
 			-- Set type "REAL".
 		local
 			l_name: ET_CLASS_NAME
@@ -1210,7 +1210,7 @@ feature -- Kernel types
 			create real_type.make (Void, l_name, l_master_class)
 		end
 
-	set_real_32_type is
+	set_real_32_type
 			-- Set type "REAL_32".
 			-- Update `real_32_convert_feature' accordingly.
 		local
@@ -1225,7 +1225,7 @@ feature -- Kernel types
 			create real_32_convert_feature.make (real_32_type)
 		end
 
-	set_real_64_type is
+	set_real_64_type
 			-- Set type "REAL_64".
 			-- Update `real_64_convert_feature' accordingly.
 		local
@@ -1240,7 +1240,7 @@ feature -- Kernel types
 			create real_64_convert_feature.make (real_64_type)
 		end
 
-	set_routine_type is
+	set_routine_type
 			-- Set type with base class "ROUTINE".
 		local
 			l_name: ET_CLASS_NAME
@@ -1256,7 +1256,7 @@ feature -- Kernel types
 			create routine_type.make (Void, l_name, l_parameters, l_master_class)
 		end
 
-	set_special_type is
+	set_special_type
 			-- Set type with base class "SPECIAL".
 		local
 			l_name: ET_CLASS_NAME
@@ -1271,7 +1271,7 @@ feature -- Kernel types
 			create special_any_type.make (Void, l_name, l_parameters, l_master_class)
 		end
 
-	set_string_type is
+	set_string_type
 			-- Set type "STRING".
 		local
 			l_name: ET_CLASS_NAME
@@ -1283,7 +1283,7 @@ feature -- Kernel types
 			create string_type.make (Void, l_name, l_master_class)
 		end
 
-	set_string_8_type is
+	set_string_8_type
 			-- Set type "STRING_8".
 			-- Update `string_8_convert_feature' accordingly.
 		local
@@ -1298,7 +1298,7 @@ feature -- Kernel types
 			create string_8_convert_feature.make (string_8_type)
 		end
 
-	set_string_32_type is
+	set_string_32_type
 			-- Set type "STRING_32".
 			-- Update `string_32_convert_feature' accordingly.
 		local
@@ -1313,7 +1313,7 @@ feature -- Kernel types
 			create string_32_convert_feature.make (string_32_type)
 		end
 
-	set_system_object_type is
+	set_system_object_type
 			-- Set type "SYSTEM_OBJECT".
 		local
 			l_name: ET_CLASS_NAME
@@ -1330,7 +1330,7 @@ feature -- Kernel types
 			system_object_parents.put_first (l_parent)
 		end
 
-	set_system_string_type is
+	set_system_string_type
 			-- Set type "SYSTEM_STRING".
 		local
 			l_name: ET_CLASS_NAME
@@ -1342,7 +1342,7 @@ feature -- Kernel types
 			create system_string_type.make (Void, l_name, l_master_class)
 		end
 
-	set_tuple_type is
+	set_tuple_type
 			-- Set type "TUPLE".
 		local
 			l_name: ET_CLASS_NAME
@@ -1354,7 +1354,7 @@ feature -- Kernel types
 			create tuple_type.make (Void, Void, l_master_class)
 		end
 
-	set_type_type is
+	set_type_type
 			-- Set type with base class "TYPE".
 		local
 			l_name: ET_CLASS_NAME
@@ -1369,7 +1369,7 @@ feature -- Kernel types
 			create type_any_type.make (Void, l_name, l_parameters, l_master_class)
 		end
 
-	set_typed_pointer_type is
+	set_typed_pointer_type
 			-- Set type with base class "TYPED_POINTER".
 		local
 			l_name: ET_CLASS_NAME
@@ -1384,7 +1384,7 @@ feature -- Kernel types
 			create typed_pointer_any_type.make (Void, l_name, l_parameters, l_master_class)
 		end
 
-	set_wide_character_type is
+	set_wide_character_type
 			-- Set type "WIDE_CHARACTER".
 		local
 			l_name: ET_CLASS_NAME
@@ -1398,7 +1398,7 @@ feature -- Kernel types
 
 feature -- Class mapping
 
-	set_default_class_mapping is
+	set_default_class_mapping
 			-- Set sized basic types (STRING, CHARACTER, WIDE_CHARACTER,
 			-- INTEGER, NATURAL, REAL, DOUBLE) to be aliased to their default.
 		do
@@ -1430,7 +1430,7 @@ feature -- Class mapping
 			set_wide_character_ref_class_mapping (tokens.character_32_ref_class_name)
 		end
 
-	set_character_class_mapping (a_class_name: ET_CLASS_NAME) is
+	set_character_class_mapping (a_class_name: ET_CLASS_NAME)
 			-- Map class "CHARACTER" to `a_class_name'.
 		require
 			a_class_name_not_void: a_class_name /= Void
@@ -1438,7 +1438,7 @@ feature -- Class mapping
 			set_class_mapping (tokens.character_class_name, a_class_name)
 		end
 
-	set_character_ref_class_mapping (a_class_name: ET_CLASS_NAME) is
+	set_character_ref_class_mapping (a_class_name: ET_CLASS_NAME)
 			-- Map class "CHARACTER_REF" to `a_class_name'.
 		require
 			a_class_name_not_void: a_class_name /= Void
@@ -1446,7 +1446,7 @@ feature -- Class mapping
 			set_class_mapping (tokens.character_ref_class_name, a_class_name)
 		end
 
-	set_double_class_mapping (a_class_name: ET_CLASS_NAME) is
+	set_double_class_mapping (a_class_name: ET_CLASS_NAME)
 			-- Map class "DOUBLE" to `a_class_name'.
 		require
 			a_class_name_not_void: a_class_name /= Void
@@ -1454,7 +1454,7 @@ feature -- Class mapping
 			set_class_mapping (tokens.double_class_name, a_class_name)
 		end
 
-	set_double_ref_class_mapping (a_class_name: ET_CLASS_NAME) is
+	set_double_ref_class_mapping (a_class_name: ET_CLASS_NAME)
 			-- Map class "DOUBLE_REF" to `a_class_name'.
 		require
 			a_class_name_not_void: a_class_name /= Void
@@ -1462,7 +1462,7 @@ feature -- Class mapping
 			set_class_mapping (tokens.double_ref_class_name, a_class_name)
 		end
 
-	set_integer_class_mapping (a_class_name: ET_CLASS_NAME) is
+	set_integer_class_mapping (a_class_name: ET_CLASS_NAME)
 			-- Map class "INTEGER" to `a_class_name'.
 		require
 			a_class_name_not_void: a_class_name /= Void
@@ -1470,7 +1470,7 @@ feature -- Class mapping
 			set_class_mapping (tokens.integer_class_name, a_class_name)
 		end
 
-	set_integer_ref_class_mapping (a_class_name: ET_CLASS_NAME) is
+	set_integer_ref_class_mapping (a_class_name: ET_CLASS_NAME)
 			-- Map class "INTEGER_REF" to `a_class_name'.
 		require
 			a_class_name_not_void: a_class_name /= Void
@@ -1478,7 +1478,7 @@ feature -- Class mapping
 			set_class_mapping (tokens.integer_ref_class_name, a_class_name)
 		end
 
-	set_natural_class_mapping (a_class_name: ET_CLASS_NAME) is
+	set_natural_class_mapping (a_class_name: ET_CLASS_NAME)
 			-- Map class "NATURAL" to `a_class_name'.
 		require
 			a_class_name_not_void: a_class_name /= Void
@@ -1486,7 +1486,7 @@ feature -- Class mapping
 			set_class_mapping (tokens.natural_class_name, a_class_name)
 		end
 
-	set_natural_ref_class_mapping (a_class_name: ET_CLASS_NAME) is
+	set_natural_ref_class_mapping (a_class_name: ET_CLASS_NAME)
 			-- Map class "NATURAL_REF" to `a_class_name'.
 		require
 			a_class_name_not_void: a_class_name /= Void
@@ -1494,7 +1494,7 @@ feature -- Class mapping
 			set_class_mapping (tokens.natural_ref_class_name, a_class_name)
 		end
 
-	set_real_class_mapping (a_class_name: ET_CLASS_NAME) is
+	set_real_class_mapping (a_class_name: ET_CLASS_NAME)
 			-- Map class "REAL" to `a_class_name'.
 		require
 			a_class_name_not_void: a_class_name /= Void
@@ -1502,7 +1502,7 @@ feature -- Class mapping
 			set_class_mapping (tokens.real_class_name, a_class_name)
 		end
 
-	set_real_ref_class_mapping (a_class_name: ET_CLASS_NAME) is
+	set_real_ref_class_mapping (a_class_name: ET_CLASS_NAME)
 			-- Map class "REAL_REF" to `a_class_name'.
 		require
 			a_class_name_not_void: a_class_name /= Void
@@ -1510,7 +1510,7 @@ feature -- Class mapping
 			set_class_mapping (tokens.real_ref_class_name, a_class_name)
 		end
 
-	set_string_class_mapping (a_class_name: ET_CLASS_NAME) is
+	set_string_class_mapping (a_class_name: ET_CLASS_NAME)
 			-- Map class "STRING" to `a_class_name'.
 		require
 			a_class_name_not_void: a_class_name /= Void
@@ -1518,7 +1518,7 @@ feature -- Class mapping
 			set_class_mapping (tokens.string_class_name, a_class_name)
 		end
 
-	set_wide_character_class_mapping (a_class_name: ET_CLASS_NAME) is
+	set_wide_character_class_mapping (a_class_name: ET_CLASS_NAME)
 			-- Map class "WIDE_CHARACTER" to `a_class_name'.
 		require
 			a_class_name_not_void: a_class_name /= Void
@@ -1526,7 +1526,7 @@ feature -- Class mapping
 			set_class_mapping (tokens.wide_character_class_name, a_class_name)
 		end
 
-	set_wide_character_ref_class_mapping (a_class_name: ET_CLASS_NAME) is
+	set_wide_character_ref_class_mapping (a_class_name: ET_CLASS_NAME)
 			-- Map class "WIDE_CHARACTER_REF" to `a_class_name'.
 		require
 			a_class_name_not_void: a_class_name /= Void
@@ -1534,7 +1534,7 @@ feature -- Class mapping
 			set_class_mapping (tokens.wide_character_ref_class_name, a_class_name)
 		end
 
-	set_class_mapping (a_alias_name, a_class_name: ET_CLASS_NAME) is
+	set_class_mapping (a_alias_name, a_class_name: ET_CLASS_NAME)
 			-- Map class `a_alias_name' to `a_class_name'.
 			--
 			-- For example:
@@ -1596,7 +1596,7 @@ feature -- Built-in convert features
 
 feature -- Iteration
 
-	classes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]) is
+	classes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])
 			-- Apply `an_action' on all classes declared locally in current universe.
 			-- Do not take into account overridden classes.
 		require
@@ -1619,7 +1619,7 @@ feature -- Iteration
 			end
 		end
 
-	classes_do_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]) is
+	classes_do_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' on all classes declared locally in current universe.
 			-- Do not take into account overridden classes.
 			--
@@ -1654,7 +1654,7 @@ feature -- Iteration
 			end
 		end
 
-	classes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN]) is
+	classes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN])
 			-- Apply `an_action' on all classes declared locally in current universe
 			-- that satisfy `a_test'.
 			-- Do not take into account overridden classes.
@@ -1681,7 +1681,7 @@ feature -- Iteration
 			end
 		end
 
-	classes_do_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]) is
+	classes_do_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' on all classes declared locally in current universe
 			-- that satisfy `a_test'.
 			-- Do not take into account overridden classes.
@@ -1720,7 +1720,7 @@ feature -- Iteration
 			end
 		end
 
-	classes_do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]) is
+	classes_do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])
 			-- Apply `an_action' on all classes declared locally in current universe
 			-- as well as on the classes that are declared in the universes it depends
 			-- on recursively.
@@ -1731,7 +1731,7 @@ feature -- Iteration
 			universes_do_recursive (agent {ET_UNIVERSE}.classes_do_all (an_action))
 		end
 
-	classes_do_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]) is
+	classes_do_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' on all classes declared locally in current universe
 			-- as well as on the classes that are declared in the universes it depends
 			-- on recursively.
@@ -1750,7 +1750,7 @@ feature -- Iteration
 			end
 		end
 
-	classes_do_if_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN]) is
+	classes_do_if_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN])
 			-- Apply `an_action' on all classes that satisfy `a_test', declared
 			-- locally in current universe as well as on the classes that are
 			-- declared in the universes it depends on recursively.
@@ -1762,7 +1762,7 @@ feature -- Iteration
 			universes_do_recursive (agent {ET_UNIVERSE}.classes_do_if (an_action, a_test))
 		end
 
-	classes_do_if_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]) is
+	classes_do_if_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' on all classes that satisfy `a_test', declared
 			-- locally in current universe as well as on the classes that are
 			-- declared in the universes it depends on recursively.
@@ -1782,7 +1782,7 @@ feature -- Iteration
 			end
 		end
 
-	master_classes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]) is
+	master_classes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]])
 			-- Apply `an_action' on all classes in `master_classes'.
 		require
 			an_action_not_void: an_action /= Void
@@ -1790,7 +1790,7 @@ feature -- Iteration
 			master_classes.do_all (an_action)
 		end
 
-	master_classes_do_until (an_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]) is
+	master_classes_do_until (an_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' on all classes in `master_classes'.
 			--
 			-- The iteration will be interrupted if a stop request is received
@@ -1816,7 +1816,7 @@ feature -- Iteration
 			end
 		end
 
-	master_classes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_MASTER_CLASS], BOOLEAN]) is
+	master_classes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_MASTER_CLASS], BOOLEAN])
 			-- Apply `an_action' on all classes in `master_classes'
 			-- that satisfy `a_test'.
 		require
@@ -1826,7 +1826,7 @@ feature -- Iteration
 			master_classes.do_if (an_action, a_test)
 		end
 
-	master_classes_do_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_MASTER_CLASS], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]) is
+	master_classes_do_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_MASTER_CLASS], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' on all classes in `master_classes'
 			-- that satisfy `a_test'.
 			--
@@ -1858,7 +1858,7 @@ feature -- Iteration
 			end
 		end
 
-	master_classes_do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]) is
+	master_classes_do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]])
 			-- Apply `an_action' on all classes in `master_classes' as well as on the classes
 			-- of the universes it depends on recursively.
 		require
@@ -1867,7 +1867,7 @@ feature -- Iteration
 			universes_do_recursive (agent {ET_UNIVERSE}.master_classes_do_all (an_action))
 		end
 
-	master_classes_do_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]) is
+	master_classes_do_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' on all classes in `master_classes' as well as on the classes
 			-- of the universes it depends on recursively.
 			--
@@ -1884,7 +1884,7 @@ feature -- Iteration
 			end
 		end
 
-	master_classes_do_if_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_MASTER_CLASS], BOOLEAN]) is
+	master_classes_do_if_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_MASTER_CLASS], BOOLEAN])
 			-- Apply `an_action' on all classes that satisfy `a_test' in `master_classes'
 			-- as well as in the classes of the universes it depends on recursively.
 		require
@@ -1894,7 +1894,7 @@ feature -- Iteration
 			universes_do_recursive (agent {ET_UNIVERSE}.master_classes_do_if (an_action, a_test))
 		end
 
-	master_classes_do_if_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_MASTER_CLASS], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]) is
+	master_classes_do_if_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_MASTER_CLASS], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' on all classes that satisfy `a_test' in `master_classes'
 			-- as well as in the classes of the universes it depends on recursively.
 			--
@@ -1912,14 +1912,14 @@ feature -- Iteration
 			end
 		end
 
-	universes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]) is
+	universes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]])
 			-- Apply `an_action' to every universe that current universe depends on.
 		require
 			an_action_not_void: an_action /= Void
 		do
 		end
 
-	universes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_test: FUNCTION [ANY, TUPLE [ET_UNIVERSE], BOOLEAN]) is
+	universes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_test: FUNCTION [ANY, TUPLE [ET_UNIVERSE], BOOLEAN])
 			-- Apply `an_action' to every universe that current universe depends on and
 			-- which satisfies `a_test'.
 		require
@@ -1928,7 +1928,7 @@ feature -- Iteration
 		do
 		end
 
-	universes_do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]) is
+	universes_do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]])
 			-- Apply `an_action' on current universe and recursively on
 			-- the universes it depends on.
 		require
@@ -1941,7 +1941,7 @@ feature -- Iteration
 			l_visited.do_all (an_action)
 		end
 
-	universes_do_if_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_test: FUNCTION [ANY, TUPLE [ET_UNIVERSE], BOOLEAN]) is
+	universes_do_if_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_test: FUNCTION [ANY, TUPLE [ET_UNIVERSE], BOOLEAN])
 			-- Apply `an_action' on current universe and recursively on
 			-- the universes it depends on which satisfies `a_test'.
 		require
@@ -1955,7 +1955,7 @@ feature -- Iteration
 			l_visited.do_if (an_action, a_test)
 		end
 
-	universes_do_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]) is
+	universes_do_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' on current universe and recursively on
 			-- the universes it depends on.
 			--
@@ -1983,7 +1983,7 @@ feature -- Iteration
 			end
 		end
 
-	universes_do_if_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_test: FUNCTION [ANY, TUPLE [ET_UNIVERSE], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]) is
+	universes_do_if_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_test: FUNCTION [ANY, TUPLE [ET_UNIVERSE], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' on current universe and recursively on
 			-- the universes it depends on which satisfies `a_test'.
 			--
@@ -2018,7 +2018,7 @@ feature -- Iteration
 
 feature -- Relations
 
-	add_universe_recursive (a_visited: DS_HASH_SET [ET_UNIVERSE]) is
+	add_universe_recursive (a_visited: DS_HASH_SET [ET_UNIVERSE])
 			-- Add current universe to `a_visited' and
 			-- recursively the universes it depends on.
 		require
@@ -2031,7 +2031,7 @@ feature -- Relations
 
 feature -- Actions
 
-	do_master_class_by_name (a_name: STRING; a_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]) is
+	do_master_class_by_name (a_name: STRING; a_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]])
 			-- Execute `a_action' on class named `a_name' when viewed from current universe, if any.
 			-- Take into account both locally declared classes and
 			-- classes imported from other universes.
@@ -2049,7 +2049,7 @@ feature -- Actions
 			end
 		end
 
-	do_class_by_name (a_name: STRING; a_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]) is
+	do_class_by_name (a_name: STRING; a_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])
 			-- Execute `a_action' on class named `a_name' declared locally in current universe.
 			-- Do not take into account overridden classes.
 			-- Do nothing if not such class.
@@ -2074,7 +2074,7 @@ feature -- Parsing
 			-- class names and their filenames, and that `master_classes' has been
 			-- populated, even if the classes have not been parsed yet.
 
-	preparse is
+	preparse
 			-- Build a mapping between class names and their filenames and
 			-- populate `master_classes', even if the classes have not been
 			-- parsed yet. If current universe had already been preparsed,
@@ -2095,7 +2095,7 @@ feature -- Parsing
 			preparsed: is_preparsed
 		end
 
-	preparse_recursive is
+	preparse_recursive
 			-- Build a mapping between class names and their filenames and
 			-- populate `master_classes', even if the classes have not been
 			-- parsed yet. If current universe had already been preparsed,
@@ -2117,7 +2117,7 @@ feature -- Parsing
 			preparsed: is_preparsed
 		end
 
-	parse_all is
+	parse_all
 			-- Parse all classes declared locally in the current universe.
 			-- There is no need to call one of the preparse routines
 			-- beforehand since the current routine will traverse all
@@ -2141,7 +2141,7 @@ feature -- Parsing
 			preparsed: is_preparsed
 		end
 
-	parse_all_recursive is
+	parse_all_recursive
 			-- Parse all classes declared locally in the current universe,
 			-- and recursively those that are declared in universes it
 			-- depends on. There is no need to call one of the preparse
@@ -2167,14 +2167,14 @@ feature -- Parsing
 
 feature {ET_UNIVERSE} -- Parsing
 
-	import_classes is
+	import_classes
 			-- Import classes made available (i.e. exported) by other universes.
 		do
 		end
 
 feature {NONE} -- Parsing
 
-	classes_modified_recursive: BOOLEAN is
+	classes_modified_recursive: BOOLEAN
 			-- Has a class (declared locally or in a universe that the current
 			-- universe recursively depends on) been modified or removed?
 			-- This would require classes from the current universe and from
@@ -2189,7 +2189,7 @@ feature {NONE} -- Parsing
 
 feature {NONE} -- Constants
 
-	initial_universes_capacity: INTEGER is
+	initial_universes_capacity: INTEGER
 			-- Initial capacity for containers containing universes
 		once
 			Result := 10
@@ -2197,7 +2197,7 @@ feature {NONE} -- Constants
 			capacity_positive: Result > 0
 		end
 
-	initial_classes_in_group_capacity: INTEGER is
+	initial_classes_in_group_capacity: INTEGER
 			-- Initial capacity for `classes_in_group'
 		once
 			Result := 20
@@ -2205,7 +2205,7 @@ feature {NONE} -- Constants
 			capacity_positive: Result > 0
 		end
 
-	initial_classes_by_groups_capacity: INTEGER is
+	initial_classes_by_groups_capacity: INTEGER
 			-- Initial capacity for `classes_by_groups'
 		once
 			Result := 500
@@ -2215,7 +2215,7 @@ feature {NONE} -- Constants
 
 feature {NONE} -- Implementation
 
-	insert_in_hash_table (a_hash_table: DS_HASH_TABLE [INTEGER, ET_UNIVERSE]; a_value: INTEGER; a_key: ET_UNIVERSE) is
+	insert_in_hash_table (a_hash_table: DS_HASH_TABLE [INTEGER, ET_UNIVERSE]; a_value: INTEGER; a_key: ET_UNIVERSE)
 			-- This routine is a workaround for the bug:
 			-- "[Compiler #16375] [er] Bug in finalized mode involving agents and generics"
 			-- reported to ISE.

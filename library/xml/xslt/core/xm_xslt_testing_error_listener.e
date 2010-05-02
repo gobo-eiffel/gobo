@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_recovery_policy: INTEGER) is
+	make (a_recovery_policy: INTEGER)
 			-- Establish invariant.
 		require
 			recovery_policy: a_recovery_policy >= Recover_silently and then a_recovery_policy <= Do_not_recover
@@ -50,7 +50,7 @@ feature -- Access
 
 feature -- Status report
 
-	has (a_identifier: STRING): BOOLEAN is
+	has (a_identifier: STRING): BOOLEAN
 			-- Has message `a_identifier' been seen?
 		require
 			a_identifier_not_void: a_identifier /= Void
@@ -58,7 +58,7 @@ feature -- Status report
 			Result := reported_errors.has (a_identifier)
 		end
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of different errors that occurred (possibly recovered)
 		do
 			Result := reported_errors.count
@@ -68,13 +68,13 @@ feature -- Status report
 
 feature -- Events
 
-	warning (a_message: STRING; a_locator: XM_XPATH_LOCATOR) is
+	warning (a_message: STRING; a_locator: XM_XPATH_LOCATOR)
 			-- Receive notification of a warning.
 		do
 			do_nothing
 		end
 
-	error (a_error: XM_XPATH_ERROR_VALUE) is
+	error (a_error: XM_XPATH_ERROR_VALUE)
 			-- Receive notification of a recoverable error.
 		local
 			l_error: like a_error
@@ -96,7 +96,7 @@ feature -- Events
 			end
 		end
 
-	fatal_error (a_error: XM_XPATH_ERROR_VALUE) is
+	fatal_error (a_error: XM_XPATH_ERROR_VALUE)
 			-- Receive notification of a non-recoverable error.
 		do
 			error (a_error)

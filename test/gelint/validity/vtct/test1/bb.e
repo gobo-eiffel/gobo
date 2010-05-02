@@ -6,7 +6,7 @@ inherit
 
 feature
 
-	f is
+	f
 		do
 		end
 

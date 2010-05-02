@@ -11,7 +11,7 @@ note
 	revision: "$Revision$"
 
 class XM_XPATH_TINY_FOLLOWING_ENUMERATION
-	
+
 inherit
 
 	XM_XPATH_AXIS_ITERATOR [XM_XPATH_TINY_NODE]
@@ -25,10 +25,10 @@ inherit
 create
 
 	make
-	
+
 feature {NONE} -- Initialization
 
-	make (a_document: XM_XPATH_TINY_FOREST; a_starting_node: XM_XPATH_TINY_NODE; a_node_test: XM_XPATH_NODE_TEST; descendants: BOOLEAN) is
+	make (a_document: XM_XPATH_TINY_FOREST; a_starting_node: XM_XPATH_TINY_NODE; a_node_test: XM_XPATH_NODE_TEST; descendants: BOOLEAN)
 			-- Establish invariant
 		require
 			document_not_void: a_document /= Void
@@ -48,8 +48,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
-			-- `Current' seen as a node iterator	
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			-- `Current' seen as a node iterator
 		local
 			a_tiny_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_TINY_NODE]
 		do
@@ -59,13 +59,13 @@ feature -- Access
 
 feature -- Cursor movement
 
-		start is
+		start
 			-- Move to next position
 		do
 			forth
 		end
 
-	forth is
+	forth
 			-- Move to next position
 		local
 			l_node_number: INTEGER
@@ -107,12 +107,12 @@ feature -- Cursor movement
 
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 			create Result.make (document, starting_node, node_test, include_descendants)
 		end
-	
+
 feature {NONE} -- Implemnentation
 
 	document: XM_XPATH_TINY_FOREST
@@ -128,13 +128,13 @@ feature {NONE} -- Implemnentation
 			-- Do we include descendants in the enumeration?
 			-- For elements, no, for attributes and namespaces, yes.
 
-	advance is
+	advance
 			-- Move to the next matching node
 		do
 			-- not used
 		end
 
-	initial_node_number: INTEGER is
+	initial_node_number: INTEGER
 			-- Node number to try first
 		require
 			first_item: index = 1
@@ -177,6 +177,6 @@ invariant
 	document_not_void: document /= Void
 	starting_node_not_void: starting_node /= Void
 	node_test_not_void: node_test /= Void
-	
+
 end
-	
+

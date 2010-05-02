@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_grammar: PR_GRAMMAR; error_handler: UT_ERROR_HANDLER) is
+	make (a_grammar: PR_GRAMMAR; error_handler: UT_ERROR_HANDLER)
 			-- Create a new finite state machine.
 			-- Reduce the grammar and resolve conflicts.
 			-- Report results to `error_handler'.
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			set_error_actions (error_handler)
 		end
 
-	make_verbose (a_grammar: PR_GRAMMAR; error_handler: UT_ERROR_HANDLER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	make_verbose (a_grammar: PR_GRAMMAR; error_handler: UT_ERROR_HANDLER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Create a new finite state machine.
 			-- Reduce the grammar and resolve conflicts.
 			-- Report results to `error_handler' and `a_file'.
@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 			print_machine (a_file)
 		end
 
-	make_default (a_grammar: PR_GRAMMAR) is
+	make_default (a_grammar: PR_GRAMMAR)
 			-- Create a new finite state machine.
 		require
 			a_grammar_not_void: a_grammar /= Void
@@ -87,7 +87,7 @@ feature -- Access
 
 feature -- Conflicts
 
-	resolve_conflicts (error_handler: UT_ERROR_HANDLER) is
+	resolve_conflicts (error_handler: UT_ERROR_HANDLER)
 			-- Try to resolve any shift/reduce conflicts using
 			-- precedence levels. Report conflicts to `error_handler'.
 		require
@@ -143,7 +143,7 @@ feature -- Conflicts
 			end
 		end
 
-	resolve_conflicts_verbose (error_handler: UT_ERROR_HANDLER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	resolve_conflicts_verbose (error_handler: UT_ERROR_HANDLER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Try to resolve any shift/reduce conflicts using
 			-- precedence levels. Report conflicts to
 			-- `error_handler' and `a_file'.
@@ -237,7 +237,7 @@ feature -- Conflicts
 
 feature -- Setting
 
-	set_error_actions (error_handler: UT_ERROR_HANDLER) is
+	set_error_actions (error_handler: UT_ERROR_HANDLER)
 			-- Try to set states' error actions.
 			-- Report conflicts to `error_handler'.
 		require
@@ -379,7 +379,7 @@ feature -- Setting
 			end
 		end
 
-	set_error_actions_verbose (error_handler: UT_ERROR_HANDLER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	set_error_actions_verbose (error_handler: UT_ERROR_HANDLER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Try to set states' error actions.
 			-- Report conflicts to `error_handler' and `a_file'.
 		require
@@ -550,7 +550,7 @@ feature -- Setting
 
 feature -- Output
 
-	print_machine (a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_machine (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print textual representation of current
 			-- finite state machine to `a_file'.
 		require
@@ -573,7 +573,7 @@ feature -- Output
 
 feature {NONE} -- Processing (nondeterministic)
 
-	build_nondeterministic is
+	build_nondeterministic
 			-- Build states of nondeterminstic finite
 			-- state machine corresponding to `grammar'.
 		local
@@ -592,7 +592,7 @@ feature {NONE} -- Processing (nondeterministic)
 			put_final_state
 		end
 
-	put_start_state is
+	put_start_state
 			-- Create and insert start state.
 		local
 			a_state: PR_STATE
@@ -606,7 +606,7 @@ feature {NONE} -- Processing (nondeterministic)
 			states.put_first (a_state)
 		end
 
-	put_final_state is
+	put_final_state
 			-- Make sure that there is a shift transition
 			-- in start state (first state in `states')
 			-- that leads to a next-to-final state whose
@@ -650,7 +650,7 @@ feature {NONE} -- Processing (nondeterministic)
 			final_state.shifts.force_last (termination_state)
 		end
 
-	put_closure_positions (a_state: PR_STATE; a_variable: PR_VARIABLE) is
+	put_closure_positions (a_state: PR_STATE; a_variable: PR_VARIABLE)
 			-- Insert in `a_state' the first positions of the
 			-- rules that can help derive the beginning of the
 			-- data for `a_variable'.
@@ -675,7 +675,7 @@ feature {NONE} -- Processing (nondeterministic)
 			end
 		end
 
-	build_transitions (a_state: PR_STATE) is
+	build_transitions (a_state: PR_STATE)
 			-- Build the shift and reduction transitions for `a_state'.
 		require
 			a_state_not_void: a_state /= Void
@@ -760,7 +760,7 @@ feature {NONE} -- Processing (nondeterministic)
 			end
 		end
 
-	build_derives is
+	build_derives
 			-- Build `derives' rule list for each variable.
 		local
 			i: INTEGER
@@ -799,7 +799,7 @@ feature {NONE} -- Processing (nondeterministic)
 			flattener.flatten (variables)
 		end
 
-	new_state (a_state: PR_STATE): PR_STATE is
+	new_state (a_state: PR_STATE): PR_STATE
 			-- Occurrence of `a_state' in FSM if present;
 			-- otherwise insert `a_state' into FSM
 		require
@@ -852,7 +852,7 @@ feature {NONE} -- Processing (nondeterministic)
 
 feature {NONE} -- Processing (deterministic)
 
-	build_deterministic is
+	build_deterministic
 			-- Make current finite state machine deterministic.
 		local
 			i, j, nb: INTEGER
@@ -1007,13 +1007,13 @@ feature {NONE} -- Processing (deterministic)
 
 feature {NONE} -- Constants
 
-	Initial_max_nb_states: INTEGER is 100
+	Initial_max_nb_states: INTEGER = 100
 			-- Initial capacity for `states'
 
-	Max_nb_states_increment: INTEGER is 100
+	Max_nb_states_increment: INTEGER = 100
 			-- Increment when resizing `states'
 
-	No_type: PR_TYPE is
+	No_type: PR_TYPE
 			-- Type used when no type has been specified
 		once
 			if grammar.types.is_empty then

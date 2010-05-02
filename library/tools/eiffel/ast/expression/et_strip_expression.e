@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new strip expression.
 		do
 			strip_keyword := tokens.strip_keyword
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			precursor
 		end
 
-	make_with_capacity (nb: INTEGER) is
+	make_with_capacity (nb: INTEGER)
 			-- Create a new strip expression with capacity `nb'.
 		do
 			strip_keyword := tokens.strip_keyword
@@ -61,7 +61,7 @@ feature -- Access
 	right_parenthesis: ET_SYMBOL
 			-- Right parenthesis
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -74,19 +74,19 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := strip_keyword
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := right_parenthesis
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := right_parenthesis.break
@@ -94,12 +94,12 @@ feature -- Access
 
 feature -- Status report
 
-	is_never_void: BOOLEAN is True
+	is_never_void: BOOLEAN = True
 			-- Can current expression never be void?
 
 feature -- Setting
 
-	set_strip_keyword (a_strip: like strip_keyword) is
+	set_strip_keyword (a_strip: like strip_keyword)
 			-- Set `strip_keyword' to `a_strip'.
 		require
 			a_strip_not_void: a_strip /= Void
@@ -109,7 +109,7 @@ feature -- Setting
 			strip_keyword_set: strip_keyword = a_strip
 		end
 
-	set_left_parenthesis (l: like left_parenthesis) is
+	set_left_parenthesis (l: like left_parenthesis)
 			-- Set `left_parenthesis' to `l'.
 		require
 			l_not_void: l /= Void
@@ -119,7 +119,7 @@ feature -- Setting
 			left_parenthesis_set: left_parenthesis = l
 		end
 
-	set_right_parenthesis (r: like right_parenthesis) is
+	set_right_parenthesis (r: like right_parenthesis)
 			-- Set `right_parenthesis' to `r'.
 		require
 			r_not_void: r /= Void
@@ -131,7 +131,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_strip_expression (Current)

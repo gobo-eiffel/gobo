@@ -22,7 +22,7 @@ create
 
 feature -- Test
 
-	test_exec is
+	test_exec
 			-- Test task 'exec' in it's simplest form.
 		do
 				-- Write a build file named 'exec.eant' which does nothing
@@ -49,7 +49,7 @@ feature -- Test
 			basic_test ("test_exec2")
 		end
 
-	test_exec_validation_1 is
+	test_exec_validation_1
 			-- Test task 'exec''s validation
 		do
 			expected_exit_code := 1
@@ -65,7 +65,7 @@ feature -- Test
 			basic_test ("test_exec_validation_1")
 		end
 
-	test_exec_validation_2 is
+	test_exec_validation_2
 			-- Test task 'exec''s validation
 		do
 			expected_exit_code := 1
@@ -83,7 +83,7 @@ feature -- Test
 			basic_test ("test_exec_validation_2")
 		end
 
-	test_exec_fs1 is
+	test_exec_fs1
 			-- Test task 'exec' with filesets
 		do
 				-- Write a build file named 'exec.eant' which does nothing

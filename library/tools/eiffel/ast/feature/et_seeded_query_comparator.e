@@ -22,14 +22,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new query comparator by first seed.
 		do
 		end
 
 feature -- Status report
 
-	less_than (u, v: ET_QUERY): BOOLEAN is
+	less_than (u, v: ET_QUERY): BOOLEAN
 			-- Is `u' considered less than `v'?
 		do
 			Result := (u.first_seed < v.first_seed)

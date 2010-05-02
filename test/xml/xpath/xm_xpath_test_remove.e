@@ -44,7 +44,7 @@ create
 
 feature -- Result
 
-	three: MA_DECIMAL is
+	three: MA_DECIMAL
 			-- 3.0
 		once
 			create Result.make_from_integer (3)
@@ -54,7 +54,7 @@ feature -- Result
 
 feature -- Test
 
-	test_remove_one is
+	test_remove_one
 			-- Test fn:remove ((1, 2, 3), 2) returns (1, 3)
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -77,14 +77,14 @@ feature -- Test
 			assert ("Second value is three", 3 = an_integer_value.value)
 		end
 
-	set_up is
+	set_up
 		do
 			conformance.set_basic_xslt_processor
 		end
 
 feature {NONE} -- Implementation
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}",
@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 			data_dirname_not_empty: not Result.is_empty
 		end
 
-	languages_xml_uri: UT_URI is
+	languages_xml_uri: UT_URI
 			-- URI of file 'languages.xml'
 		local
 			a_path: STRING

@@ -35,7 +35,7 @@ create
 
 feature -- Test
 
-	test_range_variable_in_global_variable is
+	test_range_variable_in_global_variable
 			-- Test use of range variables within the select expression of a global variable.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -66,7 +66,7 @@ feature -- Test
 			assert ("Correct result", STRING_.same_string (l_output.last_output, expected_result_string_eight))
 		end
 
-	test_type_conversion_on_apply is
+	test_type_conversion_on_apply
 			-- Test type conversion of parameters in an xsl:apply-templates call.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -96,7 +96,7 @@ feature -- Test
 			assert ("Correct result", STRING_.same_string (l_output.last_output, expected_result_string_seven))
 		end
 
-	test_as_attribute_on_with_param is
+	test_as_attribute_on_with_param
 			-- Test as attribute on xsl:with-param.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -126,7 +126,7 @@ feature -- Test
 			assert ("Correct result", STRING_.same_string (l_output.last_output, expected_result_string_six))
 		end
 
-	test_tunnel_parameters is
+	test_tunnel_parameters
 			-- Basic test of tunnel parameters.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -156,7 +156,7 @@ feature -- Test
 			assert ("Correct result", STRING_.same_string (l_output.last_output, expected_result_string_one))
 		end
 
-	test_override_tunnel_parameter is
+	test_override_tunnel_parameter
 			-- Test overriding a tunnel parameter.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -186,7 +186,7 @@ feature -- Test
 			assert ("Correct result", STRING_.same_string (l_output.last_output, expected_result_string_two))
 		end
 
-	test_tunnel_parameters_with_call_template is
+	test_tunnel_parameters_with_call_template
 			-- Test tunnel parameters with xsl:call-template.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -216,7 +216,7 @@ feature -- Test
 			assert ("Correct result", STRING_.same_string (l_output.last_output, expected_result_string_two))
 		end
 
-	test_normal_versus_tunnel_parameters is
+	test_normal_versus_tunnel_parameters
 			-- Test normal parameters not clashing with tunnel parameters.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -246,7 +246,7 @@ feature -- Test
 			assert ("Correct result", STRING_.same_string (l_output.last_output, expected_result_string_three))
 		end
 
-	test_tunnel_parameters_with_variable_contents is
+	test_tunnel_parameters_with_variable_contents
 			-- Test tunnel parameters passed to match on variable contents.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -276,7 +276,7 @@ feature -- Test
 			assert ("Correct result", STRING_.same_string (l_output.last_output, expected_result_string_four))
 		end
 
-	test_supplied_tunnel_parameter is
+	test_supplied_tunnel_parameter
 			-- Test supplied tunnel parameter.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -306,7 +306,7 @@ feature -- Test
 			assert ("Correct result", STRING_.same_string (l_output.last_output, expected_result_string_five))
 		end
 
-	test_supplied_required_tunnel_parameter is
+	test_supplied_required_tunnel_parameter
 			-- Test supplied required tunnel parameter.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -336,7 +336,7 @@ feature -- Test
 			assert ("Correct result", STRING_.same_string (l_output.last_output, expected_result_string_five))
 		end
 
-	test_required_tunnel_parameter_missing is
+	test_required_tunnel_parameter_missing
 			-- Test missing required tunnel parameter.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -366,7 +366,7 @@ feature -- Test
 			assert ("XTDE0700", l_error_listener.has (xtde0700))
 		end
 
-	test_type_error_on_tunnel_parameter is
+	test_type_error_on_tunnel_parameter
 			-- Test tunnel parameter with wrong type.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -396,7 +396,7 @@ feature -- Test
 			assert ("XTTE0590", l_error_listener.has (xtte0590))
 		end
 
-	test_duplicate_parameter_names is
+	test_duplicate_parameter_names
 			-- Test two parameters with same name.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -415,7 +415,7 @@ feature -- Test
 			assert ("XTSE0580", l_transformer_factory.was_error)
 		end
 
-	test_missing_required_global_parameter is
+	test_missing_required_global_parameter
 			-- Test missing required global parameter.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -444,7 +444,7 @@ feature -- Test
 			assert ("XTDE0050a", l_error_listener.has (xtde0050))
 		end
 
-	test_variable_with_incorrect_supplied_type is
+	test_variable_with_incorrect_supplied_type
 			-- Test variable with wrong type for supplied data..
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -463,7 +463,7 @@ feature -- Test
 			assert ("XTTE0570", l_transformer_factory.was_error)
 		end
 
-	test_type_error_on_local_parameter is
+	test_type_error_on_local_parameter
 			-- Test missing required global parameter.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -493,7 +493,7 @@ feature -- Test
 			assert ("XTTE0590", l_error_listener.has (xtte0590))
 		end
 
-	test_variable_with_missing_typed_value is
+	test_variable_with_missing_typed_value
 			-- Test missing value for integer-valued varaible.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -523,7 +523,7 @@ feature -- Test
 			assert ("FORG0001", l_error_listener.has (forg0001))
 		end
 
-	test_variable_with_incorrect_complex_type is
+	test_variable_with_incorrect_complex_type
 			-- Test variable with wrong (element) type for supplied data..
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -542,7 +542,7 @@ feature -- Test
 			assert ("XTTE0570", l_transformer_factory.was_error)
 		end
 
-	test_variable_with_incorrect_cardinality is
+	test_variable_with_incorrect_cardinality
 			-- Test variable with incorrect cardinality.
 		local
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
@@ -574,34 +574,34 @@ feature -- Test
 
 feature -- Results
 
-	expected_result_string_one: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?>%N%T<b><d>17</d></b>%N"
+	expected_result_string_one: STRING = "<?xml version=%"1.0%" encoding=%"UTF-8%"?>%N%T<b><d>17</d></b>%N"
 			-- Expected result for `test_tunnel_parameters'
 
-	expected_result_string_two: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?><out>%N%T<b><d t1=%"17%" t2=%"28%" t3=%"38%"/></b><old>18</old>%N</out>"
+	expected_result_string_two: STRING = "<?xml version=%"1.0%" encoding=%"UTF-8%"?><out>%N%T<b><d t1=%"17%" t2=%"28%" t3=%"38%"/></b><old>18</old>%N</out>"
 			-- Expected result for `test_override_tunnel_parameter'
 
-	expected_result_string_three: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?><out>%N%T<b t1=%"mushroom%"><d t1=%"17%" t2=%"28%" t3=%"38%"/></b><old>18</old>%N</out>"
+	expected_result_string_three: STRING = "<?xml version=%"1.0%" encoding=%"UTF-8%"?><out>%N%T<b t1=%"mushroom%"><d t1=%"17%" t2=%"28%" t3=%"38%"/></b><old>18</old>%N</out>"
 			-- Expected result for `test_normal_versus_tunnel_parameters'
 
-	expected_result_string_four: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?>%N<a>x = abc</a>"
+	expected_result_string_four: STRING = "<?xml version=%"1.0%" encoding=%"UTF-8%"?>%N<a>x = abc</a>"
 			-- Expected result for `test_tunnel_parameters_with_variable_contents'
 
-	expected_result_string_five: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?>%N<a>abc</a>"
+	expected_result_string_five: STRING = "<?xml version=%"1.0%" encoding=%"UTF-8%"?>%N<a>abc</a>"
 			-- Expected result for `test_supplied_tunnel_parameter'
 
-	expected_result_string_six: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?><out count=%"3%"/>"
+	expected_result_string_six: STRING = "<?xml version=%"1.0%" encoding=%"UTF-8%"?><out count=%"3%"/>"
 			-- Expected result for `test_as_attribute_on_with_param'
 
-	expected_result_string_seven: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?><out test=%"true%"/>"
+	expected_result_string_seven: STRING = "<?xml version=%"1.0%" encoding=%"UTF-8%"?><out test=%"true%"/>"
 			-- Expected result for `test_type_conversion_on_apply'
 
-	expected_result_string_eight: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?><out xmlns:xs=%"http://www.w3.org/2001/XMLSchema%" x=%"55%" z=%"22%" is-integer=%"true%"/>"
+	expected_result_string_eight: STRING = "<?xml version=%"1.0%" encoding=%"UTF-8%"?><out xmlns:xs=%"http://www.w3.org/2001/XMLSchema%" x=%"55%" z=%"22%" is-integer=%"true%"/>"
 			-- Expected result for `test_range_variable_in_global_variable'
 
 
 feature {NONE} -- Implementation
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Name of directory containing data files
 		once
 			Result := file_system.nested_pathname ("${GOBO}",
@@ -611,16 +611,16 @@ feature {NONE} -- Implementation
 			data_dirname_not_void: Result /= Void
 			data_dirname_not_empty: not Result.is_empty
 		end
-		
-	dummy_uri: UT_URI is
+
+	dummy_uri: UT_URI
 			-- Dummy URI
 		once
 			create Result.make ("dummy:")
 		ensure
 			dummy_uri_is_absolute: Result /= Void and then Result.is_absolute
 		end
-				
-	var15_xsl_uri: UT_URI is
+
+	var15_xsl_uri: UT_URI
 			-- URI of file 'var15.xsl'
 		local
 			l_path: STRING
@@ -630,8 +630,8 @@ feature {NONE} -- Implementation
 		ensure
 			var15_xsl_uri_not_void: Result /= Void
 		end
-				
-	var25_xml_uri: UT_URI is
+
+	var25_xml_uri: UT_URI
 			-- URI of file 'var25.xml'
 		local
 			l_path: STRING
@@ -642,7 +642,7 @@ feature {NONE} -- Implementation
 			var25_xml_uri_not_void: Result /= Void
 		end
 
-	var16_xsl_uri: UT_URI is
+	var16_xsl_uri: UT_URI
 			-- URI of file 'var16.xsl'
 		local
 			l_path: STRING
@@ -653,7 +653,7 @@ feature {NONE} -- Implementation
 			var16_xsl_uri_not_void: Result /= Void
 		end
 
-	var17_xsl_uri: UT_URI is
+	var17_xsl_uri: UT_URI
 			-- URI of file 'var17.xsl'
 		local
 			l_path: STRING
@@ -663,8 +663,8 @@ feature {NONE} -- Implementation
 		ensure
 			var17_xsl_uri_not_void: Result /= Void
 		end
-		
-	var20_xsl_uri: UT_URI is
+
+	var20_xsl_uri: UT_URI
 			-- URI of file 'var20.xsl'
 		local
 			l_path: STRING
@@ -675,7 +675,7 @@ feature {NONE} -- Implementation
 			var20_xsl_uri_not_void: Result /= Void
 		end
 
-	var20_xml_uri: UT_URI is
+	var20_xml_uri: UT_URI
 			-- URI of file 'var20.xml'
 		local
 			l_path: STRING
@@ -686,7 +686,7 @@ feature {NONE} -- Implementation
 			var20_xml_uri_not_void: Result /= Void
 		end
 
-	var21_xsl_uri: UT_URI is
+	var21_xsl_uri: UT_URI
 			-- URI of file 'var21.xsl'
 		local
 			l_path: STRING
@@ -697,7 +697,7 @@ feature {NONE} -- Implementation
 			var21_xsl_uri_not_void: Result /= Void
 		end
 
-	var22_xsl_uri: UT_URI is
+	var22_xsl_uri: UT_URI
 			-- URI of file 'var22.xsl'
 		local
 			l_path: STRING
@@ -708,7 +708,7 @@ feature {NONE} -- Implementation
 			var22_xsl_uri_not_void: Result /= Void
 		end
 
-	var23_xsl_uri: UT_URI is
+	var23_xsl_uri: UT_URI
 			-- URI of file 'var23.xsl'
 		local
 			l_path: STRING
@@ -719,7 +719,7 @@ feature {NONE} -- Implementation
 			var23_xsl_uri_not_void: Result /= Void
 		end
 
-	var25_xsl_uri: UT_URI is
+	var25_xsl_uri: UT_URI
 			-- URI of file 'var25.xsl'
 		local
 			l_path: STRING
@@ -730,7 +730,7 @@ feature {NONE} -- Implementation
 			var25_xsl_uri_not_void: Result /= Void
 		end
 
-	var26_xsl_uri: UT_URI is
+	var26_xsl_uri: UT_URI
 			-- URI of file 'var26.xsl'
 		local
 			l_path: STRING
@@ -741,7 +741,7 @@ feature {NONE} -- Implementation
 			var26_xsl_uri_not_void: Result /= Void
 		end
 
-	var27_xsl_uri: UT_URI is
+	var27_xsl_uri: UT_URI
 			-- URI of file 'var27.xsl'
 		local
 			l_path: STRING
@@ -752,7 +752,7 @@ feature {NONE} -- Implementation
 			var27_xsl_uri_not_void: Result /= Void
 		end
 
-	var905err_xsl_uri: UT_URI is
+	var905err_xsl_uri: UT_URI
 			-- URI of file 'var905err.xsl'
 		local
 			l_path: STRING
@@ -763,7 +763,7 @@ feature {NONE} -- Implementation
 			var905err_xsl_uri_not_void: Result /= Void
 		end
 
-	var906err_xsl_uri: UT_URI is
+	var906err_xsl_uri: UT_URI
 			-- URI of file 'var906err.xsl'
 		local
 			l_path: STRING
@@ -774,7 +774,7 @@ feature {NONE} -- Implementation
 			var906err_xsl_uri_not_void: Result /= Void
 		end
 
-	var901err_xsl_uri: UT_URI is
+	var901err_xsl_uri: UT_URI
 			-- URI of file 'var901err.xsl'
 		local
 			l_path: STRING
@@ -785,7 +785,7 @@ feature {NONE} -- Implementation
 			var901err_xsl_uri_not_void: Result /= Void
 		end
 
-	var902err_xsl_uri: UT_URI is
+	var902err_xsl_uri: UT_URI
 			-- URI of file 'var902err.xsl'
 		local
 			l_path: STRING
@@ -796,7 +796,7 @@ feature {NONE} -- Implementation
 			var902err_xsl_uri_not_void: Result /= Void
 		end
 
-	var903err_xsl_uri: UT_URI is
+	var903err_xsl_uri: UT_URI
 			-- URI of file 'var903err.xsl'
 		local
 			l_path: STRING
@@ -807,7 +807,7 @@ feature {NONE} -- Implementation
 			var903err_xsl_uri_not_void: Result /= Void
 		end
 
-	var904err_xsl_uri: UT_URI is
+	var904err_xsl_uri: UT_URI
 			-- URI of file 'var904err.xsl'
 		local
 			l_path: STRING
@@ -818,7 +818,7 @@ feature {NONE} -- Implementation
 			var904err_xsl_uri_not_void: Result /= Void
 		end
 
-	var907err_xsl_uri: UT_URI is
+	var907err_xsl_uri: UT_URI
 			-- URI of file 'var907err.xsl'
 		local
 			l_path: STRING
@@ -829,7 +829,7 @@ feature {NONE} -- Implementation
 			var907err_xsl_uri_not_void: Result /= Void
 		end
 
-	var908err_xsl_uri: UT_URI is
+	var908err_xsl_uri: UT_URI
 			-- URI of file 'var908err.xsl'
 		local
 			l_path: STRING
@@ -840,7 +840,7 @@ feature {NONE} -- Implementation
 			var908err_xsl_uri_not_void: Result /= Void
 		end
 
-	var909err_xsl_uri: UT_URI is
+	var909err_xsl_uri: UT_URI
 			-- URI of file 'var909err.xsl'
 		local
 			l_path: STRING
@@ -851,7 +851,7 @@ feature {NONE} -- Implementation
 			var909err_xsl_uri_not_void: Result /= Void
 		end
 
-	xtde0700: STRING is
+	xtde0700: STRING
 			-- Error XTDE0700
 		once
 			Result := Xpath_errors_uri + "#" + "XTDE0700"
@@ -859,7 +859,7 @@ feature {NONE} -- Implementation
 			xtde0700_not_void: Result /= Void
 		end
 
-	xtte0590: STRING is
+	xtte0590: STRING
 			-- Error XTTE0590
 		once
 			Result := Xpath_errors_uri + "#" + "XTTE0590"
@@ -867,7 +867,7 @@ feature {NONE} -- Implementation
 			xtte0590_not_void: Result /= Void
 		end
 
-	xtde0050: STRING is
+	xtde0050: STRING
 			-- Error XTDE0050
 		once
 			Result := Xpath_errors_uri + "#" + "XTDE0050"
@@ -875,7 +875,7 @@ feature {NONE} -- Implementation
 			xtde0050_not_void: Result /= Void
 		end
 
-	forg0001: STRING is
+	forg0001: STRING
 			-- Error FORG0001
 		once
 			Result := Xpath_errors_uri + "#" + "FORG0001"
@@ -883,7 +883,7 @@ feature {NONE} -- Implementation
 			forg0001_not_void: Result /= Void
 		end
 
-	xtte0570: STRING is
+	xtte0570: STRING
 			-- Error XTTE0570
 		once
 			Result := Xpath_errors_uri + "#" + "XTTE0570"

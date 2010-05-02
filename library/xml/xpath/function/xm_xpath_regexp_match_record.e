@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (some_tokens: like tokens) is
+	make (some_tokens: like tokens)
 			-- Create with splitting record
 		do
 			add_split (some_tokens)
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	has_split: BOOLEAN is
+	has_split: BOOLEAN
 			-- Does this record include a previous split result?
 		do
 			Result := tokens /= Void
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Element change
 
-	add_split (some_tokens: like tokens) is
+	add_split (some_tokens: like tokens)
 		-- Add result of previoius split
 		require
 			no_previous_split: not has_split

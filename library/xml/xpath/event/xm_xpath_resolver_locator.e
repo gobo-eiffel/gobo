@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parser: XM_PARSER) is
+	make (a_parser: XM_PARSER)
 			-- Establish invariant.
 		require
 			parser_not_void: a_parser /= Void
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	system_id: STRING is
+	system_id: STRING
 			-- Current SYSTEM ID;
 			-- If this is a URL, then it must be fully resolved
 		do
@@ -46,7 +46,7 @@ feature -- Access
 			end
 		end
 
-	line_number: INTEGER is
+	line_number: INTEGER
 			-- Approximate line number of current event, or 0 if unknown
 		do
 			Result :=  parser.position.row

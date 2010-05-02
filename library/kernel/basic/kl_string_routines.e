@@ -35,7 +35,7 @@ inherit
 
 feature -- Initialization
 
-	make_from_string (s: STRING): STRING is
+	make_from_string (s: STRING): STRING
 			-- Initialize from the character sequence of `s'.
 			-- `s' is considered with its characters which do not fit
 			-- in a CHARACTER replaced by a '%U'.
@@ -85,7 +85,7 @@ feature -- Initialization
 			initialized: elks_same_string (Result, s)
 		end
 
-	make_buffer (n: INTEGER): STRING is
+	make_buffer (n: INTEGER): STRING
 			-- Create a new string containing `n' characters.
 			-- (Not in ELKS 2001 STRING)
 		require
@@ -100,7 +100,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	has_substring (a_string, other: STRING): BOOLEAN is
+	has_substring (a_string, other: STRING): BOOLEAN
 			-- Does `a_string' contain `other'? `a_string' and `other'
 			-- are considered with their characters which do not fit
 			-- in a CHARACTER replaced by a '%U'.
@@ -129,7 +129,7 @@ feature -- Status report
 				(Result = has_substring (a_string.substring (2, a_string.count), other))
 		end
 
-	is_decimal (a_string: STRING): BOOLEAN is
+	is_decimal (a_string: STRING): BOOLEAN
 			-- Is `a_string' only made up of characters 0-9?
 			-- (Not in ELKS 2001 STRING)
 		require
@@ -160,7 +160,7 @@ feature -- Status report
 			end
 		end
 
-	is_integer_64 (a_string: STRING): BOOLEAN is
+	is_integer_64 (a_string: STRING): BOOLEAN
 			-- Does `a_string' represent a positive INTEGER_64?
 		require
 			a_string_not_void: a_string /= Void
@@ -232,7 +232,7 @@ feature -- Status report
 			end
 		end
 
-	is_hexadecimal (a_string: STRING): BOOLEAN is
+	is_hexadecimal (a_string: STRING): BOOLEAN
 			-- Is a string made up of characters 0-9 or A-F or a-f?
 			-- (Not in ELKS 2001 STRING)
 		require
@@ -263,7 +263,7 @@ feature -- Status report
 			end
 		end
 
-	is_base64 (a_string: STRING): BOOLEAN is
+	is_base64 (a_string: STRING): BOOLEAN
 			-- Is a string made up of characters +, /, =, XML whitespace, 0-9 or A-Z or a-z?
 			-- (Not in ELKS 2001 STRING)
 		require
@@ -300,7 +300,7 @@ feature -- Status report
 
 feature -- Access
 
-	new_empty_string (a_string: STRING; n: INTEGER): STRING is
+	new_empty_string (a_string: STRING; n: INTEGER): STRING
 			-- New empty string with same dynamic type as `a_string';
 			-- Try to allocate space for at least `n' characters.
 			-- (Not in ELKS 2001 STRING)
@@ -327,7 +327,7 @@ feature -- Access
 			new_string_empty: Result.count = 0
 		end
 
-	to_utf16_be (a_string: STRING): STRING is
+	to_utf16_be (a_string: STRING): STRING
 			-- New STRING made up of bytes corresponding to
 			-- the UTF-16BE representation of `a_string'
 		require
@@ -374,7 +374,7 @@ feature -- Access
 			valid_utf16: utf16.valid_utf16 (Result)
 		end
 
-	to_utf16_le (a_string: STRING): STRING is
+	to_utf16_le (a_string: STRING): STRING
 			-- New STRING made up of bytes corresponding to
 			-- the UTF-16LE representation of `a_string'
 		require
@@ -421,7 +421,7 @@ feature -- Access
 			valid_utf16: utf16.valid_utf16 (utf16.bom_le + Result)
 		end
 
-	to_utf32_be (a_string: STRING): STRING is
+	to_utf32_be (a_string: STRING): STRING
 			-- New STRING made up of bytes corresponding to
 			-- the UTF-32BE representation of `a_string'
 		require
@@ -461,7 +461,7 @@ feature -- Access
 			valid_utf32: utf32.valid_utf32 (Result)
 		end
 
-	to_utf32_le (a_string: STRING): STRING is
+	to_utf32_le (a_string: STRING): STRING
 			-- New STRING made up of bytes corresponding to
 			-- the UTF-32LE representation of `a_string'
 		require
@@ -501,7 +501,7 @@ feature -- Access
 			valid_utf32: utf32.valid_utf32 (utf32.bom_le + Result)
 		end
 
-	substring_index (a_string, other: STRING; start_index: INTEGER): INTEGER is
+	substring_index (a_string, other: STRING; start_index: INTEGER): INTEGER
 			-- Index of first occurrence of `other' at or after `start_index' in
 			-- `a_string'; 0 if none. `a_string' and `other' are considered with
 			-- their characters which do not fit in a CHARACTER replaced by a '%U'.
@@ -623,7 +623,7 @@ feature -- Access
 			none_before: Result > start_index implies not has_substring (a_string.substring (start_index, Result + other.count - 2), other)
 		end
 
-	case_insensitive_hash_code (a_string: STRING): INTEGER is
+	case_insensitive_hash_code (a_string: STRING): INTEGER
 			-- Hash code value of `a_string' which doesn't
 			-- take case sensitivity into account
 			-- (Not in ELKS 2001 STRING)
@@ -650,7 +650,7 @@ feature -- Access
 			hash_code_not_negative: Result >= 0
 		end
 
-	concat (a_string, other: STRING): STRING is
+	concat (a_string, other: STRING): STRING
 			-- New object which contains the characters of `a_string'
 			-- followed by the characters of `other'; If `other' is
 			-- of dynamic type UC_STRING or one of its descendants and
@@ -690,7 +690,7 @@ feature -- Access
 
 feature -- Comparison
 
-	elks_same_string (a_string, other: STRING): BOOLEAN is
+	elks_same_string (a_string, other: STRING): BOOLEAN
 			-- Do `a_string' and `other' have the same character sequence?
 			-- `a_string' and `other' are considered with their characters
 			-- which do not fit in a CHARACTER replaced by a '%U'.
@@ -718,7 +718,7 @@ feature -- Comparison
 			definition: Result = a_string.string.is_equal (other.string)
 		end
 
-	same_string (a_string, other: STRING): BOOLEAN is
+	same_string (a_string, other: STRING): BOOLEAN
 			-- Do `a_string' and `other' have the same unicode character sequence?
 			-- (Not in ELKS 2001 STRING)
 			-- Note: the difference with `elks_same_string' is that here the
@@ -770,7 +770,7 @@ feature -- Comparison
 			elks_same_string: Result implies elks_same_string (a_string, other)
 		end
 
-	same_case_insensitive (s1, s2: STRING): BOOLEAN is
+	same_case_insensitive (s1, s2: STRING): BOOLEAN
 			-- Are `s1' and `s2' made up of the same
 			-- characters (case insensitive)?
 			-- (Not in ELKS 2001 STRING)
@@ -827,7 +827,7 @@ feature -- Comparison
 			end
 		end
 
-	three_way_comparison (a_string, other: STRING): INTEGER is
+	three_way_comparison (a_string, other: STRING): INTEGER
 			-- If `a_string' equal to `other', 0;
 			-- if smaller, -1; if greater, 1
 			-- (ELKS 2001 STRING)
@@ -946,7 +946,7 @@ feature -- Comparison
 --			greater_positive: (Result = 1) = (a_string is greater than other)
 		end
 
-	three_way_case_insensitive_comparison (a_string, other: STRING): INTEGER is
+	three_way_case_insensitive_comparison (a_string, other: STRING): INTEGER
 			-- If `a_string' equal to `other', 0; if smaller, -1; if greater, 1
 			-- (case insensitive comparison)
 			-- (Not in ELKS 2001 STRING)
@@ -1050,7 +1050,7 @@ feature -- Comparison
 
 feature -- Duplication
 
-	cloned_string (a_string: STRING): STRING is
+	cloned_string (a_string: STRING): STRING
 			-- Clone of `a_string'
 		require
 			a_string_not_void: a_string /= Void
@@ -1064,7 +1064,7 @@ feature -- Duplication
 
 feature -- Element change
 
-	appended_string (a_string, other: STRING): STRING is
+	appended_string (a_string, other: STRING): STRING
 			-- If the dynamic type of `other' is UC_STRING or one of
 			-- its descendants and `a_string' is not, then return a
 			-- new object with the same dynamic type as `other' and
@@ -1104,7 +1104,7 @@ feature -- Element change
 			final: same_string (Result.substring (old a_string.count + 1, Result.count), old cloned_string (other))
 		end
 
-	appended_substring (a_string, other: STRING; s, e: INTEGER): STRING is
+	appended_substring (a_string, other: STRING; s, e: INTEGER): STRING
 			-- If the dynamic type of `other' is UC_STRING or one of
 			-- its descendants and `a_string' is not, then return a
 			-- new object with the same dynamic type as `other' and
@@ -1160,7 +1160,7 @@ feature -- Element change
 			final: same_string (Result.substring (old a_string.count + 1, Result.count), old other.substring (s, e))
 		end
 
-	replaced_substring (a_string, other: STRING; start_index, end_index: INTEGER): STRING is
+	replaced_substring (a_string, other: STRING; start_index, end_index: INTEGER): STRING
 			-- If the dynamic type of `other' is UC_STRING or one of
 			-- its descendants and `a_string' is not, then return a
 			-- new object with the same dynamic type as `other' and
@@ -1201,7 +1201,7 @@ feature -- Element change
 			replaced: same_string (Result, old (appended_string (appended_string (a_string.substring (1, start_index - 1), other), a_string.substring (end_index + 1, a_string.count))))
 		end
 
-	append_substring_to_string (a_string: STRING; other: STRING; s, e: INTEGER) is
+	append_substring_to_string (a_string: STRING; other: STRING; s, e: INTEGER)
 			-- Append substring of `other' between indexes
 			-- `s' and `e' at end of `a_string'.
 		require
@@ -1232,7 +1232,7 @@ feature -- Element change
 			appended: a_string.is_equal (old cloned_string (a_string) + old other.substring (s, e))
 		end
 
-	replaced_all_substrings (a_text, a_old, a_new: STRING): STRING is
+	replaced_all_substrings (a_text, a_old, a_new: STRING): STRING
 			-- Copy of `a_text' for which each occurrence of `a_old' has been replaced
 			-- by `a_new'; `a_text' if no occurrence could be found
 		require
@@ -1276,7 +1276,7 @@ feature -- Element change
 			replaced_all_substrings_not_void: Result /= Void
 		end
 
-	replaced_first_substring (a_text: STRING; a_old, a_new: STRING): STRING is
+	replaced_first_substring (a_text: STRING; a_old, a_new: STRING): STRING
 			-- Copy of `a_text' for which first occurrence of `a_old' has been replaced
 			-- by `a_new'; `a_text' if no occurrence could be found
 		require
@@ -1308,7 +1308,7 @@ feature -- Element change
 
 feature -- Conversion
 
-	as_string (a_string: STRING): STRING is
+	as_string (a_string: STRING): STRING
 			-- String version of `a_string';
 			-- Return `a_string' if it is of dynamic type STRING,
 			-- return the UTF encoding version if it is a descendant
@@ -1334,7 +1334,7 @@ feature -- Conversion
 			aliasing: ANY_.same_types (a_string, "") implies Result = a_string
 		end
 
-	hexadecimal_to_integer (a_string: STRING): INTEGER is
+	hexadecimal_to_integer (a_string: STRING): INTEGER
 			-- Convert hexadecimal number string to integer;
 			-- (Not in ELKS 2001 STRING)
 			-- Note: Do not take overflow into account.
@@ -1394,7 +1394,7 @@ feature -- Conversion
 
 feature -- Removal
 
-	left_adjust (a_string: STRING) is
+	left_adjust (a_string: STRING)
 			-- Remove leading whitespace from `a_string'.
 			-- (Not in ELKS 2001 STRING)
 			-- Note: SE 1.1 removes the following characters: ' ';
@@ -1427,7 +1427,7 @@ feature -- Removal
 				(a_string.item_code (1) /= ('%N').code))
 		end
 
-	right_adjust (a_string: STRING) is
+	right_adjust (a_string: STRING)
 			-- Remove trailing whitespace from `a_string'.
 			-- (Not in ELKS 2001 STRING)
 			-- Note: SE 1.1 removes the following characters: ' ';
@@ -1460,7 +1460,7 @@ feature -- Removal
 				(a_string.item_code (a_string.count) /= ('%N').code))
 		end
 
-	wipe_out (a_string: STRING) is
+	wipe_out (a_string: STRING)
 			-- Remove all characters in `a_string'.
 			-- Do not discard allocated memory (i.e. do not
 			-- change capacity) when allowed by the underlying
@@ -1469,12 +1469,12 @@ feature -- Removal
 		require
 			a_string_not_void: a_string /= Void
 		do
-			a_string.clear_all
+			a_string.keep_head (0)
 		ensure
 			wiped_out: a_string.count = 0
 		end
 
-	prune_all_trailing (a_string: STRING; c: CHARACTER) is
+	prune_all_trailing (a_string: STRING; c: CHARACTER)
 			-- Remove all trailing occurrences of `c' in `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -1486,7 +1486,7 @@ feature -- Removal
 
 feature -- Resizing
 
-	resize_buffer (a_string: STRING; n: INTEGER) is
+	resize_buffer (a_string: STRING; n: INTEGER)
 			-- Resize `a_string' so that it contains `n' characters.
 			-- Do not lose any previously entered characters.
 		require
@@ -1511,7 +1511,7 @@ feature -- Resizing
 
 feature -- Conversion
 
-	to_integer_64 (a_string: STRING): INTEGER_64 is
+	to_integer_64 (a_string: STRING): INTEGER_64
 			-- `a_string' as `INTEGER_64'
 		require
 			a_string_not_void: a_string /= Void
@@ -1522,10 +1522,10 @@ feature -- Conversion
 
 feature {NONE} -- Implementation
 
-	dummy_string: STRING is ""
+	dummy_string: STRING = ""
 			-- Dummy string
 
-	max_integer_64_digits: ARRAY [INTEGER] is
+	max_integer_64_digits: ARRAY [INTEGER]
 			-- Digits of maximum INTEGER_64 value
 		once
 			Result := <<9, 2, 2, 3, 3, 7, 2, 0, 3, 6, 8, 5, 4, 7, 7, 5, 8, 0, 7>>
@@ -1534,7 +1534,7 @@ feature {NONE} -- Implementation
 			ninteen_digits: Result.count = 19
 		end
 
-	min_negative_integer_64_digits: ARRAY [INTEGER] is
+	min_negative_integer_64_digits: ARRAY [INTEGER]
 			-- Digits of minimum INTEGER_64 value
 		once
 			Result := <<9, 2, 2, 3, 3, 7, 2, 0, 3, 6, 8, 5, 4, 7, 7, 5, 8, 0, 8>>
@@ -1543,7 +1543,7 @@ feature {NONE} -- Implementation
 			ninteen_digits: Result.count = 19
 		end
 
-	code_zero: INTEGER is
+	code_zero: INTEGER
 			-- code for '0'
 		once
 			Result := ('0').code

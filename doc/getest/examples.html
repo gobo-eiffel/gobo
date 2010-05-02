@@ -38,7 +38,7 @@ strings and returns the result. This example is simple, but <em>getest
 </em><font color="#000080"><em><strong>feature</strong></em></font><em> </em>{<em>NONE</em>}<em> </em><font
 color="#008000">-- Initialization</font><em>
 
-    make </em><font color="#000080"><em><strong>is</strong></em></font><em>
+    make
             </em><font color="#008000">-- Create a new string concatenator.</font><em>
         </em><font color="#000080"><em><strong>do
         end</strong></em></font><em>
@@ -46,8 +46,7 @@ color="#008000">-- Initialization</font><em>
 </em><font color="#000080"><em><strong>feature</strong></em></font><em> </em><font
 color="#008000">-- Basic operations</font><em>
 
-    concat </em>(<em>s1</em>,<em> s2</em>:<em> STRING</em>):<em> STRING </em><font
-color="#000080"><em><strong>is</strong></em></font><em>
+    concat </em>(<em>s1</em>,<em> s2</em>:<em> STRING</em>):<em> STRING
             </em><font color="#008000">-- Concatenate </font><em>s1</em><font
 color="#008000"> and </font><em>s2</em><font color="#008000">.</font><em>
    </em><font color="#000080"><em><strong>     require</strong></em></font><em>
@@ -95,7 +94,7 @@ class. </p>
 </em><font color="#000080"><em><strong>feature</strong></em></font><em> </em><font
 color="#008000">-- Test</font><em>
 
-    test_concat </em><font color="#000080"><em><strong>is</strong></em></font><em>
+    test_concat
             </em><font color="#008000">-- Test feature </font><em>concat</em><font
 color="#008000">.</font><em>
         </em><font color="#000080"><em><strong>local</strong></em></font><em>
@@ -207,9 +206,9 @@ Test Summary for xconcat2
             <strong>Last Updated:</strong> 13 February 2008</font><br>
             <!--webbot bot="PurpleText"
             preview="
-$Date$ 
+$Date$
 $Revision$"
-            --> 
+            -->
         </address>
         </td>
         <td align="right" valign="top"><a

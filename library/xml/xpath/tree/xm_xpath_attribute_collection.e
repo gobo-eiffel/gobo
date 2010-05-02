@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant.
 		do
 			create attribute_name_codes.make (Size_increment)
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	attribute_value (a_fingerprint: INTEGER): STRING is
+	attribute_value (a_fingerprint: INTEGER): STRING
 			-- Value of attribute identified by `a_fingerprint'
 		local
 			an_index: INTEGER
@@ -51,7 +51,7 @@ feature -- Access
 			end
 		end
 
-	attribute_value_by_name (a_uri: STRING; a_local_name:STRING): STRING is
+	attribute_value_by_name (a_uri: STRING; a_local_name:STRING): STRING
 			-- Value of named attribute
 		local
 			a_fingerprint: INTEGER
@@ -62,7 +62,7 @@ feature -- Access
 			end
 		end
 
-	attribute_value_by_index (an_attribute_index: INTEGER): STRING is
+	attribute_value_by_index (an_attribute_index: INTEGER): STRING
 		require
 			valid_attribute_index: is_attribute_index_valid (an_attribute_index)
 		do
@@ -71,21 +71,21 @@ feature -- Access
 			attribute_value_not_void: Result /= Void
 		end
 
-	attribute_name_code (an_attribute_index: INTEGER): INTEGER is
+	attribute_name_code (an_attribute_index: INTEGER): INTEGER
 		require
 			valid_attribute_index: is_attribute_index_valid (an_attribute_index)
 		do
 			Result := attribute_name_codes.item (an_attribute_index)
 		end
 
-	attribute_type_code (an_attribute_index: INTEGER): INTEGER is
+	attribute_type_code (an_attribute_index: INTEGER): INTEGER
 		require
 			valid_attribute_index: is_attribute_index_valid (an_attribute_index)
 		do
 			Result := attribute_type_codes.item (an_attribute_index)
 		end
 
-	attribute_properties (a_attribute_index: INTEGER): INTEGER is
+	attribute_properties (a_attribute_index: INTEGER): INTEGER
 		-- Event properties associated with attribute
 		require
 			valid_attribute_index: is_attribute_index_valid (a_attribute_index)
@@ -95,7 +95,7 @@ feature -- Access
 			definition: Result = internal_attribute_properties.item (a_attribute_index)
 		end
 
-	is_id (an_attribute_index: INTEGER): BOOLEAN is
+	is_id (an_attribute_index: INTEGER): BOOLEAN
 		-- Is the is-id property set?
 		require
 			valid_attribute_index: is_attribute_index_valid (an_attribute_index)
@@ -103,7 +103,7 @@ feature -- Access
 			Result := attribute_ids /= Void and then attribute_ids.item (an_attribute_index) = Id_property
 		end
 
-	is_idrefs (an_attribute_index: INTEGER): BOOLEAN is
+	is_idrefs (an_attribute_index: INTEGER): BOOLEAN
 			-- Is the is-idrefs property set?
 		require
 			valid_attribute_index: is_attribute_index_valid (an_attribute_index)
@@ -111,7 +111,7 @@ feature -- Access
 			Result := attribute_ids /= Void and then attribute_ids.item (an_attribute_index) = Idrefs_property
 		end
 
-	name_code_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER] is
+	name_code_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			-- A cursor over the name codes
 		do
 			Result := attribute_name_codes.new_cursor
@@ -119,7 +119,7 @@ feature -- Access
 
 feature -- Measurement
 
-	number_of_attributes: INTEGER is
+	number_of_attributes: INTEGER
 			-- Number of attributes in `Current'
 		do
 			Result := attribute_name_codes.count
@@ -129,14 +129,14 @@ feature -- Measurement
 
 feature -- Status report
 
-	is_attribute_index_valid (an_attribute_index: INTEGER): BOOLEAN is
+	is_attribute_index_valid (an_attribute_index: INTEGER): BOOLEAN
 		do
 			Result := an_attribute_index > 0 and then an_attribute_index <= attribute_values.count
 		end
 
 feature -- Element change
 
-	add_attribute (a_name_code, a_type_code: INTEGER; a_value: STRING; a_properties: INTEGER) is
+	add_attribute (a_name_code, a_type_code: INTEGER; a_value: STRING; a_properties: INTEGER)
 			-- Add an attribute.
 		require
 			valid_name_code: shared_name_pool.is_valid_name_code (a_name_code)
@@ -216,7 +216,7 @@ feature -- Element change
 
 feature -- Removal
 
-	wipe_out is
+	wipe_out
 			-- Clear all arrayed lists.
 		do
 			attribute_values.wipe_out
@@ -230,12 +230,12 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	Size_increment: INTEGER is 4
+	Size_increment: INTEGER = 4
 			-- Allocation extent size for all arrays
 
-	No_dtd_property: INTEGER is 0
-	Id_property: INTEGER is 1
-	Idrefs_property: INTEGER is 2
+	No_dtd_property: INTEGER = 0
+	Id_property: INTEGER = 1
+	Idrefs_property: INTEGER = 2
 
 	-- The next five lists are quintuples - i.e. item number n in all four lists forms a quintuple
 
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 	internal_attribute_properties: DS_ARRAYED_LIST [INTEGER]
 			-- Event properties associated with attribute
 
-	ensure_extensible is
+	ensure_extensible
 			-- Ensure 1 attribute may be added.
 		local
 			l_new: INTEGER
@@ -277,7 +277,7 @@ feature {NONE} -- Implementation
 			internal_attribute_properties_extendible: internal_attribute_properties.extendible (1)
 		end
 
-	attribute_index (a_fingerprint: INTEGER): INTEGER is
+	attribute_index (a_fingerprint: INTEGER): INTEGER
 			-- Index number of attribute with fingerprint `a_fingerprint'
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]

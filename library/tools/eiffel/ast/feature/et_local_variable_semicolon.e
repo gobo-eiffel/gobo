@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_variable: like local_variable; a_semicolon: like semicolon) is
+	make (a_variable: like local_variable; a_semicolon: like semicolon)
 			-- Create a new local_variable-semicolon.
 		require
 			a_variable_not_void: a_variable /= Void
@@ -43,38 +43,38 @@ feature -- Access
 	semicolon: ET_SYMBOL
 			-- Semicolon separator
 
-	name: ET_IDENTIFIER is
+	name: ET_IDENTIFIER
 			-- Name
 		do
 			Result := local_variable.name
 		end
 
-	type: ET_TYPE is
+	type: ET_TYPE
 			-- Type
 		do
 			Result := local_variable.type
 		end
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
 			Result := local_variable.position
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := local_variable.first_leaf
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := semicolon
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := semicolon.break
@@ -82,7 +82,7 @@ feature -- Access
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_local_variable_semicolon (Current)

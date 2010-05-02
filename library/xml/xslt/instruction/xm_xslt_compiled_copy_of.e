@@ -20,7 +20,7 @@ inherit
 			compute_cardinality, compute_dependencies, promote_instruction,
 			sub_expressions, create_iterator
 		end
-			
+
 	XM_XSLT_VALIDATION
 
 create
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_executable: XM_XSLT_EXECUTABLE; a_select_expression: XM_XPATH_EXPRESSION; copy_ns: BOOLEAN; a_base_uri: STRING) is
+	make (an_executable: XM_XSLT_EXECUTABLE; a_select_expression: XM_XPATH_EXPRESSION; copy_ns: BOOLEAN; a_base_uri: STRING)
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
@@ -50,8 +50,8 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
-	item_type: XM_XPATH_ITEM_TYPE is
+
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, when known
 		do
 			Result := select_expression.item_type
@@ -61,7 +61,7 @@ feature -- Access
 			end
 		end
 
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions of `Current'
 		do
 			create Result.make (1)
@@ -74,13 +74,13 @@ feature -- Access
 
 feature -- Status report
 
-	creates_new_nodes: BOOLEAN is
+	creates_new_nodes: BOOLEAN
 			-- Can `Current' create new nodes?
 		do
 			Result := not is_sub_type (select_expression.item_type, type_factory.any_atomic_type)
 		end
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -93,7 +93,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	compute_dependencies is
+	compute_dependencies
 			-- Compute dependencies on context.
 		do
 			if not are_intrinsic_dependencies_computed then
@@ -104,7 +104,7 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -119,10 +119,10 @@ feature -- Optimization
 			end
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]		
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			a_replacement.put (Current)
 			create l_replacement.make (Void)
@@ -134,13 +134,13 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]		
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			a_replacement.put (Current)
-			create l_replacement.make (Void)		
+			create l_replacement.make (Void)
 			select_expression.optimize (l_replacement, a_context, a_context_item_type)
 			if select_expression /= l_replacement.item then
 				select_expression := l_replacement.item
@@ -149,12 +149,12 @@ feature -- Optimization
 			end
 		end
 
-	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this instruction.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			create l_replacement.make (Void)	
+			create l_replacement.make (Void)
 			select_expression.promote (l_replacement, a_offer)
 			if select_expression /= l_replacement.item then
 				select_expression := l_replacement.item
@@ -165,7 +165,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterator over the values of a sequence
 		local
 			a_new_context: XM_XPATH_CONTEXT
@@ -185,7 +185,7 @@ feature -- Evaluation
 			last_iterator := a_receiver.sequence.last_iterator
 		end
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_receiver: XM_XPATH_SEQUENCE_RECEIVER
@@ -222,33 +222,33 @@ feature -- Evaluation
 			end
 			if l_sequence_iterator.is_error then
 				l_receiver.on_error (l_sequence_iterator.error_value.error_message)
-			end			
+			end
 		end
 
-	
+
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	native_implementations: INTEGER is
+	native_implementations: INTEGER
 			-- Natively-supported evaluation routines
 		do
 			Result := Supports_process + Supports_iterator
 		end
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinalities (select_expression)
 		end
 
 feature {NONE} -- Implementation
-	
+
 	select_expression: XM_XPATH_EXPRESSION
 			-- Select expression
 
 	copy_namespaces: BOOLEAN
 			-- Do we copy namespaces?
 
-	process_node (a_node: XM_XPATH_NODE; a_receiver: XM_XPATH_SEQUENCE_RECEIVER; which_namespaces: INTEGER; a_copy_base_uri: BOOLEAN; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	process_node (a_node: XM_XPATH_NODE; a_receiver: XM_XPATH_SEQUENCE_RECEIVER; which_namespaces: INTEGER; a_copy_base_uri: BOOLEAN; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Process a node.
 		require
 			node_not_void: a_node /= Void
@@ -303,4 +303,4 @@ invariant
 	base_uri_not_void: base_uri /= Void
 
 end
-	
+

@@ -25,8 +25,8 @@ inherit
 	UT_SHARED_URL_ENCODING
 
 feature {NONE} -- Access
-	
-	evaluated_unparsed_text (a_uri: UT_URI; an_encoding: STRING; a_context: XM_XPATH_CONTEXT; is_availability_check: BOOLEAN): XM_XPATH_ITEM is
+
+	evaluated_unparsed_text (a_uri: UT_URI; an_encoding: STRING; a_context: XM_XPATH_CONTEXT; is_availability_check: BOOLEAN): XM_XPATH_ITEM
 			-- Unparsed text (or availability thereof) for `a_uri'
 		require
 			absolute_uri: a_uri /= Void and then a_uri.is_absolute and then not a_uri.has_fragment
@@ -63,7 +63,7 @@ feature {NONE} -- Access
 			no_error_implies_string_value: not  is_availability_check and then not Result.is_error implies Result.is_string_value
 		end
 
-	resolved_text_uri (a_uri: UT_URI; an_encoding: STRING; a_context: XM_XSLT_EVALUATION_CONTEXT; is_availability_check: BOOLEAN): XM_XPATH_ITEM is
+	resolved_text_uri (a_uri: UT_URI; an_encoding: STRING; a_context: XM_XSLT_EVALUATION_CONTEXT; is_availability_check: BOOLEAN): XM_XPATH_ITEM
 			-- Resolved unparsed text (or availability thereof) for `a_uri'
 		require
 			absolute_uri: a_uri /= Void and then a_uri.is_absolute and then not a_uri.has_fragment
@@ -120,7 +120,7 @@ feature {NONE} -- Access
 			no_error_implies_string_value: not  is_availability_check and then not Result.is_error implies Result.is_string_value
 		end
 
-	retrieved_text (a_stream: XM_EIFFEL_INPUT_STREAM; a_uri: UT_URI; an_encoding: STRING; a_context: XM_XSLT_EVALUATION_CONTEXT; is_availability_check: BOOLEAN): XM_XPATH_ITEM is
+	retrieved_text (a_stream: XM_EIFFEL_INPUT_STREAM; a_uri: UT_URI; an_encoding: STRING; a_context: XM_XSLT_EVALUATION_CONTEXT; is_availability_check: BOOLEAN): XM_XPATH_ITEM
 			-- Resolved unparsed text (or availability thereof) from `a_stream' for `a_uri'
 		require
 			stream_not_void: a_stream /= Void
@@ -144,7 +144,7 @@ feature {NONE} -- Access
 			no_error_implies_string_value: not  is_availability_check and then not Result.is_error implies Result.is_string_value
 		end
 
-	is_recognized_encoding (an_encoding: STRING): BOOLEAN is
+	is_recognized_encoding (an_encoding: STRING): BOOLEAN
 		-- Is `an_encoding' supported or `Void'?
 		do
 			if an_encoding = Void then
@@ -160,7 +160,7 @@ feature {NONE} -- Access
 			end
 		end
 
-	is_xml_media_type (a_media_type: UT_MEDIA_TYPE): BOOLEAN is
+	is_xml_media_type (a_media_type: UT_MEDIA_TYPE): BOOLEAN
 			-- Is `a_media_type' an XML media type?
 		require
 			media_type_not_void: a_media_type /= Void
@@ -178,8 +178,8 @@ feature {NONE} -- Access
 			end
 		end
 
-	Charset: STRING is "charset"
+	Charset: STRING = "charset"
 			-- Charset parameter
 
 end
-	
+

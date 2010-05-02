@@ -24,7 +24,7 @@ create
 
 feature -- Test
 
-	test_generator is
+	test_generator
 			-- Test feature 'generator'.
 		local
 			l_generator: STRING
@@ -79,7 +79,7 @@ feature -- Test
 			assert ("new_object6", l_generator /= sp.generator)
 		end
 
-	test_generating_type is
+	test_generating_type
 			-- Test feature 'generating_type'.
 		local
 			l_type: STRING
@@ -134,7 +134,7 @@ feature -- Test
 			assert ("new_object6", l_type /= sp.generating_type)
 		end
 
-	test_same_type is
+	test_same_type
 			-- Test feature 'same_type'.
 		local
 			s1, s2: STRING
@@ -176,7 +176,7 @@ feature -- Test
 			assert ("not_same5", not sp3.same_type (s1))
 		end
 
-	test_conforms_to is
+	test_conforms_to
 			-- Test feature 'conforms_to'.
 		local
 			s1, s2: STRING
@@ -226,7 +226,7 @@ feature -- Test
 			assert ("not_conforms8", not sp4.conforms_to (s1))
 		end
 
-	test_is_equal is
+	test_is_equal
 			-- Test feature 'is_equal'.
 		local
 			s1, s2, s3: STRING
@@ -268,7 +268,7 @@ feature -- Test
 			assert ("not_equal8", not aa2.is_equal (aa1))
 		end
 
-	test_equal is
+	test_equal
 			-- Test feature 'equal'.
 		local
 			s1, s2, s3: STRING
@@ -305,7 +305,7 @@ feature -- Test
 			assert ("not_equal7", not aa1.equal (aa2, aa1))
 		end
 
-	test_standard_is_equal is
+	test_standard_is_equal
 			-- Test feature 'standard_is_equal'.
 		local
 			s1, s2, s3: STRING
@@ -338,7 +338,7 @@ feature -- Test
 			assert ("not_equal10", not aa2.standard_is_equal (aa1))
 		end
 
-	test_standard_is_equal___fail_ise is
+	test_standard_is_equal___fail_ise
 			-- Test feature 'standard_is_equal'.
 			-- Does not work with ISE Eiffel.
 		local
@@ -356,7 +356,7 @@ feature -- Test
 			end
 		end
 
-	test_standard_equal is
+	test_standard_equal
 			-- Test feature 'standard_equal'.
 		local
 			s1, s2, s3: STRING
@@ -391,7 +391,7 @@ feature -- Test
 			assert ("not_equal9", not aa1.standard_equal (aa2, aa1))
 		end
 
-	test_twin is
+	test_twin
 			-- Test feature 'twin'.
 		local
 			s1, s2: STRING
@@ -425,7 +425,7 @@ feature -- Test
 			assert ("cloned4", aa2 /= aa1)
 		end
 
-	test_copy is
+	test_copy
 			-- Test feature 'copy'.
 		local
 			s1, s2: STRING
@@ -457,7 +457,7 @@ feature -- Test
 			assert_integers_equal ("value7", 5, aa2.foo)
 		end
 
-	test_copy___fail_ise is
+	test_copy___fail_ise
 			-- Test feature 'copy'.
 			-- Does not work with ISE Eiffel.
 		local
@@ -480,7 +480,7 @@ feature -- Test
 			end
 		end
 
-	test_copy___fail_ise_ge is
+	test_copy___fail_ise_ge
 			-- Test feature 'copy'.
 			-- Does not work with ISE Eiffel and Gobo Eiffel.
 		local
@@ -499,7 +499,7 @@ feature -- Test
 			end
 		end
 
-	test_standard_twin is
+	test_standard_twin
 			-- Test feature 'standard_twin'.
 		local
 			s1, s2: STRING
@@ -536,7 +536,7 @@ feature -- Test
 			assert ("cloned4", aa2 /= aa1)
 		end
 
-	test_standard_copy is
+	test_standard_copy
 			-- Test feature 'standard_copy'.
 		local
 			s1, s2: STRING
@@ -568,7 +568,7 @@ feature -- Test
 			assert_integers_equal ("value7", 5, aa2.foo)
 		end
 
-	test_standard_copy___fail_ise is
+	test_standard_copy___fail_ise
 			-- Test feature 'standard_copy'.
 			-- Does not work with ISE Eiffel.
 		local
@@ -591,7 +591,7 @@ feature -- Test
 			end
 		end
 
-	test_standard_copy___fail_ise_ge is
+	test_standard_copy___fail_ise_ge
 			-- Test feature 'standard_copy'.
 			-- Does not work with ISE Eiffel and Gobo Eiffel.
 		local
@@ -610,7 +610,7 @@ feature -- Test
 			end
 		end
 
-	test_out is
+	test_out
 			-- Test feature 'out'.
 		local
 			l_out: STRING
@@ -711,7 +711,7 @@ feature -- Test
 			assert ("new_object10", l_out /= bb4.out)
 		end
 
-	test_tagged_out is
+	test_tagged_out
 			-- Test feature 'tagged_out'.
 		local
 			l_out: STRING
@@ -816,7 +816,7 @@ feature -- Test
 			assert ("new_object10", l_out /= bb4.tagged_out)
 		end
 
-	test_default is
+	test_default
 			-- Test feature 'default'.
 		local
 			s: STRING
@@ -841,7 +841,7 @@ feature -- Test
 			assert ("defaut8", b.default = False)
 		end
 
-	test_default_pointer is
+	test_default_pointer
 			-- Test feature 'default_pointer'.
 		local
 			p: POINTER
@@ -850,19 +850,19 @@ feature -- Test
 			assert ("default", default_pointer = p.default)
 		end
 
-	test_default_create is
+	test_default_create
 			-- Test feature 'default_create'.
 		do
 			default_create
 		end
 
-	test_default_rescue is
+	test_default_rescue
 			-- Test feature 'default_rescue'.
 		do
 			default_rescue
 		end
 
-	test_do_nothing is
+	test_do_nothing
 			-- Test feature 'do_nothing'.
 		local
 			s: STRING
@@ -877,7 +877,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	normalized_addresses (s: STRING): STRING is
+	normalized_addresses (s: STRING): STRING
 			-- Clone of `s' where all addresses of the
 			-- form [0xCB52D0] are replaced by [0x5]
 		require

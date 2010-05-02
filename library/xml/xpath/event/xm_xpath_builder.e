@@ -44,13 +44,13 @@ feature -- Status report
 	is_line_numbering: BOOLEAN
 			-- Is line-numbering turned on?
 
-	is_builder: BOOLEAN is
+	is_builder: BOOLEAN
 			-- Is `Current' an `XM_XPATH_BUILDER'?
 		do
 			Result := True
 		end
 
-	show_size is
+	show_size
 			-- Print tree size information.
 		do
 			-- Default does nothing.
@@ -58,7 +58,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_line_numbering (on_or_off: BOOLEAN) is
+	set_line_numbering (on_or_off: BOOLEAN)
 			-- Turn line numbering `on_or_off'.
 		do
 			is_line_numbering := on_or_off
@@ -66,7 +66,7 @@ feature -- Status setting
 			set: is_line_numbering = on_or_off
 		end
 
-	set_timing (on_or_off: BOOLEAN) is
+	set_timing (on_or_off: BOOLEAN)
 			-- Turn timing `on_or_off'.
 		do
 			is_timing := on_or_off
@@ -76,7 +76,7 @@ feature -- Status setting
 
 feature -- Events
 
-	open is
+	open
 			-- Notify start of event stream.
 		local
 			l_uri: STRING
@@ -97,7 +97,7 @@ feature -- Events
 			end
 		end
 
-	close is
+	close
 			-- Notify end of event stream.
 		local
 			l_uri: STRING
@@ -119,7 +119,7 @@ feature -- Events
 
 feature -- Element change
 
-	set_document_locator (a_locator: XM_XPATH_LOCATOR) is
+	set_document_locator (a_locator: XM_XPATH_LOCATOR)
 			-- Set the locator.
 		do
 			locator := a_locator
@@ -129,7 +129,7 @@ feature -- Element change
 
 feature -- Conversion
 
-	as_builder: XM_XPATH_BUILDER is
+	as_builder: XM_XPATH_BUILDER
 			-- `Current' as a builder
 		do
 			Result := Current
@@ -150,4 +150,4 @@ invariant
 
 end
 
-		
+

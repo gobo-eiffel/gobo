@@ -37,7 +37,7 @@ create {XM_XSLT_TRANSFORMER_FACTORY, XM_XSLT_TEST_STYLESHEET_BUILDER}
 
 feature {NONE} -- Initialization
 
-	make (a_configuration: XM_XSLT_CONFIGURATION) is
+	make (a_configuration: XM_XSLT_CONFIGURATION)
 			-- Establish invariant.
 		require
 			configuration_not_void: a_configuration /= Void
@@ -80,7 +80,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	report_error (l_message: STRING) is
+	report_error (l_message: STRING)
 			-- Report an error.
 		require
 			error_message_not_void: l_message /= Void
@@ -92,7 +92,7 @@ feature -- Status setting
 			message_set: load_stylesheet_module_error = l_message
 		end
 
-	report_fatal_error (l_message, l_code: STRING) is
+	report_fatal_error (l_message, l_code: STRING)
 			-- Report an error, passing it on to `error_listener'.
 		require
 			error_message_not_void: l_message /= Void
@@ -110,7 +110,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	increment_counter is
+	increment_counter
 			-- Add one to `counter'.
 		do
 			counter := counter + 1
@@ -120,7 +120,7 @@ feature -- Element change
 
 feature -- Compilation
 
-	prepare (a_source: XM_XSLT_SOURCE; a_uri: UT_URI) is
+	prepare (a_source: XM_XSLT_SOURCE; a_uri: UT_URI)
 			-- Prepare a stylesheet from a source document.
 		require
 			source_not_void: a_source /= Void
@@ -135,7 +135,7 @@ feature -- Compilation
 			error_or_executable: executable = Void implies load_stylesheet_module_failed
 		end
 
-	load_stylesheet_module (a_source: XM_XSLT_URI_SOURCE; a_stream: KI_CHARACTER_INPUT_STREAM; a_system_id: UT_URI; a_error_code: STRING) is
+	load_stylesheet_module (a_source: XM_XSLT_URI_SOURCE; a_stream: KI_CHARACTER_INPUT_STREAM; a_system_id: UT_URI; a_error_code: STRING)
 			-- Create a tree-representation of a subordinate stylesheet module
 		require
 			source_not_void: a_source /= Void
@@ -183,7 +183,7 @@ feature -- Compilation
 			stylesheet_module_load_failed: load_stylesheet_module_failed implies load_stylesheet_module_error /= Void and then last_loaded_module = Void
 		end
 
-	load_principal_stylesheet_module (a_source: XM_XSLT_SOURCE; a_uri: UT_URI) is
+	load_principal_stylesheet_module (a_source: XM_XSLT_SOURCE; a_uri: UT_URI)
 			-- Create a tree-representation of principal stylesheet module
 		require
 			source_not_void: a_source /= Void
@@ -229,7 +229,7 @@ feature -- Compilation
 			stylesheet_module_load_failed: load_stylesheet_module_failed implies load_stylesheet_module_error /= Void and then last_loaded_module = Void
 		end
 
-	create_style_sheet_executable (a_document: XM_XPATH_TREE_DOCUMENT) is
+	create_style_sheet_executable (a_document: XM_XPATH_TREE_DOCUMENT)
 			-- Create an executable stylesheet.
 		require
 			document_not_void: a_document /= Void
@@ -256,16 +256,16 @@ feature -- Compilation
 					if a_stylesheet.version.is_equal (decimal.one) then
 						error_listener.warning ("XSLT 1.0 stylesheet is being run on an XSLT 2.0 processor.", Void)
 					end
-					
+
 					-- Preprocess the stylesheet, performing validation and preparing template  definitions
 
 					if not a_stylesheet.any_compile_errors then
 						a_stylesheet.set_stylesheet_compiler (Current, configuration)
 						a_stylesheet.preprocess
 					end
-					
+
 					-- Compile the stylesheet, retaining the resulting  executable
-					
+
 					if not a_stylesheet.any_compile_errors and a_stylesheet.post_validated then
 						if configuration.is_explaining then
 							a_stylesheet.force_explaining
@@ -292,7 +292,7 @@ feature -- Compilation
 
 feature -- Creation
 
-	new_transformer (a_factory: XM_XSLT_TRANSFORMER_FACTORY; a_timer: XM_XSLT_TIMING): XM_XSLT_TRANSFORMER is
+	new_transformer (a_factory: XM_XSLT_TRANSFORMER_FACTORY; a_timer: XM_XSLT_TIMING): XM_XSLT_TRANSFORMER
 			-- New transformer for this stylesheet
 		require
 			executable: executable /= Void

@@ -42,14 +42,14 @@ feature -- Cursor movement
 			-- Move to first position if any.
 		deferred
 		end
-		
+
 feature -- Iteration
 
-		
+
 	do_all (action: PROCEDURE [ANY, TUPLE [G]])
 			-- Apply `action' to every item.
 			-- Semantics not guaranteed if `action' changes the structure;
-			-- in such a case, apply iterator to clone of structure instead. 
+			-- in such a case, apply iterator to clone of structure instead.
 		require
 			action_exists: action /= Void
 		do
@@ -60,7 +60,7 @@ feature -- Iteration
 	 test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
 			-- Apply `action' to every item that satisfies `test'.
 			-- Semantics not guaranteed if `action' or `test' changes the structure;
-			-- in such a case, apply iterator to clone of structure instead. 
+			-- in such a case, apply iterator to clone of structure instead.
 		require
 			action_exists: action /= Void
 			test_exits: test /= Void

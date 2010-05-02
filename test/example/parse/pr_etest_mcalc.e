@@ -22,15 +22,15 @@ create
 
 feature -- Access
 
-	program_name: STRING is "mcalc"
+	program_name: STRING = "mcalc"
 			-- Program name
 
-	library_name: STRING is "parse"
+	library_name: STRING = "parse"
 			-- Library name of example
 
 feature -- Test
 
-	test_mcalc is
+	test_mcalc
 			-- Test 'mcalc' example.
 		do
 			compile_program

@@ -14,7 +14,7 @@ class ST_IMPORTED_UNICODE_V500_NORMALIZATION_ROUTINES
 
 feature -- Access
 
-	normalization_v500: ST_UNICODE_V500_NORMALIZATION_ROUTINES is
+	normalization_v500: ST_UNICODE_V500_NORMALIZATION_ROUTINES
 			-- Unicode V500 normalization routines
 		once
 			create Result

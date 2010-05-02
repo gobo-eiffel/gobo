@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type: like static_type) is
+	make (a_type: like static_type)
 			-- Create a new empty dynamic type set.
 			-- Set `first_type' to `a_type' if it is expanded.
 		require
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			first_expanded_type: a_type.is_expanded implies (count = 1 and then dynamic_type (1) = a_type)
 		end
 
-	make_empty (a_type: like static_type) is
+	make_empty (a_type: like static_type)
 			-- Create a new empty dynamic type set.
 		require
 			a_type_not_void: a_type /= Void
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset (a_static_type: ET_DYNAMIC_TYPE) is
+	reset (a_static_type: ET_DYNAMIC_TYPE)
 			-- Reset current set.
 		require
 			a_static_type_not_void: a_static_type /= Void
@@ -72,7 +72,7 @@ feature -- Initialization
 			not_never_void: not is_never_void
 		end
 
-	reset_with_types (a_static_type: like static_type; a_dynamic_types: like dynamic_types) is
+	reset_with_types (a_static_type: like static_type; a_dynamic_types: like dynamic_types)
 			-- Reset current type set using `a_dynamic_types'.
 		require
 			a_static_type_not_void: a_static_type /= Void
@@ -93,7 +93,7 @@ feature -- Initialization
 
 feature -- Setting
 
-	set_static_type (a_static_type: ET_DYNAMIC_TYPE) is
+	set_static_type (a_static_type: ET_DYNAMIC_TYPE)
 			-- Set `static_type' to `a_static_type'.
 		require
 			a_static_type_not_void: a_static_type /= Void
@@ -106,7 +106,7 @@ feature -- Setting
 
 feature -- Element change
 
-	put_type (a_type: ET_DYNAMIC_TYPE) is
+	put_type (a_type: ET_DYNAMIC_TYPE)
 			-- Add `a_type' to current set.
 			-- Do not check for type conformance with `static_type' and do not propagate to targets.
 		do
@@ -120,7 +120,7 @@ feature -- Element change
 			end
 		end
 
-	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM) is
+	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM)
 			-- Add `a_type' coming from `a_type_set' to current target.
 		do
 			if a_type.conforms_to_type (static_type) then

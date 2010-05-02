@@ -90,12 +90,12 @@ feature -- Access
 			-- is to be kept beyond the next call to this feature.
 			-- However `last_string' is not shared between file objects.)
 
-	eol: STRING is "%N"
+	eol: STRING = "%N"
 			-- Line separator
 
 feature -- Input
 
-	read_line is
+	read_line
 			-- Read characters from input file until a line separator
 			-- or end of file is reached. Make the characters that have
 			-- been read available in `last_string' and discard the line
@@ -138,7 +138,7 @@ feature -- Input
 			end_of_file := is_eof
 		end
 
-	read_new_line is
+	read_new_line
 			-- Read a line separator from input file.
 			-- Make the characters making up the recognized
 			-- line separator available in `last_string',
@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 #ifdef GE
 feature {PLAIN_TEXT_FILE} -- Implementation
 
-	old_open_read is
+	old_open_read
 			-- Open file in read-only mode.
 		do
 			precursor

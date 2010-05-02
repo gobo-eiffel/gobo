@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER; a_name: STRING) is
+	make (filename: STRING; line: INTEGER; a_name: STRING)
 			-- Create a new error reporting that symbol
 			-- `a_name' after %prec is not a token.
 		require
@@ -37,10 +37,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: symbol $3 after %%prec is not a token"
+	default_template: STRING = "%"$1%", line $2: symbol $3 after %%prec is not a token"
 			-- Default template used to built the error message
 
-	code: STRING is "PR0008"
+	code: STRING = "PR0008"
 			-- Error code
 
 invariant

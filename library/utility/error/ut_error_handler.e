@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_standard is
+	make_standard
 			-- Create a new error handler using the standard
 			-- error file for error and warning reporting
 			-- and the standard output file for info messages.
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			info_file_set: info_file = std.output
 		end
 
-	make_null is
+	make_null
 			-- Create a new error handler ignoring
 			-- all error, warning and info messages.
 		do
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 feature -- Reporting
 
-	report_error (an_error: UT_ERROR) is
+	report_error (an_error: UT_ERROR)
 			-- Report `an_error'.
 		require
 			an_error_not_void: an_error /= Void
@@ -62,7 +62,7 @@ feature -- Reporting
 			report_error_message (message (an_error))
 		end
 
-	report_warning (a_warning: UT_ERROR) is
+	report_warning (a_warning: UT_ERROR)
 			-- Report `a_warning'.
 		require
 			a_warning_not_void: a_warning /= Void
@@ -70,7 +70,7 @@ feature -- Reporting
 			report_warning_message (message (a_warning))
 		end
 
-	report_info (an_info: UT_ERROR) is
+	report_info (an_info: UT_ERROR)
 			-- Report `an_info'.
 		require
 			an_info_not_void: an_info /= Void
@@ -78,7 +78,7 @@ feature -- Reporting
 			report_info_message (message (an_info))
 		end
 
-	report_error_message (an_error: STRING) is
+	report_error_message (an_error: STRING)
 			-- Report `an_error'.
 		require
 			an_error_not_void: an_error /= Void
@@ -86,7 +86,7 @@ feature -- Reporting
 			error_file.put_line (an_error)
 		end
 
-	report_warning_message (a_warning: STRING) is
+	report_warning_message (a_warning: STRING)
 			-- Report `a_warning'.
 		require
 			a_warning_not_void: a_warning /= Void
@@ -94,7 +94,7 @@ feature -- Reporting
 			warning_file.put_line (a_warning)
 		end
 
-	report_info_message (an_info: STRING) is
+	report_info_message (an_info: STRING)
 			-- Report `an_info'.
 		require
 			an_info_not_void: an_info /= Void
@@ -115,7 +115,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_verbose: BOOLEAN is
+	is_verbose: BOOLEAN
 			-- Is `info_file' set to something other than
 			-- the null output stream?
 		do
@@ -126,7 +126,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_error_file (a_file: like error_file) is
+	set_error_file (a_file: like error_file)
 			-- Set `error_file' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -137,7 +137,7 @@ feature -- Setting
 			error_file_set: error_file = a_file
 		end
 
-	set_error_standard is
+	set_error_standard
 			-- Set `error_file' to standard error file.
 		do
 			error_file := std.error
@@ -145,7 +145,7 @@ feature -- Setting
 			error_file_set: error_file = std.error
 		end
 
-	set_error_null is
+	set_error_null
 			-- Set `error_file' to null output stream,
 			-- i.e. error messages will be ignored.
 		do
@@ -154,7 +154,7 @@ feature -- Setting
 			error_file_set: error_file = null_output_stream
 		end
 
-	set_warning_file (a_file: like warning_file) is
+	set_warning_file (a_file: like warning_file)
 			-- Set `warning_file' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -165,7 +165,7 @@ feature -- Setting
 			warning_file_set: warning_file = a_file
 		end
 
-	set_warning_standard is
+	set_warning_standard
 			-- Set `warning_file' to standard error file.
 		do
 			warning_file := std.error
@@ -173,7 +173,7 @@ feature -- Setting
 			warning_file_set: warning_file = std.error
 		end
 
-	set_warning_null is
+	set_warning_null
 			-- Set `warning_file' to null output stream,
 			-- i.e. warning messages will be ignored.
 		do
@@ -182,7 +182,7 @@ feature -- Setting
 			warning_file_set: warning_file = null_output_stream
 		end
 
-	set_info_file (a_file: like info_file) is
+	set_info_file (a_file: like info_file)
 			-- Set `info_file' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -193,7 +193,7 @@ feature -- Setting
 			info_file_set: info_file = a_file
 		end
 
-	set_info_standard is
+	set_info_standard
 			-- Set `info_file' to standard output file.
 		do
 			info_file := std.output
@@ -201,7 +201,7 @@ feature -- Setting
 			info_file_set: info_file = std.output
 		end
 
-	set_info_null is
+	set_info_null
 			-- Set `info_file' to null output stream,
 			-- i.e. info messages will be ignored.
 		do
@@ -212,7 +212,7 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	message (an_error: UT_ERROR): STRING is
+	message (an_error: UT_ERROR): STRING
 			-- Message built out of `an_error'
 		require
 			an_error_not_void: an_error /= Void

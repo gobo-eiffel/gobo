@@ -35,7 +35,7 @@ feature -- Tables
 			-- Where to go if `yy_chk' disallows `yy_nxt' entry
 
 	yy_acclist: ARRAY [INTEGER]
-			-- Accepting id list, used when `reject' is called 
+			-- Accepting id list, used when `reject' is called
 			-- or when there is a variable length trailing context;
 			-- Void otherwise
 
@@ -65,7 +65,7 @@ feature -- Constants
 
 feature -- Conversion
 
-	from_tables (other: like to_tables) is
+	from_tables (other: like to_tables)
 			-- Set current tables with those of `other'.
 		do
 			yy_nxt := other.yy_nxt
@@ -91,7 +91,7 @@ feature -- Conversion
 			yyPosition_used := other.yyPosition_used
 		end
 
-	to_tables: LX_COMPRESSED_TABLES is
+	to_tables: LX_COMPRESSED_TABLES
 			-- New compressed tables made from current tables
 		do
 			create Result.make_from_tables (Current)

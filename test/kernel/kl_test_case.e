@@ -24,7 +24,7 @@ inherit
 
 feature -- Filenames
 
-	new_filename (a_prefix, an_extension: STRING): STRING is
+	new_filename (a_prefix, an_extension: STRING): STRING
 			-- New unique filename
 		require
 			a_prefix_not_void: a_prefix /= Void
@@ -47,7 +47,7 @@ feature -- Filenames
 			filename_not_void: Result /= Void
 		end
 
-	booleans_filename: STRING is
+	booleans_filename: STRING
 			-- Full filename of "booleans.txt"
 		once
 			Result := file_system.pathname (data_dirname, "booleans.txt")
@@ -55,7 +55,7 @@ feature -- Filenames
 			booleans_filename_not_void: Result /= Void
 		end
 
-	empty_filename: STRING is
+	empty_filename: STRING
 			-- Full filename of "empty.txt"
 		once
 			Result := file_system.pathname (data_dirname, "empty.txt")
@@ -63,7 +63,7 @@ feature -- Filenames
 			empty_filename_not_void: Result /= Void
 		end
 
-	gobo_filename: STRING is
+	gobo_filename: STRING
 			-- Full filename of "gobo.txt"
 		once
 			Result := file_system.pathname (data_dirname, "gobo.txt")
@@ -71,7 +71,7 @@ feature -- Filenames
 			gobo_filename_not_void: Result /= Void
 		end
 
-	hello_filename: STRING is
+	hello_filename: STRING
 			-- Full filename of "hello.txt"
 		once
 			Result := file_system.pathname (data_dirname, "hello.txt")
@@ -79,7 +79,7 @@ feature -- Filenames
 			hello_filename_not_void: Result /= Void
 		end
 
-	integers_filename: STRING is
+	integers_filename: STRING
 			-- Full filename of "integers.txt"
 		once
 			Result := file_system.pathname (data_dirname, "integers.txt")
@@ -89,7 +89,7 @@ feature -- Filenames
 
 feature -- Directory names
 
-	new_dirname (a_prefix: STRING): STRING is
+	new_dirname (a_prefix: STRING): STRING
 			-- New unique directory name
 		require
 			a_prefix_not_void: a_prefix /= Void
@@ -111,7 +111,7 @@ feature -- Directory names
 			dirname_not_void: Result /= Void
 		end
 
-	data_dirname: STRING is
+	data_dirname: STRING
 			-- Full directory name of "$GOBO/test/kernel/data"
 		once
 			Result := file_system.pathname (kernel_dirname, "data")
@@ -119,7 +119,7 @@ feature -- Directory names
 			data_dirname_not_void: Result /= Void
 		end
 
-	kernel_dirname: STRING is
+	kernel_dirname: STRING
 			-- Full directory name of "$GOBO/test/kernel"
 		once
 			Result := file_system.nested_pathname ("$GOBO", <<"test", "kernel">>)
@@ -129,7 +129,7 @@ feature -- Directory names
 
 feature -- Execution
 
-	set_up is
+	set_up
 			-- Setup for a test.
 		local
 			a_testdir: STRING
@@ -142,7 +142,7 @@ feature -- Execution
 			file_system.cd (a_testdir)
 		end
 
-	tear_down is
+	tear_down
 			-- Tear down after a test.
 		do
 			if old_cwd /= Void then
@@ -157,10 +157,10 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	testdir: STRING is "Tkernel"
+	testdir: STRING = "Tkernel"
 			-- Name of temporary directory where to run the test
 
-	counter: KL_CELL [INTEGER] is
+	counter: KL_CELL [INTEGER]
 			-- Filename counter
 		once
 			create Result.make (0)

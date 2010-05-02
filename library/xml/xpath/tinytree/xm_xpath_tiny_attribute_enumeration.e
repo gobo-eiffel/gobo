@@ -11,7 +11,7 @@ note
 	revision: "$Revision$"
 
 class XM_XPATH_TINY_ATTRIBUTE_ENUMERATION
-	
+
 inherit
 
 	XM_XPATH_AXIS_ITERATOR [XM_XPATH_TINY_ATTRIBUTE]
@@ -24,10 +24,10 @@ inherit
 create
 
 	make
-	
+
 feature {NONE} -- Initialization
 
-	make (a_document: XM_XPATH_TINY_FOREST; an_element: INTEGER; a_node_test: XM_XPATH_NODE_TEST) is
+	make (a_document: XM_XPATH_TINY_FOREST; an_element: INTEGER; a_node_test: XM_XPATH_NODE_TEST)
 			-- Establish invariant
 		require
 			document_not_void: a_document /= Void
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
 		local
 			a_tiny_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_TINY_ATTRIBUTE]
@@ -59,7 +59,7 @@ feature -- Access
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move to next position
 		local
 			a_node: INTEGER
@@ -82,10 +82,10 @@ feature -- Cursor movement
 				end
 			end
 		end
-	
+
 feature -- Duplication
 
-	another: like Current is
+	another: like Current
 			-- Another iterator that iterates over the same items as the original
 		do
 			create Result.make (document, parent_element, node_test)
@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 	attribute_index: INTEGER
 			-- Index of an attribute within `document'
 
-	advance is
+	advance
 			-- Move to the next matching node
 		local
 			finished: BOOLEAN
@@ -125,12 +125,12 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-	
+
 invariant
 
 	document_not_void: document /= Void
 	strictly_positive_parent_element: parent_element > 0
 	node_test_not_void: node_test /= Void
-	
+
 end
-	
+

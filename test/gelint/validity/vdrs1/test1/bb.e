@@ -9,7 +9,7 @@ inherit
 
 feature
 
-	h is
+	h
 		do
 			print ("h%N")
 		end

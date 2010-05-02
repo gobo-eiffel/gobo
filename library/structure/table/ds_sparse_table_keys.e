@@ -30,7 +30,7 @@ create {DS_SPARSE_TABLE}
 
 feature {NONE} -- Initialization
 
-	make (a_table: like table) is
+	make (a_table: like table)
 			-- Create a new linear representation of the keys of `a_table'.
 		require
 			a_table_not_void: a_table /= Void
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	first: K is
+	first: K
 			-- First item in container
 		local
 			l_cursor: like new_cursor
@@ -54,7 +54,7 @@ feature -- Access
 			Result := l_cursor.item
 		end
 
-	last: K is
+	last: K
 			-- Last item in container
 		local
 			l_cursor: like new_cursor
@@ -64,7 +64,7 @@ feature -- Access
 			Result := l_cursor.item
 		end
 
-	new_cursor: DS_SPARSE_TABLE_KEYS_CURSOR [G, K] is
+	new_cursor: DS_SPARSE_TABLE_KEYS_CURSOR [G, K]
 			-- New external cursor for traversal
 		do
 			create Result.make (Current)
@@ -72,7 +72,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items in container
 		do
 			Result := table.count
@@ -80,7 +80,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	equality_tester_settable (a_tester: like equality_tester): BOOLEAN is
+	equality_tester_settable (a_tester: like equality_tester): BOOLEAN
 			-- Can `set_equality_tester' be called with `a_tester'
 			-- as argument in current state of container?
 		do
@@ -89,7 +89,7 @@ feature -- Status report
 
 feature -- Iteration
 
-	do_all (an_action: PROCEDURE [ANY, TUPLE [K]]) is
+	do_all (an_action: PROCEDURE [ANY, TUPLE [K]])
 			-- Apply `an_action' to every item, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the structure.)
 		local
@@ -106,7 +106,7 @@ feature -- Iteration
 			end
 		end
 
-	do_all_with_index (an_action: PROCEDURE [ANY, TUPLE [K, INTEGER]]) is
+	do_all_with_index (an_action: PROCEDURE [ANY, TUPLE [K, INTEGER]])
 			-- Apply `an_action' to every item, from first to last.
 			-- `an_action' receives the item and its index.
 			-- (Semantics not guaranteed if `an_action' changes the structure.)
@@ -126,7 +126,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if (an_action: PROCEDURE [ANY, TUPLE [K]]; a_test: FUNCTION [ANY, TUPLE [K], BOOLEAN]) is
+	do_if (an_action: PROCEDURE [ANY, TUPLE [K]]; a_test: FUNCTION [ANY, TUPLE [K], BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
 		local
@@ -147,7 +147,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if_with_index (an_action: PROCEDURE [ANY, TUPLE [K, INTEGER]]; a_test: FUNCTION [ANY, TUPLE [K, INTEGER], BOOLEAN]) is
+	do_if_with_index (an_action: PROCEDURE [ANY, TUPLE [K, INTEGER]]; a_test: FUNCTION [ANY, TUPLE [K, INTEGER], BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
 			-- `an_action' and `a_test' receive the item and its index.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
@@ -171,7 +171,7 @@ feature -- Iteration
 			end
 		end
 
-	there_exists (a_test: FUNCTION [ANY, TUPLE [K], BOOLEAN]): BOOLEAN is
+	there_exists (a_test: FUNCTION [ANY, TUPLE [K], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for at least one item?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		local
@@ -193,7 +193,7 @@ feature -- Iteration
 			end
 		end
 
-	for_all (a_test: FUNCTION [ANY, TUPLE [K], BOOLEAN]): BOOLEAN is
+	for_all (a_test: FUNCTION [ANY, TUPLE [K], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for all items?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		local
@@ -218,7 +218,7 @@ feature -- Iteration
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is current container equal to `other'?
 		do
 			Result := table.is_equal (other.table)
@@ -226,7 +226,7 @@ feature -- Comparison
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Copy `other' to current container.
 			-- Move all cursors `off' (unless `other = Current').
 		do
@@ -243,7 +243,7 @@ feature -- Duplication
 
 feature -- Removal
 
-	wipe_out is
+	wipe_out
 			-- Remove all items from container.
 		do
 			table.wipe_out
@@ -251,7 +251,7 @@ feature -- Removal
 
 feature {NONE} -- Cursor implementation
 
-	set_internal_cursor (c: like internal_cursor) is
+	set_internal_cursor (c: like internal_cursor)
 			-- Set `internal_cursor' to `c'.
 		do
 			internal_cursor := c
@@ -262,67 +262,67 @@ feature {NONE} -- Cursor implementation
 
 feature {DS_SPARSE_TABLE_KEYS_CURSOR} -- Cursor implementation
 
-	cursor_item (a_cursor: like new_cursor): K is
+	cursor_item (a_cursor: like new_cursor): K
 			-- Item at `a_cursor' position
 		do
 			Result := a_cursor.table_cursor.key
 		end
 
-	cursor_after (a_cursor: like new_cursor): BOOLEAN is
+	cursor_after (a_cursor: like new_cursor): BOOLEAN
 			-- Is there no valid position to right of `a_cursor'?
 		do
 			Result := a_cursor.table_cursor.after
 		end
 
-	cursor_before (a_cursor: like new_cursor): BOOLEAN is
+	cursor_before (a_cursor: like new_cursor): BOOLEAN
 			-- Is there no valid position to left of `a_cursor'?
 		do
 			Result := a_cursor.table_cursor.before
 		end
 
-	cursor_is_first (a_cursor: like new_cursor): BOOLEAN is
+	cursor_is_first (a_cursor: like new_cursor): BOOLEAN
 			-- Is `a_cursor' on first item?
 		do
 			Result := a_cursor.table_cursor.is_first
 		end
 
-	cursor_is_last (a_cursor: like new_cursor): BOOLEAN is
+	cursor_is_last (a_cursor: like new_cursor): BOOLEAN
 			-- Is `a_cursor' on last item?
 		do
 			Result := a_cursor.table_cursor.is_last
 		end
 
-	cursor_same_position (a_cursor, other: like new_cursor): BOOLEAN is
+	cursor_same_position (a_cursor, other: like new_cursor): BOOLEAN
 			-- Is `a_cursor' at same position as `other'?
 		do
 			Result := a_cursor.table_cursor.same_position (other.table_cursor)
 		end
 
-	cursor_start (a_cursor: like new_cursor) is
+	cursor_start (a_cursor: like new_cursor)
 			-- Move `a_cursor' to first position.
 		do
 			a_cursor.table_cursor.start
 		end
 
-	cursor_finish (a_cursor: like new_cursor) is
+	cursor_finish (a_cursor: like new_cursor)
 			-- Move `a_cursor' to last position.
 		do
 			a_cursor.table_cursor.finish
 		end
 
-	cursor_forth (a_cursor: like new_cursor) is
+	cursor_forth (a_cursor: like new_cursor)
 			-- Move `a_cursor' to next position.
 		do
 			a_cursor.table_cursor.forth
 		end
 
-	cursor_back (a_cursor: like new_cursor) is
+	cursor_back (a_cursor: like new_cursor)
 			-- Move `a_cursor' to previous position.
 		do
 			a_cursor.table_cursor.back
 		end
 
-	cursor_search_forth (a_cursor: like new_cursor; v: K) is
+	cursor_search_forth (a_cursor: like new_cursor; v: K)
 			-- Move `a_cursor' to first position at or after its current
 			-- position where `cursor_item (a_cursor)' and `v' are equal.
 			-- (Use `equality_tester''s comparison criterion
@@ -350,7 +350,7 @@ feature {DS_SPARSE_TABLE_KEYS_CURSOR} -- Cursor implementation
 			end
 		end
 
-	cursor_search_back (a_cursor: like new_cursor; v: K) is
+	cursor_search_back (a_cursor: like new_cursor; v: K)
 			-- Move `a_cursor' to first position at or before its current
 			-- position where `cursor_item (a_cursor)' and `v' are equal.
 			-- (Use `equality_tester''s comparison criterion
@@ -378,19 +378,19 @@ feature {DS_SPARSE_TABLE_KEYS_CURSOR} -- Cursor implementation
 			end
 		end
 
-	cursor_go_after (a_cursor: like new_cursor) is
+	cursor_go_after (a_cursor: like new_cursor)
 			-- Move `a_cursor' to `after' position.
 		do
 			a_cursor.table_cursor.go_after
 		end
 
-	cursor_go_before (a_cursor: like new_cursor) is
+	cursor_go_before (a_cursor: like new_cursor)
 			-- Move `a_cursor' to `before' position.
 		do
 			a_cursor.table_cursor.go_before
 		end
 
-	cursor_go_to (a_cursor, other: like new_cursor) is
+	cursor_go_to (a_cursor, other: like new_cursor)
 			-- Move `a_cursor' to `other''s position.
 		do
 			a_cursor.table_cursor.go_to (other.table_cursor)
@@ -403,7 +403,7 @@ feature {DS_SPARSE_TABLE, DS_SPARSE_TABLE_KEYS, DS_SPARSE_TABLE_KEYS_CURSOR} -- 
 
 feature {DS_SPARSE_TABLE} -- Implementation
 
-	internal_set_equality_tester (a_tester: like equality_tester) is
+	internal_set_equality_tester (a_tester: like equality_tester)
 			-- Set `equality_tester' to `a_tester'.
 			-- (No precondition, to be used internally only.)
 		do
@@ -414,7 +414,7 @@ feature {DS_SPARSE_TABLE} -- Implementation
 
 feature {NONE} -- Not applicable
 
-	make_default is
+	make_default
 			-- Create an empty container.
 		do
 		end

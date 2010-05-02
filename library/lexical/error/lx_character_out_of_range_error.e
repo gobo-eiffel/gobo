@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER; char: STRING) is
+	make (filename: STRING; line: INTEGER; char: STRING)
 			-- Create a new error reporting that
 			-- character `char' is out of range.
 		require
@@ -37,10 +37,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: character '$3' out of range"
+	default_template: STRING = "%"$1%", line $2: character '$3' out of range"
 			-- Default template used to built the error message
 
-	code: STRING is "LX0008"
+	code: STRING = "LX0008"
 			-- Error code
 
 invariant

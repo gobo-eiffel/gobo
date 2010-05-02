@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_item (an_item: XM_XPATH_ITEM) is
+	make_item (an_item: XM_XPATH_ITEM)
 			-- Create an item result.
 		require
 			item_not_void: an_item /= Void
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			item_set: item_result = an_item
 		end
 
-	make_sequence (a_sequence: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
+	make_sequence (a_sequence: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM])
 			-- Create a sequence result.
 		require
 			sequence_not_void: a_sequence /= void
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item: XM_XPATH_ITEM is
+	item: XM_XPATH_ITEM
 			-- Encapsulated item
 		require
 			item_result: not is_sequence
@@ -50,8 +50,8 @@ feature -- Access
 		ensure
 			item_not_void: Result /= Void
 		end
-		
-	sequence: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+
+	sequence: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			-- Encapsulated sequence
 		require
 			sequence_result: is_sequence
@@ -60,7 +60,7 @@ feature -- Access
 		ensure
 			sequence_not_void: Result /= Void
 		end
-	
+
 feature -- Status setting
 
 	is_sequence: BOOLEAN

@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new string splitter.
 		do
 			set_separators (Default_separators)
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			no_escape_character: not has_escape_character
 		end
 
-	make_with_separators (a_string: STRING) is
+	make_with_separators (a_string: STRING)
 			-- Create a new string splitter with separators specified in `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -61,12 +61,12 @@ feature -- Access
 			-- with the character following it. This following
 			-- character is not treated as a separator.)
 
-	Default_separators: STRING is " %T%R%N"
+	Default_separators: STRING = " %T%R%N"
 			-- Space, Tab, CR, Newline
 
 feature -- Setting
 
-	set_separators (a_string: STRING) is
+	set_separators (a_string: STRING)
 			-- Set characters used as separators within string.
 		require
 			a_string_not_void: a_string /= Void
@@ -91,7 +91,7 @@ feature -- Setting
 			separators_set: separators = a_string
 		end
 
-	set_escape_character (a_character: CHARACTER) is
+	set_escape_character (a_character: CHARACTER)
 			-- Set escape character.
 		require
 			escape_character_not_separator: not separators.has (a_character)
@@ -103,7 +103,7 @@ feature -- Setting
 			escape_character_set: escape_character = a_character
 		end
 
-	reset_escape_character is
+	reset_escape_character
 			-- Remove escape character.
 		do
 			has_escape_character := False
@@ -113,7 +113,7 @@ feature -- Setting
 
 feature -- Status report
 
-	has_empty (a_linear: DS_LINEAR [STRING]): BOOLEAN is
+	has_empty (a_linear: DS_LINEAR [STRING]): BOOLEAN
 			-- Is there an empty string in this sequence?
 		require
 			a_linear_not_void: a_linear /= Void
@@ -142,7 +142,7 @@ feature -- Status report
 
 feature -- Operation(s)
 
-	split (a_string: STRING): DS_LIST [STRING] is
+	split (a_string: STRING): DS_LIST [STRING]
 			-- Split a string according to separator
 			-- and escape character settings.
 			-- A sequence of separators is a single separator,
@@ -163,7 +163,7 @@ feature -- Operation(s)
 				implies (Result.last.item (Result.last.count) = escape_character)
 		end
 
-	split_greedy (a_string: STRING): DS_LIST [STRING] is
+	split_greedy (a_string: STRING): DS_LIST [STRING]
 			-- Split a string according to separator
 			-- and escape character settings.
 			-- Each separator character makes a separate separator
@@ -185,7 +185,7 @@ feature -- Operation(s)
 				implies (Result.last.item (Result.last.count) = escape_character)
 		end
 
-	join (a_linear: DS_LINEAR [STRING]): STRING is
+	join (a_linear: DS_LINEAR [STRING]): STRING
 			-- Join sequence to a string using the first of the
 			-- `separators' as separator, and escape separators
 			-- within tokens.
@@ -202,7 +202,7 @@ feature -- Operation(s)
 			stable_reversible: STRING_.same_string (join (split (Result)), Result)
 		end
 
-	join_greedy (a_linear: DS_LINEAR [STRING]): STRING is
+	join_greedy (a_linear: DS_LINEAR [STRING]): STRING
 			-- Join sequence to a string using the first of the
 			-- `separators' as separator, and escape separators
 			-- within tokens.
@@ -218,7 +218,7 @@ feature -- Operation(s)
 			stable_reversible: STRING_.same_string (join_greedy (split_greedy (Result)), Result)
 		end
 
-	join_unescaped (a_linear: DS_LINEAR [STRING]): STRING is
+	join_unescaped (a_linear: DS_LINEAR [STRING]): STRING
 			-- Join sequence to a string using the first of the
 			-- `separators' as separator. Separators within items
 			-- are NOT escaped, see `join' for escaping version.
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 			-- Character codes of separators
 			-- (Hashed, and integer for unicode compatibility.)
 
-	do_split (a_string: STRING; a_greedy: BOOLEAN): DS_LIST [STRING] is
+	do_split (a_string: STRING; a_greedy: BOOLEAN): DS_LIST [STRING]
 			-- Split implementation.
 		local
 			i, nb: INTEGER
@@ -331,7 +331,7 @@ feature {NONE} -- Implementation
 			no_void_item: not Result.has_void
 		end
 
-	do_join (a_linear: DS_LINEAR [STRING]; a_greedy: BOOLEAN): STRING is
+	do_join (a_linear: DS_LINEAR [STRING]; a_greedy: BOOLEAN): STRING
 			-- Join sequence to a string using the first of the
 			-- `separators' as separator, and escape separators
 			-- within tokens.
@@ -362,7 +362,7 @@ feature {NONE} -- Implementation
 			join_not_void: Result /= Void
 		end
 
-	escape_appended_string (a_result: STRING; a_string: STRING): STRING is
+	escape_appended_string (a_result: STRING; a_string: STRING): STRING
 			-- Append `a_string' to `a_result', with escaping if necessary.
 		require
 			a_result_not_void: a_result /= Void
