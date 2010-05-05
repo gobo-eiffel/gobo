@@ -5,7 +5,7 @@ note
 		"Eiffel call agents"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,7 +23,8 @@ inherit
 
 	ET_CALL_COMPONENT
 		redefine
-			is_qualified_call
+			is_qualified_call,
+			is_call_agent
 		end
 
 create

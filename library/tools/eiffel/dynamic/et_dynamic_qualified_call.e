@@ -47,12 +47,18 @@ feature -- Access
 			position_not_void: Result /= Void
 		end
 
-feature -- Static report
+feature -- Status report
 
 	is_tuple_label: BOOLEAN
 			-- Is current call a call to a Tuple label?
 		do
 			Result := static_call.is_tuple_label
+		end
+
+	is_call_agent: BOOLEAN
+			-- Is current call a call agent?
+		do
+			Result := static_call.is_call_agent
 		end
 
 feature -- Measurement

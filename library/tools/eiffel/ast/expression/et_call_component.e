@@ -53,4 +53,10 @@ feature -- Status report
 			definition: Result = name.is_tuple_label
 		end
 
+	is_call_agent: BOOLEAN
+			-- Is current call a call agent?
+		do
+			Result := False
+		end
+
 end

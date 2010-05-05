@@ -4,6 +4,9 @@ Version 3.10 - ?
 
 	* Added option --gelint to force the whole content of classes to be
 	  checked (even features not reachable from the root creation procedure).
+	* Fixed bug in the generated C code for call agents whose feature was
+	  FUNCTION.item or ROUTINE.call and whose closed argument was a manifest
+	  tuple. See bug#2997112.
 
 	geant:
 

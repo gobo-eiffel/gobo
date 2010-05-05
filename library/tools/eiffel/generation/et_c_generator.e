@@ -661,7 +661,7 @@ feature {NONE} -- C code Generation
 					-- We need to print polymorphic call functions now, because they
 					-- will populate `called_features' before we start traversing it.
 					-- Polymorphic calls to Tuple label functions are printed later
-					-- before some of them may be added when processing Agent calls
+					-- because some of them may be added when processing Agent calls
 					-- (see `print_builtin_routine_call_call').
 				print_polymorphic_query_call_functions
 				print_polymorphic_procedure_call_functions
@@ -5745,7 +5745,7 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 				-- Check whether this a call to ROUTINE.call with a manifest
 				-- tuple as argument. We have a special treatment in that case
 				-- to avoid having to create the manifest tuple when possible.
-			if not a_call.is_tuple_label and then l_seed = current_system.routine_call_seed then
+			if not a_call.is_tuple_label and then l_seed = current_system.routine_call_seed and then not a_call.is_call_agent then
 				if l_actuals /= Void and then l_actuals.count = 1 then
 					l_manifest_tuple ?= l_actuals.actual_argument (1)
 					if l_manifest_tuple /= Void then
@@ -6029,7 +6029,7 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 				-- Check whether this a call to ROUTINE.call with a manifest
 				-- tuple as argument. We have a special treatment in that case
 				-- to avoid having to create the manifest tuple when possible.
-			if l_seed = current_system.routine_call_seed then
+			if l_seed = current_system.routine_call_seed and then not a_call.is_call_agent then
 				if l_actuals /= Void and then l_actuals.count = 1 then
 					l_manifest_tuple ?= l_actuals.actual_argument (1)
 					if l_manifest_tuple /= Void then
@@ -9540,7 +9540,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 					-- Check whether this a call to FUNCTION.item with a manifest
 					-- tuple as argument. We have a special treatment in that case
 					-- to avoid having to create the manifest tuple when possible.
-				if not a_call.is_tuple_label and then l_seed = current_system.function_item_seed then
+				if not a_call.is_tuple_label and then l_seed = current_system.function_item_seed and then not a_call.is_call_agent then
 					if l_actuals /= Void and then l_actuals.count = 1 then
 						l_manifest_tuple ?= l_actuals.actual_argument (1)
 						if l_manifest_tuple /= Void then
@@ -10466,7 +10466,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 						-- Check whether this a call to FUNCTION.item with a manifest
 						-- tuple as argument. We have a special treatment in that case
 						-- to avoid having to create the manifest tuple when possible.
-					if l_seed = current_system.function_item_seed then
+					if l_seed = current_system.function_item_seed and then not a_call.is_call_agent then
 						if l_actuals /= Void and then l_actuals.count = 1 then
 							l_manifest_tuple ?= l_actuals.actual_argument (1)
 							if l_manifest_tuple /= Void then
@@ -13800,7 +13800,7 @@ feature {NONE} -- Polymorphic call functions generation
 						-- in that case to avoid having to create the manifest tuple when possible.
 					if l_formal_arguments_count = 1 then
 						l_seed := l_static_call.name.seed
-						if l_seed = current_system.routine_call_seed or l_seed = current_system.function_item_seed then
+						if (l_seed = current_system.routine_call_seed or l_seed = current_system.function_item_seed) and then not l_static_call.is_call_agent then
 							if l_actual_arguments /= Void and then l_actual_arguments.count = 1 then
 								l_manifest_tuple ?= l_actual_arguments.actual_argument (1)
 								if l_manifest_tuple /= Void then
@@ -14192,7 +14192,7 @@ feature {NONE} -- Polymorphic call functions generation
 						l_type_set2 := dynamic_type_set_in_feature (l_args2.actual_argument (i), l_feature2)
 						if nb = 1 then
 							l_seed := a_call1.static_call.name.seed
-							if not a_call1.is_tuple_label and then (l_seed = current_system.routine_call_seed or l_seed = current_system.function_item_seed) then
+							if not a_call1.is_tuple_label and then (l_seed = current_system.routine_call_seed or l_seed = current_system.function_item_seed) and then (not a_call1.is_call_agent and not a_call2.is_call_agent) then
 								l_manifest_tuple1 ?= l_args1.actual_argument (1)
 								l_manifest_tuple2 ?= l_args2.actual_argument (1)
 							end
@@ -14246,7 +14246,7 @@ feature {NONE} -- Polymorphic call functions generation
 				nb := nb_args
 				if nb_args = 1 then
 					l_seed := a_first_call.static_call.name.seed
-					if not a_first_call.is_tuple_label and then (l_seed = current_system.routine_call_seed or l_seed = current_system.function_item_seed) then
+					if not a_first_call.is_tuple_label and then (l_seed = current_system.routine_call_seed or l_seed = current_system.function_item_seed) and then not a_first_call.is_call_agent then
 						l_manifest_tuple ?= l_actual_arguments.actual_argument (1)
 						if l_manifest_tuple /= Void then
 							nb := l_manifest_tuple.count + 1
@@ -26352,7 +26352,7 @@ feature {NONE} -- Feature name generation
 				a_file.put_character ('x')
 				if a_call.is_tuple_label then
 					a_file.put_character ('t')
-				elseif l_seed = current_system.routine_call_seed or l_seed = current_system.function_item_seed then
+				elseif (l_seed = current_system.routine_call_seed or l_seed = current_system.function_item_seed) and then not a_call.is_call_agent then
 					if l_arguments /= Void and then l_arguments.count = 1 then
 						l_manifest_tuple ?= l_arguments.actual_argument (1)
 						if l_manifest_tuple /= Void then
@@ -26667,7 +26667,7 @@ feature {NONE} -- Feature name generation
 				a_file.put_string (once " (label on item #")
 				a_file.put_integer (l_seed)
 				a_file.put_character (')')
-			elseif l_seed = current_system.routine_call_seed or l_seed = current_system.function_item_seed then
+			elseif (l_seed = current_system.routine_call_seed or l_seed = current_system.function_item_seed) and then not a_call.is_call_agent then
 				l_arguments := a_call.arguments
 				if l_arguments /= Void and then l_arguments.count = 1 then
 					l_manifest_tuple ?= l_arguments.actual_argument (1)
