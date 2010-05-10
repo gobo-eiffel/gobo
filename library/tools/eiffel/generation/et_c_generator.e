@@ -643,6 +643,8 @@ feature {NONE} -- C code Generation
 				header_file.put_new_line
 				include_runtime_header_file ("ge_gc.h", True, header_file)
 				header_file.put_new_line
+				include_runtime_header_file ("ge_identified.h", True, header_file)
+				header_file.put_new_line
 				print_start_extern_c (header_file)
 				print_types (header_file)
 				flush_to_c_file
@@ -22643,6 +22645,8 @@ feature {NONE} -- C function generation
 				current_file.put_line ("GE_last_rescue = 0;")
 				print_indentation
 				current_file.put_line ("GE_init_gc();")
+				print_indentation
+				current_file.put_line ("GE_init_identified();")
 				print_indentation
 				current_file.put_line ("GE_const_init();")
 					-- Initialize variable used in WEL.

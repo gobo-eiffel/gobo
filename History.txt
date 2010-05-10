@@ -7,6 +7,10 @@ Version 3.10 - ?
 	* Fixed bug in the generated C code for call agents whose feature was
 	  FUNCTION.item or ROUTINE.call and whose closed argument was a manifest
 	  tuple. See bug#2997112.
+	* Fixed implementation of class IDENTIFIED_ROUTINES. Object addresses
+	  were casted to INTEGER_32, which causes loss of information when
+	  compiled on a 64-bit computer. See bug#2999209.
+
 
 	geant:
 
