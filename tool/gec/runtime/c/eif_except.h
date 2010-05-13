@@ -4,7 +4,7 @@
 		"C functions used to implement class EXCEPTIONS"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,6 +34,8 @@ extern EIF_REFERENCE eeoclass(void);
 extern void eecatch(long code);
 extern void eeignore(long code);
 extern void eetrace(char b);
+/* Used in EiffelCOM */
+extern char eedefined(long ex);
 
 #ifdef EIF_WINDOWS
 /* Needed to compile some code at AXAR */
@@ -46,6 +48,10 @@ extern void xraise(int code);
 extern void esys(void);
 /* As a special case, an I/O error is raised when a system call which is I/O bound fails. */
 extern void eise_io(char *tag);
+/* Raise "out of memory exception. */
+extern void enomem(void);
+/* Raise EiffelCOM exception */
+#define com_eraise(tag,num) eraise((tag),(num))
 
 /*
  * Predefined exception numbers. Value cannot start at 0 because this may need
@@ -80,6 +86,9 @@ extern void eise_io(char *tag);
 #define EN_ISE_IO	27			/* I/O error raised by the ISE Eiffel runtime */
 #define EN_COM		28			/* COM error raised by EiffelCOM runtime */
 #define EN_RT_CHECK	29			/* Runtime check error such as out-of-bound array access */
+
+#define echval 0
+#define echtg (char*)0
 
 #ifdef __cplusplus
 }

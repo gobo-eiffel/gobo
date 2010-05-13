@@ -4,7 +4,7 @@
 		"C functions used to implement class EXCEPTIONS"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -115,6 +115,15 @@ EIF_REFERENCE eeoclass(void) {
 	return GE_ms8("Not implemented yet",19);
 }
 
+char eedefined(long ex) {
+	/* TODO */
+#ifdef EIF_WINDOWS
+	GE_show_console();
+#endif
+	fprintf(stderr, "'eedefined' in 'eif_except.h' not implemented\n");
+	return '\1';
+}
+
 void eecatch(long code) {
 	/* TODO */
 #ifdef EIF_WINDOWS
@@ -176,6 +185,13 @@ void esys(void) {
 void eise_io(char *tag) {
 	eraise(tag, EN_ISE_IO);		/* I/O error */
 }
+
+/*
+ * Raise "out of mnemory" exception.
+ */
+ void enomem(void) {
+	xraise(EN_OMEM);
+ }
 
 #ifdef __cplusplus
 }

@@ -13,4 +13,7 @@
 #ifndef EIF_EIFFEL_H
 #define EIF_EIFFEL_H
 
+#include "eif_globals.h"
+#include "eif_except.h"
+
 #endif

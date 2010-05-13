@@ -376,7 +376,10 @@ feature {NONE} -- Compilation script generation
 			l_base_name: STRING
 			i, nb: INTEGER
 			l_obj: STRING
-			l_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_env_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_wel_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_com_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_com_runtime_regexp: RX_PCRE_REGULAR_EXPRESSION
 			l_replacement: STRING
 			l_external_include_pathnames: DS_ARRAYED_LIST [STRING]
 			l_external_library_pathnames: DS_ARRAYED_LIST [STRING]
@@ -385,21 +388,34 @@ feature {NONE} -- Compilation script generation
 			l_libs: STRING
 			l_pathname: STRING
 			l_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
+			l_external_c_filenames: DS_HASH_TABLE [STRING, STRING]
+			l_rc_template: STRING
+			l_rc_filename: STRING
+			l_res_filename: STRING
 		do
 			l_base_name := a_system_name
 			l_c_config := c_config
 			l_variables := l_c_config.twin
-			create l_regexp.make
-			l_regexp.compile ("\$\(([^)]+)\)")
+			create l_env_regexp.make
+			l_env_regexp.compile ("\$\(([^)]+)\)")
+			create l_wel_regexp.make
+			l_wel_regexp.set_case_insensitive (True)
+			l_wel_regexp.compile ("(.*[\\/]library[\\/]wel[\\/]).*[\\/](mt)?wel\.lib")
+			create l_com_regexp.make
+			l_com_regexp.set_case_insensitive (True)
+			l_com_regexp.compile ("(.*[\\/]library[\\/]com[\\/]).*[\\/](mt)?com\.(lib|a)")
+			create l_com_runtime_regexp.make
+			l_com_runtime_regexp.set_case_insensitive (True)
+			l_com_runtime_regexp.compile ("(.*[\\/]library[\\/]com[\\/]).*[\\/](mt)?com_runtime\.(lib|a)")
 			create l_includes.make (256)
 			l_external_include_pathnames := current_system.external_include_pathnames
 			nb := l_external_include_pathnames.count
 			from i := 1 until i > nb loop
 				l_pathname := l_external_include_pathnames.item (i)
-				l_regexp.match (l_pathname)
+				l_env_regexp.match (l_pathname)
 				l_replacement := STRING_.new_empty_string (l_pathname, 6)
 				l_replacement.append_string ("${\1\}")
-				l_pathname := Execution_environment.interpreted_string (l_regexp.replace_all (l_replacement))
+				l_pathname := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
 				if i /= 1 then
 					l_includes.append_character (' ')
 				end
@@ -408,19 +424,29 @@ feature {NONE} -- Compilation script generation
 				i := i + 1
 			end
 			l_variables.force (l_includes, "includes")
+			create l_external_c_filenames.make_map (10)
+			l_external_c_filenames.set_key_equality_tester (string_equality_tester)
 			create l_libs.make (256)
 			l_external_library_pathnames := current_system.external_library_pathnames
 			nb := l_external_library_pathnames.count
 			from i := 1 until i > nb loop
 				l_pathname := l_external_library_pathnames.item (i)
-				l_regexp.match (l_pathname)
+				l_env_regexp.match (l_pathname)
 				l_replacement := STRING_.new_empty_string (l_pathname, 6)
 				l_replacement.append_string ("${\1\}")
-				l_pathname := Execution_environment.interpreted_string (l_regexp.replace_all (l_replacement))
-				if i /= 1 then
-					l_libs.append_character (' ')
+				l_pathname := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
+				if l_wel_regexp.recognizes (l_pathname) then
+					add_external_c_files ("wel", l_wel_regexp.captured_substring (1) + "clib", l_external_c_filenames)
+				elseif l_com_regexp.recognizes (l_pathname) then
+					add_external_c_files ("com", l_com_regexp.captured_substring (1) + "clib", l_external_c_filenames)
+				elseif l_com_runtime_regexp.recognizes (l_pathname) then
+					add_external_c_files ("com_runtime", l_com_runtime_regexp.captured_substring (1) + "clib_runtime", l_external_c_filenames)
+				else
+					if i /= 1 then
+						l_libs.append_character (' ')
+					end
+					l_libs.append_string (l_pathname)
 				end
-				l_libs.append_string (l_pathname)
 				i := i + 1
 			end
 			l_variables.force (l_libs, "libs")
@@ -441,13 +467,29 @@ feature {NONE} -- Compilation script generation
 			nb := l_external_object_pathnames.count
 			from i := 1 until i > nb loop
 				l_pathname := l_external_object_pathnames.item (i)
-				l_regexp.match (l_pathname)
+				l_env_regexp.match (l_pathname)
 				l_replacement := STRING_.new_empty_string (l_pathname, 6)
 				l_replacement.append_string ("${\1\}")
-				l_pathname := Execution_environment.interpreted_string (l_regexp.replace_all (l_replacement))
-				l_obj_filenames.append_character (' ')
-				l_obj_filenames.append_string (l_pathname)
+				l_pathname := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
+				if l_wel_regexp.recognizes (l_pathname) then
+					add_external_c_files ("wel", l_wel_regexp.captured_substring (1) + "clib", l_external_c_filenames)
+				elseif l_com_regexp.recognizes (l_pathname) then
+					add_external_c_files ("com", l_com_regexp.captured_substring (1) + "clib", l_external_c_filenames)
+				elseif l_com_runtime_regexp.recognizes (l_pathname) then
+					add_external_c_files ("com_runtime", l_com_runtime_regexp.captured_substring (1) + "clib_runtime", l_external_c_filenames)
+				else
+					l_obj_filenames.append_character (' ')
+					l_obj_filenames.append_string (l_pathname)
+				end
 				i := i + 1
+			end
+			l_cursor := l_external_c_filenames.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				l_obj_filenames.append_character (' ')
+				l_filename := l_cursor.key
+				l_obj_filenames.append_string (l_filename)
+				l_obj_filenames.append_string (l_obj)
+				l_cursor.forth
 			end
 			l_variables.force (l_obj_filenames, "objs")
 			if operating_system.is_windows then
@@ -466,12 +508,36 @@ feature {NONE} -- Compilation script generation
 					-- Compile files in reverse order so that it looks like
 					-- a countdown since the filenames are numbered.
 				l_cc_template := l_c_config.item ("cc")
+				l_cursor := c_filenames.new_cursor
 				from l_cursor.finish until l_cursor.before loop
 					l_filename := l_cursor.key + l_cursor.item
 					l_variables.force (l_filename, "c")
 					l_command_name := template_expander.expand_from_values (l_cc_template, l_variables)
 					l_file.put_line (l_command_name)
 					l_cursor.back
+				end
+				l_cursor := l_external_c_filenames.new_cursor
+				from l_cursor.start until l_cursor.after loop
+					l_filename := l_cursor.key + l_cursor.item
+					l_variables.force (l_filename, "c")
+					l_command_name := template_expander.expand_from_values (l_cc_template, l_variables)
+					l_file.put_line (l_command_name)
+					l_cursor.forth
+				end
+					-- Resource file.
+				l_c_config.search ("rc")
+				if l_c_config.found then
+					l_rc_template := l_c_config.found_item
+					l_rc_filename :=  l_base_name + rc_file_extension
+					if file_system.file_exists (l_rc_filename) then
+						l_res_filename := l_base_name + res_file_extension
+						l_variables.force (l_rc_filename, "rc_file")
+						l_variables.force (l_res_filename, "res_file")
+						l_command_name := template_expander.expand_from_values (l_rc_template, l_variables)
+						l_file.put_line (l_command_name)
+						l_obj_filenames.append_character (' ')
+						l_obj_filenames.append_string (l_res_filename)
+					end
 				end
 				l_link_template := l_c_config.item ("link")
 				l_command_name := template_expander.expand_from_values (l_link_template, l_variables)
@@ -581,6 +647,102 @@ feature {NONE} -- Compilation script generation
 			obj_defined: Result.has ("obj")
 		end
 
+	add_external_c_files (a_library_name, a_clib_dirname: STRING; a_external_c_filenames: DS_HASH_TABLE [STRING, STRING])
+			-- Add C files of `a_library_name' found in `a_clib_dirname' to the compilation script.
+		require
+			a_library_name_not_void: a_library_name /= Void
+			a_clib_dirname_not_void: a_clib_dirname /= Void
+			a_external_c_filenames_not_void: a_external_c_filenames /= Void
+		local
+			l_c_file: KL_TEXT_OUTPUT_FILE
+			l_cpp_file: KL_TEXT_OUTPUT_FILE
+			l_external_file: KL_TEXT_OUTPUT_FILE
+			l_c_filename: STRING
+			l_cpp_filename: STRING
+			l_external_filename: STRING
+			l_dir: KL_DIRECTORY
+			l_filename: STRING
+			l_extension: STRING
+			l_basename: STRING
+		do
+			l_c_filename := a_library_name + c_file_extension
+			l_cpp_filename := a_library_name + "_cpp" + cpp_file_extension
+			create l_dir.make (a_clib_dirname)
+			l_dir.open_read
+			if not l_dir.is_open_read then
+				set_fatal_error
+				report_cannot_read_error (a_clib_dirname)
+			else
+				from
+					l_dir.read_entry
+				until
+					l_dir.end_of_input
+				loop
+					l_filename := l_dir.last_entry
+					if l_filename.ends_with (c_file_extension) then
+						l_external_file := l_c_file
+						l_external_filename := l_c_filename
+					elseif l_filename.ends_with (cpp_file_extension) then
+						l_external_file := l_cpp_file
+						l_external_filename := l_cpp_filename
+					else
+						l_external_file := Void
+						l_external_filename := Void
+					end
+					if l_external_filename /= Void then
+						if l_external_file = Void then
+							create l_external_file.make (l_external_filename)
+							if l_external_filename = l_c_filename then
+								l_c_file := l_external_file
+							else
+								l_cpp_file := l_external_file
+							end
+							l_external_file.open_write
+							if not l_external_file.is_open_write then
+								set_fatal_error
+								report_cannot_write_error (l_external_filename)
+							else
+								l_extension := file_system.extension (l_external_filename)
+								l_basename := l_external_filename.twin
+								l_basename.remove_tail (l_extension.count)
+								a_external_c_filenames.force_last (l_extension, l_basename)
+								l_external_file.put_string (c_include)
+								l_external_file.put_character (' ')
+								l_external_file.put_character ('"')
+								l_external_file.put_string ("ge_eiffel.h")
+								l_external_file.put_character ('"')
+								l_external_file.put_new_line
+								l_external_file.put_string (c_include)
+								l_external_file.put_character (' ')
+								l_external_file.put_character ('"')
+								l_external_file.put_string ("ge_gc.h")
+								l_external_file.put_character ('"')
+								l_external_file.put_new_line
+							end
+						end
+						if l_external_file.is_open_write then
+							l_filename := file_system.pathname (a_clib_dirname, l_filename)
+							l_filename := STRING_.replaced_all_substrings (l_filename, "\", "\\")
+							l_external_file.put_string (c_include)
+							l_external_file.put_character (' ')
+							l_external_file.put_character ('"')
+							l_external_file.put_string (l_filename)
+							l_external_file.put_character ('"')
+							l_external_file.put_new_line
+						end
+					end
+					l_dir.read_entry
+				end
+				l_dir.close
+				if l_c_file /= Void and then l_c_file.is_open_write then
+					l_c_file.close
+				end
+				if l_cpp_file /= Void and then l_cpp_file.is_open_write then
+					l_cpp_file.close
+				end
+			end
+		end
+
 feature {NONE} -- C code Generation
 
 	generate_c_code (a_system_name: STRING)
@@ -645,6 +807,9 @@ feature {NONE} -- C code Generation
 				header_file.put_new_line
 				include_runtime_header_file ("ge_identified.h", True, header_file)
 				header_file.put_new_line
+					-- Two header files needed to compile EiffelCOM.
+				include_runtime_header_file ("eif_cecil.h", False, header_file)
+				include_runtime_header_file ("eif_plug.h", False, header_file)
 				print_start_extern_c (header_file)
 				print_types (header_file)
 				flush_to_c_file
@@ -26931,8 +27096,12 @@ feature {NONE} -- Include files
 			a_file_open_write: a_file.is_open_write
 		do
 			if not included_header_filenames.has (a_filename) then
-				if a_filename.same_string ("%"eif_console.h%"") then
+				if a_filename.same_string ("%"eif_cecil.h%"") then
+					include_runtime_header_file ("eif_cecil.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_console.h%"") then
 					include_runtime_header_file ("eif_console.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_constants.h%"") then
+					include_runtime_header_file ("eif_constants.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_dir.h%"") then
 					include_runtime_header_file ("eif_dir.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_eiffel.h%"") then
@@ -26941,6 +27110,12 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("eif_except.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_file.h%"") then
 					include_runtime_header_file ("eif_file.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_globals.h%"") then
+					include_runtime_header_file ("eif_globals.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_hector.h%"") then
+					include_runtime_header_file ("eif_hector.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_lmalloc.h%"") then
+					include_runtime_header_file ("eif_lmalloc.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_main.h%"") then
 					include_runtime_header_file ("eif_main.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_memory.h%"") then
@@ -26949,6 +27124,10 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("eif_misc.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_path_name.h%"") then
 					include_runtime_header_file ("eif_path_name.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_plug.h%"") then
+					include_runtime_header_file ("eif_plug.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_portable.h%"") then
+					include_runtime_header_file ("eif_portable.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_retrieve.h%"") then
 					include_runtime_header_file ("eif_retrieve.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_sig.h%"") then
@@ -26959,6 +27138,8 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("eif_threads.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_traverse.h%"") then
 					include_runtime_header_file ("eif_traverse.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_types.h%"") then
+					include_runtime_header_file ("eif_types.h", False, a_file)
 				elseif a_filename.same_string ("%"ge_time.h%"") then
 					include_runtime_header_file ("ge_time.h", False, a_file)
 				else
@@ -26992,6 +27173,8 @@ feature {NONE} -- Include files
 					included_runtime_c_files.force ("ge_identified.c")
 				elseif a_filename.same_string ("ge_main.h") then
 					included_runtime_c_files.force ("ge_main.c")
+				elseif a_filename.same_string ("eif_cecil.h") then
+					included_runtime_c_files.force ("eif_cecil.c")
 				elseif a_filename.same_string ("eif_console.h") then
 					include_runtime_header_file ("ge_console.h", False, a_file)
 					include_runtime_header_file ("eif_file.h", False, a_file)
@@ -27014,6 +27197,8 @@ feature {NONE} -- Include files
 					included_runtime_c_files.force ("eif_misc.c")
 				elseif a_filename.same_string ("eif_path_name.h") then
 					included_runtime_c_files.force ("eif_path_name.c")
+				elseif a_filename.same_string ("eif_plug.h") then
+					included_runtime_c_files.force ("eif_plug.c")
 				elseif a_filename.same_string ("eif_retrieve.h") then
 					included_runtime_c_files.force ("eif_retrieve.c")
 				elseif a_filename.same_string ("eif_sig.h") then
@@ -28865,6 +29050,8 @@ feature {NONE} -- Constants
 	cfg_file_extension: STRING = ".cfg"
 	cpp_file_extension: STRING = ".cpp"
 	h_file_extension: STRING = ".h"
+	res_file_extension: STRING = ".res"
+	rc_file_extension: STRING = ".rc"
 	sh_file_extension: STRING = ".sh"
 			-- File extensions
 
