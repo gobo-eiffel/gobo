@@ -13,8 +13,6 @@
 #ifndef EIF_CECIL_H
 #define EIF_CECIL_H
 
-#include "eif_plug.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
