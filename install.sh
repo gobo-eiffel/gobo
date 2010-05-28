@@ -166,7 +166,7 @@ if [ "$EIF" = "ge" ]; then
 	export GOBO_EIFFEL
 	cd $BIN_DIR
 	$BIN_DIR/gec$EXE --finalize $GOBO/src/geant/ge.xace
-	strip geant$EXE}
+	strip geant${EXE}
 	$BIN_DIR/gec$EXE --finalize $GOBO/src/gexace/ge.xace
 	strip gexace${EXE}
 	$BIN_DIR/gec$EXE --finalize $GOBO/src/gelex/ge.xace
