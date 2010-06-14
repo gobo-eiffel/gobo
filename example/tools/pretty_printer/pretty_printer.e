@@ -4,7 +4,7 @@ note
 
 		"Eiffel pretty-printer"
 
-	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,6 +38,7 @@ feature {NONE} -- Execution
 			a_time_stamp: INTEGER
 			a_parser: ET_EIFFEL_PARSER
 			a_eiffel_error_handler: ET_ERROR_HANDLER
+			a_class_text: STRING
 		do
 			Arguments.set_program_name ("pretty_printer")
 			create error_handler.make_standard
@@ -75,14 +76,22 @@ feature {NONE} -- Execution
 						std.output.append (in_file)
 						in_file.close
 					else
+						create a_class_text.make (1024)
+						from
+							in_file.read_string (1024)
+						until
+							in_file.end_of_file
+						loop
+							a_class_text.append_string (in_file.last_string)
+							in_file.read_string (1024)
+						end
+						in_file.close
 						create out_file.make (out_filename)
 						out_file.recursive_open_write
 						if out_file.is_open_write then
-							out_file.append (in_file)
+							out_file.put_string (a_class_text)
 							out_file.close
-							in_file.close
 						else
-							in_file.close
 							report_cannot_write_error (out_filename)
 							Exceptions.die (1)
 						end
