@@ -718,6 +718,19 @@ feature {NONE} -- Compilation script generation
 								l_external_file.put_string ("ge_gc.h")
 								l_external_file.put_character ('"')
 								l_external_file.put_new_line
+									-- Two header files needed to compile EiffelCOM.
+								l_external_file.put_string (c_include)
+								l_external_file.put_character (' ')
+								l_external_file.put_character ('"')
+								l_external_file.put_string ("eif_cecil.h")
+								l_external_file.put_character ('"')
+								l_external_file.put_new_line
+								l_external_file.put_string (c_include)
+								l_external_file.put_character (' ')
+								l_external_file.put_character ('"')
+								l_external_file.put_string ("eif_plug.h")
+								l_external_file.put_character ('"')
+								l_external_file.put_new_line
 							end
 						end
 						if l_external_file.is_open_write then
