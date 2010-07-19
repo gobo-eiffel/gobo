@@ -5,10 +5,10 @@ note
 		"Test cases"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010/05/03 $"
+	revision: "$Revision: #19 $"
 
 deferred class TS_TEST_CASE
 
@@ -322,7 +322,14 @@ feature {NONE} -- Execution
 						end
 					end
 				else
-					logger.report_abort
+						-- Get exception trace.
+					l_message := Exceptions.exception_trace
+					if l_message = Void or else l_message.is_empty then
+						l_message := "Eiffel exception"
+					else
+						l_message := "Eiffel exception%N" + l_message
+					end
+					logger.report_abort (l_message)
 						-- Report any test failure before reporting the Eiffel exception.
 					an_error_messages := assertions.error_messages
 					nb := an_error_messages.count
@@ -335,12 +342,6 @@ feature {NONE} -- Execution
 						i := i + 1
 					end
 						-- Report the Eiffel exception.
-					l_message := Exceptions.exception_trace
-					if l_message = Void or else l_message.is_empty then
-						l_message := "Eiffel exception"
-					else
-						l_message := "Eiffel exception%N" + l_message
-					end
 					a_summary.put_abort (Current, l_message)
 				end
 			end

@@ -5,10 +5,10 @@ note
 		"Null loggers for tests and assertion checkings"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010/05/03 $"
+	revision: "$Revision: #5 $"
 
 class TS_NULL_TEST_LOGGER
 
@@ -34,7 +34,7 @@ feature -- Log
 		do
 		end
 
-	report_abort
+	report_abort (a_reason: STRING)
 			-- Report that current test has been aborted.
 		do
 		end
