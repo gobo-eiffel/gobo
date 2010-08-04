@@ -7,8 +7,8 @@ note
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2004-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010/05/03 $"
+	revision: "$Revision: #11 $"
 
 deferred class ET_TAIL_LIST [G]
 
@@ -292,6 +292,33 @@ feature -- Iteration
 			end
 		end
 
+	do_until (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+			-- Apply `an_action' to every item, from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the list.)
+			--
+			-- The iteration will be interrupted if a stop request is received
+			-- i.e. `a_stop_request' starts returning True. No interruption if
+			-- `a_stop_request' is Void.
+		require
+			an_action_not_void: an_action /= Void
+		local
+			i, nb: INTEGER
+		do
+			if a_stop_request = Void then
+				do_all (an_action)
+			elseif not a_stop_request.item ([]) then
+				nb := count
+				from i := 1 until i > nb loop
+					if a_stop_request.item ([]) then
+						i := nb + 1
+					else
+						an_action.call ([storage.item (i)])
+						i := i + 1
+					end
+				end
+			end
+		end
+
 	do_if (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
@@ -309,6 +336,38 @@ feature -- Iteration
 					an_action.call ([l_item])
 				end
 				i := i + 1
+			end
+		end
+
+	do_if_until (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
+			--
+			-- The iteration will be interrupted if a stop request is received
+			-- i.e. `a_stop_request' starts returning True. No interruption if
+			-- `a_stop_request' is Void.
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		local
+			i, nb: INTEGER
+			l_item: like item
+		do
+			if a_stop_request = Void then
+				do_if (an_action, a_test)
+			elseif not a_stop_request.item ([]) then
+				nb := count
+				from i := 1 until i > nb loop
+					if a_stop_request.item ([]) then
+						i := nb + 1
+					else
+						l_item := storage.item (i)
+						if a_test.item ([l_item]) then
+							an_action.call ([l_item])
+						end
+						i := i + 1
+					end
+				end
 			end
 		end
 

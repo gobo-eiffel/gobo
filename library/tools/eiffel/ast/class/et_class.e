@@ -7,8 +7,8 @@ note
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010/05/03 $"
+	revision: "$Revision: #41 $"
 
 class ET_CLASS
 
@@ -1531,6 +1531,20 @@ feature -- Features
 			procedures.features_do_all (an_action)
 		end
 
+	features_do_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+			-- Apply `an_action' to every feature of current class.
+			-- (Semantics not guaranteed if `an_action' changes the list of features.)
+			--
+			-- The iteration will be interrupted if a stop request is received
+			-- i.e. `a_stop_request' starts returning True. No interruption if
+			-- `a_stop_request' is Void.
+		require
+			an_action_not_void: an_action /= Void
+		do
+			queries.features_do_until (an_action, a_stop_request)
+			procedures.features_do_until (an_action, a_stop_request)
+		end
+
 	features_do_declared (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]])
 			-- Apply `an_action' to every feature declared in current class
 			-- (i.e. do not traverse inherited features which have not been
@@ -1541,6 +1555,22 @@ feature -- Features
 		do
 			queries.features_do_declared (an_action)
 			procedures.features_do_declared (an_action)
+		end
+
+	features_do_declared_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+			-- Apply `an_action' to every feature declared in current class
+			-- (i.e. do not traverse inherited features which have not been
+			-- redefined in current class).
+			-- (Semantics not guaranteed if `an_action' changes the list of features.)
+			--
+			-- The iteration will be interrupted if a stop request is received
+			-- i.e. `a_stop_request' starts returning True. No interruption if
+			-- `a_stop_request' is Void.
+		require
+			an_action_not_void: an_action /= Void
+		do
+			queries.features_do_declared_until (an_action, a_stop_request)
+			procedures.features_do_declared_until (an_action, a_stop_request)
 		end
 
 	features_do_inherited (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]])
@@ -1554,6 +1584,21 @@ feature -- Features
 			procedures.features_do_inherited (an_action)
 		end
 
+	features_do_inherited_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+			-- Apply `an_action' to every feature inherited without being explicitly
+			-- redeclared in current class that satisfies `a_test'.
+			-- (Semantics not guaranteed if `an_action' changes the list of features.)
+			--
+			-- The iteration will be interrupted if a stop request is received
+			-- i.e. `a_stop_request' starts returning True. No interruption if
+			-- `a_stop_request' is Void.
+		require
+			an_action_not_void: an_action /= Void
+		do
+			queries.features_do_inherited_until (an_action, a_stop_request)
+			procedures.features_do_inherited_until (an_action, a_stop_request)
+		end
+
 	features_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN])
 			-- Apply `an_action' to every feature of current class that satisfies `a_test'.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list of features.)
@@ -1563,6 +1608,21 @@ feature -- Features
 		do
 			queries.features_do_if (an_action, a_test)
 			procedures.features_do_if (an_action, a_test)
+		end
+
+	features_do_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+			-- Apply `an_action' to every feature of current class that satisfies `a_test'.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the list of features.)
+			--
+			-- The iteration will be interrupted if a stop request is received
+			-- i.e. `a_stop_request' starts returning True. No interruption if
+			-- `a_stop_request' is Void.
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		do
+			queries.features_do_if_until (an_action, a_test, a_stop_request)
+			procedures.features_do_if_until (an_action, a_test, a_stop_request)
 		end
 
 	features_do_declared_if (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN])
@@ -1578,6 +1638,23 @@ feature -- Features
 			procedures.features_do_declared_if (an_action, a_test)
 		end
 
+	features_do_declared_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+			-- Apply `an_action' to every feature declared in current class
+			-- (i.e. do not traverse inherited features which have not been
+			-- redefined in current class) that satisfies `a_test'.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the list of features.)
+			--
+			-- The iteration will be interrupted if a stop request is received
+			-- i.e. `a_stop_request' starts returning True. No interruption if
+			-- `a_stop_request' is Void.
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		do
+			queries.features_do_declared_if_until (an_action, a_test, a_stop_request)
+			procedures.features_do_declared_if_until (an_action, a_test, a_stop_request)
+		end
+
 	features_do_inherited_if (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN])
 			-- Apply `an_action' to every feature inherited without being explicitly
 			-- redeclared in current class that satisfies `a_test'.
@@ -1588,6 +1665,22 @@ feature -- Features
 		do
 			queries.features_do_inherited_if (an_action, a_test)
 			procedures.features_do_inherited_if (an_action, a_test)
+		end
+
+	features_do_inherited_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+			-- Apply `an_action' to every feature inherited without being explicitly
+			-- redeclared in current class that satisfies `a_test'.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the list of features.)
+			--
+			-- The iteration will be interrupted if a stop request is received
+			-- i.e. `a_stop_request' starts returning True. No interruption if
+			-- `a_stop_request' is Void.
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		do
+			queries.features_do_inherited_if_until (an_action, a_test, a_stop_request)
+			procedures.features_do_inherited_if_until (an_action, a_test, a_stop_request)
 		end
 
 	has_declared_feature (a_feature: ET_FEATURE): BOOLEAN
