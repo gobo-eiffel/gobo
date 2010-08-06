@@ -5,10 +5,10 @@ note
 		"Test config clusters"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010/05/03 $"
+	revision: "$Revision: #13 $"
 
 class TS_CLUSTER
 
@@ -152,14 +152,13 @@ feature -- Processing
 			a_class_not_void: a_class /= Void
 			testcases_not_void: testcases /= Void
 		local
-			feature_names: DS_LINKED_LIST [STRING]
 			l_procedures: ET_PROCEDURE_LIST
 			i, nb: INTEGER
 			an_identifier: ET_IDENTIFIER
 			a_name: STRING
 			l_default_test_name: STRING
 		do
-			create feature_names.make_equal
+			testcases.set_class_prefix (a_class, class_prefix)
 			l_procedures := a_class.procedures
 			nb := l_procedures.count
 			from
@@ -171,19 +170,17 @@ feature -- Processing
 				if an_identifier /= Void then
 					a_name := an_identifier.name
 					if feature_regexp.recognizes (a_name) then
-						feature_names.put_last (a_name)
+						testcases.put_testcase (a_class, an_identifier)
 					end
 				end
 				i := i + 1
 			end
 			if default_test_included then
 				l_default_test_name := "default_test"
-				if not feature_names.has (l_default_test_name) then
-					feature_names.put_last (l_default_test_name)
+				create an_identifier.make (l_default_test_name)
+				if not feature_regexp.recognizes (l_default_test_name) then
+					testcases.put_testcase (a_class, an_identifier)
 				end
-			end
-			if not feature_names.is_empty then
-				testcases.put (a_class, feature_names, class_prefix)
 			end
 		end
 

@@ -5,10 +5,10 @@ note
 		"Test config testcases"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010/05/03 $"
+	revision: "$Revision: #14 $"
 
 class TS_TESTCASES
 
@@ -25,6 +25,9 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
+	TS_CONFIG_CONSTANTS
+		export {NONE} all end
+
 create
 
 	make
@@ -36,7 +39,8 @@ feature {NONE} -- Initialization
 		require
 			an_error_handler_not_void: an_error_handler /= Void
 		do
-			create testcases.make (10)
+			create testcases.make (100)
+			create class_prefixes.make_map (10)
 			testgen := a_testgen
 			error_handler := an_error_handler
 			tester_parent := default_tester_parent
@@ -48,18 +52,22 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	put (a_class: ET_CLASS; feature_names: DS_LIST [STRING]; class_prefix: STRING)
-			-- Add (`class_name', `feature_names') to the list of testcases.
+	put_testcase (a_class: ET_CLASS; a_feature_name: ET_FEATURE_NAME)
+			-- Add (`a_class', `a_feature_name') to the list of testcases.
 		require
-			a_classnot_void: a_class /= Void
-			feature_names_not_void: feature_names /= Void
-			no_void_feature_name: not feature_names.has_void
-			class_prefix_not_void: class_prefix /= Void
-		local
-			a_pair: DS_PAIR [DS_LIST [STRING], STRING]
+			a_class_not_void: a_class /= Void
+			a_feature_name_not_void: a_feature_name /= Void
 		do
-			create a_pair.make (feature_names, class_prefix)
-			testcases.force (a_pair, a_class)
+			testcases.force_last ([a_class, a_feature_name])
+		end
+
+	set_class_prefix (a_class: ET_CLASS; a_class_prefix: STRING)
+			-- Set the prefix for `a_class' to be `a_class_prefix'
+		require
+			a_class_not_void: a_class /= Void
+			a_class_prefix_not_void: a_class_prefix /= Void
+		do
+			class_prefixes.force (a_class_prefix, a_class)
 		end
 
 feature -- Generation
@@ -67,34 +75,25 @@ feature -- Generation
 	generate_test_classes
 			-- Generate test classes.
 		local
-			a_cursor: DS_HASH_TABLE_CURSOR [DS_PAIR [DS_LIST [STRING], STRING], ET_CLASS]
-			a_pair: DS_PAIR [DS_LIST [STRING], STRING]
 			l_class: ET_CLASS
+			i, nb: INTEGER
 		do
-			a_cursor := testcases.new_cursor
-			from
-				a_cursor.start
-			until
-				a_cursor.after
-			loop
-				l_class := a_cursor.key
+			nb := testcases.count
+			from i := 1 until i > nb loop
+				l_class := testcases.item (i).a_class
 				if l_class.is_deferred then
 						-- Generate a new class only when the test case class
 						-- is deferred. Otherwise use the test case class directly.
-					a_pair := a_cursor.item
-					generate_test_class (l_class, a_pair.first, a_pair.second)
+					generate_test_class (l_class)
 				end
-				a_cursor.forth
+				i := i + 1
 			end
 		end
 
-	generate_test_class (a_class: ET_CLASS; feature_names: DS_LIST [STRING]; class_prefix: STRING)
-			-- Generate test class `class_name'.
+	generate_test_class (a_class: ET_CLASS)
+			-- Generate test class associated with `a_class'.
 		require
 			a_class_not_void: a_class /= Void
-			feature_names_not_void: feature_names /= Void
-			no_void_feature_name: not feature_names.has_void
-			class_prefix_not_void: class_prefix /= Void
 		local
 			cannot_write: UT_CANNOT_WRITE_TO_FILE_ERROR
 			a_class_name: STRING
@@ -103,10 +102,17 @@ feature -- Generation
 			a_dirname: STRING
 			a_dir: KL_DIRECTORY
 			new_name: STRING
+			l_class_prefix: STRING
 		do
+			class_prefixes.search (a_class)
+			if class_prefixes.found then
+				l_class_prefix := class_prefixes.found_item
+			else
+				l_class_prefix := Default_class_prefix
+			end
 			a_class_name := a_class.upper_name
-			create new_name.make (a_class_name.count + class_prefix.count)
-			new_name.append_string (class_prefix)
+			create new_name.make (a_class_name.count + l_class_prefix.count)
+			new_name.append_string (l_class_prefix)
 			new_name.append_string (a_class_name)
 			if testgen /= Void and then testgen.count > 0 then
 				a_dirname := file_system.pathname_from_file_system (testgen, unix_file_system)
@@ -155,23 +161,22 @@ feature -- Generation
 			end
 		end
 
-	generate_root_class (class_name: STRING)
-			-- Generate root class `class_name'.
+	generate_root_class (a_class_name: STRING)
+			-- Generate root class `a_class_name'.
 		require
-			class_name_not_void: class_name /= Void
+			a_class_name_not_void: a_class_name /= Void
 		local
 			cannot_write: UT_CANNOT_WRITE_TO_FILE_ERROR
-			a_cursor: DS_HASH_TABLE_CURSOR [DS_PAIR [DS_LIST [STRING], STRING], ET_CLASS]
-			a_pair: DS_PAIR [DS_LIST [STRING], STRING]
+			i, nb: INTEGER
+			l_testcase: TUPLE [a_class: ET_CLASS; a_feature_name: ET_FEATURE_NAME]
 			a_file: KL_TEXT_OUTPUT_FILE
 			a_filename: STRING
 			a_dirname: STRING
 			a_dir: KL_DIRECTORY
-			l_test_name: STRING
+			l_test_class_name: STRING
 			upper_class_name: STRING
-			l_test_features: DS_LIST [STRING]
-			l_test_features_cursor: DS_LIST_CURSOR [STRING]
 			l_test_feature_name: STRING
+			l_test_indexes: DS_HASH_TABLE [INTEGER, ET_CLASS]
 			l_test_index: INTEGER
 			l_class: ET_CLASS
 			l_class_prefix: STRING
@@ -184,16 +189,16 @@ feature -- Generation
 				if not a_dir.exists then
 					a_dir.recursive_create_directory
 				end
-				a_filename := file_system.pathname (a_dirname, class_name.as_lower + ".e")
+				a_filename := file_system.pathname (a_dirname, a_class_name.as_lower + ".e")
 			else
-				create a_filename.make (class_name.count + 2)
-				a_filename.append_string (class_name.as_lower)
+				create a_filename.make (a_class_name.count + 2)
+				a_filename.append_string (a_class_name.as_lower)
 				a_filename.append_string (".e")
 			end
 			create a_file.make (a_filename)
 			a_file.open_write
 			if a_file.is_open_write then
-				upper_class_name := class_name.as_upper
+				upper_class_name := a_class_name.as_upper
 				a_file.put_line ("note")
 				a_file.put_new_line
 				a_file.put_line ("%Tdescription: %"Test harness root class%"")
@@ -221,89 +226,87 @@ feature -- Generation
 				a_file.put_new_line
 				a_file.put_line ("%Tbuild_suite")
 				a_file.put_line ("%T%T%T-- Add to `suite' the test cases that need to executed.")
-				a_cursor := testcases.new_cursor
+				nb := testcases.count
+				create l_test_indexes.make_map (nb)
+				has_test := (nb > 0)
+					-- Declare local variables.
+				if has_test then
+					a_file.put_line ("%T%Tlocal")
+					a_file.put_line ("%T%T%Tl_regexp: like enabled_test_cases")
+					a_file.put_line ("%T%T%Tl_name: STRING")
+				end
 				from
-					a_cursor.start
+					i := 1
 				until
-					a_cursor.after
+					i > nb
 				loop
-					a_pair := a_cursor.item
-					if not a_pair.first.is_empty then
-						l_test_index := l_test_index + 1
-						if not has_test then
-							a_file.put_line ("%T%Tlocal")
-							a_file.put_line ("%T%T%Tl_regexp: like enabled_test_cases")
-							a_file.put_line ("%T%T%Tl_name: STRING")
-							has_test := True
-						end
+					l_testcase := testcases.item (i)
+					l_class := l_testcase.a_class
+					l_test_indexes.search (l_class)
+					if l_test_indexes.found then
+						l_test_index := l_test_indexes.found_item
+					else
+						l_test_index := l_test_indexes.count + 1
+						l_test_indexes.force_last_new (l_test_index, l_class)
 						a_file.put_string ("%T%T%Tl_test")
 						a_file.put_integer (l_test_index)
 						a_file.put_string (": ")
-						l_class := a_cursor.key
-						l_test_name := l_class.upper_name
+						l_test_class_name := l_class.upper_name
 						if l_class.is_deferred then
 								-- A new class has been generated only when the test case class
 								-- is deferred. Otherwise use the test case class directly.
-								-- `a_pair.second' correspond to the class name prefix of the
-								-- generated class if any.
-							l_class_prefix := a_pair.second
+							class_prefixes.search (l_class)
+							if class_prefixes.found then
+								l_class_prefix := class_prefixes.found_item
+							else
+								l_class_prefix := Default_class_prefix
+							end
 						else
 							l_class_prefix := ""
 						end
 						a_file.put_string (l_class_prefix)
-						a_file.put_line (l_test_name)
+						a_file.put_line (l_test_class_name)
 					end
-					a_cursor.forth
+					i := i + 1
 				end
+					-- Declare body.
 				a_file.put_line ("%T%Tdo")
 				if has_test then
 					a_file.put_line ("%T%T%Tl_regexp := enabled_test_cases")
 				end
-				l_test_index := 0
 				from
-					a_cursor.start
+					i := 1
 				until
-					a_cursor.after
+					i > nb
 				loop
-					a_pair := a_cursor.item
-					l_test_features := a_pair.first
-					if not l_test_features.is_empty then
-						l_test_index := l_test_index + 1
-						l_class := a_cursor.key
-						l_test_name := l_class.upper_name
-						l_test_features_cursor := l_test_features.new_cursor
-						from
-							l_test_features_cursor.start
-						until
-							l_test_features_cursor.after
-						loop
-							l_test_feature_name := l_test_features_cursor.item
-							a_file.put_string ("%T%T%Tl_name := %"")
-							a_file.put_string (l_test_name)
-							a_file.put_character ('.')
-							a_file.put_string (l_test_feature_name)
-							a_file.put_line ("%"")
-							a_file.put_line ("%T%T%Tif l_regexp = Void or else l_regexp.recognizes (l_name) then")
-							a_file.put_string ("%T%T%T%Tcreate l_test")
-							a_file.put_integer (l_test_index)
-							a_file.put_line (".make_default")
-							a_file.put_string ("%T%T%T%Tl_test")
-							a_file.put_integer (l_test_index)
-							a_file.put_string (".set_test (l_name, agent l_test")
-							a_file.put_integer (l_test_index)
-							a_file.put_character ('.')
-							a_file.put_string (l_test_feature_name)
-							a_file.put_character (')')
-							a_file.put_new_line
-							a_file.put_string ("%T%T%T%Tput_test (l_test")
-							a_file.put_integer (l_test_index)
-							a_file.put_character (')')
-							a_file.put_new_line
-							a_file.put_line ("%T%T%Tend")
-							l_test_features_cursor.forth
-						end
-					end
-					a_cursor.forth
+					l_testcase := testcases.item (i)
+					l_test_feature_name := l_testcase.a_feature_name.lower_name
+					l_class := l_testcase.a_class
+					l_test_class_name := l_class.upper_name
+					l_test_index := l_test_indexes.item (l_class)
+					a_file.put_string ("%T%T%Tl_name := %"")
+					a_file.put_string (l_test_class_name)
+					a_file.put_character ('.')
+					a_file.put_string (l_test_feature_name)
+					a_file.put_line ("%"")
+					a_file.put_line ("%T%T%Tif l_regexp = Void or else l_regexp.recognizes (l_name) then")
+					a_file.put_string ("%T%T%T%Tcreate l_test")
+					a_file.put_integer (l_test_index)
+					a_file.put_line (".make_default")
+					a_file.put_string ("%T%T%T%Tl_test")
+					a_file.put_integer (l_test_index)
+					a_file.put_string (".set_test (l_name, agent l_test")
+					a_file.put_integer (l_test_index)
+					a_file.put_character ('.')
+					a_file.put_string (l_test_feature_name)
+					a_file.put_character (')')
+					a_file.put_new_line
+					a_file.put_string ("%T%T%T%Tput_test (l_test")
+					a_file.put_integer (l_test_index)
+					a_file.put_character (')')
+					a_file.put_new_line
+					a_file.put_line ("%T%T%Tend")
+					i := i + 1
 				end
 				a_file.put_line ("%T%Tend")
 				a_file.put_new_line
@@ -357,31 +360,19 @@ feature -- Measurement
 
 	count: INTEGER
 			-- Number of testcases
-		local
-			a_cursor: DS_HASH_TABLE_CURSOR [DS_PAIR [DS_LIST [STRING], STRING], ET_CLASS]
-			a_list: DS_LIST [STRING]
 		do
-			a_cursor := testcases.new_cursor
-			from
-				a_cursor.start
-			until
-				a_cursor.after
-			loop
-				a_list := a_cursor.item.first
-				if a_list /= Void then
-					Result := Result + a_list.count
-				end
-				a_cursor.forth
-			end
+			Result := testcases.count
 		ensure
-			count_nonnegative: Result >= 0
+			count_not_negative: Result >= 0
 		end
 
 feature {NONE} -- Implementation
 
-	testcases: DS_HASH_TABLE [DS_PAIR [DS_LIST [STRING], STRING], ET_CLASS]
-			-- Testcases (lists of feature names and
-			-- class prefix indexed by classes)
+	testcases: DS_ARRAYED_LIST [TUPLE [a_class: ET_CLASS; a_feature_name: ET_FEATURE_NAME]]
+			-- Testcases (lists of feature names in their classes)
+
+	class_prefixes: DS_HASH_TABLE [STRING, ET_CLASS]
+			-- Class prefixes indexed by class
 
 	default_tester_parent: STRING = "TS_TESTER"
 			-- Default value for `tester_parent'
@@ -389,11 +380,10 @@ feature {NONE} -- Implementation
 invariant
 
 	testcases_not_void: testcases /= Void
-	no_void_class_name: not testcases.has_void
-	no_void_testcase: not testcases.has_void_item
---	feature_names_not_void: forall item in testcases, item.first /= Void
---	no_void_feature_names: forall item in testcases, not item.has_void
---	class_prefix_not_void: forall item in testcases, item.second /= Void
+	no_void_testcase: not testcases.has_void
+	class_prefixes_not_void: class_prefixes /= Void
+	no_void_class_prefix: not class_prefixes.has_void_item
+	no_void_prefix_class: not class_prefixes.has_void
 	error_handler_not_void: error_handler /= Void
 	tester_parent_not_void: tester_parent /= Void
 	version_not_void: version /= Void
