@@ -16,10 +16,10 @@ note
 		the given name when viewed from the surrounding universe using `actual_class'.
 	]"
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: $"
-	revision: "$Revision: $"
+	date: "$Date: 2010/05/03 $"
+	revision: "$Revision: #6 $"
 
 class ET_MASTER_CLASS
 
@@ -27,18 +27,29 @@ inherit
 
 	ET_NAMED_CLASS
 		redefine
+			name,
 			intrinsic_class,
 			actual_intrinsic_class,
 			set_marked
 		end
 
-	ET_SHARED_TOKEN_CONSTANTS
-		export {NONE} all end
+	ET_CLASS_TYPE
+		rename
+			make as make_type,
+			actual_parameters as formal_parameters
+		undefine
+			upper_name, lower_name
+		redefine
+			name, process,
+			formal_parameters,
+			append_to_string,
+			debug_output,
+			append_unaliased_to_string,
+			is_named_type,
+			is_valid_context
+		end
 
 	KL_SHARED_FILE_SYSTEM
-		export {NONE} all end
-
-	KL_IMPORTED_ANY_ROUTINES
 		export {NONE} all end
 
 	ET_IMPORTED_AGENT_ROUTINES
@@ -58,6 +69,7 @@ feature {NONE} -- Initialization
 		do
 			name := a_name
 			universe := a_universe
+			named_base_class := Current
 			other_local_override_classes := tokens.empty_classes
 			other_local_non_override_classes := tokens.empty_classes
 			other_imported_classes := tokens.empty_master_classes
@@ -69,6 +81,9 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	name: ET_CLASS_NAME
+			-- Name of class
 
 	actual_class: ET_CLASS
 			-- Actual class
@@ -258,6 +273,12 @@ feature -- Access
 	universe: ET_UNIVERSE
 			-- Universe to which current class belongs
 
+	formal_parameters: ET_FORMAL_PARAMETER_LIST
+			-- Formal generic parameters
+		do
+			Result := actual_class.formal_parameters
+		end
+
 feature -- Status report
 
 	is_override (a_universe: ET_UNIVERSE): BOOLEAN
@@ -440,6 +461,9 @@ feature -- Status report
 				Result := other_overriding_classes.has (a_class)
 			end
 		end
+
+	is_named_type: BOOLEAN = True
+			-- Is current type only made up of named types?
 
 feature -- Status setting
 
@@ -1522,6 +1546,53 @@ feature -- System
 					l_class.set_marked (True)
 				end
 			end
+		end
+
+feature -- Type context
+
+	is_valid_context: BOOLEAN = True
+			-- A context is valid if the base class of its `root_context'
+			-- is preparsed and if its `root_context' is only made up
+			-- of class names and formal generic parameter names, and if
+			-- the actual parameters of these formal parameters are
+			-- themselves
+
+feature -- Output
+
+	append_to_string (a_string: STRING)
+			-- Append textual representation of
+			-- current type to `a_string'.
+		local
+			a_parameters: like formal_parameters
+		do
+			a_string.append_string (upper_name)
+			a_parameters := formal_parameters
+			if a_parameters /= Void and then not a_parameters.is_empty then
+				a_string.append_character (' ')
+				a_parameters.append_to_string (a_string)
+			end
+		end
+
+	append_unaliased_to_string (a_string: STRING)
+			-- Append textual representation of unaliased
+			-- version of current type to `a_string'.
+			-- An unaliased version if when aliased types such as INTEGER
+			-- are replaced by the associated types such as INTEGER_32.
+		local
+			a_parameters: like formal_parameters
+		do
+			a_string.append_string (upper_name)
+			a_parameters := formal_parameters
+			if a_parameters /= Void and then not a_parameters.is_empty then
+				a_string.append_character (' ')
+				a_parameters.append_unaliased_to_string (a_string)
+			end
+		end
+
+	debug_output: STRING
+			-- String that should be displayed in debugger to represent `Current'
+		do
+			Result := upper_name
 		end
 
 feature -- Processing
