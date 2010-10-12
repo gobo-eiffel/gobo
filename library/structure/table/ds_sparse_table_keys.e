@@ -10,10 +10,10 @@ note
 		in Eiffel.
 	]"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2006-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010/10/06 $"
+	revision: "$Revision: #9 $"
 
 class DS_SPARSE_TABLE_KEYS [G, K]
 
@@ -168,6 +168,60 @@ feature -- Iteration
 					an_action.call ([l_item, i])
 				end
 				l_cursor.forth
+			end
+		end
+
+	do_until (an_action: PROCEDURE [ANY, TUPLE [K]]; a_condition: FUNCTION [ANY, TUPLE [K], BOOLEAN])
+			-- Apply `an_action' to every item, from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the structure.)
+			--
+			-- The iteration will be interrupted if `a_condition' starts returning True.
+		local
+			l_cursor: like new_cursor
+			l_item: K
+		do
+			from
+				l_cursor := new_cursor
+				l_cursor.start
+			until
+				l_cursor.after
+			loop
+				l_item := l_cursor.item
+				if a_condition.item ([l_item]) then
+						-- Stop.
+					l_cursor.go_after
+				else
+					an_action.call ([l_item])
+					l_cursor.forth
+				end
+			end
+		end
+
+	do_if_until (an_action: PROCEDURE [ANY, TUPLE [K]]; a_test: FUNCTION [ANY, TUPLE [K], BOOLEAN]; a_condition: FUNCTION [ANY, TUPLE [K], BOOLEAN])
+			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
+			--
+			-- The iteration will be interrupted if `a_condition' starts returning True.
+		local
+			l_cursor: like new_cursor
+			l_item: K
+		do
+			from
+				l_cursor := new_cursor
+				l_cursor.start
+			until
+				l_cursor.after
+			loop
+				l_item := l_cursor.item
+				if a_condition.item ([l_item]) then
+						-- Stop.
+					l_cursor.go_after
+				else
+					if a_test.item ([l_item]) then
+						an_action.call ([l_item])
+					end
+					l_cursor.forth
+				end
 			end
 		end
 

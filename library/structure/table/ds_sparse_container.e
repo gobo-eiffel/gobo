@@ -5,10 +5,10 @@ note
 		"Sparse containers. Used for implementation of sparse tables and sparse sets."
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2003-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010/10/06 $"
+	revision: "$Revision: #16 $"
 
 deferred class DS_SPARSE_CONTAINER [G, K]
 
@@ -276,6 +276,70 @@ feature -- Iteration
 					l_item := item_storage_item (i)
 					if a_test.item ([l_item, j]) then
 						an_action.call ([l_item, j])
+					end
+				end
+				i := i + 1
+			end
+		end
+
+	do_until (an_action: PROCEDURE [ANY, TUPLE [G]]; a_condition: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+			-- Apply `an_action' to every item, from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the structure.)
+			--
+			-- The iteration will be interrupted if `a_condition' starts returning True.
+		local
+			i: INTEGER
+			l_item: G
+		do
+			from
+				i := 1
+			invariant
+				i_large_enough: i >= 1
+				i_small_enough: i <= last_position + 1
+			variant
+				index: last_position - i + 1
+			until
+				i > last_position
+			loop
+				if clashes_item (i) > Free_watermark then
+					l_item := item_storage_item (i)
+					if a_condition.item ([l_item]) then
+							-- Stop.
+						i := last_position
+					else
+						an_action.call ([l_item])
+					end
+				end
+				i := i + 1
+			end
+		end
+
+	do_if_until (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]; a_condition: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
+			--
+			-- The iteration will be interrupted if `a_condition' starts returning True.
+		local
+			i: INTEGER
+			l_item: G
+		do
+			from
+				i := 1
+			invariant
+				i_large_enough: i >= 1
+				i_small_enough: i <= last_position + 1
+			variant
+				index: last_position - i + 1
+			until
+				i > last_position
+			loop
+				if clashes_item (i) > Free_watermark then
+					l_item := item_storage_item (i)
+					if a_condition.item ([l_item]) then
+							-- Stop.
+						i := last_position
+					elseif a_test.item ([l_item]) then
+						an_action.call ([l_item])
 					end
 				end
 				i := i + 1

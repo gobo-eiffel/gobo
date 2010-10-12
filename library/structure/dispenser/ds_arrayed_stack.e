@@ -5,10 +5,10 @@ note
 		"Stacks (Last-In, First-Out) implemented with arrays"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010/10/06 $"
+	revision: "$Revision: #10 $"
 
 class DS_ARRAYED_STACK [G]
 
@@ -353,6 +353,66 @@ feature -- Iteration
 			loop
 				l_item := storage.item (i)
 				if a_test.item ([l_item]) then
+					an_action.call ([l_item])
+				end
+				i := i - 1
+			end
+		end
+
+	do_until (an_action: PROCEDURE [ANY, TUPLE [G]]; a_condition: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+			-- Apply `an_action' to every item, from last to first inserted.
+			-- (Semantics not guaranteed if `an_action' changes the structure.)
+			--
+			-- The iteration will be interrupted if `a_condition' starts returning True.
+		local
+			i: INTEGER
+			l_item: G
+		do
+			from
+				i := count
+			invariant
+				i_large_enough: i >= 0
+				i_small_enough: i <= count
+			variant
+				index: i
+			until
+				i < 1
+			loop
+				l_item := storage.item (i)
+				if a_condition.item ([l_item]) then
+						-- Stop.
+					i := 1
+				else
+					an_action.call ([l_item])
+				end
+				i := i - 1
+			end
+		end
+
+	do_if_until (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]; a_condition: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+			-- Apply `an_action' to every item that satisfies `a_test', from last to first inserted.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
+			--
+			-- The iteration will be interrupted if `a_condition' starts returning True.
+		local
+			i: INTEGER
+			l_item: G
+		do
+			from
+				i := count
+			invariant
+				i_large_enough: i >= 0
+				i_small_enough: i <= count
+			variant
+				index: i
+			until
+				i < 1
+			loop
+				l_item := storage.item (i)
+				if a_condition.item ([l_item]) then
+						-- Stop.
+					i := 1
+				elseif a_test.item ([l_item]) then
 					an_action.call ([l_item])
 				end
 				i := i - 1

@@ -5,10 +5,10 @@ note
 		"Data structures that may be traversed forward"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010/10/06 $"
+	revision: "$Revision: #8 $"
 
 deferred class DS_LINEAR [G]
 
@@ -18,7 +18,9 @@ inherit
 		redefine
 			new_cursor,
 			do_all,
-			do_if
+			do_if,
+			do_until,
+			do_if_until
 		end
 
 	DS_SEARCHABLE [G]
@@ -165,6 +167,22 @@ feature -- Iteration
 		require
 			an_action_not_void: an_action /= Void
 			a_test_not_void: a_test /= Void
+		deferred
+		end
+
+	do_until (an_action: PROCEDURE [ANY, TUPLE [G]]; a_condition: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+			-- Apply `an_action' to every item, from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the structure.)
+			--
+			-- The iteration will be interrupted if `a_condition' starts returning True.
+		deferred
+		end
+
+	do_if_until (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]; a_condition: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
+			--
+			-- The iteration will be interrupted if `a_condition' starts returning True.
 		deferred
 		end
 

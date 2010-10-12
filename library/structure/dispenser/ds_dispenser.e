@@ -5,10 +5,10 @@ note
 		"Dispenser containers"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010/10/06 $"
+	revision: "$Revision: #8 $"
 
 deferred class DS_DISPENSER [G]
 
@@ -21,7 +21,9 @@ inherit
 			extend,
 			append,
 			do_all,
-			do_if
+			do_if,
+			do_until,
+			do_if_until
 		end
 
 feature -- Access
@@ -105,6 +107,22 @@ feature -- Iteration
 	do_if (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test', from first to last item accessible.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
+		deferred
+		end
+
+	do_until (an_action: PROCEDURE [ANY, TUPLE [G]]; a_condition: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+			-- Apply `an_action' to every item, from first to last item accessible.
+			-- (Semantics not guaranteed if `an_action' changes the structure.)
+			--
+			-- The iteration will be interrupted if `a_condition' starts returning True.
+		deferred
+		end
+
+	do_if_until (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]; a_condition: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+			-- Apply `an_action' to every item that satisfies `a_test', from first to last item accessible.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
+			--
+			-- The iteration will be interrupted if `a_condition' starts returning True.
 		deferred
 		end
 

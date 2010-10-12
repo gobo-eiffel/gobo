@@ -5,10 +5,10 @@ note
 		"Data structures that can hold zero or more items"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010/10/06 $"
+	revision: "$Revision: #10 $"
 
 deferred class DS_CONTAINER [G]
 
@@ -88,6 +88,29 @@ feature -- Iteration
 		require
 			an_action_not_void: an_action /= Void
 			a_test_not_void: a_test /= Void
+		deferred
+		end
+
+	do_until (an_action: PROCEDURE [ANY, TUPLE [G]]; a_condition: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+			-- Apply `an_action' to every item.
+			-- (Semantics not guaranteed if `an_action' changes the structure.)
+			--
+			-- The iteration will be interrupted if `a_condition' starts returning True.
+		require
+			an_action_not_void: an_action /= Void
+			a_condition_not_void: a_condition /= Void
+		deferred
+		end
+
+	do_if_until (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]; a_condition: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+			-- Apply `an_action' to every item that satisfies `a_test'.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
+			--
+			-- The iteration will be interrupted if `a_condition' starts returning True.
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+			a_condition_not_void: a_condition /= Void
 		deferred
 		end
 

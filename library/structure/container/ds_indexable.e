@@ -6,10 +6,10 @@ note
 		%modified through integer access"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010/10/06 $"
+	revision: "$Revision: #11 $"
 
 deferred class DS_INDEXABLE [G]
 
@@ -27,7 +27,9 @@ inherit
 			put_last,
 			force_last,
 			extend_last,
-			append_last
+			append_last,
+			do_until,
+			do_if_until
 		end
 
 feature -- Access
@@ -354,6 +356,66 @@ feature -- Iteration
 				l_item := item (i)
 				if a_test.item ([l_item, i]) then
 					an_action.call ([l_item, i])
+				end
+				i := i + 1
+			end
+		end
+
+	do_until (an_action: PROCEDURE [ANY, TUPLE [G]]; a_condition: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+			-- Apply `an_action' to every item, from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the structure.)
+			--
+			-- The iteration will be interrupted if `a_condition' starts returning True.
+		local
+			i: INTEGER
+			l_item: G
+		do
+			from
+				i := 1
+			invariant
+				i_large_enough: i >= 1
+				i_small_enough: i <= count + 1
+			variant
+				index: count - i + 1
+			until
+				i > count
+			loop
+				l_item := item (i)
+				if a_condition.item ([l_item]) then
+						-- Stop.
+					i := count + 1
+				else
+					an_action.call ([l_item])
+					i := i + 1
+				end
+			end
+		end
+
+	do_if_until (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]; a_condition: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
+			--
+			-- The iteration will be interrupted if `a_condition' starts returning True.
+		local
+			i: INTEGER
+			l_item: G
+		do
+			from
+				i := 1
+			invariant
+				i_large_enough: i >= 1
+				i_small_enough: i <= count + 1
+			variant
+				index: count - i + 1
+			until
+				i > count
+			loop
+				l_item := item (i)
+				if a_condition.item ([l_item]) then
+						-- Stop.
+					i := count
+				elseif a_test.item ([l_item]) then
+					an_action.call ([l_item])
 				end
 				i := i + 1
 			end

@@ -19,10 +19,10 @@ note
 		the binary search tree container classes.
 	]"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2008-2009, Daniel Tuser and others"
+	copyright: "Copyright (c) 2008-2010, Daniel Tuser and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010/10/06 $"
+	revision: "$Revision: #11 $"
 
 deferred class DS_BINARY_SEARCH_TREE_CONTAINER [G, K]
 
@@ -991,6 +991,58 @@ feature -- Iteration
 				end
 				l_node := successor (l_node)
 				i := i + 1
+			end
+		end
+
+	do_until (an_action: PROCEDURE [ANY, TUPLE [G]]; a_condition: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+			-- Apply `an_action' to every item, from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the structure.)
+			--
+			-- The iteration will be interrupted if `a_condition' starts returning True.
+		local
+			l_node: like root_node
+			l_item: G
+		do
+			from
+				l_node := first_node
+			until
+				l_node = Void
+			loop
+				l_item := l_node.item
+				if a_condition.item ([l_item]) then
+						-- Stop.
+					l_node := Void
+				else
+					an_action.call ([l_item])
+					l_node := successor (l_node)
+				end
+			end
+		end
+
+	do_if_until (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]; a_condition: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
+			--
+			-- The iteration will be interrupted if `a_condition' starts returning True.
+		local
+			l_node: like root_node
+			l_item: G
+		do
+			from
+				l_node := first_node
+			until
+				l_node = Void
+			loop
+				l_item := l_node.item
+				if a_condition.item ([l_item]) then
+						-- Stop.
+					l_node := Void
+				else
+					if a_test.item ([l_item]) then
+						an_action.call ([l_item])
+					end
+					l_node := successor (l_node)
+				end
 			end
 		end
 

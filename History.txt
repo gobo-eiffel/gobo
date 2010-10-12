@@ -11,7 +11,6 @@ Version 3.10 - ?
 	  were casted to INTEGER_32, which causes loss of information when
 	  compiled on a 64-bit computer. See bug#2999209.
 
-
 	geant:
 
 	* Extended the attributes 'if' and 'unless' to accept the values
@@ -69,6 +68,9 @@ Version 3.10 - ?
 	* Relaxed precondition of `put' and `put_last' in classes DS_SET and
 	  DS_SPARSE_TABLE (i.e. the ancestors of DS_HASH_SET and DS_HASH_TABLE) to
 	  be "not is_full or else has (k)" instead of just "not is_full".
+
+	* Added features `do_until' and `do_if_until' to DS_CONTAINER and its
+	  descendants.
 
 	Gobo Eiffel Time Library:
 
