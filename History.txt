@@ -20,6 +20,10 @@ Version 3.10 - ?
 	getest:
 
 	* Set exit code to 4 when at least one of the test cases has been aborted.
+	* Split the feature `build_suite' in smaller routines in the generated test
+	  harness so that the back-end C compiler (in particular MSVC under Windows)
+	  can compile the generated C code for this routine in a reasonable amount
+	  of time.
 
 	gexace:
 
