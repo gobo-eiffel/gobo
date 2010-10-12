@@ -242,7 +242,7 @@ feature {NONE} -- Generation
 			if nb > 1 then
 					-- Split the feature 'build_suite' into smaller features, so that
 					-- the back-end C compiler can compile the generated C code for
-					-- this routime in a reasonable amount of time.
+					-- this routine in a reasonable amount of time.
 				a_file.put_line ("%Tbuild_suite")
 				a_file.put_line ("%T%T%T-- Add to `suite' the test cases that need to executed.")
 				a_file.put_line ("%T%Tdo")
