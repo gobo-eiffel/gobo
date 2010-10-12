@@ -18,8 +18,8 @@ note
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2009-04-22 15:37:59 +0200 (Wed, 22 Apr 2009) $"
-	revision: "$Revision: 6626 $"
+	date: "$Date: 2010/09/15 $"
+	revision: "$Revision: #18 $"
 
 deferred class ET_UNIVERSE
 
@@ -80,7 +80,7 @@ feature -- Initialization
 			-- they were when they were last preparsed if there was
 			-- a syntax error (so that the syntax error will be
 			-- reported again if the class is processed again).
-			-- Overridden classes are also taken into account.
+			-- Overridden and ignored classes are also taken into account.
 			-- Do nothing on classes which are not parsed yet.
 		do
 			master_classes_do_all (agent {ET_MASTER_CLASS}.local_classes_do_all (agent {ET_CLASS}.reset_after_parsed_and_errors))
@@ -93,7 +93,7 @@ feature -- Initialization
 			-- they were when they were last preparsed if there was
 			-- a syntax error (so that the syntax error will be
 			-- reported again if the class is processed again).
-			-- Overridden classes are also taken into account.
+			-- Overridden and ignored classes are also taken into account.
 			-- Do nothing on classes which are not parsed yet.
 		do
 			master_classes_do_recursive (agent {ET_MASTER_CLASS}.local_classes_do_all (agent {ET_CLASS}.reset_after_parsed_and_errors))
@@ -121,7 +121,7 @@ feature -- Initialization
 			l_implementation_status_checker: ET_IMPLEMENTATION_STATUS_CHECKER
 		do
 				-- Start by taking care of classes containing errors, and
-				-- also reset overridden classes as they were when last parsed.
+				-- also reset overridden and ignored classes as they were when last parsed.
 			master_classes_do_recursive (agent {ET_MASTER_CLASS}.local_classes_do_unless_actual (agent {ET_CLASS}.reset_after_parsed_and_errors))
 				-- Classes that had a syntax error need to be reparsed.
 			classes_do_if_recursive (agent {ET_CLASS}.reset_after_preparsed, agent {ET_CLASS}.has_syntax_error)
@@ -319,15 +319,11 @@ feature -- Access
 			a_name_not_empty: a_name.count > 0
 		local
 			l_class_name: ET_IDENTIFIER
-			l_class: ET_MASTER_CLASS
 		do
 			create l_class_name.make (a_name)
 			master_classes.search (l_class_name)
 			if master_classes.found then
-				l_class := master_classes.found_item
-				if l_class.is_preparsed then
-					Result := l_class
-				end
+				Result := master_classes.found_item
 			end
 		end
 
@@ -388,7 +384,7 @@ feature -- Access
 
 	classes_in_group (a_group: ET_GROUP): DS_ARRAYED_LIST [ET_CLASS]
 			-- Classes declared locally in current universe which are in `a_group'.
-			-- Overridden classes are also taken into account.
+			-- Overridden and ignored classes are also taken into account.
 			-- Create a new list at each call.
 		require
 			a_group_not_void: a_group /= Void
@@ -403,7 +399,7 @@ feature -- Access
 	classes_in_group_recursive (a_group: ET_GROUP): DS_ARRAYED_LIST [ET_CLASS]
 			-- Classes declared locally in current in universe which are in `a_group'
 			-- or recursively in one of its subgroups.
-			-- Overridden classes are also taken into account.
+			-- Overridden and ignored classes are also taken into account.
 			-- Create a new list at each call.
 		require
 			a_group_not_void: a_group /= Void
@@ -417,7 +413,7 @@ feature -- Access
 
 	classes_by_groups: DS_HASH_TABLE [DS_ARRAYED_LIST [ET_CLASS], ET_GROUP]
 			-- Classes, indexed by groups, declared locally in current universe.
-			-- Overridden classes are also taken into account.
+			-- Overridden and ignored classes are also taken into account.
 			-- Create a new data structure at each call.
 		do
 			create Result.make_map (initial_classes_by_groups_capacity)
@@ -432,7 +428,7 @@ feature -- Access
 	classes_by_groups_recursive: DS_HASH_TABLE [DS_ARRAYED_LIST [ET_CLASS], ET_GROUP]
 			-- Classes, indexed by groups, declared locally in current universe
 			-- and recursively in universes it depends on.
-			-- Overridden classes are also taken into account.
+			-- Overridden and ignored classes are also taken into account.
 			-- Create a new data structure at each call.
 		do
 			create Result.make_map (initial_classes_by_groups_capacity)

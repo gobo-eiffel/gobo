@@ -7,8 +7,8 @@ note
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2010/05/03 $"
-	revision: "$Revision: #41 $"
+	date: "$Date: 2010/09/15 $"
+	revision: "$Revision: #43 $"
 
 class ET_CLASS
 
@@ -402,6 +402,50 @@ feature -- Status report
 			definition: Result = group.is_unknown
 		end
 
+	is_ignored: BOOLEAN
+			-- Should this class not be taken into account when
+			-- analyzing the system?
+
+feature -- Status setting
+
+	set_ignored (b: BOOLEAN)
+			-- Set `is_ignored' to `b'.
+		do
+			is_ignored := b
+		ensure
+			ignored_set: is_ignored = b
+		end
+
+	mark_ignored_class
+			-- Mark current class as ignored if not already done.
+			-- Update its master class accordingly.
+		local
+			l_master_class: ET_MASTER_CLASS
+		do
+			if not is_ignored then
+				l_master_class := master_class_in_universe
+				l_master_class.remove_local_class (Current)
+				set_ignored (True)
+				reset_after_parsed
+				l_master_class.add_last_local_ignored_class (Current)
+			end
+		end
+
+	unmark_ignored_class
+			-- Mark current class as not ignored if not already done.
+			-- Update its master class accordingly.
+		local
+			l_master_class: ET_MASTER_CLASS
+		do
+			if is_ignored then
+				l_master_class := master_class_in_universe
+				l_master_class.remove_local_ignored_class (Current)
+				reset_after_parsed
+				set_ignored (False)
+				l_master_class.add_last_local_class (Current)
+			end
+		end
+
 feature -- Access
 
 	name: ET_CLASS_NAME
@@ -578,17 +622,65 @@ feature -- Preparsing
 	time_stamp: INTEGER
 			-- Time stamp of the file when it was last parsed
 
-	master_class: ET_MASTER_CLASS
+	master_class_in_universe: ET_MASTER_CLASS
 			-- Class named `name' in `universe'
 			--
 			-- Note that the 'actual_class' of the Result might represent
 			-- a class other than the current class when there are name clashes.
 			-- In that case, the current class is likely to be found in one of
 			-- 'first_local_override_class', 'other_local_override_classes',
-			-- 'first_local_non_override_class' or 'other_local_non_override_classes'
+			-- 'first_local_non_override_class', 'other_local_non_override_classes',
+			-- 'first_local_ignored_class' or 'other_local_ignored_classes'
 			-- of the Result. See features of class ET_MASTER_CLASS for more details.
 		do
 			Result := universe.master_class (name)
+		ensure
+			master_class_in_universe_not_void: Result /= Void
+			master_class_in_universe: Result.universe = universe
+		end
+
+	master_class_in_system: ET_MASTER_CLASS
+			-- Class in `current_system' corresponding to `master_class_in_universe'
+			-- if any, Void otherwise
+			--
+			-- It's either `master_class_in_universe' if `universe' is `current_system'
+			-- itself, or it's one of the classes in `current_system' with
+			-- `master_class_in_universe' as one of its imported classes.
+		local
+			l_master_class_in_universe: ET_MASTER_CLASS
+			l_other_master_class: ET_MASTER_CLASS
+			l_cell: DS_CELL [ET_MASTER_CLASS]
+		do
+			l_master_class_in_universe := universe.master_class (name)
+			if l_master_class_in_universe.universe = current_system then
+				Result := l_master_class_in_universe
+			else
+				create l_cell.make (Void)
+				l_master_class_in_universe.overriding_classes_do_if (agent l_cell.put, agent {ET_MASTER_CLASS}.is_in_universe (current_system))
+				if l_cell.item /= Void then
+					Result := l_cell.item
+				else
+					l_other_master_class := current_system.master_class (name)
+					if l_other_master_class.has_imported_class (l_master_class_in_universe) then
+						Result := l_other_master_class
+					else
+						current_system.master_classes.do_if (agent l_cell.put, agent {ET_MASTER_CLASS}.has_imported_class (l_master_class_in_universe))
+						Result := l_cell.item
+					end
+				end
+			end
+		ensure
+			master_class_in_system: Result /= Void implies Result.universe = current_system
+		end
+
+	master_class: ET_MASTER_CLASS
+			-- `master_class_in_system' if not Void,
+			-- `master_class_in_universe' otherwise
+		do
+			Result := master_class_in_system
+			if Result = Void then
+				Result := master_class_in_universe
+			end
 		ensure
 			master_class_not_void: Result /= Void
 		end
@@ -608,7 +700,7 @@ feature -- Preparsing
 			l_master_class: ET_MASTER_CLASS
 			l_imported_class: ET_MASTER_CLASS
 		do
-			l_master_class := master_class
+			l_master_class := master_class_in_universe
 			if l_master_class.actual_class = Current then
 				Result := l_master_class.first_local_non_override_class
 				if Result = Current and then not l_master_class.other_local_non_override_classes.is_empty then
@@ -746,9 +838,19 @@ feature -- Preparsing status
 	is_overridden: BOOLEAN
 			-- Is current class overridden by another class?
 		do
-			Result := (master_class.actual_class /= Current)
+			Result := (master_class_in_universe.actual_class /= Current)
 		ensure
-			definition: Result = (master_class.actual_class /= Current)
+			definition: Result = (master_class_in_universe.actual_class /= Current)
+		end
+
+	is_unignorable_overridden: BOOLEAN
+			-- Is current class overridden by another class?
+			--
+			-- Note that this routine does not take into account the ignored status of classes.
+		do
+			Result := (master_class_in_universe.unignorable_actual_class /= Current)
+		ensure
+			definition: Result = (master_class_in_universe.unignorable_actual_class /= Current)
 		end
 
 	is_overriding: BOOLEAN
@@ -756,10 +858,23 @@ feature -- Preparsing status
 		local
 			l_master_class: ET_MASTER_CLASS
 		do
-			l_master_class := master_class
+			l_master_class := master_class_in_universe
 			Result := l_master_class.actual_class = Current and l_master_class.has_name_clash
 		ensure
-			definition: Result = (master_class.actual_class = Current and master_class.has_name_clash)
+			definition: Result = (master_class_in_universe.actual_class = Current and master_class_in_universe.has_name_clash)
+		end
+
+	is_unignorable_overriding: BOOLEAN
+			-- Is current class overriding another class?
+			--
+			-- Note that this routine does not take into account the ignored status of classes.
+		local
+			l_master_class: ET_MASTER_CLASS
+		do
+			l_master_class := master_class_in_universe
+			Result := l_master_class.unignorable_actual_class = Current and l_master_class.has_unignorable_name_clash
+		ensure
+			definition: Result = (master_class_in_universe.unignorable_actual_class = Current and master_class_in_universe.has_unignorable_name_clash)
 		end
 
 	is_in_override_group: BOOLEAN
@@ -1993,6 +2108,7 @@ feature -- Duplication
 			l_filename: like filename
 			l_id: like id
 			l_time_stamp: like time_stamp
+			l_is_ignored: BOOLEAN
 		do
 			if other /= Current then
 				l_name := name
@@ -2000,12 +2116,14 @@ feature -- Duplication
 				l_group := group
 				l_time_stamp := time_stamp
 				l_id := id
+				l_is_ignored := is_ignored
 				copy (other)
 				name := l_name
 				filename := l_filename
 				group := l_group
 				time_stamp := l_time_stamp
 				id := l_id
+				is_ignored := l_is_ignored
 			end
 		end
 

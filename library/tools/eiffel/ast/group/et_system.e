@@ -7,8 +7,8 @@ note
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2009/11/01 $"
-	revision: "$Revision: #18 $"
+	date: "$Date: 2010/09/15 $"
+	revision: "$Revision: #22 $"
 
 class ET_SYSTEM
 
@@ -814,6 +814,33 @@ feature -- Parsing
 					end
 				end
 			end
+		end
+
+feature -- Ignored classes
+
+	ignore_classes (a_classes: DS_HASH_SET [ET_CLASS])
+			-- Unmark classes which were already marked as ignored
+			-- and mark the classes in `a_classes'. Reset classes
+			-- of current system accordingly to take into account
+			-- these modifications.
+		require
+			a_classes_not_void: a_classes /= Void
+			no_void_classes: not a_classes.has_void
+		do
+				-- Unmark classes which were already marked as ignored
+				-- and mark the classes in `a_classes'.
+			master_classes_do_recursive (agent {ET_MASTER_CLASS}.local_ignored_classes_do_if (agent {ET_CLASS}.unmark_ignored_class, agent any_actions.negated ({ET_CLASS} ?, agent a_classes.has)))
+			a_classes.do_all (agent {ET_CLASS}.mark_ignored_class)
+				-- Then for each universe, import classes from other universes.
+			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.import_classes)
+			libraries.do_recursive (agent {ET_LIBRARY}.import_classes)
+			import_classes
+				-- Reset incrementally all classes that may have been
+				-- affected by changes made above.
+			if classes_modified_recursive then
+				reset_classes_incremental_recursive
+			end
+			check_master_class_validity
 		end
 
 feature -- SCM mappings

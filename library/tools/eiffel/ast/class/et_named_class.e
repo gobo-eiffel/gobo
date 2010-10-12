@@ -7,8 +7,8 @@ note
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: $"
-	revision: "$Revision: $"
+	date: "$Date: 2010/09/15 $"
+	revision: "$Revision: #3 $"
 
 deferred class ET_NAMED_CLASS
 
@@ -50,6 +50,15 @@ feature -- Access
 		deferred
 		ensure
 			actual_class_not_void: Result /= Void
+		end
+
+	unignorable_actual_class: ET_CLASS
+			-- Actual class, not taking into account the
+			-- ignored status of classes
+		do
+			Result := actual_class
+		ensure
+			unignorable_actual_class_not_void: Result /= Void
 		end
 
 	actual_intrinsic_class: ET_CLASS

@@ -93,6 +93,9 @@ Version 3.10 - ?
 	  types (e.g. 'attached FOO' or 'detachable BAR') and for object-tests
 	  (e.g. 'attached {T} exp as x' with '{T}' and 'x' optional). See
 	  bug#2682694.
+	* Added the notion of ignored classes. We can programmatically decide
+	  to ignore the class from a cluster and take it into account later on
+	  after some processing.
 
 	Gobo Eiffel XML Library:
 

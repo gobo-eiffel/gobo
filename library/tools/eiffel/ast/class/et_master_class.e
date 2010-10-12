@@ -18,8 +18,8 @@ note
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2008-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2010/05/03 $"
-	revision: "$Revision: #6 $"
+	date: "$Date: 2010/09/15 $"
+	revision: "$Revision: #8 $"
 
 class ET_MASTER_CLASS
 
@@ -30,6 +30,7 @@ inherit
 			name,
 			intrinsic_class,
 			actual_intrinsic_class,
+			unignorable_actual_class,
 			set_marked
 		end
 
@@ -72,6 +73,7 @@ feature {NONE} -- Initialization
 			named_base_class := Current
 			other_local_override_classes := tokens.empty_classes
 			other_local_non_override_classes := tokens.empty_classes
+			other_local_ignored_classes := tokens.empty_classes
 			other_imported_classes := tokens.empty_master_classes
 			other_overriding_classes := tokens.empty_master_classes
 			intrinsic_class := tokens.unknown_class
@@ -97,6 +99,23 @@ feature -- Access
 			end
 		end
 
+	unignorable_actual_class: ET_CLASS
+			-- Actual class, not taking into account the
+			-- ignored status of classes
+		do
+			if mapped_class /= Void then
+				Result := mapped_class.unignorable_actual_class
+			elseif first_overriding_class /= Void then
+				Result := first_overriding_class.unignorable_actual_class
+			elseif first_local_override_class /= Void then
+				Result := first_local_override_class
+			elseif first_local_ignored_class /= Void and then (first_local_ignored_class.is_in_override_group or first_local_non_override_class = Void) then
+				Result := first_local_ignored_class
+			else
+				Result := intrinsic_class.unignorable_actual_class
+			end
+		end
+
 	actual_intrinsic_class: ET_CLASS
 			-- Actual class, not taking into account (recursively) the
 			-- fact that a class may be overridden by classes declared
@@ -110,8 +129,8 @@ feature -- Access
 		end
 
 	intrinsic_class: ET_NAMED_CLASS
-			-- Class being used, taking into account only classes declared
-			-- locally in `universe' or imported from universes it depends
+			-- Class being used, taking into account only non-ignored classes
+			-- declared locally in `universe' or imported from universes it depends
 			-- on, but not taking into account overriding classes from other
 			-- universes
 			--
@@ -120,7 +139,7 @@ feature -- Access
 			-- universe then it will be of type ET_MASTER_CLASS. So we need
 			-- to use `actual_class' to have access to the actual class object.
 			--
-			-- In case of conflict, `intrinsic_class' will be one the override
+			-- In case of conflict, `intrinsic_class' will be one of the override
 			-- classes declared locally in `universe'. If no such classes,
 			-- then it will be one of the other classes declared locally in
 			-- `universe'. If no such classes, then it will be one of the
@@ -130,15 +149,20 @@ feature -- Access
 	first_local_class: ET_CLASS
 			-- First class, if any, declared in an override group of `universe';
 			-- If no such class, then first class, if any, declared in a non-override
-			-- group of `universe'
+			-- group of `universe'; If no such class, then first class, if any,
+			-- declared in a group of `universe' which has been explicitly ignored
 		do
 			Result := first_local_override_class
 			if Result = Void then
 				Result := first_local_non_override_class
 			end
+			if Result = Void then
+				Result := first_local_ignored_class
+			end
 		ensure
 			definition_if_override: first_local_override_class /= Void implies Result = first_local_override_class
-			definition_if_not_override: first_local_override_class = Void implies Result = first_local_non_override_class
+			definition_if_not_override: (first_local_override_class = Void and first_local_non_override_class /= Void) implies Result = first_local_non_override_class
+			definition_if_ignored: (first_local_override_class = Void and first_local_non_override_class = Void) implies Result = first_local_ignored_class
 		end
 
 	first_local_override_class: ET_CLASS
@@ -162,6 +186,17 @@ feature -- Access
 			-- Other classes, if any, declared in a non-override group of `universe'
 			--
 			-- The first such class, if any, is stored in `first_local_non_override_class'.
+
+	first_local_ignored_class: ET_CLASS
+			-- First class, if any, declared in a group of `universe', which has been explicitly ignored
+			--
+			-- If more than one such class, the other classes are stored in
+			-- `other_local_ignored_classes'.
+
+	other_local_ignored_classes: DS_ARRAYED_LIST [ET_CLASS]
+			-- Other classes, if any, declared in a group of `universe', which has been explicitly ignored
+			--
+			-- The first such class, if any, is stored in `first_local_ignored_class'.
 
 	first_imported_class: ET_MASTER_CLASS
 			-- First class, if any, imported from a universe other than `universe'
@@ -223,7 +258,7 @@ feature -- Access
 			-- when "CHARACTER" is mapped to "CHARACTER_8".
 
 	classes_in_group (a_group: ET_GROUP): DS_ARRAYED_LIST [ET_CLASS]
-			-- Classes among local, imported and overriding classes
+			-- Classes among local (ignored or not), imported and overriding classes
 			-- that are declared in `a_group'
 		require
 			a_group_not_void: a_group /= Void
@@ -242,12 +277,13 @@ feature -- Access
 					imported_classes_do_if (agent {ET_MASTER_CLASS}.local_non_override_classes_do_if (agent Result.force_last, agent {ET_CLASS}.is_in_group (a_group)), agent {ET_MASTER_CLASS}.is_in_universe (a_group.universe))
 				end
 			end
+			local_ignored_classes_do_if (agent Result.force_last, agent {ET_CLASS}.is_in_group (a_group))
 		ensure
 			in_group: Result.for_all (agent {ET_CLASS}.is_in_group (a_group))
 		end
 
 	classes_in_group_recursive (a_group: ET_GROUP): DS_ARRAYED_LIST [ET_CLASS]
-			-- Classes among local, imported and overriding classes
+			-- Classes among local (ignored or not), imported and overriding classes
 			-- that are declared in `a_group' or recursively in one of its subgroups
 		require
 			a_group_not_void: a_group /= Void
@@ -266,6 +302,7 @@ feature -- Access
 					imported_classes_do_if (agent {ET_MASTER_CLASS}.local_non_override_classes_do_if (agent Result.force_last, agent {ET_CLASS}.is_in_group_recursive (a_group)), agent {ET_MASTER_CLASS}.is_in_universe (a_group.universe))
 				end
 			end
+			local_ignored_classes_do_if (agent Result.force_last, agent {ET_CLASS}.is_in_group_recursive (a_group))
 		ensure
 			in_group: Result.for_all (agent {ET_CLASS}.is_in_group_recursive (a_group))
 		end
@@ -277,6 +314,67 @@ feature -- Access
 			-- Formal generic parameters
 		do
 			Result := actual_class.formal_parameters
+		end
+
+	first_non_override_overridden_class: ET_CLASS
+			-- First class other than `actual_class' that is not in an override group;
+			-- Void if no such class
+		local
+			l_actual_class: ET_CLASS
+			l_class: ET_CLASS
+		do
+			l_actual_class := actual_class
+			l_class := first_local_non_override_class
+			if l_class /= Void and l_class /= l_actual_class then
+				Result := l_class
+			elseif not other_local_non_override_classes.is_empty then
+				Result := other_local_non_override_classes.first
+			elseif attached first_imported_class as l_imported_class then
+				Result := l_imported_class.first_local_non_override_class
+			end
+		end
+
+	first_unignorable_non_override_overridden_class: ET_CLASS
+			-- First class other than `unignorable_actual_class' that is not in an override group;
+			-- Void if no such class
+			--
+			-- Note that this routine does not take into account the ignored status of classes.
+		local
+			l_imported_class: ET_MASTER_CLASS
+			l_class: ET_CLASS
+			l_other_classes: DS_ARRAYED_LIST [ET_CLASS]
+			i, nb: INTEGER
+			l_actual_class: ET_CLASS
+		do
+			l_actual_class := unignorable_actual_class
+			l_class := first_local_non_override_class
+			if l_class /= Void and l_class /= l_actual_class then
+				Result := l_class
+			elseif not other_local_non_override_classes.is_empty then
+				Result := other_local_non_override_classes.first
+			else
+				l_class := first_local_ignored_class
+				if l_class /= Void and l_class /= l_actual_class and not l_class.is_in_override_group then
+					Result := l_class
+				else
+					l_other_classes := other_local_ignored_classes
+					nb := l_other_classes.count
+					from i := 1 until i > nb loop
+						l_class := l_other_classes.item (i)
+						if l_class /= l_actual_class and not l_class.is_in_override_group then
+							Result := l_class
+							i := nb + 1
+						end
+						i := i + 1
+					end
+				end
+				if Result = Void then
+					l_imported_class := first_imported_class
+					if l_imported_class /= Void then
+						Result := first_local_non_override_class
+					end
+				end
+			end
 		end
 
 feature -- Status report
@@ -328,6 +426,7 @@ feature -- Status report
 
 	has_name_clash: BOOLEAN
 			-- Is there two intrinsic classes with the same name?
+			-- Ignored classes are not taken into account.
 			-- Intrinsic classes means that classes in universes other than `universe'
 			-- which overrides current class are not taken into account.
 			--
@@ -360,9 +459,51 @@ feature -- Status report
 			Result := (nb >= 2)
 		end
 
+	has_unignorable_name_clash: BOOLEAN
+			-- Is there two intrinsic classes with the same name?
+			-- Ignored classes are taken into account.
+			-- Intrinsic classes means that classes in universes other than `universe'
+			-- which overrides current class are not taken into account.
+			--
+			-- Note that some name clashes may be valid when a class is declared
+			-- in an override group and the other is not.
+		local
+			nb: INTEGER
+		do
+			if mapped_class /= Void then
+				nb := nb + 1
+			end
+			if first_local_override_class /= Void then
+				nb := nb + 1
+			end
+			if other_local_override_classes /= Void then
+				nb := nb + other_local_override_classes.count
+			end
+			if first_local_non_override_class /= Void then
+				nb := nb + 1
+			end
+			if other_local_non_override_classes /= Void then
+				nb := nb + other_local_non_override_classes.count
+			end
+			if first_local_ignored_class /= Void then
+				nb := nb + 1
+			end
+			if other_local_ignored_classes /= Void then
+				nb := nb + other_local_ignored_classes.count
+			end
+			if first_imported_class /= Void then
+				nb := nb + 1
+			end
+			if other_imported_classes /= Void then
+				nb := nb + other_imported_classes.count
+			end
+			Result := (nb >= 2)
+		end
+
 	has_invalid_name_clash: BOOLEAN
 			-- Is there two intrinsic classes with the same name resulting
 			-- in an invalid name clash?
+			-- Ignored classes are not taken into account.
 			-- Intrinsic classes means that classes in universes other than `universe'
 			-- which overrides current class are not taken into account.
 			--
@@ -395,14 +536,15 @@ feature -- Status report
 	has_local_class (a_class: ET_CLASS): BOOLEAN
 			-- Is `a_class' one of the classes that have been declared in a group of `universe'?
 			-- This means that `a_class' is one of the classes in `first_local_override_class',
-			-- `other_local_override_classes', `first_local_non_override_class'
-			-- or `other_local_non_override_classes'?
+			-- `other_local_override_classes', `first_local_non_override_class',
+			-- `other_local_non_override_classes', `first_local_ignored_class'
+			-- or `other_local_ignored_classes'?
 		require
 			a_class_not_void: a_class /= Void
 		do
-			Result := has_local_override_class (a_class) or else has_local_non_override_class (a_class)
+			Result := has_local_override_class (a_class) or else has_local_non_override_class (a_class) or else has_local_ignored_class (a_class)
 		ensure
-			definition: Result = (has_local_override_class (a_class) or has_local_non_override_class (a_class))
+			definition: Result = (has_local_override_class (a_class) or has_local_non_override_class (a_class) or has_local_ignored_class (a_class))
 		end
 
 	has_local_override_class (a_class: ET_CLASS): BOOLEAN
@@ -430,6 +572,20 @@ feature -- Status report
 				Result := True
 			elseif other_local_non_override_classes /= Void then
 				Result := other_local_non_override_classes.has (a_class)
+			end
+		end
+
+	has_local_ignored_class (a_class: ET_CLASS): BOOLEAN
+			-- Is `a_class' one of the ignored classes that have been declared in a  group of `universe'?
+			-- This means that `a_class' is one of the classes in `first_local_ignored_class'
+			-- or `other_local_ignored_classes'?
+		require
+			a_class_not_void: a_class /= Void
+		do
+			if first_local_ignored_class = a_class then
+				Result := True
+			elseif other_local_ignored_classes /= Void then
+				Result := other_local_ignored_classes.has (a_class)
 			end
 		end
 
@@ -639,10 +795,11 @@ feature -- Implementation checking status
 feature -- Element change
 
 	add_first_local_class (a_class: ET_CLASS)
-			-- Add `a_class' to `first_local_override_class' if `a_class' is
-			-- in an override group, to `first_local_non_override_class' otherwise.
-			-- If there was already such class, move it to `other_local_override_classes'
-			-- or to `other_local_non_override_classes'.
+			-- Add `a_class' to `first_local_ignored_class' if `a_class' is ignored,
+			-- to `first_local_override_class' if `a_class' is in an override group,
+			-- to `first_local_non_override_class' otherwise.
+			-- If there was already such class, move it to `other_local_ignored_classes',
+			-- `other_local_override_classes' or to `other_local_non_override_classes'.
 			-- Update `intrinsic_class' and `is_modified' accordingly.
 			--
 			-- The difference between `add_first_local_class' and `add_last_local_class'
@@ -653,21 +810,26 @@ feature -- Element change
 			a_class_not_void: a_class /= Void
 --			no_cycle: no cycle in graph of master classes
 		do
-			if a_class.group.is_override then
+			if a_class.is_ignored then
+				add_first_local_ignored_class (a_class)
+			elseif a_class.is_in_override_group then
 				add_first_local_override_class (a_class)
 			else
 				add_first_local_non_override_class (a_class)
 			end
 		ensure
-			a_class_added_first_if_override: a_class.group.is_override implies first_local_override_class = a_class
-			a_class_added_first_if_not_override: not a_class.group.is_override implies first_local_non_override_class = a_class
+			a_class_added_first_if_ignored: a_class.is_ignored implies first_local_ignored_class = a_class
+			a_class_added_first_if_override: (not a_class.is_ignored and a_class.is_in_override_group) implies first_local_override_class = a_class
+			a_class_added_first_if_not_override: (not a_class.is_ignored and not a_class.is_in_override_group) implies first_local_non_override_class = a_class
 		end
 
 	add_last_local_class (a_class: ET_CLASS)
-			-- If `a_class' is in an override group, then add `a_class' to `first_local_override_class'
-			-- if no such class, otherwise add it to `other_local_override_classes'.
-			-- If `a_class' is not in an override group, then add `a_class' to `first_local_non_override_class'
-			-- if no such class, otherwise add it to `other_local_non_override_classes'.
+			-- If `a_class' is_ignored, then add it to `first_local_ignored_class' if no such class
+			-- or to `other_local_ignored_classes' otherwise.
+			-- Otherwise, if `a_class' is in an override group, then add it to `first_local_override_class'
+			-- if no such class, or add it to `other_local_override_classes' otherwise.
+			-- Otherwise if `a_class' is not in an override group, then add it to `first_local_non_override_class'
+			-- if no such class, or add it to `other_local_non_override_classes' otherwise.
 			-- Update `intrinsic_class' and `is_modified' accordingly.
 			--
 			-- The difference between `add_first_local_class' and `add_last_local_class' is
@@ -679,16 +841,20 @@ feature -- Element change
 			a_class_not_void: a_class /= Void
 --			no_cycle: no cycle in graph of master classes
 		do
-			if a_class.group.is_override then
+			if a_class.is_ignored then
+				add_last_local_ignored_class (a_class)
+			elseif a_class.is_in_override_group then
 				add_last_local_override_class (a_class)
 			else
 				add_last_local_non_override_class (a_class)
 			end
 		ensure
-			a_class_added_first_if_override: a_class.group.is_override implies ((old first_local_override_class = Void) implies (first_local_override_class = a_class))
-			a_class_added_last_if_override: a_class.group.is_override implies ((old first_local_override_class /= Void) implies (not other_local_override_classes.is_empty and then other_local_override_classes.last = a_class))
-			a_class_added_first_if_not_override: not a_class.group.is_override implies ((old first_local_non_override_class = Void) implies (first_local_non_override_class = a_class))
-			a_class_added_last_if_not_override: not a_class.group.is_override implies ((old first_local_non_override_class /= Void) implies (not other_local_non_override_classes.is_empty and then other_local_non_override_classes.last = a_class))
+			a_class_added_first_if_ignored: a_class.is_ignored implies ((old first_local_ignored_class = Void) implies (first_local_ignored_class = a_class))
+			a_class_added_last_if_ignored: a_class.is_ignored implies ((old first_local_ignored_class /= Void) implies (not other_local_ignored_classes.is_empty and then other_local_ignored_classes.last = a_class))
+			a_class_added_first_if_override: (not a_class.is_ignored and a_class.is_in_override_group) implies ((old first_local_override_class = Void) implies (first_local_override_class = a_class))
+			a_class_added_last_if_override: (not a_class.is_ignored and a_class.is_in_override_group) implies ((old first_local_override_class /= Void) implies (not other_local_override_classes.is_empty and then other_local_override_classes.last = a_class))
+			a_class_added_first_if_not_override: (not a_class.is_ignored and not a_class.is_in_override_group) implies ((old first_local_non_override_class = Void) implies (first_local_non_override_class = a_class))
+			a_class_added_last_if_not_override: (not a_class.is_ignored and not a_class.is_in_override_group) implies ((old first_local_non_override_class /= Void) implies (not other_local_non_override_classes.is_empty and then other_local_non_override_classes.last = a_class))
 		end
 
 	add_first_local_override_class (a_class: ET_CLASS)
@@ -793,6 +959,46 @@ feature -- Element change
 		ensure
 			a_class_added_first: (old first_local_non_override_class = Void) implies (first_local_non_override_class = a_class)
 			a_class_added_last: (old first_local_non_override_class /= Void) implies (not other_local_non_override_classes.is_empty and then other_local_non_override_classes.last = a_class)
+		end
+
+	add_first_local_ignored_class (a_class: ET_CLASS)
+			-- Add `a_class' to `first_local_ignored_class'.
+			-- If there was already such class, move it to `other_local_ignored_classes'.
+			-- Note that `intrinsic_class' and `is_modified' will not be affected.
+		require
+			a_class_not_void: a_class /= Void
+--			no_cycle: no cycle in graph of master classes
+		do
+			if first_local_ignored_class /= Void then
+				if other_local_ignored_classes = tokens.empty_classes then
+					create other_local_ignored_classes.make (2)
+				end
+				other_local_ignored_classes.force_first (first_local_ignored_class)
+			end
+			first_local_ignored_class := a_class
+		ensure
+			a_class_added_first: first_local_ignored_class = a_class
+		end
+
+	add_last_local_ignored_class (a_class: ET_CLASS)
+			-- Add `a_class' to `first_local_ignored_class', if there was
+			-- no such class, otherwise add it to `other_local_ignored_classes'.
+			-- Note that `intrinsic_class' and `is_modified' will not be affected.
+		require
+			a_class_not_void: a_class /= Void
+--			no_cycle: no cycle in graph of master classes
+		do
+			if first_local_ignored_class = Void then
+				first_local_ignored_class := a_class
+			else
+				if other_local_ignored_classes = tokens.empty_classes then
+					create other_local_ignored_classes.make (2)
+				end
+				other_local_ignored_classes.force_last (a_class)
+			end
+		ensure
+			a_class_added_first: (old first_local_ignored_class = Void) implies (first_local_ignored_class = a_class)
+			a_class_added_last: (old first_local_ignored_class /= Void) implies (not other_local_ignored_classes.is_empty and then other_local_ignored_classes.last = a_class)
 		end
 
 	add_first_imported_class (a_class: ET_MASTER_CLASS)
@@ -911,13 +1117,15 @@ feature -- Element change
 
 	remove_local_class (a_class: ET_CLASS)
 			-- Remove `a_class' from `first_local_override_class', `other_local_override_classes',
-			-- `first_local_non_override_class' and `other_local_non_override_classes'.
+			-- `first_local_non_override_class', `other_local_non_override_classes'.
+			-- `first_local_ignored_class' and `other_local_ignored_classes'.
 			-- Update `intrinsic_class' and `is_modified' accordingly.
 		require
 			a_class_not_void: a_class /= Void
 		do
 			remove_local_override_class (a_class)
 			remove_local_non_override_class (a_class)
+			remove_local_ignored_class (a_class)
 		ensure
 			a_class_removed: not has_local_class (a_class)
 		end
@@ -965,9 +1173,31 @@ feature -- Element change
 			a_class_removed: not has_local_non_override_class (a_class)
 		end
 
+	remove_local_ignored_class (a_class: ET_CLASS)
+			-- Remove `a_class' from `first_local_ignored_class' and `other_local_ignored_classes'.
+			-- Note that `intrinsic_class' and `is_modified' will not be affected.
+		require
+			a_class_not_void: a_class /= Void
+		do
+			if first_local_ignored_class = a_class then
+				other_local_ignored_classes.delete (a_class)
+				if not other_local_ignored_classes.is_empty then
+					first_local_ignored_class := other_local_ignored_classes.first
+					other_local_ignored_classes.remove_first
+				else
+					first_local_ignored_class := Void
+				end
+			else
+				other_local_ignored_classes.delete (a_class)
+			end
+		ensure
+			a_class_removed: not has_local_ignored_class (a_class)
+		end
+
 	remove_unknown_local_classes
 			-- Remove classes from `first_local_override_class', `other_local_override_classes',
-			-- `first_local_non_override_class' and `other_local_non_override_classes',
+			-- `first_local_non_override_class', `other_local_non_override_classes',
+			-- `first_local_ignored_class' and `other_local_ignored_classes',
 			-- that do not exist anymore in `universe' (i.e. they are marked as 'is_unknown').
 			-- Update `intrinsic_class' and `is_modified' accordingly.
 		local
@@ -994,11 +1224,24 @@ feature -- Element change
 					i := i + 1
 				end
 			end
+			l_other_classes := other_local_ignored_classes
+			nb := l_other_classes.count
+			from i := 1 until i > nb loop
+				if l_other_classes.item (i).is_unknown then
+					l_other_classes.remove (i)
+					nb := nb - 1
+				else
+					i := i + 1
+				end
+			end
 			if first_local_override_class /= Void and then first_local_override_class.is_unknown then
 				remove_local_override_class (first_local_override_class)
 			end
 			if first_local_non_override_class /= Void and then first_local_non_override_class.is_unknown then
 				remove_local_non_override_class (first_local_non_override_class)
+			end
+			if first_local_ignored_class /= Void and then first_local_ignored_class.is_unknown then
+				remove_local_ignored_class (first_local_ignored_class)
 			end
 		end
 
@@ -1062,6 +1305,8 @@ feature -- Element change
 			other_local_override_classes.wipe_out
 			first_local_non_override_class := Void
 			other_local_non_override_classes.wipe_out
+			first_local_ignored_class := Void
+			other_local_ignored_classes.wipe_out
 			first_imported_class := Void
 			other_imported_classes.wipe_out
 			first_overriding_class := Void
@@ -1197,13 +1442,15 @@ feature -- Iteration
 	local_classes_do_all (a_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])
 			-- Apply `a_action' to every class declared in groups of `universe'.
 			-- These classes can be found in `first_local_override_class',
-			-- `other_local_override_classes', `first_local_non_override_class'
-			-- and `other_local_non_override_classes'.
+			-- `other_local_override_classes', `first_local_non_override_class',
+			-- `other_local_non_override_classes', `first_local_ignored_class'
+			-- and `other_local_ignored_classes'.
 		require
 			a_action_not_void: a_action /= Void
 		do
 			local_override_classes_do_all (a_action)
 			local_non_override_classes_do_all (a_action)
+			local_ignored_classes_do_all (a_action)
 		end
 
 	local_override_classes_do_all (a_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])
@@ -1232,18 +1479,33 @@ feature -- Iteration
 			end
 		end
 
+	local_ignored_classes_do_all (a_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])
+			-- Apply `a_action' to every ignored class declared in groups of `universe'.
+			-- These classes can be found in `first_local_ignored_class' and
+			-- `other_local_ignored_classes'.
+		require
+			a_action_not_void: a_action /= Void
+		do
+			if first_local_ignored_class /= Void then
+				a_action.call ([first_local_ignored_class])
+				other_local_ignored_classes.do_all (a_action)
+			end
+		end
+
 	local_classes_do_if (a_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN])
 			-- Apply `a_action' to every class declared in groups of `universe'
 			-- that satisfies `a_test'.
 			-- These classes can be found in `first_local_override_class',
-			-- `other_local_override_classes', `first_local_non_override_class'
-			-- and `other_local_non_override_classes'.
+			-- `other_local_override_classes', `first_local_non_override_class',
+			-- `other_local_non_override_classes', `first_local_ignored_class'
+			-- and `other_local_ignored_classes'.
 		require
 			a_action_not_void: a_action /= Void
 			a_test_not_void: a_test /= Void
 		do
 			local_override_classes_do_if (a_action, a_test)
 			local_non_override_classes_do_if (a_action, a_test)
+			local_ignored_classes_do_if (a_action, a_test)
 		end
 
 	local_override_classes_do_if (a_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN])
@@ -1280,6 +1542,23 @@ feature -- Iteration
 			end
 		end
 
+	local_ignored_classes_do_if (a_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN])
+			-- Apply `a_action' to every ignored class declared in groups of `universe'
+			-- that satisfies `a_test'.
+			-- These classes can be found in `first_local_ignored_class' and
+			-- `other_local_ignored_classes'.
+		require
+			a_action_not_void: a_action /= Void
+			a_test_not_void: a_test /= Void
+		do
+			if first_local_ignored_class /= Void then
+				if a_test.item ([first_local_ignored_class]) then
+					a_action.call ([first_local_ignored_class])
+				end
+				other_local_ignored_classes.do_if (a_action, a_test)
+			end
+		end
+
 	local_classes_do_unless_actual (a_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])
 			-- Apply `a_action' to every class declared in groups of `universe'
 			-- unless this class is the `actual_class'.
@@ -1291,6 +1570,8 @@ feature -- Iteration
 		do
 			local_override_classes_do_unless_actual (a_action)
 			local_non_override_classes_do_unless_actual (a_action)
+				-- Note that the actual class cannot be ignored.
+			local_ignored_classes_do_all (a_action)
 		end
 
 	local_override_classes_do_unless_actual (a_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])
@@ -1403,7 +1684,8 @@ feature -- Initialization
 	reset_local_modified_classes
 			-- Reset appropriately classes that have been declared in groups of `universe'
 			-- (i.e. classes that can be found in `first_local_override_class', `other_local_override_classes',
-			-- `first_local_non_override_class' and `other_local_non_override_classes'), that
+			-- `first_local_non_override_class', `other_local_non_override_classes',
+			-- `first_local_ignored_class' and `other_local_ignored_classes'), that
 			-- have been modified and possibly removed (either their old files do not exist anymore,
 			-- or they have been modified and may contain another class) so that they will be
 			-- (pre)parsed again. Only classes declared locally in `universe' are taken into account.
@@ -1425,6 +1707,9 @@ feature -- Initialization
 			local_override_classes_do_all (agent reset_local_modified_class)
 			if not current_system.preparse_override_mode then
 				local_non_override_classes_do_all (agent reset_local_modified_class)
+				local_ignored_classes_do_all (agent reset_local_modified_class)
+			else
+				local_ignored_classes_do_if (agent reset_local_modified_class, agent {ET_CLASS}.is_in_override_group)
 			end
 		end
 
@@ -1611,6 +1896,9 @@ invariant
 	other_local_non_override_classes_not_void: other_local_non_override_classes /= Void
 	no_void_other_local_non_override_classes: not other_local_non_override_classes.has_void
 	no_other_local_non_override_classes: first_local_non_override_class = Void implies other_local_non_override_classes.is_empty
+	other_local_ignored_classes_not_void: other_local_ignored_classes /= Void
+	no_void_other_local_ignored_classes: not other_local_ignored_classes.has_void
+	no_other_local_ignored_classes: first_local_ignored_class = Void implies other_local_ignored_classes.is_empty
 	other_imported_classes_not_void: other_imported_classes /= Void
 	no_void_other_imported_classes: not other_imported_classes.has_void
 	no_other_imported_classes: first_imported_class = Void implies other_imported_classes.is_empty
