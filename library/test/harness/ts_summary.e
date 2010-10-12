@@ -5,10 +5,10 @@ note
 		"Test result summaries"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010/09/29 $"
+	revision: "$Revision: #10 $"
 
 class TS_SUMMARY
 
@@ -35,6 +35,12 @@ feature -- Status report
 			-- Have all tests been successful?
 		do
 			Result := failure_count = 0 and abort_count = 0
+		end
+
+	is_aborted: BOOLEAN
+			-- Has at least one test been aborted?
+		do
+			Result := abort_count /= 0
 		end
 
 	fail_on_rescue: BOOLEAN

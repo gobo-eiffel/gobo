@@ -5,10 +5,10 @@ note
 		"Testers: test harness to execute registered test cases"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010/09/29 $"
+	revision: "$Revision: #12 $"
 
 class TS_TESTER
 
@@ -216,7 +216,11 @@ feature -- Execution
 					a_file.put_new_line
 					a_summary.print_errors (a_file)
 				end
-				if exit_on_error then
+				if not exit_on_error then
+					-- Do nothing.
+				elseif a_summary.is_aborted then
+					Exceptions.die (4)
+				else
 					Exceptions.die (3)
 				end
 			end

@@ -17,6 +17,10 @@ Version 3.10 - ?
 	  "true" and "false". This can be useful when automatically generating
 	  geant build files. See bug#2657770.
 
+	getest:
+
+	* Set exit code to 4 when at least one of the test cases has been aborted.
+
 	gexace:
 
 	* Added option "syntax" to support the corresponding option in ECF.
