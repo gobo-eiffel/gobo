@@ -7,8 +7,8 @@ note
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2006-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010/09/15 $"
+	revision: "$Revision: #9 $"
 
 deferred class ET_GROUP
 
@@ -349,6 +349,21 @@ feature -- Nested
 	parent: ET_GROUP
 			-- Parent group
 		deferred
+		end
+
+	root: like parent
+			-- Either current group if it has no parent, or the
+			-- ancestor of current group which has no parent
+		do
+			if parent = Void then
+				Result := Current
+			else
+				Result := parent.root
+			end
+		ensure
+			root_not_void: Result /= Void
+			is_root: Result.parent = Void
+			is_subgroup: Result = Current or else Result.has_subgroup (Current)
 		end
 
 feature -- Status setting
