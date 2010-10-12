@@ -5,10 +5,10 @@ note
 		"Routines that ought to be in agent classes."
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010/10/06 $"
+	revision: "$Revision: #3 $"
 
 class KL_AGENT_ROUTINES [G]
 
@@ -27,6 +27,18 @@ feature -- Action
 		end
 
 feature -- Boolean operations
+
+	is_true (v: G; a_boolean: FUNCTION [ANY, TUPLE, BOOLEAN]): BOOLEAN
+			-- True if `a_boolean' returns True
+			--
+			-- Note: Useful when we want to pass it as an agent which
+			-- requires an open operand of type G that is not required
+			-- by `a_boolean'.
+		require
+			a_boolean_not_void: a_boolean /= Void
+		do
+			Result := a_boolean.item ([])
+		end
 
 	negated (v: G; a_boolean: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
 			-- Negation

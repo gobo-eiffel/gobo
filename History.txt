@@ -50,6 +50,7 @@ Version 3.10 - ?
 	* Features `test' in class KL_EQUALITY_TESTER and `equal_objects' in
 	  class KL_ANY_ROUTINES now use the new ECMA construct '~' instead
 	  of the combination `same_type' and then `is_equal'.
+	* Added feature `is_true' to class KL_AGENT_ROUTINES.
 
 	Gobo Eiffel Lexical Library:
 
