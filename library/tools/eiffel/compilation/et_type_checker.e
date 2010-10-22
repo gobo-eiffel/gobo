@@ -493,18 +493,18 @@ feature {NONE} -- Validity checking
 						error_handler.report_vtug1a_error (current_class_impl, a_type)
 					end
 				end
+			elseif a_class.is_unknown then
+				set_fatal_error
+				if current_class = current_class_impl then
+					error_handler.report_vtct0a_error (current_class, a_type)
+				else
+-- TODO: this error should have already been reported when processing `current_class_impl'.
+					error_handler.report_vtct0a_error (current_class_impl, a_type)
+				end
 			else
 				a_class.process (current_system.interface_checker)
 				if not a_class.interface_checked then
 					set_fatal_error
-				elseif not a_class.is_preparsed then
-					set_fatal_error
-					if current_class = current_class_impl then
-						error_handler.report_vtct0a_error (current_class, a_type)
-					else
--- TODO: this error should have already been reported when processing `current_class_impl'.
-						error_handler.report_vtct0a_error (current_class_impl, a_type)
-					end
 				elseif a_class.has_interface_error then
 						-- Error should already have been
 						-- reported somewhere else.

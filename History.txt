@@ -1,5 +1,11 @@
 Version 3.10 - ?
 
+	geant:
+
+	* Extended the attributes 'if' and 'unless' to accept the values
+	  "true" and "false". This can be useful when automatically generating
+	  geant build files. See bug#2657770.
+
 	gec:
 
 	* Added option --gelint to force the whole content of classes to be
@@ -11,11 +17,11 @@ Version 3.10 - ?
 	  were casted to INTEGER_32, which causes loss of information when
 	  compiled on a 64-bit computer. See bug#2999209.
 
-	geant:
+	gelint:
 
-	* Extended the attributes 'if' and 'unless' to accept the values
-	  "true" and "false". This can be useful when automatically generating
-	  geant build files. See bug#2657770.
+	* Fixed bug where it was reporting an internal error instead of a VTCT error
+	  when the type of a local variable was a generic class type whose base class
+	  did not exist.
 
 	getest:
 
