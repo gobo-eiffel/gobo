@@ -777,7 +777,7 @@ feature -- Preparsing status
 		end
 
 	is_in_group (a_group: ET_GROUP): BOOLEAN
-			-- Has current class been declared in `a_universe'?
+			-- Has current class been declared in `a_group'?
 		require
 			a_group_not_void: a_group /= Void
 		do
