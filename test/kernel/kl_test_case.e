@@ -5,7 +5,7 @@ note
 		"Kernel test cases"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,13 +35,13 @@ feature -- Filenames
 			from
 				nb := counter.item + 1
 				counter.put (nb)
-				Result := a_prefix + nb.out + an_extension
+				Result := name + "_" + a_prefix + nb.out + an_extension
 			until
 				not file_system.file_exists (Result)
 			loop
 				nb := counter.item + 1
 				counter.put (nb)
-				Result := a_prefix + nb.out + an_extension
+				Result := name + "_" + a_prefix + nb.out + an_extension
 			end
 		ensure
 			filename_not_void: Result /= Void
@@ -99,13 +99,13 @@ feature -- Directory names
 			from
 				nb := counter.item + 1
 				counter.put (nb)
-				Result := a_prefix + nb.out
+				Result := name + "_" + a_prefix + nb.out
 			until
 				not file_system.directory_exists (Result)
 			loop
 				nb := counter.item + 1
 				counter.put (nb)
-				Result := a_prefix + nb.out
+				Result := name + "_" + a_prefix + nb.out
 			end
 		ensure
 			dirname_not_void: Result /= Void
