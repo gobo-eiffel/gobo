@@ -5,7 +5,7 @@ note
 		"Eiffel routines"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,6 +22,7 @@ inherit
 			reset_preconditions,
 			reset_postconditions
 		redefine
+			is_routine,
 			obsolete_message
 		end
 
@@ -31,6 +32,11 @@ inherit
 		undefine
 			implementation_feature
 		end
+
+feature -- Status report
+
+	is_routine: BOOLEAN = True
+			-- Is feature a routine?
 
 feature -- Access
 

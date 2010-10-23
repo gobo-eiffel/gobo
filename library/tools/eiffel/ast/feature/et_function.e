@@ -16,6 +16,7 @@ inherit
 
 	ET_QUERY
 		undefine
+			is_routine,
 			arguments,
 			preconditions,
 			postconditions,

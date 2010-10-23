@@ -5,7 +5,7 @@ note
 		"Routines implemented in .NET"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,6 +24,7 @@ inherit
 
 	ET_DOTNET_FEATURE
 		undefine
+			is_routine,
 			obsolete_message,
 			arguments,
 			preconditions,

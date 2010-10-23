@@ -319,6 +319,7 @@ feature -- Status report
 			-- Result := False
 		ensure
 			query: Result implies is_query
+			routine: Result implies is_routine
 		end
 
 	is_attribute: BOOLEAN
@@ -327,6 +328,7 @@ feature -- Status report
 			-- Result := False
 		ensure
 			query: Result implies is_query
+			not_routine: Result implies not is_routine
 		end
 
 	is_constant_attribute: BOOLEAN
@@ -335,6 +337,7 @@ feature -- Status report
 			-- Result := False
 		ensure
 			query: Result implies is_query
+			not_routine: Result implies not is_routine
 		end
 
 	is_unique_attribute: BOOLEAN
@@ -343,6 +346,7 @@ feature -- Status report
 			-- Result := False
 		ensure
 			query: Result implies is_query
+			not_routine: Result implies not is_routine
 		end
 
 	is_query: BOOLEAN
@@ -359,6 +363,13 @@ feature -- Status report
 			Result := (type = Void)
 		ensure
 			definition: Result = (type = Void)
+			routine: Result implies is_routine
+		end
+
+	is_routine: BOOLEAN
+			-- Is feature a routine?
+		do
+			-- Result := False
 		end
 
 	is_once: BOOLEAN

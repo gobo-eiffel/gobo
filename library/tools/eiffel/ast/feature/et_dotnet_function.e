@@ -32,6 +32,7 @@ inherit
 			reset_postconditions,
 			obsolete_message,
 			is_function,
+			is_routine,
 			is_prefixable, is_infixable,
 			is_bracketable, undefined_feature,
 			is_deferred
