@@ -24,7 +24,7 @@ inherit
 
 feature -- Access
 
-	feature_name (a_feature_name: STRING): ET_FEATURE_NAME is
+	feature_name (a_feature_name: STRING): ET_FEATURE_NAME
 			-- Feature name corresponding to `a_feature_name';
 			-- Void if not a valid feature name
 		require
@@ -110,6 +110,7 @@ feature {NONE} -- Implementation
 			free_infix_feature_name_regexp_not_void: Result /= Void
 			free_infix_feature_name_regexp_compiled: Result.is_compiled
 			free_infix_feature_name_regexp_case_insensitive: Result.is_case_insensitive
+			one_subpattern: Result.has_matched implies Result.match_count = 2
 		end
 
 	free_prefix_feature_name_regexp: RX_PCRE_REGULAR_EXPRESSION
@@ -122,6 +123,7 @@ feature {NONE} -- Implementation
 			free_prefix_feature_name_regexp_not_void: Result /= Void
 			free_prefix_feature_name_regexp_compiled: Result.is_compiled
 			free_prefix_feature_name_regexp_case_insensitive: Result.is_case_insensitive
+			one_subpattern: Result.has_matched implies Result.match_count = 2
 		end
 
 end
