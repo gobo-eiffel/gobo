@@ -5,7 +5,7 @@ note
 		"Cells containing an item"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,6 +20,16 @@ feature -- Access
 
 	item: G
 			-- Content of cell
+
+feature -- Status report
+
+	has_void: BOOLEAN
+			-- Does cell include Void?
+		do
+			Result := (item = Void)
+		ensure
+			item_void: (item = Void) implies Result
+		end
 
 feature -- Element change
 

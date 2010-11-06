@@ -79,13 +79,12 @@ Version 3.10 - ?
 
 	* Fixed assertion violation in feature `compress' from DS_SPARSE_CONTAINER.
 	  See bug#2831433.
-
 	* Relaxed precondition of `put' and `put_last' in classes DS_SET and
 	  DS_SPARSE_TABLE (i.e. the ancestors of DS_HASH_SET and DS_HASH_TABLE) to
 	  be "not is_full or else has (k)" instead of just "not is_full".
-
 	* Added features `do_until' and `do_if_until' to DS_CONTAINER and its
 	  descendants.
+	* Added feature `has_void' to DS_CELL and DS_PAIR.
 
 	Gobo Eiffel Time Library:
 
