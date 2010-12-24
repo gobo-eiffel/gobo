@@ -7,8 +7,8 @@ note
 	library: "Gobo Eiffel Test Library"
 	copyright: "Copyright (c) 2000-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2010/09/29 $"
-	revision: "$Revision: #12 $"
+	date: "$Date: 2010/12/24 $"
+	revision: "$Revision: #13 $"
 
 class TS_TESTER
 
@@ -188,9 +188,9 @@ feature -- Execution
 				a_file.put_integer (suite.count)
 				a_file.put_new_line
 				a_file.flush
-				create {TS_PROGRESS_SUMMARY} a_summary.make (a_file)
+				a_summary := new_progress_summary (a_file)
 			else
-				create a_summary.make
+				a_summary := new_summary
 			end
 			execute_with_summary (a_summary, a_file)
 		end
@@ -402,6 +402,25 @@ feature {NONE} -- Implementation
 
 	internal_suite: TS_TEST_SUITE
 			-- Internal implementation of `suite'
+
+	new_summary: TS_SUMMARY
+			-- New test result summary
+		do
+			create Result.make
+		ensure
+			summary_not_void: Result /= Void
+		end
+
+	new_progress_summary (a_file: KI_TEXT_OUTPUT_STREAM): TS_PROGRESS_SUMMARY
+			-- New test result summary with progress status
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			create Result.make (a_file)
+		ensure
+			progress_summary_not_void: Result /= Void
+		end
 
 invariant
 

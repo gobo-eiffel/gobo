@@ -7,8 +7,8 @@ note
 	library: "Gobo Eiffel Test Library"
 	copyright: "Copyright (c) 2006-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2010/05/03 $"
-	revision: "$Revision: #5 $"
+	date: "$Date: 2010/07/19 $"
+	revision: "$Revision: #6 $"
 
 class TS_NULL_TEST_LOGGER
 
@@ -29,8 +29,13 @@ feature {NONE} -- Initialization
 
 feature -- Log
 
-	report_assertion (a_tag: STRING; a_passed: BOOLEAN)
-			-- Report whether assertion with tag `a_tag' passed or not.
+	report_success (a_tag: STRING)
+			-- Report that assertion with tag `a_tag' passed.
+		do
+		end
+
+	report_failure (a_tag: STRING; a_reason: STRING)
+			-- Report that assertion with tag `a_tag' failed for `a_reason'.
 		do
 		end
 

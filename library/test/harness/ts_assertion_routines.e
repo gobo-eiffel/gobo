@@ -5,10 +5,10 @@ note
 		"Assertion routines"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010/05/03 $"
+	revision: "$Revision: #15 $"
 
 deferred class TS_ASSERTION_ROUTINES
 
@@ -59,9 +59,11 @@ feature {TS_TEST_HANDLER} -- Basic operations
 			a_tag_not_void: a_tag /= Void
 		do
 			assertions.add_assertion
-			logger.report_assertion (a_tag, a_condition)
 			if not a_condition then
+				logger.report_failure (a_tag, a_tag)
 				assertions.report_error (a_tag)
+			else
+				logger.report_success (a_tag)
 			end
 		end
 
@@ -85,9 +87,11 @@ feature {TS_TEST_HANDLER} -- Basic operations
 			a_tag_not_void: a_tag /= Void
 		do
 			assertions.add_assertion
-			logger.report_assertion (a_tag, not a_condition)
 			if a_condition then
+				logger.report_failure (a_tag, a_tag)
 				assertions.report_error (a_tag)
+			else
+				logger.report_success (a_tag)
 			end
 		end
 
@@ -112,15 +116,15 @@ feature {TS_TEST_HANDLER} -- Equality
 		require
 			a_tag_not_void: a_tag /= Void
 		local
-			a_message: STRING
-			l_condition: BOOLEAN
+			l_message: STRING
 		do
 			assertions.add_assertion
-			l_condition := expected ~ actual
-			logger.report_assertion (a_tag, l_condition)
-			if not l_condition then
-				a_message := assert_equal_message (a_tag, expected, actual)
-				assertions.report_error (a_message)
+			if expected /~ actual then
+				l_message := assert_equal_message (a_tag, expected, actual)
+				logger.report_failure (a_tag, l_message)
+				assertions.report_error (l_message)
+			else
+				logger.report_success (a_tag)
 			end
 		end
 
@@ -143,15 +147,15 @@ feature {TS_TEST_HANDLER} -- Equality
 		require
 			a_tag_not_void: a_tag /= Void
 		local
-			a_message: STRING
-			l_condition: BOOLEAN
+			l_message: STRING
 		do
 			assertions.add_assertion
-			l_condition := expected /~ actual
-			logger.report_assertion (a_tag, l_condition)
-			if not l_condition then
-				a_message := assert_not_equal_message (a_tag, expected, actual)
-				assertions.report_error (a_message)
+			if expected ~ actual then
+				l_message := assert_not_equal_message (a_tag, expected, actual)
+				logger.report_failure (a_tag, l_message)
+				assertions.report_error (l_message)
+			else
+				logger.report_success (a_tag)
 			end
 		end
 
@@ -174,15 +178,15 @@ feature {TS_TEST_HANDLER} -- Equality
 		require
 			a_tag_not_void: a_tag /= Void
 		local
-			a_message: STRING
-			l_condition: BOOLEAN
+			l_message: STRING
 		do
 			assertions.add_assertion
-			l_condition := (expected = actual)
-			logger.report_assertion (a_tag, l_condition)
-			if not l_condition then
-				a_message := assert_equal_message (a_tag, expected, actual)
-				assertions.report_error (a_message)
+			if expected /= actual then
+				l_message := assert_equal_message (a_tag, expected, actual)
+				logger.report_failure (a_tag, l_message)
+				assertions.report_error (l_message)
+			else
+				logger.report_success (a_tag)
 			end
 		end
 
@@ -205,15 +209,15 @@ feature {TS_TEST_HANDLER} -- Equality
 		require
 			a_tag_not_void: a_tag /= Void
 		local
-			a_message: STRING
-			l_condition: BOOLEAN
+			l_message: STRING
 		do
 			assertions.add_assertion
-			l_condition := (expected /= actual)
-			logger.report_assertion (a_tag, l_condition)
-			if not l_condition then
-				a_message := assert_not_equal_message (a_tag, expected, actual)
-				assertions.report_error (a_message)
+			if expected = actual then
+				l_message := assert_not_equal_message (a_tag, expected, actual)
+				logger.report_failure (a_tag, l_message)
+				assertions.report_error (l_message)
+			else
+				logger.report_success (a_tag)
 			end
 		end
 
@@ -236,15 +240,15 @@ feature {TS_TEST_HANDLER} -- Equality
 		require
 			a_tag_not_void: a_tag /= Void
 		local
-			a_message: STRING
-			l_condition: BOOLEAN
+			l_message: STRING
 		do
 			assertions.add_assertion
-			l_condition := (expected = actual)
-			logger.report_assertion (a_tag, l_condition)
-			if not l_condition then
-				a_message := assert_strings_equal_message (a_tag, expected.out, actual.out)
-				assertions.report_error (a_message)
+			if expected /= actual then
+				l_message := assert_strings_equal_message (a_tag, expected.out, actual.out)
+				logger.report_failure (a_tag, l_message)
+				assertions.report_error (l_message)
+			else
+				logger.report_success (a_tag)
 			end
 		end
 
@@ -267,15 +271,15 @@ feature {TS_TEST_HANDLER} -- Equality
 		require
 			a_tag_not_void: a_tag /= Void
 		local
-			a_message: STRING
-			l_condition: BOOLEAN
+			l_message: STRING
 		do
 			assertions.add_assertion
-			l_condition := (expected /= actual)
-			logger.report_assertion (a_tag, l_condition)
-			if not l_condition then
-				a_message := assert_strings_not_equal_message (a_tag, expected.out, actual.out)
-				assertions.report_error (a_message)
+			if expected = actual then
+				l_message := assert_strings_not_equal_message (a_tag, expected.out, actual.out)
+				logger.report_failure (a_tag, l_message)
+				assertions.report_error (l_message)
+			else
+				logger.report_success (a_tag)
 			end
 		end
 
@@ -299,15 +303,15 @@ feature {TS_TEST_HANDLER} -- Equality
 			a_tag_not_void: a_tag /= Void
 			tolerance_not_negative: tolerance >= 0
 		local
-			a_message: STRING
-			l_condition: BOOLEAN
+			l_message: STRING
 		do
 			assertions.add_assertion
-			l_condition := (expected - actual).abs <= tolerance
-			logger.report_assertion (a_tag, l_condition)
-			if not l_condition then
-				a_message := assert_strings_equal_with_tolerance_message (a_tag, expected.out, actual.out, tolerance.out, False)
-				assertions.report_error (a_message)
+			if (expected - actual).abs > tolerance then
+				l_message := assert_strings_equal_with_tolerance_message (a_tag, expected.out, actual.out, tolerance.out, False)
+				logger.report_failure (a_tag, l_message)
+				assertions.report_error (l_message)
+			else
+				logger.report_success (a_tag)
 			end
 		end
 
@@ -332,15 +336,15 @@ feature {TS_TEST_HANDLER} -- Equality
 			a_tag_not_void: a_tag /= Void
 			tolerance_not_negative: tolerance >= 0
 		local
-			a_message: STRING
-			l_condition: BOOLEAN
+			l_message: STRING
 		do
 			assertions.add_assertion
-			l_condition := (expected - actual).abs < tolerance
-			logger.report_assertion (a_tag, l_condition)
-			if not l_condition then
-				a_message := assert_strings_equal_with_tolerance_message (a_tag, expected.out, actual.out, tolerance.out, True)
-				assertions.report_error (a_message)
+			if (expected - actual).abs >= tolerance then
+				l_message := assert_strings_equal_with_tolerance_message (a_tag, expected.out, actual.out, tolerance.out, True)
+				logger.report_failure (a_tag, l_message)
+				assertions.report_error (l_message)
+			else
+				logger.report_success (a_tag)
 			end
 		end
 
@@ -364,7 +368,7 @@ feature {TS_TEST_HANDLER} -- Equality
 		require
 			a_tag_not_void: a_tag /= Void
 		local
-			a_message: STRING
+			l_message: STRING
 			l_condition: BOOLEAN
 		do
 			assertions.add_assertion
@@ -375,10 +379,12 @@ feature {TS_TEST_HANDLER} -- Equality
 			else
 				l_condition := STRING_.same_string (expected, actual)
 			end
-			logger.report_assertion (a_tag, l_condition)
 			if not l_condition then
-				a_message := assert_strings_equal_message (a_tag, expected, actual)
-				assertions.report_error (a_message)
+				l_message := assert_strings_equal_message (a_tag, expected, actual)
+				logger.report_failure (a_tag, l_message)
+				assertions.report_error (l_message)
+			else
+				logger.report_success (a_tag)
 			end
 		end
 
@@ -401,7 +407,7 @@ feature {TS_TEST_HANDLER} -- Equality
 		require
 			a_tag_not_void: a_tag /= Void
 		local
-			a_message: STRING
+			l_message: STRING
 			l_condition: BOOLEAN
 		do
 			assertions.add_assertion
@@ -412,10 +418,12 @@ feature {TS_TEST_HANDLER} -- Equality
 			else
 				l_condition := not STRING_.same_string (expected, actual)
 			end
-			logger.report_assertion (a_tag, l_condition)
 			if not l_condition then
-				a_message := assert_strings_not_equal_message (a_tag, expected, actual)
-				assertions.report_error (a_message)
+				l_message := assert_strings_not_equal_message (a_tag, expected, actual)
+				logger.report_failure (a_tag, l_message)
+				assertions.report_error (l_message)
+			else
+				logger.report_success (a_tag)
 			end
 		end
 
@@ -438,7 +446,7 @@ feature {TS_TEST_HANDLER} -- Equality
 		require
 			a_tag_not_void: a_tag /= Void
 		local
-			a_message: STRING
+			l_message: STRING
 			l_condition: BOOLEAN
 		do
 			assertions.add_assertion
@@ -449,10 +457,12 @@ feature {TS_TEST_HANDLER} -- Equality
 			else
 				l_condition := STRING_.same_case_insensitive (expected, actual)
 			end
-			logger.report_assertion (a_tag, l_condition)
 			if not l_condition then
-				a_message := assert_strings_equal_message (a_tag, expected, actual)
-				assertions.report_error (a_message)
+				l_message := assert_strings_equal_message (a_tag, expected, actual)
+				logger.report_failure (a_tag, l_message)
+				assertions.report_error (l_message)
+			else
+				logger.report_success (a_tag)
 			end
 		end
 
@@ -475,15 +485,15 @@ feature {TS_TEST_HANDLER} -- Equality
 		require
 			a_tag_not_void: a_tag /= Void
 		local
-			a_message: STRING
-			l_condition: BOOLEAN
+			l_message: STRING
 		do
 			assertions.add_assertion
-			l_condition := (expected = actual)
-			logger.report_assertion (a_tag, l_condition)
-			if not l_condition then
-				a_message := assert_strings_equal_message (a_tag, expected.out, actual.out)
-				assertions.report_error (a_message)
+			if expected /= actual then
+				l_message := assert_strings_equal_message (a_tag, expected.out, actual.out)
+				logger.report_failure (a_tag, l_message)
+				assertions.report_error (l_message)
+			else
+				logger.report_success (a_tag)
 			end
 		end
 
@@ -506,15 +516,15 @@ feature {TS_TEST_HANDLER} -- Equality
 		require
 			a_tag_not_void: a_tag /= Void
 		local
-			a_message: STRING
-			l_condition: BOOLEAN
+			l_message: STRING
 		do
 			assertions.add_assertion
-			l_condition := (expected /= actual)
-			logger.report_assertion (a_tag, l_condition)
-			if not l_condition then
-				a_message := assert_strings_not_equal_message (a_tag, expected.out, actual.out)
-				assertions.report_error (a_message)
+			if expected = actual then
+				l_message := assert_strings_not_equal_message (a_tag, expected.out, actual.out)
+				logger.report_failure (a_tag, l_message)
+				assertions.report_error (l_message)
+			else
+				logger.report_success (a_tag)
 			end
 		end
 
@@ -537,15 +547,15 @@ feature {TS_TEST_HANDLER} -- Equality
 		require
 			a_tag_not_void: a_tag /= Void
 		local
-			a_message: STRING
-			l_condition: BOOLEAN
+			l_message: STRING
 		do
 			assertions.add_assertion
-			l_condition := (expected = actual)
-			logger.report_assertion (a_tag, l_condition)
-			if not l_condition then
-				a_message := assert_strings_equal_message (a_tag, expected.out, actual.out)
-				assertions.report_error (a_message)
+			if expected /= actual then
+				l_message := assert_strings_equal_message (a_tag, expected.out, actual.out)
+				logger.report_failure (a_tag, l_message)
+				assertions.report_error (l_message)
+			else
+				logger.report_success (a_tag)
 			end
 		end
 
@@ -568,15 +578,15 @@ feature {TS_TEST_HANDLER} -- Equality
 		require
 			a_tag_not_void: a_tag /= Void
 		local
-			a_message: STRING
-			l_condition: BOOLEAN
+			l_message: STRING
 		do
 			assertions.add_assertion
-			l_condition := (expected /= actual)
-			logger.report_assertion (a_tag, l_condition)
-			if not l_condition then
-				a_message := assert_strings_equal_message (a_tag, expected.out, actual.out)
-				assertions.report_error (a_message)
+			if expected = actual then
+				l_message := assert_strings_equal_message (a_tag, expected.out, actual.out)
+				logger.report_failure (a_tag, l_message)
+				assertions.report_error (l_message)
+			else
+				logger.report_success (a_tag)
 			end
 		end
 
@@ -688,9 +698,11 @@ feature {TS_TEST_HANDLER} -- Files
 				a_message.append_string (a_filename1)
 				a_message.append_string ("')")
 			end
-			logger.report_assertion (a_tag, a_message = Void)
 			if a_message /= Void then
+				logger.report_failure (a_tag, a_message)
 				assertions.report_error (a_message)
+			else
+				logger.report_success (a_tag)
 			end
 		end
 
@@ -761,9 +773,11 @@ feature {TS_TEST_HANDLER} -- Files
 				a_message.append_string (a_filename2)
 				a_message.append_string ("' are not equal)")
 			end
-			logger.report_assertion (a_tag, a_message = Void)
 			if a_message /= Void then
+				logger.report_failure (a_tag, a_message)
 				assertions.report_error (a_message)
+			else
+				logger.report_success (a_tag)
 			end
 		end
 
@@ -830,9 +844,11 @@ feature {TS_TEST_HANDLER} -- Containers
 					end
 				end
 			end
-			logger.report_assertion (a_tag, a_message = Void)
 			if a_message /= Void then
+				logger.report_failure (a_tag, a_message)
 				assertions.report_error (a_message)
+			else
+				logger.report_success (a_tag)
 			end
 		end
 
@@ -897,9 +913,11 @@ feature {TS_TEST_HANDLER} -- Containers
 					end
 				end
 			end
-			logger.report_assertion (a_tag, a_message = Void)
 			if a_message /= Void then
+				logger.report_failure (a_tag, a_message)
 				assertions.report_error (a_message)
+			else
+				logger.report_success (a_tag)
 			end
 		end
 
@@ -964,9 +982,11 @@ feature {TS_TEST_HANDLER} -- Containers
 					end
 				end
 			end
-			logger.report_assertion (a_tag, a_message = Void)
 			if a_message /= Void then
+				logger.report_failure (a_tag, a_message)
 				assertions.report_error (a_message)
+			else
+				logger.report_success (a_tag)
 			end
 		end
 
