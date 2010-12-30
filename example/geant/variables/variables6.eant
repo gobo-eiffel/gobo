@@ -20,31 +20,31 @@
 
 
 		<!-- 2 levels, not deferred:  -->
-		<set name="programming_languague" value="Eiffel"/>
-		<set name="message1" value="programming language is ${programming_languague}"/>
+		<set name="programming_language" value="Eiffel"/>
+		<set name="message1" value="programming language is ${programming_language}"/>
 		<set name="message2" value="My favorite ${message1}"/>
 		<echo message="${message2}"/>
 
-		<set name="programming_languague" value="Java"/>
+		<set name="programming_language" value="Java"/>
 			<!-- Note that instead of 'Java' 'Eiffel' is echo'ed since 'message2' was completely resolved earlier: -->
 		<echo message="${message2}"/>
 
 		<unset name="message1"/>
 		<unset name="message2"/>
-		<unset name="programming_languague"/>
+		<unset name="programming_language"/>
 
 		<!-- 2 deferred levels, template (reverse) approach: -->
 		<!-- This example shows -->
 		<set name="message2" value="My favorite ${message1}"/>
-		<set name="message1" value="programming language is ${programming_languague}"/>
-		<set name="programming_languague" value="Eiffel"/>
+		<set name="message1" value="programming language is ${programming_language}"/>
+		<set name="programming_language" value="Eiffel"/>
 		<echo message="${message2}"/>
 
-		<set name="programming_languague" value="Java"/>
+		<set name="programming_language" value="Java"/>
 			<!-- Note that 'Java' is echo'ed due to the template approach: -->
 		<echo message="${message2}"/>
 
-		<set name="programming_languague" value="C"/>
+		<set name="programming_language" value="C"/>
 			<!-- Note that 'C' is echo'ed due to the template approach: -->
 		<echo message="${message2}"/>
 
