@@ -3,7 +3,7 @@
 <project name="geant_available" default="t1">
 	
 	<target name="t1">
-		<available resource="${GOBO}/readme.txt" variable="available"/>
+		<available resource="${GOBO}/Readme.txt" variable="available"/>
 		<echo message="${GOBO}/readme.txt available?: ${available}"/>
 
 		<available resource="${GOBO}/readme2.txt" variable="available"/>
