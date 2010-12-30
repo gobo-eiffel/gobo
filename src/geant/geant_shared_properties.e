@@ -424,14 +424,15 @@ feature -- Processing
 		end
 
 	removed_indentation (a_string: STRING): STRING
-			-- Removed left indent ( regexp: '^[%T| ']*\|) of `a_string'
+			-- `a_string' with left indent ( regexp: '^[%T| ']*\|) if any removed
 		require
 			a_string_not_void: a_string /= Void
 		local
-			i, nb, pos: INTEGER
+			i, nb, pos, line_start_index: INTEGER
 		do
 			Result := ""
 			pos := -1
+			line_start_index := 1
 			nb := a_string.count
 			from i := 1 until i > nb loop
 				inspect a_string.item (i)
@@ -439,9 +440,12 @@ feature -- Processing
 					if pos /= -1 then
 						Result := STRING_.appended_string (Result, a_string.substring (pos, i - 1))
 						pos := -1
+					else
+						Result := STRING_.appended_string (Result, a_string.substring (line_start_index, i - 1))
 					end
 					Result.append_character (a_string.item(i))
 					i := i + 1
+					line_start_index := i
 				when '|' then
 					i := i + 1
 					pos := i
@@ -449,9 +453,11 @@ feature -- Processing
 					i := i + 1
 				end
 			end
-			if pos /= -1 then
-				Result := STRING_.appended_string (Result, a_string.substring (pos, nb))
+				-- Handle last line:
+			if pos = -1 then
+				pos := line_start_index
 			end
+			Result := STRING_.appended_string (Result, a_string.substring (pos, nb))
 		end
 
 feature {NONE} -- Implemenation
