@@ -54,11 +54,11 @@ feature -- Test
 		do
 			s := "abc"
 			s2 := sp.removed_indentation (s)
-			assert_equal ("remove_indentation1", "", s2)
+			assert_equal ("remove_indentation1", "abc", s2)
 
 			s := "%Tabc"
 			s2 := sp.removed_indentation (s)
-			assert_equal ("remove_indentation2", "", s2)
+			assert_equal ("remove_indentation2", "%Tabc", s2)
 
 			s := "%T|abc"
 			s2 := sp.removed_indentation (s)
@@ -72,7 +72,39 @@ feature -- Test
 				|abc
 			}"
 			s2 := sp.removed_indentation (s)
-			assert_equal ("remove_indentation5", "abc", s2)
+			assert_equal ("remove_indentation5a", "abc", s2)
+
+			s := "{
+				|Release_notes.txt
+
+			}"
+			s2 := sp.removed_indentation (s)
+			assert_equal ("remove_indentation5b", "Release_notes.txt%N", s2)
+
+			s := "{
+				|Release_notes.txt
+bla
+			}"
+			s2 := sp.removed_indentation (s)
+			assert_equal ("remove_indentation5c", "Release_notes.txt%Nbla", s2)
+
+			s := "{
+				|Release_notes.txt
+bla
+				|Release_notes.txt
+			}"
+			s2 := sp.removed_indentation (s)
+			assert_equal ("remove_indentation5d", "Release_notes.txt%Nbla%NRelease_notes.txt", s2)
+
+			s := "{
+				|Release_notes.txt
+bla
+				|Release_notes.txt
+bli
+bla
+			}"
+			s2 := sp.removed_indentation (s)
+			assert_equal ("remove_indentation5e", "Release_notes.txt%Nbla%NRelease_notes.txt%Nbli%Nbla", s2)
 
 			s := "{
 				|abc
