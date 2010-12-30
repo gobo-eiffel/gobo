@@ -1,4 +1,4 @@
-note
+indexing
 
 	description:
 
@@ -7,8 +7,8 @@ note
 	library: "Gobo Eiffel Ant"
 	copyright: "Copyright (c) 2008, Sven Ehrke and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2008-10-25 22:20:42 +0200 (Sat, 25 Oct 2008) $"
+	revision: "$Revision: 6536 $"
 
 deferred class GEANT_FUNCTIONAL_TEST_CASE
 
@@ -25,13 +25,16 @@ inherit
 	KL_SHARED_STANDARD_FILES
 		export {NONE} all end
 
-	KL_SHARED_EXECUTION_ENVIRONMENT
+	EXECUTION_ENVIRONMENT
 		export {NONE} all end
 
 	KL_SHARED_EXCEPTIONS
 		export {NONE} all end
 
 	KL_SHARED_FILE_SYSTEM
+		export {NONE} all end
+
+	GEANT_SHARED_PROPERTIES
 		export {NONE} all end
 
 feature -- Execution
@@ -156,7 +159,7 @@ feature {NONE} -- Implementation
 			if expected_stdout_txt /= Void then
 				a_expected := expected_stdout_txt + "" -- clone `expected_stdout_txt'
 				if expected_task_output /= Void then
-					s := STRING_.replaced_all_substrings (expected_task_output, "%T%T%T%T|", "")
+					s := removed_indentation (expected_task_output)
 					a_expected := STRING_.replaced_first_substring (a_expected, "TASK_OUTPUT", s)
 				end
 				assert_filecontent_equal_to_string (a_tag, a_stdout, a_expected)
@@ -164,13 +167,12 @@ feature {NONE} -- Implementation
 
 				-- Check stderr:
 			if expected_stderr_txt /= Void then
-				a_expected := expected_stderr_txt + "" -- clone `expected_stderr_txt'
-				a_expected := STRING_.replaced_all_substrings (a_expected, "%T%T%T%T|", "")
+				a_expected := removed_indentation (expected_stderr_txt)
 				assert_filecontent_equal_to_string (a_tag, a_stderr, a_expected)
 			end
 
 			if expected_out_txt /= Void then
-				s := STRING_.replaced_all_substrings (expected_out_txt, "%T%T%T%T|", "")
+				s := removed_indentation (expected_out_txt)
 				assert_filecontent_equal_to_string (a_tag, test_dir + "/out.txt", s)
 			end
 		end
@@ -275,6 +277,41 @@ feature {NONE} -- Assertion routines
 
 				-- Compare filecontents:
 			assert_files_equal (a_tag, a_filename, a_filename_expected)
+		end
+
+	assert_file_time_stamps_equal (a_tag, a_unixpath1, a_unixpath2: STRING)
+			-- Assert that timestamp of file referred to by `a_unixpath1' and timestamp
+			-- of file referred to by `a_unixpath2' are equal
+		require
+			a_tag_not_void: a_tag /= Void
+			a_filename1_not_void: a_filename1 /= Void
+			a_filename1_not_empty: not a_filename1.empty
+			a_filename2_not_void: a_filename2 /= Void
+			a_filename2_not_empty: not a_filename2.empty
+		local
+			a_timestamp1, a_timestamp2: INTEGER
+			a_path1, a_path2: STRING
+		do
+			a_path1 := path (a_unixpath1)
+			assert_file_exists (a_tag, a_path1)
+			a_timestamp1 := file_system.file_time_stamp (a_path1)
+
+			a_path2 := path (a_unixpath2)
+			assert_file_exists (a_tag, a_path2)
+			a_timestamp2 := file_system.file_time_stamp (a_path2)
+
+			assert_equal (a_tag, a_timestamp1, a_timestamp2)
+		end
+
+	path (a_unix_path_string: STRING): STRING
+			-- `a_unix_path_string', path string in unix format converted to the current filesystem format
+		require
+			a_unix_path_string_not_void: a_unix_path_string /= Void
+			a_unix_path_string_not_empty: not a_unix_path_string.is_empty
+		do
+			Result := file_system.pathname_from_file_system (a_unix_path_string, unix_file_system)
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 end
