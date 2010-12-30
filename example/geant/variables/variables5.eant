@@ -15,10 +15,10 @@
 
 	<target name="cwd" dir="..">
 		<description>
-			displays value of current working direcotry
+			displays value of current working directory
 			using built-in variable ${cwd}
 		</description>
-		<echo message="current working directoy ${cwd}"/>
+		<echo message="current working directory ${cwd}"/>
 	</target>
 
 </project>
