@@ -95,7 +95,7 @@ feature -- Test
 				}"
  			expected_task_output := "{
 				|Release_notes.txt
-
+				|
 			}"
 
 			expected_stdout_txt := default_expected_stdout_txt
