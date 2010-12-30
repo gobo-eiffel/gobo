@@ -48,6 +48,62 @@ feature -- Test
 
 		end
 
+	test_remove_indentation
+		local
+			s,s2: STRING
+		do
+			s := "abc"
+			s2 := sp.removed_indentation (s)
+			assert_equal ("remove_indentation1", "", s2)
+
+			s := "%Tabc"
+			s2 := sp.removed_indentation (s)
+			assert_equal ("remove_indentation2", "", s2)
+
+			s := "%T|abc"
+			s2 := sp.removed_indentation (s)
+			assert_equal ("remove_indentation3", "abc", s2)
+
+			s := " %T |abc"
+			s2 := sp.removed_indentation (s)
+			assert_equal ("remove_indentation4", "abc", s2)
+
+			s := "{
+				|abc
+			}"
+			s2 := sp.removed_indentation (s)
+			assert_equal ("remove_indentation5", "abc", s2)
+
+			s := "{
+				|abc
+				|xyz
+			}"
+			s2 := sp.removed_indentation (s)
+			assert_equal ("remove_indentation6", "abc%Nxyz", s2)
+
+			s := "{
+			|abc
+			|xyz
+			}"
+			s2 := sp.removed_indentation (s)
+			assert_equal ("remove_indentation7", "abc%Nxyz", s2)
+
+			s := "{
+|abc
+|xyz
+			}"
+			s2 := sp.removed_indentation (s)
+			assert_equal ("remove_indentation8", "abc%Nxyz", s2)
+
+			s := "{
+					|abc
+				|xyz
+			}"
+			s2 := sp.removed_indentation (s)
+			assert_equal ("remove_indentation9", "abc%Nxyz", s2)
+
+		end
+
 feature -- Execution
 
 	set_up
