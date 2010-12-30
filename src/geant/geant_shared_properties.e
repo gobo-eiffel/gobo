@@ -1,4 +1,4 @@
-note
+indexing
 
 	description:
 
@@ -7,8 +7,8 @@ note
 	library: "Gobo Eiffel Ant"
 	copyright:"Copyright (c) 2001-2005, Sven Ehrke and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2008-08-03 21:54:22 +0200 (Sun, 03 Aug 2008) $"
+	revision: "$Revision: 6460 $"
 
 class GEANT_SHARED_PROPERTIES
 
@@ -421,6 +421,37 @@ feature -- Processing
 			has_star: (a_star_string.index_of ('*', 1) > 0) implies
 				Result.is_equal (a_star_string.substring (a_star_string.index_of ('*', 1) + 1, a_star_string.count))
 			not_has_start: (a_star_string.index_of ('*', 1) = 0) implies Result.is_equal (a_star_string)
+		end
+
+	removed_indentation (a_string: STRING): STRING
+			-- Removed left indent ( regexp: '^[%T| ']*\|) of `a_string'
+		require
+			a_string_not_void: a_string /= Void
+		local
+			i, nb, pos: INTEGER
+		do
+			Result := ""
+			pos := -1
+			nb := a_string.count
+			from i := 1 until i > nb loop
+				inspect a_string.item (i)
+				when '%R', '%N' then
+					if pos /= -1 then
+						Result := STRING_.appended_string (Result, a_string.substring (pos, i - 1))
+						pos := -1
+					end
+					Result.append_character (a_string.item(i))
+					i := i + 1
+				when '|' then
+					i := i + 1
+					pos := i
+				else
+					i := i + 1
+				end
+			end
+			if pos /= -1 then
+				Result := STRING_.appended_string (Result, a_string.substring (pos, nb))
+			end
 		end
 
 feature {NONE} -- Implemenation
