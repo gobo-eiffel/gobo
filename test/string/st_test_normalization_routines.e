@@ -6,10 +6,10 @@ note
 
 	test_status: "ok_to_run"
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2011, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010/05/03 $"
+	revision: "$Revision: #7 $"
 
 class ST_TEST_NORMALIZATION_ROUTINES
 
@@ -108,6 +108,8 @@ feature -- Test
 					end
 				end
 				a_file.close
+			else
+				assert ("test_considered_successful_when_normalization_test_file_not_installed", True)
 			end
 		end
 
