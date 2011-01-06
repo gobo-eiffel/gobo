@@ -813,7 +813,7 @@ feature -- Conversion
 		end
 
 	to_engineering_string: STRING
-			-- `Current' as a number in engineering notation
+			-- `Current' as a string in engineering notation format
 		do
 			Result := to_string_general (True)
 		ensure
@@ -821,7 +821,7 @@ feature -- Conversion
 		end
 
 	to_scientific_string: STRING
-			-- `Current' as a sting expressed in scientific notation
+			-- `Current' as a string in scientific notation format
 		do
 			Result := to_string_general (False)
 		ensure
