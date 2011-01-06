@@ -5,10 +5,10 @@ note
 		"Element nodes in an XSLT stylesheet"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2011, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010/05/03 $"
+	revision: "$Revision: #11 $"
 
 deferred class XM_XSLT_STYLE_ELEMENT
 
@@ -21,6 +21,8 @@ inherit
 	XM_XSLT_VALIDATION
 
 	ST_STRING_ROUTINES
+
+	XM_XSLT_STYLE_CONSTANTS
 
 	XM_XPATH_SHARED_EXPRESSION_FACTORY
 		export {NONE} all end

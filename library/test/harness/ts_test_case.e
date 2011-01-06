@@ -5,10 +5,10 @@ note
 		"Test cases"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2011, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2010/05/03 $"
-	revision: "$Revision: #19 $"
+	date: "$Date: 2010/07/19 $"
+	revision: "$Revision: #20 $"
 
 deferred class TS_TEST_CASE
 
@@ -83,14 +83,6 @@ feature -- Access
 			Result := internal_assertions
 		end
 
-	test_logger: TS_TEST_LOGGER
-			-- Logger for tests and assertion checkings
-		obsolete
-			"[080210] Use `logger' instead"
-		do
-			Result := logger
-		end
-
 	logger: TS_TEST_LOGGER
 			-- Logger for tests and assertion checkings
 		do
@@ -110,18 +102,6 @@ feature -- Setting
 			internal_variables := a_variables
 		ensure
 			variables_set: variables = a_variables
-		end
-
-	set_test_logger (a_logger: like test_logger)
-			-- Set `logger' to `a_logger'.
-		obsolete
-			"[080210] Use `set_logger' instead"
-		require
-			a_logger_not_void: a_logger /= Void
-		do
-			set_logger (a_logger)
-		ensure
-			logger_set: logger = a_logger
 		end
 
 	set_logger (a_logger: like logger)

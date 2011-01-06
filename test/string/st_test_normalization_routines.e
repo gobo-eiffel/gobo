@@ -8,8 +8,8 @@ note
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2005-2011, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date: 2010/05/03 $"
-	revision: "$Revision: #7 $"
+	date: "$Date: 2011/01/04 $"
+	revision: "$Revision: #8 $"
 
 class ST_TEST_NORMALIZATION_ROUTINES
 
@@ -85,7 +85,7 @@ feature -- Test
 							end
 							if not a_line.is_empty then
 								some_fields := a_splitter.split_greedy (a_line)
-								if some_fields.count /= Test_file_field_count then
+								if some_fields.count /= Normalization_test_file_field_count then
 									assert ("Bad data line in NormalizationTest.txt - wrong number of fields - data line is: " + a_file.last_string, False)
 								else
 									c1 := decoded_string (some_fields.item (1))
@@ -126,7 +126,7 @@ feature -- Access
 			four_codes: Result.count = 4
 		end
 
-	Test_file_field_count: INTEGER = 6
+	Normalization_test_file_field_count: INTEGER = 6
 			-- Number of fields in "NormalizationTest.txt"
 
 feature {NONE} -- Implementation

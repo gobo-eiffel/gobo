@@ -5,10 +5,10 @@ note
 		"XSLT node factory"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2011, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010/05/03 $"
+	revision: "$Revision: #6 $"
 
 class XM_XSLT_NODE_FACTORY
 
@@ -26,6 +26,9 @@ inherit
 	XM_XPATH_ERROR_TYPES
 
 	XM_XSLT_VALIDATION
+
+	XM_XSLT_STYLE_CONSTANTS
+		export {NONE} all end
 
 create
 
