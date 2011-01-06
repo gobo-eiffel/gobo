@@ -5,10 +5,10 @@ note
 		"Standard namespace URIs"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2003, Colin Adams and others"
+	copyright: "Copyright (c) 2003-2011, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010/05/03 $"
+	revision: "$Revision: #8 $"
 
 class XM_XPATH_STANDARD_NAMESPACES
 
@@ -448,157 +448,126 @@ feature -- Access
 
 			-- XSLT Attribute names
 
-	As_attribute: STRING = "as"
-	Byte_order_mark_attribute: STRING = "byte-order-mark"
-	Case_order_attribute: STRING = "case-order"
-	Cdata_section_elements_attribute: STRING = "cdata-section-elements"
-	Character_attribute: STRING = "character"
-	Collation_attribute: STRING = "collation"
-	Copy_namespaces_attribute: STRING = "copy-namespaces"
-	Count_attribute: STRING = "count"
-	Data_type_attribute: STRING = "data-type"
-	Decimal_separator_attribute: STRING = "decimal-separator"
-	Default_collation_attribute: STRING = "default-collation"
-	Default_validation_attribute: STRING = "default-validation"
-	Digit_attribute: STRING = "digit"
-	Disable_output_escaping_attribute: STRING =	"disable-output-escaping"
-	Doctype_public_attribute: STRING = "doctype-public"
-	Doctype_system_attribute: STRING = "doctype-system"
-	Elements_attribute: STRING = "elements"
-	Encoding_attribute: STRING = "encoding"
-	Escape_uri_attributes_attribute: STRING = "escape-uri-attributes"
-	Exclude_result_prefixes_attribute: STRING = "exclude-result-prefixes"
-	Extension_element_prefixes_attribute: STRING = "extension-element-prefixes"
-	Format_attribute: STRING = "format"
-	From_attribute: STRING = "from"
-	Flags_attribute: STRING = "flags"
-	Group_adjacent_attribute: STRING = "group-adjacent"
-	Group_by_attribute: STRING = "group-by"
-	Group_ending_with_attribute: STRING = "group-ending-with"
-	Group_starting_with_attribute: STRING = "group-starting-with"
-	Grouping_separator_attribute: STRING = "grouping-separator"
-	Grouping_size_attribute: STRING = "grouping-size"
-	Href_attribute: STRING = "href"
-	Id_attribute: STRING = "id"
-	Include_content_type_attribute: STRING = "include-content-type"
-	Indent_attribute: STRING = "indent"
-	Infinity_attribute: STRING = "infinity"
-	Inherit_namespaces_attribute: STRING = "inherit-namespaces"
-	Input_type_annotations_attribute: STRING = "input-type-annotations"
-	Isolation_level_attribute: STRING = "isolation-level"
-	Lang_attribute: STRING = "lang"
-	Letter_value_attribute: STRING = "letter-value"
-	Level_attribute: STRING = "level"
-	Match_attribute: STRING = "match"
-	Media_type_attribute: STRING = "media-type"
-	Method_attribute: STRING = "method"
-	Minus_sign_attribute: STRING = "minus-sign"
-	Mode_attribute: STRING = "mode"
-	Name_attribute: STRING = "name"
-	Namespace_attribute: STRING = "namespace"
-	Nan_attribute: STRING = "NaN"
-	Normalization_form_attribute: STRING = "normalization-form"
-	Omit_xml_declaration_attribute: STRING = "omit-xml-declaration"
-	Order_attribute: STRING = "order"
-	Ordinal_attribute: STRING = "ordinal"
-	Output_version_attribute: STRING = "output-version"
-	Override_attribute: STRING = "override"
-	Pattern_separator_attribute: STRING = "pattern-separator"
-	Per_mille_attribute: STRING = "per-mille"
-	Percent_attribute: STRING = "percent"
-	Priority_attribute: STRING = "priority"
-	Regex_attribute: STRING = "regex"
-	Required_attribute: STRING = "required"
-	Result_prefix_attribute: STRING = "result-prefix"
-	Select_attribute: STRING = "select"
-	Separator_attribute: STRING = "separator"
-	Stable_attribute: STRING = "stable"
-	Standalone_attribute: STRING = "standalone"
-	String_attribute: STRING = "string"
-	Stylesheet_prefix_attribute: STRING = "stylesheet-prefix"
-	Terminate_attribute: STRING = "terminate"
-	Test_attribute: STRING = "test"
-	Tunnel_attribute: STRING = "tunnel"
-	Type_attribute: STRING = "type"
-	Undeclare_prefixes_attribute: STRING = "undeclare-prefixes"
-	Use_attribute: STRING = "use"
-	Use_attribute_sets_attribute: STRING = "use-attribute-sets"
-	Use_character_maps_attribute: STRING = "use-character-maps"
-	Use_when_attribute: STRING = "use-when"
-	Validation_attribute: STRING = "validation"
-	Value_attribute: STRING = "value"
-	Version_attribute: STRING = "version"
-	Xpath_default_namespace_attribute: STRING = "xpath-default-namespace"
-	Zero_digit_attribute: STRING = "zero-digit"
-
 	Xslt_default_collation_attribute: STRING
+			-- "default-collation" attribute name prefixed with the XSLT namespace
 		once
-			Result := expanded_name_from_components (Xslt_uri, Default_collation_attribute)
+			Result := expanded_name_from_components (Xslt_uri, {XM_XSLT_STYLE_CONSTANTS}.Default_collation_attribute)
+		ensure
+			xslt_default_collation_attribute_not_void: Result /= Void
 		end
 
 	Xslt_extension_element_prefixes_attribute: STRING
+			-- "extension-element-prefixes" attribute name prefixed with the XSLT namespace
 		once
-			Result := expanded_name_from_components (Xslt_uri, Extension_element_prefixes_attribute)
+			Result := expanded_name_from_components (Xslt_uri, {XM_XSLT_STYLE_CONSTANTS}.Extension_element_prefixes_attribute)
+		ensure
+			xslt_extension_element_prefixes_attribute_not_void: Result /= Void
 		end
 
 	Xslt_exclude_result_prefixes_attribute: STRING
+			-- "exclude-result-prefixes" attribute name prefixed with the XSLT namespace
 		once
-			Result := expanded_name_from_components (Xslt_uri, Exclude_result_prefixes_attribute)
+			Result := expanded_name_from_components (Xslt_uri, {XM_XSLT_STYLE_CONSTANTS}.Exclude_result_prefixes_attribute)
+		ensure
+			xslt_exclude_result_prefixes_attribute_not_void: Result /= Void
 		end
 
 	Xslt_use_when_attribute: STRING
+			-- "use-when" attribute name prefixed with the XSLT namespace
 		once
-			Result := expanded_name_from_components (Xslt_uri, Use_when_attribute)
+			Result := expanded_name_from_components (Xslt_uri, {XM_XSLT_STYLE_CONSTANTS}.Use_when_attribute)
+		ensure
+			xslt_use_when_attribute_not_void: Result /= Void
 		end
 
 	Xslt_version_attribute: STRING
+			-- "version" attribute name prefixed with the XSLT namespace
 		once
-			Result := expanded_name_from_components (Xslt_uri, Version_attribute)
+			Result := expanded_name_from_components (Xslt_uri, {XM_XSLT_STYLE_CONSTANTS}.Version_attribute)
+		ensure
+			xslt_version_attribute_not_void: Result /= Void
 		end
 
 	Xslt_xpath_default_namespace_attribute: STRING
+			-- "xpath-default-namespace" attribute name prefixed with the XSLT namespace
 		once
-			Result := expanded_name_from_components (Xslt_uri, Xpath_default_namespace_attribute)
+			Result := expanded_name_from_components (Xslt_uri, {XM_XSLT_STYLE_CONSTANTS}.Xpath_default_namespace_attribute)
+		ensure
+			xslt_xpath_default_namespace_attribute_not_void: Result /= Void
 		end
 
 	Xslt_inherit_namespaces_attribute: STRING
+			-- "inherit-namespaces" attribute name prefixed with the XSLT namespace
 		once
-			Result := expanded_name_from_components (Xslt_uri, Xslt_inherit_namespaces_attribute)
+			Result := expanded_name_from_components (Xslt_uri, {XM_XSLT_STYLE_CONSTANTS}.inherit_namespaces_attribute)
+		ensure
+			xslt_inherit_namespaces_attribute_not_void: Result /= Void
 		end
 
 	Gexslt_character_representation_name: STRING = "character-representation"
+
 	Gexslt_character_representation_attribute: STRING
+			-- "character-representation" attribute name prefixed with the
+			-- namespace for extension functions, etc. written in Eiffel
 		once
 			Result := expanded_name_from_components (Gexslt_eiffel_type_uri, Gexslt_character_representation_name)
+		ensure
+			gexslt_character_representation_attribute_not_void: Result /= Void
 		end
 
 	Gexslt_next_in_chain_name: STRING = "next-in-chain"
+
 	Gexslt_next_in_chain_attribute: STRING
+			-- "next-in-chain" attribute name prefixed with the
+			-- namespace for extension functions, etc. written in Eiffel
 		once
 			Result := expanded_name_from_components (Gexslt_eiffel_type_uri, Gexslt_next_in_chain_name)
+		ensure
+			gexslt_next_in_chain_attribute_not_void: Result /= Void
 		end
+
+	Gexslt_memo_function_name: STRING = "memo-function"
 
 	Gexslt_memo_function_attribute: STRING
+			-- "memo-function" attribute name prefixed with the
+			-- namespace for extension functions, etc. written in Eiffel
 		once
-			Result := expanded_name_from_components (Gexslt_eiffel_type_uri, "memo-function")
+			Result := expanded_name_from_components (Gexslt_eiffel_type_uri, Gexslt_memo_function_name)
+		ensure
+			gexslt_memo_function_attribute_not_void: Result /= Void
 		end
 
+	Gexslt_method_name: STRING = "method"
+
 	Gexslt_method_attribute: STRING
+			-- "method" attribute name prefixed with the
+			-- namespace for extension functions, etc. written in Eiffel
 		once
-			Result := expanded_name_from_components (Gexslt_eiffel_type_uri, "method")
+			Result := expanded_name_from_components (Gexslt_eiffel_type_uri, Gexslt_method_name)
+		ensure
+			gexslt_method_attribute_not_void: Result /= Void
 		end
 
 	Gexslt_explain_name: STRING = "explain"
 
 	Gexslt_explain_attribute: STRING
+			-- "explain" attribute name prefixed with the
+			-- namespace for extension functions, etc. written in Eiffel
 		once
 			Result := expanded_name_from_components (Gexslt_eiffel_type_uri, Gexslt_explain_name)
+		ensure
+			gexslt_explain_attribute_not_void: Result /= Void
 		end
 
 	Gexslt_indent_spaces_name: STRING = "indent-spaces"
+
 	Gexslt_indent_spaces_attribute: STRING
+			-- "indent-spaces" attribute name prefixed with the
+			-- namespace for extension functions, etc. written in Eiffel
 		once
 			Result := expanded_name_from_components (Gexslt_eiffel_type_uri, Gexslt_indent_spaces_name)
+		ensure
+			gexslt_indent_spaces_attribute_not_void: Result /= Void
 		end
 
 	Gexslt_name_pseudo_attribute: STRING = "gexslt-name"

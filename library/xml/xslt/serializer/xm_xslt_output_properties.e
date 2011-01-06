@@ -5,10 +5,10 @@ note
 		"Output definitions"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2011, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010/05/03 $"
+	revision: "$Revision: #5 $"
 
 class XM_XSLT_OUTPUT_PROPERTIES
 
@@ -19,6 +19,8 @@ inherit
 	KL_CLONABLE
 
 	XM_XSLT_OUTPUT_ROUTINES
+
+	XM_XSLT_STYLE_CONSTANTS
 
 	UC_SHARED_STRING_EQUALITY_TESTER
 		export {NONE} all end

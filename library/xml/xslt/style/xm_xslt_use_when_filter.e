@@ -5,10 +5,10 @@ note
 		"Element filters for [xsl:]use-when processing"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2007, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2011, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010/05/03 $"
+	revision: "$Revision: #4 $"
 
 class XM_XSLT_USE_WHEN_FILTER
 
@@ -22,6 +22,9 @@ inherit
 			notify_processing_instruction, notify_comment,
 			set_document_locator
 		end
+
+	XM_XSLT_STYLE_CONSTANTS
+		export {NONE} all end
 
 	XM_XPATH_STANDARD_NAMESPACES
 		export {NONE} all end
