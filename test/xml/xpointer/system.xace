@@ -3,7 +3,7 @@
 <system name="xpointer">
 	<description>
 		system: "Gobo Eiffel XPointer Library Tester"
-		copyright: "Copyright (c) 2005-2008, Colin Adams and others"
+		copyright: "Copyright (c) 2005-2011, Colin Adams and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -49,6 +49,7 @@
 	<mount location="${GOBO}/library/parse/library.xace"/>
 	<mount location="${GOBO}/library/lexical/library.xace"/>
 	<mount location="${GOBO}/library/xml/xpath/library.xace"/>
+	<mount location="${GOBO}/library/xml/xslt/library.xace"/>
 	<mount location="${GOBO}/library/kernel.xace" />
 	<mount location="${GOBO}/library/string/library.xace"/>
 	<mount location="${GOBO}/library/math/library.xace"/>
