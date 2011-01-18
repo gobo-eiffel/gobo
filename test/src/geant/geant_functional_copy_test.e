@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Test task 'copy'"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2008, Sven Ehrke and others"
+	copyright: "Copyright (c) 2010-2011, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date: 2008-09-09 19:43:32 +0200 (Tue, 09 Sep 2008) $"
 	revision: "$Revision: 6507 $"
@@ -25,7 +25,7 @@ create
 
 feature -- Test
 
-	set_up is
+	set_up
 			-- Setup for a test.
 		do
 			precursor
@@ -33,11 +33,10 @@ feature -- Test
 			file_system.delete_file ("1.txt")
 		end
 
-	test_copy1 is
+	test_copy1
 			-- Test task 'copy': file, to_file
 		local
-			s: STRING
-			a_tmp_geant_subdir: STRING
+--			a_tmp_geant_subdir: STRING
 		do
 
 				-- Test mkdir with one directory level:
@@ -49,11 +48,11 @@ feature -- Test
 
  			tasks := "<copy file='${GOBO}/Readme.txt' to_file='1.txt'/>"
  			basic_test ("test_copy1a")
- 			assert_true ("test_copy1b", file_system.file_exists ("1.txt"))
- 			assert_files_equal ("test_copy1c", "${GOBO}/Readme.txt", "1.txt")
+ 			assert_true ("test_copy1b", file_system.file_exists (path ("1.txt")))
+ 			assert_files_equal ("test_copy1c", path ("${GOBO}/Readme.txt"), path ("1.txt"))
 		end
 
-	test_copy2 is
+	test_copy2
 			-- Test task 'copy': file, to_directory
 		do
  			tasks := "<copy file='${GOBO}/Readme.txt' to_directory='__copy'/>"
@@ -61,7 +60,7 @@ feature -- Test
  			assert_files_equal ("test_copy2b", path ("${GOBO}/Readme.txt"), path ("__copy/Readme.txt"))
 		end
 
-	test_copy3 is
+	test_copy3
 			-- Test task 'copy': file, to_file, into nonexisting directory to test that the directory
 			-- specified in 'to_file' is not created automatically
 		do
@@ -69,10 +68,8 @@ feature -- Test
 
 			expected_exit_code := 1
  			expected_task_output := "{
-			|  [copy] error: cannot copy file 'GOBO/Readme.txt' to file '__copy/1.txt'
-			}"
- 			expected_task_output := STRING_.replaced_first_substring (expected_task_output,
-				"GOBO", Execution_environment.variable_value ("GOBO"))
+			|  [copy] error: cannot copy file '
+			}" + Execution_environment.interpreted_string (path ("$GOBO/Readme.txt")) + "' to file '" + path ("__copy/1.txt") + "%'"
 			expected_stdout_txt := default_expected_stdout_txt
 			expected_stderr_txt := "{
 				|
@@ -82,14 +79,14 @@ feature -- Test
  			assert_false ("test_copy3b", file_system.file_exists (path ("__copy/1.txt")))
 		end
 
-	test_copy4 is
+	test_copy4
 			-- Test task 'copy': file, to_directory, test lazy copying, test forced copying
 		local
 			a_timestamp1, a_timestamp2: INTEGER
 		do
  			tasks := "<copy file='${GOBO}/Readme.txt' to_directory='__copy'/>"
  			basic_test ("test_copy4a")
- 			assert_files_equal ("test_copy4b", path ("${GOBO}/Readme.txt"), "__copy/Readme.txt")
+ 			assert_files_equal ("test_copy4b", path ("${GOBO}/Readme.txt"), path ("__copy/Readme.txt"))
 
 				-- test lazy copying (timestamp of target file after second
 				-- copy attempt must be the same as before):
@@ -97,32 +94,30 @@ feature -- Test
  			tasks := "<copy file='${GOBO}/Readme.txt' to_directory='__copy'/>"
  			basic_test ("test_copy4c")
 			a_timestamp2 := file_system.file_time_stamp (path ("__copy/Readme.txt"))
- 			assert_files_equal ("test_copy4d", path ("${GOBO}/Readme.txt"), "__copy/Readme.txt")
-			assert_equal ("test_copy4e", a_timestamp1, a_timestamp2)
+ 			assert_files_equal ("test_copy4d", path ("${GOBO}/Readme.txt"), path ("__copy/Readme.txt"))
+			assert_integers_equal ("test_copy4e", a_timestamp1, a_timestamp2)
 
 
 				-- test forced copying:
-				-- Sleep 10 microseconds to be able to detect timestamp difference:
-			sleep (10000)
+				-- Sleep 2 seconds to be able to detect timestamp difference:
+			Execution_environment.sleep (2_000_000_000)
 
  			tasks := "<copy file='${GOBO}/Readme.txt' to_directory='__copy' force='true'/>"
  			basic_test ("test_copy4f")
 			a_timestamp2 := file_system.file_time_stamp (path ("__copy/Readme.txt"))
- 			assert_files_equal ("test_copy4g", path ("${GOBO}/Readme.txt"), "__copy/Readme.txt")
-			assert_not_equal ("test_copy4h", a_timestamp1, a_timestamp2)
+ 			assert_files_equal ("test_copy4g", path ("${GOBO}/Readme.txt"), path ("__copy/Readme.txt"))
+			assert_integers_not_equal ("test_copy4h", a_timestamp1, a_timestamp2)
 		end
 
-	test_copy5 is
+	test_copy5
 			-- Test task 'copy': test behavior when source file does not exist
 		do
  			tasks := "<copy file='${GOBO}/nonexistingfile.txt' to_file='1.txt'/>"
 
 			expected_exit_code := 1
  			expected_task_output := "{
-				|  [copy] error: cannot find file 'GOBO/nonexistingfile.txt'
-			}"
- 			expected_task_output := STRING_.replaced_first_substring (expected_task_output,
-				"GOBO", Execution_environment.variable_value ("GOBO"))
+				|  [copy] error: cannot find file '
+			}" + Execution_environment.interpreted_string (path ("$GOBO/nonexistingfile.txt")) + "%'"
 			expected_stdout_txt := default_expected_stdout_txt
 			expected_stderr_txt := "{
 				|
@@ -132,7 +127,7 @@ feature -- Test
  			assert_false ("test_copy5b", file_system.file_exists (path ("1.txt")))
 		end
 
-	test_copy_fs1 is
+	test_copy_fs1
 			-- Test task 'copy': to_directory/fileset
 		do
 			tasks := "{

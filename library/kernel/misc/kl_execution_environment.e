@@ -12,7 +12,7 @@ note
 
 	pattern: "Singleton"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -56,6 +56,17 @@ feature -- Setting
 			-- This setting may fail on certain platforms, hence the
 			-- following commented postcondition:
 			-- variable_set: equal (variable_value (a_variable), STRING_.as_string (a_value))
+		end
+
+feature -- Basic operations
+
+	sleep (a_nanoseconds: INTEGER_64)
+			-- Suspend thread execution for interval specified in
+			-- `a_nanoseconds' (1 nanosecond = 10^(-9) second).
+		require
+			a_nanoseconds_not_negative: a_nanoseconds >= 0
+		do
+			environment_impl.sleep (a_nanoseconds)
 		end
 
 feature {NONE} -- Implementation

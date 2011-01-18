@@ -5,7 +5,7 @@ note
 		"Base class for functional geant tests"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2008, Sven Ehrke and others"
+	copyright: "Copyright (c) 2008-2011, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date: 2008-10-25 22:20:42 +0200 (Sat, 25 Oct 2008) $"
 	revision: "$Revision: 6536 $"
@@ -23,9 +23,6 @@ inherit
 		export {NONE} all end
 
 	KL_SHARED_STANDARD_FILES
-		export {NONE} all end
-
-	EXECUTION_ENVIRONMENT
 		export {NONE} all end
 
 	KL_SHARED_EXCEPTIONS
@@ -284,23 +281,23 @@ feature {NONE} -- Assertion routines
 			-- of file referred to by `a_unixpath2' are equal
 		require
 			a_tag_not_void: a_tag /= Void
-			a_filename1_not_void: a_filename1 /= Void
-			a_filename1_not_empty: not a_filename1.empty
-			a_filename2_not_void: a_filename2 /= Void
-			a_filename2_not_empty: not a_filename2.empty
+			a_unixpath1_not_void: a_unixpath1 /= Void
+			a_unixpath1_not_empty: not a_unixpath1.is_empty
+			a_unixpath2_not_void: a_unixpath2 /= Void
+			a_unixpath2_not_empty: not a_unixpath2.is_empty
 		local
 			a_timestamp1, a_timestamp2: INTEGER
 			a_path1, a_path2: STRING
 		do
 			a_path1 := path (a_unixpath1)
-			assert_file_exists (a_tag, a_path1)
+			assert (a_tag, file_system.file_exists (a_path1))
 			a_timestamp1 := file_system.file_time_stamp (a_path1)
 
 			a_path2 := path (a_unixpath2)
-			assert_file_exists (a_tag, a_path2)
+			assert (a_tag, file_system.file_exists (a_path2))
 			a_timestamp2 := file_system.file_time_stamp (a_path2)
 
-			assert_equal (a_tag, a_timestamp1, a_timestamp2)
+			assert_integers_equal (a_tag, a_timestamp1, a_timestamp2)
 		end
 
 	path (a_unix_path_string: STRING): STRING
