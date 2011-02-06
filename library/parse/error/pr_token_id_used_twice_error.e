@@ -5,7 +5,7 @@ note
 		"Warning: Token id used twice"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			token1_not_void: token1 /= Void
 			token2_not_void: token2 /= Void
 		do
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (filename, 1)
 			parameters.put (token1, 2)
 			parameters.put (token2, 3)

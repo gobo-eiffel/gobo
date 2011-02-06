@@ -10,7 +10,7 @@ note
 		of cycles is described in exercise 23 p.271 and p.548.
 	]"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2001-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -441,7 +441,7 @@ feature -- Sort
 					i := i + 1
 				end
 					-- T9.
-				create marks.make (1, nb)
+				create marks.make_filled (False, 1, nb)
 				from
 					i := 1
 				until

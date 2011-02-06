@@ -5,7 +5,7 @@ note
 		"Eiffel cluster errors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/03/03 $"
 	revision: "$Revision: #10 $"
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			etl_code := gcaaa_etl_code
 			default_template := gcaaa_default_template
 			cluster := a_cluster
-			create parameters.make (1, 3)
+			create parameters.make_filled (empty_string, 1, 3)
 			parameters.put (etl_code, 1)
 			parameters.put (cluster.full_lower_name ('/'), 2)
 			parameters.put (a_dirname, 3)
@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 			etl_code := gcaab_etl_code
 			default_template := gcaab_default_template
 			cluster := a_cluster
-			create parameters.make (1, 3)
+			create parameters.make_filled (empty_string, 1, 3)
 			parameters.put (etl_code, 1)
 			parameters.put (cluster.full_lower_name ('/'), 2)
 			parameters.put (a_filename, 3)
@@ -94,7 +94,7 @@ feature {NONE} -- Initialization
 			etl_code := gcdep_etl_code
 			default_template := gcdep_default_template
 			cluster := a_cluster
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (cluster.full_lower_name ('/'), 2)
 			parameters.put (a_class.upper_name, 3)
@@ -162,7 +162,7 @@ feature {NONE} -- Initialization
 			etl_code := gcpro_etl_code
 			default_template := gcpro_default_template
 			cluster := a_cluster
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (cluster.full_lower_name ('/'), 2)
 			parameters.put (a_class.upper_name, 3)
@@ -220,7 +220,7 @@ feature {NONE} -- Initialization
 			etl_code := gcscm_etl_code
 			default_template := gcscm_default_template
 			cluster := a_cluster
-			create parameters.make (1, 3)
+			create parameters.make_filled (empty_string, 1, 3)
 			parameters.put (etl_code, 1)
 			parameters.put (cluster.full_lower_name ('/'), 2)
 			parameters.put (a_message, 3)

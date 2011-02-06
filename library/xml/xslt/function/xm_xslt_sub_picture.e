@@ -5,7 +5,7 @@ note
 		"XSLT format-number() sub-pictures"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2011, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -306,7 +306,7 @@ feature {NONE} -- Implementation
 				-- Convert to positions relative to the decimal separator.
 
 				from
-					create integral_grouping_separator_positions.make (1, a_count)
+					create integral_grouping_separator_positions.make_filled (0, 1, a_count)
 					l_index := 1
 				until
 					l_index > a_count
@@ -332,7 +332,7 @@ feature {NONE} -- Implementation
 						a_count + 1 - l_index
 					end
 					if is_regular then
-						create integral_grouping_separator_positions.make (1, 1)
+						create integral_grouping_separator_positions.make_filled (0, 1, 1)
 						integral_grouping_separator_positions.put (a_first_value, 1)
 					end
 				end
@@ -344,7 +344,7 @@ feature {NONE} -- Implementation
 			a_count := fractional_part_positions.count
 			if a_count > 0 then
 				from
-					create fractional_grouping_separator_positions.make (1, a_count)
+					create fractional_grouping_separator_positions.make_filled (0, 1, a_count)
 					l_index := 1
 				until
 					l_index > fractional_grouping_separator_positions.count

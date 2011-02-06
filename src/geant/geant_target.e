@@ -5,7 +5,7 @@ note
 		"Target of geant build file"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2005, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2011, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -497,24 +497,24 @@ feature -- Processing
 			-- Show list of precursors.
 		local
 			a_precursor_target: like Current
-			a_message: ARRAY [STRING]
+			a_message: DS_ARRAYED_LIST [STRING]
 		do
 			from
 				a_precursor_target := Current
-				create a_message.make (1, 1)
-				a_message.put ("    precursor list: ", 1)
+				create a_message.make (10)
+				a_message.force_last ("    precursor list: ")
 			until
 				a_precursor_target = Void
 			loop
-				a_message.force ("'", a_message.count + 1)
-				a_message.force (a_precursor_target.full_name, a_message.count + 1)
-				a_message.force ("'", a_message.count + 1)
+				a_message.force_last ("'")
+				a_message.force_last (a_precursor_target.full_name)
+				a_message.force_last ("'")
 				a_precursor_target := a_precursor_target.precursor_target
 				if a_precursor_target /= Void then
-					a_message.force (", ", a_message.count + 1)
+					a_message.force_last (", ")
 				end
 			end
-			project.trace_debug (a_message)
+			project.trace_debug (a_message.to_array)
 		end
 
 	execute

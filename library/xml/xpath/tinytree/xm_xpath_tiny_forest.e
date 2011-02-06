@@ -5,7 +5,7 @@ note
 		"Tiny-tree Document collections"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2011, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -70,25 +70,25 @@ feature {NONE} -- Initialization
 			else
 				estimated_character_count := an_estimated_character_count
 			end
-			create node_kinds.make (1, estimated_node_count)
-			create depth.make (1, estimated_node_count)
-			create next_sibling_indices.make (1, estimated_node_count)
-			create alpha.make (1, estimated_node_count)
-			create beta.make (1, estimated_node_count)
-			create name_codes.make (1, estimated_node_count)
+			create node_kinds.make_filled (0, 1, estimated_node_count)
+			create depth.make_filled (0, 1, estimated_node_count)
+			create next_sibling_indices.make_filled (0, 1, estimated_node_count)
+			create alpha.make_filled (0, 1, estimated_node_count)
+			create beta.make_filled (0, 1, estimated_node_count)
+			create name_codes.make_filled (0, 1, estimated_node_count)
 
-			create attribute_parents.make (1, estimated_attribute_count)
-			create attribute_codes.make (1, estimated_attribute_count)
-			create attribute_values.make (1, estimated_attribute_count)
+			create attribute_parents.make_filled (0, 1, estimated_attribute_count)
+			create attribute_codes.make_filled (0, 1, estimated_attribute_count)
+			create attribute_values.make_filled (Void, 1, estimated_attribute_count)
 
-			create namespace_parents.make (1, estimated_namespace_count)
-			create namespace_codes.make (1, estimated_namespace_count)
+			create namespace_parents.make_filled (0, 1, estimated_namespace_count)
+			create namespace_codes.make_filled (0, 1, estimated_namespace_count)
 
 			-- This is a problem - we don't know in advance if it will be ascii or not
 
 			create character_buffer.make (estimated_character_count)
 
-			create root_indices.make (1, 5)
+			create root_indices.make_filled (0, 1, 5)
 		end
 
 	make_with_defaults
@@ -527,7 +527,7 @@ feature -- Status setting
 		local
 			a_prior_index, a_next_node: INTEGER
 		do
-			create prior_nodes_index.make (1, last_node_added)
+			create prior_nodes_index.make_filled (0, 1, last_node_added)
 			from
 				a_prior_index := 1
 			until
@@ -682,7 +682,7 @@ feature -- Element change
 			--end
 			if another_type_code /= Untyped_atomic_type_code then
 				if attribute_type_codes = Void then
-					create attribute_type_codes.make (1, number_of_attributes)
+					create attribute_type_codes.make_filled (0, 1, number_of_attributes)
 					from
 						an_index := 1
 					until
@@ -808,25 +808,25 @@ feature -- Element change
 
 			if root_index < 2 then
 				if number_of_nodes * 3 < node_kinds.count or else node_kinds.count - number_of_nodes > 20000 then
-					create some_node_kinds.make (1, number_of_nodes); copy_integer_array (node_kinds, some_node_kinds); node_kinds := some_node_kinds; some_node_kinds := Void
-					create some_name_codes.make (1, number_of_nodes); copy_integer_array (name_codes, some_name_codes); name_codes := some_name_codes; some_name_codes := Void
-					create some_next_siblings.make (1, number_of_nodes); copy_integer_array (next_sibling_indices, some_next_siblings); next_sibling_indices := some_next_siblings; some_next_siblings := Void
-					create an_alpha.make (1, number_of_nodes); copy_integer_array (alpha, an_alpha); alpha := an_alpha; an_alpha := Void
-					create a_beta.make (1, number_of_nodes); copy_integer_array (beta, a_beta); beta := a_beta; a_beta := Void
-					create a_depth.make (1, number_of_nodes); copy_integer_array (depth, a_depth); depth := a_depth; a_depth := Void
+					create some_node_kinds.make_filled (0, 1, number_of_nodes); copy_integer_array (node_kinds, some_node_kinds); node_kinds := some_node_kinds; some_node_kinds := Void
+					create some_name_codes.make_filled (0, 1, number_of_nodes); copy_integer_array (name_codes, some_name_codes); name_codes := some_name_codes; some_name_codes := Void
+					create some_next_siblings.make_filled (0, 1, number_of_nodes); copy_integer_array (next_sibling_indices, some_next_siblings); next_sibling_indices := some_next_siblings; some_next_siblings := Void
+					create an_alpha.make_filled (0, 1, number_of_nodes); copy_integer_array (alpha, an_alpha); alpha := an_alpha; an_alpha := Void
+					create a_beta.make_filled (0, 1, number_of_nodes); copy_integer_array (beta, a_beta); beta := a_beta; a_beta := Void
+					create a_depth.make_filled (0, 1, number_of_nodes); copy_integer_array (depth, a_depth); depth := a_depth; a_depth := Void
 					-- TODO: type codes when schema-aware
 				end
 				if number_of_attributes * 3 < attribute_parents.count or else attribute_parents.count - number_of_attributes > 1000 then
-					create some_attribute_parents.make (1, number_of_attributes); copy_integer_array (attribute_parents, some_attribute_parents); attribute_parents := some_attribute_parents; some_attribute_parents := Void
-					create some_attribute_codes.make (1, number_of_attributes); copy_integer_array (attribute_codes, some_attribute_codes); attribute_codes := some_attribute_codes; some_attribute_codes := Void
-					create some_attribute_values.make (1, number_of_attributes); copy_string_array (attribute_values, some_attribute_values); attribute_values := some_attribute_values; some_attribute_values := Void
+					create some_attribute_parents.make_filled (0, 1, number_of_attributes); copy_integer_array (attribute_parents, some_attribute_parents); attribute_parents := some_attribute_parents; some_attribute_parents := Void
+					create some_attribute_codes.make_filled (0, 1, number_of_attributes); copy_integer_array (attribute_codes, some_attribute_codes); attribute_codes := some_attribute_codes; some_attribute_codes := Void
+					create some_attribute_values.make_filled (Void, 1, number_of_attributes); copy_string_array (attribute_values, some_attribute_values); attribute_values := some_attribute_values; some_attribute_values := Void
 					if attribute_type_codes /= Void then
-						create some_attribute_type_codes.make (1, number_of_attributes); copy_integer_array (attribute_type_codes, some_attribute_type_codes); attribute_type_codes := some_attribute_type_codes; some_attribute_type_codes := Void
+						create some_attribute_type_codes.make_filled (0, 1, number_of_attributes); copy_integer_array (attribute_type_codes, some_attribute_type_codes); attribute_type_codes := some_attribute_type_codes; some_attribute_type_codes := Void
 					end
 				end
 				if number_of_namespaces * 3 < namespace_parents.count then
-					create some_namespace_parents.make (1, number_of_namespaces); copy_integer_array (namespace_parents, some_namespace_parents); namespace_parents := some_namespace_parents; some_namespace_parents := Void
-					create some_namespace_codes.make (1, number_of_namespaces); copy_integer_array (namespace_codes, some_namespace_codes); namespace_codes := some_namespace_codes; some_namespace_codes := Void
+					create some_namespace_parents.make_filled (0, 1, number_of_namespaces); copy_integer_array (namespace_parents, some_namespace_parents); namespace_parents := some_namespace_parents; some_namespace_parents := Void
+					create some_namespace_codes.make_filled (0, 1, number_of_namespaces); copy_integer_array (namespace_codes, some_namespace_codes); namespace_codes := some_namespace_codes; some_namespace_codes := Void
 				end
 				character_buffer := character_buffer.substring (1, character_buffer.count)
 			end

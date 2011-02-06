@@ -5,7 +5,7 @@ note
 		"Regular expressions"
 
 	library: "Gobo Eiffel Regexp Library"
-	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,6 +17,9 @@ inherit
 	RX_PATTERN_MATCHER
 
 	UT_CHARACTER_CODES
+		export {NONE} all end
+
+	KL_IMPORTED_ARRAY_ROUTINES
 		export {NONE} all end
 
 feature -- Replacement
@@ -220,7 +223,7 @@ feature -- Splitting
 		require
 			is_matching: is_matching
 		do
-			create Result.make (1, 0)
+			Result := STRING_ARRAY_.make_empty_with_lower (1)
 			append_split_to_array (Result)
 		ensure
 			all_matched: not has_matched

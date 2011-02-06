@@ -5,7 +5,7 @@ note
 		"Sparse containers. Used for implementation of sparse tables and sparse sets."
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2003-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/10/06 $"
 	revision: "$Revision: #16 $"
@@ -296,8 +296,6 @@ feature -- Iteration
 			invariant
 				i_large_enough: i >= 1
 				i_small_enough: i <= last_position + 1
-			variant
-				index: last_position - i + 1
 			until
 				i > last_position
 			loop
@@ -311,6 +309,8 @@ feature -- Iteration
 					end
 				end
 				i := i + 1
+			variant
+				index: last_position - i + 1
 			end
 		end
 
@@ -328,8 +328,6 @@ feature -- Iteration
 			invariant
 				i_large_enough: i >= 1
 				i_small_enough: i <= last_position + 1
-			variant
-				index: last_position - i + 1
 			until
 				i > last_position
 			loop
@@ -343,6 +341,8 @@ feature -- Iteration
 					end
 				end
 				i := i + 1
+			variant
+				index: last_position - i + 1
 			end
 		end
 

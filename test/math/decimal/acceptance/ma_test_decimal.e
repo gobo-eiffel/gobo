@@ -5,7 +5,7 @@ note
 		"Test features of class MA_DECIMAL"
 
 	library: "Gobo Eiffel Math Library"
-	copyright: "Copyright (c) 2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -291,7 +291,7 @@ feature {NONE} -- Implementation
 			l_match_count: INTEGER
 		do
 			create l_ctx.make_default
-			create l_flags.make (1, Signal_subnormal)
+			create l_flags.make_filled (False, 1, Signal_subnormal)
 			create l_comment_regexp.make
 			l_comment_regexp.compile ("^[ \t]*(\-\-.*)?$")
 			create l_directive_regexp.make

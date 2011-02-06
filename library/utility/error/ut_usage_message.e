@@ -5,7 +5,7 @@ note
 		"Command-line usage messages"
 
 	library: "Gobo Eiffel Utility Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 		require
 			msg_not_void: msg /= Void
 		do
-			create parameters.make (1, 1)
+			create parameters.make_filled (empty_string, 1, 1)
 			parameters.put (msg, 1)
 		end
 

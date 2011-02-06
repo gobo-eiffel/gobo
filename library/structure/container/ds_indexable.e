@@ -6,7 +6,7 @@ note
 		%modified through integer access"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/10/06 $"
 	revision: "$Revision: #11 $"
@@ -375,8 +375,6 @@ feature -- Iteration
 			invariant
 				i_large_enough: i >= 1
 				i_small_enough: i <= count + 1
-			variant
-				index: count - i + 1
 			until
 				i > count
 			loop
@@ -388,6 +386,8 @@ feature -- Iteration
 					an_action.call ([l_item])
 					i := i + 1
 				end
+			variant
+				index: count - i + 1
 			end
 		end
 
@@ -405,8 +405,6 @@ feature -- Iteration
 			invariant
 				i_large_enough: i >= 1
 				i_small_enough: i <= count + 1
-			variant
-				index: count - i + 1
 			until
 				i > count
 			loop
@@ -418,6 +416,8 @@ feature -- Iteration
 					an_action.call ([l_item])
 				end
 				i := i + 1
+			variant
+				index: count - i + 1
 			end
 		end
 

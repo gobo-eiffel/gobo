@@ -131,8 +131,8 @@ feature {NONE} -- Initialization
 		do
 			digits := a_digits
 			rounding_mode := a_rounding_mode
-			create traps.make (Signal_division_by_zero, Signal_subnormal)
-			create flags.make (Signal_division_by_zero, Signal_subnormal)
+			create traps.make_filled (False, Signal_division_by_zero, Signal_subnormal)
+			create flags.make_filled (False, Signal_division_by_zero, Signal_subnormal)
 			exponent_limit := Maximum_exponent
 		ensure
 			digits_set: digits = a_digits

@@ -5,7 +5,7 @@ note
 		"Eiffel system errors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			code := vsrc1a_template_code
 			etl_code := vsrc1_etl_code
 			default_template := vsrc1a_default_template
-			create parameters.make (1, 2)
+			create parameters.make_filled (empty_string, 1, 2)
 			parameters.put (etl_code, 1)
 			parameters.put (a_class.upper_name, 2)
 		ensure
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			code := gvknl1a_template_code
 			etl_code := gvknl1_etl_code
 			default_template := gvknl1a_default_template
-			create parameters.make (1, 2)
+			create parameters.make_filled (empty_string, 1, 2)
 			parameters.put (etl_code, 1)
 			parameters.put (a_class.upper_name, 2)
 		ensure
@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 			code := gvsrc3a_template_code
 			etl_code := gvsrc3_etl_code
 			default_template := gvsrc3a_default_template
-			create parameters.make (1, 1)
+			create parameters.make_filled (empty_string, 1, 1)
 			parameters.put (etl_code, 1)
 		ensure
 			-- dollar0: $0 = program name
@@ -93,7 +93,7 @@ feature {NONE} -- Initialization
 			code := gvsrc4a_template_code
 			etl_code := gvsrc4_etl_code
 			default_template := gvsrc4a_default_template
-			create parameters.make (1, 2)
+			create parameters.make_filled (empty_string, 1, 2)
 			parameters.put (etl_code, 1)
 			parameters.put (a_class.upper_name, 2)
 		ensure
@@ -115,7 +115,7 @@ feature {NONE} -- Initialization
 			code := gvsrc5a_template_code
 			etl_code := gvsrc5_etl_code
 			default_template := gvsrc5a_default_template
-			create parameters.make (1, 3)
+			create parameters.make_filled (empty_string, 1, 3)
 			parameters.put (etl_code, 1)
 			parameters.put (a_class.upper_name, 2)
 			parameters.put (a_feature_name.name, 3)
@@ -140,7 +140,7 @@ feature {NONE} -- Initialization
 			code := gvsrc6a_template_code
 			etl_code := gvsrc6_etl_code
 			default_template := gvsrc6a_default_template
-			create parameters.make (1, 3)
+			create parameters.make_filled (empty_string, 1, 3)
 			parameters.put (etl_code, 1)
 			parameters.put (a_class.upper_name, 2)
 			parameters.put (a_feature_name.name, 3)

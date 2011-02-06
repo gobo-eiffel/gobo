@@ -5,7 +5,7 @@ note
 		"Objects that strip white space from stylesheet elements."
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2011, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			underlying_receiver_not_void: an_underlying_receiver /= Void
 		do
 			xsl_text_fingerprint := shared_name_pool.fingerprint (Xslt_uri, "text")
-			create specials.make (1, 10)
+			create specials.make_filled (0, 1, 10)
 			specials.put (shared_name_pool.fingerprint (Xslt_uri, "analyze-string"), 1)
 			specials.put (shared_name_pool.fingerprint (Xslt_uri, "apply-imports"), 2)
 			specials.put (shared_name_pool.fingerprint (Xslt_uri, "apply-templates"), 3)

@@ -5,7 +5,7 @@ note
 		"DFA equipped with lexical analyzer generator"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -701,7 +701,7 @@ feature {NONE} -- Generation
 				a_file.put_string (", yy_Dummy>>)%N%T%Tend%N")
 			else
 				a_file.put_string ("%T%Tlocal%N%T%T%Tan_array: ARRAY [INTEGER]%N%
-					%%T%Tonce%N%T%T%Tcreate an_array.make (")
+					%%T%Tonce%N%T%T%Tcreate an_array.make_filled (0, ")
 				a_file.put_integer (a_table.lower)
 				a_file.put_string (", ")
 				a_file.put_integer (a_table.upper)
@@ -821,7 +821,7 @@ feature {NONE} -- Generation
 		do
 			nb := characters_count
 			transitions := a_state.transitions
-			create has_transition.make (0, nb - 1)
+			create has_transition.make_filled (False, 0, nb - 1)
 			if yy_ec /= Void then
 					-- Equivalence classes are used.
 				from
@@ -981,14 +981,18 @@ feature {NONE} -- Building
 			i, nb: INTEGER
 		do
 			nb := rules.count
-			create yy_rules.make (1, nb)
-			from
-				i := 1
-			until
-				i > nb
-			loop
-				yy_rules.put (rules.item (i), i)
-				i := i + 1
+			if nb = 0 then
+				yy_rules := (create {KL_ARRAY_ROUTINES [LX_RULE]}).make_empty_with_lower (1)
+			else
+				from
+					create yy_rules.make_filled (rules.first, 1, nb)
+					i := 2
+				until
+					i > nb
+				loop
+					yy_rules.put (rules.item (i), i)
+					i := i + 1
+				end
 			end
 		ensure
 			yy_rules_not_void: yy_rules /= Void
@@ -1005,7 +1009,7 @@ feature {NONE} -- Building
 			i, nb: INTEGER
 			rule: LX_RULE
 		do
-			create yy_eof_rules.make (l, u)
+			create yy_eof_rules.make_filled (Void, l, u)
 			nb := rules.count
 			from
 				i := 1

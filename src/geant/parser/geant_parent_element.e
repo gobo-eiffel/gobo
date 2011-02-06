@@ -5,7 +5,7 @@ note
 		"Parent Elements"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2011, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -41,7 +41,7 @@ feature -- Initialization
 			a_redefine_element: GEANT_REDEFINE_ELEMENT
 			a_select_element: GEANT_SELECT_ELEMENT
 			a_string: STRING
-			msg: ARRAY [STRING]
+			msg: DS_ARRAYED_LIST [STRING]
 			a_project_loader: GEANT_PROJECT_LOADER
 			a_parent_project: GEANT_PROJECT
 		do
@@ -64,17 +64,17 @@ feature -- Initialization
 				create a_rename_element.make (project, cs.item)
 				s := a_rename_element.rename_clause.original_name
 				if parent.renames.has (s) then
-					create msg.make (1, 9)
-					msg.put ("%NLOAD ERROR:%N", 1)
-					msg.put ("  Project '", 2)
-					msg.put (project.name, 3)
-					msg.put ("': VHRC-2: old_name `", 4)
-					msg.put (s, 5)
-					msg.put ("' appears more than once as the first element", 6)
-					msg.put (" of a Rename_pair in the same Rename subclause of parent '", 7)
-					msg.put (parent.parent_project.name, 8)
-					msg.put ("%'", 9)
-					exit_application (1, msg)
+					create msg.make (9)
+					msg.put_last ("%NLOAD ERROR:%N")
+					msg.put_last ("  Project '")
+					msg.put_last (project.name)
+					msg.put_last ("': VHRC-2: old_name `")
+					msg.put_last (s)
+					msg.put_last ("' appears more than once as the first element")
+					msg.put_last (" of a Rename_pair in the same Rename subclause of parent '")
+					msg.put_last (parent.parent_project.name)
+					msg.put_last ("%'")
+					exit_application (1, msg.to_array)
 				end
 				parent.renames.force_last (a_rename_element.rename_clause, s)
 				cs.forth

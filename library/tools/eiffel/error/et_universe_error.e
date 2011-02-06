@@ -5,7 +5,7 @@ note
 		"Eiffel universe errors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: $"
 	revision: "$Revision: 5877 $"
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			etl_code := vscn_etl_code
 			default_template := vscn0a_default_template
 			universe := a_universe
-			create parameters.make (1, 12)
+			create parameters.make_filled (empty_string, 1, 12)
 			parameters.put (etl_code, 1)
 			parameters.put (universe.kind_name, 2)
 			parameters.put (universe.full_lower_name ('/'), 3)
@@ -103,7 +103,7 @@ feature {NONE} -- Initialization
 			etl_code := vscn_etl_code
 			default_template := vscn0b_default_template
 			universe := a_universe
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (universe.kind_name, 2)
 			parameters.put (universe.full_lower_name ('/'), 3)
@@ -150,7 +150,7 @@ feature {NONE} -- Initialization
 			etl_code := vscn_etl_code
 			default_template := vscn0c_default_template
 			universe := a_universe
-			create parameters.make (1, 11)
+			create parameters.make_filled (empty_string, 1, 11)
 			parameters.put (etl_code, 1)
 			parameters.put (universe.kind_name, 2)
 			parameters.put (universe.full_lower_name ('/'), 3)
@@ -205,7 +205,7 @@ feature {NONE} -- Initialization
 			etl_code := vscn_etl_code
 			default_template := vscn0d_default_template
 			universe := a_universe
-			create parameters.make (1, 12)
+			create parameters.make_filled (empty_string, 1, 12)
 			parameters.put (etl_code, 1)
 			parameters.put (universe.kind_name, 2)
 			parameters.put (universe.full_lower_name ('/'), 3)

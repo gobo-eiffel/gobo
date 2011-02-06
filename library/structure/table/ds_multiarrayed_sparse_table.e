@@ -6,7 +6,7 @@ note
 		%hash tables which should supply its hashing mechanism."
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -316,7 +316,7 @@ feature {NONE} -- Implementation
 		do
 			create special_item_routines
 			create array_special_item_routines
-			create item_storage.make (0, ((n - 1) // chunk_size))
+			create item_storage.make_filled (Void, 0, ((n - 1) // chunk_size))
 		end
 
 	clone_item_storage
@@ -370,7 +370,7 @@ feature {NONE} -- Implementation
 		do
 			create special_key_routines
 			create array_special_key_routines
-			create key_storage.make (0, ((n - 1) // chunk_size))
+			create key_storage.make_filled (Void, 0, ((n - 1) // chunk_size))
 		end
 
 	key_storage_put (k: K; i: INTEGER)
@@ -441,7 +441,7 @@ feature {NONE} -- Implementation
 	make_clashes (n: INTEGER)
 			-- Create `clashes'.
 		do
-			create clashes.make (0, ((n - 1) // chunk_size))
+			create clashes.make_filled (Void, 0, ((n - 1) // chunk_size))
 		end
 
 	clashes_put (v: INTEGER; i: INTEGER)
@@ -510,7 +510,7 @@ feature {NONE} -- Implementation
 	make_slots (n: INTEGER)
 			-- Create `slots'.
 		do
-			create slots.make (0, ((n - 1) // chunk_size))
+			create slots.make_filled (Void, 0, ((n - 1) // chunk_size))
 		end
 
 	slots_item (i: INTEGER): INTEGER

@@ -5,7 +5,7 @@ note
 		"Stack frames for local variables"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2011, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			-- Create empty stack frame.
 		do
 			create slot_manager.make
-			create variables.make (1, 0)
+			create variables.make_filled (Void, 1, 0)
 		end
 
 	make_fixed_size (a_variable_count: INTEGER)
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 		do
 			create slot_manager.make
 			slot_manager.set_number_of_variables (a_variable_count)
-			create variables.make (1, a_variable_count)
+			create variables.make_filled (Void, 1, a_variable_count)
 		end
 
 feature -- Access
@@ -88,7 +88,7 @@ feature -- Element change
 		do
 			slot_manager := a_slot_manager
 			if variables.count /= a_slot_manager.number_of_variables then
-				create l_variables.make (1, a_slot_manager.number_of_variables)
+				create l_variables.make_filled (Void, 1, a_slot_manager.number_of_variables)
 				from
 					i := 1
 				until

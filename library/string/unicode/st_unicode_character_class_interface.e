@@ -5,7 +5,7 @@ note
 		"Routines for determining class of Unicode characters"
 
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2011, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -476,7 +476,7 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 		do
-			create Result.make (0, 255)
+			create Result.make_filled (0, 0, 255)
 			from
 				i := 0
 			until

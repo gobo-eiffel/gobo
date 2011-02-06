@@ -5,7 +5,7 @@ note
 		"Internal errors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			code := giaaa_template_code
 			etl_code := giaaa_etl_code
 			default_template := gi_default_template
-			create parameters.make (1, 1)
+			create parameters.make_filled (empty_string, 1, 1)
 			parameters.put (etl_code, 1)
 		ensure
 			-- dollar0: $0 = program name

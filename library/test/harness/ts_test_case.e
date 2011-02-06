@@ -229,7 +229,7 @@ feature -- Registration
 			-- Features to be registered to the test harness
 			-- using `register_test_cases'
 		once
-			create Result.make (1, 0)
+			Result := array_routines.make_empty_with_lower (1)
 		ensure
 			features_under_test_not_void: Result /= Void
 			no_void_feature_under_test: not Result.has (Void)
@@ -349,6 +349,14 @@ feature {NONE} -- Implementation
 
 	internal_logger: TS_TEST_LOGGER
 			-- Internal implementation of `logger'
+
+	array_routines: KL_ARRAY_ROUTINES [PROCEDURE [TS_TEST_CASE, TUPLE]]
+			-- Routines that ought to be in class "ARRAY"
+		once
+			create Result
+		ensure
+			array_routines_not_void: Result /= Void
+		end
 
 feature {NONE} -- Constants
 

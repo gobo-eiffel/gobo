@@ -5,7 +5,7 @@ note
 		"Objects that use a set of rules to implement an XSLT mode"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2011, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 	make
 			-- Create default rules.
 		do
-			create rule_dictionary.make (1, Number_of_buckets + Document_node + 1)
+			create rule_dictionary.make_filled (Void, 1, Number_of_buckets + Document_node + 1)
 		end
 
 
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			a_rule, a_new_rule: XM_XSLT_RULE
 			a_rule_dictionary: ARRAY [XM_XSLT_RULE]
 		do
-			create rule_dictionary.make (1, Number_of_buckets + Document_node + 1)
+			create rule_dictionary.make_filled (Void, 1, Number_of_buckets + Document_node + 1)
 			from
 				a_rule_dictionary := other.rule_dictionary
 				an_index := 1
@@ -457,7 +457,7 @@ feature -- Element change
 
 feature {XM_XSLT_MODE, XM_XSLT_RULE_MANAGER} -- Restricted
 
-	rule_dictionary: ARRAY [XM_XSLT_RULE]
+	rule_dictionary: ARRAY [detachable XM_XSLT_RULE]
 			-- Rule dictionary
 
 feature {XM_XSLT_MODE} -- Local

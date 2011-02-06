@@ -5,7 +5,7 @@ note
 		"Errors that can occur during argument parsing"
 
 	library: "Gobo Eiffel Argument Library"
-	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
+	copyright: "Copyright (c) 2006-2011, Bernd Schoeller and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			an_option_not_void: an_option /= Void
 			a_string_not_void: a_string /= Void
 		do
-			create parameters.make (1, 2)
+			create parameters.make_filled (empty_string, 1, 2)
 			parameters.put (an_option.name, 1)
 			parameters.put (a_string, 2)
 			default_template := invalid_parameter_error_template
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 		require
 			an_option_not_void: an_option /= Void
 		do
-			create parameters.make (1, 1)
+			create parameters.make_filled (empty_string, 1, 1)
 			parameters.put (an_option.name, 1)
 			default_template := missing_option_error_template
 			code := missing_option_error_code
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 		require
 			an_option_not_void: an_option /= Void
 		do
-			create parameters.make (1, 1)
+			create parameters.make_filled (empty_string, 1, 1)
 			parameters.put (an_option.name, 1)
 			default_template := missing_parameter_error_template
 			code := missing_parameter_error_code
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 		require
 			an_option_not_void: an_option /= Void
 		do
-			create parameters.make (1, 1)
+			create parameters.make_filled (empty_string, 1, 1)
 			parameters.put (an_option.name, 1)
 			default_template := surplus_option_error_template
 			code := surplus_option_error_code
@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 		require
 			an_option_not_void: a_string /= Void
 		do
-			create parameters.make (1, 1)
+			create parameters.make_filled (empty_string, 1, 1)
 			parameters.put (a_string, 1)
 			default_template := unknown_option_error_template
 			code := unknown_option_error_code
@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 			an_option_not_void: an_option /= Void
 			a_string_not_void: a_string /= Void
 		do
-			create parameters.make (1, 2)
+			create parameters.make_filled (empty_string, 1, 2)
 			parameters.put (an_option.name, 1)
 			parameters.put (a_string, 2)
 			default_template := unnecessary_parameter_error_template

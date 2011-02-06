@@ -5,7 +5,7 @@ note
 		"Errors, warnings and other kind of messages"
 
 	library: "Gobo Eiffel Utility Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -170,6 +170,11 @@ feature -- Access
 		ensure
 			code_not_void: Result /= Void
 		end
+
+feature {NONE} -- Constants
+
+	empty_string: STRING = ""
+			-- Empty string
 
 invariant
 

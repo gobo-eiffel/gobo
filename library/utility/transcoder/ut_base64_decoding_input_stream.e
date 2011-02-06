@@ -5,7 +5,7 @@ note
 		"Input streams that decode a base64-encoded stream"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2011, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 		do
 			create last_string.make_empty
 			Precursor (a_stream)
-			create codes.make (1, 4)
+			create codes.make_filled (0, 1, 4)
 			create decoded_triplet.make_filled (' ', 3)
 			triplet_position := 4
 		end

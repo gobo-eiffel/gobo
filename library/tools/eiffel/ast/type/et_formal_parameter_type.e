@@ -5,7 +5,7 @@ note
 		"Eiffel formal generic parameter types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1894,7 +1894,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 									a_formal_type ?= a_constraint
 									if a_formal_type /= Void then
 										from
-											create visited.make (1, a_formals.count)
+											create visited.make_filled (False, 1, a_formals.count)
 											visited.put (True, other_index)
 											other_index := a_formal_type.index
 											Result := an_index = other_index

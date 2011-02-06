@@ -5,7 +5,7 @@ note
 		"Objects that support number formatting for language en."
 
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2011, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -218,8 +218,7 @@ feature {NONE} -- Implementation
 	roman_thousands: ARRAY [STRING]
 			-- Thousands in Roman numerals
 		once
-			create Result.make (0, 3)
-			Result.put (new_unicode_string_empty, 0)
+			create Result.make_filled (new_unicode_string_empty, 0, 3)
 			Result.put (new_unicode_string ("m"), 1)
 			Result.put (new_unicode_string ("mm"), 2)
 			Result.put (new_unicode_string ("mmmm"), 3)
@@ -230,8 +229,7 @@ feature {NONE} -- Implementation
 	roman_hundreds: ARRAY [STRING]
 			-- Hundreds in Roman numerals
 		once
-			create Result.make (0, 9)
-			Result.put (new_unicode_string_empty, 0)
+			create Result.make_filled (new_unicode_string_empty, 0, 9)
 			Result.put (new_unicode_string ("c"), 1)
 			Result.put (new_unicode_string ("cc"), 2)
 			Result.put (new_unicode_string ("ccc"), 3)
@@ -248,8 +246,7 @@ feature {NONE} -- Implementation
 	roman_tens: ARRAY [STRING]
 			-- Tens in Roman numerals
 		once
-			create Result.make (0, 9)
-			Result.put (new_unicode_string_empty, 0)
+			create Result.make_filled (new_unicode_string_empty, 0, 9)
 			Result.put (new_unicode_string ("x"), 1)
 			Result.put (new_unicode_string ("xx"), 2)
 			Result.put (new_unicode_string ("xxx"), 3)
@@ -266,8 +263,7 @@ feature {NONE} -- Implementation
 	roman_units: ARRAY [STRING]
 			-- Units in Roman numerals
 		once
-			create Result.make (0, 9)
-			Result.put (new_unicode_string_empty, 0)
+			create Result.make_filled (new_unicode_string_empty, 0, 9)
 			Result.put (new_unicode_string ("i"), 1)
 			Result.put (new_unicode_string ("ii"), 2)
 			Result.put (new_unicode_string ("iii"), 3)
@@ -573,8 +569,7 @@ feature {NONE} -- Implementation
 	english_tens: ARRAY [STRING]
 			-- English words for tens
 		once
-			create Result.make (0, 9)
-			Result.put (new_unicode_string_empty, 0)
+			create Result.make_filled (new_unicode_string_empty, 0, 9)
 			Result.put (new_unicode_string ("Ten"), 1)
 			Result.put (new_unicode_string ("Twenty"), 2)
 			Result.put (new_unicode_string ("Thirty"), 3)
@@ -591,7 +586,7 @@ feature {NONE} -- Implementation
 	english_units: ARRAY [STRING]
 			-- English words for units and teens
 		once
-			create Result.make (1, 19)
+			create Result.make_filled ("", 1, 19)
 			Result.put (new_unicode_string ("One"), 1)
 			Result.put (new_unicode_string ("Two"), 2)
 			Result.put (new_unicode_string ("Three"), 3)
@@ -618,8 +613,7 @@ feature {NONE} -- Implementation
 	english_ordinal_tens: ARRAY [STRING]
 			-- English ordinal words for tens
 		once
-			create Result.make (0, 9)
-			Result.put (new_unicode_string_empty, 0)
+			create Result.make_filled (new_unicode_string_empty, 0, 9)
 			Result.put (new_unicode_string ("Tenth"), 1)
 			Result.put (new_unicode_string ("Twentieth"), 2)
 			Result.put (new_unicode_string ("Thirtieth"), 3)
@@ -636,7 +630,7 @@ feature {NONE} -- Implementation
 	english_ordinal_units: ARRAY [STRING]
 			-- English ordinal words for units and teens
 		once
-			create Result.make (1, 19)
+			create Result.make_filled ("", 1, 19)
 			Result.put (new_unicode_string ("First"), 1)
 			Result.put (new_unicode_string ("Second"), 2)
 			Result.put (new_unicode_string ("Third"), 3)
@@ -663,7 +657,7 @@ feature {NONE} -- Implementation
 	english_months: ARRAY [STRING]
 			-- English names for months
 		once
-			create Result.make (1, 12)
+			create Result.make_filled ("",  1, 12)
 			Result.put (new_unicode_string ("January"), 1)
 			Result.put (new_unicode_string ("February"), 2)
 			Result.put (new_unicode_string ("March"), 3)
@@ -683,7 +677,7 @@ feature {NONE} -- Implementation
 	english_days: ARRAY [STRING]
 			-- English names for days
 		once
-			create Result.make (1, 7)
+			create Result.make_filled ("", 1, 7)
 			Result.put (new_unicode_string ("Sunday"), 7)
 			Result.put (new_unicode_string ("Monday"), 1)
 			Result.put (new_unicode_string ("Tuesday"), 2)
@@ -698,7 +692,7 @@ feature {NONE} -- Implementation
 	english_day_abbreviations: ARRAY [STRING]
 			-- Abbreviated English names for days
 		once
-			create Result.make (1, 7)
+			create Result.make_filled ("", 1, 7)
 			Result.put (new_unicode_string ("Sun"), 7)
 			Result.put (new_unicode_string ("Mon"), 1)
 			Result.put (new_unicode_string ("Tues"), 2)

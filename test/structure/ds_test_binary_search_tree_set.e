@@ -6,7 +6,7 @@ note
 
 	test_status: "ok_to_run"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2008, Daniel Tuser and others"
+	copyright: "Copyright (c) 2008-2011, Daniel Tuser and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -193,12 +193,12 @@ feature -- Test
 			l_set.force_last (3)
 			l_set.force_last (2)
 			l_set.force_last (1)
-			create l_array.make (0, 6)
+			create l_array.make_filled (0, 0, 6)
 			l_set.do_all_with_index (agent l_array.put)
 			assert_iarrays_same ("items1", <<INTEGER_.to_integer (0), 1, 2, 3, 4, 5, 0>>, l_array)
 				-- Empty set.
 			create l_set.make (l_comparator)
-			create l_array.make (0, 1)
+			create l_array.make_filled (0, 0, 1)
 			l_set.do_all_with_index (agent l_array.put)
 			assert_iarrays_same ("items2", <<INTEGER_.to_integer (0), 0>>, l_array)
 		end
@@ -241,12 +241,12 @@ feature -- Test
 			l_set.force_last (6)
 			l_set.force_last (4)
 			l_set.force_last (1)
-			create l_array.make (1, 5)
+			create l_array.make_filled (0, 1, 5)
 			l_set.do_if_with_index (agent l_array.put, agent same_integers)
 			assert_iarrays_same ("items1", <<INTEGER_.to_integer (1), 2, 0, 0, 0>>, l_array)
 				-- Empty set.
 			create l_set.make (l_comparator)
-			create l_array.make (0, 1)
+			create l_array.make_filled (0, 0, 1)
 			l_set.do_if_with_index (agent l_array.put, agent same_integers)
 			assert_iarrays_same ("items2", <<INTEGER_.to_integer (0), 0>>, l_array)
 		end

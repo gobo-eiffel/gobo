@@ -6,7 +6,7 @@ note
 
 	test_status: "ok_to_run"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -43,7 +43,7 @@ feature -- Test
 			a_sorter: DS_ARRAY_BUBBLE_SORTER [INTEGER]
 			empty: ARRAY [INTEGER]
 		do
-			create empty.make (1, 0)
+			create empty.make_filled (0, 1, 0)
 			create a_comparator.make
 			create a_sorter.make (a_comparator)
 			assert ("sorted1", a_sorter.sorted (empty))
@@ -59,7 +59,7 @@ feature -- Test
 			a_sorter: DS_ARRAY_BUBBLE_SORTER [INTEGER]
 			empty: ARRAY [INTEGER]
 		do
-			create empty.make (1, 0)
+			create empty.make_filled (0, 1, 0)
 			create a_comparator.make
 			create a_sorter.make (a_comparator)
 			assert ("reverse_sorted1", a_sorter.reverse_sorted (empty))
@@ -76,7 +76,7 @@ feature -- Test
 			empty: ARRAY [INTEGER]
 			an_array: ARRAY [INTEGER]
 		do
-			create empty.make (1, 0)
+			create empty.make_filled (0, 1, 0)
 			create a_comparator.make
 			create a_sorter.make (a_comparator)
 				-- Sort empty array.
@@ -111,7 +111,7 @@ feature -- Test
 			empty: ARRAY [INTEGER]
 			an_array: ARRAY [INTEGER]
 		do
-			create empty.make (1, 0)
+			create empty.make_filled (0, 1, 0)
 			create a_comparator.make
 			create a_sorter.make (a_comparator)
 				-- Reverse sort empty array.

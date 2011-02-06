@@ -5,7 +5,7 @@ note
 		"Compile-time references to xsl:functions"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2011, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -261,7 +261,7 @@ feature -- Evaluation
 				-- as this is an XSLT function
 			end
 			create l_return_value.make (Void)
-			create l_actual_arguments.make (1, arguments.count)
+			create l_actual_arguments.make_filled (Void, 1, arguments.count)
 			evaluate_arguments (l_return_value, l_actual_arguments, l_context)
 			if l_return_value.item /= Void then
 				a_context.report_fatal_error (l_return_value.item.error_value)
@@ -453,7 +453,7 @@ feature {NONE} -- Implementation
 			l_actual_arguments: ARRAY [XM_XPATH_VALUE]
 			l_clean_context: XM_XSLT_EVALUATION_CONTEXT
 		do
-			create l_actual_arguments.make (1, arguments.count)
+			create l_actual_arguments.make_filled (Void, 1, arguments.count)
 			evaluate_arguments (a_return_value, l_actual_arguments, a_context)
 			if a_return_value.item /= Void then
 				-- error - do nothing

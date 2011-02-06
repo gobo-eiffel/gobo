@@ -2,13 +2,13 @@ note
 
 	description:
 
-	"Emitters that write HTML."
+		"Emitters that write HTML."
 
-library: "Gobo Eiffel XSLT Library"
-copyright: "Copyright (c) 2004, Colin Adams and others"
-license: "MIT License"
-date: "$Date$"
-revision: "$Revision$"
+	library: "Gobo Eiffel XSLT Library"
+	copyright: "Copyright (c) 2004-2011, Colin Adams and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class XM_XSLT_HTML_EMITTER
 
@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 	latin1_entities: ARRAY [STRING]
 			-- latin-1 entity names
 		once
-			create Result.make (161, 255)
+			create Result.make_filled ("", 161, 255)
 			Result.put ("iexcl", 161)
 			Result.put ("cent", 162)
 			Result.put ("pound", 163)

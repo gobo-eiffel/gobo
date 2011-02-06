@@ -5,7 +5,7 @@ note
 		"Error: Token associated with two different literal strings"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			string1_not_void: string1 /= Void
 			string2_not_void: string2 /= Void
 		do
-			create parameters.make (1, 5)
+			create parameters.make_filled (empty_string, 1, 5)
 			parameters.put (filename, 1)
 			parameters.put (line.out, 2)
 			parameters.put (a_token, 3)

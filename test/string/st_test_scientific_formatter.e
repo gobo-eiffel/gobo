@@ -6,7 +6,7 @@ note
 
 	test_status: "ok_to_run"
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2004-2005, Object-Tools and others"
+	copyright: "Copyright (c) 2004-2011, Object-Tools and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,9 +32,9 @@ feature -- Test
 	test_string
 			-- Test string formatting.
 		local
-			empty_array: ARRAY[STRING]
+			empty_array: ARRAY [STRING]
 		do
-			create empty_array.make (1, 0)
+			create empty_array.make_filled ("", 1, 0)
 			assert_equal ("test1", "", format ("", empty_array))
 			assert_equal ("test2", "berend", format ("$s", <<"berend">>))
 			assert_equal ("test3", "##", format ("#$s#", <<"">>))
@@ -171,7 +171,7 @@ feature -- Test
 			pi_cell: DS_CELL [DOUBLE]
 			a_format: STRING
 		do
-			create empty_array.make (1,0)
+			create empty_array.make_filled ("", 1, 0)
 			s := "programmer"
 			s1 := "programmers"
 			m_pi := -3.14159265

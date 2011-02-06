@@ -5,7 +5,7 @@ note
 		"Error: Alias name was not defined so far for a given token type"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			a_type_not_void: a_type /= Void
 			a_new_alias_name_not_void: a_new_alias_name /= Void
 		do
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (filename, 1)
 			parameters.put (line.out, 2)
 			parameters.put (a_type.name, 3)

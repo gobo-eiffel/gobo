@@ -5,7 +5,7 @@ note
 		"ECF errors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -99,7 +99,7 @@ feature {NONE} -- Initialization
 			position := a_position
 			code := syntax_code
 			default_template := default_message_template (syntax_default_template)
-			create parameters.make (1, 5)
+			create parameters.make_filled (empty_string, 1, 5)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -125,7 +125,7 @@ feature {NONE} -- Initialization
 			position := a_library_element_name.position
 			code := eaaa_code
 			default_template := default_message_template (eaaa_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -149,7 +149,7 @@ feature {NONE} -- Initialization
 			position := a_library_element_name.position
 			code := eaab_code
 			default_template := default_message_template (eaab_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -173,7 +173,7 @@ feature {NONE} -- Initialization
 			position := a_name_attribute_name.position
 			code := eaac_code
 			default_template := default_message_template (eaac_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -197,7 +197,7 @@ feature {NONE} -- Initialization
 			position := a_location_attribute_name.position
 			code := eaad_code
 			default_template := default_message_template (eaad_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -222,7 +222,7 @@ feature {NONE} -- Initialization
 			position := a_excluded_value_attribute_name.position
 			code := eaae_code
 			default_template := default_message_template (eaae_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -246,7 +246,7 @@ feature {NONE} -- Initialization
 			position := a_value_attribute_name.position
 			code := eaaf_code
 			default_template := default_message_template (eaaf_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -270,7 +270,7 @@ feature {NONE} -- Initialization
 			position := a_excluded_value_attribute_name.position
 			code := eaag_code
 			default_template := default_message_template (eaag_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -294,7 +294,7 @@ feature {NONE} -- Initialization
 			position := a_build_element_name.position
 			code := eaah_code
 			default_template := default_message_template (eaah_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -318,7 +318,7 @@ feature {NONE} -- Initialization
 			position := a_cluster_element_name.position
 			code := eaai_code
 			default_template := default_message_template (eaai_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -342,7 +342,7 @@ feature {NONE} -- Initialization
 			position := a_cluster_element_name.position
 			code := eaaj_code
 			default_template := default_message_template (eaaj_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -366,7 +366,7 @@ feature {NONE} -- Initialization
 			position := a_name_attribute_name.position
 			code := eaak_code
 			default_template := default_message_template (eaak_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -390,7 +390,7 @@ feature {NONE} -- Initialization
 			position := a_location_attribute_name.position
 			code := eaal_code
 			default_template := default_message_template (eaal_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -415,7 +415,7 @@ feature {NONE} -- Initialization
 			position := a_recursive_attribute_name.position
 			code := eaam_code
 			default_template := default_message_template (eaam_default_template)
-			create parameters.make (1, 5)
+			create parameters.make_filled (empty_string, 1, 5)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -441,7 +441,7 @@ feature {NONE} -- Initialization
 			position := a_custom_element_name.position
 			code := eaan_code
 			default_template := default_message_template (eaan_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -465,7 +465,7 @@ feature {NONE} -- Initialization
 			position := a_name_attribute_name.position
 			code := eaao_code
 			default_template := default_message_template (eaao_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -490,7 +490,7 @@ feature {NONE} -- Initialization
 			position := a_excluded_value_attribute_name.position
 			code := eaap_code
 			default_template := default_message_template (eaap_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -514,7 +514,7 @@ feature {NONE} -- Initialization
 			position := a_value_attribute_name.position
 			code := eaaq_code
 			default_template := default_message_template (eaaq_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -538,7 +538,7 @@ feature {NONE} -- Initialization
 			position := a_excluded_value_attribute_name.position
 			code := eaar_code
 			default_template := default_message_template (eaar_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -562,7 +562,7 @@ feature {NONE} -- Initialization
 			position := a_custom_element_name.position
 			code := eaas_code
 			default_template := default_message_template (eaas_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -586,7 +586,7 @@ feature {NONE} -- Initialization
 			position := a_dotnet_element_name.position
 			code := eaat_code
 			default_template := default_message_template (eaat_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -611,7 +611,7 @@ feature {NONE} -- Initialization
 			position := a_value_attribute_name.position
 			code := eaau_code
 			default_template := default_message_template (eaau_default_template)
-			create parameters.make (1, 5)
+			create parameters.make_filled (empty_string, 1, 5)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -637,7 +637,7 @@ feature {NONE} -- Initialization
 			position := a_dynamic_runtime_element_name.position
 			code := eaav_code
 			default_template := default_message_template (eaav_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -662,7 +662,7 @@ feature {NONE} -- Initialization
 			position := a_value_attribute_name.position
 			code := eaaw_code
 			default_template := default_message_template (eaaw_default_template)
-			create parameters.make (1, 5)
+			create parameters.make_filled (empty_string, 1, 5)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -688,7 +688,7 @@ feature {NONE} -- Initialization
 			position := a_multithreaded_element_name.position
 			code := eaax_code
 			default_template := default_message_template (eaax_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -713,7 +713,7 @@ feature {NONE} -- Initialization
 			position := a_value_attribute_name.position
 			code := eaay_code
 			default_template := default_message_template (eaay_default_template)
-			create parameters.make (1, 5)
+			create parameters.make_filled (empty_string, 1, 5)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -740,7 +740,7 @@ feature {NONE} -- Initialization
 			position := a_excluded_value_attribute_name.position
 			code := eaaz_code
 			default_template := default_message_template (eaaz_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -764,7 +764,7 @@ feature {NONE} -- Initialization
 			position := a_value_attribute_name.position
 			code := eaba_code
 			default_template := default_message_template (eaba_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -788,7 +788,7 @@ feature {NONE} -- Initialization
 			position := a_excluded_value_attribute_name.position
 			code := eabb_code
 			default_template := default_message_template (eabb_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -812,7 +812,7 @@ feature {NONE} -- Initialization
 			position := a_platform_element_name.position
 			code := eabc_code
 			default_template := default_message_template (eabc_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -836,7 +836,7 @@ feature {NONE} -- Initialization
 			position := a_target_element_name.position
 			code := eabd_code
 			default_template := default_message_template (eabd_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -860,7 +860,7 @@ feature {NONE} -- Initialization
 			position := a_name_attribute_name.position
 			code := eabe_code
 			default_template := default_message_template (eabe_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -886,7 +886,7 @@ feature {NONE} -- Initialization
 			position := a_min_attribute_name.position
 			code := eabf_code
 			default_template := default_message_template (eabf_default_template)
-			create parameters.make (1, 5)
+			create parameters.make_filled (empty_string, 1, 5)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -914,7 +914,7 @@ feature {NONE} -- Initialization
 			position := a_max_attribute_name.position
 			code := eabg_code
 			default_template := default_message_template (eabg_default_template)
-			create parameters.make (1, 5)
+			create parameters.make_filled (empty_string, 1, 5)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -944,7 +944,7 @@ feature {NONE} -- Initialization
 			position := a_max_attribute_name.position
 			code := eabh_code
 			default_template := default_message_template (eabh_default_template)
-			create parameters.make (1, 6)
+			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -972,7 +972,7 @@ feature {NONE} -- Initialization
 			position := a_version_element_name.position
 			code := eabi_code
 			default_template := default_message_template (eabi_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -996,7 +996,7 @@ feature {NONE} -- Initialization
 			position := a_type_attribute_name.position
 			code := eabj_code
 			default_template := default_message_template (eabj_default_template)
-			create parameters.make (1, 5)
+			create parameters.make_filled (empty_string, 1, 5)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1022,7 +1022,7 @@ feature {NONE} -- Initialization
 			position := a_system_element_name.position
 			code := eabk_code
 			default_template := default_message_template (eabk_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1046,7 +1046,7 @@ feature {NONE} -- Initialization
 			position := a_name_attribute_name.position
 			code := eabl_code
 			default_template := default_message_template (eabl_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1070,7 +1070,7 @@ feature {NONE} -- Initialization
 			position := a_system_element_name.position
 			code := eabm_code
 			default_template := default_message_template (eabm_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1094,7 +1094,7 @@ feature {NONE} -- Initialization
 			position := a_name_attribute_name.position
 			code := eabn_code
 			default_template := default_message_template (eabn_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1118,7 +1118,7 @@ feature {NONE} -- Initialization
 			position := a_system_element_name.position
 			code := eabo_code
 			default_template := default_message_template (eabo_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1142,7 +1142,7 @@ feature {NONE} -- Initialization
 			position := a_library_target_attribute_name.position
 			code := eabp_code
 			default_template := default_message_template (eabp_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1167,7 +1167,7 @@ feature {NONE} -- Initialization
 			position := a_library_target_attribute_name.position
 			code := eabq_code
 			default_template := default_message_template (eabq_default_template)
-			create parameters.make (1, 5)
+			create parameters.make_filled (empty_string, 1, 5)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1193,7 +1193,7 @@ feature {NONE} -- Initialization
 			position := a_variable_element_name.position
 			code := eabr_code
 			default_template := default_message_template (eabr_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1217,7 +1217,7 @@ feature {NONE} -- Initialization
 			position := a_name_attribute_name.position
 			code := eabs_code
 			default_template := default_message_template (eabs_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1241,7 +1241,7 @@ feature {NONE} -- Initialization
 			position := a_variable_element_name.position
 			code := eabt_code
 			default_template := default_message_template (eabt_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1265,7 +1265,7 @@ feature {NONE} -- Initialization
 			position := a_value_attribute_name.position
 			code := eabu_code
 			default_template := default_message_template (eabu_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1290,7 +1290,7 @@ feature {NONE} -- Initialization
 			position := a_location_value.position
 			code := eabv_code
 			default_template := default_message_template (eabv_default_template)
-			create parameters.make (1, 5)
+			create parameters.make_filled (empty_string, 1, 5)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1317,7 +1317,7 @@ feature {NONE} -- Initialization
 			position := a_location_value.position
 			code := eabw_code
 			default_template := default_message_template (eabw_default_template)
-			create parameters.make (1, 5)
+			create parameters.make_filled (empty_string, 1, 5)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1343,7 +1343,7 @@ feature {NONE} -- Initialization
 			position := a_root_element_name.position
 			code := eabx_code
 			default_template := default_message_template (eabx_default_template)
-			create parameters.make (1, 5)
+			create parameters.make_filled (empty_string, 1, 5)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1369,7 +1369,7 @@ feature {NONE} -- Initialization
 			position := a_system_element_name.position
 			code := eaby_code
 			default_template := default_message_template (eaby_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1394,7 +1394,7 @@ feature {NONE} -- Initialization
 			position := a_all_classes_attribute_name.position
 			code := eabz_code
 			default_template := default_message_template (eabz_default_template)
-			create parameters.make (1, 5)
+			create parameters.make_filled (empty_string, 1, 5)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1420,7 +1420,7 @@ feature {NONE} -- Initialization
 			position := a_root_element_name.position
 			code := eaca_code
 			default_template := default_message_template (eaca_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1444,7 +1444,7 @@ feature {NONE} -- Initialization
 			position := a_class_attribute_name.position
 			code := eacb_code
 			default_template := default_message_template (eacb_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1468,7 +1468,7 @@ feature {NONE} -- Initialization
 			position := a_feature_attribute_name.position
 			code := eacc_code
 			default_template := default_message_template (eacc_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1492,7 +1492,7 @@ feature {NONE} -- Initialization
 			position := a_override_element_name.position
 			code := eacd_code
 			default_template := default_message_template (eacd_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1516,7 +1516,7 @@ feature {NONE} -- Initialization
 			position := a_override_element_name.position
 			code := eace_code
 			default_template := default_message_template (eace_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1540,7 +1540,7 @@ feature {NONE} -- Initialization
 			position := a_name_attribute_name.position
 			code := eacf_code
 			default_template := default_message_template (eacf_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1564,7 +1564,7 @@ feature {NONE} -- Initialization
 			position := a_location_attribute_name.position
 			code := eacg_code
 			default_template := default_message_template (eacg_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1589,7 +1589,7 @@ feature {NONE} -- Initialization
 			position := a_recursive_attribute_name.position
 			code := each_code
 			default_template := default_message_template (each_default_template)
-			create parameters.make (1, 5)
+			create parameters.make_filled (empty_string, 1, 5)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1615,7 +1615,7 @@ feature {NONE} -- Initialization
 			position := a_external_include_element_name.position
 			code := eaci_code
 			default_template := default_message_template (eaci_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1639,7 +1639,7 @@ feature {NONE} -- Initialization
 			position := a_location_attribute_name.position
 			code := eacj_code
 			default_template := default_message_template (eacj_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1663,7 +1663,7 @@ feature {NONE} -- Initialization
 			position := a_external_library_element_name.position
 			code := eack_code
 			default_template := default_message_template (eack_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1687,7 +1687,7 @@ feature {NONE} -- Initialization
 			position := a_location_attribute_name.position
 			code := eacl_code
 			default_template := default_message_template (eacl_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1711,7 +1711,7 @@ feature {NONE} -- Initialization
 			position := a_external_object_element_name.position
 			code := eacm_code
 			default_template := default_message_template (eacm_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1735,7 +1735,7 @@ feature {NONE} -- Initialization
 			position := a_location_attribute_name.position
 			code := eacn_code
 			default_template := default_message_template (eacn_default_template)
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)

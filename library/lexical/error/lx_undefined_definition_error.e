@@ -5,7 +5,7 @@ note
 		"Error: Undefined definition"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			filename_not_void: filename /= Void
 			def_not_void: def /= Void
 		do
-			create parameters.make (1, 3)
+			create parameters.make_filled (empty_string, 1, 3)
 			parameters.put (filename, 1)
 			parameters.put (line.out, 2)
 			parameters.put (def, 3)

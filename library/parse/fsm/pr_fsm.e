@@ -5,7 +5,7 @@ note
 		"Finite State Machines"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -688,7 +688,7 @@ feature {NONE} -- Processing (nondeterministic)
 			a_symbol: PR_SYMBOL
 			a_symbol_id: INTEGER
 			a_variable: PR_VARIABLE
-			transitions: ARRAY [PR_STATE]
+			transitions: ARRAY [detachable PR_STATE]
 			nb_transitions: INTEGER
 			shifts: DS_ARRAYED_LIST [PR_STATE]
 			reductions: DS_ARRAYED_LIST [PR_REDUCTION]
@@ -696,7 +696,7 @@ feature {NONE} -- Processing (nondeterministic)
 		do
 			nb_tokens := grammar.tokens.count
 			nb_variables := grammar.variables.count
-			create transitions.make (-nb_tokens, nb_variables)
+			create transitions.make_filled (Void, -nb_tokens, nb_variables)
 			positions := a_state.positions
 			nb_positions := positions.count
 			reductions := a_state.reductions

@@ -5,7 +5,7 @@ note
 		"Error: Wrong attribute value error"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			a_cursor: DS_LINEAR_CURSOR [STRING]
 			a_string: STRING
 		do
-			create parameters.make (1, 5)
+			create parameters.make_filled (empty_string, 1, 5)
 			parameters.put (an_element.name, 1)
 			parameters.put (an_attribute_name, 2)
 			parameters.put (an_actual_value, 3)

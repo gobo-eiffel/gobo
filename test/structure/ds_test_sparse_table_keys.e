@@ -6,7 +6,7 @@ note
 
 	test_status: "ok_to_run"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -57,12 +57,12 @@ feature -- Test
 			a_table1.force_last ("three", 3)
 			a_table1.force_last ("two", 2)
 			a_table1.force_last ("one", 1)
-			create an_array2.make (0, 6)
+			create an_array2.make_filled (0, 0, 6)
 			a_table1.keys.do_all_with_index (agent an_array2.put)
 			assert_iarrays_same ("items1", <<INTEGER_.to_integer (0), 5, 4, 3, 2, 1, 0>>, an_array2)
 				-- Empty table.
 			create a_table1.make (0)
-			create an_array2.make (0, 1)
+			create an_array2.make_filled (0, 0, 1)
 			a_table1.keys.do_all_with_index (agent an_array2.put)
 			assert_iarrays_same ("items2", <<INTEGER_.to_integer (0), 0>>, an_array2)
 		end
@@ -101,12 +101,12 @@ feature -- Test
 			a_table1.force_last ("six", 6)
 			a_table1.force_last ("four", 4)
 			a_table1.force_last ("one", 1)
-			create an_array2.make (1, 5)
+			create an_array2.make_filled (0, 1, 5)
 			a_table1.keys.do_if_with_index (agent an_array2.put, agent same_integers)
 			assert_iarrays_same ("items1", <<INTEGER_.to_integer (0), 2, 0, 4, 0>>, an_array2)
 				-- Empty table.
 			create a_table1.make (0)
-			create an_array2.make (0, 1)
+			create an_array2.make_filled (0, 0, 1)
 			a_table1.keys.do_if_with_index (agent an_array2.put, agent same_integers)
 			assert_iarrays_same ("items2", <<INTEGER_.to_integer (0), 0>>, an_array2)
 		end

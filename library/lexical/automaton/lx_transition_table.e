@@ -5,12 +5,12 @@ note
 		"Transition tables, indexed by transition labels"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class LX_TRANSITION_TABLE [G -> LX_STATE]
+class LX_TRANSITION_TABLE [reference G -> detachable LX_STATE]
 
 inherit
 
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			-- Create a new transition table for labels
 			-- between `min' and `max'.
 		do
-			create storage.make (min, max)
+			create storage.make_filled (Void, min, max)
 			create array_routines
 		end
 

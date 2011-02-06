@@ -5,7 +5,7 @@ note
 		"Warning: Unknown option name"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			a_name_attribute_not_empty: an_element.attribute_by_name (uc_name).value.count > 0
 			a_position_not_void: a_position /= Void
 		do
-			create parameters.make (1, 2)
+			create parameters.make_filled (empty_string, 1, 2)
 			parameters.put (an_element.attribute_by_name (uc_name).value, 1)
 			parameters.put (a_position.out, 2)
 		end

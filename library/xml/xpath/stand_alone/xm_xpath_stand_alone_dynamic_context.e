@@ -5,7 +5,7 @@ note
 		"Objects that provide a dynamic context"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2011, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -164,9 +164,9 @@ feature 	-- Element change
 	open_stack_frame (a_slot_manager: XM_XPATH_SLOT_MANAGER)
 			-- Set stack frame.
 		local
-			an_array: ARRAY [XM_XPATH_VALUE]
+			an_array: ARRAY [detachable XM_XPATH_VALUE]
 		do
-			create an_array.make (1, a_slot_manager.number_of_variables)
+			create an_array.make_filled (Void, 1, a_slot_manager.number_of_variables)
 			create local_variable_frame.make (a_slot_manager, an_array)
 		end
 
@@ -174,10 +174,10 @@ feature 	-- Element change
 	open_sized_stack_frame (a_slot_count: INTEGER)
 			-- Set stack frame.
 		local
-			an_array: ARRAY [XM_XPATH_VALUE]
+			an_array: ARRAY [detachable XM_XPATH_VALUE]
 			a_slot_manager: XM_XPATH_SLOT_MANAGER
 		do
-			create an_array.make (1, a_slot_count)
+			create an_array.make_filled (Void, 1, a_slot_count)
 			create a_slot_manager.make
 			a_slot_manager.set_number_of_variables (a_slot_count)
 			create local_variable_frame.make (a_slot_manager, an_array)

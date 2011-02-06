@@ -5,7 +5,7 @@ note
 		"Error: Eiffel compilation error"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			-- Create a new error reporting that an Eiffel
 			-- compilation error occurred.
 		do
-			create parameters.make (1, 0)
+			create parameters.make_filled (empty_string, 1, 0)
 		end
 
 feature -- Access

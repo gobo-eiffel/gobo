@@ -6,7 +6,7 @@ note
 		%as input and return the formatted output."
 
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2004-2005, Object-Tools and others"
+	copyright: "Copyright (c) 2004-2011, Object-Tools and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 		do
 			escape_character := c
 			create string_output_stream.make (empty_string)
-			create single_parameter.make (1, 1)
+			create single_parameter.make_filled (Void, 1, 1)
 		ensure
 			escape_character_set: escape_character = c
 		end

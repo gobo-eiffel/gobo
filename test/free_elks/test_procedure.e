@@ -5,7 +5,7 @@ note
 		"Test features of class PROCEDURE"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,7 +33,7 @@ feature -- Test
 			p3: PROCEDURE [ANY, TUPLE]
 			p4: PROCEDURE [ANY, TUPLE]
 		do
-			create a.make (1, 1)
+			create a.make_filled ('%U', 1, 1)
 				-- 1 open, 1 closed.
 			p1 := agent a.put (?, 1)
 			p1.call (['g'])
@@ -122,7 +122,7 @@ feature -- Test
 			p4: PROCEDURE [ANY, TUPLE]
 		do
 				-- 1 open, 1 closed.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			p1 := agent a.put (?, 1)
 			p1.call (['g'])
 			assert_characters_equal ("call1a", 'g', a.item (1))
@@ -131,7 +131,7 @@ feature -- Test
 			p1.call (['h'])
 			assert_characters_equal ("call1b", 'h', a.item (1))
 				-- 2 open, 0 closed.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			p2 := agent a.put
 			p2.call (['a', 1])
 			assert_characters_equal ("call2a", 'a', a.item (1))
@@ -140,7 +140,7 @@ feature -- Test
 			p2.call (['b', 1])
 			assert_characters_equal ("call2b", 'b', a.item (1))
 				-- 2 open, 0 closed.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			p2 := agent a.put (?, ?)
 			p2.call (['z', 1])
 			assert_characters_equal ("call3a", 'z', a.item (1))
@@ -149,7 +149,7 @@ feature -- Test
 			p2.call (['s', 1])
 			assert_characters_equal ("call3b", 's', a.item (1))
 				-- 0 open, 2 closed.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			p3 := agent a.put ('w', 1)
 			p3.call ([])
 			assert_characters_equal ("call4a", 'w', a.item (1))
@@ -158,7 +158,7 @@ feature -- Test
 			p3.call ([])
 			assert_characters_equal ("call4b", 'x', a.item (1))
 				-- 0 open, 2 closed.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			p3 := agent a.put ('b', 1)
 			p3.call (Void)
 			assert_characters_equal ("call5a", 'b', a.item (1))
@@ -167,7 +167,7 @@ feature -- Test
 			p3.call (Void)
 			assert_characters_equal ("call5b", 'c', a.item (1))
 				-- Pass too many operands.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			p1 := agent a.put (?, 1)
 			p1.call (['p', "gobo"])
 			assert_characters_equal ("call6a", 'p', a.item (1))
@@ -176,7 +176,7 @@ feature -- Test
 			p1.call (['q', "gobo"])
 			assert_characters_equal ("call6b", 'q', a.item (1))
 				-- Polymorphic agent.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			p4 := agent a.put (?, 1)
 			p4.call (['t', "gobo"])
 			assert_characters_equal ("call7a", 't', a.item (1))
@@ -201,7 +201,7 @@ feature -- Test
 			p3: PROCEDURE [ANY, TUPLE [ARRAY [CHARACTER]]]
 			p4: PROCEDURE [ANY, TUPLE]
 		do
-			create a.make (1, 1)
+			create a.make_filled ('%U', 1, 1)
 				-- 2 open, 1 closed.
 			p1 := agent {ARRAY [CHARACTER]}.put (?, 1)
 			p1.call ([a, 'g'])
@@ -282,7 +282,7 @@ feature -- Test
 			p4: PROCEDURE [ANY, TUPLE]
 		do
 				-- 2 open, 1 closed.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			p1 := agent {TO_SPECIAL [CHARACTER]}.put (?, 1)
 			p1.call ([a, 'g'])
 			assert_characters_equal ("call1a", 'g', a.item (1))
@@ -291,7 +291,7 @@ feature -- Test
 			p1.call ([a, 'h'])
 			assert_characters_equal ("call1b", 'h', a.item (1))
 				-- 3 open, 0 closed.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			p2 := agent {TO_SPECIAL [CHARACTER]}.put
 			p2.call ([a, 'a', 1])
 			assert_characters_equal ("call2a", 'a', a.item (1))
@@ -300,7 +300,7 @@ feature -- Test
 			p2.call ([a, 'b', 1])
 			assert_characters_equal ("call2b", 'b', a.item (1))
 				-- 3 open, 0 closed.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			p2 := agent {TO_SPECIAL [CHARACTER]}.put (?, ?)
 			p2.call ([a, 'z', 1])
 			assert_characters_equal ("call3a", 'z', a.item (1))
@@ -309,7 +309,7 @@ feature -- Test
 			p2.call ([a, 'y', 1])
 			assert_characters_equal ("call3b", 'y', a.item (1))
 				-- 1 open, 2 closed.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			p3 := agent {TO_SPECIAL [CHARACTER]}.put ('w', 1)
 			p3.call ([a])
 			assert_characters_equal ("call4a", 'w', a.item (1))
@@ -318,7 +318,7 @@ feature -- Test
 			p3.call ([a])
 			assert_characters_equal ("call4b", 'x', a.item (1))
 				-- Pass too many operands.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			p1 := agent {TO_SPECIAL [CHARACTER]}.put (?, 1)
 			p1.call ([a, 'g', "gobo"])
 			assert_characters_equal ("call5a", 'g', a.item (1))
@@ -327,7 +327,7 @@ feature -- Test
 			p1.call ([a, 'h', "gobo"])
 			assert_characters_equal ("call5b", 'h', a.item (1))
 				-- Polymorphic agent.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			p4 := agent {TO_SPECIAL [CHARACTER]}.put (?, 1)
 			p4.call ([a, 't', "gobo"])
 			assert_characters_equal ("call6a", 't', a.item (1))
@@ -352,7 +352,7 @@ feature -- Test
 			p3: PROCEDURE [ANY, TUPLE]
 			p4: PROCEDURE [ANY, TUPLE]
 		do
-			create a.make (1, 1)
+			create a.make_filled ('%U', 1, 1)
 				-- 1 open, 2 closed.
 			p1 := agent f (a, ?, 1)
 			p1.call (['g'])
@@ -399,7 +399,7 @@ feature -- Test
 			s := "gobo"
 			assert ("not_valid1", not p1.valid_operands ([s]))
 				-- Test with valid operands.
-			create a.make (1, 1)
+			create a.make_filled ('%U', 1, 1)
 			assert ("valid1", p1.valid_operands ([a]))
 				-- Test that the operands are valid even though TUPLE [ANY]
 				-- does not conform to TUPLE [ARRAY [CHARACTER]]. According
@@ -447,14 +447,14 @@ feature -- Test
 		local
 			p1: PROCEDURE [ANY, TUPLE [ANY, INTEGER]]
 			p2: PROCEDURE [ANY, TUPLE [ANY, ANY]]
-			a: ARRAY [ANY]
+			a: ARRAY [detachable ANY]
 			t: TUPLE [ANY, INTEGER]
 			b: ANY
 			s: STRING
 		do
 			if not eiffel_compiler.is_ise then
 					-- Does not work with ISE.
-				create a.make (1, 1)
+				create a.make_filled (Void, 1, 1)
 				p1 := agent a.put
 					-- Here the call to 'call' will have to box the
 					-- character 'b' to a reference object when passing
@@ -489,7 +489,7 @@ feature -- Test
 		do
 				-- Test that 'twin' does not twin the closed operands.
 				-- Here the array has not been twined.
-			create a.make (1, 1)
+			create a.make_filled ('%U', 1, 1)
 			p1 := agent f (a, ?, 1)
 			p1.call (['g'])
 			assert_characters_equal ("item1a", 'g', a.item (1))
@@ -504,7 +504,7 @@ feature -- Test
 			a: ARRAY [CHARACTER]
 			p1: PROCEDURE [ANY, TUPLE [CHARACTER]]
 		do
-			create a.make (1, 1)
+			create a.make_filled ('%U', 1, 1)
 			p1 := agent f (a, ?, 1)
 			p1.call (['g'])
 			assert_characters_equal ("item1a", 'g', a.item (1))

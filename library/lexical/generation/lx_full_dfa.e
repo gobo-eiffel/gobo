@@ -5,7 +5,7 @@ note
 		"DFA which can generate scanners implemented with full tables"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -176,7 +176,7 @@ feature {NONE} -- Building
 				-- will be included in the transition table.
 				-- Build it from 0 to `maximum_symbol'.
 			yyNb_rows := maximum_symbol + 1
-			create yy_nxt_.make (0, yyNb_rows * (states.count + 1) - 1)
+			create yy_nxt_.make_filled (0, 0, yyNb_rows * (states.count + 1) - 1)
 			eob_state_id := start_states_count + 1
 			nb := yyNb_rows - 1
 				-- `0' entries for state #0.
@@ -225,7 +225,7 @@ feature {NONE} -- Building
 			a_state: LX_DFA_STATE
 		do
 			nb := states.count
-			create yy_accept_.make (0, nb)
+			create yy_accept_.make_filled (0, 0, nb)
 			from
 				i := 1
 			until

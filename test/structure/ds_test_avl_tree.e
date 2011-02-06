@@ -6,7 +6,7 @@ note
 
 	test_status: "ok_to_run"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2008, Daniel Tuser and others"
+	copyright: "Copyright (c) 2008-2011, Daniel Tuser and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -260,13 +260,13 @@ feature -- Test
 			l_tree.put_new (3, "3")
 			l_tree.put_new (0, "4")
 			l_tree.put_new (5, "5")
-			create l_list.make (1, 5)
+			create l_list.make_filled (0, 1, 5)
 				--
 			l_tree.do_if_with_index (agent l_list.put, agent same_integers)
 			assert_iarrays_same ("items", <<INTEGER_.to_integer (1), 2, 3, 0, 5>>, l_list)
 				-- Empty tree.
 			create l_tree.make (l_comparator)
-			create l_list.make (1, 5)
+			create l_list.make_filled (0, 1, 5)
 			l_tree.do_if_with_index (agent l_list.put, agent same_integers)
 			assert_iarrays_same ("empty", <<INTEGER_.to_integer (0), 0, 0, 0, 0>>, l_list)
 		end

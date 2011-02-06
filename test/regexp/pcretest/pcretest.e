@@ -5,7 +5,7 @@ note
 		"Tester for features of PCRE regexps"
 
 	library: "Gobo Eiffel Regexp Library"
-	copyright: "Copyright (c) 2002, Harald Erdbrügger and others"
+	copyright: "Copyright (c) 2002-2011, Harald Erdbrügger and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,8 +36,8 @@ feature {NONE} -- Initialization
 			-- Create a new PCRE tester.
 		do
 			create error_handler.make_standard
-			create copy_string_mask.make (1, 32)
-			create get_string_mask.make (1, 32)
+			create copy_string_mask.make_filled (False, 1, 32)
+			create get_string_mask.make_filled (False, 1, 32)
 		end
 
 	make

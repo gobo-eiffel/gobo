@@ -5,7 +5,7 @@ note
 		"Eiffel validity errors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -296,7 +296,7 @@ feature {NONE} -- Initialization
 			code := template_code (gvzzz0a_template_code)
 			etl_code := gvzzz_etl_code
 			default_template := default_message_template (gvzzz0a_default_template)
-			create parameters.make (1, 6)
+			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -335,7 +335,7 @@ feature {NONE} -- Initialization
 			code := template_code (vaol1a_template_code)
 			etl_code := vaol1_etl_code
 			default_template := default_message_template (vaol1a_default_template)
-			create parameters.make (1, 6)
+			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -379,7 +379,7 @@ feature {NONE} -- Initialization
 			code := template_code (vape0a_template_code)
 			etl_code := vape_etl_code
 			default_template := default_message_template (vape0a_default_template)
-			create parameters.make (1, 10)
+			create parameters.make_filled (empty_string, 1, 10)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -433,7 +433,7 @@ feature {NONE} -- Initialization
 			code := template_code (vape0b_template_code)
 			etl_code := vape_etl_code
 			default_template := default_message_template (vape0b_default_template)
-			create parameters.make (1, 11)
+			create parameters.make_filled (empty_string, 1, 11)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -485,7 +485,7 @@ feature {NONE} -- Initialization
 			code := template_code (vave0a_template_code)
 			etl_code := vave_etl_code
 			default_template := default_message_template (vave0a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -531,7 +531,7 @@ feature {NONE} -- Initialization
 			code := template_code (vbac1a_template_code)
 			etl_code := vbac1_etl_code
 			default_template := default_message_template (vbac1a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -576,7 +576,7 @@ feature {NONE} -- Initialization
 			code := template_code (vbac2a_template_code)
 			etl_code := vbac2_etl_code
 			default_template := default_message_template (vbac2a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -621,7 +621,7 @@ feature {NONE} -- Initialization
 			code := template_code (vcch1a_template_code)
 			etl_code := vcch1_etl_code
 			default_template := default_message_template (vcch1a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -668,7 +668,7 @@ feature {NONE} -- Initialization
 			code := template_code (vcch1a_template_code)
 			etl_code := vcch1_etl_code
 			default_template := default_message_template (vcch1a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -710,7 +710,7 @@ feature {NONE} -- Initialization
 			code := template_code (vcch2a_template_code)
 			etl_code := vcch2_etl_code
 			default_template := default_message_template (vcch2a_default_template)
-			create parameters.make (1, 6)
+			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -752,7 +752,7 @@ feature {NONE} -- Initialization
 			code := template_code (vcfg1a_template_code)
 			etl_code := vcfg1_etl_code
 			default_template := default_message_template (vcfg1a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -794,7 +794,7 @@ feature {NONE} -- Initialization
 			code := template_code (vcfg2a_template_code)
 			etl_code := vcfg2_etl_code
 			default_template := default_message_template (vcfg2a_default_template)
-			create parameters.make (1, 9)
+			create parameters.make_filled (empty_string, 1, 9)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -838,7 +838,7 @@ feature {NONE} -- Initialization
 			code := template_code (vcfg3a_template_code)
 			etl_code := vcfg3_etl_code
 			default_template := default_message_template (vcfg3a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -878,7 +878,7 @@ feature {NONE} -- Initialization
 			code := template_code (vcfg3b_template_code)
 			etl_code := vcfg3_etl_code
 			default_template := default_message_template (vcfg3b_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -918,7 +918,7 @@ feature {NONE} -- Initialization
 			code := template_code (vcfg3c_template_code)
 			etl_code := vcfg3_etl_code
 			default_template := default_message_template (vcfg3c_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -960,7 +960,7 @@ feature {NONE} -- Initialization
 			code := template_code (vcfg3d_template_code)
 			etl_code := vcfg3_etl_code
 			default_template := default_message_template (vcfg3d_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1006,7 +1006,7 @@ feature {NONE} -- Initialization
 			code := template_code (vcfg3e_template_code)
 			etl_code := vcfg3_etl_code
 			default_template := default_message_template (vcfg3e_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1067,7 +1067,7 @@ feature {NONE} -- Initialization
 				a_string.append_string (a_cursor.item.upper_name)
 				a_cursor.forth
 			end
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1109,7 +1109,7 @@ feature {NONE} -- Initialization
 			code := template_code (vcfg3h_template_code)
 			etl_code := vcfg3_etl_code
 			default_template := default_message_template (vcfg3h_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1170,7 +1170,7 @@ feature {NONE} -- Initialization
 				a_string.append_string (a_cursor.item.upper_name)
 				a_cursor.forth
 			end
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1212,7 +1212,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdjr0a_template_code)
 			etl_code := vdjr_etl_code
 			default_template := default_message_template (vdjr0a_default_template)
-			create parameters.make (1, 9)
+			create parameters.make_filled (empty_string, 1, 9)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1258,7 +1258,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdjr0b_template_code)
 			etl_code := vdjr_etl_code
 			default_template := default_message_template (vdjr0b_default_template)
-			create parameters.make (1, 10)
+			create parameters.make_filled (empty_string, 1, 10)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1306,7 +1306,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdjr0c_template_code)
 			etl_code := vdjr_etl_code
 			default_template := default_message_template (vdjr0c_default_template)
-			create parameters.make (1, 9)
+			create parameters.make_filled (empty_string, 1, 9)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1353,7 +1353,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdjr2a_template_code)
 			etl_code := vdjr2_etl_code
 			default_template := default_message_template (vdjr2a_default_template)
-			create parameters.make (1, 10)
+			create parameters.make_filled (empty_string, 1, 10)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1403,7 +1403,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdjr2b_template_code)
 			etl_code := vdjr2_etl_code
 			default_template := default_message_template (vdjr2b_default_template)
-			create parameters.make (1, 11)
+			create parameters.make_filled (empty_string, 1, 11)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1451,7 +1451,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdpr1a_template_code)
 			etl_code := vdpr1_etl_code
 			default_template := default_message_template (vdpr1a_default_template)
-			create parameters.make (1, 6)
+			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1485,7 +1485,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdpr1b_template_code)
 			etl_code := vdpr1_etl_code
 			default_template := default_message_template (vdpr1b_default_template)
-			create parameters.make (1, 6)
+			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1527,7 +1527,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdpr2a_template_code)
 			etl_code := vdpr2_etl_code
 			default_template := default_message_template (vdpr2a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1570,7 +1570,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdpr3a_template_code)
 			etl_code := vdpr3_etl_code
 			default_template := default_message_template (vdpr3a_default_template)
-			create parameters.make (1, 10)
+			create parameters.make_filled (empty_string, 1, 10)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1618,7 +1618,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdpr3b_template_code)
 			etl_code := vdpr3_etl_code
 			default_template := default_message_template (vdpr3b_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1664,7 +1664,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdpr3b_template_code)
 			etl_code := vdpr3_etl_code
 			default_template := default_message_template (vdpr3b_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1707,7 +1707,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdpr3d_template_code)
 			etl_code := vdpr3_etl_code
 			default_template := default_message_template (vdpr3d_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1748,7 +1748,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdpr3e_template_code)
 			etl_code := vdpr3_etl_code
 			default_template := default_message_template (vdpr3e_default_template)
-			create parameters.make (1, 6)
+			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1790,7 +1790,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdpr4a_template_code)
 			etl_code := vdpr4a_etl_code
 			default_template := default_message_template (vdpr4a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1841,7 +1841,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdpr4b_template_code)
 			etl_code := vdpr4b_etl_code
 			default_template := default_message_template (vdpr4b_default_template)
-			create parameters.make (1, 11)
+			create parameters.make_filled (empty_string, 1, 11)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1892,7 +1892,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdrd2a_template_code)
 			etl_code := vdrd2_etl_code
 			default_template := default_message_template (vdrd2a_default_template)
-			create parameters.make (1, 9)
+			create parameters.make_filled (empty_string, 1, 9)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1940,7 +1940,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdrd2b_template_code)
 			etl_code := vdrd2_etl_code
 			default_template := default_message_template (vdrd2b_default_template)
-			create parameters.make (1, 10)
+			create parameters.make_filled (empty_string, 1, 10)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -1990,7 +1990,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdrd2c_template_code)
 			etl_code := vdrd2_etl_code
 			default_template := default_message_template (vdrd2c_default_template)
-			create parameters.make (1, 9)
+			create parameters.make_filled (empty_string, 1, 9)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -2039,7 +2039,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdrd2d_template_code)
 			etl_code := vdrd2_etl_code
 			default_template := default_message_template (vdrd2d_default_template)
-			create parameters.make (1, 10)
+			create parameters.make_filled (empty_string, 1, 10)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -2088,7 +2088,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdrd3a_template_code)
 			etl_code := vdrd3_etl_code
 			default_template := default_message_template (vdrd3a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -2131,7 +2131,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdrd3b_template_code)
 			etl_code := vdrd3_etl_code
 			default_template := default_message_template (vdrd3b_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -2177,7 +2177,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdrd4a_template_code)
 			etl_code := vdrd4_etl_code
 			default_template := default_message_template (vdrd4a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -2225,7 +2225,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdrd4b_template_code)
 			etl_code := vdrd4_etl_code
 			default_template := default_message_template (vdrd4b_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -2273,7 +2273,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdrd4c_template_code)
 			etl_code := vdrd4_etl_code
 			default_template := default_message_template (vdrd4c_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -2321,7 +2321,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdrd5a_template_code)
 			etl_code := vdrd5_etl_code
 			default_template := default_message_template (vdrd5a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -2366,7 +2366,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdrd6a_template_code)
 			etl_code := vdrd6_etl_code
 			default_template := default_message_template (vdrd6a_default_template)
-			create parameters.make (1, 9)
+			create parameters.make_filled (empty_string, 1, 9)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -2413,7 +2413,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdrd6b_template_code)
 			etl_code := vdrd6_etl_code
 			default_template := default_message_template (vdrd6b_default_template)
-			create parameters.make (1, 9)
+			create parameters.make_filled (empty_string, 1, 9)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -2460,7 +2460,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdrd7a_template_code)
 			etl_code := vdrd7_etl_code
 			default_template := default_message_template (vdrd7a_default_template)
-			create parameters.make (1, 10)
+			create parameters.make_filled (empty_string, 1, 10)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -2509,7 +2509,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdrd7b_template_code)
 			etl_code := vdrd7_etl_code
 			default_template := default_message_template (vdrd7b_default_template)
-			create parameters.make (1, 10)
+			create parameters.make_filled (empty_string, 1, 10)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -2559,7 +2559,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdrd7c_template_code)
 			etl_code := vdrd7_etl_code
 			default_template := default_message_template (vdrd7c_default_template)
-			create parameters.make (1, 11)
+			create parameters.make_filled (empty_string, 1, 11)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -2610,7 +2610,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdrs1a_template_code)
 			etl_code := vdrs1_etl_code
 			default_template := default_message_template (vdrs1a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -2655,7 +2655,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdrs2a_template_code)
 			etl_code := vdrs2_etl_code
 			default_template := default_message_template (vdrs2a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -2700,7 +2700,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdrs2b_template_code)
 			etl_code := vdrs2_etl_code
 			default_template := default_message_template (vdrs2b_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -2745,7 +2745,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdrs3a_template_code)
 			etl_code := vdrs3_etl_code
 			default_template := default_message_template (vdrs3a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -2790,7 +2790,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdrs4a_template_code)
 			etl_code := vdrs4_etl_code
 			default_template := default_message_template (vdrs4a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -2838,7 +2838,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdrs4b_template_code)
 			etl_code := vdrs4_etl_code
 			default_template := default_message_template (vdrs4b_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -2884,7 +2884,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdus1a_template_code)
 			etl_code := vdus1_etl_code
 			default_template := default_message_template (vdus1a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -2929,7 +2929,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdus2a_template_code)
 			etl_code := vdus2_etl_code
 			default_template := default_message_template (vdus2a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -2974,7 +2974,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdus2b_template_code)
 			etl_code := vdus2_etl_code
 			default_template := default_message_template (vdus2b_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -3019,7 +3019,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdus3a_template_code)
 			etl_code := vdus3_etl_code
 			default_template := default_message_template (vdus3a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -3065,7 +3065,7 @@ feature {NONE} -- Initialization
 			code := template_code (vdus4a_template_code)
 			etl_code := vdus4_etl_code
 			default_template := default_message_template (vdus4a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -3111,7 +3111,7 @@ feature {NONE} -- Initialization
 			code := template_code (veen0a_template_code)
 			etl_code := veen_etl_code
 			default_template := default_message_template (veen0a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -3157,7 +3157,7 @@ feature {NONE} -- Initialization
 			code := template_code (veen0b_template_code)
 			etl_code := veen_etl_code
 			default_template := default_message_template (veen0b_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -3200,7 +3200,7 @@ feature {NONE} -- Initialization
 			code := template_code (veen2a_template_code)
 			etl_code := veen2_etl_code
 			default_template := default_message_template (veen2a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -3241,7 +3241,7 @@ feature {NONE} -- Initialization
 			code := template_code (veen2b_template_code)
 			etl_code := veen2_etl_code
 			default_template := default_message_template (veen2b_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -3283,7 +3283,7 @@ feature {NONE} -- Initialization
 			code := template_code (veen2c_template_code)
 			etl_code := veen2_etl_code
 			default_template := default_message_template (veen2c_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -3325,7 +3325,7 @@ feature {NONE} -- Initialization
 			code := template_code (veen2d_template_code)
 			etl_code := veen2_etl_code
 			default_template := default_message_template (veen2d_default_template)
-			create parameters.make (1, 6)
+			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -3365,7 +3365,7 @@ feature {NONE} -- Initialization
 			code := template_code (veen2e_template_code)
 			etl_code := veen2_etl_code
 			default_template := default_message_template (veen2e_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -3406,7 +3406,7 @@ feature {NONE} -- Initialization
 			code := template_code (veen2b_template_code)
 			etl_code := veen2_etl_code
 			default_template := default_message_template (veen2b_default_template)
-			create parameters.make (1, 6)
+			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -3447,7 +3447,7 @@ feature {NONE} -- Initialization
 			code := template_code (veen2g_template_code)
 			etl_code := veen2_etl_code
 			default_template := default_message_template (veen2g_default_template)
-			create parameters.make (1, 6)
+			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -3488,7 +3488,7 @@ feature {NONE} -- Initialization
 			code := template_code (veen8a_template_code)
 			etl_code := veen8_etl_code
 			default_template := default_message_template (veen8a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -3532,7 +3532,7 @@ feature {NONE} -- Initialization
 			code := template_code (veen8b_template_code)
 			etl_code := veen8_etl_code
 			default_template := default_message_template (veen8b_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -3574,7 +3574,7 @@ feature {NONE} -- Initialization
 			code := template_code (vfac1a_template_code)
 			etl_code := vfac1_etl_code
 			default_template := default_message_template (vfac1a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -3618,7 +3618,7 @@ feature {NONE} -- Initialization
 			code := template_code (vfac1b_template_code)
 			etl_code := vfac1_etl_code
 			default_template := default_message_template (vfac1b_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -3664,7 +3664,7 @@ feature {NONE} -- Initialization
 			code := template_code (vfac2a_template_code)
 			etl_code := vfac2_etl_code
 			default_template := default_message_template (vfac2a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -3715,7 +3715,7 @@ feature {NONE} -- Initialization
 			code := template_code (vfac3a_template_code)
 			etl_code := vfac3_etl_code
 			default_template := default_message_template (vfac3a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -3769,7 +3769,7 @@ feature {NONE} -- Initialization
 			code := template_code (vfac4a_template_code)
 			etl_code := vfac4_etl_code
 			default_template := default_message_template (vfac4a_default_template)
-			create parameters.make (1, 10)
+			create parameters.make_filled (empty_string, 1, 10)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -3826,7 +3826,7 @@ feature {NONE} -- Initialization
 			code := template_code (vfav1a_template_code)
 			etl_code := vfav1_etl_code
 			default_template := default_message_template (vfav1a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -3871,7 +3871,7 @@ feature {NONE} -- Initialization
 			code := template_code (vfav1b_template_code)
 			etl_code := vfav1_etl_code
 			default_template := default_message_template (vfav1b_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -3918,7 +3918,7 @@ feature {NONE} -- Initialization
 			code := template_code (vfav1c_template_code)
 			etl_code := vfav1_etl_code
 			default_template := default_message_template (vfav1c_default_template)
-			create parameters.make (1, 10)
+			create parameters.make_filled (empty_string, 1, 10)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -3969,7 +3969,7 @@ feature {NONE} -- Initialization
 			code := template_code (vfav1d_template_code)
 			etl_code := vfav1_etl_code
 			default_template := default_message_template (vfav1d_default_template)
-			create parameters.make (1, 11)
+			create parameters.make_filled (empty_string, 1, 11)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -4022,7 +4022,7 @@ feature {NONE} -- Initialization
 			code := template_code (vfav1e_template_code)
 			etl_code := vfav1_etl_code
 			default_template := default_message_template (vfav1e_default_template)
-			create parameters.make (1, 12)
+			create parameters.make_filled (empty_string, 1, 12)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -4077,7 +4077,7 @@ feature {NONE} -- Initialization
 			code := template_code (vfav1f_template_code)
 			etl_code := vfav1_etl_code
 			default_template := default_message_template (vfav1f_default_template)
-			create parameters.make (1, 10)
+			create parameters.make_filled (empty_string, 1, 10)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -4128,7 +4128,7 @@ feature {NONE} -- Initialization
 			code := template_code (vfav1g_template_code)
 			etl_code := vfav1_etl_code
 			default_template := default_message_template (vfav1g_default_template)
-			create parameters.make (1, 11)
+			create parameters.make_filled (empty_string, 1, 11)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -4181,7 +4181,7 @@ feature {NONE} -- Initialization
 			code := template_code (vfav1h_template_code)
 			etl_code := vfav1_etl_code
 			default_template := default_message_template (vfav1h_default_template)
-			create parameters.make (1, 12)
+			create parameters.make_filled (empty_string, 1, 12)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -4234,7 +4234,7 @@ feature {NONE} -- Initialization
 			code := template_code (vfav2a_template_code)
 			etl_code := vfav2_etl_code
 			default_template := default_message_template (vfav2a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -4281,7 +4281,7 @@ feature {NONE} -- Initialization
 			code := template_code (vfav2b_template_code)
 			etl_code := vfav2_etl_code
 			default_template := default_message_template (vfav2b_default_template)
-			create parameters.make (1, 10)
+			create parameters.make_filled (empty_string, 1, 10)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -4332,7 +4332,7 @@ feature {NONE} -- Initialization
 			code := template_code (vfav2c_template_code)
 			etl_code := vfav2_etl_code
 			default_template := default_message_template (vfav2c_default_template)
-			create parameters.make (1, 11)
+			create parameters.make_filled (empty_string, 1, 11)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -4385,7 +4385,7 @@ feature {NONE} -- Initialization
 			code := template_code (vfav2d_template_code)
 			etl_code := vfav2_etl_code
 			default_template := default_message_template (vfav2d_default_template)
-			create parameters.make (1, 12)
+			create parameters.make_filled (empty_string, 1, 12)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -4436,7 +4436,7 @@ feature {NONE} -- Initialization
 			code := template_code (vffd4a_template_code)
 			etl_code := vffd4_etl_code
 			default_template := default_message_template (vffd4a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -4478,7 +4478,7 @@ feature {NONE} -- Initialization
 			code := template_code (vffd5a_template_code)
 			etl_code := vffd5_etl_code
 			default_template := default_message_template (vffd5a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -4520,7 +4520,7 @@ feature {NONE} -- Initialization
 			code := template_code (vffd6a_template_code)
 			etl_code := vffd6_etl_code
 			default_template := default_message_template (vffd6a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -4562,7 +4562,7 @@ feature {NONE} -- Initialization
 			code := template_code (vffd7a_template_code)
 			etl_code := vffd7_etl_code
 			default_template := default_message_template (vffd7a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -4604,7 +4604,7 @@ feature {NONE} -- Initialization
 			code := template_code (vffd7b_template_code)
 			etl_code := vffd7_etl_code
 			default_template := default_message_template (vffd7b_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -4649,7 +4649,7 @@ feature {NONE} -- Initialization
 			code := template_code (vgcc1a_template_code)
 			etl_code := vgcc1_etl_code
 			default_template := default_message_template (vgcc1a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -4694,7 +4694,7 @@ feature {NONE} -- Initialization
 			code := template_code (vgcc1b_template_code)
 			etl_code := vgcc1_etl_code
 			default_template := default_message_template (vgcc1b_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -4742,7 +4742,7 @@ feature {NONE} -- Initialization
 			code := template_code (vgcc3a_template_code)
 			etl_code := vgcc3_etl_code
 			default_template := default_message_template (vgcc3a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -4789,7 +4789,7 @@ feature {NONE} -- Initialization
 			code := template_code (vgcc5a_template_code)
 			etl_code := vgcc5_etl_code
 			default_template := default_message_template (vgcc5a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -4834,7 +4834,7 @@ feature {NONE} -- Initialization
 			code := template_code (vgcc5b_template_code)
 			etl_code := vgcc5_etl_code
 			default_template := default_message_template (vgcc5b_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -4879,7 +4879,7 @@ feature {NONE} -- Initialization
 			code := template_code (vgcc6a_template_code)
 			etl_code := vgcc6_etl_code
 			default_template := default_message_template (vgcc6a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -4921,7 +4921,7 @@ feature {NONE} -- Initialization
 			code := template_code (vgcc6b_template_code)
 			etl_code := vgcc6_etl_code
 			default_template := default_message_template (vgcc6b_default_template)
-			create parameters.make (1, 9)
+			create parameters.make_filled (empty_string, 1, 9)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -4970,7 +4970,7 @@ feature {NONE} -- Initialization
 			code := template_code (vgcc6c_template_code)
 			etl_code := vgcc6_etl_code
 			default_template := default_message_template (vgcc6c_default_template)
-			create parameters.make (1, 9)
+			create parameters.make_filled (empty_string, 1, 9)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -5016,7 +5016,7 @@ feature {NONE} -- Initialization
 			code := template_code (vgcc6d_template_code)
 			etl_code := vgcc6_etl_code
 			default_template := default_message_template (vgcc6d_default_template)
-			create parameters.make (1, 9)
+			create parameters.make_filled (empty_string, 1, 9)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -5065,7 +5065,7 @@ feature {NONE} -- Initialization
 			code := template_code (vgcc6e_template_code)
 			etl_code := vgcc6_etl_code
 			default_template := default_message_template (vgcc6e_default_template)
-			create parameters.make (1, 9)
+			create parameters.make_filled (empty_string, 1, 9)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -5115,7 +5115,7 @@ feature {NONE} -- Initialization
 			code := template_code (vgcc8a_template_code)
 			etl_code := vgcc8_etl_code
 			default_template := default_message_template (vgcc8a_default_template)
-			create parameters.make (1, 10)
+			create parameters.make_filled (empty_string, 1, 10)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -5167,7 +5167,7 @@ feature {NONE} -- Initialization
 			code := template_code (vgcc8b_template_code)
 			etl_code := vgcc8_etl_code
 			default_template := default_message_template (vgcc8b_default_template)
-			create parameters.make (1, 10)
+			create parameters.make_filled (empty_string, 1, 10)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -5213,7 +5213,7 @@ feature {NONE} -- Initialization
 			code := template_code (vgcp1a_template_code)
 			etl_code := vgcp1_etl_code
 			default_template := default_message_template (vgcp1a_default_template)
-			create parameters.make (1, 6)
+			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -5251,7 +5251,7 @@ feature {NONE} -- Initialization
 			code := template_code (vgcp2a_template_code)
 			etl_code := vgcp2_etl_code
 			default_template := default_message_template (vgcp2a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -5294,7 +5294,7 @@ feature {NONE} -- Initialization
 			code := template_code (vgcp2b_template_code)
 			etl_code := vgcp2_etl_code
 			default_template := default_message_template (vgcp2b_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -5335,7 +5335,7 @@ feature {NONE} -- Initialization
 			code := template_code (vgcp3a_template_code)
 			etl_code := vgcp3_etl_code
 			default_template := default_message_template (vgcp3a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -5376,7 +5376,7 @@ feature {NONE} -- Initialization
 			code := template_code (vgcp3b_template_code)
 			etl_code := vgcp3_etl_code
 			default_template := default_message_template (vgcp3b_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -5418,7 +5418,7 @@ feature {NONE} -- Initialization
 			code := template_code (vgcp3c_template_code)
 			etl_code := vgcp3_etl_code
 			default_template := default_message_template (vgcp3c_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -5457,7 +5457,7 @@ feature {NONE} -- Initialization
 			code := template_code (vhay0a_template_code)
 			etl_code := vhay_etl_code
 			default_template := default_message_template (vhay0a_default_template)
-			create parameters.make (1, 6)
+			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -5513,7 +5513,7 @@ feature {NONE} -- Initialization
 				a_string.append_string (a_cursor.item.upper_name)
 				a_cursor.forth
 			end
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -5553,7 +5553,7 @@ feature {NONE} -- Initialization
 			code := template_code (vhpr1b_template_code)
 			etl_code := vhpr1_etl_code
 			default_template := default_message_template (vhpr1b_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -5593,7 +5593,7 @@ feature {NONE} -- Initialization
 			code := template_code (vhpr3a_template_code)
 			etl_code := vhpr3_etl_code
 			default_template := default_message_template (vhpr3a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -5633,7 +5633,7 @@ feature {NONE} -- Initialization
 			code := template_code (vhpr3b_template_code)
 			etl_code := vhpr3_etl_code
 			default_template := default_message_template (vhpr3b_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -5673,7 +5673,7 @@ feature {NONE} -- Initialization
 			code := template_code (vhpr3c_template_code)
 			etl_code := vhpr3_etl_code
 			default_template := default_message_template (vhpr3c_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -5717,7 +5717,7 @@ feature {NONE} -- Initialization
 			code := template_code (vhrc1a_template_code)
 			etl_code := vhrc1_etl_code
 			default_template := default_message_template (vhrc1a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -5764,7 +5764,7 @@ feature {NONE} -- Initialization
 			code := template_code (vhrc2a_template_code)
 			etl_code := vhrc2_etl_code
 			default_template := default_message_template (vhrc2a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -5810,7 +5810,7 @@ feature {NONE} -- Initialization
 			code := template_code (vhrc4a_template_code)
 			etl_code := vhrc4_etl_code
 			default_template := default_message_template (vhrc4a_default_template)
-			create parameters.make (1, 9)
+			create parameters.make_filled (empty_string, 1, 9)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -5861,7 +5861,7 @@ feature {NONE} -- Initialization
 			code := template_code (vhrc4b_template_code)
 			etl_code := vhrc4_etl_code
 			default_template := default_message_template (vhrc4b_default_template)
-			create parameters.make (1, 10)
+			create parameters.make_filled (empty_string, 1, 10)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -5914,7 +5914,7 @@ feature {NONE} -- Initialization
 			code := template_code (vhrc4c_template_code)
 			etl_code := vhrc4_etl_code
 			default_template := default_message_template (vhrc4c_default_template)
-			create parameters.make (1, 10)
+			create parameters.make_filled (empty_string, 1, 10)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -5967,7 +5967,7 @@ feature {NONE} -- Initialization
 			code := template_code (vhrc4d_template_code)
 			etl_code := vhrc4_etl_code
 			default_template := default_message_template (vhrc4d_default_template)
-			create parameters.make (1, 10)
+			create parameters.make_filled (empty_string, 1, 10)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -6016,7 +6016,7 @@ feature {NONE} -- Initialization
 			code := template_code (vhrc5a_template_code)
 			etl_code := vhrc5_etl_code
 			default_template := default_message_template (vhrc5a_default_template)
-			create parameters.make (1, 9)
+			create parameters.make_filled (empty_string, 1, 9)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -6066,7 +6066,7 @@ feature {NONE} -- Initialization
 			code := template_code (vjar0a_template_code)
 			etl_code := vjar_etl_code
 			default_template := default_message_template (vjar0a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -6109,7 +6109,7 @@ feature {NONE} -- Initialization
 			code := template_code (vjaw0a_template_code)
 			etl_code := vjaw_etl_code
 			default_template := default_message_template (vjaw0a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -6152,7 +6152,7 @@ feature {NONE} -- Initialization
 			code := template_code (vjaw0b_template_code)
 			etl_code := vjaw_etl_code
 			default_template := default_message_template (vjaw0b_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -6195,7 +6195,7 @@ feature {NONE} -- Initialization
 			code := template_code (vjaw0c_template_code)
 			etl_code := vjaw_etl_code
 			default_template := default_message_template (vjaw0c_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -6240,7 +6240,7 @@ feature {NONE} -- Initialization
 			code := template_code (vjrv0a_template_code)
 			etl_code := vjrv_etl_code
 			default_template := default_message_template (vjrv0a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -6283,7 +6283,7 @@ feature {NONE} -- Initialization
 			code := template_code (vkcn1a_template_code)
 			etl_code := vkcn1_etl_code
 			default_template := default_message_template (vkcn1a_default_template)
-			create parameters.make (1, 9)
+			create parameters.make_filled (empty_string, 1, 9)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -6329,7 +6329,7 @@ feature {NONE} -- Initialization
 			code := template_code (vkcn1c_template_code)
 			etl_code := vkcn1_etl_code
 			default_template := default_message_template (vkcn1c_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -6374,7 +6374,7 @@ feature {NONE} -- Initialization
 			code := template_code (vkcn2a_template_code)
 			etl_code := vkcn2_etl_code
 			default_template := default_message_template (vkcn2a_default_template)
-			create parameters.make (1, 9)
+			create parameters.make_filled (empty_string, 1, 9)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -6420,7 +6420,7 @@ feature {NONE} -- Initialization
 			code := template_code (vkcn2c_template_code)
 			etl_code := vkcn2_etl_code
 			default_template := default_message_template (vkcn2c_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -6464,7 +6464,7 @@ feature {NONE} -- Initialization
 			code := template_code (vlel1a_template_code)
 			etl_code := vlel1_etl_code
 			default_template := default_message_template (vlel1a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -6506,7 +6506,7 @@ feature {NONE} -- Initialization
 			code := template_code (vlel2a_template_code)
 			etl_code := vlel2_etl_code
 			default_template := default_message_template (vlel2a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -6550,7 +6550,7 @@ feature {NONE} -- Initialization
 			code := template_code (vlel3a_template_code)
 			etl_code := vlel3_etl_code
 			default_template := default_message_template (vlel3a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -6594,7 +6594,7 @@ feature {NONE} -- Initialization
 			code := template_code (vmfn0a_template_code)
 			etl_code := vmfn_etl_code
 			default_template := default_message_template (vmfn0a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -6638,7 +6638,7 @@ feature {NONE} -- Initialization
 			code := template_code (vmfn0b_template_code)
 			etl_code := vmfn_etl_code
 			default_template := default_message_template (vmfn0b_default_template)
-			create parameters.make (1, 9)
+			create parameters.make_filled (empty_string, 1, 9)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -6688,7 +6688,7 @@ feature {NONE} -- Initialization
 			code := template_code (vmfn0c_template_code)
 			etl_code := vmfn_etl_code
 			default_template := default_message_template (vmfn0c_default_template)
-			create parameters.make (1, 10)
+			create parameters.make_filled (empty_string, 1, 10)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -6737,7 +6737,7 @@ feature {NONE} -- Initialization
 			code := template_code (vmfn2a_template_code)
 			etl_code := vmfn2_etl_code
 			default_template := default_message_template (vmfn2a_default_template)
-			create parameters.make (1, 10)
+			create parameters.make_filled (empty_string, 1, 10)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -6787,7 +6787,7 @@ feature {NONE} -- Initialization
 			code := template_code (vmfn2b_template_code)
 			etl_code := vmfn2_etl_code
 			default_template := default_message_template (vmfn2b_default_template)
-			create parameters.make (1, 11)
+			create parameters.make_filled (empty_string, 1, 11)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -6863,7 +6863,7 @@ feature {NONE} -- Initialization
 				a_string.append_string (a_feature.precursor_feature.lower_name)
 				a_cursor.forth
 			end
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -6932,7 +6932,7 @@ feature {NONE} -- Initialization
 				a_string.append_string (a_feature.precursor_feature.lower_name)
 				a_cursor.forth
 			end
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -6975,7 +6975,7 @@ feature {NONE} -- Initialization
 			code := template_code (vmss1a_template_code)
 			etl_code := vmss1_etl_code
 			default_template := default_message_template (vmss1a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -7020,7 +7020,7 @@ feature {NONE} -- Initialization
 			code := template_code (vmss2a_template_code)
 			etl_code := vmss2_etl_code
 			default_template := default_message_template (vmss2a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -7065,7 +7065,7 @@ feature {NONE} -- Initialization
 			code := template_code (vmss3a_template_code)
 			etl_code := vmss3_etl_code
 			default_template := default_message_template (vmss3a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -7111,7 +7111,7 @@ feature {NONE} -- Initialization
 			code := template_code (vomb1a_template_code)
 			etl_code := vomb1_etl_code
 			default_template := default_message_template (vomb1a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -7156,7 +7156,7 @@ feature {NONE} -- Initialization
 			code := template_code (vomb2a_template_code)
 			etl_code := vomb2_etl_code
 			default_template := default_message_template (vomb2a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -7203,7 +7203,7 @@ feature {NONE} -- Initialization
 			code := template_code (vomb2b_template_code)
 			etl_code := vomb2_etl_code
 			default_template := default_message_template (vomb2b_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -7257,7 +7257,7 @@ feature {NONE} -- Initialization
 			code := template_code (vpca1a_template_code)
 			etl_code := vpca1_etl_code
 			default_template := default_message_template (vpca1a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -7301,7 +7301,7 @@ feature {NONE} -- Initialization
 			code := template_code (vpca1b_template_code)
 			etl_code := vpca1_etl_code
 			default_template := default_message_template (vpca1b_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -7348,7 +7348,7 @@ feature {NONE} -- Initialization
 			code := template_code (vpca2a_template_code)
 			etl_code := vpca2_etl_code
 			default_template := default_message_template (vpca2a_default_template)
-			create parameters.make (1, 9)
+			create parameters.make_filled (empty_string, 1, 9)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -7396,7 +7396,7 @@ feature {NONE} -- Initialization
 			code := template_code (vpca3a_template_code)
 			etl_code := vpca3_etl_code
 			default_template := default_message_template (vpca3a_default_template)
-			create parameters.make (1, 9)
+			create parameters.make_filled (empty_string, 1, 9)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -7442,7 +7442,7 @@ feature {NONE} -- Initialization
 			code := template_code (vpca3b_template_code)
 			etl_code := vpca3_etl_code
 			default_template := default_message_template (vpca3b_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -7493,7 +7493,7 @@ feature {NONE} -- Initialization
 			code := template_code (vpca4a_template_code)
 			etl_code := vpca4_etl_code
 			default_template := default_message_template (vpca4a_default_template)
-			create parameters.make (1, 12)
+			create parameters.make_filled (empty_string, 1, 12)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -7551,7 +7551,7 @@ feature {NONE} -- Initialization
 			code := template_code (vpca4b_template_code)
 			etl_code := vpca4_etl_code
 			default_template := default_message_template (vpca4b_default_template)
-			create parameters.make (1, 11)
+			create parameters.make_filled (empty_string, 1, 11)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -7609,7 +7609,7 @@ feature {NONE} -- Initialization
 			code := template_code (vpca5a_template_code)
 			etl_code := vpca5_etl_code
 			default_template := default_message_template (vpca5a_default_template)
-			create parameters.make (1, 12)
+			create parameters.make_filled (empty_string, 1, 12)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -7667,7 +7667,7 @@ feature {NONE} -- Initialization
 			code := template_code (vpca5b_template_code)
 			etl_code := vpca5_etl_code
 			default_template := default_message_template (vpca5b_default_template)
-			create parameters.make (1, 11)
+			create parameters.make_filled (empty_string, 1, 11)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -7718,7 +7718,7 @@ feature {NONE} -- Initialization
 			code := template_code (vpir1a_template_code)
 			etl_code := vpir1_etl_code
 			default_template := default_message_template (vpir1a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -7761,7 +7761,7 @@ feature {NONE} -- Initialization
 			code := template_code (vpir1b_template_code)
 			etl_code := vpir1_etl_code
 			default_template := default_message_template (vpir1b_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -7804,7 +7804,7 @@ feature {NONE} -- Initialization
 			code := template_code (vpir1c_template_code)
 			etl_code := vpir1_etl_code
 			default_template := default_message_template (vpir1c_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -7847,7 +7847,7 @@ feature {NONE} -- Initialization
 			code := template_code (vpir1d_template_code)
 			etl_code := vpir1_etl_code
 			default_template := default_message_template (vpir1d_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -7893,7 +7893,7 @@ feature {NONE} -- Initialization
 			code := template_code (vpir1e_template_code)
 			etl_code := vpir1_etl_code
 			default_template := default_message_template (vpir1e_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -7939,7 +7939,7 @@ feature {NONE} -- Initialization
 			code := template_code (vpir1f_template_code)
 			etl_code := vpir1_etl_code
 			default_template := default_message_template (vpir1f_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -7982,7 +7982,7 @@ feature {NONE} -- Initialization
 			code := template_code (vqmc1a_template_code)
 			etl_code := vqmc1_etl_code
 			default_template := default_message_template (vqmc1a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -8027,7 +8027,7 @@ feature {NONE} -- Initialization
 			code := template_code (vqmc2a_template_code)
 			etl_code := vqmc2_etl_code
 			default_template := default_message_template (vqmc2a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -8073,7 +8073,7 @@ feature {NONE} -- Initialization
 			code := template_code (vqmc3a_template_code)
 			etl_code := vqmc3_etl_code
 			default_template := default_message_template (vqmc3a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -8128,7 +8128,7 @@ feature {NONE} -- Initialization
 			else
 				l_literal := "+" + a_constant.literal
 			end
-			create parameters.make (1, 9)
+			create parameters.make_filled (empty_string, 1, 9)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -8175,7 +8175,7 @@ feature {NONE} -- Initialization
 			code := template_code (vqmc4a_template_code)
 			etl_code := vqmc4_etl_code
 			default_template := default_message_template (vqmc4a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -8220,7 +8220,7 @@ feature {NONE} -- Initialization
 			code := template_code (vqmc5a_template_code)
 			etl_code := vqmc5_etl_code
 			default_template := default_message_template (vqmc5a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -8265,7 +8265,7 @@ feature {NONE} -- Initialization
 			code := template_code (vqmc6a_template_code)
 			etl_code := vqmc6_etl_code
 			default_template := default_message_template (vqmc6a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -8308,7 +8308,7 @@ feature {NONE} -- Initialization
 			code := template_code (vqui0a_template_code)
 			etl_code := vqui_etl_code
 			default_template := default_message_template (vqui0a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -8352,7 +8352,7 @@ feature {NONE} -- Initialization
 			code := template_code (vred0a_template_code)
 			etl_code := vred_etl_code
 			default_template := default_message_template (vred0a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -8396,7 +8396,7 @@ feature {NONE} -- Initialization
 			code := template_code (vred0b_template_code)
 			etl_code := vred_etl_code
 			default_template := default_message_template (vred0b_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -8441,7 +8441,7 @@ feature {NONE} -- Initialization
 			code := template_code (vred0c_template_code)
 			etl_code := vred_etl_code
 			default_template := default_message_template (vred0c_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -8484,7 +8484,7 @@ feature {NONE} -- Initialization
 			code := template_code (vred0d_template_code)
 			etl_code := vred_etl_code
 			default_template := default_message_template (vred0d_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -8526,7 +8526,7 @@ feature {NONE} -- Initialization
 			code := template_code (vreg0a_template_code)
 			etl_code := vreg_etl_code
 			default_template := default_message_template (vreg0a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -8570,7 +8570,7 @@ feature {NONE} -- Initialization
 			code := template_code (vreg0b_template_code)
 			etl_code := vreg_etl_code
 			default_template := default_message_template (vreg0b_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -8615,7 +8615,7 @@ feature {NONE} -- Initialization
 			code := template_code (vrfa0a_template_code)
 			etl_code := vrfa_etl_code
 			default_template := default_message_template (vrfa0a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -8660,7 +8660,7 @@ feature {NONE} -- Initialization
 			code := template_code (vrfa0b_template_code)
 			etl_code := vrfa_etl_code
 			default_template := default_message_template (vrfa0b_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -8702,7 +8702,7 @@ feature {NONE} -- Initialization
 			code := template_code (vrle1a_template_code)
 			etl_code := vrle1_etl_code
 			default_template := default_message_template (vrle1a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -8747,7 +8747,7 @@ feature {NONE} -- Initialization
 			code := template_code (vrle2a_template_code)
 			etl_code := vrle2_etl_code
 			default_template := default_message_template (vrle2a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -8791,7 +8791,7 @@ feature {NONE} -- Initialization
 			code := template_code (vrlv1a_template_code)
 			etl_code := vrlv1_etl_code
 			default_template := default_message_template (vrlv1a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -8836,7 +8836,7 @@ feature {NONE} -- Initialization
 			code := template_code (vrlv1b_template_code)
 			etl_code := vrlv1_etl_code
 			default_template := default_message_template (vrlv1b_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -8879,7 +8879,7 @@ feature {NONE} -- Initialization
 			code := template_code (vrlv2a_template_code)
 			etl_code := vrlv2_etl_code
 			default_template := default_message_template (vrlv2a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -8925,7 +8925,7 @@ feature {NONE} -- Initialization
 			code := template_code (vrlv2b_template_code)
 			etl_code := vrlv2_etl_code
 			default_template := default_message_template (vrlv2b_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -8966,7 +8966,7 @@ feature {NONE} -- Initialization
 			code := template_code (vtat1a_template_code)
 			etl_code := vtat1_etl_code
 			default_template := default_message_template (vtat1a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -9011,7 +9011,7 @@ feature {NONE} -- Initialization
 			code := template_code (vtat1b_template_code)
 			etl_code := vtat1_etl_code
 			default_template := default_message_template (vtat1b_default_template)
-			create parameters.make (1, 9)
+			create parameters.make_filled (empty_string, 1, 9)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -9056,7 +9056,7 @@ feature {NONE} -- Initialization
 			code := template_code (vtat1c_template_code)
 			etl_code := vtat1_etl_code
 			default_template := default_message_template (vtat1c_default_template)
-			create parameters.make (1, 9)
+			create parameters.make_filled (empty_string, 1, 9)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -9197,7 +9197,7 @@ feature {NONE} -- Initialization
 				end
 				a_cursor.forth
 			end
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -9240,7 +9240,7 @@ feature {NONE} -- Initialization
 			code := template_code (vtat2b_template_code)
 			etl_code := vtat2_etl_code
 			default_template := default_message_template (vtat2b_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -9283,7 +9283,7 @@ feature {NONE} -- Initialization
 			code := template_code (vtbt0a_template_code)
 			etl_code := vtbt_etl_code
 			default_template := default_message_template (vtbt0a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -9325,7 +9325,7 @@ feature {NONE} -- Initialization
 			code := template_code (vtbt0b_template_code)
 			etl_code := vtbt_etl_code
 			default_template := default_message_template (vtbt0b_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -9368,7 +9368,7 @@ feature {NONE} -- Initialization
 			code := template_code (vtbt0c_template_code)
 			etl_code := vtbt_etl_code
 			default_template := default_message_template (vtbt0c_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -9410,7 +9410,7 @@ feature {NONE} -- Initialization
 			code := template_code (vtbt0d_template_code)
 			etl_code := vtbt_etl_code
 			default_template := default_message_template (vtbt0d_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -9479,7 +9479,7 @@ feature {NONE} -- Initialization
 			code := template_code (vtcg3a_template_code)
 			etl_code := vtcg3_etl_code
 			default_template := default_message_template (vtcg3a_default_template)
-			create parameters.make (1, 9)
+			create parameters.make_filled (empty_string, 1, 9)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -9527,7 +9527,7 @@ feature {NONE} -- Initialization
 			code := template_code (vtcg4a_template_code)
 			etl_code := vtcg4_etl_code
 			default_template := default_message_template (vtcg4a_default_template)
-			create parameters.make (1, 10)
+			create parameters.make_filled (empty_string, 1, 10)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -9577,7 +9577,7 @@ feature {NONE} -- Initialization
 			code := template_code (vtcg4b_template_code)
 			etl_code := vtcg4_etl_code
 			default_template := default_message_template (vtcg4b_default_template)
-			create parameters.make (1, 10)
+			create parameters.make_filled (empty_string, 1, 10)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -9624,7 +9624,7 @@ feature {NONE} -- Initialization
 			code := template_code (vtct0a_template_code)
 			etl_code := vtct_etl_code
 			default_template := default_message_template (vtct0a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -9665,7 +9665,7 @@ feature {NONE} -- Initialization
 			code := template_code (vtct0b_template_code)
 			etl_code := vtct_etl_code
 			default_template := default_message_template (vtct0b_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -9707,7 +9707,7 @@ feature {NONE} -- Initialization
 			code := template_code (vtgc0a_template_code)
 			etl_code := vtgc_etl_code
 			default_template := default_message_template (vtgc0a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -9754,7 +9754,7 @@ feature {NONE} -- Initialization
 			code := template_code (vtgc0b_template_code)
 			etl_code := vtgc_etl_code
 			default_template := default_message_template (vtgc0b_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -9798,7 +9798,7 @@ feature {NONE} -- Initialization
 			code := template_code (vtug1a_template_code)
 			etl_code := vtug1_etl_code
 			default_template := default_message_template (vtug1a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -9842,7 +9842,7 @@ feature {NONE} -- Initialization
 			code := template_code (vtug2a_template_code)
 			etl_code := vtug2_etl_code
 			default_template := default_message_template (vtug2a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -9886,7 +9886,7 @@ feature {NONE} -- Initialization
 			code := template_code (vuar1a_template_code)
 			etl_code := vuar1_etl_code
 			default_template := default_message_template (vuar1a_default_template)
-			create parameters.make (1, 9)
+			create parameters.make_filled (empty_string, 1, 9)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -9932,7 +9932,7 @@ feature {NONE} -- Initialization
 			code := template_code (vuar1b_template_code)
 			etl_code := vuar1_etl_code
 			default_template := default_message_template (vuar1b_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -9972,7 +9972,7 @@ feature {NONE} -- Initialization
 			code := template_code (vuar1c_template_code)
 			etl_code := vuar1_etl_code
 			default_template := default_message_template (vuar1c_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -10021,7 +10021,7 @@ feature {NONE} -- Initialization
 			code := template_code (vuar2a_template_code)
 			etl_code := vuar2_etl_code
 			default_template := default_message_template (vuar2a_default_template)
-			create parameters.make (1, 12)
+			create parameters.make_filled (empty_string, 1, 12)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -10079,7 +10079,7 @@ feature {NONE} -- Initialization
 			code := template_code (vuar2b_template_code)
 			etl_code := vuar2_etl_code
 			default_template := default_message_template (vuar2b_default_template)
-			create parameters.make (1, 11)
+			create parameters.make_filled (empty_string, 1, 11)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -10128,7 +10128,7 @@ feature {NONE} -- Initialization
 			code := template_code (vuar4a_template_code)
 			etl_code := vuar4_etl_code
 			default_template := default_message_template (vuar4a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -10169,7 +10169,7 @@ feature {NONE} -- Initialization
 			code := template_code (vuex1a_template_code)
 			etl_code := vuex1_etl_code
 			default_template := default_message_template (vuex1a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -10211,7 +10211,7 @@ feature {NONE} -- Initialization
 			code := template_code (vuex2a_template_code)
 			etl_code := vuex2_etl_code
 			default_template := default_message_template (vuex2a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -10258,7 +10258,7 @@ feature {NONE} -- Initialization
 			code := template_code (vuex2b_template_code)
 			etl_code := vuex2_etl_code
 			default_template := default_message_template (vuex2b_default_template)
-			create parameters.make (1, 9)
+			create parameters.make_filled (empty_string, 1, 9)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -10303,7 +10303,7 @@ feature {NONE} -- Initialization
 			code := template_code (vuot1a_template_code)
 			etl_code := vuot1_etl_code
 			default_template := default_message_template (vuot1a_default_template)
-			create parameters.make (1, 6)
+			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -10343,7 +10343,7 @@ feature {NONE} -- Initialization
 			code := template_code (vuot1b_template_code)
 			etl_code := vuot1_etl_code
 			default_template := default_message_template (vuot1b_default_template)
-			create parameters.make (1, 6)
+			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -10383,7 +10383,7 @@ feature {NONE} -- Initialization
 			code := template_code (vuot1c_template_code)
 			etl_code := vuot1_etl_code
 			default_template := default_message_template (vuot1c_default_template)
-			create parameters.make (1, 6)
+			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -10422,7 +10422,7 @@ feature {NONE} -- Initialization
 			code := template_code (vuot1d_template_code)
 			etl_code := vuot1_etl_code
 			default_template := default_message_template (vuot1d_default_template)
-			create parameters.make (1, 6)
+			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -10462,7 +10462,7 @@ feature {NONE} -- Initialization
 			code := template_code (vuot1e_template_code)
 			etl_code := vuot1_etl_code
 			default_template := default_message_template (vuot1e_default_template)
-			create parameters.make (1, 6)
+			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -10504,7 +10504,7 @@ feature {NONE} -- Initialization
 			code := template_code (vuot3a_template_code)
 			etl_code := vuot3_etl_code
 			default_template := default_message_template (vuot3a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -10547,7 +10547,7 @@ feature {NONE} -- Initialization
 			code := template_code (vuot3b_template_code)
 			etl_code := vuot3_etl_code
 			default_template := default_message_template (vuot3b_default_template)
-			create parameters.make (1, 6)
+			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -10585,7 +10585,7 @@ feature {NONE} -- Initialization
 			code := template_code (vuot4a_template_code)
 			etl_code := vuot4_etl_code
 			default_template := default_message_template (vuot4a_default_template)
-			create parameters.make (1, 6)
+			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -10623,7 +10623,7 @@ feature {NONE} -- Initialization
 			code := template_code (vuot4b_template_code)
 			etl_code := vuot4_etl_code
 			default_template := default_message_template (vuot4b_default_template)
-			create parameters.make (1, 6)
+			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -10665,7 +10665,7 @@ feature {NONE} -- Initialization
 			code := template_code (vwbe0a_template_code)
 			etl_code := vwbe_etl_code
 			default_template := default_message_template (vwbe0a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -10710,7 +10710,7 @@ feature {NONE} -- Initialization
 			code := template_code (vweq0a_template_code)
 			etl_code := vweq_etl_code
 			default_template := default_message_template (vweq0a_default_template)
-			create parameters.make (1, 9)
+			create parameters.make_filled (empty_string, 1, 9)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -10759,7 +10759,7 @@ feature {NONE} -- Initialization
 			code := template_code (vweq0b_template_code)
 			etl_code := vweq_etl_code
 			default_template := default_message_template (vweq0b_default_template)
-			create parameters.make (1, 9)
+			create parameters.make_filled (empty_string, 1, 9)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -10806,7 +10806,7 @@ feature {NONE} -- Initialization
 			code := template_code (vwmq0a_template_code)
 			etl_code := vwmq_etl_code
 			default_template := default_message_template (vwmq0a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -10849,7 +10849,7 @@ feature {NONE} -- Initialization
 			code := template_code (vwmq0b_template_code)
 			etl_code := vwmq_etl_code
 			default_template := default_message_template (vwmq0b_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -10892,7 +10892,7 @@ feature {NONE} -- Initialization
 			code := template_code (vwmq0c_template_code)
 			etl_code := vwmq_etl_code
 			default_template := default_message_template (vwmq0c_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -10935,7 +10935,7 @@ feature {NONE} -- Initialization
 			code := template_code (vwmq0d_template_code)
 			etl_code := vwmq_etl_code
 			default_template := default_message_template (vwmq0d_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -10976,7 +10976,7 @@ feature {NONE} -- Initialization
 			code := template_code (vwst1a_template_code)
 			etl_code := vwst1_etl_code
 			default_template := default_message_template (vwst1a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -11018,7 +11018,7 @@ feature {NONE} -- Initialization
 			code := template_code (vwst1a_template_code)
 			etl_code := vwst1_etl_code
 			default_template := default_message_template (vwst1a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -11061,7 +11061,7 @@ feature {NONE} -- Initialization
 			code := template_code (vwst2a_template_code)
 			etl_code := vwst2_etl_code
 			default_template := default_message_template (vwst2a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -11101,7 +11101,7 @@ feature {NONE} -- Initialization
 			code := template_code (vxrt0a_template_code)
 			etl_code := vxrt_etl_code
 			default_template := default_message_template (vxrt0a_default_template)
-			create parameters.make (1, 6)
+			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -11142,7 +11142,7 @@ feature {NONE} -- Initialization
 			code := template_code (gvagp0a_template_code)
 			etl_code := gvagp_etl_code
 			default_template := default_message_template (gvagp0a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -11184,7 +11184,7 @@ feature {NONE} -- Initialization
 			code := template_code (gvhpr4a_template_code)
 			etl_code := gvhpr4_etl_code
 			default_template := default_message_template (gvhpr4a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -11224,7 +11224,7 @@ feature {NONE} -- Initialization
 			code := template_code (gvhpr5a_template_code)
 			etl_code := gvhpr5_etl_code
 			default_template := default_message_template (gvhpr5a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -11264,7 +11264,7 @@ feature {NONE} -- Initialization
 			code := template_code (gvhso1a_template_code)
 			etl_code := gvhso1_etl_code
 			default_template := default_message_template (gvhso1a_default_template)
-			create parameters.make (1, 6)
+			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -11302,7 +11302,7 @@ feature {NONE} -- Initialization
 			code := template_code (gvhso2a_template_code)
 			etl_code := gvhso2_etl_code
 			default_template := default_message_template (gvhso2a_default_template)
-			create parameters.make (1, 6)
+			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -11367,7 +11367,7 @@ feature {NONE} -- Initialization
 				l_signature.append_string (": ")
 				l_signature.append_string (a_expected_type.to_text)
 			end
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -11411,7 +11411,7 @@ feature {NONE} -- Initialization
 			code := template_code (gvkbu1a_template_code)
 			etl_code := gvkbu1_etl_code
 			default_template := default_message_template (gvkbu1a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -11452,7 +11452,7 @@ feature {NONE} -- Initialization
 			code := template_code (gvkfe1a_template_code)
 			etl_code := gvkfe1_etl_code
 			default_template := default_message_template (gvkfe1a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -11498,7 +11498,7 @@ feature {NONE} -- Initialization
 			code := template_code (gvkfe2a_template_code)
 			etl_code := gvkfe2_etl_code
 			default_template := default_message_template (gvkfe2a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -11546,7 +11546,7 @@ feature {NONE} -- Initialization
 			code := template_code (gvkfe3a_template_code)
 			etl_code := gvkfe3_etl_code
 			default_template := default_message_template (gvkfe3a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -11594,7 +11594,7 @@ feature {NONE} -- Initialization
 			code := template_code (gvkfe4a_template_code)
 			etl_code := gvkfe4_etl_code
 			default_template := default_message_template (gvkfe4a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -11640,7 +11640,7 @@ feature {NONE} -- Initialization
 			code := template_code (gvkfe5a_template_code)
 			etl_code := gvkfe5_etl_code
 			default_template := default_message_template (gvkfe5a_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -11681,7 +11681,7 @@ feature {NONE} -- Initialization
 			code := template_code (gvscn1a_template_code)
 			etl_code := gvscn1_etl_code
 			default_template := default_message_template (gvscn1a_default_template)
-			create parameters.make (1, 9)
+			create parameters.make_filled (empty_string, 1, 9)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -11725,7 +11725,7 @@ feature {NONE} -- Initialization
 			code := template_code (gvscn1b_template_code)
 			etl_code := gvscn1_etl_code
 			default_template := default_message_template (gvscn1b_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -11770,7 +11770,7 @@ feature {NONE} -- Initialization
 			code := template_code (gvtcg5a_template_code)
 			etl_code := gvtcg5_etl_code
 			default_template := default_message_template (gvtcg5a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -11815,7 +11815,7 @@ feature {NONE} -- Initialization
 			code := template_code (gvtcg5b_template_code)
 			etl_code := gvtcg5_etl_code
 			default_template := default_message_template (gvtcg5b_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -11860,7 +11860,7 @@ feature {NONE} -- Initialization
 			code := template_code (gvuaa0a_template_code)
 			etl_code := gvuaa_etl_code
 			default_template := default_message_template (gvuaa0a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -11905,7 +11905,7 @@ feature {NONE} -- Initialization
 			code := template_code (gvuaa0b_template_code)
 			etl_code := gvuaa_etl_code
 			default_template := default_message_template (gvuaa0b_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -11948,7 +11948,7 @@ feature {NONE} -- Initialization
 			code := template_code (gvual0a_template_code)
 			etl_code := gvual_etl_code
 			default_template := default_message_template (gvual0a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -11993,7 +11993,7 @@ feature {NONE} -- Initialization
 			code := template_code (gvual0b_template_code)
 			etl_code := gvual_etl_code
 			default_template := default_message_template (gvual0b_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -12035,7 +12035,7 @@ feature {NONE} -- Initialization
 			code := template_code (gvuia0a_template_code)
 			etl_code := gvuia_etl_code
 			default_template := default_message_template (gvuia0a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -12079,7 +12079,7 @@ feature {NONE} -- Initialization
 			code := template_code (gvuia0b_template_code)
 			etl_code := gvuia_etl_code
 			default_template := default_message_template (gvuia0b_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -12121,7 +12121,7 @@ feature {NONE} -- Initialization
 			code := template_code (gvuil0a_template_code)
 			etl_code := gvuil_etl_code
 			default_template := default_message_template (gvuil0a_default_template)
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -12165,7 +12165,7 @@ feature {NONE} -- Initialization
 			code := template_code (gvuil0b_template_code)
 			etl_code := gvuil_etl_code
 			default_template := default_message_template (gvuil0b_default_template)
-			create parameters.make (1, 7)
+			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -12217,7 +12217,7 @@ feature {NONE} -- Initialization
 			else
 				l_literal := "+" + a_constant.literal
 			end
-			create parameters.make (1, 8)
+			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)

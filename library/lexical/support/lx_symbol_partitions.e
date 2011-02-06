@@ -6,7 +6,7 @@ note
 		%possibly belonging to none of the equivalence classes"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			-- Make structure to allow creation of a set of partitions
 			-- for symbols within bounds `min'..`max'.
 		do
-			create symbols.make (min, max)
+			create symbols.make_filled (False, min, max)
 			precursor (min, max)
 		end
 

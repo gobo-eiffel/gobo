@@ -5,7 +5,7 @@ note
 		"Data structures that may be traversed forward"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/10/06 $"
 	revision: "$Revision: #8 $"
@@ -195,16 +195,22 @@ feature -- Duplication
 			a_cursor: like new_cursor
 			i: INTEGER
 		do
-			create Result.make (1, count)
-			a_cursor := new_cursor
-			from
-				a_cursor.start
-			until
-				a_cursor.after
-			loop
-				i := i + 1
-				Result.put (a_cursor.item, i)
-				a_cursor.forth
+			if is_empty then
+				Result := (create {KL_ARRAY_ROUTINES [G]}).make_empty_with_lower (1)
+			else
+				from
+					a_cursor := new_cursor
+					a_cursor.start
+					i := 1
+					create Result.make_filled (a_cursor.item, 1, count)
+					a_cursor.forth
+				until
+					a_cursor.after
+				loop
+					i := i + 1
+					Result.put (a_cursor.item, i)
+					a_cursor.forth
+				end
 			end
 		ensure
 			to_array_not_void: Result /= Void

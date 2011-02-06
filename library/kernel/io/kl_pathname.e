@@ -5,7 +5,7 @@ note
 		"Pathnames"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 	make
 			-- Create a new empty pathname.
 		do
-			create components.make (1, Initial_components_capacity)
+			create components.make_filled (Void, 1, Initial_components_capacity)
 		ensure
 			not_relative: not is_relative
 		end

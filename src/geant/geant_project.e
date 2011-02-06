@@ -5,7 +5,7 @@ note
 		"Contents of geant project files"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2002, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2011, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,11 +44,7 @@ feature {NONE} -- Initialization
 		do
 			name := a_name
 			output_file := std.output
-			if a_variables = Void then
-				create variables.make
-			else
-				set_variables (a_variables)
-			end
+			set_variables (a_variables)
 			set_options (a_options)
 			create selected_targets.make_map (5)
 			create a_tester
@@ -59,9 +55,8 @@ feature {NONE} -- Initialization
 
 			build_successful := True
 		ensure
-			variables_set: a_variables /= Void implies variables = a_variables
-			variables_created: a_variables = Void implies variables /= Void
-			options_set: a_options /= Void implies options = a_options
+			variables_set: variables = a_variables
+			options_set: options = a_options
 			selected_targets_not_void: selected_targets /= Void
 			name_set: name = a_name
 		end
@@ -84,7 +79,7 @@ feature -- Access
 			-- Array of available variables sets
 			-- i.e: arguments, locals, variables
 		do
-			create Result.make (1, 3)
+			create Result.make_filled (Void, 1, 3)
 			Result[1] := target_arguments_stack.item
 			Result[2] := target_locals_stack.item
 			Result[3] := variables
@@ -658,5 +653,6 @@ invariant
 	no_void_target: targets /= Void implies not targets.has (Void)
 	output_file_not_void: output_file /= Void
 	output_file_open_write: output_file.is_open_write
+	variables_not_void: variables /= Void
 
 end

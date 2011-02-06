@@ -5,7 +5,7 @@ note
 		"XPath axis definitions"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2003, Colin Adams and others"
+	copyright: "Copyright (c) 2003-2011, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -344,7 +344,7 @@ feature {NONE} -- Implementation
 	empty_axis_table: ARRAY [INTEGER]
 		-- Table used by `is_axis_always_empty'
 		once
-			create Result.make (Ancestor_axis, Preceding_or_ancestor_axis)
+			create Result.make_filled (0, Ancestor_axis, Preceding_or_ancestor_axis)
 			Result.put (document_kind, Ancestor_axis)
 			Result.put (0, Ancestor_or_self_axis)
 			Result.put (INTEGER_.bit_or (namespace_kind, INTEGER_.bit_or (document_kind, INTEGER_.bit_or (miscellaneous_kinds, attribute_kind))), Attribute_axis)
@@ -363,7 +363,7 @@ feature {NONE} -- Implementation
 	axis_node_kind_table: ARRAY [INTEGER]
 		-- Table uses by `axis_contains_node_kind'
 		once
-			create Result.make (Ancestor_axis, Preceding_or_ancestor_axis)
+			create Result.make_filled (0, Ancestor_axis, Preceding_or_ancestor_axis)
 			Result.put (INTEGER_.bit_or (document_kind, element_kind), Ancestor_axis)
 			Result.put (INTEGER_.bit_or (namespace_kind, INTEGER_.bit_or (document_kind, INTEGER_.bit_or (attribute_kind, INTEGER_.bit_or (element_kind, miscellaneous_kinds)))), Ancestor_or_self_axis)
 			Result.put (attribute_kind, Attribute_axis)

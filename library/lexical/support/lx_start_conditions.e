@@ -5,7 +5,7 @@ note
 		"Lexical analyzer start condition lists"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,6 +17,12 @@ inherit
 	DS_ARRAYED_LIST [LX_START_CONDITION]
 
 	KL_IMPORTED_STRING_ROUTINES
+		undefine
+			is_equal,
+			copy
+		end
+
+	KL_IMPORTED_ARRAY_ROUTINES
 		undefine
 			is_equal,
 			copy
@@ -103,14 +109,18 @@ feature -- Access
 			i, nb: INTEGER
 		do
 			nb := count
-			create Result.make (0, nb - 1)
-			from
-				i := 1
-			until
-				i > nb
-			loop
-				Result.put (item (i).name, i - 1)
-				i := i + 1
+			if nb = 0 then
+				Result := STRING_ARRAY_.make_empty_with_lower (0)
+			else
+				from
+					create Result.make_filled (first.name, 0, nb - 1)
+					i := 2
+				until
+					i > nb
+				loop
+					Result.put (item (i).name, i - 1)
+					i := i + 1
+				end
 			end
 		ensure
 			names_not_void: Result /= Void

@@ -6,7 +6,7 @@ note
 
 	remark: "To be used with 'geyacc --new_typing'."
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 2003-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -565,7 +565,7 @@ feature {YY_PARSER_ACTION} -- Access
 			j: INTEGER
 		do
 			nb := yyMax_token
-			create t.make (1, nb + 1)
+			create t.make_filled (0, 1, nb + 1)
 			from
 			until
 				i > nb
@@ -576,7 +576,7 @@ feature {YY_PARSER_ACTION} -- Access
 				end
 				i := i + 1
 			end
-			create Result.make (1, j)
+			create Result.make_filled (0, 1, j)
 			from
 				i := 1
 			until

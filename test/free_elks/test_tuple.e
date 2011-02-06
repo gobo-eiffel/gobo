@@ -5,7 +5,7 @@ note
 		"Test features of class TUPLE"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -43,7 +43,7 @@ feature -- Test
 			t1: TUPLE [l1: ANY]
 			s1: STRING
 			a1: ARRAY [CHARACTER]
-			a2: ARRAY [STRING]
+			a2: ARRAY [detachable STRING]
 			l_expected: ANY
 			i: INTEGER
 		do
@@ -54,11 +54,11 @@ feature -- Test
 					t1 := [s1]
 					l_expected := s1
 				when 2 then
-					create a1.make (1, 1)
+					create a1.make_filled ('%U', 1, 1)
 					t1 := [a1]
 					l_expected := a1
 				else
-					create a2.make (1, 1)
+					create a2.make_filled (Void, 1, 1)
 					t1 := [a2]
 					l_expected := a2
 				end
@@ -92,7 +92,7 @@ feature -- Test
 			t1: TUPLE [l1: ANY; l2: CHARACTER]
 			s1: STRING
 			a1: ARRAY [CHARACTER]
-			a2: ARRAY [STRING]
+			a2: ARRAY [detachable STRING]
 			i: INTEGER
 		do
 			from i := 1 until i > 3 loop
@@ -101,10 +101,10 @@ feature -- Test
 					s1 := "gobo"
 					t1 := [s1, 'a']
 				when 2 then
-					create a1.make (1, 1)
+					create a1.make_filled ('%U', 1, 1)
 					t1 := [a1, 'a']
 				else
-					create a2.make (1, 1)
+					create a2.make_filled (Void, 1, 1)
 					t1 := ['z', 'a']
 				end
 				assert ("t1_not_void", t1 /= Void)
@@ -284,12 +284,12 @@ feature -- Test
 		local
 			t: TUPLE [COMPARABLE]
 			s: STRING
-			a: ARRAY [ANY]
+			a: ARRAY [detachable ANY]
 		do
 			create t
 			s := "gobo"
 			assert ("valid1", t.valid_type_for_index (s, 1))
-			create a.make (1, 1)
+			create a.make_filled (Void, 1, 1)
 			assert ("not_valid1", not t.valid_type_for_index (a, 1))
 		end
 

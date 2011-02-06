@@ -5,7 +5,7 @@ note
 		"Stacks (Last-In, First-Out) implemented with arrays"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/10/06 $"
 	revision: "$Revision: #10 $"
@@ -373,8 +373,6 @@ feature -- Iteration
 			invariant
 				i_large_enough: i >= 0
 				i_small_enough: i <= count
-			variant
-				index: i
 			until
 				i < 1
 			loop
@@ -386,6 +384,8 @@ feature -- Iteration
 					an_action.call ([l_item])
 				end
 				i := i - 1
+			variant
+				index: i
 			end
 		end
 
@@ -403,8 +403,6 @@ feature -- Iteration
 			invariant
 				i_large_enough: i >= 0
 				i_small_enough: i <= count
-			variant
-				index: i
 			until
 				i < 1
 			loop
@@ -416,6 +414,8 @@ feature -- Iteration
 					an_action.call ([l_item])
 				end
 				i := i - 1
+			variant
+				index: i
 			end
 		end
 

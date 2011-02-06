@@ -5,7 +5,7 @@ note
 		"Interface for pathnames"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -161,9 +161,9 @@ feature -- Access
 			nb := a_pathname.count
 			j := nb - i + 1
 			if j <= 0 then
-				create Result.make (1, 0)
+				create Result.make_filled ("", 1, 0)
 			else
-				create Result.make (1, j)
+				create Result.make_filled ("", 1, j)
 				from
 					j := 1
 				until

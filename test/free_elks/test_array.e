@@ -5,7 +5,7 @@ note
 		"Test features of class ARRAY"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -51,7 +51,7 @@ feature -- Test
 		do
 			if not eiffel_compiler.is_ise and not eiffel_compiler.is_ge then
 					-- Subarray of an empty array.
-				create l_ai1.make (4, 3)
+				create l_ai1.make_filled (0, 4, 3)
 				l_ai2 := l_ai1.subarray (4, 3)
 				assert_integers_equal ("same_items3", 0, l_ai2.count)
 				assert_integers_equal ("lower_set3", 4, l_ai2.lower)
@@ -63,10 +63,10 @@ feature -- Test
 			-- Test feature `clear_all'.
 		local
 			l_ai: ARRAY [INTEGER]
-			l_as: ARRAY [STRING]
-			void_as: ARRAY [STRING]
+			l_as: ARRAY [detachable STRING]
+			void_as: ARRAY [detachable STRING]
 		do
-			create l_ai.make (4, 7)
+			create l_ai.make_filled (0, 4, 7)
 			l_ai.put (1, 4)
 			l_ai.put (2, 5)
 			l_ai.put (3, 6)
@@ -81,10 +81,10 @@ feature -- Test
 			l_as := <<"1", "2", "3", "4">>
 			assert_arrays_equal ("as_initialized", <<"1", "2", "3", "4">>, l_as)
 			l_as.clear_all
-			create void_as.make (1, 4)
+			create void_as.make_filled (Void, 1, 4)
 			assert_arrays_same ("as_all_cleared", void_as, l_as)
 				-- Empty array.
-			create l_as.make (3, 2)
+			create l_as.make_filled ("", 3, 2)
 			assert_integers_equal ("as_empty2", 0, l_as.count)
 			l_as.clear_all
 			assert_integers_equal ("as_still_empty2", 0, l_as.count)

@@ -5,7 +5,7 @@ note
 		"Routines that ought to be in class ARRAY"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,6 +30,18 @@ feature -- Initialization
 			lower_set: Result.lower = min_index
 			count_set: Result.count = an_array.count
 --			same_items: forall i in Result.lower .. Result.upper, Result.item (i) = an_array.item (i + an_array.lower - min_index)
+		end
+
+	make_empty_with_lower (min_index: INTEGER): ARRAY [G]
+			-- Create an empty array with `min_index' as lower bound.
+		local
+			l_default: G
+		do
+			create Result.make_filled (l_default, min_index, min_index - 1)
+		ensure
+			array_not_void: Result /= Void
+			lower_set: Result.lower = min_index
+			is_empty: Result.is_empty
 		end
 
 feature -- Status report
@@ -108,8 +120,12 @@ feature -- Access
 			end_pos_small_enough: end_pos <= an_array.upper
 			valid_bounds: start_pos <= end_pos + 1
 		do
-			create Result.make (min_index, min_index + end_pos - start_pos)
-			subcopy (Result, an_array, start_pos, end_pos, min_index)
+			if end_pos < start_pos then
+				Result := make_empty_with_lower (min_index)
+			else
+				create Result.make_filled (an_array.item (start_pos), min_index, min_index + end_pos - start_pos)
+				subcopy (Result, an_array, start_pos, end_pos, min_index)
+			end
 		ensure
 			array_not_void: Result /= Void
 			lower_set: Result.lower = min_index

@@ -5,7 +5,7 @@ note
 	"Emitters that write XML."
 
 library: "Gobo Eiffel XSLT Library"
-copyright: "Copyright (c) 2004, Colin Adams and others"
+copyright: "Copyright (c) 2004-2011, Colin Adams and others"
 license: "MIT License"
 date: "$Date$"
 revision: "$Revision$"
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 			is_empty := True
 			create element_qname_stack.make_default
 			element_qname_stack.set_equality_tester (string_equality_tester)
-			create name_lookup_table.make (0, name_lookup_table_size - 1)
+			create name_lookup_table.make_filled (Void, 0, name_lookup_table_size - 1)
 			make_specials
 			base_uri := "" -- TODO - set `base_uri'
 			encoder_factory := serializer.encoder_factory
@@ -421,7 +421,7 @@ feature {NONE} -- Implementation
 	allow_undeclare_prefixes: BOOLEAN
 			-- Are namespace undeclarations allowed?
 
-	name_lookup_table: ARRAY [STRING]
+	name_lookup_table: ARRAY [detachable STRING]
 			-- Cache for frequent QNames, indexed by name code
 
 	name_lookup_table_size: INTEGER
@@ -461,13 +461,13 @@ feature {NONE} -- Implementation
 	specials_in_text: ARRAY [BOOLEAN]
 			-- Lookup table for ASCII characters that need escaping in text
 		once
-			create Result.make (0, 127)
+			create Result.make_filled (False, 0, 127)
 		end
 
 	specials_in_attributes: ARRAY [BOOLEAN]
 			-- Lookup table for ASCII characters that need escaping in attributes
 		once
-			create Result.make (0, 127)
+			create Result.make_filled (False, 0, 127)
 		end
 
 	make_specials

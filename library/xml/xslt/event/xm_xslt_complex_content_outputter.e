@@ -4,7 +4,7 @@ note
 		"Objects that output complex content."
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2011, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -55,11 +55,11 @@ feature {NONE} -- Initialization
 			pending_start_tag := -2
 			document_uri := a_underlying_receiver.document_uri
 			base_uri := a_underlying_receiver.base_uri
-			create pending_attributes_name_codes.make (1, Initial_arrays_size)
-			create pending_attributes_type_codes.make (1, Initial_arrays_size)
-			create pending_attributes_values.make (1, Initial_arrays_size)
-			create pending_attributes_properties.make (1, Initial_arrays_size)
-			create pending_namespaces.make (1, 3)
+			create pending_attributes_name_codes.make_filled (0, 1, Initial_arrays_size)
+			create pending_attributes_type_codes.make_filled (0, 1, Initial_arrays_size)
+			create pending_attributes_values.make_filled (Void, 1, Initial_arrays_size)
+			create pending_attributes_properties.make_filled (0, 1, Initial_arrays_size)
+			create pending_namespaces.make_filled (0, 1, 3)
 		ensure
 			next_receiver_set: next_receiver = a_underlying_receiver
 			no_pending_start_tag: pending_start_tag = -2

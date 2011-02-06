@@ -5,12 +5,19 @@ note
 		"Equivalence classes of integer symbols"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class LX_EQUIVALENCE_CLASSES
+
+inherit
+
+	ANY
+
+	KL_IMPORTED_ARRAY_ROUTINES
+		export {NONE} all end
 
 create
 
@@ -25,17 +32,18 @@ feature {NONE} -- Initialization
 		require
 			valid_bounds: min <= max
 		local
-			cell: DS_BILINKABLE [INTEGER]
+			l_cell: DS_BILINKABLE [INTEGER]
 			i: INTEGER
 		do
-			create storage.make (min, max)
+			create l_cell.make (min)
+			create storage.make_filled (l_cell, min, max)
 			from
-				i := min
+				i := min + 1
 			until
 				i > max
 			loop
-				create cell.make (i)
-				storage.put (cell, i)
+				create l_cell.make (i)
+				storage.put (l_cell, i)
 				i := i + 1
 			end
 			initialize
@@ -226,7 +234,7 @@ feature -- Element change
 				-- symbol class is negated. The same results will
 				-- be obtained in either case.
 			nb := symbol_class.count
-			create flags.make (lower, upper)
+			create flags.make_filled (False, lower, upper)
 			from
 				k := 1
 			until
@@ -308,7 +316,7 @@ feature -- Conversion
 		local
 			i, nb: INTEGER
 		do
-			create Result.make (lower, upper)
+			create Result.make_filled (0, lower, upper)
 			nb := upper
 			from
 				i := lower
@@ -334,7 +342,7 @@ feature -- Conversion
 		local
 			i, nb: INTEGER
 		do
-			create Result.make (l, u)
+			create Result.make_filled (0, l, u)
 			nb := upper.min (u)
 			from
 				i := lower.max (l)
@@ -360,6 +368,7 @@ feature {NONE} -- Implementation
 invariant
 
 	storage_not_void: storage /= Void
+	no_void_cell: not ANY_ARRAY_.has_void (storage)
 	valid_bounds: lower <= upper
 	positive_count: count >= 0
 	built_definition: built = (count /= 0)

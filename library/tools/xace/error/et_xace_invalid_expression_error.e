@@ -5,7 +5,7 @@ note
 		"Error: Unknown child element in element error"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2011, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			an_invalid_expression_not_void: an_invalid_expression /= Void
 			a_position_not_void: a_position /= Void
 		do
-			create parameters.make (1, 2)
+			create parameters.make_filled (empty_string, 1, 2)
 			parameters.put (an_invalid_expression, 1)
 			parameters.put (a_position.out, 2)
 		end

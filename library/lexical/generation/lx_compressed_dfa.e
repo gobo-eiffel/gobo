@@ -241,10 +241,10 @@ feature -- Building
 			create templates.make (meta_equiv_classes)
 			create partitions.make (minimum_symbol, maximum_symbol)
 				-- Allocate memory for compressed tables.
-			create yy_nxt.make (0, Initial_max_xpairs)
-			create yy_chk.make (0, Initial_max_xpairs)
-			create yy_base.make (0, states.capacity)
-			create yy_def.make (0, states.capacity)
+			create yy_nxt.make_filled (0, 0, Initial_max_xpairs)
+			create yy_chk.make_filled (0, 0, Initial_max_xpairs)
+			create yy_base.make_filled (0, 0, states.capacity)
+			create yy_def.make_filled (0, 0, states.capacity)
 				-- The compressed table format jams by entering the
 				-- jam state, losing information about the previous
 				-- state in the process. In order to recover the
@@ -309,8 +309,8 @@ feature {NONE} -- Building
 				-- `yy_nxt' and `yy_chk' are indexed
 				-- from 1 to `table_end'.
 			nb := table_end
-			create yy_nxt_.make (0, nb)
-			create yy_chk_.make (0, nb)
+			create yy_nxt_.make_filled (0, 0, nb)
+			create yy_chk_.make_filled (0, 0, nb)
 			from
 				i := 1
 			until
@@ -339,8 +339,8 @@ feature {NONE} -- Building
 				-- `yy_base' and `yy_def' are indexed
 				-- from 1 to `count'+`templates_count'.
 			nb := states.count + templates_count
-			create yy_base_.make (0, nb)
-			create yy_def_.make (0, nb)
+			create yy_base_.make_filled (0, 0, nb)
+			create yy_def_.make_filled (0, 0, nb)
 			from
 				i := 1
 			until
@@ -375,7 +375,7 @@ feature {NONE} -- Building
 					-- because we tell where the end of an accepting list
 					-- is by looking at where the list for the next
 					-- state starts. (Hence nb + 2)
-				create yy_accept_.make (0, nb + 2)
+				create yy_accept_.make_filled (0, 0, nb + 2)
 					-- First generate the `yy_acclist' array. In the process,
 					-- we compute the indices that go into the `yy_accept'
 					-- array which will contain pointers into the
@@ -390,7 +390,7 @@ feature {NONE} -- Building
 					j := j + state.accepted_head_rules.count
 					i := i + 1
 				end
-				create yy_acclist_.make (0, j.max (1))
+				create yy_acclist_.make_filled (0, 0, j.max (1))
 				j := 1
 				from
 					i := 1
@@ -443,7 +443,7 @@ feature {NONE} -- Building
 			else
 					-- Make room for the jam state accepting id
 					-- (hence nb + 1).
-				create yy_accept_.make (0, nb + 1)
+				create yy_accept_.make_filled (0, 0, nb + 1)
 				from
 					i := 1
 				until

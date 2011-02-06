@@ -5,7 +5,7 @@ note
 		"Objects that bind global variable names to values"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2011, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -143,8 +143,8 @@ feature {NONE} -- Implementation
 		require
 			strictly_positive_global_count: a_global_variable_count > 0
 		do
-			create global_variables.make (1, a_global_variable_count)
-			create busy_globals.make (1, a_global_variable_count)
+			create global_variables.make_filled (Void, 1, a_global_variable_count)
+			create busy_globals.make_filled (False, 1, a_global_variable_count)
 		end
 
 invariant

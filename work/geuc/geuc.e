@@ -1,11 +1,10 @@
-
 note
 
 	description:
 
 		"Gobo Eiffel generator for Unicode Classes"
 
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2011, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -45,7 +44,7 @@ feature -- Execution
 			Arguments.set_program_name ("geuc")
 			create error_handler.make_standard
 			process_command_line
-			create codes.make (minimum_unicode_character_code, maximum_unicode_character_code)
+			create codes.make_filled (Void, minimum_unicode_character_code, maximum_unicode_character_code)
 			parse_character_classes
 			parse_derived_core_properties
 			parse_derived_normalization_properties
@@ -893,12 +892,12 @@ feature {NONE} -- Implementation
 			l_empty_plane_written, l_empty_segment_written: BOOLEAN
 			l_plane_array_name, l_segment_array_name: STRING
 		do
-			create l_plane_names.make (0, 16)
+			create l_plane_names.make_filled (Void, 0, 16)
 			from i := 0 until i > 16 loop
-				create l_segment_names.make (0, 255)
+				create l_segment_names.make_filled (Void, 0, 255)
 				l_plane_all_absent := True
 				from j := 0 until j > 255 loop
-					create l_segment.make (0, 255)
+					create l_segment.make_filled (0, 0, 255)
 					l_segment_all_absent := True
 					from k := 0 until k > 255 loop
 						l_code := k + 256 * j + 256 * 256 * i
@@ -973,12 +972,12 @@ feature {NONE} -- Implementation
 			l_empty_plane_written, l_empty_segment_written: BOOLEAN
 			l_plane_array_name, l_segment_array_name: STRING
 		do
-			create l_plane_names.make (0, 16)
+			create l_plane_names.make_filled (Void, 0, 16)
 			from i := 0 until i > 16 loop
-				create l_segment_names.make (0, 255)
+				create l_segment_names.make_filled (Void, 0, 255)
 				l_plane_all_absent := True
 				from j := 0 until j > 255 loop
-					create l_segment.make (0, 255)
+					create l_segment.make_filled (0, 0, 255)
 					l_segment_all_absent := True
 					from k := 0 until k > 255 loop
 						l_code := k + 256 * j + 256 * 256 * i
@@ -1204,12 +1203,12 @@ feature {NONE} -- Implementation
 			l_segment: ARRAY [BOOLEAN]
 			l_plane_array_name, l_segment_array_name: STRING
 		do
-			create l_plane_names.make (0, 16)
+			create l_plane_names.make_filled (Void, 0, 16)
 			from i := 0 until i > 16 loop
-				create l_segment_names.make (0, 255)
+				create l_segment_names.make_filled (Void, 0, 255)
 				l_plane_all_false := True
 				from j := 0 until j > 255 loop
-					create l_segment.make (0, 255)
+					create l_segment.make_filled (False, 0, 255)
 					l_segment_all_false := True
 					l_segment_all_true := True
 					from k := 0 until k > 255 loop
@@ -1287,12 +1286,12 @@ feature {NONE} -- Implementation
 			l_segment: ARRAY [INTEGER_8]
 			l_data_point: GEUC_UNICODE_DATA
 		do
-			create l_plane_names.make (0, 16)
+			create l_plane_names.make_filled (Void, 0, 16)
 			from i := 0 until i > 16 loop
-				create l_segment_names.make (0, 255)
+				create l_segment_names.make_filled (Void, 0, 255)
 				l_plane_all_zero := True
 				from j := 0 until j > 255 loop
-					create l_segment.make (0, 255)
+					create l_segment.make_filled (0, 0, 255)
 					l_segment_all_zero := True
 					from k := 0 until k > 255 loop
 						l_data_point := codes.item (k + 256 * j + 256 * 256 * i)
@@ -1366,12 +1365,12 @@ feature {NONE} -- Implementation
 			l_segment: ARRAY [INTEGER_8]
 			l_data_point: GEUC_UNICODE_DATA
 		do
-			create l_plane_names.make (0, 16)
+			create l_plane_names.make_filled (Void, 0, 16)
 			from i := 0 until i > 16 loop
-				create l_segment_names.make (0, 255)
+				create l_segment_names.make_filled (Void, 0, 255)
 				l_plane_all_zero := True
 				from j := 0 until j > 255 loop
-					create l_segment.make (0, 255)
+					create l_segment.make_filled (0, 0, 255)
 					l_segment_all_zero := True
 					from k := 0 until k > 255 loop
 						l_data_point := codes.item (k + 256 * j + 256 * 256 * i)
@@ -1445,12 +1444,12 @@ feature {NONE} -- Implementation
 			l_segment: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			l_data_point: GEUC_UNICODE_DATA
 		do
-			create l_plane_names.make (0, 16)
+			create l_plane_names.make_filled (Void, 0, 16)
 			from i := 0 until i > 16 loop
-				create l_segment_names.make (0, 255)
+				create l_segment_names.make_filled (Void, 0, 255)
 				l_plane_all_empty := True
 				from j := 0 until j > 255 loop
-					create l_segment.make (0, 255)
+					create l_segment.make_filled (Void, 0, 255)
 					l_segment_all_empty := True
 					from k := 0 until k > 255 loop
 						l_code := k + 256 * j + 256 * 256 * i
@@ -1530,12 +1529,12 @@ feature {NONE} -- Implementation
 			l_segment: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			l_data_point: GEUC_UNICODE_DATA
 		do
-			create l_plane_names.make (0, 16)
+			create l_plane_names.make_filled (Void, 0, 16)
 			from i := 0 until i > 16 loop
-				create l_segment_names.make (0, 255)
+				create l_segment_names.make_filled (Void, 0, 255)
 				l_plane_all_empty := True
 				from j := 0 until j > 255 loop
-					create l_segment.make (0, 255)
+					create l_segment.make_filled (Void, 0, 255)
 					l_segment_all_empty := True
 					from k := 0 until k > 255 loop
 						l_code := k + 256 * j + 256 * 256 * i
@@ -1608,12 +1607,12 @@ feature {NONE} -- Implementation
 			l_segment: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			l_data_point: GEUC_UNICODE_DATA
 		do
-			create l_plane_names.make (0, 16)
+			create l_plane_names.make_filled (Void, 0, 16)
 			from i := 0 until i > 16 loop
-				create l_segment_names.make (0, 255)
+				create l_segment_names.make_filled (Void, 0, 255)
 				l_plane_all_empty := True
 				from j := 0 until j > 255 loop
-					create l_segment.make (0, 255)
+					create l_segment.make_filled (Void, 0, 255)
 					l_segment_all_empty := True
 					from k := 0 until k > 255 loop
 						l_code := k + 256 * j + 256 * 256 * i
@@ -1686,12 +1685,12 @@ feature {NONE} -- Implementation
 			l_segment: ARRAY [DS_ARRAYED_LIST [INTEGER]]
 			l_data_point: GEUC_UNICODE_DATA
 		do
-			create l_plane_names.make (0, 16)
+			create l_plane_names.make_filled (Void, 0, 16)
 			from i := 0 until i > 16 loop
-				create l_segment_names.make (0, 255)
+				create l_segment_names.make_filled (Void, 0, 255)
 				l_plane_all_empty := True
 				from j := 0 until j > 255 loop
-					create l_segment.make (0, 255)
+					create l_segment.make_filled (Void, 0, 255)
 					l_segment_all_empty := True
 					from k := 0 until k > 255 loop
 						l_code := k + 256 * j + 256 * 256 * i
@@ -1797,9 +1796,9 @@ feature {NONE} -- Implementation
 			a_output_file.put_string ("%T%T%Tl_pair: DS_HASHABLE_PAIR [INTEGER, INTEGER]%N")
 			a_output_file.put_string ("%T%Tonce%N")
 			a_output_file.put_string ("%T%T%Tcreate Result.make (" + compositions.count.out + ")%N")
-			a_output_file.put_string ("%T%T%Tcreate l_array_1.make (1, " + k.out + ")%N")
-			a_output_file.put_string ("%T%T%Tcreate l_array_2.make (1, " + k.out + ")%N")
-			a_output_file.put_string ("%T%T%Tcreate l_array_3.make (1, " + k.out + ")%N")
+			a_output_file.put_string ("%T%T%Tcreate l_array_1.make_filled (Void, 1, " + k.out + ")%N")
+			a_output_file.put_string ("%T%T%Tcreate l_array_2.make_filled (Void, 1, " + k.out + ")%N")
+			a_output_file.put_string ("%T%T%Tcreate l_array_3.make_filled (Void, 1, " + k.out + ")%N")
 			from l := k; k := 1 until l = 0 loop
 				a_output_file.put_string ("%T%T%Tcreate l_string.make_from_utf8 (composition_map_first_integer_" + k.out + ")%N")
 				a_output_file.put_string ("%T%T%Tl_array_1.put (l_string, " + k.out + ")%N")
@@ -1930,7 +1929,7 @@ feature {NONE} -- Implementation
 			l_plane_names: ARRAY [STRING]
 			l_all_true_plane_written, l_all_false_segment_written, l_all_undefined_segment_written, l_all_true_segment_written: DS_CELL [BOOLEAN]
 		do
-			create l_plane_names.make (0, 16)
+			create l_plane_names.make_filled (Void, 0, 16)
 			create l_all_true_plane_written.make (False)
 			create l_all_false_segment_written.make (False)
 			create l_all_undefined_segment_written.make (False)
@@ -1996,10 +1995,10 @@ feature {NONE} -- Implementation
 			l_plane_all_true, l_segment_all_false, l_segment_all_undefined, l_segment_all_true: DS_CELL [BOOLEAN]
 			l_value: UT_TRISTATE
 		do
-			create l_segment_names.make (0, 255)
+			create l_segment_names.make_filled (Void, 0, 255)
 			create l_plane_all_true.make (True)
 			from j := 0 until j > 255 loop
-				create l_segment.make (0, 255)
+				create l_segment.make_filled (Void, 0, 255)
 				create l_segment_all_false.make (True)
 				create l_segment_all_true.make (True)
 				create l_segment_all_undefined.make (True)
@@ -2141,11 +2140,11 @@ feature {NONE} -- Implementation
 			l_segment: ARRAY [INTEGER]
 			l_plane_array_name, l_segment_array_name: STRING
 		do
-			create l_plane_names.make (0, 16)
+			create l_plane_names.make_filled (Void, 0, 16)
 			from i := 0 until i > 16 loop
-				create l_segment_names.make (0, 255)
+				create l_segment_names.make_filled (Void, 0, 255)
 				from l_plane_all_absent := True; j := 0 until j > 255 loop
-					create l_segment.make (0, 255)
+					create l_segment.make_filled (0, 0, 255)
 					l_segment_all_absent := True
 					from k := 0 until k > 255 loop
 						l_code := k + 256 * j + 256 * 256 * i
@@ -2219,12 +2218,12 @@ feature {NONE} -- Implementation
 			l_segment: ARRAY [INTEGER]
 			l_plane_array_name, l_segment_array_name: STRING
 		do
-			create l_plane_names.make (0, 16)
+			create l_plane_names.make_filled (Void, 0, 16)
 			from i := 0 until i > 16 loop
-				create l_segment_names.make (0, 255)
+				create l_segment_names.make_filled (Void, 0, 255)
 				l_plane_all_absent := True
 				from j := 0 until j > 255 loop
-					create l_segment.make (0, 255)
+					create l_segment.make_filled (0, 0, 255)
 					l_segment_all_absent := True
 					from k := 0 until k > 255 loop
 						l_code := k + 256 * j + 256 * 256 * i
@@ -2298,12 +2297,12 @@ feature {NONE} -- Implementation
 			l_segment: ARRAY [INTEGER]
 			l_plane_array_name, l_segment_array_name: STRING
 		do
-			create l_plane_names.make (0, 16)
+			create l_plane_names.make_filled (Void, 0, 16)
 			from i := 0 until i > 16 loop
-				create l_segment_names.make (0, 255)
+				create l_segment_names.make_filled (Void, 0, 255)
 				l_plane_all_absent := True
 				from j := 0 until j > 255 loop
-					create l_segment.make (0, 255)
+					create l_segment.make_filled (0, 0, 255)
 					l_segment_all_absent := True
 					from k := 0 until k > 255 loop
 						l_code := k + 256 * j + 256 * 256 * i
@@ -2646,10 +2645,10 @@ feature {NONE} -- Implementation
 		do
 			a_output_file.put_string ("%T")
 			a_output_file.put_string (a_segment_array_name)
-			a_output_file.put_string (": ARRAY [DS_ARRAYED_LIST [INTEGER]]%N")
+			a_output_file.put_string (": ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]%N")
 			a_output_file.put_string ("%T%T%T-- Generated arrayed_list segment%N")
 			a_output_file.put_string ("%T%Tonce%N")
-			a_output_file.put_string ("%T%T%Tcreate Result.make (0, 255)%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make_filled (Void, 0, 255)%N")
 			if not all_empty then
 				from until i > 255 loop
 					l_list := a_segment.item (i)
@@ -2807,7 +2806,6 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 			end
-			a_output_file.put_string ("%N")
 			a_output_file.put_string ("%T%Tensure%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			a_output_file.put_string ("%T%Tend%N%N")
@@ -2857,21 +2855,23 @@ feature {NONE} -- Implementation
 			plane_name_not_empty: not a_plane_name.is_empty
 			segment_name_not_void: a_segment_name /= Void
 			segment_name_not_empty: not a_segment_name.is_empty
-		local
-			i: INTEGER
 		do
 			a_output_file.put_string ("%T")
 			a_output_file.put_string (a_plane_name)
 			a_output_file.put_string (": SPECIAL [ARRAY [BOOLEAN]]%N")
 			a_output_file.put_string ("%T%T%T-- Generated array plane%N")
+			a_output_file.put_string ("%T%Tlocal%N")
+			a_output_file.put_string ("%T%T%Ti: INTEGER%N")
 			a_output_file.put_string ("%T%Tonce%N")
 			a_output_file.put_string ("%T%T%Tcreate Result.make_filled (Void, 256)%N")
-			from  until i > 255 loop
-				a_output_file.put_string ("%T%T%TResult.put (create {ARRAY [BOOLEAN]}.make (1, 256), ")
-				a_output_file.put_string (i.out)
-				a_output_file.put_string (")%N")
-				i := i + 1
-			end
+			a_output_file.put_string ("%T%T%Tfrom%N")
+			a_output_file.put_string ("%T%T%T%Ti := 0%N")
+			a_output_file.put_string ("%T%T%Tuntil%N")
+			a_output_file.put_string ("%T%T%T%Ti > 255%N")
+			a_output_file.put_string ("%T%T%Tloop%N")
+			a_output_file.put_string ("%T%T%T%TResult.put (create {ARRAY [BOOLEAN]}.make_filled (False, 1, 256), i)%N")
+			a_output_file.put_string ("%T%T%T%Ti := i + 1%N")
+			a_output_file.put_string ("%T%T%Tend%N")
 			a_output_file.put_string ("%T%Tensure%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True --not Result.has (Void)%N")
@@ -3049,10 +3049,10 @@ feature {NONE} -- Implementation
 			alphabetic_array_void: alphabetic_array = Void
 			math_array_void: math_array = Void
 		do
-			create upper_case_array.make (minimum_unicode_character_code, maximum_unicode_character_code)
-			create lower_case_array.make (minimum_unicode_character_code, maximum_unicode_character_code)
-			create alphabetic_array.make (minimum_unicode_character_code, maximum_unicode_character_code)
-			create math_array.make (minimum_unicode_character_code, maximum_unicode_character_code)
+			create upper_case_array.make_filled (False, minimum_unicode_character_code, maximum_unicode_character_code)
+			create lower_case_array.make_filled (False, minimum_unicode_character_code, maximum_unicode_character_code)
+			create alphabetic_array.make_filled (False, minimum_unicode_character_code, maximum_unicode_character_code)
+			create math_array.make_filled (False, minimum_unicode_character_code, maximum_unicode_character_code)
 		ensure
 			upper_case_array_not_void: upper_case_array /= Void
 			lower_case_array_not_void: lower_case_array /= Void
@@ -3072,16 +3072,23 @@ feature {NONE} -- Implementation
 			nfc_quick_check_array_void: nfc_quick_check_array = Void
 			nfkd_quick_check_array_void: nfkd_quick_check_array = Void
 			nfkc_quick_check_array_void: nfkc_quick_check_array = Void
+		local
+			l_false_tristate: UT_TRISTATE
 		do
-			create full_composition_exclusion_array.make (minimum_unicode_character_code, maximum_unicode_character_code)
-			create expands_on_nfc_array.make (minimum_unicode_character_code, maximum_unicode_character_code)
-			create expands_on_nfd_array.make (minimum_unicode_character_code, maximum_unicode_character_code)
-			create expands_on_nfkc_array.make (minimum_unicode_character_code, maximum_unicode_character_code)
-			create expands_on_nfkd_array.make (minimum_unicode_character_code, maximum_unicode_character_code)
-			create nfd_quick_check_array.make (minimum_unicode_character_code, maximum_unicode_character_code); set_array_tristate_true (nfd_quick_check_array)
-			create nfc_quick_check_array.make (minimum_unicode_character_code, maximum_unicode_character_code); set_array_tristate_true (nfc_quick_check_array)
-			create nfkd_quick_check_array.make (minimum_unicode_character_code, maximum_unicode_character_code); set_array_tristate_true (nfkd_quick_check_array)
-			create nfkc_quick_check_array.make (minimum_unicode_character_code, maximum_unicode_character_code); set_array_tristate_true (nfkc_quick_check_array)
+			create full_composition_exclusion_array.make_filled (False, minimum_unicode_character_code, maximum_unicode_character_code)
+			create expands_on_nfc_array.make_filled (False, minimum_unicode_character_code, maximum_unicode_character_code)
+			create expands_on_nfd_array.make_filled (False, minimum_unicode_character_code, maximum_unicode_character_code)
+			create expands_on_nfkc_array.make_filled (False, minimum_unicode_character_code, maximum_unicode_character_code)
+			create expands_on_nfkd_array.make_filled (False, minimum_unicode_character_code, maximum_unicode_character_code)
+			create l_false_tristate.make_false
+			create nfd_quick_check_array.make_filled (l_false_tristate, minimum_unicode_character_code, maximum_unicode_character_code)
+			set_array_tristate_true (nfd_quick_check_array)
+			create nfc_quick_check_array.make_filled (l_false_tristate, minimum_unicode_character_code, maximum_unicode_character_code)
+			set_array_tristate_true (nfc_quick_check_array)
+			create nfkd_quick_check_array.make_filled (l_false_tristate, minimum_unicode_character_code, maximum_unicode_character_code)
+			set_array_tristate_true (nfkd_quick_check_array)
+			create nfkc_quick_check_array.make_filled (l_false_tristate, minimum_unicode_character_code, maximum_unicode_character_code)
+			set_array_tristate_true (nfkc_quick_check_array)
 		ensure
 			full_composition_exclusion_array_not_void: full_composition_exclusion_array /= Void
 			expands_on_nfc_array_not_void: expands_on_nfc_array /= Void

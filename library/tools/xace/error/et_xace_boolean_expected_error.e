@@ -5,7 +5,7 @@ note
 		"Error: Expected boolean value in attribute error"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			an_actual_value_not_void: an_actual_value /= Void
 			a_position_not_void: a_position /= Void
 		do
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (an_element.name, 1)
 			parameters.put (an_attribute_name, 2)
 			parameters.put (an_actual_value, 3)

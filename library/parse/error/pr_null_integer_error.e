@@ -5,7 +5,7 @@ note
 		"Error: The integer just read cannot be null"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 		require
 			filename_not_void: filename /= Void
 		do
-			create parameters.make (1, 2)
+			create parameters.make_filled (empty_string, 1, 2)
 			parameters.put (filename, 1)
 			parameters.put (line.out, 2)
 		end

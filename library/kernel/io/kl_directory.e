@@ -5,7 +5,7 @@ note
 		"Filesystem's directories"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -78,14 +78,14 @@ feature -- Access
 			-- Void if current directory could not be searched
 		local
 			a_name: STRING
-			an_array: ARRAY [STRING]
+			an_array: ARRAY [detachable STRING]
 			i, nb, k: INTEGER
 		do
 			if is_closed then
 				open_read
 				if is_open_read then
 					k := 10
-					create an_array.make (1, k)
+					create an_array.make_filled (Void, 1, k)
 					from
 						read_entry
 					until
@@ -104,7 +104,7 @@ feature -- Access
 						read_entry
 					end
 					close
-					create Result.make (1, nb)
+					create Result.make_filled ("", 1, nb)
 					from
 						i := 1
 					until
@@ -126,14 +126,14 @@ feature -- Access
 			-- (Do not include parent and current directory names.)
 		local
 			a_name: STRING
-			an_array: ARRAY [STRING]
+			an_array: ARRAY [detachable STRING]
 			i, nb, k: INTEGER
 		do
 			if is_closed then
 				open_read
 				if is_open_read then
 					k := 10
-					create an_array.make (1, k)
+					create an_array.make_filled (Void, 1, k)
 					from
 						read_entry
 					until
@@ -157,7 +157,7 @@ feature -- Access
 						read_entry
 					end
 					close
-					create Result.make (1, nb)
+					create Result.make_filled ("", 1, nb)
 					from
 						i := 1
 					until

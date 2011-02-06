@@ -4,7 +4,7 @@ note
 
 		"Error: Too many nested include files"
 
-	copyright: "Copyright (c) 2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 	make (max: INTEGER)
 			-- Create a new error.
 		do
-			create parameters.make (1, 1)
+			create parameters.make_filled (empty_string, 1, 1)
 			parameters.put (max.out, 1)
 		end
 

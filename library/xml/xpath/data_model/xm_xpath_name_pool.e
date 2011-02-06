@@ -5,7 +5,7 @@ note
 		"Namespace pool"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2003, Colin Adams and others"
+	copyright: "Copyright (c) 2003-2011, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -79,7 +79,7 @@ feature {NONE} -- Initialization
 	make
 			-- Establish invariant
 		do
-			create hash_slots.make (0, Maximum_hash_chain_depth - 1)
+			create hash_slots.make_filled (Void, 0, Maximum_hash_chain_depth - 1)
 
 			create prefixes.make (100)
 			prefixes.set_equality_tester (string_equality_tester)
@@ -1597,7 +1597,7 @@ feature {NONE} -- Implementation
 			prefix_allocated: prefix_index (a_uri_code, an_xml_prefix) > -1
 		end
 
-	hash_slots: ARRAY [XM_XPATH_NAME_ENTRY]
+	hash_slots: ARRAY [detachable XM_XPATH_NAME_ENTRY]
 			-- Fixed size hash table
 
 feature -- Access

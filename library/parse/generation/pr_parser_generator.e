@@ -5,7 +5,7 @@ note
 		"Parser generators"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -664,7 +664,7 @@ feature {NONE} -- Generation
 				a_file.put_string (", yyDummy>>)%N%T%Tend%N")
 			else
 				a_file.put_string ("%T%Tlocal%N%T%T%Tan_array: ARRAY [INTEGER]%N%
-					%%T%Tonce%N%T%T%Tcreate an_array.make (")
+					%%T%Tonce%N%T%T%Tcreate an_array.make_filled (0, ")
 				a_file.put_integer (a_table.lower)
 				a_file.put_string (", ")
 				a_file.put_integer (a_table.upper)
@@ -1347,7 +1347,7 @@ feature {NONE} -- Building
 				end
 				i := i + 1
 			end
-			create yytranslate.make (0, yyMax_token)
+			create yytranslate.make_filled (0, 0, yyMax_token)
 				-- Initialize all entries for literal tokens
 				-- to 2, i.e. the internal token number for
 				-- "$undefined.", which represents all invalid
@@ -1384,7 +1384,7 @@ feature {NONE} -- Building
 		do
 			rules := machine.grammar.rules
 			nb := rules.count
-			create yyr1.make (0, nb)
+			create yyr1.make_filled (0, 0, nb)
 			from
 				i := 1
 			until
@@ -1407,7 +1407,7 @@ feature {NONE} -- Building
 		do
 			states := machine.states
 			nb := states.count
-			create yytypes1.make (0, nb - 1)
+			create yytypes1.make_filled (0, 0, nb - 1)
 			from
 				i := 1
 			until
@@ -1430,7 +1430,7 @@ feature {NONE} -- Building
 		do
 			tokens := machine.grammar.tokens
 			nb := tokens.count
-			create yytypes2.make (0, nb)
+			create yytypes2.make_filled (0, 0, nb)
 			yytypes2.put (1, 0)
 			from
 				i := 1
@@ -1467,7 +1467,7 @@ feature {NONE} -- Building
 			variables := machine.grammar.variables
 			nb_variables := variables.count
 			create portions.make (nb_states + nb_variables)
-			create yydefact.make (0, nb_states - 1)
+			create yydefact.make_filled (0, 0, nb_states - 1)
 			from
 				i := 1
 			until
@@ -1476,7 +1476,7 @@ feature {NONE} -- Building
 				put_yydefact (states.item (i), portions)
 				i := i + 1
 			end
-			create yydefgoto.make (0, nb_variables - 1)
+			create yydefgoto.make_filled (0, 0, nb_variables - 1)
 			from
 				i := 1
 			until
@@ -1487,7 +1487,7 @@ feature {NONE} -- Building
 			end
 			portions.sort (Portion_sorter)
 			i := nb_states - 1
-			create yypact.make (0, i)
+			create yypact.make_filled (0, 0, i)
 			from
 			until
 				i < 0
@@ -1496,7 +1496,7 @@ feature {NONE} -- Building
 				i := i - 1
 			end
 			i := nb_variables - 1
-			create yypgoto.make (0, i)
+			create yypgoto.make_filled (0, 0, i)
 			from
 			until
 				i < 0
@@ -1505,8 +1505,8 @@ feature {NONE} -- Building
 				i := i - 1
 			end
 			ii := Initial_max_table_size
-			create yytable.make (0, ii)
-			create yycheck.make (0, ii)
+			create yytable.make_filled (0, 0, ii)
+			create yycheck.make_filled (0, 0, ii)
 			from
 			until
 				ii < 0
@@ -1670,7 +1670,7 @@ feature {NONE} -- Building
 			state_id: INTEGER
 		do
 			nb_tokens := machine.grammar.tokens.count
-			create action_row.make (0, nb_tokens)
+			create action_row.make_filled (0, 0, nb_tokens)
 			reductions := a_state.reductions
 			nb_reductions := reductions.count
 			if a_state.lookahead_needed then
@@ -1848,7 +1848,7 @@ feature {NONE} -- Building
 			state_id: INTEGER
 			nb_tokens, nb_states: INTEGER
 			i, count, max: INTEGER
-			not_defaults: ARRAY [PR_TRANSITION]
+			not_defaults: ARRAY [detachable PR_TRANSITION]
 			froms, tos: DS_ARRAYED_LIST [INTEGER]
 			a_portion: PR_PORTION
 		do
@@ -1858,7 +1858,7 @@ feature {NONE} -- Building
 				default_state := -1
 			else
 				nb_states := machine.states.count
-				create state_count.make (0, nb_states - 1)
+				create state_count.make_filled (0, 0, nb_states - 1)
 				a_cursor := transitions.new_cursor
 				from
 					a_cursor.start
@@ -1885,7 +1885,7 @@ feature {NONE} -- Building
 					-- Detailed info is saved for putting
 					-- into `yytable' later.
 				count := 0
-				create not_defaults.make (0, nb_states - 1)
+				create not_defaults.make_filled (Void, 0, nb_states - 1)
 				from
 					a_cursor.start
 				until

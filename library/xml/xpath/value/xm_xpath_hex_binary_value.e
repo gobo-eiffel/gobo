@@ -5,7 +5,7 @@ note
 		"XPath hexBinary values"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2011, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 		do
 			make_atomic_value
 			l_count := a_value.count
-			create binary_value.make (1, l_count // 2)
+			create binary_value.make_filled ('%U', 1, l_count // 2)
 			from l_index := 1 until l_index > l_count loop
 				l_code := 16 * hexadecimal_digit_to_integer (a_value.item (l_index)) + hexadecimal_digit_to_integer (a_value.item (l_index + 1))
 				l_index := l_index + 2

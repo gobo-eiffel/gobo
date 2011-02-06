@@ -5,7 +5,7 @@ note
 		"xsl:transform or xsl:stylesheet element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2011, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1191,8 +1191,8 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do
 			if namespace_alias_list.count > 0 then
-				create namespace_alias_namespace_codes.make (1, namespace_alias_list.count)
-				create namespace_alias_uri_codes.make (1, namespace_alias_list.count)
+				create namespace_alias_namespace_codes.make_filled (0, 1, namespace_alias_list.count)
+				create namespace_alias_uri_codes.make_filled (0, 1, namespace_alias_list.count)
 				from
 					i := 1
 				until

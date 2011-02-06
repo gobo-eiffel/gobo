@@ -2173,10 +2173,10 @@ feature {NONE} -- Implementation
 			Result.put (all_zero_decomposition_type_plane, 16)
 		end
 
-	decomposition_mapping_plane_0_segment_0: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_0: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (32),160)
 			Result.put (new_pair (32,776),168)
 			Result.put (new_singleton (97),170)
@@ -2244,15 +2244,14 @@ feature {NONE} -- Implementation
 			Result.put (new_pair (117,776),252)
 			Result.put (new_pair (121,769),253)
 			Result.put (new_pair (121,776),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_1: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_1: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_pair (65,772),0)
 			Result.put (new_pair (97,772),1)
 			Result.put (new_pair (65,774),2)
@@ -2426,15 +2425,14 @@ feature {NONE} -- Implementation
 			Result.put (new_pair (230,769),253)
 			Result.put (new_pair (216,769),254)
 			Result.put (new_pair (248,769),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_2: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_2: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_pair (65,783),0)
 			Result.put (new_pair (97,783),1)
 			Result.put (new_pair (65,785),2)
@@ -2499,15 +2497,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (115),226)
 			Result.put (new_singleton (120),227)
 			Result.put (new_singleton (661),228)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_3: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_3: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (768),64)
 			Result.put (new_singleton (769),65)
 			Result.put (new_singleton (787),67)
@@ -2551,15 +2548,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (920),244)
 			Result.put (new_singleton (949),245)
 			Result.put (new_singleton (931),249)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_4: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_4: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_pair (1045,768),0)
 			Result.put (new_pair (1045,776),1)
 			Result.put (new_pair (1043,769),3)
@@ -2612,25 +2608,23 @@ feature {NONE} -- Implementation
 			Result.put (new_pair (1095,776),245)
 			Result.put (new_pair (1067,776),248)
 			Result.put (new_pair (1099,776),249)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_5: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_5: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_pair (1381,1410),135)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_6: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_6: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_pair (1575,1619),34)
 			Result.put (new_pair (1575,1620),35)
 			Result.put (new_pair (1608,1620),36)
@@ -2643,24 +2637,22 @@ feature {NONE} -- Implementation
 			Result.put (new_pair (1749,1620),192)
 			Result.put (new_pair (1729,1620),194)
 			Result.put (new_pair (1746,1620),211)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	all_empty_decomposition_mapping_segment: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	all_empty_decomposition_mapping_segment: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
-
+			create Result.make_filled (Void, 0, 255)
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_9: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_9: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_pair (2344,2364),41)
 			Result.put (new_pair (2352,2364),49)
 			Result.put (new_pair (2355,2364),52)
@@ -2677,30 +2669,28 @@ feature {NONE} -- Implementation
 			Result.put (new_pair (2465,2492),220)
 			Result.put (new_pair (2466,2492),221)
 			Result.put (new_pair (2479,2492),223)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_10: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_10: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_pair (2610,2620),51)
 			Result.put (new_pair (2616,2620),54)
 			Result.put (new_pair (2582,2620),89)
 			Result.put (new_pair (2583,2620),90)
 			Result.put (new_pair (2588,2620),91)
 			Result.put (new_pair (2603,2620),94)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_11: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_11: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_pair (2887,2902),72)
 			Result.put (new_pair (2887,2878),75)
 			Result.put (new_pair (2887,2903),76)
@@ -2710,30 +2700,28 @@ feature {NONE} -- Implementation
 			Result.put (new_pair (3014,3006),202)
 			Result.put (new_pair (3015,3006),203)
 			Result.put (new_pair (3014,3031),204)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_12: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_12: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_pair (3142,3158),72)
 			Result.put (new_pair (3263,3285),192)
 			Result.put (new_pair (3270,3285),199)
 			Result.put (new_pair (3270,3286),200)
 			Result.put (new_pair (3270,3266),202)
 			Result.put (new_pair (3274,3285),203)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_13: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_13: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_pair (3398,3390),74)
 			Result.put (new_pair (3399,3390),75)
 			Result.put (new_pair (3398,3415),76)
@@ -2741,28 +2729,26 @@ feature {NONE} -- Implementation
 			Result.put (new_pair (3545,3535),220)
 			Result.put (new_pair (3548,3530),221)
 			Result.put (new_pair (3545,3551),222)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_14: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_14: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_pair (3661,3634),51)
 			Result.put (new_pair (3789,3762),179)
 			Result.put (new_pair (3755,3737),220)
 			Result.put (new_pair (3755,3745),221)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_15: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_15: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (3851),12)
 			Result.put (new_pair (3906,4023),67)
 			Result.put (new_pair (3916,4023),77)
@@ -2783,26 +2769,24 @@ feature {NONE} -- Implementation
 			Result.put (new_pair (4006,4023),167)
 			Result.put (new_pair (4011,4023),172)
 			Result.put (new_pair (3984,4021),185)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_16: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_16: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_pair (4133,4142),38)
 			Result.put (new_singleton (4316),252)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_29: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_29: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (65),44)
 			Result.put (new_singleton (198),45)
 			Result.put (new_singleton (66),46)
@@ -2901,15 +2885,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (657),189)
 			Result.put (new_singleton (658),190)
 			Result.put (new_singleton (952),191)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_30: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_30: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_pair (65,805),0)
 			Result.put (new_pair (97,805),1)
 			Result.put (new_pair (66,775),2)
@@ -3156,15 +3139,14 @@ feature {NONE} -- Implementation
 			Result.put (new_pair (121,777),247)
 			Result.put (new_pair (89,771),248)
 			Result.put (new_pair (121,771),249)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_31: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_31: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_pair (945,787),0)
 			Result.put (new_pair (945,788),1)
 			Result.put (new_pair (7936,768),2)
@@ -3398,15 +3380,14 @@ feature {NONE} -- Implementation
 			Result.put (new_pair (937,837),252)
 			Result.put (new_singleton (180),253)
 			Result.put (new_pair (32,788),254)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_32: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_32: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (8194),0)
 			Result.put (new_singleton (8195),1)
 			Result.put (new_singleton (32),2)
@@ -3470,15 +3451,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (120),147)
 			Result.put (new_singleton (601),148)
 			Result.put (new_pair (82,115),168)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_33: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_33: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (97,47,99),0)
 			Result.put (new_triple (97,47,115),1)
 			Result.put (new_singleton (67),2)
@@ -3586,15 +3566,14 @@ feature {NONE} -- Implementation
 			Result.put (new_pair (8656,824),205)
 			Result.put (new_pair (8660,824),206)
 			Result.put (new_pair (8658,824),207)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_34: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_34: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_pair (8707,824),4)
 			Result.put (new_pair (8712,824),9)
 			Result.put (new_pair (8715,824),12)
@@ -3637,26 +3616,24 @@ feature {NONE} -- Implementation
 			Result.put (new_pair (8883,824),235)
 			Result.put (new_pair (8884,824),236)
 			Result.put (new_pair (8885,824),237)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_35: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_35: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (12296),41)
 			Result.put (new_singleton (12297),42)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_36: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_36: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (49),96)
 			Result.put (new_singleton (50),97)
 			Result.put (new_singleton (51),98)
@@ -3796,50 +3773,46 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (121),232)
 			Result.put (new_singleton (122),233)
 			Result.put (new_singleton (48),234)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_42: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_42: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_quadruple (8747,8747,8747,8747),12)
 			Result.put (new_triple (58,58,61),116)
 			Result.put (new_pair (61,61),117)
 			Result.put (new_triple (61,61,61),118)
 			Result.put (new_pair (10973,824),220)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_45: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_45: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (11617),111)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_46: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_46: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (27597),159)
 			Result.put (new_singleton (40863),243)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_47: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_47: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (19968),0)
 			Result.put (new_singleton (20008),1)
 			Result.put (new_singleton (20022),2)
@@ -4054,15 +4027,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (40845),211)
 			Result.put (new_singleton (40860),212)
 			Result.put (new_singleton (40864),213)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_48: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_48: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (32),0)
 			Result.put (new_singleton (12306),54)
 			Result.put (new_singleton (21313),56)
@@ -4130,15 +4102,14 @@ feature {NONE} -- Implementation
 			Result.put (new_pair (12530,12441),250)
 			Result.put (new_pair (12541,12441),254)
 			Result.put (new_pair (12467,12488),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_49: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_49: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (4352),49)
 			Result.put (new_singleton (4353),50)
 			Result.put (new_singleton (4522),51)
@@ -4247,15 +4218,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (22825),157)
 			Result.put (new_singleton (22320),158)
 			Result.put (new_singleton (20154),159)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_50: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_50: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (40,4352,41),0)
 			Result.put (new_triple (40,4354,41),1)
 			Result.put (new_triple (40,4355,41),2)
@@ -4497,15 +4467,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (12528),252)
 			Result.put (new_singleton (12529),253)
 			Result.put (new_singleton (12530),254)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_51: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_51: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_quadruple (12450,12497,12540,12488),0)
 			Result.put (new_quadruple (12450,12523,12501,12449),1)
 			Result.put (new_quadruple (12450,12531,12506,12450),2)
@@ -4762,15 +4731,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (51,48,26085),253)
 			Result.put (new_triple (51,49,26085),254)
 			Result.put (new_triple (103,97,108),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_172: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_172: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_pair (4352,4449),0)
 			Result.put (new_triple (4352,4449,4520),1)
 			Result.put (new_triple (4352,4449,4521),2)
@@ -5027,15 +4995,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4352,4458,4520),253)
 			Result.put (new_triple (4352,4458,4521),254)
 			Result.put (new_triple (4352,4458,4522),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_173: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_173: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4352,4458,4523),0)
 			Result.put (new_triple (4352,4458,4524),1)
 			Result.put (new_triple (4352,4458,4525),2)
@@ -5292,15 +5259,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4352,4467,4524),253)
 			Result.put (new_triple (4352,4467,4525),254)
 			Result.put (new_triple (4352,4467,4526),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_174: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_174: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4352,4467,4527),0)
 			Result.put (new_triple (4352,4467,4528),1)
 			Result.put (new_triple (4352,4467,4529),2)
@@ -5557,15 +5523,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4353,4455,4528),253)
 			Result.put (new_triple (4353,4455,4529),254)
 			Result.put (new_triple (4353,4455,4530),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_175: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_175: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4353,4455,4531),0)
 			Result.put (new_triple (4353,4455,4532),1)
 			Result.put (new_triple (4353,4455,4533),2)
@@ -5822,15 +5787,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4353,4464,4532),253)
 			Result.put (new_triple (4353,4464,4533),254)
 			Result.put (new_triple (4353,4464,4534),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_176: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_176: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4353,4464,4535),0)
 			Result.put (new_triple (4353,4464,4536),1)
 			Result.put (new_triple (4353,4464,4537),2)
@@ -6087,15 +6051,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4354,4452,4536),253)
 			Result.put (new_triple (4354,4452,4537),254)
 			Result.put (new_triple (4354,4452,4538),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_177: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_177: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4354,4452,4539),0)
 			Result.put (new_triple (4354,4452,4540),1)
 			Result.put (new_triple (4354,4452,4541),2)
@@ -6352,15 +6315,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4354,4461,4540),253)
 			Result.put (new_triple (4354,4461,4541),254)
 			Result.put (new_triple (4354,4461,4542),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_178: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_178: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4354,4461,4543),0)
 			Result.put (new_triple (4354,4461,4544),1)
 			Result.put (new_triple (4354,4461,4545),2)
@@ -6617,15 +6579,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4355,4449,4544),253)
 			Result.put (new_triple (4355,4449,4545),254)
 			Result.put (new_triple (4355,4449,4546),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_179: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_179: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_pair (4355,4450),0)
 			Result.put (new_triple (4355,4450,4520),1)
 			Result.put (new_triple (4355,4450,4521),2)
@@ -6882,15 +6843,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4355,4459,4520),253)
 			Result.put (new_triple (4355,4459,4521),254)
 			Result.put (new_triple (4355,4459,4522),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_180: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_180: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4355,4459,4523),0)
 			Result.put (new_triple (4355,4459,4524),1)
 			Result.put (new_triple (4355,4459,4525),2)
@@ -7147,15 +7107,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4355,4468,4524),253)
 			Result.put (new_triple (4355,4468,4525),254)
 			Result.put (new_triple (4355,4468,4526),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_181: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_181: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4355,4468,4527),0)
 			Result.put (new_triple (4355,4468,4528),1)
 			Result.put (new_triple (4355,4468,4529),2)
@@ -7412,15 +7371,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4356,4456,4528),253)
 			Result.put (new_triple (4356,4456,4529),254)
 			Result.put (new_triple (4356,4456,4530),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_182: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_182: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4356,4456,4531),0)
 			Result.put (new_triple (4356,4456,4532),1)
 			Result.put (new_triple (4356,4456,4533),2)
@@ -7677,15 +7635,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4356,4465,4532),253)
 			Result.put (new_triple (4356,4465,4533),254)
 			Result.put (new_triple (4356,4465,4534),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_183: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_183: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4356,4465,4535),0)
 			Result.put (new_triple (4356,4465,4536),1)
 			Result.put (new_triple (4356,4465,4537),2)
@@ -7942,15 +7899,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4357,4453,4536),253)
 			Result.put (new_triple (4357,4453,4537),254)
 			Result.put (new_triple (4357,4453,4538),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_184: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_184: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4357,4453,4539),0)
 			Result.put (new_triple (4357,4453,4540),1)
 			Result.put (new_triple (4357,4453,4541),2)
@@ -8207,15 +8163,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4357,4462,4540),253)
 			Result.put (new_triple (4357,4462,4541),254)
 			Result.put (new_triple (4357,4462,4542),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_185: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_185: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4357,4462,4543),0)
 			Result.put (new_triple (4357,4462,4544),1)
 			Result.put (new_triple (4357,4462,4545),2)
@@ -8472,15 +8427,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4358,4450,4544),253)
 			Result.put (new_triple (4358,4450,4545),254)
 			Result.put (new_triple (4358,4450,4546),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_186: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_186: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_pair (4358,4451),0)
 			Result.put (new_triple (4358,4451,4520),1)
 			Result.put (new_triple (4358,4451,4521),2)
@@ -8737,15 +8691,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4358,4460,4520),253)
 			Result.put (new_triple (4358,4460,4521),254)
 			Result.put (new_triple (4358,4460,4522),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_187: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_187: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4358,4460,4523),0)
 			Result.put (new_triple (4358,4460,4524),1)
 			Result.put (new_triple (4358,4460,4525),2)
@@ -9002,15 +8955,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4358,4469,4524),253)
 			Result.put (new_triple (4358,4469,4525),254)
 			Result.put (new_triple (4358,4469,4526),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_188: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_188: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4358,4469,4527),0)
 			Result.put (new_triple (4358,4469,4528),1)
 			Result.put (new_triple (4358,4469,4529),2)
@@ -9267,15 +9219,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4359,4457,4528),253)
 			Result.put (new_triple (4359,4457,4529),254)
 			Result.put (new_triple (4359,4457,4530),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_189: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_189: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4359,4457,4531),0)
 			Result.put (new_triple (4359,4457,4532),1)
 			Result.put (new_triple (4359,4457,4533),2)
@@ -9532,15 +9483,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4359,4466,4532),253)
 			Result.put (new_triple (4359,4466,4533),254)
 			Result.put (new_triple (4359,4466,4534),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_190: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_190: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4359,4466,4535),0)
 			Result.put (new_triple (4359,4466,4536),1)
 			Result.put (new_triple (4359,4466,4537),2)
@@ -9797,15 +9747,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4360,4454,4536),253)
 			Result.put (new_triple (4360,4454,4537),254)
 			Result.put (new_triple (4360,4454,4538),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_191: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_191: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4360,4454,4539),0)
 			Result.put (new_triple (4360,4454,4540),1)
 			Result.put (new_triple (4360,4454,4541),2)
@@ -10062,15 +10011,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4360,4463,4540),253)
 			Result.put (new_triple (4360,4463,4541),254)
 			Result.put (new_triple (4360,4463,4542),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_192: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_192: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4360,4463,4543),0)
 			Result.put (new_triple (4360,4463,4544),1)
 			Result.put (new_triple (4360,4463,4545),2)
@@ -10327,15 +10275,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4361,4451,4544),253)
 			Result.put (new_triple (4361,4451,4545),254)
 			Result.put (new_triple (4361,4451,4546),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_193: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_193: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_pair (4361,4452),0)
 			Result.put (new_triple (4361,4452,4520),1)
 			Result.put (new_triple (4361,4452,4521),2)
@@ -10592,15 +10539,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4361,4461,4520),253)
 			Result.put (new_triple (4361,4461,4521),254)
 			Result.put (new_triple (4361,4461,4522),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_194: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_194: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4361,4461,4523),0)
 			Result.put (new_triple (4361,4461,4524),1)
 			Result.put (new_triple (4361,4461,4525),2)
@@ -10857,15 +10803,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4362,4449,4524),253)
 			Result.put (new_triple (4362,4449,4525),254)
 			Result.put (new_triple (4362,4449,4526),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_195: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_195: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4362,4449,4527),0)
 			Result.put (new_triple (4362,4449,4528),1)
 			Result.put (new_triple (4362,4449,4529),2)
@@ -11122,15 +11067,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4362,4458,4528),253)
 			Result.put (new_triple (4362,4458,4529),254)
 			Result.put (new_triple (4362,4458,4530),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_196: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_196: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4362,4458,4531),0)
 			Result.put (new_triple (4362,4458,4532),1)
 			Result.put (new_triple (4362,4458,4533),2)
@@ -11387,15 +11331,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4362,4467,4532),253)
 			Result.put (new_triple (4362,4467,4533),254)
 			Result.put (new_triple (4362,4467,4534),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_197: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_197: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4362,4467,4535),0)
 			Result.put (new_triple (4362,4467,4536),1)
 			Result.put (new_triple (4362,4467,4537),2)
@@ -11652,15 +11595,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4363,4455,4536),253)
 			Result.put (new_triple (4363,4455,4537),254)
 			Result.put (new_triple (4363,4455,4538),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_198: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_198: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4363,4455,4539),0)
 			Result.put (new_triple (4363,4455,4540),1)
 			Result.put (new_triple (4363,4455,4541),2)
@@ -11917,15 +11859,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4363,4464,4540),253)
 			Result.put (new_triple (4363,4464,4541),254)
 			Result.put (new_triple (4363,4464,4542),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_199: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_199: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4363,4464,4543),0)
 			Result.put (new_triple (4363,4464,4544),1)
 			Result.put (new_triple (4363,4464,4545),2)
@@ -12182,15 +12123,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4364,4452,4544),253)
 			Result.put (new_triple (4364,4452,4545),254)
 			Result.put (new_triple (4364,4452,4546),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_200: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_200: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_pair (4364,4453),0)
 			Result.put (new_triple (4364,4453,4520),1)
 			Result.put (new_triple (4364,4453,4521),2)
@@ -12447,15 +12387,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4364,4462,4520),253)
 			Result.put (new_triple (4364,4462,4521),254)
 			Result.put (new_triple (4364,4462,4522),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_201: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_201: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4364,4462,4523),0)
 			Result.put (new_triple (4364,4462,4524),1)
 			Result.put (new_triple (4364,4462,4525),2)
@@ -12712,15 +12651,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4365,4450,4524),253)
 			Result.put (new_triple (4365,4450,4525),254)
 			Result.put (new_triple (4365,4450,4526),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_202: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_202: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4365,4450,4527),0)
 			Result.put (new_triple (4365,4450,4528),1)
 			Result.put (new_triple (4365,4450,4529),2)
@@ -12977,15 +12915,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4365,4459,4528),253)
 			Result.put (new_triple (4365,4459,4529),254)
 			Result.put (new_triple (4365,4459,4530),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_203: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_203: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4365,4459,4531),0)
 			Result.put (new_triple (4365,4459,4532),1)
 			Result.put (new_triple (4365,4459,4533),2)
@@ -13242,15 +13179,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4365,4468,4532),253)
 			Result.put (new_triple (4365,4468,4533),254)
 			Result.put (new_triple (4365,4468,4534),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_204: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_204: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4365,4468,4535),0)
 			Result.put (new_triple (4365,4468,4536),1)
 			Result.put (new_triple (4365,4468,4537),2)
@@ -13507,15 +13443,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4366,4456,4536),253)
 			Result.put (new_triple (4366,4456,4537),254)
 			Result.put (new_triple (4366,4456,4538),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_205: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_205: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4366,4456,4539),0)
 			Result.put (new_triple (4366,4456,4540),1)
 			Result.put (new_triple (4366,4456,4541),2)
@@ -13772,15 +13707,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4366,4465,4540),253)
 			Result.put (new_triple (4366,4465,4541),254)
 			Result.put (new_triple (4366,4465,4542),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_206: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_206: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4366,4465,4543),0)
 			Result.put (new_triple (4366,4465,4544),1)
 			Result.put (new_triple (4366,4465,4545),2)
@@ -14037,15 +13971,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4367,4453,4544),253)
 			Result.put (new_triple (4367,4453,4545),254)
 			Result.put (new_triple (4367,4453,4546),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_207: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_207: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_pair (4367,4454),0)
 			Result.put (new_triple (4367,4454,4520),1)
 			Result.put (new_triple (4367,4454,4521),2)
@@ -14302,15 +14235,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4367,4463,4520),253)
 			Result.put (new_triple (4367,4463,4521),254)
 			Result.put (new_triple (4367,4463,4522),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_208: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_208: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4367,4463,4523),0)
 			Result.put (new_triple (4367,4463,4524),1)
 			Result.put (new_triple (4367,4463,4525),2)
@@ -14567,15 +14499,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4368,4451,4524),253)
 			Result.put (new_triple (4368,4451,4525),254)
 			Result.put (new_triple (4368,4451,4526),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_209: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_209: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4368,4451,4527),0)
 			Result.put (new_triple (4368,4451,4528),1)
 			Result.put (new_triple (4368,4451,4529),2)
@@ -14832,15 +14763,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4368,4460,4528),253)
 			Result.put (new_triple (4368,4460,4529),254)
 			Result.put (new_triple (4368,4460,4530),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_210: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_210: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4368,4460,4531),0)
 			Result.put (new_triple (4368,4460,4532),1)
 			Result.put (new_triple (4368,4460,4533),2)
@@ -15097,15 +15027,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4368,4469,4532),253)
 			Result.put (new_triple (4368,4469,4533),254)
 			Result.put (new_triple (4368,4469,4534),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_211: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_211: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4368,4469,4535),0)
 			Result.put (new_triple (4368,4469,4536),1)
 			Result.put (new_triple (4368,4469,4537),2)
@@ -15362,15 +15291,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4369,4457,4536),253)
 			Result.put (new_triple (4369,4457,4537),254)
 			Result.put (new_triple (4369,4457,4538),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_212: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_212: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4369,4457,4539),0)
 			Result.put (new_triple (4369,4457,4540),1)
 			Result.put (new_triple (4369,4457,4541),2)
@@ -15627,15 +15555,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4369,4466,4540),253)
 			Result.put (new_triple (4369,4466,4541),254)
 			Result.put (new_triple (4369,4466,4542),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_213: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_213: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4369,4466,4543),0)
 			Result.put (new_triple (4369,4466,4544),1)
 			Result.put (new_triple (4369,4466,4545),2)
@@ -15892,15 +15819,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4370,4454,4544),253)
 			Result.put (new_triple (4370,4454,4545),254)
 			Result.put (new_triple (4370,4454,4546),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_214: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_214: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_pair (4370,4455),0)
 			Result.put (new_triple (4370,4455,4520),1)
 			Result.put (new_triple (4370,4455,4521),2)
@@ -16157,15 +16083,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4370,4464,4520),253)
 			Result.put (new_triple (4370,4464,4521),254)
 			Result.put (new_triple (4370,4464,4522),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_215: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_215: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_triple (4370,4464,4523),0)
 			Result.put (new_triple (4370,4464,4524),1)
 			Result.put (new_triple (4370,4464,4525),2)
@@ -16330,15 +16255,14 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (4370,4469,4544),161)
 			Result.put (new_triple (4370,4469,4545),162)
 			Result.put (new_triple (4370,4469,4546),163)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_249: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_249: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (35912),0)
 			Result.put (new_singleton (26356),1)
 			Result.put (new_singleton (36554),2)
@@ -16595,15 +16519,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (20160),253)
 			Result.put (new_singleton (33590),254)
 			Result.put (new_singleton (21050),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_250: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_250: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (20999),0)
 			Result.put (new_singleton (24230),1)
 			Result.put (new_singleton (25299),2)
@@ -16803,15 +16726,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (163539),215)
 			Result.put (new_singleton (40771),216)
 			Result.put (new_singleton (40846),217)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_251: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_251: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_pair (102,102),0)
 			Result.put (new_pair (102,105),1)
 			Result.put (new_pair (102,108),2)
@@ -17012,15 +16934,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (1740),253)
 			Result.put (new_singleton (1740),254)
 			Result.put (new_singleton (1740),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_252: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_252: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_pair (1574,1580),0)
 			Result.put (new_pair (1574,1581),1)
 			Result.put (new_pair (1574,1605),2)
@@ -17277,15 +17198,14 @@ feature {NONE} -- Implementation
 			Result.put (new_pair (1588,1609),253)
 			Result.put (new_pair (1588,1610),254)
 			Result.put (new_pair (1581,1609),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_253: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_253: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_pair (1581,1610),0)
 			Result.put (new_pair (1580,1609),1)
 			Result.put (new_pair (1580,1610),2)
@@ -17479,15 +17399,14 @@ feature {NONE} -- Implementation
 			Result.put (new_eighteen_tuple (1589,1604,1609,32,1575,1604,1604,1607,32,1593,1604,1610,1607,32,1608,1587,1604,1605),250)
 			Result.put (new_octuple (1580,1604,32,1580,1604,1575,1604,1607),251)
 			Result.put (new_quadruple (1585,1740,1575,1604),252)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_254: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_254: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (44),16)
 			Result.put (new_singleton (12289),17)
 			Result.put (new_singleton (12290),18)
@@ -17693,15 +17612,14 @@ feature {NONE} -- Implementation
 			Result.put (new_pair (1604,1573),250)
 			Result.put (new_pair (1604,1575),251)
 			Result.put (new_pair (1604,1575),252)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_0_segment_255: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_0_segment_255: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (33),1)
 			Result.put (new_singleton (34),2)
 			Result.put (new_singleton (35),3)
@@ -17927,7 +17845,6 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (8595),236)
 			Result.put (new_singleton (9632),237)
 			Result.put (new_singleton (9675),238)
-
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -18197,10 +18114,10 @@ feature {NONE} -- Implementation
 			sub_arrays_not_void: True --not Result.has (Void)
 		end
 
-	decomposition_mapping_plane_1_segment_209: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_1_segment_209: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_pair (119127,119141),94)
 			Result.put (new_pair (119128,119141),95)
 			Result.put (new_pair (119135,119150),96)
@@ -18214,15 +18131,14 @@ feature {NONE} -- Implementation
 			Result.put (new_pair (119228,119150),190)
 			Result.put (new_pair (119227,119151),191)
 			Result.put (new_pair (119228,119151),192)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_1_segment_212: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_1_segment_212: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (65),0)
 			Result.put (new_singleton (66),1)
 			Result.put (new_singleton (67),2)
@@ -18467,15 +18383,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (116),253)
 			Result.put (new_singleton (117),254)
 			Result.put (new_singleton (118),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_1_segment_213: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_1_segment_213: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (119),0)
 			Result.put (new_singleton (120),1)
 			Result.put (new_singleton (121),2)
@@ -18720,15 +18635,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (112),253)
 			Result.put (new_singleton (113),254)
 			Result.put (new_singleton (114),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_1_segment_214: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_1_segment_214: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (115),0)
 			Result.put (new_singleton (116),1)
 			Result.put (new_singleton (117),2)
@@ -18983,15 +18897,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (946),253)
 			Result.put (new_singleton (947),254)
 			Result.put (new_singleton (948),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_1_segment_215: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_1_segment_215: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (949),0)
 			Result.put (new_singleton (950),1)
 			Result.put (new_singleton (951),2)
@@ -19244,7 +19157,6 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (55),253)
 			Result.put (new_singleton (56),254)
 			Result.put (new_singleton (57),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -19514,10 +19426,10 @@ feature {NONE} -- Implementation
 			sub_arrays_not_void: True --not Result.has (Void)
 		end
 
-	decomposition_mapping_plane_2_segment_248: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_2_segment_248: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (20029),0)
 			Result.put (new_singleton (20024),1)
 			Result.put (new_singleton (20033),2)
@@ -19774,15 +19686,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (27853),253)
 			Result.put (new_singleton (27751),254)
 			Result.put (new_singleton (27926),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_2_segment_249: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_2_segment_249: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (27966),0)
 			Result.put (new_singleton (28023),1)
 			Result.put (new_singleton (27969),2)
@@ -20039,15 +19950,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (169110),253)
 			Result.put (new_singleton (38923),254)
 			Result.put (new_singleton (38923),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	decomposition_mapping_plane_2_segment_250: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	decomposition_mapping_plane_2_segment_250: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (38953),0)
 			Result.put (new_singleton (169398),1)
 			Result.put (new_singleton (39138),2)
@@ -20078,7 +19988,6 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (40726),27)
 			Result.put (new_singleton (40763),28)
 			Result.put (new_singleton (173568),29)
-
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -20762,9 +20671,9 @@ feature {NONE} -- Implementation
 			l_pair: DS_HASHABLE_PAIR [INTEGER, INTEGER]
 		once
 			create Result.make (12089)
-			create l_array_1.make (1, 13)
-			create l_array_2.make (1, 13)
-			create l_array_3.make (1, 13)
+			create l_array_1.make_filled (Void, 1, 13)
+			create l_array_2.make_filled (Void, 1, 13)
+			create l_array_3.make_filled (Void, 1, 13)
 			create l_string.make_from_utf8 (composition_map_first_integer_1)
 			l_array_1.put (l_string, 1)
 			create l_string.make_from_utf8 (composition_map_second_integer_1)
@@ -21706,264 +21615,18 @@ feature {NONE} -- Implementation
 
 	all_false_expands_on_nfc_property_plane: SPECIAL [ARRAY [BOOLEAN]]
 			-- Generated array plane
+		local
+			i: INTEGER
 		once
 			create Result.make_filled (Void, 256)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 0)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 1)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 2)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 3)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 4)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 5)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 6)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 7)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 8)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 9)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 10)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 11)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 12)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 13)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 14)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 15)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 16)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 17)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 18)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 19)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 20)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 21)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 22)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 23)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 24)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 25)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 26)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 27)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 28)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 29)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 30)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 31)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 32)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 33)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 34)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 35)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 36)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 37)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 38)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 39)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 40)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 41)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 42)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 43)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 44)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 45)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 46)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 47)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 48)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 49)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 50)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 51)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 52)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 53)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 54)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 55)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 56)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 57)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 58)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 59)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 60)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 61)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 62)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 63)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 64)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 65)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 66)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 67)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 68)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 69)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 70)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 71)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 72)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 73)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 74)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 75)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 76)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 77)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 78)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 79)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 80)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 81)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 82)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 83)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 84)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 85)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 86)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 87)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 88)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 89)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 90)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 91)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 92)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 93)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 94)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 95)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 96)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 97)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 98)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 99)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 100)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 101)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 102)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 103)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 104)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 105)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 106)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 107)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 108)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 109)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 110)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 111)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 112)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 113)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 114)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 115)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 116)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 117)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 118)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 119)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 120)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 121)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 122)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 123)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 124)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 125)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 126)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 127)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 128)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 129)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 130)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 131)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 132)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 133)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 134)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 135)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 136)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 137)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 138)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 139)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 140)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 141)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 142)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 143)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 144)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 145)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 146)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 147)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 148)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 149)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 150)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 151)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 152)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 153)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 154)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 155)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 156)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 157)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 158)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 159)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 160)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 161)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 162)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 163)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 164)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 165)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 166)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 167)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 168)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 169)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 170)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 171)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 172)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 173)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 174)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 175)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 176)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 177)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 178)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 179)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 180)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 181)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 182)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 183)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 184)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 185)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 186)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 187)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 188)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 189)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 190)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 191)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 192)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 193)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 194)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 195)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 196)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 197)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 198)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 199)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 200)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 201)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 202)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 203)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 204)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 205)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 206)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 207)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 208)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 209)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 210)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 211)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 212)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 213)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 214)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 215)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 216)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 217)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 218)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 219)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 220)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 221)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 222)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 223)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 224)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 225)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 226)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 227)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 228)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 229)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 230)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 231)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 232)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 233)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 234)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 235)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 236)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 237)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 238)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 239)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 240)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 241)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 242)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 243)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 244)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 245)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 246)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 247)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 248)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 249)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 250)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 251)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 252)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 253)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 254)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 255)
+			from
+				i := 0
+			until
+				i > 255
+			loop
+				Result.put (create {ARRAY [BOOLEAN]}.make_filled (False, 1, 256), i)
+				i := i + 1
+			end
 		ensure
 			result_not_void: Result /= Void
 			sub_arrays_not_void: True --not Result.has (Void)
@@ -23364,264 +23027,18 @@ feature {NONE} -- Implementation
 
 	all_false_expands_on_nfd_property_plane: SPECIAL [ARRAY [BOOLEAN]]
 			-- Generated array plane
+		local
+			i: INTEGER
 		once
 			create Result.make_filled (Void, 256)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 0)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 1)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 2)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 3)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 4)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 5)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 6)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 7)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 8)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 9)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 10)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 11)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 12)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 13)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 14)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 15)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 16)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 17)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 18)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 19)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 20)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 21)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 22)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 23)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 24)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 25)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 26)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 27)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 28)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 29)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 30)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 31)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 32)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 33)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 34)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 35)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 36)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 37)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 38)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 39)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 40)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 41)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 42)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 43)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 44)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 45)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 46)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 47)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 48)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 49)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 50)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 51)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 52)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 53)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 54)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 55)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 56)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 57)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 58)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 59)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 60)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 61)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 62)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 63)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 64)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 65)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 66)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 67)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 68)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 69)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 70)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 71)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 72)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 73)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 74)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 75)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 76)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 77)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 78)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 79)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 80)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 81)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 82)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 83)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 84)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 85)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 86)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 87)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 88)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 89)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 90)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 91)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 92)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 93)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 94)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 95)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 96)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 97)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 98)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 99)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 100)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 101)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 102)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 103)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 104)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 105)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 106)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 107)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 108)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 109)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 110)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 111)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 112)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 113)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 114)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 115)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 116)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 117)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 118)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 119)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 120)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 121)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 122)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 123)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 124)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 125)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 126)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 127)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 128)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 129)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 130)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 131)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 132)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 133)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 134)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 135)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 136)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 137)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 138)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 139)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 140)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 141)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 142)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 143)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 144)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 145)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 146)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 147)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 148)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 149)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 150)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 151)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 152)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 153)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 154)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 155)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 156)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 157)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 158)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 159)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 160)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 161)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 162)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 163)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 164)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 165)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 166)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 167)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 168)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 169)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 170)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 171)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 172)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 173)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 174)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 175)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 176)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 177)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 178)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 179)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 180)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 181)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 182)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 183)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 184)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 185)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 186)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 187)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 188)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 189)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 190)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 191)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 192)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 193)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 194)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 195)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 196)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 197)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 198)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 199)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 200)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 201)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 202)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 203)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 204)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 205)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 206)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 207)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 208)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 209)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 210)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 211)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 212)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 213)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 214)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 215)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 216)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 217)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 218)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 219)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 220)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 221)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 222)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 223)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 224)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 225)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 226)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 227)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 228)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 229)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 230)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 231)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 232)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 233)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 234)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 235)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 236)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 237)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 238)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 239)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 240)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 241)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 242)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 243)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 244)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 245)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 246)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 247)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 248)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 249)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 250)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 251)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 252)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 253)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 254)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 255)
+			from
+				i := 0
+			until
+				i > 255
+			loop
+				Result.put (create {ARRAY [BOOLEAN]}.make_filled (False, 1, 256), i)
+				i := i + 1
+			end
 		ensure
 			result_not_void: Result /= Void
 			sub_arrays_not_void: True --not Result.has (Void)
@@ -25127,264 +24544,18 @@ feature {NONE} -- Implementation
 
 	all_false_expands_on_nfkc_property_plane: SPECIAL [ARRAY [BOOLEAN]]
 			-- Generated array plane
+		local
+			i: INTEGER
 		once
 			create Result.make_filled (Void, 256)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 0)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 1)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 2)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 3)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 4)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 5)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 6)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 7)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 8)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 9)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 10)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 11)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 12)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 13)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 14)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 15)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 16)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 17)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 18)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 19)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 20)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 21)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 22)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 23)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 24)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 25)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 26)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 27)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 28)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 29)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 30)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 31)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 32)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 33)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 34)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 35)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 36)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 37)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 38)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 39)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 40)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 41)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 42)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 43)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 44)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 45)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 46)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 47)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 48)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 49)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 50)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 51)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 52)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 53)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 54)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 55)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 56)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 57)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 58)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 59)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 60)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 61)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 62)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 63)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 64)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 65)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 66)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 67)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 68)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 69)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 70)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 71)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 72)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 73)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 74)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 75)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 76)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 77)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 78)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 79)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 80)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 81)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 82)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 83)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 84)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 85)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 86)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 87)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 88)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 89)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 90)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 91)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 92)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 93)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 94)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 95)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 96)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 97)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 98)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 99)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 100)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 101)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 102)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 103)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 104)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 105)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 106)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 107)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 108)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 109)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 110)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 111)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 112)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 113)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 114)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 115)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 116)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 117)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 118)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 119)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 120)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 121)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 122)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 123)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 124)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 125)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 126)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 127)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 128)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 129)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 130)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 131)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 132)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 133)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 134)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 135)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 136)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 137)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 138)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 139)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 140)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 141)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 142)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 143)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 144)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 145)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 146)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 147)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 148)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 149)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 150)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 151)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 152)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 153)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 154)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 155)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 156)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 157)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 158)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 159)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 160)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 161)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 162)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 163)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 164)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 165)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 166)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 167)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 168)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 169)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 170)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 171)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 172)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 173)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 174)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 175)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 176)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 177)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 178)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 179)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 180)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 181)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 182)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 183)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 184)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 185)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 186)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 187)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 188)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 189)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 190)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 191)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 192)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 193)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 194)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 195)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 196)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 197)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 198)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 199)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 200)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 201)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 202)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 203)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 204)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 205)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 206)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 207)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 208)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 209)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 210)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 211)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 212)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 213)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 214)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 215)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 216)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 217)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 218)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 219)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 220)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 221)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 222)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 223)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 224)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 225)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 226)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 227)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 228)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 229)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 230)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 231)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 232)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 233)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 234)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 235)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 236)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 237)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 238)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 239)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 240)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 241)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 242)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 243)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 244)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 245)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 246)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 247)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 248)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 249)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 250)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 251)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 252)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 253)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 254)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 255)
+			from
+				i := 0
+			until
+				i > 255
+			loop
+				Result.put (create {ARRAY [BOOLEAN]}.make_filled (False, 1, 256), i)
+				i := i + 1
+			end
 		ensure
 			result_not_void: Result /= Void
 			sub_arrays_not_void: True --not Result.has (Void)
@@ -27065,264 +26236,18 @@ feature {NONE} -- Implementation
 
 	all_false_expands_on_nfkd_property_plane: SPECIAL [ARRAY [BOOLEAN]]
 			-- Generated array plane
+		local
+			i: INTEGER
 		once
 			create Result.make_filled (Void, 256)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 0)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 1)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 2)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 3)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 4)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 5)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 6)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 7)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 8)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 9)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 10)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 11)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 12)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 13)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 14)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 15)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 16)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 17)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 18)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 19)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 20)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 21)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 22)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 23)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 24)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 25)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 26)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 27)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 28)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 29)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 30)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 31)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 32)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 33)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 34)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 35)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 36)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 37)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 38)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 39)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 40)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 41)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 42)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 43)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 44)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 45)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 46)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 47)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 48)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 49)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 50)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 51)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 52)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 53)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 54)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 55)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 56)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 57)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 58)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 59)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 60)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 61)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 62)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 63)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 64)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 65)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 66)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 67)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 68)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 69)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 70)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 71)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 72)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 73)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 74)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 75)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 76)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 77)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 78)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 79)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 80)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 81)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 82)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 83)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 84)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 85)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 86)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 87)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 88)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 89)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 90)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 91)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 92)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 93)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 94)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 95)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 96)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 97)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 98)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 99)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 100)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 101)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 102)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 103)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 104)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 105)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 106)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 107)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 108)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 109)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 110)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 111)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 112)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 113)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 114)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 115)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 116)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 117)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 118)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 119)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 120)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 121)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 122)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 123)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 124)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 125)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 126)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 127)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 128)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 129)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 130)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 131)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 132)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 133)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 134)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 135)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 136)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 137)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 138)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 139)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 140)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 141)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 142)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 143)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 144)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 145)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 146)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 147)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 148)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 149)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 150)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 151)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 152)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 153)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 154)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 155)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 156)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 157)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 158)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 159)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 160)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 161)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 162)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 163)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 164)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 165)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 166)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 167)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 168)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 169)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 170)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 171)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 172)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 173)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 174)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 175)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 176)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 177)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 178)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 179)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 180)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 181)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 182)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 183)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 184)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 185)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 186)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 187)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 188)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 189)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 190)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 191)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 192)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 193)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 194)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 195)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 196)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 197)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 198)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 199)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 200)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 201)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 202)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 203)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 204)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 205)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 206)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 207)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 208)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 209)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 210)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 211)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 212)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 213)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 214)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 215)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 216)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 217)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 218)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 219)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 220)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 221)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 222)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 223)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 224)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 225)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 226)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 227)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 228)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 229)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 230)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 231)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 232)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 233)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 234)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 235)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 236)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 237)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 238)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 239)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 240)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 241)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 242)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 243)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 244)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 245)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 246)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 247)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 248)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 249)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 250)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 251)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 252)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 253)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 254)
-			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 255)
+			from
+				i := 0
+			until
+				i > 255
+			loop
+				Result.put (create {ARRAY [BOOLEAN]}.make_filled (False, 1, 256), i)
+				i := i + 1
+			end
 		ensure
 			result_not_void: Result /= Void
 			sub_arrays_not_void: True --not Result.has (Void)

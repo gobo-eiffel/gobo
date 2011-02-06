@@ -5,7 +5,7 @@ note
 		"Token values"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2011, Colin Adams and others"
 	derivation: "See notice at bottom of file"
 	license: "MIT License"
 	date: "$Date$"
@@ -328,7 +328,7 @@ feature {NONE} -- Implementation
 	tokens: ARRAY [STRING]
 			-- Strings are used to represent tokens in error messages
 		once
-			create Result.make (0, 199)
+			create Result.make_filled (Void, 0, 199)
 
 			Result.put ("<eof>", Eof_token)
 			Result.put ("|", Union_token)

@@ -5,7 +5,7 @@ note
 		"Objects that implement the XSLT format-number() function"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2011, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -300,7 +300,7 @@ feature {NONE} -- Implementation
 	picture: STRING
 			-- Picture, when statically known
 
-	sub_pictures: ARRAY [XM_XSLT_SUB_PICTURE]
+	sub_pictures: ARRAY [detachable XM_XSLT_SUB_PICTURE]
 			-- Sub-pictures
 
 	is_fixup_required: BOOLEAN
@@ -309,13 +309,13 @@ feature {NONE} -- Implementation
 	analyzed_sub_pictures (a_picture: STRING; a_format: XM_XSLT_DECIMAL_FORMAT_ENTRY): ARRAY [XM_XSLT_SUB_PICTURE]
 			-- Sub-pictures
 		require
-			picture_string_not_void:	 a_picture /= Void
+			picture_string_not_void: a_picture /= Void
 			decimal_format_not_void: a_format /= Void
 		local
 			a_separator_index: INTEGER
 			a_sub_picture: XM_XSLT_SUB_PICTURE
 		do
-			create sub_pictures.make (1,2)
+			create sub_pictures.make_filled (Void, 1, 2)
 			if a_picture.count = 0 then
 				set_last_error_from_string ("format-number() picture is zero-length",
 													 Xpath_errors_uri, "XTDE1310", Dynamic_error)

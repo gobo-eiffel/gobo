@@ -164,11 +164,11 @@ T35 GE_default35 = {35};
 T36 GE_default36 = {36};
 T37 GE_default37 = {37};
 T38 GE_default38 = {38,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-T39 GE_default39 = {39,0,0,0,0,0,0,0,0};
+T39 GE_default39 = {39,0,0,0,0,0,0,0,0,0};
 T40 GE_default40 = {40,0};
 T44 GE_default44 = {44};
 T45 GE_default45 = {45};
-T46 GE_default46 = {46,0,0,0,0,0,0};
+T46 GE_default46 = {46,0,0,0,0,0,0,0};
 T47 GE_default47 = {47,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 T48 GE_default48 = {48,0,0,0,0,0,0};
 T49 GE_default49 = {49,0,0,0,0,0,0,0,0,0,0};
@@ -176,10 +176,10 @@ T50 GE_default50 = {50,0};
 T51 GE_default51 = {51,0};
 T52 GE_default52 = {52,0};
 T54 GE_default54 = {54,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-T55 GE_default55 = {55,0,0,0,0,0};
+T55 GE_default55 = {55,0,0,0,0,0,0};
 T56 GE_default56 = {56,0};
-T58 GE_default58 = {58,0,0,0};
-T59 GE_default59 = {59,0,0,0,0,0,0,0,0,0,0,0};
+T58 GE_default58 = {58,0,0,0,0};
+T59 GE_default59 = {59,0,0,0,0,0,0,0,0,0,0};
 T60 GE_default60 = {60,0,0,0,0,0,0,0,0};
 T61 GE_default61 = {61,0,0,0,0,0,0,0,0,0,0,0};
 T62 GE_default62 = {62,0,0,0,0,0,0,0,0,0,0};
@@ -189,7 +189,7 @@ T65 GE_default65 = {65,0,0,0};
 T69 GE_default69 = {69};
 T71 GE_default71 = {71,0,0,0,0,0,0,0,0};
 T72 GE_default72 = {72,0};
-T73 GE_default73 = {73,0,0,0};
+T73 GE_default73 = {73,0,0,0,0};
 T74 GE_default74 = {74,0,0,0,0,0};
 T75 GE_default75 = {75,0,0,0,0,0,0};
 T76 GE_default76 = {76};
@@ -242,135 +242,123 @@ T125 GE_default125 = {125,0};
 T126 GE_default126 = {126,0};
 T127 GE_default127 = {127,0};
 T128 GE_default128 = {128,0};
-T131 GE_default131 = {131,0};
-T132 GE_default132 = {132,0,0,0};
-T133 GE_default133 = {133,0,0,0,0,0,0};
-T134 GE_default134 = {134,0,0,0,0,0};
-T135 GE_default135 = {135,0,0,0,0,0,0};
-T136 GE_default136 = {136,0,{0}};
-T137 GE_default137 = {137,0,0,0};
-T138 GE_default138 = {138,0,0,0,0,0,0};
-T139 GE_default139 = {139,0};
-T141 GE_default141 = {141};
-T143 GE_default143 = {143,0,0,0};
-T144 GE_default144 = {144,0,0,0,0};
+T132 GE_default132 = {132,0};
+T133 GE_default133 = {133,0,0,0};
+T134 GE_default134 = {134,0,0,0,0,0,0};
+T135 GE_default135 = {135,0,0,0,0,0};
+T136 GE_default136 = {136,0,0,0,0,0,0};
+T137 GE_default137 = {137,0,{0}};
+T138 GE_default138 = {138,0,0,0};
+T139 GE_default139 = {139,0,0,0,0,0,0};
+T140 GE_default140 = {140,0};
+T142 GE_default142 = {142};
+T144 GE_default144 = {144,0,0,0};
 T145 GE_default145 = {145,0,0,0,0};
-T146 GE_default146 = {146,0,0,0,0,0};
+T146 GE_default146 = {146,0,0,0,0};
 T147 GE_default147 = {147,0,0,0,0,0};
-T148 GE_default148 = {148,0,0,0};
-T149 GE_default149 = {149,0,0,0,0,0};
-T150 GE_default150 = {150,0,0};
-T151 GE_default151 = {151,0,0,0,0};
-T152 GE_default152 = {152,0,0,0,0,0};
-T153 GE_default153 = {153};
-T154 GE_default154 = {154,0,0,0,0,0,0};
-T155 GE_default155 = {155,0};
-T157 GE_default157 = {157,0,0,0};
-T158 GE_default158 = {158,0,{0}};
-T159 GE_default159 = {159,0,0,0};
+T148 GE_default148 = {148,0,0,0,0,0};
+T149 GE_default149 = {149,0,0,0};
+T150 GE_default150 = {150,0,0,0,0,0};
+T151 GE_default151 = {151,0,0};
+T152 GE_default152 = {152,0,0,0,0};
+T153 GE_default153 = {153,0,0,0,0,0};
+T154 GE_default154 = {154};
+T155 GE_default155 = {155,0,0,0,0,0,0};
+T156 GE_default156 = {156,0};
+T158 GE_default158 = {158,0,0,0};
+T159 GE_default159 = {159,0,{0}};
 T160 GE_default160 = {160,0,0,0};
-T161 GE_default161 = {161,0,0,0};
-T162 GE_default162 = {162,0,0,0,0,0};
-T163 GE_default163 = {163,0,0,0,0,0};
-T164 GE_default164 = {164};
-T165 GE_default165 = {165};
+T161 GE_default161 = {161};
+T162 GE_default162 = {162,0,0,0};
+T163 GE_default163 = {163,0,0,0};
+T164 GE_default164 = {164,0,0,0,0,0};
+T165 GE_default165 = {165,0,0,0,0,0};
 T166 GE_default166 = {166};
-T167 GE_default167 = {167,0,0,0,0,0};
-T168 GE_default168 = {168,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-T169 GE_default169 = {169};
-T170 GE_default170 = {170,0,0,0};
-T172 GE_default172 = {172,0};
-T173 GE_default173 = {173,0};
+T167 GE_default167 = {167};
+T168 GE_default168 = {168};
+T169 GE_default169 = {169,0,0,0,0,0};
+T170 GE_default170 = {170,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+T171 GE_default171 = {171};
+T172 GE_default172 = {172,0,0,0};
 T174 GE_default174 = {174,0};
-T175 GE_default175 = {175,0,0};
-T177 GE_default177 = {177};
-T179 GE_default179 = {179,0,0,0,0,0,0};
-T180 GE_default180 = {180,0,0,0,0,0};
-T181 GE_default181 = {181,0,0,0,0};
+T175 GE_default175 = {175,0};
+T176 GE_default176 = {176,0};
+T177 GE_default177 = {177,0,0};
+T179 GE_default179 = {179};
+T181 GE_default181 = {181,0,0,0,0,0,0};
 T182 GE_default182 = {182,0,0,0,0,0};
-T186 GE_default186 = {186,0,0,0,0};
-T187 GE_default187 = {187,0,0,0,0,0};
-T189 GE_default189 = {189};
-T191 GE_default191 = {191,0,0,0};
-T192 GE_default192 = {192};
-T193 GE_default193 = {193,0};
+T183 GE_default183 = {183,0,0,0,0};
+T184 GE_default184 = {184,0,0,0,0,0};
+T188 GE_default188 = {188,0,0,0,0};
+T189 GE_default189 = {189,0,0,0,0,0};
+T191 GE_default191 = {191};
+T193 GE_default193 = {193,0,0,0};
 T194 GE_default194 = {194};
-T195 GE_default195 = {195,0,0,0};
-T196 GE_default196 = {196,0,{0}};
-T197 GE_default197 = {197};
-T198 GE_default198 = {198,0,0,0};
-T199 GE_default199 = {199,0,0,0};
-T201 GE_default201 = {201,0,0};
+T195 GE_default195 = {195,0};
+T196 GE_default196 = {196};
+T197 GE_default197 = {197,0,0,0};
+T198 GE_default198 = {198,0,{0}};
+T199 GE_default199 = {199};
+T200 GE_default200 = {200};
+T201 GE_default201 = {201,0,0,0};
 T202 GE_default202 = {202,0,0,0};
-T204 GE_default204 = {204,0};
-T205 GE_default205 = {205,0};
-T206 GE_default206 = {206,0};
+T204 GE_default204 = {204,0,0};
+T205 GE_default205 = {205,0,0,0};
 T207 GE_default207 = {207,0,0};
 T208 GE_default208 = {208,0};
-T209 GE_default209 = {209,0};
+T211 GE_default211 = {211,0,0};
 T212 GE_default212 = {212,0,0};
-T213 GE_default213 = {213,0,0};
-T214 GE_default214 = {214,0,0,0};
-T215 GE_default215 = {215,0,{0}};
-T216 GE_default216 = {216,0,0,0};
-T217 GE_default217 = {217,0};
-T218 GE_default218 = {218,0};
-T220 GE_default220 = {220,0,{0}};
-T221 GE_default221 = {221};
-T222 GE_default222 = {222,0,0,0};
-T224 GE_default224 = {224,0,{0}};
-T225 GE_default225 = {225};
-T227 GE_default227 = {227,0,0,0};
-T228 GE_default228 = {228,0,{0}};
-T229 GE_default229 = {229};
-T230 GE_default230 = {230,0,0};
-T231 GE_default231 = {231,0,0};
-T233 GE_default233 = {233,0,{0}};
-T234 GE_default234 = {234};
-T235 GE_default235 = {235,0,0};
-T236 GE_default236 = {236,0,0};
-T238 GE_default238 = {238,0,0,0};
-T239 GE_default239 = {239};
-T240 GE_default240 = {240,0,0};
-T241 GE_default241 = {241,0,0,0};
-T243 GE_default243 = {243,0,0};
-T244 GE_default244 = {244,0};
-T246 GE_default246 = {246,0,0,0,0,0,0,0,0,0,0};
-T250 GE_default250 = {250,0,0};
-T252 GE_default252 = {252};
-T256 GE_default256 = {256,0};
-T257 GE_default257 = {257,0,0,0};
-T259 GE_default259 = {259,0,{0}};
-T260 GE_default260 = {260};
-T261 GE_default261 = {261,0,0,0};
-T262 GE_default262 = {262,0,{0}};
-T263 GE_default263 = {263};
-T264 GE_default264 = {264,0,0,0,0,0};
+T213 GE_default213 = {213,0,0,0};
+T214 GE_default214 = {214,0,{0}};
+T215 GE_default215 = {215,0,0,0};
+T216 GE_default216 = {216,0};
+T218 GE_default218 = {218,0,{0}};
+T219 GE_default219 = {219};
+T220 GE_default220 = {220,0,0,0};
+T222 GE_default222 = {222,0,{0}};
+T223 GE_default223 = {223};
+T225 GE_default225 = {225,0,0,0};
+T226 GE_default226 = {226,0,{0}};
+T227 GE_default227 = {227};
+T228 GE_default228 = {228,0,0};
+T229 GE_default229 = {229,0,0};
+T231 GE_default231 = {231,0,{0}};
+T232 GE_default232 = {232};
+T233 GE_default233 = {233,0,0};
+T234 GE_default234 = {234,0,0};
+T236 GE_default236 = {236,0,0,0};
+T237 GE_default237 = {237};
+T238 GE_default238 = {238,0,0};
+T239 GE_default239 = {239,0,0,0};
+T241 GE_default241 = {241,0,0};
+T243 GE_default243 = {243,0,0,0,0,0,0,0,0,0,0};
+T247 GE_default247 = {247,0,0};
+T249 GE_default249 = {249,0};
+T250 GE_default250 = {250};
+T254 GE_default254 = {254,0};
+T255 GE_default255 = {255,0,0,0};
+T257 GE_default257 = {257,0,{0}};
+T258 GE_default258 = {258};
+T259 GE_default259 = {259,0,0,0};
+T260 GE_default260 = {260,0,{0}};
+T261 GE_default261 = {261};
+T262 GE_default262 = {262,0,0,0,0,0};
+T263 GE_default263 = {263,0,0};
+T264 GE_default264 = {264,0,0};
 T265 GE_default265 = {265,0,0};
-T266 GE_default266 = {266,0,0};
+T266 GE_default266 = {266};
 T267 GE_default267 = {267,0,0};
-T268 GE_default268 = {268};
-T269 GE_default269 = {269,0};
-T270 GE_default270 = {270,0,0};
-T271 GE_default271 = {271,0,0};
-T272 GE_default272 = {272,0};
-T273 GE_default273 = {273,0};
-T274 GE_default274 = {274,0};
-T275 GE_default275 = {275,0};
-T276 GE_default276 = {276,0,0};
+T268 GE_default268 = {268,0,0};
+T269 GE_default269 = {269,0,0};
+T270 GE_default270 = {270,0,{0}};
+T271 GE_default271 = {271,0,0,0,0};
+T275 GE_default275 = {275,0,0};
 T277 GE_default277 = {277,0,{0}};
-T278 GE_default278 = {278,0};
-T279 GE_default279 = {279,0,0,0,0};
-T280 GE_default280 = {280,0};
-T281 GE_default281 = {281,0};
-T285 GE_default285 = {285,0,0};
-T286 GE_default286 = {286,0,{0}};
-T288 GE_default288 = {288};
-T289 GE_default289 = {289,0,0,0};
-T290 GE_default290 = {290};
-T291 GE_default291 = {291,0};
-T294 GE_default294 = {294,0};
-T295 GE_default295 = {295};
+T278 GE_default278 = {278};
+T279 GE_default279 = {279,0};
+T282 GE_default282 = {282,0,0,0};
+T283 GE_default283 = {283,0};
+T284 GE_default284 = {284};
 
 T0* GE_ms8(char* s, T6 c)
 {
@@ -378,7 +366,7 @@ T0* GE_ms8(char* s, T6 c)
 	T0* t1;
 	t1 = GE_new15(c+1, EIF_FALSE);
 	*(T15*)t1 = GE_default15;
-	((T15*)(t1))->z1 = (c+1);
+	((T15*)(t1))->a1 = (c+1);
 	memcpy(((T15*)(t1))->z2, s, c);
 #ifndef GE_alloc_atomic_cleared
 	((T15*)(t1))->z2[c] = '\0';
@@ -400,174 +388,102 @@ T0* GE_ms32(char* s, T6 c)
 T1 T19x27T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=17) {
-if (t1==6) {
-	return ((T1)(((T0*)(GE_void(a1)))->id==6));
-} else {
+if (t1<=134) {
+if (t1==17) {
 	return ((T1)(((T0*)(GE_void(a1)))->id==17));
+} else {
+	return ((T1)(((T0*)(GE_void(a1)))->id==134));
 }
 } else {
-if (t1==133) {
-	return ((T1)(((T0*)(GE_void(a1)))->id==133));
-} else {
-	return ((T1)(((T0*)(GE_void(a1)))->id==135));
-}
+	return ((T1)(((T0*)(GE_void(a1)))->id==136));
 }
 }
 
 /* Call to UT_ERROR.default_message */
-T0* T43x4034(T0* C)
+T0* T43x4063(T0* C)
 {
-	int t1 = ((T0*)(C))->id;
-if (t1<=113) {
-if (t1<=103) {
-if (t1<=56) {
-if (t1<=51) {
-if (t1<=50) {
-if (t1==40) {
-	return (T40f2(C));
-} else {
-	return (T50f2(C));
-}
-} else {
-	return (T51f2(C));
-}
-} else {
-if (t1==52) {
-	return (T52f2(C));
-} else {
-	return (T56f2(C));
-}
-}
-} else {
-if (t1<=97) {
-if (t1<=72) {
-if (t1==65) {
-	return (T65f5(C));
-} else {
-	return (T72f5(C));
-}
-} else {
-	return (T97f5(C));
-}
-} else {
-if (t1==102) {
-	return (T102f5(C));
-} else {
-	return (T103f5(C));
-}
-}
-}
-} else {
-if (t1<=108) {
-if (t1<=106) {
-if (t1<=105) {
-if (t1==104) {
-	return (T104f5(C));
-} else {
-	return (T105f5(C));
-}
-} else {
-	return (T106f5(C));
-}
-} else {
-if (t1==107) {
-	return (T107f5(C));
-} else {
-	return (T108f5(C));
-}
-}
-} else {
-if (t1<=111) {
-if (t1==109) {
-	return (T109f5(C));
-} else {
-	return (T111f5(C));
-}
-} else {
-if (t1==112) {
-	return (T112f5(C));
-} else {
-	return (T113f5(C));
-}
-}
-}
-}
-} else {
-if (t1<=122) {
-if (t1<=118) {
-if (t1<=116) {
-if (t1<=115) {
-if (t1==114) {
-	return (T114f5(C));
-} else {
-	return (T115f5(C));
-}
-} else {
-	return (T116f5(C));
-}
-} else {
-if (t1==117) {
-	return (T117f5(C));
-} else {
-	return (T118f5(C));
-}
-}
-} else {
-if (t1<=120) {
-if (t1==119) {
-	return (T119f5(C));
-} else {
-	return (T120f5(C));
-}
-} else {
-if (t1==121) {
-	return (T121f5(C));
-} else {
-	return (T122f5(C));
-}
-}
-}
-} else {
-if (t1<=127) {
-if (t1<=125) {
-if (t1<=124) {
-if (t1==123) {
-	return (T123f5(C));
-} else {
-	return (T124f5(C));
-}
-} else {
-	return (T125f5(C));
-}
-} else {
-if (t1==126) {
-	return (T126f5(C));
-} else {
-	return (T127f5(C));
-}
-}
-} else {
-if (t1<=172) {
-if (t1==128) {
-	return (T128f5(C));
-} else {
-	return (T172f5(C));
-}
-} else {
-if (t1==173) {
-	return (T173f5(C));
-} else {
-	return (T174f5(C));
-}
-}
-}
-}
-}
+	switch (((T0*)(C))->id) {
+	case 40:
+		return (T40f3(C));
+	case 50:
+		return (T50f3(C));
+	case 51:
+		return (T51f3(C));
+	case 52:
+		return (T52f3(C));
+	case 56:
+		return (T56f3(C));
+	case 65:
+		return (T65f5(C));
+	case 72:
+		return (T72f5(C));
+	case 97:
+		return (T97f5(C));
+	case 102:
+		return (T102f5(C));
+	case 103:
+		return (T103f5(C));
+	case 104:
+		return (T104f5(C));
+	case 105:
+		return (T105f5(C));
+	case 106:
+		return (T106f5(C));
+	case 107:
+		return (T107f5(C));
+	case 108:
+		return (T108f5(C));
+	case 109:
+		return (T109f5(C));
+	case 111:
+		return (T111f5(C));
+	case 112:
+		return (T112f5(C));
+	case 113:
+		return (T113f5(C));
+	case 114:
+		return (T114f5(C));
+	case 115:
+		return (T115f5(C));
+	case 116:
+		return (T116f5(C));
+	case 117:
+		return (T117f5(C));
+	case 118:
+		return (T118f5(C));
+	case 119:
+		return (T119f5(C));
+	case 120:
+		return (T120f5(C));
+	case 121:
+		return (T121f5(C));
+	case 122:
+		return (T122f5(C));
+	case 123:
+		return (T123f5(C));
+	case 124:
+		return (T124f5(C));
+	case 125:
+		return (T125f5(C));
+	case 126:
+		return (T126f5(C));
+	case 127:
+		return (T127f5(C));
+	case 128:
+		return (T128f5(C));
+	case 174:
+		return (T174f5(C));
+	case 175:
+		return (T175f5(C));
+	case 176:
+		return (T176f5(C));
+	default:
+		return 0;
+	}
 }
 
 /* Call to AP_OPTION.short_form */
-T2 T66x5368(T0* C)
+T2 T66x6000(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -590,7 +506,7 @@ if (t1==63) {
 }
 
 /* Call to AP_OPTION.long_form */
-T0* T66x5363(T0* C)
+T0* T66x5995(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -613,7 +529,7 @@ if (t1==63) {
 }
 
 /* Call to AP_OPTION.has_long_form */
-T1 T66x5370(T0* C)
+T1 T66x6002(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -636,7 +552,7 @@ if (t1==63) {
 }
 
 /* Call to AP_OPTION.description */
-T0* T66x5361(T0* C)
+T0* T66x5993(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -659,7 +575,7 @@ if (t1==63) {
 }
 
 /* Call to AP_OPTION.names */
-T0* T66x5365(T0* C)
+T0* T66x5997(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -682,7 +598,7 @@ if (t1==63) {
 }
 
 /* Call to AP_OPTION.is_hidden */
-T1 T66x5372(T0* C)
+T1 T66x6004(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -705,7 +621,7 @@ if (t1==63) {
 }
 
 /* Call to AP_OPTION.example */
-T0* T66x5362(T0* C)
+T0* T66x5994(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -722,13 +638,13 @@ if (t1==60) {
 if (t1==63) {
 	return (T63f19(C));
 } else {
-	return (T71f26(C));
+	return (T71f23(C));
 }
 }
 }
 
 /* Call to AP_OPTION.name */
-T0* T66x5364(T0* C)
+T0* T66x5996(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -751,7 +667,7 @@ if (t1==63) {
 }
 
 /* Call to AP_OPTION.needs_parameter */
-T1 T66x5374(T0* C)
+T1 T66x6006(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -774,7 +690,7 @@ if (t1==63) {
 }
 
 /* Call to AP_OPTION.has_short_form */
-T1 T66x5371(T0* C)
+T1 T66x6003(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -797,7 +713,7 @@ if (t1==63) {
 }
 
 /* Call to AP_OPTION.allows_parameter */
-T1 T66x5369(T0* C)
+T1 T66x6001(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -820,7 +736,7 @@ if (t1==63) {
 }
 
 /* Call to AP_OPTION.maximum_occurrences */
-T6 T66x5367(T0* C)
+T6 T66x5999(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -843,7 +759,7 @@ if (t1==63) {
 }
 
 /* Call to AP_OPTION.occurrences */
-T6 T66x5366(T0* C)
+T6 T66x5998(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -858,7 +774,7 @@ if (t1==60) {
 }
 } else {
 if (t1==63) {
-	return (T63f13(C));
+	return (T63f11(C));
 } else {
 	return (((T71*)(C))->a5);
 }
@@ -866,7 +782,7 @@ if (t1==63) {
 }
 
 /* Call to AP_OPTION.was_found */
-T1 T66x5376(T0* C)
+T1 T66x6008(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -883,13 +799,13 @@ if (t1==60) {
 if (t1==63) {
 	return (T63f14(C));
 } else {
-	return (T71f24(C));
+	return (T71f25(C));
 }
 }
 }
 
 /* Call to AP_OPTION.is_mandatory */
-T1 T66x5373(T0* C)
+T1 T66x6005(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -912,52 +828,52 @@ if (t1==63) {
 }
 
 /* Call to LX_TRANSITION [LX_NFA_STATE].target */
-T0* T210x7060(T0* C)
+T0* T209x7629(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=212) {
-if (t1==209) {
-	return (((T209*)(C))->a1);
+if (t1<=211) {
+if (t1==208) {
+	return (((T208*)(C))->a1);
 } else {
-	return (((T212*)(C))->a2);
+	return (((T211*)(C))->a2);
 }
 } else {
-	return (((T213*)(C))->a2);
+	return (((T212*)(C))->a2);
 }
 }
 
 /* Call to LX_TRANSITION [LX_NFA_STATE].labeled */
-T1 T210x7063T6(T0* C, T6 a1)
+T1 T209x7632T6(T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=212) {
-if (t1==209) {
-	return (T209f3(C, a1));
+if (t1<=211) {
+if (t1==208) {
+	return (T208f3(C, a1));
 } else {
-	return (T212f4(C, a1));
+	return (T211f4(C, a1));
 }
 } else {
-	return (T213f4(C, a1));
+	return (T212f4(C, a1));
 }
 }
 
 /* Call to LX_TRANSITION [LX_NFA_STATE].cloned_object */
-T0* T210x1916(T0* C)
+T0* T209x1887(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=212) {
-if (t1==209) {
-	return (T209f2(C));
+if (t1<=211) {
+if (t1==208) {
+	return (T208f2(C));
 } else {
-	return (T212f3(C));
+	return (T211f3(C));
 }
 } else {
-	return (T213f3(C));
+	return (T212f3(C));
 }
 }
 
 /* Call to AP_OPTION.record_occurrence */
-void T66x5387T0(T0* C, T0* a1)
+void T66x6019T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -980,7 +896,7 @@ if (t1==63) {
 }
 
 /* Call to AP_OPTION.reset */
-void T66x5388(T0* C)
+void T66x6020(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -1003,32 +919,32 @@ if (t1==63) {
 }
 
 /* Call to LX_TRANSITION [LX_NFA_STATE].record */
-void T210x7064T0(T0* C, T0* a1)
+void T209x7633T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=212) {
-if (t1==209) {
-		T209f7(C, a1);
+if (t1<=211) {
+if (t1==208) {
+		T208f7(C, a1);
 } else {
-		T212f8(C, a1);
+		T211f8(C, a1);
 }
 } else {
-		T213f8(C, a1);
+		T212f8(C, a1);
 }
 }
 
 /* Call to LX_TRANSITION [LX_NFA_STATE].set_target */
-void T210x7061T0(T0* C, T0* a1)
+void T209x7630T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=212) {
-if (t1==209) {
-		T209f6(C, a1);
+if (t1<=211) {
+if (t1==208) {
+		T208f6(C, a1);
 } else {
-		T212f7(C, a1);
+		T211f7(C, a1);
 }
 } else {
-		T213f7(C, a1);
+		T212f7(C, a1);
 }
 }
 
@@ -1039,7 +955,7 @@ T0* GE_new15(T6 a1, T1 initialize)
 	R = (T0*)GE_alloc_atomic(sizeof(T15)+(a1>1?(a1-1):0)*sizeof(T2));
 	if (initialize) {
 		*(T15*)R = GE_default15;
-		((T15*)(R))->z1 = a1;
+		((T15*)(R))->a1 = a1;
 #ifndef GE_alloc_atomic_cleared
 		memset(((T15*)(R))->z2,0,a1*sizeof(T2));
 #endif
@@ -1261,7 +1177,7 @@ T0* GE_new39(T1 initialize)
 {
 	T0* R;
 	R = (T0*)GE_alloc(sizeof(T39));
-	GE_register_dispose(R,&T39f36);
+	GE_register_dispose(R,&T39f37);
 	if (initialize) {
 		*(T39*)R = GE_default39;
 	}
@@ -1394,7 +1310,7 @@ T0* GE_new55(T1 initialize)
 {
 	T0* R;
 	R = (T0*)GE_alloc(sizeof(T55));
-	GE_register_dispose(R,&T55f21);
+	GE_register_dispose(R,&T55f22);
 	if (initialize) {
 		*(T55*)R = GE_default55;
 	}
@@ -1650,7 +1566,7 @@ T0* GE_new83(T6 a1, T1 initialize)
 	R = (T0*)GE_alloc_atomic(sizeof(T83)+(a1>1?(a1-1):0)*sizeof(T6));
 	if (initialize) {
 		*(T83*)R = GE_default83;
-		((T83*)(R))->z1 = a1;
+		((T83*)(R))->a1 = a1;
 #ifndef GE_alloc_atomic_cleared
 		memset(((T83*)(R))->z2,0,a1*sizeof(T6));
 #endif
@@ -1676,7 +1592,7 @@ T0* GE_new86(T6 a1, T1 initialize)
 	R = (T0*)GE_alloc(sizeof(T86)+(a1>1?(a1-1):0)*sizeof(T0*));
 	if (initialize) {
 		*(T86*)R = GE_default86;
-		((T86*)(R))->z1 = a1;
+		((T86*)(R))->a1 = a1;
 #ifndef GE_alloc_cleared
 		memset(((T86*)(R))->z2,0,a1*sizeof(T0*));
 #endif
@@ -1702,7 +1618,7 @@ T0* GE_new88(T6 a1, T1 initialize)
 	R = (T0*)GE_alloc(sizeof(T88)+(a1>1?(a1-1):0)*sizeof(T0*));
 	if (initialize) {
 		*(T88*)R = GE_default88;
-		((T88*)(R))->z1 = a1;
+		((T88*)(R))->a1 = a1;
 #ifndef GE_alloc_cleared
 		memset(((T88*)(R))->z2,0,a1*sizeof(T0*));
 #endif
@@ -1739,7 +1655,7 @@ T0* GE_new91(T6 a1, T1 initialize)
 	R = (T0*)GE_alloc(sizeof(T91)+(a1>1?(a1-1):0)*sizeof(T0*));
 	if (initialize) {
 		*(T91*)R = GE_default91;
-		((T91*)(R))->z1 = a1;
+		((T91*)(R))->a1 = a1;
 #ifndef GE_alloc_cleared
 		memset(((T91*)(R))->z2,0,a1*sizeof(T0*));
 #endif
@@ -1787,7 +1703,7 @@ T0* GE_new95(T6 a1, T1 initialize)
 	R = (T0*)GE_alloc(sizeof(T95)+(a1>1?(a1-1):0)*sizeof(T0*));
 	if (initialize) {
 		*(T95*)R = GE_default95;
-		((T95*)(R))->z1 = a1;
+		((T95*)(R))->a1 = a1;
 #ifndef GE_alloc_cleared
 		memset(((T95*)(R))->z2,0,a1*sizeof(T0*));
 #endif
@@ -2137,17 +2053,6 @@ T0* GE_new128(T1 initialize)
 }
 
 /* New instance of type ARRAY [STRING_8] */
-T0* GE_new132(T1 initialize)
-{
-	T0* R;
-	R = (T0*)GE_alloc(sizeof(T132));
-	if (initialize) {
-		*(T132*)R = GE_default132;
-	}
-	return R;
-}
-
-/* New instance of type LX_DFA_STATE */
 T0* GE_new133(T1 initialize)
 {
 	T0* R;
@@ -2158,7 +2063,7 @@ T0* GE_new133(T1 initialize)
 	return R;
 }
 
-/* New instance of type LX_NFA_STATE */
+/* New instance of type LX_DFA_STATE */
 T0* GE_new134(T1 initialize)
 {
 	T0* R;
@@ -2169,7 +2074,7 @@ T0* GE_new134(T1 initialize)
 	return R;
 }
 
-/* New instance of type DS_ARRAYED_LIST [LX_NFA_STATE] */
+/* New instance of type LX_NFA_STATE */
 T0* GE_new135(T1 initialize)
 {
 	T0* R;
@@ -2180,33 +2085,33 @@ T0* GE_new135(T1 initialize)
 	return R;
 }
 
-/* New instance of type SPECIAL [LX_RULE] */
-T0* GE_new136(T6 a1, T1 initialize)
+/* New instance of type DS_ARRAYED_LIST [LX_NFA_STATE] */
+T0* GE_new136(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc(sizeof(T136)+(a1>1?(a1-1):0)*sizeof(T0*));
+	R = (T0*)GE_alloc(sizeof(T136));
 	if (initialize) {
 		*(T136*)R = GE_default136;
-		((T136*)(R))->z1 = a1;
+	}
+	return R;
+}
+
+/* New instance of type SPECIAL [LX_RULE] */
+T0* GE_new137(T6 a1, T1 initialize)
+{
+	T0* R;
+	R = (T0*)GE_alloc(sizeof(T137)+(a1>1?(a1-1):0)*sizeof(T0*));
+	if (initialize) {
+		*(T137*)R = GE_default137;
+		((T137*)(R))->a1 = a1;
 #ifndef GE_alloc_cleared
-		memset(((T136*)(R))->z2,0,a1*sizeof(T0*));
+		memset(((T137*)(R))->z2,0,a1*sizeof(T0*));
 #endif
 	}
 	return R;
 }
 
 /* New instance of type ARRAY [LX_RULE] */
-T0* GE_new137(T1 initialize)
-{
-	T0* R;
-	R = (T0*)GE_alloc(sizeof(T137));
-	if (initialize) {
-		*(T137*)R = GE_default137;
-	}
-	return R;
-}
-
-/* New instance of type DS_ARRAYED_LIST [LX_DFA_STATE] */
 T0* GE_new138(T1 initialize)
 {
 	T0* R;
@@ -2217,7 +2122,7 @@ T0* GE_new138(T1 initialize)
 	return R;
 }
 
-/* New instance of type DS_BUBBLE_SORTER [LX_RULE] */
+/* New instance of type DS_ARRAYED_LIST [LX_DFA_STATE] */
 T0* GE_new139(T1 initialize)
 {
 	T0* R;
@@ -2228,51 +2133,51 @@ T0* GE_new139(T1 initialize)
 	return R;
 }
 
-/* New instance of type KL_COMPARABLE_COMPARATOR [LX_RULE] */
-T0* GE_new141(T1 initialize)
+/* New instance of type DS_BUBBLE_SORTER [LX_RULE] */
+T0* GE_new140(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc_atomic(sizeof(T141));
+	R = (T0*)GE_alloc(sizeof(T140));
 	if (initialize) {
-		*(T141*)R = GE_default141;
+		*(T140*)R = GE_default140;
+	}
+	return R;
+}
+
+/* New instance of type KL_COMPARABLE_COMPARATOR [LX_RULE] */
+T0* GE_new142(T1 initialize)
+{
+	T0* R;
+	R = (T0*)GE_alloc_atomic(sizeof(T142));
+	if (initialize) {
+		*(T142*)R = GE_default142;
 	}
 	return R;
 }
 
 /* New instance of type ARRAY [INTEGER_32] */
-T0* GE_new143(T1 initialize)
-{
-	T0* R;
-	R = (T0*)GE_alloc(sizeof(T143));
-	if (initialize) {
-		*(T143*)R = GE_default143;
-	}
-	return R;
-}
-
-/* New instance of type LX_SINGLETON */
 T0* GE_new144(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc_atomic(sizeof(T144));
+	R = (T0*)GE_alloc(sizeof(T144));
 	if (initialize) {
 		*(T144*)R = GE_default144;
 	}
 	return R;
 }
 
-/* New instance of type LX_PROTO_QUEUE */
+/* New instance of type LX_SINGLETON */
 T0* GE_new145(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc(sizeof(T145));
+	R = (T0*)GE_alloc_atomic(sizeof(T145));
 	if (initialize) {
 		*(T145*)R = GE_default145;
 	}
 	return R;
 }
 
-/* New instance of type DS_ARRAYED_LIST [LX_SINGLETON] */
+/* New instance of type LX_PROTO_QUEUE */
 T0* GE_new146(T1 initialize)
 {
 	T0* R;
@@ -2283,7 +2188,7 @@ T0* GE_new146(T1 initialize)
 	return R;
 }
 
-/* New instance of type LX_TEMPLATE_LIST */
+/* New instance of type DS_ARRAYED_LIST [LX_SINGLETON] */
 T0* GE_new147(T1 initialize)
 {
 	T0* R;
@@ -2294,7 +2199,7 @@ T0* GE_new147(T1 initialize)
 	return R;
 }
 
-/* New instance of type LX_SYMBOL_PARTITIONS */
+/* New instance of type LX_TEMPLATE_LIST */
 T0* GE_new148(T1 initialize)
 {
 	T0* R;
@@ -2305,7 +2210,7 @@ T0* GE_new148(T1 initialize)
 	return R;
 }
 
-/* New instance of type DS_ARRAYED_LIST [DS_PAIR [DP_COMMAND, DS_LINKED_LIST [LX_RULE]]] */
+/* New instance of type LX_SYMBOL_PARTITIONS */
 T0* GE_new149(T1 initialize)
 {
 	T0* R;
@@ -2316,7 +2221,7 @@ T0* GE_new149(T1 initialize)
 	return R;
 }
 
-/* New instance of type DS_PAIR [DP_COMMAND, DS_LINKED_LIST [LX_RULE]] */
+/* New instance of type DS_ARRAYED_LIST [DS_PAIR [DP_COMMAND, DS_LINKED_LIST [LX_RULE]]] */
 T0* GE_new150(T1 initialize)
 {
 	T0* R;
@@ -2327,7 +2232,7 @@ T0* GE_new150(T1 initialize)
 	return R;
 }
 
-/* New instance of type DS_LINKED_LIST [LX_RULE] */
+/* New instance of type DS_PAIR [DP_COMMAND, DS_LINKED_LIST [LX_RULE]] */
 T0* GE_new151(T1 initialize)
 {
 	T0* R;
@@ -2338,7 +2243,7 @@ T0* GE_new151(T1 initialize)
 	return R;
 }
 
-/* New instance of type DS_LINKED_LIST_CURSOR [LX_RULE] */
+/* New instance of type DS_LINKED_LIST [LX_RULE] */
 T0* GE_new152(T1 initialize)
 {
 	T0* R;
@@ -2349,29 +2254,29 @@ T0* GE_new152(T1 initialize)
 	return R;
 }
 
-/* New instance of type UT_BOOLEAN_FORMATTER */
+/* New instance of type DS_LINKED_LIST_CURSOR [LX_RULE] */
 T0* GE_new153(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc_atomic(sizeof(T153));
+	R = (T0*)GE_alloc(sizeof(T153));
 	if (initialize) {
 		*(T153*)R = GE_default153;
 	}
 	return R;
 }
 
-/* New instance of type DS_ARRAYED_LIST [INTEGER_32] */
+/* New instance of type UT_BOOLEAN_FORMATTER */
 T0* GE_new154(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc(sizeof(T154));
+	R = (T0*)GE_alloc_atomic(sizeof(T154));
 	if (initialize) {
 		*(T154*)R = GE_default154;
 	}
 	return R;
 }
 
-/* New instance of type DS_BUBBLE_SORTER [INTEGER_32] */
+/* New instance of type DS_ARRAYED_LIST [INTEGER_32] */
 T0* GE_new155(T1 initialize)
 {
 	T0* R;
@@ -2382,44 +2287,44 @@ T0* GE_new155(T1 initialize)
 	return R;
 }
 
-/* New instance of type LX_TRANSITION_TABLE [LX_DFA_STATE] */
-T0* GE_new157(T1 initialize)
+/* New instance of type DS_BUBBLE_SORTER [INTEGER_32] */
+T0* GE_new156(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc(sizeof(T157));
+	R = (T0*)GE_alloc(sizeof(T156));
 	if (initialize) {
-		*(T157*)R = GE_default157;
+		*(T156*)R = GE_default156;
+	}
+	return R;
+}
+
+/* New instance of type LX_TRANSITION_TABLE [LX_DFA_STATE] */
+T0* GE_new158(T1 initialize)
+{
+	T0* R;
+	R = (T0*)GE_alloc(sizeof(T158));
+	if (initialize) {
+		*(T158*)R = GE_default158;
 	}
 	return R;
 }
 
 /* New instance of type SPECIAL [BOOLEAN] */
-T0* GE_new158(T6 a1, T1 initialize)
+T0* GE_new159(T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc_atomic(sizeof(T158)+(a1>1?(a1-1):0)*sizeof(T1));
+	R = (T0*)GE_alloc_atomic(sizeof(T159)+(a1>1?(a1-1):0)*sizeof(T1));
 	if (initialize) {
-		*(T158*)R = GE_default158;
-		((T158*)(R))->z1 = a1;
+		*(T159*)R = GE_default159;
+		((T159*)(R))->a1 = a1;
 #ifndef GE_alloc_atomic_cleared
-		memset(((T158*)(R))->z2,0,a1*sizeof(T1));
+		memset(((T159*)(R))->z2,0,a1*sizeof(T1));
 #endif
 	}
 	return R;
 }
 
 /* New instance of type ARRAY [BOOLEAN] */
-T0* GE_new159(T1 initialize)
-{
-	T0* R;
-	R = (T0*)GE_alloc(sizeof(T159));
-	if (initialize) {
-		*(T159*)R = GE_default159;
-	}
-	return R;
-}
-
-/* New instance of type DS_ARRAYED_LIST_CURSOR [LX_DFA_STATE] */
 T0* GE_new160(T1 initialize)
 {
 	T0* R;
@@ -2430,18 +2335,18 @@ T0* GE_new160(T1 initialize)
 	return R;
 }
 
-/* New instance of type LX_PROTO */
+/* New instance of type KL_ARRAY_ROUTINES [LX_RULE] */
 T0* GE_new161(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc(sizeof(T161));
+	R = (T0*)GE_alloc_atomic(sizeof(T161));
 	if (initialize) {
 		*(T161*)R = GE_default161;
 	}
 	return R;
 }
 
-/* New instance of type DS_BILINKED_LIST_CURSOR [LX_PROTO] */
+/* New instance of type DS_ARRAYED_LIST_CURSOR [LX_DFA_STATE] */
 T0* GE_new162(T1 initialize)
 {
 	T0* R;
@@ -2452,7 +2357,7 @@ T0* GE_new162(T1 initialize)
 	return R;
 }
 
-/* New instance of type DS_LINKED_LIST_CURSOR [LX_TRANSITION_TABLE [LX_DFA_STATE]] */
+/* New instance of type LX_PROTO */
 T0* GE_new163(T1 initialize)
 {
 	T0* R;
@@ -2463,29 +2368,29 @@ T0* GE_new163(T1 initialize)
 	return R;
 }
 
-/* New instance of type KL_ARRAY_ROUTINES [INTEGER_32] */
+/* New instance of type DS_BILINKED_LIST_CURSOR [LX_PROTO] */
 T0* GE_new164(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc_atomic(sizeof(T164));
+	R = (T0*)GE_alloc(sizeof(T164));
 	if (initialize) {
 		*(T164*)R = GE_default164;
 	}
 	return R;
 }
 
-/* New instance of type UT_ARRAY_FORMATTER */
+/* New instance of type DS_LINKED_LIST_CURSOR [LX_TRANSITION_TABLE [LX_DFA_STATE]] */
 T0* GE_new165(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc_atomic(sizeof(T165));
+	R = (T0*)GE_alloc(sizeof(T165));
 	if (initialize) {
 		*(T165*)R = GE_default165;
 	}
 	return R;
 }
 
-/* New instance of type KL_INTEGER_ROUTINES */
+/* New instance of type KL_ARRAY_ROUTINES [INTEGER_32] */
 T0* GE_new166(T1 initialize)
 {
 	T0* R;
@@ -2496,40 +2401,40 @@ T0* GE_new166(T1 initialize)
 	return R;
 }
 
-/* New instance of type DS_ARRAYED_LIST [LX_NFA] */
+/* New instance of type UT_ARRAY_FORMATTER */
 T0* GE_new167(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc(sizeof(T167));
+	R = (T0*)GE_alloc_atomic(sizeof(T167));
 	if (initialize) {
 		*(T167*)R = GE_default167;
 	}
 	return R;
 }
 
-/* New instance of type DS_HASH_TABLE [LX_NFA, INTEGER_32] */
+/* New instance of type KL_INTEGER_ROUTINES */
 T0* GE_new168(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc(sizeof(T168));
+	R = (T0*)GE_alloc_atomic(sizeof(T168));
 	if (initialize) {
 		*(T168*)R = GE_default168;
 	}
 	return R;
 }
 
-/* New instance of type KL_SPECIAL_ROUTINES [LX_RULE] */
+/* New instance of type DS_ARRAYED_LIST [LX_NFA] */
 T0* GE_new169(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc_atomic(sizeof(T169));
+	R = (T0*)GE_alloc(sizeof(T169));
 	if (initialize) {
 		*(T169*)R = GE_default169;
 	}
 	return R;
 }
 
-/* New instance of type DS_ARRAYED_LIST_CURSOR [LX_RULE] */
+/* New instance of type DS_HASH_TABLE [LX_NFA, INTEGER_32] */
 T0* GE_new170(T1 initialize)
 {
 	T0* R;
@@ -2540,7 +2445,18 @@ T0* GE_new170(T1 initialize)
 	return R;
 }
 
-/* New instance of type LX_BAD_ITERATION_VALUES_ERROR */
+/* New instance of type KL_SPECIAL_ROUTINES [LX_RULE] */
+T0* GE_new171(T1 initialize)
+{
+	T0* R;
+	R = (T0*)GE_alloc_atomic(sizeof(T171));
+	if (initialize) {
+		*(T171*)R = GE_default171;
+	}
+	return R;
+}
+
+/* New instance of type DS_ARRAYED_LIST_CURSOR [LX_RULE] */
 T0* GE_new172(T1 initialize)
 {
 	T0* R;
@@ -2551,18 +2467,7 @@ T0* GE_new172(T1 initialize)
 	return R;
 }
 
-/* New instance of type LX_ITERATION_NOT_POSITIVE_ERROR */
-T0* GE_new173(T1 initialize)
-{
-	T0* R;
-	R = (T0*)GE_alloc(sizeof(T173));
-	if (initialize) {
-		*(T173*)R = GE_default173;
-	}
-	return R;
-}
-
-/* New instance of type LX_NEGATIVE_RANGE_IN_CHARACTER_CLASS_ERROR */
+/* New instance of type LX_BAD_ITERATION_VALUES_ERROR */
 T0* GE_new174(T1 initialize)
 {
 	T0* R;
@@ -2573,7 +2478,7 @@ T0* GE_new174(T1 initialize)
 	return R;
 }
 
-/* New instance of type UNIX_FILE_INFO */
+/* New instance of type LX_ITERATION_NOT_POSITIVE_ERROR */
 T0* GE_new175(T1 initialize)
 {
 	T0* R;
@@ -2584,40 +2489,40 @@ T0* GE_new175(T1 initialize)
 	return R;
 }
 
-/* New instance of type KL_COMPARABLE_COMPARATOR [INTEGER_32] */
+/* New instance of type LX_NEGATIVE_RANGE_IN_CHARACTER_CLASS_ERROR */
+T0* GE_new176(T1 initialize)
+{
+	T0* R;
+	R = (T0*)GE_alloc(sizeof(T176));
+	if (initialize) {
+		*(T176*)R = GE_default176;
+	}
+	return R;
+}
+
+/* New instance of type UNIX_FILE_INFO */
 T0* GE_new177(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc_atomic(sizeof(T177));
+	R = (T0*)GE_alloc(sizeof(T177));
 	if (initialize) {
 		*(T177*)R = GE_default177;
 	}
 	return R;
 }
 
-/* New instance of type DS_ARRAYED_LIST [AP_OPTION] */
+/* New instance of type KL_COMPARABLE_COMPARATOR [INTEGER_32] */
 T0* GE_new179(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc(sizeof(T179));
+	R = (T0*)GE_alloc_atomic(sizeof(T179));
 	if (initialize) {
 		*(T179*)R = GE_default179;
 	}
 	return R;
 }
 
-/* New instance of type DS_ARRAYED_LIST [AP_ALTERNATIVE_OPTIONS_LIST] */
-T0* GE_new180(T1 initialize)
-{
-	T0* R;
-	R = (T0*)GE_alloc(sizeof(T180));
-	if (initialize) {
-		*(T180*)R = GE_default180;
-	}
-	return R;
-}
-
-/* New instance of type AP_ERROR_HANDLER */
+/* New instance of type DS_ARRAYED_LIST [AP_OPTION] */
 T0* GE_new181(T1 initialize)
 {
 	T0* R;
@@ -2628,7 +2533,7 @@ T0* GE_new181(T1 initialize)
 	return R;
 }
 
-/* New instance of type DS_LINKED_LIST [STRING_8] */
+/* New instance of type DS_ARRAYED_LIST [AP_ALTERNATIVE_OPTIONS_LIST] */
 T0* GE_new182(T1 initialize)
 {
 	T0* R;
@@ -2639,40 +2544,51 @@ T0* GE_new182(T1 initialize)
 	return R;
 }
 
-/* New instance of type DS_LINKED_LIST [INTEGER_32] */
-T0* GE_new186(T1 initialize)
+/* New instance of type AP_ERROR_HANDLER */
+T0* GE_new183(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc(sizeof(T186));
+	R = (T0*)GE_alloc(sizeof(T183));
 	if (initialize) {
-		*(T186*)R = GE_default186;
+		*(T183*)R = GE_default183;
+	}
+	return R;
+}
+
+/* New instance of type DS_LINKED_LIST [STRING_8] */
+T0* GE_new184(T1 initialize)
+{
+	T0* R;
+	R = (T0*)GE_alloc(sizeof(T184));
+	if (initialize) {
+		*(T184*)R = GE_default184;
+	}
+	return R;
+}
+
+/* New instance of type DS_LINKED_LIST [INTEGER_32] */
+T0* GE_new188(T1 initialize)
+{
+	T0* R;
+	R = (T0*)GE_alloc(sizeof(T188));
+	if (initialize) {
+		*(T188*)R = GE_default188;
 	}
 	return R;
 }
 
 /* New instance of type DS_LINKED_LIST_CURSOR [AP_OPTION] */
-T0* GE_new187(T1 initialize)
-{
-	T0* R;
-	R = (T0*)GE_alloc(sizeof(T187));
-	if (initialize) {
-		*(T187*)R = GE_default187;
-	}
-	return R;
-}
-
-/* New instance of type KL_ANY_ROUTINES */
 T0* GE_new189(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc_atomic(sizeof(T189));
+	R = (T0*)GE_alloc(sizeof(T189));
 	if (initialize) {
 		*(T189*)R = GE_default189;
 	}
 	return R;
 }
 
-/* New instance of type ST_WORD_WRAPPER */
+/* New instance of type KL_ANY_ROUTINES */
 T0* GE_new191(T1 initialize)
 {
 	T0* R;
@@ -2683,18 +2599,7 @@ T0* GE_new191(T1 initialize)
 	return R;
 }
 
-/* New instance of type KL_OPERATING_SYSTEM */
-T0* GE_new192(T1 initialize)
-{
-	T0* R;
-	R = (T0*)GE_alloc_atomic(sizeof(T192));
-	if (initialize) {
-		*(T192*)R = GE_default192;
-	}
-	return R;
-}
-
-/* New instance of type KL_WINDOWS_FILE_SYSTEM */
+/* New instance of type ST_WORD_WRAPPER */
 T0* GE_new193(T1 initialize)
 {
 	T0* R;
@@ -2705,7 +2610,7 @@ T0* GE_new193(T1 initialize)
 	return R;
 }
 
-/* New instance of type KL_UNIX_FILE_SYSTEM */
+/* New instance of type KL_OPERATING_SYSTEM */
 T0* GE_new194(T1 initialize)
 {
 	T0* R;
@@ -2716,66 +2621,77 @@ T0* GE_new194(T1 initialize)
 	return R;
 }
 
-/* New instance of type DS_ARRAYED_LIST_CURSOR [STRING_8] */
+/* New instance of type KL_WINDOWS_FILE_SYSTEM */
 T0* GE_new195(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc(sizeof(T195));
+	R = (T0*)GE_alloc_atomic(sizeof(T195));
 	if (initialize) {
 		*(T195*)R = GE_default195;
 	}
 	return R;
 }
 
-/* New instance of type SPECIAL [LX_START_CONDITION] */
-T0* GE_new196(T6 a1, T1 initialize)
+/* New instance of type KL_UNIX_FILE_SYSTEM */
+T0* GE_new196(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc(sizeof(T196)+(a1>1?(a1-1):0)*sizeof(T0*));
+	R = (T0*)GE_alloc_atomic(sizeof(T196));
 	if (initialize) {
 		*(T196*)R = GE_default196;
-		((T196*)(R))->z1 = a1;
-#ifndef GE_alloc_cleared
-		memset(((T196*)(R))->z2,0,a1*sizeof(T0*));
-#endif
 	}
 	return R;
 }
 
-/* New instance of type KL_SPECIAL_ROUTINES [LX_START_CONDITION] */
+/* New instance of type DS_ARRAYED_LIST_CURSOR [STRING_8] */
 T0* GE_new197(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc_atomic(sizeof(T197));
+	R = (T0*)GE_alloc(sizeof(T197));
 	if (initialize) {
 		*(T197*)R = GE_default197;
 	}
 	return R;
 }
 
-/* New instance of type DS_ARRAYED_LIST_CURSOR [LX_START_CONDITION] */
-T0* GE_new198(T1 initialize)
+/* New instance of type SPECIAL [LX_START_CONDITION] */
+T0* GE_new198(T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc(sizeof(T198));
+	R = (T0*)GE_alloc(sizeof(T198)+(a1>1?(a1-1):0)*sizeof(T0*));
 	if (initialize) {
 		*(T198*)R = GE_default198;
+		((T198*)(R))->a1 = a1;
+#ifndef GE_alloc_cleared
+		memset(((T198*)(R))->z2,0,a1*sizeof(T0*));
+#endif
 	}
 	return R;
 }
 
-/* New instance of type DS_SPARSE_TABLE_KEYS [STRING_8, STRING_8] */
+/* New instance of type KL_ARRAY_ROUTINES [detachable STRING_8] */
 T0* GE_new199(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc(sizeof(T199));
+	R = (T0*)GE_alloc_atomic(sizeof(T199));
 	if (initialize) {
 		*(T199*)R = GE_default199;
 	}
 	return R;
 }
 
-/* New instance of type DS_HASH_TABLE_CURSOR [STRING_8, STRING_8] */
+/* New instance of type KL_SPECIAL_ROUTINES [LX_START_CONDITION] */
+T0* GE_new200(T1 initialize)
+{
+	T0* R;
+	R = (T0*)GE_alloc_atomic(sizeof(T200));
+	if (initialize) {
+		*(T200*)R = GE_default200;
+	}
+	return R;
+}
+
+/* New instance of type DS_ARRAYED_LIST_CURSOR [LX_START_CONDITION] */
 T0* GE_new201(T1 initialize)
 {
 	T0* R;
@@ -2786,7 +2702,7 @@ T0* GE_new201(T1 initialize)
 	return R;
 }
 
-/* New instance of type DS_SPARSE_TABLE_KEYS [LX_SYMBOL_CLASS, STRING_8] */
+/* New instance of type DS_SPARSE_TABLE_KEYS [STRING_8, STRING_8] */
 T0* GE_new202(T1 initialize)
 {
 	T0* R;
@@ -2797,7 +2713,7 @@ T0* GE_new202(T1 initialize)
 	return R;
 }
 
-/* New instance of type TO_SPECIAL [INTEGER_32] */
+/* New instance of type DS_HASH_TABLE_CURSOR [STRING_8, STRING_8] */
 T0* GE_new204(T1 initialize)
 {
 	T0* R;
@@ -2808,24 +2724,13 @@ T0* GE_new204(T1 initialize)
 	return R;
 }
 
-/* New instance of type TO_SPECIAL [ANY] */
+/* New instance of type DS_SPARSE_TABLE_KEYS [LX_SYMBOL_CLASS, STRING_8] */
 T0* GE_new205(T1 initialize)
 {
 	T0* R;
 	R = (T0*)GE_alloc(sizeof(T205));
 	if (initialize) {
 		*(T205*)R = GE_default205;
-	}
-	return R;
-}
-
-/* New instance of type TO_SPECIAL [STRING_8] */
-T0* GE_new206(T1 initialize)
-{
-	T0* R;
-	R = (T0*)GE_alloc(sizeof(T206));
-	if (initialize) {
-		*(T206*)R = GE_default206;
 	}
 	return R;
 }
@@ -2841,7 +2746,7 @@ T0* GE_new207(T1 initialize)
 	return R;
 }
 
-/* New instance of type TO_SPECIAL [LX_SYMBOL_CLASS] */
+/* New instance of type LX_EPSILON_TRANSITION [LX_NFA_STATE] */
 T0* GE_new208(T1 initialize)
 {
 	T0* R;
@@ -2852,18 +2757,18 @@ T0* GE_new208(T1 initialize)
 	return R;
 }
 
-/* New instance of type LX_EPSILON_TRANSITION [LX_NFA_STATE] */
-T0* GE_new209(T1 initialize)
+/* New instance of type LX_SYMBOL_CLASS_TRANSITION [LX_NFA_STATE] */
+T0* GE_new211(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc(sizeof(T209));
+	R = (T0*)GE_alloc(sizeof(T211));
 	if (initialize) {
-		*(T209*)R = GE_default209;
+		*(T211*)R = GE_default211;
 	}
 	return R;
 }
 
-/* New instance of type LX_SYMBOL_CLASS_TRANSITION [LX_NFA_STATE] */
+/* New instance of type LX_SYMBOL_TRANSITION [LX_NFA_STATE] */
 T0* GE_new212(T1 initialize)
 {
 	T0* R;
@@ -2874,7 +2779,7 @@ T0* GE_new212(T1 initialize)
 	return R;
 }
 
-/* New instance of type LX_SYMBOL_TRANSITION [LX_NFA_STATE] */
+/* New instance of type DS_BILINKABLE [INTEGER_32] */
 T0* GE_new213(T1 initialize)
 {
 	T0* R;
@@ -2885,33 +2790,33 @@ T0* GE_new213(T1 initialize)
 	return R;
 }
 
-/* New instance of type DS_BILINKABLE [INTEGER_32] */
-T0* GE_new214(T1 initialize)
+/* New instance of type SPECIAL [DS_BILINKABLE [INTEGER_32]] */
+T0* GE_new214(T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc(sizeof(T214));
+	R = (T0*)GE_alloc(sizeof(T214)+(a1>1?(a1-1):0)*sizeof(T0*));
 	if (initialize) {
 		*(T214*)R = GE_default214;
-	}
-	return R;
-}
-
-/* New instance of type SPECIAL [DS_BILINKABLE [INTEGER_32]] */
-T0* GE_new215(T6 a1, T1 initialize)
-{
-	T0* R;
-	R = (T0*)GE_alloc(sizeof(T215)+(a1>1?(a1-1):0)*sizeof(T0*));
-	if (initialize) {
-		*(T215*)R = GE_default215;
-		((T215*)(R))->z1 = a1;
+		((T214*)(R))->a1 = a1;
 #ifndef GE_alloc_cleared
-		memset(((T215*)(R))->z2,0,a1*sizeof(T0*));
+		memset(((T214*)(R))->z2,0,a1*sizeof(T0*));
 #endif
 	}
 	return R;
 }
 
 /* New instance of type ARRAY [DS_BILINKABLE [INTEGER_32]] */
+T0* GE_new215(T1 initialize)
+{
+	T0* R;
+	R = (T0*)GE_alloc(sizeof(T215));
+	if (initialize) {
+		*(T215*)R = GE_default215;
+	}
+	return R;
+}
+
+/* New instance of type DS_BUBBLE_SORTER [LX_NFA_STATE] */
 T0* GE_new216(T1 initialize)
 {
 	T0* R;
@@ -2922,188 +2827,177 @@ T0* GE_new216(T1 initialize)
 	return R;
 }
 
-/* New instance of type TO_SPECIAL [LX_NFA] */
-T0* GE_new217(T1 initialize)
+/* New instance of type SPECIAL [LX_NFA_STATE] */
+T0* GE_new218(T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc(sizeof(T217));
-	if (initialize) {
-		*(T217*)R = GE_default217;
-	}
-	return R;
-}
-
-/* New instance of type DS_BUBBLE_SORTER [LX_NFA_STATE] */
-T0* GE_new218(T1 initialize)
-{
-	T0* R;
-	R = (T0*)GE_alloc(sizeof(T218));
+	R = (T0*)GE_alloc(sizeof(T218)+(a1>1?(a1-1):0)*sizeof(T0*));
 	if (initialize) {
 		*(T218*)R = GE_default218;
-	}
-	return R;
-}
-
-/* New instance of type SPECIAL [LX_NFA_STATE] */
-T0* GE_new220(T6 a1, T1 initialize)
-{
-	T0* R;
-	R = (T0*)GE_alloc(sizeof(T220)+(a1>1?(a1-1):0)*sizeof(T0*));
-	if (initialize) {
-		*(T220*)R = GE_default220;
-		((T220*)(R))->z1 = a1;
+		((T218*)(R))->a1 = a1;
 #ifndef GE_alloc_cleared
-		memset(((T220*)(R))->z2,0,a1*sizeof(T0*));
+		memset(((T218*)(R))->z2,0,a1*sizeof(T0*));
 #endif
 	}
 	return R;
 }
 
 /* New instance of type KL_SPECIAL_ROUTINES [LX_NFA_STATE] */
-T0* GE_new221(T1 initialize)
+T0* GE_new219(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc_atomic(sizeof(T221));
+	R = (T0*)GE_alloc_atomic(sizeof(T219));
 	if (initialize) {
-		*(T221*)R = GE_default221;
+		*(T219*)R = GE_default219;
 	}
 	return R;
 }
 
 /* New instance of type DS_ARRAYED_LIST_CURSOR [LX_NFA_STATE] */
-T0* GE_new222(T1 initialize)
+T0* GE_new220(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc(sizeof(T222));
+	R = (T0*)GE_alloc(sizeof(T220));
 	if (initialize) {
-		*(T222*)R = GE_default222;
+		*(T220*)R = GE_default220;
 	}
 	return R;
 }
 
 /* New instance of type SPECIAL [LX_DFA_STATE] */
-T0* GE_new224(T6 a1, T1 initialize)
+T0* GE_new222(T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc(sizeof(T224)+(a1>1?(a1-1):0)*sizeof(T0*));
+	R = (T0*)GE_alloc(sizeof(T222)+(a1>1?(a1-1):0)*sizeof(T0*));
 	if (initialize) {
-		*(T224*)R = GE_default224;
-		((T224*)(R))->z1 = a1;
+		*(T222*)R = GE_default222;
+		((T222*)(R))->a1 = a1;
 #ifndef GE_alloc_cleared
-		memset(((T224*)(R))->z2,0,a1*sizeof(T0*));
+		memset(((T222*)(R))->z2,0,a1*sizeof(T0*));
 #endif
 	}
 	return R;
 }
 
 /* New instance of type KL_SPECIAL_ROUTINES [LX_DFA_STATE] */
+T0* GE_new223(T1 initialize)
+{
+	T0* R;
+	R = (T0*)GE_alloc_atomic(sizeof(T223));
+	if (initialize) {
+		*(T223*)R = GE_default223;
+	}
+	return R;
+}
+
+/* New instance of type DS_BILINKABLE [LX_PROTO] */
 T0* GE_new225(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc_atomic(sizeof(T225));
+	R = (T0*)GE_alloc(sizeof(T225));
 	if (initialize) {
 		*(T225*)R = GE_default225;
 	}
 	return R;
 }
 
-/* New instance of type DS_BILINKABLE [LX_PROTO] */
-T0* GE_new227(T1 initialize)
-{
-	T0* R;
-	R = (T0*)GE_alloc(sizeof(T227));
-	if (initialize) {
-		*(T227*)R = GE_default227;
-	}
-	return R;
-}
-
 /* New instance of type SPECIAL [LX_SINGLETON] */
-T0* GE_new228(T6 a1, T1 initialize)
+T0* GE_new226(T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc(sizeof(T228)+(a1>1?(a1-1):0)*sizeof(T0*));
+	R = (T0*)GE_alloc(sizeof(T226)+(a1>1?(a1-1):0)*sizeof(T0*));
 	if (initialize) {
-		*(T228*)R = GE_default228;
-		((T228*)(R))->z1 = a1;
+		*(T226*)R = GE_default226;
+		((T226*)(R))->a1 = a1;
 #ifndef GE_alloc_cleared
-		memset(((T228*)(R))->z2,0,a1*sizeof(T0*));
+		memset(((T226*)(R))->z2,0,a1*sizeof(T0*));
 #endif
 	}
 	return R;
 }
 
 /* New instance of type KL_SPECIAL_ROUTINES [LX_SINGLETON] */
+T0* GE_new227(T1 initialize)
+{
+	T0* R;
+	R = (T0*)GE_alloc_atomic(sizeof(T227));
+	if (initialize) {
+		*(T227*)R = GE_default227;
+	}
+	return R;
+}
+
+/* New instance of type DS_ARRAYED_LIST_CURSOR [LX_SINGLETON] */
+T0* GE_new228(T1 initialize)
+{
+	T0* R;
+	R = (T0*)GE_alloc(sizeof(T228));
+	if (initialize) {
+		*(T228*)R = GE_default228;
+	}
+	return R;
+}
+
+/* New instance of type DS_LINKABLE [LX_TRANSITION_TABLE [LX_DFA_STATE]] */
 T0* GE_new229(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc_atomic(sizeof(T229));
+	R = (T0*)GE_alloc(sizeof(T229));
 	if (initialize) {
 		*(T229*)R = GE_default229;
 	}
 	return R;
 }
 
-/* New instance of type DS_ARRAYED_LIST_CURSOR [LX_SINGLETON] */
-T0* GE_new230(T1 initialize)
+/* New instance of type SPECIAL [DS_PAIR [DP_COMMAND, DS_LINKED_LIST [LX_RULE]]] */
+T0* GE_new231(T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc(sizeof(T230));
-	if (initialize) {
-		*(T230*)R = GE_default230;
-	}
-	return R;
-}
-
-/* New instance of type DS_LINKABLE [LX_TRANSITION_TABLE [LX_DFA_STATE]] */
-T0* GE_new231(T1 initialize)
-{
-	T0* R;
-	R = (T0*)GE_alloc(sizeof(T231));
+	R = (T0*)GE_alloc(sizeof(T231)+(a1>1?(a1-1):0)*sizeof(T0*));
 	if (initialize) {
 		*(T231*)R = GE_default231;
-	}
-	return R;
-}
-
-/* New instance of type SPECIAL [DS_PAIR [DP_COMMAND, DS_LINKED_LIST [LX_RULE]]] */
-T0* GE_new233(T6 a1, T1 initialize)
-{
-	T0* R;
-	R = (T0*)GE_alloc(sizeof(T233)+(a1>1?(a1-1):0)*sizeof(T0*));
-	if (initialize) {
-		*(T233*)R = GE_default233;
-		((T233*)(R))->z1 = a1;
+		((T231*)(R))->a1 = a1;
 #ifndef GE_alloc_cleared
-		memset(((T233*)(R))->z2,0,a1*sizeof(T0*));
+		memset(((T231*)(R))->z2,0,a1*sizeof(T0*));
 #endif
 	}
 	return R;
 }
 
 /* New instance of type KL_SPECIAL_ROUTINES [DS_PAIR [DP_COMMAND, DS_LINKED_LIST [LX_RULE]]] */
+T0* GE_new232(T1 initialize)
+{
+	T0* R;
+	R = (T0*)GE_alloc_atomic(sizeof(T232));
+	if (initialize) {
+		*(T232*)R = GE_default232;
+	}
+	return R;
+}
+
+/* New instance of type DS_ARRAYED_LIST_CURSOR [DS_PAIR [DP_COMMAND, DS_LINKED_LIST [LX_RULE]]] */
+T0* GE_new233(T1 initialize)
+{
+	T0* R;
+	R = (T0*)GE_alloc(sizeof(T233));
+	if (initialize) {
+		*(T233*)R = GE_default233;
+	}
+	return R;
+}
+
+/* New instance of type DS_LINKABLE [LX_RULE] */
 T0* GE_new234(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc_atomic(sizeof(T234));
+	R = (T0*)GE_alloc(sizeof(T234));
 	if (initialize) {
 		*(T234*)R = GE_default234;
 	}
 	return R;
 }
 
-/* New instance of type DS_ARRAYED_LIST_CURSOR [DS_PAIR [DP_COMMAND, DS_LINKED_LIST [LX_RULE]]] */
-T0* GE_new235(T1 initialize)
-{
-	T0* R;
-	R = (T0*)GE_alloc(sizeof(T235));
-	if (initialize) {
-		*(T235*)R = GE_default235;
-	}
-	return R;
-}
-
-/* New instance of type DS_LINKABLE [LX_RULE] */
+/* New instance of type ARRAY [LX_DFA_STATE] */
 T0* GE_new236(T1 initialize)
 {
 	T0* R;
@@ -3114,7 +3008,18 @@ T0* GE_new236(T1 initialize)
 	return R;
 }
 
-/* New instance of type ARRAY [LX_DFA_STATE] */
+/* New instance of type KL_ARRAY_ROUTINES [LX_DFA_STATE] */
+T0* GE_new237(T1 initialize)
+{
+	T0* R;
+	R = (T0*)GE_alloc_atomic(sizeof(T237));
+	if (initialize) {
+		*(T237*)R = GE_default237;
+	}
+	return R;
+}
+
+/* New instance of type DS_ARRAYED_LIST_CURSOR [LX_NFA] */
 T0* GE_new238(T1 initialize)
 {
 	T0* R;
@@ -3125,29 +3030,18 @@ T0* GE_new238(T1 initialize)
 	return R;
 }
 
-/* New instance of type KL_ARRAY_ROUTINES [LX_DFA_STATE] */
+/* New instance of type DS_SPARSE_TABLE_KEYS [LX_NFA, INTEGER_32] */
 T0* GE_new239(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc_atomic(sizeof(T239));
+	R = (T0*)GE_alloc(sizeof(T239));
 	if (initialize) {
 		*(T239*)R = GE_default239;
 	}
 	return R;
 }
 
-/* New instance of type DS_ARRAYED_LIST_CURSOR [LX_NFA] */
-T0* GE_new240(T1 initialize)
-{
-	T0* R;
-	R = (T0*)GE_alloc(sizeof(T240));
-	if (initialize) {
-		*(T240*)R = GE_default240;
-	}
-	return R;
-}
-
-/* New instance of type DS_SPARSE_TABLE_KEYS [LX_NFA, INTEGER_32] */
+/* New instance of type DS_HASH_TABLE_CURSOR [LX_NFA, INTEGER_32] */
 T0* GE_new241(T1 initialize)
 {
 	T0* R;
@@ -3158,7 +3052,7 @@ T0* GE_new241(T1 initialize)
 	return R;
 }
 
-/* New instance of type DS_HASH_TABLE_CURSOR [LX_NFA, INTEGER_32] */
+/* New instance of type STRING_TO_INTEGER_CONVERTOR */
 T0* GE_new243(T1 initialize)
 {
 	T0* R;
@@ -3169,125 +3063,136 @@ T0* GE_new243(T1 initialize)
 	return R;
 }
 
-/* New instance of type TO_SPECIAL [LX_RULE] */
-T0* GE_new244(T1 initialize)
-{
-	T0* R;
-	R = (T0*)GE_alloc(sizeof(T244));
-	if (initialize) {
-		*(T244*)R = GE_default244;
-	}
-	return R;
-}
-
-/* New instance of type STRING_TO_INTEGER_CONVERTOR */
-T0* GE_new246(T1 initialize)
-{
-	T0* R;
-	R = (T0*)GE_alloc(sizeof(T246));
-	if (initialize) {
-		*(T246*)R = GE_default246;
-	}
-	return R;
-}
-
 /* New instance of type KL_CHARACTER_BUFFER */
+T0* GE_new247(T1 initialize)
+{
+	T0* R;
+	R = (T0*)GE_alloc(sizeof(T247));
+	if (initialize) {
+		*(T247*)R = GE_default247;
+	}
+	return R;
+}
+
+/* New instance of type DS_SHELL_SORTER [INTEGER_32] */
+T0* GE_new249(T1 initialize)
+{
+	T0* R;
+	R = (T0*)GE_alloc(sizeof(T249));
+	if (initialize) {
+		*(T249*)R = GE_default249;
+	}
+	return R;
+}
+
+/* New instance of type KL_COMPARABLE_COMPARATOR [LX_NFA_STATE] */
 T0* GE_new250(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc(sizeof(T250));
+	R = (T0*)GE_alloc_atomic(sizeof(T250));
 	if (initialize) {
 		*(T250*)R = GE_default250;
 	}
 	return R;
 }
 
-/* New instance of type KL_COMPARABLE_COMPARATOR [LX_NFA_STATE] */
-T0* GE_new252(T1 initialize)
-{
-	T0* R;
-	R = (T0*)GE_alloc_atomic(sizeof(T252));
-	if (initialize) {
-		*(T252*)R = GE_default252;
-	}
-	return R;
-}
-
 /* New instance of type DS_ARRAYED_LIST_CURSOR [AP_OPTION] */
-T0* GE_new257(T1 initialize)
+T0* GE_new255(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc(sizeof(T257));
+	R = (T0*)GE_alloc(sizeof(T255));
 	if (initialize) {
-		*(T257*)R = GE_default257;
+		*(T255*)R = GE_default255;
 	}
 	return R;
 }
 
 /* New instance of type SPECIAL [AP_OPTION] */
-T0* GE_new259(T6 a1, T1 initialize)
+T0* GE_new257(T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc(sizeof(T259)+(a1>1?(a1-1):0)*sizeof(T0*));
+	R = (T0*)GE_alloc(sizeof(T257)+(a1>1?(a1-1):0)*sizeof(T0*));
 	if (initialize) {
-		*(T259*)R = GE_default259;
-		((T259*)(R))->z1 = a1;
+		*(T257*)R = GE_default257;
+		((T257*)(R))->a1 = a1;
 #ifndef GE_alloc_cleared
-		memset(((T259*)(R))->z2,0,a1*sizeof(T0*));
+		memset(((T257*)(R))->z2,0,a1*sizeof(T0*));
 #endif
 	}
 	return R;
 }
 
 /* New instance of type KL_SPECIAL_ROUTINES [AP_OPTION] */
-T0* GE_new260(T1 initialize)
+T0* GE_new258(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc_atomic(sizeof(T260));
+	R = (T0*)GE_alloc_atomic(sizeof(T258));
 	if (initialize) {
-		*(T260*)R = GE_default260;
+		*(T258*)R = GE_default258;
 	}
 	return R;
 }
 
 /* New instance of type DS_ARRAYED_LIST_CURSOR [AP_ALTERNATIVE_OPTIONS_LIST] */
-T0* GE_new261(T1 initialize)
+T0* GE_new259(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc(sizeof(T261));
+	R = (T0*)GE_alloc(sizeof(T259));
 	if (initialize) {
-		*(T261*)R = GE_default261;
+		*(T259*)R = GE_default259;
 	}
 	return R;
 }
 
 /* New instance of type SPECIAL [AP_ALTERNATIVE_OPTIONS_LIST] */
-T0* GE_new262(T6 a1, T1 initialize)
+T0* GE_new260(T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc(sizeof(T262)+(a1>1?(a1-1):0)*sizeof(T0*));
+	R = (T0*)GE_alloc(sizeof(T260)+(a1>1?(a1-1):0)*sizeof(T0*));
 	if (initialize) {
-		*(T262*)R = GE_default262;
-		((T262*)(R))->z1 = a1;
+		*(T260*)R = GE_default260;
+		((T260*)(R))->a1 = a1;
 #ifndef GE_alloc_cleared
-		memset(((T262*)(R))->z2,0,a1*sizeof(T0*));
+		memset(((T260*)(R))->z2,0,a1*sizeof(T0*));
 #endif
 	}
 	return R;
 }
 
 /* New instance of type KL_SPECIAL_ROUTINES [AP_ALTERNATIVE_OPTIONS_LIST] */
+T0* GE_new261(T1 initialize)
+{
+	T0* R;
+	R = (T0*)GE_alloc_atomic(sizeof(T261));
+	if (initialize) {
+		*(T261*)R = GE_default261;
+	}
+	return R;
+}
+
+/* New instance of type DS_LINKED_LIST_CURSOR [STRING_8] */
+T0* GE_new262(T1 initialize)
+{
+	T0* R;
+	R = (T0*)GE_alloc(sizeof(T262));
+	if (initialize) {
+		*(T262*)R = GE_default262;
+	}
+	return R;
+}
+
+/* New instance of type DS_LINKABLE [STRING_8] */
 T0* GE_new263(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc_atomic(sizeof(T263));
+	R = (T0*)GE_alloc(sizeof(T263));
 	if (initialize) {
 		*(T263*)R = GE_default263;
 	}
 	return R;
 }
 
-/* New instance of type DS_LINKED_LIST_CURSOR [STRING_8] */
+/* New instance of type DS_LINKABLE [INTEGER_32] */
 T0* GE_new264(T1 initialize)
 {
 	T0* R;
@@ -3298,7 +3203,7 @@ T0* GE_new264(T1 initialize)
 	return R;
 }
 
-/* New instance of type DS_LINKABLE [STRING_8] */
+/* New instance of type DS_LINKED_LIST_CURSOR [INTEGER_32] */
 T0* GE_new265(T1 initialize)
 {
 	T0* R;
@@ -3309,18 +3214,18 @@ T0* GE_new265(T1 initialize)
 	return R;
 }
 
-/* New instance of type DS_LINKABLE [INTEGER_32] */
+/* New instance of type EXECUTION_ENVIRONMENT */
 T0* GE_new266(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc(sizeof(T266));
+	R = (T0*)GE_alloc_atomic(sizeof(T266));
 	if (initialize) {
 		*(T266*)R = GE_default266;
 	}
 	return R;
 }
 
-/* New instance of type DS_LINKED_LIST_CURSOR [INTEGER_32] */
+/* New instance of type DS_SPARSE_TABLE_KEYS_CURSOR [STRING_8, STRING_8] */
 T0* GE_new267(T1 initialize)
 {
 	T0* R;
@@ -3331,18 +3236,18 @@ T0* GE_new267(T1 initialize)
 	return R;
 }
 
-/* New instance of type EXECUTION_ENVIRONMENT */
+/* New instance of type DS_SPARSE_TABLE_KEYS_CURSOR [LX_SYMBOL_CLASS, STRING_8] */
 T0* GE_new268(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc_atomic(sizeof(T268));
+	R = (T0*)GE_alloc(sizeof(T268));
 	if (initialize) {
 		*(T268*)R = GE_default268;
 	}
 	return R;
 }
 
-/* New instance of type TO_SPECIAL [LX_START_CONDITION] */
+/* New instance of type DS_SPARSE_TABLE_KEYS_CURSOR [LX_NFA, INTEGER_32] */
 T0* GE_new269(T1 initialize)
 {
 	T0* R;
@@ -3353,18 +3258,22 @@ T0* GE_new269(T1 initialize)
 	return R;
 }
 
-/* New instance of type DS_SPARSE_TABLE_KEYS_CURSOR [STRING_8, STRING_8] */
-T0* GE_new270(T1 initialize)
+/* New instance of type SPECIAL [NATURAL_8] */
+T0* GE_new270(T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc(sizeof(T270));
+	R = (T0*)GE_alloc_atomic(sizeof(T270)+(a1>1?(a1-1):0)*sizeof(T8));
 	if (initialize) {
 		*(T270*)R = GE_default270;
+		((T270*)(R))->a1 = a1;
+#ifndef GE_alloc_atomic_cleared
+		memset(((T270*)(R))->z2,0,a1*sizeof(T8));
+#endif
 	}
 	return R;
 }
 
-/* New instance of type DS_SPARSE_TABLE_KEYS_CURSOR [LX_SYMBOL_CLASS, STRING_8] */
+/* New instance of type INTEGER_OVERFLOW_CHECKER */
 T0* GE_new271(T1 initialize)
 {
 	T0* R;
@@ -3375,40 +3284,7 @@ T0* GE_new271(T1 initialize)
 	return R;
 }
 
-/* New instance of type TO_SPECIAL [LX_NFA_STATE] */
-T0* GE_new272(T1 initialize)
-{
-	T0* R;
-	R = (T0*)GE_alloc(sizeof(T272));
-	if (initialize) {
-		*(T272*)R = GE_default272;
-	}
-	return R;
-}
-
-/* New instance of type TO_SPECIAL [LX_DFA_STATE] */
-T0* GE_new273(T1 initialize)
-{
-	T0* R;
-	R = (T0*)GE_alloc(sizeof(T273));
-	if (initialize) {
-		*(T273*)R = GE_default273;
-	}
-	return R;
-}
-
-/* New instance of type TO_SPECIAL [LX_SINGLETON] */
-T0* GE_new274(T1 initialize)
-{
-	T0* R;
-	R = (T0*)GE_alloc(sizeof(T274));
-	if (initialize) {
-		*(T274*)R = GE_default274;
-	}
-	return R;
-}
-
-/* New instance of type TO_SPECIAL [DS_PAIR [DP_COMMAND, DS_LINKED_LIST [LX_RULE]]] */
+/* New instance of type C_STRING */
 T0* GE_new275(T1 initialize)
 {
 	T0* R;
@@ -3419,44 +3295,33 @@ T0* GE_new275(T1 initialize)
 	return R;
 }
 
-/* New instance of type DS_SPARSE_TABLE_KEYS_CURSOR [LX_NFA, INTEGER_32] */
-T0* GE_new276(T1 initialize)
-{
-	T0* R;
-	R = (T0*)GE_alloc(sizeof(T276));
-	if (initialize) {
-		*(T276*)R = GE_default276;
-	}
-	return R;
-}
-
-/* New instance of type SPECIAL [NATURAL_8] */
+/* New instance of type SPECIAL [NATURAL_64] */
 T0* GE_new277(T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc_atomic(sizeof(T277)+(a1>1?(a1-1):0)*sizeof(T8));
+	R = (T0*)GE_alloc_atomic(sizeof(T277)+(a1>1?(a1-1):0)*sizeof(T11));
 	if (initialize) {
 		*(T277*)R = GE_default277;
-		((T277*)(R))->z1 = a1;
+		((T277*)(R))->a1 = a1;
 #ifndef GE_alloc_atomic_cleared
-		memset(((T277*)(R))->z2,0,a1*sizeof(T8));
+		memset(((T277*)(R))->z2,0,a1*sizeof(T11));
 #endif
 	}
 	return R;
 }
 
-/* New instance of type DS_SHELL_SORTER [INTEGER_32] */
+/* New instance of type AP_OPTION_COMPARATOR */
 T0* GE_new278(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc(sizeof(T278));
+	R = (T0*)GE_alloc_atomic(sizeof(T278));
 	if (initialize) {
 		*(T278*)R = GE_default278;
 	}
 	return R;
 }
 
-/* New instance of type INTEGER_OVERFLOW_CHECKER */
+/* New instance of type DS_QUICK_SORTER [AP_OPTION] */
 T0* GE_new279(T1 initialize)
 {
 	T0* R;
@@ -3467,106 +3332,25 @@ T0* GE_new279(T1 initialize)
 	return R;
 }
 
-/* New instance of type TO_SPECIAL [AP_OPTION] */
-T0* GE_new280(T1 initialize)
-{
-	T0* R;
-	R = (T0*)GE_alloc(sizeof(T280));
-	if (initialize) {
-		*(T280*)R = GE_default280;
-	}
-	return R;
-}
-
-/* New instance of type TO_SPECIAL [AP_ALTERNATIVE_OPTIONS_LIST] */
-T0* GE_new281(T1 initialize)
-{
-	T0* R;
-	R = (T0*)GE_alloc(sizeof(T281));
-	if (initialize) {
-		*(T281*)R = GE_default281;
-	}
-	return R;
-}
-
-/* New instance of type C_STRING */
-T0* GE_new285(T1 initialize)
-{
-	T0* R;
-	R = (T0*)GE_alloc(sizeof(T285));
-	if (initialize) {
-		*(T285*)R = GE_default285;
-	}
-	return R;
-}
-
-/* New instance of type SPECIAL [NATURAL_64] */
-T0* GE_new286(T6 a1, T1 initialize)
-{
-	T0* R;
-	R = (T0*)GE_alloc_atomic(sizeof(T286)+(a1>1?(a1-1):0)*sizeof(T11));
-	if (initialize) {
-		*(T286*)R = GE_default286;
-		((T286*)(R))->z1 = a1;
-#ifndef GE_alloc_atomic_cleared
-		memset(((T286*)(R))->z2,0,a1*sizeof(T11));
-#endif
-	}
-	return R;
-}
-
-/* New instance of type PLATFORM */
-T0* GE_new288(T1 initialize)
-{
-	T0* R;
-	R = (T0*)GE_alloc_atomic(sizeof(T288));
-	if (initialize) {
-		*(T288*)R = GE_default288;
-	}
-	return R;
-}
-
 /* New instance of type MANAGED_POINTER */
-T0* GE_new289(T1 initialize)
+T0* GE_new282(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc_atomic(sizeof(T289));
-	GE_register_dispose(R,&T289f8);
+	R = (T0*)GE_alloc_atomic(sizeof(T282));
+	GE_register_dispose(R,&T282f8);
 	if (initialize) {
-		*(T289*)R = GE_default289;
-	}
-	return R;
-}
-
-/* New instance of type AP_OPTION_COMPARATOR */
-T0* GE_new290(T1 initialize)
-{
-	T0* R;
-	R = (T0*)GE_alloc_atomic(sizeof(T290));
-	if (initialize) {
-		*(T290*)R = GE_default290;
-	}
-	return R;
-}
-
-/* New instance of type DS_QUICK_SORTER [AP_OPTION] */
-T0* GE_new291(T1 initialize)
-{
-	T0* R;
-	R = (T0*)GE_alloc(sizeof(T291));
-	if (initialize) {
-		*(T291*)R = GE_default291;
+		*(T282*)R = GE_default282;
 	}
 	return R;
 }
 
 /* New instance of type EXCEPTIONS */
-T0* GE_new295(T1 initialize)
+T0* GE_new284(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc_atomic(sizeof(T295));
+	R = (T0*)GE_alloc_atomic(sizeof(T284));
 	if (initialize) {
-		*(T295*)R = GE_default295;
+		*(T284*)R = GE_default284;
 	}
 	return R;
 }
@@ -3607,8 +3391,8 @@ void T21f12(T0* C)
 		l1 = (((T25*)(GE_void(((T21*)(C))->a2)))->a9);
 		t1 = (EIF_FALSE);
 		if (t1) {
-			l2 = T55c20(l1);
-			T55f22(GE_void(l2));
+			l2 = T55c21(l1);
+			T55f23(GE_void(l2));
 			t1 = (T55f12(GE_void(l2)));
 			if (t1) {
 				if (((T0*)(GE_void(((T21*)(C))->a3)))->id==54) {
@@ -3616,9 +3400,9 @@ void T21f12(T0* C)
 				} else {
 					T47f82(((T21*)(C))->a3, l2);
 				}
-				T55f23(GE_void(l2));
+				T55f24(GE_void(l2));
 			} else {
-				l3 = T56c7(l1);
+				l3 = T56c8(l1);
 				T24f7(GE_void(((T21*)(C))->a1), l3);
 				t2 = (T21f4(C));
 				T44f2(GE_void(t2), (T6)(GE_int32(1)));
@@ -3636,47 +3420,47 @@ void T21f12(T0* C)
 }
 
 /* KL_STANDARD_FILES.output */
-unsigned char ge405os4163 = '\0';
-T0* ge405ov4163;
+unsigned char ge347os4193 = '\0';
+T0* ge347ov4193;
 T0* T45f2(T0* C)
 {
 	T0* R = 0;
-	if (ge405os4163) {
-		return ge405ov4163;
+	if (ge347os4193) {
+		return ge347ov4193;
 	} else {
-		ge405os4163 = '\1';
-		ge405ov4163 = R;
+		ge347os4193 = '\1';
+		ge347ov4193 = R;
 	}
-	R = T58c9();
-	ge405ov4163 = R;
+	R = T58c10();
+	ge347ov4193 = R;
 	return R;
 }
 
 /* KL_STDOUT_FILE.make */
-T0* T58c9(void)
+T0* T58c10(void)
 {
 	T0* C;
 	C = GE_new58(EIF_TRUE);
-	T58f16(C, GE_ms8("stdout", 6));
+	T58f17(C, GE_ms8("stdout", 6));
 	return C;
 }
 
 /* KL_STDOUT_FILE.make_open_stdout */
-void T58f16(T0* C, T0* a1)
+void T58f17(T0* C, T0* a1)
 {
-	T58f19(C, a1);
-	((T58*)(C))->a1 = (T58f4(C, (T6)(GE_int32(1))));
-	T58f20(C);
+	T58f21(C, a1);
+	((T58*)(C))->a1 = (T58f8(C, (T6)(GE_int32(1))));
+	T58f22(C);
 }
 
 /* KL_STDOUT_FILE.set_write_mode */
-void T58f20(T0* C)
+void T58f22(T0* C)
 {
 	((T58*)(C))->a3 = (T6)(GE_int32(2));
 }
 
 /* KL_STDOUT_FILE.console_def */
-T14 T58f4(T0* C, T6 a1)
+T14 T58f8(T0* C, T6 a1)
 {
 	T14 R = 0;
 	R = (T14)console_def(a1);
@@ -3684,26 +3468,67 @@ T14 T58f4(T0* C, T6 a1)
 }
 
 /* KL_STDOUT_FILE.old_make */
-void T58f19(T0* C, T0* a1)
+void T58f21(T0* C, T0* a1)
 {
 	((T58*)(C))->a2 = a1;
 	((T58*)(C))->a3 = (T6)(GE_int32(0));
+	((T58*)(C))->a4 = T17c35();
+}
+
+/* STRING_8.make_empty */
+T0* T17c35(void)
+{
+	T0* C;
+	C = GE_new17(EIF_TRUE);
+	T17f32(C, (T6)(GE_int32(0)));
+	return C;
+}
+
+/* STRING_8.make */
+void T17f32(T0* C, T6 a1)
+{
+	T6 t1;
+	((T17*)(C))->a2 = (T6)(GE_int32(0));
+	((T17*)(C))->a3 = (T6)(GE_int32(0));
+	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
+	((T17*)(C))->a1 = T15c10(t1);
+}
+
+/* STRING_8.make */
+T0* T17c32(T6 a1)
+{
+	T0* C;
+	T6 t1;
+	C = GE_new17(EIF_TRUE);
+	((T17*)(C))->a2 = (T6)(GE_int32(0));
+	((T17*)(C))->a3 = (T6)(GE_int32(0));
+	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
+	((T17*)(C))->a1 = T15c10(t1);
+	return C;
+}
+
+/* SPECIAL [CHARACTER_8].make */
+T0* T15c10(T6 a1)
+{
+	T0* C;
+	C = GE_new15(a1, EIF_TRUE);
+	return C;
 }
 
 /* GELEX.std */
-unsigned char ge403os1766 = '\0';
-T0* ge403ov1766;
+unsigned char ge345os1743 = '\0';
+T0* ge345ov1743;
 T0* T21f5(T0* C)
 {
 	T0* R = 0;
-	if (ge403os1766) {
-		return ge403ov1766;
+	if (ge345os1743) {
+		return ge345ov1743;
 	} else {
-		ge403os1766 = '\1';
-		ge403ov1766 = R;
+		ge345os1743 = '\1';
+		ge345ov1743 = R;
 	}
 	R = T45c4();
-	ge403ov1766 = R;
+	ge345ov1743 = R;
 	return R;
 }
 
@@ -3722,19 +3547,19 @@ void T44f2(T0* C, T6 a1)
 }
 
 /* GELEX.exceptions */
-unsigned char ge436os1767 = '\0';
-T0* ge436ov1767;
+unsigned char ge382os1744 = '\0';
+T0* ge382ov1744;
 T0* T21f4(T0* C)
 {
 	T0* R = 0;
-	if (ge436os1767) {
-		return ge436ov1767;
+	if (ge382os1744) {
+		return ge382ov1744;
 	} else {
-		ge436os1767 = '\1';
-		ge436ov1767 = R;
+		ge382os1744 = '\1';
+		ge382ov1744 = R;
 	}
 	R = T44c1();
-	ge436ov1767 = R;
+	ge382ov1744 = R;
 	return R;
 }
 
@@ -3757,54 +3582,54 @@ void T24f7(T0* C, T0* a1)
 /* UT_ERROR_HANDLER.report_error_message */
 void T24f11(T0* C, T0* a1)
 {
-	T73f11(GE_void(((T24*)(C))->a1), a1);
+	T73f12(GE_void(((T24*)(C))->a1), a1);
 }
 
 /* KL_STDERR_FILE.put_line */
-void T73f11(T0* C, T0* a1)
+void T73f12(T0* C, T0* a1)
 {
-	T73f12(C, a1);
-	T73f15(C);
+	T73f13(C, a1);
+	T73f16(C);
 }
 
 /* KL_STDERR_FILE.put_new_line */
-void T73f15(T0* C)
+void T73f16(T0* C)
 {
-	T73f12(C, ge406ov4930);
+	T73f13(C, ge348ov5216);
 }
 
 /* KL_STDERR_FILE.put_string */
-void T73f12(T0* C, T0* a1)
+void T73f13(T0* C, T0* a1)
 {
 	T0* t1;
 	T0* l1 = 0;
 	t1 = (T73f5(C));
 	l1 = (T69f2(GE_void(t1), a1));
-	T73f16(C, l1);
+	T73f17(C, l1);
 }
 
 /* KL_STDERR_FILE.old_put_string */
-void T73f16(T0* C, T0* a1)
+void T73f17(T0* C, T0* a1)
 {
 	T6 t1;
 	T1 t2;
-	T131 t3;
+	T132 t3;
 	T14 t4;
 	T0* l1 = 0;
 	t1 = (((T17*)(GE_void(a1)))->a2);
 	t2 = (((((t1) != ((T6)(GE_int32(0)))))));
 	if (t2) {
 		l1 = (((T17*)(GE_void(a1)))->a1);
-		(t3).id = 131;
+		(t3).id = 132;
 		(t3).a1 = ((l1?(T14)(GE_types[((T0*)(l1))->id].is_special?(T14)((T15*)(l1))->z2:(T14)l1):(T14)0));
 		t4 = ((t3).a1);
 		t1 = (((T17*)(GE_void(a1)))->a2);
-		T73f20(C, ((T73*)(C))->a1, t4, t1);
+		T73f21(C, ((T73*)(C))->a1, t4, t1);
 	}
 }
 
 /* KL_STDERR_FILE.console_ps */
-void T73f20(T0* C, T14 a1, T14 a2, T6 a3)
+void T73f21(T0* C, T14 a1, T14 a2, T6 a3)
 {
 	console_ps((FILE *)a1,( char *)a2,( EIF_INTEGER)a3);
 }
@@ -3817,7 +3642,7 @@ T0* T69f2(T0* C, T0* a1)
 	T0* R = 0;
 	T0* l1 = 0;
 	t1 = (T69f7(C));
-	t2 = (T189f1(GE_void(t1), a1, ge366ov5559));
+	t2 = (T191f1(GE_void(t1), a1, ge312ov6110));
 	if (t2) {
 		R = a1;
 	} else {
@@ -3826,14 +3651,14 @@ T0* T69f2(T0* C, T0* a1)
 		if (t2) {
 			R = ((GE_void(l1), (T0*)0));
 		} else {
-			R = (T17f14(GE_void(a1)));
+			R = (T17f15(GE_void(a1)));
 		}
 	}
 	return R;
 }
 
 /* STRING_8.string */
-T0* T17f14(T0* C)
+T0* T17f15(T0* C)
 {
 	T0* R = 0;
 	R = T17c41(C);
@@ -3845,788 +3670,21 @@ T0* T17c41(T0* a1)
 {
 	T0* C;
 	T1 t1;
+	T6 t2;
+	T0* t3;
 	C = GE_new17(EIF_TRUE);
 	((T17*)(C))->a1 = (((T17*)(a1))->a1);
 	((T17*)(C))->a2 = (((T17*)(a1))->a2);
 	((T17*)(C))->a3 = (T6)(GE_int32(0));
 	t1 = ((C)!=(a1));
 	if (t1) {
-		((T17*)(C))->a1 = (T15f5(GE_void(((T17*)(C))->a1)));
+		t2 = ((T6)((((T17*)(C))->a2)+((T6)(GE_int32(1)))));
+		((T17*)(C))->a1 = T15c10(t2);
+		t3 = (((T17*)(a1))->a1);
+		t2 = (T17f11(a1));
+		T15f11(GE_void(((T17*)(C))->a1), t3, t2, (T6)(GE_int32(0)), ((T17*)(C))->a2);
 	}
 	return C;
-}
-
-/* SPECIAL [CHARACTER_8].twin */
-T0* T15f5(T0* C)
-{
-	T0* R = 0;
-	R = GE_new15(((T15*)(C))->z1, EIF_FALSE);
-	*(T15*)(R) = *(T15*)(C);
-	memcpy(((T15*)(R))->z2,((T15*)(C))->z2,((T15*)(C))->z1*sizeof(T2));
-	return R;
-}
-
-/* KL_ANY_ROUTINES.same_types */
-T1 T189f1(T0* C, T0* a1, T0* a2)
-{
-	T1 R = 0;
-	R = (T19x27T0(GE_void(a1), a2));
-	return R;
-}
-
-/* KL_STRING_ROUTINES.any_ */
-unsigned char ge346os1894 = '\0';
-T0* ge346ov1894;
-T0* T69f7(T0* C)
-{
-	T0* R = 0;
-	if (ge346os1894) {
-		return ge346ov1894;
-	} else {
-		ge346os1894 = '\1';
-		ge346ov1894 = R;
-	}
-	R = T189c3();
-	ge346ov1894 = R;
-	return R;
-}
-
-/* KL_ANY_ROUTINES.default_create */
-T0* T189c3(void)
-{
-	T0* C;
-	C = GE_new189(EIF_TRUE);
-	return C;
-}
-
-/* KL_STDERR_FILE.string_ */
-unsigned char ge359os1775 = '\0';
-T0* ge359ov1775;
-T0* T73f5(T0* C)
-{
-	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
-	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
-	}
-	R = T69c12();
-	ge359ov1775 = R;
-	return R;
-}
-
-/* KL_STRING_ROUTINES.default_create */
-T0* T69c12(void)
-{
-	T0* C;
-	C = GE_new69(EIF_TRUE);
-	return C;
-}
-
-/* UT_ERROR_HANDLER.message */
-T0* T24f5(T0* C, T0* a1)
-{
-	T0* R = 0;
-	R = (T43x4034(GE_void(a1)));
-	return R;
-}
-
-/* UT_CANNOT_WRITE_TO_FILE_ERROR.make */
-T0* T56c7(T0* a1)
-{
-	T0* C;
-	C = GE_new56(EIF_TRUE);
-	((T56*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(1)));
-	T132f8(GE_void(((T56*)(C))->a1), a1, (T6)(GE_int32(1)));
-	return C;
-}
-
-/* ARRAY [STRING_8].put */
-void T132f8(T0* C, T0* a1, T6 a2)
-{
-	T6 t1;
-	t1 = ((T6)((a2)-(((T132*)(C))->a2)));
-	((T88*)(GE_void(((T132*)(C))->a1)))->z2[t1] = (a1);
-}
-
-/* ARRAY [STRING_8].make */
-T0* T132c7(T6 a1, T6 a2)
-{
-	T0* C;
-	T1 t1;
-	T6 t2;
-	T6 l1 = 0;
-	C = GE_new132(EIF_TRUE);
-	((T132*)(C))->a2 = a1;
-	((T132*)(C))->a3 = a2;
-	t1 = (T6f7(&a1, a2));
-	if (t1) {
-		t2 = ((T6)((a2)-(a1)));
-		l1 = ((T6)((t2)+((T6)(GE_int32(1)))));
-	}
-	T132f9(C, l1);
-	return C;
-}
-
-/* ARRAY [STRING_8].make_area */
-void T132f9(T0* C, T6 a1)
-{
-	((T132*)(C))->a1 = T88c4(a1);
-}
-
-/* SPECIAL [STRING_8].make */
-T0* T88c4(T6 a1)
-{
-	T0* C;
-	C = GE_new88(a1, EIF_TRUE);
-	return C;
-}
-
-/* INTEGER_32.infix "<=" */
-T1 T6f7(T6* C, T6 a1)
-{
-	T1 t1;
-	T1 R = 0;
-	t1 = ((T1)((a1)<(*C)));
-	R = ((T1)(!(t1)));
-	return R;
-}
-
-/* KL_TEXT_OUTPUT_FILE.close */
-void T55f23(T0* C)
-{
-	GE_rescue r;
-	T1 t1;
-	T1 l1 = 0;
-	if (GE_setjmp(r.jb) != 0) {
-		t1 = ((T1)(!((T1)l1)));
-		if (t1) {
-			l1 = EIF_TRUE;
-			goto GE_retry;
-		}
-		GE_raise(8);
-	}
-GE_retry:
-	r.previous = GE_last_rescue;
-	GE_last_rescue = &r;
-	t1 = ((T1)(!((T1)l1)));
-	if (t1) {
-		T55f30(C);
-	}
-	GE_last_rescue = r.previous;
-}
-
-/* KL_TEXT_OUTPUT_FILE.old_close */
-void T55f30(T0* C)
-{
-	T55f34(C, ((T55*)(C))->a4);
-	((T55*)(C))->a1 = (T6)(GE_int32(0));
-	((T55*)(C))->a5 = EIF_FALSE;
-}
-
-/* KL_TEXT_OUTPUT_FILE.file_close */
-void T55f34(T0* C, T14 a1)
-{
-	file_close((FILE *)a1);
-}
-
-/* LX_COMPRESSED_DFA.print_backing_up_report */
-void T47f82(T0* C, T0* a1)
-{
-	T47f82p1(C, a1);
-	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f26(a1, GE_ms8("Compressed tables always back up.", 33));
-	} else {
-		T58f13(a1, GE_ms8("Compressed tables always back up.", 33));
-	}
-}
-
-/* KL_STDOUT_FILE.put_line */
-void T58f13(T0* C, T0* a1)
-{
-	T58f11(C, a1);
-	T58f15(C);
-}
-
-/* KL_STDOUT_FILE.put_new_line */
-void T58f15(T0* C)
-{
-	T58f11(C, ge408ov4930);
-}
-
-/* KL_STDOUT_FILE.put_string */
-void T58f11(T0* C, T0* a1)
-{
-	T0* t1;
-	T0* l1 = 0;
-	t1 = (T58f6(C));
-	l1 = (T69f2(GE_void(t1), a1));
-	T58f17(C, l1);
-}
-
-/* KL_STDOUT_FILE.old_put_string */
-void T58f17(T0* C, T0* a1)
-{
-	T6 t1;
-	T1 t2;
-	T131 t3;
-	T14 t4;
-	T0* l1 = 0;
-	t1 = (((T17*)(GE_void(a1)))->a2);
-	t2 = (((((t1) != ((T6)(GE_int32(0)))))));
-	if (t2) {
-		l1 = (((T17*)(GE_void(a1)))->a1);
-		(t3).id = 131;
-		(t3).a1 = ((l1?(T14)(GE_types[((T0*)(l1))->id].is_special?(T14)((T15*)(l1))->z2:(T14)l1):(T14)0));
-		t4 = ((t3).a1);
-		t1 = (((T17*)(GE_void(a1)))->a2);
-		T58f21(C, ((T58*)(C))->a1, t4, t1);
-	}
-}
-
-/* KL_STDOUT_FILE.console_ps */
-void T58f21(T0* C, T14 a1, T14 a2, T6 a3)
-{
-	console_ps((FILE *)a1,( char *)a2,( EIF_INTEGER)a3);
-}
-
-/* KL_STDOUT_FILE.string_ */
-T0* T58f6(T0* C)
-{
-	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
-	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
-	}
-	R = T69c12();
-	ge359ov1775 = R;
-	return R;
-}
-
-/* KL_TEXT_OUTPUT_FILE.put_line */
-void T55f26(T0* C, T0* a1)
-{
-	T55f24(C, a1);
-	T55f28(C);
-}
-
-/* KL_TEXT_OUTPUT_FILE.put_new_line */
-void T55f28(T0* C)
-{
-	T55f24(C, ge499ov4930);
-}
-
-/* KL_TEXT_OUTPUT_FILE.put_string */
-void T55f24(T0* C, T0* a1)
-{
-	T0* t1;
-	t1 = (T55f9(C));
-	t1 = (T69f2(GE_void(t1), a1));
-	T55f32(C, t1);
-}
-
-/* KL_TEXT_OUTPUT_FILE.old_put_string */
-void T55f32(T0* C, T0* a1)
-{
-	T6 t1;
-	T1 t2;
-	T131 t3;
-	T14 t4;
-	T0* l1 = 0;
-	t1 = (((T17*)(GE_void(a1)))->a2);
-	t2 = (((((t1) != ((T6)(GE_int32(0)))))));
-	if (t2) {
-		l1 = (((T17*)(GE_void(a1)))->a1);
-		(t3).id = 131;
-		(t3).a1 = ((l1?(T14)(GE_types[((T0*)(l1))->id].is_special?(T14)((T15*)(l1))->z2:(T14)l1):(T14)0));
-		t4 = ((t3).a1);
-		t1 = (((T17*)(GE_void(a1)))->a2);
-		T55f35(C, ((T55*)(C))->a4, t4, t1);
-	}
-}
-
-/* KL_TEXT_OUTPUT_FILE.file_ps */
-void T55f35(T0* C, T14 a1, T14 a2, T6 a3)
-{
-	file_ps((FILE *)a1,( char *)a2,( EIF_INTEGER)a3);
-}
-
-/* KL_TEXT_OUTPUT_FILE.string_ */
-T0* T55f9(T0* C)
-{
-	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
-	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
-	}
-	R = T69c12();
-	ge359ov1775 = R;
-	return R;
-}
-
-/* LX_COMPRESSED_DFA.print_backing_up_report */
-void T47f82p1(T0* C, T0* a1)
-{
-	T1 t1;
-	T6 t2;
-	T6 l1 = 0;
-	T6 l2 = 0;
-	T0* l3 = 0;
-	l1 = ((T6)((((T47*)(C))->a6)+((T6)(GE_int32(1)))));
-	l2 = (((T138*)(GE_void(((T47*)(C))->a3)))->a1);
-	while (1) {
-		t1 = (T6f1((&l1), l2));
-		if (t1) {
-			break;
-		}
-		l3 = (T138f7(GE_void(((T47*)(C))->a3), l1));
-		t1 = (T133f11(GE_void(l3)));
-		t1 = ((T1)(!(t1)));
-		if (t1) {
-			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8("State #", 7));
-			} else {
-				T58f11(a1, GE_ms8("State #", 7));
-			}
-			t2 = (((T133*)(GE_void(l3)))->a6);
-			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f27(a1, t2);
-			} else {
-				T58f14(a1, t2);
-			}
-			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8(" is non-accepting -\n", 20));
-			} else {
-				T58f11(a1, GE_ms8(" is non-accepting -\n", 20));
-			}
-			T47f94(C, l3, a1);
-			T47f95(C, l3, a1);
-			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f25(a1, (T2)('\n'));
-			} else {
-				T58f12(a1, (T2)('\n'));
-			}
-		}
-		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-	}
-}
-
-/* KL_STDOUT_FILE.put_character */
-void T58f12(T0* C, T2 a1)
-{
-	T58f18(C, a1);
-}
-
-/* KL_STDOUT_FILE.old_put_character */
-void T58f18(T0* C, T2 a1)
-{
-	T58f22(C, ((T58*)(C))->a1, a1);
-}
-
-/* KL_STDOUT_FILE.console_pc */
-void T58f22(T0* C, T14 a1, T2 a2)
-{
-	console_pc((FILE *)a1,( EIF_CHARACTER)a2);
-}
-
-/* KL_TEXT_OUTPUT_FILE.put_character */
-void T55f25(T0* C, T2 a1)
-{
-	T55f33(C, a1);
-}
-
-/* KL_TEXT_OUTPUT_FILE.old_put_character */
-void T55f33(T0* C, T2 a1)
-{
-	T55f36(C, ((T55*)(C))->a4, a1);
-}
-
-/* KL_TEXT_OUTPUT_FILE.file_pc */
-void T55f36(T0* C, T14 a1, T2 a2)
-{
-	file_pc((FILE *)a1,( EIF_CHARACTER)a2);
-}
-
-/* LX_COMPRESSED_DFA.print_transitions */
-void T47f95(T0* C, T0* a1, T0* a2)
-{
-	T6 t1;
-	T1 t2;
-	T0* t3;
-	T1 t4;
-	T6 l1 = 0;
-	T6 l2 = 0;
-	T6 l3 = 0;
-	T0* l4 = 0;
-	T0* l5 = 0;
-	l3 = ((T47*)(C))->a8;
-	l4 = (((T133*)(GE_void(a1)))->a3);
-	t1 = ((T6)((l3)-((T6)(GE_int32(1)))));
-	l5 = T159c5((T6)(GE_int32(0)), t1);
-	t2 = ((((T47*)(C))->a21)!=(EIF_VOID));
-	if (t2) {
-		l1 = (T6)(GE_int32(1));
-		while (1) {
-			t2 = (T6f5((&l1), l3));
-			if (t2) {
-				break;
-			}
-			l2 = (T143f4(GE_void(((T47*)(C))->a21), l1));
-			t2 = (T157f10(GE_void(l4), l2));
-			if (t2) {
-				t3 = (T157f9(GE_void(l4), l2));
-				t2 = ((t3)!=(EIF_VOID));
-				T159f6(GE_void(l5), t2, l1);
-			}
-			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-		}
-		l2 = (T143f4(GE_void(((T47*)(C))->a21), l3));
-		t2 = (T157f10(GE_void(l4), l2));
-		if (t2) {
-			t3 = (T157f9(GE_void(l4), l2));
-			t2 = ((t3)!=(EIF_VOID));
-			T159f6(GE_void(l5), t2, (T6)(GE_int32(0)));
-		}
-	} else {
-		l1 = (T6)(GE_int32(1));
-		while (1) {
-			t2 = (T6f5((&l1), l3));
-			if (t2) {
-				break;
-			}
-			t2 = (T157f10(GE_void(l4), l1));
-			if (t2) {
-				t3 = (T157f9(GE_void(l4), l1));
-				t2 = ((t3)!=(EIF_VOID));
-				T159f6(GE_void(l5), t2, l1);
-			}
-			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-		}
-		t2 = (T157f10(GE_void(l4), l1));
-		if (t2) {
-			t3 = (T157f9(GE_void(l4), l3));
-			t2 = ((t3)!=(EIF_VOID));
-			T159f6(GE_void(l5), t2, (T6)(GE_int32(0)));
-		}
-	}
-	if (((T0*)(GE_void(a2)))->id==55) {
-		T55f24(a2, GE_ms8(" out-transitions: [", 19));
-	} else {
-		T58f11(a2, GE_ms8(" out-transitions: [", 19));
-	}
-	l1 = (T6)(GE_int32(0));
-	while (1) {
-		t2 = (T6f5((&l1), l3));
-		if (t2) {
-			break;
-		}
-		t2 = (T159f4(GE_void(l5), l1));
-		if (t2) {
-			if (((T0*)(GE_void(a2)))->id==55) {
-				T55f25(a2, (T2)(' '));
-			} else {
-				T58f12(a2, (T2)(' '));
-			}
-			T47f111(C, l1, a2);
-			l2 = l1;
-			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-			while (1) {
-				t2 = (T6f5((&l1), l3));
-				if (!(t2)) {
-					t4 = (T159f4(GE_void(l5), l1));
-					t2 = ((T1)(!(t4)));
-				}
-				if (t2) {
-					break;
-				}
-				l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-			}
-			t1 = ((T6)((l1)-((T6)(GE_int32(1)))));
-			t2 = (T6f1(&t1, l2));
-			if (t2) {
-				if (((T0*)(GE_void(a2)))->id==55) {
-					T55f25(a2, (T2)('-'));
-				} else {
-					T58f12(a2, (T2)('-'));
-				}
-				t1 = ((T6)((l1)-((T6)(GE_int32(1)))));
-				T47f111(C, t1, a2);
-			}
-			if (((T0*)(GE_void(a2)))->id==55) {
-				T55f25(a2, (T2)(' '));
-			} else {
-				T58f12(a2, (T2)(' '));
-			}
-		}
-		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-	}
-	if (((T0*)(GE_void(a2)))->id==55) {
-		T55f24(a2, GE_ms8("]\n jam-transitions: EOF [", 25));
-	} else {
-		T58f11(a2, GE_ms8("]\n jam-transitions: EOF [", 25));
-	}
-	l1 = (T6)(GE_int32(0));
-	while (1) {
-		t2 = (T6f5((&l1), l3));
-		if (t2) {
-			break;
-		}
-		t2 = (T159f4(GE_void(l5), l1));
-		t2 = ((T1)(!(t2)));
-		if (t2) {
-			if (((T0*)(GE_void(a2)))->id==55) {
-				T55f25(a2, (T2)(' '));
-			} else {
-				T58f12(a2, (T2)(' '));
-			}
-			T47f111(C, l1, a2);
-			l2 = l1;
-			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-			while (1) {
-				t2 = (T6f5((&l1), l3));
-				if (!(t2)) {
-					t2 = (T159f4(GE_void(l5), l1));
-				}
-				if (t2) {
-					break;
-				}
-				l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-			}
-			t1 = ((T6)((l1)-((T6)(GE_int32(1)))));
-			t2 = (T6f1(&t1, l2));
-			if (t2) {
-				if (((T0*)(GE_void(a2)))->id==55) {
-					T55f25(a2, (T2)('-'));
-				} else {
-					T58f12(a2, (T2)('-'));
-				}
-				t1 = ((T6)((l1)-((T6)(GE_int32(1)))));
-				T47f111(C, t1, a2);
-			}
-			if (((T0*)(GE_void(a2)))->id==55) {
-				T55f25(a2, (T2)(' '));
-			} else {
-				T58f12(a2, (T2)(' '));
-			}
-		}
-		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-	}
-	if (((T0*)(GE_void(a2)))->id==55) {
-		T55f24(a2, GE_ms8("]\n", 2));
-	} else {
-		T58f11(a2, GE_ms8("]\n", 2));
-	}
-}
-
-/* LX_COMPRESSED_DFA.print_readable_character */
-void T47f111(T0* C, T6 a1, T0* a2)
-{
-	T1 t1;
-	T0* t2;
-	T6 t3;
-	T0* t4;
-	T2 t5;
-	T0* l1 = 0;
-	T0* l2 = 0;
-	T6 l3 = 0;
-	t1 = ((T1)((a1)<((T6)(GE_int32(32)))));
-	if (!(t1)) {
-		t1 = (T6f5(&a1, (T6)(GE_int32(127))));
-	}
-	if (t1) {
-		switch (a1) {
-		case (T6)(T6)(GE_int32(8)):
-			if (((T0*)(GE_void(a2)))->id==55) {
-				T55f24(a2, GE_ms8("\\b", 2));
-			} else {
-				T58f11(a2, GE_ms8("\\b", 2));
-			}
-			break;
-		case (T6)(T6)(GE_int32(12)):
-			if (((T0*)(GE_void(a2)))->id==55) {
-				T55f24(a2, GE_ms8("\\f", 2));
-			} else {
-				T58f11(a2, GE_ms8("\\f", 2));
-			}
-			break;
-		case (T6)(T6)(GE_int32(10)):
-			if (((T0*)(GE_void(a2)))->id==55) {
-				T55f24(a2, GE_ms8("\\n", 2));
-			} else {
-				T58f11(a2, GE_ms8("\\n", 2));
-			}
-			break;
-		case (T6)(T6)(GE_int32(13)):
-			if (((T0*)(GE_void(a2)))->id==55) {
-				T55f24(a2, GE_ms8("\\r", 2));
-			} else {
-				T58f11(a2, GE_ms8("\\r", 2));
-			}
-			break;
-		case (T6)(T6)(GE_int32(9)):
-			if (((T0*)(GE_void(a2)))->id==55) {
-				T55f24(a2, GE_ms8("\\t", 2));
-			} else {
-				T58f11(a2, GE_ms8("\\t", 2));
-			}
-			break;
-		default:
-			if (((T0*)(GE_void(a2)))->id==55) {
-				T55f25(a2, (T2)('\\'));
-			} else {
-				T58f12(a2, (T2)('\\'));
-			}
-			l3 = a1;
-			t1 = ((T1)((l3)<((T6)(GE_int32(0)))));
-			if (t1) {
-				if (((T0*)(GE_void(a2)))->id==55) {
-					T55f25(a2, (T2)('-'));
-				} else {
-					T58f12(a2, (T2)('-'));
-				}
-				l3 = ((T6)(-(l3)));
-			}
-			l1 = GE_ms8("", 0);
-			while (1) {
-				t1 = (((((l3) == ((T6)(GE_int32(0)))))));
-				if (t1) {
-					break;
-				}
-				t2 = (T47f75(C));
-				t3 = ((T6)((l3)%((T6)(GE_int32(8)))));
-				t4 = (T6f6(&t3));
-				l2 = (T69f6(GE_void(t2), t4));
-				T17f34(GE_void(l2), l1);
-				l1 = l2;
-				l3 = ((T6)((l3)/((T6)(GE_int32(8)))));
-			}
-			t3 = (((T17*)(GE_void(l1)))->a2);
-			switch (t3) {
-			case (T6)(T6)(GE_int32(0)):
-				if (((T0*)(GE_void(a2)))->id==55) {
-					T55f24(a2, GE_ms8("000", 3));
-				} else {
-					T58f11(a2, GE_ms8("000", 3));
-				}
-				break;
-			case (T6)(T6)(GE_int32(1)):
-				if (((T0*)(GE_void(a2)))->id==55) {
-					T55f24(a2, GE_ms8("00", 2));
-				} else {
-					T58f11(a2, GE_ms8("00", 2));
-				}
-				break;
-			case (T6)(T6)(GE_int32(2)):
-				if (((T0*)(GE_void(a2)))->id==55) {
-					T55f25(a2, (T2)('0'));
-				} else {
-					T58f12(a2, (T2)('0'));
-				}
-				break;
-			default:
-				break;
-			}
-			if (((T0*)(GE_void(a2)))->id==55) {
-				T55f24(a2, l1);
-			} else {
-				T58f11(a2, l1);
-			}
-			break;
-		}
-	} else {
-		t1 = (((((a1) == ((T6)(GE_int32(32)))))));
-		if (t1) {
-			if (((T0*)(GE_void(a2)))->id==55) {
-				T55f24(a2, GE_ms8("\' \'", 3));
-			} else {
-				T58f11(a2, GE_ms8("\' \'", 3));
-			}
-		} else {
-			t2 = (T47f77(C));
-			t5 = (T166f1(GE_void(t2), a1));
-			if (((T0*)(GE_void(a2)))->id==55) {
-				T55f25(a2, t5);
-			} else {
-				T58f12(a2, t5);
-			}
-		}
-	}
-}
-
-/* KL_INTEGER_ROUTINES.to_character */
-T2 T166f1(T0* C, T6 a1)
-{
-	T2 R = 0;
-	R = ((T2)(a1));
-	return R;
-}
-
-/* LX_COMPRESSED_DFA.integer_ */
-unsigned char ge354os2753 = '\0';
-T0* ge354ov2753;
-T0* T47f77(T0* C)
-{
-	T0* R = 0;
-	if (ge354os2753) {
-		return ge354ov2753;
-	} else {
-		ge354os2753 = '\1';
-		ge354ov2753 = R;
-	}
-	R = T166c2();
-	ge354ov2753 = R;
-	return R;
-}
-
-/* KL_INTEGER_ROUTINES.default_create */
-T0* T166c2(void)
-{
-	T0* C;
-	C = GE_new166(EIF_TRUE);
-	return C;
-}
-
-/* STRING_8.append_string */
-void T17f34(T0* C, T0* a1)
-{
-	T1 t1;
-	t1 = ((a1)!=(EIF_VOID));
-	if (t1) {
-		T17f37(C, a1);
-	}
-}
-
-/* STRING_8.append */
-void T17f37(T0* C, T0* a1)
-{
-	T1 t1;
-	T6 t2;
-	T0* t3;
-	T6 l1 = 0;
-	T6 l2 = 0;
-	T6 l3 = 0;
-	l2 = (((T17*)(GE_void(a1)))->a2);
-	t1 = (T6f1((&l2), (T6)(GE_int32(0))));
-	if (t1) {
-		l1 = ((T17*)(C))->a2;
-		l3 = ((T6)((l2)+(l1)));
-		t2 = (T17f5(C));
-		t1 = (T6f1((&l3), t2));
-		if (t1) {
-			t2 = (T17f6(C));
-			t2 = ((T6)((l3)+(t2)));
-			T17f36(C, t2);
-		}
-		t3 = (((T17*)(GE_void(a1)))->a1);
-		T15f11(GE_void(((T17*)(C))->a1), t3, (T6)(GE_int32(0)), l1, l2);
-		((T17*)(C))->a2 = l3;
-		((T17*)(C))->a3 = (T6)(GE_int32(0));
-	}
 }
 
 /* SPECIAL [CHARACTER_8].copy_data */
@@ -4752,13 +3810,819 @@ void T15f13(T0* C, T6 a1, T6 a2, T6 a3)
 	}
 }
 
-/* STRING_8.resize */
-void T17f36(T0* C, T6 a1)
+/* INTEGER_32.is_greater */
+T1 T6f1(T6* C, T6 a1)
+{
+	T1 R = 0;
+	R = ((T1)((a1)<(*C)));
+	return R;
+}
+
+/* STRING_8.area_lower */
+T6 T17f11(T0* C)
+{
+	T6 R = 0;
+	return R;
+}
+
+/* KL_ANY_ROUTINES.same_types */
+T1 T191f1(T0* C, T0* a1, T0* a2)
+{
+	T1 R = 0;
+	R = (T19x27T0(GE_void(a1), a2));
+	return R;
+}
+
+/* KL_STRING_ROUTINES.any_ */
+unsigned char ge300os1888 = '\0';
+T0* ge300ov1888;
+T0* T69f7(T0* C)
+{
+	T0* R = 0;
+	if (ge300os1888) {
+		return ge300ov1888;
+	} else {
+		ge300os1888 = '\1';
+		ge300ov1888 = R;
+	}
+	R = T191c2();
+	ge300ov1888 = R;
+	return R;
+}
+
+/* KL_ANY_ROUTINES.default_create */
+T0* T191c2(void)
+{
+	T0* C;
+	C = GE_new191(EIF_TRUE);
+	return C;
+}
+
+/* KL_STDERR_FILE.string_ */
+unsigned char ge307os1751 = '\0';
+T0* ge307ov1751;
+T0* T73f5(T0* C)
+{
+	T0* R = 0;
+	if (ge307os1751) {
+		return ge307ov1751;
+	} else {
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
+	}
+	R = T69c12();
+	ge307ov1751 = R;
+	return R;
+}
+
+/* KL_STRING_ROUTINES.default_create */
+T0* T69c12(void)
+{
+	T0* C;
+	C = GE_new69(EIF_TRUE);
+	return C;
+}
+
+/* UT_ERROR_HANDLER.message */
+T0* T24f5(T0* C, T0* a1)
+{
+	T0* R = 0;
+	R = (T43x4063(GE_void(a1)));
+	return R;
+}
+
+/* UT_CANNOT_WRITE_TO_FILE_ERROR.make */
+T0* T56c8(T0* a1)
+{
+	T0* C;
+	C = GE_new56(EIF_TRUE);
+	((T56*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(1)));
+	T133f8(GE_void(((T56*)(C))->a1), a1, (T6)(GE_int32(1)));
+	return C;
+}
+
+/* ARRAY [STRING_8].put */
+void T133f8(T0* C, T0* a1, T6 a2)
+{
+	T6 t1;
+	t1 = ((T6)((a2)-(((T133*)(C))->a2)));
+	((T88*)(GE_void(((T133*)(C))->a1)))->z2[t1] = (a1);
+}
+
+/* ARRAY [STRING_8].make_filled */
+T0* T133c7(T0* a1, T6 a2, T6 a3)
+{
+	T0* C;
+	T1 t1;
+	T6 t2;
+	T6 l1 = 0;
+	C = GE_new133(EIF_TRUE);
+	((T133*)(C))->a2 = a2;
+	((T133*)(C))->a3 = a3;
+	t1 = (T6f7(&a2, a3));
+	if (t1) {
+		t2 = ((T6)((a3)-(a2)));
+		l1 = ((T6)((t2)+((T6)(GE_int32(1)))));
+	}
+	T133f9(C, a1, l1);
+	return C;
+}
+
+/* ARRAY [STRING_8].make_filled_area */
+void T133f9(T0* C, T0* a1, T6 a2)
+{
+	((T133*)(C))->a1 = T88c6(a1, a2);
+}
+
+/* SPECIAL [STRING_8].make_filled */
+T0* T88c6(T0* a1, T6 a2)
+{
+	T0* C;
+	T6 t1;
+	C = GE_new88(a2, EIF_TRUE);
+	T88f9(C, a2);
+	t1 = ((T6)((a2)-((T6)(GE_int32(1)))));
+	T88f8(C, a1, (T6)(GE_int32(0)), t1);
+	return C;
+}
+
+/* SPECIAL [STRING_8].fill_with */
+void T88f8(T0* C, T0* a1, T6 a2, T6 a3)
+{
+	T1 t1;
+	T6 l1 = 0;
+	T6 l2 = 0;
+	l1 = a2;
+	l2 = ((T6)((a3)+((T6)(GE_int32(1)))));
+	while (1) {
+		t1 = (((((l1) == (l2)))));
+		if (t1) {
+			break;
+		}
+		((T88*)(C))->z2[l1] = (a1);
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
+}
+
+/* SPECIAL [STRING_8].make */
+void T88f9(T0* C, T6 a1)
+{
+}
+
+/* INTEGER_32.is_less_equal */
+T1 T6f7(T6* C, T6 a1)
+{
+	T1 t1;
+	T1 R = 0;
+	t1 = ((T1)((a1)<(*C)));
+	R = ((T1)(!(t1)));
+	return R;
+}
+
+/* KL_TEXT_OUTPUT_FILE.close */
+void T55f24(T0* C)
+{
+	GE_rescue r;
+	T1 t1;
+	T1 l1 = 0;
+	if (GE_setjmp(r.jb) != 0) {
+		t1 = ((T1)(!((T1)l1)));
+		if (t1) {
+			l1 = EIF_TRUE;
+			goto GE_retry;
+		}
+		GE_raise(8);
+	}
+GE_retry:
+	r.previous = GE_last_rescue;
+	GE_last_rescue = &r;
+	t1 = ((T1)(!((T1)l1)));
+	if (t1) {
+		T55f31(C);
+	}
+	GE_last_rescue = r.previous;
+}
+
+/* KL_TEXT_OUTPUT_FILE.old_close */
+void T55f31(T0* C)
+{
+	T55f36(C, ((T55*)(C))->a5);
+	((T55*)(C))->a1 = (T6)(GE_int32(0));
+	((T55*)(C))->a6 = EIF_FALSE;
+}
+
+/* KL_TEXT_OUTPUT_FILE.file_close */
+void T55f36(T0* C, T14 a1)
+{
+	file_close((FILE *)a1);
+}
+
+/* LX_COMPRESSED_DFA.print_backing_up_report */
+void T47f82(T0* C, T0* a1)
+{
+	T47f82p1(C, a1);
+	if (((T0*)(GE_void(a1)))->id==55) {
+		T55f27(a1, GE_ms8("Compressed tables always back up.", 33));
+	} else {
+		T58f14(a1, GE_ms8("Compressed tables always back up.", 33));
+	}
+}
+
+/* KL_STDOUT_FILE.put_line */
+void T58f14(T0* C, T0* a1)
+{
+	T58f12(C, a1);
+	T58f16(C);
+}
+
+/* KL_STDOUT_FILE.put_new_line */
+void T58f16(T0* C)
+{
+	T58f12(C, ge350ov5216);
+}
+
+/* KL_STDOUT_FILE.put_string */
+void T58f12(T0* C, T0* a1)
+{
+	T0* t1;
+	T0* l1 = 0;
+	t1 = (T58f6(C));
+	l1 = (T69f2(GE_void(t1), a1));
+	T58f18(C, l1);
+}
+
+/* KL_STDOUT_FILE.old_put_string */
+void T58f18(T0* C, T0* a1)
+{
+	T6 t1;
+	T1 t2;
+	T132 t3;
+	T14 t4;
+	T0* l1 = 0;
+	t1 = (((T17*)(GE_void(a1)))->a2);
+	t2 = (((((t1) != ((T6)(GE_int32(0)))))));
+	if (t2) {
+		l1 = (((T17*)(GE_void(a1)))->a1);
+		(t3).id = 132;
+		(t3).a1 = ((l1?(T14)(GE_types[((T0*)(l1))->id].is_special?(T14)((T15*)(l1))->z2:(T14)l1):(T14)0));
+		t4 = ((t3).a1);
+		t1 = (((T17*)(GE_void(a1)))->a2);
+		T58f23(C, ((T58*)(C))->a1, t4, t1);
+	}
+}
+
+/* KL_STDOUT_FILE.console_ps */
+void T58f23(T0* C, T14 a1, T14 a2, T6 a3)
+{
+	console_ps((FILE *)a1,( char *)a2,( EIF_INTEGER)a3);
+}
+
+/* KL_STDOUT_FILE.string_ */
+T0* T58f6(T0* C)
+{
+	T0* R = 0;
+	if (ge307os1751) {
+		return ge307ov1751;
+	} else {
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
+	}
+	R = T69c12();
+	ge307ov1751 = R;
+	return R;
+}
+
+/* KL_TEXT_OUTPUT_FILE.put_line */
+void T55f27(T0* C, T0* a1)
+{
+	T55f25(C, a1);
+	T55f29(C);
+}
+
+/* KL_TEXT_OUTPUT_FILE.put_new_line */
+void T55f29(T0* C)
+{
+	T55f25(C, ge446ov5216);
+}
+
+/* KL_TEXT_OUTPUT_FILE.put_string */
+void T55f25(T0* C, T0* a1)
+{
+	T0* t1;
+	t1 = (T55f9(C));
+	t1 = (T69f2(GE_void(t1), a1));
+	T55f33(C, t1);
+}
+
+/* KL_TEXT_OUTPUT_FILE.old_put_string */
+void T55f33(T0* C, T0* a1)
+{
+	T6 t1;
+	T1 t2;
+	T132 t3;
+	T14 t4;
+	T0* l1 = 0;
+	t1 = (((T17*)(GE_void(a1)))->a2);
+	t2 = (((((t1) != ((T6)(GE_int32(0)))))));
+	if (t2) {
+		l1 = (((T17*)(GE_void(a1)))->a1);
+		(t3).id = 132;
+		(t3).a1 = ((l1?(T14)(GE_types[((T0*)(l1))->id].is_special?(T14)((T15*)(l1))->z2:(T14)l1):(T14)0));
+		t4 = ((t3).a1);
+		t1 = (((T17*)(GE_void(a1)))->a2);
+		T55f37(C, ((T55*)(C))->a5, t4, t1);
+	}
+}
+
+/* KL_TEXT_OUTPUT_FILE.file_ps */
+void T55f37(T0* C, T14 a1, T14 a2, T6 a3)
+{
+	file_ps((FILE *)a1,( char *)a2,( EIF_INTEGER)a3);
+}
+
+/* KL_TEXT_OUTPUT_FILE.string_ */
+T0* T55f9(T0* C)
+{
+	T0* R = 0;
+	if (ge307os1751) {
+		return ge307ov1751;
+	} else {
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
+	}
+	R = T69c12();
+	ge307ov1751 = R;
+	return R;
+}
+
+/* LX_COMPRESSED_DFA.print_backing_up_report */
+void T47f82p1(T0* C, T0* a1)
 {
 	T1 t1;
 	T6 t2;
 	T6 l1 = 0;
-	l1 = (((T15*)(GE_void(((T17*)(C))->a1)))->z1);
+	T6 l2 = 0;
+	T0* l3 = 0;
+	l1 = ((T6)((((T47*)(C))->a6)+((T6)(GE_int32(1)))));
+	l2 = (((T139*)(GE_void(((T47*)(C))->a3)))->a1);
+	while (1) {
+		t1 = (T6f1((&l1), l2));
+		if (t1) {
+			break;
+		}
+		l3 = (T139f7(GE_void(((T47*)(C))->a3), l1));
+		t1 = (T134f10(GE_void(l3)));
+		t1 = ((T1)(!(t1)));
+		if (t1) {
+			if (((T0*)(GE_void(a1)))->id==55) {
+				T55f25(a1, GE_ms8("State #", 7));
+			} else {
+				T58f12(a1, GE_ms8("State #", 7));
+			}
+			t2 = (((T134*)(GE_void(l3)))->a6);
+			if (((T0*)(GE_void(a1)))->id==55) {
+				T55f28(a1, t2);
+			} else {
+				T58f15(a1, t2);
+			}
+			if (((T0*)(GE_void(a1)))->id==55) {
+				T55f25(a1, GE_ms8(" is non-accepting -\n", 20));
+			} else {
+				T58f12(a1, GE_ms8(" is non-accepting -\n", 20));
+			}
+			T47f94(C, l3, a1);
+			T47f95(C, l3, a1);
+			if (((T0*)(GE_void(a1)))->id==55) {
+				T55f26(a1, (T2)('\n'));
+			} else {
+				T58f13(a1, (T2)('\n'));
+			}
+		}
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
+}
+
+/* KL_STDOUT_FILE.put_character */
+void T58f13(T0* C, T2 a1)
+{
+	T58f19(C, a1);
+}
+
+/* KL_STDOUT_FILE.old_put_character */
+void T58f19(T0* C, T2 a1)
+{
+	T58f24(C, ((T58*)(C))->a1, a1);
+}
+
+/* KL_STDOUT_FILE.console_pc */
+void T58f24(T0* C, T14 a1, T2 a2)
+{
+	console_pc((FILE *)a1,( EIF_CHARACTER)a2);
+}
+
+/* KL_TEXT_OUTPUT_FILE.put_character */
+void T55f26(T0* C, T2 a1)
+{
+	T55f34(C, a1);
+}
+
+/* KL_TEXT_OUTPUT_FILE.old_put_character */
+void T55f34(T0* C, T2 a1)
+{
+	T55f38(C, ((T55*)(C))->a5, a1);
+}
+
+/* KL_TEXT_OUTPUT_FILE.file_pc */
+void T55f38(T0* C, T14 a1, T2 a2)
+{
+	file_pc((FILE *)a1,( EIF_CHARACTER)a2);
+}
+
+/* LX_COMPRESSED_DFA.print_transitions */
+void T47f95(T0* C, T0* a1, T0* a2)
+{
+	T6 t1;
+	T1 t2;
+	T0* t3;
+	T1 t4;
+	T6 l1 = 0;
+	T6 l2 = 0;
+	T6 l3 = 0;
+	T0* l4 = 0;
+	T0* l5 = 0;
+	l3 = ((T47*)(C))->a8;
+	l4 = (((T134*)(GE_void(a1)))->a3);
+	t1 = ((T6)((l3)-((T6)(GE_int32(1)))));
+	l5 = T160c5(EIF_FALSE, (T6)(GE_int32(0)), t1);
+	t2 = ((((T47*)(C))->a21)!=(EIF_VOID));
+	if (t2) {
+		l1 = (T6)(GE_int32(1));
+		while (1) {
+			t2 = (T6f5((&l1), l3));
+			if (t2) {
+				break;
+			}
+			l2 = (T144f4(GE_void(((T47*)(C))->a21), l1));
+			t2 = (T158f10(GE_void(l4), l2));
+			if (t2) {
+				t3 = (T158f9(GE_void(l4), l2));
+				t2 = ((t3)!=(EIF_VOID));
+				T160f6(GE_void(l5), t2, l1);
+			}
+			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+		}
+		l2 = (T144f4(GE_void(((T47*)(C))->a21), l3));
+		t2 = (T158f10(GE_void(l4), l2));
+		if (t2) {
+			t3 = (T158f9(GE_void(l4), l2));
+			t2 = ((t3)!=(EIF_VOID));
+			T160f6(GE_void(l5), t2, (T6)(GE_int32(0)));
+		}
+	} else {
+		l1 = (T6)(GE_int32(1));
+		while (1) {
+			t2 = (T6f5((&l1), l3));
+			if (t2) {
+				break;
+			}
+			t2 = (T158f10(GE_void(l4), l1));
+			if (t2) {
+				t3 = (T158f9(GE_void(l4), l1));
+				t2 = ((t3)!=(EIF_VOID));
+				T160f6(GE_void(l5), t2, l1);
+			}
+			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+		}
+		t2 = (T158f10(GE_void(l4), l1));
+		if (t2) {
+			t3 = (T158f9(GE_void(l4), l3));
+			t2 = ((t3)!=(EIF_VOID));
+			T160f6(GE_void(l5), t2, (T6)(GE_int32(0)));
+		}
+	}
+	if (((T0*)(GE_void(a2)))->id==55) {
+		T55f25(a2, GE_ms8(" out-transitions: [", 19));
+	} else {
+		T58f12(a2, GE_ms8(" out-transitions: [", 19));
+	}
+	l1 = (T6)(GE_int32(0));
+	while (1) {
+		t2 = (T6f5((&l1), l3));
+		if (t2) {
+			break;
+		}
+		t2 = (T160f4(GE_void(l5), l1));
+		if (t2) {
+			if (((T0*)(GE_void(a2)))->id==55) {
+				T55f26(a2, (T2)(' '));
+			} else {
+				T58f13(a2, (T2)(' '));
+			}
+			T47f111(C, l1, a2);
+			l2 = l1;
+			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+			while (1) {
+				t2 = (T6f5((&l1), l3));
+				if (!(t2)) {
+					t4 = (T160f4(GE_void(l5), l1));
+					t2 = ((T1)(!(t4)));
+				}
+				if (t2) {
+					break;
+				}
+				l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+			}
+			t1 = ((T6)((l1)-((T6)(GE_int32(1)))));
+			t2 = (T6f1(&t1, l2));
+			if (t2) {
+				if (((T0*)(GE_void(a2)))->id==55) {
+					T55f26(a2, (T2)('-'));
+				} else {
+					T58f13(a2, (T2)('-'));
+				}
+				t1 = ((T6)((l1)-((T6)(GE_int32(1)))));
+				T47f111(C, t1, a2);
+			}
+			if (((T0*)(GE_void(a2)))->id==55) {
+				T55f26(a2, (T2)(' '));
+			} else {
+				T58f13(a2, (T2)(' '));
+			}
+		}
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
+	if (((T0*)(GE_void(a2)))->id==55) {
+		T55f25(a2, GE_ms8("]\n jam-transitions: EOF [", 25));
+	} else {
+		T58f12(a2, GE_ms8("]\n jam-transitions: EOF [", 25));
+	}
+	l1 = (T6)(GE_int32(0));
+	while (1) {
+		t2 = (T6f5((&l1), l3));
+		if (t2) {
+			break;
+		}
+		t2 = (T160f4(GE_void(l5), l1));
+		t2 = ((T1)(!(t2)));
+		if (t2) {
+			if (((T0*)(GE_void(a2)))->id==55) {
+				T55f26(a2, (T2)(' '));
+			} else {
+				T58f13(a2, (T2)(' '));
+			}
+			T47f111(C, l1, a2);
+			l2 = l1;
+			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+			while (1) {
+				t2 = (T6f5((&l1), l3));
+				if (!(t2)) {
+					t2 = (T160f4(GE_void(l5), l1));
+				}
+				if (t2) {
+					break;
+				}
+				l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+			}
+			t1 = ((T6)((l1)-((T6)(GE_int32(1)))));
+			t2 = (T6f1(&t1, l2));
+			if (t2) {
+				if (((T0*)(GE_void(a2)))->id==55) {
+					T55f26(a2, (T2)('-'));
+				} else {
+					T58f13(a2, (T2)('-'));
+				}
+				t1 = ((T6)((l1)-((T6)(GE_int32(1)))));
+				T47f111(C, t1, a2);
+			}
+			if (((T0*)(GE_void(a2)))->id==55) {
+				T55f26(a2, (T2)(' '));
+			} else {
+				T58f13(a2, (T2)(' '));
+			}
+		}
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
+	if (((T0*)(GE_void(a2)))->id==55) {
+		T55f25(a2, GE_ms8("]\n", 2));
+	} else {
+		T58f12(a2, GE_ms8("]\n", 2));
+	}
+}
+
+/* LX_COMPRESSED_DFA.print_readable_character */
+void T47f111(T0* C, T6 a1, T0* a2)
+{
+	T1 t1;
+	T0* t2;
+	T6 t3;
+	T0* t4;
+	T2 t5;
+	T0* l1 = 0;
+	T0* l2 = 0;
+	T6 l3 = 0;
+	t1 = ((T1)((a1)<((T6)(GE_int32(32)))));
+	if (!(t1)) {
+		t1 = (T6f5(&a1, (T6)(GE_int32(127))));
+	}
+	if (t1) {
+		switch (a1) {
+		case (T6)(T6)(GE_int32(8)):
+			if (((T0*)(GE_void(a2)))->id==55) {
+				T55f25(a2, GE_ms8("\\b", 2));
+			} else {
+				T58f12(a2, GE_ms8("\\b", 2));
+			}
+			break;
+		case (T6)(T6)(GE_int32(12)):
+			if (((T0*)(GE_void(a2)))->id==55) {
+				T55f25(a2, GE_ms8("\\f", 2));
+			} else {
+				T58f12(a2, GE_ms8("\\f", 2));
+			}
+			break;
+		case (T6)(T6)(GE_int32(10)):
+			if (((T0*)(GE_void(a2)))->id==55) {
+				T55f25(a2, GE_ms8("\\n", 2));
+			} else {
+				T58f12(a2, GE_ms8("\\n", 2));
+			}
+			break;
+		case (T6)(T6)(GE_int32(13)):
+			if (((T0*)(GE_void(a2)))->id==55) {
+				T55f25(a2, GE_ms8("\\r", 2));
+			} else {
+				T58f12(a2, GE_ms8("\\r", 2));
+			}
+			break;
+		case (T6)(T6)(GE_int32(9)):
+			if (((T0*)(GE_void(a2)))->id==55) {
+				T55f25(a2, GE_ms8("\\t", 2));
+			} else {
+				T58f12(a2, GE_ms8("\\t", 2));
+			}
+			break;
+		default:
+			if (((T0*)(GE_void(a2)))->id==55) {
+				T55f26(a2, (T2)('\\'));
+			} else {
+				T58f13(a2, (T2)('\\'));
+			}
+			l3 = a1;
+			t1 = ((T1)((l3)<((T6)(GE_int32(0)))));
+			if (t1) {
+				if (((T0*)(GE_void(a2)))->id==55) {
+					T55f26(a2, (T2)('-'));
+				} else {
+					T58f13(a2, (T2)('-'));
+				}
+				l3 = ((T6)(-(l3)));
+			}
+			l1 = GE_ms8("", 0);
+			while (1) {
+				t1 = (((((l3) == ((T6)(GE_int32(0)))))));
+				if (t1) {
+					break;
+				}
+				t2 = (T47f75(C));
+				t3 = ((T6)((l3)%((T6)(GE_int32(8)))));
+				t4 = (T6f6(&t3));
+				l2 = (T69f6(GE_void(t2), t4));
+				T17f34(GE_void(l2), l1);
+				l1 = l2;
+				l3 = ((T6)((l3)/((T6)(GE_int32(8)))));
+			}
+			t3 = (((T17*)(GE_void(l1)))->a2);
+			switch (t3) {
+			case (T6)(T6)(GE_int32(0)):
+				if (((T0*)(GE_void(a2)))->id==55) {
+					T55f25(a2, GE_ms8("000", 3));
+				} else {
+					T58f12(a2, GE_ms8("000", 3));
+				}
+				break;
+			case (T6)(T6)(GE_int32(1)):
+				if (((T0*)(GE_void(a2)))->id==55) {
+					T55f25(a2, GE_ms8("00", 2));
+				} else {
+					T58f12(a2, GE_ms8("00", 2));
+				}
+				break;
+			case (T6)(T6)(GE_int32(2)):
+				if (((T0*)(GE_void(a2)))->id==55) {
+					T55f26(a2, (T2)('0'));
+				} else {
+					T58f13(a2, (T2)('0'));
+				}
+				break;
+			default:
+				break;
+			}
+			if (((T0*)(GE_void(a2)))->id==55) {
+				T55f25(a2, l1);
+			} else {
+				T58f12(a2, l1);
+			}
+			break;
+		}
+	} else {
+		t1 = (((((a1) == ((T6)(GE_int32(32)))))));
+		if (t1) {
+			if (((T0*)(GE_void(a2)))->id==55) {
+				T55f25(a2, GE_ms8("\' \'", 3));
+			} else {
+				T58f12(a2, GE_ms8("\' \'", 3));
+			}
+		} else {
+			t2 = (T47f77(C));
+			t5 = (T168f1(GE_void(t2), a1));
+			if (((T0*)(GE_void(a2)))->id==55) {
+				T55f26(a2, t5);
+			} else {
+				T58f13(a2, t5);
+			}
+		}
+	}
+}
+
+/* KL_INTEGER_ROUTINES.to_character */
+T2 T168f1(T0* C, T6 a1)
+{
+	T2 R = 0;
+	R = ((T2)(a1));
+	return R;
+}
+
+/* LX_COMPRESSED_DFA.integer_ */
+unsigned char ge305os2693 = '\0';
+T0* ge305ov2693;
+T0* T47f77(T0* C)
+{
+	T0* R = 0;
+	if (ge305os2693) {
+		return ge305ov2693;
+	} else {
+		ge305os2693 = '\1';
+		ge305ov2693 = R;
+	}
+	R = T168c2();
+	ge305ov2693 = R;
+	return R;
+}
+
+/* KL_INTEGER_ROUTINES.default_create */
+T0* T168c2(void)
+{
+	T0* C;
+	C = GE_new168(EIF_TRUE);
+	return C;
+}
+
+/* STRING_8.append_string */
+void T17f34(T0* C, T0* a1)
+{
+	T1 t1;
+	t1 = ((a1)!=(EIF_VOID));
+	if (t1) {
+		T17f38(C, a1);
+	}
+}
+
+/* STRING_8.append */
+void T17f38(T0* C, T0* a1)
+{
+	T1 t1;
+	T6 t2;
+	T0* t3;
+	T6 l1 = 0;
+	T6 l2 = 0;
+	T6 l3 = 0;
+	l2 = (((T17*)(GE_void(a1)))->a2);
+	t1 = (T6f1((&l2), (T6)(GE_int32(0))));
+	if (t1) {
+		l1 = ((T17*)(C))->a2;
+		l3 = ((T6)((l2)+(l1)));
+		t2 = (T17f5(C));
+		t1 = (T6f1((&l3), t2));
+		if (t1) {
+			t2 = (T17f6(C));
+			t2 = ((T6)((l3)+(t2)));
+			T17f37(C, t2);
+		}
+		t3 = (((T17*)(GE_void(a1)))->a1);
+		t2 = (T17f11(GE_void(a1)));
+		T15f11(GE_void(((T17*)(C))->a1), t3, t2, l1, l2);
+		((T17*)(C))->a2 = l3;
+		((T17*)(C))->a3 = (T6)(GE_int32(0));
+	}
+}
+
+/* STRING_8.resize */
+void T17f37(T0* C, T6 a1)
+{
+	T1 t1;
+	T6 t2;
+	T6 l1 = 0;
+	l1 = (((T15*)(GE_void(((T17*)(C))->a1)))->a1);
 	t1 = (T6f5(&a1, l1));
 	if (t1) {
 		t2 = ((T6)((a1)+((T6)(GE_int32(1)))));
@@ -4771,7 +4635,7 @@ T0* T15f3(T0* C, T6 a1)
 {
 	T0* R = 0;
 	T6 t1;
-	t1 = ((T15*)(C))->z1;
+	t1 = ((T15*)(C))->a1;
 	if (a1>t1) {
 		R = GE_new15(a1, EIF_FALSE);
 		*(T15*)(R) = *(T15*)(C);
@@ -4782,7 +4646,7 @@ T0* T15f3(T0* C, T6 a1)
 	} else {
 		R = C;
 	}
-	((T15*)(R))->z1 = a1;
+	((T15*)(R))->a1 = a1;
 	return R;
 }
 
@@ -4816,7 +4680,7 @@ T6 T17f5(T0* C)
 {
 	T6 t1;
 	T6 R = 0;
-	t1 = (((T15*)(GE_void(((T17*)(C))->a1)))->z1);
+	t1 = (((T15*)(GE_void(((T17*)(C))->a1)))->a1);
 	R = ((T6)((t1)-((T6)(GE_int32(1)))));
 	return R;
 }
@@ -4825,12 +4689,12 @@ T6 T17f5(T0* C)
 T0* T69f6(T0* C, T0* a1)
 {
 	T0* R = 0;
-	R = (T17f15(GE_void(a1)));
+	R = (T17f16(GE_void(a1)));
 	return R;
 }
 
 /* STRING_8.twin */
-T0* T17f15(T0* C)
+T0* T17f16(T0* C)
 {
 	T0* R = 0;
 	R = GE_new17(EIF_TRUE);
@@ -4850,7 +4714,7 @@ void T17f43(T0* C, T0* a1)
 		*(T17*)(C) = *(T17*)(a1);
 		t1 = ((l1)==(EIF_VOID));
 		if (!(t1)) {
-			t2 = (((T15*)(GE_void(l1)))->z1);
+			t2 = (((T15*)(GE_void(l1)))->a1);
 			t1 = (T6f7(&t2, ((T17*)(C))->a2));
 		}
 		if (t1) {
@@ -4863,6 +4727,16 @@ void T17f43(T0* C, T0* a1)
 	}
 }
 
+/* SPECIAL [CHARACTER_8].twin */
+T0* T15f5(T0* C)
+{
+	T0* R = 0;
+	R = GE_new15(((T15*)(C))->a1, EIF_FALSE);
+	*(T15*)(R) = *(T15*)(C);
+	memcpy(((T15*)(R))->z2,((T15*)(C))->z2,((T15*)(C))->a1*sizeof(T2));
+	return R;
+}
+
 /* INTEGER_32.out */
 T0* T6f6(T6* C)
 {
@@ -4870,12 +4744,12 @@ T0* T6f6(T6* C)
 	T0* R = 0;
 	R = T17c32((T6)(GE_int32(11)));
 	t1 = (*C);
-	T17f35(GE_void(R), t1);
+	T17f36(GE_void(R), t1);
 	return R;
 }
 
 /* STRING_8.append_integer */
-void T17f35(T0* C, T6 a1)
+void T17f36(T0* C, T6 a1)
 {
 	T1 t1;
 	T6 t2;
@@ -4946,111 +4820,80 @@ void T17f33(T0* C, T2 a1)
 	if (t2) {
 		t1 = (T17f6(C));
 		t1 = ((T6)((l1)+(t1)));
-		T17f36(C, t1);
+		T17f37(C, t1);
 	}
 	((T15*)(GE_void(((T17*)(C))->a1)))->z2[l1] = (a1);
 	((T17*)(C))->a2 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	((T17*)(C))->a3 = (T6)(GE_int32(0));
 }
 
-/* STRING_8.make */
-void T17f32(T0* C, T6 a1)
-{
-	T6 t1;
-	((T17*)(C))->a2 = (T6)(GE_int32(0));
-	((T17*)(C))->a3 = (T6)(GE_int32(0));
-	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
-	((T17*)(C))->a1 = T15c10(t1);
-}
-
-/* STRING_8.make */
-T0* T17c32(T6 a1)
-{
-	T0* C;
-	T6 t1;
-	C = GE_new17(EIF_TRUE);
-	((T17*)(C))->a2 = (T6)(GE_int32(0));
-	((T17*)(C))->a3 = (T6)(GE_int32(0));
-	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
-	((T17*)(C))->a1 = T15c10(t1);
-	return C;
-}
-
-/* SPECIAL [CHARACTER_8].make */
-T0* T15c10(T6 a1)
-{
-	T0* C;
-	C = GE_new15(a1, EIF_TRUE);
-	return C;
-}
-
 /* LX_COMPRESSED_DFA.string_ */
 T0* T47f75(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
 /* ARRAY [BOOLEAN].item */
-T1 T159f4(T0* C, T6 a1)
+T1 T160f4(T0* C, T6 a1)
 {
 	T6 t1;
 	T1 R = 0;
-	t1 = ((T6)((a1)-(((T159*)(C))->a2)));
-	R = (((T158*)(GE_void(((T159*)(C))->a1)))->z2[t1]);
+	t1 = ((T6)((a1)-(((T160*)(C))->a2)));
+	R = (((T159*)(GE_void(((T160*)(C))->a1)))->z2[t1]);
 	return R;
 }
 
 /* ARRAY [BOOLEAN].put */
-void T159f6(T0* C, T1 a1, T6 a2)
+void T160f6(T0* C, T1 a1, T6 a2)
 {
 	T6 t1;
-	t1 = ((T6)((a2)-(((T159*)(C))->a2)));
-	((T158*)(GE_void(((T159*)(C))->a1)))->z2[t1] = (a1);
+	t1 = ((T6)((a2)-(((T160*)(C))->a2)));
+	((T159*)(GE_void(((T160*)(C))->a1)))->z2[t1] = (a1);
 }
 
 /* LX_TRANSITION_TABLE [LX_DFA_STATE].target */
-T0* T157f9(T0* C, T6 a1)
+T0* T158f9(T0* C, T6 a1)
 {
 	T0* R = 0;
-	R = (T238f4(GE_void(((T157*)(C))->a2), a1));
+	R = (T236f4(GE_void(((T158*)(C))->a2), a1));
 	return R;
 }
 
 /* ARRAY [LX_DFA_STATE].item */
-T0* T238f4(T0* C, T6 a1)
+T0* T236f4(T0* C, T6 a1)
 {
 	T6 t1;
 	T0* R = 0;
-	t1 = ((T6)((a1)-(((T238*)(C))->a2)));
-	R = (((T224*)(GE_void(((T238*)(C))->a1)))->z2[t1]);
+	t1 = ((T6)((a1)-(((T236*)(C))->a2)));
+	R = (((T222*)(GE_void(((T236*)(C))->a1)))->z2[t1]);
 	return R;
 }
 
 /* LX_TRANSITION_TABLE [LX_DFA_STATE].valid_label */
-T1 T157f10(T0* C, T6 a1)
+T1 T158f10(T0* C, T6 a1)
 {
 	T1 R = 0;
-	R = (T238f6(GE_void(((T157*)(C))->a2), a1));
+	R = (T236f6(GE_void(((T158*)(C))->a2), a1));
 	return R;
 }
 
 /* ARRAY [LX_DFA_STATE].valid_index */
-T1 T238f6(T0* C, T6 a1)
+T1 T236f6(T0* C, T6 a1)
 {
 	T1 t1;
 	T1 R = 0;
-	t1 = (T6f7(&(((T238*)(C))->a2), a1));
+	t1 = (T6f7(&(((T236*)(C))->a2), a1));
 	if (t1) {
-		R = (T6f7(&a1, ((T238*)(C))->a3));
+		R = (T6f7(&a1, ((T236*)(C))->a3));
 	} else {
 		R = EIF_FALSE;
 	}
@@ -5058,16 +4901,16 @@ T1 T238f6(T0* C, T6 a1)
 }
 
 /* ARRAY [INTEGER_32].item */
-T6 T143f4(T0* C, T6 a1)
+T6 T144f4(T0* C, T6 a1)
 {
 	T6 t1;
 	T6 R = 0;
-	t1 = ((T6)((a1)-(((T143*)(C))->a2)));
-	R = (((T83*)(GE_void(((T143*)(C))->a1)))->z2[t1]);
+	t1 = ((T6)((a1)-(((T144*)(C))->a2)));
+	R = (((T83*)(GE_void(((T144*)(C))->a1)))->z2[t1]);
 	return R;
 }
 
-/* INTEGER_32.infix ">=" */
+/* INTEGER_32.is_greater_equal */
 T1 T6f5(T6* C, T6 a1)
 {
 	T1 t1;
@@ -5077,37 +4920,64 @@ T1 T6f5(T6* C, T6 a1)
 	return R;
 }
 
-/* ARRAY [BOOLEAN].make */
-T0* T159c5(T6 a1, T6 a2)
+/* ARRAY [BOOLEAN].make_filled */
+T0* T160c5(T1 a1, T6 a2, T6 a3)
 {
 	T0* C;
 	T1 t1;
 	T6 t2;
 	T6 l1 = 0;
-	C = GE_new159(EIF_TRUE);
-	((T159*)(C))->a2 = a1;
-	((T159*)(C))->a3 = a2;
-	t1 = (T6f7(&a1, a2));
+	C = GE_new160(EIF_TRUE);
+	((T160*)(C))->a2 = a2;
+	((T160*)(C))->a3 = a3;
+	t1 = (T6f7(&a2, a3));
 	if (t1) {
-		t2 = ((T6)((a2)-(a1)));
+		t2 = ((T6)((a3)-(a2)));
 		l1 = ((T6)((t2)+((T6)(GE_int32(1)))));
 	}
-	T159f8(C, l1);
+	T160f8(C, a1, l1);
 	return C;
 }
 
-/* ARRAY [BOOLEAN].make_area */
-void T159f8(T0* C, T6 a1)
+/* ARRAY [BOOLEAN].make_filled_area */
+void T160f8(T0* C, T1 a1, T6 a2)
 {
-	((T159*)(C))->a1 = T158c3(a1);
+	((T160*)(C))->a1 = T159c3(a1, a2);
+}
+
+/* SPECIAL [BOOLEAN].make_filled */
+T0* T159c3(T1 a1, T6 a2)
+{
+	T0* C;
+	T6 t1;
+	C = GE_new159(a2, EIF_TRUE);
+	T159f6(C, a2);
+	t1 = ((T6)((a2)-((T6)(GE_int32(1)))));
+	T159f7(C, a1, (T6)(GE_int32(0)), t1);
+	return C;
+}
+
+/* SPECIAL [BOOLEAN].fill_with */
+void T159f7(T0* C, T1 a1, T6 a2, T6 a3)
+{
+	T1 t1;
+	T6 l1 = 0;
+	T6 l2 = 0;
+	l1 = a2;
+	l2 = ((T6)((a3)+((T6)(GE_int32(1)))));
+	while (1) {
+		t1 = (((((l1) == (l2)))));
+		if (t1) {
+			break;
+		}
+		((T159*)(C))->z2[l1] = (a1);
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
 }
 
 /* SPECIAL [BOOLEAN].make */
-T0* T158c3(T6 a1)
+void T159f6(T0* C, T6 a1)
 {
-	T0* C;
-	C = GE_new158(a1, EIF_TRUE);
-	return C;
 }
 
 /* LX_COMPRESSED_DFA.print_rule_line_numbers */
@@ -5124,24 +4994,24 @@ void T47f94(T0* C, T0* a1, T0* a2)
 	T0* l6 = 0;
 	T0* l7 = 0;
 	T6 l8 = 0;
-	l6 = (((T133*)(GE_void(a1)))->a2);
-	l2 = (((T135*)(GE_void(l6)))->a1);
-	l7 = T154c11(l2);
+	l6 = (((T134*)(GE_void(a1)))->a2);
+	l2 = (((T136*)(GE_void(l6)))->a1);
+	l7 = T155c11(l2);
 	l1 = (T6)(GE_int32(1));
 	while (1) {
 		t1 = (T6f1((&l1), l2));
 		if (t1) {
 			break;
 		}
-		l5 = (T135f10(GE_void(l6), l1));
-		l3 = (((T137*)(GE_void(((T47*)(C))->a1)))->a2);
-		l4 = (((T137*)(GE_void(((T47*)(C))->a1)))->a3);
+		l5 = (T136f13(GE_void(l6), l1));
+		l3 = (((T138*)(GE_void(((T47*)(C))->a1)))->a2);
+		l4 = (((T138*)(GE_void(((T47*)(C))->a1)))->a3);
 		while (1) {
 			t1 = (T6f1((&l3), l4));
 			if (!(t1)) {
-				t2 = (T137f5(GE_void(((T47*)(C))->a1), l3));
+				t2 = (T138f5(GE_void(((T47*)(C))->a1), l3));
 				t2 = (((T49*)(GE_void(t2)))->a2);
-				t1 = (T93f8(GE_void(t2), l5));
+				t1 = (T93f7(GE_void(t2), l5));
 			}
 			if (t1) {
 				break;
@@ -5150,24 +5020,24 @@ void T47f94(T0* C, T0* a1, T0* a2)
 		}
 		t1 = (T6f7((&l3), l4));
 		if (t1) {
-			t2 = (T137f5(GE_void(((T47*)(C))->a1), l3));
+			t2 = (T138f5(GE_void(((T47*)(C))->a1), l3));
 			l8 = (((T49*)(GE_void(t2)))->a8);
 		}
-		t1 = (T154f8(GE_void(l7), l8));
+		t1 = (T155f9(GE_void(l7), l8));
 		t1 = ((T1)(!(t1)));
 		if (t1) {
-			T154f12(GE_void(l7), l8);
+			T155f12(GE_void(l7), l8);
 		}
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
 	t2 = (T47f57(C));
-	T154f13(GE_void(l7), t2);
+	T155f13(GE_void(l7), t2);
 	if (((T0*)(GE_void(a2)))->id==55) {
-		T55f24(a2, GE_ms8(" associated rule line numbers:", 30));
+		T55f25(a2, GE_ms8(" associated rule line numbers:", 30));
 	} else {
-		T58f11(a2, GE_ms8(" associated rule line numbers:", 30));
+		T58f12(a2, GE_ms8(" associated rule line numbers:", 30));
 	}
-	l2 = (((T154*)(GE_void(l7)))->a1);
+	l2 = (((T155*)(GE_void(l7)))->a1);
 	l1 = (T6)(GE_int32(1));
 	while (1) {
 		t1 = (T6f1((&l1), l2));
@@ -5178,66 +5048,66 @@ void T47f94(T0* C, T0* a1, T0* a2)
 		t1 = (((((t3) == ((T6)(GE_int32(1)))))));
 		if (t1) {
 			if (((T0*)(GE_void(a2)))->id==55) {
-				T55f25(a2, (T2)('\n'));
+				T55f26(a2, (T2)('\n'));
 			} else {
-				T58f12(a2, (T2)('\n'));
+				T58f13(a2, (T2)('\n'));
 			}
 		}
 		if (((T0*)(GE_void(a2)))->id==55) {
-			T55f25(a2, (T2)('\t'));
+			T55f26(a2, (T2)('\t'));
 		} else {
-			T58f12(a2, (T2)('\t'));
+			T58f13(a2, (T2)('\t'));
 		}
-		t3 = (T154f7(GE_void(l7), l1));
+		t3 = (T155f7(GE_void(l7), l1));
 		if (((T0*)(GE_void(a2)))->id==55) {
-			T55f27(a2, t3);
+			T55f28(a2, t3);
 		} else {
-			T58f14(a2, t3);
+			T58f15(a2, t3);
 		}
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
 	if (((T0*)(GE_void(a2)))->id==55) {
-		T55f25(a2, (T2)('\n'));
+		T55f26(a2, (T2)('\n'));
 	} else {
-		T58f12(a2, (T2)('\n'));
+		T58f13(a2, (T2)('\n'));
 	}
 }
 
 /* DS_ARRAYED_LIST [INTEGER_32].item */
-T6 T154f7(T0* C, T6 a1)
+T6 T155f7(T0* C, T6 a1)
 {
 	T6 R = 0;
-	R = (((T83*)(GE_void(((T154*)(C))->a3)))->z2[a1]);
+	R = (((T83*)(GE_void(((T155*)(C))->a3)))->z2[a1]);
 	return R;
 }
 
 /* DS_ARRAYED_LIST [INTEGER_32].sort */
-void T154f13(T0* C, T0* a1)
+void T155f13(T0* C, T0* a1)
 {
-	T155f3(GE_void(a1), C);
+	T156f3(GE_void(a1), C);
 }
 
 /* DS_BUBBLE_SORTER [INTEGER_32].sort */
-void T155f3(T0* C, T0* a1)
+void T156f3(T0* C, T0* a1)
 {
-	T155f4(C, a1, ((T155*)(C))->a1);
+	T156f4(C, a1, ((T156*)(C))->a1);
 }
 
 /* DS_BUBBLE_SORTER [INTEGER_32].sort_with_comparator */
-void T155f4(T0* C, T0* a1, T0* a2)
+void T156f4(T0* C, T0* a1, T0* a2)
 {
 	T1 t1;
 	T6 t2;
-	t1 = (T154f10(a1));
+	t1 = (T155f10(a1));
 	t1 = ((T1)(!(t1)));
 	if (t1) {
-		t2 = (((T154*)(a1))->a1);
-		T155f5(C, a1, a2, (T6)(GE_int32(1)), t2);
+		t2 = (((T155*)(a1))->a1);
+		T156f5(C, a1, a2, (T6)(GE_int32(1)), t2);
 	}
 }
 
 /* DS_BUBBLE_SORTER [INTEGER_32].subsort_with_comparator */
-void T155f5(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
+void T156f5(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
 {
 	T1 t1;
 	T6 t2;
@@ -5258,14 +5128,14 @@ void T155f5(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
 			if (t1) {
 				break;
 			}
-			l4 = (T154f7(a1, l2));
+			l4 = (T155f7(a1, l2));
 			t2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-			l5 = (T154f7(a1, t2));
-			t1 = (T177f1(GE_void(a2), l5, l4));
+			l5 = (T155f7(a1, t2));
+			t1 = (T179f1(GE_void(a2), l5, l4));
 			if (t1) {
-				T154f14(a1, l5, l2);
+				T155f14(a1, l5, l2);
 				t2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-				T154f14(a1, l4, t2);
+				T155f14(a1, l4, t2);
 				l3 = EIF_TRUE;
 			}
 			l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
@@ -5280,13 +5150,13 @@ void T155f5(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
 }
 
 /* DS_ARRAYED_LIST [INTEGER_32].replace */
-void T154f14(T0* C, T6 a1, T6 a2)
+void T155f14(T0* C, T6 a1, T6 a2)
 {
-	((T83*)(GE_void(((T154*)(C))->a3)))->z2[a2] = (a1);
+	((T83*)(GE_void(((T155*)(C))->a3)))->z2[a2] = (a1);
 }
 
 /* KL_COMPARABLE_COMPARATOR [INTEGER_32].less_than */
-T1 T177f1(T0* C, T6 a1, T6 a2)
+T1 T179f1(T0* C, T6 a1, T6 a2)
 {
 	T1 R = 0;
 	R = ((T1)((a1)<(a2)));
@@ -5294,66 +5164,66 @@ T1 T177f1(T0* C, T6 a1, T6 a2)
 }
 
 /* DS_ARRAYED_LIST [INTEGER_32].is_empty */
-T1 T154f10(T0* C)
+T1 T155f10(T0* C)
 {
 	T1 R = 0;
-	R = (((((((T154*)(C))->a1) == ((T6)(GE_int32(0)))))));
+	R = (((((((T155*)(C))->a1) == ((T6)(GE_int32(0)))))));
 	return R;
 }
 
 /* LX_COMPRESSED_DFA.integer_sorter */
-unsigned char ge182os4546 = '\0';
-T0* ge182ov4546;
+unsigned char ge134os4824 = '\0';
+T0* ge134ov4824;
 T0* T47f57(T0* C)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	if (ge182os4546) {
-		return ge182ov4546;
+	if (ge134os4824) {
+		return ge134ov4824;
 	} else {
-		ge182os4546 = '\1';
-		ge182ov4546 = R;
+		ge134os4824 = '\1';
+		ge134ov4824 = R;
 	}
-	l1 = T177c2();
-	R = T155c2(l1);
-	ge182ov4546 = R;
+	l1 = T179c2();
+	R = T156c2(l1);
+	ge134ov4824 = R;
 	return R;
 }
 
 /* DS_BUBBLE_SORTER [INTEGER_32].make */
-T0* T155c2(T0* a1)
+T0* T156c2(T0* a1)
 {
 	T0* C;
-	C = GE_new155(EIF_TRUE);
-	((T155*)(C))->a1 = a1;
+	C = GE_new156(EIF_TRUE);
+	((T156*)(C))->a1 = a1;
 	return C;
 }
 
 /* KL_COMPARABLE_COMPARATOR [INTEGER_32].make */
-T0* T177c2(void)
+T0* T179c2(void)
 {
 	T0* C;
-	C = GE_new177(EIF_TRUE);
+	C = GE_new179(EIF_TRUE);
 	return C;
 }
 
 /* DS_ARRAYED_LIST [INTEGER_32].put_last */
-void T154f12(T0* C, T6 a1)
+void T155f12(T0* C, T6 a1)
 {
-	((T154*)(C))->a1 = ((T6)((((T154*)(C))->a1)+((T6)(GE_int32(1)))));
-	((T83*)(GE_void(((T154*)(C))->a3)))->z2[((T154*)(C))->a1] = (a1);
+	((T155*)(C))->a1 = ((T6)((((T155*)(C))->a1)+((T6)(GE_int32(1)))));
+	((T83*)(GE_void(((T155*)(C))->a3)))->z2[((T155*)(C))->a1] = (a1);
 }
 
 /* DS_ARRAYED_LIST [INTEGER_32].has */
-T1 T154f8(T0* C, T6 a1)
+T1 T155f9(T0* C, T6 a1)
 {
 	T1 t1;
 	T6 t2;
 	T1 R = 0;
 	T6 l1 = 0;
 	T0* l2 = 0;
-	l1 = ((T154*)(C))->a1;
-	l2 = ((T154*)(C))->a2;
+	l1 = ((T155*)(C))->a1;
+	l2 = ((T155*)(C))->a2;
 	t1 = (EIF_FALSE);
 	if (t1) {
 		while (1) {
@@ -5361,7 +5231,7 @@ T1 T154f8(T0* C, T6 a1)
 			if (t1) {
 				break;
 			}
-			t2 = (((T83*)(GE_void(((T154*)(C))->a3)))->z2[l1]);
+			t2 = (((T83*)(GE_void(((T155*)(C))->a3)))->z2[l1]);
 			t1 = ((GE_void(l2), t2, a1, (T1)0));
 			if (t1) {
 				R = EIF_TRUE;
@@ -5376,7 +5246,7 @@ T1 T154f8(T0* C, T6 a1)
 			if (t1) {
 				break;
 			}
-			t2 = (((T83*)(GE_void(((T154*)(C))->a3)))->z2[l1]);
+			t2 = (((T83*)(GE_void(((T155*)(C))->a3)))->z2[l1]);
 			t1 = (((((t2) == (a1)))));
 			if (t1) {
 				R = EIF_TRUE;
@@ -5390,23 +5260,23 @@ T1 T154f8(T0* C, T6 a1)
 }
 
 /* LX_NFA.has */
-T1 T93f8(T0* C, T0* a1)
+T1 T93f7(T0* C, T0* a1)
 {
 	T1 R = 0;
-	R = (T135f7(GE_void(((T93*)(C))->a2), a1));
+	R = (T136f7(GE_void(((T93*)(C))->a2), a1));
 	return R;
 }
 
 /* DS_ARRAYED_LIST [LX_NFA_STATE].has */
-T1 T135f7(T0* C, T0* a1)
+T1 T136f7(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
 	T1 R = 0;
 	T6 l1 = 0;
 	T0* l2 = 0;
-	l1 = ((T135*)(C))->a1;
-	l2 = ((T135*)(C))->a3;
+	l1 = ((T136*)(C))->a1;
+	l2 = ((T136*)(C))->a3;
 	t1 = (EIF_FALSE);
 	if (t1) {
 		while (1) {
@@ -5414,7 +5284,7 @@ T1 T135f7(T0* C, T0* a1)
 			if (t1) {
 				break;
 			}
-			t2 = (((T220*)(GE_void(((T135*)(C))->a2)))->z2[l1]);
+			t2 = (((T218*)(GE_void(((T136*)(C))->a2)))->z2[l1]);
 			t1 = ((GE_void(l2), t2, a1, (T1)0));
 			if (t1) {
 				R = EIF_TRUE;
@@ -5429,7 +5299,7 @@ T1 T135f7(T0* C, T0* a1)
 			if (t1) {
 				break;
 			}
-			t2 = (((T220*)(GE_void(((T135*)(C))->a2)))->z2[l1]);
+			t2 = (((T218*)(GE_void(((T136*)(C))->a2)))->z2[l1]);
 			t1 = ((t2)==(a1));
 			if (t1) {
 				R = EIF_TRUE;
@@ -5443,39 +5313,47 @@ T1 T135f7(T0* C, T0* a1)
 }
 
 /* ARRAY [LX_RULE].item */
-T0* T137f5(T0* C, T6 a1)
+T0* T138f5(T0* C, T6 a1)
 {
 	T6 t1;
 	T0* R = 0;
-	t1 = ((T6)((a1)-(((T137*)(C))->a2)));
-	R = (((T136*)(GE_void(((T137*)(C))->a1)))->z2[t1]);
+	t1 = ((T6)((a1)-(((T138*)(C))->a2)));
+	R = (((T137*)(GE_void(((T138*)(C))->a1)))->z2[t1]);
 	return R;
 }
 
 /* DS_ARRAYED_LIST [LX_NFA_STATE].item */
-T0* T135f10(T0* C, T6 a1)
+T0* T136f13(T0* C, T6 a1)
 {
 	T0* R = 0;
-	R = (((T220*)(GE_void(((T135*)(C))->a2)))->z2[a1]);
+	R = (((T218*)(GE_void(((T136*)(C))->a2)))->z2[a1]);
 	return R;
 }
 
 /* DS_ARRAYED_LIST [INTEGER_32].make */
-T0* T154c11(T6 a1)
+T0* T155c11(T6 a1)
 {
 	T0* C;
 	T6 t1;
-	C = GE_new154(EIF_TRUE);
-	((T154*)(C))->a4 = T84c4();
+	T0* t2;
+	C = GE_new155(EIF_TRUE);
+	((T155*)(C))->a4 = T84c4();
 	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
-	((T154*)(C))->a3 = (T84f1(GE_void(((T154*)(C))->a4), t1));
-	((T154*)(C))->a5 = a1;
-	((T154*)(C))->a6 = (T154f9(C));
+	((T155*)(C))->a3 = (T84f1(GE_void(((T155*)(C))->a4), t1));
+	((T155*)(C))->a5 = a1;
+	t2 = (T155f8(C));
+	T155f15(C, t2);
 	return C;
 }
 
+/* DS_ARRAYED_LIST [INTEGER_32].set_internal_cursor */
+void T155f15(T0* C, T0* a1)
+{
+	((T155*)(C))->a6 = a1;
+}
+
 /* DS_ARRAYED_LIST [INTEGER_32].new_cursor */
-T0* T154f9(T0* C)
+T0* T155f8(T0* C)
 {
 	T0* R = 0;
 	R = T207c3(C);
@@ -5496,23 +5374,48 @@ T0* T207c3(T0* a1)
 T0* T84f1(T0* C, T6 a1)
 {
 	T0* R = 0;
-	T0* l1 = 0;
-	l1 = T204c2(a1);
-	R = (((T204*)(GE_void(l1)))->a1);
+	T6 l1 = 0;
+	R = T83c6(l1, a1);
 	return R;
 }
 
-/* TO_SPECIAL [INTEGER_32].make_area */
-T0* T204c2(T6 a1)
+/* SPECIAL [INTEGER_32].make_filled */
+T0* T83c6(T6 a1, T6 a2)
 {
 	T0* C;
-	C = GE_new204(EIF_TRUE);
-	((T204*)(C))->a1 = T83c5(a1);
+	T6 t1;
+	C = GE_new83(a2, EIF_TRUE);
+	T83f9(C, a2);
+	t1 = ((T6)((a2)-((T6)(GE_int32(1)))));
+	T83f8(C, a1, (T6)(GE_int32(0)), t1);
 	return C;
 }
 
+/* SPECIAL [INTEGER_32].fill_with */
+void T83f8(T0* C, T6 a1, T6 a2, T6 a3)
+{
+	T1 t1;
+	T6 l1 = 0;
+	T6 l2 = 0;
+	l1 = a2;
+	l2 = ((T6)((a3)+((T6)(GE_int32(1)))));
+	while (1) {
+		t1 = (((((l1) == (l2)))));
+		if (t1) {
+			break;
+		}
+		((T83*)(C))->z2[l1] = (a1);
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
+}
+
 /* SPECIAL [INTEGER_32].make */
-T0* T83c5(T6 a1)
+void T83f9(T0* C, T6 a1)
+{
+}
+
+/* SPECIAL [INTEGER_32].make */
+T0* T83c9(T6 a1)
 {
 	T0* C;
 	C = GE_new83(a1, EIF_TRUE);
@@ -5528,133 +5431,164 @@ T0* T84c4(void)
 }
 
 /* KL_STDOUT_FILE.put_integer */
-void T58f14(T0* C, T6 a1)
+void T58f15(T0* C, T6 a1)
 {
-	T1 t1;
-	T6 t2;
-	T6 l1 = 0;
-	T6 l2 = 0;
-	t1 = (((((a1) == ((T6)(GE_int32(0)))))));
-	if (t1) {
-		T58f12(C, (T2)('0'));
+	T7 t1;
+	t1 = (T6f14(&a1));
+	T58f20(C, t1);
+}
+
+/* KL_STDOUT_FILE.put_integer_64 */
+void T58f20(T0* C, T7 a1)
+{
+	T6 t1;
+	T7 t2;
+	T1 t3;
+	T7 l1 = 0;
+	T7 l2 = 0;
+	t1 = (T6)(GE_int32(0));
+	t2 = (T6f14(&t1));
+	t3 = (((((a1) == (t2)))));
+	if (t3) {
+		T58f13(C, (T2)('0'));
 	} else {
-		t1 = ((T1)((a1)<((T6)(GE_int32(0)))));
-		if (t1) {
-			T58f12(C, (T2)('-'));
-			t2 = ((T6)((a1)+((T6)(GE_int32(1)))));
-			l1 = ((T6)(-(t2)));
-			l2 = ((T6)((l1)/((T6)(GE_int32(10)))));
-			t2 = ((T6)((l1)%((T6)(GE_int32(10)))));
+		t3 = ((T1)((a1)<((T7)(GE_int64(0)))));
+		if (t3) {
+			T58f13(C, (T2)('-'));
+			t2 = ((T7)((a1)+((T7)(GE_int64(1)))));
+			l1 = ((T7)(-(t2)));
+			l2 = ((T7)((l1)/((T7)(GE_int64(10)))));
+			t2 = ((T7)((l1)%((T7)(GE_int64(10)))));
 			switch (t2) {
-			case (T6)(T6)(GE_int32(0)):
-				t1 = (((((l2) != ((T6)(GE_int32(0)))))));
-				if (t1) {
-					T58f14(C, l2);
+			case (T7)(T7)(GE_int64(0)):
+				t1 = (T6)(GE_int32(0));
+				t2 = (T6f14(&t1));
+				t3 = (((((l2) != (t2)))));
+				if (t3) {
+					T58f20(C, l2);
 				}
-				T58f12(C, (T2)('1'));
+				T58f13(C, (T2)('1'));
 				break;
-			case (T6)(T6)(GE_int32(1)):
-				t1 = (((((l2) != ((T6)(GE_int32(0)))))));
-				if (t1) {
-					T58f14(C, l2);
+			case (T7)(T7)(GE_int64(1)):
+				t1 = (T6)(GE_int32(0));
+				t2 = (T6f14(&t1));
+				t3 = (((((l2) != (t2)))));
+				if (t3) {
+					T58f20(C, l2);
 				}
-				T58f12(C, (T2)('2'));
+				T58f13(C, (T2)('2'));
 				break;
-			case (T6)(T6)(GE_int32(2)):
-				t1 = (((((l2) != ((T6)(GE_int32(0)))))));
-				if (t1) {
-					T58f14(C, l2);
+			case (T7)(T7)(GE_int64(2)):
+				t1 = (T6)(GE_int32(0));
+				t2 = (T6f14(&t1));
+				t3 = (((((l2) != (t2)))));
+				if (t3) {
+					T58f20(C, l2);
 				}
-				T58f12(C, (T2)('3'));
+				T58f13(C, (T2)('3'));
 				break;
-			case (T6)(T6)(GE_int32(3)):
-				t1 = (((((l2) != ((T6)(GE_int32(0)))))));
-				if (t1) {
-					T58f14(C, l2);
+			case (T7)(T7)(GE_int64(3)):
+				t1 = (T6)(GE_int32(0));
+				t2 = (T6f14(&t1));
+				t3 = (((((l2) != (t2)))));
+				if (t3) {
+					T58f20(C, l2);
 				}
-				T58f12(C, (T2)('4'));
+				T58f13(C, (T2)('4'));
 				break;
-			case (T6)(T6)(GE_int32(4)):
-				t1 = (((((l2) != ((T6)(GE_int32(0)))))));
-				if (t1) {
-					T58f14(C, l2);
+			case (T7)(T7)(GE_int64(4)):
+				t1 = (T6)(GE_int32(0));
+				t2 = (T6f14(&t1));
+				t3 = (((((l2) != (t2)))));
+				if (t3) {
+					T58f20(C, l2);
 				}
-				T58f12(C, (T2)('5'));
+				T58f13(C, (T2)('5'));
 				break;
-			case (T6)(T6)(GE_int32(5)):
-				t1 = (((((l2) != ((T6)(GE_int32(0)))))));
-				if (t1) {
-					T58f14(C, l2);
+			case (T7)(T7)(GE_int64(5)):
+				t1 = (T6)(GE_int32(0));
+				t2 = (T6f14(&t1));
+				t3 = (((((l2) != (t2)))));
+				if (t3) {
+					T58f20(C, l2);
 				}
-				T58f12(C, (T2)('6'));
+				T58f13(C, (T2)('6'));
 				break;
-			case (T6)(T6)(GE_int32(6)):
-				t1 = (((((l2) != ((T6)(GE_int32(0)))))));
-				if (t1) {
-					T58f14(C, l2);
+			case (T7)(T7)(GE_int64(6)):
+				t1 = (T6)(GE_int32(0));
+				t2 = (T6f14(&t1));
+				t3 = (((((l2) != (t2)))));
+				if (t3) {
+					T58f20(C, l2);
 				}
-				T58f12(C, (T2)('7'));
+				T58f13(C, (T2)('7'));
 				break;
-			case (T6)(T6)(GE_int32(7)):
-				t1 = (((((l2) != ((T6)(GE_int32(0)))))));
-				if (t1) {
-					T58f14(C, l2);
+			case (T7)(T7)(GE_int64(7)):
+				t1 = (T6)(GE_int32(0));
+				t2 = (T6f14(&t1));
+				t3 = (((((l2) != (t2)))));
+				if (t3) {
+					T58f20(C, l2);
 				}
-				T58f12(C, (T2)('8'));
+				T58f13(C, (T2)('8'));
 				break;
-			case (T6)(T6)(GE_int32(8)):
-				t1 = (((((l2) != ((T6)(GE_int32(0)))))));
-				if (t1) {
-					T58f14(C, l2);
+			case (T7)(T7)(GE_int64(8)):
+				t1 = (T6)(GE_int32(0));
+				t2 = (T6f14(&t1));
+				t3 = (((((l2) != (t2)))));
+				if (t3) {
+					T58f20(C, l2);
 				}
-				T58f12(C, (T2)('9'));
+				T58f13(C, (T2)('9'));
 				break;
-			case (T6)(T6)(GE_int32(9)):
-				t2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-				T58f14(C, t2);
-				T58f12(C, (T2)('0'));
+			case (T7)(T7)(GE_int64(9)):
+				t2 = ((T7)((l2)+((T7)(GE_int64(1)))));
+				T58f20(C, t2);
+				T58f13(C, (T2)('0'));
 				break;
 			default:
 				break;
 			}
 		} else {
 			l1 = a1;
-			l2 = ((T6)((l1)/((T6)(GE_int32(10)))));
-			t1 = (((((l2) != ((T6)(GE_int32(0)))))));
-			if (t1) {
-				T58f14(C, l2);
+			l2 = ((T7)((l1)/((T7)(GE_int64(10)))));
+			t1 = (T6)(GE_int32(0));
+			t2 = (T6f14(&t1));
+			t3 = (((((l2) != (t2)))));
+			if (t3) {
+				T58f20(C, l2);
 			}
-			t2 = ((T6)((l1)%((T6)(GE_int32(10)))));
+			t2 = ((T7)((l1)%((T7)(GE_int64(10)))));
 			switch (t2) {
-			case (T6)(T6)(GE_int32(0)):
-				T58f12(C, (T2)('0'));
+			case (T7)(T7)(GE_int64(0)):
+				T58f13(C, (T2)('0'));
 				break;
-			case (T6)(T6)(GE_int32(1)):
-				T58f12(C, (T2)('1'));
+			case (T7)(T7)(GE_int64(1)):
+				T58f13(C, (T2)('1'));
 				break;
-			case (T6)(T6)(GE_int32(2)):
-				T58f12(C, (T2)('2'));
+			case (T7)(T7)(GE_int64(2)):
+				T58f13(C, (T2)('2'));
 				break;
-			case (T6)(T6)(GE_int32(3)):
-				T58f12(C, (T2)('3'));
+			case (T7)(T7)(GE_int64(3)):
+				T58f13(C, (T2)('3'));
 				break;
-			case (T6)(T6)(GE_int32(4)):
-				T58f12(C, (T2)('4'));
+			case (T7)(T7)(GE_int64(4)):
+				T58f13(C, (T2)('4'));
 				break;
-			case (T6)(T6)(GE_int32(5)):
-				T58f12(C, (T2)('5'));
+			case (T7)(T7)(GE_int64(5)):
+				T58f13(C, (T2)('5'));
 				break;
-			case (T6)(T6)(GE_int32(6)):
-				T58f12(C, (T2)('6'));
+			case (T7)(T7)(GE_int64(6)):
+				T58f13(C, (T2)('6'));
 				break;
-			case (T6)(T6)(GE_int32(7)):
-				T58f12(C, (T2)('7'));
+			case (T7)(T7)(GE_int64(7)):
+				T58f13(C, (T2)('7'));
 				break;
-			case (T6)(T6)(GE_int32(8)):
-				T58f12(C, (T2)('8'));
+			case (T7)(T7)(GE_int64(8)):
+				T58f13(C, (T2)('8'));
 				break;
-			case (T6)(T6)(GE_int32(9)):
-				T58f12(C, (T2)('9'));
+			case (T7)(T7)(GE_int64(9)):
+				T58f13(C, (T2)('9'));
 				break;
 			default:
 				break;
@@ -5663,134 +5597,173 @@ void T58f14(T0* C, T6 a1)
 	}
 }
 
-/* KL_TEXT_OUTPUT_FILE.put_integer */
-void T55f27(T0* C, T6 a1)
+/* INTEGER_32.to_integer_64 */
+T7 T6f14(T6* C)
 {
-	T1 t1;
-	T6 t2;
-	T6 l1 = 0;
-	T6 l2 = 0;
-	t1 = (((((a1) == ((T6)(GE_int32(0)))))));
-	if (t1) {
-		T55f25(C, (T2)('0'));
+	T7 R = 0;
+	R = ((T7)(*C));
+	return R;
+}
+
+/* KL_TEXT_OUTPUT_FILE.put_integer */
+void T55f28(T0* C, T6 a1)
+{
+	T7 t1;
+	t1 = (T6f14(&a1));
+	T55f35(C, t1);
+}
+
+/* KL_TEXT_OUTPUT_FILE.put_integer_64 */
+void T55f35(T0* C, T7 a1)
+{
+	T6 t1;
+	T7 t2;
+	T1 t3;
+	T7 l1 = 0;
+	T7 l2 = 0;
+	t1 = (T6)(GE_int32(0));
+	t2 = (T6f14(&t1));
+	t3 = (((((a1) == (t2)))));
+	if (t3) {
+		T55f26(C, (T2)('0'));
 	} else {
-		t1 = ((T1)((a1)<((T6)(GE_int32(0)))));
-		if (t1) {
-			T55f25(C, (T2)('-'));
-			t2 = ((T6)((a1)+((T6)(GE_int32(1)))));
-			l1 = ((T6)(-(t2)));
-			l2 = ((T6)((l1)/((T6)(GE_int32(10)))));
-			t2 = ((T6)((l1)%((T6)(GE_int32(10)))));
+		t3 = ((T1)((a1)<((T7)(GE_int64(0)))));
+		if (t3) {
+			T55f26(C, (T2)('-'));
+			t2 = ((T7)((a1)+((T7)(GE_int64(1)))));
+			l1 = ((T7)(-(t2)));
+			l2 = ((T7)((l1)/((T7)(GE_int64(10)))));
+			t2 = ((T7)((l1)%((T7)(GE_int64(10)))));
 			switch (t2) {
-			case (T6)(T6)(GE_int32(0)):
-				t1 = (((((l2) != ((T6)(GE_int32(0)))))));
-				if (t1) {
-					T55f27(C, l2);
+			case (T7)(T7)(GE_int64(0)):
+				t1 = (T6)(GE_int32(0));
+				t2 = (T6f14(&t1));
+				t3 = (((((l2) != (t2)))));
+				if (t3) {
+					T55f35(C, l2);
 				}
-				T55f25(C, (T2)('1'));
+				T55f26(C, (T2)('1'));
 				break;
-			case (T6)(T6)(GE_int32(1)):
-				t1 = (((((l2) != ((T6)(GE_int32(0)))))));
-				if (t1) {
-					T55f27(C, l2);
+			case (T7)(T7)(GE_int64(1)):
+				t1 = (T6)(GE_int32(0));
+				t2 = (T6f14(&t1));
+				t3 = (((((l2) != (t2)))));
+				if (t3) {
+					T55f35(C, l2);
 				}
-				T55f25(C, (T2)('2'));
+				T55f26(C, (T2)('2'));
 				break;
-			case (T6)(T6)(GE_int32(2)):
-				t1 = (((((l2) != ((T6)(GE_int32(0)))))));
-				if (t1) {
-					T55f27(C, l2);
+			case (T7)(T7)(GE_int64(2)):
+				t1 = (T6)(GE_int32(0));
+				t2 = (T6f14(&t1));
+				t3 = (((((l2) != (t2)))));
+				if (t3) {
+					T55f35(C, l2);
 				}
-				T55f25(C, (T2)('3'));
+				T55f26(C, (T2)('3'));
 				break;
-			case (T6)(T6)(GE_int32(3)):
-				t1 = (((((l2) != ((T6)(GE_int32(0)))))));
-				if (t1) {
-					T55f27(C, l2);
+			case (T7)(T7)(GE_int64(3)):
+				t1 = (T6)(GE_int32(0));
+				t2 = (T6f14(&t1));
+				t3 = (((((l2) != (t2)))));
+				if (t3) {
+					T55f35(C, l2);
 				}
-				T55f25(C, (T2)('4'));
+				T55f26(C, (T2)('4'));
 				break;
-			case (T6)(T6)(GE_int32(4)):
-				t1 = (((((l2) != ((T6)(GE_int32(0)))))));
-				if (t1) {
-					T55f27(C, l2);
+			case (T7)(T7)(GE_int64(4)):
+				t1 = (T6)(GE_int32(0));
+				t2 = (T6f14(&t1));
+				t3 = (((((l2) != (t2)))));
+				if (t3) {
+					T55f35(C, l2);
 				}
-				T55f25(C, (T2)('5'));
+				T55f26(C, (T2)('5'));
 				break;
-			case (T6)(T6)(GE_int32(5)):
-				t1 = (((((l2) != ((T6)(GE_int32(0)))))));
-				if (t1) {
-					T55f27(C, l2);
+			case (T7)(T7)(GE_int64(5)):
+				t1 = (T6)(GE_int32(0));
+				t2 = (T6f14(&t1));
+				t3 = (((((l2) != (t2)))));
+				if (t3) {
+					T55f35(C, l2);
 				}
-				T55f25(C, (T2)('6'));
+				T55f26(C, (T2)('6'));
 				break;
-			case (T6)(T6)(GE_int32(6)):
-				t1 = (((((l2) != ((T6)(GE_int32(0)))))));
-				if (t1) {
-					T55f27(C, l2);
+			case (T7)(T7)(GE_int64(6)):
+				t1 = (T6)(GE_int32(0));
+				t2 = (T6f14(&t1));
+				t3 = (((((l2) != (t2)))));
+				if (t3) {
+					T55f35(C, l2);
 				}
-				T55f25(C, (T2)('7'));
+				T55f26(C, (T2)('7'));
 				break;
-			case (T6)(T6)(GE_int32(7)):
-				t1 = (((((l2) != ((T6)(GE_int32(0)))))));
-				if (t1) {
-					T55f27(C, l2);
+			case (T7)(T7)(GE_int64(7)):
+				t1 = (T6)(GE_int32(0));
+				t2 = (T6f14(&t1));
+				t3 = (((((l2) != (t2)))));
+				if (t3) {
+					T55f35(C, l2);
 				}
-				T55f25(C, (T2)('8'));
+				T55f26(C, (T2)('8'));
 				break;
-			case (T6)(T6)(GE_int32(8)):
-				t1 = (((((l2) != ((T6)(GE_int32(0)))))));
-				if (t1) {
-					T55f27(C, l2);
+			case (T7)(T7)(GE_int64(8)):
+				t1 = (T6)(GE_int32(0));
+				t2 = (T6f14(&t1));
+				t3 = (((((l2) != (t2)))));
+				if (t3) {
+					T55f35(C, l2);
 				}
-				T55f25(C, (T2)('9'));
+				T55f26(C, (T2)('9'));
 				break;
-			case (T6)(T6)(GE_int32(9)):
-				t2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-				T55f27(C, t2);
-				T55f25(C, (T2)('0'));
+			case (T7)(T7)(GE_int64(9)):
+				t2 = ((T7)((l2)+((T7)(GE_int64(1)))));
+				T55f35(C, t2);
+				T55f26(C, (T2)('0'));
 				break;
 			default:
 				break;
 			}
 		} else {
 			l1 = a1;
-			l2 = ((T6)((l1)/((T6)(GE_int32(10)))));
-			t1 = (((((l2) != ((T6)(GE_int32(0)))))));
-			if (t1) {
-				T55f27(C, l2);
+			l2 = ((T7)((l1)/((T7)(GE_int64(10)))));
+			t1 = (T6)(GE_int32(0));
+			t2 = (T6f14(&t1));
+			t3 = (((((l2) != (t2)))));
+			if (t3) {
+				T55f35(C, l2);
 			}
-			t2 = ((T6)((l1)%((T6)(GE_int32(10)))));
+			t2 = ((T7)((l1)%((T7)(GE_int64(10)))));
 			switch (t2) {
-			case (T6)(T6)(GE_int32(0)):
-				T55f25(C, (T2)('0'));
+			case (T7)(T7)(GE_int64(0)):
+				T55f26(C, (T2)('0'));
 				break;
-			case (T6)(T6)(GE_int32(1)):
-				T55f25(C, (T2)('1'));
+			case (T7)(T7)(GE_int64(1)):
+				T55f26(C, (T2)('1'));
 				break;
-			case (T6)(T6)(GE_int32(2)):
-				T55f25(C, (T2)('2'));
+			case (T7)(T7)(GE_int64(2)):
+				T55f26(C, (T2)('2'));
 				break;
-			case (T6)(T6)(GE_int32(3)):
-				T55f25(C, (T2)('3'));
+			case (T7)(T7)(GE_int64(3)):
+				T55f26(C, (T2)('3'));
 				break;
-			case (T6)(T6)(GE_int32(4)):
-				T55f25(C, (T2)('4'));
+			case (T7)(T7)(GE_int64(4)):
+				T55f26(C, (T2)('4'));
 				break;
-			case (T6)(T6)(GE_int32(5)):
-				T55f25(C, (T2)('5'));
+			case (T7)(T7)(GE_int64(5)):
+				T55f26(C, (T2)('5'));
 				break;
-			case (T6)(T6)(GE_int32(6)):
-				T55f25(C, (T2)('6'));
+			case (T7)(T7)(GE_int64(6)):
+				T55f26(C, (T2)('6'));
 				break;
-			case (T6)(T6)(GE_int32(7)):
-				T55f25(C, (T2)('7'));
+			case (T7)(T7)(GE_int64(7)):
+				T55f26(C, (T2)('7'));
 				break;
-			case (T6)(T6)(GE_int32(8)):
-				T55f25(C, (T2)('8'));
+			case (T7)(T7)(GE_int64(8)):
+				T55f26(C, (T2)('8'));
 				break;
-			case (T6)(T6)(GE_int32(9)):
-				T55f25(C, (T2)('9'));
+			case (T7)(T7)(GE_int64(9)):
+				T55f26(C, (T2)('9'));
 				break;
 			default:
 				break;
@@ -5800,17 +5773,17 @@ void T55f27(T0* C, T6 a1)
 }
 
 /* LX_DFA_STATE.is_accepting */
-T1 T133f11(T0* C)
+T1 T134f10(T0* C)
 {
 	T1 t1;
 	T1 R = 0;
-	t1 = (T48f13(GE_void(((T133*)(C))->a1)));
+	t1 = (T48f14(GE_void(((T134*)(C))->a1)));
 	R = ((T1)(!(t1)));
 	return R;
 }
 
 /* DS_ARRAYED_LIST [LX_RULE].is_empty */
-T1 T48f13(T0* C)
+T1 T48f14(T0* C)
 {
 	T1 R = 0;
 	R = (((((((T48*)(C))->a1) == ((T6)(GE_int32(0)))))));
@@ -5818,18 +5791,10 @@ T1 T48f13(T0* C)
 }
 
 /* DS_ARRAYED_LIST [LX_DFA_STATE].item */
-T0* T138f7(T0* C, T6 a1)
+T0* T139f7(T0* C, T6 a1)
 {
 	T0* R = 0;
-	R = (((T224*)(GE_void(((T138*)(C))->a3)))->z2[a1]);
-	return R;
-}
-
-/* INTEGER_32.infix ">" */
-T1 T6f1(T6* C, T6 a1)
-{
-	T1 R = 0;
-	R = ((T1)((a1)<(*C)));
+	R = (((T222*)(GE_void(((T139*)(C))->a3)))->z2[a1]);
 	return R;
 }
 
@@ -5840,33 +5805,33 @@ void T54f51(T0* C, T0* a1)
 	switch (((T54*)(C))->a1) {
 	case (T6)(T6)(GE_int32(0)):
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("No backing up.\n", 15));
+			T55f25(a1, GE_ms8("No backing up.\n", 15));
 		} else {
-			T58f11(a1, GE_ms8("No backing up.\n", 15));
+			T58f12(a1, GE_ms8("No backing up.\n", 15));
 		}
 		break;
 	case (T6)(T6)(GE_int32(1)):
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f27(a1, ((T54*)(C))->a1);
+			T55f28(a1, ((T54*)(C))->a1);
 		} else {
-			T58f14(a1, ((T54*)(C))->a1);
+			T58f15(a1, ((T54*)(C))->a1);
 		}
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8(" backing up (non-accepting) state.\n", 35));
+			T55f25(a1, GE_ms8(" backing up (non-accepting) state.\n", 35));
 		} else {
-			T58f11(a1, GE_ms8(" backing up (non-accepting) state.\n", 35));
+			T58f12(a1, GE_ms8(" backing up (non-accepting) state.\n", 35));
 		}
 		break;
 	default:
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f27(a1, ((T54*)(C))->a1);
+			T55f28(a1, ((T54*)(C))->a1);
 		} else {
-			T58f14(a1, ((T54*)(C))->a1);
+			T58f15(a1, ((T54*)(C))->a1);
 		}
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8(" backing up (non-accepting) states.\n", 36));
+			T55f25(a1, GE_ms8(" backing up (non-accepting) states.\n", 36));
 		} else {
-			T58f11(a1, GE_ms8(" backing up (non-accepting) states.\n", 36));
+			T58f12(a1, GE_ms8(" backing up (non-accepting) states.\n", 36));
 		}
 		break;
 	}
@@ -5881,38 +5846,38 @@ void T54f51p1(T0* C, T0* a1)
 	T6 l2 = 0;
 	T0* l3 = 0;
 	l1 = ((T6)((((T54*)(C))->a2)+((T6)(GE_int32(1)))));
-	l2 = (((T138*)(GE_void(((T54*)(C))->a3)))->a1);
+	l2 = (((T139*)(GE_void(((T54*)(C))->a3)))->a1);
 	while (1) {
 		t1 = (T6f1((&l1), l2));
 		if (t1) {
 			break;
 		}
-		l3 = (T138f7(GE_void(((T54*)(C))->a3), l1));
-		t1 = (T133f11(GE_void(l3)));
+		l3 = (T139f7(GE_void(((T54*)(C))->a3), l1));
+		t1 = (T134f10(GE_void(l3)));
 		t1 = ((T1)(!(t1)));
 		if (t1) {
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8("State #", 7));
+				T55f25(a1, GE_ms8("State #", 7));
 			} else {
-				T58f11(a1, GE_ms8("State #", 7));
+				T58f12(a1, GE_ms8("State #", 7));
 			}
-			t2 = (((T133*)(GE_void(l3)))->a6);
+			t2 = (((T134*)(GE_void(l3)))->a6);
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f27(a1, t2);
+				T55f28(a1, t2);
 			} else {
-				T58f14(a1, t2);
+				T58f15(a1, t2);
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8(" is non-accepting -\n", 20));
+				T55f25(a1, GE_ms8(" is non-accepting -\n", 20));
 			} else {
-				T58f11(a1, GE_ms8(" is non-accepting -\n", 20));
+				T58f12(a1, GE_ms8(" is non-accepting -\n", 20));
 			}
 			T54f63(C, l3, a1);
 			T54f64(C, l3, a1);
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f25(a1, (T2)('\n'));
+				T55f26(a1, (T2)('\n'));
 			} else {
-				T58f12(a1, (T2)('\n'));
+				T58f13(a1, (T2)('\n'));
 			}
 		}
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
@@ -5932,9 +5897,9 @@ void T54f64(T0* C, T0* a1, T0* a2)
 	T0* l4 = 0;
 	T0* l5 = 0;
 	l3 = ((T54*)(C))->a5;
-	l4 = (((T133*)(GE_void(a1)))->a3);
+	l4 = (((T134*)(GE_void(a1)))->a3);
 	t1 = ((T6)((l3)-((T6)(GE_int32(1)))));
-	l5 = T159c5((T6)(GE_int32(0)), t1);
+	l5 = T160c5(EIF_FALSE, (T6)(GE_int32(0)), t1);
 	t2 = ((((T54*)(C))->a18)!=(EIF_VOID));
 	if (t2) {
 		l1 = (T6)(GE_int32(1));
@@ -5943,21 +5908,21 @@ void T54f64(T0* C, T0* a1, T0* a2)
 			if (t2) {
 				break;
 			}
-			l2 = (T143f4(GE_void(((T54*)(C))->a18), l1));
-			t2 = (T157f10(GE_void(l4), l2));
+			l2 = (T144f4(GE_void(((T54*)(C))->a18), l1));
+			t2 = (T158f10(GE_void(l4), l2));
 			if (t2) {
-				t3 = (T157f9(GE_void(l4), l2));
+				t3 = (T158f9(GE_void(l4), l2));
 				t2 = ((t3)!=(EIF_VOID));
-				T159f6(GE_void(l5), t2, l1);
+				T160f6(GE_void(l5), t2, l1);
 			}
 			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 		}
-		l2 = (T143f4(GE_void(((T54*)(C))->a18), l3));
-		t2 = (T157f10(GE_void(l4), l2));
+		l2 = (T144f4(GE_void(((T54*)(C))->a18), l3));
+		t2 = (T158f10(GE_void(l4), l2));
 		if (t2) {
-			t3 = (T157f9(GE_void(l4), l2));
+			t3 = (T158f9(GE_void(l4), l2));
 			t2 = ((t3)!=(EIF_VOID));
-			T159f6(GE_void(l5), t2, (T6)(GE_int32(0)));
+			T160f6(GE_void(l5), t2, (T6)(GE_int32(0)));
 		}
 	} else {
 		l1 = (T6)(GE_int32(1));
@@ -5966,25 +5931,25 @@ void T54f64(T0* C, T0* a1, T0* a2)
 			if (t2) {
 				break;
 			}
-			t2 = (T157f10(GE_void(l4), l1));
+			t2 = (T158f10(GE_void(l4), l1));
 			if (t2) {
-				t3 = (T157f9(GE_void(l4), l1));
+				t3 = (T158f9(GE_void(l4), l1));
 				t2 = ((t3)!=(EIF_VOID));
-				T159f6(GE_void(l5), t2, l1);
+				T160f6(GE_void(l5), t2, l1);
 			}
 			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 		}
-		t2 = (T157f10(GE_void(l4), l1));
+		t2 = (T158f10(GE_void(l4), l1));
 		if (t2) {
-			t3 = (T157f9(GE_void(l4), l3));
+			t3 = (T158f9(GE_void(l4), l3));
 			t2 = ((t3)!=(EIF_VOID));
-			T159f6(GE_void(l5), t2, (T6)(GE_int32(0)));
+			T160f6(GE_void(l5), t2, (T6)(GE_int32(0)));
 		}
 	}
 	if (((T0*)(GE_void(a2)))->id==55) {
-		T55f24(a2, GE_ms8(" out-transitions: [", 19));
+		T55f25(a2, GE_ms8(" out-transitions: [", 19));
 	} else {
-		T58f11(a2, GE_ms8(" out-transitions: [", 19));
+		T58f12(a2, GE_ms8(" out-transitions: [", 19));
 	}
 	l1 = (T6)(GE_int32(0));
 	while (1) {
@@ -5992,12 +5957,12 @@ void T54f64(T0* C, T0* a1, T0* a2)
 		if (t2) {
 			break;
 		}
-		t2 = (T159f4(GE_void(l5), l1));
+		t2 = (T160f4(GE_void(l5), l1));
 		if (t2) {
 			if (((T0*)(GE_void(a2)))->id==55) {
-				T55f25(a2, (T2)(' '));
+				T55f26(a2, (T2)(' '));
 			} else {
-				T58f12(a2, (T2)(' '));
+				T58f13(a2, (T2)(' '));
 			}
 			T54f75(C, l1, a2);
 			l2 = l1;
@@ -6005,7 +5970,7 @@ void T54f64(T0* C, T0* a1, T0* a2)
 			while (1) {
 				t2 = (T6f5((&l1), l3));
 				if (!(t2)) {
-					t4 = (T159f4(GE_void(l5), l1));
+					t4 = (T160f4(GE_void(l5), l1));
 					t2 = ((T1)(!(t4)));
 				}
 				if (t2) {
@@ -6017,25 +5982,25 @@ void T54f64(T0* C, T0* a1, T0* a2)
 			t2 = (T6f1(&t1, l2));
 			if (t2) {
 				if (((T0*)(GE_void(a2)))->id==55) {
-					T55f25(a2, (T2)('-'));
+					T55f26(a2, (T2)('-'));
 				} else {
-					T58f12(a2, (T2)('-'));
+					T58f13(a2, (T2)('-'));
 				}
 				t1 = ((T6)((l1)-((T6)(GE_int32(1)))));
 				T54f75(C, t1, a2);
 			}
 			if (((T0*)(GE_void(a2)))->id==55) {
-				T55f25(a2, (T2)(' '));
+				T55f26(a2, (T2)(' '));
 			} else {
-				T58f12(a2, (T2)(' '));
+				T58f13(a2, (T2)(' '));
 			}
 		}
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
 	if (((T0*)(GE_void(a2)))->id==55) {
-		T55f24(a2, GE_ms8("]\n jam-transitions: EOF [", 25));
+		T55f25(a2, GE_ms8("]\n jam-transitions: EOF [", 25));
 	} else {
-		T58f11(a2, GE_ms8("]\n jam-transitions: EOF [", 25));
+		T58f12(a2, GE_ms8("]\n jam-transitions: EOF [", 25));
 	}
 	l1 = (T6)(GE_int32(0));
 	while (1) {
@@ -6043,13 +6008,13 @@ void T54f64(T0* C, T0* a1, T0* a2)
 		if (t2) {
 			break;
 		}
-		t2 = (T159f4(GE_void(l5), l1));
+		t2 = (T160f4(GE_void(l5), l1));
 		t2 = ((T1)(!(t2)));
 		if (t2) {
 			if (((T0*)(GE_void(a2)))->id==55) {
-				T55f25(a2, (T2)(' '));
+				T55f26(a2, (T2)(' '));
 			} else {
-				T58f12(a2, (T2)(' '));
+				T58f13(a2, (T2)(' '));
 			}
 			T54f75(C, l1, a2);
 			l2 = l1;
@@ -6057,7 +6022,7 @@ void T54f64(T0* C, T0* a1, T0* a2)
 			while (1) {
 				t2 = (T6f5((&l1), l3));
 				if (!(t2)) {
-					t2 = (T159f4(GE_void(l5), l1));
+					t2 = (T160f4(GE_void(l5), l1));
 				}
 				if (t2) {
 					break;
@@ -6068,25 +6033,25 @@ void T54f64(T0* C, T0* a1, T0* a2)
 			t2 = (T6f1(&t1, l2));
 			if (t2) {
 				if (((T0*)(GE_void(a2)))->id==55) {
-					T55f25(a2, (T2)('-'));
+					T55f26(a2, (T2)('-'));
 				} else {
-					T58f12(a2, (T2)('-'));
+					T58f13(a2, (T2)('-'));
 				}
 				t1 = ((T6)((l1)-((T6)(GE_int32(1)))));
 				T54f75(C, t1, a2);
 			}
 			if (((T0*)(GE_void(a2)))->id==55) {
-				T55f25(a2, (T2)(' '));
+				T55f26(a2, (T2)(' '));
 			} else {
-				T58f12(a2, (T2)(' '));
+				T58f13(a2, (T2)(' '));
 			}
 		}
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
 	if (((T0*)(GE_void(a2)))->id==55) {
-		T55f24(a2, GE_ms8("]\n", 2));
+		T55f25(a2, GE_ms8("]\n", 2));
 	} else {
-		T58f11(a2, GE_ms8("]\n", 2));
+		T58f12(a2, GE_ms8("]\n", 2));
 	}
 }
 
@@ -6109,52 +6074,52 @@ void T54f75(T0* C, T6 a1, T0* a2)
 		switch (a1) {
 		case (T6)(T6)(GE_int32(8)):
 			if (((T0*)(GE_void(a2)))->id==55) {
-				T55f24(a2, GE_ms8("\\b", 2));
+				T55f25(a2, GE_ms8("\\b", 2));
 			} else {
-				T58f11(a2, GE_ms8("\\b", 2));
+				T58f12(a2, GE_ms8("\\b", 2));
 			}
 			break;
 		case (T6)(T6)(GE_int32(12)):
 			if (((T0*)(GE_void(a2)))->id==55) {
-				T55f24(a2, GE_ms8("\\f", 2));
+				T55f25(a2, GE_ms8("\\f", 2));
 			} else {
-				T58f11(a2, GE_ms8("\\f", 2));
+				T58f12(a2, GE_ms8("\\f", 2));
 			}
 			break;
 		case (T6)(T6)(GE_int32(10)):
 			if (((T0*)(GE_void(a2)))->id==55) {
-				T55f24(a2, GE_ms8("\\n", 2));
+				T55f25(a2, GE_ms8("\\n", 2));
 			} else {
-				T58f11(a2, GE_ms8("\\n", 2));
+				T58f12(a2, GE_ms8("\\n", 2));
 			}
 			break;
 		case (T6)(T6)(GE_int32(13)):
 			if (((T0*)(GE_void(a2)))->id==55) {
-				T55f24(a2, GE_ms8("\\r", 2));
+				T55f25(a2, GE_ms8("\\r", 2));
 			} else {
-				T58f11(a2, GE_ms8("\\r", 2));
+				T58f12(a2, GE_ms8("\\r", 2));
 			}
 			break;
 		case (T6)(T6)(GE_int32(9)):
 			if (((T0*)(GE_void(a2)))->id==55) {
-				T55f24(a2, GE_ms8("\\t", 2));
+				T55f25(a2, GE_ms8("\\t", 2));
 			} else {
-				T58f11(a2, GE_ms8("\\t", 2));
+				T58f12(a2, GE_ms8("\\t", 2));
 			}
 			break;
 		default:
 			if (((T0*)(GE_void(a2)))->id==55) {
-				T55f25(a2, (T2)('\\'));
+				T55f26(a2, (T2)('\\'));
 			} else {
-				T58f12(a2, (T2)('\\'));
+				T58f13(a2, (T2)('\\'));
 			}
 			l3 = a1;
 			t1 = ((T1)((l3)<((T6)(GE_int32(0)))));
 			if (t1) {
 				if (((T0*)(GE_void(a2)))->id==55) {
-					T55f25(a2, (T2)('-'));
+					T55f26(a2, (T2)('-'));
 				} else {
-					T58f12(a2, (T2)('-'));
+					T58f13(a2, (T2)('-'));
 				}
 				l3 = ((T6)(-(l3)));
 			}
@@ -6176,32 +6141,32 @@ void T54f75(T0* C, T6 a1, T0* a2)
 			switch (t3) {
 			case (T6)(T6)(GE_int32(0)):
 				if (((T0*)(GE_void(a2)))->id==55) {
-					T55f24(a2, GE_ms8("000", 3));
+					T55f25(a2, GE_ms8("000", 3));
 				} else {
-					T58f11(a2, GE_ms8("000", 3));
+					T58f12(a2, GE_ms8("000", 3));
 				}
 				break;
 			case (T6)(T6)(GE_int32(1)):
 				if (((T0*)(GE_void(a2)))->id==55) {
-					T55f24(a2, GE_ms8("00", 2));
+					T55f25(a2, GE_ms8("00", 2));
 				} else {
-					T58f11(a2, GE_ms8("00", 2));
+					T58f12(a2, GE_ms8("00", 2));
 				}
 				break;
 			case (T6)(T6)(GE_int32(2)):
 				if (((T0*)(GE_void(a2)))->id==55) {
-					T55f25(a2, (T2)('0'));
+					T55f26(a2, (T2)('0'));
 				} else {
-					T58f12(a2, (T2)('0'));
+					T58f13(a2, (T2)('0'));
 				}
 				break;
 			default:
 				break;
 			}
 			if (((T0*)(GE_void(a2)))->id==55) {
-				T55f24(a2, l1);
+				T55f25(a2, l1);
 			} else {
-				T58f11(a2, l1);
+				T58f12(a2, l1);
 			}
 			break;
 		}
@@ -6209,17 +6174,17 @@ void T54f75(T0* C, T6 a1, T0* a2)
 		t1 = (((((a1) == ((T6)(GE_int32(32)))))));
 		if (t1) {
 			if (((T0*)(GE_void(a2)))->id==55) {
-				T55f24(a2, GE_ms8("\' \'", 3));
+				T55f25(a2, GE_ms8("\' \'", 3));
 			} else {
-				T58f11(a2, GE_ms8("\' \'", 3));
+				T58f12(a2, GE_ms8("\' \'", 3));
 			}
 		} else {
 			t2 = (T54f48(C));
-			t5 = (T166f1(GE_void(t2), a1));
+			t5 = (T168f1(GE_void(t2), a1));
 			if (((T0*)(GE_void(a2)))->id==55) {
-				T55f25(a2, t5);
+				T55f26(a2, t5);
 			} else {
-				T58f12(a2, t5);
+				T58f13(a2, t5);
 			}
 		}
 	}
@@ -6229,14 +6194,14 @@ void T54f75(T0* C, T6 a1, T0* a2)
 T0* T54f48(T0* C)
 {
 	T0* R = 0;
-	if (ge354os2753) {
-		return ge354ov2753;
+	if (ge305os2693) {
+		return ge305ov2693;
 	} else {
-		ge354os2753 = '\1';
-		ge354ov2753 = R;
+		ge305os2693 = '\1';
+		ge305ov2693 = R;
 	}
-	R = T166c2();
-	ge354ov2753 = R;
+	R = T168c2();
+	ge305ov2693 = R;
 	return R;
 }
 
@@ -6244,14 +6209,14 @@ T0* T54f48(T0* C)
 T0* T54f46(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
@@ -6269,24 +6234,24 @@ void T54f63(T0* C, T0* a1, T0* a2)
 	T0* l6 = 0;
 	T0* l7 = 0;
 	T6 l8 = 0;
-	l6 = (((T133*)(GE_void(a1)))->a2);
-	l2 = (((T135*)(GE_void(l6)))->a1);
-	l7 = T154c11(l2);
+	l6 = (((T134*)(GE_void(a1)))->a2);
+	l2 = (((T136*)(GE_void(l6)))->a1);
+	l7 = T155c11(l2);
 	l1 = (T6)(GE_int32(1));
 	while (1) {
 		t1 = (T6f1((&l1), l2));
 		if (t1) {
 			break;
 		}
-		l5 = (T135f10(GE_void(l6), l1));
-		l3 = (((T137*)(GE_void(((T54*)(C))->a21)))->a2);
-		l4 = (((T137*)(GE_void(((T54*)(C))->a21)))->a3);
+		l5 = (T136f13(GE_void(l6), l1));
+		l3 = (((T138*)(GE_void(((T54*)(C))->a21)))->a2);
+		l4 = (((T138*)(GE_void(((T54*)(C))->a21)))->a3);
 		while (1) {
 			t1 = (T6f1((&l3), l4));
 			if (!(t1)) {
-				t2 = (T137f5(GE_void(((T54*)(C))->a21), l3));
+				t2 = (T138f5(GE_void(((T54*)(C))->a21), l3));
 				t2 = (((T49*)(GE_void(t2)))->a2);
-				t1 = (T93f8(GE_void(t2), l5));
+				t1 = (T93f7(GE_void(t2), l5));
 			}
 			if (t1) {
 				break;
@@ -6295,24 +6260,24 @@ void T54f63(T0* C, T0* a1, T0* a2)
 		}
 		t1 = (T6f7((&l3), l4));
 		if (t1) {
-			t2 = (T137f5(GE_void(((T54*)(C))->a21), l3));
+			t2 = (T138f5(GE_void(((T54*)(C))->a21), l3));
 			l8 = (((T49*)(GE_void(t2)))->a8);
 		}
-		t1 = (T154f8(GE_void(l7), l8));
+		t1 = (T155f9(GE_void(l7), l8));
 		t1 = ((T1)(!(t1)));
 		if (t1) {
-			T154f12(GE_void(l7), l8);
+			T155f12(GE_void(l7), l8);
 		}
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
 	t2 = (T54f36(C));
-	T154f13(GE_void(l7), t2);
+	T155f13(GE_void(l7), t2);
 	if (((T0*)(GE_void(a2)))->id==55) {
-		T55f24(a2, GE_ms8(" associated rule line numbers:", 30));
+		T55f25(a2, GE_ms8(" associated rule line numbers:", 30));
 	} else {
-		T58f11(a2, GE_ms8(" associated rule line numbers:", 30));
+		T58f12(a2, GE_ms8(" associated rule line numbers:", 30));
 	}
-	l2 = (((T154*)(GE_void(l7)))->a1);
+	l2 = (((T155*)(GE_void(l7)))->a1);
 	l1 = (T6)(GE_int32(1));
 	while (1) {
 		t1 = (T6f1((&l1), l2));
@@ -6323,28 +6288,28 @@ void T54f63(T0* C, T0* a1, T0* a2)
 		t1 = (((((t3) == ((T6)(GE_int32(1)))))));
 		if (t1) {
 			if (((T0*)(GE_void(a2)))->id==55) {
-				T55f25(a2, (T2)('\n'));
+				T55f26(a2, (T2)('\n'));
 			} else {
-				T58f12(a2, (T2)('\n'));
+				T58f13(a2, (T2)('\n'));
 			}
 		}
 		if (((T0*)(GE_void(a2)))->id==55) {
-			T55f25(a2, (T2)('\t'));
+			T55f26(a2, (T2)('\t'));
 		} else {
-			T58f12(a2, (T2)('\t'));
+			T58f13(a2, (T2)('\t'));
 		}
-		t3 = (T154f7(GE_void(l7), l1));
+		t3 = (T155f7(GE_void(l7), l1));
 		if (((T0*)(GE_void(a2)))->id==55) {
-			T55f27(a2, t3);
+			T55f28(a2, t3);
 		} else {
-			T58f14(a2, t3);
+			T58f15(a2, t3);
 		}
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
 	if (((T0*)(GE_void(a2)))->id==55) {
-		T55f25(a2, (T2)('\n'));
+		T55f26(a2, (T2)('\n'));
 	} else {
-		T58f12(a2, (T2)('\n'));
+		T58f13(a2, (T2)('\n'));
 	}
 }
 
@@ -6353,15 +6318,15 @@ T0* T54f36(T0* C)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	if (ge182os4546) {
-		return ge182ov4546;
+	if (ge134os4824) {
+		return ge134ov4824;
 	} else {
-		ge182os4546 = '\1';
-		ge182ov4546 = R;
+		ge134os4824 = '\1';
+		ge134ov4824 = R;
 	}
-	l1 = T177c2();
-	R = T155c2(l1);
-	ge182ov4546 = R;
+	l1 = T179c2();
+	R = T156c2(l1);
+	ge134ov4824 = R;
 	return R;
 }
 
@@ -6394,7 +6359,7 @@ T1 T55f8(T0* C)
 }
 
 /* KL_TEXT_OUTPUT_FILE.open_write */
-void T55f22(T0* C)
+void T55f23(T0* C)
 {
 	GE_rescue r;
 	T1 t1;
@@ -6412,15 +6377,15 @@ GE_retry:
 	GE_last_rescue = &r;
 	t1 = ((T1)(!((T1)l1)));
 	if (t1) {
-		t1 = ((((T55*)(C))->a3)!=(ge388ov3337));
+		t1 = ((((T55*)(C))->a3)!=(ge334ov3277));
 		if (t1) {
-			T55f31(C);
+			T55f32(C);
 		}
 	} else {
 		t1 = (T55f13(C));
 		t1 = ((T1)(!(t1)));
 		if (t1) {
-			T55f23(C);
+			T55f24(C);
 		}
 	}
 	GE_last_rescue = r.previous;
@@ -6443,42 +6408,42 @@ T1 T55f11(T0* C)
 }
 
 /* KL_TEXT_OUTPUT_FILE.old_open_write */
-void T55f31(T0* C)
+void T55f32(T0* C)
 {
 	T14 t1;
 	T1 t2;
-	T55f31p1(C);
-	t1 = (T55f18(C));
-	t2 = (((((((T55*)(C))->a4) == (t1)))));
+	T55f32p1(C);
+	t1 = (T55f19(C));
+	t2 = (((((((T55*)(C))->a5) == (t1)))));
 	if (t2) {
 		((T55*)(C))->a1 = (T6)(GE_int32(0));
-		((T55*)(C))->a5 = EIF_FALSE;
+		((T55*)(C))->a6 = EIF_FALSE;
 	}
 }
 
 /* KL_TEXT_OUTPUT_FILE.default_pointer */
-T14 T55f18(T0* C)
+T14 T55f19(T0* C)
 {
 	T14 R = 0;
 	return R;
 }
 
 /* KL_TEXT_OUTPUT_FILE.open_write */
-void T55f31p1(T0* C)
+void T55f32p1(T0* C)
 {
-	T131 t1;
+	T132 t1;
 	T14 t2;
 	T0* l1 = 0;
 	l1 = (T17f4(GE_void(((T55*)(C))->a3)));
-	(t1).id = 131;
+	(t1).id = 132;
 	(t1).a1 = ((l1?(T14)(GE_types[((T0*)(l1))->id].is_special?(T14)((T15*)(l1))->z2:(T14)l1):(T14)0));
 	t2 = ((t1).a1);
-	((T55*)(C))->a4 = (T55f19(C, t2, (T6)(GE_int32(1))));
+	((T55*)(C))->a5 = (T55f20(C, t2, (T6)(GE_int32(1))));
 	((T55*)(C))->a1 = (T6)(GE_int32(2));
 }
 
 /* KL_TEXT_OUTPUT_FILE.file_open */
-T14 T55f19(T0* C, T14 a1, T6 a2)
+T14 T55f20(T0* C, T14 a1, T6 a2)
 {
 	T14 R = 0;
 	R = (T14)(EIF_POINTER )file_open((char *)a1,( int)a2);
@@ -6497,7 +6462,7 @@ T0* T17f4(T0* C)
 }
 
 /* KL_TEXT_OUTPUT_FILE.make */
-T0* T55c20(T0* a1)
+T0* T55c21(T0* a1)
 {
 	T0* C;
 	T6 t1;
@@ -6510,18 +6475,19 @@ T0* T55c20(T0* a1)
 	if (t2) {
 		t3 = (T55f9(C));
 		t3 = (T69f2(GE_void(t3), a1));
-		T55f29(C, t3);
+		T55f30(C, t3);
 	} else {
-		T55f29(C, ge388ov3337);
+		T55f30(C, ge334ov3277);
 	}
 	return C;
 }
 
 /* KL_TEXT_OUTPUT_FILE.old_make */
-void T55f29(T0* C, T0* a1)
+void T55f30(T0* C, T0* a1)
 {
 	((T55*)(C))->a3 = a1;
 	((T55*)(C))->a1 = (T6)(GE_int32(0));
+	((T55*)(C))->a4 = T17c35();
 }
 
 /* GELEX.print_scanner */
@@ -6535,8 +6501,8 @@ void T21f11(T0* C)
 	l1 = (((T25*)(GE_void(((T21*)(C))->a2)))->a7);
 	t1 = ((l1)!=(EIF_VOID));
 	if (t1) {
-		l2 = T55c20(l1);
-		T55f22(GE_void(l2));
+		l2 = T55c21(l1);
+		T55f23(GE_void(l2));
 		t1 = (T55f12(GE_void(l2)));
 		if (t1) {
 			if (((T0*)(GE_void(((T21*)(C))->a3)))->id==54) {
@@ -6544,9 +6510,9 @@ void T21f11(T0* C)
 			} else {
 				T47f81(((T21*)(C))->a3, l2);
 			}
-			T55f23(GE_void(l2));
+			T55f24(GE_void(l2));
 		} else {
-			l3 = T56c7(l1);
+			l3 = T56c8(l1);
 			T24f7(GE_void(((T21*)(C))->a1), l3);
 			t2 = (T21f4(C));
 			T44f2(GE_void(t2), (T6)(GE_int32(1)));
@@ -6567,45 +6533,45 @@ void T47f81(T0* C, T0* a1)
 {
 	T47f86(C, a1);
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\nfeature -- Status report\n\n", 27));
+		T55f25(a1, GE_ms8("\nfeature -- Status report\n\n", 27));
 	} else {
-		T58f11(a1, GE_ms8("\nfeature -- Status report\n\n", 27));
+		T58f12(a1, GE_ms8("\nfeature -- Status report\n\n", 27));
 	}
 	T47f87(C, a1);
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\nfeature {NONE} -- Implementation\n\n", 35));
+		T55f25(a1, GE_ms8("\nfeature {NONE} -- Implementation\n\n", 35));
 	} else {
-		T58f11(a1, GE_ms8("\nfeature {NONE} -- Implementation\n\n", 35));
+		T58f12(a1, GE_ms8("\nfeature {NONE} -- Implementation\n\n", 35));
 	}
 	T47f88(C, a1);
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f25(a1, (T2)('\n'));
+		T55f26(a1, (T2)('\n'));
 	} else {
-		T58f12(a1, (T2)('\n'));
+		T58f13(a1, (T2)('\n'));
 	}
 	T47f89(C, a1);
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f25(a1, (T2)('\n'));
+		T55f26(a1, (T2)('\n'));
 	} else {
-		T58f12(a1, (T2)('\n'));
+		T58f13(a1, (T2)('\n'));
 	}
 	T47f90(C, a1);
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\nfeature {NONE} -- Table templates\n\n", 36));
+		T55f25(a1, GE_ms8("\nfeature {NONE} -- Table templates\n\n", 36));
 	} else {
-		T58f11(a1, GE_ms8("\nfeature {NONE} -- Table templates\n\n", 36));
+		T58f12(a1, GE_ms8("\nfeature {NONE} -- Table templates\n\n", 36));
 	}
 	T47f91(C, a1);
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\nfeature {NONE} -- Constants\n\n", 30));
+		T55f25(a1, GE_ms8("\nfeature {NONE} -- Constants\n\n", 30));
 	} else {
-		T58f11(a1, GE_ms8("\nfeature {NONE} -- Constants\n\n", 30));
+		T58f12(a1, GE_ms8("\nfeature {NONE} -- Constants\n\n", 30));
 	}
 	T47f92(C, a1);
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\nfeature -- User-defined features\n\n", 35));
+		T55f25(a1, GE_ms8("\nfeature -- User-defined features\n\n", 35));
 	} else {
-		T58f11(a1, GE_ms8("\nfeature -- User-defined features\n\n", 35));
+		T58f12(a1, GE_ms8("\nfeature -- User-defined features\n\n", 35));
 	}
 	T47f93(C, a1);
 }
@@ -6617,9 +6583,9 @@ void T47f93(T0* C, T0* a1)
 	t1 = ((((T47*)(C))->a12)!=(EIF_VOID));
 	if (t1) {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, ((T47*)(C))->a12);
+			T55f25(a1, ((T47*)(C))->a12);
 		} else {
-			T58f11(a1, ((T47*)(C))->a12);
+			T58f12(a1, ((T47*)(C))->a12);
 		}
 	}
 }
@@ -6630,63 +6596,63 @@ void T47f92(T0* C, T0* a1)
 	T0* t1;
 	T1 t2;
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\tyyJam_base: INTEGER is ", 24));
+		T55f25(a1, GE_ms8("\tyyJam_base: INTEGER = ", 23));
 	} else {
-		T58f11(a1, GE_ms8("\tyyJam_base: INTEGER is ", 24));
+		T58f12(a1, GE_ms8("\tyyJam_base: INTEGER = ", 23));
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f27(a1, ((T47*)(C))->a46);
+		T55f28(a1, ((T47*)(C))->a46);
 	} else {
-		T58f14(a1, ((T47*)(C))->a46);
+		T58f15(a1, ((T47*)(C))->a46);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\n\t\t\t-- Position in `yy_nxt\'/`yy_chk\' tables\n\t\t\t-- where default jam table starts\n\n\tyyJam_state: INTEGER is ", 107));
+		T55f25(a1, GE_ms8("\n\t\t\t-- Position in `yy_nxt\'/`yy_chk\' tables\n\t\t\t-- where default jam table starts\n\n\tyyJam_state: INTEGER = ", 106));
 	} else {
-		T58f11(a1, GE_ms8("\n\t\t\t-- Position in `yy_nxt\'/`yy_chk\' tables\n\t\t\t-- where default jam table starts\n\n\tyyJam_state: INTEGER is ", 107));
+		T58f12(a1, GE_ms8("\n\t\t\t-- Position in `yy_nxt\'/`yy_chk\' tables\n\t\t\t-- where default jam table starts\n\n\tyyJam_state: INTEGER = ", 106));
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f27(a1, ((T47*)(C))->a47);
+		T55f28(a1, ((T47*)(C))->a47);
 	} else {
-		T58f14(a1, ((T47*)(C))->a47);
+		T58f15(a1, ((T47*)(C))->a47);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\n\t\t\t-- State id corresponding to jam state\n\n\tyyTemplate_mark: INTEGER is ", 73));
+		T55f25(a1, GE_ms8("\n\t\t\t-- State id corresponding to jam state\n\n\tyyTemplate_mark: INTEGER = ", 72));
 	} else {
-		T58f11(a1, GE_ms8("\n\t\t\t-- State id corresponding to jam state\n\n\tyyTemplate_mark: INTEGER is ", 73));
+		T58f12(a1, GE_ms8("\n\t\t\t-- State id corresponding to jam state\n\n\tyyTemplate_mark: INTEGER = ", 72));
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f27(a1, ((T47*)(C))->a48);
+		T55f28(a1, ((T47*)(C))->a48);
 	} else {
-		T58f14(a1, ((T47*)(C))->a48);
+		T58f15(a1, ((T47*)(C))->a48);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\n\t\t\t-- Mark between normal states and templates\n\n\tyyNull_equiv_class: INTEGER is ", 81));
+		T55f25(a1, GE_ms8("\n\t\t\t-- Mark between normal states and templates\n\n\tyyNull_equiv_class: INTEGER = ", 80));
 	} else {
-		T58f11(a1, GE_ms8("\n\t\t\t-- Mark between normal states and templates\n\n\tyyNull_equiv_class: INTEGER is ", 81));
+		T58f12(a1, GE_ms8("\n\t\t\t-- Mark between normal states and templates\n\n\tyyNull_equiv_class: INTEGER = ", 80));
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f27(a1, ((T47*)(C))->a22);
+		T55f28(a1, ((T47*)(C))->a22);
 	} else {
-		T58f14(a1, ((T47*)(C))->a22);
+		T58f15(a1, ((T47*)(C))->a22);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\n\t\t\t-- Equivalence code for NULL character\n\n\tyyReject_used: BOOLEAN is ", 71));
+		T55f25(a1, GE_ms8("\n\t\t\t-- Equivalence code for NULL character\n\n\tyyReject_used: BOOLEAN = ", 70));
 	} else {
-		T58f11(a1, GE_ms8("\n\t\t\t-- Equivalence code for NULL character\n\n\tyyReject_used: BOOLEAN is ", 71));
-	}
-	t1 = (T47f56(C));
-	T153f4(GE_void(t1), a1, ((T47*)(C))->a4);
-	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\n\t\t\t-- Is `reject\' called\?\n\n\tyyVariable_trail_context: BOOLEAN is ", 66));
-	} else {
-		T58f11(a1, GE_ms8("\n\t\t\t-- Is `reject\' called\?\n\n\tyyVariable_trail_context: BOOLEAN is ", 66));
+		T58f12(a1, GE_ms8("\n\t\t\t-- Equivalence code for NULL character\n\n\tyyReject_used: BOOLEAN = ", 70));
 	}
 	t1 = (T47f56(C));
-	T153f4(GE_void(t1), a1, ((T47*)(C))->a2);
+	T154f4(GE_void(t1), a1, ((T47*)(C))->a4);
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\n\t\t\t-- Is there a regular expression with\n\t\t\t-- both leading and trailing parts having\n\t\t\t-- variable length\?\n\n\tyyReject_or_variable_trail_context: BOOLEAN is ", 159));
+		T55f25(a1, GE_ms8("\n\t\t\t-- Is `reject\' called\?\n\n\tyyVariable_trail_context: BOOLEAN = ", 65));
 	} else {
-		T58f11(a1, GE_ms8("\n\t\t\t-- Is there a regular expression with\n\t\t\t-- both leading and trailing parts having\n\t\t\t-- variable length\?\n\n\tyyReject_or_variable_trail_context: BOOLEAN is ", 159));
+		T58f12(a1, GE_ms8("\n\t\t\t-- Is `reject\' called\?\n\n\tyyVariable_trail_context: BOOLEAN = ", 65));
+	}
+	t1 = (T47f56(C));
+	T154f4(GE_void(t1), a1, ((T47*)(C))->a2);
+	if (((T0*)(GE_void(a1)))->id==55) {
+		T55f25(a1, GE_ms8("\n\t\t\t-- Is there a regular expression with\n\t\t\t-- both leading and trailing parts having\n\t\t\t-- variable length\?\n\n\tyyReject_or_variable_trail_context: BOOLEAN = ", 158));
+	} else {
+		T58f12(a1, GE_ms8("\n\t\t\t-- Is there a regular expression with\n\t\t\t-- both leading and trailing parts having\n\t\t\t-- variable length\?\n\n\tyyReject_or_variable_trail_context: BOOLEAN = ", 158));
 	}
 	t1 = (T47f56(C));
 	if (!(((T47*)(C))->a4)) {
@@ -6694,11 +6660,11 @@ void T47f92(T0* C, T0* a1)
 	} else {
 		t2 = EIF_TRUE;
 	}
-	T153f4(GE_void(t1), a1, t2);
+	T154f4(GE_void(t1), a1, t2);
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\n\t\t\t-- Is `reject\' called or is there a\n\t\t\t-- regular expression with both leading\n\t\t\t-- and trailing parts having variable length\?\n\n", 133));
+		T55f25(a1, GE_ms8("\n\t\t\t-- Is `reject\' called or is there a\n\t\t\t-- regular expression with both leading\n\t\t\t-- and trailing parts having variable length\?\n\n", 133));
 	} else {
-		T58f11(a1, GE_ms8("\n\t\t\t-- Is `reject\' called or is there a\n\t\t\t-- regular expression with both leading\n\t\t\t-- and trailing parts having variable length\?\n\n", 133));
+		T58f12(a1, GE_ms8("\n\t\t\t-- Is `reject\' called or is there a\n\t\t\t-- regular expression with both leading\n\t\t\t-- and trailing parts having variable length\?\n\n", 133));
 	}
 	T47f92p1(C, a1);
 }
@@ -6711,136 +6677,136 @@ void T47f92p1(T0* C, T0* a1)
 	T6 l1 = 0;
 	T6 l2 = 0;
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\tyyNb_rules: INTEGER is ", 24));
+		T55f25(a1, GE_ms8("\tyyNb_rules: INTEGER = ", 23));
 	} else {
-		T58f11(a1, GE_ms8("\tyyNb_rules: INTEGER is ", 24));
+		T58f12(a1, GE_ms8("\tyyNb_rules: INTEGER = ", 23));
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f27(a1, ((T47*)(C))->a23);
+		T55f28(a1, ((T47*)(C))->a23);
 	} else {
-		T58f14(a1, ((T47*)(C))->a23);
+		T58f15(a1, ((T47*)(C))->a23);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\n\t\t\t-- Number of rules\n\n\tyyEnd_of_buffer: INTEGER is ", 53));
+		T55f25(a1, GE_ms8("\n\t\t\t-- Number of rules\n\n\tyyEnd_of_buffer: INTEGER = ", 52));
 	} else {
-		T58f11(a1, GE_ms8("\n\t\t\t-- Number of rules\n\n\tyyEnd_of_buffer: INTEGER is ", 53));
+		T58f12(a1, GE_ms8("\n\t\t\t-- Number of rules\n\n\tyyEnd_of_buffer: INTEGER = ", 52));
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f27(a1, ((T47*)(C))->a24);
+		T55f28(a1, ((T47*)(C))->a24);
 	} else {
-		T58f14(a1, ((T47*)(C))->a24);
+		T58f15(a1, ((T47*)(C))->a24);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\n\t\t\t-- End of buffer rule code\n\n\tyyLine_used: BOOLEAN is ", 57));
+		T55f25(a1, GE_ms8("\n\t\t\t-- End of buffer rule code\n\n\tyyLine_used: BOOLEAN = ", 56));
 	} else {
-		T58f11(a1, GE_ms8("\n\t\t\t-- End of buffer rule code\n\n\tyyLine_used: BOOLEAN is ", 57));
+		T58f12(a1, GE_ms8("\n\t\t\t-- End of buffer rule code\n\n\tyyLine_used: BOOLEAN = ", 56));
 	}
 	t1 = (T47f56(C));
-	T153f4(GE_void(t1), a1, ((T47*)(C))->a25);
+	T154f4(GE_void(t1), a1, ((T47*)(C))->a25);
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\n\t\t\t-- Are line and column numbers used\?\n\n\tyyPosition_used: BOOLEAN is ", 71));
+		T55f25(a1, GE_ms8("\n\t\t\t-- Are line and column numbers used\?\n\n\tyyPosition_used: BOOLEAN = ", 70));
 	} else {
-		T58f11(a1, GE_ms8("\n\t\t\t-- Are line and column numbers used\?\n\n\tyyPosition_used: BOOLEAN is ", 71));
+		T58f12(a1, GE_ms8("\n\t\t\t-- Are line and column numbers used\?\n\n\tyyPosition_used: BOOLEAN = ", 70));
 	}
 	t1 = (T47f56(C));
-	T153f4(GE_void(t1), a1, ((T47*)(C))->a26);
+	T154f4(GE_void(t1), a1, ((T47*)(C))->a26);
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\n\t\t\t-- Is `position\' used\?\n\n", 28));
+		T55f25(a1, GE_ms8("\n\t\t\t-- Is `position\' used\?\n\n", 28));
 	} else {
-		T58f11(a1, GE_ms8("\n\t\t\t-- Is `position\' used\?\n\n", 28));
+		T58f12(a1, GE_ms8("\n\t\t\t-- Is `position\' used\?\n\n", 28));
 	}
-	l2 = (((T132*)(GE_void(((T47*)(C))->a20)))->a3);
-	l1 = (((T132*)(GE_void(((T47*)(C))->a20)))->a2);
+	l2 = (((T133*)(GE_void(((T47*)(C))->a20)))->a3);
+	l1 = (((T133*)(GE_void(((T47*)(C))->a20)))->a2);
 	while (1) {
 		t2 = (T6f1((&l1), l2));
 		if (t2) {
 			break;
 		}
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f25(a1, (T2)('\t'));
+			T55f26(a1, (T2)('\t'));
 		} else {
-			T58f12(a1, (T2)('\t'));
+			T58f13(a1, (T2)('\t'));
 		}
-		t1 = (T132f5(GE_void(((T47*)(C))->a20), l1));
+		t1 = (T133f5(GE_void(((T47*)(C))->a20), l1));
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, t1);
+			T55f25(a1, t1);
 		} else {
-			T58f11(a1, t1);
-		}
-		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8(": INTEGER is ", 13));
-		} else {
-			T58f11(a1, GE_ms8(": INTEGER is ", 13));
+			T58f12(a1, t1);
 		}
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f27(a1, l1);
+			T55f25(a1, GE_ms8(": INTEGER = ", 12));
 		} else {
-			T58f14(a1, l1);
+			T58f12(a1, GE_ms8(": INTEGER = ", 12));
 		}
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f25(a1, (T2)('\n'));
+			T55f28(a1, l1);
 		} else {
-			T58f12(a1, (T2)('\n'));
+			T58f15(a1, l1);
+		}
+		if (((T0*)(GE_void(a1)))->id==55) {
+			T55f26(a1, (T2)('\n'));
+		} else {
+			T58f13(a1, (T2)('\n'));
 		}
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\t\t\t-- Start condition codes\n", 28));
+		T55f25(a1, GE_ms8("\t\t\t-- Start condition codes\n", 28));
 	} else {
-		T58f11(a1, GE_ms8("\t\t\t-- Start condition codes\n", 28));
+		T58f12(a1, GE_ms8("\t\t\t-- Start condition codes\n", 28));
 	}
 }
 
 /* ARRAY [STRING_8].item */
-T0* T132f5(T0* C, T6 a1)
+T0* T133f5(T0* C, T6 a1)
 {
 	T6 t1;
 	T0* R = 0;
-	t1 = ((T6)((a1)-(((T132*)(C))->a2)));
-	R = (((T88*)(GE_void(((T132*)(C))->a1)))->z2[t1]);
+	t1 = ((T6)((a1)-(((T133*)(C))->a2)));
+	R = (((T88*)(GE_void(((T133*)(C))->a1)))->z2[t1]);
 	return R;
 }
 
 /* UT_BOOLEAN_FORMATTER.put_eiffel_boolean */
-void T153f4(T0* C, T0* a1, T1 a2)
+void T154f4(T0* C, T0* a1, T1 a2)
 {
 	if (a2) {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, ge300ov6409);
+			T55f25(a1, ge257ov7083);
 		} else {
-			T58f11(a1, ge300ov6409);
+			T58f12(a1, ge257ov7083);
 		}
 	} else {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, ge300ov6410);
+			T55f25(a1, ge257ov7084);
 		} else {
-			T58f11(a1, ge300ov6410);
+			T58f12(a1, ge257ov7084);
 		}
 	}
 }
 
 /* LX_COMPRESSED_DFA.boolean_formatter_ */
-unsigned char ge302os4581 = '\0';
-T0* ge302ov4581;
+unsigned char ge259os4859 = '\0';
+T0* ge259ov4859;
 T0* T47f56(T0* C)
 {
 	T0* R = 0;
-	if (ge302os4581) {
-		return ge302ov4581;
+	if (ge259os4859) {
+		return ge259ov4859;
 	} else {
-		ge302os4581 = '\1';
-		ge302ov4581 = R;
+		ge259os4859 = '\1';
+		ge259ov4859 = R;
 	}
-	R = T153c3();
-	ge302ov4581 = R;
+	R = T154c3();
+	ge259ov4859 = R;
 	return R;
 }
 
 /* UT_BOOLEAN_FORMATTER.default_create */
-T0* T153c3(void)
+T0* T154c3(void)
 {
 	T0* C;
-	C = GE_new153(EIF_TRUE);
+	C = GE_new154(EIF_TRUE);
 	return C;
 }
 
@@ -6850,53 +6816,53 @@ void T47f91(T0* C, T0* a1)
 	T1 t1;
 	T47f110(C, GE_ms8("yy_nxt_template", 15), ((T47*)(C))->a37, a1);
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f25(a1, (T2)('\n'));
+		T55f26(a1, (T2)('\n'));
 	} else {
-		T58f12(a1, (T2)('\n'));
+		T58f13(a1, (T2)('\n'));
 	}
 	T47f110(C, GE_ms8("yy_chk_template", 15), ((T47*)(C))->a38, a1);
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f25(a1, (T2)('\n'));
+		T55f26(a1, (T2)('\n'));
 	} else {
-		T58f12(a1, (T2)('\n'));
+		T58f13(a1, (T2)('\n'));
 	}
 	T47f110(C, GE_ms8("yy_base_template", 16), ((T47*)(C))->a39, a1);
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f25(a1, (T2)('\n'));
+		T55f26(a1, (T2)('\n'));
 	} else {
-		T58f12(a1, (T2)('\n'));
+		T58f13(a1, (T2)('\n'));
 	}
 	T47f110(C, GE_ms8("yy_def_template", 15), ((T47*)(C))->a40, a1);
 	t1 = ((((T47*)(C))->a21)!=(EIF_VOID));
 	if (t1) {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f25(a1, (T2)('\n'));
+			T55f26(a1, (T2)('\n'));
 		} else {
-			T58f12(a1, (T2)('\n'));
+			T58f13(a1, (T2)('\n'));
 		}
 		T47f110(C, GE_ms8("yy_ec_template", 14), ((T47*)(C))->a21, a1);
 	}
 	t1 = ((((T47*)(C))->a42)!=(EIF_VOID));
 	if (t1) {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f25(a1, (T2)('\n'));
+			T55f26(a1, (T2)('\n'));
 		} else {
-			T58f12(a1, (T2)('\n'));
+			T58f13(a1, (T2)('\n'));
 		}
 		T47f110(C, GE_ms8("yy_meta_template", 16), ((T47*)(C))->a42, a1);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f25(a1, (T2)('\n'));
+		T55f26(a1, (T2)('\n'));
 	} else {
-		T58f12(a1, (T2)('\n'));
+		T58f13(a1, (T2)('\n'));
 	}
 	T47f110(C, GE_ms8("yy_accept_template", 18), ((T47*)(C))->a45, a1);
 	t1 = ((((T47*)(C))->a43)!=(EIF_VOID));
 	if (t1) {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f25(a1, (T2)('\n'));
+			T55f26(a1, (T2)('\n'));
 		} else {
-			T58f12(a1, (T2)('\n'));
+			T58f13(a1, (T2)('\n'));
 		}
 		T47f110(C, GE_ms8("yy_acclist_template", 19), ((T47*)(C))->a43, a1);
 	}
@@ -6915,71 +6881,71 @@ void T47f110(T0* C, T0* a1, T0* a2, T0* a3)
 	T6 l4 = 0;
 	T6 l5 = 0;
 	if (((T0*)(GE_void(a3)))->id==55) {
-		T55f25(a3, (T2)('\t'));
+		T55f26(a3, (T2)('\t'));
 	} else {
-		T58f12(a3, (T2)('\t'));
+		T58f13(a3, (T2)('\t'));
 	}
 	if (((T0*)(GE_void(a3)))->id==55) {
-		T55f24(a3, a1);
+		T55f25(a3, a1);
 	} else {
-		T58f11(a3, a1);
+		T58f12(a3, a1);
 	}
 	if (((T0*)(GE_void(a3)))->id==55) {
-		T55f24(a3, GE_ms8(": SPECIAL [INTEGER] is\n", 23));
+		T55f25(a3, GE_ms8(": SPECIAL [INTEGER]\n", 20));
 	} else {
-		T58f11(a3, GE_ms8(": SPECIAL [INTEGER] is\n", 23));
+		T58f12(a3, GE_ms8(": SPECIAL [INTEGER]\n", 20));
 	}
 	t1 = (((((((T47*)(C))->a9) == ((T6)(GE_int32(0)))))));
 	if (t1) {
 		l4 = (T6)(GE_int32(1));
 	} else {
-		t2 = (T143f5(GE_void(a2)));
+		t2 = (T144f5(GE_void(a2)));
 		t2 = ((T6)((t2)/(((T47*)(C))->a9)));
 		l4 = ((T6)((t2)+((T6)(GE_int32(1)))));
 	}
 	t1 = (((((l4) == ((T6)(GE_int32(1)))))));
 	if (t1) {
 		if (((T0*)(GE_void(a3)))->id==55) {
-			T55f24(a3, GE_ms8("\t\tonce\n\t\t\tResult := yy_fixed_array (<<\n", 39));
+			T55f25(a3, GE_ms8("\t\tonce\n\t\t\tResult := yy_fixed_array (<<\n", 39));
 		} else {
-			T58f11(a3, GE_ms8("\t\tonce\n\t\t\tResult := yy_fixed_array (<<\n", 39));
+			T58f12(a3, GE_ms8("\t\tonce\n\t\t\tResult := yy_fixed_array (<<\n", 39));
 		}
 		t3 = (T47f69(C));
-		t2 = (((T143*)(GE_void(a2)))->a2);
-		t4 = (((T143*)(GE_void(a2)))->a3);
-		T165f8(GE_void(t3), a3, a2, t2, t4);
+		t2 = (((T144*)(GE_void(a2)))->a2);
+		t4 = (((T144*)(GE_void(a2)))->a3);
+		T167f8(GE_void(t3), a3, a2, t2, t4);
 		if (((T0*)(GE_void(a3)))->id==55) {
-			T55f24(a3, GE_ms8(", yy_Dummy>>)\n\t\tend\n", 20));
+			T55f25(a3, GE_ms8(", yy_Dummy>>)\n\t\tend\n", 20));
 		} else {
-			T58f11(a3, GE_ms8(", yy_Dummy>>)\n\t\tend\n", 20));
+			T58f12(a3, GE_ms8(", yy_Dummy>>)\n\t\tend\n", 20));
 		}
 	} else {
 		if (((T0*)(GE_void(a3)))->id==55) {
-			T55f24(a3, GE_ms8("\t\tlocal\n\t\t\tan_array: ARRAY [INTEGER]\n\t\tonce\n\t\t\tcreate an_array.make (", 69));
+			T55f25(a3, GE_ms8("\t\tlocal\n\t\t\tan_array: ARRAY [INTEGER]\n\t\tonce\n\t\t\tcreate an_array.make_filled (0, ", 79));
 		} else {
-			T58f11(a3, GE_ms8("\t\tlocal\n\t\t\tan_array: ARRAY [INTEGER]\n\t\tonce\n\t\t\tcreate an_array.make (", 69));
+			T58f12(a3, GE_ms8("\t\tlocal\n\t\t\tan_array: ARRAY [INTEGER]\n\t\tonce\n\t\t\tcreate an_array.make_filled (0, ", 79));
 		}
-		t2 = (((T143*)(GE_void(a2)))->a2);
+		t2 = (((T144*)(GE_void(a2)))->a2);
 		if (((T0*)(GE_void(a3)))->id==55) {
-			T55f27(a3, t2);
+			T55f28(a3, t2);
 		} else {
-			T58f14(a3, t2);
-		}
-		if (((T0*)(GE_void(a3)))->id==55) {
-			T55f24(a3, GE_ms8(", ", 2));
-		} else {
-			T58f11(a3, GE_ms8(", ", 2));
-		}
-		t2 = (((T143*)(GE_void(a2)))->a3);
-		if (((T0*)(GE_void(a3)))->id==55) {
-			T55f27(a3, t2);
-		} else {
-			T58f14(a3, t2);
+			T58f15(a3, t2);
 		}
 		if (((T0*)(GE_void(a3)))->id==55) {
-			T55f24(a3, GE_ms8(")\n", 2));
+			T55f25(a3, GE_ms8(", ", 2));
 		} else {
-			T58f11(a3, GE_ms8(")\n", 2));
+			T58f12(a3, GE_ms8(", ", 2));
+		}
+		t2 = (((T144*)(GE_void(a2)))->a3);
+		if (((T0*)(GE_void(a3)))->id==55) {
+			T55f28(a3, t2);
+		} else {
+			T58f15(a3, t2);
+		}
+		if (((T0*)(GE_void(a3)))->id==55) {
+			T55f25(a3, GE_ms8(")\n", 2));
+		} else {
+			T58f12(a3, GE_ms8(")\n", 2));
 		}
 		l2 = (T6)(GE_int32(1));
 		while (1) {
@@ -6988,111 +6954,111 @@ void T47f110(T0* C, T0* a1, T0* a2, T0* a3)
 				break;
 			}
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f24(a3, ge182ov4545);
+				T55f25(a3, ge134ov4823);
 			} else {
-				T58f11(a3, ge182ov4545);
+				T58f12(a3, ge134ov4823);
 			}
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f24(a3, a1);
+				T55f25(a3, a1);
 			} else {
-				T58f11(a3, a1);
+				T58f12(a3, a1);
 			}
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f25(a3, (T2)('_'));
+				T55f26(a3, (T2)('_'));
 			} else {
-				T58f12(a3, (T2)('_'));
+				T58f13(a3, (T2)('_'));
 			}
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f27(a3, l2);
+				T55f28(a3, l2);
 			} else {
-				T58f14(a3, l2);
+				T58f15(a3, l2);
 			}
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f24(a3, GE_ms8(" (an_array)\n", 12));
+				T55f25(a3, GE_ms8(" (an_array)\n", 12));
 			} else {
-				T58f11(a3, GE_ms8(" (an_array)\n", 12));
+				T58f12(a3, GE_ms8(" (an_array)\n", 12));
 			}
 			l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
 		}
 		if (((T0*)(GE_void(a3)))->id==55) {
-			T55f24(a3, GE_ms8("\t\t\tResult := yy_fixed_array (an_array)\n\t\tend\n", 45));
+			T55f25(a3, GE_ms8("\t\t\tResult := yy_fixed_array (an_array)\n\t\tend\n", 45));
 		} else {
-			T58f11(a3, GE_ms8("\t\t\tResult := yy_fixed_array (an_array)\n\t\tend\n", 45));
+			T58f12(a3, GE_ms8("\t\t\tResult := yy_fixed_array (an_array)\n\t\tend\n", 45));
 		}
 		l2 = (T6)(GE_int32(1));
-		l1 = (((T143*)(GE_void(a2)))->a2);
-		l5 = (((T143*)(GE_void(a2)))->a3);
+		l1 = (((T144*)(GE_void(a2)))->a2);
+		l5 = (((T144*)(GE_void(a2)))->a3);
 		while (1) {
 			t1 = (T6f1((&l2), l4));
 			if (t1) {
 				break;
 			}
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f24(a3, GE_ms8("\n\t", 2));
+				T55f25(a3, GE_ms8("\n\t", 2));
 			} else {
-				T58f11(a3, GE_ms8("\n\t", 2));
+				T58f12(a3, GE_ms8("\n\t", 2));
 			}
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f24(a3, a1);
+				T55f25(a3, a1);
 			} else {
-				T58f11(a3, a1);
+				T58f12(a3, a1);
 			}
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f25(a3, (T2)('_'));
+				T55f26(a3, (T2)('_'));
 			} else {
-				T58f12(a3, (T2)('_'));
+				T58f13(a3, (T2)('_'));
 			}
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f27(a3, l2);
+				T55f28(a3, l2);
 			} else {
-				T58f14(a3, l2);
+				T58f15(a3, l2);
 			}
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f24(a3, GE_ms8(" (an_array: ARRAY [INTEGER]) is\n\t\tdo\n\t\t\tyy_array_subcopy (an_array, <<\n", 71));
+				T55f25(a3, GE_ms8(" (an_array: ARRAY [INTEGER])\n\t\tdo\n\t\t\tyy_array_subcopy (an_array, <<\n", 68));
 			} else {
-				T58f11(a3, GE_ms8(" (an_array: ARRAY [INTEGER]) is\n\t\tdo\n\t\t\tyy_array_subcopy (an_array, <<\n", 71));
+				T58f12(a3, GE_ms8(" (an_array: ARRAY [INTEGER])\n\t\tdo\n\t\t\tyy_array_subcopy (an_array, <<\n", 68));
 			}
 			t2 = ((T6)((l1)+(((T47*)(C))->a9)));
 			t2 = ((T6)((t2)-((T6)(GE_int32(1)))));
 			l3 = (T6f13((&l5), t2));
 			t3 = (T47f69(C));
-			T165f8(GE_void(t3), a3, a2, l1, l3);
+			T167f8(GE_void(t3), a3, a2, l1, l3);
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f24(a3, GE_ms8(", yy_Dummy>>,\n\t\t\t", 17));
+				T55f25(a3, GE_ms8(", yy_Dummy>>,\n\t\t\t", 17));
 			} else {
-				T58f11(a3, GE_ms8(", yy_Dummy>>,\n\t\t\t", 17));
+				T58f12(a3, GE_ms8(", yy_Dummy>>,\n\t\t\t", 17));
 			}
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f27(a3, (T6)(GE_int32(1)));
+				T55f28(a3, (T6)(GE_int32(1)));
 			} else {
-				T58f14(a3, (T6)(GE_int32(1)));
+				T58f15(a3, (T6)(GE_int32(1)));
 			}
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f24(a3, GE_ms8(", ", 2));
+				T55f25(a3, GE_ms8(", ", 2));
 			} else {
-				T58f11(a3, GE_ms8(", ", 2));
+				T58f12(a3, GE_ms8(", ", 2));
 			}
 			t2 = ((T6)((l3)-(l1)));
 			t2 = ((T6)((t2)+((T6)(GE_int32(1)))));
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f27(a3, t2);
+				T55f28(a3, t2);
 			} else {
-				T58f14(a3, t2);
+				T58f15(a3, t2);
 			}
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f24(a3, GE_ms8(", ", 2));
+				T55f25(a3, GE_ms8(", ", 2));
 			} else {
-				T58f11(a3, GE_ms8(", ", 2));
+				T58f12(a3, GE_ms8(", ", 2));
 			}
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f27(a3, l1);
+				T55f28(a3, l1);
 			} else {
-				T58f14(a3, l1);
+				T58f15(a3, l1);
 			}
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f24(a3, GE_ms8(")\n\t\tend\n", 8));
+				T55f25(a3, GE_ms8(")\n\t\tend\n", 8));
 			} else {
-				T58f11(a3, GE_ms8(")\n\t\tend\n", 8));
+				T58f12(a3, GE_ms8(")\n\t\tend\n", 8));
 			}
 			l1 = ((T6)((l3)+((T6)(GE_int32(1)))));
 			l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
@@ -7115,7 +7081,7 @@ T6 T6f13(T6* C, T6 a1)
 }
 
 /* UT_ARRAY_FORMATTER.put_integer_array */
-void T165f8(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
+void T167f8(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
 {
 	T1 t1;
 	T0* t2;
@@ -7125,9 +7091,9 @@ void T165f8(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
 	T6 l3 = 0;
 	T6 l4 = 0;
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, ge299ov6422);
+		T55f25(a1, ge256ov7097);
 	} else {
-		T58f11(a1, ge299ov6422);
+		T58f12(a1, ge256ov7097);
 	}
 	l3 = (T6)(GE_int32(1));
 	l1 = a3;
@@ -7140,71 +7106,71 @@ void T165f8(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
 		t1 = (T6f1((&l4), (T6)(GE_int32(10))));
 		if (t1) {
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f28(a1);
+				T55f29(a1);
 			} else {
-				T58f15(a1);
+				T58f16(a1);
 			}
 			l4 = (T6)(GE_int32(1));
 			l3 = ((T6)((l3)+((T6)(GE_int32(1)))));
 			t1 = (T6f1((&l3), (T6)(GE_int32(10))));
 			if (t1) {
 				if (((T0*)(GE_void(a1)))->id==55) {
-					T55f28(a1);
+					T55f29(a1);
 				} else {
-					T58f15(a1);
+					T58f16(a1);
 				}
 				l3 = (T6)(GE_int32(1));
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, ge299ov6422);
+				T55f25(a1, ge256ov7097);
 			} else {
-				T58f11(a1, ge299ov6422);
+				T58f12(a1, ge256ov7097);
 			}
 		}
-		l2 = (T143f4(GE_void(a2), l1));
+		l2 = (T144f4(GE_void(a2), l1));
 		t2 = (T6f6((&l2)));
 		t3 = (((T17*)(GE_void(t2)))->a2);
 		switch (t3) {
 		case (T6)(T6)(GE_int32(1)):
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, ge299ov6421);
+				T55f25(a1, ge256ov7096);
 			} else {
-				T58f11(a1, ge299ov6421);
+				T58f12(a1, ge256ov7096);
 			}
 			break;
 		case (T6)(T6)(GE_int32(2)):
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, ge299ov6420);
+				T55f25(a1, ge256ov7095);
 			} else {
-				T58f11(a1, ge299ov6420);
+				T58f12(a1, ge256ov7095);
 			}
 			break;
 		case (T6)(T6)(GE_int32(3)):
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, ge299ov6419);
+				T55f25(a1, ge256ov7094);
 			} else {
-				T58f11(a1, ge299ov6419);
+				T58f12(a1, ge256ov7094);
 			}
 			break;
 		default:
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f25(a1, (T2)(' '));
+				T55f26(a1, (T2)(' '));
 			} else {
-				T58f12(a1, (T2)(' '));
+				T58f13(a1, (T2)(' '));
 			}
 			break;
 		}
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f27(a1, l2);
+			T55f28(a1, l2);
 		} else {
-			T58f14(a1, l2);
+			T58f15(a1, l2);
 		}
 		t1 = ((T1)((l1)<(a4)));
 		if (t1) {
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f25(a1, (T2)(','));
+				T55f26(a1, (T2)(','));
 			} else {
-				T58f12(a1, (T2)(','));
+				T58f13(a1, (T2)(','));
 			}
 		}
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
@@ -7212,36 +7178,36 @@ void T165f8(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
 }
 
 /* LX_COMPRESSED_DFA.array_formatter_ */
-unsigned char ge302os4583 = '\0';
-T0* ge302ov4583;
+unsigned char ge259os4861 = '\0';
+T0* ge259ov4861;
 T0* T47f69(T0* C)
 {
 	T0* R = 0;
-	if (ge302os4583) {
-		return ge302ov4583;
+	if (ge259os4861) {
+		return ge259ov4861;
 	} else {
-		ge302os4583 = '\1';
-		ge302ov4583 = R;
+		ge259os4861 = '\1';
+		ge259ov4861 = R;
 	}
-	R = T165c7();
-	ge302ov4583 = R;
+	R = T167c7();
+	ge259ov4861 = R;
 	return R;
 }
 
 /* UT_ARRAY_FORMATTER.default_create */
-T0* T165c7(void)
+T0* T167c7(void)
 {
 	T0* C;
-	C = GE_new165(EIF_TRUE);
+	C = GE_new167(EIF_TRUE);
 	return C;
 }
 
 /* ARRAY [INTEGER_32].count */
-T6 T143f5(T0* C)
+T6 T144f5(T0* C)
 {
 	T6 t1;
 	T6 R = 0;
-	t1 = ((T6)((((T143*)(C))->a3)-(((T143*)(C))->a2)));
+	t1 = ((T6)((((T144*)(C))->a3)-(((T144*)(C))->a2)));
 	R = ((T6)((t1)+((T6)(GE_int32(1)))));
 	return R;
 }
@@ -7263,37 +7229,37 @@ void T47f90(T0* C, T0* a1)
 	T0* l9 = 0;
 	T0* l10 = 0;
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\tyy_execute_eof_action (yy_sc: INTEGER) is\n\t\t\t-- Execute EOF semantic action.\n\t\tdo\n", 83));
+		T55f25(a1, GE_ms8("\tyy_execute_eof_action (yy_sc: INTEGER)\n\t\t\t-- Execute EOF semantic action.\n\t\tdo\n", 80));
 	} else {
-		T58f11(a1, GE_ms8("\tyy_execute_eof_action (yy_sc: INTEGER) is\n\t\t\t-- Execute EOF semantic action.\n\t\tdo\n", 83));
+		T58f12(a1, GE_ms8("\tyy_execute_eof_action (yy_sc: INTEGER)\n\t\t\t-- Execute EOF semantic action.\n\t\tdo\n", 80));
 	}
 	if (((T47*)(C))->a17) {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("\t\t\tpre_eof_action\n", 18));
+			T55f25(a1, GE_ms8("\t\t\tpre_eof_action\n", 18));
 		} else {
-			T58f11(a1, GE_ms8("\t\t\tpre_eof_action\n", 18));
+			T58f12(a1, GE_ms8("\t\t\tpre_eof_action\n", 18));
 		}
 	}
-	l1 = (((T137*)(GE_void(((T47*)(C))->a44)))->a2);
-	l2 = (((T137*)(GE_void(((T47*)(C))->a44)))->a3);
-	t1 = (T137f4(GE_void(((T47*)(C))->a44)));
-	l4 = T149c8(t1);
+	l1 = (((T138*)(GE_void(((T47*)(C))->a44)))->a2);
+	l2 = (((T138*)(GE_void(((T47*)(C))->a44)))->a3);
+	t1 = (T138f4(GE_void(((T47*)(C))->a44)));
+	l4 = T150c8(t1);
 	while (1) {
 		t2 = (T6f1((&l1), l2));
 		if (t2) {
 			break;
 		}
-		l3 = (T137f5(GE_void(((T47*)(C))->a44), l1));
+		l3 = (T138f5(GE_void(((T47*)(C))->a44), l1));
 		t2 = ((l3)!=(EIF_VOID));
 		if (t2) {
 			l5 = (((T49*)(GE_void(l3)))->a3);
 			l6 = (T6)(GE_int32(1));
-			l7 = (((T149*)(GE_void(l4)))->a1);
+			l7 = (((T150*)(GE_void(l4)))->a1);
 			while (1) {
 				t2 = (T6f1((&l6), l7));
 				if (!(t2)) {
-					t3 = (T149f6(GE_void(l4), l6));
-					t3 = (((T150*)(GE_void(t3)))->a1);
+					t3 = (T150f7(GE_void(l4), l6));
+					t3 = (((T151*)(GE_void(t3)))->a1);
 					t2 = ((t3)==(l5));
 				}
 				if (t2) {
@@ -7303,24 +7269,24 @@ void T47f90(T0* C, T0* a1)
 			}
 			t2 = (T6f7((&l6), l7));
 			if (t2) {
-				t3 = (T149f6(GE_void(l4), l6));
-				l9 = (((T150*)(GE_void(t3)))->a2);
+				t3 = (T150f7(GE_void(l4), l6));
+				l9 = (((T151*)(GE_void(t3)))->a2);
 			} else {
-				l9 = T151c8();
-				l8 = T150c3(l5, l9);
-				T149f9(GE_void(l4), l8);
+				l9 = T152c8();
+				l8 = T151c3(l5, l9);
+				T150f9(GE_void(l4), l8);
 			}
-			T151f9(GE_void(l9), l3);
+			T152f9(GE_void(l9), l3);
 		}
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
-	l7 = (((T149*)(GE_void(l4)))->a1);
+	l7 = (((T150*)(GE_void(l4)))->a1);
 	t2 = (T6f1((&l7), (T6)(GE_int32(0))));
 	if (t2) {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("\t\t\tinspect yy_sc\n", 17));
+			T55f25(a1, GE_ms8("\t\t\tinspect yy_sc\n", 17));
 		} else {
-			T58f11(a1, GE_ms8("\t\t\tinspect yy_sc\n", 17));
+			T58f12(a1, GE_ms8("\t\t\tinspect yy_sc\n", 17));
 		}
 		l6 = (T6)(GE_int32(1));
 		while (1) {
@@ -7328,167 +7294,167 @@ void T47f90(T0* C, T0* a1)
 			if (t2) {
 				break;
 			}
-			t3 = (T149f6(GE_void(l4), l6));
-			l9 = (((T150*)(GE_void(t3)))->a2);
-			l10 = (T151f6(GE_void(l9)));
-			T152f8(GE_void(l10));
-			l3 = (T152f6(GE_void(l10)));
+			t3 = (T150f7(GE_void(l4), l6));
+			l9 = (((T151*)(GE_void(t3)))->a2);
+			l10 = (T152f5(GE_void(l9)));
+			T153f8(GE_void(l10));
+			l3 = (T153f6(GE_void(l10)));
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8("when ", 5));
+				T55f25(a1, GE_ms8("when ", 5));
 			} else {
-				T58f11(a1, GE_ms8("when ", 5));
+				T58f12(a1, GE_ms8("when ", 5));
 			}
 			t1 = (((T49*)(GE_void(l3)))->a1);
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f27(a1, t1);
+				T55f28(a1, t1);
 			} else {
-				T58f14(a1, t1);
+				T58f15(a1, t1);
 			}
-			T152f9(GE_void(l10));
+			T153f9(GE_void(l10));
 			while (1) {
-				t2 = (((T152*)(GE_void(l10)))->a1);
+				t2 = (((T153*)(GE_void(l10)))->a1);
 				if (t2) {
 					break;
 				}
 				if (((T0*)(GE_void(a1)))->id==55) {
-					T55f24(a1, GE_ms8(", ", 2));
+					T55f25(a1, GE_ms8(", ", 2));
 				} else {
-					T58f11(a1, GE_ms8(", ", 2));
+					T58f12(a1, GE_ms8(", ", 2));
 				}
-				t3 = (T152f6(GE_void(l10)));
+				t3 = (T153f6(GE_void(l10)));
 				t1 = (((T49*)(GE_void(t3)))->a1);
 				if (((T0*)(GE_void(a1)))->id==55) {
-					T55f27(a1, t1);
+					T55f28(a1, t1);
 				} else {
-					T58f14(a1, t1);
+					T58f15(a1, t1);
 				}
-				T152f9(GE_void(l10));
+				T153f9(GE_void(l10));
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8(" then\n", 6));
+				T55f25(a1, GE_ms8(" then\n", 6));
 			} else {
-				T58f11(a1, GE_ms8(" then\n", 6));
+				T58f12(a1, GE_ms8(" then\n", 6));
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8("--|#line ", 9));
+				T55f25(a1, GE_ms8("--|#line ", 9));
 			} else {
-				T58f11(a1, GE_ms8("--|#line ", 9));
+				T58f12(a1, GE_ms8("--|#line ", 9));
 			}
 			if (((T47*)(C))->a19) {
 				t1 = (((T49*)(GE_void(l3)))->a8);
 				if (((T0*)(GE_void(a1)))->id==55) {
-					T55f27(a1, t1);
+					T55f28(a1, t1);
 				} else {
-					T58f14(a1, t1);
+					T58f15(a1, t1);
 				}
 			} else {
 				if (((T0*)(GE_void(a1)))->id==55) {
-					T55f24(a1, GE_ms8("<not available>", 15));
+					T55f25(a1, GE_ms8("<not available>", 15));
 				} else {
-					T58f11(a1, GE_ms8("<not available>", 15));
+					T58f12(a1, GE_ms8("<not available>", 15));
 				}
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8(" \"", 2));
+				T55f25(a1, GE_ms8(" \"", 2));
 			} else {
-				T58f11(a1, GE_ms8(" \"", 2));
+				T58f12(a1, GE_ms8(" \"", 2));
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, ((T47*)(C))->a7);
+				T55f25(a1, ((T47*)(C))->a7);
 			} else {
-				T58f11(a1, ((T47*)(C))->a7);
+				T58f12(a1, ((T47*)(C))->a7);
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f25(a1, (T2)('\"'));
+				T55f26(a1, (T2)('\"'));
 			} else {
-				T58f12(a1, (T2)('\"'));
+				T58f13(a1, (T2)('\"'));
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f28(a1);
+				T55f29(a1);
 			} else {
-				T58f15(a1);
+				T58f16(a1);
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f26(a1, GE_ms8("debug (\"GELEX\")", 15));
+				T55f27(a1, GE_ms8("debug (\"GELEX\")", 15));
 			} else {
-				T58f13(a1, GE_ms8("debug (\"GELEX\")", 15));
+				T58f14(a1, GE_ms8("debug (\"GELEX\")", 15));
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8("\tstd.error.put_line (\"Executing scanner user-code from file \'", 61));
+				T55f25(a1, GE_ms8("\tstd.error.put_line (\"Executing scanner user-code from file \'", 61));
 			} else {
-				T58f11(a1, GE_ms8("\tstd.error.put_line (\"Executing scanner user-code from file \'", 61));
+				T58f12(a1, GE_ms8("\tstd.error.put_line (\"Executing scanner user-code from file \'", 61));
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, ((T47*)(C))->a7);
+				T55f25(a1, ((T47*)(C))->a7);
 			} else {
-				T58f11(a1, ((T47*)(C))->a7);
+				T58f12(a1, ((T47*)(C))->a7);
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8("\' at line ", 10));
+				T55f25(a1, GE_ms8("\' at line ", 10));
 			} else {
-				T58f11(a1, GE_ms8("\' at line ", 10));
+				T58f12(a1, GE_ms8("\' at line ", 10));
 			}
 			if (((T47*)(C))->a19) {
 				t1 = (((T49*)(GE_void(l3)))->a8);
 				if (((T0*)(GE_void(a1)))->id==55) {
-					T55f27(a1, t1);
+					T55f28(a1, t1);
 				} else {
-					T58f14(a1, t1);
+					T58f15(a1, t1);
 				}
 			} else {
 				if (((T0*)(GE_void(a1)))->id==55) {
-					T55f24(a1, GE_ms8("<not available>", 15));
+					T55f25(a1, GE_ms8("<not available>", 15));
 				} else {
-					T58f11(a1, GE_ms8("<not available>", 15));
+					T58f12(a1, GE_ms8("<not available>", 15));
 				}
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f26(a1, GE_ms8("\")", 2));
+				T55f27(a1, GE_ms8("\")", 2));
 			} else {
-				T58f13(a1, GE_ms8("\")", 2));
+				T58f14(a1, GE_ms8("\")", 2));
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f26(a1, GE_ms8("end", 3));
+				T55f27(a1, GE_ms8("end", 3));
 			} else {
-				T58f13(a1, GE_ms8("end", 3));
+				T58f14(a1, GE_ms8("end", 3));
 			}
 			t3 = (((T49*)(GE_void(l3)))->a3);
 			t3 = (T100f2(GE_void(t3)));
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, t3);
+				T55f25(a1, t3);
 			} else {
-				T58f11(a1, t3);
+				T58f12(a1, t3);
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f28(a1);
+				T55f29(a1);
 			} else {
-				T58f15(a1);
+				T58f16(a1);
 			}
 			l6 = ((T6)((l6)+((T6)(GE_int32(1)))));
 		}
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("\t\t\telse\n\t\t\t\tterminate\n\t\t\tend\n", 29));
+			T55f25(a1, GE_ms8("\t\t\telse\n\t\t\t\tterminate\n\t\t\tend\n", 29));
 		} else {
-			T58f11(a1, GE_ms8("\t\t\telse\n\t\t\t\tterminate\n\t\t\tend\n", 29));
+			T58f12(a1, GE_ms8("\t\t\telse\n\t\t\t\tterminate\n\t\t\tend\n", 29));
 		}
 	} else {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("\t\t\tterminate\n", 13));
+			T55f25(a1, GE_ms8("\t\t\tterminate\n", 13));
 		} else {
-			T58f11(a1, GE_ms8("\t\t\tterminate\n", 13));
+			T58f12(a1, GE_ms8("\t\t\tterminate\n", 13));
 		}
 	}
 	if (((T47*)(C))->a18) {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("\t\t\tpost_eof_action\n", 19));
+			T55f25(a1, GE_ms8("\t\t\tpost_eof_action\n", 19));
 		} else {
-			T58f11(a1, GE_ms8("\t\t\tpost_eof_action\n", 19));
+			T58f12(a1, GE_ms8("\t\t\tpost_eof_action\n", 19));
 		}
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\t\tend\n", 6));
+		T55f25(a1, GE_ms8("\t\tend\n", 6));
 	} else {
-		T58f11(a1, GE_ms8("\t\tend\n", 6));
+		T58f12(a1, GE_ms8("\t\tend\n", 6));
 	}
 }
 
@@ -7501,71 +7467,71 @@ T0* T100f2(T0* C)
 }
 
 /* DS_LINKED_LIST_CURSOR [LX_RULE].forth */
-void T152f9(T0* C)
+void T153f9(T0* C)
 {
-	T151f11(GE_void(((T152*)(C))->a3), C);
+	T152f12(GE_void(((T153*)(C))->a3), C);
 }
 
 /* DS_LINKED_LIST [LX_RULE].cursor_forth */
-void T151f11(T0* C, T0* a1)
+void T152f12(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
 	T1 l1 = 0;
 	T1 l2 = 0;
 	T0* l3 = 0;
-	t1 = (((T152*)(a1))->a4);
+	t1 = (((T153*)(a1))->a4);
 	if (t1) {
 		l1 = EIF_TRUE;
-		l3 = ((T151*)(C))->a2;
+		l3 = ((T152*)(C))->a1;
 	} else {
-		t2 = (((T152*)(a1))->a2);
-		l3 = (((T236*)(GE_void(t2)))->a2);
+		t2 = (((T153*)(a1))->a2);
+		l3 = (((T234*)(GE_void(t2)))->a2);
 	}
 	l2 = ((l3)==(EIF_VOID));
-	T152f10(a1, l3, EIF_FALSE, l2);
+	T153f10(a1, l3, EIF_FALSE, l2);
 	if (l2) {
 		t1 = ((T1)(!(l1)));
 		if (t1) {
-			T151f13(C, a1);
+			T152f14(C, a1);
 		}
 	} else {
 		if (l1) {
-			T151f12(C, a1);
+			T152f13(C, a1);
 		}
 	}
 }
 
 /* DS_LINKED_LIST [LX_RULE].add_traversing_cursor */
-void T151f12(T0* C, T0* a1)
+void T152f13(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
-	t1 = ((a1)!=(((T151*)(C))->a1));
+	t1 = ((a1)!=(((T152*)(C))->a4));
 	if (t1) {
-		t2 = (((T152*)(GE_void(((T151*)(C))->a1)))->a5);
-		T152f11(a1, t2);
-		T152f11(GE_void(((T151*)(C))->a1), a1);
+		t2 = (((T153*)(GE_void(((T152*)(C))->a4)))->a5);
+		T153f11(a1, t2);
+		T153f11(GE_void(((T152*)(C))->a4), a1);
 	}
 }
 
 /* DS_LINKED_LIST_CURSOR [LX_RULE].set_next_cursor */
-void T152f11(T0* C, T0* a1)
+void T153f11(T0* C, T0* a1)
 {
-	((T152*)(C))->a5 = a1;
+	((T153*)(C))->a5 = a1;
 }
 
 /* DS_LINKED_LIST [LX_RULE].remove_traversing_cursor */
-void T151f13(T0* C, T0* a1)
+void T152f14(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
 	T0* l1 = 0;
 	T0* l2 = 0;
-	t1 = ((a1)!=(((T151*)(C))->a1));
+	t1 = ((a1)!=(((T152*)(C))->a4));
 	if (t1) {
-		l2 = ((T151*)(C))->a1;
-		l1 = (((T152*)(GE_void(l2)))->a5);
+		l2 = ((T152*)(C))->a4;
+		l1 = (((T153*)(GE_void(l2)))->a5);
 		while (1) {
 			t1 = ((l1)==(a1));
 			if (!(t1)) {
@@ -7575,233 +7541,266 @@ void T151f13(T0* C, T0* a1)
 				break;
 			}
 			l2 = l1;
-			l1 = (((T152*)(GE_void(l1)))->a5);
+			l1 = (((T153*)(GE_void(l1)))->a5);
 		}
 		t1 = ((l1)==(a1));
 		if (t1) {
-			t2 = (((T152*)(a1))->a5);
-			T152f11(GE_void(l2), t2);
-			T152f11(a1, EIF_VOID);
+			t2 = (((T153*)(a1))->a5);
+			T153f11(GE_void(l2), t2);
+			T153f11(a1, EIF_VOID);
 		}
 	}
 }
 
 /* DS_LINKED_LIST_CURSOR [LX_RULE].set */
-void T152f10(T0* C, T0* a1, T1 a2, T1 a3)
+void T153f10(T0* C, T0* a1, T1 a2, T1 a3)
 {
-	((T152*)(C))->a2 = a1;
-	((T152*)(C))->a4 = a2;
-	((T152*)(C))->a1 = a3;
+	((T153*)(C))->a2 = a1;
+	((T153*)(C))->a4 = a2;
+	((T153*)(C))->a1 = a3;
 }
 
 /* DS_LINKED_LIST_CURSOR [LX_RULE].item */
-T0* T152f6(T0* C)
+T0* T153f6(T0* C)
 {
 	T0* R = 0;
-	R = (((T236*)(GE_void(((T152*)(C))->a2)))->a1);
+	R = (((T234*)(GE_void(((T153*)(C))->a2)))->a1);
 	return R;
 }
 
 /* DS_LINKED_LIST_CURSOR [LX_RULE].start */
-void T152f8(T0* C)
+void T153f8(T0* C)
 {
-	T151f10(GE_void(((T152*)(C))->a3), C);
+	T152f11(GE_void(((T153*)(C))->a3), C);
 }
 
 /* DS_LINKED_LIST [LX_RULE].cursor_start */
-void T151f10(T0* C, T0* a1)
+void T152f11(T0* C, T0* a1)
 {
 	T1 t1;
 	T1 l1 = 0;
 	T1 l2 = 0;
-	l1 = (T151f7(C, a1));
-	l2 = ((((T151*)(C))->a2)==(EIF_VOID));
-	T152f10(a1, ((T151*)(C))->a2, EIF_FALSE, l2);
+	l1 = (T152f7(C, a1));
+	l2 = ((((T152*)(C))->a1)==(EIF_VOID));
+	T153f10(a1, ((T152*)(C))->a1, EIF_FALSE, l2);
 	t1 = ((T1)(!(l2)));
 	if (t1) {
 		t1 = (l1);
 	}
 	if (t1) {
-		T151f12(C, a1);
+		T152f13(C, a1);
 	}
 }
 
 /* DS_LINKED_LIST [LX_RULE].cursor_off */
-T1 T151f7(T0* C, T0* a1)
+T1 T152f7(T0* C, T0* a1)
 {
 	T0* t1;
 	T1 R = 0;
-	t1 = (((T152*)(a1))->a2);
+	t1 = (((T153*)(a1))->a2);
 	R = ((t1)==(EIF_VOID));
 	return R;
 }
 
 /* DS_LINKED_LIST [LX_RULE].new_cursor */
-T0* T151f6(T0* C)
+T0* T152f5(T0* C)
 {
 	T0* R = 0;
-	R = T152c7(C);
+	R = T153c7(C);
 	return R;
 }
 
 /* DS_LINKED_LIST_CURSOR [LX_RULE].make */
-T0* T152c7(T0* a1)
+T0* T153c7(T0* a1)
 {
 	T0* C;
-	C = GE_new152(EIF_TRUE);
-	((T152*)(C))->a3 = a1;
-	((T152*)(C))->a4 = EIF_TRUE;
+	C = GE_new153(EIF_TRUE);
+	((T153*)(C))->a3 = a1;
+	((T153*)(C))->a4 = EIF_TRUE;
 	return C;
 }
 
 /* DS_LINKED_LIST [LX_RULE].put_last */
-void T151f9(T0* C, T0* a1)
+void T152f9(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* l1 = 0;
-	t1 = (T151f5(C));
+	t1 = (T152f6(C));
 	if (t1) {
-		((T151*)(C))->a2 = T236c3(a1);
-		((T151*)(C))->a3 = ((T151*)(C))->a2;
-		((T151*)(C))->a4 = (T6)(GE_int32(1));
+		((T152*)(C))->a1 = T234c3(a1);
+		((T152*)(C))->a2 = ((T152*)(C))->a1;
+		((T152*)(C))->a3 = (T6)(GE_int32(1));
 	} else {
-		l1 = ((T151*)(C))->a3;
-		((T151*)(C))->a3 = T236c3(a1);
-		T236f4(GE_void(l1), ((T151*)(C))->a3);
-		((T151*)(C))->a4 = ((T6)((((T151*)(C))->a4)+((T6)(GE_int32(1)))));
+		l1 = ((T152*)(C))->a2;
+		((T152*)(C))->a2 = T234c3(a1);
+		T234f4(GE_void(l1), ((T152*)(C))->a2);
+		((T152*)(C))->a3 = ((T6)((((T152*)(C))->a3)+((T6)(GE_int32(1)))));
 	}
 }
 
 /* DS_LINKABLE [LX_RULE].put_right */
-void T236f4(T0* C, T0* a1)
+void T234f4(T0* C, T0* a1)
 {
-	((T236*)(C))->a2 = a1;
+	((T234*)(C))->a2 = a1;
 }
 
 /* DS_LINKABLE [LX_RULE].make */
-T0* T236c3(T0* a1)
+T0* T234c3(T0* a1)
 {
 	T0* C;
-	C = GE_new236(EIF_TRUE);
-	((T236*)(C))->a1 = a1;
+	C = GE_new234(EIF_TRUE);
+	((T234*)(C))->a1 = a1;
 	return C;
 }
 
 /* DS_LINKED_LIST [LX_RULE].is_empty */
-T1 T151f5(T0* C)
+T1 T152f6(T0* C)
 {
 	T1 R = 0;
-	R = (((((((T151*)(C))->a4) == ((T6)(GE_int32(0)))))));
+	R = (((((((T152*)(C))->a3) == ((T6)(GE_int32(0)))))));
 	return R;
 }
 
 /* DS_ARRAYED_LIST [DS_PAIR [DP_COMMAND, DS_LINKED_LIST [LX_RULE]]].put_last */
-void T149f9(T0* C, T0* a1)
+void T150f9(T0* C, T0* a1)
 {
-	((T149*)(C))->a1 = ((T6)((((T149*)(C))->a1)+((T6)(GE_int32(1)))));
-	((T233*)(GE_void(((T149*)(C))->a2)))->z2[((T149*)(C))->a1] = (a1);
+	((T150*)(C))->a1 = ((T6)((((T150*)(C))->a1)+((T6)(GE_int32(1)))));
+	((T231*)(GE_void(((T150*)(C))->a2)))->z2[((T150*)(C))->a1] = (a1);
 }
 
 /* DS_PAIR [DP_COMMAND, DS_LINKED_LIST [LX_RULE]].make */
-T0* T150c3(T0* a1, T0* a2)
+T0* T151c3(T0* a1, T0* a2)
 {
 	T0* C;
-	C = GE_new150(EIF_TRUE);
-	((T150*)(C))->a1 = a1;
-	((T150*)(C))->a2 = a2;
+	C = GE_new151(EIF_TRUE);
+	((T151*)(C))->a1 = a1;
+	((T151*)(C))->a2 = a2;
 	return C;
 }
 
 /* DS_LINKED_LIST [LX_RULE].make */
-T0* T151c8(void)
+T0* T152c8(void)
 {
 	T0* C;
-	C = GE_new151(EIF_TRUE);
-	((T151*)(C))->a1 = (T151f6(C));
+	T0* t1;
+	C = GE_new152(EIF_TRUE);
+	t1 = (T152f5(C));
+	T152f10(C, t1);
 	return C;
 }
 
+/* DS_LINKED_LIST [LX_RULE].set_internal_cursor */
+void T152f10(T0* C, T0* a1)
+{
+	((T152*)(C))->a4 = a1;
+}
+
 /* DS_ARRAYED_LIST [DS_PAIR [DP_COMMAND, DS_LINKED_LIST [LX_RULE]]].item */
-T0* T149f6(T0* C, T6 a1)
+T0* T150f7(T0* C, T6 a1)
 {
 	T0* R = 0;
-	R = (((T233*)(GE_void(((T149*)(C))->a2)))->z2[a1]);
+	R = (((T231*)(GE_void(((T150*)(C))->a2)))->z2[a1]);
 	return R;
 }
 
 /* DS_ARRAYED_LIST [DS_PAIR [DP_COMMAND, DS_LINKED_LIST [LX_RULE]]].make */
-T0* T149c8(T6 a1)
+T0* T150c8(T6 a1)
 {
 	T0* C;
 	T6 t1;
-	C = GE_new149(EIF_TRUE);
-	((T149*)(C))->a3 = T234c2();
+	T0* t2;
+	C = GE_new150(EIF_TRUE);
+	((T150*)(C))->a3 = T232c2();
 	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
-	((T149*)(C))->a2 = (T234f1(GE_void(((T149*)(C))->a3), t1));
-	((T149*)(C))->a4 = a1;
-	((T149*)(C))->a5 = (T149f7(C));
+	((T150*)(C))->a2 = (T232f1(GE_void(((T150*)(C))->a3), t1));
+	((T150*)(C))->a4 = a1;
+	t2 = (T150f6(C));
+	T150f10(C, t2);
 	return C;
 }
 
+/* DS_ARRAYED_LIST [DS_PAIR [DP_COMMAND, DS_LINKED_LIST [LX_RULE]]].set_internal_cursor */
+void T150f10(T0* C, T0* a1)
+{
+	((T150*)(C))->a5 = a1;
+}
+
 /* DS_ARRAYED_LIST [DS_PAIR [DP_COMMAND, DS_LINKED_LIST [LX_RULE]]].new_cursor */
-T0* T149f7(T0* C)
+T0* T150f6(T0* C)
 {
 	T0* R = 0;
-	R = T235c3(C);
+	R = T233c3(C);
 	return R;
 }
 
 /* DS_ARRAYED_LIST_CURSOR [DS_PAIR [DP_COMMAND, DS_LINKED_LIST [LX_RULE]]].make */
-T0* T235c3(T0* a1)
+T0* T233c3(T0* a1)
 {
 	T0* C;
-	C = GE_new235(EIF_TRUE);
-	((T235*)(C))->a1 = a1;
-	((T235*)(C))->a2 = (T6)(GE_int32(0));
+	C = GE_new233(EIF_TRUE);
+	((T233*)(C))->a1 = a1;
+	((T233*)(C))->a2 = (T6)(GE_int32(0));
 	return C;
 }
 
 /* KL_SPECIAL_ROUTINES [DS_PAIR [DP_COMMAND, DS_LINKED_LIST [LX_RULE]]].make */
-T0* T234f1(T0* C, T6 a1)
+T0* T232f1(T0* C, T6 a1)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	l1 = T275c2(a1);
-	R = (((T275*)(GE_void(l1)))->a1);
+	R = T231c3(l1, a1);
 	return R;
 }
 
-/* TO_SPECIAL [DS_PAIR [DP_COMMAND, DS_LINKED_LIST [LX_RULE]]].make_area */
-T0* T275c2(T6 a1)
+/* SPECIAL [DS_PAIR [DP_COMMAND, DS_LINKED_LIST [LX_RULE]]].make_filled */
+T0* T231c3(T0* a1, T6 a2)
 {
 	T0* C;
-	C = GE_new275(EIF_TRUE);
-	((T275*)(C))->a1 = T233c2(a1);
+	T6 t1;
+	C = GE_new231(a2, EIF_TRUE);
+	T231f5(C, a2);
+	t1 = ((T6)((a2)-((T6)(GE_int32(1)))));
+	T231f6(C, a1, (T6)(GE_int32(0)), t1);
 	return C;
+}
+
+/* SPECIAL [DS_PAIR [DP_COMMAND, DS_LINKED_LIST [LX_RULE]]].fill_with */
+void T231f6(T0* C, T0* a1, T6 a2, T6 a3)
+{
+	T1 t1;
+	T6 l1 = 0;
+	T6 l2 = 0;
+	l1 = a2;
+	l2 = ((T6)((a3)+((T6)(GE_int32(1)))));
+	while (1) {
+		t1 = (((((l1) == (l2)))));
+		if (t1) {
+			break;
+		}
+		((T231*)(C))->z2[l1] = (a1);
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
 }
 
 /* SPECIAL [DS_PAIR [DP_COMMAND, DS_LINKED_LIST [LX_RULE]]].make */
-T0* T233c2(T6 a1)
+void T231f5(T0* C, T6 a1)
 {
-	T0* C;
-	C = GE_new233(a1, EIF_TRUE);
-	return C;
 }
 
 /* KL_SPECIAL_ROUTINES [DS_PAIR [DP_COMMAND, DS_LINKED_LIST [LX_RULE]]].default_create */
-T0* T234c2(void)
+T0* T232c2(void)
 {
 	T0* C;
-	C = GE_new234(EIF_TRUE);
+	C = GE_new232(EIF_TRUE);
 	return C;
 }
 
 /* ARRAY [LX_RULE].count */
-T6 T137f4(T0* C)
+T6 T138f4(T0* C)
 {
 	T6 t1;
 	T6 R = 0;
-	t1 = ((T6)((((T137*)(C))->a3)-(((T137*)(C))->a2)));
+	t1 = ((T6)((((T138*)(C))->a3)-(((T138*)(C))->a2)));
 	R = ((T6)((t1)+((T6)(GE_int32(1)))));
 	return R;
 }
@@ -7816,50 +7815,50 @@ void T47f89(T0* C, T0* a1)
 	T6 l1 = 0;
 	T6 l2 = 0;
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\tyy_execute_action (yy_act: INTEGER) is\n\t\t\t-- Execute semantic action.\n\t\tdo\n", 76));
+		T55f25(a1, GE_ms8("\tyy_execute_action (yy_act: INTEGER)\n\t\t\t-- Execute semantic action.\n\t\tdo\n", 73));
 	} else {
-		T58f11(a1, GE_ms8("\tyy_execute_action (yy_act: INTEGER) is\n\t\t\t-- Execute semantic action.\n\t\tdo\n", 76));
+		T58f12(a1, GE_ms8("\tyy_execute_action (yy_act: INTEGER)\n\t\t\t-- Execute semantic action.\n\t\tdo\n", 73));
 	}
 	if (((T47*)(C))->a10) {
 		T47f107(C, a1);
 	} else {
-		t1 = (((T137*)(GE_void(((T47*)(C))->a1)))->a2);
-		t2 = (((T137*)(GE_void(((T47*)(C))->a1)))->a3);
+		t1 = (((T138*)(GE_void(((T47*)(C))->a1)))->a2);
+		t2 = (((T138*)(GE_void(((T47*)(C))->a1)))->a3);
 		T47f108(C, a1, t1, t2);
 	}
 	if (((T47*)(C))->a16) {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("\t\t\tpost_action\n", 15));
+			T55f25(a1, GE_ms8("\t\t\tpost_action\n", 15));
 		} else {
-			T58f11(a1, GE_ms8("\t\t\tpost_action\n", 15));
+			T58f12(a1, GE_ms8("\t\t\tpost_action\n", 15));
 		}
 	}
 	if (((T47*)(C))->a14) {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("\t\t\tyy_set_beginning_of_line\n", 28));
+			T55f25(a1, GE_ms8("\t\t\tyy_set_beginning_of_line\n", 28));
 		} else {
-			T58f11(a1, GE_ms8("\t\t\tyy_set_beginning_of_line\n", 28));
+			T58f12(a1, GE_ms8("\t\t\tyy_set_beginning_of_line\n", 28));
 		}
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\t\tend\n", 6));
+		T55f25(a1, GE_ms8("\t\tend\n", 6));
 	} else {
-		T58f11(a1, GE_ms8("\t\tend\n", 6));
+		T58f12(a1, GE_ms8("\t\tend\n", 6));
 	}
 	if (((T47*)(C))->a11) {
-		l2 = (((T137*)(GE_void(((T47*)(C))->a1)))->a3);
-		l1 = (((T137*)(GE_void(((T47*)(C))->a1)))->a2);
+		l2 = (((T138*)(GE_void(((T47*)(C))->a1)))->a3);
+		l1 = (((T138*)(GE_void(((T47*)(C))->a1)))->a2);
 		while (1) {
 			t3 = (T6f1((&l1), l2));
 			if (t3) {
 				break;
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f25(a1, (T2)('\n'));
+				T55f26(a1, (T2)('\n'));
 			} else {
-				T58f12(a1, (T2)('\n'));
+				T58f13(a1, (T2)('\n'));
 			}
-			t4 = (T137f5(GE_void(((T47*)(C))->a1), l1));
+			t4 = (T138f5(GE_void(((T47*)(C))->a1), l1));
 			T47f109(C, a1, t4);
 			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 		}
@@ -7871,55 +7870,55 @@ void T47f109(T0* C, T0* a1, T0* a2)
 {
 	T6 t1;
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\tyy_execute_action_", 19));
+		T55f25(a1, GE_ms8("\tyy_execute_action_", 19));
 	} else {
-		T58f11(a1, GE_ms8("\tyy_execute_action_", 19));
+		T58f12(a1, GE_ms8("\tyy_execute_action_", 19));
 	}
 	t1 = (((T49*)(GE_void(a2)))->a1);
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f27(a1, t1);
+		T55f28(a1, t1);
 	} else {
-		T58f14(a1, t1);
+		T58f15(a1, t1);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8(" is\n\t\t\t--|#line ", 16));
+		T55f25(a1, GE_ms8("\n\t\t\t--|#line ", 13));
 	} else {
-		T58f11(a1, GE_ms8(" is\n\t\t\t--|#line ", 16));
+		T58f12(a1, GE_ms8("\n\t\t\t--|#line ", 13));
 	}
 	if (((T47*)(C))->a19) {
 		t1 = (((T49*)(GE_void(a2)))->a8);
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f27(a1, t1);
+			T55f28(a1, t1);
 		} else {
-			T58f14(a1, t1);
+			T58f15(a1, t1);
 		}
 	} else {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("<not available>", 15));
+			T55f25(a1, GE_ms8("<not available>", 15));
 		} else {
-			T58f11(a1, GE_ms8("<not available>", 15));
+			T58f12(a1, GE_ms8("<not available>", 15));
 		}
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8(" \"", 2));
+		T55f25(a1, GE_ms8(" \"", 2));
 	} else {
-		T58f11(a1, GE_ms8(" \"", 2));
+		T58f12(a1, GE_ms8(" \"", 2));
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, ((T47*)(C))->a7);
+		T55f25(a1, ((T47*)(C))->a7);
 	} else {
-		T58f11(a1, ((T47*)(C))->a7);
+		T58f12(a1, ((T47*)(C))->a7);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\"\n\t\tdo\n", 7));
+		T55f25(a1, GE_ms8("\"\n\t\tdo\n", 7));
 	} else {
-		T58f11(a1, GE_ms8("\"\n\t\tdo\n", 7));
+		T58f12(a1, GE_ms8("\"\n\t\tdo\n", 7));
 	}
 	T47f118(C, a1, a2);
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\n\t\tend\n", 7));
+		T55f25(a1, GE_ms8("\n\t\tend\n", 7));
 	} else {
-		T58f11(a1, GE_ms8("\n\t\tend\n", 7));
+		T58f12(a1, GE_ms8("\n\t\tend\n", 7));
 	}
 }
 
@@ -7938,40 +7937,40 @@ void T47f118(T0* C, T0* a1, T0* a2)
 		t1 = (T6f5(&t2, (T6)(GE_int32(0))));
 		if (t1) {
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8("\tyy_end := yy_end - ", 20));
+				T55f25(a1, GE_ms8("\tyy_end := yy_end - ", 20));
 			} else {
-				T58f11(a1, GE_ms8("\tyy_end := yy_end - ", 20));
+				T58f12(a1, GE_ms8("\tyy_end := yy_end - ", 20));
 			}
 			t2 = (((T49*)(GE_void(a2)))->a5);
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f27(a1, t2);
+				T55f28(a1, t2);
 			} else {
-				T58f14(a1, t2);
+				T58f15(a1, t2);
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f25(a1, (T2)('\n'));
+				T55f26(a1, (T2)('\n'));
 			} else {
-				T58f12(a1, (T2)('\n'));
+				T58f13(a1, (T2)('\n'));
 			}
 		} else {
 			t2 = (((T49*)(GE_void(a2)))->a4);
 			t1 = (T6f5(&t2, (T6)(GE_int32(0))));
 			if (t1) {
 				if (((T0*)(GE_void(a1)))->id==55) {
-					T55f24(a1, GE_ms8("\tyy_end := yy_start + yy_more_len + ", 36));
+					T55f25(a1, GE_ms8("\tyy_end := yy_start + yy_more_len + ", 36));
 				} else {
-					T58f11(a1, GE_ms8("\tyy_end := yy_start + yy_more_len + ", 36));
+					T58f12(a1, GE_ms8("\tyy_end := yy_start + yy_more_len + ", 36));
 				}
 				t2 = (((T49*)(GE_void(a2)))->a4);
 				if (((T0*)(GE_void(a1)))->id==55) {
-					T55f27(a1, t2);
+					T55f28(a1, t2);
 				} else {
-					T58f14(a1, t2);
+					T58f15(a1, t2);
 				}
 				if (((T0*)(GE_void(a1)))->id==55) {
-					T55f25(a1, (T2)('\n'));
+					T55f26(a1, (T2)('\n'));
 				} else {
-					T58f12(a1, (T2)('\n'));
+					T58f13(a1, (T2)('\n'));
 				}
 			}
 		}
@@ -7984,27 +7983,27 @@ void T47f118(T0* C, T0* a1, T0* a2)
 			t1 = (T6f1((&l2), (T6)(GE_int32(0))));
 			if (t1) {
 				if (((T0*)(GE_void(a1)))->id==55) {
-					T55f24(a1, GE_ms8("\tyy_column := yy_column + ", 26));
+					T55f25(a1, GE_ms8("\tyy_column := yy_column + ", 26));
 				} else {
-					T58f11(a1, GE_ms8("\tyy_column := yy_column + ", 26));
+					T58f12(a1, GE_ms8("\tyy_column := yy_column + ", 26));
 				}
 				if (((T0*)(GE_void(a1)))->id==55) {
-					T55f27(a1, l2);
+					T55f28(a1, l2);
 				} else {
-					T58f14(a1, l2);
+					T58f15(a1, l2);
 				}
 				if (((T0*)(GE_void(a1)))->id==55) {
-					T55f25(a1, (T2)('\n'));
+					T55f26(a1, (T2)('\n'));
 				} else {
-					T58f12(a1, (T2)('\n'));
+					T58f13(a1, (T2)('\n'));
 				}
 			} else {
 				t1 = (((((l2) != ((T6)(GE_int32(0)))))));
 				if (t1) {
 					if (((T0*)(GE_void(a1)))->id==55) {
-						T55f24(a1, GE_ms8("\tyy_column := yy_column + yy_end - yy_start - yy_more_len\n", 58));
+						T55f25(a1, GE_ms8("\tyy_column := yy_column + yy_end - yy_start - yy_more_len\n", 58));
 					} else {
-						T58f11(a1, GE_ms8("\tyy_column := yy_column + yy_end - yy_start - yy_more_len\n", 58));
+						T58f12(a1, GE_ms8("\tyy_column := yy_column + yy_end - yy_start - yy_more_len\n", 58));
 					}
 				}
 			}
@@ -8014,73 +8013,73 @@ void T47f118(T0* C, T0* a1, T0* a2)
 				t1 = (((((l2) == ((T6)(GE_int32(0)))))));
 				if (t1) {
 					if (((T0*)(GE_void(a1)))->id==55) {
-						T55f24(a1, GE_ms8("\tyy_line := yy_line + ", 22));
+						T55f25(a1, GE_ms8("\tyy_line := yy_line + ", 22));
 					} else {
-						T58f11(a1, GE_ms8("\tyy_line := yy_line + ", 22));
+						T58f12(a1, GE_ms8("\tyy_line := yy_line + ", 22));
 					}
 					if (((T0*)(GE_void(a1)))->id==55) {
-						T55f27(a1, l1);
+						T55f28(a1, l1);
 					} else {
-						T58f14(a1, l1);
+						T58f15(a1, l1);
 					}
 					if (((T0*)(GE_void(a1)))->id==55) {
-						T55f25(a1, (T2)('\n'));
+						T55f26(a1, (T2)('\n'));
 					} else {
-						T58f12(a1, (T2)('\n'));
+						T58f13(a1, (T2)('\n'));
 					}
 					if (((T0*)(GE_void(a1)))->id==55) {
-						T55f24(a1, GE_ms8("\tyy_column := 1\n", 16));
+						T55f25(a1, GE_ms8("\tyy_column := 1\n", 16));
 					} else {
-						T58f11(a1, GE_ms8("\tyy_column := 1\n", 16));
+						T58f12(a1, GE_ms8("\tyy_column := 1\n", 16));
 					}
 				} else {
 					t1 = (T6f1((&l2), (T6)(GE_int32(0))));
 					if (t1) {
 						if (((T0*)(GE_void(a1)))->id==55) {
-							T55f24(a1, GE_ms8("\tyy_line := yy_line + ", 22));
+							T55f25(a1, GE_ms8("\tyy_line := yy_line + ", 22));
 						} else {
-							T58f11(a1, GE_ms8("\tyy_line := yy_line + ", 22));
+							T58f12(a1, GE_ms8("\tyy_line := yy_line + ", 22));
 						}
 						if (((T0*)(GE_void(a1)))->id==55) {
-							T55f27(a1, l1);
+							T55f28(a1, l1);
 						} else {
-							T58f14(a1, l1);
+							T58f15(a1, l1);
 						}
 						if (((T0*)(GE_void(a1)))->id==55) {
-							T55f25(a1, (T2)('\n'));
+							T55f26(a1, (T2)('\n'));
 						} else {
-							T58f12(a1, (T2)('\n'));
+							T58f13(a1, (T2)('\n'));
 						}
 						if (((T0*)(GE_void(a1)))->id==55) {
-							T55f24(a1, GE_ms8("\tyy_column := ", 14));
+							T55f25(a1, GE_ms8("\tyy_column := ", 14));
 						} else {
-							T58f11(a1, GE_ms8("\tyy_column := ", 14));
+							T58f12(a1, GE_ms8("\tyy_column := ", 14));
 						}
 						if (((T0*)(GE_void(a1)))->id==55) {
-							T55f27(a1, l2);
+							T55f28(a1, l2);
 						} else {
-							T58f14(a1, l2);
+							T58f15(a1, l2);
 						}
 						if (((T0*)(GE_void(a1)))->id==55) {
-							T55f24(a1, GE_ms8(" + 1\n", 5));
+							T55f25(a1, GE_ms8(" + 1\n", 5));
 						} else {
-							T58f11(a1, GE_ms8(" + 1\n", 5));
+							T58f12(a1, GE_ms8(" + 1\n", 5));
 						}
 					} else {
 						if (((T0*)(GE_void(a1)))->id==55) {
-							T55f24(a1, GE_ms8("yy_set_column (", 15));
+							T55f25(a1, GE_ms8("yy_set_column (", 15));
 						} else {
-							T58f11(a1, GE_ms8("yy_set_column (", 15));
+							T58f12(a1, GE_ms8("yy_set_column (", 15));
 						}
 						if (((T0*)(GE_void(a1)))->id==55) {
-							T55f27(a1, l1);
+							T55f28(a1, l1);
 						} else {
-							T58f14(a1, l1);
+							T58f15(a1, l1);
 						}
 						if (((T0*)(GE_void(a1)))->id==55) {
-							T55f24(a1, GE_ms8(")\n", 2));
+							T55f25(a1, GE_ms8(")\n", 2));
 						} else {
-							T58f11(a1, GE_ms8(")\n", 2));
+							T58f12(a1, GE_ms8(")\n", 2));
 						}
 					}
 				}
@@ -8088,25 +8087,25 @@ void T47f118(T0* C, T0* a1, T0* a2)
 				t1 = (T6f5((&l2), (T6)(GE_int32(0))));
 				if (t1) {
 					if (((T0*)(GE_void(a1)))->id==55) {
-						T55f24(a1, GE_ms8("yy_set_line (", 13));
+						T55f25(a1, GE_ms8("yy_set_line (", 13));
 					} else {
-						T58f11(a1, GE_ms8("yy_set_line (", 13));
+						T58f12(a1, GE_ms8("yy_set_line (", 13));
 					}
 					if (((T0*)(GE_void(a1)))->id==55) {
-						T55f27(a1, l2);
+						T55f28(a1, l2);
 					} else {
-						T58f14(a1, l2);
+						T58f15(a1, l2);
 					}
 					if (((T0*)(GE_void(a1)))->id==55) {
-						T55f24(a1, GE_ms8(")\n", 2));
+						T55f25(a1, GE_ms8(")\n", 2));
 					} else {
-						T58f11(a1, GE_ms8(")\n", 2));
+						T58f12(a1, GE_ms8(")\n", 2));
 					}
 				} else {
 					if (((T0*)(GE_void(a1)))->id==55) {
-						T55f24(a1, GE_ms8("yy_set_line_column\n", 19));
+						T55f25(a1, GE_ms8("yy_set_line_column\n", 19));
 					} else {
-						T58f11(a1, GE_ms8("yy_set_line_column\n", 19));
+						T58f12(a1, GE_ms8("yy_set_line_column\n", 19));
 					}
 				}
 			}
@@ -8117,132 +8116,132 @@ void T47f118(T0* C, T0* a1, T0* a2)
 		t1 = (T6f1((&l3), (T6)(GE_int32(0))));
 		if (t1) {
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8("\tyy_position := yy_position + ", 30));
+				T55f25(a1, GE_ms8("\tyy_position := yy_position + ", 30));
 			} else {
-				T58f11(a1, GE_ms8("\tyy_position := yy_position + ", 30));
+				T58f12(a1, GE_ms8("\tyy_position := yy_position + ", 30));
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f27(a1, l3);
+				T55f28(a1, l3);
 			} else {
-				T58f14(a1, l3);
+				T58f15(a1, l3);
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f25(a1, (T2)('\n'));
+				T55f26(a1, (T2)('\n'));
 			} else {
-				T58f12(a1, (T2)('\n'));
+				T58f13(a1, (T2)('\n'));
 			}
 		} else {
 			t1 = (((((l3) != ((T6)(GE_int32(0)))))));
 			if (t1) {
 				if (((T0*)(GE_void(a1)))->id==55) {
-					T55f24(a1, GE_ms8("\tyy_position := yy_position + yy_end - yy_start - yy_more_len\n", 62));
+					T55f25(a1, GE_ms8("\tyy_position := yy_position + yy_end - yy_start - yy_more_len\n", 62));
 				} else {
-					T58f11(a1, GE_ms8("\tyy_position := yy_position + yy_end - yy_start - yy_more_len\n", 62));
+					T58f12(a1, GE_ms8("\tyy_position := yy_position + yy_end - yy_start - yy_more_len\n", 62));
 				}
 			}
 		}
 	}
 	if (((T47*)(C))->a15) {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("pre_action\n", 11));
+			T55f25(a1, GE_ms8("pre_action\n", 11));
 		} else {
-			T58f11(a1, GE_ms8("pre_action\n", 11));
+			T58f12(a1, GE_ms8("pre_action\n", 11));
 		}
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("--|#line ", 9));
+		T55f25(a1, GE_ms8("--|#line ", 9));
 	} else {
-		T58f11(a1, GE_ms8("--|#line ", 9));
+		T58f12(a1, GE_ms8("--|#line ", 9));
 	}
 	if (((T47*)(C))->a19) {
 		t2 = (((T49*)(GE_void(a2)))->a8);
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f27(a1, t2);
+			T55f28(a1, t2);
 		} else {
-			T58f14(a1, t2);
+			T58f15(a1, t2);
 		}
 	} else {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("<not available>", 15));
+			T55f25(a1, GE_ms8("<not available>", 15));
 		} else {
-			T58f11(a1, GE_ms8("<not available>", 15));
+			T58f12(a1, GE_ms8("<not available>", 15));
 		}
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8(" \"", 2));
+		T55f25(a1, GE_ms8(" \"", 2));
 	} else {
-		T58f11(a1, GE_ms8(" \"", 2));
+		T58f12(a1, GE_ms8(" \"", 2));
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, ((T47*)(C))->a7);
+		T55f25(a1, ((T47*)(C))->a7);
 	} else {
-		T58f11(a1, ((T47*)(C))->a7);
+		T58f12(a1, ((T47*)(C))->a7);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f25(a1, (T2)('\"'));
+		T55f26(a1, (T2)('\"'));
 	} else {
-		T58f12(a1, (T2)('\"'));
+		T58f13(a1, (T2)('\"'));
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f28(a1);
+		T55f29(a1);
 	} else {
-		T58f15(a1);
+		T58f16(a1);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f26(a1, GE_ms8("debug (\"GELEX\")", 15));
+		T55f27(a1, GE_ms8("debug (\"GELEX\")", 15));
 	} else {
-		T58f13(a1, GE_ms8("debug (\"GELEX\")", 15));
+		T58f14(a1, GE_ms8("debug (\"GELEX\")", 15));
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\tstd.error.put_line (\"Executing scanner user-code from file \'", 61));
+		T55f25(a1, GE_ms8("\tstd.error.put_line (\"Executing scanner user-code from file \'", 61));
 	} else {
-		T58f11(a1, GE_ms8("\tstd.error.put_line (\"Executing scanner user-code from file \'", 61));
+		T58f12(a1, GE_ms8("\tstd.error.put_line (\"Executing scanner user-code from file \'", 61));
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, ((T47*)(C))->a7);
+		T55f25(a1, ((T47*)(C))->a7);
 	} else {
-		T58f11(a1, ((T47*)(C))->a7);
+		T58f12(a1, ((T47*)(C))->a7);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\' at line ", 10));
+		T55f25(a1, GE_ms8("\' at line ", 10));
 	} else {
-		T58f11(a1, GE_ms8("\' at line ", 10));
+		T58f12(a1, GE_ms8("\' at line ", 10));
 	}
 	if (((T47*)(C))->a19) {
 		t2 = (((T49*)(GE_void(a2)))->a8);
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f27(a1, t2);
+			T55f28(a1, t2);
 		} else {
-			T58f14(a1, t2);
+			T58f15(a1, t2);
 		}
 	} else {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("<not available>", 15));
+			T55f25(a1, GE_ms8("<not available>", 15));
 		} else {
-			T58f11(a1, GE_ms8("<not available>", 15));
+			T58f12(a1, GE_ms8("<not available>", 15));
 		}
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f26(a1, GE_ms8("\")", 2));
+		T55f27(a1, GE_ms8("\")", 2));
 	} else {
-		T58f13(a1, GE_ms8("\")", 2));
+		T58f14(a1, GE_ms8("\")", 2));
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f26(a1, GE_ms8("end", 3));
+		T55f27(a1, GE_ms8("end", 3));
 	} else {
-		T58f13(a1, GE_ms8("end", 3));
+		T58f14(a1, GE_ms8("end", 3));
 	}
 	t3 = (((T49*)(GE_void(a2)))->a3);
 	t3 = (T100f2(GE_void(t3)));
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, t3);
+		T55f25(a1, t3);
 	} else {
-		T58f11(a1, t3);
+		T58f12(a1, t3);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f28(a1);
+		T55f29(a1);
 	} else {
-		T58f15(a1);
+		T58f16(a1);
 	}
 }
 
@@ -8255,72 +8254,72 @@ void T47f108(T0* C, T0* a1, T6 a2, T6 a3)
 	T6 l1 = 0;
 	t1 = (((((a2) == (a3)))));
 	if (t1) {
-		t2 = (T137f5(GE_void(((T47*)(C))->a1), a2));
+		t2 = (T138f5(GE_void(((T47*)(C))->a1), a2));
 		T47f117(C, a1, t2);
 	} else {
 		t3 = ((T6)((a2)+((T6)(GE_int32(1)))));
 		t1 = (((((t3) == (a3)))));
 		if (t1) {
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8("if yy_act = ", 12));
+				T55f25(a1, GE_ms8("if yy_act = ", 12));
 			} else {
-				T58f11(a1, GE_ms8("if yy_act = ", 12));
+				T58f12(a1, GE_ms8("if yy_act = ", 12));
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f27(a1, a2);
+				T55f28(a1, a2);
 			} else {
-				T58f14(a1, a2);
+				T58f15(a1, a2);
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8(" then\n", 6));
+				T55f25(a1, GE_ms8(" then\n", 6));
 			} else {
-				T58f11(a1, GE_ms8(" then\n", 6));
+				T58f12(a1, GE_ms8(" then\n", 6));
 			}
-			t2 = (T137f5(GE_void(((T47*)(C))->a1), a2));
+			t2 = (T138f5(GE_void(((T47*)(C))->a1), a2));
 			T47f117(C, a1, t2);
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8("else\n", 5));
+				T55f25(a1, GE_ms8("else\n", 5));
 			} else {
-				T58f11(a1, GE_ms8("else\n", 5));
+				T58f12(a1, GE_ms8("else\n", 5));
 			}
-			t2 = (T137f5(GE_void(((T47*)(C))->a1), a3));
+			t2 = (T138f5(GE_void(((T47*)(C))->a1), a3));
 			T47f117(C, a1, t2);
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8("end\n", 4));
+				T55f25(a1, GE_ms8("end\n", 4));
 			} else {
-				T58f11(a1, GE_ms8("end\n", 4));
+				T58f12(a1, GE_ms8("end\n", 4));
 			}
 		} else {
 			t3 = ((T6)((a3)-(a2)));
 			t3 = ((T6)((t3)/((T6)(GE_int32(2)))));
 			l1 = ((T6)((a2)+(t3)));
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8("if yy_act <= ", 13));
+				T55f25(a1, GE_ms8("if yy_act <= ", 13));
 			} else {
-				T58f11(a1, GE_ms8("if yy_act <= ", 13));
+				T58f12(a1, GE_ms8("if yy_act <= ", 13));
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f27(a1, l1);
+				T55f28(a1, l1);
 			} else {
-				T58f14(a1, l1);
+				T58f15(a1, l1);
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8(" then\n", 6));
+				T55f25(a1, GE_ms8(" then\n", 6));
 			} else {
-				T58f11(a1, GE_ms8(" then\n", 6));
+				T58f12(a1, GE_ms8(" then\n", 6));
 			}
 			T47f108(C, a1, a2, l1);
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8("else\n", 5));
+				T55f25(a1, GE_ms8("else\n", 5));
 			} else {
-				T58f11(a1, GE_ms8("else\n", 5));
+				T58f12(a1, GE_ms8("else\n", 5));
 			}
 			t3 = ((T6)((l1)+((T6)(GE_int32(1)))));
 			T47f108(C, a1, t3, a3);
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8("end\n", 4));
+				T55f25(a1, GE_ms8("end\n", 4));
 			} else {
-				T58f11(a1, GE_ms8("end\n", 4));
+				T58f12(a1, GE_ms8("end\n", 4));
 			}
 		}
 	}
@@ -8332,49 +8331,49 @@ void T47f117(T0* C, T0* a1, T0* a2)
 	T6 t1;
 	if (((T47*)(C))->a11) {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("\t\t--|#line ", 11));
+			T55f25(a1, GE_ms8("\t\t--|#line ", 11));
 		} else {
-			T58f11(a1, GE_ms8("\t\t--|#line ", 11));
+			T58f12(a1, GE_ms8("\t\t--|#line ", 11));
 		}
 		if (((T47*)(C))->a19) {
 			t1 = (((T49*)(GE_void(a2)))->a8);
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f27(a1, t1);
+				T55f28(a1, t1);
 			} else {
-				T58f14(a1, t1);
+				T58f15(a1, t1);
 			}
 		} else {
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8("<not available>", 15));
+				T55f25(a1, GE_ms8("<not available>", 15));
 			} else {
-				T58f11(a1, GE_ms8("<not available>", 15));
+				T58f12(a1, GE_ms8("<not available>", 15));
 			}
 		}
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8(" \"", 2));
+			T55f25(a1, GE_ms8(" \"", 2));
 		} else {
-			T58f11(a1, GE_ms8(" \"", 2));
+			T58f12(a1, GE_ms8(" \"", 2));
 		}
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, ((T47*)(C))->a7);
+			T55f25(a1, ((T47*)(C))->a7);
 		} else {
-			T58f11(a1, ((T47*)(C))->a7);
+			T58f12(a1, ((T47*)(C))->a7);
 		}
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("\"\n\tyy_execute_action_", 21));
+			T55f25(a1, GE_ms8("\"\n\tyy_execute_action_", 21));
 		} else {
-			T58f11(a1, GE_ms8("\"\n\tyy_execute_action_", 21));
+			T58f12(a1, GE_ms8("\"\n\tyy_execute_action_", 21));
 		}
 		t1 = (((T49*)(GE_void(a2)))->a1);
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f27(a1, t1);
+			T55f28(a1, t1);
 		} else {
-			T58f14(a1, t1);
+			T58f15(a1, t1);
 		}
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f25(a1, (T2)('\n'));
+			T55f26(a1, (T2)('\n'));
 		} else {
-			T58f12(a1, (T2)('\n'));
+			T58f13(a1, (T2)('\n'));
 		}
 	} else {
 		T47f118(C, a1, a2);
@@ -8395,28 +8394,28 @@ void T47f107(T0* C, T0* a1)
 	T0* l4 = 0;
 	T1 l5 = 0;
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\t\t\tinspect yy_act\n", 18));
+		T55f25(a1, GE_ms8("\t\t\tinspect yy_act\n", 18));
 	} else {
-		T58f11(a1, GE_ms8("\t\t\tinspect yy_act\n", 18));
+		T58f12(a1, GE_ms8("\t\t\tinspect yy_act\n", 18));
 	}
-	l2 = (((T137*)(GE_void(((T47*)(C))->a1)))->a3);
-	l1 = (((T137*)(GE_void(((T47*)(C))->a1)))->a2);
+	l2 = (((T138*)(GE_void(((T47*)(C))->a1)))->a3);
+	l1 = (((T138*)(GE_void(((T47*)(C))->a1)))->a2);
 	while (1) {
 		t1 = (T6f1((&l1), l2));
 		if (t1) {
 			break;
 		}
-		l3 = (T137f5(GE_void(((T47*)(C))->a1), l1));
+		l3 = (T138f5(GE_void(((T47*)(C))->a1), l1));
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("when ", 5));
+			T55f25(a1, GE_ms8("when ", 5));
 		} else {
-			T58f11(a1, GE_ms8("when ", 5));
+			T58f12(a1, GE_ms8("when ", 5));
 		}
 		t2 = (((T49*)(GE_void(l3)))->a1);
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f27(a1, t2);
+			T55f28(a1, t2);
 		} else {
-			T58f14(a1, t2);
+			T58f15(a1, t2);
 		}
 		t1 = (((T49*)(GE_void(l3)))->a9);
 		t1 = ((T1)(!(t1)));
@@ -8432,7 +8431,7 @@ void T47f107(T0* C, T0* a1)
 				if (t1) {
 					break;
 				}
-				l4 = (T137f5(GE_void(((T47*)(C))->a1), l1));
+				l4 = (T138f5(GE_void(((T47*)(C))->a1), l1));
 				t3 = (((T49*)(GE_void(l3)))->a3);
 				t4 = (((T49*)(GE_void(l4)))->a3);
 				t1 = ((t3)==(t4));
@@ -8448,15 +8447,15 @@ void T47f107(T0* C, T0* a1)
 				}
 				if (t1) {
 					if (((T0*)(GE_void(a1)))->id==55) {
-						T55f24(a1, GE_ms8(", ", 2));
+						T55f25(a1, GE_ms8(", ", 2));
 					} else {
-						T58f11(a1, GE_ms8(", ", 2));
+						T58f12(a1, GE_ms8(", ", 2));
 					}
 					t2 = (((T49*)(GE_void(l4)))->a1);
 					if (((T0*)(GE_void(a1)))->id==55) {
-						T55f27(a1, t2);
+						T55f28(a1, t2);
 					} else {
-						T58f14(a1, t2);
+						T58f15(a1, t2);
 					}
 					l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 				} else {
@@ -8478,7 +8477,7 @@ void T47f107(T0* C, T0* a1)
 			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 			t1 = (T6f7((&l1), l2));
 			if (t1) {
-				l4 = (T137f5(GE_void(((T47*)(C))->a1), l1));
+				l4 = (T138f5(GE_void(((T47*)(C))->a1), l1));
 				t3 = (((T49*)(GE_void(l4)))->a3);
 				t4 = (((T49*)(GE_void(l3)))->a3);
 				t1 = ((t3)==(t4));
@@ -8487,28 +8486,28 @@ void T47f107(T0* C, T0* a1)
 			}
 		}
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8(" then\n", 6));
+			T55f25(a1, GE_ms8(" then\n", 6));
 		} else {
-			T58f11(a1, GE_ms8(" then\n", 6));
+			T58f12(a1, GE_ms8(" then\n", 6));
 		}
 		T47f117(C, a1, l3);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\t\t\telse\n", 8));
+		T55f25(a1, GE_ms8("\t\t\telse\n", 8));
 	} else {
-		T58f11(a1, GE_ms8("\t\t\telse\n", 8));
+		T58f12(a1, GE_ms8("\t\t\telse\n", 8));
 	}
 	if (((T47*)(C))->a15) {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("\t\t\t\tpre_action\n", 15));
+			T55f25(a1, GE_ms8("\t\t\t\tpre_action\n", 15));
 		} else {
-			T58f11(a1, GE_ms8("\t\t\t\tpre_action\n", 15));
+			T58f12(a1, GE_ms8("\t\t\t\tpre_action\n", 15));
 		}
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\t\t\t\tlast_token := yyError_token\n\t\t\t\tfatal_error (\"fatal scanner internal error: no action found\")\n\t\t\tend\n", 105));
+		T55f25(a1, GE_ms8("\t\t\t\tlast_token := yyError_token\n\t\t\t\tfatal_error (\"fatal scanner internal error: no action found\")\n\t\t\tend\n", 105));
 	} else {
-		T58f11(a1, GE_ms8("\t\t\t\tlast_token := yyError_token\n\t\t\t\tfatal_error (\"fatal scanner internal error: no action found\")\n\t\t\tend\n", 105));
+		T58f12(a1, GE_ms8("\t\t\t\tlast_token := yyError_token\n\t\t\t\tfatal_error (\"fatal scanner internal error: no action found\")\n\t\t\tend\n", 105));
 	}
 }
 
@@ -8517,103 +8516,103 @@ void T47f88(T0* C, T0* a1)
 {
 	T1 t1;
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\tyy_build_tables is\n\t\t\t-- Build scanner tables.\n\t\tdo\n", 53));
+		T55f25(a1, GE_ms8("\tyy_build_tables\n\t\t\t-- Build scanner tables.\n\t\tdo\n", 50));
 	} else {
-		T58f11(a1, GE_ms8("\tyy_build_tables is\n\t\t\t-- Build scanner tables.\n\t\tdo\n", 53));
+		T58f12(a1, GE_ms8("\tyy_build_tables\n\t\t\t-- Build scanner tables.\n\t\tdo\n", 50));
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, ge182ov4545);
+		T55f25(a1, ge134ov4823);
 	} else {
-		T58f11(a1, ge182ov4545);
+		T58f12(a1, ge134ov4823);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("yy_nxt := yy_nxt_template\n", 26));
+		T55f25(a1, GE_ms8("yy_nxt := yy_nxt_template\n", 26));
 	} else {
-		T58f11(a1, GE_ms8("yy_nxt := yy_nxt_template\n", 26));
+		T58f12(a1, GE_ms8("yy_nxt := yy_nxt_template\n", 26));
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, ge182ov4545);
+		T55f25(a1, ge134ov4823);
 	} else {
-		T58f11(a1, ge182ov4545);
+		T58f12(a1, ge134ov4823);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("yy_chk := yy_chk_template\n", 26));
+		T55f25(a1, GE_ms8("yy_chk := yy_chk_template\n", 26));
 	} else {
-		T58f11(a1, GE_ms8("yy_chk := yy_chk_template\n", 26));
+		T58f12(a1, GE_ms8("yy_chk := yy_chk_template\n", 26));
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, ge182ov4545);
+		T55f25(a1, ge134ov4823);
 	} else {
-		T58f11(a1, ge182ov4545);
+		T58f12(a1, ge134ov4823);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("yy_base := yy_base_template\n", 28));
+		T55f25(a1, GE_ms8("yy_base := yy_base_template\n", 28));
 	} else {
-		T58f11(a1, GE_ms8("yy_base := yy_base_template\n", 28));
+		T58f12(a1, GE_ms8("yy_base := yy_base_template\n", 28));
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, ge182ov4545);
+		T55f25(a1, ge134ov4823);
 	} else {
-		T58f11(a1, ge182ov4545);
+		T58f12(a1, ge134ov4823);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("yy_def := yy_def_template\n", 26));
+		T55f25(a1, GE_ms8("yy_def := yy_def_template\n", 26));
 	} else {
-		T58f11(a1, GE_ms8("yy_def := yy_def_template\n", 26));
+		T58f12(a1, GE_ms8("yy_def := yy_def_template\n", 26));
 	}
 	t1 = ((((T47*)(C))->a21)!=(EIF_VOID));
 	if (t1) {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, ge182ov4545);
+			T55f25(a1, ge134ov4823);
 		} else {
-			T58f11(a1, ge182ov4545);
+			T58f12(a1, ge134ov4823);
 		}
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("yy_ec := yy_ec_template\n", 24));
+			T55f25(a1, GE_ms8("yy_ec := yy_ec_template\n", 24));
 		} else {
-			T58f11(a1, GE_ms8("yy_ec := yy_ec_template\n", 24));
+			T58f12(a1, GE_ms8("yy_ec := yy_ec_template\n", 24));
 		}
 	}
 	t1 = ((((T47*)(C))->a42)!=(EIF_VOID));
 	if (t1) {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, ge182ov4545);
+			T55f25(a1, ge134ov4823);
 		} else {
-			T58f11(a1, ge182ov4545);
+			T58f12(a1, ge134ov4823);
 		}
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("yy_meta := yy_meta_template\n", 28));
+			T55f25(a1, GE_ms8("yy_meta := yy_meta_template\n", 28));
 		} else {
-			T58f11(a1, GE_ms8("yy_meta := yy_meta_template\n", 28));
+			T58f12(a1, GE_ms8("yy_meta := yy_meta_template\n", 28));
 		}
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, ge182ov4545);
+		T55f25(a1, ge134ov4823);
 	} else {
-		T58f11(a1, ge182ov4545);
+		T58f12(a1, ge134ov4823);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("yy_accept := yy_accept_template\n", 32));
+		T55f25(a1, GE_ms8("yy_accept := yy_accept_template\n", 32));
 	} else {
-		T58f11(a1, GE_ms8("yy_accept := yy_accept_template\n", 32));
+		T58f12(a1, GE_ms8("yy_accept := yy_accept_template\n", 32));
 	}
 	t1 = ((((T47*)(C))->a43)!=(EIF_VOID));
 	if (t1) {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, ge182ov4545);
+			T55f25(a1, ge134ov4823);
 		} else {
-			T58f11(a1, ge182ov4545);
+			T58f12(a1, ge134ov4823);
 		}
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("yy_acclist := yy_acclist_template\n", 34));
+			T55f25(a1, GE_ms8("yy_acclist := yy_acclist_template\n", 34));
 		} else {
-			T58f11(a1, GE_ms8("yy_acclist := yy_acclist_template\n", 34));
+			T58f12(a1, GE_ms8("yy_acclist := yy_acclist_template\n", 34));
 		}
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\t\tend\n", 6));
+		T55f25(a1, GE_ms8("\t\tend\n", 6));
 	} else {
-		T58f11(a1, GE_ms8("\t\tend\n", 6));
+		T58f12(a1, GE_ms8("\t\tend\n", 6));
 	}
 }
 
@@ -8623,83 +8622,83 @@ void T47f87(T0* C, T0* a1)
 	T6 t1;
 	T0* t2;
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\tvalid_start_condition (sc: INTEGER): BOOLEAN is\n\t\t\t-- Is `sc\' a valid start condition\?\n\t\tdo\n\t\t\tResult := ", 106));
+		T55f25(a1, GE_ms8("\tvalid_start_condition (sc: INTEGER): BOOLEAN\n\t\t\t-- Is `sc\' a valid start condition\?\n\t\tdo\n\t\t\tResult := ", 103));
 	} else {
-		T58f11(a1, GE_ms8("\tvalid_start_condition (sc: INTEGER): BOOLEAN is\n\t\t\t-- Is `sc\' a valid start condition\?\n\t\tdo\n\t\t\tResult := ", 106));
+		T58f12(a1, GE_ms8("\tvalid_start_condition (sc: INTEGER): BOOLEAN\n\t\t\t-- Is `sc\' a valid start condition\?\n\t\tdo\n\t\t\tResult := ", 103));
 	}
-	t1 = (T132f6(GE_void(((T47*)(C))->a20)));
+	t1 = (T133f6(GE_void(((T47*)(C))->a20)));
 	switch (t1) {
 	case (T6)(T6)(GE_int32(0)):
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("False", 5));
+			T55f25(a1, GE_ms8("False", 5));
 		} else {
-			T58f11(a1, GE_ms8("False", 5));
+			T58f12(a1, GE_ms8("False", 5));
 		}
 		break;
 	case (T6)(T6)(GE_int32(1)):
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("(sc = ", 6));
+			T55f25(a1, GE_ms8("(sc = ", 6));
 		} else {
-			T58f11(a1, GE_ms8("(sc = ", 6));
+			T58f12(a1, GE_ms8("(sc = ", 6));
 		}
-		t1 = (((T132*)(GE_void(((T47*)(C))->a20)))->a2);
-		t2 = (T132f5(GE_void(((T47*)(C))->a20), t1));
+		t1 = (((T133*)(GE_void(((T47*)(C))->a20)))->a2);
+		t2 = (T133f5(GE_void(((T47*)(C))->a20), t1));
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, t2);
+			T55f25(a1, t2);
 		} else {
-			T58f11(a1, t2);
+			T58f12(a1, t2);
 		}
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f25(a1, (T2)(')'));
+			T55f26(a1, (T2)(')'));
 		} else {
-			T58f12(a1, (T2)(')'));
+			T58f13(a1, (T2)(')'));
 		}
 		break;
 	default:
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f25(a1, (T2)('('));
+			T55f26(a1, (T2)('('));
 		} else {
-			T58f12(a1, (T2)('('));
+			T58f13(a1, (T2)('('));
 		}
-		t1 = (((T132*)(GE_void(((T47*)(C))->a20)))->a2);
-		t2 = (T132f5(GE_void(((T47*)(C))->a20), t1));
+		t1 = (((T133*)(GE_void(((T47*)(C))->a20)))->a2);
+		t2 = (T133f5(GE_void(((T47*)(C))->a20), t1));
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, t2);
+			T55f25(a1, t2);
 		} else {
-			T58f11(a1, t2);
-		}
-		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8(" <= sc and sc <= ", 17));
-		} else {
-			T58f11(a1, GE_ms8(" <= sc and sc <= ", 17));
-		}
-		t1 = (((T132*)(GE_void(((T47*)(C))->a20)))->a3);
-		t2 = (T132f5(GE_void(((T47*)(C))->a20), t1));
-		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, t2);
-		} else {
-			T58f11(a1, t2);
+			T58f12(a1, t2);
 		}
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f25(a1, (T2)(')'));
+			T55f25(a1, GE_ms8(" <= sc and sc <= ", 17));
 		} else {
-			T58f12(a1, (T2)(')'));
+			T58f12(a1, GE_ms8(" <= sc and sc <= ", 17));
+		}
+		t1 = (((T133*)(GE_void(((T47*)(C))->a20)))->a3);
+		t2 = (T133f5(GE_void(((T47*)(C))->a20), t1));
+		if (((T0*)(GE_void(a1)))->id==55) {
+			T55f25(a1, t2);
+		} else {
+			T58f12(a1, t2);
+		}
+		if (((T0*)(GE_void(a1)))->id==55) {
+			T55f26(a1, (T2)(')'));
+		} else {
+			T58f13(a1, (T2)(')'));
 		}
 		break;
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\n\t\tend\n", 7));
+		T55f25(a1, GE_ms8("\n\t\tend\n", 7));
 	} else {
-		T58f11(a1, GE_ms8("\n\t\tend\n", 7));
+		T58f12(a1, GE_ms8("\n\t\tend\n", 7));
 	}
 }
 
 /* ARRAY [STRING_8].count */
-T6 T132f6(T0* C)
+T6 T133f6(T0* C)
 {
 	T6 t1;
 	T6 R = 0;
-	t1 = ((T6)((((T132*)(C))->a3)-(((T132*)(C))->a2)));
+	t1 = ((T6)((((T133*)(C))->a3)-(((T133*)(C))->a2)));
 	R = ((T6)((t1)+((T6)(GE_int32(1)))));
 	return R;
 }
@@ -8722,9 +8721,9 @@ void T47f86(T0* C, T0* a1)
 			}
 			t2 = (T74f8(GE_void(((T47*)(C))->a13), l1));
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, t2);
+				T55f25(a1, t2);
 			} else {
-				T58f11(a1, t2);
+				T58f12(a1, t2);
 			}
 			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 		}
@@ -8744,45 +8743,45 @@ void T54f50(T0* C, T0* a1)
 {
 	T54f55(C, a1);
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\nfeature -- Status report\n\n", 27));
+		T55f25(a1, GE_ms8("\nfeature -- Status report\n\n", 27));
 	} else {
-		T58f11(a1, GE_ms8("\nfeature -- Status report\n\n", 27));
+		T58f12(a1, GE_ms8("\nfeature -- Status report\n\n", 27));
 	}
 	T54f56(C, a1);
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\nfeature {NONE} -- Implementation\n\n", 35));
+		T55f25(a1, GE_ms8("\nfeature {NONE} -- Implementation\n\n", 35));
 	} else {
-		T58f11(a1, GE_ms8("\nfeature {NONE} -- Implementation\n\n", 35));
+		T58f12(a1, GE_ms8("\nfeature {NONE} -- Implementation\n\n", 35));
 	}
 	T54f57(C, a1);
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f25(a1, (T2)('\n'));
+		T55f26(a1, (T2)('\n'));
 	} else {
-		T58f12(a1, (T2)('\n'));
+		T58f13(a1, (T2)('\n'));
 	}
 	T54f58(C, a1);
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f25(a1, (T2)('\n'));
+		T55f26(a1, (T2)('\n'));
 	} else {
-		T58f12(a1, (T2)('\n'));
+		T58f13(a1, (T2)('\n'));
 	}
 	T54f59(C, a1);
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\nfeature {NONE} -- Table templates\n\n", 36));
+		T55f25(a1, GE_ms8("\nfeature {NONE} -- Table templates\n\n", 36));
 	} else {
-		T58f11(a1, GE_ms8("\nfeature {NONE} -- Table templates\n\n", 36));
+		T58f12(a1, GE_ms8("\nfeature {NONE} -- Table templates\n\n", 36));
 	}
 	T54f60(C, a1);
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\nfeature {NONE} -- Constants\n\n", 30));
+		T55f25(a1, GE_ms8("\nfeature {NONE} -- Constants\n\n", 30));
 	} else {
-		T58f11(a1, GE_ms8("\nfeature {NONE} -- Constants\n\n", 30));
+		T58f12(a1, GE_ms8("\nfeature {NONE} -- Constants\n\n", 30));
 	}
 	T54f61(C, a1);
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\nfeature -- User-defined features\n\n", 35));
+		T55f25(a1, GE_ms8("\nfeature -- User-defined features\n\n", 35));
 	} else {
-		T58f11(a1, GE_ms8("\nfeature -- User-defined features\n\n", 35));
+		T58f12(a1, GE_ms8("\nfeature -- User-defined features\n\n", 35));
 	}
 	T54f62(C, a1);
 }
@@ -8794,9 +8793,9 @@ void T54f62(T0* C, T0* a1)
 	t1 = ((((T54*)(C))->a9)!=(EIF_VOID));
 	if (t1) {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, ((T54*)(C))->a9);
+			T55f25(a1, ((T54*)(C))->a9);
 		} else {
-			T58f11(a1, ((T54*)(C))->a9);
+			T58f12(a1, ((T54*)(C))->a9);
 		}
 	}
 }
@@ -8806,36 +8805,36 @@ void T54f61(T0* C, T0* a1)
 {
 	T0* t1;
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\tyyNull_equiv_class: INTEGER is ", 32));
+		T55f25(a1, GE_ms8("\tyyNull_equiv_class: INTEGER = ", 31));
 	} else {
-		T58f11(a1, GE_ms8("\tyyNull_equiv_class: INTEGER is ", 32));
+		T58f12(a1, GE_ms8("\tyyNull_equiv_class: INTEGER = ", 31));
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f27(a1, ((T54*)(C))->a19);
+		T55f28(a1, ((T54*)(C))->a19);
 	} else {
-		T58f14(a1, ((T54*)(C))->a19);
+		T58f15(a1, ((T54*)(C))->a19);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\n\t\t\t-- Equivalence code for NULL character\n\n\tyyNb_rows: INTEGER is ", 67));
+		T55f25(a1, GE_ms8("\n\t\t\t-- Equivalence code for NULL character\n\n\tyyNb_rows: INTEGER = ", 66));
 	} else {
-		T58f11(a1, GE_ms8("\n\t\t\t-- Equivalence code for NULL character\n\n\tyyNb_rows: INTEGER is ", 67));
+		T58f12(a1, GE_ms8("\n\t\t\t-- Equivalence code for NULL character\n\n\tyyNb_rows: INTEGER = ", 66));
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f27(a1, ((T54*)(C))->a32);
+		T55f28(a1, ((T54*)(C))->a32);
 	} else {
-		T58f14(a1, ((T54*)(C))->a32);
+		T58f15(a1, ((T54*)(C))->a32);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\n\t\t\t-- Number of rows in `yy_nxt\'\n\n\tyyBacking_up: BOOLEAN is ", 61));
+		T55f25(a1, GE_ms8("\n\t\t\t-- Number of rows in `yy_nxt\'\n\n\tyyBacking_up: BOOLEAN = ", 60));
 	} else {
-		T58f11(a1, GE_ms8("\n\t\t\t-- Number of rows in `yy_nxt\'\n\n\tyyBacking_up: BOOLEAN is ", 61));
+		T58f12(a1, GE_ms8("\n\t\t\t-- Number of rows in `yy_nxt\'\n\n\tyyBacking_up: BOOLEAN = ", 60));
 	}
 	t1 = (T54f35(C));
-	T153f4(GE_void(t1), a1, ((T54*)(C))->a28);
+	T154f4(GE_void(t1), a1, ((T54*)(C))->a28);
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\n\t\t\t-- Does current scanner back up\?\n\t\t\t-- (i.e. does it have non-accepting states)\n\n", 85));
+		T55f25(a1, GE_ms8("\n\t\t\t-- Does current scanner back up\?\n\t\t\t-- (i.e. does it have non-accepting states)\n\n", 85));
 	} else {
-		T58f11(a1, GE_ms8("\n\t\t\t-- Does current scanner back up\?\n\t\t\t-- (i.e. does it have non-accepting states)\n\n", 85));
+		T58f12(a1, GE_ms8("\n\t\t\t-- Does current scanner back up\?\n\t\t\t-- (i.e. does it have non-accepting states)\n\n", 85));
 	}
 	T54f61p1(C, a1);
 }
@@ -8848,83 +8847,83 @@ void T54f61p1(T0* C, T0* a1)
 	T6 l1 = 0;
 	T6 l2 = 0;
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\tyyNb_rules: INTEGER is ", 24));
+		T55f25(a1, GE_ms8("\tyyNb_rules: INTEGER = ", 23));
 	} else {
-		T58f11(a1, GE_ms8("\tyyNb_rules: INTEGER is ", 24));
+		T58f12(a1, GE_ms8("\tyyNb_rules: INTEGER = ", 23));
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f27(a1, ((T54*)(C))->a20);
+		T55f28(a1, ((T54*)(C))->a20);
 	} else {
-		T58f14(a1, ((T54*)(C))->a20);
+		T58f15(a1, ((T54*)(C))->a20);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\n\t\t\t-- Number of rules\n\n\tyyEnd_of_buffer: INTEGER is ", 53));
+		T55f25(a1, GE_ms8("\n\t\t\t-- Number of rules\n\n\tyyEnd_of_buffer: INTEGER = ", 52));
 	} else {
-		T58f11(a1, GE_ms8("\n\t\t\t-- Number of rules\n\n\tyyEnd_of_buffer: INTEGER is ", 53));
+		T58f12(a1, GE_ms8("\n\t\t\t-- Number of rules\n\n\tyyEnd_of_buffer: INTEGER = ", 52));
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f27(a1, ((T54*)(C))->a22);
+		T55f28(a1, ((T54*)(C))->a22);
 	} else {
-		T58f14(a1, ((T54*)(C))->a22);
+		T58f15(a1, ((T54*)(C))->a22);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\n\t\t\t-- End of buffer rule code\n\n\tyyLine_used: BOOLEAN is ", 57));
+		T55f25(a1, GE_ms8("\n\t\t\t-- End of buffer rule code\n\n\tyyLine_used: BOOLEAN = ", 56));
 	} else {
-		T58f11(a1, GE_ms8("\n\t\t\t-- End of buffer rule code\n\n\tyyLine_used: BOOLEAN is ", 57));
+		T58f12(a1, GE_ms8("\n\t\t\t-- End of buffer rule code\n\n\tyyLine_used: BOOLEAN = ", 56));
 	}
 	t1 = (T54f35(C));
-	T153f4(GE_void(t1), a1, ((T54*)(C))->a23);
+	T154f4(GE_void(t1), a1, ((T54*)(C))->a23);
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\n\t\t\t-- Are line and column numbers used\?\n\n\tyyPosition_used: BOOLEAN is ", 71));
+		T55f25(a1, GE_ms8("\n\t\t\t-- Are line and column numbers used\?\n\n\tyyPosition_used: BOOLEAN = ", 70));
 	} else {
-		T58f11(a1, GE_ms8("\n\t\t\t-- Are line and column numbers used\?\n\n\tyyPosition_used: BOOLEAN is ", 71));
+		T58f12(a1, GE_ms8("\n\t\t\t-- Are line and column numbers used\?\n\n\tyyPosition_used: BOOLEAN = ", 70));
 	}
 	t1 = (T54f35(C));
-	T153f4(GE_void(t1), a1, ((T54*)(C))->a24);
+	T154f4(GE_void(t1), a1, ((T54*)(C))->a24);
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\n\t\t\t-- Is `position\' used\?\n\n", 28));
+		T55f25(a1, GE_ms8("\n\t\t\t-- Is `position\' used\?\n\n", 28));
 	} else {
-		T58f11(a1, GE_ms8("\n\t\t\t-- Is `position\' used\?\n\n", 28));
+		T58f12(a1, GE_ms8("\n\t\t\t-- Is `position\' used\?\n\n", 28));
 	}
-	l2 = (((T132*)(GE_void(((T54*)(C))->a17)))->a3);
-	l1 = (((T132*)(GE_void(((T54*)(C))->a17)))->a2);
+	l2 = (((T133*)(GE_void(((T54*)(C))->a17)))->a3);
+	l1 = (((T133*)(GE_void(((T54*)(C))->a17)))->a2);
 	while (1) {
 		t2 = (T6f1((&l1), l2));
 		if (t2) {
 			break;
 		}
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f25(a1, (T2)('\t'));
+			T55f26(a1, (T2)('\t'));
 		} else {
-			T58f12(a1, (T2)('\t'));
+			T58f13(a1, (T2)('\t'));
 		}
-		t1 = (T132f5(GE_void(((T54*)(C))->a17), l1));
+		t1 = (T133f5(GE_void(((T54*)(C))->a17), l1));
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, t1);
+			T55f25(a1, t1);
 		} else {
-			T58f11(a1, t1);
-		}
-		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8(": INTEGER is ", 13));
-		} else {
-			T58f11(a1, GE_ms8(": INTEGER is ", 13));
+			T58f12(a1, t1);
 		}
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f27(a1, l1);
+			T55f25(a1, GE_ms8(": INTEGER = ", 12));
 		} else {
-			T58f14(a1, l1);
+			T58f12(a1, GE_ms8(": INTEGER = ", 12));
 		}
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f25(a1, (T2)('\n'));
+			T55f28(a1, l1);
 		} else {
-			T58f12(a1, (T2)('\n'));
+			T58f15(a1, l1);
+		}
+		if (((T0*)(GE_void(a1)))->id==55) {
+			T55f26(a1, (T2)('\n'));
+		} else {
+			T58f13(a1, (T2)('\n'));
 		}
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\t\t\t-- Start condition codes\n", 28));
+		T55f25(a1, GE_ms8("\t\t\t-- Start condition codes\n", 28));
 	} else {
-		T58f11(a1, GE_ms8("\t\t\t-- Start condition codes\n", 28));
+		T58f12(a1, GE_ms8("\t\t\t-- Start condition codes\n", 28));
 	}
 }
 
@@ -8932,14 +8931,14 @@ void T54f61p1(T0* C, T0* a1)
 T0* T54f35(T0* C)
 {
 	T0* R = 0;
-	if (ge302os4581) {
-		return ge302ov4581;
+	if (ge259os4859) {
+		return ge259ov4859;
 	} else {
-		ge302os4581 = '\1';
-		ge302ov4581 = R;
+		ge259os4859 = '\1';
+		ge259ov4859 = R;
 	}
-	R = T153c3();
-	ge302ov4581 = R;
+	R = T154c3();
+	ge259ov4859 = R;
 	return R;
 }
 
@@ -8951,16 +8950,16 @@ void T54f60(T0* C, T0* a1)
 	t1 = ((((T54*)(C))->a18)!=(EIF_VOID));
 	if (t1) {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f25(a1, (T2)('\n'));
+			T55f26(a1, (T2)('\n'));
 		} else {
-			T58f12(a1, (T2)('\n'));
+			T58f13(a1, (T2)('\n'));
 		}
 		T54f74(C, GE_ms8("yy_ec_template", 14), ((T54*)(C))->a18, a1);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f25(a1, (T2)('\n'));
+		T55f26(a1, (T2)('\n'));
 	} else {
-		T58f12(a1, (T2)('\n'));
+		T58f13(a1, (T2)('\n'));
 	}
 	T54f74(C, GE_ms8("yy_accept_template", 18), ((T54*)(C))->a31, a1);
 }
@@ -8978,71 +8977,71 @@ void T54f74(T0* C, T0* a1, T0* a2, T0* a3)
 	T6 l4 = 0;
 	T6 l5 = 0;
 	if (((T0*)(GE_void(a3)))->id==55) {
-		T55f25(a3, (T2)('\t'));
+		T55f26(a3, (T2)('\t'));
 	} else {
-		T58f12(a3, (T2)('\t'));
+		T58f13(a3, (T2)('\t'));
 	}
 	if (((T0*)(GE_void(a3)))->id==55) {
-		T55f24(a3, a1);
+		T55f25(a3, a1);
 	} else {
-		T58f11(a3, a1);
+		T58f12(a3, a1);
 	}
 	if (((T0*)(GE_void(a3)))->id==55) {
-		T55f24(a3, GE_ms8(": SPECIAL [INTEGER] is\n", 23));
+		T55f25(a3, GE_ms8(": SPECIAL [INTEGER]\n", 20));
 	} else {
-		T58f11(a3, GE_ms8(": SPECIAL [INTEGER] is\n", 23));
+		T58f12(a3, GE_ms8(": SPECIAL [INTEGER]\n", 20));
 	}
 	t1 = (((((((T54*)(C))->a6) == ((T6)(GE_int32(0)))))));
 	if (t1) {
 		l4 = (T6)(GE_int32(1));
 	} else {
-		t2 = (T143f5(GE_void(a2)));
+		t2 = (T144f5(GE_void(a2)));
 		t2 = ((T6)((t2)/(((T54*)(C))->a6)));
 		l4 = ((T6)((t2)+((T6)(GE_int32(1)))));
 	}
 	t1 = (((((l4) == ((T6)(GE_int32(1)))))));
 	if (t1) {
 		if (((T0*)(GE_void(a3)))->id==55) {
-			T55f24(a3, GE_ms8("\t\tonce\n\t\t\tResult := yy_fixed_array (<<\n", 39));
+			T55f25(a3, GE_ms8("\t\tonce\n\t\t\tResult := yy_fixed_array (<<\n", 39));
 		} else {
-			T58f11(a3, GE_ms8("\t\tonce\n\t\t\tResult := yy_fixed_array (<<\n", 39));
+			T58f12(a3, GE_ms8("\t\tonce\n\t\t\tResult := yy_fixed_array (<<\n", 39));
 		}
 		t3 = (T54f40(C));
-		t2 = (((T143*)(GE_void(a2)))->a2);
-		t4 = (((T143*)(GE_void(a2)))->a3);
-		T165f8(GE_void(t3), a3, a2, t2, t4);
+		t2 = (((T144*)(GE_void(a2)))->a2);
+		t4 = (((T144*)(GE_void(a2)))->a3);
+		T167f8(GE_void(t3), a3, a2, t2, t4);
 		if (((T0*)(GE_void(a3)))->id==55) {
-			T55f24(a3, GE_ms8(", yy_Dummy>>)\n\t\tend\n", 20));
+			T55f25(a3, GE_ms8(", yy_Dummy>>)\n\t\tend\n", 20));
 		} else {
-			T58f11(a3, GE_ms8(", yy_Dummy>>)\n\t\tend\n", 20));
+			T58f12(a3, GE_ms8(", yy_Dummy>>)\n\t\tend\n", 20));
 		}
 	} else {
 		if (((T0*)(GE_void(a3)))->id==55) {
-			T55f24(a3, GE_ms8("\t\tlocal\n\t\t\tan_array: ARRAY [INTEGER]\n\t\tonce\n\t\t\tcreate an_array.make (", 69));
+			T55f25(a3, GE_ms8("\t\tlocal\n\t\t\tan_array: ARRAY [INTEGER]\n\t\tonce\n\t\t\tcreate an_array.make_filled (0, ", 79));
 		} else {
-			T58f11(a3, GE_ms8("\t\tlocal\n\t\t\tan_array: ARRAY [INTEGER]\n\t\tonce\n\t\t\tcreate an_array.make (", 69));
+			T58f12(a3, GE_ms8("\t\tlocal\n\t\t\tan_array: ARRAY [INTEGER]\n\t\tonce\n\t\t\tcreate an_array.make_filled (0, ", 79));
 		}
-		t2 = (((T143*)(GE_void(a2)))->a2);
+		t2 = (((T144*)(GE_void(a2)))->a2);
 		if (((T0*)(GE_void(a3)))->id==55) {
-			T55f27(a3, t2);
+			T55f28(a3, t2);
 		} else {
-			T58f14(a3, t2);
-		}
-		if (((T0*)(GE_void(a3)))->id==55) {
-			T55f24(a3, GE_ms8(", ", 2));
-		} else {
-			T58f11(a3, GE_ms8(", ", 2));
-		}
-		t2 = (((T143*)(GE_void(a2)))->a3);
-		if (((T0*)(GE_void(a3)))->id==55) {
-			T55f27(a3, t2);
-		} else {
-			T58f14(a3, t2);
+			T58f15(a3, t2);
 		}
 		if (((T0*)(GE_void(a3)))->id==55) {
-			T55f24(a3, GE_ms8(")\n", 2));
+			T55f25(a3, GE_ms8(", ", 2));
 		} else {
-			T58f11(a3, GE_ms8(")\n", 2));
+			T58f12(a3, GE_ms8(", ", 2));
+		}
+		t2 = (((T144*)(GE_void(a2)))->a3);
+		if (((T0*)(GE_void(a3)))->id==55) {
+			T55f28(a3, t2);
+		} else {
+			T58f15(a3, t2);
+		}
+		if (((T0*)(GE_void(a3)))->id==55) {
+			T55f25(a3, GE_ms8(")\n", 2));
+		} else {
+			T58f12(a3, GE_ms8(")\n", 2));
 		}
 		l2 = (T6)(GE_int32(1));
 		while (1) {
@@ -9051,111 +9050,111 @@ void T54f74(T0* C, T0* a1, T0* a2, T0* a3)
 				break;
 			}
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f24(a3, ge182ov4545);
+				T55f25(a3, ge134ov4823);
 			} else {
-				T58f11(a3, ge182ov4545);
+				T58f12(a3, ge134ov4823);
 			}
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f24(a3, a1);
+				T55f25(a3, a1);
 			} else {
-				T58f11(a3, a1);
+				T58f12(a3, a1);
 			}
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f25(a3, (T2)('_'));
+				T55f26(a3, (T2)('_'));
 			} else {
-				T58f12(a3, (T2)('_'));
+				T58f13(a3, (T2)('_'));
 			}
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f27(a3, l2);
+				T55f28(a3, l2);
 			} else {
-				T58f14(a3, l2);
+				T58f15(a3, l2);
 			}
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f24(a3, GE_ms8(" (an_array)\n", 12));
+				T55f25(a3, GE_ms8(" (an_array)\n", 12));
 			} else {
-				T58f11(a3, GE_ms8(" (an_array)\n", 12));
+				T58f12(a3, GE_ms8(" (an_array)\n", 12));
 			}
 			l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
 		}
 		if (((T0*)(GE_void(a3)))->id==55) {
-			T55f24(a3, GE_ms8("\t\t\tResult := yy_fixed_array (an_array)\n\t\tend\n", 45));
+			T55f25(a3, GE_ms8("\t\t\tResult := yy_fixed_array (an_array)\n\t\tend\n", 45));
 		} else {
-			T58f11(a3, GE_ms8("\t\t\tResult := yy_fixed_array (an_array)\n\t\tend\n", 45));
+			T58f12(a3, GE_ms8("\t\t\tResult := yy_fixed_array (an_array)\n\t\tend\n", 45));
 		}
 		l2 = (T6)(GE_int32(1));
-		l1 = (((T143*)(GE_void(a2)))->a2);
-		l5 = (((T143*)(GE_void(a2)))->a3);
+		l1 = (((T144*)(GE_void(a2)))->a2);
+		l5 = (((T144*)(GE_void(a2)))->a3);
 		while (1) {
 			t1 = (T6f1((&l2), l4));
 			if (t1) {
 				break;
 			}
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f24(a3, GE_ms8("\n\t", 2));
+				T55f25(a3, GE_ms8("\n\t", 2));
 			} else {
-				T58f11(a3, GE_ms8("\n\t", 2));
+				T58f12(a3, GE_ms8("\n\t", 2));
 			}
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f24(a3, a1);
+				T55f25(a3, a1);
 			} else {
-				T58f11(a3, a1);
+				T58f12(a3, a1);
 			}
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f25(a3, (T2)('_'));
+				T55f26(a3, (T2)('_'));
 			} else {
-				T58f12(a3, (T2)('_'));
+				T58f13(a3, (T2)('_'));
 			}
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f27(a3, l2);
+				T55f28(a3, l2);
 			} else {
-				T58f14(a3, l2);
+				T58f15(a3, l2);
 			}
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f24(a3, GE_ms8(" (an_array: ARRAY [INTEGER]) is\n\t\tdo\n\t\t\tyy_array_subcopy (an_array, <<\n", 71));
+				T55f25(a3, GE_ms8(" (an_array: ARRAY [INTEGER])\n\t\tdo\n\t\t\tyy_array_subcopy (an_array, <<\n", 68));
 			} else {
-				T58f11(a3, GE_ms8(" (an_array: ARRAY [INTEGER]) is\n\t\tdo\n\t\t\tyy_array_subcopy (an_array, <<\n", 71));
+				T58f12(a3, GE_ms8(" (an_array: ARRAY [INTEGER])\n\t\tdo\n\t\t\tyy_array_subcopy (an_array, <<\n", 68));
 			}
 			t2 = ((T6)((l1)+(((T54*)(C))->a6)));
 			t2 = ((T6)((t2)-((T6)(GE_int32(1)))));
 			l3 = (T6f13((&l5), t2));
 			t3 = (T54f40(C));
-			T165f8(GE_void(t3), a3, a2, l1, l3);
+			T167f8(GE_void(t3), a3, a2, l1, l3);
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f24(a3, GE_ms8(", yy_Dummy>>,\n\t\t\t", 17));
+				T55f25(a3, GE_ms8(", yy_Dummy>>,\n\t\t\t", 17));
 			} else {
-				T58f11(a3, GE_ms8(", yy_Dummy>>,\n\t\t\t", 17));
+				T58f12(a3, GE_ms8(", yy_Dummy>>,\n\t\t\t", 17));
 			}
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f27(a3, (T6)(GE_int32(1)));
+				T55f28(a3, (T6)(GE_int32(1)));
 			} else {
-				T58f14(a3, (T6)(GE_int32(1)));
+				T58f15(a3, (T6)(GE_int32(1)));
 			}
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f24(a3, GE_ms8(", ", 2));
+				T55f25(a3, GE_ms8(", ", 2));
 			} else {
-				T58f11(a3, GE_ms8(", ", 2));
+				T58f12(a3, GE_ms8(", ", 2));
 			}
 			t2 = ((T6)((l3)-(l1)));
 			t2 = ((T6)((t2)+((T6)(GE_int32(1)))));
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f27(a3, t2);
+				T55f28(a3, t2);
 			} else {
-				T58f14(a3, t2);
+				T58f15(a3, t2);
 			}
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f24(a3, GE_ms8(", ", 2));
+				T55f25(a3, GE_ms8(", ", 2));
 			} else {
-				T58f11(a3, GE_ms8(", ", 2));
+				T58f12(a3, GE_ms8(", ", 2));
 			}
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f27(a3, l1);
+				T55f28(a3, l1);
 			} else {
-				T58f14(a3, l1);
+				T58f15(a3, l1);
 			}
 			if (((T0*)(GE_void(a3)))->id==55) {
-				T55f24(a3, GE_ms8(")\n\t\tend\n", 8));
+				T55f25(a3, GE_ms8(")\n\t\tend\n", 8));
 			} else {
-				T58f11(a3, GE_ms8(")\n\t\tend\n", 8));
+				T58f12(a3, GE_ms8(")\n\t\tend\n", 8));
 			}
 			l1 = ((T6)((l3)+((T6)(GE_int32(1)))));
 			l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
@@ -9167,14 +9166,14 @@ void T54f74(T0* C, T0* a1, T0* a2, T0* a3)
 T0* T54f40(T0* C)
 {
 	T0* R = 0;
-	if (ge302os4583) {
-		return ge302ov4583;
+	if (ge259os4861) {
+		return ge259ov4861;
 	} else {
-		ge302os4583 = '\1';
-		ge302ov4583 = R;
+		ge259os4861 = '\1';
+		ge259ov4861 = R;
 	}
-	R = T165c7();
-	ge302ov4583 = R;
+	R = T167c7();
+	ge259ov4861 = R;
 	return R;
 }
 
@@ -9195,37 +9194,37 @@ void T54f59(T0* C, T0* a1)
 	T0* l9 = 0;
 	T0* l10 = 0;
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\tyy_execute_eof_action (yy_sc: INTEGER) is\n\t\t\t-- Execute EOF semantic action.\n\t\tdo\n", 83));
+		T55f25(a1, GE_ms8("\tyy_execute_eof_action (yy_sc: INTEGER)\n\t\t\t-- Execute EOF semantic action.\n\t\tdo\n", 80));
 	} else {
-		T58f11(a1, GE_ms8("\tyy_execute_eof_action (yy_sc: INTEGER) is\n\t\t\t-- Execute EOF semantic action.\n\t\tdo\n", 83));
+		T58f12(a1, GE_ms8("\tyy_execute_eof_action (yy_sc: INTEGER)\n\t\t\t-- Execute EOF semantic action.\n\t\tdo\n", 80));
 	}
 	if (((T54*)(C))->a14) {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("\t\t\tpre_eof_action\n", 18));
+			T55f25(a1, GE_ms8("\t\t\tpre_eof_action\n", 18));
 		} else {
-			T58f11(a1, GE_ms8("\t\t\tpre_eof_action\n", 18));
+			T58f12(a1, GE_ms8("\t\t\tpre_eof_action\n", 18));
 		}
 	}
-	l1 = (((T137*)(GE_void(((T54*)(C))->a29)))->a2);
-	l2 = (((T137*)(GE_void(((T54*)(C))->a29)))->a3);
-	t1 = (T137f4(GE_void(((T54*)(C))->a29)));
-	l4 = T149c8(t1);
+	l1 = (((T138*)(GE_void(((T54*)(C))->a29)))->a2);
+	l2 = (((T138*)(GE_void(((T54*)(C))->a29)))->a3);
+	t1 = (T138f4(GE_void(((T54*)(C))->a29)));
+	l4 = T150c8(t1);
 	while (1) {
 		t2 = (T6f1((&l1), l2));
 		if (t2) {
 			break;
 		}
-		l3 = (T137f5(GE_void(((T54*)(C))->a29), l1));
+		l3 = (T138f5(GE_void(((T54*)(C))->a29), l1));
 		t2 = ((l3)!=(EIF_VOID));
 		if (t2) {
 			l5 = (((T49*)(GE_void(l3)))->a3);
 			l6 = (T6)(GE_int32(1));
-			l7 = (((T149*)(GE_void(l4)))->a1);
+			l7 = (((T150*)(GE_void(l4)))->a1);
 			while (1) {
 				t2 = (T6f1((&l6), l7));
 				if (!(t2)) {
-					t3 = (T149f6(GE_void(l4), l6));
-					t3 = (((T150*)(GE_void(t3)))->a1);
+					t3 = (T150f7(GE_void(l4), l6));
+					t3 = (((T151*)(GE_void(t3)))->a1);
 					t2 = ((t3)==(l5));
 				}
 				if (t2) {
@@ -9235,24 +9234,24 @@ void T54f59(T0* C, T0* a1)
 			}
 			t2 = (T6f7((&l6), l7));
 			if (t2) {
-				t3 = (T149f6(GE_void(l4), l6));
-				l9 = (((T150*)(GE_void(t3)))->a2);
+				t3 = (T150f7(GE_void(l4), l6));
+				l9 = (((T151*)(GE_void(t3)))->a2);
 			} else {
-				l9 = T151c8();
-				l8 = T150c3(l5, l9);
-				T149f9(GE_void(l4), l8);
+				l9 = T152c8();
+				l8 = T151c3(l5, l9);
+				T150f9(GE_void(l4), l8);
 			}
-			T151f9(GE_void(l9), l3);
+			T152f9(GE_void(l9), l3);
 		}
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
-	l7 = (((T149*)(GE_void(l4)))->a1);
+	l7 = (((T150*)(GE_void(l4)))->a1);
 	t2 = (T6f1((&l7), (T6)(GE_int32(0))));
 	if (t2) {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("\t\t\tinspect yy_sc\n", 17));
+			T55f25(a1, GE_ms8("\t\t\tinspect yy_sc\n", 17));
 		} else {
-			T58f11(a1, GE_ms8("\t\t\tinspect yy_sc\n", 17));
+			T58f12(a1, GE_ms8("\t\t\tinspect yy_sc\n", 17));
 		}
 		l6 = (T6)(GE_int32(1));
 		while (1) {
@@ -9260,167 +9259,167 @@ void T54f59(T0* C, T0* a1)
 			if (t2) {
 				break;
 			}
-			t3 = (T149f6(GE_void(l4), l6));
-			l9 = (((T150*)(GE_void(t3)))->a2);
-			l10 = (T151f6(GE_void(l9)));
-			T152f8(GE_void(l10));
-			l3 = (T152f6(GE_void(l10)));
+			t3 = (T150f7(GE_void(l4), l6));
+			l9 = (((T151*)(GE_void(t3)))->a2);
+			l10 = (T152f5(GE_void(l9)));
+			T153f8(GE_void(l10));
+			l3 = (T153f6(GE_void(l10)));
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8("when ", 5));
+				T55f25(a1, GE_ms8("when ", 5));
 			} else {
-				T58f11(a1, GE_ms8("when ", 5));
+				T58f12(a1, GE_ms8("when ", 5));
 			}
 			t1 = (((T49*)(GE_void(l3)))->a1);
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f27(a1, t1);
+				T55f28(a1, t1);
 			} else {
-				T58f14(a1, t1);
+				T58f15(a1, t1);
 			}
-			T152f9(GE_void(l10));
+			T153f9(GE_void(l10));
 			while (1) {
-				t2 = (((T152*)(GE_void(l10)))->a1);
+				t2 = (((T153*)(GE_void(l10)))->a1);
 				if (t2) {
 					break;
 				}
 				if (((T0*)(GE_void(a1)))->id==55) {
-					T55f24(a1, GE_ms8(", ", 2));
+					T55f25(a1, GE_ms8(", ", 2));
 				} else {
-					T58f11(a1, GE_ms8(", ", 2));
+					T58f12(a1, GE_ms8(", ", 2));
 				}
-				t3 = (T152f6(GE_void(l10)));
+				t3 = (T153f6(GE_void(l10)));
 				t1 = (((T49*)(GE_void(t3)))->a1);
 				if (((T0*)(GE_void(a1)))->id==55) {
-					T55f27(a1, t1);
+					T55f28(a1, t1);
 				} else {
-					T58f14(a1, t1);
+					T58f15(a1, t1);
 				}
-				T152f9(GE_void(l10));
+				T153f9(GE_void(l10));
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8(" then\n", 6));
+				T55f25(a1, GE_ms8(" then\n", 6));
 			} else {
-				T58f11(a1, GE_ms8(" then\n", 6));
+				T58f12(a1, GE_ms8(" then\n", 6));
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8("--|#line ", 9));
+				T55f25(a1, GE_ms8("--|#line ", 9));
 			} else {
-				T58f11(a1, GE_ms8("--|#line ", 9));
+				T58f12(a1, GE_ms8("--|#line ", 9));
 			}
 			if (((T54*)(C))->a16) {
 				t1 = (((T49*)(GE_void(l3)))->a8);
 				if (((T0*)(GE_void(a1)))->id==55) {
-					T55f27(a1, t1);
+					T55f28(a1, t1);
 				} else {
-					T58f14(a1, t1);
+					T58f15(a1, t1);
 				}
 			} else {
 				if (((T0*)(GE_void(a1)))->id==55) {
-					T55f24(a1, GE_ms8("<not available>", 15));
+					T55f25(a1, GE_ms8("<not available>", 15));
 				} else {
-					T58f11(a1, GE_ms8("<not available>", 15));
+					T58f12(a1, GE_ms8("<not available>", 15));
 				}
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8(" \"", 2));
+				T55f25(a1, GE_ms8(" \"", 2));
 			} else {
-				T58f11(a1, GE_ms8(" \"", 2));
+				T58f12(a1, GE_ms8(" \"", 2));
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, ((T54*)(C))->a4);
+				T55f25(a1, ((T54*)(C))->a4);
 			} else {
-				T58f11(a1, ((T54*)(C))->a4);
+				T58f12(a1, ((T54*)(C))->a4);
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f25(a1, (T2)('\"'));
+				T55f26(a1, (T2)('\"'));
 			} else {
-				T58f12(a1, (T2)('\"'));
+				T58f13(a1, (T2)('\"'));
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f28(a1);
+				T55f29(a1);
 			} else {
-				T58f15(a1);
+				T58f16(a1);
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f26(a1, GE_ms8("debug (\"GELEX\")", 15));
+				T55f27(a1, GE_ms8("debug (\"GELEX\")", 15));
 			} else {
-				T58f13(a1, GE_ms8("debug (\"GELEX\")", 15));
+				T58f14(a1, GE_ms8("debug (\"GELEX\")", 15));
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8("\tstd.error.put_line (\"Executing scanner user-code from file \'", 61));
+				T55f25(a1, GE_ms8("\tstd.error.put_line (\"Executing scanner user-code from file \'", 61));
 			} else {
-				T58f11(a1, GE_ms8("\tstd.error.put_line (\"Executing scanner user-code from file \'", 61));
+				T58f12(a1, GE_ms8("\tstd.error.put_line (\"Executing scanner user-code from file \'", 61));
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, ((T54*)(C))->a4);
+				T55f25(a1, ((T54*)(C))->a4);
 			} else {
-				T58f11(a1, ((T54*)(C))->a4);
+				T58f12(a1, ((T54*)(C))->a4);
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8("\' at line ", 10));
+				T55f25(a1, GE_ms8("\' at line ", 10));
 			} else {
-				T58f11(a1, GE_ms8("\' at line ", 10));
+				T58f12(a1, GE_ms8("\' at line ", 10));
 			}
 			if (((T54*)(C))->a16) {
 				t1 = (((T49*)(GE_void(l3)))->a8);
 				if (((T0*)(GE_void(a1)))->id==55) {
-					T55f27(a1, t1);
+					T55f28(a1, t1);
 				} else {
-					T58f14(a1, t1);
+					T58f15(a1, t1);
 				}
 			} else {
 				if (((T0*)(GE_void(a1)))->id==55) {
-					T55f24(a1, GE_ms8("<not available>", 15));
+					T55f25(a1, GE_ms8("<not available>", 15));
 				} else {
-					T58f11(a1, GE_ms8("<not available>", 15));
+					T58f12(a1, GE_ms8("<not available>", 15));
 				}
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f26(a1, GE_ms8("\")", 2));
+				T55f27(a1, GE_ms8("\")", 2));
 			} else {
-				T58f13(a1, GE_ms8("\")", 2));
+				T58f14(a1, GE_ms8("\")", 2));
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f26(a1, GE_ms8("end", 3));
+				T55f27(a1, GE_ms8("end", 3));
 			} else {
-				T58f13(a1, GE_ms8("end", 3));
+				T58f14(a1, GE_ms8("end", 3));
 			}
 			t3 = (((T49*)(GE_void(l3)))->a3);
 			t3 = (T100f2(GE_void(t3)));
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, t3);
+				T55f25(a1, t3);
 			} else {
-				T58f11(a1, t3);
+				T58f12(a1, t3);
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f28(a1);
+				T55f29(a1);
 			} else {
-				T58f15(a1);
+				T58f16(a1);
 			}
 			l6 = ((T6)((l6)+((T6)(GE_int32(1)))));
 		}
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("\t\t\telse\n\t\t\t\tterminate\n\t\t\tend\n", 29));
+			T55f25(a1, GE_ms8("\t\t\telse\n\t\t\t\tterminate\n\t\t\tend\n", 29));
 		} else {
-			T58f11(a1, GE_ms8("\t\t\telse\n\t\t\t\tterminate\n\t\t\tend\n", 29));
+			T58f12(a1, GE_ms8("\t\t\telse\n\t\t\t\tterminate\n\t\t\tend\n", 29));
 		}
 	} else {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("\t\t\tterminate\n", 13));
+			T55f25(a1, GE_ms8("\t\t\tterminate\n", 13));
 		} else {
-			T58f11(a1, GE_ms8("\t\t\tterminate\n", 13));
+			T58f12(a1, GE_ms8("\t\t\tterminate\n", 13));
 		}
 	}
 	if (((T54*)(C))->a15) {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("\t\t\tpost_eof_action\n", 19));
+			T55f25(a1, GE_ms8("\t\t\tpost_eof_action\n", 19));
 		} else {
-			T58f11(a1, GE_ms8("\t\t\tpost_eof_action\n", 19));
+			T58f12(a1, GE_ms8("\t\t\tpost_eof_action\n", 19));
 		}
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\t\tend\n", 6));
+		T55f25(a1, GE_ms8("\t\tend\n", 6));
 	} else {
-		T58f11(a1, GE_ms8("\t\tend\n", 6));
+		T58f12(a1, GE_ms8("\t\tend\n", 6));
 	}
 }
 
@@ -9434,50 +9433,50 @@ void T54f58(T0* C, T0* a1)
 	T6 l1 = 0;
 	T6 l2 = 0;
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\tyy_execute_action (yy_act: INTEGER) is\n\t\t\t-- Execute semantic action.\n\t\tdo\n", 76));
+		T55f25(a1, GE_ms8("\tyy_execute_action (yy_act: INTEGER)\n\t\t\t-- Execute semantic action.\n\t\tdo\n", 73));
 	} else {
-		T58f11(a1, GE_ms8("\tyy_execute_action (yy_act: INTEGER) is\n\t\t\t-- Execute semantic action.\n\t\tdo\n", 76));
+		T58f12(a1, GE_ms8("\tyy_execute_action (yy_act: INTEGER)\n\t\t\t-- Execute semantic action.\n\t\tdo\n", 73));
 	}
 	if (((T54*)(C))->a7) {
 		T54f71(C, a1);
 	} else {
-		t1 = (((T137*)(GE_void(((T54*)(C))->a21)))->a2);
-		t2 = (((T137*)(GE_void(((T54*)(C))->a21)))->a3);
+		t1 = (((T138*)(GE_void(((T54*)(C))->a21)))->a2);
+		t2 = (((T138*)(GE_void(((T54*)(C))->a21)))->a3);
 		T54f72(C, a1, t1, t2);
 	}
 	if (((T54*)(C))->a13) {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("\t\t\tpost_action\n", 15));
+			T55f25(a1, GE_ms8("\t\t\tpost_action\n", 15));
 		} else {
-			T58f11(a1, GE_ms8("\t\t\tpost_action\n", 15));
+			T58f12(a1, GE_ms8("\t\t\tpost_action\n", 15));
 		}
 	}
 	if (((T54*)(C))->a11) {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("\t\t\tyy_set_beginning_of_line\n", 28));
+			T55f25(a1, GE_ms8("\t\t\tyy_set_beginning_of_line\n", 28));
 		} else {
-			T58f11(a1, GE_ms8("\t\t\tyy_set_beginning_of_line\n", 28));
+			T58f12(a1, GE_ms8("\t\t\tyy_set_beginning_of_line\n", 28));
 		}
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\t\tend\n", 6));
+		T55f25(a1, GE_ms8("\t\tend\n", 6));
 	} else {
-		T58f11(a1, GE_ms8("\t\tend\n", 6));
+		T58f12(a1, GE_ms8("\t\tend\n", 6));
 	}
 	if (((T54*)(C))->a8) {
-		l2 = (((T137*)(GE_void(((T54*)(C))->a21)))->a3);
-		l1 = (((T137*)(GE_void(((T54*)(C))->a21)))->a2);
+		l2 = (((T138*)(GE_void(((T54*)(C))->a21)))->a3);
+		l1 = (((T138*)(GE_void(((T54*)(C))->a21)))->a2);
 		while (1) {
 			t3 = (T6f1((&l1), l2));
 			if (t3) {
 				break;
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f25(a1, (T2)('\n'));
+				T55f26(a1, (T2)('\n'));
 			} else {
-				T58f12(a1, (T2)('\n'));
+				T58f13(a1, (T2)('\n'));
 			}
-			t4 = (T137f5(GE_void(((T54*)(C))->a21), l1));
+			t4 = (T138f5(GE_void(((T54*)(C))->a21), l1));
 			T54f73(C, a1, t4);
 			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 		}
@@ -9489,55 +9488,55 @@ void T54f73(T0* C, T0* a1, T0* a2)
 {
 	T6 t1;
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\tyy_execute_action_", 19));
+		T55f25(a1, GE_ms8("\tyy_execute_action_", 19));
 	} else {
-		T58f11(a1, GE_ms8("\tyy_execute_action_", 19));
+		T58f12(a1, GE_ms8("\tyy_execute_action_", 19));
 	}
 	t1 = (((T49*)(GE_void(a2)))->a1);
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f27(a1, t1);
+		T55f28(a1, t1);
 	} else {
-		T58f14(a1, t1);
+		T58f15(a1, t1);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8(" is\n\t\t\t--|#line ", 16));
+		T55f25(a1, GE_ms8("\n\t\t\t--|#line ", 13));
 	} else {
-		T58f11(a1, GE_ms8(" is\n\t\t\t--|#line ", 16));
+		T58f12(a1, GE_ms8("\n\t\t\t--|#line ", 13));
 	}
 	if (((T54*)(C))->a16) {
 		t1 = (((T49*)(GE_void(a2)))->a8);
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f27(a1, t1);
+			T55f28(a1, t1);
 		} else {
-			T58f14(a1, t1);
+			T58f15(a1, t1);
 		}
 	} else {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("<not available>", 15));
+			T55f25(a1, GE_ms8("<not available>", 15));
 		} else {
-			T58f11(a1, GE_ms8("<not available>", 15));
+			T58f12(a1, GE_ms8("<not available>", 15));
 		}
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8(" \"", 2));
+		T55f25(a1, GE_ms8(" \"", 2));
 	} else {
-		T58f11(a1, GE_ms8(" \"", 2));
+		T58f12(a1, GE_ms8(" \"", 2));
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, ((T54*)(C))->a4);
+		T55f25(a1, ((T54*)(C))->a4);
 	} else {
-		T58f11(a1, ((T54*)(C))->a4);
+		T58f12(a1, ((T54*)(C))->a4);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\"\n\t\tdo\n", 7));
+		T55f25(a1, GE_ms8("\"\n\t\tdo\n", 7));
 	} else {
-		T58f11(a1, GE_ms8("\"\n\t\tdo\n", 7));
+		T58f12(a1, GE_ms8("\"\n\t\tdo\n", 7));
 	}
 	T54f80(C, a1, a2);
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\n\t\tend\n", 7));
+		T55f25(a1, GE_ms8("\n\t\tend\n", 7));
 	} else {
-		T58f11(a1, GE_ms8("\n\t\tend\n", 7));
+		T58f12(a1, GE_ms8("\n\t\tend\n", 7));
 	}
 }
 
@@ -9556,40 +9555,40 @@ void T54f80(T0* C, T0* a1, T0* a2)
 		t1 = (T6f5(&t2, (T6)(GE_int32(0))));
 		if (t1) {
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8("\tyy_end := yy_end - ", 20));
+				T55f25(a1, GE_ms8("\tyy_end := yy_end - ", 20));
 			} else {
-				T58f11(a1, GE_ms8("\tyy_end := yy_end - ", 20));
+				T58f12(a1, GE_ms8("\tyy_end := yy_end - ", 20));
 			}
 			t2 = (((T49*)(GE_void(a2)))->a5);
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f27(a1, t2);
+				T55f28(a1, t2);
 			} else {
-				T58f14(a1, t2);
+				T58f15(a1, t2);
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f25(a1, (T2)('\n'));
+				T55f26(a1, (T2)('\n'));
 			} else {
-				T58f12(a1, (T2)('\n'));
+				T58f13(a1, (T2)('\n'));
 			}
 		} else {
 			t2 = (((T49*)(GE_void(a2)))->a4);
 			t1 = (T6f5(&t2, (T6)(GE_int32(0))));
 			if (t1) {
 				if (((T0*)(GE_void(a1)))->id==55) {
-					T55f24(a1, GE_ms8("\tyy_end := yy_start + yy_more_len + ", 36));
+					T55f25(a1, GE_ms8("\tyy_end := yy_start + yy_more_len + ", 36));
 				} else {
-					T58f11(a1, GE_ms8("\tyy_end := yy_start + yy_more_len + ", 36));
+					T58f12(a1, GE_ms8("\tyy_end := yy_start + yy_more_len + ", 36));
 				}
 				t2 = (((T49*)(GE_void(a2)))->a4);
 				if (((T0*)(GE_void(a1)))->id==55) {
-					T55f27(a1, t2);
+					T55f28(a1, t2);
 				} else {
-					T58f14(a1, t2);
+					T58f15(a1, t2);
 				}
 				if (((T0*)(GE_void(a1)))->id==55) {
-					T55f25(a1, (T2)('\n'));
+					T55f26(a1, (T2)('\n'));
 				} else {
-					T58f12(a1, (T2)('\n'));
+					T58f13(a1, (T2)('\n'));
 				}
 			}
 		}
@@ -9602,27 +9601,27 @@ void T54f80(T0* C, T0* a1, T0* a2)
 			t1 = (T6f1((&l2), (T6)(GE_int32(0))));
 			if (t1) {
 				if (((T0*)(GE_void(a1)))->id==55) {
-					T55f24(a1, GE_ms8("\tyy_column := yy_column + ", 26));
+					T55f25(a1, GE_ms8("\tyy_column := yy_column + ", 26));
 				} else {
-					T58f11(a1, GE_ms8("\tyy_column := yy_column + ", 26));
+					T58f12(a1, GE_ms8("\tyy_column := yy_column + ", 26));
 				}
 				if (((T0*)(GE_void(a1)))->id==55) {
-					T55f27(a1, l2);
+					T55f28(a1, l2);
 				} else {
-					T58f14(a1, l2);
+					T58f15(a1, l2);
 				}
 				if (((T0*)(GE_void(a1)))->id==55) {
-					T55f25(a1, (T2)('\n'));
+					T55f26(a1, (T2)('\n'));
 				} else {
-					T58f12(a1, (T2)('\n'));
+					T58f13(a1, (T2)('\n'));
 				}
 			} else {
 				t1 = (((((l2) != ((T6)(GE_int32(0)))))));
 				if (t1) {
 					if (((T0*)(GE_void(a1)))->id==55) {
-						T55f24(a1, GE_ms8("\tyy_column := yy_column + yy_end - yy_start - yy_more_len\n", 58));
+						T55f25(a1, GE_ms8("\tyy_column := yy_column + yy_end - yy_start - yy_more_len\n", 58));
 					} else {
-						T58f11(a1, GE_ms8("\tyy_column := yy_column + yy_end - yy_start - yy_more_len\n", 58));
+						T58f12(a1, GE_ms8("\tyy_column := yy_column + yy_end - yy_start - yy_more_len\n", 58));
 					}
 				}
 			}
@@ -9632,73 +9631,73 @@ void T54f80(T0* C, T0* a1, T0* a2)
 				t1 = (((((l2) == ((T6)(GE_int32(0)))))));
 				if (t1) {
 					if (((T0*)(GE_void(a1)))->id==55) {
-						T55f24(a1, GE_ms8("\tyy_line := yy_line + ", 22));
+						T55f25(a1, GE_ms8("\tyy_line := yy_line + ", 22));
 					} else {
-						T58f11(a1, GE_ms8("\tyy_line := yy_line + ", 22));
+						T58f12(a1, GE_ms8("\tyy_line := yy_line + ", 22));
 					}
 					if (((T0*)(GE_void(a1)))->id==55) {
-						T55f27(a1, l1);
+						T55f28(a1, l1);
 					} else {
-						T58f14(a1, l1);
+						T58f15(a1, l1);
 					}
 					if (((T0*)(GE_void(a1)))->id==55) {
-						T55f25(a1, (T2)('\n'));
+						T55f26(a1, (T2)('\n'));
 					} else {
-						T58f12(a1, (T2)('\n'));
+						T58f13(a1, (T2)('\n'));
 					}
 					if (((T0*)(GE_void(a1)))->id==55) {
-						T55f24(a1, GE_ms8("\tyy_column := 1\n", 16));
+						T55f25(a1, GE_ms8("\tyy_column := 1\n", 16));
 					} else {
-						T58f11(a1, GE_ms8("\tyy_column := 1\n", 16));
+						T58f12(a1, GE_ms8("\tyy_column := 1\n", 16));
 					}
 				} else {
 					t1 = (T6f1((&l2), (T6)(GE_int32(0))));
 					if (t1) {
 						if (((T0*)(GE_void(a1)))->id==55) {
-							T55f24(a1, GE_ms8("\tyy_line := yy_line + ", 22));
+							T55f25(a1, GE_ms8("\tyy_line := yy_line + ", 22));
 						} else {
-							T58f11(a1, GE_ms8("\tyy_line := yy_line + ", 22));
+							T58f12(a1, GE_ms8("\tyy_line := yy_line + ", 22));
 						}
 						if (((T0*)(GE_void(a1)))->id==55) {
-							T55f27(a1, l1);
+							T55f28(a1, l1);
 						} else {
-							T58f14(a1, l1);
+							T58f15(a1, l1);
 						}
 						if (((T0*)(GE_void(a1)))->id==55) {
-							T55f25(a1, (T2)('\n'));
+							T55f26(a1, (T2)('\n'));
 						} else {
-							T58f12(a1, (T2)('\n'));
+							T58f13(a1, (T2)('\n'));
 						}
 						if (((T0*)(GE_void(a1)))->id==55) {
-							T55f24(a1, GE_ms8("\tyy_column := ", 14));
+							T55f25(a1, GE_ms8("\tyy_column := ", 14));
 						} else {
-							T58f11(a1, GE_ms8("\tyy_column := ", 14));
+							T58f12(a1, GE_ms8("\tyy_column := ", 14));
 						}
 						if (((T0*)(GE_void(a1)))->id==55) {
-							T55f27(a1, l2);
+							T55f28(a1, l2);
 						} else {
-							T58f14(a1, l2);
+							T58f15(a1, l2);
 						}
 						if (((T0*)(GE_void(a1)))->id==55) {
-							T55f24(a1, GE_ms8(" + 1\n", 5));
+							T55f25(a1, GE_ms8(" + 1\n", 5));
 						} else {
-							T58f11(a1, GE_ms8(" + 1\n", 5));
+							T58f12(a1, GE_ms8(" + 1\n", 5));
 						}
 					} else {
 						if (((T0*)(GE_void(a1)))->id==55) {
-							T55f24(a1, GE_ms8("yy_set_column (", 15));
+							T55f25(a1, GE_ms8("yy_set_column (", 15));
 						} else {
-							T58f11(a1, GE_ms8("yy_set_column (", 15));
+							T58f12(a1, GE_ms8("yy_set_column (", 15));
 						}
 						if (((T0*)(GE_void(a1)))->id==55) {
-							T55f27(a1, l1);
+							T55f28(a1, l1);
 						} else {
-							T58f14(a1, l1);
+							T58f15(a1, l1);
 						}
 						if (((T0*)(GE_void(a1)))->id==55) {
-							T55f24(a1, GE_ms8(")\n", 2));
+							T55f25(a1, GE_ms8(")\n", 2));
 						} else {
-							T58f11(a1, GE_ms8(")\n", 2));
+							T58f12(a1, GE_ms8(")\n", 2));
 						}
 					}
 				}
@@ -9706,25 +9705,25 @@ void T54f80(T0* C, T0* a1, T0* a2)
 				t1 = (T6f5((&l2), (T6)(GE_int32(0))));
 				if (t1) {
 					if (((T0*)(GE_void(a1)))->id==55) {
-						T55f24(a1, GE_ms8("yy_set_line (", 13));
+						T55f25(a1, GE_ms8("yy_set_line (", 13));
 					} else {
-						T58f11(a1, GE_ms8("yy_set_line (", 13));
+						T58f12(a1, GE_ms8("yy_set_line (", 13));
 					}
 					if (((T0*)(GE_void(a1)))->id==55) {
-						T55f27(a1, l2);
+						T55f28(a1, l2);
 					} else {
-						T58f14(a1, l2);
+						T58f15(a1, l2);
 					}
 					if (((T0*)(GE_void(a1)))->id==55) {
-						T55f24(a1, GE_ms8(")\n", 2));
+						T55f25(a1, GE_ms8(")\n", 2));
 					} else {
-						T58f11(a1, GE_ms8(")\n", 2));
+						T58f12(a1, GE_ms8(")\n", 2));
 					}
 				} else {
 					if (((T0*)(GE_void(a1)))->id==55) {
-						T55f24(a1, GE_ms8("yy_set_line_column\n", 19));
+						T55f25(a1, GE_ms8("yy_set_line_column\n", 19));
 					} else {
-						T58f11(a1, GE_ms8("yy_set_line_column\n", 19));
+						T58f12(a1, GE_ms8("yy_set_line_column\n", 19));
 					}
 				}
 			}
@@ -9735,132 +9734,132 @@ void T54f80(T0* C, T0* a1, T0* a2)
 		t1 = (T6f1((&l3), (T6)(GE_int32(0))));
 		if (t1) {
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8("\tyy_position := yy_position + ", 30));
+				T55f25(a1, GE_ms8("\tyy_position := yy_position + ", 30));
 			} else {
-				T58f11(a1, GE_ms8("\tyy_position := yy_position + ", 30));
+				T58f12(a1, GE_ms8("\tyy_position := yy_position + ", 30));
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f27(a1, l3);
+				T55f28(a1, l3);
 			} else {
-				T58f14(a1, l3);
+				T58f15(a1, l3);
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f25(a1, (T2)('\n'));
+				T55f26(a1, (T2)('\n'));
 			} else {
-				T58f12(a1, (T2)('\n'));
+				T58f13(a1, (T2)('\n'));
 			}
 		} else {
 			t1 = (((((l3) != ((T6)(GE_int32(0)))))));
 			if (t1) {
 				if (((T0*)(GE_void(a1)))->id==55) {
-					T55f24(a1, GE_ms8("\tyy_position := yy_position + yy_end - yy_start - yy_more_len\n", 62));
+					T55f25(a1, GE_ms8("\tyy_position := yy_position + yy_end - yy_start - yy_more_len\n", 62));
 				} else {
-					T58f11(a1, GE_ms8("\tyy_position := yy_position + yy_end - yy_start - yy_more_len\n", 62));
+					T58f12(a1, GE_ms8("\tyy_position := yy_position + yy_end - yy_start - yy_more_len\n", 62));
 				}
 			}
 		}
 	}
 	if (((T54*)(C))->a12) {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("pre_action\n", 11));
+			T55f25(a1, GE_ms8("pre_action\n", 11));
 		} else {
-			T58f11(a1, GE_ms8("pre_action\n", 11));
+			T58f12(a1, GE_ms8("pre_action\n", 11));
 		}
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("--|#line ", 9));
+		T55f25(a1, GE_ms8("--|#line ", 9));
 	} else {
-		T58f11(a1, GE_ms8("--|#line ", 9));
+		T58f12(a1, GE_ms8("--|#line ", 9));
 	}
 	if (((T54*)(C))->a16) {
 		t2 = (((T49*)(GE_void(a2)))->a8);
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f27(a1, t2);
+			T55f28(a1, t2);
 		} else {
-			T58f14(a1, t2);
+			T58f15(a1, t2);
 		}
 	} else {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("<not available>", 15));
+			T55f25(a1, GE_ms8("<not available>", 15));
 		} else {
-			T58f11(a1, GE_ms8("<not available>", 15));
+			T58f12(a1, GE_ms8("<not available>", 15));
 		}
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8(" \"", 2));
+		T55f25(a1, GE_ms8(" \"", 2));
 	} else {
-		T58f11(a1, GE_ms8(" \"", 2));
+		T58f12(a1, GE_ms8(" \"", 2));
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, ((T54*)(C))->a4);
+		T55f25(a1, ((T54*)(C))->a4);
 	} else {
-		T58f11(a1, ((T54*)(C))->a4);
+		T58f12(a1, ((T54*)(C))->a4);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f25(a1, (T2)('\"'));
+		T55f26(a1, (T2)('\"'));
 	} else {
-		T58f12(a1, (T2)('\"'));
+		T58f13(a1, (T2)('\"'));
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f28(a1);
+		T55f29(a1);
 	} else {
-		T58f15(a1);
+		T58f16(a1);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f26(a1, GE_ms8("debug (\"GELEX\")", 15));
+		T55f27(a1, GE_ms8("debug (\"GELEX\")", 15));
 	} else {
-		T58f13(a1, GE_ms8("debug (\"GELEX\")", 15));
+		T58f14(a1, GE_ms8("debug (\"GELEX\")", 15));
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\tstd.error.put_line (\"Executing scanner user-code from file \'", 61));
+		T55f25(a1, GE_ms8("\tstd.error.put_line (\"Executing scanner user-code from file \'", 61));
 	} else {
-		T58f11(a1, GE_ms8("\tstd.error.put_line (\"Executing scanner user-code from file \'", 61));
+		T58f12(a1, GE_ms8("\tstd.error.put_line (\"Executing scanner user-code from file \'", 61));
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, ((T54*)(C))->a4);
+		T55f25(a1, ((T54*)(C))->a4);
 	} else {
-		T58f11(a1, ((T54*)(C))->a4);
+		T58f12(a1, ((T54*)(C))->a4);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\' at line ", 10));
+		T55f25(a1, GE_ms8("\' at line ", 10));
 	} else {
-		T58f11(a1, GE_ms8("\' at line ", 10));
+		T58f12(a1, GE_ms8("\' at line ", 10));
 	}
 	if (((T54*)(C))->a16) {
 		t2 = (((T49*)(GE_void(a2)))->a8);
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f27(a1, t2);
+			T55f28(a1, t2);
 		} else {
-			T58f14(a1, t2);
+			T58f15(a1, t2);
 		}
 	} else {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("<not available>", 15));
+			T55f25(a1, GE_ms8("<not available>", 15));
 		} else {
-			T58f11(a1, GE_ms8("<not available>", 15));
+			T58f12(a1, GE_ms8("<not available>", 15));
 		}
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f26(a1, GE_ms8("\")", 2));
+		T55f27(a1, GE_ms8("\")", 2));
 	} else {
-		T58f13(a1, GE_ms8("\")", 2));
+		T58f14(a1, GE_ms8("\")", 2));
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f26(a1, GE_ms8("end", 3));
+		T55f27(a1, GE_ms8("end", 3));
 	} else {
-		T58f13(a1, GE_ms8("end", 3));
+		T58f14(a1, GE_ms8("end", 3));
 	}
 	t3 = (((T49*)(GE_void(a2)))->a3);
 	t3 = (T100f2(GE_void(t3)));
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, t3);
+		T55f25(a1, t3);
 	} else {
-		T58f11(a1, t3);
+		T58f12(a1, t3);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f28(a1);
+		T55f29(a1);
 	} else {
-		T58f15(a1);
+		T58f16(a1);
 	}
 }
 
@@ -9873,72 +9872,72 @@ void T54f72(T0* C, T0* a1, T6 a2, T6 a3)
 	T6 l1 = 0;
 	t1 = (((((a2) == (a3)))));
 	if (t1) {
-		t2 = (T137f5(GE_void(((T54*)(C))->a21), a2));
+		t2 = (T138f5(GE_void(((T54*)(C))->a21), a2));
 		T54f79(C, a1, t2);
 	} else {
 		t3 = ((T6)((a2)+((T6)(GE_int32(1)))));
 		t1 = (((((t3) == (a3)))));
 		if (t1) {
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8("if yy_act = ", 12));
+				T55f25(a1, GE_ms8("if yy_act = ", 12));
 			} else {
-				T58f11(a1, GE_ms8("if yy_act = ", 12));
+				T58f12(a1, GE_ms8("if yy_act = ", 12));
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f27(a1, a2);
+				T55f28(a1, a2);
 			} else {
-				T58f14(a1, a2);
+				T58f15(a1, a2);
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8(" then\n", 6));
+				T55f25(a1, GE_ms8(" then\n", 6));
 			} else {
-				T58f11(a1, GE_ms8(" then\n", 6));
+				T58f12(a1, GE_ms8(" then\n", 6));
 			}
-			t2 = (T137f5(GE_void(((T54*)(C))->a21), a2));
+			t2 = (T138f5(GE_void(((T54*)(C))->a21), a2));
 			T54f79(C, a1, t2);
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8("else\n", 5));
+				T55f25(a1, GE_ms8("else\n", 5));
 			} else {
-				T58f11(a1, GE_ms8("else\n", 5));
+				T58f12(a1, GE_ms8("else\n", 5));
 			}
-			t2 = (T137f5(GE_void(((T54*)(C))->a21), a3));
+			t2 = (T138f5(GE_void(((T54*)(C))->a21), a3));
 			T54f79(C, a1, t2);
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8("end\n", 4));
+				T55f25(a1, GE_ms8("end\n", 4));
 			} else {
-				T58f11(a1, GE_ms8("end\n", 4));
+				T58f12(a1, GE_ms8("end\n", 4));
 			}
 		} else {
 			t3 = ((T6)((a3)-(a2)));
 			t3 = ((T6)((t3)/((T6)(GE_int32(2)))));
 			l1 = ((T6)((a2)+(t3)));
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8("if yy_act <= ", 13));
+				T55f25(a1, GE_ms8("if yy_act <= ", 13));
 			} else {
-				T58f11(a1, GE_ms8("if yy_act <= ", 13));
+				T58f12(a1, GE_ms8("if yy_act <= ", 13));
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f27(a1, l1);
+				T55f28(a1, l1);
 			} else {
-				T58f14(a1, l1);
+				T58f15(a1, l1);
 			}
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8(" then\n", 6));
+				T55f25(a1, GE_ms8(" then\n", 6));
 			} else {
-				T58f11(a1, GE_ms8(" then\n", 6));
+				T58f12(a1, GE_ms8(" then\n", 6));
 			}
 			T54f72(C, a1, a2, l1);
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8("else\n", 5));
+				T55f25(a1, GE_ms8("else\n", 5));
 			} else {
-				T58f11(a1, GE_ms8("else\n", 5));
+				T58f12(a1, GE_ms8("else\n", 5));
 			}
 			t3 = ((T6)((l1)+((T6)(GE_int32(1)))));
 			T54f72(C, a1, t3, a3);
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8("end\n", 4));
+				T55f25(a1, GE_ms8("end\n", 4));
 			} else {
-				T58f11(a1, GE_ms8("end\n", 4));
+				T58f12(a1, GE_ms8("end\n", 4));
 			}
 		}
 	}
@@ -9950,49 +9949,49 @@ void T54f79(T0* C, T0* a1, T0* a2)
 	T6 t1;
 	if (((T54*)(C))->a8) {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("\t\t--|#line ", 11));
+			T55f25(a1, GE_ms8("\t\t--|#line ", 11));
 		} else {
-			T58f11(a1, GE_ms8("\t\t--|#line ", 11));
+			T58f12(a1, GE_ms8("\t\t--|#line ", 11));
 		}
 		if (((T54*)(C))->a16) {
 			t1 = (((T49*)(GE_void(a2)))->a8);
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f27(a1, t1);
+				T55f28(a1, t1);
 			} else {
-				T58f14(a1, t1);
+				T58f15(a1, t1);
 			}
 		} else {
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, GE_ms8("<not available>", 15));
+				T55f25(a1, GE_ms8("<not available>", 15));
 			} else {
-				T58f11(a1, GE_ms8("<not available>", 15));
+				T58f12(a1, GE_ms8("<not available>", 15));
 			}
 		}
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8(" \"", 2));
+			T55f25(a1, GE_ms8(" \"", 2));
 		} else {
-			T58f11(a1, GE_ms8(" \"", 2));
+			T58f12(a1, GE_ms8(" \"", 2));
 		}
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, ((T54*)(C))->a4);
+			T55f25(a1, ((T54*)(C))->a4);
 		} else {
-			T58f11(a1, ((T54*)(C))->a4);
+			T58f12(a1, ((T54*)(C))->a4);
 		}
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("\"\n\tyy_execute_action_", 21));
+			T55f25(a1, GE_ms8("\"\n\tyy_execute_action_", 21));
 		} else {
-			T58f11(a1, GE_ms8("\"\n\tyy_execute_action_", 21));
+			T58f12(a1, GE_ms8("\"\n\tyy_execute_action_", 21));
 		}
 		t1 = (((T49*)(GE_void(a2)))->a1);
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f27(a1, t1);
+			T55f28(a1, t1);
 		} else {
-			T58f14(a1, t1);
+			T58f15(a1, t1);
 		}
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f25(a1, (T2)('\n'));
+			T55f26(a1, (T2)('\n'));
 		} else {
-			T58f12(a1, (T2)('\n'));
+			T58f13(a1, (T2)('\n'));
 		}
 	} else {
 		T54f80(C, a1, a2);
@@ -10013,28 +10012,28 @@ void T54f71(T0* C, T0* a1)
 	T0* l4 = 0;
 	T1 l5 = 0;
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\t\t\tinspect yy_act\n", 18));
+		T55f25(a1, GE_ms8("\t\t\tinspect yy_act\n", 18));
 	} else {
-		T58f11(a1, GE_ms8("\t\t\tinspect yy_act\n", 18));
+		T58f12(a1, GE_ms8("\t\t\tinspect yy_act\n", 18));
 	}
-	l2 = (((T137*)(GE_void(((T54*)(C))->a21)))->a3);
-	l1 = (((T137*)(GE_void(((T54*)(C))->a21)))->a2);
+	l2 = (((T138*)(GE_void(((T54*)(C))->a21)))->a3);
+	l1 = (((T138*)(GE_void(((T54*)(C))->a21)))->a2);
 	while (1) {
 		t1 = (T6f1((&l1), l2));
 		if (t1) {
 			break;
 		}
-		l3 = (T137f5(GE_void(((T54*)(C))->a21), l1));
+		l3 = (T138f5(GE_void(((T54*)(C))->a21), l1));
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("when ", 5));
+			T55f25(a1, GE_ms8("when ", 5));
 		} else {
-			T58f11(a1, GE_ms8("when ", 5));
+			T58f12(a1, GE_ms8("when ", 5));
 		}
 		t2 = (((T49*)(GE_void(l3)))->a1);
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f27(a1, t2);
+			T55f28(a1, t2);
 		} else {
-			T58f14(a1, t2);
+			T58f15(a1, t2);
 		}
 		t1 = (((T49*)(GE_void(l3)))->a9);
 		t1 = ((T1)(!(t1)));
@@ -10050,7 +10049,7 @@ void T54f71(T0* C, T0* a1)
 				if (t1) {
 					break;
 				}
-				l4 = (T137f5(GE_void(((T54*)(C))->a21), l1));
+				l4 = (T138f5(GE_void(((T54*)(C))->a21), l1));
 				t3 = (((T49*)(GE_void(l3)))->a3);
 				t4 = (((T49*)(GE_void(l4)))->a3);
 				t1 = ((t3)==(t4));
@@ -10066,15 +10065,15 @@ void T54f71(T0* C, T0* a1)
 				}
 				if (t1) {
 					if (((T0*)(GE_void(a1)))->id==55) {
-						T55f24(a1, GE_ms8(", ", 2));
+						T55f25(a1, GE_ms8(", ", 2));
 					} else {
-						T58f11(a1, GE_ms8(", ", 2));
+						T58f12(a1, GE_ms8(", ", 2));
 					}
 					t2 = (((T49*)(GE_void(l4)))->a1);
 					if (((T0*)(GE_void(a1)))->id==55) {
-						T55f27(a1, t2);
+						T55f28(a1, t2);
 					} else {
-						T58f14(a1, t2);
+						T58f15(a1, t2);
 					}
 					l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 				} else {
@@ -10096,7 +10095,7 @@ void T54f71(T0* C, T0* a1)
 			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 			t1 = (T6f7((&l1), l2));
 			if (t1) {
-				l4 = (T137f5(GE_void(((T54*)(C))->a21), l1));
+				l4 = (T138f5(GE_void(((T54*)(C))->a21), l1));
 				t3 = (((T49*)(GE_void(l4)))->a3);
 				t4 = (((T49*)(GE_void(l3)))->a3);
 				t1 = ((t3)==(t4));
@@ -10105,28 +10104,28 @@ void T54f71(T0* C, T0* a1)
 			}
 		}
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8(" then\n", 6));
+			T55f25(a1, GE_ms8(" then\n", 6));
 		} else {
-			T58f11(a1, GE_ms8(" then\n", 6));
+			T58f12(a1, GE_ms8(" then\n", 6));
 		}
 		T54f79(C, a1, l3);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\t\t\telse\n", 8));
+		T55f25(a1, GE_ms8("\t\t\telse\n", 8));
 	} else {
-		T58f11(a1, GE_ms8("\t\t\telse\n", 8));
+		T58f12(a1, GE_ms8("\t\t\telse\n", 8));
 	}
 	if (((T54*)(C))->a12) {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("\t\t\t\tpre_action\n", 15));
+			T55f25(a1, GE_ms8("\t\t\t\tpre_action\n", 15));
 		} else {
-			T58f11(a1, GE_ms8("\t\t\t\tpre_action\n", 15));
+			T58f12(a1, GE_ms8("\t\t\t\tpre_action\n", 15));
 		}
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\t\t\t\tlast_token := yyError_token\n\t\t\t\tfatal_error (\"fatal scanner internal error: no action found\")\n\t\t\tend\n", 105));
+		T55f25(a1, GE_ms8("\t\t\t\tlast_token := yyError_token\n\t\t\t\tfatal_error (\"fatal scanner internal error: no action found\")\n\t\t\tend\n", 105));
 	} else {
-		T58f11(a1, GE_ms8("\t\t\t\tlast_token := yyError_token\n\t\t\t\tfatal_error (\"fatal scanner internal error: no action found\")\n\t\t\tend\n", 105));
+		T58f12(a1, GE_ms8("\t\t\t\tlast_token := yyError_token\n\t\t\t\tfatal_error (\"fatal scanner internal error: no action found\")\n\t\t\tend\n", 105));
 	}
 }
 
@@ -10135,47 +10134,47 @@ void T54f57(T0* C, T0* a1)
 {
 	T1 t1;
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\tyy_build_tables is\n\t\t\t-- Build scanner tables.\n\t\tdo\n", 53));
+		T55f25(a1, GE_ms8("\tyy_build_tables\n\t\t\t-- Build scanner tables.\n\t\tdo\n", 50));
 	} else {
-		T58f11(a1, GE_ms8("\tyy_build_tables is\n\t\t\t-- Build scanner tables.\n\t\tdo\n", 53));
+		T58f12(a1, GE_ms8("\tyy_build_tables\n\t\t\t-- Build scanner tables.\n\t\tdo\n", 50));
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, ge182ov4545);
+		T55f25(a1, ge134ov4823);
 	} else {
-		T58f11(a1, ge182ov4545);
+		T58f12(a1, ge134ov4823);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("yy_nxt := yy_nxt_template\n", 26));
+		T55f25(a1, GE_ms8("yy_nxt := yy_nxt_template\n", 26));
 	} else {
-		T58f11(a1, GE_ms8("yy_nxt := yy_nxt_template\n", 26));
+		T58f12(a1, GE_ms8("yy_nxt := yy_nxt_template\n", 26));
 	}
 	t1 = ((((T54*)(C))->a18)!=(EIF_VOID));
 	if (t1) {
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, ge182ov4545);
+			T55f25(a1, ge134ov4823);
 		} else {
-			T58f11(a1, ge182ov4545);
+			T58f12(a1, ge134ov4823);
 		}
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("yy_ec := yy_ec_template\n", 24));
+			T55f25(a1, GE_ms8("yy_ec := yy_ec_template\n", 24));
 		} else {
-			T58f11(a1, GE_ms8("yy_ec := yy_ec_template\n", 24));
+			T58f12(a1, GE_ms8("yy_ec := yy_ec_template\n", 24));
 		}
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, ge182ov4545);
+		T55f25(a1, ge134ov4823);
 	} else {
-		T58f11(a1, ge182ov4545);
+		T58f12(a1, ge134ov4823);
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("yy_accept := yy_accept_template\n", 32));
+		T55f25(a1, GE_ms8("yy_accept := yy_accept_template\n", 32));
 	} else {
-		T58f11(a1, GE_ms8("yy_accept := yy_accept_template\n", 32));
+		T58f12(a1, GE_ms8("yy_accept := yy_accept_template\n", 32));
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\t\tend\n", 6));
+		T55f25(a1, GE_ms8("\t\tend\n", 6));
 	} else {
-		T58f11(a1, GE_ms8("\t\tend\n", 6));
+		T58f12(a1, GE_ms8("\t\tend\n", 6));
 	}
 }
 
@@ -10185,74 +10184,74 @@ void T54f56(T0* C, T0* a1)
 	T6 t1;
 	T0* t2;
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\tvalid_start_condition (sc: INTEGER): BOOLEAN is\n\t\t\t-- Is `sc\' a valid start condition\?\n\t\tdo\n\t\t\tResult := ", 106));
+		T55f25(a1, GE_ms8("\tvalid_start_condition (sc: INTEGER): BOOLEAN\n\t\t\t-- Is `sc\' a valid start condition\?\n\t\tdo\n\t\t\tResult := ", 103));
 	} else {
-		T58f11(a1, GE_ms8("\tvalid_start_condition (sc: INTEGER): BOOLEAN is\n\t\t\t-- Is `sc\' a valid start condition\?\n\t\tdo\n\t\t\tResult := ", 106));
+		T58f12(a1, GE_ms8("\tvalid_start_condition (sc: INTEGER): BOOLEAN\n\t\t\t-- Is `sc\' a valid start condition\?\n\t\tdo\n\t\t\tResult := ", 103));
 	}
-	t1 = (T132f6(GE_void(((T54*)(C))->a17)));
+	t1 = (T133f6(GE_void(((T54*)(C))->a17)));
 	switch (t1) {
 	case (T6)(T6)(GE_int32(0)):
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("False", 5));
+			T55f25(a1, GE_ms8("False", 5));
 		} else {
-			T58f11(a1, GE_ms8("False", 5));
+			T58f12(a1, GE_ms8("False", 5));
 		}
 		break;
 	case (T6)(T6)(GE_int32(1)):
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8("(sc = ", 6));
+			T55f25(a1, GE_ms8("(sc = ", 6));
 		} else {
-			T58f11(a1, GE_ms8("(sc = ", 6));
+			T58f12(a1, GE_ms8("(sc = ", 6));
 		}
-		t1 = (((T132*)(GE_void(((T54*)(C))->a17)))->a2);
-		t2 = (T132f5(GE_void(((T54*)(C))->a17), t1));
+		t1 = (((T133*)(GE_void(((T54*)(C))->a17)))->a2);
+		t2 = (T133f5(GE_void(((T54*)(C))->a17), t1));
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, t2);
+			T55f25(a1, t2);
 		} else {
-			T58f11(a1, t2);
+			T58f12(a1, t2);
 		}
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f25(a1, (T2)(')'));
+			T55f26(a1, (T2)(')'));
 		} else {
-			T58f12(a1, (T2)(')'));
+			T58f13(a1, (T2)(')'));
 		}
 		break;
 	default:
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f25(a1, (T2)('('));
+			T55f26(a1, (T2)('('));
 		} else {
-			T58f12(a1, (T2)('('));
+			T58f13(a1, (T2)('('));
 		}
-		t1 = (((T132*)(GE_void(((T54*)(C))->a17)))->a2);
-		t2 = (T132f5(GE_void(((T54*)(C))->a17), t1));
+		t1 = (((T133*)(GE_void(((T54*)(C))->a17)))->a2);
+		t2 = (T133f5(GE_void(((T54*)(C))->a17), t1));
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, t2);
+			T55f25(a1, t2);
 		} else {
-			T58f11(a1, t2);
-		}
-		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, GE_ms8(" <= sc and sc <= ", 17));
-		} else {
-			T58f11(a1, GE_ms8(" <= sc and sc <= ", 17));
-		}
-		t1 = (((T132*)(GE_void(((T54*)(C))->a17)))->a3);
-		t2 = (T132f5(GE_void(((T54*)(C))->a17), t1));
-		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f24(a1, t2);
-		} else {
-			T58f11(a1, t2);
+			T58f12(a1, t2);
 		}
 		if (((T0*)(GE_void(a1)))->id==55) {
-			T55f25(a1, (T2)(')'));
+			T55f25(a1, GE_ms8(" <= sc and sc <= ", 17));
 		} else {
-			T58f12(a1, (T2)(')'));
+			T58f12(a1, GE_ms8(" <= sc and sc <= ", 17));
+		}
+		t1 = (((T133*)(GE_void(((T54*)(C))->a17)))->a3);
+		t2 = (T133f5(GE_void(((T54*)(C))->a17), t1));
+		if (((T0*)(GE_void(a1)))->id==55) {
+			T55f25(a1, t2);
+		} else {
+			T58f12(a1, t2);
+		}
+		if (((T0*)(GE_void(a1)))->id==55) {
+			T55f26(a1, (T2)(')'));
+		} else {
+			T58f13(a1, (T2)(')'));
 		}
 		break;
 	}
 	if (((T0*)(GE_void(a1)))->id==55) {
-		T55f24(a1, GE_ms8("\n\t\tend\n", 7));
+		T55f25(a1, GE_ms8("\n\t\tend\n", 7));
 	} else {
-		T58f11(a1, GE_ms8("\n\t\tend\n", 7));
+		T58f12(a1, GE_ms8("\n\t\tend\n", 7));
 	}
 }
 
@@ -10274,9 +10273,9 @@ void T54f55(T0* C, T0* a1)
 			}
 			t2 = (T74f8(GE_void(((T54*)(C))->a10), l1));
 			if (((T0*)(GE_void(a1)))->id==55) {
-				T55f24(a1, t2);
+				T55f25(a1, t2);
 			} else {
-				T58f11(a1, t2);
+				T58f12(a1, t2);
 			}
 			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 		}
@@ -10322,7 +10321,7 @@ void T21f10(T0* C)
 				}
 				t2 = (T48f8(GE_void(l2), l8));
 				t3 = (((T49*)(GE_void(t2)))->a8);
-				l4 = T50c7(l7, t3);
+				l4 = T50c8(l7, t3);
 				T24f8(GE_void(((T21*)(C))->a1), l4);
 				l8 = ((T6)((l8)+((T6)(GE_int32(1)))));
 			}
@@ -10350,7 +10349,7 @@ void T21f10(T0* C)
 			t1 = ((T1)(!(t1)));
 			if (t1) {
 				t3 = (((T49*)(GE_void(l3)))->a8);
-				l5 = T51c7(l7, t3);
+				l5 = T51c8(l7, t3);
 				T24f8(GE_void(((T21*)(C))->a1), l5);
 			}
 			l8 = ((T6)((l8)+((T6)(GE_int32(1)))));
@@ -10361,32 +10360,32 @@ void T21f10(T0* C)
 			t1 = (((T49*)(GE_void(t2)))->a10);
 		}
 		if (t1) {
-			l6 = T52c7(l7);
+			l6 = T52c8(l7);
 			T24f8(GE_void(((T21*)(C))->a1), l6);
 		}
 	}
 }
 
 /* LX_DEFAULT_RULE_CAN_BE_MATCHED_ERROR.make */
-T0* T52c7(T0* a1)
+T0* T52c8(T0* a1)
 {
 	T0* C;
 	C = GE_new52(EIF_TRUE);
-	((T52*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(1)));
-	T132f8(GE_void(((T52*)(C))->a1), a1, (T6)(GE_int32(1)));
+	((T52*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(1)));
+	T133f8(GE_void(((T52*)(C))->a1), a1, (T6)(GE_int32(1)));
 	return C;
 }
 
 /* LX_RULE_CANNOT_BE_MATCHED_ERROR.make */
-T0* T51c7(T0* a1, T6 a2)
+T0* T51c8(T0* a1, T6 a2)
 {
 	T0* C;
 	T0* t1;
 	C = GE_new51(EIF_TRUE);
-	((T51*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(2)));
-	T132f8(GE_void(((T51*)(C))->a1), a1, (T6)(GE_int32(1)));
+	((T51*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(2)));
+	T133f8(GE_void(((T51*)(C))->a1), a1, (T6)(GE_int32(1)));
 	t1 = (T6f6(&a2));
-	T132f8(GE_void(((T51*)(C))->a1), t1, (T6)(GE_int32(2)));
+	T133f8(GE_void(((T51*)(C))->a1), t1, (T6)(GE_int32(2)));
 	return C;
 }
 
@@ -10401,19 +10400,19 @@ void T24f8(T0* C, T0* a1)
 /* UT_ERROR_HANDLER.report_warning_message */
 void T24f12(T0* C, T0* a1)
 {
-	T73f11(GE_void(((T24*)(C))->a2), a1);
+	T73f12(GE_void(((T24*)(C))->a2), a1);
 }
 
 /* LX_DANGEROUS_TRAILING_CONTEXT_ERROR.make */
-T0* T50c7(T0* a1, T6 a2)
+T0* T50c8(T0* a1, T6 a2)
 {
 	T0* C;
 	T0* t1;
 	C = GE_new50(EIF_TRUE);
-	((T50*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(2)));
-	T132f8(GE_void(((T50*)(C))->a1), a1, (T6)(GE_int32(1)));
+	((T50*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(2)));
+	T133f8(GE_void(((T50*)(C))->a1), a1, (T6)(GE_int32(1)));
 	t1 = (T6f6(&a2));
-	T132f8(GE_void(((T50*)(C))->a1), t1, (T6)(GE_int32(2)));
+	T133f8(GE_void(((T50*)(C))->a1), t1, (T6)(GE_int32(2)));
 	return C;
 }
 
@@ -10421,7 +10420,7 @@ T0* T50c7(T0* a1, T6 a2)
 T0* T48f8(T0* C, T6 a1)
 {
 	T0* R = 0;
-	R = (((T136*)(GE_void(((T48*)(C))->a2)))->z2[a1]);
+	R = (((T137*)(GE_void(((T48*)(C))->a2)))->z2[a1]);
 	return R;
 }
 
@@ -10440,40 +10439,40 @@ T0* T47f51(T0* C)
 	T0* l5 = 0;
 	T0* l6 = 0;
 	T0* l7 = 0;
-	t1 = (T137f4(GE_void(((T47*)(C))->a1)));
+	t1 = (T138f4(GE_void(((T47*)(C))->a1)));
 	R = T48c15(t1);
 	if (((T47*)(C))->a2) {
-		l1 = (((T138*)(GE_void(((T47*)(C))->a3)))->a1);
+		l1 = (((T139*)(GE_void(((T47*)(C))->a3)))->a1);
 		while (1) {
 			t2 = ((T1)((l1)<((T6)(GE_int32(1)))));
 			if (t2) {
 				break;
 			}
-			l4 = (T138f7(GE_void(((T47*)(C))->a3), l1));
-			t2 = (T133f10(GE_void(l4)));
+			l4 = (T139f7(GE_void(((T47*)(C))->a3), l1));
+			t2 = (T134f9(GE_void(l4)));
 			if (t2) {
-				l7 = (((T133*)(GE_void(l4)))->a4);
-				l6 = (((T133*)(GE_void(l4)))->a2);
-				l2 = (((T135*)(GE_void(l6)))->a1);
+				l7 = (((T134*)(GE_void(l4)))->a4);
+				l6 = (((T134*)(GE_void(l4)))->a2);
+				l2 = (((T136*)(GE_void(l6)))->a1);
 				while (1) {
 					t2 = ((T1)((l2)<((T6)(GE_int32(1)))));
 					if (t2) {
 						break;
 					}
-					l5 = (T135f10(GE_void(l6), l2));
-					t2 = (((T134*)(GE_void(l5)))->a1);
+					l5 = (T136f13(GE_void(l6), l2));
+					t2 = (((T135*)(GE_void(l5)))->a1);
 					if (t2) {
 						l3 = (((T48*)(GE_void(l7)))->a1);
 						while (1) {
 							t2 = ((T1)((l3)<((T6)(GE_int32(1)))));
 							if (!(t2)) {
 								t3 = (T48f8(GE_void(l7), l3));
-								t4 = (T48f7(GE_void(R), t3));
+								t4 = (T48f12(GE_void(R), t3));
 								t4 = ((T1)(!(t4)));
 								if (t4) {
 									t3 = (T48f8(GE_void(l7), l3));
 									t3 = (((T49*)(GE_void(t3)))->a2);
-									t2 = (T93f8(GE_void(t3), l5));
+									t2 = (T93f7(GE_void(t3), l5));
 								} else {
 									t2 = EIF_FALSE;
 								}
@@ -10503,30 +10502,30 @@ T0* T47f51(T0* C)
 /* DS_ARRAYED_LIST [LX_RULE].sort */
 void T48f19(T0* C, T0* a1)
 {
-	T139f3(GE_void(a1), C);
+	T140f3(GE_void(a1), C);
 }
 
 /* DS_BUBBLE_SORTER [LX_RULE].sort */
-void T139f3(T0* C, T0* a1)
+void T140f3(T0* C, T0* a1)
 {
-	T139f4(C, a1, ((T139*)(C))->a1);
+	T140f4(C, a1, ((T140*)(C))->a1);
 }
 
 /* DS_BUBBLE_SORTER [LX_RULE].sort_with_comparator */
-void T139f4(T0* C, T0* a1, T0* a2)
+void T140f4(T0* C, T0* a1, T0* a2)
 {
 	T1 t1;
 	T6 t2;
-	t1 = (T48f13(a1));
+	t1 = (T48f14(a1));
 	t1 = ((T1)(!(t1)));
 	if (t1) {
 		t2 = (((T48*)(a1))->a1);
-		T139f5(C, a1, a2, (T6)(GE_int32(1)), t2);
+		T140f5(C, a1, a2, (T6)(GE_int32(1)), t2);
 	}
 }
 
 /* DS_BUBBLE_SORTER [LX_RULE].subsort_with_comparator */
-void T139f5(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
+void T140f5(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
 {
 	T1 t1;
 	T6 t2;
@@ -10550,11 +10549,11 @@ void T139f5(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
 			l4 = (T48f8(a1, l2));
 			t2 = ((T6)((l2)+((T6)(GE_int32(1)))));
 			l5 = (T48f8(a1, t2));
-			t1 = (T141f1(GE_void(a2), l5, l4));
+			t1 = (T142f1(GE_void(a2), l5, l4));
 			if (t1) {
-				T48f24(a1, l5, l2);
+				T48f25(a1, l5, l2);
 				t2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-				T48f24(a1, l4, t2);
+				T48f25(a1, l4, t2);
 				l3 = EIF_TRUE;
 			}
 			l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
@@ -10569,20 +10568,20 @@ void T139f5(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
 }
 
 /* DS_ARRAYED_LIST [LX_RULE].replace */
-void T48f24(T0* C, T0* a1, T6 a2)
+void T48f25(T0* C, T0* a1, T6 a2)
 {
-	((T136*)(GE_void(((T48*)(C))->a2)))->z2[a2] = (a1);
+	((T137*)(GE_void(((T48*)(C))->a2)))->z2[a2] = (a1);
 }
 
 /* KL_COMPARABLE_COMPARATOR [LX_RULE].less_than */
-T1 T141f1(T0* C, T0* a1, T0* a2)
+T1 T142f1(T0* C, T0* a1, T0* a2)
 {
 	T1 R = 0;
 	R = (T49f13(GE_void(a1), a2));
 	return R;
 }
 
-/* LX_RULE.infix "<" */
+/* LX_RULE.is_less */
 T1 T49f13(T0* C, T0* a1)
 {
 	T6 t1;
@@ -10593,38 +10592,38 @@ T1 T49f13(T0* C, T0* a1)
 }
 
 /* LX_COMPRESSED_DFA.rule_sorter */
-unsigned char ge178os4507 = '\0';
-T0* ge178ov4507;
+unsigned char ge130os4785 = '\0';
+T0* ge130ov4785;
 T0* T47f52(T0* C)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	if (ge178os4507) {
-		return ge178ov4507;
+	if (ge130os4785) {
+		return ge130ov4785;
 	} else {
-		ge178os4507 = '\1';
-		ge178ov4507 = R;
+		ge130os4785 = '\1';
+		ge130ov4785 = R;
 	}
-	l1 = T141c2();
-	R = T139c2(l1);
-	ge178ov4507 = R;
+	l1 = T142c2();
+	R = T140c2(l1);
+	ge130ov4785 = R;
 	return R;
 }
 
 /* DS_BUBBLE_SORTER [LX_RULE].make */
-T0* T139c2(T0* a1)
+T0* T140c2(T0* a1)
 {
 	T0* C;
-	C = GE_new139(EIF_TRUE);
-	((T139*)(C))->a1 = a1;
+	C = GE_new140(EIF_TRUE);
+	((T140*)(C))->a1 = a1;
 	return C;
 }
 
 /* KL_COMPARABLE_COMPARATOR [LX_RULE].make */
-T0* T141c2(void)
+T0* T142c2(void)
 {
 	T0* C;
-	C = GE_new141(EIF_TRUE);
+	C = GE_new142(EIF_TRUE);
 	return C;
 }
 
@@ -10632,11 +10631,11 @@ T0* T141c2(void)
 void T48f18(T0* C, T0* a1)
 {
 	((T48*)(C))->a1 = ((T6)((((T48*)(C))->a1)+((T6)(GE_int32(1)))));
-	((T136*)(GE_void(((T48*)(C))->a2)))->z2[((T48*)(C))->a1] = (a1);
+	((T137*)(GE_void(((T48*)(C))->a2)))->z2[((T48*)(C))->a1] = (a1);
 }
 
 /* DS_ARRAYED_LIST [LX_RULE].has */
-T1 T48f7(T0* C, T0* a1)
+T1 T48f12(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
@@ -10652,7 +10651,7 @@ T1 T48f7(T0* C, T0* a1)
 			if (t1) {
 				break;
 			}
-			t2 = (((T136*)(GE_void(((T48*)(C))->a2)))->z2[l1]);
+			t2 = (((T137*)(GE_void(((T48*)(C))->a2)))->z2[l1]);
 			t1 = ((GE_void(l2), t2, a1, (T1)0));
 			if (t1) {
 				R = EIF_TRUE;
@@ -10667,7 +10666,7 @@ T1 T48f7(T0* C, T0* a1)
 			if (t1) {
 				break;
 			}
-			t2 = (((T136*)(GE_void(((T48*)(C))->a2)))->z2[l1]);
+			t2 = (((T137*)(GE_void(((T48*)(C))->a2)))->z2[l1]);
 			t1 = ((t2)==(a1));
 			if (t1) {
 				R = EIF_TRUE;
@@ -10681,11 +10680,11 @@ T1 T48f7(T0* C, T0* a1)
 }
 
 /* LX_DFA_STATE.is_accepting_head */
-T1 T133f10(T0* C)
+T1 T134f9(T0* C)
 {
 	T1 t1;
 	T1 R = 0;
-	t1 = (T48f13(GE_void(((T133*)(C))->a4)));
+	t1 = (T48f14(GE_void(((T134*)(C))->a4)));
 	R = ((T1)(!(t1)));
 	return R;
 }
@@ -10695,65 +10694,90 @@ T0* T48c15(T6 a1)
 {
 	T0* C;
 	T6 t1;
+	T0* t2;
 	C = GE_new48(EIF_TRUE);
-	((T48*)(C))->a4 = T169c3();
+	((T48*)(C))->a4 = T171c3();
 	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
-	((T48*)(C))->a2 = (T169f1(GE_void(((T48*)(C))->a4), t1));
+	((T48*)(C))->a2 = (T171f1(GE_void(((T48*)(C))->a4), t1));
 	((T48*)(C))->a5 = a1;
-	((T48*)(C))->a6 = (T48f9(C));
+	t2 = (T48f9(C));
+	T48f20(C, t2);
 	return C;
+}
+
+/* DS_ARRAYED_LIST [LX_RULE].set_internal_cursor */
+void T48f20(T0* C, T0* a1)
+{
+	((T48*)(C))->a6 = a1;
 }
 
 /* DS_ARRAYED_LIST [LX_RULE].new_cursor */
 T0* T48f9(T0* C)
 {
 	T0* R = 0;
-	R = T170c4(C);
+	R = T172c4(C);
 	return R;
 }
 
 /* DS_ARRAYED_LIST_CURSOR [LX_RULE].make */
-T0* T170c4(T0* a1)
+T0* T172c4(T0* a1)
 {
 	T0* C;
-	C = GE_new170(EIF_TRUE);
-	((T170*)(C))->a2 = a1;
-	((T170*)(C))->a3 = (T6)(GE_int32(0));
+	C = GE_new172(EIF_TRUE);
+	((T172*)(C))->a2 = a1;
+	((T172*)(C))->a3 = (T6)(GE_int32(0));
 	return C;
 }
 
 /* KL_SPECIAL_ROUTINES [LX_RULE].make */
-T0* T169f1(T0* C, T6 a1)
+T0* T171f1(T0* C, T6 a1)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	l1 = T244c2(a1);
-	R = (((T244*)(GE_void(l1)))->a1);
+	R = T137c5(l1, a1);
 	return R;
 }
 
-/* TO_SPECIAL [LX_RULE].make_area */
-T0* T244c2(T6 a1)
+/* SPECIAL [LX_RULE].make_filled */
+T0* T137c5(T0* a1, T6 a2)
 {
 	T0* C;
-	C = GE_new244(EIF_TRUE);
-	((T244*)(C))->a1 = T136c4(a1);
+	T6 t1;
+	C = GE_new137(a2, EIF_TRUE);
+	T137f7(C, a2);
+	t1 = ((T6)((a2)-((T6)(GE_int32(1)))));
+	T137f8(C, a1, (T6)(GE_int32(0)), t1);
 	return C;
+}
+
+/* SPECIAL [LX_RULE].fill_with */
+void T137f8(T0* C, T0* a1, T6 a2, T6 a3)
+{
+	T1 t1;
+	T6 l1 = 0;
+	T6 l2 = 0;
+	l1 = a2;
+	l2 = ((T6)((a3)+((T6)(GE_int32(1)))));
+	while (1) {
+		t1 = (((((l1) == (l2)))));
+		if (t1) {
+			break;
+		}
+		((T137*)(C))->z2[l1] = (a1);
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
 }
 
 /* SPECIAL [LX_RULE].make */
-T0* T136c4(T6 a1)
+void T137f7(T0* C, T6 a1)
 {
-	T0* C;
-	C = GE_new136(a1, EIF_TRUE);
-	return C;
 }
 
 /* KL_SPECIAL_ROUTINES [LX_RULE].default_create */
-T0* T169c3(void)
+T0* T171c3(void)
 {
 	T0* C;
-	C = GE_new169(EIF_TRUE);
+	C = GE_new171(EIF_TRUE);
 	return C;
 }
 
@@ -10782,19 +10806,19 @@ void T47f85(T0* C)
 	((T47*)(C))->a29 = (T6)(GE_int32(1));
 	((T47*)(C))->a30 = (T6)(GE_int32(0));
 	((T47*)(C))->a31 = (T6)(GE_int32(0));
-	((T47*)(C))->a32 = T145c12();
-	((T47*)(C))->a33 = T146c9((T6)(GE_int32(500)));
+	((T47*)(C))->a32 = T146c12();
+	((T47*)(C))->a33 = T147c9((T6)(GE_int32(500)));
 	if (((T47*)(C))->a5) {
 		((T47*)(C))->a34 = T94c10(((T47*)(C))->a27, ((T47*)(C))->a28);
 	}
-	((T47*)(C))->a35 = T147c11(((T47*)(C))->a34);
-	((T47*)(C))->a36 = T148c9(((T47*)(C))->a27, ((T47*)(C))->a28);
-	((T47*)(C))->a37 = T143c10((T6)(GE_int32(0)), (T6)(GE_int32(2000)));
-	((T47*)(C))->a38 = T143c10((T6)(GE_int32(0)), (T6)(GE_int32(2000)));
-	t1 = (((T138*)(GE_void(((T47*)(C))->a3)))->a2);
-	((T47*)(C))->a39 = T143c10((T6)(GE_int32(0)), t1);
-	t1 = (((T138*)(GE_void(((T47*)(C))->a3)))->a2);
-	((T47*)(C))->a40 = T143c10((T6)(GE_int32(0)), t1);
+	((T47*)(C))->a35 = T148c11(((T47*)(C))->a34);
+	((T47*)(C))->a36 = T149c9(((T47*)(C))->a27, ((T47*)(C))->a28);
+	((T47*)(C))->a37 = T144c10((T6)(GE_int32(0)), (T6)(GE_int32(0)), (T6)(GE_int32(2000)));
+	((T47*)(C))->a38 = T144c10((T6)(GE_int32(0)), (T6)(GE_int32(0)), (T6)(GE_int32(2000)));
+	t1 = (((T139*)(GE_void(((T47*)(C))->a3)))->a2);
+	((T47*)(C))->a39 = T144c10((T6)(GE_int32(0)), (T6)(GE_int32(0)), t1);
+	t1 = (((T139*)(GE_void(((T47*)(C))->a3)))->a2);
+	((T47*)(C))->a40 = T144c10((T6)(GE_int32(0)), (T6)(GE_int32(0)), t1);
 	((T47*)(C))->a41 = (T6)(GE_int32(1));
 	l1 = (T6)(GE_int32(1));
 	while (1) {
@@ -10802,26 +10826,26 @@ void T47f85(T0* C)
 		if (t2) {
 			break;
 		}
-		l2 = (T138f7(GE_void(((T47*)(C))->a3), l1));
+		l2 = (T139f7(GE_void(((T47*)(C))->a3), l1));
 		T47f99(C, l2);
 		T47f100(C, l2);
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
-	l2 = (T138f7(GE_void(((T47*)(C))->a3), l1));
+	l2 = (T139f7(GE_void(((T47*)(C))->a3), l1));
 	T47f99(C, l2);
-	t1 = (((T133*)(GE_void(l2)))->a6);
-	l3 = T144c5(t1, (T6)(GE_int32(-32766)), (T6)(GE_int32(0)), (T6)(GE_int32(0)));
-	T146f10(GE_void(((T47*)(C))->a33), l3);
+	t1 = (((T134*)(GE_void(l2)))->a6);
+	l3 = T145c5(t1, (T6)(GE_int32(-32766)), (T6)(GE_int32(0)), (T6)(GE_int32(0)));
+	T147f10(GE_void(((T47*)(C))->a33), l3);
 	l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	while (1) {
-		t1 = (((T138*)(GE_void(((T47*)(C))->a3)))->a1);
+		t1 = (((T139*)(GE_void(((T47*)(C))->a3)))->a1);
 		t2 = (T6f1((&l1), t1));
 		if (t2) {
 			break;
 		}
-		l2 = (T138f7(GE_void(((T47*)(C))->a3), l1));
+		l2 = (T139f7(GE_void(((T47*)(C))->a3), l1));
 		T47f99(C, l2);
-		t2 = (T133f11(GE_void(l2)));
+		t2 = (T134f10(GE_void(l2)));
 		t2 = ((T1)(!(t2)));
 		if (t2) {
 			((T47*)(C))->a41 = ((T6)((((T47*)(C))->a41)+((T6)(GE_int32(1)))));
@@ -10858,7 +10882,7 @@ void T47f106(T0* C)
 	T0* l8 = 0;
 	T0* l9 = 0;
 	T0* l10 = 0;
-	l3 = (((T138*)(GE_void(((T47*)(C))->a3)))->a1);
+	l3 = (((T139*)(GE_void(((T47*)(C))->a3)))->a1);
 	if (!(((T47*)(C))->a4)) {
 		t1 = (((T47*)(C))->a2);
 	} else {
@@ -10866,24 +10890,24 @@ void T47f106(T0* C)
 	}
 	if (t1) {
 		t2 = ((T6)((l3)+((T6)(GE_int32(2)))));
-		l9 = T143c10((T6)(GE_int32(0)), t2);
+		l9 = T144c10((T6)(GE_int32(0)), (T6)(GE_int32(0)), t2);
 		l1 = (T6)(GE_int32(1));
 		while (1) {
 			t1 = (T6f1((&l1), l3));
 			if (t1) {
 				break;
 			}
-			l8 = (T138f7(GE_void(((T47*)(C))->a3), l1));
-			t3 = (((T133*)(GE_void(l8)))->a1);
+			l8 = (T139f7(GE_void(((T47*)(C))->a3), l1));
+			t3 = (((T134*)(GE_void(l8)))->a1);
 			t2 = (((T48*)(GE_void(t3)))->a1);
 			l2 = ((T6)((l2)+(t2)));
-			t3 = (((T133*)(GE_void(l8)))->a4);
+			t3 = (((T134*)(GE_void(l8)))->a4);
 			t2 = (((T48*)(GE_void(t3)))->a1);
 			l2 = ((T6)((l2)+(t2)));
 			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 		}
 		t2 = (T6f12((&l2), (T6)(GE_int32(1))));
-		l10 = T143c10((T6)(GE_int32(0)), t2);
+		l10 = T144c10((T6)(GE_int32(0)), (T6)(GE_int32(0)), t2);
 		l2 = (T6)(GE_int32(1));
 		l1 = (T6)(GE_int32(1));
 		while (1) {
@@ -10891,9 +10915,9 @@ void T47f106(T0* C)
 			if (t1) {
 				break;
 			}
-			T143f11(GE_void(l9), l2, l1);
-			l8 = (T138f7(GE_void(((T47*)(C))->a3), l1));
-			l6 = (((T133*)(GE_void(l8)))->a1);
+			T144f11(GE_void(l9), l2, l1);
+			l8 = (T139f7(GE_void(((T47*)(C))->a3), l1));
+			l6 = (((T134*)(GE_void(l8)))->a1);
 			l5 = (((T48*)(GE_void(l6)))->a1);
 			l4 = (T6)(GE_int32(1));
 			while (1) {
@@ -10910,15 +10934,15 @@ void T47f106(T0* C)
 				if (t1) {
 					t2 = (((T49*)(GE_void(l7)))->a1);
 					t2 = ((T6)(-(t2)));
-					T143f11(GE_void(l10), t2, l2);
+					T144f11(GE_void(l10), t2, l2);
 				} else {
 					t2 = (((T49*)(GE_void(l7)))->a1);
-					T143f11(GE_void(l10), t2, l2);
+					T144f11(GE_void(l10), t2, l2);
 				}
 				l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
 				l4 = ((T6)((l4)+((T6)(GE_int32(1)))));
 			}
-			l6 = (((T133*)(GE_void(l8)))->a4);
+			l6 = (((T134*)(GE_void(l8)))->a4);
 			l5 = (((T48*)(GE_void(l6)))->a1);
 			l4 = (T6)(GE_int32(1));
 			while (1) {
@@ -10930,49 +10954,49 @@ void T47f106(T0* C)
 				t2 = (((T49*)(GE_void(l7)))->a1);
 				t2 = ((T6)(-(t2)));
 				t2 = ((T6)((t2)-(((T47*)(C))->a23)));
-				T143f11(GE_void(l10), t2, l2);
+				T144f11(GE_void(l10), t2, l2);
 				l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
 				l4 = ((T6)((l4)+((T6)(GE_int32(1)))));
 			}
 			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 		}
-		T143f11(GE_void(l9), l2, l1);
+		T144f11(GE_void(l9), l2, l1);
 		t2 = ((T6)((l1)+((T6)(GE_int32(1)))));
-		T143f11(GE_void(l9), l2, t2);
+		T144f11(GE_void(l9), l2, t2);
 		((T47*)(C))->a45 = l9;
 		((T47*)(C))->a43 = l10;
 	} else {
 		t2 = ((T6)((l3)+((T6)(GE_int32(1)))));
-		l9 = T143c10((T6)(GE_int32(0)), t2);
+		l9 = T144c10((T6)(GE_int32(0)), (T6)(GE_int32(0)), t2);
 		l1 = (T6)(GE_int32(1));
 		while (1) {
 			t1 = (T6f1((&l1), l3));
 			if (t1) {
 				break;
 			}
-			l8 = (T138f7(GE_void(((T47*)(C))->a3), l1));
-			t1 = (T133f11(GE_void(l8)));
+			l8 = (T139f7(GE_void(((T47*)(C))->a3), l1));
+			t1 = (T134f10(GE_void(l8)));
 			if (t1) {
-				t3 = (((T133*)(GE_void(l8)))->a1);
-				t3 = (T48f14(GE_void(t3)));
+				t3 = (((T134*)(GE_void(l8)))->a1);
+				t3 = (T48f7(GE_void(t3)));
 				t2 = (((T49*)(GE_void(t3)))->a1);
-				T143f11(GE_void(l9), t2, l1);
+				T144f11(GE_void(l9), t2, l1);
 			} else {
-				T143f11(GE_void(l9), (T6)(GE_int32(0)), l1);
+				T144f11(GE_void(l9), (T6)(GE_int32(0)), l1);
 			}
 			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 		}
-		T143f11(GE_void(l9), (T6)(GE_int32(0)), l1);
+		T144f11(GE_void(l9), (T6)(GE_int32(0)), l1);
 		((T47*)(C))->a45 = l9;
 		((T47*)(C))->a43 = EIF_VOID;
 	}
 }
 
 /* DS_ARRAYED_LIST [LX_RULE].first */
-T0* T48f14(T0* C)
+T0* T48f7(T0* C)
 {
 	T0* R = 0;
-	R = (((T136*)(GE_void(((T48*)(C))->a2)))->z2[(T6)(GE_int32(1))]);
+	R = (((T137*)(GE_void(((T48*)(C))->a2)))->z2[(T6)(GE_int32(1))]);
 	return R;
 }
 
@@ -10995,11 +11019,11 @@ T1 T49f14(T0* C)
 }
 
 /* ARRAY [INTEGER_32].put */
-void T143f11(T0* C, T6 a1, T6 a2)
+void T144f11(T0* C, T6 a1, T6 a2)
 {
 	T6 t1;
-	t1 = ((T6)((a2)-(((T143*)(C))->a2)));
-	((T83*)(GE_void(((T143*)(C))->a1)))->z2[t1] = (a1);
+	t1 = ((T6)((a2)-(((T144*)(C))->a2)));
+	((T83*)(GE_void(((T144*)(C))->a1)))->z2[t1] = (a1);
 }
 
 /* LX_COMPRESSED_DFA.build_base_def_tables */
@@ -11011,20 +11035,20 @@ void T47f105(T0* C)
 	T0* l2 = 0;
 	T6 l3 = 0;
 	T6 l4 = 0;
-	t1 = (((T138*)(GE_void(((T47*)(C))->a3)))->a1);
+	t1 = (((T139*)(GE_void(((T47*)(C))->a3)))->a1);
 	l4 = ((T6)((t1)+(((T47*)(C))->a31)));
-	l1 = T143c10((T6)(GE_int32(0)), l4);
-	l2 = T143c10((T6)(GE_int32(0)), l4);
+	l1 = T144c10((T6)(GE_int32(0)), (T6)(GE_int32(0)), l4);
+	l2 = T144c10((T6)(GE_int32(0)), (T6)(GE_int32(0)), l4);
 	l3 = (T6)(GE_int32(1));
 	while (1) {
 		t2 = (T6f1((&l3), l4));
 		if (t2) {
 			break;
 		}
-		t1 = (T143f4(GE_void(((T47*)(C))->a39), l3));
-		T143f11(GE_void(l1), t1, l3);
-		t1 = (T143f4(GE_void(((T47*)(C))->a40), l3));
-		T143f11(GE_void(l2), t1, l3);
+		t1 = (T144f4(GE_void(((T47*)(C))->a39), l3));
+		T144f11(GE_void(l1), t1, l3);
+		t1 = (T144f4(GE_void(((T47*)(C))->a40), l3));
+		T144f11(GE_void(l2), t1, l3);
 		l3 = ((T6)((l3)+((T6)(GE_int32(1)))));
 	}
 	((T47*)(C))->a39 = l1;
@@ -11041,18 +11065,18 @@ void T47f104(T0* C)
 	T6 l3 = 0;
 	T6 l4 = 0;
 	l4 = ((T47*)(C))->a30;
-	l1 = T143c10((T6)(GE_int32(0)), l4);
-	l2 = T143c10((T6)(GE_int32(0)), l4);
+	l1 = T144c10((T6)(GE_int32(0)), (T6)(GE_int32(0)), l4);
+	l2 = T144c10((T6)(GE_int32(0)), (T6)(GE_int32(0)), l4);
 	l3 = (T6)(GE_int32(1));
 	while (1) {
 		t1 = (T6f1((&l3), l4));
 		if (t1) {
 			break;
 		}
-		t2 = (T143f4(GE_void(((T47*)(C))->a37), l3));
-		T143f11(GE_void(l1), t2, l3);
-		t2 = (T143f4(GE_void(((T47*)(C))->a38), l3));
-		T143f11(GE_void(l2), t2, l3);
+		t2 = (T144f4(GE_void(((T47*)(C))->a37), l3));
+		T144f11(GE_void(l1), t2, l3);
+		t2 = (T144f4(GE_void(((T47*)(C))->a38), l3));
+		T144f11(GE_void(l2), t2, l3);
 		l3 = ((T6)((l3)+((T6)(GE_int32(1)))));
 	}
 	((T47*)(C))->a37 = l1;
@@ -11077,42 +11101,42 @@ void T47f103(T0* C)
 	T0* l10 = 0;
 	T0* l11 = 0;
 	l5 = ((T6)((((T47*)(C))->a6)+((T6)(GE_int32(1)))));
-	t1 = (((T138*)(GE_void(((T47*)(C))->a3)))->a1);
+	t1 = (((T139*)(GE_void(((T47*)(C))->a3)))->a1);
 	((T47*)(C))->a47 = ((T6)((t1)+((T6)(GE_int32(1)))));
 	((T47*)(C))->a46 = ((T6)((((T47*)(C))->a30)+((T6)(GE_int32(1)))));
 	l7 = ((T47*)(C))->a47;
 	l6 = ((T47*)(C))->a46;
 	l8 = ((T47*)(C))->a39;
 	l9 = ((T47*)(C))->a40;
-	l2 = (((T138*)(GE_void(((T47*)(C))->a3)))->a1);
+	l2 = (((T139*)(GE_void(((T47*)(C))->a3)))->a1);
 	l1 = (T6)(GE_int32(1));
 	while (1) {
 		t2 = (T6f1((&l1), l2));
 		if (t2) {
 			break;
 		}
-		t1 = (T143f4(GE_void(l8), l1));
+		t1 = (T144f4(GE_void(l8), l1));
 		t2 = (((((t1) == ((T6)(GE_int32(-32766)))))));
 		if (t2) {
-			T143f11(GE_void(l8), l6, l1);
+			T144f11(GE_void(l8), l6, l1);
 		}
-		l4 = (T143f4(GE_void(l9), l1));
+		l4 = (T144f4(GE_void(l9), l1));
 		t2 = (((((l4) == ((T6)(GE_int32(-32766)))))));
 		if (t2) {
-			T143f11(GE_void(l9), l7, l1);
+			T144f11(GE_void(l9), l7, l1);
 		} else {
 			t2 = ((T1)((l4)<((T6)(GE_int32(0)))));
 			if (t2) {
 				t1 = ((T6)((l2)-(l4)));
 				t1 = ((T6)((t1)+((T6)(GE_int32(1)))));
-				T143f11(GE_void(l9), t1, l1);
+				T144f11(GE_void(l9), t1, l1);
 			}
 		}
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
-	T143f11(GE_void(l8), l6, l7);
-	T143f11(GE_void(l9), (T6)(GE_int32(0)), l7);
-	t1 = (((T138*)(GE_void(((T47*)(C))->a3)))->a1);
+	T144f11(GE_void(l8), l6, l7);
+	T144f11(GE_void(l9), (T6)(GE_int32(0)), l7);
+	t1 = (((T139*)(GE_void(((T47*)(C))->a3)))->a1);
 	l2 = ((T6)((t1)+(((T47*)(C))->a31)));
 	l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	while (1) {
@@ -11120,7 +11144,7 @@ void T47f103(T0* C)
 		if (t2) {
 			break;
 		}
-		T143f11(GE_void(l9), l7, l1);
+		T144f11(GE_void(l9), l7, l1);
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
 	l10 = ((T47*)(C))->a37;
@@ -11128,13 +11152,13 @@ void T47f103(T0* C)
 	t1 = ((T6)((((T47*)(C))->a30)+(((T47*)(C))->a28)));
 	t1 = ((T6)((t1)-(((T47*)(C))->a27)));
 	l3 = ((T6)((t1)+((T6)(GE_int32(2)))));
-	t1 = (((T143*)(GE_void(l10)))->a3);
+	t1 = (((T144*)(GE_void(l10)))->a3);
 	t2 = (T6f1((&l3), t1));
 	if (t2) {
 		t3 = (T47f68(C));
-		T164f2(GE_void(t3), l10, (T6)(GE_int32(0)), l3);
+		T166f2(GE_void(t3), l10, (T6)(GE_int32(0)), l3);
 		t3 = (T47f68(C));
-		T164f2(GE_void(t3), l11, (T6)(GE_int32(0)), l3);
+		T166f2(GE_void(t3), l11, (T6)(GE_int32(0)), l3);
 	}
 	l2 = ((T47*)(C))->a30;
 	l1 = (T6)(GE_int32(1));
@@ -11143,44 +11167,44 @@ void T47f103(T0* C)
 		if (t2) {
 			break;
 		}
-		t1 = (T143f4(GE_void(l11), l1));
+		t1 = (T144f4(GE_void(l11), l1));
 		t2 = (((((t1) == ((T6)(GE_int32(0)))))));
 		if (!(t2)) {
-			t1 = (T143f4(GE_void(l10), l1));
+			t1 = (T144f4(GE_void(l10), l1));
 			t2 = (((((t1) == ((T6)(GE_int32(0)))))));
 		}
 		if (t2) {
-			T143f11(GE_void(l10), l7, l1);
+			T144f11(GE_void(l10), l7, l1);
 		}
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
-	T143f11(GE_void(l10), l5, l6);
-	T143f11(GE_void(l11), l7, l6);
+	T144f11(GE_void(l10), l5, l6);
+	T144f11(GE_void(l11), l7, l6);
 	l1 = ((T6)((l6)+((T6)(GE_int32(1)))));
 	while (1) {
 		t2 = (T6f1((&l1), l3));
 		if (t2) {
 			break;
 		}
-		T143f11(GE_void(l10), l7, l1);
-		T143f11(GE_void(l11), l7, l1);
+		T144f11(GE_void(l10), l7, l1);
+		T144f11(GE_void(l11), l7, l1);
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
 	((T47*)(C))->a30 = l3;
 }
 
 /* KL_ARRAY_ROUTINES [INTEGER_32].resize */
-void T164f2(T0* C, T0* a1, T6 a2, T6 a3)
+void T166f2(T0* C, T0* a1, T6 a2, T6 a3)
 {
 	T1 t1;
 	t1 = (T6f7(&a2, a3));
 	if (t1) {
-		T143f13(GE_void(a1), a2, a3);
+		T144f13(GE_void(a1), a2, a3);
 	}
 }
 
 /* ARRAY [INTEGER_32].conservative_resize */
-void T143f13(T0* C, T6 a1, T6 a2)
+void T144f13(T0* C, T6 a1, T6 a2)
 {
 	T1 t1;
 	T6 t2;
@@ -11188,39 +11212,39 @@ void T143f13(T0* C, T6 a1, T6 a2)
 	T6 l2 = 0;
 	T6 l3 = 0;
 	T6 l4 = 0;
-	t1 = (T143f6(C));
+	t1 = (T144f6(C));
 	if (t1) {
 		t2 = ((T6)((a2)-(a1)));
 		t2 = ((T6)((t2)+((T6)(GE_int32(1)))));
-		T143f12(C, t2);
-		((T143*)(C))->a2 = a1;
-		((T143*)(C))->a3 = a2;
+		T144f14(C, t2);
+		((T144*)(C))->a2 = a1;
+		((T144*)(C))->a3 = a2;
 	} else {
-		l2 = (T6f13(&a1, ((T143*)(C))->a2));
-		l3 = (T6f12(&a2, ((T143*)(C))->a3));
+		l2 = (T6f13(&a1, ((T144*)(C))->a2));
+		l3 = (T6f12(&a2, ((T144*)(C))->a3));
 		t2 = ((T6)((l3)-(l2)));
 		l1 = ((T6)((t2)+((T6)(GE_int32(1)))));
-		t2 = (((T83*)(GE_void(((T143*)(C))->a1)))->z1);
+		t2 = (((T83*)(GE_void(((T144*)(C))->a1)))->a1);
 		t1 = (T6f1((&l1), t2));
 		if (t1) {
-			((T143*)(C))->a1 = (T83f3(GE_void(((T143*)(C))->a1), l1));
+			((T144*)(C))->a1 = (T83f5(GE_void(((T144*)(C))->a1), l1));
 		}
-		t1 = ((T1)((l2)<(((T143*)(C))->a2)));
+		t1 = ((T1)((l2)<(((T144*)(C))->a2)));
 		if (t1) {
-			l4 = ((T6)((((T143*)(C))->a2)-(l2)));
-			t2 = ((T6)((((T143*)(C))->a3)-(((T143*)(C))->a2)));
+			l4 = ((T6)((((T144*)(C))->a2)-(l2)));
+			t2 = ((T6)((((T144*)(C))->a3)-(((T144*)(C))->a2)));
 			t2 = ((T6)((t2)+((T6)(GE_int32(1)))));
-			T83f6(GE_void(((T143*)(C))->a1), (T6)(GE_int32(0)), l4, t2);
+			T83f10(GE_void(((T144*)(C))->a1), (T6)(GE_int32(0)), l4, t2);
 			t2 = ((T6)((l4)-((T6)(GE_int32(1)))));
-			T83f7(GE_void(((T143*)(C))->a1), (T6)(GE_int32(0)), t2);
+			T83f11(GE_void(((T144*)(C))->a1), (T6)(GE_int32(0)), t2);
 		}
-		((T143*)(C))->a2 = l2;
-		((T143*)(C))->a3 = l3;
+		((T144*)(C))->a2 = l2;
+		((T144*)(C))->a3 = l3;
 	}
 }
 
 /* SPECIAL [INTEGER_32].fill_with_default */
-void T83f7(T0* C, T6 a1, T6 a2)
+void T83f11(T0* C, T6 a1, T6 a2)
 {
 	T1 t1;
 	T6 l1 = 0;
@@ -11232,20 +11256,13 @@ void T83f7(T0* C, T6 a1, T6 a2)
 		if (t1) {
 			break;
 		}
-		T83f11(C, l1);
+		((T83*)(C))->z2[l1] = 0;
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
 }
 
-/* SPECIAL [INTEGER_32].put_default */
-void T83f11(T0* C, T6 a1)
-{
-	T6 l1 = 0;
-	((T83*)(C))->z2[a1] = (l1);
-}
-
 /* SPECIAL [INTEGER_32].move_data */
-void T83f6(T0* C, T6 a1, T6 a2, T6 a3)
+void T83f10(T0* C, T6 a1, T6 a2, T6 a3)
 {
 	T1 t1;
 	T6 t2;
@@ -11257,24 +11274,24 @@ void T83f6(T0* C, T6 a1, T6 a2, T6 a3)
 			t2 = ((T6)((a2)+(a3)));
 			t1 = ((T1)((t2)<(a1)));
 			if (t1) {
-				T83f9(C, a1, a2, a3);
+				T83f12(C, a1, a2, a3);
 			} else {
-				T83f10(C, a1, a2, a3);
+				T83f13(C, a1, a2, a3);
 			}
 		} else {
 			t2 = ((T6)((a1)+(a3)));
 			t1 = ((T1)((t2)<(a2)));
 			if (t1) {
-				T83f9(C, a1, a2, a3);
+				T83f12(C, a1, a2, a3);
 			} else {
-				T83f10(C, a1, a2, a3);
+				T83f13(C, a1, a2, a3);
 			}
 		}
 	}
 }
 
 /* SPECIAL [INTEGER_32].overlapping_move */
-void T83f10(T0* C, T6 a1, T6 a2, T6 a3)
+void T83f13(T0* C, T6 a1, T6 a2, T6 a3)
 {
 	T1 t1;
 	T6 t2;
@@ -11316,7 +11333,7 @@ void T83f10(T0* C, T6 a1, T6 a2, T6 a3)
 }
 
 /* SPECIAL [INTEGER_32].non_overlapping_move */
-void T83f9(T0* C, T6 a1, T6 a2, T6 a3)
+void T83f12(T0* C, T6 a1, T6 a2, T6 a3)
 {
 	T1 t1;
 	T6 t2;
@@ -11340,11 +11357,11 @@ void T83f9(T0* C, T6 a1, T6 a2, T6 a3)
 }
 
 /* SPECIAL [INTEGER_32].aliased_resized_area */
-T0* T83f3(T0* C, T6 a1)
+T0* T83f5(T0* C, T6 a1)
 {
 	T0* R = 0;
 	T6 t1;
-	t1 = ((T83*)(C))->z1;
+	t1 = ((T83*)(C))->a1;
 	if (a1>t1) {
 		R = GE_new83(a1, EIF_FALSE);
 		*(T83*)(R) = *(T83*)(C);
@@ -11355,25 +11372,25 @@ T0* T83f3(T0* C, T6 a1)
 	} else {
 		R = C;
 	}
-	((T83*)(R))->z1 = a1;
+	((T83*)(R))->a1 = a1;
 	return R;
 }
 
 /* ARRAY [INTEGER_32].make_area */
-void T143f12(T0* C, T6 a1)
+void T144f14(T0* C, T6 a1)
 {
-	((T143*)(C))->a1 = T83c5(a1);
+	((T144*)(C))->a1 = T83c9(a1);
 }
 
 /* ARRAY [INTEGER_32].empty_area */
-T1 T143f6(T0* C)
+T1 T144f6(T0* C)
 {
 	T1 t1;
 	T6 t2;
 	T1 R = 0;
-	t1 = ((((T143*)(C))->a1)==(EIF_VOID));
+	t1 = ((((T144*)(C))->a1)==(EIF_VOID));
 	if (!(t1)) {
-		t2 = (((T83*)(GE_void(((T143*)(C))->a1)))->z1);
+		t2 = (((T83*)(GE_void(((T144*)(C))->a1)))->a1);
 		R = (((((t2) == ((T6)(GE_int32(0)))))));
 	} else {
 		R = EIF_TRUE;
@@ -11382,27 +11399,27 @@ T1 T143f6(T0* C)
 }
 
 /* LX_COMPRESSED_DFA.integer_array_ */
-unsigned char ge347os2760 = '\0';
-T0* ge347ov2760;
+unsigned char ge301os2700 = '\0';
+T0* ge301ov2700;
 T0* T47f68(T0* C)
 {
 	T0* R = 0;
-	if (ge347os2760) {
-		return ge347ov2760;
+	if (ge301os2700) {
+		return ge301ov2700;
 	} else {
-		ge347os2760 = '\1';
-		ge347ov2760 = R;
+		ge301os2700 = '\1';
+		ge301ov2700 = R;
 	}
-	R = T164c1();
-	ge347ov2760 = R;
+	R = T166c1();
+	ge301ov2700 = R;
 	return R;
 }
 
 /* KL_ARRAY_ROUTINES [INTEGER_32].default_create */
-T0* T164c1(void)
+T0* T166c1(void)
 {
 	T0* C;
-	C = GE_new164(EIF_TRUE);
+	C = GE_new166(EIF_TRUE);
 	return C;
 }
 
@@ -11412,13 +11429,13 @@ void T47f102(T0* C)
 	T1 t1;
 	T0* t2;
 	T6 l1 = 0;
-	l1 = (((T146*)(GE_void(((T47*)(C))->a33)))->a1);
+	l1 = (((T147*)(GE_void(((T47*)(C))->a33)))->a1);
 	while (1) {
 		t1 = ((T1)((l1)<((T6)(GE_int32(1)))));
 		if (t1) {
 			break;
 		}
-		t2 = (T146f6(GE_void(((T47*)(C))->a33), l1));
+		t2 = (T147f6(GE_void(((T47*)(C))->a33), l1));
 		T47f116(C, t2);
 		l1 = ((T6)((l1)-((T6)(GE_int32(1)))));
 	}
@@ -11434,18 +11451,18 @@ void T47f116(T0* C, T0* a1)
 	T6 l2 = 0;
 	T6 l3 = 0;
 	T0* l4 = 0;
-	l1 = (((T144*)(GE_void(a1)))->a1);
-	l2 = (((T144*)(GE_void(a1)))->a2);
+	l1 = (((T145*)(GE_void(a1)))->a1);
+	l2 = (((T145*)(GE_void(a1)))->a2);
 	t1 = ((T1)((((T47*)(C))->a29)<(l1)));
 	if (t1) {
 		((T47*)(C))->a29 = l1;
 	}
 	l4 = ((T47*)(C))->a38;
-	l3 = (((T143*)(GE_void(((T47*)(C))->a37)))->a3);
+	l3 = (((T144*)(GE_void(((T47*)(C))->a37)))->a3);
 	while (1) {
 		t1 = (T6f1(&(((T47*)(C))->a29), l3));
 		if (!(t1)) {
-			t2 = (T143f4(GE_void(l4), ((T47*)(C))->a29));
+			t2 = (T144f4(GE_void(l4), ((T47*)(C))->a29));
 			t1 = (((((t2) == ((T6)(GE_int32(0)))))));
 		}
 		if (t1) {
@@ -11457,38 +11474,38 @@ void T47f116(T0* C, T0* a1)
 	if (t1) {
 		l3 = ((T6)((l3)+((T6)(GE_int32(2000)))));
 		t3 = (T47f68(C));
-		T164f2(GE_void(t3), ((T47*)(C))->a37, (T6)(GE_int32(0)), l3);
+		T166f2(GE_void(t3), ((T47*)(C))->a37, (T6)(GE_int32(0)), l3);
 		t3 = (T47f68(C));
-		T164f2(GE_void(t3), l4, (T6)(GE_int32(0)), l3);
+		T166f2(GE_void(t3), l4, (T6)(GE_int32(0)), l3);
 	}
 	t2 = ((T6)((((T47*)(C))->a29)-(l1)));
-	T143f11(GE_void(((T47*)(C))->a39), t2, l2);
-	t2 = (((T144*)(GE_void(a1)))->a3);
-	T143f11(GE_void(((T47*)(C))->a40), t2, l2);
-	T143f11(GE_void(l4), l2, ((T47*)(C))->a29);
-	t2 = (((T144*)(GE_void(a1)))->a4);
-	T143f11(GE_void(((T47*)(C))->a37), t2, ((T47*)(C))->a29);
+	T144f11(GE_void(((T47*)(C))->a39), t2, l2);
+	t2 = (((T145*)(GE_void(a1)))->a3);
+	T144f11(GE_void(((T47*)(C))->a40), t2, l2);
+	T144f11(GE_void(l4), l2, ((T47*)(C))->a29);
+	t2 = (((T145*)(GE_void(a1)))->a4);
+	T144f11(GE_void(((T47*)(C))->a37), t2, ((T47*)(C))->a29);
 	t1 = (T6f1(&(((T47*)(C))->a29), ((T47*)(C))->a30));
 	if (t1) {
 		((T47*)(C))->a30 = ((T47*)(C))->a29;
 		((T47*)(C))->a29 = ((T6)((((T47*)(C))->a29)+((T6)(GE_int32(1)))));
-		l3 = (((T143*)(GE_void(((T47*)(C))->a37)))->a3);
+		l3 = (((T144*)(GE_void(((T47*)(C))->a37)))->a3);
 		t1 = (T6f1(&(((T47*)(C))->a29), l3));
 		if (t1) {
 			l3 = ((T6)((l3)+((T6)(GE_int32(2000)))));
 			t3 = (T47f68(C));
-			T164f2(GE_void(t3), ((T47*)(C))->a37, (T6)(GE_int32(0)), l3);
+			T166f2(GE_void(t3), ((T47*)(C))->a37, (T6)(GE_int32(0)), l3);
 			t3 = (T47f68(C));
-			T164f2(GE_void(t3), l4, (T6)(GE_int32(0)), l3);
+			T166f2(GE_void(t3), l4, (T6)(GE_int32(0)), l3);
 		}
 	}
 }
 
 /* DS_ARRAYED_LIST [LX_SINGLETON].item */
-T0* T146f6(T0* C, T6 a1)
+T0* T147f6(T0* C, T6 a1)
 {
 	T0* R = 0;
-	R = (((T228*)(GE_void(((T146*)(C))->a2)))->z2[a1]);
+	R = (((T226*)(GE_void(((T147*)(C))->a2)))->z2[a1]);
 	return R;
 }
 
@@ -11502,7 +11519,7 @@ void T47f101(T0* C)
 	T0* l2 = 0;
 	T6 l3 = 0;
 	T6 l4 = 0;
-	t1 = (((T138*)(GE_void(((T47*)(C))->a3)))->a1);
+	t1 = (((T139*)(GE_void(((T47*)(C))->a3)))->a1);
 	((T47*)(C))->a48 = ((T6)((t1)+((T6)(GE_int32(2)))));
 	t2 = ((((T47*)(C))->a34)!=(EIF_VOID));
 	if (t2) {
@@ -11511,101 +11528,101 @@ void T47f101(T0* C)
 	} else {
 		((T47*)(C))->a42 = EIF_VOID;
 	}
-	t1 = (((T147*)(GE_void(((T47*)(C))->a35)))->a1);
+	t1 = (((T148*)(GE_void(((T47*)(C))->a35)))->a1);
 	((T47*)(C))->a31 = ((T6)((t1)+((T6)(GE_int32(1)))));
-	t1 = (((T138*)(GE_void(((T47*)(C))->a3)))->a1);
+	t1 = (((T139*)(GE_void(((T47*)(C))->a3)))->a1);
 	l4 = ((T6)((t1)+(((T47*)(C))->a31)));
-	t1 = (((T138*)(GE_void(((T47*)(C))->a3)))->a2);
+	t1 = (((T139*)(GE_void(((T47*)(C))->a3)))->a2);
 	t2 = ((T1)((t1)<(l4)));
 	if (t2) {
 		t3 = (T47f68(C));
-		T164f2(GE_void(t3), ((T47*)(C))->a39, (T6)(GE_int32(0)), l4);
+		T166f2(GE_void(t3), ((T47*)(C))->a39, (T6)(GE_int32(0)), l4);
 		t3 = (T47f68(C));
-		T164f2(GE_void(t3), ((T47*)(C))->a40, (T6)(GE_int32(0)), l4);
+		T166f2(GE_void(t3), ((T47*)(C))->a40, (T6)(GE_int32(0)), l4);
 	}
-	t1 = (((T138*)(GE_void(((T47*)(C))->a3)))->a1);
+	t1 = (((T139*)(GE_void(((T47*)(C))->a3)))->a1);
 	l3 = ((T6)((t1)+((T6)(GE_int32(2)))));
-	l1 = (T147f6(GE_void(((T47*)(C))->a35)));
-	T163f8(GE_void(l1));
+	l1 = (T148f6(GE_void(((T47*)(C))->a35)));
+	T165f8(GE_void(l1));
 	while (1) {
-		t2 = (((T163*)(GE_void(l1)))->a1);
+		t2 = (((T165*)(GE_void(l1)))->a1);
 		if (t2) {
 			break;
 		}
-		t3 = (T163f6(GE_void(l1)));
-		l2 = (T147f7(GE_void(((T47*)(C))->a35), t3));
+		t3 = (T165f6(GE_void(l1)));
+		l2 = (T148f8(GE_void(((T47*)(C))->a35), t3));
 		T47f115(C, l3, (T6)(GE_int32(-32766)), l2);
 		l3 = ((T6)((l3)+((T6)(GE_int32(1)))));
-		T163f9(GE_void(l1));
+		T165f9(GE_void(l1));
 	}
 }
 
 /* DS_LINKED_LIST_CURSOR [LX_TRANSITION_TABLE [LX_DFA_STATE]].forth */
-void T163f9(T0* C)
+void T165f9(T0* C)
 {
-	T147f16(GE_void(((T163*)(C))->a3), C);
+	T148f17(GE_void(((T165*)(C))->a3), C);
 }
 
 /* LX_TEMPLATE_LIST.cursor_forth */
-void T147f16(T0* C, T0* a1)
+void T148f17(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
 	T1 l1 = 0;
 	T1 l2 = 0;
 	T0* l3 = 0;
-	t1 = (((T163*)(a1))->a4);
+	t1 = (((T165*)(a1))->a4);
 	if (t1) {
 		l1 = EIF_TRUE;
-		l3 = ((T147*)(C))->a5;
+		l3 = ((T148*)(C))->a4;
 	} else {
-		t2 = (((T163*)(a1))->a2);
-		l3 = (((T231*)(GE_void(t2)))->a2);
+		t2 = (((T165*)(a1))->a2);
+		l3 = (((T229*)(GE_void(t2)))->a2);
 	}
 	l2 = ((l3)==(EIF_VOID));
-	T163f10(a1, l3, EIF_FALSE, l2);
+	T165f10(a1, l3, EIF_FALSE, l2);
 	if (l2) {
 		t1 = ((T1)(!(l1)));
 		if (t1) {
-			T147f18(C, a1);
+			T148f19(C, a1);
 		}
 	} else {
 		if (l1) {
-			T147f17(C, a1);
+			T148f18(C, a1);
 		}
 	}
 }
 
 /* LX_TEMPLATE_LIST.add_traversing_cursor */
-void T147f17(T0* C, T0* a1)
+void T148f18(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
-	t1 = ((a1)!=(((T147*)(C))->a4));
+	t1 = ((a1)!=(((T148*)(C))->a5));
 	if (t1) {
-		t2 = (((T163*)(GE_void(((T147*)(C))->a4)))->a5);
-		T163f11(a1, t2);
-		T163f11(GE_void(((T147*)(C))->a4), a1);
+		t2 = (((T165*)(GE_void(((T148*)(C))->a5)))->a5);
+		T165f11(a1, t2);
+		T165f11(GE_void(((T148*)(C))->a5), a1);
 	}
 }
 
 /* DS_LINKED_LIST_CURSOR [LX_TRANSITION_TABLE [LX_DFA_STATE]].set_next_cursor */
-void T163f11(T0* C, T0* a1)
+void T165f11(T0* C, T0* a1)
 {
-	((T163*)(C))->a5 = a1;
+	((T165*)(C))->a5 = a1;
 }
 
 /* LX_TEMPLATE_LIST.remove_traversing_cursor */
-void T147f18(T0* C, T0* a1)
+void T148f19(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
 	T0* l1 = 0;
 	T0* l2 = 0;
-	t1 = ((a1)!=(((T147*)(C))->a4));
+	t1 = ((a1)!=(((T148*)(C))->a5));
 	if (t1) {
-		l2 = ((T147*)(C))->a4;
-		l1 = (((T163*)(GE_void(l2)))->a5);
+		l2 = ((T148*)(C))->a5;
+		l1 = (((T165*)(GE_void(l2)))->a5);
 		while (1) {
 			t1 = ((l1)==(a1));
 			if (!(t1)) {
@@ -11615,23 +11632,23 @@ void T147f18(T0* C, T0* a1)
 				break;
 			}
 			l2 = l1;
-			l1 = (((T163*)(GE_void(l1)))->a5);
+			l1 = (((T165*)(GE_void(l1)))->a5);
 		}
 		t1 = ((l1)==(a1));
 		if (t1) {
-			t2 = (((T163*)(a1))->a5);
-			T163f11(GE_void(l2), t2);
-			T163f11(a1, EIF_VOID);
+			t2 = (((T165*)(a1))->a5);
+			T165f11(GE_void(l2), t2);
+			T165f11(a1, EIF_VOID);
 		}
 	}
 }
 
 /* DS_LINKED_LIST_CURSOR [LX_TRANSITION_TABLE [LX_DFA_STATE]].set */
-void T163f10(T0* C, T0* a1, T1 a2, T1 a3)
+void T165f10(T0* C, T0* a1, T1 a2, T1 a3)
 {
-	((T163*)(C))->a2 = a1;
-	((T163*)(C))->a4 = a2;
-	((T163*)(C))->a1 = a3;
+	((T165*)(C))->a2 = a1;
+	((T165*)(C))->a4 = a2;
+	((T165*)(C))->a1 = a3;
 }
 
 /* LX_COMPRESSED_DFA.put_entry */
@@ -11654,26 +11671,26 @@ void T47f115(T0* C, T6 a1, T6 a2, T0* a3)
 	T0* l11 = 0;
 	T0* l12 = 0;
 	T0* l13 = 0;
-	t1 = (((T157*)(GE_void(a3)))->a1);
+	t1 = (((T158*)(GE_void(a3)))->a1);
 	switch (t1) {
 	case (T6)(T6)(GE_int32(0)):
 		t2 = (((((a2) == ((T6)(GE_int32(-32766)))))));
 		if (t2) {
-			T143f11(GE_void(((T47*)(C))->a39), (T6)(GE_int32(-32766)), a1);
+			T144f11(GE_void(((T47*)(C))->a39), (T6)(GE_int32(-32766)), a1);
 		} else {
-			T143f11(GE_void(((T47*)(C))->a39), (T6)(GE_int32(0)), a1);
+			T144f11(GE_void(((T47*)(C))->a39), (T6)(GE_int32(0)), a1);
 		}
-		T143f11(GE_void(((T47*)(C))->a40), a2, a1);
+		T144f11(GE_void(((T47*)(C))->a40), a2, a1);
 		break;
 	case (T6)(T6)(GE_int32(1)):
-		l5 = (T157f7(GE_void(a3)));
-		l13 = (T157f9(GE_void(a3), l5));
-		t1 = (((T133*)(GE_void(l13)))->a6);
-		l12 = T144c5(a1, a2, l5, t1);
-		t2 = (T146f7(GE_void(((T47*)(C))->a33)));
+		l5 = (T158f7(GE_void(a3)));
+		l13 = (T158f9(GE_void(a3), l5));
+		t1 = (((T134*)(GE_void(l13)))->a6);
+		l12 = T145c5(a1, a2, l5, t1);
+		t2 = (T147f8(GE_void(((T47*)(C))->a33)));
 		t2 = ((T1)(!(t2)));
 		if (t2) {
-			T146f10(GE_void(((T47*)(C))->a33), l12);
+			T147f10(GE_void(((T47*)(C))->a33), l12);
 		} else {
 			T47f116(C, l12);
 		}
@@ -11681,10 +11698,10 @@ void T47f115(T0* C, T6 a1, T6 a2, T0* a3)
 	default:
 		l11 = ((T47*)(C))->a37;
 		l10 = ((T47*)(C))->a38;
-		l5 = (T157f7(GE_void(a3)));
-		l6 = (T157f4(GE_void(a3)));
-		l3 = (((T157*)(GE_void(a3)))->a1);
-		l4 = (T157f5(GE_void(a3)));
+		l5 = (T158f7(GE_void(a3)));
+		l6 = (T158f4(GE_void(a3)));
+		l3 = (((T158*)(GE_void(a3)))->a1);
+		l4 = (T158f5(GE_void(a3)));
 		t1 = ((T6)((l3)*((T6)(GE_int32(100)))));
 		t3 = ((T6)((l4)*((T6)(GE_int32(15)))));
 		t2 = (T6f7(&t1, t3));
@@ -11697,7 +11714,7 @@ void T47f115(T0* C, T6 a1, T6 a2, T0* a3)
 				}
 				l7 = ((T6)((l7)+((T6)(GE_int32(1)))));
 				while (1) {
-					t1 = (T143f4(GE_void(l10), l7));
+					t1 = (T144f4(GE_void(l10), l7));
 					t2 = (((((t1) == ((T6)(GE_int32(0)))))));
 					if (t2) {
 						break;
@@ -11708,14 +11725,14 @@ void T47f115(T0* C, T6 a1, T6 a2, T0* a3)
 			t1 = ((T6)((l7)+(l6)));
 			t1 = ((T6)((t1)-(l5)));
 			l2 = ((T6)((t1)+((T6)(GE_int32(1)))));
-			t1 = (((T143*)(GE_void(l11)))->a3);
+			t1 = (((T144*)(GE_void(l11)))->a3);
 			t2 = (T6f5((&l2), t1));
 			if (t2) {
 				l2 = ((T6)((l2)+((T6)(GE_int32(2000)))));
 				t4 = (T47f68(C));
-				T164f2(GE_void(t4), l11, (T6)(GE_int32(0)), l2);
+				T166f2(GE_void(t4), l11, (T6)(GE_int32(0)), l2);
 				t4 = (T47f68(C));
-				T164f2(GE_void(t4), l10, (T6)(GE_int32(0)), l2);
+				T166f2(GE_void(t4), l10, (T6)(GE_int32(0)), l2);
 			}
 			l1 = l5;
 			while (1) {
@@ -11723,21 +11740,21 @@ void T47f115(T0* C, T6 a1, T6 a2, T0* a3)
 				if (t2) {
 					break;
 				}
-				t4 = (T157f9(GE_void(a3), l1));
+				t4 = (T158f9(GE_void(a3), l1));
 				t2 = ((t4)!=(EIF_VOID));
 				if (t2) {
 					t1 = ((T6)((l7)+(l1)));
 					t1 = ((T6)((t1)-(l5)));
-					t1 = (T143f4(GE_void(l10), t1));
+					t1 = (T144f4(GE_void(l10), t1));
 					t2 = (((((t1) != ((T6)(GE_int32(0)))))));
 				}
 				if (t2) {
 					l7 = ((T6)((l7)+((T6)(GE_int32(1)))));
-					l2 = (((T143*)(GE_void(l11)))->a3);
+					l2 = (((T144*)(GE_void(l11)))->a3);
 					while (1) {
 						t2 = (T6f1((&l7), l2));
 						if (!(t2)) {
-							t1 = (T143f4(GE_void(l10), l7));
+							t1 = (T144f4(GE_void(l10), l7));
 							t2 = (((((t1) == ((T6)(GE_int32(0)))))));
 						}
 						if (t2) {
@@ -11748,14 +11765,14 @@ void T47f115(T0* C, T6 a1, T6 a2, T0* a3)
 					t1 = ((T6)((l7)+(l6)));
 					t1 = ((T6)((t1)-(l5)));
 					l2 = ((T6)((t1)+((T6)(GE_int32(1)))));
-					t1 = (((T143*)(GE_void(l11)))->a3);
+					t1 = (((T144*)(GE_void(l11)))->a3);
 					t2 = (T6f5((&l2), t1));
 					if (t2) {
 						l2 = ((T6)((l2)+((T6)(GE_int32(2000)))));
 						t4 = (T47f68(C));
-						T164f2(GE_void(t4), l11, (T6)(GE_int32(0)), l2);
+						T166f2(GE_void(t4), l11, (T6)(GE_int32(0)), l2);
 						t4 = (T47f68(C));
-						T164f2(GE_void(t4), l10, (T6)(GE_int32(0)), l2);
+						T166f2(GE_void(t4), l10, (T6)(GE_int32(0)), l2);
 					}
 					l1 = l5;
 				} else {
@@ -11769,32 +11786,32 @@ void T47f115(T0* C, T6 a1, T6 a2, T0* a3)
 		l8 = ((T6)((l7)-(l5)));
 		l9 = ((T6)((l8)+(l6)));
 		l2 = ((T6)((l9)+((T6)(GE_int32(1)))));
-		t1 = (((T143*)(GE_void(l11)))->a3);
+		t1 = (((T144*)(GE_void(l11)))->a3);
 		t2 = (T6f5((&l2), t1));
 		if (t2) {
 			l2 = ((T6)((l2)+((T6)(GE_int32(2000)))));
 			t4 = (T47f68(C));
-			T164f2(GE_void(t4), l11, (T6)(GE_int32(0)), l2);
+			T166f2(GE_void(t4), l11, (T6)(GE_int32(0)), l2);
 			t4 = (T47f68(C));
-			T164f2(GE_void(t4), l10, (T6)(GE_int32(0)), l2);
+			T166f2(GE_void(t4), l10, (T6)(GE_int32(0)), l2);
 		}
-		T143f11(GE_void(((T47*)(C))->a39), l8, a1);
-		T143f11(GE_void(((T47*)(C))->a40), a2, a1);
+		T144f11(GE_void(((T47*)(C))->a39), l8, a1);
+		T144f11(GE_void(((T47*)(C))->a40), a2, a1);
 		l1 = l5;
 		while (1) {
 			t2 = (T6f1((&l1), l6));
 			if (t2) {
 				break;
 			}
-			t4 = (T157f9(GE_void(a3), l1));
+			t4 = (T158f9(GE_void(a3), l1));
 			t2 = ((t4)!=(EIF_VOID));
 			if (t2) {
-				t4 = (T157f9(GE_void(a3), l1));
-				t1 = (((T133*)(GE_void(t4)))->a6);
+				t4 = (T158f9(GE_void(a3), l1));
+				t1 = (((T134*)(GE_void(t4)))->a6);
 				t3 = ((T6)((l8)+(l1)));
-				T143f11(GE_void(l11), t1, t3);
+				T144f11(GE_void(l11), t1, t3);
 				t1 = ((T6)((l8)+(l1)));
-				T143f11(GE_void(l10), a1, t1);
+				T144f11(GE_void(l10), a1, t1);
 			}
 			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 		}
@@ -11802,7 +11819,7 @@ void T47f115(T0* C, T6 a1, T6 a2, T0* a3)
 		if (t2) {
 			l1 = ((T6)((l7)+((T6)(GE_int32(1)))));
 			while (1) {
-				t1 = (T143f4(GE_void(l10), l1));
+				t1 = (T144f4(GE_void(l10), l1));
 				t2 = (((((t1) == ((T6)(GE_int32(0)))))));
 				if (t2) {
 					break;
@@ -11817,104 +11834,104 @@ void T47f115(T0* C, T6 a1, T6 a2, T0* a3)
 }
 
 /* LX_TRANSITION_TABLE [LX_DFA_STATE].capacity */
-T6 T157f5(T0* C)
+T6 T158f5(T0* C)
 {
 	T6 R = 0;
-	R = (T238f5(GE_void(((T157*)(C))->a2)));
+	R = (T236f5(GE_void(((T158*)(C))->a2)));
 	return R;
 }
 
 /* ARRAY [LX_DFA_STATE].count */
-T6 T238f5(T0* C)
+T6 T236f5(T0* C)
 {
 	T6 t1;
 	T6 R = 0;
-	t1 = ((T6)((((T238*)(C))->a3)-(((T238*)(C))->a2)));
+	t1 = ((T6)((((T236*)(C))->a3)-(((T236*)(C))->a2)));
 	R = ((T6)((t1)+((T6)(GE_int32(1)))));
 	return R;
 }
 
 /* LX_TRANSITION_TABLE [LX_DFA_STATE].maximum_label */
-T6 T157f4(T0* C)
+T6 T158f4(T0* C)
 {
 	T1 t1;
 	T0* t2;
 	T6 R = 0;
 	T0* l1 = 0;
-	R = (T157f8(C));
-	l1 = (T157f9(C, R));
+	R = (T158f8(C));
+	l1 = (T158f9(C, R));
 	while (1) {
 		t1 = ((l1)!=(EIF_VOID));
 		if (t1) {
-			t2 = (T133f9(GE_void(l1)));
+			t2 = (T134f13(GE_void(l1)));
 			t1 = ((l1)!=(t2));
 		}
 		if (t1) {
 			break;
 		}
 		R = ((T6)((R)-((T6)(GE_int32(1)))));
-		l1 = (T157f9(C, R));
+		l1 = (T158f9(C, R));
 	}
 	return R;
 }
 
 /* LX_DFA_STATE.default */
-T0* T133f9(T0* C)
+T0* T134f13(T0* C)
 {
 	T0* R = 0;
 	return R;
 }
 
 /* LX_TRANSITION_TABLE [LX_DFA_STATE].upper */
-T6 T157f8(T0* C)
+T6 T158f8(T0* C)
 {
 	T6 R = 0;
-	R = (((T238*)(GE_void(((T157*)(C))->a2)))->a3);
+	R = (((T236*)(GE_void(((T158*)(C))->a2)))->a3);
 	return R;
 }
 
 /* DS_ARRAYED_LIST [LX_SINGLETON].is_full */
-T1 T146f7(T0* C)
+T1 T147f8(T0* C)
 {
 	T1 R = 0;
-	R = (((((((T146*)(C))->a1) == (((T146*)(C))->a3)))));
+	R = (((((((T147*)(C))->a1) == (((T147*)(C))->a3)))));
 	return R;
 }
 
 /* LX_TRANSITION_TABLE [LX_DFA_STATE].minimum_label */
-T6 T157f7(T0* C)
+T6 T158f7(T0* C)
 {
 	T1 t1;
 	T0* t2;
 	T6 R = 0;
 	T0* l1 = 0;
-	R = (T157f6(C));
-	l1 = (T157f9(C, R));
+	R = (T158f6(C));
+	l1 = (T158f9(C, R));
 	while (1) {
 		t1 = ((l1)!=(EIF_VOID));
 		if (t1) {
-			t2 = (T133f9(GE_void(l1)));
+			t2 = (T134f13(GE_void(l1)));
 			t1 = ((l1)!=(t2));
 		}
 		if (t1) {
 			break;
 		}
 		R = ((T6)((R)+((T6)(GE_int32(1)))));
-		l1 = (T157f9(C, R));
+		l1 = (T158f9(C, R));
 	}
 	return R;
 }
 
 /* LX_TRANSITION_TABLE [LX_DFA_STATE].lower */
-T6 T157f6(T0* C)
+T6 T158f6(T0* C)
 {
 	T6 R = 0;
-	R = (((T238*)(GE_void(((T157*)(C))->a2)))->a2);
+	R = (((T236*)(GE_void(((T158*)(C))->a2)))->a2);
 	return R;
 }
 
 /* LX_TEMPLATE_LIST.equiv_template */
-T0* T147f7(T0* C, T0* a1)
+T0* T148f8(T0* C, T0* a1)
 {
 	T1 t1;
 	T6 t2;
@@ -11924,27 +11941,27 @@ T0* T147f7(T0* C, T0* a1)
 	T6 l3 = 0;
 	T0* l4 = 0;
 	T0* l5 = 0;
-	t1 = ((((T147*)(C))->a3)==(EIF_VOID));
+	t1 = ((((T148*)(C))->a3)==(EIF_VOID));
 	if (t1) {
 		R = a1;
 	} else {
-		t2 = (T94f7(GE_void(((T147*)(C))->a3)));
-		l5 = T157c14((T6)(GE_int32(1)), t2);
+		t2 = (T94f7(GE_void(((T148*)(C))->a3)));
+		l5 = T158c14((T6)(GE_int32(1)), t2);
 		R = l5;
-		l3 = (T157f8(GE_void(a1)));
-		l1 = (T157f6(GE_void(a1)));
+		l3 = (T158f8(GE_void(a1)));
+		l1 = (T158f6(GE_void(a1)));
 		while (1) {
 			t1 = (T6f1((&l1), l3));
 			if (t1) {
 				break;
 			}
-			t1 = (T94f8(GE_void(((T147*)(C))->a3), l1));
+			t1 = (T94f8(GE_void(((T148*)(C))->a3), l1));
 			if (t1) {
-				l4 = (T157f9(GE_void(a1), l1));
+				l4 = (T158f9(GE_void(a1), l1));
 				t1 = ((l4)!=(EIF_VOID));
 				if (t1) {
-					l2 = (T94f9(GE_void(((T147*)(C))->a3), l1));
-					T157f15(GE_void(R), l4, l2);
+					l2 = (T94f9(GE_void(((T148*)(C))->a3), l1));
+					T158f15(GE_void(R), l4, l2);
 				}
 			}
 			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
@@ -11954,25 +11971,25 @@ T0* T147f7(T0* C, T0* a1)
 }
 
 /* LX_TRANSITION_TABLE [LX_DFA_STATE].set_target */
-void T157f15(T0* C, T0* a1, T6 a2)
+void T158f15(T0* C, T0* a1, T6 a2)
 {
 	T0* t1;
 	T1 t2;
 	T0* l1 = 0;
-	t1 = (T157f9(C, a2));
+	t1 = (T158f9(C, a2));
 	t2 = ((t1)==(l1));
 	if (t2) {
-		((T157*)(C))->a1 = ((T6)((((T157*)(C))->a1)+((T6)(GE_int32(1)))));
+		((T158*)(C))->a1 = ((T6)((((T158*)(C))->a1)+((T6)(GE_int32(1)))));
 	}
-	T238f9(GE_void(((T157*)(C))->a2), a1, a2);
+	T236f9(GE_void(((T158*)(C))->a2), a1, a2);
 }
 
 /* ARRAY [LX_DFA_STATE].put */
-void T238f9(T0* C, T0* a1, T6 a2)
+void T236f9(T0* C, T0* a1, T6 a2)
 {
 	T6 t1;
-	t1 = ((T6)((a2)-(((T238*)(C))->a2)));
-	((T224*)(GE_void(((T238*)(C))->a1)))->z2[t1] = (a1);
+	t1 = ((T6)((a2)-(((T236*)(C))->a2)));
+	((T222*)(GE_void(((T236*)(C))->a1)))->z2[t1] = (a1);
 }
 
 /* LX_EQUIVALENCE_CLASSES.equivalence_class */
@@ -11980,18 +11997,18 @@ T6 T94f9(T0* C, T6 a1)
 {
 	T0* t1;
 	T6 R = 0;
-	t1 = (T216f4(GE_void(((T94*)(C))->a2), a1));
-	R = (((T214*)(GE_void(t1)))->a1);
+	t1 = (T215f4(GE_void(((T94*)(C))->a2), a1));
+	R = (((T213*)(GE_void(t1)))->a1);
 	return R;
 }
 
 /* ARRAY [DS_BILINKABLE [INTEGER_32]].item */
-T0* T216f4(T0* C, T6 a1)
+T0* T215f4(T0* C, T6 a1)
 {
 	T6 t1;
 	T0* R = 0;
-	t1 = ((T6)((a1)-(((T216*)(C))->a2)));
-	R = (((T215*)(GE_void(((T216*)(C))->a1)))->z2[t1]);
+	t1 = ((T6)((a1)-(((T215*)(C))->a2)));
+	R = (((T214*)(GE_void(((T215*)(C))->a1)))->z2[t1]);
 	return R;
 }
 
@@ -12000,138 +12017,165 @@ T1 T94f8(T0* C, T6 a1)
 {
 	T0* t1;
 	T1 R = 0;
-	t1 = (T216f4(GE_void(((T94*)(C))->a2), a1));
-	t1 = (((T214*)(GE_void(t1)))->a2);
+	t1 = (T215f4(GE_void(((T94*)(C))->a2), a1));
+	t1 = (((T213*)(GE_void(t1)))->a2);
 	R = ((t1)==(EIF_VOID));
 	return R;
 }
 
 /* LX_TRANSITION_TABLE [LX_DFA_STATE].make */
-T0* T157c14(T6 a1, T6 a2)
+T0* T158c14(T6 a1, T6 a2)
 {
 	T0* C;
-	C = GE_new157(EIF_TRUE);
-	((T157*)(C))->a2 = T238c8(a1, a2);
-	((T157*)(C))->a3 = T239c2();
+	C = GE_new158(EIF_TRUE);
+	((T158*)(C))->a2 = T236c8(EIF_VOID, a1, a2);
+	((T158*)(C))->a3 = T237c2();
 	return C;
 }
 
 /* KL_ARRAY_ROUTINES [LX_DFA_STATE].default_create */
-T0* T239c2(void)
+T0* T237c2(void)
 {
 	T0* C;
-	C = GE_new239(EIF_TRUE);
+	C = GE_new237(EIF_TRUE);
 	return C;
 }
 
-/* ARRAY [LX_DFA_STATE].make */
-T0* T238c8(T6 a1, T6 a2)
+/* ARRAY [LX_DFA_STATE].make_filled */
+T0* T236c8(T0* a1, T6 a2, T6 a3)
 {
 	T0* C;
 	T1 t1;
 	T6 t2;
 	T6 l1 = 0;
-	C = GE_new238(EIF_TRUE);
-	((T238*)(C))->a2 = a1;
-	((T238*)(C))->a3 = a2;
-	t1 = (T6f7(&a1, a2));
+	C = GE_new236(EIF_TRUE);
+	((T236*)(C))->a2 = a2;
+	((T236*)(C))->a3 = a3;
+	t1 = (T6f7(&a2, a3));
 	if (t1) {
-		t2 = ((T6)((a2)-(a1)));
+		t2 = ((T6)((a3)-(a2)));
 		l1 = ((T6)((t2)+((T6)(GE_int32(1)))));
 	}
-	T238f10(C, l1);
+	T236f10(C, a1, l1);
 	return C;
 }
 
-/* ARRAY [LX_DFA_STATE].make_area */
-void T238f10(T0* C, T6 a1)
+/* ARRAY [LX_DFA_STATE].make_filled_area */
+void T236f10(T0* C, T0* a1, T6 a2)
 {
-	((T238*)(C))->a1 = T224c5(a1);
+	((T236*)(C))->a1 = T222c6(a1, a2);
+}
+
+/* SPECIAL [LX_DFA_STATE].make_filled */
+T0* T222c6(T0* a1, T6 a2)
+{
+	T0* C;
+	T6 t1;
+	C = GE_new222(a2, EIF_TRUE);
+	T222f8(C, a2);
+	t1 = ((T6)((a2)-((T6)(GE_int32(1)))));
+	T222f9(C, a1, (T6)(GE_int32(0)), t1);
+	return C;
+}
+
+/* SPECIAL [LX_DFA_STATE].fill_with */
+void T222f9(T0* C, T0* a1, T6 a2, T6 a3)
+{
+	T1 t1;
+	T6 l1 = 0;
+	T6 l2 = 0;
+	l1 = a2;
+	l2 = ((T6)((a3)+((T6)(GE_int32(1)))));
+	while (1) {
+		t1 = (((((l1) == (l2)))));
+		if (t1) {
+			break;
+		}
+		((T222*)(C))->z2[l1] = (a1);
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
 }
 
 /* SPECIAL [LX_DFA_STATE].make */
-T0* T224c5(T6 a1)
+void T222f8(T0* C, T6 a1)
 {
-	T0* C;
-	C = GE_new224(a1, EIF_TRUE);
-	return C;
 }
 
 /* LX_EQUIVALENCE_CLASSES.capacity */
 T6 T94f7(T0* C)
 {
 	T6 R = 0;
-	R = (T216f5(GE_void(((T94*)(C))->a2)));
+	R = (T215f5(GE_void(((T94*)(C))->a2)));
 	return R;
 }
 
 /* ARRAY [DS_BILINKABLE [INTEGER_32]].count */
-T6 T216f5(T0* C)
+T6 T215f5(T0* C)
 {
 	T6 t1;
 	T6 R = 0;
-	t1 = ((T6)((((T216*)(C))->a3)-(((T216*)(C))->a2)));
+	t1 = ((T6)((((T215*)(C))->a3)-(((T215*)(C))->a2)));
 	R = ((T6)((t1)+((T6)(GE_int32(1)))));
 	return R;
 }
 
 /* DS_LINKED_LIST_CURSOR [LX_TRANSITION_TABLE [LX_DFA_STATE]].item */
-T0* T163f6(T0* C)
+T0* T165f6(T0* C)
 {
 	T0* R = 0;
-	R = (((T231*)(GE_void(((T163*)(C))->a2)))->a1);
+	R = (((T229*)(GE_void(((T165*)(C))->a2)))->a1);
 	return R;
 }
 
 /* DS_LINKED_LIST_CURSOR [LX_TRANSITION_TABLE [LX_DFA_STATE]].start */
-void T163f8(T0* C)
+void T165f8(T0* C)
 {
-	T147f15(GE_void(((T163*)(C))->a3), C);
+	T148f16(GE_void(((T165*)(C))->a3), C);
 }
 
 /* LX_TEMPLATE_LIST.cursor_start */
-void T147f15(T0* C, T0* a1)
+void T148f16(T0* C, T0* a1)
 {
 	T1 t1;
 	T1 l1 = 0;
 	T1 l2 = 0;
-	l1 = (T147f10(C, a1));
-	l2 = ((((T147*)(C))->a5)==(EIF_VOID));
-	T163f10(a1, ((T147*)(C))->a5, EIF_FALSE, l2);
+	l1 = (T148f10(C, a1));
+	l2 = ((((T148*)(C))->a4)==(EIF_VOID));
+	T165f10(a1, ((T148*)(C))->a4, EIF_FALSE, l2);
 	t1 = ((T1)(!(l2)));
 	if (t1) {
 		t1 = (l1);
 	}
 	if (t1) {
-		T147f17(C, a1);
+		T148f18(C, a1);
 	}
 }
 
 /* LX_TEMPLATE_LIST.cursor_off */
-T1 T147f10(T0* C, T0* a1)
+T1 T148f10(T0* C, T0* a1)
 {
 	T0* t1;
 	T1 R = 0;
-	t1 = (((T163*)(a1))->a2);
+	t1 = (((T165*)(a1))->a2);
 	R = ((t1)==(EIF_VOID));
 	return R;
 }
 
 /* LX_TEMPLATE_LIST.new_cursor */
-T0* T147f6(T0* C)
+T0* T148f6(T0* C)
 {
 	T0* R = 0;
-	R = T163c7(C);
+	R = T165c7(C);
 	return R;
 }
 
 /* DS_LINKED_LIST_CURSOR [LX_TRANSITION_TABLE [LX_DFA_STATE]].make */
-T0* T163c7(T0* a1)
+T0* T165c7(T0* a1)
 {
 	T0* C;
-	C = GE_new163(EIF_TRUE);
-	((T163*)(C))->a3 = a1;
-	((T163*)(C))->a4 = EIF_TRUE;
+	C = GE_new165(EIF_TRUE);
+	((T165*)(C))->a3 = a1;
+	((T165*)(C))->a4 = EIF_TRUE;
 	return C;
 }
 
@@ -12144,7 +12188,7 @@ T0* T94f3(T0* C, T6 a1, T6 a2)
 	T0* R = 0;
 	T6 l1 = 0;
 	T6 l2 = 0;
-	R = T143c10(a1, a2);
+	R = T144c10((T6)(GE_int32(0)), a1, a2);
 	t1 = (T94f4(C));
 	l2 = (T6f13(&t1, a2));
 	t1 = (T94f5(C));
@@ -12154,9 +12198,9 @@ T0* T94f3(T0* C, T6 a1, T6 a2)
 		if (t2) {
 			break;
 		}
-		t3 = (T216f4(GE_void(((T94*)(C))->a2), l1));
-		t1 = (((T214*)(GE_void(t3)))->a1);
-		T143f11(GE_void(R), t1, l1);
+		t3 = (T215f4(GE_void(((T94*)(C))->a2), l1));
+		t1 = (((T213*)(GE_void(t3)))->a1);
+		T144f11(GE_void(R), t1, l1);
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
 	return R;
@@ -12166,7 +12210,7 @@ T0* T94f3(T0* C, T6 a1, T6 a2)
 T6 T94f5(T0* C)
 {
 	T6 R = 0;
-	R = (((T216*)(GE_void(((T94*)(C))->a2)))->a2);
+	R = (((T215*)(GE_void(((T94*)(C))->a2)))->a2);
 	return R;
 }
 
@@ -12174,7 +12218,7 @@ T6 T94f5(T0* C)
 T6 T94f4(T0* C)
 {
 	T6 R = 0;
-	R = (((T216*)(GE_void(((T94*)(C))->a2)))->a3);
+	R = (((T215*)(GE_void(((T94*)(C))->a2)))->a3);
 	return R;
 }
 
@@ -12194,20 +12238,20 @@ void T94f11(T0* C)
 		if (t1) {
 			break;
 		}
-		l4 = (T216f4(GE_void(((T94*)(C))->a2), l1));
-		t2 = (((T214*)(GE_void(l4)))->a2);
+		l4 = (T215f4(GE_void(((T94*)(C))->a2), l1));
+		t2 = (((T213*)(GE_void(l4)))->a2);
 		t1 = ((t2)==(EIF_VOID));
 		if (t1) {
 			l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-			T214f5(GE_void(l4), l2);
-			l4 = (((T214*)(GE_void(l4)))->a3);
+			T213f5(GE_void(l4), l2);
+			l4 = (((T213*)(GE_void(l4)))->a3);
 			while (1) {
 				t1 = ((l4)==(EIF_VOID));
 				if (t1) {
 					break;
 				}
-				T214f5(GE_void(l4), l2);
-				l4 = (((T214*)(GE_void(l4)))->a3);
+				T213f5(GE_void(l4), l2);
+				l4 = (((T213*)(GE_void(l4)))->a3);
 			}
 		}
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
@@ -12216,27 +12260,27 @@ void T94f11(T0* C)
 }
 
 /* DS_BILINKABLE [INTEGER_32].put */
-void T214f5(T0* C, T6 a1)
+void T213f5(T0* C, T6 a1)
 {
-	((T214*)(C))->a1 = a1;
+	((T213*)(C))->a1 = a1;
 }
 
 /* DS_ARRAYED_LIST [LX_SINGLETON].put_last */
-void T146f10(T0* C, T0* a1)
+void T147f10(T0* C, T0* a1)
 {
-	((T146*)(C))->a1 = ((T6)((((T146*)(C))->a1)+((T6)(GE_int32(1)))));
-	((T228*)(GE_void(((T146*)(C))->a2)))->z2[((T146*)(C))->a1] = (a1);
+	((T147*)(C))->a1 = ((T6)((((T147*)(C))->a1)+((T6)(GE_int32(1)))));
+	((T226*)(GE_void(((T147*)(C))->a2)))->z2[((T147*)(C))->a1] = (a1);
 }
 
 /* LX_SINGLETON.make */
-T0* T144c5(T6 a1, T6 a2, T6 a3, T6 a4)
+T0* T145c5(T6 a1, T6 a2, T6 a3, T6 a4)
 {
 	T0* C;
-	C = GE_new144(EIF_TRUE);
-	((T144*)(C))->a2 = a1;
-	((T144*)(C))->a3 = a2;
-	((T144*)(C))->a1 = a3;
-	((T144*)(C))->a4 = a4;
+	C = GE_new145(EIF_TRUE);
+	((T145*)(C))->a2 = a1;
+	((T145*)(C))->a3 = a2;
+	((T145*)(C))->a1 = a3;
+	((T145*)(C))->a4 = a4;
 	return C;
 }
 
@@ -12268,19 +12312,19 @@ void T47f100(T0* C, T0* a1)
 	T0* l18 = 0;
 	T6 l19 = 0;
 	T6 l20 = 0;
-	l1 = (((T133*)(GE_void(a1)))->a3);
-	l3 = (((T157*)(GE_void(l1)))->a1);
-	l4 = (T157f5(GE_void(l1)));
+	l1 = (((T134*)(GE_void(a1)))->a3);
+	l3 = (((T158*)(GE_void(l1)))->a1);
+	l4 = (T158f5(GE_void(l1)));
 	t1 = ((T6)((l3)*((T6)(GE_int32(100)))));
 	t2 = ((T6)((l4)*((T6)(GE_int32(15)))));
 	t3 = ((T1)((t1)<(t2)));
 	if (t3) {
-		t1 = (((T133*)(GE_void(a1)))->a6);
+		t1 = (((T134*)(GE_void(a1)))->a6);
 		T47f115(C, t1, (T6)(GE_int32(-32766)), l1);
 	} else {
-		l8 = T138c15(l3);
-		l9 = T154c11(l3);
-		l10 = (T138f12(GE_void(l8)));
+		l8 = T139c15(l3);
+		l9 = T155c11(l3);
+		l10 = (T139f12(GE_void(l8)));
 		l7 = ((T47*)(C))->a28;
 		l5 = ((T47*)(C))->a27;
 		while (1) {
@@ -12288,88 +12332,88 @@ void T47f100(T0* C, T0* a1)
 			if (t3) {
 				break;
 			}
-			l11 = (T157f9(GE_void(l1), l5));
+			l11 = (T158f9(GE_void(l1), l5));
 			t3 = ((l11)!=(EIF_VOID));
 			if (t3) {
-				T160f8(GE_void(l10));
-				T160f9(GE_void(l10), l11);
-				t3 = (T160f6(GE_void(l10)));
+				T162f8(GE_void(l10));
+				T162f9(GE_void(l10), l11);
+				t3 = (T162f6(GE_void(l10)));
 				t3 = ((T1)(!(t3)));
 				if (t3) {
-					l6 = (T160f4(GE_void(l10)));
-					t1 = (T154f7(GE_void(l9), l6));
+					l6 = (T162f4(GE_void(l10)));
+					t1 = (T155f7(GE_void(l9), l6));
 					t1 = ((T6)((t1)+((T6)(GE_int32(1)))));
-					T154f14(GE_void(l9), t1, l6);
+					T155f14(GE_void(l9), t1, l6);
 				} else {
-					T138f16(GE_void(l8), l11);
-					T154f12(GE_void(l9), (T6)(GE_int32(1)));
+					T139f16(GE_void(l8), l11);
+					T155f12(GE_void(l9), (T6)(GE_int32(1)));
 				}
 			}
 			l5 = ((T6)((l5)+((T6)(GE_int32(1)))));
 		}
-		T160f10(GE_void(l10));
-		l7 = (((T138*)(GE_void(l8)))->a1);
+		T162f10(GE_void(l10));
+		l7 = (((T139*)(GE_void(l8)))->a1);
 		l5 = (T6)(GE_int32(1));
 		while (1) {
 			t3 = (T6f1((&l5), l7));
 			if (t3) {
 				break;
 			}
-			t1 = (T154f7(GE_void(l9), l5));
+			t1 = (T155f7(GE_void(l9), l5));
 			t3 = ((T1)((l12)<(t1)));
 			if (t3) {
-				l11 = (T138f7(GE_void(l8), l5));
-				l12 = (T154f7(GE_void(l9), l5));
+				l11 = (T139f7(GE_void(l8), l5));
+				l12 = (T155f7(GE_void(l9), l5));
 			}
 			l5 = ((T6)((l5)+((T6)(GE_int32(1)))));
 		}
-		l16 = (T145f8(GE_void(((T47*)(C))->a32)));
-		t3 = (T145f5(GE_void(((T47*)(C))->a32)));
+		l16 = (T146f8(GE_void(((T47*)(C))->a32)));
+		t3 = (T146f5(GE_void(((T47*)(C))->a32)));
 		t3 = ((T1)(!(t3)));
 		if (t3) {
-			l13 = (T145f6(GE_void(((T47*)(C))->a32)));
-			T162f11(GE_void(l16));
+			l13 = (T146f7(GE_void(((T47*)(C))->a32)));
+			T164f11(GE_void(l16));
 		}
 		l19 = l3;
-		l15 = (T145f8(GE_void(((T47*)(C))->a32)));
-		T162f11(GE_void(l15));
+		l15 = (T146f8(GE_void(((T47*)(C))->a32)));
+		T164f11(GE_void(l15));
 		t1 = ((T6)((l12)*((T6)(GE_int32(100)))));
 		t2 = ((T6)((l3)*((T6)(GE_int32(50)))));
 		t3 = (T6f1(&t1, t2));
 		if (t3) {
 			while (1) {
-				t3 = (((T162*)(GE_void(l15)))->a1);
+				t3 = (((T164*)(GE_void(l15)))->a1);
 				if (!(t3)) {
-					t4 = (T162f6(GE_void(l15)));
-					t4 = (((T161*)(GE_void(t4)))->a3);
+					t4 = (T164f6(GE_void(l15)));
+					t4 = (((T163*)(GE_void(t4)))->a3);
 					t3 = ((t4)==(l11));
 				}
 				if (t3) {
 					break;
 				}
-				T162f14(GE_void(l15));
+				T164f14(GE_void(l15));
 			}
-			t3 = (((T162*)(GE_void(l15)))->a1);
+			t3 = (((T164*)(GE_void(l15)))->a1);
 			t3 = ((T1)(!(t3)));
 			if (t3) {
-				l13 = (T162f6(GE_void(l15)));
-				T162f12(GE_void(l16), l15);
-				t4 = (((T161*)(GE_void(l13)))->a2);
+				l13 = (T164f6(GE_void(l15)));
+				T164f12(GE_void(l16), l15);
+				t4 = (((T163*)(GE_void(l13)))->a2);
 				t5 = (T47f63(C));
-				l17 = (T157f11(GE_void(l1), t4, t5));
-				l19 = (((T157*)(GE_void(l17)))->a1);
+				l17 = (T158f11(GE_void(l1), t4, t5));
+				l19 = (((T158*)(GE_void(l17)))->a1);
 			}
 		} else {
 			l11 = (T47f63(C));
-			t3 = (T145f5(GE_void(((T47*)(C))->a32)));
+			t3 = (T146f5(GE_void(((T47*)(C))->a32)));
 			t3 = ((T1)(!(t3)));
 			if (t3) {
-				l13 = (T145f6(GE_void(((T47*)(C))->a32)));
-				T162f12(GE_void(l16), l15);
-				t4 = (((T161*)(GE_void(l13)))->a2);
+				l13 = (T146f7(GE_void(((T47*)(C))->a32)));
+				T164f12(GE_void(l16), l15);
+				t4 = (((T163*)(GE_void(l13)))->a2);
 				t5 = (T47f63(C));
-				l17 = (T157f11(GE_void(l1), t4, t5));
-				l19 = (((T157*)(GE_void(l17)))->a1);
+				l17 = (T158f11(GE_void(l1), t4, t5));
+				l19 = (((T158*)(GE_void(l17)))->a1);
 			}
 		}
 		t1 = ((T6)((l19)*((T6)(GE_int32(100)))));
@@ -12377,26 +12421,26 @@ void T47f100(T0* C, T0* a1)
 		t3 = (T6f1(&t1, t2));
 		if (t3) {
 			while (1) {
-				t3 = (((T162*)(GE_void(l15)))->a1);
+				t3 = (((T164*)(GE_void(l15)))->a1);
 				if (t3) {
 					break;
 				}
-				l14 = (T162f6(GE_void(l15)));
-				t4 = (((T161*)(GE_void(l14)))->a2);
+				l14 = (T164f6(GE_void(l15)));
+				t4 = (((T163*)(GE_void(l14)))->a2);
 				t5 = (T47f63(C));
-				l18 = (T157f11(GE_void(l1), t4, t5));
-				t1 = (((T157*)(GE_void(l18)))->a1);
+				l18 = (T158f11(GE_void(l1), t4, t5));
+				t1 = (((T158*)(GE_void(l18)))->a1);
 				t3 = ((T1)((t1)<(l19)));
 				if (t3) {
 					l13 = l14;
-					T162f12(GE_void(l16), l15);
+					T164f12(GE_void(l16), l15);
 					l17 = l18;
-					l19 = (((T157*)(GE_void(l17)))->a1);
+					l19 = (((T158*)(GE_void(l17)))->a1);
 				}
-				T162f14(GE_void(l15));
+				T164f14(GE_void(l15));
 			}
 		} else {
-			T162f13(GE_void(l15));
+			T164f13(GE_void(l15));
 		}
 		t1 = ((T6)((l19)*((T6)(GE_int32(100)))));
 		t2 = ((T6)((l3)*((T6)(GE_int32(50)))));
@@ -12406,178 +12450,178 @@ void T47f100(T0* C, T0* a1)
 			t2 = ((T6)((l3)*((T6)(GE_int32(60)))));
 			t3 = (T6f5(&t1, t2));
 			if (t3) {
-				T147f12(GE_void(((T47*)(C))->a35), a1, l11);
-				l2 = (T147f9(GE_void(((T47*)(C))->a35)));
-				t1 = (((T147*)(GE_void(((T47*)(C))->a35)))->a1);
+				T148f12(GE_void(((T47*)(C))->a35), a1, l11);
+				l2 = (T148f9(GE_void(((T47*)(C))->a35)));
+				t1 = (((T148*)(GE_void(((T47*)(C))->a35)))->a1);
 				l20 = ((T6)(-(t1)));
-				T145f13(GE_void(((T47*)(C))->a32), l20, l2, l11);
-				t1 = (((T133*)(GE_void(a1)))->a6);
+				T146f13(GE_void(((T47*)(C))->a32), l20, l2, l11);
+				t1 = (((T134*)(GE_void(a1)))->a6);
 				t4 = (T47f63(C));
-				t4 = (T157f11(GE_void(l1), l2, t4));
+				t4 = (T158f11(GE_void(l1), l2, t4));
 				T47f115(C, t1, l20, t4);
 			} else {
-				t1 = (((T133*)(GE_void(a1)))->a6);
-				t4 = (T157f12(GE_void(l1)));
-				T145f13(GE_void(((T47*)(C))->a32), t1, t4, l11);
-				t1 = (((T133*)(GE_void(a1)))->a6);
+				t1 = (((T134*)(GE_void(a1)))->a6);
+				t4 = (T158f12(GE_void(l1)));
+				T146f13(GE_void(((T47*)(C))->a32), t1, t4, l11);
+				t1 = (((T134*)(GE_void(a1)))->a6);
 				T47f115(C, t1, (T6)(GE_int32(-32766)), l1);
 			}
 		} else {
-			t1 = (((T133*)(GE_void(a1)))->a6);
-			t2 = (((T161*)(GE_void(l13)))->a1);
+			t1 = (((T134*)(GE_void(a1)))->a6);
+			t2 = (((T163*)(GE_void(l13)))->a1);
 			T47f115(C, t1, t2, l17);
-			T145f14(GE_void(((T47*)(C))->a32), l16);
+			T146f14(GE_void(((T47*)(C))->a32), l16);
 			t1 = ((T6)((l19)*((T6)(GE_int32(100)))));
 			t2 = ((T6)((l3)*((T6)(GE_int32(20)))));
 			t3 = (T6f5(&t1, t2));
 			if (t3) {
-				t1 = (((T133*)(GE_void(a1)))->a6);
-				t4 = (T157f12(GE_void(l1)));
-				T145f13(GE_void(((T47*)(C))->a32), t1, t4, l11);
+				t1 = (((T134*)(GE_void(a1)))->a6);
+				t4 = (T158f12(GE_void(l1)));
+				T146f13(GE_void(((T47*)(C))->a32), t1, t4, l11);
 			}
 		}
-		T162f13(GE_void(l16));
+		T164f13(GE_void(l16));
 	}
 }
 
 /* LX_PROTO_QUEUE.move_to_front */
-void T145f14(T0* C, T0* a1)
+void T146f14(T0* C, T0* a1)
 {
 	T0* l1 = 0;
-	l1 = (T162f6(GE_void(a1)));
-	T162f15(GE_void(a1));
-	T145f16(C, l1);
+	l1 = (T164f6(GE_void(a1)));
+	T164f15(GE_void(a1));
+	T146f17(C, l1);
 }
 
 /* LX_PROTO_QUEUE.put_first */
-void T145f16(T0* C, T0* a1)
+void T146f17(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* l1 = 0;
-	t1 = (T145f5(C));
+	t1 = (T146f5(C));
 	if (t1) {
-		((T145*)(C))->a2 = T227c4(a1);
-		((T145*)(C))->a4 = ((T145*)(C))->a2;
-		((T145*)(C))->a1 = (T6)(GE_int32(1));
+		((T146*)(C))->a2 = T225c4(a1);
+		((T146*)(C))->a4 = ((T146*)(C))->a2;
+		((T146*)(C))->a1 = (T6)(GE_int32(1));
 	} else {
-		l1 = ((T145*)(C))->a2;
-		((T145*)(C))->a2 = T227c4(a1);
-		T227f5(GE_void(((T145*)(C))->a2), l1);
-		((T145*)(C))->a1 = ((T6)((((T145*)(C))->a1)+((T6)(GE_int32(1)))));
+		l1 = ((T146*)(C))->a2;
+		((T146*)(C))->a2 = T225c4(a1);
+		T225f5(GE_void(((T146*)(C))->a2), l1);
+		((T146*)(C))->a1 = ((T6)((((T146*)(C))->a1)+((T6)(GE_int32(1)))));
 	}
 }
 
 /* DS_BILINKABLE [LX_PROTO].put_right */
-void T227f5(T0* C, T0* a1)
+void T225f5(T0* C, T0* a1)
 {
-	((T227*)(C))->a3 = a1;
-	T227f7(GE_void(a1), C);
+	((T225*)(C))->a3 = a1;
+	T225f7(GE_void(a1), C);
 }
 
 /* DS_BILINKABLE [LX_PROTO].attach_left */
-void T227f7(T0* C, T0* a1)
+void T225f7(T0* C, T0* a1)
 {
-	((T227*)(C))->a2 = a1;
+	((T225*)(C))->a2 = a1;
 }
 
 /* DS_BILINKABLE [LX_PROTO].make */
-T0* T227c4(T0* a1)
+T0* T225c4(T0* a1)
 {
 	T0* C;
-	C = GE_new227(EIF_TRUE);
-	((T227*)(C))->a1 = a1;
+	C = GE_new225(EIF_TRUE);
+	((T225*)(C))->a1 = a1;
 	return C;
 }
 
 /* DS_BILINKED_LIST_CURSOR [LX_PROTO].remove */
-void T162f15(T0* C)
+void T164f15(T0* C)
 {
-	T145f25(GE_void(((T162*)(C))->a4), C);
+	T146f26(GE_void(((T164*)(C))->a4), C);
 }
 
 /* LX_PROTO_QUEUE.remove_at_cursor */
-void T145f25(T0* C, T0* a1)
+void T146f26(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
 	T0* l1 = 0;
 	T0* l2 = 0;
-	t1 = (T162f8(a1));
+	t1 = (T164f8(a1));
 	if (t1) {
-		T145f28(C);
+		T146f29(C);
 	} else {
-		t1 = (T162f9(a1));
+		t1 = (T164f9(a1));
 		if (t1) {
-			T145f15(C);
+			T146f16(C);
 		} else {
-			l1 = (((T162*)(a1))->a2);
-			l2 = (((T227*)(GE_void(l1)))->a3);
-			T145f29(C, l1, l2);
-			t2 = (((T227*)(GE_void(l1)))->a2);
-			T227f5(GE_void(t2), l2);
-			((T145*)(C))->a1 = ((T6)((((T145*)(C))->a1)-((T6)(GE_int32(1)))));
+			l1 = (((T164*)(a1))->a2);
+			l2 = (((T225*)(GE_void(l1)))->a3);
+			T146f30(C, l1, l2);
+			t2 = (((T225*)(GE_void(l1)))->a2);
+			T225f5(GE_void(t2), l2);
+			((T146*)(C))->a1 = ((T6)((((T146*)(C))->a1)-((T6)(GE_int32(1)))));
 		}
 	}
 }
 
 /* LX_PROTO_QUEUE.move_all_cursors */
-void T145f29(T0* C, T0* a1, T0* a2)
+void T146f30(T0* C, T0* a1, T0* a2)
 {
 	T1 t1;
 	T0* t2;
 	T0* l1 = 0;
-	l1 = ((T145*)(C))->a3;
+	l1 = ((T146*)(C))->a3;
 	while (1) {
 		t1 = ((l1)==(EIF_VOID));
 		if (t1) {
 			break;
 		}
-		t2 = (((T162*)(GE_void(l1)))->a2);
+		t2 = (((T164*)(GE_void(l1)))->a2);
 		t1 = ((t2)==(a1));
 		if (t1) {
-			T162f19(GE_void(l1), a2);
+			T164f19(GE_void(l1), a2);
 		}
-		l1 = (((T162*)(GE_void(l1)))->a3);
+		l1 = (((T164*)(GE_void(l1)))->a3);
 	}
 }
 
 /* DS_BILINKED_LIST_CURSOR [LX_PROTO].set_current_cell */
-void T162f19(T0* C, T0* a1)
+void T164f19(T0* C, T0* a1)
 {
-	((T162*)(C))->a2 = a1;
+	((T164*)(C))->a2 = a1;
 }
 
 /* LX_PROTO_QUEUE.remove_last */
-void T145f15(T0* C)
+void T146f16(T0* C)
 {
 	T1 t1;
 	T0* t2;
-	t1 = (((((((T145*)(C))->a1) == ((T6)(GE_int32(1)))))));
+	t1 = (((((((T146*)(C))->a1) == ((T6)(GE_int32(1)))))));
 	if (t1) {
-		T145f17(C);
+		T146f18(C);
 	} else {
-		T145f18(C);
-		t2 = (((T227*)(GE_void(((T145*)(C))->a4)))->a2);
-		T145f19(C, t2);
-		((T145*)(C))->a1 = ((T6)((((T145*)(C))->a1)-((T6)(GE_int32(1)))));
+		T146f19(C);
+		t2 = (((T225*)(GE_void(((T146*)(C))->a4)))->a2);
+		T146f20(C, t2);
+		((T146*)(C))->a1 = ((T6)((((T146*)(C))->a1)-((T6)(GE_int32(1)))));
 	}
 }
 
 /* LX_PROTO_QUEUE.set_last_cell */
-void T145f19(T0* C, T0* a1)
+void T146f20(T0* C, T0* a1)
 {
-	T227f8(GE_void(a1));
-	((T145*)(C))->a4 = a1;
+	T225f8(GE_void(a1));
+	((T146*)(C))->a4 = a1;
 }
 
 /* DS_BILINKABLE [LX_PROTO].forget_right */
-void T227f8(T0* C)
+void T225f8(T0* C)
 {
-	((T227*)(C))->a3 = EIF_VOID;
+	((T225*)(C))->a3 = EIF_VOID;
 }
 
 /* LX_PROTO_QUEUE.move_last_cursors_after */
-void T145f18(T0* C)
+void T146f19(T0* C)
 {
 	T0* t1;
 	T1 t2;
@@ -12585,95 +12629,95 @@ void T145f18(T0* C)
 	T0* l2 = 0;
 	T0* l3 = 0;
 	T0* l4 = 0;
-	l1 = ((T145*)(C))->a3;
-	l4 = ((T145*)(C))->a4;
-	t1 = (((T162*)(GE_void(l1)))->a2);
+	l1 = ((T146*)(C))->a3;
+	l4 = ((T146*)(C))->a4;
+	t1 = (((T164*)(GE_void(l1)))->a2);
 	t2 = ((t1)==(l4));
 	if (t2) {
-		T162f16(GE_void(l1));
+		T164f16(GE_void(l1));
 	}
 	l2 = l1;
-	l1 = (((T162*)(GE_void(l1)))->a3);
+	l1 = (((T164*)(GE_void(l1)))->a3);
 	while (1) {
 		t2 = ((l1)==(EIF_VOID));
 		if (t2) {
 			break;
 		}
-		t1 = (((T162*)(GE_void(l1)))->a2);
+		t1 = (((T164*)(GE_void(l1)))->a2);
 		t2 = ((t1)==(l4));
 		if (t2) {
-			T162f16(GE_void(l1));
-			l3 = (((T162*)(GE_void(l1)))->a3);
-			T162f17(GE_void(l2), l3);
-			T162f17(GE_void(l1), EIF_VOID);
+			T164f16(GE_void(l1));
+			l3 = (((T164*)(GE_void(l1)))->a3);
+			T164f17(GE_void(l2), l3);
+			T164f17(GE_void(l1), EIF_VOID);
 			l1 = l3;
 		} else {
 			l2 = l1;
-			l1 = (((T162*)(GE_void(l1)))->a3);
+			l1 = (((T164*)(GE_void(l1)))->a3);
 		}
 	}
 }
 
 /* DS_BILINKED_LIST_CURSOR [LX_PROTO].set_next_cursor */
-void T162f17(T0* C, T0* a1)
+void T164f17(T0* C, T0* a1)
 {
-	((T162*)(C))->a3 = a1;
+	((T164*)(C))->a3 = a1;
 }
 
 /* DS_BILINKED_LIST_CURSOR [LX_PROTO].set_after */
-void T162f16(T0* C)
+void T164f16(T0* C)
 {
-	((T162*)(C))->a2 = EIF_VOID;
-	((T162*)(C))->a5 = EIF_FALSE;
-	((T162*)(C))->a1 = EIF_TRUE;
+	((T164*)(C))->a2 = EIF_VOID;
+	((T164*)(C))->a5 = EIF_FALSE;
+	((T164*)(C))->a1 = EIF_TRUE;
 }
 
 /* LX_PROTO_QUEUE.wipe_out */
-void T145f17(T0* C)
+void T146f18(T0* C)
 {
-	T145f20(C);
-	((T145*)(C))->a2 = EIF_VOID;
-	((T145*)(C))->a4 = EIF_VOID;
-	((T145*)(C))->a1 = (T6)(GE_int32(0));
+	T146f21(C);
+	((T146*)(C))->a2 = EIF_VOID;
+	((T146*)(C))->a4 = EIF_VOID;
+	((T146*)(C))->a1 = (T6)(GE_int32(0));
 }
 
 /* LX_PROTO_QUEUE.move_all_cursors_after */
-void T145f20(T0* C)
+void T146f21(T0* C)
 {
 	T1 t1;
 	T0* l1 = 0;
 	T0* l2 = 0;
-	l1 = ((T145*)(C))->a3;
+	l1 = ((T146*)(C))->a3;
 	while (1) {
 		t1 = ((l1)==(EIF_VOID));
 		if (t1) {
 			break;
 		}
-		T162f16(GE_void(l1));
-		l2 = (((T162*)(GE_void(l1)))->a3);
-		T162f17(GE_void(l1), EIF_VOID);
+		T164f16(GE_void(l1));
+		l2 = (((T164*)(GE_void(l1)))->a3);
+		T164f17(GE_void(l1), EIF_VOID);
 		l1 = l2;
 	}
 }
 
 /* DS_BILINKED_LIST_CURSOR [LX_PROTO].is_last */
-T1 T162f9(T0* C)
+T1 T164f9(T0* C)
 {
 	T1 R = 0;
-	R = (T145f11(GE_void(((T162*)(C))->a4), C));
+	R = (T146f11(GE_void(((T164*)(C))->a4), C));
 	return R;
 }
 
 /* LX_PROTO_QUEUE.cursor_is_last */
-T1 T145f11(T0* C, T0* a1)
+T1 T146f11(T0* C, T0* a1)
 {
 	T1 t1;
 	T1 R = 0;
 	T0* l1 = 0;
-	l1 = (((T162*)(a1))->a2);
+	l1 = (((T164*)(a1))->a2);
 	t1 = ((l1)!=(EIF_VOID));
 	if (t1) {
-		R = ((l1)==(((T145*)(C))->a4));
+		R = ((l1)==(((T146*)(C))->a4));
 	} else {
 		R = EIF_FALSE;
 	}
@@ -12681,52 +12725,52 @@ T1 T145f11(T0* C, T0* a1)
 }
 
 /* LX_PROTO_QUEUE.remove_first */
-void T145f28(T0* C)
+void T146f29(T0* C)
 {
 	T1 t1;
 	T0* l1 = 0;
-	t1 = (((((((T145*)(C))->a1) == ((T6)(GE_int32(1)))))));
+	t1 = (((((((T146*)(C))->a1) == ((T6)(GE_int32(1)))))));
 	if (t1) {
-		T145f17(C);
+		T146f18(C);
 	} else {
-		l1 = (((T227*)(GE_void(((T145*)(C))->a2)))->a3);
-		T145f29(C, ((T145*)(C))->a2, l1);
-		T145f30(C, l1);
-		((T145*)(C))->a1 = ((T6)((((T145*)(C))->a1)-((T6)(GE_int32(1)))));
+		l1 = (((T225*)(GE_void(((T146*)(C))->a2)))->a3);
+		T146f30(C, ((T146*)(C))->a2, l1);
+		T146f31(C, l1);
+		((T146*)(C))->a1 = ((T6)((((T146*)(C))->a1)-((T6)(GE_int32(1)))));
 	}
 }
 
 /* LX_PROTO_QUEUE.set_first_cell */
-void T145f30(T0* C, T0* a1)
+void T146f31(T0* C, T0* a1)
 {
-	T227f6(GE_void(a1));
-	((T145*)(C))->a2 = a1;
+	T225f6(GE_void(a1));
+	((T146*)(C))->a2 = a1;
 }
 
 /* DS_BILINKABLE [LX_PROTO].forget_left */
-void T227f6(T0* C)
+void T225f6(T0* C)
 {
-	((T227*)(C))->a2 = EIF_VOID;
+	((T225*)(C))->a2 = EIF_VOID;
 }
 
 /* DS_BILINKED_LIST_CURSOR [LX_PROTO].is_first */
-T1 T162f8(T0* C)
+T1 T164f8(T0* C)
 {
 	T1 R = 0;
-	R = (T145f10(GE_void(((T162*)(C))->a4), C));
+	R = (T146f10(GE_void(((T164*)(C))->a4), C));
 	return R;
 }
 
 /* LX_PROTO_QUEUE.cursor_is_first */
-T1 T145f10(T0* C, T0* a1)
+T1 T146f10(T0* C, T0* a1)
 {
 	T1 t1;
 	T1 R = 0;
 	T0* l1 = 0;
-	l1 = (((T162*)(a1))->a2);
+	l1 = (((T164*)(a1))->a2);
 	t1 = ((l1)!=(EIF_VOID));
 	if (t1) {
-		R = ((l1)==(((T145*)(C))->a2));
+		R = ((l1)==(((T146*)(C))->a2));
 	} else {
 		R = EIF_FALSE;
 	}
@@ -12734,110 +12778,110 @@ T1 T145f10(T0* C, T0* a1)
 }
 
 /* LX_TRANSITION_TABLE [LX_DFA_STATE].cloned_object */
-T0* T157f12(T0* C)
+T0* T158f12(T0* C)
 {
 	T0* R = 0;
-	R = (T157f13(C));
+	R = (T158f13(C));
 	return R;
 }
 
 /* LX_TRANSITION_TABLE [LX_DFA_STATE].twin */
-T0* T157f13(T0* C)
+T0* T158f13(T0* C)
 {
 	T0* R = 0;
-	R = GE_new157(EIF_TRUE);
-	T157f16(R, C);
+	R = GE_new158(EIF_TRUE);
+	T158f16(R, C);
 	return R;
 }
 
 /* LX_TRANSITION_TABLE [LX_DFA_STATE].copy */
-void T157f16(T0* C, T0* a1)
+void T158f16(T0* C, T0* a1)
 {
-	*(T157*)(C) = *(T157*)(a1);
-	((T157*)(C))->a2 = (T239f1(GE_void(((T157*)(C))->a3), ((T157*)(C))->a2));
+	*(T158*)(C) = *(T158*)(a1);
+	((T158*)(C))->a2 = (T237f1(GE_void(((T158*)(C))->a3), ((T158*)(C))->a2));
 }
 
 /* KL_ARRAY_ROUTINES [LX_DFA_STATE].cloned_array */
-T0* T239f1(T0* C, T0* a1)
+T0* T237f1(T0* C, T0* a1)
 {
 	T0* R = 0;
-	R = (T238f7(GE_void(a1)));
+	R = (T236f7(GE_void(a1)));
 	return R;
 }
 
 /* ARRAY [LX_DFA_STATE].twin */
-T0* T238f7(T0* C)
+T0* T236f7(T0* C)
 {
 	T0* R = 0;
-	R = GE_new238(EIF_TRUE);
-	T238f11(R, C);
+	R = GE_new236(EIF_TRUE);
+	T236f11(R, C);
 	return R;
 }
 
 /* ARRAY [LX_DFA_STATE].copy */
-void T238f11(T0* C, T0* a1)
+void T236f11(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
 	t1 = ((a1)!=(C));
 	if (t1) {
-		*(T238*)(C) = *(T238*)(a1);
-		t2 = (((T238*)(a1))->a1);
-		t2 = (T224f4(GE_void(t2)));
-		T238f13(C, t2);
+		*(T236*)(C) = *(T236*)(a1);
+		t2 = (((T236*)(a1))->a1);
+		t2 = (T222f5(GE_void(t2)));
+		T236f13(C, t2);
 	}
 }
 
 /* ARRAY [LX_DFA_STATE].set_area */
-void T238f13(T0* C, T0* a1)
+void T236f13(T0* C, T0* a1)
 {
-	((T238*)(C))->a1 = a1;
+	((T236*)(C))->a1 = a1;
 }
 
 /* SPECIAL [LX_DFA_STATE].twin */
-T0* T224f4(T0* C)
+T0* T222f5(T0* C)
 {
 	T0* R = 0;
-	R = GE_new224(((T224*)(C))->z1, EIF_FALSE);
-	*(T224*)(R) = *(T224*)(C);
-	memcpy(((T224*)(R))->z2,((T224*)(C))->z2,((T224*)(C))->z1*sizeof(T0*));
+	R = GE_new222(((T222*)(C))->a1, EIF_FALSE);
+	*(T222*)(R) = *(T222*)(C);
+	memcpy(((T222*)(R))->z2,((T222*)(C))->z2,((T222*)(C))->a1*sizeof(T0*));
 	return R;
 }
 
 /* LX_PROTO_QUEUE.put */
-void T145f13(T0* C, T6 a1, T0* a2, T0* a3)
+void T146f13(T0* C, T6 a1, T0* a2, T0* a3)
 {
 	T1 t1;
 	T0* l1 = 0;
-	l1 = T161c4(a1, a2, a3);
-	t1 = (T6f5(&(((T145*)(C))->a1), (T6)(GE_int32(50))));
+	l1 = T163c4(a1, a2, a3);
+	t1 = (T6f5(&(((T146*)(C))->a1), (T6)(GE_int32(50))));
 	if (t1) {
-		T145f15(C);
+		T146f16(C);
 	}
-	T145f16(C, l1);
+	T146f17(C, l1);
 }
 
 /* LX_PROTO.make */
-T0* T161c4(T6 a1, T0* a2, T0* a3)
+T0* T163c4(T6 a1, T0* a2, T0* a3)
 {
 	T0* C;
-	C = GE_new161(EIF_TRUE);
-	((T161*)(C))->a1 = a1;
-	((T161*)(C))->a2 = a2;
-	((T161*)(C))->a3 = a3;
+	C = GE_new163(EIF_TRUE);
+	((T163*)(C))->a1 = a1;
+	((T163*)(C))->a2 = a2;
+	((T163*)(C))->a3 = a3;
 	return C;
 }
 
 /* LX_TEMPLATE_LIST.last */
-T0* T147f9(T0* C)
+T0* T148f9(T0* C)
 {
 	T0* R = 0;
-	R = (((T231*)(GE_void(((T147*)(C))->a2)))->a1);
+	R = (((T229*)(GE_void(((T148*)(C))->a2)))->a1);
 	return R;
 }
 
 /* LX_TEMPLATE_LIST.put */
-void T147f12(T0* C, T0* a1, T0* a2)
+void T148f12(T0* C, T0* a1, T0* a2)
 {
 	T6 t1;
 	T1 t2;
@@ -12848,11 +12892,11 @@ void T147f12(T0* C, T0* a1, T0* a2)
 	T6 l4 = 0;
 	T6 l5 = 0;
 	T0* l6 = 0;
-	l1 = (((T133*)(GE_void(a1)))->a3);
-	l4 = (T157f6(GE_void(l1)));
-	l5 = (T157f8(GE_void(l1)));
-	l2 = T157c14(l4, l5);
-	t1 = (T157f5(GE_void(l1)));
+	l1 = (((T134*)(GE_void(a1)))->a3);
+	l4 = (T158f6(GE_void(l1)));
+	l5 = (T158f8(GE_void(l1)));
+	l2 = T158c14(l4, l5);
+	t1 = (T158f5(GE_void(l1)));
 	l6 = T90c18(t1);
 	l3 = l4;
 	while (1) {
@@ -12860,18 +12904,18 @@ void T147f12(T0* C, T0* a1, T0* a2)
 		if (t2) {
 			break;
 		}
-		t3 = (T157f9(GE_void(l1), l3));
+		t3 = (T158f9(GE_void(l1), l3));
 		t2 = ((t3)!=(EIF_VOID));
 		if (t2) {
-			T157f15(GE_void(l2), a2, l3);
+			T158f15(GE_void(l2), a2, l3);
 			T90f20(GE_void(l6), l3);
 		}
 		l3 = ((T6)((l3)+((T6)(GE_int32(1)))));
 	}
-	T147f14(C, l2);
-	t2 = ((((T147*)(C))->a3)!=(EIF_VOID));
+	T148f14(C, l2);
+	t2 = ((((T148*)(C))->a3)!=(EIF_VOID));
 	if (t2) {
-		T94f12(GE_void(((T147*)(C))->a3), l6);
+		T94f12(GE_void(((T148*)(C))->a3), l6);
 	}
 }
 
@@ -12898,7 +12942,7 @@ void T94f12(T0* C, T0* a1)
 	l8 = (((T90*)(GE_void(a1)))->a7);
 	t1 = (T94f5(C));
 	t2 = (T94f4(C));
-	l12 = T159c5(t1, t2);
+	l12 = T160c5(EIF_FALSE, t1, t2);
 	l7 = (T6)(GE_int32(1));
 	while (1) {
 		t3 = (T6f1((&l7), l8));
@@ -12906,17 +12950,17 @@ void T94f12(T0* C, T0* a1)
 			break;
 		}
 		t1 = (T90f14(GE_void(a1), l7));
-		l1 = (T216f4(GE_void(((T94*)(C))->a2), t1));
-		l3 = (((T214*)(GE_void(l1)))->a2);
+		l1 = (T215f4(GE_void(((T94*)(C))->a2), t1));
+		l3 = (((T213*)(GE_void(l1)))->a2);
 		l4 = l1;
 		l6 = ((T6)((l7)+((T6)(GE_int32(1)))));
-		l2 = (((T214*)(GE_void(l1)))->a3);
+		l2 = (((T213*)(GE_void(l1)))->a3);
 		while (1) {
 			t3 = ((l2)==(EIF_VOID));
 			if (t3) {
 				break;
 			}
-			l5 = (((T214*)(GE_void(l2)))->a1);
+			l5 = (((T213*)(GE_void(l2)))->a1);
 			l9 = EIF_FALSE;
 			while (1) {
 				if (!(l9)) {
@@ -12934,13 +12978,13 @@ void T94f12(T0* C, T0* a1)
 				} else {
 					t3 = (((((l11) == (l5)))));
 					if (t3) {
-						t4 = (T159f4(GE_void(l12), l5));
+						t4 = (T160f4(GE_void(l12), l5));
 						t3 = ((T1)(!(t4)));
 					}
 					if (t3) {
-						T214f6(GE_void(l4), l2);
+						T213f6(GE_void(l4), l2);
 						l4 = l2;
-						T159f6(GE_void(l12), EIF_TRUE, l6);
+						T160f6(GE_void(l12), EIF_TRUE, l6);
 						l10 = EIF_TRUE;
 						l9 = EIF_TRUE;
 					} else {
@@ -12952,32 +12996,32 @@ void T94f12(T0* C, T0* a1)
 			if (t3) {
 				t3 = ((l3)==(EIF_VOID));
 				if (t3) {
-					T214f8(GE_void(l2));
+					T213f8(GE_void(l2));
 				} else {
-					T214f6(GE_void(l3), l2);
+					T213f6(GE_void(l3), l2);
 				}
 				l3 = l2;
 			} else {
 				l10 = EIF_FALSE;
 			}
-			l2 = (((T214*)(GE_void(l2)))->a3);
+			l2 = (((T213*)(GE_void(l2)))->a3);
 		}
-		t5 = (((T214*)(GE_void(l1)))->a2);
+		t5 = (((T213*)(GE_void(l1)))->a2);
 		t3 = ((t5)!=(EIF_VOID));
 		if (!(t3)) {
-			t5 = (((T214*)(GE_void(l1)))->a2);
+			t5 = (((T213*)(GE_void(l1)))->a2);
 			t3 = ((l3)!=(t5));
 		}
 		if (t3) {
-			T214f8(GE_void(l1));
-			T214f7(GE_void(l3));
+			T213f8(GE_void(l1));
+			T213f7(GE_void(l3));
 		}
-		T214f7(GE_void(l4));
+		T213f7(GE_void(l4));
 		l7 = ((T6)((l7)+((T6)(GE_int32(1)))));
 		while (1) {
 			t3 = (T6f1((&l7), l8));
 			if (!(t3)) {
-				t4 = (T159f4(GE_void(l12), l7));
+				t4 = (T160f4(GE_void(l12), l7));
 				t3 = ((T1)(!(t4)));
 			}
 			if (t3) {
@@ -12989,28 +13033,28 @@ void T94f12(T0* C, T0* a1)
 }
 
 /* DS_BILINKABLE [INTEGER_32].forget_right */
-void T214f7(T0* C)
+void T213f7(T0* C)
 {
-	((T214*)(C))->a3 = EIF_VOID;
+	((T213*)(C))->a3 = EIF_VOID;
 }
 
 /* DS_BILINKABLE [INTEGER_32].forget_left */
-void T214f8(T0* C)
+void T213f8(T0* C)
 {
-	((T214*)(C))->a2 = EIF_VOID;
+	((T213*)(C))->a2 = EIF_VOID;
 }
 
 /* DS_BILINKABLE [INTEGER_32].put_right */
-void T214f6(T0* C, T0* a1)
+void T213f6(T0* C, T0* a1)
 {
-	((T214*)(C))->a3 = a1;
-	T214f11(GE_void(a1), C);
+	((T213*)(C))->a3 = a1;
+	T213f11(GE_void(a1), C);
 }
 
 /* DS_BILINKABLE [INTEGER_32].attach_left */
-void T214f11(T0* C, T0* a1)
+void T213f11(T0* C, T0* a1)
 {
-	((T214*)(C))->a2 = a1;
+	((T213*)(C))->a2 = a1;
 }
 
 /* LX_SYMBOL_CLASS.item */
@@ -13022,43 +13066,43 @@ T6 T90f14(T0* C, T6 a1)
 }
 
 /* LX_TEMPLATE_LIST.put_last */
-void T147f14(T0* C, T0* a1)
+void T148f14(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* l1 = 0;
-	t1 = (T147f8(C));
+	t1 = (T148f7(C));
 	if (t1) {
-		((T147*)(C))->a5 = T231c3(a1);
-		((T147*)(C))->a2 = ((T147*)(C))->a5;
-		((T147*)(C))->a1 = (T6)(GE_int32(1));
+		((T148*)(C))->a4 = T229c3(a1);
+		((T148*)(C))->a2 = ((T148*)(C))->a4;
+		((T148*)(C))->a1 = (T6)(GE_int32(1));
 	} else {
-		l1 = ((T147*)(C))->a2;
-		((T147*)(C))->a2 = T231c3(a1);
-		T231f4(GE_void(l1), ((T147*)(C))->a2);
-		((T147*)(C))->a1 = ((T6)((((T147*)(C))->a1)+((T6)(GE_int32(1)))));
+		l1 = ((T148*)(C))->a2;
+		((T148*)(C))->a2 = T229c3(a1);
+		T229f4(GE_void(l1), ((T148*)(C))->a2);
+		((T148*)(C))->a1 = ((T6)((((T148*)(C))->a1)+((T6)(GE_int32(1)))));
 	}
 }
 
 /* DS_LINKABLE [LX_TRANSITION_TABLE [LX_DFA_STATE]].put_right */
-void T231f4(T0* C, T0* a1)
+void T229f4(T0* C, T0* a1)
 {
-	((T231*)(C))->a2 = a1;
+	((T229*)(C))->a2 = a1;
 }
 
 /* DS_LINKABLE [LX_TRANSITION_TABLE [LX_DFA_STATE]].make */
-T0* T231c3(T0* a1)
+T0* T229c3(T0* a1)
 {
 	T0* C;
-	C = GE_new231(EIF_TRUE);
-	((T231*)(C))->a1 = a1;
+	C = GE_new229(EIF_TRUE);
+	((T229*)(C))->a1 = a1;
 	return C;
 }
 
 /* LX_TEMPLATE_LIST.is_empty */
-T1 T147f8(T0* C)
+T1 T148f7(T0* C)
 {
 	T1 R = 0;
-	R = (((((((T147*)(C))->a1) == ((T6)(GE_int32(0)))))));
+	R = (((((((T148*)(C))->a1) == ((T6)(GE_int32(0)))))));
 	return R;
 }
 
@@ -13067,24 +13111,24 @@ void T90f20(T0* C, T6 a1)
 {
 	T1 t1;
 	T6 t2;
-	t1 = (T90f12(C, a1));
+	t1 = (T90f10(C, a1));
 	t1 = ((T1)(!(t1)));
 	if (t1) {
-		t1 = (T90f16(C));
+		t1 = (T90f12(C));
 		t1 = ((T1)(!(t1)));
 		if (t1) {
-			t2 = (T90f9(C));
+			t2 = (T90f16(C));
 			t1 = (T6f1(&t2, a1));
 		}
 		if (t1) {
-			((T90*)(C))->a6 = EIF_TRUE;
+			((T90*)(C))->a5 = EIF_TRUE;
 		}
-		T90f21(C, a1);
+		T90f22(C, a1);
 	}
 }
 
 /* LX_SYMBOL_CLASS.force_last */
-void T90f21(T0* C, T6 a1)
+void T90f22(T0* C, T6 a1)
 {
 	T1 t1;
 	T6 t2;
@@ -13093,14 +13137,14 @@ void T90f21(T0* C, T6 a1)
 	if (t1) {
 		t2 = ((T6)((((T90*)(C))->a7)+((T6)(GE_int32(1)))));
 		t2 = (T90f13(C, t2));
-		T90f22(C, t2);
+		T90f23(C, t2);
 	}
 	((T90*)(C))->a7 = ((T6)((((T90*)(C))->a7)+((T6)(GE_int32(1)))));
 	((T83*)(GE_void(((T90*)(C))->a2)))->z2[((T90*)(C))->a7] = (a1);
 }
 
 /* LX_SYMBOL_CLASS.resize */
-void T90f22(T0* C, T6 a1)
+void T90f23(T0* C, T6 a1)
 {
 	T6 t1;
 	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
@@ -13114,12 +13158,34 @@ T0* T84f2(T0* C, T0* a1, T6 a2)
 	T6 t1;
 	T1 t2;
 	T0* R = 0;
-	t1 = (((T83*)(GE_void(a1)))->z1);
+	T6 l1 = 0;
+	t1 = (((T83*)(GE_void(a1)))->a1);
 	t2 = (T6f1(&a2, t1));
 	if (t2) {
-		R = (T83f3(GE_void(a1), a2));
+		R = (T83f4(GE_void(a1), l1, a2));
 	} else {
 		R = a1;
+	}
+	return R;
+}
+
+/* SPECIAL [INTEGER_32].aliased_resized_area_with_default */
+T0* T83f4(T0* C, T6 a1, T6 a2)
+{
+	T1 t1;
+	T0* R = 0;
+	T6 l1 = 0;
+	T6 l2 = 0;
+	l2 = ((T83*)(C))->a1;
+	R = (T83f5(C, a2));
+	l1 = l2;
+	while (1) {
+		t1 = (((((l1) == (a2)))));
+		if (t1) {
+			break;
+		}
+		((T83*)(GE_void(R)))->z2[l1] = (a1);
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
 	return R;
 }
@@ -13146,7 +13212,7 @@ T1 T90f11(T0* C, T6 a1)
 }
 
 /* LX_SYMBOL_CLASS.last */
-T6 T90f9(T0* C)
+T6 T90f16(T0* C)
 {
 	T6 R = 0;
 	R = (((T83*)(GE_void(((T90*)(C))->a2)))->z2[((T90*)(C))->a7]);
@@ -13154,7 +13220,7 @@ T6 T90f9(T0* C)
 }
 
 /* LX_SYMBOL_CLASS.is_empty */
-T1 T90f16(T0* C)
+T1 T90f12(T0* C)
 {
 	T1 R = 0;
 	R = (((((((T90*)(C))->a7) == ((T6)(GE_int32(0)))))));
@@ -13162,25 +13228,25 @@ T1 T90f16(T0* C)
 }
 
 /* LX_SYMBOL_CLASS.has */
-T1 T90f12(T0* C, T6 a1)
+T1 T90f10(T0* C, T6 a1)
 {
 	T1 t1;
 	T6 t2;
 	T1 R = 0;
 	T6 l1 = 0;
 	T1 l2 = 0;
-	if (((T90*)(C))->a6) {
+	if (((T90*)(C))->a5) {
 		R = (T90f15(C, a1));
 	} else {
-		t1 = (T90f16(C));
+		t1 = (T90f12(C));
 		t1 = ((T1)(!(t1)));
 		if (t1) {
-			t2 = (T90f9(C));
+			t2 = (T90f16(C));
 			t1 = (((((t2) == (a1)))));
 			if (t1) {
 				R = EIF_TRUE;
 			} else {
-				t2 = (T90f9(C));
+				t2 = (T90f16(C));
 				t1 = (T6f1(&t2, a1));
 				if (t1) {
 					l1 = (T6)(GE_int32(1));
@@ -13264,17 +13330,25 @@ T0* T90c18(T6 a1)
 {
 	T0* C;
 	T6 t1;
+	T0* t2;
 	C = GE_new90(EIF_TRUE);
 	((T90*)(C))->a1 = T84c4();
 	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
 	((T90*)(C))->a2 = (T84f1(GE_void(((T90*)(C))->a1), t1));
 	((T90*)(C))->a3 = a1;
-	((T90*)(C))->a4 = (T90f10(C));
+	t2 = (T90f9(C));
+	T90f21(C, t2);
 	return C;
 }
 
+/* LX_SYMBOL_CLASS.set_internal_cursor */
+void T90f21(T0* C, T0* a1)
+{
+	((T90*)(C))->a6 = a1;
+}
+
 /* LX_SYMBOL_CLASS.new_cursor */
-T0* T90f10(T0* C)
+T0* T90f9(T0* C)
 {
 	T0* R = 0;
 	R = T207c3(C);
@@ -13282,35 +13356,35 @@ T0* T90f10(T0* C)
 }
 
 /* DS_BILINKED_LIST_CURSOR [LX_PROTO].go_after */
-void T162f13(T0* C)
+void T164f13(T0* C)
 {
-	T145f23(GE_void(((T162*)(C))->a4), C);
+	T146f24(GE_void(((T164*)(C))->a4), C);
 }
 
 /* LX_PROTO_QUEUE.cursor_go_after */
-void T145f23(T0* C, T0* a1)
+void T146f24(T0* C, T0* a1)
 {
 	T1 t1;
 	T1 l1 = 0;
-	l1 = (T145f9(C, a1));
-	T162f16(a1);
+	l1 = (T146f9(C, a1));
+	T164f16(a1);
 	t1 = ((T1)(!(l1)));
 	if (t1) {
-		T145f27(C, a1);
+		T146f28(C, a1);
 	}
 }
 
 /* LX_PROTO_QUEUE.remove_traversing_cursor */
-void T145f27(T0* C, T0* a1)
+void T146f28(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
 	T0* l1 = 0;
 	T0* l2 = 0;
-	t1 = ((a1)!=(((T145*)(C))->a3));
+	t1 = ((a1)!=(((T146*)(C))->a3));
 	if (t1) {
-		l2 = ((T145*)(C))->a3;
-		l1 = (((T162*)(GE_void(l2)))->a3);
+		l2 = ((T146*)(C))->a3;
+		l1 = (((T164*)(GE_void(l2)))->a3);
 		while (1) {
 			t1 = ((l1)==(a1));
 			if (!(t1)) {
@@ -13320,29 +13394,29 @@ void T145f27(T0* C, T0* a1)
 				break;
 			}
 			l2 = l1;
-			l1 = (((T162*)(GE_void(l1)))->a3);
+			l1 = (((T164*)(GE_void(l1)))->a3);
 		}
 		t1 = ((l1)==(a1));
 		if (t1) {
-			t2 = (((T162*)(a1))->a3);
-			T162f17(GE_void(l2), t2);
-			T162f17(a1, EIF_VOID);
+			t2 = (((T164*)(a1))->a3);
+			T164f17(GE_void(l2), t2);
+			T164f17(a1, EIF_VOID);
 		}
 	}
 }
 
 /* LX_PROTO_QUEUE.cursor_off */
-T1 T145f9(T0* C, T0* a1)
+T1 T146f9(T0* C, T0* a1)
 {
 	T0* t1;
 	T1 R = 0;
-	t1 = (((T162*)(a1))->a2);
+	t1 = (((T164*)(a1))->a2);
 	R = ((t1)==(EIF_VOID));
 	return R;
 }
 
 /* LX_TRANSITION_TABLE [LX_DFA_STATE].difference */
-T0* T157f11(T0* C, T0* a1, T0* a2)
+T0* T158f11(T0* C, T0* a1, T0* a2)
 {
 	T6 t1;
 	T6 t2;
@@ -13352,29 +13426,29 @@ T0* T157f11(T0* C, T0* a1, T0* a2)
 	T6 l1 = 0;
 	T6 l2 = 0;
 	T0* l3 = 0;
-	t1 = (T157f6(C));
-	t2 = (T157f8(C));
-	R = T157c14(t1, t2);
-	l2 = (T157f8(C));
-	l1 = (T157f6(C));
+	t1 = (T158f6(C));
+	t2 = (T158f8(C));
+	R = T158c14(t1, t2);
+	l2 = (T158f8(C));
+	l1 = (T158f6(C));
 	while (1) {
 		t3 = (T6f1((&l1), l2));
 		if (t3) {
 			break;
 		}
-		l3 = (T157f9(C, l1));
-		t4 = (T157f9(GE_void(a1), l1));
+		l3 = (T158f9(C, l1));
+		t4 = (T158f9(GE_void(a1), l1));
 		t3 = ((l3)!=(t4));
 		if (t3) {
 			t3 = ((l3)==(EIF_VOID));
 			if (!(t3)) {
-				t4 = (T133f9(GE_void(l3)));
+				t4 = (T134f13(GE_void(l3)));
 				t3 = ((l3)==(t4));
 			}
 			if (t3) {
-				T157f15(GE_void(R), a2, l1);
+				T158f15(GE_void(R), a2, l1);
 			} else {
-				T157f15(GE_void(R), l3, l1);
+				T158f15(GE_void(R), l3, l1);
 			}
 		}
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
@@ -13383,33 +13457,33 @@ T0* T157f11(T0* C, T0* a1, T0* a2)
 }
 
 /* LX_COMPRESSED_DFA.null_state */
-unsigned char ge178os4495 = '\0';
-T0* ge178ov4495;
+unsigned char ge130os4773 = '\0';
+T0* ge130ov4773;
 T0* T47f63(T0* C)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	if (ge178os4495) {
-		return ge178ov4495;
+	if (ge130os4773) {
+		return ge130ov4773;
 	} else {
-		ge178os4495 = '\1';
-		ge178ov4495 = R;
+		ge130os4773 = '\1';
+		ge130ov4773 = R;
 	}
-	l1 = T135c23((T6)(GE_int32(0)));
-	R = T133c18(l1, ((T47*)(C))->a27, ((T47*)(C))->a28);
-	ge178ov4495 = R;
-	T133f19(GE_void(R), (T6)(GE_int32(0)));
+	l1 = T136c23((T6)(GE_int32(0)));
+	R = T134c18(l1, ((T47*)(C))->a27, ((T47*)(C))->a28);
+	ge130ov4773 = R;
+	T134f19(GE_void(R), (T6)(GE_int32(0)));
 	return R;
 }
 
 /* LX_DFA_STATE.set_id */
-void T133f19(T0* C, T6 a1)
+void T134f19(T0* C, T6 a1)
 {
-	((T133*)(C))->a6 = a1;
+	((T134*)(C))->a6 = a1;
 }
 
 /* LX_DFA_STATE.make */
-T0* T133c18(T0* a1, T6 a2, T6 a3)
+T0* T134c18(T0* a1, T6 a2, T6 a3)
 {
 	T0* C;
 	T1 t1;
@@ -13420,28 +13494,28 @@ T0* T133c18(T0* a1, T6 a2, T6 a3)
 	T0* l3 = 0;
 	T0* l4 = 0;
 	T0* l5 = 0;
-	C = GE_new133(EIF_TRUE);
-	l2 = (((T135*)(GE_void(a1)))->a1);
-	((T133*)(C))->a2 = T135c23(l2);
-	((T133*)(C))->a3 = T157c14(a2, a3);
-	((T133*)(C))->a1 = T48c15(l2);
-	((T133*)(C))->a4 = T48c15(l2);
+	C = GE_new134(EIF_TRUE);
+	l2 = (((T136*)(GE_void(a1)))->a1);
+	((T134*)(C))->a2 = T136c23(l2);
+	((T134*)(C))->a3 = T158c14(a2, a3);
+	((T134*)(C))->a1 = T48c15(l2);
+	((T134*)(C))->a4 = T48c15(l2);
 	l1 = (T6)(GE_int32(1));
 	while (1) {
 		t1 = (T6f1((&l1), l2));
 		if (t1) {
 			break;
 		}
-		l3 = (T135f10(GE_void(a1), l1));
-		t2 = (((T134*)(GE_void(l3)))->a2);
+		l3 = (T136f13(GE_void(a1), l1));
+		t2 = (((T135*)(GE_void(l3)))->a2);
 		t1 = ((t2)!=(EIF_VOID));
 		if (t1) {
-			t2 = (((T134*)(GE_void(l3)))->a2);
+			t2 = (((T135*)(GE_void(l3)))->a2);
 			if ((t2)==EIF_VOID) {
 				l5 = EIF_VOID;
 			} else {
 				switch (((T0*)(t2))->id) {
-				case 209:
+				case 208:
 					l5 = t2;
 					break;
 				default:
@@ -13450,66 +13524,66 @@ T0* T133c18(T0* a1, T6 a2, T6 a3)
 			}
 			t1 = ((l5)==(EIF_VOID));
 			if (t1) {
-				T135f27(GE_void(((T133*)(C))->a2), l3);
-				t3 = (((T134*)(GE_void(l3)))->a4);
-				((T133*)(C))->a5 = ((T6)((((T133*)(C))->a5)+(t3)));
+				T136f27(GE_void(((T134*)(C))->a2), l3);
+				t3 = (((T135*)(GE_void(l3)))->a4);
+				((T134*)(C))->a5 = ((T6)((((T134*)(C))->a5)+(t3)));
 			} else {
-				l4 = (((T209*)(GE_void(l5)))->a1);
-				t1 = (T135f7(GE_void(a1), l4));
+				l4 = (((T208*)(GE_void(l5)))->a1);
+				t1 = (T136f7(GE_void(a1), l4));
 				t1 = ((T1)(!(t1)));
 				if (t1) {
-					T135f27(GE_void(a1), l4);
+					T136f27(GE_void(a1), l4);
 					l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
 				}
 			}
 		}
-		t2 = (((T134*)(GE_void(l3)))->a3);
+		t2 = (((T135*)(GE_void(l3)))->a3);
 		t1 = ((t2)!=(EIF_VOID));
 		if (t1) {
-			t2 = (((T134*)(GE_void(l3)))->a3);
-			l4 = (((T209*)(GE_void(t2)))->a1);
-			t1 = (T135f7(GE_void(a1), l4));
+			t2 = (((T135*)(GE_void(l3)))->a3);
+			l4 = (((T208*)(GE_void(t2)))->a1);
+			t1 = (T136f7(GE_void(a1), l4));
 			t1 = ((T1)(!(t1)));
 			if (t1) {
-				T135f27(GE_void(a1), l4);
+				T136f27(GE_void(a1), l4);
 				l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
 			}
 		}
-		t1 = (T134f7(GE_void(l3)));
+		t1 = (T135f7(GE_void(l3)));
 		if (t1) {
-			t1 = (T134f6(GE_void(l3)));
+			t1 = (T135f6(GE_void(l3)));
 			if (t1) {
-				t2 = (((T134*)(GE_void(l3)))->a5);
-				T48f16(GE_void(((T133*)(C))->a4), t2);
+				t2 = (((T135*)(GE_void(l3)))->a5);
+				T48f16(GE_void(((T134*)(C))->a4), t2);
 			} else {
-				t2 = (((T134*)(GE_void(l3)))->a5);
-				T48f16(GE_void(((T133*)(C))->a1), t2);
+				t2 = (((T135*)(GE_void(l3)))->a5);
+				T48f16(GE_void(((T134*)(C))->a1), t2);
 			}
-			t1 = (T135f8(GE_void(((T133*)(C))->a2)));
+			t1 = (T136f8(GE_void(((T134*)(C))->a2)));
 			if (!(t1)) {
-				t2 = (T135f9(GE_void(((T133*)(C))->a2)));
+				t2 = (T136f9(GE_void(((T134*)(C))->a2)));
 				t1 = ((t2)!=(l3));
 			}
 			if (t1) {
-				T135f27(GE_void(((T133*)(C))->a2), l3);
-				t3 = (((T134*)(GE_void(l3)))->a4);
-				((T133*)(C))->a5 = ((T6)((((T133*)(C))->a5)+(t3)));
+				T136f27(GE_void(((T134*)(C))->a2), l3);
+				t3 = (((T135*)(GE_void(l3)))->a4);
+				((T134*)(C))->a5 = ((T6)((((T134*)(C))->a5)+(t3)));
 			}
 		}
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
-	t2 = (T133f8(C));
-	T135f29(GE_void(((T133*)(C))->a2), t2);
-	t1 = (T48f13(GE_void(((T133*)(C))->a1)));
+	t2 = (T134f8(C));
+	T136f29(GE_void(((T134*)(C))->a2), t2);
+	t1 = (T48f14(GE_void(((T134*)(C))->a1)));
 	t1 = ((T1)(!(t1)));
 	if (t1) {
-		t2 = (T133f7(C));
-		T48f19(GE_void(((T133*)(C))->a1), t2);
-		t2 = (T48f14(GE_void(((T133*)(C))->a1)));
+		t2 = (T134f7(C));
+		T48f19(GE_void(((T134*)(C))->a1), t2);
+		t2 = (T48f7(GE_void(((T134*)(C))->a1)));
 		T49f24(GE_void(t2), EIF_TRUE);
 	}
-	t2 = (T133f7(C));
-	T48f19(GE_void(((T133*)(C))->a4), t2);
+	t2 = (T134f7(C));
+	T48f19(GE_void(((T134*)(C))->a4), t2);
 	return C;
 }
 
@@ -13520,51 +13594,51 @@ void T49f24(T0* C, T1 a1)
 }
 
 /* LX_DFA_STATE.rule_sorter */
-unsigned char ge136os1913 = '\0';
-T0* ge136ov1913;
-T0* T133f7(T0* C)
+unsigned char ge88os1884 = '\0';
+T0* ge88ov1884;
+T0* T134f7(T0* C)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	if (ge136os1913) {
-		return ge136ov1913;
+	if (ge88os1884) {
+		return ge88ov1884;
 	} else {
-		ge136os1913 = '\1';
-		ge136ov1913 = R;
+		ge88os1884 = '\1';
+		ge88ov1884 = R;
 	}
-	l1 = T141c2();
-	R = T139c2(l1);
-	ge136ov1913 = R;
+	l1 = T142c2();
+	R = T140c2(l1);
+	ge88ov1884 = R;
 	return R;
 }
 
 /* DS_ARRAYED_LIST [LX_NFA_STATE].sort */
-void T135f29(T0* C, T0* a1)
+void T136f29(T0* C, T0* a1)
 {
-	T218f3(GE_void(a1), C);
+	T216f3(GE_void(a1), C);
 }
 
 /* DS_BUBBLE_SORTER [LX_NFA_STATE].sort */
-void T218f3(T0* C, T0* a1)
+void T216f3(T0* C, T0* a1)
 {
-	T218f4(C, a1, ((T218*)(C))->a1);
+	T216f4(C, a1, ((T216*)(C))->a1);
 }
 
 /* DS_BUBBLE_SORTER [LX_NFA_STATE].sort_with_comparator */
-void T218f4(T0* C, T0* a1, T0* a2)
+void T216f4(T0* C, T0* a1, T0* a2)
 {
 	T1 t1;
 	T6 t2;
-	t1 = (T135f8(a1));
+	t1 = (T136f8(a1));
 	t1 = ((T1)(!(t1)));
 	if (t1) {
-		t2 = (((T135*)(a1))->a1);
-		T218f5(C, a1, a2, (T6)(GE_int32(1)), t2);
+		t2 = (((T136*)(a1))->a1);
+		T216f5(C, a1, a2, (T6)(GE_int32(1)), t2);
 	}
 }
 
 /* DS_BUBBLE_SORTER [LX_NFA_STATE].subsort_with_comparator */
-void T218f5(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
+void T216f5(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
 {
 	T1 t1;
 	T6 t2;
@@ -13585,14 +13659,14 @@ void T218f5(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
 			if (t1) {
 				break;
 			}
-			l4 = (T135f10(a1, l2));
+			l4 = (T136f13(a1, l2));
 			t2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-			l5 = (T135f10(a1, t2));
-			t1 = (T252f1(GE_void(a2), l5, l4));
+			l5 = (T136f13(a1, t2));
+			t1 = (T250f1(GE_void(a2), l5, l4));
 			if (t1) {
-				T135f26(a1, l5, l2);
+				T136f26(a1, l5, l2);
 				t2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-				T135f26(a1, l4, t2);
+				T136f26(a1, l4, t2);
 				l3 = EIF_TRUE;
 			}
 			l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
@@ -13607,78 +13681,78 @@ void T218f5(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
 }
 
 /* DS_ARRAYED_LIST [LX_NFA_STATE].replace */
-void T135f26(T0* C, T0* a1, T6 a2)
+void T136f26(T0* C, T0* a1, T6 a2)
 {
-	((T220*)(GE_void(((T135*)(C))->a2)))->z2[a2] = (a1);
+	((T218*)(GE_void(((T136*)(C))->a2)))->z2[a2] = (a1);
 }
 
 /* KL_COMPARABLE_COMPARATOR [LX_NFA_STATE].less_than */
-T1 T252f1(T0* C, T0* a1, T0* a2)
+T1 T250f1(T0* C, T0* a1, T0* a2)
 {
 	T1 R = 0;
-	R = (T134f9(GE_void(a1), a2));
+	R = (T135f11(GE_void(a1), a2));
 	return R;
 }
 
-/* LX_NFA_STATE.infix "<" */
-T1 T134f9(T0* C, T0* a1)
+/* LX_NFA_STATE.is_less */
+T1 T135f11(T0* C, T0* a1)
 {
 	T6 t1;
 	T1 R = 0;
-	t1 = (((T134*)(GE_void(a1)))->a4);
-	R = ((T1)((((T134*)(C))->a4)<(t1)));
+	t1 = (((T135*)(GE_void(a1)))->a4);
+	R = ((T1)((((T135*)(C))->a4)<(t1)));
 	return R;
 }
 
 /* LX_DFA_STATE.bubble_sorter */
-unsigned char ge136os1912 = '\0';
-T0* ge136ov1912;
-T0* T133f8(T0* C)
+unsigned char ge88os1883 = '\0';
+T0* ge88ov1883;
+T0* T134f8(T0* C)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	if (ge136os1912) {
-		return ge136ov1912;
+	if (ge88os1883) {
+		return ge88ov1883;
 	} else {
-		ge136os1912 = '\1';
-		ge136ov1912 = R;
+		ge88os1883 = '\1';
+		ge88ov1883 = R;
 	}
-	l1 = T252c2();
-	R = T218c2(l1);
-	ge136ov1912 = R;
+	l1 = T250c2();
+	R = T216c2(l1);
+	ge88ov1883 = R;
 	return R;
 }
 
 /* DS_BUBBLE_SORTER [LX_NFA_STATE].make */
-T0* T218c2(T0* a1)
+T0* T216c2(T0* a1)
 {
 	T0* C;
-	C = GE_new218(EIF_TRUE);
-	((T218*)(C))->a1 = a1;
+	C = GE_new216(EIF_TRUE);
+	((T216*)(C))->a1 = a1;
 	return C;
 }
 
 /* KL_COMPARABLE_COMPARATOR [LX_NFA_STATE].make */
-T0* T252c2(void)
+T0* T250c2(void)
 {
 	T0* C;
-	C = GE_new252(EIF_TRUE);
+	C = GE_new250(EIF_TRUE);
 	return C;
 }
 
 /* DS_ARRAYED_LIST [LX_NFA_STATE].last */
-T0* T135f9(T0* C)
+T0* T136f9(T0* C)
 {
 	T0* R = 0;
-	R = (((T220*)(GE_void(((T135*)(C))->a2)))->z2[((T135*)(C))->a1]);
+	R = (((T218*)(GE_void(((T136*)(C))->a2)))->z2[((T136*)(C))->a1]);
 	return R;
 }
 
 /* DS_ARRAYED_LIST [LX_NFA_STATE].is_empty */
-T1 T135f8(T0* C)
+T1 T136f8(T0* C)
 {
 	T1 R = 0;
-	R = (((((((T135*)(C))->a1) == ((T6)(GE_int32(0)))))));
+	R = (((((((T136*)(C))->a1) == ((T6)(GE_int32(0)))))));
 	return R;
 }
 
@@ -13692,54 +13766,76 @@ void T48f16(T0* C, T0* a1)
 	if (t1) {
 		t2 = ((T6)((((T48*)(C))->a1)+((T6)(GE_int32(1)))));
 		t2 = (T48f11(C, t2));
-		T48f20(C, t2);
+		T48f21(C, t2);
 	}
 	((T48*)(C))->a1 = ((T6)((((T48*)(C))->a1)+((T6)(GE_int32(1)))));
-	((T136*)(GE_void(((T48*)(C))->a2)))->z2[((T48*)(C))->a1] = (a1);
+	((T137*)(GE_void(((T48*)(C))->a2)))->z2[((T48*)(C))->a1] = (a1);
 }
 
 /* DS_ARRAYED_LIST [LX_RULE].resize */
-void T48f20(T0* C, T6 a1)
+void T48f21(T0* C, T6 a1)
 {
 	T6 t1;
 	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
-	((T48*)(C))->a2 = (T169f2(GE_void(((T48*)(C))->a4), ((T48*)(C))->a2, t1));
+	((T48*)(C))->a2 = (T171f2(GE_void(((T48*)(C))->a4), ((T48*)(C))->a2, t1));
 	((T48*)(C))->a5 = a1;
 }
 
 /* KL_SPECIAL_ROUTINES [LX_RULE].resize */
-T0* T169f2(T0* C, T0* a1, T6 a2)
+T0* T171f2(T0* C, T0* a1, T6 a2)
 {
 	T6 t1;
 	T1 t2;
 	T0* R = 0;
-	t1 = (((T136*)(GE_void(a1)))->z1);
+	T0* l1 = 0;
+	t1 = (((T137*)(GE_void(a1)))->a1);
 	t2 = (T6f1(&a2, t1));
 	if (t2) {
-		R = (T136f3(GE_void(a1), a2));
+		R = (T137f3(GE_void(a1), l1, a2));
 	} else {
 		R = a1;
 	}
 	return R;
 }
 
+/* SPECIAL [LX_RULE].aliased_resized_area_with_default */
+T0* T137f3(T0* C, T0* a1, T6 a2)
+{
+	T1 t1;
+	T0* R = 0;
+	T6 l1 = 0;
+	T6 l2 = 0;
+	l2 = ((T137*)(C))->a1;
+	R = (T137f4(C, a2));
+	l1 = l2;
+	while (1) {
+		t1 = (((((l1) == (a2)))));
+		if (t1) {
+			break;
+		}
+		((T137*)(GE_void(R)))->z2[l1] = (a1);
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
+	return R;
+}
+
 /* SPECIAL [LX_RULE].aliased_resized_area */
-T0* T136f3(T0* C, T6 a1)
+T0* T137f4(T0* C, T6 a1)
 {
 	T0* R = 0;
 	T6 t1;
-	t1 = ((T136*)(C))->z1;
+	t1 = ((T137*)(C))->a1;
 	if (a1>t1) {
-		R = GE_new136(a1, EIF_FALSE);
-		*(T136*)(R) = *(T136*)(C);
-		memcpy(((T136*)(R))->z2,((T136*)(C))->z2,t1*sizeof(T0*));
+		R = GE_new137(a1, EIF_FALSE);
+		*(T137*)(R) = *(T137*)(C);
+		memcpy(((T137*)(R))->z2,((T137*)(C))->z2,t1*sizeof(T0*));
 #ifndef GE_alloc_cleared
-		memset(((T136*)(R))->z2+t1,0,(a1-t1)*sizeof(T0*));
+		memset(((T137*)(R))->z2+t1,0,(a1-t1)*sizeof(T0*));
 #endif
 	} else {
 		R = C;
 	}
-	((T136*)(R))->z1 = a1;
+	((T137*)(R))->a1 = a1;
 	return R;
 }
 
@@ -13765,16 +13861,16 @@ T1 T48f10(T0* C, T6 a1)
 }
 
 /* LX_NFA_STATE.is_accepting_head */
-T1 T134f6(T0* C)
+T1 T135f6(T0* C)
 {
 	T1 t1;
 	T1 R = 0;
-	t1 = (T134f7(C));
+	t1 = (T135f7(C));
 	if (t1) {
-		t1 = ((T1)(!(((T134*)(C))->a1)));
+		t1 = ((T1)(!(((T135*)(C))->a1)));
 	}
 	if (t1) {
-		R = (T134f10(C));
+		R = (T135f9(C));
 	} else {
 		R = EIF_FALSE;
 	}
@@ -13782,13 +13878,13 @@ T1 T134f6(T0* C)
 }
 
 /* LX_NFA_STATE.has_transition */
-T1 T134f10(T0* C)
+T1 T135f9(T0* C)
 {
 	T1 t1;
 	T1 R = 0;
-	t1 = ((((T134*)(C))->a2)!=(EIF_VOID));
+	t1 = ((((T135*)(C))->a2)!=(EIF_VOID));
 	if (!(t1)) {
-		R = ((((T134*)(C))->a3)!=(EIF_VOID));
+		R = ((((T135*)(C))->a3)!=(EIF_VOID));
 	} else {
 		R = EIF_TRUE;
 	}
@@ -13796,76 +13892,98 @@ T1 T134f10(T0* C)
 }
 
 /* LX_NFA_STATE.is_accepting */
-T1 T134f7(T0* C)
+T1 T135f7(T0* C)
 {
 	T1 R = 0;
-	R = ((((T134*)(C))->a5)!=(EIF_VOID));
+	R = ((((T135*)(C))->a5)!=(EIF_VOID));
 	return R;
 }
 
 /* DS_ARRAYED_LIST [LX_NFA_STATE].force_last */
-void T135f27(T0* C, T0* a1)
+void T136f27(T0* C, T0* a1)
 {
 	T1 t1;
 	T6 t2;
-	t1 = (T135f12(C, (T6)(GE_int32(1))));
+	t1 = (T136f11(C, (T6)(GE_int32(1))));
 	t1 = ((T1)(!(t1)));
 	if (t1) {
-		t2 = ((T6)((((T135*)(C))->a1)+((T6)(GE_int32(1)))));
-		t2 = (T135f13(C, t2));
-		T135f31(C, t2);
+		t2 = ((T6)((((T136*)(C))->a1)+((T6)(GE_int32(1)))));
+		t2 = (T136f12(C, t2));
+		T136f32(C, t2);
 	}
-	((T135*)(C))->a1 = ((T6)((((T135*)(C))->a1)+((T6)(GE_int32(1)))));
-	((T220*)(GE_void(((T135*)(C))->a2)))->z2[((T135*)(C))->a1] = (a1);
+	((T136*)(C))->a1 = ((T6)((((T136*)(C))->a1)+((T6)(GE_int32(1)))));
+	((T218*)(GE_void(((T136*)(C))->a2)))->z2[((T136*)(C))->a1] = (a1);
 }
 
 /* DS_ARRAYED_LIST [LX_NFA_STATE].resize */
-void T135f31(T0* C, T6 a1)
+void T136f32(T0* C, T6 a1)
 {
 	T6 t1;
 	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
-	((T135*)(C))->a2 = (T221f2(GE_void(((T135*)(C))->a4), ((T135*)(C))->a2, t1));
-	((T135*)(C))->a5 = a1;
+	((T136*)(C))->a2 = (T219f2(GE_void(((T136*)(C))->a4), ((T136*)(C))->a2, t1));
+	((T136*)(C))->a5 = a1;
 }
 
 /* KL_SPECIAL_ROUTINES [LX_NFA_STATE].resize */
-T0* T221f2(T0* C, T0* a1, T6 a2)
+T0* T219f2(T0* C, T0* a1, T6 a2)
 {
 	T6 t1;
 	T1 t2;
 	T0* R = 0;
-	t1 = (((T220*)(GE_void(a1)))->z1);
+	T0* l1 = 0;
+	t1 = (((T218*)(GE_void(a1)))->a1);
 	t2 = (T6f1(&a2, t1));
 	if (t2) {
-		R = (T220f3(GE_void(a1), a2));
+		R = (T218f3(GE_void(a1), l1, a2));
 	} else {
 		R = a1;
 	}
 	return R;
 }
 
+/* SPECIAL [LX_NFA_STATE].aliased_resized_area_with_default */
+T0* T218f3(T0* C, T0* a1, T6 a2)
+{
+	T1 t1;
+	T0* R = 0;
+	T6 l1 = 0;
+	T6 l2 = 0;
+	l2 = ((T218*)(C))->a1;
+	R = (T218f4(C, a2));
+	l1 = l2;
+	while (1) {
+		t1 = (((((l1) == (a2)))));
+		if (t1) {
+			break;
+		}
+		((T218*)(GE_void(R)))->z2[l1] = (a1);
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
+	return R;
+}
+
 /* SPECIAL [LX_NFA_STATE].aliased_resized_area */
-T0* T220f3(T0* C, T6 a1)
+T0* T218f4(T0* C, T6 a1)
 {
 	T0* R = 0;
 	T6 t1;
-	t1 = ((T220*)(C))->z1;
+	t1 = ((T218*)(C))->a1;
 	if (a1>t1) {
-		R = GE_new220(a1, EIF_FALSE);
-		*(T220*)(R) = *(T220*)(C);
-		memcpy(((T220*)(R))->z2,((T220*)(C))->z2,t1*sizeof(T0*));
+		R = GE_new218(a1, EIF_FALSE);
+		*(T218*)(R) = *(T218*)(C);
+		memcpy(((T218*)(R))->z2,((T218*)(C))->z2,t1*sizeof(T0*));
 #ifndef GE_alloc_cleared
-		memset(((T220*)(R))->z2+t1,0,(a1-t1)*sizeof(T0*));
+		memset(((T218*)(R))->z2+t1,0,(a1-t1)*sizeof(T0*));
 #endif
 	} else {
 		R = C;
 	}
-	((T220*)(R))->z1 = a1;
+	((T218*)(R))->a1 = a1;
 	return R;
 }
 
 /* DS_ARRAYED_LIST [LX_NFA_STATE].new_capacity */
-T6 T135f13(T0* C, T6 a1)
+T6 T136f12(T0* C, T6 a1)
 {
 	T6 t1;
 	T6 R = 0;
@@ -13876,275 +13994,300 @@ T6 T135f13(T0* C, T6 a1)
 }
 
 /* DS_ARRAYED_LIST [LX_NFA_STATE].extendible */
-T1 T135f12(T0* C, T6 a1)
+T1 T136f11(T0* C, T6 a1)
 {
 	T6 t1;
 	T1 R = 0;
-	t1 = ((T6)((((T135*)(C))->a1)+(a1)));
-	R = (T6f5(&(((T135*)(C))->a5), t1));
+	t1 = ((T6)((((T136*)(C))->a1)+(a1)));
+	R = (T6f5(&(((T136*)(C))->a5), t1));
 	return R;
 }
 
 /* DS_ARRAYED_LIST [LX_NFA_STATE].make */
-T0* T135c23(T6 a1)
+T0* T136c23(T6 a1)
 {
 	T0* C;
 	T6 t1;
-	C = GE_new135(EIF_TRUE);
-	((T135*)(C))->a4 = T221c3();
+	T0* t2;
+	C = GE_new136(EIF_TRUE);
+	((T136*)(C))->a4 = T219c3();
 	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
-	((T135*)(C))->a2 = (T221f1(GE_void(((T135*)(C))->a4), t1));
-	((T135*)(C))->a5 = a1;
-	((T135*)(C))->a6 = (T135f11(C));
+	((T136*)(C))->a2 = (T219f1(GE_void(((T136*)(C))->a4), t1));
+	((T136*)(C))->a5 = a1;
+	t2 = (T136f10(C));
+	T136f30(C, t2);
 	return C;
 }
 
+/* DS_ARRAYED_LIST [LX_NFA_STATE].set_internal_cursor */
+void T136f30(T0* C, T0* a1)
+{
+	((T136*)(C))->a6 = a1;
+}
+
 /* DS_ARRAYED_LIST [LX_NFA_STATE].new_cursor */
-T0* T135f11(T0* C)
+T0* T136f10(T0* C)
 {
 	T0* R = 0;
-	R = T222c7(C);
+	R = T220c7(C);
 	return R;
 }
 
 /* DS_ARRAYED_LIST_CURSOR [LX_NFA_STATE].make */
-T0* T222c7(T0* a1)
+T0* T220c7(T0* a1)
 {
 	T0* C;
-	C = GE_new222(EIF_TRUE);
-	((T222*)(C))->a3 = a1;
-	((T222*)(C))->a1 = (T6)(GE_int32(0));
+	C = GE_new220(EIF_TRUE);
+	((T220*)(C))->a3 = a1;
+	((T220*)(C))->a1 = (T6)(GE_int32(0));
 	return C;
 }
 
 /* KL_SPECIAL_ROUTINES [LX_NFA_STATE].make */
-T0* T221f1(T0* C, T6 a1)
+T0* T219f1(T0* C, T6 a1)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	l1 = T272c2(a1);
-	R = (((T272*)(GE_void(l1)))->a1);
+	R = T218c5(l1, a1);
 	return R;
 }
 
-/* TO_SPECIAL [LX_NFA_STATE].make_area */
-T0* T272c2(T6 a1)
+/* SPECIAL [LX_NFA_STATE].make_filled */
+T0* T218c5(T0* a1, T6 a2)
 {
 	T0* C;
-	C = GE_new272(EIF_TRUE);
-	((T272*)(C))->a1 = T220c4(a1);
+	T6 t1;
+	C = GE_new218(a2, EIF_TRUE);
+	T218f7(C, a2);
+	t1 = ((T6)((a2)-((T6)(GE_int32(1)))));
+	T218f8(C, a1, (T6)(GE_int32(0)), t1);
 	return C;
+}
+
+/* SPECIAL [LX_NFA_STATE].fill_with */
+void T218f8(T0* C, T0* a1, T6 a2, T6 a3)
+{
+	T1 t1;
+	T6 l1 = 0;
+	T6 l2 = 0;
+	l1 = a2;
+	l2 = ((T6)((a3)+((T6)(GE_int32(1)))));
+	while (1) {
+		t1 = (((((l1) == (l2)))));
+		if (t1) {
+			break;
+		}
+		((T218*)(C))->z2[l1] = (a1);
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
 }
 
 /* SPECIAL [LX_NFA_STATE].make */
-T0* T220c4(T6 a1)
+void T218f7(T0* C, T6 a1)
 {
-	T0* C;
-	C = GE_new220(a1, EIF_TRUE);
-	return C;
 }
 
 /* KL_SPECIAL_ROUTINES [LX_NFA_STATE].default_create */
-T0* T221c3(void)
+T0* T219c3(void)
 {
 	T0* C;
-	C = GE_new221(EIF_TRUE);
+	C = GE_new219(EIF_TRUE);
 	return C;
 }
 
 /* DS_BILINKED_LIST_CURSOR [LX_PROTO].go_to */
-void T162f12(T0* C, T0* a1)
+void T164f12(T0* C, T0* a1)
 {
-	T145f22(GE_void(((T162*)(C))->a4), C, a1);
+	T146f23(GE_void(((T164*)(C))->a4), C, a1);
 }
 
 /* LX_PROTO_QUEUE.cursor_go_to */
-void T145f22(T0* C, T0* a1, T0* a2)
+void T146f23(T0* C, T0* a1, T0* a2)
 {
 	T0* t1;
 	T1 t2;
 	T1 t3;
 	T1 l1 = 0;
-	l1 = (T145f9(C, a1));
-	t1 = (((T162*)(GE_void(a2)))->a2);
-	t2 = (((T162*)(GE_void(a2)))->a5);
-	t3 = (((T162*)(GE_void(a2)))->a1);
-	T162f18(a1, t1, t2, t3);
-	t2 = (T162f7(a1));
+	l1 = (T146f9(C, a1));
+	t1 = (((T164*)(GE_void(a2)))->a2);
+	t2 = (((T164*)(GE_void(a2)))->a5);
+	t3 = (((T164*)(GE_void(a2)))->a1);
+	T164f18(a1, t1, t2, t3);
+	t2 = (T164f7(a1));
 	t2 = ((T1)(!(t2)));
 	if (t2) {
 		if (l1) {
-			T145f26(C, a1);
+			T146f27(C, a1);
 		}
 	} else {
 		t2 = ((T1)(!(l1)));
 		if (t2) {
-			T145f27(C, a1);
+			T146f28(C, a1);
 		}
 	}
 }
 
 /* LX_PROTO_QUEUE.add_traversing_cursor */
-void T145f26(T0* C, T0* a1)
+void T146f27(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
-	t1 = ((a1)!=(((T145*)(C))->a3));
+	t1 = ((a1)!=(((T146*)(C))->a3));
 	if (t1) {
-		t2 = (((T162*)(GE_void(((T145*)(C))->a3)))->a3);
-		T162f17(a1, t2);
-		T162f17(GE_void(((T145*)(C))->a3), a1);
+		t2 = (((T164*)(GE_void(((T146*)(C))->a3)))->a3);
+		T164f17(a1, t2);
+		T164f17(GE_void(((T146*)(C))->a3), a1);
 	}
 }
 
 /* DS_BILINKED_LIST_CURSOR [LX_PROTO].off */
-T1 T162f7(T0* C)
+T1 T164f7(T0* C)
 {
 	T1 R = 0;
-	R = ((((T162*)(C))->a2)==(EIF_VOID));
+	R = ((((T164*)(C))->a2)==(EIF_VOID));
 	return R;
 }
 
 /* DS_BILINKED_LIST_CURSOR [LX_PROTO].set */
-void T162f18(T0* C, T0* a1, T1 a2, T1 a3)
+void T164f18(T0* C, T0* a1, T1 a2, T1 a3)
 {
-	((T162*)(C))->a2 = a1;
-	((T162*)(C))->a5 = a2;
-	((T162*)(C))->a1 = a3;
+	((T164*)(C))->a2 = a1;
+	((T164*)(C))->a5 = a2;
+	((T164*)(C))->a1 = a3;
 }
 
 /* DS_BILINKED_LIST_CURSOR [LX_PROTO].forth */
-void T162f14(T0* C)
+void T164f14(T0* C)
 {
-	T145f24(GE_void(((T162*)(C))->a4), C);
+	T146f25(GE_void(((T164*)(C))->a4), C);
 }
 
 /* LX_PROTO_QUEUE.cursor_forth */
-void T145f24(T0* C, T0* a1)
+void T146f25(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
 	T1 l1 = 0;
 	T1 l2 = 0;
 	T0* l3 = 0;
-	t1 = (((T162*)(a1))->a5);
+	t1 = (((T164*)(a1))->a5);
 	if (t1) {
 		l1 = EIF_TRUE;
-		l3 = ((T145*)(C))->a2;
+		l3 = ((T146*)(C))->a2;
 	} else {
-		t2 = (((T162*)(a1))->a2);
-		l3 = (((T227*)(GE_void(t2)))->a3);
+		t2 = (((T164*)(a1))->a2);
+		l3 = (((T225*)(GE_void(t2)))->a3);
 	}
 	l2 = ((l3)==(EIF_VOID));
-	T162f18(a1, l3, EIF_FALSE, l2);
+	T164f18(a1, l3, EIF_FALSE, l2);
 	if (l2) {
 		t1 = ((T1)(!(l1)));
 		if (t1) {
-			T145f27(C, a1);
+			T146f28(C, a1);
 		}
 	} else {
 		if (l1) {
-			T145f26(C, a1);
+			T146f27(C, a1);
 		}
 	}
 }
 
 /* DS_BILINKED_LIST_CURSOR [LX_PROTO].item */
-T0* T162f6(T0* C)
+T0* T164f6(T0* C)
 {
 	T0* R = 0;
-	R = (((T227*)(GE_void(((T162*)(C))->a2)))->a1);
+	R = (((T225*)(GE_void(((T164*)(C))->a2)))->a1);
 	return R;
 }
 
 /* DS_BILINKED_LIST_CURSOR [LX_PROTO].start */
-void T162f11(T0* C)
+void T164f11(T0* C)
 {
-	T145f21(GE_void(((T162*)(C))->a4), C);
+	T146f22(GE_void(((T164*)(C))->a4), C);
 }
 
 /* LX_PROTO_QUEUE.cursor_start */
-void T145f21(T0* C, T0* a1)
+void T146f22(T0* C, T0* a1)
 {
 	T1 t1;
 	T1 l1 = 0;
 	T1 l2 = 0;
-	l1 = (T145f9(C, a1));
-	l2 = ((((T145*)(C))->a2)==(EIF_VOID));
-	T162f18(a1, ((T145*)(C))->a2, EIF_FALSE, l2);
+	l1 = (T146f9(C, a1));
+	l2 = ((((T146*)(C))->a2)==(EIF_VOID));
+	T164f18(a1, ((T146*)(C))->a2, EIF_FALSE, l2);
 	t1 = ((T1)(!(l2)));
 	if (t1) {
 		t1 = (l1);
 	}
 	if (t1) {
-		T145f26(C, a1);
+		T146f27(C, a1);
 	}
 }
 
 /* LX_PROTO_QUEUE.first */
-T0* T145f6(T0* C)
+T0* T146f7(T0* C)
 {
 	T0* R = 0;
-	R = (((T227*)(GE_void(((T145*)(C))->a2)))->a1);
+	R = (((T225*)(GE_void(((T146*)(C))->a2)))->a1);
 	return R;
 }
 
 /* LX_PROTO_QUEUE.is_empty */
-T1 T145f5(T0* C)
+T1 T146f5(T0* C)
 {
 	T1 R = 0;
-	R = (((((((T145*)(C))->a1) == ((T6)(GE_int32(0)))))));
+	R = (((((((T146*)(C))->a1) == ((T6)(GE_int32(0)))))));
 	return R;
 }
 
 /* LX_PROTO_QUEUE.new_cursor */
-T0* T145f8(T0* C)
+T0* T146f8(T0* C)
 {
 	T0* R = 0;
-	R = T162c10(C);
+	R = T164c10(C);
 	return R;
 }
 
 /* DS_BILINKED_LIST_CURSOR [LX_PROTO].make */
-T0* T162c10(T0* a1)
+T0* T164c10(T0* a1)
 {
 	T0* C;
-	C = GE_new162(EIF_TRUE);
-	((T162*)(C))->a4 = a1;
-	((T162*)(C))->a5 = EIF_TRUE;
+	C = GE_new164(EIF_TRUE);
+	((T164*)(C))->a4 = a1;
+	((T164*)(C))->a5 = EIF_TRUE;
 	return C;
 }
 
 /* DS_ARRAYED_LIST_CURSOR [LX_DFA_STATE].go_after */
-void T160f10(T0* C)
+void T162f10(T0* C)
 {
-	T138f20(GE_void(((T160*)(C))->a1), C);
+	T139f21(GE_void(((T162*)(C))->a1), C);
 }
 
 /* DS_ARRAYED_LIST [LX_DFA_STATE].cursor_go_after */
-void T138f20(T0* C, T0* a1)
+void T139f21(T0* C, T0* a1)
 {
 	T1 t1;
 	T1 l1 = 0;
-	l1 = (T160f5(a1));
-	T160f11(a1, (T6)(GE_int32(-1)));
+	l1 = (T162f5(a1));
+	T162f11(a1, (T6)(GE_int32(-1)));
 	t1 = ((T1)(!(l1)));
 	if (t1) {
-		T138f22(C, a1);
+		T139f23(C, a1);
 	}
 }
 
 /* DS_ARRAYED_LIST [LX_DFA_STATE].remove_traversing_cursor */
-void T138f22(T0* C, T0* a1)
+void T139f23(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
 	T0* l1 = 0;
 	T0* l2 = 0;
-	t1 = ((a1)!=(((T138*)(C))->a5));
+	t1 = ((a1)!=(((T139*)(C))->a5));
 	if (t1) {
-		l2 = ((T138*)(C))->a5;
-		l1 = (((T160*)(GE_void(l2)))->a3);
+		l2 = ((T139*)(C))->a5;
+		l1 = (((T162*)(GE_void(l2)))->a3);
 		while (1) {
 			t1 = ((l1)==(a1));
 			if (!(t1)) {
@@ -14154,45 +14297,45 @@ void T138f22(T0* C, T0* a1)
 				break;
 			}
 			l2 = l1;
-			l1 = (((T160*)(GE_void(l1)))->a3);
+			l1 = (((T162*)(GE_void(l1)))->a3);
 		}
 		t1 = ((l1)==(a1));
 		if (t1) {
-			t2 = (((T160*)(a1))->a3);
-			T160f12(GE_void(l2), t2);
-			T160f12(a1, EIF_VOID);
+			t2 = (((T162*)(a1))->a3);
+			T162f12(GE_void(l2), t2);
+			T162f12(a1, EIF_VOID);
 		}
 	}
 }
 
 /* DS_ARRAYED_LIST_CURSOR [LX_DFA_STATE].set_next_cursor */
-void T160f12(T0* C, T0* a1)
+void T162f12(T0* C, T0* a1)
 {
-	((T160*)(C))->a3 = a1;
+	((T162*)(C))->a3 = a1;
 }
 
 /* DS_ARRAYED_LIST_CURSOR [LX_DFA_STATE].set_position */
-void T160f11(T0* C, T6 a1)
+void T162f11(T0* C, T6 a1)
 {
-	((T160*)(C))->a2 = a1;
+	((T162*)(C))->a2 = a1;
 }
 
 /* DS_ARRAYED_LIST_CURSOR [LX_DFA_STATE].off */
-T1 T160f5(T0* C)
+T1 T162f5(T0* C)
 {
 	T1 R = 0;
-	R = (T138f13(GE_void(((T160*)(C))->a1), C));
+	R = (T139f13(GE_void(((T162*)(C))->a1), C));
 	return R;
 }
 
 /* DS_ARRAYED_LIST [LX_DFA_STATE].cursor_off */
-T1 T138f13(T0* C, T0* a1)
+T1 T139f13(T0* C, T0* a1)
 {
 	T1 t1;
 	T1 R = 0;
-	t1 = (T138f8(C, a1));
+	t1 = (T139f8(C, a1));
 	if (!(t1)) {
-		R = (T138f14(C, a1));
+		R = (T139f14(C, a1));
 	} else {
 		R = EIF_TRUE;
 	}
@@ -14200,69 +14343,69 @@ T1 T138f13(T0* C, T0* a1)
 }
 
 /* DS_ARRAYED_LIST [LX_DFA_STATE].cursor_before */
-T1 T138f14(T0* C, T0* a1)
+T1 T139f14(T0* C, T0* a1)
 {
 	T6 t1;
 	T1 R = 0;
-	t1 = (((T160*)(a1))->a2);
+	t1 = (((T162*)(a1))->a2);
 	R = (((((t1) == ((T6)(GE_int32(0)))))));
 	return R;
 }
 
 /* DS_ARRAYED_LIST [LX_DFA_STATE].cursor_after */
-T1 T138f8(T0* C, T0* a1)
+T1 T139f8(T0* C, T0* a1)
 {
 	T6 t1;
 	T1 R = 0;
-	t1 = (((T160*)(a1))->a2);
+	t1 = (((T162*)(a1))->a2);
 	R = (((((t1) == ((T6)(GE_int32(-1)))))));
 	return R;
 }
 
 /* DS_ARRAYED_LIST [LX_DFA_STATE].put_last */
-void T138f16(T0* C, T0* a1)
+void T139f16(T0* C, T0* a1)
 {
-	((T138*)(C))->a1 = ((T6)((((T138*)(C))->a1)+((T6)(GE_int32(1)))));
-	((T224*)(GE_void(((T138*)(C))->a3)))->z2[((T138*)(C))->a1] = (a1);
+	((T139*)(C))->a1 = ((T6)((((T139*)(C))->a1)+((T6)(GE_int32(1)))));
+	((T222*)(GE_void(((T139*)(C))->a3)))->z2[((T139*)(C))->a1] = (a1);
 }
 
 /* DS_ARRAYED_LIST_CURSOR [LX_DFA_STATE].index */
-T6 T160f4(T0* C)
+T6 T162f4(T0* C)
 {
 	T6 R = 0;
-	R = (T138f9(GE_void(((T160*)(C))->a1), C));
+	R = (T139f9(GE_void(((T162*)(C))->a1), C));
 	return R;
 }
 
 /* DS_ARRAYED_LIST [LX_DFA_STATE].cursor_index */
-T6 T138f9(T0* C, T0* a1)
+T6 T139f9(T0* C, T0* a1)
 {
 	T1 t1;
 	T6 R = 0;
-	R = (((T160*)(a1))->a2);
+	R = (((T162*)(a1))->a2);
 	t1 = (((((R) == ((T6)(GE_int32(-1)))))));
 	if (t1) {
-		R = ((T6)((((T138*)(C))->a1)+((T6)(GE_int32(1)))));
+		R = ((T6)((((T139*)(C))->a1)+((T6)(GE_int32(1)))));
 	}
 	return R;
 }
 
 /* DS_ARRAYED_LIST_CURSOR [LX_DFA_STATE].after */
-T1 T160f6(T0* C)
+T1 T162f6(T0* C)
 {
 	T1 R = 0;
-	R = (T138f8(GE_void(((T160*)(C))->a1), C));
+	R = (T139f8(GE_void(((T162*)(C))->a1), C));
 	return R;
 }
 
 /* DS_ARRAYED_LIST_CURSOR [LX_DFA_STATE].search_forth */
-void T160f9(T0* C, T0* a1)
+void T162f9(T0* C, T0* a1)
 {
-	T138f19(GE_void(((T160*)(C))->a1), C, a1);
+	T139f20(GE_void(((T162*)(C))->a1), C, a1);
 }
 
 /* DS_ARRAYED_LIST [LX_DFA_STATE].cursor_search_forth */
-void T138f19(T0* C, T0* a1, T0* a2)
+void T139f20(T0* C, T0* a1, T0* a2)
 {
 	T1 t1;
 	T0* t2;
@@ -14270,16 +14413,16 @@ void T138f19(T0* C, T0* a1, T0* a2)
 	T6 l2 = 0;
 	T0* l3 = 0;
 	T1 l4 = 0;
-	l4 = (T160f5(a1));
-	l1 = (T160f4(a1));
-	l2 = ((T138*)(C))->a1;
-	l3 = ((T138*)(C))->a6;
+	l4 = (T162f5(a1));
+	l1 = (T162f4(a1));
+	l2 = ((T139*)(C))->a1;
+	l3 = ((T139*)(C))->a6;
 	t1 = (EIF_FALSE);
 	if (t1) {
 		while (1) {
 			t1 = (T6f1((&l1), l2));
 			if (!(t1)) {
-				t2 = (T138f7(C, l1));
+				t2 = (T139f7(C, l1));
 				t1 = ((GE_void(l3), t2, a2, (T1)0));
 			}
 			if (t1) {
@@ -14291,7 +14434,7 @@ void T138f19(T0* C, T0* a1, T0* a2)
 		while (1) {
 			t1 = (T6f1((&l1), l2));
 			if (!(t1)) {
-				t2 = (T138f7(C, l1));
+				t2 = (T139f7(C, l1));
 				t1 = ((t2)==(a2));
 			}
 			if (t1) {
@@ -14302,119 +14445,117 @@ void T138f19(T0* C, T0* a1, T0* a2)
 	}
 	t1 = (T6f1((&l1), l2));
 	if (t1) {
-		T160f11(a1, (T6)(GE_int32(-1)));
+		T162f11(a1, (T6)(GE_int32(-1)));
 		t1 = ((T1)(!(l4)));
 		if (t1) {
-			T138f22(C, a1);
+			T139f23(C, a1);
 		}
 	} else {
-		T160f11(a1, l1);
+		T162f11(a1, l1);
 		if (l4) {
-			T138f21(C, a1);
+			T139f22(C, a1);
 		}
 	}
 }
 
 /* DS_ARRAYED_LIST [LX_DFA_STATE].add_traversing_cursor */
-void T138f21(T0* C, T0* a1)
+void T139f22(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
-	t1 = ((a1)!=(((T138*)(C))->a5));
+	t1 = ((a1)!=(((T139*)(C))->a5));
 	if (t1) {
-		t2 = (((T160*)(GE_void(((T138*)(C))->a5)))->a3);
-		T160f12(a1, t2);
-		T160f12(GE_void(((T138*)(C))->a5), a1);
+		t2 = (((T162*)(GE_void(((T139*)(C))->a5)))->a3);
+		T162f12(a1, t2);
+		T162f12(GE_void(((T139*)(C))->a5), a1);
 	}
 }
 
 /* DS_ARRAYED_LIST_CURSOR [LX_DFA_STATE].start */
-void T160f8(T0* C)
+void T162f8(T0* C)
 {
-	T138f18(GE_void(((T160*)(C))->a1), C);
+	T139f19(GE_void(((T162*)(C))->a1), C);
 }
 
 /* DS_ARRAYED_LIST [LX_DFA_STATE].cursor_start */
-void T138f18(T0* C, T0* a1)
+void T139f19(T0* C, T0* a1)
 {
 	T1 t1;
 	T1 l1 = 0;
-	l1 = (T160f5(a1));
-	t1 = (T138f11(C));
+	l1 = (T162f5(a1));
+	t1 = (T139f11(C));
 	if (t1) {
-		T160f11(a1, (T6)(GE_int32(-1)));
+		T162f11(a1, (T6)(GE_int32(-1)));
 	} else {
-		T160f11(a1, (T6)(GE_int32(1)));
+		T162f11(a1, (T6)(GE_int32(1)));
 		if (l1) {
-			T138f21(C, a1);
+			T139f22(C, a1);
 		}
 	}
 }
 
 /* DS_ARRAYED_LIST [LX_DFA_STATE].is_empty */
-T1 T138f11(T0* C)
+T1 T139f11(T0* C)
 {
 	T1 R = 0;
-	R = (((((((T138*)(C))->a1) == ((T6)(GE_int32(0)))))));
+	R = (((((((T139*)(C))->a1) == ((T6)(GE_int32(0)))))));
 	return R;
 }
 
 /* DS_ARRAYED_LIST [LX_DFA_STATE].new_cursor */
-T0* T138f12(T0* C)
+T0* T139f12(T0* C)
 {
 	T0* R = 0;
-	R = T160c7(C);
+	R = T162c7(C);
 	return R;
 }
 
 /* DS_ARRAYED_LIST_CURSOR [LX_DFA_STATE].make */
-T0* T160c7(T0* a1)
+T0* T162c7(T0* a1)
 {
 	T0* C;
-	C = GE_new160(EIF_TRUE);
-	((T160*)(C))->a1 = a1;
-	((T160*)(C))->a2 = (T6)(GE_int32(0));
+	C = GE_new162(EIF_TRUE);
+	((T162*)(C))->a1 = a1;
+	((T162*)(C))->a2 = (T6)(GE_int32(0));
 	return C;
 }
 
 /* DS_ARRAYED_LIST [LX_DFA_STATE].make */
-T0* T138c15(T6 a1)
+T0* T139c15(T6 a1)
 {
 	T0* C;
 	T6 t1;
-	C = GE_new138(EIF_TRUE);
-	((T138*)(C))->a4 = T225c3();
+	T0* t2;
+	C = GE_new139(EIF_TRUE);
+	((T139*)(C))->a4 = T223c3();
 	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
-	((T138*)(C))->a3 = (T225f1(GE_void(((T138*)(C))->a4), t1));
-	((T138*)(C))->a2 = a1;
-	((T138*)(C))->a5 = (T138f12(C));
+	((T139*)(C))->a3 = (T223f1(GE_void(((T139*)(C))->a4), t1));
+	((T139*)(C))->a2 = a1;
+	t2 = (T139f12(C));
+	T139f18(C, t2);
 	return C;
+}
+
+/* DS_ARRAYED_LIST [LX_DFA_STATE].set_internal_cursor */
+void T139f18(T0* C, T0* a1)
+{
+	((T139*)(C))->a5 = a1;
 }
 
 /* KL_SPECIAL_ROUTINES [LX_DFA_STATE].make */
-T0* T225f1(T0* C, T6 a1)
+T0* T223f1(T0* C, T6 a1)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	l1 = T273c2(a1);
-	R = (((T273*)(GE_void(l1)))->a1);
+	R = T222c6(l1, a1);
 	return R;
 }
 
-/* TO_SPECIAL [LX_DFA_STATE].make_area */
-T0* T273c2(T6 a1)
-{
-	T0* C;
-	C = GE_new273(EIF_TRUE);
-	((T273*)(C))->a1 = T224c5(a1);
-	return C;
-}
-
 /* KL_SPECIAL_ROUTINES [LX_DFA_STATE].default_create */
-T0* T225c3(void)
+T0* T223c3(void)
 {
 	T0* C;
-	C = GE_new225(EIF_TRUE);
+	C = GE_new223(EIF_TRUE);
 	return C;
 }
 
@@ -14431,51 +14572,51 @@ void T47f99(T0* C, T0* a1)
 	T0* l4 = 0;
 	T0* l5 = 0;
 	T0* l6 = 0;
-	l2 = (T148f5(GE_void(((T47*)(C))->a36)));
-	t1 = (((T138*)(GE_void(((T47*)(C))->a3)))->a2);
-	t2 = (((T138*)(GE_void(((T47*)(C))->a3)))->a1);
+	l2 = (T149f5(GE_void(((T47*)(C))->a36)));
+	t1 = (((T139*)(GE_void(((T47*)(C))->a3)))->a2);
+	t2 = (((T139*)(GE_void(((T47*)(C))->a3)))->a1);
 	t1 = ((T6)((t1)-(t2)));
 	t3 = ((T1)((t1)<(l2)));
 	if (t3) {
-		t1 = (((T138*)(GE_void(((T47*)(C))->a3)))->a2);
+		t1 = (((T139*)(GE_void(((T47*)(C))->a3)))->a2);
 		t1 = ((T6)((t1)+(l2)));
 		t1 = ((T6)((t1)+((T6)(GE_int32(1000)))));
 		T47f114(C, t1);
 	}
-	T148f10(GE_void(((T47*)(C))->a36));
-	T133f20(GE_void(a1), ((T47*)(C))->a36);
-	l6 = (((T148*)(GE_void(((T47*)(C))->a36)))->a1);
-	l5 = (((T133*)(GE_void(a1)))->a3);
+	T149f10(GE_void(((T47*)(C))->a36));
+	T134f20(GE_void(a1), ((T47*)(C))->a36);
+	l6 = (((T149*)(GE_void(((T47*)(C))->a36)))->a1);
+	l5 = (((T134*)(GE_void(a1)))->a3);
 	l1 = ((T47*)(C))->a27;
 	while (1) {
 		t3 = (T6f1((&l1), ((T47*)(C))->a28));
 		if (t3) {
 			break;
 		}
-		t3 = (T159f4(GE_void(l6), l1));
+		t3 = (T160f4(GE_void(l6), l1));
 		if (t3) {
-			t3 = (T148f8(GE_void(((T47*)(C))->a36), l1));
+			t3 = (T149f8(GE_void(((T47*)(C))->a36), l1));
 			if (t3) {
-				t4 = (T133f12(GE_void(a1), l1));
+				t4 = (T134f11(GE_void(a1), l1));
 				l4 = (T47f60(C, t4));
 			} else {
-				l3 = (T148f4(GE_void(((T47*)(C))->a36), l1));
-				l4 = (T157f9(GE_void(l5), l3));
+				l3 = (T149f4(GE_void(((T47*)(C))->a36), l1));
+				l4 = (T158f9(GE_void(l5), l3));
 			}
-			T157f15(GE_void(l5), l4, l1);
+			T158f15(GE_void(l5), l4, l1);
 		}
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
 }
 
 /* LX_SYMBOL_PARTITIONS.previous_symbol */
-T6 T148f4(T0* C, T6 a1)
+T6 T149f4(T0* C, T6 a1)
 {
 	T0* t1;
 	T6 R = 0;
-	t1 = (T216f4(GE_void(((T148*)(C))->a2), a1));
-	t1 = (((T214*)(GE_void(t1)))->a2);
-	R = (((T214*)(GE_void(t1)))->a1);
+	t1 = (T215f4(GE_void(((T149*)(C))->a2), a1));
+	t1 = (((T213*)(GE_void(t1)))->a2);
+	R = (((T213*)(GE_void(t1)))->a1);
 	return R;
 }
 
@@ -14488,7 +14629,7 @@ T0* T47f60(T0* C, T0* a1)
 	T6 l1 = 0;
 	T6 l2 = 0;
 	l1 = ((T6)((((T47*)(C))->a6)+((T6)(GE_int32(1)))));
-	l2 = (((T138*)(GE_void(((T47*)(C))->a3)))->a1);
+	l2 = (((T139*)(GE_void(((T47*)(C))->a3)))->a1);
 	while (1) {
 		t1 = ((R)!=(EIF_VOID));
 		if (!(t1)) {
@@ -14497,8 +14638,8 @@ T0* T47f60(T0* C, T0* a1)
 		if (t1) {
 			break;
 		}
-		R = (T138f7(GE_void(((T47*)(C))->a3), l1));
-		t1 = (T133f13(GE_void(R), a1));
+		R = (T139f7(GE_void(((T47*)(C))->a3), l1));
+		t1 = (T134f12(GE_void(R), a1));
 		t1 = ((T1)(!(t1)));
 		if (t1) {
 			R = EIF_VOID;
@@ -14508,35 +14649,35 @@ T0* T47f60(T0* C, T0* a1)
 	t1 = ((R)==(EIF_VOID));
 	if (t1) {
 		R = a1;
-		T138f16(GE_void(((T47*)(C))->a3), a1);
-		t2 = (((T138*)(GE_void(((T47*)(C))->a3)))->a1);
-		T133f19(GE_void(a1), t2);
+		T139f16(GE_void(((T47*)(C))->a3), a1);
+		t2 = (((T139*)(GE_void(((T47*)(C))->a3)))->a1);
+		T134f19(GE_void(a1), t2);
 	}
 	return R;
 }
 
 /* LX_DFA_STATE.is_equal */
-T1 T133f13(T0* C, T0* a1)
+T1 T134f12(T0* C, T0* a1)
 {
 	T0* t1;
 	T1 t2;
 	T6 t3;
 	T1 R = 0;
-	t1 = (T133f16(C));
-	t2 = (T189f1(GE_void(t1), C, a1));
+	t1 = (T134f16(C));
+	t2 = (T191f1(GE_void(t1), C, a1));
 	if (t2) {
-		t3 = (((T133*)(GE_void(a1)))->a5);
-		t2 = (((((((T133*)(C))->a5) == (t3)))));
+		t3 = (((T134*)(GE_void(a1)))->a5);
+		t2 = (((((((T134*)(C))->a5) == (t3)))));
 	}
 	if (t2) {
-		t1 = (((T133*)(GE_void(a1)))->a2);
-		R = (T135f19(GE_void(((T133*)(C))->a2), t1));
+		t1 = (((T134*)(GE_void(a1)))->a2);
+		R = (T136f17(GE_void(((T134*)(C))->a2), t1));
 	}
 	return R;
 }
 
 /* DS_ARRAYED_LIST [LX_NFA_STATE].is_equal */
-T1 T135f19(T0* C, T0* a1)
+T1 T136f17(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
@@ -14550,16 +14691,16 @@ T1 T135f19(T0* C, T0* a1)
 	if (t1) {
 		R = EIF_TRUE;
 	} else {
-		t2 = (T135f21(C));
-		t1 = (T189f1(GE_void(t2), C, a1));
+		t2 = (T136f19(C));
+		t1 = (T191f1(GE_void(t2), C, a1));
 		if (t1) {
-			t3 = (((T135*)(GE_void(a1)))->a1);
-			t1 = (((((t3) == (((T135*)(C))->a1)))));
+			t3 = (((T136*)(GE_void(a1)))->a1);
+			t1 = (((((t3) == (((T136*)(C))->a1)))));
 		}
 		if (t1) {
-			l3 = (((T135*)(GE_void(a1)))->a2);
+			l3 = (((T136*)(GE_void(a1)))->a2);
 			l1 = (T6)(GE_int32(1));
-			l2 = ((T135*)(C))->a1;
+			l2 = ((T136*)(C))->a1;
 			R = EIF_TRUE;
 			while (1) {
 				t1 = ((T1)(!(R)));
@@ -14569,8 +14710,8 @@ T1 T135f19(T0* C, T0* a1)
 				if (t1) {
 					break;
 				}
-				t2 = (((T220*)(GE_void(((T135*)(C))->a2)))->z2[l1]);
-				t4 = (((T220*)(GE_void(l3)))->z2[l1]);
+				t2 = (((T218*)(GE_void(((T136*)(C))->a2)))->z2[l1]);
+				t4 = (((T218*)(GE_void(l3)))->z2[l1]);
 				R = ((t2)==(t4));
 				l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 			}
@@ -14580,37 +14721,37 @@ T1 T135f19(T0* C, T0* a1)
 }
 
 /* DS_ARRAYED_LIST [LX_NFA_STATE].any_ */
-T0* T135f21(T0* C)
+T0* T136f19(T0* C)
 {
 	T0* R = 0;
-	if (ge346os1894) {
-		return ge346ov1894;
+	if (ge300os1888) {
+		return ge300ov1888;
 	} else {
-		ge346os1894 = '\1';
-		ge346ov1894 = R;
+		ge300os1888 = '\1';
+		ge300ov1888 = R;
 	}
-	R = T189c3();
-	ge346ov1894 = R;
+	R = T191c2();
+	ge300ov1888 = R;
 	return R;
 }
 
 /* LX_DFA_STATE.any_ */
-T0* T133f16(T0* C)
+T0* T134f16(T0* C)
 {
 	T0* R = 0;
-	if (ge346os1894) {
-		return ge346ov1894;
+	if (ge300os1888) {
+		return ge300ov1888;
 	} else {
-		ge346os1894 = '\1';
-		ge346ov1894 = R;
+		ge300os1888 = '\1';
+		ge300ov1888 = R;
 	}
-	R = T189c3();
-	ge346ov1894 = R;
+	R = T191c2();
+	ge300ov1888 = R;
 	return R;
 }
 
 /* LX_DFA_STATE.new_state */
-T0* T133f12(T0* C, T6 a1)
+T0* T134f11(T0* C, T6 a1)
 {
 	T1 t1;
 	T0* t2;
@@ -14621,131 +14762,122 @@ T0* T133f12(T0* C, T6 a1)
 	T6 l2 = 0;
 	T0* l3 = 0;
 	T0* l4 = 0;
-	l2 = (((T135*)(GE_void(((T133*)(C))->a2)))->a1);
-	l4 = T135c23(l2);
+	l2 = (((T136*)(GE_void(((T134*)(C))->a2)))->a1);
+	l4 = T136c23(l2);
 	l1 = (T6)(GE_int32(1));
 	while (1) {
 		t1 = (T6f1((&l1), l2));
 		if (t1) {
 			break;
 		}
-		t2 = (T135f10(GE_void(((T133*)(C))->a2), l1));
-		l3 = (((T134*)(GE_void(t2)))->a2);
+		t2 = (T136f13(GE_void(((T134*)(C))->a2), l1));
+		l3 = (((T135*)(GE_void(t2)))->a2);
 		t1 = ((l3)!=(EIF_VOID));
 		if (t1) {
-			t1 = (T210x7063T6(GE_void(l3), a1));
+			t1 = (T209x7632T6(GE_void(l3), a1));
 		}
 		if (t1) {
-			t2 = (T210x7060(GE_void(l3)));
-			T135f24(GE_void(l4), t2);
+			t2 = (T209x7629(GE_void(l3)));
+			T136f24(GE_void(l4), t2);
 		}
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
-	t3 = (T133f14(C));
-	t4 = (T133f15(C));
-	R = T133c18(l4, t3, t4);
+	t3 = (T134f14(C));
+	t4 = (T134f15(C));
+	R = T134c18(l4, t3, t4);
 	return R;
 }
 
 /* LX_DFA_STATE.maximum_symbol */
-T6 T133f15(T0* C)
+T6 T134f15(T0* C)
 {
 	T6 R = 0;
-	R = (T157f8(GE_void(((T133*)(C))->a3)));
+	R = (T158f8(GE_void(((T134*)(C))->a3)));
 	return R;
 }
 
 /* LX_DFA_STATE.minimum_symbol */
-T6 T133f14(T0* C)
+T6 T134f14(T0* C)
 {
 	T6 R = 0;
-	R = (T157f6(GE_void(((T133*)(C))->a3)));
+	R = (T158f6(GE_void(((T134*)(C))->a3)));
 	return R;
 }
 
 /* DS_ARRAYED_LIST [LX_NFA_STATE].put_last */
-void T135f24(T0* C, T0* a1)
+void T136f24(T0* C, T0* a1)
 {
-	((T135*)(C))->a1 = ((T6)((((T135*)(C))->a1)+((T6)(GE_int32(1)))));
-	((T220*)(GE_void(((T135*)(C))->a2)))->z2[((T135*)(C))->a1] = (a1);
+	((T136*)(C))->a1 = ((T6)((((T136*)(C))->a1)+((T6)(GE_int32(1)))));
+	((T218*)(GE_void(((T136*)(C))->a2)))->z2[((T136*)(C))->a1] = (a1);
 }
 
 /* LX_SYMBOL_PARTITIONS.is_representative */
-T1 T148f8(T0* C, T6 a1)
+T1 T149f8(T0* C, T6 a1)
 {
 	T0* t1;
 	T1 R = 0;
-	t1 = (T216f4(GE_void(((T148*)(C))->a2), a1));
-	t1 = (((T214*)(GE_void(t1)))->a2);
+	t1 = (T215f4(GE_void(((T149*)(C))->a2), a1));
+	t1 = (((T213*)(GE_void(t1)))->a2);
 	R = ((t1)==(EIF_VOID));
 	return R;
 }
 
 /* LX_DFA_STATE.partition */
-void T133f20(T0* C, T0* a1)
+void T134f20(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
 	T6 l1 = 0;
 	T6 l2 = 0;
 	T0* l3 = 0;
-	l2 = (((T135*)(GE_void(((T133*)(C))->a2)))->a1);
+	l2 = (((T136*)(GE_void(((T134*)(C))->a2)))->a1);
 	l1 = (T6)(GE_int32(1));
 	while (1) {
 		t1 = (T6f1((&l1), l2));
 		if (t1) {
 			break;
 		}
-		t2 = (T135f10(GE_void(((T133*)(C))->a2), l1));
-		l3 = (((T134*)(GE_void(t2)))->a2);
+		t2 = (T136f13(GE_void(((T134*)(C))->a2), l1));
+		l3 = (((T135*)(GE_void(t2)))->a2);
 		t1 = ((l3)!=(EIF_VOID));
 		if (t1) {
-			T210x7064T0(GE_void(l3), a1);
+			T209x7633T0(GE_void(l3), a1);
 		}
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
 }
 
 /* LX_SYMBOL_PARTITIONS.initialize */
-void T148f10(T0* C)
+void T149f10(T0* C)
 {
-	T148f10p1(C);
-	T159f7(GE_void(((T148*)(C))->a1));
+	T149f10p1(C);
+	T160f7(GE_void(((T149*)(C))->a1));
 }
 
 /* ARRAY [BOOLEAN].clear_all */
-void T159f7(T0* C)
+void T160f7(T0* C)
 {
-	T158f5(GE_void(((T159*)(C))->a1));
+	T159f5(GE_void(((T160*)(C))->a1));
 }
 
 /* SPECIAL [BOOLEAN].clear_all */
-void T158f5(T0* C)
+void T159f5(T0* C)
 {
-	T6 t1;
-	T1 t2;
+	T1 t1;
 	T6 l1 = 0;
-	t1 = (((T158*)(C))->z1);
-	l1 = ((T6)((t1)-((T6)(GE_int32(1)))));
+	l1 = ((T6)((((T159*)(C))->a1)-((T6)(GE_int32(1)))));
 	while (1) {
-		t2 = ((T1)((l1)<((T6)(GE_int32(0)))));
-		if (t2) {
+		t1 = ((T1)((l1)<((T6)(GE_int32(0)))));
+		if (t1) {
 			break;
 		}
-		T158f6(C, l1);
+		((T159*)(C))->z2[l1] = 0;
 		l1 = ((T6)((l1)-((T6)(GE_int32(1)))));
 	}
 }
 
-/* SPECIAL [BOOLEAN].put_default */
-void T158f6(T0* C, T6 a1)
-{
-	T1 l1 = 0;
-	((T158*)(C))->z2[a1] = (l1);
-}
-
 /* LX_SYMBOL_PARTITIONS.initialize */
-void T148f10p1(T0* C)
+void T149f10p1(T0* C)
 {
 	T6 t1;
 	T0* t2;
@@ -14753,54 +14885,54 @@ void T148f10p1(T0* C)
 	T6 l1 = 0;
 	T6 l2 = 0;
 	T0* l3 = 0;
-	l2 = (T148f6(C));
-	t1 = (T148f7(C));
-	t2 = (T216f4(GE_void(((T148*)(C))->a2), t1));
-	t1 = (T148f7(C));
-	T214f5(GE_void(t2), t1);
-	t1 = (T148f7(C));
+	l2 = (T149f6(C));
+	t1 = (T149f7(C));
+	t2 = (T215f4(GE_void(((T149*)(C))->a2), t1));
+	t1 = (T149f7(C));
+	T213f5(GE_void(t2), t1);
+	t1 = (T149f7(C));
 	l1 = ((T6)((t1)+((T6)(GE_int32(1)))));
 	while (1) {
 		t3 = (T6f1((&l1), l2));
 		if (t3) {
 			break;
 		}
-		l3 = (T216f4(GE_void(((T148*)(C))->a2), l1));
+		l3 = (T215f4(GE_void(((T149*)(C))->a2), l1));
 		t1 = ((T6)((l1)-((T6)(GE_int32(1)))));
-		t2 = (T216f4(GE_void(((T148*)(C))->a2), t1));
-		T214f9(GE_void(l3), t2);
-		T214f5(GE_void(l3), l1);
+		t2 = (T215f4(GE_void(((T149*)(C))->a2), t1));
+		T213f9(GE_void(l3), t2);
+		T213f5(GE_void(l3), l1);
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
-	((T148*)(C))->a3 = (T6)(GE_int32(0));
+	((T149*)(C))->a3 = (T6)(GE_int32(0));
 }
 
 /* DS_BILINKABLE [INTEGER_32].put_left */
-void T214f9(T0* C, T0* a1)
+void T213f9(T0* C, T0* a1)
 {
-	((T214*)(C))->a2 = a1;
-	T214f10(GE_void(a1), C);
+	((T213*)(C))->a2 = a1;
+	T213f10(GE_void(a1), C);
 }
 
 /* DS_BILINKABLE [INTEGER_32].attach_right */
-void T214f10(T0* C, T0* a1)
+void T213f10(T0* C, T0* a1)
 {
-	((T214*)(C))->a3 = a1;
+	((T213*)(C))->a3 = a1;
 }
 
 /* LX_SYMBOL_PARTITIONS.lower */
-T6 T148f7(T0* C)
+T6 T149f7(T0* C)
 {
 	T6 R = 0;
-	R = (((T216*)(GE_void(((T148*)(C))->a2)))->a2);
+	R = (((T215*)(GE_void(((T149*)(C))->a2)))->a2);
 	return R;
 }
 
 /* LX_SYMBOL_PARTITIONS.upper */
-T6 T148f6(T0* C)
+T6 T149f6(T0* C)
 {
 	T6 R = 0;
-	R = (((T216*)(GE_void(((T148*)(C))->a2)))->a3);
+	R = (((T215*)(GE_void(((T149*)(C))->a2)))->a3);
 	return R;
 }
 
@@ -14808,179 +14940,243 @@ T6 T148f6(T0* C)
 void T47f114(T0* C, T6 a1)
 {
 	T0* t1;
-	T138f17(GE_void(((T47*)(C))->a3), a1);
+	T139f17(GE_void(((T47*)(C))->a3), a1);
 	t1 = (T47f68(C));
-	T164f2(GE_void(t1), ((T47*)(C))->a39, (T6)(GE_int32(0)), a1);
+	T166f2(GE_void(t1), ((T47*)(C))->a39, (T6)(GE_int32(0)), a1);
 	t1 = (T47f68(C));
-	T164f2(GE_void(t1), ((T47*)(C))->a40, (T6)(GE_int32(0)), a1);
+	T166f2(GE_void(t1), ((T47*)(C))->a40, (T6)(GE_int32(0)), a1);
 }
 
 /* DS_ARRAYED_LIST [LX_DFA_STATE].resize */
-void T138f17(T0* C, T6 a1)
+void T139f17(T0* C, T6 a1)
 {
 	T6 t1;
 	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
-	((T138*)(C))->a3 = (T225f2(GE_void(((T138*)(C))->a4), ((T138*)(C))->a3, t1));
-	((T138*)(C))->a2 = a1;
+	((T139*)(C))->a3 = (T223f2(GE_void(((T139*)(C))->a4), ((T139*)(C))->a3, t1));
+	((T139*)(C))->a2 = a1;
 }
 
 /* KL_SPECIAL_ROUTINES [LX_DFA_STATE].resize */
-T0* T225f2(T0* C, T0* a1, T6 a2)
+T0* T223f2(T0* C, T0* a1, T6 a2)
 {
 	T6 t1;
 	T1 t2;
 	T0* R = 0;
-	t1 = (((T224*)(GE_void(a1)))->z1);
+	T0* l1 = 0;
+	t1 = (((T222*)(GE_void(a1)))->a1);
 	t2 = (T6f1(&a2, t1));
 	if (t2) {
-		R = (T224f3(GE_void(a1), a2));
+		R = (T222f3(GE_void(a1), l1, a2));
 	} else {
 		R = a1;
 	}
 	return R;
 }
 
+/* SPECIAL [LX_DFA_STATE].aliased_resized_area_with_default */
+T0* T222f3(T0* C, T0* a1, T6 a2)
+{
+	T1 t1;
+	T0* R = 0;
+	T6 l1 = 0;
+	T6 l2 = 0;
+	l2 = ((T222*)(C))->a1;
+	R = (T222f4(C, a2));
+	l1 = l2;
+	while (1) {
+		t1 = (((((l1) == (a2)))));
+		if (t1) {
+			break;
+		}
+		((T222*)(GE_void(R)))->z2[l1] = (a1);
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
+	return R;
+}
+
 /* SPECIAL [LX_DFA_STATE].aliased_resized_area */
-T0* T224f3(T0* C, T6 a1)
+T0* T222f4(T0* C, T6 a1)
 {
 	T0* R = 0;
 	T6 t1;
-	t1 = ((T224*)(C))->z1;
+	t1 = ((T222*)(C))->a1;
 	if (a1>t1) {
-		R = GE_new224(a1, EIF_FALSE);
-		*(T224*)(R) = *(T224*)(C);
-		memcpy(((T224*)(R))->z2,((T224*)(C))->z2,t1*sizeof(T0*));
+		R = GE_new222(a1, EIF_FALSE);
+		*(T222*)(R) = *(T222*)(C);
+		memcpy(((T222*)(R))->z2,((T222*)(C))->z2,t1*sizeof(T0*));
 #ifndef GE_alloc_cleared
-		memset(((T224*)(R))->z2+t1,0,(a1-t1)*sizeof(T0*));
+		memset(((T222*)(R))->z2+t1,0,(a1-t1)*sizeof(T0*));
 #endif
 	} else {
 		R = C;
 	}
-	((T224*)(R))->z1 = a1;
+	((T222*)(R))->a1 = a1;
 	return R;
 }
 
 /* LX_SYMBOL_PARTITIONS.capacity */
-T6 T148f5(T0* C)
+T6 T149f5(T0* C)
 {
 	T6 R = 0;
-	R = (T216f5(GE_void(((T148*)(C))->a2)));
+	R = (T215f5(GE_void(((T149*)(C))->a2)));
 	return R;
 }
 
-/* ARRAY [INTEGER_32].make */
-T0* T143c10(T6 a1, T6 a2)
+/* ARRAY [INTEGER_32].make_filled */
+T0* T144c10(T6 a1, T6 a2, T6 a3)
 {
 	T0* C;
 	T1 t1;
 	T6 t2;
 	T6 l1 = 0;
-	C = GE_new143(EIF_TRUE);
-	((T143*)(C))->a2 = a1;
-	((T143*)(C))->a3 = a2;
-	t1 = (T6f7(&a1, a2));
+	C = GE_new144(EIF_TRUE);
+	((T144*)(C))->a2 = a2;
+	((T144*)(C))->a3 = a3;
+	t1 = (T6f7(&a2, a3));
 	if (t1) {
-		t2 = ((T6)((a2)-(a1)));
+		t2 = ((T6)((a3)-(a2)));
 		l1 = ((T6)((t2)+((T6)(GE_int32(1)))));
 	}
-	T143f12(C, l1);
+	T144f12(C, a1, l1);
 	return C;
 }
 
+/* ARRAY [INTEGER_32].make_filled_area */
+void T144f12(T0* C, T6 a1, T6 a2)
+{
+	((T144*)(C))->a1 = T83c6(a1, a2);
+}
+
 /* LX_SYMBOL_PARTITIONS.make */
-T0* T148c9(T6 a1, T6 a2)
+T0* T149c9(T6 a1, T6 a2)
 {
 	T0* C;
-	C = GE_new148(EIF_TRUE);
-	((T148*)(C))->a1 = T159c5(a1, a2);
-	T148f9p1(C, a1, a2);
+	C = GE_new149(EIF_TRUE);
+	((T149*)(C))->a1 = T160c5(EIF_FALSE, a1, a2);
+	T149f9p1(C, a1, a2);
 	return C;
 }
 
 /* LX_SYMBOL_PARTITIONS.make */
-void T148f9p1(T0* C, T6 a1, T6 a2)
+void T149f9p1(T0* C, T6 a1, T6 a2)
 {
 	T1 t1;
 	T0* l1 = 0;
 	T6 l2 = 0;
-	((T148*)(C))->a2 = T216c6(a1, a2);
-	l2 = a1;
+	l1 = T213c4(a1);
+	((T149*)(C))->a2 = T215c6(l1, a1, a2);
+	l2 = ((T6)((a1)+((T6)(GE_int32(1)))));
 	while (1) {
 		t1 = (T6f1((&l2), a2));
 		if (t1) {
 			break;
 		}
-		l1 = T214c4(l2);
-		T216f7(GE_void(((T148*)(C))->a2), l1, l2);
+		l1 = T213c4(l2);
+		T215f7(GE_void(((T149*)(C))->a2), l1, l2);
 		l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
 	}
-	T148f10(C);
+	T149f10(C);
 }
 
 /* ARRAY [DS_BILINKABLE [INTEGER_32]].put */
-void T216f7(T0* C, T0* a1, T6 a2)
+void T215f7(T0* C, T0* a1, T6 a2)
 {
 	T6 t1;
-	t1 = ((T6)((a2)-(((T216*)(C))->a2)));
-	((T215*)(GE_void(((T216*)(C))->a1)))->z2[t1] = (a1);
+	t1 = ((T6)((a2)-(((T215*)(C))->a2)));
+	((T214*)(GE_void(((T215*)(C))->a1)))->z2[t1] = (a1);
 }
 
-/* DS_BILINKABLE [INTEGER_32].make */
-T0* T214c4(T6 a1)
-{
-	T0* C;
-	C = GE_new214(EIF_TRUE);
-	((T214*)(C))->a1 = a1;
-	return C;
-}
-
-/* ARRAY [DS_BILINKABLE [INTEGER_32]].make */
-T0* T216c6(T6 a1, T6 a2)
+/* ARRAY [DS_BILINKABLE [INTEGER_32]].make_filled */
+T0* T215c6(T0* a1, T6 a2, T6 a3)
 {
 	T0* C;
 	T1 t1;
 	T6 t2;
 	T6 l1 = 0;
-	C = GE_new216(EIF_TRUE);
-	((T216*)(C))->a2 = a1;
-	((T216*)(C))->a3 = a2;
-	t1 = (T6f7(&a1, a2));
+	C = GE_new215(EIF_TRUE);
+	((T215*)(C))->a2 = a2;
+	((T215*)(C))->a3 = a3;
+	t1 = (T6f7(&a2, a3));
 	if (t1) {
-		t2 = ((T6)((a2)-(a1)));
+		t2 = ((T6)((a3)-(a2)));
 		l1 = ((T6)((t2)+((T6)(GE_int32(1)))));
 	}
-	T216f8(C, l1);
+	T215f8(C, a1, l1);
 	return C;
 }
 
-/* ARRAY [DS_BILINKABLE [INTEGER_32]].make_area */
-void T216f8(T0* C, T6 a1)
+/* ARRAY [DS_BILINKABLE [INTEGER_32]].make_filled_area */
+void T215f8(T0* C, T0* a1, T6 a2)
 {
-	((T216*)(C))->a1 = T215c2(a1);
+	((T215*)(C))->a1 = T214c3(a1, a2);
+}
+
+/* SPECIAL [DS_BILINKABLE [INTEGER_32]].make_filled */
+T0* T214c3(T0* a1, T6 a2)
+{
+	T0* C;
+	T6 t1;
+	C = GE_new214(a2, EIF_TRUE);
+	T214f5(C, a2);
+	t1 = ((T6)((a2)-((T6)(GE_int32(1)))));
+	T214f6(C, a1, (T6)(GE_int32(0)), t1);
+	return C;
+}
+
+/* SPECIAL [DS_BILINKABLE [INTEGER_32]].fill_with */
+void T214f6(T0* C, T0* a1, T6 a2, T6 a3)
+{
+	T1 t1;
+	T6 l1 = 0;
+	T6 l2 = 0;
+	l1 = a2;
+	l2 = ((T6)((a3)+((T6)(GE_int32(1)))));
+	while (1) {
+		t1 = (((((l1) == (l2)))));
+		if (t1) {
+			break;
+		}
+		((T214*)(C))->z2[l1] = (a1);
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
 }
 
 /* SPECIAL [DS_BILINKABLE [INTEGER_32]].make */
-T0* T215c2(T6 a1)
+void T214f5(T0* C, T6 a1)
+{
+}
+
+/* DS_BILINKABLE [INTEGER_32].make */
+T0* T213c4(T6 a1)
 {
 	T0* C;
-	C = GE_new215(a1, EIF_TRUE);
+	C = GE_new213(EIF_TRUE);
+	((T213*)(C))->a1 = a1;
 	return C;
 }
 
 /* LX_TEMPLATE_LIST.make */
-T0* T147c11(T0* a1)
+T0* T148c11(T0* a1)
 {
 	T0* C;
-	C = GE_new147(EIF_TRUE);
-	T147f13(C);
-	((T147*)(C))->a3 = a1;
+	C = GE_new148(EIF_TRUE);
+	T148f13(C);
+	((T148*)(C))->a3 = a1;
 	return C;
 }
 
 /* LX_TEMPLATE_LIST.make_list */
-void T147f13(T0* C)
+void T148f13(T0* C)
 {
-	((T147*)(C))->a4 = (T147f6(C));
+	T0* t1;
+	t1 = (T148f6(C));
+	T148f15(C, t1);
+}
+
+/* LX_TEMPLATE_LIST.set_internal_cursor */
+void T148f15(T0* C, T0* a1)
+{
+	((T148*)(C))->a5 = a1;
 }
 
 /* LX_EQUIVALENCE_CLASSES.make */
@@ -14991,15 +15187,16 @@ T0* T94c10(T6 a1, T6 a2)
 	T0* l1 = 0;
 	T6 l2 = 0;
 	C = GE_new94(EIF_TRUE);
-	((T94*)(C))->a2 = T216c6(a1, a2);
-	l2 = a1;
+	l1 = T213c4(a1);
+	((T94*)(C))->a2 = T215c6(l1, a1, a2);
+	l2 = ((T6)((a1)+((T6)(GE_int32(1)))));
 	while (1) {
 		t1 = (T6f1((&l2), a2));
 		if (t1) {
 			break;
 		}
-		l1 = T214c4(l2);
-		T216f7(GE_void(((T94*)(C))->a2), l1, l2);
+		l1 = T213c4(l2);
+		T215f7(GE_void(((T94*)(C))->a2), l1, l2);
 		l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
 	}
 	T94f13(C);
@@ -15017,9 +15214,9 @@ void T94f13(T0* C)
 	T0* l3 = 0;
 	l2 = (T94f4(C));
 	t1 = (T94f5(C));
-	t2 = (T216f4(GE_void(((T94*)(C))->a2), t1));
+	t2 = (T215f4(GE_void(((T94*)(C))->a2), t1));
 	t1 = (T94f5(C));
-	T214f5(GE_void(t2), t1);
+	T213f5(GE_void(t2), t1);
 	t1 = (T94f5(C));
 	l1 = ((T6)((t1)+((T6)(GE_int32(1)))));
 	while (1) {
@@ -15027,90 +15224,123 @@ void T94f13(T0* C)
 		if (t3) {
 			break;
 		}
-		l3 = (T216f4(GE_void(((T94*)(C))->a2), l1));
+		l3 = (T215f4(GE_void(((T94*)(C))->a2), l1));
 		t1 = ((T6)((l1)-((T6)(GE_int32(1)))));
-		t2 = (T216f4(GE_void(((T94*)(C))->a2), t1));
-		T214f9(GE_void(l3), t2);
-		T214f5(GE_void(l3), l1);
+		t2 = (T215f4(GE_void(((T94*)(C))->a2), t1));
+		T213f9(GE_void(l3), t2);
+		T213f5(GE_void(l3), l1);
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
 	((T94*)(C))->a1 = (T6)(GE_int32(0));
 }
 
 /* DS_ARRAYED_LIST [LX_SINGLETON].make */
-T0* T146c9(T6 a1)
+T0* T147c9(T6 a1)
 {
 	T0* C;
 	T6 t1;
-	C = GE_new146(EIF_TRUE);
-	((T146*)(C))->a4 = T229c2();
+	T0* t2;
+	C = GE_new147(EIF_TRUE);
+	((T147*)(C))->a4 = T227c2();
 	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
-	((T146*)(C))->a2 = (T229f1(GE_void(((T146*)(C))->a4), t1));
-	((T146*)(C))->a3 = a1;
-	((T146*)(C))->a5 = (T146f8(C));
+	((T147*)(C))->a2 = (T227f1(GE_void(((T147*)(C))->a4), t1));
+	((T147*)(C))->a3 = a1;
+	t2 = (T147f7(C));
+	T147f11(C, t2);
 	return C;
 }
 
+/* DS_ARRAYED_LIST [LX_SINGLETON].set_internal_cursor */
+void T147f11(T0* C, T0* a1)
+{
+	((T147*)(C))->a5 = a1;
+}
+
 /* DS_ARRAYED_LIST [LX_SINGLETON].new_cursor */
-T0* T146f8(T0* C)
+T0* T147f7(T0* C)
 {
 	T0* R = 0;
-	R = T230c3(C);
+	R = T228c3(C);
 	return R;
 }
 
 /* DS_ARRAYED_LIST_CURSOR [LX_SINGLETON].make */
-T0* T230c3(T0* a1)
+T0* T228c3(T0* a1)
 {
 	T0* C;
-	C = GE_new230(EIF_TRUE);
-	((T230*)(C))->a1 = a1;
-	((T230*)(C))->a2 = (T6)(GE_int32(0));
+	C = GE_new228(EIF_TRUE);
+	((T228*)(C))->a1 = a1;
+	((T228*)(C))->a2 = (T6)(GE_int32(0));
 	return C;
 }
 
 /* KL_SPECIAL_ROUTINES [LX_SINGLETON].make */
-T0* T229f1(T0* C, T6 a1)
+T0* T227f1(T0* C, T6 a1)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	l1 = T274c2(a1);
-	R = (((T274*)(GE_void(l1)))->a1);
+	R = T226c3(l1, a1);
 	return R;
 }
 
-/* TO_SPECIAL [LX_SINGLETON].make_area */
-T0* T274c2(T6 a1)
+/* SPECIAL [LX_SINGLETON].make_filled */
+T0* T226c3(T0* a1, T6 a2)
 {
 	T0* C;
-	C = GE_new274(EIF_TRUE);
-	((T274*)(C))->a1 = T228c2(a1);
+	T6 t1;
+	C = GE_new226(a2, EIF_TRUE);
+	T226f5(C, a2);
+	t1 = ((T6)((a2)-((T6)(GE_int32(1)))));
+	T226f6(C, a1, (T6)(GE_int32(0)), t1);
 	return C;
+}
+
+/* SPECIAL [LX_SINGLETON].fill_with */
+void T226f6(T0* C, T0* a1, T6 a2, T6 a3)
+{
+	T1 t1;
+	T6 l1 = 0;
+	T6 l2 = 0;
+	l1 = a2;
+	l2 = ((T6)((a3)+((T6)(GE_int32(1)))));
+	while (1) {
+		t1 = (((((l1) == (l2)))));
+		if (t1) {
+			break;
+		}
+		((T226*)(C))->z2[l1] = (a1);
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
 }
 
 /* SPECIAL [LX_SINGLETON].make */
-T0* T228c2(T6 a1)
+void T226f5(T0* C, T6 a1)
 {
-	T0* C;
-	C = GE_new228(a1, EIF_TRUE);
-	return C;
 }
 
 /* KL_SPECIAL_ROUTINES [LX_SINGLETON].default_create */
-T0* T229c2(void)
+T0* T227c2(void)
 {
 	T0* C;
-	C = GE_new229(EIF_TRUE);
+	C = GE_new227(EIF_TRUE);
 	return C;
 }
 
 /* LX_PROTO_QUEUE.make */
-T0* T145c12(void)
+T0* T146c12(void)
 {
 	T0* C;
-	C = GE_new145(EIF_TRUE);
-	((T145*)(C))->a3 = (T145f8(C));
+	T0* t1;
+	C = GE_new146(EIF_TRUE);
+	t1 = (T146f8(C));
+	T146f15(C, t1);
 	return C;
+}
+
+/* LX_PROTO_QUEUE.set_internal_cursor */
+void T146f15(T0* C, T0* a1)
+{
+	((T146*)(C))->a3 = a1;
 }
 
 /* LX_COMPRESSED_DFA.put_eob_state */
@@ -15121,18 +15351,18 @@ void T47f84(T0* C)
 	T0* l1 = 0;
 	T0* l2 = 0;
 	T0* l3 = 0;
-	l2 = T135c23((T6)(GE_int32(0)));
-	l1 = T133c18(l2, ((T47*)(C))->a27, ((T47*)(C))->a28);
+	l2 = T136c23((T6)(GE_int32(0)));
+	l1 = T134c18(l2, ((T47*)(C))->a27, ((T47*)(C))->a28);
 	l3 = T49c15(((T47*)(C))->a24);
-	t1 = (((T133*)(GE_void(l1)))->a1);
-	T48f23(GE_void(t1), l3);
-	T138f16(GE_void(((T47*)(C))->a3), l1);
-	t2 = (((T138*)(GE_void(((T47*)(C))->a3)))->a1);
-	T133f19(GE_void(l1), t2);
+	t1 = (((T134*)(GE_void(l1)))->a1);
+	T48f24(GE_void(t1), l3);
+	T139f16(GE_void(((T47*)(C))->a3), l1);
+	t2 = (((T139*)(GE_void(((T47*)(C))->a3)))->a1);
+	T134f19(GE_void(l1), t2);
 }
 
 /* DS_ARRAYED_LIST [LX_RULE].force_first */
-void T48f23(T0* C, T0* a1)
+void T48f24(T0* C, T0* a1)
 {
 	T1 t1;
 	T6 t2;
@@ -15141,13 +15371,13 @@ void T48f23(T0* C, T0* a1)
 	if (t1) {
 		t2 = ((T6)((((T48*)(C))->a1)+((T6)(GE_int32(1)))));
 		t2 = (T48f11(C, t2));
-		T48f20(C, t2);
+		T48f21(C, t2);
 	}
-	T48f25(C, a1, (T6)(GE_int32(1)));
+	T48f26(C, a1, (T6)(GE_int32(1)));
 }
 
 /* DS_ARRAYED_LIST [LX_RULE].put */
-void T48f25(T0* C, T0* a1, T6 a2)
+void T48f26(T0* C, T0* a1, T6 a2)
 {
 	T6 t1;
 	T1 t2;
@@ -15156,14 +15386,14 @@ void T48f25(T0* C, T0* a1, T6 a2)
 	if (t2) {
 		T48f18(C, a1);
 	} else {
-		T48f26(C, a2, (T6)(GE_int32(1)));
 		T48f27(C, a2, (T6)(GE_int32(1)));
-		((T136*)(GE_void(((T48*)(C))->a2)))->z2[a2] = (a1);
+		T48f28(C, a2, (T6)(GE_int32(1)));
+		((T137*)(GE_void(((T48*)(C))->a2)))->z2[a2] = (a1);
 	}
 }
 
 /* DS_ARRAYED_LIST [LX_RULE].move_cursors_right */
-void T48f27(T0* C, T6 a1, T6 a2)
+void T48f28(T0* C, T6 a1, T6 a2)
 {
 	T1 t1;
 	T6 t2;
@@ -15175,24 +15405,24 @@ void T48f27(T0* C, T6 a1, T6 a2)
 		if (t1) {
 			break;
 		}
-		l2 = (((T170*)(GE_void(l1)))->a3);
+		l2 = (((T172*)(GE_void(l1)))->a3);
 		t1 = (T6f5((&l2), a1));
 		if (t1) {
 			t2 = ((T6)((l2)+(a2)));
-			T170f5(GE_void(l1), t2);
+			T172f5(GE_void(l1), t2);
 		}
-		l1 = (((T170*)(GE_void(l1)))->a1);
+		l1 = (((T172*)(GE_void(l1)))->a1);
 	}
 }
 
 /* DS_ARRAYED_LIST_CURSOR [LX_RULE].set_position */
-void T170f5(T0* C, T6 a1)
+void T172f5(T0* C, T6 a1)
 {
-	((T170*)(C))->a3 = a1;
+	((T172*)(C))->a3 = a1;
 }
 
 /* DS_ARRAYED_LIST [LX_RULE].move_right */
-void T48f26(T0* C, T6 a1, T6 a2)
+void T48f27(T0* C, T6 a1, T6 a2)
 {
 	T1 t1;
 	T0* t2;
@@ -15205,9 +15435,9 @@ void T48f26(T0* C, T6 a1, T6 a2)
 		if (t1) {
 			break;
 		}
-		t2 = (((T136*)(GE_void(((T48*)(C))->a2)))->z2[l1]);
+		t2 = (((T137*)(GE_void(((T48*)(C))->a2)))->z2[l1]);
 		t3 = ((T6)((l1)+(a2)));
-		((T136*)(GE_void(((T48*)(C))->a2)))->z2[t3] = (t2);
+		((T137*)(GE_void(((T48*)(C))->a2)))->z2[t3] = (t2);
 		l1 = ((T6)((l1)-((T6)(GE_int32(1)))));
 	}
 }
@@ -15228,19 +15458,19 @@ T0* T49c15(T6 a1)
 }
 
 /* LX_RULE.dummy_action */
-unsigned char ge223os1970 = '\0';
-T0* ge223ov1970;
+unsigned char ge175os1942 = '\0';
+T0* ge175ov1942;
 T0* T49f11(T0* C)
 {
 	T0* R = 0;
-	if (ge223os1970) {
-		return ge223ov1970;
+	if (ge175os1942) {
+		return ge175ov1942;
 	} else {
-		ge223os1970 = '\1';
-		ge223ov1970 = R;
+		ge175os1942 = '\1';
+		ge175ov1942 = R;
 	}
 	R = T100c3(GE_ms8("", 0));
-	ge223ov1970 = R;
+	ge175ov1942 = R;
 	return R;
 }
 
@@ -15254,19 +15484,19 @@ T0* T100c3(T0* a1)
 }
 
 /* LX_RULE.dummy_pattern */
-unsigned char ge223os1969 = '\0';
-T0* ge223ov1969;
+unsigned char ge175os1941 = '\0';
+T0* ge175ov1941;
 T0* T49f12(T0* C)
 {
 	T0* R = 0;
-	if (ge223os1969) {
-		return ge223ov1969;
+	if (ge175os1941) {
+		return ge175ov1941;
 	} else {
-		ge223os1969 = '\1';
-		ge223ov1969 = R;
+		ge175os1941 = '\1';
+		ge175ov1941 = R;
 	}
 	R = T93c9(EIF_FALSE);
-	ge223ov1969 = R;
+	ge175ov1941 = R;
 	return R;
 }
 
@@ -15279,109 +15509,109 @@ T0* T93c9(T1 a1)
 	T0* l3 = 0;
 	C = GE_new93(EIF_TRUE);
 	((T93*)(C))->a1 = a1;
-	((T93*)(C))->a2 = T135c23((T6)(GE_int32(100)));
-	l2 = T134c12(a1);
-	l3 = T134c12(a1);
-	l1 = T209c5(l3);
-	T134f13(GE_void(l2), l1);
-	T135f25(GE_void(((T93*)(C))->a2), l2);
-	T135f24(GE_void(((T93*)(C))->a2), l3);
+	((T93*)(C))->a2 = T136c23((T6)(GE_int32(100)));
+	l2 = T135c12(a1);
+	l3 = T135c12(a1);
+	l1 = T208c5(l3);
+	T135f13(GE_void(l2), l1);
+	T136f25(GE_void(((T93*)(C))->a2), l2);
+	T136f24(GE_void(((T93*)(C))->a2), l3);
 	return C;
 }
 
 /* DS_ARRAYED_LIST [LX_NFA_STATE].put_first */
-void T135f25(T0* C, T0* a1)
+void T136f25(T0* C, T0* a1)
 {
-	T135f30(C, a1, (T6)(GE_int32(1)));
+	T136f31(C, a1, (T6)(GE_int32(1)));
 }
 
 /* DS_ARRAYED_LIST [LX_NFA_STATE].put */
-void T135f30(T0* C, T0* a1, T6 a2)
+void T136f31(T0* C, T0* a1, T6 a2)
 {
 	T6 t1;
 	T1 t2;
-	t1 = ((T6)((((T135*)(C))->a1)+((T6)(GE_int32(1)))));
+	t1 = ((T6)((((T136*)(C))->a1)+((T6)(GE_int32(1)))));
 	t2 = (((((a2) == (t1)))));
 	if (t2) {
-		T135f24(C, a1);
+		T136f24(C, a1);
 	} else {
-		T135f33(C, a2, (T6)(GE_int32(1)));
-		T135f34(C, a2, (T6)(GE_int32(1)));
-		((T220*)(GE_void(((T135*)(C))->a2)))->z2[a2] = (a1);
+		T136f34(C, a2, (T6)(GE_int32(1)));
+		T136f35(C, a2, (T6)(GE_int32(1)));
+		((T218*)(GE_void(((T136*)(C))->a2)))->z2[a2] = (a1);
 	}
 }
 
 /* DS_ARRAYED_LIST [LX_NFA_STATE].move_cursors_right */
-void T135f34(T0* C, T6 a1, T6 a2)
+void T136f35(T0* C, T6 a1, T6 a2)
 {
 	T1 t1;
 	T6 t2;
 	T0* l1 = 0;
 	T6 l2 = 0;
-	l1 = ((T135*)(C))->a6;
+	l1 = ((T136*)(C))->a6;
 	while (1) {
 		t1 = ((l1)==(EIF_VOID));
 		if (t1) {
 			break;
 		}
-		l2 = (((T222*)(GE_void(l1)))->a1);
+		l2 = (((T220*)(GE_void(l1)))->a1);
 		t1 = (T6f5((&l2), a1));
 		if (t1) {
 			t2 = ((T6)((l2)+(a2)));
-			T222f8(GE_void(l1), t2);
+			T220f8(GE_void(l1), t2);
 		}
-		l1 = (((T222*)(GE_void(l1)))->a2);
+		l1 = (((T220*)(GE_void(l1)))->a2);
 	}
 }
 
 /* DS_ARRAYED_LIST_CURSOR [LX_NFA_STATE].set_position */
-void T222f8(T0* C, T6 a1)
+void T220f8(T0* C, T6 a1)
 {
-	((T222*)(C))->a1 = a1;
+	((T220*)(C))->a1 = a1;
 }
 
 /* DS_ARRAYED_LIST [LX_NFA_STATE].move_right */
-void T135f33(T0* C, T6 a1, T6 a2)
+void T136f34(T0* C, T6 a1, T6 a2)
 {
 	T1 t1;
 	T0* t2;
 	T6 t3;
 	T6 l1 = 0;
-	l1 = ((T135*)(C))->a1;
-	((T135*)(C))->a1 = ((T6)((((T135*)(C))->a1)+(a2)));
+	l1 = ((T136*)(C))->a1;
+	((T136*)(C))->a1 = ((T6)((((T136*)(C))->a1)+(a2)));
 	while (1) {
 		t1 = ((T1)((l1)<(a1)));
 		if (t1) {
 			break;
 		}
-		t2 = (((T220*)(GE_void(((T135*)(C))->a2)))->z2[l1]);
+		t2 = (((T218*)(GE_void(((T136*)(C))->a2)))->z2[l1]);
 		t3 = ((T6)((l1)+(a2)));
-		((T220*)(GE_void(((T135*)(C))->a2)))->z2[t3] = (t2);
+		((T218*)(GE_void(((T136*)(C))->a2)))->z2[t3] = (t2);
 		l1 = ((T6)((l1)-((T6)(GE_int32(1)))));
 	}
 }
 
 /* LX_NFA_STATE.set_transition */
-void T134f13(T0* C, T0* a1)
+void T135f13(T0* C, T0* a1)
 {
-	((T134*)(C))->a2 = a1;
+	((T135*)(C))->a2 = a1;
 }
 
 /* LX_EPSILON_TRANSITION [LX_NFA_STATE].make */
-T0* T209c5(T0* a1)
+T0* T208c5(T0* a1)
 {
 	T0* C;
-	C = GE_new209(EIF_TRUE);
-	((T209*)(C))->a1 = a1;
+	C = GE_new208(EIF_TRUE);
+	((T208*)(C))->a1 = a1;
 	return C;
 }
 
 /* LX_NFA_STATE.make */
-T0* T134c12(T1 a1)
+T0* T135c12(T1 a1)
 {
 	T0* C;
-	C = GE_new134(EIF_TRUE);
-	((T134*)(C))->a1 = a1;
+	C = GE_new135(EIF_TRUE);
+	((T135*)(C))->a1 = a1;
 	return C;
 }
 
@@ -15396,7 +15626,7 @@ void T47f83(T0* C, T0* a1)
 	((T47*)(C))->a7 = (((T25*)(GE_void(a1)))->a1);
 	t1 = ((((T47*)(C))->a7)==(EIF_VOID));
 	if (t1) {
-		((T47*)(C))->a7 = ge182ov4547;
+		((T47*)(C))->a7 = ge134ov4825;
 	}
 	((T47*)(C))->a8 = (((T25*)(GE_void(a1)))->a12);
 	((T47*)(C))->a9 = (((T25*)(GE_void(a1)))->a13);
@@ -15411,11 +15641,11 @@ void T47f83(T0* C, T0* a1)
 	((T47*)(C))->a18 = (((T25*)(GE_void(a1)))->a29);
 	((T47*)(C))->a19 = (((T25*)(GE_void(a1)))->a14);
 	t2 = (((T25*)(GE_void(a1)))->a17);
-	((T47*)(C))->a20 = (T75f16(GE_void(t2)));
+	((T47*)(C))->a20 = (T75f18(GE_void(t2)));
 	t2 = (((T25*)(GE_void(a1)))->a5);
 	T47f96(C, t2);
 	t2 = (((T25*)(GE_void(a1)))->a15);
-	t3 = (T132f6(GE_void(((T47*)(C))->a20)));
+	t3 = (T133f6(GE_void(((T47*)(C))->a20)));
 	t3 = ((T6)((t3)-((T6)(GE_int32(1)))));
 	T47f97(C, t2, (T6)(GE_int32(0)), t3);
 	l1 = ((T47*)(C))->a8;
@@ -15426,12 +15656,12 @@ void T47f83(T0* C, T0* a1)
 	}
 	if (t1) {
 		((T47*)(C))->a21 = (T94f3(GE_void(l2), (T6)(GE_int32(0)), l1));
-		((T47*)(C))->a22 = (T143f4(GE_void(((T47*)(C))->a21), l1));
+		((T47*)(C))->a22 = (T144f4(GE_void(((T47*)(C))->a21), l1));
 		l1 = (((T94*)(GE_void(l2)))->a1);
 	} else {
 		((T47*)(C))->a22 = l1;
 	}
-	((T47*)(C))->a23 = (((T137*)(GE_void(((T47*)(C))->a1)))->a3);
+	((T47*)(C))->a23 = (((T138*)(GE_void(((T47*)(C))->a1)))->a3);
 	((T47*)(C))->a24 = ((T6)((((T47*)(C))->a23)+((T6)(GE_int32(1)))));
 	((T47*)(C))->a25 = (((T25*)(GE_void(a1)))->a30);
 	((T47*)(C))->a26 = (((T25*)(GE_void(a1)))->a31);
@@ -15454,7 +15684,7 @@ void T47f98(T0* C, T0* a1, T6 a2, T6 a3)
 	t1 = ((T6)((t1)*(l2)));
 	t1 = ((T6)((t1)+((T6)(GE_int32(1)))));
 	t1 = (T6f12(&t1, (T6)(GE_int32(1000))));
-	((T47*)(C))->a3 = T138c15(t1);
+	((T47*)(C))->a3 = T139c15(t1);
 	T47f112(C, a1);
 	l1 = (T6)(GE_int32(1));
 	while (1) {
@@ -15462,7 +15692,7 @@ void T47f98(T0* C, T0* a1, T6 a2, T6 a3)
 		if (t2) {
 			break;
 		}
-		t3 = (T75f10(GE_void(a1), l1));
+		t3 = (T75f14(GE_void(a1), l1));
 		T47f113(C, t3);
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
@@ -15486,74 +15716,74 @@ void T47f113(T0* C, T0* a1)
 	T6 l8 = 0;
 	l1 = (((T101*)(GE_void(a1)))->a4);
 	l2 = (((T101*)(GE_void(a1)))->a5);
-	l8 = (((T167*)(GE_void(l1)))->a5);
-	l3 = T135c23(l8);
-	t1 = (((T167*)(GE_void(l2)))->a5);
+	l8 = (((T169*)(GE_void(l1)))->a5);
+	l3 = T136c23(l8);
+	t1 = (((T169*)(GE_void(l2)))->a5);
 	t1 = ((T6)((l8)+(t1)));
-	l4 = T135c23(t1);
+	l4 = T136c23(t1);
 	l7 = (T6)(GE_int32(1));
 	while (1) {
 		t2 = (T6f1((&l7), l8));
 		if (t2) {
 			break;
 		}
-		t3 = (T167f7(GE_void(l1), l7));
+		t3 = (T169f7(GE_void(l1), l7));
 		l5 = (T93f4(GE_void(t3)));
-		T135f24(GE_void(l3), l5);
-		T135f24(GE_void(l4), l5);
+		T136f24(GE_void(l3), l5);
+		T136f24(GE_void(l4), l5);
 		l7 = ((T6)((l7)+((T6)(GE_int32(1)))));
 	}
-	l8 = (((T167*)(GE_void(l2)))->a5);
+	l8 = (((T169*)(GE_void(l2)))->a5);
 	l7 = (T6)(GE_int32(1));
 	while (1) {
 		t2 = (T6f1((&l7), l8));
 		if (t2) {
 			break;
 		}
-		t3 = (T167f7(GE_void(l2), l7));
+		t3 = (T169f7(GE_void(l2), l7));
 		t3 = (T93f4(GE_void(t3)));
-		T135f24(GE_void(l4), t3);
+		T136f24(GE_void(l4), t3);
 		l7 = ((T6)((l7)+((T6)(GE_int32(1)))));
 	}
-	l6 = T133c18(l3, ((T47*)(C))->a27, ((T47*)(C))->a28);
-	T138f16(GE_void(((T47*)(C))->a3), l6);
-	t1 = (((T138*)(GE_void(((T47*)(C))->a3)))->a1);
-	T133f19(GE_void(l6), t1);
-	l6 = T133c18(l4, ((T47*)(C))->a27, ((T47*)(C))->a28);
-	T138f16(GE_void(((T47*)(C))->a3), l6);
-	t1 = (((T138*)(GE_void(((T47*)(C))->a3)))->a1);
-	T133f19(GE_void(l6), t1);
+	l6 = T134c18(l3, ((T47*)(C))->a27, ((T47*)(C))->a28);
+	T139f16(GE_void(((T47*)(C))->a3), l6);
+	t1 = (((T139*)(GE_void(((T47*)(C))->a3)))->a1);
+	T134f19(GE_void(l6), t1);
+	l6 = T134c18(l4, ((T47*)(C))->a27, ((T47*)(C))->a28);
+	T139f16(GE_void(((T47*)(C))->a3), l6);
+	t1 = (((T139*)(GE_void(((T47*)(C))->a3)))->a1);
+	T134f19(GE_void(l6), t1);
 }
 
 /* LX_NFA.start_state */
 T0* T93f4(T0* C)
 {
 	T0* R = 0;
-	R = (T135f14(GE_void(((T93*)(C))->a2)));
+	R = (T136f14(GE_void(((T93*)(C))->a2)));
 	return R;
 }
 
 /* DS_ARRAYED_LIST [LX_NFA_STATE].first */
-T0* T135f14(T0* C)
+T0* T136f14(T0* C)
 {
 	T0* R = 0;
-	R = (((T220*)(GE_void(((T135*)(C))->a2)))->z2[(T6)(GE_int32(1))]);
+	R = (((T218*)(GE_void(((T136*)(C))->a2)))->z2[(T6)(GE_int32(1))]);
 	return R;
 }
 
 /* DS_ARRAYED_LIST [LX_NFA].item */
-T0* T167f7(T0* C, T6 a1)
+T0* T169f7(T0* C, T6 a1)
 {
 	T0* R = 0;
-	R = (((T95*)(GE_void(((T167*)(C))->a2)))->z2[a1]);
+	R = (((T95*)(GE_void(((T169*)(C))->a2)))->z2[a1]);
 	return R;
 }
 
 /* LX_START_CONDITIONS.item */
-T0* T75f10(T0* C, T6 a1)
+T0* T75f14(T0* C, T6 a1)
 {
 	T0* R = 0;
-	R = (((T196*)(GE_void(((T75*)(C))->a2)))->z2[a1]);
+	R = (((T198*)(GE_void(((T75*)(C))->a2)))->z2[a1]);
 	return R;
 }
 
@@ -15576,7 +15806,7 @@ void T47f112(T0* C, T0* a1)
 	T6 l12 = 0;
 	T6 l13 = 0;
 	l13 = (T6)(GE_int32(1));
-	l5 = T168c36((T6)(GE_int32(100)));
+	l5 = T170c36((T6)(GE_int32(100)));
 	l7 = (((T75*)(GE_void(a1)))->a1);
 	l6 = (T6)(GE_int32(1));
 	while (1) {
@@ -15584,36 +15814,36 @@ void T47f112(T0* C, T0* a1)
 		if (t1) {
 			break;
 		}
-		l1 = (T75f10(GE_void(a1), l6));
+		l1 = (T75f14(GE_void(a1), l6));
 		l2 = (((T101*)(GE_void(l1)))->a4);
-		l9 = (((T167*)(GE_void(l2)))->a5);
+		l9 = (((T169*)(GE_void(l2)))->a5);
 		l8 = (T6)(GE_int32(1));
 		while (1) {
 			t1 = (T6f1((&l8), l9));
 			if (t1) {
 				break;
 			}
-			l3 = (T167f7(GE_void(l2), l8));
+			l3 = (T169f7(GE_void(l2), l8));
 			t2 = (T93f4(GE_void(l3)));
-			l12 = (((T134*)(GE_void(t2)))->a4);
-			t1 = (T168f23(GE_void(l5), l12));
+			l12 = (((T135*)(GE_void(t2)))->a4);
+			t1 = (T170f23(GE_void(l5), l12));
 			t1 = ((T1)(!(t1)));
 			if (!(t1)) {
-				t2 = (T168f22(GE_void(l5), l12));
+				t2 = (T170f22(GE_void(l5), l12));
 				t1 = ((t2)!=(l3));
 			}
 			if (t1) {
-				T168f37(GE_void(l5), l3, l13);
+				T170f37(GE_void(l5), l3, l13);
 				l4 = (((T93*)(GE_void(l3)))->a2);
-				l11 = (((T135*)(GE_void(l4)))->a1);
+				l11 = (((T136*)(GE_void(l4)))->a1);
 				l10 = (T6)(GE_int32(1));
 				while (1) {
 					t1 = (T6f1((&l10), l11));
 					if (t1) {
 						break;
 					}
-					t2 = (T135f10(GE_void(l4), l10));
-					T134f15(GE_void(t2), l13);
+					t2 = (T136f13(GE_void(l4), l10));
+					T135f15(GE_void(t2), l13);
 					l13 = ((T6)((l13)+((T6)(GE_int32(1)))));
 					l10 = ((T6)((l10)+((T6)(GE_int32(1)))));
 				}
@@ -15621,34 +15851,34 @@ void T47f112(T0* C, T0* a1)
 			l8 = ((T6)((l8)+((T6)(GE_int32(1)))));
 		}
 		l2 = (((T101*)(GE_void(l1)))->a5);
-		l9 = (((T167*)(GE_void(l2)))->a5);
+		l9 = (((T169*)(GE_void(l2)))->a5);
 		l8 = (T6)(GE_int32(1));
 		while (1) {
 			t1 = (T6f1((&l8), l9));
 			if (t1) {
 				break;
 			}
-			l3 = (T167f7(GE_void(l2), l8));
+			l3 = (T169f7(GE_void(l2), l8));
 			t2 = (T93f4(GE_void(l3)));
-			l12 = (((T134*)(GE_void(t2)))->a4);
-			t1 = (T168f23(GE_void(l5), l12));
+			l12 = (((T135*)(GE_void(t2)))->a4);
+			t1 = (T170f23(GE_void(l5), l12));
 			t1 = ((T1)(!(t1)));
 			if (!(t1)) {
-				t2 = (T168f22(GE_void(l5), l12));
+				t2 = (T170f22(GE_void(l5), l12));
 				t1 = ((t2)!=(l3));
 			}
 			if (t1) {
-				T168f37(GE_void(l5), l3, l13);
+				T170f37(GE_void(l5), l3, l13);
 				l4 = (((T93*)(GE_void(l3)))->a2);
-				l11 = (((T135*)(GE_void(l4)))->a1);
+				l11 = (((T136*)(GE_void(l4)))->a1);
 				l10 = (T6)(GE_int32(1));
 				while (1) {
 					t1 = (T6f1((&l10), l11));
 					if (t1) {
 						break;
 					}
-					t2 = (T135f10(GE_void(l4), l10));
-					T134f15(GE_void(t2), l13);
+					t2 = (T136f13(GE_void(l4), l10));
+					T135f15(GE_void(t2), l13);
 					l13 = ((T6)((l13)+((T6)(GE_int32(1)))));
 					l10 = ((T6)((l10)+((T6)(GE_int32(1)))));
 				}
@@ -15660,89 +15890,89 @@ void T47f112(T0* C, T0* a1)
 }
 
 /* LX_NFA_STATE.set_id */
-void T134f15(T0* C, T6 a1)
+void T135f15(T0* C, T6 a1)
 {
-	((T134*)(C))->a4 = a1;
+	((T135*)(C))->a4 = a1;
 }
 
 /* DS_HASH_TABLE [LX_NFA, INTEGER_32].force */
-void T168f37(T0* C, T0* a1, T6 a2)
+void T170f37(T0* C, T0* a1, T6 a2)
 {
 	T1 t1;
 	T6 t2;
 	T6 t3;
 	T6 l1 = 0;
 	T6 l2 = 0;
-	T168f40(C);
-	T168f38(C, a2);
-	t1 = (((((((T168*)(C))->a1) != ((T6)(GE_int32(0)))))));
+	T170f40(C);
+	T170f38(C, a2);
+	t1 = (((((((T170*)(C))->a1) != ((T6)(GE_int32(0)))))));
 	if (t1) {
-		T168f41(C, a1, ((T168*)(C))->a1);
+		T170f41(C, a1, ((T170*)(C))->a1);
 	} else {
-		t1 = (((((((T168*)(C))->a4) == (((T168*)(C))->a5)))));
+		t1 = (((((((T170*)(C))->a4) == (((T170*)(C))->a5)))));
 		if (t1) {
-			t2 = ((T6)((((T168*)(C))->a4)+((T6)(GE_int32(1)))));
-			t2 = (T168f33(C, t2));
-			T168f42(C, t2);
-			l2 = (T168f21(C, a2));
+			t2 = ((T6)((((T170*)(C))->a4)+((T6)(GE_int32(1)))));
+			t2 = (T170f33(C, t2));
+			T170f42(C, t2);
+			l2 = (T170f21(C, a2));
 		} else {
-			l2 = ((T168*)(C))->a6;
+			l2 = ((T170*)(C))->a6;
 		}
-		l1 = ((T168*)(C))->a7;
+		l1 = ((T170*)(C))->a7;
 		t1 = (((((l1) == ((T6)(GE_int32(0)))))));
 		if (t1) {
-			((T168*)(C))->a8 = ((T6)((((T168*)(C))->a8)+((T6)(GE_int32(1)))));
-			l1 = ((T168*)(C))->a8;
+			((T170*)(C))->a8 = ((T6)((((T170*)(C))->a8)+((T6)(GE_int32(1)))));
+			l1 = ((T170*)(C))->a8;
 		} else {
 			t2 = (T6)(GE_int32(-1));
-			t3 = (T168f28(C, l1));
-			((T168*)(C))->a7 = ((T6)((t2)-(t3)));
+			t3 = (T170f28(C, l1));
+			((T170*)(C))->a7 = ((T6)((t2)-(t3)));
 		}
-		t2 = (T168f29(C, l2));
-		T168f43(C, t2, l1);
-		T168f44(C, l1, l2);
-		T168f41(C, a1, l1);
-		T168f45(C, a2, l1);
-		((T168*)(C))->a4 = ((T6)((((T168*)(C))->a4)+((T6)(GE_int32(1)))));
+		t2 = (T170f31(C, l2));
+		T170f43(C, t2, l1);
+		T170f44(C, l1, l2);
+		T170f41(C, a1, l1);
+		T170f45(C, a2, l1);
+		((T170*)(C))->a4 = ((T6)((((T170*)(C))->a4)+((T6)(GE_int32(1)))));
 	}
 }
 
 /* DS_HASH_TABLE [LX_NFA, INTEGER_32].key_storage_put */
-void T168f45(T0* C, T6 a1, T6 a2)
+void T170f45(T0* C, T6 a1, T6 a2)
 {
-	((T83*)(GE_void(((T168*)(C))->a16)))->z2[a2] = (a1);
+	((T83*)(GE_void(((T170*)(C))->a16)))->z2[a2] = (a1);
 }
 
 /* DS_HASH_TABLE [LX_NFA, INTEGER_32].slots_put */
-void T168f44(T0* C, T6 a1, T6 a2)
+void T170f44(T0* C, T6 a1, T6 a2)
 {
-	((T83*)(GE_void(((T168*)(C))->a15)))->z2[a2] = (a1);
+	((T83*)(GE_void(((T170*)(C))->a15)))->z2[a2] = (a1);
 }
 
 /* DS_HASH_TABLE [LX_NFA, INTEGER_32].clashes_put */
-void T168f43(T0* C, T6 a1, T6 a2)
+void T170f43(T0* C, T6 a1, T6 a2)
 {
-	((T83*)(GE_void(((T168*)(C))->a14)))->z2[a2] = (a1);
+	((T83*)(GE_void(((T170*)(C))->a14)))->z2[a2] = (a1);
 }
 
 /* DS_HASH_TABLE [LX_NFA, INTEGER_32].slots_item */
-T6 T168f29(T0* C, T6 a1)
+T6 T170f31(T0* C, T6 a1)
 {
 	T6 R = 0;
-	R = (((T83*)(GE_void(((T168*)(C))->a15)))->z2[a1]);
+	R = (((T83*)(GE_void(((T170*)(C))->a15)))->z2[a1]);
 	return R;
 }
 
 /* DS_HASH_TABLE [LX_NFA, INTEGER_32].clashes_item */
-T6 T168f28(T0* C, T6 a1)
+T6 T170f28(T0* C, T6 a1)
 {
 	T6 R = 0;
-	R = (((T83*)(GE_void(((T168*)(C))->a14)))->z2[a1]);
+	R = (((T83*)(GE_void(((T170*)(C))->a14)))->z2[a1]);
 	return R;
 }
 
 /* DS_HASH_TABLE [LX_NFA, INTEGER_32].hash_position */
-T6 T168f21(T0* C, T6 a1)
+T6 T170f21(T0* C, T6 a1)
 {
 	T1 t1;
 	T6 t2;
@@ -15751,120 +15981,112 @@ T6 T168f21(T0* C, T6 a1)
 	if (t1) {
 		t1 = (EIF_FALSE);
 		if (t1) {
-			t2 = ((GE_void(((T168*)(C))->a20), a1, (T6)0));
-			R = ((T6)((t2)%(((T168*)(C))->a9)));
+			t2 = ((GE_void(((T170*)(C))->a20), a1, (T6)0));
+			R = ((T6)((t2)%(((T170*)(C))->a9)));
 		} else {
-			t2 = (T6f18(&a1));
-			R = ((T6)((t2)%(((T168*)(C))->a9)));
+			t2 = (T6f20(&a1));
+			R = ((T6)((t2)%(((T170*)(C))->a9)));
 		}
 	} else {
-		R = ((T168*)(C))->a9;
+		R = ((T170*)(C))->a9;
 	}
 	return R;
 }
 
 /* INTEGER_32.hash_code */
-T6 T6f18(T6* C)
+T6 T6f20(T6* C)
 {
 	T6 t1;
 	T6 R = 0;
 	t1 = (*C);
-	R = (T6f22(&t1, (T6)(GE_int32(0x7FFFFFFF))));
-	return R;
-}
-
-/* INTEGER_32.infix "&" */
-T6 T6f22(T6* C, T6 a1)
-{
-	T6 R = 0;
-	R = ((T6)((*C)&(a1)));
+	R = ((T6)((t1)&((T6)(GE_int32(2147483647)))));
 	return R;
 }
 
 /* DS_HASH_TABLE [LX_NFA, INTEGER_32].resize */
-void T168f42(T0* C, T6 a1)
+void T170f42(T0* C, T6 a1)
 {
 	T6 t1;
 	T1 t2;
 	T6 l1 = 0;
 	T6 l2 = 0;
 	T6 l3 = 0;
-	T168f40(C);
-	l1 = (T168f24(C, a1));
+	T170f40(C);
+	l1 = (T170f24(C, a1));
 	t1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-	T168f47(C, t1);
-	l2 = ((T168*)(C))->a9;
+	T170f47(C, t1);
+	l2 = ((T170*)(C))->a9;
 	while (1) {
 		t2 = ((T1)((l2)<((T6)(GE_int32(0)))));
 		if (t2) {
 			break;
 		}
-		T168f44(C, (T6)(GE_int32(0)), l2);
+		T170f44(C, (T6)(GE_int32(0)), l2);
 		l2 = ((T6)((l2)-((T6)(GE_int32(1)))));
 	}
-	((T168*)(C))->a9 = l1;
-	l2 = ((T168*)(C))->a8;
+	((T170*)(C))->a9 = l1;
+	l2 = ((T170*)(C))->a8;
 	while (1) {
 		t2 = ((T1)((l2)<((T6)(GE_int32(1)))));
 		if (t2) {
 			break;
 		}
-		t1 = (T168f28(C, l2));
+		t1 = (T170f28(C, l2));
 		t2 = (T6f1(&t1, (T6)(GE_int32(-1))));
 		if (t2) {
-			t1 = (T168f34(C, l2));
-			l3 = (T168f21(C, t1));
-			t1 = (T168f29(C, l3));
-			T168f43(C, t1, l2);
-			T168f44(C, l2, l3);
+			t1 = (T170f34(C, l2));
+			l3 = (T170f21(C, t1));
+			t1 = (T170f31(C, l3));
+			T170f43(C, t1, l2);
+			T170f44(C, l2, l3);
 		}
 		l2 = ((T6)((l2)-((T6)(GE_int32(1)))));
 	}
 	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
-	T168f48(C, t1);
+	T170f48(C, t1);
 	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
-	T168f49(C, t1);
+	T170f49(C, t1);
 	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
-	T168f50(C, t1);
-	((T168*)(C))->a5 = a1;
-	((T168*)(C))->a1 = (T6)(GE_int32(0));
+	T170f50(C, t1);
+	((T170*)(C))->a5 = a1;
+	((T170*)(C))->a1 = (T6)(GE_int32(0));
 }
 
 /* DS_HASH_TABLE [LX_NFA, INTEGER_32].clashes_resize */
-void T168f50(T0* C, T6 a1)
+void T170f50(T0* C, T6 a1)
 {
 	T0* t1;
-	t1 = (T168f31(C));
-	((T168*)(C))->a14 = (T84f2(GE_void(t1), ((T168*)(C))->a14, a1));
+	t1 = (T170f30(C));
+	((T170*)(C))->a14 = (T84f2(GE_void(t1), ((T170*)(C))->a14, a1));
 }
 
 /* DS_HASH_TABLE [LX_NFA, INTEGER_32].special_integer_ */
-unsigned char ge357os2757 = '\0';
-T0* ge357ov2757;
-T0* T168f31(T0* C)
+unsigned char ge306os2697 = '\0';
+T0* ge306ov2697;
+T0* T170f30(T0* C)
 {
 	T0* R = 0;
-	if (ge357os2757) {
-		return ge357ov2757;
+	if (ge306os2697) {
+		return ge306ov2697;
 	} else {
-		ge357os2757 = '\1';
-		ge357ov2757 = R;
+		ge306os2697 = '\1';
+		ge306ov2697 = R;
 	}
 	R = T84c4();
-	ge357ov2757 = R;
+	ge306ov2697 = R;
 	return R;
 }
 
 /* DS_HASH_TABLE [LX_NFA, INTEGER_32].key_storage_resize */
-void T168f49(T0* C, T6 a1)
+void T170f49(T0* C, T6 a1)
 {
-	((T168*)(C))->a16 = (T84f2(GE_void(((T168*)(C))->a19), ((T168*)(C))->a16, a1));
+	((T170*)(C))->a16 = (T84f2(GE_void(((T170*)(C))->a18), ((T170*)(C))->a16, a1));
 }
 
 /* DS_HASH_TABLE [LX_NFA, INTEGER_32].item_storage_resize */
-void T168f48(T0* C, T6 a1)
+void T170f48(T0* C, T6 a1)
 {
-	((T168*)(C))->a2 = (T96f2(GE_void(((T168*)(C))->a18), ((T168*)(C))->a2, a1));
+	((T170*)(C))->a2 = (T96f2(GE_void(((T170*)(C))->a17), ((T170*)(C))->a2, a1));
 }
 
 /* KL_SPECIAL_ROUTINES [LX_NFA].resize */
@@ -15873,22 +16095,44 @@ T0* T96f2(T0* C, T0* a1, T6 a2)
 	T6 t1;
 	T1 t2;
 	T0* R = 0;
-	t1 = (((T95*)(GE_void(a1)))->z1);
+	T0* l1 = 0;
+	t1 = (((T95*)(GE_void(a1)))->a1);
 	t2 = (T6f1(&a2, t1));
 	if (t2) {
-		R = (T95f3(GE_void(a1), a2));
+		R = (T95f4(GE_void(a1), l1, a2));
 	} else {
 		R = a1;
 	}
 	return R;
 }
 
+/* SPECIAL [LX_NFA].aliased_resized_area_with_default */
+T0* T95f4(T0* C, T0* a1, T6 a2)
+{
+	T1 t1;
+	T0* R = 0;
+	T6 l1 = 0;
+	T6 l2 = 0;
+	l2 = ((T95*)(C))->a1;
+	R = (T95f5(C, a2));
+	l1 = l2;
+	while (1) {
+		t1 = (((((l1) == (a2)))));
+		if (t1) {
+			break;
+		}
+		((T95*)(GE_void(R)))->z2[l1] = (a1);
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
+	return R;
+}
+
 /* SPECIAL [LX_NFA].aliased_resized_area */
-T0* T95f3(T0* C, T6 a1)
+T0* T95f5(T0* C, T6 a1)
 {
 	T0* R = 0;
 	T6 t1;
-	t1 = ((T95*)(C))->z1;
+	t1 = ((T95*)(C))->a1;
 	if (a1>t1) {
 		R = GE_new95(a1, EIF_FALSE);
 		*(T95*)(R) = *(T95*)(C);
@@ -15899,28 +16143,28 @@ T0* T95f3(T0* C, T6 a1)
 	} else {
 		R = C;
 	}
-	((T95*)(R))->z1 = a1;
+	((T95*)(R))->a1 = a1;
 	return R;
 }
 
 /* DS_HASH_TABLE [LX_NFA, INTEGER_32].key_storage_item */
-T6 T168f34(T0* C, T6 a1)
+T6 T170f34(T0* C, T6 a1)
 {
 	T6 R = 0;
-	R = (((T83*)(GE_void(((T168*)(C))->a16)))->z2[a1]);
+	R = (((T83*)(GE_void(((T170*)(C))->a16)))->z2[a1]);
 	return R;
 }
 
 /* DS_HASH_TABLE [LX_NFA, INTEGER_32].slots_resize */
-void T168f47(T0* C, T6 a1)
+void T170f47(T0* C, T6 a1)
 {
 	T0* t1;
-	t1 = (T168f31(C));
-	((T168*)(C))->a15 = (T84f2(GE_void(t1), ((T168*)(C))->a15, a1));
+	t1 = (T170f30(C));
+	((T170*)(C))->a15 = (T84f2(GE_void(t1), ((T170*)(C))->a15, a1));
 }
 
 /* DS_HASH_TABLE [LX_NFA, INTEGER_32].new_modulus */
-T6 T168f24(T0* C, T6 a1)
+T6 T170f24(T0* C, T6 a1)
 {
 	T6 t1;
 	T6 R = 0;
@@ -15931,7 +16175,7 @@ T6 T168f24(T0* C, T6 a1)
 }
 
 /* DS_HASH_TABLE [LX_NFA, INTEGER_32].new_capacity */
-T6 T168f33(T0* C, T6 a1)
+T6 T170f33(T0* C, T6 a1)
 {
 	T6 t1;
 	T6 R = 0;
@@ -15941,13 +16185,13 @@ T6 T168f33(T0* C, T6 a1)
 }
 
 /* DS_HASH_TABLE [LX_NFA, INTEGER_32].item_storage_put */
-void T168f41(T0* C, T0* a1, T6 a2)
+void T170f41(T0* C, T0* a1, T6 a2)
 {
-	((T95*)(GE_void(((T168*)(C))->a2)))->z2[a2] = (a1);
+	((T95*)(GE_void(((T170*)(C))->a2)))->z2[a2] = (a1);
 }
 
 /* DS_HASH_TABLE [LX_NFA, INTEGER_32].search_position */
-void T168f38(T0* C, T6 a1)
+void T170f38(T0* C, T6 a1)
 {
 	T1 t1;
 	T6 t2;
@@ -15958,16 +16202,16 @@ void T168f38(T0* C, T6 a1)
 	T0* l4 = 0;
 	t1 = (EIF_FALSE);
 	if (t1) {
-		((T168*)(C))->a1 = (T168f29(C, ((T168*)(C))->a9));
-		((T168*)(C))->a6 = ((T168*)(C))->a9;
-		((T168*)(C))->a10 = (T6)(GE_int32(0));
+		((T170*)(C))->a1 = (T170f31(C, ((T170*)(C))->a9));
+		((T170*)(C))->a6 = ((T170*)(C))->a9;
+		((T170*)(C))->a10 = (T6)(GE_int32(0));
 	} else {
-		l4 = ((T168*)(C))->a3;
+		l4 = ((T170*)(C))->a3;
 		t1 = ((l4)!=(EIF_VOID));
 		if (t1) {
-			t1 = (((((((T168*)(C))->a1) == ((T6)(GE_int32(0)))))));
+			t1 = (((((((T170*)(C))->a1) == ((T6)(GE_int32(0)))))));
 			if (!(t1)) {
-				t2 = (T168f34(C, ((T168*)(C))->a1));
+				t2 = (T170f34(C, ((T170*)(C))->a1));
 				t3 = (T30f1(GE_void(l4), a1, t2));
 				t1 = ((T1)(!(t3)));
 			}
@@ -15975,57 +16219,57 @@ void T168f38(T0* C, T6 a1)
 				t1 = (T30f1(GE_void(l4), a1, l3));
 			}
 			if (t1) {
-				((T168*)(C))->a6 = (T168f21(C, a1));
-				l1 = (T168f29(C, ((T168*)(C))->a6));
-				((T168*)(C))->a1 = (T6)(GE_int32(0));
+				((T170*)(C))->a6 = (T170f21(C, a1));
+				l1 = (T170f31(C, ((T170*)(C))->a6));
+				((T170*)(C))->a1 = (T6)(GE_int32(0));
 				l2 = (T6)(GE_int32(0));
 				while (1) {
 					t1 = (((((l1) == ((T6)(GE_int32(0)))))));
 					if (t1) {
 						break;
 					}
-					t2 = (T168f34(C, l1));
+					t2 = (T170f34(C, l1));
 					t1 = (T30f1(GE_void(l4), a1, t2));
 					if (t1) {
-						((T168*)(C))->a1 = l1;
+						((T170*)(C))->a1 = l1;
 						l1 = (T6)(GE_int32(0));
 					} else {
 						l2 = l1;
-						l1 = (T168f28(C, l1));
+						l1 = (T170f28(C, l1));
 					}
 				}
-				((T168*)(C))->a10 = l2;
+				((T170*)(C))->a10 = l2;
 			}
 		} else {
-			t1 = (((((((T168*)(C))->a1) == ((T6)(GE_int32(0)))))));
+			t1 = (((((((T170*)(C))->a1) == ((T6)(GE_int32(0)))))));
 			if (!(t1)) {
-				t2 = (T168f34(C, ((T168*)(C))->a1));
+				t2 = (T170f34(C, ((T170*)(C))->a1));
 				t1 = (((((a1) != (t2)))));
 			}
 			if (!(t1)) {
 				t1 = (((((a1) == (l3)))));
 			}
 			if (t1) {
-				((T168*)(C))->a6 = (T168f21(C, a1));
-				l1 = (T168f29(C, ((T168*)(C))->a6));
-				((T168*)(C))->a1 = (T6)(GE_int32(0));
+				((T170*)(C))->a6 = (T170f21(C, a1));
+				l1 = (T170f31(C, ((T170*)(C))->a6));
+				((T170*)(C))->a1 = (T6)(GE_int32(0));
 				l2 = (T6)(GE_int32(0));
 				while (1) {
 					t1 = (((((l1) == ((T6)(GE_int32(0)))))));
 					if (t1) {
 						break;
 					}
-					t2 = (T168f34(C, l1));
+					t2 = (T170f34(C, l1));
 					t1 = (((((a1) == (t2)))));
 					if (t1) {
-						((T168*)(C))->a1 = l1;
+						((T170*)(C))->a1 = l1;
 						l1 = (T6)(GE_int32(0));
 					} else {
 						l2 = l1;
-						l1 = (T168f28(C, l1));
+						l1 = (T170f28(C, l1));
 					}
 				}
-				((T168*)(C))->a10 = l2;
+				((T170*)(C))->a10 = l2;
 			}
 		}
 	}
@@ -16035,231 +16279,181 @@ void T168f38(T0* C, T6 a1)
 T1 T30f1(T0* C, T6 a1, T6 a2)
 {
 	T1 t1;
-	T0* t2;
 	T1 R = 0;
 	t1 = (((((a1) == (a2)))));
 	if (t1) {
 		R = EIF_TRUE;
 	} else {
-		t1 = (EIF_FALSE);
-		if (t1) {
-			R = EIF_FALSE;
-		} else {
-			t1 = (EIF_FALSE);
-			if (t1) {
-				R = EIF_FALSE;
-			} else {
-				t2 = (T30f2(C));
-				R = (T189f2(GE_void(t2), GE_boxed6(a1), GE_boxed6(a2)));
-			}
-		}
+		R = (((((a1) == (a2)))));
 	}
-	return R;
-}
-
-/* KL_ANY_ROUTINES.equal_objects */
-T1 T189f2(T0* C, T0* a1, T0* a2)
-{
-	T1 t1;
-	T1 R = 0;
-	t1 = (((((((Tb6*)(a1))->z1) == (((Tb6*)(a2))->z1)))));
-	if (t1) {
-		R = EIF_TRUE;
-	} else {
-		t1 = (EIF_FALSE);
-		if (t1) {
-			R = EIF_FALSE;
-		} else {
-			t1 = (EIF_FALSE);
-			if (t1) {
-				R = EIF_FALSE;
-			} else {
-				t1 = (T189f1(C, a1, a2));
-				if (t1) {
-					R = (T6f20(&(((Tb6*)(a1))->z1), ((Tb6*)(a2))->z1));
-				}
-			}
-		}
-	}
-	return R;
-}
-
-/* INTEGER_32.is_equal */
-T1 T6f20(T6* C, T6 a1)
-{
-	T6 t1;
-	T6 t2;
-	T1 R = 0;
-	t1 = (a1);
-	t2 = (*C);
-	R = (((((t1) == (t2)))));
-	return R;
-}
-
-/* KL_EQUALITY_TESTER [INTEGER_32].any_ */
-T0* T30f2(T0* C)
-{
-	T0* R = 0;
-	if (ge346os1894) {
-		return ge346ov1894;
-	} else {
-		ge346os1894 = '\1';
-		ge346ov1894 = R;
-	}
-	R = T189c3();
-	ge346ov1894 = R;
 	return R;
 }
 
 /* DS_HASH_TABLE [LX_NFA, INTEGER_32].unset_found_item */
-void T168f40(T0* C)
+void T170f40(T0* C)
 {
-	((T168*)(C))->a13 = (T6)(GE_int32(0));
+	((T170*)(C))->a13 = (T6)(GE_int32(0));
 }
 
 /* DS_HASH_TABLE [LX_NFA, INTEGER_32].item */
-T0* T168f22(T0* C, T6 a1)
+T0* T170f22(T0* C, T6 a1)
 {
 	T0* R = 0;
-	T168f38(C, a1);
-	R = (T168f32(C, ((T168*)(C))->a1));
+	T170f38(C, a1);
+	R = (T170f32(C, ((T170*)(C))->a1));
 	return R;
 }
 
 /* DS_HASH_TABLE [LX_NFA, INTEGER_32].item_storage_item */
-T0* T168f32(T0* C, T6 a1)
+T0* T170f32(T0* C, T6 a1)
 {
 	T0* R = 0;
-	R = (((T95*)(GE_void(((T168*)(C))->a2)))->z2[a1]);
+	R = (((T95*)(GE_void(((T170*)(C))->a2)))->z2[a1]);
 	return R;
 }
 
 /* DS_HASH_TABLE [LX_NFA, INTEGER_32].has */
-T1 T168f23(T0* C, T6 a1)
+T1 T170f23(T0* C, T6 a1)
 {
 	T1 R = 0;
-	T168f38(C, a1);
-	R = (((((((T168*)(C))->a1) != ((T6)(GE_int32(0)))))));
+	T170f38(C, a1);
+	R = (((((((T170*)(C))->a1) != ((T6)(GE_int32(0)))))));
 	return R;
 }
 
 /* DS_HASH_TABLE [LX_NFA, INTEGER_32].make */
-T0* T168c36(T6 a1)
+T0* T170c36(T6 a1)
 {
 	T0* C;
-	C = GE_new168(EIF_TRUE);
-	((T168*)(C))->a3 = T30c3();
-	T168f39(C, a1, EIF_VOID, ((T168*)(C))->a3);
+	C = GE_new170(EIF_TRUE);
+	((T170*)(C))->a3 = T30c2();
+	T170f39(C, a1, EIF_VOID, ((T170*)(C))->a3);
 	return C;
 }
 
 /* DS_HASH_TABLE [LX_NFA, INTEGER_32].make_with_equality_testers */
-void T168f39(T0* C, T6 a1, T0* a2, T0* a3)
+void T170f39(T0* C, T6 a1, T0* a2, T0* a3)
 {
-	((T168*)(C))->a11 = a2;
-	((T168*)(C))->a3 = a3;
-	T168f46(C, a1);
-	((T168*)(C))->a12 = T241c5(C);
+	((T170*)(C))->a11 = a2;
+	((T170*)(C))->a3 = a3;
+	T170f46(C, a1);
+	((T170*)(C))->a12 = T239c5(C);
 }
 
 /* DS_SPARSE_TABLE_KEYS [LX_NFA, INTEGER_32].make */
-T0* T241c5(T0* a1)
+T0* T239c5(T0* a1)
 {
 	T0* C;
-	C = GE_new241(EIF_TRUE);
-	((T241*)(C))->a1 = a1;
-	((T241*)(C))->a2 = (((T168*)(GE_void(((T241*)(C))->a1)))->a3);
-	((T241*)(C))->a3 = (T241f4(C));
+	T0* t1;
+	C = GE_new239(EIF_TRUE);
+	((T239*)(C))->a1 = a1;
+	((T239*)(C))->a2 = (((T170*)(GE_void(((T239*)(C))->a1)))->a3);
+	t1 = (T239f4(C));
+	T239f6(C, t1);
 	return C;
 }
 
+/* DS_SPARSE_TABLE_KEYS [LX_NFA, INTEGER_32].set_internal_cursor */
+void T239f6(T0* C, T0* a1)
+{
+	((T239*)(C))->a3 = a1;
+}
+
 /* DS_SPARSE_TABLE_KEYS [LX_NFA, INTEGER_32].new_cursor */
-T0* T241f4(T0* C)
+T0* T239f4(T0* C)
 {
 	T0* R = 0;
-	R = T276c3(C);
+	R = T269c3(C);
 	return R;
 }
 
 /* DS_SPARSE_TABLE_KEYS_CURSOR [LX_NFA, INTEGER_32].make */
-T0* T276c3(T0* a1)
+T0* T269c3(T0* a1)
 {
 	T0* C;
 	T0* t1;
-	C = GE_new276(EIF_TRUE);
-	((T276*)(C))->a1 = a1;
-	t1 = (((T241*)(GE_void(((T276*)(C))->a1)))->a1);
-	((T276*)(C))->a2 = (T168f30(GE_void(t1)));
+	C = GE_new269(EIF_TRUE);
+	((T269*)(C))->a1 = a1;
+	t1 = (((T239*)(GE_void(((T269*)(C))->a1)))->a1);
+	((T269*)(C))->a2 = (T170f29(GE_void(t1)));
 	return C;
 }
 
 /* DS_HASH_TABLE [LX_NFA, INTEGER_32].new_cursor */
-T0* T168f30(T0* C)
+T0* T170f29(T0* C)
 {
 	T0* R = 0;
-	R = T243c3(C);
+	R = T241c3(C);
 	return R;
 }
 
 /* DS_HASH_TABLE_CURSOR [LX_NFA, INTEGER_32].make */
-T0* T243c3(T0* a1)
+T0* T241c3(T0* a1)
 {
 	T0* C;
-	C = GE_new243(EIF_TRUE);
-	((T243*)(C))->a1 = a1;
-	((T243*)(C))->a2 = ((T6)(GE_int32(-1)));
+	C = GE_new241(EIF_TRUE);
+	((T241*)(C))->a1 = a1;
+	((T241*)(C))->a2 = ((T6)(GE_int32(-1)));
 	return C;
 }
 
 /* DS_HASH_TABLE [LX_NFA, INTEGER_32].make_sparse_container */
-void T168f46(T0* C, T6 a1)
+void T170f46(T0* C, T6 a1)
 {
 	T6 t1;
-	((T168*)(C))->a5 = a1;
+	T0* t2;
+	((T170*)(C))->a5 = a1;
 	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
-	T168f51(C, t1);
+	T170f51(C, t1);
 	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
-	T168f52(C, t1);
+	T170f52(C, t1);
 	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
-	T168f53(C, t1);
-	((T168*)(C))->a9 = (T168f24(C, a1));
-	t1 = ((T6)((((T168*)(C))->a9)+((T6)(GE_int32(1)))));
-	T168f54(C, t1);
-	((T168*)(C))->a8 = (T6)(GE_int32(0));
-	((T168*)(C))->a7 = (T6)(GE_int32(0));
-	((T168*)(C))->a1 = (T6)(GE_int32(0));
-	T168f40(C);
-	((T168*)(C))->a17 = (T168f30(C));
+	T170f53(C, t1);
+	((T170*)(C))->a9 = (T170f24(C, a1));
+	t1 = ((T6)((((T170*)(C))->a9)+((T6)(GE_int32(1)))));
+	T170f54(C, t1);
+	((T170*)(C))->a8 = (T6)(GE_int32(0));
+	((T170*)(C))->a7 = (T6)(GE_int32(0));
+	((T170*)(C))->a1 = (T6)(GE_int32(0));
+	T170f40(C);
+	t2 = (T170f29(C));
+	T170f55(C, t2);
+}
+
+/* DS_HASH_TABLE [LX_NFA, INTEGER_32].set_internal_cursor */
+void T170f55(T0* C, T0* a1)
+{
+	((T170*)(C))->a19 = a1;
 }
 
 /* DS_HASH_TABLE [LX_NFA, INTEGER_32].make_slots */
-void T168f54(T0* C, T6 a1)
+void T170f54(T0* C, T6 a1)
 {
 	T0* t1;
-	t1 = (T168f31(C));
-	((T168*)(C))->a15 = (T84f1(GE_void(t1), a1));
+	t1 = (T170f30(C));
+	((T170*)(C))->a15 = (T84f1(GE_void(t1), a1));
 }
 
 /* DS_HASH_TABLE [LX_NFA, INTEGER_32].make_clashes */
-void T168f53(T0* C, T6 a1)
+void T170f53(T0* C, T6 a1)
 {
 	T0* t1;
-	t1 = (T168f31(C));
-	((T168*)(C))->a14 = (T84f1(GE_void(t1), a1));
+	t1 = (T170f30(C));
+	((T170*)(C))->a14 = (T84f1(GE_void(t1), a1));
 }
 
 /* DS_HASH_TABLE [LX_NFA, INTEGER_32].make_key_storage */
-void T168f52(T0* C, T6 a1)
+void T170f52(T0* C, T6 a1)
 {
-	((T168*)(C))->a19 = T84c4();
-	((T168*)(C))->a16 = (T84f1(GE_void(((T168*)(C))->a19), a1));
+	((T170*)(C))->a18 = T84c4();
+	((T170*)(C))->a16 = (T84f1(GE_void(((T170*)(C))->a18), a1));
 }
 
 /* DS_HASH_TABLE [LX_NFA, INTEGER_32].make_item_storage */
-void T168f51(T0* C, T6 a1)
+void T170f51(T0* C, T6 a1)
 {
-	((T168*)(C))->a18 = T96c3();
-	((T168*)(C))->a2 = (T96f1(GE_void(((T168*)(C))->a18), a1));
+	((T170*)(C))->a17 = T96c3();
+	((T170*)(C))->a2 = (T96f1(GE_void(((T170*)(C))->a17), a1));
 }
 
 /* KL_SPECIAL_ROUTINES [LX_NFA].make */
@@ -16267,26 +16461,43 @@ T0* T96f1(T0* C, T6 a1)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	l1 = T217c2(a1);
-	R = (((T217*)(GE_void(l1)))->a1);
+	R = T95c6(l1, a1);
 	return R;
 }
 
-/* TO_SPECIAL [LX_NFA].make_area */
-T0* T217c2(T6 a1)
+/* SPECIAL [LX_NFA].make_filled */
+T0* T95c6(T0* a1, T6 a2)
 {
 	T0* C;
-	C = GE_new217(EIF_TRUE);
-	((T217*)(C))->a1 = T95c4(a1);
+	T6 t1;
+	C = GE_new95(a2, EIF_TRUE);
+	T95f9(C, a2);
+	t1 = ((T6)((a2)-((T6)(GE_int32(1)))));
+	T95f8(C, a1, (T6)(GE_int32(0)), t1);
 	return C;
 }
 
-/* SPECIAL [LX_NFA].make */
-T0* T95c4(T6 a1)
+/* SPECIAL [LX_NFA].fill_with */
+void T95f8(T0* C, T0* a1, T6 a2, T6 a3)
 {
-	T0* C;
-	C = GE_new95(a1, EIF_TRUE);
-	return C;
+	T1 t1;
+	T6 l1 = 0;
+	T6 l2 = 0;
+	l1 = a2;
+	l2 = ((T6)((a3)+((T6)(GE_int32(1)))));
+	while (1) {
+		t1 = (((((l1) == (l2)))));
+		if (t1) {
+			break;
+		}
+		((T95*)(C))->z2[l1] = (a1);
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
+}
+
+/* SPECIAL [LX_NFA].make */
+void T95f9(T0* C, T6 a1)
+{
 }
 
 /* KL_SPECIAL_ROUTINES [LX_NFA].default_create */
@@ -16298,7 +16509,7 @@ T0* T96c3(void)
 }
 
 /* KL_EQUALITY_TESTER [INTEGER_32].default_create */
-T0* T30c3(void)
+T0* T30c2(void)
 {
 	T0* C;
 	C = GE_new30(EIF_TRUE);
@@ -16321,7 +16532,7 @@ void T47f97(T0* C, T0* a1, T6 a2, T6 a3)
 	T6 l1 = 0;
 	T6 l2 = 0;
 	T0* l3 = 0;
-	((T47*)(C))->a44 = T137c6(a2, a3);
+	((T47*)(C))->a44 = T138c6(EIF_VOID, a2, a3);
 	l2 = (((T48*)(GE_void(a1)))->a1);
 	l1 = (T6)(GE_int32(1));
 	while (1) {
@@ -16331,42 +16542,42 @@ void T47f97(T0* C, T0* a1, T6 a2, T6 a3)
 		}
 		l3 = (T48f8(GE_void(a1), l1));
 		t2 = (((T49*)(GE_void(l3)))->a1);
-		T137f7(GE_void(((T47*)(C))->a44), l3, t2);
+		T138f7(GE_void(((T47*)(C))->a44), l3, t2);
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
 }
 
 /* ARRAY [LX_RULE].put */
-void T137f7(T0* C, T0* a1, T6 a2)
+void T138f7(T0* C, T0* a1, T6 a2)
 {
 	T6 t1;
-	t1 = ((T6)((a2)-(((T137*)(C))->a2)));
-	((T136*)(GE_void(((T137*)(C))->a1)))->z2[t1] = (a1);
+	t1 = ((T6)((a2)-(((T138*)(C))->a2)));
+	((T137*)(GE_void(((T138*)(C))->a1)))->z2[t1] = (a1);
 }
 
-/* ARRAY [LX_RULE].make */
-T0* T137c6(T6 a1, T6 a2)
+/* ARRAY [LX_RULE].make_filled */
+T0* T138c6(T0* a1, T6 a2, T6 a3)
 {
 	T0* C;
 	T1 t1;
 	T6 t2;
 	T6 l1 = 0;
-	C = GE_new137(EIF_TRUE);
-	((T137*)(C))->a2 = a1;
-	((T137*)(C))->a3 = a2;
-	t1 = (T6f7(&a1, a2));
+	C = GE_new138(EIF_TRUE);
+	((T138*)(C))->a2 = a2;
+	((T138*)(C))->a3 = a3;
+	t1 = (T6f7(&a2, a3));
 	if (t1) {
-		t2 = ((T6)((a2)-(a1)));
+		t2 = ((T6)((a3)-(a2)));
 		l1 = ((T6)((t2)+((T6)(GE_int32(1)))));
 	}
-	T137f8(C, l1);
+	T138f8(C, a1, l1);
 	return C;
 }
 
-/* ARRAY [LX_RULE].make_area */
-void T137f8(T0* C, T6 a1)
+/* ARRAY [LX_RULE].make_filled_area */
+void T138f8(T0* C, T0* a1, T6 a2)
 {
-	((T137*)(C))->a1 = T136c4(a1);
+	((T138*)(C))->a1 = T137c5(a1, a2);
 }
 
 /* LX_COMPRESSED_DFA.build_rules */
@@ -16377,44 +16588,122 @@ void T47f96(T0* C, T0* a1)
 	T6 l1 = 0;
 	T6 l2 = 0;
 	l2 = (((T48*)(GE_void(a1)))->a1);
-	((T47*)(C))->a1 = T137c6((T6)(GE_int32(1)), l2);
-	l1 = (T6)(GE_int32(1));
-	while (1) {
-		t1 = (T6f1((&l1), l2));
-		if (t1) {
-			break;
+	t1 = (((((l2) == ((T6)(GE_int32(0)))))));
+	if (t1) {
+		t2 = (T161c2());
+		((T47*)(C))->a1 = (T161f1(t2, (T6)(GE_int32(1))));
+	} else {
+		t2 = (T48f7(GE_void(a1)));
+		((T47*)(C))->a1 = T138c6(t2, (T6)(GE_int32(1)), l2);
+		l1 = (T6)(GE_int32(2));
+		while (1) {
+			t1 = (T6f1((&l1), l2));
+			if (t1) {
+				break;
+			}
+			t2 = (T48f8(GE_void(a1), l1));
+			T138f7(GE_void(((T47*)(C))->a1), t2, l1);
+			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 		}
-		t2 = (T48f8(GE_void(a1), l1));
-		T137f7(GE_void(((T47*)(C))->a1), t2, l1);
-		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
 }
 
-/* LX_START_CONDITIONS.names */
-T0* T75f16(T0* C)
+/* KL_ARRAY_ROUTINES [LX_RULE].make_empty_with_lower */
+T0* T161f1(T0* C, T6 a1)
 {
 	T6 t1;
-	T1 t2;
-	T0* t3;
+	T0* R = 0;
+	T0* l1 = 0;
+	t1 = ((T6)((a1)-((T6)(GE_int32(1)))));
+	R = T138c6(l1, a1, t1);
+	return R;
+}
+
+/* KL_ARRAY_ROUTINES [LX_RULE].default_create */
+T0* T161c2(void)
+{
+	T0* C;
+	C = GE_new161(EIF_TRUE);
+	return C;
+}
+
+/* LX_START_CONDITIONS.names */
+T0* T75f18(T0* C)
+{
+	T1 t1;
+	T0* t2;
+	T6 t3;
 	T0* R = 0;
 	T6 l1 = 0;
 	T6 l2 = 0;
 	l2 = ((T75*)(C))->a1;
-	t1 = ((T6)((l2)-((T6)(GE_int32(1)))));
-	R = T132c7((T6)(GE_int32(0)), t1);
-	l1 = (T6)(GE_int32(1));
-	while (1) {
-		t2 = (T6f1((&l1), l2));
-		if (t2) {
-			break;
+	t1 = (((((l2) == ((T6)(GE_int32(0)))))));
+	if (t1) {
+		t2 = (T75f8(C));
+		R = (T199f1(GE_void(t2), (T6)(GE_int32(0))));
+	} else {
+		t2 = (T75f9(C));
+		t2 = (((T101*)(GE_void(t2)))->a1);
+		t3 = ((T6)((l2)-((T6)(GE_int32(1)))));
+		R = T133c7(t2, (T6)(GE_int32(0)), t3);
+		l1 = (T6)(GE_int32(2));
+		while (1) {
+			t1 = (T6f1((&l1), l2));
+			if (t1) {
+				break;
+			}
+			t2 = (T75f14(C, l1));
+			t2 = (((T101*)(GE_void(t2)))->a1);
+			t3 = ((T6)((l1)-((T6)(GE_int32(1)))));
+			T133f8(GE_void(R), t2, t3);
+			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 		}
-		t3 = (T75f10(C, l1));
-		t3 = (((T101*)(GE_void(t3)))->a1);
-		t1 = ((T6)((l1)-((T6)(GE_int32(1)))));
-		T132f8(GE_void(R), t3, t1);
-		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
 	return R;
+}
+
+/* LX_START_CONDITIONS.first */
+T0* T75f9(T0* C)
+{
+	T0* R = 0;
+	R = (((T198*)(GE_void(((T75*)(C))->a2)))->z2[(T6)(GE_int32(1))]);
+	return R;
+}
+
+/* KL_ARRAY_ROUTINES [detachable STRING_8].make_empty_with_lower */
+T0* T199f1(T0* C, T6 a1)
+{
+	T6 t1;
+	T0* R = 0;
+	T0* l1 = 0;
+	t1 = ((T6)((a1)-((T6)(GE_int32(1)))));
+	R = T133c7(l1, a1, t1);
+	return R;
+}
+
+/* LX_START_CONDITIONS.string_array_ */
+unsigned char ge301os2702 = '\0';
+T0* ge301ov2702;
+T0* T75f8(T0* C)
+{
+	T0* R = 0;
+	if (ge301os2702) {
+		return ge301ov2702;
+	} else {
+		ge301os2702 = '\1';
+		ge301ov2702 = R;
+	}
+	R = T199c2();
+	ge301ov2702 = R;
+	return R;
+}
+
+/* KL_ARRAY_ROUTINES [detachable STRING_8].default_create */
+T0* T199c2(void)
+{
+	T0* C;
+	C = GE_new199(EIF_TRUE);
+	return C;
 }
 
 /* LX_FULL_DFA.make */
@@ -16436,29 +16725,29 @@ void T54f54(T0* C)
 	T6 l1 = 0;
 	T0* l2 = 0;
 	((T54*)(C))->a1 = (T6)(GE_int32(0));
-	((T54*)(C))->a27 = T148c9(((T54*)(C))->a25, ((T54*)(C))->a26);
+	((T54*)(C))->a27 = T149c9(((T54*)(C))->a25, ((T54*)(C))->a26);
 	l1 = (T6)(GE_int32(1));
 	while (1) {
 		t1 = (T6f1((&l1), ((T54*)(C))->a2));
 		if (t1) {
 			break;
 		}
-		l2 = (T138f7(GE_void(((T54*)(C))->a3), l1));
+		l2 = (T139f7(GE_void(((T54*)(C))->a3), l1));
 		T54f68(C, l2);
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
-	l2 = (T138f7(GE_void(((T54*)(C))->a3), l1));
+	l2 = (T139f7(GE_void(((T54*)(C))->a3), l1));
 	T54f68(C, l2);
 	l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	while (1) {
-		t2 = (((T138*)(GE_void(((T54*)(C))->a3)))->a1);
+		t2 = (((T139*)(GE_void(((T54*)(C))->a3)))->a1);
 		t1 = (T6f1((&l1), t2));
 		if (t1) {
 			break;
 		}
-		l2 = (T138f7(GE_void(((T54*)(C))->a3), l1));
+		l2 = (T139f7(GE_void(((T54*)(C))->a3), l1));
 		T54f68(C, l2);
-		t1 = (T133f11(GE_void(l2)));
+		t1 = (T134f10(GE_void(l2)));
 		t1 = ((T1)(!(t1)));
 		if (t1) {
 			((T54*)(C))->a1 = ((T6)((((T54*)(C))->a1)+((T6)(GE_int32(1)))));
@@ -16481,23 +16770,23 @@ void T54f70(T0* C)
 	T6 l2 = 0;
 	T6 l3 = 0;
 	T0* l4 = 0;
-	l3 = (((T138*)(GE_void(((T54*)(C))->a3)))->a1);
-	l1 = T143c10((T6)(GE_int32(0)), l3);
+	l3 = (((T139*)(GE_void(((T54*)(C))->a3)))->a1);
+	l1 = T144c10((T6)(GE_int32(0)), (T6)(GE_int32(0)), l3);
 	l2 = (T6)(GE_int32(1));
 	while (1) {
 		t1 = (T6f1((&l2), l3));
 		if (t1) {
 			break;
 		}
-		l4 = (T138f7(GE_void(((T54*)(C))->a3), l2));
-		t1 = (T133f11(GE_void(l4)));
+		l4 = (T139f7(GE_void(((T54*)(C))->a3), l2));
+		t1 = (T134f10(GE_void(l4)));
 		if (t1) {
-			t2 = (((T133*)(GE_void(l4)))->a1);
-			t2 = (T48f14(GE_void(t2)));
+			t2 = (((T134*)(GE_void(l4)))->a1);
+			t2 = (T48f7(GE_void(t2)));
 			t3 = (((T49*)(GE_void(t2)))->a1);
-			T143f11(GE_void(l1), t3, l2);
+			T144f11(GE_void(l1), t3, l2);
 		} else {
-			T143f11(GE_void(l1), (T6)(GE_int32(0)), l2);
+			T144f11(GE_void(l1), (T6)(GE_int32(0)), l2);
 		}
 		l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
 	}
@@ -16519,30 +16808,30 @@ void T54f69(T0* C)
 	T0* l8 = 0;
 	T6 l9 = 0;
 	((T54*)(C))->a32 = ((T6)((((T54*)(C))->a26)+((T6)(GE_int32(1)))));
-	t1 = (((T138*)(GE_void(((T54*)(C))->a3)))->a1);
+	t1 = (((T139*)(GE_void(((T54*)(C))->a3)))->a1);
 	t1 = ((T6)((t1)+((T6)(GE_int32(1)))));
 	t1 = ((T6)((((T54*)(C))->a32)*(t1)));
 	t1 = ((T6)((t1)-((T6)(GE_int32(1)))));
-	l1 = T143c10((T6)(GE_int32(0)), t1);
+	l1 = T144c10((T6)(GE_int32(0)), (T6)(GE_int32(0)), t1);
 	l9 = ((T6)((((T54*)(C))->a2)+((T6)(GE_int32(1)))));
 	l5 = ((T6)((((T54*)(C))->a32)-((T6)(GE_int32(1)))));
 	l3 = ((T54*)(C))->a32;
 	l2 = (T6)(GE_int32(1));
 	while (1) {
-		t1 = (((T138*)(GE_void(((T54*)(C))->a3)))->a1);
+		t1 = (((T139*)(GE_void(((T54*)(C))->a3)))->a1);
 		t2 = (T6f1((&l2), t1));
 		if (t2) {
 			break;
 		}
-		l6 = (T138f7(GE_void(((T54*)(C))->a3), l2));
-		l8 = (((T133*)(GE_void(l6)))->a3);
-		t1 = (((T133*)(GE_void(l6)))->a6);
+		l6 = (T139f7(GE_void(((T54*)(C))->a3), l2));
+		l8 = (((T134*)(GE_void(l6)))->a3);
+		t1 = (((T134*)(GE_void(l6)))->a6);
 		t2 = (((((t1) == (l9)))));
 		if (t2) {
 			t1 = ((T6)(-(l9)));
-			T143f11(GE_void(l1), t1, l3);
+			T144f11(GE_void(l1), t1, l3);
 		} else {
-			T143f11(GE_void(l1), l9, l3);
+			T144f11(GE_void(l1), l9, l3);
 		}
 		l5 = ((T6)((l5)+(((T54*)(C))->a32)));
 		l4 = (T6)(GE_int32(1));
@@ -16552,15 +16841,15 @@ void T54f69(T0* C)
 			if (t2) {
 				break;
 			}
-			l7 = (T157f9(GE_void(l8), l4));
+			l7 = (T158f9(GE_void(l8), l4));
 			t2 = ((l7)!=(EIF_VOID));
 			if (t2) {
-				t1 = (((T133*)(GE_void(l7)))->a6);
-				T143f11(GE_void(l1), t1, l3);
+				t1 = (((T134*)(GE_void(l7)))->a6);
+				T144f11(GE_void(l1), t1, l3);
 			} else {
-				t1 = (((T133*)(GE_void(l6)))->a6);
+				t1 = (((T134*)(GE_void(l6)))->a6);
 				t1 = ((T6)(-(t1)));
-				T143f11(GE_void(l1), t1, l3);
+				T144f11(GE_void(l1), t1, l3);
 			}
 			l4 = ((T6)((l4)+((T6)(GE_int32(1)))));
 			l3 = ((T6)((l3)+((T6)(GE_int32(1)))));
@@ -16583,38 +16872,38 @@ void T54f68(T0* C, T0* a1)
 	T0* l4 = 0;
 	T0* l5 = 0;
 	T0* l6 = 0;
-	l2 = (T148f5(GE_void(((T54*)(C))->a27)));
-	t1 = (((T138*)(GE_void(((T54*)(C))->a3)))->a2);
-	t2 = (((T138*)(GE_void(((T54*)(C))->a3)))->a1);
+	l2 = (T149f5(GE_void(((T54*)(C))->a27)));
+	t1 = (((T139*)(GE_void(((T54*)(C))->a3)))->a2);
+	t2 = (((T139*)(GE_void(((T54*)(C))->a3)))->a1);
 	t1 = ((T6)((t1)-(t2)));
 	t3 = ((T1)((t1)<(l2)));
 	if (t3) {
-		t1 = (((T138*)(GE_void(((T54*)(C))->a3)))->a2);
+		t1 = (((T139*)(GE_void(((T54*)(C))->a3)))->a2);
 		t1 = ((T6)((t1)+(l2)));
 		t1 = ((T6)((t1)+((T6)(GE_int32(1000)))));
 		T54f78(C, t1);
 	}
-	T148f10(GE_void(((T54*)(C))->a27));
-	T133f20(GE_void(a1), ((T54*)(C))->a27);
-	l6 = (((T148*)(GE_void(((T54*)(C))->a27)))->a1);
-	l5 = (((T133*)(GE_void(a1)))->a3);
+	T149f10(GE_void(((T54*)(C))->a27));
+	T134f20(GE_void(a1), ((T54*)(C))->a27);
+	l6 = (((T149*)(GE_void(((T54*)(C))->a27)))->a1);
+	l5 = (((T134*)(GE_void(a1)))->a3);
 	l1 = ((T54*)(C))->a25;
 	while (1) {
 		t3 = (T6f1((&l1), ((T54*)(C))->a26));
 		if (t3) {
 			break;
 		}
-		t3 = (T159f4(GE_void(l6), l1));
+		t3 = (T160f4(GE_void(l6), l1));
 		if (t3) {
-			t3 = (T148f8(GE_void(((T54*)(C))->a27), l1));
+			t3 = (T149f8(GE_void(((T54*)(C))->a27), l1));
 			if (t3) {
-				t4 = (T133f12(GE_void(a1), l1));
+				t4 = (T134f11(GE_void(a1), l1));
 				l4 = (T54f39(C, t4));
 			} else {
-				l3 = (T148f4(GE_void(((T54*)(C))->a27), l1));
-				l4 = (T157f9(GE_void(l5), l3));
+				l3 = (T149f4(GE_void(((T54*)(C))->a27), l1));
+				l4 = (T158f9(GE_void(l5), l3));
 			}
-			T157f15(GE_void(l5), l4, l1);
+			T158f15(GE_void(l5), l4, l1);
 		}
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
@@ -16629,7 +16918,7 @@ T0* T54f39(T0* C, T0* a1)
 	T6 l1 = 0;
 	T6 l2 = 0;
 	l1 = ((T6)((((T54*)(C))->a2)+((T6)(GE_int32(1)))));
-	l2 = (((T138*)(GE_void(((T54*)(C))->a3)))->a1);
+	l2 = (((T139*)(GE_void(((T54*)(C))->a3)))->a1);
 	while (1) {
 		t1 = ((R)!=(EIF_VOID));
 		if (!(t1)) {
@@ -16638,8 +16927,8 @@ T0* T54f39(T0* C, T0* a1)
 		if (t1) {
 			break;
 		}
-		R = (T138f7(GE_void(((T54*)(C))->a3), l1));
-		t1 = (T133f13(GE_void(R), a1));
+		R = (T139f7(GE_void(((T54*)(C))->a3), l1));
+		t1 = (T134f12(GE_void(R), a1));
 		t1 = ((T1)(!(t1)));
 		if (t1) {
 			R = EIF_VOID;
@@ -16649,9 +16938,9 @@ T0* T54f39(T0* C, T0* a1)
 	t1 = ((R)==(EIF_VOID));
 	if (t1) {
 		R = a1;
-		T138f16(GE_void(((T54*)(C))->a3), a1);
-		t2 = (((T138*)(GE_void(((T54*)(C))->a3)))->a1);
-		T133f19(GE_void(a1), t2);
+		T139f16(GE_void(((T54*)(C))->a3), a1);
+		t2 = (((T139*)(GE_void(((T54*)(C))->a3)))->a1);
+		T134f19(GE_void(a1), t2);
 	}
 	return R;
 }
@@ -16659,7 +16948,7 @@ T0* T54f39(T0* C, T0* a1)
 /* LX_FULL_DFA.resize */
 void T54f78(T0* C, T6 a1)
 {
-	T138f17(GE_void(((T54*)(C))->a3), a1);
+	T139f17(GE_void(((T54*)(C))->a3), a1);
 }
 
 /* LX_FULL_DFA.put_eob_state */
@@ -16670,14 +16959,14 @@ void T54f53(T0* C)
 	T0* l1 = 0;
 	T0* l2 = 0;
 	T0* l3 = 0;
-	l2 = T135c23((T6)(GE_int32(0)));
-	l1 = T133c18(l2, ((T54*)(C))->a25, ((T54*)(C))->a26);
+	l2 = T136c23((T6)(GE_int32(0)));
+	l1 = T134c18(l2, ((T54*)(C))->a25, ((T54*)(C))->a26);
 	l3 = T49c15(((T54*)(C))->a22);
-	t1 = (((T133*)(GE_void(l1)))->a1);
-	T48f23(GE_void(t1), l3);
-	T138f16(GE_void(((T54*)(C))->a3), l1);
-	t2 = (((T138*)(GE_void(((T54*)(C))->a3)))->a1);
-	T133f19(GE_void(l1), t2);
+	t1 = (((T134*)(GE_void(l1)))->a1);
+	T48f24(GE_void(t1), l3);
+	T139f16(GE_void(((T54*)(C))->a3), l1);
+	t2 = (((T139*)(GE_void(((T54*)(C))->a3)))->a1);
+	T134f19(GE_void(l1), t2);
 }
 
 /* LX_FULL_DFA.initialize */
@@ -16691,7 +16980,7 @@ void T54f52(T0* C, T0* a1)
 	((T54*)(C))->a4 = (((T25*)(GE_void(a1)))->a1);
 	t1 = ((((T54*)(C))->a4)==(EIF_VOID));
 	if (t1) {
-		((T54*)(C))->a4 = ge182ov4547;
+		((T54*)(C))->a4 = ge134ov4825;
 	}
 	((T54*)(C))->a5 = (((T25*)(GE_void(a1)))->a12);
 	((T54*)(C))->a6 = (((T25*)(GE_void(a1)))->a13);
@@ -16706,11 +16995,11 @@ void T54f52(T0* C, T0* a1)
 	((T54*)(C))->a15 = (((T25*)(GE_void(a1)))->a29);
 	((T54*)(C))->a16 = (((T25*)(GE_void(a1)))->a14);
 	t2 = (((T25*)(GE_void(a1)))->a17);
-	((T54*)(C))->a17 = (T75f16(GE_void(t2)));
+	((T54*)(C))->a17 = (T75f18(GE_void(t2)));
 	t2 = (((T25*)(GE_void(a1)))->a5);
 	T54f65(C, t2);
 	t2 = (((T25*)(GE_void(a1)))->a15);
-	t3 = (T132f6(GE_void(((T54*)(C))->a17)));
+	t3 = (T133f6(GE_void(((T54*)(C))->a17)));
 	t3 = ((T6)((t3)-((T6)(GE_int32(1)))));
 	T54f66(C, t2, (T6)(GE_int32(0)), t3);
 	l1 = ((T54*)(C))->a5;
@@ -16721,12 +17010,12 @@ void T54f52(T0* C, T0* a1)
 	}
 	if (t1) {
 		((T54*)(C))->a18 = (T94f3(GE_void(l2), (T6)(GE_int32(0)), l1));
-		((T54*)(C))->a19 = (T143f4(GE_void(((T54*)(C))->a18), l1));
+		((T54*)(C))->a19 = (T144f4(GE_void(((T54*)(C))->a18), l1));
 		l1 = (((T94*)(GE_void(l2)))->a1);
 	} else {
 		((T54*)(C))->a19 = l1;
 	}
-	((T54*)(C))->a20 = (((T137*)(GE_void(((T54*)(C))->a21)))->a3);
+	((T54*)(C))->a20 = (((T138*)(GE_void(((T54*)(C))->a21)))->a3);
 	((T54*)(C))->a22 = ((T6)((((T54*)(C))->a20)+((T6)(GE_int32(1)))));
 	((T54*)(C))->a23 = (((T25*)(GE_void(a1)))->a30);
 	((T54*)(C))->a24 = (((T25*)(GE_void(a1)))->a31);
@@ -16749,7 +17038,7 @@ void T54f67(T0* C, T0* a1, T6 a2, T6 a3)
 	t1 = ((T6)((t1)*(l2)));
 	t1 = ((T6)((t1)+((T6)(GE_int32(1)))));
 	t1 = (T6f12(&t1, (T6)(GE_int32(1000))));
-	((T54*)(C))->a3 = T138c15(t1);
+	((T54*)(C))->a3 = T139c15(t1);
 	T54f76(C, a1);
 	l1 = (T6)(GE_int32(1));
 	while (1) {
@@ -16757,7 +17046,7 @@ void T54f67(T0* C, T0* a1, T6 a2, T6 a3)
 		if (t2) {
 			break;
 		}
-		t3 = (T75f10(GE_void(a1), l1));
+		t3 = (T75f14(GE_void(a1), l1));
 		T54f77(C, t3);
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
@@ -16781,43 +17070,43 @@ void T54f77(T0* C, T0* a1)
 	T6 l8 = 0;
 	l1 = (((T101*)(GE_void(a1)))->a4);
 	l2 = (((T101*)(GE_void(a1)))->a5);
-	l8 = (((T167*)(GE_void(l1)))->a5);
-	l3 = T135c23(l8);
-	t1 = (((T167*)(GE_void(l2)))->a5);
+	l8 = (((T169*)(GE_void(l1)))->a5);
+	l3 = T136c23(l8);
+	t1 = (((T169*)(GE_void(l2)))->a5);
 	t1 = ((T6)((l8)+(t1)));
-	l4 = T135c23(t1);
+	l4 = T136c23(t1);
 	l7 = (T6)(GE_int32(1));
 	while (1) {
 		t2 = (T6f1((&l7), l8));
 		if (t2) {
 			break;
 		}
-		t3 = (T167f7(GE_void(l1), l7));
+		t3 = (T169f7(GE_void(l1), l7));
 		l5 = (T93f4(GE_void(t3)));
-		T135f24(GE_void(l3), l5);
-		T135f24(GE_void(l4), l5);
+		T136f24(GE_void(l3), l5);
+		T136f24(GE_void(l4), l5);
 		l7 = ((T6)((l7)+((T6)(GE_int32(1)))));
 	}
-	l8 = (((T167*)(GE_void(l2)))->a5);
+	l8 = (((T169*)(GE_void(l2)))->a5);
 	l7 = (T6)(GE_int32(1));
 	while (1) {
 		t2 = (T6f1((&l7), l8));
 		if (t2) {
 			break;
 		}
-		t3 = (T167f7(GE_void(l2), l7));
+		t3 = (T169f7(GE_void(l2), l7));
 		t3 = (T93f4(GE_void(t3)));
-		T135f24(GE_void(l4), t3);
+		T136f24(GE_void(l4), t3);
 		l7 = ((T6)((l7)+((T6)(GE_int32(1)))));
 	}
-	l6 = T133c18(l3, ((T54*)(C))->a25, ((T54*)(C))->a26);
-	T138f16(GE_void(((T54*)(C))->a3), l6);
-	t1 = (((T138*)(GE_void(((T54*)(C))->a3)))->a1);
-	T133f19(GE_void(l6), t1);
-	l6 = T133c18(l4, ((T54*)(C))->a25, ((T54*)(C))->a26);
-	T138f16(GE_void(((T54*)(C))->a3), l6);
-	t1 = (((T138*)(GE_void(((T54*)(C))->a3)))->a1);
-	T133f19(GE_void(l6), t1);
+	l6 = T134c18(l3, ((T54*)(C))->a25, ((T54*)(C))->a26);
+	T139f16(GE_void(((T54*)(C))->a3), l6);
+	t1 = (((T139*)(GE_void(((T54*)(C))->a3)))->a1);
+	T134f19(GE_void(l6), t1);
+	l6 = T134c18(l4, ((T54*)(C))->a25, ((T54*)(C))->a26);
+	T139f16(GE_void(((T54*)(C))->a3), l6);
+	t1 = (((T139*)(GE_void(((T54*)(C))->a3)))->a1);
+	T134f19(GE_void(l6), t1);
 }
 
 /* LX_FULL_DFA.set_nfa_state_ids */
@@ -16839,7 +17128,7 @@ void T54f76(T0* C, T0* a1)
 	T6 l12 = 0;
 	T6 l13 = 0;
 	l13 = (T6)(GE_int32(1));
-	l5 = T168c36((T6)(GE_int32(100)));
+	l5 = T170c36((T6)(GE_int32(100)));
 	l7 = (((T75*)(GE_void(a1)))->a1);
 	l6 = (T6)(GE_int32(1));
 	while (1) {
@@ -16847,36 +17136,36 @@ void T54f76(T0* C, T0* a1)
 		if (t1) {
 			break;
 		}
-		l1 = (T75f10(GE_void(a1), l6));
+		l1 = (T75f14(GE_void(a1), l6));
 		l2 = (((T101*)(GE_void(l1)))->a4);
-		l9 = (((T167*)(GE_void(l2)))->a5);
+		l9 = (((T169*)(GE_void(l2)))->a5);
 		l8 = (T6)(GE_int32(1));
 		while (1) {
 			t1 = (T6f1((&l8), l9));
 			if (t1) {
 				break;
 			}
-			l3 = (T167f7(GE_void(l2), l8));
+			l3 = (T169f7(GE_void(l2), l8));
 			t2 = (T93f4(GE_void(l3)));
-			l12 = (((T134*)(GE_void(t2)))->a4);
-			t1 = (T168f23(GE_void(l5), l12));
+			l12 = (((T135*)(GE_void(t2)))->a4);
+			t1 = (T170f23(GE_void(l5), l12));
 			t1 = ((T1)(!(t1)));
 			if (!(t1)) {
-				t2 = (T168f22(GE_void(l5), l12));
+				t2 = (T170f22(GE_void(l5), l12));
 				t1 = ((t2)!=(l3));
 			}
 			if (t1) {
-				T168f37(GE_void(l5), l3, l13);
+				T170f37(GE_void(l5), l3, l13);
 				l4 = (((T93*)(GE_void(l3)))->a2);
-				l11 = (((T135*)(GE_void(l4)))->a1);
+				l11 = (((T136*)(GE_void(l4)))->a1);
 				l10 = (T6)(GE_int32(1));
 				while (1) {
 					t1 = (T6f1((&l10), l11));
 					if (t1) {
 						break;
 					}
-					t2 = (T135f10(GE_void(l4), l10));
-					T134f15(GE_void(t2), l13);
+					t2 = (T136f13(GE_void(l4), l10));
+					T135f15(GE_void(t2), l13);
 					l13 = ((T6)((l13)+((T6)(GE_int32(1)))));
 					l10 = ((T6)((l10)+((T6)(GE_int32(1)))));
 				}
@@ -16884,34 +17173,34 @@ void T54f76(T0* C, T0* a1)
 			l8 = ((T6)((l8)+((T6)(GE_int32(1)))));
 		}
 		l2 = (((T101*)(GE_void(l1)))->a5);
-		l9 = (((T167*)(GE_void(l2)))->a5);
+		l9 = (((T169*)(GE_void(l2)))->a5);
 		l8 = (T6)(GE_int32(1));
 		while (1) {
 			t1 = (T6f1((&l8), l9));
 			if (t1) {
 				break;
 			}
-			l3 = (T167f7(GE_void(l2), l8));
+			l3 = (T169f7(GE_void(l2), l8));
 			t2 = (T93f4(GE_void(l3)));
-			l12 = (((T134*)(GE_void(t2)))->a4);
-			t1 = (T168f23(GE_void(l5), l12));
+			l12 = (((T135*)(GE_void(t2)))->a4);
+			t1 = (T170f23(GE_void(l5), l12));
 			t1 = ((T1)(!(t1)));
 			if (!(t1)) {
-				t2 = (T168f22(GE_void(l5), l12));
+				t2 = (T170f22(GE_void(l5), l12));
 				t1 = ((t2)!=(l3));
 			}
 			if (t1) {
-				T168f37(GE_void(l5), l3, l13);
+				T170f37(GE_void(l5), l3, l13);
 				l4 = (((T93*)(GE_void(l3)))->a2);
-				l11 = (((T135*)(GE_void(l4)))->a1);
+				l11 = (((T136*)(GE_void(l4)))->a1);
 				l10 = (T6)(GE_int32(1));
 				while (1) {
 					t1 = (T6f1((&l10), l11));
 					if (t1) {
 						break;
 					}
-					t2 = (T135f10(GE_void(l4), l10));
-					T134f15(GE_void(t2), l13);
+					t2 = (T136f13(GE_void(l4), l10));
+					T135f15(GE_void(t2), l13);
 					l13 = ((T6)((l13)+((T6)(GE_int32(1)))));
 					l10 = ((T6)((l10)+((T6)(GE_int32(1)))));
 				}
@@ -16930,7 +17219,7 @@ void T54f66(T0* C, T0* a1, T6 a2, T6 a3)
 	T6 l1 = 0;
 	T6 l2 = 0;
 	T0* l3 = 0;
-	((T54*)(C))->a29 = T137c6(a2, a3);
+	((T54*)(C))->a29 = T138c6(EIF_VOID, a2, a3);
 	l2 = (((T48*)(GE_void(a1)))->a1);
 	l1 = (T6)(GE_int32(1));
 	while (1) {
@@ -16940,7 +17229,7 @@ void T54f66(T0* C, T0* a1, T6 a2, T6 a3)
 		}
 		l3 = (T48f8(GE_void(a1), l1));
 		t2 = (((T49*)(GE_void(l3)))->a1);
-		T137f7(GE_void(((T54*)(C))->a29), l3, t2);
+		T138f7(GE_void(((T54*)(C))->a29), l3, t2);
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
 }
@@ -16953,16 +17242,23 @@ void T54f65(T0* C, T0* a1)
 	T6 l1 = 0;
 	T6 l2 = 0;
 	l2 = (((T48*)(GE_void(a1)))->a1);
-	((T54*)(C))->a21 = T137c6((T6)(GE_int32(1)), l2);
-	l1 = (T6)(GE_int32(1));
-	while (1) {
-		t1 = (T6f1((&l1), l2));
-		if (t1) {
-			break;
+	t1 = (((((l2) == ((T6)(GE_int32(0)))))));
+	if (t1) {
+		t2 = (T161c2());
+		((T54*)(C))->a21 = (T161f1(t2, (T6)(GE_int32(1))));
+	} else {
+		t2 = (T48f7(GE_void(a1)));
+		((T54*)(C))->a21 = T138c6(t2, (T6)(GE_int32(1)), l2);
+		l1 = (T6)(GE_int32(2));
+		while (1) {
+			t1 = (T6f1((&l1), l2));
+			if (t1) {
+				break;
+			}
+			t2 = (T48f8(GE_void(a1), l1));
+			T138f7(GE_void(((T54*)(C))->a21), t2, l1);
+			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 		}
-		t2 = (T48f8(GE_void(a1), l1));
-		T137f7(GE_void(((T54*)(C))->a21), t2, l1);
-		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
 }
 
@@ -16980,14 +17276,14 @@ void T21f9(T0* C)
 	l2 = (((T25*)(GE_void(((T21*)(C))->a2)))->a1);
 	t1 = ((l2)!=(EIF_VOID));
 	if (t1) {
-		l3 = T39c35(l2);
-		T39f37(GE_void(l3));
-		t1 = (T39f11(GE_void(l3)));
+		l3 = T39c36(l2);
+		T39f38(GE_void(l3));
+		t1 = (T39f20(GE_void(l3)));
 		if (t1) {
 			T38f266(GE_void(l1), l3);
-			T39f38(GE_void(l3));
+			T39f39(GE_void(l3));
 		} else {
-			l4 = T40c7(l2);
+			l4 = T40c8(l2);
 			T24f7(GE_void(((T21*)(C))->a1), l4);
 			t2 = (T21f4(C));
 			T44f2(GE_void(t2), (T6)(GE_int32(1)));
@@ -17006,48 +17302,49 @@ void T21f9(T0* C)
 }
 
 /* KL_STANDARD_FILES.input */
-unsigned char ge405os4162 = '\0';
-T0* ge405ov4162;
+unsigned char ge347os4192 = '\0';
+T0* ge347ov4192;
 T0* T45f1(T0* C)
 {
 	T0* R = 0;
-	if (ge405os4162) {
-		return ge405ov4162;
+	if (ge347os4192) {
+		return ge347ov4192;
 	} else {
-		ge405os4162 = '\1';
-		ge405ov4162 = R;
+		ge347os4192 = '\1';
+		ge347ov4192 = R;
 	}
-	R = T46c18();
-	ge405ov4162 = R;
+	R = T46c19();
+	ge347ov4192 = R;
 	return R;
 }
 
 /* KL_STDIN_FILE.make */
-T0* T46c18(void)
+T0* T46c19(void)
 {
 	T0* C;
 	C = GE_new46(EIF_TRUE);
-	T46f20(C, GE_ms8("stdin", 5));
-	((T46*)(C))->a1 = EIF_FALSE;
+	((T46*)(C))->a1 = T17c35();
+	T46f21(C, GE_ms8("stdin", 5));
+	((T46*)(C))->a2 = EIF_FALSE;
 	return C;
 }
 
 /* KL_STDIN_FILE.make_open_stdin */
-void T46f20(T0* C, T0* a1)
+void T46f21(T0* C, T0* a1)
 {
-	T46f21(C, a1);
-	((T46*)(C))->a2 = (T46f8(C, (T6)(GE_int32(0))));
-	T46f22(C);
+	T46f22(C, a1);
+	((T46*)(C))->a3 = (T46f9(C, (T6)(GE_int32(0))));
+	T46f23(C);
 }
 
 /* KL_STDIN_FILE.set_read_mode */
-void T46f22(T0* C)
+void T46f23(T0* C)
 {
-	((T46*)(C))->a4 = (T6)(GE_int32(1));
+	((T46*)(C))->a5 = (T6)(GE_int32(1));
 }
 
 /* KL_STDIN_FILE.console_def */
-T14 T46f8(T0* C, T6 a1)
+T14 T46f9(T0* C, T6 a1)
 {
 	T14 R = 0;
 	R = (T14)console_def(a1);
@@ -17055,24 +17352,25 @@ T14 T46f8(T0* C, T6 a1)
 }
 
 /* KL_STDIN_FILE.old_make */
-void T46f21(T0* C, T0* a1)
+void T46f22(T0* C, T0* a1)
 {
-	((T46*)(C))->a3 = a1;
-	((T46*)(C))->a4 = (T6)(GE_int32(0));
+	((T46*)(C))->a4 = a1;
+	((T46*)(C))->a5 = (T6)(GE_int32(0));
+	((T46*)(C))->a1 = T17c35();
 }
 
 /* UT_CANNOT_READ_FILE_ERROR.make */
-T0* T40c7(T0* a1)
+T0* T40c8(T0* a1)
 {
 	T0* C;
 	C = GE_new40(EIF_TRUE);
-	((T40*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(1)));
-	T132f8(GE_void(((T40*)(C))->a1), a1, (T6)(GE_int32(1)));
+	((T40*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(1)));
+	T133f8(GE_void(((T40*)(C))->a1), a1, (T6)(GE_int32(1)));
 	return C;
 }
 
 /* KL_TEXT_INPUT_FILE.close */
-void T39f38(T0* C)
+void T39f39(T0* C)
 {
 	GE_rescue r;
 	T1 t1;
@@ -17090,22 +17388,22 @@ GE_retry:
 	GE_last_rescue = &r;
 	t1 = ((T1)(!((T1)l1)));
 	if (t1) {
-		T39f40(C);
-		((T39*)(C))->a4 = EIF_VOID;
+		T39f41(C);
+		((T39*)(C))->a5 = EIF_VOID;
 	}
 	GE_last_rescue = r.previous;
 }
 
 /* KL_TEXT_INPUT_FILE.old_close */
-void T39f40(T0* C)
+void T39f41(T0* C)
 {
-	T39f42(C, ((T39*)(C))->a6);
+	T39f43(C, ((T39*)(C))->a7);
 	((T39*)(C))->a1 = (T6)(GE_int32(0));
-	((T39*)(C))->a7 = EIF_FALSE;
+	((T39*)(C))->a8 = EIF_FALSE;
 }
 
 /* KL_TEXT_INPUT_FILE.file_close */
-void T39f42(T0* C, T14 a1)
+void T39f43(T0* C, T14 a1)
 {
 	file_close((FILE *)a1);
 }
@@ -17179,7 +17477,7 @@ GE_retry:
 		((T38*)(C))->a39 = (T6)(GE_int32(0));
 		T38f275(C);
 		((T38*)(C))->a32 = (T6)(GE_int32(-1));
-		l1 = (((T83*)(GE_void(((T38*)(C))->a17)))->z1);
+		l1 = (((T83*)(GE_void(((T38*)(C))->a17)))->a1);
 		((T38*)(C))->a23 = (T6)(GE_int32(104));
 		l7 = (T6)(GE_int32(1));
 	}
@@ -17465,22 +17763,44 @@ T0* T87f2(T0* C, T0* a1, T6 a2)
 	T6 t1;
 	T1 t2;
 	T0* R = 0;
-	t1 = (((T86*)(GE_void(a1)))->z1);
+	T0* l1 = 0;
+	t1 = (((T86*)(GE_void(a1)))->a1);
 	t2 = (T6f1(&a2, t1));
 	if (t2) {
-		R = (T86f2(GE_void(a1), a2));
+		R = (T86f3(GE_void(a1), l1, a2));
 	} else {
 		R = a1;
 	}
 	return R;
 }
 
+/* SPECIAL [ANY].aliased_resized_area_with_default */
+T0* T86f3(T0* C, T0* a1, T6 a2)
+{
+	T1 t1;
+	T0* R = 0;
+	T6 l1 = 0;
+	T6 l2 = 0;
+	l2 = ((T86*)(C))->a1;
+	R = (T86f4(C, a2));
+	l1 = l2;
+	while (1) {
+		t1 = (((((l1) == (a2)))));
+		if (t1) {
+			break;
+		}
+		((T86*)(GE_void(R)))->z2[l1] = (a1);
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
+	return R;
+}
+
 /* SPECIAL [ANY].aliased_resized_area */
-T0* T86f2(T0* C, T6 a1)
+T0* T86f4(T0* C, T6 a1)
 {
 	T0* R = 0;
 	T6 t1;
-	t1 = ((T86*)(C))->z1;
+	t1 = ((T86*)(C))->a1;
 	if (a1>t1) {
 		R = GE_new86(a1, EIF_FALSE);
 		*(T86*)(R) = *(T86*)(C);
@@ -17491,7 +17811,7 @@ T0* T86f2(T0* C, T6 a1)
 	} else {
 		R = C;
 	}
-	((T86*)(R))->z1 = a1;
+	((T86*)(R))->a1 = a1;
 	return R;
 }
 
@@ -17500,26 +17820,43 @@ T0* T87f1(T0* C, T6 a1)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	l1 = T205c2(a1);
-	R = (((T205*)(GE_void(l1)))->a1);
+	R = T86c5(l1, a1);
 	return R;
 }
 
-/* TO_SPECIAL [ANY].make_area */
-T0* T205c2(T6 a1)
+/* SPECIAL [ANY].make_filled */
+T0* T86c5(T0* a1, T6 a2)
 {
 	T0* C;
-	C = GE_new205(EIF_TRUE);
-	((T205*)(C))->a1 = T86c3(a1);
+	T6 t1;
+	C = GE_new86(a2, EIF_TRUE);
+	T86f8(C, a2);
+	t1 = ((T6)((a2)-((T6)(GE_int32(1)))));
+	T86f7(C, a1, (T6)(GE_int32(0)), t1);
 	return C;
 }
 
-/* SPECIAL [ANY].make */
-T0* T86c3(T6 a1)
+/* SPECIAL [ANY].fill_with */
+void T86f7(T0* C, T0* a1, T6 a2, T6 a3)
 {
-	T0* C;
-	C = GE_new86(a1, EIF_TRUE);
-	return C;
+	T1 t1;
+	T6 l1 = 0;
+	T6 l2 = 0;
+	l1 = a2;
+	l2 = ((T6)((a3)+((T6)(GE_int32(1)))));
+	while (1) {
+		t1 = (((((l1) == (l2)))));
+		if (t1) {
+			break;
+		}
+		((T86*)(C))->z2[l1] = (a1);
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
+}
+
+/* SPECIAL [ANY].make */
+void T86f8(T0* C, T6 a1)
+{
 }
 
 /* KL_SPECIAL_ROUTINES [ANY].default_create */
@@ -17592,7 +17929,7 @@ void T38f281(T0* C, T6 a1)
 		break;
 	case (T6)(T6)(GE_int32(4)):
 		t3 = (((T83*)(GE_void(((T38*)(C))->a87)))->z2[((T38*)(C))->a49]);
-		T75f19(GE_void(((T38*)(C))->a3), t3);
+		T75f21(GE_void(((T38*)(C))->a3), t3);
 		t2 = (T6f5(&(((T38*)(C))->a23), (T6)(GE_int32(104))));
 		if (t2) {
 			((T38*)(C))->a32 = ((T6)((((T38*)(C))->a32)-((T6)(GE_int32(5)))));
@@ -17603,7 +17940,7 @@ void T38f281(T0* C, T6 a1)
 		break;
 	case (T6)(T6)(GE_int32(5)):
 		t3 = (((T83*)(GE_void(((T38*)(C))->a87)))->z2[((T38*)(C))->a49]);
-		T75f19(GE_void(((T38*)(C))->a3), t3);
+		T75f21(GE_void(((T38*)(C))->a3), t3);
 		t2 = (T6f5(&(((T38*)(C))->a23), (T6)(GE_int32(104))));
 		if (t2) {
 			((T38*)(C))->a32 = ((T6)((((T38*)(C))->a32)-((T6)(GE_int32(5)))));
@@ -17719,7 +18056,7 @@ void T38f281(T0* C, T6 a1)
 	case (T6)(T6)(GE_int32(12)):
 		l2 = (((T83*)(GE_void(((T38*)(C))->a87)))->z2[((T38*)(C))->a49]);
 		t1 = (((T25*)(GE_void(((T38*)(C))->a12)))->a17);
-		T75f20(GE_void(((T38*)(C))->a3), t1);
+		T75f22(GE_void(((T38*)(C))->a3), t1);
 		t2 = (T6f5(&(((T38*)(C))->a23), (T6)(GE_int32(104))));
 		if (t2) {
 			((T38*)(C))->a32 = ((T6)((((T38*)(C))->a32)-((T6)(GE_int32(3)))));
@@ -18606,23 +18943,23 @@ T0* T93c20(T6 a1, T1 a2)
 	T0* l3 = 0;
 	C = GE_new93(EIF_TRUE);
 	((T93*)(C))->a1 = a2;
-	((T93*)(C))->a2 = T135c23((T6)(GE_int32(100)));
-	l2 = T134c12(a2);
-	l3 = T134c12(a2);
-	l1 = T213c6(a1, l3);
-	T134f13(GE_void(l2), l1);
-	T135f25(GE_void(((T93*)(C))->a2), l2);
-	T135f24(GE_void(((T93*)(C))->a2), l3);
+	((T93*)(C))->a2 = T136c23((T6)(GE_int32(100)));
+	l2 = T135c12(a2);
+	l3 = T135c12(a2);
+	l1 = T212c6(a1, l3);
+	T135f13(GE_void(l2), l1);
+	T136f25(GE_void(((T93*)(C))->a2), l2);
+	T136f24(GE_void(((T93*)(C))->a2), l3);
 	return C;
 }
 
 /* LX_SYMBOL_TRANSITION [LX_NFA_STATE].make */
-T0* T213c6(T6 a1, T0* a2)
+T0* T212c6(T6 a1, T0* a2)
 {
 	T0* C;
-	C = GE_new213(EIF_TRUE);
-	((T213*)(C))->a1 = a1;
-	((T213*)(C))->a2 = a2;
+	C = GE_new212(EIF_TRUE);
+	((T212*)(C))->a1 = a1;
+	((T212*)(C))->a2 = a2;
 	return C;
 }
 
@@ -18705,7 +19042,7 @@ T6 T82f31(T0* C, T0* a1)
 			t2 = ((GE_void(((T82*)(C))->a20), a1, (T6)0));
 			R = ((T6)((t2)%(((T82*)(C))->a11)));
 		} else {
-			t2 = (T17f27(GE_void(a1)));
+			t2 = (T17f28(GE_void(a1)));
 			R = ((T6)((t2)%(((T82*)(C))->a11)));
 		}
 	} else {
@@ -18715,7 +19052,7 @@ T6 T82f31(T0* C, T0* a1)
 }
 
 /* STRING_8.hash_code */
-T6 T17f27(T0* C)
+T6 T17f28(T0* C)
 {
 	T1 t1;
 	T6 t2;
@@ -18737,7 +19074,7 @@ T6 T17f27(T0* C)
 				break;
 			}
 			t2 = ((T6)((R)%((T6)(GE_int32(8388593)))));
-			t2 = (T6f24(&t2, (T6)(GE_int32(8))));
+			t2 = ((T6)((t2)<<((T6)(GE_int32(8)))));
 			t3 = (((T15*)(GE_void(l3)))->z2[l1]);
 			t4 = ((T6)(t3));
 			R = ((T6)((t2)+(t4)));
@@ -18745,14 +19082,6 @@ T6 T17f27(T0* C)
 		}
 		((T17*)(C))->a3 = R;
 	}
-	return R;
-}
-
-/* INTEGER_32.infix "|<<" */
-T6 T6f24(T6* C, T6 a1)
-{
-	T6 R = 0;
-	R = ((T6)((*C)<<(a1)));
 	return R;
 }
 
@@ -18818,29 +19147,29 @@ void T82f52(T0* C, T6 a1)
 void T82f60(T0* C, T6 a1)
 {
 	T0* t1;
-	t1 = (T82f33(C));
+	t1 = (T82f32(C));
 	((T82*)(C))->a14 = (T84f2(GE_void(t1), ((T82*)(C))->a14, a1));
 }
 
 /* DS_HASH_TABLE [LX_SYMBOL_CLASS, STRING_8].special_integer_ */
-T0* T82f33(T0* C)
+T0* T82f32(T0* C)
 {
 	T0* R = 0;
-	if (ge357os2757) {
-		return ge357ov2757;
+	if (ge306os2697) {
+		return ge306ov2697;
 	} else {
-		ge357os2757 = '\1';
-		ge357ov2757 = R;
+		ge306os2697 = '\1';
+		ge306ov2697 = R;
 	}
 	R = T84c4();
-	ge357ov2757 = R;
+	ge306ov2697 = R;
 	return R;
 }
 
 /* DS_HASH_TABLE [LX_SYMBOL_CLASS, STRING_8].key_storage_resize */
 void T82f59(T0* C, T6 a1)
 {
-	((T82*)(C))->a16 = (T89f2(GE_void(((T82*)(C))->a19), ((T82*)(C))->a16, a1));
+	((T82*)(C))->a16 = (T89f2(GE_void(((T82*)(C))->a18), ((T82*)(C))->a16, a1));
 }
 
 /* KL_SPECIAL_ROUTINES [STRING_8].resize */
@@ -18849,22 +19178,44 @@ T0* T89f2(T0* C, T0* a1, T6 a2)
 	T6 t1;
 	T1 t2;
 	T0* R = 0;
-	t1 = (((T88*)(GE_void(a1)))->z1);
+	T0* l1 = 0;
+	t1 = (((T88*)(GE_void(a1)))->a1);
 	t2 = (T6f1(&a2, t1));
 	if (t2) {
-		R = (T88f3(GE_void(a1), a2));
+		R = (T88f4(GE_void(a1), l1, a2));
 	} else {
 		R = a1;
 	}
 	return R;
 }
 
+/* SPECIAL [STRING_8].aliased_resized_area_with_default */
+T0* T88f4(T0* C, T0* a1, T6 a2)
+{
+	T1 t1;
+	T0* R = 0;
+	T6 l1 = 0;
+	T6 l2 = 0;
+	l2 = ((T88*)(C))->a1;
+	R = (T88f5(C, a2));
+	l1 = l2;
+	while (1) {
+		t1 = (((((l1) == (a2)))));
+		if (t1) {
+			break;
+		}
+		((T88*)(GE_void(R)))->z2[l1] = (a1);
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
+	return R;
+}
+
 /* SPECIAL [STRING_8].aliased_resized_area */
-T0* T88f3(T0* C, T6 a1)
+T0* T88f5(T0* C, T6 a1)
 {
 	T0* R = 0;
 	T6 t1;
-	t1 = ((T88*)(C))->z1;
+	t1 = ((T88*)(C))->a1;
 	if (a1>t1) {
 		R = GE_new88(a1, EIF_FALSE);
 		*(T88*)(R) = *(T88*)(C);
@@ -18875,14 +19226,14 @@ T0* T88f3(T0* C, T6 a1)
 	} else {
 		R = C;
 	}
-	((T88*)(R))->z1 = a1;
+	((T88*)(R))->a1 = a1;
 	return R;
 }
 
 /* DS_HASH_TABLE [LX_SYMBOL_CLASS, STRING_8].item_storage_resize */
 void T82f58(T0* C, T6 a1)
 {
-	((T82*)(C))->a3 = (T92f2(GE_void(((T82*)(C))->a18), ((T82*)(C))->a3, a1));
+	((T82*)(C))->a3 = (T92f2(GE_void(((T82*)(C))->a17), ((T82*)(C))->a3, a1));
 }
 
 /* DS_HASH_TABLE [LX_SYMBOL_CLASS, STRING_8].key_storage_item */
@@ -18897,7 +19248,7 @@ T0* T82f25(T0* C, T6 a1)
 void T82f57(T0* C, T6 a1)
 {
 	T0* t1;
-	t1 = (T82f33(C));
+	t1 = (T82f32(C));
 	((T82*)(C))->a15 = (T84f2(GE_void(t1), ((T82*)(C))->a15, a1));
 }
 
@@ -18932,12 +19283,12 @@ void T82f50(T0* C)
 T0* T82f24(T0* C)
 {
 	T0* R = 0;
-	R = (T82f32(C, ((T82*)(C))->a2));
+	R = (T82f33(C, ((T82*)(C))->a2));
 	return R;
 }
 
 /* DS_HASH_TABLE [LX_SYMBOL_CLASS, STRING_8].item_storage_item */
-T0* T82f32(T0* C, T6 a1)
+T0* T82f33(T0* C, T6 a1)
 {
 	T0* R = 0;
 	R = (((T91*)(GE_void(((T82*)(C))->a3)))->z2[a1]);
@@ -19076,8 +19427,8 @@ T1 T81f1(T0* C, T0* a1, T0* a2)
 						if (t1) {
 							break;
 						}
-						t2 = (T17f13(GE_void(a1), l1));
-						t3 = (T17f13(GE_void(a2), l1));
+						t2 = (T17f14(GE_void(a1), l1));
+						t3 = (T17f14(GE_void(a2), l1));
 						t1 = (((((t2) != (t3)))));
 						if (t1) {
 							R = EIF_FALSE;
@@ -19094,7 +19445,7 @@ T1 T81f1(T0* C, T0* a1, T0* a2)
 }
 
 /* STRING_8.item_code */
-T6 T17f13(T0* C, T6 a1)
+T6 T17f14(T0* C, T6 a1)
 {
 	T6 t1;
 	T2 t2;
@@ -19231,21 +19582,21 @@ void T38f360(T0* C)
 	T0* t1;
 	T0* l1 = 0;
 	t1 = (T38f232(C));
-	l1 = T174c7(t1, ((T38*)(C))->a16);
+	l1 = T176c8(t1, ((T38*)(C))->a16);
 	T24f7(GE_void(((T38*)(C))->a13), l1);
 	((T38*)(C))->a1 = EIF_FALSE;
 }
 
 /* LX_NEGATIVE_RANGE_IN_CHARACTER_CLASS_ERROR.make */
-T0* T174c7(T0* a1, T6 a2)
+T0* T176c8(T0* a1, T6 a2)
 {
 	T0* C;
 	T0* t1;
-	C = GE_new174(EIF_TRUE);
-	((T174*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(2)));
-	T132f8(GE_void(((T174*)(C))->a1), a1, (T6)(GE_int32(1)));
+	C = GE_new176(EIF_TRUE);
+	((T176*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(2)));
+	T133f8(GE_void(((T176*)(C))->a1), a1, (T6)(GE_int32(1)));
 	t1 = (T6f6(&a2));
-	T132f8(GE_void(((T174*)(C))->a1), t1, (T6)(GE_int32(2)));
+	T133f8(GE_void(((T176*)(C))->a1), t1, (T6)(GE_int32(2)));
 	return C;
 }
 
@@ -19270,7 +19621,7 @@ T0* T38f232(T0* C)
 	t1 = ((l1)!=(EIF_VOID));
 	if (t1) {
 		t2 = (((T78*)(GE_void(l1)))->a9);
-		R = (((((T0*)(GE_void(t2)))->id==39)?((T39*)(t2))->a2:((T46*)(t2))->a3));
+		R = (((((T0*)(GE_void(t2)))->id==39)?((T39*)(t2))->a3:((T46*)(t2))->a4));
 	} else {
 		R = GE_ms8("string", 6);
 	}
@@ -19283,22 +19634,44 @@ T0* T92f2(T0* C, T0* a1, T6 a2)
 	T6 t1;
 	T1 t2;
 	T0* R = 0;
-	t1 = (((T91*)(GE_void(a1)))->z1);
+	T0* l1 = 0;
+	t1 = (((T91*)(GE_void(a1)))->a1);
 	t2 = (T6f1(&a2, t1));
 	if (t2) {
-		R = (T91f2(GE_void(a1), a2));
+		R = (T91f4(GE_void(a1), l1, a2));
 	} else {
 		R = a1;
 	}
 	return R;
 }
 
+/* SPECIAL [LX_SYMBOL_CLASS].aliased_resized_area_with_default */
+T0* T91f4(T0* C, T0* a1, T6 a2)
+{
+	T1 t1;
+	T0* R = 0;
+	T6 l1 = 0;
+	T6 l2 = 0;
+	l2 = ((T91*)(C))->a1;
+	R = (T91f5(C, a2));
+	l1 = l2;
+	while (1) {
+		t1 = (((((l1) == (a2)))));
+		if (t1) {
+			break;
+		}
+		((T91*)(GE_void(R)))->z2[l1] = (a1);
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
+	return R;
+}
+
 /* SPECIAL [LX_SYMBOL_CLASS].aliased_resized_area */
-T0* T91f2(T0* C, T6 a1)
+T0* T91f5(T0* C, T6 a1)
 {
 	T0* R = 0;
 	T6 t1;
-	t1 = ((T91*)(C))->z1;
+	t1 = ((T91*)(C))->a1;
 	if (a1>t1) {
 		R = GE_new91(a1, EIF_FALSE);
 		*(T91*)(R) = *(T91*)(C);
@@ -19309,7 +19682,7 @@ T0* T91f2(T0* C, T6 a1)
 	} else {
 		R = C;
 	}
-	((T91*)(R))->z1 = a1;
+	((T91*)(R))->a1 = a1;
 	return R;
 }
 
@@ -19318,26 +19691,43 @@ T0* T92f1(T0* C, T6 a1)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	l1 = T208c2(a1);
-	R = (((T208*)(GE_void(l1)))->a1);
+	R = T91c6(l1, a1);
 	return R;
 }
 
-/* TO_SPECIAL [LX_SYMBOL_CLASS].make_area */
-T0* T208c2(T6 a1)
+/* SPECIAL [LX_SYMBOL_CLASS].make_filled */
+T0* T91c6(T0* a1, T6 a2)
 {
 	T0* C;
-	C = GE_new208(EIF_TRUE);
-	((T208*)(C))->a1 = T91c4(a1);
+	T6 t1;
+	C = GE_new91(a2, EIF_TRUE);
+	T91f9(C, a2);
+	t1 = ((T6)((a2)-((T6)(GE_int32(1)))));
+	T91f8(C, a1, (T6)(GE_int32(0)), t1);
 	return C;
 }
 
-/* SPECIAL [LX_SYMBOL_CLASS].make */
-T0* T91c4(T6 a1)
+/* SPECIAL [LX_SYMBOL_CLASS].fill_with */
+void T91f8(T0* C, T0* a1, T6 a2, T6 a3)
 {
-	T0* C;
-	C = GE_new91(a1, EIF_TRUE);
-	return C;
+	T1 t1;
+	T6 l1 = 0;
+	T6 l2 = 0;
+	l1 = a2;
+	l2 = ((T6)((a3)+((T6)(GE_int32(1)))));
+	while (1) {
+		t1 = (((((l1) == (l2)))));
+		if (t1) {
+			break;
+		}
+		((T91*)(C))->z2[l1] = (a1);
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
+}
+
+/* SPECIAL [LX_SYMBOL_CLASS].make */
+void T91f9(T0* C, T6 a1)
+{
 }
 
 /* KL_SPECIAL_ROUTINES [LX_SYMBOL_CLASS].default_create */
@@ -19451,7 +19841,7 @@ T0* T38f180(T0* C)
 /* LX_SYMBOL_CLASS.set_negated */
 void T90f19(T0* C, T1 a1)
 {
-	((T90*)(C))->a5 = a1;
+	((T90*)(C))->a4 = a1;
 }
 
 /* DS_HASH_TABLE [LX_SYMBOL_CLASS, STRING_8].force */
@@ -19502,7 +19892,7 @@ T0* T38f179(T0* C, T0* a1)
 	T1 t1;
 	T0* R = 0;
 	T0* l1 = 0;
-	t1 = (((T90*)(GE_void(a1)))->a6);
+	t1 = (((T90*)(GE_void(a1)))->a5);
 	if (t1) {
 		T90f24(GE_void(a1));
 	}
@@ -19521,36 +19911,36 @@ void T90f24(T0* C)
 	T0* t1;
 	t1 = (T90f17(C));
 	T90f26(C, t1);
-	((T90*)(C))->a6 = EIF_FALSE;
+	((T90*)(C))->a5 = EIF_FALSE;
 }
 
 /* LX_SYMBOL_CLASS.arrayed_sort */
 void T90f26(T0* C, T0* a1)
 {
-	T278f3(GE_void(a1), C);
+	T249f3(GE_void(a1), C);
 }
 
 /* DS_SHELL_SORTER [INTEGER_32].sort */
-void T278f3(T0* C, T0* a1)
+void T249f3(T0* C, T0* a1)
 {
-	T278f4(C, a1, ((T278*)(C))->a1);
+	T249f4(C, a1, ((T249*)(C))->a1);
 }
 
 /* DS_SHELL_SORTER [INTEGER_32].sort_with_comparator */
-void T278f4(T0* C, T0* a1, T0* a2)
+void T249f4(T0* C, T0* a1, T0* a2)
 {
 	T1 t1;
 	T6 t2;
-	t1 = (T90f16(a1));
+	t1 = (T90f12(a1));
 	t1 = ((T1)(!(t1)));
 	if (t1) {
 		t2 = (((T90*)(a1))->a7);
-		T278f5(C, a1, a2, (T6)(GE_int32(1)), t2);
+		T249f5(C, a1, a2, (T6)(GE_int32(1)), t2);
 	}
 }
 
 /* DS_SHELL_SORTER [INTEGER_32].subsort_with_comparator */
-void T278f5(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
+void T249f5(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
 {
 	T1 t1;
 	T6 t2;
@@ -19585,10 +19975,10 @@ void T278f5(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
 					l3 = ((T6)((l2)+(l4)));
 					l5 = (T90f14(a1, l2));
 					l6 = (T90f14(a1, l3));
-					t1 = (T177f1(GE_void(a2), l6, l5));
+					t1 = (T179f1(GE_void(a2), l6, l5));
 					if (t1) {
-						T90f25(a1, l6, l2);
-						T90f25(a1, l5, l3);
+						T90f27(a1, l6, l2);
+						T90f27(a1, l5, l3);
 						l2 = ((T6)((l2)-(l4)));
 					} else {
 						l2 = ((T6)((a3)-((T6)(GE_int32(1)))));
@@ -19602,36 +19992,36 @@ void T278f5(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
 }
 
 /* LX_SYMBOL_CLASS.replace */
-void T90f25(T0* C, T6 a1, T6 a2)
+void T90f27(T0* C, T6 a1, T6 a2)
 {
 	((T83*)(GE_void(((T90*)(C))->a2)))->z2[a2] = (a1);
 }
 
 /* LX_SYMBOL_CLASS.sorter */
-unsigned char ge141os2357 = '\0';
-T0* ge141ov2357;
+unsigned char ge93os2334 = '\0';
+T0* ge93ov2334;
 T0* T90f17(T0* C)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	if (ge141os2357) {
-		return ge141ov2357;
+	if (ge93os2334) {
+		return ge93ov2334;
 	} else {
-		ge141os2357 = '\1';
-		ge141ov2357 = R;
+		ge93os2334 = '\1';
+		ge93ov2334 = R;
 	}
-	l1 = T177c2();
-	R = T278c2(l1);
-	ge141ov2357 = R;
+	l1 = T179c2();
+	R = T249c2(l1);
+	ge93ov2334 = R;
 	return R;
 }
 
 /* DS_SHELL_SORTER [INTEGER_32].make */
-T0* T278c2(T0* a1)
+T0* T249c2(T0* a1)
 {
 	T0* C;
-	C = GE_new278(EIF_TRUE);
-	((T278*)(C))->a1 = a1;
+	C = GE_new249(EIF_TRUE);
+	((T249*)(C))->a1 = a1;
 	return C;
 }
 
@@ -19641,9 +20031,9 @@ void T38f315(T0* C, T0* a1)
 	T1 t1;
 	T6 t2;
 	((T38*)(C))->a110 = (T6)(GE_int32(1));
-	t1 = (T90f12(GE_void(a1), (T6)(GE_int32(10))));
+	t1 = (T90f10(GE_void(a1), (T6)(GE_int32(10))));
 	if (t1) {
-		t1 = (((T90*)(GE_void(a1)))->a5);
+		t1 = (((T90*)(GE_void(a1)))->a4);
 		if (t1) {
 			((T38*)(C))->a111 = (T6)(GE_int32(0));
 			((T38*)(C))->a112 = (T6)(GE_int32(1));
@@ -19659,7 +20049,7 @@ void T38f315(T0* C, T0* a1)
 			}
 		}
 	} else {
-		t1 = (((T90*)(GE_void(a1)))->a5);
+		t1 = (((T90*)(GE_void(a1)))->a4);
 		if (t1) {
 			((T38*)(C))->a111 = (T6)(GE_int32(-1));
 			((T38*)(C))->a112 = (T6)(GE_int32(-1));
@@ -19695,23 +20085,23 @@ T0* T93c18(T0* a1, T1 a2)
 	T0* l3 = 0;
 	C = GE_new93(EIF_TRUE);
 	((T93*)(C))->a1 = a2;
-	((T93*)(C))->a2 = T135c23((T6)(GE_int32(100)));
-	l2 = T134c12(a2);
-	l3 = T134c12(a2);
-	l1 = T212c6(a1, l3);
-	T134f13(GE_void(l2), l1);
-	T135f25(GE_void(((T93*)(C))->a2), l2);
-	T135f24(GE_void(((T93*)(C))->a2), l3);
+	((T93*)(C))->a2 = T136c23((T6)(GE_int32(100)));
+	l2 = T135c12(a2);
+	l3 = T135c12(a2);
+	l1 = T211c6(a1, l3);
+	T135f13(GE_void(l2), l1);
+	T136f25(GE_void(((T93*)(C))->a2), l2);
+	T136f24(GE_void(((T93*)(C))->a2), l3);
 	return C;
 }
 
 /* LX_SYMBOL_CLASS_TRANSITION [LX_NFA_STATE].make */
-T0* T212c6(T0* a1, T0* a2)
+T0* T211c6(T0* a1, T0* a2)
 {
 	T0* C;
-	C = GE_new212(EIF_TRUE);
-	((T212*)(C))->a1 = a1;
-	((T212*)(C))->a2 = a2;
+	C = GE_new211(EIF_TRUE);
+	((T211*)(C))->a1 = a1;
+	((T211*)(C))->a2 = a2;
 	return C;
 }
 
@@ -19815,21 +20205,21 @@ void T93f17(T0* C, T6 a1)
 T0* T93f6(T0* C)
 {
 	T0* R = 0;
-	R = (T93f7(C));
+	R = (T93f8(C));
 	return R;
 }
 
 /* LX_NFA.twin */
-T0* T93f7(T0* C)
+T0* T93f8(T0* C)
 {
 	T0* R = 0;
 	R = GE_new93(EIF_TRUE);
-	T93f21(R, C);
+	T93f22(R, C);
 	return R;
 }
 
 /* LX_NFA.copy */
-void T93f21(T0* C, T0* a1)
+void T93f22(T0* C, T0* a1)
 {
 	T6 t1;
 	T1 t2;
@@ -19843,19 +20233,19 @@ void T93f21(T0* C, T0* a1)
 	T0* l7 = 0;
 	*(T93*)(C) = *(T93*)(a1);
 	l1 = ((T93*)(C))->a2;
-	t1 = (((T135*)(GE_void(l1)))->a5);
-	((T93*)(C))->a2 = T135c23(t1);
-	l5 = (((T135*)(GE_void(l1)))->a1);
+	t1 = (((T136*)(GE_void(l1)))->a5);
+	((T93*)(C))->a2 = T136c23(t1);
+	l5 = (((T136*)(GE_void(l1)))->a1);
 	l4 = (T6)(GE_int32(1));
 	while (1) {
 		t2 = (T6f1((&l4), l5));
 		if (t2) {
 			break;
 		}
-		l3 = (T135f10(GE_void(l1), l4));
-		T134f15(GE_void(l3), l4);
-		t3 = (T134f8(GE_void(l3)));
-		T135f24(GE_void(((T93*)(C))->a2), t3);
+		l3 = (T136f13(GE_void(l1), l4));
+		T135f15(GE_void(l3), l4);
+		t3 = (T135f8(GE_void(l3)));
+		T136f24(GE_void(((T93*)(C))->a2), t3);
 		l4 = ((T6)((l4)+((T6)(GE_int32(1)))));
 	}
 	l4 = (T6)(GE_int32(1));
@@ -19864,58 +20254,58 @@ void T93f21(T0* C, T0* a1)
 		if (t2) {
 			break;
 		}
-		l2 = (T135f10(GE_void(((T93*)(C))->a2), l4));
-		l6 = (((T134*)(GE_void(l2)))->a2);
+		l2 = (T136f13(GE_void(((T93*)(C))->a2), l4));
+		l6 = (((T135*)(GE_void(l2)))->a2);
 		t2 = ((l6)!=(EIF_VOID));
 		if (t2) {
-			l6 = (T210x1916(GE_void(l6)));
-			l3 = (T210x7060(GE_void(l6)));
-			t1 = (((T134*)(GE_void(l3)))->a4);
-			t3 = (T135f10(GE_void(((T93*)(C))->a2), t1));
-			T210x7061T0(GE_void(l6), t3);
-			T134f13(GE_void(l2), l6);
+			l6 = (T209x1887(GE_void(l6)));
+			l3 = (T209x7629(GE_void(l6)));
+			t1 = (((T135*)(GE_void(l3)))->a4);
+			t3 = (T136f13(GE_void(((T93*)(C))->a2), t1));
+			T209x7630T0(GE_void(l6), t3);
+			T135f13(GE_void(l2), l6);
 		}
-		l7 = (((T134*)(GE_void(l2)))->a3);
+		l7 = (((T135*)(GE_void(l2)))->a3);
 		t2 = ((l7)!=(EIF_VOID));
 		if (t2) {
-			l7 = (T209f2(GE_void(l7)));
-			l3 = (((T209*)(GE_void(l7)))->a1);
-			t1 = (((T134*)(GE_void(l3)))->a4);
-			t3 = (T135f10(GE_void(((T93*)(C))->a2), t1));
-			T209f6(GE_void(l7), t3);
-			T134f14(GE_void(l2), l7);
+			l7 = (T208f2(GE_void(l7)));
+			l3 = (((T208*)(GE_void(l7)))->a1);
+			t1 = (((T135*)(GE_void(l3)))->a4);
+			t3 = (T136f13(GE_void(((T93*)(C))->a2), t1));
+			T208f6(GE_void(l7), t3);
+			T135f14(GE_void(l2), l7);
 		}
 		l4 = ((T6)((l4)+((T6)(GE_int32(1)))));
 	}
 }
 
 /* LX_NFA_STATE.set_epsilon_transition */
-void T134f14(T0* C, T0* a1)
+void T135f14(T0* C, T0* a1)
 {
-	((T134*)(C))->a3 = a1;
+	((T135*)(C))->a3 = a1;
 }
 
 /* LX_NFA_STATE.cloned_object */
-T0* T134f8(T0* C)
+T0* T135f8(T0* C)
 {
 	T0* R = 0;
-	R = (T134f11(C));
+	R = (T135f10(C));
 	return R;
 }
 
 /* LX_NFA_STATE.twin */
-T0* T134f11(T0* C)
+T0* T135f10(T0* C)
 {
 	T0* R = 0;
-	R = GE_new134(EIF_TRUE);
-	T134f18(R, C);
+	R = GE_new135(EIF_TRUE);
+	T135f18(R, C);
 	return R;
 }
 
 /* LX_NFA_STATE.copy */
-void T134f18(T0* C, T0* a1)
+void T135f18(T0* C, T0* a1)
 {
-	*(T134*)(C) = *(T134*)(a1);
+	*(T135*)(C) = *(T135*)(a1);
 }
 
 /* LX_LEX_PARSER.report_iteration_not_positive_error */
@@ -19924,21 +20314,21 @@ void T38f359(T0* C)
 	T0* t1;
 	T0* l1 = 0;
 	t1 = (T38f232(C));
-	l1 = T173c7(t1, ((T38*)(C))->a16);
+	l1 = T175c8(t1, ((T38*)(C))->a16);
 	T24f7(GE_void(((T38*)(C))->a13), l1);
 	((T38*)(C))->a1 = EIF_FALSE;
 }
 
 /* LX_ITERATION_NOT_POSITIVE_ERROR.make */
-T0* T173c7(T0* a1, T6 a2)
+T0* T175c8(T0* a1, T6 a2)
 {
 	T0* C;
 	T0* t1;
-	C = GE_new173(EIF_TRUE);
-	((T173*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(2)));
-	T132f8(GE_void(((T173*)(C))->a1), a1, (T6)(GE_int32(1)));
+	C = GE_new175(EIF_TRUE);
+	((T175*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(2)));
+	T133f8(GE_void(((T175*)(C))->a1), a1, (T6)(GE_int32(1)));
 	t1 = (T6f6(&a2));
-	T132f8(GE_void(((T173*)(C))->a1), t1, (T6)(GE_int32(2)));
+	T133f8(GE_void(((T175*)(C))->a1), t1, (T6)(GE_int32(2)));
 	return C;
 }
 
@@ -20065,21 +20455,21 @@ void T38f358(T0* C)
 	T0* t1;
 	T0* l1 = 0;
 	t1 = (T38f232(C));
-	l1 = T172c7(t1, ((T38*)(C))->a16);
+	l1 = T174c8(t1, ((T38*)(C))->a16);
 	T24f7(GE_void(((T38*)(C))->a13), l1);
 	((T38*)(C))->a1 = EIF_FALSE;
 }
 
 /* LX_BAD_ITERATION_VALUES_ERROR.make */
-T0* T172c7(T0* a1, T6 a2)
+T0* T174c8(T0* a1, T6 a2)
 {
 	T0* C;
 	T0* t1;
-	C = GE_new172(EIF_TRUE);
-	((T172*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(2)));
-	T132f8(GE_void(((T172*)(C))->a1), a1, (T6)(GE_int32(1)));
+	C = GE_new174(EIF_TRUE);
+	((T174*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(2)));
+	T133f8(GE_void(((T174*)(C))->a1), a1, (T6)(GE_int32(1)));
 	t1 = (T6f6(&a2));
-	T132f8(GE_void(((T172*)(C))->a1), t1, (T6)(GE_int32(2)));
+	T133f8(GE_void(((T174*)(C))->a1), t1, (T6)(GE_int32(2)));
 	return C;
 }
 
@@ -20109,25 +20499,25 @@ void T93f14(T0* C)
 	T0* l3 = 0;
 	T0* l4 = 0;
 	t1 = (T93f4(C));
-	t1 = (((T134*)(GE_void(t1)))->a3);
+	t1 = (((T135*)(GE_void(t1)))->a3);
 	t2 = ((t1)==(EIF_VOID));
 	if (t2) {
 		t1 = (T93f5(C));
-		l1 = T209c5(t1);
+		l1 = T208c5(t1);
 		t1 = (T93f4(C));
-		T134f14(GE_void(t1), l1);
+		T135f14(GE_void(t1), l1);
 	} else {
 		l2 = (T93f4(C));
 		l3 = (T93f5(C));
-		l4 = T134c12(((T93*)(C))->a1);
-		l1 = T209c5(l2);
-		T134f13(GE_void(l4), l1);
-		l1 = T209c5(l3);
-		T134f14(GE_void(l4), l1);
-		T135f26(GE_void(((T93*)(C))->a2), l4, (T6)(GE_int32(1)));
-		t3 = (((T135*)(GE_void(((T93*)(C))->a2)))->a1);
-		T135f26(GE_void(((T93*)(C))->a2), l2, t3);
-		T135f27(GE_void(((T93*)(C))->a2), l3);
+		l4 = T135c12(((T93*)(C))->a1);
+		l1 = T208c5(l2);
+		T135f13(GE_void(l4), l1);
+		l1 = T208c5(l3);
+		T135f14(GE_void(l4), l1);
+		T136f26(GE_void(((T93*)(C))->a2), l4, (T6)(GE_int32(1)));
+		t3 = (((T136*)(GE_void(((T93*)(C))->a2)))->a1);
+		T136f26(GE_void(((T93*)(C))->a2), l2, t3);
+		T136f27(GE_void(((T93*)(C))->a2), l3);
 	}
 }
 
@@ -20135,7 +20525,7 @@ void T93f14(T0* C)
 T0* T93f5(T0* C)
 {
 	T0* R = 0;
-	R = (T135f9(GE_void(((T93*)(C))->a2)));
+	R = (T136f9(GE_void(((T93*)(C))->a2)));
 	return R;
 }
 
@@ -20175,17 +20565,17 @@ void T93f13(T0* C)
 	T0* l4 = 0;
 	l2 = (T93f4(C));
 	l3 = (T93f5(C));
-	l1 = T209c5(l2);
-	T134f13(GE_void(l3), l1);
-	l4 = T134c12(((T93*)(C))->a1);
-	l1 = T209c5(l2);
-	T134f13(GE_void(l4), l1);
-	T135f26(GE_void(((T93*)(C))->a2), l4, (T6)(GE_int32(1)));
-	l4 = T134c12(((T93*)(C))->a1);
-	l1 = T209c5(l4);
-	T134f14(GE_void(l3), l1);
-	T135f27(GE_void(((T93*)(C))->a2), l2);
-	T135f27(GE_void(((T93*)(C))->a2), l4);
+	l1 = T208c5(l2);
+	T135f13(GE_void(l3), l1);
+	l4 = T135c12(((T93*)(C))->a1);
+	l1 = T208c5(l2);
+	T135f13(GE_void(l4), l1);
+	T136f26(GE_void(((T93*)(C))->a2), l4, (T6)(GE_int32(1)));
+	l4 = T135c12(((T93*)(C))->a1);
+	l1 = T208c5(l4);
+	T135f14(GE_void(l3), l1);
+	T136f27(GE_void(((T93*)(C))->a2), l2);
+	T136f27(GE_void(((T93*)(C))->a2), l4);
 }
 
 /* LX_LEX_PARSER.process_singleton_star */
@@ -20411,115 +20801,115 @@ void T93f11(T0* C, T0* a1)
 	T0* t1;
 	T0* l1 = 0;
 	t1 = (T93f4(GE_void(a1)));
-	l1 = T209c5(t1);
+	l1 = T208c5(t1);
 	t1 = (T93f5(C));
-	T134f13(GE_void(t1), l1);
+	T135f13(GE_void(t1), l1);
 	t1 = (((T93*)(GE_void(a1)))->a2);
-	T135f28(GE_void(((T93*)(C))->a2), t1);
+	T136f28(GE_void(((T93*)(C))->a2), t1);
 }
 
 /* DS_ARRAYED_LIST [LX_NFA_STATE].append_last */
-void T135f28(T0* C, T0* a1)
+void T136f28(T0* C, T0* a1)
 {
 	T1 t1;
 	T6 t2;
 	T6 l1 = 0;
-	l1 = (((T135*)(GE_void(a1)))->a1);
-	t1 = (T135f12(C, l1));
+	l1 = (((T136*)(GE_void(a1)))->a1);
+	t1 = (T136f11(C, l1));
 	t1 = ((T1)(!(t1)));
 	if (t1) {
-		t2 = ((T6)((((T135*)(C))->a1)+(l1)));
-		t2 = (T135f13(C, t2));
-		T135f31(C, t2);
+		t2 = ((T6)((((T136*)(C))->a1)+(l1)));
+		t2 = (T136f12(C, t2));
+		T136f32(C, t2);
 	}
-	T135f32(C, a1);
+	T136f33(C, a1);
 }
 
 /* DS_ARRAYED_LIST [LX_NFA_STATE].extend_last */
-void T135f32(T0* C, T0* a1)
+void T136f33(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
 	T6 t3;
 	T6 l1 = 0;
 	T0* l2 = 0;
-	l1 = ((T6)((((T135*)(C))->a1)+((T6)(GE_int32(1)))));
-	l2 = (T135f11(GE_void(a1)));
-	T222f9(GE_void(l2));
+	l1 = ((T6)((((T136*)(C))->a1)+((T6)(GE_int32(1)))));
+	l2 = (T136f10(GE_void(a1)));
+	T220f9(GE_void(l2));
 	while (1) {
-		t1 = (T222f5(GE_void(l2)));
+		t1 = (T220f5(GE_void(l2)));
 		if (t1) {
 			break;
 		}
-		t2 = (T222f4(GE_void(l2)));
-		((T220*)(GE_void(((T135*)(C))->a2)))->z2[l1] = (t2);
+		t2 = (T220f4(GE_void(l2)));
+		((T218*)(GE_void(((T136*)(C))->a2)))->z2[l1] = (t2);
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-		T222f10(GE_void(l2));
+		T220f10(GE_void(l2));
 	}
-	t3 = (((T135*)(GE_void(a1)))->a1);
-	((T135*)(C))->a1 = ((T6)((((T135*)(C))->a1)+(t3)));
+	t3 = (((T136*)(GE_void(a1)))->a1);
+	((T136*)(C))->a1 = ((T6)((((T136*)(C))->a1)+(t3)));
 }
 
 /* DS_ARRAYED_LIST_CURSOR [LX_NFA_STATE].forth */
-void T222f10(T0* C)
+void T220f10(T0* C)
 {
-	T135f36(GE_void(((T222*)(C))->a3), C);
+	T136f37(GE_void(((T220*)(C))->a3), C);
 }
 
 /* DS_ARRAYED_LIST [LX_NFA_STATE].cursor_forth */
-void T135f36(T0* C, T0* a1)
+void T136f37(T0* C, T0* a1)
 {
 	T1 t1;
 	T1 l1 = 0;
 	T6 l2 = 0;
-	l2 = (((T222*)(a1))->a1);
+	l2 = (((T220*)(a1))->a1);
 	l1 = (((((l2) == ((T6)(GE_int32(0)))))));
 	l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-	t1 = (T6f1((&l2), ((T135*)(C))->a1));
+	t1 = (T6f1((&l2), ((T136*)(C))->a1));
 	if (t1) {
 		l2 = (T6)(GE_int32(-1));
 		t1 = ((T1)(!(l1)));
 		if (t1) {
-			T135f38(C, a1);
+			T136f39(C, a1);
 		}
 	} else {
 		if (l1) {
-			T135f37(C, a1);
+			T136f38(C, a1);
 		}
 	}
-	T222f8(a1, l2);
+	T220f8(a1, l2);
 }
 
 /* DS_ARRAYED_LIST [LX_NFA_STATE].add_traversing_cursor */
-void T135f37(T0* C, T0* a1)
+void T136f38(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
-	t1 = ((a1)!=(((T135*)(C))->a6));
+	t1 = ((a1)!=(((T136*)(C))->a6));
 	if (t1) {
-		t2 = (((T222*)(GE_void(((T135*)(C))->a6)))->a2);
-		T222f11(a1, t2);
-		T222f11(GE_void(((T135*)(C))->a6), a1);
+		t2 = (((T220*)(GE_void(((T136*)(C))->a6)))->a2);
+		T220f11(a1, t2);
+		T220f11(GE_void(((T136*)(C))->a6), a1);
 	}
 }
 
 /* DS_ARRAYED_LIST_CURSOR [LX_NFA_STATE].set_next_cursor */
-void T222f11(T0* C, T0* a1)
+void T220f11(T0* C, T0* a1)
 {
-	((T222*)(C))->a2 = a1;
+	((T220*)(C))->a2 = a1;
 }
 
 /* DS_ARRAYED_LIST [LX_NFA_STATE].remove_traversing_cursor */
-void T135f38(T0* C, T0* a1)
+void T136f39(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
 	T0* l1 = 0;
 	T0* l2 = 0;
-	t1 = ((a1)!=(((T135*)(C))->a6));
+	t1 = ((a1)!=(((T136*)(C))->a6));
 	if (t1) {
-		l2 = ((T135*)(C))->a6;
-		l1 = (((T222*)(GE_void(l2)))->a2);
+		l2 = ((T136*)(C))->a6;
+		l1 = (((T220*)(GE_void(l2)))->a2);
 		while (1) {
 			t1 = ((l1)==(a1));
 			if (!(t1)) {
@@ -20529,92 +20919,92 @@ void T135f38(T0* C, T0* a1)
 				break;
 			}
 			l2 = l1;
-			l1 = (((T222*)(GE_void(l1)))->a2);
+			l1 = (((T220*)(GE_void(l1)))->a2);
 		}
 		t1 = ((l1)==(a1));
 		if (t1) {
-			t2 = (((T222*)(a1))->a2);
-			T222f11(GE_void(l2), t2);
-			T222f11(a1, EIF_VOID);
+			t2 = (((T220*)(a1))->a2);
+			T220f11(GE_void(l2), t2);
+			T220f11(a1, EIF_VOID);
 		}
 	}
 }
 
 /* DS_ARRAYED_LIST_CURSOR [LX_NFA_STATE].item */
-T0* T222f4(T0* C)
+T0* T220f4(T0* C)
 {
 	T0* R = 0;
-	R = (T135f16(GE_void(((T222*)(C))->a3), C));
+	R = (T136f16(GE_void(((T220*)(C))->a3), C));
 	return R;
 }
 
 /* DS_ARRAYED_LIST [LX_NFA_STATE].cursor_item */
-T0* T135f16(T0* C, T0* a1)
+T0* T136f16(T0* C, T0* a1)
 {
 	T6 t1;
 	T0* R = 0;
-	t1 = (((T222*)(a1))->a1);
-	R = (T135f10(C, t1));
+	t1 = (((T220*)(a1))->a1);
+	R = (T136f13(C, t1));
 	return R;
 }
 
 /* DS_ARRAYED_LIST_CURSOR [LX_NFA_STATE].after */
-T1 T222f5(T0* C)
+T1 T220f5(T0* C)
 {
 	T1 R = 0;
-	R = (T135f15(GE_void(((T222*)(C))->a3), C));
+	R = (T136f15(GE_void(((T220*)(C))->a3), C));
 	return R;
 }
 
 /* DS_ARRAYED_LIST [LX_NFA_STATE].cursor_after */
-T1 T135f15(T0* C, T0* a1)
+T1 T136f15(T0* C, T0* a1)
 {
 	T6 t1;
 	T1 R = 0;
-	t1 = (((T222*)(a1))->a1);
+	t1 = (((T220*)(a1))->a1);
 	R = (((((t1) == ((T6)(GE_int32(-1)))))));
 	return R;
 }
 
 /* DS_ARRAYED_LIST_CURSOR [LX_NFA_STATE].start */
-void T222f9(T0* C)
+void T220f9(T0* C)
 {
-	T135f35(GE_void(((T222*)(C))->a3), C);
+	T136f36(GE_void(((T220*)(C))->a3), C);
 }
 
 /* DS_ARRAYED_LIST [LX_NFA_STATE].cursor_start */
-void T135f35(T0* C, T0* a1)
+void T136f36(T0* C, T0* a1)
 {
 	T1 t1;
 	T1 l1 = 0;
-	l1 = (T222f6(a1));
-	t1 = (T135f8(C));
+	l1 = (T220f6(a1));
+	t1 = (T136f8(C));
 	if (t1) {
-		T222f8(a1, (T6)(GE_int32(-1)));
+		T220f8(a1, (T6)(GE_int32(-1)));
 	} else {
-		T222f8(a1, (T6)(GE_int32(1)));
+		T220f8(a1, (T6)(GE_int32(1)));
 		if (l1) {
-			T135f37(C, a1);
+			T136f38(C, a1);
 		}
 	}
 }
 
 /* DS_ARRAYED_LIST_CURSOR [LX_NFA_STATE].off */
-T1 T222f6(T0* C)
+T1 T220f6(T0* C)
 {
 	T1 R = 0;
-	R = (T135f18(GE_void(((T222*)(C))->a3), C));
+	R = (T136f21(GE_void(((T220*)(C))->a3), C));
 	return R;
 }
 
 /* DS_ARRAYED_LIST [LX_NFA_STATE].cursor_off */
-T1 T135f18(T0* C, T0* a1)
+T1 T136f21(T0* C, T0* a1)
 {
 	T1 t1;
 	T1 R = 0;
-	t1 = (T135f15(C, a1));
+	t1 = (T136f15(C, a1));
 	if (!(t1)) {
-		R = (T135f20(C, a1));
+		R = (T136f22(C, a1));
 	} else {
 		R = EIF_TRUE;
 	}
@@ -20622,11 +21012,11 @@ T1 T135f18(T0* C, T0* a1)
 }
 
 /* DS_ARRAYED_LIST [LX_NFA_STATE].cursor_before */
-T1 T135f20(T0* C, T0* a1)
+T1 T136f22(T0* C, T0* a1)
 {
 	T6 t1;
 	T1 R = 0;
-	t1 = (((T222*)(a1))->a1);
+	t1 = (((T220*)(a1))->a1);
 	R = (((((t1) == ((T6)(GE_int32(0)))))));
 	return R;
 }
@@ -20725,65 +21115,65 @@ void T93f10(T0* C, T0* a1)
 	T0* l4 = 0;
 	l2 = (T93f4(C));
 	l3 = (T93f4(GE_void(a1)));
-	t1 = (((T134*)(GE_void(l2)))->a3);
+	t1 = (((T135*)(GE_void(l2)))->a3);
 	t2 = ((t1)==(EIF_VOID));
 	if (t2) {
-		l1 = T209c5(l3);
-		T134f14(GE_void(l2), l1);
+		l1 = T208c5(l3);
+		T135f14(GE_void(l2), l1);
 	} else {
-		t1 = (((T134*)(GE_void(l3)))->a3);
+		t1 = (((T135*)(GE_void(l3)))->a3);
 		t2 = ((t1)==(EIF_VOID));
 		if (t2) {
-			l1 = T209c5(l2);
-			T134f14(GE_void(l3), l1);
-			T135f26(GE_void(((T93*)(C))->a2), l3, (T6)(GE_int32(1)));
+			l1 = T208c5(l2);
+			T135f14(GE_void(l3), l1);
+			T136f26(GE_void(((T93*)(C))->a2), l3, (T6)(GE_int32(1)));
 			t1 = (((T93*)(GE_void(a1)))->a2);
-			T135f26(GE_void(t1), l2, (T6)(GE_int32(1)));
+			T136f26(GE_void(t1), l2, (T6)(GE_int32(1)));
 		} else {
-			l4 = T134c12(((T93*)(C))->a1);
-			l1 = T209c5(l2);
-			T134f13(GE_void(l4), l1);
-			l1 = T209c5(l3);
-			T134f14(GE_void(l4), l1);
-			T135f26(GE_void(((T93*)(C))->a2), l4, (T6)(GE_int32(1)));
+			l4 = T135c12(((T93*)(C))->a1);
+			l1 = T208c5(l2);
+			T135f13(GE_void(l4), l1);
+			l1 = T208c5(l3);
+			T135f14(GE_void(l4), l1);
+			T136f26(GE_void(((T93*)(C))->a2), l4, (T6)(GE_int32(1)));
 			l4 = (T93f5(C));
-			t3 = (((T135*)(GE_void(((T93*)(C))->a2)))->a1);
-			T135f26(GE_void(((T93*)(C))->a2), l2, t3);
-			T135f27(GE_void(((T93*)(C))->a2), l4);
+			t3 = (((T136*)(GE_void(((T93*)(C))->a2)))->a1);
+			T136f26(GE_void(((T93*)(C))->a2), l2, t3);
+			T136f27(GE_void(((T93*)(C))->a2), l4);
 		}
 	}
 	l2 = (T93f5(C));
 	l3 = (T93f5(GE_void(a1)));
-	t2 = (T134f7(GE_void(l3)));
+	t2 = (T135f7(GE_void(l3)));
 	t2 = ((T1)(!(t2)));
 	if (t2) {
-		l1 = T209c5(l3);
-		T134f13(GE_void(l2), l1);
+		l1 = T208c5(l3);
+		T135f13(GE_void(l2), l1);
 		t1 = (((T93*)(GE_void(a1)))->a2);
-		T135f28(GE_void(((T93*)(C))->a2), t1);
+		T136f28(GE_void(((T93*)(C))->a2), t1);
 	} else {
-		t2 = (T134f7(GE_void(l2)));
+		t2 = (T135f7(GE_void(l2)));
 		t2 = ((T1)(!(t2)));
 		if (t2) {
-			l1 = T209c5(l2);
-			T134f13(GE_void(l3), l1);
-			t3 = (((T135*)(GE_void(((T93*)(C))->a2)))->a1);
-			T135f26(GE_void(((T93*)(C))->a2), l3, t3);
+			l1 = T208c5(l2);
+			T135f13(GE_void(l3), l1);
+			t3 = (((T136*)(GE_void(((T93*)(C))->a2)))->a1);
+			T136f26(GE_void(((T93*)(C))->a2), l3, t3);
 			t1 = (((T93*)(GE_void(a1)))->a2);
 			t4 = (((T93*)(GE_void(a1)))->a2);
-			t3 = (((T135*)(GE_void(t4)))->a1);
-			T135f26(GE_void(t1), l2, t3);
+			t3 = (((T136*)(GE_void(t4)))->a1);
+			T136f26(GE_void(t1), l2, t3);
 			t1 = (((T93*)(GE_void(a1)))->a2);
-			T135f28(GE_void(((T93*)(C))->a2), t1);
+			T136f28(GE_void(((T93*)(C))->a2), t1);
 		} else {
-			l4 = T134c12(((T93*)(C))->a1);
-			l1 = T209c5(l4);
-			T134f13(GE_void(l2), l1);
-			l1 = T209c5(l4);
-			T134f13(GE_void(l3), l1);
+			l4 = T135c12(((T93*)(C))->a1);
+			l1 = T208c5(l4);
+			T135f13(GE_void(l2), l1);
+			l1 = T208c5(l4);
+			T135f13(GE_void(l3), l1);
 			t1 = (((T93*)(GE_void(a1)))->a2);
-			T135f28(GE_void(((T93*)(C))->a2), t1);
-			T135f27(GE_void(((T93*)(C))->a2), l4);
+			T136f28(GE_void(((T93*)(C))->a2), t1);
+			T136f27(GE_void(((T93*)(C))->a2), l4);
 		}
 	}
 }
@@ -20818,21 +21208,21 @@ void T38f304(T0* C)
 	T0* t1;
 	T0* l1 = 0;
 	t1 = (T38f232(C));
-	l1 = T104c7(t1, ((T38*)(C))->a16);
+	l1 = T104c8(t1, ((T38*)(C))->a16);
 	T24f7(GE_void(((T38*)(C))->a13), l1);
 	((T38*)(C))->a1 = EIF_FALSE;
 }
 
 /* LX_TRAILING_CONTEXT_USED_TWICE_ERROR.make */
-T0* T104c7(T0* a1, T6 a2)
+T0* T104c8(T0* a1, T6 a2)
 {
 	T0* C;
 	T0* t1;
 	C = GE_new104(EIF_TRUE);
-	((T104*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(2)));
-	T132f8(GE_void(((T104*)(C))->a1), a1, (T6)(GE_int32(1)));
+	((T104*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(2)));
+	T133f8(GE_void(((T104*)(C))->a1), a1, (T6)(GE_int32(1)));
 	t1 = (T6f6(&a2));
-	T132f8(GE_void(((T104*)(C))->a1), t1, (T6)(GE_int32(2)));
+	T133f8(GE_void(((T104*)(C))->a1), t1, (T6)(GE_int32(2)));
 	return C;
 }
 
@@ -20854,7 +21244,7 @@ T0* T38f157(T0* C, T0* a1, T0* a2)
 {
 	T1 t1;
 	T0* R = 0;
-	T93f23(GE_void(a1));
+	T93f21(GE_void(a1));
 	t1 = (T6f5(&(((T38*)(C))->a100), (T6)(GE_int32(0))));
 	if (!(t1)) {
 		t1 = (T6f5(&(((T38*)(C))->a98), (T6)(GE_int32(0))));
@@ -20873,37 +21263,37 @@ void T93f19(T0* C, T0* a1)
 {
 	T0* t1;
 	t1 = (T93f5(C));
-	T134f16(GE_void(t1), a1);
+	T135f16(GE_void(t1), a1);
 }
 
 /* LX_NFA_STATE.set_accepted_rule */
-void T134f16(T0* C, T0* a1)
+void T135f16(T0* C, T0* a1)
 {
-	((T134*)(C))->a5 = a1;
+	((T135*)(C))->a5 = a1;
 }
 
 /* LX_NFA.set_beginning_as_normal */
-void T93f23(T0* C)
+void T93f21(T0* C)
 {
 	T0* t1;
 	t1 = (T93f4(C));
-	T134f17(GE_void(t1));
+	T135f17(GE_void(t1));
 }
 
 /* LX_NFA_STATE.set_beginning_as_normal */
-void T134f17(T0* C)
+void T135f17(T0* C)
 {
 	T1 t1;
 	T0* t2;
 	T0* l1 = 0;
-	if (((T134*)(C))->a1) {
-		((T134*)(C))->a1 = EIF_FALSE;
-		if ((((T134*)(C))->a2)==EIF_VOID) {
+	if (((T135*)(C))->a1) {
+		((T135*)(C))->a1 = EIF_FALSE;
+		if ((((T135*)(C))->a2)==EIF_VOID) {
 			l1 = EIF_VOID;
 		} else {
-			switch (((T0*)(((T134*)(C))->a2))->id) {
-			case 209:
-				l1 = ((T134*)(C))->a2;
+			switch (((T0*)(((T135*)(C))->a2))->id) {
+			case 208:
+				l1 = ((T135*)(C))->a2;
 				break;
 			default:
 				l1 = EIF_VOID;
@@ -20911,13 +21301,13 @@ void T134f17(T0* C)
 		}
 		t1 = ((l1)!=(EIF_VOID));
 		if (t1) {
-			t2 = (((T209*)(GE_void(l1)))->a1);
-			T134f17(GE_void(t2));
+			t2 = (((T208*)(GE_void(l1)))->a1);
+			T135f17(GE_void(t2));
 		}
-		t1 = ((((T134*)(C))->a3)!=(EIF_VOID));
+		t1 = ((((T135*)(C))->a3)!=(EIF_VOID));
 		if (t1) {
-			t2 = (((T209*)(GE_void(((T134*)(C))->a3)))->a1);
-			T134f17(GE_void(t2));
+			t2 = (((T208*)(GE_void(((T135*)(C))->a3)))->a1);
+			T135f17(GE_void(t2));
 		}
 	}
 }
@@ -20928,21 +21318,21 @@ void T38f303(T0* C)
 	T0* t1;
 	T0* l1 = 0;
 	t1 = (T38f232(C));
-	l1 = T103c7(t1, ((T38*)(C))->a16);
+	l1 = T103c8(t1, ((T38*)(C))->a16);
 	T24f7(GE_void(((T38*)(C))->a13), l1);
 	((T38*)(C))->a1 = EIF_FALSE;
 }
 
 /* LX_UNRECOGNIZED_RULE_ERROR.make */
-T0* T103c7(T0* a1, T6 a2)
+T0* T103c8(T0* a1, T6 a2)
 {
 	T0* C;
 	T0* t1;
 	C = GE_new103(EIF_TRUE);
-	((T103*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(2)));
-	T132f8(GE_void(((T103*)(C))->a1), a1, (T6)(GE_int32(1)));
+	((T103*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(2)));
+	T133f8(GE_void(((T103*)(C))->a1), a1, (T6)(GE_int32(1)));
 	t1 = (T6f6(&a2));
-	T132f8(GE_void(((T103*)(C))->a1), t1, (T6)(GE_int32(2)));
+	T133f8(GE_void(((T103*)(C))->a1), t1, (T6)(GE_int32(2)));
 	return C;
 }
 
@@ -20951,11 +21341,11 @@ void T38f302(T0* C)
 {
 	T1 t1;
 	T0* t2;
-	t1 = (T75f9(GE_void(((T38*)(C))->a3)));
+	t1 = (T75f11(GE_void(((T38*)(C))->a3)));
 	if (t1) {
 		t2 = (((T25*)(GE_void(((T38*)(C))->a12)))->a17);
-		T75f26(GE_void(((T38*)(C))->a3), t2);
-		t1 = (T75f9(GE_void(((T38*)(C))->a3)));
+		T75f28(GE_void(((T38*)(C))->a3), t2);
+		t1 = (T75f11(GE_void(((T38*)(C))->a3)));
 		if (t1) {
 			T38f348(C);
 		} else {
@@ -20985,7 +21375,7 @@ void T38f349(T0* C, T0* a1)
 		if (t1) {
 			break;
 		}
-		l4 = (T75f10(GE_void(a1), l2));
+		l4 = (T75f14(GE_void(a1), l2));
 		t1 = (((T101*)(GE_void(l4)))->a6);
 		if (t1) {
 			t2 = (((T101*)(GE_void(l4)))->a1);
@@ -21017,19 +21407,19 @@ void T49f16(T0* C, T0* a1)
 }
 
 /* LX_LEX_PARSER.eof_nfa */
-unsigned char ge188os2658 = '\0';
-T0* ge188ov2658;
+unsigned char ge140os2599 = '\0';
+T0* ge140ov2599;
 T0* T38f253(T0* C)
 {
 	T0* R = 0;
-	if (ge188os2658) {
-		return ge188ov2658;
+	if (ge140os2599) {
+		return ge140ov2599;
 	} else {
-		ge188os2658 = '\1';
-		ge188ov2658 = R;
+		ge140os2599 = '\1';
+		ge140ov2599 = R;
 	}
 	R = T93c9(EIF_FALSE);
-	ge188ov2658 = R;
+	ge140ov2599 = R;
 	return R;
 }
 
@@ -21045,21 +21435,21 @@ void T38f356(T0* C, T0* a1)
 	T0* t1;
 	T0* l1 = 0;
 	t1 = (T38f232(C));
-	l1 = T128c7(t1, ((T38*)(C))->a16, a1);
+	l1 = T128c8(t1, ((T38*)(C))->a16, a1);
 	T24f7(GE_void(((T38*)(C))->a13), l1);
 }
 
 /* LX_MULTIPLE_EOF_RULES_ERROR.make */
-T0* T128c7(T0* a1, T6 a2, T0* a3)
+T0* T128c8(T0* a1, T6 a2, T0* a3)
 {
 	T0* C;
 	T0* t1;
 	C = GE_new128(EIF_TRUE);
-	((T128*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(3)));
-	T132f8(GE_void(((T128*)(C))->a1), a1, (T6)(GE_int32(1)));
+	((T128*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(3)));
+	T133f8(GE_void(((T128*)(C))->a1), a1, (T6)(GE_int32(1)));
 	t1 = (T6f6(&a2));
-	T132f8(GE_void(((T128*)(C))->a1), t1, (T6)(GE_int32(2)));
-	T132f8(GE_void(((T128*)(C))->a1), a3, (T6)(GE_int32(3)));
+	T133f8(GE_void(((T128*)(C))->a1), t1, (T6)(GE_int32(2)));
+	T133f8(GE_void(((T128*)(C))->a1), a3, (T6)(GE_int32(3)));
 	return C;
 }
 
@@ -21073,26 +21463,26 @@ void T38f348(T0* C)
 	t1 = ((T1)(!(t1)));
 	if (t1) {
 		t2 = (T38f232(C));
-		l1 = T124c7(t2, ((T38*)(C))->a16);
+		l1 = T124c8(t2, ((T38*)(C))->a16);
 		T24f8(GE_void(((T38*)(C))->a13), l1);
 	}
 }
 
 /* LX_ALL_START_CONDITIONS_EOF_ERROR.make */
-T0* T124c7(T0* a1, T6 a2)
+T0* T124c8(T0* a1, T6 a2)
 {
 	T0* C;
 	T0* t1;
 	C = GE_new124(EIF_TRUE);
-	((T124*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(2)));
-	T132f8(GE_void(((T124*)(C))->a1), a1, (T6)(GE_int32(1)));
+	((T124*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(2)));
+	T133f8(GE_void(((T124*)(C))->a1), a1, (T6)(GE_int32(1)));
 	t1 = (T6f6(&a2));
-	T132f8(GE_void(((T124*)(C))->a1), t1, (T6)(GE_int32(2)));
+	T133f8(GE_void(((T124*)(C))->a1), t1, (T6)(GE_int32(2)));
 	return C;
 }
 
 /* LX_START_CONDITIONS.append_non_eof_start_conditions */
-void T75f26(T0* C, T0* a1)
+void T75f28(T0* C, T0* a1)
 {
 	T1 t1;
 	T6 l1 = 0;
@@ -21105,79 +21495,101 @@ void T75f26(T0* C, T0* a1)
 		if (t1) {
 			break;
 		}
-		l3 = (T75f10(GE_void(a1), l1));
+		l3 = (T75f14(GE_void(a1), l1));
 		t1 = (((T101*)(GE_void(l3)))->a6);
 		t1 = ((T1)(!(t1)));
 		if (t1) {
-			T75f31(C, l3);
+			T75f34(C, l3);
 		}
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
 }
 
 /* LX_START_CONDITIONS.force_last */
-void T75f31(T0* C, T0* a1)
+void T75f34(T0* C, T0* a1)
 {
 	T1 t1;
 	T6 t2;
-	t1 = (T75f14(C, (T6)(GE_int32(1))));
+	t1 = (T75f16(C, (T6)(GE_int32(1))));
 	t1 = ((T1)(!(t1)));
 	if (t1) {
 		t2 = ((T6)((((T75*)(C))->a1)+((T6)(GE_int32(1)))));
-		t2 = (T75f15(C, t2));
-		T75f33(C, t2);
+		t2 = (T75f17(C, t2));
+		T75f36(C, t2);
 	}
 	((T75*)(C))->a1 = ((T6)((((T75*)(C))->a1)+((T6)(GE_int32(1)))));
-	((T196*)(GE_void(((T75*)(C))->a2)))->z2[((T75*)(C))->a1] = (a1);
+	((T198*)(GE_void(((T75*)(C))->a2)))->z2[((T75*)(C))->a1] = (a1);
 }
 
 /* LX_START_CONDITIONS.resize */
-void T75f33(T0* C, T6 a1)
+void T75f36(T0* C, T6 a1)
 {
 	T6 t1;
 	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
-	((T75*)(C))->a2 = (T197f2(GE_void(((T75*)(C))->a3), ((T75*)(C))->a2, t1));
+	((T75*)(C))->a2 = (T200f2(GE_void(((T75*)(C))->a3), ((T75*)(C))->a2, t1));
 	((T75*)(C))->a4 = a1;
 }
 
 /* KL_SPECIAL_ROUTINES [LX_START_CONDITION].resize */
-T0* T197f2(T0* C, T0* a1, T6 a2)
+T0* T200f2(T0* C, T0* a1, T6 a2)
 {
 	T6 t1;
 	T1 t2;
 	T0* R = 0;
-	t1 = (((T196*)(GE_void(a1)))->z1);
+	T0* l1 = 0;
+	t1 = (((T198*)(GE_void(a1)))->a1);
 	t2 = (T6f1(&a2, t1));
 	if (t2) {
-		R = (T196f3(GE_void(a1), a2));
+		R = (T198f3(GE_void(a1), l1, a2));
 	} else {
 		R = a1;
 	}
 	return R;
 }
 
+/* SPECIAL [LX_START_CONDITION].aliased_resized_area_with_default */
+T0* T198f3(T0* C, T0* a1, T6 a2)
+{
+	T1 t1;
+	T0* R = 0;
+	T6 l1 = 0;
+	T6 l2 = 0;
+	l2 = ((T198*)(C))->a1;
+	R = (T198f4(C, a2));
+	l1 = l2;
+	while (1) {
+		t1 = (((((l1) == (a2)))));
+		if (t1) {
+			break;
+		}
+		((T198*)(GE_void(R)))->z2[l1] = (a1);
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
+	return R;
+}
+
 /* SPECIAL [LX_START_CONDITION].aliased_resized_area */
-T0* T196f3(T0* C, T6 a1)
+T0* T198f4(T0* C, T6 a1)
 {
 	T0* R = 0;
 	T6 t1;
-	t1 = ((T196*)(C))->z1;
+	t1 = ((T198*)(C))->a1;
 	if (a1>t1) {
-		R = GE_new196(a1, EIF_FALSE);
-		*(T196*)(R) = *(T196*)(C);
-		memcpy(((T196*)(R))->z2,((T196*)(C))->z2,t1*sizeof(T0*));
+		R = GE_new198(a1, EIF_FALSE);
+		*(T198*)(R) = *(T198*)(C);
+		memcpy(((T198*)(R))->z2,((T198*)(C))->z2,t1*sizeof(T0*));
 #ifndef GE_alloc_cleared
-		memset(((T196*)(R))->z2+t1,0,(a1-t1)*sizeof(T0*));
+		memset(((T198*)(R))->z2+t1,0,(a1-t1)*sizeof(T0*));
 #endif
 	} else {
 		R = C;
 	}
-	((T196*)(R))->z1 = a1;
+	((T198*)(R))->a1 = a1;
 	return R;
 }
 
 /* LX_START_CONDITIONS.new_capacity */
-T6 T75f15(T0* C, T6 a1)
+T6 T75f17(T0* C, T6 a1)
 {
 	T6 t1;
 	T6 R = 0;
@@ -21188,7 +21600,7 @@ T6 T75f15(T0* C, T6 a1)
 }
 
 /* LX_START_CONDITIONS.extendible */
-T1 T75f14(T0* C, T6 a1)
+T1 T75f16(T0* C, T6 a1)
 {
 	T6 t1;
 	T1 R = 0;
@@ -21198,7 +21610,7 @@ T1 T75f14(T0* C, T6 a1)
 }
 
 /* LX_START_CONDITIONS.is_empty */
-T1 T75f9(T0* C)
+T1 T75f11(T0* C)
 {
 	T1 R = 0;
 	R = (((((((T75*)(C))->a1) == ((T6)(GE_int32(0)))))));
@@ -21234,17 +21646,17 @@ void T38f301(T0* C, T0* a1)
 	if (t2) {
 		T25f58(GE_void(((T38*)(C))->a12), EIF_TRUE);
 	}
-	t2 = (T75f9(GE_void(((T38*)(C))->a3)));
+	t2 = (T75f11(GE_void(((T38*)(C))->a3)));
 	if (t2) {
 		t1 = (((T25*)(GE_void(((T38*)(C))->a12)))->a17);
-		T75f25(GE_void(t1), a1);
+		T75f27(GE_void(t1), a1);
 	} else {
-		T75f21(GE_void(((T38*)(C))->a3), a1);
+		T75f23(GE_void(((T38*)(C))->a3), a1);
 	}
 }
 
 /* LX_START_CONDITIONS.add_nfa_to_all */
-void T75f21(T0* C, T0* a1)
+void T75f23(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
@@ -21257,7 +21669,7 @@ void T75f21(T0* C, T0* a1)
 		if (t1) {
 			break;
 		}
-		t2 = (T75f10(C, l1));
+		t2 = (T75f14(C, l1));
 		T101f9(GE_void(t2), a1);
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
@@ -21266,36 +21678,36 @@ void T75f21(T0* C, T0* a1)
 /* LX_START_CONDITION.put_nfa */
 void T101f9(T0* C, T0* a1)
 {
-	T167f11(GE_void(((T101*)(C))->a4), a1);
+	T169f12(GE_void(((T101*)(C))->a4), a1);
 }
 
 /* DS_ARRAYED_LIST [LX_NFA].force_last */
-void T167f11(T0* C, T0* a1)
+void T169f12(T0* C, T0* a1)
 {
 	T1 t1;
 	T6 t2;
-	t1 = (T167f8(C, (T6)(GE_int32(1))));
+	t1 = (T169f8(C, (T6)(GE_int32(1))));
 	t1 = ((T1)(!(t1)));
 	if (t1) {
-		t2 = ((T6)((((T167*)(C))->a5)+((T6)(GE_int32(1)))));
-		t2 = (T167f9(C, t2));
-		T167f12(C, t2);
+		t2 = ((T6)((((T169*)(C))->a5)+((T6)(GE_int32(1)))));
+		t2 = (T169f9(C, t2));
+		T169f13(C, t2);
 	}
-	((T167*)(C))->a5 = ((T6)((((T167*)(C))->a5)+((T6)(GE_int32(1)))));
-	((T95*)(GE_void(((T167*)(C))->a2)))->z2[((T167*)(C))->a5] = (a1);
+	((T169*)(C))->a5 = ((T6)((((T169*)(C))->a5)+((T6)(GE_int32(1)))));
+	((T95*)(GE_void(((T169*)(C))->a2)))->z2[((T169*)(C))->a5] = (a1);
 }
 
 /* DS_ARRAYED_LIST [LX_NFA].resize */
-void T167f12(T0* C, T6 a1)
+void T169f13(T0* C, T6 a1)
 {
 	T6 t1;
 	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
-	((T167*)(C))->a2 = (T96f2(GE_void(((T167*)(C))->a1), ((T167*)(C))->a2, t1));
-	((T167*)(C))->a3 = a1;
+	((T169*)(C))->a2 = (T96f2(GE_void(((T169*)(C))->a1), ((T169*)(C))->a2, t1));
+	((T169*)(C))->a3 = a1;
 }
 
 /* DS_ARRAYED_LIST [LX_NFA].new_capacity */
-T6 T167f9(T0* C, T6 a1)
+T6 T169f9(T0* C, T6 a1)
 {
 	T6 t1;
 	T6 R = 0;
@@ -21306,17 +21718,17 @@ T6 T167f9(T0* C, T6 a1)
 }
 
 /* DS_ARRAYED_LIST [LX_NFA].extendible */
-T1 T167f8(T0* C, T6 a1)
+T1 T169f8(T0* C, T6 a1)
 {
 	T6 t1;
 	T1 R = 0;
-	t1 = ((T6)((((T167*)(C))->a5)+(a1)));
-	R = (T6f5(&(((T167*)(C))->a3), t1));
+	t1 = ((T6)((((T169*)(C))->a5)+(a1)));
+	R = (T6f5(&(((T169*)(C))->a3), t1));
 	return R;
 }
 
 /* LX_START_CONDITIONS.add_nfa_to_non_exclusive */
-void T75f25(T0* C, T0* a1)
+void T75f27(T0* C, T0* a1)
 {
 	T1 t1;
 	T6 l1 = 0;
@@ -21329,7 +21741,7 @@ void T75f25(T0* C, T0* a1)
 		if (t1) {
 			break;
 		}
-		l3 = (T75f10(C, l1));
+		l3 = (T75f14(C, l1));
 		t1 = (((T101*)(GE_void(l3)))->a3);
 		t1 = ((T1)(!(t1)));
 		if (t1) {
@@ -21405,17 +21817,17 @@ void T38f300(T0* C, T0* a1)
 		T25f58(GE_void(((T38*)(C))->a12), EIF_TRUE);
 	}
 	T25f59(GE_void(((T38*)(C))->a12), EIF_TRUE);
-	t2 = (T75f9(GE_void(((T38*)(C))->a3)));
+	t2 = (T75f11(GE_void(((T38*)(C))->a3)));
 	if (t2) {
 		t1 = (((T25*)(GE_void(((T38*)(C))->a12)))->a17);
-		T75f23(GE_void(t1), a1);
+		T75f25(GE_void(t1), a1);
 	} else {
-		T75f24(GE_void(((T38*)(C))->a3), a1);
+		T75f26(GE_void(((T38*)(C))->a3), a1);
 	}
 }
 
 /* LX_START_CONDITIONS.add_bol_nfa_to_all */
-void T75f24(T0* C, T0* a1)
+void T75f26(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
@@ -21428,7 +21840,7 @@ void T75f24(T0* C, T0* a1)
 		if (t1) {
 			break;
 		}
-		t2 = (T75f10(C, l1));
+		t2 = (T75f14(C, l1));
 		T101f10(GE_void(t2), a1);
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
@@ -21437,11 +21849,11 @@ void T75f24(T0* C, T0* a1)
 /* LX_START_CONDITION.put_bol_nfa */
 void T101f10(T0* C, T0* a1)
 {
-	T167f11(GE_void(((T101*)(C))->a5), a1);
+	T169f12(GE_void(((T101*)(C))->a5), a1);
 }
 
 /* LX_START_CONDITIONS.add_bol_nfa_to_non_exclusive */
-void T75f23(T0* C, T0* a1)
+void T75f25(T0* C, T0* a1)
 {
 	T1 t1;
 	T6 l1 = 0;
@@ -21454,7 +21866,7 @@ void T75f23(T0* C, T0* a1)
 		if (t1) {
 			break;
 		}
-		l3 = (T75f10(C, l1));
+		l3 = (T75f14(C, l1));
 		t1 = (((T101*)(GE_void(l3)))->a3);
 		t1 = ((T1)(!(t1)));
 		if (t1) {
@@ -21476,21 +21888,21 @@ void T38f299(T0* C)
 	T0* t1;
 	T0* l1 = 0;
 	t1 = (T38f232(C));
-	l1 = T102c7(t1, ((T38*)(C))->a16);
+	l1 = T102c8(t1, ((T38*)(C))->a16);
 	T24f7(GE_void(((T38*)(C))->a13), l1);
 	((T38*)(C))->a1 = EIF_FALSE;
 }
 
 /* LX_BAD_START_CONDITION_LIST_ERROR.make */
-T0* T102c7(T0* a1, T6 a2)
+T0* T102c8(T0* a1, T6 a2)
 {
 	T0* C;
 	T0* t1;
 	C = GE_new102(EIF_TRUE);
-	((T102*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(2)));
-	T132f8(GE_void(((T102*)(C))->a1), a1, (T6)(GE_int32(1)));
+	((T102*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(2)));
+	T133f8(GE_void(((T102*)(C))->a1), a1, (T6)(GE_int32(1)));
 	t1 = (T6f6(&a2));
-	T132f8(GE_void(((T102*)(C))->a1), t1, (T6)(GE_int32(2)));
+	T133f8(GE_void(((T102*)(C))->a1), t1, (T6)(GE_int32(2)));
 	return C;
 }
 
@@ -21507,8 +21919,8 @@ void T38f298(T0* C, T0* a1, T0* a2)
 		if (t1) {
 			T38f346(C, a1);
 		} else {
-			t2 = (T75f8(GE_void(l1), a1));
-			T75f22(GE_void(a2), t2);
+			t2 = (T75f10(GE_void(l1), a1));
+			T75f24(GE_void(a2), t2);
 		}
 	} else {
 		T38f347(C, a1);
@@ -21521,33 +21933,33 @@ void T38f347(T0* C, T0* a1)
 	T0* t1;
 	T0* l1 = 0;
 	t1 = (T38f232(C));
-	l1 = T123c7(t1, ((T38*)(C))->a16, a1);
+	l1 = T123c8(t1, ((T38*)(C))->a16, a1);
 	T24f7(GE_void(((T38*)(C))->a13), l1);
 }
 
 /* LX_UNDECLARED_START_CONDITION_ERROR.make */
-T0* T123c7(T0* a1, T6 a2, T0* a3)
+T0* T123c8(T0* a1, T6 a2, T0* a3)
 {
 	T0* C;
 	T0* t1;
 	C = GE_new123(EIF_TRUE);
-	((T123*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(3)));
-	T132f8(GE_void(((T123*)(C))->a1), a1, (T6)(GE_int32(1)));
+	((T123*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(3)));
+	T133f8(GE_void(((T123*)(C))->a1), a1, (T6)(GE_int32(1)));
 	t1 = (T6f6(&a2));
-	T132f8(GE_void(((T123*)(C))->a1), t1, (T6)(GE_int32(2)));
-	T132f8(GE_void(((T123*)(C))->a1), a3, (T6)(GE_int32(3)));
+	T133f8(GE_void(((T123*)(C))->a1), t1, (T6)(GE_int32(2)));
+	T133f8(GE_void(((T123*)(C))->a1), a3, (T6)(GE_int32(3)));
 	return C;
 }
 
 /* LX_START_CONDITIONS.put_last */
-void T75f22(T0* C, T0* a1)
+void T75f24(T0* C, T0* a1)
 {
 	((T75*)(C))->a1 = ((T6)((((T75*)(C))->a1)+((T6)(GE_int32(1)))));
-	((T196*)(GE_void(((T75*)(C))->a2)))->z2[((T75*)(C))->a1] = (a1);
+	((T198*)(GE_void(((T75*)(C))->a2)))->z2[((T75*)(C))->a1] = (a1);
 }
 
 /* LX_START_CONDITIONS.start_condition */
-T0* T75f8(T0* C, T0* a1)
+T0* T75f10(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
@@ -21566,10 +21978,10 @@ T0* T75f8(T0* C, T0* a1)
 		if (t1) {
 			break;
 		}
-		R = (T75f10(C, l1));
+		R = (T75f14(C, l1));
 		t2 = (((T101*)(GE_void(R)))->a1);
 		t2 = (T17f8(GE_void(t2)));
-		t1 = (T17f22(GE_void(l3), t2));
+		t1 = (T17f24(GE_void(l3), t2));
 		t1 = ((T1)(!(t1)));
 		if (t1) {
 			R = EIF_VOID;
@@ -21580,11 +21992,12 @@ T0* T75f8(T0* C, T0* a1)
 }
 
 /* STRING_8.is_equal */
-T1 T17f22(T0* C, T0* a1)
+T1 T17f24(T0* C, T0* a1)
 {
 	T1 t1;
 	T6 t2;
 	T0* t3;
+	T6 t4;
 	T1 R = 0;
 	T6 l1 = 0;
 	t1 = ((a1)==(C));
@@ -21596,37 +22009,45 @@ T1 T17f22(T0* C, T0* a1)
 		t1 = (((((l1) == (t2)))));
 		if (t1) {
 			t3 = (((T17*)(GE_void(a1)))->a1);
-			t2 = (T17f25(C, ((T17*)(C))->a1, t3, l1));
-			R = (((((t2) == ((T6)(GE_int32(0)))))));
+			t2 = (T17f11(GE_void(a1)));
+			t4 = (T17f11(C));
+			R = (T15f4(GE_void(((T17*)(C))->a1), t3, t2, t4, l1));
 		}
 	}
 	return R;
 }
 
-/* STRING_8.str_strict_cmp */
-T6 T17f25(T0* C, T0* a1, T0* a2, T6 a3)
+/* SPECIAL [CHARACTER_8].same_items */
+T1 T15f4(T0* C, T0* a1, T6 a2, T6 a3, T6 a4)
 {
 	T1 t1;
 	T2 t2;
-	T6 R = 0;
+	T2 t3;
+	T1 R = 0;
 	T6 l1 = 0;
 	T6 l2 = 0;
 	T6 l3 = 0;
-	while (1) {
-		t1 = (((((l1) == (a3)))));
-		if (t1) {
-			break;
+	R = EIF_TRUE;
+	t1 = ((a1)!=(C));
+	if (t1) {
+		l1 = a2;
+		l2 = a3;
+		l3 = ((T6)((a2)+(a4)));
+		while (1) {
+			t1 = (((((l1) == (l3)))));
+			if (t1) {
+				break;
+			}
+			t2 = (((T15*)(GE_void(a1)))->z2[l1]);
+			t3 = (((T15*)(C))->z2[l2]);
+			t1 = (((((t2) != (t3)))));
+			if (t1) {
+				R = EIF_FALSE;
+				l1 = ((T6)((l3)-((T6)(GE_int32(1)))));
+			}
+			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+			l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
 		}
-		t2 = (((T15*)(GE_void(a1)))->z2[l1]);
-		l2 = ((T6)(t2));
-		t2 = (((T15*)(GE_void(a2)))->z2[l1]);
-		l3 = ((T6)(t2));
-		t1 = (((((l2) != (l3)))));
-		if (t1) {
-			R = ((T6)((l2)-(l3)));
-			l1 = ((T6)((a3)-((T6)(GE_int32(1)))));
-		}
-		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
 	return R;
 }
@@ -21635,7 +22056,7 @@ T6 T17f25(T0* C, T0* a1, T0* a2, T6 a3)
 T0* T17f8(T0* C)
 {
 	T0* R = 0;
-	R = (T17f15(C));
+	R = (T17f16(C));
 	T17f42(GE_void(R));
 	return R;
 }
@@ -21703,24 +22124,16 @@ T1 T2f5(T2* C)
 	t1 = (*C);
 	t2 = ((T6)(t1));
 	t3 = (T2f6(C, t2));
-	t3 = (T8f1(&t3, (T8)(GE_nat8(0x01))));
+	t3 = ((T8)((t3)&((T8)(GE_nat8(1)))));
 	R = (T8f2(&t3, (T8)(GE_nat8(0))));
 	return R;
 }
 
-/* NATURAL_8.infix ">" */
+/* NATURAL_8.is_greater */
 T1 T8f2(T8* C, T8 a1)
 {
 	T1 R = 0;
 	R = ((T1)((a1)<(*C)));
-	return R;
-}
-
-/* NATURAL_8.infix "&" */
-T8 T8f1(T8* C, T8 a1)
-{
-	T8 R = 0;
-	R = ((T8)((*C)&(a1)));
 	return R;
 }
 
@@ -21733,206 +22146,198 @@ T8 T2f6(T2* C, T6 a1)
 	t1 = ((T1)((a1)<((T6)(GE_int32(256)))));
 	if (t1) {
 		t2 = (T2f8(C));
-		R = (((T277*)(GE_void(t2)))->z2[a1]);
+		R = (((T270*)(GE_void(t2)))->z2[a1]);
 	}
 	return R;
 }
 
 /* CHARACTER_8.internal_character_types */
-unsigned char ge8os92 = '\0';
-T0* ge8ov92;
+unsigned char ge583os92 = '\0';
+T0* ge583ov92;
 T0* T2f8(T2* C)
 {
 	T8 t1;
 	T0* R = 0;
-	if (ge8os92) {
-		return ge8ov92;
+	if (ge583os92) {
+		return ge583ov92;
 	} else {
-		ge8os92 = '\1';
-		ge8ov92 = R;
+		ge583os92 = '\1';
+		ge583ov92 = R;
 	}
-	R = T277c2((T6)(GE_int32(256)));
-	ge8ov92 = R;
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(0))] = ((T8)(GE_nat8(0x20)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(1))] = ((T8)(GE_nat8(0x20)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(2))] = ((T8)(GE_nat8(0x20)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(3))] = ((T8)(GE_nat8(0x20)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(4))] = ((T8)(GE_nat8(0x20)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(5))] = ((T8)(GE_nat8(0x20)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(6))] = ((T8)(GE_nat8(0x20)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(7))] = ((T8)(GE_nat8(0x20)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(8))] = ((T8)(GE_nat8(0x20)));
-	t1 = (T8)(GE_nat8(0x20));
-	t1 = (T8f3(&t1, (T8)(GE_nat8(0x08))));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(9))] = (t1);
-	t1 = (T8)(GE_nat8(0x20));
-	t1 = (T8f3(&t1, (T8)(GE_nat8(0x08))));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(10))] = (t1);
-	t1 = (T8)(GE_nat8(0x20));
-	t1 = (T8f3(&t1, (T8)(GE_nat8(0x08))));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(11))] = (t1);
-	t1 = (T8)(GE_nat8(0x20));
-	t1 = (T8f3(&t1, (T8)(GE_nat8(0x08))));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(12))] = (t1);
-	t1 = (T8)(GE_nat8(0x20));
-	t1 = (T8f3(&t1, (T8)(GE_nat8(0x08))));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(13))] = (t1);
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(14))] = ((T8)(GE_nat8(0x20)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(15))] = ((T8)(GE_nat8(0x20)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(16))] = ((T8)(GE_nat8(0x20)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(17))] = ((T8)(GE_nat8(0x20)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(18))] = ((T8)(GE_nat8(0x20)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(19))] = ((T8)(GE_nat8(0x20)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(20))] = ((T8)(GE_nat8(0x20)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(21))] = ((T8)(GE_nat8(0x20)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(22))] = ((T8)(GE_nat8(0x20)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(23))] = ((T8)(GE_nat8(0x20)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(24))] = ((T8)(GE_nat8(0x20)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(25))] = ((T8)(GE_nat8(0x20)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(26))] = ((T8)(GE_nat8(0x20)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(27))] = ((T8)(GE_nat8(0x20)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(28))] = ((T8)(GE_nat8(0x20)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(29))] = ((T8)(GE_nat8(0x20)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(30))] = ((T8)(GE_nat8(0x20)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(31))] = ((T8)(GE_nat8(0x20)));
-	t1 = (T8)(GE_nat8(0x08));
-	t1 = (T8f3(&t1, (T8)(GE_nat8(0x80))));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(32))] = (t1);
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(33))] = ((T8)(GE_nat8(0x10)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(34))] = ((T8)(GE_nat8(0x10)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(35))] = ((T8)(GE_nat8(0x10)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(36))] = ((T8)(GE_nat8(0x10)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(37))] = ((T8)(GE_nat8(0x10)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(38))] = ((T8)(GE_nat8(0x10)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(39))] = ((T8)(GE_nat8(0x10)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(40))] = ((T8)(GE_nat8(0x10)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(41))] = ((T8)(GE_nat8(0x10)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(42))] = ((T8)(GE_nat8(0x10)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(43))] = ((T8)(GE_nat8(0x10)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(44))] = ((T8)(GE_nat8(0x10)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(45))] = ((T8)(GE_nat8(0x10)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(46))] = ((T8)(GE_nat8(0x10)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(47))] = ((T8)(GE_nat8(0x10)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(48))] = ((T8)(GE_nat8(0x04)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(49))] = ((T8)(GE_nat8(0x04)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(50))] = ((T8)(GE_nat8(0x04)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(51))] = ((T8)(GE_nat8(0x04)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(52))] = ((T8)(GE_nat8(0x04)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(53))] = ((T8)(GE_nat8(0x04)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(54))] = ((T8)(GE_nat8(0x04)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(55))] = ((T8)(GE_nat8(0x04)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(56))] = ((T8)(GE_nat8(0x04)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(57))] = ((T8)(GE_nat8(0x04)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(58))] = ((T8)(GE_nat8(0x10)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(59))] = ((T8)(GE_nat8(0x10)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(60))] = ((T8)(GE_nat8(0x10)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(61))] = ((T8)(GE_nat8(0x10)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(62))] = ((T8)(GE_nat8(0x10)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(63))] = ((T8)(GE_nat8(0x10)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(64))] = ((T8)(GE_nat8(0x10)));
-	t1 = (T8)(GE_nat8(0x01));
-	t1 = (T8f3(&t1, (T8)(GE_nat8(0x40))));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(65))] = (t1);
-	t1 = (T8)(GE_nat8(0x01));
-	t1 = (T8f3(&t1, (T8)(GE_nat8(0x40))));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(66))] = (t1);
-	t1 = (T8)(GE_nat8(0x01));
-	t1 = (T8f3(&t1, (T8)(GE_nat8(0x40))));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(67))] = (t1);
-	t1 = (T8)(GE_nat8(0x01));
-	t1 = (T8f3(&t1, (T8)(GE_nat8(0x40))));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(68))] = (t1);
-	t1 = (T8)(GE_nat8(0x01));
-	t1 = (T8f3(&t1, (T8)(GE_nat8(0x40))));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(69))] = (t1);
-	t1 = (T8)(GE_nat8(0x01));
-	t1 = (T8f3(&t1, (T8)(GE_nat8(0x40))));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(70))] = (t1);
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(71))] = ((T8)(GE_nat8(0x01)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(72))] = ((T8)(GE_nat8(0x01)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(73))] = ((T8)(GE_nat8(0x01)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(74))] = ((T8)(GE_nat8(0x01)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(75))] = ((T8)(GE_nat8(0x01)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(76))] = ((T8)(GE_nat8(0x01)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(77))] = ((T8)(GE_nat8(0x01)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(78))] = ((T8)(GE_nat8(0x01)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(79))] = ((T8)(GE_nat8(0x01)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(80))] = ((T8)(GE_nat8(0x01)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(81))] = ((T8)(GE_nat8(0x01)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(82))] = ((T8)(GE_nat8(0x01)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(83))] = ((T8)(GE_nat8(0x01)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(84))] = ((T8)(GE_nat8(0x01)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(85))] = ((T8)(GE_nat8(0x01)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(86))] = ((T8)(GE_nat8(0x01)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(87))] = ((T8)(GE_nat8(0x01)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(88))] = ((T8)(GE_nat8(0x01)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(89))] = ((T8)(GE_nat8(0x01)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(90))] = ((T8)(GE_nat8(0x01)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(91))] = ((T8)(GE_nat8(0x10)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(92))] = ((T8)(GE_nat8(0x10)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(93))] = ((T8)(GE_nat8(0x10)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(94))] = ((T8)(GE_nat8(0x10)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(95))] = ((T8)(GE_nat8(0x10)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(96))] = ((T8)(GE_nat8(0x10)));
-	t1 = (T8)(GE_nat8(0x02));
-	t1 = (T8f3(&t1, (T8)(GE_nat8(0x40))));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(97))] = (t1);
-	t1 = (T8)(GE_nat8(0x02));
-	t1 = (T8f3(&t1, (T8)(GE_nat8(0x40))));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(98))] = (t1);
-	t1 = (T8)(GE_nat8(0x02));
-	t1 = (T8f3(&t1, (T8)(GE_nat8(0x40))));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(99))] = (t1);
-	t1 = (T8)(GE_nat8(0x02));
-	t1 = (T8f3(&t1, (T8)(GE_nat8(0x40))));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(100))] = (t1);
-	t1 = (T8)(GE_nat8(0x02));
-	t1 = (T8f3(&t1, (T8)(GE_nat8(0x40))));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(101))] = (t1);
-	t1 = (T8)(GE_nat8(0x02));
-	t1 = (T8f3(&t1, (T8)(GE_nat8(0x40))));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(102))] = (t1);
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(103))] = ((T8)(GE_nat8(0x02)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(104))] = ((T8)(GE_nat8(0x02)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(105))] = ((T8)(GE_nat8(0x02)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(106))] = ((T8)(GE_nat8(0x02)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(107))] = ((T8)(GE_nat8(0x02)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(108))] = ((T8)(GE_nat8(0x02)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(109))] = ((T8)(GE_nat8(0x02)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(110))] = ((T8)(GE_nat8(0x02)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(111))] = ((T8)(GE_nat8(0x02)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(112))] = ((T8)(GE_nat8(0x02)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(113))] = ((T8)(GE_nat8(0x02)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(114))] = ((T8)(GE_nat8(0x02)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(115))] = ((T8)(GE_nat8(0x02)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(116))] = ((T8)(GE_nat8(0x02)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(117))] = ((T8)(GE_nat8(0x02)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(118))] = ((T8)(GE_nat8(0x02)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(119))] = ((T8)(GE_nat8(0x02)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(120))] = ((T8)(GE_nat8(0x02)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(121))] = ((T8)(GE_nat8(0x02)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(122))] = ((T8)(GE_nat8(0x02)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(123))] = ((T8)(GE_nat8(0x10)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(124))] = ((T8)(GE_nat8(0x10)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(125))] = ((T8)(GE_nat8(0x10)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(126))] = ((T8)(GE_nat8(0x10)));
-	((T277*)(GE_void(R)))->z2[(T6)(GE_int32(127))] = ((T8)(GE_nat8(0x20)));
-	return R;
-}
-
-/* NATURAL_8.infix "|" */
-T8 T8f3(T8* C, T8 a1)
-{
-	T8 R = 0;
-	R = ((T8)((*C)|(a1)));
+	R = T270c3((T6)(GE_int32(256)));
+	ge583ov92 = R;
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(0))] = ((T8)(GE_nat8(32)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(1))] = ((T8)(GE_nat8(32)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(2))] = ((T8)(GE_nat8(32)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(3))] = ((T8)(GE_nat8(32)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(4))] = ((T8)(GE_nat8(32)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(5))] = ((T8)(GE_nat8(32)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(6))] = ((T8)(GE_nat8(32)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(7))] = ((T8)(GE_nat8(32)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(8))] = ((T8)(GE_nat8(32)));
+	t1 = (T8)(GE_nat8(32));
+	t1 = ((T8)((t1)|((T8)(GE_nat8(8)))));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(9))] = (t1);
+	t1 = (T8)(GE_nat8(32));
+	t1 = ((T8)((t1)|((T8)(GE_nat8(8)))));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(10))] = (t1);
+	t1 = (T8)(GE_nat8(32));
+	t1 = ((T8)((t1)|((T8)(GE_nat8(8)))));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(11))] = (t1);
+	t1 = (T8)(GE_nat8(32));
+	t1 = ((T8)((t1)|((T8)(GE_nat8(8)))));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(12))] = (t1);
+	t1 = (T8)(GE_nat8(32));
+	t1 = ((T8)((t1)|((T8)(GE_nat8(8)))));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(13))] = (t1);
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(14))] = ((T8)(GE_nat8(32)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(15))] = ((T8)(GE_nat8(32)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(16))] = ((T8)(GE_nat8(32)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(17))] = ((T8)(GE_nat8(32)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(18))] = ((T8)(GE_nat8(32)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(19))] = ((T8)(GE_nat8(32)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(20))] = ((T8)(GE_nat8(32)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(21))] = ((T8)(GE_nat8(32)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(22))] = ((T8)(GE_nat8(32)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(23))] = ((T8)(GE_nat8(32)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(24))] = ((T8)(GE_nat8(32)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(25))] = ((T8)(GE_nat8(32)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(26))] = ((T8)(GE_nat8(32)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(27))] = ((T8)(GE_nat8(32)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(28))] = ((T8)(GE_nat8(32)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(29))] = ((T8)(GE_nat8(32)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(30))] = ((T8)(GE_nat8(32)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(31))] = ((T8)(GE_nat8(32)));
+	t1 = (T8)(GE_nat8(8));
+	t1 = ((T8)((t1)|((T8)(GE_nat8(128)))));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(32))] = (t1);
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(33))] = ((T8)(GE_nat8(16)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(34))] = ((T8)(GE_nat8(16)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(35))] = ((T8)(GE_nat8(16)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(36))] = ((T8)(GE_nat8(16)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(37))] = ((T8)(GE_nat8(16)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(38))] = ((T8)(GE_nat8(16)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(39))] = ((T8)(GE_nat8(16)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(40))] = ((T8)(GE_nat8(16)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(41))] = ((T8)(GE_nat8(16)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(42))] = ((T8)(GE_nat8(16)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(43))] = ((T8)(GE_nat8(16)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(44))] = ((T8)(GE_nat8(16)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(45))] = ((T8)(GE_nat8(16)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(46))] = ((T8)(GE_nat8(16)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(47))] = ((T8)(GE_nat8(16)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(48))] = ((T8)(GE_nat8(4)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(49))] = ((T8)(GE_nat8(4)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(50))] = ((T8)(GE_nat8(4)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(51))] = ((T8)(GE_nat8(4)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(52))] = ((T8)(GE_nat8(4)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(53))] = ((T8)(GE_nat8(4)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(54))] = ((T8)(GE_nat8(4)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(55))] = ((T8)(GE_nat8(4)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(56))] = ((T8)(GE_nat8(4)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(57))] = ((T8)(GE_nat8(4)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(58))] = ((T8)(GE_nat8(16)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(59))] = ((T8)(GE_nat8(16)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(60))] = ((T8)(GE_nat8(16)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(61))] = ((T8)(GE_nat8(16)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(62))] = ((T8)(GE_nat8(16)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(63))] = ((T8)(GE_nat8(16)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(64))] = ((T8)(GE_nat8(16)));
+	t1 = (T8)(GE_nat8(1));
+	t1 = ((T8)((t1)|((T8)(GE_nat8(64)))));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(65))] = (t1);
+	t1 = (T8)(GE_nat8(1));
+	t1 = ((T8)((t1)|((T8)(GE_nat8(64)))));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(66))] = (t1);
+	t1 = (T8)(GE_nat8(1));
+	t1 = ((T8)((t1)|((T8)(GE_nat8(64)))));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(67))] = (t1);
+	t1 = (T8)(GE_nat8(1));
+	t1 = ((T8)((t1)|((T8)(GE_nat8(64)))));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(68))] = (t1);
+	t1 = (T8)(GE_nat8(1));
+	t1 = ((T8)((t1)|((T8)(GE_nat8(64)))));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(69))] = (t1);
+	t1 = (T8)(GE_nat8(1));
+	t1 = ((T8)((t1)|((T8)(GE_nat8(64)))));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(70))] = (t1);
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(71))] = ((T8)(GE_nat8(1)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(72))] = ((T8)(GE_nat8(1)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(73))] = ((T8)(GE_nat8(1)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(74))] = ((T8)(GE_nat8(1)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(75))] = ((T8)(GE_nat8(1)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(76))] = ((T8)(GE_nat8(1)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(77))] = ((T8)(GE_nat8(1)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(78))] = ((T8)(GE_nat8(1)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(79))] = ((T8)(GE_nat8(1)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(80))] = ((T8)(GE_nat8(1)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(81))] = ((T8)(GE_nat8(1)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(82))] = ((T8)(GE_nat8(1)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(83))] = ((T8)(GE_nat8(1)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(84))] = ((T8)(GE_nat8(1)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(85))] = ((T8)(GE_nat8(1)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(86))] = ((T8)(GE_nat8(1)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(87))] = ((T8)(GE_nat8(1)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(88))] = ((T8)(GE_nat8(1)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(89))] = ((T8)(GE_nat8(1)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(90))] = ((T8)(GE_nat8(1)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(91))] = ((T8)(GE_nat8(16)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(92))] = ((T8)(GE_nat8(16)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(93))] = ((T8)(GE_nat8(16)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(94))] = ((T8)(GE_nat8(16)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(95))] = ((T8)(GE_nat8(16)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(96))] = ((T8)(GE_nat8(16)));
+	t1 = (T8)(GE_nat8(2));
+	t1 = ((T8)((t1)|((T8)(GE_nat8(64)))));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(97))] = (t1);
+	t1 = (T8)(GE_nat8(2));
+	t1 = ((T8)((t1)|((T8)(GE_nat8(64)))));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(98))] = (t1);
+	t1 = (T8)(GE_nat8(2));
+	t1 = ((T8)((t1)|((T8)(GE_nat8(64)))));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(99))] = (t1);
+	t1 = (T8)(GE_nat8(2));
+	t1 = ((T8)((t1)|((T8)(GE_nat8(64)))));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(100))] = (t1);
+	t1 = (T8)(GE_nat8(2));
+	t1 = ((T8)((t1)|((T8)(GE_nat8(64)))));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(101))] = (t1);
+	t1 = (T8)(GE_nat8(2));
+	t1 = ((T8)((t1)|((T8)(GE_nat8(64)))));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(102))] = (t1);
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(103))] = ((T8)(GE_nat8(2)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(104))] = ((T8)(GE_nat8(2)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(105))] = ((T8)(GE_nat8(2)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(106))] = ((T8)(GE_nat8(2)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(107))] = ((T8)(GE_nat8(2)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(108))] = ((T8)(GE_nat8(2)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(109))] = ((T8)(GE_nat8(2)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(110))] = ((T8)(GE_nat8(2)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(111))] = ((T8)(GE_nat8(2)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(112))] = ((T8)(GE_nat8(2)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(113))] = ((T8)(GE_nat8(2)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(114))] = ((T8)(GE_nat8(2)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(115))] = ((T8)(GE_nat8(2)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(116))] = ((T8)(GE_nat8(2)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(117))] = ((T8)(GE_nat8(2)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(118))] = ((T8)(GE_nat8(2)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(119))] = ((T8)(GE_nat8(2)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(120))] = ((T8)(GE_nat8(2)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(121))] = ((T8)(GE_nat8(2)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(122))] = ((T8)(GE_nat8(2)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(123))] = ((T8)(GE_nat8(16)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(124))] = ((T8)(GE_nat8(16)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(125))] = ((T8)(GE_nat8(16)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(126))] = ((T8)(GE_nat8(16)));
+	((T270*)(GE_void(R)))->z2[(T6)(GE_int32(127))] = ((T8)(GE_nat8(32)));
 	return R;
 }
 
 /* SPECIAL [NATURAL_8].make */
-T0* T277c2(T6 a1)
+T0* T270c3(T6 a1)
 {
 	T0* C;
-	C = GE_new277(a1, EIF_TRUE);
+	C = GE_new270(a1, EIF_TRUE);
 	return C;
 }
 
@@ -21946,22 +22351,22 @@ void T38f346(T0* C, T0* a1)
 	t1 = ((T1)(!(t1)));
 	if (t1) {
 		t2 = (T38f232(C));
-		l1 = T122c7(t2, ((T38*)(C))->a16, a1);
+		l1 = T122c8(t2, ((T38*)(C))->a16, a1);
 		T24f8(GE_void(((T38*)(C))->a13), l1);
 	}
 }
 
 /* LX_START_CONDITION_SPECIFIED_TWICE_ERROR.make */
-T0* T122c7(T0* a1, T6 a2, T0* a3)
+T0* T122c8(T0* a1, T6 a2, T0* a3)
 {
 	T0* C;
 	T0* t1;
 	C = GE_new122(EIF_TRUE);
-	((T122*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(3)));
-	T132f8(GE_void(((T122*)(C))->a1), a1, (T6)(GE_int32(1)));
+	((T122*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(3)));
+	T133f8(GE_void(((T122*)(C))->a1), a1, (T6)(GE_int32(1)));
 	t1 = (T6f6(&a2));
-	T132f8(GE_void(((T122*)(C))->a1), t1, (T6)(GE_int32(2)));
-	T132f8(GE_void(((T122*)(C))->a1), a3, (T6)(GE_int32(3)));
+	T133f8(GE_void(((T122*)(C))->a1), t1, (T6)(GE_int32(2)));
+	T133f8(GE_void(((T122*)(C))->a1), a3, (T6)(GE_int32(3)));
 	return C;
 }
 
@@ -21986,17 +22391,17 @@ T1 T75f7(T0* C, T0* a1)
 		if (t1) {
 			break;
 		}
-		t2 = (T75f10(C, l1));
+		t2 = (T75f14(C, l1));
 		t2 = (((T101*)(GE_void(t2)))->a1);
 		t2 = (T17f8(GE_void(t2)));
-		R = (T17f22(GE_void(l3), t2));
+		R = (T17f24(GE_void(l3), t2));
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
 	return R;
 }
 
 /* LX_START_CONDITIONS.append_start_conditions */
-void T75f20(T0* C, T0* a1)
+void T75f22(T0* C, T0* a1)
 {
 	T1 t1;
 	T6 l1 = 0;
@@ -22009,18 +22414,18 @@ void T75f20(T0* C, T0* a1)
 		if (t1) {
 			break;
 		}
-		l3 = (T75f10(GE_void(a1), l1));
-		t1 = (T75f12(C, l3));
+		l3 = (T75f14(GE_void(a1), l1));
+		t1 = (T75f13(C, l3));
 		t1 = ((T1)(!(t1)));
 		if (t1) {
-			T75f31(C, l3);
+			T75f34(C, l3);
 		}
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
 }
 
 /* LX_START_CONDITIONS.has */
-T1 T75f12(T0* C, T0* a1)
+T1 T75f13(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
@@ -22036,7 +22441,7 @@ T1 T75f12(T0* C, T0* a1)
 			if (t1) {
 				break;
 			}
-			t2 = (((T196*)(GE_void(((T75*)(C))->a2)))->z2[l1]);
+			t2 = (((T198*)(GE_void(((T75*)(C))->a2)))->z2[l1]);
 			t1 = ((GE_void(l2), t2, a1, (T1)0));
 			if (t1) {
 				R = EIF_TRUE;
@@ -22051,7 +22456,7 @@ T1 T75f12(T0* C, T0* a1)
 			if (t1) {
 				break;
 			}
-			t2 = (((T196*)(GE_void(((T75*)(C))->a2)))->z2[l1]);
+			t2 = (((T198*)(GE_void(((T75*)(C))->a2)))->z2[l1]);
 			t1 = ((t2)==(a1));
 			if (t1) {
 				R = EIF_TRUE;
@@ -22090,13 +22495,13 @@ void T38f297(T0* C, T0* a1)
 /* DS_ARRAYED_LIST [LX_RULE].wipe_out */
 void T48f17(T0* C)
 {
-	T48f21(C);
-	T48f22(C, (T6)(GE_int32(1)), ((T48*)(C))->a1);
+	T48f22(C);
+	T48f23(C, (T6)(GE_int32(1)), ((T48*)(C))->a1);
 	((T48*)(C))->a1 = (T6)(GE_int32(0));
 }
 
 /* DS_ARRAYED_LIST [LX_RULE].clear_items */
-void T48f22(T0* C, T6 a1, T6 a2)
+void T48f23(T0* C, T6 a1, T6 a2)
 {
 	T1 t1;
 	T0* l1 = 0;
@@ -22107,13 +22512,13 @@ void T48f22(T0* C, T6 a1, T6 a2)
 		if (t1) {
 			break;
 		}
-		((T136*)(GE_void(((T48*)(C))->a2)))->z2[l2] = (l1);
+		((T137*)(GE_void(((T48*)(C))->a2)))->z2[l2] = (l1);
 		l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
 	}
 }
 
 /* DS_ARRAYED_LIST [LX_RULE].move_all_cursors_after */
-void T48f21(T0* C)
+void T48f22(T0* C)
 {
 	T1 t1;
 	T0* l1 = 0;
@@ -22124,17 +22529,17 @@ void T48f21(T0* C)
 		if (t1) {
 			break;
 		}
-		T170f5(GE_void(l1), (T6)(GE_int32(-1)));
-		l2 = (((T170*)(GE_void(l1)))->a1);
-		T170f6(GE_void(l1), EIF_VOID);
+		T172f5(GE_void(l1), (T6)(GE_int32(-1)));
+		l2 = (((T172*)(GE_void(l1)))->a1);
+		T172f6(GE_void(l1), EIF_VOID);
 		l1 = l2;
 	}
 }
 
 /* DS_ARRAYED_LIST_CURSOR [LX_RULE].set_next_cursor */
-void T170f6(T0* C, T0* a1)
+void T172f6(T0* C, T0* a1)
 {
-	((T170*)(C))->a1 = a1;
+	((T172*)(C))->a1 = a1;
 }
 
 /* LX_RULE.set_action */
@@ -22152,17 +22557,17 @@ T0* T76f1(T0* C, T0* a1)
 }
 
 /* LX_START_CONDITIONS.keep_first */
-void T75f19(T0* C, T6 a1)
+void T75f21(T0* C, T6 a1)
 {
 	T6 t1;
-	T75f29(C);
+	T75f32(C);
 	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
-	T75f30(C, t1, ((T75*)(C))->a1);
+	T75f33(C, t1, ((T75*)(C))->a1);
 	((T75*)(C))->a1 = a1;
 }
 
 /* LX_START_CONDITIONS.clear_items */
-void T75f30(T0* C, T6 a1, T6 a2)
+void T75f33(T0* C, T6 a1, T6 a2)
 {
 	T1 t1;
 	T0* l1 = 0;
@@ -22173,13 +22578,13 @@ void T75f30(T0* C, T6 a1, T6 a2)
 		if (t1) {
 			break;
 		}
-		((T196*)(GE_void(((T75*)(C))->a2)))->z2[l2] = (l1);
+		((T198*)(GE_void(((T75*)(C))->a2)))->z2[l2] = (l1);
 		l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
 	}
 }
 
 /* LX_START_CONDITIONS.move_all_cursors_after */
-void T75f29(T0* C)
+void T75f32(T0* C)
 {
 	T1 t1;
 	T0* l1 = 0;
@@ -22190,23 +22595,23 @@ void T75f29(T0* C)
 		if (t1) {
 			break;
 		}
-		T198f5(GE_void(l1), (T6)(GE_int32(-1)));
-		l2 = (((T198*)(GE_void(l1)))->a1);
-		T198f6(GE_void(l1), EIF_VOID);
+		T201f5(GE_void(l1), (T6)(GE_int32(-1)));
+		l2 = (((T201*)(GE_void(l1)))->a1);
+		T201f6(GE_void(l1), EIF_VOID);
 		l1 = l2;
 	}
 }
 
 /* DS_ARRAYED_LIST_CURSOR [LX_START_CONDITION].set_next_cursor */
-void T198f6(T0* C, T0* a1)
+void T201f6(T0* C, T0* a1)
 {
-	((T198*)(C))->a1 = a1;
+	((T201*)(C))->a1 = a1;
 }
 
 /* DS_ARRAYED_LIST_CURSOR [LX_START_CONDITION].set_position */
-void T198f5(T0* C, T6 a1)
+void T201f5(T0* C, T6 a1)
 {
-	((T198*)(C))->a2 = a1;
+	((T201*)(C))->a2 = a1;
 }
 
 /* LX_DESCRIPTION.create_equiv_classes */
@@ -22259,17 +22664,17 @@ void T38f295(T0* C)
 void T38f345(T0* C)
 {
 	T0* l1 = 0;
-	l1 = T121c7();
+	l1 = T121c8();
 	T24f7(GE_void(((T38*)(C))->a13), l1);
 	((T38*)(C))->a1 = EIF_FALSE;
 }
 
 /* LX_FULL_AND_VARIABLE_TRAILING_CONTEXT_ERROR.make */
-T0* T121c7(void)
+T0* T121c8(void)
 {
 	T0* C;
 	C = GE_new121(EIF_TRUE);
-	((T121*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(0)));
+	((T121*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(0)));
 	return C;
 }
 
@@ -22277,17 +22682,17 @@ T0* T121c7(void)
 void T38f344(T0* C)
 {
 	T0* l1 = 0;
-	l1 = T120c7();
+	l1 = T120c8();
 	T24f7(GE_void(((T38*)(C))->a13), l1);
 	((T38*)(C))->a1 = EIF_FALSE;
 }
 
 /* LX_FULL_AND_REJECT_ERROR.make */
-T0* T120c7(void)
+T0* T120c8(void)
 {
 	T0* C;
 	C = GE_new120(EIF_TRUE);
-	((T120*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(0)));
+	((T120*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(0)));
 	return C;
 }
 
@@ -22295,17 +22700,17 @@ T0* T120c7(void)
 void T38f343(T0* C)
 {
 	T0* l1 = 0;
-	l1 = T119c7();
+	l1 = T119c8();
 	T24f7(GE_void(((T38*)(C))->a13), l1);
 	((T38*)(C))->a1 = EIF_FALSE;
 }
 
 /* LX_FULL_AND_META_ERROR.make */
-T0* T119c7(void)
+T0* T119c8(void)
 {
 	T0* C;
 	C = GE_new119(EIF_TRUE);
-	((T119*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(0)));
+	((T119*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(0)));
 	return C;
 }
 
@@ -22326,7 +22731,7 @@ void T38f294(T0* C)
 			break;
 		}
 		t2 = (T98f4(GE_void(l1)));
-		T90f23(GE_void(t2), l2);
+		T90f25(GE_void(t2), l2);
 		T98f8(GE_void(l1));
 	}
 }
@@ -22334,11 +22739,11 @@ void T38f294(T0* C)
 /* DS_HASH_TABLE_CURSOR [LX_SYMBOL_CLASS, STRING_8].forth */
 void T98f8(T0* C)
 {
-	T82f66(GE_void(((T98*)(C))->a1), C);
+	T82f67(GE_void(((T98*)(C))->a1), C);
 }
 
 /* DS_HASH_TABLE [LX_SYMBOL_CLASS, STRING_8].cursor_forth */
-void T82f66(T0* C, T0* a1)
+void T82f67(T0* C, T0* a1)
 {
 	T1 t1;
 	T6 t2;
@@ -22372,26 +22777,26 @@ void T82f66(T0* C, T0* a1)
 		T98f9(a1, (T6)(GE_int32(-2)));
 		t1 = ((T1)(!(l3)));
 		if (t1) {
-			T82f67(C, a1);
+			T82f68(C, a1);
 		}
 	} else {
 		T98f9(a1, l1);
 		if (l3) {
-			T82f68(C, a1);
+			T82f69(C, a1);
 		}
 	}
 }
 
 /* DS_HASH_TABLE [LX_SYMBOL_CLASS, STRING_8].add_traversing_cursor */
-void T82f68(T0* C, T0* a1)
+void T82f69(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
-	t1 = ((a1)!=(((T82*)(C))->a17));
+	t1 = ((a1)!=(((T82*)(C))->a19));
 	if (t1) {
-		t2 = (((T98*)(GE_void(((T82*)(C))->a17)))->a3);
+		t2 = (((T98*)(GE_void(((T82*)(C))->a19)))->a3);
 		T98f10(a1, t2);
-		T98f10(GE_void(((T82*)(C))->a17), a1);
+		T98f10(GE_void(((T82*)(C))->a19), a1);
 	}
 }
 
@@ -22402,15 +22807,15 @@ void T98f10(T0* C, T0* a1)
 }
 
 /* DS_HASH_TABLE [LX_SYMBOL_CLASS, STRING_8].remove_traversing_cursor */
-void T82f67(T0* C, T0* a1)
+void T82f68(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
 	T0* l1 = 0;
 	T0* l2 = 0;
-	t1 = ((a1)!=(((T82*)(C))->a17));
+	t1 = ((a1)!=(((T82*)(C))->a19));
 	if (t1) {
-		l2 = ((T82*)(C))->a17;
+		l2 = ((T82*)(C))->a19;
 		l1 = (((T98*)(GE_void(l2)))->a3);
 		while (1) {
 			t1 = ((l1)==(a1));
@@ -22439,7 +22844,7 @@ void T98f9(T0* C, T6 a1)
 }
 
 /* LX_SYMBOL_CLASS.convert_to_equivalence */
-void T90f23(T0* C, T0* a1)
+void T90f25(T0* C, T0* a1)
 {
 	T1 t1;
 	T6 t2;
@@ -22459,7 +22864,7 @@ void T90f23(T0* C, T0* a1)
 		if (t1) {
 			l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
 			t2 = (T94f9(GE_void(a1), l4));
-			T90f25(C, t2, l2);
+			T90f27(C, t2, l2);
 		}
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
@@ -22480,7 +22885,7 @@ T0* T82f37(T0* C, T0* a1)
 	T6 t1;
 	T0* R = 0;
 	t1 = (((T98*)(a1))->a2);
-	R = (T82f32(C, t1));
+	R = (T82f33(C, t1));
 	return R;
 }
 
@@ -22505,11 +22910,11 @@ T1 T82f36(T0* C, T0* a1)
 /* DS_HASH_TABLE_CURSOR [LX_SYMBOL_CLASS, STRING_8].start */
 void T98f7(T0* C)
 {
-	T82f65(GE_void(((T98*)(C))->a1), C);
+	T82f66(GE_void(((T98*)(C))->a1), C);
 }
 
 /* DS_HASH_TABLE [LX_SYMBOL_CLASS, STRING_8].cursor_start */
-void T82f65(T0* C, T0* a1)
+void T82f66(T0* C, T0* a1)
 {
 	T1 t1;
 	T6 t2;
@@ -22539,12 +22944,12 @@ void T82f65(T0* C, T0* a1)
 			T98f9(a1, (T6)(GE_int32(-2)));
 			t1 = ((T1)(!(l3)));
 			if (t1) {
-				T82f67(C, a1);
+				T82f68(C, a1);
 			}
 		} else {
 			T98f9(a1, l1);
 			if (l3) {
-				T82f68(C, a1);
+				T82f69(C, a1);
 			}
 		}
 	}
@@ -22608,7 +23013,7 @@ void T38f293(T0* C)
 	T49f21(GE_void(((T38*)(C))->a95), (T6)(GE_int32(-1)));
 	T49f22(GE_void(((T38*)(C))->a95), (T6)(GE_int32(-1)));
 	t1 = (((T25*)(GE_void(((T38*)(C))->a12)))->a17);
-	T75f21(GE_void(t1), l2);
+	T75f23(GE_void(t1), l2);
 	t2 = (((T25*)(GE_void(((T38*)(C))->a12)))->a6);
 	if (t2) {
 		T38f297(C, GE_ms8("last_token := yyError_token\nfatal_error (\"scanner jammed\")", 58));
@@ -22699,18 +23104,8 @@ T0* T89f1(T0* C, T6 a1)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	l1 = T206c2(a1);
-	R = (((T206*)(GE_void(l1)))->a1);
+	R = T88c6(l1, a1);
 	return R;
-}
-
-/* TO_SPECIAL [STRING_8].make_area */
-T0* T206c2(T6 a1)
-{
-	T0* C;
-	C = GE_new206(EIF_TRUE);
-	((T206*)(C))->a1 = T88c4(a1);
-	return C;
 }
 
 /* KL_SPECIAL_ROUTINES [STRING_8].default_create */
@@ -22746,21 +23141,21 @@ void T38f292(T0* C, T0* a1)
 	T0* t1;
 	T0* l1 = 0;
 	t1 = (T38f232(C));
-	l1 = T97c7(t1, ((T38*)(C))->a16);
+	l1 = T97c8(t1, ((T38*)(C))->a16);
 	T24f7(GE_void(((T38*)(C))->a13), l1);
 	((T38*)(C))->a1 = EIF_FALSE;
 }
 
 /* UT_SYNTAX_ERROR.make */
-T0* T97c7(T0* a1, T6 a2)
+T0* T97c8(T0* a1, T6 a2)
 {
 	T0* C;
 	T0* t1;
 	C = GE_new97(EIF_TRUE);
-	((T97*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(2)));
-	T132f8(GE_void(((T97*)(C))->a1), a1, (T6)(GE_int32(1)));
+	((T97*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(2)));
+	T133f8(GE_void(((T97*)(C))->a1), a1, (T6)(GE_int32(1)));
 	t1 = (T6f6(&a2));
-	T132f8(GE_void(((T97*)(C))->a1), t1, (T6)(GE_int32(2)));
+	T133f8(GE_void(((T97*)(C))->a1), t1, (T6)(GE_int32(2)));
 	return C;
 }
 
@@ -22789,6 +23184,7 @@ void T38f276(T0* C)
 	T6 l11 = 0;
 	T6 l12 = 0;
 	T1 l13 = 0;
+	T0* l14 = 0;
 	((T38*)(C))->a41 = (T6)(GE_int32(-2));
 	l7 = (T6)(GE_int32(1));
 	while (1) {
@@ -22822,30 +23218,31 @@ void T38f276(T0* C)
 			l7 = (T6)(GE_int32(2));
 			break;
 		case (T6)(T6)(GE_int32(2)):
+			l14 = ((T38*)(C))->a60;
 			l13 = EIF_FALSE;
 			while (1) {
 				if (l13) {
 					break;
 				}
-				t1 = ((((T38*)(C))->a60)!=(EIF_VOID));
+				t1 = ((((T38*)(C))->a61)!=(EIF_VOID));
 				if (t1) {
-					t1 = ((((T38*)(C))->a61)!=(EIF_VOID));
+					t1 = ((l14)!=(EIF_VOID));
 					if (t1) {
-						t2 = (((T15*)(GE_void(((T38*)(C))->a61)))->z2[l1]);
+						t2 = (((T15*)(GE_void(l14)))->z2[l1]);
 						t3 = ((T6)(t2));
-						l8 = (((T83*)(GE_void(((T38*)(C))->a60)))->z2[t3]);
+						l8 = (((T83*)(GE_void(((T38*)(C))->a61)))->z2[t3]);
 					} else {
-						t2 = (T250f3(GE_void(((T38*)(C))->a62), l1));
+						t2 = (T247f3(GE_void(((T38*)(C))->a62), l1));
 						t3 = ((T6)(t2));
-						l8 = (((T83*)(GE_void(((T38*)(C))->a60)))->z2[t3]);
+						l8 = (((T83*)(GE_void(((T38*)(C))->a61)))->z2[t3]);
 					}
 				} else {
-					t1 = ((((T38*)(C))->a61)!=(EIF_VOID));
+					t1 = ((l14)!=(EIF_VOID));
 					if (t1) {
-						t2 = (((T15*)(GE_void(((T38*)(C))->a61)))->z2[l1]);
+						t2 = (((T15*)(GE_void(l14)))->z2[l1]);
 						l8 = ((T6)(t2));
 					} else {
-						t2 = (T250f3(GE_void(((T38*)(C))->a62), l1));
+						t2 = (T247f3(GE_void(((T38*)(C))->a62), l1));
 						l8 = ((T6)(t2));
 					}
 				}
@@ -23586,11 +23983,11 @@ void T38f290(T0* C, T6 a1)
 							if (t1) {
 							} else {
 								t3 = (T38f190(C));
-								t1 = (T17f11(GE_void(t3)));
+								t1 = (T17f12(GE_void(t3)));
 								if (t1) {
 									((T38*)(C))->a41 = (T6)(GE_int32(265));
 									t3 = (T38f190(C));
-									((T38*)(C))->a89 = (T17f12(GE_void(t3)));
+									((T38*)(C))->a89 = (T17f13(GE_void(t3)));
 								} else {
 									t3 = (T38f190(C));
 									T38f337(C, t3);
@@ -23821,12 +24218,14 @@ void T38f342(T0* C)
 	T1 t1;
 	T6 t2;
 	T2 t3;
+	T0* l1 = 0;
 	t1 = (T6f1(&(((T38*)(C))->a19), ((T38*)(C))->a46));
 	if (t1) {
-		t1 = ((((T38*)(C))->a61)!=(EIF_VOID));
+		l1 = ((T38*)(C))->a60;
+		t1 = ((l1)!=(EIF_VOID));
 		if (t1) {
 			t2 = ((T6)((((T38*)(C))->a19)-((T6)(GE_int32(1)))));
-			t3 = (((T15*)(GE_void(((T38*)(C))->a61)))->z2[t2]);
+			t3 = (((T15*)(GE_void(l1)))->z2[t2]);
 			t1 = (((((t3) == ((T2)('\n'))))));
 			if (((T0*)(GE_void(((T38*)(C))->a18)))->id==78) {
 				T78f20(((T38*)(C))->a18, t1);
@@ -23835,7 +24234,7 @@ void T38f342(T0* C)
 			}
 		} else {
 			t2 = ((T6)((((T38*)(C))->a19)-((T6)(GE_int32(1)))));
-			t3 = (T250f3(GE_void(((T38*)(C))->a62), t2));
+			t3 = (T247f3(GE_void(((T38*)(C))->a62), t2));
 			t1 = (((((t3) == ((T2)('\n'))))));
 			if (((T0*)(GE_void(((T38*)(C))->a18)))->id==78) {
 				T78f20(((T38*)(C))->a18, t1);
@@ -23864,22 +24263,22 @@ void T38f341(T0* C, T0* a1)
 	T0* t1;
 	T0* l1 = 0;
 	t1 = (T38f232(C));
-	l1 = T118c7(t1, ((T38*)(C))->a16, a1);
+	l1 = T118c8(t1, ((T38*)(C))->a16, a1);
 	T24f7(GE_void(((T38*)(C))->a13), l1);
 	((T38*)(C))->a1 = EIF_FALSE;
 }
 
 /* LX_BAD_CHARACTER_ERROR.make */
-T0* T118c7(T0* a1, T6 a2, T0* a3)
+T0* T118c8(T0* a1, T6 a2, T0* a3)
 {
 	T0* C;
 	T0* t1;
 	C = GE_new118(EIF_TRUE);
-	((T118*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(3)));
-	T132f8(GE_void(((T118*)(C))->a1), a1, (T6)(GE_int32(1)));
+	((T118*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(3)));
+	T133f8(GE_void(((T118*)(C))->a1), a1, (T6)(GE_int32(1)));
 	t1 = (T6f6(&a2));
-	T132f8(GE_void(((T118*)(C))->a1), t1, (T6)(GE_int32(2)));
-	T132f8(GE_void(((T118*)(C))->a1), a3, (T6)(GE_int32(3)));
+	T133f8(GE_void(((T118*)(C))->a1), t1, (T6)(GE_int32(2)));
+	T133f8(GE_void(((T118*)(C))->a1), a3, (T6)(GE_int32(3)));
 	return C;
 }
 
@@ -24054,21 +24453,21 @@ void T38f339(T0* C)
 	T0* t1;
 	T0* l1 = 0;
 	t1 = (T38f232(C));
-	l1 = T117c7(t1, ((T38*)(C))->a16);
+	l1 = T117c8(t1, ((T38*)(C))->a16);
 	T24f7(GE_void(((T38*)(C))->a13), l1);
 	((T38*)(C))->a1 = EIF_FALSE;
 }
 
 /* LX_MISSING_BRACKET_ERROR.make */
-T0* T117c7(T0* a1, T6 a2)
+T0* T117c8(T0* a1, T6 a2)
 {
 	T0* C;
 	T0* t1;
 	C = GE_new117(EIF_TRUE);
-	((T117*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(2)));
-	T132f8(GE_void(((T117*)(C))->a1), a1, (T6)(GE_int32(1)));
+	((T117*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(2)));
+	T133f8(GE_void(((T117*)(C))->a1), a1, (T6)(GE_int32(1)));
 	t1 = (T6f6(&a2));
-	T132f8(GE_void(((T117*)(C))->a1), t1, (T6)(GE_int32(2)));
+	T133f8(GE_void(((T117*)(C))->a1), t1, (T6)(GE_int32(2)));
 	return C;
 }
 
@@ -24078,21 +24477,21 @@ void T38f338(T0* C)
 	T0* t1;
 	T0* l1 = 0;
 	t1 = (T38f232(C));
-	l1 = T116c7(t1, ((T38*)(C))->a16);
+	l1 = T116c8(t1, ((T38*)(C))->a16);
 	T24f7(GE_void(((T38*)(C))->a13), l1);
 	((T38*)(C))->a1 = EIF_FALSE;
 }
 
 /* LX_BAD_CHARACTER_IN_BRACKETS_ERROR.make */
-T0* T116c7(T0* a1, T6 a2)
+T0* T116c8(T0* a1, T6 a2)
 {
 	T0* C;
 	T0* t1;
 	C = GE_new116(EIF_TRUE);
-	((T116*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(2)));
-	T132f8(GE_void(((T116*)(C))->a1), a1, (T6)(GE_int32(1)));
+	((T116*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(2)));
+	T133f8(GE_void(((T116*)(C))->a1), a1, (T6)(GE_int32(1)));
 	t1 = (T6f6(&a2));
-	T132f8(GE_void(((T116*)(C))->a1), t1, (T6)(GE_int32(2)));
+	T133f8(GE_void(((T116*)(C))->a1), t1, (T6)(GE_int32(2)));
 	return C;
 }
 
@@ -24102,61 +24501,61 @@ void T38f337(T0* C, T0* a1)
 	T0* t1;
 	T0* l1 = 0;
 	t1 = (T38f232(C));
-	l1 = T115c7(t1, ((T38*)(C))->a16, a1);
+	l1 = T115c8(t1, ((T38*)(C))->a16, a1);
 	T24f7(GE_void(((T38*)(C))->a13), l1);
 	((T38*)(C))->a1 = EIF_FALSE;
 }
 
 /* LX_INTEGER_TOO_LARGE_ERROR.make */
-T0* T115c7(T0* a1, T6 a2, T0* a3)
+T0* T115c8(T0* a1, T6 a2, T0* a3)
 {
 	T0* C;
 	T0* t1;
 	C = GE_new115(EIF_TRUE);
-	((T115*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(3)));
-	T132f8(GE_void(((T115*)(C))->a1), a1, (T6)(GE_int32(1)));
+	((T115*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(3)));
+	T133f8(GE_void(((T115*)(C))->a1), a1, (T6)(GE_int32(1)));
 	t1 = (T6f6(&a2));
-	T132f8(GE_void(((T115*)(C))->a1), t1, (T6)(GE_int32(2)));
-	T132f8(GE_void(((T115*)(C))->a1), a3, (T6)(GE_int32(2)));
+	T133f8(GE_void(((T115*)(C))->a1), t1, (T6)(GE_int32(2)));
+	T133f8(GE_void(((T115*)(C))->a1), a3, (T6)(GE_int32(2)));
 	return C;
 }
 
 /* STRING_8.to_integer */
-T6 T17f12(T0* C)
+T6 T17f13(T0* C)
 {
 	T6 t1;
 	T6 R = 0;
 	T0* l1 = 0;
-	l1 = (T17f21(C));
+	l1 = (T17f23(C));
 	t1 = ((T6)(GE_int32(0)));
-	T246f17(GE_void(l1), C, t1);
-	R = (T246f13(GE_void(l1)));
+	T243f17(GE_void(l1), C, t1);
+	R = (T243f13(GE_void(l1)));
 	return R;
 }
 
 /* STRING_TO_INTEGER_CONVERTOR.parsed_integer */
-T6 T246f13(T0* C)
+T6 T243f13(T0* C)
 {
 	T1 t1;
 	T11 t2;
 	T6 t3;
 	T6 R = 0;
-	t1 = (((((((T246*)(C))->a1) == ((T6)(GE_int32(1)))))));
+	t1 = (((((((T243*)(C))->a1) == ((T6)(GE_int32(1)))))));
 	if (t1) {
-		t2 = ((T11)((((T246*)(C))->a2)*((T11)(GE_nat64(10)))));
-		t2 = ((T11)((t2)+(((T246*)(C))->a3)));
+		t2 = ((T11)((((T243*)(C))->a2)*((T11)(GE_nat64(10)))));
+		t2 = ((T11)((t2)+(((T243*)(C))->a3)));
 		t3 = ((T6)(t2));
 		R = ((T6)(-(t3)));
 	} else {
-		t2 = ((T11)((((T246*)(C))->a2)*((T11)(GE_nat64(10)))));
-		t2 = ((T11)((t2)+(((T246*)(C))->a3)));
+		t2 = ((T11)((((T243*)(C))->a2)*((T11)(GE_nat64(10)))));
+		t2 = ((T11)((t2)+(((T243*)(C))->a3)));
 		R = ((T6)(t2));
 	}
 	return R;
 }
 
 /* STRING_TO_INTEGER_CONVERTOR.parse_string_with_type */
-void T246f17(T0* C, T0* a1, T6 a2)
+void T243f17(T0* C, T0* a1, T6 a2)
 {
 	T1 t1;
 	T0* m1;
@@ -24168,7 +24567,7 @@ void T246f17(T0* C, T0* a1, T6 a2)
 	T6 l2 = 0;
 	T0* l3 = 0;
 	T0* l4 = 0;
-	T246f18(C, a2);
+	T243f18(C, a2);
 	l1 = (T6)(GE_int32(0));
 	l2 = (((T17*)(a1))->a2);
 	t1 = (m1 = a1, EIF_TRUE);
@@ -24177,13 +24576,13 @@ void T246f17(T0* C, T0* a1, T6 a2)
 		while (1) {
 			t1 = (((((l1) == (l2)))));
 			if (!(t1)) {
-				t1 = (T6f5(&(((T246*)(C))->a4), (T6)(GE_int32(4))));
+				t1 = (T6f5(&(((T243*)(C))->a4), (T6)(GE_int32(4))));
 			}
 			if (t1) {
 				break;
 			}
 			t2 = (((T15*)(GE_void(l3)))->z2[l1]);
-			T246f23(C, t2);
+			T243f23(C, t2);
 			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 		}
 	} else {
@@ -24193,14 +24592,14 @@ void T246f17(T0* C, T0* a1, T6 a2)
 			while (1) {
 				t1 = (((((l1) == (l2)))));
 				if (!(t1)) {
-					t1 = (T6f5(&(((T246*)(C))->a4), (T6)(GE_int32(4))));
+					t1 = (T6f5(&(((T243*)(C))->a4), (T6)(GE_int32(4))));
 				}
 				if (t1) {
 					break;
 				}
 				t3 = ((GE_void(l4), l1, (T3)0));
 				t2 = ((T2)(t3));
-				T246f23(C, t2);
+				T243f23(C, t2);
 				l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 			}
 		} else {
@@ -24209,14 +24608,14 @@ void T246f17(T0* C, T0* a1, T6 a2)
 			while (1) {
 				t1 = (T6f1((&l1), l2));
 				if (!(t1)) {
-					t1 = (T6f5(&(((T246*)(C))->a4), (T6)(GE_int32(4))));
+					t1 = (T6f5(&(((T243*)(C))->a4), (T6)(GE_int32(4))));
 				}
 				if (t1) {
 					break;
 				}
-				t4 = (T17f26(a1, l1));
+				t4 = (T17f27(a1, l1));
 				t2 = ((T2)(t4));
-				T246f23(C, t2);
+				T243f23(C, t2);
 				l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 			}
 		}
@@ -24224,7 +24623,7 @@ void T246f17(T0* C, T0* a1, T6 a2)
 }
 
 /* STRING_8.code */
-T10 T17f26(T0* C, T6 a1)
+T10 T17f27(T0* C, T6 a1)
 {
 	T6 t1;
 	T2 t2;
@@ -24232,12 +24631,12 @@ T10 T17f26(T0* C, T6 a1)
 	t1 = ((T6)((a1)-((T6)(GE_int32(1)))));
 	t2 = (((T15*)(GE_void(((T17*)(C))->a1)))->z2[t1]);
 	t1 = ((T6)(t2));
-	R = (T6f17(&t1));
+	R = (T6f19(&t1));
 	return R;
 }
 
 /* INTEGER_32.to_natural_32 */
-T10 T6f17(T6* C)
+T10 T6f19(T6* C)
 {
 	T10 R = 0;
 	R = ((T10)(*C));
@@ -24245,7 +24644,7 @@ T10 T6f17(T6* C)
 }
 
 /* STRING_TO_INTEGER_CONVERTOR.parse_character */
-void T246f23(T0* C, T2 a1)
+void T243f23(T0* C, T2 a1)
 {
 	T1 t1;
 	T6 t2;
@@ -24254,7 +24653,7 @@ void T246f23(T0* C, T2 a1)
 	T11 l1 = 0;
 	T11 l2 = 0;
 	T6 l3 = 0;
-	l3 = ((T246*)(C))->a4;
+	l3 = ((T243*)(C))->a4;
 	t1 = (T6f7((&l3), (T6)(GE_int32(4))));
 	if (t1) {
 		switch (l3) {
@@ -24262,10 +24661,10 @@ void T246f23(T0* C, T2 a1)
 			t1 = (T2f16(&a1));
 			if (t1) {
 				l3 = (T6)(GE_int32(2));
-				((T246*)(C))->a2 = (T11)(GE_nat64(0));
+				((T243*)(C))->a2 = (T11)(GE_nat64(0));
 				t2 = ((T6)(a1));
 				t2 = ((T6)((t2)-((T6)(GE_int32(48)))));
-				((T246*)(C))->a3 = (T6f25(&t2));
+				((T243*)(C))->a3 = (T6f24(&t2));
 			} else {
 				t1 = (((((a1) == ((T2)('-'))))));
 				if (!(t1)) {
@@ -24275,13 +24674,13 @@ void T246f23(T0* C, T2 a1)
 					l3 = (T6)(GE_int32(1));
 					t1 = (((((a1) == ((T2)('-'))))));
 					if (t1) {
-						((T246*)(C))->a1 = (T6)(GE_int32(1));
+						((T243*)(C))->a1 = (T6)(GE_int32(1));
 					} else {
-						((T246*)(C))->a1 = (T6)(GE_int32(0));
+						((T243*)(C))->a1 = (T6)(GE_int32(0));
 					}
 				} else {
-					if (((T246*)(C))->a9) {
-						t1 = (T17f29(GE_void(((T246*)(C))->a6), a1));
+					if (((T243*)(C))->a9) {
+						t1 = (T17f29(GE_void(((T243*)(C))->a6), a1));
 					} else {
 						t1 = EIF_FALSE;
 					}
@@ -24295,18 +24694,18 @@ void T246f23(T0* C, T2 a1)
 		case (T6)(T6)(GE_int32(1)):
 			t1 = (T2f16(&a1));
 			if (t1) {
-				((T246*)(C))->a2 = (T11)(GE_nat64(0));
+				((T243*)(C))->a2 = (T11)(GE_nat64(0));
 				t2 = ((T6)(a1));
 				t2 = ((T6)((t2)-((T6)(GE_int32(48)))));
-				((T246*)(C))->a3 = (T6f25(&t2));
-				t1 = (((((((T246*)(C))->a8) != ((T6)(GE_int32(0)))))));
+				((T243*)(C))->a3 = (T6f24(&t2));
+				t1 = (((((((T243*)(C))->a8) != ((T6)(GE_int32(0)))))));
 				if (t1) {
-					t3 = (T246f14(C));
-					t1 = (T279f7(GE_void(t3), ((T246*)(C))->a2, ((T246*)(C))->a3, ((T246*)(C))->a8, ((T246*)(C))->a1));
+					t3 = (T243f14(C));
+					t1 = (T271f7(GE_void(t3), ((T243*)(C))->a2, ((T243*)(C))->a3, ((T243*)(C))->a8, ((T243*)(C))->a1));
 					if (t1) {
-						((T246*)(C))->a5 = EIF_TRUE;
-						((T246*)(C))->a2 = l1;
-						((T246*)(C))->a3 = l2;
+						((T243*)(C))->a5 = EIF_TRUE;
+						((T243*)(C))->a2 = l1;
+						((T243*)(C))->a3 = l2;
 						l3 = (T6)(GE_int32(5));
 					}
 				}
@@ -24318,27 +24717,27 @@ void T246f23(T0* C, T2 a1)
 		case (T6)(T6)(GE_int32(2)):
 			t1 = (T2f16(&a1));
 			if (t1) {
-				l1 = ((T246*)(C))->a2;
-				l2 = ((T246*)(C))->a3;
-				t4 = ((T11)((((T246*)(C))->a2)*((T11)(GE_nat64(10)))));
-				((T246*)(C))->a2 = ((T11)((t4)+(((T246*)(C))->a3)));
+				l1 = ((T243*)(C))->a2;
+				l2 = ((T243*)(C))->a3;
+				t4 = ((T11)((((T243*)(C))->a2)*((T11)(GE_nat64(10)))));
+				((T243*)(C))->a2 = ((T11)((t4)+(((T243*)(C))->a3)));
 				t2 = ((T6)(a1));
 				t2 = ((T6)((t2)-((T6)(GE_int32(48)))));
-				((T246*)(C))->a3 = (T6f25(&t2));
-				t1 = (((((((T246*)(C))->a8) != ((T6)(GE_int32(0)))))));
+				((T243*)(C))->a3 = (T6f24(&t2));
+				t1 = (((((((T243*)(C))->a8) != ((T6)(GE_int32(0)))))));
 				if (t1) {
-					t3 = (T246f14(C));
-					((T246*)(C))->a5 = (T279f7(GE_void(t3), ((T246*)(C))->a2, ((T246*)(C))->a3, ((T246*)(C))->a8, ((T246*)(C))->a1));
-					t1 = (T246f15(C));
+					t3 = (T243f14(C));
+					((T243*)(C))->a5 = (T271f7(GE_void(t3), ((T243*)(C))->a2, ((T243*)(C))->a3, ((T243*)(C))->a8, ((T243*)(C))->a1));
+					t1 = (T243f15(C));
 					if (t1) {
-						((T246*)(C))->a2 = l1;
-						((T246*)(C))->a3 = l2;
+						((T243*)(C))->a2 = l1;
+						((T243*)(C))->a3 = l2;
 						l3 = (T6)(GE_int32(5));
 					}
 				}
 			} else {
-				if (((T246*)(C))->a10) {
-					t1 = (T17f29(GE_void(((T246*)(C))->a7), a1));
+				if (((T243*)(C))->a10) {
+					t1 = (T17f29(GE_void(((T243*)(C))->a7), a1));
 				} else {
 					t1 = EIF_FALSE;
 				}
@@ -24350,8 +24749,8 @@ void T246f23(T0* C, T2 a1)
 			}
 			break;
 		case (T6)(T6)(GE_int32(3)):
-			if (((T246*)(C))->a10) {
-				t1 = (T17f29(GE_void(((T246*)(C))->a7), a1));
+			if (((T243*)(C))->a10) {
+				t1 = (T17f29(GE_void(((T243*)(C))->a7), a1));
 			} else {
 				t1 = EIF_FALSE;
 			}
@@ -24364,15 +24763,15 @@ void T246f23(T0* C, T2 a1)
 			break;
 		}
 	}
-	((T246*)(C))->a4 = l3;
+	((T243*)(C))->a4 = l3;
 }
 
 /* STRING_TO_INTEGER_CONVERTOR.overflowed */
-T1 T246f15(T0* C)
+T1 T243f15(T0* C)
 {
 	T1 R = 0;
-	if (((T246*)(C))->a5) {
-		R = (((((((T246*)(C))->a1) == ((T6)(GE_int32(0)))))));
+	if (((T243*)(C))->a5) {
+		R = (((((((T243*)(C))->a1) == ((T6)(GE_int32(0)))))));
 	} else {
 		R = EIF_FALSE;
 	}
@@ -24380,7 +24779,7 @@ T1 T246f15(T0* C)
 }
 
 /* INTEGER_OVERFLOW_CHECKER.will_overflow */
-T1 T279f7(T0* C, T11 a1, T11 a2, T6 a3, T6 a4)
+T1 T271f7(T0* C, T11 a1, T11 a2, T6 a3, T6 a4)
 {
 	T1 t1;
 	T6 t2;
@@ -24402,13 +24801,13 @@ T1 T279f7(T0* C, T11 a1, T11 a2, T6 a3, T6 a4)
 		if (t1) {
 			t2 = ((T6)((a4)*((T6)(GE_int32(4)))));
 			l1 = ((T6)((t2)+(a3)));
-			t3 = (((T286*)(GE_void(((T279*)(C))->a1)))->z2[l1]);
+			t3 = (((T277*)(GE_void(((T271*)(C))->a1)))->z2[l1]);
 			t1 = (T11f4(&a1, t3));
 			if (!(t1)) {
-				t3 = (((T286*)(GE_void(((T279*)(C))->a1)))->z2[l1]);
+				t3 = (((T277*)(GE_void(((T271*)(C))->a1)))->z2[l1]);
 				t1 = (((((a1) == (t3)))));
 				if (t1) {
-					t3 = (((T286*)(GE_void(((T279*)(C))->a2)))->z2[l1]);
+					t3 = (((T277*)(GE_void(((T271*)(C))->a2)))->z2[l1]);
 					R = (T11f4(&a2, t3));
 				} else {
 					R = EIF_FALSE;
@@ -24427,13 +24826,13 @@ T1 T279f7(T0* C, T11 a1, T11 a2, T6 a3, T6 a4)
 					R = EIF_TRUE;
 				}
 			} else {
-				t3 = (((T286*)(GE_void(((T279*)(C))->a3)))->z2[l1]);
+				t3 = (((T277*)(GE_void(((T271*)(C))->a3)))->z2[l1]);
 				t1 = (T11f4(&a1, t3));
 				if (!(t1)) {
-					t3 = (((T286*)(GE_void(((T279*)(C))->a3)))->z2[l1]);
+					t3 = (((T277*)(GE_void(((T271*)(C))->a3)))->z2[l1]);
 					t1 = (((((a1) == (t3)))));
 					if (t1) {
-						t3 = (((T286*)(GE_void(((T279*)(C))->a4)))->z2[l1]);
+						t3 = (((T277*)(GE_void(((T271*)(C))->a4)))->z2[l1]);
 						R = (T11f4(&a2, t3));
 					} else {
 						R = EIF_FALSE;
@@ -24447,7 +24846,7 @@ T1 T279f7(T0* C, T11 a1, T11 a2, T6 a3, T6 a4)
 	return R;
 }
 
-/* NATURAL_64.infix ">" */
+/* NATURAL_64.is_greater */
 T1 T11f4(T11* C, T11 a1)
 {
 	T1 R = 0;
@@ -24456,24 +24855,24 @@ T1 T11f4(T11* C, T11 a1)
 }
 
 /* STRING_TO_INTEGER_CONVERTOR.overflow_checker */
-unsigned char ge670os7124 = '\0';
-T0* ge670ov7124;
-T0* T246f14(T0* C)
+unsigned char ge653os7693 = '\0';
+T0* ge653ov7693;
+T0* T243f14(T0* C)
 {
 	T0* R = 0;
-	if (ge670os7124) {
-		return ge670ov7124;
+	if (ge653os7693) {
+		return ge653ov7693;
 	} else {
-		ge670os7124 = '\1';
-		ge670ov7124 = R;
+		ge653os7693 = '\1';
+		ge653ov7693 = R;
 	}
-	R = T279c13();
-	ge670ov7124 = R;
+	R = T271c13();
+	ge653ov7693 = R;
 	return R;
 }
 
 /* INTEGER_OVERFLOW_CHECKER.make */
-T0* T279c13(void)
+T0* T271c13(void)
 {
 	T0* C;
 	T6 t1;
@@ -24484,125 +24883,125 @@ T0* T279c13(void)
 	T8 t6;
 	T9 t7;
 	T10 t8;
-	C = GE_new279(EIF_TRUE);
+	C = GE_new271(EIF_TRUE);
 	t1 = (T6)(GE_int32(4));
 	t1 = ((T6)((t1)*((T6)(GE_int32(2)))));
 	t1 = ((T6)((t1)+((T6)(GE_int32(1)))));
-	((T279*)(C))->a1 = T286c2(t1);
+	((T271*)(C))->a1 = T277c3(t1);
 	t1 = (T6)(GE_int32(4));
 	t1 = ((T6)((t1)*((T6)(GE_int32(2)))));
 	t1 = ((T6)((t1)+((T6)(GE_int32(1)))));
-	((T279*)(C))->a2 = T286c2(t1);
+	((T271*)(C))->a2 = T277c3(t1);
 	t2 = ((T4)(GE_int8(127)));
 	t2 = ((T4)((t2)/((T4)(GE_int8(10)))));
 	t3 = (T4f3(&t2));
-	((T286*)(GE_void(((T279*)(C))->a1)))->z2[(T6)(GE_int32(1))] = (t3);
+	((T277*)(GE_void(((T271*)(C))->a1)))->z2[(T6)(GE_int32(1))] = (t3);
 	t2 = ((T4)(GE_int8(127)));
 	t2 = ((T4)((t2)%((T4)(GE_int8(10)))));
 	t3 = (T4f3(&t2));
-	((T286*)(GE_void(((T279*)(C))->a2)))->z2[(T6)(GE_int32(1))] = (t3);
+	((T277*)(GE_void(((T271*)(C))->a2)))->z2[(T6)(GE_int32(1))] = (t3);
 	t4 = ((T5)(GE_int16(32767)));
 	t4 = ((T5)((t4)/((T5)(GE_int16(10)))));
 	t3 = (T5f3(&t4));
-	((T286*)(GE_void(((T279*)(C))->a1)))->z2[(T6)(GE_int32(2))] = (t3);
+	((T277*)(GE_void(((T271*)(C))->a1)))->z2[(T6)(GE_int32(2))] = (t3);
 	t4 = ((T5)(GE_int16(32767)));
 	t4 = ((T5)((t4)%((T5)(GE_int16(10)))));
 	t3 = (T5f3(&t4));
-	((T286*)(GE_void(((T279*)(C))->a2)))->z2[(T6)(GE_int32(2))] = (t3);
+	((T277*)(GE_void(((T271*)(C))->a2)))->z2[(T6)(GE_int32(2))] = (t3);
 	t1 = ((T6)(GE_int32(2147483647)));
 	t1 = ((T6)((t1)/((T6)(GE_int32(10)))));
-	t3 = (T6f25(&t1));
-	((T286*)(GE_void(((T279*)(C))->a1)))->z2[(T6)(GE_int32(3))] = (t3);
+	t3 = (T6f24(&t1));
+	((T277*)(GE_void(((T271*)(C))->a1)))->z2[(T6)(GE_int32(3))] = (t3);
 	t1 = ((T6)(GE_int32(2147483647)));
 	t1 = ((T6)((t1)%((T6)(GE_int32(10)))));
-	t3 = (T6f25(&t1));
-	((T286*)(GE_void(((T279*)(C))->a2)))->z2[(T6)(GE_int32(3))] = (t3);
+	t3 = (T6f24(&t1));
+	((T277*)(GE_void(((T271*)(C))->a2)))->z2[(T6)(GE_int32(3))] = (t3);
 	t5 = ((T7)(GE_int64(9223372036854775807)));
 	t5 = ((T7)((t5)/((T7)(GE_int64(10)))));
-	t3 = (T7f3(&t5));
-	((T286*)(GE_void(((T279*)(C))->a1)))->z2[(T6)(GE_int32(4))] = (t3);
+	t3 = (T7f7(&t5));
+	((T277*)(GE_void(((T271*)(C))->a1)))->z2[(T6)(GE_int32(4))] = (t3);
 	t5 = ((T7)(GE_int64(9223372036854775807)));
 	t5 = ((T7)((t5)%((T7)(GE_int64(10)))));
-	t3 = (T7f3(&t5));
-	((T286*)(GE_void(((T279*)(C))->a2)))->z2[(T6)(GE_int32(4))] = (t3);
+	t3 = (T7f7(&t5));
+	((T277*)(GE_void(((T271*)(C))->a2)))->z2[(T6)(GE_int32(4))] = (t3);
 	t2 = ((T4)(GE_int8(-128)));
 	t2 = ((T4)((t2)/((T4)(GE_int8(10)))));
 	t2 = ((T4)(-(t2)));
 	t3 = (T4f3(&t2));
-	((T286*)(GE_void(((T279*)(C))->a1)))->z2[(T6)(GE_int32(5))] = (t3);
+	((T277*)(GE_void(((T271*)(C))->a1)))->z2[(T6)(GE_int32(5))] = (t3);
 	t2 = ((T4)(GE_int8(-128)));
 	t2 = ((T4)((t2)%((T4)(GE_int8(10)))));
 	t2 = ((T4)(-(t2)));
 	t3 = (T4f3(&t2));
-	((T286*)(GE_void(((T279*)(C))->a2)))->z2[(T6)(GE_int32(5))] = (t3);
+	((T277*)(GE_void(((T271*)(C))->a2)))->z2[(T6)(GE_int32(5))] = (t3);
 	t4 = ((T5)(GE_int16(-32768)));
 	t4 = ((T5)((t4)/((T5)(GE_int16(10)))));
 	t4 = ((T5)(-(t4)));
 	t3 = (T5f3(&t4));
-	((T286*)(GE_void(((T279*)(C))->a1)))->z2[(T6)(GE_int32(6))] = (t3);
+	((T277*)(GE_void(((T271*)(C))->a1)))->z2[(T6)(GE_int32(6))] = (t3);
 	t4 = ((T5)(GE_int16(-32768)));
 	t4 = ((T5)((t4)%((T5)(GE_int16(10)))));
 	t4 = ((T5)(-(t4)));
 	t3 = (T5f3(&t4));
-	((T286*)(GE_void(((T279*)(C))->a2)))->z2[(T6)(GE_int32(6))] = (t3);
+	((T277*)(GE_void(((T271*)(C))->a2)))->z2[(T6)(GE_int32(6))] = (t3);
 	t1 = ((T6)(GE_int32(-2147483647)-1));
 	t1 = ((T6)((t1)/((T6)(GE_int32(10)))));
 	t1 = ((T6)(-(t1)));
-	t3 = (T6f25(&t1));
-	((T286*)(GE_void(((T279*)(C))->a1)))->z2[(T6)(GE_int32(7))] = (t3);
+	t3 = (T6f24(&t1));
+	((T277*)(GE_void(((T271*)(C))->a1)))->z2[(T6)(GE_int32(7))] = (t3);
 	t1 = ((T6)(GE_int32(-2147483647)-1));
 	t1 = ((T6)((t1)%((T6)(GE_int32(10)))));
 	t1 = ((T6)(-(t1)));
-	t3 = (T6f25(&t1));
-	((T286*)(GE_void(((T279*)(C))->a2)))->z2[(T6)(GE_int32(7))] = (t3);
+	t3 = (T6f24(&t1));
+	((T277*)(GE_void(((T271*)(C))->a2)))->z2[(T6)(GE_int32(7))] = (t3);
 	t5 = ((T7)(GE_int64(-9223372036854775807)-1));
 	t5 = ((T7)((t5)/((T7)(GE_int64(10)))));
 	t5 = ((T7)(-(t5)));
-	t3 = (T7f3(&t5));
-	((T286*)(GE_void(((T279*)(C))->a1)))->z2[(T6)(GE_int32(8))] = (t3);
+	t3 = (T7f7(&t5));
+	((T277*)(GE_void(((T271*)(C))->a1)))->z2[(T6)(GE_int32(8))] = (t3);
 	t5 = ((T7)(GE_int64(-9223372036854775807)-1));
 	t5 = ((T7)((t5)%((T7)(GE_int64(10)))));
 	t5 = ((T7)(-(t5)));
-	t3 = (T7f3(&t5));
-	((T286*)(GE_void(((T279*)(C))->a2)))->z2[(T6)(GE_int32(8))] = (t3);
+	t3 = (T7f7(&t5));
+	((T277*)(GE_void(((T271*)(C))->a2)))->z2[(T6)(GE_int32(8))] = (t3);
 	t1 = (T6)(GE_int32(4));
 	t1 = ((T6)((t1)+((T6)(GE_int32(1)))));
-	((T279*)(C))->a3 = T286c2(t1);
+	((T271*)(C))->a3 = T277c3(t1);
 	t1 = (T6)(GE_int32(4));
 	t1 = ((T6)((t1)+((T6)(GE_int32(1)))));
-	((T279*)(C))->a4 = T286c2(t1);
+	((T271*)(C))->a4 = T277c3(t1);
 	t6 = ((T8)(GE_nat8(255)));
 	t6 = ((T8)((t6)/((T8)(GE_nat8(10)))));
-	t3 = (T8f9(&t6));
-	((T286*)(GE_void(((T279*)(C))->a3)))->z2[(T6)(GE_int32(1))] = (t3);
+	t3 = (T8f7(&t6));
+	((T277*)(GE_void(((T271*)(C))->a3)))->z2[(T6)(GE_int32(1))] = (t3);
 	t6 = ((T8)(GE_nat8(255)));
 	t6 = ((T8)((t6)%((T8)(GE_nat8(10)))));
-	t3 = (T8f9(&t6));
-	((T286*)(GE_void(((T279*)(C))->a4)))->z2[(T6)(GE_int32(1))] = (t3);
+	t3 = (T8f7(&t6));
+	((T277*)(GE_void(((T271*)(C))->a4)))->z2[(T6)(GE_int32(1))] = (t3);
 	t7 = ((T9)(GE_nat16(65535)));
 	t7 = ((T9)((t7)/((T9)(GE_nat16(10)))));
 	t3 = (T9f3(&t7));
-	((T286*)(GE_void(((T279*)(C))->a3)))->z2[(T6)(GE_int32(2))] = (t3);
+	((T277*)(GE_void(((T271*)(C))->a3)))->z2[(T6)(GE_int32(2))] = (t3);
 	t7 = ((T9)(GE_nat16(65535)));
 	t7 = ((T9)((t7)%((T9)(GE_nat16(10)))));
 	t3 = (T9f3(&t7));
-	((T286*)(GE_void(((T279*)(C))->a4)))->z2[(T6)(GE_int32(2))] = (t3);
+	((T277*)(GE_void(((T271*)(C))->a4)))->z2[(T6)(GE_int32(2))] = (t3);
 	t8 = ((T10)(GE_nat32(4294967295)));
 	t8 = ((T10)((t8)/((T10)(GE_nat32(10)))));
 	t3 = (T10f4(&t8));
-	((T286*)(GE_void(((T279*)(C))->a3)))->z2[(T6)(GE_int32(3))] = (t3);
+	((T277*)(GE_void(((T271*)(C))->a3)))->z2[(T6)(GE_int32(3))] = (t3);
 	t8 = ((T10)(GE_nat32(4294967295)));
 	t8 = ((T10)((t8)%((T10)(GE_nat32(10)))));
 	t3 = (T10f4(&t8));
-	((T286*)(GE_void(((T279*)(C))->a4)))->z2[(T6)(GE_int32(3))] = (t3);
+	((T277*)(GE_void(((T271*)(C))->a4)))->z2[(T6)(GE_int32(3))] = (t3);
 	t3 = ((T11)(GE_nat64(18446744073709551615)));
 	t3 = ((T11)((t3)/((T11)(GE_nat64(10)))));
 	t3 = (T11f7(&t3));
-	((T286*)(GE_void(((T279*)(C))->a3)))->z2[(T6)(GE_int32(4))] = (t3);
+	((T277*)(GE_void(((T271*)(C))->a3)))->z2[(T6)(GE_int32(4))] = (t3);
 	t3 = ((T11)(GE_nat64(18446744073709551615)));
 	t3 = ((T11)((t3)%((T11)(GE_nat64(10)))));
 	t3 = (T11f7(&t3));
-	((T286*)(GE_void(((T279*)(C))->a4)))->z2[(T6)(GE_int32(4))] = (t3);
+	((T277*)(GE_void(((T271*)(C))->a4)))->z2[(T6)(GE_int32(4))] = (t3);
 	return C;
 }
 
@@ -24631,7 +25030,7 @@ T11 T9f3(T9* C)
 }
 
 /* NATURAL_8.to_natural_64 */
-T11 T8f9(T8* C)
+T11 T8f7(T8* C)
 {
 	T11 R = 0;
 	R = ((T11)(*C));
@@ -24639,7 +25038,7 @@ T11 T8f9(T8* C)
 }
 
 /* INTEGER_64.to_natural_64 */
-T11 T7f3(T7* C)
+T11 T7f7(T7* C)
 {
 	T11 R = 0;
 	R = ((T11)(*C));
@@ -24663,10 +25062,10 @@ T11 T4f3(T4* C)
 }
 
 /* SPECIAL [NATURAL_64].make */
-T0* T286c2(T6 a1)
+T0* T277c3(T6 a1)
 {
 	T0* C;
-	C = GE_new286(a1, EIF_TRUE);
+	C = GE_new277(a1, EIF_TRUE);
 	return C;
 }
 
@@ -24700,7 +25099,7 @@ T1 T17f29(T0* C, T2 a1)
 }
 
 /* INTEGER_32.to_natural_64 */
-T11 T6f25(T6* C)
+T11 T6f24(T6* C)
 {
 	T11 R = 0;
 	R = ((T11)(*C));
@@ -24717,111 +25116,111 @@ T1 T2f16(T2* C)
 	t1 = (*C);
 	t2 = ((T6)(t1));
 	t3 = (T2f6(C, t2));
-	t3 = (T8f1(&t3, (T8)(GE_nat8(0x04))));
+	t3 = ((T8)((t3)&((T8)(GE_nat8(4)))));
 	R = (T8f2(&t3, (T8)(GE_nat8(0))));
 	return R;
 }
 
 /* STRING_TO_INTEGER_CONVERTOR.reset */
-void T246f18(T0* C, T6 a1)
+void T243f18(T0* C, T6 a1)
 {
-	((T246*)(C))->a4 = (T6)(GE_int32(0));
-	((T246*)(C))->a2 = (T11)(GE_nat64(0));
-	((T246*)(C))->a3 = (T11)(GE_nat64(0));
-	((T246*)(C))->a1 = (T6)(GE_int32(0));
-	((T246*)(C))->a8 = a1;
-	((T246*)(C))->a5 = EIF_FALSE;
+	((T243*)(C))->a4 = (T6)(GE_int32(0));
+	((T243*)(C))->a2 = (T11)(GE_nat64(0));
+	((T243*)(C))->a3 = (T11)(GE_nat64(0));
+	((T243*)(C))->a1 = (T6)(GE_int32(0));
+	((T243*)(C))->a8 = a1;
+	((T243*)(C))->a5 = EIF_FALSE;
 }
 
 /* STRING_8.ctoi_convertor */
-unsigned char ge662os1267 = '\0';
-T0* ge662ov1267;
-T0* T17f21(T0* C)
+unsigned char ge637os1245 = '\0';
+T0* ge637ov1245;
+T0* T17f23(T0* C)
 {
 	T0* R = 0;
-	if (ge662os1267) {
-		return ge662ov1267;
+	if (ge637os1245) {
+		return ge637ov1245;
 	} else {
-		ge662os1267 = '\1';
-		ge662ov1267 = R;
+		ge637os1245 = '\1';
+		ge637ov1245 = R;
 	}
-	R = T246c16();
-	ge662ov1267 = R;
-	T246f19(GE_void(R), GE_ms8(" ", 1));
-	T246f20(GE_void(R), GE_ms8(" ", 1));
-	T246f21(GE_void(R), EIF_TRUE);
-	T246f22(GE_void(R), EIF_TRUE);
+	R = T243c16();
+	ge637ov1245 = R;
+	T243f19(GE_void(R), GE_ms8(" ", 1));
+	T243f20(GE_void(R), GE_ms8(" ", 1));
+	T243f21(GE_void(R), EIF_TRUE);
+	T243f22(GE_void(R), EIF_TRUE);
 	return R;
 }
 
 /* STRING_TO_INTEGER_CONVERTOR.set_trailing_separators_acceptable */
-void T246f22(T0* C, T1 a1)
+void T243f22(T0* C, T1 a1)
 {
-	((T246*)(C))->a10 = a1;
+	((T243*)(C))->a10 = a1;
 }
 
 /* STRING_TO_INTEGER_CONVERTOR.set_leading_separators_acceptable */
-void T246f21(T0* C, T1 a1)
+void T243f21(T0* C, T1 a1)
 {
-	((T246*)(C))->a9 = a1;
+	((T243*)(C))->a9 = a1;
 }
 
 /* STRING_TO_INTEGER_CONVERTOR.set_trailing_separators */
-void T246f20(T0* C, T0* a1)
+void T243f20(T0* C, T0* a1)
 {
-	((T246*)(C))->a7 = T17c41(a1);
+	((T243*)(C))->a7 = T17c41(a1);
 }
 
 /* STRING_TO_INTEGER_CONVERTOR.set_leading_separators */
-void T246f19(T0* C, T0* a1)
+void T243f19(T0* C, T0* a1)
 {
-	((T246*)(C))->a6 = T17c41(a1);
+	((T243*)(C))->a6 = T17c41(a1);
 }
 
 /* STRING_TO_INTEGER_CONVERTOR.make */
-T0* T246c16(void)
+T0* T243c16(void)
 {
 	T0* C;
-	C = GE_new246(EIF_TRUE);
-	T246f18(C, (T6)(GE_int32(0)));
-	((T246*)(C))->a6 = T17c41(GE_ms8(" ", 1));
-	((T246*)(C))->a7 = T17c41(GE_ms8(" ", 1));
+	C = GE_new243(EIF_TRUE);
+	T243f18(C, (T6)(GE_int32(0)));
+	((T243*)(C))->a6 = T17c41(GE_ms8(" ", 1));
+	((T243*)(C))->a7 = T17c41(GE_ms8(" ", 1));
 	return C;
 }
 
 /* STRING_8.is_integer */
-T1 T17f11(T0* C)
+T1 T17f12(T0* C)
 {
 	T6 t1;
 	T1 R = 0;
 	t1 = ((T6)(GE_int32(3)));
-	R = (T17f20(C, t1));
+	R = (T17f22(C, t1));
 	return R;
 }
 
 /* STRING_8.is_valid_integer_or_natural */
-T1 T17f20(T0* C, T6 a1)
+T1 T17f22(T0* C, T6 a1)
 {
 	T1 R = 0;
 	T0* l1 = 0;
-	l1 = (T17f21(C));
-	T246f18(GE_void(l1), a1);
-	T246f17(GE_void(l1), C, a1);
-	R = (T246f12(GE_void(l1)));
+	l1 = (T17f23(C));
+	T243f18(GE_void(l1), a1);
+	T243f17(GE_void(l1), C, a1);
+	R = (T243f12(GE_void(l1)));
 	return R;
 }
 
 /* STRING_TO_INTEGER_CONVERTOR.is_integral_integer */
-T1 T246f12(T0* C)
+T1 T243f12(T0* C)
 {
 	T1 t1;
 	T1 R = 0;
-	t1 = (((((((T246*)(C))->a4) == ((T6)(GE_int32(2)))))));
+	t1 = (((((((T243*)(C))->a4) == ((T6)(GE_int32(2)))))));
 	if (!(t1)) {
-		t1 = (((((((T246*)(C))->a4) == ((T6)(GE_int32(3)))))));
+		t1 = (((((((T243*)(C))->a4) == ((T6)(GE_int32(3)))))));
 	}
 	if (t1) {
-		R = ((T1)(!(((T246*)(C))->a5)));
+		R = ((T1)(!(((T243*)(C))->a5)));
 	} else {
 		R = EIF_FALSE;
 	}
@@ -24834,22 +25233,22 @@ void T38f336(T0* C, T0* a1)
 	T0* t1;
 	T0* l1 = 0;
 	t1 = (T38f232(C));
-	l1 = T114c7(t1, ((T38*)(C))->a16, a1);
+	l1 = T114c8(t1, ((T38*)(C))->a16, a1);
 	T24f7(GE_void(((T38*)(C))->a13), l1);
 	((T38*)(C))->a1 = EIF_FALSE;
 }
 
 /* LX_BAD_START_CONDITION_ERROR.make */
-T0* T114c7(T0* a1, T6 a2, T0* a3)
+T0* T114c8(T0* a1, T6 a2, T0* a3)
 {
 	T0* C;
 	T0* t1;
 	C = GE_new114(EIF_TRUE);
-	((T114*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(3)));
-	T132f8(GE_void(((T114*)(C))->a1), a1, (T6)(GE_int32(1)));
+	((T114*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(3)));
+	T133f8(GE_void(((T114*)(C))->a1), a1, (T6)(GE_int32(1)));
 	t1 = (T6f6(&a2));
-	T132f8(GE_void(((T114*)(C))->a1), t1, (T6)(GE_int32(2)));
-	T132f8(GE_void(((T114*)(C))->a1), a3, (T6)(GE_int32(3)));
+	T133f8(GE_void(((T114*)(C))->a1), t1, (T6)(GE_int32(2)));
+	T133f8(GE_void(((T114*)(C))->a1), a3, (T6)(GE_int32(3)));
 	return C;
 }
 
@@ -24876,22 +25275,22 @@ void T38f355(T0* C, T0* a1)
 	T0* t1;
 	T0* l1 = 0;
 	t1 = (T38f232(C));
-	l1 = T127c7(t1, ((T38*)(C))->a16, a1);
+	l1 = T127c8(t1, ((T38*)(C))->a16, a1);
 	T24f7(GE_void(((T38*)(C))->a13), l1);
 	((T38*)(C))->a1 = EIF_FALSE;
 }
 
 /* LX_CHARACTER_OUT_OF_RANGE_ERROR.make */
-T0* T127c7(T0* a1, T6 a2, T0* a3)
+T0* T127c8(T0* a1, T6 a2, T0* a3)
 {
 	T0* C;
 	T0* t1;
 	C = GE_new127(EIF_TRUE);
-	((T127*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(3)));
-	T132f8(GE_void(((T127*)(C))->a1), a1, (T6)(GE_int32(1)));
+	((T127*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(3)));
+	T133f8(GE_void(((T127*)(C))->a1), a1, (T6)(GE_int32(1)));
 	t1 = (T6f6(&a2));
-	T132f8(GE_void(((T127*)(C))->a1), t1, (T6)(GE_int32(2)));
-	T132f8(GE_void(((T127*)(C))->a1), a3, (T6)(GE_int32(3)));
+	T133f8(GE_void(((T127*)(C))->a1), t1, (T6)(GE_int32(2)));
+	T133f8(GE_void(((T127*)(C))->a1), a3, (T6)(GE_int32(3)));
 	return C;
 }
 
@@ -24901,15 +25300,17 @@ T2 T38f216(T0* C, T6 a1)
 	T1 t1;
 	T6 t2;
 	T2 R = 0;
-	t1 = ((((T38*)(C))->a61)!=(EIF_VOID));
+	T0* l1 = 0;
+	l1 = ((T38*)(C))->a60;
+	t1 = ((l1)!=(EIF_VOID));
 	if (t1) {
 		t2 = ((T6)((((T38*)(C))->a46)+(a1)));
 		t2 = ((T6)((t2)-((T6)(GE_int32(1)))));
-		R = (((T15*)(GE_void(((T38*)(C))->a61)))->z2[t2]);
+		R = (((T15*)(GE_void(l1)))->z2[t2]);
 	} else {
 		t2 = ((T6)((((T38*)(C))->a46)+(a1)));
 		t2 = ((T6)((t2)-((T6)(GE_int32(1)))));
-		R = (T250f3(GE_void(((T38*)(C))->a62), t2));
+		R = (T247f3(GE_void(((T38*)(C))->a62), t2));
 	}
 	return R;
 }
@@ -24920,21 +25321,21 @@ void T38f334(T0* C)
 	T0* t1;
 	T0* l1 = 0;
 	t1 = (T38f232(C));
-	l1 = T113c7(t1, ((T38*)(C))->a16);
+	l1 = T113c8(t1, ((T38*)(C))->a16);
 	T24f7(GE_void(((T38*)(C))->a13), l1);
 	((T38*)(C))->a1 = EIF_FALSE;
 }
 
 /* LX_BAD_CHARACTER_CLASS_ERROR.make */
-T0* T113c7(T0* a1, T6 a2)
+T0* T113c8(T0* a1, T6 a2)
 {
 	T0* C;
 	T0* t1;
 	C = GE_new113(EIF_TRUE);
-	((T113*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(2)));
-	T132f8(GE_void(((T113*)(C))->a1), a1, (T6)(GE_int32(1)));
+	((T113*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(2)));
+	T133f8(GE_void(((T113*)(C))->a1), a1, (T6)(GE_int32(1)));
 	t1 = (T6f6(&a2));
-	T132f8(GE_void(((T113*)(C))->a1), t1, (T6)(GE_int32(2)));
+	T133f8(GE_void(((T113*)(C))->a1), t1, (T6)(GE_int32(2)));
 	return C;
 }
 
@@ -24943,7 +25344,7 @@ T0* T82f34(T0* C, T0* a1)
 {
 	T0* R = 0;
 	T82f48(C, a1);
-	R = (T82f32(C, ((T82*)(C))->a1));
+	R = (T82f33(C, ((T82*)(C))->a1));
 	return R;
 }
 
@@ -24962,22 +25363,22 @@ void T38f333(T0* C, T0* a1)
 	T0* t1;
 	T0* l1 = 0;
 	t1 = (T38f232(C));
-	l1 = T112c7(t1, ((T38*)(C))->a16, a1);
+	l1 = T112c8(t1, ((T38*)(C))->a16, a1);
 	T24f7(GE_void(((T38*)(C))->a13), l1);
 	((T38*)(C))->a1 = EIF_FALSE;
 }
 
 /* LX_UNDEFINED_DEFINITION_ERROR.make */
-T0* T112c7(T0* a1, T6 a2, T0* a3)
+T0* T112c8(T0* a1, T6 a2, T0* a3)
 {
 	T0* C;
 	T0* t1;
 	C = GE_new112(EIF_TRUE);
-	((T112*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(3)));
-	T132f8(GE_void(((T112*)(C))->a1), a1, (T6)(GE_int32(1)));
+	((T112*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(3)));
+	T133f8(GE_void(((T112*)(C))->a1), a1, (T6)(GE_int32(1)));
 	t1 = (T6f6(&a2));
-	T132f8(GE_void(((T112*)(C))->a1), t1, (T6)(GE_int32(2)));
-	T132f8(GE_void(((T112*)(C))->a1), a3, (T6)(GE_int32(3)));
+	T133f8(GE_void(((T112*)(C))->a1), t1, (T6)(GE_int32(2)));
+	T133f8(GE_void(((T112*)(C))->a1), a3, (T6)(GE_int32(3)));
 	return C;
 }
 
@@ -25024,29 +25425,14 @@ void T38f354(T0* C, T2 a1)
 	} else {
 		((T38*)(C))->a19 = ((T6)((((T38*)(C))->a19)-((T6)(GE_int32(1)))));
 	}
-	T250f9(GE_void(((T38*)(C))->a62), a1, ((T38*)(C))->a19);
+	T247f8(GE_void(((T38*)(C))->a62), a1, ((T38*)(C))->a19);
 	((T38*)(C))->a46 = ((T38*)(C))->a19;
 }
 
 /* KL_CHARACTER_BUFFER.put */
-void T250f9(T0* C, T2 a1, T6 a2)
+void T247f8(T0* C, T2 a1, T6 a2)
 {
-	T1 t1;
-	t1 = ((((T250*)(C))->a1)!=(EIF_VOID));
-	if (t1) {
-		((T15*)(GE_void(((T250*)(C))->a1)))->z2[a2] = (a1);
-	} else {
-		T17f48(GE_void(((T250*)(C))->a2), a1, a2);
-	}
-}
-
-/* STRING_8.put */
-void T17f48(T0* C, T2 a1, T6 a2)
-{
-	T6 t1;
-	t1 = ((T6)((a2)-((T6)(GE_int32(1)))));
-	((T15*)(GE_void(((T17*)(C))->a1)))->z2[t1] = (a1);
-	((T17*)(C))->a3 = (T6)(GE_int32(0));
+	((T15*)(GE_void(((T247*)(C))->a1)))->z2[a2] = (a1);
 }
 
 /* LX_LEX_PARSER.yy_set_content */
@@ -25057,11 +25443,11 @@ void T38f286(T0* C, T0* a1)
 	T0* t3;
 	T6 l1 = 0;
 	((T38*)(C))->a62 = a1;
-	((T38*)(C))->a61 = (((T250*)(GE_void(a1)))->a1);
+	((T38*)(C))->a60 = (((T247*)(GE_void(a1)))->a1);
 	if (EIF_FALSE) {
-		t1 = (T250f4(GE_void(a1)));
+		t1 = (T247f4(GE_void(a1)));
 		l1 = ((T6)((t1)+((T6)(GE_int32(1)))));
-		t1 = (((T83*)(GE_void(((T38*)(C))->a58)))->z1);
+		t1 = (((T83*)(GE_void(((T38*)(C))->a58)))->a1);
 		t2 = ((T1)((t1)<(l1)));
 		if (t2) {
 			t3 = (T38f153(C));
@@ -25071,18 +25457,12 @@ void T38f286(T0* C, T0* a1)
 }
 
 /* KL_CHARACTER_BUFFER.count */
-T6 T250f4(T0* C)
+T6 T247f4(T0* C)
 {
-	T1 t1;
-	T6 t2;
+	T6 t1;
 	T6 R = 0;
-	t1 = ((((T250*)(C))->a1)!=(EIF_VOID));
-	if (t1) {
-		t2 = (((T17*)(GE_void(((T250*)(C))->a2)))->a2);
-		R = ((T6)((t2)-((T6)(GE_int32(1)))));
-	} else {
-		R = (((T17*)(GE_void(((T250*)(C))->a2)))->a2);
-	}
+	t1 = (((T17*)(GE_void(((T247*)(C))->a2)))->a2);
+	R = ((T6)((t1)-((T6)(GE_int32(1)))));
 	return R;
 }
 
@@ -25104,7 +25484,7 @@ void T79f18(T0* C)
 	t2 = (((((((T79*)(C))->a2) != (l1)))));
 	if (t2) {
 		t1 = ((T6)((l2)+((T6)(GE_int32(2)))));
-		T250f10(GE_void(((T79*)(C))->a1), ((T79*)(C))->a2, l1, t1);
+		T247f9(GE_void(((T79*)(C))->a1), ((T79*)(C))->a2, l1, t1);
 		((T79*)(C))->a2 = l1;
 		t1 = ((T6)((l1)+(l2)));
 		((T79*)(C))->a7 = ((T6)((t1)-((T6)(GE_int32(1)))));
@@ -25112,7 +25492,7 @@ void T79f18(T0* C)
 }
 
 /* KL_CHARACTER_BUFFER.move_right */
-void T250f10(T0* C, T6 a1, T6 a2, T6 a3)
+void T247f9(T0* C, T6 a1, T6 a2, T6 a3)
 {
 	T1 t1;
 	T6 t2;
@@ -25120,17 +25500,10 @@ void T250f10(T0* C, T6 a1, T6 a2, T6 a3)
 	T6 t4;
 	t1 = (T6f1(&a3, (T6)(GE_int32(0))));
 	if (t1) {
-		t1 = ((((T250*)(C))->a1)!=(EIF_VOID));
-		if (t1) {
-			t2 = ((T6)((a1)+((T6)(GE_int32(1)))));
-			t3 = ((T6)((a1)+(a3)));
-			t4 = ((T6)((a2)+((T6)(GE_int32(1)))));
-			T17f50(GE_void(((T250*)(C))->a2), ((T250*)(C))->a2, t2, t3, t4);
-		} else {
-			t2 = ((T6)((a1)+(a3)));
-			t2 = ((T6)((t2)-((T6)(GE_int32(1)))));
-			T17f50(GE_void(((T250*)(C))->a2), ((T250*)(C))->a2, a1, t2, a2);
-		}
+		t2 = ((T6)((a1)+((T6)(GE_int32(1)))));
+		t3 = ((T6)((a1)+(a3)));
+		t4 = ((T6)((a2)+((T6)(GE_int32(1)))));
+		T17f50(GE_void(((T247*)(C))->a2), ((T247*)(C))->a2, t2, t3, t4);
 	}
 }
 
@@ -25178,30 +25551,23 @@ void T79f20(T0* C)
 		((T79*)(C))->a9 = ((T6)((((T79*)(C))->a9)*((T6)(GE_int32(2)))));
 	}
 	t2 = ((T6)((((T79*)(C))->a9)+((T6)(GE_int32(2)))));
-	t3 = (T250f4(GE_void(((T79*)(C))->a1)));
+	t3 = (T247f4(GE_void(((T79*)(C))->a1)));
 	t1 = (T6f1(&t2, t3));
 	if (t1) {
 		t2 = ((T6)((((T79*)(C))->a9)+((T6)(GE_int32(2)))));
-		T250f12(GE_void(((T79*)(C))->a1), t2);
+		T247f11(GE_void(((T79*)(C))->a1), t2);
 	}
 }
 
 /* KL_CHARACTER_BUFFER.resize */
-void T250f12(T0* C, T6 a1)
+void T247f11(T0* C, T6 a1)
 {
-	T1 t1;
-	T6 t2;
-	t1 = ((((T250*)(C))->a1)!=(EIF_VOID));
-	if (t1) {
-		t2 = ((T6)((a1)+((T6)(GE_int32(1)))));
-		T17f36(GE_void(((T250*)(C))->a2), t2);
-		t2 = ((T6)((a1)+((T6)(GE_int32(1)))));
-		T17f44(GE_void(((T250*)(C))->a2), t2);
-		((T250*)(C))->a1 = (((T17*)(GE_void(((T250*)(C))->a2)))->a1);
-	} else {
-		T17f36(GE_void(((T250*)(C))->a2), a1);
-		T17f44(GE_void(((T250*)(C))->a2), a1);
-	}
+	T6 t1;
+	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
+	T17f37(GE_void(((T247*)(C))->a2), t1);
+	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
+	T17f44(GE_void(((T247*)(C))->a2), t1);
+	((T247*)(C))->a1 = (((T17*)(GE_void(((T247*)(C))->a2)))->a1);
 }
 
 /* STRING_8.set_count */
@@ -25212,19 +25578,19 @@ void T17f44(T0* C, T6 a1)
 }
 
 /* YY_BUFFER.default_capacity */
-unsigned char ge213os5834 = '\0';
-T6 ge213ov5834;
+unsigned char ge165os6575 = '\0';
+T6 ge165ov6575;
 T6 T79f12(T0* C)
 {
 	T6 R = 0;
-	if (ge213os5834) {
-		return ge213ov5834;
+	if (ge165os6575) {
+		return ge165ov6575;
 	} else {
-		ge213os5834 = '\1';
-		ge213ov5834 = R;
+		ge165os6575 = '\1';
+		ge165ov6575 = R;
 	}
 	R = (T6)(GE_int32(16384));
-	ge213ov5834 = R;
+	ge165ov6575 = R;
 	return R;
 }
 
@@ -25246,7 +25612,7 @@ void T78f21(T0* C)
 	t2 = (((((((T78*)(C))->a2) != (l1)))));
 	if (t2) {
 		t1 = ((T6)((l2)+((T6)(GE_int32(2)))));
-		T250f10(GE_void(((T78*)(C))->a1), ((T78*)(C))->a2, l1, t1);
+		T247f9(GE_void(((T78*)(C))->a1), ((T78*)(C))->a2, l1, t1);
 		((T78*)(C))->a2 = l1;
 		t1 = ((T6)((l1)+(l2)));
 		((T78*)(C))->a7 = ((T6)((t1)-((T6)(GE_int32(1)))));
@@ -25266,11 +25632,11 @@ void T78f24(T0* C)
 		((T78*)(C))->a11 = ((T6)((((T78*)(C))->a11)*((T6)(GE_int32(2)))));
 	}
 	t2 = ((T6)((((T78*)(C))->a11)+((T6)(GE_int32(2)))));
-	t3 = (T250f4(GE_void(((T78*)(C))->a1)));
+	t3 = (T247f4(GE_void(((T78*)(C))->a1)));
 	t1 = (T6f1(&t2, t3));
 	if (t1) {
 		t2 = ((T6)((((T78*)(C))->a11)+((T6)(GE_int32(2)))));
-		T250f12(GE_void(((T78*)(C))->a1), t2);
+		T247f11(GE_void(((T78*)(C))->a1), t2);
 	}
 }
 
@@ -25278,14 +25644,14 @@ void T78f24(T0* C)
 T6 T78f13(T0* C)
 {
 	T6 R = 0;
-	if (ge213os5834) {
-		return ge213ov5834;
+	if (ge165os6575) {
+		return ge165ov6575;
 	} else {
-		ge213os5834 = '\1';
-		ge213ov5834 = R;
+		ge165os6575 = '\1';
+		ge165ov6575 = R;
 	}
 	R = (T6)(GE_int32(16384));
-	ge213ov5834 = R;
+	ge165ov6575 = R;
 	return R;
 }
 
@@ -25373,7 +25739,7 @@ void T80f39(T0* C, T0* a1)
 						l1 = (T6)(GE_int32(0));
 					} else {
 						l2 = l1;
-						l1 = (T80f29(C, l1));
+						l1 = (T80f31(C, l1));
 					}
 				}
 				((T80*)(C))->a11 = l2;
@@ -25404,7 +25770,7 @@ void T80f39(T0* C, T0* a1)
 						l1 = (T6)(GE_int32(0));
 					} else {
 						l2 = l1;
-						l1 = (T80f29(C, l1));
+						l1 = (T80f31(C, l1));
 					}
 				}
 				((T80*)(C))->a11 = l2;
@@ -25414,7 +25780,7 @@ void T80f39(T0* C, T0* a1)
 }
 
 /* DS_HASH_TABLE [STRING_8, STRING_8].clashes_item */
-T6 T80f29(T0* C, T6 a1)
+T6 T80f31(T0* C, T6 a1)
 {
 	T6 R = 0;
 	R = (((T83*)(GE_void(((T80*)(C))->a14)))->z2[a1]);
@@ -25434,7 +25800,7 @@ T6 T80f22(T0* C, T0* a1)
 			t2 = ((GE_void(((T80*)(C))->a20), a1, (T6)0));
 			R = ((T6)((t2)%(((T80*)(C))->a10)));
 		} else {
-			t2 = (T17f27(GE_void(a1)));
+			t2 = (T17f28(GE_void(a1)));
 			R = ((T6)((t2)%(((T80*)(C))->a10)));
 		}
 	} else {
@@ -25506,6 +25872,8 @@ void T38f353(T0* C)
 	T6 l4 = 0;
 	T1 l5 = 0;
 	T2 l6 = 0;
+	T0* l7 = 0;
+	l7 = ((T38*)(C))->a60;
 	l1 = ((T6)((((T38*)(C))->a19)-((T6)(GE_int32(1)))));
 	l2 = ((T6)((((T38*)(C))->a46)+(((T38*)(C))->a53)));
 	while (1) {
@@ -25516,11 +25884,11 @@ void T38f353(T0* C)
 		if (t1) {
 			break;
 		}
-		t1 = ((((T38*)(C))->a61)!=(EIF_VOID));
+		t1 = ((l7)!=(EIF_VOID));
 		if (t1) {
-			l6 = (((T15*)(GE_void(((T38*)(C))->a61)))->z2[l1]);
+			l6 = (((T15*)(GE_void(l7)))->z2[l1]);
 		} else {
-			l6 = (T250f3(GE_void(((T38*)(C))->a62), l1));
+			l6 = (T247f3(GE_void(((T38*)(C))->a62), l1));
 		}
 		t1 = (((((l6) == ((T2)('\n'))))));
 		if (t1) {
@@ -25536,11 +25904,11 @@ void T38f353(T0* C)
 		if (t1) {
 			break;
 		}
-		t1 = ((((T38*)(C))->a61)!=(EIF_VOID));
+		t1 = ((l7)!=(EIF_VOID));
 		if (t1) {
-			l6 = (((T15*)(GE_void(((T38*)(C))->a61)))->z2[l1]);
+			l6 = (((T15*)(GE_void(l7)))->z2[l1]);
 		} else {
-			l6 = (T250f3(GE_void(((T38*)(C))->a62), l1));
+			l6 = (T247f3(GE_void(((T38*)(C))->a62), l1));
 		}
 		t1 = (((((l6) == ((T2)('\n'))))));
 		if (t1) {
@@ -25562,21 +25930,21 @@ void T38f330(T0* C)
 	T0* t1;
 	T0* l1 = 0;
 	t1 = (T38f232(C));
-	l1 = T111c7(t1, ((T38*)(C))->a16);
+	l1 = T111c8(t1, ((T38*)(C))->a16);
 	T24f7(GE_void(((T38*)(C))->a13), l1);
 	((T38*)(C))->a1 = EIF_FALSE;
 }
 
 /* LX_INCOMPLETE_NAME_DEFINITION_ERROR.make */
-T0* T111c7(T0* a1, T6 a2)
+T0* T111c8(T0* a1, T6 a2)
 {
 	T0* C;
 	T0* t1;
 	C = GE_new111(EIF_TRUE);
-	((T111*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(2)));
-	T132f8(GE_void(((T111*)(C))->a1), a1, (T6)(GE_int32(1)));
+	((T111*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(2)));
+	T133f8(GE_void(((T111*)(C))->a1), a1, (T6)(GE_int32(1)));
 	t1 = (T6f6(&a2));
-	T132f8(GE_void(((T111*)(C))->a1), t1, (T6)(GE_int32(2)));
+	T133f8(GE_void(((T111*)(C))->a1), t1, (T6)(GE_int32(2)));
 	return C;
 }
 
@@ -25674,7 +26042,7 @@ void T80f38(T0* C, T0* a1, T0* a2)
 			l1 = ((T80*)(C))->a9;
 		} else {
 			t2 = (T6)(GE_int32(-1));
-			t3 = (T80f29(C, l1));
+			t3 = (T80f31(C, l1));
 			((T80*)(C))->a8 = ((T6)((t2)-(t3)));
 		}
 		t2 = (T80f32(C, l2));
@@ -25733,7 +26101,7 @@ void T80f43(T0* C, T6 a1)
 		if (t2) {
 			break;
 		}
-		t1 = (T80f29(C, l2));
+		t1 = (T80f31(C, l2));
 		t2 = (T6f1(&t1, (T6)(GE_int32(-1))));
 		if (t2) {
 			t3 = (T80f21(C, l2));
@@ -25758,42 +26126,42 @@ void T80f43(T0* C, T6 a1)
 void T80f51(T0* C, T6 a1)
 {
 	T0* t1;
-	t1 = (T80f31(C));
+	t1 = (T80f30(C));
 	((T80*)(C))->a14 = (T84f2(GE_void(t1), ((T80*)(C))->a14, a1));
 }
 
 /* DS_HASH_TABLE [STRING_8, STRING_8].special_integer_ */
-T0* T80f31(T0* C)
+T0* T80f30(T0* C)
 {
 	T0* R = 0;
-	if (ge357os2757) {
-		return ge357ov2757;
+	if (ge306os2697) {
+		return ge306ov2697;
 	} else {
-		ge357os2757 = '\1';
-		ge357ov2757 = R;
+		ge306os2697 = '\1';
+		ge306ov2697 = R;
 	}
 	R = T84c4();
-	ge357ov2757 = R;
+	ge306ov2697 = R;
 	return R;
 }
 
 /* DS_HASH_TABLE [STRING_8, STRING_8].key_storage_resize */
 void T80f50(T0* C, T6 a1)
 {
-	((T80*)(C))->a16 = (T89f2(GE_void(((T80*)(C))->a19), ((T80*)(C))->a16, a1));
+	((T80*)(C))->a16 = (T89f2(GE_void(((T80*)(C))->a18), ((T80*)(C))->a16, a1));
 }
 
 /* DS_HASH_TABLE [STRING_8, STRING_8].item_storage_resize */
 void T80f49(T0* C, T6 a1)
 {
-	((T80*)(C))->a2 = (T89f2(GE_void(((T80*)(C))->a18), ((T80*)(C))->a2, a1));
+	((T80*)(C))->a2 = (T89f2(GE_void(((T80*)(C))->a17), ((T80*)(C))->a2, a1));
 }
 
 /* DS_HASH_TABLE [STRING_8, STRING_8].slots_resize */
 void T80f48(T0* C, T6 a1)
 {
 	T0* t1;
-	t1 = (T80f31(C));
+	t1 = (T80f30(C));
 	((T80*)(C))->a15 = (T84f2(GE_void(t1), ((T80*)(C))->a15, a1));
 }
 
@@ -25849,7 +26217,7 @@ T0* T17f10(T0* C, T6 a1, T6 a2)
 	if (t2) {
 		t1 = ((T6)((a2)-(a1)));
 		t1 = ((T6)((t1)+((T6)(GE_int32(1)))));
-		R = (T17f19(C, t1));
+		R = (T17f21(C, t1));
 		t3 = (((T17*)(GE_void(R)))->a1);
 		t1 = ((T6)((a1)-((T6)(GE_int32(1)))));
 		t4 = ((T6)((a2)-(a1)));
@@ -25859,13 +26227,13 @@ T0* T17f10(T0* C, T6 a1, T6 a2)
 		t1 = ((T6)((t1)+((T6)(GE_int32(1)))));
 		T17f44(GE_void(R), t1);
 	} else {
-		R = (T17f19(C, (T6)(GE_int32(0))));
+		R = (T17f21(C, (T6)(GE_int32(0))));
 	}
 	return R;
 }
 
 /* STRING_8.new_string */
-T0* T17f19(T0* C, T6 a1)
+T0* T17f21(T0* C, T6 a1)
 {
 	T0* R = 0;
 	R = T17c32(a1);
@@ -25878,22 +26246,22 @@ void T38f352(T0* C, T0* a1)
 	T0* t1;
 	T0* l1 = 0;
 	t1 = (T38f232(C));
-	l1 = T126c7(t1, ((T38*)(C))->a16, a1);
+	l1 = T126c8(t1, ((T38*)(C))->a16, a1);
 	T24f7(GE_void(((T38*)(C))->a13), l1);
 	((T38*)(C))->a1 = EIF_FALSE;
 }
 
 /* LX_NAME_DEFINED_TWICE_ERROR.make */
-T0* T126c7(T0* a1, T6 a2, T0* a3)
+T0* T126c8(T0* a1, T6 a2, T0* a3)
 {
 	T0* C;
 	T0* t1;
 	C = GE_new126(EIF_TRUE);
-	((T126*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(3)));
-	T132f8(GE_void(((T126*)(C))->a1), a1, (T6)(GE_int32(1)));
+	((T126*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(3)));
+	T133f8(GE_void(((T126*)(C))->a1), a1, (T6)(GE_int32(1)));
 	t1 = (T6f6(&a2));
-	T132f8(GE_void(((T126*)(C))->a1), t1, (T6)(GE_int32(2)));
-	T132f8(GE_void(((T126*)(C))->a1), a3, (T6)(GE_int32(3)));
+	T133f8(GE_void(((T126*)(C))->a1), t1, (T6)(GE_int32(2)));
+	T133f8(GE_void(((T126*)(C))->a1), a3, (T6)(GE_int32(3)));
 	return C;
 }
 
@@ -25903,21 +26271,21 @@ void T38f328(T0* C)
 	T0* t1;
 	T0* l1 = 0;
 	t1 = (T38f232(C));
-	l1 = T109c7(t1, ((T38*)(C))->a16);
+	l1 = T109c8(t1, ((T38*)(C))->a16);
 	T24f7(GE_void(((T38*)(C))->a13), l1);
 	((T38*)(C))->a1 = EIF_FALSE;
 }
 
 /* LX_MISSING_QUOTE_ERROR.make */
-T0* T109c7(T0* a1, T6 a2)
+T0* T109c8(T0* a1, T6 a2)
 {
 	T0* C;
 	T0* t1;
 	C = GE_new109(EIF_TRUE);
-	((T109*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(2)));
-	T132f8(GE_void(((T109*)(C))->a1), a1, (T6)(GE_int32(1)));
+	((T109*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(2)));
+	T133f8(GE_void(((T109*)(C))->a1), a1, (T6)(GE_int32(1)));
 	t1 = (T6f6(&a2));
-	T132f8(GE_void(((T109*)(C))->a1), t1, (T6)(GE_int32(2)));
+	T133f8(GE_void(((T109*)(C))->a1), t1, (T6)(GE_int32(2)));
 	return C;
 }
 
@@ -25933,22 +26301,22 @@ void T38f327(T0* C, T0* a1)
 	T0* t1;
 	T0* l1 = 0;
 	t1 = (T38f232(C));
-	l1 = T108c7(t1, ((T38*)(C))->a16, a1);
+	l1 = T108c8(t1, ((T38*)(C))->a16, a1);
 	T24f7(GE_void(((T38*)(C))->a13), l1);
 	((T38*)(C))->a1 = EIF_FALSE;
 }
 
 /* LX_UNRECOGNIZED_OPTION_ERROR.make */
-T0* T108c7(T0* a1, T6 a2, T0* a3)
+T0* T108c8(T0* a1, T6 a2, T0* a3)
 {
 	T0* C;
 	T0* t1;
 	C = GE_new108(EIF_TRUE);
-	((T108*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(3)));
-	T132f8(GE_void(((T108*)(C))->a1), a1, (T6)(GE_int32(1)));
+	((T108*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(3)));
+	T133f8(GE_void(((T108*)(C))->a1), a1, (T6)(GE_int32(1)));
 	t1 = (T6f6(&a2));
-	T132f8(GE_void(((T108*)(C))->a1), t1, (T6)(GE_int32(2)));
-	T132f8(GE_void(((T108*)(C))->a1), a3, (T6)(GE_int32(3)));
+	T133f8(GE_void(((T108*)(C))->a1), t1, (T6)(GE_int32(2)));
+	T133f8(GE_void(((T108*)(C))->a1), a3, (T6)(GE_int32(3)));
 	return C;
 }
 
@@ -26048,21 +26416,21 @@ void T38f326(T0* C)
 	T0* t1;
 	T0* l1 = 0;
 	t1 = (T38f232(C));
-	l1 = T107c7(t1, ((T38*)(C))->a16);
+	l1 = T107c8(t1, ((T38*)(C))->a16);
 	T24f7(GE_void(((T38*)(C))->a13), l1);
 	((T38*)(C))->a1 = EIF_FALSE;
 }
 
 /* LX_START_CONDITION_EXPECTED_ERROR.make */
-T0* T107c7(T0* a1, T6 a2)
+T0* T107c8(T0* a1, T6 a2)
 {
 	T0* C;
 	T0* t1;
 	C = GE_new107(EIF_TRUE);
-	((T107*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(2)));
-	T132f8(GE_void(((T107*)(C))->a1), a1, (T6)(GE_int32(1)));
+	((T107*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(2)));
+	T133f8(GE_void(((T107*)(C))->a1), a1, (T6)(GE_int32(1)));
 	t1 = (T6f6(&a2));
-	T132f8(GE_void(((T107*)(C))->a1), t1, (T6)(GE_int32(2)));
+	T133f8(GE_void(((T107*)(C))->a1), t1, (T6)(GE_int32(2)));
 	return C;
 }
 
@@ -26076,16 +26444,16 @@ void T38f325(T0* C, T0* a1, T1 a2)
 	if (t1) {
 		T38f351(C, a1);
 	} else {
-		T75f27(GE_void(l1), a1, a2);
+		T75f29(GE_void(l1), a1, a2);
 	}
 }
 
 /* LX_START_CONDITIONS.force_new_start_condition */
-void T75f27(T0* C, T0* a1, T1 a2)
+void T75f29(T0* C, T0* a1, T1 a2)
 {
 	T0* l1 = 0;
 	l1 = T101c7(a1, ((T75*)(C))->a1, a2);
-	T75f31(C, l1);
+	T75f34(C, l1);
 }
 
 /* LX_START_CONDITION.make */
@@ -26096,40 +26464,48 @@ T0* T101c7(T0* a1, T6 a2, T1 a3)
 	((T101*)(C))->a1 = a1;
 	((T101*)(C))->a2 = a2;
 	((T101*)(C))->a3 = a3;
-	((T101*)(C))->a4 = T167c10((T6)(GE_int32(50)));
-	((T101*)(C))->a5 = T167c10((T6)(GE_int32(50)));
+	((T101*)(C))->a4 = T169c10((T6)(GE_int32(50)));
+	((T101*)(C))->a5 = T169c10((T6)(GE_int32(50)));
 	return C;
 }
 
 /* DS_ARRAYED_LIST [LX_NFA].make */
-T0* T167c10(T6 a1)
+T0* T169c10(T6 a1)
 {
 	T0* C;
 	T6 t1;
-	C = GE_new167(EIF_TRUE);
-	((T167*)(C))->a1 = T96c3();
+	T0* t2;
+	C = GE_new169(EIF_TRUE);
+	((T169*)(C))->a1 = T96c3();
 	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
-	((T167*)(C))->a2 = (T96f1(GE_void(((T167*)(C))->a1), t1));
-	((T167*)(C))->a3 = a1;
-	((T167*)(C))->a4 = (T167f6(C));
+	((T169*)(C))->a2 = (T96f1(GE_void(((T169*)(C))->a1), t1));
+	((T169*)(C))->a3 = a1;
+	t2 = (T169f6(C));
+	T169f11(C, t2);
 	return C;
 }
 
+/* DS_ARRAYED_LIST [LX_NFA].set_internal_cursor */
+void T169f11(T0* C, T0* a1)
+{
+	((T169*)(C))->a4 = a1;
+}
+
 /* DS_ARRAYED_LIST [LX_NFA].new_cursor */
-T0* T167f6(T0* C)
+T0* T169f6(T0* C)
 {
 	T0* R = 0;
-	R = T240c3(C);
+	R = T238c3(C);
 	return R;
 }
 
 /* DS_ARRAYED_LIST_CURSOR [LX_NFA].make */
-T0* T240c3(T0* a1)
+T0* T238c3(T0* a1)
 {
 	T0* C;
-	C = GE_new240(EIF_TRUE);
-	((T240*)(C))->a1 = a1;
-	((T240*)(C))->a2 = (T6)(GE_int32(0));
+	C = GE_new238(EIF_TRUE);
+	((T238*)(C))->a1 = a1;
+	((T238*)(C))->a2 = (T6)(GE_int32(0));
 	return C;
 }
 
@@ -26139,21 +26515,21 @@ void T38f351(T0* C, T0* a1)
 	T0* t1;
 	T0* l1 = 0;
 	t1 = (T38f232(C));
-	l1 = T125c7(t1, ((T38*)(C))->a16, a1);
+	l1 = T125c8(t1, ((T38*)(C))->a16, a1);
 	T24f7(GE_void(((T38*)(C))->a13), l1);
 }
 
 /* LX_START_CONDITION_DECLARED_TWICE_ERROR.make */
-T0* T125c7(T0* a1, T6 a2, T0* a3)
+T0* T125c8(T0* a1, T6 a2, T0* a3)
 {
 	T0* C;
 	T0* t1;
 	C = GE_new125(EIF_TRUE);
-	((T125*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(3)));
-	T132f8(GE_void(((T125*)(C))->a1), a1, (T6)(GE_int32(1)));
+	((T125*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(3)));
+	T133f8(GE_void(((T125*)(C))->a1), a1, (T6)(GE_int32(1)));
 	t1 = (T6f6(&a2));
-	T132f8(GE_void(((T125*)(C))->a1), t1, (T6)(GE_int32(2)));
-	T132f8(GE_void(((T125*)(C))->a1), a3, (T6)(GE_int32(3)));
+	T133f8(GE_void(((T125*)(C))->a1), t1, (T6)(GE_int32(2)));
+	T133f8(GE_void(((T125*)(C))->a1), a3, (T6)(GE_int32(3)));
 	return C;
 }
 
@@ -26177,14 +26553,14 @@ void T74f22(T0* C, T0* a1)
 	if (t1) {
 		t2 = ((T6)((((T74*)(C))->a1)+((T6)(GE_int32(1)))));
 		t2 = (T74f19(C, t2));
-		T74f26(C, t2);
+		T74f27(C, t2);
 	}
 	((T74*)(C))->a1 = ((T6)((((T74*)(C))->a1)+((T6)(GE_int32(1)))));
 	((T88*)(GE_void(((T74*)(C))->a2)))->z2[((T74*)(C))->a1] = (a1);
 }
 
 /* DS_ARRAYED_LIST [STRING_8].resize */
-void T74f26(T0* C, T6 a1)
+void T74f27(T0* C, T6 a1)
 {
 	T6 t1;
 	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
@@ -26254,13 +26630,13 @@ T0* T38f196(T0* C, T6 a1, T6 a2)
 		t2 = ((T6)((t2)-((T6)(GE_int32(1)))));
 		t3 = ((T6)((((T38*)(C))->a46)+(a2)));
 		t3 = ((T6)((t3)-((T6)(GE_int32(1)))));
-		R = (T250f6(GE_void(((T38*)(C))->a62), t2, t3));
+		R = (T247f6(GE_void(((T38*)(C))->a62), t2, t3));
 	}
 	return R;
 }
 
 /* KL_CHARACTER_BUFFER.substring */
-T0* T250f6(T0* C, T6 a1, T6 a2)
+T0* T247f6(T0* C, T6 a1, T6 a2)
 {
 	T1 t1;
 	T6 t2;
@@ -26270,14 +26646,9 @@ T0* T250f6(T0* C, T6 a1, T6 a2)
 	if (t1) {
 		R = T17c32((T6)(GE_int32(0)));
 	} else {
-		t1 = ((((T250*)(C))->a1)!=(EIF_VOID));
-		if (t1) {
-			t2 = ((T6)((a1)+((T6)(GE_int32(1)))));
-			t3 = ((T6)((a2)+((T6)(GE_int32(1)))));
-			R = (T17f10(GE_void(((T250*)(C))->a2), t2, t3));
-		} else {
-			R = (T17f10(GE_void(((T250*)(C))->a2), a1, a2));
-		}
+		t2 = ((T6)((a1)+((T6)(GE_int32(1)))));
+		t3 = ((T6)((a2)+((T6)(GE_int32(1)))));
+		R = (T17f10(GE_void(((T247*)(C))->a2), t2, t3));
 	}
 	return R;
 }
@@ -26302,21 +26673,21 @@ void T38f323(T0* C)
 	T0* t1;
 	T0* l1 = 0;
 	t1 = (T38f232(C));
-	l1 = T106c7(t1, ((T38*)(C))->a16);
+	l1 = T106c8(t1, ((T38*)(C))->a16);
 	T24f7(GE_void(((T38*)(C))->a13), l1);
 	((T38*)(C))->a1 = EIF_FALSE;
 }
 
 /* LX_DIRECTIVE_EXPECTED_ERROR.make */
-T0* T106c7(T0* a1, T6 a2)
+T0* T106c8(T0* a1, T6 a2)
 {
 	T0* C;
 	T0* t1;
 	C = GE_new106(EIF_TRUE);
-	((T106*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(2)));
-	T132f8(GE_void(((T106*)(C))->a1), a1, (T6)(GE_int32(1)));
+	((T106*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(2)));
+	T133f8(GE_void(((T106*)(C))->a1), a1, (T6)(GE_int32(1)));
 	t1 = (T6f6(&a2));
-	T132f8(GE_void(((T106*)(C))->a1), t1, (T6)(GE_int32(2)));
+	T133f8(GE_void(((T106*)(C))->a1), t1, (T6)(GE_int32(2)));
 	return C;
 }
 
@@ -26326,21 +26697,21 @@ void T38f322(T0* C)
 	T0* t1;
 	T0* l1 = 0;
 	t1 = (T38f232(C));
-	l1 = T105c7(t1, ((T38*)(C))->a16);
+	l1 = T105c8(t1, ((T38*)(C))->a16);
 	T24f7(GE_void(((T38*)(C))->a13), l1);
 	((T38*)(C))->a1 = EIF_FALSE;
 }
 
 /* LX_UNRECOGNIZED_DIRECTIVE_ERROR.make */
-T0* T105c7(T0* a1, T6 a2)
+T0* T105c8(T0* a1, T6 a2)
 {
 	T0* C;
 	T0* t1;
 	C = GE_new105(EIF_TRUE);
-	((T105*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(2)));
-	T132f8(GE_void(((T105*)(C))->a1), a1, (T6)(GE_int32(1)));
+	((T105*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(2)));
+	T133f8(GE_void(((T105*)(C))->a1), a1, (T6)(GE_int32(1)));
 	t1 = (T6f6(&a2));
-	T132f8(GE_void(((T105*)(C))->a1), t1, (T6)(GE_int32(2)));
+	T133f8(GE_void(((T105*)(C))->a1), t1, (T6)(GE_int32(2)));
 	return C;
 }
 
@@ -26353,7 +26724,7 @@ T0* T38f190(T0* C)
 	t1 = ((T1)((((T38*)(C))->a46)<(((T38*)(C))->a19)));
 	if (t1) {
 		t2 = ((T6)((((T38*)(C))->a19)-((T6)(GE_int32(1)))));
-		R = (T250f6(GE_void(((T38*)(C))->a62), ((T38*)(C))->a46, t2));
+		R = (T247f6(GE_void(((T38*)(C))->a62), ((T38*)(C))->a46, t2));
 	} else {
 		R = T17c32((T6)(GE_int32(0)));
 	}
@@ -26439,16 +26810,16 @@ void T78f19(T0* C)
 		l1 = ((T6)((((T78*)(C))->a11)-(((T78*)(C))->a7)));
 		if (((T78*)(C))->a12) {
 			if (((T0*)(GE_void(((T78*)(C))->a9)))->id==39) {
-				T39f44(((T78*)(C))->a9);
+				T39f45(((T78*)(C))->a9);
 			} else {
-				T46f23(((T78*)(C))->a9);
+				T46f24(((T78*)(C))->a9);
 			}
-			t1 = (((((T0*)(GE_void(((T78*)(C))->a9)))->id==39)?T39f24(((T78*)(C))->a9):((T46*)(((T78*)(C))->a9))->a1));
+			t1 = (((((T0*)(GE_void(((T78*)(C))->a9)))->id==39)?T39f25(((T78*)(C))->a9):((T46*)(((T78*)(C))->a9))->a2));
 			t1 = ((T1)(!(t1)));
 			if (t1) {
 				((T78*)(C))->a7 = ((T6)((((T78*)(C))->a7)+((T6)(GE_int32(1)))));
-				t2 = (((((T0*)(GE_void(((T78*)(C))->a9)))->id==39)?((T39*)(((T78*)(C))->a9))->a8:((T46*)(((T78*)(C))->a9))->a5));
-				T250f9(GE_void(l3), t2, ((T78*)(C))->a7);
+				t2 = (((((T0*)(GE_void(((T78*)(C))->a9)))->id==39)?((T39*)(((T78*)(C))->a9))->a9:((T46*)(((T78*)(C))->a9))->a6));
+				T247f8(GE_void(l3), t2, ((T78*)(C))->a7);
 				((T78*)(C))->a8 = EIF_TRUE;
 			} else {
 				((T78*)(C))->a8 = EIF_FALSE;
@@ -26456,10 +26827,10 @@ void T78f19(T0* C)
 			}
 		} else {
 			t3 = ((T6)((((T78*)(C))->a7)+((T6)(GE_int32(1)))));
-			l2 = (T250f5(GE_void(l3), ((T78*)(C))->a9, t3, l1));
+			l2 = (T247f5(GE_void(l3), ((T78*)(C))->a9, t3, l1));
 			t1 = ((T1)((l2)<(l1)));
 			if (t1) {
-				((T78*)(C))->a10 = (((((T0*)(GE_void(((T78*)(C))->a9)))->id==39)?T39f24(((T78*)(C))->a9):((T46*)(((T78*)(C))->a9))->a1));
+				((T78*)(C))->a10 = (((((T0*)(GE_void(((T78*)(C))->a9)))->id==39)?T39f25(((T78*)(C))->a9):((T46*)(((T78*)(C))->a9))->a2));
 			}
 			t1 = (T6f1((&l2), (T6)(GE_int32(0))));
 			if (t1) {
@@ -26470,32 +26841,26 @@ void T78f19(T0* C)
 			((T78*)(C))->a7 = ((T6)((((T78*)(C))->a7)+(l2)));
 		}
 		t3 = ((T6)((((T78*)(C))->a7)+((T6)(GE_int32(1)))));
-		T250f9(GE_void(l3), (T2)('\000'), t3);
+		T247f8(GE_void(l3), (T2)('\000'), t3);
 		t3 = ((T6)((((T78*)(C))->a7)+((T6)(GE_int32(2)))));
-		T250f9(GE_void(l3), (T2)('\000'), t3);
+		T247f8(GE_void(l3), (T2)('\000'), t3);
 	} else {
 		((T78*)(C))->a8 = EIF_FALSE;
 	}
 }
 
 /* KL_CHARACTER_BUFFER.fill_from_stream */
-T6 T250f5(T0* C, T0* a1, T6 a2, T6 a3)
+T6 T247f5(T0* C, T0* a1, T6 a2, T6 a3)
 {
-	T1 t1;
-	T6 t2;
+	T6 t1;
 	T6 R = 0;
-	t1 = ((((T250*)(C))->a1)!=(EIF_VOID));
-	if (t1) {
-		t2 = ((T6)((a2)+((T6)(GE_int32(1)))));
-		R = (((((T0*)(GE_void(a1)))->id==39)?T39f29(a1, ((T250*)(C))->a2, t2, a3):T46f13(a1, ((T250*)(C))->a2, t2, a3)));
-	} else {
-		R = (((((T0*)(GE_void(a1)))->id==39)?T39f29(a1, ((T250*)(C))->a2, a2, a3):T46f13(a1, ((T250*)(C))->a2, a2, a3)));
-	}
+	t1 = ((T6)((a2)+((T6)(GE_int32(1)))));
+	R = (((((T0*)(GE_void(a1)))->id==39)?T39f30(a1, ((T247*)(C))->a2, t1, a3):T46f14(a1, ((T247*)(C))->a2, t1, a3)));
 	return R;
 }
 
 /* KL_STDIN_FILE.read_to_string */
-T6 T46f13(T0* C, T0* a1, T6 a2, T6 a3)
+T6 T46f14(T0* C, T0* a1, T6 a2, T6 a3)
 {
 	T1 t1;
 	T2 t2;
@@ -26507,7 +26872,9 @@ T6 T46f13(T0* C, T0* a1, T6 a2, T6 a3)
 	T6 l3 = 0;
 	T6 l4 = 0;
 	T0* l5 = 0;
+	T0* l6 = 0;
 	l2 = a2;
+	l6 = ((T46*)(C))->a7;
 	while (1) {
 		t1 = (((((l1) == (a3)))));
 		if (!(t1)) {
@@ -26517,27 +26884,28 @@ T6 T46f13(T0* C, T0* a1, T6 a2, T6 a3)
 			break;
 		}
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-		t2 = ((GE_void(((T46*)(C))->a6), (T2)0));
+		t2 = ((GE_void(l6), (T2)0));
 		T17f48(GE_void(a1), t2, l2);
-		((T46*)(C))->a6 = ((GE_void(((T46*)(C))->a6), (T0*)0));
+		l6 = ((GE_void(l6), (T0*)0));
 		l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
 	}
+	((T46*)(C))->a7 = l6;
 	t1 = ((T1)((l1)<(a3)));
 	if (t1) {
-		t1 = (T46f10(C));
+		t1 = (T46f11(C));
 		t1 = ((T1)(!(t1)));
 		if (t1) {
-			t3 = (T46f14(C));
-			t1 = (T189f1(GE_void(t3), a1, ge407ov4178));
+			t3 = (T46f15(C));
+			t1 = (T191f1(GE_void(t3), a1, ge349ov4209));
 			if (t1) {
 				t4 = ((T6)((a3)-(l1)));
-				t4 = (T46f16(C, a1, l2, t4));
+				t4 = (T46f17(C, a1, l2, t4));
 				R = ((T6)((l1)+(t4)));
 			} else {
 				l4 = ((T6)((a3)-(l1)));
 				l5 = T17c32(l4);
 				T17f44(GE_void(l5), l4);
-				l4 = (T46f16(C, l5, (T6)(GE_int32(1)), l4));
+				l4 = (T46f17(C, l5, (T6)(GE_int32(1)), l4));
 				l3 = (T6)(GE_int32(1));
 				while (1) {
 					t1 = (T6f1((&l3), l4));
@@ -26554,7 +26922,7 @@ T6 T46f13(T0* C, T0* a1, T6 a2, T6 a3)
 		} else {
 			R = l1;
 		}
-		((T46*)(C))->a1 = (T46f10(C));
+		((T46*)(C))->a2 = (T46f11(C));
 	} else {
 		R = l1;
 	}
@@ -26562,7 +26930,7 @@ T6 T46f13(T0* C, T0* a1, T6 a2, T6 a3)
 }
 
 /* KL_STDIN_FILE.old_read_to_string */
-T6 T46f16(T0* C, T0* a1, T6 a2, T6 a3)
+T6 T46f17(T0* C, T0* a1, T6 a2, T6 a3)
 {
 	T0* t1;
 	T6 t2;
@@ -26571,12 +26939,12 @@ T6 T46f16(T0* C, T0* a1, T6 a2, T6 a3)
 	t1 = (((T17*)(GE_void(a1)))->a1);
 	t2 = ((T6)((a2)-((T6)(GE_int32(1)))));
 	t3 = (T15f6(GE_void(t1), t2));
-	R = (T46f17(C, ((T46*)(C))->a2, t3, a3));
+	R = (T46f18(C, ((T46*)(C))->a3, t3, a3));
 	return R;
 }
 
 /* KL_STDIN_FILE.file_gss */
-T6 T46f17(T0* C, T14 a1, T14 a2, T6 a3)
+T6 T46f18(T0* C, T14 a1, T14 a2, T6 a3)
 {
 	T6 R = 0;
 	R = (T6)(EIF_INTEGER )file_gss((FILE *)a1,( char *)a2,( EIF_INTEGER)a3);
@@ -26597,38 +26965,47 @@ T14 T15f6(T0* C, T6 a1)
 }
 
 /* KL_STDIN_FILE.any_ */
-T0* T46f14(T0* C)
+T0* T46f15(T0* C)
 {
 	T0* R = 0;
-	if (ge346os1894) {
-		return ge346ov1894;
+	if (ge300os1888) {
+		return ge300ov1888;
 	} else {
-		ge346os1894 = '\1';
-		ge346ov1894 = R;
+		ge300os1888 = '\1';
+		ge300ov1888 = R;
 	}
-	R = T189c3();
-	ge346ov1894 = R;
+	R = T191c2();
+	ge300ov1888 = R;
 	return R;
 }
 
 /* KL_STDIN_FILE.old_end_of_file */
-T1 T46f10(T0* C)
+T1 T46f11(T0* C)
 {
 	T1 R = 0;
-	R = (T46f12(C, ((T46*)(C))->a2));
+	R = (T46f13(C, ((T46*)(C))->a3));
 	return R;
 }
 
 /* KL_STDIN_FILE.console_eof */
-T1 T46f12(T0* C, T14 a1)
+T1 T46f13(T0* C, T14 a1)
 {
 	T1 R = 0;
 	R = (T1)EIF_TEST((EIF_BOOLEAN )console_eof((FILE *)a1));
 	return R;
 }
 
+/* STRING_8.put */
+void T17f48(T0* C, T2 a1, T6 a2)
+{
+	T6 t1;
+	t1 = ((T6)((a2)-((T6)(GE_int32(1)))));
+	((T15*)(GE_void(((T17*)(C))->a1)))->z2[t1] = (a1);
+	((T17*)(C))->a3 = (T6)(GE_int32(0));
+}
+
 /* KL_TEXT_INPUT_FILE.read_to_string */
-T6 T39f29(T0* C, T0* a1, T6 a2, T6 a3)
+T6 T39f30(T0* C, T0* a1, T6 a2, T6 a3)
 {
 	T1 t1;
 	T2 t2;
@@ -26641,7 +27018,9 @@ T6 T39f29(T0* C, T0* a1, T6 a2, T6 a3)
 	T6 l3 = 0;
 	T6 l4 = 0;
 	T6 l5 = 0;
+	T0* l6 = 0;
 	l1 = a2;
+	l6 = ((T39*)(C))->a5;
 	while (1) {
 		t1 = (((((l5) == (a3)))));
 		if (!(t1)) {
@@ -26651,35 +27030,39 @@ T6 T39f29(T0* C, T0* a1, T6 a2, T6 a3)
 			break;
 		}
 		l5 = ((T6)((l5)+((T6)(GE_int32(1)))));
-		t2 = ((GE_void(((T39*)(C))->a4), (T2)0));
+		t2 = ((GE_void(l6), (T2)0));
 		T17f48(GE_void(a1), t2, l1);
-		((T39*)(C))->a4 = ((GE_void(((T39*)(C))->a4), (T0*)0));
+		l6 = ((GE_void(l6), (T0*)0));
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
+	((T39*)(C))->a5 = l6;
 	t1 = ((T1)((l5)<(a3)));
 	if (t1) {
-		t1 = (T39f26(C));
+		t1 = (T39f27(C));
 		t1 = ((T1)(!(t1)));
 		if (t1) {
-			t3 = (T39f30(C));
-			t1 = (T189f1(GE_void(t3), a1, ge392ov3317));
+			t3 = (T39f31(C));
+			t1 = (T191f1(GE_void(t3), a1, ge336ov3257));
 			if (t1) {
 				t4 = ((T6)((a3)-(l5)));
-				t4 = (T39f32(C, a1, l1, t4));
+				t4 = (T39f33(C, a1, l1, t4));
 				l5 = ((T6)((l5)+(t4)));
+				T17f52(GE_void(a1), (T6)(GE_int32(0)));
 			} else {
-				t3 = (T39f30(C));
-				t5 = (T39f33(C));
-				t1 = (T189f1(GE_void(t3), a1, t5));
+				t3 = (T39f31(C));
+				t5 = (T39f34(C));
+				t1 = (T191f1(GE_void(t3), a1, t5));
 				if (t1) {
 					t4 = ((T6)((a3)-(l5)));
-					t4 = (T39f32(C, a1, l1, t4));
+					t4 = (T39f33(C, a1, l1, t4));
 					l5 = ((T6)((l5)+(t4)));
+					T17f52(GE_void(a1), (T6)(GE_int32(0)));
 				} else {
 					l4 = ((T6)((a3)-(l5)));
 					l2 = T17c32(l4);
 					T17f44(GE_void(l2), l4);
-					l4 = (T39f32(C, l2, (T6)(GE_int32(1)), l4));
+					l4 = (T39f33(C, l2, (T6)(GE_int32(1)), l4));
+					T17f52(GE_void(l2), (T6)(GE_int32(0)));
 					l3 = (T6)(GE_int32(1));
 					while (1) {
 						t1 = (T6f1((&l3), l4));
@@ -26695,107 +27078,51 @@ T6 T39f29(T0* C, T0* a1, T6 a2, T6 a3)
 				}
 			}
 		}
-		((T39*)(C))->a5 = (T39f26(C));
+		((T39*)(C))->a6 = (T39f27(C));
 	}
 	R = l5;
 	return R;
 }
 
 /* KL_TEXT_INPUT_FILE.dummy_kl_character_buffer */
-unsigned char ge392os3318 = '\0';
-T0* ge392ov3318;
-T0* T39f33(T0* C)
+unsigned char ge336os3258 = '\0';
+T0* ge336ov3258;
+T0* T39f34(T0* C)
 {
 	T0* R = 0;
-	if (ge392os3318) {
-		return ge392ov3318;
+	if (ge336os3258) {
+		return ge336ov3258;
 	} else {
-		ge392os3318 = '\1';
-		ge392ov3318 = R;
+		ge336os3258 = '\1';
+		ge336ov3258 = R;
 	}
-	R = T250c8((T6)(GE_int32(0)));
-	ge392ov3318 = R;
+	R = T247c7((T6)(GE_int32(0)));
+	ge336ov3258 = R;
 	return R;
 }
 
 /* KL_CHARACTER_BUFFER.make */
-T0* T250c8(T6 a1)
+T0* T247c7(T6 a1)
 {
 	T0* C;
-	T0* t1;
-	T1 t2;
-	T6 t3;
-	C = GE_new250(EIF_TRUE);
-	t1 = (T250f7(C));
-	t2 = (T192f6(GE_void(t1)));
-	t2 = ((T1)(!(t2)));
-	if (t2) {
-		t3 = ((T6)((a1)+((T6)(GE_int32(1)))));
-		((T250*)(C))->a2 = T17c32(t3);
-		t3 = ((T6)((a1)+((T6)(GE_int32(1)))));
-		T17f44(GE_void(((T250*)(C))->a2), t3);
-		((T250*)(C))->a1 = (((T17*)(GE_void(((T250*)(C))->a2)))->a1);
-	} else {
-		((T250*)(C))->a2 = T17c32(a1);
-		T17f44(GE_void(((T250*)(C))->a2), a1);
-	}
+	T6 t1;
+	C = GE_new247(EIF_TRUE);
+	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
+	((T247*)(C))->a2 = T17c32(t1);
+	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
+	T17f44(GE_void(((T247*)(C))->a2), t1);
+	((T247*)(C))->a1 = (((T17*)(GE_void(((T247*)(C))->a2)))->a1);
 	return C;
 }
 
-/* KL_OPERATING_SYSTEM.is_dotnet */
-unsigned char ge431os4181 = '\0';
-T1 ge431ov4181;
-T1 T192f6(T0* C)
+/* STRING_8.set_internal_hash_code */
+void T17f52(T0* C, T6 a1)
 {
-	T1 R = 0;
-	T0* l1 = 0;
-	if (ge431os4181) {
-		return ge431ov4181;
-	} else {
-		ge431os4181 = '\1';
-		ge431ov4181 = R;
-	}
-	l1 = T288c2();
-	R = (EIF_FALSE);
-	ge431ov4181 = R;
-	return R;
-}
-
-/* PLATFORM.default_create */
-T0* T288c2(void)
-{
-	T0* C;
-	C = GE_new288(EIF_TRUE);
-	return C;
-}
-
-/* KL_CHARACTER_BUFFER.operating_system */
-unsigned char ge439os3356 = '\0';
-T0* ge439ov3356;
-T0* T250f7(T0* C)
-{
-	T0* R = 0;
-	if (ge439os3356) {
-		return ge439ov3356;
-	} else {
-		ge439os3356 = '\1';
-		ge439ov3356 = R;
-	}
-	R = T192c7();
-	ge439ov3356 = R;
-	return R;
-}
-
-/* KL_OPERATING_SYSTEM.default_create */
-T0* T192c7(void)
-{
-	T0* C;
-	C = GE_new192(EIF_TRUE);
-	return C;
+	((T17*)(C))->a3 = a1;
 }
 
 /* KL_TEXT_INPUT_FILE.old_read_to_string */
-T6 T39f32(T0* C, T0* a1, T6 a2, T6 a3)
+T6 T39f33(T0* C, T0* a1, T6 a2, T6 a3)
 {
 	T0* t1;
 	T6 t2;
@@ -26804,12 +27131,12 @@ T6 T39f32(T0* C, T0* a1, T6 a2, T6 a3)
 	t1 = (((T17*)(GE_void(a1)))->a1);
 	t2 = ((T6)((a2)-((T6)(GE_int32(1)))));
 	t3 = (T15f6(GE_void(t1), t2));
-	R = (T39f34(C, ((T39*)(C))->a6, t3, a3));
+	R = (T39f35(C, ((T39*)(C))->a7, t3, a3));
 	return R;
 }
 
 /* KL_TEXT_INPUT_FILE.file_gss */
-T6 T39f34(T0* C, T14 a1, T14 a2, T6 a3)
+T6 T39f35(T0* C, T14 a1, T14 a2, T6 a3)
 {
 	T6 R = 0;
 	R = (T6)(EIF_INTEGER )file_gss((FILE *)a1,( char *)a2,( EIF_INTEGER)a3);
@@ -26817,30 +27144,30 @@ T6 T39f34(T0* C, T14 a1, T14 a2, T6 a3)
 }
 
 /* KL_TEXT_INPUT_FILE.any_ */
-T0* T39f30(T0* C)
+T0* T39f31(T0* C)
 {
 	T0* R = 0;
-	if (ge346os1894) {
-		return ge346ov1894;
+	if (ge300os1888) {
+		return ge300ov1888;
 	} else {
-		ge346os1894 = '\1';
-		ge346ov1894 = R;
+		ge300os1888 = '\1';
+		ge300ov1888 = R;
 	}
-	R = T189c3();
-	ge346ov1894 = R;
+	R = T191c2();
+	ge300ov1888 = R;
 	return R;
 }
 
 /* KL_TEXT_INPUT_FILE.old_end_of_file */
-T1 T39f26(T0* C)
+T1 T39f27(T0* C)
 {
 	T1 R = 0;
-	R = (T39f28(C, ((T39*)(C))->a6));
+	R = (T39f29(C, ((T39*)(C))->a7));
 	return R;
 }
 
 /* KL_TEXT_INPUT_FILE.file_feof */
-T1 T39f28(T0* C, T14 a1)
+T1 T39f29(T0* C, T14 a1)
 {
 	T1 R = 0;
 	R = (T1)EIF_TEST((EIF_BOOLEAN )file_feof((FILE *)a1));
@@ -26848,40 +27175,42 @@ T1 T39f28(T0* C, T14 a1)
 }
 
 /* KL_TEXT_INPUT_FILE.end_of_input */
-T1 T39f24(T0* C)
+T1 T39f25(T0* C)
 {
 	T1 R = 0;
-	R = ((T39*)(C))->a5;
+	R = ((T39*)(C))->a6;
 	return R;
 }
 
 /* KL_STDIN_FILE.read_character */
-void T46f23(T0* C)
+void T46f24(T0* C)
 {
 	T1 t1;
+	T0* l1 = 0;
+	l1 = ((T46*)(C))->a7;
 	t1 = (EIF_FALSE);
 	if (t1) {
-		((T46*)(C))->a5 = ((GE_void(((T46*)(C))->a6), (T2)0));
-		((T46*)(C))->a6 = ((GE_void(((T46*)(C))->a6), (T0*)0));
+		((T46*)(C))->a6 = ((GE_void(l1), (T2)0));
+		((T46*)(C))->a7 = ((GE_void(l1), (T0*)0));
 	} else {
-		t1 = (T46f10(C));
+		t1 = (T46f11(C));
 		if (t1) {
-			((T46*)(C))->a1 = EIF_TRUE;
+			((T46*)(C))->a2 = EIF_TRUE;
 		} else {
-			T46f24(C);
-			((T46*)(C))->a1 = (T46f10(C));
+			T46f25(C);
+			((T46*)(C))->a2 = (T46f11(C));
 		}
 	}
 }
 
 /* KL_STDIN_FILE.old_read_character */
-void T46f24(T0* C)
+void T46f25(T0* C)
 {
-	((T46*)(C))->a5 = (T46f11(C, ((T46*)(C))->a2));
+	((T46*)(C))->a6 = (T46f12(C, ((T46*)(C))->a3));
 }
 
 /* KL_STDIN_FILE.console_readchar */
-T2 T46f11(T0* C, T14 a1)
+T2 T46f12(T0* C, T14 a1)
 {
 	T2 R = 0;
 	R = (T2)(EIF_CHARACTER )console_readchar((FILE *)a1);
@@ -26889,32 +27218,34 @@ T2 T46f11(T0* C, T14 a1)
 }
 
 /* KL_TEXT_INPUT_FILE.read_character */
-void T39f44(T0* C)
+void T39f45(T0* C)
 {
 	T1 t1;
+	T0* l1 = 0;
+	l1 = ((T39*)(C))->a5;
 	t1 = (EIF_FALSE);
 	if (t1) {
-		((T39*)(C))->a8 = ((GE_void(((T39*)(C))->a4), (T2)0));
-		((T39*)(C))->a4 = ((GE_void(((T39*)(C))->a4), (T0*)0));
+		((T39*)(C))->a9 = ((GE_void(l1), (T2)0));
+		((T39*)(C))->a5 = ((GE_void(l1), (T0*)0));
 	} else {
-		t1 = (T39f26(C));
+		t1 = (T39f27(C));
 		if (t1) {
-			((T39*)(C))->a5 = EIF_TRUE;
+			((T39*)(C))->a6 = EIF_TRUE;
 		} else {
-			T39f45(C);
-			((T39*)(C))->a5 = (T39f26(C));
+			T39f46(C);
+			((T39*)(C))->a6 = (T39f27(C));
 		}
 	}
 }
 
 /* KL_TEXT_INPUT_FILE.old_read_character */
-void T39f45(T0* C)
+void T39f46(T0* C)
 {
-	((T39*)(C))->a8 = (T39f27(C, ((T39*)(C))->a6));
+	((T39*)(C))->a9 = (T39f28(C, ((T39*)(C))->a7));
 }
 
 /* KL_TEXT_INPUT_FILE.file_gc */
-T2 T39f27(T0* C, T14 a1)
+T2 T39f28(T0* C, T14 a1)
 {
 	T2 R = 0;
 	R = (T2)(EIF_CHARACTER )file_gc((FILE *)a1);
@@ -26936,14 +27267,14 @@ void T78f23(T0* C)
 	t2 = (((((((T78*)(C))->a2) != ((T6)(GE_int32(1)))))));
 	if (t2) {
 		t1 = ((T6)((l1)+((T6)(GE_int32(2)))));
-		T250f11(GE_void(((T78*)(C))->a1), ((T78*)(C))->a2, (T6)(GE_int32(1)), t1);
+		T247f10(GE_void(((T78*)(C))->a1), ((T78*)(C))->a2, (T6)(GE_int32(1)), t1);
 		((T78*)(C))->a2 = (T6)(GE_int32(1));
 		((T78*)(C))->a7 = l1;
 	}
 }
 
 /* KL_CHARACTER_BUFFER.move_left */
-void T250f11(T0* C, T6 a1, T6 a2, T6 a3)
+void T247f10(T0* C, T6 a1, T6 a2, T6 a3)
 {
 	T1 t1;
 	T6 t2;
@@ -26951,17 +27282,10 @@ void T250f11(T0* C, T6 a1, T6 a2, T6 a3)
 	T6 t4;
 	t1 = (T6f1(&a3, (T6)(GE_int32(0))));
 	if (t1) {
-		t1 = ((((T250*)(C))->a1)!=(EIF_VOID));
-		if (t1) {
-			t2 = ((T6)((a1)+((T6)(GE_int32(1)))));
-			t3 = ((T6)((a1)+(a3)));
-			t4 = ((T6)((a2)+((T6)(GE_int32(1)))));
-			T17f50(GE_void(((T250*)(C))->a2), ((T250*)(C))->a2, t2, t3, t4);
-		} else {
-			t2 = ((T6)((a1)+(a3)));
-			t2 = ((T6)((t2)-((T6)(GE_int32(1)))));
-			T17f50(GE_void(((T250*)(C))->a2), ((T250*)(C))->a2, a1, t2, a2);
-		}
+		t2 = ((T6)((a1)+((T6)(GE_int32(1)))));
+		t3 = ((T6)((a1)+(a3)));
+		t4 = ((T6)((a2)+((T6)(GE_int32(1)))));
+		T17f50(GE_void(((T247*)(C))->a2), ((T247*)(C))->a2, t2, t3, t4);
 	}
 }
 
@@ -27026,6 +27350,7 @@ T6 T38f128(T0* C)
 	T6 l1 = 0;
 	T6 l2 = 0;
 	T6 l3 = 0;
+	T0* l4 = 0;
 	t1 = (((((T0*)(GE_void(((T38*)(C))->a18)))->id==78)?((T78*)(((T38*)(C))->a18))->a6:((T79*)(((T38*)(C))->a18))->a6));
 	if (t1) {
 		R = ((T6)((((T38*)(C))->a57)+((T6)(GE_int32(1)))));
@@ -27036,6 +27361,7 @@ T6 T38f128(T0* C)
 		((T83*)(GE_void(((T38*)(C))->a58)))->z2[(T6)(GE_int32(0))] = (R);
 		((T38*)(C))->a59 = (T6)(GE_int32(1));
 	}
+	l4 = ((T38*)(C))->a60;
 	l1 = ((T6)((((T38*)(C))->a46)+(((T38*)(C))->a53)));
 	l2 = ((T38*)(C))->a19;
 	while (1) {
@@ -27043,21 +27369,21 @@ T6 T38f128(T0* C)
 		if (t1) {
 			break;
 		}
-		t1 = ((((T38*)(C))->a61)!=(EIF_VOID));
+		t1 = ((l4)!=(EIF_VOID));
 		if (t1) {
-			t2 = (((T15*)(GE_void(((T38*)(C))->a61)))->z2[l1]);
+			t2 = (((T15*)(GE_void(l4)))->z2[l1]);
 			l3 = ((T6)(t2));
 		} else {
-			t2 = (T250f3(GE_void(((T38*)(C))->a62), l1));
+			t2 = (T247f3(GE_void(((T38*)(C))->a62), l1));
 			l3 = ((T6)(t2));
 		}
 		t1 = (((((l3) == ((T6)(GE_int32(0)))))));
 		if (t1) {
 			l3 = (T6)(GE_int32(1));
 		} else {
-			t1 = ((((T38*)(C))->a60)!=(EIF_VOID));
+			t1 = ((((T38*)(C))->a61)!=(EIF_VOID));
 			if (t1) {
-				l3 = (((T83*)(GE_void(((T38*)(C))->a60)))->z2[l3]);
+				l3 = (((T83*)(GE_void(((T38*)(C))->a61)))->z2[l3]);
 			}
 		}
 		t1 = EIF_FALSE;
@@ -27105,66 +27431,66 @@ void T38f287(T0* C, T0* a1)
 	T0* t1;
 	t1 = (T38f184(C));
 	t1 = (T45f3(GE_void(t1)));
-	T73f12(GE_void(t1), a1);
+	T73f13(GE_void(t1), a1);
 	t1 = (T38f184(C));
 	t1 = (T45f3(GE_void(t1)));
-	T73f13(GE_void(t1), (T2)('\n'));
+	T73f14(GE_void(t1), (T2)('\n'));
 }
 
 /* KL_STDERR_FILE.put_character */
-void T73f13(T0* C, T2 a1)
+void T73f14(T0* C, T2 a1)
 {
-	T73f17(C, a1);
+	T73f18(C, a1);
 }
 
 /* KL_STDERR_FILE.old_put_character */
-void T73f17(T0* C, T2 a1)
+void T73f18(T0* C, T2 a1)
 {
-	T73f21(C, ((T73*)(C))->a1, a1);
+	T73f22(C, ((T73*)(C))->a1, a1);
 }
 
 /* KL_STDERR_FILE.console_pc */
-void T73f21(T0* C, T14 a1, T2 a2)
+void T73f22(T0* C, T14 a1, T2 a2)
 {
 	console_pc((FILE *)a1,( EIF_CHARACTER)a2);
 }
 
 /* KL_STANDARD_FILES.error */
-unsigned char ge405os4164 = '\0';
-T0* ge405ov4164;
+unsigned char ge347os4194 = '\0';
+T0* ge347ov4194;
 T0* T45f3(T0* C)
 {
 	T0* R = 0;
-	if (ge405os4164) {
-		return ge405ov4164;
+	if (ge347os4194) {
+		return ge347ov4194;
 	} else {
-		ge405os4164 = '\1';
-		ge405ov4164 = R;
+		ge347os4194 = '\1';
+		ge347ov4194 = R;
 	}
-	R = T73c9();
-	ge405ov4164 = R;
+	R = T73c10();
+	ge347ov4194 = R;
 	return R;
 }
 
 /* KL_STDERR_FILE.make */
-T0* T73c9(void)
+T0* T73c10(void)
 {
 	T0* C;
 	C = GE_new73(EIF_TRUE);
-	T73f14(C, GE_ms8("stderr", 6));
+	T73f15(C, GE_ms8("stderr", 6));
 	return C;
 }
 
 /* KL_STDERR_FILE.make_open_stderr */
-void T73f14(T0* C, T0* a1)
+void T73f15(T0* C, T0* a1)
 {
-	T73f18(C, a1);
+	T73f19(C, a1);
 	((T73*)(C))->a1 = (T73f6(C, (T6)(GE_int32(2))));
-	T73f19(C);
+	T73f20(C);
 }
 
 /* KL_STDERR_FILE.set_write_mode */
-void T73f19(T0* C)
+void T73f20(T0* C)
 {
 	((T73*)(C))->a3 = (T6)(GE_int32(2));
 }
@@ -27178,38 +27504,33 @@ T14 T73f6(T0* C, T6 a1)
 }
 
 /* KL_STDERR_FILE.old_make */
-void T73f18(T0* C, T0* a1)
+void T73f19(T0* C, T0* a1)
 {
 	((T73*)(C))->a2 = a1;
 	((T73*)(C))->a3 = (T6)(GE_int32(0));
+	((T73*)(C))->a4 = T17c35();
 }
 
 /* LX_LEX_PARSER.std */
 T0* T38f184(T0* C)
 {
 	T0* R = 0;
-	if (ge403os1766) {
-		return ge403ov1766;
+	if (ge345os1743) {
+		return ge345ov1743;
 	} else {
-		ge403os1766 = '\1';
-		ge403ov1766 = R;
+		ge345os1743 = '\1';
+		ge345ov1743 = R;
 	}
 	R = T45c4();
-	ge403ov1766 = R;
+	ge345ov1743 = R;
 	return R;
 }
 
 /* KL_CHARACTER_BUFFER.item */
-T2 T250f3(T0* C, T6 a1)
+T2 T247f3(T0* C, T6 a1)
 {
-	T1 t1;
 	T2 R = 0;
-	t1 = ((((T250*)(C))->a1)!=(EIF_VOID));
-	if (t1) {
-		R = (((T15*)(GE_void(((T250*)(C))->a1)))->z2[a1]);
-	} else {
-		R = (T17f9(GE_void(((T250*)(C))->a2), a1));
-	}
+	R = (((T15*)(GE_void(((T247*)(C))->a1)))->z2[a1]);
 	return R;
 }
 
@@ -27217,14 +27538,14 @@ T2 T250f3(T0* C, T6 a1)
 T0* T38f153(T0* C)
 {
 	T0* R = 0;
-	if (ge357os2757) {
-		return ge357ov2757;
+	if (ge306os2697) {
+		return ge306ov2697;
 	} else {
-		ge357os2757 = '\1';
-		ge357ov2757 = R;
+		ge306os2697 = '\1';
+		ge306ov2697 = R;
 	}
 	R = T84c4();
-	ge357ov2757 = R;
+	ge306ov2697 = R;
 	return R;
 }
 
@@ -27260,144 +27581,77 @@ void T38f350(T0* C)
 void T38f357(T0* C)
 {
 	T1 t1;
+	T6 t2;
+	T0* l1 = 0;
+	T0* l2 = 0;
+	T6 l3 = 0;
+	T0* l4 = 0;
+	T0* l5 = 0;
 	t1 = ((((T38*)(C))->a79)!=(EIF_VOID));
 	if (t1) {
-		T86f5(GE_void(((T38*)(C))->a79));
+		t2 = (T86f2(GE_void(((T38*)(C))->a79)));
+		T86f7(GE_void(((T38*)(C))->a79), l1, (T6)(GE_int32(0)), t2);
 	}
 	t1 = ((((T38*)(C))->a83)!=(EIF_VOID));
 	if (t1) {
-		T88f6(GE_void(((T38*)(C))->a83));
+		t2 = (T88f3(GE_void(((T38*)(C))->a83)));
+		T88f8(GE_void(((T38*)(C))->a83), l2, (T6)(GE_int32(0)), t2);
 	}
 	t1 = ((((T38*)(C))->a87)!=(EIF_VOID));
 	if (t1) {
-		T83f8(GE_void(((T38*)(C))->a87));
+		t2 = (T83f3(GE_void(((T38*)(C))->a87)));
+		T83f8(GE_void(((T38*)(C))->a87), l3, (T6)(GE_int32(0)), t2);
 	}
 	t1 = ((((T38*)(C))->a91)!=(EIF_VOID));
 	if (t1) {
-		T91f6(GE_void(((T38*)(C))->a91));
+		t2 = (T91f3(GE_void(((T38*)(C))->a91)));
+		T91f8(GE_void(((T38*)(C))->a91), l4, (T6)(GE_int32(0)), t2);
 	}
 	t1 = ((((T38*)(C))->a96)!=(EIF_VOID));
 	if (t1) {
-		T95f6(GE_void(((T38*)(C))->a96));
+		t2 = (T95f3(GE_void(((T38*)(C))->a96)));
+		T95f8(GE_void(((T38*)(C))->a96), l5, (T6)(GE_int32(0)), t2);
 	}
 }
 
-/* SPECIAL [LX_NFA].clear_all */
-void T95f6(T0* C)
+/* SPECIAL [LX_NFA].upper */
+T6 T95f3(T0* C)
 {
-	T6 t1;
-	T1 t2;
-	T6 l1 = 0;
-	t1 = (((T95*)(C))->z1);
-	l1 = ((T6)((t1)-((T6)(GE_int32(1)))));
-	while (1) {
-		t2 = ((T1)((l1)<((T6)(GE_int32(0)))));
-		if (t2) {
-			break;
-		}
-		T95f7(C, l1);
-		l1 = ((T6)((l1)-((T6)(GE_int32(1)))));
-	}
+	T6 R = 0;
+	R = ((T6)((((T95*)(C))->a1)-((T6)(GE_int32(1)))));
+	return R;
 }
 
-/* SPECIAL [LX_NFA].put_default */
-void T95f7(T0* C, T6 a1)
+/* SPECIAL [LX_SYMBOL_CLASS].upper */
+T6 T91f3(T0* C)
 {
-	T0* l1 = 0;
-	((T95*)(C))->z2[a1] = (l1);
+	T6 R = 0;
+	R = ((T6)((((T91*)(C))->a1)-((T6)(GE_int32(1)))));
+	return R;
 }
 
-/* SPECIAL [LX_SYMBOL_CLASS].clear_all */
-void T91f6(T0* C)
+/* SPECIAL [INTEGER_32].upper */
+T6 T83f3(T0* C)
 {
-	T6 t1;
-	T1 t2;
-	T6 l1 = 0;
-	t1 = (((T91*)(C))->z1);
-	l1 = ((T6)((t1)-((T6)(GE_int32(1)))));
-	while (1) {
-		t2 = ((T1)((l1)<((T6)(GE_int32(0)))));
-		if (t2) {
-			break;
-		}
-		T91f7(C, l1);
-		l1 = ((T6)((l1)-((T6)(GE_int32(1)))));
-	}
+	T6 R = 0;
+	R = ((T6)((((T83*)(C))->a1)-((T6)(GE_int32(1)))));
+	return R;
 }
 
-/* SPECIAL [LX_SYMBOL_CLASS].put_default */
-void T91f7(T0* C, T6 a1)
+/* SPECIAL [STRING_8].upper */
+T6 T88f3(T0* C)
 {
-	T0* l1 = 0;
-	((T91*)(C))->z2[a1] = (l1);
+	T6 R = 0;
+	R = ((T6)((((T88*)(C))->a1)-((T6)(GE_int32(1)))));
+	return R;
 }
 
-/* SPECIAL [INTEGER_32].clear_all */
-void T83f8(T0* C)
+/* SPECIAL [ANY].upper */
+T6 T86f2(T0* C)
 {
-	T6 t1;
-	T1 t2;
-	T6 l1 = 0;
-	t1 = (((T83*)(C))->z1);
-	l1 = ((T6)((t1)-((T6)(GE_int32(1)))));
-	while (1) {
-		t2 = ((T1)((l1)<((T6)(GE_int32(0)))));
-		if (t2) {
-			break;
-		}
-		T83f11(C, l1);
-		l1 = ((T6)((l1)-((T6)(GE_int32(1)))));
-	}
-}
-
-/* SPECIAL [STRING_8].clear_all */
-void T88f6(T0* C)
-{
-	T6 t1;
-	T1 t2;
-	T6 l1 = 0;
-	t1 = (((T88*)(C))->z1);
-	l1 = ((T6)((t1)-((T6)(GE_int32(1)))));
-	while (1) {
-		t2 = ((T1)((l1)<((T6)(GE_int32(0)))));
-		if (t2) {
-			break;
-		}
-		T88f7(C, l1);
-		l1 = ((T6)((l1)-((T6)(GE_int32(1)))));
-	}
-}
-
-/* SPECIAL [STRING_8].put_default */
-void T88f7(T0* C, T6 a1)
-{
-	T0* l1 = 0;
-	((T88*)(C))->z2[a1] = (l1);
-}
-
-/* SPECIAL [ANY].clear_all */
-void T86f5(T0* C)
-{
-	T6 t1;
-	T1 t2;
-	T6 l1 = 0;
-	t1 = (((T86*)(C))->z1);
-	l1 = ((T6)((t1)-((T6)(GE_int32(1)))));
-	while (1) {
-		t2 = ((T1)((l1)<((T6)(GE_int32(0)))));
-		if (t2) {
-			break;
-		}
-		T86f6(C, l1);
-		l1 = ((T6)((l1)-((T6)(GE_int32(1)))));
-	}
-}
-
-/* SPECIAL [ANY].put_default */
-void T86f6(T0* C, T6 a1)
-{
-	T0* l1 = 0;
-	((T86*)(C))->z2[a1] = (l1);
+	T6 R = 0;
+	R = ((T6)((((T86*)(C))->a1)-((T6)(GE_int32(1)))));
+	return R;
 }
 
 /* LX_LEX_PARSER.abort */
@@ -27488,7 +27742,7 @@ void T78f22(T0* C, T0* a1, T6 a2)
 /* YY_FILE_BUFFER.set_file */
 void T78f25(T0* C, T0* a1)
 {
-	((T78*)(C))->a10 = (((((T0*)(GE_void(a1)))->id==39)?T39f24(a1):((T46*)(a1))->a1));
+	((T78*)(C))->a10 = (((((T0*)(GE_void(a1)))->id==39)?T39f25(a1):((T46*)(a1))->a2));
 	T78f26(C);
 	((T78*)(C))->a9 = a1;
 }
@@ -27496,8 +27750,8 @@ void T78f25(T0* C, T0* a1)
 /* YY_FILE_BUFFER.flush */
 void T78f26(T0* C)
 {
-	T250f9(GE_void(((T78*)(C))->a1), (T2)('\000'), (T6)(GE_int32(1)));
-	T250f9(GE_void(((T78*)(C))->a1), (T2)('\000'), (T6)(GE_int32(2)));
+	T247f8(GE_void(((T78*)(C))->a1), (T2)('\000'), (T6)(GE_int32(1)));
+	T247f8(GE_void(((T78*)(C))->a1), (T2)('\000'), (T6)(GE_int32(2)));
 	((T78*)(C))->a7 = (T6)(GE_int32(0));
 	((T78*)(C))->a2 = (T6)(GE_int32(1));
 	((T78*)(C))->a3 = (T6)(GE_int32(1));
@@ -27511,12 +27765,12 @@ void T78f26(T0* C)
 T0* T78f15(T0* C, T6 a1)
 {
 	T0* R = 0;
-	R = T250c8(a1);
+	R = T247c7(a1);
 	return R;
 }
 
 /* KL_TEXT_INPUT_FILE.is_open_read */
-T1 T39f11(T0* C)
+T1 T39f20(T0* C)
 {
 	T1 R = 0;
 	R = (T39f19(C));
@@ -27541,7 +27795,7 @@ T1 T39f19(T0* C)
 }
 
 /* KL_TEXT_INPUT_FILE.open_read */
-void T39f37(T0* C)
+void T39f38(T0* C)
 {
 	GE_rescue r;
 	T1 t1;
@@ -27559,38 +27813,38 @@ GE_retry:
 	GE_last_rescue = &r;
 	t1 = ((T1)(!((T1)l1)));
 	if (t1) {
-		t1 = ((((T39*)(C))->a3)!=(ge388ov3337));
+		t1 = ((((T39*)(C))->a4)!=(ge334ov3277));
 		if (t1) {
-			((T39*)(C))->a4 = EIF_VOID;
-			((T39*)(C))->a5 = EIF_FALSE;
-			t1 = (T39f14(C));
+			((T39*)(C))->a5 = EIF_VOID;
+			((T39*)(C))->a6 = EIF_FALSE;
+			t1 = (T39f15(C));
 			if (t1) {
-				t1 = (T39f15(C));
+				t1 = (T39f16(C));
 			}
 			if (t1) {
-				T39f41(C);
+				T39f42(C);
 			}
 		}
 	} else {
-		t1 = (T39f16(C));
+		t1 = (T39f17(C));
 		t1 = ((T1)(!(t1)));
 		if (t1) {
-			T39f38(C);
+			T39f39(C);
 		}
 	}
 	GE_last_rescue = r.previous;
 }
 
 /* KL_TEXT_INPUT_FILE.is_closed */
-T1 T39f16(T0* C)
+T1 T39f17(T0* C)
 {
 	T1 R = 0;
-	R = (T39f10(C));
+	R = (T39f11(C));
 	return R;
 }
 
 /* KL_TEXT_INPUT_FILE.old_is_closed */
-T1 T39f10(T0* C)
+T1 T39f11(T0* C)
 {
 	T1 R = 0;
 	R = (((((((T39*)(C))->a1) == ((T6)(GE_int32(0)))))));
@@ -27598,42 +27852,42 @@ T1 T39f10(T0* C)
 }
 
 /* KL_TEXT_INPUT_FILE.old_open_read */
-void T39f41(T0* C)
+void T39f42(T0* C)
 {
 	T14 t1;
 	T1 t2;
-	T39f41p1(C);
-	t1 = (T39f20(C));
-	t2 = (((((((T39*)(C))->a6) == (t1)))));
+	T39f42p1(C);
+	t1 = (T39f21(C));
+	t2 = (((((((T39*)(C))->a7) == (t1)))));
 	if (t2) {
 		((T39*)(C))->a1 = (T6)(GE_int32(0));
-		((T39*)(C))->a7 = EIF_FALSE;
+		((T39*)(C))->a8 = EIF_FALSE;
 	}
 }
 
 /* KL_TEXT_INPUT_FILE.default_pointer */
-T14 T39f20(T0* C)
+T14 T39f21(T0* C)
 {
 	T14 R = 0;
 	return R;
 }
 
 /* KL_TEXT_INPUT_FILE.open_read */
-void T39f41p1(T0* C)
+void T39f42p1(T0* C)
 {
-	T131 t1;
+	T132 t1;
 	T14 t2;
 	T0* l1 = 0;
-	l1 = (T17f4(GE_void(((T39*)(C))->a3)));
-	(t1).id = 131;
+	l1 = (T17f4(GE_void(((T39*)(C))->a4)));
+	(t1).id = 132;
 	(t1).a1 = ((l1?(T14)(GE_types[((T0*)(l1))->id].is_special?(T14)((T15*)(l1))->z2:(T14)l1):(T14)0));
 	t2 = ((t1).a1);
-	((T39*)(C))->a6 = (T39f21(C, t2, (T6)(GE_int32(0))));
+	((T39*)(C))->a7 = (T39f22(C, t2, (T6)(GE_int32(0))));
 	((T39*)(C))->a1 = (T6)(GE_int32(1));
 }
 
 /* KL_TEXT_INPUT_FILE.file_open */
-T14 T39f21(T0* C, T14 a1, T6 a2)
+T14 T39f22(T0* C, T14 a1, T6 a2)
 {
 	T14 R = 0;
 	R = (T14)(EIF_POINTER )file_open((char *)a1,( int)a2);
@@ -27641,32 +27895,32 @@ T14 T39f21(T0* C, T14 a1, T6 a2)
 }
 
 /* KL_TEXT_INPUT_FILE.old_is_readable */
-T1 T39f15(T0* C)
+T1 T39f16(T0* C)
 {
 	T0* t1;
 	T1 R = 0;
-	T39f43(C);
-	t1 = (T39f23(C));
-	R = (T175f5(GE_void(t1)));
+	T39f44(C);
+	t1 = (T39f24(C));
+	R = (T177f5(GE_void(t1)));
 	return R;
 }
 
 /* UNIX_FILE_INFO.is_readable */
-T1 T175f5(T0* C)
+T1 T177f5(T0* C)
 {
-	T256 t1;
+	T254 t1;
 	T0* t2;
 	T14 t3;
 	T1 R = 0;
-	(t1).id = 256;
-	(t1).a1 = (((t2 = ((T175*)(C))->a1)?(T14)(GE_types[((T0*)(t2))->id].is_special?(T14)((T15*)(t2))->z2:(T14)((T175*)(C))->a1):(T14)0));
+	(t1).id = 254;
+	(t1).a1 = (((t2 = ((T177*)(C))->a1)?(T14)(GE_types[((T0*)(t2))->id].is_special?(T14)((T15*)(t2))->z2:(T14)((T177*)(C))->a1):(T14)0));
 	t3 = ((t1).a1);
-	R = (T175f3(C, t3, (T6)(GE_int32(0))));
+	R = (T177f3(C, t3, (T6)(GE_int32(0))));
 	return R;
 }
 
 /* UNIX_FILE_INFO.file_eaccess */
-T1 T175f3(T0* C, T14 a1, T6 a2)
+T1 T177f3(T0* C, T14 a1, T6 a2)
 {
 	T1 R = 0;
 	R = (T1)EIF_TEST((EIF_BOOLEAN )file_eaccess((struct stat *)a1,( int)a2));
@@ -27674,41 +27928,41 @@ T1 T175f3(T0* C, T14 a1, T6 a2)
 }
 
 /* KL_TEXT_INPUT_FILE.buffered_file_info */
-unsigned char ge641os3553 = '\0';
-T0* ge641ov3553;
-T0* T39f23(T0* C)
+unsigned char ge592os3493 = '\0';
+T0* ge592ov3493;
+T0* T39f24(T0* C)
 {
 	T0* R = 0;
-	if (ge641os3553) {
-		return ge641ov3553;
+	if (ge592os3493) {
+		return ge592ov3493;
 	} else {
-		ge641os3553 = '\1';
-		ge641ov3553 = R;
+		ge592os3493 = '\1';
+		ge592ov3493 = R;
 	}
-	R = T175c6();
-	ge641ov3553 = R;
+	R = T177c6();
+	ge592ov3493 = R;
 	return R;
 }
 
 /* UNIX_FILE_INFO.make */
-T0* T175c6(void)
+T0* T177c6(void)
 {
 	T0* C;
 	T6 t1;
-	C = GE_new175(EIF_TRUE);
-	t1 = (T175f4(C));
-	T175f8(C, t1);
+	C = GE_new177(EIF_TRUE);
+	t1 = (T177f4(C));
+	T177f8(C, t1);
 	return C;
 }
 
 /* UNIX_FILE_INFO.make_buffered_file_info */
-void T175f8(T0* C, T6 a1)
+void T177f8(T0* C, T6 a1)
 {
-	((T175*)(C))->a1 = T15c10(a1);
+	((T177*)(C))->a1 = T15c10(a1);
 }
 
 /* UNIX_FILE_INFO.stat_size */
-T6 T175f4(T0* C)
+T6 T177f4(T0* C)
 {
 	T6 R = 0;
 	R = (T6)stat_size();
@@ -27716,56 +27970,56 @@ T6 T175f4(T0* C)
 }
 
 /* KL_TEXT_INPUT_FILE.set_buffer */
-void T39f43(T0* C)
+void T39f44(T0* C)
 {
 	T0* t1;
-	t1 = (T39f23(C));
-	T175f7(GE_void(t1), ((T39*)(C))->a3);
+	t1 = (T39f24(C));
+	T177f7(GE_void(t1), ((T39*)(C))->a4);
 }
 
 /* UNIX_FILE_INFO.update */
-void T175f7(T0* C, T0* a1)
+void T177f7(T0* C, T0* a1)
 {
-	T131 t1;
+	T132 t1;
 	T14 t2;
-	T256 t3;
+	T254 t3;
 	T0* t4;
 	T14 t5;
 	T0* l1 = 0;
 	l1 = (T17f4(GE_void(a1)));
-	(t1).id = 131;
+	(t1).id = 132;
 	(t1).a1 = ((l1?(T14)(GE_types[((T0*)(l1))->id].is_special?(T14)((T15*)(l1))->z2:(T14)l1):(T14)0));
 	t2 = ((t1).a1);
-	(t3).id = 256;
-	(t3).a1 = (((t4 = ((T175*)(C))->a1)?(T14)(GE_types[((T0*)(t4))->id].is_special?(T14)((T15*)(t4))->z2:(T14)((T175*)(C))->a1):(T14)0));
+	(t3).id = 254;
+	(t3).a1 = (((t4 = ((T177*)(C))->a1)?(T14)(GE_types[((T0*)(t4))->id].is_special?(T14)((T15*)(t4))->z2:(T14)((T177*)(C))->a1):(T14)0));
 	t5 = ((t3).a1);
-	T175f9(C, t2, t5);
-	((T175*)(C))->a2 = a1;
+	T177f9(C, t2, t5);
+	((T177*)(C))->a2 = a1;
 }
 
 /* UNIX_FILE_INFO.file_stat */
-void T175f9(T0* C, T14 a1, T14 a2)
+void T177f9(T0* C, T14 a1, T14 a2)
 {
 	file_stat((char *)a1,( struct stat *)a2);
 }
 
 /* KL_TEXT_INPUT_FILE.old_exists */
-T1 T39f14(T0* C)
+T1 T39f15(T0* C)
 {
-	T131 t1;
+	T132 t1;
 	T14 t2;
 	T1 R = 0;
 	T0* l1 = 0;
-	l1 = (T17f4(GE_void(((T39*)(C))->a3)));
-	(t1).id = 131;
+	l1 = (T17f4(GE_void(((T39*)(C))->a4)));
+	(t1).id = 132;
 	(t1).a1 = ((l1?(T14)(GE_types[((T0*)(l1))->id].is_special?(T14)((T15*)(l1))->z2:(T14)l1):(T14)0));
 	t2 = ((t1).a1);
-	R = (T39f22(C, t2));
+	R = (T39f23(C, t2));
 	return R;
 }
 
 /* KL_TEXT_INPUT_FILE.file_exists */
-T1 T39f22(T0* C, T14 a1)
+T1 T39f23(T0* C, T14 a1)
 {
 	T1 R = 0;
 	R = (T1)EIF_TEST((EIF_BOOLEAN )file_exists((char *)a1));
@@ -27773,45 +28027,53 @@ T1 T39f22(T0* C, T14 a1)
 }
 
 /* KL_TEXT_INPUT_FILE.make */
-T0* T39c35(T0* a1)
+T0* T39c36(T0* a1)
 {
 	T0* C;
-	T6 t1;
-	T1 t2;
-	T0* t3;
 	C = GE_new39(EIF_TRUE);
-	((T39*)(C))->a2 = a1;
-	t1 = (((T17*)(GE_void(a1)))->a2);
-	t2 = (T6f1(&t1, (T6)(GE_int32(0))));
-	if (t2) {
-		t3 = (T39f25(C));
-		t3 = (T69f2(GE_void(t3), a1));
-		T39f39(C, t3);
-	} else {
-		T39f39(C, ge388ov3337);
-	}
+	((T39*)(C))->a2 = T17c35();
+	T39f36p1(C, a1);
 	return C;
 }
 
-/* KL_TEXT_INPUT_FILE.old_make */
-void T39f39(T0* C, T0* a1)
+/* KL_TEXT_INPUT_FILE.make */
+void T39f36p1(T0* C, T0* a1)
 {
+	T6 t1;
+	T1 t2;
+	T0* t3;
 	((T39*)(C))->a3 = a1;
+	t1 = (((T17*)(GE_void(a1)))->a2);
+	t2 = (T6f1(&t1, (T6)(GE_int32(0))));
+	if (t2) {
+		t3 = (T39f26(C));
+		t3 = (T69f2(GE_void(t3), a1));
+		T39f40(C, t3);
+	} else {
+		T39f40(C, ge334ov3277);
+	}
+}
+
+/* KL_TEXT_INPUT_FILE.old_make */
+void T39f40(T0* C, T0* a1)
+{
+	((T39*)(C))->a4 = a1;
 	((T39*)(C))->a1 = (T6)(GE_int32(0));
+	((T39*)(C))->a2 = T17c35();
 }
 
 /* KL_TEXT_INPUT_FILE.string_ */
-T0* T39f25(T0* C)
+T0* T39f26(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
@@ -27829,7 +28091,7 @@ T0* T38c264(T0* a1, T0* a2)
 	T38f267(C, a1, a2);
 	T38f268(C);
 	((T38*)(C))->a2 = T48c15((T6)(GE_int32(10)));
-	((T38*)(C))->a3 = T75c18((T6)(GE_int32(40)));
+	((T38*)(C))->a3 = T75c20((T6)(GE_int32(40)));
 	((T38*)(C))->a4 = T76c2();
 	((T38*)(C))->a5 = T77c8((T6)(GE_int32(10)));
 	((T38*)(C))->a6 = T77c8((T6)(GE_int32(10)));
@@ -27862,80 +28124,107 @@ T0* T76c2(void)
 }
 
 /* LX_START_CONDITIONS.make */
-void T75f18(T0* C, T6 a1)
+void T75f20(T0* C, T6 a1)
 {
 	T6 t1;
-	((T75*)(C))->a3 = T197c3();
+	T0* t2;
+	((T75*)(C))->a3 = T200c3();
 	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
-	((T75*)(C))->a2 = (T197f1(GE_void(((T75*)(C))->a3), t1));
+	((T75*)(C))->a2 = (T200f1(GE_void(((T75*)(C))->a3), t1));
 	((T75*)(C))->a4 = a1;
-	((T75*)(C))->a5 = (T75f11(C));
+	t2 = (T75f12(C));
+	T75f31(C, t2);
 }
 
 /* LX_START_CONDITIONS.make */
-T0* T75c18(T6 a1)
+T0* T75c20(T6 a1)
 {
 	T0* C;
 	T6 t1;
+	T0* t2;
 	C = GE_new75(EIF_TRUE);
-	((T75*)(C))->a3 = T197c3();
+	((T75*)(C))->a3 = T200c3();
 	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
-	((T75*)(C))->a2 = (T197f1(GE_void(((T75*)(C))->a3), t1));
+	((T75*)(C))->a2 = (T200f1(GE_void(((T75*)(C))->a3), t1));
 	((T75*)(C))->a4 = a1;
-	((T75*)(C))->a5 = (T75f11(C));
+	t2 = (T75f12(C));
+	T75f31(C, t2);
 	return C;
 }
 
+/* LX_START_CONDITIONS.set_internal_cursor */
+void T75f31(T0* C, T0* a1)
+{
+	((T75*)(C))->a5 = a1;
+}
+
 /* LX_START_CONDITIONS.new_cursor */
-T0* T75f11(T0* C)
+T0* T75f12(T0* C)
 {
 	T0* R = 0;
-	R = T198c4(C);
+	R = T201c4(C);
 	return R;
 }
 
 /* DS_ARRAYED_LIST_CURSOR [LX_START_CONDITION].make */
-T0* T198c4(T0* a1)
+T0* T201c4(T0* a1)
 {
 	T0* C;
-	C = GE_new198(EIF_TRUE);
-	((T198*)(C))->a3 = a1;
-	((T198*)(C))->a2 = (T6)(GE_int32(0));
+	C = GE_new201(EIF_TRUE);
+	((T201*)(C))->a3 = a1;
+	((T201*)(C))->a2 = (T6)(GE_int32(0));
 	return C;
 }
 
 /* KL_SPECIAL_ROUTINES [LX_START_CONDITION].make */
-T0* T197f1(T0* C, T6 a1)
+T0* T200f1(T0* C, T6 a1)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	l1 = T269c2(a1);
-	R = (((T269*)(GE_void(l1)))->a1);
+	R = T198c5(l1, a1);
 	return R;
 }
 
-/* TO_SPECIAL [LX_START_CONDITION].make_area */
-T0* T269c2(T6 a1)
+/* SPECIAL [LX_START_CONDITION].make_filled */
+T0* T198c5(T0* a1, T6 a2)
 {
 	T0* C;
-	C = GE_new269(EIF_TRUE);
-	((T269*)(C))->a1 = T196c4(a1);
+	T6 t1;
+	C = GE_new198(a2, EIF_TRUE);
+	T198f7(C, a2);
+	t1 = ((T6)((a2)-((T6)(GE_int32(1)))));
+	T198f8(C, a1, (T6)(GE_int32(0)), t1);
 	return C;
+}
+
+/* SPECIAL [LX_START_CONDITION].fill_with */
+void T198f8(T0* C, T0* a1, T6 a2, T6 a3)
+{
+	T1 t1;
+	T6 l1 = 0;
+	T6 l2 = 0;
+	l1 = a2;
+	l2 = ((T6)((a3)+((T6)(GE_int32(1)))));
+	while (1) {
+		t1 = (((((l1) == (l2)))));
+		if (t1) {
+			break;
+		}
+		((T198*)(C))->z2[l1] = (a1);
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
 }
 
 /* SPECIAL [LX_START_CONDITION].make */
-T0* T196c4(T6 a1)
+void T198f7(T0* C, T6 a1)
 {
-	T0* C;
-	C = GE_new196(a1, EIF_TRUE);
-	return C;
 }
 
 /* KL_SPECIAL_ROUTINES [LX_START_CONDITION].default_create */
-T0* T197c3(void)
+T0* T200c3(void)
 {
 	T0* C;
-	C = GE_new197(EIF_TRUE);
+	C = GE_new200(EIF_TRUE);
 	return C;
 }
 
@@ -27965,19 +28254,19 @@ void T38f273(T0* C)
 }
 
 /* LX_LEX_PARSER.yycheck_template */
-unsigned char ge187os2540 = '\0';
-T0* ge187ov2540;
+unsigned char ge139os2481 = '\0';
+T0* ge139ov2481;
 T0* T38f139(T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	if (ge187os2540) {
-		return ge187ov2540;
+	if (ge139os2481) {
+		return ge139ov2481;
 	} else {
-		ge187os2540 = '\1';
-		ge187ov2540 = R;
+		ge139os2481 = '\1';
+		ge139ov2481 = R;
 	}
-	t1 = GE_ma143((T6)82,(T6)82,
+	t1 = GE_ma144((T6)82,(T6)82,
 (T6)(GE_int32(30)),
 (T6)(GE_int32(1)),
 (T6)(GE_int32(10)),
@@ -28061,7 +28350,7 @@ T0* T38f139(T0* C)
 (T6)(GE_int32(20)),
 (T6)(GE_int32(2147483647)));
 	R = (T38f255(C, t1));
-	ge187ov2540 = R;
+	ge139ov2481 = R;
 	return R;
 }
 
@@ -28079,24 +28368,24 @@ T0* T38f255(T0* C, T0* a1)
 T0* T84f3(T0* C, T0* a1)
 {
 	T0* R = 0;
-	R = (((T143*)(GE_void(a1)))->a1);
+	R = (((T144*)(GE_void(a1)))->a1);
 	return R;
 }
 
 /* LX_LEX_PARSER.yytable_template */
-unsigned char ge187os2539 = '\0';
-T0* ge187ov2539;
+unsigned char ge139os2480 = '\0';
+T0* ge139ov2480;
 T0* T38f138(T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	if (ge187os2539) {
-		return ge187ov2539;
+	if (ge139os2480) {
+		return ge139ov2480;
 	} else {
-		ge187os2539 = '\1';
-		ge187ov2539 = R;
+		ge139os2480 = '\1';
+		ge139ov2480 = R;
 	}
-	t1 = GE_ma143((T6)82,(T6)82,
+	t1 = GE_ma144((T6)82,(T6)82,
 (T6)(GE_int32(50)),
 (T6)(GE_int32(25)),
 (T6)(GE_int32(66)),
@@ -28180,24 +28469,24 @@ T0* T38f138(T0* C)
 (T6)(GE_int32(41)),
 (T6)(GE_int32(2147483647)));
 	R = (T38f255(C, t1));
-	ge187ov2539 = R;
+	ge139ov2480 = R;
 	return R;
 }
 
 /* LX_LEX_PARSER.yypgoto_template */
-unsigned char ge187os2538 = '\0';
-T0* ge187ov2538;
+unsigned char ge139os2479 = '\0';
+T0* ge139ov2479;
 T0* T38f136(T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	if (ge187os2538) {
-		return ge187ov2538;
+	if (ge139os2479) {
+		return ge139ov2479;
 	} else {
-		ge187os2538 = '\1';
-		ge187ov2538 = R;
+		ge139os2479 = '\1';
+		ge139ov2479 = R;
 	}
-	t1 = GE_ma143((T6)21,(T6)21,
+	t1 = GE_ma144((T6)21,(T6)21,
 (T6)(GE_int32(-32768)),
 (T6)(GE_int32(-32768)),
 (T6)(GE_int32(60)),
@@ -28220,24 +28509,24 @@ T0* T38f136(T0* C)
 (T6)(GE_int32(-32768)),
 (T6)(GE_int32(2147483647)));
 	R = (T38f255(C, t1));
-	ge187ov2538 = R;
+	ge139ov2479 = R;
 	return R;
 }
 
 /* LX_LEX_PARSER.yypact_template */
-unsigned char ge187os2537 = '\0';
-T0* ge187ov2537;
+unsigned char ge139os2478 = '\0';
+T0* ge139ov2478;
 T0* T38f135(T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	if (ge187os2537) {
-		return ge187ov2537;
+	if (ge139os2478) {
+		return ge139ov2478;
 	} else {
-		ge187os2537 = '\1';
-		ge187ov2537 = R;
+		ge139os2478 = '\1';
+		ge139ov2478 = R;
 	}
-	t1 = GE_ma143((T6)84,(T6)84,
+	t1 = GE_ma144((T6)84,(T6)84,
 (T6)(GE_int32(65)),
 (T6)(GE_int32(-32768)),
 (T6)(GE_int32(-32768)),
@@ -28323,24 +28612,24 @@ T0* T38f135(T0* C)
 (T6)(GE_int32(-32768)),
 (T6)(GE_int32(2147483647)));
 	R = (T38f255(C, t1));
-	ge187ov2537 = R;
+	ge139ov2478 = R;
 	return R;
 }
 
 /* LX_LEX_PARSER.yydefgoto_template */
-unsigned char ge187os2536 = '\0';
-T0* ge187ov2536;
+unsigned char ge139os2477 = '\0';
+T0* ge139ov2477;
 T0* T38f134(T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	if (ge187os2536) {
-		return ge187ov2536;
+	if (ge139os2477) {
+		return ge139ov2477;
 	} else {
-		ge187os2536 = '\1';
-		ge187ov2536 = R;
+		ge139os2477 = '\1';
+		ge139ov2477 = R;
 	}
-	t1 = GE_ma143((T6)21,(T6)21,
+	t1 = GE_ma144((T6)21,(T6)21,
 (T6)(GE_int32(5)),
 (T6)(GE_int32(6)),
 (T6)(GE_int32(26)),
@@ -28363,24 +28652,24 @@ T0* T38f134(T0* C)
 (T6)(GE_int32(67)),
 (T6)(GE_int32(2147483647)));
 	R = (T38f255(C, t1));
-	ge187ov2536 = R;
+	ge139ov2477 = R;
 	return R;
 }
 
 /* LX_LEX_PARSER.yydefact_template */
-unsigned char ge187os2535 = '\0';
-T0* ge187ov2535;
+unsigned char ge139os2476 = '\0';
+T0* ge139ov2476;
 T0* T38f131(T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	if (ge187os2535) {
-		return ge187ov2535;
+	if (ge139os2476) {
+		return ge139ov2476;
 	} else {
-		ge187os2535 = '\1';
-		ge187ov2535 = R;
+		ge139os2476 = '\1';
+		ge139ov2476 = R;
 	}
-	t1 = GE_ma143((T6)84,(T6)84,
+	t1 = GE_ma144((T6)84,(T6)84,
 (T6)(GE_int32(0)),
 (T6)(GE_int32(2)),
 (T6)(GE_int32(3)),
@@ -28466,24 +28755,24 @@ T0* T38f131(T0* C)
 (T6)(GE_int32(0)),
 (T6)(GE_int32(2147483647)));
 	R = (T38f255(C, t1));
-	ge187ov2535 = R;
+	ge139ov2476 = R;
 	return R;
 }
 
 /* LX_LEX_PARSER.yytypes2_template */
-unsigned char ge187os2534 = '\0';
-T0* ge187ov2534;
+unsigned char ge139os2475 = '\0';
+T0* ge139ov2475;
 T0* T38f125(T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	if (ge187os2534) {
-		return ge187ov2534;
+	if (ge139os2475) {
+		return ge139ov2475;
 	} else {
-		ge187os2534 = '\1';
-		ge187ov2534 = R;
+		ge139os2475 = '\1';
+		ge139ov2475 = R;
 	}
-	t1 = GE_ma143((T6)32,(T6)32,
+	t1 = GE_ma144((T6)32,(T6)32,
 (T6)(GE_int32(1)),
 (T6)(GE_int32(1)),
 (T6)(GE_int32(1)),
@@ -28517,24 +28806,24 @@ T0* T38f125(T0* C)
 (T6)(GE_int32(1)),
 (T6)(GE_int32(2147483647)));
 	R = (T38f255(C, t1));
-	ge187ov2534 = R;
+	ge139ov2475 = R;
 	return R;
 }
 
 /* LX_LEX_PARSER.yytypes1_template */
-unsigned char ge187os2533 = '\0';
-T0* ge187ov2533;
+unsigned char ge139os2474 = '\0';
+T0* ge139ov2474;
 T0* T38f123(T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	if (ge187os2533) {
-		return ge187ov2533;
+	if (ge139os2474) {
+		return ge139ov2474;
 	} else {
-		ge187os2533 = '\1';
-		ge187ov2533 = R;
+		ge139os2474 = '\1';
+		ge139ov2474 = R;
 	}
-	t1 = GE_ma143((T6)84,(T6)84,
+	t1 = GE_ma144((T6)84,(T6)84,
 (T6)(GE_int32(1)),
 (T6)(GE_int32(1)),
 (T6)(GE_int32(1)),
@@ -28620,24 +28909,24 @@ T0* T38f123(T0* C)
 (T6)(GE_int32(1)),
 (T6)(GE_int32(2147483647)));
 	R = (T38f255(C, t1));
-	ge187ov2533 = R;
+	ge139ov2474 = R;
 	return R;
 }
 
 /* LX_LEX_PARSER.yyr1_template */
-unsigned char ge187os2532 = '\0';
-T0* ge187ov2532;
+unsigned char ge139os2473 = '\0';
+T0* ge139ov2473;
 T0* T38f118(T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	if (ge187os2532) {
-		return ge187ov2532;
+	if (ge139os2473) {
+		return ge139ov2473;
 	} else {
-		ge187os2532 = '\1';
-		ge187ov2532 = R;
+		ge139os2473 = '\1';
+		ge139ov2473 = R;
 	}
-	t1 = GE_ma143((T6)58,(T6)58,
+	t1 = GE_ma144((T6)58,(T6)58,
 (T6)(GE_int32(0)),
 (T6)(GE_int32(42)),
 (T6)(GE_int32(43)),
@@ -28697,24 +28986,24 @@ T0* T38f118(T0* C)
 (T6)(GE_int32(46)),
 (T6)(GE_int32(2147483647)));
 	R = (T38f255(C, t1));
-	ge187ov2532 = R;
+	ge139ov2473 = R;
 	return R;
 }
 
 /* LX_LEX_PARSER.yytranslate_template */
-unsigned char ge187os2531 = '\0';
-T0* ge187ov2531;
+unsigned char ge139os2472 = '\0';
+T0* ge139ov2472;
 T0* T38f117(T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	if (ge187os2531) {
-		return ge187ov2531;
+	if (ge139os2472) {
+		return ge139ov2472;
 	} else {
-		ge187os2531 = '\1';
-		ge187ov2531 = R;
+		ge139os2472 = '\1';
+		ge139ov2472 = R;
 	}
-	t1 = GE_ma143((T6)268,(T6)268,
+	t1 = GE_ma144((T6)268,(T6)268,
 (T6)(GE_int32(0)),
 (T6)(GE_int32(2)),
 (T6)(GE_int32(2)),
@@ -28984,7 +29273,7 @@ T0* T38f117(T0* C)
 (T6)(GE_int32(12)),
 (T6)(GE_int32(2147483647)));
 	R = (T38f255(C, t1));
-	ge187ov2531 = R;
+	ge139ov2472 = R;
 	return R;
 }
 
@@ -29015,13 +29304,13 @@ void T38f267(T0* C, T0* a1, T0* a2)
 void T82f44(T0* C, T0* a1)
 {
 	((T82*)(C))->a4 = a1;
-	T202f6(GE_void(((T82*)(C))->a5), a1);
+	T205f6(GE_void(((T82*)(C))->a5), a1);
 }
 
 /* DS_SPARSE_TABLE_KEYS [LX_SYMBOL_CLASS, STRING_8].internal_set_equality_tester */
-void T202f6(T0* C, T0* a1)
+void T205f6(T0* C, T0* a1)
 {
-	((T202*)(C))->a2 = a1;
+	((T205*)(C))->a2 = a1;
 }
 
 /* DS_HASH_TABLE [LX_SYMBOL_CLASS, STRING_8].make_map */
@@ -29039,37 +29328,45 @@ void T82f49(T0* C, T6 a1, T0* a2, T0* a3)
 	((T82*)(C))->a13 = a2;
 	((T82*)(C))->a4 = a3;
 	T82f56(C, a1);
-	((T82*)(C))->a5 = T202c5(C);
+	((T82*)(C))->a5 = T205c5(C);
 }
 
 /* DS_SPARSE_TABLE_KEYS [LX_SYMBOL_CLASS, STRING_8].make */
-T0* T202c5(T0* a1)
+T0* T205c5(T0* a1)
 {
 	T0* C;
-	C = GE_new202(EIF_TRUE);
-	((T202*)(C))->a1 = a1;
-	((T202*)(C))->a2 = (((T82*)(GE_void(((T202*)(C))->a1)))->a4);
-	((T202*)(C))->a3 = (T202f4(C));
+	T0* t1;
+	C = GE_new205(EIF_TRUE);
+	((T205*)(C))->a1 = a1;
+	((T205*)(C))->a2 = (((T82*)(GE_void(((T205*)(C))->a1)))->a4);
+	t1 = (T205f4(C));
+	T205f7(C, t1);
 	return C;
 }
 
+/* DS_SPARSE_TABLE_KEYS [LX_SYMBOL_CLASS, STRING_8].set_internal_cursor */
+void T205f7(T0* C, T0* a1)
+{
+	((T205*)(C))->a3 = a1;
+}
+
 /* DS_SPARSE_TABLE_KEYS [LX_SYMBOL_CLASS, STRING_8].new_cursor */
-T0* T202f4(T0* C)
+T0* T205f4(T0* C)
 {
 	T0* R = 0;
-	R = T271c3(C);
+	R = T268c3(C);
 	return R;
 }
 
 /* DS_SPARSE_TABLE_KEYS_CURSOR [LX_SYMBOL_CLASS, STRING_8].make */
-T0* T271c3(T0* a1)
+T0* T268c3(T0* a1)
 {
 	T0* C;
 	T0* t1;
-	C = GE_new271(EIF_TRUE);
-	((T271*)(C))->a1 = a1;
-	t1 = (((T202*)(GE_void(((T271*)(C))->a1)))->a1);
-	((T271*)(C))->a2 = (T82f35(GE_void(t1)));
+	C = GE_new268(EIF_TRUE);
+	((T268*)(C))->a1 = a1;
+	t1 = (((T205*)(GE_void(((T268*)(C))->a1)))->a1);
+	((T268*)(C))->a2 = (T82f35(GE_void(t1)));
 	return C;
 }
 
@@ -29077,6 +29374,7 @@ T0* T271c3(T0* a1)
 void T82f56(T0* C, T6 a1)
 {
 	T6 t1;
+	T0* t2;
 	((T82*)(C))->a7 = a1;
 	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
 	T82f61(C, t1);
@@ -29091,14 +29389,21 @@ void T82f56(T0* C, T6 a1)
 	((T82*)(C))->a9 = (T6)(GE_int32(0));
 	((T82*)(C))->a1 = (T6)(GE_int32(0));
 	T82f50(C);
-	((T82*)(C))->a17 = (T82f35(C));
+	t2 = (T82f35(C));
+	T82f65(C, t2);
+}
+
+/* DS_HASH_TABLE [LX_SYMBOL_CLASS, STRING_8].set_internal_cursor */
+void T82f65(T0* C, T0* a1)
+{
+	((T82*)(C))->a19 = a1;
 }
 
 /* DS_HASH_TABLE [LX_SYMBOL_CLASS, STRING_8].make_slots */
 void T82f64(T0* C, T6 a1)
 {
 	T0* t1;
-	t1 = (T82f33(C));
+	t1 = (T82f32(C));
 	((T82*)(C))->a15 = (T84f1(GE_void(t1), a1));
 }
 
@@ -29106,51 +29411,51 @@ void T82f64(T0* C, T6 a1)
 void T82f63(T0* C, T6 a1)
 {
 	T0* t1;
-	t1 = (T82f33(C));
+	t1 = (T82f32(C));
 	((T82*)(C))->a14 = (T84f1(GE_void(t1), a1));
 }
 
 /* DS_HASH_TABLE [LX_SYMBOL_CLASS, STRING_8].make_key_storage */
 void T82f62(T0* C, T6 a1)
 {
-	((T82*)(C))->a19 = T89c3();
-	((T82*)(C))->a16 = (T89f1(GE_void(((T82*)(C))->a19), a1));
+	((T82*)(C))->a18 = T89c3();
+	((T82*)(C))->a16 = (T89f1(GE_void(((T82*)(C))->a18), a1));
 }
 
 /* DS_HASH_TABLE [LX_SYMBOL_CLASS, STRING_8].make_item_storage */
 void T82f61(T0* C, T6 a1)
 {
-	((T82*)(C))->a18 = T92c3();
-	((T82*)(C))->a3 = (T92f1(GE_void(((T82*)(C))->a18), a1));
+	((T82*)(C))->a17 = T92c3();
+	((T82*)(C))->a3 = (T92f1(GE_void(((T82*)(C))->a17), a1));
 }
 
 /* DS_HASH_TABLE [STRING_8, STRING_8].set_key_equality_tester */
 void T80f37(T0* C, T0* a1)
 {
 	((T80*)(C))->a3 = a1;
-	T199f6(GE_void(((T80*)(C))->a4), a1);
+	T202f6(GE_void(((T80*)(C))->a4), a1);
 }
 
 /* DS_SPARSE_TABLE_KEYS [STRING_8, STRING_8].internal_set_equality_tester */
-void T199f6(T0* C, T0* a1)
+void T202f6(T0* C, T0* a1)
 {
-	((T199*)(C))->a2 = a1;
+	((T202*)(C))->a2 = a1;
 }
 
 /* LX_LEX_PARSER.string_equality_tester */
-unsigned char ge362os3043 = '\0';
-T0* ge362ov3043;
+unsigned char ge309os2983 = '\0';
+T0* ge309ov2983;
 T0* T38f121(T0* C)
 {
 	T0* R = 0;
-	if (ge362os3043) {
-		return ge362ov3043;
+	if (ge309os2983) {
+		return ge309ov2983;
 	} else {
-		ge362os3043 = '\1';
-		ge362ov3043 = R;
+		ge309os2983 = '\1';
+		ge309ov2983 = R;
 	}
 	R = T81c2();
-	ge362ov3043 = R;
+	ge309ov2983 = R;
 	return R;
 }
 
@@ -29177,55 +29482,63 @@ void T80f40(T0* C, T6 a1, T0* a2, T0* a3)
 	((T80*)(C))->a12 = a2;
 	((T80*)(C))->a3 = a3;
 	T80f47(C, a1);
-	((T80*)(C))->a4 = T199c5(C);
+	((T80*)(C))->a4 = T202c5(C);
 }
 
 /* DS_SPARSE_TABLE_KEYS [STRING_8, STRING_8].make */
-T0* T199c5(T0* a1)
+T0* T202c5(T0* a1)
 {
 	T0* C;
-	C = GE_new199(EIF_TRUE);
-	((T199*)(C))->a1 = a1;
-	((T199*)(C))->a2 = (((T80*)(GE_void(((T199*)(C))->a1)))->a3);
-	((T199*)(C))->a3 = (T199f4(C));
+	T0* t1;
+	C = GE_new202(EIF_TRUE);
+	((T202*)(C))->a1 = a1;
+	((T202*)(C))->a2 = (((T80*)(GE_void(((T202*)(C))->a1)))->a3);
+	t1 = (T202f4(C));
+	T202f7(C, t1);
 	return C;
 }
 
+/* DS_SPARSE_TABLE_KEYS [STRING_8, STRING_8].set_internal_cursor */
+void T202f7(T0* C, T0* a1)
+{
+	((T202*)(C))->a3 = a1;
+}
+
 /* DS_SPARSE_TABLE_KEYS [STRING_8, STRING_8].new_cursor */
-T0* T199f4(T0* C)
+T0* T202f4(T0* C)
 {
 	T0* R = 0;
-	R = T270c3(C);
+	R = T267c3(C);
 	return R;
 }
 
 /* DS_SPARSE_TABLE_KEYS_CURSOR [STRING_8, STRING_8].make */
-T0* T270c3(T0* a1)
+T0* T267c3(T0* a1)
 {
 	T0* C;
 	T0* t1;
-	C = GE_new270(EIF_TRUE);
-	((T270*)(C))->a1 = a1;
-	t1 = (((T199*)(GE_void(((T270*)(C))->a1)))->a1);
-	((T270*)(C))->a2 = (T80f30(GE_void(t1)));
+	C = GE_new267(EIF_TRUE);
+	((T267*)(C))->a1 = a1;
+	t1 = (((T202*)(GE_void(((T267*)(C))->a1)))->a1);
+	((T267*)(C))->a2 = (T80f29(GE_void(t1)));
 	return C;
 }
 
 /* DS_HASH_TABLE [STRING_8, STRING_8].new_cursor */
-T0* T80f30(T0* C)
+T0* T80f29(T0* C)
 {
 	T0* R = 0;
-	R = T201c3(C);
+	R = T204c3(C);
 	return R;
 }
 
 /* DS_HASH_TABLE_CURSOR [STRING_8, STRING_8].make */
-T0* T201c3(T0* a1)
+T0* T204c3(T0* a1)
 {
 	T0* C;
-	C = GE_new201(EIF_TRUE);
-	((T201*)(C))->a1 = a1;
-	((T201*)(C))->a2 = ((T6)(GE_int32(-1)));
+	C = GE_new204(EIF_TRUE);
+	((T204*)(C))->a1 = a1;
+	((T204*)(C))->a2 = ((T6)(GE_int32(-1)));
 	return C;
 }
 
@@ -29233,6 +29546,7 @@ T0* T201c3(T0* a1)
 void T80f47(T0* C, T6 a1)
 {
 	T6 t1;
+	T0* t2;
 	((T80*)(C))->a6 = a1;
 	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
 	T80f52(C, t1);
@@ -29247,14 +29561,21 @@ void T80f47(T0* C, T6 a1)
 	((T80*)(C))->a8 = (T6)(GE_int32(0));
 	((T80*)(C))->a1 = (T6)(GE_int32(0));
 	T80f41(C);
-	((T80*)(C))->a17 = (T80f30(C));
+	t2 = (T80f29(C));
+	T80f56(C, t2);
+}
+
+/* DS_HASH_TABLE [STRING_8, STRING_8].set_internal_cursor */
+void T80f56(T0* C, T0* a1)
+{
+	((T80*)(C))->a19 = a1;
 }
 
 /* DS_HASH_TABLE [STRING_8, STRING_8].make_slots */
 void T80f55(T0* C, T6 a1)
 {
 	T0* t1;
-	t1 = (T80f31(C));
+	t1 = (T80f30(C));
 	((T80*)(C))->a15 = (T84f1(GE_void(t1), a1));
 }
 
@@ -29262,22 +29583,22 @@ void T80f55(T0* C, T6 a1)
 void T80f54(T0* C, T6 a1)
 {
 	T0* t1;
-	t1 = (T80f31(C));
+	t1 = (T80f30(C));
 	((T80*)(C))->a14 = (T84f1(GE_void(t1), a1));
 }
 
 /* DS_HASH_TABLE [STRING_8, STRING_8].make_key_storage */
 void T80f53(T0* C, T6 a1)
 {
-	((T80*)(C))->a19 = T89c3();
-	((T80*)(C))->a16 = (T89f1(GE_void(((T80*)(C))->a19), a1));
+	((T80*)(C))->a18 = T89c3();
+	((T80*)(C))->a16 = (T89f1(GE_void(((T80*)(C))->a18), a1));
 }
 
 /* DS_HASH_TABLE [STRING_8, STRING_8].make_item_storage */
 void T80f52(T0* C, T6 a1)
 {
-	((T80*)(C))->a18 = T89c3();
-	((T80*)(C))->a2 = (T89f1(GE_void(((T80*)(C))->a18), a1));
+	((T80*)(C))->a17 = T89c3();
+	((T80*)(C))->a2 = (T89f1(GE_void(((T80*)(C))->a17), a1));
 }
 
 /* LX_LEX_PARSER.make_with_buffer */
@@ -29305,7 +29626,7 @@ void T38f285(T0* C)
 	if (EIF_FALSE) {
 		t1 = (T38f153(C));
 		t2 = (((((T0*)(GE_void(((T38*)(C))->a18)))->id==78)?((T78*)(((T38*)(C))->a18))->a1:((T79*)(((T38*)(C))->a18))->a1));
-		t3 = (T250f4(GE_void(t2)));
+		t3 = (T247f4(GE_void(t2)));
 		t3 = ((T6)((t3)+((T6)(GE_int32(1)))));
 		((T38*)(C))->a58 = (T84f1(GE_void(t1), t3));
 	}
@@ -29318,25 +29639,25 @@ void T38f319(T0* C)
 	((T38*)(C))->a66 = (T38f237(C));
 	((T38*)(C))->a67 = (T38f238(C));
 	((T38*)(C))->a68 = (T38f239(C));
-	((T38*)(C))->a60 = (T38f240(C));
+	((T38*)(C))->a61 = (T38f240(C));
 	((T38*)(C))->a69 = (T38f241(C));
 	((T38*)(C))->a63 = (T38f242(C));
 }
 
 /* LX_LEX_PARSER.yy_accept_template */
-unsigned char ge189os3059 = '\0';
-T0* ge189ov3059;
+unsigned char ge141os2999 = '\0';
+T0* ge141ov2999;
 T0* T38f242(T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	if (ge189os3059) {
-		return ge189ov3059;
+	if (ge141os2999) {
+		return ge141ov2999;
 	} else {
-		ge189os3059 = '\1';
-		ge189ov3059 = R;
+		ge141os2999 = '\1';
+		ge141ov2999 = R;
 	}
-	t1 = GE_ma143((T6)472,(T6)472,
+	t1 = GE_ma144((T6)472,(T6)472,
 (T6)(GE_int32(0)),
 (T6)(GE_int32(0)),
 (T6)(GE_int32(0)),
@@ -29810,7 +30131,7 @@ T0* T38f242(T0* C)
 (T6)(GE_int32(0)),
 (T6)(GE_int32(2147483647)));
 	R = (T38f261(C, t1));
-	ge189ov3059 = R;
+	ge141ov2999 = R;
 	return R;
 }
 
@@ -29825,19 +30146,19 @@ T0* T38f261(T0* C, T0* a1)
 }
 
 /* LX_LEX_PARSER.yy_meta_template */
-unsigned char ge189os3058 = '\0';
-T0* ge189ov3058;
+unsigned char ge141os2998 = '\0';
+T0* ge141ov2998;
 T0* T38f241(T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	if (ge189os3058) {
-		return ge189ov3058;
+	if (ge141os2998) {
+		return ge141ov2998;
 	} else {
-		ge189os3058 = '\1';
-		ge189ov3058 = R;
+		ge141os2998 = '\1';
+		ge141ov2998 = R;
 	}
-	t1 = GE_ma143((T6)51,(T6)51,
+	t1 = GE_ma144((T6)51,(T6)51,
 (T6)(GE_int32(0)),
 (T6)(GE_int32(1)),
 (T6)(GE_int32(1)),
@@ -29890,24 +30211,24 @@ T0* T38f241(T0* C)
 (T6)(GE_int32(20)),
 (T6)(GE_int32(2147483647)));
 	R = (T38f261(C, t1));
-	ge189ov3058 = R;
+	ge141ov2998 = R;
 	return R;
 }
 
 /* LX_LEX_PARSER.yy_ec_template */
-unsigned char ge189os3057 = '\0';
-T0* ge189ov3057;
+unsigned char ge141os2997 = '\0';
+T0* ge141ov2997;
 T0* T38f240(T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	if (ge189os3057) {
-		return ge189ov3057;
+	if (ge141os2997) {
+		return ge141ov2997;
 	} else {
-		ge189os3057 = '\1';
-		ge189ov3057 = R;
+		ge141os2997 = '\1';
+		ge141ov2997 = R;
 	}
-	t1 = GE_ma143((T6)258,(T6)258,
+	t1 = GE_ma144((T6)258,(T6)258,
 (T6)(GE_int32(0)),
 (T6)(GE_int32(1)),
 (T6)(GE_int32(1)),
@@ -30167,24 +30488,24 @@ T0* T38f240(T0* C)
 (T6)(GE_int32(1)),
 (T6)(GE_int32(2147483647)));
 	R = (T38f261(C, t1));
-	ge189ov3057 = R;
+	ge141ov2997 = R;
 	return R;
 }
 
 /* LX_LEX_PARSER.yy_def_template */
-unsigned char ge189os3056 = '\0';
-T0* ge189ov3056;
+unsigned char ge141os2996 = '\0';
+T0* ge141ov2996;
 T0* T38f239(T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	if (ge189os3056) {
-		return ge189ov3056;
+	if (ge141os2996) {
+		return ge141ov2996;
 	} else {
-		ge189os3056 = '\1';
-		ge189ov3056 = R;
+		ge141os2996 = '\1';
+		ge141ov2996 = R;
 	}
-	t1 = GE_ma143((T6)522,(T6)522,
+	t1 = GE_ma144((T6)522,(T6)522,
 (T6)(GE_int32(0)),
 (T6)(GE_int32(471)),
 (T6)(GE_int32(470)),
@@ -30708,24 +31029,24 @@ T0* T38f239(T0* C)
 (T6)(GE_int32(470)),
 (T6)(GE_int32(2147483647)));
 	R = (T38f261(C, t1));
-	ge189ov3056 = R;
+	ge141ov2996 = R;
 	return R;
 }
 
 /* LX_LEX_PARSER.yy_base_template */
-unsigned char ge189os3055 = '\0';
-T0* ge189ov3055;
+unsigned char ge141os2995 = '\0';
+T0* ge141ov2995;
 T0* T38f238(T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	if (ge189os3055) {
-		return ge189ov3055;
+	if (ge141os2995) {
+		return ge141ov2995;
 	} else {
-		ge189os3055 = '\1';
-		ge189ov3055 = R;
+		ge141os2995 = '\1';
+		ge141ov2995 = R;
 	}
-	t1 = GE_ma143((T6)522,(T6)522,
+	t1 = GE_ma144((T6)522,(T6)522,
 (T6)(GE_int32(0)),
 (T6)(GE_int32(0)),
 (T6)(GE_int32(12)),
@@ -31249,28 +31570,28 @@ T0* T38f238(T0* C)
 (T6)(GE_int32(1451)),
 (T6)(GE_int32(2147483647)));
 	R = (T38f261(C, t1));
-	ge189ov3055 = R;
+	ge141ov2995 = R;
 	return R;
 }
 
 /* LX_LEX_PARSER.yy_chk_template */
-unsigned char ge189os3052 = '\0';
-T0* ge189ov3052;
+unsigned char ge141os2992 = '\0';
+T0* ge141ov2992;
 T0* T38f237(T0* C)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	if (ge189os3052) {
-		return ge189ov3052;
+	if (ge141os2992) {
+		return ge141ov2992;
 	} else {
-		ge189os3052 = '\1';
-		ge189ov3052 = R;
+		ge141os2992 = '\1';
+		ge141ov2992 = R;
 	}
-	l1 = T143c10((T6)(GE_int32(0)), (T6)(GE_int32(1702)));
+	l1 = T144c10((T6)(GE_int32(0)), (T6)(GE_int32(0)), (T6)(GE_int32(1702)));
 	T38f363(C, l1);
 	T38f364(C, l1);
 	R = (T38f261(C, l1));
-	ge189ov3052 = R;
+	ge141ov2992 = R;
 	return R;
 }
 
@@ -31278,7 +31599,7 @@ T0* T38f237(T0* C)
 void T38f364(T0* C, T0* a1)
 {
 	T0* t1;
-	t1 = GE_ma143((T6)704,(T6)704,
+	t1 = GE_ma144((T6)704,(T6)704,
 (T6)(GE_int32(493)),
 (T6)(GE_int32(493)),
 (T6)(GE_int32(493)),
@@ -31991,37 +32312,37 @@ void T38f365(T0* C, T0* a1, T0* a2, T6 a3, T6 a4, T6 a5)
 {
 	T0* t1;
 	t1 = (T38f263(C));
-	T164f3(GE_void(t1), a1, a2, a3, a4, a5);
+	T166f3(GE_void(t1), a1, a2, a3, a4, a5);
 }
 
 /* KL_ARRAY_ROUTINES [INTEGER_32].subcopy */
-void T164f3(T0* C, T0* a1, T0* a2, T6 a3, T6 a4, T6 a5)
+void T166f3(T0* C, T0* a1, T0* a2, T6 a3, T6 a4, T6 a5)
 {
 	T1 t1;
 	t1 = (T6f7(&a3, a4));
 	if (t1) {
-		T143f14(GE_void(a1), a2, a3, a4, a5);
+		T144f15(GE_void(a1), a2, a3, a4, a5);
 	}
 }
 
 /* ARRAY [INTEGER_32].subcopy */
-void T143f14(T0* C, T0* a1, T6 a2, T6 a3, T6 a4)
+void T144f15(T0* C, T0* a1, T6 a2, T6 a3, T6 a4)
 {
 	T0* t1;
 	T6 t2;
 	T6 t3;
 	T6 t4;
-	t1 = (((T143*)(a1))->a1);
-	t2 = (((T143*)(a1))->a2);
+	t1 = (((T144*)(a1))->a1);
+	t2 = (((T144*)(a1))->a2);
 	t2 = ((T6)((a2)-(t2)));
-	t3 = ((T6)((a4)-(((T143*)(C))->a2)));
+	t3 = ((T6)((a4)-(((T144*)(C))->a2)));
 	t4 = ((T6)((a3)-(a2)));
 	t4 = ((T6)((t4)+((T6)(GE_int32(1)))));
-	T83f12(GE_void(((T143*)(C))->a1), t1, t2, t3, t4);
+	T83f15(GE_void(((T144*)(C))->a1), t1, t2, t3, t4);
 }
 
 /* SPECIAL [INTEGER_32].copy_data */
-void T83f12(T0* C, T0* a1, T6 a2, T6 a3, T6 a4)
+void T83f15(T0* C, T0* a1, T6 a2, T6 a3, T6 a4)
 {
 	T1 t1;
 	T6 t2;
@@ -32030,7 +32351,7 @@ void T83f12(T0* C, T0* a1, T6 a2, T6 a3, T6 a4)
 	T6 l3 = 0;
 	t1 = ((a1)==(C));
 	if (t1) {
-		T83f6(C, a2, a3, a4);
+		T83f10(C, a2, a3, a4);
 	} else {
 		l1 = a2;
 		l2 = a3;
@@ -32052,14 +32373,14 @@ void T83f12(T0* C, T0* a1, T6 a2, T6 a3, T6 a4)
 T0* T38f263(T0* C)
 {
 	T0* R = 0;
-	if (ge347os2760) {
-		return ge347ov2760;
+	if (ge301os2700) {
+		return ge301ov2700;
 	} else {
-		ge347os2760 = '\1';
-		ge347ov2760 = R;
+		ge301os2700 = '\1';
+		ge301ov2700 = R;
 	}
-	R = T164c1();
-	ge347ov2760 = R;
+	R = T166c1();
+	ge301ov2700 = R;
 	return R;
 }
 
@@ -32067,7 +32388,7 @@ T0* T38f263(T0* C)
 void T38f363(T0* C, T0* a1)
 {
 	T0* t1;
-	t1 = GE_ma143((T6)1001,(T6)1001,
+	t1 = GE_ma144((T6)1001,(T6)1001,
 (T6)(GE_int32(0)),
 (T6)(GE_int32(0)),
 (T6)(GE_int32(1)),
@@ -33073,23 +33394,23 @@ void T38f363(T0* C, T0* a1)
 }
 
 /* LX_LEX_PARSER.yy_nxt_template */
-unsigned char ge189os3049 = '\0';
-T0* ge189ov3049;
+unsigned char ge141os2989 = '\0';
+T0* ge141ov2989;
 T0* T38f236(T0* C)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	if (ge189os3049) {
-		return ge189ov3049;
+	if (ge141os2989) {
+		return ge141ov2989;
 	} else {
-		ge189os3049 = '\1';
-		ge189ov3049 = R;
+		ge141os2989 = '\1';
+		ge141ov2989 = R;
 	}
-	l1 = T143c10((T6)(GE_int32(0)), (T6)(GE_int32(1702)));
+	l1 = T144c10((T6)(GE_int32(0)), (T6)(GE_int32(0)), (T6)(GE_int32(1702)));
 	T38f361(C, l1);
 	T38f362(C, l1);
 	R = (T38f261(C, l1));
-	ge189ov3049 = R;
+	ge141ov2989 = R;
 	return R;
 }
 
@@ -33097,7 +33418,7 @@ T0* T38f236(T0* C)
 void T38f362(T0* C, T0* a1)
 {
 	T0* t1;
-	t1 = GE_ma143((T6)704,(T6)704,
+	t1 = GE_ma144((T6)704,(T6)704,
 (T6)(GE_int32(177)),
 (T6)(GE_int32(177)),
 (T6)(GE_int32(177)),
@@ -33809,7 +34130,7 @@ void T38f362(T0* C, T0* a1)
 void T38f361(T0* C, T0* a1)
 {
 	T0* t1;
-	t1 = GE_ma143((T6)1001,(T6)1001,
+	t1 = GE_ma144((T6)1001,(T6)1001,
 (T6)(GE_int32(0)),
 (T6)(GE_int32(470)),
 (T6)(GE_int32(39)),
@@ -34815,19 +35136,19 @@ void T38f361(T0* C, T0* a1)
 }
 
 /* LX_LEX_PARSER.empty_buffer */
-unsigned char ge218os2931 = '\0';
-T0* ge218ov2931;
+unsigned char ge170os2871 = '\0';
+T0* ge170ov2871;
 T0* T38f145(T0* C)
 {
 	T0* R = 0;
-	if (ge218os2931) {
-		return ge218ov2931;
+	if (ge170os2871) {
+		return ge170ov2871;
 	} else {
-		ge218os2931 = '\1';
-		ge218ov2931 = R;
+		ge170os2871 = '\1';
+		ge170ov2871 = R;
 	}
 	R = T79c13(GE_ms8("", 0));
-	ge218ov2931 = R;
+	ge170ov2871 = R;
 	return R;
 }
 
@@ -34842,10 +35163,10 @@ T0* T79c13(T0* a1)
 	t1 = (((T17*)(a1))->a2);
 	l2 = ((T6)((t1)+((T6)(GE_int32(2)))));
 	l1 = (T79f11(C, l2));
-	T250f13(GE_void(l1), a1, (T6)(GE_int32(1)));
+	T247f12(GE_void(l1), a1, (T6)(GE_int32(1)));
 	t1 = ((T6)((l2)-((T6)(GE_int32(1)))));
-	T250f9(GE_void(l1), (T2)('\000'), t1);
-	T250f9(GE_void(l1), (T2)('\000'), l2);
+	T247f8(GE_void(l1), (T2)('\000'), t1);
+	T247f8(GE_void(l1), (T2)('\000'), l2);
 	T79f19(C, l1);
 	return C;
 }
@@ -34854,7 +35175,7 @@ T0* T79c13(T0* a1)
 void T79f19(T0* C, T0* a1)
 {
 	T6 t1;
-	t1 = (T250f4(GE_void(a1)));
+	t1 = (T247f4(GE_void(a1)));
 	((T79*)(C))->a9 = ((T6)((t1)-((T6)(GE_int32(2)))));
 	((T79*)(C))->a7 = ((T79*)(C))->a9;
 	((T79*)(C))->a1 = a1;
@@ -34866,7 +35187,7 @@ void T79f19(T0* C, T0* a1)
 }
 
 /* KL_CHARACTER_BUFFER.fill_from_string */
-void T250f13(T0* C, T0* a1, T6 a2)
+void T247f12(T0* C, T0* a1, T6 a2)
 {
 	T1 t1;
 	T6 t2;
@@ -34874,13 +35195,8 @@ void T250f13(T0* C, T0* a1, T6 a2)
 	l1 = (((T17*)(a1))->a2);
 	t1 = (T6f1((&l1), (T6)(GE_int32(0))));
 	if (t1) {
-		t1 = ((((T250*)(C))->a1)!=(EIF_VOID));
-		if (t1) {
-			t2 = ((T6)((a2)+((T6)(GE_int32(1)))));
-			T17f50(GE_void(((T250*)(C))->a2), a1, (T6)(GE_int32(1)), l1, t2);
-		} else {
-			T17f50(GE_void(((T250*)(C))->a2), a1, (T6)(GE_int32(1)), l1, a2);
-		}
+		t2 = ((T6)((a2)+((T6)(GE_int32(1)))));
+		T17f50(GE_void(((T247*)(C))->a2), a1, (T6)(GE_int32(1)), l1, t2);
 	}
 }
 
@@ -34888,7 +35204,7 @@ void T250f13(T0* C, T0* a1, T6 a2)
 T0* T79f11(T0* C, T6 a1)
 {
 	T0* R = 0;
-	R = T250c8(a1);
+	R = T247c7(a1);
 	return R;
 }
 
@@ -34917,76 +35233,76 @@ void T22f6(T0* C, T0* a1)
 	T0* l16 = 0;
 	T0* l17 = 0;
 	T0* l18 = 0;
-	l1 = T59c25();
-	T59f26(GE_void(l1), GE_ms8("Gobo Eiffel Lex is a tool for generating Eiffel programs that perform pattern-matching on text.", 95));
-	T59f27(GE_void(l1), GE_ms8("filename", 8));
+	l1 = T59c24();
+	T59f25(GE_void(l1), GE_ms8("Gobo Eiffel Lex is a tool for generating Eiffel programs that perform pattern-matching on text.", 95));
+	T59f26(GE_void(l1), GE_ms8("filename", 8));
 	l2 = T60c18((T2)('V'), GE_ms8("version", 7));
 	T60f19(GE_void(l2), GE_ms8("Display version information.", 28));
 	l17 = T64c11(l2);
 	t1 = (((T59*)(GE_void(l1)))->a1);
-	T180f19(GE_void(t1), l17);
+	T182f19(GE_void(t1), l17);
 	l5 = T63c22((T2)('a'));
 	T63f23(GE_void(l5), GE_ms8("Split manifest arrays larger than \'size\'.", 41));
 	T63f24(GE_void(l5), GE_ms8("size", 4));
 	t1 = (((T59*)(GE_void(l1)))->a2);
-	T179f21(GE_void(t1), l5);
+	T181f21(GE_void(t1), l5);
 	l6 = T60c18((T2)('b'), GE_ms8("backup", 6));
 	T60f19(GE_void(l6), GE_ms8("Generate backing-up information to standard output.", 51));
 	t1 = (((T59*)(GE_void(l1)))->a2);
-	T179f21(GE_void(t1), l6);
+	T181f21(GE_void(t1), l6);
 	l8 = T60c18((T2)('c'), GE_ms8("nofull", 6));
 	T60f19(GE_void(l8), GE_ms8("Generated compressed tables (small, but slower).", 48));
 	t1 = (((T59*)(GE_void(l1)))->a2);
-	T179f21(GE_void(t1), l8);
+	T181f21(GE_void(t1), l8);
 	l7 = T60c18((T2)('d'), GE_ms8("debug", 5));
 	T60f19(GE_void(l7), GE_ms8("Enable debug output.", 20));
 	t1 = (((T59*)(GE_void(l1)))->a2);
-	T179f21(GE_void(t1), l7);
+	T181f21(GE_void(t1), l7);
 	l9 = T60c18((T2)('e'), GE_ms8("ecs", 3));
 	T60f19(GE_void(l9), GE_ms8("Direct gelex to construct equivalence classes.", 46));
 	t1 = (((T59*)(GE_void(l1)))->a2);
-	T179f21(GE_void(t1), l9);
+	T181f21(GE_void(t1), l9);
 	l10 = T60c18((T2)('f'), GE_ms8("full", 4));
 	T60f19(GE_void(l10), GE_ms8("Generate full tables (large, but faster).", 41));
 	t1 = (((T59*)(GE_void(l1)))->a2);
-	T179f21(GE_void(t1), l10);
+	T181f21(GE_void(t1), l10);
 	l11 = T60c18((T2)('i'), GE_ms8("case-insensitive", 16));
 	T60f19(GE_void(l11), GE_ms8("Generate a case-insensitive scanner.", 36));
 	t1 = (((T59*)(GE_void(l1)))->a2);
-	T179f21(GE_void(t1), l11);
+	T181f21(GE_void(t1), l11);
 	l12 = T60c18((T2)('m'), GE_ms8("meta-ecs", 8));
 	T60f19(GE_void(l12), GE_ms8("Direct gelex to construct meta-equivalence classes.", 51));
 	t1 = (((T59*)(GE_void(l1)))->a2);
-	T179f21(GE_void(t1), l12);
+	T181f21(GE_void(t1), l12);
 	l4 = T62c22((T2)('o'), GE_ms8("outfile", 7));
 	T62f23(GE_void(l4), GE_ms8("Name of the output file (instead of stdout).", 44));
 	T62f24(GE_void(l4), GE_ms8("filename", 8));
 	t1 = (((T59*)(GE_void(l1)))->a2);
-	T179f21(GE_void(t1), l4);
+	T181f21(GE_void(t1), l4);
 	l3 = T61c24(GE_ms8("pragma", 6));
 	T61f25(GE_void(l3), GE_ms8("Generation of #line comments.", 29));
 	T61f26(GE_void(l3), GE_ms8("line", 4));
 	T61f26(GE_void(l3), GE_ms8("noline", 6));
 	T61f27(GE_void(l3), GE_ms8("[no]line", 8));
 	t1 = (((T59*)(GE_void(l1)))->a2);
-	T179f21(GE_void(t1), l3);
+	T181f21(GE_void(t1), l3);
 	l13 = T60c18((T2)('s'), GE_ms8("nodefault", 9));
 	T60f19(GE_void(l13), GE_ms8("Cause the default rule to be suppressed.", 40));
 	t1 = (((T59*)(GE_void(l1)))->a2);
-	T179f21(GE_void(t1), l13);
+	T181f21(GE_void(t1), l13);
 	l14 = T60c18((T2)('w'), GE_ms8("nowarn", 6));
 	T60f19(GE_void(l14), GE_ms8("Suppress warnings.", 18));
 	t1 = (((T59*)(GE_void(l1)))->a2);
-	T179f21(GE_void(t1), l14);
+	T181f21(GE_void(t1), l14);
 	l15 = T60c20((T2)('x'));
 	T60f19(GE_void(l15), GE_ms8("Write each semantic action into a separate routine.", 51));
 	t1 = (((T59*)(GE_void(l1)))->a2);
-	T179f21(GE_void(t1), l15);
+	T181f21(GE_void(t1), l15);
 	l16 = T60c18((T2)('z'), GE_ms8("inspect", 7));
 	T60f19(GE_void(l16), GE_ms8("The generated code uses an inspect instruction to find out which action to execute.", 83));
 	t1 = (((T59*)(GE_void(l1)))->a2);
-	T179f21(GE_void(t1), l16);
-	T59f28(GE_void(l1));
+	T181f21(GE_void(t1), l16);
+	T59f27(GE_void(l1));
 	t2 = (T60f9(GE_void(l2)));
 	if (t2) {
 		T22f7(C);
@@ -35013,7 +35329,7 @@ void T22f6(T0* C, T0* a1)
 		} else {
 			t4 = (T63f15(GE_void(l5)));
 			t1 = (T6f6(&t4));
-			l18 = T65c20(l5, t1);
+			l18 = T65c21(l5, t1);
 			T24f7(GE_void(((T22*)(C))->a1), l18);
 			t1 = (T22f3(C));
 			T44f2(GE_void(t1), (T6)(GE_int32(1)));
@@ -35099,7 +35415,7 @@ T0* T74f15(T0* C)
 /* UT_ERROR_HANDLER.report_info_message */
 void T24f9(T0* C, T0* a1)
 {
-	T58f13(GE_void(((T24*)(C))->a3), a1);
+	T58f14(GE_void(((T24*)(C))->a3), a1);
 }
 
 /* AP_DISPLAY_HELP_FLAG.full_usage_instruction */
@@ -35112,93 +35428,93 @@ T0* T71f13(T0* C, T0* a1)
 	R = (T71f14(C, a1));
 	T17f33(GE_void(R), (T2)('\n'));
 	l1 = (((T59*)(GE_void(a1)))->a1);
-	T180f20(GE_void(l1));
+	T182f20(GE_void(l1));
 	while (1) {
-		t1 = (T180f9(GE_void(l1)));
+		t1 = (T182f9(GE_void(l1)));
 		if (t1) {
 			break;
 		}
-		t2 = (T180f8(GE_void(l1)));
+		t2 = (T182f8(GE_void(l1)));
 		t2 = (((T64*)(GE_void(t2)))->a1);
 		t1 = (((((T0*)(GE_void(t2)))->id==60)?((T60*)(t2))->a8:((T71*)(t2))->a6));
 		t1 = ((T1)(!(t1)));
 		if (t1) {
-			t2 = (T180f8(GE_void(l1)));
+			t2 = (T182f8(GE_void(l1)));
 			t2 = (T71f15(C, a1, t2));
 			T17f34(GE_void(R), t2);
 		}
 		T17f33(GE_void(R), (T2)('\n'));
-		T180f21(GE_void(l1));
+		T182f21(GE_void(l1));
 	}
 	return R;
 }
 
 /* DS_ARRAYED_LIST [AP_ALTERNATIVE_OPTIONS_LIST].forth */
-void T180f21(T0* C)
+void T182f21(T0* C)
 {
-	T180f24(C, ((T180*)(C))->a1);
+	T182f25(C, ((T182*)(C))->a1);
 }
 
 /* DS_ARRAYED_LIST [AP_ALTERNATIVE_OPTIONS_LIST].cursor_forth */
-void T180f24(T0* C, T0* a1)
+void T182f25(T0* C, T0* a1)
 {
 	T1 t1;
 	T1 l1 = 0;
 	T6 l2 = 0;
-	l2 = (((T261*)(GE_void(a1)))->a1);
+	l2 = (((T259*)(GE_void(a1)))->a1);
 	l1 = (((((l2) == ((T6)(GE_int32(0)))))));
 	l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-	t1 = (T6f1((&l2), ((T180*)(C))->a5));
+	t1 = (T6f1((&l2), ((T182*)(C))->a5));
 	if (t1) {
 		l2 = (T6)(GE_int32(-1));
 		t1 = ((T1)(!(l1)));
 		if (t1) {
-			T180f26(C, a1);
+			T182f27(C, a1);
 		}
 	} else {
 		if (l1) {
-			T180f25(C, a1);
+			T182f26(C, a1);
 		}
 	}
-	T261f6(GE_void(a1), l2);
+	T259f6(GE_void(a1), l2);
 }
 
 /* DS_ARRAYED_LIST_CURSOR [AP_ALTERNATIVE_OPTIONS_LIST].set_position */
-void T261f6(T0* C, T6 a1)
+void T259f6(T0* C, T6 a1)
 {
-	((T261*)(C))->a1 = a1;
+	((T259*)(C))->a1 = a1;
 }
 
 /* DS_ARRAYED_LIST [AP_ALTERNATIVE_OPTIONS_LIST].add_traversing_cursor */
-void T180f25(T0* C, T0* a1)
+void T182f26(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
-	t1 = ((a1)!=(((T180*)(C))->a1));
+	t1 = ((a1)!=(((T182*)(C))->a1));
 	if (t1) {
-		t2 = (((T261*)(GE_void(((T180*)(C))->a1)))->a2);
-		T261f7(GE_void(a1), t2);
-		T261f7(GE_void(((T180*)(C))->a1), a1);
+		t2 = (((T259*)(GE_void(((T182*)(C))->a1)))->a2);
+		T259f7(GE_void(a1), t2);
+		T259f7(GE_void(((T182*)(C))->a1), a1);
 	}
 }
 
 /* DS_ARRAYED_LIST_CURSOR [AP_ALTERNATIVE_OPTIONS_LIST].set_next_cursor */
-void T261f7(T0* C, T0* a1)
+void T259f7(T0* C, T0* a1)
 {
-	((T261*)(C))->a2 = a1;
+	((T259*)(C))->a2 = a1;
 }
 
 /* DS_ARRAYED_LIST [AP_ALTERNATIVE_OPTIONS_LIST].remove_traversing_cursor */
-void T180f26(T0* C, T0* a1)
+void T182f27(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
 	T0* l1 = 0;
 	T0* l2 = 0;
-	t1 = ((a1)!=(((T180*)(C))->a1));
+	t1 = ((a1)!=(((T182*)(C))->a1));
 	if (t1) {
-		l2 = ((T180*)(C))->a1;
-		l1 = (((T261*)(GE_void(l2)))->a2);
+		l2 = ((T182*)(C))->a1;
+		l1 = (((T259*)(GE_void(l2)))->a2);
 		while (1) {
 			t1 = ((l1)==(a1));
 			if (!(t1)) {
@@ -35208,13 +35524,13 @@ void T180f26(T0* C, T0* a1)
 				break;
 			}
 			l2 = l1;
-			l1 = (((T261*)(GE_void(l1)))->a2);
+			l1 = (((T259*)(GE_void(l1)))->a2);
 		}
 		t1 = ((l1)==(a1));
 		if (t1) {
-			t2 = (((T261*)(GE_void(a1)))->a2);
-			T261f7(GE_void(l2), t2);
-			T261f7(GE_void(a1), EIF_VOID);
+			t2 = (((T259*)(GE_void(a1)))->a2);
+			T259f7(GE_void(l2), t2);
+			T259f7(GE_void(a1), EIF_VOID);
 		}
 	}
 }
@@ -35231,12 +35547,12 @@ T0* T71f15(T0* C, T0* a1, T0* a2)
 	T0* l1 = 0;
 	T0* l2 = 0;
 	T0* l3 = 0;
-	l1 = T17c39();
+	l1 = T17c35();
 	t1 = (((T64*)(GE_void(a2)))->a1);
-	t1 = (((((T0*)(GE_void(t1)))->id==60)?T60f13(t1):T71f20(t1)));
+	t1 = (((((T0*)(GE_void(t1)))->id==60)?T60f14(t1):T71f23(t1)));
 	T17f34(GE_void(l1), t1);
 	T17f33(GE_void(l1), (T2)(' '));
-	T64f15(GE_void(a2));
+	T64f16(GE_void(a2));
 	while (1) {
 		t2 = (T64f5(GE_void(a2)));
 		if (t2) {
@@ -35250,33 +35566,33 @@ T0* T71f15(T0* C, T0* a1, T0* a2)
 			T17f34(GE_void(l1), t1);
 			T17f33(GE_void(l1), (T2)(' '));
 		}
-		T64f16(GE_void(a2));
+		T64f17(GE_void(a2));
 	}
 	t1 = (((T64*)(GE_void(a2)))->a2);
 	T17f34(GE_void(l1), t1);
 	t1 = (T71f16(C));
 	t3 = (T71f17(C));
 	t3 = (((T23*)(GE_void(t3)))->a1);
-	l3 = (((((T0*)(GE_void(t1)))->id==193)?T193f6(t1, t3):T194f1(t1, t3)));
+	l3 = (((((T0*)(GE_void(t1)))->id==195)?T195f6(t1, t3):T196f1(t1, t3)));
 	T17f49(GE_void(l3), (T6)(GE_int32(40)));
-	t4 = (((T17*)(ge56ov5567))->a2);
+	t4 = (((T17*)(ge8ov6118))->a2);
 	R = T17c40((T2)(' '), t4);
 	T17f34(GE_void(R), l3);
 	T17f33(GE_void(R), (T2)(' '));
 	T17f34(GE_void(R), l1);
-	t1 = (T71f25(C));
-	t4 = (((T17*)(ge56ov5567))->a2);
+	t1 = (T71f26(C));
+	t4 = (((T17*)(ge8ov6118))->a2);
 	t5 = (((T17*)(GE_void(l3)))->a2);
 	t4 = ((T6)((t4)+(t5)));
 	t4 = ((T6)((t4)+((T6)(GE_int32(1)))));
-	T191f10(GE_void(t1), t4);
-	t1 = (T71f25(C));
-	R = (T191f5(GE_void(t1), R));
+	T193f10(GE_void(t1), t4);
+	t1 = (T71f26(C));
+	R = (T193f5(GE_void(t1), R));
 	return R;
 }
 
 /* ST_WORD_WRAPPER.wrapped_string */
-T0* T191f5(T0* C, T0* a1)
+T0* T193f5(T0* C, T0* a1)
 {
 	T0* t1;
 	T6 t2;
@@ -35289,16 +35605,16 @@ T0* T191f5(T0* C, T0* a1)
 	T6 l4 = 0;
 	T6 l5 = 0;
 	T0* l6 = 0;
-	t1 = (T191f4(C));
+	t1 = (T193f4(C));
 	l1 = (T69f6(GE_void(t1), a1));
-	T191f12(C, l1);
+	T193f12(C, l1);
 	l2 = (((T17*)(GE_void(l1)))->a2);
-	l6 = T17c40((T2)(' '), ((T191*)(C))->a1);
+	l6 = T17c40((T2)(' '), ((T193*)(C))->a1);
 	t2 = (((T17*)(GE_void(a1)))->a2);
 	R = T17c32(t2);
-	((T191*)(C))->a2 = (T6)(GE_int32(0));
+	((T193*)(C))->a2 = (T6)(GE_int32(0));
 	l4 = (T6)(GE_int32(1));
-	l3 = ((T191*)(C))->a3;
+	l3 = ((T193*)(C))->a3;
 	while (1) {
 		t3 = (T6f1((&l4), l2));
 		if (t3) {
@@ -35324,7 +35640,7 @@ T0* T191f5(T0* C, T0* a1)
 		}
 		t3 = (((((l5) == (l4)))));
 		if (t3) {
-			((T191*)(C))->a2 = ((T6)((((T191*)(C))->a2)+((T6)(GE_int32(1)))));
+			((T193*)(C))->a2 = ((T6)((((T193*)(C))->a2)+((T6)(GE_int32(1)))));
 			t2 = ((T6)((l4)+(l3)));
 			l5 = ((T6)((t2)-((T6)(GE_int32(1)))));
 			t1 = (T17f10(GE_void(l1), l4, l5));
@@ -35341,13 +35657,13 @@ T0* T191f5(T0* C, T0* a1)
 			T17f33(GE_void(R), (T2)('\n'));
 			T17f34(GE_void(R), l6);
 		}
-		l3 = ((T6)((((T191*)(C))->a3)-(((T191*)(C))->a1)));
+		l3 = ((T6)((((T193*)(C))->a3)-(((T193*)(C))->a1)));
 	}
 	return R;
 }
 
 /* ST_WORD_WRAPPER.canonify_whitespace */
-void T191f12(T0* C, T0* a1)
+void T193f12(T0* C, T0* a1)
 {
 	T1 t1;
 	T6 l1 = 0;
@@ -35361,7 +35677,7 @@ void T191f12(T0* C, T0* a1)
 			break;
 		}
 		l3 = (T17f9(GE_void(a1), l1));
-		t1 = (T191f8(C, l3));
+		t1 = (T193f8(C, l3));
 		if (t1) {
 			T17f48(GE_void(a1), (T2)(' '), l1);
 		}
@@ -35370,7 +35686,7 @@ void T191f12(T0* C, T0* a1)
 }
 
 /* ST_WORD_WRAPPER.is_space */
-T1 T191f8(T0* C, T2 a1)
+T1 T193f8(T0* C, T2 a1)
 {
 	T1 t1;
 	T1 R = 0;
@@ -35390,57 +35706,57 @@ T1 T191f8(T0* C, T2 a1)
 }
 
 /* ST_WORD_WRAPPER.string_ */
-T0* T191f4(T0* C)
+T0* T193f4(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
 /* ST_WORD_WRAPPER.set_new_line_indentation */
-void T191f10(T0* C, T6 a1)
+void T193f10(T0* C, T6 a1)
 {
-	((T191*)(C))->a1 = a1;
+	((T193*)(C))->a1 = a1;
 }
 
 /* AP_DISPLAY_HELP_FLAG.wrapper */
-unsigned char ge56os5580 = '\0';
-T0* ge56ov5580;
-T0* T71f25(T0* C)
+unsigned char ge8os6131 = '\0';
+T0* ge8ov6131;
+T0* T71f26(T0* C)
 {
 	T0* R = 0;
-	if (ge56os5580) {
-		return ge56ov5580;
+	if (ge8os6131) {
+		return ge8ov6131;
 	} else {
-		ge56os5580 = '\1';
-		ge56ov5580 = R;
+		ge8os6131 = '\1';
+		ge8ov6131 = R;
 	}
-	R = T191c9();
-	ge56ov5580 = R;
-	T191f11(GE_void(R), (T6)(GE_int32(79)));
+	R = T193c9();
+	ge8ov6131 = R;
+	T193f11(GE_void(R), (T6)(GE_int32(79)));
 	return R;
 }
 
 /* ST_WORD_WRAPPER.set_maximum_text_width */
-void T191f11(T0* C, T6 a1)
+void T193f11(T0* C, T6 a1)
 {
-	((T191*)(C))->a3 = a1;
+	((T193*)(C))->a3 = a1;
 }
 
 /* ST_WORD_WRAPPER.make */
-T0* T191c9(void)
+T0* T193c9(void)
 {
 	T0* C;
-	C = GE_new191(EIF_TRUE);
-	((T191*)(C))->a3 = (T6)(GE_int32(79));
-	((T191*)(C))->a1 = (T6)(GE_int32(0));
+	C = GE_new193(EIF_TRUE);
+	((T193*)(C))->a3 = (T6)(GE_int32(79));
+	((T193*)(C))->a1 = (T6)(GE_int32(0));
 	return C;
 }
 
@@ -35500,7 +35816,7 @@ void T17f49(T0* C, T6 a1)
 }
 
 /* KL_UNIX_FILE_SYSTEM.basename */
-T0* T194f1(T0* C, T0* a1)
+T0* T196f1(T0* C, T0* a1)
 {
 	T1 t1;
 	T2 t2;
@@ -35508,9 +35824,9 @@ T0* T194f1(T0* C, T0* a1)
 	T0* R = 0;
 	T6 l1 = 0;
 	T6 l2 = 0;
-	t1 = (T194f2(C, a1));
+	t1 = (T196f2(C, a1));
 	if (t1) {
-		R = (T194f3(C));
+		R = (T196f3(C));
 	} else {
 		l1 = (((T17*)(GE_void(a1)))->a2);
 		while (1) {
@@ -35552,24 +35868,24 @@ T0* T194f1(T0* C, T0* a1)
 }
 
 /* KL_UNIX_FILE_SYSTEM.root_directory */
-unsigned char ge411os6838 = '\0';
-T0* ge411ov6838;
-T0* T194f3(T0* C)
+unsigned char ge353os7401 = '\0';
+T0* ge353ov7401;
+T0* T196f3(T0* C)
 {
 	T0* R = 0;
-	if (ge411os6838) {
-		return ge411ov6838;
+	if (ge353os7401) {
+		return ge353ov7401;
 	} else {
-		ge411os6838 = '\1';
-		ge411ov6838 = R;
+		ge353os7401 = '\1';
+		ge353ov7401 = R;
 	}
 	R = GE_ms8("/", 1);
-	ge411ov6838 = R;
+	ge353ov7401 = R;
 	return R;
 }
 
 /* KL_UNIX_FILE_SYSTEM.is_root_directory */
-T1 T194f2(T0* C, T0* a1)
+T1 T196f2(T0* C, T0* a1)
 {
 	T1 t1;
 	T2 t2;
@@ -35600,7 +35916,7 @@ T1 T194f2(T0* C, T0* a1)
 }
 
 /* KL_WINDOWS_FILE_SYSTEM.basename */
-T0* T193f6(T0* C, T0* a1)
+T0* T195f6(T0* C, T0* a1)
 {
 	T1 t1;
 	T2 t2;
@@ -35609,16 +35925,16 @@ T0* T193f6(T0* C, T0* a1)
 	T0* R = 0;
 	T6 l1 = 0;
 	T6 l2 = 0;
-	t1 = (T193f2(C, a1));
+	t1 = (T195f2(C, a1));
 	if (t1) {
-		R = (T193f3(C));
+		R = (T195f3(C));
 	} else {
 		l1 = (((T17*)(GE_void(a1)))->a2);
 		while (1) {
 			t1 = ((T1)((l1)<((T6)(GE_int32(1)))));
 			if (!(t1)) {
 				t2 = (T17f9(GE_void(a1), l1));
-				t3 = (T193f4(C, t2));
+				t3 = (T195f4(C, t2));
 				t1 = ((T1)(!(t3)));
 			}
 			if (t1) {
@@ -35631,7 +35947,7 @@ T0* T193f6(T0* C, T0* a1)
 			t1 = ((T1)((l1)<((T6)(GE_int32(1)))));
 			if (!(t1)) {
 				t2 = (T17f9(GE_void(a1), l1));
-				t1 = (T193f4(C, t2));
+				t1 = (T195f4(C, t2));
 			}
 			if (t1) {
 				break;
@@ -35654,13 +35970,13 @@ T0* T193f6(T0* C, T0* a1)
 }
 
 /* KL_WINDOWS_FILE_SYSTEM.is_directory_separator */
-T1 T193f4(T0* C, T2 a1)
+T1 T195f4(T0* C, T2 a1)
 {
 	T1 t1;
 	T1 R = 0;
 	t1 = (((((a1) == ((T2)('\\'))))));
 	if (!(t1)) {
-		R = (((((a1) == (((T193*)(C))->a1)))));
+		R = (((((a1) == (((T195*)(C))->a1)))));
 	} else {
 		R = EIF_TRUE;
 	}
@@ -35668,24 +35984,24 @@ T1 T193f4(T0* C, T2 a1)
 }
 
 /* KL_WINDOWS_FILE_SYSTEM.root_directory */
-unsigned char ge414os6838 = '\0';
-T0* ge414ov6838;
-T0* T193f3(T0* C)
+unsigned char ge356os7401 = '\0';
+T0* ge356ov7401;
+T0* T195f3(T0* C)
 {
 	T0* R = 0;
-	if (ge414os6838) {
-		return ge414ov6838;
+	if (ge356os7401) {
+		return ge356ov7401;
 	} else {
-		ge414os6838 = '\1';
-		ge414ov6838 = R;
+		ge356os7401 = '\1';
+		ge356ov7401 = R;
 	}
 	R = GE_ms8("\\", 1);
-	ge414ov6838 = R;
+	ge356ov7401 = R;
 	return R;
 }
 
 /* KL_WINDOWS_FILE_SYSTEM.is_root_directory */
-T1 T193f2(T0* C, T0* a1)
+T1 T195f2(T0* C, T0* a1)
 {
 	T1 t1;
 	T2 t2;
@@ -35701,14 +36017,14 @@ T1 T193f2(T0* C, T0* a1)
 	t1 = (T6f5((&l2), (T6)(GE_int32(4))));
 	if (t1) {
 		t2 = (T17f9(GE_void(a1), (T6)(GE_int32(1))));
-		t1 = (T193f4(C, t2));
+		t1 = (T195f4(C, t2));
 	}
 	if (t1) {
 		t2 = (T17f9(GE_void(a1), (T6)(GE_int32(2))));
-		t1 = (T193f4(C, t2));
+		t1 = (T195f4(C, t2));
 		if (t1) {
 			t2 = (T17f9(GE_void(a1), (T6)(GE_int32(3))));
-			t3 = (T193f4(C, t2));
+			t3 = (T195f4(C, t2));
 			t1 = ((T1)(!(t3)));
 		}
 		if (t1) {
@@ -35722,7 +36038,7 @@ T1 T193f2(T0* C, T0* a1)
 					break;
 				}
 				l5 = (T17f9(GE_void(a1), l1));
-				t1 = (T193f4(C, l5));
+				t1 = (T195f4(C, l5));
 				if (t1) {
 					l4 = EIF_TRUE;
 				} else {
@@ -35734,7 +36050,7 @@ T1 T193f2(T0* C, T0* a1)
 				if (t1) {
 					t4 = ((T6)((l1)+((T6)(GE_int32(1)))));
 					t2 = (T17f9(GE_void(a1), t4));
-					t3 = (T193f4(C, t2));
+					t3 = (T195f4(C, t2));
 					t1 = ((T1)(!(t3)));
 				}
 				if (t1) {
@@ -35749,7 +36065,7 @@ T1 T193f2(T0* C, T0* a1)
 							break;
 						}
 						l5 = (T17f9(GE_void(a1), l1));
-						t1 = (T193f4(C, l5));
+						t1 = (T195f4(C, l5));
 						if (t1) {
 							l4 = EIF_TRUE;
 						} else {
@@ -35768,7 +36084,7 @@ T1 T193f2(T0* C, T0* a1)
 								break;
 							}
 							l5 = (T17f9(GE_void(a1), l1));
-							t1 = (T193f4(C, l5));
+							t1 = (T195f4(C, l5));
 							t1 = ((T1)(!(t1)));
 							if (t1) {
 								l4 = EIF_TRUE;
@@ -35787,7 +36103,7 @@ T1 T193f2(T0* C, T0* a1)
 		t1 = (T6f5((&l2), (T6)(GE_int32(3))));
 		if (t1) {
 			l5 = (T17f9(GE_void(a1), (T6)(GE_int32(1))));
-			t1 = (T193f4(C, l5));
+			t1 = (T195f4(C, l5));
 			t1 = ((T1)(!(t1)));
 			if (t1) {
 				t1 = (((((l5) != ((T2)(':'))))));
@@ -35806,7 +36122,7 @@ T1 T193f2(T0* C, T0* a1)
 						break;
 					}
 					l5 = (T17f9(GE_void(a1), l1));
-					t1 = (T193f4(C, l5));
+					t1 = (T195f4(C, l5));
 					if (t1) {
 						l3 = EIF_TRUE;
 					} else {
@@ -35826,14 +36142,14 @@ T1 T193f2(T0* C, T0* a1)
 				}
 				if (t1) {
 					l5 = (T17f9(GE_void(a1), l2));
-					R = (T193f4(C, l5));
+					R = (T195f4(C, l5));
 				}
 			}
 		} else {
 			t1 = (((((l2) == ((T6)(GE_int32(1)))))));
 			if (t1) {
 				l5 = (T17f9(GE_void(a1), (T6)(GE_int32(1))));
-				R = (T193f4(C, l5));
+				R = (T195f4(C, l5));
 			}
 		}
 	}
@@ -35841,19 +36157,19 @@ T1 T193f2(T0* C, T0* a1)
 }
 
 /* AP_DISPLAY_HELP_FLAG.arguments */
-unsigned char ge434os1769 = '\0';
-T0* ge434ov1769;
+unsigned char ge380os1745 = '\0';
+T0* ge380ov1745;
 T0* T71f17(T0* C)
 {
 	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
+	if (ge380os1745) {
+		return ge380ov1745;
 	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
 	}
 	R = T23c4();
-	ge434ov1769 = R;
+	ge380ov1745 = R;
 	return R;
 }
 
@@ -35876,67 +36192,67 @@ T0* T23f2(T0* C, T6 a1)
 }
 
 /* AP_DISPLAY_HELP_FLAG.file_system */
-unsigned char ge402os3352 = '\0';
-T0* ge402ov3352;
+unsigned char ge344os3292 = '\0';
+T0* ge344ov3292;
 T0* T71f16(T0* C)
 {
 	T0* t1;
 	T1 t2;
 	T0* R = 0;
-	if (ge402os3352) {
-		return ge402ov3352;
+	if (ge344os3292) {
+		return ge344ov3292;
 	} else {
-		ge402os3352 = '\1';
-		ge402ov3352 = R;
+		ge344os3292 = '\1';
+		ge344ov3292 = R;
 	}
 	t1 = (T71f9(C));
-	t2 = (T192f1(GE_void(t1)));
+	t2 = (T194f1(GE_void(t1)));
 	if (t2) {
 		R = (T71f10(C));
-		ge402ov3352 = R;
+		ge344ov3292 = R;
 	} else {
 		t1 = (T71f9(C));
-		t2 = (T192f2(GE_void(t1)));
+		t2 = (T194f2(GE_void(t1)));
 		if (t2) {
 			R = (T71f11(C));
-			ge402ov3352 = R;
+			ge344ov3292 = R;
 		} else {
 			R = (T71f11(C));
-			ge402ov3352 = R;
+			ge344ov3292 = R;
 		}
 	}
 	return R;
 }
 
 /* AP_DISPLAY_HELP_FLAG.unix_file_system */
-unsigned char ge402os3355 = '\0';
-T0* ge402ov3355;
+unsigned char ge344os3295 = '\0';
+T0* ge344ov3295;
 T0* T71f11(T0* C)
 {
 	T0* R = 0;
-	if (ge402os3355) {
-		return ge402ov3355;
+	if (ge344os3295) {
+		return ge344ov3295;
 	} else {
-		ge402os3355 = '\1';
-		ge402ov3355 = R;
+		ge344os3295 = '\1';
+		ge344ov3295 = R;
 	}
-	R = T194c5();
-	ge402ov3355 = R;
+	R = T196c5();
+	ge344ov3295 = R;
 	return R;
 }
 
 /* KL_UNIX_FILE_SYSTEM.make */
-T0* T194c5(void)
+T0* T196c5(void)
 {
 	T0* C;
-	C = GE_new194(EIF_TRUE);
+	C = GE_new196(EIF_TRUE);
 	return C;
 }
 
 /* KL_OPERATING_SYSTEM.is_unix */
-unsigned char ge431os4180 = '\0';
-T1 ge431ov4180;
-T1 T192f2(T0* C)
+unsigned char ge377os4211 = '\0';
+T1 ge377ov4211;
+T1 T194f2(T0* C)
 {
 	T1 t1;
 	T6 t2;
@@ -35944,49 +36260,49 @@ T1 T192f2(T0* C)
 	T1 R = 0;
 	T0* l1 = 0;
 	T0* l2 = 0;
-	if (ge431os4180) {
-		return ge431ov4180;
+	if (ge377os4211) {
+		return ge377ov4211;
 	} else {
-		ge431os4180 = '\1';
-		ge431ov4180 = R;
+		ge377os4211 = '\1';
+		ge377ov4211 = R;
 	}
-	l2 = (T192f3(C, GE_ms8("GOBO_OS", 7)));
+	l2 = (T194f3(C, GE_ms8("GOBO_OS", 7)));
 	t1 = ((l2)!=(EIF_VOID));
 	if (t1) {
 		t2 = (((T17*)(GE_void(l2)))->a2);
 		t1 = (T6f1(&t2, (T6)(GE_int32(0))));
 	}
 	if (t1) {
-		t1 = (T17f22(GE_void(l2), GE_ms8("unix", 4)));
+		t1 = (T17f24(GE_void(l2), GE_ms8("unix", 4)));
 		if (t1) {
 			R = EIF_TRUE;
-			ge431ov4180 = R;
+			ge377ov4211 = R;
 		}
 	} else {
-		l1 = (T192f4(C));
+		l1 = (T194f4(C));
 		t2 = (((T17*)(GE_void(l1)))->a2);
 		t1 = (T6f1(&t2, (T6)(GE_int32(0))));
 		if (t1) {
 			t3 = (T17f9(GE_void(l1), (T6)(GE_int32(1))));
 			R = (((((t3) == ((T2)('/'))))));
-			ge431ov4180 = R;
+			ge377ov4211 = R;
 		}
 	}
 	return R;
 }
 
 /* KL_OPERATING_SYSTEM.current_working_directory */
-T0* T192f4(T0* C)
+T0* T194f4(T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	t1 = (T192f5(C));
-	R = (T268f2(GE_void(t1)));
+	t1 = (T194f5(C));
+	R = (T266f2(GE_void(t1)));
 	return R;
 }
 
 /* EXECUTION_ENVIRONMENT.current_working_directory */
-T0* T268f2(T0* C)
+T0* T266f2(T0* C)
 {
 	T0* R = 0;
 	R = (T0*)dir_current();
@@ -35994,44 +36310,44 @@ T0* T268f2(T0* C)
 }
 
 /* KL_OPERATING_SYSTEM.execution_environment */
-unsigned char ge431os4184 = '\0';
-T0* ge431ov4184;
-T0* T192f5(T0* C)
+unsigned char ge377os4215 = '\0';
+T0* ge377ov4215;
+T0* T194f5(T0* C)
 {
 	T0* R = 0;
-	if (ge431os4184) {
-		return ge431ov4184;
+	if (ge377os4215) {
+		return ge377ov4215;
 	} else {
-		ge431os4184 = '\1';
-		ge431ov4184 = R;
+		ge377os4215 = '\1';
+		ge377ov4215 = R;
 	}
-	R = T268c4();
-	ge431ov4184 = R;
+	R = T266c4();
+	ge377ov4215 = R;
 	return R;
 }
 
 /* EXECUTION_ENVIRONMENT.default_create */
-T0* T268c4(void)
+T0* T266c4(void)
 {
 	T0* C;
-	C = GE_new268(EIF_TRUE);
+	C = GE_new266(EIF_TRUE);
 	return C;
 }
 
 /* KL_OPERATING_SYSTEM.variable_value */
-T0* T192f3(T0* C, T0* a1)
+T0* T194f3(T0* C, T0* a1)
 {
 	T0* t1;
 	T0* R = 0;
-	t1 = (T192f5(C));
-	R = (T268f1(GE_void(t1), a1));
+	t1 = (T194f5(C));
+	R = (T266f1(GE_void(t1), a1));
 	return R;
 }
 
 /* EXECUTION_ENVIRONMENT.get */
-T0* T268f1(T0* C, T0* a1)
+T0* T266f1(T0* C, T0* a1)
 {
-	T131 t1;
+	T132 t1;
 	T14 t2;
 	T1 t3;
 	T0* R = 0;
@@ -36039,10 +36355,10 @@ T0* T268f1(T0* C, T0* a1)
 	T14 l2 = 0;
 	T14 l3 = 0;
 	l1 = (T17f4(a1));
-	(t1).id = 131;
+	(t1).id = 132;
 	(t1).a1 = ((l1?(T14)(GE_types[((T0*)(l1))->id].is_special?(T14)((T15*)(l1))->z2:(T14)l1):(T14)0));
 	t2 = ((t1).a1);
-	l2 = (T268f3(C, t2));
+	l2 = (T266f3(C, t2));
 	t3 = (((((l2) != (l3)))));
 	if (t3) {
 		R = T17c51(l2);
@@ -36050,7 +36366,7 @@ T0* T268f1(T0* C, T0* a1)
 	return R;
 }
 
-/* STRING_8.make_from_c_pointer */
+/* STRING_8.make_from_c */
 T0* T17c51(T14 a1)
 {
 	T0* C;
@@ -36059,20 +36375,20 @@ T0* T17c51(T14 a1)
 	T6 l1 = 0;
 	C = GE_new17(EIF_TRUE);
 	t1 = (T17f30(C));
-	T285f5(GE_void(t1), a1);
+	T275f5(GE_void(t1), a1);
 	t1 = (T17f30(C));
-	l1 = (((T285*)(GE_void(t1)))->a1);
+	l1 = (((T275*)(GE_void(t1)))->a1);
 	t2 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	((T17*)(C))->a1 = T15c10(t2);
 	((T17*)(C))->a2 = l1;
 	((T17*)(C))->a3 = (T6)(GE_int32(0));
 	t1 = (T17f30(C));
-	T285f6(GE_void(t1), ((T17*)(C))->a1, (T6)(GE_int32(1)), l1);
+	T275f6(GE_void(t1), ((T17*)(C))->a1, (T6)(GE_int32(1)), l1);
 	return C;
 }
 
 /* C_STRING.read_substring_into_character_8_area */
-void T285f6(T0* C, T0* a1, T6 a2, T6 a3)
+void T275f6(T0* C, T0* a1, T6 a2, T6 a3)
 {
 	T1 t1;
 	T8 t2;
@@ -36083,13 +36399,13 @@ void T285f6(T0* C, T0* a1, T6 a2, T6 a3)
 	T6 l4 = 0;
 	l2 = ((T6)((a2)-((T6)(GE_int32(1)))));
 	l4 = ((T6)((a3)-(a2)));
-	l1 = ((T285*)(C))->a2;
+	l1 = ((T275*)(C))->a2;
 	while (1) {
 		t1 = (T6f1((&l2), l4));
 		if (t1) {
 			break;
 		}
-		t2 = (T289f6(GE_void(l1), l2));
+		t2 = (T282f6(GE_void(l1), l2));
 		t3 = ((T2)(t2));
 		((T15*)(GE_void(a1)))->z2[l3] = (t3);
 		l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
@@ -36098,75 +36414,75 @@ void T285f6(T0* C, T0* a1, T6 a2, T6 a3)
 }
 
 /* MANAGED_POINTER.read_natural_8 */
-T8 T289f6(T0* C, T6 a1)
+T8 T282f6(T0* C, T6 a1)
 {
-	T294 t1;
+	T283 t1;
 	T14 t2;
 	T8 R = 0;
-	(t1).id = 294;
+	(t1).id = 283;
 	(t1).a1 = ((T14)&R);
-	t2 = ((T14)(((char*)(((T289*)(C))->a2))+(a1)));
-	T294f2(&t1, t2, (T6)(GE_int32(1)));
+	t2 = ((T14)(((char*)(((T282*)(C))->a2))+(a1)));
+	T283f2(&t1, t2, (T6)(GE_int32(1)));
 	return R;
 }
 
 /* TYPED_POINTER [NATURAL_8].memory_copy */
-void T294f2(T294* C, T14 a1, T6 a2)
+void T283f2(T283* C, T14 a1, T6 a2)
 {
-	T294f3(C, (*C).a1, a1, a2);
+	T283f3(C, (*C).a1, a1, a2);
 }
 
 /* TYPED_POINTER [NATURAL_8].c_memcpy */
-void T294f3(T294* C, T14 a1, T14 a2, T6 a3)
+void T283f3(T283* C, T14 a1, T14 a2, T6 a3)
 {
 	memcpy((void *)a1,( const void *)a2,( size_t)a3);
 }
 
 /* C_STRING.set_shared_from_pointer */
-void T285f5(T0* C, T14 a1)
+void T275f5(T0* C, T14 a1)
 {
 	T6 t1;
-	t1 = (T285f3(C, a1));
-	T285f7(C, a1, t1);
+	t1 = (T275f3(C, a1));
+	T275f7(C, a1, t1);
 }
 
 /* C_STRING.set_shared_from_pointer_and_count */
-void T285f7(T0* C, T14 a1, T6 a2)
+void T275f7(T0* C, T14 a1, T6 a2)
 {
 	T1 t1;
 	T6 t2;
-	((T285*)(C))->a1 = a2;
-	t1 = (((T289*)(GE_void(((T285*)(C))->a2)))->a1);
+	((T275*)(C))->a1 = a2;
+	t1 = (((T282*)(GE_void(((T275*)(C))->a2)))->a1);
 	t1 = ((T1)(!(t1)));
 	if (t1) {
 		t2 = ((T6)((a2)+((T6)(GE_int32(1)))));
-		((T285*)(C))->a2 = T289c9(a1, t2);
+		((T275*)(C))->a2 = T282c9(a1, t2);
 	} else {
 		t2 = ((T6)((a2)+((T6)(GE_int32(1)))));
-		T289f10(GE_void(((T285*)(C))->a2), a1, t2);
+		T282f10(GE_void(((T275*)(C))->a2), a1, t2);
 	}
 }
 
 /* MANAGED_POINTER.set_from_pointer */
-void T289f10(T0* C, T14 a1, T6 a2)
+void T282f10(T0* C, T14 a1, T6 a2)
 {
-	((T289*)(C))->a2 = a1;
-	((T289*)(C))->a3 = a2;
+	((T282*)(C))->a2 = a1;
+	((T282*)(C))->a3 = a2;
 }
 
 /* MANAGED_POINTER.share_from_pointer */
-T0* T289c9(T14 a1, T6 a2)
+T0* T282c9(T14 a1, T6 a2)
 {
 	T0* C;
-	C = GE_new289(EIF_TRUE);
-	((T289*)(C))->a2 = a1;
-	((T289*)(C))->a3 = a2;
-	((T289*)(C))->a1 = EIF_TRUE;
+	C = GE_new282(EIF_TRUE);
+	((T282*)(C))->a2 = a1;
+	((T282*)(C))->a3 = a2;
+	((T282*)(C))->a1 = EIF_TRUE;
 	return C;
 }
 
 /* C_STRING.c_strlen */
-T6 T285f3(T0* C, T14 a1)
+T6 T275f3(T0* C, T14 a1)
 {
 	T6 R = 0;
 	R = (T6)(EIF_INTEGER )strlen((char *)a1);
@@ -36174,88 +36490,88 @@ T6 T285f3(T0* C, T14 a1)
 }
 
 /* STRING_8.c_string_provider */
-unsigned char ge662os1266 = '\0';
-T0* ge662ov1266;
+unsigned char ge637os1244 = '\0';
+T0* ge637ov1244;
 T0* T17f30(T0* C)
 {
 	T0* R = 0;
-	if (ge662os1266) {
-		return ge662ov1266;
+	if (ge637os1244) {
+		return ge637ov1244;
 	} else {
-		ge662os1266 = '\1';
-		ge662ov1266 = R;
+		ge637os1244 = '\1';
+		ge637ov1244 = R;
 	}
-	R = T285c4((T6)(GE_int32(0)));
-	ge662ov1266 = R;
+	R = T275c4((T6)(GE_int32(0)));
+	ge637ov1244 = R;
 	return R;
 }
 
 /* C_STRING.make_empty */
-T0* T285c4(T6 a1)
+T0* T275c4(T6 a1)
 {
 	T0* C;
 	T6 t1;
-	C = GE_new285(EIF_TRUE);
+	C = GE_new275(EIF_TRUE);
 	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
-	((T285*)(C))->a2 = T289c7(t1);
-	((T285*)(C))->a1 = (T6)(GE_int32(0));
+	((T275*)(C))->a2 = T282c7(t1);
+	((T275*)(C))->a1 = (T6)(GE_int32(0));
 	return C;
 }
 
 /* MANAGED_POINTER.make */
-T0* T289c7(T6 a1)
+T0* T282c7(T6 a1)
 {
 	T0* C;
 	T6 t1;
 	T14 t2;
 	T1 t3;
 	T0* t4;
-	C = GE_new289(EIF_TRUE);
+	C = GE_new282(EIF_TRUE);
 	t1 = (T6f12(&a1, (T6)(GE_int32(1))));
-	((T289*)(C))->a2 = (T14f2(&(((T289*)(C))->a2), (T6)(GE_int32(1)), t1));
-	t2 = (T289f5(C));
-	t3 = (((((((T289*)(C))->a2) == (t2)))));
+	((T282*)(C))->a2 = (T14f2(&(((T282*)(C))->a2), (T6)(GE_int32(1)), t1));
+	t2 = (T282f5(C));
+	t3 = (((((((T282*)(C))->a2) == (t2)))));
 	if (t3) {
-		t4 = (T295c2());
-		T295f3(t4, GE_ms8("No more memory", 14));
+		t4 = (T284c2());
+		T284f3(t4, GE_ms8("No more memory", 14));
 	}
-	((T289*)(C))->a3 = a1;
+	((T282*)(C))->a3 = a1;
 	return C;
 }
 
 /* EXCEPTIONS.raise */
-void T295f3(T0* C, T0* a1)
+void T284f3(T0* C, T0* a1)
 {
 	T1 t1;
-	T131 t2;
+	T132 t2;
 	T14 t3;
 	T0* l1 = 0;
 	t1 = (EIF_TRUE);
 	if (t1) {
 		l1 = (T17f4(a1));
 	}
-	(t2).id = 131;
+	(t2).id = 132;
 	(t2).a1 = ((l1?(T14)(GE_types[((T0*)(l1))->id].is_special?(T14)((T15*)(l1))->z2:(T14)l1):(T14)0));
 	t3 = ((t2).a1);
-	T295f4(C, t3, (T6)(GE_int32(24)));
+	T284f4(C, t3, (T6)(GE_int32(24)));
 }
 
 /* EXCEPTIONS.eraise */
-void T295f4(T0* C, T14 a1, T6 a2)
+void T284f4(T0* C, T14 a1, T6 a2)
 {
 	eraise((char *)a1,( long)a2);
 }
 
 /* EXCEPTIONS.default_create */
-T0* T295c2(void)
+T0* T284c2(void)
 {
 	T0* C;
-	C = GE_new295(EIF_TRUE);
+	C = GE_new284(EIF_TRUE);
 	return C;
 }
 
 /* MANAGED_POINTER.default_pointer */
-T14 T289f5(T0* C)
+T14 T282f5(T0* C)
 {
 	T14 R = 0;
 	return R;
@@ -36278,7 +36594,7 @@ T14 T14f3(T14* C, T6 a1, T6 a2)
 }
 
 /* EXECUTION_ENVIRONMENT.eif_getenv */
-T14 T268f3(T0* C, T14 a1)
+T14 T266f3(T0* C, T14 a1)
 {
 	T14 R = 0;
 	R = (T14)getenv((char*)a1);
@@ -36286,35 +36602,35 @@ T14 T268f3(T0* C, T14 a1)
 }
 
 /* AP_DISPLAY_HELP_FLAG.windows_file_system */
-unsigned char ge402os3353 = '\0';
-T0* ge402ov3353;
+unsigned char ge344os3293 = '\0';
+T0* ge344ov3293;
 T0* T71f10(T0* C)
 {
 	T0* R = 0;
-	if (ge402os3353) {
-		return ge402ov3353;
+	if (ge344os3293) {
+		return ge344ov3293;
 	} else {
-		ge402os3353 = '\1';
-		ge402ov3353 = R;
+		ge344os3293 = '\1';
+		ge344ov3293 = R;
 	}
-	R = T193c7();
-	ge402ov3353 = R;
+	R = T195c7();
+	ge344ov3293 = R;
 	return R;
 }
 
 /* KL_WINDOWS_FILE_SYSTEM.make */
-T0* T193c7(void)
+T0* T195c7(void)
 {
 	T0* C;
-	C = GE_new193(EIF_TRUE);
-	((T193*)(C))->a1 = (T2)('/');
+	C = GE_new195(EIF_TRUE);
+	((T195*)(C))->a1 = (T2)('/');
 	return C;
 }
 
 /* KL_OPERATING_SYSTEM.is_windows */
-unsigned char ge431os4179 = '\0';
-T1 ge431ov4179;
-T1 T192f1(T0* C)
+unsigned char ge377os4210 = '\0';
+T1 ge377ov4210;
+T1 T194f1(T0* C)
 {
 	T1 t1;
 	T6 t2;
@@ -36323,35 +36639,35 @@ T1 T192f1(T0* C)
 	T0* l1 = 0;
 	T0* l2 = 0;
 	T0* l3 = 0;
-	if (ge431os4179) {
-		return ge431ov4179;
+	if (ge377os4210) {
+		return ge377ov4210;
 	} else {
-		ge431os4179 = '\1';
-		ge431ov4179 = R;
+		ge377os4210 = '\1';
+		ge377ov4210 = R;
 	}
-	l2 = (T192f3(C, GE_ms8("GOBO_OS", 7)));
+	l2 = (T194f3(C, GE_ms8("GOBO_OS", 7)));
 	t1 = ((l2)!=(EIF_VOID));
 	if (t1) {
 		t2 = (((T17*)(GE_void(l2)))->a2);
 		t1 = (T6f1(&t2, (T6)(GE_int32(0))));
 	}
 	if (t1) {
-		t1 = (T17f22(GE_void(l2), GE_ms8("windows", 7)));
+		t1 = (T17f24(GE_void(l2), GE_ms8("windows", 7)));
 		if (t1) {
 			R = EIF_TRUE;
-			ge431ov4179 = R;
+			ge377ov4210 = R;
 		}
 	} else {
-		l3 = (T192f3(C, GE_ms8("OS", 2)));
+		l3 = (T194f3(C, GE_ms8("OS", 2)));
 		t1 = ((l3)!=(EIF_VOID));
 		if (t1) {
-			t1 = (T17f22(GE_void(l3), GE_ms8("Windows_NT", 10)));
+			t1 = (T17f24(GE_void(l3), GE_ms8("Windows_NT", 10)));
 		}
 		if (t1) {
 			R = EIF_TRUE;
-			ge431ov4179 = R;
+			ge377ov4210 = R;
 		} else {
-			l1 = (T192f4(C));
+			l1 = (T194f4(C));
 			t2 = (((T17*)(GE_void(l1)))->a2);
 			t1 = (T6f5(&t2, (T6)(GE_int32(3))));
 			if (t1) {
@@ -36363,7 +36679,7 @@ T1 T192f1(T0* C)
 				}
 				if (t1) {
 					R = EIF_TRUE;
-					ge431ov4179 = R;
+					ge377ov4210 = R;
 				} else {
 					t3 = (T17f9(GE_void(l1), (T6)(GE_int32(1))));
 					t1 = (((((t3) == ((T2)('\\'))))));
@@ -36373,7 +36689,7 @@ T1 T192f1(T0* C)
 					}
 					if (t1) {
 						R = EIF_TRUE;
-						ge431ov4179 = R;
+						ge377ov4210 = R;
 					}
 				}
 			}
@@ -36383,77 +36699,87 @@ T1 T192f1(T0* C)
 }
 
 /* AP_DISPLAY_HELP_FLAG.operating_system */
+unsigned char ge385os3296 = '\0';
+T0* ge385ov3296;
 T0* T71f9(T0* C)
 {
 	T0* R = 0;
-	if (ge439os3356) {
-		return ge439ov3356;
+	if (ge385os3296) {
+		return ge385ov3296;
 	} else {
-		ge439os3356 = '\1';
-		ge439ov3356 = R;
+		ge385os3296 = '\1';
+		ge385ov3296 = R;
 	}
-	R = T192c7();
-	ge439ov3356 = R;
+	R = T194c6();
+	ge385ov3296 = R;
 	return R;
 }
 
-/* AP_ALTERNATIVE_OPTIONS_LIST.forth */
-void T64f16(T0* C)
+/* KL_OPERATING_SYSTEM.default_create */
+T0* T194c6(void)
 {
-	T64f18(C, ((T64*)(C))->a3);
+	T0* C;
+	C = GE_new194(EIF_TRUE);
+	return C;
+}
+
+/* AP_ALTERNATIVE_OPTIONS_LIST.forth */
+void T64f17(T0* C)
+{
+	T64f19(C, ((T64*)(C))->a3);
 }
 
 /* AP_ALTERNATIVE_OPTIONS_LIST.cursor_forth */
-void T64f18(T0* C, T0* a1)
+void T64f19(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
 	T1 l1 = 0;
 	T1 l2 = 0;
 	T0* l3 = 0;
-	t1 = (((T187*)(GE_void(a1)))->a2);
+	t1 = (((T189*)(GE_void(a1)))->a2);
 	if (t1) {
 		l1 = EIF_TRUE;
 		l3 = ((T64*)(C))->a4;
 	} else {
-		t2 = (((T187*)(GE_void(a1)))->a4);
+		t2 = (((T189*)(GE_void(a1)))->a4);
 		l3 = ((GE_void(t2), (T0*)0));
 	}
 	l2 = (EIF_TRUE);
-	T187f7(GE_void(a1), l3, EIF_FALSE, l2);
+	T189f7(GE_void(a1), l3, EIF_FALSE, l2);
 	if (l2) {
 		t1 = ((T1)(!(l1)));
 		if (t1) {
-			T64f20(C, a1);
+			T64f21(C, a1);
 		}
 	} else {
 		if (l1) {
-			T64f19(C, a1);
+			T64f20(C, a1);
 		}
 	}
 }
 
 /* AP_ALTERNATIVE_OPTIONS_LIST.add_traversing_cursor */
-void T64f19(T0* C, T0* a1)
+void T64f20(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
 	t1 = ((a1)!=(((T64*)(C))->a3));
 	if (t1) {
-		t2 = (((T187*)(GE_void(((T64*)(C))->a3)))->a5);
-		T187f8(GE_void(a1), t2);
-		T187f8(GE_void(((T64*)(C))->a3), a1);
+		t2 = (((T189*)(GE_void(((T64*)(C))->a3)))->a5);
+		T189f8(GE_void(a1), t2);
+		T189f8(GE_void(((T64*)(C))->a3), a1);
 	}
 }
 
 /* DS_LINKED_LIST_CURSOR [AP_OPTION].set_next_cursor */
-void T187f8(T0* C, T0* a1)
+void T189f8(T0* C, T0* a1)
 {
-	((T187*)(C))->a5 = a1;
+	((T189*)(C))->a5 = a1;
 }
 
 /* AP_ALTERNATIVE_OPTIONS_LIST.remove_traversing_cursor */
-void T64f20(T0* C, T0* a1)
+void T64f21(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
@@ -36462,7 +36788,7 @@ void T64f20(T0* C, T0* a1)
 	t1 = ((a1)!=(((T64*)(C))->a3));
 	if (t1) {
 		l2 = ((T64*)(C))->a3;
-		l1 = (((T187*)(GE_void(l2)))->a5);
+		l1 = (((T189*)(GE_void(l2)))->a5);
 		while (1) {
 			t1 = ((l1)==(a1));
 			if (!(t1)) {
@@ -36472,23 +36798,23 @@ void T64f20(T0* C, T0* a1)
 				break;
 			}
 			l2 = l1;
-			l1 = (((T187*)(GE_void(l1)))->a5);
+			l1 = (((T189*)(GE_void(l1)))->a5);
 		}
 		t1 = ((l1)==(a1));
 		if (t1) {
-			t2 = (((T187*)(GE_void(a1)))->a5);
-			T187f8(GE_void(l2), t2);
-			T187f8(GE_void(a1), EIF_VOID);
+			t2 = (((T189*)(GE_void(a1)))->a5);
+			T189f8(GE_void(l2), t2);
+			T189f8(GE_void(a1), EIF_VOID);
 		}
 	}
 }
 
 /* DS_LINKED_LIST_CURSOR [AP_OPTION].set */
-void T187f7(T0* C, T0* a1, T1 a2, T1 a3)
+void T189f7(T0* C, T0* a1, T1 a2, T1 a3)
 {
-	((T187*)(C))->a4 = a1;
-	((T187*)(C))->a2 = a2;
-	((T187*)(C))->a3 = a3;
+	((T189*)(C))->a4 = a1;
+	((T189*)(C))->a2 = a2;
+	((T189*)(C))->a3 = a3;
 }
 
 /* AP_ALTERNATIVE_OPTIONS_LIST.item_for_iteration */
@@ -36504,7 +36830,7 @@ T0* T64f8(T0* C, T0* a1)
 {
 	T0* t1;
 	T0* R = 0;
-	t1 = (((T187*)(GE_void(a1)))->a4);
+	t1 = (((T189*)(GE_void(a1)))->a4);
 	R = ((GE_void(t1), (T0*)0));
 	return R;
 }
@@ -36521,31 +36847,31 @@ T1 T64f5(T0* C)
 T1 T64f7(T0* C, T0* a1)
 {
 	T1 R = 0;
-	R = (((T187*)(GE_void(a1)))->a3);
+	R = (((T189*)(GE_void(a1)))->a3);
 	return R;
 }
 
 /* AP_ALTERNATIVE_OPTIONS_LIST.start */
-void T64f15(T0* C)
+void T64f16(T0* C)
 {
-	T64f17(C, ((T64*)(C))->a3);
+	T64f18(C, ((T64*)(C))->a3);
 }
 
 /* AP_ALTERNATIVE_OPTIONS_LIST.cursor_start */
-void T64f17(T0* C, T0* a1)
+void T64f18(T0* C, T0* a1)
 {
 	T1 t1;
 	T1 l1 = 0;
 	T1 l2 = 0;
 	l1 = (T64f9(C, a1));
 	l2 = (EIF_TRUE);
-	T187f7(GE_void(a1), ((T64*)(C))->a4, EIF_FALSE, l2);
+	T189f7(GE_void(a1), ((T64*)(C))->a4, EIF_FALSE, l2);
 	t1 = ((T1)(!(l2)));
 	if (t1) {
 		t1 = (l1);
 	}
 	if (t1) {
-		T64f19(C, a1);
+		T64f20(C, a1);
 	}
 }
 
@@ -36554,111 +36880,102 @@ T1 T64f9(T0* C, T0* a1)
 {
 	T0* t1;
 	T1 R = 0;
-	t1 = (((T187*)(GE_void(a1)))->a4);
+	t1 = (((T189*)(GE_void(a1)))->a4);
 	R = (EIF_TRUE);
 	return R;
 }
 
-/* STRING_8.make_empty */
-T0* T17c39(void)
-{
-	T0* C;
-	C = GE_new17(EIF_TRUE);
-	T17f32(C, (T6)(GE_int32(0)));
-	return C;
-}
-
 /* DS_ARRAYED_LIST [AP_ALTERNATIVE_OPTIONS_LIST].item_for_iteration */
-T0* T180f8(T0* C)
+T0* T182f8(T0* C)
 {
 	T0* R = 0;
-	R = (T180f13(C, ((T180*)(C))->a1));
+	R = (T182f13(C, ((T182*)(C))->a1));
 	return R;
 }
 
 /* DS_ARRAYED_LIST [AP_ALTERNATIVE_OPTIONS_LIST].cursor_item */
-T0* T180f13(T0* C, T0* a1)
+T0* T182f13(T0* C, T0* a1)
 {
 	T6 t1;
 	T0* R = 0;
-	t1 = (((T261*)(GE_void(a1)))->a1);
-	R = (T180f7(C, t1));
+	t1 = (((T259*)(GE_void(a1)))->a1);
+	R = (T182f7(C, t1));
 	return R;
 }
 
 /* DS_ARRAYED_LIST [AP_ALTERNATIVE_OPTIONS_LIST].item */
-T0* T180f7(T0* C, T6 a1)
+T0* T182f7(T0* C, T6 a1)
 {
 	T0* R = 0;
-	R = (((T262*)(GE_void(((T180*)(C))->a2)))->z2[a1]);
+	R = (((T260*)(GE_void(((T182*)(C))->a2)))->z2[a1]);
 	return R;
 }
 
 /* DS_ARRAYED_LIST [AP_ALTERNATIVE_OPTIONS_LIST].after */
-T1 T180f9(T0* C)
+T1 T182f9(T0* C)
 {
 	T1 R = 0;
-	R = (T180f10(C, ((T180*)(C))->a1));
+	R = (T182f10(C, ((T182*)(C))->a1));
 	return R;
 }
 
 /* DS_ARRAYED_LIST [AP_ALTERNATIVE_OPTIONS_LIST].cursor_after */
-T1 T180f10(T0* C, T0* a1)
+T1 T182f10(T0* C, T0* a1)
 {
 	T6 t1;
 	T1 R = 0;
-	t1 = (((T261*)(GE_void(a1)))->a1);
+	t1 = (((T259*)(GE_void(a1)))->a1);
 	R = (((((t1) == ((T6)(GE_int32(-1)))))));
 	return R;
 }
 
 /* DS_ARRAYED_LIST [AP_ALTERNATIVE_OPTIONS_LIST].start */
-void T180f20(T0* C)
+void T182f20(T0* C)
 {
-	T180f23(C, ((T180*)(C))->a1);
+	T182f24(C, ((T182*)(C))->a1);
 }
 
 /* DS_ARRAYED_LIST [AP_ALTERNATIVE_OPTIONS_LIST].cursor_start */
-void T180f23(T0* C, T0* a1)
+void T182f24(T0* C, T0* a1)
 {
 	T1 t1;
 	T1 l1 = 0;
-	l1 = (T261f4(GE_void(a1)));
-	t1 = (T180f15(C));
+	l1 = (T259f4(GE_void(a1)));
+	t1 = (T182f15(C));
 	if (t1) {
-		T261f6(GE_void(a1), (T6)(GE_int32(-1)));
+		T259f6(GE_void(a1), (T6)(GE_int32(-1)));
 	} else {
-		T261f6(GE_void(a1), (T6)(GE_int32(1)));
+		T259f6(GE_void(a1), (T6)(GE_int32(1)));
 		if (l1) {
-			T180f25(C, a1);
+			T182f26(C, a1);
 		}
 	}
 }
 
 /* DS_ARRAYED_LIST [AP_ALTERNATIVE_OPTIONS_LIST].is_empty */
-T1 T180f15(T0* C)
+T1 T182f15(T0* C)
 {
 	T1 R = 0;
-	R = (((((((T180*)(C))->a5) == ((T6)(GE_int32(0)))))));
+	R = (((((((T182*)(C))->a5) == ((T6)(GE_int32(0)))))));
 	return R;
 }
 
 /* DS_ARRAYED_LIST_CURSOR [AP_ALTERNATIVE_OPTIONS_LIST].off */
-T1 T261f4(T0* C)
+T1 T259f4(T0* C)
 {
 	T1 R = 0;
-	R = (T180f16(GE_void(((T261*)(C))->a3), C));
+	R = (T182f16(GE_void(((T259*)(C))->a3), C));
 	return R;
 }
 
 /* DS_ARRAYED_LIST [AP_ALTERNATIVE_OPTIONS_LIST].cursor_off */
-T1 T180f16(T0* C, T0* a1)
+T1 T182f16(T0* C, T0* a1)
 {
 	T1 t1;
 	T1 R = 0;
-	t1 = (T180f10(C, a1));
+	t1 = (T182f10(C, a1));
 	if (!(t1)) {
-		R = (T180f17(C, a1));
+		R = (T182f17(C, a1));
 	} else {
 		R = EIF_TRUE;
 	}
@@ -36666,11 +36983,11 @@ T1 T180f16(T0* C, T0* a1)
 }
 
 /* DS_ARRAYED_LIST [AP_ALTERNATIVE_OPTIONS_LIST].cursor_before */
-T1 T180f17(T0* C, T0* a1)
+T1 T182f17(T0* C, T0* a1)
 {
 	T6 t1;
 	T1 R = 0;
-	t1 = (((T261*)(a1))->a1);
+	t1 = (((T259*)(a1))->a1);
 	R = (((((t1) == ((T6)(GE_int32(0)))))));
 	return R;
 }
@@ -36688,113 +37005,113 @@ T0* T71f14(T0* C, T0* a1)
 	T0* l2 = 0;
 	T0* l3 = 0;
 	T0* l4 = 0;
-	l1 = T17c39();
+	l1 = T17c35();
 	l3 = (((T59*)(GE_void(a1)))->a2);
-	T179f22(GE_void(l3));
+	T181f22(GE_void(l3));
 	while (1) {
-		t1 = (T179f9(GE_void(l3)));
+		t1 = (T181f9(GE_void(l3)));
 		if (t1) {
 			break;
 		}
-		l2 = (T179f7(GE_void(l3)));
-		t1 = (T66x5372(GE_void(l2)));
+		l2 = (T181f7(GE_void(l3)));
+		t1 = (T66x6004(GE_void(l2)));
 		t1 = ((T1)(!(t1)));
 		if (t1) {
-			t2 = (T66x5362(GE_void(l2)));
+			t2 = (T66x5994(GE_void(l2)));
 			T17f34(GE_void(l1), t2);
 			T17f33(GE_void(l1), (T2)(' '));
 		}
-		T179f23(GE_void(l3));
+		T181f23(GE_void(l3));
 	}
 	t2 = (((T59*)(GE_void(a1)))->a6);
 	T17f34(GE_void(l1), t2);
 	t2 = (T71f16(C));
 	t3 = (T71f17(C));
 	t3 = (((T23*)(GE_void(t3)))->a1);
-	l4 = (((((T0*)(GE_void(t2)))->id==193)?T193f6(t2, t3):T194f1(t2, t3)));
+	l4 = (((((T0*)(GE_void(t2)))->id==195)?T195f6(t2, t3):T196f1(t2, t3)));
 	T17f49(GE_void(l4), (T6)(GE_int32(40)));
 	R = T17c32((T6)(GE_int32(20)));
-	T17f34(GE_void(R), ge56ov5567);
+	T17f34(GE_void(R), ge8ov6118);
 	T17f34(GE_void(R), l4);
 	T17f33(GE_void(R), (T2)(' '));
 	T17f34(GE_void(R), l1);
-	t2 = (T71f25(C));
-	t4 = (((T17*)(ge56ov5567))->a2);
+	t2 = (T71f26(C));
+	t4 = (((T17*)(ge8ov6118))->a2);
 	t5 = (((T17*)(GE_void(l4)))->a2);
 	t4 = ((T6)((t4)+(t5)));
 	t4 = ((T6)((t4)+((T6)(GE_int32(1)))));
-	T191f10(GE_void(t2), t4);
-	t2 = (T71f25(C));
-	R = (T191f5(GE_void(t2), R));
+	T193f10(GE_void(t2), t4);
+	t2 = (T71f26(C));
+	R = (T193f5(GE_void(t2), R));
 	return R;
 }
 
 /* DS_ARRAYED_LIST [AP_OPTION].forth */
-void T179f23(T0* C)
+void T181f23(T0* C)
 {
-	T179f26(C, ((T179*)(C))->a1);
+	T181f27(C, ((T181*)(C))->a1);
 }
 
 /* DS_ARRAYED_LIST [AP_OPTION].cursor_forth */
-void T179f26(T0* C, T0* a1)
+void T181f27(T0* C, T0* a1)
 {
 	T1 t1;
 	T1 l1 = 0;
 	T6 l2 = 0;
-	l2 = (((T257*)(GE_void(a1)))->a1);
+	l2 = (((T255*)(GE_void(a1)))->a1);
 	l1 = (((((l2) == ((T6)(GE_int32(0)))))));
 	l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-	t1 = (T6f1((&l2), ((T179*)(C))->a2));
+	t1 = (T6f1((&l2), ((T181*)(C))->a2));
 	if (t1) {
 		l2 = (T6)(GE_int32(-1));
 		t1 = ((T1)(!(l1)));
 		if (t1) {
-			T179f28(C, a1);
+			T181f29(C, a1);
 		}
 	} else {
 		if (l1) {
-			T179f27(C, a1);
+			T181f28(C, a1);
 		}
 	}
-	T257f6(GE_void(a1), l2);
+	T255f6(GE_void(a1), l2);
 }
 
 /* DS_ARRAYED_LIST_CURSOR [AP_OPTION].set_position */
-void T257f6(T0* C, T6 a1)
+void T255f6(T0* C, T6 a1)
 {
-	((T257*)(C))->a1 = a1;
+	((T255*)(C))->a1 = a1;
 }
 
 /* DS_ARRAYED_LIST [AP_OPTION].add_traversing_cursor */
-void T179f27(T0* C, T0* a1)
+void T181f28(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
-	t1 = ((a1)!=(((T179*)(C))->a1));
+	t1 = ((a1)!=(((T181*)(C))->a1));
 	if (t1) {
-		t2 = (((T257*)(GE_void(((T179*)(C))->a1)))->a2);
-		T257f7(GE_void(a1), t2);
-		T257f7(GE_void(((T179*)(C))->a1), a1);
+		t2 = (((T255*)(GE_void(((T181*)(C))->a1)))->a2);
+		T255f7(GE_void(a1), t2);
+		T255f7(GE_void(((T181*)(C))->a1), a1);
 	}
 }
 
 /* DS_ARRAYED_LIST_CURSOR [AP_OPTION].set_next_cursor */
-void T257f7(T0* C, T0* a1)
+void T255f7(T0* C, T0* a1)
 {
-	((T257*)(C))->a2 = a1;
+	((T255*)(C))->a2 = a1;
 }
 
 /* DS_ARRAYED_LIST [AP_OPTION].remove_traversing_cursor */
-void T179f28(T0* C, T0* a1)
+void T181f29(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
 	T0* l1 = 0;
 	T0* l2 = 0;
-	t1 = ((a1)!=(((T179*)(C))->a1));
+	t1 = ((a1)!=(((T181*)(C))->a1));
 	if (t1) {
-		l2 = ((T179*)(C))->a1;
-		l1 = (((T257*)(GE_void(l2)))->a2);
+		l2 = ((T181*)(C))->a1;
+		l1 = (((T255*)(GE_void(l2)))->a2);
 		while (1) {
 			t1 = ((l1)==(a1));
 			if (!(t1)) {
@@ -36804,108 +37121,108 @@ void T179f28(T0* C, T0* a1)
 				break;
 			}
 			l2 = l1;
-			l1 = (((T257*)(GE_void(l1)))->a2);
+			l1 = (((T255*)(GE_void(l1)))->a2);
 		}
 		t1 = ((l1)==(a1));
 		if (t1) {
-			t2 = (((T257*)(GE_void(a1)))->a2);
-			T257f7(GE_void(l2), t2);
-			T257f7(GE_void(a1), EIF_VOID);
+			t2 = (((T255*)(GE_void(a1)))->a2);
+			T255f7(GE_void(l2), t2);
+			T255f7(GE_void(a1), EIF_VOID);
 		}
 	}
 }
 
 /* DS_ARRAYED_LIST [AP_OPTION].item_for_iteration */
-T0* T179f7(T0* C)
+T0* T181f7(T0* C)
 {
 	T0* R = 0;
-	R = (T179f13(C, ((T179*)(C))->a1));
+	R = (T181f13(C, ((T181*)(C))->a1));
 	return R;
 }
 
 /* DS_ARRAYED_LIST [AP_OPTION].cursor_item */
-T0* T179f13(T0* C, T0* a1)
+T0* T181f13(T0* C, T0* a1)
 {
 	T6 t1;
 	T0* R = 0;
-	t1 = (((T257*)(GE_void(a1)))->a1);
-	R = (T179f11(C, t1));
+	t1 = (((T255*)(GE_void(a1)))->a1);
+	R = (T181f11(C, t1));
 	return R;
 }
 
 /* DS_ARRAYED_LIST [AP_OPTION].item */
-T0* T179f11(T0* C, T6 a1)
+T0* T181f11(T0* C, T6 a1)
 {
 	T0* R = 0;
-	R = (((T259*)(GE_void(((T179*)(C))->a4)))->z2[a1]);
+	R = (((T257*)(GE_void(((T181*)(C))->a4)))->z2[a1]);
 	return R;
 }
 
 /* DS_ARRAYED_LIST [AP_OPTION].after */
-T1 T179f9(T0* C)
+T1 T181f9(T0* C)
 {
 	T1 R = 0;
-	R = (T179f12(C, ((T179*)(C))->a1));
+	R = (T181f12(C, ((T181*)(C))->a1));
 	return R;
 }
 
 /* DS_ARRAYED_LIST [AP_OPTION].cursor_after */
-T1 T179f12(T0* C, T0* a1)
+T1 T181f12(T0* C, T0* a1)
 {
 	T6 t1;
 	T1 R = 0;
-	t1 = (((T257*)(GE_void(a1)))->a1);
+	t1 = (((T255*)(GE_void(a1)))->a1);
 	R = (((((t1) == ((T6)(GE_int32(-1)))))));
 	return R;
 }
 
 /* DS_ARRAYED_LIST [AP_OPTION].start */
-void T179f22(T0* C)
+void T181f22(T0* C)
 {
-	T179f25(C, ((T179*)(C))->a1);
+	T181f26(C, ((T181*)(C))->a1);
 }
 
 /* DS_ARRAYED_LIST [AP_OPTION].cursor_start */
-void T179f25(T0* C, T0* a1)
+void T181f26(T0* C, T0* a1)
 {
 	T1 t1;
 	T1 l1 = 0;
-	l1 = (T257f4(GE_void(a1)));
-	t1 = (T179f17(C));
+	l1 = (T255f4(GE_void(a1)));
+	t1 = (T181f17(C));
 	if (t1) {
-		T257f6(GE_void(a1), (T6)(GE_int32(-1)));
+		T255f6(GE_void(a1), (T6)(GE_int32(-1)));
 	} else {
-		T257f6(GE_void(a1), (T6)(GE_int32(1)));
+		T255f6(GE_void(a1), (T6)(GE_int32(1)));
 		if (l1) {
-			T179f27(C, a1);
+			T181f28(C, a1);
 		}
 	}
 }
 
 /* DS_ARRAYED_LIST [AP_OPTION].is_empty */
-T1 T179f17(T0* C)
+T1 T181f17(T0* C)
 {
 	T1 R = 0;
-	R = (((((((T179*)(C))->a2) == ((T6)(GE_int32(0)))))));
+	R = (((((((T181*)(C))->a2) == ((T6)(GE_int32(0)))))));
 	return R;
 }
 
 /* DS_ARRAYED_LIST_CURSOR [AP_OPTION].off */
-T1 T257f4(T0* C)
+T1 T255f4(T0* C)
 {
 	T1 R = 0;
-	R = (T179f18(GE_void(((T257*)(C))->a3), C));
+	R = (T181f18(GE_void(((T255*)(C))->a3), C));
 	return R;
 }
 
 /* DS_ARRAYED_LIST [AP_OPTION].cursor_off */
-T1 T179f18(T0* C, T0* a1)
+T1 T181f18(T0* C, T0* a1)
 {
 	T1 t1;
 	T1 R = 0;
-	t1 = (T179f12(C, a1));
+	t1 = (T181f12(C, a1));
 	if (!(t1)) {
-		R = (T179f19(C, a1));
+		R = (T181f19(C, a1));
 	} else {
 		R = EIF_TRUE;
 	}
@@ -36913,11 +37230,11 @@ T1 T179f18(T0* C, T0* a1)
 }
 
 /* DS_ARRAYED_LIST [AP_OPTION].cursor_before */
-T1 T179f19(T0* C, T0* a1)
+T1 T181f19(T0* C, T0* a1)
 {
 	T6 t1;
 	T1 R = 0;
-	t1 = (((T257*)(a1))->a1);
+	t1 = (((T255*)(a1))->a1);
 	R = (((((t1) == ((T6)(GE_int32(0)))))));
 	return R;
 }
@@ -36938,29 +37255,29 @@ void T25f46(T0* C, T1 a1)
 T0* T22f3(T0* C)
 {
 	T0* R = 0;
-	if (ge436os1767) {
-		return ge436ov1767;
+	if (ge382os1744) {
+		return ge382ov1744;
 	} else {
-		ge436os1767 = '\1';
-		ge436ov1767 = R;
+		ge382os1744 = '\1';
+		ge382ov1744 = R;
 	}
 	R = T44c1();
-	ge436ov1767 = R;
+	ge382ov1744 = R;
 	return R;
 }
 
 /* AP_ERROR.make_invalid_parameter_error */
-T0* T65c20(T0* a1, T0* a2)
+T0* T65c21(T0* a1, T0* a2)
 {
 	T0* C;
 	T0* t1;
 	C = GE_new65(EIF_TRUE);
-	((T65*)(C))->a2 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(2)));
+	((T65*)(C))->a2 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(2)));
 	t1 = (((((T0*)(GE_void(a1)))->id==63)?T63f18(a1):T61f12(a1)));
-	T132f8(GE_void(((T65*)(C))->a2), t1, (T6)(GE_int32(1)));
-	T132f8(GE_void(((T65*)(C))->a2), a2, (T6)(GE_int32(2)));
-	((T65*)(C))->a1 = ge58ov5493;
-	((T65*)(C))->a3 = ge58ov5500;
+	T133f8(GE_void(((T65*)(C))->a2), t1, (T6)(GE_int32(1)));
+	T133f8(GE_void(((T65*)(C))->a2), a2, (T6)(GE_int32(2)));
+	((T65*)(C))->a1 = ge10ov6062;
+	((T65*)(C))->a3 = ge10ov6069;
 	return C;
 }
 
@@ -36974,15 +37291,15 @@ void T25f37(T0* C, T6 a1)
 T6 T63f15(T0* C)
 {
 	T6 R = 0;
-	R = (T186f7(GE_void(((T63*)(C))->a1)));
+	R = (T188f5(GE_void(((T63*)(C))->a1)));
 	return R;
 }
 
 /* DS_LINKED_LIST [INTEGER_32].last */
-T6 T186f7(T0* C)
+T6 T188f5(T0* C)
 {
 	T6 R = 0;
-	R = (((T266*)(GE_void(((T186*)(C))->a2)))->a1);
+	R = (((T264*)(GE_void(((T188*)(C))->a2)))->a1);
 	return R;
 }
 
@@ -37038,10 +37355,10 @@ T1 T69f1(T0* C, T0* a1, T0* a2)
 					R = ((GE_void(l1), a1, (T1)0));
 				} else {
 					t4 = (T69f7(C));
-					t1 = (T189f1(GE_void(t4), a1, ge366ov5559));
+					t1 = (T191f1(GE_void(t4), a1, ge312ov6110));
 					if (t1) {
 						t4 = (T69f7(C));
-						t1 = (T189f1(GE_void(t4), a2, ge366ov5559));
+						t1 = (T191f1(GE_void(t4), a2, ge312ov6110));
 					}
 					if (t1) {
 						R = (T69f9(C, a1, a2));
@@ -37054,8 +37371,8 @@ T1 T69f1(T0* C, T0* a1, T0* a2)
 							if (t1) {
 								break;
 							}
-							t2 = (T17f13(GE_void(a1), l2));
-							t3 = (T17f13(GE_void(a2), l2));
+							t2 = (T17f14(GE_void(a1), l2));
+							t3 = (T17f14(GE_void(a2), l2));
 							t1 = (((((t2) != (t3)))));
 							if (t1) {
 								R = EIF_FALSE;
@@ -37089,11 +37406,11 @@ T1 T69f9(T0* C, T0* a1, T0* a2)
 		t1 = (((((t2) == (t3)))));
 		if (t1) {
 			t4 = (T69f7(C));
-			t1 = (T189f1(GE_void(t4), a2, ge366ov5559));
+			t1 = (T191f1(GE_void(t4), a2, ge312ov6110));
 			if (t1) {
-				R = (T17f16(GE_void(a1), a2));
+				R = (T17f17(GE_void(a1), a2));
 			} else {
-				R = (T17f16(GE_void(a2), a1));
+				R = (T17f17(GE_void(a2), a1));
 			}
 		}
 	}
@@ -37101,11 +37418,12 @@ T1 T69f9(T0* C, T0* a1, T0* a2)
 }
 
 /* STRING_8.same_string */
-T1 T17f16(T0* C, T0* a1)
+T1 T17f17(T0* C, T0* a1)
 {
 	T1 t1;
 	T6 t2;
 	T0* t3;
+	T6 t4;
 	T1 R = 0;
 	t1 = ((a1)==(C));
 	if (t1) {
@@ -37117,9 +37435,11 @@ T1 T17f16(T0* C, T0* a1)
 			t1 = (EIF_TRUE);
 			if (t1) {
 				t3 = (((T17*)(GE_void(a1)))->a1);
-				R = (T15f4(GE_void(((T17*)(C))->a1), t3, (T6)(GE_int32(0)), (T6)(GE_int32(0)), ((T17*)(C))->a2));
+				t2 = (T17f11(GE_void(a1)));
+				t4 = (T17f11(C));
+				R = (T15f4(GE_void(((T17*)(C))->a1), t3, t2, t4, ((T17*)(C))->a2));
 			} else {
-				R = (T17f24(C, a1));
+				R = (T17f26(C, a1));
 			}
 		}
 	}
@@ -37127,7 +37447,7 @@ T1 T17f16(T0* C, T0* a1)
 }
 
 /* STRING_8.same_string_general */
-T1 T17f24(T0* C, T0* a1)
+T1 T17f26(T0* C, T0* a1)
 {
 	T1 t1;
 	T6 t2;
@@ -37151,8 +37471,8 @@ T1 T17f24(T0* C, T0* a1)
 				if (t1) {
 					break;
 				}
-				t3 = (T17f26(C, l1));
-				t4 = (T17f26(GE_void(a1), l1));
+				t3 = (T17f27(C, l1));
+				t4 = (T17f27(GE_void(a1), l1));
 				t1 = (((((t3) != (t4)))));
 				if (t1) {
 					R = EIF_FALSE;
@@ -37160,41 +37480,6 @@ T1 T17f24(T0* C, T0* a1)
 				}
 				l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 			}
-		}
-	}
-	return R;
-}
-
-/* SPECIAL [CHARACTER_8].same_items */
-T1 T15f4(T0* C, T0* a1, T6 a2, T6 a3, T6 a4)
-{
-	T1 t1;
-	T2 t2;
-	T2 t3;
-	T1 R = 0;
-	T6 l1 = 0;
-	T6 l2 = 0;
-	T6 l3 = 0;
-	R = EIF_TRUE;
-	t1 = ((a1)!=(C));
-	if (t1) {
-		l1 = a2;
-		l2 = a3;
-		l3 = ((T6)((a2)+(a4)));
-		while (1) {
-			t1 = (((((l1) == (l3)))));
-			if (t1) {
-				break;
-			}
-			t2 = (((T15*)(GE_void(a1)))->z2[l1]);
-			t3 = (((T15*)(C))->z2[l2]);
-			t1 = (((((t2) != (t3)))));
-			if (t1) {
-				R = EIF_FALSE;
-				l1 = ((T6)((l3)-((T6)(GE_int32(1)))));
-			}
-			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-			l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
 		}
 	}
 	return R;
@@ -37212,14 +37497,14 @@ T0* T61f16(T0* C)
 T0* T22f2(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
@@ -37228,7 +37513,7 @@ void T22f7(T0* C)
 {
 	T0* t1;
 	T0* l1 = 0;
-	l1 = T72c7(ge426ov1774);
+	l1 = T72c8(ge371ov1750);
 	T24f10(GE_void(((T22*)(C))->a1), l1);
 	t1 = (T22f3(C));
 	T44f2(GE_void(t1), (T6)(GE_int32(0)));
@@ -37243,24 +37528,24 @@ void T24f10(T0* C, T0* a1)
 }
 
 /* UT_VERSION_NUMBER.make */
-T0* T72c7(T0* a1)
+T0* T72c8(T0* a1)
 {
 	T0* C;
 	C = GE_new72(EIF_TRUE);
-	((T72*)(C))->a1 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(1)));
-	T132f8(GE_void(((T72*)(C))->a1), a1, (T6)(GE_int32(1)));
+	((T72*)(C))->a1 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(1)));
+	T133f8(GE_void(((T72*)(C))->a1), a1, (T6)(GE_int32(1)));
 	return C;
 }
 
 /* AP_PARSER.parse_arguments */
-void T59f28(T0* C)
+void T59f27(T0* C)
 {
 	T0* t1;
 	T1 t2;
 	T0* l1 = 0;
 	T6 l2 = 0;
 	T6 l3 = 0;
-	t1 = (T59f17(C));
+	t1 = (T59f23(C));
 	l3 = ((T6)(GE_argc - 1));
 	l1 = T74c21(l3);
 	l2 = (T6)(GE_int32(1));
@@ -37269,74 +37554,73 @@ void T59f28(T0* C)
 		if (t2) {
 			break;
 		}
-		t1 = (T59f17(C));
+		t1 = (T59f23(C));
 		t1 = (T23f2(GE_void(t1), l2));
 		T74f23(GE_void(l1), t1, l2);
 		l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
 	}
-	T59f30(C, l1);
+	T59f29(C, l1);
 }
 
 /* AP_PARSER.parse_list */
-void T59f30(T0* C, T0* a1)
+void T59f29(T0* C, T0* a1)
 {
 	T1 t1;
-	T59f31(C);
-	((T59*)(C))->a8 = a1;
-	T74f24(GE_void(((T59*)(C))->a8));
+	T59f30(C);
+	T74f24(GE_void(a1));
 	while (1) {
-		t1 = (T74f9(GE_void(((T59*)(C))->a8)));
+		t1 = (T74f9(GE_void(a1)));
 		if (t1) {
 			break;
 		}
-		T59f32(C);
+		T59f31(C, a1);
 	}
-	T59f33(C);
-	t1 = (((T181*)(GE_void(((T59*)(C))->a7)))->a1);
+	T59f32(C);
+	t1 = (((T183*)(GE_void(((T59*)(C))->a7)))->a1);
 	if (t1) {
-		T59f34(C);
+		T59f33(C);
 	}
 }
 
 /* AP_PARSER.final_error_action */
-void T59f34(T0* C)
+void T59f33(T0* C)
 {
 	T0* t1;
-	T181f10(GE_void(((T59*)(C))->a7), ge55ov5347);
-	t1 = (T59f21(C));
+	T183f10(GE_void(((T59*)(C))->a7), ge7ov5979);
+	t1 = (T59f20(C));
 	T44f2(GE_void(t1), (T6)(GE_int32(1)));
 }
 
 /* AP_PARSER.exceptions */
-T0* T59f21(T0* C)
+T0* T59f20(T0* C)
 {
 	T0* R = 0;
-	if (ge436os1767) {
-		return ge436ov1767;
+	if (ge382os1744) {
+		return ge382ov1744;
 	} else {
-		ge436os1767 = '\1';
-		ge436ov1767 = R;
+		ge382os1744 = '\1';
+		ge382ov1744 = R;
 	}
 	R = T44c1();
-	ge436ov1767 = R;
+	ge382ov1744 = R;
 	return R;
 }
 
 /* AP_ERROR_HANDLER.report_error_message */
-void T181f10(T0* C, T0* a1)
+void T183f10(T0* C, T0* a1)
 {
-	((T181*)(C))->a1 = EIF_TRUE;
-	T181f10p1(C, a1);
+	((T183*)(C))->a1 = EIF_TRUE;
+	T183f10p1(C, a1);
 }
 
 /* AP_ERROR_HANDLER.report_error_message */
-void T181f10p1(T0* C, T0* a1)
+void T183f10p1(T0* C, T0* a1)
 {
-	T73f11(GE_void(((T181*)(C))->a2), a1);
+	T73f12(GE_void(((T183*)(C))->a2), a1);
 }
 
 /* AP_PARSER.check_options_after_parsing */
-void T59f33(T0* C)
+void T59f32(T0* C)
 {
 	T1 t1;
 	T1 t2;
@@ -37344,69 +37628,71 @@ void T59f33(T0* C)
 	T6 t4;
 	T0* l1 = 0;
 	T0* l2 = 0;
-	if (((T0*)(GE_void(((T59*)(C))->a9)))->id==179) {
-		T179f22(((T59*)(C))->a9);
+	T0* l3 = 0;
+	l3 = ((T59*)(C))->a8;
+	if (((T0*)(GE_void(l3)))->id==181) {
+		T181f22(l3);
 	} else {
-		T64f15(((T59*)(C))->a9);
+		T64f16(l3);
 	}
 	while (1) {
-		t1 = (((((T0*)(GE_void(((T59*)(C))->a9)))->id==179)?T179f9(((T59*)(C))->a9):T64f5(((T59*)(C))->a9)));
+		t1 = (((((T0*)(GE_void(l3)))->id==181)?T181f9(l3):T64f5(l3)));
 		if (t1) {
 			break;
 		}
-		l1 = (((((T0*)(GE_void(((T59*)(C))->a9)))->id==179)?T179f7(((T59*)(C))->a9):T64f6(((T59*)(C))->a9)));
-		t1 = (T66x5373(GE_void(l1)));
+		l1 = (((((T0*)(GE_void(l3)))->id==181)?T181f7(l3):T64f6(l3)));
+		t1 = (T66x6005(GE_void(l1)));
 		if (t1) {
-			t2 = (T66x5376(GE_void(l1)));
+			t2 = (T66x6008(GE_void(l1)));
 			t1 = ((T1)(!(t2)));
 		}
 		if (t1) {
-			l2 = T65c21(l1);
-			T181f9(GE_void(((T59*)(C))->a7), l2);
+			l2 = T65c22(l1);
+			T183f9(GE_void(((T59*)(C))->a7), l2);
 		}
-		t3 = (T66x5367(GE_void(l1)));
+		t3 = (T66x5999(GE_void(l1)));
 		t1 = (T6f1(&t3, (T6)(GE_int32(0))));
 		if (t1) {
-			t3 = (T66x5366(GE_void(l1)));
-			t4 = (T66x5367(GE_void(l1)));
+			t3 = (T66x5998(GE_void(l1)));
+			t4 = (T66x5999(GE_void(l1)));
 			t1 = (T6f1(&t3, t4));
 		}
 		if (t1) {
-			l2 = T65c22(l1);
-			T181f9(GE_void(((T59*)(C))->a7), l2);
+			l2 = T65c23(l1);
+			T183f9(GE_void(((T59*)(C))->a7), l2);
 		}
-		if (((T0*)(GE_void(((T59*)(C))->a9)))->id==179) {
-			T179f23(((T59*)(C))->a9);
+		if (((T0*)(GE_void(l3)))->id==181) {
+			T181f23(l3);
 		} else {
-			T64f16(((T59*)(C))->a9);
+			T64f17(l3);
 		}
 	}
 }
 
 /* AP_ERROR.make_surplus_option_error */
-T0* T65c22(T0* a1)
+T0* T65c23(T0* a1)
 {
 	T0* C;
 	T0* t1;
 	C = GE_new65(EIF_TRUE);
-	((T65*)(C))->a2 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(1)));
-	t1 = (T66x5364(GE_void(a1)));
-	T132f8(GE_void(((T65*)(C))->a2), t1, (T6)(GE_int32(1)));
-	((T65*)(C))->a1 = ge58ov5496;
-	((T65*)(C))->a3 = ge58ov5503;
+	((T65*)(C))->a2 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(1)));
+	t1 = (T66x5996(GE_void(a1)));
+	T133f8(GE_void(((T65*)(C))->a2), t1, (T6)(GE_int32(1)));
+	((T65*)(C))->a1 = ge10ov6065;
+	((T65*)(C))->a3 = ge10ov6072;
 	return C;
 }
 
 /* AP_ERROR_HANDLER.report_error */
-void T181f9(T0* C, T0* a1)
+void T183f9(T0* C, T0* a1)
 {
 	T0* t1;
-	t1 = (T181f6(C, a1));
-	T181f10(C, t1);
+	t1 = (T183f6(C, a1));
+	T183f10(C, t1);
 }
 
 /* AP_ERROR_HANDLER.message */
-T0* T181f6(T0* C, T0* a1)
+T0* T183f6(T0* C, T0* a1)
 {
 	T0* R = 0;
 	R = (T65f5(GE_void(a1)));
@@ -37414,28 +37700,30 @@ T0* T181f6(T0* C, T0* a1)
 }
 
 /* AP_ERROR.make_missing_option_error */
-T0* T65c21(T0* a1)
+T0* T65c22(T0* a1)
 {
 	T0* C;
 	T0* t1;
 	C = GE_new65(EIF_TRUE);
-	((T65*)(C))->a2 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(1)));
-	t1 = (T66x5364(GE_void(a1)));
-	T132f8(GE_void(((T65*)(C))->a2), t1, (T6)(GE_int32(1)));
-	((T65*)(C))->a1 = ge58ov5494;
-	((T65*)(C))->a3 = ge58ov5501;
+	((T65*)(C))->a2 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(1)));
+	t1 = (T66x5996(GE_void(a1)));
+	T133f8(GE_void(((T65*)(C))->a2), t1, (T6)(GE_int32(1)));
+	((T65*)(C))->a1 = ge10ov6063;
+	((T65*)(C))->a3 = ge10ov6070;
 	return C;
 }
 
 /* AP_PARSER.parse_argument */
-void T59f32(T0* C)
+void T59f31(T0* C, T0* a1)
 {
 	T1 t1;
 	T2 t2;
 	T0* t3;
 	T0* l1 = 0;
 	T6 l2 = 0;
-	l1 = (T74f16(GE_void(((T59*)(C))->a8)));
+	T0* l3 = 0;
+	l3 = ((T59*)(C))->a3;
+	l1 = (T74f16(GE_void(a1)));
 	l2 = (((T17*)(GE_void(l1)))->a2);
 	t1 = (T6f5((&l2), (T6)(GE_int32(2))));
 	if (t1) {
@@ -37448,30 +37736,30 @@ void T59f32(T0* C)
 		if (t1) {
 			t1 = (((((l2) == ((T6)(GE_int32(2)))))));
 			if (t1) {
-				T74f25(GE_void(((T59*)(C))->a8));
+				T74f25(GE_void(a1));
 				while (1) {
-					t1 = (T74f9(GE_void(((T59*)(C))->a8)));
+					t1 = (T74f9(GE_void(a1)));
 					if (t1) {
 						break;
 					}
-					t3 = (T74f16(GE_void(((T59*)(C))->a8)));
-					T74f22(GE_void(((T59*)(C))->a3), t3);
-					T74f25(GE_void(((T59*)(C))->a8));
+					t3 = (T74f16(GE_void(a1)));
+					T74f22(GE_void(l3), t3);
+					T74f25(GE_void(a1));
 				}
 			} else {
-				T59f35(C);
+				T59f34(C, a1);
 			}
 		} else {
-			T59f36(C);
+			T59f35(C, a1);
 		}
 	} else {
-		T74f22(GE_void(((T59*)(C))->a3), l1);
-		T74f25(GE_void(((T59*)(C))->a8));
+		T74f22(GE_void(l3), l1);
+		T74f25(GE_void(a1));
 	}
 }
 
 /* AP_PARSER.parse_short */
-void T59f36(T0* C)
+void T59f35(T0* C, T0* a1)
 {
 	T6 t1;
 	T1 t2;
@@ -37485,7 +37773,8 @@ void T59f36(T0* C)
 	T0* l5 = 0;
 	T0* l6 = 0;
 	T0* l7 = 0;
-	l1 = (T74f16(GE_void(((T59*)(C))->a8)));
+	T0* l8 = 0;
+	l1 = (T74f16(GE_void(a1)));
 	l2 = (T6)(GE_int32(2));
 	while (1) {
 		t1 = (((T17*)(GE_void(l1)))->a2);
@@ -37495,78 +37784,82 @@ void T59f36(T0* C)
 		}
 		l3 = (T17f9(GE_void(l1), l2));
 		l4 = EIF_VOID;
-		if (((T59*)(C))->a10) {
-			T180f20(GE_void(((T59*)(C))->a1));
+		if (((T59*)(C))->a9) {
+			T182f20(GE_void(((T59*)(C))->a1));
 			while (1) {
 				t2 = ((l4)!=(EIF_VOID));
 				if (!(t2)) {
-					t2 = (T180f9(GE_void(((T59*)(C))->a1)));
+					t2 = (T182f9(GE_void(((T59*)(C))->a1)));
 				}
 				if (t2) {
 					break;
 				}
-				t3 = (T180f8(GE_void(((T59*)(C))->a1)));
+				t3 = (T182f8(GE_void(((T59*)(C))->a1)));
 				l5 = (((T64*)(GE_void(t3)))->a1);
-				t2 = (T66x5371(GE_void(l5)));
+				t2 = (T66x6003(GE_void(l5)));
 				if (t2) {
-					t4 = (T66x5368(GE_void(l5)));
+					t4 = (T66x6000(GE_void(l5)));
 					t2 = (((((t4) == (l3)))));
 				}
 				if (t2) {
 					l4 = l5;
-					((T59*)(C))->a9 = (T180f8(GE_void(((T59*)(C))->a1)));
+					((T59*)(C))->a8 = (T182f8(GE_void(((T59*)(C))->a1)));
 				}
-				T180f21(GE_void(((T59*)(C))->a1));
+				T182f21(GE_void(((T59*)(C))->a1));
 			}
-			((T59*)(C))->a10 = EIF_FALSE;
+			((T59*)(C))->a9 = EIF_FALSE;
 		}
+		l8 = ((T59*)(C))->a8;
 		t2 = ((l4)==(EIF_VOID));
 		if (t2) {
-			if (((T0*)(GE_void(((T59*)(C))->a9)))->id==179) {
-				T179f22(((T59*)(C))->a9);
+			t2 = ((l8)!=(EIF_VOID));
+		}
+		if (t2) {
+			if (((T0*)(GE_void(l8)))->id==181) {
+				T181f22(l8);
 			} else {
-				T64f15(((T59*)(C))->a9);
+				T64f16(l8);
 			}
 			while (1) {
 				t2 = ((l4)!=(EIF_VOID));
 				if (!(t2)) {
-					t2 = (((((T0*)(GE_void(((T59*)(C))->a9)))->id==179)?T179f9(((T59*)(C))->a9):T64f5(((T59*)(C))->a9)));
+					t2 = (((((T0*)(GE_void(l8)))->id==181)?T181f9(l8):T64f5(l8)));
 				}
 				if (t2) {
 					break;
 				}
-				l5 = (((((T0*)(GE_void(((T59*)(C))->a9)))->id==179)?T179f7(((T59*)(C))->a9):T64f6(((T59*)(C))->a9)));
-				t2 = (T66x5371(GE_void(l5)));
+				l5 = (((((T0*)(GE_void(l8)))->id==181)?T181f7(l8):T64f6(l8)));
+				t2 = (T66x6003(GE_void(l5)));
 				if (t2) {
-					t4 = (T66x5368(GE_void(l5)));
+					t4 = (T66x6000(GE_void(l5)));
 					t2 = (((((t4) == (l3)))));
 				}
 				if (t2) {
 					l4 = l5;
 				}
-				if (((T0*)(GE_void(((T59*)(C))->a9)))->id==179) {
-					T179f23(((T59*)(C))->a9);
+				if (((T0*)(GE_void(l8)))->id==181) {
+					T181f23(l8);
 				} else {
-					T64f16(((T59*)(C))->a9);
+					T64f17(l8);
 				}
 			}
 		}
 		t2 = ((l4)==(EIF_VOID));
 		if (t2) {
 			t3 = (T2f2((&l3)));
-			l7 = T65c23(t3);
-			T181f9(GE_void(((T59*)(C))->a7), l7);
+			l7 = T65c24(t3);
+			T183f9(GE_void(((T59*)(C))->a7), l7);
 		} else {
-			t2 = (T66x5374(GE_void(l4)));
+			t2 = (T66x6006(GE_void(l4)));
 			if (t2) {
 				t1 = (((T17*)(GE_void(l1)))->a2);
 				t2 = (((((l2) == (t1)))));
 				if (t2) {
-					T74f25(GE_void(((T59*)(C))->a8));
-					t2 = (T74f6(GE_void(((T59*)(C))->a8)));
+					T74f25(GE_void(a1));
+					t2 = (T74f6(GE_void(a1)));
 					t2 = ((T1)(!(t2)));
 					if (t2) {
-						l6 = (T74f16(GE_void(((T59*)(C))->a8)));
+						l6 = (T74f16(GE_void(a1)));
 					}
 				} else {
 					t1 = ((T6)((l2)+((T6)(GE_int32(1)))));
@@ -37576,36 +37869,36 @@ void T59f36(T0* C)
 				}
 				t2 = ((l6)==(EIF_VOID));
 				if (t2) {
-					l7 = T65c24(l4);
-					T181f9(GE_void(((T59*)(C))->a7), l7);
+					l7 = T65c25(l4);
+					T183f9(GE_void(((T59*)(C))->a7), l7);
 				} else {
-					((T59*)(C))->a11 = l6;
-					T66x5387T0(GE_void(l4), C);
+					((T59*)(C))->a10 = l6;
+					T66x6019T0(GE_void(l4), C);
 				}
 			} else {
-				T66x5387T0(GE_void(l4), C);
+				T66x6019T0(GE_void(l4), C);
 			}
 		}
 		l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
 	}
-	t2 = (T74f9(GE_void(((T59*)(C))->a8)));
+	t2 = (T74f9(GE_void(a1)));
 	t2 = ((T1)(!(t2)));
 	if (t2) {
-		T74f25(GE_void(((T59*)(C))->a8));
+		T74f25(GE_void(a1));
 	}
 }
 
 /* AP_ERROR.make_missing_parameter_error */
-T0* T65c24(T0* a1)
+T0* T65c25(T0* a1)
 {
 	T0* C;
 	T0* t1;
 	C = GE_new65(EIF_TRUE);
-	((T65*)(C))->a2 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(1)));
-	t1 = (T66x5364(GE_void(a1)));
-	T132f8(GE_void(((T65*)(C))->a2), t1, (T6)(GE_int32(1)));
-	((T65*)(C))->a1 = ge58ov5495;
-	((T65*)(C))->a3 = ge58ov5502;
+	((T65*)(C))->a2 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(1)));
+	t1 = (T66x5996(GE_void(a1)));
+	T133f8(GE_void(((T65*)(C))->a2), t1, (T6)(GE_int32(1)));
+	((T65*)(C))->a1 = ge10ov6064;
+	((T65*)(C))->a3 = ge10ov6071;
 	return C;
 }
 
@@ -37636,7 +37929,7 @@ T1 T74f14(T0* C, T0* a1)
 {
 	T6 t1;
 	T1 R = 0;
-	t1 = (((T195*)(GE_void(a1)))->a1);
+	t1 = (((T197*)(GE_void(a1)))->a1);
 	R = (((((t1) == ((T6)(GE_int32(0)))))));
 	return R;
 }
@@ -37646,20 +37939,20 @@ T1 T74f10(T0* C, T0* a1)
 {
 	T6 t1;
 	T1 R = 0;
-	t1 = (((T195*)(GE_void(a1)))->a1);
+	t1 = (((T197*)(GE_void(a1)))->a1);
 	R = (((((t1) == ((T6)(GE_int32(-1)))))));
 	return R;
 }
 
 /* AP_ERROR.make_unknown_option_error */
-T0* T65c23(T0* a1)
+T0* T65c24(T0* a1)
 {
 	T0* C;
 	C = GE_new65(EIF_TRUE);
-	((T65*)(C))->a2 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(1)));
-	T132f8(GE_void(((T65*)(C))->a2), a1, (T6)(GE_int32(1)));
-	((T65*)(C))->a1 = ge58ov5497;
-	((T65*)(C))->a3 = ge58ov5504;
+	((T65*)(C))->a2 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(1)));
+	T133f8(GE_void(((T65*)(C))->a2), a1, (T6)(GE_int32(1)));
+	((T65*)(C))->a1 = ge10ov6066;
+	((T65*)(C))->a3 = ge10ov6073;
 	return C;
 }
 
@@ -37675,13 +37968,12 @@ T0* T2f2(T2* C)
 }
 
 /* AP_PARSER.parse_long */
-void T59f35(T0* C)
+void T59f34(T0* C, T0* a1)
 {
 	T1 t1;
 	T6 t2;
 	T6 t3;
 	T0* t4;
-	T0* t5;
 	T0* l1 = 0;
 	T0* l2 = 0;
 	T0* l3 = 0;
@@ -37689,8 +37981,10 @@ void T59f35(T0* C)
 	T6 l5 = 0;
 	T0* l6 = 0;
 	T0* l7 = 0;
-	l1 = (T74f16(GE_void(((T59*)(C))->a8)));
-	l5 = (T17f28(GE_void(l1), (T2)('='), (T6)(GE_int32(3))));
+	T0* l8 = 0;
+	T0* l9 = 0;
+	l1 = (T74f16(GE_void(a1)));
+	l5 = (T17f19(GE_void(l1), (T2)('='), (T6)(GE_int32(3))));
 	t1 = (T6f1((&l5), (T6)(GE_int32(0))));
 	if (t1) {
 		t2 = ((T6)((l5)-((T6)(GE_int32(1)))));
@@ -37702,141 +37996,145 @@ void T59f35(T0* C)
 		t2 = (((T17*)(GE_void(l1)))->a2);
 		l2 = (T17f10(GE_void(l1), (T6)(GE_int32(3)), t2));
 	}
-	if (((T59*)(C))->a10) {
+	if (((T59*)(C))->a9) {
 		l3 = EIF_VOID;
-		T180f20(GE_void(((T59*)(C))->a1));
+		T182f20(GE_void(((T59*)(C))->a1));
 		while (1) {
 			t1 = ((l3)!=(EIF_VOID));
 			if (!(t1)) {
-				t1 = (T180f9(GE_void(((T59*)(C))->a1)));
+				t1 = (T182f9(GE_void(((T59*)(C))->a1)));
 			}
 			if (t1) {
 				break;
 			}
-			t4 = (T180f8(GE_void(((T59*)(C))->a1)));
+			t4 = (T182f8(GE_void(((T59*)(C))->a1)));
 			l4 = (((T64*)(GE_void(t4)))->a1);
-			t1 = (T66x5370(GE_void(l4)));
+			t1 = (T66x6002(GE_void(l4)));
 			if (t1) {
-				t4 = (T59f23(C));
-				t5 = (T66x5363(GE_void(l4)));
-				t1 = (T69f1(GE_void(t4), t5, l2));
+				l9 = (T66x5995(GE_void(l4)));
+				t4 = (T59f22(C));
+				t1 = (T69f1(GE_void(t4), l9, l2));
+				if (t1) {
+					l3 = l4;
+					((T59*)(C))->a8 = (T182f8(GE_void(((T59*)(C))->a1)));
+				}
 			}
-			if (t1) {
-				l3 = l4;
-				((T59*)(C))->a9 = (T180f8(GE_void(((T59*)(C))->a1)));
-			}
-			T180f21(GE_void(((T59*)(C))->a1));
+			T182f21(GE_void(((T59*)(C))->a1));
 		}
-		((T59*)(C))->a10 = EIF_FALSE;
+		((T59*)(C))->a9 = EIF_FALSE;
 	}
+	l8 = ((T59*)(C))->a8;
 	t1 = ((l3)==(EIF_VOID));
 	if (t1) {
-		if (((T0*)(GE_void(((T59*)(C))->a9)))->id==179) {
-			T179f22(((T59*)(C))->a9);
+		t1 = ((l8)!=(EIF_VOID));
+	}
+	if (t1) {
+		if (((T0*)(GE_void(l8)))->id==181) {
+			T181f22(l8);
 		} else {
-			T64f15(((T59*)(C))->a9);
+			T64f16(l8);
 		}
 		while (1) {
 			t1 = ((l3)!=(EIF_VOID));
 			if (!(t1)) {
-				t1 = (((((T0*)(GE_void(((T59*)(C))->a9)))->id==179)?T179f9(((T59*)(C))->a9):T64f5(((T59*)(C))->a9)));
+				t1 = (((((T0*)(GE_void(l8)))->id==181)?T181f9(l8):T64f5(l8)));
 			}
 			if (t1) {
 				break;
 			}
-			l4 = (((((T0*)(GE_void(((T59*)(C))->a9)))->id==179)?T179f7(((T59*)(C))->a9):T64f6(((T59*)(C))->a9)));
-			t1 = (T66x5370(GE_void(l4)));
+			l4 = (((((T0*)(GE_void(l8)))->id==181)?T181f7(l8):T64f6(l8)));
+			t1 = (T66x6002(GE_void(l4)));
 			if (t1) {
-				t4 = (T59f23(C));
-				t5 = (T66x5363(GE_void(l4)));
-				t1 = (T69f1(GE_void(t4), t5, l2));
+				l9 = (T66x5995(GE_void(l4)));
+				t4 = (T59f22(C));
+				t1 = (T69f1(GE_void(t4), l9, l2));
+				if (t1) {
+					l3 = l4;
+				}
 			}
-			if (t1) {
-				l3 = l4;
-			}
-			if (((T0*)(GE_void(((T59*)(C))->a9)))->id==179) {
-				T179f23(((T59*)(C))->a9);
+			if (((T0*)(GE_void(l8)))->id==181) {
+				T181f23(l8);
 			} else {
-				T64f16(((T59*)(C))->a9);
+				T64f17(l8);
 			}
 		}
 	}
 	t1 = ((l3)==(EIF_VOID));
 	if (t1) {
-		l7 = T65c23(l2);
-		T181f9(GE_void(((T59*)(C))->a7), l7);
+		l7 = T65c24(l2);
+		T183f9(GE_void(((T59*)(C))->a7), l7);
 	} else {
-		t1 = (T66x5374(GE_void(l3)));
+		t1 = (T66x6006(GE_void(l3)));
 		if (t1) {
 			t1 = ((l6)==(EIF_VOID));
 			if (t1) {
-				T74f25(GE_void(((T59*)(C))->a8));
-				t1 = (T74f6(GE_void(((T59*)(C))->a8)));
+				T74f25(GE_void(a1));
+				t1 = (T74f6(GE_void(a1)));
 				if (t1) {
-					l7 = T65c24(l3);
-					T181f9(GE_void(((T59*)(C))->a7), l7);
+					l7 = T65c25(l3);
+					T183f9(GE_void(((T59*)(C))->a7), l7);
 				} else {
-					l6 = (T74f16(GE_void(((T59*)(C))->a8)));
+					l6 = (T74f16(GE_void(a1)));
 				}
 			}
 			t1 = ((l6)!=(EIF_VOID));
 			if (t1) {
-				((T59*)(C))->a11 = l6;
-				T66x5387T0(GE_void(l3), C);
+				((T59*)(C))->a10 = l6;
+				T66x6019T0(GE_void(l3), C);
 			}
 		} else {
 			t1 = ((l6)==(EIF_VOID));
 			if (!(t1)) {
-				t1 = (T66x5369(GE_void(l3)));
+				t1 = (T66x6001(GE_void(l3)));
 			}
 			if (t1) {
-				((T59*)(C))->a11 = l6;
-				T66x5387T0(GE_void(l3), C);
+				((T59*)(C))->a10 = l6;
+				T66x6019T0(GE_void(l3), C);
 			} else {
-				l7 = T65c25(l3, l6);
-				T181f9(GE_void(((T59*)(C))->a7), l7);
+				l7 = T65c26(l3, l6);
+				T183f9(GE_void(((T59*)(C))->a7), l7);
 			}
 		}
 	}
-	t1 = (T74f9(GE_void(((T59*)(C))->a8)));
+	t1 = (T74f9(GE_void(a1)));
 	t1 = ((T1)(!(t1)));
 	if (t1) {
-		T74f25(GE_void(((T59*)(C))->a8));
+		T74f25(GE_void(a1));
 	}
 }
 
 /* AP_ERROR.make_unnecessary_parameter_error */
-T0* T65c25(T0* a1, T0* a2)
+T0* T65c26(T0* a1, T0* a2)
 {
 	T0* C;
 	T0* t1;
 	C = GE_new65(EIF_TRUE);
-	((T65*)(C))->a2 = T132c7((T6)(GE_int32(1)), (T6)(GE_int32(2)));
-	t1 = (T66x5364(GE_void(a1)));
-	T132f8(GE_void(((T65*)(C))->a2), t1, (T6)(GE_int32(1)));
-	T132f8(GE_void(((T65*)(C))->a2), a2, (T6)(GE_int32(2)));
-	((T65*)(C))->a1 = ge58ov5498;
-	((T65*)(C))->a3 = ge58ov5505;
+	((T65*)(C))->a2 = T133c7(ge246ov4066, (T6)(GE_int32(1)), (T6)(GE_int32(2)));
+	t1 = (T66x5996(GE_void(a1)));
+	T133f8(GE_void(((T65*)(C))->a2), t1, (T6)(GE_int32(1)));
+	T133f8(GE_void(((T65*)(C))->a2), a2, (T6)(GE_int32(2)));
+	((T65*)(C))->a1 = ge10ov6067;
+	((T65*)(C))->a3 = ge10ov6074;
 	return C;
 }
 
 /* AP_PARSER.string_ */
-T0* T59f23(T0* C)
+T0* T59f22(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
 /* STRING_8.index_of */
-T6 T17f28(T0* C, T2 a1, T6 a2)
+T6 T17f19(T0* C, T2 a1, T6 a2)
 {
 	T1 t1;
 	T2 t2;
@@ -37871,16 +38169,16 @@ T6 T17f28(T0* C, T2 a1, T6 a2)
 /* DS_ARRAYED_LIST [STRING_8].forth */
 void T74f25(T0* C)
 {
-	T74f29(C, ((T74*)(C))->a3);
+	T74f30(C, ((T74*)(C))->a3);
 }
 
 /* DS_ARRAYED_LIST [STRING_8].cursor_forth */
-void T74f29(T0* C, T0* a1)
+void T74f30(T0* C, T0* a1)
 {
 	T1 t1;
 	T1 l1 = 0;
 	T6 l2 = 0;
-	l2 = (((T195*)(GE_void(a1)))->a1);
+	l2 = (((T197*)(GE_void(a1)))->a1);
 	l1 = (((((l2) == ((T6)(GE_int32(0)))))));
 	l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
 	t1 = (T6f1((&l2), ((T74*)(C))->a1));
@@ -37888,43 +38186,43 @@ void T74f29(T0* C, T0* a1)
 		l2 = (T6)(GE_int32(-1));
 		t1 = ((T1)(!(l1)));
 		if (t1) {
-			T74f34(C, a1);
+			T74f35(C, a1);
 		}
 	} else {
 		if (l1) {
-			T74f33(C, a1);
+			T74f34(C, a1);
 		}
 	}
-	T195f6(GE_void(a1), l2);
+	T197f6(GE_void(a1), l2);
 }
 
 /* DS_ARRAYED_LIST_CURSOR [STRING_8].set_position */
-void T195f6(T0* C, T6 a1)
+void T197f6(T0* C, T6 a1)
 {
-	((T195*)(C))->a1 = a1;
+	((T197*)(C))->a1 = a1;
 }
 
 /* DS_ARRAYED_LIST [STRING_8].add_traversing_cursor */
-void T74f33(T0* C, T0* a1)
+void T74f34(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
 	t1 = ((a1)!=(((T74*)(C))->a3));
 	if (t1) {
-		t2 = (((T195*)(GE_void(((T74*)(C))->a3)))->a2);
-		T195f7(GE_void(a1), t2);
-		T195f7(GE_void(((T74*)(C))->a3), a1);
+		t2 = (((T197*)(GE_void(((T74*)(C))->a3)))->a2);
+		T197f7(GE_void(a1), t2);
+		T197f7(GE_void(((T74*)(C))->a3), a1);
 	}
 }
 
 /* DS_ARRAYED_LIST_CURSOR [STRING_8].set_next_cursor */
-void T195f7(T0* C, T0* a1)
+void T197f7(T0* C, T0* a1)
 {
-	((T195*)(C))->a2 = a1;
+	((T197*)(C))->a2 = a1;
 }
 
 /* DS_ARRAYED_LIST [STRING_8].remove_traversing_cursor */
-void T74f34(T0* C, T0* a1)
+void T74f35(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
@@ -37933,7 +38231,7 @@ void T74f34(T0* C, T0* a1)
 	t1 = ((a1)!=(((T74*)(C))->a3));
 	if (t1) {
 		l2 = ((T74*)(C))->a3;
-		l1 = (((T195*)(GE_void(l2)))->a2);
+		l1 = (((T197*)(GE_void(l2)))->a2);
 		while (1) {
 			t1 = ((l1)==(a1));
 			if (!(t1)) {
@@ -37943,13 +38241,13 @@ void T74f34(T0* C, T0* a1)
 				break;
 			}
 			l2 = l1;
-			l1 = (((T195*)(GE_void(l1)))->a2);
+			l1 = (((T197*)(GE_void(l1)))->a2);
 		}
 		t1 = ((l1)==(a1));
 		if (t1) {
-			t2 = (((T195*)(GE_void(a1)))->a2);
-			T195f7(GE_void(l2), t2);
-			T195f7(GE_void(a1), EIF_VOID);
+			t2 = (((T197*)(GE_void(a1)))->a2);
+			T197f7(GE_void(l2), t2);
+			T197f7(GE_void(a1), EIF_VOID);
 		}
 	}
 }
@@ -37967,7 +38265,7 @@ T0* T74f11(T0* C, T0* a1)
 {
 	T6 t1;
 	T0* R = 0;
-	t1 = (((T195*)(GE_void(a1)))->a1);
+	t1 = (((T197*)(GE_void(a1)))->a1);
 	R = (T74f8(C, t1));
 	return R;
 }
@@ -37983,22 +38281,22 @@ T1 T74f9(T0* C)
 /* DS_ARRAYED_LIST [STRING_8].start */
 void T74f24(T0* C)
 {
-	T74f28(C, ((T74*)(C))->a3);
+	T74f29(C, ((T74*)(C))->a3);
 }
 
 /* DS_ARRAYED_LIST [STRING_8].cursor_start */
-void T74f28(T0* C, T0* a1)
+void T74f29(T0* C, T0* a1)
 {
 	T1 t1;
 	T1 l1 = 0;
-	l1 = (T195f4(GE_void(a1)));
+	l1 = (T197f4(GE_void(a1)));
 	t1 = (T74f20(C));
 	if (t1) {
-		T195f6(GE_void(a1), (T6)(GE_int32(-1)));
+		T197f6(GE_void(a1), (T6)(GE_int32(-1)));
 	} else {
-		T195f6(GE_void(a1), (T6)(GE_int32(1)));
+		T197f6(GE_void(a1), (T6)(GE_int32(1)));
 		if (l1) {
-			T74f33(C, a1);
+			T74f34(C, a1);
 		}
 	}
 }
@@ -38012,103 +38310,103 @@ T1 T74f20(T0* C)
 }
 
 /* DS_ARRAYED_LIST_CURSOR [STRING_8].off */
-T1 T195f4(T0* C)
+T1 T197f4(T0* C)
 {
 	T1 R = 0;
-	R = (T74f12(GE_void(((T195*)(C))->a3), C));
+	R = (T74f12(GE_void(((T197*)(C))->a3), C));
 	return R;
 }
 
 /* AP_PARSER.reset_parser */
-void T59f31(T0* C)
+void T59f30(T0* C)
 {
 	T1 t1;
 	T0* t2;
 	T0* l1 = 0;
-	T181f8(GE_void(((T59*)(C))->a7));
-	l1 = (T59f15(C));
-	T179f22(GE_void(l1));
+	T183f8(GE_void(((T59*)(C))->a7));
+	l1 = (T59f14(C));
+	T181f22(GE_void(l1));
 	while (1) {
-		t1 = (T179f9(GE_void(l1)));
+		t1 = (T181f9(GE_void(l1)));
 		if (t1) {
 			break;
 		}
-		t2 = (T179f7(GE_void(l1)));
-		T66x5388(GE_void(t2));
-		T179f23(GE_void(l1));
+		t2 = (T181f7(GE_void(l1)));
+		T66x6020(GE_void(t2));
+		T181f23(GE_void(l1));
 	}
-	((T59*)(C))->a9 = ((T59*)(C))->a2;
+	((T59*)(C))->a8 = ((T59*)(C))->a2;
 	((T59*)(C))->a3 = T74c21((T6)(GE_int32(0)));
-	((T59*)(C))->a10 = EIF_TRUE;
+	((T59*)(C))->a9 = EIF_TRUE;
 }
 
 /* AP_PARSER.all_options */
-T0* T59f15(T0* C)
+T0* T59f14(T0* C)
 {
 	T1 t1;
 	T0* t2;
 	T0* R = 0;
 	T0* l1 = 0;
-	R = T179c20((T6)(GE_int32(0)));
-	T179f22(GE_void(((T59*)(C))->a2));
+	R = T181c20((T6)(GE_int32(0)));
+	T181f22(GE_void(((T59*)(C))->a2));
 	while (1) {
-		t1 = (T179f9(GE_void(((T59*)(C))->a2)));
+		t1 = (T181f9(GE_void(((T59*)(C))->a2)));
 		if (t1) {
 			break;
 		}
-		t2 = (T179f7(GE_void(((T59*)(C))->a2)));
-		t1 = (T179f8(GE_void(R), t2));
+		t2 = (T181f7(GE_void(((T59*)(C))->a2)));
+		t1 = (T181f8(GE_void(R), t2));
 		t1 = ((T1)(!(t1)));
 		if (t1) {
-			t2 = (T179f7(GE_void(((T59*)(C))->a2)));
-			T179f21(GE_void(R), t2);
+			t2 = (T181f7(GE_void(((T59*)(C))->a2)));
+			T181f21(GE_void(R), t2);
 		}
-		T179f23(GE_void(((T59*)(C))->a2));
+		T181f23(GE_void(((T59*)(C))->a2));
 	}
-	T180f20(GE_void(((T59*)(C))->a1));
+	T182f20(GE_void(((T59*)(C))->a1));
 	while (1) {
-		t1 = (T180f9(GE_void(((T59*)(C))->a1)));
+		t1 = (T182f9(GE_void(((T59*)(C))->a1)));
 		if (t1) {
 			break;
 		}
-		l1 = (T180f8(GE_void(((T59*)(C))->a1)));
+		l1 = (T182f8(GE_void(((T59*)(C))->a1)));
 		t2 = (((T64*)(GE_void(l1)))->a1);
-		t1 = (T179f8(GE_void(R), t2));
+		t1 = (T181f8(GE_void(R), t2));
 		t1 = ((T1)(!(t1)));
 		if (t1) {
 			t2 = (((T64*)(GE_void(l1)))->a1);
-			T179f21(GE_void(R), t2);
+			T181f21(GE_void(R), t2);
 		}
-		T64f15(GE_void(l1));
+		T64f16(GE_void(l1));
 		while (1) {
 			t1 = (T64f5(GE_void(l1)));
 			if (t1) {
 				break;
 			}
 			t2 = (T64f6(GE_void(l1)));
-			t1 = (T179f8(GE_void(R), t2));
+			t1 = (T181f8(GE_void(R), t2));
 			t1 = ((T1)(!(t1)));
 			if (t1) {
 				t2 = (T64f6(GE_void(l1)));
-				T179f21(GE_void(R), t2);
+				T181f21(GE_void(R), t2);
 			}
-			T64f16(GE_void(l1));
+			T64f17(GE_void(l1));
 		}
-		T180f21(GE_void(((T59*)(C))->a1));
+		T182f21(GE_void(((T59*)(C))->a1));
 	}
 	return R;
 }
 
 /* DS_ARRAYED_LIST [AP_OPTION].has */
-T1 T179f8(T0* C, T0* a1)
+T1 T181f8(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
 	T1 R = 0;
 	T6 l1 = 0;
 	T0* l2 = 0;
-	l1 = ((T179*)(C))->a2;
-	l2 = ((T179*)(C))->a3;
+	l1 = ((T181*)(C))->a2;
+	l2 = ((T181*)(C))->a3;
 	t1 = (EIF_FALSE);
 	if (t1) {
 		while (1) {
@@ -38116,7 +38414,7 @@ T1 T179f8(T0* C, T0* a1)
 			if (t1) {
 				break;
 			}
-			t2 = (((T259*)(GE_void(((T179*)(C))->a4)))->z2[l1]);
+			t2 = (((T257*)(GE_void(((T181*)(C))->a4)))->z2[l1]);
 			t1 = ((GE_void(l2), t2, a1, (T1)0));
 			if (t1) {
 				R = EIF_TRUE;
@@ -38131,7 +38429,7 @@ T1 T179f8(T0* C, T0* a1)
 			if (t1) {
 				break;
 			}
-			t2 = (((T259*)(GE_void(((T179*)(C))->a4)))->z2[l1]);
+			t2 = (((T257*)(GE_void(((T181*)(C))->a4)))->z2[l1]);
 			t1 = ((t2)==(a1));
 			if (t1) {
 				R = EIF_TRUE;
@@ -38145,76 +38443,101 @@ T1 T179f8(T0* C, T0* a1)
 }
 
 /* DS_ARRAYED_LIST [AP_OPTION].make */
-T0* T179c20(T6 a1)
+T0* T181c20(T6 a1)
 {
 	T0* C;
 	T6 t1;
-	C = GE_new179(EIF_TRUE);
-	((T179*)(C))->a5 = T260c3();
+	T0* t2;
+	C = GE_new181(EIF_TRUE);
+	((T181*)(C))->a5 = T258c3();
 	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
-	((T179*)(C))->a4 = (T260f1(GE_void(((T179*)(C))->a5), t1));
-	((T179*)(C))->a6 = a1;
-	((T179*)(C))->a1 = (T179f14(C));
+	((T181*)(C))->a4 = (T258f1(GE_void(((T181*)(C))->a5), t1));
+	((T181*)(C))->a6 = a1;
+	t2 = (T181f14(C));
+	T181f24(C, t2);
 	return C;
 }
 
+/* DS_ARRAYED_LIST [AP_OPTION].set_internal_cursor */
+void T181f24(T0* C, T0* a1)
+{
+	((T181*)(C))->a1 = a1;
+}
+
 /* DS_ARRAYED_LIST [AP_OPTION].new_cursor */
-T0* T179f14(T0* C)
+T0* T181f14(T0* C)
 {
 	T0* R = 0;
-	R = T257c5(C);
+	R = T255c5(C);
 	return R;
 }
 
 /* DS_ARRAYED_LIST_CURSOR [AP_OPTION].make */
-T0* T257c5(T0* a1)
+T0* T255c5(T0* a1)
 {
 	T0* C;
-	C = GE_new257(EIF_TRUE);
-	((T257*)(C))->a3 = a1;
-	((T257*)(C))->a1 = (T6)(GE_int32(0));
+	C = GE_new255(EIF_TRUE);
+	((T255*)(C))->a3 = a1;
+	((T255*)(C))->a1 = (T6)(GE_int32(0));
 	return C;
 }
 
 /* KL_SPECIAL_ROUTINES [AP_OPTION].make */
-T0* T260f1(T0* C, T6 a1)
+T0* T258f1(T0* C, T6 a1)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	l1 = T280c2(a1);
-	R = (((T280*)(GE_void(l1)))->a1);
+	R = T257c5(l1, a1);
 	return R;
 }
 
-/* TO_SPECIAL [AP_OPTION].make_area */
-T0* T280c2(T6 a1)
+/* SPECIAL [AP_OPTION].make_filled */
+T0* T257c5(T0* a1, T6 a2)
 {
 	T0* C;
-	C = GE_new280(EIF_TRUE);
-	((T280*)(C))->a1 = T259c4(a1);
+	T6 t1;
+	C = GE_new257(a2, EIF_TRUE);
+	T257f7(C, a2);
+	t1 = ((T6)((a2)-((T6)(GE_int32(1)))));
+	T257f8(C, a1, (T6)(GE_int32(0)), t1);
 	return C;
+}
+
+/* SPECIAL [AP_OPTION].fill_with */
+void T257f8(T0* C, T0* a1, T6 a2, T6 a3)
+{
+	T1 t1;
+	T6 l1 = 0;
+	T6 l2 = 0;
+	l1 = a2;
+	l2 = ((T6)((a3)+((T6)(GE_int32(1)))));
+	while (1) {
+		t1 = (((((l1) == (l2)))));
+		if (t1) {
+			break;
+		}
+		((T257*)(C))->z2[l1] = (a1);
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
 }
 
 /* SPECIAL [AP_OPTION].make */
-T0* T259c4(T6 a1)
+void T257f7(T0* C, T6 a1)
 {
-	T0* C;
-	C = GE_new259(a1, EIF_TRUE);
-	return C;
 }
 
 /* KL_SPECIAL_ROUTINES [AP_OPTION].default_create */
-T0* T260c3(void)
+T0* T258c3(void)
 {
 	T0* C;
-	C = GE_new260(EIF_TRUE);
+	C = GE_new258(EIF_TRUE);
 	return C;
 }
 
 /* AP_ERROR_HANDLER.reset */
-void T181f8(T0* C)
+void T183f8(T0* C)
 {
-	((T181*)(C))->a1 = EIF_FALSE;
+	((T183*)(C))->a1 = EIF_FALSE;
 }
 
 /* DS_ARRAYED_LIST [STRING_8].force */
@@ -38227,29 +38550,29 @@ void T74f23(T0* C, T0* a1, T6 a2)
 	if (t1) {
 		t2 = ((T6)((((T74*)(C))->a1)+((T6)(GE_int32(1)))));
 		t2 = (T74f19(C, t2));
-		T74f26(C, t2);
+		T74f27(C, t2);
 	}
-	T74f27(C, a1, a2);
+	T74f28(C, a1, a2);
 }
 
 /* DS_ARRAYED_LIST [STRING_8].put */
-void T74f27(T0* C, T0* a1, T6 a2)
+void T74f28(T0* C, T0* a1, T6 a2)
 {
 	T6 t1;
 	T1 t2;
 	t1 = ((T6)((((T74*)(C))->a1)+((T6)(GE_int32(1)))));
 	t2 = (((((a2) == (t1)))));
 	if (t2) {
-		T74f30(C, a1);
+		T74f31(C, a1);
 	} else {
-		T74f31(C, a2, (T6)(GE_int32(1)));
 		T74f32(C, a2, (T6)(GE_int32(1)));
+		T74f33(C, a2, (T6)(GE_int32(1)));
 		((T88*)(GE_void(((T74*)(C))->a2)))->z2[a2] = (a1);
 	}
 }
 
 /* DS_ARRAYED_LIST [STRING_8].move_cursors_right */
-void T74f32(T0* C, T6 a1, T6 a2)
+void T74f33(T0* C, T6 a1, T6 a2)
 {
 	T1 t1;
 	T6 t2;
@@ -38261,18 +38584,18 @@ void T74f32(T0* C, T6 a1, T6 a2)
 		if (t1) {
 			break;
 		}
-		l2 = (((T195*)(GE_void(l1)))->a1);
+		l2 = (((T197*)(GE_void(l1)))->a1);
 		t1 = (T6f5((&l2), a1));
 		if (t1) {
 			t2 = ((T6)((l2)+(a2)));
-			T195f6(GE_void(l1), t2);
+			T197f6(GE_void(l1), t2);
 		}
-		l1 = (((T195*)(GE_void(l1)))->a2);
+		l1 = (((T197*)(GE_void(l1)))->a2);
 	}
 }
 
 /* DS_ARRAYED_LIST [STRING_8].move_right */
-void T74f31(T0* C, T6 a1, T6 a2)
+void T74f32(T0* C, T6 a1, T6 a2)
 {
 	T1 t1;
 	T0* t2;
@@ -38293,7 +38616,7 @@ void T74f31(T0* C, T6 a1, T6 a2)
 }
 
 /* DS_ARRAYED_LIST [STRING_8].put_last */
-void T74f30(T0* C, T0* a1)
+void T74f31(T0* C, T0* a1)
 {
 	((T74*)(C))->a1 = ((T6)((((T74*)(C))->a1)+((T6)(GE_int32(1)))));
 	((T88*)(GE_void(((T74*)(C))->a2)))->z2[((T74*)(C))->a1] = (a1);
@@ -38304,45 +38627,53 @@ T0* T74c21(T6 a1)
 {
 	T0* C;
 	T6 t1;
+	T0* t2;
 	C = GE_new74(EIF_TRUE);
 	((T74*)(C))->a4 = T89c3();
 	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
 	((T74*)(C))->a2 = (T89f1(GE_void(((T74*)(C))->a4), t1));
 	((T74*)(C))->a5 = a1;
-	((T74*)(C))->a3 = (T74f17(C));
+	t2 = (T74f17(C));
+	T74f26(C, t2);
 	return C;
+}
+
+/* DS_ARRAYED_LIST [STRING_8].set_internal_cursor */
+void T74f26(T0* C, T0* a1)
+{
+	((T74*)(C))->a3 = a1;
 }
 
 /* DS_ARRAYED_LIST [STRING_8].new_cursor */
 T0* T74f17(T0* C)
 {
 	T0* R = 0;
-	R = T195c5(C);
+	R = T197c5(C);
 	return R;
 }
 
 /* DS_ARRAYED_LIST_CURSOR [STRING_8].make */
-T0* T195c5(T0* a1)
+T0* T197c5(T0* a1)
 {
 	T0* C;
-	C = GE_new195(EIF_TRUE);
-	((T195*)(C))->a3 = a1;
-	((T195*)(C))->a1 = (T6)(GE_int32(0));
+	C = GE_new197(EIF_TRUE);
+	((T197*)(C))->a3 = a1;
+	((T197*)(C))->a1 = (T6)(GE_int32(0));
 	return C;
 }
 
 /* AP_PARSER.arguments */
-T0* T59f17(T0* C)
+T0* T59f23(T0* C)
 {
 	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
+	if (ge380os1745) {
+		return ge380ov1745;
 	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
 	}
 	R = T23c4();
-	ge434ov1769 = R;
+	ge380ov1745 = R;
 	return R;
 }
 
@@ -38379,7 +38710,7 @@ void T61f27(T0* C, T0* a1)
 /* AP_ENUMERATION_OPTION.extend */
 void T61f26(T0* C, T0* a1)
 {
-	T182f17(GE_void(((T61*)(C))->a3), a1);
+	T184f17(GE_void(((T61*)(C))->a3), a1);
 	T61f31(C);
 }
 
@@ -38390,90 +38721,90 @@ void T61f31(T0* C)
 	T0* t2;
 	T0* l1 = 0;
 	l1 = T17c32((T6)(GE_int32(20)));
-	T182f19(GE_void(((T61*)(C))->a3));
+	T184f19(GE_void(((T61*)(C))->a3));
 	while (1) {
-		t1 = (T182f12(GE_void(((T61*)(C))->a3)));
+		t1 = (T184f12(GE_void(((T61*)(C))->a3)));
 		if (t1) {
 			break;
 		}
-		t2 = (T182f8(GE_void(((T61*)(C))->a3)));
+		t2 = (T184f8(GE_void(((T61*)(C))->a3)));
 		T17f34(GE_void(l1), t2);
-		t1 = (T182f11(GE_void(((T61*)(C))->a3)));
+		t1 = (T184f11(GE_void(((T61*)(C))->a3)));
 		t1 = ((T1)(!(t1)));
 		if (t1) {
 			T17f33(GE_void(l1), (T2)('|'));
 		}
-		T182f20(GE_void(((T61*)(C))->a3));
+		T184f20(GE_void(((T61*)(C))->a3));
 	}
 	T61f27(C, l1);
 }
 
 /* DS_LINKED_LIST [STRING_8].forth */
-void T182f20(T0* C)
+void T184f20(T0* C)
 {
-	T182f22(C, ((T182*)(C))->a1);
+	T184f23(C, ((T184*)(C))->a1);
 }
 
 /* DS_LINKED_LIST [STRING_8].cursor_forth */
-void T182f22(T0* C, T0* a1)
+void T184f23(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
 	T1 l1 = 0;
 	T1 l2 = 0;
 	T0* l3 = 0;
-	t1 = (((T264*)(GE_void(a1)))->a3);
+	t1 = (((T262*)(GE_void(a1)))->a3);
 	if (t1) {
 		l1 = EIF_TRUE;
-		l3 = ((T182*)(C))->a3;
+		l3 = ((T184*)(C))->a3;
 	} else {
-		t2 = (((T264*)(GE_void(a1)))->a2);
-		l3 = (((T265*)(GE_void(t2)))->a2);
+		t2 = (((T262*)(GE_void(a1)))->a2);
+		l3 = (((T263*)(GE_void(t2)))->a2);
 	}
 	l2 = ((l3)==(EIF_VOID));
-	T264f7(GE_void(a1), l3, EIF_FALSE, l2);
+	T262f7(GE_void(a1), l3, EIF_FALSE, l2);
 	if (l2) {
 		t1 = ((T1)(!(l1)));
 		if (t1) {
-			T182f24(C, a1);
+			T184f25(C, a1);
 		}
 	} else {
 		if (l1) {
-			T182f23(C, a1);
+			T184f24(C, a1);
 		}
 	}
 }
 
 /* DS_LINKED_LIST [STRING_8].add_traversing_cursor */
-void T182f23(T0* C, T0* a1)
+void T184f24(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
-	t1 = ((a1)!=(((T182*)(C))->a1));
+	t1 = ((a1)!=(((T184*)(C))->a1));
 	if (t1) {
-		t2 = (((T264*)(GE_void(((T182*)(C))->a1)))->a4);
-		T264f8(GE_void(a1), t2);
-		T264f8(GE_void(((T182*)(C))->a1), a1);
+		t2 = (((T262*)(GE_void(((T184*)(C))->a1)))->a4);
+		T262f8(GE_void(a1), t2);
+		T262f8(GE_void(((T184*)(C))->a1), a1);
 	}
 }
 
 /* DS_LINKED_LIST_CURSOR [STRING_8].set_next_cursor */
-void T264f8(T0* C, T0* a1)
+void T262f8(T0* C, T0* a1)
 {
-	((T264*)(C))->a4 = a1;
+	((T262*)(C))->a4 = a1;
 }
 
 /* DS_LINKED_LIST [STRING_8].remove_traversing_cursor */
-void T182f24(T0* C, T0* a1)
+void T184f25(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
 	T0* l1 = 0;
 	T0* l2 = 0;
-	t1 = ((a1)!=(((T182*)(C))->a1));
+	t1 = ((a1)!=(((T184*)(C))->a1));
 	if (t1) {
-		l2 = ((T182*)(C))->a1;
-		l1 = (((T264*)(GE_void(l2)))->a4);
+		l2 = ((T184*)(C))->a1;
+		l1 = (((T262*)(GE_void(l2)))->a4);
 		while (1) {
 			t1 = ((l1)==(a1));
 			if (!(t1)) {
@@ -38483,43 +38814,43 @@ void T182f24(T0* C, T0* a1)
 				break;
 			}
 			l2 = l1;
-			l1 = (((T264*)(GE_void(l1)))->a4);
+			l1 = (((T262*)(GE_void(l1)))->a4);
 		}
 		t1 = ((l1)==(a1));
 		if (t1) {
-			t2 = (((T264*)(GE_void(a1)))->a4);
-			T264f8(GE_void(l2), t2);
-			T264f8(GE_void(a1), EIF_VOID);
+			t2 = (((T262*)(GE_void(a1)))->a4);
+			T262f8(GE_void(l2), t2);
+			T262f8(GE_void(a1), EIF_VOID);
 		}
 	}
 }
 
 /* DS_LINKED_LIST_CURSOR [STRING_8].set */
-void T264f7(T0* C, T0* a1, T1 a2, T1 a3)
+void T262f7(T0* C, T0* a1, T1 a2, T1 a3)
 {
-	((T264*)(C))->a2 = a1;
-	((T264*)(C))->a3 = a2;
-	((T264*)(C))->a1 = a3;
+	((T262*)(C))->a2 = a1;
+	((T262*)(C))->a3 = a2;
+	((T262*)(C))->a1 = a3;
 }
 
 /* DS_LINKED_LIST [STRING_8].is_last */
-T1 T182f11(T0* C)
+T1 T184f11(T0* C)
 {
 	T1 R = 0;
-	R = (T182f7(C, ((T182*)(C))->a1));
+	R = (T184f7(C, ((T184*)(C))->a1));
 	return R;
 }
 
 /* DS_LINKED_LIST [STRING_8].cursor_is_last */
-T1 T182f7(T0* C, T0* a1)
+T1 T184f7(T0* C, T0* a1)
 {
 	T1 t1;
 	T1 R = 0;
 	T0* l1 = 0;
-	l1 = (((T264*)(GE_void(a1)))->a2);
+	l1 = (((T262*)(GE_void(a1)))->a2);
 	t1 = ((l1)!=(EIF_VOID));
 	if (t1) {
-		R = ((l1)==(((T182*)(C))->a2));
+		R = ((l1)==(((T184*)(C))->a2));
 	} else {
 		R = EIF_FALSE;
 	}
@@ -38527,111 +38858,111 @@ T1 T182f7(T0* C, T0* a1)
 }
 
 /* DS_LINKED_LIST [STRING_8].item_for_iteration */
-T0* T182f8(T0* C)
+T0* T184f8(T0* C)
 {
 	T0* R = 0;
-	R = (T182f6(C, ((T182*)(C))->a1));
+	R = (T184f6(C, ((T184*)(C))->a1));
 	return R;
 }
 
 /* DS_LINKED_LIST [STRING_8].cursor_item */
-T0* T182f6(T0* C, T0* a1)
+T0* T184f6(T0* C, T0* a1)
 {
 	T0* t1;
 	T0* R = 0;
-	t1 = (((T264*)(GE_void(a1)))->a2);
-	R = (((T265*)(GE_void(t1)))->a1);
+	t1 = (((T262*)(GE_void(a1)))->a2);
+	R = (((T263*)(GE_void(t1)))->a1);
 	return R;
 }
 
 /* DS_LINKED_LIST [STRING_8].after */
-T1 T182f12(T0* C)
+T1 T184f12(T0* C)
 {
 	T1 R = 0;
-	R = (T182f13(C, ((T182*)(C))->a1));
+	R = (T184f13(C, ((T184*)(C))->a1));
 	return R;
 }
 
 /* DS_LINKED_LIST [STRING_8].cursor_after */
-T1 T182f13(T0* C, T0* a1)
+T1 T184f13(T0* C, T0* a1)
 {
 	T1 R = 0;
-	R = (((T264*)(GE_void(a1)))->a1);
+	R = (((T262*)(GE_void(a1)))->a1);
 	return R;
 }
 
 /* DS_LINKED_LIST [STRING_8].start */
-void T182f19(T0* C)
+void T184f19(T0* C)
 {
-	T182f21(C, ((T182*)(C))->a1);
+	T184f22(C, ((T184*)(C))->a1);
 }
 
 /* DS_LINKED_LIST [STRING_8].cursor_start */
-void T182f21(T0* C, T0* a1)
+void T184f22(T0* C, T0* a1)
 {
 	T1 t1;
 	T1 l1 = 0;
 	T1 l2 = 0;
-	l1 = (T182f14(C, a1));
-	l2 = ((((T182*)(C))->a3)==(EIF_VOID));
-	T264f7(GE_void(a1), ((T182*)(C))->a3, EIF_FALSE, l2);
+	l1 = (T184f14(C, a1));
+	l2 = ((((T184*)(C))->a3)==(EIF_VOID));
+	T262f7(GE_void(a1), ((T184*)(C))->a3, EIF_FALSE, l2);
 	t1 = ((T1)(!(l2)));
 	if (t1) {
 		t1 = (l1);
 	}
 	if (t1) {
-		T182f23(C, a1);
+		T184f24(C, a1);
 	}
 }
 
 /* DS_LINKED_LIST [STRING_8].cursor_off */
-T1 T182f14(T0* C, T0* a1)
+T1 T184f14(T0* C, T0* a1)
 {
 	T0* t1;
 	T1 R = 0;
-	t1 = (((T264*)(GE_void(a1)))->a2);
+	t1 = (((T262*)(GE_void(a1)))->a2);
 	R = ((t1)==(EIF_VOID));
 	return R;
 }
 
 /* DS_LINKED_LIST [STRING_8].force_last */
-void T182f17(T0* C, T0* a1)
+void T184f17(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* l1 = 0;
-	t1 = (T182f10(C));
+	t1 = (T184f10(C));
 	if (t1) {
-		((T182*)(C))->a3 = T265c3(a1);
-		((T182*)(C))->a2 = ((T182*)(C))->a3;
-		((T182*)(C))->a4 = (T6)(GE_int32(1));
+		((T184*)(C))->a3 = T263c3(a1);
+		((T184*)(C))->a2 = ((T184*)(C))->a3;
+		((T184*)(C))->a4 = (T6)(GE_int32(1));
 	} else {
-		l1 = ((T182*)(C))->a2;
-		((T182*)(C))->a2 = T265c3(a1);
-		T265f4(GE_void(l1), ((T182*)(C))->a2);
-		((T182*)(C))->a4 = ((T6)((((T182*)(C))->a4)+((T6)(GE_int32(1)))));
+		l1 = ((T184*)(C))->a2;
+		((T184*)(C))->a2 = T263c3(a1);
+		T263f4(GE_void(l1), ((T184*)(C))->a2);
+		((T184*)(C))->a4 = ((T6)((((T184*)(C))->a4)+((T6)(GE_int32(1)))));
 	}
 }
 
 /* DS_LINKABLE [STRING_8].put_right */
-void T265f4(T0* C, T0* a1)
+void T263f4(T0* C, T0* a1)
 {
-	((T265*)(C))->a2 = a1;
+	((T263*)(C))->a2 = a1;
 }
 
 /* DS_LINKABLE [STRING_8].make */
-T0* T265c3(T0* a1)
+T0* T263c3(T0* a1)
 {
 	T0* C;
-	C = GE_new265(EIF_TRUE);
-	((T265*)(C))->a1 = a1;
+	C = GE_new263(EIF_TRUE);
+	((T263*)(C))->a1 = a1;
 	return C;
 }
 
 /* DS_LINKED_LIST [STRING_8].is_empty */
-T1 T182f10(T0* C)
+T1 T184f10(T0* C)
 {
 	T1 R = 0;
-	R = (((((((T182*)(C))->a4) == ((T6)(GE_int32(0)))))));
+	R = (((((((T184*)(C))->a4) == ((T6)(GE_int32(0)))))));
 	return R;
 }
 
@@ -38663,56 +38994,64 @@ void T61f28(T0* C)
 {
 	T0* t1;
 	T61f28p1(C);
-	((T61*)(C))->a3 = T182c16();
+	((T61*)(C))->a3 = T184c16();
 	t1 = (T61f13(C));
-	T182f18(GE_void(((T61*)(C))->a3), t1);
+	T184f18(GE_void(((T61*)(C))->a3), t1);
 }
 
 /* DS_LINKED_LIST [STRING_8].set_equality_tester */
-void T182f18(T0* C, T0* a1)
+void T184f18(T0* C, T0* a1)
 {
-	((T182*)(C))->a5 = a1;
+	((T184*)(C))->a5 = a1;
 }
 
 /* AP_ENUMERATION_OPTION.string_equality_tester */
 T0* T61f13(T0* C)
 {
 	T0* R = 0;
-	if (ge362os3043) {
-		return ge362ov3043;
+	if (ge309os2983) {
+		return ge309ov2983;
 	} else {
-		ge362os3043 = '\1';
-		ge362ov3043 = R;
+		ge309os2983 = '\1';
+		ge309ov2983 = R;
 	}
 	R = T81c2();
-	ge362ov3043 = R;
+	ge309ov2983 = R;
 	return R;
 }
 
 /* DS_LINKED_LIST [STRING_8].make */
-T0* T182c16(void)
+T0* T184c16(void)
 {
 	T0* C;
-	C = GE_new182(EIF_TRUE);
-	((T182*)(C))->a1 = (T182f9(C));
+	T0* t1;
+	C = GE_new184(EIF_TRUE);
+	t1 = (T184f9(C));
+	T184f21(C, t1);
 	return C;
 }
 
+/* DS_LINKED_LIST [STRING_8].set_internal_cursor */
+void T184f21(T0* C, T0* a1)
+{
+	((T184*)(C))->a1 = a1;
+}
+
 /* DS_LINKED_LIST [STRING_8].new_cursor */
-T0* T182f9(T0* C)
+T0* T184f9(T0* C)
 {
 	T0* R = 0;
-	R = T264c6(C);
+	R = T262c6(C);
 	return R;
 }
 
 /* DS_LINKED_LIST_CURSOR [STRING_8].make */
-T0* T264c6(T0* a1)
+T0* T262c6(T0* a1)
 {
 	T0* C;
-	C = GE_new264(EIF_TRUE);
-	((T264*)(C))->a5 = a1;
-	((T264*)(C))->a3 = EIF_TRUE;
+	C = GE_new262(EIF_TRUE);
+	((T262*)(C))->a5 = a1;
+	((T262*)(C))->a3 = EIF_TRUE;
 	return C;
 }
 
@@ -38794,68 +39133,90 @@ void T62f25p0(T0* C)
 }
 
 /* DS_ARRAYED_LIST [AP_OPTION].force_last */
-void T179f21(T0* C, T0* a1)
+void T181f21(T0* C, T0* a1)
 {
 	T1 t1;
 	T6 t2;
-	t1 = (T179f15(C, (T6)(GE_int32(1))));
+	t1 = (T181f15(C, (T6)(GE_int32(1))));
 	t1 = ((T1)(!(t1)));
 	if (t1) {
-		t2 = ((T6)((((T179*)(C))->a2)+((T6)(GE_int32(1)))));
-		t2 = (T179f16(C, t2));
-		T179f24(C, t2);
+		t2 = ((T6)((((T181*)(C))->a2)+((T6)(GE_int32(1)))));
+		t2 = (T181f16(C, t2));
+		T181f25(C, t2);
 	}
-	((T179*)(C))->a2 = ((T6)((((T179*)(C))->a2)+((T6)(GE_int32(1)))));
-	((T259*)(GE_void(((T179*)(C))->a4)))->z2[((T179*)(C))->a2] = (a1);
+	((T181*)(C))->a2 = ((T6)((((T181*)(C))->a2)+((T6)(GE_int32(1)))));
+	((T257*)(GE_void(((T181*)(C))->a4)))->z2[((T181*)(C))->a2] = (a1);
 }
 
 /* DS_ARRAYED_LIST [AP_OPTION].resize */
-void T179f24(T0* C, T6 a1)
+void T181f25(T0* C, T6 a1)
 {
 	T6 t1;
 	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
-	((T179*)(C))->a4 = (T260f2(GE_void(((T179*)(C))->a5), ((T179*)(C))->a4, t1));
-	((T179*)(C))->a6 = a1;
+	((T181*)(C))->a4 = (T258f2(GE_void(((T181*)(C))->a5), ((T181*)(C))->a4, t1));
+	((T181*)(C))->a6 = a1;
 }
 
 /* KL_SPECIAL_ROUTINES [AP_OPTION].resize */
-T0* T260f2(T0* C, T0* a1, T6 a2)
+T0* T258f2(T0* C, T0* a1, T6 a2)
 {
 	T6 t1;
 	T1 t2;
 	T0* R = 0;
-	t1 = (((T259*)(GE_void(a1)))->z1);
+	T0* l1 = 0;
+	t1 = (((T257*)(GE_void(a1)))->a1);
 	t2 = (T6f1(&a2, t1));
 	if (t2) {
-		R = (T259f3(GE_void(a1), a2));
+		R = (T257f3(GE_void(a1), l1, a2));
 	} else {
 		R = a1;
 	}
 	return R;
 }
 
+/* SPECIAL [AP_OPTION].aliased_resized_area_with_default */
+T0* T257f3(T0* C, T0* a1, T6 a2)
+{
+	T1 t1;
+	T0* R = 0;
+	T6 l1 = 0;
+	T6 l2 = 0;
+	l2 = ((T257*)(C))->a1;
+	R = (T257f4(C, a2));
+	l1 = l2;
+	while (1) {
+		t1 = (((((l1) == (a2)))));
+		if (t1) {
+			break;
+		}
+		((T257*)(GE_void(R)))->z2[l1] = (a1);
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
+	return R;
+}
+
 /* SPECIAL [AP_OPTION].aliased_resized_area */
-T0* T259f3(T0* C, T6 a1)
+T0* T257f4(T0* C, T6 a1)
 {
 	T0* R = 0;
 	T6 t1;
-	t1 = ((T259*)(C))->z1;
+	t1 = ((T257*)(C))->a1;
 	if (a1>t1) {
-		R = GE_new259(a1, EIF_FALSE);
-		*(T259*)(R) = *(T259*)(C);
-		memcpy(((T259*)(R))->z2,((T259*)(C))->z2,t1*sizeof(T0*));
+		R = GE_new257(a1, EIF_FALSE);
+		*(T257*)(R) = *(T257*)(C);
+		memcpy(((T257*)(R))->z2,((T257*)(C))->z2,t1*sizeof(T0*));
 #ifndef GE_alloc_cleared
-		memset(((T259*)(R))->z2+t1,0,(a1-t1)*sizeof(T0*));
+		memset(((T257*)(R))->z2+t1,0,(a1-t1)*sizeof(T0*));
 #endif
 	} else {
 		R = C;
 	}
-	((T259*)(R))->z1 = a1;
+	((T257*)(R))->a1 = a1;
 	return R;
 }
 
 /* DS_ARRAYED_LIST [AP_OPTION].new_capacity */
-T6 T179f16(T0* C, T6 a1)
+T6 T181f16(T0* C, T6 a1)
 {
 	T6 t1;
 	T6 R = 0;
@@ -38866,12 +39227,12 @@ T6 T179f16(T0* C, T6 a1)
 }
 
 /* DS_ARRAYED_LIST [AP_OPTION].extendible */
-T1 T179f15(T0* C, T6 a1)
+T1 T181f15(T0* C, T6 a1)
 {
 	T6 t1;
 	T1 R = 0;
-	t1 = ((T6)((((T179*)(C))->a2)+(a1)));
-	R = (T6f5(&(((T179*)(C))->a6), t1));
+	t1 = ((T6)((((T181*)(C))->a2)+(a1)));
+	R = (T6f5(&(((T181*)(C))->a6), t1));
 	return R;
 }
 
@@ -38926,68 +39287,90 @@ void T63f25p0(T0* C)
 }
 
 /* DS_ARRAYED_LIST [AP_ALTERNATIVE_OPTIONS_LIST].force_last */
-void T180f19(T0* C, T0* a1)
+void T182f19(T0* C, T0* a1)
 {
 	T1 t1;
 	T6 t2;
-	t1 = (T180f12(C, (T6)(GE_int32(1))));
+	t1 = (T182f12(C, (T6)(GE_int32(1))));
 	t1 = ((T1)(!(t1)));
 	if (t1) {
-		t2 = ((T6)((((T180*)(C))->a5)+((T6)(GE_int32(1)))));
-		t2 = (T180f14(C, t2));
-		T180f22(C, t2);
+		t2 = ((T6)((((T182*)(C))->a5)+((T6)(GE_int32(1)))));
+		t2 = (T182f14(C, t2));
+		T182f23(C, t2);
 	}
-	((T180*)(C))->a5 = ((T6)((((T180*)(C))->a5)+((T6)(GE_int32(1)))));
-	((T262*)(GE_void(((T180*)(C))->a2)))->z2[((T180*)(C))->a5] = (a1);
+	((T182*)(C))->a5 = ((T6)((((T182*)(C))->a5)+((T6)(GE_int32(1)))));
+	((T260*)(GE_void(((T182*)(C))->a2)))->z2[((T182*)(C))->a5] = (a1);
 }
 
 /* DS_ARRAYED_LIST [AP_ALTERNATIVE_OPTIONS_LIST].resize */
-void T180f22(T0* C, T6 a1)
+void T182f23(T0* C, T6 a1)
 {
 	T6 t1;
 	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
-	((T180*)(C))->a2 = (T263f2(GE_void(((T180*)(C))->a3), ((T180*)(C))->a2, t1));
-	((T180*)(C))->a4 = a1;
+	((T182*)(C))->a2 = (T261f2(GE_void(((T182*)(C))->a3), ((T182*)(C))->a2, t1));
+	((T182*)(C))->a4 = a1;
 }
 
 /* KL_SPECIAL_ROUTINES [AP_ALTERNATIVE_OPTIONS_LIST].resize */
-T0* T263f2(T0* C, T0* a1, T6 a2)
+T0* T261f2(T0* C, T0* a1, T6 a2)
 {
 	T6 t1;
 	T1 t2;
 	T0* R = 0;
-	t1 = (((T262*)(GE_void(a1)))->z1);
+	T0* l1 = 0;
+	t1 = (((T260*)(GE_void(a1)))->a1);
 	t2 = (T6f1(&a2, t1));
 	if (t2) {
-		R = (T262f3(GE_void(a1), a2));
+		R = (T260f3(GE_void(a1), l1, a2));
 	} else {
 		R = a1;
 	}
 	return R;
 }
 
+/* SPECIAL [AP_ALTERNATIVE_OPTIONS_LIST].aliased_resized_area_with_default */
+T0* T260f3(T0* C, T0* a1, T6 a2)
+{
+	T1 t1;
+	T0* R = 0;
+	T6 l1 = 0;
+	T6 l2 = 0;
+	l2 = ((T260*)(C))->a1;
+	R = (T260f4(C, a2));
+	l1 = l2;
+	while (1) {
+		t1 = (((((l1) == (a2)))));
+		if (t1) {
+			break;
+		}
+		((T260*)(GE_void(R)))->z2[l1] = (a1);
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
+	return R;
+}
+
 /* SPECIAL [AP_ALTERNATIVE_OPTIONS_LIST].aliased_resized_area */
-T0* T262f3(T0* C, T6 a1)
+T0* T260f4(T0* C, T6 a1)
 {
 	T0* R = 0;
 	T6 t1;
-	t1 = ((T262*)(C))->z1;
+	t1 = ((T260*)(C))->a1;
 	if (a1>t1) {
-		R = GE_new262(a1, EIF_FALSE);
-		*(T262*)(R) = *(T262*)(C);
-		memcpy(((T262*)(R))->z2,((T262*)(C))->z2,t1*sizeof(T0*));
+		R = GE_new260(a1, EIF_FALSE);
+		*(T260*)(R) = *(T260*)(C);
+		memcpy(((T260*)(R))->z2,((T260*)(C))->z2,t1*sizeof(T0*));
 #ifndef GE_alloc_cleared
-		memset(((T262*)(R))->z2+t1,0,(a1-t1)*sizeof(T0*));
+		memset(((T260*)(R))->z2+t1,0,(a1-t1)*sizeof(T0*));
 #endif
 	} else {
 		R = C;
 	}
-	((T262*)(R))->z1 = a1;
+	((T260*)(R))->a1 = a1;
 	return R;
 }
 
 /* DS_ARRAYED_LIST [AP_ALTERNATIVE_OPTIONS_LIST].new_capacity */
-T6 T180f14(T0* C, T6 a1)
+T6 T182f14(T0* C, T6 a1)
 {
 	T6 t1;
 	T6 R = 0;
@@ -38998,12 +39381,12 @@ T6 T180f14(T0* C, T6 a1)
 }
 
 /* DS_ARRAYED_LIST [AP_ALTERNATIVE_OPTIONS_LIST].extendible */
-T1 T180f12(T0* C, T6 a1)
+T1 T182f12(T0* C, T6 a1)
 {
 	T6 t1;
 	T1 R = 0;
-	t1 = ((T6)((((T180*)(C))->a5)+(a1)));
-	R = (T6f5(&(((T180*)(C))->a4), t1));
+	t1 = ((T6)((((T182*)(C))->a5)+(a1)));
+	R = (T6f5(&(((T182*)(C))->a4), t1));
 	return R;
 }
 
@@ -39021,24 +39404,32 @@ T0* T64c11(T0* a1)
 /* AP_ALTERNATIVE_OPTIONS_LIST.old_make */
 void T64f14(T0* C)
 {
-	((T64*)(C))->a3 = (T64f10(C));
+	T0* t1;
+	t1 = (T64f10(C));
+	T64f15(C, t1);
+}
+
+/* AP_ALTERNATIVE_OPTIONS_LIST.set_internal_cursor */
+void T64f15(T0* C, T0* a1)
+{
+	((T64*)(C))->a3 = a1;
 }
 
 /* AP_ALTERNATIVE_OPTIONS_LIST.new_cursor */
 T0* T64f10(T0* C)
 {
 	T0* R = 0;
-	R = T187c6(C);
+	R = T189c6(C);
 	return R;
 }
 
 /* DS_LINKED_LIST_CURSOR [AP_OPTION].make */
-T0* T187c6(T0* a1)
+T0* T189c6(T0* a1)
 {
 	T0* C;
-	C = GE_new187(EIF_TRUE);
-	((T187*)(C))->a1 = a1;
-	((T187*)(C))->a2 = EIF_TRUE;
+	C = GE_new189(EIF_TRUE);
+	((T189*)(C))->a1 = a1;
+	((T189*)(C))->a2 = EIF_TRUE;
 	return C;
 }
 
@@ -39079,28 +39470,30 @@ void T60f23(T0* C, T0* a1)
 }
 
 /* AP_PARSER.set_parameters_description */
-void T59f27(T0* C, T0* a1)
+void T59f26(T0* C, T0* a1)
 {
 	((T59*)(C))->a6 = a1;
 }
 
 /* AP_PARSER.set_application_description */
-void T59f26(T0* C, T0* a1)
+void T59f25(T0* C, T0* a1)
 {
 	((T59*)(C))->a5 = a1;
 }
 
 /* AP_PARSER.make */
-T0* T59c25(void)
+T0* T59c24(void)
 {
 	T0* C;
 	T0* l1 = 0;
+	T0* l2 = 0;
 	C = GE_new59(EIF_TRUE);
-	T59f29(C);
-	((T59*)(C))->a4 = T71c36((T2)('h'), ge55ov5342);
-	T71f37(GE_void(((T59*)(C))->a4), ge55ov5341);
-	l1 = T64c11(((T59*)(C))->a4);
-	T180f19(GE_void(((T59*)(C))->a1), l1);
+	T59f28(C);
+	l2 = T71c36((T2)('h'), ge7ov5974);
+	((T59*)(C))->a4 = l2;
+	T71f37(GE_void(l2), ge7ov5973);
+	l1 = T64c11(l2);
+	T182f19(GE_void(((T59*)(C))->a1), l1);
 	return C;
 }
 
@@ -39142,109 +39535,134 @@ void T71f38(T0* C)
 }
 
 /* AP_PARSER.make_empty */
-void T59f29(T0* C)
+void T59f28(T0* C)
 {
-	((T59*)(C))->a2 = T179c20((T6)(GE_int32(0)));
-	((T59*)(C))->a1 = T180c18((T6)(GE_int32(0)));
-	((T59*)(C))->a7 = T181c7();
-	((T59*)(C))->a6 = ge55ov5349;
-	((T59*)(C))->a5 = ge55ov5348;
+	((T59*)(C))->a2 = T181c20((T6)(GE_int32(0)));
+	((T59*)(C))->a1 = T182c18((T6)(GE_int32(0)));
+	((T59*)(C))->a7 = T183c7();
+	((T59*)(C))->a6 = ge7ov5981;
+	((T59*)(C))->a5 = ge7ov5980;
 }
 
 /* AP_ERROR_HANDLER.make_standard */
-T0* T181c7(void)
+T0* T183c7(void)
 {
 	T0* C;
 	T0* t1;
-	C = GE_new181(EIF_TRUE);
-	t1 = (T181f5(C));
-	((T181*)(C))->a2 = (T45f3(GE_void(t1)));
-	t1 = (T181f5(C));
-	((T181*)(C))->a3 = (T45f3(GE_void(t1)));
-	t1 = (T181f5(C));
-	((T181*)(C))->a4 = (T45f2(GE_void(t1)));
+	C = GE_new183(EIF_TRUE);
+	t1 = (T183f5(C));
+	((T183*)(C))->a2 = (T45f3(GE_void(t1)));
+	t1 = (T183f5(C));
+	((T183*)(C))->a3 = (T45f3(GE_void(t1)));
+	t1 = (T183f5(C));
+	((T183*)(C))->a4 = (T45f2(GE_void(t1)));
 	return C;
 }
 
 /* AP_ERROR_HANDLER.std */
-T0* T181f5(T0* C)
+T0* T183f5(T0* C)
 {
 	T0* R = 0;
-	if (ge403os1766) {
-		return ge403ov1766;
+	if (ge345os1743) {
+		return ge345ov1743;
 	} else {
-		ge403os1766 = '\1';
-		ge403ov1766 = R;
+		ge345os1743 = '\1';
+		ge345ov1743 = R;
 	}
 	R = T45c4();
-	ge403ov1766 = R;
+	ge345ov1743 = R;
 	return R;
 }
 
 /* DS_ARRAYED_LIST [AP_ALTERNATIVE_OPTIONS_LIST].make */
-T0* T180c18(T6 a1)
+T0* T182c18(T6 a1)
 {
 	T0* C;
 	T6 t1;
-	C = GE_new180(EIF_TRUE);
-	((T180*)(C))->a3 = T263c3();
+	T0* t2;
+	C = GE_new182(EIF_TRUE);
+	((T182*)(C))->a3 = T261c3();
 	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
-	((T180*)(C))->a2 = (T263f1(GE_void(((T180*)(C))->a3), t1));
-	((T180*)(C))->a4 = a1;
-	((T180*)(C))->a1 = (T180f11(C));
+	((T182*)(C))->a2 = (T261f1(GE_void(((T182*)(C))->a3), t1));
+	((T182*)(C))->a4 = a1;
+	t2 = (T182f11(C));
+	T182f22(C, t2);
 	return C;
 }
 
+/* DS_ARRAYED_LIST [AP_ALTERNATIVE_OPTIONS_LIST].set_internal_cursor */
+void T182f22(T0* C, T0* a1)
+{
+	((T182*)(C))->a1 = a1;
+}
+
 /* DS_ARRAYED_LIST [AP_ALTERNATIVE_OPTIONS_LIST].new_cursor */
-T0* T180f11(T0* C)
+T0* T182f11(T0* C)
 {
 	T0* R = 0;
-	R = T261c5(C);
+	R = T259c5(C);
 	return R;
 }
 
 /* DS_ARRAYED_LIST_CURSOR [AP_ALTERNATIVE_OPTIONS_LIST].make */
-T0* T261c5(T0* a1)
+T0* T259c5(T0* a1)
 {
 	T0* C;
-	C = GE_new261(EIF_TRUE);
-	((T261*)(C))->a3 = a1;
-	((T261*)(C))->a1 = (T6)(GE_int32(0));
+	C = GE_new259(EIF_TRUE);
+	((T259*)(C))->a3 = a1;
+	((T259*)(C))->a1 = (T6)(GE_int32(0));
 	return C;
 }
 
 /* KL_SPECIAL_ROUTINES [AP_ALTERNATIVE_OPTIONS_LIST].make */
-T0* T263f1(T0* C, T6 a1)
+T0* T261f1(T0* C, T6 a1)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	l1 = T281c2(a1);
-	R = (((T281*)(GE_void(l1)))->a1);
+	R = T260c5(l1, a1);
 	return R;
 }
 
-/* TO_SPECIAL [AP_ALTERNATIVE_OPTIONS_LIST].make_area */
-T0* T281c2(T6 a1)
+/* SPECIAL [AP_ALTERNATIVE_OPTIONS_LIST].make_filled */
+T0* T260c5(T0* a1, T6 a2)
 {
 	T0* C;
-	C = GE_new281(EIF_TRUE);
-	((T281*)(C))->a1 = T262c4(a1);
+	T6 t1;
+	C = GE_new260(a2, EIF_TRUE);
+	T260f7(C, a2);
+	t1 = ((T6)((a2)-((T6)(GE_int32(1)))));
+	T260f8(C, a1, (T6)(GE_int32(0)), t1);
 	return C;
+}
+
+/* SPECIAL [AP_ALTERNATIVE_OPTIONS_LIST].fill_with */
+void T260f8(T0* C, T0* a1, T6 a2, T6 a3)
+{
+	T1 t1;
+	T6 l1 = 0;
+	T6 l2 = 0;
+	l1 = a2;
+	l2 = ((T6)((a3)+((T6)(GE_int32(1)))));
+	while (1) {
+		t1 = (((((l1) == (l2)))));
+		if (t1) {
+			break;
+		}
+		((T260*)(C))->z2[l1] = (a1);
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
 }
 
 /* SPECIAL [AP_ALTERNATIVE_OPTIONS_LIST].make */
-T0* T262c4(T6 a1)
+void T260f7(T0* C, T6 a1)
 {
-	T0* C;
-	C = GE_new262(a1, EIF_TRUE);
-	return C;
 }
 
 /* KL_SPECIAL_ROUTINES [AP_ALTERNATIVE_OPTIONS_LIST].default_create */
-T0* T263c3(void)
+T0* T261c3(void)
 {
 	T0* C;
-	C = GE_new263(EIF_TRUE);
+	C = GE_new261(EIF_TRUE);
 	return C;
 }
 
@@ -39270,46 +39688,46 @@ T0* T25c34(void)
 	((T25*)(C))->a5 = T48c15((T6)(GE_int32(250)));
 	((T25*)(C))->a15 = T48c15((T6)(GE_int32(40)));
 	((T25*)(C))->a16 = T74c21((T6)(GE_int32(1)));
-	((T25*)(C))->a17 = T75c17((T6)(GE_int32(40)));
+	((T25*)(C))->a17 = T75c19((T6)(GE_int32(40)));
 	return C;
 }
 
 /* LX_START_CONDITIONS.make_with_initial */
-T0* T75c17(T6 a1)
+T0* T75c19(T6 a1)
 {
 	T0* C;
 	T0* l1 = 0;
 	C = GE_new75(EIF_TRUE);
-	T75f18(C, a1);
+	T75f20(C, a1);
 	l1 = T101c7(GE_ms8("INITIAL", 7), (T6)(GE_int32(0)), EIF_FALSE);
-	T75f28(C, l1);
+	T75f30(C, l1);
 	return C;
 }
 
 /* LX_START_CONDITIONS.put_first */
-void T75f28(T0* C, T0* a1)
+void T75f30(T0* C, T0* a1)
 {
-	T75f32(C, a1, (T6)(GE_int32(1)));
+	T75f35(C, a1, (T6)(GE_int32(1)));
 }
 
 /* LX_START_CONDITIONS.put */
-void T75f32(T0* C, T0* a1, T6 a2)
+void T75f35(T0* C, T0* a1, T6 a2)
 {
 	T6 t1;
 	T1 t2;
 	t1 = ((T6)((((T75*)(C))->a1)+((T6)(GE_int32(1)))));
 	t2 = (((((a2) == (t1)))));
 	if (t2) {
-		T75f22(C, a1);
+		T75f24(C, a1);
 	} else {
-		T75f34(C, a2, (T6)(GE_int32(1)));
-		T75f35(C, a2, (T6)(GE_int32(1)));
-		((T196*)(GE_void(((T75*)(C))->a2)))->z2[a2] = (a1);
+		T75f37(C, a2, (T6)(GE_int32(1)));
+		T75f38(C, a2, (T6)(GE_int32(1)));
+		((T198*)(GE_void(((T75*)(C))->a2)))->z2[a2] = (a1);
 	}
 }
 
 /* LX_START_CONDITIONS.move_cursors_right */
-void T75f35(T0* C, T6 a1, T6 a2)
+void T75f38(T0* C, T6 a1, T6 a2)
 {
 	T1 t1;
 	T6 t2;
@@ -39321,18 +39739,18 @@ void T75f35(T0* C, T6 a1, T6 a2)
 		if (t1) {
 			break;
 		}
-		l2 = (((T198*)(GE_void(l1)))->a2);
+		l2 = (((T201*)(GE_void(l1)))->a2);
 		t1 = (T6f5((&l2), a1));
 		if (t1) {
 			t2 = ((T6)((l2)+(a2)));
-			T198f5(GE_void(l1), t2);
+			T201f5(GE_void(l1), t2);
 		}
-		l1 = (((T198*)(GE_void(l1)))->a1);
+		l1 = (((T201*)(GE_void(l1)))->a1);
 	}
 }
 
 /* LX_START_CONDITIONS.move_right */
-void T75f34(T0* C, T6 a1, T6 a2)
+void T75f37(T0* C, T6 a1, T6 a2)
 {
 	T1 t1;
 	T0* t2;
@@ -39345,9 +39763,9 @@ void T75f34(T0* C, T6 a1, T6 a2)
 		if (t1) {
 			break;
 		}
-		t2 = (((T196*)(GE_void(((T75*)(C))->a2)))->z2[l1]);
+		t2 = (((T198*)(GE_void(((T75*)(C))->a2)))->z2[l1]);
 		t3 = ((T6)((l1)+(a2)));
-		((T196*)(GE_void(((T75*)(C))->a2)))->z2[t3] = (t2);
+		((T198*)(GE_void(((T75*)(C))->a2)))->z2[t3] = (t2);
 		l1 = ((T6)((l1)-((T6)(GE_int32(1)))));
 	}
 }
@@ -39371,14 +39789,14 @@ T0* T24c6(void)
 T0* T24f4(T0* C)
 {
 	T0* R = 0;
-	if (ge403os1766) {
-		return ge403ov1766;
+	if (ge345os1743) {
+		return ge345ov1743;
 	} else {
-		ge403os1766 = '\1';
-		ge403ov1766 = R;
+		ge345os1743 = '\1';
+		ge345ov1743 = R;
 	}
 	R = T45c4();
-	ge403ov1766 = R;
+	ge345ov1743 = R;
 	return R;
 }
 
@@ -39392,14 +39810,14 @@ void T23f5(T0* C, T0* a1)
 T0* T21f6(T0* C)
 {
 	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
+	if (ge380os1745) {
+		return ge380ov1745;
 	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
 	}
 	R = T23c4();
-	ge434ov1769 = R;
+	ge380ov1745 = R;
 	return R;
 }
 
@@ -39422,7 +39840,7 @@ void T21f8(T0* C)
 	l2 = T27c1();
 	l3 = T28c1();
 	l4 = T29c1();
-	l5 = T30c3();
+	l5 = T30c2();
 	l6 = T31c1();
 	l7 = T32c1();
 	l8 = T33c1();
@@ -39521,16 +39939,16 @@ T0* T26c1(void)
 }
 
 /* MANAGED_POINTER.dispose */
-void T289f8(T0* C)
+void T282f8(T0* C)
 {
 	T1 t1;
 	T14 l1 = 0;
-	t1 = ((T1)(!(((T289*)(C))->a1)));
+	t1 = ((T1)(!(((T282*)(C))->a1)));
 	if (t1) {
-		T14f6(&(((T289*)(C))->a2));
+		T14f6(&(((T282*)(C))->a2));
 	}
-	((T289*)(C))->a2 = l1;
-	((T289*)(C))->a1 = EIF_FALSE;
+	((T282*)(C))->a2 = l1;
+	((T282*)(C))->a1 = EIF_FALSE;
 }
 
 /* POINTER.memory_free */
@@ -39557,99 +39975,99 @@ void T14f7(T14* C, T14 a1)
 }
 
 /* KL_TEXT_OUTPUT_FILE.dispose */
-void T55f21(T0* C)
+void T55f22(T0* C)
 {
 	T1 t1;
 	t1 = (T55f11(C));
 	t1 = ((T1)(!(t1)));
 	if (t1) {
-		T55f30(C);
+		T55f31(C);
 	}
 }
 
 /* KL_TEXT_INPUT_FILE.dispose */
-void T39f36(T0* C)
+void T39f37(T0* C)
 {
 	T1 t1;
-	t1 = (T39f10(C));
+	t1 = (T39f11(C));
 	t1 = ((T1)(!(t1)));
 	if (t1) {
-		T39f40(C);
+		T39f41(C);
 	}
 }
 
 /* LX_SYMBOL_TRANSITION [LX_NFA_STATE].set_target */
-void T213f7(T0* C, T0* a1)
-{
-	((T213*)(C))->a2 = a1;
-}
-
-/* LX_SYMBOL_CLASS_TRANSITION [LX_NFA_STATE].set_target */
 void T212f7(T0* C, T0* a1)
 {
 	((T212*)(C))->a2 = a1;
 }
 
-/* LX_EPSILON_TRANSITION [LX_NFA_STATE].set_target */
-void T209f6(T0* C, T0* a1)
+/* LX_SYMBOL_CLASS_TRANSITION [LX_NFA_STATE].set_target */
+void T211f7(T0* C, T0* a1)
 {
-	((T209*)(C))->a1 = a1;
+	((T211*)(C))->a2 = a1;
+}
+
+/* LX_EPSILON_TRANSITION [LX_NFA_STATE].set_target */
+void T208f6(T0* C, T0* a1)
+{
+	((T208*)(C))->a1 = a1;
 }
 
 /* LX_SYMBOL_TRANSITION [LX_NFA_STATE].record */
-void T213f8(T0* C, T0* a1)
+void T212f8(T0* C, T0* a1)
 {
-	T148f12(GE_void(a1), ((T213*)(C))->a1);
+	T149f12(GE_void(a1), ((T212*)(C))->a1);
 }
 
 /* LX_SYMBOL_PARTITIONS.put */
-void T148f12(T0* C, T6 a1)
+void T149f12(T0* C, T6 a1)
 {
-	T159f6(GE_void(((T148*)(C))->a1), EIF_TRUE, a1);
-	T148f12p1(C, a1);
+	T160f6(GE_void(((T149*)(C))->a1), EIF_TRUE, a1);
+	T149f12p1(C, a1);
 }
 
 /* LX_SYMBOL_PARTITIONS.put */
-void T148f12p1(T0* C, T6 a1)
+void T149f12p1(T0* C, T6 a1)
 {
 	T1 t1;
 	T0* l1 = 0;
 	T0* l2 = 0;
 	T0* l3 = 0;
-	l1 = (T216f4(GE_void(((T148*)(C))->a2), a1));
-	l2 = (((T214*)(GE_void(l1)))->a2);
-	l3 = (((T214*)(GE_void(l1)))->a3);
+	l1 = (T215f4(GE_void(((T149*)(C))->a2), a1));
+	l2 = (((T213*)(GE_void(l1)))->a2);
+	l3 = (((T213*)(GE_void(l1)))->a3);
 	t1 = ((l2)!=(EIF_VOID));
 	if (t1) {
 		t1 = ((l3)!=(EIF_VOID));
 	}
 	if (t1) {
-		T214f6(GE_void(l2), l3);
-		T214f7(GE_void(l1));
-		T214f8(GE_void(l1));
+		T213f6(GE_void(l2), l3);
+		T213f7(GE_void(l1));
+		T213f8(GE_void(l1));
 	} else {
 		t1 = ((l3)!=(EIF_VOID));
 		if (t1) {
-			T214f8(GE_void(l3));
-			T214f7(GE_void(l1));
+			T213f8(GE_void(l3));
+			T213f7(GE_void(l1));
 		} else {
 			t1 = ((l2)!=(EIF_VOID));
 			if (t1) {
-				T214f7(GE_void(l2));
-				T214f8(GE_void(l1));
+				T213f7(GE_void(l2));
+				T213f8(GE_void(l1));
 			}
 		}
 	}
 }
 
 /* LX_SYMBOL_CLASS_TRANSITION [LX_NFA_STATE].record */
-void T212f8(T0* C, T0* a1)
+void T211f8(T0* C, T0* a1)
 {
-	T148f11(GE_void(a1), ((T212*)(C))->a1);
+	T149f11(GE_void(a1), ((T211*)(C))->a1);
 }
 
 /* LX_SYMBOL_PARTITIONS.add */
-void T148f11(T0* C, T0* a1)
+void T149f11(T0* C, T0* a1)
 {
 	T1 t1;
 	T6 t2;
@@ -39659,14 +40077,14 @@ void T148f11(T0* C, T0* a1)
 	T6 l4 = 0;
 	T6 l5 = 0;
 	T0* l6 = 0;
-	T148f11p1(C, a1);
+	T149f11p1(C, a1);
 	l3 = (((T90*)(GE_void(a1)))->a7);
-	l6 = ((T148*)(C))->a1;
-	t1 = (((T90*)(GE_void(a1)))->a5);
+	l6 = ((T149*)(C))->a1;
+	t1 = (((T90*)(GE_void(a1)))->a4);
 	if (t1) {
-		t2 = (T148f7(C));
+		t2 = (T149f7(C));
 		l2 = ((T6)((t2)-((T6)(GE_int32(1)))));
-		l4 = (T148f6(C));
+		l4 = (T149f6(C));
 		l1 = (T6)(GE_int32(1));
 		while (1) {
 			t1 = (T6f1((&l1), l3));
@@ -39680,7 +40098,7 @@ void T148f11(T0* C, T0* a1)
 				if (t1) {
 					break;
 				}
-				T159f6(GE_void(l6), EIF_TRUE, l2);
+				T160f6(GE_void(l6), EIF_TRUE, l2);
 				l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
 			}
 			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
@@ -39691,7 +40109,7 @@ void T148f11(T0* C, T0* a1)
 			if (t1) {
 				break;
 			}
-			T159f6(GE_void(l6), EIF_TRUE, l2);
+			T160f6(GE_void(l6), EIF_TRUE, l2);
 			l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
 		}
 	} else {
@@ -39702,14 +40120,14 @@ void T148f11(T0* C, T0* a1)
 				break;
 			}
 			t2 = (T90f14(GE_void(a1), l1));
-			T159f6(GE_void(l6), EIF_TRUE, t2);
+			T160f6(GE_void(l6), EIF_TRUE, t2);
 			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 		}
 	}
 }
 
 /* LX_SYMBOL_PARTITIONS.add */
-void T148f11p1(T0* C, T0* a1)
+void T149f11p1(T0* C, T0* a1)
 {
 	T6 t1;
 	T6 t2;
@@ -39729,9 +40147,9 @@ void T148f11p1(T0* C, T0* a1)
 	T6 l11 = 0;
 	T0* l12 = 0;
 	l8 = (((T90*)(GE_void(a1)))->a7);
-	t1 = (T148f7(C));
-	t2 = (T148f6(C));
-	l12 = T159c5(t1, t2);
+	t1 = (T149f7(C));
+	t2 = (T149f6(C));
+	l12 = T160c5(EIF_FALSE, t1, t2);
 	l7 = (T6)(GE_int32(1));
 	while (1) {
 		t3 = (T6f1((&l7), l8));
@@ -39739,17 +40157,17 @@ void T148f11p1(T0* C, T0* a1)
 			break;
 		}
 		t1 = (T90f14(GE_void(a1), l7));
-		l1 = (T216f4(GE_void(((T148*)(C))->a2), t1));
-		l3 = (((T214*)(GE_void(l1)))->a2);
+		l1 = (T215f4(GE_void(((T149*)(C))->a2), t1));
+		l3 = (((T213*)(GE_void(l1)))->a2);
 		l4 = l1;
 		l6 = ((T6)((l7)+((T6)(GE_int32(1)))));
-		l2 = (((T214*)(GE_void(l1)))->a3);
+		l2 = (((T213*)(GE_void(l1)))->a3);
 		while (1) {
 			t3 = ((l2)==(EIF_VOID));
 			if (t3) {
 				break;
 			}
-			l5 = (((T214*)(GE_void(l2)))->a1);
+			l5 = (((T213*)(GE_void(l2)))->a1);
 			l9 = EIF_FALSE;
 			while (1) {
 				if (!(l9)) {
@@ -39767,13 +40185,13 @@ void T148f11p1(T0* C, T0* a1)
 				} else {
 					t3 = (((((l11) == (l5)))));
 					if (t3) {
-						t4 = (T159f4(GE_void(l12), l5));
+						t4 = (T160f4(GE_void(l12), l5));
 						t3 = ((T1)(!(t4)));
 					}
 					if (t3) {
-						T214f6(GE_void(l4), l2);
+						T213f6(GE_void(l4), l2);
 						l4 = l2;
-						T159f6(GE_void(l12), EIF_TRUE, l6);
+						T160f6(GE_void(l12), EIF_TRUE, l6);
 						l10 = EIF_TRUE;
 						l9 = EIF_TRUE;
 					} else {
@@ -39785,32 +40203,32 @@ void T148f11p1(T0* C, T0* a1)
 			if (t3) {
 				t3 = ((l3)==(EIF_VOID));
 				if (t3) {
-					T214f8(GE_void(l2));
+					T213f8(GE_void(l2));
 				} else {
-					T214f6(GE_void(l3), l2);
+					T213f6(GE_void(l3), l2);
 				}
 				l3 = l2;
 			} else {
 				l10 = EIF_FALSE;
 			}
-			l2 = (((T214*)(GE_void(l2)))->a3);
+			l2 = (((T213*)(GE_void(l2)))->a3);
 		}
-		t5 = (((T214*)(GE_void(l1)))->a2);
+		t5 = (((T213*)(GE_void(l1)))->a2);
 		t3 = ((t5)!=(EIF_VOID));
 		if (!(t3)) {
-			t5 = (((T214*)(GE_void(l1)))->a2);
+			t5 = (((T213*)(GE_void(l1)))->a2);
 			t3 = ((l3)!=(t5));
 		}
 		if (t3) {
-			T214f8(GE_void(l1));
-			T214f7(GE_void(l3));
+			T213f8(GE_void(l1));
+			T213f7(GE_void(l3));
 		}
-		T214f7(GE_void(l4));
+		T213f7(GE_void(l4));
 		l7 = ((T6)((l7)+((T6)(GE_int32(1)))));
 		while (1) {
 			t3 = (T6f1((&l7), l8));
 			if (!(t3)) {
-				t4 = (T159f4(GE_void(l12), l7));
+				t4 = (T160f4(GE_void(l12), l7));
 				t3 = ((T1)(!(t4)));
 			}
 			if (t3) {
@@ -39822,7 +40240,7 @@ void T148f11p1(T0* C, T0* a1)
 }
 
 /* LX_EPSILON_TRANSITION [LX_NFA_STATE].record */
-void T209f7(T0* C, T0* a1)
+void T208f7(T0* C, T0* a1)
 {
 }
 
@@ -39835,33 +40253,41 @@ void T71f41(T0* C)
 /* AP_INTEGER_OPTION.reset */
 void T63f27(T0* C)
 {
-	((T63*)(C))->a1 = T186c8();
+	((T63*)(C))->a1 = T188c8();
 }
 
 /* DS_LINKED_LIST [INTEGER_32].make */
-T0* T186c8(void)
+T0* T188c8(void)
 {
 	T0* C;
-	C = GE_new186(EIF_TRUE);
-	((T186*)(C))->a3 = (T186f5(C));
+	T0* t1;
+	C = GE_new188(EIF_TRUE);
+	t1 = (T188f7(C));
+	T188f9(C, t1);
 	return C;
 }
 
+/* DS_LINKED_LIST [INTEGER_32].set_internal_cursor */
+void T188f9(T0* C, T0* a1)
+{
+	((T188*)(C))->a3 = a1;
+}
+
 /* DS_LINKED_LIST [INTEGER_32].new_cursor */
-T0* T186f5(T0* C)
+T0* T188f7(T0* C)
 {
 	T0* R = 0;
-	R = T267c3(C);
+	R = T265c3(C);
 	return R;
 }
 
 /* DS_LINKED_LIST_CURSOR [INTEGER_32].make */
-T0* T267c3(T0* a1)
+T0* T265c3(T0* a1)
 {
 	T0* C;
-	C = GE_new267(EIF_TRUE);
-	((T267*)(C))->a1 = a1;
-	((T267*)(C))->a2 = EIF_TRUE;
+	C = GE_new265(EIF_TRUE);
+	((T265*)(C))->a1 = a1;
+	((T265*)(C))->a2 = EIF_TRUE;
 	return C;
 }
 
@@ -39896,7 +40322,7 @@ void T71f43(T0* C, T0* a1)
 	T0* t2;
 	t1 = (((T59*)(a1))->a7);
 	t2 = (T71f29(C, a1));
-	T181f11(GE_void(t1), t2);
+	T183f11(GE_void(t1), t2);
 	t1 = (T71f30(C));
 	T44f2(GE_void(t1), (T6)(GE_int32(0)));
 }
@@ -39905,21 +40331,21 @@ void T71f43(T0* C, T0* a1)
 T0* T71f30(T0* C)
 {
 	T0* R = 0;
-	if (ge436os1767) {
-		return ge436ov1767;
+	if (ge382os1744) {
+		return ge382ov1744;
 	} else {
-		ge436os1767 = '\1';
-		ge436ov1767 = R;
+		ge382os1744 = '\1';
+		ge382ov1744 = R;
 	}
 	R = T44c1();
-	ge436ov1767 = R;
+	ge382ov1744 = R;
 	return R;
 }
 
 /* AP_ERROR_HANDLER.report_info_message */
-void T181f11(T0* C, T0* a1)
+void T183f11(T0* C, T0* a1)
 {
-	T58f13(GE_void(((T181*)(C))->a4), a1);
+	T58f14(GE_void(((T183*)(C))->a4), a1);
 }
 
 /* AP_DISPLAY_HELP_FLAG.full_help_text */
@@ -39935,63 +40361,63 @@ T0* T71f29(T0* C, T0* a1)
 	T0* l3 = 0;
 	T0* l4 = 0;
 	T1 l5 = 0;
-	l3 = T290c3();
-	l4 = T291c2(l3);
+	l3 = T278c3();
+	l4 = T279c2(l3);
 	R = (T71f13(C, a1));
 	t1 = (((T59*)(a1))->a5);
 	t2 = (T17f31(GE_void(t1)));
 	t2 = ((T1)(!(t2)));
 	if (t2) {
-		T17f34(GE_void(R), ge56ov5568);
-		t1 = (T71f25(C));
-		T191f10(GE_void(t1), (T6)(GE_int32(0)));
-		t1 = (T71f25(C));
+		T17f34(GE_void(R), ge8ov6119);
+		t1 = (T71f26(C));
+		T193f10(GE_void(t1), (T6)(GE_int32(0)));
+		t1 = (T71f26(C));
 		t3 = (((T59*)(a1))->a5);
-		t1 = (T191f5(GE_void(t1), t3));
+		t1 = (T193f5(GE_void(t1), t3));
 		T17f34(GE_void(R), t1);
-		T17f34(GE_void(R), ge56ov5569);
+		T17f34(GE_void(R), ge8ov6120);
 	}
-	T17f34(GE_void(R), ge56ov5570);
-	l2 = (T59f15(a1));
-	T291f3(GE_void(l4), l2);
+	T17f34(GE_void(R), ge8ov6121);
+	l2 = (T59f14(a1));
+	T279f3(GE_void(l4), l2);
 	l1 = (T6)(GE_int32(0));
-	T179f22(GE_void(l2));
+	T181f22(GE_void(l2));
 	while (1) {
-		t2 = (T179f9(GE_void(l2)));
+		t2 = (T181f9(GE_void(l2)));
 		if (t2) {
 			break;
 		}
-		t1 = (T179f7(GE_void(l2)));
-		t2 = (T66x5372(GE_void(t1)));
+		t1 = (T181f7(GE_void(l2)));
+		t2 = (T66x6004(GE_void(t1)));
 		t2 = ((T1)(!(t2)));
 		if (t2) {
-			t1 = (T179f7(GE_void(l2)));
-			t1 = (T66x5365(GE_void(t1)));
+			t1 = (T181f7(GE_void(l2)));
+			t1 = (T66x5997(GE_void(t1)));
 			t4 = (((T17*)(GE_void(t1)))->a2);
 			l1 = (T6f12(&t4, l1));
 		}
-		T179f23(GE_void(l2));
+		T181f23(GE_void(l2));
 	}
-	T179f22(GE_void(l2));
+	T181f22(GE_void(l2));
 	while (1) {
-		t2 = (T179f9(GE_void(l2)));
+		t2 = (T181f9(GE_void(l2)));
 		if (t2) {
 			break;
 		}
-		t1 = (T179f7(GE_void(l2)));
-		t2 = (T66x5372(GE_void(t1)));
+		t1 = (T181f7(GE_void(l2)));
+		t2 = (T66x6004(GE_void(t1)));
 		t2 = ((T1)(!(t2)));
 		if (t2) {
 			if (l5) {
 				T17f33(GE_void(R), (T2)('\n'));
 			}
-			t1 = (T179f7(GE_void(l2)));
+			t1 = (T181f7(GE_void(l2)));
 			t4 = ((T6)((l1)+((T6)(GE_int32(1)))));
 			t1 = (T71f35(C, t1, t4));
 			T17f34(GE_void(R), t1);
 			l5 = EIF_TRUE;
 		}
-		T179f23(GE_void(l2));
+		T181f23(GE_void(l2));
 	}
 	return R;
 }
@@ -40005,55 +40431,55 @@ T0* T71f35(T0* C, T0* a1, T6 a2)
 	T0* t4;
 	T0* R = 0;
 	T0* l1 = 0;
-	t1 = (T66x5365(GE_void(a1)));
+	t1 = (T66x5997(GE_void(a1)));
 	t2 = (((T17*)(GE_void(t1)))->a2);
 	t2 = ((T6)((a2)-(t2)));
 	l1 = T17c40((T2)(' '), t2);
-	t1 = (T71f25(C));
-	T191f10(GE_void(t1), a2);
-	t1 = (T71f25(C));
-	t3 = (T66x5365(GE_void(a1)));
-	t3 = (T17f17(GE_void(t3), l1));
-	t4 = (T66x5361(GE_void(a1)));
-	t3 = (T17f17(GE_void(t3), t4));
-	R = (T191f5(GE_void(t1), t3));
+	t1 = (T71f26(C));
+	T193f10(GE_void(t1), a2);
+	t1 = (T71f26(C));
+	t3 = (T66x5997(GE_void(a1)));
+	t3 = (T17f18(GE_void(t3), l1));
+	t4 = (T66x5993(GE_void(a1)));
+	t3 = (T17f18(GE_void(t3), t4));
+	R = (T193f5(GE_void(t1), t3));
 	return R;
 }
 
-/* STRING_8.infix "+" */
-T0* T17f17(T0* C, T0* a1)
+/* STRING_8.plus */
+T0* T17f18(T0* C, T0* a1)
 {
 	T6 t1;
 	T0* R = 0;
 	t1 = (((T17*)(GE_void(a1)))->a2);
 	t1 = ((T6)((((T17*)(C))->a2)+(t1)));
-	R = (T17f19(C, t1));
-	T17f37(GE_void(R), C);
-	T17f37(GE_void(R), a1);
+	R = (T17f21(C, t1));
+	T17f38(GE_void(R), C);
+	T17f38(GE_void(R), a1);
 	return R;
 }
 
 /* DS_QUICK_SORTER [AP_OPTION].sort */
-void T291f3(T0* C, T0* a1)
+void T279f3(T0* C, T0* a1)
 {
-	T291f4(C, a1, ((T291*)(C))->a1);
+	T279f4(C, a1, ((T279*)(C))->a1);
 }
 
 /* DS_QUICK_SORTER [AP_OPTION].sort_with_comparator */
-void T291f4(T0* C, T0* a1, T0* a2)
+void T279f4(T0* C, T0* a1, T0* a2)
 {
 	T1 t1;
 	T6 t2;
-	t1 = (T179f17(GE_void(a1)));
+	t1 = (T181f17(GE_void(a1)));
 	t1 = ((T1)(!(t1)));
 	if (t1) {
-		t2 = (((T179*)(GE_void(a1)))->a2);
-		T291f5(C, a1, a2, (T6)(GE_int32(1)), t2);
+		t2 = (((T181*)(GE_void(a1)))->a2);
+		T279f5(C, a1, a2, (T6)(GE_int32(1)), t2);
 	}
 }
 
 /* DS_QUICK_SORTER [AP_OPTION].subsort_with_comparator */
-void T291f5(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
+void T279f5(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
 {
 	T6 t1;
 	T1 t2;
@@ -40082,18 +40508,18 @@ void T291f5(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
 		l4 = ((T6)((l4)+((T6)(GE_int32(1)))));
 	}
 	l4 = ((T6)((l4)+((T6)(GE_int32(10)))));
-	l11 = T143c10((T6)(GE_int32(1)), l4);
-	l12 = T143c10((T6)(GE_int32(1)), l4);
-	T143f11(GE_void(l11), a3, (T6)(GE_int32(1)));
-	T143f11(GE_void(l12), a4, (T6)(GE_int32(1)));
+	l11 = T144c10((T6)(GE_int32(0)), (T6)(GE_int32(1)), l4);
+	l12 = T144c10((T6)(GE_int32(0)), (T6)(GE_int32(1)), l4);
+	T144f11(GE_void(l11), a3, (T6)(GE_int32(1)));
+	T144f11(GE_void(l12), a4, (T6)(GE_int32(1)));
 	l4 = (T6)(GE_int32(1));
 	while (1) {
 		t2 = (((((l4) == ((T6)(GE_int32(0)))))));
 		if (t2) {
 			break;
 		}
-		l9 = (T143f4(GE_void(l11), l4));
-		l10 = (T143f4(GE_void(l12), l4));
+		l9 = (T144f4(GE_void(l11), l4));
+		l10 = (T144f4(GE_void(l12), l4));
 		l4 = ((T6)((l4)-((T6)(GE_int32(1)))));
 		l1 = l9;
 		l2 = l10;
@@ -40102,19 +40528,19 @@ void T291f5(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
 			t1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 			t2 = (((((l2) == (t1)))));
 			if (t2) {
-				l7 = (T179f11(GE_void(a1), l1));
-				l8 = (T179f11(GE_void(a1), l2));
-				t2 = (T290f1(GE_void(a2), l8, l7));
+				l7 = (T181f11(GE_void(a1), l1));
+				l8 = (T181f11(GE_void(a1), l2));
+				t2 = (T278f1(GE_void(a2), l8, l7));
 				if (t2) {
-					T179f29(GE_void(a1), l7, l2);
-					T179f29(GE_void(a1), l8, l1);
+					T181f30(GE_void(a1), l7, l2);
+					T181f30(GE_void(a1), l8, l1);
 				}
 			} else {
 				t1 = ((T6)((l1)+(l2)));
 				l3 = ((T6)((t1)/((T6)(GE_int32(2)))));
-				l6 = (T179f11(GE_void(a1), l3));
-				t3 = (T179f11(GE_void(a1), l10));
-				T179f29(GE_void(a1), t3, l3);
+				l6 = (T181f11(GE_void(a1), l3));
+				t3 = (T181f11(GE_void(a1), l10));
+				T181f30(GE_void(a1), t3, l3);
 				while (1) {
 					t2 = (T6f5((&l1), l2));
 					if (t2) {
@@ -40123,8 +40549,8 @@ void T291f5(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
 					while (1) {
 						t2 = (T6f5((&l1), l2));
 						if (!(t2)) {
-							t3 = (T179f11(GE_void(a1), l1));
-							t4 = (T290f1(GE_void(a2), t3, l6));
+							t3 = (T181f11(GE_void(a1), l1));
+							t4 = (T278f1(GE_void(a2), t3, l6));
 							t2 = ((T1)(!(t4)));
 						}
 						if (t2) {
@@ -40136,8 +40562,8 @@ void T291f5(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
 					while (1) {
 						t2 = (T6f7((&l2), l1));
 						if (!(t2)) {
-							t3 = (T179f11(GE_void(a1), l2));
-							t4 = (T290f1(GE_void(a2), l6, t3));
+							t3 = (T181f11(GE_void(a1), l2));
+							t4 = (T278f1(GE_void(a2), l6, t3));
 							t2 = ((T1)(!(t4)));
 						}
 						if (t2) {
@@ -40147,28 +40573,28 @@ void T291f5(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
 					}
 					t2 = ((T1)((l1)<(l2)));
 					if (t2) {
-						T179f30(GE_void(a1), l1, l2);
+						T181f31(GE_void(a1), l1, l2);
 						l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 					}
 				}
-				t3 = (T179f11(GE_void(a1), l1));
-				T179f29(GE_void(a1), t3, l10);
-				T179f29(GE_void(a1), l6, l1);
+				t3 = (T181f11(GE_void(a1), l1));
+				T181f30(GE_void(a1), t3, l10);
+				T181f30(GE_void(a1), l6, l1);
 				t1 = ((T6)((l1)-((T6)(GE_int32(1)))));
 				t2 = (T6f1(&t1, l9));
 				if (t2) {
 					l4 = ((T6)((l4)+((T6)(GE_int32(1)))));
-					T143f15(GE_void(l11), l9, l4);
+					T144f16(GE_void(l11), l9, l4);
 					t1 = ((T6)((l1)-((T6)(GE_int32(1)))));
-					T143f15(GE_void(l12), t1, l4);
+					T144f16(GE_void(l12), t1, l4);
 				}
 				t1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 				t2 = ((T1)((t1)<(l10)));
 				if (t2) {
 					l4 = ((T6)((l4)+((T6)(GE_int32(1)))));
 					t1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-					T143f15(GE_void(l11), t1, l4);
-					T143f15(GE_void(l12), l10, l4);
+					T144f16(GE_void(l11), t1, l4);
+					T144f16(GE_void(l12), l10, l4);
 				}
 			}
 		}
@@ -40176,23 +40602,23 @@ void T291f5(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
 }
 
 /* ARRAY [INTEGER_32].force */
-void T143f15(T0* C, T6 a1, T6 a2)
+void T144f16(T0* C, T6 a1, T6 a2)
 {
 	T1 t1;
-	t1 = ((T1)((a2)<(((T143*)(C))->a2)));
+	t1 = ((T1)((a2)<(((T144*)(C))->a2)));
 	if (t1) {
-		T143f16(C, a2, ((T143*)(C))->a3);
+		T144f17(C, a2, ((T144*)(C))->a3);
 	} else {
-		t1 = (T6f1(&a2, ((T143*)(C))->a3));
+		t1 = (T6f1(&a2, ((T144*)(C))->a3));
 		if (t1) {
-			T143f16(C, ((T143*)(C))->a2, a2);
+			T144f17(C, ((T144*)(C))->a2, a2);
 		}
 	}
-	T143f11(C, a1, a2);
+	T144f11(C, a1, a2);
 }
 
 /* ARRAY [INTEGER_32].auto_resize */
-void T143f16(T0* C, T6 a1, T6 a2)
+void T144f17(T0* C, T6 a1, T6 a2)
 {
 	T1 t1;
 	T6 t2;
@@ -40202,92 +40628,92 @@ void T143f16(T0* C, T6 a1, T6 a2)
 	T6 l3 = 0;
 	T6 l4 = 0;
 	T6 l5 = 0;
-	t1 = (T143f6(C));
+	t1 = (T144f6(C));
 	if (t1) {
 		l3 = a1;
 		l4 = a2;
 	} else {
-		l3 = (T6f13(&a1, ((T143*)(C))->a2));
-		l4 = (T6f12(&a2, ((T143*)(C))->a3));
+		l3 = (T6f13(&a1, ((T144*)(C))->a2));
+		l4 = (T6f12(&a2, ((T144*)(C))->a3));
 	}
 	t2 = ((T6)((l4)-(l3)));
 	l2 = ((T6)((t2)+((T6)(GE_int32(1)))));
-	t1 = (T143f6(C));
+	t1 = (T144f6(C));
 	t1 = ((T1)(!(t1)));
 	if (t1) {
-		l1 = (((T83*)(GE_void(((T143*)(C))->a1)))->z1);
+		l1 = (((T83*)(GE_void(((T144*)(C))->a1)))->a1);
 		t1 = (T6f1((&l2), l1));
 		if (t1) {
 			t2 = ((T6)((l2)-(l1)));
-			t3 = (T143f7(C));
+			t3 = (T144f7(C));
 			t1 = ((T1)((t2)<(t3)));
 		}
 		if (t1) {
-			t2 = (T143f7(C));
+			t2 = (T144f7(C));
 			l2 = ((T6)((l1)+(t2)));
 		}
 	}
-	t1 = (T143f6(C));
+	t1 = (T144f6(C));
 	if (t1) {
-		T143f12(C, l2);
+		T144f14(C, l2);
 	} else {
 		t1 = (T6f1((&l2), l1));
 		if (t1) {
-			((T143*)(C))->a1 = (T83f3(GE_void(((T143*)(C))->a1), l2));
+			((T144*)(C))->a1 = (T83f5(GE_void(((T144*)(C))->a1), l2));
 		}
-		t1 = ((T1)((l3)<(((T143*)(C))->a2)));
+		t1 = ((T1)((l3)<(((T144*)(C))->a2)));
 		if (t1) {
-			l5 = ((T6)((((T143*)(C))->a2)-(l3)));
-			t2 = (T143f8(C));
-			T83f6(GE_void(((T143*)(C))->a1), (T6)(GE_int32(0)), l5, t2);
+			l5 = ((T6)((((T144*)(C))->a2)-(l3)));
+			t2 = (T144f8(C));
+			T83f10(GE_void(((T144*)(C))->a1), (T6)(GE_int32(0)), l5, t2);
 			t2 = ((T6)((l5)-((T6)(GE_int32(1)))));
-			T83f7(GE_void(((T143*)(C))->a1), (T6)(GE_int32(0)), t2);
+			T83f11(GE_void(((T144*)(C))->a1), (T6)(GE_int32(0)), t2);
 		}
 	}
-	((T143*)(C))->a2 = l3;
-	((T143*)(C))->a3 = l4;
+	((T144*)(C))->a2 = l3;
+	((T144*)(C))->a3 = l4;
 }
 
 /* ARRAY [INTEGER_32].capacity */
-T6 T143f8(T0* C)
+T6 T144f8(T0* C)
 {
 	T6 t1;
 	T6 R = 0;
-	t1 = ((T6)((((T143*)(C))->a3)-(((T143*)(C))->a2)));
+	t1 = ((T6)((((T144*)(C))->a3)-(((T144*)(C))->a2)));
 	R = ((T6)((t1)+((T6)(GE_int32(1)))));
 	return R;
 }
 
 /* ARRAY [INTEGER_32].additional_space */
-T6 T143f7(T0* C)
+T6 T144f7(T0* C)
 {
 	T6 t1;
 	T6 R = 0;
-	t1 = (T143f8(C));
+	t1 = (T144f8(C));
 	t1 = ((T6)((t1)/((T6)(GE_int32(2)))));
 	R = (T6f12(&t1, (T6)(GE_int32(5))));
 	return R;
 }
 
 /* DS_ARRAYED_LIST [AP_OPTION].swap */
-void T179f30(T0* C, T6 a1, T6 a2)
+void T181f31(T0* C, T6 a1, T6 a2)
 {
 	T0* t1;
 	T0* l1 = 0;
-	l1 = (T179f11(C, a1));
-	t1 = (T179f11(C, a2));
-	T179f29(C, t1, a1);
-	T179f29(C, l1, a2);
+	l1 = (T181f11(C, a1));
+	t1 = (T181f11(C, a2));
+	T181f30(C, t1, a1);
+	T181f30(C, l1, a2);
 }
 
 /* DS_ARRAYED_LIST [AP_OPTION].replace */
-void T179f29(T0* C, T0* a1, T6 a2)
+void T181f30(T0* C, T0* a1, T6 a2)
 {
-	((T259*)(GE_void(((T179*)(C))->a4)))->z2[a2] = (a1);
+	((T257*)(GE_void(((T181*)(C))->a4)))->z2[a2] = (a1);
 }
 
 /* AP_OPTION_COMPARATOR.less_than */
-T1 T290f1(T0* C, T0* a1, T0* a2)
+T1 T278f1(T0* C, T0* a1, T0* a2)
 {
 	T1 t1;
 	T2 t2;
@@ -40296,21 +40722,24 @@ T1 T290f1(T0* C, T0* a1, T0* a2)
 	T1 R = 0;
 	T0* l1 = 0;
 	T0* l2 = 0;
-	t1 = (T66x5370(GE_void(a1)));
+	T0* l3 = 0;
+	t1 = (T66x6002(GE_void(a1)));
 	if (t1) {
-		l1 = (T66x5363(GE_void(a1)));
+		l3 = (T66x5995(GE_void(a1)));
+		l1 = l3;
 	} else {
-		t2 = (T66x5368(GE_void(a1)));
+		t2 = (T66x6000(GE_void(a1)));
 		l1 = (T2f2(&t2));
 	}
-	t1 = (T66x5370(GE_void(a2)));
+	t1 = (T66x6002(GE_void(a2)));
 	if (t1) {
-		l2 = (T66x5363(GE_void(a2)));
+		l3 = (T66x5995(GE_void(a2)));
+		l2 = l3;
 	} else {
-		t2 = (T66x5368(GE_void(a2)));
+		t2 = (T66x6000(GE_void(a2)));
 		l2 = (T2f2(&t2));
 	}
-	t3 = (T290f2(C));
+	t3 = (T278f2(C));
 	t4 = (T69f11(GE_void(t3), l1, l2));
 	R = (((((t4) == ((T6)(GE_int32(-1)))))));
 	return R;
@@ -40338,10 +40767,10 @@ T6 T69f11(T0* C, T0* a1, T0* a2)
 		R = (T6)(GE_int32(0));
 	} else {
 		t2 = (T69f7(C));
-		t1 = (T189f1(GE_void(t2), a1, ge366ov5559));
+		t1 = (T191f1(GE_void(t2), a1, ge312ov6110));
 		if (t1) {
 			t2 = (T69f7(C));
-			t1 = (T189f1(GE_void(t2), a2, ge366ov5559));
+			t1 = (T191f1(GE_void(t2), a2, ge312ov6110));
 		}
 		if (t1) {
 			l4 = (((T17*)(GE_void(a1)))->a2);
@@ -40414,8 +40843,8 @@ T6 T69f11(T0* C, T0* a1, T0* a2)
 						if (t1) {
 							break;
 						}
-						l8 = (T17f13(GE_void(a1), l2));
-						l9 = (T17f13(GE_void(a2), l2));
+						l8 = (T17f14(GE_void(a1), l2));
+						l9 = (T17f14(GE_void(a2), l2));
 						t1 = (((((l8) == (l9)))));
 						if (t1) {
 							l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
@@ -40451,7 +40880,7 @@ T6 T69f11(T0* C, T0* a1, T0* a2)
 	return R;
 }
 
-/* CHARACTER_8.infix "<" */
+/* CHARACTER_8.is_less */
 T1 T2f17(T2* C, T2 a1)
 {
 	T6 t1;
@@ -40464,17 +40893,17 @@ T1 T2f17(T2* C, T2 a1)
 }
 
 /* AP_OPTION_COMPARATOR.string_ */
-T0* T290f2(T0* C)
+T0* T278f2(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
@@ -40487,82 +40916,81 @@ T1 T17f31(T0* C)
 }
 
 /* DS_QUICK_SORTER [AP_OPTION].make */
-T0* T291c2(T0* a1)
+T0* T279c2(T0* a1)
 {
 	T0* C;
-	C = GE_new291(EIF_TRUE);
-	((T291*)(C))->a1 = a1;
+	C = GE_new279(EIF_TRUE);
+	((T279*)(C))->a1 = a1;
 	return C;
 }
 
 /* AP_OPTION_COMPARATOR.default_create */
-T0* T290c3(void)
+T0* T278c3(void)
 {
 	T0* C;
-	C = GE_new290(EIF_TRUE);
+	C = GE_new278(EIF_TRUE);
 	return C;
 }
 
 /* AP_INTEGER_OPTION.record_occurrence */
 void T63f28(T0* C, T0* a1)
 {
-	T0* t1;
-	T1 t2;
-	T6 t3;
+	T1 t1;
+	T6 t2;
+	T0* t3;
 	T0* l1 = 0;
-	t1 = (((T59*)(a1))->a11);
-	t2 = (T17f11(GE_void(t1)));
-	if (t2) {
-		t1 = (((T59*)(a1))->a11);
-		t3 = (T17f12(GE_void(t1)));
-		T186f9(GE_void(((T63*)(C))->a1), t3);
+	T0* l2 = 0;
+	l2 = (((T59*)(a1))->a10);
+	t1 = (T17f12(GE_void(l2)));
+	if (t1) {
+		t2 = (T17f13(GE_void(l2)));
+		T188f10(GE_void(((T63*)(C))->a1), t2);
 	} else {
-		t1 = (((T59*)(a1))->a11);
-		l1 = T65c20(C, t1);
-		t1 = (((T59*)(a1))->a7);
-		T181f9(GE_void(t1), l1);
-		T186f9(GE_void(((T63*)(C))->a1), (T6)(GE_int32(0)));
+		l1 = T65c21(C, l2);
+		t3 = (((T59*)(a1))->a7);
+		T183f9(GE_void(t3), l1);
+		T188f10(GE_void(((T63*)(C))->a1), (T6)(GE_int32(0)));
 	}
 }
 
 /* DS_LINKED_LIST [INTEGER_32].force_last */
-void T186f9(T0* C, T6 a1)
+void T188f10(T0* C, T6 a1)
 {
 	T1 t1;
 	T0* l1 = 0;
-	t1 = (T186f6(C));
+	t1 = (T188f6(C));
 	if (t1) {
-		((T186*)(C))->a4 = T266c3(a1);
-		((T186*)(C))->a2 = ((T186*)(C))->a4;
-		((T186*)(C))->a1 = (T6)(GE_int32(1));
+		((T188*)(C))->a4 = T264c3(a1);
+		((T188*)(C))->a2 = ((T188*)(C))->a4;
+		((T188*)(C))->a1 = (T6)(GE_int32(1));
 	} else {
-		l1 = ((T186*)(C))->a2;
-		((T186*)(C))->a2 = T266c3(a1);
-		T266f4(GE_void(l1), ((T186*)(C))->a2);
-		((T186*)(C))->a1 = ((T6)((((T186*)(C))->a1)+((T6)(GE_int32(1)))));
+		l1 = ((T188*)(C))->a2;
+		((T188*)(C))->a2 = T264c3(a1);
+		T264f4(GE_void(l1), ((T188*)(C))->a2);
+		((T188*)(C))->a1 = ((T6)((((T188*)(C))->a1)+((T6)(GE_int32(1)))));
 	}
 }
 
 /* DS_LINKABLE [INTEGER_32].put_right */
-void T266f4(T0* C, T0* a1)
+void T264f4(T0* C, T0* a1)
 {
-	((T266*)(C))->a2 = a1;
+	((T264*)(C))->a2 = a1;
 }
 
 /* DS_LINKABLE [INTEGER_32].make */
-T0* T266c3(T6 a1)
+T0* T264c3(T6 a1)
 {
 	T0* C;
-	C = GE_new266(EIF_TRUE);
-	((T266*)(C))->a1 = a1;
+	C = GE_new264(EIF_TRUE);
+	((T264*)(C))->a1 = a1;
 	return C;
 }
 
 /* DS_LINKED_LIST [INTEGER_32].is_empty */
-T1 T186f6(T0* C)
+T1 T188f6(T0* C)
 {
 	T1 R = 0;
-	R = (((((((T186*)(C))->a1) == ((T6)(GE_int32(0)))))));
+	R = (((((((T188*)(C))->a1) == ((T6)(GE_int32(0)))))));
 	return R;
 }
 
@@ -40570,42 +40998,41 @@ T1 T186f6(T0* C)
 void T62f29(T0* C, T0* a1)
 {
 	T0* t1;
-	t1 = (((T59*)(a1))->a11);
+	t1 = (((T59*)(a1))->a10);
 	T74f22(GE_void(((T62*)(C))->a1), t1);
 }
 
 /* AP_ENUMERATION_OPTION.record_occurrence */
 void T61f32(T0* C, T0* a1)
 {
-	T0* t1;
-	T1 t2;
+	T1 t1;
+	T0* t2;
 	T0* l1 = 0;
+	T0* l2 = 0;
 	T61f32p1(C, a1);
-	t1 = (((T59*)(a1))->a11);
-	t2 = ((t1)!=(EIF_VOID));
-	if (t2) {
-		t1 = (((T59*)(a1))->a11);
-		t2 = (T182f15(GE_void(((T61*)(C))->a3), t1));
-		t2 = ((T1)(!(t2)));
-		if (t2) {
-			t1 = (((T59*)(a1))->a11);
-			l1 = T65c20(C, t1);
-			t1 = (((T59*)(a1))->a7);
-			T181f9(GE_void(t1), l1);
+	l2 = (((T59*)(a1))->a10);
+	t1 = ((l2)!=(EIF_VOID));
+	if (t1) {
+		t1 = (T184f15(GE_void(((T61*)(C))->a3), l2));
+		t1 = ((T1)(!(t1)));
+		if (t1) {
+			l1 = T65c21(C, l2);
+			t2 = (((T59*)(a1))->a7);
+			T183f9(GE_void(t2), l1);
 		}
 	}
 }
 
 /* DS_LINKED_LIST [STRING_8].has */
-T1 T182f15(T0* C, T0* a1)
+T1 T184f15(T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
 	T1 R = 0;
 	T0* l1 = 0;
 	T0* l2 = 0;
-	l1 = ((T182*)(C))->a3;
-	l2 = ((T182*)(C))->a5;
+	l1 = ((T184*)(C))->a3;
+	l2 = ((T184*)(C))->a5;
 	t1 = ((l2)!=(EIF_VOID));
 	if (t1) {
 		while (1) {
@@ -40613,13 +41040,13 @@ T1 T182f15(T0* C, T0* a1)
 			if (t1) {
 				break;
 			}
-			t2 = (((T265*)(GE_void(l1)))->a1);
+			t2 = (((T263*)(GE_void(l1)))->a1);
 			t1 = (T81f1(GE_void(l2), t2, a1));
 			if (t1) {
 				R = EIF_TRUE;
 				l1 = EIF_VOID;
 			} else {
-				l1 = (((T265*)(GE_void(l1)))->a2);
+				l1 = (((T263*)(GE_void(l1)))->a2);
 			}
 		}
 	} else {
@@ -40628,13 +41055,13 @@ T1 T182f15(T0* C, T0* a1)
 			if (t1) {
 				break;
 			}
-			t2 = (((T265*)(GE_void(l1)))->a1);
+			t2 = (((T263*)(GE_void(l1)))->a1);
 			t1 = ((t2)==(a1));
 			if (t1) {
 				R = EIF_TRUE;
 				l1 = EIF_VOID;
 			} else {
-				l1 = (((T265*)(GE_void(l1)))->a2);
+				l1 = (((T263*)(GE_void(l1)))->a2);
 			}
 		}
 	}
@@ -40645,7 +41072,7 @@ T1 T182f15(T0* C, T0* a1)
 void T61f32p1(T0* C, T0* a1)
 {
 	T0* t1;
-	t1 = (((T59*)(a1))->a11);
+	t1 = (((T59*)(a1))->a10);
 	T74f22(GE_void(((T61*)(C))->a1), t1);
 }
 
@@ -40656,29 +41083,6 @@ void T60f25(T0* C, T0* a1)
 }
 
 /* LX_SYMBOL_TRANSITION [LX_NFA_STATE].cloned_object */
-T0* T213f3(T0* C)
-{
-	T0* R = 0;
-	R = (T213f5(C));
-	return R;
-}
-
-/* LX_SYMBOL_TRANSITION [LX_NFA_STATE].twin */
-T0* T213f5(T0* C)
-{
-	T0* R = 0;
-	R = GE_new213(EIF_TRUE);
-	T213f9(R, C);
-	return R;
-}
-
-/* LX_SYMBOL_TRANSITION [LX_NFA_STATE].copy */
-void T213f9(T0* C, T0* a1)
-{
-	*(T213*)(C) = *(T213*)(a1);
-}
-
-/* LX_SYMBOL_CLASS_TRANSITION [LX_NFA_STATE].cloned_object */
 T0* T212f3(T0* C)
 {
 	T0* R = 0;
@@ -40686,7 +41090,7 @@ T0* T212f3(T0* C)
 	return R;
 }
 
-/* LX_SYMBOL_CLASS_TRANSITION [LX_NFA_STATE].twin */
+/* LX_SYMBOL_TRANSITION [LX_NFA_STATE].twin */
 T0* T212f5(T0* C)
 {
 	T0* R = 0;
@@ -40695,67 +41099,90 @@ T0* T212f5(T0* C)
 	return R;
 }
 
-/* LX_SYMBOL_CLASS_TRANSITION [LX_NFA_STATE].copy */
+/* LX_SYMBOL_TRANSITION [LX_NFA_STATE].copy */
 void T212f9(T0* C, T0* a1)
 {
 	*(T212*)(C) = *(T212*)(a1);
 }
 
-/* LX_EPSILON_TRANSITION [LX_NFA_STATE].cloned_object */
-T0* T209f2(T0* C)
+/* LX_SYMBOL_CLASS_TRANSITION [LX_NFA_STATE].cloned_object */
+T0* T211f3(T0* C)
 {
 	T0* R = 0;
-	R = (T209f4(C));
+	R = (T211f5(C));
+	return R;
+}
+
+/* LX_SYMBOL_CLASS_TRANSITION [LX_NFA_STATE].twin */
+T0* T211f5(T0* C)
+{
+	T0* R = 0;
+	R = GE_new211(EIF_TRUE);
+	T211f9(R, C);
+	return R;
+}
+
+/* LX_SYMBOL_CLASS_TRANSITION [LX_NFA_STATE].copy */
+void T211f9(T0* C, T0* a1)
+{
+	*(T211*)(C) = *(T211*)(a1);
+}
+
+/* LX_EPSILON_TRANSITION [LX_NFA_STATE].cloned_object */
+T0* T208f2(T0* C)
+{
+	T0* R = 0;
+	R = (T208f4(C));
 	return R;
 }
 
 /* LX_EPSILON_TRANSITION [LX_NFA_STATE].twin */
-T0* T209f4(T0* C)
+T0* T208f4(T0* C)
 {
 	T0* R = 0;
-	R = GE_new209(EIF_TRUE);
-	T209f8(R, C);
+	R = GE_new208(EIF_TRUE);
+	T208f8(R, C);
 	return R;
 }
 
 /* LX_EPSILON_TRANSITION [LX_NFA_STATE].copy */
-void T209f8(T0* C, T0* a1)
+void T208f8(T0* C, T0* a1)
 {
-	*(T209*)(C) = *(T209*)(a1);
+	*(T208*)(C) = *(T208*)(a1);
 }
 
 /* LX_SYMBOL_TRANSITION [LX_NFA_STATE].labeled */
-T1 T213f4(T0* C, T6 a1)
+T1 T212f4(T0* C, T6 a1)
 {
 	T1 R = 0;
-	R = (((((((T213*)(C))->a1) == (a1)))));
+	R = (((((((T212*)(C))->a1) == (a1)))));
 	return R;
 }
 
 /* LX_SYMBOL_CLASS_TRANSITION [LX_NFA_STATE].labeled */
-T1 T212f4(T0* C, T6 a1)
+T1 T211f4(T0* C, T6 a1)
 {
 	T1 t1;
 	T1 R = 0;
-	t1 = (((T90*)(GE_void(((T212*)(C))->a1)))->a5);
+	t1 = (((T90*)(GE_void(((T211*)(C))->a1)))->a4);
 	if (t1) {
-		t1 = (T90f12(GE_void(((T212*)(C))->a1), a1));
+		t1 = (T90f10(GE_void(((T211*)(C))->a1), a1));
 		R = ((T1)(!(t1)));
 	} else {
-		R = (T90f12(GE_void(((T212*)(C))->a1), a1));
+		R = (T90f10(GE_void(((T211*)(C))->a1), a1));
 	}
 	return R;
 }
 
 /* LX_EPSILON_TRANSITION [LX_NFA_STATE].labeled */
-T1 T209f3(T0* C, T6 a1)
+T1 T208f3(T0* C, T6 a1)
 {
 	T1 R = 0;
 	return R;
 }
 
 /* AP_DISPLAY_HELP_FLAG.was_found */
-T1 T71f24(T0* C)
+T1 T71f25(T0* C)
 {
 	T1 R = 0;
 	R = (T6f1(&(((T71*)(C))->a5), (T6)(GE_int32(0))));
@@ -40767,7 +41194,7 @@ T1 T63f14(T0* C)
 {
 	T6 t1;
 	T1 R = 0;
-	t1 = (T63f13(C));
+	t1 = (T63f11(C));
 	R = (T6f1(&t1, (T6)(GE_int32(0))));
 	return R;
 }
@@ -40801,10 +41228,10 @@ T1 T60f9(T0* C)
 }
 
 /* AP_INTEGER_OPTION.occurrences */
-T6 T63f13(T0* C)
+T6 T63f11(T0* C)
 {
 	T6 R = 0;
-	R = (((T186*)(GE_void(((T63*)(C))->a1)))->a1);
+	R = (((T188*)(GE_void(((T63*)(C))->a1)))->a1);
 	return R;
 }
 
@@ -40896,19 +41323,21 @@ T0* T71f20(T0* C)
 	T0* t3;
 	T0* t4;
 	T0* R = 0;
+	T0* l1 = 0;
 	t1 = (T71f18(C));
 	if (t1) {
+		l1 = ((T71*)(C))->a4;
 		t2 = (T2)('-');
 		t3 = (T2f2(&t2));
 		t2 = (T2)('-');
 		t4 = (T2f2(&t2));
-		t3 = (T17f17(GE_void(t3), t4));
-		R = (T17f17(GE_void(t3), ((T71*)(C))->a4));
+		t3 = (T17f18(GE_void(t3), t4));
+		R = (T17f18(GE_void(t3), l1));
 	} else {
 		t2 = (T2)('-');
 		t3 = (T2f2(&t2));
 		t4 = (T2f2(&(((T71*)(C))->a2)));
-		R = (T17f17(GE_void(t3), t4));
+		R = (T17f18(GE_void(t3), t4));
 	}
 	return R;
 }
@@ -40921,19 +41350,21 @@ T0* T63f18(T0* C)
 	T0* t3;
 	T0* t4;
 	T0* R = 0;
+	T0* l1 = 0;
 	t1 = (T63f10(C));
 	if (t1) {
+		l1 = ((T63*)(C))->a6;
 		t2 = (T2)('-');
 		t3 = (T2f2(&t2));
 		t2 = (T2)('-');
 		t4 = (T2f2(&t2));
-		t3 = (T17f17(GE_void(t3), t4));
-		R = (T17f17(GE_void(t3), ((T63*)(C))->a6));
+		t3 = (T17f18(GE_void(t3), t4));
+		R = (T17f18(GE_void(t3), l1));
 	} else {
 		t2 = (T2)('-');
 		t3 = (T2f2(&t2));
 		t4 = (T2f2(&(((T63*)(C))->a4)));
-		R = (T17f17(GE_void(t3), t4));
+		R = (T17f18(GE_void(t3), t4));
 	}
 	return R;
 }
@@ -40946,19 +41377,21 @@ T0* T62f12(T0* C)
 	T0* t3;
 	T0* t4;
 	T0* R = 0;
+	T0* l1 = 0;
 	t1 = (T62f14(C));
 	if (t1) {
+		l1 = ((T62*)(C))->a7;
 		t2 = (T2)('-');
 		t3 = (T2f2(&t2));
 		t2 = (T2)('-');
 		t4 = (T2f2(&t2));
-		t3 = (T17f17(GE_void(t3), t4));
-		R = (T17f17(GE_void(t3), ((T62*)(C))->a7));
+		t3 = (T17f18(GE_void(t3), t4));
+		R = (T17f18(GE_void(t3), l1));
 	} else {
 		t2 = (T2)('-');
 		t3 = (T2f2(&t2));
 		t4 = (T2f2(&(((T62*)(C))->a5)));
-		R = (T17f17(GE_void(t3), t4));
+		R = (T17f18(GE_void(t3), t4));
 	}
 	return R;
 }
@@ -40971,19 +41404,21 @@ T0* T61f12(T0* C)
 	T0* t3;
 	T0* t4;
 	T0* R = 0;
+	T0* l1 = 0;
 	t1 = (T61f14(C));
 	if (t1) {
+		l1 = ((T61*)(C))->a6;
 		t2 = (T2)('-');
 		t3 = (T2f2(&t2));
 		t2 = (T2)('-');
 		t4 = (T2f2(&t2));
-		t3 = (T17f17(GE_void(t3), t4));
-		R = (T17f17(GE_void(t3), ((T61*)(C))->a6));
+		t3 = (T17f18(GE_void(t3), t4));
+		R = (T17f18(GE_void(t3), l1));
 	} else {
 		t2 = (T2)('-');
 		t3 = (T2f2(&t2));
 		t4 = (T2f2(&(((T61*)(C))->a10)));
-		R = (T17f17(GE_void(t3), t4));
+		R = (T17f18(GE_void(t3), t4));
 	}
 	return R;
 }
@@ -40996,29 +41431,32 @@ T0* T60f13(T0* C)
 	T0* t3;
 	T0* t4;
 	T0* R = 0;
+	T0* l1 = 0;
 	t1 = (T60f10(C));
 	if (t1) {
+		l1 = ((T60*)(C))->a5;
 		t2 = (T2)('-');
 		t3 = (T2f2(&t2));
 		t2 = (T2)('-');
 		t4 = (T2f2(&t2));
-		t3 = (T17f17(GE_void(t3), t4));
-		R = (T17f17(GE_void(t3), ((T60*)(C))->a5));
+		t3 = (T17f18(GE_void(t3), t4));
+		R = (T17f18(GE_void(t3), l1));
 	} else {
 		t2 = (T2)('-');
 		t3 = (T2f2(&t2));
 		t4 = (T2f2(&(((T60*)(C))->a3)));
-		R = (T17f17(GE_void(t3), t4));
+		R = (T17f18(GE_void(t3), t4));
 	}
 	return R;
 }
 
 /* AP_DISPLAY_HELP_FLAG.example */
-T0* T71f26(T0* C)
+T0* T71f23(T0* C)
 {
 	T1 t1;
 	T0* t2;
 	T0* R = 0;
+	T0* l1 = 0;
 	R = T17c32((T6)(GE_int32(20)));
 	t1 = ((T1)(!(((T71*)(C))->a7)));
 	if (t1) {
@@ -41029,8 +41467,9 @@ T0* T71f26(T0* C)
 		t2 = (T2f2(&(((T71*)(C))->a2)));
 		T17f34(GE_void(R), t2);
 	} else {
+		l1 = ((T71*)(C))->a4;
 		T17f33(GE_void(R), (T2)('-'));
-		T17f34(GE_void(R), ((T71*)(C))->a4);
+		T17f34(GE_void(R), l1);
 	}
 	t1 = ((T1)(!(((T71*)(C))->a7)));
 	if (t1) {
@@ -41044,6 +41483,7 @@ T0* T63f19(T0* C)
 {
 	T1 t1;
 	T0* R = 0;
+	T0* l1 = 0;
 	R = T17c32((T6)(GE_int32(20)));
 	t1 = ((T1)(!(((T63*)(C))->a7)));
 	if (t1) {
@@ -41056,7 +41496,8 @@ T0* T63f19(T0* C)
 		T17f34(GE_void(R), ((T63*)(C))->a3);
 	} else {
 		T17f33(GE_void(R), (T2)('-'));
-		T17f34(GE_void(R), ((T63*)(C))->a6);
+		l1 = ((T63*)(C))->a6;
+		T17f34(GE_void(R), l1);
 		t1 = (T63f16(C));
 		t1 = ((T1)(!(t1)));
 		if (t1) {
@@ -41082,6 +41523,7 @@ T0* T62f17(T0* C)
 {
 	T1 t1;
 	T0* R = 0;
+	T0* l1 = 0;
 	R = T17c32((T6)(GE_int32(20)));
 	t1 = ((T1)(!(((T62*)(C))->a8)));
 	if (t1) {
@@ -41094,7 +41536,8 @@ T0* T62f17(T0* C)
 		T17f34(GE_void(R), ((T62*)(C))->a3);
 	} else {
 		T17f33(GE_void(R), (T2)('-'));
-		T17f34(GE_void(R), ((T62*)(C))->a7);
+		l1 = ((T62*)(C))->a7;
+		T17f34(GE_void(R), l1);
 		t1 = ((T1)(!(((T62*)(C))->a4)));
 		if (t1) {
 			T17f33(GE_void(R), (T2)('['));
@@ -41118,6 +41561,7 @@ T0* T61f19(T0* C)
 {
 	T1 t1;
 	T0* R = 0;
+	T0* l1 = 0;
 	R = T17c32((T6)(GE_int32(20)));
 	t1 = ((T1)(!(((T61*)(C))->a7)));
 	if (t1) {
@@ -41130,7 +41574,8 @@ T0* T61f19(T0* C)
 		T17f34(GE_void(R), ((T61*)(C))->a4);
 	} else {
 		T17f33(GE_void(R), (T2)('-'));
-		T17f34(GE_void(R), ((T61*)(C))->a6);
+		l1 = ((T61*)(C))->a6;
+		T17f34(GE_void(R), l1);
 		t1 = ((T1)(!(((T61*)(C))->a5)));
 		if (t1) {
 			T17f33(GE_void(R), (T2)('['));
@@ -41155,6 +41600,7 @@ T0* T60f14(T0* C)
 	T1 t1;
 	T0* t2;
 	T0* R = 0;
+	T0* l1 = 0;
 	R = T17c32((T6)(GE_int32(20)));
 	t1 = ((T1)(!(((T60*)(C))->a6)));
 	if (t1) {
@@ -41165,8 +41611,9 @@ T0* T60f14(T0* C)
 		t2 = (T2f2(&(((T60*)(C))->a3)));
 		T17f34(GE_void(R), t2);
 	} else {
+		l1 = ((T60*)(C))->a5;
 		T17f33(GE_void(R), (T2)('-'));
-		T17f34(GE_void(R), ((T60*)(C))->a5);
+		T17f34(GE_void(R), l1);
 	}
 	t1 = ((T1)(!(((T60*)(C))->a6)));
 	if (t1) {
@@ -41181,23 +41628,27 @@ T0* T71f34(T0* C)
 	T2 t1;
 	T1 t2;
 	T0* R = 0;
+	T0* l1 = 0;
+	T0* l2 = 0;
 	if (((T71*)(C))->a3) {
 		t1 = (T2)('-');
-		R = (T2f2(&t1));
-		T17f33(GE_void(R), ((T71*)(C))->a2);
+		l1 = (T2f2(&t1));
+		T17f33(GE_void(l1), ((T71*)(C))->a2);
 	}
 	t2 = (T71f18(C));
 	if (t2) {
-		t2 = ((R)==(EIF_VOID));
+		l2 = ((T71*)(C))->a4;
+		t2 = ((l1)==(EIF_VOID));
 		if (t2) {
-			R = GE_ms8("    ", 4);
+			l1 = GE_ms8("    ", 4);
 		} else {
-			T17f34(GE_void(R), GE_ms8(", ", 2));
+			T17f34(GE_void(l1), GE_ms8(", ", 2));
 		}
-		T17f33(GE_void(R), (T2)('-'));
-		T17f33(GE_void(R), (T2)('-'));
-		T17f34(GE_void(R), ((T71*)(C))->a4);
+		T17f33(GE_void(l1), (T2)('-'));
+		T17f33(GE_void(l1), (T2)('-'));
+		T17f34(GE_void(l1), l2);
 	}
+	R = l1;
 	return R;
 }
 
@@ -41238,23 +41689,27 @@ T0* T63f21p1(T0* C)
 	T2 t1;
 	T1 t2;
 	T0* R = 0;
+	T0* l1 = 0;
+	T0* l2 = 0;
 	if (((T63*)(C))->a5) {
 		t1 = (T2)('-');
-		R = (T2f2(&t1));
-		T17f33(GE_void(R), ((T63*)(C))->a4);
+		l1 = (T2f2(&t1));
+		T17f33(GE_void(l1), ((T63*)(C))->a4);
 	}
 	t2 = (T63f10(C));
 	if (t2) {
-		t2 = ((R)==(EIF_VOID));
+		l2 = ((T63*)(C))->a6;
+		t2 = ((l1)==(EIF_VOID));
 		if (t2) {
-			R = GE_ms8("    ", 4);
+			l1 = GE_ms8("    ", 4);
 		} else {
-			T17f34(GE_void(R), GE_ms8(", ", 2));
+			T17f34(GE_void(l1), GE_ms8(", ", 2));
 		}
-		T17f33(GE_void(R), (T2)('-'));
-		T17f33(GE_void(R), (T2)('-'));
-		T17f34(GE_void(R), ((T63*)(C))->a6);
+		T17f33(GE_void(l1), (T2)('-'));
+		T17f33(GE_void(l1), (T2)('-'));
+		T17f34(GE_void(l1), l2);
 	}
+	R = l1;
 	return R;
 }
 
@@ -41293,23 +41748,27 @@ T0* T62f21p1(T0* C)
 	T2 t1;
 	T1 t2;
 	T0* R = 0;
+	T0* l1 = 0;
+	T0* l2 = 0;
 	if (((T62*)(C))->a6) {
 		t1 = (T2)('-');
-		R = (T2f2(&t1));
-		T17f33(GE_void(R), ((T62*)(C))->a5);
+		l1 = (T2f2(&t1));
+		T17f33(GE_void(l1), ((T62*)(C))->a5);
 	}
 	t2 = (T62f14(C));
 	if (t2) {
-		t2 = ((R)==(EIF_VOID));
+		l2 = ((T62*)(C))->a7;
+		t2 = ((l1)==(EIF_VOID));
 		if (t2) {
-			R = GE_ms8("    ", 4);
+			l1 = GE_ms8("    ", 4);
 		} else {
-			T17f34(GE_void(R), GE_ms8(", ", 2));
+			T17f34(GE_void(l1), GE_ms8(", ", 2));
 		}
-		T17f33(GE_void(R), (T2)('-'));
-		T17f33(GE_void(R), (T2)('-'));
-		T17f34(GE_void(R), ((T62*)(C))->a7);
+		T17f33(GE_void(l1), (T2)('-'));
+		T17f33(GE_void(l1), (T2)('-'));
+		T17f34(GE_void(l1), l2);
 	}
+	R = l1;
 	return R;
 }
 
@@ -41348,23 +41807,27 @@ T0* T61f23p1(T0* C)
 	T2 t1;
 	T1 t2;
 	T0* R = 0;
+	T0* l1 = 0;
+	T0* l2 = 0;
 	if (((T61*)(C))->a9) {
 		t1 = (T2)('-');
-		R = (T2f2(&t1));
-		T17f33(GE_void(R), ((T61*)(C))->a10);
+		l1 = (T2f2(&t1));
+		T17f33(GE_void(l1), ((T61*)(C))->a10);
 	}
 	t2 = (T61f14(C));
 	if (t2) {
-		t2 = ((R)==(EIF_VOID));
+		l2 = ((T61*)(C))->a6;
+		t2 = ((l1)==(EIF_VOID));
 		if (t2) {
-			R = GE_ms8("    ", 4);
+			l1 = GE_ms8("    ", 4);
 		} else {
-			T17f34(GE_void(R), GE_ms8(", ", 2));
+			T17f34(GE_void(l1), GE_ms8(", ", 2));
 		}
-		T17f33(GE_void(R), (T2)('-'));
-		T17f33(GE_void(R), (T2)('-'));
-		T17f34(GE_void(R), ((T61*)(C))->a6);
+		T17f33(GE_void(l1), (T2)('-'));
+		T17f33(GE_void(l1), (T2)('-'));
+		T17f34(GE_void(l1), l2);
 	}
+	R = l1;
 	return R;
 }
 
@@ -41374,23 +41837,27 @@ T0* T60f17(T0* C)
 	T2 t1;
 	T1 t2;
 	T0* R = 0;
+	T0* l1 = 0;
+	T0* l2 = 0;
 	if (((T60*)(C))->a4) {
 		t1 = (T2)('-');
-		R = (T2f2(&t1));
-		T17f33(GE_void(R), ((T60*)(C))->a3);
+		l1 = (T2f2(&t1));
+		T17f33(GE_void(l1), ((T60*)(C))->a3);
 	}
 	t2 = (T60f10(C));
 	if (t2) {
-		t2 = ((R)==(EIF_VOID));
+		l2 = ((T60*)(C))->a5;
+		t2 = ((l1)==(EIF_VOID));
 		if (t2) {
-			R = GE_ms8("    ", 4);
+			l1 = GE_ms8("    ", 4);
 		} else {
-			T17f34(GE_void(R), GE_ms8(", ", 2));
+			T17f34(GE_void(l1), GE_ms8(", ", 2));
 		}
-		T17f33(GE_void(R), (T2)('-'));
-		T17f33(GE_void(R), (T2)('-'));
-		T17f34(GE_void(R), ((T60*)(C))->a5);
+		T17f33(GE_void(l1), (T2)('-'));
+		T17f33(GE_void(l1), (T2)('-'));
+		T17f34(GE_void(l1), l2);
 	}
+	R = l1;
 	return R;
 }
 
@@ -41435,14 +41902,566 @@ T1 T60f10(T0* C)
 }
 
 /* LX_NEGATIVE_RANGE_IN_CHARACTER_CLASS_ERROR.default_message */
-T0* T174f5(T0* C)
+T0* T176f5(T0* C)
 {
 	T0* R = 0;
-	R = (T174f3(C, ge167ov4035));
+	R = (T176f3(C, ge119ov4064));
 	return R;
 }
 
 /* LX_NEGATIVE_RANGE_IN_CHARACTER_CLASS_ERROR.message */
+T0* T176f3(T0* C, T0* a1)
+{
+	T0* t1;
+	T1 t2;
+	T6 t3;
+	T6 t4;
+	T0* t5;
+	T0* R = 0;
+	T0* l1 = 0;
+	T6 l2 = 0;
+	T6 l3 = 0;
+	T6 l4 = 0;
+	T2 l5 = 0;
+	T1 l6 = 0;
+	T1 l7 = 0;
+	T1 l8 = 0;
+	l2 = (T6)(GE_int32(1));
+	l4 = (((T17*)(a1))->a2);
+	t1 = (T176f4(C));
+	R = (T69f3(GE_void(t1), a1, l4));
+	while (1) {
+		t2 = (T6f1((&l2), l4));
+		if (t2) {
+			break;
+		}
+		l5 = (T17f9(a1, l2));
+		l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
+		t2 = (((((l5) != ((T2)('$'))))));
+		if (t2) {
+			t2 = (((((l5) != ((T2)('\000'))))));
+			if (t2) {
+				T17f33(GE_void(R), l5);
+			} else {
+				t1 = (T176f4(C));
+				t3 = ((T6)((l2)-((T6)(GE_int32(1)))));
+				t4 = ((T6)((l2)-((T6)(GE_int32(1)))));
+				R = (T69f4(GE_void(t1), R, a1, t3, t4));
+			}
+		} else {
+			t2 = (T6f1((&l2), l4));
+			if (t2) {
+				T17f33(GE_void(R), (T2)('$'));
+			} else {
+				l5 = (T17f9(a1, l2));
+				t2 = (((((l5) == ((T2)('$'))))));
+				if (t2) {
+					T17f33(GE_void(R), (T2)('$'));
+					l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
+				} else {
+					t1 = (T176f4(C));
+					l1 = (T69f3(GE_void(t1), a1, (T6)(GE_int32(5))));
+					t2 = (((((l5) == ((T2)('{'))))));
+					if (t2) {
+						l7 = EIF_TRUE;
+						l8 = EIF_FALSE;
+						l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
+						while (1) {
+							t2 = (T6f1((&l2), l4));
+							if (!(t2)) {
+								t2 = (l8);
+							}
+							if (t2) {
+								break;
+							}
+							l5 = (T17f9(a1, l2));
+							t2 = (((((l5) == ((T2)('}'))))));
+							if (t2) {
+								l8 = EIF_TRUE;
+							} else {
+								t2 = (((((l5) != ((T2)('\000'))))));
+								if (t2) {
+									T17f33(GE_void(l1), l5);
+								} else {
+									t1 = (T176f4(C));
+									T69f13(GE_void(t1), l1, a1, l2, l2);
+								}
+							}
+							l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
+						}
+					} else {
+						l7 = EIF_FALSE;
+						l8 = EIF_FALSE;
+						l6 = EIF_FALSE;
+						while (1) {
+							t2 = (T6f1((&l2), l4));
+							if (!(t2)) {
+								t2 = (l6);
+							}
+							if (t2) {
+								break;
+							}
+							l5 = (T17f9(a1, l2));
+							switch (l5) {
+							case (T2)'0':
+							case (T2)'1':
+							case (T2)'2':
+							case (T2)'3':
+							case (T2)'4':
+							case (T2)'5':
+							case (T2)'6':
+							case (T2)'7':
+							case (T2)'8':
+							case (T2)'9':
+								T17f33(GE_void(l1), l5);
+								l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
+								break;
+							default:
+								l6 = EIF_TRUE;
+								break;
+							}
+						}
+					}
+					t2 = (T17f12(GE_void(l1)));
+					if (t2) {
+						l3 = (T17f13(GE_void(l1)));
+						t2 = (T133f4(GE_void(((T176*)(C))->a1), l3));
+						if (t2) {
+							t1 = (T176f4(C));
+							t5 = (T133f5(GE_void(((T176*)(C))->a1), l3));
+							R = (T69f5(GE_void(t1), R, t5));
+						} else {
+							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
+							if (t2) {
+								t1 = (T176f4(C));
+								t5 = (T176f6(C));
+								t5 = (((T23*)(GE_void(t5)))->a1);
+								R = (T69f5(GE_void(t1), R, t5));
+							} else {
+								T17f33(GE_void(R), (T2)('$'));
+								if (l7) {
+									T17f33(GE_void(R), (T2)('{'));
+								}
+								t1 = (T176f4(C));
+								R = (T69f5(GE_void(t1), R, l1));
+								if (l8) {
+									T17f33(GE_void(R), (T2)('}'));
+								}
+							}
+						}
+					} else {
+						T17f33(GE_void(R), (T2)('$'));
+						if (l7) {
+							T17f33(GE_void(R), (T2)('{'));
+						}
+						t1 = (T176f4(C));
+						R = (T69f5(GE_void(t1), R, l1));
+						if (l8) {
+							T17f33(GE_void(R), (T2)('}'));
+						}
+					}
+				}
+			}
+		}
+	}
+	return R;
+}
+
+/* LX_NEGATIVE_RANGE_IN_CHARACTER_CLASS_ERROR.arguments */
+T0* T176f6(T0* C)
+{
+	T0* R = 0;
+	if (ge380os1745) {
+		return ge380ov1745;
+	} else {
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
+	}
+	R = T23c4();
+	ge380ov1745 = R;
+	return R;
+}
+
+/* KL_STRING_ROUTINES.appended_string */
+T0* T69f5(T0* C, T0* a1, T0* a2)
+{
+	T1 t1;
+	T0* R = 0;
+	T0* l1 = 0;
+	l1 = EIF_VOID;
+	t1 = (EIF_FALSE);
+	if (t1) {
+		(GE_void(l1), a2);
+		R = l1;
+	} else {
+		l1 = EIF_VOID;
+		t1 = (EIF_FALSE);
+		if (t1) {
+			R = (T69f10(C, a1, a2));
+		} else {
+			T17f34(GE_void(a1), a2);
+			R = a1;
+		}
+	}
+	return R;
+}
+
+/* KL_STRING_ROUTINES.concat */
+T0* T69f10(T0* C, T0* a1, T0* a2)
+{
+	T1 t1;
+	T0* R = 0;
+	T0* l1 = 0;
+	l1 = EIF_VOID;
+	t1 = (EIF_FALSE);
+	if (t1) {
+		R = ((GE_void(l1), a2, (T0*)0));
+	} else {
+		l1 = EIF_VOID;
+		t1 = (EIF_FALSE);
+		if (t1) {
+			R = ((GE_void(l1), a1, (T0*)0));
+		} else {
+			R = (T17f18(GE_void(a1), a2));
+		}
+	}
+	return R;
+}
+
+/* ARRAY [STRING_8].valid_index */
+T1 T133f4(T0* C, T6 a1)
+{
+	T1 t1;
+	T1 R = 0;
+	t1 = (T6f7(&(((T133*)(C))->a2), a1));
+	if (t1) {
+		R = (T6f7(&a1, ((T133*)(C))->a3));
+	} else {
+		R = EIF_FALSE;
+	}
+	return R;
+}
+
+/* KL_STRING_ROUTINES.append_substring_to_string */
+void T69f13(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
+{
+	T1 t1;
+	T2 t2;
+	T0* l1 = 0;
+	T6 l2 = 0;
+	l1 = EIF_VOID;
+	t1 = (EIF_FALSE);
+	if (t1) {
+		(GE_void(l1), a2, a3, a4);
+	} else {
+		l2 = a3;
+		while (1) {
+			t1 = (T6f1((&l2), a4));
+			if (t1) {
+				break;
+			}
+			t2 = (T17f9(GE_void(a2), l2));
+			T17f33(GE_void(a1), t2);
+			l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
+		}
+	}
+}
+
+/* KL_STRING_ROUTINES.appended_substring */
+T0* T69f4(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
+{
+	T1 t1;
+	T6 t2;
+	T2 t3;
+	T0* R = 0;
+	T0* l1 = 0;
+	T6 l2 = 0;
+	l1 = EIF_VOID;
+	t1 = (EIF_FALSE);
+	if (t1) {
+		(GE_void(l1), a2, a3, a4);
+		R = l1;
+	} else {
+		l1 = EIF_VOID;
+		t1 = (EIF_FALSE);
+		if (t1) {
+			t2 = (((T17*)(GE_void(a1)))->a2);
+			t2 = ((T6)((t2)+(a4)));
+			t2 = ((T6)((t2)-(a3)));
+			t2 = ((T6)((t2)+((T6)(GE_int32(1)))));
+			l1 = ((GE_void(l1), t2, (T0*)0));
+			(GE_void(l1), a1);
+			(GE_void(l1), a2, a3, a4);
+			R = l1;
+		} else {
+			l2 = a3;
+			while (1) {
+				t1 = (T6f1((&l2), a4));
+				if (t1) {
+					break;
+				}
+				t3 = (T17f9(GE_void(a2), l2));
+				T17f33(GE_void(a1), t3);
+				l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
+			}
+			R = a1;
+		}
+	}
+	return R;
+}
+
+/* KL_STRING_ROUTINES.new_empty_string */
+T0* T69f3(T0* C, T0* a1, T6 a2)
+{
+	T0* t1;
+	T1 t2;
+	T0* R = 0;
+	T0* l1 = 0;
+	t1 = (T69f7(C));
+	t2 = (T191f1(GE_void(t1), a1, ge312ov6110));
+	if (t2) {
+		R = T17c32(a2);
+	} else {
+		l1 = EIF_VOID;
+		t2 = (EIF_FALSE);
+		if (t2) {
+			R = ((GE_void(l1), a2, (T0*)0));
+		} else {
+			R = (T69f6(C, a1));
+			T17f39(GE_void(R));
+		}
+	}
+	return R;
+}
+
+/* STRING_8.wipe_out */
+void T17f39(T0* C)
+{
+	((T17*)(C))->a1 = T15c10((T6)(GE_int32(1)));
+	((T17*)(C))->a2 = (T6)(GE_int32(0));
+	((T17*)(C))->a3 = (T6)(GE_int32(0));
+}
+
+/* LX_NEGATIVE_RANGE_IN_CHARACTER_CLASS_ERROR.string_ */
+T0* T176f4(T0* C)
+{
+	T0* R = 0;
+	if (ge307os1751) {
+		return ge307ov1751;
+	} else {
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
+	}
+	R = T69c12();
+	ge307ov1751 = R;
+	return R;
+}
+
+/* LX_ITERATION_NOT_POSITIVE_ERROR.default_message */
+T0* T175f5(T0* C)
+{
+	T0* R = 0;
+	R = (T175f3(C, ge114ov4064));
+	return R;
+}
+
+/* LX_ITERATION_NOT_POSITIVE_ERROR.message */
+T0* T175f3(T0* C, T0* a1)
+{
+	T0* t1;
+	T1 t2;
+	T6 t3;
+	T6 t4;
+	T0* t5;
+	T0* R = 0;
+	T0* l1 = 0;
+	T6 l2 = 0;
+	T6 l3 = 0;
+	T6 l4 = 0;
+	T2 l5 = 0;
+	T1 l6 = 0;
+	T1 l7 = 0;
+	T1 l8 = 0;
+	l2 = (T6)(GE_int32(1));
+	l4 = (((T17*)(a1))->a2);
+	t1 = (T175f4(C));
+	R = (T69f3(GE_void(t1), a1, l4));
+	while (1) {
+		t2 = (T6f1((&l2), l4));
+		if (t2) {
+			break;
+		}
+		l5 = (T17f9(a1, l2));
+		l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
+		t2 = (((((l5) != ((T2)('$'))))));
+		if (t2) {
+			t2 = (((((l5) != ((T2)('\000'))))));
+			if (t2) {
+				T17f33(GE_void(R), l5);
+			} else {
+				t1 = (T175f4(C));
+				t3 = ((T6)((l2)-((T6)(GE_int32(1)))));
+				t4 = ((T6)((l2)-((T6)(GE_int32(1)))));
+				R = (T69f4(GE_void(t1), R, a1, t3, t4));
+			}
+		} else {
+			t2 = (T6f1((&l2), l4));
+			if (t2) {
+				T17f33(GE_void(R), (T2)('$'));
+			} else {
+				l5 = (T17f9(a1, l2));
+				t2 = (((((l5) == ((T2)('$'))))));
+				if (t2) {
+					T17f33(GE_void(R), (T2)('$'));
+					l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
+				} else {
+					t1 = (T175f4(C));
+					l1 = (T69f3(GE_void(t1), a1, (T6)(GE_int32(5))));
+					t2 = (((((l5) == ((T2)('{'))))));
+					if (t2) {
+						l7 = EIF_TRUE;
+						l8 = EIF_FALSE;
+						l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
+						while (1) {
+							t2 = (T6f1((&l2), l4));
+							if (!(t2)) {
+								t2 = (l8);
+							}
+							if (t2) {
+								break;
+							}
+							l5 = (T17f9(a1, l2));
+							t2 = (((((l5) == ((T2)('}'))))));
+							if (t2) {
+								l8 = EIF_TRUE;
+							} else {
+								t2 = (((((l5) != ((T2)('\000'))))));
+								if (t2) {
+									T17f33(GE_void(l1), l5);
+								} else {
+									t1 = (T175f4(C));
+									T69f13(GE_void(t1), l1, a1, l2, l2);
+								}
+							}
+							l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
+						}
+					} else {
+						l7 = EIF_FALSE;
+						l8 = EIF_FALSE;
+						l6 = EIF_FALSE;
+						while (1) {
+							t2 = (T6f1((&l2), l4));
+							if (!(t2)) {
+								t2 = (l6);
+							}
+							if (t2) {
+								break;
+							}
+							l5 = (T17f9(a1, l2));
+							switch (l5) {
+							case (T2)'0':
+							case (T2)'1':
+							case (T2)'2':
+							case (T2)'3':
+							case (T2)'4':
+							case (T2)'5':
+							case (T2)'6':
+							case (T2)'7':
+							case (T2)'8':
+							case (T2)'9':
+								T17f33(GE_void(l1), l5);
+								l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
+								break;
+							default:
+								l6 = EIF_TRUE;
+								break;
+							}
+						}
+					}
+					t2 = (T17f12(GE_void(l1)));
+					if (t2) {
+						l3 = (T17f13(GE_void(l1)));
+						t2 = (T133f4(GE_void(((T175*)(C))->a1), l3));
+						if (t2) {
+							t1 = (T175f4(C));
+							t5 = (T133f5(GE_void(((T175*)(C))->a1), l3));
+							R = (T69f5(GE_void(t1), R, t5));
+						} else {
+							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
+							if (t2) {
+								t1 = (T175f4(C));
+								t5 = (T175f6(C));
+								t5 = (((T23*)(GE_void(t5)))->a1);
+								R = (T69f5(GE_void(t1), R, t5));
+							} else {
+								T17f33(GE_void(R), (T2)('$'));
+								if (l7) {
+									T17f33(GE_void(R), (T2)('{'));
+								}
+								t1 = (T175f4(C));
+								R = (T69f5(GE_void(t1), R, l1));
+								if (l8) {
+									T17f33(GE_void(R), (T2)('}'));
+								}
+							}
+						}
+					} else {
+						T17f33(GE_void(R), (T2)('$'));
+						if (l7) {
+							T17f33(GE_void(R), (T2)('{'));
+						}
+						t1 = (T175f4(C));
+						R = (T69f5(GE_void(t1), R, l1));
+						if (l8) {
+							T17f33(GE_void(R), (T2)('}'));
+						}
+					}
+				}
+			}
+		}
+	}
+	return R;
+}
+
+/* LX_ITERATION_NOT_POSITIVE_ERROR.arguments */
+T0* T175f6(T0* C)
+{
+	T0* R = 0;
+	if (ge380os1745) {
+		return ge380ov1745;
+	} else {
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
+	}
+	R = T23c4();
+	ge380ov1745 = R;
+	return R;
+}
+
+/* LX_ITERATION_NOT_POSITIVE_ERROR.string_ */
+T0* T175f4(T0* C)
+{
+	T0* R = 0;
+	if (ge307os1751) {
+		return ge307ov1751;
+	} else {
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
+	}
+	R = T69c12();
+	ge307ov1751 = R;
+	return R;
+}
+
+/* LX_BAD_ITERATION_VALUES_ERROR.default_message */
+T0* T174f5(T0* C)
+{
+	T0* R = 0;
+	R = (T174f3(C, ge102ov4064));
+	return R;
+}
+
+/* LX_BAD_ITERATION_VALUES_ERROR.message */
 T0* T174f3(T0* C, T0* a1)
 {
 	T0* t1;
@@ -41555,13 +42574,13 @@ T0* T174f3(T0* C, T0* a1)
 							}
 						}
 					}
-					t2 = (T17f11(GE_void(l1)));
+					t2 = (T17f12(GE_void(l1)));
 					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T174*)(C))->a1), l3));
+						l3 = (T17f13(GE_void(l1)));
+						t2 = (T133f4(GE_void(((T174*)(C))->a1), l3));
 						if (t2) {
 							t1 = (T174f4(C));
-							t5 = (T132f5(GE_void(((T174*)(C))->a1), l3));
+							t5 = (T133f5(GE_void(((T174*)(C))->a1), l3));
 							R = (T69f5(GE_void(t1), R, t5));
 						} else {
 							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
@@ -41600,585 +42619,33 @@ T0* T174f3(T0* C, T0* a1)
 	return R;
 }
 
-/* LX_NEGATIVE_RANGE_IN_CHARACTER_CLASS_ERROR.arguments */
+/* LX_BAD_ITERATION_VALUES_ERROR.arguments */
 T0* T174f6(T0* C)
 {
 	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
+	if (ge380os1745) {
+		return ge380ov1745;
 	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
 	}
 	R = T23c4();
-	ge434ov1769 = R;
-	return R;
-}
-
-/* KL_STRING_ROUTINES.appended_string */
-T0* T69f5(T0* C, T0* a1, T0* a2)
-{
-	T1 t1;
-	T0* R = 0;
-	T0* l1 = 0;
-	l1 = EIF_VOID;
-	t1 = (EIF_FALSE);
-	if (t1) {
-		(GE_void(l1), a2);
-		R = l1;
-	} else {
-		l1 = EIF_VOID;
-		t1 = (EIF_FALSE);
-		if (t1) {
-			R = (T69f10(C, a1, a2));
-		} else {
-			T17f34(GE_void(a1), a2);
-			R = a1;
-		}
-	}
-	return R;
-}
-
-/* KL_STRING_ROUTINES.concat */
-T0* T69f10(T0* C, T0* a1, T0* a2)
-{
-	T1 t1;
-	T0* R = 0;
-	T0* l1 = 0;
-	l1 = EIF_VOID;
-	t1 = (EIF_FALSE);
-	if (t1) {
-		R = ((GE_void(l1), a2, (T0*)0));
-	} else {
-		l1 = EIF_VOID;
-		t1 = (EIF_FALSE);
-		if (t1) {
-			R = ((GE_void(l1), a1, (T0*)0));
-		} else {
-			R = (T17f17(GE_void(a1), a2));
-		}
-	}
-	return R;
-}
-
-/* ARRAY [STRING_8].valid_index */
-T1 T132f4(T0* C, T6 a1)
-{
-	T1 t1;
-	T1 R = 0;
-	t1 = (T6f7(&(((T132*)(C))->a2), a1));
-	if (t1) {
-		R = (T6f7(&a1, ((T132*)(C))->a3));
-	} else {
-		R = EIF_FALSE;
-	}
-	return R;
-}
-
-/* KL_STRING_ROUTINES.append_substring_to_string */
-void T69f13(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
-{
-	T1 t1;
-	T2 t2;
-	T0* l1 = 0;
-	T6 l2 = 0;
-	l1 = EIF_VOID;
-	t1 = (EIF_FALSE);
-	if (t1) {
-		(GE_void(l1), a2, a3, a4);
-	} else {
-		l2 = a3;
-		while (1) {
-			t1 = (T6f1((&l2), a4));
-			if (t1) {
-				break;
-			}
-			t2 = (T17f9(GE_void(a2), l2));
-			T17f33(GE_void(a1), t2);
-			l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-		}
-	}
-}
-
-/* KL_STRING_ROUTINES.appended_substring */
-T0* T69f4(T0* C, T0* a1, T0* a2, T6 a3, T6 a4)
-{
-	T1 t1;
-	T6 t2;
-	T2 t3;
-	T0* R = 0;
-	T0* l1 = 0;
-	T6 l2 = 0;
-	l1 = EIF_VOID;
-	t1 = (EIF_FALSE);
-	if (t1) {
-		(GE_void(l1), a2, a3, a4);
-		R = l1;
-	} else {
-		l1 = EIF_VOID;
-		t1 = (EIF_FALSE);
-		if (t1) {
-			t2 = (((T17*)(GE_void(a1)))->a2);
-			t2 = ((T6)((t2)+(a4)));
-			t2 = ((T6)((t2)-(a3)));
-			t2 = ((T6)((t2)+((T6)(GE_int32(1)))));
-			l1 = ((GE_void(l1), t2, (T0*)0));
-			(GE_void(l1), a1);
-			(GE_void(l1), a2, a3, a4);
-			R = l1;
-		} else {
-			l2 = a3;
-			while (1) {
-				t1 = (T6f1((&l2), a4));
-				if (t1) {
-					break;
-				}
-				t3 = (T17f9(GE_void(a2), l2));
-				T17f33(GE_void(a1), t3);
-				l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-			}
-			R = a1;
-		}
-	}
-	return R;
-}
-
-/* KL_STRING_ROUTINES.new_empty_string */
-T0* T69f3(T0* C, T0* a1, T6 a2)
-{
-	T0* t1;
-	T1 t2;
-	T0* R = 0;
-	T0* l1 = 0;
-	t1 = (T69f7(C));
-	t2 = (T189f1(GE_void(t1), a1, ge366ov5559));
-	if (t2) {
-		R = T17c32(a2);
-	} else {
-		l1 = EIF_VOID;
-		t2 = (EIF_FALSE);
-		if (t2) {
-			R = ((GE_void(l1), a2, (T0*)0));
-		} else {
-			R = (T69f6(C, a1));
-			T17f38(GE_void(R));
-		}
-	}
-	return R;
-}
-
-/* STRING_8.wipe_out */
-void T17f38(T0* C)
-{
-	((T17*)(C))->a1 = T15c10((T6)(GE_int32(1)));
-	((T17*)(C))->a2 = (T6)(GE_int32(0));
-	((T17*)(C))->a3 = (T6)(GE_int32(0));
-}
-
-/* LX_NEGATIVE_RANGE_IN_CHARACTER_CLASS_ERROR.string_ */
-T0* T174f4(T0* C)
-{
-	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
-	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
-	}
-	R = T69c12();
-	ge359ov1775 = R;
-	return R;
-}
-
-/* LX_ITERATION_NOT_POSITIVE_ERROR.default_message */
-T0* T173f5(T0* C)
-{
-	T0* R = 0;
-	R = (T173f3(C, ge162ov4035));
-	return R;
-}
-
-/* LX_ITERATION_NOT_POSITIVE_ERROR.message */
-T0* T173f3(T0* C, T0* a1)
-{
-	T0* t1;
-	T1 t2;
-	T6 t3;
-	T6 t4;
-	T0* t5;
-	T0* R = 0;
-	T0* l1 = 0;
-	T6 l2 = 0;
-	T6 l3 = 0;
-	T6 l4 = 0;
-	T2 l5 = 0;
-	T1 l6 = 0;
-	T1 l7 = 0;
-	T1 l8 = 0;
-	l2 = (T6)(GE_int32(1));
-	l4 = (((T17*)(a1))->a2);
-	t1 = (T173f4(C));
-	R = (T69f3(GE_void(t1), a1, l4));
-	while (1) {
-		t2 = (T6f1((&l2), l4));
-		if (t2) {
-			break;
-		}
-		l5 = (T17f9(a1, l2));
-		l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-		t2 = (((((l5) != ((T2)('$'))))));
-		if (t2) {
-			t2 = (((((l5) != ((T2)('\000'))))));
-			if (t2) {
-				T17f33(GE_void(R), l5);
-			} else {
-				t1 = (T173f4(C));
-				t3 = ((T6)((l2)-((T6)(GE_int32(1)))));
-				t4 = ((T6)((l2)-((T6)(GE_int32(1)))));
-				R = (T69f4(GE_void(t1), R, a1, t3, t4));
-			}
-		} else {
-			t2 = (T6f1((&l2), l4));
-			if (t2) {
-				T17f33(GE_void(R), (T2)('$'));
-			} else {
-				l5 = (T17f9(a1, l2));
-				t2 = (((((l5) == ((T2)('$'))))));
-				if (t2) {
-					T17f33(GE_void(R), (T2)('$'));
-					l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-				} else {
-					t1 = (T173f4(C));
-					l1 = (T69f3(GE_void(t1), a1, (T6)(GE_int32(5))));
-					t2 = (((((l5) == ((T2)('{'))))));
-					if (t2) {
-						l7 = EIF_TRUE;
-						l8 = EIF_FALSE;
-						l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-						while (1) {
-							t2 = (T6f1((&l2), l4));
-							if (!(t2)) {
-								t2 = (l8);
-							}
-							if (t2) {
-								break;
-							}
-							l5 = (T17f9(a1, l2));
-							t2 = (((((l5) == ((T2)('}'))))));
-							if (t2) {
-								l8 = EIF_TRUE;
-							} else {
-								t2 = (((((l5) != ((T2)('\000'))))));
-								if (t2) {
-									T17f33(GE_void(l1), l5);
-								} else {
-									t1 = (T173f4(C));
-									T69f13(GE_void(t1), l1, a1, l2, l2);
-								}
-							}
-							l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-						}
-					} else {
-						l7 = EIF_FALSE;
-						l8 = EIF_FALSE;
-						l6 = EIF_FALSE;
-						while (1) {
-							t2 = (T6f1((&l2), l4));
-							if (!(t2)) {
-								t2 = (l6);
-							}
-							if (t2) {
-								break;
-							}
-							l5 = (T17f9(a1, l2));
-							switch (l5) {
-							case (T2)'0':
-							case (T2)'1':
-							case (T2)'2':
-							case (T2)'3':
-							case (T2)'4':
-							case (T2)'5':
-							case (T2)'6':
-							case (T2)'7':
-							case (T2)'8':
-							case (T2)'9':
-								T17f33(GE_void(l1), l5);
-								l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-								break;
-							default:
-								l6 = EIF_TRUE;
-								break;
-							}
-						}
-					}
-					t2 = (T17f11(GE_void(l1)));
-					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T173*)(C))->a1), l3));
-						if (t2) {
-							t1 = (T173f4(C));
-							t5 = (T132f5(GE_void(((T173*)(C))->a1), l3));
-							R = (T69f5(GE_void(t1), R, t5));
-						} else {
-							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
-							if (t2) {
-								t1 = (T173f4(C));
-								t5 = (T173f6(C));
-								t5 = (((T23*)(GE_void(t5)))->a1);
-								R = (T69f5(GE_void(t1), R, t5));
-							} else {
-								T17f33(GE_void(R), (T2)('$'));
-								if (l7) {
-									T17f33(GE_void(R), (T2)('{'));
-								}
-								t1 = (T173f4(C));
-								R = (T69f5(GE_void(t1), R, l1));
-								if (l8) {
-									T17f33(GE_void(R), (T2)('}'));
-								}
-							}
-						}
-					} else {
-						T17f33(GE_void(R), (T2)('$'));
-						if (l7) {
-							T17f33(GE_void(R), (T2)('{'));
-						}
-						t1 = (T173f4(C));
-						R = (T69f5(GE_void(t1), R, l1));
-						if (l8) {
-							T17f33(GE_void(R), (T2)('}'));
-						}
-					}
-				}
-			}
-		}
-	}
-	return R;
-}
-
-/* LX_ITERATION_NOT_POSITIVE_ERROR.arguments */
-T0* T173f6(T0* C)
-{
-	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
-	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
-	}
-	R = T23c4();
-	ge434ov1769 = R;
-	return R;
-}
-
-/* LX_ITERATION_NOT_POSITIVE_ERROR.string_ */
-T0* T173f4(T0* C)
-{
-	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
-	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
-	}
-	R = T69c12();
-	ge359ov1775 = R;
-	return R;
-}
-
-/* LX_BAD_ITERATION_VALUES_ERROR.default_message */
-T0* T172f5(T0* C)
-{
-	T0* R = 0;
-	R = (T172f3(C, ge150ov4035));
-	return R;
-}
-
-/* LX_BAD_ITERATION_VALUES_ERROR.message */
-T0* T172f3(T0* C, T0* a1)
-{
-	T0* t1;
-	T1 t2;
-	T6 t3;
-	T6 t4;
-	T0* t5;
-	T0* R = 0;
-	T0* l1 = 0;
-	T6 l2 = 0;
-	T6 l3 = 0;
-	T6 l4 = 0;
-	T2 l5 = 0;
-	T1 l6 = 0;
-	T1 l7 = 0;
-	T1 l8 = 0;
-	l2 = (T6)(GE_int32(1));
-	l4 = (((T17*)(a1))->a2);
-	t1 = (T172f4(C));
-	R = (T69f3(GE_void(t1), a1, l4));
-	while (1) {
-		t2 = (T6f1((&l2), l4));
-		if (t2) {
-			break;
-		}
-		l5 = (T17f9(a1, l2));
-		l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-		t2 = (((((l5) != ((T2)('$'))))));
-		if (t2) {
-			t2 = (((((l5) != ((T2)('\000'))))));
-			if (t2) {
-				T17f33(GE_void(R), l5);
-			} else {
-				t1 = (T172f4(C));
-				t3 = ((T6)((l2)-((T6)(GE_int32(1)))));
-				t4 = ((T6)((l2)-((T6)(GE_int32(1)))));
-				R = (T69f4(GE_void(t1), R, a1, t3, t4));
-			}
-		} else {
-			t2 = (T6f1((&l2), l4));
-			if (t2) {
-				T17f33(GE_void(R), (T2)('$'));
-			} else {
-				l5 = (T17f9(a1, l2));
-				t2 = (((((l5) == ((T2)('$'))))));
-				if (t2) {
-					T17f33(GE_void(R), (T2)('$'));
-					l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-				} else {
-					t1 = (T172f4(C));
-					l1 = (T69f3(GE_void(t1), a1, (T6)(GE_int32(5))));
-					t2 = (((((l5) == ((T2)('{'))))));
-					if (t2) {
-						l7 = EIF_TRUE;
-						l8 = EIF_FALSE;
-						l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-						while (1) {
-							t2 = (T6f1((&l2), l4));
-							if (!(t2)) {
-								t2 = (l8);
-							}
-							if (t2) {
-								break;
-							}
-							l5 = (T17f9(a1, l2));
-							t2 = (((((l5) == ((T2)('}'))))));
-							if (t2) {
-								l8 = EIF_TRUE;
-							} else {
-								t2 = (((((l5) != ((T2)('\000'))))));
-								if (t2) {
-									T17f33(GE_void(l1), l5);
-								} else {
-									t1 = (T172f4(C));
-									T69f13(GE_void(t1), l1, a1, l2, l2);
-								}
-							}
-							l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-						}
-					} else {
-						l7 = EIF_FALSE;
-						l8 = EIF_FALSE;
-						l6 = EIF_FALSE;
-						while (1) {
-							t2 = (T6f1((&l2), l4));
-							if (!(t2)) {
-								t2 = (l6);
-							}
-							if (t2) {
-								break;
-							}
-							l5 = (T17f9(a1, l2));
-							switch (l5) {
-							case (T2)'0':
-							case (T2)'1':
-							case (T2)'2':
-							case (T2)'3':
-							case (T2)'4':
-							case (T2)'5':
-							case (T2)'6':
-							case (T2)'7':
-							case (T2)'8':
-							case (T2)'9':
-								T17f33(GE_void(l1), l5);
-								l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-								break;
-							default:
-								l6 = EIF_TRUE;
-								break;
-							}
-						}
-					}
-					t2 = (T17f11(GE_void(l1)));
-					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T172*)(C))->a1), l3));
-						if (t2) {
-							t1 = (T172f4(C));
-							t5 = (T132f5(GE_void(((T172*)(C))->a1), l3));
-							R = (T69f5(GE_void(t1), R, t5));
-						} else {
-							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
-							if (t2) {
-								t1 = (T172f4(C));
-								t5 = (T172f6(C));
-								t5 = (((T23*)(GE_void(t5)))->a1);
-								R = (T69f5(GE_void(t1), R, t5));
-							} else {
-								T17f33(GE_void(R), (T2)('$'));
-								if (l7) {
-									T17f33(GE_void(R), (T2)('{'));
-								}
-								t1 = (T172f4(C));
-								R = (T69f5(GE_void(t1), R, l1));
-								if (l8) {
-									T17f33(GE_void(R), (T2)('}'));
-								}
-							}
-						}
-					} else {
-						T17f33(GE_void(R), (T2)('$'));
-						if (l7) {
-							T17f33(GE_void(R), (T2)('{'));
-						}
-						t1 = (T172f4(C));
-						R = (T69f5(GE_void(t1), R, l1));
-						if (l8) {
-							T17f33(GE_void(R), (T2)('}'));
-						}
-					}
-				}
-			}
-		}
-	}
-	return R;
-}
-
-/* LX_BAD_ITERATION_VALUES_ERROR.arguments */
-T0* T172f6(T0* C)
-{
-	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
-	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
-	}
-	R = T23c4();
-	ge434ov1769 = R;
+	ge380ov1745 = R;
 	return R;
 }
 
 /* LX_BAD_ITERATION_VALUES_ERROR.string_ */
-T0* T172f4(T0* C)
+T0* T174f4(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
@@ -42186,7 +42653,7 @@ T0* T172f4(T0* C)
 T0* T128f5(T0* C)
 {
 	T0* R = 0;
-	R = (T128f3(C, ge165ov4035));
+	R = (T128f3(C, ge117ov4064));
 	return R;
 }
 
@@ -42303,13 +42770,13 @@ T0* T128f3(T0* C, T0* a1)
 							}
 						}
 					}
-					t2 = (T17f11(GE_void(l1)));
+					t2 = (T17f12(GE_void(l1)));
 					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T128*)(C))->a1), l3));
+						l3 = (T17f13(GE_void(l1)));
+						t2 = (T133f4(GE_void(((T128*)(C))->a1), l3));
 						if (t2) {
 							t1 = (T128f4(C));
-							t5 = (T132f5(GE_void(((T128*)(C))->a1), l3));
+							t5 = (T133f5(GE_void(((T128*)(C))->a1), l3));
 							R = (T69f5(GE_void(t1), R, t5));
 						} else {
 							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
@@ -42352,14 +42819,14 @@ T0* T128f3(T0* C, T0* a1)
 T0* T128f6(T0* C)
 {
 	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
+	if (ge380os1745) {
+		return ge380ov1745;
 	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
 	}
 	R = T23c4();
-	ge434ov1769 = R;
+	ge380ov1745 = R;
 	return R;
 }
 
@@ -42367,14 +42834,14 @@ T0* T128f6(T0* C)
 T0* T128f4(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
@@ -42382,7 +42849,7 @@ T0* T128f4(T0* C)
 T0* T127f5(T0* C)
 {
 	T0* R = 0;
-	R = (T127f3(C, ge153ov4035));
+	R = (T127f3(C, ge105ov4064));
 	return R;
 }
 
@@ -42499,13 +42966,13 @@ T0* T127f3(T0* C, T0* a1)
 							}
 						}
 					}
-					t2 = (T17f11(GE_void(l1)));
+					t2 = (T17f12(GE_void(l1)));
 					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T127*)(C))->a1), l3));
+						l3 = (T17f13(GE_void(l1)));
+						t2 = (T133f4(GE_void(((T127*)(C))->a1), l3));
 						if (t2) {
 							t1 = (T127f4(C));
-							t5 = (T132f5(GE_void(((T127*)(C))->a1), l3));
+							t5 = (T133f5(GE_void(((T127*)(C))->a1), l3));
 							R = (T69f5(GE_void(t1), R, t5));
 						} else {
 							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
@@ -42548,14 +43015,14 @@ T0* T127f3(T0* C, T0* a1)
 T0* T127f6(T0* C)
 {
 	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
+	if (ge380os1745) {
+		return ge380ov1745;
 	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
 	}
 	R = T23c4();
-	ge434ov1769 = R;
+	ge380ov1745 = R;
 	return R;
 }
 
@@ -42563,14 +43030,14 @@ T0* T127f6(T0* C)
 T0* T127f4(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
@@ -42578,7 +43045,7 @@ T0* T127f4(T0* C)
 T0* T126f5(T0* C)
 {
 	T0* R = 0;
-	R = (T126f3(C, ge166ov4035));
+	R = (T126f3(C, ge118ov4064));
 	return R;
 }
 
@@ -42695,13 +43162,13 @@ T0* T126f3(T0* C, T0* a1)
 							}
 						}
 					}
-					t2 = (T17f11(GE_void(l1)));
+					t2 = (T17f12(GE_void(l1)));
 					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T126*)(C))->a1), l3));
+						l3 = (T17f13(GE_void(l1)));
+						t2 = (T133f4(GE_void(((T126*)(C))->a1), l3));
 						if (t2) {
 							t1 = (T126f4(C));
-							t5 = (T132f5(GE_void(((T126*)(C))->a1), l3));
+							t5 = (T133f5(GE_void(((T126*)(C))->a1), l3));
 							R = (T69f5(GE_void(t1), R, t5));
 						} else {
 							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
@@ -42744,14 +43211,14 @@ T0* T126f3(T0* C, T0* a1)
 T0* T126f6(T0* C)
 {
 	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
+	if (ge380os1745) {
+		return ge380ov1745;
 	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
 	}
 	R = T23c4();
-	ge434ov1769 = R;
+	ge380ov1745 = R;
 	return R;
 }
 
@@ -42759,14 +43226,14 @@ T0* T126f6(T0* C)
 T0* T126f4(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
@@ -42774,7 +43241,7 @@ T0* T126f4(T0* C)
 T0* T125f5(T0* C)
 {
 	T0* R = 0;
-	R = (T125f3(C, ge169ov4035));
+	R = (T125f3(C, ge121ov4064));
 	return R;
 }
 
@@ -42891,13 +43358,13 @@ T0* T125f3(T0* C, T0* a1)
 							}
 						}
 					}
-					t2 = (T17f11(GE_void(l1)));
+					t2 = (T17f12(GE_void(l1)));
 					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T125*)(C))->a1), l3));
+						l3 = (T17f13(GE_void(l1)));
+						t2 = (T133f4(GE_void(((T125*)(C))->a1), l3));
 						if (t2) {
 							t1 = (T125f4(C));
-							t5 = (T132f5(GE_void(((T125*)(C))->a1), l3));
+							t5 = (T133f5(GE_void(((T125*)(C))->a1), l3));
 							R = (T69f5(GE_void(t1), R, t5));
 						} else {
 							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
@@ -42940,14 +43407,14 @@ T0* T125f3(T0* C, T0* a1)
 T0* T125f6(T0* C)
 {
 	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
+	if (ge380os1745) {
+		return ge380ov1745;
 	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
 	}
 	R = T23c4();
-	ge434ov1769 = R;
+	ge380ov1745 = R;
 	return R;
 }
 
@@ -42955,14 +43422,14 @@ T0* T125f6(T0* C)
 T0* T125f4(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
@@ -42970,7 +43437,7 @@ T0* T125f4(T0* C)
 T0* T124f5(T0* C)
 {
 	T0* R = 0;
-	R = (T124f3(C, ge146ov4035));
+	R = (T124f3(C, ge98ov4064));
 	return R;
 }
 
@@ -43087,13 +43554,13 @@ T0* T124f3(T0* C, T0* a1)
 							}
 						}
 					}
-					t2 = (T17f11(GE_void(l1)));
+					t2 = (T17f12(GE_void(l1)));
 					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T124*)(C))->a1), l3));
+						l3 = (T17f13(GE_void(l1)));
+						t2 = (T133f4(GE_void(((T124*)(C))->a1), l3));
 						if (t2) {
 							t1 = (T124f4(C));
-							t5 = (T132f5(GE_void(((T124*)(C))->a1), l3));
+							t5 = (T133f5(GE_void(((T124*)(C))->a1), l3));
 							R = (T69f5(GE_void(t1), R, t5));
 						} else {
 							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
@@ -43136,14 +43603,14 @@ T0* T124f3(T0* C, T0* a1)
 T0* T124f6(T0* C)
 {
 	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
+	if (ge380os1745) {
+		return ge380ov1745;
 	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
 	}
 	R = T23c4();
-	ge434ov1769 = R;
+	ge380ov1745 = R;
 	return R;
 }
 
@@ -43151,14 +43618,14 @@ T0* T124f6(T0* C)
 T0* T124f4(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
@@ -43166,7 +43633,7 @@ T0* T124f4(T0* C)
 T0* T123f5(T0* C)
 {
 	T0* R = 0;
-	R = (T123f3(C, ge173ov4035));
+	R = (T123f3(C, ge125ov4064));
 	return R;
 }
 
@@ -43283,13 +43750,13 @@ T0* T123f3(T0* C, T0* a1)
 							}
 						}
 					}
-					t2 = (T17f11(GE_void(l1)));
+					t2 = (T17f12(GE_void(l1)));
 					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T123*)(C))->a1), l3));
+						l3 = (T17f13(GE_void(l1)));
+						t2 = (T133f4(GE_void(((T123*)(C))->a1), l3));
 						if (t2) {
 							t1 = (T123f4(C));
-							t5 = (T132f5(GE_void(((T123*)(C))->a1), l3));
+							t5 = (T133f5(GE_void(((T123*)(C))->a1), l3));
 							R = (T69f5(GE_void(t1), R, t5));
 						} else {
 							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
@@ -43332,14 +43799,14 @@ T0* T123f3(T0* C, T0* a1)
 T0* T123f6(T0* C)
 {
 	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
+	if (ge380os1745) {
+		return ge380ov1745;
 	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
 	}
 	R = T23c4();
-	ge434ov1769 = R;
+	ge380ov1745 = R;
 	return R;
 }
 
@@ -43347,14 +43814,14 @@ T0* T123f6(T0* C)
 T0* T123f4(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
@@ -43362,7 +43829,7 @@ T0* T123f4(T0* C)
 T0* T122f5(T0* C)
 {
 	T0* R = 0;
-	R = (T122f3(C, ge171ov4035));
+	R = (T122f3(C, ge123ov4064));
 	return R;
 }
 
@@ -43479,13 +43946,13 @@ T0* T122f3(T0* C, T0* a1)
 							}
 						}
 					}
-					t2 = (T17f11(GE_void(l1)));
+					t2 = (T17f12(GE_void(l1)));
 					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T122*)(C))->a1), l3));
+						l3 = (T17f13(GE_void(l1)));
+						t2 = (T133f4(GE_void(((T122*)(C))->a1), l3));
 						if (t2) {
 							t1 = (T122f4(C));
-							t5 = (T132f5(GE_void(((T122*)(C))->a1), l3));
+							t5 = (T133f5(GE_void(((T122*)(C))->a1), l3));
 							R = (T69f5(GE_void(t1), R, t5));
 						} else {
 							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
@@ -43528,14 +43995,14 @@ T0* T122f3(T0* C, T0* a1)
 T0* T122f6(T0* C)
 {
 	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
+	if (ge380os1745) {
+		return ge380ov1745;
 	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
 	}
 	R = T23c4();
-	ge434ov1769 = R;
+	ge380ov1745 = R;
 	return R;
 }
 
@@ -43543,14 +44010,14 @@ T0* T122f6(T0* C)
 T0* T122f4(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
@@ -43558,7 +44025,7 @@ T0* T122f4(T0* C)
 T0* T121f5(T0* C)
 {
 	T0* R = 0;
-	R = (T121f3(C, ge159ov4035));
+	R = (T121f3(C, ge111ov4064));
 	return R;
 }
 
@@ -43675,13 +44142,13 @@ T0* T121f3(T0* C, T0* a1)
 							}
 						}
 					}
-					t2 = (T17f11(GE_void(l1)));
+					t2 = (T17f12(GE_void(l1)));
 					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T121*)(C))->a1), l3));
+						l3 = (T17f13(GE_void(l1)));
+						t2 = (T133f4(GE_void(((T121*)(C))->a1), l3));
 						if (t2) {
 							t1 = (T121f4(C));
-							t5 = (T132f5(GE_void(((T121*)(C))->a1), l3));
+							t5 = (T133f5(GE_void(((T121*)(C))->a1), l3));
 							R = (T69f5(GE_void(t1), R, t5));
 						} else {
 							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
@@ -43724,14 +44191,14 @@ T0* T121f3(T0* C, T0* a1)
 T0* T121f6(T0* C)
 {
 	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
+	if (ge380os1745) {
+		return ge380ov1745;
 	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
 	}
 	R = T23c4();
-	ge434ov1769 = R;
+	ge380ov1745 = R;
 	return R;
 }
 
@@ -43739,14 +44206,14 @@ T0* T121f6(T0* C)
 T0* T121f4(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
@@ -43754,7 +44221,7 @@ T0* T121f4(T0* C)
 T0* T120f5(T0* C)
 {
 	T0* R = 0;
-	R = (T120f3(C, ge158ov4035));
+	R = (T120f3(C, ge110ov4064));
 	return R;
 }
 
@@ -43871,13 +44338,13 @@ T0* T120f3(T0* C, T0* a1)
 							}
 						}
 					}
-					t2 = (T17f11(GE_void(l1)));
+					t2 = (T17f12(GE_void(l1)));
 					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T120*)(C))->a1), l3));
+						l3 = (T17f13(GE_void(l1)));
+						t2 = (T133f4(GE_void(((T120*)(C))->a1), l3));
 						if (t2) {
 							t1 = (T120f4(C));
-							t5 = (T132f5(GE_void(((T120*)(C))->a1), l3));
+							t5 = (T133f5(GE_void(((T120*)(C))->a1), l3));
 							R = (T69f5(GE_void(t1), R, t5));
 						} else {
 							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
@@ -43920,14 +44387,14 @@ T0* T120f3(T0* C, T0* a1)
 T0* T120f6(T0* C)
 {
 	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
+	if (ge380os1745) {
+		return ge380ov1745;
 	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
 	}
 	R = T23c4();
-	ge434ov1769 = R;
+	ge380ov1745 = R;
 	return R;
 }
 
@@ -43935,14 +44402,14 @@ T0* T120f6(T0* C)
 T0* T120f4(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
@@ -43950,7 +44417,7 @@ T0* T120f4(T0* C)
 T0* T119f5(T0* C)
 {
 	T0* R = 0;
-	R = (T119f3(C, ge157ov4035));
+	R = (T119f3(C, ge109ov4064));
 	return R;
 }
 
@@ -44067,13 +44534,13 @@ T0* T119f3(T0* C, T0* a1)
 							}
 						}
 					}
-					t2 = (T17f11(GE_void(l1)));
+					t2 = (T17f12(GE_void(l1)));
 					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T119*)(C))->a1), l3));
+						l3 = (T17f13(GE_void(l1)));
+						t2 = (T133f4(GE_void(((T119*)(C))->a1), l3));
 						if (t2) {
 							t1 = (T119f4(C));
-							t5 = (T132f5(GE_void(((T119*)(C))->a1), l3));
+							t5 = (T133f5(GE_void(((T119*)(C))->a1), l3));
 							R = (T69f5(GE_void(t1), R, t5));
 						} else {
 							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
@@ -44116,14 +44583,14 @@ T0* T119f3(T0* C, T0* a1)
 T0* T119f6(T0* C)
 {
 	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
+	if (ge380os1745) {
+		return ge380ov1745;
 	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
 	}
 	R = T23c4();
-	ge434ov1769 = R;
+	ge380ov1745 = R;
 	return R;
 }
 
@@ -44131,14 +44598,14 @@ T0* T119f6(T0* C)
 T0* T119f4(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
@@ -44146,7 +44613,7 @@ T0* T119f4(T0* C)
 T0* T118f5(T0* C)
 {
 	T0* R = 0;
-	R = (T118f3(C, ge148ov4035));
+	R = (T118f3(C, ge100ov4064));
 	return R;
 }
 
@@ -44263,13 +44730,13 @@ T0* T118f3(T0* C, T0* a1)
 							}
 						}
 					}
-					t2 = (T17f11(GE_void(l1)));
+					t2 = (T17f12(GE_void(l1)));
 					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T118*)(C))->a1), l3));
+						l3 = (T17f13(GE_void(l1)));
+						t2 = (T133f4(GE_void(((T118*)(C))->a1), l3));
 						if (t2) {
 							t1 = (T118f4(C));
-							t5 = (T132f5(GE_void(((T118*)(C))->a1), l3));
+							t5 = (T133f5(GE_void(((T118*)(C))->a1), l3));
 							R = (T69f5(GE_void(t1), R, t5));
 						} else {
 							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
@@ -44312,14 +44779,14 @@ T0* T118f3(T0* C, T0* a1)
 T0* T118f6(T0* C)
 {
 	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
+	if (ge380os1745) {
+		return ge380ov1745;
 	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
 	}
 	R = T23c4();
-	ge434ov1769 = R;
+	ge380ov1745 = R;
 	return R;
 }
 
@@ -44327,14 +44794,14 @@ T0* T118f6(T0* C)
 T0* T118f4(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
@@ -44342,7 +44809,7 @@ T0* T118f4(T0* C)
 T0* T117f5(T0* C)
 {
 	T0* R = 0;
-	R = (T117f3(C, ge163ov4035));
+	R = (T117f3(C, ge115ov4064));
 	return R;
 }
 
@@ -44459,13 +44926,13 @@ T0* T117f3(T0* C, T0* a1)
 							}
 						}
 					}
-					t2 = (T17f11(GE_void(l1)));
+					t2 = (T17f12(GE_void(l1)));
 					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T117*)(C))->a1), l3));
+						l3 = (T17f13(GE_void(l1)));
+						t2 = (T133f4(GE_void(((T117*)(C))->a1), l3));
 						if (t2) {
 							t1 = (T117f4(C));
-							t5 = (T132f5(GE_void(((T117*)(C))->a1), l3));
+							t5 = (T133f5(GE_void(((T117*)(C))->a1), l3));
 							R = (T69f5(GE_void(t1), R, t5));
 						} else {
 							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
@@ -44508,14 +44975,14 @@ T0* T117f3(T0* C, T0* a1)
 T0* T117f6(T0* C)
 {
 	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
+	if (ge380os1745) {
+		return ge380ov1745;
 	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
 	}
 	R = T23c4();
-	ge434ov1769 = R;
+	ge380ov1745 = R;
 	return R;
 }
 
@@ -44523,14 +44990,14 @@ T0* T117f6(T0* C)
 T0* T117f4(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
@@ -44538,7 +45005,7 @@ T0* T117f4(T0* C)
 T0* T116f5(T0* C)
 {
 	T0* R = 0;
-	R = (T116f3(C, ge149ov4035));
+	R = (T116f3(C, ge101ov4064));
 	return R;
 }
 
@@ -44655,13 +45122,13 @@ T0* T116f3(T0* C, T0* a1)
 							}
 						}
 					}
-					t2 = (T17f11(GE_void(l1)));
+					t2 = (T17f12(GE_void(l1)));
 					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T116*)(C))->a1), l3));
+						l3 = (T17f13(GE_void(l1)));
+						t2 = (T133f4(GE_void(((T116*)(C))->a1), l3));
 						if (t2) {
 							t1 = (T116f4(C));
-							t5 = (T132f5(GE_void(((T116*)(C))->a1), l3));
+							t5 = (T133f5(GE_void(((T116*)(C))->a1), l3));
 							R = (T69f5(GE_void(t1), R, t5));
 						} else {
 							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
@@ -44704,14 +45171,14 @@ T0* T116f3(T0* C, T0* a1)
 T0* T116f6(T0* C)
 {
 	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
+	if (ge380os1745) {
+		return ge380ov1745;
 	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
 	}
 	R = T23c4();
-	ge434ov1769 = R;
+	ge380ov1745 = R;
 	return R;
 }
 
@@ -44719,14 +45186,14 @@ T0* T116f6(T0* C)
 T0* T116f4(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
@@ -44734,7 +45201,7 @@ T0* T116f4(T0* C)
 T0* T115f5(T0* C)
 {
 	T0* R = 0;
-	R = (T115f3(C, ge161ov4035));
+	R = (T115f3(C, ge113ov4064));
 	return R;
 }
 
@@ -44851,13 +45318,13 @@ T0* T115f3(T0* C, T0* a1)
 							}
 						}
 					}
-					t2 = (T17f11(GE_void(l1)));
+					t2 = (T17f12(GE_void(l1)));
 					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T115*)(C))->a1), l3));
+						l3 = (T17f13(GE_void(l1)));
+						t2 = (T133f4(GE_void(((T115*)(C))->a1), l3));
 						if (t2) {
 							t1 = (T115f4(C));
-							t5 = (T132f5(GE_void(((T115*)(C))->a1), l3));
+							t5 = (T133f5(GE_void(((T115*)(C))->a1), l3));
 							R = (T69f5(GE_void(t1), R, t5));
 						} else {
 							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
@@ -44900,14 +45367,14 @@ T0* T115f3(T0* C, T0* a1)
 T0* T115f6(T0* C)
 {
 	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
+	if (ge380os1745) {
+		return ge380ov1745;
 	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
 	}
 	R = T23c4();
-	ge434ov1769 = R;
+	ge380ov1745 = R;
 	return R;
 }
 
@@ -44915,14 +45382,14 @@ T0* T115f6(T0* C)
 T0* T115f4(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
@@ -44930,7 +45397,7 @@ T0* T115f4(T0* C)
 T0* T114f5(T0* C)
 {
 	T0* R = 0;
-	R = (T114f3(C, ge151ov4035));
+	R = (T114f3(C, ge103ov4064));
 	return R;
 }
 
@@ -45047,13 +45514,13 @@ T0* T114f3(T0* C, T0* a1)
 							}
 						}
 					}
-					t2 = (T17f11(GE_void(l1)));
+					t2 = (T17f12(GE_void(l1)));
 					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T114*)(C))->a1), l3));
+						l3 = (T17f13(GE_void(l1)));
+						t2 = (T133f4(GE_void(((T114*)(C))->a1), l3));
 						if (t2) {
 							t1 = (T114f4(C));
-							t5 = (T132f5(GE_void(((T114*)(C))->a1), l3));
+							t5 = (T133f5(GE_void(((T114*)(C))->a1), l3));
 							R = (T69f5(GE_void(t1), R, t5));
 						} else {
 							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
@@ -45096,14 +45563,14 @@ T0* T114f3(T0* C, T0* a1)
 T0* T114f6(T0* C)
 {
 	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
+	if (ge380os1745) {
+		return ge380ov1745;
 	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
 	}
 	R = T23c4();
-	ge434ov1769 = R;
+	ge380ov1745 = R;
 	return R;
 }
 
@@ -45111,14 +45578,14 @@ T0* T114f6(T0* C)
 T0* T114f4(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
@@ -45126,7 +45593,7 @@ T0* T114f4(T0* C)
 T0* T113f5(T0* C)
 {
 	T0* R = 0;
-	R = (T113f3(C, ge147ov4035));
+	R = (T113f3(C, ge99ov4064));
 	return R;
 }
 
@@ -45243,13 +45710,13 @@ T0* T113f3(T0* C, T0* a1)
 							}
 						}
 					}
-					t2 = (T17f11(GE_void(l1)));
+					t2 = (T17f12(GE_void(l1)));
 					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T113*)(C))->a1), l3));
+						l3 = (T17f13(GE_void(l1)));
+						t2 = (T133f4(GE_void(((T113*)(C))->a1), l3));
 						if (t2) {
 							t1 = (T113f4(C));
-							t5 = (T132f5(GE_void(((T113*)(C))->a1), l3));
+							t5 = (T133f5(GE_void(((T113*)(C))->a1), l3));
 							R = (T69f5(GE_void(t1), R, t5));
 						} else {
 							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
@@ -45292,14 +45759,14 @@ T0* T113f3(T0* C, T0* a1)
 T0* T113f6(T0* C)
 {
 	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
+	if (ge380os1745) {
+		return ge380ov1745;
 	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
 	}
 	R = T23c4();
-	ge434ov1769 = R;
+	ge380ov1745 = R;
 	return R;
 }
 
@@ -45307,14 +45774,14 @@ T0* T113f6(T0* C)
 T0* T113f4(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
@@ -45322,7 +45789,7 @@ T0* T113f4(T0* C)
 T0* T112f5(T0* C)
 {
 	T0* R = 0;
-	R = (T112f3(C, ge174ov4035));
+	R = (T112f3(C, ge126ov4064));
 	return R;
 }
 
@@ -45439,13 +45906,13 @@ T0* T112f3(T0* C, T0* a1)
 							}
 						}
 					}
-					t2 = (T17f11(GE_void(l1)));
+					t2 = (T17f12(GE_void(l1)));
 					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T112*)(C))->a1), l3));
+						l3 = (T17f13(GE_void(l1)));
+						t2 = (T133f4(GE_void(((T112*)(C))->a1), l3));
 						if (t2) {
 							t1 = (T112f4(C));
-							t5 = (T132f5(GE_void(((T112*)(C))->a1), l3));
+							t5 = (T133f5(GE_void(((T112*)(C))->a1), l3));
 							R = (T69f5(GE_void(t1), R, t5));
 						} else {
 							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
@@ -45488,14 +45955,14 @@ T0* T112f3(T0* C, T0* a1)
 T0* T112f6(T0* C)
 {
 	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
+	if (ge380os1745) {
+		return ge380ov1745;
 	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
 	}
 	R = T23c4();
-	ge434ov1769 = R;
+	ge380ov1745 = R;
 	return R;
 }
 
@@ -45503,14 +45970,14 @@ T0* T112f6(T0* C)
 T0* T112f4(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
@@ -45518,7 +45985,7 @@ T0* T112f4(T0* C)
 T0* T111f5(T0* C)
 {
 	T0* R = 0;
-	R = (T111f3(C, ge160ov4035));
+	R = (T111f3(C, ge112ov4064));
 	return R;
 }
 
@@ -45635,13 +46102,13 @@ T0* T111f3(T0* C, T0* a1)
 							}
 						}
 					}
-					t2 = (T17f11(GE_void(l1)));
+					t2 = (T17f12(GE_void(l1)));
 					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T111*)(C))->a1), l3));
+						l3 = (T17f13(GE_void(l1)));
+						t2 = (T133f4(GE_void(((T111*)(C))->a1), l3));
 						if (t2) {
 							t1 = (T111f4(C));
-							t5 = (T132f5(GE_void(((T111*)(C))->a1), l3));
+							t5 = (T133f5(GE_void(((T111*)(C))->a1), l3));
 							R = (T69f5(GE_void(t1), R, t5));
 						} else {
 							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
@@ -45684,14 +46151,14 @@ T0* T111f3(T0* C, T0* a1)
 T0* T111f6(T0* C)
 {
 	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
+	if (ge380os1745) {
+		return ge380ov1745;
 	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
 	}
 	R = T23c4();
-	ge434ov1769 = R;
+	ge380ov1745 = R;
 	return R;
 }
 
@@ -45699,14 +46166,14 @@ T0* T111f6(T0* C)
 T0* T111f4(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
@@ -45714,7 +46181,7 @@ T0* T111f4(T0* C)
 T0* T109f5(T0* C)
 {
 	T0* R = 0;
-	R = (T109f3(C, ge164ov4035));
+	R = (T109f3(C, ge116ov4064));
 	return R;
 }
 
@@ -45831,13 +46298,13 @@ T0* T109f3(T0* C, T0* a1)
 							}
 						}
 					}
-					t2 = (T17f11(GE_void(l1)));
+					t2 = (T17f12(GE_void(l1)));
 					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T109*)(C))->a1), l3));
+						l3 = (T17f13(GE_void(l1)));
+						t2 = (T133f4(GE_void(((T109*)(C))->a1), l3));
 						if (t2) {
 							t1 = (T109f4(C));
-							t5 = (T132f5(GE_void(((T109*)(C))->a1), l3));
+							t5 = (T133f5(GE_void(((T109*)(C))->a1), l3));
 							R = (T69f5(GE_void(t1), R, t5));
 						} else {
 							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
@@ -45880,14 +46347,14 @@ T0* T109f3(T0* C, T0* a1)
 T0* T109f6(T0* C)
 {
 	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
+	if (ge380os1745) {
+		return ge380ov1745;
 	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
 	}
 	R = T23c4();
-	ge434ov1769 = R;
+	ge380ov1745 = R;
 	return R;
 }
 
@@ -45895,14 +46362,14 @@ T0* T109f6(T0* C)
 T0* T109f4(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
@@ -45910,7 +46377,7 @@ T0* T109f4(T0* C)
 T0* T108f5(T0* C)
 {
 	T0* R = 0;
-	R = (T108f3(C, ge176ov4035));
+	R = (T108f3(C, ge128ov4064));
 	return R;
 }
 
@@ -46027,13 +46494,13 @@ T0* T108f3(T0* C, T0* a1)
 							}
 						}
 					}
-					t2 = (T17f11(GE_void(l1)));
+					t2 = (T17f12(GE_void(l1)));
 					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T108*)(C))->a1), l3));
+						l3 = (T17f13(GE_void(l1)));
+						t2 = (T133f4(GE_void(((T108*)(C))->a1), l3));
 						if (t2) {
 							t1 = (T108f4(C));
-							t5 = (T132f5(GE_void(((T108*)(C))->a1), l3));
+							t5 = (T133f5(GE_void(((T108*)(C))->a1), l3));
 							R = (T69f5(GE_void(t1), R, t5));
 						} else {
 							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
@@ -46076,14 +46543,14 @@ T0* T108f3(T0* C, T0* a1)
 T0* T108f6(T0* C)
 {
 	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
+	if (ge380os1745) {
+		return ge380ov1745;
 	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
 	}
 	R = T23c4();
-	ge434ov1769 = R;
+	ge380ov1745 = R;
 	return R;
 }
 
@@ -46091,14 +46558,14 @@ T0* T108f6(T0* C)
 T0* T108f4(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
@@ -46106,7 +46573,7 @@ T0* T108f4(T0* C)
 T0* T107f5(T0* C)
 {
 	T0* R = 0;
-	R = (T107f3(C, ge170ov4035));
+	R = (T107f3(C, ge122ov4064));
 	return R;
 }
 
@@ -46223,13 +46690,13 @@ T0* T107f3(T0* C, T0* a1)
 							}
 						}
 					}
-					t2 = (T17f11(GE_void(l1)));
+					t2 = (T17f12(GE_void(l1)));
 					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T107*)(C))->a1), l3));
+						l3 = (T17f13(GE_void(l1)));
+						t2 = (T133f4(GE_void(((T107*)(C))->a1), l3));
 						if (t2) {
 							t1 = (T107f4(C));
-							t5 = (T132f5(GE_void(((T107*)(C))->a1), l3));
+							t5 = (T133f5(GE_void(((T107*)(C))->a1), l3));
 							R = (T69f5(GE_void(t1), R, t5));
 						} else {
 							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
@@ -46272,14 +46739,14 @@ T0* T107f3(T0* C, T0* a1)
 T0* T107f6(T0* C)
 {
 	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
+	if (ge380os1745) {
+		return ge380ov1745;
 	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
 	}
 	R = T23c4();
-	ge434ov1769 = R;
+	ge380ov1745 = R;
 	return R;
 }
 
@@ -46287,14 +46754,14 @@ T0* T107f6(T0* C)
 T0* T107f4(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
@@ -46302,7 +46769,7 @@ T0* T107f4(T0* C)
 T0* T106f5(T0* C)
 {
 	T0* R = 0;
-	R = (T106f3(C, ge156ov4035));
+	R = (T106f3(C, ge108ov4064));
 	return R;
 }
 
@@ -46419,13 +46886,13 @@ T0* T106f3(T0* C, T0* a1)
 							}
 						}
 					}
-					t2 = (T17f11(GE_void(l1)));
+					t2 = (T17f12(GE_void(l1)));
 					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T106*)(C))->a1), l3));
+						l3 = (T17f13(GE_void(l1)));
+						t2 = (T133f4(GE_void(((T106*)(C))->a1), l3));
 						if (t2) {
 							t1 = (T106f4(C));
-							t5 = (T132f5(GE_void(((T106*)(C))->a1), l3));
+							t5 = (T133f5(GE_void(((T106*)(C))->a1), l3));
 							R = (T69f5(GE_void(t1), R, t5));
 						} else {
 							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
@@ -46468,14 +46935,14 @@ T0* T106f3(T0* C, T0* a1)
 T0* T106f6(T0* C)
 {
 	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
+	if (ge380os1745) {
+		return ge380ov1745;
 	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
 	}
 	R = T23c4();
-	ge434ov1769 = R;
+	ge380ov1745 = R;
 	return R;
 }
 
@@ -46483,14 +46950,14 @@ T0* T106f6(T0* C)
 T0* T106f4(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
@@ -46498,7 +46965,7 @@ T0* T106f4(T0* C)
 T0* T105f5(T0* C)
 {
 	T0* R = 0;
-	R = (T105f3(C, ge175ov4035));
+	R = (T105f3(C, ge127ov4064));
 	return R;
 }
 
@@ -46615,13 +47082,13 @@ T0* T105f3(T0* C, T0* a1)
 							}
 						}
 					}
-					t2 = (T17f11(GE_void(l1)));
+					t2 = (T17f12(GE_void(l1)));
 					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T105*)(C))->a1), l3));
+						l3 = (T17f13(GE_void(l1)));
+						t2 = (T133f4(GE_void(((T105*)(C))->a1), l3));
 						if (t2) {
 							t1 = (T105f4(C));
-							t5 = (T132f5(GE_void(((T105*)(C))->a1), l3));
+							t5 = (T133f5(GE_void(((T105*)(C))->a1), l3));
 							R = (T69f5(GE_void(t1), R, t5));
 						} else {
 							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
@@ -46664,14 +47131,14 @@ T0* T105f3(T0* C, T0* a1)
 T0* T105f6(T0* C)
 {
 	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
+	if (ge380os1745) {
+		return ge380ov1745;
 	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
 	}
 	R = T23c4();
-	ge434ov1769 = R;
+	ge380ov1745 = R;
 	return R;
 }
 
@@ -46679,14 +47146,14 @@ T0* T105f6(T0* C)
 T0* T105f4(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
@@ -46694,7 +47161,7 @@ T0* T105f4(T0* C)
 T0* T104f5(T0* C)
 {
 	T0* R = 0;
-	R = (T104f3(C, ge172ov4035));
+	R = (T104f3(C, ge124ov4064));
 	return R;
 }
 
@@ -46811,13 +47278,13 @@ T0* T104f3(T0* C, T0* a1)
 							}
 						}
 					}
-					t2 = (T17f11(GE_void(l1)));
+					t2 = (T17f12(GE_void(l1)));
 					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T104*)(C))->a1), l3));
+						l3 = (T17f13(GE_void(l1)));
+						t2 = (T133f4(GE_void(((T104*)(C))->a1), l3));
 						if (t2) {
 							t1 = (T104f4(C));
-							t5 = (T132f5(GE_void(((T104*)(C))->a1), l3));
+							t5 = (T133f5(GE_void(((T104*)(C))->a1), l3));
 							R = (T69f5(GE_void(t1), R, t5));
 						} else {
 							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
@@ -46860,14 +47327,14 @@ T0* T104f3(T0* C, T0* a1)
 T0* T104f6(T0* C)
 {
 	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
+	if (ge380os1745) {
+		return ge380ov1745;
 	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
 	}
 	R = T23c4();
-	ge434ov1769 = R;
+	ge380ov1745 = R;
 	return R;
 }
 
@@ -46875,14 +47342,14 @@ T0* T104f6(T0* C)
 T0* T104f4(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
@@ -46890,7 +47357,7 @@ T0* T104f4(T0* C)
 T0* T103f5(T0* C)
 {
 	T0* R = 0;
-	R = (T103f3(C, ge177ov4035));
+	R = (T103f3(C, ge129ov4064));
 	return R;
 }
 
@@ -47007,13 +47474,13 @@ T0* T103f3(T0* C, T0* a1)
 							}
 						}
 					}
-					t2 = (T17f11(GE_void(l1)));
+					t2 = (T17f12(GE_void(l1)));
 					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T103*)(C))->a1), l3));
+						l3 = (T17f13(GE_void(l1)));
+						t2 = (T133f4(GE_void(((T103*)(C))->a1), l3));
 						if (t2) {
 							t1 = (T103f4(C));
-							t5 = (T132f5(GE_void(((T103*)(C))->a1), l3));
+							t5 = (T133f5(GE_void(((T103*)(C))->a1), l3));
 							R = (T69f5(GE_void(t1), R, t5));
 						} else {
 							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
@@ -47056,14 +47523,14 @@ T0* T103f3(T0* C, T0* a1)
 T0* T103f6(T0* C)
 {
 	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
+	if (ge380os1745) {
+		return ge380ov1745;
 	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
 	}
 	R = T23c4();
-	ge434ov1769 = R;
+	ge380ov1745 = R;
 	return R;
 }
 
@@ -47071,14 +47538,14 @@ T0* T103f6(T0* C)
 T0* T103f4(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
@@ -47086,7 +47553,7 @@ T0* T103f4(T0* C)
 T0* T102f5(T0* C)
 {
 	T0* R = 0;
-	R = (T102f3(C, ge152ov4035));
+	R = (T102f3(C, ge104ov4064));
 	return R;
 }
 
@@ -47203,13 +47670,13 @@ T0* T102f3(T0* C, T0* a1)
 							}
 						}
 					}
-					t2 = (T17f11(GE_void(l1)));
+					t2 = (T17f12(GE_void(l1)));
 					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T102*)(C))->a1), l3));
+						l3 = (T17f13(GE_void(l1)));
+						t2 = (T133f4(GE_void(((T102*)(C))->a1), l3));
 						if (t2) {
 							t1 = (T102f4(C));
-							t5 = (T132f5(GE_void(((T102*)(C))->a1), l3));
+							t5 = (T133f5(GE_void(((T102*)(C))->a1), l3));
 							R = (T69f5(GE_void(t1), R, t5));
 						} else {
 							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
@@ -47252,14 +47719,14 @@ T0* T102f3(T0* C, T0* a1)
 T0* T102f6(T0* C)
 {
 	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
+	if (ge380os1745) {
+		return ge380ov1745;
 	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
 	}
 	R = T23c4();
-	ge434ov1769 = R;
+	ge380ov1745 = R;
 	return R;
 }
 
@@ -47267,14 +47734,14 @@ T0* T102f6(T0* C)
 T0* T102f4(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
@@ -47282,7 +47749,7 @@ T0* T102f4(T0* C)
 T0* T97f5(T0* C)
 {
 	T0* R = 0;
-	R = (T97f3(C, ge293ov4035));
+	R = (T97f3(C, ge250ov4064));
 	return R;
 }
 
@@ -47399,13 +47866,13 @@ T0* T97f3(T0* C, T0* a1)
 							}
 						}
 					}
-					t2 = (T17f11(GE_void(l1)));
+					t2 = (T17f12(GE_void(l1)));
 					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T97*)(C))->a1), l3));
+						l3 = (T17f13(GE_void(l1)));
+						t2 = (T133f4(GE_void(((T97*)(C))->a1), l3));
 						if (t2) {
 							t1 = (T97f4(C));
-							t5 = (T132f5(GE_void(((T97*)(C))->a1), l3));
+							t5 = (T133f5(GE_void(((T97*)(C))->a1), l3));
 							R = (T69f5(GE_void(t1), R, t5));
 						} else {
 							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
@@ -47448,14 +47915,14 @@ T0* T97f3(T0* C, T0* a1)
 T0* T97f6(T0* C)
 {
 	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
+	if (ge380os1745) {
+		return ge380ov1745;
 	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
+		ge380os1745 = '\1';
+		ge380ov1745 = R;
 	}
 	R = T23c4();
-	ge434ov1769 = R;
+	ge380ov1745 = R;
 	return R;
 }
 
@@ -47463,14 +47930,14 @@ T0* T97f6(T0* C)
 T0* T97f4(T0* C)
 {
 	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
+	if (ge307os1751) {
+		return ge307ov1751;
 	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
+		ge307os1751 = '\1';
+		ge307ov1751 = R;
 	}
 	R = T69c12();
-	ge359ov1775 = R;
+	ge307ov1751 = R;
 	return R;
 }
 
@@ -47478,7 +47945,7 @@ T0* T97f4(T0* C)
 T0* T72f5(T0* C)
 {
 	T0* R = 0;
-	R = (T72f3(C, ge298ov4035));
+	R = (T72f3(C, ge255ov4064));
 	return R;
 }
 
@@ -47595,13 +48062,13 @@ T0* T72f3(T0* C, T0* a1)
 							}
 						}
 					}
-					t2 = (T17f11(GE_void(l1)));
+					t2 = (T17f12(GE_void(l1)));
 					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T72*)(C))->a1), l3));
+						l3 = (T17f13(GE_void(l1)));
+						t2 = (T133f4(GE_void(((T72*)(C))->a1), l3));
 						if (t2) {
 							t1 = (T72f4(C));
-							t5 = (T132f5(GE_void(((T72*)(C))->a1), l3));
+							t5 = (T133f5(GE_void(((T72*)(C))->a1), l3));
 							R = (T69f5(GE_void(t1), R, t5));
 						} else {
 							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
@@ -47628,398 +48095,6 @@ T0* T72f3(T0* C, T0* a1)
 							T17f33(GE_void(R), (T2)('{'));
 						}
 						t1 = (T72f4(C));
-						R = (T69f5(GE_void(t1), R, l1));
-						if (l8) {
-							T17f33(GE_void(R), (T2)('}'));
-						}
-					}
-				}
-			}
-		}
-	}
-	return R;
-}
-
-/* UT_VERSION_NUMBER.arguments */
-T0* T72f6(T0* C)
-{
-	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
-	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
-	}
-	R = T23c4();
-	ge434ov1769 = R;
-	return R;
-}
-
-/* UT_VERSION_NUMBER.string_ */
-T0* T72f4(T0* C)
-{
-	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
-	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
-	}
-	R = T69c12();
-	ge359ov1775 = R;
-	return R;
-}
-
-/* AP_ERROR.default_message */
-T0* T65f5(T0* C)
-{
-	T0* R = 0;
-	R = (T65f8(C, ((T65*)(C))->a1));
-	return R;
-}
-
-/* AP_ERROR.message */
-T0* T65f8(T0* C, T0* a1)
-{
-	T0* t1;
-	T1 t2;
-	T6 t3;
-	T6 t4;
-	T0* t5;
-	T0* R = 0;
-	T0* l1 = 0;
-	T6 l2 = 0;
-	T6 l3 = 0;
-	T6 l4 = 0;
-	T2 l5 = 0;
-	T1 l6 = 0;
-	T1 l7 = 0;
-	T1 l8 = 0;
-	l2 = (T6)(GE_int32(1));
-	l4 = (((T17*)(GE_void(a1)))->a2);
-	t1 = (T65f4(C));
-	R = (T69f3(GE_void(t1), a1, l4));
-	while (1) {
-		t2 = (T6f1((&l2), l4));
-		if (t2) {
-			break;
-		}
-		l5 = (T17f9(GE_void(a1), l2));
-		l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-		t2 = (((((l5) != ((T2)('$'))))));
-		if (t2) {
-			t2 = (((((l5) != ((T2)('\000'))))));
-			if (t2) {
-				T17f33(GE_void(R), l5);
-			} else {
-				t1 = (T65f4(C));
-				t3 = ((T6)((l2)-((T6)(GE_int32(1)))));
-				t4 = ((T6)((l2)-((T6)(GE_int32(1)))));
-				R = (T69f4(GE_void(t1), R, a1, t3, t4));
-			}
-		} else {
-			t2 = (T6f1((&l2), l4));
-			if (t2) {
-				T17f33(GE_void(R), (T2)('$'));
-			} else {
-				l5 = (T17f9(GE_void(a1), l2));
-				t2 = (((((l5) == ((T2)('$'))))));
-				if (t2) {
-					T17f33(GE_void(R), (T2)('$'));
-					l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-				} else {
-					t1 = (T65f4(C));
-					l1 = (T69f3(GE_void(t1), a1, (T6)(GE_int32(5))));
-					t2 = (((((l5) == ((T2)('{'))))));
-					if (t2) {
-						l7 = EIF_TRUE;
-						l8 = EIF_FALSE;
-						l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-						while (1) {
-							t2 = (T6f1((&l2), l4));
-							if (!(t2)) {
-								t2 = (l8);
-							}
-							if (t2) {
-								break;
-							}
-							l5 = (T17f9(GE_void(a1), l2));
-							t2 = (((((l5) == ((T2)('}'))))));
-							if (t2) {
-								l8 = EIF_TRUE;
-							} else {
-								t2 = (((((l5) != ((T2)('\000'))))));
-								if (t2) {
-									T17f33(GE_void(l1), l5);
-								} else {
-									t1 = (T65f4(C));
-									T69f13(GE_void(t1), l1, a1, l2, l2);
-								}
-							}
-							l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-						}
-					} else {
-						l7 = EIF_FALSE;
-						l8 = EIF_FALSE;
-						l6 = EIF_FALSE;
-						while (1) {
-							t2 = (T6f1((&l2), l4));
-							if (!(t2)) {
-								t2 = (l6);
-							}
-							if (t2) {
-								break;
-							}
-							l5 = (T17f9(GE_void(a1), l2));
-							switch (l5) {
-							case (T2)'0':
-							case (T2)'1':
-							case (T2)'2':
-							case (T2)'3':
-							case (T2)'4':
-							case (T2)'5':
-							case (T2)'6':
-							case (T2)'7':
-							case (T2)'8':
-							case (T2)'9':
-								T17f33(GE_void(l1), l5);
-								l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-								break;
-							default:
-								l6 = EIF_TRUE;
-								break;
-							}
-						}
-					}
-					t2 = (T17f11(GE_void(l1)));
-					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T65*)(C))->a2), l3));
-						if (t2) {
-							t1 = (T65f4(C));
-							t5 = (T132f5(GE_void(((T65*)(C))->a2), l3));
-							R = (T69f5(GE_void(t1), R, t5));
-						} else {
-							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
-							if (t2) {
-								t1 = (T65f4(C));
-								t5 = (T65f6(C));
-								t5 = (((T23*)(GE_void(t5)))->a1);
-								R = (T69f5(GE_void(t1), R, t5));
-							} else {
-								T17f33(GE_void(R), (T2)('$'));
-								if (l7) {
-									T17f33(GE_void(R), (T2)('{'));
-								}
-								t1 = (T65f4(C));
-								R = (T69f5(GE_void(t1), R, l1));
-								if (l8) {
-									T17f33(GE_void(R), (T2)('}'));
-								}
-							}
-						}
-					} else {
-						T17f33(GE_void(R), (T2)('$'));
-						if (l7) {
-							T17f33(GE_void(R), (T2)('{'));
-						}
-						t1 = (T65f4(C));
-						R = (T69f5(GE_void(t1), R, l1));
-						if (l8) {
-							T17f33(GE_void(R), (T2)('}'));
-						}
-					}
-				}
-			}
-		}
-	}
-	return R;
-}
-
-/* AP_ERROR.arguments */
-T0* T65f6(T0* C)
-{
-	T0* R = 0;
-	if (ge434os1769) {
-		return ge434ov1769;
-	} else {
-		ge434os1769 = '\1';
-		ge434ov1769 = R;
-	}
-	R = T23c4();
-	ge434ov1769 = R;
-	return R;
-}
-
-/* AP_ERROR.string_ */
-T0* T65f4(T0* C)
-{
-	T0* R = 0;
-	if (ge359os1775) {
-		return ge359ov1775;
-	} else {
-		ge359os1775 = '\1';
-		ge359ov1775 = R;
-	}
-	R = T69c12();
-	ge359ov1775 = R;
-	return R;
-}
-
-/* UT_CANNOT_WRITE_TO_FILE_ERROR.default_message */
-T0* T56f2(T0* C)
-{
-	T0* R = 0;
-	R = (T56f4(C, ge288ov4035));
-	return R;
-}
-
-/* UT_CANNOT_WRITE_TO_FILE_ERROR.message */
-T0* T56f4(T0* C, T0* a1)
-{
-	T0* t1;
-	T1 t2;
-	T6 t3;
-	T6 t4;
-	T0* t5;
-	T0* R = 0;
-	T0* l1 = 0;
-	T6 l2 = 0;
-	T6 l3 = 0;
-	T6 l4 = 0;
-	T2 l5 = 0;
-	T1 l6 = 0;
-	T1 l7 = 0;
-	T1 l8 = 0;
-	l2 = (T6)(GE_int32(1));
-	l4 = (((T17*)(a1))->a2);
-	t1 = (T56f5(C));
-	R = (T69f3(GE_void(t1), a1, l4));
-	while (1) {
-		t2 = (T6f1((&l2), l4));
-		if (t2) {
-			break;
-		}
-		l5 = (T17f9(a1, l2));
-		l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-		t2 = (((((l5) != ((T2)('$'))))));
-		if (t2) {
-			t2 = (((((l5) != ((T2)('\000'))))));
-			if (t2) {
-				T17f33(GE_void(R), l5);
-			} else {
-				t1 = (T56f5(C));
-				t3 = ((T6)((l2)-((T6)(GE_int32(1)))));
-				t4 = ((T6)((l2)-((T6)(GE_int32(1)))));
-				R = (T69f4(GE_void(t1), R, a1, t3, t4));
-			}
-		} else {
-			t2 = (T6f1((&l2), l4));
-			if (t2) {
-				T17f33(GE_void(R), (T2)('$'));
-			} else {
-				l5 = (T17f9(a1, l2));
-				t2 = (((((l5) == ((T2)('$'))))));
-				if (t2) {
-					T17f33(GE_void(R), (T2)('$'));
-					l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-				} else {
-					t1 = (T56f5(C));
-					l1 = (T69f3(GE_void(t1), a1, (T6)(GE_int32(5))));
-					t2 = (((((l5) == ((T2)('{'))))));
-					if (t2) {
-						l7 = EIF_TRUE;
-						l8 = EIF_FALSE;
-						l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-						while (1) {
-							t2 = (T6f1((&l2), l4));
-							if (!(t2)) {
-								t2 = (l8);
-							}
-							if (t2) {
-								break;
-							}
-							l5 = (T17f9(a1, l2));
-							t2 = (((((l5) == ((T2)('}'))))));
-							if (t2) {
-								l8 = EIF_TRUE;
-							} else {
-								t2 = (((((l5) != ((T2)('\000'))))));
-								if (t2) {
-									T17f33(GE_void(l1), l5);
-								} else {
-									t1 = (T56f5(C));
-									T69f13(GE_void(t1), l1, a1, l2, l2);
-								}
-							}
-							l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-						}
-					} else {
-						l7 = EIF_FALSE;
-						l8 = EIF_FALSE;
-						l6 = EIF_FALSE;
-						while (1) {
-							t2 = (T6f1((&l2), l4));
-							if (!(t2)) {
-								t2 = (l6);
-							}
-							if (t2) {
-								break;
-							}
-							l5 = (T17f9(a1, l2));
-							switch (l5) {
-							case (T2)'0':
-							case (T2)'1':
-							case (T2)'2':
-							case (T2)'3':
-							case (T2)'4':
-							case (T2)'5':
-							case (T2)'6':
-							case (T2)'7':
-							case (T2)'8':
-							case (T2)'9':
-								T17f33(GE_void(l1), l5);
-								l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-								break;
-							default:
-								l6 = EIF_TRUE;
-								break;
-							}
-						}
-					}
-					t2 = (T17f11(GE_void(l1)));
-					if (t2) {
-						l3 = (T17f12(GE_void(l1)));
-						t2 = (T132f4(GE_void(((T56*)(C))->a1), l3));
-						if (t2) {
-							t1 = (T56f5(C));
-							t5 = (T132f5(GE_void(((T56*)(C))->a1), l3));
-							R = (T69f5(GE_void(t1), R, t5));
-						} else {
-							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
-							if (t2) {
-								t1 = (T56f5(C));
-								t5 = (T56f6(C));
-								t5 = (((T23*)(GE_void(t5)))->a1);
-								R = (T69f5(GE_void(t1), R, t5));
-							} else {
-								T17f33(GE_void(R), (T2)('$'));
-								if (l7) {
-									T17f33(GE_void(R), (T2)('{'));
-								}
-								t1 = (T56f5(C));
-								R = (T69f5(GE_void(t1), R, l1));
-								if (l8) {
-									T17f33(GE_void(R), (T2)('}'));
-								}
-							}
-						}
-					} else {
-						T17f33(GE_void(R), (T2)('$'));
-						if (l7) {
-							T17f33(GE_void(R), (T2)('{'));
-						}
-						t1 = (T56f5(C));
 						R = (T69f5(GE_void(t1), R, l1));
 						if (l8) {
 							T17f33(GE_void(R), (T2)('}'));

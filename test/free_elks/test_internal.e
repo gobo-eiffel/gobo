@@ -5,7 +5,7 @@ note
 		"Test features of class INTERNAL"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2010-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,7 +32,7 @@ feature -- Test
 			l_attribute_count_in_ts_test_case := 5
 			create internal
 			assert_integers_equal ("fields_in_current", 16 + l_attribute_count_in_ts_test_case, internal.field_count (Current))
-			create arr.make (1, 5)
+			create arr.make_filled ("", 1, 5)
 			assert_integers_equal ("fields_in_array", 4, internal.field_count (arr))
 		end
 
@@ -203,7 +203,7 @@ feature -- Test
 		do
 			create internal
 			s := "gobo"
-			create arr.make (1, 5)
+			create arr.make_filled ("", 1, 5)
 			assert_strings_equal ("string_8", "STRING_8", internal.class_name (s))
 			assert_strings_equal ("integer_16", "INTEGER_16", internal.class_name (i))
 			assert_strings_equal ("array", "ARRAY", internal.class_name (arr))
@@ -230,7 +230,7 @@ feature -- Test
 		do
 			create internal
 			s := "gobo"
-			create arr.make (1, 5)
+			create arr.make_filled ("", 1, 5)
 			assert_strings_equal ("string_8", "STRING_8", internal.type_name (s))
 			assert_strings_equal ("integer_16", "INTEGER_16", internal.type_name (i))
 			assert_strings_equal ("array_any", "ARRAY [ANY]", internal.type_name (arr))
@@ -257,7 +257,7 @@ feature -- Test
 		do
 			create internal
 			s := "gobo"
-			create arr.make (1, 5)
+			create arr.make_filled ("", 1, 5)
 			assert_integers_equal ("string_8", ({STRING_8}).type_id, internal.dynamic_type (s))
 			assert_integers_equal ("integer_16", ({INTEGER_16}).type_id, internal.dynamic_type (i))
 			assert_integers_equal ("array_any", ({ARRAY [ANY]}).type_id, internal.dynamic_type (arr))
@@ -406,7 +406,7 @@ feature -- Test
 			s := "foo"
 			string_8_1 := s
 			assert_same ("string_8_1", s, internal.field (field_index ("string_8_1", Current), Current))
-			create arr.make (1, 4)
+			create arr.make_filled ("", 1, 4)
 			any_1 := arr
 			assert_same ("any_1", arr, internal.field (field_index ("any_1", Current), Current))
 		end
@@ -710,7 +710,7 @@ feature -- Test
 			s := "gobo"
 			internal.set_reference_field (field_index ("string_8_1", Current), Current, s)
 			assert ("string_8_1", string_8_1 = s)
-			create arr.make (1, 3)
+			create arr.make_filled ("", 1, 3)
 			internal.set_reference_field (field_index ("any_1", Current), Current, arr)
 			assert ("any_1", any_1 = arr)
 		end
@@ -725,7 +725,7 @@ feature -- Test
 			create internal
 			s := "gobo"
 			assert_integers_equal ("string_8", 0, internal.generic_count (s))
-			create arr.make (1, 3)
+			create arr.make_filled ("", 1, 3)
 			assert_integers_equal ("array", 1, internal.generic_count (arr))
 		end
 
@@ -747,9 +747,9 @@ feature -- Test
 			arr_i: ARRAY [INTEGER_16]
 		do
 			create internal
-			create arr_s.make (1, 3)
+			create arr_s.make_filled ("", 1, 3)
 			assert_integers_equal ("string_8", ({STRING_8}).type_id, internal.generic_dynamic_type (arr_s, 1))
-			create arr_i.make (1, 3)
+			create arr_i.make_filled (0, 1, 3)
 			assert_integers_equal ("integer_16", ({INTEGER_16}).type_id, internal.generic_dynamic_type (arr_i, 1))
 		end
 

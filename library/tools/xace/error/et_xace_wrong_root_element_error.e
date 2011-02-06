@@ -5,7 +5,7 @@ note
 		"Error: Wrong root element in Xace file"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2002, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2011, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			an_element_name_not_empty: an_element_name.count > 0
 			a_position_not_void: a_position /= Void
 		do
-			create parameters.make (1, 2)
+			create parameters.make_filled (empty_string, 1, 2)
 			parameters.put (an_element_name, 1)
 			parameters.put (a_position.out, 2)
 		end

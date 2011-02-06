@@ -20,10 +20,10 @@ inherit
 
 feature {NONE} -- Implementation
 
-	lower_case_mapping_plane_0_segment_0: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	lower_case_mapping_plane_0_segment_0: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (97),65)
 			Result.put (new_singleton (98),66)
 			Result.put (new_singleton (99),67)
@@ -81,15 +81,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (253),221)
 			Result.put (new_singleton (254),222)
 			Result.put (new_singleton (223),223)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	lower_case_mapping_plane_0_segment_1: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	lower_case_mapping_plane_0_segment_1: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (257),0)
 			Result.put (new_singleton (259),2)
 			Result.put (new_singleton (261),4)
@@ -223,15 +222,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (507),250)
 			Result.put (new_singleton (509),252)
 			Result.put (new_singleton (511),254)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	lower_case_mapping_plane_0_segment_2: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	lower_case_mapping_plane_0_segment_2: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (513),0)
 			Result.put (new_singleton (515),2)
 			Result.put (new_singleton (517),4)
@@ -271,15 +269,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (587),74)
 			Result.put (new_singleton (589),76)
 			Result.put (new_singleton (591),78)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	lower_case_mapping_plane_0_segment_3: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	lower_case_mapping_plane_0_segment_3: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (940),134)
 			Result.put (new_singleton (941),136)
 			Result.put (new_singleton (942),137)
@@ -337,15 +334,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (891),253)
 			Result.put (new_singleton (892),254)
 			Result.put (new_singleton (893),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	lower_case_mapping_plane_0_segment_4: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	lower_case_mapping_plane_0_segment_4: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (1104),0)
 			Result.put (new_singleton (1105),1)
 			Result.put (new_singleton (1106),2)
@@ -470,15 +466,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (1275),250)
 			Result.put (new_singleton (1277),252)
 			Result.put (new_singleton (1279),254)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	lower_case_mapping_plane_0_segment_5: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	lower_case_mapping_plane_0_segment_5: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (1281),0)
 			Result.put (new_singleton (1283),2)
 			Result.put (new_singleton (1285),4)
@@ -531,24 +526,22 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (1414),88)
 			Result.put (new_singleton (1415),135)
 			Result.put (new_singleton (1415),136)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	all_empty_lower_case_mapping_segment: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	all_empty_lower_case_mapping_segment: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
-
+			create Result.make_filled (Void, 0, 255)
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	lower_case_mapping_plane_0_segment_16: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	lower_case_mapping_plane_0_segment_16: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (11520),160)
 			Result.put (new_singleton (11521),161)
 			Result.put (new_singleton (11522),162)
@@ -597,15 +590,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (11557),205)
 			Result.put (new_singleton (11557),206)
 			Result.put (new_singleton (11557),207)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	lower_case_mapping_plane_0_segment_30: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	lower_case_mapping_plane_0_segment_30: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (7681),0)
 			Result.put (new_singleton (7683),2)
 			Result.put (new_singleton (7685),4)
@@ -731,15 +723,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (7925),244)
 			Result.put (new_singleton (7927),246)
 			Result.put (new_singleton (7929),248)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	lower_case_mapping_plane_0_segment_31: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	lower_case_mapping_plane_0_segment_31: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (7936),8)
 			Result.put (new_singleton (7937),9)
 			Result.put (new_singleton (7938),10)
@@ -901,15 +892,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (8060),250)
 			Result.put (new_singleton (8061),251)
 			Result.put (new_singleton (8179),252)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	lower_case_mapping_plane_0_segment_33: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	lower_case_mapping_plane_0_segment_33: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (969),38)
 			Result.put (new_singleton (107),42)
 			Result.put (new_singleton (229),43)
@@ -931,15 +921,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (8574),110)
 			Result.put (new_singleton (8575),111)
 			Result.put (new_singleton (8580),131)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	lower_case_mapping_plane_0_segment_36: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	lower_case_mapping_plane_0_segment_36: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (9424),182)
 			Result.put (new_singleton (9425),183)
 			Result.put (new_singleton (9426),184)
@@ -966,15 +955,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (9447),205)
 			Result.put (new_singleton (9448),206)
 			Result.put (new_singleton (9449),207)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	lower_case_mapping_plane_0_segment_44: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	lower_case_mapping_plane_0_segment_44: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (11312),0)
 			Result.put (new_singleton (11313),1)
 			Result.put (new_singleton (11314),2)
@@ -1081,15 +1069,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (11487),222)
 			Result.put (new_singleton (11489),224)
 			Result.put (new_singleton (11491),226)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	lower_case_mapping_plane_0_segment_251: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	lower_case_mapping_plane_0_segment_251: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (64256),0)
 			Result.put (new_singleton (64257),1)
 			Result.put (new_singleton (64258),2)
@@ -1119,15 +1106,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (64279),26)
 			Result.put (new_singleton (64279),27)
 			Result.put (new_singleton (64279),28)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	lower_case_mapping_plane_0_segment_255: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	lower_case_mapping_plane_0_segment_255: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (65345),33)
 			Result.put (new_singleton (65346),34)
 			Result.put (new_singleton (65347),35)
@@ -1154,7 +1140,6 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (65368),56)
 			Result.put (new_singleton (65369),57)
 			Result.put (new_singleton (65370),58)
-
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -1424,10 +1409,10 @@ feature {NONE} -- Implementation
 			sub_arrays_not_void: True --not Result.has (Void)
 		end
 
-	lower_case_mapping_plane_1_segment_4: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	lower_case_mapping_plane_1_segment_4: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (66600),0)
 			Result.put (new_singleton (66601),1)
 			Result.put (new_singleton (66602),2)
@@ -1468,7 +1453,6 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (66637),37)
 			Result.put (new_singleton (66638),38)
 			Result.put (new_singleton (66639),39)
-
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -2026,10 +2010,10 @@ feature {NONE} -- Implementation
 			Result.put (all_empty_lower_case_mapping_plane, 16)
 		end
 
-	title_case_mapping_plane_0_segment_0: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	title_case_mapping_plane_0_segment_0: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (65),97)
 			Result.put (new_singleton (66),98)
 			Result.put (new_singleton (67),99)
@@ -2089,15 +2073,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (221),253)
 			Result.put (new_singleton (222),254)
 			Result.put (new_singleton (376),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	title_case_mapping_plane_0_segment_1: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	title_case_mapping_plane_0_segment_1: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (256),1)
 			Result.put (new_singleton (258),3)
 			Result.put (new_singleton (260),5)
@@ -2220,15 +2203,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (506),251)
 			Result.put (new_singleton (508),253)
 			Result.put (new_singleton (510),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	title_case_mapping_plane_0_segment_2: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	title_case_mapping_plane_0_segment_2: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (512),1)
 			Result.put (new_singleton (514),3)
 			Result.put (new_singleton (516),5)
@@ -2284,15 +2266,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (434),139)
 			Result.put (new_singleton (581),140)
 			Result.put (new_singleton (439),146)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	title_case_mapping_plane_0_segment_3: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	title_case_mapping_plane_0_segment_3: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (921),69)
 			Result.put (new_singleton (1021),123)
 			Result.put (new_singleton (1022),124)
@@ -2356,15 +2337,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (917),245)
 			Result.put (new_singleton (1015),248)
 			Result.put (new_singleton (1018),251)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	title_case_mapping_plane_0_segment_4: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	title_case_mapping_plane_0_segment_4: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (1040),48)
 			Result.put (new_singleton (1041),49)
 			Result.put (new_singleton (1042),50)
@@ -2489,15 +2469,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (1274),251)
 			Result.put (new_singleton (1276),253)
 			Result.put (new_singleton (1278),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	title_case_mapping_plane_0_segment_5: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	title_case_mapping_plane_0_segment_5: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (1280),1)
 			Result.put (new_singleton (1282),3)
 			Result.put (new_singleton (1284),5)
@@ -2577,34 +2556,31 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (1366),134)
 			Result.put (new_pair (1333,1410),135)
 			Result.put (new_pair (1333,1410),136)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	all_empty_title_case_mapping_segment: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	all_empty_title_case_mapping_segment: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
-
+			create Result.make_filled (Void, 0, 255)
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	title_case_mapping_plane_0_segment_29: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	title_case_mapping_plane_0_segment_29: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (11363),125)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	title_case_mapping_plane_0_segment_30: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	title_case_mapping_plane_0_segment_30: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (7680),1)
 			Result.put (new_singleton (7682),3)
 			Result.put (new_singleton (7684),5)
@@ -2741,15 +2717,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (7928),253)
 			Result.put (new_singleton (7928),254)
 			Result.put (new_singleton (7928),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	title_case_mapping_plane_0_segment_31: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	title_case_mapping_plane_0_segment_31: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (7944),0)
 			Result.put (new_singleton (7945),1)
 			Result.put (new_singleton (7946),2)
@@ -2911,15 +2886,14 @@ feature {NONE} -- Implementation
 			Result.put (new_pair (937,834),246)
 			Result.put (new_triple (937,834,837),247)
 			Result.put (new_singleton (8188),252)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	title_case_mapping_plane_0_segment_33: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	title_case_mapping_plane_0_segment_33: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (8498),78)
 			Result.put (new_singleton (8498),79)
 			Result.put (new_singleton (8498),80)
@@ -2953,15 +2927,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (8579),141)
 			Result.put (new_singleton (8579),142)
 			Result.put (new_singleton (8579),143)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	title_case_mapping_plane_0_segment_36: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	title_case_mapping_plane_0_segment_36: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (9398),208)
 			Result.put (new_singleton (9399),209)
 			Result.put (new_singleton (9400),210)
@@ -2988,15 +2961,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (9421),231)
 			Result.put (new_singleton (9422),232)
 			Result.put (new_singleton (9423),233)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	title_case_mapping_plane_0_segment_44: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	title_case_mapping_plane_0_segment_44: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (11264),48)
 			Result.put (new_singleton (11265),49)
 			Result.put (new_singleton (11266),50)
@@ -3109,15 +3081,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (11486),223)
 			Result.put (new_singleton (11488),225)
 			Result.put (new_singleton (11490),227)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	title_case_mapping_plane_0_segment_45: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	title_case_mapping_plane_0_segment_45: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (4256),0)
 			Result.put (new_singleton (4257),1)
 			Result.put (new_singleton (4258),2)
@@ -3166,15 +3137,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (4293),45)
 			Result.put (new_singleton (4293),46)
 			Result.put (new_singleton (4293),47)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	title_case_mapping_plane_0_segment_251: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	title_case_mapping_plane_0_segment_251: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_pair (70,102),0)
 			Result.put (new_pair (70,105),1)
 			Result.put (new_pair (70,108),2)
@@ -3204,15 +3174,14 @@ feature {NONE} -- Implementation
 			Result.put (new_pair (1348,1389),26)
 			Result.put (new_pair (1348,1389),27)
 			Result.put (new_pair (1348,1389),28)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	title_case_mapping_plane_0_segment_255: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	title_case_mapping_plane_0_segment_255: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (65313),65)
 			Result.put (new_singleton (65314),66)
 			Result.put (new_singleton (65315),67)
@@ -3239,7 +3208,6 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (65336),88)
 			Result.put (new_singleton (65337),89)
 			Result.put (new_singleton (65338),90)
-
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -3509,10 +3477,10 @@ feature {NONE} -- Implementation
 			sub_arrays_not_void: True --not Result.has (Void)
 		end
 
-	title_case_mapping_plane_1_segment_4: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	title_case_mapping_plane_1_segment_4: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (66560),40)
 			Result.put (new_singleton (66561),41)
 			Result.put (new_singleton (66562),42)
@@ -3553,7 +3521,6 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (66597),77)
 			Result.put (new_singleton (66598),78)
 			Result.put (new_singleton (66599),79)
-
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -4111,10 +4078,10 @@ feature {NONE} -- Implementation
 			Result.put (all_empty_title_case_mapping_plane, 16)
 		end
 
-	upper_case_mapping_plane_0_segment_0: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	upper_case_mapping_plane_0_segment_0: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (65),97)
 			Result.put (new_singleton (66),98)
 			Result.put (new_singleton (67),99)
@@ -4174,15 +4141,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (221),253)
 			Result.put (new_singleton (222),254)
 			Result.put (new_singleton (376),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	upper_case_mapping_plane_0_segment_1: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	upper_case_mapping_plane_0_segment_1: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (256),1)
 			Result.put (new_singleton (258),3)
 			Result.put (new_singleton (260),5)
@@ -4301,15 +4267,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (506),251)
 			Result.put (new_singleton (508),253)
 			Result.put (new_singleton (510),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	upper_case_mapping_plane_0_segment_2: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	upper_case_mapping_plane_0_segment_2: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (512),1)
 			Result.put (new_singleton (514),3)
 			Result.put (new_singleton (516),5)
@@ -4365,15 +4330,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (434),139)
 			Result.put (new_singleton (581),140)
 			Result.put (new_singleton (439),146)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	upper_case_mapping_plane_0_segment_3: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	upper_case_mapping_plane_0_segment_3: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (921),69)
 			Result.put (new_singleton (1021),123)
 			Result.put (new_singleton (1022),124)
@@ -4437,15 +4401,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (917),245)
 			Result.put (new_singleton (1015),248)
 			Result.put (new_singleton (1018),251)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	upper_case_mapping_plane_0_segment_4: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	upper_case_mapping_plane_0_segment_4: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (1040),48)
 			Result.put (new_singleton (1041),49)
 			Result.put (new_singleton (1042),50)
@@ -4570,15 +4533,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (1274),251)
 			Result.put (new_singleton (1276),253)
 			Result.put (new_singleton (1278),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	upper_case_mapping_plane_0_segment_5: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	upper_case_mapping_plane_0_segment_5: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (1280),1)
 			Result.put (new_singleton (1282),3)
 			Result.put (new_singleton (1284),5)
@@ -4658,34 +4620,31 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (1366),134)
 			Result.put (new_pair (1333,1362),135)
 			Result.put (new_pair (1333,1362),136)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	all_empty_upper_case_mapping_segment: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	all_empty_upper_case_mapping_segment: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
-
+			create Result.make_filled (Void, 0, 255)
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	upper_case_mapping_plane_0_segment_29: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	upper_case_mapping_plane_0_segment_29: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (11363),125)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	upper_case_mapping_plane_0_segment_30: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	upper_case_mapping_plane_0_segment_30: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (7680),1)
 			Result.put (new_singleton (7682),3)
 			Result.put (new_singleton (7684),5)
@@ -4822,15 +4781,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (7928),253)
 			Result.put (new_singleton (7928),254)
 			Result.put (new_singleton (7928),255)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	upper_case_mapping_plane_0_segment_31: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	upper_case_mapping_plane_0_segment_31: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (7944),0)
 			Result.put (new_singleton (7945),1)
 			Result.put (new_singleton (7946),2)
@@ -4992,15 +4950,14 @@ feature {NONE} -- Implementation
 			Result.put (new_pair (937,834),246)
 			Result.put (new_triple (937,834,921),247)
 			Result.put (new_pair (937,921),252)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	upper_case_mapping_plane_0_segment_33: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	upper_case_mapping_plane_0_segment_33: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (8498),78)
 			Result.put (new_singleton (8498),79)
 			Result.put (new_singleton (8498),80)
@@ -5034,15 +4991,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (8579),141)
 			Result.put (new_singleton (8579),142)
 			Result.put (new_singleton (8579),143)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	upper_case_mapping_plane_0_segment_36: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	upper_case_mapping_plane_0_segment_36: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (9398),208)
 			Result.put (new_singleton (9399),209)
 			Result.put (new_singleton (9400),210)
@@ -5069,15 +5025,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (9421),231)
 			Result.put (new_singleton (9422),232)
 			Result.put (new_singleton (9423),233)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	upper_case_mapping_plane_0_segment_44: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	upper_case_mapping_plane_0_segment_44: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (11264),48)
 			Result.put (new_singleton (11265),49)
 			Result.put (new_singleton (11266),50)
@@ -5190,15 +5145,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (11486),223)
 			Result.put (new_singleton (11488),225)
 			Result.put (new_singleton (11490),227)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	upper_case_mapping_plane_0_segment_45: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	upper_case_mapping_plane_0_segment_45: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (4256),0)
 			Result.put (new_singleton (4257),1)
 			Result.put (new_singleton (4258),2)
@@ -5247,15 +5201,14 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (4293),45)
 			Result.put (new_singleton (4293),46)
 			Result.put (new_singleton (4293),47)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	upper_case_mapping_plane_0_segment_251: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	upper_case_mapping_plane_0_segment_251: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_pair (70,70),0)
 			Result.put (new_pair (70,73),1)
 			Result.put (new_pair (70,76),2)
@@ -5285,15 +5238,14 @@ feature {NONE} -- Implementation
 			Result.put (new_pair (1348,1341),26)
 			Result.put (new_pair (1348,1341),27)
 			Result.put (new_pair (1348,1341),28)
-
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	upper_case_mapping_plane_0_segment_255: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	upper_case_mapping_plane_0_segment_255: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (65313),65)
 			Result.put (new_singleton (65314),66)
 			Result.put (new_singleton (65315),67)
@@ -5320,7 +5272,6 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (65336),88)
 			Result.put (new_singleton (65337),89)
 			Result.put (new_singleton (65338),90)
-
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -5590,10 +5541,10 @@ feature {NONE} -- Implementation
 			sub_arrays_not_void: True --not Result.has (Void)
 		end
 
-	upper_case_mapping_plane_1_segment_4: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+	upper_case_mapping_plane_1_segment_4: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			-- Generated arrayed_list segment
 		once
-			create Result.make (0, 255)
+			create Result.make_filled (Void, 0, 255)
 			Result.put (new_singleton (66560),40)
 			Result.put (new_singleton (66561),41)
 			Result.put (new_singleton (66562),42)
@@ -5634,7 +5585,6 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (66597),77)
 			Result.put (new_singleton (66598),78)
 			Result.put (new_singleton (66599),79)
-
 		ensure
 			result_not_void: Result /= Void
 		end

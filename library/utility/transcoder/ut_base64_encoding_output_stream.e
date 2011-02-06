@@ -14,7 +14,7 @@ note
 		%Set both options to True for 100%% conformance to RFC 2045."
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2011, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -219,7 +219,7 @@ feature -- Constants
 	base64_alphabet: ARRAY [CHARACTER]
 			-- Base64 alphabet
 		once
-			create Result.make (0, 64)
+			create Result.make_filled ('%U', 0, 64)
 			Result.put ('A', 0)
 			Result.put ('B', 1)
 			Result.put ('C', 2)

@@ -5,7 +5,7 @@ note
 		"Parser skeletons for parser generators such as 'geyacc'"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1036,7 +1036,7 @@ feature {NONE} -- Implementation
 			variables: DS_ARRAYED_LIST [PR_VARIABLE]
 			a_variable: PR_VARIABLE
 			max_token_id: INTEGER
-			translate: ARRAY [PR_TOKEN]
+			translate: ARRAY [detachable PR_TOKEN]
 		do
 			tokens := last_grammar.tokens
 			last_token_id := 256
@@ -1056,7 +1056,7 @@ feature {NONE} -- Implementation
 				end
 				i := i + 1
 			end
-			create translate.make (0, max_token_id)
+			create translate.make_filled (Void, 0, max_token_id)
 			from
 				i := 1
 			until

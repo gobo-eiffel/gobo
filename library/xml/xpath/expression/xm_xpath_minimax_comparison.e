@@ -9,7 +9,7 @@ note
 	%a static type that is a numeric sequence."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2011, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -185,9 +185,7 @@ feature {NONE} -- Implementation
 					a_number := an_iterator.item.as_numeric_value
 					if not a_number.is_nan then
 						if Result = Void then
-							create Result.make (1,2)
-							Result.put (a_number, 1)
-							Result.put (a_number, 2)
+							create Result.make_filled (a_number, 1, 2)
 						else
 							if a_number.three_way_comparison (Result.item (1), a_context) = -1 then
 								Result.put (a_number, 1)

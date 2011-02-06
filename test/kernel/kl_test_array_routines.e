@@ -6,7 +6,7 @@ note
 
 	test_status: "ok_to_run"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -68,7 +68,7 @@ feature -- Test
 			assert_integers_equal ("lower_set2", 9, l_ai2.lower)
 			assert_integers_equal ("upper_set2", 8, l_ai2.upper)
 				-- Subarray of an empty array.
-			create l_ai1.make (4, 3)
+			create l_ai1.make_filled (0, 4, 3)
 			l_ai2 := l_ri.subarray (l_ai1, 4, 3, 2)
 			assert_integers_equal ("same_items3", 0, l_ai2.count)
 			assert_integers_equal ("lower_set3", 2, l_ai2.lower)
@@ -82,13 +82,13 @@ feature -- Test
 			l_ai1, l_ai2: ARRAY [INTEGER]
 		do
 			create l_ri
-			create l_ai1.make (2, 6)
+			create l_ai1.make_filled (0, 2, 6)
 			l_ai1.put (1, 2)
 			l_ai1.put (2, 3)
 			l_ai1.put (3, 4)
 			l_ai1.put (4, 5)
 			l_ai1.put (5, 6)
-			create l_ai2.make (10, 13)
+			create l_ai2.make_filled (0, 10, 13)
 			l_ai2.put (10, 10)
 			l_ai2.put (11, 11)
 			l_ai2.put (12, 12)

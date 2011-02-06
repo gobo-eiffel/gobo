@@ -5,7 +5,7 @@ note
 		"Error: Input is not an Xace file"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2011, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 		require
 			a_filename_not_void: a_filename /= Void
 		do
-			create parameters.make (1, 1)
+			create parameters.make_filled (empty_string, 1, 1)
 			parameters.put (a_filename, 1)
 		end
 

@@ -9,7 +9,7 @@ note
 		need a few modifications to account of surrogates.
 	]"
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2011, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -688,7 +688,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			j: INTEGER_8
 		do
-			create Result.make (0, 255)
+			create Result.make_filled (0, 0, 255)
 			from
 				i := 0
 			until

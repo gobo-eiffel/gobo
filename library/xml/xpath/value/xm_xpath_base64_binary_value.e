@@ -5,7 +5,7 @@ note
 		"XPath base64Binary values"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2011, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			l_decoder.read_string (l_count)
 			l_decoded_string := l_decoder.last_string
 			l_count := l_decoded_string.count
-			create binary_value.make (1, l_count)
+			create binary_value.make_filled ('%U', 1, l_count)
 			from l_index := 1 until l_index > l_count loop
 				binary_value.put (l_decoded_string.item (l_index), l_index)
 				l_index := l_index + 1

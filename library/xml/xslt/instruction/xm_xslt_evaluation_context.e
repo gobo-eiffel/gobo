@@ -5,7 +5,7 @@ note
 		"Objects that represent an XSLT evaluation context"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2011, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -394,7 +394,7 @@ feature -- Element change
 		do
 			tail_call_function := a_function
 			if a_variables.count /= local_variable_frame.variables.count then
-				create l_variables.make (1, a_function.slot_manager.number_of_variables)
+				create l_variables.make_filled (Void, 1, a_function.slot_manager.number_of_variables)
 				from
 					i := 1
 				until
@@ -432,7 +432,7 @@ feature -- Element change
 		local
 			an_array: ARRAY [XM_XPATH_VALUE]
 		do
-			create an_array.make (1, a_slot_manager.number_of_variables)
+			create an_array.make_filled (Void, 1, a_slot_manager.number_of_variables)
 			create internal_local_variable_frame.make (a_slot_manager, an_array)
 		end
 
@@ -443,7 +443,7 @@ feature -- Element change
 			an_array: ARRAY [XM_XPATH_VALUE]
 			a_slot_manager: XM_XPATH_SLOT_MANAGER
 		do
-			create an_array.make (1, a_slot_count)
+			create an_array.make_filled (Void, 1, a_slot_count)
 			create a_slot_manager.make
 			a_slot_manager.set_number_of_variables (a_slot_count)
 			create internal_local_variable_frame.make (a_slot_manager, an_array)

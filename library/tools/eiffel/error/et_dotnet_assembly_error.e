@@ -5,7 +5,7 @@ note
 		".NET assembly errors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			etl_code := gaaaa_etl_code
 			default_template := gaaaa_default_template
 			assembly := an_assembly
-			create parameters.make (1, 2)
+			create parameters.make_filled (empty_string, 1, 2)
 			parameters.put (etl_code, 1)
 			parameters.put (assembly.full_lower_name ('/'), 2)
 		ensure
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			etl_code := gazzz_etl_code
 			default_template := gazzz_default_template
 			assembly := an_assembly
-			create parameters.make (1, 3)
+			create parameters.make_filled (empty_string, 1, 3)
 			parameters.put (etl_code, 1)
 			parameters.put (assembly.full_lower_name ('/'), 2)
 			parameters.put (a_message, 3)
