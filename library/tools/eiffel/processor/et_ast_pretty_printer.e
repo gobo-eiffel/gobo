@@ -5,7 +5,7 @@ note
 		"Eiffel AST pretty printers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1944,7 +1944,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_locals /= Void then
 				l_locals.process (Current)
 				process_comments
-				print_new_line
 			end
 			l_compound := a_feature.compound
 			if l_compound /= Void then
@@ -2018,7 +2017,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_locals /= Void then
 				l_locals.process (Current)
 				process_comments
-				print_new_line
 			end
 			l_compound := an_expression.compound
 			if l_compound /= Void then
@@ -2152,7 +2150,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_locals /= Void then
 				l_locals.process (Current)
 				process_comments
-				print_new_line
 			end
 			l_compound := a_feature.compound
 			if l_compound /= Void then
@@ -2214,7 +2211,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_locals /= Void then
 				l_locals.process (Current)
 				process_comments
-				print_new_line
 			end
 			l_compound := an_expression.compound
 			if l_compound /= Void then
@@ -3849,42 +3845,52 @@ feature {ET_AST_NODE} -- Processing
 			l_item: ET_LOCAL_VARIABLE_ITEM
 			l_name: ET_IDENTIFIER
 			l_type: ET_TYPE
+			l_break: ET_BREAK
+			l_has_comment_assertion: BOOLEAN
 		do
-			a_list.local_keyword.process (Current)
-			print_new_line
-			indent
-			process_comments
-			nb := a_list.count
-			from i := 1 until i > nb loop
-				l_item := a_list.item (i)
-				l_name := l_item.name
-				l_name.process (Current)
-				if l_item.is_last_entity or i = nb then
-					tokens.colon_symbol.process (Current)
-					print_space
-					l_type := l_item.type
-					l_type.process (Current)
-					comment_finder.add_excluded_node (l_name)
-					comment_finder.add_excluded_node (l_type)
-					comment_finder.find_comments (l_item, comment_list)
-					comment_finder.reset_excluded_nodes
-					if i /= nb then
+			l_break := a_list.break
+			l_has_comment_assertion := l_break /= Void and then l_break.has_comment
+			if a_list.is_empty and not l_has_comment_assertion then
+					-- Do not print empty local variable clause, but keep the comments if any.
+					--
+					-- Note that a comment could be a commented out local variable,
+					-- so the local variable clause is not considered empty in that case.
+				comment_finder.find_comments (a_list, comment_list)
+			else
+				a_list.local_keyword.process (Current)
+				print_new_line
+				indent
+				process_comments
+				nb := a_list.count
+				from i := 1 until i > nb loop
+					l_item := a_list.item (i)
+					l_name := l_item.name
+					l_name.process (Current)
+					if l_item.is_last_entity or i = nb then
+						tokens.colon_symbol.process (Current)
+						print_space
+						l_type := l_item.type
+						l_type.process (Current)
+						comment_finder.add_excluded_node (l_name)
+						comment_finder.add_excluded_node (l_type)
+						comment_finder.find_comments (l_item, comment_list)
+						comment_finder.reset_excluded_nodes
 						print_new_line
 						process_comments
+					else
+						comment_finder.add_excluded_node (l_name)
+						comment_finder.find_comments (l_item, comment_list)
+						comment_finder.reset_excluded_nodes
+							-- The AST may or may not contain the comma.
+							-- So we have to print it explicitly here.
+						tokens.comma_symbol.process (Current)
+						print_space
 					end
-				else
-					comment_finder.add_excluded_node (l_name)
-					comment_finder.find_comments (l_item, comment_list)
-					comment_finder.reset_excluded_nodes
-						-- The AST may or may not contain the comma.
-						-- So we have to print it explicitly here.
-					tokens.comma_symbol.process (Current)
-					print_space
+					i := i + 1
 				end
-				i := i + 1
+				process_comments
+				dedent
 			end
-			process_comments
-			dedent
 		end
 
 	process_loop_instruction (an_instruction: ET_LOOP_INSTRUCTION)
@@ -4273,7 +4279,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_locals /= Void then
 				l_locals.process (Current)
 				process_comments
-				print_new_line
 			end
 			l_compound := a_feature.compound
 			if l_compound /= Void then
@@ -4347,7 +4352,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_locals /= Void then
 				l_locals.process (Current)
 				process_comments
-				print_new_line
 			end
 			l_compound := an_expression.compound
 			if l_compound /= Void then
@@ -4489,7 +4493,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_locals /= Void then
 				l_locals.process (Current)
 				process_comments
-				print_new_line
 			end
 			l_compound := a_feature.compound
 			if l_compound /= Void then
@@ -4551,7 +4554,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_locals /= Void then
 				l_locals.process (Current)
 				process_comments
-				print_new_line
 			end
 			l_compound := an_expression.compound
 			if l_compound /= Void then
