@@ -829,7 +829,7 @@ feature {TS_TEST_HANDLER} -- Containers
 					i > nb
 				loop
 					expected_item := expected.item (i1)
-					actual_item := actual.item (i1)
+					actual_item := actual.item (i2)
 					if expected_item /= actual_item then
 						create new_tag.make (15)
 						new_tag.append_string (a_tag)
@@ -898,7 +898,7 @@ feature {TS_TEST_HANDLER} -- Containers
 					i > nb
 				loop
 					expected_item := expected.item (i1)
-					actual_item := actual.item (i1)
+					actual_item := actual.item (i2)
 					if expected_item /~ actual_item then
 						create new_tag.make (15)
 						new_tag.append_string (a_tag)
