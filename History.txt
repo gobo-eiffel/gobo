@@ -16,6 +16,8 @@ Version 3.10 - ?
 	* Fixed implementation of class IDENTIFIED_ROUTINES. Object addresses
 	  were casted to INTEGER_32, which causes loss of information when
 	  compiled on a 64-bit computer. See bug#2999209.
+	* Fixed type system bug when processing constant attributes in
+	  inspect instructions. See bug#3238111.
 
 	gelint:
 

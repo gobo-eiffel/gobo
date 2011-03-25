@@ -3240,7 +3240,13 @@ feature {NONE} -- Instruction validity
 				if l_query /= Void then
 					l_constant_attribute ?= l_query
 					if l_constant_attribute /= Void then
-						Result := l_constant_attribute.constant
+							-- If we use the same object for the constant attribute
+							-- when analyzing different client features, each feature
+							-- will assign its own index to this object. That's why
+							-- we need to clone the object here and to reset the index
+							-- so that the index does not get corrupted.
+						Result := l_constant_attribute.constant.twin
+						Result.set_index (0)
 					else
 						l_unique_attribute ?= l_query
 						if l_unique_attribute /= Void then
