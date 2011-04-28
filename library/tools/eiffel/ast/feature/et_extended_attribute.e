@@ -159,7 +159,7 @@ feature -- Processing
 	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
---			a_processor.process_extended_attribute (Current)
+			a_processor.process_extended_attribute (Current)
 		end
 
 end
