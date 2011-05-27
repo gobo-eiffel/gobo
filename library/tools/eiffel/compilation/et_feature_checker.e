@@ -110,6 +110,9 @@ inherit
 			process_void
 		end
 
+	ET_SHARED_ERROR_HANDLERS
+		export {NONE} all end
+
 	KL_SHARED_PLATFORM
 		export {NONE} all end
 
@@ -1863,6 +1866,21 @@ feature {NONE} -- Type checking
 			end
 		end
 
+	is_type_valid (a_type: ET_TYPE): BOOLEAN
+			-- Is `a_type' valid when it appears in the
+			-- body, assertions or rescue clause of a feature?
+		require
+			a_type_not_void: a_type /= Void
+		local
+			l_error_handler: ET_ERROR_HANDLER
+		do
+			l_error_handler := current_system.error_handler
+			current_system.set_error_handler (null_error_handler)
+			type_checker.check_type_validity (a_type, current_closure_impl, current_class_impl, current_class_impl)
+			Result := not type_checker.has_fatal_error
+			current_system.set_error_handler (l_error_handler)
+		end
+
 	check_creation_type_validity (a_type: ET_CLASS_TYPE; a_position: ET_POSITION)
 			-- Check validity of `a_type' as a creation type in `current_type'.
 			-- Note that `a_type' should already be a valid type by itself
@@ -2771,10 +2789,16 @@ feature {NONE} -- Instruction validity
 				l_creation_named_type := l_creation_type.shallow_named_type (current_type)
 				l_class_type ?= l_creation_named_type
 				if l_class_type /= Void then
-					had_error := has_fatal_error
-					check_creation_type_validity (l_class_type, l_position)
-					if had_error then
+					if l_explicit_creation_type = Void and then not is_type_valid (l_class_type) then
+							-- There is no explicit creation type, and the type of the target is not a valid type.
+							-- This error should already have been reported when the target was declared.
 						set_fatal_error
+					else
+						had_error := has_fatal_error
+						check_creation_type_validity (l_class_type, l_position)
+						if had_error then
+							set_fatal_error
+						end
 					end
 				end
 				if l_procedure = Void then
@@ -8225,8 +8249,8 @@ feature {NONE} -- Expression validity
 						end
 					end
 				else
-						a_context.force_last (l_type)
-						report_result_assignment_target (l_result)
+					a_context.force_last (l_type)
+					report_result_assignment_target (l_result)
 				end
 			else
 				l_identifier ?= a_writable
