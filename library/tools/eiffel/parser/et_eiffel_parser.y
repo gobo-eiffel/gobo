@@ -6,7 +6,7 @@ note
 		"Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -123,7 +123,7 @@ create
 %type <ET_CLIENT_ITEM> Client Client_comma
 %type <ET_CLIENTS> Clients Client_list
 %type <ET_COMPOUND> Compound Rescue_opt Do_compound Once_compound Then_compound
-%type <ET_COMPOUND> Else_compound Rescue_compound From_compound Loop_compound
+%type <ET_COMPOUND> Else_compound Rescue_compound From_compound Loop_compound Attribute_compound
 %type <ET_CONSTANT> Manifest_constant
 %type <ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM> Constraint_type_no_identifier_comma
 %type <ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM> Constraint_tuple_labeled_actual_parameter
@@ -1905,9 +1905,9 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 		{ $$ := ast_factory.new_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, Void, last_clients, last_feature_clause, last_class) }
 	| Extended_feature_name ':' Type Assigner_opt ';'
 		{ $$ := ast_factory.new_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, last_clients, last_feature_clause, last_class) }
-	| Extended_feature_name ':' Type Assigner_opt Indexing_clause_opt Obsolete_opt Precondition_opt E_ATTRIBUTE Postcondition_opt E_END Semicolon_opt
+	| Extended_feature_name ':' Type Assigner_opt Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt Attribute_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
-			$$ := ast_factory.new_extended_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, $8, $9, $10, $11, last_clients, last_feature_clause, last_class)
+			$$ := ast_factory.new_extended_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, last_clients, last_feature_clause, last_class)
 		}
 	| Extended_feature_name ':' Type Assigner_opt E_IS Manifest_constant Semicolon_opt
 		{ $$ := ast_factory.new_constant_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, last_clients, last_feature_clause, last_class) }
@@ -3006,6 +3006,15 @@ Once_compound: E_ONCE
 		}
 	;
 
+Attribute_compound: E_ATTRIBUTE
+		{ $$ := ast_factory.new_attribute_compound ($1, ast_factory.new_compound (0)) }
+	| E_ATTRIBUTE Add_counter Compound
+		{
+			$$ := ast_factory.new_attribute_compound ($1, $3)
+			remove_counter
+		}
+	;
+	
 Then_compound: E_THEN
 		{ $$ := ast_factory.new_then_compound ($1, ast_factory.new_compound (0)) }
 	| E_THEN Add_counter Compound

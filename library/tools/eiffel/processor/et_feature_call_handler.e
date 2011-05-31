@@ -5,7 +5,7 @@ note
 		"Eiffel feature call handlers: traverse features and report when feature calls are found."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/04/06 $"
 	revision: "$Revision: #12 $"
@@ -1357,9 +1357,21 @@ feature {ET_AST_NODE} -- Processing
 
 	process_extended_attribute (a_feature: ET_EXTENDED_ATTRIBUTE)
 			-- Process `a_feature'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		do
+			process_extended_attribute_closure (a_feature)
+		end
+
+	process_extended_attribute_closure (a_feature: ET_EXTENDED_ATTRIBUTE_CLOSURE)
+			-- Process `a_feature'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_feature_not_void: a_feature /= Void
 		local
 			l_preconditions: ET_PRECONDITIONS
+			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_postconditions: ET_POSTCONDITIONS
+			l_compound: ET_COMPOUND
 			had_error: BOOLEAN
 		do
 			reset_fatal_error (False)
@@ -1373,11 +1385,30 @@ feature {ET_AST_NODE} -- Processing
 					process_preconditions (l_preconditions)
 					had_error := had_error or has_fatal_error
 				end
+			end
+			if anchored_types_enabled then
+				l_locals := a_feature.locals
+				if l_locals /= Void then
+					process_local_variable_list (l_locals)
+					had_error := had_error or has_fatal_error
+				end
+			end
+			l_compound := a_feature.compound
+			if l_compound /= Void then
+				process_compound (l_compound)
+				had_error := had_error or has_fatal_error
+			end
+			if assertions_enabled then
 				l_postconditions := a_feature.postconditions
 				if l_postconditions /= Void then
 					process_postconditions (l_postconditions)
 					had_error := had_error or has_fatal_error
 				end
+			end
+			l_compound := a_feature.rescue_clause
+			if l_compound /= Void then
+				process_compound (l_compound)
+				had_error := had_error or has_fatal_error
 			end
 			reset_fatal_error (had_error)
 		end

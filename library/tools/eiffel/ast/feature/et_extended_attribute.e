@@ -5,7 +5,7 @@ note
 		"Eiffel variable attributes with extended syntax"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,6 +16,7 @@ inherit
 
 	ET_ATTRIBUTE
 		undefine
+			locals,
 			obsolete_message,
 			preconditions,
 			reset_preconditions,
@@ -49,7 +50,6 @@ feature {NONE} -- Initialization
 			-- Create a new attribute.
 		do
 			precursor (a_name, a_type, a_class)
-			attribute_keyword := tokens.attribute_keyword
 			end_keyword := tokens.end_keyword
 		end
 
@@ -117,9 +117,11 @@ feature -- Duplication
 			Result.set_assigner (assigner)
 			Result.set_obsolete_message (obsolete_message)
 			Result.set_preconditions (preconditions)
+			Result.set_locals (locals)
+			Result.set_compound (compound)
 			Result.set_postconditions (postconditions)
+			Result.set_rescue_clause (rescue_clause)
 			Result.set_clients (clients)
-			Result.set_attribute_keyword (attribute_keyword)
 			Result.set_end_keyword (end_keyword)
 			Result.set_semicolon (semicolon)
 			Result.set_feature_clause (feature_clause)
@@ -137,12 +139,14 @@ feature -- Conversion
 			Result.set_assigner (assigner)
 			Result.set_obsolete_message (obsolete_message)
 			Result.set_preconditions (preconditions)
+			Result.set_locals (locals)
+			Result.set_compound (compound)
 			Result.set_postconditions (postconditions)
+			Result.set_rescue_clause (rescue_clause)
 			Result.set_clients (clients)
 			Result.set_implementation_feature (implementation_feature)
 			Result.set_first_precursor (first_precursor)
 			Result.set_other_precursors (other_precursors)
-			Result.set_attribute_keyword (attribute_keyword)
 			Result.set_end_keyword (end_keyword)
 			Result.set_version (version)
 			Result.set_frozen_keyword (frozen_keyword)

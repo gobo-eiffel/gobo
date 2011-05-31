@@ -112,6 +112,7 @@ Version 3.10 - ?
 	* Added the notion of ignored classes. We can programmatically decide
 	  to ignore the class from a cluster and take it into account later on
 	  after some processing.
+	* Added support for attribute initialization body.
 
 	Gobo Eiffel XML Library:
 

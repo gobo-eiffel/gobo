@@ -5,7 +5,7 @@ note
 		"Eiffel AST iterators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1331,6 +1331,8 @@ feature {ET_AST_NODE} -- Processing
 			a_postconditions: ET_POSTCONDITIONS
 			a_semicolon: ET_SEMICOLON_SYMBOL
 			an_assigner: ET_ASSIGNER
+			a_locals: ET_LOCAL_VARIABLE_LIST
+			a_compound: ET_COMPOUND
 		do
 			from
 				a_synonym := a_feature
@@ -1361,10 +1363,21 @@ feature {ET_AST_NODE} -- Processing
 			if a_preconditions /= Void then
 				a_preconditions.process (Current)
 			end
-			a_feature.attribute_keyword.process (Current)
+			a_locals := a_feature.locals
+			if a_locals /= Void then
+				a_locals.process (Current)
+			end
+			a_compound := a_feature.compound
+			if a_compound /= Void then
+				a_compound.process (Current)
+			end
 			a_postconditions := a_feature.postconditions
 			if a_postconditions /= Void then
 				a_postconditions.process (Current)
+			end
+			a_compound := a_feature.rescue_clause
+			if a_compound /= Void then
+				a_compound.process (Current)
 			end
 			a_feature.end_keyword.process (Current)
 			a_semicolon := a_feature.semicolon

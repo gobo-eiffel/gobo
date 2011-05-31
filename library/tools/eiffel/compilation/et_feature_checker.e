@@ -5,7 +5,7 @@ note
 		"Eiffel feature validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -639,6 +639,7 @@ feature {NONE} -- Feature validity
 			check_signature_type_validity (a_feature.implementation_feature.type)
 			if not has_fatal_error then
 				report_current_type_needed
+				report_result_declaration (l_type)
 				if in_precursor then
 -- TODO: when processing a precursor, its signature should be resolved to the
 -- context of `current_class', but it is currently seen in the context of its parent class.
@@ -1061,8 +1062,50 @@ feature {NONE} -- Feature validity
 		require
 			a_feature_not_void: a_feature /= Void
 			consistent: a_feature = current_feature
+		local
+			l_type: ET_TYPE
+			l_object_tests: ET_OBJECT_TEST_LIST
+			l_locals: ET_LOCAL_VARIABLE_LIST
+			l_compound: ET_COMPOUND
+			had_error: BOOLEAN
 		do
-			check_attribute_validity (a_feature)
+			has_fatal_error := False
+			l_type := a_feature.type
+			check_signature_type_validity (a_feature.implementation_feature.type)
+			if not has_fatal_error then
+				report_current_type_needed
+				report_result_declaration (l_type)
+				if in_precursor then
+-- TODO: when processing a precursor, its signature should be resolved to the
+-- context of `current_class', but it is currently seen in the context of its parent class.
+				else
+					report_result_supplier (l_type, current_class, a_feature)
+				end
+			end
+			had_error := had_error or has_fatal_error
+			l_object_tests := a_feature.object_tests
+			if l_object_tests /= Void then
+				check_object_tests_validity (l_object_tests, a_feature)
+				had_error := had_error or has_fatal_error
+			end
+			l_locals := a_feature.locals
+			if l_locals /= Void then
+				check_locals_validity (l_locals, a_feature)
+				had_error := had_error or has_fatal_error
+			end
+			if not had_error then
+				l_compound := a_feature.compound
+				if l_compound /= Void then
+					check_instructions_validity (l_compound)
+					had_error := had_error or has_fatal_error
+				end
+				l_compound := a_feature.rescue_clause
+				if l_compound /= Void then
+					check_rescue_validity (l_compound)
+					had_error := had_error or has_fatal_error
+				end
+			end
+			has_fatal_error := had_error
 		end
 
 	check_external_function_validity (a_feature: ET_EXTERNAL_FUNCTION)

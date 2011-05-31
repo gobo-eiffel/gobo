@@ -2538,6 +2538,8 @@ feature {ET_AST_NODE} -- Processing
 			l_semicolon: ET_SEMICOLON_SYMBOL
 			l_assigner: ET_ASSIGNER
 			l_obsolete_string: ET_MANIFEST_STRING
+			l_locals: ET_LOCAL_VARIABLE_LIST
+			l_compound: ET_COMPOUND
 		do
 			from
 				l_synonym := a_feature
@@ -2585,7 +2587,6 @@ feature {ET_AST_NODE} -- Processing
 				print_space
 				l_assigner.process (Current)
 			end
-			print_space
 			indent
 			process_comments
 			print_new_line
@@ -2615,13 +2616,29 @@ feature {ET_AST_NODE} -- Processing
 				l_preconditions.process (Current)
 				process_comments
 			end
-			a_feature.attribute_keyword.process (Current)
+			l_locals := a_feature.locals
+			if l_locals /= Void then
+				l_locals.process (Current)
+				process_comments
+			end
+			l_compound := a_feature.compound
+			if l_compound /= Void then
+				l_compound.process (Current)
+			else
+				tokens.do_keyword.process (Current)
+			end
 			process_comments
 			print_new_line
 			l_postconditions := a_feature.postconditions
 			if l_postconditions /= Void then
 				l_postconditions.process (Current)
 				process_comments
+			end
+			l_compound := a_feature.rescue_clause
+			if l_compound /= Void then
+				l_compound.process (Current)
+				process_comments
+				print_new_line
 			end
 			a_feature.end_keyword.process (Current)
 			l_semicolon := a_feature.semicolon

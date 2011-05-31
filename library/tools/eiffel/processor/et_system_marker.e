@@ -5,7 +5,7 @@ note
 		"Eiffel system class markers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -765,18 +765,40 @@ feature {ET_AST_NODE} -- Processing
 
 	process_extended_attribute (a_feature: ET_EXTENDED_ATTRIBUTE)
 			-- Process `a_feature'.
+		do
+			process_extended_attribute_closure (a_feature)
+		end
+
+	process_extended_attribute_closure (a_feature: ET_EXTENDED_ATTRIBUTE_CLOSURE)
+			-- Process `a_feature'.
+		require
+			a_feature_not_void: a_feature /= Void
 		local
 			a_preconditions: ET_PRECONDITIONS
+			a_locals: ET_LOCAL_VARIABLE_LIST
 			a_postconditions: ET_POSTCONDITIONS
+			a_compound: ET_COMPOUND
 		do
 			process_type (a_feature.type)
 			a_preconditions := a_feature.preconditions
 			if a_preconditions /= Void then
 				process_preconditions (a_preconditions)
 			end
+			a_locals := a_feature.locals
+			if a_locals /= Void then
+				process_local_variable_list (a_locals)
+			end
+			a_compound := a_feature.compound
+			if a_compound /= Void then
+				process_compound (a_compound)
+			end
 			a_postconditions := a_feature.postconditions
 			if a_postconditions /= Void then
 				process_postconditions (a_postconditions)
+			end
+			a_compound := a_feature.rescue_clause
+			if a_compound /= Void then
+				process_compound (a_compound)
 			end
 		end
 

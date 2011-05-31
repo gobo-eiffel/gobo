@@ -5,7 +5,7 @@ note
 		"C code generators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -4716,12 +4716,19 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_extended_attribute (a_feature: ET_ATTRIBUTE)
+	print_extended_attribute (a_feature: ET_EXTENDED_ATTRIBUTE)
 			-- Print function wrapper for `a_feature' to `current_file'
 			-- and its signature to `header_file'.
 		require
 			a_feature_not_void: a_feature /= Void
+		local
+			l_compound: ET_COMPOUND
 		do
+			l_compound := a_feature.compound
+			if (l_compound /= Void and then not l_compound.is_empty) or else a_feature.locals /= Void or else a_feature.rescue_clause /= Void then
+-- TODO
+print ("ET_C_GENERATOR.print_extended_attribute: initialization not supported yet.%N")
+			end
 			print_attribute (a_feature)
 		end
 
@@ -25553,6 +25560,12 @@ feature {NONE} -- Type generation
 					a_file.put_character ('/')
 					a_file.put_new_line
 					l_empty_struct := False
+					if attached {ET_EXTENDED_ATTRIBUTE} l_query.static_feature as l_extended_attribute then
+						if (attached l_extended_attribute.compound as l_compound and then not l_compound.is_empty) or else l_extended_attribute.locals /= Void or else l_extended_attribute.rescue_clause /= Void then
+-- TODO
+print ("Extended attribute " + a_type.base_class.upper_name + "." + l_query.static_feature.lower_name + ": initialization not supported yet.%N")
+						end
+					end
 					i := i + 1
 				end
 				l_special_type ?= a_type

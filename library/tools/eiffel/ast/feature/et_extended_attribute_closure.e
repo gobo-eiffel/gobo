@@ -5,7 +5,7 @@ note
 		"Eiffel closures with components common to extended attributes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,26 +15,45 @@ deferred class ET_EXTENDED_ATTRIBUTE_CLOSURE
 inherit
 
 	ET_FEATURE_CLOSURE
+		redefine
+			locals
+		end
 
 feature -- Access
 
-	attribute_keyword: ET_KEYWORD
-			-- 'attribute' keyword
+	compound: ET_COMPOUND
+			-- Routine body
+
+	locals: ET_LOCAL_VARIABLE_LIST
+			-- Local variables
+
+	rescue_clause: ET_COMPOUND
+			-- Rescue clause
 
 feature -- Setting
 
-	set_attribute_keyword (a_attribute: like attribute_keyword)
-			-- Set `attribute_keyword' to `a_attribute'.
-		require
-			a_attribute_not_void: a_attribute /= Void
+	set_compound (a_compound: like compound)
+			-- Set `compound' to `a_compound'.
 		do
-			attribute_keyword := a_attribute
+			compound := a_compound
 		ensure
-			attribute_keyword_set: attribute_keyword = a_attribute
+			compound_set: compound = a_compound
 		end
 
-invariant
+	set_locals (a_locals: like locals)
+			-- Set `locals' to `a_locals'.
+		do
+			locals := a_locals
+		ensure
+			locals_set: locals = a_locals
+		end
 
-	attribute_keyword_not_void: attribute_keyword /= Void
+	set_rescue_clause (a_rescue: like rescue_clause)
+			-- Set `rescue_clause' to `a_rescue'.
+		do
+			rescue_clause := a_rescue
+		ensure
+			rescue_clause_set: rescue_clause = a_rescue
+		end
 
 end
