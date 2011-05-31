@@ -1676,7 +1676,7 @@ feature {ET_AST_NODE} -- Processing
 			print_new_line
 			l_indexing := a_feature.first_indexing
 			if l_indexing /= Void then
-				l_indexing.process (Current)
+				process_indexing_clause (l_indexing, False)
 				process_comments
 				print_new_line
 			end
@@ -1786,7 +1786,7 @@ feature {ET_AST_NODE} -- Processing
 			print_new_line
 			l_indexing := a_feature.first_indexing
 			if l_indexing /= Void then
-				l_indexing.process (Current)
+				process_indexing_clause (l_indexing, False)
 				process_comments
 				print_new_line
 			end
@@ -1916,7 +1916,7 @@ feature {ET_AST_NODE} -- Processing
 			print_new_line
 			l_indexing := a_feature.first_indexing
 			if l_indexing /= Void then
-				l_indexing.process (Current)
+				process_indexing_clause (l_indexing, False)
 				process_comments
 				print_new_line
 			end
@@ -2122,7 +2122,7 @@ feature {ET_AST_NODE} -- Processing
 			print_new_line
 			l_indexing := a_feature.first_indexing
 			if l_indexing /= Void then
-				l_indexing.process (Current)
+				process_indexing_clause (l_indexing, False)
 				process_comments
 				print_new_line
 			end
@@ -2592,7 +2592,7 @@ feature {ET_AST_NODE} -- Processing
 			print_new_line
 			l_indexing := a_feature.first_indexing
 			if l_indexing /= Void then
-				l_indexing.process (Current)
+				process_indexing_clause (l_indexing, False)
 				process_comments
 				print_new_line
 			end
@@ -2739,7 +2739,7 @@ feature {ET_AST_NODE} -- Processing
 			print_new_line
 			l_indexing := a_feature.first_indexing
 			if l_indexing /= Void then
-				l_indexing.process (Current)
+				process_indexing_clause (l_indexing, False)
 				process_comments
 				print_new_line
 			end
@@ -2967,7 +2967,7 @@ feature {ET_AST_NODE} -- Processing
 			print_new_line
 			l_indexing := a_feature.first_indexing
 			if l_indexing /= Void then
-				l_indexing.process (Current)
+				process_indexing_clause (l_indexing, False)
 				process_comments
 				print_new_line
 			end
@@ -3530,6 +3530,14 @@ feature {ET_AST_NODE} -- Processing
 
 	process_indexing_list (a_list: ET_INDEXING_LIST)
 			-- Process `a_list'.
+		do
+			process_indexing_clause (a_list, True)
+		end
+
+	process_indexing_clause (a_list: ET_INDEXING_LIST; a_new_line: BOOLEAN)
+			-- Process `a_list'.
+			-- `a_new_line' indicates that an empty new-line should
+			-- appear between the 'indexing' keyword and the first item.
 		local
 			i, nb: INTEGER
 			l_item: ET_INDEXING_ITEM
@@ -3543,7 +3551,9 @@ feature {ET_AST_NODE} -- Processing
 				a_list.indexing_keyword.process (Current)
 				indent
 				process_comments
-				print_new_line
+				if a_new_line then
+					print_new_line
+				end
 				nb := a_list.count
 				from i := 1 until i > nb loop
 					process_comments
@@ -4268,7 +4278,7 @@ feature {ET_AST_NODE} -- Processing
 			print_new_line
 			l_indexing := a_feature.first_indexing
 			if l_indexing /= Void then
-				l_indexing.process (Current)
+				process_indexing_clause (l_indexing, False)
 				process_comments
 				print_new_line
 			end
@@ -4482,7 +4492,7 @@ feature {ET_AST_NODE} -- Processing
 			print_new_line
 			l_indexing := a_feature.first_indexing
 			if l_indexing /= Void then
-				l_indexing.process (Current)
+				process_indexing_clause (l_indexing, False)
 				process_comments
 				print_new_line
 			end

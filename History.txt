@@ -114,6 +114,8 @@ Version 3.10 - ?
 	  after some processing.
 	* Added support for attribute initialization body.
 	* Added support for renaming clause in libraries when parsing ECF files.
+	* Fixed pretty-printer when processing indexing clauses in features.
+	  An extra empty line was inserted.
 
 	Gobo Eiffel XML Library:
 
