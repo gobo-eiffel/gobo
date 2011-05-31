@@ -84,7 +84,12 @@ create
 	make_eack,
 	make_eacl,
 	make_eacm,
-	make_eacn
+	make_eacn,
+	make_eaco,
+	make_eacp,
+	make_eacq,
+	make_eacr,
+	make_eacs
 
 feature {NONE} -- Initialization
 
@@ -1749,6 +1754,129 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 		end
 
+	make_eaco (a_renaming_clause: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Create a new EACO error: the old name of the renaming clause is missing.
+		require
+			a_renaming_clause_not_void: a_renaming_clause /= Void
+			a_universe_not_void: a_universe /= Void
+		do
+			universe := a_universe
+			position := a_renaming_clause.position
+			code := eaco_code
+			default_template := default_message_template (eaco_default_template)
+			create parameters.make_filled (empty_string, 1, 4)
+			parameters.put (code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+		ensure
+			universe_set: universe = a_universe
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+		end
+
+	make_eacp (a_old_name_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Create a new EACP error: the old name of the renaming clause is empty.
+		require
+			a_old_name_attribute_name_not_void: a_old_name_attribute_name /= Void
+			a_universe_not_void: a_universe /= Void
+		do
+			universe := a_universe
+			position := a_old_name_attribute_name.position
+			code := eacp_code
+			default_template := default_message_template (eacp_default_template)
+			create parameters.make_filled (empty_string, 1, 4)
+			parameters.put (code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+		ensure
+			universe_set: universe = a_universe
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+		end
+
+	make_eacq (a_renaming_clause: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Create a new EACQ error: the new name of the renaming clause is missing.
+		require
+			a_renaming_clause_not_void: a_renaming_clause /= Void
+			a_universe_not_void: a_universe /= Void
+		do
+			universe := a_universe
+			position := a_renaming_clause.position
+			code := eacq_code
+			default_template := default_message_template (eacq_default_template)
+			create parameters.make_filled (empty_string, 1, 4)
+			parameters.put (code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+		ensure
+			universe_set: universe = a_universe
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+		end
+
+	make_eacr (a_new_name_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Create a new EACR error: the new name of the renaming clause is empty.
+		require
+			a_new_name_attribute_name_not_void: a_new_name_attribute_name /= Void
+			a_universe_not_void: a_universe /= Void
+		do
+			universe := a_universe
+			position := a_new_name_attribute_name.position
+			code := eacr_code
+			default_template := default_message_template (eacr_default_template)
+			create parameters.make_filled (empty_string, 1, 4)
+			parameters.put (code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+		ensure
+			universe_set: universe = a_universe
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+		end
+
+	make_eacs (a_old_name_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Create a new EACS error: the old name of the renaming clause already
+			-- appears in another renaming clause.
+		require
+			a_old_name_attribute_name_not_void: a_old_name_attribute_name /= Void
+			a_universe_not_void: a_universe /= Void
+		do
+			universe := a_universe
+			position := a_old_name_attribute_name.position
+			code := eacs_code
+			default_template := default_message_template (eacs_default_template)
+			create parameters.make_filled (empty_string, 1, 5)
+			parameters.put (code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (a_old_name_attribute_name.upper_name, 5)
+		ensure
+			universe_set: universe = a_universe
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = old name
+		end
+
 feature -- Access
 
 	default_template: STRING
@@ -1896,6 +2024,11 @@ feature {NONE} -- Implementation
 	eacl_default_template: STRING = "'location' attribute in element 'external_library' is empty."
 	eacm_default_template: STRING = "'location' attribute is missing in element 'external_object'."
 	eacn_default_template: STRING = "'location' attribute in element 'external_object' is empty."
+	eaco_default_template: STRING = "'old_name' attribute is missing in 'renaming' clause."
+	eacp_default_template: STRING = "'old_name' attribute in 'renaming' clause is empty."
+	eacq_default_template: STRING = "'new_name' attribute is missing in 'renaming' clause."
+	eacr_default_template: STRING = "'new_name' attribute in 'renaming' clause is empty."
+	eacs_default_template: STRING = "'old_name' attribute $5 already appears in another 'renaming' clause."
 			-- Default templates
 
 	syntax_code: STRING = "ESYN"
@@ -1965,6 +2098,11 @@ feature {NONE} -- Implementation
 	eacl_code: STRING = "EACL"
 	eacm_code: STRING = "EACM"
 	eacn_code: STRING = "EACN"
+	eaco_code: STRING = "EACO"
+	eacp_code: STRING = "EACP"
+	eacq_code: STRING = "EACQ"
+	eacr_code: STRING = "EACR"
+	eacs_code: STRING = "EACS"
 			-- Error codes
 
 invariant

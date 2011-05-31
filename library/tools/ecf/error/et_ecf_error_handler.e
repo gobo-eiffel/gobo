@@ -865,6 +865,67 @@ feature -- Reporting errors
 			report_error (l_error)
 		end
 
+	report_eaco_error (a_renaming_clause: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EACO error: the old name of the renaming clause is missing.
+		require
+			a_renaming_clause_not_void: a_renaming_clause /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_eaco (a_renaming_clause, a_universe)
+			report_error (l_error)
+		end
+
+	report_eacp_error (a_old_name_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EACP error: the old name of the renaming clause is empty.
+		require
+			a_old_name_attribute_name_not_void: a_old_name_attribute_name /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_eacp (a_old_name_attribute_name, a_universe)
+			report_error (l_error)
+		end
+
+	report_eacq_error (a_renaming_clause: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EACQ error: the new name of the renaming clause is missing.
+		require
+			a_renaming_clause_not_void: a_renaming_clause /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_eacq (a_renaming_clause, a_universe)
+			report_error (l_error)
+		end
+
+	report_eacr_error (a_new_name_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EACR error: the new name of the renaming clause is empty.
+		require
+			a_new_name_attribute_name_not_void: a_new_name_attribute_name /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_eacr (a_new_name_attribute_name, a_universe)
+			report_error (l_error)
+		end
+
+	report_eacs_error (a_old_name_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EACS error: the old name of the renaming clause already
+			-- appears in another renaming clause.
+		require
+			a_old_name_attribute_name_not_void: a_old_name_attribute_name /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_eacs (a_old_name_attribute_name, a_universe)
+			report_error (l_error)
+		end
+
 feature -- Reporting
 
 	report_error_message (an_error: STRING)

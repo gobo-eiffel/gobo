@@ -5,7 +5,7 @@ note
 		"ECF XML element names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -86,8 +86,14 @@ feature -- Constants
 	xml_name: STRING = "name"
 			-- "name" attribute name
 
+	xml_new_name: STRING = "new_name"
+			-- "new_name" attribute name
+
 	xml_location: STRING = "location"
 			-- "location" attribute name
+
+	xml_old_name: STRING = "old_name"
+			-- "old_name" attribute name
 
 	xml_override: STRING = "override"
 			-- "override" element name
@@ -97,6 +103,9 @@ feature -- Constants
 
 	xml_recursive: STRING = "recursive"
 			-- "recursive" attribute name
+
+	xml_renaming: STRING = "renaming"
+			-- "renaming" element name
 
 	xml_root: STRING = "root"
 			-- "root" element name

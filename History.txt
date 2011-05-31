@@ -113,6 +113,7 @@ Version 3.10 - ?
 	  to ignore the class from a cluster and take it into account later on
 	  after some processing.
 	* Added support for attribute initialization body.
+	* Added support for renaming clause in libraries when parsing ECF files.
 
 	Gobo Eiffel XML Library:
 

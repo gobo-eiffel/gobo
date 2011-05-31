@@ -5,7 +5,7 @@ note
 		"ECF parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,6 +23,9 @@ inherit
 		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
+
+	KL_SHARED_STRING_EQUALITY_TESTER
 		export {NONE} all end
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
@@ -126,6 +129,9 @@ feature {NONE} -- AST factory
 			l_child: XM_ELEMENT
 			l_condition: ET_ECF_CONDITIONS
 			l_conditions: ET_ECF_CONDITIONS
+			l_old_name: XM_ATTRIBUTE
+			l_new_name: XM_ATTRIBUTE
+			l_renamings: DS_HASH_TABLE [STRING, STRING]
 		do
 			l_name := an_element.attribute_by_name (xml_name)
 			l_filename := an_element.attribute_by_name (xml_location)
@@ -152,10 +158,33 @@ feature {NONE} -- AST factory
 									l_conditions.put_last (l_condition)
 								end
 							end
+						elseif STRING_.same_case_insensitive (l_child.name, xml_renaming) then
+							l_old_name := l_child.attribute_by_name (xml_old_name)
+							l_new_name := l_child.attribute_by_name (xml_new_name)
+							if l_old_name = Void then
+								error_handler.report_eaco_error (element_name (l_child, a_position_table), a_universe)
+							elseif l_old_name.value.is_empty then
+								error_handler.report_eacp_error (attribute_name (l_old_name, a_position_table), a_universe)
+							elseif l_new_name = Void then
+								error_handler.report_eacq_error (element_name (l_child, a_position_table), a_universe)
+							elseif l_new_name.value.is_empty then
+								error_handler.report_eacr_error (attribute_name (l_new_name, a_position_table), a_universe)
+							else
+								if l_renamings = Void then
+									create l_renamings.make_map (10)
+									l_renamings.set_key_equality_tester (case_insensitive_string_equality_tester)
+								end
+								l_renamings.search (l_old_name.value)
+								if l_renamings.found then
+									error_handler.report_eacs_error (attribute_name (l_old_name, a_position_table), a_universe)
+								end
+								l_renamings.force_last (l_new_name.value, l_old_name.value)
+							end
 						end
 					end
 					l_cursor.forth
 				end
+				Result.set_class_renamings (l_renamings)
 				Result.set_condition (l_conditions)
 			end
 		end
