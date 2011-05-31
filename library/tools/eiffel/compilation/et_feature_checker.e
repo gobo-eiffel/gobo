@@ -1910,8 +1910,7 @@ feature {NONE} -- Type checking
 		end
 
 	is_type_valid (a_type: ET_TYPE): BOOLEAN
-			-- Is `a_type' valid when it appears in the
-			-- body, assertions or rescue clause of a feature?
+			-- Is `a_type' valid when viewed from `current_type'?
 		require
 			a_type_not_void: a_type /= Void
 		local
@@ -1919,7 +1918,7 @@ feature {NONE} -- Type checking
 		do
 			l_error_handler := current_system.error_handler
 			current_system.set_error_handler (null_error_handler)
-			type_checker.check_type_validity (a_type, current_closure_impl, current_class_impl, current_class_impl)
+			type_checker.check_type_validity (a_type, current_closure_impl, current_class_impl, current_type)
 			Result := not type_checker.has_fatal_error
 			current_system.set_error_handler (l_error_handler)
 		end
