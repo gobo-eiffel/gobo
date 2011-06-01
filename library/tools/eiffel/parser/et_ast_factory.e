@@ -1671,9 +1671,13 @@ feature -- AST nodes
 		require
 			nb_positive: nb >= 0
 		do
-			if nb > 0 then
-				create Result.make_with_capacity (nb)
-			end
+			create Result.make_with_capacity (nb)
+		end
+
+	new_empty_compound: ET_COMPOUND
+			-- New empty instruction compound
+		do
+			Result := Void
 		end
 
 	new_conditional (a_keyword: ET_KEYWORD; an_expression: ET_EXPRESSION): ET_CONDITIONAL

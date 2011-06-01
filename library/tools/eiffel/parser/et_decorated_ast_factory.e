@@ -183,7 +183,7 @@ inherit
 			new_client_comma,
 			new_clients,
 			new_colon_type,
-			new_compound,
+			new_empty_compound,
 			new_conditional,
 			new_constant_attribute,
 			new_constrained_formal_parameter,
@@ -1918,10 +1918,10 @@ feature -- AST nodes
 			end
 		end
 
-	new_compound (nb: INTEGER): ET_COMPOUND
-			-- New instruction compound with capacity `nb'
+	new_empty_compound: ET_COMPOUND
+			-- New empty instruction compound
 		do
-			create Result.make_with_capacity (nb)
+			create Result.make_with_capacity (0)
 		end
 
 	new_conditional (a_keyword: ET_KEYWORD; an_expression: ET_EXPRESSION): ET_CONDITIONAL

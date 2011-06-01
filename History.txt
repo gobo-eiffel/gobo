@@ -18,6 +18,8 @@ Version 3.10 - ?
 	  compiled on a 64-bit computer. See bug#2999209.
 	* Fixed type system bug when processing constant attributes in
 	  inspect instructions. See bug#3238111.
+	* Fixed bug when an inspect instruction had no else-branch. No exception
+	  was raised.
 
 	gelint:
 

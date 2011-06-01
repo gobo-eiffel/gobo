@@ -123,7 +123,8 @@ create
 %type <ET_CLIENT_ITEM> Client Client_comma
 %type <ET_CLIENTS> Clients Client_list
 %type <ET_COMPOUND> Compound Rescue_opt Do_compound Once_compound Then_compound
-%type <ET_COMPOUND> Else_compound Rescue_compound From_compound Loop_compound Attribute_compound
+%type <ET_COMPOUND> Else_compound Explicit_else_compound Rescue_compound
+%type <ET_COMPOUND> From_compound Loop_compound Attribute_compound
 %type <ET_CONSTANT> Manifest_constant
 %type <ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM> Constraint_type_no_identifier_comma
 %type <ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM> Constraint_tuple_labeled_actual_parameter
@@ -2989,7 +2990,7 @@ Qualified_anchored_type: E_LIKE '{' Type '}' '.' Identifier
 ------------------------------------------------------------------------------------
 
 Do_compound: E_DO
-		{ $$ := ast_factory.new_do_compound ($1, ast_factory.new_compound (0)) }
+		{ $$ := ast_factory.new_do_compound ($1, ast_factory.new_empty_compound) }
 	| E_DO Add_counter Compound
 		{
 			$$ := ast_factory.new_do_compound ($1, $3)
@@ -2998,7 +2999,7 @@ Do_compound: E_DO
 	;
 
 Once_compound: E_ONCE
-		{ $$ := ast_factory.new_once_compound ($1, ast_factory.new_compound (0)) }
+		{ $$ := ast_factory.new_once_compound ($1, ast_factory.new_empty_compound) }
 	| E_ONCE Add_counter Compound
 		{
 			$$ := ast_factory.new_once_compound ($1, $3)
@@ -3007,7 +3008,7 @@ Once_compound: E_ONCE
 	;
 
 Attribute_compound: E_ATTRIBUTE
-		{ $$ := ast_factory.new_attribute_compound ($1, ast_factory.new_compound (0)) }
+		{ $$ := ast_factory.new_attribute_compound ($1, ast_factory.new_empty_compound) }
 	| E_ATTRIBUTE Add_counter Compound
 		{
 			$$ := ast_factory.new_attribute_compound ($1, $3)
@@ -3016,7 +3017,7 @@ Attribute_compound: E_ATTRIBUTE
 	;
 	
 Then_compound: E_THEN
-		{ $$ := ast_factory.new_then_compound ($1, ast_factory.new_compound (0)) }
+		{ $$ := ast_factory.new_then_compound ($1, ast_factory.new_empty_compound) }
 	| E_THEN Add_counter Compound
 		{
 			$$ := ast_factory.new_then_compound ($1, $3)
@@ -3025,7 +3026,7 @@ Then_compound: E_THEN
 	;
 
 Else_compound: E_ELSE
-		{ $$ := ast_factory.new_else_compound ($1, ast_factory.new_compound (0)) }
+		{ $$ := ast_factory.new_else_compound ($1, ast_factory.new_empty_compound) }
 	| E_ELSE Add_counter Compound
 		{
 			$$ := ast_factory.new_else_compound ($1, $3)
@@ -3033,8 +3034,17 @@ Else_compound: E_ELSE
 		}
 	;
 
+Explicit_else_compound: E_ELSE
+		{ $$ := ast_factory.new_else_compound ($1, ast_factory.new_compound (0)) }
+	| E_ELSE Add_counter Compound
+		{
+			$$ := ast_factory.new_else_compound ($1, $3)
+			remove_counter
+		}
+	;
+	
 Rescue_compound: E_RESCUE
-		{ $$ := ast_factory.new_rescue_compound ($1, ast_factory.new_compound (0)) }
+		{ $$ := ast_factory.new_rescue_compound ($1, ast_factory.new_empty_compound) }
 	| E_RESCUE Add_counter Compound
 		{
 			$$ := ast_factory.new_rescue_compound ($1, $3)
@@ -3043,7 +3053,7 @@ Rescue_compound: E_RESCUE
 	;
 
 From_compound: E_FROM
-		{ $$ := ast_factory.new_from_compound ($1, ast_factory.new_compound (0)) }
+		{ $$ := ast_factory.new_from_compound ($1, ast_factory.new_empty_compound) }
 	| E_FROM Add_counter Compound
 		{
 			$$ := ast_factory.new_from_compound ($1, $3)
@@ -3052,7 +3062,7 @@ From_compound: E_FROM
 	;
 
 Loop_compound: E_LOOP
-		{ $$ := ast_factory.new_loop_compound ($1, ast_factory.new_compound (0)) }
+		{ $$ := ast_factory.new_loop_compound ($1, ast_factory.new_empty_compound) }
 	| E_LOOP Add_counter Compound
 		{
 			$$ := ast_factory.new_loop_compound ($1, $3)
@@ -3219,7 +3229,7 @@ Elseif_part: E_ELSEIF Expression Then_compound
 
 ------------------------------------------------------------------------------------
 
-Multi_branch: E_INSPECT Expression When_list_opt Else_compound E_END
+Multi_branch: E_INSPECT Expression When_list_opt Explicit_else_compound E_END
 		{ $$ := ast_factory.new_inspect_instruction (ast_factory.new_conditional ($1, $2), $3, $4, $5) }
 	| E_INSPECT Expression When_list_opt E_END
 		{ $$ := ast_factory.new_inspect_instruction (ast_factory.new_conditional ($1, $2), $3, Void, $4) }
@@ -3330,7 +3340,7 @@ Choice_constant: Integer_constant
 ------------------------------------------------------------------------------------
 
 Debug_instruction: E_DEBUG Parenthesized_manifest_string_list E_END
-		{ $$ := ast_factory.new_debug_instruction ($2, ast_factory.new_debug_compound ($1, ast_factory.new_compound (0)), $3) }
+		{ $$ := ast_factory.new_debug_instruction ($2, ast_factory.new_debug_compound ($1, ast_factory.new_empty_compound), $3) }
 	| E_DEBUG Parenthesized_manifest_string_list Add_counter Compound E_END
 		{
 			$$ := ast_factory.new_debug_instruction ($2, ast_factory.new_debug_compound ($1, $4), $5)

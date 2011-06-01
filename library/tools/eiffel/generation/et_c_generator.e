@@ -5707,9 +5707,14 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 				current_file.put_new_line
 				dedent
 			else
--- TODO: raise exception.
 				indent
 				print_indentation
+				current_file.put_string (c_ge_raise)
+				current_file.put_character ('(')
+				current_file.put_character ('9')
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
 				current_file.put_string (c_break)
 				current_file.put_character (';')
 				current_file.put_new_line
