@@ -118,6 +118,7 @@ Version 3.10 - ?
 	* Added support for renaming clause in libraries when parsing ECF files.
 	* Fixed pretty-printer when processing indexing clauses in features.
 	  An extra empty line was inserted.
+	* Added support for check instructions with a then-branch.
 
 	Gobo Eiffel XML Library:
 

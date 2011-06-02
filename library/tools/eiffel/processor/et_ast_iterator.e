@@ -418,12 +418,17 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_instruction'.
 		local
 			i, nb: INTEGER
+			l_compound: ET_COMPOUND
 		do
 			an_instruction.check_keyword.process (Current)
 			nb := an_instruction.count
 			from i := 1 until i > nb loop
 				an_instruction.item (i).process (Current)
 				i := i + 1
+			end
+			l_compound := an_instruction.then_compound
+			if l_compound /= Void then
+				l_compound.process (Current)
 			end
 			an_instruction.end_keyword.process (Current)
 		end

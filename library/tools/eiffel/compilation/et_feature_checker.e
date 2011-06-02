@@ -2532,12 +2532,13 @@ feature {NONE} -- Instruction validity
 			l_assertion_context: ET_NESTED_TYPE_CONTEXT
 			boolean_type: ET_CLASS_TYPE
 			l_named_type: ET_NAMED_TYPE
+			l_compound: ET_COMPOUND
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
-			in_check_instruction := True
 			boolean_type := current_universe_impl.boolean_type
 			l_assertion_context := new_context (current_type)
+			in_check_instruction := True
 			nb := an_instruction.count
 			from i := 1 until i > nb loop
 				l_expression := an_instruction.assertion (i).expression
@@ -2555,11 +2556,18 @@ feature {NONE} -- Instruction validity
 				end
 				i := i + 1
 			end
+			in_check_instruction := False
+			free_context (l_assertion_context)
+			l_compound := an_instruction.then_compound
+			if l_compound /= Void then
+				check_instructions_validity (l_compound)
+				if has_fatal_error then
+					had_error := True
+				end
+			end
 			if had_error then
 				set_fatal_error
 			end
-			free_context (l_assertion_context)
-			in_check_instruction := False
 		end
 
 	check_create_instruction_validity (an_instruction: ET_CREATE_INSTRUCTION)

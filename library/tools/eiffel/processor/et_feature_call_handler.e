@@ -907,9 +907,19 @@ feature {ET_AST_NODE} -- Processing
 	process_check_instruction (an_instruction: ET_CHECK_INSTRUCTION)
 			-- Process `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
+		local
+			l_compound: ET_COMPOUND
+			had_error: BOOLEAN
 		do
 			reset_fatal_error (False)
-			if assertions_enabled then
+			l_compound := an_instruction.then_compound
+			if l_compound /= Void then
+				process_compound (l_compound)
+				had_error := has_fatal_error
+				process_assertions (an_instruction)
+				had_error := had_error or has_fatal_error
+				reset_fatal_error (had_error)
+			elseif assertions_enabled then
 				process_assertions (an_instruction)
 			end
 		end

@@ -5,7 +5,7 @@ note
 		"Eiffel parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/11/01 $"
 	revision: "$Revision: #41 $"
@@ -1048,16 +1048,16 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_check_instruction (a_check: ET_KEYWORD; an_end: ET_KEYWORD): ET_CHECK_INSTRUCTION
+	new_check_instruction (a_check: ET_KEYWORD; a_then_compound: ET_COMPOUND; an_end: ET_KEYWORD): ET_CHECK_INSTRUCTION
 			-- New check instruction
 		local
 			i: INTEGER
 		do
 			i := assertions.count
 			if i = 0 then
-				Result := ast_factory.new_check_instruction (a_check, an_end, 0)
+				Result := ast_factory.new_check_instruction (a_check, a_then_compound, an_end, 0)
 			else
-				Result := ast_factory.new_check_instruction (a_check, an_end, i)
+				Result := ast_factory.new_check_instruction (a_check, a_then_compound, an_end, i)
 				if Result /= Void then
 					from until i < 1 loop
 						Result.put_first (assertions.item (i))

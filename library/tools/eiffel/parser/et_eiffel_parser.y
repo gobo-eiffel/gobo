@@ -122,7 +122,8 @@ create
 %type <ET_CLASS> Class_header Class_to_end Class_declaration
 %type <ET_CLIENT_ITEM> Client Client_comma
 %type <ET_CLIENTS> Clients Client_list
-%type <ET_COMPOUND> Compound Rescue_opt Do_compound Once_compound Then_compound
+%type <ET_COMPOUND> Compound Rescue_opt Do_compound Once_compound
+%type <ET_COMPOUND> Then_compound Explicit_then_compound
 %type <ET_COMPOUND> Else_compound Explicit_else_compound Rescue_compound
 %type <ET_COMPOUND> From_compound Loop_compound Attribute_compound
 %type <ET_CONSTANT> Manifest_constant
@@ -3025,6 +3026,15 @@ Then_compound: E_THEN
 		}
 	;
 
+Explicit_then_compound: E_THEN
+		{ $$ := ast_factory.new_then_compound ($1, ast_factory.new_compound (0)) }
+	| E_THEN Add_counter Compound
+		{
+			$$ := ast_factory.new_then_compound ($1, $3)
+			remove_counter
+		}
+	;
+
 Else_compound: E_ELSE
 		{ $$ := ast_factory.new_else_compound ($1, ast_factory.new_empty_compound) }
 	| E_ELSE Add_counter Compound
@@ -3146,9 +3156,13 @@ Instruction: Creation_instruction
 	| Debug_instruction
 		{ $$ := $1 }
 	| E_CHECK E_END
-		{ $$ := new_check_instruction ($1, $2) }
+		{ $$ := new_check_instruction ($1, Void, $2) }
 	| E_CHECK Assertions E_END
-		{ $$ := new_check_instruction ($1, $3) }
+		{ $$ := new_check_instruction ($1, Void, $3) }
+	| E_CHECK Explicit_then_compound E_END
+		{ $$ := new_check_instruction ($1, $2, $3) }
+	| E_CHECK Assertions Explicit_then_compound E_END
+		{ $$ := new_check_instruction ($1, $3, $4) }
 	| E_RETRY
 		{ $$ := $1 }
 	| ';'

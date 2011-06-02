@@ -1013,7 +1013,7 @@ feature {NONE} -- Instruction validity
 			-- Check validity of `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
-			if not no_debug then
+			if not no_assertion or else an_instruction.then_compound /= Void then
 				precursor (an_instruction)
 			else
 				has_fatal_error := False

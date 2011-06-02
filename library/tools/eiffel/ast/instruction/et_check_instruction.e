@@ -5,7 +5,7 @@ note
 		"Eiffel check instructions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -51,6 +51,9 @@ feature -- Access
 	check_keyword: ET_KEYWORD
 			-- 'check' keyword
 
+	then_compound: ET_COMPOUND
+			-- Then part
+
 	end_keyword: ET_KEYWORD
 			-- 'end' keyword
 
@@ -89,6 +92,14 @@ feature -- Setting
 			check_keyword := a_check
 		ensure
 			check_keyword_set: check_keyword = a_check
+		end
+
+	set_then_compound (a_compound: like then_compound)
+			-- Set `then_compound' to `a_compound'.
+		do
+			then_compound := a_compound
+		ensure
+			then_compound_set: then_compound = a_compound
 		end
 
 	set_end_keyword (an_end: like end_keyword)

@@ -5,7 +5,7 @@ note
 		"Eiffel precursor validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -458,11 +458,16 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_instruction'.
 		local
 			i, nb: INTEGER
+			l_compound: ET_COMPOUND
 		do
 			nb := an_instruction.count
 			from i := 1 until i > nb loop
 				an_instruction.assertion (i).process (Current)
 				i := i + 1
+			end
+			l_compound := an_instruction.then_compound
+			if l_compound /= Void then
+				process_compound (l_compound)
 			end
 		end
 

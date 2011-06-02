@@ -5317,8 +5317,58 @@ feature {NONE} -- Instruction generation
 			-- Print `an_instruction'.
 		require
 			an_instruction_not_void: an_instruction /= Void
+		local
+			l_compound: ET_COMPOUND
+			l_expression: ET_EXPRESSION
+			i, nb: INTEGER
 		do
-			-- Do nothing.
+			l_compound := an_instruction.then_compound
+			if l_compound /= Void then
+				print_indentation
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				nb := an_instruction.count
+				from i := 1 until i > nb loop
+					l_expression := an_instruction.assertion (i).expression
+					if l_expression /= Void then
+						print_operand (l_expression)
+						fill_call_operands (1)
+						print_indentation
+						current_file.put_string (c_if)
+						current_file.put_character (' ')
+						current_file.put_character ('(')
+						current_file.put_character ('!')
+						current_file.put_character ('(')
+						print_expression (call_operands.first)
+						call_operands.wipe_out
+						current_file.put_character (')')
+						current_file.put_character (')')
+						current_file.put_character (' ')
+						current_file.put_character ('{')
+						current_file.put_new_line
+						indent
+						print_indentation
+						current_file.put_string (c_ge_raise)
+						current_file.put_character ('(')
+						current_file.put_character ('7')
+						current_file.put_character (')')
+						current_file.put_character (';')
+						current_file.put_new_line
+						dedent
+						print_indentation
+						current_file.put_character ('}')
+					end
+					i := i + 1
+				end
+				print_compound (l_compound)
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_new_line
+			else
+					-- Do not check assertions at run-time.
+			end
 		end
 
 	print_compound (a_compound: ET_COMPOUND)

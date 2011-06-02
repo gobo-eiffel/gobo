@@ -390,8 +390,14 @@ feature {ET_AST_NODE} -- Processing
 
 	process_check_instruction (an_instruction: ET_CHECK_INSTRUCTION)
 			-- Process `an_instruction'.
+		local
+			l_compound: ET_COMPOUND
 		do
 			process_assertions (an_instruction)
+			l_compound := an_instruction.then_compound
+			if l_compound /= Void then
+				process_compound (l_compound)
+			end
 		end
 
 	process_choice_list (a_list: ET_CHOICE_LIST)

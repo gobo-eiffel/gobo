@@ -904,6 +904,8 @@ feature {ET_AST_NODE} -- Processing
 
 	process_check_instruction (an_instruction: ET_CHECK_INSTRUCTION)
 			-- Process `an_instruction'.
+		local
+			l_compound: ET_COMPOUND
 		do
 			an_instruction.check_keyword.process (Current)
 			print_new_line
@@ -912,6 +914,12 @@ feature {ET_AST_NODE} -- Processing
 			process_assertions (an_instruction)
 			process_comments
 			dedent
+			l_compound := an_instruction.then_compound
+			if l_compound /= Void then
+				l_compound.process (Current)
+				process_comments
+				print_new_line
+			end
 			an_instruction.end_keyword.process (Current)
 		end
 

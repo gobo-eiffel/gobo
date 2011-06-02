@@ -1842,10 +1842,11 @@ feature -- AST nodes
 			end
 		end
 
-	new_check_instruction (a_check: ET_KEYWORD; an_end: ET_KEYWORD; nb: INTEGER): ET_CHECK_INSTRUCTION
+	new_check_instruction (a_check: ET_KEYWORD; a_then_compound: ET_COMPOUND; an_end: ET_KEYWORD; nb: INTEGER): ET_CHECK_INSTRUCTION
 			-- New check instruction with given capacity
 		do
 			create Result.make_with_capacity (nb)
+			Result.set_then_compound (a_then_compound)
 			if a_check /= Void then
 				Result.set_check_keyword (a_check)
 			end
