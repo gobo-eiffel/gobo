@@ -17,13 +17,14 @@ inherit
 	ET_ATTRIBUTE
 		undefine
 			locals,
-			obsolete_message,
 			preconditions,
 			reset_preconditions,
 			postconditions,
 			reset_postconditions
 		redefine
 			make,
+			reset_after_features_flattened,
+			obsolete_message,
 			header_break,
 			last_leaf,
 			break,
@@ -51,6 +52,25 @@ feature {NONE} -- Initialization
 		do
 			precursor (a_name, a_type, a_class)
 			end_keyword := tokens.end_keyword
+		end
+
+feature -- Initialization
+
+	reset_after_features_flattened
+			-- Reset current attribute as it was just after it was last flattened.
+		do
+			if implementation_checked then
+				if locals /= Void then
+					locals.reset
+				end
+				if compound /= Void then
+					compound.reset
+				end
+				if rescue_clause /= Void then
+					rescue_clause.reset
+				end
+			end
+			precursor
 		end
 
 feature -- Access
