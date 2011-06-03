@@ -15,13 +15,14 @@ class ET_CHECK_INSTRUCTION
 inherit
 
 	ET_INSTRUCTION
-		undefine
+		redefine
 			reset
 		end
 
 	ET_ASSERTIONS
 		redefine
-			make, make_with_capacity
+			make, make_with_capacity,
+			reset
 		end
 
 create
@@ -44,6 +45,17 @@ feature {NONE} -- Initialization
 			check_keyword := tokens.check_keyword
 			end_keyword := tokens.end_keyword
 			precursor (nb)
+		end
+
+feature -- Initialization
+
+	reset
+			-- Reset check instruction as it was just after it was last parsed.
+		do
+			precursor {ET_ASSERTIONS}
+			if then_compound /= Void then
+				then_compound.reset
+			end
 		end
 
 feature -- Access
