@@ -186,6 +186,8 @@ create
 	make_vpir1d,
 	make_vpir1e,
 	make_vpir1f,
+	make_vpir3a,
+	make_vpir3b,
 	make_vqmc1a,
 	make_vqmc2a,
 	make_vqmc3a,
@@ -7965,6 +7967,82 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = local name
 		end
 
+	make_vpir3a (a_class: ET_CLASS; an_agent: ET_ONCE_ROUTINE_INLINE_AGENT)
+			-- Create a new VPIR-3 error: an inline agent cannot be of the once form.
+			--
+			-- Only in ISE.
+			-- See ECMA 367-2: p.136
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_agent_not_void: an_agent /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := an_agent.position
+			code := template_code (vpir3a_template_code)
+			etl_code := vpir3_etl_code
+			default_template := default_message_template (vpir3a_default_template)
+			create parameters.make_filled (empty_string, 1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+		end
+
+	make_vpir3b (a_class: ET_CLASS; an_agent: ET_EXTERNAL_ROUTINE_INLINE_AGENT)
+			-- Create a new VPIR-3 error: an inline agent cannot be of the external form.
+			--
+			-- Only in ISE.
+			-- See ECMA 367-2: p.136
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_agent_not_void: an_agent /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := an_agent.position
+			code := template_code (vpir3b_template_code)
+			etl_code := vpir3_etl_code
+			default_template := default_message_template (vpir3b_default_template)
+			create parameters.make_filled (empty_string, 1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+		end
+
 	make_vqmc1a (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE)
 			-- Create a new VQMC-1 error: `an_attribute', declared in `a_class_impl, introduces
 			-- a boolean constant but its type is not "BOOLEAN" when viewed from one of its
@@ -12558,6 +12636,8 @@ feature {NONE} -- Implementation
 	vpir1d_default_template: STRING = "local variable name '$7' in inline agent is also the name of a local variable of an enclosing feature or inline agent."
 	vpir1e_default_template: STRING = "argument name '$7' in inline agent is also the name of an object-test local of an enclosing feature or inline agent whose scope contains the inline agent."
 	vpir1f_default_template: STRING = "local variable name '$7' in inline agent is also the name of an object-test local of an enclosing feature or inline agent whose scope contains the inline agent."
+	vpir3a_default_template: STRING = "inline agents cannot be of the once form."
+	vpir3b_default_template: STRING = "inline agents cannot be of the external form."
 	vqmc1a_default_template: STRING = "boolean constant attribute `$7' is not declared of type BOOLEAN."
 	vqmc2a_default_template: STRING = "character constant attribute `$7' is not declared of type CHARACTER."
 	vqmc3a_default_template: STRING = "integer constant attribute `$7' is not declared of type INTEGER."
@@ -12738,6 +12818,7 @@ feature {NONE} -- Implementation
 	vpca4_etl_code: STRING = "VPCA-4"
 	vpca5_etl_code: STRING = "VPCA-5"
 	vpir1_etl_code: STRING = "VPIR-1"
+	vpir3_etl_code: STRING = "VPIR-3"
 	vqmc1_etl_code: STRING = "VQMC-1"
 	vqmc2_etl_code: STRING = "VQMC-2"
 	vqmc3_etl_code: STRING = "VQMC-3"
@@ -12981,6 +13062,8 @@ feature {NONE} -- Implementation
 	vpir1d_template_code: STRING = "vpir1d"
 	vpir1e_template_code: STRING = "vpir1e"
 	vpir1f_template_code: STRING = "vpir1f"
+	vpir3a_template_code: STRING = "vpir3a"
+	vpir3b_template_code: STRING = "vpir3b"
 	vqmc1a_template_code: STRING = "vqmc1a"
 	vqmc2a_template_code: STRING = "vqmc2a"
 	vqmc3a_template_code: STRING = "vqmc3a"

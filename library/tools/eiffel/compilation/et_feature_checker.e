@@ -10008,6 +10008,11 @@ feature {NONE} -- Agent validity
 				-- Check validity of call agent equivalent form.
 			check_query_inline_agent_validity (an_expression, a_context)
 			has_fatal_error := has_fatal_error or had_error
+			if current_system.is_ise then
+					-- ISE does not support inline agent of the external form.
+				set_fatal_error
+				error_handler.report_vpir3b_error (current_class, an_expression)
+			end
 		end
 
 	check_external_procedure_inline_agent_validity (an_expression: ET_EXTERNAL_PROCEDURE_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT)
@@ -10056,6 +10061,11 @@ feature {NONE} -- Agent validity
 				-- Check validity of call agent equivalent form.
 			check_procedure_inline_agent_validity (an_expression, a_context)
 			has_fatal_error := has_fatal_error or had_error
+			if current_system.is_ise then
+					-- ISE does not support inline agent of the external form.
+				set_fatal_error
+				error_handler.report_vpir3b_error (current_class, an_expression)
+			end
 		end
 
 	check_once_function_inline_agent_validity (an_expression: ET_ONCE_FUNCTION_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT)
@@ -10138,6 +10148,11 @@ feature {NONE} -- Agent validity
 				-- Check validity of call agent equivalent form.
 			check_query_inline_agent_validity (an_expression, a_context)
 			has_fatal_error := has_fatal_error or had_error or had_key_error
+			if current_system.is_ise then
+					-- ISE does not support inline agent of the once form.
+				set_fatal_error
+				error_handler.report_vpir3a_error (current_class, an_expression)
+			end
 		end
 
 	check_once_procedure_inline_agent_validity (an_expression: ET_ONCE_PROCEDURE_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT)
@@ -10212,6 +10227,11 @@ feature {NONE} -- Agent validity
 				-- Check validity of call agent equivalent form.
 			check_procedure_inline_agent_validity (an_expression, a_context)
 			has_fatal_error := has_fatal_error or had_error or had_key_error
+			if current_system.is_ise then
+					-- ISE does not support inline agent of the once form.
+				set_fatal_error
+				error_handler.report_vpir3a_error (current_class, an_expression)
+			end
 		end
 
 	check_query_inline_agent_validity (an_expression: ET_QUERY_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT)

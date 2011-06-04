@@ -26,6 +26,8 @@ Version 3.10 - ?
 	* Fixed bug where it was reporting an internal error instead of a VTCT error
 	  when the type of a local variable was a generic class type whose base class
 	  did not exist.
+	* Report a VIPR-3 error for inline agent of the once and external forms.
+	  This is not in ECMA 367-2, but a restriction in ISE.
 
 	getest:
 

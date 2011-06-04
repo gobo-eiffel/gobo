@@ -4468,6 +4468,42 @@ feature -- Validity errors
 			end
 		end
 
+	report_vpir3a_error (a_class: ET_CLASS; an_agent: ET_ONCE_ROUTINE_INLINE_AGENT)
+			-- Report VPIR-3 error: an inline agent cannot be of the once form.
+			--
+			-- Only in ISE.
+			-- See ECMA 367-2: p.136
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_agent_not_void: an_agent /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vpir3_error (a_class) then
+				create an_error.make_vpir3a (a_class, an_agent)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vpir3b_error (a_class: ET_CLASS; an_agent: ET_EXTERNAL_ROUTINE_INLINE_AGENT)
+			-- Report VPIR-3 error: an inline agent cannot be of the external form.
+			--
+			-- Only in ISE.
+			-- See ECMA 367-2: p.136
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_agent_not_void: an_agent /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vpir3_error (a_class) then
+				create an_error.make_vpir3b (a_class, an_agent)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vqmc1a_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE)
 			-- Report VQMC-1 error: `an_attribute', declared in `a_class_impl, introduces
 			-- a boolean constant but its type is not "BOOLEAN" when viewed from one of its
@@ -7231,6 +7267,16 @@ feature -- Validity error status
 
 	reportable_vpir1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VPIR-1 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vpir3_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VPIR-3 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void
