@@ -113,6 +113,9 @@ inherit
 	ET_SHARED_ERROR_HANDLERS
 		export {NONE} all end
 
+	ET_SHARED_STANDARD_ONCE_KEYS
+		export {NONE} all end
+
 	KL_SHARED_PLATFORM
 		export {NONE} all end
 
@@ -1183,6 +1186,8 @@ feature {NONE} -- Feature validity
 			l_object_tests: ET_OBJECT_TEST_LIST
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_compound: ET_COMPOUND
+			l_keys: ET_MANIFEST_STRING_LIST
+			had_key_error: BOOLEAN
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -1213,6 +1218,11 @@ feature {NONE} -- Feature validity
 				check_locals_validity (l_locals, a_feature)
 				had_error := had_error or has_fatal_error
 			end
+			l_keys := a_feature.keys
+			if l_keys /= Void then
+				check_once_keys_validity (l_keys)
+				had_key_error := has_fatal_error
+			end
 			if not had_error then
 				l_compound := a_feature.compound
 				if l_compound /= Void then
@@ -1225,7 +1235,7 @@ feature {NONE} -- Feature validity
 					had_error := had_error or has_fatal_error
 				end
 			end
-			has_fatal_error := had_error
+			has_fatal_error := had_error or had_key_error
 		end
 
 	check_once_procedure_validity (a_feature: ET_ONCE_PROCEDURE)
@@ -1239,6 +1249,8 @@ feature {NONE} -- Feature validity
 			l_object_tests: ET_OBJECT_TEST_LIST
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_compound: ET_COMPOUND
+			l_keys: ET_MANIFEST_STRING_LIST
+			had_key_error: BOOLEAN
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -1257,6 +1269,11 @@ feature {NONE} -- Feature validity
 				check_locals_validity (l_locals, a_feature)
 				had_error := had_error or has_fatal_error
 			end
+			l_keys := a_feature.keys
+			if l_keys /= Void then
+				check_once_keys_validity (l_keys)
+				had_key_error := has_fatal_error
+			end
 			if not had_error then
 				l_compound := a_feature.compound
 				if l_compound /= Void then
@@ -1269,7 +1286,7 @@ feature {NONE} -- Feature validity
 					had_error := had_error or has_fatal_error
 				end
 			end
-			has_fatal_error := had_error
+			has_fatal_error := had_error or had_key_error
 		end
 
 	check_unique_attribute_validity (a_feature: ET_UNIQUE_ATTRIBUTE)
@@ -1941,6 +1958,67 @@ feature {NONE} -- Type checking
 
 	type_checker: ET_TYPE_CHECKER
 			-- Type checker
+
+feature {NONE} -- Once key validity
+
+	check_once_keys_validity (a_keys: ET_MANIFEST_STRING_LIST)
+			-- Check validity of once keys `a_keys'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_keys_not_void: a_keys /= Void
+		local
+			l_object_key: ET_MANIFEST_STRING
+			l_thread_key: ET_MANIFEST_STRING
+			l_process_key: ET_MANIFEST_STRING
+			i, nb: INTEGER
+			l_key: ET_MANIFEST_STRING
+		do
+			has_fatal_error := False
+			nb := a_keys.count
+			from i := 1 until i > nb loop
+				l_key := a_keys.manifest_string (i)
+				if standard_once_keys.is_object_key (l_key) then
+					l_object_key := l_key
+					if l_thread_key /= Void then
+							-- Error: once keys "THREAD" and "OBJECT" cannot be combined.
+						set_fatal_error
+						error_handler.report_vvok1a_error (current_class, l_thread_key, l_key)
+					elseif l_process_key /= Void then
+							-- Error: once keys "PROCESS" and "OBJECT" cannot be combined.
+						set_fatal_error
+						error_handler.report_vvok1a_error (current_class, l_process_key, l_key)
+					end
+				elseif standard_once_keys.is_thread_key (l_key) then
+					l_thread_key := l_key
+					if l_object_key /= Void then
+							-- Error: once keys "OBJECT" and "THREAD" cannot be combined.
+						set_fatal_error
+						error_handler.report_vvok1a_error (current_class, l_object_key, l_key)
+					elseif l_process_key /= Void then
+							-- Error: once keys "PROCESS" and "THREAD" cannot be combined.
+						set_fatal_error
+						error_handler.report_vvok1a_error (current_class, l_process_key, l_key)
+					end
+				elseif standard_once_keys.is_process_key (l_key) then
+					l_process_key := l_key
+					if l_object_key /= Void then
+							-- Error: once keys "OBJECT" and "PROCESS" cannot be combined.
+						set_fatal_error
+						error_handler.report_vvok1a_error (current_class, l_object_key, l_key)
+					elseif l_thread_key /= Void then
+							-- Error: once keys "THREAD" and "PROCESS" cannot be combined.
+						set_fatal_error
+						error_handler.report_vvok1a_error (current_class, l_thread_key, l_key)
+					end
+				else
+						-- Error: this once key is not supported. The supported once keys
+						-- are "THREAD", "PROCESS" and "OBJECT".
+					set_fatal_error
+					error_handler.report_vvok2a_error (current_class, l_key)
+				end
+				i := i + 1
+			end
+		end
 
 feature {NONE} -- Instruction validity
 
@@ -9993,6 +10071,8 @@ feature {NONE} -- Agent validity
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_compound: ET_COMPOUND
 			l_old_hidden_object_test_scope: INTEGER
+			l_keys: ET_MANIFEST_STRING_LIST
+			had_key_error: BOOLEAN
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -10028,6 +10108,11 @@ feature {NONE} -- Agent validity
 				check_inline_agent_locals_validity (l_locals, an_expression)
 				had_error := had_error or has_fatal_error
 			end
+			l_keys := an_expression.keys
+			if l_keys /= Void then
+				check_once_keys_validity (l_keys)
+				had_key_error := has_fatal_error
+			end
 			if not had_error then
 				l_compound := an_expression.compound
 				if l_compound /= Void then
@@ -10052,7 +10137,7 @@ feature {NONE} -- Agent validity
 			end
 				-- Check validity of call agent equivalent form.
 			check_query_inline_agent_validity (an_expression, a_context)
-			has_fatal_error := has_fatal_error or had_error
+			has_fatal_error := has_fatal_error or had_error or had_key_error
 		end
 
 	check_once_procedure_inline_agent_validity (an_expression: ET_ONCE_PROCEDURE_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT)
@@ -10067,6 +10152,8 @@ feature {NONE} -- Agent validity
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_compound: ET_COMPOUND
 			l_old_hidden_object_test_scope: INTEGER
+			l_keys: ET_MANIFEST_STRING_LIST
+			had_key_error: BOOLEAN
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -10095,6 +10182,11 @@ feature {NONE} -- Agent validity
 				check_inline_agent_locals_validity (l_locals, an_expression)
 				had_error := had_error or has_fatal_error
 			end
+			l_keys := an_expression.keys
+			if l_keys /= Void then
+				check_once_keys_validity (l_keys)
+				had_key_error := has_fatal_error
+			end
 			if not had_error then
 				l_compound := an_expression.compound
 				if l_compound /= Void then
@@ -10119,7 +10211,7 @@ feature {NONE} -- Agent validity
 			end
 				-- Check validity of call agent equivalent form.
 			check_procedure_inline_agent_validity (an_expression, a_context)
-			has_fatal_error := has_fatal_error or had_error
+			has_fatal_error := has_fatal_error or had_error or had_key_error
 		end
 
 	check_query_inline_agent_validity (an_expression: ET_QUERY_INLINE_AGENT; a_context: ET_NESTED_TYPE_CONTEXT)

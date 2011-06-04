@@ -5,7 +5,7 @@ note
 		"Error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/11/23 $"
 	revision: "$Revision: #35 $"
@@ -5672,6 +5672,44 @@ feature -- Validity errors
 			end
 		end
 
+	report_vvok1a_error (a_class: ET_CLASS; a_once_key1, a_once_key2: ET_MANIFEST_STRING)
+			-- Report VVOK-1 error: `a_once_key1' and `a_once_key2' cannot be
+			-- combined. The supported once keys "PROCESS", "THREAD" and "OBJECT"
+			-- cannot be combined.
+			--
+			-- Not in ECMA, only in ISE
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_once_key1_not_void: a_once_key1 /= Void
+			a_once_key2_not_void: a_once_key2 /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vvok1_error (a_class) then
+				create an_error.make_vvok1a (a_class, a_once_key1, a_once_key2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vvok2a_error (a_class: ET_CLASS; a_once_key: ET_MANIFEST_STRING)
+			-- Report VVOK-2 error: `a_once_key' is not one of the supported
+			-- once keys. The supported once keys are "PROCESS", "THREAD" and "OBJECT".
+			--
+			-- Not in ECMA, only in ISE
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_once_key_not_void: a_once_key /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vvok2_error (a_class) then
+				create an_error.make_vvok2a (a_class, a_once_key)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vwbe0a_error (a_class, a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE)
 			-- Report VWBE error: the boolean expression `an_expression'
 			-- in `a_class_impl' and viewed from one of its descendants
@@ -7503,6 +7541,26 @@ feature -- Validity error status
 
 	reportable_vuot4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VUOT-4 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vvok1_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VVOK-1 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vvok2_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VVOK-2 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

@@ -244,6 +244,8 @@ create
 	make_vuot3b,
 	make_vuot4a,
 	make_vuot4b,
+	make_vvok1a,
+	make_vvok2a,
 	make_vwbe0a,
 	make_vweq0a,
 	make_vweq0b,
@@ -10645,6 +10647,86 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = object-test local name
 		end
 
+	make_vvok1a (a_class: ET_CLASS; a_once_key1, a_once_key2: ET_MANIFEST_STRING)
+			-- Create a new VVOK-1 error: `a_once_key1' and `a_once_key2' cannot be
+			-- combined. The supported once keys "PROCESS", "THREAD" and "OBJECT"
+			-- cannot be combined.
+			--
+			-- Not in ECMA, only in ISE
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_once_key1_not_void: a_once_key1 /= Void
+			a_once_key2_not_void: a_once_key2 /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_once_key2.position
+			code := template_code (vvok1a_template_code)
+			etl_code := vvok1_etl_code
+			default_template := default_message_template (vvok1a_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_once_key1.value, 6)
+			parameters.put (a_once_key2.value, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = first once key
+			-- dollar7: $7 = second once key
+		end
+
+	make_vvok2a (a_class: ET_CLASS; a_once_key: ET_MANIFEST_STRING)
+			-- Create a new VVOK-2 error: `a_once_key' is not one of the supported
+			-- once keys. The supported once keys are "PROCESS", "THREAD" and "OBJECT".
+			--
+			-- Not in ECMA, only in ISE
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_once_key_not_void: a_once_key /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_once_key.position
+			code := template_code (vvok2a_template_code)
+			etl_code := vvok2_etl_code
+			default_template := default_message_template (vvok2a_default_template)
+			create parameters.make_filled (empty_string, 1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_once_key.value, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = once key
+		end
+
 	make_vwbe0a (a_class, a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE)
 			-- Create a new VWBE error: the boolean expression `an_expression'
 			-- in `a_class_impl' and viewed from one of its descendants
@@ -12534,6 +12616,8 @@ feature {NONE} -- Implementation
 	vuot3b_default_template: STRING = "object-test with local name '$6' has the same name as another object-test local appearing in the invariant or in the same inline agent."
 	vuot4a_default_template: STRING = "ISE does not support object-tests in preconditions."
 	vuot4b_default_template: STRING = "ISE does not support object-tests in check instructions."
+	vvok1a_default_template: STRING = "once keys %"$6%" and %"$7%" cannot be combined."
+	vvok2a_default_template: STRING = "once key %"$6%" is not supported. The supported once keys are %"THREAD%", %"PROCESS%" and %"OBJECT%"."
 	vwbe0a_default_template: STRING = "boolean expression of non-BOOLEAN type '$7'."
 	vweq0a_default_template: STRING = "none of the operands of '$7' (of types '$8' and '$9') conforms or converts to the other."
 	vweq0b_default_template: STRING = "none of the operands of '$7' (of types '$8' and '$9') conforms or converts to the other."
@@ -12685,6 +12769,8 @@ feature {NONE} -- Implementation
 	vuot1_etl_code: STRING = "VUOT-1"
 	vuot3_etl_code: STRING = "VUOT-3"
 	vuot4_etl_code: STRING = "VUOT-4"
+	vvok1_etl_code: STRING = "VVOK-1"
+	vvok2_etl_code: STRING = "VVOK-2"
 	vwbe_etl_code: STRING = "VWBE"
 	vweq_etl_code: STRING = "VWEQ"
 	vwmq_etl_code: STRING = "VWMQ"
@@ -12953,6 +13039,8 @@ feature {NONE} -- Implementation
 	vuot3b_template_code: STRING = "vuot3b"
 	vuot4a_template_code: STRING = "vuot4a"
 	vuot4b_template_code: STRING = "vuot4b"
+	vvok1a_template_code: STRING = "vvok1a"
+	vvok2a_template_code: STRING = "vvok2a"
 	vwbe0a_template_code: STRING = "vwbe0a"
 	vweq0a_template_code: STRING = "vweq0a"
 	vweq0b_template_code: STRING = "vweq0b"

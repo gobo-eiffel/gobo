@@ -119,6 +119,7 @@ Version 3.10 - ?
 	* Fixed pretty-printer when processing indexing clauses in features.
 	  An extra empty line was inserted.
 	* Added support for check instructions with a then-branch.
+	* Added support for once keys in once routines.
 
 	Gobo Eiffel XML Library:
 

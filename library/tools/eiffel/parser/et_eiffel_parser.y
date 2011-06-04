@@ -122,10 +122,11 @@ create
 %type <ET_CLASS> Class_header Class_to_end Class_declaration
 %type <ET_CLIENT_ITEM> Client Client_comma
 %type <ET_CLIENTS> Clients Client_list
-%type <ET_COMPOUND> Compound Rescue_opt Do_compound Once_compound
+%type <ET_COMPOUND> Compound Rescue_opt Do_compound
 %type <ET_COMPOUND> Then_compound Explicit_then_compound
 %type <ET_COMPOUND> Else_compound Explicit_else_compound Rescue_compound
 %type <ET_COMPOUND> From_compound Loop_compound Attribute_compound
+%type <ET_COMPOUND> Instruction_list Compound_opt Explicit_compound_opt
 %type <ET_CONSTANT> Manifest_constant
 %type <ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM> Constraint_type_no_identifier_comma
 %type <ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM> Constraint_tuple_labeled_actual_parameter
@@ -188,7 +189,7 @@ create
 %type <ET_MANIFEST_ARRAY> Manifest_array Manifest_array_expression_list
 %type <ET_MANIFEST_STRING> Manifest_string
 %type <ET_MANIFEST_STRING_ITEM> Manifest_string_comma
-%type <ET_MANIFEST_STRING_LIST> Manifest_string_list Parenthesized_manifest_string_list
+%type <ET_MANIFEST_STRING_LIST> Manifest_string_list Parenthesized_manifest_string_list_opt
 %type <ET_MANIFEST_TUPLE> Manifest_tuple Manifest_tuple_expression_list
 %type <ET_OBJECT_TEST_LIST> End_of_inline_agent
 %type <ET_OBSOLETE> Obsolete_opt
@@ -216,7 +217,7 @@ create
 %type <ET_WHEN_PART_LIST> When_list When_list_opt
 %type <ET_WRITABLE> Writable
 
-%expect 54
+%expect 64
 %start Class_declarations
 
 %%
@@ -1958,29 +1959,29 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 			end
 		}
 	| Extended_feature_name ':' Type Assigner_opt E_IS Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
-	Once_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
-		{ $$ := ast_factory.new_once_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, last_clients, last_feature_clause, last_class) }
+	E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
+		{ $$ := ast_factory.new_once_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, $8, $9, $11, ast_factory.new_once_compound ($10, $12), $13, $14, $15, $16, last_clients, last_feature_clause, last_class) }	
 	| Extended_feature_name ':' Type Assigner_opt Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
-	Once_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
+	E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
 			if current_system.is_ise and then current_system.ise_version < ise_5_7_59914 then
 				raise_error
 			else
-				$$ := ast_factory.new_once_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, $8, $9, $10, $11, $12, $13, last_clients, last_feature_clause, last_class)
+				$$ := ast_factory.new_once_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, $8, $10, ast_factory.new_once_compound ($9, $11), $12, $13, $14, $15, last_clients, last_feature_clause, last_class)
 			end
 		}
 	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt E_IS Indexing_clause_opt
 	Obsolete_opt Precondition_opt Local_declarations_opt
-	Once_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
-		{ $$ := ast_factory.new_once_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, last_clients, last_feature_clause, last_class) }
+	E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
+		{ $$ := ast_factory.new_once_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, $6, $7, $8, $9, $10, $12, ast_factory.new_once_compound ($11, $13), $14, $15, $16, $17, last_clients, last_feature_clause, last_class) }
 	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt Indexing_clause_opt
 	Obsolete_opt Precondition_opt Local_declarations_opt
-	Once_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
+	E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
 			if current_system.is_ise and then current_system.ise_version < ise_5_7_59914 then
 				raise_error
 			else
-				$$ := ast_factory.new_once_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, $9, $10, $11, $12, $13, $14, last_clients, last_feature_clause, last_class)
+				$$ := ast_factory.new_once_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, $9, $11, ast_factory.new_once_compound ($10, $12), $13, $14, $15, $16, last_clients, last_feature_clause, last_class)
 			end
 		}
 	| Extended_feature_name ':' Type Assigner_opt E_IS Indexing_clause_opt Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
@@ -2041,12 +2042,12 @@ Single_procedure_declaration: Extended_feature_name Is_opt Indexing_clause_opt O
 	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_do_procedure ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, last_clients, last_feature_clause, last_class) }
 	| Extended_feature_name Is_opt Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
-	Once_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
-		{ $$ := ast_factory.new_once_procedure ($1, Void, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, last_clients, last_feature_clause, last_class) }
+	E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
+		{ $$ := ast_factory.new_once_procedure ($1, Void, $2, $3, $4, $5, $6, $8, ast_factory.new_once_compound ($7, $9), $10, $11, $12, $13, last_clients, last_feature_clause, last_class) }
 	| Extended_feature_name Feature_formal_arguments Is_opt Indexing_clause_opt
 	Obsolete_opt Precondition_opt Local_declarations_opt
-	Once_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
-		{ $$ := ast_factory.new_once_procedure ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, last_clients, last_feature_clause, last_class) }
+	E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
+		{ $$ := ast_factory.new_once_procedure ($1, $2, $3, $4, $5, $6, $7, $9, ast_factory.new_once_compound ($8, $10), $11, $12, $13, $14, last_clients, last_feature_clause, last_class) }
 	| Extended_feature_name Is_opt Indexing_clause_opt Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_deferred_procedure ($1, Void, $2, $3, $4, $5, $6, $7, $8, $9, last_clients, last_feature_clause, last_class) }
 	| Extended_feature_name Feature_formal_arguments Is_opt Indexing_clause_opt
@@ -2990,97 +2991,62 @@ Qualified_anchored_type: E_LIKE '{' Type '}' '.' Identifier
 
 ------------------------------------------------------------------------------------
 
-Do_compound: E_DO
-		{ $$ := ast_factory.new_do_compound ($1, ast_factory.new_empty_compound) }
-	| E_DO Add_counter Compound
-		{
-			$$ := ast_factory.new_do_compound ($1, $3)
-			remove_counter
-		}
+Do_compound: E_DO Compound_opt
+		{ $$ := ast_factory.new_do_compound ($1, $2) }
 	;
 
-Once_compound: E_ONCE
-		{ $$ := ast_factory.new_once_compound ($1, ast_factory.new_empty_compound) }
-	| E_ONCE Add_counter Compound
-		{
-			$$ := ast_factory.new_once_compound ($1, $3)
-			remove_counter
-		}
-	;
-
-Attribute_compound: E_ATTRIBUTE
-		{ $$ := ast_factory.new_attribute_compound ($1, ast_factory.new_empty_compound) }
-	| E_ATTRIBUTE Add_counter Compound
-		{
-			$$ := ast_factory.new_attribute_compound ($1, $3)
-			remove_counter
-		}
+Attribute_compound: E_ATTRIBUTE Compound_opt
+		{ $$ := ast_factory.new_attribute_compound ($1, $2) }
 	;
 	
-Then_compound: E_THEN
-		{ $$ := ast_factory.new_then_compound ($1, ast_factory.new_empty_compound) }
-	| E_THEN Add_counter Compound
-		{
-			$$ := ast_factory.new_then_compound ($1, $3)
-			remove_counter
-		}
+Then_compound: E_THEN Compound_opt
+		{ $$ := ast_factory.new_then_compound ($1, $2) }
 	;
 
-Explicit_then_compound: E_THEN
-		{ $$ := ast_factory.new_then_compound ($1, ast_factory.new_compound (0)) }
-	| E_THEN Add_counter Compound
-		{
-			$$ := ast_factory.new_then_compound ($1, $3)
-			remove_counter
-		}
+Explicit_then_compound: E_THEN Explicit_compound_opt
+		{ $$ := ast_factory.new_then_compound ($1, $2) }
 	;
 
-Else_compound: E_ELSE
-		{ $$ := ast_factory.new_else_compound ($1, ast_factory.new_empty_compound) }
-	| E_ELSE Add_counter Compound
-		{
-			$$ := ast_factory.new_else_compound ($1, $3)
-			remove_counter
-		}
+Else_compound: E_ELSE Compound_opt
+		{ $$ := ast_factory.new_else_compound ($1, $2) }
 	;
 
-Explicit_else_compound: E_ELSE
-		{ $$ := ast_factory.new_else_compound ($1, ast_factory.new_compound (0)) }
-	| E_ELSE Add_counter Compound
-		{
-			$$ := ast_factory.new_else_compound ($1, $3)
-			remove_counter
-		}
+Explicit_else_compound: E_ELSE Explicit_compound_opt
+		{ $$ := ast_factory.new_else_compound ($1, $2) }
 	;
 	
-Rescue_compound: E_RESCUE
-		{ $$ := ast_factory.new_rescue_compound ($1, ast_factory.new_empty_compound) }
-	| E_RESCUE Add_counter Compound
+Rescue_compound: E_RESCUE Compound_opt
+		{ $$ := ast_factory.new_rescue_compound ($1, $2) }
+	;
+
+From_compound: E_FROM Compound_opt
+		{ $$ := ast_factory.new_from_compound ($1, $2) }
+	;
+
+Loop_compound: E_LOOP Compound_opt
+		{ $$ := ast_factory.new_loop_compound ($1, $2) }
+	;
+
+Compound: Add_counter Instruction_list
 		{
-			$$ := ast_factory.new_rescue_compound ($1, $3)
+			$$ := $2
 			remove_counter
 		}
 	;
 
-From_compound: E_FROM
-		{ $$ := ast_factory.new_from_compound ($1, ast_factory.new_empty_compound) }
-	| E_FROM Add_counter Compound
-		{
-			$$ := ast_factory.new_from_compound ($1, $3)
-			remove_counter
-		}
+Compound_opt: -- Empty
+		{ $$ := ast_factory.new_empty_compound }
+	| Compound
+		{ $$ := $1 }
 	;
 
-Loop_compound: E_LOOP
-		{ $$ := ast_factory.new_loop_compound ($1, ast_factory.new_empty_compound) }
-	| E_LOOP Add_counter Compound
-		{
-			$$ := ast_factory.new_loop_compound ($1, $3)
-			remove_counter
-		}
+Explicit_compound_opt: -- Empty
+		{ $$ := ast_factory.new_compound (0) }
+	| Compound
+		{ $$ := $1 }
 	;
-
-Compound: Instruction
+		
+Instruction_list: Instruction
 		{
 			if $1 /= Void then
 				$$ := ast_factory.new_compound (counter_value + 1)
@@ -3097,7 +3063,7 @@ Compound: Instruction
 				increment_counter
 			end
 		}
-	  Compound
+	  Instruction_list
 		{
 			$$ := $3
 			if $$ /= Void and $1 /= Void then
@@ -3353,16 +3319,11 @@ Choice_constant: Integer_constant
 
 ------------------------------------------------------------------------------------
 
-Debug_instruction: E_DEBUG Parenthesized_manifest_string_list E_END
-		{ $$ := ast_factory.new_debug_instruction ($2, ast_factory.new_debug_compound ($1, ast_factory.new_empty_compound), $3) }
-	| E_DEBUG Parenthesized_manifest_string_list Add_counter Compound E_END
-		{
-			$$ := ast_factory.new_debug_instruction ($2, ast_factory.new_debug_compound ($1, $4), $5)
-			remove_counter
-		}
+Debug_instruction: E_DEBUG Parenthesized_manifest_string_list_opt Compound_opt E_END
+		{ $$ := ast_factory.new_debug_instruction ($2, ast_factory.new_debug_compound ($1, $3), $4) }
 	;
 
-Parenthesized_manifest_string_list: -- Empty
+Parenthesized_manifest_string_list_opt: -- Empty
 		-- { $$ := Void }
 	| '(' ')'
 		{ $$ := ast_factory.new_manifest_string_list ($1, $2, 0) }
@@ -3919,18 +3880,18 @@ Inline_agent:
 			$$.set_object_tests ($11)
 		}
 	| E_AGENT No_inline_agent_formal_arguments ':' Type
-	Precondition_opt Local_declarations_opt Once_compound Postcondition_opt Rescue_opt E_END
+	Precondition_opt Local_declarations_opt E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END
 	End_of_inline_agent Agent_actuals_opt
 		{
-			$$ := ast_factory.new_once_function_inline_agent ($1, Void, ast_factory.new_colon_type ($3, $4), $5, $6, $7, $8, $9, $10, $12)
-			$$.set_object_tests ($11)
+			$$ := ast_factory.new_once_function_inline_agent ($1, Void, ast_factory.new_colon_type ($3, $4), $5, $6, $8, ast_factory.new_once_compound ($7, $9), $10, $11, $12, $14)
+			$$.set_object_tests ($13)
 		}
 	| E_AGENT Inline_agent_formal_arguments ':' Type
-	Precondition_opt Local_declarations_opt Once_compound Postcondition_opt Rescue_opt E_END
+	Precondition_opt Local_declarations_opt E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END
 	End_of_inline_agent Agent_actuals_opt
 		{
-			$$ := ast_factory.new_once_function_inline_agent ($1, $2, ast_factory.new_colon_type ($3, $4), $5, $6, $7, $8, $9, $10, $12)
-			$$.set_object_tests ($11)
+			$$ := ast_factory.new_once_function_inline_agent ($1, $2, ast_factory.new_colon_type ($3, $4), $5, $6, $8, ast_factory.new_once_compound ($7, $9), $10, $11, $12, $14)
+			$$.set_object_tests ($13)
 		}
 	| E_AGENT No_inline_agent_formal_arguments ':' Type
 	Precondition_opt E_EXTERNAL Manifest_string External_name_opt Postcondition_opt E_END
@@ -3961,18 +3922,18 @@ Inline_agent:
 			$$.set_object_tests ($9)
 		}
 	| E_AGENT No_inline_agent_formal_arguments
-	Precondition_opt Local_declarations_opt Once_compound Postcondition_opt Rescue_opt E_END
+	Precondition_opt Local_declarations_opt E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END
 	End_of_inline_agent Agent_actuals_opt
 		{
-			$$ := ast_factory.new_once_procedure_inline_agent ($1, Void, $3, $4, $5, $6, $7, $8, $10)
-			$$.set_object_tests ($9)
+			$$ := ast_factory.new_once_procedure_inline_agent ($1, Void, $3, $4, $6, ast_factory.new_once_compound ($5, $7), $8, $9, $10, $12)
+			$$.set_object_tests ($11)
 		}
 	| E_AGENT Inline_agent_formal_arguments
-	Precondition_opt Local_declarations_opt Once_compound Postcondition_opt Rescue_opt E_END
+	Precondition_opt Local_declarations_opt E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END
 	End_of_inline_agent Agent_actuals_opt
 		{
-			$$ := ast_factory.new_once_procedure_inline_agent ($1, $2, $3, $4, $5, $6, $7, $8, $10)
-			$$.set_object_tests ($9)
+			$$ := ast_factory.new_once_procedure_inline_agent ($1, $2, $3, $4, $6, ast_factory.new_once_compound ($5, $7), $8, $9, $10, $12)
+			$$.set_object_tests ($11)
 		}
 	| E_AGENT No_inline_agent_formal_arguments
 	Precondition_opt E_EXTERNAL Manifest_string External_name_opt Postcondition_opt E_END
@@ -4226,7 +4187,7 @@ Identifier: E_IDENTIFIER
 
 Add_counter: { add_counter }
 	;
-
+	
 --------------------------------------------------------------------------------
 %%
 

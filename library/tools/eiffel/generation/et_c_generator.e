@@ -110,6 +110,9 @@ inherit
 	ET_SHARED_TOKEN_CONSTANTS
 		export {NONE} all end
 
+	ET_SHARED_STANDARD_ONCE_KEYS
+		export {NONE} all end
+
 	ET_SHARED_IDENTIFIER_TESTER
 		export {NONE} all end
 
@@ -4689,7 +4692,13 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			-- Print `a_feature' to `current_file' and its signature to `header_file'.
 		require
 			a_feature_not_void: a_feature /= Void
+		local
+			l_keys: ET_MANIFEST_STRING_LIST
 		do
+			l_keys := a_feature.keys
+			if l_keys /= Void and then standard_once_keys.has_object_key (l_keys) then
+print ("ET_C_GENERATOR.print_once_function: once key %"OBJECT%" not supported.%N")
+			end
 			print_internal_function (a_feature)
 		end
 
@@ -4697,7 +4706,13 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			-- Print `a_feature' to `current_file' and its signature to `header_file'.
 		require
 			a_feature_not_void: a_feature /= Void
+		local
+			l_keys: ET_MANIFEST_STRING_LIST
 		do
+			l_keys := a_feature.keys
+			if l_keys /= Void and then standard_once_keys.has_object_key (l_keys) then
+print ("ET_C_GENERATOR.print_once_procedure: once key %"OBJECT%" not supported.%N")
+			end
 			print_internal_procedure (a_feature)
 		end
 
@@ -13091,7 +13106,13 @@ feature {NONE} -- Agent generation
 			-- Print `an_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
+		local
+			l_keys: ET_MANIFEST_STRING_LIST
 		do
+			l_keys := an_agent.keys
+			if l_keys /= Void and then standard_once_keys.has_object_key (l_keys) then
+print ("ET_C_GENERATOR.print_once_function_inline_agent: once key %"OBJECT%" not supported.%N")
+			end
 			print_agent (an_agent)
 		end
 
@@ -13099,7 +13120,13 @@ feature {NONE} -- Agent generation
 			-- Print `an_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
+		local
+			l_keys: ET_MANIFEST_STRING_LIST
 		do
+			l_keys := an_agent.keys
+			if l_keys /= Void and then standard_once_keys.has_object_key (l_keys) then
+print ("ET_C_GENERATOR.print_once_procedure_inline_agent: once key %"OBJECT%" not supported.%N")
+			end
 			print_agent (an_agent)
 		end
 

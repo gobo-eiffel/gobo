@@ -5,7 +5,7 @@ note
 		"Eiffel once-functions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,18 +15,19 @@ class ET_ONCE_FUNCTION
 inherit
 
 	ET_INTERNAL_FUNCTION
-		redefine
+		undefine
 			is_once
+		end
+
+	ET_ONCE_ROUTINE
+		undefine
+			reset, type, is_prefixable, is_infixable,
+			is_bracketable, is_function
 		end
 
 create
 
 	make
-
-feature -- Status report
-
-	is_once: BOOLEAN = True
-			-- Is current feature a once feature?
 
 feature -- Duplication
 

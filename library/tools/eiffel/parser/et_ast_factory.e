@@ -2962,8 +2962,8 @@ feature -- AST nodes
 
 	new_once_function (a_name: ET_EXTENDED_FEATURE_NAME; args: ET_FORMAL_ARGUMENT_LIST; a_type: ET_DECLARED_TYPE;
 		an_assigner: ET_ASSIGNER; an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST; an_obsolete: ET_OBSOLETE;
-		a_preconditions: ET_PRECONDITIONS; a_locals: ET_LOCAL_VARIABLE_LIST; a_compound: ET_COMPOUND;
-		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND; an_end: ET_KEYWORD;
+		a_preconditions: ET_PRECONDITIONS; a_locals: ET_LOCAL_VARIABLE_LIST; a_keys: ET_MANIFEST_STRING_LIST;
+		a_compound: ET_COMPOUND; a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND; an_end: ET_KEYWORD;
 		a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLIENT_LIST;
 		a_feature_clause: ET_FEATURE_CLAUSE; a_class: ET_CLASS): ET_ONCE_FUNCTION
 			-- New once function
@@ -2977,6 +2977,7 @@ feature -- AST nodes
 				Result.set_obsolete_message (an_obsolete)
 				Result.set_preconditions (a_preconditions)
 				Result.set_locals (a_locals)
+				Result.set_keys (a_keys)
 				Result.set_compound (a_compound)
 				Result.set_postconditions (a_postconditions)
 				Result.set_rescue_clause (a_rescue)
@@ -2986,8 +2987,9 @@ feature -- AST nodes
 		end
 
 	new_once_function_inline_agent (an_agent: ET_AGENT_KEYWORD; a_formal_args: ET_FORMAL_ARGUMENT_LIST; a_type: ET_DECLARED_TYPE;
-		a_preconditions: ET_PRECONDITIONS; a_locals: ET_LOCAL_VARIABLE_LIST; a_compound: ET_COMPOUND; a_postconditions: ET_POSTCONDITIONS;
-		a_rescue: ET_COMPOUND; an_end: ET_KEYWORD; an_actual_args: ET_AGENT_ARGUMENT_OPERAND_LIST): ET_ONCE_FUNCTION_INLINE_AGENT
+		a_preconditions: ET_PRECONDITIONS; a_locals: ET_LOCAL_VARIABLE_LIST; a_keys: ET_MANIFEST_STRING_LIST;
+		a_compound: ET_COMPOUND; a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND; an_end: ET_KEYWORD;
+		an_actual_args: ET_AGENT_ARGUMENT_OPERAND_LIST): ET_ONCE_FUNCTION_INLINE_AGENT
 			-- New inline agent whose associated feature is a once function
 		do
 			if a_type /= Void then
@@ -2997,6 +2999,7 @@ feature -- AST nodes
 				end
 				Result.set_preconditions (a_preconditions)
 				Result.set_locals (a_locals)
+				Result.set_keys (a_keys)
 				Result.set_compound (a_compound)
 				Result.set_postconditions (a_postconditions)
 				Result.set_rescue_clause (a_rescue)
@@ -3016,8 +3019,8 @@ feature -- AST nodes
 
 	new_once_procedure (a_name: ET_EXTENDED_FEATURE_NAME; args: ET_FORMAL_ARGUMENT_LIST;
 		an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
-		a_locals: ET_LOCAL_VARIABLE_LIST; a_compound: ET_COMPOUND; a_postconditions: ET_POSTCONDITIONS;
-		a_rescue: ET_COMPOUND; an_end: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL;
+		a_locals: ET_LOCAL_VARIABLE_LIST; a_keys: ET_MANIFEST_STRING_LIST; a_compound: ET_COMPOUND;
+		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND; an_end: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL;
 		a_clients: ET_CLIENT_LIST; a_feature_clause: ET_FEATURE_CLAUSE;
 		a_class: ET_CLASS): ET_ONCE_PROCEDURE
 			-- New once procedure
@@ -3030,6 +3033,7 @@ feature -- AST nodes
 				Result.set_obsolete_message (an_obsolete)
 				Result.set_preconditions (a_preconditions)
 				Result.set_locals (a_locals)
+				Result.set_keys (a_keys)
 				Result.set_compound (a_compound)
 				Result.set_postconditions (a_postconditions)
 				Result.set_rescue_clause (a_rescue)
@@ -3039,8 +3043,9 @@ feature -- AST nodes
 		end
 
 	new_once_procedure_inline_agent (an_agent: ET_AGENT_KEYWORD; a_formal_args: ET_FORMAL_ARGUMENT_LIST;
-		a_preconditions: ET_PRECONDITIONS; a_locals: ET_LOCAL_VARIABLE_LIST; a_compound: ET_COMPOUND; a_postconditions: ET_POSTCONDITIONS;
-		a_rescue: ET_COMPOUND; an_end: ET_KEYWORD; an_actual_args: ET_AGENT_ARGUMENT_OPERAND_LIST): ET_ONCE_PROCEDURE_INLINE_AGENT
+		a_preconditions: ET_PRECONDITIONS; a_locals: ET_LOCAL_VARIABLE_LIST; a_keys: ET_MANIFEST_STRING_LIST;
+		a_compound: ET_COMPOUND; a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND; an_end: ET_KEYWORD;
+		an_actual_args: ET_AGENT_ARGUMENT_OPERAND_LIST): ET_ONCE_PROCEDURE_INLINE_AGENT
 			-- New inline agent whose associated feature is a once procedure
 		do
 			create Result.make (a_formal_args, an_actual_args)
@@ -3049,6 +3054,7 @@ feature -- AST nodes
 			end
 			Result.set_preconditions (a_preconditions)
 			Result.set_locals (a_locals)
+			Result.set_keys (a_keys)
 			Result.set_compound (a_compound)
 			Result.set_postconditions (a_postconditions)
 			Result.set_rescue_clause (a_rescue)
