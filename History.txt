@@ -61,6 +61,8 @@ Version 3.10 - ?
 	  class KL_ANY_ROUTINES now use the new ECMA construct '~' instead
 	  of the combination `same_type' and then `is_equal'.
 	* Added feature `is_true' to class KL_AGENT_ROUTINES.
+	* Fixed bug in feature `read_to_string' of file classes where the 
+	  hash code was not reset properly.
 
 	Gobo Eiffel Lexical Library:
 
