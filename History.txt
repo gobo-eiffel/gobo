@@ -124,6 +124,9 @@ Version 3.10 - ?
 	  An extra empty line was inserted.
 	* Added support for check instructions with a then-branch.
 	* Added support for once keys in once routines.
+	* Improved the way the type of a manifest array is determined in the
+	  case where the types of all items conform to one of them. In that
+	  case the manifest array will be an array of that type.
 
 	Gobo Eiffel XML Library:
 

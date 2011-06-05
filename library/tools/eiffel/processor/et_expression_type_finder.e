@@ -1200,7 +1200,16 @@ feature {NONE} -- Expression processing
 							if l_item_type = Void then
 								l_item_type := l_expression_context.named_type
 							elseif not hybrid_type then
-								hybrid_type := not l_expression_context.same_named_type (l_item_type, current_type)
+								if l_expression_context.conforms_to_type (l_item_type, current_type) then
+										-- The type of the current item conforms to the type
+										-- retained so far. Keep the old type.
+								elseif l_item_type.conforms_to_type (tokens.like_current, l_expression_context, current_type) then
+										-- The type retained so far conforms to the type of the
+										-- current item. Retain this new type.
+									l_item_type := l_expression_context.named_type
+								else
+									hybrid_type := True
+								end
 							end
 						end
 						if l_array_type /= Void and then not l_expression_context.conforms_to_type (l_array_parameter, current_type) then
@@ -1232,10 +1241,10 @@ feature {NONE} -- Expression processing
 				free_context (l_expression_context)
 				free_context (l_parameter_context)
 			else
-					-- Try to see if all items have the same type. If so then the
-					-- type of the manifest array will be an array of that type.
-					-- Otherwise we are out of luck and will consider that it is
-					-- an 'ARRAY [ANY]'.
+					-- Try to see if the types of all items conform to one of them.
+					-- If so then the type of the manifest array will be an array of
+					-- that type. Otherwise we are out of luck and will consider that
+					-- it is an 'ARRAY [ANY]'.
 				l_array_type := Void
 				any_type := current_system.any_type
 				l_expression_context := new_context (current_type)
@@ -1247,7 +1256,16 @@ feature {NONE} -- Expression processing
 						if l_item_type = Void then
 							l_item_type := l_expression_context.named_type
 						elseif not hybrid_type then
-							hybrid_type := not l_expression_context.same_named_type (l_item_type, current_type)
+							if l_expression_context.conforms_to_type (l_item_type, current_type) then
+									-- The type of the current item conforms to the type
+									-- retained so far. Keep the old type.
+							elseif l_item_type.conforms_to_type (tokens.like_current, l_expression_context, current_type) then
+									-- The type retained so far conforms to the type of the
+									-- current item. Retain this new type.
+								l_item_type := l_expression_context.named_type
+							else
+								hybrid_type := True
+							end
 						end
 					end
 					l_expression_context.wipe_out
@@ -1265,15 +1283,15 @@ feature {NONE} -- Expression processing
 				l_array_type := current_system.array_any_type
 				a_context.force_last (l_array_type)
 			elseif hybrid_type then
-					-- There are at least two items which don't have the same type.
+					-- There are at least two items which don't conform to each other either way.
 					-- Use 'ARRAY [ANY]' in that type.
--- TODO: we could do better that 'ARRAY [ANY]', for example choosing one of the
+-- TODO: we could do better than 'ARRAY [ANY]', for example choosing one of the
 -- common ancestors of these two types. But which one to choose? ETL2 does not say.
 				l_array_type := current_system.array_any_type
 				a_context.force_last (l_array_type)
 			else
-					-- All items of the same type. So the manifest array will be
-					-- an array of that type.
+					-- The type of all items conforms to one of them.
+					-- So the manifest array will be an array of that type.
 				create l_actuals.make_with_capacity (1)
 				l_actuals.put_first (l_item_type)
 				create l_generic_class_type.make (Void, array_class.name, l_actuals, array_class)
