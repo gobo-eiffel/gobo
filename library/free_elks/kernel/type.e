@@ -12,11 +12,15 @@ frozen class
 
 inherit
 	HASHABLE
+		rename
+			default as any_default
 		redefine
 			is_equal, out
 		end
 
 	DEBUG_OUTPUT
+		rename
+			default as any_default
 		redefine
 			is_equal, out
 		end
@@ -549,6 +553,12 @@ feature -- Conversion
 		end
 
 	default_detachable_value: detachable G
+		do
+		end
+
+	default: G
+		require
+--			has_default: has_default
 		do
 		end
 

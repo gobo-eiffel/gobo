@@ -34,6 +34,7 @@ class ARRAY [G] inherit
 
 create
 	make,
+	make_empty,
 	make_filled,
 	make_from_array,
 	make_from_special,
@@ -45,6 +46,18 @@ convert
 	make_from_cil ({NATIVE_ARRAY [G]})
 
 feature -- Initialization
+
+	make_empty
+			-- Allocate empty array starting at `1'.
+		do
+			lower := 1
+			upper := 0
+			make_area (0)
+		ensure
+			lower_set: lower = 1
+			upper_set: upper = 0
+			items_set: all_default
+		end
 
 	make_filled (a_default_value: G; min_index, max_index: INTEGER)
 			-- Allocate array; set index interval to
