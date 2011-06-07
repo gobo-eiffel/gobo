@@ -54,7 +54,7 @@ feature -- Status report
 			-- subclusters of current universe or recursively in
 			-- one of the universes it depends on?
 		do
-			Result := internal_universes_there_exists (agent has_cluster (a_cluster))
+			Result := internal_universes_there_exists (agent {ET_INTERNAL_UNIVERSE}.has_cluster (a_cluster))
 		end
 
 	has_cluster_by_name (a_names: ARRAY [STRING]): BOOLEAN
@@ -77,7 +77,7 @@ feature -- Status report
 			no_void_name: not a_names.has (Void)
 			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
 		do
-			Result := internal_universes_there_exists (agent has_cluster_by_name (a_name))
+			Result := internal_universes_there_exists (agent {ET_INTERNAL_UNIVERSE}.has_cluster_by_name (a_names))
 		end
 
 	has_cluster_with_absolute_pathname (a_pathname: STRING): BOOLEAN
@@ -102,7 +102,7 @@ feature -- Status report
 			a_pathname_not_void: a_pathname /= Void
 			a_pathname_absolute: file_system.is_absolute_pathname (a_pathname)
 		do
-			Result := internal_universes_there_exists (agent has_cluster_with_absolute_pathname (a_pathname))
+			Result := internal_universes_there_exists (agent {ET_INTERNAL_UNIVERSE}.has_cluster_with_absolute_pathname (a_pathname))
 		end
 
 feature -- Access
@@ -390,7 +390,7 @@ feature -- Iteration
 			end
 		end
 
-	internal_universes_there_exists (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+	internal_universes_there_exists (a_test: FUNCTION [ANY, TUPLE [ET_INTERNAL_UNIVERSE], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for at least current universe or recursively one
 			-- of the internal universes it depends on?
 		require
