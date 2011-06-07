@@ -49,6 +49,14 @@ feature -- Status report
 			Result := clusters.has_subcluster (a_cluster)
 		end
 
+	has_cluster_recursive (a_cluster: ET_CLUSTER): BOOLEAN
+			-- Is `a_cluster' one of the clusters or recursively
+			-- subclusters of current universe or recursively in
+			-- one of the universes it depends on?
+		do
+			Result := internal_universes_there_exists (agent has_cluster (a_cluster))
+		end
+
 	has_cluster_by_name (a_names: ARRAY [STRING]): BOOLEAN
 			-- Is there a cluster named `a_names' in universe?
 			-- Do not take into account missing implicit subclusters.
@@ -58,6 +66,18 @@ feature -- Status report
 			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
 		do
 			Result := clusters.has_subcluster_by_name (a_names)
+		end
+
+	has_cluster_by_name_recursive (a_names: ARRAY [STRING]): BOOLEAN
+			-- Is there a cluster named `a_names' in universe
+			-- or recursively in one of the universes it depends on?
+			-- Do not take into account missing implicit subclusters.
+		require
+			a_names_not_void: a_names /= Void
+			no_void_name: not a_names.has (Void)
+			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
+		do
+			Result := internal_universes_there_exists (agent has_cluster_by_name (a_name))
 		end
 
 	has_cluster_with_absolute_pathname (a_pathname: STRING): BOOLEAN
@@ -70,6 +90,19 @@ feature -- Status report
 			a_pathname_absolute: file_system.is_absolute_pathname (a_pathname)
 		do
 			Result := clusters.has_subcluster_with_absolute_pathname (a_pathname)
+		end
+
+	has_cluster_with_absolute_pathname_recursive (a_pathname: STRING): BOOLEAN
+			-- Is there a cluster with absolute pathname `a_pathname' in universe
+			-- or recursively in one of the universes it depends on?
+			--
+			-- `a_pathname' is expected to be a canonical absolute pathname.
+			-- Do not take into account missing implicit subclusters.
+		require
+			a_pathname_not_void: a_pathname /= Void
+			a_pathname_absolute: file_system.is_absolute_pathname (a_pathname)
+		do
+			Result := internal_universes_there_exists (agent has_cluster_with_absolute_pathname (a_pathname))
 		end
 
 feature -- Access
@@ -111,6 +144,26 @@ feature -- Access
 			Result := clusters.subcluster_with_absolute_pathname (a_pathname)
 		ensure
 			not_void_if_has: has_cluster_with_absolute_pathname (a_pathname) implies Result /= Void
+		end
+
+	cluster_with_absolute_pathname_recursive (a_pathname: STRING): ET_CLUSTER
+			-- Cluster with absolute pathname `a_pathname' in current universe
+			-- or recursively in one of the universes it depends on.
+			--
+			-- `a_pathname' is expected to be a canonical absolute pathname.
+			-- Add missing implicit subclusters if needed.
+			-- Void if not such cluster.
+		require
+			a_pathname_not_void: a_pathname /= Void
+			a_pathname_absolute: file_system.is_absolute_pathname (a_pathname)
+		local
+			l_cell: DS_CELL [ET_CLUSTER]
+		do
+			create l_cell.make (Void)
+			internal_universes_do_recursive (agent {ET_INTERNAL_UNIVERSE}.do_cluster_with_absolute_pathname (a_pathname, agent l_cell.put))
+			Result := l_cell.item
+		ensure
+			not_void_if_has: has_cluster_with_absolute_pathname_recursive (a_pathname) implies Result /= Void
 		end
 
 	adapted_universe (a_universe: ET_UNIVERSE): ET_ADAPTED_UNIVERSE
@@ -337,6 +390,27 @@ feature -- Iteration
 			end
 		end
 
+	internal_universes_there_exists (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+			-- Is `a_test' true for at least current universe or recursively one
+			-- of the internal universes it depends on?
+		require
+			a_test_not_void: a_test /= Void
+		local
+			l_visited: DS_HASH_SET [ET_INTERNAL_UNIVERSE]
+		do
+			create l_visited.make (initial_universes_capacity)
+			add_internal_universe_recursive (l_visited)
+			from l_visited.start until l_visited.after loop
+				if a_test.item ([l_visited.item_for_iteration]) then
+					Result := True
+						-- Jump out of the loop.
+					l_visited.go_after
+				else
+					l_visited.forth
+				end
+			end
+		end
+
 feature -- Relations
 
 	add_universe_recursive (a_visited: DS_HASH_SET [ET_UNIVERSE])
@@ -359,6 +433,24 @@ feature -- Relations
 			if not a_visited.has (Current) then
 				a_visited.force_last (Current)
 				libraries.do_all (agent {ET_LIBRARY}.add_internal_universe_recursive (a_visited))
+			end
+		end
+
+feature -- Actions
+
+	do_cluster_with_absolute_pathname (a_pathname: STRING; a_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]])
+			-- Execute `a_action' on cluster with absolute pathname `a_pathname' in current universe.
+			-- Do nothing if not such cluster.
+		require
+			a_pathname_not_void: a_pathname /= Void
+			a_pathname_absolute: file_system.is_absolute_pathname (a_pathname)
+			a_action_not_void: a_action /= Void
+		local
+			l_cluster: ET_CLUSTER
+		do
+			l_cluster := cluster_with_absolute_pathname (a_pathname)
+			if l_cluster /= Void then
+				a_action.call ([l_cluster])
 			end
 		end
 
