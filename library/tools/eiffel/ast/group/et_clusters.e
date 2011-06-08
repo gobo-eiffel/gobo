@@ -5,7 +5,7 @@ note
 		"Eiffel cluster lists"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -177,8 +177,73 @@ feature -- Access
 			not_void_if_has: has_subcluster_by_name (a_names) implies Result /= Void
 		end
 
+	subcluster_with_absolute_pathname (a_pathname: STRING): ET_CLUSTER
+			-- Subcluster (recursively) with absolute pathname `a_pathname' in current clusters
+			--
+			-- `a_pathname' is expected to be a canonical absolute pathname.
+			-- Add missing implicit subclusters if needed.
+			-- Void if not such cluster.
+		require
+			a_pathname_not_void: a_pathname /= Void
+			a_pathname_absolute: file_system.is_absolute_pathname (a_pathname)
+		local
+			i, nb: INTEGER
+		do
+			nb := clusters.count
+			from i := 1 until i > nb loop
+				Result := clusters.item (i).cluster_with_absolute_pathname (a_pathname)
+				if Result /= Void then
+					i := nb + 1
+				end
+				i := i + 1
+			end
+		ensure
+			not_void_if_has: has_subcluster_with_absolute_pathname (a_pathname) implies Result /= Void
+		end
+
+	clusters: DS_ARRAYED_LIST [like cluster]
+			-- Clusters
+
+feature {ET_INTERNAL_UNIVERSE} -- Access
+
+	subcluster_by_name_at_index (a_names: ARRAY [STRING]; a_index: INTEGER): ET_CLUSTER
+			-- Subcluster (recursively) named `a_names', ignoring the entries before `a_index',
+			-- in current clusters
+			--
+			-- Add missing implicit subclusters if needed.
+			-- Void if not such cluster.
+		require
+			a_names_not_void: a_names /= Void
+			no_void_name: not a_names.has (Void)
+			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
+		do
+			Result := subcluster_by_name_at_index_with_parent (a_names, a_index, Void)
+		end
+
+feature {ET_CLUSTER} -- Access
+
 	subcluster_by_name_with_parent (a_names: ARRAY [STRING]; a_parent_cluster: ET_CLUSTER): ET_CLUSTER
 			-- Subcluster (recursively) named `a_names' in current clusters
+			--
+			-- If `a_parent_cluster' is not Void, then it is considered to be
+			-- the parent cluster of the current clusters.
+			-- Add missing implicit subclusters if needed.
+			-- Void if not such cluster.
+		require
+			a_names_not_void: a_names /= Void
+			no_void_name: not a_names.has (Void)
+			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
+		do
+			Result := subcluster_by_name_at_index_with_parent (a_names, a_names.lower, a_parent_cluster)
+		ensure
+			not_void_if_has: has_subcluster_by_name (a_names) implies Result /= Void
+		end
+
+feature {NONE} -- Access
+
+	subcluster_by_name_at_index_with_parent (a_names: ARRAY [STRING]; a_index: INTEGER; a_parent_cluster: ET_CLUSTER): ET_CLUSTER
+			-- Subcluster (recursively) named `a_names', ignoring the entries before `a_index',
+			-- in current clusters
 			--
 			-- If `a_parent_cluster' is not Void, then it is considered to be
 			-- the parent cluster of the current clusters.
@@ -196,7 +261,7 @@ feature -- Access
 		do
 			l_clusters := Current
 			l_parent_cluster := a_parent_cluster
-			i := a_names.lower
+			i := a_index
 			nb := a_names.upper
 			from until i > nb loop
 				if l_clusters /= Void then
@@ -230,36 +295,7 @@ feature -- Access
 					i := nb + 1 -- Jump out of the loop.
 				end
 			end
-		ensure
-			not_void_if_has: has_subcluster_by_name (a_names) implies Result /= Void
 		end
-
-	subcluster_with_absolute_pathname (a_pathname: STRING): ET_CLUSTER
-			-- Subcluster (recursively) with absolute pathname `a_pathname' in current clusters
-			--
-			-- `a_pathname' is expected to be a canonical absolute pathname.
-			-- Add missing implicit subclusters if needed.
-			-- Void if not such cluster.
-		require
-			a_pathname_not_void: a_pathname /= Void
-			a_pathname_absolute: file_system.is_absolute_pathname (a_pathname)
-		local
-			i, nb: INTEGER
-		do
-			nb := clusters.count
-			from i := 1 until i > nb loop
-				Result := clusters.item (i).cluster_with_absolute_pathname (a_pathname)
-				if Result /= Void then
-					i := nb + 1
-				end
-				i := i + 1
-			end
-		ensure
-			not_void_if_has: has_subcluster_with_absolute_pathname (a_pathname) implies Result /= Void
-		end
-
-	clusters: DS_ARRAYED_LIST [like cluster]
-			-- Clusters
 
 feature -- Iterators
 

@@ -5,7 +5,7 @@ note
 		"ECF Eiffel system parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -68,6 +68,7 @@ feature {NONE} -- Element change
 					parsed_libraries.forth
 				end
 				l_target.fill_root (l_system)
+				l_target.fill_settings (l_system)
 				last_system := l_system
 			end
 		end

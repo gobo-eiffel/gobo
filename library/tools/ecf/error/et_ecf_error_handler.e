@@ -5,7 +5,7 @@ note
 		"ECF error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -923,6 +923,162 @@ feature -- Reporting errors
 			l_error: ET_ECF_ERROR
 		do
 			create l_error.make_eacs (a_old_name_attribute_name, a_universe)
+			report_error (l_error)
+		end
+
+	report_eact_error (a_readonly_attribute_name: ET_IDENTIFIER; a_readonly_value: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EACT error: the readonly attribute of the cluster should be a boolean.
+		require
+			a_readonly_attribute_name_not_void: a_readonly_attribute_name /= Void
+			a_readonly_value_not_void: a_readonly_value /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_eact (a_readonly_attribute_name, a_readonly_value, a_universe)
+			report_error (l_error)
+		end
+
+	report_eacu_error (a_readonly_attribute_name: ET_IDENTIFIER; a_readonly_value: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EACU error: the readonly attribute of the override should be a boolean.
+		require
+			a_readonly_attribute_name_not_void: a_readonly_attribute_name /= Void
+			a_readonly_value_not_void: a_readonly_value /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_eacu (a_readonly_attribute_name, a_readonly_value, a_universe)
+			report_error (l_error)
+		end
+
+	report_eacv_error (a_readonly_attribute_name: ET_IDENTIFIER; a_readonly_value: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EACV error: the readonly attribute of the library should be a boolean.
+		require
+			a_readonly_attribute_name_not_void: a_readonly_attribute_name /= Void
+			a_readonly_value_not_void: a_readonly_value /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_eacv (a_readonly_attribute_name, a_readonly_value, a_universe)
+			report_error (l_error)
+		end
+
+	report_eacw_error (a_readonly_attribute_name: ET_IDENTIFIER; a_readonly_value: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EACW error: the readonly attribute of the .NET assembly should be a boolean.
+		require
+			a_readonly_attribute_name_not_void: a_readonly_attribute_name /= Void
+			a_readonly_value_not_void: a_readonly_value /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_eacw (a_readonly_attribute_name, a_readonly_value, a_universe)
+			report_error (l_error)
+		end
+
+	report_eacx_error (a_assembly_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EACX error: the name of the assembly is missing.
+		require
+			a_assembly_element_name_not_void: a_assembly_element_name /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_eacx (a_assembly_element_name, a_universe)
+			report_error (l_error)
+		end
+
+	report_eacy_error (a_assembly_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EACY error: the location of the assembly is missing.
+		require
+			a_assembly_element_name_not_void: a_assembly_element_name /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_eacy (a_assembly_element_name, a_universe)
+			report_error (l_error)
+		end
+
+	report_eacz_error (a_name_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EACZ error: the name of the assembly is empty.
+		require
+			a_name_attribute_name_not_void: a_name_attribute_name /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_eacz (a_name_attribute_name, a_universe)
+			report_error (l_error)
+		end
+
+	report_eada_error (a_location_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EADA error: the filename of the assembly is empty.
+		require
+			a_location_attribute_name_not_void: a_location_attribute_name /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_eada (a_location_attribute_name, a_universe)
+			report_error (l_error)
+		end
+
+	report_esnm_error (a_setting_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report ESNM error: the name of the setting missing.
+			--
+			-- ESNM: Ecf Setting Name Missing
+		require
+			a_setting_element_name_not_void: a_setting_element_name /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_esnm (a_setting_element_name, a_universe)
+			report_error (l_error)
+		end
+
+	report_esne_error (a_name_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report ESNE error: the name of the setting is empty.
+			--
+			-- ESNE: Ecf Setting Name Empty
+		require
+			a_name_attribute_name_not_void: a_name_attribute_name /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_esne (a_name_attribute_name, a_universe)
+			report_error (l_error)
+		end
+
+	report_esvm_error (a_setting_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report ESVM error: the value of the setting missing.
+			--
+			-- ESVM: Ecf Setting Value Missing
+		require
+			a_setting_element_name_not_void: a_setting_element_name /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_esvm (a_setting_element_name, a_universe)
+			report_error (l_error)
+		end
+
+	report_esve_error (a_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report ESVE error: the value of the setting is empty.
+			--
+			-- ESVE: Ecf Setting Value Empty
+		require
+			a_value_attribute_name_not_void: a_value_attribute_name /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_esve (a_value_attribute_name, a_universe)
 			report_error (l_error)
 		end
 

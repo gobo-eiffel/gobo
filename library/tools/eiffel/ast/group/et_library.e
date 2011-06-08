@@ -5,7 +5,7 @@ note
 		"Eiffel class libraries"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -13,6 +13,18 @@ note
 class ET_LIBRARY
 
 inherit
+
+	ET_GROUP
+		undefine
+			current_system, hash_code,
+			library,
+			lower_name,
+			full_name, full_lower_name,
+			relative_name, relative_lower_name
+		redefine
+			is_library,
+			kind_name
+		end
 
 	ET_INTERNAL_UNIVERSE
 		rename
@@ -47,15 +59,47 @@ feature {NONE} -- Initialization
 			current_system_set: current_system = a_system
 		end
 
+feature -- Status report
+
+	is_library: BOOLEAN = True
+			-- Is current group a library?
+
+	is_override: BOOLEAN = False
+			-- Is current group an override group?
+			-- In other words, do classes in this group and other override
+			-- groups take precedence over classes with same names but in
+			-- non-override group? (see 'override_cluster' in ISE's LACE.)
+
 feature -- Access
+
+	pathname: STRING
+			-- Library pathname (may be Void)
+		do
+		end
 
 	library: ET_LIBRARY
 			-- Eiffel library being adapted
 
+	universe: ET_UNIVERSE
+			-- Surrounding universe
+		do
+			Result := Current
+		ensure then
+			definition: Result = Current
+		end
+
 	kind_name: STRING
-			-- Name of the kind of universe (e.g. "library", "assembly", etc.)
+			-- Name of the kind of group or universe (e.g. "cluster", "assembly", "library", etc.)
 		once
 			Result := "library"
+		end
+
+feature -- Nested
+
+	parent: ET_LIBRARY
+			-- Parent group
+		do
+			-- Result := Void
 		end
 
 feature -- Relations

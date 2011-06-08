@@ -5,7 +5,7 @@ note
 		"ECF Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,6 +24,28 @@ feature {NONE} -- Initialization
 		end
 
 feature -- AST factory
+
+	new_adapted_dotnet_assembly (a_name, a_filename: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_ADAPTED_DOTNET_ASSEMBLY
+			-- New adpated .NET assembly
+		require
+			a_name_not_void: a_name /= Void
+			a_filename_not_void: a_filename /= Void
+			a_universe_not_void: a_universe /= Void
+		do
+			create Result.make (a_name, a_filename, a_universe)
+		ensure
+			adapted_dotnet_assembly_not_void: Result /= Void
+		end
+
+	new_adapted_dotnet_assemblies (a_dotnet_assembly: ET_ECF_ADAPTED_DOTNET_ASSEMBLY): ET_ECF_ADAPTED_DOTNET_ASSEMBLIES
+			-- New adapted .NET assembly list
+		require
+			a_dotnet_assembly_not_void: a_dotnet_assembly /= Void
+		do
+			create Result.make (a_dotnet_assembly)
+		ensure
+			adapted_dotnet_assemblies_not_void: Result /= Void
+		end
 
 	new_adapted_library (a_name, a_filename: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_ADAPTED_LIBRARY
 			-- New adpated library

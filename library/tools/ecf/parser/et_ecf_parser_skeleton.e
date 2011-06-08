@@ -115,6 +115,98 @@ feature -- Setting
 
 feature {NONE} -- AST factory
 
+	new_adapted_dotnet_assembly (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_ADAPTED_DOTNET_ASSEMBLY
+			-- New .NET assembly built from `an_element'
+		require
+			an_element_not_void: an_element /= Void
+			is_assembly: STRING_.same_case_insensitive (an_element.name, xml_assembly)
+			a_position_table_not_void: a_position_table /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_name: XM_ATTRIBUTE
+			l_filename: XM_ATTRIBUTE
+			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
+			l_child: XM_ELEMENT
+			l_condition: ET_ECF_CONDITIONS
+			l_conditions: ET_ECF_CONDITIONS
+			l_old_name: XM_ATTRIBUTE
+			l_new_name: XM_ATTRIBUTE
+			l_renamings: DS_HASH_TABLE [STRING, STRING]
+			l_readonly: XM_ATTRIBUTE
+			l_prefix: XM_ATTRIBUTE
+			l_bool: STRING
+		do
+			l_name := an_element.attribute_by_name (xml_name)
+			l_filename := an_element.attribute_by_name (xml_location)
+			if l_name = Void then
+				error_handler.report_eacx_error (element_name (an_element, a_position_table), a_universe)
+			elseif l_filename = Void then
+				error_handler.report_eacy_error (element_name (an_element, a_position_table), a_universe)
+			elseif l_name.value.is_empty then
+				error_handler.report_eacz_error (attribute_name (l_name, a_position_table), a_universe)
+			elseif l_filename.value.is_empty then
+				error_handler.report_eada_error (attribute_name (l_filename, a_position_table), a_universe)
+			else
+				Result := ast_factory.new_adapted_dotnet_assembly (attribute_value (l_name, a_position_table), attribute_value (l_filename, a_position_table), a_universe)
+				l_readonly := an_element.attribute_by_name (xml_readonly)
+				if l_readonly /= Void then
+					l_bool := l_readonly.value
+					if is_true (l_bool) then
+						Result.set_read_only (True)
+					elseif is_false (l_bool) then
+						Result.set_read_only (False)
+					else
+						error_handler.report_eacw_error (attribute_name (l_readonly, a_position_table), l_bool, a_universe)
+					end
+				end
+				l_prefix := an_element.attribute_by_name (xml_prefix)
+				if l_prefix /= Void then
+					Result.set_classname_prefix (l_prefix.value)
+				end
+				l_cursor := an_element.new_cursor
+				from l_cursor.start until l_cursor.after loop
+					l_child ?= l_cursor.item
+					if l_child /= Void then
+						if STRING_.same_case_insensitive (l_child.name, xml_condition) then
+							l_condition := new_condition (l_child, a_position_table, a_universe)
+							if l_condition /= Void then
+								if l_conditions = Void then
+									l_conditions := ast_factory.new_conditions (l_condition)
+								else
+									l_conditions.put_last (l_condition)
+								end
+							end
+						elseif STRING_.same_case_insensitive (l_child.name, xml_renaming) then
+							l_old_name := l_child.attribute_by_name (xml_old_name)
+							l_new_name := l_child.attribute_by_name (xml_new_name)
+							if l_old_name = Void then
+								error_handler.report_eaco_error (element_name (l_child, a_position_table), a_universe)
+							elseif l_old_name.value.is_empty then
+								error_handler.report_eacp_error (attribute_name (l_old_name, a_position_table), a_universe)
+							elseif l_new_name = Void then
+								error_handler.report_eacq_error (element_name (l_child, a_position_table), a_universe)
+							elseif l_new_name.value.is_empty then
+								error_handler.report_eacr_error (attribute_name (l_new_name, a_position_table), a_universe)
+							else
+								if l_renamings = Void then
+									create l_renamings.make_map (10)
+									l_renamings.set_key_equality_tester (case_insensitive_string_equality_tester)
+								end
+								l_renamings.search (l_old_name.value)
+								if l_renamings.found then
+									error_handler.report_eacs_error (attribute_name (l_old_name, a_position_table), a_universe)
+								end
+								l_renamings.force_last (l_new_name.value, l_old_name.value)
+							end
+						end
+					end
+					l_cursor.forth
+				end
+				Result.set_class_renamings (l_renamings)
+				Result.set_condition (l_conditions)
+			end
+		end
+
 	new_adapted_library (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_ADAPTED_LIBRARY
 			-- New library built from `an_element'
 		require
@@ -132,6 +224,9 @@ feature {NONE} -- AST factory
 			l_old_name: XM_ATTRIBUTE
 			l_new_name: XM_ATTRIBUTE
 			l_renamings: DS_HASH_TABLE [STRING, STRING]
+			l_readonly: XM_ATTRIBUTE
+			l_prefix: XM_ATTRIBUTE
+			l_bool: STRING
 		do
 			l_name := an_element.attribute_by_name (xml_name)
 			l_filename := an_element.attribute_by_name (xml_location)
@@ -145,6 +240,21 @@ feature {NONE} -- AST factory
 				error_handler.report_eaad_error (attribute_name (l_filename, a_position_table), a_universe)
 			else
 				Result := ast_factory.new_adapted_library (attribute_value (l_name, a_position_table), attribute_value (l_filename, a_position_table), a_universe)
+				l_readonly := an_element.attribute_by_name (xml_readonly)
+				if l_readonly /= Void then
+					l_bool := l_readonly.value
+					if is_true (l_bool) then
+						Result.set_read_only (True)
+					elseif is_false (l_bool) then
+						Result.set_read_only (False)
+					else
+						error_handler.report_eacv_error (attribute_name (l_readonly, a_position_table), l_bool, a_universe)
+					end
+				end
+				l_prefix := an_element.attribute_by_name (xml_prefix)
+				if l_prefix /= Void then
+					Result.set_classname_prefix (l_prefix.value)
+				end
 				l_cursor := an_element.new_cursor
 				from l_cursor.start until l_cursor.after loop
 					l_child ?= l_cursor.item
@@ -230,6 +340,7 @@ feature {NONE} -- AST factory
 			l_name: XM_ATTRIBUTE
 			l_pathname: XM_ATTRIBUTE
 			l_recursive: XM_ATTRIBUTE
+			l_readonly: XM_ATTRIBUTE
 			l_bool: STRING
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			l_child: XM_ELEMENT
@@ -262,6 +373,17 @@ feature {NONE} -- AST factory
 						Result.set_recursive (False)
 					else
 						error_handler.report_eaam_error (attribute_name (l_recursive, a_position_table), l_bool, a_universe)
+					end
+				end
+				l_readonly := an_element.attribute_by_name (xml_readonly)
+				if l_readonly /= Void then
+					l_bool := l_readonly.value
+					if is_true (l_bool) then
+						Result.set_read_only (True)
+					elseif is_false (l_bool) then
+						Result.set_read_only (False)
+					else
+						error_handler.report_eact_error (attribute_name (l_readonly, a_position_table), l_bool, a_universe)
 					end
 				end
 				l_cursor := an_element.new_cursor
@@ -722,6 +844,7 @@ feature {NONE} -- AST factory
 			l_name: XM_ATTRIBUTE
 			l_pathname: XM_ATTRIBUTE
 			l_recursive: XM_ATTRIBUTE
+			l_readonly: XM_ATTRIBUTE
 			l_bool: STRING
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			l_child: XM_ELEMENT
@@ -754,6 +877,17 @@ feature {NONE} -- AST factory
 						Result.set_recursive (False)
 					else
 						error_handler.report_each_error (attribute_name (l_recursive, a_position_table), l_bool, a_universe)
+					end
+				end
+				l_readonly := an_element.attribute_by_name (xml_readonly)
+				if l_readonly /= Void then
+					l_bool := l_readonly.value
+					if is_true (l_bool) then
+						Result.set_read_only (True)
+					elseif is_false (l_bool) then
+						Result.set_read_only (False)
+					else
+						error_handler.report_eacu_error (attribute_name (l_readonly, a_position_table), l_bool, a_universe)
 					end
 				end
 				l_cursor := an_element.new_cursor
@@ -911,6 +1045,8 @@ feature {NONE} -- AST factory
 			l_clusters: ET_ECF_CLUSTERS
 			l_library: ET_ECF_ADAPTED_LIBRARY
 			l_libraries: ET_ECF_ADAPTED_LIBRARIES
+			l_dotnet_assembly: ET_ECF_ADAPTED_DOTNET_ASSEMBLY
+			l_dotnet_assemblies: ET_ECF_ADAPTED_DOTNET_ASSEMBLIES
 			l_file_rule: ET_ECF_FILE_RULE
 			l_file_rules: ET_ECF_FILE_RULES
 			l_external_include: ET_ECF_EXTERNAL_INCLUDE
@@ -959,6 +1095,15 @@ feature {NONE} -- AST factory
 									l_libraries.put_last (l_library)
 								end
 							end
+						elseif STRING_.same_case_insensitive (l_child.name, xml_assembly) then
+							l_dotnet_assembly := new_adapted_dotnet_assembly (l_child, a_position_table, a_universe)
+							if l_dotnet_assembly /= Void then
+								if l_dotnet_assemblies = Void then
+									l_dotnet_assemblies := ast_factory.new_adapted_dotnet_assemblies (l_dotnet_assembly)
+								else
+									l_dotnet_assemblies.put_last (l_dotnet_assembly)
+								end
+							end
 						elseif STRING_.same_case_insensitive (l_child.name, xml_file_rule) then
 							l_file_rule := new_file_rule (l_child, a_position_table, a_universe)
 							if l_file_rule /= Void then
@@ -1005,12 +1150,15 @@ feature {NONE} -- AST factory
 							end
 						elseif STRING_.same_case_insensitive (l_child.name, xml_variable) then
 							add_variable (Result.variables, l_child, a_position_table, a_universe)
+						elseif STRING_.same_case_insensitive (l_child.name, xml_setting) then
+							add_setting (Result.settings, l_child, a_position_table, a_universe)
 						end
 					end
 					l_cursor.forth
 				end
 				Result.set_clusters (l_clusters)
 				Result.set_libraries (l_libraries)
+				Result.set_dotnet_assemblies (l_dotnet_assemblies)
 				Result.set_file_rules (l_file_rules)
 				Result.set_external_includes (l_external_includes)
 				Result.set_external_libraries (l_external_libraries)
@@ -1187,6 +1335,38 @@ feature {NONE} -- Element change
 -- TODO: warning: several variables with the same name! (not reported by ISE: use the last one.)
 				end
 				a_variables.set_primary_value (l_name.value, l_value.value)
+			end
+		end
+
+	add_setting (a_settings: ET_ECF_SETTINGS; an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Add to `a_settings' the setting held in `an_element'.
+		require
+			a_settings_not_void: a_settings /= Void
+			an_element_not_void: an_element /= Void
+			is_setting: STRING_.same_case_insensitive (an_element.name, xml_setting)
+			a_position_table_not_void: a_position_table /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_name: XM_ATTRIBUTE
+			l_value: XM_ATTRIBUTE
+			l_other_value: STRING
+		do
+			l_name := an_element.attribute_by_name (xml_name)
+			l_value := an_element.attribute_by_name (xml_value)
+			if l_name = Void then
+				error_handler.report_esnm_error (element_name (an_element, a_position_table), a_universe)
+			elseif l_name.value.is_empty then
+				error_handler.report_esne_error (attribute_name (l_name, a_position_table), a_universe)
+			elseif l_value = Void then
+				error_handler.report_esvm_error (element_name (an_element, a_position_table), a_universe)
+			elseif l_value.value.is_empty then
+				error_handler.report_esve_error (attribute_name (l_value, a_position_table), a_universe)
+			else
+				l_other_value := a_settings.primary_value (l_name.value)
+				if l_other_value /= Void then
+-- TODO: warning: several settings with the same name! (not reported by ISE: use the last one.)
+				end
+				a_settings.set_primary_value (l_name.value, l_value.value)
 			end
 		end
 

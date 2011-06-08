@@ -5,7 +5,7 @@ note
 		"Eiffel adapted class universes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,6 +27,14 @@ feature {NONE} -- Initialization
 			name_set: name = a_name
 			universe_set: universe = a_universe
 		end
+
+feature -- Status report
+
+	is_read_only: BOOLEAN
+			-- Is current adapted universe a read-only universe?
+			-- In other words, are changes in this universe and in its classes
+			-- not taken into account when repreparsing or reparsing
+			-- universes depending on it?
 
 feature -- Access
 
@@ -67,6 +75,16 @@ feature -- Access
 
 	universe: ET_UNIVERSE
 			-- Eiffel class universe being adapted
+
+feature -- Status setting
+
+	set_read_only (b: BOOLEAN)
+			-- Set `is_read_only' to `b'.
+		do
+			is_read_only := b
+		ensure
+			read_only_set: is_read_only = b
+		end
 
 feature -- Setting
 

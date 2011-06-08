@@ -17,6 +17,9 @@ feature -- Constants
 	xml_all_classes: STRING = "all_classes"
 			-- "all_classes" attribute name
 
+	xml_assembly: STRING = "assembly"
+			-- "assembly" element name
+
 	xml_build: STRING = "build"
 			-- "build" attribute name
 
@@ -101,6 +104,12 @@ feature -- Constants
 	xml_platform: STRING = "platform"
 			-- "platform" element name
 
+	xml_prefix: STRING = "prefix"
+			-- "prefix" attribute name
+
+	xml_readonly: STRING = "readonly"
+			-- "recursive" attribute name
+
 	xml_recursive: STRING = "recursive"
 			-- "recursive" attribute name
 
@@ -109,6 +118,9 @@ feature -- Constants
 
 	xml_root: STRING = "root"
 			-- "root" element name
+
+	xml_setting: STRING = "setting"
+			-- "setting" element name
 
 	xml_system: STRING = "system"
 			-- "system" element name

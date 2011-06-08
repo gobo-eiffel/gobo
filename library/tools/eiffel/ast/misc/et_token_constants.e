@@ -5,7 +5,7 @@ note
 		"Eiffel token and symbol constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -3834,6 +3834,14 @@ feature -- System
 			create Result.make ("*unknown*", unknown_system)
 		ensure
 			unknown_library_not_void: Result /= Void
+		end
+
+	unknown_dotnet_assembly: ET_DOTNET_ASSEMBLY
+			-- Shared unknown .NET assembly
+		once
+			create Result.make ("*unknown*", Void, unknown_system)
+		ensure
+			unknown_dotnet_assembly_not_void: Result /= Void
 		end
 
 	standard_error_handler: ET_ERROR_HANDLER

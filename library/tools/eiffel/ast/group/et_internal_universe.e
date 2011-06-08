@@ -6,7 +6,7 @@ note
 		in clusters, or imported from libraries or .NET assemblies.
 	]"
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2008-12-23 16:09:12 +0100 (Tue, 23 Dec 2008) $"
 	revision: "$Revision: 6570 $"
@@ -131,6 +131,46 @@ feature -- Access
 			not_void_if_has: has_cluster_by_name (a_names) implies Result /= Void
 		end
 
+	library_by_name (a_name: STRING): ET_LIBRARY
+			-- Library with name `a_name';
+			-- Void if not such library
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
+		local
+			l_adapted_library: ET_ADAPTED_LIBRARY
+		do
+			l_adapted_library := libraries.library_by_name (a_name)
+			if l_adapted_library /= Void then
+				Result := l_adapted_library.library
+			end
+		end
+
+	dotnet_assembly_by_name (a_name: STRING): ET_DOTNET_ASSEMBLY
+			-- .NET assembly with name `a_name';
+			-- Void if not such .NET assembly
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
+		local
+			l_adapted_dotnet_assembly: ET_ADAPTED_DOTNET_ASSEMBLY
+		do
+			l_adapted_dotnet_assembly := dotnet_assemblies.dotnet_assembly_by_name (a_name)
+			if l_adapted_dotnet_assembly /= Void then
+				Result := l_adapted_dotnet_assembly.dotnet_assembly
+			end
+		end
+
+	group_by_name (a_names: ARRAY [STRING]): ET_GROUP
+			-- Group named `a_names' starting from within current universe
+			-- and recursively traversing dependent universes if needed
+			--
+			-- Add missing implicit subclusters if needed.
+			-- Void if not such group.
+		do
+			Result := group_by_name_at_index (a_names, a_names.lower)
+		end
+
 	cluster_with_absolute_pathname (a_pathname: STRING): ET_CLUSTER
 			-- Cluster with absolute pathname `a_pathname' in current universe
 			--
@@ -184,6 +224,45 @@ feature -- Access
 				l_dotnet_assembly ?= a_universe
 				if l_dotnet_assembly /= Void then
 					Result := dotnet_assemblies.adapted_dotnet_assembly (l_dotnet_assembly)
+				end
+			end
+		end
+
+feature {ET_INTERNAL_UNIVERSE} -- Access
+
+	group_by_name_at_index (a_names: ARRAY [STRING]; a_index: INTEGER): ET_GROUP
+			-- Group named `a_names', ignoring the entries before `a_index',
+			-- starting from within current universe and recursively traversing
+			-- dependent universes if needed
+			--
+			-- Add missing implicit subclusters if needed.
+			-- Void if not such group.
+		local
+			nb: INTEGER
+			l_library: ET_LIBRARY
+			l_dotnet_assembly: ET_DOTNET_ASSEMBLY
+
+		do
+			nb := a_names.upper
+			if a_index <= nb then
+				l_library := library_by_name (a_names.item (a_index))
+				if l_library /= Void then
+					if a_index = nb then
+						Result := l_library
+					else
+						Result := l_library.group_by_name_at_index (a_names, a_index + 1)
+					end
+				else
+					l_dotnet_assembly := dotnet_assembly_by_name (a_names.item (a_index))
+					if l_dotnet_assembly /= Void then
+						if a_index = nb then
+							Result := l_dotnet_assembly
+						else
+							Result := l_dotnet_assembly.group_by_name_at_index (a_names, a_index + 1)
+						end
+					else
+						Result := clusters.subcluster_by_name_at_index (a_names, a_index)
+					end
 				end
 			end
 		end

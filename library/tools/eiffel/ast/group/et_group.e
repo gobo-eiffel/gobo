@@ -5,7 +5,7 @@ note
 		"Groups of Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/15 $"
 	revision: "$Revision: #9 $"
@@ -40,6 +40,12 @@ feature -- Status report
 
 	is_cluster: BOOLEAN
 			-- Is current group a cluster?
+		do
+			-- Result := False
+		end
+
+	is_library: BOOLEAN
+			-- Is current group a library?
 		do
 			-- Result := False
 		end
@@ -317,6 +323,16 @@ feature -- Access
 			definition: ANY_.same_objects (Result, Current)
 		end
 
+	library: ET_LIBRARY
+			-- Current group viewed as a library
+		require
+			is_library: is_library
+		do
+			check is_library: is_library end
+		ensure
+			definition: ANY_.same_objects (Result, Current)
+		end
+
 	dotnet_assembly: ET_DOTNET_ASSEMBLY
 			-- Current group viewed as a .NET assembly
 		require
@@ -328,7 +344,7 @@ feature -- Access
 		end
 
 	kind_name: STRING
-			-- Name of the kind of group (e.g. "cluster", "assembly", etc.)
+			-- Name of the kind of group (e.g. "cluster", "assembly", "library", etc.)
 		once
 			Result := "group"
 		ensure

@@ -16,7 +16,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/15 $"
 	revision: "$Revision: #18 $"
@@ -438,6 +438,19 @@ feature -- Access
 			no_void_list: not Result.has_void_item
 			no_void_group: not Result.has_void
 			no_void_class: not Result.there_exists (agent {DS_ARRAYED_LIST [ET_CLASS]}.has_void)
+		end
+
+	group_by_name (a_names: ARRAY [STRING]): ET_GROUP
+			-- Group named `a_names' starting from within current universe
+			-- and recursively traversing dependent universes if needed
+			--
+			-- Add missing implicit subclusters if needed.
+			-- Void if not such group.
+		require
+			a_names_not_void: a_names /= Void
+			no_void_name: not a_names.has (Void)
+			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
+		deferred
 		end
 
 	current_system: ET_SYSTEM

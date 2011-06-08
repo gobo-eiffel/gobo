@@ -5,7 +5,7 @@ note
 		"ECF states fulfilling or not conditions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,6 +31,14 @@ feature {NONE} -- Initialization
 			ise_version_set: ise_version = a_version
 		end
 
+feature -- Status
+
+	is_dotnet: BOOLEAN
+			-- Is system to be compiled to .NET?
+
+	is_multithreaded: BOOLEAN
+			-- Is system to be compiled multithreaded?
+
 feature -- Access
 
 	target: ET_ECF_TARGET
@@ -38,6 +46,24 @@ feature -- Access
 
 	ise_version: UT_VERSION
 			-- ISE version to be used when evaluating version conditions
+
+feature -- Status setting
+
+	set_dotnet (b: BOOLEAN)
+			-- Set `is_dotnet' to `b'.
+		do
+			is_dotnet := b
+		ensure
+			dotnet_set: is_dotnet = b
+		end
+
+	set_multithreaded (b: BOOLEAN)
+			-- Set `is_multithreaded' to `b'.
+		do
+			is_multithreaded := b
+		ensure
+			multithreaded_set: is_multithreaded = b
+		end
 
 invariant
 

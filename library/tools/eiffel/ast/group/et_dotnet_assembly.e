@@ -5,7 +5,7 @@ note
 		"Eiffel .NET assemblies of classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -78,12 +78,6 @@ feature -- Status report
 			-- groups take precedence over classes with same names but in
 			-- non-override group? (see 'override_cluster' in ISE's LACE.)
 
-	is_read_only: BOOLEAN = True
-			-- Is current group a read-only group?
-			-- In other words, are changes in this group and in its classes
-			-- not taken into account when repreparsing or reparsing
-			-- the universe? (see 'library' in ISE's LACE.)
-
 	is_implicit: BOOLEAN
 			-- Has current assembly not been explicitly declared
 			-- but is instead the result of assembly dependences?
@@ -100,6 +94,16 @@ feature -- Access
 
 	referenced_assemblies: ET_DOTNET_ASSEMBLIES
 			-- .NET assemblies that current universe depends on
+
+	group_by_name (a_names: ARRAY [STRING]): ET_GROUP
+			-- Group named `a_names' starting from within current universe
+			-- and recursively traversing dependent universes if needed
+			--
+			-- Add missing implicit subclusters if needed.
+			-- Void if not such group.
+		do
+			Result := group_by_name_at_index (a_names, a_names.lower)
+		end
 
 	adapted_universe (a_universe: ET_UNIVERSE): ET_ADAPTED_UNIVERSE
 			-- Adapted version of `a_universe' viewed from current universe
@@ -132,6 +136,32 @@ feature -- Access
 			-- Name of the kind of group or universe (e.g. "cluster", "assembly", "library", etc.)
 		once
 			Result := "assembly"
+		end
+
+feature {ET_DOTNET_ASSEMBLY, ET_INTERNAL_UNIVERSE} -- Access
+
+	group_by_name_at_index (a_names: ARRAY [STRING]; a_index: INTEGER): ET_GROUP
+			-- Group named `a_names', ignoring the entries before `a_index',
+			-- starting from within current universe and recursively traversing
+			-- dependent universes if needed
+			--
+			-- Add missing implicit subclusters if needed.
+			-- Void if not such group.
+		local
+			nb: INTEGER
+			l_dotnet_assembly: ET_DOTNET_ASSEMBLY
+		do
+			nb := a_names.upper
+			if a_index <= nb then
+				l_dotnet_assembly := referenced_assemblies.assembly_by_name (a_names.item (a_index))
+				if l_dotnet_assembly /= Void then
+					if a_index = nb then
+						Result := l_dotnet_assembly
+					else
+						Result := l_dotnet_assembly.group_by_name_at_index (a_names, a_index + 1)
+					end
+				end
+			end
 		end
 
 feature -- Status setting
