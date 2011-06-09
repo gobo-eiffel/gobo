@@ -5,7 +5,7 @@ note
 		"ECF parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,6 +30,8 @@ feature {NONE} -- Initialization
 			precursor (a_factory, an_error_handler)
 			create parsed_libraries.make_map (10)
 			parsed_libraries.set_key_equality_tester (case_insensitive_string_equality_tester)
+			create parsed_dotnet_assemblies.make_map (10)
+			parsed_dotnet_assemblies.set_key_equality_tester (string_equality_tester)
 				-- We must not create a new ET_ECF_LIBRARY_PARSER
 				-- object if `Current' is one already, or we will
 				-- recurse in this routine forever.
@@ -37,6 +39,7 @@ feature {NONE} -- Initialization
 			if library_parser = Void then
 				create library_parser.make_with_factory (a_factory, an_error_handler)
 				library_parser.set_parsed_libraries (parsed_libraries)
+				library_parser.set_parsed_dotnet_assemblies (parsed_dotnet_assemblies)
 			end
 			create {XM_EIFFEL_PARSER} xml_parser.make
 			xml_parser.set_string_mode_mixed
@@ -50,6 +53,9 @@ feature -- Access
 
 	parsed_libraries: DS_HASH_TABLE [ET_ECF_LIBRARY, STRING]
 			-- Already parsed ECF libraries, indexed by UUID
+
+	parsed_dotnet_assemblies: DS_HASH_TABLE [ET_ECF_DOTNET_ASSEMBLY, STRING]
+			-- Already parsed .NET assemblies, indexed by filenames
 
 	library_parser: ET_ECF_LIBRARY_PARSER
 			-- Library Parser
@@ -123,6 +129,17 @@ feature -- Setting
 			parsed_libraries := a_libraries
 		ensure
 			parsed_libraries_set: parsed_libraries = a_libraries
+		end
+
+	set_parsed_dotnet_assemblies (a_dotnet_assemblies: like parsed_dotnet_assemblies)
+			-- Set `parsed_dotnet_assemblies' to `a_dotnet_assemblies'.
+		require
+			a_dotnet_assemblies_not_void: a_dotnet_assemblies /= Void
+			no_void_dotnet_assembly: not a_dotnet_assemblies.has_void_item
+		do
+			parsed_dotnet_assemblies := a_dotnet_assemblies
+		ensure
+			parsed_dotnet_assemblies_set: parsed_dotnet_assemblies = a_dotnet_assemblies
 		end
 
 feature {NONE} -- Element change

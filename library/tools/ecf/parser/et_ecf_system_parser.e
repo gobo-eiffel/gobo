@@ -36,6 +36,7 @@ feature -- Parsing
 			last_system := Void
 			precursor (a_file)
 			parsed_libraries.wipe_out
+			parsed_dotnet_assemblies.wipe_out
 		end
 
 feature {NONE} -- Element change

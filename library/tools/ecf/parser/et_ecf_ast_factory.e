@@ -135,6 +135,19 @@ feature -- AST factory
 			condition_not_void: Result /= Void
 		end
 
+	new_dotnet_assembly (a_name, a_filename: STRING; a_system: ET_SYSTEM): ET_ECF_DOTNET_ASSEMBLY
+			-- New .NET assembly
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
+			a_filename_not_void: a_filename /= Void
+			a_system_not_void: a_system /= Void
+		do
+			create Result.make (a_name, a_filename, a_system)
+		ensure
+			dotnet_assembly_not_void: Result /= Void
+		end
+
 	new_dotnet_condition (a_value: BOOLEAN): ET_ECF_DOTNET_CONDITION
 			-- New dotnet condition
 		do

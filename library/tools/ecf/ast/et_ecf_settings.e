@@ -45,7 +45,7 @@ feature -- Access
 			primary_settings.search (a_name)
 			if primary_settings.found then
 				Result := primary_settings.found_item
-			else
+			elseif secondary_settings /= Void then
 				Result := secondary_settings.value (a_name)
 			end
 		end

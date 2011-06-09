@@ -49,7 +49,7 @@ feature -- Access
 			primary_variables.search (a_variable)
 			if primary_variables.found then
 				Result := primary_variables.found_item
-			else
+			elseif secondary_variables /= Void then
 				Result := secondary_variables.value (a_variable)
 			end
 		end

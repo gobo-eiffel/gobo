@@ -244,7 +244,7 @@ feature -- Basic operations
 					i := i + 1
 				end
 			end
-			if dotnet_assemblies /= Void then
+			if a_state.is_dotnet and dotnet_assemblies /= Void then
 				l_universe_dotnet_assemblies := a_universe.dotnet_assemblies
 				nb := dotnet_assemblies.count
 				from i := 1 until i > nb loop
