@@ -5,7 +5,7 @@ note
 		"Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/15 $"
 	revision: "$Revision: #43 $"
@@ -610,7 +610,7 @@ feature -- Preparsing
 	filename: STRING
 			-- Filename
 
-	group: ET_GROUP
+	group: ET_PRIMARY_GROUP
 			-- Group (e.g. cluster or .NET assembly) to which current class belongs
 
 	universe: ET_UNIVERSE
@@ -787,12 +787,16 @@ feature -- Preparsing status
 		end
 
 	is_in_group_recursive (a_group: ET_GROUP): BOOLEAN
-			-- Is current class in `a_group' or recursively
-			-- in one of its subgroups?
+			-- Has current class been declared in `a_group' or
+			-- recursively in one of its subgroups?
 		require
 			a_group_not_void: a_group /= Void
 		do
 			if group = a_group then
+				Result := True
+			elseif a_group.universe /= universe then
+				Result := False
+			elseif ANY_.to_any (a_group) = universe then
 				Result := True
 			else
 				Result := a_group.has_subgroup (group)

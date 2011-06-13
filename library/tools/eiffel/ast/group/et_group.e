@@ -38,6 +38,18 @@ feature -- Initialization
 
 feature -- Status report
 
+	is_primary: BOOLEAN
+			-- Is current group a primary group?
+		do
+			-- Result := False
+		end
+
+	is_secondary: BOOLEAN
+			-- Is current group a secondary group?
+		do
+			-- Result := False
+		end
+
 	is_cluster: BOOLEAN
 			-- Is current group a cluster?
 		do
@@ -313,6 +325,45 @@ feature -- Access
 			aboslute_pathname_not_empty: Result.count > 0
 		end
 
+	kind_name: STRING
+			-- Name of the kind of group (e.g. "cluster", "assembly", "library", etc.)
+		once
+			Result := "group"
+		ensure
+			kind_name_not_void: Result /= Void
+		end
+
+	hash_code: INTEGER
+			-- Hash code value
+		do
+			Result := name.hash_code
+		end
+
+	data: ANY
+			-- Arbitrary user data
+
+feature -- Conversion
+
+	as_primary: ET_PRIMARY_GROUP
+			-- Current group viewed as a primary group
+		require
+			is_primary: is_primary
+		do
+			check is_primary: is_primary end
+		ensure
+			definition: ANY_.same_objects (Result, Current)
+		end
+
+	as_secondary: ET_SECONDARY_GROUP
+			-- Current group viewed as a secondary group
+		require
+			is_secondary: is_secondary
+		do
+			check is_secondary: is_secondary end
+		ensure
+			definition: ANY_.same_objects (Result, Current)
+		end
+
 	cluster: ET_CLUSTER
 			-- Current group viewed as a cluster
 		require
@@ -342,23 +393,6 @@ feature -- Access
 		ensure
 			definition: ANY_.same_objects (Result, Current)
 		end
-
-	kind_name: STRING
-			-- Name of the kind of group (e.g. "cluster", "assembly", "library", etc.)
-		once
-			Result := "group"
-		ensure
-			kind_name_not_void: Result /= Void
-		end
-
-	hash_code: INTEGER
-			-- Hash code value
-		do
-			Result := name.hash_code
-		end
-
-	data: ANY
-			-- Arbitrary user data
 
 feature -- Nested
 

@@ -14,7 +14,7 @@ class ET_DOTNET_ASSEMBLY
 
 inherit
 
-	ET_GROUP
+	ET_PRIMARY_GROUP
 		undefine
 			current_system, hash_code,
 			dotnet_assembly, lower_name,
@@ -82,6 +82,42 @@ feature -- Status report
 			-- Has current assembly not been explicitly declared
 			-- but is instead the result of assembly dependences?
 
+	has_group_by_name (a_names: ARRAY [STRING]): BOOLEAN
+			-- Is there a group named `a_names' starting from within current universe
+			-- and recursively traversing dependent universes if needed?
+			-- Do not take into account missing implicit subclusters.
+		do
+			Result := has_group_by_name_at_index (a_names, a_names.lower)
+		end
+
+feature {ET_DOTNET_ASSEMBLY, ET_INTERNAL_UNIVERSE} -- Status report
+
+	has_group_by_name_at_index (a_names: ARRAY [STRING]; a_index: INTEGER): BOOLEAN
+			-- Is there a group named `a_names', ignoring the entries before `a_index',
+			-- starting from within current universe and recursively traversing
+			-- dependent universes if needed?
+			-- Do not take into account missing implicit subclusters.
+		require
+			a_names_not_void: a_names /= Void
+			no_void_name: not a_names.has (Void)
+			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
+		local
+			nb: INTEGER
+			l_dotnet_assembly: ET_DOTNET_ASSEMBLY
+		do
+			nb := a_names.upper
+			if a_index <= nb then
+				l_dotnet_assembly := referenced_assemblies.assembly_by_name (a_names.item (a_index))
+				if l_dotnet_assembly /= Void then
+					if a_index = nb then
+						Result := True
+					else
+						Result := l_dotnet_assembly.has_group_by_name_at_index (a_names, a_index + 1)
+					end
+				end
+			end
+		end
+
 feature -- Access
 
 	pathname: STRING
@@ -147,6 +183,10 @@ feature {ET_DOTNET_ASSEMBLY, ET_INTERNAL_UNIVERSE} -- Access
 			--
 			-- Add missing implicit subclusters if needed.
 			-- Void if not such group.
+		require
+			a_names_not_void: a_names /= Void
+			no_void_name: not a_names.has (Void)
+			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
 		local
 			nb: INTEGER
 			l_dotnet_assembly: ET_DOTNET_ASSEMBLY
@@ -162,6 +202,8 @@ feature {ET_DOTNET_ASSEMBLY, ET_INTERNAL_UNIVERSE} -- Access
 					end
 				end
 			end
+		ensure
+			not_void_if_has: has_group_by_name_at_index (a_names, a_index) implies Result /= Void
 		end
 
 feature -- Status setting

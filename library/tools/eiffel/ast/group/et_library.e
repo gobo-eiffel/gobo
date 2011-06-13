@@ -14,7 +14,7 @@ class ET_LIBRARY
 
 inherit
 
-	ET_GROUP
+	ET_PRIMARY_GROUP
 		undefine
 			current_system, hash_code,
 			library,

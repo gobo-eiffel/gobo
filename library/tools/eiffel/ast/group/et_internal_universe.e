@@ -42,11 +42,21 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
+	has_group_by_name (a_names: ARRAY [STRING]): BOOLEAN
+			-- Is there a group named `a_names' starting from within current universe
+			-- and recursively traversing dependent universes if needed?
+			-- Do not take into account missing implicit subclusters.
+		do
+			Result := has_group_by_name_at_index (a_names, a_names.lower)
+		end
+
 	has_cluster (a_cluster: ET_CLUSTER): BOOLEAN
 			-- Is `a_cluster' one of the clusters or recursively
 			-- subclusters of current universe?
 		do
-			Result := clusters.has_subcluster (a_cluster)
+			if a_cluster.universe = Current then
+				Result := clusters.has_subcluster (a_cluster)
+			end
 		end
 
 	has_cluster_recursive (a_cluster: ET_CLUSTER): BOOLEAN
@@ -103,6 +113,46 @@ feature -- Status report
 			a_pathname_absolute: file_system.is_absolute_pathname (a_pathname)
 		do
 			Result := internal_universes_there_exists (agent {ET_INTERNAL_UNIVERSE}.has_cluster_with_absolute_pathname (a_pathname))
+		end
+
+feature {ET_INTERNAL_UNIVERSE} -- Status report
+
+	has_group_by_name_at_index (a_names: ARRAY [STRING]; a_index: INTEGER): BOOLEAN
+			-- Is there a group named `a_names', ignoring the entries before `a_index',
+			-- starting from within current universe and recursively traversing
+			-- dependent universes if needed?
+			-- Do not take into account missing implicit subclusters.
+		require
+			a_names_not_void: a_names /= Void
+			no_void_name: not a_names.has (Void)
+			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
+		local
+			nb: INTEGER
+			l_library: ET_LIBRARY
+			l_dotnet_assembly: ET_DOTNET_ASSEMBLY
+		do
+			nb := a_names.upper
+			if a_index <= nb then
+				l_library := library_by_name (a_names.item (a_index))
+				if l_library /= Void then
+					if a_index = nb then
+						Result := True
+					else
+						Result := l_library.has_group_by_name_at_index (a_names, a_index + 1)
+					end
+				else
+					l_dotnet_assembly := dotnet_assembly_by_name (a_names.item (a_index))
+					if l_dotnet_assembly /= Void then
+						if a_index = nb then
+							Result := True
+						else
+							Result := l_dotnet_assembly.has_group_by_name_at_index (a_names, a_index + 1)
+						end
+					else
+						Result := clusters.has_subcluster_by_name_at_index (a_names, a_index)
+					end
+				end
+			end
 		end
 
 feature -- Access
@@ -237,11 +287,14 @@ feature {ET_INTERNAL_UNIVERSE} -- Access
 			--
 			-- Add missing implicit subclusters if needed.
 			-- Void if not such group.
+		require
+			a_names_not_void: a_names /= Void
+			no_void_name: not a_names.has (Void)
+			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
 		local
 			nb: INTEGER
 			l_library: ET_LIBRARY
 			l_dotnet_assembly: ET_DOTNET_ASSEMBLY
-
 		do
 			nb := a_names.upper
 			if a_index <= nb then
@@ -265,6 +318,8 @@ feature {ET_INTERNAL_UNIVERSE} -- Access
 					end
 				end
 			end
+		ensure
+			not_void_if_has: has_group_by_name_at_index (a_names, a_index) implies Result /= Void
 		end
 
 feature -- Measurement

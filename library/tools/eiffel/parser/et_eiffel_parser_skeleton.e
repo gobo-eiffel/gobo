@@ -136,7 +136,7 @@ feature -- Parsing
 			a_filename_not_empty: not a_filename.is_empty
 			a_cluster_not_void: a_cluster /= Void
 		local
-			old_group: ET_GROUP
+			old_group: ET_PRIMARY_GROUP
 		do
 			old_group := group
 			group := a_cluster
@@ -174,7 +174,7 @@ feature -- Parsing
 			dir: KL_DIRECTORY
 			s: STRING
 			l_subclusters: ET_CLUSTERS
-			old_group: ET_GROUP
+			old_group: ET_PRIMARY_GROUP
 			l_already_preparsed: BOOLEAN
 			l_classes: DS_ARRAYED_LIST [ET_CLASS]
 			l_class: ET_CLASS
@@ -315,7 +315,7 @@ feature -- AST processing
 			a_cluster: ET_CLUSTER
 			a_file: KL_TEXT_INPUT_FILE
 			old_class: ET_CLASS
-			old_group: ET_GROUP
+			old_group: ET_PRIMARY_GROUP
 		do
 			if a_class.is_none then
 				a_class.set_parsed

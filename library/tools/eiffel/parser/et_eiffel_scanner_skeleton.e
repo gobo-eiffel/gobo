@@ -5,7 +5,7 @@ note
 		"Scanner skeletons for Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/11/19 $"
 	revision: "$Revision: #28 $"
@@ -73,7 +73,7 @@ feature -- Access
 	filename: STRING
 			-- Name of file being parsed
 
-	group: ET_GROUP
+	group: ET_PRIMARY_GROUP
 			-- Group to which the class being parsed belongs
 
 	current_universe: ET_UNIVERSE
@@ -199,7 +199,7 @@ feature -- Cluster dependences
 			l_names: DS_LIST [STRING]
 			l_cluster_names: DS_ARRAYED_LIST [STRING]
 			l_provider_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT
-			old_group: ET_GROUP
+			old_group: ET_PRIMARY_GROUP
 			i: INTEGER
 		do
 			old_group := group
@@ -261,7 +261,7 @@ feature -- Cluster dependences
 			l_names: DS_LIST [STRING]
 			l_cluster_names: DS_ARRAYED_LIST [STRING]
 			l_dependant_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT
-			old_group: ET_GROUP
+			old_group: ET_PRIMARY_GROUP
 			i: INTEGER
 		do
 			old_group := group

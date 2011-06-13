@@ -277,6 +277,17 @@ feature -- Status report
 			Result := l_result.is_true
 		end
 
+	has_group_by_name (a_names: ARRAY [STRING]): BOOLEAN
+			-- Is there a group named `a_names' starting from within current universe
+			-- and recursively traversing dependent universes if needed?
+			-- Do not take into account missing implicit subclusters.
+		require
+			a_names_not_void: a_names /= Void
+			no_void_name: not a_names.has (Void)
+			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
+		deferred
+		end
+
 feature -- Access
 
 	master_classes: DS_HASH_TABLE [ET_MASTER_CLASS, ET_CLASS_NAME]
@@ -451,6 +462,8 @@ feature -- Access
 			no_void_name: not a_names.has (Void)
 			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
 		deferred
+		ensure
+			not_void_if_has: has_group_by_name (a_names) implies Result /= Void
 		end
 
 	current_system: ET_SYSTEM

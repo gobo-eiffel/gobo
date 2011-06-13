@@ -5,7 +5,7 @@ note
 		"Eiffel clusters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,7 @@ deferred class ET_CLUSTER
 
 inherit
 
-	ET_GROUP
+	ET_PRIMARY_GROUP
 		redefine
 			is_cluster, cluster,
 			relative_name, relative_lower_name,
