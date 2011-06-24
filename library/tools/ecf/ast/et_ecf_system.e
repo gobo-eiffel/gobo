@@ -27,7 +27,8 @@ inherit
 			parse_all_recursive,
 			preparse,
 			parse_all,
-			set_none_type
+			set_none_type,
+			default_read_only_value
 		redefine
 			make, name
 		end

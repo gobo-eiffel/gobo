@@ -160,6 +160,26 @@ feature -- Iteration
 			end
 		end
 
+	do_if (an_action: PROCEDURE [ANY, TUPLE [ET_DOTNET_ASSEMBLY]]; a_test: FUNCTION [ANY, TUPLE [ET_DOTNET_ASSEMBLY], BOOLEAN])
+			-- Apply `an_action' to every .NET assembly that satisfies `a_test', from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the list.)
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		local
+			i, nb: INTEGER
+			l_assembly: ET_DOTNET_ASSEMBLY
+		do
+			nb := dotnet_assemblies.count
+			from i := 1 until i > nb loop
+				l_assembly := dotnet_assemblies.item (i).dotnet_assembly
+				if a_test.item ([l_assembly]) then
+					an_action.call ([l_assembly])
+				end
+				i := i + 1
+			end
+		end
+
 	universes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]])
 			-- Apply `an_action' to every .NET assembly (viewed as a universe), from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)

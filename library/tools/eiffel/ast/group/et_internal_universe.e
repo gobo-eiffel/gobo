@@ -350,9 +350,11 @@ feature -- Measurement
 
 	override_cluster_count: INTEGER
 			-- Number of non-abstract non-read-only override clusters and recursively subclusters
-			-- in current universe
+			-- in current universe; 0 if current universe is read only
 		do
-			Result := clusters.override_count
+			if not is_read_only then
+				Result := clusters.override_count
+			end
 		ensure
 			override_cluster_count_not_negavite: Result >= 0
 		end
@@ -375,9 +377,11 @@ feature -- Measurement
 
 	read_write_cluster_count: INTEGER
 			-- Number of non-abstract non-read-only clusters and recursively subclusters
-			-- in current universe
+			-- in current universe; 0 if current universe is read only
 		do
-			Result := clusters.read_write_count
+			if not is_read_only then
+				Result := clusters.read_write_count
+			end
 		ensure
 			read_write_cluster_count_not_negavite: Result >= 0
 		end
@@ -545,6 +549,26 @@ feature -- Iteration
 			end
 		end
 
+	dotnet_assemblies_do_all (a_action: PROCEDURE [ANY, TUPLE [ET_DOTNET_ASSEMBLY]])
+			-- Apply `a_action' to every .NET assembly of `dotnet_assemblies', from first to last.
+			-- (Semantics not guaranteed if `a_action' changes the list.)
+		require
+			a_action_not_void: a_action /= Void
+		do
+			dotnet_assemblies.do_all (a_action)
+		end
+
+	dotnet_assemblies_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_DOTNET_ASSEMBLY]]; a_test: FUNCTION [ANY, TUPLE [ET_DOTNET_ASSEMBLY], BOOLEAN])
+			-- Apply `an_action' to every .NET assembly  of `dotnet_assemblies'
+			-- that satisfies `a_test', from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the list.)
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		do
+			dotnet_assemblies.do_if (an_action, a_test)
+		end
+
 feature -- Relations
 
 	add_universe_recursive (a_visited: DS_HASH_SET [ET_UNIVERSE])
@@ -609,8 +633,7 @@ feature -- Parsing
 			if not is_preparsed then
 				is_preparsed := True
 				clusters.do_all (agent {ET_CLUSTER}.process (current_system.eiffel_preparser))
-			else
--- TODO: .NET assemblies are currently considered read-only.
+			elseif not is_read_only then
 					-- Take care of possibly removed classes (either their old files do not exist
 					-- anymore, or they have been modified and may contain another class).
 					-- Note that if a file contains two classes and is modified between the
@@ -638,11 +661,14 @@ feature -- Parsing
 			-- preparsing works. Read the header comments of these features
 			-- for more details.
 		local
+			l_assembly_set: DS_HASH_SET [ET_DOTNET_ASSEMBLY]
 			l_assemblies: ET_DOTNET_ASSEMBLIES
 		do
 				-- First preparse locally all dependent universes.
+			create l_assembly_set.make (dotnet_assemblies.count)
+			internal_universes_do_recursive (agent {ET_INTERNAL_UNIVERSE}.dotnet_assemblies_do_if (agent l_assembly_set.force_last, agent {ET_DOTNET_ASSEMBLY}.is_consumable))
 			create l_assemblies.make_empty
-			dotnet_assemblies.do_all (agent l_assemblies.put_last)
+			l_assembly_set.do_all (agent l_assemblies.put_last)
 			current_system.dotnet_assembly_consumer.consume_assemblies (l_assemblies)
 			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.preparse)
 			libraries.do_recursive (agent {ET_LIBRARY}.preparse)
@@ -680,8 +706,7 @@ feature -- Parsing
 			if not is_preparsed then
 				is_preparsed := True
 				clusters.do_all (agent {ET_CLUSTER}.process (current_system.eiffel_parser))
-			else
--- TODO: .NET assemblies are currently considered read-only.
+			elseif not is_read_only then
 					-- Take care of possibly removed classes (either their old files do not exist
 					-- anymore, or they have been modified and may contain another class).
 					-- Note that if a file contains two classes and is modified between the
@@ -711,11 +736,14 @@ feature -- Parsing
 			-- preparsing works. Read the header comments of these features
 			-- for more details.
 		local
+			l_assembly_set: DS_HASH_SET [ET_DOTNET_ASSEMBLY]
 			l_assemblies: ET_DOTNET_ASSEMBLIES
 		do
 				-- First preparse locally all dependent universes.
+			create l_assembly_set.make (dotnet_assemblies.count)
+			internal_universes_do_recursive (agent {ET_INTERNAL_UNIVERSE}.dotnet_assemblies_do_if (agent l_assembly_set.force_last, agent {ET_DOTNET_ASSEMBLY}.is_consumable))
 			create l_assemblies.make_empty
-			dotnet_assemblies.do_all (agent l_assemblies.put_last)
+			l_assembly_set.do_all (agent l_assemblies.put_last)
 			current_system.dotnet_assembly_consumer.consume_assemblies (l_assemblies)
 			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.parse_all)
 			libraries.do_recursive (agent {ET_LIBRARY}.parse_all)

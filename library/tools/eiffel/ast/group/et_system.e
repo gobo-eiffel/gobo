@@ -18,7 +18,8 @@ inherit
 		redefine
 			preparse_recursive,
 			parse_all_recursive,
-			set_none_type
+			set_none_type,
+			default_read_only_value
 		end
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
@@ -1430,6 +1431,14 @@ feature {NONE} -- Implementation
 
 	internal_dotnet_assembly_consumer: ET_DOTNET_ASSEMBLY_CONSUMER
 			-- .NET assembly consumer
+
+feature {NONE} -- Constants
+
+	default_read_only_value: BOOLEAN
+			-- Default value for `is_read_only'
+		once
+			Result := False
+		end
 
 invariant
 

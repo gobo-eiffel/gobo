@@ -23,6 +23,7 @@ feature {NONE} -- Initialization
 		do
 			name := a_name
 			universe := a_universe
+			is_read_only := default_read_only_value
 		ensure
 			name_set: name = a_name
 			universe_set: universe = a_universe
@@ -86,6 +87,12 @@ feature -- Status setting
 			read_only_set: is_read_only = b
 		end
 
+	propagate_read_only
+			-- Propagate the read-only status to `universe'.
+		do
+			universe.set_read_only (is_read_only)
+		end
+
 feature -- Setting
 
 	set_classname_prefix (a_prefix: like classname_prefix)
@@ -143,6 +150,14 @@ feature -- Exporting classes
 				end
 				l_cursor.forth
 			end
+		end
+
+feature {NONE} -- Constants
+
+	default_read_only_value: BOOLEAN
+			-- Default value for `is_read_only'
+		once
+			Result := True
 		end
 
 invariant

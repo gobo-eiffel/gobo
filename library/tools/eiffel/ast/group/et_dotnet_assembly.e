@@ -285,6 +285,18 @@ feature -- Relations
 			end
 		end
 
+feature {ET_INTERNAL_UNIVERSE} -- Parsing
+
+	is_consumable: BOOLEAN
+			-- Will current .NET assembly need to be consumed
+			-- next time a universe depending on it will be
+			-- preparsed or parsed.
+		do
+-- TODO: .NET assemblies are currently considered read-only,
+-- regardless of the value of `is_read_only'.
+			Result := not is_preparsed
+		end
+
 feature {ET_DOTNET_ASSEMBLY_CONSUMER} -- Parsing
 
 	set_preparsed (b: BOOLEAN)
