@@ -1206,12 +1206,13 @@ Rename_list: Rename
 			end
 		}
 	| Rename_comma
-		-- TODO: syntax error
 		{
 			$$ := ast_factory.new_renames (last_keyword, counter_value)
 			if $$ /= Void and $1 /= Void then
 				$$.put_first ($1)
 			end
+				-- TODO: syntax error.
+			abort
 		}
 	| Rename_comma Rename_list
 		{

@@ -28,7 +28,8 @@ inherit
 
 	ET_INTERNAL_UNIVERSE
 		rename
-			universe as library
+			universe as library,
+			has_class as has_class_by_name
 		redefine
 			library,
 			kind_name
@@ -69,6 +70,13 @@ feature -- Status report
 			-- In other words, do classes in this group and other override
 			-- groups take precedence over classes with same names but in
 			-- non-override group? (see 'override_cluster' in ISE's LACE.)
+
+	has_class (a_class: ET_CLASS): BOOLEAN
+			-- Has `a_class' been declared locally in current library?
+			-- Do not take into account overridden classes.
+		do
+			Result := a_class.universe = Current and then not a_class.is_overridden
+		end
 
 feature -- Access
 

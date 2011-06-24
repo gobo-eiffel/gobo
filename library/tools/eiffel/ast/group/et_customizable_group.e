@@ -56,6 +56,14 @@ feature -- Access
 	classes: DS_HASH_SET [ET_CLASS]
 			-- Classes being part of current group
 
+feature -- Measurement
+
+	class_count: INTEGER
+			-- Number of classes which are part of current group
+		do
+			Result := classes.count
+		end
+
 feature -- Iteration
 
 	classes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])

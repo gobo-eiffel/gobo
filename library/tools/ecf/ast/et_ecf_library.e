@@ -27,7 +27,8 @@ inherit
 	ET_ECF_INTERNAL_UNIVERSE
 		rename
 			make as make_config,
-			universe as library
+			universe as library,
+			has_class as has_class_by_name
 		undefine
 			kind_name
 		redefine

@@ -22,7 +22,11 @@ inherit
 			kind_name
 		end
 
+	ET_IMPORTED_AGENT_ROUTINES
+		export {NONE} all end
+
 	KL_SHARED_OPERATING_SYSTEM
+		export {NONE} all end
 
 feature -- Status report
 
@@ -215,6 +219,14 @@ feature -- Status report
 			Result := a_dirname.count > 0 and
 				not STRING_.same_string (a_dirname, dot_directory_name) and
 				not STRING_.same_string (a_dirname, dot_dot_directory_name)
+		end
+
+	has_class (a_class: ET_CLASS): BOOLEAN
+			-- Has `a_class' been declared in current cluster or recursively
+			-- in one of its subclusters?
+			-- Do not take into account overridden classes.
+		do
+			Result := a_class.is_in_group_recursive (Current) and then not a_class.is_overridden
 		end
 
 feature -- Access
@@ -586,6 +598,18 @@ feature -- Measurement
 			read_write_count_non_negative: Result >= 0
 		end
 
+	class_count: INTEGER
+			-- Number of classes which have been declared in
+			-- current cluster or recursively in one of its subclusters.
+			-- Do not take into account overridden classes.
+		local
+			l_counter: UT_COUNTER
+		do
+			create l_counter.make (0)
+			classes_do_all (agent class_actions.call (?, agent l_counter.increment))
+			Result := l_counter.item
+		end
+
 feature -- Status setting
 
 	set_abstract (b: BOOLEAN)
@@ -810,6 +834,25 @@ feature -- Element change
 			if subclusters /= Void then
 				subclusters.add_implicit_subclusters
 			end
+		end
+
+feature -- Iteration
+
+	classes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])
+			-- Apply `an_action' on all classes which have been declared in
+			-- current cluster or recursively in one of its subclusters.
+			-- Do not take into account overridden classes.
+		do
+			universe.classes_do_if (an_action, agent {ET_CLASS}.is_in_group_recursive (Current))
+		end
+
+	classes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN])
+			-- Apply `an_action' on all classes which have been declared in
+			-- current cluster or recursively in one of its subclusters,
+			-- and which satisfy `a_test'.
+			-- Do not take into account overridden classes.
+		do
+			universe.classes_do_if (an_action, agent class_actions.conjuncted_semistrict (?, agent {ET_CLASS}.is_in_group_recursive (Current), a_test))
 		end
 
 feature {ET_CLUSTER, ET_CLUSTERS} -- Setting

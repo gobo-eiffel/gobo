@@ -27,7 +27,8 @@ inherit
 
 	ET_UNIVERSE
 		rename
-			universe as dotnet_assembly
+			universe as dotnet_assembly,
+			has_class as has_class_by_name
 		redefine
 			import_classes,
 			add_universe_recursive,
@@ -88,6 +89,13 @@ feature -- Status report
 			-- Do not take into account missing implicit subclusters.
 		do
 			Result := has_group_by_name_at_index (a_names, a_names.lower)
+		end
+
+	has_class (a_class: ET_CLASS): BOOLEAN
+			-- Has `a_class' been declared in current .NET assembly?
+			-- Do not take into account overridden classes.
+		do
+			Result := a_class.universe = Current and then not a_class.is_overridden
 		end
 
 feature {ET_DOTNET_ASSEMBLY, ET_INTERNAL_UNIVERSE} -- Status report
