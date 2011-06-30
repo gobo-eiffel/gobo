@@ -14,6 +14,7 @@ deferred class ET_GROUP
 
 inherit
 
+	ET_ADAPTED_GROUP
 	HASHABLE
 	DEBUG_OUTPUT
 	KL_IMPORTED_ANY_ROUTINES
@@ -130,7 +131,16 @@ feature -- Status report
 			a_class_not_void: a_class /= Void
 		deferred
 		end
-		
+
+	has_class_recursive (a_class: ET_CLASS): BOOLEAN
+			-- Is `a_class' part of current group
+			-- or recusively one of its subgroups?
+		require
+			a_class_not_void: a_class /= Void
+		do
+			Result := has_class (a_class)
+		end
+
 feature -- Access
 
 	universe: ET_UNIVERSE
@@ -146,38 +156,6 @@ feature -- Access
 			Result := universe.current_system
 		ensure
 			current_system_not_void: Result /= Void
-		end
-
-	name: STRING
-			-- Name
-		deferred
-		ensure
-			name_not_void: Result /= Void
-			name_not_empty: Result.count > 0
-		end
-
-	lower_name: STRING
-			-- Lower-name of group
-			-- (May return the same object as `name' if already in lower case.)
-		local
-			i, nb: INTEGER
-			c: CHARACTER
-		do
-			Result := name
-			nb := Result.count
-			from i := 1 until i > nb loop
-				c := Result.item (i)
-				if c >= 'A' and c <= 'Z' then
-					Result := Result.as_lower
-					i := nb + 1 -- Jump out of the loop.
-				else
-					i := i + 1
-				end
-			end
-		ensure
-			lower_name_not_void: Result /= Void
-			lower_name_not_empty: Result.count > 0
-			definition: Result.same_string (name.as_lower)
 		end
 
 	prefixed_name: STRING
@@ -349,6 +327,14 @@ feature -- Access
 	data: ANY
 			-- Arbitrary user data
 
+	group: ET_GROUP
+			-- Group being adapted
+		do
+			Result := Current
+		ensure then
+			definition: Result = Current
+		end
+
 feature -- Measurement
 
 	class_count: INTEGER
@@ -356,6 +342,15 @@ feature -- Measurement
 		deferred
 		ensure
 			class_count_not_negative: Result >= 0
+		end
+
+	class_count_recursive: INTEGER
+			-- Number of classes which are part of current group
+			-- or recursively one of its subgroups
+		do
+			Result := class_count
+		ensure
+			class_coun_recursivet_not_negative: Result >= 0
 		end
 
 feature -- Conversion
@@ -468,6 +463,25 @@ feature -- Iteration
 			an_action_not_void: an_action /= Void
 			a_test_not_void: a_test /= Void
 		deferred
+		end
+
+	classes_do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])
+			-- Apply `an_action' on all classes which are part of current group
+			-- or recursively one of its subgroups.
+		require
+			an_action_not_void: an_action /= Void
+		do
+			classes_do_all (an_action)
+		end
+
+	classes_do_if_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN])
+			-- Apply `an_action' on all classes which are part of current group
+			-- or recursively one of its subgroups and which satisfy `a_test'.
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		do
+			classes_do_if (an_action, a_test)
 		end
 
 feature -- Output

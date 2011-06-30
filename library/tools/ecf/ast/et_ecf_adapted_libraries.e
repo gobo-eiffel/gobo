@@ -17,7 +17,8 @@ inherit
 	ET_ADAPTED_LIBRARIES
 		redefine
 			library,
-			do_adapted
+			do_adapted,
+			do_adapted_if
 		end
 
 create
@@ -43,6 +44,23 @@ feature -- Iteration
 			nb := libraries.count
 			from i := 1 until i > nb loop
 				an_action.call ([libraries.item (i)])
+				i := i + 1
+			end
+		end
+
+	do_adapted_if (an_action: PROCEDURE [ANY, TUPLE [ET_ADAPTED_LIBRARY]]; a_test: FUNCTION [ANY, TUPLE [ET_ADAPTED_LIBRARY], BOOLEAN])
+			-- Apply `an_action' to every library which satisfies `a_test', from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the list.)
+		local
+			i, nb: INTEGER
+			l_library: ET_ECF_ADAPTED_LIBRARY
+		do
+			nb := libraries.count
+			from i := 1 until i > nb loop
+				l_library := libraries.item (i)
+				if a_test.item ([l_library]) then
+					an_action.call ([l_library])
+				end
 				i := i + 1
 			end
 		end

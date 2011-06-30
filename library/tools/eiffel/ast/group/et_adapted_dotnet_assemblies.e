@@ -224,6 +224,16 @@ feature -- Iteration
 			dotnet_assemblies.do_all (an_action)
 		end
 
+	do_adapted_if (an_action: PROCEDURE [ANY, TUPLE [ET_ADAPTED_DOTNET_ASSEMBLY]]; a_test: FUNCTION [ANY, TUPLE [ET_ADAPTED_DOTNET_ASSEMBLY], BOOLEAN])
+			-- Apply `an_action' to every .NET assembly which satisfies `a_test', from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the list.)
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		do
+			dotnet_assemblies.do_if (an_action, a_test)
+		end
+
 	do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_DOTNET_ASSEMBLY]])
 			-- Apply `an_action' to every .NET assemblies,
 			-- and to all .NET assemblies reachable from them.

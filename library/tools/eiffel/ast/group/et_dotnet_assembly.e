@@ -15,6 +15,12 @@ class ET_DOTNET_ASSEMBLY
 inherit
 
 	ET_PRIMARY_GROUP
+		rename
+			group as dotnet_assembly,
+			has_class_recursive as has_class,
+			class_count_recursive as class_count,
+			classes_do_recursive as classes_do_all,
+			classes_do_if_recursive as classes_do_if
 		undefine
 			current_system, hash_code,
 			dotnet_assembly, lower_name,
@@ -22,7 +28,11 @@ inherit
 			relative_name, relative_lower_name
 		redefine
 			is_dotnet_assembly,
-			kind_name
+			kind_name,
+			has_class,
+			class_count,
+			classes_do_all,
+			classes_do_if
 		end
 
 	ET_UNIVERSE
@@ -36,7 +46,10 @@ inherit
 			universes_do_if,
 			dotnet_assembly,
 			adapted_universe,
-			kind_name
+			kind_name,
+			class_count,
+			classes_do_all,
+			classes_do_if
 		end
 
 	ET_ADAPTED_DOTNET_ASSEMBLY
@@ -246,6 +259,15 @@ feature -- Setting
 			referenced_assemblies_set: referenced_assemblies = a_assemblies
 		end
 
+feature -- Measurement
+
+	class_count: INTEGER
+			-- Number of classes declared locally in current .NET assembly.
+			-- Do not take into account overridden classes.
+		do
+			Result := precursor {ET_UNIVERSE}
+		end
+
 feature -- Nested
 
 	parent: ET_DOTNET_ASSEMBLY
@@ -255,6 +277,21 @@ feature -- Nested
 		end
 
 feature -- Iteration
+
+	classes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])
+			-- Apply `an_action' on all classes declared locally in current .NET assembly.
+			-- Do not take into account overridden classes.
+		do
+			precursor {ET_UNIVERSE} (an_action)
+		end
+
+	classes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN])
+			-- Apply `an_action' on all classes declared locally in current .NET assembly
+			-- that satisfy `a_test'.
+			-- Do not take into account overridden classes.
+		do
+			precursor {ET_UNIVERSE} (an_action, a_test)
+		end
 
 	universes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]])
 			-- Apply `an_action' to every universe that current universe depends on.

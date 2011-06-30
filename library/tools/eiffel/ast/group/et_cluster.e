@@ -19,7 +19,11 @@ inherit
 			is_cluster, cluster,
 			relative_name, relative_lower_name,
 			full_pathname, full_unix_pathname,
-			kind_name
+			kind_name,
+			has_class_recursive,
+			class_count_recursive,
+			classes_do_recursive,
+			classes_do_if_recursive
 		end
 
 	ET_IMPORTED_AGENT_ROUTINES
@@ -222,6 +226,13 @@ feature -- Status report
 		end
 
 	has_class (a_class: ET_CLASS): BOOLEAN
+			-- Is current cluster the primary group of `a_class'?
+			-- Do not take into account overridden classes.
+		do
+			Result := a_class.is_in_group (Current) and then not a_class.is_overridden
+		end
+
+	has_class_recursive (a_class: ET_CLASS): BOOLEAN
 			-- Has `a_class' been declared in current cluster or recursively
 			-- in one of its subclusters?
 			-- Do not take into account overridden classes.
@@ -556,7 +567,7 @@ feature -- SCM mappings
 
 feature -- Measurement
 
-	count: INTEGER
+	count_recursive: INTEGER
 			-- Number (recursively) of non-abstract clusters,
 			-- including current cluster
 		do
@@ -564,13 +575,13 @@ feature -- Measurement
 				Result := 1
 			end
 			if subclusters /= Void then
-				Result := Result + subclusters.count
+				Result := Result + subclusters.count_recursive
 			end
 		ensure
-			count_non_negative: Result >= 0
+			count_recursive_not_negative: Result >= 0
 		end
 
-	override_count: INTEGER
+	override_count_recursive: INTEGER
 			-- Number (recursively) of non-abstract non-read-only override clusters,
 			-- including current cluster
 		do
@@ -578,13 +589,13 @@ feature -- Measurement
 				Result := 1
 			end
 			if subclusters /= Void then
-				Result := Result + subclusters.override_count
+				Result := Result + subclusters.override_count_recursive
 			end
 		ensure
-			override_count_non_negative: Result >= 0
+			override_count_not_negative: Result >= 0
 		end
 
-	read_write_count: INTEGER
+	read_write_count_recursive: INTEGER
 			-- Number (recursively) of non-abstract non-read-only clusters,
 			-- including current cluster
 		do
@@ -592,10 +603,10 @@ feature -- Measurement
 				Result := 1
 			end
 			if subclusters /= Void then
-				Result := Result + subclusters.read_write_count
+				Result := Result + subclusters.read_write_count_recursive
 			end
 		ensure
-			read_write_count_non_negative: Result >= 0
+			read_write_count_recursive_not_negative: Result >= 0
 		end
 
 	class_count: INTEGER
@@ -607,6 +618,17 @@ feature -- Measurement
 		do
 			create l_counter.make (0)
 			classes_do_all (agent class_actions.call (?, agent l_counter.increment))
+			Result := l_counter.item
+		end
+
+	class_count_recursive: INTEGER
+			-- Number of classes with current cluster as primary group.
+			-- Do not take into account overridden classes.
+		local
+			l_counter: UT_COUNTER
+		do
+			create l_counter.make (0)
+			classes_do_recursive (agent class_actions.call (?, agent l_counter.increment))
 			Result := l_counter.item
 		end
 
@@ -839,6 +861,21 @@ feature -- Element change
 feature -- Iteration
 
 	classes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])
+			-- Apply `an_action' on all classes with current cluster as primary group.
+			-- Do not take into account overridden classes.
+		do
+			universe.classes_do_if (an_action, agent {ET_CLASS}.is_in_group (Current))
+		end
+
+	classes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN])
+			-- Apply `an_action' on all classes with current cluster as primary group,
+			-- and which satisfy `a_test'.
+			-- Do not take into account overridden classes.
+		do
+			universe.classes_do_if (an_action, agent class_actions.conjuncted_semistrict (?, agent {ET_CLASS}.is_in_group (Current), a_test))
+		end
+
+	classes_do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])
 			-- Apply `an_action' on all classes which have been declared in
 			-- current cluster or recursively in one of its subclusters.
 			-- Do not take into account overridden classes.
@@ -846,7 +883,7 @@ feature -- Iteration
 			universe.classes_do_if (an_action, agent {ET_CLASS}.is_in_group_recursive (Current))
 		end
 
-	classes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN])
+	classes_do_if_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN])
 			-- Apply `an_action' on all classes which have been declared in
 			-- current cluster or recursively in one of its subclusters,
 			-- and which satisfy `a_test'.

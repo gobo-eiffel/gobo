@@ -160,6 +160,26 @@ feature -- Iteration
 			end
 		end
 
+	do_if (an_action: PROCEDURE [ANY, TUPLE [ET_LIBRARY]]; a_test: FUNCTION [ANY, TUPLE [ET_LIBRARY], BOOLEAN])
+			-- Apply `an_action' to every library that satisfies `a_test', from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the list.)
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		local
+			i, nb: INTEGER
+			l_library: ET_LIBRARY
+		do
+			nb := libraries.count
+			from i := 1 until i > nb loop
+				l_library := libraries.item (i).library
+				if a_test.item ([l_library]) then
+					an_action.call ([l_library])
+				end
+				i := i + 1
+			end
+		end
+
 	universes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]])
 			-- Apply `an_action' to every library (viewed as a universe), from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
@@ -202,6 +222,16 @@ feature -- Iteration
 			an_action_not_void: an_action /= Void
 		do
 			libraries.do_all (an_action)
+		end
+
+	do_adapted_if (an_action: PROCEDURE [ANY, TUPLE [ET_ADAPTED_LIBRARY]]; a_test: FUNCTION [ANY, TUPLE [ET_ADAPTED_LIBRARY], BOOLEAN])
+			-- Apply `an_action' to every library which satisfies `a_test', from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the list.)
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		do
+			libraries.do_if (an_action, a_test)
 		end
 
 	do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_LIBRARY]])

@@ -147,7 +147,7 @@ feature -- Access
 			-- `i'-th cluster
 		require
 			i_large_enough: i >= 1
-			i_small_enough: i <= clusters.count
+			i_small_enough: i <= count
 		do
 			Result := clusters.item (i)
 		ensure
@@ -332,6 +332,26 @@ feature -- Iterators
 			end
 		end
 
+	do_if (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]]; a_test: FUNCTION [ANY, TUPLE [ET_CLUSTER], BOOLEAN])
+			-- Apply `an_action' to every cluster which satisfies `a_test'.
+			-- (Semantics not guaranteed if `an_action' adds or removes clusters.)
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		local
+			i, nb: INTEGER
+			l_cluster: ET_CLUSTER
+		do
+			nb := clusters.count
+			from i := 1 until i > nb loop
+				l_cluster := clusters.item (i)
+				if a_test.item ([l_cluster]) then
+					an_action.call ([l_cluster])
+				end
+				i := i + 1
+			end
+		end
+
 	do_all_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' to every cluster.
 			-- (Semantics not guaranteed if `an_action' adds or removes clusters.)
@@ -478,45 +498,53 @@ feature -- Iterators
 feature -- Measurement
 
 	count: INTEGER
+			-- Number of clusters
+		do
+			Result := clusters.count
+		ensure
+			count_not_negative: Result >= 0
+		end
+
+	count_recursive: INTEGER
 			-- Number (recursively) of non-abstract clusters
 		local
 			i, nb: INTEGER
 		do
 			nb := clusters.count
 			from i := 1 until i > nb loop
-				Result := Result + clusters.item (i).count
+				Result := Result + clusters.item (i).count_recursive
 				i := i + 1
 			end
 		ensure
-			count_non_negative: Result >= 0
+			count_recursive_not_negative: Result >= 0
 		end
 
-	override_count: INTEGER
+	override_count_recursive: INTEGER
 			-- Number (recursively) of non-abstract non-read-only override clusters
 		local
 			i, nb: INTEGER
 		do
 			nb := clusters.count
 			from i := 1 until i > nb loop
-				Result := Result + clusters.item (i).override_count
+				Result := Result + clusters.item (i).override_count_recursive
 				i := i + 1
 			end
 		ensure
-			override_count_non_negative: Result >= 0
+			override_count_recursive_not_negative: Result >= 0
 		end
 
-	read_write_count: INTEGER
+	read_write_count_recursive: INTEGER
 			-- Number (recursively) of non-abstract non-read-only clusters
 		local
 			i, nb: INTEGER
 		do
 			nb := clusters.count
 			from i := 1 until i > nb loop
-				Result := Result + clusters.item (i).read_write_count
+				Result := Result + clusters.item (i).read_write_count_recursive
 				i := i + 1
 			end
 		ensure
-			read_write_count_non_negative: Result >= 0
+			read_write_count_recursive_not_negative: Result >= 0
 		end
 
 feature -- Status setting

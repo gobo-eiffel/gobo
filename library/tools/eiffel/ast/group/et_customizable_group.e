@@ -56,6 +56,9 @@ feature -- Access
 	classes: DS_HASH_SET [ET_CLASS]
 			-- Classes being part of current group
 
+	universe: ET_UNIVERSE
+			-- Surrounding universe
+
 feature -- Measurement
 
 	class_count: INTEGER

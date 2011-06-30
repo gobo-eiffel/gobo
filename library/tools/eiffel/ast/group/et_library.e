@@ -15,15 +15,32 @@ class ET_LIBRARY
 inherit
 
 	ET_PRIMARY_GROUP
+		rename
+			group as library,
+			has_class as group_has_class,
+			has_class_recursive as has_class,
+			class_count as group_class_count,
+			class_count_recursive as class_count,
+			classes_do_all as group_classes_do_all,
+			classes_do_if as group_classes_do_if,
+			classes_do_recursive as classes_do_all,
+			classes_do_if_recursive as classes_do_if
 		undefine
-			current_system, hash_code,
+			current_system,
+			hash_code,
 			library,
 			lower_name,
-			full_name, full_lower_name,
-			relative_name, relative_lower_name
+			full_name,
+			full_lower_name,
+			relative_name,
+			relative_lower_name,
+			class_count,
+			classes_do_all,
+			classes_do_if
 		redefine
 			is_library,
-			kind_name
+			kind_name,
+			has_class
 		end
 
 	ET_INTERNAL_UNIVERSE
@@ -71,6 +88,13 @@ feature -- Status report
 			-- groups take precedence over classes with same names but in
 			-- non-override group? (see 'override_cluster' in ISE's LACE.)
 
+	group_has_class (a_class: ET_CLASS): BOOLEAN
+			-- Is current group the primary group of `a_class' ?
+			-- Do not take into account overridden classes.
+		do
+			Result := False
+		end
+
 	has_class (a_class: ET_CLASS): BOOLEAN
 			-- Has `a_class' been declared locally in current library?
 			-- Do not take into account overridden classes.
@@ -102,12 +126,33 @@ feature -- Access
 			Result := "library"
 		end
 
+feature -- Measurement
+
+	group_class_count: INTEGER
+			-- Number of classes with current group as primary group
+		do
+			Result := 0
+		end
+
 feature -- Nested
 
 	parent: ET_LIBRARY
 			-- Parent group
 		do
 			-- Result := Void
+		end
+
+feature -- Iteration
+
+	group_classes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])
+			-- Apply `an_action' on all classes with current group as primary group.
+		do
+		end
+
+	group_classes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN])
+			-- Apply `an_action' on all classes with current group as primary group
+			-- that satisfy `a_test'.
+		do
 		end
 
 feature -- Relations

@@ -55,9 +55,6 @@ feature -- Access
 		do
 		end
 
-	universe: ET_UNIVERSE
-			-- Surrounding universe
-
 feature -- Conversion
 
 	as_secondary: ET_SECONDARY_GROUP

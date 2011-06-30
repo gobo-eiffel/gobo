@@ -327,7 +327,7 @@ feature -- Measurement
 	cluster_count: INTEGER
 			-- Number of non-abstract clusters and recursively subclusters in current universe
 		do
-			Result := clusters.count
+			Result := clusters.count_recursive
 		ensure
 			cluster_count_not_negavite: Result >= 0
 		end
@@ -353,7 +353,7 @@ feature -- Measurement
 			-- in current universe; 0 if current universe is read only
 		do
 			if not is_read_only then
-				Result := clusters.override_count
+				Result := clusters.override_count_recursive
 			end
 		ensure
 			override_cluster_count_not_negavite: Result >= 0
@@ -380,7 +380,7 @@ feature -- Measurement
 			-- in current universe; 0 if current universe is read only
 		do
 			if not is_read_only then
-				Result := clusters.read_write_count
+				Result := clusters.read_write_count_recursive
 			end
 		ensure
 			read_write_cluster_count_not_negavite: Result >= 0
