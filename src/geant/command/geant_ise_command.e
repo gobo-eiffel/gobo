@@ -148,7 +148,7 @@ feature -- Execution
 			a_filename: STRING
 		do
 			create cmd.make (128)
-			cmd.append_string ("ecb -batch")
+			cmd.append_string ("ec -batch")
 			if ace_filename /= Void and then ace_filename.count > 0 then
 				cmd.append_string (" -config ")
 				a_filename := file_system.pathname_from_file_system (ace_filename, unix_file_system)
