@@ -256,17 +256,24 @@ void file_link(char *from, char *to) {
  * Delete file or directory `name'.
  */
 void file_unlink(char *name) {
-	struct stat buf;
-	file_stat(name, &buf);
-	errno = 0;
-	if (buf.st_mode & S_IFDIR) {
-		if (rmdir(name) == -1) {
-			esys(); /* Raise exception */
+	struct stat buf;				/* File statistics */
+	int status;						/* Status from system call */
+
+	file_stat(name, &buf);				/* Side effect: ensure file exists */
+
+	for (;;) {
+		errno = 0;						/* Reset error condition */
+		if (buf.st_mode & S_IFDIR)		/* Directory */
+			status = rmdir(name);		/* Remove only if empty */
+		else
+			status = unlink(name);		/* Not a directory */
+		if (status == -1) {				/* An error occurred */
+			if (errno == EINTR)			/* Interrupted by signal */
+				continue;				/* Re-issue system call */
+			else
+				esys();					/* Raise exception */
 		}
-	} else {
-		if (remove(name) == -1) {
-			esys(); /* Raise exception */
-		}
+		break;
 	}
 }
 
@@ -278,7 +285,7 @@ static char* file_open_mode(int how) {
  * This follows the change in EiffelStudio svn#73874.
  */
 	switch (how) {
-	case 0: 
+	case 0:
 #ifdef EIF_WINDOWS
 		return "rtN";
 #else
@@ -314,7 +321,7 @@ static char* file_open_mode(int how) {
 #else
 		return "a+";
 #endif
-	case 10: 
+	case 10:
 #ifdef EIF_WINDOWS
 		return "rbN";
 #else
@@ -824,7 +831,7 @@ void file_chown(char *name, int uid) {
 #ifdef HAS_CHOWN
 	int gid;
 	struct stat buf;
-	
+
 	file_stat(name, &buf);
 	gid = buf.st_gid;
 	errno = 0;
@@ -841,7 +848,7 @@ void file_chgrp(char *name, int gid) {
 #ifdef HAS_CHOWN
 	int uid;
 	struct stat buf;
-	
+
 	file_stat(name, &buf);
 	uid = buf.st_uid;
 	errno = 0;
@@ -1092,7 +1099,7 @@ static void swallow_nl(FILE *f) {
  * Get an integer from `f'.
  */
 EIF_INTEGER file_gi(FILE *f) {
-	EIF_INTEGER i;     
+	EIF_INTEGER i;
 
 	errno = 0;
 	if (fscanf(f, "%d", &i) < 0) {
@@ -1106,7 +1113,7 @@ EIF_INTEGER file_gi(FILE *f) {
  * Get a real from `f'.
  */
 EIF_REAL_32 file_gr(FILE *f) {
-	EIF_REAL_32 r;     
+	EIF_REAL_32 r;
 	errno = 0;
 	if (fscanf(f, "%f", &r) < 0) {
 		eise_io("FILE: unable to read REAL value.");
@@ -1119,7 +1126,7 @@ EIF_REAL_32 file_gr(FILE *f) {
  * Get a double from `f'.
  */
 EIF_REAL_64 file_gd(FILE *f) {
-	EIF_REAL_64 d;     
+	EIF_REAL_64 d;
 	errno = 0;
 	if (fscanf(f, "%lf", &d) < 0) {
 		eise_io("FILE: unable to read DOUBLE value.");
@@ -1422,7 +1429,7 @@ EIF_REFERENCE file_group(int gid) {
  * Get an integer from `f'.
  */
 EIF_INTEGER file_gib(FILE* f) {
-	EIF_INTEGER i;     
+	EIF_INTEGER i;
 	errno = 0;
 	if (fread (&i, sizeof (EIF_INTEGER), 1, f) != 1) {
 		eise_io("FILE: unable to read INTEGER value.");
@@ -1434,7 +1441,7 @@ EIF_INTEGER file_gib(FILE* f) {
  * Get a real from `f'.
  */
 EIF_REAL_32 file_grb(FILE* f) {
-	EIF_REAL_32 r;     
+	EIF_REAL_32 r;
 	errno = 0;
 	if (fread (&r, sizeof (EIF_REAL_32), 1, f) != 1) {
 		eise_io("FILE: unable to read REAL value.");
@@ -1446,7 +1453,7 @@ EIF_REAL_32 file_grb(FILE* f) {
  * Get a double from `f'.
  */
 EIF_REAL_64 file_gdb(FILE* f) {
-	EIF_REAL_64 d;     
+	EIF_REAL_64 d;
 	errno = 0;
 	if (fread (&d, sizeof(EIF_REAL_64), 1, f) != 1) {
 		eise_io("FILE: unable to read DOUBLE value.");
