@@ -23,6 +23,21 @@ create
 
 	make, make_standard, make_with_factory
 
+feature -- Status report
+
+	finalize_mode: BOOLEAN
+			-- Is system to be compiled in finalize mode?
+
+feature -- Status setting
+
+	set_finalize_mode (b: BOOLEAN)
+			-- Set `finalize_mode' to `b'.
+		do
+			finalize_mode := b
+		ensure
+			finalize_mode_set: finalize_mode = b
+		end
+
 feature -- Access
 
 	last_system: ET_ECF_SYSTEM
@@ -61,6 +76,7 @@ feature {NONE} -- Element change
 			end
 			if l_target /= Void then
 				create l_state.make (l_target, ise_version)
+				l_state.set_finalize_mode (finalize_mode)
 				l_target.update_state (l_state)
 				l_system.select_target (l_target, l_state)
 				parse_libraries (l_system, l_state)

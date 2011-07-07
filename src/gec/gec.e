@@ -185,6 +185,7 @@ feature {NONE} -- Eiffel config file parsing
 			last_system := Void
 			create l_ecf_error_handler.make_standard
 			create l_ecf_parser.make (l_ecf_error_handler)
+			l_ecf_parser.set_finalize_mode (is_finalize)
 			l_ecf_parser.parse_file (a_file)
 			if not l_ecf_error_handler.has_error then
 				last_system := l_ecf_parser.last_system

@@ -39,6 +39,9 @@ feature -- Status
 	is_multithreaded: BOOLEAN
 			-- Is system to be compiled multithreaded?
 
+	finalize_mode: BOOLEAN
+			-- Is system to be compiled in finalize mode?
+
 feature -- Access
 
 	target: ET_ECF_TARGET
@@ -63,6 +66,14 @@ feature -- Status setting
 			is_multithreaded := b
 		ensure
 			multithreaded_set: is_multithreaded = b
+		end
+
+	set_finalize_mode (b: BOOLEAN)
+			-- Set `finalize_mode' to `b'.
+		do
+			finalize_mode := b
+		ensure
+			finalize_mode_set: finalize_mode = b
 		end
 
 invariant
