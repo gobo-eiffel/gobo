@@ -69,7 +69,7 @@ feature -- Access
 			dotnet_assembly_not_void: Result /= Void
 		end
 
-	dotnet_assembly_by_name (a_name: STRING): ET_ADAPTED_DOTNET_ASSEMBLY
+	dotnet_assembly_by_name (a_name: STRING): like dotnet_assembly
 			-- .NET assembly with name `a_name';
 			-- Void if not such .NET assembly
 		require
@@ -77,7 +77,7 @@ feature -- Access
 			a_name_not_empty: a_name.count > 0
 		local
 			i, nb: INTEGER
-			l_dotnet_assembly: ET_ADAPTED_DOTNET_ASSEMBLY
+			l_dotnet_assembly: like dotnet_assembly
 		do
 			nb := dotnet_assemblies.count
 			from i := nb until i < 1 loop
