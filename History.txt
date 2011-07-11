@@ -20,6 +20,8 @@ Version 3.10 - ?
 	  inspect instructions. See bug#3238111.
 	* Fixed bug when an inspect instruction had no else-branch. No exception
 	  was raised.
+  * Use ISE Eiffel's ec instead of ecb, so output is compatible with
+	  estudio; else estudio will complain about a corrupted project.
 
 	gelint:
 
@@ -63,7 +65,7 @@ Version 3.10 - ?
 	  class KL_ANY_ROUTINES now use the new ECMA construct '~' instead
 	  of the combination `same_type' and then `is_equal'.
 	* Added feature `is_true' to class KL_AGENT_ROUTINES.
-	* Fixed bug in feature `read_to_string' of file classes where the 
+	* Fixed bug in feature `read_to_string' of file classes where the
 	  hash code was not reset properly.
 
 	Gobo Eiffel Lexical Library:
@@ -129,7 +131,7 @@ Version 3.10 - ?
 	  case the manifest array will be an array of that type.
 	* The scope of object-test locals can cover the following assertions
 	  in the same postcondition or invariant clause because it's as if
-	  they were separated by "and then" operators. It was already 
+	  they were separated by "and then" operators. It was already
 	  implemented that way in preconditions.
 
 	Gobo Eiffel XML Library:
@@ -268,7 +270,7 @@ Version 3.8 - 11 May 2008
 
 	gelint:
 
-	* Fixed bug in the flat Degree 3 mode where the precursor features 
+	* Fixed bug in the flat Degree 3 mode where the precursor features
 	  corresponding to precursor expressions or instructions were not checked.
 	* Fixed bug when the type in a manifest type is based on an unknown class.
 	  Instead of reporting a VTCT error, gelint/gec were reporting another
@@ -394,7 +396,7 @@ Version 3.7 - 5 November 2007
 
 	gelint:
 
-	* Fixed bug when determining the type of a call to a Tuple label 
+	* Fixed bug when determining the type of a call to a Tuple label
 	  when appearing in a generic class.
 	* Added support for some incrementality when used within the same session.
 
@@ -403,7 +405,7 @@ Version 3.7 - 5 November 2007
 	* Added the possibility to specify a maximum number of options.
 	* Added the possibility to make option arguments optional for options
 	  that only have a long form.
-	* The contracts now certify that the setup of arguments are 
+	* The contracts now certify that the setup of arguments are
 	  unambiguous.
 
 	Gobo Eiffel Kernel Library:
@@ -434,7 +436,7 @@ Version 3.6 - 14 June 2007
 
 	Gobo Eiffel Structure Library:
 
-	* Added iterator features (`do_all', `do_all_with_index', `do_if', 
+	* Added iterator features (`do_all', `do_all_with_index', `do_if',
 	  `do_if_with_index', `there_exists') to relevant classes.
 	* Fixed bug in invariant of DS_MULTIARRAYED_SPARSE_SET and
 	  DS_MULTIARRAYED_SPARSE_TABLE when `capacity' is zero.
@@ -499,7 +501,7 @@ Version 3.5 - 23 January 2007
 	* Fixed bug in KL_(UNIX|WINDOWS)_FILE_SYSTEM.absolute_parent_pathname.
 	  When the result was a root directory it was erroneously returning
 	  `absolute_root_directory'. So if you were in 'C:\gobo' and asked for
-	  the `absolute_parent_pathname' of 'D:\foo' you were getting 'C:\' 
+	  the `absolute_parent_pathname' of 'D:\foo' you were getting 'C:\'
 	  instead of the expected 'D:\'.
 	* Fixed bug in KL_WINDOWS_FILE_SYSTEM.canonical_pathname which for the
 	  input '\\gobo\foo\..' was returning the invalid pathname '\\gobo\'
@@ -520,7 +522,7 @@ Version 3.5 - 23 January 2007
 	      append_code -> append_item_code
 	      has_code -> has_item_code
 	      index_of_code -> index_of_item_code
-	  The new names are not great, but they match the feature `item_code'. 
+	  The new names are not great, but they match the feature `item_code'.
 
 	Gobo Eiffel Math/Decimal Library:
 
@@ -624,7 +626,7 @@ Version 3.4 - 10 July 2005
 
 	getest:
 
-	* Added command-line options '--verbose' and '-v' to run 
+	* Added command-line options '--verbose' and '-v' to run
 	  getest in verbose mode.
 	* In verbose mode getest prints the number of test cases
 	  that have been generated.
@@ -660,7 +662,7 @@ Version 3.4 - 10 July 2005
 	* Added feature `truncated_to_integer' to KL_DOUBLE_ROUTINES because
 	  this routine is not supported anymore in SE 2.2b1.
 	* Added class KL_CLONABLE. This class should be used whenever
-	  the corresponding objects need to be cloned. This is the 
+	  the corresponding objects need to be cloned. This is the
 	  consequence of `clone' not being supported anymore in SE 2.2b1.
 	  If you need to clone strings or arrays, use `cloned_string'
 	  by inheriting from KL_IMPORTED_STRING_ROUTINES and `cloned_array'
@@ -678,9 +680,9 @@ Version 3.4 - 10 July 2005
 	Gobo Eiffel Math/Decimal Library:
 
 	* New library, incorporated from the SAFE project (http://safe.sf.net).
-	* Contains MA_DECIMAL, which provides Decimal floating-point arithmetic, 
-	  with unrounded and integer arithmetic as a subset 
-	  (IEEE 754R + IEEE 854 + ANSI X3.274 + ECMA 334). 
+	* Contains MA_DECIMAL, which provides Decimal floating-point arithmetic,
+	  with unrounded and integer arithmetic as a subset
+	  (IEEE 754R + IEEE 854 + ANSI X3.274 + ECMA 334).
 
 	Gobo Eiffel String Library:
 
