@@ -1212,7 +1212,7 @@ Rename_list: Rename
 				$$.put_first ($1)
 			end
 				-- TODO: syntax error.
-			abort
+			raise_error
 		}
 	| Rename_comma Rename_list
 		{
