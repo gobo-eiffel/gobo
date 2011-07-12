@@ -371,7 +371,7 @@ feature -- Access
 				if Result = Void then
 					l_imported_class := first_imported_class
 					if l_imported_class /= Void then
-						Result := first_local_non_override_class
+						Result := l_imported_class.first_local_non_override_class
 					end
 				end
 			end
@@ -1393,9 +1393,13 @@ feature {NONE} -- Element change
 			-- Update `is_modified' accordingly.
 		require
 			a_class_not_void: a_class /= Void
+		local
+			l_old_intrinsic_class: ET_NAMED_CLASS
 		do
 			if intrinsic_class /= a_class then
-				if intrinsic_class.is_override (universe) then
+				l_old_intrinsic_class := intrinsic_class
+				intrinsic_class := a_class
+				if l_old_intrinsic_class.is_override (universe) then
 					if not a_class.is_override (universe) then
 						if first_imported_class /= Void then
 							unmark_overridden (first_imported_class)
@@ -1408,7 +1412,6 @@ feature {NONE} -- Element change
 						other_imported_classes.do_all (agent mark_overridden)
 					end
 				end
-				intrinsic_class := a_class
 				if first_overriding_class = Void then
 					is_modified := True
 					set_marked (is_marked)
