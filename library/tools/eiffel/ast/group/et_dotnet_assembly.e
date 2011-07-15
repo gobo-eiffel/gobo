@@ -29,6 +29,7 @@ inherit
 		redefine
 			is_dotnet_assembly,
 			kind_name,
+			kind_name_plural,
 			has_class,
 			class_count,
 			classes_do_all,
@@ -193,6 +194,12 @@ feature -- Access
 			-- Name of the kind of group or universe (e.g. "cluster", "assembly", "library", etc.)
 		once
 			Result := "assembly"
+		end
+
+	kind_name_plural: STRING
+			-- Plural form of name of the kind of group (e.g. "clusters", "assemblies", "libraries", etc.)
+		once
+			Result := "assemblies"
 		end
 
 feature {ET_DOTNET_ASSEMBLY, ET_INTERNAL_UNIVERSE} -- Access
