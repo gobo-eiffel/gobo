@@ -4,7 +4,7 @@
 
 	<description>
 		system: "Test VJAR validity rule"
-		copyright: "Copyright (c) 2007, Eric Bezault and others"
+		copyright: "Copyright (c) 2007-2011, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -26,6 +26,7 @@
 			Install other items in ${system} directory.
 		</description>
 		<geant file="build.eant" target="install" dir="test1"/>
+		<geant file="build.eant" target="install" dir="test2"/>
 	</target>
 
 	<target name="other_clean" depend="init">
@@ -33,7 +34,9 @@
 			Remove other intermediary generated files.
 		</description>
 		<geant file="build.eant" target="clean" dir="test1"/>
+		<geant file="build.eant" target="clean" dir="test2"/>
 		<delete directory="Ttest1"/>
+		<delete directory="Ttest2"/>
 	</target>
 
 	<target name="other_clobber" depend="init">
@@ -41,6 +44,7 @@
 			Remove other generated files.
 		</description>
 		<geant file="build.eant" target="clobber" dir="test1"/>
+		<geant file="build.eant" target="clobber" dir="test2"/>
 	</target>
 
 	<target name="init_system">

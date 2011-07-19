@@ -380,7 +380,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			elseif other = Current and (other_context = a_context or else not is_generic) then
 				Result := True
 			elseif base_class = other_base_class then
-				if not other.is_generic then
+				if is_expanded and not other.is_expanded then
+					Result := False
+				elseif not other.is_generic then
 					Result := not is_generic
 				elseif not is_generic then
 					Result := False
