@@ -5,7 +5,7 @@ note
 		"Eiffel systems"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/15 $"
 	revision: "$Revision: #22 $"
@@ -121,7 +121,8 @@ feature -- Kernel types
 			l_name := tokens.none_class_name
 			l_master_class := master_class (l_name)
 			l_master_class.set_in_system (True)
-			create none_type.make (Void, l_name, l_master_class)
+			create none_type.make (tokens.implicit_attached_type_mark, l_name, l_master_class)
+			create detachable_none_type.make (tokens.detachable_keyword, l_name, l_master_class)
 			l_class := ast_factory.new_class (l_name)
 			register_class (l_class)
 			create l_none_group.make (Current)
@@ -996,7 +997,7 @@ feature -- Compilation
 		do
 			if root_type = Void then
 				compile_all
-			elseif  root_type = none_type then
+			elseif root_type = none_type then
 				compile_all
 			elseif root_type = any_type then
 				compile_all

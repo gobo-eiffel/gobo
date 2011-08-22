@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Eiffel Ant file for gelint validity tests"
-		copyright: "Copyright (c) 2008, Eric Bezault and others"
+		copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -120,22 +120,68 @@
 				of argument "do_clean".
 			-->
 		<set name="do_clean" value="${do_clean}"/>
-		<geant file="build.eant" target="${target}" dir="gvwmc2"/>
+		<set name="do_all_exit_code" value="0"/>
+		
+		<geant file="build.eant" target="${target}" exit_code_variable="gvwmc2_exit_code" dir="gvwmc2"/>
+		<set name="do_all_exit_code" value="1" unless="${gvwmc2_exit_code}=0"/>
 		<geant file="build.eant" target="clean" dir="gvwmc2" if="${do_clean}=true"/>
-		<geant file="build.eant" target="${target}" dir="veen8"/>
+		
+		<geant file="build.eant" target="${target}" exit_code_variable="vdrd2_exit_code" dir="vdrd2"/>
+		<set name="do_all_exit_code" value="1" unless="${vdrd2_exit_code}=0"/>
+		<geant file="build.eant" target="clean" dir="vdrd2" if="${do_clean}=true"/>
+		
+		<geant file="build.eant" target="${target}" exit_code_variable="veen8_exit_code" dir="veen8"/>
+		<set name="do_all_exit_code" value="1" unless="${veen8_exit_code}=0"/>
 		<geant file="build.eant" target="clean" dir="veen8" if="${do_clean}=true"/>
-		<geant file="build.eant" target="${target}" dir="vjar"/>
+		
+		<geant file="build.eant" target="${target}" exit_code_variable="vfac3_exit_code" dir="vfac3"/>
+		<set name="do_all_exit_code" value="1" unless="${vfac3_exit_code}=0"/>
+		<geant file="build.eant" target="clean" dir="vfac3" if="${do_clean}=true"/>
+		
+		<geant file="build.eant" target="${target}" exit_code_variable="vjar_exit_code" dir="vjar"/>
+		<set name="do_all_exit_code" value="1" unless="${vjar_exit_code}=0"/>
 		<geant file="build.eant" target="clean" dir="vjar" if="${do_clean}=true"/>
-		<geant file="build.eant" target="${target}" dir="vpir1"/>
+		
+		<geant file="build.eant" target="${target}" exit_code_variable="vpir1_exit_code" dir="vpir1"/>
+		<set name="do_all_exit_code" value="1" unless="${vpir1_exit_code}=0"/>
 		<geant file="build.eant" target="clean" dir="vpir1" if="${do_clean}=true"/>
-		<geant file="build.eant" target="${target}" dir="vqmc3"/>
+		
+		<geant file="build.eant" target="${target}" exit_code_variable="vqmc3_exit_code" dir="vqmc3"/>
+		<set name="do_all_exit_code" value="1" unless="${vqmc3_exit_code}=0"/>
 		<geant file="build.eant" target="clean" dir="vqmc3" if="${do_clean}=true"/>
-		<geant file="build.eant" target="${target}" dir="vtct"/>
+		
+		<geant file="build.eant" target="${target}" exit_code_variable="vtct_exit_code" dir="vtct"/>
+		<set name="do_all_exit_code" value="1" unless="${vtct_exit_code}=0"/>
 		<geant file="build.eant" target="clean" dir="vtct" if="${do_clean}=true"/>
-		<geant file="build.eant" target="${target}" dir="vuex1"/>
+		
+		<geant file="build.eant" target="${target}" exit_code_variable="vuex1_exit_code" dir="vuex1"/>
+		<set name="do_all_exit_code" value="1" unless="${vuex1_exit_code}=0"/>
 		<geant file="build.eant" target="clean" dir="vuex1" if="${do_clean}=true"/>
-		<geant file="build.eant" target="${target}" dir="vuot1"/>
+		
+		<geant file="build.eant" target="${target}" exit_code_variable="vuot1_exit_code" dir="vuot1"/>
+		<set name="do_all_exit_code" value="1" unless="${vuot1_exit_code}=0"/>
 		<geant file="build.eant" target="clean" dir="vuot1" if="${do_clean}=true"/>
+		
+		<geant file="build.eant" target="${target}" exit_code_variable="vuta2_exit_code" dir="vuta2"/>
+		<set name="do_all_exit_code" value="1" unless="${vuta2_exit_code}=0"/>
+		<geant file="build.eant" target="clean" dir="vuta2" if="${do_clean}=true"/>
+		
+		<echo message="" unless="${do_all_exit_code}=0"/>
+		<echo message="" unless="${do_all_exit_code}=0"/>
+		<echo message="##################################" unless="${do_all_exit_code}=0"/>
+		<echo message="# FAILED: gvwmc2" unless="${gvwmc2_exit_code}=0"/>
+		<echo message="# FAILED: vdrd2" unless="${vdrd2_exit_code}=0"/>
+		<echo message="# FAILED: veen8" unless="${veen8_exit_code}=0"/>
+		<echo message="# FAILED: vfac3" unless="${vfac3_exit_code}=0"/>
+		<echo message="# FAILED: vjar" unless="${vjar_exit_code}=0"/>
+		<echo message="# FAILED: vpir1" unless="${vpir1_exit_code}=0"/>
+		<echo message="# FAILED: vqmc3" unless="${vqmc3_exit_code}=0"/>
+		<echo message="# FAILED: vtct" unless="${vtct_exit_code}=0"/>
+		<echo message="# FAILED: vuex1" unless="${vuex1_exit_code}=0"/>
+		<echo message="# FAILED: vuot1" unless="${vuot1_exit_code}=0"/>
+		<echo message="# FAILED: vuta2" unless="${vuta2_exit_code}=0"/>
+		<echo message="##################################" unless="${do_all_exit_code}=0"/>
+		<exit code="${do_all_exit_code}" unless="${do_all_exit_code}=0"/>
 	</target>
 
 </project>

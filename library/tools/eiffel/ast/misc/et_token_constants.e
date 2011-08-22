@@ -2240,11 +2240,261 @@ feature -- Feature names
 feature -- Types
 
 	like_current: ET_LIKE_CURRENT
-			-- Type 'like Current'
+			-- Type 'like Current' with implicit 'attached' type mark
+		once
+			create Result.make (implicit_attached_type_mark)
+		ensure
+			like_current_not_void: Result /= Void
+		end
+
+	attached_like_current: ET_LIKE_CURRENT
+			-- Type 'attached like Current'
+		once
+			create Result.make (attached_keyword)
+		ensure
+			attached_like_current_not_void: Result /= Void
+		end
+
+	identity_type: ET_LIKE_CURRENT
+			-- Type 'like Current' with no type mark modifier
 		once
 			create Result.make (Void)
 		ensure
-			like_current_not_void: Result /= Void
+			identity_type_not_void: Result /= Void
+		end
+
+	implicit_attached_type_mark: ET_IMPLICIT_TYPE_MARK
+			-- Implicit 'attached' type mark
+		once
+			create Result.make
+			Result.set_attached_mark (True)
+		ensure
+			implicit_attached_type_mark_not_void: Result /= Void
+		end
+
+	implicit_attached_expanded_type_mark: ET_IMPLICIT_TYPE_MARK
+			-- Implicit 'attached expanded' type mark
+		once
+			create Result.make
+			Result.set_attached_mark (True)
+			Result.set_expanded_mark (True)
+		ensure
+			implicit_attached_expanded_type_mark_not_void: Result /= Void
+		end
+
+	implicit_attached_reference_type_mark: ET_IMPLICIT_TYPE_MARK
+			-- Implicit 'attached reference' type mark
+		once
+			create Result.make
+			Result.set_attached_mark (True)
+			Result.set_reference_mark (True)
+		ensure
+			implicit_attached_reference_type_mark_not_void: Result /= Void
+		end
+
+	implicit_attached_separate_type_mark: ET_IMPLICIT_TYPE_MARK
+			-- Implicit 'attached separate' type mark
+		once
+			create Result.make
+			Result.set_attached_mark (True)
+			Result.set_separate_mark (True)
+		ensure
+			implicit_attached_separate_type_mark_not_void: Result /= Void
+		end
+
+	implicit_attached_separate_expanded_type_mark: ET_IMPLICIT_TYPE_MARK
+			-- Implicit 'attached separate expanded' type mark
+		once
+			create Result.make
+			Result.set_attached_mark (True)
+			Result.set_separate_mark (True)
+			Result.set_expanded_mark (True)
+		ensure
+			implicit_attached_separate_expanded_type_mark_not_void: Result /= Void
+		end
+
+	implicit_attached_separate_reference_type_mark: ET_IMPLICIT_TYPE_MARK
+			-- Implicit 'attached separate reference' type mark
+		once
+			create Result.make
+			Result.set_attached_mark (True)
+			Result.set_separate_mark (True)
+			Result.set_reference_mark (True)
+		ensure
+			implicit_attached_separate_reference_type_mark_not_void: Result /= Void
+		end
+
+	implicit_detachable_type_mark: ET_IMPLICIT_TYPE_MARK
+			-- Implicit 'detachable' type mark
+		once
+			create Result.make
+			Result.set_detachable_mark (True)
+		ensure
+			implicit_detachable_type_mark_not_void: Result /= Void
+		end
+
+	implicit_detachable_expanded_type_mark: ET_IMPLICIT_TYPE_MARK
+			-- Implicit 'detachable expanded' type mark
+		once
+			create Result.make
+			Result.set_detachable_mark (True)
+			Result.set_expanded_mark (True)
+		ensure
+			implicit_detachable_expanded_type_mark_not_void: Result /= Void
+		end
+
+	implicit_detachable_reference_type_mark: ET_IMPLICIT_TYPE_MARK
+			-- Implicit 'detachable reference' type mark
+		once
+			create Result.make
+			Result.set_detachable_mark (True)
+			Result.set_reference_mark (True)
+		ensure
+			implicit_detachable_reference_type_mark_not_void: Result /= Void
+		end
+
+	implicit_detachable_separate_type_mark: ET_IMPLICIT_TYPE_MARK
+			-- Implicit 'detachable separate' type mark
+		once
+			create Result.make
+			Result.set_detachable_mark (True)
+			Result.set_separate_mark (True)
+		ensure
+			implicit_detachable_separate_type_mark_not_void: Result /= Void
+		end
+
+	implicit_detachable_separate_expanded_type_mark: ET_IMPLICIT_TYPE_MARK
+			-- Implicit 'detachable separate expanded' type mark
+		once
+			create Result.make
+			Result.set_detachable_mark (True)
+			Result.set_separate_mark (True)
+			Result.set_expanded_mark (True)
+		ensure
+			implicit_detachable_separate_expanded_type_mark_not_void: Result /= Void
+		end
+
+	implicit_detachable_separate_reference_type_mark: ET_IMPLICIT_TYPE_MARK
+			-- Implicit 'detachable separate reference' type mark
+		once
+			create Result.make
+			Result.set_detachable_mark (True)
+			Result.set_separate_mark (True)
+			Result.set_reference_mark (True)
+		ensure
+			implicit_detachable_separate_reference_type_mark_not_void: Result /= Void
+		end
+
+	implicit_expanded_type_mark: ET_IMPLICIT_TYPE_MARK
+			-- Implicit 'expanded' type mark
+		once
+			create Result.make
+			Result.set_expanded_mark (True)
+		ensure
+			implicit_expanded_type_mark_not_void: Result /= Void
+		end
+
+	implicit_reference_type_mark: ET_IMPLICIT_TYPE_MARK
+			-- Implicit 'reference' type mark
+		once
+			create Result.make
+			Result.set_reference_mark (True)
+		ensure
+			implicit_reference_type_mark_not_void: Result /= Void
+		end
+
+	implicit_separate_type_mark: ET_IMPLICIT_TYPE_MARK
+			-- Implicit 'separate' type mark
+		once
+			create Result.make
+			Result.set_separate_mark (True)
+		ensure
+			implicit_separate_type_mark_not_void: Result /= Void
+		end
+
+	implicit_separate_expanded_type_mark: ET_IMPLICIT_TYPE_MARK
+			-- Implicit 'separate expanded' type mark
+		once
+			create Result.make
+			Result.set_separate_mark (True)
+			Result.set_expanded_mark (True)
+		ensure
+			implicit_separate_expanded_type_mark_not_void: Result /= Void
+		end
+
+	implicit_separate_reference_type_mark: ET_IMPLICIT_TYPE_MARK
+			-- Implicit 'separate reference' type mark
+		once
+			create Result.make
+			Result.set_separate_mark (True)
+			Result.set_reference_mark (True)
+		ensure
+			implicit_separate_reference_type_mark_not_void: Result /= Void
+		end
+
+	implicit_no_type_mark: ET_IMPLICIT_TYPE_MARK
+			-- Implicit no type mark
+		once
+			create Result.make
+		ensure
+			implicit_no_type_mark_not_void: Result /= Void
+		end
+
+	implicit_type_mark (a_expanded_mark, a_reference_mark, a_separate_mark, a_attached_mark, a_detachable_mark: BOOLEAN): ET_IMPLICIT_TYPE_MARK
+			-- Implicity type mark
+		require
+			expandedness_consistency: not (a_expanded_mark and a_reference_mark)
+			attachment_consistency: not (a_attached_mark and a_detachable_mark)
+		do
+			if a_attached_mark then
+				if a_separate_mark then
+					if a_expanded_mark then
+						Result := implicit_attached_separate_expanded_type_mark
+					elseif a_reference_mark then
+						Result := implicit_attached_separate_reference_type_mark
+					else
+						Result := implicit_attached_separate_type_mark
+					end
+				elseif a_expanded_mark then
+					Result := implicit_attached_expanded_type_mark
+				elseif a_reference_mark then
+					Result := implicit_attached_reference_type_mark
+				else
+					Result := implicit_attached_type_mark
+				end
+			elseif a_detachable_mark then
+				if a_separate_mark then
+					if a_expanded_mark then
+						Result := implicit_detachable_separate_expanded_type_mark
+					elseif a_reference_mark then
+						Result := implicit_detachable_separate_reference_type_mark
+					else
+						Result := implicit_detachable_separate_type_mark
+					end
+				elseif a_expanded_mark then
+					Result := implicit_detachable_expanded_type_mark
+				elseif a_reference_mark then
+					Result := implicit_detachable_reference_type_mark
+				else
+					Result := implicit_detachable_type_mark
+				end
+			elseif a_separate_mark then
+				if a_expanded_mark then
+					Result := implicit_separate_expanded_type_mark
+				elseif a_reference_mark then
+					Result := implicit_separate_reference_type_mark
+				else
+					Result := implicit_separate_type_mark
+				end
+			elseif a_expanded_mark then
+				Result := implicit_expanded_type_mark
+			elseif a_reference_mark then
+				Result := implicit_reference_type_mark
+			else
+				Result := implicit_no_type_mark
+			end
+		ensure
+			implicit_type_mark_not_void: Result /= Void
 		end
 
 feature -- Symbols
@@ -3610,6 +3860,21 @@ feature -- Keyword and symbol names
 	when_keyword_name: STRING = "when"
 	xor_keyword_name: STRING = "xor"
 			-- Eiffel keyword names
+
+	attached_expanded_type_mark_name: STRING = "attached expanded"
+	attached_reference_type_mark_name: STRING = "attached reference"
+	attached_separate_type_mark_name: STRING = "attached separate"
+	attached_separate_expanded_type_mark_name: STRING = "attached separate expanded"
+	attached_separate_reference_type_mark_name: STRING = "attached separate reference"
+	detachable_expanded_type_mark_name: STRING = "detachable expanded"
+	detachable_reference_type_mark_name: STRING = "detachable reference"
+	detachable_separate_type_mark_name: STRING = "detachable separate"
+	detachable_separate_expanded_type_mark_name: STRING = "detachable separate expanded"
+	detachable_separate_reference_type_mark_name: STRING = "detachable separate reference"
+	separate_expanded_type_mark_name: STRING = "separate expanded"
+	separate_reference_type_mark_name: STRING = "separate reference"
+	no_type_mark_name: STRING = ""
+			-- Type mark names
 
 	arrow_symbol_name: STRING = "->"
 	assign_symbol_name: STRING = ":="

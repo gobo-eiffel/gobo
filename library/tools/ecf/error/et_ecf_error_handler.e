@@ -1026,6 +1026,55 @@ feature -- Reporting errors
 			report_error (l_error)
 		end
 
+	report_eadb_error (a_value_attribute_name, a_excluded_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EADB error: cannot have both value and excluded_value in concurrency condition.
+		require
+			a_value_attribute_name_not_void: a_value_attribute_name /= Void
+			a_excluded_value_attribute_name_not_void: a_excluded_value_attribute_name /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_eadb (a_value_attribute_name, a_excluded_value_attribute_name, a_universe)
+			report_error (l_error)
+		end
+
+	report_eadc_error (a_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EADC error: the value in concurrency condition is empty.
+		require
+			a_value_attribute_name_not_void: a_value_attribute_name /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_eadc (a_value_attribute_name, a_universe)
+			report_error (l_error)
+		end
+
+	report_eadd_error (a_excluded_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EADD error: the excluded value in concurrency condition is empty.
+		require
+			a_excluded_value_attribute_name_not_void: a_excluded_value_attribute_name /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_eadd (a_excluded_value_attribute_name, a_universe)
+			report_error (l_error)
+		end
+
+	report_eade_error (a_platform_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EADE error: value or excluded value missing in platform condition.
+		require
+			a_platform_element_name_not_void: a_platform_element_name /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_eade (a_platform_element_name, a_universe)
+			report_error (l_error)
+		end
+
 	report_esnm_error (a_setting_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
 			-- Report ESNM error: the name of the setting missing.
 			--

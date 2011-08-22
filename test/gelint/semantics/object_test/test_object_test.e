@@ -196,6 +196,28 @@ feature -- Test
 			end
 		end
 
+	test_check
+			-- Test scope of object-test local when part of conditional of check instruction.
+			-- ECMA-367-2, 8.24.5-4 and 8.24.5-5.
+		local
+			s: detachable STRING
+		do
+			s := "foo"
+			check attached {STRING} s as x1 then
+				assert ("check1", x1.count = 3)
+			end
+			check attached s as x2 then
+				assert ("check2", x2.count = 3)
+			end
+			s := Void
+			check not attached {STRING} s as x3 then
+				assert ("check3", True)
+			end
+			check not attached s as x4 then
+				assert ("check4", True)
+			end
+		end
+		
 	test_precondition
 			-- Test scope of object-test local when in a precondition.
 			-- The scope should cover the following assertions in the

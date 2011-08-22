@@ -1485,6 +1485,22 @@ feature -- AST nodes
 			end
 		end
 
+	new_attachment_separate_keywords (a_attachment_keyword: ET_KEYWORD; a_separateness_keyword: ET_KEYWORD): ET_ATTACHMENT_SEPARATE_KEYWORDS
+			-- New attachment keyword ('attached' or 'detachable') followed by the keyword 'separate'
+		do
+			if a_attachment_keyword /= Void and a_separateness_keyword /= Void then
+				create Result.make (a_attachment_keyword, a_separateness_keyword)
+			end
+		end
+
+	new_attachment_symbol_separate_keyword (a_attachment_symbol: ET_SYMBOL; a_separateness_keyword: ET_KEYWORD): ET_ATTACHMENT_SYMBOL_SEPARATE_KEYWORD
+			-- New attachment symbol ('!' or '?') followed by the keyword 'separate'
+		do
+			if a_attachment_symbol /= Void and a_separateness_keyword /= Void then
+				create Result.make (a_attachment_symbol, a_separateness_keyword)
+			end
+		end
+
 	new_attribute (a_name: ET_EXTENDED_FEATURE_NAME; a_type: ET_DECLARED_TYPE; an_assigner: ET_ASSIGNER;
 		a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLIENT_LIST;
 		a_feature_clause: ET_FEATURE_CLAUSE; a_class: ET_CLASS): ET_ATTRIBUTE
@@ -3250,11 +3266,11 @@ feature -- AST nodes
 			end
 		end
 
-	new_qualified_like_type (a_type: ET_LIKE_TYPE; a_name: ET_QUALIFIED_FEATURE_NAME): ET_QUALIFIED_LIKE_TYPE
+	new_qualified_like_type (a_type_mark: ET_TYPE_MARK; a_type: ET_LIKE_TYPE; a_name: ET_QUALIFIED_FEATURE_NAME): ET_QUALIFIED_LIKE_TYPE
 			-- New qualified anchored type of the form 'like a.b.c'
 		do
 			if a_type /= Void and a_name /= Void then
-				create Result.make (a_type, a_name)
+				create Result.make (a_type_mark, a_type, a_name)
 			end
 		end
 

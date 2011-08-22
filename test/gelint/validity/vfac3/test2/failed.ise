@@ -1,0 +1,17 @@
+-------------------------------------------------------------------------------
+
+Error code: VBAC(1)
+
+Error: source type of assigner call is not compatible with target type.
+What to do: ensure that source type is compatible with target type.
+
+Class: AA
+Feature: make
+Target type: [detachable] STRING_8
+Source type: [like Current] AA
+Line: 14
+        create b
+->      b.xxx := Current
+        b.yyy := "eiffel"
+
+-------------------------------------------------------------------------------

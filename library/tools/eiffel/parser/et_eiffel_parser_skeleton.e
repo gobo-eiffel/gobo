@@ -773,6 +773,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 			a_formal: ET_FORMAL_PARAMETER
 			a_type_mark: ET_TYPE_MARK
 			a_base_class: ET_MASTER_CLASS
+			l_type_mark: ET_TYPE_MARK
 		do
 			a_name := a_constraint.name
 			a_type_mark := a_constraint.type_mark
@@ -793,6 +794,10 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 					providers.force_last (a_base_class)
 				end
 				a_base_class.set_in_system (True)
+				l_type_mark := a_type_mark
+				if l_type_mark = Void then
+					l_type_mark := current_universe.implicit_attachment_type_mark
+				end
 				if a_base_class.name.same_class_name (tokens.tuple_class_name) then
 					if a_type_mark /= Void and then not a_type_mark.is_attachment_mark then
 							-- A TUPLE type is not a class type. It cannot
@@ -801,10 +806,10 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 						report_syntax_error (a_type_mark.position)
 						Result := ast_factory.new_tuple_type (Void, a_name, Void, a_base_class)
 					else
-						Result := ast_factory.new_tuple_type (a_type_mark, a_name, Void, a_base_class)
+						Result := ast_factory.new_tuple_type (l_type_mark, a_name, Void, a_base_class)
 					end
 				else
-					Result := ast_factory.new_class_type (a_type_mark, a_name, a_base_class)
+					Result := ast_factory.new_class_type (l_type_mark, a_name, a_base_class)
 				end
 			end
 		end
@@ -826,6 +831,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 			a_formal: ET_FORMAL_PARAMETER
 			a_base_class: ET_MASTER_CLASS
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_type_mark: ET_TYPE_MARK
 		do
 			a_name := a_constraint.name
 			a_type_mark := a_constraint.type_mark
@@ -848,6 +854,10 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 						providers.force_last (a_base_class)
 					end
 					a_base_class.set_in_system (True)
+					l_type_mark := a_type_mark
+					if l_type_mark = Void then
+						l_type_mark := current_universe.implicit_attachment_type_mark
+					end
 					if a_base_class.name.same_class_name (tokens.tuple_class_name) then
 						if a_type_mark /= Void and then not a_type_mark.is_attachment_mark then
 								-- A TUPLE type is not a class type. It cannot
@@ -856,10 +866,10 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 							report_syntax_error (a_type_mark.position)
 							Result := ast_factory.new_tuple_type (Void, a_name, a_parameters, a_base_class)
 						else
-							Result := ast_factory.new_tuple_type (a_type_mark, a_name, a_parameters, a_base_class)
+							Result := ast_factory.new_tuple_type (l_type_mark, a_name, a_parameters, a_base_class)
 						end
 					else
-						Result := ast_factory.new_generic_class_type (a_type_mark, a_name, a_parameters, a_base_class)
+						Result := ast_factory.new_generic_class_type (l_type_mark, a_name, a_parameters, a_base_class)
 					end
 				end
 			end
@@ -1314,6 +1324,7 @@ feature {NONE} -- AST factory
 			a_parameter: ET_FORMAL_PARAMETER
 			a_last_class: ET_CLASS
 			l_class: ET_MASTER_CLASS
+			l_type_mark: ET_TYPE_MARK
 		do
 			a_last_class := last_class
 			if a_last_class /= Void and a_name /= Void then
@@ -1322,7 +1333,7 @@ feature {NONE} -- AST factory
 					if a_generics /= Void then
 						-- TODO: Error
 					end
-					if a_type_mark /= Void and then a_type_mark.is_keyword then
+					if a_type_mark /= Void and then not a_type_mark.is_attachment_mark then
 						-- TODO: Error
 					end
 					Result := ast_factory.new_formal_parameter_type (a_type_mark, a_name, a_parameter.index, a_last_class)
@@ -1332,10 +1343,14 @@ feature {NONE} -- AST factory
 						providers.force_last (l_class)
 					end
 					l_class.set_in_system (True)
+					l_type_mark := a_type_mark
+					if l_type_mark = Void then
+						l_type_mark := current_universe.implicit_attachment_type_mark
+					end
 					if a_generics /= Void then
-						Result := ast_factory.new_generic_class_type (a_type_mark, a_name, a_generics, l_class)
+						Result := ast_factory.new_generic_class_type (l_type_mark, a_name, a_generics, l_class)
 					else
-						Result := ast_factory.new_class_type (a_type_mark, a_name, l_class)
+						Result := ast_factory.new_class_type (l_type_mark, a_name, l_class)
 					end
 				end
 			end

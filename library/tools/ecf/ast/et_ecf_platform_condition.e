@@ -5,7 +5,7 @@ note
 		"ECF platform conditions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -73,7 +73,7 @@ feature -- Status report
 			else
 				l_expected_value := "unix"
 			end
-			if is_excluded and value.has (' ') then
+			if value.has (' ') then
 				create l_splitter.make_with_separators (" ")
 				Result := l_splitter.split (value).there_exists (agent STRING_.same_case_insensitive (?, l_expected_value))
 			else

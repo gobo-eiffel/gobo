@@ -103,6 +103,18 @@ feature -- AST factory
 			clusters_not_void: Result /= Void
 		end
 
+	new_concurrency_condition (a_value: STRING; a_excluded: BOOLEAN): ET_ECF_CONCURRENCY_CONDITION
+			-- New concurrency condition
+		do
+			if a_excluded then
+				create Result.make_excluded (a_value)
+			else
+				create Result.make (a_value)
+			end
+		ensure
+			condition_not_void: Result /= Void
+		end
+
 	new_condition: ET_ECF_CONDITIONS
 			-- New condition
 		do

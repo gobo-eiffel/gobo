@@ -728,7 +728,10 @@ feature -- Measurement
 feature -- Kernel types
 
 	any_type: ET_CLASS_TYPE
-			-- Class type "ANY"
+			-- Class type "ANY", with implicit 'attached' type mark
+
+	detachable_any_type: ET_CLASS_TYPE
+			-- Class type "detachable ANY"
 
 	any_parent: ET_PARENT
 			-- Default parent
@@ -740,7 +743,10 @@ feature -- Kernel types
 			-- Default client clause
 
 	array_any_type: ET_GENERIC_CLASS_TYPE
-			-- Class type "ARRAY [ANY]"
+			-- Class type "ARRAY [ANY]", with implicit 'attached' type mark
+
+	array_detachable_any_type: ET_GENERIC_CLASS_TYPE
+			-- Class type "ARRAY [detachable ANY]", with implicit 'attached' type mark
 
 	boolean_type: ET_CLASS_TYPE
 			-- Class type "BOOLEAN"
@@ -758,7 +764,7 @@ feature -- Kernel types
 			-- Class type "DOUBLE"
 
 	function_type: ET_GENERIC_CLASS_TYPE
-			-- Class type "FUNCTION [ANY, TUPLE, ANY]"
+			-- Class type "FUNCTION [ANY, TUPLE, ANY]", with implicit 'attached' type mark
 
 	integer_type: ET_CLASS_TYPE
 			-- Class type "INTEGER"
@@ -791,16 +797,19 @@ feature -- Kernel types
 			-- Class type "NATURAL_64"
 
 	none_type: ET_CLASS_TYPE
-			-- Class type "NONE"
+			-- Class type "NONE", with implicit 'attached' type mark
+
+	detachable_none_type: ET_CLASS_TYPE
+			-- Class type "detachable NONE"
 
 	pointer_type: ET_CLASS_TYPE
 			-- Class type "POINTER"
 
 	predicate_type: ET_GENERIC_CLASS_TYPE
-			-- Class type "PREDICATE [ANY, TUPLE]"
+			-- Class type "PREDICATE [ANY, TUPLE]", with implicit 'attached' type mark
 
 	procedure_type: ET_GENERIC_CLASS_TYPE
-			-- Class type "PROCEDURE [ANY, TUPLE]"
+			-- Class type "PROCEDURE [ANY, TUPLE]", with implicit 'attached' type mark
 
 	real_type: ET_CLASS_TYPE
 			-- Class type "REAL"
@@ -812,31 +821,34 @@ feature -- Kernel types
 			-- Class type "REAL_64"
 
 	routine_type: ET_GENERIC_CLASS_TYPE
-			-- Class type "ROUTINE [ANY, TUPLE]"
+			-- Class type "ROUTINE [ANY, TUPLE]", with implicit 'attached' type mark
 
 	special_any_type: ET_GENERIC_CLASS_TYPE
-			-- Class type "SPECIAL [ANY]"
+			-- Class type "SPECIAL [ANY]", with implicit 'attached' type mark
 
 	string_type: ET_CLASS_TYPE
-			-- Class type "STRING"
+			-- Class type "STRING", with implicit 'attached' type mark
 
 	string_8_type: ET_CLASS_TYPE
-			-- Class type "STRING_8"
+			-- Class type "STRING_8", with implicit 'attached' type mark
 
 	string_32_type: ET_CLASS_TYPE
-			-- Class type "STRING_32"
+			-- Class type "STRING_32", with implicit 'attached' type mark
 
 	system_object_type: ET_CLASS_TYPE
-			-- Type "SYSTEM_OBJECT" (in Eiffel for .NET)
+			-- Type "SYSTEM_OBJECT" (in Eiffel for .NET), with implicit 'attached' type mark
 
 	system_object_parents: ET_PARENT_LIST
 			-- Default parents for .NET classes
 
 	system_string_type: ET_CLASS_TYPE
-			-- Class type "SYSTEM_STRING" (in Eiffel for .NET)
+			-- Class type "SYSTEM_STRING" (in Eiffel for .NET), with implicit 'attached' type mark
 
 	tuple_type: ET_TUPLE_TYPE
-			-- Type "TUPLE"
+			-- Type "TUPLE", with implicit 'attached' type mark
+
+	detachable_tuple_type: ET_TUPLE_TYPE
+			-- Type "detachable TUPLE"
 
 	type_any_type: ET_GENERIC_CLASS_TYPE
 			-- Class type "TYPE [ANY]"
@@ -907,7 +919,8 @@ feature -- Kernel types
 			l_name := tokens.any_class_name
 			l_master_class := master_class (l_name)
 			l_master_class.set_in_system (True)
-			create any_type.make (Void, l_name, l_master_class)
+			create any_type.make (tokens.implicit_attached_type_mark, l_name, l_master_class)
+			create detachable_any_type.make (tokens.detachable_keyword, l_name, l_master_class)
 				-- Implicit parent "ANY".
 			create any_parent.make (any_type, Void, Void, Void, Void, Void)
 			create any_parents.make_with_capacity (1)
@@ -931,7 +944,11 @@ feature -- Kernel types
 				-- Type "ARRAY [ANY]".
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (any_type)
-			create array_any_type.make (Void, l_name, l_parameters, l_master_class)
+			create array_any_type.make (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
+				-- Type "ARRAY [detachable ANY]".
+			create l_parameters.make_with_capacity (1)
+			l_parameters.put_first (detachable_any_type)
+			create array_detachable_any_type.make (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
 		end
 
 	set_boolean_type
@@ -1014,7 +1031,7 @@ feature -- Kernel types
 			l_parameters.put_first (any_type)
 			l_parameters.put_first (tuple_type)
 			l_parameters.put_first (any_type)
-			create function_type.make (Void, l_name, l_parameters, l_master_class)
+			create function_type.make (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
 		end
 
 	set_integer_type
@@ -1171,7 +1188,8 @@ feature -- Kernel types
 			l_name := tokens.none_class_name
 			l_master_class := master_class (l_name)
 			l_master_class.set_in_system (True)
-			create none_type.make (Void, l_name, l_master_class)
+			create none_type.make (tokens.implicit_attached_type_mark, l_name, l_master_class)
+			create detachable_none_type.make (tokens.detachable_keyword, l_name, l_master_class)
 			l_none_class := current_system.master_class (l_name)
 			l_master_class.add_first_imported_class (l_none_class)
 		end
@@ -1201,7 +1219,7 @@ feature -- Kernel types
 			create l_parameters.make_with_capacity (2)
 			l_parameters.put_first (tuple_type)
 			l_parameters.put_first (any_type)
-			create predicate_type.make (Void, l_name, l_parameters, l_master_class)
+			create predicate_type.make (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
 		end
 
 	set_procedure_type
@@ -1217,7 +1235,7 @@ feature -- Kernel types
 			create l_parameters.make_with_capacity (2)
 			l_parameters.put_first (tuple_type)
 			l_parameters.put_first (any_type)
-			create procedure_type.make (Void, l_name, l_parameters, l_master_class)
+			create procedure_type.make (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
 		end
 
 	set_real_type
@@ -1275,7 +1293,7 @@ feature -- Kernel types
 			create l_parameters.make_with_capacity (2)
 			l_parameters.put_first (tuple_type)
 			l_parameters.put_first (any_type)
-			create routine_type.make (Void, l_name, l_parameters, l_master_class)
+			create routine_type.make (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
 		end
 
 	set_special_type
@@ -1290,7 +1308,7 @@ feature -- Kernel types
 			l_master_class.set_in_system (True)
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (any_type)
-			create special_any_type.make (Void, l_name, l_parameters, l_master_class)
+			create special_any_type.make (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
 		end
 
 	set_string_type
@@ -1302,7 +1320,7 @@ feature -- Kernel types
 			l_name := tokens.string_class_name
 			l_master_class := master_class (l_name)
 			l_master_class.set_in_system (True)
-			create string_type.make (Void, l_name, l_master_class)
+			create string_type.make (tokens.implicit_attached_type_mark, l_name, l_master_class)
 		end
 
 	set_string_8_type
@@ -1315,7 +1333,7 @@ feature -- Kernel types
 			l_name := tokens.string_8_class_name
 			l_master_class := master_class (l_name)
 			l_master_class.set_in_system (True)
-			create string_8_type.make (Void, l_name, l_master_class)
+			create string_8_type.make (tokens.implicit_attached_type_mark, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create string_8_convert_feature.make (string_8_type)
 		end
@@ -1330,7 +1348,7 @@ feature -- Kernel types
 			l_name := tokens.string_32_class_name
 			l_master_class := master_class (l_name)
 			l_master_class.set_in_system (True)
-			create string_32_type.make (Void, l_name, l_master_class)
+			create string_32_type.make (tokens.implicit_attached_type_mark, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create string_32_convert_feature.make (string_32_type)
 		end
@@ -1345,7 +1363,7 @@ feature -- Kernel types
 			l_name := tokens.system_object_class_name
 			l_master_class := master_class (l_name)
 			l_master_class.set_in_system (True)
-			create system_object_type.make (Void, l_name, l_master_class)
+			create system_object_type.make (tokens.implicit_attached_type_mark, l_name, l_master_class)
 				-- Implicit parent "SYSTEM_OBJECT".
 			create l_parent.make (system_object_type, Void, Void, Void, Void, Void)
 			create system_object_parents.make_with_capacity (1)
@@ -1361,7 +1379,7 @@ feature -- Kernel types
 			l_name := tokens.system_string_class_name
 			l_master_class := master_class (l_name)
 			l_master_class.set_in_system (True)
-			create system_string_type.make (Void, l_name, l_master_class)
+			create system_string_type.make (tokens.implicit_attached_type_mark, l_name, l_master_class)
 		end
 
 	set_tuple_type
@@ -1373,7 +1391,8 @@ feature -- Kernel types
 			l_name := tokens.tuple_class_name
 			l_master_class := master_class (l_name)
 			l_master_class.set_in_system (True)
-			create tuple_type.make (Void, Void, l_master_class)
+			create tuple_type.make (tokens.implicit_attached_type_mark, Void, l_master_class)
+			create detachable_tuple_type.make (tokens.detachable_keyword, Void, l_master_class)
 		end
 
 	set_type_type
@@ -1570,6 +1589,46 @@ feature -- Class mapping
 		do
 			l_master_class := master_class (a_alias_name)
 			l_master_class.set_mapped_class (master_class (a_class_name))
+		end
+
+feature -- Compilation options
+
+	attachment_type_conformance_mode: BOOLEAN
+			-- Should attachment status be taken into account when checking
+			-- conformance of types in current universe?
+
+	implicit_attachment_type_mark: ET_TYPE_MARK
+			-- Implicit attachment type mark when a type in a class of the
+			-- current universe is declared with no explicit attachment type mark
+
+	target_type_attachment_mode: BOOLEAN
+			-- Should the attachment status of the target of qualified calls
+			-- be checked at compile time?
+
+feature -- Compilation options setting
+
+	set_attachment_type_conformance_mode (b: BOOLEAN)
+			-- Set `attachment_type_conformance_mode' to `b'.
+		do
+			attachment_type_conformance_mode := b
+		ensure
+			attachment_type_conformance_mode_set: attachment_type_conformance_mode = b
+		end
+
+	set_implicit_attachment_type_mark (a_type_mark: like implicit_attachment_type_mark)
+			-- Set `implicit_attachment_type_mark' to `a_type_mark'.
+		do
+			implicit_attachment_type_mark := a_type_mark
+		ensure
+			implicit_attachment_type_mark_set: implicit_attachment_type_mark = a_type_mark
+		end
+
+	set_target_type_attachment_mode (b: BOOLEAN)
+			-- Set `target_type_attachment_mode' to `b'.
+		do
+			target_type_attachment_mode := b
+		ensure
+			target_type_attachment_mode_set: target_type_attachment_mode = b
 		end
 
 feature -- Built-in convert features
@@ -2254,10 +2313,12 @@ invariant
 	no_void_master_class: not master_classes.has_void_item
 		-- Kernel types.
 	any_type_not_void: any_type /= Void
+	detachable_any_type_not_void: detachable_any_type /= Void
 	any_parent_not_void: any_parent /= Void
 	any_parents_not_void: any_parents /= Void
 	any_clients_not_void: any_clients /= Void
 	array_any_type_not_void: array_any_type /= Void
+	array_detachable_any_type_not_void: array_detachable_any_type /= Void
 	character_8_type_not_void: character_8_type /= Void
 	character_32_type_not_void: character_32_type /= Void
 	function_type_not_void: function_type /= Void
@@ -2270,6 +2331,7 @@ invariant
 	natural_32_type_not_void: natural_32_type /= Void
 	natural_64_type_not_void: natural_64_type /= Void
 	none_type_not_void: none_type /= Void
+	detachable_none_type_not_void: detachable_none_type /= Void
 	pointer_type_not_void: pointer_type /= Void
 	predicate_type_not_void: predicate_type /= Void
 	procedure_type_not_void: procedure_type /= Void
@@ -2283,6 +2345,7 @@ invariant
 	system_object_parents_not_void: system_object_parents /= Void
 	system_string_type_not_void: system_string_type /= Void
 	tuple_type_not_void: tuple_type /= Void
+	detachable_tuple_type_not_void: detachable_tuple_type /= Void
 	type_any_type_not_void: type_any_type /= Void
 	typed_pointer_any_type_not_void: typed_pointer_any_type /= Void
 		-- Class mapping.

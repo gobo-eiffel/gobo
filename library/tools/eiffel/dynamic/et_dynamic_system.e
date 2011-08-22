@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic systems at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1512,9 +1512,9 @@ feature {NONE} -- Compilation
 							set_fatal_error
 							error_handler.report_gvkfe2a_error (l_class, routine_closed_operands_feature)
 							routine_closed_operands_feature := Void
-						elseif not routine_closed_operands_feature.type.same_named_type (current_system.tuple_type, l_class, l_class) then
+						elseif not routine_closed_operands_feature.type.same_named_type (current_system.detachable_tuple_type, l_class, l_class) then
 							set_fatal_error
-							error_handler.report_gvkfe3a_error (l_class, routine_closed_operands_feature, current_system.tuple_type)
+							error_handler.report_gvkfe3a_error (l_class, routine_closed_operands_feature, current_system.detachable_tuple_type)
 							routine_closed_operands_feature := Void
 						end
 							-- Check feature 'is_target_closed' of class "ROUTINE".
@@ -1542,7 +1542,7 @@ feature {NONE} -- Compilation
 					-- Type "ANY".
 				any_type := dynamic_type (current_system.any_type, l_any)
 					-- Type "NONE".
-				none_type := dynamic_type (current_system.none_type, l_any)
+				none_type := dynamic_type (current_system.detachable_none_type, l_any)
 			end
 		end
 

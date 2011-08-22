@@ -1449,7 +1449,7 @@ feature -- Conversion
 			other_type: ET_TYPE
 		do
 			if convert_features /= Void then
-				other_type := tokens.like_current
+				other_type := tokens.identity_type
 				nb := convert_features.count
 				from i := 1 until i > nb loop
 					a_feature := convert_features.convert_feature (i)
@@ -1479,7 +1479,7 @@ feature -- Conversion
 			other_type: ET_TYPE
 		do
 			if convert_features /= Void then
-				other_type := tokens.like_current
+				other_type := tokens.identity_type
 				nb := convert_features.count
 				from i := 1 until i > nb loop
 					a_feature := convert_features.convert_feature (i)

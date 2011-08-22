@@ -87,6 +87,7 @@ feature {NONE} -- Element change
 				l_system.libraries.do_adapted (agent {ET_ADAPTED_LIBRARY}.propagate_read_only)
 				l_target.fill_root (l_system)
 				l_target.fill_settings (l_system)
+				l_target.fill_options (l_system)
 				last_system := l_system
 			end
 		end

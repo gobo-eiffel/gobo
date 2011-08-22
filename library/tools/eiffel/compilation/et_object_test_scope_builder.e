@@ -5,7 +5,7 @@ note
 		"Eiffel object-test scope builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,7 +31,7 @@ feature -- Status report
 
 	is_negated: BOOLEAN
 			-- Look for object-tests which are guaranteed to be
-			-- successful is the expression in which they appear
+			-- successful if the expression in which they appear
 			-- is evaluated to False?
 
 feature -- Access

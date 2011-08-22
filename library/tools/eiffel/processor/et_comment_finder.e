@@ -5,7 +5,7 @@ note
 		"Eiffel AST comment finders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,6 +33,8 @@ inherit
 			process_assigner_instruction,
 			process_assignment,
 			process_assignment_attempt,
+			process_attachment_separate_keywords,
+			process_attachment_symbol_separate_keyword,
 			process_attribute,
 			process_bang_instruction,
 			process_binary_integer_constant,
@@ -388,6 +390,22 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if not excluded_nodes.has (an_instruction) then
 				precursor (an_instruction)
+			end
+		end
+
+	process_attachment_separate_keywords (a_keywords: ET_ATTACHMENT_SEPARATE_KEYWORDS)
+			-- Process `a_keywords'.
+		do
+			if not excluded_nodes.has (a_keywords) then
+				precursor (a_keywords)
+			end
+		end
+
+	process_attachment_symbol_separate_keyword (a_keywords: ET_ATTACHMENT_SYMBOL_SEPARATE_KEYWORD)
+			-- Process `a_keywords'.
+		do
+			if not excluded_nodes.has (a_keywords) then
+				precursor (a_keywords)
 			end
 		end
 

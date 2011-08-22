@@ -5,7 +5,7 @@ note
 		"Contexts to evaluate Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,7 +31,7 @@ feature -- Access
 			valid_context: is_valid_context implies Result.is_valid_context
 		end
 
-	new_type_context (a_type: ET_TYPE): ET_NESTED_TYPE_CONTEXT
+	new_type_context (a_type: ET_TYPE): ET_TYPE_CONTEXT
 			-- New type context made up of `a_type' in current context
 		require
 			a_type_not_void: a_type /= Void
@@ -70,9 +70,22 @@ feature -- Access
 		require
 			valid_context: is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
-		deferred
+		do
+			Result := base_type_with_type_mark (Void)
 		ensure
 			base_type_not_void: Result /= Void
+			deep_base_type: Result.is_named_type
+		end
+
+	base_type_with_type_mark (a_type_mark: ET_TYPE_MARK): ET_BASE_TYPE
+			-- Same as `base_type' except that its type mark status is
+			-- overridden by `a_type_mark', if not Void
+		require
+			valid_context: is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		ensure
+			base_type_with_type_mark_not_void: Result /= Void
 			deep_base_type: Result.is_named_type
 		end
 
@@ -127,9 +140,22 @@ feature -- Access
 		require
 			valid_context: is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
-		deferred
+		do
+			Result := named_type_with_type_mark (Void)
 		ensure
 			named_type_not_void: Result /= Void
+			named_type_named: Result.is_named_type
+		end
+
+	named_type_with_type_mark (a_type_mark: ET_TYPE_MARK): ET_NAMED_TYPE
+			-- Same as `named_type' except that its type mark status is
+			-- overridden by `a_type_mark', if not Void
+		require
+			valid_context: is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		ensure
+			named_type_with_type_mark_not_void: Result /= Void
 			named_type_named: Result.is_named_type
 		end
 
@@ -179,11 +205,61 @@ feature -- Status report
 			-- already the name of a feature in SmartEiffel's GENERAL.)
 		require
 			-- no_cycle: no cycle in anchored types involved.
+		do
+			Result := is_type_expanded_with_type_mark (Void)
+		end
+
+	is_type_expanded_with_type_mark (a_type_mark: ET_TYPE_MARK): BOOLEAN
+			-- Same as `is_type_expanded' except that the type mark status is
+			-- overridden by `a_type_mark', if not Void
+		require
+			-- no_cycle: no cycle in anchored types involved.
 		deferred
 		end
 
 	is_type_reference: BOOLEAN
 			-- Is `base_type' a reference type?
+		require
+			-- no_cycle: no cycle in anchored types involved.
+		do
+			Result := is_type_reference_with_type_mark (Void)
+		end
+
+	is_type_reference_with_type_mark (a_type_mark: ET_TYPE_MARK): BOOLEAN
+			-- Same as `is_type_reference' except that the type mark status is
+			-- overridden by `a_type_mark', if not Void
+		require
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		end
+
+	is_type_attached: BOOLEAN
+			-- Is `base_type' an attached type?
+		require
+			-- no_cycle: no cycle in anchored types involved.
+		do
+			Result := is_type_attached_with_type_mark (Void)
+		end
+
+	is_type_attached_with_type_mark (a_type_mark: ET_TYPE_MARK): BOOLEAN
+			-- Same as `is_type_attached' except that the type mark status is
+			-- overridden by `a_type_mark', if not Void
+		require
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		end
+
+	is_type_detachable: BOOLEAN
+			-- Is `base_type' a detachable type?
+		require
+			-- no_cycle: no cycle in anchored types involved.
+		do
+			Result := is_type_detachable_with_type_mark (Void)
+		end
+
+	is_type_detachable_with_type_mark (a_type_mark: ET_TYPE_MARK): BOOLEAN
+			-- Same as `is_type_detachable' except that the type mark status is
+			-- overridden by `a_type_mark', if not Void
 		require
 			-- no_cycle: no cycle in anchored types involved.
 		deferred
@@ -207,6 +283,13 @@ feature -- Status report
 		deferred
 		end
 
+	attachment_type_conformance_mode: BOOLEAN
+			-- Should attachment status be taken into account when checking
+			-- conformance of types in the universe of the base class of `root_context'?
+		do
+			Result := root_context.base_class.universe.attachment_type_conformance_mode
+		end
+
 feature -- Comparison
 
 	same_named_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT): BOOLEAN
@@ -218,9 +301,24 @@ feature -- Comparison
 			other_context_not_void: other_context /= Void
 			other_context_valid: other_context.is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
-		deferred
+		do
+			Result := same_named_type_with_type_marks (other, Void, other_context, Void)
 		ensure
 			definition: Result = named_type.same_syntactical_type (other.named_type (other_context), other_context.root_context, root_context)
+		end
+
+	same_named_type_with_type_marks (other: ET_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK): BOOLEAN
+			-- Same as `same_named_type' except that the type mark status of `Current'
+			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
+		require
+			valid_context: is_valid_context
+			other_not_void: other /= Void
+			other_context_not_void: other_context /= Void
+			other_context_valid: other_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		ensure
+			definition: Result = named_type_with_type_mark (a_type_mark).same_syntactical_type (other.named_type_with_type_mark (other_type_mark, other_context), other_context.root_context, root_context)
 		end
 
 	same_named_context (other: ET_TYPE_CONTEXT): BOOLEAN
@@ -231,9 +329,23 @@ feature -- Comparison
 			other_context_valid: other.is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
 		do
-			Result := same_named_type (tokens.like_current, other)
+			Result := same_named_context_with_type_marks (Void, other, Void)
 		ensure
 			definition: Result = named_type.same_syntactical_type (other.named_type, other.root_context, root_context)
+		end
+
+	same_named_context_with_type_marks (other_type_mark: ET_TYPE_MARK; other: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK): BOOLEAN
+			-- Same as `same_named_context' except that the type mark status of `Current'
+			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
+		require
+			valid_context: is_valid_context
+			other_not_void: other /= Void
+			other_context_valid: other.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		do
+			Result := same_named_type_with_type_marks (tokens.identity_type, other_type_mark, other, a_type_mark)
+		ensure
+			definition: Result = named_type_with_type_mark (a_type_mark).same_syntactical_type (other.named_type_with_type_mark (other_type_mark), other.root_context, root_context)
 		end
 
 	same_base_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT): BOOLEAN
@@ -245,16 +357,33 @@ feature -- Comparison
 			other_context_not_void: other_context /= Void
 			other_context_valid: other_context.is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
-		deferred
+		do
+			Result := same_base_type_with_type_marks (other, Void,  other_context, Void)
 		ensure
 			definition: Result = base_type.same_syntactical_type (other.base_type (other_context), other_context.root_context, root_context)
 		end
 
+	same_base_type_with_type_marks (other: ET_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK): BOOLEAN
+			-- Same as `same_base_type' except that the type mark status of `Current'
+			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
+		require
+			valid_context: is_valid_context
+			other_not_void: other /= Void
+			other_context_not_void: other_context /= Void
+			other_context_valid: other_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		ensure
+			definition: Result = base_type_with_type_mark (a_type_mark).same_syntactical_type (other.base_type_with_type_mark (other_type_mark, other_context), other_context.root_context, root_context)
+		end
+
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
-	same_named_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_named_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK): BOOLEAN
 			-- Do current context and `other' type appearing in
 			-- `other_context' have the same named type?
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		require
 			valid_context: is_valid_context
 			other_not_void: other /= Void
@@ -264,9 +393,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		deferred
 		end
 
-	same_named_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_named_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK): BOOLEAN
 			-- Do current context and `other' type appearing in
 			-- `other_context' have the same named type?
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		require
 			valid_context: is_valid_context
 			other_not_void: other /= Void
@@ -276,10 +407,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		deferred
 		end
 
-	same_named_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
-		other_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_named_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK): BOOLEAN
 			-- Do current context and `other' type appearing in
 			-- `other_context' have the same named type?
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		require
 			valid_context: is_valid_context
 			other_not_void: other /= Void
@@ -289,9 +421,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		deferred
 		end
 
-	same_named_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_named_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK): BOOLEAN
 			-- Do current context and `other' type appearing in
 			-- `other_context' have the same named type?
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		require
 			valid_context: is_valid_context
 			other_not_void: other /= Void
@@ -301,9 +435,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		deferred
 		end
 
-	same_base_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_base_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK): BOOLEAN
 			-- Do current context and `other' type appearing in
 			-- `other_context' have the same base type?
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		require
 			valid_context: is_valid_context
 			other_not_void: other /= Void
@@ -313,9 +449,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		deferred
 		end
 
-	same_base_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_base_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK): BOOLEAN
 			-- Do current context and `other' type appearing in
 			-- `other_context' have the same base type?
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		require
 			valid_context: is_valid_context
 			other_not_void: other /= Void
@@ -325,9 +463,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		deferred
 		end
 
-	same_base_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE; other_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_base_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK): BOOLEAN
 			-- Do current context and `other' type appearing in
 			-- `other_context' have the same base type?
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		require
 			valid_context: is_valid_context
 			other_not_void: other /= Void
@@ -337,9 +477,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		deferred
 		end
 
-	same_base_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_base_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK): BOOLEAN
 			-- Do current context and `other' type appearing in
 			-- `other_context' have the same base type?
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		require
 			valid_context: is_valid_context
 			other_not_void: other /= Void
@@ -361,6 +503,19 @@ feature -- Conformance
 			other_context_not_void: other_context /= Void
 			other_context_valid: other_context.is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
+		do
+			Result := conforms_to_type_with_type_marks (other, Void, other_context, Void)
+		end
+
+	conforms_to_type_with_type_marks (other: ET_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK): BOOLEAN
+			-- Same as `conforms_to_type' except that the type mark status of `Current'
+			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
+		require
+			valid_context: is_valid_context
+			other_not_void: other /= Void
+			other_context_not_void: other_context /= Void
+			other_context_valid: other_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
 		deferred
 		end
 
@@ -374,13 +529,27 @@ feature -- Conformance
 			other_context_valid: other.is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
 		do
-			Result := conforms_to_type (tokens.like_current, other)
+			Result := conforms_to_context_with_type_marks (Void, other, Void)
+		end
+
+	conforms_to_context_with_type_marks (other_type_mark: ET_TYPE_MARK; other: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK): BOOLEAN
+			-- Same as `conforms_to_context' except that the type mark status of `Current'
+			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
+		require
+			valid_context: is_valid_context
+			other_not_void: other /= Void
+			other_context_valid: other.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		do
+			Result := conforms_to_type_with_type_marks (tokens.identity_type, other_type_mark, other, a_type_mark)
 		end
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
-	conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT): BOOLEAN
+	conforms_from_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform to current context?
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 			-- (Note: 'current_system.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		require
@@ -392,8 +561,10 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 		deferred
 		end
 
-	conforms_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT): BOOLEAN
+	conforms_from_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform to current context?
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 			-- (Note: 'current_system.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		require
@@ -405,8 +576,10 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 		deferred
 		end
 
-	conforms_from_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE; other_context: ET_TYPE_CONTEXT): BOOLEAN
+	conforms_from_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform to current context?
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 			-- (Note: 'current_system.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		require
@@ -419,8 +592,10 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 		deferred
 		end
 
-	conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT): BOOLEAN
+	conforms_from_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform to current context?
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 			-- (Note: 'current_system.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		require

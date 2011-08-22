@@ -687,7 +687,7 @@ feature {NONE} -- Output logs
 			l_input_filename: STRING
 		do
 				-- Compile regexp.
-			a_pattern1 := "<[0-9]{16}>(.*)"
+			a_pattern1 := "<[0-9A-F]{16}>(.*)"
 			create a_regexp1.make
 			a_regexp1.compile (a_pattern1)
 			assert ("cannot compile regexp '" + a_pattern1 + "'", a_regexp1.is_compiled)

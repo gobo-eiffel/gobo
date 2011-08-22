@@ -39,6 +39,9 @@ feature -- Status
 	is_multithreaded: BOOLEAN
 			-- Is system to be compiled multithreaded?
 
+	is_scoop: BOOLEAN
+			-- Is system to be compiled in scoop mode?
+
 	finalize_mode: BOOLEAN
 			-- Is system to be compiled in finalize mode?
 
@@ -64,8 +67,22 @@ feature -- Status setting
 			-- Set `is_multithreaded' to `b'.
 		do
 			is_multithreaded := b
+			if b then
+				is_scoop := False
+			end
 		ensure
 			multithreaded_set: is_multithreaded = b
+		end
+
+	set_scoop (b: BOOLEAN)
+			-- Set `is_scoop' to `b'.
+		do
+			is_scoop := b
+			if b then
+				is_multithreaded := False
+			end
+		ensure
+			scoop_set: is_scoop = b
 		end
 
 	set_finalize_mode (b: BOOLEAN)

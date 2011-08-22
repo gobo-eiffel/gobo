@@ -1,0 +1,2 @@
+[VFAC-3] class BB (15,30): the type of the first argument of assigner procedure `set_xxx' and the result type of query `xxx' do not have the same deanchored form.
+----

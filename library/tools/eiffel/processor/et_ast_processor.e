@@ -5,7 +5,7 @@ note
 		"Eiffel AST processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -155,6 +155,20 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_instruction'.
 		require
 			an_instruction_not_void: an_instruction /= Void
+		deferred
+		end
+
+	process_attachment_separate_keywords (a_keywords: ET_ATTACHMENT_SEPARATE_KEYWORDS)
+			-- Process `a_keywords'.
+		require
+			a_keywords_not_void: a_keywords /= Void
+		deferred
+		end
+
+	process_attachment_symbol_separate_keyword (a_keywords: ET_ATTACHMENT_SYMBOL_SEPARATE_KEYWORD)
+			-- Process `a_keywords'.
+		require
+			a_keywords_not_void: a_keywords /= Void
 		deferred
 		end
 
@@ -796,6 +810,13 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_instruction'.
 		require
 			an_instruction_not_void: an_instruction /= Void
+		deferred
+		end
+
+	process_implicit_type_mark (a_type_mark: ET_IMPLICIT_TYPE_MARK)
+			-- Process `a_type_mark'.
+		require
+			a_type_mark_not_void: a_type_mark /= Void
 		deferred
 		end
 

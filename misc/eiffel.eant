@@ -32,11 +32,12 @@
 			Install ${system} directory.
 		</description>
 
-		<geant target="xace">
+		<available resource="${system_dir}/system.xace" variable="xace_available"/>
+		<geant target="xace" if="${xace_available}=true">
 			<argument name="a_compiler" value="ge"/>
 			<argument name="a_output" value=""/>
 		</geant>
-		<geant target="xace">
+		<geant target="xace" if="${xace_available}=true">
 			<argument name="a_compiler" value="ise"/>
 			<argument name="a_output" value=""/>
 		</geant>

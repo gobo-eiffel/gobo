@@ -181,7 +181,7 @@ create
 %type <ET_KEYWORD> Frozen_opt External_opt Is_opt
 %type <ET_KEYWORD_FEATURE_NAME_LIST> Keyword_feature_name_list Select_clause Select_clause_opt
 %type <ET_KEYWORD_FEATURE_NAME_LIST> Undefine_clause Undefine_clause_opt Redefine_clause Redefine_clause_opt
-%type <ET_LIKE_TYPE> Anchored_type
+%type <ET_LIKE_TYPE> Anchored_type Anchored_type_with_no_type_mark
 %type <ET_LOCAL_VARIABLE> Local_name Local_name_comma
 %type <ET_LOCAL_VARIABLE_ITEM> Local_variable Local_variable_semicolon
 %type <ET_LOCAL_VARIABLE_LIST> Local_declarations_opt Local_variable_list
@@ -200,7 +200,7 @@ create
 %type <ET_POSTCONDITIONS> Postcondition_opt
 %type <ET_PRECONDITIONS> Precondition_opt
 %type <ET_PROCEDURE> Procedure_declaration Single_procedure_declaration
-%type <ET_QUALIFIED_LIKE_IDENTIFIER> Qualified_anchored_type
+%type <ET_QUALIFIED_LIKE_IDENTIFIER> Qualified_anchored_type Qualified_anchored_type_with_no_type_mark
 %type <ET_QUERY> Query_declaration Single_query_declaration
 %type <ET_REAL_CONSTANT> Real_constant Typed_real_constant Untyped_real_constant Signed_real_constant
 %type <ET_RENAME_ITEM> Rename Rename_comma
@@ -757,24 +757,20 @@ Constraint_type: Class_name Constraint_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| E_ATTACHED Class_name Constraint_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
+	| E_ATTACHED E_SEPARATE Class_name Constraint_actual_parameters_opt
+		{ $$ := new_constraint_named_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
 	| E_DETACHABLE Class_name Constraint_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
+	| E_DETACHABLE E_SEPARATE Class_name Constraint_actual_parameters_opt
+		{ $$ := new_constraint_named_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
 	| '!' Class_name Constraint_actual_parameters_opt
-		{ 
-			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
-				raise_error
-			else
-				$$ := new_constraint_named_type ($1, $2, $3)
-			end
-		}
+		{ $$ := new_constraint_named_type ($1, $2, $3) }
+	| '!' E_SEPARATE Class_name Constraint_actual_parameters_opt
+		{ $$ := new_constraint_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
 	| '?' Class_name Constraint_actual_parameters_opt
-		{ 
-			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
-				raise_error
-			else
-				$$ := new_constraint_named_type ($1, $2, $3)
-			end
-		}
+		{ $$ := new_constraint_named_type ($1, $2, $3) }
+	| '?' E_SEPARATE Class_name Constraint_actual_parameters_opt
+		{ $$ := new_constraint_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
 	| Anchored_type
 		{ $$ := $1 }
 	| E_BITTYPE Untyped_integer_constant
@@ -783,26 +779,24 @@ Constraint_type: Class_name Constraint_actual_parameters_opt
 		{ $$ := new_bit_feature ($1, $2)  }
 	| E_TUPLE Constraint_tuple_actual_parameters_opt
 		{ $$ := new_constraint_named_type (Void, $1, $2) }
+	| E_SEPARATE E_TUPLE Constraint_tuple_actual_parameters_opt
+		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| E_ATTACHED E_TUPLE Constraint_tuple_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
+	| E_ATTACHED E_SEPARATE E_TUPLE Constraint_tuple_actual_parameters_opt
+		{ $$ := new_constraint_named_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
 	| E_DETACHABLE E_TUPLE Constraint_tuple_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
+	| E_DETACHABLE E_SEPARATE E_TUPLE Constraint_tuple_actual_parameters_opt
+		{ $$ := new_constraint_named_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
 	| '!' E_TUPLE Constraint_tuple_actual_parameters_opt
-		{
-			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
-				raise_error
-			else
-				$$ := new_constraint_named_type ($1, $2, $3)
-			end
-		}
+		{ $$ := new_constraint_named_type ($1, $2, $3) }
+	| '!' E_SEPARATE E_TUPLE Constraint_tuple_actual_parameters_opt
+		{ $$ := new_constraint_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
 	| '?' E_TUPLE Constraint_tuple_actual_parameters_opt
-		{
-			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
-				raise_error
-			else
-				$$ := new_constraint_named_type ($1, $2, $3)
-			end
-		}
+		{ $$ := new_constraint_named_type ($1, $2, $3) }
+	| '?' E_SEPARATE E_TUPLE Constraint_tuple_actual_parameters_opt
+		{ $$ := new_constraint_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
 	;
 
 Constraint_type_no_identifier: Class_name Constraint_actual_parameters
@@ -815,24 +809,20 @@ Constraint_type_no_identifier: Class_name Constraint_actual_parameters
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| E_ATTACHED Class_name Constraint_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
+	| E_ATTACHED E_SEPARATE Class_name Constraint_actual_parameters_opt
+		{ $$ := new_constraint_named_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
 	| E_DETACHABLE Class_name Constraint_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
+	| E_DETACHABLE E_SEPARATE Class_name Constraint_actual_parameters_opt
+		{ $$ := new_constraint_named_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
 	| '!' Class_name Constraint_actual_parameters_opt
-		{ 
-			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
-				raise_error
-			else
-				$$ := new_constraint_named_type ($1, $2, $3)
-			end
-		}
+		{ $$ := new_constraint_named_type ($1, $2, $3) }
+	| '!' E_SEPARATE Class_name Constraint_actual_parameters_opt
+		{ $$ := new_constraint_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
 	| '?' Class_name Constraint_actual_parameters_opt
-		{ 
-			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
-				raise_error
-			else
-				$$ := new_constraint_named_type ($1, $2, $3)
-			end
-		}
+		{ $$ := new_constraint_named_type ($1, $2, $3) }
+	| '?' E_SEPARATE Class_name Constraint_actual_parameters_opt
+		{ $$ := new_constraint_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
 	| Anchored_type
 		{ $$ := $1 }
 	| E_BITTYPE Untyped_integer_constant
@@ -841,26 +831,24 @@ Constraint_type_no_identifier: Class_name Constraint_actual_parameters
 		{ $$ := new_bit_feature ($1, $2)  }
 	| E_TUPLE Constraint_tuple_actual_parameters
 		{ $$ := new_constraint_named_type (Void, $1, $2) }
+	| E_SEPARATE E_TUPLE Constraint_tuple_actual_parameters_opt
+		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| E_ATTACHED E_TUPLE Constraint_tuple_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
+	| E_ATTACHED E_SEPARATE E_TUPLE Constraint_tuple_actual_parameters_opt
+		{ $$ := new_constraint_named_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
 	| E_DETACHABLE E_TUPLE Constraint_tuple_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
+	| E_DETACHABLE E_SEPARATE E_TUPLE Constraint_tuple_actual_parameters_opt
+		{ $$ := new_constraint_named_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
 	| '!' E_TUPLE Constraint_tuple_actual_parameters_opt
-		{ 
-			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
-				raise_error
-			else
-				$$ := new_constraint_named_type ($1, $2, $3)
-			end
-		}
+		{ $$ := new_constraint_named_type ($1, $2, $3) }
+	| '!' E_SEPARATE E_TUPLE Constraint_tuple_actual_parameters_opt
+		{ $$ := new_constraint_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
 	| '?' E_TUPLE Constraint_tuple_actual_parameters_opt
-		{ 
-			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
-				raise_error
-			else
-				$$ := new_constraint_named_type ($1, $2, $3)
-			end
-		}
+		{ $$ := new_constraint_named_type ($1, $2, $3) }
+	| '?' E_SEPARATE E_TUPLE Constraint_tuple_actual_parameters_opt
+		{ $$ := new_constraint_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
 	;
 
 Constraint_actual_parameters_opt: -- Empty
@@ -2549,7 +2537,7 @@ Type: Class_name
 	| Type_no_class_name
 		{ $$ := $1 }
 	;
-
+	
 Type_no_class_name: Class_name Actual_parameters
 		{ $$ := new_named_type (Void, $1, $2) }
 	| E_EXPANDED Class_name Actual_parameters_opt
@@ -2560,24 +2548,20 @@ Type_no_class_name: Class_name Actual_parameters
 		{ $$ := new_named_type ($1, $2, $3) }
 	| E_ATTACHED Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
+	| E_ATTACHED E_SEPARATE Class_name Actual_parameters_opt
+		{ $$ := new_named_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
 	| E_DETACHABLE Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
+	| E_DETACHABLE E_SEPARATE Class_name Actual_parameters_opt
+		{ $$ := new_named_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
 	| '!' Class_name Actual_parameters_opt
-		{ 
-			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
-				raise_error
-			else
-				$$ := new_named_type ($1, $2, $3)
-			end
-		}
+		{ $$ := new_named_type ($1, $2, $3) }
+	| '!' E_SEPARATE Class_name Actual_parameters_opt
+		{ $$ := new_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
 	| '?' Class_name Actual_parameters_opt
-		{ 
-			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
-				raise_error
-			else
-				$$ := new_named_type ($1, $2, $3)
-			end
-		}
+		{ $$ := new_named_type ($1, $2, $3) }
+	| '?' E_SEPARATE Class_name Actual_parameters_opt
+		{ $$ := new_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
 	| Anchored_type
 		{ $$ := $1 }
 	| E_BITTYPE Untyped_integer_constant
@@ -2586,26 +2570,24 @@ Type_no_class_name: Class_name Actual_parameters
 		{ $$ := new_bit_feature ($1, $2)  }
 	| E_TUPLE Tuple_actual_parameters_opt
 		{ $$ := new_tuple_type (Void, $1, $2) }
+	| E_SEPARATE E_TUPLE Tuple_actual_parameters_opt
+		{ $$ := new_tuple_type ($1, $2, $3) }
 	| E_ATTACHED E_TUPLE Tuple_actual_parameters_opt
 		{ $$ := new_tuple_type ($1, $2, $3) }
+	| E_ATTACHED E_SEPARATE E_TUPLE Tuple_actual_parameters_opt
+		{ $$ := new_tuple_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
 	| E_DETACHABLE E_TUPLE Tuple_actual_parameters_opt
 		{ $$ := new_tuple_type ($1, $2, $3) }
+	| E_DETACHABLE E_SEPARATE E_TUPLE Tuple_actual_parameters_opt
+		{ $$ := new_tuple_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
 	| '!' E_TUPLE Tuple_actual_parameters_opt
-		{ 
-			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
-				raise_error
-			else
-				$$ := new_tuple_type ($1, $2, $3)
-			end
-		}
+		{ $$ := new_tuple_type ($1, $2, $3) }
+	| '!' E_SEPARATE E_TUPLE Tuple_actual_parameters_opt
+		{ $$ := new_tuple_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
 	| '?' E_TUPLE Tuple_actual_parameters_opt
-		{ 
-			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
-				raise_error
-			else
-				$$ := new_tuple_type ($1, $2, $3)
-			end
-		}
+		{ $$ := new_tuple_type ($1, $2, $3) }
+	| '?' E_SEPARATE E_TUPLE Tuple_actual_parameters_opt
+		{ $$ := new_tuple_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
 	;
 
 Type_no_identifier: Class_name Actual_parameters
@@ -2618,24 +2600,20 @@ Type_no_identifier: Class_name Actual_parameters
 		{ $$ := new_named_type ($1, $2, $3) }
 	| E_ATTACHED Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
+	| E_ATTACHED E_SEPARATE Class_name Actual_parameters_opt
+		{ $$ := new_named_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
 	| E_DETACHABLE Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
+	| E_DETACHABLE E_SEPARATE Class_name Actual_parameters_opt
+		{ $$ := new_named_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
 	| '!' Class_name Actual_parameters_opt
-		{ 
-			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
-				raise_error
-			else
-				$$ := new_named_type ($1, $2, $3)
-			end
-		}
+		{ $$ := new_named_type ($1, $2, $3) }
+	| '!' E_SEPARATE Class_name Actual_parameters_opt
+		{ $$ := new_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
 	| '?' Class_name Actual_parameters_opt
-		{ 
-			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
-				raise_error
-			else
-				$$ := new_named_type ($1, $2, $3)
-			end
-		}
+		{ $$ := new_named_type ($1, $2, $3) }
+	| '?' E_SEPARATE Class_name Actual_parameters_opt
+		{ $$ := new_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
 	| Anchored_type
 		{ $$ := $1 }
 	| E_BITTYPE Untyped_integer_constant
@@ -2644,26 +2622,24 @@ Type_no_identifier: Class_name Actual_parameters
 		{ $$ := new_bit_feature ($1, $2)  }
 	| E_TUPLE Tuple_actual_parameters
 		{ $$ := new_tuple_type (Void, $1, $2) }
+	| E_SEPARATE E_TUPLE Tuple_actual_parameters_opt
+		{ $$ := new_tuple_type ($1, $2, $3) }
 	| E_ATTACHED E_TUPLE Tuple_actual_parameters_opt
 		{ $$ := new_tuple_type ($1, $2, $3) }
+	| E_ATTACHED E_SEPARATE E_TUPLE Tuple_actual_parameters_opt
+		{ $$ := new_tuple_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
 	| E_DETACHABLE E_TUPLE Tuple_actual_parameters_opt
 		{ $$ := new_tuple_type ($1, $2, $3) }
+	| E_DETACHABLE E_SEPARATE E_TUPLE Tuple_actual_parameters_opt
+		{ $$ := new_tuple_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
 	| '!' E_TUPLE Tuple_actual_parameters_opt
-		{ 
-			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
-				raise_error
-			else
-				$$ := new_tuple_type ($1, $2, $3)
-			end
-		}
+		{ $$ := new_tuple_type ($1, $2, $3) }
+	| '!' E_SEPARATE E_TUPLE Tuple_actual_parameters_opt
+		{ $$ := new_tuple_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
 	| '?' E_TUPLE Tuple_actual_parameters_opt
-		{ 
-			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
-				raise_error
-			else
-				$$ := new_tuple_type ($1, $2, $3)
-			end
-		}
+		{ $$ := new_tuple_type ($1, $2, $3) }
+	| '?' E_SEPARATE E_TUPLE Tuple_actual_parameters_opt
+		{ $$ := new_tuple_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
 	;
 
 Type_no_bang_identifier: Class_name
@@ -2678,24 +2654,20 @@ Type_no_bang_identifier: Class_name
 		{ $$ := new_named_type ($1, $2, $3) }
 	| E_ATTACHED Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
+	| E_ATTACHED E_SEPARATE Class_name Actual_parameters_opt
+		{ $$ := new_named_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
 	| E_DETACHABLE Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
+	| E_DETACHABLE E_SEPARATE Class_name Actual_parameters_opt
+		{ $$ := new_named_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
 	| '!' Class_name Actual_parameters
-		{ 
-			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
-				raise_error
-			else
-				$$ := new_named_type ($1, $2, $3)
-			end
-		}
+		{ $$ := new_named_type ($1, $2, $3) }
+	| '!' E_SEPARATE Class_name Actual_parameters_opt
+		{ $$ := new_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
 	| '?' Class_name Actual_parameters_opt
-		{ 
-			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
-				raise_error
-			else
-				$$ := new_named_type ($1, $2, $3)
-			end
-		}
+		{ $$ := new_named_type ($1, $2, $3) }
+	| '?' E_SEPARATE Class_name Actual_parameters_opt
+		{ $$ := new_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
 	| Anchored_type
 		{ $$ := $1 }
 	| E_BITTYPE Untyped_integer_constant
@@ -2704,26 +2676,24 @@ Type_no_bang_identifier: Class_name
 		{ $$ := new_bit_feature ($1, $2)  }
 	| E_TUPLE Tuple_actual_parameters_opt
 		{ $$ := new_tuple_type (Void, $1, $2) }
+	| E_SEPARATE E_TUPLE Tuple_actual_parameters_opt
+		{ $$ := new_tuple_type ($1, $2, $3) }
 	| E_ATTACHED E_TUPLE Tuple_actual_parameters_opt
 		{ $$ := new_tuple_type ($1, $2, $3) }
+	| E_ATTACHED E_SEPARATE E_TUPLE Tuple_actual_parameters_opt
+		{ $$ := new_tuple_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
 	| E_DETACHABLE E_TUPLE Tuple_actual_parameters_opt
 		{ $$ := new_tuple_type ($1, $2, $3) }
+	| E_DETACHABLE E_SEPARATE E_TUPLE Tuple_actual_parameters_opt
+		{ $$ := new_tuple_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
 	| '!' E_TUPLE Tuple_actual_parameters
-		{ 
-			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
-				raise_error
-			else
-				$$ := new_tuple_type ($1, $2, $3)
-			end
-		}
+		{ $$ := new_tuple_type ($1, $2, $3) }
+	| '!' E_SEPARATE E_TUPLE Tuple_actual_parameters_opt
+		{ $$ := new_tuple_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
 	| '?' E_TUPLE Tuple_actual_parameters_opt
-		{ 
-			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
-				raise_error
-			else
-				$$ := new_tuple_type ($1, $2, $3)
-			end
-		}
+		{ $$ := new_tuple_type ($1, $2, $3) }
+	| '?' E_SEPARATE E_TUPLE Tuple_actual_parameters_opt
+		{ $$ := new_tuple_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
 	;
 
 Class_name: E_IDENTIFIER
@@ -2888,60 +2858,84 @@ Tuple_labeled_actual_parameter_semicolon: Identifier ':' Type ';'
 		}
 	;
 
+Anchored_type_with_no_type_mark: E_LIKE Identifier
+		{ $$ := ast_factory.new_like_feature (Void, $1, $2) }
+	| E_LIKE E_CURRENT
+		{ $$ := ast_factory.new_like_current (current_universe.implicit_attachment_type_mark, $1, $2) }
+	| Qualified_anchored_type_with_no_type_mark
+		{ $$ := $1 }
+	;
+	
 Anchored_type: E_LIKE Identifier
 		{ $$ := ast_factory.new_like_feature (Void, $1, $2) }
+	| E_SEPARATE E_LIKE Identifier
+		{ $$ := ast_factory.new_like_feature ($1, $2, $3) }
 	| E_ATTACHED E_LIKE Identifier
 		{ $$ := ast_factory.new_like_feature ($1, $2, $3) }
+	| E_ATTACHED E_SEPARATE E_LIKE Identifier
+		{ $$ := ast_factory.new_like_feature (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
 	| E_DETACHABLE E_LIKE Identifier
 		{ $$ := ast_factory.new_like_feature ($1, $2, $3) }
+	| E_DETACHABLE E_SEPARATE E_LIKE Identifier
+		{ $$ := ast_factory.new_like_feature (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
 	| '!' E_LIKE Identifier
-		{ 
-			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
-				raise_error
-			else
-				$$ := ast_factory.new_like_feature ($1, $2, $3)
-			end
-		}
+		{ $$ := ast_factory.new_like_feature ($1, $2, $3) }
+	| '!' E_SEPARATE E_LIKE Identifier
+		{ $$ := ast_factory.new_like_feature (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
 	| '?' E_LIKE Identifier
-		{ 
-			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
-				raise_error
-			else
-				$$ := ast_factory.new_like_feature ($1, $2, $3)
-			end
-		}
+		{ $$ := ast_factory.new_like_feature ($1, $2, $3) }
+	| '?' E_SEPARATE E_LIKE Identifier
+		{ $$ := ast_factory.new_like_feature (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
 	| E_LIKE E_CURRENT
-		{ $$ := ast_factory.new_like_current (Void, $1, $2) }
+		{ $$ := ast_factory.new_like_current (current_universe.implicit_attachment_type_mark, $1, $2) }
+	| E_SEPARATE E_LIKE E_CURRENT
+		{ $$ := ast_factory.new_like_current ($1, $2, $3) }
 	| E_ATTACHED E_LIKE E_CURRENT
 		{ $$ := ast_factory.new_like_current ($1, $2, $3) }
+	| E_ATTACHED E_SEPARATE E_LIKE E_CURRENT
+		{ $$ := ast_factory.new_like_current (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
 	| E_DETACHABLE E_LIKE E_CURRENT
 		{ $$ := ast_factory.new_like_current ($1, $2, $3) }
+	| E_DETACHABLE E_SEPARATE E_LIKE E_CURRENT
+		{ $$ := ast_factory.new_like_current (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
 	| '!' E_LIKE E_CURRENT
-		{ 
-			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
-				raise_error
-			else
-				$$ := ast_factory.new_like_current ($1, $2, $3)
-			end
-		}
+		{ $$ := ast_factory.new_like_current ($1, $2, $3) }
+	| '!' E_SEPARATE E_LIKE E_CURRENT
+		{ $$ := ast_factory.new_like_current (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
 	| '?' E_LIKE E_CURRENT
-		{ 
-			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
-				raise_error
-			else
-				$$ := ast_factory.new_like_current ($1, $2, $3)
-			end
-		}
+		{ $$ := ast_factory.new_like_current ($1, $2, $3) }
+	| '?' E_SEPARATE E_LIKE E_CURRENT
+		{ $$ := ast_factory.new_like_current (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
 	| Qualified_anchored_type
 		{ $$ := $1 }
 	;
 
-Qualified_anchored_type: E_LIKE '{' Type '}' '.' Identifier
+Qualified_anchored_type_with_no_type_mark: E_LIKE '{' Type '}' '.' Identifier
 		{
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
 				$$ := ast_factory.new_qualified_like_braced_type (Void, $1, $2, $3, $4, ast_factory.new_dot_feature_name ($5, $6))
+			end
+		}
+	| Anchored_type_with_no_type_mark '.' Identifier
+		{
+			if not current_system.qualified_anchored_types_enabled then
+				raise_error
+			else
+				$$ := ast_factory.new_qualified_like_type (Void, $1, ast_factory.new_dot_feature_name ($2, $3))
+			end
+		}
+	;
+	
+Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
+		{ $$ := $1 }
+	| E_SEPARATE E_LIKE '{' Type '}' '.' Identifier
+		{
+			if not current_system.qualified_anchored_types_enabled then
+				raise_error
+			else
+				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, ast_factory.new_dot_feature_name ($6, $7))
 			end
 		}
 	| E_ATTACHED E_LIKE '{' Type '}' '.' Identifier
@@ -2952,12 +2946,28 @@ Qualified_anchored_type: E_LIKE '{' Type '}' '.' Identifier
 				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, ast_factory.new_dot_feature_name ($6, $7))
 			end
 		}
+	| E_ATTACHED E_SEPARATE E_LIKE '{' Type '}' '.' Identifier
+		{
+			if not current_system.qualified_anchored_types_enabled then
+				raise_error
+			else
+				$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4, $5, $6, ast_factory.new_dot_feature_name ($7, $8))
+			end
+		}
 	| E_DETACHABLE E_LIKE '{' Type '}' '.' Identifier
 		{
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
 				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, ast_factory.new_dot_feature_name ($6, $7))
+			end
+		}
+	| E_DETACHABLE E_SEPARATE E_LIKE '{' Type '}' '.' Identifier
+		{
+			if not current_system.qualified_anchored_types_enabled then
+				raise_error
+			else
+				$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4, $5, $6, ast_factory.new_dot_feature_name ($7, $8))
 			end
 		}
 	| '!' E_LIKE '{' Type '}' '.' Identifier
@@ -2970,6 +2980,16 @@ Qualified_anchored_type: E_LIKE '{' Type '}' '.' Identifier
 				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, ast_factory.new_dot_feature_name ($6, $7))
 			end
 		}
+	| '!' E_SEPARATE E_LIKE '{' Type '}' '.' Identifier
+		{
+			if not current_system.qualified_anchored_types_enabled then
+				raise_error
+			elseif current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+				raise_error
+			else
+				$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4, $5, $6, ast_factory.new_dot_feature_name ($7, $8))
+			end
+		}
 	| '?' E_LIKE '{' Type '}' '.' Identifier
 		{
 			if not current_system.qualified_anchored_types_enabled then
@@ -2980,16 +3000,90 @@ Qualified_anchored_type: E_LIKE '{' Type '}' '.' Identifier
 				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, ast_factory.new_dot_feature_name ($6, $7))
 			end
 		}
-	| Anchored_type '.' Identifier
+	| '?' E_SEPARATE E_LIKE '{' Type '}' '.' Identifier
+		{
+			if not current_system.qualified_anchored_types_enabled then
+				raise_error
+			elseif current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+				raise_error
+			else
+				$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4, $5, $6, ast_factory.new_dot_feature_name ($7, $8))
+			end
+		}
+	| E_SEPARATE Anchored_type_with_no_type_mark '.' Identifier
 		{
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				$$ := ast_factory.new_qualified_like_type ($1, ast_factory.new_dot_feature_name ($2, $3))
+				$$ := ast_factory.new_qualified_like_type ($1, $2, ast_factory.new_dot_feature_name ($3, $4))
+			end
+		}
+	| E_ATTACHED Anchored_type_with_no_type_mark '.' Identifier
+		{
+			if not current_system.qualified_anchored_types_enabled then
+				raise_error
+			else
+				$$ := ast_factory.new_qualified_like_type ($1, $2, ast_factory.new_dot_feature_name ($3, $4))
+			end
+		}
+	| E_ATTACHED E_SEPARATE Anchored_type_with_no_type_mark '.' Identifier
+		{
+			if not current_system.qualified_anchored_types_enabled then
+				raise_error
+			else
+				$$ := ast_factory.new_qualified_like_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, ast_factory.new_dot_feature_name ($4, $5))
+			end
+		}
+	| E_DETACHABLE Anchored_type_with_no_type_mark '.' Identifier
+		{
+			if not current_system.qualified_anchored_types_enabled then
+				raise_error
+			else
+				$$ := ast_factory.new_qualified_like_type ($1, $2, ast_factory.new_dot_feature_name ($3, $4))
+			end
+		}
+	| E_DETACHABLE E_SEPARATE Anchored_type_with_no_type_mark '.' Identifier
+		{
+			if not current_system.qualified_anchored_types_enabled then
+				raise_error
+			else
+				$$ := ast_factory.new_qualified_like_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, ast_factory.new_dot_feature_name ($4, $5))
+			end
+		}
+	| '!' Anchored_type_with_no_type_mark '.' Identifier
+		{
+			if not current_system.qualified_anchored_types_enabled then
+				raise_error
+			else
+				$$ := ast_factory.new_qualified_like_type ($1, $2, ast_factory.new_dot_feature_name ($3, $4))
+			end
+		}
+	| '!' E_SEPARATE Anchored_type_with_no_type_mark '.' Identifier
+		{
+			if not current_system.qualified_anchored_types_enabled then
+				raise_error
+			else
+				$$ := ast_factory.new_qualified_like_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, ast_factory.new_dot_feature_name ($4, $5))
+			end
+		}
+	| '?' Anchored_type_with_no_type_mark '.' Identifier
+		{
+			if not current_system.qualified_anchored_types_enabled then
+				raise_error
+			else
+				$$ := ast_factory.new_qualified_like_type ($1, $2, ast_factory.new_dot_feature_name ($3, $4))
+			end
+		}
+	| '?' E_SEPARATE Anchored_type_with_no_type_mark '.' Identifier
+		{
+			if not current_system.qualified_anchored_types_enabled then
+				raise_error
+			else
+				$$ := ast_factory.new_qualified_like_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, ast_factory.new_dot_feature_name ($4, $5))
 			end
 		}
 	;
-
+	
 ------------------------------------------------------------------------------------
 
 Do_compound: E_DO Compound_opt

@@ -29,6 +29,8 @@ inherit
 			process_assigner_instruction,
 			process_assignment,
 			process_assignment_attempt,
+			process_attachment_separate_keywords,
+			process_attachment_symbol_separate_keyword,
 			process_attribute,
 			process_bang_instruction,
 			process_binary_integer_constant,
@@ -503,6 +505,22 @@ feature {ET_AST_NODE} -- Processing
 			an_instruction.assign_attempt_symbol.process (Current)
 			print_space
 			an_instruction.source.process (Current)
+		end
+
+	process_attachment_separate_keywords (a_keywords: ET_ATTACHMENT_SEPARATE_KEYWORDS)
+			-- Process `a_keywords'.
+		do
+			a_keywords.attachment_keyword.process (Current)
+			print_space
+			a_keywords.separateness_keyword.process (Current)
+		end
+
+	process_attachment_symbol_separate_keyword (a_keywords: ET_ATTACHMENT_SYMBOL_SEPARATE_KEYWORD)
+			-- Process `a_keywords'.
+		do
+			a_keywords.attachment_symbol.process (Current)
+			print_space
+			a_keywords.separateness_keyword.process (Current)
 		end
 
 	process_attribute (a_feature: ET_ATTRIBUTE)
@@ -1080,12 +1098,12 @@ feature {ET_AST_NODE} -- Processing
 	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
 		local
-			a_type_mark: ET_TYPE_MARK
+			l_type_mark: ET_TYPE_MARK
 		do
-			a_type_mark := a_type.type_mark
-			if a_type_mark /= Void then
-				a_type_mark.process (Current)
-				if a_type_mark.is_keyword then
+			l_type_mark := a_type.type_mark
+			if l_type_mark /= Void then
+				l_type_mark.process (Current)
+				if not l_type_mark.is_implicit_mark then
 					print_space
 				end
 			end
@@ -3342,7 +3360,7 @@ feature {ET_AST_NODE} -- Processing
 			l_type_mark := a_type.type_mark
 			if l_type_mark /= Void then
 				l_type_mark.process (Current)
-				if l_type_mark.is_keyword then
+				if not l_type_mark.is_implicit_mark then
 					print_space
 				end
 			end
@@ -3758,7 +3776,7 @@ feature {ET_AST_NODE} -- Processing
 			l_type_mark := a_type.type_mark
 			if l_type_mark /= Void then
 				l_type_mark.process (Current)
-				if l_type_mark.is_keyword then
+				if not l_type_mark.is_implicit_mark then
 					print_space
 				end
 			end
@@ -3775,7 +3793,7 @@ feature {ET_AST_NODE} -- Processing
 			l_type_mark := a_type.type_mark
 			if l_type_mark /= Void then
 				l_type_mark.process (Current)
-				if l_type_mark.is_keyword then
+				if not l_type_mark.is_implicit_mark then
 					print_space
 				end
 			end
@@ -4933,7 +4951,15 @@ feature {ET_AST_NODE} -- Processing
 		local
 			l_qualified_feature_name: ET_QUALIFIED_FEATURE_NAME
 			l_feature_name: ET_FEATURE_NAME
+			l_type_mark: ET_TYPE_MARK
 		do
+			l_type_mark := a_type.type_mark
+			if l_type_mark /= Void then
+				l_type_mark.process (Current)
+				if not l_type_mark.is_implicit_mark then
+					print_space
+				end
+			end
 			a_type.like_keyword.process (Current)
 			print_space
 			a_type.left_brace.process (Current)
@@ -4955,7 +4981,15 @@ feature {ET_AST_NODE} -- Processing
 		local
 			l_qualified_feature_name: ET_QUALIFIED_FEATURE_NAME
 			l_feature_name: ET_FEATURE_NAME
+			l_type_mark: ET_TYPE_MARK
 		do
+			l_type_mark := a_type.type_mark
+			if l_type_mark /= Void then
+				l_type_mark.process (Current)
+				if not l_type_mark.is_implicit_mark then
+					print_space
+				end
+			end
 			a_type.target_type.process (Current)
 				-- The AST may or may not contain the dot.
 				-- So we have to print them explicitly here.
@@ -5329,7 +5363,7 @@ feature {ET_AST_NODE} -- Processing
 			l_type_mark := a_type.type_mark
 			if l_type_mark /= Void then
 				l_type_mark.process (Current)
-				if l_type_mark.is_keyword then
+				if not l_type_mark.is_implicit_mark then
 					print_space
 				end
 			end

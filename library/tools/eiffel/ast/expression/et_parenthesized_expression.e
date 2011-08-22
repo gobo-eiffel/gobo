@@ -5,7 +5,7 @@ note
 		"Eiffel parenthesized expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,6 +16,7 @@ inherit
 
 	ET_EXPRESSION
 		redefine
+			unparenthesized_expression,
 			reset, index, is_current
 		end
 
@@ -70,6 +71,12 @@ feature -- Access
 
 	right_parenthesis: ET_SYMBOL
 			-- Right parenthesis
+
+	unparenthesized_expression: ET_EXPRESSION
+			-- Version of current expression without any surrounding parentheses
+		do
+			Result := expression.unparenthesized_expression
+		end
 
 	index: INTEGER
 			-- Index of expression in enclosing feature;

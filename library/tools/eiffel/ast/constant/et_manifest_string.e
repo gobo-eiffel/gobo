@@ -5,7 +5,7 @@ note
 		"Eiffel manifest strings"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -155,9 +155,9 @@ feature -- Type conversion
 		do
 			if cast_type = Void then
 -- TODO: check that the value of `Current' can be represented in `a_target_type'.
-				if a_target_type.same_named_context (a_universe.string_8_type) then
+				if a_target_type.same_named_context_with_type_marks (tokens.implicit_attached_type_mark, a_universe.string_8_type, tokens.implicit_attached_type_mark) then
 					Result := a_universe.string_8_convert_feature
-				elseif a_target_type.same_named_context (a_universe.string_32_type) then
+				elseif a_target_type.same_named_context_with_type_marks (tokens.implicit_attached_type_mark, a_universe.string_32_type, tokens.implicit_attached_type_mark) then
 					Result := a_universe.string_32_convert_feature
 				end
 			end

@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type set builders where types are pushed to supersets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -416,7 +416,7 @@ feature {NONE} -- Implementation
 					l_parameters.put_first (l_dynamic_type_set.static_type.base_type)
 				end
 			end
-			create l_tuple_type.make (Void, l_parameters, current_universe_impl.tuple_type.named_base_class)
+			create l_tuple_type.make (tokens.implicit_attached_type_mark, l_parameters, current_universe_impl.tuple_type.named_base_class)
 			l_dynamic_tuple_type ?= current_dynamic_system.dynamic_type (l_tuple_type, current_system.any_type)
 			if l_dynamic_tuple_type = Void then
 					-- Internal error: the dynamic type of a Tuple type

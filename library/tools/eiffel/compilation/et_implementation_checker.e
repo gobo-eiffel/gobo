@@ -5,7 +5,7 @@ note
 		"Eiffel implementation checkers for features and invariants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -320,12 +320,12 @@ feature {NONE} -- Feature validity
 			if flat_mode and not an_error_in_parent then
 				feature_checker.set_precursor_queries (precursor_queries)
 			end
+			check_assertions_validity (a_query, a_query, an_error_in_parent)
 			feature_checker.check_feature_validity (a_query, current_class)
 			feature_checker.set_precursor_queries (Void)
 			if feature_checker.has_fatal_error then
 				set_fatal_error (current_class)
 			end
-			check_assertions_validity (a_query, a_query, an_error_in_parent)
 			if flat_mode and not an_error_in_parent then
 				from precursor_queries.start until precursor_queries.after loop
 					check_precursor_query_validity (precursor_queries.item_for_iteration, an_error_in_parent)
@@ -345,12 +345,12 @@ feature {NONE} -- Feature validity
 			if flat_mode and not an_error_in_parent then
 				feature_checker.set_precursor_procedures (precursor_procedures)
 			end
+			check_assertions_validity (a_procedure, a_procedure, an_error_in_parent)
 			feature_checker.check_feature_validity (a_procedure, current_class)
 			feature_checker.set_precursor_procedures (Void)
 			if feature_checker.has_fatal_error then
 				set_fatal_error (current_class)
 			end
-			check_assertions_validity (a_procedure, a_procedure, an_error_in_parent)
 			if flat_mode and not an_error_in_parent then
 				from precursor_procedures.start until precursor_procedures.after loop
 					check_precursor_procedure_validity (precursor_procedures.item_for_iteration, an_error_in_parent)

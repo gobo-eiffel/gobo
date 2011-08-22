@@ -5,7 +5,7 @@ note
 		"Eiffel formal parameter validity checkers, second pass"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -133,7 +133,7 @@ feature {NONE} -- Constraint validity
 						a_formal := a_formals.formal_parameter (i)
 						a_constraint := a_formal.constraint
 						if a_constraint = Void then
-							a_constraint := current_universe.any_type
+							a_constraint := current_universe.detachable_any_type
 						end
 							-- If we have:
 							--    class A [G, H -> LIST [G]] ...

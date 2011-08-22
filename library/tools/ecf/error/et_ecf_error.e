@@ -98,6 +98,10 @@ create
 	make_eacy,
 	make_eacz,
 	make_eada,
+	make_eadb,
+	make_eadc,
+	make_eadd,
+	make_eade,
 	make_esnm,
 	make_esne,
 	make_esvm,
@@ -2093,6 +2097,103 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 		end
 
+	make_eadb (a_value_attribute_name, a_excluded_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Create a new EADB error: cannot have both value and excluded_value in concurrency condition.
+		require
+			a_value_attribute_name_not_void: a_value_attribute_name /= Void
+			a_excluded_value_attribute_name_not_void: a_excluded_value_attribute_name /= Void
+			a_universe_not_void: a_universe /= Void
+		do
+			universe := a_universe
+			position := a_excluded_value_attribute_name.position
+			code := eadb_code
+			default_template := default_message_template (eadb_default_template)
+			create parameters.make_filled (empty_string, 1, 4)
+			parameters.put (code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+		ensure
+			universe_set: universe = a_universe
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+		end
+
+	make_eadc (a_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Create a new EADC error: the value in concurrency condition is empty.
+		require
+			a_value_attribute_name_not_void: a_value_attribute_name /= Void
+			a_universe_not_void: a_universe /= Void
+		do
+			universe := a_universe
+			position := a_value_attribute_name.position
+			code := eadc_code
+			default_template := default_message_template (eadc_default_template)
+			create parameters.make_filled (empty_string, 1, 4)
+			parameters.put (code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+		ensure
+			universe_set: universe = a_universe
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+		end
+
+	make_eadd (a_excluded_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Create a new EADD error: the excluded value in concurrency condition is empty.
+		require
+			a_excluded_value_attribute_name_not_void: a_excluded_value_attribute_name /= Void
+			a_universe_not_void: a_universe /= Void
+		do
+			universe := a_universe
+			position := a_excluded_value_attribute_name.position
+			code := eadd_code
+			default_template := default_message_template (eadd_default_template)
+			create parameters.make_filled (empty_string, 1, 4)
+			parameters.put (code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+		ensure
+			universe_set: universe = a_universe
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+		end
+
+	make_eade (a_platform_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Create a new EADE error: value or excluded value missing in concurrency condition.
+		require
+			a_platform_element_name_not_void: a_platform_element_name /= Void
+			a_universe_not_void: a_universe /= Void
+		do
+			universe := a_universe
+			position := a_platform_element_name.position
+			code := eade_code
+			default_template := default_message_template (eade_default_template)
+			create parameters.make_filled (empty_string, 1, 4)
+			parameters.put (code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+		ensure
+			universe_set: universe = a_universe
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+		end
+
 	make_esnm (a_setting_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
 			-- Create a new ESNM error: the name of the setting missing.
 			--
@@ -2357,6 +2458,10 @@ feature {NONE} -- Implementation
 	eacy_default_template: STRING = "'location' attribute is missing in element 'assembly'."
 	eacz_default_template: STRING = "'name' attribute in element 'assembly' is empty."
 	eada_default_template: STRING = "'location' attribute in element 'assembly' is empty."
+	eadb_default_template: STRING = "cannot have both 'value' and 'excluded_value' in 'concurrency' condition."
+	eadc_default_template: STRING = "'value' attribute in 'concurrency' condition is empty."
+	eadd_default_template: STRING = "'excluded_value' attribute in 'concurrency' condition is empty."
+	eade_default_template: STRING = "'value' or 'excluded_value' attribute is missing in 'concurrency' condition."
 	esnm_default_template: STRING = "'name' attribute is missing in element 'setting'."
 	esne_default_template: STRING = "'name' attribute in element 'setting' is empty."
 	esvm_default_template: STRING = "'value' attribute is missing in element 'setting'."
@@ -2443,6 +2548,10 @@ feature {NONE} -- Implementation
 	eacy_code: STRING = "EACY"
 	eacz_code: STRING = "EACZ"
 	eada_code: STRING = "EADA"
+	eadb_code: STRING = "EADB"
+	eadc_code: STRING = "EADC"
+	eadd_code: STRING = "EADD"
+	eade_code: STRING = "EADE"
 	esnm_code: STRING = "ESNM"
 	esne_code: STRING = "ESNE"
 	esvm_code: STRING = "ESVM"

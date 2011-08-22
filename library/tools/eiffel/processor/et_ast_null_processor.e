@@ -5,7 +5,7 @@ note
 		"Eiffel AST null processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -114,6 +114,16 @@ feature {ET_AST_NODE} -- Processing
 
 	process_assignment_attempt (an_instruction: ET_ASSIGNMENT_ATTEMPT)
 			-- Process `an_instruction'.
+		do
+		end
+
+	process_attachment_separate_keywords (a_keywords: ET_ATTACHMENT_SEPARATE_KEYWORDS)
+			-- Process `a_keywords'.
+		do
+		end
+
+	process_attachment_symbol_separate_keyword (a_keywords: ET_ATTACHMENT_SYMBOL_SEPARATE_KEYWORD)
+			-- Process `a_keywords'.
 		do
 		end
 
@@ -569,6 +579,11 @@ feature {ET_AST_NODE} -- Processing
 
 	process_if_instruction (an_instruction: ET_IF_INSTRUCTION)
 			-- Process `an_instruction'.
+		do
+		end
+
+	process_implicit_type_mark (a_type_mark: ET_IMPLICIT_TYPE_MARK)
+			-- Process `a_type_mark'.
 		do
 		end
 
