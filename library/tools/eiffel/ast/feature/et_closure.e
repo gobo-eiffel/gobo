@@ -5,7 +5,7 @@ note
 		"Eiffel closures, e.g. features, invariants, inline agents"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,6 +33,18 @@ feature -- Access
 	locals: ET_LOCAL_VARIABLE_LIST
 			-- Local variables;
 			-- Void if no local variables
+		do
+		end
+
+	preconditions: ET_PRECONDITIONS
+			-- Preconditions;
+			-- Void if no preconditions
+		do
+		end
+
+	postconditions: ET_POSTCONDITIONS
+			-- Postconditions;
+			-- Void if no postconditions
 		do
 		end
 

@@ -174,11 +174,26 @@ feature -- Status report
 			-- Has the implementation of `a_feature' been checked?
 		require
 			a_feature_not_void: a_feature /= Void
+		local
+			l_preconditions: ET_PRECONDITIONS
+			l_postconditions: ET_POSTCONDITIONS
 		do
-			if in_assertion then
-				Result := a_feature.implementation_feature.assertions_checked
+			if in_precondition then
+				l_preconditions := a_feature.implementation_feature.preconditions
+				if l_preconditions /= Void then
+					Result := l_preconditions.validity_checked
+				else
+					Result := True
+				end
+			elseif in_postcondition then
+				l_postconditions := a_feature.implementation_feature.postconditions
+				if l_postconditions /= Void then
+					Result := l_postconditions.validity_checked
+				else
+					Result := True
+				end
 			else
-				Result := a_feature.implementation_feature.implementation_checked
+				Result := a_feature.implementation_feature.validity_checked
 			end
 		end
 
@@ -187,11 +202,22 @@ feature -- Status report
 			-- of implementation of `a_feature'?
 		require
 			a_feature_not_void: a_feature /= Void
+		local
+			l_preconditions: ET_PRECONDITIONS
+			l_postconditions: ET_POSTCONDITIONS
 		do
-			if in_assertion then
-				Result := a_feature.implementation_feature.has_assertions_error
+			if in_precondition then
+				l_preconditions := a_feature.implementation_feature.preconditions
+				if l_preconditions /= Void then
+					Result := l_preconditions.has_validity_error
+				end
+			elseif in_postcondition then
+				l_postconditions := a_feature.implementation_feature.postconditions
+				if l_postconditions /= Void then
+					Result := l_postconditions.has_validity_error
+				end
 			else
-				Result := a_feature.implementation_feature.has_implementation_error
+				Result := a_feature.implementation_feature.has_validity_error
 			end
 		end
 
@@ -229,17 +255,17 @@ feature -- Validity checking
 					-- be an ancestor of `a_current_type.base_class') does not exist.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_class_impl /= l_class or else not a_current_type.same_as_base_class then
-					-- Check that this feature has already been checked in the
+			elseif l_feature_impl.validity_checked then
+					-- This feature has already been checked in the
 					-- context of its implementation class.
-				if l_feature_impl.implementation_checked then
-					if l_feature_impl.has_implementation_error then
-							-- The error should have already been reported.
-						set_fatal_error
-					end
-				else
-					check_feature_validity (l_feature_impl, l_class_impl)
+				if l_feature_impl.has_validity_error then
+						-- The error should have already been reported.
+					set_fatal_error
 				end
+			elseif l_class_impl /= l_class or else not a_current_type.same_as_base_class then
+					-- Check the validity of this feature in the
+					-- context of its implementation class.
+				check_feature_validity (l_feature_impl, l_class_impl)
 			end
 			if not has_fatal_error then
 				old_feature_impl := current_feature_impl
@@ -261,7 +287,7 @@ feature -- Validity checking
 					if current_universe.attachment_type_conformance_mode then
 						if l_class = l_class_impl then
 							l_preconditions := l_feature_impl.preconditions
-							if l_preconditions /= Void and then not l_feature_impl.assertions_checked then
+							if l_preconditions /= Void and then not l_preconditions.validity_checked then
 									-- Make sure to mark as boolean expression infix and prefix expressions
 									-- with target of type BOOLEAN.
 								l_old_has_error := has_fatal_error
@@ -273,9 +299,9 @@ feature -- Validity checking
 					end
 					a_feature.process (Current)
 					if current_type = current_class_impl then
-						a_feature.set_implementation_checked
+						a_feature.set_validity_checked
 						if has_fatal_error then
-							a_feature.set_implementation_error
+							a_feature.set_validity_error
 						end
 					end
 				end
@@ -330,7 +356,6 @@ feature -- Validity checking
 			old_class: ET_CLASS
 			old_class_impl: ET_CLASS
 			old_type: ET_BASE_TYPE
-			old_in_assertion: BOOLEAN
 			old_in_precondition: BOOLEAN
 			l_assertion_context: ET_NESTED_TYPE_CONTEXT
 			i, nb: INTEGER
@@ -353,15 +378,15 @@ feature -- Validity checking
 					-- be an ancestor of `l_current_class') does not exist.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_class_impl /= l_current_class then
-				if l_feature_impl.assertions_checked then
-					if l_feature_impl.has_assertions_error then
-							-- The error should have already been reported.
-						set_fatal_error
-					end
-				else
-					check_preconditions_validity (a_preconditions, l_feature_impl, l_feature_impl, l_class_impl)
+			elseif a_preconditions.validity_checked then
+					-- These preconditions have already been checked in the
+					-- context of their implementation class.
+				if a_preconditions.has_validity_error then
+						-- The error should have already been reported.
+					set_fatal_error
 				end
+			elseif l_class_impl /= l_current_class or else not a_current_type.same_as_base_class then
+				check_preconditions_validity (a_preconditions, l_feature_impl, l_feature_impl, l_class_impl)
 			end
 			if not has_fatal_error then
 				old_feature_impl := current_feature_impl
@@ -374,8 +399,6 @@ feature -- Validity checking
 				current_class := l_current_class
 				old_class_impl := current_class_impl
 				current_class_impl := l_class_impl
-				old_in_assertion := in_assertion
-				in_assertion := True
 				old_in_precondition := in_precondition
 				in_precondition := True
 					-- First, make sure that the interface of `current_type' is valid.
@@ -414,8 +437,13 @@ feature -- Validity checking
 					current_object_test_scope.keep_object_tests (l_old_object_test_scope)
 					free_context (l_assertion_context)
 					has_fatal_error := has_fatal_error or had_error
+					if current_type = current_class_impl then
+						a_preconditions.set_validity_checked
+						if has_fatal_error then
+							a_preconditions.set_validity_error
+						end
+					end
 				end
-				in_assertion := old_in_assertion
 				in_precondition := old_in_precondition
 				from current_object_test_types.start until current_object_test_types.after loop
 					free_context (current_object_test_types.item_for_iteration)
@@ -451,7 +479,6 @@ feature -- Validity checking
 			old_class: ET_CLASS
 			old_class_impl: ET_CLASS
 			old_type: ET_BASE_TYPE
-			old_in_assertion: BOOLEAN
 			old_in_postcondition: BOOLEAN
 			l_assertion_context: ET_NESTED_TYPE_CONTEXT
 			i, nb: INTEGER
@@ -463,6 +490,8 @@ feature -- Validity checking
 			l_class_impl: ET_CLASS
 			l_current_class: ET_CLASS
 			l_old_object_test_scope: INTEGER
+			l_preconditions: ET_PRECONDITIONS
+			l_old_has_error: BOOLEAN
 		do
 			has_fatal_error := False
 			l_feature_impl := a_current_feature_impl.implementation_feature
@@ -474,15 +503,15 @@ feature -- Validity checking
 					-- be an ancestor of `l_current_class') does not exist.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_class_impl /= l_current_class then
-				if l_feature_impl.assertions_checked then
-					if l_feature_impl.has_assertions_error then
-							-- The error should have already been reported.
-						set_fatal_error
-					end
-				else
-					check_postconditions_validity (a_postconditions, l_feature_impl, l_feature_impl, l_class_impl)
+			elseif a_postconditions.validity_checked then
+					-- These postconditions have already been checked in the
+					-- context of their implementation class.
+				if a_postconditions.has_validity_error then
+						-- The error should have already been reported.
+					set_fatal_error
 				end
+			elseif l_class_impl /= l_current_class or else not a_current_type.same_as_base_class then
+				check_postconditions_validity (a_postconditions, l_feature_impl, l_feature_impl, l_class_impl)
 			end
 			if not has_fatal_error then
 				old_feature_impl := current_feature_impl
@@ -495,8 +524,6 @@ feature -- Validity checking
 				current_class := l_current_class
 				old_class_impl := current_class_impl
 				current_class_impl := l_class_impl
-				old_in_assertion := in_assertion
-				in_assertion := True
 				old_in_postcondition := in_postcondition
 				in_postcondition := True
 					-- First, make sure that the interface of `current_type' is valid.
@@ -506,6 +533,16 @@ feature -- Validity checking
 					set_fatal_error
 				else
 					if current_universe.attachment_type_conformance_mode then
+						if l_current_class = l_class_impl then
+							l_preconditions := l_feature_impl.preconditions
+							if l_preconditions /= Void and then not l_preconditions.validity_checked then
+									-- Make sure to mark as boolean expression infix and prefix expressions
+									-- with target of type BOOLEAN.
+								l_old_has_error := has_fatal_error
+								feature_checker.check_preconditions_validity (l_preconditions, l_feature_impl, l_feature_impl, l_class_impl)
+								has_fatal_error := l_old_has_error
+							end
+						end
 						build_preconditions_attachment_scope (l_feature_impl)
 					end
 					boolean_type := current_universe_impl.boolean_type
@@ -538,8 +575,13 @@ feature -- Validity checking
 					current_object_test_scope.keep_object_tests (l_old_object_test_scope)
 					free_context (l_assertion_context)
 					has_fatal_error := has_fatal_error or had_error
+					if current_type = current_class_impl then
+						a_postconditions.set_validity_checked
+						if has_fatal_error then
+							a_postconditions.set_validity_error
+						end
+					end
 				end
-				in_assertion := old_in_assertion
 				in_postcondition := old_in_postcondition
 				from current_object_test_types.start until current_object_test_types.after loop
 					free_context (current_object_test_types.item_for_iteration)
@@ -571,7 +613,6 @@ feature -- Validity checking
 			old_class: ET_CLASS
 			old_class_impl: ET_CLASS
 			old_type: ET_BASE_TYPE
-			old_in_assertion: BOOLEAN
 			old_in_invariant: BOOLEAN
 			i, nb: INTEGER
 			l_expression: ET_EXPRESSION
@@ -592,15 +633,15 @@ feature -- Validity checking
 					-- be an ancestor of `l_current_class') does not exist.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_class_impl /= l_current_class then
-				if an_invariants.assertions_checked then
-					if an_invariants.has_assertions_error then
-							-- The error should have already been reported.
-						set_fatal_error
-					end
-				else
-					check_invariants_validity (an_invariants, l_class_impl)
+			elseif an_invariants.validity_checked then
+					-- These invariants have already been checked in the
+					-- context of their implementation class.
+				if an_invariants.has_validity_error then
+						-- The error should have already been reported.
+					set_fatal_error
 				end
+			elseif l_class_impl /= l_current_class or else not a_current_type.same_as_base_class then
+				check_invariants_validity (an_invariants, l_class_impl)
 			end
 			if not has_fatal_error then
 				old_feature_impl := current_feature_impl
@@ -613,8 +654,6 @@ feature -- Validity checking
 				current_class := l_current_class
 				old_class_impl := current_class_impl
 				current_class_impl := l_class_impl
-				old_in_assertion := in_assertion
-				in_assertion := True
 				old_in_invariant := in_invariant
 				in_invariant := True
 					-- First, make sure that the interface of `current_type' is valid.
@@ -654,13 +693,12 @@ feature -- Validity checking
 					free_context (l_assertion_context)
 					has_fatal_error := has_fatal_error or had_error
 					if current_class = current_class_impl then
-						an_invariants.set_assertions_checked
+						an_invariants.set_validity_checked
 						if has_fatal_error then
-							an_invariants.set_assertions_error
+							an_invariants.set_validity_error
 						end
 					end
 				end
-				in_assertion := old_in_assertion
 				in_invariant := old_in_invariant
 				from current_object_test_types.start until current_object_test_types.after loop
 					free_context (current_object_test_types.item_for_iteration)
@@ -7529,7 +7567,7 @@ feature {NONE} -- Expression validity
 						-- reported in the implementation feature.
 					error_handler.report_giaaa_error
 				end
-			elseif in_assertion then
+			elseif in_precondition or in_postcondition then
 					-- The Precursor expression does not appear in a Routine_body.
 				set_fatal_error
 				if current_class = current_class_impl then
@@ -13006,9 +13044,6 @@ feature {NONE} -- Status report
 
 	in_rescue: BOOLEAN
 			-- Are we processing a rescue clause?
-
-	in_assertion: BOOLEAN
-			-- Are we processing an assertion?
 
 	in_precondition: BOOLEAN
 			-- Are we processing a precondition?

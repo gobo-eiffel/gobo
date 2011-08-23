@@ -20,6 +20,8 @@ Version 3.10 - ?
 	  inspect instructions. See bug#3238111.
 	* Fixed bug when an inspect instruction had no else-branch. No exception
 	  was raised.
+	* Fixed bug when running 'gec --gelint ...'. Validity errors were
+	  reported twice.
 
 	gelint:
 
@@ -131,6 +133,7 @@ Version 3.10 - ?
 	  in the same postcondition or invariant clause because it's as if
 	  they were separated by "and then" operators. It was already 
 	  implemented that way in preconditions.
+	* Start checking void-safety validity rules.
 
 	Gobo Eiffel XML Library:
 

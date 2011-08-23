@@ -5,7 +5,7 @@ note
 		"Eiffel inline agents"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -77,18 +77,6 @@ feature -- Initialization
 		end
 
 feature -- Access
-
-	preconditions: ET_PRECONDITIONS
-			-- Preconditions;
-			-- Void if associated feature is not a routine or is a routine with no preconditions
-		do
-		end
-
-	postconditions: ET_POSTCONDITIONS
-			-- Postconditions;
-			-- Void if associated feature is not a routine or is a routine with no postconditions
-		do
-		end
 
 	position: ET_POSITION
 			-- Position of first character of

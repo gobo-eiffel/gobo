@@ -5,7 +5,7 @@ note
 		"Eiffel standalone closures, e.g. features or invariants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -84,72 +84,40 @@ feature -- Export status
 			clients_not_void: Result /= Void
 		end
 
-feature -- Implementation checking status
+feature -- Validity checking status
 
-	implementation_checked: BOOLEAN
-			-- Has the implementation of current feature been checked?
-			-- (Check everything except assertions.)
+	validity_checked: BOOLEAN
+			-- Has the validity of current closure been checked?
+			-- (Check everything except preconditions and postconditions.)
 
-	has_implementation_error: BOOLEAN
-			-- Has a fatal error occurred during implementation checking?
-			-- (Check everything except assertions.)
+	has_validity_error: BOOLEAN
+			-- Has a fatal error occurred during validity checking?
+			-- (Check everything except preconditions and postconditions.)
 
-	assertions_checked: BOOLEAN
-			-- Has the implementation of assertions of current feature been checked?
-
-	has_assertions_error: BOOLEAN
-			-- Has a fatal error occurred during assertions implementation checking?
-
-	set_implementation_checked
-			-- Set `implementation_checked' to True.
+	set_validity_checked
+			-- Set `validity_checked' to True.
 		do
-			implementation_checked := True
+			validity_checked := True
 		ensure
-			implementation_checked: implementation_checked
+			validity_checked: validity_checked
 		end
 
-	set_implementation_error
-			-- Set `has_implementation_error' to True.
+	set_validity_error
+			-- Set `has_validity_error' to True.
 		do
-			has_implementation_error := True
+			has_validity_error := True
 		ensure
-			has_implementation_error: has_implementation_error
+			has_validity_error: has_validity_error
 		end
 
-	reset_implementation_checked
-			-- Set `implementation_checked' to False.
+	reset_validity_checked
+			-- Set `validity_checked' to False.
 		do
-			has_implementation_error := False
-			implementation_checked := False
+			has_validity_error := False
+			validity_checked := False
 		ensure
-			implementation_not_checked: not implementation_checked
-			no_implementation_error: not has_implementation_error
-		end
-
-	set_assertions_checked
-			-- Set `assertions_checked' to True.
-		do
-			assertions_checked := True
-		ensure
-			assertions_checked: assertions_checked
-		end
-
-	set_assertions_error
-			-- Set `has_assertions_error' to True.
-		do
-			has_assertions_error := True
-		ensure
-			has_assertions_error: has_assertions_error
-		end
-
-	reset_assertions_checked
-			-- Set `assertions_checked' to False.
-		do
-			has_assertions_error := False
-			assertions_checked := False
-		ensure
-			assertions_not_checked: not assertions_checked
-			no_assertions_error: not has_assertions_error
+			validity_not_checked: not validity_checked
+			no_validity_error: not has_validity_error
 		end
 
 feature -- Conversion

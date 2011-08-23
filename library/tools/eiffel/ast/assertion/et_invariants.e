@@ -5,7 +5,7 @@ note
 		"Eiffel class invariants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -67,10 +67,9 @@ feature -- Initialization
 	reset
 			-- Reset invariants as they were just after they were last parsed.
 		do
-			if assertions_checked or implementation_checked then
+			if validity_checked then
 				precursor
-				reset_assertions_checked
-				reset_implementation_checked
+				reset_validity_checked
 			end
 		end
 

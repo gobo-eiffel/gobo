@@ -5,7 +5,7 @@ note
 		"Eiffel precondition lists"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,7 +16,9 @@ inherit
 
 	ET_ASSERTIONS
 		redefine
-			make, make_with_capacity
+			make,
+			make_with_capacity,
+			reset
 		end
 
 create
@@ -37,6 +39,17 @@ feature {NONE} -- Initialization
 		do
 			require_keyword := tokens.require_keyword
 			precursor (nb)
+		end
+
+feature -- Initialization
+
+	reset
+			-- Reset preconditions as they were just after they were last parsed.
+		do
+			if validity_checked then
+				precursor
+				reset_validity_checked
+			end
 		end
 
 feature -- Access
@@ -113,6 +126,40 @@ feature -- Setting
 			else_keyword := an_else
 		ensure
 			else_keyword_set: else_keyword = an_else
+		end
+
+feature -- Validity checking status
+
+	validity_checked: BOOLEAN
+			-- Has the validity of current preconditions been checked?
+
+	has_validity_error: BOOLEAN
+			-- Has a fatal error occurred during preconditions validity checking?
+
+	set_validity_checked
+			-- Set `validity_checked' to True.
+		do
+			validity_checked := True
+		ensure
+			validity_checked: validity_checked
+		end
+
+	set_validity_error
+			-- Set `has_validity_error' to True.
+		do
+			has_validity_error := True
+		ensure
+			has_validity_error: has_validity_error
+		end
+
+	reset_validity_checked
+			-- Set `validity_checked' to False.
+		do
+			has_validity_error := False
+			validity_checked := False
+		ensure
+			validity_not_checked: not validity_checked
+			no_validity_error: not has_validity_error
 		end
 
 feature -- Processing
