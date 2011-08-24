@@ -2487,6 +2487,48 @@ feature -- Validity errors
 			end
 		end
 
+	report_vevi0c_error (a_class, a_class_impl: ET_CLASS; a_function: ET_INTERNAL_FUNCTION)
+			-- Report VEVI error: the 'Result' entity declared of attached type
+			-- is not initialized at the end of the function `a_function' declared
+			-- in class `a_class_impl' and viewed from one of its descendants
+			-- `a_class' (possibly itself).
+			--
+			-- ECMA-367-2: p.105
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_function_not_void: a_function /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vevi_error (a_class) then
+				create an_error.make_vevi0c (a_class, a_class_impl, a_function)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vevi0d_error (a_class, a_class_impl: ET_CLASS; a_agent: ET_INTERNAL_FUNCTION_INLINE_AGENT)
+			-- Report VEVI error: the 'Result' entity declared of attached type
+			-- is not initialized at the end of the inline agent `a_agent' appearing
+			-- in class `a_class_impl' and viewed from one of its descendants
+			-- `a_class' (possibly itself).
+			--
+			-- ECMA-367-2: p.105
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_agent_not_void: a_agent /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vevi_error (a_class) then
+				create an_error.make_vevi0d (a_class, a_class_impl, a_agent)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vfac1a_error (a_class: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY)
 			-- Report VFAC-1 error: `a_query' has an assigner `an_assigner'
 			-- but there is not feature with that name in `a_class'.

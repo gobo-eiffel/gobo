@@ -1,2 +1,2 @@
-[VPIR-1] class AA (21,7): local variable name 'a' in inline agent is also the name of an object-test local of an enclosing feature or inline agent whose scope contains the inline agent.
+[VPIR-1] class AA (23,7): local variable name 'a' in inline agent is also the name of an object-test local of an enclosing feature or inline agent whose scope contains the inline agent.
 ----

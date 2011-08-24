@@ -10,11 +10,13 @@ feature
 		local
 			b: BB [attached ANY]
 			a: attached ANY
+			c: attached ANY
 		do
 			create b
-			a := b.f
-			if a = Void then
-				io.output.put_string ("a = Void%N")
+			create a
+			c := b.f (a)
+			if c = Void then
+				io.output.put_string ("c = Void%N")
 			end
 		end
 

@@ -1,0 +1,17 @@
+-------------------------------------------------------------------------------
+
+Error code: VEVI
+
+Error: variable is not properly set.
+What to do: ensure the variable is properly set by the corresponding
+  setter instruction.
+
+Class: AA
+Feature: f
+Local: s
+Line: 19
+      do
+->      a := s
+        s := "gobo"
+
+-------------------------------------------------------------------------------

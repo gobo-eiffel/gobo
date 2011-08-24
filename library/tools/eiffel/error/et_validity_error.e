@@ -95,6 +95,8 @@ create
 	make_veen8b,
 	make_vevi0a,
 	make_vevi0b,
+	make_vevi0c,
+	make_vevi0d,
 	make_vfac1a,
 	make_vfac1b,
 	make_vfac2a,
@@ -3625,6 +3627,96 @@ feature {NONE} -- Initialization
 			code := template_code (vevi0b_template_code)
 			etl_code := vevi_etl_code
 			default_template := default_message_template (vevi0b_default_template)
+			create parameters.make_filled (empty_string, 1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+		end
+
+	make_vevi0c (a_class, a_class_impl: ET_CLASS; a_function: ET_INTERNAL_FUNCTION)
+			-- Create a new VEVI error: the 'Result' entity declared of attached type
+			-- is not initialized at the end of the function `a_function' declared
+			-- in class `a_class_impl' and viewed from one of its descendants
+			-- `a_class' (possibly itself).
+			--
+			-- ECMA-367-2: p.105
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_function_not_void: a_function /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_function.end_keyword.position
+			if position.is_null then
+				position := a_function.name.position
+			end
+			code := template_code (vevi0c_template_code)
+			etl_code := vevi_etl_code
+			default_template := default_message_template (vevi0c_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_function.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = function name
+		end
+
+	make_vevi0d (a_class, a_class_impl: ET_CLASS; a_agent: ET_INTERNAL_FUNCTION_INLINE_AGENT)
+			-- Create a new VEVI error: the 'Result' entity declared of attached type
+			-- is not initialized at the end of the inline agent `a_agent' appearing
+			-- in class `a_class_impl' and viewed from one of its descendants
+			-- `a_class' (possibly itself).
+			--
+			-- ECMA-367-2: p.105
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_agent_not_void: a_agent /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_agent.end_keyword.position
+			if position.is_null then
+				position := a_agent.position
+			end
+			code := template_code (vevi0d_template_code)
+			etl_code := vevi_etl_code
+			default_template := default_message_template (vevi0d_default_template)
 			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -12726,6 +12818,8 @@ feature {NONE} -- Implementation
 	veen8b_default_template: STRING = "`$7' appearing in the invariant or one of its possibly nested inline agents, is an object-test local that is used outside of its scope."
 	vevi0a_default_template: STRING = "local entity `$7' declared as attached is used before being initialized."
 	vevi0b_default_template: STRING = "entity 'Result' declared as attached is used before being initialized."
+	vevi0c_default_template: STRING = "entity 'Result' declared as attached is not initialized at the end of function `$7'."
+	vevi0d_default_template: STRING = "entity 'Result' declared as attached is not initialized at the end of inline agent."
 	vfac1a_default_template: STRING = "query `$7' has an assigner mark `$8' but there is no feature with that name."
 	vfac1b_default_template: STRING = "query `$7' has an assigner mark `$8' but this feature is not a procedure."
 	vfac2a_default_template: STRING = "the number of arguments in assigner procedure `$8' is not one more than the number of arguments in query `$7'."
@@ -13158,6 +13252,8 @@ feature {NONE} -- Implementation
 	veen8b_template_code: STRING = "veen8b"
 	vevi0a_template_code: STRING = "vevi0a"
 	vevi0b_template_code: STRING = "vevi0b"
+	vevi0c_template_code: STRING = "vevi0c"
+	vevi0d_template_code: STRING = "vevi0d"
 	vfac1a_template_code: STRING = "vfac1a"
 	vfac1b_template_code: STRING = "vfac1b"
 	vfac2a_template_code: STRING = "vfac2a"

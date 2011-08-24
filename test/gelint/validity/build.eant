@@ -133,7 +133,11 @@
 		<geant file="build.eant" target="${target}" exit_code_variable="veen8_exit_code" dir="veen8"/>
 		<set name="do_all_exit_code" value="1" unless="${veen8_exit_code}=0"/>
 		<geant file="build.eant" target="clean" dir="veen8" if="${do_clean}=true"/>
-		
+
+		<geant file="build.eant" target="${target}" exit_code_variable="vevi_exit_code" dir="vevi"/>
+		<set name="do_all_exit_code" value="1" unless="${vevi_exit_code}=0"/>
+		<geant file="build.eant" target="clean" dir="vevi" if="${do_clean}=true"/>
+
 		<geant file="build.eant" target="${target}" exit_code_variable="vfac3_exit_code" dir="vfac3"/>
 		<set name="do_all_exit_code" value="1" unless="${vfac3_exit_code}=0"/>
 		<geant file="build.eant" target="clean" dir="vfac3" if="${do_clean}=true"/>
@@ -172,6 +176,7 @@
 		<echo message="# FAILED: gvwmc2" unless="${gvwmc2_exit_code}=0"/>
 		<echo message="# FAILED: vdrd2" unless="${vdrd2_exit_code}=0"/>
 		<echo message="# FAILED: veen8" unless="${veen8_exit_code}=0"/>
+		<echo message="# FAILED: vevi" unless="${vevi_exit_code}=0"/>
 		<echo message="# FAILED: vfac3" unless="${vfac3_exit_code}=0"/>
 		<echo message="# FAILED: vjar" unless="${vjar_exit_code}=0"/>
 		<echo message="# FAILED: vpir1" unless="${vpir1_exit_code}=0"/>

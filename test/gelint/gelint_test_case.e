@@ -117,16 +117,21 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 			out_file: KL_TEXT_OUTPUT_FILE
 			in_file: KL_TEXT_INPUT_FILE
 			a_line: STRING
-			a_pattern1: STRING
-			a_regexp1: RX_PCRE_REGULAR_EXPRESSION
+			a_pattern1, a_pattern2: STRING
+			a_regexp1, a_regexp2: RX_PCRE_REGULAR_EXPRESSION
 			l_empty_line: BOOLEAN
 		do
-				-- Compile regexp.
+				-- Compile regexps.
 			a_pattern1 := "BUILD FAILED!"
 			create a_regexp1.make
 			a_regexp1.compile (a_pattern1)
 			assert ("cannot compile regexp '" + a_pattern1 + "'", a_regexp1.is_compiled)
 			a_regexp1.optimize
+			a_pattern2 := "aa[0-9]+\.c"
+			create a_regexp2.make
+			a_regexp2.compile (a_pattern2)
+			assert ("cannot compile regexp '" + a_pattern2 + "'", a_regexp2.is_compiled)
+			a_regexp2.optimize
 				-- Copy files.
 			create out_file.make (an_output_filename)
 			out_file.open_append
@@ -140,11 +145,14 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 						in_file.end_of_file
 					loop
 						a_line := in_file.last_string
-						if a_regexp1.recognizes (a_line) then
+						if a_line.is_empty then
+							l_empty_line := True
+						elseif a_regexp1.recognizes (a_line) then
 								-- Skip this line and the previous empty line.
 							l_empty_line := False
-						elseif a_line.is_empty then
-							l_empty_line := True
+						elseif a_regexp2.recognizes (a_line) then
+								-- Skip this line and the previous empty line.
+							l_empty_line := False
 						else
 							if l_empty_line then
 								out_file.put_new_line
@@ -153,6 +161,7 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 							out_file.put_line (a_line)
 						end
 						a_regexp1.wipe_out
+						a_regexp2.wipe_out
 						in_file.read_line
 					end
 					in_file.close
@@ -232,11 +241,11 @@ feature {NONE} -- Test gelint
 						in_file.end_of_file
 					loop
 						a_line := in_file.last_string
-						if a_regexp1.recognizes (a_line) then
+						if a_line.is_empty then
+							l_empty_line := True
+						elseif a_regexp1.recognizes (a_line) then
 								-- Skip this line and the previous empty line.
 							l_empty_line := False
-						elseif a_line.is_empty then
-							l_empty_line := True
 						else
 							if l_empty_line then
 								out_file.put_new_line
@@ -374,25 +383,25 @@ feature {NONE} -- Test ISE Eiffel
 								-- Skip this line and the previous empty line.
 							l_empty_line := False
 						elseif a_regexp2.matches (a_line) then
-								-- Skip this line.
+								-- Skip this line and the previous empty line.
 							l_empty_line := False
 						elseif a_regexp3.recognizes (a_line) then
-								-- Skip this line.
+								-- Skip this line and the previous empty line.
 							l_empty_line := False
 						elseif a_regexp4.recognizes (a_line) then
-								-- Skip this line.
+								-- Skip this line and the previous empty line.
 							l_empty_line := False
 						elseif a_regexp5.matches (a_line) then
-								-- Skip this line.
+								-- Skip this line and the previous empty line.
 							l_empty_line := False
 						elseif a_regexp6.matches (a_line) then
-								-- Skip this line.
+								-- Skip this line and the previous empty line.
 							l_empty_line := False
 						elseif a_regexp7.matches (a_line) then
-								-- Skip this line.
+								-- Skip this line and the previous empty line.
 							l_empty_line := False
 						elseif a_regexp8.matches (a_line) then
-								-- Skip this line.
+								-- Skip this line and the previous empty line.
 							l_empty_line := False
 						else
 							if l_empty_line then

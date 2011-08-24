@@ -1015,6 +1015,17 @@ feature {NONE} -- Feature validity
 					check_instructions_validity (l_compound)
 					had_error := had_error or has_fatal_error
 				end
+				if current_universe.attachment_type_conformance_mode then
+					if not l_type.is_type_detachable (current_type) and not l_type.is_type_expanded (current_type) then
+						if not current_initialization_scope.has_result then
+								-- Error: 'Result' entity declared as attached
+								-- is not initialized at the end of the function.
+							had_error := True
+							set_fatal_error
+							error_handler.report_vevi0c_error (current_class, current_class_impl, a_feature)
+						end
+					end
+				end
 				l_compound := a_feature.rescue_clause
 				if l_compound /= Void then
 					check_rescue_validity (l_compound)
@@ -1320,6 +1331,17 @@ feature {NONE} -- Feature validity
 				if l_compound /= Void then
 					check_instructions_validity (l_compound)
 					had_error := had_error or has_fatal_error
+				end
+				if current_universe.attachment_type_conformance_mode then
+					if not l_type.is_type_detachable (current_type) and not l_type.is_type_expanded (current_type) then
+						if not current_initialization_scope.has_result then
+								-- Error: 'Result' entity declared as attached
+								-- is not initialized at the end of the function.
+							had_error := True
+							set_fatal_error
+							error_handler.report_vevi0c_error (current_class, current_class_impl, a_feature)
+						end
+					end
 				end
 				l_compound := a_feature.rescue_clause
 				if l_compound /= Void then
@@ -8170,7 +8192,7 @@ feature {NONE} -- Expression validity
 						--        g (a: STRING): BOOLEAN do ... end
 						--    end
 						-- 'Result' in the inherited postcondition "post" should be considered
-						-- of type STRING (and not ANY) is class B..
+						-- of type STRING (and not ANY) is class B.
 					l_type := current_feature.type
 				end
 				if l_type = Void then
@@ -10500,6 +10522,17 @@ feature {NONE} -- Agent validity
 					check_instructions_validity (l_compound)
 					had_error := had_error or has_fatal_error
 				end
+				if current_universe.attachment_type_conformance_mode then
+					if not l_type.is_type_detachable (a_context) and not l_type.is_type_expanded (a_context) then
+						if not current_initialization_scope.has_result then
+								-- Error: 'Result' entity declared as attached
+								-- is not initialized at the end of the function.
+							had_error := True
+							set_fatal_error
+							error_handler.report_vevi0d_error (current_class, current_class_impl, an_expression)
+						end
+					end
+				end
 				l_compound := an_expression.rescue_clause
 				if l_compound /= Void then
 					check_rescue_validity (l_compound)
@@ -10826,6 +10859,17 @@ feature {NONE} -- Agent validity
 				if l_compound /= Void then
 					check_instructions_validity (l_compound)
 					had_error := had_error or has_fatal_error
+				end
+				if current_universe.attachment_type_conformance_mode then
+					if not l_type.is_type_detachable (a_context) and not l_type.is_type_expanded (a_context) then
+						if not current_initialization_scope.has_result then
+								-- Error: 'Result' entity declared as attached
+								-- is not initialized at the end of the function.
+							had_error := True
+							set_fatal_error
+							error_handler.report_vevi0d_error (current_class, current_class_impl, an_expression)
+						end
+					end
 				end
 				l_compound := an_expression.rescue_clause
 				if l_compound /= Void then
