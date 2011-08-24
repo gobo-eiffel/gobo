@@ -2529,6 +2529,27 @@ feature -- Validity errors
 			end
 		end
 
+	report_vevi0e_error (a_class, a_class_impl: ET_CLASS; a_attribute: ET_EXTENDED_ATTRIBUTE)
+			-- Report VEVI error: the 'Result' entity declared of attached type
+			-- is not initialized at the end of the attribute body of `a_attribute'
+			-- declared in class `a_class_impl' and viewed from one of its descendants
+			-- `a_class' (possibly itself).
+			--
+			-- ECMA-367-2: p.105
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_attribute_not_void: a_attribute /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vevi_error (a_class) then
+				create an_error.make_vevi0e (a_class, a_class_impl, a_attribute)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vfac1a_error (a_class: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY)
 			-- Report VFAC-1 error: `a_query' has an assigner `an_assigner'
 			-- but there is not feature with that name in `a_class'.

@@ -97,6 +97,7 @@ create
 	make_vevi0b,
 	make_vevi0c,
 	make_vevi0d,
+	make_vevi0e,
 	make_vfac1a,
 	make_vfac1b,
 	make_vfac2a,
@@ -3737,6 +3738,52 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
+		end
+
+	make_vevi0e (a_class, a_class_impl: ET_CLASS; a_attribute: ET_EXTENDED_ATTRIBUTE)
+			-- Report VEVI error: the 'Result' entity declared of attached type
+			-- is not initialized at the end of the attribute body of `a_attribute'
+			-- declared in class `a_class_impl' and viewed from one of its descendants
+			-- `a_class' (possibly itself).
+			--
+			-- ECMA-367-2: p.105
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_attribute_not_void: a_attribute /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_attribute.end_keyword.position
+			if position.is_null then
+				position := a_attribute.name.position
+			end
+			code := template_code (vevi0e_template_code)
+			etl_code := vevi_etl_code
+			default_template := default_message_template (vevi0e_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_attribute.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = attribute name
 		end
 
 	make_vfac1a (a_class: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY)
@@ -12818,8 +12865,9 @@ feature {NONE} -- Implementation
 	veen8b_default_template: STRING = "`$7' appearing in the invariant or one of its possibly nested inline agents, is an object-test local that is used outside of its scope."
 	vevi0a_default_template: STRING = "local entity `$7' declared as attached is used before being initialized."
 	vevi0b_default_template: STRING = "entity 'Result' declared as attached is used before being initialized."
-	vevi0c_default_template: STRING = "entity 'Result' declared as attached is not initialized at the end of function `$7'."
-	vevi0d_default_template: STRING = "entity 'Result' declared as attached is not initialized at the end of inline agent."
+	vevi0c_default_template: STRING = "entity 'Result' declared as attached is not initialized at the end of the body of function `$7'."
+	vevi0d_default_template: STRING = "entity 'Result' declared as attached is not initialized at the end of the body of inline agent."
+	vevi0e_default_template: STRING = "entity 'Result' declared as attached is not initialized at the end of the body of attribute `$7'."
 	vfac1a_default_template: STRING = "query `$7' has an assigner mark `$8' but there is no feature with that name."
 	vfac1b_default_template: STRING = "query `$7' has an assigner mark `$8' but this feature is not a procedure."
 	vfac2a_default_template: STRING = "the number of arguments in assigner procedure `$8' is not one more than the number of arguments in query `$7'."
@@ -13254,6 +13302,7 @@ feature {NONE} -- Implementation
 	vevi0b_template_code: STRING = "vevi0b"
 	vevi0c_template_code: STRING = "vevi0c"
 	vevi0d_template_code: STRING = "vevi0d"
+	vevi0e_template_code: STRING = "vevi0e"
 	vfac1a_template_code: STRING = "vfac1a"
 	vfac1b_template_code: STRING = "vfac1b"
 	vfac2a_template_code: STRING = "vfac2a"

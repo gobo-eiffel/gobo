@@ -1018,8 +1018,8 @@ feature {NONE} -- Feature validity
 				if current_universe.attachment_type_conformance_mode then
 					if not l_type.is_type_detachable (current_type) and not l_type.is_type_expanded (current_type) then
 						if not current_initialization_scope.has_result then
-								-- Error: 'Result' entity declared as attached
-								-- is not initialized at the end of the function.
+								-- Error: 'Result' entity declared as attached is not initialized
+								-- at the end of the body the function.
 							had_error := True
 							set_fatal_error
 							error_handler.report_vevi0c_error (current_class, current_class_impl, a_feature)
@@ -1205,6 +1205,17 @@ feature {NONE} -- Feature validity
 					check_instructions_validity (l_compound)
 					had_error := had_error or has_fatal_error
 				end
+				if current_universe.attachment_type_conformance_mode then
+					if not l_type.is_type_detachable (current_type) and not l_type.is_type_expanded (current_type) then
+						if not current_initialization_scope.has_result then
+								-- Error: 'Result' entity declared as attached is not initialized
+								-- at the end of the body of the attribute.
+							had_error := True
+							set_fatal_error
+							error_handler.report_vevi0e_error (current_class, current_class_impl, a_feature)
+						end
+					end
+				end
 				l_compound := a_feature.rescue_clause
 				if l_compound /= Void then
 					check_rescue_validity (l_compound)
@@ -1335,8 +1346,8 @@ feature {NONE} -- Feature validity
 				if current_universe.attachment_type_conformance_mode then
 					if not l_type.is_type_detachable (current_type) and not l_type.is_type_expanded (current_type) then
 						if not current_initialization_scope.has_result then
-								-- Error: 'Result' entity declared as attached
-								-- is not initialized at the end of the function.
+								-- Error: 'Result' entity declared as attached is not initialized
+								-- at the end of the body of the function.
 							had_error := True
 							set_fatal_error
 							error_handler.report_vevi0c_error (current_class, current_class_impl, a_feature)
@@ -10525,8 +10536,8 @@ feature {NONE} -- Agent validity
 				if current_universe.attachment_type_conformance_mode then
 					if not l_type.is_type_detachable (a_context) and not l_type.is_type_expanded (a_context) then
 						if not current_initialization_scope.has_result then
-								-- Error: 'Result' entity declared as attached
-								-- is not initialized at the end of the function.
+								-- Error: 'Result' entity declared as attached is not initialized
+								-- at the end of the body of the inline agent.
 							had_error := True
 							set_fatal_error
 							error_handler.report_vevi0d_error (current_class, current_class_impl, an_expression)
@@ -10863,8 +10874,8 @@ feature {NONE} -- Agent validity
 				if current_universe.attachment_type_conformance_mode then
 					if not l_type.is_type_detachable (a_context) and not l_type.is_type_expanded (a_context) then
 						if not current_initialization_scope.has_result then
-								-- Error: 'Result' entity declared as attached
-								-- is not initialized at the end of the function.
+								-- Error: 'Result' entity declared as attached is not initialized
+								-- at the end of the body of the inline agent.
 							had_error := True
 							set_fatal_error
 							error_handler.report_vevi0d_error (current_class, current_class_impl, an_expression)
