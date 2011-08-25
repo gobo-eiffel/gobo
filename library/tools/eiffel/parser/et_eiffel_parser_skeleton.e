@@ -1525,13 +1525,18 @@ feature {NONE} -- AST factory
 			-- New 'TUPLE' type
 		local
 			a_class: ET_NAMED_CLASS
+			l_type_mark: ET_TYPE_MARK
 		do
 			a_class := current_universe.master_class (a_tuple)
 			if providers_enabled then
 				providers.force_last (a_class)
 			end
 			a_class.set_in_system (True)
-			Result := ast_factory.new_tuple_type (a_type_mark, a_tuple, a_generics, a_class)
+			l_type_mark := a_type_mark
+			if l_type_mark = Void then
+				l_type_mark := current_universe.implicit_attachment_type_mark
+			end
+			Result := ast_factory.new_tuple_type (l_type_mark, a_tuple, a_generics, a_class)
 		end
 
 	new_unqualified_call_expression (a_name: ET_IDENTIFIER; args: ET_ACTUAL_ARGUMENT_LIST): ET_EXPRESSION
