@@ -12949,6 +12949,7 @@ feature {NONE} -- Attachments
 					l_query := current_class.seeded_query (l_identifier.seed)
 					if l_query /= Void and then l_query.is_attribute then
 -- TODO: see whether the attribute is declared as stable.
+						Result := current_attachment_scope.has_name (l_identifier)
 					end
 				end
 			end
