@@ -2232,7 +2232,6 @@ feature {NONE} -- Agent validity
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			an_agent_type: ET_GENERIC_CLASS_TYPE
 			an_agent_class: ET_NAMED_CLASS
-			l_tuple_type_mark: ET_TYPE_MARK
 		do
 			reset_fatal_error (False)
 			a_name := an_expression.name
@@ -2242,12 +2241,7 @@ feature {NONE} -- Agent validity
 				fill_open_operands (an_expression, a_query, an_open_operands)
 			end
 			if not has_fatal_error then
-				if an_open_operands = Void or else an_open_operands.is_empty then
-					l_tuple_type_mark := tokens.detachable_keyword
-				else
-					l_tuple_type_mark := tokens.attached_keyword
-				end
-				create a_tuple_type.make (l_tuple_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
+				create a_tuple_type.make (tokens.implicit_attached_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
 				a_type := a_query.type
 -- TODO: like argument
 				if a_type.same_named_type (current_universe_impl.boolean_type, current_type, current_type) then
@@ -2287,7 +2281,6 @@ feature {NONE} -- Agent validity
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			an_agent_type: ET_GENERIC_CLASS_TYPE
 			an_agent_class: ET_NAMED_CLASS
-			l_tuple_type_mark: ET_TYPE_MARK
 		do
 			reset_fatal_error (False)
 			a_name := an_expression.name
@@ -2297,12 +2290,7 @@ feature {NONE} -- Agent validity
 				fill_open_operands (an_expression, a_procedure, an_open_operands)
 			end
 			if not has_fatal_error then
-				if an_open_operands = Void or else an_open_operands.is_empty then
-					l_tuple_type_mark := tokens.detachable_keyword
-				else
-					l_tuple_type_mark := tokens.attached_keyword
-				end
-				create a_tuple_type.make (l_tuple_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
+				create a_tuple_type.make (tokens.implicit_attached_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
 				an_agent_class := current_universe_impl.procedure_type.named_base_class
 				create a_parameters.make_with_capacity (2)
 				a_parameters.put_first (a_tuple_type)
@@ -2405,7 +2393,6 @@ feature {NONE} -- Agent validity
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			an_agent_type: ET_GENERIC_CLASS_TYPE
 			an_agent_class: ET_NAMED_CLASS
-			l_tuple_type_mark: ET_TYPE_MARK
 		do
 			reset_fatal_error (False)
 			a_name := an_expression.name
@@ -2417,12 +2404,7 @@ feature {NONE} -- Agent validity
 			end
 			if not has_fatal_error then
 				a_target_type := tokens.identity_type
-				if an_open_operands = Void or else an_open_operands.is_empty then
-					l_tuple_type_mark := tokens.detachable_keyword
-				else
-					l_tuple_type_mark := tokens.attached_keyword
-				end
-				create a_tuple_type.make (l_tuple_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
+				create a_tuple_type.make (tokens.implicit_attached_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
 				a_type := a_query.type
 -- TODO: like argument
 				if a_type.same_named_type (current_universe_impl.boolean_type, current_type, current_type) then
@@ -2466,7 +2448,6 @@ feature {NONE} -- Agent validity
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			an_agent_type: ET_GENERIC_CLASS_TYPE
 			an_agent_class: ET_NAMED_CLASS
-			l_tuple_type_mark: ET_TYPE_MARK
 		do
 			reset_fatal_error (False)
 			a_name := an_expression.name
@@ -2478,12 +2459,7 @@ feature {NONE} -- Agent validity
 			end
 			if not has_fatal_error then
 				a_target_type := tokens.identity_type
-				if an_open_operands = Void or else an_open_operands.is_empty then
-					l_tuple_type_mark := tokens.detachable_keyword
-				else
-					l_tuple_type_mark := tokens.attached_keyword
-				end
-				create a_tuple_type.make (l_tuple_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
+				create a_tuple_type.make (tokens.implicit_attached_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
 				an_agent_class := current_universe_impl.procedure_type.named_base_class
 				create a_parameters.make_with_capacity (2)
 				a_parameters.put_first (a_tuple_type)
@@ -2641,7 +2617,7 @@ feature {NONE} -- Agent validity
 			if not has_fatal_error then
 				a_target_type := tokens.identity_type
 				an_open_operands.put_first (a_target_type)
-				create a_tuple_type.make (tokens.attached_keyword, an_open_operands, current_universe_impl.tuple_type.named_base_class)
+				create a_tuple_type.make (tokens.implicit_attached_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
 				a_result_type := a_query.type
 -- TODO: like argument
 				if a_result_type.same_named_type (current_universe_impl.boolean_type, current_type, current_type) then
@@ -2700,7 +2676,7 @@ feature {NONE} -- Agent validity
 			if not has_fatal_error then
 				a_target_type := tokens.identity_type
 				an_open_operands.put_first (a_target_type)
-				create a_tuple_type.make (tokens.attached_keyword, an_open_operands, current_universe_impl.tuple_type.named_base_class)
+				create a_tuple_type.make (tokens.implicit_attached_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
 				an_agent_class := current_universe_impl.procedure_type.named_base_class
 				create a_parameters.make_with_capacity (2)
 				a_parameters.put_first (a_tuple_type)
@@ -2741,7 +2717,7 @@ feature {NONE} -- Agent validity
 			l_target_type := a_target.type
 			create l_open_operands.make_with_capacity (1)
 			l_open_operands.put_first (l_target_type)
-			create l_tuple_type.make (tokens.attached_keyword, l_open_operands, current_universe_impl.tuple_type.named_base_class)
+			create l_tuple_type.make (tokens.implicit_attached_type_mark, l_open_operands, current_universe_impl.tuple_type.named_base_class)
 			if l_type.same_named_type (current_universe_impl.boolean_type, current_type, current_type) then
 				l_agent_class := current_universe_impl.predicate_type.named_base_class
 				create l_parameters.make_with_capacity (2)
@@ -2840,7 +2816,6 @@ feature {NONE} -- Agent validity
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			an_agent_type: ET_GENERIC_CLASS_TYPE
 			an_agent_class: ET_NAMED_CLASS
-			l_tuple_type_mark: ET_TYPE_MARK
 		do
 			reset_fatal_error (False)
 			a_formal_arguments := an_expression.formal_arguments
@@ -2849,12 +2824,7 @@ feature {NONE} -- Agent validity
 				fill_open_operands (an_expression, an_expression, an_open_operands)
 			end
 			if not has_fatal_error then
-				if an_open_operands = Void or else an_open_operands.is_empty then
-					l_tuple_type_mark := tokens.detachable_keyword
-				else
-					l_tuple_type_mark := tokens.attached_keyword
-				end
-				create a_tuple_type.make (l_tuple_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
+				create a_tuple_type.make (tokens.implicit_attached_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
 				a_type := an_expression.type
 -- TODO: like argument
 				if a_type.same_named_type (current_universe_impl.boolean_type, current_type, current_type) then
@@ -2889,7 +2859,6 @@ feature {NONE} -- Agent validity
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			an_agent_type: ET_GENERIC_CLASS_TYPE
 			an_agent_class: ET_NAMED_CLASS
-			l_tuple_type_mark: ET_TYPE_MARK
 		do
 			reset_fatal_error (False)
 			a_formal_arguments := an_expression.formal_arguments
@@ -2898,12 +2867,7 @@ feature {NONE} -- Agent validity
 				fill_open_operands (an_expression, an_expression, an_open_operands)
 			end
 			if not has_fatal_error then
-				if an_open_operands = Void or else an_open_operands.is_empty then
-					l_tuple_type_mark := tokens.detachable_keyword
-				else
-					l_tuple_type_mark := tokens.attached_keyword
-				end
-				create a_tuple_type.make (l_tuple_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
+				create a_tuple_type.make (tokens.implicit_attached_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
 				an_agent_class := current_universe_impl.procedure_type.named_base_class
 				create a_parameters.make_with_capacity (2)
 				a_parameters.put_first (a_tuple_type)
