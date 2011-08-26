@@ -224,9 +224,17 @@ feature {NONE} -- Signature validity
 					-- in the context of the current expanded class does not conform to
 					-- 'like Current' in the context of the parent, but the types are
 					-- identical so we want to accept this particular case anyway.
+					--
 					-- Note that we won't need that trick anymore with ECMA Eiffel where
 					-- expanded types conforms to reference parents.
-				not a_type.same_syntactical_type (other_type, parent_context, current_class)
+					-- But the reverse is still true: when 'like Current' appears in
+					-- an expanded parent, and the current class is not expanded.
+					--
+					-- There is also a bug in EiffelStudio 6.8 where it allows a feature
+					-- of type 'attached like Current' to be redefined as 'detachable like Current'.
+					-- That's why we use `same_syntactical_type_with_type_marks' and not just
+					-- `same_syntactical_type' below.
+				not (attached {ET_LIKE_CURRENT} a_type and then a_type.same_syntactical_type_with_type_marks (other_type, tokens.attached_keyword, parent_context, tokens.attached_keyword, current_class))
 			then
 				set_fatal_error
 				if a_report then
@@ -306,9 +314,17 @@ feature {NONE} -- Signature validity
 							-- in the context of the current expanded class does not conform to
 							-- 'like Current' in the context of the parent, but the types are
 							-- identical so we want to accept this particular case anyway.
+							--
 							-- Note that we won't need that trick anymore with ECMA Eiffel where
 							-- expanded types conforms to reference parents.
-						not a_type.same_syntactical_type (other_type, parent_context, current_class)
+							-- But the reverse is still true: when 'like Current' appears in
+							-- an expanded parent, and the current class is not expanded.
+							--
+							-- There is also a bug in EiffelStudio 6.8 where it allows a feature
+							-- of type 'attached like Current' to be redefined as 'detachable like Current'.
+							-- That's why we use `same_syntactical_type_with_type_marks' and not just
+							-- `same_syntactical_type' below.
+						not (attached {ET_LIKE_CURRENT} a_type and then a_type.same_syntactical_type_with_type_marks (other_type, tokens.attached_keyword, parent_context, tokens.attached_keyword, current_class))
 					then
 						set_fatal_error
 						if a_report then
@@ -380,9 +396,17 @@ feature {NONE} -- Signature validity
 					-- in the context of the current expanded class does not conform to
 					-- 'like Current' in the context of the parent, but the types are
 					-- identical so we want to accept this particular case anyway.
+					--
 					-- Note that we won't need that trick anymore with ECMA Eiffel where
 					-- expanded types conforms to reference parents.
-				not a_type.same_syntactical_type (other_type, parent_context, current_class)
+					-- But the reverse is still true: when 'like Current' appears in
+					-- an expanded parent, and the current class is not expanded.
+					--
+					-- There is also a bug in EiffelStudio 6.8 where it allows a feature
+					-- of type 'attached like Current' to be redefined as 'detachable like Current'.
+					-- That's why we use `same_syntactical_type_with_type_marks' and not just
+					-- `same_syntactical_type' below.
+				not (attached {ET_LIKE_CURRENT} a_type and then a_type.same_syntactical_type_with_type_marks (other_type, tokens.attached_keyword, parent_context, tokens.attached_keyword, current_class))
 			then
 				set_fatal_error
 				if a_report then
@@ -430,9 +454,17 @@ feature {NONE} -- Signature validity
 							-- in the context of the current expanded class does not conform to
 							-- 'like Current' in the context of the parent, but the types are
 							-- identical so we want to accept this particular case anyway.
+							--
 							-- Note that we won't need that trick anymore with ECMA Eiffel where
 							-- expanded types conforms to reference parents.
-						not a_type.same_syntactical_type (other_type, parent_context, current_class)
+							-- But the reverse is still true: when 'like Current' appears in
+							-- an expanded parent, and the current class is not expanded.
+							--
+							-- There is also a bug in EiffelStudio 6.8 where it allows a feature
+							-- of type 'attached like Current' to be redefined as 'detachable like Current'.
+							-- That's why we use `same_syntactical_type_with_type_marks' and not just
+							-- `same_syntactical_type' below.
+						not (attached {ET_LIKE_CURRENT} a_type and then a_type.same_syntactical_type_with_type_marks (other_type, tokens.attached_keyword, parent_context, tokens.attached_keyword, current_class))
 					then
 						set_fatal_error
 						if a_report then
