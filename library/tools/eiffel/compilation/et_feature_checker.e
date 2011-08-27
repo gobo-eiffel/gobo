@@ -2637,10 +2637,15 @@ feature {NONE} -- Instruction validity
 				if current_universe.attachment_type_conformance_mode then
 					l_target_type_detachable := l_target_context.is_type_detachable
 					l_source_type_attached := l_source_context.is_type_attached
-					if not l_target_type_detachable and not l_source_type_attached then
-						if is_entity_attached (l_source) then
-							l_source_entity_attached := True
-							l_source_context.force_last (tokens.attached_like_current)
+					if not l_source_type_attached then
+						if not l_target_type_detachable then
+							if is_entity_attached (l_source) then
+								l_source_entity_attached := True
+								l_source_context.force_last (tokens.attached_like_current)
+							end
+						else
+-- TODO: to be done only when the target is a stable attribute.
+							l_source_entity_attached := is_entity_attached (l_source)
 						end
 					end
 				end
