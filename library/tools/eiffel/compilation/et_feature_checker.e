@@ -9712,6 +9712,11 @@ feature {NONE} -- Agent validity
 -- a local variable, a formal argument or the name of an attribute.
 					check_expression_validity (a_target, a_context, l_detachable_any_type)
 					if not has_fatal_error then
+						if current_universe.attachment_type_conformance_mode then
+							if not a_context.is_type_attached and is_entity_attached (a_target) then
+								a_context.force_last (tokens.attached_like_current)
+							end
+						end
 						a_class := a_context.base_class
 						a_class.process (current_system.interface_checker)
 						if not a_class.interface_checked or else a_class.has_interface_error then
@@ -9899,6 +9904,13 @@ feature {NONE} -- Agent validity
 			has_fatal_error := False
 			a_name := an_expression.name
 			a_seed := a_name.seed
+			if current_universe.target_type_attachment_mode then
+				if not a_context.is_type_attached then
+						-- Error: the target of the call is not attached.
+					set_fatal_error
+					error_handler.report_vuta2a_error (current_class, current_class_impl, a_name, a_query, a_context.named_type)
+				end
+			end
 			if not a_query.is_exported_to (current_class) then
 					-- The feature is not exported to `current_class'.
 				set_fatal_error
@@ -9965,6 +9977,13 @@ feature {NONE} -- Agent validity
 			has_fatal_error := False
 			a_name := an_expression.name
 			a_seed := a_name.seed
+			if current_universe.target_type_attachment_mode then
+				if not a_context.is_type_attached then
+						-- Error: the target of the call is not attached.
+					set_fatal_error
+					error_handler.report_vuta2a_error (current_class, current_class_impl, a_name, a_procedure, a_context.named_type)
+				end
+			end
 			if not a_procedure.is_exported_to (current_class) then
 					-- The feature is not exported to `current_class'.
 				set_fatal_error
@@ -10019,6 +10038,13 @@ feature {NONE} -- Agent validity
 			has_fatal_error := False
 			l_name := an_expression.name
 			l_index := l_name.seed
+			if current_universe.target_type_attachment_mode then
+				if not a_context.is_type_attached then
+						-- Error: the target of the call is not attached.
+					set_fatal_error
+					error_handler.report_vuta2b_error (current_class, current_class_impl, l_name, a_context.named_type)
+				end
+			end
 			l_actuals := an_expression.arguments
 			if l_actuals /= Void and then not l_actuals.is_empty then
 					-- A call to a Tuple label cannot have arguments.
