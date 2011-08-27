@@ -5253,9 +5253,9 @@ feature {NONE} -- Expression validity
 				if not has_fatal_error then
 					if current_class /= current_class_impl then
 						-- Possible convertibility should be resolved in the implementation class.
-					elseif l_left_context.conforms_to_context (l_right_context) then
+					elseif l_left_context.conforms_to_context_with_type_marks (tokens.attached_keyword, l_right_context, tokens.attached_keyword) then
 						-- OK.
-					elseif l_right_context.conforms_to_context (l_left_context) then
+					elseif l_right_context.conforms_to_context_with_type_marks (tokens.attached_keyword, l_left_context, tokens.attached_keyword) then
 						-- OK.
 					elseif l_left_context.same_named_type (current_system.detachable_none_type, current_type) then
 						-- OK: we can compare anything with 'Void'.
@@ -7327,9 +7327,9 @@ feature {NONE} -- Expression validity
 				if not has_fatal_error then
 					if current_class /= current_class_impl then
 						-- Possible convertibility should be resolved in the implementation class.
-					elseif l_left_context.conforms_to_context (l_right_context) then
+					elseif l_left_context.conforms_to_context_with_type_marks (tokens.attached_keyword, l_right_context, tokens.attached_keyword) then
 						-- OK.
-					elseif l_right_context.conforms_to_context (l_left_context) then
+					elseif l_right_context.conforms_to_context_with_type_marks (tokens.attached_keyword, l_left_context, tokens.attached_keyword) then
 						-- OK.
 					elseif l_left_context.same_named_type (current_system.detachable_none_type, current_type) then
 						-- OK: we can compare anything with 'Void'.
