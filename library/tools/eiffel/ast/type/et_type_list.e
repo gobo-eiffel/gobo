@@ -64,7 +64,7 @@ feature -- Status report
 			from i := 0 until i > nb loop
 				if storage.item (i).type.same_named_type (other, other_context, a_context) then
 					Result := True
-					i := nb + 1 -- Jump out o fthe loop.
+					i := nb + 1 -- Jump out of the loop.
 				else
 					i := i + 1
 				end

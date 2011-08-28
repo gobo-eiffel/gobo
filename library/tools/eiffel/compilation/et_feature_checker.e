@@ -12191,16 +12191,14 @@ feature {NONE} -- Client/Supplier relationship
 
 feature {NONE} -- Conversion
 
-	convert_expression (a_source: ET_EXPRESSION; a_source_type, a_target_type: ET_TYPE_CONTEXT): ET_CONVERT_EXPRESSION
+	convert_expression (a_source: ET_EXPRESSION; a_source_type, a_target_type: ET_NESTED_TYPE_CONTEXT): ET_CONVERT_EXPRESSION
 			-- Conversion expresion to convert `a_source' of type `a_source_type' to `a_target_type';
 			-- Void if no such conversion expression.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_source_not_void: a_source /= Void
 			a_source_type_not_void: a_source_type /= Void
-			a_source_context_valid: a_source_type.is_valid_context
 			a_target_type_not_void: a_target_type /= Void
-			a_target_context_valid: a_target_type.is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
 		local
 			l_convert_feature: ET_CONVERT_FEATURE
@@ -12215,6 +12213,11 @@ feature {NONE} -- Conversion
 			has_fatal_error := False
 			if current_class = current_class_impl then
 					-- Convertibility should be resolved in the implementation class.
+					--
+					-- Look for convert feature without taking into account
+					-- the attachment status of the types involved.
+				a_source_type.force_last (tokens.attached_like_current)
+				a_target_type.force_last (tokens.attached_like_current)
 				l_convert_feature := type_checker.convert_feature (a_source_type, a_target_type)
 				if l_convert_feature = Void then
 						-- Check whether `a_source' is a non-explicitly typed manifest constant which
@@ -12270,6 +12273,8 @@ feature {NONE} -- Conversion
 						Result := l_convert_builtin_expression
 					end
 				end
+				a_source_type.remove_last
+				a_target_type.remove_last
 			end
 		ensure
 			implementation_class: Result /= Void implies (current_class = current_class_impl)
