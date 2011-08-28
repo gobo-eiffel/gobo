@@ -160,7 +160,6 @@ feature {NONE} -- Initialization
 			create current_object_test_types.make_map (50)
 			create current_object_test_scope.make
 			create object_test_scope_builder.make
-			create current_expression_object_tests.make (dummy_expression)
 				-- Attachments.
 			create current_initialization_scope.make
 			create current_attachment_scope.make
@@ -427,7 +426,8 @@ feature -- Validity checking
 								-- The scope of object-test locals can cover the following assertions
 								-- in the same precondition clause because it's as if they were separated
 								-- by "and then" operators.
-							object_test_scope_builder.build_scope (l_expression, current_object_test_scope)
+							object_test_scope_builder.build_scope (l_expression, current_object_test_scope, current_class_impl)
+							has_fatal_error := has_fatal_error or object_test_scope_builder.has_fatal_error
 							if current_universe.attachment_type_conformance_mode then
 								attachment_scope_builder.build_scope (l_expression, current_attachment_scope)
 							end
@@ -565,7 +565,8 @@ feature -- Validity checking
 								-- The scope of object-test locals can cover the following assertions
 								-- in the same postcondition clause because it's as if they were separated
 								-- by "and then" operators.
-							object_test_scope_builder.build_scope (l_expression, current_object_test_scope)
+							object_test_scope_builder.build_scope (l_expression, current_object_test_scope, current_class_impl)
+							has_fatal_error := has_fatal_error or object_test_scope_builder.has_fatal_error
 							if current_universe.attachment_type_conformance_mode then
 								attachment_scope_builder.build_scope (l_expression, current_attachment_scope)
 							end
@@ -682,7 +683,8 @@ feature -- Validity checking
 								-- The scope of object-test locals can cover the following assertions
 								-- in the same invariant clause because it's as if they were separated
 								-- by "and then" operators.
-							object_test_scope_builder.build_scope (l_expression, current_object_test_scope)
+							object_test_scope_builder.build_scope (l_expression, current_object_test_scope, current_class_impl)
+							has_fatal_error := has_fatal_error or object_test_scope_builder.has_fatal_error
 							if current_universe.attachment_type_conformance_mode then
 								attachment_scope_builder.build_scope (l_expression, current_attachment_scope)
 							end
@@ -2839,7 +2841,8 @@ feature {NONE} -- Instruction validity
 						-- The scope of object-test locals can cover the following assertions
 						-- in the same check clause because it's as if they were separated
 						-- by "and then" operators.
-					object_test_scope_builder.build_scope (l_expression, current_object_test_scope)
+					object_test_scope_builder.build_scope (l_expression, current_object_test_scope, current_class_impl)
+					had_error := had_error or object_test_scope_builder.has_fatal_error
 					if current_universe.attachment_type_conformance_mode then
 						attachment_scope_builder.build_scope (l_expression, current_attachment_scope)
 					end
@@ -3320,6 +3323,11 @@ feature {NONE} -- Instruction validity
 			end
 			free_context (l_conditional_context)
 			l_old_object_test_scope := current_object_test_scope.count
+				-- Note: Even when there is no then-compound the object-test scopes
+				-- need to be build to detect possible object-test local name overlaps.
+				-- This is to be fully compliant with ISE 6.8.
+			object_test_scope_builder.build_scope (l_conditional, current_object_test_scope, current_class_impl)
+			had_error := had_error or object_test_scope_builder.has_fatal_error
 			if current_universe.attachment_type_conformance_mode then
 				l_old_initialization_scope := current_initialization_scope
 				current_initialization_scope := new_attachment_scope
@@ -3332,22 +3340,22 @@ feature {NONE} -- Instruction validity
 			end
 			l_compound := an_instruction.then_compound
 			if l_compound /= Void then
-				object_test_scope_builder.build_scope (l_conditional, current_object_test_scope)
 				check_instructions_validity (l_compound)
-				current_object_test_scope.keep_object_tests (l_old_object_test_scope)
 				if has_fatal_error then
 					had_error := True
 				end
 			end
+			current_object_test_scope.keep_object_tests (l_old_object_test_scope)
 			if current_universe.attachment_type_conformance_mode then
 				l_if_attachment_scope := current_attachment_scope
 				l_if_initialization_scope := current_initialization_scope
 			end
+				-- Note: Even when there is no else-compound the object-test scopes
+				-- need to be build to detect possible object-test local name overlaps.
+				-- This is to be fully compliant with ISE 6.8.
+			object_test_scope_builder.build_negated_scope (l_conditional, current_object_test_scope, current_class_impl)
+			had_error := had_error or object_test_scope_builder.has_fatal_error
 			l_elseif_parts := an_instruction.elseif_parts
-			l_else_compound := an_instruction.else_compound
-			if l_elseif_parts /= Void or l_else_compound /= Void then
-				object_test_scope_builder.build_negated_scope (l_conditional, current_object_test_scope)
-			end
 			if l_elseif_parts /= Void then
 				if current_universe.attachment_type_conformance_mode then
 					current_attachment_scope := new_attachment_scope
@@ -3372,27 +3380,33 @@ feature {NONE} -- Instruction validity
 						error_handler.report_vwbe0a_error (current_class, current_class_impl, l_conditional, l_named_type)
 					end
 					free_context (l_conditional_context)
+						-- Note: Even when there is no then-compound the object-test scopes
+						-- need to be build to detect possible object-test local name overlaps.
+						-- This is to be fully compliant with ISE 6.8.
+					l_old_elseif_object_test_scope := current_object_test_scope.count
+					object_test_scope_builder.build_scope (l_conditional, current_object_test_scope, current_class_impl)
+					had_error := had_error or object_test_scope_builder.has_fatal_error
 					if current_universe.attachment_type_conformance_mode then
 						attachment_scope_builder.build_scope (l_conditional, current_attachment_scope)
 						attachment_scope_builder.build_negated_scope (l_conditional, l_old_attachment_scope)
 					end
 					l_compound := l_elseif.then_compound
 					if l_compound /= Void then
-						l_old_elseif_object_test_scope := current_object_test_scope.count
-						object_test_scope_builder.build_scope (l_conditional, current_object_test_scope)
 						check_instructions_validity (l_compound)
-						current_object_test_scope.keep_object_tests (l_old_elseif_object_test_scope)
 						if has_fatal_error then
 							had_error := True
 						end
 					end
+					current_object_test_scope.keep_object_tests (l_old_elseif_object_test_scope)
 					if current_universe.attachment_type_conformance_mode then
 						l_if_attachment_scope.merge_scope (current_attachment_scope)
 						l_if_initialization_scope.merge_scope (current_initialization_scope)
 					end
-					if i < nb or else l_else_compound /= Void then
-						object_test_scope_builder.build_negated_scope (l_conditional, current_object_test_scope)
-					end
+						-- Note: Even when there is no else-compound the object-test scopes
+						-- need to be build to detect possible object-test local name overlaps.
+						-- This is to be fully compliant with ISE 6.8.
+					object_test_scope_builder.build_negated_scope (l_conditional, current_object_test_scope, current_class_impl)
+					had_error := had_error or object_test_scope_builder.has_fatal_error
 					i := i + 1
 				end
 				if current_universe.attachment_type_conformance_mode then
@@ -3404,6 +3418,7 @@ feature {NONE} -- Instruction validity
 				current_initialization_scope := l_old_initialization_scope
 				current_attachment_scope := l_old_attachment_scope
 			end
+			l_else_compound := an_instruction.else_compound
 			if l_else_compound /= Void then
 				check_instructions_validity (l_else_compound)
 				if has_fatal_error then
@@ -3852,12 +3867,17 @@ feature {NONE} -- Instruction validity
 			end
 			free_context (l_expression_context)
 			l_compound := an_instruction.loop_compound
-			if l_compound /= Void then
+			if l_compound /= Void and then not l_compound.is_empty then
 				if current_universe.attachment_type_conformance_mode then
 					attachment_scope_builder.build_negated_scope (l_expression, current_attachment_scope)
 				end
 				l_old_object_test_scope := current_object_test_scope.count
-				object_test_scope_builder.build_negated_scope (l_expression, current_object_test_scope)
+				if l_compound.has_non_null_instruction then
+						-- Note: With ISE 6.8, the detection of object-test local name overlap is
+						-- triggered only when the loop-compound contains at least one instruction.
+					object_test_scope_builder.build_negated_scope (l_expression, current_object_test_scope, current_class_impl)
+					had_error := had_error or object_test_scope_builder.has_fatal_error
+				end
 				check_instructions_validity (l_compound)
 				current_object_test_scope.keep_object_tests (l_old_object_test_scope)
 				if has_fatal_error then
@@ -3917,7 +3937,8 @@ feature {NONE} -- Instruction validity
 					-- The scope of object-test locals can cover the following assertions
 					-- in the same loop invariant clause because it's as if they were separated
 					-- by "and then" operators.
-				object_test_scope_builder.build_scope (l_expression, current_object_test_scope)
+				object_test_scope_builder.build_scope (l_expression, current_object_test_scope, current_class_impl)
+				had_error := had_error or object_test_scope_builder.has_fatal_error
 				if current_universe.attachment_type_conformance_mode then
 						-- `current_attachment_scope' will be reset in `check_loop_instruction_no_from_validity'
 						-- before processing the other parts of the loop, so that the analysis of the
@@ -5935,7 +5956,6 @@ feature {NONE} -- Expression validity
 		local
 			l_name: ET_CALL_NAME
 			l_target: ET_EXPRESSION
-			l_boolean_target: ET_EXPRESSION
 			l_class: ET_CLASS
 			l_query: ET_QUERY
 			l_procedure: ET_PROCEDURE
@@ -6178,7 +6198,8 @@ feature {NONE} -- Expression validity
 							check_expression_validity (l_actual, l_actual_context, l_formal_context)
 						elseif l_name.is_infix_and_then or l_name.is_infix_implies then
 							l_old_object_test_scope := current_object_test_scope.count
-							object_test_scope_builder.build_scope (l_target, current_object_test_scope)
+							object_test_scope_builder.build_scope (l_target, current_object_test_scope, current_class_impl)
+							had_error := had_error or object_test_scope_builder.has_fatal_error
 							if current_universe.attachment_type_conformance_mode then
 								l_old_attachment_scope := current_attachment_scope
 								current_attachment_scope := new_attachment_scope
@@ -6186,14 +6207,21 @@ feature {NONE} -- Expression validity
 								attachment_scope_builder.build_scope (l_target, current_attachment_scope)
 							end
 							check_expression_validity (l_actual, l_actual_context, l_formal_context)
-							current_object_test_scope.keep_object_tests (l_old_object_test_scope)
+							if l_old_object_test_scope /= current_object_test_scope.count then
+								l_scope_changed := True
+								current_object_test_scope.keep_object_tests (l_old_object_test_scope)
+							end
 							if current_universe.attachment_type_conformance_mode then
+								if not current_attachment_scope.is_subset (l_old_attachment_scope) then
+									l_scope_changed := True
+								end
 								free_attachment_scope (current_attachment_scope)
 								current_attachment_scope := l_old_attachment_scope
 							end
 						elseif l_name.is_infix_or_else then
 							l_old_object_test_scope := current_object_test_scope.count
-							object_test_scope_builder.build_negated_scope (l_target, current_object_test_scope)
+							object_test_scope_builder.build_negated_scope (l_target, current_object_test_scope, current_class_impl)
+							had_error := had_error or object_test_scope_builder.has_fatal_error
 							if current_universe.attachment_type_conformance_mode then
 								l_old_attachment_scope := current_attachment_scope
 								current_attachment_scope := new_attachment_scope
@@ -6201,8 +6229,14 @@ feature {NONE} -- Expression validity
 								attachment_scope_builder.build_negated_scope (l_target, current_attachment_scope)
 							end
 							check_expression_validity (l_actual, l_actual_context, l_formal_context)
-							current_object_test_scope.keep_object_tests (l_old_object_test_scope)
+							if l_old_object_test_scope /= current_object_test_scope.count then
+								l_scope_changed := True
+								current_object_test_scope.keep_object_tests (l_old_object_test_scope)
+							end
 							if current_universe.attachment_type_conformance_mode then
+								if not current_attachment_scope.is_subset (l_old_attachment_scope) then
+									l_scope_changed := True
+								end
 								free_attachment_scope (current_attachment_scope)
 								current_attachment_scope := l_old_attachment_scope
 							end
@@ -6334,37 +6368,6 @@ feature {NONE} -- Expression validity
 																-- so the right-hand-side should not be in the scope of these
 																-- object-test locals anymore. We need to reprocess the right-hand-side
 																-- in this new context.
-															if l_name.is_infix_and_then or l_name.is_infix_implies then
-																l_old_object_test_scope := current_object_test_scope.count
-																object_test_scope_builder.build_scope (l_boolean_target, current_object_test_scope)
-																if l_old_object_test_scope /= current_object_test_scope.count then
-																	l_scope_changed := True
-																	current_object_test_scope.keep_object_tests (l_old_object_test_scope)
-																elseif current_universe.attachment_type_conformance_mode then
-																	l_old_attachment_scope := current_attachment_scope
-																	current_attachment_scope := new_attachment_scope
-																	current_attachment_scope.copy_scope (l_old_attachment_scope)
-																	attachment_scope_builder.build_scope (l_boolean_target, current_attachment_scope)
-																	l_scope_changed := not current_attachment_scope.is_subset (l_old_attachment_scope)
-																	free_attachment_scope (current_attachment_scope)
-																	current_attachment_scope := l_old_attachment_scope
-																end
-															elseif l_name.is_infix_or_else then
-																l_old_object_test_scope := current_object_test_scope.count
-																object_test_scope_builder.build_negated_scope (l_boolean_target, current_object_test_scope)
-																if l_old_object_test_scope /= current_object_test_scope.count then
-																	l_scope_changed := True
-																	current_object_test_scope.keep_object_tests (l_old_object_test_scope)
-																elseif current_universe.attachment_type_conformance_mode then
-																	l_old_attachment_scope := current_attachment_scope
-																	current_attachment_scope := new_attachment_scope
-																	current_attachment_scope.copy_scope (l_old_attachment_scope)
-																	attachment_scope_builder.build_negated_scope (l_boolean_target, current_attachment_scope)
-																	l_scope_changed := not current_attachment_scope.is_subset (l_old_attachment_scope)
-																	free_attachment_scope (current_attachment_scope)
-																	current_attachment_scope := l_old_attachment_scope
-																end
-															end
 															an_expression.set_boolean_operator (False)
 															if l_scope_changed then
 																	-- The right-hand-side was in the scope of object-test locals
@@ -6417,7 +6420,8 @@ feature {NONE} -- Expression validity
 								check_expression_validity (l_actual, a_context, l_formal_context)
 							elseif l_name.is_infix_and_then or l_name.is_infix_implies then
 								l_old_object_test_scope := current_object_test_scope.count
-								object_test_scope_builder.build_scope (l_target, current_object_test_scope)
+								object_test_scope_builder.build_scope (l_target, current_object_test_scope, current_class_impl)
+								had_error := object_test_scope_builder.has_fatal_error
 								if current_universe.attachment_type_conformance_mode then
 									l_old_attachment_scope := current_attachment_scope
 									current_attachment_scope := new_attachment_scope
@@ -6425,6 +6429,7 @@ feature {NONE} -- Expression validity
 									attachment_scope_builder.build_scope (l_target, current_attachment_scope)
 								end
 								check_expression_validity (l_actual, a_context, l_formal_context)
+								has_fatal_error := has_fatal_error or had_error
 								current_object_test_scope.keep_object_tests (l_old_object_test_scope)
 								if current_universe.attachment_type_conformance_mode then
 									free_attachment_scope (current_attachment_scope)
@@ -6432,7 +6437,8 @@ feature {NONE} -- Expression validity
 								end
 							elseif l_name.is_infix_or_else then
 								l_old_object_test_scope := current_object_test_scope.count
-								object_test_scope_builder.build_negated_scope (l_target, current_object_test_scope)
+								object_test_scope_builder.build_negated_scope (l_target, current_object_test_scope, current_class_impl)
+								had_error := object_test_scope_builder.has_fatal_error
 								if current_universe.attachment_type_conformance_mode then
 									l_old_attachment_scope := current_attachment_scope
 									current_attachment_scope := new_attachment_scope
@@ -6440,6 +6446,7 @@ feature {NONE} -- Expression validity
 									attachment_scope_builder.build_negated_scope (l_target, current_attachment_scope)
 								end
 								check_expression_validity (l_actual, a_context, l_formal_context)
+								has_fatal_error := has_fatal_error or had_error
 								current_object_test_scope.keep_object_tests (l_old_object_test_scope)
 								if current_universe.attachment_type_conformance_mode then
 									free_attachment_scope (current_attachment_scope)
@@ -7150,7 +7157,6 @@ feature {NONE} -- Expression validity
 			l_enclosing_agent: ET_INLINE_AGENT
 			args: ET_FORMAL_ARGUMENT_LIST
 			l_locals: ET_LOCAL_VARIABLE_LIST
-			l_outermost_expression: ET_EXPRESSION
 		do
 			has_fatal_error := False
 			l_expression_context := new_context (current_type)
@@ -7265,22 +7271,6 @@ feature {NONE} -- Expression validity
 						set_fatal_error
 						error_handler.report_vuot4b_error (current_class, an_expression)
 					end
-				end
-				if current_expression_object_tests.has_object_test (l_name) then
-						-- Two object-tests with the same local name appear in the same
-						-- expression. This is forbidden to avoid scope intersection,
-						-- i.e. two object-tests with the same local name and whose
-						-- scopes can overlap. For example:
-						--
-						--   if attached exp1 as x and attached exp2 as x then
-						--      x.do_something
-						--   end
-					set_fatal_error
-					l_other_object_test := current_expression_object_tests.object_test (l_name)
-					l_outermost_expression := current_expression_object_tests.expression
-					error_handler.report_vuot1e_error (current_class, an_expression, l_other_object_test, l_outermost_expression)
-				else
-					current_expression_object_tests.add_object_test (an_expression)
 				end
 			end
 			if not has_fatal_error then
@@ -9229,21 +9219,13 @@ feature {NONE} -- Expression validity
 		local
 			old_context: ET_NESTED_TYPE_CONTEXT
 			old_target_type: ET_TYPE_CONTEXT
-			l_is_outermost_expression: BOOLEAN
 		do
 			has_fatal_error := False
 			old_target_type := current_target_type
 			current_target_type := a_target_type
 			old_context := current_context
 			current_context := a_context
-			if current_expression_object_tests.expression = dummy_expression then
-				l_is_outermost_expression := True
-				current_expression_object_tests.reset (an_expression)
-			end
 			an_expression.process (Current)
-			if l_is_outermost_expression then
-				current_expression_object_tests.reset (dummy_expression)
-			end
 			if not has_fatal_error then
 				report_expression_supplier (a_context, current_class, current_feature)
 			end
@@ -12910,9 +12892,6 @@ feature {NONE} -- Object-tests
 	current_object_test_types: DS_HASH_TABLE [ET_NESTED_TYPE_CONTEXT, ET_NAMED_OBJECT_TEST]
 			-- Types of object-test locals
 
-	current_expression_object_tests: ET_EXPRESSION_OBJECT_TESTS
-			-- Object-tests appearing in the outermost expression being processed
-
 	current_object_test_scope: ET_OBJECT_TEST_SCOPE
 			-- Object-tests for which we are currently in the
 			-- scope of their locals
@@ -13493,14 +13472,6 @@ feature {NONE} -- Constants
 			dummy_feature_not_void: Result /= Void
 		end
 
-	dummy_expression: ET_EXPRESSION
-			-- Dummy expression
-		once
-			create {ET_CURRENT} Result.make
-		ensure
-			dummy_expression_not_void: Result /= Void
-		end
-
 invariant
 
 	current_feature_not_void: current_feature /= Void
@@ -13538,7 +13509,6 @@ invariant
 	no_void_object_test_type: not current_object_test_types.has_void_item
 	current_object_test_scope_not_void: current_object_test_scope /= Void
 	object_test_scope_builder_not_void: object_test_scope_builder /= Void
-	current_expression_object_tests_not_void: current_expression_object_tests /= Void
 		-- Attachments
 	current_initialization_scope_not_void: current_initialization_scope /= Void
 	current_attachment_scope_not_void: current_attachment_scope /= Void

@@ -10750,9 +10750,9 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = object-test local name
 		end
 
-	make_vuot1e (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_NAMED_OBJECT_TEST; a_expression: ET_EXPRESSION)
-			-- Create a new VUOT-1 error: `a_object_test1' and `a_object_test2'
-			-- appearing in `a_expression' have the same local name.
+	make_vuot1e (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_NAMED_OBJECT_TEST)
+			-- Create a new VUOT-1 error: `a_object_test1' and `a_object_test2' have the same
+			-- local name and their scope overlap.
 			--
 			-- Not in ECMA yet
 		require
@@ -10760,7 +10760,6 @@ feature {NONE} -- Initialization
 			a_class_preparsed: a_class.is_preparsed
 			a_object_test1_not_void: a_object_test1 /= Void
 			a_object_test2_not_void: a_object_test2 /= Void
-			a_expression_not_void: a_expression /= Void
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -13016,7 +13015,7 @@ feature {NONE} -- Implementation
 	vuot1b_default_template: STRING = "object-test local name '$6' is also the name of a formal argument of an enclosing feature or inline agent."
 	vuot1c_default_template: STRING = "object-test local name '$6' is also the name of a local variable of an enclosing feature or inline agent."
 	vuot1d_default_template: STRING = "object-test with local name '$6' appears in the scope of another object-test local with the same name."
-	vuot1e_default_template: STRING = "object-test with local name '$6' appears in the same expression as another object-test with the same local name."
+	vuot1e_default_template: STRING = "the scope of object-test with local name '$6' overlaps with the scope of another object-test with the same local name."
 	vuot3a_default_template: STRING = "object-test with local name '$6' has the same name as another object-test local appearing in the same feature `$7' or in the same inline agent."
 	vuot3b_default_template: STRING = "object-test with local name '$6' has the same name as another object-test local appearing in the invariant or in the same inline agent."
 	vuot4a_default_template: STRING = "ISE does not support object-tests in preconditions."

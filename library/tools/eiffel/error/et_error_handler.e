@@ -5713,9 +5713,9 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuot1e_error (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_NAMED_OBJECT_TEST; a_expression: ET_EXPRESSION)
-			-- Report VUOT-1 error: `a_object_test1' and `a_object_test2'
-			-- appearing in `a_expression' have the same local name.
+	report_vuot1e_error (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_NAMED_OBJECT_TEST)
+			-- Report VUOT-1 error: `a_object_test1' and `a_object_test2' have the same
+			-- local name and their scope overlap.
 			--
 			-- Not in ECMA yet
 		require
@@ -5723,12 +5723,11 @@ feature -- Validity errors
 			a_class_preparsed: a_class.is_preparsed
 			a_object_test1_not_void: a_object_test1 /= Void
 			a_object_test2_not_void: a_object_test2 /= Void
-			a_expression_not_void: a_expression /= Void
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vuot1_error (a_class) then
-				create an_error.make_vuot1e (a_class, a_object_test1, a_object_test2, a_expression)
+				create an_error.make_vuot1e (a_class, a_object_test1, a_object_test2)
 				report_validity_error (an_error)
 			end
 		end
