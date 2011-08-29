@@ -825,14 +825,14 @@ feature -- Status report
 						l_formal_parameter := a_formal_parameters.formal_parameter (a_formal_index)
 						if l_formal_parameter.is_expanded then
 							Result := True
-						elseif a_formal_type = Current and (l_type_mark /= Void and then l_type_mark.is_attached_mark) then
-							Result := True
-						elseif a_formal_type /= Current and a_formal_type.is_type_attached_with_type_mark (l_type_mark, a_context.root_context) then
-							Result := True
+						elseif a_formal_type /= Current then
+							Result := a_formal_type.is_type_attached_with_type_mark (l_type_mark, a_context.root_context)
 						else
 							l_constraint := l_formal_parameter.constraint_base_type
 							if l_constraint /= Void then
 								Result := l_constraint.is_type_attached_with_type_mark (l_type_mark, a_context.root_context)
+							else
+								Result := l_type_mark /= Void and then l_type_mark.is_attached_mark
 							end
 						end
 					else
