@@ -115,6 +115,7 @@ create
 %type <ET_CALL_AGENT> Call_agent
 %type <ET_CALL_EXPRESSION> Qualified_call_expression
 %type <ET_CHARACTER_CONSTANT> Character_constant Typed_character_constant Untyped_character_constant
+%type <ET_CHECK_INSTRUCTION> Check_instruction
 %type <ET_CHOICE> Choice
 %type <ET_CHOICE_CONSTANT> Choice_constant
 %type <ET_CHOICE_ITEM> Choice_comma
@@ -3217,20 +3218,30 @@ Instruction: Creation_instruction
 --			}
 	| Debug_instruction
 		{ $$ := $1 }
-	| E_CHECK E_END
-		{ $$ := new_check_instruction ($1, Void, $2) }
-	| E_CHECK Assertions E_END
-		{ $$ := new_check_instruction ($1, Void, $3) }
-	| E_CHECK Explicit_then_compound E_END
-		{ $$ := new_check_instruction ($1, $2, $3) }
-	| E_CHECK Assertions Explicit_then_compound E_END
-		{ $$ := new_check_instruction ($1, $3, $4) }
+	| Check_instruction
+		{ $$ := $1 }
 	| E_RETRY
 		{ $$ := $1 }
 	| ';'
 		{ $$ := ast_factory.new_null_instruction ($1) }
 	;
 
+------------------------------------------------------------------------------------
+
+Check_instruction: E_CHECK Start_check_instruction E_END
+		{ $$ := new_check_instruction ($1, Void, $3) }
+	| E_CHECK Start_check_instruction Assertions E_END
+		{ $$ := new_check_instruction ($1, Void, $4) }
+	| E_CHECK Start_check_instruction Explicit_then_compound E_END
+		{ $$ := new_check_instruction ($1, $3, $4) }
+	| E_CHECK Start_check_instruction Assertions Explicit_then_compound E_END
+		{ $$ := new_check_instruction ($1, $4, $5) }
+	;
+
+Start_check_instruction:
+		{ start_check_instruction }
+	;
+	
 ------------------------------------------------------------------------------------
 
 Creation_instruction: '!' Type_no_bang_identifier '!' Writable
