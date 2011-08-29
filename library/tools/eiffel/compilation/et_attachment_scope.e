@@ -32,19 +32,40 @@ feature {NONE} -- Initialization
 	make
 			-- Create a new attachment scope.
 		do
-			create names.make (50)
-			names.set_equality_tester (identifier_tester)
+			create locals_attached.make (50)
+			create arguments_attached.make (10)
+			create attributes_attached.make (50)
 		end
 
 feature -- Status report
 
-	has_name (a_name: ET_IDENTIFIER): BOOLEAN
-			-- Is entity named `a_name' attached (when declared as detachable)
+	has_local_variable (a_name: ET_IDENTIFIER): BOOLEAN
+			-- Is local variable `a_name' attached (when declared as detachable)
+			-- or initialized (when declared as attached)?
+		require
+			a_name_not_void: a_name /= Void
+			a_name_is_local: a_name.is_local
+		do
+			Result := locals_attached.has (a_name.seed)
+		end
+
+	has_formal_argument (a_name: ET_IDENTIFIER): BOOLEAN
+			-- Is formal argument `a_name' attached (when declared as detachable)
+			-- or initialized (when declared as attached)?
+		require
+			a_name_not_void: a_name /= Void
+			a_name_is_argument: a_name.is_argument
+		do
+			Result := arguments_attached.has (a_name.seed)
+		end
+
+	has_attribute (a_name: ET_IDENTIFIER): BOOLEAN
+			-- Is attribute `a_name' attached (when declared as detachable)
 			-- or initialized (when declared as attached)?
 		require
 			a_name_not_void: a_name /= Void
 		do
-			Result := names.has (a_name)
+			Result := attributes_attached.has (a_name.seed)
 		end
 
 	has_result: BOOLEAN
@@ -54,26 +75,72 @@ feature -- Status report
 			Result := result_attached
 		end
 
+	has_name (a_name: ET_IDENTIFIER): BOOLEAN
+			-- Is entity named `a_name' attached (when declared as detachable)
+			-- or initialized (when declared as attached)?
+		require
+			a_name_not_void: a_name /= Void
+		do
+			if a_name.is_local then
+				Result := locals_attached.has (a_name.seed)
+			elseif a_name.is_argument then
+				Result := arguments_attached.has (a_name.seed)
+			else
+				Result := attributes_attached.has (a_name.seed)
+			end
+		end
+
 	is_subset (other: ET_ATTACHMENT_SCOPE): BOOLEAN
 			-- Is `Current' a subset of `other'
 		require
 			other_not_void: other /= Void
 		do
+			Result := True
 			if result_attached and then not other.result_attached then
 				Result := False
-			else
-				Result := True
+			end
+			if Result then
 				from
-					names.start
+					locals_attached.start
 				until
-					names.after
+					locals_attached.after
 				loop
-					if not other.has_name (names.item_for_iteration) then
+					if not other.locals_attached.has (locals_attached.item_for_iteration) then
 						Result := False
 							-- Jump out of the loop.
-						names.go_after
+						locals_attached.go_after
 					else
-						names.forth
+						locals_attached.forth
+					end
+				end
+			end
+			if Result then
+				from
+					arguments_attached.start
+				until
+					arguments_attached.after
+				loop
+					if not other.arguments_attached.has (arguments_attached.item_for_iteration) then
+						Result := False
+							-- Jump out of the loop.
+						arguments_attached.go_after
+					else
+						arguments_attached.forth
+					end
+				end
+			end
+			if Result then
+				from
+					attributes_attached.start
+				until
+					attributes_attached.after
+				loop
+					if not other.attributes_attached.has (attributes_attached.item_for_iteration) then
+						Result := False
+							-- Jump out of the loop.
+						attributes_attached.go_after
+					else
+						attributes_attached.forth
 					end
 				end
 			end
@@ -81,9 +148,16 @@ feature -- Status report
 
 feature -- Access
 
-	names: DS_HASH_SET [ET_IDENTIFIER]
-			-- Names of local variables, formal arguments and attributes
-			-- which are attached (when declared as detachable)
+	locals_attached: DS_HASH_SET [INTEGER]
+			-- Indexes of local variables which are attached (when declared as detachable)
+			-- or initialized (when declared as attached)
+
+	arguments_attached: DS_HASH_SET [INTEGER]
+			-- Indexes of formal arguments which are attached (when declared as detachable)
+			-- or initialized (when declared as attached)
+
+	attributes_attached: DS_HASH_SET [INTEGER]
+			-- Seeds of attributes which are attached (when declared as detachable)
 			-- or initialized (when declared as attached)
 
 	result_attached: BOOLEAN
@@ -92,28 +166,42 @@ feature -- Access
 
 feature -- Element change
 
-	add_name (a_name: ET_IDENTIFIER)
-			-- Indicate that entity named `a_name' is attached
+	add_local_variable (a_name: ET_IDENTIFIER)
+			-- Indicate that local variable `a_name' is attached
+			-- (when declared as detachable) or initialized
+			-- (when declared as attached).
+		require
+			a_name_not_void: a_name /= Void
+			a_name_is_local: a_name.is_local
+		do
+			locals_attached.force_last (a_name.seed)
+		ensure
+			local_variable_added: has_local_variable (a_name)
+		end
+
+	add_formal_argument (a_name: ET_IDENTIFIER)
+			-- Indicate that formal argument `a_name' is attached
+			-- (when declared as detachable) or initialized
+			-- (when declared as attached).
+		require
+			a_name_not_void: a_name /= Void
+			a_name_is_argument: a_name.is_argument
+		do
+			arguments_attached.force_last (a_name.seed)
+		ensure
+			formal_argument_added: has_formal_argument (a_name)
+		end
+
+	add_attribute (a_name: ET_IDENTIFIER)
+			-- Indicate that attribute `a_name' is attached
 			-- (when declared as detachable) or initialized
 			-- (when declared as attached).
 		require
 			a_name_not_void: a_name /= Void
 		do
-			names.force_last (a_name)
+			attributes_attached.force_last (a_name.seed)
 		ensure
-			name_added: has_name (a_name)
-		end
-
-	remove_name (a_name: ET_IDENTIFIER)
-			-- Indicate that entity named `a_name' is not attached
-			-- (when declared as detachable) or not initialized
-			-- (when declared as attached).
-		require
-			a_name_not_void: a_name /= Void
-		do
-			names.remove (a_name)
-		ensure
-			name_removed: not has_name (a_name)
+			attribute_added: has_attribute (a_name)
 		end
 
 	add_result
@@ -126,6 +214,62 @@ feature -- Element change
 			result_added: has_result
 		end
 
+	add_name (a_name: ET_IDENTIFIER)
+			-- Indicate that entity named `a_name' is attached
+			-- (when declared as detachable) or initialized
+			-- (when declared as attached).
+		require
+			a_name_not_void: a_name /= Void
+		do
+			if a_name.is_local then
+				add_local_variable (a_name)
+			elseif a_name.is_argument then
+				add_formal_argument (a_name)
+			else
+				add_attribute (a_name)
+			end
+		ensure
+			name_added: has_name (a_name)
+		end
+
+	remove_local_variable (a_name: ET_IDENTIFIER)
+			-- Indicate that local variable `a_name' is not attached
+			-- (when declared as detachable) or not initialized
+			-- (when declared as attached).
+		require
+			a_name_not_void: a_name /= Void
+			a_name_is_local: a_name.is_local
+		do
+			locals_attached.remove (a_name.seed)
+		ensure
+			local_variable_removed: not has_local_variable (a_name)
+		end
+
+	remove_formal_argument (a_name: ET_IDENTIFIER)
+			-- Indicate that formal argument `a_name' is not attached
+			-- (when declared as detachable) or not initialized
+			-- (when declared as attached).
+		require
+			a_name_not_void: a_name /= Void
+			a_name_is_argument: a_name.is_argument
+		do
+			arguments_attached.remove (a_name.seed)
+		ensure
+			formal_argument_removed: not has_formal_argument (a_name)
+		end
+
+	remove_attribute (a_name: ET_IDENTIFIER)
+			-- Indicate that attribute `a_name' is not attached
+			-- (when declared as detachable) or not initialized
+			-- (when declared as attached).
+		require
+			a_name_not_void: a_name /= Void
+		do
+			attributes_attached.remove (a_name.seed)
+		ensure
+			attribute_removed: not has_attribute (a_name)
+		end
+
 	remove_result
 			-- Indicate that entity 'Result' is not attached
 			-- (when declared as detachable) or not initialized
@@ -136,13 +280,35 @@ feature -- Element change
 			result_removed: not has_result
 		end
 
+	remove_name (a_name: ET_IDENTIFIER)
+			-- Indicate that entity named `a_name' is not attached
+			-- (when declared as detachable) or not initialized
+			-- (when declared as attached).
+		require
+			a_name_not_void: a_name /= Void
+		do
+			if a_name.is_local then
+				remove_local_variable (a_name)
+			elseif a_name.is_argument then
+				remove_formal_argument (a_name)
+			else
+				remove_attribute (a_name)
+			end
+		ensure
+			name_removed: not has_name (a_name)
+		end
+
 	copy_scope (other: ET_ATTACHMENT_SCOPE)
 			-- Make sure that `Current' has the same entities as `other'.
 		require
 			other_not_void: other /= Void
 		do
-			names.wipe_out
-			names.append_last (other.names)
+			locals_attached.wipe_out
+			locals_attached.append_last (other.locals_attached)
+			arguments_attached.wipe_out
+			arguments_attached.append_last (other.arguments_attached)
+			attributes_attached.wipe_out
+			attributes_attached.append_last (other.attributes_attached)
 			result_attached := other.result_attached
 		end
 
@@ -151,21 +317,45 @@ feature -- Element change
 		require
 			other_not_void: other /= Void
 		local
-			l_name: ET_IDENTIFIER
+			l_seed: INTEGER
 		do
 			if result_attached and not other.result_attached then
 				result_attached := False
 			end
 			from
-				names.start
+				locals_attached.start
 			until
-				names.after
+				locals_attached.after
 			loop
-				l_name := names.item_for_iteration
-				if not other.has_name (l_name) then
-					names.remove (l_name)
+				l_seed := locals_attached.item_for_iteration
+				if not other.locals_attached.has (l_seed) then
+					locals_attached.remove (l_seed)
 				else
-					names.forth
+					locals_attached.forth
+				end
+			end
+			from
+				arguments_attached.start
+			until
+				arguments_attached.after
+			loop
+				l_seed := arguments_attached.item_for_iteration
+				if not other.arguments_attached.has (l_seed) then
+					arguments_attached.remove (l_seed)
+				else
+					arguments_attached.forth
+				end
+			end
+			from
+				attributes_attached.start
+			until
+				attributes_attached.after
+			loop
+				l_seed := attributes_attached.item_for_iteration
+				if not other.attributes_attached.has (l_seed) then
+					attributes_attached.remove (l_seed)
+				else
+					attributes_attached.forth
 				end
 			end
 		end
@@ -174,13 +364,16 @@ feature -- Element change
 			-- Indicate that no entity is attached (when declared
 			-- as detachable) or initialized (when declared as attached).
 		do
-			names.wipe_out
+			locals_attached.wipe_out
+			arguments_attached.wipe_out
+			attributes_attached.wipe_out
 			result_attached := False
 		end
 
 invariant
 
-	names_not_void: names /= Void
-	no_void_name: not names.has_void
+	locals_attached_not_void: locals_attached /= Void
+	arguments_attached_not_void: arguments_attached /= Void
+	attributes_attached_not_void: attributes_attached /= Void
 
 end
