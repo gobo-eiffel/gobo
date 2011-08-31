@@ -27,10 +27,20 @@ create
 
 CHAR_CODE (0*([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))
 
+UTF8_BOM (\0xEF\0xBB\0xBF)
+
 %x BREAK MS MSN VS1 VS2 VS3 LAVS1 LAVS2 LAVS3
 %option nodefault line outfile="et_eiffel_scanner.e"
 
 %%
+
+----------/** BOM **/-----------------------------------------------------------
+
+{UTF8_BOM}	{
+				-- Ignore byte order mark (BOM).
+				-- See http://en.wikipedia.org/wiki/Byte_order_mark
+			}
+
 
 ----------/** Eiffel symbols **/------------------------------------------------
 

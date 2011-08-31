@@ -5,6 +5,8 @@ Version 3.10 - ?
 	* Extended the attributes 'if' and 'unless' to accept the values
 	  "true" and "false". This can be useful when automatically generating
 	  geant build files. See bug#2657770.
+	* Use ISE Eiffel's ec instead of ecb, so output is compatible with
+	  estudio; else estudio will complain about a corrupted project.
 
 	gec:
 
@@ -20,8 +22,6 @@ Version 3.10 - ?
 	  inspect instructions. See bug#3238111.
 	* Fixed bug when an inspect instruction had no else-branch. No exception
 	  was raised.
-  * Use ISE Eiffel's ec instead of ecb, so output is compatible with
-	  estudio; else estudio will complain about a corrupted project.
 	* Fixed bug when running 'gec --gelint ...'. Validity errors were
 	  reported twice.
 
@@ -137,6 +137,8 @@ Version 3.10 - ?
 	  implemented that way in preconditions.
 	* Support the ECMA syntax for typed manifest strings and typed character
 	  constants.
+	* Accept class text files which start with the byte order mark (BOM).
+	  (See http://en.wikipedia.org/wiki/Byte_order_mark.)
 	* Started checking void-safety validity rules.
 
 	Gobo Eiffel XML Library:
