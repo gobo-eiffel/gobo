@@ -55,6 +55,24 @@ feature -- Initialization
 			end
 		end
 
+feature -- Status report
+
+	has_non_null_instruction: BOOLEAN
+			-- Does current compound contain at least one non-null instruction?
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if not attached {ET_NULL_INSTRUCTION} storage.item (i) then
+					Result := True
+						-- Jump out of the loop.
+					i := nb + 1
+				end
+				i := i + 1
+			end
+		end
+
 feature -- Access
 
 	keyword: ET_KEYWORD

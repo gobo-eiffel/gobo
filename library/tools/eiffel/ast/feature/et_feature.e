@@ -5,7 +5,7 @@ note
 		"Eiffel features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2008/12/01 $"
 	revision: "$Revision: #16 $"
@@ -71,18 +71,15 @@ feature -- Initialization
 			l_postconditions: like postconditions
 		do
 			reset_signature_qualified_anchored_types
-			if assertions_checked then
-				l_preconditions := preconditions
-				if l_preconditions /= Void then
-					l_preconditions.reset
-				end
-				l_postconditions := postconditions
-				if l_postconditions /= Void then
-					l_postconditions.reset
-				end
+			l_preconditions := preconditions
+			if l_preconditions /= Void then
+				l_preconditions.reset
 			end
-			reset_assertions_checked
-			reset_implementation_checked
+			l_postconditions := postconditions
+			if l_postconditions /= Void then
+				l_postconditions.reset
+			end
+			reset_validity_checked
 		end
 
 	reset_signature_qualified_anchored_types
@@ -159,18 +156,6 @@ feature -- Access
 	header_break: ET_BREAK
 			-- Break which appears where the header comment is expected
 		deferred
-		end
-
-	preconditions: ET_PRECONDITIONS
-			-- Preconditions;
-			-- Void if not a routine or a routine with no preconditions
-		do
-		end
-
-	postconditions: ET_POSTCONDITIONS
-			-- Postconditions;
-			-- Void if not a routine or a routine with no postconditions
-		do
 		end
 
 	obsolete_message: ET_OBSOLETE

@@ -16,10 +16,19 @@ inherit
 
 	ANY
 
+	ET_ECF_ELEMENT_NAMES
+		export {NONE} all end
+
 	ET_ECF_SETTING_NAMES
 		export {NONE} all end
 
+	ET_SHARED_TOKEN_CONSTANTS
+		export {NONE} all end
+
 	KL_SHARED_EXECUTION_ENVIRONMENT
+		export {NONE} all end
+
+	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
 create
@@ -37,6 +46,7 @@ feature {NONE} -- Initialization
 			create variables.make
 			variables.set_secondary_variables (Execution_environment)
 			create settings.make
+			create options.make
 		ensure
 			name_set: name = a_name
 		end
@@ -66,6 +76,9 @@ feature -- Access
 
 	settings: ET_ECF_SETTINGS
 			-- Settings
+
+	options: ET_ECF_OPTIONS
+			-- Options
 
 	file_rules: ET_ECF_FILE_RULES
 			-- File rules
@@ -114,9 +127,11 @@ feature -- Setting
 			if parent /= Void then
 				variables.set_secondary_variables (parent.variables)
 				settings.set_secondary_settings (parent.settings)
+				options.set_secondary_options (parent.options)
 			else
 				variables.set_secondary_variables (Execution_environment)
 				settings.set_secondary_settings (Void)
+				options.set_secondary_options (Void)
 			end
 		ensure
 			parent_set: parent = a_parent
@@ -179,6 +194,17 @@ feature -- Basic operations
 			l_value := settings.value (multithreaded_setting_name)
 			if l_value /= Void and then l_value.is_boolean then
 				a_state.set_multithreaded (l_value.to_boolean)
+			end
+			l_value := settings.value (concurrency_setting_name)
+			if l_value /= Void then
+				if STRING_.same_case_insensitive (l_value, "thread") then
+					a_state.set_multithreaded (True)
+				elseif STRING_.same_case_insensitive (l_value, "scoop") then
+					a_state.set_scoop (True)
+				else
+					a_state.set_multithreaded (False)
+					a_state.set_scoop (False)
+				end
 			end
 			l_value := settings.value (msil_generation_setting_name)
 			if l_value /= Void and then l_value.is_boolean then
@@ -310,6 +336,45 @@ feature -- Basic operations
 			if l_value /= Void and then l_value.is_boolean  then
 				a_system.set_console_application_mode (l_value.to_boolean)
 			end
+				-- Unknown built-in features reported.
+			l_value := variables.value ("unknown_builtin_reported")
+			if l_value /= Void and then l_value.is_boolean then
+				a_system.set_unknown_builtin_reported (l_value.to_boolean)
+			end
+		end
+
+	fill_options (a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Fill `a_universe' with option information.
+		require
+			a_universe_not_void: a_universe /= Void
+		local
+			l_value: STRING
+		do
+				-- void_safety.
+			l_value := options.value (xml_void_safety)
+			if l_value = Void or else l_value.as_lower.same_string ("none") then
+				a_universe.set_attachment_type_conformance_mode (False)
+				a_universe.set_target_type_attachment_mode (False)
+			elseif l_value.as_lower.same_string ("all") then
+				a_universe.set_attachment_type_conformance_mode (True)
+				a_universe.set_target_type_attachment_mode (True)
+			else
+				a_universe.set_attachment_type_conformance_mode (True)
+				a_universe.set_target_type_attachment_mode (False)
+			end
+				-- is_attached_by_default.
+			l_value := options.value (xml_is_attached_by_default)
+			if l_value /= Void and then l_value.is_boolean then
+				if l_value.to_boolean then
+					a_universe.set_implicit_attachment_type_mark (tokens.implicit_attached_type_mark)
+				else
+					a_universe.set_implicit_attachment_type_mark (tokens.implicit_detachable_type_mark)
+				end
+			elseif a_universe.attachment_type_conformance_mode then
+				a_universe.set_implicit_attachment_type_mark (tokens.implicit_attached_type_mark)
+			else
+				a_universe.set_implicit_attachment_type_mark (tokens.implicit_detachable_type_mark)
+			end
 		end
 
 invariant
@@ -318,5 +383,6 @@ invariant
 --	no_cycle_in_parent: no cycle in parent
 	variables_not_void: variables /= Void
 	settings_not_void: settings /= Void
+	options_not_void: options /= Void
 
 end

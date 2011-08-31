@@ -5,7 +5,7 @@ note
 		"Eiffel class interface checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -356,8 +356,8 @@ feature {NONE} -- Constraint creation validity
 						-- So we must have something like that:
 						-- "[G -> H create make end, H -> G]".
 						-- We consider that the base class of the
-						-- constraint in ANY in that case.
-					a_class := current_universe.any_type.base_class
+						-- constraint is 'ANY' in that case.
+					a_class := current_universe.detachable_any_type.base_class
 				end
 					-- Build the feature table.
 				a_class.process (current_system.feature_flattener)

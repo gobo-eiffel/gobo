@@ -4,7 +4,7 @@ note
 
 		"Test semantics of object-tests"
 
-	copyright: "Copyright (c) 2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -72,6 +72,28 @@ feature -- Test
 			assert ("or_else8", (not attached s as x8 or 1 /= 1) or else not x8.is_empty)
 		end
 
+	test_or
+			-- Test scope of object-test local when part of a strict disjunctive expression.
+		local
+			s1: detachable STRING
+			s2: detachable STRING
+		do
+			s1 := "foo"
+			s2 := "foobar"
+			assert ("or1", (attached s1 as x and then x.count = 3) or (attached s2 as x and then x.count = 6))
+		end
+
+	test_and
+			-- Test scope of object-test local when part of a strict conjunctive expression.
+		local
+			s1: detachable STRING
+			s2: detachable STRING
+		do
+			s1 := "foo"
+			s2 := "foobar"
+			assert ("and1", (not attached s1 as x or else x.count = 3) and (not attached s2 as x or else x.count = 6))
+		end
+		
 	test_if
 			-- Test scope of object-test local when part of conditional of if instruction.
 			-- ECMA-367-2, 8.24.5-4 and 8.24.5-5.
@@ -196,6 +218,28 @@ feature -- Test
 			end
 		end
 
+	test_check
+			-- Test scope of object-test local when part of conditional of check instruction.
+			-- ECMA-367-2, 8.24.5-4 and 8.24.5-5.
+		local
+			s: detachable STRING
+		do
+			s := "foo"
+			check attached {STRING} s as x1 then
+				assert ("check1", x1.count = 3)
+			end
+			check attached s as x2 then
+				assert ("check2", x2.count = 3)
+			end
+			s := Void
+			check not attached {STRING} s as x3 then
+				assert ("check3", True)
+			end
+			check not attached s as x4 then
+				assert ("check4", True)
+			end
+		end
+		
 	test_precondition
 			-- Test scope of object-test local when in a precondition.
 			-- The scope should cover the following assertions in the

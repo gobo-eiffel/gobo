@@ -40,6 +40,7 @@ inherit
 		redefine
 			is_library,
 			kind_name,
+			kind_name_plural,
 			has_class
 		end
 
@@ -124,6 +125,12 @@ feature -- Access
 			-- Name of the kind of group or universe (e.g. "cluster", "assembly", "library", etc.)
 		once
 			Result := "library"
+		end
+
+	kind_name_plural: STRING
+			-- Plural form of name of the kind of group (e.g. "clusters", "assemblies", "libraries", etc.)
+		once
+			Result := "libraries"
 		end
 
 feature -- Measurement

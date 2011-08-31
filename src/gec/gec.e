@@ -181,15 +181,37 @@ feature {NONE} -- Eiffel config file parsing
 		local
 			l_ecf_parser: ET_ECF_SYSTEM_PARSER
 			l_ecf_error_handler: ET_ECF_ERROR_HANDLER
+			l_gobo_eiffel: STRING
+			l_ecf_system: ET_ECF_SYSTEM
+			l_target: ET_ECF_TARGET
+			l_value: STRING
 		do
 			last_system := Void
+			l_gobo_eiffel := Execution_environment.variable_value ("GOBO_EIFFEL")
+			if l_gobo_eiffel = Void or else l_gobo_eiffel.is_empty then
+				Execution_environment.set_variable_value ("GOBO_EIFFEL", "ge")
+			end
 			create l_ecf_error_handler.make_standard
 			create l_ecf_parser.make (l_ecf_error_handler)
+			l_ecf_parser.set_finalize_mode (is_finalize)
 			l_ecf_parser.parse_file (a_file)
 			if not l_ecf_error_handler.has_error then
-				last_system := l_ecf_parser.last_system
+				l_ecf_system := l_ecf_parser.last_system
+				if l_ecf_system /= Void then
+					l_target := l_ecf_system.selected_target
+					if l_target /= Void then
+						l_value := l_target.variables.value ("gelint")
+						if l_value /= Void and then l_value.is_boolean then
+							ecf_gelint_option := l_value.to_boolean
+						end
+					end
+					last_system := l_ecf_system
+				end
 			end
 		end
+
+	ecf_gelint_option: BOOLEAN
+			-- Same as command-line option --gelint, but specified from the ECF file
 
 feature {NONE} -- Processing
 
@@ -310,7 +332,7 @@ feature -- Status report
 	is_gelint: BOOLEAN
 			-- Should gelint be run on the full content of each class being compiled?
 		do
-			Result := gelint_flag.was_found
+			Result := gelint_flag.was_found or ecf_gelint_option
 		end
 
 	catcall_error_mode: BOOLEAN

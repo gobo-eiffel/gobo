@@ -5,7 +5,7 @@ note
 		"Eiffel closures with components common to routines and extended attributes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,10 @@ deferred class ET_FEATURE_CLOSURE
 inherit
 
 	ET_CLOSURE
+		redefine
+			preconditions,
+			postconditions
+		end
 
 feature -- Access
 

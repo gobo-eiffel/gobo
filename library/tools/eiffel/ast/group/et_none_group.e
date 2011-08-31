@@ -5,7 +5,7 @@ note
 		"Built-in groups for class NONE"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -65,7 +65,7 @@ feature -- Iteration
 	classes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])
 			-- Apply `an_action' on all classes which are part of current group.
 		do
-			an_action.call ([universe.none_type.base_class])
+			an_action.call ([universe.detachable_none_type.base_class])
 		end
 
 	classes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN])
@@ -74,7 +74,7 @@ feature -- Iteration
 		local
 			l_none_class: ET_CLASS
 		do
-			l_none_class := universe.none_type.base_class
+			l_none_class := universe.detachable_none_type.base_class
 			if a_test.item ([l_none_class]) then
 				an_action.call ([l_none_class])
 			end

@@ -5,7 +5,7 @@ note
 		"Eiffel object-test scope builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,11 @@ class ET_OBJECT_TEST_SCOPE_BUILDER
 
 inherit
 
+	ET_CLASS_SUBPROCESSOR
+
 	ET_AST_NULL_PROCESSOR
+		undefine
+			make
 		redefine
 			process_infix_expression,
 			process_named_object_test,
@@ -31,7 +35,7 @@ feature -- Status report
 
 	is_negated: BOOLEAN
 			-- Look for object-tests which are guaranteed to be
-			-- successful is the expression in which they appear
+			-- successful if the expression in which they appear
 			-- is evaluated to False?
 
 feature -- Access
@@ -41,41 +45,55 @@ feature -- Access
 
 feature -- Basic operations
 
-	build_scope (a_expression: ET_EXPRESSION; a_scope: ET_OBJECT_TEST_SCOPE)
-			-- Add to `a_scope' the object-tests found in `a_expression'
-			-- that are guaranteed to be successful if `a_expression'
+	build_scope (a_expression: ET_EXPRESSION; a_scope: ET_OBJECT_TEST_SCOPE; a_class: ET_CLASS)
+			-- Add to `a_scope' the object-tests found in `a_expression', appearing in
+			-- class `a_class', that are guaranteed to be successful if `a_expression'
 			-- is evaluated to True.
+			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_expression_not_void: a_expression /= Void
+			a_class_not_void: a_class /= Void
 		local
 			old_negated: BOOLEAN
 			old_scope: like scope
+			old_class: ET_CLASS
 		do
+			has_fatal_error := False
+			old_class := current_class
+			current_class := a_class
 			old_scope := scope
 			scope := a_scope
 			old_negated := is_negated
 			is_negated := False
 			a_expression.process (Current)
 			is_negated := old_negated
+			current_class := old_class
 			scope := old_scope
 		end
 
-	build_negated_scope (a_expression: ET_EXPRESSION; a_scope: ET_OBJECT_TEST_SCOPE)
-			-- Add to `a_scope' the object-tests found in `a_expression'
-			-- that are guaranteed to be successful if `a_expression'
+	build_negated_scope (a_expression: ET_EXPRESSION; a_scope: ET_OBJECT_TEST_SCOPE; a_class: ET_CLASS)
+			-- Add to `a_scope' the object-tests found in `a_expression', appearing in
+			-- class `a_class', that are guaranteed to be successful if `a_expression'
 			-- is evaluated to False.
+			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_expression_not_void: a_expression /= Void
+			a_class_not_void: a_class /= Void
 		local
 			old_negated: BOOLEAN
 			old_scope: like scope
+			old_class: ET_CLASS
 		do
+			has_fatal_error := False
+			old_class := current_class
+			current_class := a_class
 			old_scope := scope
 			scope := a_scope
 			old_negated := is_negated
 			is_negated := True
 			a_expression.process (Current)
 			is_negated := old_negated
+			current_class := a_class
 			scope := old_scope
 		end
 
@@ -110,14 +128,25 @@ feature {ET_AST_NODE} -- Processing
 
 	process_named_object_test (an_expression: ET_NAMED_OBJECT_TEST)
 			-- Process `an_expression'.
+		local
+			l_other_object_test: ET_NAMED_OBJECT_TEST
 		do
 			if not is_negated then
 				if scope /= Void then
-						-- Note that object-test local scope intersection (i.e.
-						-- two object-tests with the same local name and whose
-						-- scopes can overlap) is already taken care of with the
-						-- validity rule VUOT-1.
-					scope.add_object_test (an_expression)
+					l_other_object_test := scope.object_test (an_expression.name)
+					if l_other_object_test /= Void then
+							-- Two object-tests with the same local name appear in the same
+							-- expression in such a way that their scope will overlap.
+							-- For example:
+							--
+							--   if attached exp1 as x and attached exp2 as x then
+							--      x.do_something
+							--   end
+						set_fatal_error
+						error_handler.report_vuot1e_error (current_class, an_expression, l_other_object_test)
+					else
+						scope.add_object_test (an_expression)
+					end
 				end
 			end
 		end

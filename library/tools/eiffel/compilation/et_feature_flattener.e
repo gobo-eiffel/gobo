@@ -1877,9 +1877,22 @@ feature -- Assigner validity
 									l_other_type := l_procedure_arguments.formal_argument (1).type
 									l_arg_offset := 1
 								end
-								if not l_type.same_named_type (l_other_type, current_class, current_class) then
-									set_fatal_error (current_class)
-									error_handler.report_vfac3a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure)
+								if current_system.is_ise then
+										-- ECMA 367-2 says that the type of the query and of the first formal argument
+										-- of the assigner procedure should have the same deanchored form.
+										-- But EiffelStudio 6.8.8.6542 actually only checks that the type of the
+										-- formal argument of the assigner procedure conforms to the type of the query.
+										-- The conformance in the other direction is checked in the client code,
+										-- which is not what ECMA 367-2 suggests (see rules VFAC-3 and VBAC-1).
+									if not l_other_type.conforms_to_type (l_type, current_class, current_class) then
+										set_fatal_error (current_class)
+										error_handler.report_vfac3a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure)
+									end
+								else
+									if not l_type.same_named_type (l_other_type, current_class, current_class) then
+										set_fatal_error (current_class)
+										error_handler.report_vfac3a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure)
+									end
 								end
 								l_query_arguments := l_query.arguments
 								nb_args := l_procedure_arguments.count - 1
@@ -1955,9 +1968,22 @@ feature -- Assigner validity
 									l_other_type := l_procedure_arguments.formal_argument (1).type
 									l_arg_offset := 1
 								end
-								if not l_type.same_named_type (l_other_type, current_class, current_class) then
-									set_fatal_error (current_class)
-									error_handler.report_vfac3a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure)
+								if current_system.is_ise then
+										-- ECMA 367-2 says that the type of the query and of the first formal argument
+										-- of the assigner procedure should have the same deanchored form.
+										-- But EiffelStudio 6.8.8.6542 actually only checks that the type of the
+										-- formal argument of the assigner procedure conforms to the type of the query.
+										-- The conformance in the other direction is checked in the client code,
+										-- which is not what ECMA 367-2 suggests (see rules VFAC-3 and VBAC-1).
+									if not l_other_type.conforms_to_type (l_type, current_class, current_class) then
+										set_fatal_error (current_class)
+										error_handler.report_vfac3a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure)
+									end
+								else
+									if not l_type.same_named_type (l_other_type, current_class, current_class) then
+										set_fatal_error (current_class)
+										error_handler.report_vfac3a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure)
+									end
 								end
 								l_query_arguments := l_query.arguments
 								nb_args := l_procedure_arguments.count - 1

@@ -117,16 +117,21 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 			out_file: KL_TEXT_OUTPUT_FILE
 			in_file: KL_TEXT_INPUT_FILE
 			a_line: STRING
-			a_pattern1: STRING
-			a_regexp1: RX_PCRE_REGULAR_EXPRESSION
+			a_pattern1, a_pattern2: STRING
+			a_regexp1, a_regexp2: RX_PCRE_REGULAR_EXPRESSION
 			l_empty_line: BOOLEAN
 		do
-				-- Compile regexp.
+				-- Compile regexps.
 			a_pattern1 := "BUILD FAILED!"
 			create a_regexp1.make
 			a_regexp1.compile (a_pattern1)
 			assert ("cannot compile regexp '" + a_pattern1 + "'", a_regexp1.is_compiled)
 			a_regexp1.optimize
+			a_pattern2 := "aa[0-9]+\.c"
+			create a_regexp2.make
+			a_regexp2.compile (a_pattern2)
+			assert ("cannot compile regexp '" + a_pattern2 + "'", a_regexp2.is_compiled)
+			a_regexp2.optimize
 				-- Copy files.
 			create out_file.make (an_output_filename)
 			out_file.open_append
@@ -140,11 +145,14 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 						in_file.end_of_file
 					loop
 						a_line := in_file.last_string
-						if a_regexp1.recognizes (a_line) then
+						if a_line.is_empty then
+							l_empty_line := True
+						elseif a_regexp1.recognizes (a_line) then
 								-- Skip this line and the previous empty line.
 							l_empty_line := False
-						elseif a_line.is_empty then
-							l_empty_line := True
+						elseif a_regexp2.recognizes (a_line) then
+								-- Skip this line and the previous empty line.
+							l_empty_line := False
 						else
 							if l_empty_line then
 								out_file.put_new_line
@@ -153,6 +161,7 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 							out_file.put_line (a_line)
 						end
 						a_regexp1.wipe_out
+						a_regexp2.wipe_out
 						in_file.read_line
 					end
 					in_file.close
@@ -232,11 +241,11 @@ feature {NONE} -- Test gelint
 						in_file.end_of_file
 					loop
 						a_line := in_file.last_string
-						if a_regexp1.recognizes (a_line) then
+						if a_line.is_empty then
+							l_empty_line := True
+						elseif a_regexp1.recognizes (a_line) then
 								-- Skip this line and the previous empty line.
 							l_empty_line := False
-						elseif a_line.is_empty then
-							l_empty_line := True
 						else
 							if l_empty_line then
 								out_file.put_new_line
@@ -310,8 +319,8 @@ feature {NONE} -- Test ISE Eiffel
 			out_file: KL_TEXT_OUTPUT_FILE
 			in_file: KL_TEXT_INPUT_FILE
 			a_line: STRING
-			a_pattern1, a_pattern2, a_pattern3, a_pattern4, a_pattern5, a_pattern6, a_pattern7: STRING
-			a_regexp1, a_regexp2, a_regexp3, a_regexp4, a_regexp5, a_regexp6, a_regexp7: RX_PCRE_REGULAR_EXPRESSION
+			a_pattern1, a_pattern2, a_pattern3, a_pattern4, a_pattern5, a_pattern6, a_pattern7, a_pattern8: STRING
+			a_regexp1, a_regexp2, a_regexp3, a_regexp4, a_regexp5, a_regexp6, a_regexp7, a_regexp8: RX_PCRE_REGULAR_EXPRESSION
 			l_empty_line: BOOLEAN
 		do
 				-- Compile regexps.
@@ -320,12 +329,12 @@ feature {NONE} -- Test ISE Eiffel
 			a_regexp1.compile (a_pattern1)
 			assert ("cannot compile regexp '" + a_pattern1 + "'", a_regexp1.is_compiled)
 			a_regexp1.optimize
-			a_pattern2 := "(\[ *[0-9]+%% - *[0-9]+\] (Degree -?[0-9]+|Generating Auxiliary Files))|(Features done: [0-9]+\sFeatures to go: [0-9]+)|(Degree 6: Examining System)|(Degree 5: Parsing Classes)|(Degree 4: Analyzing Inheritance)|(Degree 3: Checking Types)|(Degree 2: Generating Byte Code)|(Degree -1: Generating Code)"
+			a_pattern2 := "(\[ *[0-9]+%% - *[0-9]+\] (Degree -?[0-9]+|Generating Auxiliary Files))|(Features done: [0-9]+\sFeatures to go: [0-9]+)|(Degree 6: Examining System)|(Degree 5: Parsing Classes)|(Degree 4: Analyzing Inheritance)|(Degree 3: Checking Types)|(Degree 2: Generating Byte Code)|(Degree -1: Generating Code)|(Degree -2: Constructing Polymorphic Table)|(Degree -3: Generating Optimized Code)"
 			create a_regexp2.make
 			a_regexp2.compile (a_pattern2)
 			assert ("cannot compile regexp '" + a_pattern2 + "'", a_regexp2.is_compiled)
 			a_regexp2.optimize
-			a_pattern3 := "(Eiffel Compilation Manager)|(Freezing System Changes)|(System Recompiled\.)|(C compilation completed)|(Preparing C compilation\.\.\.)|(Removing Dead Code)|(\s*\(version .*\))|(Version .*)|(\s*1 file\(s\) copied\.)"
+			a_pattern3 := "(Eiffel Compilation Manager)|(Freezing System Changes)|(System Recompiled\.)|(C compilation completed)|(Preparing C compilation\.\.\.)|(Removing Dead Code)|(Removing Unused Code)|(\s*\(version .*\))|(Version .*)|(\s*1 file\(s\) copied\.)"
 			create a_regexp3.make
 			a_regexp3.compile (a_pattern3)
 			assert ("cannot compile regexp '" + a_pattern3 + "'", a_regexp3.is_compiled)
@@ -350,6 +359,11 @@ feature {NONE} -- Test ISE Eiffel
 			a_regexp7.compile (a_pattern7)
 			assert ("cannot compile regexp '" + a_pattern7 + "'", a_regexp7.is_compiled)
 			a_regexp7.optimize
+			a_pattern8 := "WARNING: Option '[^']+' was found in neither CONFIG\.EIF nor registry\."
+			create a_regexp8.make
+			a_regexp8.compile (a_pattern8)
+			assert ("cannot compile regexp '" + a_pattern8 + "'", a_regexp8.is_compiled)
+			a_regexp8.optimize
 				-- Copy files.
 			create out_file.make (an_output_filename)
 			out_file.open_append
@@ -369,22 +383,25 @@ feature {NONE} -- Test ISE Eiffel
 								-- Skip this line and the previous empty line.
 							l_empty_line := False
 						elseif a_regexp2.matches (a_line) then
-								-- Skip this line.
+								-- Skip this line and the previous empty line.
 							l_empty_line := False
 						elseif a_regexp3.recognizes (a_line) then
-								-- Skip this line.
+								-- Skip this line and the previous empty line.
 							l_empty_line := False
 						elseif a_regexp4.recognizes (a_line) then
-								-- Skip this line.
+								-- Skip this line and the previous empty line.
 							l_empty_line := False
 						elseif a_regexp5.matches (a_line) then
-								-- Skip this line.
+								-- Skip this line and the previous empty line.
 							l_empty_line := False
 						elseif a_regexp6.matches (a_line) then
-								-- Skip this line.
+								-- Skip this line and the previous empty line.
 							l_empty_line := False
 						elseif a_regexp7.matches (a_line) then
-								-- Skip this line.
+								-- Skip this line and the previous empty line.
+							l_empty_line := False
+						elseif a_regexp8.matches (a_line) then
+								-- Skip this line and the previous empty line.
 							l_empty_line := False
 						else
 							if l_empty_line then
@@ -400,6 +417,7 @@ feature {NONE} -- Test ISE Eiffel
 						a_regexp5.wipe_out
 						a_regexp6.wipe_out
 						a_regexp7.wipe_out
+						a_regexp8.wipe_out
 						in_file.read_line
 					end
 					in_file.close
@@ -678,7 +696,7 @@ feature {NONE} -- Output logs
 			l_input_filename: STRING
 		do
 				-- Compile regexp.
-			a_pattern1 := "<[0-9]{16}>(.*)"
+			a_pattern1 := "<[0-9A-F]{16}>(.*)"
 			create a_regexp1.make
 			a_regexp1.compile (a_pattern1)
 			assert ("cannot compile regexp '" + a_pattern1 + "'", a_regexp1.is_compiled)

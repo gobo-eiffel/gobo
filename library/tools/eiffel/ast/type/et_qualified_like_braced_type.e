@@ -5,7 +5,7 @@ note
 		"Eiffel qualified anchored types of the form 'like {A}.b'"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,7 +16,8 @@ inherit
 
 	ET_QUALIFIED_LIKE_IDENTIFIER
 		redefine
-			resolved_formal_parameters
+			resolved_formal_parameters_with_type_mark,
+			type_with_type_mark
 		end
 
 create
@@ -45,10 +46,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	type_mark: ET_TYPE_MARK
-			-- 'attached' or 'detachable' keyword,
-			-- or '!' or '?' symbol
-
 	like_keyword: ET_KEYWORD
 			-- 'like' keyword
 
@@ -60,6 +57,22 @@ feature -- Access
 
 	right_brace: ET_SYMBOL
 			-- '}' symbol
+
+	type_with_type_mark (a_type_mark: ET_TYPE_MARK): ET_QUALIFIED_LIKE_BRACED_TYPE
+			-- Current type whose type mark status is
+			-- overridden by `a_type_mark', if not Void
+		local
+			l_type_mark: ET_TYPE_MARK
+		do
+			l_type_mark := overridden_type_mark (a_type_mark)
+			if l_type_mark = type_mark then
+				Result := Current
+			else
+				create Result.make (a_type_mark, target_type, qualified_name)
+				Result.set_left_brace (left_brace)
+				Result.set_right_brace (right_brace)
+			end
+		end
 
 feature -- Setting
 
@@ -95,21 +108,23 @@ feature -- Setting
 
 feature -- Type processing
 
-	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_QUALIFIED_LIKE_BRACED_TYPE
-			-- Version of current type where the formal generic
-			-- parameter types have been replaced by their actual
-			-- counterparts in `a_parameters'
+	resolved_formal_parameters_with_type_mark (a_type_mark: ET_TYPE_MARK; a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_QUALIFIED_LIKE_BRACED_TYPE
+			-- Same as `resolved_formal_parameters' except that the type mark status is
+			-- overridden by `a_type_mark', if not Void
 		local
 			l_target_type: like target_type
 			l_resolved_target_type: like target_type
+			l_type_mark: ET_TYPE_MARK
 		do
-			Result := Current
 			l_target_type := target_type
 			l_resolved_target_type := l_target_type.resolved_formal_parameters (a_parameters)
-			if l_target_type /= l_target_type then
-				create Result.make (type_mark, l_resolved_target_type, qualified_name)
+			l_type_mark := overridden_type_mark (a_type_mark)
+			if l_type_mark /= type_mark or l_target_type /= l_target_type then
+				create Result.make (l_type_mark, l_resolved_target_type, qualified_name)
 				Result.set_left_brace (left_brace)
 				Result.set_right_brace (right_brace)
+			else
+				Result := Current
 			end
 		end
 
@@ -119,6 +134,16 @@ feature -- Output
 			-- Append textual representation of
 			-- current type to `a_string'.
 		do
+			if type_mark /= Void then
+				if type_mark.is_implicit_mark then
+					a_string.append_character ('[')
+				end
+				a_string.append_string (type_mark.text)
+				if type_mark.is_implicit_mark then
+					a_string.append_character (']')
+				end
+				a_string.append_character (' ')
+			end
 			a_string.append_string (like_space)
 			a_string.append_character ('{')
 			target_type.append_to_string (a_string)

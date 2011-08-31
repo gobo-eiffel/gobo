@@ -179,6 +179,20 @@ feature {ET_AST_NODE} -- Processing
 			an_instruction.source.process (Current)
 		end
 
+	process_attachment_separate_keywords (a_keywords: ET_ATTACHMENT_SEPARATE_KEYWORDS)
+			-- Process `a_keywords'.
+		do
+			a_keywords.attachment_keyword.process (Current)
+			a_keywords.separateness_keyword.process (Current)
+		end
+
+	process_attachment_symbol_separate_keyword (a_keywords: ET_ATTACHMENT_SYMBOL_SEPARATE_KEYWORD)
+			-- Process `a_keywords'.
+		do
+			a_keywords.attachment_symbol.process (Current)
+			a_keywords.separateness_keyword.process (Current)
+		end
+
 	process_attribute (a_feature: ET_ATTRIBUTE)
 			-- Process `a_feature'.
 		local
@@ -1929,6 +1943,12 @@ feature {ET_AST_NODE} -- Processing
 			an_instruction.end_keyword.process (Current)
 		end
 
+	process_implicit_type_mark (a_type_mark: ET_IMPLICIT_TYPE_MARK)
+			-- Process `a_type_mark'.
+		do
+			-- Implicit type marks are ignored.
+		end
+
 	process_indexing (an_indexing: ET_INDEXING)
 			-- Process `an_indexing'.
 		do
@@ -2809,7 +2829,13 @@ feature {ET_AST_NODE} -- Processing
 
 	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE)
 			-- Process `a_type'.
+		local
+			l_type_mark: ET_TYPE_MARK
 		do
+			l_type_mark := a_type.type_mark
+			if l_type_mark /= Void then
+				l_type_mark.process (Current)
+			end
 			a_type.like_keyword.process (Current)
 			a_type.left_brace.process (Current)
 			a_type.target_type.process (Current)
@@ -2819,7 +2845,13 @@ feature {ET_AST_NODE} -- Processing
 
 	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE)
 			-- Process `a_type'.
+		local
+			l_type_mark: ET_TYPE_MARK
 		do
+			l_type_mark := a_type.type_mark
+			if l_type_mark /= Void then
+				l_type_mark.process (Current)
+			end
 			a_type.target_type.process (Current)
 			a_type.qualified_name.process (Current)
 		end

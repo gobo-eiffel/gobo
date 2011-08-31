@@ -133,6 +133,7 @@ feature -- Execution
 			-- Execute command.
 		local
 			a_name: STRING
+			i: INTEGER
 		do
 			exit_code := 0
 			if is_directory_executable then
@@ -141,8 +142,21 @@ feature -- Execution
 				if not project.options.no_exec then
 					file_system.recursive_delete_directory (a_name)
 					if file_system.directory_exists (a_name) then
-						project.log (<<"  [delete] error: cannot delete directory '", a_name, "%'">>)
-						exit_code := 1
+							-- On Windows 7, there seems to be a delay between the time the
+							-- file or directory is deleted and the time it is shown as deleted.
+						from
+							i := 1
+							file_system.recursive_delete_directory (a_name)
+						until
+							i > 1000 or else not file_system.directory_exists (a_name)
+						loop
+							file_system.recursive_delete_directory (a_name)
+							i := i + 1
+						end
+						if file_system.directory_exists (a_name) then
+							project.log (<<"  [delete] error: cannot delete directory '", a_name, "%'">>)
+							exit_code := 1
+						end
 					end
 				end
 			elseif is_file_executable then
@@ -151,8 +165,21 @@ feature -- Execution
 				if not project.options.no_exec then
 					file_system.delete_file (a_name)
 					if file_system.file_exists (a_name) then
-						project.log (<<"geant error: cannot delete file '", a_name, "%'">>)
-						exit_code := 1
+							-- On Windows 7, there seems to be a delay between the time the
+							-- file or directory is deleted and the time it is shown as deleted.
+						from
+							i := 1
+							file_system.delete_file (a_name)
+						until
+							i > 1000 or else not file_system.file_exists (a_name)
+						loop
+							file_system.delete_file (a_name)
+							i := i + 1
+						end
+						if file_system.file_exists (a_name) then
+							project.log (<<"geant error: cannot delete file '", a_name, "%'">>)
+							exit_code := 1
+						end
 					end
 				end
 			else
@@ -183,8 +210,21 @@ feature -- Execution
 							if not project.options.no_exec then
 								file_system.delete_file (a_name)
 								if file_system.file_exists (a_name) then
-									project.log (<<"geant error: cannot delete file '", a_name, "%'">>)
-									exit_code := 1
+										-- On Windows 7, there seems to be a delay between the time the
+										-- file or directory is deleted and the time it is shown as deleted.
+									from
+										i := 1
+										file_system.delete_file (a_name)
+									until
+										i > 1000 or else not file_system.file_exists (a_name)
+									loop
+										file_system.delete_file (a_name)
+										i := i + 1
+									end
+									if file_system.file_exists (a_name) then
+										project.log (<<"geant error: cannot delete file '", a_name, "%'">>)
+										exit_code := 1
+									end
 								end
 							end
 							fileset.forth
@@ -209,8 +249,21 @@ feature -- Execution
 							if not project.options.no_exec then
 								file_system.recursive_delete_directory (a_name)
 								if file_system.directory_exists (a_name) then
-									project.log (<<"  [delete] error: cannot delete directory '", a_name, "%'">>)
-									exit_code := 1
+										-- On Windows 7, there seems to be a delay between the time the
+										-- file or directory is deleted and the time it is shown as deleted.
+									from
+										i := 1
+										file_system.recursive_delete_directory (a_name)
+									until
+										i > 1000 or else not file_system.directory_exists (a_name)
+									loop
+										file_system.recursive_delete_directory (a_name)
+										i := i + 1
+									end
+									if file_system.directory_exists (a_name) then
+										project.log (<<"  [delete] error: cannot delete directory '", a_name, "%'">>)
+										exit_code := 1
+									end
 								end
 							end
 							directoryset.forth

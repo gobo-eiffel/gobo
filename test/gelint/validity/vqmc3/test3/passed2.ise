@@ -1,0 +1,14 @@
+-------------------------------------------------------------------------------
+
+Error code: VQMC
+
+Error: type of manifest constant does not match declaration.
+What to do: use appropriate manifest constant type as value,
+  or change declared type to match value.
+
+Class: AA
+Constant name: cc
+Found constant of type: INTEGER_32
+Declared type: INTEGER_8
+
+-------------------------------------------------------------------------------

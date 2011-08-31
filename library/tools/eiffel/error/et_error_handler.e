@@ -2446,6 +2446,110 @@ feature -- Validity errors
 			end
 		end
 
+	report_vevi0a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_IDENTIFIER; a_local: ET_LOCAL_VARIABLE)
+			-- Report VEVI error: the local variable `a_local', declared of attached type
+			-- is used before being initialized in class `a_class_impl' and viewed from
+			-- one of its descendants `a_class' (possibly itself).
+			--
+			-- ECMA-367-2: p.105
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_local_not_void: a_local /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vevi_error (a_class) then
+				create an_error.make_vevi0a (a_class, a_class_impl, a_name, a_local)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vevi0b_error (a_class, a_class_impl: ET_CLASS; a_result: ET_RESULT)
+			-- Report VEVI error: the 'Result' entity `a_result', declared of attached type
+			-- is used before being initialized in class `a_class_impl' and viewed from
+			-- one of its descendants `a_class' (possibly itself).
+			--
+			-- ECMA-367-2: p.105
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_result_not_void: a_result /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vevi_error (a_class) then
+				create an_error.make_vevi0b (a_class, a_class_impl, a_result)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vevi0c_error (a_class, a_class_impl: ET_CLASS; a_function: ET_INTERNAL_FUNCTION)
+			-- Report VEVI error: the 'Result' entity declared of attached type
+			-- is not initialized at the end of the function `a_function' declared
+			-- in class `a_class_impl' and viewed from one of its descendants
+			-- `a_class' (possibly itself).
+			--
+			-- ECMA-367-2: p.105
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_function_not_void: a_function /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vevi_error (a_class) then
+				create an_error.make_vevi0c (a_class, a_class_impl, a_function)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vevi0d_error (a_class, a_class_impl: ET_CLASS; a_agent: ET_INTERNAL_FUNCTION_INLINE_AGENT)
+			-- Report VEVI error: the 'Result' entity declared of attached type
+			-- is not initialized at the end of the inline agent `a_agent' appearing
+			-- in class `a_class_impl' and viewed from one of its descendants
+			-- `a_class' (possibly itself).
+			--
+			-- ECMA-367-2: p.105
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_agent_not_void: a_agent /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vevi_error (a_class) then
+				create an_error.make_vevi0d (a_class, a_class_impl, a_agent)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vevi0e_error (a_class, a_class_impl: ET_CLASS; a_attribute: ET_EXTENDED_ATTRIBUTE)
+			-- Report VEVI error: the 'Result' entity declared of attached type
+			-- is not initialized at the end of the attribute body of `a_attribute'
+			-- declared in class `a_class_impl' and viewed from one of its descendants
+			-- `a_class' (possibly itself).
+			--
+			-- ECMA-367-2: p.105
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_attribute_not_void: a_attribute /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vevi_error (a_class) then
+				create an_error.make_vevi0e (a_class, a_class_impl, a_attribute)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vfac1a_error (a_class: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY)
 			-- Report VFAC-1 error: `a_query' has an assigner `an_assigner'
 			-- but there is not feature with that name in `a_class'.
@@ -5609,9 +5713,9 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuot1e_error (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_NAMED_OBJECT_TEST; a_expression: ET_EXPRESSION)
-			-- Report VUOT-1 error: `a_object_test1' and `a_object_test2'
-			-- appearing in `a_expression' have the same local name.
+	report_vuot1e_error (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_NAMED_OBJECT_TEST)
+			-- Report VUOT-1 error: `a_object_test1' and `a_object_test2' have the same
+			-- local name and their scope overlap.
 			--
 			-- Not in ECMA yet
 		require
@@ -5619,12 +5723,11 @@ feature -- Validity errors
 			a_class_preparsed: a_class.is_preparsed
 			a_object_test1_not_void: a_object_test1 /= Void
 			a_object_test2_not_void: a_object_test2 /= Void
-			a_expression_not_void: a_expression /= Void
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vuot1_error (a_class) then
-				create an_error.make_vuot1e (a_class, a_object_test1, a_object_test2, a_expression)
+				create an_error.make_vuot1e (a_class, a_object_test1, a_object_test2)
 				report_validity_error (an_error)
 			end
 		end
@@ -5704,6 +5807,50 @@ feature -- Validity errors
 		do
 			if reportable_vuot4_error (a_class) then
 				create an_error.make_vuot4b (a_class, a_object_test)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vuta2a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target_type: ET_NAMED_TYPE)
+			-- Report VUTA-2 error: the target, of type `a_target_type', of the call to feature `a_feature'
+			-- is not attached when viewed from `a_class', one of the descendants of `a_class_impl' (possibly itself)
+			-- where the qualified call `a_name' appears.
+			--
+			-- ECMA-367-2: p.123
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuta2_error (a_class) then
+				create an_error.make_vuta2a (a_class, a_class_impl, a_name, a_feature, a_target_type)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vuta2b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_target_type: ET_NAMED_TYPE)
+			-- Report VUTA-2 error: the target, of type `a_target_type', of the call to Tuple label `a_name'
+			-- appearing in `a_class_impl' and viewed from one of its descendants `a_class'
+			-- (possibly itself), is not attached.
+			--
+			-- ECMA-367-2: p.123
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_name_is_tuple_label: a_name.is_tuple_label
+			a_target_type_not_void: a_target_type /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuta2_error (a_class) then
+				create an_error.make_vuta2b (a_class, a_class_impl, a_name, a_target_type)
 				report_validity_error (an_error)
 			end
 		end
@@ -6805,6 +6952,16 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_vevi_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VEVI error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_vfac1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VFAC-1 error be reported when it
 			-- appears in `a_class'?
@@ -7587,6 +7744,16 @@ feature -- Validity error status
 
 	reportable_vuot4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VUOT-4 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vuta2_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VUTA-2 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

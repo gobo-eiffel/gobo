@@ -17,6 +17,9 @@ feature -- Access
 	console_application_setting_name: STRING = "console_application"
 			-- Name of setting "console_application"
 
+	concurrency_setting_name: STRING = "concurrency"
+			-- Name of setting "concurrency"
+
 	metadata_cache_path_setting_name: STRING = "metadata_cache_path"
 			-- Name of setting "metadata_cache_path"
 

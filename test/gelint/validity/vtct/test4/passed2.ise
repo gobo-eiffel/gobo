@@ -1,0 +1,11 @@
+-------------------------------------------------------------------------------
+
+Error code: VTCT
+
+Error: type is based on unknown class.
+What to do: use an identifier that is the name of a class in the universe.
+
+Class: AA
+Unknown class name: THIS_TYPE_DOES_NOT_EXIST in aa
+
+-------------------------------------------------------------------------------

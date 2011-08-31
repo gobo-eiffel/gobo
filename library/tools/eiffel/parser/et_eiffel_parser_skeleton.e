@@ -74,6 +74,7 @@ feature {NONE} -- Initialization
 			create last_object_tests_stack.make (Initial_last_object_tests_capacity)
 			create last_object_tests_pool.make (Initial_last_object_tests_capacity)
 			create assertions.make (Initial_assertions_capacity)
+			create check_assertion_counters.make (Initial_check_assertion_counters_capacity)
 			create queries.make (Initial_queries_capacity)
 			create procedures.make (Initial_procedures_capacity)
 			create constraints.make (Initial_constraints_capacity)
@@ -97,6 +98,7 @@ feature -- Initialization
 			last_symbols.wipe_out
 			providers.wipe_out
 			assertions.wipe_out
+			check_assertion_counters.wipe_out
 			queries.wipe_out
 			procedures.wipe_out
 			constraints.wipe_out
@@ -755,6 +757,12 @@ feature {NONE} -- Basic operations
 			end
 		end
 
+	start_check_instruction
+			-- Indicate that we start parsing a check-instruction.
+		do
+			check_assertion_counters.force_last (assertions.count)
+		end
+		
 feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIST} -- Generic constraints
 
 	resolved_constraint_named_type (a_constraint: ET_CONSTRAINT_NAMED_TYPE;
@@ -773,6 +781,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 			a_formal: ET_FORMAL_PARAMETER
 			a_type_mark: ET_TYPE_MARK
 			a_base_class: ET_MASTER_CLASS
+			l_type_mark: ET_TYPE_MARK
 		do
 			a_name := a_constraint.name
 			a_type_mark := a_constraint.type_mark
@@ -793,6 +802,10 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 					providers.force_last (a_base_class)
 				end
 				a_base_class.set_in_system (True)
+				l_type_mark := a_type_mark
+				if l_type_mark = Void then
+					l_type_mark := current_universe.implicit_attachment_type_mark
+				end
 				if a_base_class.name.same_class_name (tokens.tuple_class_name) then
 					if a_type_mark /= Void and then not a_type_mark.is_attachment_mark then
 							-- A TUPLE type is not a class type. It cannot
@@ -801,10 +814,10 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 						report_syntax_error (a_type_mark.position)
 						Result := ast_factory.new_tuple_type (Void, a_name, Void, a_base_class)
 					else
-						Result := ast_factory.new_tuple_type (a_type_mark, a_name, Void, a_base_class)
+						Result := ast_factory.new_tuple_type (l_type_mark, a_name, Void, a_base_class)
 					end
 				else
-					Result := ast_factory.new_class_type (a_type_mark, a_name, a_base_class)
+					Result := ast_factory.new_class_type (l_type_mark, a_name, a_base_class)
 				end
 			end
 		end
@@ -826,6 +839,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 			a_formal: ET_FORMAL_PARAMETER
 			a_base_class: ET_MASTER_CLASS
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_type_mark: ET_TYPE_MARK
 		do
 			a_name := a_constraint.name
 			a_type_mark := a_constraint.type_mark
@@ -848,6 +862,10 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 						providers.force_last (a_base_class)
 					end
 					a_base_class.set_in_system (True)
+					l_type_mark := a_type_mark
+					if l_type_mark = Void then
+						l_type_mark := current_universe.implicit_attachment_type_mark
+					end
 					if a_base_class.name.same_class_name (tokens.tuple_class_name) then
 						if a_type_mark /= Void and then not a_type_mark.is_attachment_mark then
 								-- A TUPLE type is not a class type. It cannot
@@ -856,10 +874,10 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 							report_syntax_error (a_type_mark.position)
 							Result := ast_factory.new_tuple_type (Void, a_name, a_parameters, a_base_class)
 						else
-							Result := ast_factory.new_tuple_type (a_type_mark, a_name, a_parameters, a_base_class)
+							Result := ast_factory.new_tuple_type (l_type_mark, a_name, a_parameters, a_base_class)
 						end
 					else
-						Result := ast_factory.new_generic_class_type (a_type_mark, a_name, a_parameters, a_base_class)
+						Result := ast_factory.new_generic_class_type (l_type_mark, a_name, a_parameters, a_base_class)
 					end
 				end
 			end
@@ -1051,23 +1069,37 @@ feature {NONE} -- AST factory
 	new_check_instruction (a_check: ET_KEYWORD; a_then_compound: ET_COMPOUND; an_end: ET_KEYWORD): ET_CHECK_INSTRUCTION
 			-- New check instruction
 		local
-			i: INTEGER
+			i, nb: INTEGER
+			l_old_count: INTEGER
+			l_first: INTEGER
 		do
+			if not check_assertion_counters.is_empty then
+				l_old_count := check_assertion_counters.last
+				check_assertion_counters.remove_last
+			end
 			i := assertions.count
-			if i = 0 then
+			nb := i - l_old_count
+			if nb <= 0 then
 				Result := ast_factory.new_check_instruction (a_check, a_then_compound, an_end, 0)
 			else
-				Result := ast_factory.new_check_instruction (a_check, a_then_compound, an_end, i)
+				Result := ast_factory.new_check_instruction (a_check, a_then_compound, an_end, nb)
 				if Result /= Void then
-					from until i < 1 loop
+					l_first := l_old_count + 1
+					from until i < l_first loop
 						Result.put_first (assertions.item (i))
+						assertions.remove_last
+						i := i - 1
+					end
+				else
+					l_first := l_old_count + 1
+					from until i < l_first loop
+						assertions.remove_last
 						i := i - 1
 					end
 				end
-				assertions.wipe_out
 			end
 		end
-
+		
 	new_choice_attribute_constant (a_name: ET_IDENTIFIER): ET_IDENTIFIER
 			-- New choice constant which is supposed to be the name of
 			-- a constant attribute or unique attribute
@@ -1314,6 +1346,7 @@ feature {NONE} -- AST factory
 			a_parameter: ET_FORMAL_PARAMETER
 			a_last_class: ET_CLASS
 			l_class: ET_MASTER_CLASS
+			l_type_mark: ET_TYPE_MARK
 		do
 			a_last_class := last_class
 			if a_last_class /= Void and a_name /= Void then
@@ -1322,7 +1355,7 @@ feature {NONE} -- AST factory
 					if a_generics /= Void then
 						-- TODO: Error
 					end
-					if a_type_mark /= Void and then a_type_mark.is_keyword then
+					if a_type_mark /= Void and then not a_type_mark.is_attachment_mark then
 						-- TODO: Error
 					end
 					Result := ast_factory.new_formal_parameter_type (a_type_mark, a_name, a_parameter.index, a_last_class)
@@ -1332,10 +1365,14 @@ feature {NONE} -- AST factory
 						providers.force_last (l_class)
 					end
 					l_class.set_in_system (True)
+					l_type_mark := a_type_mark
+					if l_type_mark = Void then
+						l_type_mark := current_universe.implicit_attachment_type_mark
+					end
 					if a_generics /= Void then
-						Result := ast_factory.new_generic_class_type (a_type_mark, a_name, a_generics, l_class)
+						Result := ast_factory.new_generic_class_type (l_type_mark, a_name, a_generics, l_class)
 					else
-						Result := ast_factory.new_class_type (a_type_mark, a_name, l_class)
+						Result := ast_factory.new_class_type (l_type_mark, a_name, l_class)
 					end
 				end
 			end
@@ -1510,13 +1547,18 @@ feature {NONE} -- AST factory
 			-- New 'TUPLE' type
 		local
 			a_class: ET_NAMED_CLASS
+			l_type_mark: ET_TYPE_MARK
 		do
 			a_class := current_universe.master_class (a_tuple)
 			if providers_enabled then
 				providers.force_last (a_class)
 			end
 			a_class.set_in_system (True)
-			Result := ast_factory.new_tuple_type (a_type_mark, a_tuple, a_generics, a_class)
+			l_type_mark := a_type_mark
+			if l_type_mark = Void then
+				l_type_mark := current_universe.implicit_attachment_type_mark
+			end
+			Result := ast_factory.new_tuple_type (l_type_mark, a_tuple, a_generics, a_class)
 		end
 
 	new_unqualified_call_expression (a_name: ET_IDENTIFIER; args: ET_ACTUAL_ARGUMENT_LIST): ET_EXPRESSION
@@ -1720,6 +1762,9 @@ feature {NONE} -- Access
 	assertions: DS_ARRAYED_LIST [ET_ASSERTION_ITEM]
 			-- List of assertions currently being parsed
 
+	check_assertion_counters: DS_ARRAYED_LIST [INTEGER]
+			-- List of counters when parsing nested check-instructions
+			
 	queries: DS_ARRAYED_LIST [ET_QUERY]
 			-- List of queries currently being parsed
 
@@ -1976,6 +2021,9 @@ feature {NONE} -- Constants
 	Initial_assertions_capacity: INTEGER = 20
 			-- Initial capacity for `assertions'
 
+	Initial_check_assertion_counters_capacity: INTEGER = 10
+			-- Initial capacity for `check_assertion_counters'
+			
 	Initial_queries_capacity: INTEGER = 100
 			-- Initial capacity for `queries'
 
@@ -2027,6 +2075,7 @@ invariant
 	last_symbols_not_void: last_symbols /= Void
 	assertions_not_void: assertions /= Void
 	no_void_assertion: not assertions.has_void
+	check_assertion_counters_not_void: check_assertion_counters /= Void
 	queries_not_void: queries /= Void
 	no_void_query: not queries.has_void
 	-- queries_registered: forall f in queries, f.is_registered

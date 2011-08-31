@@ -1,0 +1,2 @@
+[VUOT-1] class AA (20,51): the scope of object-test with local name 'x1' overlaps with the scope of another object-test with the same local name.
+----

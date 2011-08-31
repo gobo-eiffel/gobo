@@ -5,7 +5,7 @@ note
 		"Eiffel expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -84,6 +84,14 @@ feature -- Access
 			Result := Current
 		ensure then
 			definition: Result = Current
+		end
+
+	unparenthesized_expression: ET_EXPRESSION
+			-- Version of current expression without any surrounding parentheses
+		do
+			Result := Current
+		ensure
+			unparenthezized_expression_not_void: Result /= Void
 		end
 
 feature -- Status report

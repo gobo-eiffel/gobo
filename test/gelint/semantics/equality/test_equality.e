@@ -4,7 +4,7 @@ note
 
 		"Test semantics of equality ('=' and '/=')"
 
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -106,8 +106,8 @@ feature -- Test
 			assert ("not_equal1", {INTEGER_8} 1 /= {NATURAL_8} 1)
 				-- Conversion in both directions.
 				-- Convert the right operand in that case.
-			assert ("equal4", {REAL_32} 5.4 = {REAL_64} 5.4)
-			assert ("equal5", {REAL_64} 6.5 = {REAL_32} 6.5)
+			assert ("equal4", {REAL_32} 6.5 = {REAL_64} 6.5)
+			assert ("equal5", {REAL_64} 3.0 = {REAL_32} 3.0)
 		end
 
 end

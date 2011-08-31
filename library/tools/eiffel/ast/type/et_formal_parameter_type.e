@@ -16,34 +16,37 @@ inherit
 
 	ET_NAMED_TYPE
 		redefine
-			named_type,
-			shallow_named_type,
+			named_type_with_type_mark,
+			shallow_named_type_with_type_mark,
 			named_type_has_class,
 			named_type_is_formal_type,
 			name,
-			is_type_reference,
+			is_type_reference_with_type_mark,
+			is_type_detachable_with_type_mark,
 			has_formal_types,
-			same_syntactical_bit_type,
-			same_syntactical_class_type,
-			same_syntactical_formal_parameter_type,
-			same_syntactical_like_current,
-			same_syntactical_like_feature,
-			same_syntactical_qualified_like_identifier,
-			same_syntactical_tuple_type,
-			same_named_bit_type,
-			same_named_class_type,
-			same_named_formal_parameter_type,
-			same_named_tuple_type,
-			same_base_bit_type,
-			same_base_class_type,
-			same_base_formal_parameter_type,
-			same_base_tuple_type,
-			conforms_from_bit_type,
-			conforms_from_class_type,
-			conforms_from_formal_parameter_type,
-			conforms_from_tuple_type,
-			resolved_formal_parameters,
-			is_valid_context_type
+			same_syntactical_bit_type_with_type_marks,
+			same_syntactical_class_type_with_type_marks,
+			same_syntactical_formal_parameter_type_with_type_marks,
+			same_syntactical_like_current_with_type_marks,
+			same_syntactical_like_feature_with_type_marks,
+			same_syntactical_qualified_like_identifier_with_type_marks,
+			same_syntactical_tuple_type_with_type_marks,
+			same_named_bit_type_with_type_marks,
+			same_named_class_type_with_type_marks,
+			same_named_formal_parameter_type_with_type_marks,
+			same_named_tuple_type_with_type_marks,
+			same_base_bit_type_with_type_marks,
+			same_base_class_type_with_type_marks,
+			same_base_formal_parameter_type_with_type_marks,
+			same_base_tuple_type_with_type_marks,
+			conforms_from_bit_type_with_type_marks,
+			conforms_from_class_type_with_type_marks,
+			conforms_from_formal_parameter_type_with_type_marks,
+			conforms_from_tuple_type_with_type_marks,
+			resolved_formal_parameters_with_type_mark,
+			is_valid_context_type,
+			type_with_type_mark,
+			type_mark
 		end
 
 create
@@ -73,7 +76,8 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	type_mark: ET_TYPE_MARK
-			-- '!' or '?' symbol
+			-- 'attached' or 'detachable' keyword,
+			-- or '!' or '?' symbol
 
 	name: ET_IDENTIFIER
 			-- Name of type
@@ -137,8 +141,8 @@ feature -- Access
 								-- This formal parameter has either no constraint
 								-- or a cyclic constraint of the form "[G -> H,
 								-- H -> G]". The base class is considered to be
-								-- "ANY" in these two cases.
-							Result := a_class.universe.any_type.named_base_class
+								-- "detachable ANY" in these two cases.
+							Result := a_class.universe.detachable_any_type.named_base_class
 						end
 					else
 							-- Internal error: formal parameter not matched.
@@ -153,14 +157,9 @@ feature -- Access
 			end
 		end
 
-	base_type (a_context: ET_TYPE_CONTEXT): ET_BASE_TYPE
-			-- Base type of current type, when it appears in `a_context',
-			-- only made up of class names and generic formal parameters
-			-- when the root type of `a_context' is a generic type not
-			-- fully derived (Definition of base type in ETL2 p.198).
-			-- Replace by "*UNKNOWN*" any unresolved identifier type, or
-			-- unmatched formal generic parameter if this parameter
-			-- is current type.
+	base_type_with_type_mark (a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): ET_BASE_TYPE
+			-- Same as `base_type' except that its type mark status is
+			-- overridden by `a_type_mark', if not Void
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -171,8 +170,10 @@ feature -- Access
 			an_index: INTEGER
 			l_context_base_class: ET_CLASS
 			l_ancestor: ET_BASE_TYPE
+			l_detachable_any_type: ET_CLASS_TYPE
+			l_type_mark: ET_TYPE_MARK
 		do
--- TODO: take `type_mark' into account.
+			l_type_mark := overridden_type_mark (a_type_mark)
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
 				l_ancestor := l_context_base_class.ancestor (implementation_class)
@@ -185,7 +186,7 @@ feature -- Access
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := tokens.unknown_class
 				else
-					Result := l_ancestor.actual_parameters.type (index).base_type (a_context)
+					Result := l_ancestor.actual_parameters.type (index).base_type_with_type_mark (l_type_mark, a_context)
 				end
 			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
@@ -198,7 +199,7 @@ feature -- Access
 						a_formal := a_formals.formal_parameter (an_index)
 						a_base_type := a_formal.constraint_base_type
 						if a_base_type /= Void then
-							Result := a_base_type
+							Result := a_base_type.type_with_type_mark (l_type_mark)
 						elseif not a_class.is_preparsed then
 								-- Internal error: we have a formal parameter of a class that
 								-- is not even preparsed (i.e. for which we know nothing,
@@ -209,8 +210,9 @@ feature -- Access
 								-- This formal parameter has either no constraint
 								-- or a cyclic constraint of the form "[G -> H,
 								-- H -> G]". The base type is considered to be
-								-- "ANY" in these two cases.
-							Result := a_class.universe.any_type
+								-- "detachable ANY" in these two cases.
+							l_detachable_any_type := a_class.universe.detachable_any_type
+							Result := l_detachable_any_type.type_with_type_mark (l_type_mark)
 						end
 					else
 							-- Internal error: formal parameter not matched.
@@ -219,11 +221,13 @@ feature -- Access
 				else
 					Result ?= an_actual
 					if Result = Void then
-							 -- Should never happen: `a_context.base_type' is the
-							 -- result of call to `base_type'. So `an_actual'
-							 -- is either a formal generic parameter or a
-							 -- base type itself.
-						 Result := tokens.unknown_class
+							-- Should never happen: `a_context.base_type' is the
+							-- result of call to `base_type'. So `an_actual'
+							-- is either a formal generic parameter or a
+							-- base type itself.
+						Result := tokens.unknown_class
+					else
+						Result := Result.type_with_type_mark (l_type_mark)
 					end
 				end
 			else
@@ -232,11 +236,9 @@ feature -- Access
 			end
 		end
 
-	shallow_base_type (a_context: ET_BASE_TYPE): ET_BASE_TYPE
-			-- Base type of current type, when it appears in `a_context',
-			-- but where the actual generic parameters are not replaced
-			-- by their named version and should still be considered as
-			-- viewed from `a_context'
+	shallow_base_type_with_type_mark (a_type_mark: ET_TYPE_MARK; a_context: ET_BASE_TYPE): ET_BASE_TYPE
+			-- Same as `shallow_base_type' except that its type mark status is
+			-- overridden by `a_type_mark', if not Void
 		local
 			an_actual: ET_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -247,8 +249,10 @@ feature -- Access
 			an_index: INTEGER
 			l_context_base_class: ET_CLASS
 			l_ancestor: ET_BASE_TYPE
+			l_detachable_any_type: ET_CLASS_TYPE
+			l_type_mark: ET_TYPE_MARK
 		do
--- TODO: take `type_mark' into account.
+			l_type_mark := overridden_type_mark (a_type_mark)
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
 				l_ancestor := l_context_base_class.ancestor (implementation_class)
@@ -261,7 +265,7 @@ feature -- Access
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := tokens.unknown_class
 				else
-					Result := l_ancestor.actual_parameters.type (index).shallow_base_type (a_context)
+					Result := l_ancestor.actual_parameters.type (index).shallow_base_type_with_type_mark (l_type_mark, a_context)
 				end
 			elseif index <= a_context.actual_parameter_count then
 				an_actual := a_context.actual_parameters.type (index)
@@ -274,7 +278,7 @@ feature -- Access
 						a_formal := a_formals.formal_parameter (an_index)
 						a_base_type := a_formal.constraint_base_type
 						if a_base_type /= Void then
-							Result := a_base_type
+							Result := a_base_type.type_with_type_mark (l_type_mark)
 						elseif not a_class.is_preparsed then
 								-- Internal error: we have a formal parameter of a class that
 								-- is not even preparsed (i.e. for which we know nothing,
@@ -285,8 +289,9 @@ feature -- Access
 								-- This formal parameter has either no constraint
 								-- or a cyclic constraint of the form "[G -> H,
 								-- H -> G]". The base type is considered to be
-								-- "ANY" in these two cases.
-							Result := a_class.current_system.any_type
+								-- "detachable ANY" in these two cases.
+							l_detachable_any_type := a_class.current_system.detachable_any_type
+							Result := l_detachable_any_type.type_with_type_mark (l_type_mark)
 						end
 					else
 							-- Internal error: formal parameter not matched.
@@ -295,10 +300,12 @@ feature -- Access
 				else
 					Result ?= an_actual
 					if Result = Void then
-							 -- Should never happen: `a_context' is a valid context,
-							 -- so its actual parameters are either formal generic
-							 -- parameters or a base types.
-						 Result := tokens.unknown_class
+							-- Should never happen: `a_context' is a valid context,
+							-- so its actual parameters are either formal generic
+							-- parameters or a base types.
+						Result := tokens.unknown_class
+					else
+						Result := Result.type_with_type_mark (l_type_mark)
 					end
 				end
 			else
@@ -351,7 +358,7 @@ feature -- Access
 								-- This formal parameter has either no constraint
 								-- or a cyclic constraint of the form "[G -> H,
 								-- H -> G]". The base type is considered to be
-								-- "ANY" in these two cases.
+								-- "detachable ANY" in these two cases.
 							Result := tokens.unknown_class
 						end
 					else
@@ -411,7 +418,7 @@ feature -- Access
 								-- This formal parameter has either no constraint
 								-- or a cyclic constraint of the form "[G -> H,
 								-- H -> G]". The base type is considered to be
-								-- "ANY" in these two cases.
+								-- "detachable ANY" in these two cases.
 							Result := tokens.unknown_class
 						end
 					else
@@ -472,7 +479,7 @@ feature -- Access
 								-- This formal parameter has either no constraint
 								-- or a cyclic constraint of the form "[G -> H,
 								-- H -> G]". The base type is considered to be
-								-- "ANY" in these two cases.
+								-- "detachable ANY" in these two cases.
 							Result := 0
 						end
 					else
@@ -488,17 +495,15 @@ feature -- Access
 			end
 		end
 
-	named_type (a_context: ET_TYPE_CONTEXT): ET_NAMED_TYPE
-			-- Same as `base_type' except when current type is still
-			-- a formal generic parameter after having been replaced
-			-- by its actual counterpart in `a_context'. Return this
-			-- new formal type in that case instead of the base
-			-- type of its constraint.
+	named_type_with_type_mark (a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): ET_NAMED_TYPE
+			-- Same as `named_type' except that its type mark status is
+			-- overridden by `a_type_mark', if not Void
 		local
 			l_context_base_class: ET_CLASS
 			l_ancestor: ET_BASE_TYPE
+			l_type_mark: ET_TYPE_MARK
 		do
--- TODO: take `type_mark' into account.
+			l_type_mark := overridden_type_mark (a_type_mark)
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
 				l_ancestor := l_context_base_class.ancestor (implementation_class)
@@ -511,27 +516,25 @@ feature -- Access
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := tokens.unknown_class
 				else
-					Result := l_ancestor.actual_parameters.type (index).named_type (a_context)
+					Result := l_ancestor.actual_parameters.type (index).named_type_with_type_mark (l_type_mark, a_context)
 				end
 			elseif index <= a_context.base_type_actual_count then
-				Result := a_context.base_type_actual (index)
+				Result := a_context.base_type_actual (index).type_with_type_mark (l_type_mark)
 			else
 					-- Internal error: formal parameter not matched.
 				Result := tokens.unknown_class
 			end
 		end
 
-	shallow_named_type (a_context: ET_BASE_TYPE): ET_NAMED_TYPE
-			-- Same as `shallow_base_type' except when current type is still
-			-- a formal generic parameter after having been replaced
-			-- by its actual counterpart in `a_context'. Return this
-			-- new formal type in that case instead of the base
-			-- type of its constraint.
+	shallow_named_type_with_type_mark (a_type_mark: ET_TYPE_MARK; a_context: ET_BASE_TYPE): ET_NAMED_TYPE
+			-- Same as `shallow_named_type' except that its type mark status is
+			-- overridden by `a_type_mark', if not Void
 		local
 			l_context_base_class: ET_CLASS
 			l_ancestor: ET_BASE_TYPE
+			l_type_mark: ET_TYPE_MARK
 		do
--- TODO: take `type_mark' into account.
+			l_type_mark := overridden_type_mark (a_type_mark)
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
 				l_ancestor := l_context_base_class.ancestor (implementation_class)
@@ -544,7 +547,7 @@ feature -- Access
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := tokens.unknown_class
 				else
-					Result := l_ancestor.actual_parameters.type (index).shallow_named_type (a_context)
+					Result := l_ancestor.actual_parameters.type (index).shallow_named_type_with_type_mark (l_type_mark, a_context)
 				end
 			elseif index <= a_context.actual_parameter_count then
 				Result ?= a_context.actual_parameters.type (index)
@@ -553,6 +556,8 @@ feature -- Access
 						 -- so its actual parameters are either formal generic
 						 -- parameters or a base types.
 					Result := tokens.unknown_class
+				else
+					Result := Result.type_with_type_mark (l_type_mark)
 				end
 			else
 					-- Internal error: formal parameter not matched.
@@ -560,11 +565,25 @@ feature -- Access
 			end
 		end
 
+	type_with_type_mark (a_type_mark: ET_TYPE_MARK): ET_FORMAL_PARAMETER_TYPE
+			-- Current type whose type mark status is
+			-- overridden by `a_type_mark', if not Void
+		local
+			l_type_mark: ET_TYPE_MARK
+		do
+			l_type_mark := overridden_type_mark (a_type_mark)
+			if l_type_mark = type_mark then
+				Result := Current
+			else
+				create Result.make (l_type_mark, name, index, implementation_class)
+			end
+		end
+
 	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
-			if type_mark /= Void then
+			if type_mark /= Void and then not type_mark.is_implicit_mark then
 				Result := type_mark.position
 			end
 			if Result = Void or else Result.is_null then
@@ -575,9 +594,10 @@ feature -- Access
 	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
-			if type_mark /= Void then
-				Result := type_mark
-			else
+			if type_mark /= Void and then not type_mark.is_implicit_mark then
+				Result := type_mark.first_leaf
+			end
+			if Result = Void then
 				Result := name
 			end
 		end
@@ -639,7 +659,7 @@ feature -- Measurement
 								-- This formal parameter has either no constraint
 								-- or a cyclic constraint of the form "[G -> H,
 								-- H -> G]". The base type is considered to be
-								-- "ANY" in these two cases.
+								-- "detachable ANY" in these two cases.
 							Result := 0
 						end
 					else
@@ -649,11 +669,11 @@ feature -- Measurement
 				else
 					a_base_type ?= an_actual
 					if a_base_type = Void then
-							 -- Should never happen: `a_context.base_type' is the
-							 -- result of call to `base_type'. So `an_actual'
-							 -- is either a formal generic parameter or a
-							 -- base type itself.
-						 Result := 0
+							-- Should never happen: `a_context.base_type' is the
+							-- result of call to `base_type'. So `an_actual'
+							-- is either a formal generic parameter or a
+							-- base type itself.
+						Result := 0
 					else
 						Result := a_base_type.actual_parameter_count
 					end
@@ -666,8 +686,9 @@ feature -- Measurement
 
 feature -- Status report
 
-	is_type_expanded (a_context: ET_TYPE_CONTEXT): BOOLEAN
-			-- Is current type expanded when viewed from `a_context'?
+	is_type_expanded_with_type_mark (a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Same as `is_type_expanded' except that the type mark status is
+			-- overridden by `a_type_mark', if not Void
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -688,7 +709,7 @@ feature -- Status report
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := False
 				else
-					Result := l_ancestor.actual_parameters.type (index).is_type_expanded (a_context)
+					Result := l_ancestor.actual_parameters.type (index).is_type_expanded_with_type_mark (overridden_type_mark (a_type_mark), a_context)
 				end
 			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
@@ -706,7 +727,7 @@ feature -- Status report
 						Result := False
 					end
 				else
-					Result := an_actual.is_type_expanded (a_context.root_context)
+					Result := an_actual.is_type_expanded_with_type_mark (overridden_type_mark (a_type_mark), a_context.root_context)
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -714,8 +735,9 @@ feature -- Status report
 			end
 		end
 
-	is_type_reference (a_context: ET_TYPE_CONTEXT): BOOLEAN
-			-- Is current type reference when viewed from `a_context'?
+	is_type_reference_with_type_mark (a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Same as `is_type_reference' except that the type mark status is
+			-- overridden by `a_type_mark', if not Void
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -736,7 +758,7 @@ feature -- Status report
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := False
 				else
-					Result := l_ancestor.actual_parameters.type (index).is_type_reference (a_context)
+					Result := l_ancestor.actual_parameters.type (index).is_type_reference_with_type_mark (overridden_type_mark (a_type_mark), a_context)
 				end
 			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
@@ -754,7 +776,131 @@ feature -- Status report
 						Result := False
 					end
 				else
-					Result := an_actual.is_type_reference (a_context.root_context)
+					Result := an_actual.is_type_reference_with_type_mark (overridden_type_mark (a_type_mark), a_context.root_context)
+				end
+			else
+					-- Internal error: does current type really appear in `a_context'?
+				Result := False
+			end
+		end
+
+	is_type_attached_with_type_mark (a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Same as `is_type_attached' except that the type mark status is
+			-- overridden by `a_type_mark', if not Void
+		local
+			an_actual: ET_NAMED_TYPE
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_formal_index: INTEGER
+			a_formal_parameters: ET_FORMAL_PARAMETER_LIST
+			l_formal_parameter: ET_FORMAL_PARAMETER
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
+			l_type_mark: ET_TYPE_MARK
+			l_constraint: ET_BASE_TYPE
+		do
+			l_type_mark := overridden_type_mark (a_type_mark)
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := False
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				else
+					Result := l_ancestor.actual_parameters.type (index).is_type_attached_with_type_mark (l_type_mark, a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
+				an_actual := a_context.base_type_actual (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					a_formal_index := a_formal_type.index
+					a_formal_parameters := a_context.root_context.base_class.formal_parameters
+					if a_formal_parameters /= Void and then a_formal_index <= a_formal_parameters.count then
+						l_formal_parameter := a_formal_parameters.formal_parameter (a_formal_index)
+						if l_formal_parameter.is_expanded then
+							Result := True
+						elseif a_formal_type /= Current then
+							Result := a_formal_type.is_type_attached_with_type_mark (l_type_mark, a_context.root_context)
+						else
+							l_constraint := l_formal_parameter.constraint_base_type
+							if l_constraint /= Void then
+								Result := l_constraint.is_type_attached_with_type_mark (l_type_mark, a_context.root_context)
+							else
+								Result := l_type_mark /= Void and then l_type_mark.is_attached_mark
+							end
+						end
+					else
+							-- Internal error: does current type really
+							-- appear in `a_context'?
+						Result := False
+					end
+				else
+					Result := an_actual.is_type_attached_with_type_mark (l_type_mark, a_context.root_context)
+				end
+			else
+					-- Internal error: does current type really appear in `a_context'?
+				Result := False
+			end
+		end
+
+	is_type_detachable_with_type_mark (a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Same as `is_type_detachable' except that the type mark status is
+			-- overridden by `a_type_mark', if not Void
+		local
+			an_actual: ET_NAMED_TYPE
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_formal_index: INTEGER
+			a_formal_parameters: ET_FORMAL_PARAMETER_LIST
+			l_formal_parameter: ET_FORMAL_PARAMETER
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
+			l_type_mark: ET_TYPE_MARK
+		do
+			l_type_mark := overridden_type_mark (a_type_mark)
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := False
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				else
+					Result := l_ancestor.actual_parameters.type (index).is_type_detachable_with_type_mark (l_type_mark, a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
+				an_actual := a_context.base_type_actual (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					a_formal_index := a_formal_type.index
+					a_formal_parameters := a_context.root_context.base_class.formal_parameters
+					if a_formal_parameters /= Void and then a_formal_index <= a_formal_parameters.count then
+						l_formal_parameter := a_formal_parameters.formal_parameter (a_formal_index)
+						if l_formal_parameter.is_expanded then
+							Result := False
+						elseif a_formal_type = Current then
+							Result := l_type_mark /= Void and then l_type_mark.is_detachable_mark
+						else
+							Result := a_formal_type.is_type_detachable_with_type_mark (l_type_mark, a_context.root_context)
+						end
+					else
+							-- Internal error: does current type really
+							-- appear in `a_context'?
+						Result := False
+					end
+				else
+					Result := an_actual.is_type_detachable_with_type_mark (l_type_mark, a_context.root_context)
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -891,8 +1037,8 @@ feature -- Status report
 								-- This formal parameter has either no constraint
 								-- or a cyclic constraint of the form "[G -> H,
 								-- H -> G]". The base type is considered to be
-								-- "ANY" in these two cases.
-							Result := (a_class = a_base_class.universe.any_type.base_class)
+								-- "detachable ANY" in these two cases.
+							Result := (a_class = a_base_class.universe.detachable_any_type.base_class)
 						end
 					else
 							-- Internal error: formal parameter not matched.
@@ -946,14 +1092,9 @@ feature -- Status report
 
 feature -- Comparison
 
-	same_syntactical_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
-			-- Are current type appearing in `a_context' and `other'
-			-- type appearing in `other_context' the same type?
-			-- (Note: We are NOT comparing the base types here!
-			-- Therefore anchored types are considered the same
-			-- only if they have the same anchor. An anchor type
-			-- is not considered the same as any other type even
-			-- if they have the same base type.)
+	same_syntactical_type_with_type_marks (other: ET_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Same as `same_syntactical_type' except that the type mark status of `Current'
+			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -972,7 +1113,7 @@ feature -- Comparison
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := False
 				else
-					Result := l_ancestor.actual_parameters.type (index).same_syntactical_type (other, other_context, a_context)
+					Result := l_ancestor.actual_parameters.type (index).same_syntactical_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				end
 			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
@@ -980,9 +1121,9 @@ feature -- Comparison
 				if a_formal_type /= Void then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-					Result := other.same_syntactical_formal_parameter_type (a_formal_type, a_context.root_context, other_context)
+					Result := other.same_syntactical_formal_parameter_type_with_type_marks (a_formal_type, overridden_type_mark (a_type_mark), a_context.root_context, other_type_mark, other_context)
 				else
-					Result := an_actual.same_syntactical_type (other, other_context, a_context.root_context)
+					Result := an_actual.same_syntactical_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -990,9 +1131,9 @@ feature -- Comparison
 			end
 		end
 
-	same_named_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
-			-- Do current type appearing in `a_context' and `other' type
-			-- appearing in `other_context' have the same named type?
+	same_named_type_with_type_marks (other: ET_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Same as `same_named_type' except that the type mark status of `Current'
+			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -1011,7 +1152,7 @@ feature -- Comparison
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := False
 				else
-					Result := l_ancestor.actual_parameters.type (index).same_named_type (other, other_context, a_context)
+					Result := l_ancestor.actual_parameters.type (index).same_named_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				end
 			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
@@ -1019,9 +1160,9 @@ feature -- Comparison
 				if a_formal_type /= Void then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-					Result := other.same_named_formal_parameter_type (a_formal_type, a_context.root_context, other_context)
+					Result := other.same_named_formal_parameter_type_with_type_marks (a_formal_type, overridden_type_mark (a_type_mark), a_context.root_context, other_type_mark, other_context)
 				else
-					Result := an_actual.same_named_type (other, other_context, a_context.root_context)
+					Result := an_actual.same_named_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1029,9 +1170,9 @@ feature -- Comparison
 			end
 		end
 
-	same_base_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
-			-- Do current type appearing in `a_context' and `other' type
-			-- appearing in `other_context' have the same base type?
+	same_base_type_with_type_marks (other: ET_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Same as `same_base_type' except that the type mark status of `Current'
+			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -1050,7 +1191,7 @@ feature -- Comparison
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := False
 				else
-					Result := l_ancestor.actual_parameters.type (index).same_base_type (other, other_context, a_context)
+					Result := l_ancestor.actual_parameters.type (index).same_base_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				end
 			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
@@ -1058,9 +1199,9 @@ feature -- Comparison
 				if a_formal_type /= Void then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-					Result := other.same_base_formal_parameter_type (a_formal_type, a_context.root_context, other_context)
+					Result := other.same_base_formal_parameter_type_with_type_marks (a_formal_type, overridden_type_mark (a_type_mark), a_context.root_context, other_type_mark, other_context)
 				else
-					Result := an_actual.same_base_type (other, other_context, a_context.root_context)
+					Result := an_actual.same_base_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1070,7 +1211,7 @@ feature -- Comparison
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
-	same_syntactical_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_syntactical_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the base types here!
@@ -1078,6 +1219,8 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even
 			-- if they have the same base type.)
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -1096,7 +1239,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := False
 				else
-					Result := l_ancestor.actual_parameters.type (index).same_syntactical_bit_type (other, other_context, a_context)
+					Result := l_ancestor.actual_parameters.type (index).same_syntactical_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				end
 			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
@@ -1106,7 +1249,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.same_syntactical_bit_type (other, other_context, a_context.root_context)
+					Result := an_actual.same_syntactical_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1114,7 +1257,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_syntactical_class_type (other: ET_CLASS_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_syntactical_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the base types here!
@@ -1122,7 +1265,8 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even
 			-- if they have the same base type.)
-			-- no_cycle: no cycle in anchored types involved.
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -1141,7 +1285,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := False
 				else
-					Result := l_ancestor.actual_parameters.type (index).same_syntactical_class_type (other, other_context, a_context)
+					Result := l_ancestor.actual_parameters.type (index).same_syntactical_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				end
 			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
@@ -1151,7 +1295,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.same_syntactical_class_type (other, other_context, a_context.root_context)
+					Result := an_actual.same_syntactical_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1159,7 +1303,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_syntactical_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_syntactical_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the base types here!
@@ -1167,6 +1311,8 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even
 			-- if they have the same base type.)
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -1185,7 +1331,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := False
 				else
-					Result := l_ancestor.actual_parameters.type (index).same_syntactical_formal_parameter_type (other, other_context, a_context)
+					Result := l_ancestor.actual_parameters.type (index).same_syntactical_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				end
 			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
@@ -1193,9 +1339,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				if a_formal_type /= Void then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-					Result := a_formal_type.index = other.index
+					if a_formal_type.index = other.index then
+						if a_context.attachment_type_conformance_mode then
+							Result := is_type_attached_with_type_mark (a_type_mark, a_context) = other.is_type_attached_with_type_mark (other_type_mark, other_context)
+								and is_type_detachable_with_type_mark (a_type_mark, a_context) = other.is_type_detachable_with_type_mark (other_type_mark, other_context)
+						else
+							Result := True
+						end
+					end
 				else
-					Result := an_actual.same_syntactical_formal_parameter_type (other, other_context, a_context.root_context)
+					Result := an_actual.same_syntactical_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1203,7 +1356,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_syntactical_like_current (other: ET_LIKE_CURRENT; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_syntactical_like_current_with_type_marks (other: ET_LIKE_CURRENT; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the base types here!
@@ -1211,6 +1364,8 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even
 			-- if they have the same base type.)
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -1229,7 +1384,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := False
 				else
-					Result := l_ancestor.actual_parameters.type (index).same_syntactical_like_current (other, other_context, a_context)
+					Result := l_ancestor.actual_parameters.type (index).same_syntactical_like_current_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				end
 			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
@@ -1239,7 +1394,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.same_syntactical_like_current (other, other_context, a_context.root_context)
+					Result := an_actual.same_syntactical_like_current_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1247,7 +1402,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_syntactical_like_feature (other: ET_LIKE_FEATURE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_syntactical_like_feature_with_type_marks (other: ET_LIKE_FEATURE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the base types here!
@@ -1255,6 +1410,8 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even
 			-- if they have the same base type.)
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -1273,7 +1430,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := False
 				else
-					Result := l_ancestor.actual_parameters.type (index).same_syntactical_like_feature (other, other_context, a_context)
+					Result := l_ancestor.actual_parameters.type (index).same_syntactical_like_feature_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				end
 			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
@@ -1283,7 +1440,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.same_syntactical_like_feature (other, other_context, a_context.root_context)
+					Result := an_actual.same_syntactical_like_feature_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1291,7 +1448,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_syntactical_qualified_like_identifier (other: ET_QUALIFIED_LIKE_IDENTIFIER; other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_syntactical_qualified_like_identifier_with_type_marks (other: ET_QUALIFIED_LIKE_IDENTIFIER; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the base types here!
@@ -1299,6 +1456,8 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even
 			-- if they have the same base type.)
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -1317,7 +1476,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := False
 				else
-					Result := l_ancestor.actual_parameters.type (index).same_syntactical_qualified_like_identifier (other, other_context, a_context)
+					Result := l_ancestor.actual_parameters.type (index).same_syntactical_qualified_like_identifier_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				end
 			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
@@ -1327,7 +1486,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.same_syntactical_qualified_like_identifier (other, other_context, a_context.root_context)
+					Result := an_actual.same_syntactical_qualified_like_identifier_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
 				end
 			else
 					-- Internal error: does current type really
@@ -1336,7 +1495,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_syntactical_tuple_type (other: ET_TUPLE_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_syntactical_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the base types here!
@@ -1344,6 +1503,8 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even
 			-- if they have the same base type.)
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -1362,7 +1523,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := False
 				else
-					Result := l_ancestor.actual_parameters.type (index).same_syntactical_tuple_type (other, other_context, a_context)
+					Result := l_ancestor.actual_parameters.type (index).same_syntactical_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				end
 			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
@@ -1372,7 +1533,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.same_syntactical_tuple_type (other, other_context, a_context.root_context)
+					Result := an_actual.same_syntactical_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1380,9 +1541,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_named_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_named_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -1401,7 +1564,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := False
 				else
-					Result := l_ancestor.actual_parameters.type (index).same_named_bit_type (other, other_context, a_context)
+					Result := l_ancestor.actual_parameters.type (index).same_named_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				end
 			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
@@ -1411,7 +1574,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.same_named_bit_type (other, other_context, a_context.root_context)
+					Result := an_actual.same_named_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1419,9 +1582,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_named_class_type (other: ET_CLASS_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_named_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -1440,7 +1605,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := False
 				else
-					Result := l_ancestor.actual_parameters.type (index).same_named_class_type (other, other_context, a_context)
+					Result := l_ancestor.actual_parameters.type (index).same_named_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				end
 			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
@@ -1450,7 +1615,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.same_named_class_type (other, other_context, a_context.root_context)
+					Result := an_actual.same_named_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1458,9 +1623,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_named_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_named_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -1479,7 +1646,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := False
 				else
-					Result := l_ancestor.actual_parameters.type (index).same_named_formal_parameter_type (other, other_context, a_context)
+					Result := l_ancestor.actual_parameters.type (index).same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				end
 			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
@@ -1487,9 +1654,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				if a_formal_type /= Void then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-					Result := a_formal_type.index = other.index
+					if a_formal_type.index = other.index then
+						if a_context.attachment_type_conformance_mode then
+							Result := is_type_attached_with_type_mark (a_type_mark, a_context) = other.is_type_attached_with_type_mark (other_type_mark, other_context)
+								and is_type_detachable_with_type_mark (a_type_mark, a_context) = other.is_type_detachable_with_type_mark (other_type_mark, other_context)
+						else
+							Result := True
+						end
+					end
 				else
-					Result := an_actual.same_named_formal_parameter_type (other, other_context, a_context.root_context)
+					Result := an_actual.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1497,9 +1671,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_named_tuple_type (other: ET_TUPLE_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_named_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -1518,7 +1694,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := False
 				else
-					Result := l_ancestor.actual_parameters.type (index).same_named_tuple_type (other, other_context, a_context)
+					Result := l_ancestor.actual_parameters.type (index).same_named_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				end
 			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
@@ -1528,7 +1704,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.same_named_tuple_type (other, other_context, a_context.root_context)
+					Result := an_actual.same_named_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1536,9 +1712,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_base_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_base_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -1557,7 +1735,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := False
 				else
-					Result := l_ancestor.actual_parameters.type (index).same_base_bit_type (other, other_context, a_context)
+					Result := l_ancestor.actual_parameters.type (index).same_base_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				end
 			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
@@ -1567,7 +1745,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.same_base_bit_type (other, other_context, a_context.root_context)
+					Result := an_actual.same_base_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1575,9 +1753,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_base_class_type (other: ET_CLASS_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_base_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -1596,7 +1776,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := False
 				else
-					Result := l_ancestor.actual_parameters.type (index).same_base_class_type (other, other_context, a_context)
+					Result := l_ancestor.actual_parameters.type (index).same_base_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				end
 			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
@@ -1606,7 +1786,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.same_base_class_type (other, other_context, a_context.root_context)
+					Result := an_actual.same_base_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1614,9 +1794,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_base_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_base_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -1635,7 +1817,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := False
 				else
-					Result := l_ancestor.actual_parameters.type (index).same_base_formal_parameter_type (other, other_context, a_context)
+					Result := l_ancestor.actual_parameters.type (index).same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				end
 			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
@@ -1643,9 +1825,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				if a_formal_type /= Void then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-					Result := a_formal_type.index = other.index
+					if a_formal_type.index = other.index then
+						if a_context.attachment_type_conformance_mode then
+							Result := is_type_attached_with_type_mark (a_type_mark, a_context) = other.is_type_attached_with_type_mark (other_type_mark, other_context)
+								and is_type_detachable_with_type_mark (a_type_mark, a_context) = other.is_type_detachable_with_type_mark (other_type_mark, other_context)
+						else
+							Result := True
+						end
+					end
 				else
-					Result := an_actual.same_base_formal_parameter_type (other, other_context, a_context.root_context)
+					Result := an_actual.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1653,9 +1842,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_base_tuple_type (other: ET_TUPLE_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_base_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -1674,7 +1865,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := False
 				else
-					Result := l_ancestor.actual_parameters.type (index).same_base_tuple_type (other, other_context, a_context)
+					Result := l_ancestor.actual_parameters.type (index).same_base_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				end
 			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
@@ -1684,7 +1875,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.same_base_tuple_type (other, other_context, a_context.root_context)
+					Result := an_actual.same_base_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1694,12 +1885,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
 feature -- Conformance
 
-	conforms_to_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
-			-- Does current type appearing in `a_context' conform
-			-- to `other' type appearing in `other_context'?
-			-- (Note: 'current_system.ancestor_builder' is used on classes on
-			-- the classes whose ancestors need to be built in order to check
-			-- for conformance.)
+	conforms_to_type_with_type_marks (other: ET_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Same as `conforms_to_type' except that the type mark status of `Current'
+			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -1718,7 +1906,7 @@ feature -- Conformance
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := False
 				else
-					Result := l_ancestor.actual_parameters.type (index).conforms_to_type (other, other_context, a_context)
+					Result := l_ancestor.actual_parameters.type (index).conforms_to_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				end
 			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
@@ -1726,9 +1914,9 @@ feature -- Conformance
 				if a_formal_type /= Void then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-					Result := other.conforms_from_formal_parameter_type (a_formal_type, a_context.root_context, other_context)
+					Result := other.conforms_from_formal_parameter_type_with_type_marks (a_formal_type, overridden_type_mark (a_type_mark), a_context.root_context, other_type_mark, other_context)
 				else
-					Result := an_actual.conforms_to_type (other, other_context, a_context.root_context)
+					Result := an_actual.conforms_to_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1738,12 +1926,13 @@ feature -- Conformance
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
-	conforms_from_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
+	conforms_from_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: 'current_system.ancestor_builder' is used on classes on
-			-- the classes whose ancestors need to be built in order to check
-			-- for conformance.)
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
+			-- (Note: 'current_system.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -1762,7 +1951,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := False
 				else
-					Result := l_ancestor.actual_parameters.type (index).conforms_from_bit_type (other, other_context, a_context)
+					Result := l_ancestor.actual_parameters.type (index).conforms_from_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				end
 			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
@@ -1771,7 +1960,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 						-- No type other than itself conforms to a formal generic type.
 					Result := False
 				else
-					Result := an_actual.conforms_from_bit_type (other, other_context, a_context.root_context)
+					Result := an_actual.conforms_from_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1779,12 +1968,13 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			end
 		end
 
-	conforms_from_class_type (other: ET_CLASS_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
+	conforms_from_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: 'current_system.ancestor_builder' is used on classes on
-			-- the classes whose ancestors need to be built in order to check
-			-- for conformance.)
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
+			-- (Note: 'current_system.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -1803,18 +1993,24 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := False
 				else
-					Result := l_ancestor.actual_parameters.type (index).conforms_from_class_type (other, other_context, a_context)
+					Result := l_ancestor.actual_parameters.type (index).conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				end
 			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
 						-- No type other than itself conforms to a formal generic type,
-						-- unless it is declared as 'reference' in which case "NONE"
-						-- conforms to it.
-					Result := is_type_reference (a_context) and other.base_class.is_none
+						-- unless it is declared as 'reference' and 'detachable' in
+						-- which case "NONE" conforms to it.
+					if is_type_reference_with_type_mark (a_type_mark, a_context) and other.base_class.is_none then
+						if other_context.attachment_type_conformance_mode then
+							Result := is_type_detachable_with_type_mark (a_type_mark, a_context)
+						else
+							Result := True
+						end
+					end
 				else
-					Result := an_actual.conforms_from_class_type (other, other_context, a_context.root_context)
+					Result := an_actual.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1822,12 +2018,13 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			end
 		end
 
-	conforms_from_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
+	conforms_from_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: 'current_system.ancestor_builder' is used on classes on
-			-- the classes whose ancestors need to be built in order to check
-			-- for conformance.)
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
+			-- (Note: 'current_system.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -1853,7 +2050,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := False
 				else
-					Result := l_ancestor.actual_parameters.type (index).conforms_from_formal_parameter_type (other, other_context, a_context)
+					Result := l_ancestor.actual_parameters.type (index).conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				end
 			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
@@ -1864,7 +2061,12 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 					an_index := a_formal_type.index
 					other_index := other.index
 					if an_index = other_index then
-						Result := True
+						if other_context.attachment_type_conformance_mode then
+							Result := (is_type_attached_with_type_mark (a_type_mark, a_context) implies other.is_type_attached_with_type_mark (other_type_mark, other_context))
+								and (other.is_type_detachable_with_type_mark (other_type_mark, other_context) implies is_type_detachable_with_type_mark (a_type_mark, a_context))
+						else
+							Result := True
+						end
 					else
 							-- Check for constraints of the form "[G -> H,
 							-- H -> K, K]" where "G" conforms to "K".
@@ -1884,7 +2086,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 								if a_base_type /= Void then
 										-- There is no cycle of the form
 										-- "[G -> G]" or "[G -> H, H -> G]".
-									Result := a_constraint.conforms_to_type (Current, a_context.root_context, other_context)
+									Result := a_constraint.conforms_to_type_with_type_marks (Current, a_type_mark, a_context, other.overridden_type_mark (other_type_mark), other_context.root_context)
 								else
 										-- There is a cycle. If `other' is "G" and current
 										-- type is "K", we still want to return True when
@@ -1897,7 +2099,15 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 											create visited.make_filled (False, 1, a_formals.count)
 											visited.put (True, other_index)
 											other_index := a_formal_type.index
-											Result := an_index = other_index
+											if an_index = other_index then
+												if other_context.attachment_type_conformance_mode then
+													Result := not is_type_detachable_with_type_mark (a_type_mark, a_context) implies other.is_type_attached_with_type_mark (other_type_mark, other_context)
+												else
+													Result := True
+												end
+													-- Jump out of the loop.
+												visited.put (True, other_index)
+											end
 										until
 											Result or visited.item (other_index)
 										loop
@@ -1907,7 +2117,15 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 												a_formal_type ?= a_formal.constraint
 												if a_formal_type /= Void then
 													other_index := a_formal_type.index
-													Result := an_index = other_index
+													if an_index = other_index then
+														if other_context.attachment_type_conformance_mode then
+															Result := not is_type_detachable_with_type_mark (a_type_mark, a_context) implies other.is_type_attached_with_type_mark (other_type_mark, other_context)
+														else
+															Result := True
+														end
+															-- Jump out of the loop.
+														visited.put (True, other_index)
+													end
 												else
 														-- Internal error: we know that there is a cycle
 														-- of the form "[G -> H, H -> G]", so the constraint
@@ -1934,7 +2152,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 						end
 					end
 				else
-					Result := an_actual.conforms_from_formal_parameter_type (other, other_context, a_context.root_context)
+					Result := an_actual.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1942,12 +2160,13 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			end
 		end
 
-	conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
+	conforms_from_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: 'current_system.ancestor_builder' is used on classes on
-			-- the classes whose ancestors need to be built in order to check
-			-- for conformance.)
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
+			-- (Note: 'current_system.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -1966,7 +2185,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := False
 				else
-					Result := l_ancestor.actual_parameters.type (index).conforms_from_tuple_type (other, other_context, a_context)
+					Result := l_ancestor.actual_parameters.type (index).conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				end
 			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
@@ -1975,7 +2194,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 						-- No type other than itself conforms to a formal generic type.
 					Result := False
 				else
-					Result := an_actual.conforms_from_tuple_type (other, other_context, a_context.root_context)
+					Result := an_actual.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1985,20 +2204,21 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
 feature -- Type processing
 
-	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_TYPE
-			-- Version of current type where the formal generic
-			-- parameter types have been replaced by their actual
-			-- counterparts in `a_parameters'
+	resolved_formal_parameters_with_type_mark (a_type_mark: ET_TYPE_MARK; a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_TYPE
+			-- Same as `resolved_formal_parameters' except that the type mark status is
+			-- overridden by `a_type_mark', if not Void
 		local
 			l_formal: ET_FORMAL_PARAMETER_TYPE
+			l_type_mark: ET_TYPE_MARK
 		do
--- TODO: take `type_mark' into account.
 			if index <= a_parameters.count then
 				Result := a_parameters.type (index)
 				l_formal ?= Result
 				if l_formal /= Void and then l_formal.index = index and then l_formal.implementation_class = implementation_class then
 					Result := Current
 				end
+				l_type_mark := overridden_type_mark (a_type_mark)
+				Result := Result.type_with_type_mark (l_type_mark)
 			else
 					-- Internal error: formal parameter not matched.
 				Result := tokens.unknown_class
@@ -2029,6 +2249,16 @@ feature -- Output
 			-- Append textual representation of
 			-- current type to `a_string'.
 		do
+			if type_mark /= Void then
+				if type_mark.is_implicit_mark then
+					a_string.append_character ('[')
+				end
+				a_string.append_string (type_mark.text)
+				if type_mark.is_implicit_mark then
+					a_string.append_character (']')
+				end
+				a_string.append_character (' ')
+			end
 			a_string.append_string (upper_name)
 		end
 

@@ -62,7 +62,7 @@ feature -- Status report
 	is_enabled (a_state: ET_ECF_STATE): BOOLEAN
 			-- Does `a_state' fulfill current condition?
 		do
-			Result := (is_excluded /= STRING_.same_case_insensitive (value, "finalize"))
+			Result := (is_excluded /= (a_state.finalize_mode = STRING_.same_case_insensitive (value, "finalize")))
 		end
 
 	is_excluded: BOOLEAN

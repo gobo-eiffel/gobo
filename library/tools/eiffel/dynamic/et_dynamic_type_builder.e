@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -100,7 +100,8 @@ inherit
 			report_unqualified_call_instruction,
 			report_unqualified_procedure_call_agent,
 			report_unqualified_query_call_agent,
-			report_void_constant
+			report_void_constant,
+			feature_checker
 		end
 
 	ET_TOKEN_CODES
@@ -125,6 +126,7 @@ feature {NONE} -- Initialization
 		do
 			current_dynamic_system := a_system
 			make_feature_checker
+			create feature_checker.make
 			current_dynamic_type := dummy_dynamic_type
 			current_dynamic_feature := dummy_dynamic_feature
 			create dynamic_type_sets.make_with_capacity (1000)
@@ -875,7 +877,7 @@ feature {NONE} -- Feature validity
 			if not has_fatal_error then
 				if a_feature.is_builtin and then not a_feature.is_builtin_unknown then
 					check_external_builtin_function_validity (a_feature)
-				elseif a_feature.type.same_base_type (current_universe_impl.string_type, current_type, current_type) then
+				elseif a_feature.type.same_base_type_with_type_marks (current_universe_impl.string_type, tokens.implicit_attached_type_mark, current_type, tokens.implicit_attached_type_mark, current_type) then
 					if current_type = current_dynamic_type.base_type then
 						l_dynamic_type := result_type_set.static_type
 						mark_string_type_alive (l_dynamic_type)
@@ -1622,7 +1624,7 @@ feature {NONE} -- Event handling
 					-- Object-tests are of type "BOOLEAN".
 				report_constant_expression (a_object_test, current_universe_impl.boolean_type)
 					-- Take care of the type of the object-test local.
-				l_dynamic_type := current_dynamic_system.dynamic_type (tokens.like_current, a_local_type)
+				l_dynamic_type := current_dynamic_system.dynamic_type (tokens.identity_type, a_local_type)
 				l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
 					-- An object-test local is assumed to be never Void.
 				l_dynamic_type_set.set_never_void
@@ -2714,9 +2716,9 @@ feature {NONE} -- Built-in features
 			if current_type = current_dynamic_type.base_type then
 				l_result_type := result_type_set.static_type
 				l_base_type := l_result_type.base_type
-				if current_universe_impl.string_8_type.same_named_type (l_base_type, current_type, current_type) then
+				if current_universe_impl.string_8_type.same_named_type_with_type_marks (l_base_type, tokens.implicit_attached_type_mark, current_type, tokens.implicit_attached_type_mark, current_type) then
 					mark_string_type_alive (l_result_type)
-				elseif current_universe_impl.string_32_type.same_named_type (l_base_type, current_type, current_type) then
+				elseif current_universe_impl.string_32_type.same_named_type_with_type_marks (l_base_type, tokens.implicit_attached_type_mark, current_type, tokens.implicit_attached_type_mark, current_type) then
 					mark_string_type_alive (l_result_type)
 				else
 					mark_type_alive (l_result_type)
@@ -3105,6 +3107,12 @@ feature {ET_FEATURE_CHECKER} -- Access
 
 	none_index: DS_CELL [INTEGER]
 			-- Index of dynamic type set of none expressions in `dynamic_type_sets'
+
+feature {NONE} -- Feature checker
+
+	feature_checker: ET_FEATURE_CHECKER
+			-- Feature checker to be used when processing preconditions
+			-- to get the attachment scope
 
 feature {NONE} -- Implementation
 

@@ -1,0 +1,29 @@
+-------------------------------------------------------------------------------
+
+Obsolete syntax used at line 12 in class AA
+Make an expanded version of the base class associated with this type.
+
+            a: ANY
+            ae: expanded ANY
+----------------^
+        do
+
+-------------------------------------------------------------------------------
+
+Error code: VJAR
+
+Type error: source of assignment is not compatible with target. 
+What to do: make sure that type of source (right-hand side)
+  is compatible with type of target. 
+
+Class: AA
+Feature: make
+Target name: ae
+Target type: expanded ANY (from base)
+Source type: ANY (from base)
+Line: 15
+        create a
+->      ae := a
+      end
+
+-------------------------------------------------------------------------------

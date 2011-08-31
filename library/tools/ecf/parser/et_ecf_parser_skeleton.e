@@ -441,6 +441,36 @@ feature {NONE} -- AST factory
 			end
 		end
 
+	new_concurrency_condition (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_CONCURRENCY_CONDITION
+			-- New concurrency condition built from `an_element'
+		require
+			an_element_not_void: an_element /= Void
+			is_concurrency: STRING_.same_case_insensitive (an_element.name, xml_concurrency)
+			a_position_table_not_void: a_position_table /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_value: XM_ATTRIBUTE
+			l_excluded_value: XM_ATTRIBUTE
+		do
+			l_value := an_element.attribute_by_name (xml_value)
+			l_excluded_value := an_element.attribute_by_name (xml_excluded_value)
+			if l_value /= Void then
+				if l_excluded_value /= Void then
+					error_handler.report_eadb_error (attribute_name (l_value, a_position_table), attribute_name (l_excluded_value, a_position_table), a_universe)
+				elseif l_value.value.is_empty then
+					error_handler.report_eadc_error (attribute_name (l_value, a_position_table), a_universe)
+				else
+					Result := ast_factory.new_concurrency_condition (l_value.value, False)
+				end
+			elseif l_excluded_value = Void then
+				error_handler.report_eadd_error (element_name (an_element, a_position_table), a_universe)
+			elseif l_excluded_value.value.is_empty then
+				error_handler.report_eade_error (attribute_name (l_excluded_value, a_position_table), a_universe)
+			else
+				Result := ast_factory.new_concurrency_condition (l_excluded_value.value, True)
+			end
+		end
+
 	new_condition (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_CONDITIONS
 			-- New condition built from `an_element'
 		require
@@ -470,6 +500,11 @@ feature {NONE} -- AST factory
 						end
 					elseif STRING_.same_case_insensitive (l_child.name, xml_multithreaded) then
 						l_condition := new_multithreaded_condition (l_child, a_position_table, a_universe)
+						if l_condition /= Void then
+							Result.put_last (l_condition)
+						end
+					elseif STRING_.same_case_insensitive (l_child.name, xml_concurrency) then
+						l_condition := new_concurrency_condition (l_child, a_position_table, a_universe)
 						if l_condition /= Void then
 							Result.put_last (l_condition)
 						end
@@ -1205,6 +1240,8 @@ feature {NONE} -- AST factory
 							add_variable (Result.variables, l_child, a_position_table, a_universe)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_setting) then
 							add_setting (Result.settings, l_child, a_position_table, a_universe)
+						elseif STRING_.same_case_insensitive (l_child.name, xml_option) then
+							add_option (Result.options, l_child, a_position_table, a_universe)
 						end
 					end
 					l_cursor.forth
@@ -1423,6 +1460,43 @@ feature {NONE} -- Element change
 			end
 		end
 
+	add_option (a_options: ET_ECF_OPTIONS; an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Add to `a_options' the setting held in `an_element'.
+		require
+			a_options_not_void: a_options /= Void
+			an_element_not_void: an_element /= Void
+			is_option: STRING_.same_case_insensitive (an_element.name, xml_option)
+			a_position_table_not_void: a_position_table /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_name: STRING
+			l_attribute: XM_ATTRIBUTE
+			l_other_value: STRING
+		do
+			l_name := xml_void_safety
+			l_attribute := an_element.attribute_by_name (l_name)
+			if l_attribute = Void then
+				-- Option not specified.
+			else
+				l_other_value := a_options.primary_value (l_name)
+				if l_other_value /= Void then
+-- TODO: warning: several options with the same name! (not reported by ISE: use the last one.)
+				end
+				a_options.set_primary_value (l_name, l_attribute.value)
+			end
+			l_name := xml_is_attached_by_default
+			l_attribute := an_element.attribute_by_name (l_name)
+			if l_attribute = Void then
+				-- Option not specified.
+			else
+				l_other_value := a_options.primary_value (l_name)
+				if l_other_value /= Void then
+-- TODO: warning: several options with the same name! (not reported by ISE: use the last one.)
+				end
+				a_options.set_primary_value (l_name, l_attribute.value)
+			end
+		end
+
 	parse_libraries (a_universe: ET_ECF_INTERNAL_UNIVERSE; a_state: ET_ECF_STATE)
 			-- Parse libraries referenced in `a_universe' when in `a_state'.
 		require
@@ -1477,6 +1551,7 @@ feature {NONE} -- Element change
 										error_handler.report_eabw_error (l_adapted_library.filename, l_filename, a_universe)
 									else
 										l_library.select_target (l_target, a_state)
+										l_target.fill_options (l_library)
 									end
 								end
 							end

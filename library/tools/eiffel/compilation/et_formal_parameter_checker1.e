@@ -5,7 +5,7 @@ note
 		"Eiffel formal parameter validity checkers, first pass"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -287,7 +287,7 @@ feature {NONE} -- Constraint validity
 						-- itself (e.g. "A [G -> G]"). This is not
 						-- considered as a fatal error by gelint. The
 						-- base class of this formal parameter will be
-						-- considered to be ANY.
+						-- considered to be "detachable ANY".
 					if current_system.is_ise and then current_system.ise_version <= ise_6_1_latest then
 						error_handler.report_vcfg3d_error (current_class, a_formal, a_type)
 					end
@@ -296,8 +296,8 @@ feature {NONE} -- Constraint validity
 						-- parameter appearing before (e.g. "A [G, H -> G]").
 						-- This is not considered as a fatal error by gelint.
 						-- The base class of this formal parameter will be the
-						-- base class of its constraint, or ANY if there is
-						-- a cycle (e.g. "A [G -> H, H -> G]").
+						-- base class of its constraint, or "detachable ANY"
+						-- if there is a cycle (e.g. "A [G -> H, H -> G]").
 					other_formal := a_parameters.formal_parameter (index1)
 					direct_formal_parameter_sorter.force_relation (other_formal, a_formal)
 					formal_parameter_sorter.force_relation (other_formal, a_formal)
@@ -310,8 +310,8 @@ feature {NONE} -- Constraint validity
 						-- parameter appearing after (e.g. "A [G -> H, H]").
 						-- This is not considered as a fatal error by gelint.
 						-- The base class of this formal parameter will be the
-						-- base class of its constraint, or ANY if there is
-						-- a cycle (e.g. "A [G -> H, H -> G]").
+						-- base class of its constraint, or "detachable ANY "
+						-- if there is a cycle (e.g. "A [G -> H, H -> G]").
 					other_formal := a_parameters.formal_parameter (index1)
 					direct_formal_parameter_sorter.force_relation (other_formal, a_formal)
 					formal_parameter_sorter.force_relation (other_formal, a_formal)
@@ -428,7 +428,7 @@ feature {NONE} -- Constraint cycles
 			a_base_type: ET_BASE_TYPE
 			has_cycle: BOOLEAN
 			i, nb: INTEGER
-			any_type: ET_CLASS_TYPE
+			l_detachable_any_type: ET_CLASS_TYPE
 		do
 			if direct_formal_parameter_sorter.count > 0 then
 				direct_formal_parameter_sorter.sort
@@ -437,7 +437,7 @@ feature {NONE} -- Constraint cycles
 						-- constraints (e.g. "A [G -> H, H -> G]"). This is
 						-- not considered as a fatal error by gelint. The
 						-- base class of the formal parameters involved in
-						-- this cycle will be considered to be ANY.
+						-- this cycle will be considered to be "detachable ANY".
 					has_cycle := True
 					if current_system.is_ise and then current_system.ise_version <= ise_6_1_latest then
 						error_handler.report_vcfg3g_error (current_class, direct_formal_parameter_sorter.cycle)
@@ -449,7 +449,7 @@ feature {NONE} -- Constraint cycles
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
-					any_type := current_universe.any_type
+					l_detachable_any_type := current_universe.detachable_any_type
 					a_parameters_count := a_parameters.count
 					a_sorted_formals := direct_formal_parameter_sorter.sorted_items
 					nb := a_sorted_formals.count
@@ -471,7 +471,7 @@ feature {NONE} -- Constraint cycles
 								if a_base_type /= Void then
 									a_formal.set_constraint_base_type (a_base_type)
 								else
-									a_formal.set_constraint_base_type (any_type)
+									a_formal.set_constraint_base_type (l_detachable_any_type)
 								end
 							end
 						end

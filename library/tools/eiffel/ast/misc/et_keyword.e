@@ -5,7 +5,7 @@ note
 		"Eiffel keywords"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,7 +29,8 @@ inherit
 			is_detachable,
 			is_expanded,
 			is_reference,
-			is_separate
+			is_separate,
+			text
 		end
 
 create

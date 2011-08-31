@@ -1,0 +1,2 @@
+[VEVI] class AA (16,2): entity 'Result' declared as attached is not initialized at the end of the body of function `f'.
+----

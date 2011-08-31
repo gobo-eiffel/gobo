@@ -5,7 +5,7 @@ note
 		"Gec commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2005-2009, Sven Ehrke and others"
+	copyright: "Copyright (c) 2005-2011, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -314,6 +314,10 @@ feature -- Execution
 					project.set_variable_value (exit_code_variable_name, exit_code.out)
 						-- Reset `exit_code' since return_code of process is available through
 						-- variable 'exit_code_variable_name':
+					exit_code := 0
+				end
+				if exit_code = 2 then
+						-- When the exit code is 2, it means that gec reported warnings.
 					exit_code := 0
 				end
 			end

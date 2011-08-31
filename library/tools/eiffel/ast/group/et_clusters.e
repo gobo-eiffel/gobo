@@ -324,10 +324,12 @@ feature -- Iterators
 			an_action_not_void: an_action /= Void
 		local
 			i, nb: INTEGER
+			l_cluster: like cluster
 		do
 			nb := clusters.count
 			from i := 1 until i > nb loop
-				an_action.call ([clusters.item (i)])
+				l_cluster := clusters.item (i)
+				an_action.call ([l_cluster])
 				i := i + 1
 			end
 		end
@@ -340,7 +342,7 @@ feature -- Iterators
 			a_test_not_void: a_test /= Void
 		local
 			i, nb: INTEGER
-			l_cluster: ET_CLUSTER
+			l_cluster: like cluster
 		do
 			nb := clusters.count
 			from i := 1 until i > nb loop
@@ -363,6 +365,7 @@ feature -- Iterators
 			an_action_not_void: an_action /= Void
 		local
 			i, nb: INTEGER
+			l_cluster: like cluster
 		do
 			if a_stop_request = Void then
 				do_all (an_action)
@@ -372,7 +375,8 @@ feature -- Iterators
 					if a_stop_request.item ([]) then
 						i := nb + 1
 					else
-						an_action.call ([clusters.item (i)])
+						l_cluster := clusters.item (i)
+						an_action.call ([l_cluster])
 						i := i + 1
 					end
 				end
@@ -386,7 +390,7 @@ feature -- Iterators
 			an_action_not_void: an_action /= Void
 		local
 			i, nb: INTEGER
-			l_cluster: ET_CLUSTER
+			l_cluster: like cluster
 			l_subclusters: ET_CLUSTERS
 		do
 			nb := clusters.count
@@ -412,7 +416,7 @@ feature -- Iterators
 			an_action_not_void: an_action /= Void
 		local
 			i, nb: INTEGER
-			l_cluster: ET_CLUSTER
+			l_cluster: like cluster
 			l_subclusters: ET_CLUSTERS
 		do
 			if a_stop_request = Void then
@@ -442,7 +446,7 @@ feature -- Iterators
 			an_action_not_void: an_action /= Void
 		local
 			i, nb: INTEGER
-			l_cluster: ET_CLUSTER
+			l_cluster: like cluster
 			l_subclusters: ET_CLUSTERS
 		do
 			nb := clusters.count
@@ -470,7 +474,7 @@ feature -- Iterators
 			an_action_not_void: an_action /= Void
 		local
 			i, nb: INTEGER
-			l_cluster: ET_CLUSTER
+			l_cluster: like cluster
 			l_subclusters: ET_CLUSTERS
 		do
 			if a_stop_request = Void then

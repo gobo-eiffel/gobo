@@ -3033,11 +3033,11 @@ feature {NONE} -- Expression types
 		do
 			reset_fatal_error (False)
 			if current_inline_agent /= Void then
-				expression_type_finder.find_expression_type_in_agent (a_expression, current_inline_agent, current_feature, a_context, current_system.any_type)
+				expression_type_finder.find_expression_type_in_agent (a_expression, current_inline_agent, current_feature, a_context, current_system.detachable_any_type)
 			elseif current_feature.is_feature then
-				expression_type_finder.find_expression_type_in_feature (a_expression, current_feature.as_feature, a_context, current_system.any_type)
+				expression_type_finder.find_expression_type_in_feature (a_expression, current_feature.as_feature, a_context, current_system.detachable_any_type)
 			else
-				expression_type_finder.find_expression_type_in_invariant (a_expression, current_feature.as_invariants, a_context, current_system.any_type)
+				expression_type_finder.find_expression_type_in_invariant (a_expression, current_feature.as_invariants, a_context, current_system.detachable_any_type)
 			end
 			reset_fatal_error (expression_type_finder.has_fatal_error)
 		end

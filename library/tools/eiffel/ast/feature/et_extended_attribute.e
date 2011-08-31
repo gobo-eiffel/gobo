@@ -59,7 +59,7 @@ feature -- Initialization
 	reset_after_features_flattened
 			-- Reset current attribute as it was just after it was last flattened.
 		do
-			if implementation_checked then
+			if validity_checked then
 				if locals /= Void then
 					locals.reset
 				end

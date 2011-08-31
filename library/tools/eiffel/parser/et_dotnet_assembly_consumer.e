@@ -5,7 +5,7 @@ note
 		".NET assembly consumers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -48,7 +48,7 @@ feature -- Consuming
 		do
 			nb := an_assemblies.count
 			from i := 1 until i > nb loop
-				an_assemblies.assembly (i).consume (Current)
+				an_assemblies.dotnet_assembly (i).consume (Current)
 				i := i + 1
 			end
 		end

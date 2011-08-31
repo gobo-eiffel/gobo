@@ -318,6 +318,120 @@ feature -- Access
 			kind_name_not_void: Result /= Void
 		end
 
+	kind_lower_name: STRING
+			-- Lower-name of the kind of group (e.g. "cluster", "assembly", "library", etc.)
+			-- (May return the same object as `kind_name' if already in lower case.)
+		local
+			i, nb: INTEGER
+			c: CHARACTER
+		do
+			Result := kind_name
+			nb := Result.count
+			from i := 1 until i > nb loop
+				c := Result.item (i)
+				if c >= 'A' and c <= 'Z' then
+					Result := Result.as_lower
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		ensure
+			kind_lower_name_not_void: Result /= Void
+			kind_lower_name_not_empty: Result.count > 0
+			definition: Result.same_string (kind_name.as_lower)
+		end
+
+	kind_capitalized_name: STRING
+			-- Capitalized name of the kind of group (e.g. "Cluster", "Assembly", "Library", etc.)
+			-- (May return the same object as `kind_name' if already capitalized.)
+		local
+			i, nb: INTEGER
+			c: CHARACTER
+		do
+			Result := kind_name
+			nb := Result.count
+			c := Result.item (1)
+			if c >= 'a' and c <= 'z' then
+				Result := Result.as_lower
+				Result.put (c.as_upper, 1)
+			else
+				from i := 2 until i > nb loop
+					c := Result.item (i)
+					if c >= 'A' and c <= 'Z' then
+						Result := Result.as_lower
+						i := nb + 1 -- Jump out of the loop.
+					else
+						i := i + 1
+					end
+				end
+			end
+		ensure
+			kind_capitalized_name_not_void: Result /= Void
+			kind_capitalized_name_not_empty: Result.count > 0
+		end
+
+	kind_name_plural: STRING
+			-- Plural form of name of the kind of group (e.g. "clusters", "assemblies", "libraries", etc.)
+		do
+			Result := kind_name + "s"
+		ensure
+			kind_name_plural_not_void: Result /= Void
+		end
+
+	kind_lower_name_plural: STRING
+			-- Lower-name of the kind of group (e.g. "clusters", "assemblies", "libraries", etc.)
+			-- (May return the same object as `kind_name_plural' if already in lower case.)
+		local
+			i, nb: INTEGER
+			c: CHARACTER
+		do
+			Result := kind_name_plural
+			nb := Result.count
+			from i := 1 until i > nb loop
+				c := Result.item (i)
+				if c >= 'A' and c <= 'Z' then
+					Result := Result.as_lower
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		ensure
+			kind_lower_name_plural_not_void: Result /= Void
+			kind_lower_name_plural_not_empty: Result.count > 0
+			definition: Result.same_string (kind_lower_name_plural.as_lower)
+		end
+
+	kind_capitalized_name_plural: STRING
+			-- Capitalized name of the kind of group (e.g. "Clusters", "Assemblies", "Libraries", etc.)
+			-- (May return the same object as `kind_name_plural' if already capitalized.)
+		local
+			i, nb: INTEGER
+			c: CHARACTER
+		do
+			Result := kind_name_plural
+			nb := Result.count
+			c := Result.item (1)
+			if c >= 'a' and c <= 'z' then
+				Result := Result.as_lower
+				Result.put (c.as_upper, 1)
+			else
+				from i := 2 until i > nb loop
+					c := Result.item (i)
+					if c >= 'A' and c <= 'Z' then
+						Result := Result.as_lower
+						i := nb + 1 -- Jump out of the loop.
+					else
+						i := i + 1
+					end
+				end
+			end
+		ensure
+			kind_capitalized_name_plural_not_void: Result /= Void
+			kind_capitalized_name_plural_not_empty: Result.count > 0
+		end
+
 	hash_code: INTEGER
 			-- Hash code value
 		do

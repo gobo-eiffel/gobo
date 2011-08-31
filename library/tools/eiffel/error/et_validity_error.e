@@ -93,6 +93,11 @@ create
 	make_veen2g,
 	make_veen8a,
 	make_veen8b,
+	make_vevi0a,
+	make_vevi0b,
+	make_vevi0c,
+	make_vevi0d,
+	make_vevi0e,
 	make_vfac1a,
 	make_vfac1b,
 	make_vfac2a,
@@ -246,6 +251,8 @@ create
 	make_vuot3b,
 	make_vuot4a,
 	make_vuot4b,
+	make_vuta2a,
+	make_vuta2b,
 	make_vvok1a,
 	make_vvok2a,
 	make_vwbe0a,
@@ -3558,6 +3565,225 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = object-test local
+		end
+
+	make_vevi0a (a_class, a_class_impl: ET_CLASS; a_name: ET_IDENTIFIER; a_local: ET_LOCAL_VARIABLE)
+			-- Create a new VEVI error: the local variable `a_local', declared of attached type
+			-- is used before being initialized in class `a_class_impl' and viewed from
+			-- one of its descendants `a_class' (possibly itself).
+			--
+			-- ECMA-367-2: p.105
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_local_not_void: a_local /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vevi0a_template_code)
+			etl_code := vevi_etl_code
+			default_template := default_message_template (vevi0a_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = local variable name
+		end
+
+	make_vevi0b (a_class, a_class_impl: ET_CLASS; a_result: ET_RESULT)
+			-- Create a new VEVI error: the 'Result' entity `a_result', declared of attached type
+			-- is used before being initialized in class `a_class_impl' and viewed from
+			-- one of its descendants `a_class' (possibly itself).
+			--
+			-- ECMA-367-2: p.105
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_result_not_void: a_result /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_result.position
+			code := template_code (vevi0b_template_code)
+			etl_code := vevi_etl_code
+			default_template := default_message_template (vevi0b_default_template)
+			create parameters.make_filled (empty_string, 1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+		end
+
+	make_vevi0c (a_class, a_class_impl: ET_CLASS; a_function: ET_INTERNAL_FUNCTION)
+			-- Create a new VEVI error: the 'Result' entity declared of attached type
+			-- is not initialized at the end of the function `a_function' declared
+			-- in class `a_class_impl' and viewed from one of its descendants
+			-- `a_class' (possibly itself).
+			--
+			-- ECMA-367-2: p.105
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_function_not_void: a_function /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_function.end_keyword.position
+			if position.is_null then
+				position := a_function.name.position
+			end
+			code := template_code (vevi0c_template_code)
+			etl_code := vevi_etl_code
+			default_template := default_message_template (vevi0c_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_function.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = function name
+		end
+
+	make_vevi0d (a_class, a_class_impl: ET_CLASS; a_agent: ET_INTERNAL_FUNCTION_INLINE_AGENT)
+			-- Create a new VEVI error: the 'Result' entity declared of attached type
+			-- is not initialized at the end of the inline agent `a_agent' appearing
+			-- in class `a_class_impl' and viewed from one of its descendants
+			-- `a_class' (possibly itself).
+			--
+			-- ECMA-367-2: p.105
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_agent_not_void: a_agent /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_agent.end_keyword.position
+			if position.is_null then
+				position := a_agent.position
+			end
+			code := template_code (vevi0d_template_code)
+			etl_code := vevi_etl_code
+			default_template := default_message_template (vevi0d_default_template)
+			create parameters.make_filled (empty_string, 1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+		end
+
+	make_vevi0e (a_class, a_class_impl: ET_CLASS; a_attribute: ET_EXTENDED_ATTRIBUTE)
+			-- Report VEVI error: the 'Result' entity declared of attached type
+			-- is not initialized at the end of the attribute body of `a_attribute'
+			-- declared in class `a_class_impl' and viewed from one of its descendants
+			-- `a_class' (possibly itself).
+			--
+			-- ECMA-367-2: p.105
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_attribute_not_void: a_attribute /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_attribute.end_keyword.position
+			if position.is_null then
+				position := a_attribute.name.position
+			end
+			code := template_code (vevi0e_template_code)
+			etl_code := vevi_etl_code
+			default_template := default_message_template (vevi0e_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_attribute.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = attribute name
 		end
 
 	make_vfac1a (a_class: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY)
@@ -10524,9 +10750,9 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = object-test local name
 		end
 
-	make_vuot1e (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_NAMED_OBJECT_TEST; a_expression: ET_EXPRESSION)
-			-- Create a new VUOT-1 error: `a_object_test1' and `a_object_test2'
-			-- appearing in `a_expression' have the same local name.
+	make_vuot1e (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_NAMED_OBJECT_TEST)
+			-- Create a new VUOT-1 error: `a_object_test1' and `a_object_test2' have the same
+			-- local name and their scope overlap.
 			--
 			-- Not in ECMA yet
 		require
@@ -10534,7 +10760,6 @@ feature {NONE} -- Initialization
 			a_class_preparsed: a_class.is_preparsed
 			a_object_test1_not_void: a_object_test1 /= Void
 			a_object_test2_not_void: a_object_test2 /= Void
-			a_expression_not_void: a_expression /= Void
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -10723,6 +10948,100 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = object-test local name
+		end
+
+	make_vuta2a (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target_type: ET_NAMED_TYPE)
+			-- Create a new VUTA-2 error: the target, of type `a_target_type', of the call to feature `a_feature'
+			-- is not attached when viewed from `a_class', one of the descendants of `a_class_impl' (possibly itself)
+			-- where the qualified call `a_name' appears.
+			--
+			-- ECMA-367-2: p.123
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vuta2a_template_code)
+			etl_code := vuta2_etl_code
+			default_template := default_message_template (vuta2a_default_template)
+			create parameters.make_filled (empty_string, 1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			parameters.put (a_feature.lower_name, 8)
+			parameters.put (a_target_type.to_text, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name of the call
+			-- dollar8: $8 = name of corresponding feature in base class of $9
+			-- dollar9: $9 = type of the target
+		end
+
+	make_vuta2b (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_target_type: ET_NAMED_TYPE)
+			-- Create a new VUTA-2 error: the target, of type `a_target_type', of the call to Tuple label `a_name'
+			-- appearing in `a_class_impl' and viewed from one of its descendants `a_class'
+			-- (possibly itself), is not attached.
+			--
+			-- ECMA-367-2: p.123
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_name_is_tuple_label: a_name.is_tuple_label
+			a_target_type_not_void: a_target_type /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vuta2b_template_code)
+			etl_code := vuta2_etl_code
+			default_template := default_message_template (vuta2b_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			parameters.put (a_target_type.to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = Tuple label
+			-- dollar8: $8 = type of the target
 		end
 
 	make_vvok1a (a_class: ET_CLASS; a_once_key1, a_once_key2: ET_MANIFEST_STRING)
@@ -12543,6 +12862,11 @@ feature {NONE} -- Implementation
 	veen2g_default_template: STRING = "entity 'Result' appears in the body, postcondition or rescue clause of an inline agent whose associated feature is a procedure."
 	veen8a_default_template: STRING = "`$7' appearing in feature `$8' or one of its possibly nested inline agents, is an object-test local that is used outside of its scope."
 	veen8b_default_template: STRING = "`$7' appearing in the invariant or one of its possibly nested inline agents, is an object-test local that is used outside of its scope."
+	vevi0a_default_template: STRING = "local entity `$7' declared as attached is used before being initialized."
+	vevi0b_default_template: STRING = "entity 'Result' declared as attached is used before being initialized."
+	vevi0c_default_template: STRING = "entity 'Result' declared as attached is not initialized at the end of the body of function `$7'."
+	vevi0d_default_template: STRING = "entity 'Result' declared as attached is not initialized at the end of the body of inline agent."
+	vevi0e_default_template: STRING = "entity 'Result' declared as attached is not initialized at the end of the body of attribute `$7'."
 	vfac1a_default_template: STRING = "query `$7' has an assigner mark `$8' but there is no feature with that name."
 	vfac1b_default_template: STRING = "query `$7' has an assigner mark `$8' but this feature is not a procedure."
 	vfac2a_default_template: STRING = "the number of arguments in assigner procedure `$8' is not one more than the number of arguments in query `$7'."
@@ -12691,11 +13015,13 @@ feature {NONE} -- Implementation
 	vuot1b_default_template: STRING = "object-test local name '$6' is also the name of a formal argument of an enclosing feature or inline agent."
 	vuot1c_default_template: STRING = "object-test local name '$6' is also the name of a local variable of an enclosing feature or inline agent."
 	vuot1d_default_template: STRING = "object-test with local name '$6' appears in the scope of another object-test local with the same name."
-	vuot1e_default_template: STRING = "object-test with local name '$6' appears in the same expression as another object-test with the same local name."
+	vuot1e_default_template: STRING = "the scope of object-test with local name '$6' overlaps with the scope of another object-test with the same local name."
 	vuot3a_default_template: STRING = "object-test with local name '$6' has the same name as another object-test local appearing in the same feature `$7' or in the same inline agent."
 	vuot3b_default_template: STRING = "object-test with local name '$6' has the same name as another object-test local appearing in the invariant or in the same inline agent."
 	vuot4a_default_template: STRING = "ISE does not support object-tests in preconditions."
 	vuot4b_default_template: STRING = "ISE does not support object-tests in check instructions."
+	vuta2a_default_template: STRING = "the target (of type '$9') of the call to feature `$8' is not attached."
+	vuta2b_default_template: STRING = "the target (of type '$8') of the call to Tuple label `$7' is not attached."
 	vvok1a_default_template: STRING = "once keys %"$6%" and %"$7%" cannot be combined."
 	vvok2a_default_template: STRING = "once key %"$6%" is not supported. The supported once keys are %"THREAD%", %"PROCESS%" and %"OBJECT%"."
 	vwbe0a_default_template: STRING = "boolean expression of non-BOOLEAN type '$7'."
@@ -12771,6 +13097,7 @@ feature {NONE} -- Implementation
 	veen_etl_code: STRING = "VEEN"
 	veen2_etl_code: STRING = "VEEN-2"
 	veen8_etl_code: STRING = "VEEN-8"
+	vevi_etl_code: STRING = "VEVI"
 	vfac1_etl_code: STRING = "VFAC-1"
 	vfac2_etl_code: STRING = "VFAC-2"
 	vfac3_etl_code: STRING = "VFAC-3"
@@ -12850,6 +13177,7 @@ feature {NONE} -- Implementation
 	vuot1_etl_code: STRING = "VUOT-1"
 	vuot3_etl_code: STRING = "VUOT-3"
 	vuot4_etl_code: STRING = "VUOT-4"
+	vuta2_etl_code: STRING = "VUTA-2"
 	vvok1_etl_code: STRING = "VVOK-1"
 	vvok2_etl_code: STRING = "VVOK-2"
 	vwbe_etl_code: STRING = "VWBE"
@@ -12969,6 +13297,11 @@ feature {NONE} -- Implementation
 	veen2g_template_code: STRING = "veen2g"
 	veen8a_template_code: STRING = "veen8a"
 	veen8b_template_code: STRING = "veen8b"
+	vevi0a_template_code: STRING = "vevi0a"
+	vevi0b_template_code: STRING = "vevi0b"
+	vevi0c_template_code: STRING = "vevi0c"
+	vevi0d_template_code: STRING = "vevi0d"
+	vevi0e_template_code: STRING = "vevi0e"
 	vfac1a_template_code: STRING = "vfac1a"
 	vfac1b_template_code: STRING = "vfac1b"
 	vfac2a_template_code: STRING = "vfac2a"
@@ -13122,6 +13455,8 @@ feature {NONE} -- Implementation
 	vuot3b_template_code: STRING = "vuot3b"
 	vuot4a_template_code: STRING = "vuot4a"
 	vuot4b_template_code: STRING = "vuot4b"
+	vuta2a_template_code: STRING = "vuta2a"
+	vuta2b_template_code: STRING = "vuta2b"
 	vvok1a_template_code: STRING = "vvok1a"
 	vvok2a_template_code: STRING = "vvok2a"
 	vwbe0a_template_code: STRING = "vwbe0a"

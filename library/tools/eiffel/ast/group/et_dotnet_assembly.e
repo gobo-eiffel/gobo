@@ -29,6 +29,7 @@ inherit
 		redefine
 			is_dotnet_assembly,
 			kind_name,
+			kind_name_plural,
 			has_class,
 			class_count,
 			classes_do_all,
@@ -128,7 +129,7 @@ feature {ET_DOTNET_ASSEMBLY, ET_INTERNAL_UNIVERSE} -- Status report
 		do
 			nb := a_names.upper
 			if a_index <= nb then
-				l_dotnet_assembly := referenced_assemblies.assembly_by_name (a_names.item (a_index))
+				l_dotnet_assembly := referenced_assemblies.dotnet_assembly_by_name (a_names.item (a_index))
 				if l_dotnet_assembly /= Void then
 					if a_index = nb then
 						Result := True
@@ -173,7 +174,7 @@ feature -- Access
 			l_dotnet_assembly: ET_DOTNET_ASSEMBLY
 		do
 			l_dotnet_assembly ?= a_universe
-			if l_dotnet_assembly /= Void and then referenced_assemblies.assemblies.has (l_dotnet_assembly) then
+			if l_dotnet_assembly /= Void and then referenced_assemblies.dotnet_assemblies.has (l_dotnet_assembly) then
 				Result := l_dotnet_assembly
 			end
 		end
@@ -195,6 +196,12 @@ feature -- Access
 			Result := "assembly"
 		end
 
+	kind_name_plural: STRING
+			-- Plural form of name of the kind of group (e.g. "clusters", "assemblies", "libraries", etc.)
+		once
+			Result := "assemblies"
+		end
+
 feature {ET_DOTNET_ASSEMBLY, ET_INTERNAL_UNIVERSE} -- Access
 
 	group_by_name_at_index (a_names: ARRAY [STRING]; a_index: INTEGER): ET_GROUP
@@ -214,7 +221,7 @@ feature {ET_DOTNET_ASSEMBLY, ET_INTERNAL_UNIVERSE} -- Access
 		do
 			nb := a_names.upper
 			if a_index <= nb then
-				l_dotnet_assembly := referenced_assemblies.assembly_by_name (a_names.item (a_index))
+				l_dotnet_assembly := referenced_assemblies.dotnet_assembly_by_name (a_names.item (a_index))
 				if l_dotnet_assembly /= Void then
 					if a_index = nb then
 						Result := l_dotnet_assembly

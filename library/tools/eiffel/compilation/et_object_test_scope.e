@@ -142,7 +142,7 @@ feature -- Measurement
 
 	hidden_count: INTEGER
 			-- Number of object-tests for which we consider that
-			-- we are not currently in within the scope of their
+			-- we are not currently within the scope of their
 			-- locals. Useful when analyzing inline agents: we
 			-- should not use object-test locals declared in the
 			-- enclosing feature or inline agent.

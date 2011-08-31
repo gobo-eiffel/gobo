@@ -13332,7 +13332,7 @@ print ("ET_C_GENERATOR.print_once_procedure_inline_agent: once key %"OBJECT%" no
 				l_parameters.put_first (dynamic_type_set (agent_closed_operands.item (j)).static_type.base_type)
 				j := j - 1
 			end
-			create l_tuple_type.make (Void, l_parameters, l_agent_type.base_class.universe.tuple_type.named_base_class)
+			create l_tuple_type.make (tokens.implicit_attached_type_mark, l_parameters, l_agent_type.base_class.universe.tuple_type.named_base_class)
 			agent_closed_operands_type := current_dynamic_system.dynamic_type (l_tuple_type, current_system.any_type)
 				--
 				-- Print function associated with the agent to `current_file'.
@@ -22134,6 +22134,8 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 						current_file.put_integer ({INTERNAL}.real_32_type)
 					elseif current_universe_impl.real_64_type.same_named_type (l_result_type.base_type, current_type.base_type, current_type.base_type) then
 						current_file.put_integer ({INTERNAL}.real_64_type)
+					elseif current_universe_impl.detachable_none_type.same_named_type (l_result_type.base_type, current_type.base_type, current_type.base_type) then
+						current_file.put_integer ({INTERNAL}.none_type)
 					elseif current_universe_impl.none_type.same_named_type (l_result_type.base_type, current_type.base_type, current_type.base_type) then
 						current_file.put_integer ({INTERNAL}.none_type)
 					elseif l_result_type.is_expanded then

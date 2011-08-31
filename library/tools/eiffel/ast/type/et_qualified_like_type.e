@@ -6,7 +6,7 @@ note
 		or 'like Current.b.c' or 'like {A}.b.c'
 	]"
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,7 +17,8 @@ inherit
 
 	ET_QUALIFIED_LIKE_IDENTIFIER
 		redefine
-			resolved_formal_parameters
+			resolved_formal_parameters_with_type_mark,
+			type_with_type_mark
 		end
 
 create
@@ -26,27 +27,22 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type: like target_type; a_name: like qualified_name)
+	make (a_type_mark: like type_mark; a_type: like target_type; a_name: like qualified_name)
 			-- Create a new 'like a.b.c' type.
 		require
 			a_type_not_void: a_type /= Void
 			a_name_not_void: a_name /= Void
 		do
+			type_mark := a_type_mark
 			target_type := a_type
 			qualified_name := a_name
 		ensure
+			type_mark_set: type_mark = a_type_mark
 			target_type_set: target_type = a_type
 			qualified_name_set: qualified_name = a_name
 		end
 
 feature -- Access
-
-	type_mark: ET_TYPE_MARK
-			-- 'attached' or 'detachable' keyword,
-			-- or '!' or '?' symbol
-		do
-			Result := target_type.type_mark
-		end
 
 	like_keyword: ET_KEYWORD
 			-- 'like' keyword
@@ -57,21 +53,37 @@ feature -- Access
 	target_type: ET_LIKE_TYPE
 			-- Target anchored type
 
+	type_with_type_mark (a_type_mark: ET_TYPE_MARK): ET_QUALIFIED_LIKE_TYPE
+			-- Current type whose type mark status is
+			-- overridden by `a_type_mark', if not Void
+		local
+			l_type_mark: ET_TYPE_MARK
+		do
+			l_type_mark := overridden_type_mark (a_type_mark)
+			if l_type_mark = type_mark then
+				Result := Current
+			else
+				create Result.make (a_type_mark, target_type, qualified_name)
+			end
+		end
+
 feature -- Type processing
 
-	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_QUALIFIED_LIKE_TYPE
-			-- Version of current type where the formal generic
-			-- parameter types have been replaced by their actual
-			-- counterparts in `a_parameters'
+	resolved_formal_parameters_with_type_mark (a_type_mark: ET_TYPE_MARK; a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_QUALIFIED_LIKE_TYPE
+			-- Same as `resolved_formal_parameters' except that the type mark status is
+			-- overridden by `a_type_mark', if not Void
 		local
 			l_target_type: like target_type
 			l_resolved_target_type: like target_type
+			l_type_mark: ET_TYPE_MARK
 		do
-			Result := Current
 			l_target_type := target_type
 			l_resolved_target_type := l_target_type.resolved_formal_parameters (a_parameters)
-			if l_target_type /= l_resolved_target_type then
-				create Result.make (l_resolved_target_type, qualified_name)
+			l_type_mark := overridden_type_mark (a_type_mark)
+			if l_type_mark /= type_mark or l_target_type /= l_target_type then
+				create Result.make (l_type_mark, l_resolved_target_type, qualified_name)
+			else
+				Result := Current
 			end
 		end
 
@@ -81,6 +93,16 @@ feature -- Output
 			-- Append textual representation of
 			-- current type to `a_string'.
 		do
+			if type_mark /= Void then
+				if type_mark.is_implicit_mark then
+					a_string.append_character ('[')
+				end
+				a_string.append_string (type_mark.text)
+				if type_mark.is_implicit_mark then
+					a_string.append_character (']')
+				end
+				a_string.append_character (' ')
+			end
 			target_type.append_to_string (a_string)
 			a_string.append_character ('.')
 			a_string.append_string (name.lower_name)

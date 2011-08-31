@@ -32,6 +32,9 @@ feature -- Constants
 	xml_compiler: STRING = "compiler"
 			-- "compiler" attribute value
 
+	xml_concurrency: STRING = "concurrency"
+			-- "concurrency" element name
+
 	xml_condition: STRING = "condition"
 			-- "condition" element name
 
@@ -68,6 +71,9 @@ feature -- Constants
 	xml_include: STRING = "include"
 			-- "include" attribute name
 
+	xml_is_attached_by_default: STRING = "is_attached_by_default"
+			-- "is_attached_by_default" attribute name
+
 	xml_library: STRING = "library"
 			-- "library" attribute name
 
@@ -97,6 +103,9 @@ feature -- Constants
 
 	xml_old_name: STRING = "old_name"
 			-- "old_name" attribute name
+
+	xml_option: STRING = "option"
+			-- "option" element name
 
 	xml_override: STRING = "override"
 			-- "override" element name
@@ -142,6 +151,9 @@ feature -- Constants
 
 	xml_version: STRING = "version"
 			-- "version" element name
+
+	xml_void_safety: STRING = "void_safety"
+			-- "void_safety" attribute name
 
 feature -- Namespaces
 
