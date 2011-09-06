@@ -201,8 +201,8 @@ feature -- Initialization
 			l_reparse_needed: UT_TRISTATE
 		do
 			create l_reparse_needed.make_false
-			master_classes_do_if (agent master_class_actions.call (?, agent l_reparse_needed.set_true), agent master_class_actions.conjuncted (?, agent {ET_MASTER_CLASS}.is_preparsed, agent {ET_MASTER_CLASS}.has_syntax_error))
-			master_classes_do_all (agent {ET_MASTER_CLASS}.local_classes_do_all (agent {ET_CLASS}.reset_errors))
+			master_classes_do_if_recursive (agent master_class_actions.call (?, agent l_reparse_needed.set_true), agent master_class_actions.conjuncted (?, agent {ET_MASTER_CLASS}.is_preparsed, agent {ET_MASTER_CLASS}.has_syntax_error))
+			master_classes_do_recursive (agent {ET_MASTER_CLASS}.local_classes_do_all (agent {ET_CLASS}.reset_errors))
 			if l_reparse_needed.is_true then
 					-- Some classes which had a syntax error will be reparsed.
 					-- As a consequence, it is wiser to incrementally reset
