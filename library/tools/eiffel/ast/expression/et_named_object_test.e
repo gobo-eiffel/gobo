@@ -54,7 +54,6 @@ feature -- Initialization
 	reset
 			-- Reset expression as it was just after it was last parsed.
 		do
-			name.reset
 			precursor
 		end
 

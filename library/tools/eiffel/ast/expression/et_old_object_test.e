@@ -64,7 +64,6 @@ feature -- Initialization
 			if l_type /= Void then
 				l_type.reset
 			end
-			name.reset
 			expression.reset
 		end
 
