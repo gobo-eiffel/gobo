@@ -546,6 +546,9 @@ feature {NONE} -- Validity checking
 						nb := an_actuals.count
 						from i := 1 until i > nb loop
 							an_actual := an_actuals.type (i)
+							had_error := has_fatal_error
+							an_actual.process (Current)
+							reset_fatal_error (has_fatal_error or had_error)
 							a_formal := a_formals.formal_parameter (i)
 							if a_formal.is_expanded then
 								if not an_actual.is_type_expanded (current_type) then
@@ -558,9 +561,6 @@ feature {NONE} -- Validity checking
 									error_handler.report_gvtcg5a_error (current_class, a_type, an_actual, a_formal)
 								end
 							end
-							had_error := has_fatal_error
-							an_actual.process (Current)
-							reset_fatal_error (has_fatal_error or had_error)
 							a_constraint := a_formal.constraint
 							if a_constraint = Void then
 								a_constraint := current_system.detachable_any_type
