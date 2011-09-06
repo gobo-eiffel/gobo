@@ -22,7 +22,7 @@ create
 	make
 %}
 
-UTF8_BOM (\0xEF\0xBB\0xBF)
+UTF8_BOM (\xEF\xBB\xBF)
 
 %x MS MSN MSN1 VS1 VS2 VS3 LAVS1 LAVS2 LAVS3
 %option nodefault line outfile="et_eiffel_preparser.e"
