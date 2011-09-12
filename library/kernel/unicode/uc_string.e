@@ -18,8 +18,8 @@ note
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010/05/03 $"
+	revision: "$Revision: #9 $"
 
 class UC_STRING
 
@@ -1785,7 +1785,7 @@ feature -- Element change
 			unicode_replaced: item_code (i) = c.code
 		end
 
-	prepend (s: STRING)
+	prepend (s: READABLE_STRING_8)
 			-- Prepend a copy of `s' at front.
 		do
 			insert_string (s, 1)
@@ -2355,7 +2355,7 @@ feature -- Element change
 			insert_string (s, i)
 		end
 
-	insert_string (a_string: STRING; i: INTEGER)
+	insert_string (a_string: READABLE_STRING_8; i: INTEGER)
 			-- Insert `a_string' at index `i', shifting characters between ranks
 			-- `i' and `count' rightwards.
 			-- (ELKS 2001 STRING)
