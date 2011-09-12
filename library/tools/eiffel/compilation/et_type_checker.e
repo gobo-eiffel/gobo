@@ -553,12 +553,12 @@ feature {NONE} -- Validity checking
 							if a_formal.is_expanded then
 								if not an_actual.is_type_expanded (current_type) then
 									set_fatal_error
-									error_handler.report_gvtcg5b_error (current_class, a_type, an_actual, a_formal)
+									error_handler.report_gvtcg5b_error (current_class, current_class_impl, a_type, an_actual, a_formal)
 								end
 							elseif a_formal.is_reference then
 								if not an_actual.is_type_reference (current_type) then
 									set_fatal_error
-									error_handler.report_gvtcg5a_error (current_class, a_type, an_actual, a_formal)
+									error_handler.report_gvtcg5a_error (current_class, current_class_impl, a_type, an_actual, a_formal)
 								end
 							end
 							a_constraint := a_formal.constraint

@@ -7,8 +7,8 @@ note
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010/05/03 $"
+	revision: "$Revision: #11 $"
 
 class ET_PARENT_CHECKER1
 
@@ -162,19 +162,19 @@ feature {NONE} -- Parent validity
 					nb := an_actuals.count
 					from i := 1 until i > nb loop
 						an_actual := an_actuals.type (i)
+						an_actual.process (Current)
 						a_formal := a_formals.formal_parameter (i)
 						if a_formal.is_expanded then
 							if not an_actual.is_type_expanded (current_class) then
-								error_handler.report_gvtcg5b_error (current_class, a_type, an_actual, a_formal)
+								error_handler.report_gvtcg5b_error (current_class, current_class, a_type, an_actual, a_formal)
 								set_fatal_error
 							end
 						elseif a_formal.is_reference then
 							if not an_actual.is_type_reference (current_class) then
-								error_handler.report_gvtcg5a_error (current_class, a_type, an_actual, a_formal)
+								error_handler.report_gvtcg5a_error (current_class, current_class, a_type, an_actual, a_formal)
 								set_fatal_error
 							end
 						end
-						an_actual.process (Current)
 						i := i + 1
 					end
 				end

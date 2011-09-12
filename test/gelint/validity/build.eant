@@ -121,7 +121,11 @@
 			-->
 		<set name="do_clean" value="${do_clean}"/>
 		<set name="do_all_exit_code" value="0"/>
-		
+
+		<geant file="build.eant" target="${target}" exit_code_variable="gvtcg5_exit_code" dir="gvtcg5"/>
+		<set name="do_all_exit_code" value="1" unless="${gvtcg5_exit_code}=0"/>
+		<geant file="build.eant" target="clean" dir="gvtcg5" if="${do_clean}=true"/>
+	
 		<geant file="build.eant" target="${target}" exit_code_variable="gvwmc2_exit_code" dir="gvwmc2"/>
 		<set name="do_all_exit_code" value="1" unless="${gvwmc2_exit_code}=0"/>
 		<geant file="build.eant" target="clean" dir="gvwmc2" if="${do_clean}=true"/>
@@ -173,6 +177,7 @@
 		<echo message="" unless="${do_all_exit_code}=0"/>
 		<echo message="" unless="${do_all_exit_code}=0"/>
 		<echo message="##################################" unless="${do_all_exit_code}=0"/>
+		<echo message="# FAILED: gvwmc2" unless="${gvtcg5_exit_code}=0"/>
 		<echo message="# FAILED: gvwmc2" unless="${gvwmc2_exit_code}=0"/>
 		<echo message="# FAILED: vdrd2" unless="${vdrd2_exit_code}=0"/>
 		<echo message="# FAILED: veen8" unless="${veen8_exit_code}=0"/>

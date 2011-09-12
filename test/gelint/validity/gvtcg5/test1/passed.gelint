@@ -1,0 +1,2 @@
+[GVTCG-5] class AA (11,11): actual generic parameter 'INTEGER' in type 'BB [INTEGER]' is not a reference type but the corresponding formal parameter is marked as reference.
+----

@@ -224,19 +224,19 @@ feature {NONE} -- Constraint validity
 					nb := an_actuals.count
 					from i := 1 until i > nb loop
 						l_actual := an_actuals.type (i)
+						l_actual.process (Current)
 						l_formal := a_formals.formal_parameter (i)
 						if l_formal.is_expanded then
 							if not l_actual.is_type_expanded (current_class) then
-								error_handler.report_gvtcg5b_error (current_class, a_type, l_actual, l_formal)
+								error_handler.report_gvtcg5b_error (current_class, current_class, a_type, l_actual, l_formal)
 								set_fatal_error
 							end
 						elseif l_formal.is_reference then
 							if not l_actual.is_type_reference (current_class) then
-								error_handler.report_gvtcg5a_error (current_class, a_type, l_actual, l_formal)
+								error_handler.report_gvtcg5a_error (current_class, current_class, a_type, l_actual, l_formal)
 								set_fatal_error
 							end
 						end
-						l_actual.process (Current)
 						i := i + 1
 					end
 				end

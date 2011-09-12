@@ -6393,15 +6393,17 @@ feature -- Validity errors
 			end
 		end
 
-	report_gvtcg5a_error (a_class: ET_CLASS; a_type: ET_CLASS_TYPE; an_actual: ET_TYPE; a_formal: ET_FORMAL_PARAMETER)
+	report_gvtcg5a_error (a_class, a_class_impl: ET_CLASS; a_type: ET_CLASS_TYPE; an_actual: ET_TYPE; a_formal: ET_FORMAL_PARAMETER)
 			-- Report GVTCG-5 error: actual generic paramater `an_actual' of `a_type' in
-			-- `a_class' is not a reference type but the corresponding formal parameter
-			-- `a_formal' is marked as reference.
+			-- `a_class_impl' and viewed from one of its descendants `a_class' is not a
+			-- reference type but the corresponding formal parameter `a_formal' is marked
+			-- as reference.
 			--
 			-- Not in ETL
 		require
 			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
 			a_type_not_void: a_type /= Void
 			an_actual_not_void: an_actual /= Void
 			a_formal_not_void: a_formal /= Void
@@ -6409,20 +6411,22 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_gvtcg5_error (a_class) then
-				create an_error.make_gvtcg5a (a_class, a_type, an_actual, a_formal)
+				create an_error.make_gvtcg5a (a_class, a_class_impl, a_type, an_actual, a_formal)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_gvtcg5b_error (a_class: ET_CLASS; a_type: ET_CLASS_TYPE; an_actual: ET_TYPE; a_formal: ET_FORMAL_PARAMETER)
+	report_gvtcg5b_error (a_class, a_class_impl: ET_CLASS; a_type: ET_CLASS_TYPE; an_actual: ET_TYPE; a_formal: ET_FORMAL_PARAMETER)
 			-- Report GVTCG-5 error: actual generic paramater `an_actual' of `a_type' in
-			-- `a_class' is not expanded type but the corresponding formal parameter
-			-- `a_formal' is marked as expanded.
+			-- `a_class_impl' and viewed from one of its descendants `a_class' is not a
+			-- expanded type but the corresponding formal parameter `a_formal' is marked
+			-- as expanded.
 			--
 			-- Not in ETL
 		require
 			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
 			a_type_not_void: a_type /= Void
 			an_actual_not_void: an_actual /= Void
 			a_formal_not_void: a_formal /= Void
@@ -6430,7 +6434,7 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_gvtcg5_error (a_class) then
-				create an_error.make_gvtcg5b (a_class, a_type, an_actual, a_formal)
+				create an_error.make_gvtcg5b (a_class, a_class_impl, a_type, an_actual, a_formal)
 				report_validity_error (an_error)
 			end
 		end

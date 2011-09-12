@@ -12230,21 +12230,23 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = filename
 		end
 
-	make_gvtcg5a (a_class: ET_CLASS; a_type: ET_CLASS_TYPE; an_actual: ET_TYPE; a_formal: ET_FORMAL_PARAMETER)
+	make_gvtcg5a (a_class, a_class_impl: ET_CLASS; a_type: ET_CLASS_TYPE; an_actual: ET_TYPE; a_formal: ET_FORMAL_PARAMETER)
 			-- Create a new GVTCG-5 error: actual generic paramater `an_actual' of `a_type' in
-			-- `a_class' is not a reference type but the corresponding formal parameter
-			-- `a_formal' is marked as reference.
+			-- `a_class_impl' and viewed from one of its descendants `a_class' is not a
+			-- reference type but the corresponding formal parameter `a_formal' is marked
+			-- as reference.
 			--
 			-- Not in ETL
 		require
 			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
 			a_type_not_void: a_type /= Void
 			an_actual_not_void: an_actual /= Void
 			a_formal_not_void: a_formal /= Void
 		do
 			current_class := a_class
-			class_impl := a_class
+			class_impl := a_class_impl
 			position := an_actual.position
 			code := template_code (gvtcg5a_template_code)
 			etl_code := gvtcg5_etl_code
@@ -12261,7 +12263,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
+			class_impl_set: class_impl = a_class_impl
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -12275,21 +12277,23 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = generic type
 		end
 
-	make_gvtcg5b (a_class: ET_CLASS; a_type: ET_CLASS_TYPE; an_actual: ET_TYPE; a_formal: ET_FORMAL_PARAMETER)
+	make_gvtcg5b (a_class, a_class_impl: ET_CLASS; a_type: ET_CLASS_TYPE; an_actual: ET_TYPE; a_formal: ET_FORMAL_PARAMETER)
 			-- Create a new GVTCG-5 error: actual generic paramater `an_actual' of `a_type' in
-			-- `a_class' is not expanded type but the corresponding formal parameter
-			-- `a_formal' is marked as expanded.
+			-- `a_class_impl' and viewed from one of its descendants `a_class' is not a
+			-- expanded type but the corresponding formal parameter `a_formal' is marked
+			-- as expanded.
 			--
 			-- Not in ETL
 		require
 			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
 			a_type_not_void: a_type /= Void
 			an_actual_not_void: an_actual /= Void
 			a_formal_not_void: a_formal /= Void
 		do
 			current_class := a_class
-			class_impl := a_class
+			class_impl := a_class_impl
 			position := an_actual.position
 			code := template_code (gvtcg5b_template_code)
 			etl_code := gvtcg5_etl_code
@@ -12306,7 +12310,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
+			class_impl_set: class_impl = a_class_impl
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
