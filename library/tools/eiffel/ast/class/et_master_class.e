@@ -1399,6 +1399,15 @@ feature {NONE} -- Element change
 			if intrinsic_class /= a_class then
 				l_old_intrinsic_class := intrinsic_class
 				intrinsic_class := a_class
+				if attached {ET_CLASS} l_old_intrinsic_class as l_old_class and then (l_old_class.is_unknown and l_old_class /= tokens.unknown_class) then
+						-- This class has probably been removed from the universe.
+						-- We don't know whether it was an override class or not,
+						-- so make as if it was an override class just in case.
+					if first_imported_class /= Void then
+						unmark_overridden (first_imported_class)
+						other_imported_classes.do_all (agent unmark_overridden)
+					end
+				end
 				if l_old_intrinsic_class.is_override (universe) then
 					if not a_class.is_override (universe) then
 						if first_imported_class /= Void then
