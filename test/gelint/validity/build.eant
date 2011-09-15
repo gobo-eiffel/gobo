@@ -157,6 +157,10 @@
 		<geant file="build.eant" target="${target}" exit_code_variable="vqmc3_exit_code" dir="vqmc3"/>
 		<set name="do_all_exit_code" value="1" unless="${vqmc3_exit_code}=0"/>
 		<geant file="build.eant" target="clean" dir="vqmc3" if="${do_clean}=true"/>
+
+		<geant file="build.eant" target="${target}" exit_code_variable="vtat2_exit_code" dir="vtat2"/>
+		<set name="do_all_exit_code" value="1" unless="${vtat2_exit_code}=0"/>
+		<geant file="build.eant" target="clean" dir="vtat2" if="${do_clean}=true"/>
 		
 		<geant file="build.eant" target="${target}" exit_code_variable="vtct_exit_code" dir="vtct"/>
 		<set name="do_all_exit_code" value="1" unless="${vtct_exit_code}=0"/>
@@ -186,6 +190,7 @@
 		<echo message="# FAILED: vjar" unless="${vjar_exit_code}=0"/>
 		<echo message="# FAILED: vpir1" unless="${vpir1_exit_code}=0"/>
 		<echo message="# FAILED: vqmc3" unless="${vqmc3_exit_code}=0"/>
+		<echo message="# FAILED: vtat2" unless="${vtat2_exit_code}=0"/>
 		<echo message="# FAILED: vtct" unless="${vtct_exit_code}=0"/>
 		<echo message="# FAILED: vuex1" unless="${vuex1_exit_code}=0"/>
 		<echo message="# FAILED: vuot1" unless="${vuot1_exit_code}=0"/>

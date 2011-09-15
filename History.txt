@@ -24,6 +24,7 @@ Version 3.10 - ?
 	  was raised.
 	* Fixed bug when running 'gec --gelint ...'. Validity errors were
 	  reported twice.
+	* Qualified anchored types are now accepted by default.
 
 	gelint:
 
@@ -32,6 +33,7 @@ Version 3.10 - ?
 	  did not exist.
 	* Report a VIPR-3 error for inline agent of the once and external forms.
 	  This is not in ECMA 367-2, but a restriction in ISE.
+	* Qualified anchored types are now accepted by default.
 
 	getest:
 
@@ -140,6 +142,8 @@ Version 3.10 - ?
 	* Accept class text files which start with the byte order mark (BOM).
 	  (See http://en.wikipedia.org/wiki/Byte_order_mark.)
 	* Started checking void-safety validity rules.
+	* Relaxed the validity rule to prevent cycles in qualified anchored types
+	  so that it can accept code appearing in ISE's libraries.
 
 	Gobo Eiffel XML Library:
 

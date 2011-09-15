@@ -5146,8 +5146,8 @@ feature -- Validity errors
 
 	report_vtat2b_error (a_class, a_class_impl: ET_CLASS; a_type: ET_LIKE_IDENTIFIER)
 			-- Report VTAT-2 error: the type of the anchor of `a_type' appearing in
-			-- a qualified anchored type in `a_class_impl' contains an anchored type
-			-- (other than 'like Current') when viewed from `a_class'.
+			-- a qualified anchored type in `a_class_impl' depends on a qualified
+			-- anchored type when viewed from `a_class'.
 			--
 			-- Not in ECMA, similar to VTAT-1 in ETL2 page 214, but applied to
 			-- qualified anchored types.

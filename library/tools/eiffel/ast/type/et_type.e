@@ -429,6 +429,17 @@ feature -- Status report
 			-- Result := False
 		end
 
+	depends_on_qualified_anchored_type (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Does current type depend on a qualified anchored type when
+			-- viewed from `a_context' when trying to determine its base type?
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in non-qualified anchored types involved.
+		do
+			-- Result := False
+		end
+
 	has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does current type contain a formal generic parameter
 			-- when viewed from `a_context'?

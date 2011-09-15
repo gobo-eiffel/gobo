@@ -22,6 +22,7 @@ inherit
 			shallow_named_type_with_type_mark,
 			named_type_has_class,
 			named_type_is_formal_type,
+			depends_on_qualified_anchored_type,
 			has_formal_types,
 			same_syntactical_qualified_like_identifier_with_type_marks,
 			same_named_bit_type_with_type_marks,
@@ -494,6 +495,13 @@ feature -- Status report
 					Result := False
 				end
 			end
+		end
+
+	depends_on_qualified_anchored_type (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Does current type depend on a qualified anchored type when
+			-- viewed from `a_context' when trying to determine its base type?
+		do
+			Result := True
 		end
 
 	has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN

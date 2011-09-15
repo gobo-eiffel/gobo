@@ -25,6 +25,7 @@ inherit
 			is_base_type,
 			has_anchored_type,
 			has_identifier_anchored_type,
+			depends_on_qualified_anchored_type,
 			has_formal_types,
 			conforms_from_bit_type_with_type_marks,
 			conforms_from_formal_parameter_type_with_type_marks,
@@ -313,6 +314,18 @@ feature -- Status report
 			a_parameters := actual_parameters
 			if a_parameters /= Void then
 				Result := a_parameters.has_identifier_anchored_type
+			end
+		end
+
+	depends_on_qualified_anchored_type (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Does current type depend on a qualified anchored type when
+			-- viewed from `a_context' when trying to determine its base type?
+		local
+			a_parameters: like actual_parameters
+		do
+			a_parameters := actual_parameters
+			if a_parameters /= Void then
+				Result := a_parameters.depends_on_qualified_anchored_type (a_context)
 			end
 		end
 

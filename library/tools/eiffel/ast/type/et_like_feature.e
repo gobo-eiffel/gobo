@@ -36,7 +36,8 @@ inherit
 			conforms_from_tuple_type_with_type_marks,
 			type_with_type_mark,
 			is_type_reference_with_type_mark,
-			is_type_detachable_with_type_mark
+			is_type_detachable_with_type_mark,
+			depends_on_qualified_anchored_type
 		end
 
 create
@@ -846,6 +847,57 @@ feature -- Status report
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
 					Result := l_query.type.is_type_detachable_with_type_mark (overridden_type_mark (a_type_mark), a_context)
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we resolved
+						-- current anchored type.
+					Result := False
+				end
+			end
+		end
+
+	depends_on_qualified_anchored_type (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Does current type depend on a qualified anchored type when
+			-- viewed from `a_context' when trying to determine its base type?
+				local
+			a_class: ET_CLASS
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
+			args: ET_FORMAL_ARGUMENT_LIST
+			an_index: INTEGER
+		do
+			if seed = 0 then
+					-- Anchored type not resolved yet.
+				Result := False
+			elseif is_like_argument then
+				a_class := a_context.base_class
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
+				if l_feature /= Void then
+					args := l_feature.arguments
+					an_index := index
+					if args = Void or else an_index > args.count then
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we resolved
+							-- current anchored type.
+						Result := False
+					else
+						Result := args.item (an_index).type.depends_on_qualified_anchored_type (a_context)
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we resolved
+						-- current anchored type.
+					Result := False
+				end
+			else
+				a_class := a_context.base_class
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.depends_on_qualified_anchored_type (a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved

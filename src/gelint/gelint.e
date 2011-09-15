@@ -54,6 +54,7 @@ feature -- Execution
 			ise_variables.set_ise_library_variable
 			create error_handler.make_standard
 			is_flat_dbc := True
+			qualified_anchored_types_enabled := True
 			nb := Arguments.argument_count
 			from i := 1 until i > nb loop
 				arg := Arguments.argument (i)

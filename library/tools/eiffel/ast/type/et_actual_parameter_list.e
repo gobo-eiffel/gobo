@@ -236,6 +236,27 @@ feature -- Status report
 			end
 		end
 
+	depends_on_qualified_anchored_type (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Does one of the current types depend on a qualified anchored type when
+			-- viewed from `a_context' when trying to determine its base type?
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in non-qualified anchored types involved.
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).type.depends_on_qualified_anchored_type (a_context) then
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		end
+
 	has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does one of the current types contain a formal generic
 			-- parameter when viewed from `a_context'?

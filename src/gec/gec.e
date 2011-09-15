@@ -350,7 +350,7 @@ feature -- Status report
 	qualified_anchored_types_enabled: BOOLEAN
 			-- Are Qualified Anchored Types allowed?
 		do
-			Result := qat_option.was_found and then qat_option.parameter
+			Result := not qat_option.was_found or else qat_option.parameter
 		end
 
 	no_c_compile: BOOLEAN
@@ -452,7 +452,7 @@ feature -- Argument parsing
 			a_parser.options.force_last (catcall_option)
 				-- qat
 			create qat_option.make_with_long_form ("qat")
-			qat_option.set_description ("Are Qualified Anchored Types allowed? (default: no)")
+			qat_option.set_description ("Are Qualified Anchored Types allowed? (default: yes)")
 			qat_option.set_parameter_description ("no|yes")
 			a_parser.options.force_last (qat_option)
 				-- cc
