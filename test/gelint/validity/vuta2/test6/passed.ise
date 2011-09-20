@@ -1,0 +1,16 @@
+-------------------------------------------------------------------------------
+
+Error code: VUTA(2)
+
+Error: target of the Object_call is not attached.
+What to do: ensure target of the call is attached.
+
+Class: AA
+Feature: f2
+Type: detachable STRING_8
+Line: 33
+      rescue
+->      i := s.count
+      end
+
+-------------------------------------------------------------------------------

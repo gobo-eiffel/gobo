@@ -982,6 +982,11 @@ feature {NONE} -- Feature validity
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_compound: ET_COMPOUND
 			had_error: BOOLEAN
+			l_rescue_compound: ET_COMPOUND
+			l_rescue_attachment_scope: like current_attachment_scope
+			l_rescue_initialization_scope: like current_initialization_scope
+			l_main_attachment_scope: like current_attachment_scope
+			l_main_initialization_scope: like current_initialization_scope
 		do
 			has_fatal_error := False
 			l_arguments := a_feature.arguments
@@ -1013,6 +1018,17 @@ feature {NONE} -- Feature validity
 			end
 			if not had_error then
 				l_compound := a_feature.compound
+				l_rescue_compound := a_feature.rescue_clause
+				if current_universe.attachment_type_conformance_mode then
+					if l_rescue_compound /= Void and l_compound /= Void then
+						l_rescue_initialization_scope := current_initialization_scope
+						current_initialization_scope := new_attachment_scope
+						current_initialization_scope.copy_scope (l_rescue_initialization_scope)
+						l_rescue_attachment_scope := current_attachment_scope
+						current_attachment_scope := new_attachment_scope
+						current_attachment_scope.copy_scope (l_rescue_attachment_scope)
+					end
+				end
 				if l_compound /= Void then
 					check_instructions_validity (l_compound)
 					had_error := had_error or has_fatal_error
@@ -1028,10 +1044,25 @@ feature {NONE} -- Feature validity
 						end
 					end
 				end
-				l_compound := a_feature.rescue_clause
-				if l_compound /= Void then
-					check_rescue_validity (l_compound)
+				if l_rescue_compound /= Void then
+					if current_universe.attachment_type_conformance_mode then
+						if l_compound /= Void then
+							l_main_attachment_scope := current_attachment_scope
+							l_main_initialization_scope := current_initialization_scope
+							current_attachment_scope := l_rescue_attachment_scope
+							current_initialization_scope := l_rescue_initialization_scope
+						end
+					end
+					check_rescue_validity (l_rescue_compound)
 					had_error := had_error or has_fatal_error
+					if current_universe.attachment_type_conformance_mode then
+						if l_compound /= Void then
+							free_attachment_scope (current_attachment_scope)
+							free_attachment_scope (current_initialization_scope)
+							current_attachment_scope := l_main_attachment_scope
+							current_initialization_scope := l_main_initialization_scope
+						end
+					end
 				end
 			end
 			has_fatal_error := had_error
@@ -1049,6 +1080,11 @@ feature {NONE} -- Feature validity
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_compound: ET_COMPOUND
 			had_error: BOOLEAN
+			l_rescue_compound: ET_COMPOUND
+			l_rescue_attachment_scope: like current_attachment_scope
+			l_rescue_initialization_scope: like current_initialization_scope
+			l_main_attachment_scope: like current_attachment_scope
+			l_main_initialization_scope: like current_initialization_scope
 		do
 			has_fatal_error := False
 			l_arguments := a_feature.arguments
@@ -1068,14 +1104,40 @@ feature {NONE} -- Feature validity
 			end
 			if not had_error then
 				l_compound := a_feature.compound
+				l_rescue_compound := a_feature.rescue_clause
+				if current_universe.attachment_type_conformance_mode then
+					if l_rescue_compound /= Void and l_compound /= Void then
+						l_rescue_initialization_scope := current_initialization_scope
+						current_initialization_scope := new_attachment_scope
+						current_initialization_scope.copy_scope (l_rescue_initialization_scope)
+						l_rescue_attachment_scope := current_attachment_scope
+						current_attachment_scope := new_attachment_scope
+						current_attachment_scope.copy_scope (l_rescue_attachment_scope)
+					end
+				end
 				if l_compound /= Void then
 					check_instructions_validity (l_compound)
 					had_error := had_error or has_fatal_error
 				end
-				l_compound := a_feature.rescue_clause
-				if l_compound /= Void then
-					check_rescue_validity (l_compound)
+				if l_rescue_compound /= Void then
+					if current_universe.attachment_type_conformance_mode then
+						if l_compound /= Void then
+							l_main_attachment_scope := current_attachment_scope
+							l_main_initialization_scope := current_initialization_scope
+							current_attachment_scope := l_rescue_attachment_scope
+							current_initialization_scope := l_rescue_initialization_scope
+						end
+					end
+					check_rescue_validity (l_rescue_compound)
 					had_error := had_error or has_fatal_error
+					if current_universe.attachment_type_conformance_mode then
+						if l_compound /= Void then
+							free_attachment_scope (current_attachment_scope)
+							free_attachment_scope (current_initialization_scope)
+							current_attachment_scope := l_main_attachment_scope
+							current_initialization_scope := l_main_initialization_scope
+						end
+					end
 				end
 			end
 			has_fatal_error := had_error
@@ -1176,6 +1238,11 @@ feature {NONE} -- Feature validity
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_compound: ET_COMPOUND
 			had_error: BOOLEAN
+			l_rescue_compound: ET_COMPOUND
+			l_rescue_attachment_scope: like current_attachment_scope
+			l_rescue_initialization_scope: like current_initialization_scope
+			l_main_attachment_scope: like current_attachment_scope
+			l_main_initialization_scope: like current_initialization_scope
 		do
 			has_fatal_error := False
 			l_type := a_feature.type
@@ -1203,6 +1270,17 @@ feature {NONE} -- Feature validity
 			end
 			if not had_error then
 				l_compound := a_feature.compound
+				l_rescue_compound := a_feature.rescue_clause
+				if current_universe.attachment_type_conformance_mode then
+					if l_rescue_compound /= Void and l_compound /= Void then
+						l_rescue_initialization_scope := current_initialization_scope
+						current_initialization_scope := new_attachment_scope
+						current_initialization_scope.copy_scope (l_rescue_initialization_scope)
+						l_rescue_attachment_scope := current_attachment_scope
+						current_attachment_scope := new_attachment_scope
+						current_attachment_scope.copy_scope (l_rescue_attachment_scope)
+					end
+				end
 				if l_compound /= Void then
 					check_instructions_validity (l_compound)
 					had_error := had_error or has_fatal_error
@@ -1218,10 +1296,25 @@ feature {NONE} -- Feature validity
 						end
 					end
 				end
-				l_compound := a_feature.rescue_clause
-				if l_compound /= Void then
-					check_rescue_validity (l_compound)
+				if l_rescue_compound /= Void then
+					if current_universe.attachment_type_conformance_mode then
+						if l_compound /= Void then
+							l_main_attachment_scope := current_attachment_scope
+							l_main_initialization_scope := current_initialization_scope
+							current_attachment_scope := l_rescue_attachment_scope
+							current_initialization_scope := l_rescue_initialization_scope
+						end
+					end
+					check_rescue_validity (l_rescue_compound)
 					had_error := had_error or has_fatal_error
+					if current_universe.attachment_type_conformance_mode then
+						if l_compound /= Void then
+							free_attachment_scope (current_attachment_scope)
+							free_attachment_scope (current_initialization_scope)
+							current_attachment_scope := l_main_attachment_scope
+							current_initialization_scope := l_main_initialization_scope
+						end
+					end
 				end
 			end
 			has_fatal_error := had_error
@@ -1305,6 +1398,11 @@ feature {NONE} -- Feature validity
 			l_keys: ET_MANIFEST_STRING_LIST
 			had_key_error: BOOLEAN
 			had_error: BOOLEAN
+			l_rescue_compound: ET_COMPOUND
+			l_rescue_attachment_scope: like current_attachment_scope
+			l_rescue_initialization_scope: like current_initialization_scope
+			l_main_attachment_scope: like current_attachment_scope
+			l_main_initialization_scope: like current_initialization_scope
 		do
 			has_fatal_error := False
 			l_arguments := a_feature.arguments
@@ -1341,6 +1439,17 @@ feature {NONE} -- Feature validity
 			end
 			if not had_error then
 				l_compound := a_feature.compound
+				l_rescue_compound := a_feature.rescue_clause
+				if current_universe.attachment_type_conformance_mode then
+					if l_rescue_compound /= Void and l_compound /= Void then
+						l_rescue_initialization_scope := current_initialization_scope
+						current_initialization_scope := new_attachment_scope
+						current_initialization_scope.copy_scope (l_rescue_initialization_scope)
+						l_rescue_attachment_scope := current_attachment_scope
+						current_attachment_scope := new_attachment_scope
+						current_attachment_scope.copy_scope (l_rescue_attachment_scope)
+					end
+				end
 				if l_compound /= Void then
 					check_instructions_validity (l_compound)
 					had_error := had_error or has_fatal_error
@@ -1356,10 +1465,25 @@ feature {NONE} -- Feature validity
 						end
 					end
 				end
-				l_compound := a_feature.rescue_clause
-				if l_compound /= Void then
-					check_rescue_validity (l_compound)
+				if l_rescue_compound /= Void then
+					if current_universe.attachment_type_conformance_mode then
+						if l_compound /= Void then
+							l_main_attachment_scope := current_attachment_scope
+							l_main_initialization_scope := current_initialization_scope
+							current_attachment_scope := l_rescue_attachment_scope
+							current_initialization_scope := l_rescue_initialization_scope
+						end
+					end
+					check_rescue_validity (l_rescue_compound)
 					had_error := had_error or has_fatal_error
+					if current_universe.attachment_type_conformance_mode then
+						if l_compound /= Void then
+							free_attachment_scope (current_attachment_scope)
+							free_attachment_scope (current_initialization_scope)
+							current_attachment_scope := l_main_attachment_scope
+							current_initialization_scope := l_main_initialization_scope
+						end
+					end
 				end
 			end
 			has_fatal_error := had_error or had_key_error
@@ -1379,6 +1503,11 @@ feature {NONE} -- Feature validity
 			l_keys: ET_MANIFEST_STRING_LIST
 			had_key_error: BOOLEAN
 			had_error: BOOLEAN
+			l_rescue_compound: ET_COMPOUND
+			l_rescue_attachment_scope: like current_attachment_scope
+			l_rescue_initialization_scope: like current_initialization_scope
+			l_main_attachment_scope: like current_attachment_scope
+			l_main_initialization_scope: like current_initialization_scope
 		do
 			has_fatal_error := False
 			l_arguments := a_feature.arguments
@@ -1403,14 +1532,40 @@ feature {NONE} -- Feature validity
 			end
 			if not had_error then
 				l_compound := a_feature.compound
+				l_rescue_compound := a_feature.rescue_clause
+				if current_universe.attachment_type_conformance_mode then
+					if l_rescue_compound /= Void and l_compound /= Void then
+						l_rescue_initialization_scope := current_initialization_scope
+						current_initialization_scope := new_attachment_scope
+						current_initialization_scope.copy_scope (l_rescue_initialization_scope)
+						l_rescue_attachment_scope := current_attachment_scope
+						current_attachment_scope := new_attachment_scope
+						current_attachment_scope.copy_scope (l_rescue_attachment_scope)
+					end
+				end
 				if l_compound /= Void then
 					check_instructions_validity (l_compound)
 					had_error := had_error or has_fatal_error
 				end
-				l_compound := a_feature.rescue_clause
-				if l_compound /= Void then
-					check_rescue_validity (l_compound)
+				if l_rescue_compound /= Void then
+					if current_universe.attachment_type_conformance_mode then
+						if l_compound /= Void then
+							l_main_attachment_scope := current_attachment_scope
+							l_main_initialization_scope := current_initialization_scope
+							current_attachment_scope := l_rescue_attachment_scope
+							current_initialization_scope := l_rescue_initialization_scope
+						end
+					end
+					check_rescue_validity (l_rescue_compound)
 					had_error := had_error or has_fatal_error
+					if current_universe.attachment_type_conformance_mode then
+						if l_compound /= Void then
+							free_attachment_scope (current_attachment_scope)
+							free_attachment_scope (current_initialization_scope)
+							current_attachment_scope := l_main_attachment_scope
+							current_initialization_scope := l_main_initialization_scope
+						end
+					end
 				end
 			end
 			has_fatal_error := had_error or had_key_error
@@ -10474,6 +10629,11 @@ feature {NONE} -- Agent validity
 			l_old_attachment_scope: like current_attachment_scope
 			l_old_initialization_scope: like current_initialization_scope
 			had_error: BOOLEAN
+			l_rescue_compound: ET_COMPOUND
+			l_rescue_attachment_scope: like current_attachment_scope
+			l_rescue_initialization_scope: like current_initialization_scope
+			l_main_attachment_scope: like current_attachment_scope
+			l_main_initialization_scope: like current_initialization_scope
 		do
 			has_fatal_error := False
 				-- Manage enclosing inline agents stack.
@@ -10518,6 +10678,17 @@ feature {NONE} -- Agent validity
 			end
 			if not had_error then
 				l_compound := an_expression.compound
+				l_rescue_compound := an_expression.rescue_clause
+				if current_universe.attachment_type_conformance_mode then
+					if l_rescue_compound /= Void and l_compound /= Void then
+						l_rescue_initialization_scope := current_initialization_scope
+						current_initialization_scope := new_attachment_scope
+						current_initialization_scope.copy_scope (l_rescue_initialization_scope)
+						l_rescue_attachment_scope := current_attachment_scope
+						current_attachment_scope := new_attachment_scope
+						current_attachment_scope.copy_scope (l_rescue_attachment_scope)
+					end
+				end
 				if l_compound /= Void then
 					check_instructions_validity (l_compound)
 					had_error := had_error or has_fatal_error
@@ -10533,10 +10704,25 @@ feature {NONE} -- Agent validity
 						end
 					end
 				end
-				l_compound := an_expression.rescue_clause
-				if l_compound /= Void then
-					check_rescue_validity (l_compound)
+				if l_rescue_compound /= Void then
+					if current_universe.attachment_type_conformance_mode then
+						if l_compound /= Void then
+							l_main_attachment_scope := current_attachment_scope
+							l_main_initialization_scope := current_initialization_scope
+							current_attachment_scope := l_rescue_attachment_scope
+							current_initialization_scope := l_rescue_initialization_scope
+						end
+					end
+					check_rescue_validity (l_rescue_compound)
 					had_error := had_error or has_fatal_error
+					if current_universe.attachment_type_conformance_mode then
+						if l_compound /= Void then
+							free_attachment_scope (current_attachment_scope)
+							free_attachment_scope (current_initialization_scope)
+							current_attachment_scope := l_main_attachment_scope
+							current_initialization_scope := l_main_initialization_scope
+						end
+					end
 				end
 			end
 				-- Restore the scope object-test locals declared
@@ -10575,6 +10761,11 @@ feature {NONE} -- Agent validity
 			l_old_attachment_scope: like current_attachment_scope
 			l_old_initialization_scope: like current_initialization_scope
 			had_error: BOOLEAN
+			l_rescue_compound: ET_COMPOUND
+			l_rescue_attachment_scope: like current_attachment_scope
+			l_rescue_initialization_scope: like current_initialization_scope
+			l_main_attachment_scope: like current_attachment_scope
+			l_main_initialization_scope: like current_initialization_scope
 		do
 			has_fatal_error := False
 				-- Manage enclosing inline agents stack.
@@ -10612,14 +10803,40 @@ feature {NONE} -- Agent validity
 			end
 			if not had_error then
 				l_compound := an_expression.compound
+				l_rescue_compound := an_expression.rescue_clause
+				if current_universe.attachment_type_conformance_mode then
+					if l_rescue_compound /= Void and l_compound /= Void then
+						l_rescue_initialization_scope := current_initialization_scope
+						current_initialization_scope := new_attachment_scope
+						current_initialization_scope.copy_scope (l_rescue_initialization_scope)
+						l_rescue_attachment_scope := current_attachment_scope
+						current_attachment_scope := new_attachment_scope
+						current_attachment_scope.copy_scope (l_rescue_attachment_scope)
+					end
+				end
 				if l_compound /= Void then
 					check_instructions_validity (l_compound)
 					had_error := had_error or has_fatal_error
 				end
-				l_compound := an_expression.rescue_clause
-				if l_compound /= Void then
-					check_rescue_validity (l_compound)
+				if l_rescue_compound /= Void then
+					if current_universe.attachment_type_conformance_mode then
+						if l_compound /= Void then
+							l_main_attachment_scope := current_attachment_scope
+							l_main_initialization_scope := current_initialization_scope
+							current_attachment_scope := l_rescue_attachment_scope
+							current_initialization_scope := l_rescue_initialization_scope
+						end
+					end
+					check_rescue_validity (l_rescue_compound)
 					had_error := had_error or has_fatal_error
+					if current_universe.attachment_type_conformance_mode then
+						if l_compound /= Void then
+							free_attachment_scope (current_attachment_scope)
+							free_attachment_scope (current_initialization_scope)
+							current_attachment_scope := l_main_attachment_scope
+							current_initialization_scope := l_main_initialization_scope
+						end
+					end
 				end
 			end
 				-- Restore the scope object-test locals declared
@@ -10807,6 +11024,11 @@ feature {NONE} -- Agent validity
 			l_keys: ET_MANIFEST_STRING_LIST
 			had_key_error: BOOLEAN
 			had_error: BOOLEAN
+			l_rescue_compound: ET_COMPOUND
+			l_rescue_attachment_scope: like current_attachment_scope
+			l_rescue_initialization_scope: like current_initialization_scope
+			l_main_attachment_scope: like current_attachment_scope
+			l_main_initialization_scope: like current_initialization_scope
 		do
 			has_fatal_error := False
 				-- Manage enclosing inline agents stack.
@@ -10856,6 +11078,17 @@ feature {NONE} -- Agent validity
 			end
 			if not had_error then
 				l_compound := an_expression.compound
+				l_rescue_compound := an_expression.rescue_clause
+				if current_universe.attachment_type_conformance_mode then
+					if l_rescue_compound /= Void and l_compound /= Void then
+						l_rescue_initialization_scope := current_initialization_scope
+						current_initialization_scope := new_attachment_scope
+						current_initialization_scope.copy_scope (l_rescue_initialization_scope)
+						l_rescue_attachment_scope := current_attachment_scope
+						current_attachment_scope := new_attachment_scope
+						current_attachment_scope.copy_scope (l_rescue_attachment_scope)
+					end
+				end
 				if l_compound /= Void then
 					check_instructions_validity (l_compound)
 					had_error := had_error or has_fatal_error
@@ -10871,10 +11104,25 @@ feature {NONE} -- Agent validity
 						end
 					end
 				end
-				l_compound := an_expression.rescue_clause
-				if l_compound /= Void then
-					check_rescue_validity (l_compound)
+				if l_rescue_compound /= Void then
+					if current_universe.attachment_type_conformance_mode then
+						if l_compound /= Void then
+							l_main_attachment_scope := current_attachment_scope
+							l_main_initialization_scope := current_initialization_scope
+							current_attachment_scope := l_rescue_attachment_scope
+							current_initialization_scope := l_rescue_initialization_scope
+						end
+					end
+					check_rescue_validity (l_rescue_compound)
 					had_error := had_error or has_fatal_error
+					if current_universe.attachment_type_conformance_mode then
+						if l_compound /= Void then
+							free_attachment_scope (current_attachment_scope)
+							free_attachment_scope (current_initialization_scope)
+							current_attachment_scope := l_main_attachment_scope
+							current_initialization_scope := l_main_initialization_scope
+						end
+					end
 				end
 			end
 				-- Restore the scope object-test locals declared
@@ -10920,6 +11168,11 @@ feature {NONE} -- Agent validity
 			l_keys: ET_MANIFEST_STRING_LIST
 			had_key_error: BOOLEAN
 			had_error: BOOLEAN
+			l_rescue_compound: ET_COMPOUND
+			l_rescue_attachment_scope: like current_attachment_scope
+			l_rescue_initialization_scope: like current_initialization_scope
+			l_main_attachment_scope: like current_attachment_scope
+			l_main_initialization_scope: like current_initialization_scope
 		do
 			has_fatal_error := False
 				-- Manage enclosing inline agents stack.
@@ -10962,14 +11215,40 @@ feature {NONE} -- Agent validity
 			end
 			if not had_error then
 				l_compound := an_expression.compound
+				l_rescue_compound := an_expression.rescue_clause
+				if current_universe.attachment_type_conformance_mode then
+					if l_rescue_compound /= Void and l_compound /= Void then
+						l_rescue_initialization_scope := current_initialization_scope
+						current_initialization_scope := new_attachment_scope
+						current_initialization_scope.copy_scope (l_rescue_initialization_scope)
+						l_rescue_attachment_scope := current_attachment_scope
+						current_attachment_scope := new_attachment_scope
+						current_attachment_scope.copy_scope (l_rescue_attachment_scope)
+					end
+				end
 				if l_compound /= Void then
 					check_instructions_validity (l_compound)
 					had_error := had_error or has_fatal_error
 				end
-				l_compound := an_expression.rescue_clause
-				if l_compound /= Void then
-					check_rescue_validity (l_compound)
+				if l_rescue_compound /= Void then
+					if current_universe.attachment_type_conformance_mode then
+						if l_compound /= Void then
+							l_main_attachment_scope := current_attachment_scope
+							l_main_initialization_scope := current_initialization_scope
+							current_attachment_scope := l_rescue_attachment_scope
+							current_initialization_scope := l_rescue_initialization_scope
+						end
+					end
+					check_rescue_validity (l_rescue_compound)
 					had_error := had_error or has_fatal_error
+					if current_universe.attachment_type_conformance_mode then
+						if l_compound /= Void then
+							free_attachment_scope (current_attachment_scope)
+							free_attachment_scope (current_initialization_scope)
+							current_attachment_scope := l_main_attachment_scope
+							current_initialization_scope := l_main_initialization_scope
+						end
+					end
 				end
 			end
 				-- Restore the scope object-test locals declared
