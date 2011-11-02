@@ -54,6 +54,7 @@ feature {NONE} -- Initialization
 			console_application_mode := True
 			alias_transition_mode := True
 			unknown_builtin_reported := True
+			qualified_anchored_types_enabled := True
 			set_default_class_mapping
 			set_kernel_types
 			create null_processor.make
