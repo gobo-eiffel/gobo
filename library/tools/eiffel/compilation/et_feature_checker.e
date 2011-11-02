@@ -1286,13 +1286,19 @@ feature {NONE} -- Feature validity
 					had_error := had_error or has_fatal_error
 				end
 				if current_universe.attachment_type_conformance_mode then
-					if not l_type.is_type_detachable (current_type) and not l_type.is_type_expanded (current_type) then
-						if not current_initialization_scope.has_result then
-								-- Error: 'Result' entity declared as attached is not initialized
-								-- at the end of the body of the attribute.
-							had_error := True
-							set_fatal_error
-							error_handler.report_vevi0e_error (current_class, current_class_impl, a_feature)
+					if l_compound /= Void and then l_compound.has_non_null_instruction then
+							-- Check that the 'Result' entity has been initialized when
+							-- declared as attached only when the body is not empty.
+							-- When the body is empty, we consider that it is not an
+							-- initialization declaration.
+						if not l_type.is_type_detachable (current_type) and not l_type.is_type_expanded (current_type) then
+							if not current_initialization_scope.has_result then
+									-- Error: 'Result' entity declared as attached is not initialized
+									-- at the end of the body of the attribute.
+								had_error := True
+								set_fatal_error
+								error_handler.report_vevi0e_error (current_class, current_class_impl, a_feature)
+							end
 						end
 					end
 				end
