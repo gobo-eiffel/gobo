@@ -7,8 +7,8 @@ note
 	library: "Gobo Eiffel Test Library"
 	copyright: "Copyright (c) 2000-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2010/05/03 $"
-	revision: "$Revision: #15 $"
+	date: "$Date: 2011/03/17 $"
+	revision: "$Revision: #17 $"
 
 deferred class TS_ASSERTION_ROUTINES
 
@@ -306,7 +306,8 @@ feature {TS_TEST_HANDLER} -- Equality
 			l_message: STRING
 		do
 			assertions.add_assertion
-			if (expected - actual).abs > tolerance then
+				-- Take NaN into account.
+			if (actual /= actual and expected = expected) or (actual = actual and expected /= expected) or (actual = actual and expected = expected and (expected - actual).abs > tolerance) then
 				l_message := assert_strings_equal_with_tolerance_message (a_tag, expected.out, actual.out, tolerance.out, False)
 				logger.report_failure (a_tag, l_message)
 				assertions.report_error (l_message)
@@ -339,7 +340,8 @@ feature {TS_TEST_HANDLER} -- Equality
 			l_message: STRING
 		do
 			assertions.add_assertion
-			if (expected - actual).abs >= tolerance then
+				-- Take NaN into account.
+			if (actual /= actual and expected = expected) or (actual = actual and expected /= expected) or (actual = actual and expected = expected and (expected - actual).abs >= tolerance) then
 				l_message := assert_strings_equal_with_tolerance_message (a_tag, expected.out, actual.out, tolerance.out, True)
 				logger.report_failure (a_tag, l_message)
 				assertions.report_error (l_message)
