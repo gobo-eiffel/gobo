@@ -7,8 +7,8 @@ note
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2009-2011, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2011/09/15 $"
+	revision: "$Revision: #5 $"
 
 class ET_EXTENDED_ATTRIBUTE
 
@@ -23,7 +23,7 @@ inherit
 			reset_postconditions
 		redefine
 			make,
-			reset_after_features_flattened,
+			reset_after_interface_checked,
 			obsolete_message,
 			header_break,
 			last_leaf,
@@ -56,8 +56,8 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset_after_features_flattened
-			-- Reset current attribute as it was just after it was last flattened.
+	reset_after_interface_checked
+			-- Reset current attribute as it was just after its interface was last checked.
 		do
 			if validity_checked then
 				if locals /= Void then

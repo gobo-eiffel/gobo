@@ -7,8 +7,8 @@ note
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2003-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2010/05/03 $"
-	revision: "$Revision: #14 $"
+	date: "$Date: 2010/08/02 $"
+	revision: "$Revision: #15 $"
 
 class ET_FEATURE_LIST
 
@@ -46,6 +46,20 @@ feature -- Initialization
 			nb := count - declared_count
 			from i := count - 1 until i < nb loop
 				storage.item (i).reset_after_features_flattened
+				i := i - 1
+			end
+		end
+
+	reset_after_interface_checked
+			-- Reset features at index 1 to `declared_count' as they were just after their interface was last checked.
+		local
+			i, nb: INTEGER
+		do
+				-- The code below takes advantage of the fact that the features
+				-- are stored in `storage' from 'count - 1' to '0'.
+			nb := count - declared_count
+			from i := count - 1 until i < nb loop
+				storage.item (i).reset_after_interface_checked
 				i := i - 1
 			end
 		end

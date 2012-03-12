@@ -7,8 +7,8 @@ note
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2010/09/15 $"
-	revision: "$Revision: #43 $"
+	date: "$Date: 2011/09/15 $"
+	revision: "$Revision: #46 $"
 
 class ET_CLASS
 
@@ -231,8 +231,8 @@ feature -- Initialization
 			-- Do nothing if interface not checked.
 		do
 			reset_implementation_checked
-			queries.reset_after_features_flattened
-			procedures.reset_after_features_flattened
+			queries.reset_after_interface_checked
+			procedures.reset_after_interface_checked
 			if invariants /= Void then
 				invariants.reset
 			end
