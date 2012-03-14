@@ -7,8 +7,8 @@ note
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010/05/03 $"
+	revision: "$Revision: #8 $"
 
 deferred class ET_INTERNAL_FUNCTION
 
@@ -16,7 +16,7 @@ inherit
 
 	ET_FUNCTION
 		undefine
-			reset_after_features_flattened, locals
+			reset_after_interface_checked, locals
 		end
 
 	ET_INTERNAL_ROUTINE
