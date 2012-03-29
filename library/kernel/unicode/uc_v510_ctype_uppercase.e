@@ -642,7 +642,7 @@ feature {NONE} -- Implementation
 	upper_code_plane_0: SPECIAL [ARRAY [INTEGER]]
 			-- Generated array plane
 		once
-			create Result.make_filled (Void, 256)
+			create Result.make_filled (empty_upper_code_segment, 256)
 			Result.put (upper_code_plane_0_segment_0, 0)
 			Result.put (upper_code_plane_0_segment_1, 1)
 			Result.put (upper_code_plane_0_segment_2, 2)
@@ -942,7 +942,7 @@ feature {NONE} -- Implementation
 	upper_code_plane_1: SPECIAL [ARRAY [INTEGER]]
 			-- Generated array plane
 		once
-			create Result.make_filled (Void, 256)
+			create Result.make_filled (empty_upper_code_segment, 256)
 			Result.put (empty_upper_code_segment, 0)
 			Result.put (empty_upper_code_segment, 1)
 			Result.put (empty_upper_code_segment, 2)
@@ -1207,7 +1207,7 @@ feature {NONE} -- Implementation
 	empty_upper_code_plane: SPECIAL [ARRAY [INTEGER]]
 			-- Generated array plane
 		once
-			create Result.make_filled (Void, 256)
+			create Result.make_filled (empty_upper_code_segment, 256)
 			Result.put (empty_upper_code_segment, 0)
 			Result.put (empty_upper_code_segment, 1)
 			Result.put (empty_upper_code_segment, 2)
@@ -1472,7 +1472,7 @@ feature {NONE} -- Implementation
 	upper_codes: SPECIAL [SPECIAL [ARRAY [INTEGER]]]
 			-- Upper case code points for each code point
 		once
-			create Result.make_filled (Void, 17)
+			create Result.make_filled (empty_upper_code_plane, 17)
 			Result.put (upper_code_plane_0, 0)
 			Result.put (upper_code_plane_1, 1)
 			Result.put (empty_upper_code_plane, 2)
