@@ -326,8 +326,38 @@ feature {NONE} -- Output
 			end
 				-- is_attached_by_default
 -- TODO: Not supported yet.
+			if an_option.is_attached_by_default_declared then
+				if not l_option_attribute_printed then
+					print_indentation (indent, a_file)
+					a_file.put_string ("<option")
+					l_option_attribute_printed := True
+				end
+				a_file.put_string (" is_attached_by_default=%"")
+				if an_option.attached_by_default then
+					a_file.put_string ("true")
+				else
+					a_file.put_string ("false")
+				end
+				a_file.put_character ('%"')
+			end
 				-- is_void_safe
 -- TODO: Not supported yet.
+			if an_option.is_void_safety_declared then
+				if not l_option_attribute_printed then
+					print_indentation (indent, a_file)
+					a_file.put_string ("<option")
+					l_option_attribute_printed := True
+				end
+				a_file.put_string (" void_safety=%"")
+				if an_option.void_safety.same_string (options.none_value) then
+					a_file.put_string ("none")
+				elseif an_option.void_safety.same_string (options.on_demand_value) then
+					a_file.put_string ("initialization")
+				else
+					a_file.put_string ("all")
+				end
+				a_file.put_character ('%"')
+			end
 				-- debug
 			if an_option.is_debug_tag_declared then
 				l_cursor := an_option.debug_tag.new_cursor

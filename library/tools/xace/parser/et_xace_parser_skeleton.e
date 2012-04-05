@@ -855,6 +855,14 @@ feature {NONE} -- Element change
 									else
 										error_handler.report_wrong_attribute_value_error (an_element, uc_value, a_value, an_option.valid_assertion, a_position_table.item (an_element))
 									end
+								when attached_by_default_code then
+									if is_true (a_value) then
+										an_option.set_attached_by_default (True)
+									elseif is_false (a_value) then
+										an_option.set_attached_by_default (False)
+									else
+										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
+									end
 								when automatic_backup_code then
 									if is_true (a_value) then
 										an_option.set_automatic_backup (True)
@@ -1376,6 +1384,12 @@ feature {NONE} -- Element change
 									an_option.set_version (a_value)
 								when visible_filename_code then
 									an_option.set_visible_filename (a_value)
+								when void_safety_code then
+									if an_option.valid_void_safety.has (a_value) then
+										an_option.set_void_safety (a_value)
+									else
+										error_handler.report_wrong_attribute_value_error (an_element, uc_value, a_value, an_option.valid_void_safety, a_position_table.item (an_element))
+									end
 								when warning_code then
 									if an_option.valid_warning.has (a_value) then
 										an_option.set_warning (a_value)
