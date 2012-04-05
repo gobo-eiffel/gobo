@@ -325,7 +325,6 @@ feature {NONE} -- Output
 				a_file.put_character ('%"')
 			end
 				-- is_attached_by_default
--- TODO: Not supported yet.
 			if an_option.is_attached_by_default_declared then
 				if not l_option_attribute_printed then
 					print_indentation (indent, a_file)
@@ -340,8 +339,7 @@ feature {NONE} -- Output
 				end
 				a_file.put_character ('%"')
 			end
-				-- is_void_safe
--- TODO: Not supported yet.
+				-- void_safety
 			if an_option.is_void_safety_declared then
 				if not l_option_attribute_printed then
 					print_indentation (indent, a_file)

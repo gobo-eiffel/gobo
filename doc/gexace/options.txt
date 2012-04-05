@@ -105,6 +105,18 @@ ISE ECF:
   check -> <option><assertions check="true"/></option>
   all -> <option><assertions precondition="true" postcondition="true" invariant="true" loop="true" check="true"/></option>
 -------------------------------------------------------------
+NAME: attached_by_default
+
+VALUES: true | false
+DEFAULT: false
+DESCRIPTION: Are types attached by default when no attachment mark is specified?
+
+ISE Ace:
+  N/A
+ISE ECF:
+  true -> <option is_attached_by_default="true"/>
+  false -> <option is_attached_by_default="false"/>
+-------------------------------------------------------------
 NAME: automatic_backup
 
 VALUES: true | false
@@ -1142,6 +1154,19 @@ ISE Ace:
 ISE ECF:
   N/A
 -------------------------------------------------------------
+NAME: void_safety
+
+VALUES: none | on_demand | complete
+DEFAULT: none
+DESCRIPTION: Should void-safety rules be checked?
+
+ISE Ace:
+  N/A
+ISE ECF:
+  none -> <option void_safety="none"/>
+  on_demand -> <option void_safety="initialization"/>
+  complete -> <option void_safety="all"/>
+-------------------------------------------------------------
 NAME: warning
 
 VALUES: none | style | default | all
@@ -1278,6 +1303,18 @@ ISE ECF:
   loop_variant -> <option><assertions loop="true"/></option>
   check -> <option><assertions check="true"/></option>
   all -> <option><assertions precondition="true" postcondition="true" invariant="true" loop="true" check="true"/></option>
+-------------------------------------------------------------
+NAME: attached_by_default
+
+VALUES: true | false
+DEFAULT: false
+DESCRIPTION: Are types attached by default when no attachment mark is specified?
+
+ISE Ace:
+  N/A
+ISE ECF:
+  true -> <option is_attached_by_default="true"/>
+  false -> <option is_attached_by_default="false"/>
 -------------------------------------------------------------
 NAME: component
 
@@ -1623,6 +1660,19 @@ ISE ECF:
          assembly_name="<name>" assembly_version="<version>"
          assembly_cluster="<culture>" assembly_key="<public_key_token>"/>
 -------------------------------------------------------------
+NAME: void_safety
+
+VALUES: none | on_demand | complete
+DEFAULT: none
+DESCRIPTION: Should void-safety rules be checked?
+
+ISE Ace:
+  N/A
+ISE ECF:
+  none -> <option void_safety="none"/>
+  on_demand -> <option void_safety="initialization"/>
+  complete -> <option void_safety="all"/>
+-------------------------------------------------------------
 
 =============================================================
 
@@ -1684,6 +1734,18 @@ ISE ECF:
   loop_variant -> <class_option class="CLASS_NAME"><assertions loop="true"/></class_option>
   check -> <class_option class="CLASS_NAME"><assertions check="true"/></class_option>
   all -> <class_option class="CLASS_NAME"><assertions precondition="true" postcondition="true" invariant="true" loop="true" check="true"/></class_option>
+-------------------------------------------------------------
+NAME: attached_by_default
+
+VALUES: true | false
+DEFAULT: false
+DESCRIPTION: Are types attached by default when no attachment mark is specified?
+
+ISE Ace:
+  N/A
+ISE ECF:
+  true -> <class_option class="CLASS_NAME" is_attached_by_default="true"/>
+  false -> <class_option class="CLASS_NAME" is_attached_by_default="false"/>
 -------------------------------------------------------------
 NAME: debug
 
@@ -1809,6 +1871,19 @@ ISE Ace:
 ISE ECF:
   true -> <class_option class="CLASS_NAME" trace="true"/>
   false -> <class_option class="CLASS_NAME" trace="false"/>
+-------------------------------------------------------------
+NAME: void_safety
+
+VALUES: none | on_demand | complete
+DEFAULT: none
+DESCRIPTION: Should void-safety rules be checked?
+
+ISE Ace:
+  N/A
+ISE ECF:
+  none -> <class_option class="CLASS_NAME" void_safety="none"/>
+  on_demand -> <class_option class="CLASS_NAME" void_safety="initialization"/>
+  complete -> <class_option class="CLASS_NAME" void_safety="all"/>
 -------------------------------------------------------------
 
 =============================================================
