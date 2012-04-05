@@ -84,6 +84,14 @@ feature -- Status report
 			definition: Result = (declared_assertion /= Void and then not declared_assertion.is_empty)
 		end
 
+	is_attached_by_default_declared: BOOLEAN
+			-- Has 'assertion' option been declared?
+		do
+			Result := declared_attached_by_default /= Void and then not declared_attached_by_default.is_undefined
+		ensure
+			definition: Result = (declared_attached_by_default /= Void and then not declared_attached_by_default.is_undefined)
+		end
+
 	is_automatic_backup_declared: BOOLEAN
 			-- Has 'automatic_backup' option been declared?
 		do
@@ -772,6 +780,14 @@ feature -- Status report
 			definition: Result = (declared_visible_filename /= Void)
 		end
 
+	is_void_safety_declared: BOOLEAN
+			-- Has 'void_safety' option been declared?
+		do
+			Result := declared_void_safety /= Void
+		ensure
+			definition: Result = (declared_void_safety /= Void)
+		end
+
 	is_warning_declared: BOOLEAN
 			-- Has 'warning' option been declared?
 		do
@@ -856,6 +872,15 @@ feature -- Option values
 			-- valid_value: forall v in Result, valid_assertion.has (v)
 		end
 
+	attached_by_default: BOOLEAN
+			-- 'attached_by_default' option
+		do
+			if is_attached_by_default_declared then
+				Result := declared_attached_by_default.is_true
+			else
+				Result := default_attached_by_default
+			end
+		end
 	automatic_backup: BOOLEAN
 			-- Is 'automatic_backup' option enabled?
 		do
@@ -1762,6 +1787,16 @@ feature -- Option values
 			end
 		end
 
+	void_safety: STRING
+			-- 'void_safety' option
+		do
+			if is_void_safety_declared then
+				Result := declared_void_safety
+			else
+				Result := default_void_safety
+			end
+		end
+
 	warning: STRING
 			-- 'warning' option
 		do
@@ -1873,6 +1908,22 @@ feature -- Modification
 		ensure
 			assertion_declared: is_assertion_declared
 			assertion_set: assertion.has (a_value)
+		end
+
+	set_attached_by_default (b: BOOLEAN)
+			-- Set `attached_by_default' to `b'.
+		do
+			if declared_attached_by_default = Void then
+				create declared_attached_by_default.make_undefined
+			end
+			if b then
+				declared_attached_by_default.set_true
+			else
+				declared_attached_by_default.set_false
+			end
+		ensure
+			abstract_declared: is_abstract_declared
+			abstract_set: abstract = b
 		end
 
 	set_automatic_backup (b: BOOLEAN)
@@ -3090,6 +3141,18 @@ feature -- Modification
 			visible_filename_set: visible_filename = a_value
 		end
 
+	set_void_safety (a_value: STRING)
+			-- Set `void_safety' to `a_value'.
+		require
+			a_value_not_void: a_value /= Void
+			a_value_valid: valid_void_safety.has (a_value)
+		do
+			declared_void_safety := a_value
+		ensure
+			void_safety_declared: is_void_safety_declared
+			void_safety_set: void_safety = a_value
+		end
+
 	set_warning (a_value: STRING)
 			-- Set `warning' to `a_value'.
 		require
@@ -3167,6 +3230,14 @@ feature -- Status setting
 			assertion_not_declared: not is_assertion_declared
 		end
 
+	unset_attached_by_default
+			-- Unset 'attached_by_default'
+		do
+			declared_attached_by_default := Void
+		ensure
+			attached_by_default_not_declared: not is_attached_by_default_declared
+		end
+		
 	unset_automatic_backup
 			-- Unset `automatic_backup'.
 		do
@@ -3855,6 +3926,13 @@ feature -- Status setting
 			visible_filename_not_declared: not is_visible_filename_declared
 		end
 
+	unset_void_safety
+			-- Unset 'void_safety'
+		do
+			declared_void_safety := Void
+		ensure
+			void_safety_not_declared: not is_void_safety_declared
+		end
 	unset_warning
 			-- Unset `warning'.
 		do
@@ -4030,6 +4108,21 @@ feature -- Valid values
 			-- all_lower: forall v in Result, v.is_lower
 		end
 
+	valid_void_safety: DS_HASH_SET [STRING]
+			-- Valid values for 'void_safety' option
+		once
+			create Result.make (3)
+			Result.set_equality_tester (string_equality_tester)
+			Result.put_last (options.none_value)
+			Result.put_last (options.on_demand_value)
+			Result.put_last (options.complete_value)
+		ensure
+			valid_target_not_void: Result /= Void
+			valid_target_not_empty: not Result.is_empty
+			no_void_value: not Result.has_void
+			-- all_lower: forall v in Result, v.is_lower
+		end
+
 	valid_warning: DS_HASH_SET [STRING]
 			-- Valid values for 'warning' option
 		once
@@ -4065,6 +4158,9 @@ feature -- Declared values
 
 	declared_assertion: DS_HASH_SET [STRING]
 			-- Declared values for 'assertion' option
+
+	declared_attached_by_default: UT_TRISTATE
+			-- Declared value for 'attached_by_default' option
 
 	declared_automatic_backup: UT_TRISTATE
 			-- Declared value for 'automatic_backup' option
@@ -4324,6 +4420,9 @@ feature -- Declared values
 	declared_visible_filename: STRING
 			-- Declared value for 'visible_filename' option
 
+	declared_void_safety: STRING
+			-- Declared value for 'void_safety' option
+
 	declared_warning: STRING
 			-- Declared value for 'warning' option
 
@@ -4367,6 +4466,9 @@ feature -- Default values
 			default_assertion_not_void: Result /= Void
 			-- valid_value: forall v in Result, valid_assertion.has (v)
 		end
+
+	default_attached_by_default: BOOLEAN = False
+			-- Default value for 'attached_by_default' option
 
 	default_automatic_backup: BOOLEAN = False
 			-- Default value for 'automatic_backup' option
@@ -4799,6 +4901,12 @@ feature -- Default values
 			-- Default value for 'visible_filename' option
 		once
 			Result := Void
+		end
+
+	default_void_safety : STRING
+			-- Default value for 'void_safety' option
+		once
+			Result := options.none_value
 		end
 
 	default_warning: STRING

@@ -24,6 +24,7 @@ feature -- Option names
 	array_optimization_name: STRING = "array_optimization"
 	assembly_name: STRING = "assembly"
 	assertion_name: STRING = "assertion"
+	attached_by_default_name: STRING = "attached_by_default"
 	automatic_backup_name: STRING = "automatic_backup"
 	callback_name: STRING = "callback"
 	case_insensitive_name: STRING = "case_insensitive"
@@ -110,6 +111,7 @@ feature -- Option names
 	verbose_name: STRING = "verbose"
 	version_name: STRING = "version"
 	visible_filename_name: STRING = "visible_filename"
+	void_safety_name: STRING = "void_safety"
 	warning_name: STRING = "warning"
 	wedit_name: STRING = "wedit"
 
@@ -121,6 +123,7 @@ feature -- Option codes
 	array_optimization_code: INTEGER = 4
 	assembly_code: INTEGER = 5
 	assertion_code: INTEGER = 6
+	attached_by_default_code: INTEGER = 95 -- **** FIXME
 	automatic_backup_code: INTEGER = 7
 	callback_code: INTEGER = 8
 	case_insensitive_code: INTEGER = 9
@@ -207,13 +210,14 @@ feature -- Option codes
 	verbose_code: INTEGER = 90
 	version_code: INTEGER = 91
 	visible_filename_code: INTEGER = 92
+	void_safety_code: INTEGER = 96 -- ***** FIXME
 	warning_code: INTEGER = 93
 	wedit_code: INTEGER = 94
 
 	option_codes: DS_HASH_TABLE [INTEGER, STRING]
 			-- Mapping option names -> option codes
 		once
-			create Result.make_map (94)
+			create Result.make_map (96)
 			Result.set_key_equality_tester (string_equality_tester)
 			Result.put_new (abstract_code, abstract_name)
 			Result.put_new (address_expression_code, address_expression_name)
@@ -221,6 +225,7 @@ feature -- Option codes
 			Result.put_new (array_optimization_code, array_optimization_name)
 			Result.put_new (assembly_code, assembly_name)
 			Result.put_new (assertion_code, assertion_name)
+			Result.put_new (attached_by_default_code, attached_by_default_name)
 			Result.put_new (automatic_backup_code, automatic_backup_name)
 			Result.put_new (callback_code, callback_name)
 			Result.put_new (case_insensitive_code, case_insensitive_name)
@@ -307,6 +312,7 @@ feature -- Option codes
 			Result.put_new (verbose_code, verbose_name)
 			Result.put_new (version_code, version_name)
 			Result.put_new (visible_filename_code, visible_filename_name)
+			Result.put_new (void_safety_code, void_safety_name)
 			Result.put_new (warning_code, warning_name)
 			Result.put_new (wedit_code, wedit_name)
 		ensure
@@ -323,6 +329,7 @@ feature -- Option values
 	check_value: STRING = "check"
 	class_value: STRING = "class"
 	com_value: STRING = "com"
+	complete_value: STRING = "complete"
 	constant_value: STRING = "constant"
 	default_value: STRING = "default"
 	dll_value: STRING = "dll"
@@ -340,6 +347,7 @@ feature -- Option values
 	none_value: STRING = "none"
 	obsolete_value: STRING = "obsolete"
 	once_value: STRING = "once"
+	on_demand_value: STRING = "on_demand"
 	require_value: STRING = "require"
 	sequential_value: STRING = "sequential"
 	standard_value: STRING = "standard"
