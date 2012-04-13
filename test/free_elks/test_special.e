@@ -449,4 +449,41 @@ feature -- Test
 			assert_same ("resized10", Void, sp4.item (3))
 		end
 
+	test_deep_copy
+			-- Test feature 'deep_copy'.
+		local
+			sp1, sp2: SPECIAL [CHARACTER]
+			sp3, sp4: SPECIAL [detachable STRING]
+			s1, s2, s3: STRING
+		do
+			create sp1.make_filled ('z', 4)
+			sp1.put ('a', 0)
+			sp1.put ('b', 1)
+			sp1.put ('c', 2)
+			sp1.put ('d', 3)
+			create sp2.make_filled ('z', 4)
+			sp2.deep_copy (sp1)
+			assert_integers_equal ("count_1", 4, sp2.count)
+			assert_characters_equal ("deep_copy_1", 'a', sp2.item (0))
+			assert_characters_equal ("deep_copy_2", 'b', sp2.item (1))
+			assert_characters_equal ("deep_copy_3", 'c', sp2.item (2))
+			assert_characters_equal ("deep_copy_4", 'd', sp2.item (3))
+			create sp3.make_filled (Void, 3)
+			s1 := "gobo"
+			s2 := "foo"
+			s3 := "bar"
+			sp3.put (s1, 0)
+			sp3.put (s2, 1)
+			sp3.put (s3, 2)
+			create sp4.make_filled (Void, 3)
+			sp4.deep_copy (sp3)
+			assert_integers_equal ("count_2", 3, sp4.count)
+			assert_strings_equal ("deep_copy_5a", s1, sp4.item (0))
+			assert_not_same ("deep_copy_5b", s1, sp4.item (0))
+			assert_strings_equal ("deep_copy_6a", s2, sp4.item (1))
+			assert_not_same ("deep_copy_6b", s2, sp4.item (1))
+			assert_strings_equal ("deep_copy_7a", s3, sp4.item (2))
+			assert_not_same ("deep_copy_7b", s3, sp4.item (2))
+		end
+
 end

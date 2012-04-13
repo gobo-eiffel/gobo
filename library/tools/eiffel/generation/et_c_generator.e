@@ -14935,7 +14935,7 @@ feature {NONE} -- Deep features generation
 									current_file.put_character ('{')
 									current_file.put_new_line
 									indent
-									print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_special_indexed_item_access (l_temp,  tokens.result_keyword, a_type, False))
+									print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_special_indexed_item_access (l_temp,  tokens.current_keyword, a_type, False), agent print_attribute_special_indexed_item_access (l_temp,  tokens.result_keyword, a_type, False))
 									dedent
 									print_indentation
 									current_file.put_character ('}')
@@ -14976,7 +14976,7 @@ feature {NONE} -- Deep features generation
 								current_file.put_character ('{')
 								current_file.put_new_line
 								indent
-								print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_special_indexed_item_access (l_temp,  tokens.result_keyword, a_type, False))
+								print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_special_indexed_item_access (l_temp,  tokens.current_keyword, a_type, False), agent print_attribute_special_indexed_item_access (l_temp,  tokens.result_keyword, a_type, False))
 								dedent
 								print_indentation
 								current_file.put_character ('}')
@@ -15000,10 +15000,10 @@ feature {NONE} -- Deep features generation
 									-- already been copied. We need to deep twin it only if
 									-- it itself contains (recursively) reference attributes.
 								if l_attribute_type.has_nested_reference_attributes then
-									print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_access (l_attribute, tokens.result_keyword, a_type, False))
+									print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_access (l_attribute, tokens.result_keyword, a_type, False), agent print_attribute_access (l_attribute, tokens.result_keyword, a_type, False))
 								end
 							else
-								print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_access (l_attribute, tokens.result_keyword, a_type, False))
+								print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_access (l_attribute, tokens.result_keyword, a_type, False), agent print_attribute_access (l_attribute, tokens.result_keyword, a_type, False))
 							end
 							i := i + 1
 						end
@@ -15023,10 +15023,10 @@ feature {NONE} -- Deep features generation
 										-- already been copied. We need to deep twin it only if
 										-- it itself contains (recursively) reference attributes.
 									if l_attribute_type.has_nested_reference_attributes then
-										print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_tuple_item_access (i, tokens.result_keyword, a_type, False))
+										print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_tuple_item_access (i, tokens.result_keyword, a_type, False), agent print_attribute_tuple_item_access (i, tokens.result_keyword, a_type, False))
 									end
 								else
-									print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_tuple_item_access (i, tokens.result_keyword, a_type, False))
+									print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_tuple_item_access (i, tokens.result_keyword, a_type, False), agent print_attribute_tuple_item_access (i, tokens.result_keyword, a_type, False))
 								end
 								i := i + 1
 							end
@@ -15357,17 +15357,19 @@ feature {NONE} -- Deep features generation
 			end
 		end
 
-	print_set_deep_twined_attribute (an_attribute_type_set: ET_DYNAMIC_TYPE_SET; a_print_attribute_access: PROCEDURE [ANY, TUPLE])
+	print_set_deep_twined_attribute (an_attribute_type_set: ET_DYNAMIC_TYPE_SET; a_print_attribute_access_read, a_print_attribute_access_write: PROCEDURE [ANY, TUPLE])
 			-- Print to `current_file' the instructions needed to deep twin an attribute
 			-- of `current_type' whose dynamic type set is `an_attribute_type_set'.
-			-- `a_print_attribute_access' is used to print to `current_file'
-			-- the code to access this attribute. Indeed, it can be a "regular"
-			-- attribute, but it can also be items of a SPECIAL object, fields
-			-- of a TUPLE object, closed operands of an Agent object, ...
+			-- `a_print_attribute_access_read' and `a_print_attribute_access_write' are
+			-- used to print to `current_file' the code to access this attribute in
+			-- read and write mode. Indeed, it can be a "regular" attribute, but it
+			-- can also be items of a SPECIAL object, fields of a TUPLE object, closed
+			-- operands of an Agent object, ...
 		require
 			an_attribute_type_set_not_void: an_attribute_type_set /= Void
 			an_attribute_type_set_not_empty: not an_attribute_type_set.is_empty
-			a_print_attribute_access_not_void: a_print_attribute_access /= Void
+			a_print_attribute_access_read_not_void: a_print_attribute_access_read /= Void
+			a_print_attribute_access_write_not_void: a_print_attribute_access_write /= Void
 		local
 			l_attribute_type: ET_DYNAMIC_TYPE
 			l_temp1, l_temp2: ET_IDENTIFIER
@@ -15379,14 +15381,14 @@ feature {NONE} -- Deep features generation
 			current_file.put_character (' ')
 			current_file.put_character ('=')
 			current_file.put_character (' ')
-			a_print_attribute_access.call ([])
+			a_print_attribute_access_read.call ([])
 			current_file.put_character (';')
 			current_file.put_new_line
 			if l_attribute_type.is_expanded then
 					-- No need to test whether the attribute is Void or not:
 					-- expanded attributes are never Void.
 				print_indentation
-				a_print_attribute_access.call ([])
+				a_print_attribute_access_write.call ([])
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
@@ -15413,7 +15415,7 @@ feature {NONE} -- Deep features generation
 				current_file.put_string (", t0);")
 				current_file.put_new_line
 				print_indentation
-				a_print_attribute_access.call ([])
+				a_print_attribute_access_write.call ([])
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
