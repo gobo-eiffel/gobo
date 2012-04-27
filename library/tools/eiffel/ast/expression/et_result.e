@@ -5,7 +5,7 @@ note
 		"Eiffel result entities"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,7 +25,7 @@ inherit
 		rename
 			make_result as make
 		undefine
-			is_current, is_result
+			is_current, is_false, is_result
 		redefine
 			process
 		end

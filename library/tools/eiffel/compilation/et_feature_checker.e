@@ -5,7 +5,7 @@ note
 		"Eiffel feature validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1038,9 +1038,13 @@ feature {NONE} -- Feature validity
 						if not current_initialization_scope.has_result then
 								-- Error: 'Result' entity declared as attached is not initialized
 								-- at the end of the body the function.
-							had_error := True
-							set_fatal_error
-							error_handler.report_vevi0c_error (current_class, current_class_impl, a_feature)
+							if not current_initialization_scope.is_code_unreachable then
+									-- Starting with ISE 7.0.8.7345, void-safety errors in
+									-- unreachable code are not reported.
+								had_error := True
+								set_fatal_error
+								error_handler.report_vevi0c_error (current_class, current_class_impl, a_feature)
+							end
 						end
 					end
 				end
@@ -1465,9 +1469,13 @@ feature {NONE} -- Feature validity
 						if not current_initialization_scope.has_result then
 								-- Error: 'Result' entity declared as attached is not initialized
 								-- at the end of the body of the function.
-							had_error := True
-							set_fatal_error
-							error_handler.report_vevi0c_error (current_class, current_class_impl, a_feature)
+							if not current_initialization_scope.is_code_unreachable then
+									-- Starting with ISE 7.0.8.7345, void-safety errors in
+									-- unreachable code are not reported.
+								had_error := True
+								set_fatal_error
+								error_handler.report_vevi0c_error (current_class, current_class_impl, a_feature)
+							end
 						end
 					end
 				end
@@ -2979,6 +2987,7 @@ feature {NONE} -- Instruction validity
 			l_compound: ET_COMPOUND
 			had_error: BOOLEAN
 			l_old_object_test_scope: INTEGER
+			l_has_false: BOOLEAN
 		do
 			has_fatal_error := False
 			boolean_type := current_universe_impl.boolean_type
@@ -2999,6 +3008,9 @@ feature {NONE} -- Instruction validity
 						error_handler.report_vwbe0a_error (current_class, current_class_impl, l_expression, l_named_type)
 					end
 					l_assertion_context.wipe_out
+					if l_expression.is_false then
+						l_has_false := True
+					end
 						-- The scope of object-test locals can cover the following assertions
 						-- in the same check clause because it's as if they were separated
 						-- by "and then" operators.
@@ -3014,6 +3026,10 @@ feature {NONE} -- Instruction validity
 			free_context (l_assertion_context)
 			l_compound := an_instruction.then_compound
 			if l_compound /= Void then
+				if l_has_false then
+					current_initialization_scope.set_code_unreachable (True)
+					current_attachment_scope.set_code_unreachable (True)
+				end
 				check_instructions_validity (l_compound)
 				if has_fatal_error then
 					had_error := True
@@ -9955,6 +9971,11 @@ feature {NONE} -- Agent validity
 -- a local variable, a formal argument or the name of an attribute.
 				check_expression_validity (a_target, a_context, l_detachable_any_type)
 				if not has_fatal_error then
+					if current_universe.attachment_type_conformance_mode then
+						if not a_context.is_type_attached and is_entity_attached (a_target) then
+							a_context.force_last (tokens.attached_like_current)
+						end
+					end
 					a_class := a_context.base_class
 					a_class.process (current_system.interface_checker)
 					if not a_class.interface_checked or else a_class.has_interface_error then
@@ -9974,6 +9995,11 @@ feature {NONE} -- Agent validity
 -- a local variable, a formal argument or the name of an attribute.
 				check_expression_validity (a_target, a_context, l_detachable_any_type)
 				if not has_fatal_error then
+					if current_universe.attachment_type_conformance_mode then
+						if not a_context.is_type_attached and is_entity_attached (a_target) then
+							a_context.force_last (tokens.attached_like_current)
+						end
+					end
 					a_class := a_context.base_class
 					a_class.process (current_system.interface_checker)
 					if not a_class.interface_checked or else a_class.has_interface_error then
@@ -9997,6 +10023,11 @@ feature {NONE} -- Agent validity
 -- a local variable, a formal argument or the name of an attribute.
 				check_expression_validity (a_target, a_context, l_detachable_any_type)
 				if not has_fatal_error then
+					if current_universe.attachment_type_conformance_mode then
+						if not a_context.is_type_attached and is_entity_attached (a_target) then
+							a_context.force_last (tokens.attached_like_current)
+						end
+					end
 					a_class := a_context.base_class
 					a_class.process (current_system.interface_checker)
 					if not a_class.interface_checked or else a_class.has_interface_error then

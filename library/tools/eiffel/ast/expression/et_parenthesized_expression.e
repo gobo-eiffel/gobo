@@ -5,7 +5,7 @@ note
 		"Eiffel parenthesized expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,7 +17,8 @@ inherit
 	ET_EXPRESSION
 		redefine
 			unparenthesized_expression,
-			reset, index, is_current
+			reset, index, is_current,
+			is_false
 		end
 
 	ET_AGENT_TARGET
@@ -59,6 +60,12 @@ feature -- Status report
 			-- Is current expression the 'Current' entity (possibly parenthesized)?
 		do
 			Result := expression.is_current
+		end
+
+	is_false: BOOLEAN
+			-- Is current expression the 'False' entity (possibly parenthesized)?
+		do
+			Result := expression.is_false
 		end
 
 feature -- Access
