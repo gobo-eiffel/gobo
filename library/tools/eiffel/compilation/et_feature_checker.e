@@ -7484,6 +7484,7 @@ feature {NONE} -- Expression validity
 			l_left_convert_expression: ET_CONVERT_EXPRESSION
 			l_right_convert_expression: ET_CONVERT_EXPRESSION
 			l_detachable_any_type: ET_CLASS_TYPE
+			l_target_type_context: ET_TYPE_CONTEXT
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -7494,6 +7495,7 @@ feature {NONE} -- Expression validity
 			l_left_operand := an_expression.left
 			l_right_operand := an_expression.right
 			check_expression_validity (l_left_operand, l_left_context, l_detachable_any_type)
+			l_target_type_context := l_left_context
 			if not has_fatal_error then
 				check_expression_validity (l_right_operand, l_right_context, l_detachable_any_type)
 				if not has_fatal_error then
@@ -7529,6 +7531,7 @@ feature {NONE} -- Expression validity
 								-- Convertibility should be resolved in the implementation class.
 							check implementation_class: current_class = current_class_impl end
 							an_expression.set_left (l_left_convert_expression)
+							l_target_type_context := l_right_context
 						else
 								-- We consider that VWEQ is not taken into account in flat Degree 3 mode.
 								-- This is not considered as a fatal error.
@@ -7537,7 +7540,7 @@ feature {NONE} -- Expression validity
 					end
 					if not has_fatal_error then
 						a_context.force_last (current_universe_impl.boolean_type)
-						report_object_equality_expression (an_expression)
+						report_object_equality_expression (an_expression, l_target_type_context)
 					end
 				end
 			else
@@ -11980,11 +11983,15 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION)
+	report_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION; a_target_type: ET_TYPE_CONTEXT)
 			-- Report that an object equality expression has been processed.
+			-- `a_target_type' is the type of the target of the call to 'is_equal'
+			-- internally invoked by the object equality expression.
 		require
 			no_error: not has_fatal_error
 			an_expression_not_void: an_expression /= Void
+			a_target_type_not_void: a_target_type /= Void
+			a_target_type_valid: a_target_type.is_valid_context
 		do
 		end
 

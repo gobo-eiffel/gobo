@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1661,8 +1661,10 @@ feature {NONE} -- Event handling
 			report_constant_expression (a_constant, a_type)
 		end
 
-	report_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION)
+	report_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION; a_target_type: ET_TYPE_CONTEXT)
 			-- Report that an object equality expression has been processed.
+			-- `a_target_type' is the type of the target of the call to 'is_equal'
+			-- internally invoked by the object equality expression.
 		local
 			l_object_equality: ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
