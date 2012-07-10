@@ -5,7 +5,7 @@ note
 		"Compilation commands for ISE Eiffel"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -58,6 +58,9 @@ feature -- Access
 	system_name: STRING
 			-- System name
 
+	compatible_mode: BOOLEAN
+			-- Compatible mode
+			
 	finalize_mode: BOOLEAN
 			-- Finalize mode
 
@@ -88,6 +91,14 @@ feature -- Setting
 			system_name_set: system_name = a_name
 		end
 
+	set_compatible_mode (b: BOOLEAN)
+			-- Set  `compatible_mode' to `b'.
+		do
+			compatible_mode := b
+		ensure
+			compatible_mode_set: compatible_mode = b
+		end
+		
 	set_finalize_mode (b: BOOLEAN)
 			-- Set  `finalize_mode' to `b'.
 		do
@@ -153,6 +164,9 @@ feature -- Execution
 				cmd.append_string (" -config ")
 				a_filename := file_system.pathname_from_file_system (ace_filename, unix_file_system)
 				cmd := STRING_.appended_string (cmd, a_filename)
+			end
+			if compatible_mode then
+				cmd.append_string (" -compat")
 			end
 			if finalize_mode then
 				cmd.append_string (" -finalize")

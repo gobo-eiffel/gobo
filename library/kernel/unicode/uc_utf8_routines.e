@@ -5,7 +5,7 @@ note
 		"UTF-8 encoding routines"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -227,20 +227,13 @@ feature -- Measurement
 			valid_end_index: end_index <= a_string.count
 			meaningful_interval: start_index <= end_index + 1
 		local
-			a_utf8: detachable UC_UTF8_STRING
-			a_uc_string: detachable UC_STRING
 			s, e: INTEGER
 			i: INTEGER
 			even_end_index: INTEGER
 			c: CHARACTER
-			l_string_8: detachable STRING
 		do
 			if start_index <= end_index then
-				if ANY_.same_types (a_string, dummy_string) then
-					l_string_8 ?= a_string
-					check
-						is_string_8: l_string_8 /= Void
-					end
+				if ANY_.same_types (a_string, dummy_string) and then attached {STRING_8} a_string as l_string_8 then
 						-- This is the original code
 --					from i := start_index until i > end_index loop
 --						Result := Result + character_byte_count (l_string_8.item (i))
@@ -279,11 +272,7 @@ feature -- Measurement
 					if even_end_index < end_index then
 						Result := Result + character_byte_count (l_string_8.item (end_index))
 					end
-				elseif ANY_.same_types (a_string, dummy_uc_string) then
-					a_uc_string ?= a_string
-					check
-						is_uc_string: a_uc_string /= Void
-					end
+				elseif ANY_.same_types (a_string, dummy_uc_string) and then attached {UC_STRING} a_string as a_uc_string then
 					if start_index = 1 and end_index = a_uc_string.count then
 						Result := a_uc_string.byte_count
 					else
@@ -295,29 +284,26 @@ feature -- Measurement
 							Result := e - s
 						end
 					end
-				else
-					a_utf8 ?= a_string
-					if a_utf8 /= Void then
-						if start_index = 1 and end_index = a_utf8.count then
-							Result := a_utf8.byte_count
-						else
-							s := a_utf8.byte_index (start_index)
-							if end_index = a_utf8.count then
-								Result := a_utf8.byte_count - s + 1
-							else
-								e := a_utf8.shifted_byte_index (s, end_index - start_index + 1)
-								Result := e - s
-							end
-						end
+				elseif attached {UC_UTF8_STRING} a_string as a_utf8 then
+					if start_index = 1 and end_index = a_utf8.count then
+						Result := a_utf8.byte_count
 					else
-						from
-							i := start_index
-						until
-							i > end_index
-						loop
-							Result := Result + code_byte_count (a_string.code (i).to_integer_32)
-							i := i + 1
+						s := a_utf8.byte_index (start_index)
+						if end_index = a_utf8.count then
+							Result := a_utf8.byte_count - s + 1
+						else
+							e := a_utf8.shifted_byte_index (s, end_index - start_index + 1)
+							Result := e - s
 						end
+					end
+				else
+					from
+						i := start_index
+					until
+						i > end_index
+					loop
+						Result := Result + code_byte_count (a_string.code (i).to_integer_32)
+						i := i + 1
 					end
 				end
 			end

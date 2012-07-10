@@ -6,7 +6,7 @@ note
 		and removals from the tail are optimized.
 	]"
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2010-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -53,9 +53,9 @@ feature {NONE} -- Initialization
 			count := 0
 			if nb > 0 then
 				storage := fixed_array.make (nb + 1)
-				clashes := SPECIAL_INTEGER_.make (nb + 1)
+				clashes := SPECIAL_INTEGER_.make_filled (0, nb + 1)
 				m := new_modulus (nb)
-				slots := SPECIAL_INTEGER_.make (m)
+				slots := SPECIAL_INTEGER_.make_filled (0, m)
 			else
 				storage := Void
 				slots := Void
@@ -125,7 +125,11 @@ feature -- Element change
 			h := hash_position (an_item)
 			clashes.put (slots.item (h), i)
 			slots.put (i, h)
-			storage.put (an_item, i)
+			if count = 0 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				fixed_array.force (storage, an_item, 0)
+			end
+			fixed_array.force (storage, an_item, i)
 			count := i
 		end
 
@@ -142,7 +146,11 @@ feature -- Element change
 			h := hash_position (an_item)
 			clashes.put (slots.item (h), i)
 			slots.put (i, h)
-			storage.put (an_item, i)
+			if count = 0 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				fixed_array.force (storage, an_item, 0)
+			end
+			fixed_array.force (storage, an_item, i)
 			count := i
 		end
 
@@ -159,6 +167,10 @@ feature -- Element change
 			if count + nb > capacity then
 				resize (new_capacity (count + nb))
 			end
+			if count = 0 and other.count > 0 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				fixed_array.force (storage, other.first, 0)
+			end
 			j := count
 			from i := 1 until i > nb loop
 				j := j + 1
@@ -166,7 +178,7 @@ feature -- Element change
 				h := hash_position (l_item)
 				clashes.put (slots.item (h), j)
 				slots.put (j, h)
-				storage.put (l_item, j)
+				fixed_array.force (storage, l_item, j)
 				i := i + 1
 			end
 			count := j
@@ -199,6 +211,10 @@ feature -- Element change
 			h := hash_position (an_item)
 			clashes.put (slots.item (h), i)
 			slots.put (i, h)
+			if i = 1 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				storage.put (an_item, 0)
+			end
 			storage.put (an_item, i)
 		end
 
@@ -208,7 +224,6 @@ feature -- Removal
 			-- Remove last item.
 		local
 			j: INTEGER
-			dead_item: like item
 			l_item: like item
 			h, l_previous: INTEGER
 		do
@@ -229,7 +244,12 @@ feature -- Removal
 				end
 				clashes.put (clashes.item (j), l_previous)
 			end
-			storage.put (dead_item, count)
+			if count = 1 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				fixed_array.keep_head (storage, 0, count + 1)
+			else
+				fixed_array.keep_head (storage, count, count + 1)
+			end
 			count := count - 1
 		end
 
@@ -237,7 +257,6 @@ feature -- Removal
 			-- Remove item at index `i'.
 		local
 			j, nb: INTEGER
-			dead_item: like item
 			l_item: like item
 			h, l_previous: INTEGER
 		do
@@ -277,7 +296,12 @@ feature -- Removal
 				storage.put (storage.item (j + 1), j)
 				j := j + 1
 			end
-			storage.put (dead_item, j)
+			if count = 1 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				fixed_array.keep_head (storage, 0, count + 1)
+			else
+				fixed_array.keep_head (storage, count, count + 1)
+			end
 			count := count - 1
 		end
 
@@ -285,11 +309,9 @@ feature -- Removal
 			-- Remove all items.
 		local
 			i: INTEGER
-			dead_item: like item
 		do
 			if count > 0 then
 				from i := count until i < 1 loop
-					storage.put (dead_item, i)
 					clashes.put (No_position, i)
 					i := i - 1
 				end
@@ -298,6 +320,7 @@ feature -- Removal
 					slots.put (No_position, i)
 					i := i - 1
 				end
+				fixed_array.keep_head (storage, 0, count + 1)
 				count := 0
 			end
 		end
@@ -314,12 +337,12 @@ feature -- Resizing
 				m := new_modulus (nb)
 				if storage = Void then
 					storage := fixed_array.make (nb + 1)
-					clashes := SPECIAL_INTEGER_.make (nb + 1)
-					slots := SPECIAL_INTEGER_.make (m)
+					clashes := SPECIAL_INTEGER_.make_filled (0, nb + 1)
+					slots := SPECIAL_INTEGER_.make_filled (0, m)
 				else
 					storage := fixed_array.resize (storage, nb + 1)
-					clashes := SPECIAL_INTEGER_.resize (clashes, nb + 1)
-					slots := SPECIAL_INTEGER_.resize (slots, m)
+					clashes := SPECIAL_INTEGER_.aliased_resized_area_with_default (clashes, 0, nb + 1)
+					slots := SPECIAL_INTEGER_.aliased_resized_area_with_default (slots, 0, m)
 				end
 				from
 					i := slots.count - 1
@@ -396,7 +419,7 @@ invariant
 	capacity_constraint: capacity < modulus
 	slots_not_void: capacity > 0 implies slots /= Void
 	clashes_not_void: capacity > 0 implies clashes /= Void
-	clashes_count: capacity > 0 implies clashes.count = storage.count
+	clashes_count: capacity > 0 implies clashes.count = storage.capacity
 	slots_count: capacity > 0 implies slots.count = modulus
 
 end

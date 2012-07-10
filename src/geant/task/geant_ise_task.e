@@ -5,7 +5,7 @@ note
 		"Compilation tasks for ISE Eiffel"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -55,6 +55,10 @@ feature {NONE} -- Initialization
 					command.set_clean (a_value)
 				end
 			end
+				-- compatible:
+			if has_attribute (Compatible_attribute_name) then
+				command.set_compatible_mode (boolean_value (Compatible_attribute_name))
+			end
 				-- finalize:
 			if has_attribute (Finalize_attribute_name) then
 				command.set_finalize_mode (boolean_value (Finalize_attribute_name))
@@ -103,6 +107,15 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
+	Compatible_attribute_name: STRING
+			-- Name of xml attribute for "compatible"
+		once
+			Result := "compatible"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+		
 	Finalize_attribute_name: STRING
 			-- Name of xml attribute for "finalize"
 		once

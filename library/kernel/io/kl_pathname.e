@@ -5,7 +5,7 @@ note
 		"Pathnames"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -71,8 +71,9 @@ feature -- Access
 			check
 					 -- Implied by `i_large_enough' and `i_small_enough'.
 				s_not_void: s /= Void
+			then
+				Result := s
 			end
-			Result := s
 		end
 
 	drive: detachable STRING

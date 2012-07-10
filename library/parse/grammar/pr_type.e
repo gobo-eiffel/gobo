@@ -5,7 +5,7 @@ note
 		"Symbol types"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -453,9 +453,11 @@ feature -- Output
 			a_file_open_write: a_file.is_open_write
 		do
 			print_indentation (indent, a_file)
-			a_file.put_string ("yyvs")
+			a_file.put_string ("yyspecial_routines")
 			a_file.put_integer (id)
-			a_file.put_string (".put (yyval")
+			a_file.put_string (".force (yyvs")
+			a_file.put_integer (id)
+			a_file.put_string (", yyval")
 			a_file.put_integer (id)
 			a_file.put_string (", yyvsp")
 			a_file.put_integer (id)
@@ -477,9 +479,11 @@ feature -- Output
 			a_file.put_line (" + 1")
 			print_resize_yyvs (indent, a_file)
 			print_indentation (indent, a_file)
-			a_file.put_string ("yyvs")
+			a_file.put_string ("yyspecial_routines")
 			a_file.put_integer (id)
-			a_file.put_string (".put (")
+			a_file.put_string (".force (yyvs")
+			a_file.put_integer (id)
+			a_file.put_string (", ")
 			a_file.put_string (last_value_name)
 			a_file.put_string (", yyvsp")
 			a_file.put_integer (id)

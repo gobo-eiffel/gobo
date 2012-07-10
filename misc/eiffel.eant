@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Eiffel compilation"
-		copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -102,7 +102,9 @@
 		</delete>
 		<set name="finalize" value="true"/>
 		<set name="finalize" value="false" if="${debug}"/>
-		<ise ace="${ace_filename}" system="${system}" finalize="${finalize}" finish_freezing="true"/>
+		<set name="compatible" value="false"/>
+		<set name="compatible" value="true" if="${GOBO_COMPATIBLE}"/>
+		<ise ace="${ace_filename}" system="${system}" finalize="${finalize}" compatible="${compatible}" finish_freezing="true"/>
 		<set name="codedir" value="W_code" if="${finalize}=false"/>
 		<set name="codedir" value="F_code" if="${finalize}=true"/>
 		<available resource="EIFGENs/${system}/${codedir}/${system}${exe}" variable="file_available"/>
@@ -209,6 +211,7 @@
 			Pass $GOBO_CC value to 'gexace' if defined.
 			Pass $GOBO_XML_EXPAT option to 'gexace' if defined.
 			Pass $GOBO_DOTNET option to 'gexace' if defined.
+			Pass $GOBO_COMPATIBLE option to 'gexace' if defined.
 			Pass $BOEHM_GC option to 'gexace' if defined.
 			To be redefined in descendant if additional options are
 			necessary.
@@ -223,6 +226,7 @@
 			<define name="GOBO_CC" value="${GOBO_CC}" if="${GOBO_CC}"/>
 			<define name="GOBO_XML_EXPAT" value="true" if="${GOBO_XML_EXPAT}"/>
 			<define name="GOBO_DOTNET" value="true" if="${GOBO_DOTNET}"/>
+			<define name="GOBO_COMPATIBLE" value="true" if="${GOBO_COMPATIBLE}"/>
 			<define name="BOEHM_GC" value="${BOEHM_GC}" if="${BOEHM_GC}"/>
 		</gexace>
 	</target>

@@ -5,7 +5,7 @@ note
 		"Interface for character buffers"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,9 +15,6 @@ deferred class KI_CHARACTER_BUFFER
 inherit
 
 	KI_BUFFER [CHARACTER]
-		undefine
-			put,
-			item
 		redefine
 			fill_from_stream
 		end

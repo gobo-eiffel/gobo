@@ -5,7 +5,7 @@ note
 		"PCRE regexp matchers"
 
 	library: "Gobo Eiffel Regexp Library"
-	copyright: "Copyright (c) 2001-2002, Harald Erdbruegger and others"
+	copyright: "Copyright (c) 2001-2012, Harald Erdbruegger and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,14 +42,14 @@ feature {NONE} -- Initialization
 			-- strings.
 		do
 			precursor
-			offset_vector := SPECIAL_INTEGER_.make (64)
+			offset_vector := SPECIAL_INTEGER_.make_filled (0, 64)
 			offset_vector_count := 0
 			brastart_capacity := 8
-			brastart_vector := SPECIAL_INTEGER_.make (brastart_capacity)
+			brastart_vector := SPECIAL_INTEGER_.make_filled (0, brastart_capacity)
 			brastart_lower := 0
 			brastart_count := 0
 			eptr_capacity := 8
-			eptr_vector := SPECIAL_INTEGER_.make (eptr_capacity)
+			eptr_vector := SPECIAL_INTEGER_.make_filled (0, eptr_capacity)
 			eptr_lower := 0
 			eptr_upper := -1
 		end
@@ -105,7 +105,7 @@ feature -- Compilation
 			precursor (a_pattern)
 			offset_vector_count := subexpression_count * 2 + 2
 			if offset_vector.count < offset_vector_count then
-				offset_vector := SPECIAL_INTEGER_.resize (offset_vector, offset_vector_count)
+				offset_vector := SPECIAL_INTEGER_.aliased_resized_area_with_default (offset_vector, 0, offset_vector_count)
 			end
 		end
 
@@ -442,7 +442,7 @@ feature {NONE} -- Matching
 			brastart_count := offset_vector_count
 			new_count := brastart_lower + brastart_count
 			if brastart_capacity < new_count then
-				brastart_vector := SPECIAL_INTEGER_.resize (brastart_vector, new_count)
+				brastart_vector := SPECIAL_INTEGER_.aliased_resized_area_with_default (brastart_vector, 0, new_count)
 				brastart_capacity := new_count
 			end
 			is_matching_caseless := is_caseless
@@ -505,7 +505,7 @@ feature {NONE} -- Matching
 				eptr_upper := eptr_upper + 1
 				if eptr_capacity <= eptr_upper then
 					new_capacity := 2 * (eptr_upper + 1)
-					eptr_vector := SPECIAL_INTEGER_.resize (eptr_vector, new_capacity)
+					eptr_vector := SPECIAL_INTEGER_.aliased_resized_area_with_default (eptr_vector, 0, new_capacity)
 					eptr_capacity := new_capacity
 				end
 				eptr_vector.put (eptr, eptr_upper)
@@ -650,7 +650,7 @@ feature {NONE} -- Matching
 						brastart_lower := brastart_lower + brastart_count
 						new_count := brastart_lower + brastart_count
 						if brastart_capacity < new_count then
-							brastart_vector := SPECIAL_INTEGER_.resize (brastart_vector, new_count)
+							brastart_vector := SPECIAL_INTEGER_.aliased_resized_area_with_default (brastart_vector, 0, new_count)
 							brastart_capacity := new_count
 						end
 						j := brastart_lower

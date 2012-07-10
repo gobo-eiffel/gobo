@@ -5,7 +5,7 @@ note
 		"Eiffel AST lists where insertions to and removals from the tail are optimized"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/05/03 $"
 	revision: "$Revision: #11 $"
@@ -106,7 +106,7 @@ feature -- Measurement
 			-- Maximum number of items in list
 		do
 			if storage /= Void then
-				Result := storage.count - 1
+				Result := storage.capacity - 1
 			end
 		end
 
@@ -145,8 +145,12 @@ feature -- Element change
 			an_item_not_void: an_item /= Void
 			not_full: count < capacity
 		do
+			if count = 0 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				fixed_array.force (storage, an_item, 0)
+			end
 			count := count + 1
-			storage.put (an_item, count)
+			fixed_array.force (storage, an_item, count)
 		ensure
 			one_more: count = old count + 1
 			last_set: last = an_item
@@ -161,8 +165,12 @@ feature -- Element change
 			if count >= capacity then
 				resize (new_capacity (count + 1))
 			end
+			if count = 0 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				fixed_array.force (storage, an_item, 0)
+			end
 			count := count + 1
-			storage.put (an_item, count)
+			fixed_array.force (storage, an_item, count)
 		ensure
 			one_more: count = old count + 1
 			last_set: last = an_item
@@ -182,10 +190,14 @@ feature -- Element change
 			if count + nb > capacity then
 				resize (new_capacity (count + nb))
 			end
+			if count = 0 and other.count > 0 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				fixed_array.force (storage, other.first, 0)
+			end
 			j := count
 			from i := 1 until i > nb loop
 				j := j + 1
-				storage.put (other.item (i), j)
+				fixed_array.force (storage, other.item (i), j)
 				i := i + 1
 			end
 			count := j
@@ -200,6 +212,10 @@ feature -- Element change
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
 		do
+			if i = 1 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				storage.put (an_item, 0)
+			end
 			storage.put (an_item, i)
 		ensure
 			same_count: count = old count
@@ -212,10 +228,13 @@ feature -- Removal
 			-- Remove last item.
 		require
 			not_empty: not is_empty
-		local
-			dead_item: like item
 		do
-			storage.put (dead_item, count)
+			if count = 1 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				fixed_array.keep_head (storage, 0, count + 1)
+			else
+				fixed_array.keep_head (storage, count, count + 1)
+			end
 			count := count - 1
 		ensure
 			one_less: count = old count - 1
@@ -228,7 +247,6 @@ feature -- Removal
 			i_small_enough: i <= count
 		local
 			j, nb: INTEGER
-			dead_item: like item
 		do
 			j := i
 			nb := count - 1
@@ -236,7 +254,12 @@ feature -- Removal
 				storage.put (storage.item (j + 1), j)
 				j := j + 1
 			end
-			storage.put (dead_item, j)
+			if count = 1 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				fixed_array.keep_head (storage, 0, count + 1)
+			else
+				fixed_array.keep_head (storage, count, count + 1)
+			end
 			count := count - 1
 		ensure
 			one_less: count = old count - 1
@@ -244,14 +267,8 @@ feature -- Removal
 
 	wipe_out
 			-- Remove all items.
-		local
-			i: INTEGER
-			dead_item: like item
 		do
-			from i := count until i < 1 loop
-				storage.put (dead_item, i)
-				i := i - 1
-			end
+			fixed_array.keep_head (storage, 0, count + 1)
 			count := 0
 		ensure
 			wiped_out: is_empty

@@ -5,7 +5,7 @@ note
 		"Interface for buffers"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,18 +19,7 @@ feature -- Access
 		require
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
-		local
-			r: detachable G
-		do
-				-- TODO: This routine should be deferred, but there is
-				-- a bug with ISE Eiffel 5.1.5 up to 6.3 in the generated
-				-- C code in finalized mode (ISE bug#15375), and having this
-				-- routine effective is a workaround.
-			check
-					-- Fooling the compiler.
-				r_not_void: r /= Void
-			end
-			Result := r
+		deferred
 		end
 
 feature -- Measurement
@@ -49,11 +38,7 @@ feature -- Element change
 		require
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
-		do
-				-- TODO: This routine should be deferred, but there is
-				-- a bug with ISE Eiffel 5.1.5 up to 6.3 in the generated
-				-- C code in finalized mode (ISE bug#15375), and having this
-				-- routine effective is a workaround.
+		deferred
 		ensure
 			inserted: item (i) = v
 		end

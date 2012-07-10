@@ -5,7 +5,7 @@ note
 		"Character sets"
 
 	library: "Gobo Eiffel Regexp Library"
-	copyright: "Copyright (c) 2001-2002, Harald Erdbruegger and others"
+	copyright: "Copyright (c) 2001-2012, Harald Erdbruegger and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,7 +29,7 @@ feature {ANY} -- Initialization
 	make_empty
 			-- Create an empty character set.
 		do
-			set := SPECIAL_BOOLEAN_.make (256)
+			set := SPECIAL_BOOLEAN_.make_filled (False, 256)
 		ensure
 			is_empty: is_empty
 		end

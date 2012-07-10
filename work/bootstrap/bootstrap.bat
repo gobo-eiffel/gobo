@@ -1,7 +1,7 @@
 @echo off
 
 rem description: "Bootstrap Gobo Eiffel package"
-rem copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+rem copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
 rem license: "MIT License"
 rem date: "$Date$"
 rem revision: "$Revision$"
@@ -176,6 +176,7 @@ goto exit
 	goto c_compilation
 
 :c_compilation
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec16.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec15.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec14.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec13.c

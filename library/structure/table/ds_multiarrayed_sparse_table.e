@@ -6,7 +6,7 @@ note
 		%hash tables which should supply its hashing mechanism."
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2001-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -281,7 +281,7 @@ feature {DS_MULTIARRAYED_SPARSE_TABLE_CURSOR} -- Implementation
 				subitems := special_item_routines.make (chunk_size)
 				item_storage.put (subitems, j)
 			end
-			subitems.put (v, i \\ chunk_size)
+			special_item_routines.force (subitems, v, i \\ chunk_size)
 		end
 
 	key_storage_item (i: INTEGER): K
@@ -385,7 +385,7 @@ feature {NONE} -- Implementation
 				subkeys := special_key_routines.make (chunk_size)
 				key_storage.put (subkeys, j)
 			end
-			subkeys.put (k, i \\ chunk_size)
+			special_key_routines.force (subkeys, k, i \\ chunk_size)
 		end
 
 	clone_key_storage
@@ -453,7 +453,7 @@ feature {NONE} -- Implementation
 			j := i // chunk_size
 			subclashes := clashes.item (j)
 			if subclashes = Void then
-				subclashes := SPECIAL_INTEGER_.make (chunk_size)
+				subclashes := SPECIAL_INTEGER_.make_filled (0, chunk_size)
 				clashes.put (subclashes, j)
 			end
 			subclashes.put (v, i \\ chunk_size)
@@ -533,7 +533,7 @@ feature {NONE} -- Implementation
 			j := i // chunk_size
 			subslots := slots.item (j)
 			if subslots = Void then
-				subslots := SPECIAL_INTEGER_.make (chunk_size)
+				subslots := SPECIAL_INTEGER_.make_filled (0, chunk_size)
 				slots.put (subslots, j)
 			end
 			subslots.put (v, i \\ chunk_size)

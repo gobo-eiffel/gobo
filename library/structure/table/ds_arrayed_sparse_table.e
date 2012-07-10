@@ -6,7 +6,7 @@ note
 		%hash tables which should supply its hashing mechanism."
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -45,7 +45,7 @@ feature {DS_ARRAYED_SPARSE_TABLE_CURSOR} -- Implementation
 	item_storage_put (v: G; i: INTEGER)
 			-- Put `v' at position `i' in `item_storage'.
 		do
-			item_storage.put (v, i)
+			special_item_routines.force (item_storage, v, i)
 		end
 
 	key_storage_item (i: INTEGER): K
@@ -67,9 +67,11 @@ feature {NONE} -- Implementation
 
 	make_item_storage (n: INTEGER)
 			-- Create `item_storage'.
+		local
+			l_dead_item: G
 		do
 			create special_item_routines
-			item_storage := special_item_routines.make (n)
+			item_storage := special_item_routines.make_filled (l_dead_item, n)
 		end
 
 	clone_item_storage
@@ -80,8 +82,10 @@ feature {NONE} -- Implementation
 
 	item_storage_resize (n: INTEGER)
 			-- Resize `item_storage'.
+		local
+			l_dead_item: G
 		do
-			item_storage := special_item_routines.resize (item_storage, n)
+			item_storage := special_item_routines.aliased_resized_area_with_default (item_storage, l_dead_item, n)
 		end
 
 	item_storage_wipe_out
@@ -105,15 +109,17 @@ feature {NONE} -- Implementation
 
 	make_key_storage (n: INTEGER)
 			-- Create `key_storage'.
+		local
+			l_dead_key: K
 		do
 			create special_key_routines
-			key_storage := special_key_routines.make (n)
+			key_storage := special_key_routines.make_filled (l_dead_key, n)
 		end
 
 	key_storage_put (k: K; i: INTEGER)
 			-- Put `k' at position `i' in `key_storage'.
 		do
-			key_storage.put (k, i)
+			special_key_routines.force (key_storage, k, i)
 		end
 
 	clone_key_storage
@@ -124,8 +130,10 @@ feature {NONE} -- Implementation
 
 	key_storage_resize (n: INTEGER)
 			-- Resize `key_storage'.
+		local
+			l_dead_key: K
 		do
-			key_storage := special_key_routines.resize (key_storage, n)
+			key_storage := special_key_routines.aliased_resized_area_with_default (key_storage, l_dead_key, n)
 		end
 
 	key_storage_wipe_out
@@ -154,7 +162,7 @@ feature {NONE} -- Implementation
 	make_clashes (n: INTEGER)
 			-- Create `clashes'.
 		do
-			clashes := SPECIAL_INTEGER_.make (n)
+			clashes := SPECIAL_INTEGER_.make_filled (No_position, n)
 		end
 
 	clashes_put (v: INTEGER; i: INTEGER)
@@ -172,7 +180,7 @@ feature {NONE} -- Implementation
 	clashes_resize (n: INTEGER)
 			-- Resize `clashes'.
 		do
-			clashes := SPECIAL_INTEGER_.resize (clashes, n)
+			clashes := SPECIAL_INTEGER_.aliased_resized_area_with_default (clashes, No_position, n)
 		end
 
 	clashes_wipe_out
@@ -198,7 +206,7 @@ feature {NONE} -- Implementation
 	make_slots (n: INTEGER)
 			-- Create `slots'.
 		do
-			slots := SPECIAL_INTEGER_.make (n)
+			slots := SPECIAL_INTEGER_.make_filled (No_position, n)
 		end
 
 	slots_item (i: INTEGER): INTEGER
@@ -222,7 +230,7 @@ feature {NONE} -- Implementation
 	slots_resize (n: INTEGER)
 			-- Resize `slots'.
 		do
-			slots := SPECIAL_INTEGER_.resize (slots, n)
+			slots := SPECIAL_INTEGER_.aliased_resized_area_with_default (slots, No_position, n)
 		end
 
 	slots_wipe_out
@@ -249,9 +257,9 @@ feature {NONE} -- Implementation
 invariant
 
 	item_storage_not_void: item_storage /= Void
-	item_storage_count: item_storage.count = capacity + 1
+	item_storage_count: item_storage.capacity = capacity + 1
 	key_storage_not_void: key_storage /= Void
-	key_storage_count: key_storage.count = capacity + 1
+	key_storage_count: key_storage.capacity = capacity + 1
 	clashes_not_void: clashes /= Void
 	clashes_count: clashes.count = capacity + 1
 	slots_not_void: slots /= Void

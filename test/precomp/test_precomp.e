@@ -5,7 +5,7 @@ note
 		"Test precompilation of Gobo Library classes"
 
 	library: "Gobo Eiffel Library"
-	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -87,6 +87,8 @@ feature {NONE} -- Precompilation
 		local
 			define_option: STRING
 			dotnet: STRING
+			l_compatible: STRING
+			l_compat_option: STRING
 		do
 			old_cwd := file_system.cwd
 			file_system.create_directory (testdir)
@@ -106,12 +108,22 @@ feature {NONE} -- Precompilation
 					define_option.append_string (" GOBO_DOTNET")
 				end
 			end
+			l_compat_option := ""
+			l_compatible := Execution_environment.variable_value ("GOBO_COMPATIBLE")
+			if l_compatible /= Void and then l_compatible.count > 0 then
+				l_compat_option := " -compat"
+				if define_option.count = 0 then
+					define_option.append_string ("--define=%"GOBO_COMPATIBLE")
+				else
+					define_option.append_string (" GOBO_COMPATIBLE")
+				end
+			end
 			if define_option.count > 0 then
 				define_option.append_string ("%" ")
 			end
 			assert_execute ("gexace " + define_option + "--library=ise " + xace_filename + output_log)
 				-- Eiffel precompilation.
-			assert_execute ("ecb -precompile -batch -config ise.ecf" + output_log)
+			assert_execute ("ecb " + l_compat_option + "-precompile -batch -config ise.ecf" + output_log)
 				-- Done.
 			file_system.cd (old_cwd)
 			file_system.recursive_delete_directory (testdir)

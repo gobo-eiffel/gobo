@@ -9,7 +9,7 @@ note
 		and 'geyacc --new_typing' instead.
 	]"
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 2003-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 					std.error.put_new_line
 				end
 			end
-			yyvs.put (last_value, yyvsp)
+			yy_special_routines.force (yyvs, last_value, yyvsp)
 		end
 
 	yy_push_error_value
@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 					std.error.put_new_line
 				end
 			end
-			yyvs.put (yyv, yyvsp)
+			yy_special_routines.force (yyvs, yyv, yyvsp)
 		end
 
 	yy_pop_last_value (yystate: INTEGER)

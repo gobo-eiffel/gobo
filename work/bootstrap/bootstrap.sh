@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # description: "Bootstrap Gobo Eiffel package"
-# copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+# copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
 # license: "MIT License"
 # date: "$Date$"
 # revision: "$Revision$"
@@ -58,6 +58,7 @@ BOOTSTRAP_DIR=$GOBO/work/bootstrap
 cd $BIN_DIR
 
 c_compilation() {
+	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec16.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec15.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec14.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec13.c

@@ -5,7 +5,7 @@ note
 		"Lists of Eiffel dynamic types with hashing search"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2010-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -58,6 +58,10 @@ feature -- Element change
 			if count + nb > capacity then
 				resize (new_capacity (count + nb))
 			end
+			if count = 0 and other.count > 0 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				fixed_array.force (storage, other.dynamic_type (1), 0)
+			end
 			j := count
 			from i := 1 until i > nb loop
 				j := j + 1
@@ -65,7 +69,7 @@ feature -- Element change
 				h := hash_position (l_item)
 				clashes.put (slots.item (h), j)
 				slots.put (j, h)
-				storage.put (l_item, j)
+				fixed_array.force (storage, l_item, j)
 				i := i + 1
 			end
 			count := j

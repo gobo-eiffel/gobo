@@ -5,7 +5,7 @@ note
 		"Simple implementation of coefficients using a native array of characters"
 
 	library: "Gobo Eiffel Decimal Arithmetic Library"
-	copyright: "Copyright (c) 2004, Paul G. Crismer and others"
+	copyright: "Copyright (c) 2004-2012, Paul G. Crismer and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 	make (a_capacity: INTEGER)
 			-- Make with `a_capacity'.
 		do
-			digits := SPECIAL_DIGITS_.make (a_capacity)
+			digits := SPECIAL_DIGITS_.make_filled (0, a_capacity)
 			capacity := a_capacity
 			set_count (0)
 		end
@@ -156,7 +156,7 @@ feature -- Element change
 		do
 			new_upper := a_capacity - 1
 			if a_capacity > capacity then
-				digits := SPECIAL_DIGITS_.resize (digits, new_upper + 1)
+				digits := SPECIAL_DIGITS_.aliased_resized_area_with_default (digits, 0, new_upper + 1)
 				capacity := new_upper + 1
 			end
 				-- Zero msd.
