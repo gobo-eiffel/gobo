@@ -5,7 +5,7 @@ note
 		"Test config testcases"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/10/08 $"
 	revision: "$Revision: #17 $"
@@ -244,7 +244,7 @@ feature {NONE} -- Generation
 					-- the back-end C compiler can compile the generated C code for
 					-- this routine in a reasonable amount of time.
 				a_file.put_line ("%Tbuild_suite")
-				a_file.put_line ("%T%T%T-- Add to `suite' the test cases that need to executed.")
+				a_file.put_line ("%T%T%T-- Add to `suite' the test cases that need to be executed.")
 				a_file.put_line ("%T%Tdo")
 				(1 |..| nb).do_all (agent generate_call_to_i_th_build_suite_feature (?, a_file))
 				a_file.put_line ("%T%Tend")
@@ -301,14 +301,15 @@ feature {NONE} -- Generation
 		do
 			a_file.put_character ('%T')
 			a_file.put_line (a_feature_name)
-			a_file.put_line ("%T%T%T-- Add to `suite' the test cases that need to executed.")
+			a_file.put_line ("%T%T%T-- Add to `suite' the test cases that need to be executed.")
 			nb := a_upper - a_lower + 1
 			create l_test_indexes.make_map (nb)
 			l_has_test := (nb > 0)
 				-- Declare local variables.
 			if l_has_test then
 				a_file.put_line ("%T%Tlocal")
-				a_file.put_line ("%T%T%Tl_regexp: like enabled_test_cases")
+				a_file.put_line ("%T%T%Tl_enabled_regexp: like enabled_test_cases")
+				a_file.put_line ("%T%T%Tl_disabled_regexp: like disabled_test_cases")
 				a_file.put_line ("%T%T%Tl_name: STRING")
 			end
 			from
@@ -348,7 +349,8 @@ feature {NONE} -- Generation
 				-- Declare body.
 			a_file.put_line ("%T%Tdo")
 			if l_has_test then
-				a_file.put_line ("%T%T%Tl_regexp := enabled_test_cases")
+				a_file.put_line ("%T%T%Tl_enabled_regexp := enabled_test_cases")
+				a_file.put_line ("%T%T%Tl_disabled_regexp := disabled_test_cases")
 			end
 			from
 				i := a_lower
@@ -365,7 +367,7 @@ feature {NONE} -- Generation
 				a_file.put_character ('.')
 				a_file.put_string (l_test_feature_name)
 				a_file.put_line ("%"")
-				a_file.put_line ("%T%T%Tif l_regexp = Void or else l_regexp.recognizes (l_name) then")
+				a_file.put_line ("%T%T%Tif (l_enabled_regexp = Void or else l_enabled_regexp.recognizes (l_name)) and then (l_disabled_regexp = Void or else not l_disabled_regexp.recognizes (l_name)) then")
 				a_file.put_string ("%T%T%T%Tcreate l_test")
 				a_file.put_integer (l_test_index)
 				a_file.put_line (".make_default")

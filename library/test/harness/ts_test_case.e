@@ -5,7 +5,7 @@ note
 		"Test cases"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/07/19 $"
 	revision: "$Revision: #20 $"
@@ -124,9 +124,11 @@ feature -- Execution
 		local
 			l_collecting: BOOLEAN
 			l_enabled_test_cases: RX_REGULAR_EXPRESSION
+			l_disabled_test_cases: RX_REGULAR_EXPRESSION
 		do
 			l_enabled_test_cases := a_summary.enabled_test_cases
-			if l_enabled_test_cases = Void or else l_enabled_test_cases.recognizes (name) then
+			l_disabled_test_cases := a_summary.disabled_test_cases
+			if (l_enabled_test_cases = Void or else l_enabled_test_cases.recognizes (name)) and then (l_disabled_test_cases = Void or else not l_disabled_test_cases.recognizes (name)) then
 				l_collecting := memory.collecting
 				assertions.reset
 				a_summary.start_test (Current)

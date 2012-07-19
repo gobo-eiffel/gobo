@@ -5,12 +5,19 @@ note
 		"Test result summaries"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/29 $"
 	revision: "$Revision: #10 $"
 
 class TS_SUMMARY
+
+inherit
+
+	ANY
+
+	KL_SHARED_STREAMS
+		export {NONE} all end
 
 create
 
@@ -22,6 +29,7 @@ feature {NONE} -- Initialization
 			-- Create a new result summary.
 		do
 			create results.make
+			success_output := null_output_stream
 		end
 
 feature -- Access
@@ -54,6 +62,14 @@ feature -- Status report
 			-- Only test cases whose name matches this regexp will
 			-- be executed, or execute all test cases is Void
 
+	disabled_test_cases: RX_REGULAR_EXPRESSION
+			-- Test cases whose name does not match this regexp will
+			-- not be executed
+
+	success_output: KI_TEXT_OUTPUT_STREAM
+			-- File where to print the name of tests
+			-- when successfully executed
+
 feature -- Status setting
 
 	set_fail_on_rescue (b: BOOLEAN)
@@ -72,6 +88,27 @@ feature -- Status setting
 			enabled_test_cases := a_regexp
 		ensure
 			enabled_test_cases_set: enabled_test_cases = a_regexp
+		end
+
+	set_disabled_test_cases (a_regexp: like disabled_test_cases)
+			-- Set `disabled_test_cases' to `a_regexp'.
+		require
+			compiled: a_regexp /= Void implies a_regexp.is_compiled
+		do
+			disabled_test_cases := a_regexp
+		ensure
+			disabled_test_cases_set: disabled_test_cases = a_regexp
+		end
+
+	set_success_output (a_output: like success_output)
+			-- Set `success_output' to `a_output'.
+		require
+			a_output_not_void: a_output /= Void
+			a_output_open_write: a_output.is_open_write
+		do
+			success_output := a_output
+		ensure
+			success_output_set: success_output = a_output
 		end
 
 feature -- Measurement
@@ -108,6 +145,8 @@ feature -- Element change
 			create a_result.make (a_test)
 			results.put_last (a_result)
 			success_count := success_count + 1
+			success_output.put_line (a_test.name)
+			success_output.flush
 		end
 
 	put_failure (a_test: TS_TEST; a_reason: STRING)
@@ -270,5 +309,8 @@ invariant
 	results_not_void: results /= Void
 	no_void_result: not results.has_void
 	enabled_test_cases_compiled: enabled_test_cases /= Void implies enabled_test_cases.is_compiled
+	disabled_test_cases_compiled: disabled_test_cases /= Void implies disabled_test_cases.is_compiled
+	success_output_not_void: success_output /= Void
+	success_output_open_write: success_output.is_open_write
 
 end
