@@ -108,6 +108,15 @@ feature -- Status report
 			-- Name of file where to print the name of tests
 			-- when successfully executed
 
+	failure_output_filename: STRING
+			-- Name of file where to print the name of tests when failed
+
+	abort_output_filename: STRING
+			-- Name of file where to print the name of tests when aborted
+
+	completed_output_filename: STRING
+			-- Name of file where to print the name of tests when completed
+
 feature -- Status setting
 
 	set_fail_on_rescue (b: BOOLEAN)
@@ -152,6 +161,30 @@ feature -- Status setting
 			success_output_filename := a_filename
 		ensure
 			success_output_filename_set: success_output_filename = a_filename
+		end
+
+	set_failure_output_filename (a_filename: like failure_output_filename)
+			-- Set `failure_output_filename' to `a_filename'.
+		do
+			failure_output_filename := a_filename
+		ensure
+			failure_output_filename_set: failure_output_filename = a_filename
+		end
+
+	set_abort_output_filename (a_filename: like abort_output_filename)
+			-- Set `abort_output_filename' to `a_filename'.
+		do
+			abort_output_filename := a_filename
+		ensure
+			abort_output_filename_set: abort_output_filename = a_filename
+		end
+
+	set_completed_output_filename (a_filename: like completed_output_filename)
+			-- Set `completed_output_filename' to `a_filename'.
+		do
+			completed_output_filename := a_filename
+		ensure
+			completed_output_filename_set: completed_output_filename = a_filename
 		end
 
 feature -- Element change
@@ -232,7 +265,13 @@ feature -- Execution
 		local
 			l_suite: like suite
 			l_old_success_output: KI_TEXT_OUTPUT_STREAM
+			l_old_failure_output: KI_TEXT_OUTPUT_STREAM
+			l_old_abort_output: KI_TEXT_OUTPUT_STREAM
+			l_old_completed_output: KI_TEXT_OUTPUT_STREAM
 			l_success_file: KL_TEXT_OUTPUT_FILE
+			l_failure_file: KL_TEXT_OUTPUT_FILE
+			l_abort_file: KL_TEXT_OUTPUT_FILE
+			l_completed_file: KL_TEXT_OUTPUT_FILE
 			l_cannot_write: UT_CANNOT_WRITE_TO_FILE_ERROR
 		do
 			l_suite := suite
@@ -251,10 +290,58 @@ feature -- Execution
 					report_error (l_cannot_write)
 				end
 			end
+			l_old_failure_output := a_summary.failure_output
+			if failure_output_filename /= Void then
+				create l_failure_file.make (failure_output_filename)
+				l_failure_file.recursive_open_append
+				if l_failure_file.is_open_write then
+					a_summary.set_failure_output (l_failure_file)
+				else
+					l_failure_file := Void
+					create l_cannot_write.make (failure_output_filename)
+					report_error (l_cannot_write)
+				end
+			end
+			l_old_abort_output := a_summary.abort_output
+			if abort_output_filename /= Void then
+				create l_abort_file.make (abort_output_filename)
+				l_abort_file.recursive_open_append
+				if l_abort_file.is_open_write then
+					a_summary.set_abort_output (l_abort_file)
+				else
+					l_abort_file := Void
+					create l_cannot_write.make (abort_output_filename)
+					report_error (l_cannot_write)
+				end
+			end
+			l_old_completed_output := a_summary.completed_output
+			if completed_output_filename /= Void then
+				create l_completed_file.make (completed_output_filename)
+				l_completed_file.recursive_open_append
+				if l_completed_file.is_open_write then
+					a_summary.set_completed_output (l_completed_file)
+				else
+					l_completed_file := Void
+					create l_cannot_write.make (completed_output_filename)
+					report_error (l_cannot_write)
+				end
+			end
 			l_suite.execute (a_summary)
 			if l_success_file /= Void then
 				a_summary.set_success_output (l_old_success_output)
 				l_success_file.close
+			end
+			if l_failure_file /= Void then
+				a_summary.set_failure_output (l_old_failure_output)
+				l_failure_file.close
+			end
+			if l_abort_file /= Void then
+				a_summary.set_abort_output (l_old_abort_output)
+				l_abort_file.close
+			end
+			if l_completed_file /= Void then
+				a_summary.set_completed_output (l_old_completed_output)
+				l_completed_file.close
 			end
 			a_summary.print_summary (l_suite, a_file)
 			if not a_summary.is_successful then
@@ -444,6 +531,27 @@ feature {NONE} -- Command line
 					else
 						report_usage_error
 					end
+				elseif arg.count >= 17 and then arg.substring (1, 17).is_equal ("--failure_output=") then
+					if arg.count > 17 then
+						arg := arg.substring (18, arg.count)
+						set_failure_output_filename (arg)
+					else
+						report_usage_error
+					end
+				elseif arg.count >= 15 and then arg.substring (1, 15).is_equal ("--abort_output=") then
+					if arg.count > 15 then
+						arg := arg.substring (16, arg.count)
+						set_abort_output_filename (arg)
+					else
+						report_usage_error
+					end
+				elseif arg.count >= 19 and then arg.substring (1, 19).is_equal ("--completed_output=") then
+					if arg.count > 19 then
+						arg := arg.substring (20, arg.count)
+						set_completed_output_filename (arg)
+					else
+						report_usage_error
+					end
 				elseif arg.is_equal ("-D") then
 					i := i + 1
 					if i <= nb then
@@ -511,7 +619,7 @@ feature {NONE} -- Error handling
 	Usage_message: UT_USAGE_MESSAGE
 			-- Tester usage message
 		once
-			create Result.make ("[-a][-p][-D <name>=<value>|--define=<name>=<value>]* [--filter=<regexp>][--filters=<filename>][--exclude_filter=<regexp>][--exclude_filters=<filename>] [--success_output=<filename>][-o filename]")
+			create Result.make ("[-a][-p][-D <name>=<value>|--define=<name>=<value>]* [--filter=<regexp>][--filters=<filename>][--exclude_filter=<regexp>][--exclude_filters=<filename>] [--success_output=<filename>][--failure_output=<filename>][--abort_output=<filename>][--completed_output=<filename>][-o filename]")
 		ensure
 			usage_message_not_void: Result /= Void
 		end
