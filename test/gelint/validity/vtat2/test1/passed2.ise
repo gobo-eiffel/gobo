@@ -1,0 +1,25 @@
+-------------------------------------------------------------------------------
+
+Error code: VTAT(1)
+
+Error: improper anchor for `like' declaration.
+What to do: make sure that anchor type is a query, and that there is no anchor cycle.
+
+Class: BB
+Feature: g
+Anchored type: h
+Appearing in type: [like h] 
+
+-------------------------------------------------------------------------------
+
+Error code: VTAT(1)
+
+Error: improper anchor for `like' declaration.
+What to do: make sure that anchor type is a query, and that there is no anchor cycle.
+
+Class: BB
+Feature: g
+Anchored type: g
+Appearing in type: [like {[detachable] BB}.g] [detachable] BB
+
+-------------------------------------------------------------------------------

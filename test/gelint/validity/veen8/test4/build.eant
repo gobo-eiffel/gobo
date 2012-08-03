@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 
-<project name="vuot1_test7" default="help">
+<project name="veen8_test3" default="help">
 
 	<description>
-		description: "Eiffel Ant file for 'vuot1_test7'"
-		copyright: "Copyright (c) 2011, Eric Bezault and others"
+		description: "Eiffel Ant file for 'veen8_test4'"
+		copyright: "Copyright (c) 2012, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -20,7 +20,7 @@
 
 	<target name="init_system">
 		<set name="system" value="aa"/>
-		<set name="system_dir" value="${GOBO}/test/gelint/validity/vuot1/test7"/>
+		<set name="system_dir" value="${GOBO}/test/gelint/validity/veen8/test4"/>
 	</target>
 
 </project>
