@@ -28,7 +28,8 @@ create
 	make_generic,
 	make_labeled_tuple,
 	make_anchored,
-	make_like_current
+	make_like_current,
+	make_qualified_anchored
 
 feature {NONE} -- Initialization
 
@@ -198,6 +199,39 @@ feature {NONE} -- Initialization
 			id_set: id = an_id
 		end
 
+	make_qualified_anchored (an_id: INTEGER; a_type_mark: STRING; a_type: PR_TYPE; a_name: like name)
+			-- Create a new anchored type
+			-- of the form "like {`a_type'}`a_name'".
+		require
+			valid_id: id >= 0
+			a_type_not_void: a_type /= Void
+			a_name_not_void: a_name /= Void
+			a_name_long_enough: a_name.count > 0
+			a_type_mark_not_empty: a_type_mark /= Void implies not a_type_mark.is_empty
+		local
+			l_type_name: STRING
+		do
+			id := an_id
+			l_type_name := a_type.name
+			if a_type_mark /= Void then
+				create name.make (a_type_mark.count + l_type_name.count + a_name.count + 8)
+				name.append_string (a_type_mark)
+				name.append_character (' ')
+				name.append_string ("like {")
+				name.append_string (l_type_name)
+				name.append_character ('}')
+				name.append_string (a_name)
+			else
+				create name.make (a_name.count + l_type_name.count + 7)
+				name.append_string ("like {")
+				name.append_string (l_type_name)
+				name.append_character ('}')
+				name.append_string (a_name)
+			end
+		ensure
+			id_set: id = an_id
+		end
+		
 feature -- Status report
 
 	is_used: BOOLEAN

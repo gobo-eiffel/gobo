@@ -5,7 +5,7 @@ note
 		"Parser skeletons for parser generators such as 'geyacc'"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -727,6 +727,34 @@ feature {NONE} -- Factory
 			type_not_void: Result /= Void
 		end
 
+	new_qualified_anchored_type (a_type_mark: STRING; a_type: PR_TYPE; a_name: STRING): PR_TYPE
+			-- Qualified anchored type of the form "like {`a_type'}`a_name'";
+			-- Create a new type if it does not exist yet.
+		require
+			a_type_not_void: a_type /= Void
+			a_name_not_void: a_name /= Void
+			a_name_long_enough: a_name.count > 0
+			a_type_mark_not_empty: a_type_mark /= Void implies not a_type_mark.is_empty
+		local
+			lower_name: STRING
+			an_id: INTEGER
+		do
+				-- Types are indexed from 1.
+				-- (0 used to be reserved for no-type)
+			an_id := last_grammar.types.count + 1
+			create Result.make_qualified_anchored (an_id, a_type_mark, a_type, a_name)
+			lower_name := Result.name.as_lower
+			types.search (lower_name)
+			if types.found then
+				Result := types.found_item
+			else
+				types.force_new (Result, lower_name)
+				last_grammar.put_type (Result)
+			end
+		ensure
+			type_not_void: Result /= Void
+		end
+		
 	new_labeled_type (a_label: STRING; a_type: PR_TYPE): PR_LABELED_TYPE
 			-- New labeled type
 		require
