@@ -5,7 +5,7 @@ note
 		"Eiffel AST processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,6 +24,20 @@ feature {NONE} -- Initialization
 		end
 
 feature {ET_AST_NODE} -- Processing
+
+	process_across_expression (an_expression: ET_ACROSS_EXPRESSION)
+			-- Process `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
+		deferred
+		end
+
+	process_across_instruction (an_instruction: ET_ACROSS_INSTRUCTION)
+			-- Process `an_instruction'.
+		require
+			an_instruction_not_void: an_instruction /= Void
+		deferred
+		end
 
 	process_actual_argument_list (a_list: ET_ACTUAL_ARGUMENT_LIST)
 			-- Process `a_list'.

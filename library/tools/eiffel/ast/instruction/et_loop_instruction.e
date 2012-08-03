@@ -19,6 +19,8 @@ inherit
 			reset
 		end
 
+	ET_LOOP_COMPONENT
+	
 create
 
 	make

@@ -5,7 +5,7 @@ note
 		"Eiffel AST pretty printers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,6 +17,8 @@ inherit
 	ET_AST_PRINTER
 		redefine
 			make, file,
+			process_across_expression,
+			process_across_instruction,
 			process_actual_argument_list,
 			process_actual_parameter_list,
 			process_agent_argument_operand_list,
@@ -240,6 +242,126 @@ feature -- Indentation
 		end
 
 feature {ET_AST_NODE} -- Processing
+
+	process_across_expression (an_expression: ET_ACROSS_EXPRESSION)
+			-- Process `an_expression'.
+		local
+			an_invariant_part: ET_LOOP_INVARIANTS
+			a_variant_part: ET_VARIANT
+			l_conditional: ET_CONDITIONAL
+			l_expression: ET_EXPRESSION
+		do
+			an_expression.across_keyword.process (Current)
+			print_space
+			an_expression.iterable_expression.process (Current)
+			print_space
+			an_expression.as_keyword.process (Current)
+			print_space
+			an_expression.cursor_name.process (Current)
+			print_space
+			an_invariant_part := an_expression.invariant_part
+			if an_invariant_part /= Void then
+				an_invariant_part.process (Current)
+			end
+			l_conditional := an_expression.until_conditional
+			if l_conditional /= Void then
+				tokens.until_keyword.process (Current)
+				print_space
+				l_expression := l_conditional.expression
+				l_expression.process (Current)
+				comment_finder.add_excluded_node (l_expression)
+				comment_finder.find_comments (l_conditional, comment_list)
+				comment_finder.reset_excluded_nodes
+				print_space
+			end
+			l_conditional := an_expression.iteration_conditional
+			if an_expression.is_all then
+				tokens.all_keyword.process (Current)
+			else
+				tokens.some_keyword.process (Current)
+			end
+			print_space
+			l_expression := l_conditional.expression
+			l_expression.process (Current)
+			comment_finder.add_excluded_node (l_expression)
+			comment_finder.find_comments (l_conditional, comment_list)
+			comment_finder.reset_excluded_nodes
+			print_space
+			a_variant_part := an_expression.variant_part
+			if a_variant_part /= Void then
+				a_variant_part.process (Current)
+				print_space
+			end
+			an_expression.end_keyword.process (Current)
+		end
+
+	process_across_instruction (an_instruction: ET_ACROSS_INSTRUCTION)
+			-- Process `an_instruction'.
+		local
+			an_invariant_part: ET_LOOP_INVARIANTS
+			a_variant_part: ET_VARIANT
+			a_compound: ET_COMPOUND
+			l_conditional: ET_CONDITIONAL
+			l_expression: ET_EXPRESSION
+		do
+			an_instruction.across_keyword.process (Current)
+			print_new_line
+			indent
+			process_comments
+			an_instruction.iterable_expression.process (Current)
+			print_new_line
+			process_comments
+			dedent
+			an_instruction.as_keyword.process (Current)
+			print_new_line
+			indent
+			process_comments
+			an_instruction.cursor_name.process (Current)
+			print_new_line
+			process_comments
+			dedent
+			a_compound := an_instruction.from_compound
+			if a_compound /= Void then
+				a_compound.process (Current)
+			end
+			print_new_line
+			process_comments
+			an_invariant_part := an_instruction.invariant_part
+			if an_invariant_part /= Void then
+				an_invariant_part.process (Current)
+				process_comments
+			end
+			l_conditional := an_instruction.until_conditional
+			if l_conditional /= Void then
+				tokens.until_keyword.process (Current)
+				print_new_line
+				indent
+				process_comments
+				l_expression := l_conditional.expression
+				l_expression.process (Current)
+				comment_finder.add_excluded_node (l_expression)
+				comment_finder.find_comments (l_conditional, comment_list)
+				comment_finder.reset_excluded_nodes
+				print_new_line
+				process_comments
+				dedent
+			end
+			a_compound := an_instruction.loop_compound
+			if a_compound /= Void then
+				a_compound.process (Current)
+			else
+				tokens.loop_keyword.process (Current)
+			end
+			print_new_line
+			process_comments
+			a_variant_part := an_instruction.variant_part
+			if a_variant_part /= Void then
+				a_variant_part.process (Current)
+				print_new_line
+				process_comments
+			end
+			an_instruction.end_keyword.process (Current)
+		end
 
 	process_actual_argument_list (a_list: ET_ACTUAL_ARGUMENT_LIST)
 			-- Process `a_list'.

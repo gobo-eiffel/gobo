@@ -5,7 +5,7 @@ note
 		"Eiffel AST iterators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,6 +21,68 @@ create
 	make
 
 feature {ET_AST_NODE} -- Processing
+
+	process_across_expression (an_expression: ET_ACROSS_EXPRESSION)
+			-- Process `an_expression'.
+		local
+			an_invariant_part: ET_LOOP_INVARIANTS
+			a_variant_part: ET_VARIANT
+			a_conditional: ET_CONDITIONAL
+		do
+			an_expression.across_keyword.process (Current)
+			an_expression.iterable_expression.process (Current)
+			an_expression.as_keyword.process (Current)
+			an_expression.cursor_name.process (Current)
+			an_invariant_part := an_expression.invariant_part
+			if an_invariant_part /= Void then
+				an_invariant_part.process (Current)
+			end
+			a_conditional := an_expression.until_conditional
+			if a_conditional /= Void then
+				a_conditional.process (Current)
+			end
+			an_expression.iteration_conditional.process (Current)
+			a_variant_part := an_expression.variant_part
+			if a_variant_part /= Void  then
+				a_variant_part.process (Current)
+			end
+			an_expression.end_keyword.process (Current)
+		end
+
+	process_across_instruction (an_instruction: ET_ACROSS_INSTRUCTION)
+			-- Process `an_instruction'.
+		local
+			an_invariant_part: ET_LOOP_INVARIANTS
+			a_variant_part: ET_VARIANT
+			a_compound: ET_COMPOUND
+			a_conditional: ET_CONDITIONAL
+		do
+			an_instruction.across_keyword.process (Current)
+			an_instruction.iterable_expression.process (Current)
+			an_instruction.as_keyword.process (Current)
+			an_instruction.cursor_name.process (Current)
+			a_compound := an_instruction.from_compound
+			if a_compound /= Void then
+				a_compound.process (Current)
+			end
+			an_invariant_part := an_instruction.invariant_part
+			if an_invariant_part /= Void then
+				an_invariant_part.process (Current)
+			end
+			a_conditional := an_instruction.until_conditional
+			if a_conditional /= Void then
+				a_conditional.process (Current)
+			end
+			a_compound := an_instruction.loop_compound
+			if a_compound /= Void then
+				a_compound.process (Current)
+			end
+			a_variant_part := an_instruction.variant_part
+			if a_variant_part /= Void then
+				a_variant_part.process (Current)
+			end
+			an_instruction.end_keyword.process (Current)
+		end
 
 	process_actual_argument_list (a_list: ET_ACTUAL_ARGUMENT_LIST)
 			-- Process `a_list'.

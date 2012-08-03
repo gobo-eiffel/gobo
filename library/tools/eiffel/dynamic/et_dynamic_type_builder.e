@@ -35,6 +35,9 @@ inherit
 			check_debug_instruction_validity,
 			check_loop_invariant_validity,
 			check_loop_variant_validity,
+			report_across_cursor,
+			report_across_cursor_declaration,
+			report_across_expression,
 			report_assignment,
 			report_assignment_attempt,
 			report_attribute_address,
@@ -1056,6 +1059,29 @@ feature {NONE} -- Instruction validity
 		end
 
 feature {NONE} -- Event handling
+
+	report_across_cursor (a_name: ET_IDENTIFIER; a_across_component: ET_ACROSS_COMPONENT)
+			-- Report that a call to across cursor `a_name' has been processed.
+		do
+			if current_type = current_dynamic_type.base_type then
+				a_name.set_index (a_across_component.cursor_name.index)
+			end
+		end
+
+	report_across_cursor_declaration (a_name: ET_IDENTIFIER; a_across_component: ET_ACROSS_COMPONENT)
+			-- Report that the declaration of the across cursor `a_name' has been processed.
+		do
+			if current_type = current_dynamic_type.base_type then
+					-- Take care of the type of the across cursor.
+				a_name.set_index (a_across_component.new_cursor_expression.index)
+			end
+		end
+
+	report_across_expression (a_across_expression: ET_ACROSS_EXPRESSION)
+			-- Report that the across expression `a_across_expression' has been processed.
+		do
+			report_constant_expression (a_across_expression, current_universe_impl.boolean_type)
+		end
 
 	report_assignment (an_instruction: ET_ASSIGNMENT)
 			-- Report that an assignment instruction has been processed.

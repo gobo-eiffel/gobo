@@ -5,7 +5,7 @@ note
 		"Scanner skeletons for Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/11/19 $"
 	revision: "$Revision: #28 $"
@@ -747,6 +747,8 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.capitalized_integer_32_name)
 			Result.force_new (-1, tokens.capitalized_integer_64_name)
 			Result.force_new (-1, tokens.capitalized_internal_name)
+			Result.force_new (-1, tokens.capitalized_iterable_name)
+			Result.force_new (-1, tokens.capitalized_iteration_cursor_name)
 			Result.force_new (-1, tokens.capitalized_memory_name)
 			Result.force_new (-1, tokens.capitalized_native_array_name)
 			Result.force_new (-1, tokens.capitalized_natural_name)
@@ -775,6 +777,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.capitalized_wide_character_name)
 			Result.force_new (-1, tokens.capitalized_unknown_name)
 				-- Feature names.
+			Result.force_new (-1, tokens.after_name)
 			Result.force_new (-1, tokens.aliased_resized_area_name)
 			Result.force_new (-1, tokens.area_name)
 			Result.force_new (-1, tokens.argument_name)
@@ -833,6 +836,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.find_referers_name)
 			Result.force_new (-1, tokens.floor_real_32_name)
 			Result.force_new (-1, tokens.floor_real_64_name)
+			Result.force_new (-1, tokens.forth_name)
 			Result.force_new (-1, tokens.free_name)
 			Result.force_new (-1, tokens.generating_type_name)
 			Result.force_new (-1, tokens.generator_name)
@@ -881,6 +885,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.natural_64_item_name)
 			Result.force_new (-1, tokens.natural_64_field_name)
 			Result.force_new (-1, tokens.negated_name)
+			Result.force_new (-1, tokens.new_cursor_name)
 			Result.force_new (-1, tokens.object_comparison_name)
 			Result.force_new (-1, tokens.opposite_name)
 			Result.force_new (-1, tokens.out_name)
@@ -963,6 +968,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.capitalized_true_keyword_name)
 			Result.force_new (-1, tokens.capitalized_void_keyword_name)
 			Result.force_new (-1, tokens.capitalized_unique_keyword_name)
+			Result.force_new (-1, tokens.across_keyword_name)
 			Result.force_new (-1, tokens.agent_keyword_name)
 			Result.force_new (-1, tokens.alias_keyword_name)
 			Result.force_new (-1, tokens.all_keyword_name)
@@ -1020,6 +1026,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.retry_keyword_name)
 			Result.force_new (-1, tokens.select_keyword_name)
 			Result.force_new (-1, tokens.separate_keyword_name)
+			Result.force_new (-1, tokens.some_keyword_name)
 			Result.force_new (-1, tokens.strip_keyword_name)
 			Result.force_new (-1, tokens.then_keyword_name)
 			Result.force_new (-1, tokens.true_keyword_name)
@@ -1466,6 +1473,24 @@ feature {NONE} -- Processing
 					else
 						-- Do nothing.
 					end
+				when 's', 'S' then
+					inspect text_item (2)
+					when 'o', 'O' then
+						inspect text_item (3)
+						when 'm', 'M' then
+							inspect text_item (4)
+							when 'e', 'E' then
+								last_token := E_SOME
+								last_et_keyword_value := ast_factory.new_some_keyword (Current)
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
 				when 't', 'T' then
 					inspect text_item (2)
 					when 'h', 'H' then
@@ -1811,6 +1836,29 @@ feature {NONE} -- Processing
 				inspect text_item (1)
 				when 'a', 'A' then
 					inspect text_item (2)
+					when 'c', 'C' then
+						inspect text_item (3)
+						when 'r', 'R' then
+							inspect text_item (4)
+							when 'o', 'O' then
+								inspect text_item (5)
+								when 's', 'S' then
+									inspect text_item (6)
+									when 's', 'S' then
+										last_token := E_ACROSS
+										last_et_keyword_value := ast_factory.new_across_keyword (Current)
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
 					when 's', 'S' then
 						inspect text_item (3)
 						when 's', 'S' then

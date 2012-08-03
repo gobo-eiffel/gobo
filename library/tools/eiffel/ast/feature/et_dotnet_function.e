@@ -5,7 +5,7 @@ note
 		"Functions implemented in .NET"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -92,6 +92,7 @@ feature -- Duplication
 			Result.set_feature_clause (feature_clause)
 			Result.set_first_indexing (first_indexing)
 			Result.set_object_tests (object_tests)
+			Result.set_across_components (across_components)
 			Result.set_synonym (Current)
 		end
 
@@ -115,6 +116,7 @@ feature -- Conversion
 			Result.set_feature_clause (feature_clause)
 			Result.set_first_indexing (first_indexing)
 			Result.set_object_tests (object_tests)
+			Result.set_across_components (across_components)
 			Result.set_first_seed (first_seed)
 			Result.set_other_seeds (other_seeds)
 		end

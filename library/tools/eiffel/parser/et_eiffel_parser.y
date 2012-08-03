@@ -47,6 +47,7 @@ create
 %token <ET_KEYWORD> E_DEFERRED E_EXPANDED E_REFERENCE E_SEPARATE
 %token <ET_KEYWORD> E_ATTACHED E_DETACHABLE
 %token <ET_KEYWORD> E_ATTRIBUTE E_CONVERT E_RECAST E_ASSIGN
+%token <ET_KEYWORD> E_ACROSS E_SOME
 %token <ET_AGENT_KEYWORD> E_AGENT
 %token <ET_PRECURSOR_KEYWORD> E_PRECURSOR
 
@@ -97,6 +98,8 @@ create
 %left E_FREEOP
 %right E_NOT E_OLD
 
+%type <ET_ACROSS_EXPRESSION> Across_all_expression Across_some_expression Across_expression_header
+%type <ET_ACROSS_INSTRUCTION> Across_instruction_header
 %type <ET_ACTUAL_ARGUMENT_LIST> Actuals_opt Actuals_expression_list
 %type <ET_ACTUAL_PARAMETER_ITEM> Type_no_identifier_comma
 %type <ET_ACTUAL_PARAMETER_ITEM> Tuple_labeled_actual_parameter Tuple_labeled_actual_parameter_semicolon
@@ -126,8 +129,9 @@ create
 %type <ET_COMPOUND> Compound Rescue_opt Do_compound
 %type <ET_COMPOUND> Then_compound Explicit_then_compound
 %type <ET_COMPOUND> Else_compound Explicit_else_compound Rescue_compound
-%type <ET_COMPOUND> From_compound Loop_compound Attribute_compound
+%type <ET_COMPOUND> From_compound From_compound_opt Loop_compound Attribute_compound
 %type <ET_COMPOUND> Instruction_list Compound_opt Explicit_compound_opt
+%type <ET_CONDITIONAL> Until_expression_opt
 %type <ET_CONSTANT> Manifest_constant
 %type <ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM> Constraint_type_no_identifier_comma
 %type <ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM> Constraint_tuple_labeled_actual_parameter
@@ -175,7 +179,7 @@ create
 %type <ET_INDEXING_TERM> Index_value
 %type <ET_INDEXING_TERM_ITEM> Index_value_comma
 %type <ET_INDEXING_TERM_LIST> Index_terms
-%type <ET_INLINE_AGENT> Inline_agent
+%type <ET_INLINE_AGENT> Inline_agent Inline_agent_no_actual_arguments
 %type <ET_INSPECT_INSTRUCTION> Multi_branch
 %type <ET_INSTRUCTION> Instruction Creation_instruction Call_instruction Create_instruction
 %type <ET_INTEGER_CONSTANT> Integer_constant Typed_integer_constant Untyped_integer_constant Signed_integer_constant
@@ -193,7 +197,6 @@ create
 %type <ET_MANIFEST_STRING_ITEM> Manifest_string_comma
 %type <ET_MANIFEST_STRING_LIST> Manifest_string_list Parenthesized_manifest_string_list_opt
 %type <ET_MANIFEST_TUPLE> Manifest_tuple Manifest_tuple_expression_list
-%type <ET_OBJECT_TEST_LIST> End_of_inline_agent
 %type <ET_OBSOLETE> Obsolete_opt
 %type <ET_PARENTHESIZED_EXPRESSION> Parenthesized_expression
 %type <ET_PARENT> Parent Parent_end
@@ -214,12 +217,12 @@ create
 %type <ET_TYPE> Type Type_no_class_name Type_no_identifier Type_no_bang_identifier
 %type <ET_TYPE_ITEM> Type_comma
 %type <ET_TYPE_LIST> Convert_types Convert_type_list
-%type <ET_VARIANT> Variant_clause
+%type <ET_VARIANT> Variant_clause Variant_clause_opt
 %type <ET_WHEN_PART> When_part
 %type <ET_WHEN_PART_LIST> When_list When_list_opt
 %type <ET_WRITABLE> Writable
 
-%expect 92
+%expect 81
 %start Class_declarations
 
 %%
@@ -2524,6 +2527,12 @@ Variant_clause: E_VARIANT Expression
 		{ $$ := ast_factory.new_variant ($1, ast_factory.new_tag ($2, $3), $4) }
 	;
 
+Variant_clause_opt: -- Empty
+		-- { $$ := Void }
+	| Variant_clause
+		{ $$ := $1 }
+	;
+
 ------------------------------------------------------------------------------------
 
 Rescue_opt: -- Empty
@@ -3120,6 +3129,12 @@ From_compound: E_FROM Compound_opt
 		{ $$ := ast_factory.new_from_compound ($1, $2) }
 	;
 
+From_compound_opt: -- Empty
+		-- { $ := Void }
+	| From_compound
+		{ $$ := $1 }
+	;
+	
 Loop_compound: E_LOOP Compound_opt
 		{ $$ := ast_factory.new_loop_compound ($1, $2) }
 	;
@@ -3216,6 +3231,8 @@ Instruction: Creation_instruction
 --			{
 --				print ("End expected")
 --			}
+	| Across_instruction_header From_compound_opt Loop_invariant_clause_opt Until_expression_opt Loop_compound Variant_clause_opt E_END
+		{ $$ := new_across_instruction ($1, $2, $3, $4, $5, $6, $7) }
 	| Debug_instruction
 		{ $$ := $1 }
 	| Check_instruction
@@ -3225,7 +3242,7 @@ Instruction: Creation_instruction
 	| ';'
 		{ $$ := ast_factory.new_null_instruction ($1) }
 	;
-
+	
 ------------------------------------------------------------------------------------
 
 Check_instruction: E_CHECK Start_check_instruction E_END
@@ -3424,6 +3441,18 @@ Choice_constant: Integer_constant
 		{ $$ := $1 }
 	;
 
+------------------------------------------------------------------------------------
+
+Across_instruction_header: E_ACROSS Expression E_AS Identifier
+		{ $$ := new_across_instruction_header ($1, $2, $3, $4) }
+	;
+	
+Until_expression_opt: -- Empty
+		-- { $$ := Void }
+	| E_UNTIL Expression
+		{ $$ := ast_factory.new_conditional ($1, $2) }
+	;
+	
 ------------------------------------------------------------------------------------
 
 Debug_instruction: E_DEBUG Parenthesized_manifest_string_list_opt Compound_opt E_END
@@ -3706,6 +3735,10 @@ Non_binary_and_typed_expression: Untyped_bracket_target
 	| Untyped_bracket_expression
 		{ $$ := $1 }
 	| Create_expression
+		{ $$ := $1 }
+	| Across_some_expression
+		{ $$ := $1 }
+	| Across_all_expression
 		{ $$ := $1 }
 	| Manifest_tuple
 		{ $$ := $1 }
@@ -4029,6 +4062,18 @@ Manifest_constant: Boolean_constant
 		{ $$ := $1 }
 	;
 
+Across_some_expression: Across_expression_header Loop_invariant_clause_opt Until_expression_opt E_SOME Expression Variant_clause_opt E_END
+		{ $$ := new_across_some_expression ($1, $2, $3, ast_factory.new_conditional ($4, $5), $6, $7) }
+	;
+
+Across_all_expression: Across_expression_header Loop_invariant_clause_opt Until_expression_opt E_ALL Expression Variant_clause_opt E_END
+		{ $$ := new_across_all_expression ($1, $2, $3, ast_factory.new_conditional ($4, $5), $6, $7) }
+	;
+
+Across_expression_header: E_ACROSS Expression E_AS Identifier
+		{ $$ := new_across_expression_header ($1, $2, $3, $4) }
+	;
+
 ------------------------------------------------------------------------------------
 
 Call_agent: E_AGENT Feature_name Agent_actuals_opt
@@ -4037,93 +4082,87 @@ Call_agent: E_AGENT Feature_name Agent_actuals_opt
 		{ $$ := ast_factory.new_call_agent ($1, $2, ast_factory.new_dot_feature_name ($3, $4), $5) }
 	;
 
-Inline_agent:
+Inline_agent: Inline_agent_no_actual_arguments Agent_actuals_opt
+		{
+			set_inline_agent_actual_arguments ($1, $2)
+			$$ := $1
+		}
+	;
+
+Inline_agent_no_actual_arguments:
 -- There is a syntactical ambiguity with attribute inline agents.
 --	E_AGENT ':' Type Agent_actuals_opt
 --		{ $$ := ast_factory.new_attribute_inline_agent ($1, ast_factory.new_colon_type ($2, $3), $4) }
 	E_AGENT No_inline_agent_formal_arguments ':' Type
 	Precondition_opt Local_declarations_opt Do_compound Postcondition_opt Rescue_opt E_END
-	End_of_inline_agent Agent_actuals_opt
 		{
-			$$ := ast_factory.new_do_function_inline_agent ($1, Void, ast_factory.new_colon_type ($3, $4), $5, $6, $7, $8, $9, $10, $12)
-			$$.set_object_tests ($11)
+			$$ := ast_factory.new_do_function_inline_agent ($1, Void, ast_factory.new_colon_type ($3, $4), $5, $6, $7, $8, $9, $10, Void)
+			register_inline_agent ($$)
 		}
 	| E_AGENT Inline_agent_formal_arguments ':' Type
 	Precondition_opt Local_declarations_opt Do_compound Postcondition_opt Rescue_opt E_END
-	End_of_inline_agent Agent_actuals_opt
 		{
-			$$ := ast_factory.new_do_function_inline_agent ($1, $2, ast_factory.new_colon_type ($3, $4), $5, $6, $7, $8, $9, $10, $12)
-			$$.set_object_tests ($11)
+			$$ := ast_factory.new_do_function_inline_agent ($1, $2, ast_factory.new_colon_type ($3, $4), $5, $6, $7, $8, $9, $10, Void)
+			register_inline_agent ($$)
 		}
 	| E_AGENT No_inline_agent_formal_arguments ':' Type
 	Precondition_opt Local_declarations_opt E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END
-	End_of_inline_agent Agent_actuals_opt
 		{
-			$$ := ast_factory.new_once_function_inline_agent ($1, Void, ast_factory.new_colon_type ($3, $4), $5, $6, $8, ast_factory.new_once_compound ($7, $9), $10, $11, $12, $14)
-			$$.set_object_tests ($13)
+			$$ := ast_factory.new_once_function_inline_agent ($1, Void, ast_factory.new_colon_type ($3, $4), $5, $6, $8, ast_factory.new_once_compound ($7, $9), $10, $11, $12, Void)
+			register_inline_agent ($$)
 		}
 	| E_AGENT Inline_agent_formal_arguments ':' Type
 	Precondition_opt Local_declarations_opt E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END
-	End_of_inline_agent Agent_actuals_opt
 		{
-			$$ := ast_factory.new_once_function_inline_agent ($1, $2, ast_factory.new_colon_type ($3, $4), $5, $6, $8, ast_factory.new_once_compound ($7, $9), $10, $11, $12, $14)
-			$$.set_object_tests ($13)
+			$$ := ast_factory.new_once_function_inline_agent ($1, $2, ast_factory.new_colon_type ($3, $4), $5, $6, $8, ast_factory.new_once_compound ($7, $9), $10, $11, $12, Void)
+			register_inline_agent ($$)
 		}
 	| E_AGENT No_inline_agent_formal_arguments ':' Type
 	Precondition_opt E_EXTERNAL Untyped_manifest_string External_name_opt Postcondition_opt E_END
-	End_of_inline_agent Agent_actuals_opt
 		{
-			$$ := ast_factory.new_external_function_inline_agent ($1, Void, ast_factory.new_colon_type ($3, $4), $5, ast_factory.new_external_language ($6, $7), $8, $9, $10, $12)
-			$$.set_object_tests ($11)
+			$$ := ast_factory.new_external_function_inline_agent ($1, Void, ast_factory.new_colon_type ($3, $4), $5, ast_factory.new_external_language ($6, $7), $8, $9, $10, Void)
+			register_inline_agent ($$)
 		}
 	| E_AGENT Inline_agent_formal_arguments ':' Type
 	Precondition_opt E_EXTERNAL Untyped_manifest_string External_name_opt Postcondition_opt E_END
-	End_of_inline_agent Agent_actuals_opt
 		{
-			$$ := ast_factory.new_external_function_inline_agent ($1, $2, ast_factory.new_colon_type ($3, $4), $5, ast_factory.new_external_language ($6, $7), $8, $9, $10, $12)
-			$$.set_object_tests ($11)
+			$$ := ast_factory.new_external_function_inline_agent ($1, $2, ast_factory.new_colon_type ($3, $4), $5, ast_factory.new_external_language ($6, $7), $8, $9, $10, Void)
+			register_inline_agent ($$)
 		}
 	| E_AGENT No_inline_agent_formal_arguments
 	Precondition_opt Local_declarations_opt Do_compound Postcondition_opt Rescue_opt E_END
-	End_of_inline_agent Agent_actuals_opt
 		{
-			$$ := ast_factory.new_do_procedure_inline_agent ($1, Void, $3, $4, $5, $6, $7, $8, $10)
-			$$.set_object_tests ($9)
+			$$ := ast_factory.new_do_procedure_inline_agent ($1, Void, $3, $4, $5, $6, $7, $8, Void)
+			register_inline_agent ($$)
 		}
 	| E_AGENT Inline_agent_formal_arguments
 	Precondition_opt Local_declarations_opt Do_compound Postcondition_opt Rescue_opt E_END
-	End_of_inline_agent Agent_actuals_opt
 		{
-			$$ := ast_factory.new_do_procedure_inline_agent ($1, $2, $3, $4, $5, $6, $7, $8, $10)
-			$$.set_object_tests ($9)
+			$$ := ast_factory.new_do_procedure_inline_agent ($1, $2, $3, $4, $5, $6, $7, $8, Void)
+			register_inline_agent ($$)
 		}
 	| E_AGENT No_inline_agent_formal_arguments
 	Precondition_opt Local_declarations_opt E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END
-	End_of_inline_agent Agent_actuals_opt
 		{
-			$$ := ast_factory.new_once_procedure_inline_agent ($1, Void, $3, $4, $6, ast_factory.new_once_compound ($5, $7), $8, $9, $10, $12)
-			$$.set_object_tests ($11)
+			$$ := ast_factory.new_once_procedure_inline_agent ($1, Void, $3, $4, $6, ast_factory.new_once_compound ($5, $7), $8, $9, $10, Void)
+			register_inline_agent ($$)
 		}
 	| E_AGENT Inline_agent_formal_arguments
 	Precondition_opt Local_declarations_opt E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END
-	End_of_inline_agent Agent_actuals_opt
 		{
-			$$ := ast_factory.new_once_procedure_inline_agent ($1, $2, $3, $4, $6, ast_factory.new_once_compound ($5, $7), $8, $9, $10, $12)
-			$$.set_object_tests ($11)
+			$$ := ast_factory.new_once_procedure_inline_agent ($1, $2, $3, $4, $6, ast_factory.new_once_compound ($5, $7), $8, $9, $10, Void)
 		}
 	| E_AGENT No_inline_agent_formal_arguments
 	Precondition_opt E_EXTERNAL Untyped_manifest_string External_name_opt Postcondition_opt E_END
-	End_of_inline_agent Agent_actuals_opt
 		{
-			$$ := ast_factory.new_external_procedure_inline_agent ($1, Void, $3, ast_factory.new_external_language ($4, $5), $6, $7, $8, $10)
-			$$.set_object_tests ($9)
+			$$ := ast_factory.new_external_procedure_inline_agent ($1, Void, $3, ast_factory.new_external_language ($4, $5), $6, $7, $8, Void)
+			register_inline_agent ($$)
 		}
 	| E_AGENT Inline_agent_formal_arguments
 	Precondition_opt E_EXTERNAL Untyped_manifest_string External_name_opt Postcondition_opt E_END
-	End_of_inline_agent Agent_actuals_opt
 		{
-			$$ := ast_factory.new_external_procedure_inline_agent ($1, $2, $3, ast_factory.new_external_language ($4, $5), $6, $7, $8, $10)
-			$$.set_object_tests ($9)
+			$$ := ast_factory.new_external_procedure_inline_agent ($1, $2, $3, ast_factory.new_external_language ($4, $5), $6, $7, $8, Void)
+			register_inline_agent ($$)
 		}
 	;
 
@@ -4136,18 +4175,6 @@ Inline_agent_formal_arguments: Formal_arguments
 
 No_inline_agent_formal_arguments: -- Empty
 		{ set_start_closure (Void) }
-	;
-
-End_of_inline_agent: -- Empty
-		{
-			if last_object_tests /= Void then
-				$$ := last_object_tests.cloned_object_test_list
-			else
-				$$ := Void
-			end
-				-- Clean up after the inline agent has been parsed.
-			set_end_closure
-		}
 	;
 
 Agent_target: Identifier

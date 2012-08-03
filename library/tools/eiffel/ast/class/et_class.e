@@ -5,7 +5,7 @@ note
 		"Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2011/09/15 $"
 	revision: "$Revision: #46 $"
@@ -342,6 +342,18 @@ feature -- Status report
 			-- Is current class the "FUNCTION" class?
 		do
 			Result := class_code = class_codes.function_class_code
+		end
+
+	is_iterable_class: BOOLEAN
+			-- Is current class the "ITERABLE" class?
+		do
+			Result := class_code = class_codes.iterable_class_code
+		end
+
+	is_iteration_cursor_class: BOOLEAN
+			-- Is current class the "ITERATION_CURSOR" class?
+		do
+			Result := class_code = class_codes.iteration_cursor_class_code
 		end
 
 	is_predicate_class: BOOLEAN

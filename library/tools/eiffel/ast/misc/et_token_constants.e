@@ -5,7 +5,7 @@ note
 		"Eiffel token and symbol constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -155,11 +155,27 @@ feature -- Class names
 		end
 
 	internal_class_name: ET_CLASS_NAME
-			-- "INTEGER_64" class name
+			-- "INTERNAL" class name
 		once
 			create {ET_IDENTIFIER} Result.make (capitalized_internal_name)
 		ensure
 			internal_class_name_not_void: Result /= Void
+		end
+
+	iterable_class_name: ET_CLASS_NAME
+			-- "ITERABLE" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_iterable_name)
+		ensure
+			iterable_class_name_not_void: Result /= Void
+		end
+
+	iteration_cursor_class_name: ET_CLASS_NAME
+			-- "ITERATION_CURSOR" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_iteration_cursor_name)
+		ensure
+			iteration_cursor_class_name_not_void: Result /= Void
 		end
 
 	memory_class_name: ET_CLASS_NAME
@@ -541,6 +557,14 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 		end
 
 feature -- Feature names
+
+	after_feature_name: ET_FEATURE_NAME
+			-- 'after' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (after_name)
+		ensure
+			after_feature_name_not_void: Result /= Void
+		end
 
 	aliased_resized_area_feature_name: ET_FEATURE_NAME
 			-- 'aliased_resized_area' feature name
@@ -1004,6 +1028,14 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (floor_real_64_name)
 		ensure
 			floor_real_64_feature_name_not_void: Result /= Void
+		end
+
+	forth_feature_name: ET_FEATURE_NAME
+			-- 'forth' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (forth_name)
+		ensure
+			forth_feature_name_not_void: Result /= Void
 		end
 
 	free_feature_name: ET_FEATURE_NAME
@@ -1602,6 +1634,14 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (negated_name)
 		ensure
 			negated_feature_name_not_void: Result /= Void
+		end
+
+	new_cursor_feature_name: ET_FEATURE_NAME
+			-- 'new_cursor' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (new_cursor_name)
+		ensure
+			new_cursor_feature_name_not_void: Result /= Void
 		end
 
 	object_comparison_feature_name: ET_FEATURE_NAME
@@ -2677,6 +2717,14 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
+	across_keyword: ET_KEYWORD
+			-- 'across' keyword
+		once
+			create Result.make_across
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
 	agent_keyword: ET_AGENT_KEYWORD
 			-- 'agent' keyword
 		once
@@ -3109,6 +3157,14 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
+	some_keyword: ET_KEYWORD
+			-- 'some' keyword
+		once
+			create Result.make_some
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
 	strip_keyword: ET_KEYWORD
 			-- 'strip' keyword
 		once
@@ -3209,6 +3265,8 @@ feature -- Keyword and symbol names
 	capitalized_integer_32_name: STRING = "INTEGER_32"
 	capitalized_integer_64_name: STRING = "INTEGER_64"
 	capitalized_internal_name: STRING = "INTERNAL"
+	capitalized_iterable_name: STRING = "ITERABLE"
+	capitalized_iteration_cursor_name: STRING = "ITERATION_CURSOR"
 	capitalized_memory_name: STRING = "MEMORY"
 	capitalized_native_array_name: STRING = "NATIVE_ARRAY"
 	capitalized_natural_name: STRING = "NATURAL"
@@ -3237,6 +3295,9 @@ feature -- Keyword and symbol names
 	capitalized_wide_character_name: STRING = "WIDE_CHARACTER"
 	capitalized_unknown_name: STRING = "*UNKNOWN*"
 			-- Eiffel class names
+
+	after_name: STRING = "after"
+			-- Name of Eiffel feature 'after'
 
 	aliased_resized_area_name: STRING = "aliased_resized_area"
 			-- Name of Eiffel feature 'aliased_resized_area'
@@ -3412,6 +3473,9 @@ feature -- Keyword and symbol names
 	floor_real_64_name: STRING = "floor_real_64"
 			-- Name of Eiffel feature 'floor_real_64'
 
+	forth_name: STRING = "forth"
+			-- Name of Eiffel feature 'forth'
+
 	free_name: STRING = "free"
 			-- Name of Eiffel feature 'free'
 
@@ -3558,6 +3622,9 @@ feature -- Keyword and symbol names
 
 	negated_name: STRING = "negated"
 			-- Name of Eiffel feature 'negated'
+
+	new_cursor_name: STRING = "new_cursor"
+			-- Name of Eiffel feature 'new_cursor'
 
 	object_comparison_name: STRING = "object_comparison"
 			-- Name of Eiffel feature 'object_comparison'
@@ -3790,6 +3857,7 @@ feature -- Keyword and symbol names
 	capitalized_unique_keyword_name: STRING = "Unique"
 			-- Eiffel keyword names with first letter in upper-case
 
+	across_keyword_name: STRING = "across"
 	agent_keyword_name: STRING = "agent"
 	alias_keyword_name: STRING = "alias"
 	all_keyword_name: STRING = "all"
@@ -3849,6 +3917,7 @@ feature -- Keyword and symbol names
 	retry_keyword_name: STRING = "retry"
 	select_keyword_name: STRING = "select"
 	separate_keyword_name: STRING = "separate"
+	some_keyword_name: STRING = "some"
 	strip_keyword_name: STRING = "strip"
 	then_keyword_name: STRING = "then"
 	true_keyword_name: STRING = "true"

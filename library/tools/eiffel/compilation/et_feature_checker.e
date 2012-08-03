@@ -23,6 +23,8 @@ inherit
 		undefine
 			make
 		redefine
+			process_across_expression,
+			process_across_instruction,
 			process_assigner_instruction,
 			process_assignment,
 			process_assignment_attempt,
@@ -160,6 +162,9 @@ feature {NONE} -- Initialization
 			create current_object_test_types.make_map (50)
 			create current_object_test_scope.make
 			create object_test_scope_builder.make
+				-- Across components.
+			create current_across_cursor_types.make_map (50)
+			create current_across_cursor_scope.make
 				-- Attachments.
 			create current_initialization_scope.make
 			create current_attachment_scope.make
@@ -310,6 +315,12 @@ feature -- Validity checking
 				end
 				current_object_test_types.wipe_out
 				current_object_test_scope.wipe_out
+				from current_across_cursor_types.start until current_across_cursor_types.after loop
+					free_context (current_across_cursor_types.item_for_iteration)
+					current_across_cursor_types.forth
+				end
+				current_across_cursor_types.wipe_out
+				current_across_cursor_scope.wipe_out
 				current_attachment_scope.wipe_out
 				current_initialization_scope.wipe_out
 				current_class := old_class
@@ -451,6 +462,12 @@ feature -- Validity checking
 				end
 				current_object_test_types.wipe_out
 				current_object_test_scope.wipe_out
+				from current_across_cursor_types.start until current_across_cursor_types.after loop
+					free_context (current_across_cursor_types.item_for_iteration)
+					current_across_cursor_types.forth
+				end
+				current_across_cursor_types.wipe_out
+				current_across_cursor_scope.wipe_out
 				current_attachment_scope.wipe_out
 				current_initialization_scope.wipe_out
 				current_class := old_class
@@ -590,6 +607,12 @@ feature -- Validity checking
 				end
 				current_object_test_types.wipe_out
 				current_object_test_scope.wipe_out
+				from current_across_cursor_types.start until current_across_cursor_types.after loop
+					free_context (current_across_cursor_types.item_for_iteration)
+					current_across_cursor_types.forth
+				end
+				current_across_cursor_types.wipe_out
+				current_across_cursor_scope.wipe_out
 				current_attachment_scope.wipe_out
 				current_initialization_scope.wipe_out
 				current_class := old_class
@@ -708,6 +731,12 @@ feature -- Validity checking
 				end
 				current_object_test_types.wipe_out
 				current_object_test_scope.wipe_out
+				from current_across_cursor_types.start until current_across_cursor_types.after loop
+					free_context (current_across_cursor_types.item_for_iteration)
+					current_across_cursor_types.forth
+				end
+				current_across_cursor_types.wipe_out
+				current_across_cursor_scope.wipe_out
 				current_attachment_scope.wipe_out
 				current_initialization_scope.wipe_out
 				current_class := old_class
@@ -728,6 +757,7 @@ feature {NONE} -- Feature validity
 			consistent: a_feature = current_feature
 		local
 			l_object_tests: ET_OBJECT_TEST_LIST
+			l_across_components: ET_ACROSS_COMPONENT_LIST
 			l_type: ET_TYPE
 			had_error: BOOLEAN
 		do
@@ -750,6 +780,11 @@ feature {NONE} -- Feature validity
 				check_object_tests_validity (l_object_tests, a_feature)
 				had_error := had_error or has_fatal_error
 			end
+			l_across_components := a_feature.across_components
+			if l_across_components /= Void then
+				check_across_components_validity (l_across_components, a_feature)
+				had_error := had_error or has_fatal_error
+			end
 			has_fatal_error := had_error
 		end
 
@@ -761,6 +796,7 @@ feature {NONE} -- Feature validity
 			consistent: a_feature = current_feature
 		local
 			l_object_tests: ET_OBJECT_TEST_LIST
+			l_across_components: ET_ACROSS_COMPONENT_LIST
 			l_type: ET_TYPE
 			l_constant: ET_CONSTANT
 			l_bit_type: ET_BIT_TYPE
@@ -784,6 +820,11 @@ feature {NONE} -- Feature validity
 			l_object_tests := a_feature.object_tests
 			if l_object_tests /= Void then
 				check_object_tests_validity (l_object_tests, a_feature)
+				had_error := had_error or has_fatal_error
+			end
+			l_across_components := a_feature.across_components
+			if l_across_components /= Void then
+				check_across_components_validity (l_across_components, a_feature)
 				had_error := had_error or has_fatal_error
 			end
 			if not had_error then
@@ -915,6 +956,7 @@ feature {NONE} -- Feature validity
 		local
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_object_tests: ET_OBJECT_TEST_LIST
+			l_across_components: ET_ACROSS_COMPONENT_LIST
 			l_type: ET_TYPE
 			had_error: BOOLEAN
 		do
@@ -941,6 +983,11 @@ feature {NONE} -- Feature validity
 				check_object_tests_validity (l_object_tests, a_feature)
 				had_error := had_error or has_fatal_error
 			end
+			l_across_components := a_feature.across_components
+			if l_across_components /= Void then
+				check_across_components_validity (l_across_components, a_feature)
+				had_error := had_error or has_fatal_error
+			end
 			has_fatal_error := had_error
 		end
 
@@ -953,6 +1000,7 @@ feature {NONE} -- Feature validity
 		local
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_object_tests: ET_OBJECT_TEST_LIST
+			l_across_components: ET_ACROSS_COMPONENT_LIST
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -964,6 +1012,11 @@ feature {NONE} -- Feature validity
 			l_object_tests := a_feature.object_tests
 			if l_object_tests /= Void then
 				check_object_tests_validity (l_object_tests, a_feature)
+				had_error := had_error or has_fatal_error
+			end
+			l_across_components := a_feature.across_components
+			if l_across_components /= Void then
+				check_across_components_validity (l_across_components, a_feature)
 				had_error := had_error or has_fatal_error
 			end
 			has_fatal_error := had_error
@@ -979,6 +1032,7 @@ feature {NONE} -- Feature validity
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_type: ET_TYPE
 			l_object_tests: ET_OBJECT_TEST_LIST
+			l_across_components: ET_ACROSS_COMPONENT_LIST
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_compound: ET_COMPOUND
 			had_error: BOOLEAN
@@ -1009,6 +1063,11 @@ feature {NONE} -- Feature validity
 			l_object_tests := a_feature.object_tests
 			if l_object_tests /= Void then
 				check_object_tests_validity (l_object_tests, a_feature)
+				had_error := had_error or has_fatal_error
+			end
+			l_across_components := a_feature.across_components
+			if l_across_components /= Void then
+				check_across_components_validity (l_across_components, a_feature)
 				had_error := had_error or has_fatal_error
 			end
 			l_locals := a_feature.locals
@@ -1081,6 +1140,7 @@ feature {NONE} -- Feature validity
 		local
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_object_tests: ET_OBJECT_TEST_LIST
+			l_across_components: ET_ACROSS_COMPONENT_LIST
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_compound: ET_COMPOUND
 			had_error: BOOLEAN
@@ -1099,6 +1159,11 @@ feature {NONE} -- Feature validity
 			l_object_tests := a_feature.object_tests
 			if l_object_tests /= Void then
 				check_object_tests_validity (l_object_tests, a_feature)
+				had_error := had_error or has_fatal_error
+			end
+			l_across_components := a_feature.across_components
+			if l_across_components /= Void then
+				check_across_components_validity (l_across_components, a_feature)
 				had_error := had_error or has_fatal_error
 			end
 			l_locals := a_feature.locals
@@ -1176,6 +1241,7 @@ feature {NONE} -- Feature validity
 		local
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_object_tests: ET_OBJECT_TEST_LIST
+			l_across_components: ET_ACROSS_COMPONENT_LIST
 			l_type: ET_TYPE
 			had_error: BOOLEAN
 		do
@@ -1202,6 +1268,11 @@ feature {NONE} -- Feature validity
 				check_object_tests_validity (l_object_tests, a_feature)
 				had_error := had_error or has_fatal_error
 			end
+			l_across_components := a_feature.across_components
+			if l_across_components /= Void then
+				check_across_components_validity (l_across_components, a_feature)
+				had_error := had_error or has_fatal_error
+			end
 			has_fatal_error := had_error
 		end
 
@@ -1214,6 +1285,7 @@ feature {NONE} -- Feature validity
 		local
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_object_tests: ET_OBJECT_TEST_LIST
+			l_across_components: ET_ACROSS_COMPONENT_LIST
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -1225,6 +1297,11 @@ feature {NONE} -- Feature validity
 			l_object_tests := a_feature.object_tests
 			if l_object_tests /= Void then
 				check_object_tests_validity (l_object_tests, a_feature)
+				had_error := had_error or has_fatal_error
+			end
+			l_across_components := a_feature.across_components
+			if l_across_components /= Void then
+				check_across_components_validity (l_across_components, a_feature)
 				had_error := had_error or has_fatal_error
 			end
 			has_fatal_error := had_error
@@ -1239,6 +1316,7 @@ feature {NONE} -- Feature validity
 		local
 			l_type: ET_TYPE
 			l_object_tests: ET_OBJECT_TEST_LIST
+			l_across_components: ET_ACROSS_COMPONENT_LIST
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_compound: ET_COMPOUND
 			had_error: BOOLEAN
@@ -1265,6 +1343,11 @@ feature {NONE} -- Feature validity
 			l_object_tests := a_feature.object_tests
 			if l_object_tests /= Void then
 				check_object_tests_validity (l_object_tests, a_feature)
+				had_error := had_error or has_fatal_error
+			end
+			l_across_components := a_feature.across_components
+			if l_across_components /= Void then
+				check_across_components_validity (l_across_components, a_feature)
 				had_error := had_error or has_fatal_error
 			end
 			l_locals := a_feature.locals
@@ -1340,6 +1423,7 @@ feature {NONE} -- Feature validity
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_type: ET_TYPE
 			l_object_tests: ET_OBJECT_TEST_LIST
+			l_across_components: ET_ACROSS_COMPONENT_LIST
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -1365,6 +1449,11 @@ feature {NONE} -- Feature validity
 				check_object_tests_validity (l_object_tests, a_feature)
 				had_error := had_error or has_fatal_error
 			end
+			l_across_components := a_feature.across_components
+			if l_across_components /= Void then
+				check_across_components_validity (l_across_components, a_feature)
+				had_error := had_error or has_fatal_error
+			end
 			has_fatal_error := had_error
 		end
 
@@ -1377,6 +1466,7 @@ feature {NONE} -- Feature validity
 		local
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_object_tests: ET_OBJECT_TEST_LIST
+			l_across_components: ET_ACROSS_COMPONENT_LIST
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -1388,6 +1478,11 @@ feature {NONE} -- Feature validity
 			l_object_tests := a_feature.object_tests
 			if l_object_tests /= Void then
 				check_object_tests_validity (l_object_tests, a_feature)
+				had_error := had_error or has_fatal_error
+			end
+			l_across_components := a_feature.across_components
+			if l_across_components /= Void then
+				check_across_components_validity (l_across_components, a_feature)
 				had_error := had_error or has_fatal_error
 			end
 			has_fatal_error := had_error
@@ -1403,6 +1498,7 @@ feature {NONE} -- Feature validity
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_type: ET_TYPE
 			l_object_tests: ET_OBJECT_TEST_LIST
+			l_across_components: ET_ACROSS_COMPONENT_LIST
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_compound: ET_COMPOUND
 			l_keys: ET_MANIFEST_STRING_LIST
@@ -1435,6 +1531,11 @@ feature {NONE} -- Feature validity
 			l_object_tests := a_feature.object_tests
 			if l_object_tests /= Void then
 				check_object_tests_validity (l_object_tests, a_feature)
+				had_error := had_error or has_fatal_error
+			end
+			l_across_components := a_feature.across_components
+			if l_across_components /= Void then
+				check_across_components_validity (l_across_components, a_feature)
 				had_error := had_error or has_fatal_error
 			end
 			l_locals := a_feature.locals
@@ -1512,6 +1613,7 @@ feature {NONE} -- Feature validity
 		local
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_object_tests: ET_OBJECT_TEST_LIST
+			l_across_components: ET_ACROSS_COMPONENT_LIST
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_compound: ET_COMPOUND
 			l_keys: ET_MANIFEST_STRING_LIST
@@ -1532,6 +1634,11 @@ feature {NONE} -- Feature validity
 			l_object_tests := a_feature.object_tests
 			if l_object_tests /= Void then
 				check_object_tests_validity (l_object_tests, a_feature)
+				had_error := had_error or has_fatal_error
+			end
+			l_across_components := a_feature.across_components
+			if l_across_components /= Void then
+				check_across_components_validity (l_across_components, a_feature)
 				had_error := had_error or has_fatal_error
 			end
 			l_locals := a_feature.locals
@@ -1594,6 +1701,7 @@ feature {NONE} -- Feature validity
 		local
 			l_type: ET_TYPE
 			l_object_tests: ET_OBJECT_TEST_LIST
+			l_across_components: ET_ACROSS_COMPONENT_LIST
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -1611,6 +1719,11 @@ feature {NONE} -- Feature validity
 			l_object_tests := a_feature.object_tests
 			if l_object_tests /= Void then
 				check_object_tests_validity (l_object_tests, a_feature)
+				had_error := had_error or has_fatal_error
+			end
+			l_across_components := a_feature.across_components
+			if l_across_components /= Void then
+				check_across_components_validity (l_across_components, a_feature)
 				had_error := had_error or has_fatal_error
 			end
 			if not had_error then
@@ -1706,6 +1819,7 @@ feature {NONE} -- Locals/Formal arguments validity
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_enclosing_agent: ET_INLINE_AGENT
 			l_object_test: ET_NAMED_OBJECT_TEST
+			l_across_component: ET_ACROSS_COMPONENT
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -1792,6 +1906,14 @@ feature {NONE} -- Locals/Formal arguments validity
 							-- the inline agent `an_agent'.
 						set_fatal_error
 						error_handler.report_vpir1e_error (current_class, l_formal, an_agent, l_object_test)
+					end
+					l_across_component := current_across_cursor_scope.hidden_across_component (l_name)
+					if l_across_component /= Void then
+							-- This formal argument has the same name as an across cursor
+							-- of an enclosing feature or inline agent whose scope contains
+							-- the inline agent `an_agent'.
+						set_fatal_error
+						error_handler.report_vpir1g_error (current_class, l_formal, an_agent, l_across_component)
 					end
 					l_type := l_formal.type
 					had_error := had_error or has_fatal_error
@@ -1923,6 +2045,7 @@ feature {NONE} -- Locals/Formal arguments validity
 			l_enclosing_agent: ET_INLINE_AGENT
 			l_type: ET_TYPE
 			l_object_test: ET_NAMED_OBJECT_TEST
+			l_across_component: ET_ACROSS_COMPONENT
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -2020,6 +2143,14 @@ feature {NONE} -- Locals/Formal arguments validity
 						set_fatal_error
 						error_handler.report_vpir1f_error (current_class, l_local, an_agent, l_object_test)
 					end
+					l_across_component := current_across_cursor_scope.hidden_across_component (l_name)
+					if l_across_component /= Void then
+							-- This local variable has the same name as an across cursor
+							-- of an enclosing feature or inline agent whose scope contains
+							-- the inline agent `an_agent'.
+						set_fatal_error
+						error_handler.report_vpir1h_error (current_class, l_local, an_agent, l_across_component)
+					end
 					l_type := l_local.type
 					had_error := had_error or has_fatal_error
 					check_local_type_validity (l_type)
@@ -2052,7 +2183,7 @@ feature {NONE} -- Locals/Formal arguments validity
 			-- Set `has_fatal_error' if a fatal error occurred.
 			--
 			-- Note that the validity of the declared types of the object-test
-			-- locals and scope intersections will be checked when it appears
+			-- locals and scope intersections will be checked when they appear
 			-- in the class text.
 		require
 			a_object_tests_not_void: a_object_tests /= Void
@@ -2097,7 +2228,7 @@ feature {NONE} -- Locals/Formal arguments validity
 			-- Set `has_fatal_error' if a fatal error occurred.
 			--
 			-- Note that the validity of the declared types of the object-test
-			-- locals and scope intersections will be checked when it appears
+			-- locals and scope intersections will be checked when they appear
 			-- in the class text.
 		require
 			a_object_tests_not_void: a_object_tests /= Void
@@ -2131,6 +2262,64 @@ feature {NONE} -- Locals/Formal arguments validity
 							j := j + 1
 						end
 					end
+					i := i + 1
+				end
+			end
+		end
+
+	check_across_components_validity (a_across_components: ET_ACROSS_COMPONENT_LIST; a_feature: ET_FEATURE)
+			-- Check validity of `a_across_components' of `a_feature'.
+			-- These are all across components declared in `a_feature'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+			--
+			-- Note that the scope intersections will be checked when they appear
+			-- in the class text.
+		require
+			a_across_components_not_void: a_across_components /= Void
+			a_feature_not_void: a_feature /= Void
+			consistent: a_feature = current_feature
+		local
+			i, nb: INTEGER
+			l_across_component: ET_ACROSS_COMPONENT
+			l_name: ET_IDENTIFIER
+		do
+			has_fatal_error := False
+			if current_class = current_class_impl then
+				nb := a_across_components.count
+				from i := 1 until i > nb loop
+					l_across_component := a_across_components.across_component (i)
+					l_name := l_across_component.cursor_name
+					l_name.set_across_cursor (True)
+					l_name.set_seed (i)
+					i := i + 1
+				end
+			end
+		end
+
+	check_inline_agent_across_components_validity (a_across_components: ET_ACROSS_COMPONENT_LIST; an_agent: ET_INLINE_AGENT)
+			-- Check validity of `a_across_components' of `an_agent'.
+			-- These are all across components declared in `an_agent'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+			--
+			-- Note that the scope intersections will be checked when they appear
+			-- in the class text.
+		require
+			a_across_components_not_void: a_across_components /= Void
+			an_agent_not_void: an_agent /= Void
+			consistent: an_agent = current_inline_agent
+		local
+			i, nb: INTEGER
+			l_across_component: ET_ACROSS_COMPONENT
+			l_name: ET_IDENTIFIER
+		do
+			has_fatal_error := False
+			if current_class = current_class_impl then
+				nb := a_across_components.count
+				from i := 1 until i > nb loop
+					l_across_component := a_across_components.across_component (i)
+					l_name := l_across_component.cursor_name
+					l_name.set_across_cursor (True)
+					l_name.set_seed (i)
 					i := i + 1
 				end
 			end
@@ -2317,6 +2506,40 @@ feature {NONE} -- Once key validity
 		end
 
 feature {NONE} -- Instruction validity
+
+	check_across_instruction_validity (an_instruction: ET_ACROSS_INSTRUCTION)
+			-- Check validity of `an_instruction'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			an_instruction_not_void: an_instruction /= Void
+		local
+			l_compound: ET_COMPOUND
+			had_error: BOOLEAN
+		do
+			has_fatal_error := False
+			check_across_component_header_validity (an_instruction)
+			if has_fatal_error then
+				had_error := True
+			end
+			current_across_cursor_scope.add_across_component (an_instruction)
+			l_compound := an_instruction.from_compound
+			if l_compound /= Void then
+				check_instructions_validity (l_compound)
+				if has_fatal_error then
+					had_error := True
+				end
+			end
+			check_loop_component_no_from_validity (an_instruction)
+			current_across_cursor_scope.remove_across_components (1)
+			current_across_cursor_types.search (an_instruction)
+			if current_across_cursor_types.found then
+				free_context (current_across_cursor_types.found_item)
+				current_across_cursor_types.remove_found_item
+			end
+			if had_error then
+				set_fatal_error
+			end
+		end
 
 	check_assigner_instruction_validity (an_instruction: ET_ASSIGNER_INSTRUCTION)
 			-- Check validity of `an_instruction'.
@@ -3921,6 +4144,8 @@ feature {NONE} -- Instruction validity
 							-- This is not a constant.
 					elseif l_identifier.is_object_test_local then
 							-- This is not a constant.
+					elseif l_identifier.is_across_cursor then
+							-- This is not a constant.
 					else
 						l_seed := l_identifier.seed
 						l_query := current_class.seeded_query (l_seed)
@@ -3975,21 +4200,22 @@ feature {NONE} -- Instruction validity
 					had_error := True
 				end
 			end
-			check_loop_instruction_no_from_validity (an_instruction)
+			check_loop_component_no_from_validity (an_instruction)
 			if had_error then
 				set_fatal_error
 			end
 		end
 
-	check_loop_instruction_no_from_validity (an_instruction: ET_LOOP_INSTRUCTION)
+	check_loop_component_no_from_validity (an_instruction: ET_LOOP_COMPONENT)
 			-- Check validity of `an_instruction' except for the from-part.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			an_instruction_not_void: an_instruction /= Void
 		local
-			l_expression: ET_EXPRESSION
+			l_until_expression: ET_EXPRESSION
 			l_expression_context: ET_NESTED_TYPE_CONTEXT
 			l_compound: ET_COMPOUND
+			l_conditional: ET_CONDITIONAL
 			had_error: BOOLEAN
 			l_named_type: ET_NAMED_TYPE
 			boolean_type: ET_CLASS_TYPE
@@ -4030,29 +4256,32 @@ feature {NONE} -- Instruction validity
 					current_attachment_scope.copy_scope (l_old_attachment_scope)
 				end
 			end
-			boolean_type := current_universe_impl.boolean_type
-			l_expression := an_instruction.until_conditional.expression
-			l_expression_context := new_context (current_type)
-			check_expression_validity (l_expression, l_expression_context, boolean_type)
-			if has_fatal_error then
-				had_error := True
-			elseif not l_expression_context.same_named_type (boolean_type, current_class_impl) then
-				had_error := True
-				set_fatal_error
-				l_named_type := l_expression_context.named_type
-				error_handler.report_vwbe0a_error (current_class, current_class_impl, l_expression, l_named_type)
+			l_conditional := an_instruction.until_conditional
+			if l_conditional /= Void then
+				boolean_type := current_universe_impl.boolean_type
+				l_until_expression := l_conditional.expression
+				l_expression_context := new_context (current_type)
+				check_expression_validity (l_until_expression, l_expression_context, boolean_type)
+				if has_fatal_error then
+					had_error := True
+				elseif not l_expression_context.same_named_type (boolean_type, current_class_impl) then
+					had_error := True
+					set_fatal_error
+					l_named_type := l_expression_context.named_type
+					error_handler.report_vwbe0a_error (current_class, current_class_impl, l_until_expression, l_named_type)
+				end
+				free_context (l_expression_context)
 			end
-			free_context (l_expression_context)
 			l_compound := an_instruction.loop_compound
 			if l_compound /= Void and then not l_compound.is_empty then
-				if current_universe.attachment_type_conformance_mode then
-					attachment_scope_builder.build_negated_scope (l_expression, current_attachment_scope)
+				if current_universe.attachment_type_conformance_mode and l_until_expression /= Void then
+					attachment_scope_builder.build_negated_scope (l_until_expression, current_attachment_scope)
 				end
 				l_old_object_test_scope := current_object_test_scope.count
-				if l_compound.has_non_null_instruction then
+				if l_compound.has_non_null_instruction and l_until_expression /= Void then
 						-- Note: With ISE 6.8, the detection of object-test local name overlap is
 						-- triggered only when the loop-compound contains at least one instruction.
-					object_test_scope_builder.build_negated_scope (l_expression, current_object_test_scope, current_class_impl)
+					object_test_scope_builder.build_negated_scope (l_until_expression, current_object_test_scope, current_class_impl)
 					had_error := had_error or object_test_scope_builder.has_fatal_error
 				end
 				check_instructions_validity (l_compound)
@@ -4060,19 +4289,21 @@ feature {NONE} -- Instruction validity
 				if has_fatal_error then
 					had_error := True
 				end
+				if current_universe.attachment_type_conformance_mode then
+					if not had_error and not l_old_attachment_scope.is_subset (current_attachment_scope) then
+							-- Some local variables declared as detachable which were attached
+							-- before the first execution of the loop invariant, variant, until
+							-- condition and loop body have been detached in the loop body.
+							-- We need to check whether subsequent iterations will still work
+							-- without any attachment problems.
+						check_loop_component_no_from_validity (an_instruction)
+					end
+				end
 			end
 			if had_error then
 				set_fatal_error
 			end
 			if current_universe.attachment_type_conformance_mode then
-				if not has_fatal_error and not l_old_attachment_scope.is_subset (current_attachment_scope) then
-						-- Some local variables declared as detachable which were attached
-						-- before the first execution of the loop invariant, variant, until
-						-- condition and loop body have been detached in the loop body.
-						-- We need to check whether subsequent iterations will still work
-						-- without any attachment problems.
-					check_loop_instruction_no_from_validity (an_instruction)
-				end
 				free_attachment_scope (current_attachment_scope)
 				free_attachment_scope (current_initialization_scope)
 				current_attachment_scope := l_old_attachment_scope
@@ -4883,6 +5114,385 @@ feature {NONE} -- Instruction validity
 
 feature {NONE} -- Expression validity
 
+	check_across_component_header_validity (a_across_component: ET_ACROSS_COMPONENT)
+			-- Check validity of the header of `a_across_component'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_across_component_not_void: a_across_component /= Void
+		local
+			l_object_test: ET_NAMED_OBJECT_TEST
+			l_had_error: BOOLEAN
+			l_had_iterable_error: BOOLEAN
+			l_expression_context: ET_NESTED_TYPE_CONTEXT
+			l_conditional_context: ET_NESTED_TYPE_CONTEXT
+			l_cursor_name: ET_IDENTIFIER
+			l_feature: ET_FEATURE
+			i, j, nb: INTEGER
+			l_enclosing_agent: ET_INLINE_AGENT
+			args: ET_FORMAL_ARGUMENT_LIST
+			l_locals: ET_LOCAL_VARIABLE_LIST
+			l_other_across_component: ET_ACROSS_COMPONENT
+			l_iterable_type: ET_CLASS_TYPE
+			l_iterable_expression: ET_EXPRESSION
+			l_named_type: ET_NAMED_TYPE
+			l_boolean_type: ET_CLASS_TYPE
+		do
+			has_fatal_error := False
+			l_expression_context := new_context (current_type)
+			l_iterable_expression := a_across_component.iterable_expression
+			l_iterable_type := current_universe_impl.iterable_detachable_any_type
+			check_expression_validity (l_iterable_expression, l_expression_context, l_iterable_type)
+			if has_fatal_error then
+				l_had_error := True
+				l_had_iterable_error := True
+			elseif not l_expression_context.conforms_to_type (l_iterable_type, current_class_impl) then
+				l_had_error := True
+				l_had_iterable_error := True
+				set_fatal_error
+				l_named_type := l_expression_context.named_type
+				error_handler.report_voit1a_error (current_class, current_class_impl, l_iterable_expression, l_named_type)
+			end
+			free_context (l_expression_context)
+				-- Check across cursor name clashes (see VOIT-2).
+			if current_class = current_class_impl then
+				l_cursor_name := a_across_component.cursor_name
+				l_feature := current_class.named_query (l_cursor_name)
+				if l_feature /= Void then
+						-- This across cursor has the same name as the
+						-- final name of a feature in `current_class'.
+					l_had_error := True
+					set_fatal_error
+					error_handler.report_voit2a_error (current_class, a_across_component, l_feature)
+				else
+					l_feature := current_class.named_procedure (l_cursor_name)
+					if l_feature /= Void then
+							-- This across cursor has the same name as the
+							-- final name of a feature in `current_class'.
+						l_had_error := True
+						set_fatal_error
+						error_handler.report_voit2a_error (current_class, a_across_component, l_feature)
+					end
+				end
+				if current_inline_agent /= Void then
+					enclosing_inline_agents.force_last (current_inline_agent)
+					nb := enclosing_inline_agents.count
+					from i := 1 until i > nb loop
+						l_enclosing_agent := enclosing_inline_agents.item (i)
+						args := l_enclosing_agent.formal_arguments
+						if args /= Void then
+							j := args.index_of (l_cursor_name)
+							if j /= 0 then
+									-- This across cursor has the same name as a formal
+									-- argument of an enclosing inline agent.
+								l_had_error := True
+								set_fatal_error
+								error_handler.report_voit2b_error (current_class, a_across_component, args.formal_argument (j))
+							end
+						end
+						l_locals := l_enclosing_agent.locals
+						if l_locals /= Void then
+							j := l_locals.index_of (l_cursor_name)
+							if j /= 0 then
+									-- This across cursor has the same name as a
+									-- local variable of an enclosing inline agent.
+								l_had_error := True
+								set_fatal_error
+								error_handler.report_voit2c_error (current_class, a_across_component, l_locals.local_variable (j))
+							end
+						end
+						i := i + 1
+					end
+					enclosing_inline_agents.remove_last
+				end
+				args := current_feature.arguments
+				if args /= Void then
+					j := args.index_of (l_cursor_name)
+					if j /= 0 then
+							-- This across cursor has the same name as a formal
+							-- argument of the enclosing feature.
+						l_had_error := True
+						set_fatal_error
+						error_handler.report_voit2b_error (current_class, a_across_component, args.formal_argument (j))
+					end
+				end
+				l_locals := current_feature.locals
+				if l_locals /= Void then
+					j := l_locals.index_of (l_cursor_name)
+					if j /= 0 then
+							-- This across cursor has the same name as a
+							-- local variable of the enclosing feature.
+						l_had_error := True
+						set_fatal_error
+						error_handler.report_voit2c_error (current_class, a_across_component, l_locals.local_variable (j))
+					end
+				end
+				l_object_test := current_object_test_scope.object_test (l_cursor_name)
+				if l_object_test = Void then
+						-- Take into account object-tests in enclosing feature or inline agent as
+						-- well when in an inline agent.
+					l_object_test := current_object_test_scope.hidden_object_test (l_cursor_name)
+				end
+				if l_object_test /= Void then
+						-- This across cursor appears in the scope of a
+						-- object-test local with the same name.
+					l_had_error := True
+					set_fatal_error
+					error_handler.report_voit2d_error (current_class, a_across_component, l_object_test)
+				end
+				l_other_across_component := current_across_cursor_scope.across_component (l_cursor_name)
+				if l_other_across_component = Void then
+						-- Take into account across components in enclosing feature or inline agent as
+						-- well when in an inline agent.
+					l_other_across_component := current_across_cursor_scope.hidden_across_component (l_cursor_name)
+				end
+				if l_other_across_component /= Void then
+						-- This across cursor appears in the scope of an other across
+						-- cursor with the same name.
+					l_had_error := True
+					set_fatal_error
+					error_handler.report_voit2e_error (current_class, a_across_component, l_other_across_component)
+				end
+			end
+				-- Type of across cursor.
+			if not l_had_iterable_error then
+				l_expression_context := new_context (current_type)
+				a_across_component.new_cursor_expression.name.set_seed (current_system.iterable_new_cursor_seed)
+				check_expression_validity (a_across_component.new_cursor_expression, l_expression_context, current_system.detachable_any_type)
+				if has_fatal_error then
+					l_had_error := True
+					free_context (l_expression_context)
+				else
+					report_across_cursor_declaration (l_cursor_name, a_across_component)
+					current_across_cursor_types.force_last (l_expression_context, a_across_component)
+					current_across_cursor_scope.add_across_component (a_across_component)
+						-- Make sure that it is valid to call feature
+						-- 'after' on the across cursor.
+					a_across_component.cursor_after_expression.name.set_seed (current_system.iteration_cursor_after_seed)
+					l_boolean_type := current_universe_impl.boolean_type
+					l_conditional_context := new_context (current_type)
+					check_expression_validity (a_across_component.cursor_after_expression, l_conditional_context, l_boolean_type)
+					if has_fatal_error then
+						l_had_error := True
+					elseif not l_conditional_context.same_named_type (l_boolean_type, current_class_impl) then
+						l_had_error := True
+						set_fatal_error
+						l_named_type := l_conditional_context.named_type
+						error_handler.report_vwbe0a_error (current_class, current_class_impl, a_across_component.cursor_after_expression, l_named_type)
+					end
+					free_context (l_conditional_context)
+						-- Make sure that it is valid to call feature
+						-- 'forth' on the across cursor.
+					a_across_component.cursor_forth_instruction.name.set_seed (current_system.iteration_cursor_forth_seed)
+					check_qualified_call_instruction_validity (a_across_component.cursor_forth_instruction)
+					if has_fatal_error then
+						l_had_error := True
+					end
+					current_across_cursor_scope.remove_across_components (1)
+				end
+			end
+			if l_had_error then
+				set_fatal_error
+			end
+		end
+
+	check_across_cursor_validity (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT)
+			-- Check validity of across cursor `a_name'.
+			-- `a_context' represents the type in which `a_name' appears.
+			-- It will be altered on exit to represent the type of `a_name'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_across_cursor: a_name.is_across_cursor
+			a_context_not_void: a_context /= Void
+		local
+			l_seed: INTEGER
+			l_across_components: ET_ACROSS_COMPONENT_LIST
+			l_across_component: ET_ACROSS_COMPONENT
+		do
+			has_fatal_error := False
+			l_seed := a_name.seed
+			if l_seed = 0 then
+					-- We need to resolve `a_name' in the implementation
+					-- class of `current_feature_impl' first.
+				if current_class_impl /= current_class then
+					set_fatal_error
+					if not has_implementation_error (current_feature_impl) then
+							-- Internal error: `a_name' should have been resolved in
+							-- the implementation feature.
+						error_handler.report_giaaa_error
+					end
+				else
+					l_across_component := current_across_cursor_scope.across_component (a_name)
+					if l_across_component = Void then
+							-- Error: `a_name' is an across cursor that is used outside of its scope.
+						set_fatal_error
+						if current_feature_impl.is_feature then
+							error_handler.report_veen9a_error (current_class, a_name, current_feature_impl.as_feature)
+						else
+							error_handler.report_veen9b_error (current_class, a_name)
+						end
+					else
+						l_seed := l_across_component.cursor_name.seed
+						a_name.set_seed (l_seed)
+						current_across_cursor_types.search (l_across_component)
+						if not current_across_cursor_types.found then
+								-- The type of the across cursor should have been determined
+								-- when processing the header of the across component itself.
+								-- And this should have already been done since we are in the
+								-- scope of that cursor. Here we don't have this type, which
+								-- means that an error had occurred (and had been reported)
+								-- when processing the iterable expression of the across component.
+							set_fatal_error
+						else
+							a_context.copy_type_context (current_across_cursor_types.found_item)
+							report_across_cursor (a_name, l_across_component)
+						end
+					end
+				end
+			else
+				l_across_components := current_closure_impl.across_components
+				if l_across_components = Void then
+						-- Internal error.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				elseif l_seed < 1 or l_seed > l_across_components.count then
+						-- Internal error.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_across_component := l_across_components.across_component (l_seed)
+					current_across_cursor_types.search (l_across_component)
+					if not current_across_cursor_types.found then
+							-- Internal error: the type of the across cursor should
+							-- have been determined when processing the header of the
+							-- across component itself. And this should have already
+							-- been done since we are in the scope of that cursor.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						a_context.copy_type_context (current_across_cursor_types.found_item)
+						report_across_cursor (a_name, l_across_component)
+					end
+				end
+			end
+		end
+
+	check_across_expression_validity (an_expression: ET_ACROSS_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
+			-- Check validity of `an_expression'.
+			-- `a_context' represents the type in which `an_expression' appears.
+			-- It will be altered on exit to represent the type of `an_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			an_expression_not_void: an_expression /= Void
+			a_context_not_void: a_context /= Void
+		local
+			l_until_expression: ET_EXPRESSION
+			l_iteration_expression: ET_EXPRESSION
+			l_expression_context: ET_NESTED_TYPE_CONTEXT
+			l_conditional: ET_CONDITIONAL
+			had_error: BOOLEAN
+			l_named_type: ET_NAMED_TYPE
+			l_boolean_type: ET_CLASS_TYPE
+			l_variant: ET_VARIANT
+			l_invariant: ET_LOOP_INVARIANTS
+			l_old_object_test_scope: INTEGER
+			l_old_attachment_scope: like current_attachment_scope
+			l_old_initialization_scope: like current_initialization_scope
+		do
+			has_fatal_error := False
+			check_across_component_header_validity (an_expression)
+			if has_fatal_error then
+				had_error := True
+			end
+			current_across_cursor_scope.add_across_component (an_expression)
+			if current_universe.attachment_type_conformance_mode then
+				l_old_initialization_scope := current_initialization_scope
+				current_initialization_scope := new_attachment_scope
+				current_initialization_scope.copy_scope (l_old_initialization_scope)
+				l_old_attachment_scope := current_attachment_scope
+				current_attachment_scope := new_attachment_scope
+				current_attachment_scope.copy_scope (l_old_attachment_scope)
+			end
+			l_invariant := an_expression.invariant_part
+			if l_invariant /= Void then
+				check_loop_invariant_validity (l_invariant)
+				if has_fatal_error then
+					had_error := True
+				end
+				if current_universe.attachment_type_conformance_mode then
+					current_initialization_scope.copy_scope (l_old_initialization_scope)
+					current_attachment_scope.copy_scope (l_old_attachment_scope)
+				end
+			end
+			l_variant := an_expression.variant_part
+			if l_variant /= Void then
+				check_loop_variant_validity (l_variant)
+				if has_fatal_error then
+					had_error := True
+				end
+				if current_universe.attachment_type_conformance_mode then
+					current_initialization_scope.copy_scope (l_old_initialization_scope)
+					current_attachment_scope.copy_scope (l_old_attachment_scope)
+				end
+			end
+			l_boolean_type := current_universe_impl.boolean_type
+			l_conditional := an_expression.until_conditional
+			if l_conditional /= Void then
+				l_until_expression := l_conditional.expression
+				l_expression_context := new_context (current_type)
+				check_expression_validity (l_until_expression, l_expression_context, l_boolean_type)
+				if has_fatal_error then
+					had_error := True
+				elseif not l_expression_context.same_named_type (l_boolean_type, current_class_impl) then
+					had_error := True
+					set_fatal_error
+					l_named_type := l_expression_context.named_type
+					error_handler.report_vwbe0a_error (current_class, current_class_impl, l_until_expression, l_named_type)
+				end
+				free_context (l_expression_context)
+			end
+			l_iteration_expression := an_expression.iteration_conditional.expression
+			l_old_object_test_scope := current_object_test_scope.count
+			if l_until_expression /= Void then
+				if current_universe.attachment_type_conformance_mode then
+					attachment_scope_builder.build_negated_scope (l_until_expression, current_attachment_scope)
+				end
+				object_test_scope_builder.build_negated_scope (l_until_expression, current_object_test_scope, current_class_impl)
+				had_error := had_error or object_test_scope_builder.has_fatal_error
+			end
+			l_expression_context := new_context (current_type)
+			check_expression_validity (l_iteration_expression, l_expression_context, l_boolean_type)
+			if has_fatal_error then
+				had_error := True
+			elseif not l_expression_context.same_named_type (l_boolean_type, current_class_impl) then
+				had_error := True
+				set_fatal_error
+				l_named_type := l_expression_context.named_type
+				error_handler.report_vwbe0a_error (current_class, current_class_impl, l_iteration_expression, l_named_type)
+			end
+			free_context (l_expression_context)
+			current_object_test_scope.keep_object_tests (l_old_object_test_scope)
+			current_across_cursor_scope.remove_across_components (1)
+			current_across_cursor_types.search (an_expression)
+			if current_across_cursor_types.found then
+				free_context (current_across_cursor_types.found_item)
+				current_across_cursor_types.remove_found_item
+			end
+			if current_universe.attachment_type_conformance_mode then
+				free_attachment_scope (current_attachment_scope)
+				free_attachment_scope (current_initialization_scope)
+				current_attachment_scope := l_old_attachment_scope
+				current_initialization_scope := l_old_initialization_scope
+			end
+			if had_error then
+				set_fatal_error
+			end
+			if not has_fatal_error then
+				a_context.force_last (l_boolean_type)
+				report_across_expression (an_expression)
+			end
+		end
+
 	check_binary_integer_constant_validity (a_constant: ET_BINARY_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_constant'.
 			-- `a_context' represents the type in which `a_constant' appears.
@@ -5609,6 +6219,8 @@ feature {NONE} -- Expression validity
 			l_actuals: ET_ACTUAL_PARAMETER_LIST
 			l_object_tests: ET_OBJECT_TEST_LIST
 			l_object_test: ET_NAMED_OBJECT_TEST
+			l_across_component: ET_ACROSS_COMPONENT
+			l_across_components: ET_ACROSS_COMPONENT_LIST
 		do
 			has_fatal_error := False
 			l_name := an_expression.name
@@ -5667,12 +6279,13 @@ feature {NONE} -- Expression validity
 										-- 'TYPED_POINTER [<type-of-object_test_local>]'.
 									current_object_test_types.search (l_object_test)
 									if not current_object_test_types.found then
-											-- Internal error: the type of the object-test local should
-											-- have been determined when processing the object-test itself.
-											-- And this should have already been done this we are in the
-											-- scope of that object-test.
+											-- The type of the object-test local should have been determined
+											-- when processing the object-test itself. And this should have
+											-- already been done since we are in the scope of that object-test.
+											-- Here we don't have this type, which means that an error had
+											-- occurred (and had been reported) when processing the expression
+											-- of the object-test.
 										set_fatal_error
-										error_handler.report_giaaa_error
 									else
 										a_context.copy_type_context (current_object_test_types.found_item)
 										create l_actuals.make_with_capacity (1)
@@ -5690,6 +6303,63 @@ feature {NONE} -- Expression validity
 									end
 								else
 										-- Use the ETL2 implementation: the type of '$object_test_local' is POINTER.
+									l_pointer_type := current_universe_impl.pointer_type
+									a_context.force_last (l_pointer_type)
+									report_pointer_expression (an_expression, l_pointer_type)
+								end
+								already_checked := True
+							end
+						end
+					elseif l_name.is_across_cursor then
+							-- We need to resolve `a_name' in the implementation
+							-- class of `current_feature_impl' first.
+						if current_class_impl /= current_class then
+							set_fatal_error
+							if not has_implementation_error (current_feature_impl) then
+									-- Internal error: `a_name' should have been resolved in
+									-- the implementation feature.
+								error_handler.report_giaaa_error
+							end
+						else
+							l_identifier ?= l_name
+							check is_across_cursor: l_identifier /= Void end
+							l_across_component := current_across_cursor_scope.across_component (l_identifier)
+							if l_across_component = Void then
+									-- Error: `l_identifier' is an across cursor that is used outside of its scope.
+								set_fatal_error
+								if current_feature_impl.is_feature then
+									error_handler.report_veen9a_error (current_class, l_identifier, current_feature_impl.as_feature)
+								else
+									error_handler.report_veen9b_error (current_class, l_identifier)
+								end
+							else
+								report_across_cursor (l_identifier, l_across_component)
+								l_seed := l_across_component.cursor_name.seed
+								l_identifier.set_seed (l_seed)
+								l_typed_pointer_class := current_universe_impl.typed_pointer_any_type.named_base_class
+								if l_typed_pointer_class.actual_class.is_preparsed then
+										-- Class TYPED_POINTER has been found in the universe.
+										-- Use ISE's implementation: the type of '$across_cursor' is
+										-- 'TYPED_POINTER [<type-of-across-cursor>]'.
+									current_across_cursor_types.search (l_across_component)
+									if not current_across_cursor_types.found then
+											-- The type of the across cursor should have been determined
+											-- when processing the header of the across component itself.
+											-- And this should have already been done since we are in the
+											-- scope of that cursor. Here we don't have this type, which
+											-- means that an error had occurred (and had been reported)
+											-- when processing the iterable expression of the across component.
+										set_fatal_error
+									else
+										a_context.copy_type_context (current_across_cursor_types.found_item)
+										create l_actuals.make_with_capacity (1)
+										l_actuals.put_first (tokens.identity_type)
+										create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
+										report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
+										a_context.force_last (l_typed_pointer_type)
+									end
+								else
+										-- Use the ETL2 implementation: the type of '$across_cursor' is POINTER.
 									l_pointer_type := current_universe_impl.pointer_type
 									a_context.force_last (l_pointer_type)
 									report_pointer_expression (an_expression, l_pointer_type)
@@ -5932,7 +6602,7 @@ feature {NONE} -- Expression validity
 							if not current_object_test_types.found then
 									-- Internal error: the type of the object-test local should
 									-- have been determined when processing the object-test itself.
-									-- And this should have already been done this we are in the
+									-- And this should have already been done since we are in the
 									-- scope of that object-test.
 								set_fatal_error
 								error_handler.report_giaaa_error
@@ -5953,6 +6623,49 @@ feature {NONE} -- Expression validity
 							end
 						else
 								-- Use the ETL2 implementation: the type of '$object_test_local' is POINTER.
+							l_pointer_type := current_universe_impl.pointer_type
+							a_context.force_last (l_pointer_type)
+							report_pointer_expression (an_expression, l_pointer_type)
+						end
+					end
+				elseif l_name.is_across_cursor then
+					l_across_components := current_closure_impl.across_components
+					if l_across_components = Void then
+							-- Internal error.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					elseif l_seed < 1 or l_seed > l_across_components.count then
+							-- Internal error.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						l_across_component := l_across_components.across_component (l_seed)
+						l_identifier ?= l_name
+						check is_across_cursor: l_identifier /= Void end
+						report_across_cursor (l_identifier, l_across_component)
+						l_typed_pointer_class := current_universe_impl.typed_pointer_any_type.named_base_class
+						if l_typed_pointer_class.actual_class.is_preparsed then
+								-- Class TYPED_POINTER has been found in the universe.
+								-- Use ISE's implementation: the type of '$across_cursor' is
+								-- 'TYPED_POINTER [<type-of-across-cursor>]'.
+							current_across_cursor_types.search (l_across_component)
+							if not current_across_cursor_types.found then
+									-- Internal error: the type of the across cursor should
+									-- have been determined when processing the header of the
+									-- across component itself. And this should have already
+									-- been done since we are in the scope of that cursor.
+								set_fatal_error
+								error_handler.report_giaaa_error
+							else
+								a_context.copy_type_context (current_across_cursor_types.found_item)
+								create l_actuals.make_with_capacity (1)
+								l_actuals.put_first (tokens.identity_type)
+								create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
+								report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
+								a_context.force_last (l_typed_pointer_type)
+							end
+						else
+								-- Use the ETL2 implementation: the type of '$across_cursor' is POINTER.
 							l_pointer_type := current_universe_impl.pointer_type
 							a_context.force_last (l_pointer_type)
 							report_pointer_expression (an_expression, l_pointer_type)
@@ -6844,6 +7557,8 @@ feature {NONE} -- Expression validity
 
 	check_local_variable_validity (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of local variable `a_name'.
+			-- `a_context' represents the type in which `a_name' appears.
+			-- It will be altered on exit to represent the type of `a_name'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_name_not_void: a_name /= Void
@@ -7334,6 +8049,7 @@ feature {NONE} -- Expression validity
 			l_enclosing_agent: ET_INLINE_AGENT
 			args: ET_FORMAL_ARGUMENT_LIST
 			l_locals: ET_LOCAL_VARIABLE_LIST
+			l_across_component: ET_ACROSS_COMPONENT
 		do
 			has_fatal_error := False
 			l_expression_context := new_context (current_type)
@@ -7361,7 +8077,9 @@ feature {NONE} -- Expression validity
 					l_expression_context.force_last (tokens.attached_like_current)
 				end
 			end
-			current_object_test_types.force_last (l_expression_context, an_expression)
+			if not has_fatal_error then
+				current_object_test_types.force_last (l_expression_context, an_expression)
+			end
 				-- Check object-test local name clashes (see VUOT-1, in ECMA-367-2 p.127).
 			if current_class = current_class_impl then
 				l_name := an_expression.name
@@ -7436,6 +8154,13 @@ feature {NONE} -- Expression validity
 					set_fatal_error
 					error_handler.report_vuot1d_error (current_class, an_expression, l_other_object_test)
 				end
+				l_across_component := current_across_cursor_scope.across_component (l_name)
+				if l_across_component /= Void then
+						-- This object-test appears in the scope of an across
+						-- cursor with the same name.
+					set_fatal_error
+					error_handler.report_vuot1e_error (current_class, an_expression, l_across_component)
+				end
 				if current_system.is_ise and then current_system.ise_version < ise_6_3_7_5660 then
 						-- ISE did not support object-tests in preconditions before 6.3.7.5660.
 					if current_inline_agent = Void and in_precondition then
@@ -7453,18 +8178,6 @@ feature {NONE} -- Expression validity
 			if not has_fatal_error then
 				a_context.force_last (current_universe_impl.boolean_type)
 				report_named_object_test (an_expression, l_expression_context)
-			else
-					-- Make sure that `report_named_object_test' is called anyway
-					-- in order to avoid an internal error to be reported when we
-					-- try to determine the dynamic type set of the corresponding
-					-- object-test local when it appears as an expression in its
-					-- scope. This is so because even though we got a validity error
-					-- with the object-test, we might try to check the validity of
-					-- subsequent expressions/intructions contained in the scope
-					-- in order to be able to report as many errors as possible.
-				has_fatal_error := False
-				report_named_object_test (an_expression, l_expression_context)
-				has_fatal_error := True
 			end
 		end
 
@@ -7594,6 +8307,8 @@ feature {NONE} -- Expression validity
 
 	check_object_test_local_validity (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of object-test local `a_name'.
+			-- `a_context' represents the type in which `a_name' appears.
+			-- It will be altered on exit to represent the type of `a_name'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_name_not_void: a_name /= Void
@@ -7631,12 +8346,13 @@ feature {NONE} -- Expression validity
 						a_name.set_seed (l_seed)
 						current_object_test_types.search (l_object_test)
 						if not current_object_test_types.found then
-								-- Internal error: the type of the object-test local should
-								-- have been determined when processing the object-test itself.
-								-- And this should have already been done this we are in the
-								-- scope of that object-test.
+								-- The type of the object-test local should have been determined
+								-- when processing the object-test itself. And this should have
+								-- already been done since we are in the scope of that object-test.
+								-- Here we don't have this type, which means that an error had
+								-- occurred (and had been reported) when processing the expression
+								-- of the object-test.
 							set_fatal_error
-							error_handler.report_giaaa_error
 						else
 							a_context.copy_type_context (current_object_test_types.found_item)
 							report_object_test_local (a_name, l_object_test)
@@ -7659,10 +8375,9 @@ feature {NONE} -- Expression validity
 					if not current_object_test_types.found then
 							-- Internal error: the type of the object-test local should
 							-- have been determined when processing the object-test itself.
-							-- And this should have already been done this we are in the
+							-- And this should have already been done since we are in the
 							-- scope of that object-test.
 						set_fatal_error
-						error_handler.report_giaaa_error
 					else
 						a_context.copy_type_context (current_object_test_types.found_item)
 						report_object_test_local (a_name, l_object_test)
@@ -10663,9 +11378,11 @@ feature {NONE} -- Agent validity
 			l_formal_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_type: ET_TYPE
 			l_object_tests: ET_OBJECT_TEST_LIST
+			l_across_components: ET_ACROSS_COMPONENT_LIST
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_compound: ET_COMPOUND
 			l_old_hidden_object_test_scope: INTEGER
+			l_old_hidden_across_cursor_scope: INTEGER
 			l_old_attachment_scope: like current_attachment_scope
 			l_old_initialization_scope: like current_initialization_scope
 			had_error: BOOLEAN
@@ -10685,6 +11402,10 @@ feature {NONE} -- Agent validity
 				-- in an enclosing feature or inline agent.
 			l_old_hidden_object_test_scope := current_object_test_scope.hidden_count
 			current_object_test_scope.hide_object_tests (current_object_test_scope.count)
+				-- Make sure that we do not use across cursors declared
+				-- in an enclosing feature or inline agent.
+			l_old_hidden_across_cursor_scope := current_across_cursor_scope.hidden_count
+			current_across_cursor_scope.hide_across_components (current_across_cursor_scope.count)
 			if current_universe.attachment_type_conformance_mode then
 				l_old_initialization_scope := current_initialization_scope
 				current_initialization_scope := new_attachment_scope
@@ -10709,6 +11430,11 @@ feature {NONE} -- Agent validity
 			l_object_tests := an_expression.object_tests
 			if l_object_tests /= Void then
 				check_inline_agent_object_tests_validity (l_object_tests, an_expression)
+				had_error := had_error or has_fatal_error
+			end
+			l_across_components := an_expression.across_components
+			if l_across_components /= Void then
+				check_inline_agent_across_components_validity (l_across_components, an_expression)
 				had_error := had_error or has_fatal_error
 			end
 			l_locals := an_expression.locals
@@ -10768,6 +11494,9 @@ feature {NONE} -- Agent validity
 				-- Restore the scope object-test locals declared
 				-- in the enclosing feature or inline agent.
 			current_object_test_scope.hide_object_tests (l_old_hidden_object_test_scope)
+				-- Restore the scope across cursors declared
+				-- in the enclosing feature or inline agent.
+			current_across_cursor_scope.hide_across_components (l_old_hidden_across_cursor_scope)
 			if current_universe.attachment_type_conformance_mode then
 				free_attachment_scope (current_initialization_scope)
 				current_initialization_scope := l_old_initialization_scope
@@ -10795,9 +11524,11 @@ feature {NONE} -- Agent validity
 		local
 			l_formal_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_object_tests: ET_OBJECT_TEST_LIST
+			l_across_components: ET_ACROSS_COMPONENT_LIST
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_compound: ET_COMPOUND
 			l_old_hidden_object_test_scope: INTEGER
+			l_old_hidden_across_cursor_scope: INTEGER
 			l_old_attachment_scope: like current_attachment_scope
 			l_old_initialization_scope: like current_initialization_scope
 			had_error: BOOLEAN
@@ -10817,6 +11548,10 @@ feature {NONE} -- Agent validity
 				-- in an enclosing feature or inline agent.
 			l_old_hidden_object_test_scope := current_object_test_scope.hidden_count
 			current_object_test_scope.hide_object_tests (current_object_test_scope.count)
+				-- Make sure that we do not use across cursors declared
+				-- in an enclosing feature or inline agent.
+			l_old_hidden_across_cursor_scope := current_across_cursor_scope.hidden_count
+			current_across_cursor_scope.hide_across_components (current_across_cursor_scope.count)
 			if current_universe.attachment_type_conformance_mode then
 				l_old_initialization_scope := current_initialization_scope
 				current_initialization_scope := new_attachment_scope
@@ -10834,6 +11569,11 @@ feature {NONE} -- Agent validity
 			l_object_tests := an_expression.object_tests
 			if l_object_tests /= Void then
 				check_inline_agent_object_tests_validity (l_object_tests, an_expression)
+				had_error := had_error or has_fatal_error
+			end
+			l_across_components := an_expression.across_components
+			if l_across_components /= Void then
+				check_inline_agent_across_components_validity (l_across_components, an_expression)
 				had_error := had_error or has_fatal_error
 			end
 			l_locals := an_expression.locals
@@ -10882,6 +11622,9 @@ feature {NONE} -- Agent validity
 				-- Restore the scope object-test locals declared
 				-- in the enclosing feature or inline agent.
 			current_object_test_scope.hide_object_tests (l_old_hidden_object_test_scope)
+				-- Restore the scope across cursors declared
+				-- in the enclosing feature or inline agent.
+			current_across_cursor_scope.hide_across_components (l_old_hidden_across_cursor_scope)
 			if current_universe.attachment_type_conformance_mode then
 				free_attachment_scope (current_initialization_scope)
 				current_initialization_scope := l_old_initialization_scope
@@ -10910,7 +11653,9 @@ feature {NONE} -- Agent validity
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_type: ET_TYPE
 			l_object_tests: ET_OBJECT_TEST_LIST
+			l_across_components: ET_ACROSS_COMPONENT_LIST
 			l_old_hidden_object_test_scope: INTEGER
+			l_old_hidden_across_cursor_scope: INTEGER
 			l_old_attachment_scope: like current_attachment_scope
 			l_old_initialization_scope: like current_initialization_scope
 			had_error: BOOLEAN
@@ -10925,6 +11670,10 @@ feature {NONE} -- Agent validity
 				-- in an enclosing feature or inline agent.
 			l_old_hidden_object_test_scope := current_object_test_scope.hidden_count
 			current_object_test_scope.hide_object_tests (current_object_test_scope.count)
+				-- Make sure that we do not use across cursors declared
+				-- in an enclosing feature or inline agent.
+			l_old_hidden_across_cursor_scope := current_across_cursor_scope.hidden_count
+			current_across_cursor_scope.hide_across_components (current_across_cursor_scope.count)
 			if current_universe.attachment_type_conformance_mode then
 				l_old_initialization_scope := current_initialization_scope
 				current_initialization_scope := new_attachment_scope
@@ -10951,9 +11700,17 @@ feature {NONE} -- Agent validity
 				check_inline_agent_object_tests_validity (l_object_tests, an_expression)
 				had_error := had_error or has_fatal_error
 			end
+			l_across_components := an_expression.across_components
+			if l_across_components /= Void then
+				check_inline_agent_across_components_validity (l_across_components, an_expression)
+				had_error := had_error or has_fatal_error
+			end
 				-- Restore the scope object-test locals declared
 				-- in the enclosing feature or inline agent.
 			current_object_test_scope.hide_object_tests (l_old_hidden_object_test_scope)
+				-- Restore the scope across cursors declared
+				-- in the enclosing feature or inline agent.
+			current_across_cursor_scope.hide_across_components (l_old_hidden_across_cursor_scope)
 			if current_universe.attachment_type_conformance_mode then
 				free_attachment_scope (current_initialization_scope)
 				current_initialization_scope := l_old_initialization_scope
@@ -10986,7 +11743,9 @@ feature {NONE} -- Agent validity
 		local
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_object_tests: ET_OBJECT_TEST_LIST
+			l_across_components: ET_ACROSS_COMPONENT_LIST
 			l_old_hidden_object_test_scope: INTEGER
+			l_old_hidden_across_cursor_scope: INTEGER
 			l_old_attachment_scope: like current_attachment_scope
 			l_old_initialization_scope: like current_initialization_scope
 			had_error: BOOLEAN
@@ -11001,6 +11760,10 @@ feature {NONE} -- Agent validity
 				-- in an enclosing feature or inline agent.
 			l_old_hidden_object_test_scope := current_object_test_scope.hidden_count
 			current_object_test_scope.hide_object_tests (current_object_test_scope.count)
+				-- Make sure that we do not use across cursors declared
+				-- in an enclosing feature or inline agent.
+			l_old_hidden_across_cursor_scope := current_across_cursor_scope.hidden_count
+			current_across_cursor_scope.hide_across_components (current_across_cursor_scope.count)
 			if current_universe.attachment_type_conformance_mode then
 				l_old_initialization_scope := current_initialization_scope
 				current_initialization_scope := new_attachment_scope
@@ -11020,9 +11783,17 @@ feature {NONE} -- Agent validity
 				check_inline_agent_object_tests_validity (l_object_tests, an_expression)
 				had_error := had_error or has_fatal_error
 			end
+			l_across_components := an_expression.across_components
+			if l_across_components /= Void then
+				check_inline_agent_across_components_validity (l_across_components, an_expression)
+				had_error := had_error or has_fatal_error
+			end
 				-- Restore the scope object-test locals declared
 				-- in the enclosing feature or inline agent.
 			current_object_test_scope.hide_object_tests (l_old_hidden_object_test_scope)
+				-- Restore the scope across cursors declared
+				-- in the enclosing feature or inline agent.
+			current_across_cursor_scope.hide_across_components (l_old_hidden_across_cursor_scope)
 			if current_universe.attachment_type_conformance_mode then
 				free_attachment_scope (current_initialization_scope)
 				current_initialization_scope := l_old_initialization_scope
@@ -11055,10 +11826,12 @@ feature {NONE} -- Agent validity
 		local
 			l_formal_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_object_tests: ET_OBJECT_TEST_LIST
+			l_across_components: ET_ACROSS_COMPONENT_LIST
 			l_type: ET_TYPE
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_compound: ET_COMPOUND
 			l_old_hidden_object_test_scope: INTEGER
+			l_old_hidden_across_cursor_scope: INTEGER
 			l_old_attachment_scope: like current_attachment_scope
 			l_old_initialization_scope: like current_initialization_scope
 			l_keys: ET_MANIFEST_STRING_LIST
@@ -11080,6 +11853,10 @@ feature {NONE} -- Agent validity
 				-- in an enclosing feature or inline agent.
 			l_old_hidden_object_test_scope := current_object_test_scope.hidden_count
 			current_object_test_scope.hide_object_tests (current_object_test_scope.count)
+				-- Make sure that we do not use across cursors declared
+				-- in an enclosing feature or inline agent.
+			l_old_hidden_across_cursor_scope := current_across_cursor_scope.hidden_count
+			current_across_cursor_scope.hide_across_components (current_across_cursor_scope.count)
 			if current_universe.attachment_type_conformance_mode then
 				l_old_initialization_scope := current_initialization_scope
 				current_initialization_scope := new_attachment_scope
@@ -11104,6 +11881,11 @@ feature {NONE} -- Agent validity
 			l_object_tests := an_expression.object_tests
 			if l_object_tests /= Void then
 				check_inline_agent_object_tests_validity (l_object_tests, an_expression)
+				had_error := had_error or has_fatal_error
+			end
+			l_across_components := an_expression.across_components
+			if l_across_components /= Void then
+				check_inline_agent_across_components_validity (l_across_components, an_expression)
 				had_error := had_error or has_fatal_error
 			end
 			l_locals := an_expression.locals
@@ -11168,6 +11950,9 @@ feature {NONE} -- Agent validity
 				-- Restore the scope object-test locals declared
 				-- in the enclosing feature or inline agent.
 			current_object_test_scope.hide_object_tests (l_old_hidden_object_test_scope)
+				-- Restore the scope across cursors declared
+				-- in the enclosing feature or inline agent.
+			current_across_cursor_scope.hide_across_components (l_old_hidden_across_cursor_scope)
 			if current_universe.attachment_type_conformance_mode then
 				free_attachment_scope (current_initialization_scope)
 				current_initialization_scope := l_old_initialization_scope
@@ -11200,9 +11985,11 @@ feature {NONE} -- Agent validity
 		local
 			l_formal_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_object_tests: ET_OBJECT_TEST_LIST
+			l_across_components: ET_ACROSS_COMPONENT_LIST
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_compound: ET_COMPOUND
 			l_old_hidden_object_test_scope: INTEGER
+			l_old_hidden_across_cursor_scope: INTEGER
 			l_old_attachment_scope: like current_attachment_scope
 			l_old_initialization_scope: like current_initialization_scope
 			l_keys: ET_MANIFEST_STRING_LIST
@@ -11224,6 +12011,10 @@ feature {NONE} -- Agent validity
 				-- in an enclosing feature or inline agent.
 			l_old_hidden_object_test_scope := current_object_test_scope.hidden_count
 			current_object_test_scope.hide_object_tests (current_object_test_scope.count)
+				-- Make sure that we do not use across cursors declared
+				-- in an enclosing feature or inline agent.
+			l_old_hidden_across_cursor_scope := current_across_cursor_scope.hidden_count
+			current_across_cursor_scope.hide_across_components (current_across_cursor_scope.count)
 			if current_universe.attachment_type_conformance_mode then
 				l_old_initialization_scope := current_initialization_scope
 				current_initialization_scope := new_attachment_scope
@@ -11241,6 +12032,11 @@ feature {NONE} -- Agent validity
 			l_object_tests := an_expression.object_tests
 			if l_object_tests /= Void then
 				check_inline_agent_object_tests_validity (l_object_tests, an_expression)
+				had_error := had_error or has_fatal_error
+			end
+			l_across_components := an_expression.across_components
+			if l_across_components /= Void then
+				check_inline_agent_across_components_validity (l_across_components, an_expression)
 				had_error := had_error or has_fatal_error
 			end
 			l_locals := an_expression.locals
@@ -11294,6 +12090,9 @@ feature {NONE} -- Agent validity
 				-- Restore the scope object-test locals declared
 				-- in the enclosing feature or inline agent.
 			current_object_test_scope.hide_object_tests (l_old_hidden_object_test_scope)
+				-- Restore the scope across cursors declared
+				-- in the enclosing feature or inline agent.
+			current_across_cursor_scope.hide_across_components (l_old_hidden_across_cursor_scope)
 			if current_universe.attachment_type_conformance_mode then
 				free_attachment_scope (current_initialization_scope)
 				current_initialization_scope := l_old_initialization_scope
@@ -11640,6 +12439,32 @@ feature {NONE} -- Agent validity
 		end
 
 feature {NONE} -- Event handling
+
+	report_across_cursor (a_name: ET_IDENTIFIER; a_across_component: ET_ACROSS_COMPONENT)
+			-- Report that a call to across cursor `a_name' has been processed.
+		require
+			no_error: not has_fatal_error
+			a_name_not_void: a_name /= Void
+			a_across_component_not_void: a_across_component /= Void
+		do
+		end
+
+	report_across_cursor_declaration (a_name: ET_IDENTIFIER; a_across_component: ET_ACROSS_COMPONENT)
+			-- Report that the declaration of the across cursor `a_name' has been processed.
+		require
+			no_error: not has_fatal_error
+			a_name_not_void: a_name /= Void
+			a_across_component_not_void: a_across_component /= Void
+		do
+		end
+
+	report_across_expression (a_across_expression: ET_ACROSS_EXPRESSION)
+			-- Report that the across expression `a_across_expression' has been processed.
+		require
+			no_error: not has_fatal_error
+			a_across_expression_not_void: a_across_expression /= Void
+		do
+		end
 
 	report_assignment (an_instruction: ET_ASSIGNMENT)
 			-- Report that an assignment instruction has been processed.
@@ -12605,6 +13430,18 @@ feature {NONE} -- Conversion
 
 feature {ET_AST_NODE} -- Processing
 
+	process_across_expression (an_expression: ET_ACROSS_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			check_across_expression_validity (an_expression, current_context)
+		end
+
+	process_across_instruction (an_instruction: ET_ACROSS_INSTRUCTION)
+			-- Process `an_instruction'.
+		do
+			check_across_instruction_validity (an_instruction)
+		end
+
 	process_assigner_instruction (an_instruction: ET_ASSIGNER_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
@@ -12878,6 +13715,8 @@ feature {ET_AST_NODE} -- Processing
 				check_local_variable_validity (an_identifier, current_context)
 			elseif an_identifier.is_object_test_local then
 				check_object_test_local_validity (an_identifier, current_context)
+			elseif an_identifier.is_across_cursor then
+				check_across_cursor_validity (an_identifier, current_context)
 			elseif an_identifier.is_instruction then
 				check_unqualified_call_instruction_validity (an_identifier)
 			else
@@ -13226,6 +14065,15 @@ feature {NONE} -- Object-tests
 
 	object_test_scope_builder: ET_OBJECT_TEST_SCOPE_BUILDER
 			-- Object-tests local scope builder
+
+feature {NONE} -- Across components
+
+	current_across_cursor_types: DS_HASH_TABLE [ET_NESTED_TYPE_CONTEXT, ET_ACROSS_COMPONENT]
+			-- Types of across cursors
+
+	current_across_cursor_scope: ET_ACROSS_CURSOR_SCOPE
+			-- Across components for which we are currently in the
+			-- scope of their cursors
 
 feature {NONE} -- Attachments
 
@@ -13832,12 +14680,16 @@ invariant
 	unused_contexts_not_void: unused_contexts /= Void
 	no_void_unused_context: not unused_contexts.has_void
 	current_target_type_not_void: current_target_type /= Void
-		-- Object-tests
+		-- Object-tests.
 	current_object_test_types_not_void: current_object_test_types /= Void
 	no_void_object_test_type: not current_object_test_types.has_void_item
 	current_object_test_scope_not_void: current_object_test_scope /= Void
 	object_test_scope_builder_not_void: object_test_scope_builder /= Void
-		-- Attachments
+		-- Across components.
+	current_across_cursor_types_not_void: current_across_cursor_types /= Void
+	no_void_across_cursor_type: not current_across_cursor_types.has_void_item
+	current_across_cursor_scope_not_void: current_across_cursor_scope /= Void
+		-- Attachments.
 	current_initialization_scope_not_void: current_initialization_scope /= Void
 	current_attachment_scope_not_void: current_attachment_scope /= Void
 	attachment_scope_builder_not_void: attachment_scope_builder /= Void

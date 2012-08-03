@@ -5,7 +5,7 @@ note
 		"Eiffel parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/11/01 $"
 	revision: "$Revision: #41 $"
@@ -73,6 +73,8 @@ feature {NONE} -- Initialization
 			create last_symbols.make (Initial_last_symbols_capacity)
 			create last_object_tests_stack.make (Initial_last_object_tests_capacity)
 			create last_object_tests_pool.make (Initial_last_object_tests_capacity)
+			create last_across_components_stack.make (Initial_last_across_components_capacity)
+			create last_across_components_pool.make (Initial_last_across_components_capacity)
 			create assertions.make (Initial_assertions_capacity)
 			create check_assertion_counters.make (Initial_check_assertion_counters_capacity)
 			create queries.make (Initial_queries_capacity)
@@ -94,6 +96,7 @@ feature -- Initialization
 			wipe_out_last_formal_arguments_stack
 			wipe_out_last_local_variables_stack
 			wipe_out_last_object_tests_stack
+			wipe_out_last_across_components_stack
 			last_keywords.wipe_out
 			last_symbols.wipe_out
 			providers.wipe_out
@@ -407,12 +410,16 @@ feature {NONE} -- Basic operations
 				if last_object_tests /= Void then
 					a_query.set_object_tests (last_object_tests.cloned_object_test_list)
 				end
+				if last_across_components /= Void then
+					a_query.set_across_components (last_across_components.cloned_across_component_list)
+				end
 			end
-				-- Reset local variables, formal arguments and
-				-- object-tests before reading the next feature.
+				-- Reset local variables, formal arguments, object-tests
+				-- and across components before reading the next feature.
 			wipe_out_last_formal_arguments_stack
 			wipe_out_last_local_variables_stack
 			wipe_out_last_object_tests_stack
+			wipe_out_last_across_components_stack
 		end
 
 	register_query_synonym (a_query: ET_QUERY)
@@ -438,12 +445,16 @@ feature {NONE} -- Basic operations
 				if last_object_tests /= Void then
 					a_procedure.set_object_tests (last_object_tests.cloned_object_test_list)
 				end
+				if last_across_components /= Void then
+					a_procedure.set_across_components (last_across_components.cloned_across_component_list)
+				end
 			end
-				-- Reset local variables, formal arguments and
-				-- object-tests before reading the next feature.
+				-- Reset local variables, formal arguments, object-tests
+				-- and across components before reading the next feature.
 			wipe_out_last_formal_arguments_stack
 			wipe_out_last_local_variables_stack
 			wipe_out_last_object_tests_stack
+			wipe_out_last_across_components_stack
 		end
 
 	register_procedure_synonym (a_procedure: ET_PROCEDURE)
@@ -456,6 +467,21 @@ feature {NONE} -- Basic operations
 				end
 				procedures.force_left (a_procedure)
 				procedures.back
+			end
+		end
+
+	register_inline_agent (a_inline_agent: ET_INLINE_AGENT)
+			-- Register `a_inline_agent'.
+		do
+			if a_inline_agent /= Void then
+				if last_object_tests /= Void then
+					a_inline_agent.set_object_tests (last_object_tests.cloned_object_test_list)
+				end
+				if last_across_components /= Void then
+					a_inline_agent.set_across_components (last_across_components.cloned_across_component_list)
+				end
+					-- Clean up after the inline agent has been parsed.
+				set_end_closure
 			end
 		end
 
@@ -615,6 +641,14 @@ feature {NONE} -- Basic operations
 			set_class_to_end (a_class, an_obsolete, a_parents, Void, Void, Void, Void, Void, an_end)
 		end
 
+	set_inline_agent_actual_arguments (a_inline_agent: ET_INLINE_AGENT; a_actual_arguments: ET_AGENT_ARGUMENT_OPERANDS)
+			-- Set actual arguments of inline agent.
+		do
+			if a_inline_agent /= Void and a_actual_arguments /= Void then
+				a_inline_agent.set_actual_arguments (a_actual_arguments)
+			end
+		end
+
 	add_expression_assertion (an_expression: ET_EXPRESSION; a_semicolon: ET_SYMBOL)
 			-- Add `an_expression' assertion, optionally followed
 			-- by `a_semicolon', to `assertions'.
@@ -713,9 +747,10 @@ feature {NONE} -- Basic operations
 			-- Indicate the we just parsed the formal arguments of a
 			-- new closure (i.e. feature, invariant or inline agent).
 			-- Keep track of the values of `last_formal_arguments',
-			-- `last_local_variables' and `last_object_tests' for the
-			-- enclosing closure. They will be restored when we reach
-			-- the end of the closure by `set_end_closure'.
+			-- `last_local_variables', `last_object_tests' and
+			-- `last_across_components' for the enclosing closure.
+			-- They will be restored when we reach the end of the
+			-- closure by `set_end_closure'.
 		do
 			if not last_formal_arguments_stack.is_empty or last_formal_arguments /= Void then
 				last_formal_arguments_stack.force (last_formal_arguments)
@@ -728,14 +763,19 @@ feature {NONE} -- Basic operations
 			if not last_object_tests_stack.is_empty or last_object_tests /= Void then
 				last_object_tests_stack.force (last_object_tests)
 			end
-			last_object_tests := Void
+			last_across_components := Void
+			if not last_across_components_stack.is_empty or last_across_components /= Void then
+				last_across_components_stack.force (last_across_components)
+			end
+			last_across_components := Void
 		end
 
 	set_end_closure
 			-- Indicate that the end of the closure (i.e. feature, invariant
 			-- or inline agent) being parsed has been reached. Restore
-			-- `last_formal_arguments', `last_local_variables' and
-			-- `last_object_tests' for the enclosing closure if any.
+			-- `last_formal_arguments', `last_local_variables',
+			-- `last_object_tests' and `last_across_components'
+			-- for the enclosing closure if any.
 		do
 			if not last_formal_arguments_stack.is_empty then
 				last_formal_arguments := last_formal_arguments_stack.item
@@ -755,6 +795,12 @@ feature {NONE} -- Basic operations
 			else
 				last_object_tests := Void
 			end
+			if not last_across_components_stack.is_empty then
+				last_across_components := last_across_components_stack.item
+				last_across_components_stack.remove
+			else
+				last_across_components := Void
+			end
 		end
 
 	start_check_instruction
@@ -762,7 +808,7 @@ feature {NONE} -- Basic operations
 		do
 			check_assertion_counters.force_last (assertions.count)
 		end
-		
+
 feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIST} -- Generic constraints
 
 	resolved_constraint_named_type (a_constraint: ET_CONSTRAINT_NAMED_TYPE;
@@ -964,6 +1010,102 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 
 feature {NONE} -- AST factory
 
+	new_across_all_expression (a_across_header: ET_ACROSS_EXPRESSION; an_invariant: ET_LOOP_INVARIANTS;
+			an_until_conditional: ET_CONDITIONAL; a_all_conditional: ET_CONDITIONAL;
+			a_variant: ET_VARIANT; an_end: ET_KEYWORD): ET_ACROSS_EXPRESSION
+				-- New across all expression
+			do
+				if a_across_header /= Void and a_all_conditional /= Void then
+					Result := a_across_header
+					Result.set_until_conditional (an_until_conditional)
+					Result.set_iteration_conditional (a_all_conditional)
+					Result.set_all (True)
+					Result.set_invariant_part (an_invariant)
+					Result.set_variant_part (a_variant)
+					if an_end /= Void then
+						Result.set_end_keyword (an_end)
+					end
+						-- We set 'cursor_name.is_across_cursor' to False when
+						-- parsing within its scope.
+					Result.cursor_name.set_across_cursor (True)
+				end
+			end
+
+	new_across_expression_header (a_across: ET_KEYWORD; a_iterable_expression: ET_EXPRESSION; a_as: ET_KEYWORD; a_cursor_name: ET_IDENTIFIER): ET_ACROSS_EXPRESSION
+				-- New across expression header
+		do
+			Result := ast_factory.new_across_all_expression (a_across, a_iterable_expression, a_as, a_cursor_name, Void, Void, tokens.true_keyword, Void, Void)
+			if Result /= Void then
+				if last_across_components = Void then
+					last_across_components := new_across_component_list
+				end
+				last_across_components.force_last (Result)
+					-- We set 'cursor_name.is_across_cursor' to False when
+					-- parsing within its scope.
+				a_cursor_name.set_across_cursor (False)
+				a_cursor_name.set_seed (last_across_components.count)
+			end
+		end
+
+	new_across_instruction (a_across_header: ET_ACROSS_INSTRUCTION;
+		a_from_compound: ET_COMPOUND; an_invariant: ET_LOOP_INVARIANTS;
+		an_until_conditional: ET_CONDITIONAL; a_loop_compound: ET_COMPOUND;
+		a_variant: ET_VARIANT; an_end: ET_KEYWORD): ET_ACROSS_INSTRUCTION
+			-- New across instruction
+		do
+			if a_across_header /= Void then
+				Result := a_across_header
+				Result.set_from_compound (a_from_compound)
+				Result.set_until_conditional (an_until_conditional)
+				Result.set_loop_compound (a_loop_compound)
+				Result.set_invariant_part (an_invariant)
+				Result.set_variant_part (a_variant)
+				if an_end /= Void then
+					Result.set_end_keyword (an_end)
+				end
+					-- We set 'cursor_name.is_across_cursor' to False when
+					-- parsing within its scope.
+				Result.cursor_name.set_across_cursor (True)
+			end
+		end
+
+	new_across_instruction_header (a_across: ET_KEYWORD; a_iterable_expression: ET_EXPRESSION; a_as: ET_KEYWORD; a_cursor_name: ET_IDENTIFIER): ET_ACROSS_INSTRUCTION
+			-- New across instruction header
+		do
+			Result := ast_factory.new_across_instruction (a_across, a_iterable_expression, a_as, a_cursor_name, Void, Void, Void, Void, Void, Void)
+			if Result /= Void then
+				if last_across_components = Void then
+					last_across_components := new_across_component_list
+				end
+				last_across_components.force_last (Result)
+					-- We set 'cursor_name.is_across_cursor' to False when
+					-- parsing within its scope.
+				a_cursor_name.set_across_cursor (False)
+				a_cursor_name.set_seed (last_across_components.count)
+			end
+		end
+
+	new_across_some_expression (a_across_header: ET_ACROSS_EXPRESSION; an_invariant: ET_LOOP_INVARIANTS;
+			an_until_conditional: ET_CONDITIONAL; a_some_conditional: ET_CONDITIONAL;
+			a_variant: ET_VARIANT; an_end: ET_KEYWORD): ET_ACROSS_EXPRESSION
+				-- New across some expression
+			do
+				if a_across_header /= Void and a_some_conditional /= Void then
+					Result := a_across_header
+					Result.set_until_conditional (an_until_conditional)
+					Result.set_iteration_conditional (a_some_conditional)
+					Result.set_some (True)
+					Result.set_invariant_part (an_invariant)
+					Result.set_variant_part (a_variant)
+					if an_end /= Void then
+						Result.set_end_keyword (an_end)
+					end
+						-- We set 'cursor_name.is_across_cursor' to False when
+						-- parsing within its scope.
+					Result.cursor_name.set_across_cursor (True)
+				end
+			end
+
 	new_agent_identifier_target (an_identifier: ET_IDENTIFIER): ET_IDENTIFIER
 			-- New agent identifier target
 		local
@@ -985,10 +1127,20 @@ feature {NONE} -- AST factory
 						an_identifier.set_local (True)
 					end
 				end
-				if a_seed = 0 and then last_object_tests /= Void then
-					a_seed := last_object_tests.index_of_name (an_identifier)
-					if a_seed /= 0 then
-						an_identifier.set_object_test_local (True)
+				if a_seed = 0 then
+					if last_object_tests /= Void then
+						a_seed := last_object_tests.index_of_name (an_identifier)
+						if a_seed /= 0 then
+							an_identifier.set_object_test_local (True)
+						end
+					end
+					if last_across_components /= Void then
+						a_seed := last_across_components.index_of_name (an_identifier)
+						if a_seed /= 0 and then not last_across_components.across_component (a_seed).cursor_name.is_across_cursor then
+								-- We set 'cursor_name.is_across_cursor' to False when
+								-- parsing withing its scope.
+							an_identifier.set_across_cursor (True)
+						end
 					end
 				end
 			end
@@ -1099,7 +1251,7 @@ feature {NONE} -- AST factory
 				end
 			end
 		end
-		
+
 	new_choice_attribute_constant (a_name: ET_IDENTIFIER): ET_IDENTIFIER
 			-- New choice constant which is supposed to be the name of
 			-- a constant attribute or unique attribute
@@ -1124,10 +1276,20 @@ feature {NONE} -- AST factory
 						last_local_variables.local_variable (a_seed).set_used (True)
 					end
 				end
-				if a_seed = 0 and then last_object_tests /= Void then
-					a_seed := last_object_tests.index_of_name (a_name)
-					if a_seed /= 0 then
-						a_name.set_object_test_local (True)
+				if a_seed = 0 then
+					if last_object_tests /= Void then
+						a_seed := last_object_tests.index_of_name (a_name)
+						if a_seed /= 0 then
+							a_name.set_object_test_local (True)
+						end
+					end
+					if last_across_components /= Void then
+						a_seed := last_across_components.index_of_name (a_name)
+						if a_seed /= 0 and then not last_across_components.across_component (a_seed).cursor_name.is_across_cursor then
+								-- We set 'cursor_name.is_across_cursor' to False when
+								-- parsing within its scope.
+							a_name.set_across_cursor (True)
+						end
 					end
 				end
 			end
@@ -1213,10 +1375,20 @@ feature {NONE} -- AST factory
 						last_local_variables.local_variable (l_seed).set_used (True)
 					end
 				end
-				if l_seed = 0 and then last_object_tests /= Void then
-					l_seed := last_object_tests.index_of_name (l_identifier)
-					if l_seed /= 0 then
-						l_identifier.set_object_test_local (True)
+				if l_seed = 0 then
+					if last_object_tests /= Void then
+						l_seed := last_object_tests.index_of_name (l_identifier)
+						if l_seed /= 0 then
+							l_identifier.set_object_test_local (True)
+						end
+					end
+					if last_across_components /= Void then
+						l_seed := last_across_components.index_of_name (l_identifier)
+						if l_seed /= 0 and then not last_across_components.across_component (l_seed).cursor_name.is_across_cursor then
+								-- We set 'cursor_name.is_across_cursor' to False when
+								-- parsing within its scope.
+							l_identifier.set_across_cursor (True)
+						end
 					end
 				end
 			end
@@ -1284,14 +1456,20 @@ feature {NONE} -- AST factory
 				end
 				assertions.wipe_out
 			end
-			if Result /= Void and last_object_tests /= Void then
-				Result.set_object_tests (last_object_tests.cloned_object_test_list)
+			if Result /= Void then
+				if last_object_tests /= Void then
+					Result.set_object_tests (last_object_tests.cloned_object_test_list)
+				end
+				if last_across_components /= Void then
+					Result.set_across_components (last_across_components.cloned_across_component_list)
+				end
 			end
-				-- Reset local variables, formal arguments and
-				-- object-tests before reading the next closure.
+				-- Reset local variables, formal arguments, object-tests
+				-- and across components before reading the next closure.
 			wipe_out_last_formal_arguments_stack
 			wipe_out_last_local_variables_stack
 			wipe_out_last_object_tests_stack
+			wipe_out_last_across_components_stack
 		end
 
 	new_local_variables (a_local: ET_KEYWORD; nb: INTEGER): ET_LOCAL_VARIABLE_LIST
@@ -1586,10 +1764,20 @@ feature {NONE} -- AST factory
 						last_local_variables.local_variable (a_seed).set_used (True)
 					end
 				end
-				if a_seed = 0 and then last_object_tests /= Void then
-					a_seed := last_object_tests.index_of_name (a_name)
-					if a_seed /= 0 then
-						a_name.set_object_test_local (True)
+				if a_seed = 0 then
+					if last_object_tests /= Void then
+						a_seed := last_object_tests.index_of_name (a_name)
+						if a_seed /= 0 then
+							a_name.set_object_test_local (True)
+						end
+					end
+					if last_across_components /= Void then
+						a_seed := last_across_components.index_of_name (a_name)
+						if a_seed /= 0 and then not last_across_components.across_component (a_seed).cursor_name.is_across_cursor then
+								-- We set 'cursor_name.is_across_cursor' to False when
+								-- parsing within its scope.
+							a_name.set_across_cursor (True)
+						end
 					end
 				end
 			end
@@ -1764,7 +1952,7 @@ feature {NONE} -- Access
 
 	check_assertion_counters: DS_ARRAYED_LIST [INTEGER]
 			-- List of counters when parsing nested check-instructions
-			
+
 	queries: DS_ARRAYED_LIST [ET_QUERY]
 			-- List of queries currently being parsed
 
@@ -1853,6 +2041,62 @@ feature {NONE} -- Object-tests
 		ensure
 			last_object_tests_stack_wiped_out: last_object_tests_stack.is_empty
 			last_object_tests_void: last_object_tests = Void
+		end
+
+feature {NONE} -- Across components
+
+	last_across_components: ET_ACROSS_COMPONENT_LIST
+			-- Across components already found in the closure (i.e. feature,
+			-- invariant or inline agent) being parsed
+
+	last_across_components_stack: DS_ARRAYED_STACK [ET_ACROSS_COMPONENT_LIST]
+			-- Stack of across components already found in the enclosing
+			-- closures (i.e. feature, invariant or inline agents)
+			-- of the closure being parsed
+
+	last_across_components_pool: DS_ARRAYED_STACK [ET_ACROSS_COMPONENT_LIST]
+			-- Pool of across component lists available for usage
+			-- whenever needed
+
+	new_across_component_list: ET_ACROSS_COMPONENT_LIST
+			-- New across component list;
+			-- Reuse items from `last_across_components_pool' if available.
+		do
+			if not last_across_components_pool.is_empty then
+				Result := last_across_components_pool.item
+				last_across_components_pool.remove
+			else
+				create Result.make_with_capacity (Initial_last_across_components_capacity)
+			end
+		ensure
+			new_across_component_list_not_void: Result /= Void
+		end
+
+	wipe_out_last_across_components_stack
+			-- Wipe out `last_across_components_stack' and
+			-- set `last_across_components' to Void.
+		local
+			l_across_component_list: ET_ACROSS_COMPONENT_LIST
+			i, nb: INTEGER
+		do
+			if last_across_components /= Void then
+				last_across_components.wipe_out
+				last_across_components_pool.force (last_across_components)
+				last_across_components := Void
+			end
+			nb := last_across_components_stack.count
+			from i := 1 until i > nb loop
+				l_across_component_list := last_across_components_stack.i_th (i)
+				if l_across_component_list /= Void then
+					l_across_component_list.wipe_out
+					last_across_components_pool.force (l_across_component_list)
+				end
+				i := i + 1
+			end
+			last_across_components_stack.wipe_out
+		ensure
+			last_across_components_stack_wiped_out: last_across_components_stack.is_empty
+			last_across_components_void: last_across_components = Void
 		end
 
 feature {NONE} -- Formal arguments
@@ -2018,12 +2262,15 @@ feature {NONE} -- Constants
 	Initial_last_object_tests_capacity: INTEGER = 50
 			-- Initial capacity for `last_object_tests'
 
+	Initial_last_across_components_capacity: INTEGER = 50
+			-- Initial capacity for `last_across_components'
+
 	Initial_assertions_capacity: INTEGER = 20
 			-- Initial capacity for `assertions'
 
 	Initial_check_assertion_counters_capacity: INTEGER = 10
 			-- Initial capacity for `check_assertion_counters'
-			
+
 	Initial_queries_capacity: INTEGER = 100
 			-- Initial capacity for `queries'
 
@@ -2089,6 +2336,10 @@ invariant
 	last_object_tests_stack_not_void: last_object_tests_stack /= Void
 	last_object_tests_pool_not_void: last_object_tests_pool /= Void
 	no_void_last_object_tests_in_pool: not last_object_tests_pool.has_void
+		-- Across components.
+	last_across_components_stack_not_void: last_across_components_stack /= Void
+	last_across_components_pool_not_void: last_across_components_pool /= Void
+	no_void_last_across_components_in_pool: not last_across_components_pool.has_void
 		-- Input buffer.
 	eiffel_buffer_not_void: eiffel_buffer /= Void
 

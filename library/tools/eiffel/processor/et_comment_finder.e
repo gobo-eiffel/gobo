@@ -5,7 +5,7 @@ note
 		"Eiffel AST comment finders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,6 +17,8 @@ inherit
 	ET_AST_ITERATOR
 		redefine
 			make,
+			process_across_expression,
+			process_across_instruction,
 			process_actual_argument_list,
 			process_actual_parameter_comma,
 			process_actual_parameter_list,
@@ -264,6 +266,22 @@ feature -- Excluded nodes
 		end
 
 feature {ET_AST_NODE} -- Processing
+
+	process_across_expression (an_expression: ET_ACROSS_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			if not excluded_nodes.has (an_expression) then
+				precursor (an_expression)
+			end
+		end
+
+	process_across_instruction (an_instruction: ET_ACROSS_INSTRUCTION)
+			-- Process `an_instruction'.
+		do
+			if not excluded_nodes.has (an_instruction) then
+				precursor (an_instruction)
+			end
+		end
 
 	process_actual_argument_list (a_list: ET_ACTUAL_ARGUMENT_LIST)
 			-- Process `a_list'.
