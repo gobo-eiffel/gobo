@@ -62,6 +62,9 @@ Version 3.10 - ?
 	  name of this variable to `last_<alias_name>_value' by declaring
 	  '%token <EIFFEL_TYPE as alias_name> ...'. See bug#2621302.
 
+	* Added support for qualified anchored types in %type and %token declarations
+	  in .y files.
+
 	Gobo Eiffel Kernel Library:
 
 	* Added features `same_*_pathnames' to class KI_FILE_SYSTEM.
@@ -144,6 +147,7 @@ Version 3.10 - ?
 	* Started checking void-safety validity rules.
 	* Relaxed the validity rule to prevent cycles in qualified anchored types
 	  so that it can accept code appearing in ISE's libraries.
+	* Added support for across instructions/expressions.
 
 	Gobo Eiffel XML Library:
 
