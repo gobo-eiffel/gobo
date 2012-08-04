@@ -8373,10 +8373,12 @@ feature {NONE} -- Expression validity
 					l_object_test := l_object_tests.object_test (l_seed)
 					current_object_test_types.search (l_object_test)
 					if not current_object_test_types.found then
-							-- Internal error: the type of the object-test local should
-							-- have been determined when processing the object-test itself.
-							-- And this should have already been done since we are in the
-							-- scope of that object-test.
+							-- The type of the object-test local should have been determined
+							-- when processing the object-test itself. And this should have
+							-- already been done since we are in the scope of that object-test.
+							-- Here we don't have this type, which means that an error had
+							-- occurred (and had been reported) when processing the expression
+							-- of the object-test.
 						set_fatal_error
 					else
 						a_context.copy_type_context (current_object_test_types.found_item)
