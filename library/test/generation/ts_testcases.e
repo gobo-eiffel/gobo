@@ -308,8 +308,8 @@ feature {NONE} -- Generation
 				-- Declare local variables.
 			if l_has_test then
 				a_file.put_line ("%T%Tlocal")
-				a_file.put_line ("%T%T%Tl_enabled_regexp: like enabled_test_cases")
-				a_file.put_line ("%T%T%Tl_disabled_regexp: like disabled_test_cases")
+				a_file.put_line ("%T%T%Tl_enabled_regexps: like enabled_test_cases")
+				a_file.put_line ("%T%T%Tl_disabled_regexps: like disabled_test_cases")
 				a_file.put_line ("%T%T%Tl_name: STRING")
 			end
 			from
@@ -349,8 +349,8 @@ feature {NONE} -- Generation
 				-- Declare body.
 			a_file.put_line ("%T%Tdo")
 			if l_has_test then
-				a_file.put_line ("%T%T%Tl_enabled_regexp := enabled_test_cases")
-				a_file.put_line ("%T%T%Tl_disabled_regexp := disabled_test_cases")
+				a_file.put_line ("%T%T%Tl_enabled_regexps := enabled_test_cases")
+				a_file.put_line ("%T%T%Tl_disabled_regexps := disabled_test_cases")
 			end
 			from
 				i := a_lower
@@ -367,7 +367,7 @@ feature {NONE} -- Generation
 				a_file.put_character ('.')
 				a_file.put_string (l_test_feature_name)
 				a_file.put_line ("%"")
-				a_file.put_line ("%T%T%Tif (l_enabled_regexp = Void or else l_enabled_regexp.recognizes (l_name)) and then (l_disabled_regexp = Void or else not l_disabled_regexp.recognizes (l_name)) then")
+				a_file.put_line ("%T%T%Tif (l_enabled_regexps = Void or else l_enabled_regexps.there_exists (agent {RX_REGULAR_EXPRESSION}.recognizes (l_name))) and then (l_disabled_regexps = Void or else not l_disabled_regexps.there_exists (agent {RX_REGULAR_EXPRESSION}.recognizes (l_name))) then")
 				a_file.put_string ("%T%T%T%Tcreate l_test")
 				a_file.put_integer (l_test_index)
 				a_file.put_line (".make_default")

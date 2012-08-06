@@ -42,6 +42,9 @@ Version 3.10 - ?
 	  harness so that the back-end C compiler (in particular MSVC under Windows)
 	  can compile the generated C code for this routine in a reasonable amount
 	  of time.
+	* Added command-line options to the generated test harness to monitor which
+	  of the registered test cases should be executed or ignored.
+	* Improved command-line processing of the generated test harness.
 
 	gexace:
 

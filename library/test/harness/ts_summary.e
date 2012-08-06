@@ -61,12 +61,12 @@ feature -- Status report
 			-- debugging it might be useful to get the full exception
 			-- trace.)
 
-	enabled_test_cases: RX_REGULAR_EXPRESSION
-			-- Only test cases whose name matches this regexp will
+	enabled_test_cases: DS_LINKED_LIST [RX_REGULAR_EXPRESSION]
+			-- Only test cases whose name matches one of these regexps will
 			-- be executed, or execute all test cases is Void
 
-	disabled_test_cases: RX_REGULAR_EXPRESSION
-			-- Test cases whose name does not match this regexp will
+	disabled_test_cases: DS_LINKED_LIST [RX_REGULAR_EXPRESSION]
+			-- Test cases whose name matches one of these regexps will
 			-- not be executed
 
 	success_output: KI_TEXT_OUTPUT_STREAM
@@ -92,24 +92,26 @@ feature -- Status setting
 			fail_on_rescue_set: fail_on_rescue = b
 		end
 
-	set_enabled_test_cases (a_regexp: like enabled_test_cases)
+	set_enabled_test_cases (a_test_cases: like enabled_test_cases)
 			-- Set `enabled_test_cases' to `a_regexp'.
 		require
-			compiled: a_regexp /= Void implies a_regexp.is_compiled
+			no_void_test_case: a_test_cases /= Void implies not a_test_cases.has_void
+			test_cases_compiled: a_test_cases /= Void implies a_test_cases.for_all (agent {RX_REGULAR_EXPRESSION}.is_compiled)
 		do
-			enabled_test_cases := a_regexp
+			enabled_test_cases := a_test_cases
 		ensure
-			enabled_test_cases_set: enabled_test_cases = a_regexp
+			enabled_test_cases_set: enabled_test_cases = a_test_cases
 		end
 
-	set_disabled_test_cases (a_regexp: like disabled_test_cases)
-			-- Set `disabled_test_cases' to `a_regexp'.
+	set_disabled_test_cases (a_test_cases: like disabled_test_cases)
+			-- Set `disabled_test_cases' to `a_test_cases'.
 		require
-			compiled: a_regexp /= Void implies a_regexp.is_compiled
+			no_void_test_case: a_test_cases /= Void implies not a_test_cases.has_void
+			test_cases_compiled: a_test_cases /= Void implies a_test_cases.for_all (agent {RX_REGULAR_EXPRESSION}.is_compiled)
 		do
-			disabled_test_cases := a_regexp
+			disabled_test_cases := a_test_cases
 		ensure
-			disabled_test_cases_set: disabled_test_cases = a_regexp
+			disabled_test_cases_set: disabled_test_cases = a_test_cases
 		end
 
 	set_success_output (a_output: like success_output)
@@ -363,8 +365,10 @@ invariant
 	assertion_count_positive: assertion_count >= 0
 	results_not_void: results /= Void
 	no_void_result: not results.has_void
-	enabled_test_cases_compiled: enabled_test_cases /= Void implies enabled_test_cases.is_compiled
-	disabled_test_cases_compiled: disabled_test_cases /= Void implies disabled_test_cases.is_compiled
+	no_void_enabled_test_cases: enabled_test_cases /= Void implies not enabled_test_cases.has_void
+	enabled_test_cases_compiled: enabled_test_cases /= Void implies enabled_test_cases.for_all (agent {RX_REGULAR_EXPRESSION}.is_compiled)
+	no_void_disabled_test_cases: disabled_test_cases /= Void implies not disabled_test_cases.has_void
+	disabled_test_cases_compiled: disabled_test_cases /= Void implies disabled_test_cases.for_all (agent {RX_REGULAR_EXPRESSION}.is_compiled)
 	success_output_not_void: success_output /= Void
 	success_output_open_write: success_output.is_open_write
 	failure_output_not_void: failure_output /= Void
