@@ -655,6 +655,12 @@ feature {ET_AST_NODE} -- Processing
 					had_error := had_error or has_fatal_error
 				end
 			end
+			process_expression (an_expression.new_cursor_expression)
+			had_error := had_error or has_fatal_error
+			process_expression (an_expression.cursor_after_expression)
+			had_error := had_error or has_fatal_error
+			an_expression.cursor_forth_instruction.process (Current)
+			had_error := had_error or has_fatal_error
 			reset_fatal_error (had_error)
 		end
 
@@ -700,6 +706,12 @@ feature {ET_AST_NODE} -- Processing
 					had_error := had_error or has_fatal_error
 				end
 			end
+			process_expression (an_instruction.new_cursor_expression)
+			had_error := had_error or has_fatal_error
+			process_expression (an_instruction.cursor_after_expression)
+			had_error := had_error or has_fatal_error
+			an_instruction.cursor_forth_instruction.process (Current)
+			had_error := had_error or has_fatal_error
 			reset_fatal_error (had_error)
 		end
 
