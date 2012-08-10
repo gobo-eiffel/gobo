@@ -5154,8 +5154,8 @@ feature {NONE} -- Expression validity
 			end
 			free_context (l_expression_context)
 				-- Check across cursor name clashes (see VOIT-2).
+			l_cursor_name := a_across_component.cursor_name
 			if current_class = current_class_impl then
-				l_cursor_name := a_across_component.cursor_name
 				l_feature := current_class.named_query (l_cursor_name)
 				if l_feature /= Void then
 						-- This across cursor has the same name as the
