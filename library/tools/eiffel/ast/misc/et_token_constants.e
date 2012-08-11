@@ -2303,6 +2303,14 @@ feature -- Types
 			identity_type_not_void: Result /= Void
 		end
 
+	attached_separate_type_mark: ET_ATTACHMENT_SEPARATE_KEYWORDS
+			-- 'attached separate' type mark
+		once
+			create Result.make (attached_keyword, separate_keyword)
+		ensure
+			attached_separate_type_mark_not_void: Result /= Void
+		end
+
 	implicit_attached_type_mark: ET_IMPLICIT_TYPE_MARK
 			-- Implicit 'attached' type mark
 		once
@@ -3153,6 +3161,14 @@ feature -- Keywords
 			-- 'select' keyword
 		once
 			create Result.make_select
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	separate_keyword: ET_KEYWORD
+			-- 'separate' keyword
+		once
+			create Result.make_separate
 		ensure
 			keyword_not_void: Result /= Void
 		end

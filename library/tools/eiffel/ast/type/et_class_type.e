@@ -5,7 +5,7 @@ note
 		"Eiffel class types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright:  "Copyright (c) 1999-2011, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -269,6 +269,18 @@ feature -- Status report
 			end
 		end
 
+	is_type_separate_with_type_mark (a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Is current type separate when viewed from `a_context'?
+		do
+			if a_type_mark = Void then
+				Result := is_separate
+			elseif a_type_mark.is_separate_mark then
+				Result := True
+			else
+				Result := is_separate
+			end
+		end
+
 	is_expanded: BOOLEAN
 			-- Is current type expanded?
 		do
@@ -433,7 +445,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			elseif
 				base_class = other.base_class and then
 				is_type_expanded_with_type_mark (a_type_mark, a_context) = other.is_type_expanded_with_type_mark (other_type_mark, other_context) and then
-				is_separate = other.is_separate
+				is_type_separate_with_type_mark (a_type_mark, a_context) = other.is_type_separate_with_type_mark (other_type_mark, other_context)
 			then
 				if not other.is_generic then
 					Result := not is_generic
@@ -468,7 +480,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			elseif
 				base_class = other.base_class and then
 				is_type_expanded_with_type_mark (a_type_mark, a_context) = other.is_type_expanded_with_type_mark (other_type_mark, other_context) and then
-				is_separate = other.is_separate
+				is_type_separate_with_type_mark (a_type_mark, a_context) = other.is_type_separate_with_type_mark (other_type_mark, other_context)
 			then
 				if not other.is_generic then
 					Result := not is_generic
@@ -503,7 +515,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			elseif
 				base_class = other.base_class and then
 				is_type_expanded_with_type_mark (a_type_mark, a_context) = other.is_type_expanded_with_type_mark (other_type_mark, other_context) and then
-				is_separate = other.is_separate
+				is_type_separate_with_type_mark (a_type_mark, a_context) = other.is_type_separate_with_type_mark (other_type_mark, other_context)
 			then
 				if not other.is_generic then
 					Result := not is_generic

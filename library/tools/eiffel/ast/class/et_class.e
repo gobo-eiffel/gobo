@@ -1466,7 +1466,9 @@ feature -- Conversion
 				from i := 1 until i > nb loop
 					a_feature := convert_features.convert_feature (i)
 					if a_feature.is_convert_to then
-						if a_feature.types.has_named_type (other_type, other, a_type) then
+							-- Do not take into account the attachment and
+							-- separateness status of the types involved.
+						if a_feature.types.has_named_type_with_type_marks (other_type, tokens.attached_separate_type_mark, other, tokens.attached_separate_type_mark, a_type) then
 							Result := a_feature
 							i := nb + 1 -- Jump out of the loop.
 						end
@@ -1496,7 +1498,9 @@ feature -- Conversion
 				from i := 1 until i > nb loop
 					a_feature := convert_features.convert_feature (i)
 					if a_feature.is_convert_from then
-						if a_feature.types.has_named_type (other_type, other, a_type) then
+							-- Do not take into account the attachment and
+							-- separateness status of the types involved.
+						if a_feature.types.has_named_type_with_type_marks (other_type, tokens.attached_separate_type_mark, other, tokens.attached_separate_type_mark, a_type) then
 							Result := a_feature
 							i := nb + 1 -- Jump out of the loop.
 						end
