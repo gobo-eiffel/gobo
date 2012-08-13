@@ -64,7 +64,6 @@ Version 3.10 - ?
 	  are replaced by underscores. It is now possible to customize the
 	  name of this variable to `last_<alias_name>_value' by declaring
 	  '%token <EIFFEL_TYPE as alias_name> ...'. See bug#2621302.
-
 	* Added support for qualified anchored types in %type and %token declarations
 	  in .y files.
 
@@ -82,7 +81,6 @@ Version 3.10 - ?
 
 	* Fixed bug in LX_DFA_REGULAR_EXPRESSION where `compile ("foo\$")' was
 	  setting `has_dollar' to True even though the dollar sign was escaped.
-
 	* Added features `pattern' and `is_case_insensitive' in class LX_PATTERN_MATCHER.
 
 	Gobo Eiffel Regexp Library:

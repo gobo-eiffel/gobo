@@ -293,7 +293,9 @@ feature -- Duplication
 					set_internal_cursor (Void)
 					set_internal_cursor (new_cursor)
 				end
-				storage := storage.twin
+					-- Note: do not use `storage.twin' because SPECIAL.copy may
+					-- shrink the 'capacity' down to 'count'.
+				storage := storage.resized_area (storage.capacity)
 			end
 		end
 

@@ -181,11 +181,12 @@ feature {NONE} -- Implementation
 		local
 			subitems: SPECIAL [G]
 			j: INTEGER
+			l_dead_item: G
 		do
 			j := i // chunk_size
 			subitems := item_storage.item (j)
 			if subitems = Void then
-				subitems := special_item_routines.make (chunk_size)
+				subitems := special_item_routines.make_filled (l_dead_item, chunk_size)
 				item_storage.put (subitems, j)
 			end
 			special_item_routines.force (subitems, v, i \\ chunk_size)
@@ -206,7 +207,9 @@ feature {NONE} -- Implementation
 			loop
 				subitems := item_storage.item (i)
 				if subitems /= Void then
-					item_storage.put (subitems.twin, i)
+						-- Note that SPECIAL.copy may shrink 'capacity'
+						-- down to 'count'. So do not use SPECIAL.twin here.
+					item_storage.put (subitems.resized_area (subitems.capacity), i)
 				end
 				i := i + 1
 			end
@@ -277,7 +280,9 @@ feature {NONE} -- Implementation
 			loop
 				subclashes := clashes.item (i)
 				if subclashes /= Void then
-					clashes.put (subclashes.twin, i)
+						-- Note that SPECIAL.copy may shrink 'capacity'
+						-- down to 'count'. So do not use SPECIAL.twin here.
+					clashes.put (subclashes.resized_area (subclashes.capacity), i)
 				end
 				i := i + 1
 			end
@@ -357,7 +362,9 @@ feature {NONE} -- Implementation
 			loop
 				subslots := slots.item (i)
 				if subslots /= Void then
-					slots.put (subslots.twin, i)
+						-- Note that SPECIAL.copy may shrink 'capacity'
+						-- down to 'count'. So do not use SPECIAL.twin here.
+					slots.put (subslots.resized_area (subslots.capacity), i)
 				end
 				i := i + 1
 			end

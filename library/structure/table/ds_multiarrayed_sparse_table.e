@@ -274,11 +274,12 @@ feature {DS_MULTIARRAYED_SPARSE_TABLE_CURSOR} -- Implementation
 		local
 			subitems: SPECIAL [G]
 			j: INTEGER
+			l_dead_item: G
 		do
 			j := i // chunk_size
 			subitems := item_storage.item (j)
 			if subitems = Void then
-				subitems := special_item_routines.make (chunk_size)
+				subitems := special_item_routines.make_filled (l_dead_item, chunk_size)
 				item_storage.put (subitems, j)
 			end
 			special_item_routines.force (subitems, v, i \\ chunk_size)
@@ -334,7 +335,9 @@ feature {NONE} -- Implementation
 			loop
 				subitems := item_storage.item (i)
 				if subitems /= Void then
-					item_storage.put (subitems.twin, i)
+						-- Note that SPECIAL.copy may shrink 'capacity'
+						-- down to 'count'. So do not use SPECIAL.twin here.
+					item_storage.put (subitems.resized_area (subitems.capacity), i)
 				end
 				i := i + 1
 			end
@@ -378,11 +381,12 @@ feature {NONE} -- Implementation
 		local
 			subkeys: SPECIAL [K]
 			j: INTEGER
+			l_dead_key: K
 		do
 			j := i // chunk_size
 			subkeys := key_storage.item (j)
 			if subkeys = Void then
-				subkeys := special_key_routines.make (chunk_size)
+				subkeys := special_key_routines.make_filled (l_dead_key, chunk_size)
 				key_storage.put (subkeys, j)
 			end
 			special_key_routines.force (subkeys, k, i \\ chunk_size)
@@ -403,7 +407,9 @@ feature {NONE} -- Implementation
 			loop
 				subkeys := key_storage.item (i)
 				if subkeys /= Void then
-					key_storage.put (subkeys.twin, i)
+						-- Note that SPECIAL.copy may shrink 'capacity'
+						-- down to 'count'. So do not use SPECIAL.twin here.
+					key_storage.put (subkeys.resized_area (subkeys.capacity), i)
 				end
 				i := i + 1
 			end
@@ -474,7 +480,9 @@ feature {NONE} -- Implementation
 			loop
 				subclashes := clashes.item (i)
 				if subclashes /= Void then
-					clashes.put (subclashes.twin, i)
+						-- Note that SPECIAL.copy may shrink 'capacity'
+						-- down to 'count'. So do not use SPECIAL.twin here.
+					clashes.put (subclashes.resized_area (subclashes.capacity), i)
 				end
 				i := i + 1
 			end
@@ -554,7 +562,9 @@ feature {NONE} -- Implementation
 			loop
 				subslots := slots.item (i)
 				if subslots /= Void then
-					slots.put (subslots.twin, i)
+						-- Note that SPECIAL.copy may shrink 'capacity'
+						-- down to 'count'. So do not use SPECIAL.twin here.
+					slots.put (subslots.resized_area (subslots.capacity), i)
 				end
 				i := i + 1
 			end

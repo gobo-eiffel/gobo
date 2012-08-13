@@ -257,10 +257,16 @@ feature -- Access
 			text_not_empty: not is_implicit_mark implies Result.count > 0
 		end
 
+	is_type_mark: BOOLEAN
+			-- Is `Current' a type mark?
+		do
+			Result := is_implicit_mark or is_expandedness_mark or is_separateness_mark or is_attachment_mark
+		end
+
 invariant
 
 	expandedness_consistency: not (is_expanded_mark and is_reference_mark)
 	attachment_consistency: not (is_attached_mark and is_detachable_mark)
-	explicit_consistency: not is_implicit_mark implies (is_expandedness_mark or is_separateness_mark or is_attachment_mark)
+	explicit_consistency: is_type_mark implies (not is_implicit_mark implies (is_expandedness_mark or is_separateness_mark or is_attachment_mark))
 
 end

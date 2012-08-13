@@ -110,6 +110,7 @@ inherit
 			insert_character,
 			string,
 			same_string,
+			same_string_general,
 			insert_string,
 			insert,
 			prepend,
@@ -202,6 +203,7 @@ inherit
 			insert_character,
 			string,
 			same_string,
+			same_string_general,
 			insert_string,
 			insert,
 			prepend,
@@ -1506,6 +1508,42 @@ feature -- Comparison
 				Result := True
 			elseif other.count = count then
 				Result := (substring_index (other, 1) = 1)
+			end
+		end
+
+	same_string_general (other: READABLE_STRING_GENERAL): BOOLEAN
+			-- Do `Current' and `other' have the same character sequence?
+			-- `Current' is considered with its characters which do not
+			-- fit in a CHARACTER replaced by a '%U'.
+			-- (Extended from ELKS 2001 STRING)
+		local
+			i, l_count: INTEGER
+			l_c, l_other_c: NATURAL_32
+		do
+			if other = Current then
+				Result := True
+			elseif other.count = count then
+				l_count := count
+				from
+					Result := True
+					i := 1
+				until
+					i > l_count
+				loop
+					l_c := code (i)
+					if l_c > platform.maximum_character_code.to_natural_32 then
+						l_c := 0
+					end
+					l_other_c := other.code (i)
+					if l_other_c > platform.maximum_character_code.to_natural_32 then
+						l_other_c := 0
+					end
+					if l_c /= l_other_c then
+						Result := False
+						i := l_count
+					end
+					i := i + 1
+				end
 			end
 		end
 

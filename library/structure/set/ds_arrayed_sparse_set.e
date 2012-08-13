@@ -71,7 +71,9 @@ feature {NONE} -- Implementation
 	clone_item_storage
 			-- Clone `item_storage'.
 		do
-			item_storage := item_storage.twin
+				-- Note that SPECIAL.copy may shrink 'capacity'
+				-- down to 'count'. So do not use SPECIAL.twin here.
+			item_storage := item_storage.resized_area (item_storage.capacity)
 		end
 
 	item_storage_resize (n: INTEGER)
@@ -120,7 +122,9 @@ feature {NONE} -- Implementation
 	clone_clashes
 			-- Clone `clashes'.
 		do
-			clashes := clashes.twin
+				-- Note that SPECIAL.copy may shrink 'capacity'
+				-- down to 'count'. So do not use SPECIAL.twin here.
+			clashes := clashes.resized_area (clashes.capacity)
 		end
 
 	clashes_resize (n: INTEGER)
@@ -170,7 +174,9 @@ feature {NONE} -- Implementation
 	clone_slots
 			-- Clone `slots'.
 		do
-			slots := slots.twin
+				-- Note that SPECIAL.copy may shrink 'capacity'
+				-- down to 'count'. So do not use SPECIAL.twin here.
+			slots := slots.resized_area (slots.capacity)
 		end
 
 	slots_resize (n: INTEGER)
