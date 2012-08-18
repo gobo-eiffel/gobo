@@ -225,19 +225,12 @@ feature {NONE} -- Output
 			l_option_element_printed: BOOLEAN
 			l_cursor: DS_HASH_SET_CURSOR [STRING]
 			l_assertions: DS_HASH_SET [STRING]
-			a_class_name: STRING
 		do
 				-- trace
 			if an_option.is_trace_declared then
 				if not l_option_attribute_printed then
 					print_indentation (indent, a_file)
-					if a_class_name /= Void and then not a_class_name.is_empty then
-						a_file.put_string ("<class_option class=%"")
-						print_quote_escaped_string (a_class_name, a_file)
-						a_file.put_character ('%"')
-					else
-						a_file.put_string ("<option")
-					end
+					a_file.put_string ("<option")
 					l_option_attribute_printed := True
 				end
 				if an_option.trace then
