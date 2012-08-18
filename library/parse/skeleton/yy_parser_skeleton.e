@@ -804,6 +804,11 @@ feature {NONE} -- Implementation
 			clear_all
 		end
 
+	yy_run_geyacc
+			-- You must run geyacc to regenerate this class.
+		deferred
+		end
+
 feature {NONE} -- Constants
 
 	yyNewstate: INTEGER = 1
