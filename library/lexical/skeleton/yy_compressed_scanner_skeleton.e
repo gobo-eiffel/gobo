@@ -445,7 +445,7 @@ feature {NONE} -- Implementation
 			yy_content_area := a_content.as_special
 			if yyReject_or_variable_trail_context then
 				nb := a_content.count + 1
-				if yy_state_stack.count < nb then
+				if yy_state_stack.capacity < nb then
 					yy_state_stack := SPECIAL_INTEGER_.resize (yy_state_stack, nb)
 				end
 			end
