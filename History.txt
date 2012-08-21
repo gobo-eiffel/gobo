@@ -66,6 +66,9 @@ Version 3.10 - ?
 	  '%token <EIFFEL_TYPE as alias_name> ...'. See bug#2621302.
 	* Added support for qualified anchored types in %type and %token declarations
 	  in .y files.
+	* Eiffel classes need to be regenerated with geyacc from .y files because
+	  of a breaking change to make the internal stacks void-safe compliant.
+	  Otherwise this will result in a compilation error.
 
 	Gobo Eiffel Kernel Library:
 
