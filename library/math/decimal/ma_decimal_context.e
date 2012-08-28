@@ -159,7 +159,7 @@ feature -- Access
 			-- Rounding algorithm to be used for an operation when non-zero digits have to
 			-- be discarded in order to reduce the precision of a result
 
-	reason: STRING
+	reason: detachable STRING
 			-- Reason of latest raised signal
 
 	exponent_limit: INTEGER

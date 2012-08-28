@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	last_decimal: MA_DECIMAL
+	last_decimal: detachable MA_DECIMAL
 			-- Last decimal parsed
 
 feature -- Status report

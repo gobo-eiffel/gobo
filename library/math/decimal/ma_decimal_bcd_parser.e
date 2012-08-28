@@ -40,10 +40,11 @@ feature -- Basic operations
 			l_coefficient: MA_DECIMAL_COEFFICIENT
 			nibble_index, c_code: INTEGER
 			c: CHARACTER
+			l_last_decimal : MA_DECIMAL
 		do
 			error := False
-			create last_decimal.make (packed_string.count * 2 - 1)
-			l_coefficient := last_decimal.coefficient
+			create l_last_decimal.make (packed_string.count * 2 - 1)
+			l_coefficient := l_last_decimal.coefficient
 			zero_code := ('0').code
 			from
 				index := 1
@@ -66,17 +67,21 @@ feature -- Basic operations
 				else
 					inspect lo
 					when 11, 13 then
-						last_decimal.set_negative
+						l_last_decimal.set_negative
 					when 10, 12, 14, 15 then
 							-- Do nothing.
 					else
 --						create e
 --						e.raise ("Invalid file format : need 8 bytes packed decimal")
 						error := True
-						last_decimal := Void
 					end
 				end
 				index := index + 1
+			end
+			if error then
+				last_decimal := Void
+			else
+				last_decimal := l_last_decimal
 			end
 		end
 

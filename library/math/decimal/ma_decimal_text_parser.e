@@ -94,7 +94,7 @@ feature -- Access
 	decimal_point_index: INTEGER
 			-- Index of decimal point if any
 
-	last_parsed: STRING
+	last_parsed: detachable STRING
 			-- Last parsed string
 
 feature -- Status report
