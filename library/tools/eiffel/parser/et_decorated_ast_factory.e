@@ -5,7 +5,7 @@ note
 		"Eiffel decorated Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,6 +16,7 @@ inherit
 
 	ET_AST_FACTORY
 		redefine
+			new_across_keyword,
 			new_agent_keyword,
 			new_alias_keyword,
 			new_all_keyword,
@@ -73,6 +74,7 @@ inherit
 			new_retry_keyword,
 			new_select_keyword,
 			new_separate_keyword,
+			new_some_keyword,
 			new_strip_keyword,
 			new_then_keyword,
 			new_true_keyword,
@@ -135,6 +137,9 @@ inherit
 			new_underscored_integer_constant,
 			new_underscored_real_constant,
 			new_verbatim_string,
+			new_across_all_expression,
+			new_across_instruction,
+			new_across_some_expression,
 			new_actual_arguments,
 			new_actual_parameter_comma,
 			new_actual_parameters,
@@ -349,6 +354,15 @@ feature -- Statut setting
 		end
 
 feature -- Eiffel keywords
+
+	new_across_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+			-- New 'across' keyword
+		do
+			create Result.make_across
+			Result.set_text (a_scanner.last_literal)
+			Result.set_position (a_scanner.line, a_scanner.column)
+			Result.set_break (last_break (False, a_scanner))
+		end
 
 	new_agent_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_AGENT_KEYWORD
 			-- New 'agent' keyword
@@ -863,6 +877,15 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
+	new_some_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+			-- New 'some' keyword
+		do
+			create Result.make_some
+			Result.set_text (a_scanner.last_literal)
+			Result.set_position (a_scanner.line, a_scanner.column)
+			Result.set_break (last_break (False, a_scanner))
+		end
+
 	new_strip_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
 			-- New 'strip' keyword
 		do
@@ -1370,6 +1393,73 @@ feature -- AST leaves
 		end
 
 feature -- AST nodes
+
+	new_across_all_expression (a_across: ET_KEYWORD; a_iterable_expression: ET_EXPRESSION;
+			a_as: ET_KEYWORD; a_cursor_name: ET_IDENTIFIER; an_invariant: ET_LOOP_INVARIANTS;
+			an_until_conditional: ET_CONDITIONAL; a_all_conditional: ET_CONDITIONAL;
+			a_variant: ET_VARIANT; an_end: ET_KEYWORD): ET_ACROSS_EXPRESSION
+				-- New across all expression
+			do
+				if a_iterable_expression /= Void and a_cursor_name /= Void and a_all_conditional /= Void then
+					create Result.make_all (a_iterable_expression, a_cursor_name, an_until_conditional, a_all_conditional)
+					Result.set_invariant_part (an_invariant)
+					Result.set_variant_part (a_variant)
+					if a_across /= Void then
+						Result.set_across_keyword (a_across)
+					end
+					if a_as /= Void then
+						Result.set_as_keyword (a_as)
+					end
+					if an_end /= Void then
+						Result.set_end_keyword (an_end)
+					end
+				end
+			end
+
+	new_across_instruction (a_across: ET_KEYWORD; a_iterable_expression: ET_EXPRESSION;
+		a_as: ET_KEYWORD; a_cursor_name: ET_IDENTIFIER;
+		a_from_compound: ET_COMPOUND; an_invariant: ET_LOOP_INVARIANTS;
+		an_until_conditional: ET_CONDITIONAL; a_loop_compound: ET_COMPOUND;
+		a_variant: ET_VARIANT; an_end: ET_KEYWORD): ET_ACROSS_INSTRUCTION
+			-- New across instruction
+		do
+			if a_iterable_expression /= Void and a_cursor_name /= Void then
+				create Result.make (a_iterable_expression, a_cursor_name, a_from_compound, an_until_conditional, a_loop_compound)
+				Result.set_invariant_part (an_invariant)
+				Result.set_variant_part (a_variant)
+				if a_across /= Void then
+					Result.set_across_keyword (a_across)
+				end
+				if a_as /= Void then
+					Result.set_as_keyword (a_as)
+				end
+				if an_end /= Void then
+					Result.set_end_keyword (an_end)
+				end
+			end
+		end
+
+	new_across_some_expression (a_across: ET_KEYWORD; a_iterable_expression: ET_EXPRESSION;
+		a_as: ET_KEYWORD; a_cursor_name: ET_IDENTIFIER; an_invariant: ET_LOOP_INVARIANTS;
+		an_until_conditional: ET_CONDITIONAL; a_some_conditional: ET_CONDITIONAL;
+		a_variant: ET_VARIANT; an_end: ET_KEYWORD): ET_ACROSS_EXPRESSION
+			-- New across some expression
+		do
+			if a_iterable_expression /= Void and a_cursor_name /= Void and a_some_conditional /= Void then
+				create Result.make_some (a_iterable_expression, a_cursor_name, an_until_conditional, a_some_conditional)
+				Result.set_invariant_part (an_invariant)
+				Result.set_variant_part (a_variant)
+				if a_across /= Void then
+					Result.set_across_keyword (a_across)
+				end
+				if a_as /= Void then
+					Result.set_as_keyword (a_as)
+				end
+				if an_end /= Void then
+					Result.set_end_keyword (an_end)
+				end
+			end
+		end
 
 	new_actual_arguments (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_ACTUAL_ARGUMENT_LIST
 			-- New actual argument list with given capacity

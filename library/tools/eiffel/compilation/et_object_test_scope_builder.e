@@ -143,7 +143,7 @@ feature {ET_AST_NODE} -- Processing
 							--      x.do_something
 							--   end
 						set_fatal_error
-						error_handler.report_vuot1e_error (current_class, an_expression, l_other_object_test)
+						error_handler.report_vuot1f_error (current_class, an_expression, l_other_object_test)
 					else
 						scope.add_object_test (an_expression)
 					end

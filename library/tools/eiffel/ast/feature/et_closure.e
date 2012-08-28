@@ -5,7 +5,7 @@ note
 		"Eiffel closures, e.g. features, invariants, inline agents"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -52,6 +52,10 @@ feature -- Access
 			-- Object-tests declared in current closure;
 			-- Void if none
 
+	across_components: ET_ACROSS_COMPONENT_LIST
+			-- Across components declared in current closure;
+			-- Void if none
+
 	implementation_closure: ET_CLOSURE
 			-- Current closure viewed from the class where it has been implemented
 			--
@@ -71,6 +75,14 @@ feature -- Setting
 			object_tests := a_object_tests
 		ensure
 			object_tests_set: object_tests = a_object_tests
+		end
+
+	set_across_components (a_across_components: like across_components)
+			-- Set `across_components' to `a_across_components'.
+		do
+			across_components := a_across_components
+		ensure
+			across_components_set: across_components = a_across_components
 		end
 
 end

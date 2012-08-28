@@ -6,7 +6,7 @@ note
 		"Parsers for parser generators such as 'geyacc'"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -41,8 +41,8 @@ create
 %token <STRING> T_LIKE T_CURRENT T_EXPANDED T_REFERENCE T_SEPARATE T_ATTACHED T_DETACHABLE
 %token <INTEGER> T_NUMBER T_ERROR '|' ':'
 
-%type <STRING> Identifier Eiffel_basic_type_name
-%type <STRING> Type_mark Attached_type_mark Attached_type_mark_opt
+%type <STRING> Identifier Eiffel_basic_type_name Qualified_identifiers
+%type <STRING> Type_mark Type_mark_no_expanded_reference Type_mark_no_expanded_reference_opt
 %type <PR_TOKEN> Terminal Token_declaration Left_declaration Right_declaration Nonassoc_declaration
 %type <PR_TYPE> Eiffel_type Eiffel_type_no_identifier
 %type <DS_ARRAYED_LIST [PR_TYPE]> Eiffel_type_list Eiffel_generics
@@ -179,11 +179,11 @@ Eiffel_type_no_identifier: Type_mark T_IDENTIFIER
 		{
 			$$ := new_generic_type (Void, $1, $2)
 		}
-	| Attached_type_mark T_TUPLE
+	| Type_mark_no_expanded_reference T_TUPLE
 		{
 			$$ := new_type ($1, $2)
 		}
-	| Attached_type_mark T_TUPLE '[' ']'
+	| Type_mark_no_expanded_reference T_TUPLE '[' ']'
 		{
 			$$ := new_type ($1, $2)
 		}
@@ -191,7 +191,7 @@ Eiffel_type_no_identifier: Type_mark T_IDENTIFIER
 		{
 			$$ := new_type (Void, $1)
 		}
-	| Attached_type_mark T_TUPLE Eiffel_generics
+	| Type_mark_no_expanded_reference T_TUPLE Eiffel_generics
 		{
 			$$ := new_generic_type ($1, $2, $3)
 		}
@@ -199,7 +199,7 @@ Eiffel_type_no_identifier: Type_mark T_IDENTIFIER
 		{
 			$$ := new_generic_type (Void, $1, $2)
 		}
-	| Attached_type_mark T_TUPLE Eiffel_labeled_generics
+	| Type_mark_no_expanded_reference T_TUPLE Eiffel_labeled_generics
 		{
 			$$ := new_labeled_tuple_type ($1, $2, $3)
 		}
@@ -207,16 +207,38 @@ Eiffel_type_no_identifier: Type_mark T_IDENTIFIER
 		{
 			$$ := new_labeled_tuple_type (Void, $1, $2)
 		}
-	| Attached_type_mark_opt T_LIKE T_IDENTIFIER
+	| Type_mark_no_expanded_reference_opt T_LIKE T_IDENTIFIER
 		{
 			$$ := new_anchored_type ($1, $3)
 		}
-	| Attached_type_mark_opt T_LIKE T_CURRENT
+	| Type_mark_no_expanded_reference_opt T_LIKE T_CURRENT
 		{
 			$$ := new_like_current_type ($1)
 		}
+	| Type_mark_no_expanded_reference_opt T_LIKE T_IDENTIFIER Qualified_identifiers
+		{
+			$$ := new_anchored_type ($1, $3 + $4)
+		}
+	| Type_mark_no_expanded_reference_opt T_LIKE T_CURRENT Qualified_identifiers
+		{
+			$$ := new_anchored_type ($1, $3 + $4)
+		}
+	| Type_mark_no_expanded_reference_opt T_LIKE '{' Eiffel_type '}' Qualified_identifiers
+		{
+			$$ := new_qualified_anchored_type ($1, $4, $6)
+		}
 	;
 
+Qualified_identifiers: '.' T_IDENTIFIER
+		{
+			$$ := "." + $2
+		}
+	| Qualified_identifiers '.' T_IDENTIFIER
+		{
+			$$ := $1 + "." + $3
+		}
+	;
+	
 Eiffel_basic_type_name: T_INTEGER
 		{ $$ := $1 }
 	| T_INTEGER_8
@@ -265,28 +287,46 @@ Type_mark: T_EXPANDED
 		{ $$ := $1 }
 	| T_ATTACHED
 		{ $$ := $1 }
+	| T_ATTACHED T_SEPARATE
+		{ $$ := $1 + " " + $2 }
 	| T_DETACHABLE
 		{ $$ := $1 }
+	| T_DETACHABLE T_SEPARATE
+		{ $$ := $1 + " " + $2 }
 	| '!'
 		{ $$ := "!" }
+	| '!' T_SEPARATE
+		{ $$ := "! " + $2 }
 	| '?'
 		{ $$ := "?" }
+	| '?' T_SEPARATE
+		{ $$ := "? " + $2 }
 	;
 
-Attached_type_mark_opt: -- Empty
+Type_mark_no_expanded_reference: T_SEPARATE
+		{ $$ := $1 }
+	| T_ATTACHED
+		{ $$ := $1 }
+	| T_ATTACHED T_SEPARATE
+		{ $$ := $1 + " " + $2 }
+	| T_DETACHABLE
+		{ $$ := $1 }
+	| T_DETACHABLE T_SEPARATE
+		{ $$ := $1 + " " + $2 }
+	| '!'
+		{ $$ := "!" }
+	| '!' T_SEPARATE
+		{ $$ := "! " + $2 }
+	| '?'
+		{ $$ := "?" }
+	| '?' T_SEPARATE
+		{ $$ := "? " + $2 }
+	;
+	
+Type_mark_no_expanded_reference_opt: -- Empty
 		{ $$ := Void }
-	| Attached_type_mark
+	| Type_mark_no_expanded_reference
 		{ $$ := $1 }
-	;
-
-Attached_type_mark: T_ATTACHED
-		{ $$ := $1 }
-	| T_DETACHABLE
-		{ $$ := $1 }
-	| '!'
-		{ $$ := "!" }
-	| '?'
-		{ $$ := "?" }
 	;
 
 Eiffel_generics: '[' Eiffel_type_list ']'

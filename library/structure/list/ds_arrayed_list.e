@@ -5,7 +5,7 @@ note
 		"Lists implemented with arrays"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -88,6 +88,10 @@ feature {NONE} -- Initialization
 			nb := other.count
 			make (nb)
 			count := nb
+			if nb > 0 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				special_routines.force (storage, other.first, 0)
+			end
 			from
 				i := 1
 				other_cursor := other.new_cursor
@@ -95,7 +99,7 @@ feature {NONE} -- Initialization
 			until
 				i > nb
 			loop
-				storage.put (other_cursor.item, i)
+				special_routines.force (storage, other_cursor.item, i)
 				other_cursor.forth
 				i := i + 1
 			end
@@ -116,13 +120,17 @@ feature {NONE} -- Initialization
 			nb := other.count
 			make (nb)
 			count := nb
+			if nb > 0 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				special_routines.force (storage, other.item (other.lower), 0)
+			end
 			from
 				j := 1
 				i := other.lower
 			until
 				j > nb
 			loop
-				storage.put (other.item (i), j)
+				special_routines.force (storage, other.item (i), j)
 				j := j + 1
 				i := i + 1
 			end
@@ -285,7 +293,9 @@ feature -- Duplication
 					set_internal_cursor (Void)
 					set_internal_cursor (new_cursor)
 				end
-				storage := storage.twin
+					-- Note: do not use `storage.twin' because SPECIAL.copy may
+					-- shrink the 'capacity' down to 'count'.
+				storage := storage.resized_area (storage.capacity)
 			end
 		end
 
@@ -324,6 +334,10 @@ feature -- Element change
 			-- Do not move cursors.
 			-- (Performance: O(1).)
 		do
+			if i = 1 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				storage.put (v, 0)
+			end
 			storage.put (v, i)
 		end
 
@@ -340,8 +354,12 @@ feature -- Element change
 			-- Do not move cursors.
 			-- (Performance: O(1).)
 		do
+			if count = 0 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				special_routines.force (storage, v, 0)
+			end
 			count := count + 1
-			storage.put (v, count)
+			special_routines.force (storage, v, count)
 		end
 
 	put (v: G; i: INTEGER)
@@ -397,8 +415,12 @@ feature -- Element change
 			if not extendible (1) then
 				resize (new_capacity (count + 1))
 			end
+			if count = 0 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				special_routines.force (storage, v, 0)
+			end
 			count := count + 1
-			storage.put (v, count)
+			special_routines.force (storage, v, count)
 		end
 
 	force (v: G; i: INTEGER)
@@ -457,6 +479,10 @@ feature -- Element change
 			i: INTEGER
 			other_cursor: DS_LINEAR_CURSOR [G]
 		do
+			if count = 0 and other.count > 0 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				special_routines.force (storage, other.first, 0)
+			end
 			i := count + 1
 			other_cursor := other.new_cursor
 			from
@@ -464,7 +490,7 @@ feature -- Element change
 			until
 				other_cursor.after
 			loop
-				storage.put (other_cursor.item, i)
+				special_routines.force (storage, other_cursor.item, i)
 				i := i + 1
 				other_cursor.forth
 			end
@@ -609,11 +635,9 @@ feature -- removal
 			-- Remove item at end of list.
 			-- Move any cursors at this position `forth'.
 			-- (Performance: O(1).)
-		local
-			dead_item: G
 		do
 			move_last_cursors_after
-			storage.put (dead_item, count)
+			clear_items (count, count)
 			count := count - 1
 		end
 
@@ -621,15 +645,13 @@ feature -- removal
 			-- Remove item at `i'-th position.
 			-- Move any cursors at this position `forth'.
 			-- (Performance: O(count-i).)
-		local
-			dead_item: G
 		do
 			if i = count then
 				remove_last
 			else
 				move_cursors_left (i + 1)
 				move_left (i + 1, 1)
-				storage.put (dead_item, count + 1)
+				clear_items (count + 1, count + 1)
 			end
 		end
 
@@ -828,16 +850,39 @@ feature {NONE} -- Implementation
 			positive_offset: offset >= 0
 			extendible: extendible (offset)
 		local
-			j: INTEGER
+			j, nb: INTEGER
 		do
-			from
-				j := count
+			if i <= count then
+					-- Fill the gap between `count' and `i + offset' if any.
+				from
+					j := count + 1
+					nb := i + offset - 1
+				until
+					j > nb
+				loop
+					special_routines.force (storage, storage.item (i), j)
+					j := j + 1
+				end
+					-- Move items to positions after `count'.
+				from
+					nb := count + offset
+				until
+					j > nb
+				loop
+					special_routines.force (storage, storage.item (j - offset), j)
+					j := j + 1
+				end
+					-- Move items to positions before `count'.
+				from
+					j := count
+					nb := i + offset
+				until
+					j < nb
+				loop
+					storage.put (storage.item (j - offset), j)
+					j := j - 1
+				end
 				count := count + offset
-			until
-				j < i
-			loop
-				storage.put (storage.item (j), j + offset)
-				j := j - 1
 			end
 		ensure
 			count_set: count = old count + offset
@@ -873,17 +918,12 @@ feature {NONE} -- Implementation
 			s_large_enough: s >= 1
 			e_small_enough: e <= capacity
 			valid_bound: s <= e + 1
-		local
-			dead_item: G
-			i: INTEGER
 		do
-			from
-				i := s
-			until
-				i > e
-			loop
-				storage.put (dead_item, i)
-				i := i + 1
+			if s = 1 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				special_routines.keep_head (storage, 0, e + 1)
+			else
+				special_routines.keep_head (storage, s, e + 1)
 			end
 		end
 
@@ -1277,7 +1317,7 @@ feature {DS_ARRAYED_LIST_CURSOR} -- Cursor implementation
 invariant
 
 	storage_not_void: storage /= Void
-	capacity_definition: capacity = storage.count - 1
+	capacity_definition: capacity = storage.capacity - 1
 	special_routines_not_void: special_routines /= Void
 
 end

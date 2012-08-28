@@ -5,7 +5,7 @@ note
 		"Skeletons of scanners implemented with compressed tables"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -135,7 +135,7 @@ feature -- Scanning
 --	END INLINING 'yy_at_beginning_of_line'
 					if yyReject_or_variable_trail_context then
 							-- Set up for storing up states.
-						yy_state_stack.put (yy_current_state, 0)
+						SPECIAL_INTEGER_.force (yy_state_stack, yy_current_state, 0)
 						yy_state_count := 1
 					end
 					yy_goto := yyMatch
@@ -186,7 +186,7 @@ feature -- Scanning
 						end
 						yy_current_state := yy_nxt.item (yy_base.item (yy_current_state) + yy_c)
 						if yyReject_or_variable_trail_context then
-							yy_state_stack.put (yy_current_state, yy_state_count)
+							SPECIAL_INTEGER_.force (yy_state_stack, yy_current_state, yy_state_count)
 							yy_state_count := yy_state_count + 1
 						end
 						yy_cp := yy_cp + 1
@@ -445,7 +445,7 @@ feature {NONE} -- Implementation
 			yy_content_area := a_content.as_special
 			if yyReject_or_variable_trail_context then
 				nb := a_content.count + 1
-				if yy_state_stack.count < nb then
+				if yy_state_stack.capacity < nb then
 					yy_state_stack := SPECIAL_INTEGER_.resize (yy_state_stack, nb)
 				end
 			end
@@ -480,7 +480,7 @@ feature {NONE} -- Implementation
 --	END INLINING
 			if yyReject_or_variable_trail_context then
 					-- Set up for storing up states.
-				yy_state_stack.put (Result, 0)
+				SPECIAL_INTEGER_.force (yy_state_stack, Result, 0)
 				yy_state_count := 1
 			end
 			l_content_area := yy_content_area
@@ -529,7 +529,7 @@ feature {NONE} -- Implementation
 				end
 				Result := yy_nxt.item (yy_base.item (Result) + yy_c)
 				if yyReject_or_variable_trail_context then
-					yy_state_stack.put (Result, yy_state_count)
+					SPECIAL_INTEGER_.force (yy_state_stack, Result, yy_state_count)
 					yy_state_count := yy_state_count + 1
 				end
 				yy_cp := yy_cp + 1
@@ -572,7 +572,7 @@ feature {NONE} -- Implementation
 			end
 			Result := yy_nxt.item (yy_base.item (Result) + yy_c)
 			if yyReject_or_variable_trail_context then
-				yy_state_stack.put (Result, yy_state_count)
+				SPECIAL_INTEGER_.force (yy_state_stack, Result, yy_state_count)
 				yy_state_count := yy_state_count + 1
 			end
 			yy_is_jam := (Result = yyJam_state)

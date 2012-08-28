@@ -5,7 +5,7 @@ note
 		"Eiffel feature call handlers: traverse features and report when feature calls are found."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/04/06 $"
 	revision: "$Revision: #12 $"
@@ -23,6 +23,8 @@ inherit
 		undefine
 			make
 		redefine
+			process_across_expression,
+			process_across_instruction,
 			process_actual_parameter_list,
 			process_agent_argument_operand_list,
 			process_agent_typed_open_argument,
@@ -619,6 +621,99 @@ feature {NONE} -- Event handling
 		end
 
 feature {ET_AST_NODE} -- Processing
+
+	process_across_expression (an_expression: ET_ACROSS_EXPRESSION)
+			-- Process `an_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		local
+			l_invariant_part: ET_LOOP_INVARIANTS
+			l_variant_part: ET_VARIANT
+			l_conditional: ET_CONDITIONAL
+			had_error: BOOLEAN
+		do
+			reset_fatal_error (False)
+			process_expression (an_expression.iterable_expression)
+			had_error := has_fatal_error
+			if assertions_enabled then
+				l_invariant_part := an_expression.invariant_part
+				if l_invariant_part /= Void then
+					process_loop_invariants (l_invariant_part)
+					had_error := had_error or has_fatal_error
+				end
+			end
+			l_conditional := an_expression.until_conditional
+			if l_conditional /= Void then
+				process_expression (l_conditional.expression)
+			end
+			had_error := had_error or has_fatal_error
+			process_expression (an_expression.iteration_conditional.expression)
+			had_error := had_error or has_fatal_error
+			if assertions_enabled then
+				l_variant_part := an_expression.variant_part
+				if l_variant_part /= Void then
+					process_variant (l_variant_part)
+					had_error := had_error or has_fatal_error
+				end
+			end
+			process_expression (an_expression.new_cursor_expression)
+			had_error := had_error or has_fatal_error
+			process_expression (an_expression.cursor_after_expression)
+			had_error := had_error or has_fatal_error
+			an_expression.cursor_forth_instruction.process (Current)
+			had_error := had_error or has_fatal_error
+			reset_fatal_error (had_error)
+		end
+
+	process_across_instruction (an_instruction: ET_ACROSS_INSTRUCTION)
+			-- Process `an_instruction'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		local
+			l_compound: ET_COMPOUND
+			l_invariant_part: ET_LOOP_INVARIANTS
+			l_variant_part: ET_VARIANT
+			l_conditional: ET_CONDITIONAL
+			had_error: BOOLEAN
+		do
+			reset_fatal_error (False)
+			process_expression (an_instruction.iterable_expression)
+			had_error := has_fatal_error
+			l_compound := an_instruction.from_compound
+			if l_compound /= Void then
+				process_compound (l_compound)
+				had_error := had_error or has_fatal_error
+			end
+			if assertions_enabled then
+				l_invariant_part := an_instruction.invariant_part
+				if l_invariant_part /= Void then
+					process_loop_invariants (l_invariant_part)
+					had_error := had_error or has_fatal_error
+				end
+			end
+			l_conditional := an_instruction.until_conditional
+			if l_conditional /= Void then
+				process_expression (l_conditional.expression)
+			end
+			had_error := had_error or has_fatal_error
+			l_compound := an_instruction.loop_compound
+			if l_compound /= Void then
+				process_compound (l_compound)
+				had_error := had_error or has_fatal_error
+			end
+			if assertions_enabled then
+				l_variant_part := an_instruction.variant_part
+				if l_variant_part /= Void then
+					process_variant (l_variant_part)
+					had_error := had_error or has_fatal_error
+				end
+			end
+			process_expression (an_instruction.new_cursor_expression)
+			had_error := had_error or has_fatal_error
+			process_expression (an_instruction.cursor_after_expression)
+			had_error := had_error or has_fatal_error
+			an_instruction.cursor_forth_instruction.process (Current)
+			had_error := had_error or has_fatal_error
+			reset_fatal_error (had_error)
+		end
 
 	process_actual_arguments (a_list: ET_ACTUAL_ARGUMENTS)
 			-- Process `a_list'.
@@ -1550,6 +1645,8 @@ feature {ET_AST_NODE} -- Processing
 				-- Do nothing
 			elseif l_name.is_object_test_local then
 				-- Do nothing
+			elseif l_name.is_across_cursor then
+				-- Do nothing
 			else
 					-- This is of the form '$feature_name'.
 				l_procedure := current_class.seeded_procedure (l_seed)
@@ -1633,6 +1730,8 @@ feature {ET_AST_NODE} -- Processing
 			elseif an_identifier.is_local then
 				-- Do nothing
 			elseif an_identifier.is_object_test_local then
+				-- Do nothing
+			elseif an_identifier.is_across_cursor then
 				-- Do nothing
 			elseif an_identifier.is_instruction then
 				process_unqualified_call_instruction (an_identifier)

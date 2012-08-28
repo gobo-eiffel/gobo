@@ -5,7 +5,7 @@ note
 		"Stacks (Last-In, First-Out) implemented with arrays"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/10/06 $"
 	revision: "$Revision: #10 $"
@@ -223,8 +223,12 @@ feature -- Element change
 	put (v: G)
 			-- Push `v' on stack.
 		do
+			if count = 0 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				special_routines.force (storage, v, 0)
+			end
 			count := count + 1
-			storage.put (v, count)
+			special_routines.force (storage, v, count)
 		end
 
 	force (v: G)
@@ -234,13 +238,21 @@ feature -- Element change
 			if not extendible (1) then
 				resize (new_capacity (count + 1))
 			end
+			if count = 0 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				special_routines.force (storage, v, 0)
+			end
 			count := count + 1
-			storage.put (v, count)
+			special_routines.force (storage, v, count)
 		end
 
 	replace (v: G)
 			-- Replace top item by `v'.
 		do
+			if count = 1 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				storage.put (v, 0)
+			end
 			storage.put (v, count)
 		end
 
@@ -251,6 +263,10 @@ feature -- Element change
 			i: INTEGER
 			other_cursor: DS_LINEAR_CURSOR [G]
 		do
+			if count = 0 and other.count > 0 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				special_routines.force (storage, other.first, 0)
+			end
 			i := count + 1
 			other_cursor := other.new_cursor
 			from
@@ -258,7 +274,7 @@ feature -- Element change
 			until
 				other_cursor.after
 			loop
-				storage.put (other_cursor.item, i)
+				special_routines.force (storage, other_cursor.item, i)
 				i := i + 1
 				other_cursor.forth
 			end
@@ -283,10 +299,8 @@ feature -- Removal
 
 	remove
 			-- Remove top item from stack.
-		local
-			dead_item: G
 		do
-			storage.put (dead_item, count)
+			clear_items (count, count)
 			count := count - 1
 		end
 
@@ -475,17 +489,12 @@ feature {NONE} -- Implementation
 			s_large_enough: s >= 1
 			e_small_enough: e <= capacity
 			valid_bound: s <= e + 1
-		local
-			dead_item: G
-			i: INTEGER
 		do
-			from
-				i := s
-			until
-				i > e
-			loop
-				storage.put (dead_item, i)
-				i := i + 1
+			if s = 1 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				special_routines.keep_head (storage, 0, e + 1)
+			else
+				special_routines.keep_head (storage, s, e + 1)
 			end
 		end
 
@@ -495,7 +504,7 @@ feature {NONE} -- Implementation
 invariant
 
 	storage_not_void: storage /= Void
-	capacity_definition: capacity = storage.count - 1
+	capacity_definition: capacity = storage.capacity - 1
 	special_routines_not_void: special_routines /= Void
 
 end

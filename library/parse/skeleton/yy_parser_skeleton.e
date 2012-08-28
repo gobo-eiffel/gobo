@@ -6,7 +6,7 @@ note
 
 	remark: "To be used with 'geyacc --new_typing'."
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -125,7 +125,7 @@ feature -- Parsing
 						std.error.put_integer (yystate)
 						std.error.put_character ('%N')
 					end
-					yyss.put (yystate, yyssp)
+					SPECIAL_INTEGER_.force (yyss, yystate, yyssp)
 						-- Do appropriate processing given the current state.
 						-- Read a lookahead token if one is needed.
 					yyn := yypact.item (yystate)
@@ -802,6 +802,11 @@ feature {NONE} -- Implementation
 			-- `parse' before exiting.
 		do
 			clear_all
+		end
+
+	yy_run_geyacc
+			-- You must run geyacc to regenerate this class.
+		deferred
 		end
 
 feature {NONE} -- Constants

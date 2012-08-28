@@ -6,7 +6,7 @@ note
 		%hash sets which should supply its hashing mechanism."
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -181,14 +181,15 @@ feature {NONE} -- Implementation
 		local
 			subitems: SPECIAL [G]
 			j: INTEGER
+			l_dead_item: G
 		do
 			j := i // chunk_size
 			subitems := item_storage.item (j)
 			if subitems = Void then
-				subitems := special_item_routines.make (chunk_size)
+				subitems := special_item_routines.make_filled (l_dead_item, chunk_size)
 				item_storage.put (subitems, j)
 			end
-			subitems.put (v, i \\ chunk_size)
+			special_item_routines.force (subitems, v, i \\ chunk_size)
 		end
 
 	clone_item_storage
@@ -206,7 +207,9 @@ feature {NONE} -- Implementation
 			loop
 				subitems := item_storage.item (i)
 				if subitems /= Void then
-					item_storage.put (subitems.twin, i)
+						-- Note that SPECIAL.copy may shrink 'capacity'
+						-- down to 'count'. So do not use SPECIAL.twin here.
+					item_storage.put (subitems.resized_area (subitems.capacity), i)
 				end
 				i := i + 1
 			end
@@ -256,7 +259,7 @@ feature {NONE} -- Implementation
 			j := i // chunk_size
 			subclashes := clashes.item (j)
 			if subclashes = Void then
-				subclashes := SPECIAL_INTEGER_.make (chunk_size)
+				subclashes := SPECIAL_INTEGER_.make_filled (0, chunk_size)
 				clashes.put (subclashes, j)
 			end
 			subclashes.put (v, i \\ chunk_size)
@@ -277,7 +280,9 @@ feature {NONE} -- Implementation
 			loop
 				subclashes := clashes.item (i)
 				if subclashes /= Void then
-					clashes.put (subclashes.twin, i)
+						-- Note that SPECIAL.copy may shrink 'capacity'
+						-- down to 'count'. So do not use SPECIAL.twin here.
+					clashes.put (subclashes.resized_area (subclashes.capacity), i)
 				end
 				i := i + 1
 			end
@@ -336,7 +341,7 @@ feature {NONE} -- Implementation
 			j := i // chunk_size
 			subslots := slots.item (j)
 			if subslots = Void then
-				subslots := SPECIAL_INTEGER_.make (chunk_size)
+				subslots := SPECIAL_INTEGER_.make_filled (0, chunk_size)
 				slots.put (subslots, j)
 			end
 			subslots.put (v, i \\ chunk_size)
@@ -357,7 +362,9 @@ feature {NONE} -- Implementation
 			loop
 				subslots := slots.item (i)
 				if subslots /= Void then
-					slots.put (subslots.twin, i)
+						-- Note that SPECIAL.copy may shrink 'capacity'
+						-- down to 'count'. So do not use SPECIAL.twin here.
+					slots.put (subslots.resized_area (subslots.capacity), i)
 				end
 				i := i + 1
 			end

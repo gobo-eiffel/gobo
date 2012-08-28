@@ -335,7 +335,7 @@ feature {NONE} -- Usage message
 			create Result.make ("[defines][options] command [xace-file]%N%
 				%%Tdefines:  --define=%"VAR_NAME[=VALUE]( VAR_NAME[=VALUE])*%"%N%
 				%%Toptions:  --verbose|--shallow%N%
-				%%Tcommand:  --system=(ge|ise [--format=(ace|ecf|xace)][--output=<filename>]%N%
+				%%Tcommand:  --system=(ge|ise) [--format=(ace|ecf|xace)][--output=<filename>]%N%
 				%%Tcommand:  --library=(ge|ise) [--format=(ace|ecf|xace)][--output=<filename>]%N%
 				%%Tcommand:  --validate")
 		ensure

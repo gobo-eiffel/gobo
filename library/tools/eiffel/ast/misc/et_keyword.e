@@ -5,7 +5,7 @@ note
 		"Eiffel keywords"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,6 +35,7 @@ inherit
 
 create
 
+	make_across,
 	make_alias,
 	make_all,
 	make_as,
@@ -82,6 +83,7 @@ create
 	make_rescue,
 	make_select,
 	make_separate,
+	make_some,
 	make_strip,
 	make_then,
 	make_undefine,
@@ -91,6 +93,17 @@ create
 	make_when
 
 feature {NONE} -- Initialization
+
+	make_across
+			-- Create a new 'across' keyword.
+		do
+			code := tokens.across_keyword_code
+			make_token (tokens.across_keyword_name)
+		ensure
+			is_acorss: is_across
+			line_set: line = no_line
+			column_set: column = no_column
+		end
 
 	make_agent
 			-- Create a new 'agent' keyword.
@@ -719,6 +732,17 @@ feature {NONE} -- Initialization
 			column_set: column = no_column
 		end
 
+	make_some
+			-- Create a new 'some' keyword.
+		do
+			code := tokens.some_keyword_code
+			make_token (tokens.some_keyword_name)
+		ensure
+			is_some: is_some
+			line_set: line = no_line
+			column_set: column = no_column
+		end
+
 	make_strip
 			-- Create a new 'strip' keyword.
 		do
@@ -830,6 +854,12 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Status report
+
+	is_across: BOOLEAN
+			-- Is current keyword 'across'?
+		do
+			Result := (code = tokens.across_keyword_code)
+		end
 
 	is_agent: BOOLEAN
 			-- Is current keyword 'agent'?
@@ -1171,6 +1201,12 @@ feature -- Status report
 			-- Is current keyword 'separate'?
 		do
 			Result := (code = tokens.separate_keyword_code)
+		end
+
+	is_some: BOOLEAN
+			-- Is current keyword 'some'?
+		do
+			Result := (code = tokens.some_keyword_code)
 		end
 
 	is_strip: BOOLEAN

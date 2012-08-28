@@ -5,7 +5,7 @@ note
 		"Eiffel class codes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date:  $"
 	revision: "$Revision: $"
@@ -146,6 +146,12 @@ feature -- Codes
 	disposable_class_code: NATURAL_8 = 107
 			-- Code for class "DISPOSABLE"
 
+	iterable_class_code: NATURAL_8 = 108
+			-- Code for class "ITERABLE"
+
+	iteration_cursor_class_code: NATURAL_8 = 109
+			-- Code for class "ITERATION_CURSOR"
+
 	codes_by_name: DS_HASH_TABLE [NATURAL_8, ET_CLASS_NAME]
 			-- Class codes indexed by class names
 		once
@@ -177,6 +183,8 @@ feature -- Codes
 			Result.force_last (any_class_code, tokens.any_class_name)
 			Result.force_last (system_object_class_code, tokens.system_object_class_name)
 			Result.force_last (disposable_class_code, tokens.disposable_class_name)
+			Result.force_last (iterable_class_code, tokens.iterable_class_name)
+			Result.force_last (iteration_cursor_class_code, tokens.iteration_cursor_class_name)
 		ensure
 			codes_by_name_not_void: Result /= Void
 		end

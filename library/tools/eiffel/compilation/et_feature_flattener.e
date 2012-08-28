@@ -5,7 +5,7 @@ note
 		"Eiffel class feature flatteners"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1675,6 +1675,44 @@ feature {NONE} -- Kernel feature validity
 					end
 				else
 					current_system.set_dispose_seed (0)
+				end
+			elseif l_class.is_iterable_class then
+					-- ITERABLE.new_cursor.
+				named_features.search (tokens.new_cursor_feature_name)
+				if named_features.found then
+					l_feature := named_features.found_item.flattened_feature
+					if l_feature.is_query then
+						current_system.set_iterable_new_cursor_seed (l_feature.first_seed)
+					else
+						current_system.set_iterable_new_cursor_seed (0)
+					end
+				else
+					current_system.set_iterable_new_cursor_seed (0)
+				end
+			elseif l_class.is_iteration_cursor_class then
+					-- ITERATION_CUREOR.after.
+				named_features.search (tokens.after_feature_name)
+				if named_features.found then
+					l_feature := named_features.found_item.flattened_feature
+					if l_feature.is_query then
+						current_system.set_iteration_cursor_after_seed (l_feature.first_seed)
+					else
+						current_system.set_iteration_cursor_after_seed (0)
+					end
+				else
+					current_system.set_iteration_cursor_after_seed (0)
+				end
+					-- ITERATION_CUREOR.forth.
+				named_features.search (tokens.forth_feature_name)
+				if named_features.found then
+					l_feature := named_features.found_item.flattened_feature
+					if l_feature.is_procedure then
+						current_system.set_iteration_cursor_forth_seed (l_feature.first_seed)
+					else
+						current_system.set_iteration_cursor_forth_seed (0)
+					end
+				else
+					current_system.set_iteration_cursor_forth_seed (0)
 				end
 			end
 		end

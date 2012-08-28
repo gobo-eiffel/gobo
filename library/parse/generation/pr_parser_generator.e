@@ -5,7 +5,7 @@ note
 		"Parser generators"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -129,6 +129,8 @@ feature -- Generation
 				print_pop_last_value (a_file)
 				a_file.put_new_line
 			end
+			print_dummy_feature (a_file)
+			a_file.put_new_line
 			a_file.put_string ("feature {NONE} -- Semantic actions%N%N")
 			if actions_separated then
 				print_separated_actions (a_file)
@@ -1318,6 +1320,18 @@ feature {NONE} -- Generation
 			a_file.put_integer (yyNsyms)
 			a_file.put_string ("%N%T%T%T-- Number of symbols%
 				%%N%T%T%T-- (terminal and nonterminal)%N")
+		end
+
+	print_dummy_feature (a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print code for `yy_run_geyacc' to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_line ("%Tyy_run_geyacc")
+			a_file.put_line ("%T%T%T-- You must run geyacc to regenerate this class.")
+			a_file.put_line ("%T%Tdo")
+			a_file.put_line ("%T%Tend")
 		end
 
 feature {NONE} -- Building

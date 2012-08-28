@@ -5,7 +5,7 @@ note
 		"Eiffel Void entities"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,7 +23,7 @@ inherit
 		rename
 			make_void as make
 		undefine
-			is_current
+			is_current, is_false
 		redefine
 			process
 		end

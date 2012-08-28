@@ -5,7 +5,7 @@ note
 		"Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2011/09/15 $"
 	revision: "$Revision: #46 $"
@@ -342,6 +342,18 @@ feature -- Status report
 			-- Is current class the "FUNCTION" class?
 		do
 			Result := class_code = class_codes.function_class_code
+		end
+
+	is_iterable_class: BOOLEAN
+			-- Is current class the "ITERABLE" class?
+		do
+			Result := class_code = class_codes.iterable_class_code
+		end
+
+	is_iteration_cursor_class: BOOLEAN
+			-- Is current class the "ITERATION_CURSOR" class?
+		do
+			Result := class_code = class_codes.iteration_cursor_class_code
 		end
 
 	is_predicate_class: BOOLEAN
@@ -1454,7 +1466,9 @@ feature -- Conversion
 				from i := 1 until i > nb loop
 					a_feature := convert_features.convert_feature (i)
 					if a_feature.is_convert_to then
-						if a_feature.types.has_named_type (other_type, other, a_type) then
+							-- Do not take into account the attachment and
+							-- separateness status of the types involved.
+						if a_feature.types.has_named_type_with_type_marks (other_type, tokens.attached_separate_type_mark, other, tokens.attached_separate_type_mark, a_type) then
 							Result := a_feature
 							i := nb + 1 -- Jump out of the loop.
 						end
@@ -1484,7 +1498,9 @@ feature -- Conversion
 				from i := 1 until i > nb loop
 					a_feature := convert_features.convert_feature (i)
 					if a_feature.is_convert_from then
-						if a_feature.types.has_named_type (other_type, other, a_type) then
+							-- Do not take into account the attachment and
+							-- separateness status of the types involved.
+						if a_feature.types.has_named_type_with_type_marks (other_type, tokens.attached_separate_type_mark, other, tokens.attached_separate_type_mark, a_type) then
 							Result := a_feature
 							i := nb + 1 -- Jump out of the loop.
 						end

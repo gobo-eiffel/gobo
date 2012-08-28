@@ -9,7 +9,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2011-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -145,6 +145,14 @@ feature -- Status report
 				end
 			end
 		end
+
+	is_code_unreachable: BOOLEAN
+			-- Has an instruction which makes the code appearing after it unreachable been executed?
+			--
+			-- Currently only the following instructions are taken into account:
+			--    check False then ... end
+			--
+			-- Starting with ISE 7.0.8.7345, void-safety errors in unreachable code are not reported.
 
 feature -- Access
 
@@ -298,6 +306,14 @@ feature -- Element change
 			name_removed: not has_name (a_name)
 		end
 
+	set_code_unreachable (b: BOOLEAN)
+			-- Set `is_code_unreachable' to `b'.
+		do
+			is_code_unreachable := b
+		ensure
+			code_unreachable_set: is_code_unreachable = b
+		end
+
 	copy_scope (other: ET_ATTACHMENT_SCOPE)
 			-- Make sure that `Current' has the same entities as `other'.
 		require
@@ -310,6 +326,7 @@ feature -- Element change
 			attributes_attached.wipe_out
 			attributes_attached.append_last (other.attributes_attached)
 			result_attached := other.result_attached
+			is_code_unreachable := other.is_code_unreachable
 		end
 
 	merge_scope (other: ET_ATTACHMENT_SCOPE)
@@ -358,6 +375,9 @@ feature -- Element change
 					attributes_attached.forth
 				end
 			end
+			if is_code_unreachable and not other.is_code_unreachable then
+				is_code_unreachable := False
+			end
 		end
 
 	wipe_out
@@ -368,6 +388,7 @@ feature -- Element change
 			arguments_attached.wipe_out
 			attributes_attached.wipe_out
 			result_attached := False
+			is_code_unreachable := False
 		end
 
 invariant

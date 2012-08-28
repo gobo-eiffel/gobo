@@ -5,7 +5,7 @@ note
 		"Routines that ought to be in class ARRAY"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,9 +35,15 @@ feature -- Initialization
 	make_empty_with_lower (min_index: INTEGER): ARRAY [G]
 			-- Create an empty array with `min_index' as lower bound.
 		local
-			l_default: G
+			l_array: KL_ARRAY [G]
 		do
-			create Result.make_filled (l_default, min_index, min_index - 1)
+			if min_index = 1 then
+				create Result.make_empty
+			else
+				create l_array.make_empty
+				l_array.new_rebase (min_index)
+				create Result.make_from_array (l_array)
+			end
 		ensure
 			array_not_void: Result /= Void
 			lower_set: Result.lower = min_index

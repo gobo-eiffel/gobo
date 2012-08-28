@@ -5,7 +5,7 @@ note
 		"Gec commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2005-2011, Sven Ehrke and others"
+	copyright: "Copyright (c) 2005-2012, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -285,6 +285,13 @@ feature -- Execution
 					i := i + 1
 				end
 				a_name := clean + ".tds"
+				if file_system.file_exists (a_name) then
+					project.trace (<<"  [gec] delete ", a_name>>)
+					if not project.options.no_exec then
+						file_system.delete_file (a_name)
+					end
+				end
+				a_name := clean + ".res"
 				if file_system.file_exists (a_name) then
 					project.trace (<<"  [gec] delete ", a_name>>)
 					if not project.options.no_exec then

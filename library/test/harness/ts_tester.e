@@ -5,7 +5,7 @@ note
 		"Testers: test harness to execute registered test cases"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/12/24 $"
 	revision: "$Revision: #13 $"
@@ -22,6 +22,8 @@ inherit
 	KL_SHARED_EXCEPTIONS
 
 	KL_SHARED_STANDARD_FILES
+
+	KL_SHARED_FILE_SYSTEM
 
 	KL_IMPORTED_STRING_ROUTINES
 
@@ -96,9 +98,26 @@ feature -- Status report
 			-- (Useful when the current tester is root of a test harness
 			-- application, otherwise return False.)
 
-	enabled_test_cases: RX_REGULAR_EXPRESSION
-			-- Only test cases whose name matches this regexp will
+	enabled_test_cases: DS_LINKED_LIST [RX_REGULAR_EXPRESSION]
+			-- Only test cases whose name matches one of these regexps will
 			-- be executed, or execute all test cases is Void
+
+	disabled_test_cases: DS_LINKED_LIST [RX_REGULAR_EXPRESSION]
+			-- Test cases whose name matches one of these regexps will
+			-- not be executed
+
+	success_output_filename: STRING
+			-- Name of file where to print the name of tests
+			-- when successfully executed
+
+	failure_output_filename: STRING
+			-- Name of file where to print the name of tests when failed
+
+	abort_output_filename: STRING
+			-- Name of file where to print the name of tests when aborted
+
+	completed_output_filename: STRING
+			-- Name of file where to print the name of tests when completed
 
 feature -- Status setting
 
@@ -118,14 +137,86 @@ feature -- Status setting
 			progress_status_set: progress_status = b
 		end
 
-	set_enabled_test_cases (a_regexp: like enabled_test_cases)
+	set_enabled_test_cases (a_test_cases: like enabled_test_cases)
 			-- Set `enabled_test_cases' to `a_regexp'.
 		require
-			compiled: a_regexp /= Void implies a_regexp.is_compiled
+			no_void_test_case: a_test_cases /= Void implies not a_test_cases.has_void
+			test_cases_compiled: a_test_cases /= Void implies a_test_cases.for_all (agent {RX_REGULAR_EXPRESSION}.is_compiled)
 		do
-			enabled_test_cases := a_regexp
+			enabled_test_cases := a_test_cases
 		ensure
-			enabled_test_cases_set: enabled_test_cases = a_regexp
+			enabled_test_cases_set: enabled_test_cases = a_test_cases
+		end
+
+	add_enabled_test_cases (a_regexp: RX_REGULAR_EXPRESSION)
+			-- Add `a_regexp' to `enabled_test_cases'.
+		require
+			a_regexp_not_void: a_regexp /= Void
+			a_regexp_compiled: a_regexp.is_compiled
+		do
+			if enabled_test_cases = Void then
+				create enabled_test_cases.make
+			end
+			enabled_test_cases.force_last (a_regexp)
+		ensure
+			added: enabled_test_cases /= Void and then enabled_test_cases.has (a_regexp)
+		end
+
+	set_disabled_test_cases (a_test_cases: like disabled_test_cases)
+			-- Set `disabled_test_cases' to `a_test_cases'.
+		require
+			no_void_test_case: a_test_cases /= Void implies not a_test_cases.has_void
+			test_cases_compiled: a_test_cases /= Void implies a_test_cases.for_all (agent {RX_REGULAR_EXPRESSION}.is_compiled)
+		do
+			disabled_test_cases := a_test_cases
+		ensure
+			disabled_test_cases_set: disabled_test_cases = a_test_cases
+		end
+
+	add_disabled_test_cases (a_regexp: RX_REGULAR_EXPRESSION)
+			-- Add `a_regexp' to `disabled_test_cases'.
+		require
+			a_regexp_not_void: a_regexp /= Void
+			a_regexp_compiled: a_regexp.is_compiled
+		do
+			if disabled_test_cases = Void then
+				create disabled_test_cases.make
+			end
+			disabled_test_cases.force_last (a_regexp)
+		ensure
+			added: disabled_test_cases /= Void and then disabled_test_cases.has (a_regexp)
+		end
+
+	set_success_output_filename (a_filename: like success_output_filename)
+			-- Set `success_output_filename' to `a_filename'.
+		do
+			success_output_filename := a_filename
+		ensure
+			success_output_filename_set: success_output_filename = a_filename
+		end
+
+	set_failure_output_filename (a_filename: like failure_output_filename)
+			-- Set `failure_output_filename' to `a_filename'.
+		do
+			failure_output_filename := a_filename
+		ensure
+			failure_output_filename_set: failure_output_filename = a_filename
+		end
+
+	set_abort_output_filename (a_filename: like abort_output_filename)
+			-- Set `abort_output_filename' to `a_filename'.
+		do
+			abort_output_filename := a_filename
+		ensure
+			abort_output_filename_set: abort_output_filename = a_filename
+		end
+
+	set_completed_output_filename (a_filename: like completed_output_filename)
+			-- Set `completed_output_filename' to `a_filename'.
+		do
+			completed_output_filename := a_filename
+		ensure
+			completed_output_filename_set: completed_output_filename = a_filename
 		end
 
 feature -- Element change
@@ -204,13 +295,87 @@ feature -- Execution
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
-			a_suite: like suite
+			l_suite: like suite
+			l_old_success_output: KI_TEXT_OUTPUT_STREAM
+			l_old_failure_output: KI_TEXT_OUTPUT_STREAM
+			l_old_abort_output: KI_TEXT_OUTPUT_STREAM
+			l_old_completed_output: KI_TEXT_OUTPUT_STREAM
+			l_success_file: KL_TEXT_OUTPUT_FILE
+			l_failure_file: KL_TEXT_OUTPUT_FILE
+			l_abort_file: KL_TEXT_OUTPUT_FILE
+			l_completed_file: KL_TEXT_OUTPUT_FILE
+			l_cannot_write: UT_CANNOT_WRITE_TO_FILE_ERROR
 		do
-			a_suite := suite
+			l_suite := suite
 			a_summary.set_fail_on_rescue (fail_on_rescue)
 			a_summary.set_enabled_test_cases (enabled_test_cases)
-			a_suite.execute (a_summary)
-			a_summary.print_summary (a_suite, a_file)
+			a_summary.set_disabled_test_cases (disabled_test_cases)
+			l_old_success_output := a_summary.success_output
+			if success_output_filename /= Void then
+				create l_success_file.make (success_output_filename)
+				l_success_file.recursive_open_append
+				if l_success_file.is_open_write then
+					a_summary.set_success_output (l_success_file)
+				else
+					l_success_file := Void
+					create l_cannot_write.make (success_output_filename)
+					report_error (l_cannot_write)
+				end
+			end
+			l_old_failure_output := a_summary.failure_output
+			if failure_output_filename /= Void then
+				create l_failure_file.make (failure_output_filename)
+				l_failure_file.recursive_open_append
+				if l_failure_file.is_open_write then
+					a_summary.set_failure_output (l_failure_file)
+				else
+					l_failure_file := Void
+					create l_cannot_write.make (failure_output_filename)
+					report_error (l_cannot_write)
+				end
+			end
+			l_old_abort_output := a_summary.abort_output
+			if abort_output_filename /= Void then
+				create l_abort_file.make (abort_output_filename)
+				l_abort_file.recursive_open_append
+				if l_abort_file.is_open_write then
+					a_summary.set_abort_output (l_abort_file)
+				else
+					l_abort_file := Void
+					create l_cannot_write.make (abort_output_filename)
+					report_error (l_cannot_write)
+				end
+			end
+			l_old_completed_output := a_summary.completed_output
+			if completed_output_filename /= Void then
+				create l_completed_file.make (completed_output_filename)
+				l_completed_file.recursive_open_append
+				if l_completed_file.is_open_write then
+					a_summary.set_completed_output (l_completed_file)
+				else
+					l_completed_file := Void
+					create l_cannot_write.make (completed_output_filename)
+					report_error (l_cannot_write)
+				end
+			end
+			l_suite.execute (a_summary)
+			if l_success_file /= Void then
+				a_summary.set_success_output (l_old_success_output)
+				l_success_file.close
+			end
+			if l_failure_file /= Void then
+				a_summary.set_failure_output (l_old_failure_output)
+				l_failure_file.close
+			end
+			if l_abort_file /= Void then
+				a_summary.set_abort_output (l_old_abort_output)
+				l_abort_file.close
+			end
+			if l_completed_file /= Void then
+				a_summary.set_completed_output (l_old_completed_output)
+				l_completed_file.close
+			end
+			a_summary.print_summary (l_suite, a_file)
 			if not a_summary.is_successful then
 				if not progress_status then
 					a_file.put_new_line
@@ -235,10 +400,11 @@ feature {NONE} -- Command line
 			arg: STRING
 			l_regexp: RX_PCRE_REGULAR_EXPRESSION
 			l_error: UT_MESSAGE
-			l_filters: STRING
 			l_cannot_read: UT_CANNOT_READ_FILE_ERROR
 			l_file: KL_TEXT_INPUT_FILE
 			l_regexp_name: STRING
+			l_message: UT_MESSAGE
+			l_warning: UT_MESSAGE
 		do
 			nb := Arguments.argument_count
 			from
@@ -247,7 +413,11 @@ feature {NONE} -- Command line
 				i > nb
 			loop
 				arg := Arguments.argument (i)
-				if arg.is_equal ("-o") then
+				if arg.is_equal ("-h") or arg.is_equal ("--help") then
+					create l_message.make (Help_message)
+					error_handler.report_info (l_message)
+					Exceptions.die (0)
+				elseif arg.is_equal ("-o") then
 					if i < nb then
 						i := i + 1
 						output_filename := Arguments.argument (i)
@@ -272,7 +442,11 @@ feature {NONE} -- Command line
 						l_regexp.set_caseless (True)
 						l_regexp.compile (arg)
 						if l_regexp.is_compiled then
-							set_enabled_test_cases (l_regexp)
+							add_enabled_test_cases (l_regexp)
+							if file_system.file_exists (arg) then
+								create l_warning.make ("Warning: Regular expression specified in the --filter option is also the name of a file.")
+								error_handler.report_warning (l_warning)
+							end
 						else
 							create l_error.make ("Invalid regular expression for --filter: " + arg)
 							report_error (l_error)
@@ -302,27 +476,106 @@ feature {NONE} -- Command line
 								elseif l_regexp_name.starts_with ("--") then
 									-- Ignore comment.
 								else
-									if l_filters = Void then
-										l_filters := "(" + l_regexp_name + ")"
+									create l_regexp.make
+									l_regexp.set_caseless (True)
+									l_regexp.compile (l_regexp_name)
+									if l_regexp.is_compiled then
+										add_enabled_test_cases (l_regexp)
 									else
-										l_filters := l_filters + "|(" + l_regexp_name + ")"
+										create l_error.make ("Invalid regular expression '" + l_regexp_name + "' found in --filters file '" + arg + "'")
+										report_error (l_error)
 									end
 								end
 								l_file.read_line
 							end
 							l_file.close
-							if l_filters /= Void then
-								create l_regexp.make
-								l_regexp.set_caseless (True)
-								l_regexp.compile (l_filters)
-								if l_regexp.is_compiled then
-									set_enabled_test_cases (l_regexp)
-								else
-									create l_error.make ("Invalid regular expression built for --filters: " + l_filters)
-									report_error (l_error)
-								end
-							end
 						end
+					else
+						report_usage_error
+					end
+				elseif arg.count >= 17 and then arg.substring (1, 17).is_equal ("--exclude_filter=") then
+					if arg.count > 17 then
+						arg := arg.substring (18, arg.count)
+						create l_regexp.make
+						l_regexp.set_caseless (True)
+						l_regexp.compile (arg)
+						if l_regexp.is_compiled then
+							add_disabled_test_cases (l_regexp)
+							if file_system.file_exists (arg) then
+								create l_warning.make ("Warning: Regular expression specified in the --exclude_filter option is also the name of a file.")
+								error_handler.report_warning (l_warning)
+							end
+						else
+							create l_error.make ("Invalid regular expression for --exclude_filter: " + arg)
+							report_error (l_error)
+						end
+					else
+						report_usage_error
+					end
+				elseif arg.count >= 18 and then arg.substring (1, 18).is_equal ("--exclude_filters=") then
+					if arg.count > 18 then
+						arg := arg.substring (19, arg.count)
+						create l_file.make (arg)
+						l_file.open_read
+						if not l_file.is_open_read then
+							create l_cannot_read.make (arg)
+							report_error (l_cannot_read)
+						else
+							from
+								l_file.read_line
+							until
+								l_file.end_of_file
+							loop
+								l_regexp_name := l_file.last_string.twin
+								STRING_.left_adjust (l_regexp_name)
+								STRING_.right_adjust (l_regexp_name)
+								if l_regexp_name.is_empty then
+									-- Do nothing.
+								elseif l_regexp_name.starts_with ("--") then
+									-- Ignore comment.
+								else
+									create l_regexp.make
+									l_regexp.set_caseless (True)
+									l_regexp.compile (l_regexp_name)
+									if l_regexp.is_compiled then
+										add_disabled_test_cases (l_regexp)
+									else
+										create l_error.make ("Invalid regular expression '" + l_regexp_name + "' found in --exclude_filters file '" + arg + "'")
+										report_error (l_error)
+									end
+								end
+								l_file.read_line
+							end
+							l_file.close
+						end
+					else
+						report_usage_error
+					end
+				elseif arg.count >= 17 and then arg.substring (1, 17).is_equal ("--success_output=") then
+					if arg.count > 17 then
+						arg := arg.substring (18, arg.count)
+						set_success_output_filename (arg)
+					else
+						report_usage_error
+					end
+				elseif arg.count >= 17 and then arg.substring (1, 17).is_equal ("--failure_output=") then
+					if arg.count > 17 then
+						arg := arg.substring (18, arg.count)
+						set_failure_output_filename (arg)
+					else
+						report_usage_error
+					end
+				elseif arg.count >= 15 and then arg.substring (1, 15).is_equal ("--abort_output=") then
+					if arg.count > 15 then
+						arg := arg.substring (16, arg.count)
+						set_abort_output_filename (arg)
+					else
+						report_usage_error
+					end
+				elseif arg.count >= 19 and then arg.substring (1, 19).is_equal ("--completed_output=") then
+					if arg.count > 19 then
+						arg := arg.substring (20, arg.count)
+						set_completed_output_filename (arg)
 					else
 						report_usage_error
 					end
@@ -334,9 +587,19 @@ feature {NONE} -- Command line
 					else
 						report_usage_error
 					end
+				else
+					process_other_arg (arg)
 				end
 				i := i + 1
 			end
+		end
+
+	process_other_arg (arg: STRING)
+			-- Process unknown command-line argument `arg'.
+		require
+			arg_not_void: arg /= Void
+		do
+			report_usage_error
 		end
 
 	set_defined_variable (arg: STRING)
@@ -393,9 +656,66 @@ feature {NONE} -- Error handling
 	Usage_message: UT_USAGE_MESSAGE
 			-- Tester usage message
 		once
-			create Result.make ("[-a][-p][-D <name>=<value>|--define=<name>=<value>]* [--filter=<regexp>][--filters=<filename>] [-o filename]")
+			create Result.make ("[-h|--help] [-a] [-p]%N%
+				%%T[-D <name>=<value>|--define=<name>=<value>]*%N%
+				%%T[--filter=<regexp>]* [--filters=<filename>]*%N%
+				%%T[--exclude_filter=<regexp>]* [--exclude_filters=<filename>]*%N%
+				%%T[--success_output=<filename>] [--failure_output=<filename>]%N%
+				%%T[--abort_output=<filename>] [--completed_output=<filename>]%N%
+				%%T[-o <filename>]")
 		ensure
 			usage_message_not_void: Result /= Void
+		end
+
+	Help_message: STRING
+			-- Help message
+		once
+			Result := "[
+Test harness to execute registered test cases.
+-h
+--help
+    Display this help message.
+-a
+    The test application will crash when an error occur?
+	By default test case errors are caught by a rescue clause and reported
+	to the result summary, but during debugging it might be useful to get
+	the full exception trace.
+-p
+    Print the progress status to the console while executing the test cases?
+-D <name>=<value>
+--define=<name>=<value>
+    Define variable.
+--filter=<regexp>
+    Only test cases whose name matches the regular expression will be executed.
+    This option and the following can be specified several times, in which case
+    the name should match at least one of these regular expressions.
+    Execute all test cases by default.
+--filters=<filename>
+    Name of a file containing regular expressions, one per line, with the same
+    effect as specifying the previous options multiple times.
+--exclude_filter=<regexp>
+    Test cases whose name matches this regular expression will not be executed.
+    This option and the following can be specified several times, in which case
+    the name should not match any of these regular expressions.
+--exclude_filters=<filename>
+    Name of a file containing regular expressions, one per line, with the same
+    effect as specifying the previous options multiple times.
+--success_output=<filename>
+    Append the name of successful test cases to this file.
+--failure_output=<filename>
+    Append the name of failed test cases to this file.
+--abort_output=<filename>
+    Append the name of aborted test cases to this file.
+    A test case is said to be aborted if it ended up with an exception.
+--completed_output=<filename>
+    Append the name of test cases to this file when completed, regardless
+    of their success, failure or abortion.
+-o <filename>
+    Print test result summary to this file.
+    Use console window by default.
+]"
+		ensure
+			help_message_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation
@@ -426,6 +746,9 @@ invariant
 
 	error_handler_not_void: error_handler /= Void
 	variables_not_void: variables /= Void
-	enabled_test_cases_compiled: enabled_test_cases /= Void implies enabled_test_cases.is_compiled
+	no_void_enabled_test_cases: enabled_test_cases /= Void implies not enabled_test_cases.has_void
+	enabled_test_cases_compiled: enabled_test_cases /= Void implies enabled_test_cases.for_all (agent {RX_REGULAR_EXPRESSION}.is_compiled)
+	no_void_disabled_test_cases: disabled_test_cases /= Void implies not disabled_test_cases.has_void
+	disabled_test_cases_compiled: disabled_test_cases /= Void implies disabled_test_cases.for_all (agent {RX_REGULAR_EXPRESSION}.is_compiled)
 
 end

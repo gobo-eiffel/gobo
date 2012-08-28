@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="vuot1_test6" default="help">
+<project name="vuot1_test7" default="help">
 
 	<description>
 		description: "Eiffel Ant file for 'vuot1_test7'"

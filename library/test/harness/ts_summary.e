@@ -5,12 +5,19 @@ note
 		"Test result summaries"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/29 $"
 	revision: "$Revision: #10 $"
 
 class TS_SUMMARY
+
+inherit
+
+	ANY
+
+	KL_SHARED_STREAMS
+		export {NONE} all end
 
 create
 
@@ -22,6 +29,10 @@ feature {NONE} -- Initialization
 			-- Create a new result summary.
 		do
 			create results.make
+			success_output := null_output_stream
+			failure_output := null_output_stream
+			abort_output := null_output_stream
+			completed_output := null_output_stream
 		end
 
 feature -- Access
@@ -50,9 +61,26 @@ feature -- Status report
 			-- debugging it might be useful to get the full exception
 			-- trace.)
 
-	enabled_test_cases: RX_REGULAR_EXPRESSION
-			-- Only test cases whose name matches this regexp will
+	enabled_test_cases: DS_LINKED_LIST [RX_REGULAR_EXPRESSION]
+			-- Only test cases whose name matches one of these regexps will
 			-- be executed, or execute all test cases is Void
+
+	disabled_test_cases: DS_LINKED_LIST [RX_REGULAR_EXPRESSION]
+			-- Test cases whose name matches one of these regexps will
+			-- not be executed
+
+	success_output: KI_TEXT_OUTPUT_STREAM
+			-- File where to print the name of tests
+			-- when successfully executed
+
+	failure_output: KI_TEXT_OUTPUT_STREAM
+			-- File where to print the name of tests when failed
+
+	abort_output: KI_TEXT_OUTPUT_STREAM
+			-- File where to print the name of tests when aborted
+
+	completed_output: KI_TEXT_OUTPUT_STREAM
+			-- File where to print the name of tests when completed
 
 feature -- Status setting
 
@@ -64,14 +92,70 @@ feature -- Status setting
 			fail_on_rescue_set: fail_on_rescue = b
 		end
 
-	set_enabled_test_cases (a_regexp: like enabled_test_cases)
+	set_enabled_test_cases (a_test_cases: like enabled_test_cases)
 			-- Set `enabled_test_cases' to `a_regexp'.
 		require
-			compiled: a_regexp /= Void implies a_regexp.is_compiled
+			no_void_test_case: a_test_cases /= Void implies not a_test_cases.has_void
+			test_cases_compiled: a_test_cases /= Void implies a_test_cases.for_all (agent {RX_REGULAR_EXPRESSION}.is_compiled)
 		do
-			enabled_test_cases := a_regexp
+			enabled_test_cases := a_test_cases
 		ensure
-			enabled_test_cases_set: enabled_test_cases = a_regexp
+			enabled_test_cases_set: enabled_test_cases = a_test_cases
+		end
+
+	set_disabled_test_cases (a_test_cases: like disabled_test_cases)
+			-- Set `disabled_test_cases' to `a_test_cases'.
+		require
+			no_void_test_case: a_test_cases /= Void implies not a_test_cases.has_void
+			test_cases_compiled: a_test_cases /= Void implies a_test_cases.for_all (agent {RX_REGULAR_EXPRESSION}.is_compiled)
+		do
+			disabled_test_cases := a_test_cases
+		ensure
+			disabled_test_cases_set: disabled_test_cases = a_test_cases
+		end
+
+	set_success_output (a_output: like success_output)
+			-- Set `success_output' to `a_output'.
+		require
+			a_output_not_void: a_output /= Void
+			a_output_open_write: a_output.is_open_write
+		do
+			success_output := a_output
+		ensure
+			success_output_set: success_output = a_output
+		end
+
+	set_failure_output (a_output: like failure_output)
+			-- Set `failure_output' to `a_output'.
+		require
+			a_output_not_void: a_output /= Void
+			a_output_open_write: a_output.is_open_write
+		do
+			failure_output := a_output
+		ensure
+			failure_output_set: failure_output = a_output
+		end
+
+	set_abort_output (a_output: like abort_output)
+			-- Set `abort_output' to `a_output'.
+		require
+			a_output_not_void: a_output /= Void
+			a_output_open_write: a_output.is_open_write
+		do
+			abort_output := a_output
+		ensure
+			abort_output_set: abort_output = a_output
+		end
+
+	set_completed_output (a_output: like completed_output)
+			-- Set `completed_output' to `a_output'.
+		require
+			a_output_not_void: a_output /= Void
+			a_output_open_write: a_output.is_open_write
+		do
+			completed_output := a_output
+		ensure
+			completed_output_set: completed_output = a_output
 		end
 
 feature -- Measurement
@@ -108,6 +192,10 @@ feature -- Element change
 			create a_result.make (a_test)
 			results.put_last (a_result)
 			success_count := success_count + 1
+			success_output.put_line (a_test.name)
+			success_output.flush
+			completed_output.put_line (a_test.name)
+			completed_output.flush
 		end
 
 	put_failure (a_test: TS_TEST; a_reason: STRING)
@@ -121,6 +209,10 @@ feature -- Element change
 			create a_result.make (a_test, a_reason)
 			results.put_last (a_result)
 			failure_count := failure_count + 1
+			failure_output.put_line (a_test.name)
+			failure_output.flush
+			completed_output.put_line (a_test.name)
+			completed_output.flush
 		end
 
 	put_abort (a_test: TS_TEST; a_reason: STRING)
@@ -134,6 +226,10 @@ feature -- Element change
 			create a_result.make (a_test, a_reason)
 			results.put_last (a_result)
 			abort_count := abort_count + 1
+			abort_output.put_line (a_test.name)
+			abort_output.flush
+			completed_output.put_line (a_test.name)
+			completed_output.flush
 		end
 
 	start_test (a_test: TS_TEST)
@@ -269,6 +365,17 @@ invariant
 	assertion_count_positive: assertion_count >= 0
 	results_not_void: results /= Void
 	no_void_result: not results.has_void
-	enabled_test_cases_compiled: enabled_test_cases /= Void implies enabled_test_cases.is_compiled
+	no_void_enabled_test_cases: enabled_test_cases /= Void implies not enabled_test_cases.has_void
+	enabled_test_cases_compiled: enabled_test_cases /= Void implies enabled_test_cases.for_all (agent {RX_REGULAR_EXPRESSION}.is_compiled)
+	no_void_disabled_test_cases: disabled_test_cases /= Void implies not disabled_test_cases.has_void
+	disabled_test_cases_compiled: disabled_test_cases /= Void implies disabled_test_cases.for_all (agent {RX_REGULAR_EXPRESSION}.is_compiled)
+	success_output_not_void: success_output /= Void
+	success_output_open_write: success_output.is_open_write
+	failure_output_not_void: failure_output /= Void
+	failure_output_open_write: failure_output.is_open_write
+	abort_output_not_void: abort_output /= Void
+	abort_output_open_write: abort_output.is_open_write
+	completed_output_not_void: completed_output /= Void
+	completed_output_open_write: completed_output.is_open_write
 
 end

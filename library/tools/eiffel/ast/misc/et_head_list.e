@@ -5,7 +5,7 @@ note
 		"Eiffel AST lists where insertions to and removals from the head are optimized"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/05/03 $"
 	revision: "$Revision: #10 $"
@@ -84,7 +84,7 @@ feature -- Measurement
 			-- Maximum number of items in list
 		do
 			if storage /= Void then
-				Result := storage.count
+				Result := storage.capacity
 			end
 		end
 
@@ -133,7 +133,7 @@ feature -- Element change
 			an_item_not_void: an_item /= Void
 			not_full: count < capacity
 		do
-			storage.put (an_item, count)
+			fixed_array.force (storage,an_item, count)
 			count := count + 1
 		ensure
 			one_more: count = old count + 1
@@ -149,7 +149,7 @@ feature -- Element change
 			if count >= capacity then
 				resize (new_capacity (count + 1))
 			end
-			storage.put (an_item, count)
+			fixed_array.force (storage, an_item, count)
 			count := count + 1
 		ensure
 			one_more: count = old count + 1
@@ -175,11 +175,9 @@ feature -- Removal
 			-- Remove first item.
 		require
 			not_empty: not is_empty
-		local
-			dead_item: like item
 		do
 			count := count - 1
-			storage.put (dead_item, count)
+			fixed_array.keep_head (storage, count, count + 1)
 		ensure
 			one_less: count = old count - 1
 		end
@@ -191,7 +189,6 @@ feature -- Removal
 			i_small_enough: i <= count
 		local
 			j, nb: INTEGER
-			dead_item: like item
 		do
 			j := count - i
 			nb := count - 2
@@ -199,7 +196,7 @@ feature -- Removal
 				storage.put (storage.item (j + 1), j)
 				j := j + 1
 			end
-			storage.put (dead_item, j)
+			fixed_array.keep_head (storage, count - 1, count)
 			count := count - 1
 		ensure
 			one_less: count = old count - 1
@@ -208,13 +205,8 @@ feature -- Removal
 	wipe_out
 			-- Remove all items.
 		local
-			i: INTEGER
-			dead_item: like item
 		do
-			from i := count - 1 until i < 0 loop
-				storage.put (dead_item, i)
-				i := i - 1
-			end
+			fixed_array.keep_head (storage, 0, count)
 			count := 0
 		ensure
 			wiped_out: is_empty

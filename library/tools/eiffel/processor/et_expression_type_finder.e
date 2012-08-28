@@ -5,7 +5,7 @@ note
 		"Eiffel expression type finders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/10/25 $"
 	revision: "$Revision: #6 $"
@@ -23,6 +23,7 @@ inherit
 		undefine
 			make
 		redefine
+			process_across_expression,
 			process_bit_constant,
 			process_binary_integer_constant,
 			process_bracket_expression,
@@ -421,6 +422,56 @@ feature -- Status setting
 
 feature {NONE} -- Expression processing
 
+	find_across_cursor_type (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT)
+			-- `a_context' represents the type in which `a_name' appears.
+			-- It will be altered on exit to represent the type of `a_name'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_object_test_local: a_name.is_across_cursor
+			a_context_not_void: a_context /= Void
+		local
+			l_seed: INTEGER
+			l_across_component: ET_ACROSS_COMPONENT
+			l_across_components: ET_ACROSS_COMPONENT_LIST
+		do
+			reset_fatal_error (False)
+			l_seed := a_name.seed
+			l_across_components := current_closure_impl.across_components
+			if l_across_components = Void then
+					-- Internal error.
+					-- This error should have already been reported when checking
+					-- `current_feature' (using ET_FEATURE_CHECKER for example).
+				set_fatal_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
+			elseif l_seed < 1 or l_seed > l_across_components.count then
+					-- Internal error.
+					-- This error should have already been reported when checking
+					-- `current_feature' (using ET_FEATURE_CHECKER for example).
+				set_fatal_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
+			else
+				l_across_component := l_across_components.across_component (l_seed)
+				find_expression_type (l_across_component.new_cursor_expression, a_context, current_system.detachable_any_type)
+			end
+		end
+
+	find_across_expression_type (an_expression: ET_ACROSS_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
+			-- `a_context' represents the type in which `an_expression' appears.
+			-- It will be altered on exit to represent the type of `an_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			an_expression_not_void: an_expression /= Void
+			a_context_not_void: a_context /= Void
+		do
+			reset_fatal_error (False)
+			a_context.force_last (current_universe_impl.boolean_type)
+		end
+
 	find_binary_integer_constant_type (a_constant: ET_BINARY_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
@@ -716,6 +767,8 @@ feature {NONE} -- Expression processing
 			l_actuals: ET_ACTUAL_PARAMETER_LIST
 			l_object_test: ET_NAMED_OBJECT_TEST
 			l_object_tests: ET_OBJECT_TEST_LIST
+			l_across_component: ET_ACROSS_COMPONENT
+			l_across_components: ET_ACROSS_COMPONENT_LIST
 			l_class_impl: ET_CLASS
 		do
 			reset_fatal_error (False)
@@ -875,6 +928,45 @@ feature {NONE} -- Expression processing
 						end
 					else
 							-- Use the ETL2 implementation: the type of '$object_test_local' is POINTER.
+						a_context.force_last (current_universe_impl.pointer_type)
+					end
+				end
+			elseif l_name.is_across_cursor then
+				l_across_components := current_closure_impl.across_components
+				if l_across_components = Void then
+						-- Internal error.
+						-- This error should have already been reported when checking
+						-- `current_feature' (using ET_FEATURE_CHECKER for example).
+					set_fatal_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
+				elseif l_seed < 1 or l_seed > l_across_components.count then
+						-- Internal error.
+						-- This error should have already been reported when checking
+						-- `current_feature' (using ET_FEATURE_CHECKER for example).
+					set_fatal_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
+				else
+					l_across_component := l_across_components.across_component (l_seed)
+					l_identifier ?= l_name
+					check is_across_cursor: l_identifier /= Void end
+					l_typed_pointer_class := current_universe_impl.typed_pointer_any_type.named_base_class
+					if l_typed_pointer_class.actual_class.is_preparsed then
+							-- Class TYPED_POINTER has been found in the universe.
+							-- Use ISE's implementation: the type of '$across_cursor' is
+							-- 'TYPED_POINTER [<type-of-across-cursor>]'.
+						find_expression_type (l_across_component.new_cursor_expression, a_context, current_system.detachable_any_type)
+						if not has_fatal_error then
+							create l_actuals.make_with_capacity (1)
+							l_actuals.put_first (tokens.identity_type)
+							create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
+							a_context.force_last (l_typed_pointer_type)
+						end
+					else
+							-- Use the ETL2 implementation: the type of '$across_cursor' is POINTER.
 						a_context.force_last (current_universe_impl.pointer_type)
 					end
 				end
@@ -2971,6 +3063,12 @@ feature {NONE} -- Agent validity
 
 feature {ET_AST_NODE} -- Processing
 
+	process_across_expression (an_expression: ET_ACROSS_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			find_across_expression_type (an_expression, current_context)
+		end
+
 	process_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
@@ -3118,6 +3216,8 @@ feature {ET_AST_NODE} -- Processing
 				find_local_variable_type (an_identifier, current_context)
 			elseif an_identifier.is_object_test_local then
 				find_object_test_local_type (an_identifier, current_context)
+			elseif an_identifier.is_across_cursor then
+				find_across_cursor_type (an_identifier, current_context)
 			elseif not an_identifier.is_instruction then
 				find_unqualified_call_expression_type (an_identifier, current_context)
 			end

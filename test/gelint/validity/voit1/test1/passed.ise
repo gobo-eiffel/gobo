@@ -1,0 +1,34 @@
+-------------------------------------------------------------------------------
+
+Error code: VOIT(1)
+
+Error: Iteration expression should conform to ITERABLE [G].
+What to do: make sure the Iteration expression conforms to ITERABLE [G].
+
+Class: AA
+Feature: f
+Target type: ITERABLE [Generic #1]
+Source type: BB
+Line: 23
+        as
+->        c
+        loop
+
+-------------------------------------------------------------------------------
+
+Error code: VEEN
+
+Error: unknown identifier.
+What to do: make sure that identifier, if needed, is final name of
+  feature of class, or local entity or formal argument of routine.
+
+Class: AA
+Feature: f
+Identifier: c
+Target type: [like Current] AA
+Line: 25
+        loop
+->        a := c
+        end
+
+-------------------------------------------------------------------------------

@@ -5,7 +5,7 @@ note
 		"Error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/11/23 $"
 	revision: "$Revision: #35 $"
@@ -2446,6 +2446,47 @@ feature -- Validity errors
 			end
 		end
 
+	report_veen9a_error (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER; a_feature: ET_FEATURE)
+			-- Report VEEN-9 error: `an_identifier', appearing in `a_feature'
+			-- of `a_class' or one of its (possibly nested) inline agents, is an
+			-- across cursor that is used outside of its scope.
+			--
+			-- Not in ECMA-367-2.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_identifier_not_void: an_identifier /= Void
+			an_identifier_across_cursor: an_identifier.is_across_cursor
+			a_feature_not_void: a_feature /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_veen9_error (a_class) then
+				create an_error.make_veen9a (a_class, an_identifier, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_veen9b_error (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER)
+			-- Report VEEN-9 error: `an_identifier', appearing in the invariant
+			-- of `a_class' or one of its (possibly nested) inline agents, is an
+			-- across cursor that is used outside of its scope.
+			--
+			-- Not in ECMA-367-2.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_identifier_not_void: an_identifier /= Void
+			an_identifier_across_cursor: an_identifier.is_across_cursor
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_veen9_error (a_class) then
+				create an_error.make_veen9b (a_class, an_identifier)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vevi0a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_IDENTIFIER; a_local: ET_LOCAL_VARIABLE)
 			-- Report VEVI error: the local variable `a_local', declared of attached type
 			-- is used before being initialized in class `a_class_impl' and viewed from
@@ -4163,6 +4204,124 @@ feature -- Validity errors
 			end
 		end
 
+	report_voit1a_error (a_class, a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE)
+			-- Report VOIT-1 error: the type `a_type' of the across iterable expression
+			-- `an_expression' appearing in `a_class_impl' and viewed from one of its
+			-- descendants `a_class' (possibly itself) does not conform to "ITERABLE".
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			an_expression_not_void: an_expression /= Void
+			a_type_not_void: a_type /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_voit1_error (a_class) then
+				create an_error.make_voit1a (a_class, a_class_impl, an_expression, a_type)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_voit2a_error (a_class: ET_CLASS; a_across_component: ET_ACROSS_COMPONENT; a_feature: ET_FEATURE)
+			-- Report VOIT-2 error: The cursor of `a_across_component' has the same
+			-- name as `a_feature' in `a_class'.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_across_component_not_void: a_across_component /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_voit2_error (a_class) then
+				create an_error.make_voit2a (a_class, a_across_component, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_voit2b_error (a_class: ET_CLASS; a_across_component: ET_ACROSS_COMPONENT; arg: ET_FORMAL_ARGUMENT)
+			-- Report VOIT-2 error: The cursor of `a_across_component' has
+			-- the same name as argument `arg' of an enclosing feature or
+			-- inline agent.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_across_component_not_void: a_across_component /= Void
+			arg_not_void: arg /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_voit2_error (a_class) then
+				create an_error.make_voit2b (a_class, a_across_component, arg)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_voit2c_error (a_class: ET_CLASS; a_across_component: ET_ACROSS_COMPONENT; a_local: ET_LOCAL_VARIABLE)
+			-- Report VOIT-2 error: The cursor of `a_across_component' has
+			-- the same name as local variable `a_local' of an enclosing
+			-- feature or inline agent.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_across_component_not_void: a_across_component /= Void
+			a_local_not_void: a_local /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_voit2_error (a_class) then
+				create an_error.make_voit2c (a_class, a_across_component, a_local)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_voit2d_error (a_class: ET_CLASS; a_across_component: ET_ACROSS_COMPONENT; a_object_test: ET_NAMED_OBJECT_TEST)
+			-- Report VOIT-2 error: `a_across_component' appears in the scope
+			-- of the local of `a_object_test' with the same local name.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_across_component_not_void: a_across_component /= Void
+			a_object_test_not_void: a_object_test /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_voit2_error (a_class) then
+				create an_error.make_voit2d (a_class, a_across_component, a_object_test)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_voit2e_error (a_class: ET_CLASS; a_across_component1, a_across_component2: ET_ACROSS_COMPONENT)
+			-- Report VOIT-2 error: `a_across_component1' appears in the scope
+			-- of the cursor of `a_across_component2' with the same cursor name.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_across_component1_not_void: a_across_component1 /= Void
+			a_across_component2_not_void: a_across_component2 /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_voit2_error (a_class) then
+				create an_error.make_voit2e (a_class, a_across_component1, a_across_component2)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vomb1a_error (a_class, a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE)
 			-- Report VOMB-1 error: the inspect expression `an_expression'
 			-- in `a_class_impl' and viewed from one of its descendants `a_class'
@@ -4568,6 +4727,48 @@ feature -- Validity errors
 		do
 			if reportable_vpir1_error (a_class) then
 				create an_error.make_vpir1f (a_class, a_local, an_agent, a_object_test)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vpir1g_error (a_class: ET_CLASS; arg: ET_FORMAL_ARGUMENT; an_agent: ET_INLINE_AGENT; a_across_component: ET_ACROSS_COMPONENT)
+			-- Report VPIR-1 error: `arg' in inline agent `an_agent' has
+			-- the same name as the cursor of `a_across_component' of an enclosing
+			-- feature or inline agent whose scope contains the inline agent.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			arg_not_void: arg /= Void
+			an_agent_not_void: an_agent /= Void
+			a_across_component_not_void: a_across_component /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vpir1_error (a_class) then
+				create an_error.make_vpir1g (a_class, arg, an_agent, a_across_component)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vpir1h_error (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; a_across_component: ET_ACROSS_COMPONENT)
+			-- Report VPIR-1 error: `a_local' in inline agent `an_agent' has
+			-- the same name as the cursor of `a_across_component' of an enclosing
+			-- feature or inline agent whose scope contains the inline agent.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_local_not_void: a_local /= Void
+			an_agent_not_void: an_agent /= Void
+			a_across_component_not_void: a_across_component /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vpir1_error (a_class) then
+				create an_error.make_vpir1h (a_class, a_local, an_agent, a_across_component)
 				report_validity_error (an_error)
 			end
 		end
@@ -5713,7 +5914,26 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuot1e_error (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_NAMED_OBJECT_TEST)
+	report_vuot1e_error (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST; a_across_component: ET_ACROSS_COMPONENT)
+			-- Report VUOT-1 error: `a_object_test' appears in the scope
+			-- of the cursor of `a_across_component' with the same local name.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_object_test_not_void: a_object_test /= Void
+			a_across_component_not_void: a_across_component /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuot1_error (a_class) then
+				create an_error.make_vuot1e (a_class, a_object_test, a_across_component)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vuot1f_error (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_NAMED_OBJECT_TEST)
 			-- Report VUOT-1 error: `a_object_test1' and `a_object_test2' have the same
 			-- local name and their scope overlap.
 			--
@@ -5727,7 +5947,7 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vuot1_error (a_class) then
-				create an_error.make_vuot1e (a_class, a_object_test1, a_object_test2)
+				create an_error.make_vuot1f (a_class, a_object_test1, a_object_test2)
 				report_validity_error (an_error)
 			end
 		end
@@ -6956,6 +7176,16 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_veen9_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VEEN-9 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_vevi_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VEVI error be reported when it
 			-- appears in `a_class'?
@@ -7348,6 +7578,26 @@ feature -- Validity error status
 
 	reportable_vmss3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VMSS-3 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_voit1_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VOIT-1 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_voit2_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VOIT-2 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

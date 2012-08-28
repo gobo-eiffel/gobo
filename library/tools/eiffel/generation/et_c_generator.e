@@ -5,7 +5,7 @@ note
 		"C code generators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,6 +18,8 @@ inherit
 		rename
 			make as make_null
 		redefine
+			process_across_expression,
+			process_across_instruction,
 			process_assigner_instruction,
 			process_assignment,
 			process_assignment_attempt,
@@ -4978,6 +4980,108 @@ print ("ET_C_GENERATOR.print_extended_attribute: initialization not supported ye
 
 feature {NONE} -- Instruction generation
 
+	print_across_instruction (an_instruction: ET_ACROSS_INSTRUCTION)
+			-- Print `an_instruction'.
+		require
+			an_instruction_not_void: an_instruction /= Void
+		local
+			l_compound: ET_COMPOUND
+			l_conditional: ET_CONDITIONAL
+			l_expression: ET_EXPRESSION
+			l_cursor_name: ET_IDENTIFIER
+			l_cursor_type: ET_DYNAMIC_TYPE
+			l_cursor_type_set: ET_DYNAMIC_TYPE_SET
+		do
+				-- Declaration of the across cursor.
+			l_cursor_name := an_instruction.cursor_name
+			l_cursor_type_set := dynamic_type_set (l_cursor_name)
+			l_cursor_type := l_cursor_type_set.static_type
+			current_function_header_buffer.put_character ('%T')
+			print_type_declaration (l_cursor_type, current_function_header_buffer)
+			current_function_header_buffer.put_character (' ')
+			print_across_cursor_name (l_cursor_name, current_function_header_buffer)
+			current_function_header_buffer.put_character (';')
+			current_function_header_buffer.put_new_line
+				-- Call to `new_cursor'.
+			assignment_target := Void
+-- TODO: check to see if `l_cursor_type' has a non-standard 'copy' feature.
+			assignment_target := l_cursor_name
+			print_operand (an_instruction.new_cursor_expression)
+			assignment_target := Void
+			fill_call_operands (1)
+			if call_operands.first /= l_cursor_name then
+				print_indentation
+				print_across_cursor_name (l_cursor_name, current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_attachment_expression (call_operands.first, l_cursor_type_set, l_cursor_type)
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+			call_operands.wipe_out
+			l_compound := an_instruction.from_compound
+			if l_compound /= Void then
+				print_compound (l_compound)
+			end
+			print_indentation
+			current_file.put_string (c_while)
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			current_file.put_character ('1')
+			current_file.put_character (')')
+			current_file.put_character (' ')
+			current_file.put_character ('{')
+			current_file.put_new_line
+			indent
+			print_operand (an_instruction.cursor_after_expression)
+			l_conditional := an_instruction.until_conditional
+			if l_conditional /= Void then
+				l_expression := l_conditional.expression
+				print_operand (l_expression)
+				fill_call_operands (2)
+			else
+				fill_call_operands (1)
+			end
+			print_indentation
+			current_file.put_string (c_if)
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			current_file.put_character ('(')
+			print_expression (call_operands.first)
+			current_file.put_character (')')
+			if call_operands.count = 2 then
+				current_file.put_character ('|')
+				current_file.put_character ('|')
+				current_file.put_character ('(')
+				print_expression (call_operands.item (2))
+				current_file.put_character (')')
+			end
+			call_operands.wipe_out
+			current_file.put_character (')')
+			current_file.put_character (' ')
+			current_file.put_character ('{')
+			current_file.put_new_line
+			indent
+			print_indentation
+			current_file.put_string (c_break)
+			current_file.put_character (';')
+			current_file.put_new_line
+			dedent
+			print_indentation
+			current_file.put_character ('}')
+			current_file.put_new_line
+			l_compound := an_instruction.loop_compound
+			if l_compound /= Void then
+				print_compound (l_compound)
+			end
+			print_instruction (an_instruction.cursor_forth_instruction)
+			dedent
+			print_indentation
+			current_file.put_character ('}')
+			current_file.put_new_line
+		end
+
 	print_assigner_instruction (an_instruction: ET_ASSIGNER_INSTRUCTION)
 			-- Print `an_instruction'.
 		require
@@ -6769,6 +6873,187 @@ feature {NONE} -- Procedure call generation
 
 feature {NONE} -- Expression generation
 
+	print_across_expression (an_expression: ET_ACROSS_EXPRESSION)
+			-- Print `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
+		local
+			l_temp: ET_IDENTIFIER
+			l_temp_index: INTEGER
+			l_conditional: ET_CONDITIONAL
+			l_expression: ET_EXPRESSION
+			l_cursor_name: ET_IDENTIFIER
+			l_cursor_type: ET_DYNAMIC_TYPE
+			l_cursor_type_set: ET_DYNAMIC_TYPE_SET
+			l_boolean_type: ET_DYNAMIC_TYPE
+		do
+			assignment_target := Void
+				-- Declaration of the across cursor.
+			l_cursor_name := an_expression.cursor_name
+			l_cursor_type_set := dynamic_type_set (l_cursor_name)
+			l_cursor_type := l_cursor_type_set.static_type
+			current_function_header_buffer.put_character ('%T')
+			print_type_declaration (l_cursor_type, current_function_header_buffer)
+			current_function_header_buffer.put_character (' ')
+			print_across_cursor_name (l_cursor_name, current_function_header_buffer)
+			current_function_header_buffer.put_character (';')
+			current_function_header_buffer.put_new_line
+				-- Call to `new_cursor'.
+-- TODO: check to see if `l_cursor_type' has a non-standard 'copy' feature.
+			assignment_target := l_cursor_name
+			print_operand (an_expression.new_cursor_expression)
+			assignment_target := Void
+			fill_call_operands (1)
+			if call_operands.first /= l_cursor_name then
+				print_indentation
+				print_across_cursor_name (l_cursor_name, current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_attachment_expression (call_operands.first, l_cursor_type_set, l_cursor_type)
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+			call_operands.wipe_out
+				-- Declaration of temporary result.
+			l_boolean_type := current_dynamic_system.dynamic_type (current_universe_impl.boolean_type, current_type.base_type)
+			l_temp := new_temp_variable (l_boolean_type)
+				-- We will set the index of `l_temp' later because
+				-- it could still be used in `call_operands'.
+			l_temp_index := an_expression.index
+			operand_stack.force (l_temp)
+			print_indentation
+			print_temp_name (l_temp, current_file)
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			if an_expression.is_all then
+				current_file.put_string (c_eif_true)
+			else
+				current_file.put_string (c_eif_false)
+			end
+			current_file.put_character (';')
+			current_file.put_new_line
+			print_indentation
+			current_file.put_string (c_while)
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			current_file.put_character ('1')
+			current_file.put_character (')')
+			current_file.put_character (' ')
+			current_file.put_character ('{')
+			current_file.put_new_line
+			indent
+			print_operand (an_expression.cursor_after_expression)
+			l_conditional := an_expression.until_conditional
+			if l_conditional /= Void then
+				l_expression := l_conditional.expression
+				print_operand (l_expression)
+				fill_call_operands (2)
+			else
+				fill_call_operands (1)
+			end
+			print_indentation
+			current_file.put_string (c_if)
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			current_file.put_character ('(')
+			if an_expression.is_all then
+				current_file.put_character ('!')
+			end
+			print_temp_name (l_temp, current_file)
+			current_file.put_character (')')
+			current_file.put_character ('|')
+			current_file.put_character ('|')
+			current_file.put_character ('(')
+			print_expression (call_operands.first)
+			current_file.put_character (')')
+			if call_operands.count = 2 then
+				current_file.put_character ('|')
+				current_file.put_character ('|')
+				current_file.put_character ('(')
+				print_expression (call_operands.item (2))
+				current_file.put_character (')')
+			end
+			current_file.put_character (')')
+			current_file.put_character (' ')
+			current_file.put_character ('{')
+			current_file.put_new_line
+			call_operands.wipe_out
+			indent
+			print_indentation
+			current_file.put_string (c_break)
+			current_file.put_character (';')
+			current_file.put_new_line
+			dedent
+			print_indentation
+			current_file.put_character ('}')
+			current_file.put_new_line
+				-- all/some expression.
+			assignment_target := l_temp
+			l_expression := an_expression.iteration_conditional.expression
+			print_operand (l_expression)
+			assignment_target := Void
+			fill_call_operands (1)
+			if call_operands.first /= l_temp then
+				print_indentation
+				print_temp_name (l_temp, current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_attachment_expression (call_operands.first, dynamic_type_set (l_expression), l_boolean_type)
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+			call_operands.wipe_out
+				-- Call to `forth'.
+			print_instruction (an_expression.cursor_forth_instruction)
+			dedent
+			print_indentation
+			current_file.put_character ('}')
+			current_file.put_new_line
+			if l_temp_index /= 0 then
+					-- We had to wait until this stage to set the index of `l_temp'
+					-- because it could have still been used in `call_operands'.
+				check l_temp_not_void: l_temp /= Void end
+				l_temp.set_index (l_temp_index)
+			end
+		end
+
+	print_across_cursor (a_name: ET_IDENTIFIER)
+			-- Print across cursor `a_name'.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_across_cursor: a_name.is_across_cursor
+		local
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_static_type: ET_DYNAMIC_TYPE
+		do
+			if in_operand then
+				operand_stack.force (a_name)
+			else
+				if in_target then
+					l_dynamic_type_set := dynamic_type_set (a_name)
+					l_static_type := l_dynamic_type_set.static_type
+					if l_static_type.is_expanded then
+							-- Pass the address of the expanded object.
+						current_file.put_character ('&')
+						print_across_cursor_name (a_name, current_file)
+					elseif call_target_type.is_expanded and not call_target_type.is_generic then
+							-- We need to unbox the object and then pass its address.
+						current_file.put_character ('&')
+						current_file.put_character ('(')
+						print_boxed_attribute_item_access (a_name, call_target_type, call_target_check_void)
+						current_file.put_character (')')
+					else
+						print_across_cursor_name (a_name, current_file)
+					end
+				else
+					print_across_cursor_name (a_name, current_file)
+				end
+			end
+		end
+
 	print_attachment_expression (an_expression: ET_EXPRESSION; a_source_type_set: ET_DYNAMIC_TYPE_SET; a_target_type: ET_DYNAMIC_TYPE)
 			-- Print `an_expression' of dynamic type set `a_source_type_set'
 			-- when it is to be attached to an entity of type `a_target_type'.
@@ -8108,6 +8393,8 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 					l_name_expression := l_name.local_name
 				elseif l_name.is_object_test_local then
 					l_name_expression := l_name.object_test_local_name
+				elseif l_name.is_across_cursor then
+					l_name_expression := l_name.across_cursor_name
 				end
 				if l_name_expression /= Void then
 					l_value_type_set := dynamic_type_set (l_name_expression)
@@ -9289,9 +9576,9 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			else
 				l_target_type := l_source_type
 			end
+			print_operand (l_source)
+			fill_call_operands (1)
 			if in_operand then
-				print_operand (l_source)
-				fill_call_operands (1)
 				if l_assignment_target /= Void then
 					operand_stack.force (l_assignment_target)
 					print_indentation
@@ -9379,10 +9666,10 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 				end
 				current_file.put_character (')')
 			end
+			call_operands.wipe_out
 			if in_operand then
 				current_file.put_character (';')
 				current_file.put_new_line
-				call_operands.wipe_out
 				if l_temp_index /= 0 then
 						-- We had to wait until this stage to set the index of `l_temp'
 						-- because it could have still been used in `call_operands'.
@@ -11019,6 +11306,8 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 					print_formal_argument (l_identifier)
 				elseif l_identifier.is_temporary then
 					print_temporary_variable (l_identifier)
+				elseif l_identifier.is_across_cursor then
+					print_across_cursor (l_identifier)
 				elseif l_identifier.is_local then
 					if has_rescue then
 							-- Keep track of the fact that the value of this local variable
@@ -14935,7 +15224,7 @@ feature {NONE} -- Deep features generation
 									current_file.put_character ('{')
 									current_file.put_new_line
 									indent
-									print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_special_indexed_item_access (l_temp,  tokens.result_keyword, a_type, False))
+									print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_special_indexed_item_access (l_temp,  tokens.current_keyword, a_type, False), agent print_attribute_special_indexed_item_access (l_temp,  tokens.result_keyword, a_type, False))
 									dedent
 									print_indentation
 									current_file.put_character ('}')
@@ -14976,7 +15265,7 @@ feature {NONE} -- Deep features generation
 								current_file.put_character ('{')
 								current_file.put_new_line
 								indent
-								print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_special_indexed_item_access (l_temp,  tokens.result_keyword, a_type, False))
+								print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_special_indexed_item_access (l_temp,  tokens.current_keyword, a_type, False), agent print_attribute_special_indexed_item_access (l_temp,  tokens.result_keyword, a_type, False))
 								dedent
 								print_indentation
 								current_file.put_character ('}')
@@ -15000,10 +15289,10 @@ feature {NONE} -- Deep features generation
 									-- already been copied. We need to deep twin it only if
 									-- it itself contains (recursively) reference attributes.
 								if l_attribute_type.has_nested_reference_attributes then
-									print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_access (l_attribute, tokens.result_keyword, a_type, False))
+									print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_access (l_attribute, tokens.result_keyword, a_type, False), agent print_attribute_access (l_attribute, tokens.result_keyword, a_type, False))
 								end
 							else
-								print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_access (l_attribute, tokens.result_keyword, a_type, False))
+								print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_access (l_attribute, tokens.result_keyword, a_type, False), agent print_attribute_access (l_attribute, tokens.result_keyword, a_type, False))
 							end
 							i := i + 1
 						end
@@ -15023,10 +15312,10 @@ feature {NONE} -- Deep features generation
 										-- already been copied. We need to deep twin it only if
 										-- it itself contains (recursively) reference attributes.
 									if l_attribute_type.has_nested_reference_attributes then
-										print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_tuple_item_access (i, tokens.result_keyword, a_type, False))
+										print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_tuple_item_access (i, tokens.result_keyword, a_type, False), agent print_attribute_tuple_item_access (i, tokens.result_keyword, a_type, False))
 									end
 								else
-									print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_tuple_item_access (i, tokens.result_keyword, a_type, False))
+									print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_tuple_item_access (i, tokens.result_keyword, a_type, False), agent print_attribute_tuple_item_access (i, tokens.result_keyword, a_type, False))
 								end
 								i := i + 1
 							end
@@ -15357,17 +15646,19 @@ feature {NONE} -- Deep features generation
 			end
 		end
 
-	print_set_deep_twined_attribute (an_attribute_type_set: ET_DYNAMIC_TYPE_SET; a_print_attribute_access: PROCEDURE [ANY, TUPLE])
+	print_set_deep_twined_attribute (an_attribute_type_set: ET_DYNAMIC_TYPE_SET; a_print_attribute_access_read, a_print_attribute_access_write: PROCEDURE [ANY, TUPLE])
 			-- Print to `current_file' the instructions needed to deep twin an attribute
 			-- of `current_type' whose dynamic type set is `an_attribute_type_set'.
-			-- `a_print_attribute_access' is used to print to `current_file'
-			-- the code to access this attribute. Indeed, it can be a "regular"
-			-- attribute, but it can also be items of a SPECIAL object, fields
-			-- of a TUPLE object, closed operands of an Agent object, ...
+			-- `a_print_attribute_access_read' and `a_print_attribute_access_write' are
+			-- used to print to `current_file' the code to access this attribute in
+			-- read and write mode. Indeed, it can be a "regular" attribute, but it
+			-- can also be items of a SPECIAL object, fields of a TUPLE object, closed
+			-- operands of an Agent object, ...
 		require
 			an_attribute_type_set_not_void: an_attribute_type_set /= Void
 			an_attribute_type_set_not_empty: not an_attribute_type_set.is_empty
-			a_print_attribute_access_not_void: a_print_attribute_access /= Void
+			a_print_attribute_access_read_not_void: a_print_attribute_access_read /= Void
+			a_print_attribute_access_write_not_void: a_print_attribute_access_write /= Void
 		local
 			l_attribute_type: ET_DYNAMIC_TYPE
 			l_temp1, l_temp2: ET_IDENTIFIER
@@ -15379,14 +15670,14 @@ feature {NONE} -- Deep features generation
 			current_file.put_character (' ')
 			current_file.put_character ('=')
 			current_file.put_character (' ')
-			a_print_attribute_access.call ([])
+			a_print_attribute_access_read.call ([])
 			current_file.put_character (';')
 			current_file.put_new_line
 			if l_attribute_type.is_expanded then
 					-- No need to test whether the attribute is Void or not:
 					-- expanded attributes are never Void.
 				print_indentation
-				a_print_attribute_access.call ([])
+				a_print_attribute_access_write.call ([])
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
@@ -15413,7 +15704,7 @@ feature {NONE} -- Deep features generation
 				current_file.put_string (", t0);")
 				current_file.put_new_line
 				print_indentation
-				a_print_attribute_access.call ([])
+				a_print_attribute_access_write.call ([])
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
@@ -26703,6 +26994,25 @@ feature {NONE} -- Feature name generation
 			end
 		end
 
+	print_across_cursor_name (a_name: ET_IDENTIFIER; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print name of across cursor `a_name' to `a_file'.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_across_cursor: a_name.is_across_cursor
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			if short_names then
+				a_file.put_character ('u')
+				a_file.put_integer (a_name.seed)
+			else
+-- TODO: long names
+				short_names := True
+				print_across_cursor_name (a_name, a_file)
+				short_names := False
+			end
+		end
+
 	print_object_test_local_name (a_name: ET_IDENTIFIER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print name of object-test local `a_name' to `a_file'.
 		require
@@ -27521,6 +27831,18 @@ feature {NONE} -- Output files/buffers
 
 feature {ET_AST_NODE} -- Processing
 
+	process_across_expression (an_expression: ET_ACROSS_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			print_across_expression (an_expression)
+		end
+
+	process_across_instruction (an_instruction: ET_ACROSS_INSTRUCTION)
+			-- Process `an_instruction'.
+		do
+			print_across_instruction (an_instruction)
+		end
+
 	process_assigner_instruction (an_instruction: ET_ASSIGNER_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
@@ -27792,6 +28114,8 @@ feature {ET_AST_NODE} -- Processing
 				print_local_variable (an_identifier)
 			elseif an_identifier.is_object_test_local then
 				print_object_test_local (an_identifier)
+			elseif an_identifier.is_across_cursor then
+				print_across_cursor (an_identifier)
 			elseif an_identifier.is_agent_open_operand then
 				print_agent_open_operand (an_identifier)
 			elseif an_identifier.is_agent_closed_operand then

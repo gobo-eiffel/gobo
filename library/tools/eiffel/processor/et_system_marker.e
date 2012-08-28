@@ -5,7 +5,7 @@ note
 		"Eiffel system class markers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,6 +18,8 @@ inherit
 		rename
 			make as make_null
 		redefine
+			process_across_expression,
+			process_across_instruction,
 			process_actual_parameter_list,
 			process_agent_argument_operand_list,
 			process_agent_typed_open_argument,
@@ -213,6 +215,60 @@ feature -- Processing
 		end
 
 feature {ET_AST_NODE} -- Processing
+
+	process_across_expression (an_expression: ET_ACROSS_EXPRESSION)
+			-- Process `an_expression'.
+		local
+			an_invariant_part: ET_LOOP_INVARIANTS
+			a_variant_part: ET_VARIANT
+			a_conditional: ET_CONDITIONAL
+		do
+			process_expression (an_expression.iterable_expression)
+			an_invariant_part := an_expression.invariant_part
+			if an_invariant_part /= Void then
+				process_loop_invariants (an_invariant_part)
+			end
+			a_conditional := an_expression.until_conditional
+			if a_conditional /= Void then
+				process_expression (a_conditional.expression)
+			end
+			process_expression (an_expression.iteration_conditional.expression)
+			a_variant_part := an_expression.variant_part
+			if a_variant_part /= Void then
+				process_variant (a_variant_part)
+			end
+		end
+
+	process_across_instruction (an_instruction: ET_ACROSS_INSTRUCTION)
+			-- Process `an_instruction'.
+		local
+			an_invariant_part: ET_LOOP_INVARIANTS
+			a_variant_part: ET_VARIANT
+			a_compound: ET_COMPOUND
+			a_conditional: ET_CONDITIONAL
+		do
+			process_expression (an_instruction.iterable_expression)
+			a_compound := an_instruction.from_compound
+			if a_compound /= Void then
+				process_compound (a_compound)
+			end
+			an_invariant_part := an_instruction.invariant_part
+			if an_invariant_part /= Void then
+				process_loop_invariants (an_invariant_part)
+			end
+			a_conditional := an_instruction.until_conditional
+			if a_conditional /= Void then
+				process_expression (a_conditional.expression)
+			end
+			a_compound := an_instruction.loop_compound
+			if a_compound /= Void then
+				process_compound (a_compound)
+			end
+			a_variant_part := an_instruction.variant_part
+			if a_variant_part /= Void then
+				process_variant (a_variant_part)
+			end
+		end
 
 	process_actual_arguments (a_list: ET_ACTUAL_ARGUMENTS)
 			-- Process `a_list'.

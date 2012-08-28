@@ -5,7 +5,7 @@ note
 		"Eiffel comma-separated lists of types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -57,12 +57,26 @@ feature -- Status report
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
+		do
+			Result := has_named_type_with_type_marks (other, Void, other_context, Void, a_context)
+		end
+
+	has_named_type_with_type_marks (other: ET_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Same as `has_named_type' except that the type mark status of current types
+			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
+		require
+			other_not_void: other /= Void
+			other_context_not_void: other_context /= Void
+			other_context_valid: other_context.is_valid_context
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
 		local
 			i, nb: INTEGER
 		do
 			nb := count - 1
 			from i := 0 until i > nb loop
-				if storage.item (i).type.same_named_type (other, other_context, a_context) then
+				if storage.item (i).type.same_named_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, a_context) then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else

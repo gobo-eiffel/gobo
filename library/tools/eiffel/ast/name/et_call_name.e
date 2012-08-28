@@ -5,7 +5,7 @@ note
 		"Eiffel feature call names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -82,6 +82,12 @@ feature -- Status report
 
 	is_object_test_local: BOOLEAN
 			-- Is current call name actually an object-test local name?
+		do
+			-- Result := False
+		end
+
+	is_across_cursor: BOOLEAN
+			-- Is current call name actually an across cursor name?
 		do
 			-- Result := False
 		end
@@ -320,6 +326,16 @@ feature -- Conversion
 			is_object_test_local: is_object_test_local
 		do
 			check is_object_test_local: is_object_test_local end
+		ensure
+			definition: ANY_.same_objects (Result, Current)
+		end
+
+	across_cursor_name: ET_IDENTIFIER
+			-- Current name viewed as an across cursor name
+		require
+			is_across_cursor: is_across_cursor
+		do
+			check is_across_cursor: is_across_cursor end
 		ensure
 			definition: ANY_.same_objects (Result, Current)
 		end

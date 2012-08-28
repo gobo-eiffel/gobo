@@ -5,7 +5,7 @@ note
 		"Mappings between upper- and lower-case characters"
 
 	library: "Gobo Eiffel Regexp Library"
-	copyright: "Copyright (c) 2001-2002, Harald Erdbruegger and others"
+	copyright: "Copyright (c) 2001-2012, Harald Erdbruegger and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,8 +32,8 @@ feature {NONE} -- Initialization
 			-- Create new mapping between upper- and lower-case characters.
 			-- Each character is its own upper- and lower-case version by default.
 		do
-			lower_table := SPECIAL_INTEGER_.make (256)
-			flip_table := SPECIAL_INTEGER_.make (256)
+			lower_table := SPECIAL_INTEGER_.make_filled (0, 256)
+			flip_table := SPECIAL_INTEGER_.make_filled (0, 256)
 			clear
 		end
 

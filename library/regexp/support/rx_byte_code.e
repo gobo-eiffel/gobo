@@ -5,7 +5,7 @@ note
 		"Byte codes"
 
 	library: "Gobo Eiffel Regexp Library"
-	copyright: "Copyright (c) 2002-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,10 +32,10 @@ feature {NONE} -- Initialization
 		do
 			count := 0
 			capacity := nb
-			byte_code := SPECIAL_INTEGER_.make (nb)
+			byte_code := SPECIAL_INTEGER_.make_filled (0, nb)
 			character_sets_count := 0
 			character_sets_capacity := nb
-			character_sets := SPECIAL_BOOLEAN_.make (nb)
+			character_sets := SPECIAL_BOOLEAN_.make_filled (False, nb)
 		ensure
 			is_empty: count = 0
 			capacity_set: capacity = nb
@@ -328,7 +328,7 @@ feature {NONE} -- Resizing
 		do
 			if capacity < nb then
 				new_capacity := 2 * nb
-				byte_code := SPECIAL_INTEGER_.resize (byte_code, new_capacity)
+				byte_code := SPECIAL_INTEGER_.aliased_resized_area_with_default (byte_code, 0, new_capacity)
 				capacity := new_capacity
 			end
 		ensure
@@ -342,7 +342,7 @@ feature {NONE} -- Resizing
 		do
 			if character_sets_capacity < nb then
 				new_capacity := 2 * nb
-				character_sets := SPECIAL_BOOLEAN_.resize (character_sets, new_capacity)
+				character_sets := SPECIAL_BOOLEAN_.aliased_resized_area_with_default (character_sets, False, new_capacity)
 				character_sets_capacity := new_capacity
 			end
 		ensure

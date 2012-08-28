@@ -40,8 +40,7 @@ feature {NONE} -- Initialization
 			-- Create a new character buffer being able
 			-- to contain `n' characters.
 		do
-			create area.make (n + 1)
-			area.set_count (n + 1)
+			create area.make_filled ('%U', n + 1)
 			as_special := area.area
 		end
 
@@ -161,10 +160,14 @@ feature -- Resizing
 	resize (n: INTEGER)
 			-- Resize buffer so that it contains `n' characters.
 			-- Do not lose any previously entered characters.
+		local
+			l_old_count: INTEGER
 		do
+			l_old_count := count
 			area.resize (n + 1)
 			area.set_count (n + 1)
 			as_special := area.area
+			as_special.fill_with ('%U', l_old_count + 2, n + 1)
 		end
 
 feature {NONE} -- Implementation

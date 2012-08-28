@@ -5,7 +5,7 @@ note
 		"Lists of Eiffel dynamic types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -47,10 +47,14 @@ feature -- Element change
 			if count + nb > capacity then
 				resize (new_capacity (count + nb))
 			end
+			if count = 0 and other.count > 0 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				fixed_array.force (storage, other.dynamic_type (1), 0)
+			end
 			j := count
 			from i := 1 until i > nb loop
 				j := j + 1
-				storage.put (other.dynamic_type (i), j)
+				fixed_array.force (storage, other.dynamic_type (i), j)
 				i := i + 1
 			end
 			count := j
