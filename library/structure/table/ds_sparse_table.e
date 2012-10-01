@@ -6,7 +6,7 @@ note
 		%which should supply their hashing mechanisms."
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2000-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -425,7 +425,7 @@ feature -- Element change
 				compress
 				i := last_position + 1
 			end
-			h := slots_position
+			h := hash_position (k)
 			clashes_put (slots_item (h), i)
 			slots_put (i, h)
 			item_storage_put (v, i)
@@ -545,10 +545,8 @@ feature -- Element change
 			i := last_position + 1
 			if i > capacity then
 				resize (new_capacity (i))
-				h := hash_position (k)
-			else
-				h := slots_position
 			end
+			h := hash_position (k)
 			clashes_put (slots_item (h), i)
 			slots_put (i, h)
 			item_storage_put (v, i)

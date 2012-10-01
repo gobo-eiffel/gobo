@@ -6,7 +6,7 @@ note
 
 	test_status: "ok_to_run"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2001-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -212,6 +212,19 @@ feature -- Test
 			assert_integers_equal ("count", 2, l_set.count)
 		end
 
+	test_reentrant_search_position
+			-- Test reentrancy of feature 'search_position'.
+		local
+			a_set1: DS_HASH_SET [STRING]
+		do
+			create a_set1.make (5)
+			a_set1.set_equality_tester (create {KL_AGENT_EQUALITY_TESTER [STRING]}.make (agent same_strings_with_side_effect (?, ?, a_set1)))
+			a_set1.set_hash_function (create {KL_AGENT_HASH_FUNCTION [STRING]}.make (agent unique_string_hash_code))
+			a_set1.force_last ("one")
+			a_set1.force_last ("two")
+			assert ("not_has_void", not a_set1.has_void)
+		end
+
 feature {NONE} -- Implementation
 
 	same_integers (i, j: INTEGER): BOOLEAN
@@ -221,6 +234,26 @@ feature {NONE} -- Implementation
 			Result := (i = j)
 		ensure
 			definition: Result = (i = j)
+		end
+
+	same_strings_with_side_effect (s1, s2: STRING; a_set: DS_HASH_SET [STRING]): BOOLEAN
+			-- Is `s1' equal to `s2'?
+			-- (Used as agent to test iterators.)
+			-- Make sure that a call to `a_set.search_position' is invoked.
+		require
+			a_set_not_void: a_set /= Void
+		do
+				-- Force a call to `a_set.search_position'.
+			Result := not a_set.has_void
+			Result := (s1 ~ s2)
+		ensure
+			definition: Result = (s1 ~ s2)
+		end
+
+	unique_string_hash_code (a_string: STRING): INTEGER
+			-- Unique hash-code for all strings
+		do
+			Result := 1
 		end
 
 end

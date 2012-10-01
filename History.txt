@@ -103,6 +103,12 @@ Version 3.10 - ?
 	* Added features `do_until' and `do_if_until' to DS_CONTAINER and its
 	  descendants.
 	* Added feature `has_void' to DS_CELL and DS_PAIR.
+	* Fixed bug in DS_HASH_TABLE when the calls to `key_equality_tester'
+	  in `search_position' trigger the invariant which internally calls
+	  `search_position'. This routine was not written to be re-entrant.
+	* Fixed bug in features `force_last_new' and `put_last_new' of
+	  DS_HASH_TABLE when the call is not preceded by a call to
+	  `search_position' with the same key.
 
 	Gobo Eiffel Time Library:
 
