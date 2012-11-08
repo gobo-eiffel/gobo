@@ -919,7 +919,9 @@ feature {NONE} -- Implementation
 			e_small_enough: e <= capacity
 			valid_bound: s <= e + 1
 		do
-			if s = 1 then
+			if e = 0 then
+				-- Nothing to be done.
+			elseif s = 1 then
 					-- Take care of the dummy item at position 0 in `storage'.
 				special_routines.keep_head (storage, 0, e + 1)
 			else
