@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 	make
 			-- Start telco benchmark.
 		do
+			create last_number.make_zero
 			std.output.put_line ("-- telco application")
 			std.output.put_line ("--")
 			std.output.put_line ("-- Benchmark for Decimal Arithmetic")
@@ -267,6 +268,7 @@ feature -- Basic operations
 			a_file_not_end_of_input: not a_file.end_of_input
 		local
 			l_packed_string: STRING
+			l_last_decimal : detachable MA_DECIMAL
 		do
 			a_file.read_string (8)
 			if not a_file.end_of_input then
@@ -274,7 +276,9 @@ feature -- Basic operations
 					l_packed_string := a_file.last_string
 					bcd_parser.parse (l_packed_string)
 					if not bcd_parser.error then
-						last_number := bcd_parser.last_decimal
+						l_last_decimal := bcd_parser.last_decimal
+						check l_last_decimal /= Void end
+						last_number := l_last_decimal
 					else
 						Exceptions.raise ("Invalid file format: need 8 byte packed decimal")
 					end
