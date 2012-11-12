@@ -268,8 +268,10 @@ feature -- Removal
 	wipe_out
 			-- Remove all items.
 		do
-			fixed_array.keep_head (storage, 0, count + 1)
-			count := 0
+			if count > 0 then
+				fixed_array.keep_head (storage, 0, count + 1)
+				count := 0
+			end
 		ensure
 			wiped_out: is_empty
 		end

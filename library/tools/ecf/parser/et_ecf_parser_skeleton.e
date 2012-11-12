@@ -136,7 +136,6 @@ feature {NONE} -- AST factory
 		local
 			l_name: XM_ATTRIBUTE
 			l_filename: XM_ATTRIBUTE
-			l_dotnet_assembly: ET_ECF_DOTNET_ASSEMBLY
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			l_condition: ET_ECF_CONDITIONS
 			l_conditions: ET_ECF_CONDITIONS
@@ -159,8 +158,6 @@ feature {NONE} -- AST factory
 				error_handler.report_eada_error (attribute_name (l_filename, a_position_table), a_universe)
 			else
 				Result := ast_factory.new_adapted_dotnet_assembly (attribute_value (l_name, a_position_table), attribute_value (l_filename, a_position_table), a_universe)
-				l_dotnet_assembly := new_dotnet_assembly (an_element, a_position_table, Result)
-				Result.set_dotnet_assembly (l_dotnet_assembly)
 				l_readonly := an_element.attribute_by_name (xml_readonly)
 				if l_readonly /= Void then
 					l_bool := l_readonly.value
@@ -559,45 +556,6 @@ feature {NONE} -- AST factory
 				error_handler.report_eaar_error (attribute_name (l_excluded_value, a_position_table), a_universe)
 			else
 				Result := ast_factory.new_custom_condition (l_name.value, l_excluded_value.value, True)
-			end
-		end
-
-	new_dotnet_assembly (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_adapted_dotnet_assembly: ET_ECF_ADAPTED_DOTNET_ASSEMBLY): ET_ECF_DOTNET_ASSEMBLY
-			-- New .NET assembly built from `an_element'
-		require
-			an_element_not_void: an_element /= Void
-			is_assembly: STRING_.same_case_insensitive (an_element.name, xml_assembly)
-			a_position_table_not_void: a_position_table /= Void
-			a_adapted_dotnet_assembly_not_void: a_adapted_dotnet_assembly /= Void
-		local
-			l_parsed_dotnet_assemblies: like parsed_dotnet_assemblies
-			l_filename: STRING
-		do
-			l_parsed_dotnet_assemblies := parsed_dotnet_assemblies
-				-- Make sure that the filename of the .NET assembly is a canonical absolute pathname.
-			l_filename := a_adapted_dotnet_assembly.filename.name
-			l_filename := Execution_environment.interpreted_string (l_filename)
-				-- Make sure that the directory separator symbol is the
-				-- one of the current file system. We take advantage of
-				-- the fact that `windows_file_system' accepts both '\'
-				-- and '/' as directory separator.
-			l_filename := file_system.pathname_from_file_system (l_filename, windows_file_system)
-			if file_system.is_relative_pathname (l_filename) then
-				l_filename := file_system.pathname (file_system.dirname (a_adapted_dotnet_assembly.universe.filename), l_filename)
-			end
-			l_filename := file_system.canonical_pathname (l_filename)
-			if operating_system.is_windows then
-				l_filename := l_filename.as_lower
-			end
-			l_parsed_dotnet_assemblies.search (l_filename)
-			if l_parsed_dotnet_assemblies.found then
-					-- Already parsed.
-				Result := l_parsed_dotnet_assemblies.found_item
-				a_adapted_dotnet_assembly.set_dotnet_assembly (Result)
-			else
-				Result := ast_factory.new_dotnet_assembly (a_adapted_dotnet_assembly.name, l_filename, a_adapted_dotnet_assembly.universe.current_system)
-				a_adapted_dotnet_assembly.set_dotnet_assembly (Result)
-				l_parsed_dotnet_assemblies.force_last_new (Result, l_filename)
 			end
 		end
 
@@ -1531,6 +1489,55 @@ feature {NONE} -- Element change
 									end
 								end
 							end
+						end
+					end
+					i := i + 1
+				end
+			end
+		end
+
+	parse_dotnet_assemblies (a_universe: ET_ECF_INTERNAL_UNIVERSE; a_state: ET_ECF_STATE)
+			-- Parse .NET assemblies referenced in `a_universe' when in `a_state'.
+		require
+			a_universe_not_void: a_universe /= Void
+			a_state_not_void: a_state /= Void
+		local
+			l_dotnet_assemblies: ET_ADAPTED_DOTNET_ASSEMBLIES
+			l_dotnet_assembly: ET_ECF_DOTNET_ASSEMBLY
+			i, nb: INTEGER
+			l_filename: STRING
+			l_parsed_dotnet_assemblies: like parsed_dotnet_assemblies
+		do
+			l_parsed_dotnet_assemblies := parsed_dotnet_assemblies
+			l_dotnet_assemblies := a_universe.dotnet_assemblies
+			if l_dotnet_assemblies /= Void then
+				nb := l_dotnet_assemblies.count
+				from i := 1 until i > nb loop
+					if attached {ET_ECF_ADAPTED_DOTNET_ASSEMBLY} l_dotnet_assemblies.dotnet_assembly (i) as l_adapted_dotnet_assembly then
+							-- Make sure that the filename of the .NET assembly is a canonical absolute pathname.
+						l_filename := l_adapted_dotnet_assembly.filename.name
+						l_filename := Execution_environment.interpreted_string (l_filename)
+							-- Make sure that the directory separator symbol is the
+							-- one of the current file system. We take advantage of
+							-- the fact that `windows_file_system' accepts both '\'
+							-- and '/' as directory separator.
+						l_filename := file_system.pathname_from_file_system (l_filename, windows_file_system)
+						if file_system.is_relative_pathname (l_filename) then
+							l_filename := file_system.pathname (file_system.dirname (l_adapted_dotnet_assembly.universe.filename), l_filename)
+						end
+						l_filename := file_system.canonical_pathname (l_filename)
+						if operating_system.is_windows then
+							l_filename := l_filename.as_lower
+						end
+						l_parsed_dotnet_assemblies.search (l_filename)
+						if l_parsed_dotnet_assemblies.found then
+								-- Already parsed.
+							l_dotnet_assembly := l_parsed_dotnet_assemblies.found_item
+							l_adapted_dotnet_assembly.set_dotnet_assembly (l_dotnet_assembly)
+						else
+							l_dotnet_assembly := ast_factory.new_dotnet_assembly (l_adapted_dotnet_assembly.name, l_filename, l_adapted_dotnet_assembly.universe.current_system)
+							l_adapted_dotnet_assembly.set_dotnet_assembly (l_dotnet_assembly)
+							l_parsed_dotnet_assemblies.force_last_new (l_dotnet_assembly, l_filename)
 						end
 					end
 					i := i + 1
