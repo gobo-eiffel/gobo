@@ -38,6 +38,9 @@ inherit
 	UT_SHARED_ECMA_VERSIONS
 		export {NONE} all end
 
+	ET_SHARED_ISE_VARIABLES
+		export {NONE} all end
+
 create
 
 	make_default
@@ -58,6 +61,9 @@ feature -- Test
 			ise_version: UT_VERSION
 			ecma_version: UT_VERSION
 		do
+				-- For compatibility with ISE's tools, define the environment
+				-- variable "$ISE_LIBRARY" to $ISE_EIFFEL" if not set yet.
+			ise_variables.set_ise_library_variable
 			create an_xace_file.make (xace_filename)
 			an_xace_file.open_read
 			assert ("xace_file_opened", an_xace_file.is_open_read)
