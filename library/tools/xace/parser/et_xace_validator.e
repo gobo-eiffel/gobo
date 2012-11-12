@@ -5,7 +5,7 @@ note
 		"Xace XML validators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2004, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2012, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -115,7 +115,6 @@ feature {NONE} -- Validation
 			a_position_table_not_void: a_position_table /= Void
 		local
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			a_child: XM_ELEMENT
 		do
 			if not a_system.has_attribute_by_name (uc_name) then
 				has_error := True
@@ -129,8 +128,7 @@ feature {NONE} -- Validation
 			end
 			a_cursor := a_system.new_cursor
 			from a_cursor.start until a_cursor.after loop
-				a_child ?= a_cursor.item
-				if a_child = Void then
+				if not attached {XM_ELEMENT} a_cursor.item as a_child then
 						-- Not an element. Ignore.
 				elseif STRING_.same_string (a_child.name, uc_description) then
 						-- OK.
@@ -169,7 +167,6 @@ feature {NONE} -- Validation
 			a_position_table_not_void: a_position_table /= Void
 		local
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			a_child: XM_ELEMENT
 		do
 			if not a_library.has_attribute_by_name (uc_name) then
 				has_error := True
@@ -177,8 +174,7 @@ feature {NONE} -- Validation
 			end
 			a_cursor := a_library.new_cursor
 			from a_cursor.start until a_cursor.after loop
-				a_child ?= a_cursor.item
-				if a_child = Void then
+				if not attached {XM_ELEMENT} a_cursor.item as a_child then
 						-- Not an element. Ignore.
 				elseif STRING_.same_string (a_child.name, uc_description) then
 						-- OK.
@@ -246,12 +242,10 @@ feature {NONE} -- Validation
 			a_position_table_not_void: a_position_table /= Void
 		local
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			a_child: XM_ELEMENT
 		do
 			a_cursor := a_cluster.new_cursor
 			from a_cursor.start until a_cursor.after loop
-				a_child ?= a_cursor.item
-				if a_child = Void then
+				if not attached {XM_ELEMENT} a_cursor.item as a_child then
 						-- Not an element. Ignore.
 				elseif STRING_.same_string (a_child.name, uc_description) then
 						-- OK.
@@ -284,7 +278,6 @@ feature {NONE} -- Validation
 			a_position_table_not_void: a_position_table /= Void
 		local
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			a_child: XM_ELEMENT
 		do
 			if not a_class.has_attribute_by_name (uc_name) then
 				has_error := True
@@ -292,8 +285,7 @@ feature {NONE} -- Validation
 			end
 			a_cursor := a_class.new_cursor
 			from a_cursor.start until a_cursor.after loop
-				a_child ?= a_cursor.item
-				if a_child = Void then
+				if not attached {XM_ELEMENT} a_cursor.item as a_child then
 						-- Not an element. Ignore.
 				elseif STRING_.same_string (a_child.name, uc_option) then
 					validate_option (a_child, a_position_table)
@@ -316,7 +308,6 @@ feature {NONE} -- Validation
 			a_position_table_not_void: a_position_table /= Void
 		local
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			a_child: XM_ELEMENT
 		do
 			if not a_feature.has_attribute_by_name (uc_name) then
 				has_error := True
@@ -324,8 +315,7 @@ feature {NONE} -- Validation
 			end
 			a_cursor := a_feature.new_cursor
 			from a_cursor.start until a_cursor.after loop
-				a_child ?= a_cursor.item
-				if a_child = Void then
+				if not attached {XM_ELEMENT} a_cursor.item as a_child then
 						-- Not an element. Ignore.
 				elseif STRING_.same_string (a_child.name, uc_option) then
 					validate_option (a_child, a_position_table)
@@ -346,7 +336,6 @@ feature {NONE} -- Validation
 			a_position_table_not_void: a_position_table /= Void
 		local
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			a_child: XM_ELEMENT
 		do
 			if not a_mount.has_attribute_by_name (uc_location) then
 				has_error := True
@@ -354,8 +343,7 @@ feature {NONE} -- Validation
 			end
 			a_cursor := a_mount.new_cursor
 			from a_cursor.start until a_cursor.after loop
-				a_child ?= a_cursor.item
-				if a_child = Void then
+				if not attached {XM_ELEMENT} a_cursor.item as a_child then
 						-- Not an element. Ignore.
 				elseif STRING_.same_string (a_child.name, uc_exclude) then
 					error_handler.report_obsolete_exclude_element_warning (a_position_table.item (a_child))
@@ -380,7 +368,6 @@ feature {NONE} -- Validation
 			has_value: BOOLEAN
 			a_name: STRING
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			a_child: XM_ELEMENT
 			a_child_name: STRING
 		do
 			has_name := an_option.has_attribute_by_name (uc_name)
@@ -409,8 +396,7 @@ feature {NONE} -- Validation
 			else
 				a_cursor := an_option.new_cursor
 				from a_cursor.start until a_cursor.after loop
-					a_child ?= a_cursor.item
-					if a_child = Void then
+					if not attached {XM_ELEMENT} a_cursor.item as a_child then
 							-- Not an element. Ignore.
 					else
 						a_child_name := a_child.name
@@ -449,12 +435,10 @@ feature {NONE} -- Validation
 			a_position_table_not_void: a_position_table /= Void
 		local
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			a_child: XM_ELEMENT
 		do
 			a_cursor := an_external.new_cursor
 			from a_cursor.start until a_cursor.after loop
-				a_child ?= a_cursor.item
-				if a_child = Void then
+				if not attached {XM_ELEMENT} a_cursor.item as a_child then
 						-- Not an element. Ignore.
 				elseif STRING_.same_string (a_child.name, uc_include_dir) then
 					if not a_child.has_attribute_by_name (uc_location) then
@@ -499,15 +483,13 @@ feature {NONE} -- Validation
 			a_position_table_not_void: a_position_table /= Void
 		local
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			a_child: XM_ELEMENT
 		do
 			if not an_export.has_attribute_by_name (uc_class) then
 				error_handler.report_missing_attribute_error (an_export, uc_class, a_position_table.item (an_export))
 			end
 			a_cursor := an_export.new_cursor
 			from a_cursor.start until a_cursor.after loop
-				a_child ?= a_cursor.item
-				if a_child = Void then
+				if not attached {XM_ELEMENT} a_cursor.item as a_child then
 						-- Not an element. Ignore.
 				elseif STRING_.same_string (a_child.name, uc_feature) then
 					if not a_child.has_attribute_by_name (uc_name) then

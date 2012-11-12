@@ -5,7 +5,7 @@ note
 		"Eiffel inline agents"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -45,15 +45,13 @@ feature -- Initialization
 	reset
 			-- Reset inline agent as it was just after it was last parsed.
 		local
-			l_actuals: ET_AGENT_ARGUMENT_OPERAND_LIST
 			l_type: like type
 			l_arguments: like formal_arguments
 			l_preconditions: like preconditions
 			l_postconditions: like postconditions
 		do
 			target.reset
-			l_actuals ?= actual_arguments
-			if l_actuals /= Void then
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} actual_arguments as l_actuals then
 				l_actuals.reset
 			else
 				actual_arguments := Void

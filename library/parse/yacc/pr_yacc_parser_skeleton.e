@@ -754,7 +754,7 @@ feature {NONE} -- Factory
 		ensure
 			type_not_void: Result /= Void
 		end
-		
+
 	new_labeled_type (a_label: STRING; a_type: PR_TYPE): PR_LABELED_TYPE
 			-- New labeled type
 		require
@@ -1037,7 +1037,9 @@ feature {NONE} -- Implementation
 				until
 					i < 1 or a_token /= Void
 				loop
-					a_token ?= rhs.item (i)
+					if attached {PR_TOKEN} rhs.item (i) as l_token then
+						a_token := l_token
+					end
 					i := i - 1
 				end
 			end

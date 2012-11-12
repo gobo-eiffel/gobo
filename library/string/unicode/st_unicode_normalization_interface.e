@@ -9,7 +9,7 @@ note
 		need a few modifications to account of surrogates.
 	]"
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2005-2011, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2012, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -110,17 +110,21 @@ feature -- Access
 		local
 			changed: DS_CELL [BOOLEAN]
 			a_decomposition: DS_ARRAYED_LIST [INTEGER]
-			l_result: detachable UC_UTF8_STRING
 		do
-			l_result ?= a_source
-			if l_result = Void or else not l_result.is_empty then
+			if attached {UC_UTF8_STRING} a_source as l_result then
+				Result := l_result
+				if not Result.is_empty then
+					create changed.make (False)
+					a_decomposition := decomposition (a_source, True, changed)
+					if changed.item then
+						Result := string_from_codes (a_decomposition)
+					end
+				end
+			else
 				create changed.make (False)
 				a_decomposition := decomposition (a_source, True, changed)
-				if changed.item or l_result = Void then
-					l_result := string_from_codes (a_decomposition)
-				end
+				Result := string_from_codes (a_decomposition)
 			end
-			Result := l_result
 		ensure
 			as_nfd_not_void: Result /= Void
 			is_nfd: is_nfd (Result)
@@ -153,17 +157,21 @@ feature -- Access
 		local
 			changed: DS_CELL [BOOLEAN]
 			a_decomposition: DS_ARRAYED_LIST [INTEGER]
-			l_result: detachable UC_UTF8_STRING
 		do
-			l_result ?= a_source
-			if l_result = Void or else not l_result.is_empty then
+			if attached {UC_UTF8_STRING} a_source as l_result then
+				Result := l_result
+				if not Result.is_empty then
+					create changed.make (False)
+					a_decomposition := decomposition (a_source, False, changed)
+					if changed.item then
+						Result := string_from_codes (a_decomposition)
+					end
+				end
+			else
 				create changed.make (False)
 				a_decomposition := decomposition (a_source, False, changed)
-				if changed.item or l_result = Void then
-					l_result := string_from_codes (a_decomposition)
-				end
+				Result := string_from_codes (a_decomposition)
 			end
-			Result := l_result
 		ensure
 			as_nfkd_not_void: Result /= Void
 			is_nfd: is_nfd (Result)

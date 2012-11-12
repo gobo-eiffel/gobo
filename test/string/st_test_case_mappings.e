@@ -4,9 +4,8 @@ note
 
 		"Test features of class ST_UNICODE_FULL_CASE_MAPPING"
 
-	test_status: "ok_to_run"
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2006, Colin Adams and others"
+	copyright: "Copyright (c) 2006-2012, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,17 +39,17 @@ feature -- Test
 		end
 
 	test_lower_case
-			-- Test loer case mapping
+			-- Test lower case mapping
 		local
 			l_unicode: 	UC_UNICODE_ROUTINES
-			l_unicode_string, l_expected: UC_UTF8_STRING
+			l_unicode_string, l_expected: STRING
 		do
 			create l_unicode
 			-- LATIN CAPITAL LETTER I WITH DOT ABOVE
-			l_unicode_string ?= l_unicode.code_to_string (304)
+			l_unicode_string := l_unicode.code_to_string (304)
 			l_unicode_string := lower_utf8_string (l_unicode_string)
 			assert ("Lower cased string not void", l_unicode_string /= Void)
-			l_expected ?= STRING_.concat (l_unicode.code_to_string (105), l_unicode.code_to_string (775))
+			l_expected := STRING_.concat (l_unicode.code_to_string (105), l_unicode.code_to_string (775))
 			assert ("Correct lower form", STRING_.same_string (l_expected, l_unicode_string))
 		end
 

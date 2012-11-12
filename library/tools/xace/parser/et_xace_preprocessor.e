@@ -5,7 +5,7 @@ note
 		"Xace XML preprocessor"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2004, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2012, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -65,15 +65,14 @@ feature -- Preprocessing
 			a_position_table_not_void: a_position_table /= Void
 		local
 			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
-			a_child_element: XM_ELEMENT
 			should_remove: BOOLEAN
 		do
 			expand_attribute_variables (a_composite)
 			a_cursor := a_composite.new_cursor
 			from a_cursor.start until a_cursor.after loop
 				should_remove := False
-				a_child_element ?= a_cursor.item
-				if a_child_element /= Void then
+				if attached {XM_ELEMENT} a_cursor.item as a_child_element then
+
 					if should_strip_element (a_child_element, a_position_table) then
 						should_remove := True
 					else
@@ -205,14 +204,12 @@ feature {NONE} -- Implementation
 		require
 			a_composite_not_void: a_composite /= Void
 		local
-			an_attribute: XM_ATTRIBUTE
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			a_string: STRING
 		do
 			a_cursor := a_composite.new_cursor
 			from a_cursor.start until a_cursor.after loop
-				an_attribute ?= a_cursor.item
-				if an_attribute /= Void then
+				if attached {XM_ATTRIBUTE} a_cursor.item as an_attribute then
 					a_string := template_expander.expand_from_values (an_attribute.value, variables)
 					an_attribute.set_value (a_string)
 				end

@@ -5,7 +5,7 @@ note
 		"Eiffel creation clauses"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -66,7 +66,9 @@ feature -- Access
 	clients_clause: ET_CLIENTS
 			-- Clients clause
 		do
-			Result ?= clients
+			if attached {ET_CLIENTS} clients as l_result then
+				Result := l_result
+			end
 		end
 
 	position: ET_POSITION

@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic systems at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1073,7 +1073,6 @@ feature {NONE} -- Compilation
 			l_count_feature: ET_QUERY
 			l_procedure: ET_PROCEDURE
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
-			l_external_function: ET_EXTERNAL_FUNCTION
 		do
 			if not current_system.stop_requested then
 				dynamic_types.wipe_out
@@ -1475,8 +1474,7 @@ feature {NONE} -- Compilation
 							error_handler.report_gvkfe3a_error (l_class, typed_pointer_to_pointer_feature, current_system.pointer_type)
 							typed_pointer_to_pointer_feature := Void
 						elseif not typed_pointer_to_pointer_feature.is_attribute then
-							l_external_function ?= typed_pointer_to_pointer_feature
-							if l_external_function = Void or else l_external_function.builtin_code /= tokens.builtin_pointer_feature (tokens.builtin_pointer_item) then
+							if not attached {ET_EXTERNAL_FUNCTION} typed_pointer_to_pointer_feature as l_external_function or else l_external_function.builtin_code /= tokens.builtin_pointer_feature (tokens.builtin_pointer_item) then
 								set_fatal_error
 								error_handler.report_gvkfe2a_error (l_class, typed_pointer_to_pointer_feature)
 								typed_pointer_to_pointer_feature := Void

@@ -1193,7 +1193,6 @@ feature -- Compilation
 			-- is received, i.e. `stop_request' starts returning True. No
 			-- interruption if `stop_request' is Void.
 		local
-			l_checker: ET_IMPLEMENTATION_CHECKER
 			l_processor: ET_AST_PROCESSOR
 		do
 				-- Check implementation.
@@ -1202,8 +1201,7 @@ feature -- Compilation
 			else
 				l_processor := implementation_checker
 			end
-			l_checker ?= l_processor
-			if l_checker /= Void then
+			if attached {ET_IMPLEMENTATION_CHECKER} l_processor as l_checker then
 				l_checker.set_flat_mode (flat_mode)
 				l_checker.set_flat_dbc_mode (flat_dbc_mode)
 				l_checker.set_suppliers_enabled (suppliers_enabled)

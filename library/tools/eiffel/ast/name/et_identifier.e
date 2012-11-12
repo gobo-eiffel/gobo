@@ -417,21 +417,17 @@ feature -- Comparison
 			-- Are `Current' and `other' the same feature call name?
 			-- (case insensitive)
 		local
-			an_id: ET_IDENTIFIER
 			l_name: STRING
 		do
 			if other = Current then
 				Result := True
-			else
-				an_id ?= other
-				if an_id /= Void then
-					if hash_code = an_id.hash_code then
-						l_name := an_id.name
-						if l_name = name then
-							Result := True
-						else
-							Result := STRING_.same_case_insensitive (name, l_name)
-						end
+			elseif attached {ET_IDENTIFIER} other as an_id then
+				if hash_code = an_id.hash_code then
+					l_name := an_id.name
+					if l_name = name then
+						Result := True
+					else
+						Result := STRING_.same_case_insensitive (name, l_name)
 					end
 				end
 			end
@@ -441,21 +437,17 @@ feature -- Comparison
 			-- Are feature name and `other' the same feature name?
 			-- (case insensitive)
 		local
-			an_id: ET_IDENTIFIER
 			l_name: STRING
 		do
 			if other = Current then
 				Result := True
-			else
-				an_id ?= other
-				if an_id /= Void then
-					if hash_code = an_id.hash_code then
-						l_name := an_id.name
-						if l_name = name then
-							Result := True
-						else
-							Result := STRING_.same_case_insensitive (name, l_name)
-						end
+			elseif attached {ET_IDENTIFIER} other as an_id then
+				if hash_code = an_id.hash_code then
+					l_name := an_id.name
+					if l_name = name then
+						Result := True
+					else
+						Result := STRING_.same_case_insensitive (name, l_name)
 					end
 				end
 			end
@@ -465,21 +457,17 @@ feature -- Comparison
 			-- Are class name and `other' the same class name?
 			-- (case insensitive)
 		local
-			an_id: ET_IDENTIFIER
 			l_name: STRING
 		do
 			if other = Current then
 				Result := True
-			else
-				an_id ?= other
-				if an_id /= Void then
-					if hash_code = an_id.hash_code then
-						l_name := an_id.name
-						if l_name = name then
-							Result := True
-						else
-							Result := STRING_.same_case_insensitive (name, l_name)
-						end
+			elseif attached {ET_IDENTIFIER} other as an_id then
+				if hash_code = an_id.hash_code then
+					l_name := an_id.name
+					if l_name = name then
+						Result := True
+					else
+						Result := STRING_.same_case_insensitive (name, l_name)
 					end
 				end
 			end

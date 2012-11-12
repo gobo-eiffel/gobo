@@ -6,7 +6,7 @@ note
 		%as input and return the formatted output."
 
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2004-2011, Object-Tools and others"
+	copyright: "Copyright (c) 2004-2012, Object-Tools and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -101,12 +101,9 @@ feature -- Formatting
 		require
 			a_format_not_void: a_format /= Void
 			valid_format_and_parameters: valid_format_and_parameters (a_format, a_parameters)
-		local
-			a_stream: detachable KI_CHARACTER_OUTPUT_STREAM
 		do
 			Result := STRING_.new_empty_string (a_format, a_format.count)
-			a_stream ?= ANY_.to_any (Result)
-			if a_stream /= Void then
+			if attached {KI_CHARACTER_OUTPUT_STREAM} Result as a_stream then
 				do_format_to (a_format, a_parameters, a_stream)
 			else
 				string_output_stream.set_string (Result)
@@ -128,13 +125,10 @@ feature -- Formatting
 		require
 			a_format_not_void: a_format /= Void
 			valid_format_and_parameters: valid_format_and_parameters (a_format, <<a_parameter>>)
-		local
-			a_stream: detachable KI_CHARACTER_OUTPUT_STREAM
 		do
 			single_parameter.put (a_parameter, 1)
 			Result := STRING_.new_empty_string (a_format, a_format.count)
-			a_stream ?= ANY_.to_any (Result)
-			if a_stream /= Void then
+			if attached {KI_CHARACTER_OUTPUT_STREAM} Result as a_stream then
 				do_format_to (a_format, single_parameter, a_stream)
 			else
 				string_output_stream.set_string (Result)
@@ -179,7 +173,6 @@ feature {NONE} -- Formatting
 			a_width_found: BOOLEAN
 			a_width: INTEGER
 			a_parameter: detachable ANY
-			an_integer_parameter: detachable DS_CELL [INTEGER]
 			no_more_precision: BOOLEAN
 			a_precision_found: BOOLEAN
 			a_precision: INTEGER
@@ -335,8 +328,7 @@ feature {NONE} -- Formatting
 										a_parameters_not_void: a_parameters /= Void
 									end
 									a_parameter := a_parameters.item (j)
-									an_integer_parameter ?= a_parameter
-									if an_integer_parameter /= Void then
+									if attached {DS_CELL [INTEGER]} a_parameter as an_integer_parameter then
 										a_width := an_integer_parameter.item
 										if a_width < 0 then
 											set_error ("Width parameter must not be negative")
@@ -411,8 +403,7 @@ feature {NONE} -- Formatting
 											a_parameters_not_void: a_parameters /= Void
 										end
 										a_parameter := a_parameters.item (j)
-										an_integer_parameter ?= a_parameter
-										if an_integer_parameter /= Void then
+										if attached {DS_CELL [INTEGER]} a_parameter as an_integer_parameter then
 											a_precision := an_integer_parameter.item
 											if a_precision < 0 then
 												set_error ("Precision parameter must not be negative")

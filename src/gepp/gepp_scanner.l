@@ -5,7 +5,7 @@ note
 
 		"Scanners for 'gepp' preprocessors"
 
-	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -225,17 +225,17 @@ feature -- Element change
 			-- Should current scanner terminate when end of file is reached?
 			-- True unless an include file was being processed.
 		local
-			old_buffer: YY_FILE_BUFFER
+			l_old_buffer: YY_BUFFER
 			a_file: KI_CHARACTER_INPUT_STREAM
 		do
 			if not include_stack.is_empty then
-				old_buffer ?= input_buffer
+				l_old_buffer := input_buffer
 				set_input_buffer (include_stack.item)
 				line_nb := line_nb_stack.item
 				line_nb_stack.remove
 				include_stack.remove
-				if old_buffer /= Void then
-					a_file := old_buffer.file
+				if attached {YY_FILE_BUFFER} l_old_buffer as l_file_buffer then
+					a_file := l_file_buffer.file
 					if a_file.is_closable then
 						a_file.close
 					end

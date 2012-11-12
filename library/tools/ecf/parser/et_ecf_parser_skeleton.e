@@ -5,7 +5,7 @@ note
 		"ECF parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -138,7 +138,6 @@ feature {NONE} -- AST factory
 			l_filename: XM_ATTRIBUTE
 			l_dotnet_assembly: ET_ECF_DOTNET_ASSEMBLY
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			l_child: XM_ELEMENT
 			l_condition: ET_ECF_CONDITIONS
 			l_conditions: ET_ECF_CONDITIONS
 			l_old_name: XM_ATTRIBUTE
@@ -179,8 +178,7 @@ feature {NONE} -- AST factory
 				end
 				l_cursor := an_element.new_cursor
 				from l_cursor.start until l_cursor.after loop
-					l_child ?= l_cursor.item
-					if l_child /= Void then
+					if attached {XM_ELEMENT} l_cursor.item as l_child then
 						if STRING_.same_case_insensitive (l_child.name, xml_condition) then
 							l_condition := new_condition (l_child, a_position_table, a_universe)
 							if l_condition /= Void then
@@ -232,7 +230,6 @@ feature {NONE} -- AST factory
 			l_name: XM_ATTRIBUTE
 			l_filename: XM_ATTRIBUTE
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			l_child: XM_ELEMENT
 			l_condition: ET_ECF_CONDITIONS
 			l_conditions: ET_ECF_CONDITIONS
 			l_old_name: XM_ATTRIBUTE
@@ -271,8 +268,7 @@ feature {NONE} -- AST factory
 				end
 				l_cursor := an_element.new_cursor
 				from l_cursor.start until l_cursor.after loop
-					l_child ?= l_cursor.item
-					if l_child /= Void then
+					if attached {XM_ELEMENT} l_cursor.item as l_child then
 						if STRING_.same_case_insensitive (l_child.name, xml_condition) then
 							l_condition := new_condition (l_child, a_position_table, a_universe)
 							if l_condition /= Void then
@@ -357,7 +353,6 @@ feature {NONE} -- AST factory
 			l_readonly: XM_ATTRIBUTE
 			l_bool: STRING
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			l_child: XM_ELEMENT
 			l_cluster: ET_ECF_CLUSTER
 			l_subclusters: ET_ECF_CLUSTERS
 			l_file_rule: ET_ECF_FILE_RULE
@@ -402,8 +397,7 @@ feature {NONE} -- AST factory
 				end
 				l_cursor := an_element.new_cursor
 				from l_cursor.start until l_cursor.after loop
-					l_child ?= l_cursor.item
-					if l_child /= Void then
+					if attached {XM_ELEMENT} l_cursor.item as l_child then
 						if STRING_.same_case_insensitive (l_child.name, xml_cluster) then
 							l_cluster := new_cluster (l_child, a_position_table, a_override, a_universe)
 							if l_cluster /= Void then
@@ -480,14 +474,12 @@ feature {NONE} -- AST factory
 			a_universe_not_void: a_universe /= Void
 		local
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			l_child: XM_ELEMENT
 			l_condition: ET_ECF_CONDITION
 		do
 			Result := ast_factory.new_condition
 			l_cursor := an_element.new_cursor
 			from l_cursor.start until l_cursor.after loop
-				l_child ?= l_cursor.item
-				if l_child /= Void then
+				if attached {XM_ELEMENT} l_cursor.item as l_child then
 					if STRING_.same_case_insensitive (l_child.name, xml_platform) then
 						l_condition := new_platform_condition (l_child, a_position_table, a_universe)
 						if l_condition /= Void then
@@ -673,7 +665,6 @@ feature {NONE} -- AST factory
 			l_condition: ET_ECF_CONDITIONS
 			l_conditions: ET_ECF_CONDITIONS
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			l_child: XM_ELEMENT
 		do
 			l_pathname := an_element.attribute_by_name (xml_location)
 			if l_pathname = Void then
@@ -684,8 +675,7 @@ feature {NONE} -- AST factory
 				Result := ast_factory.new_external_include (l_pathname.value)
 				l_cursor := an_element.new_cursor
 				from l_cursor.start until l_cursor.after loop
-					l_child ?= l_cursor.item
-					if l_child /= Void then
+					if attached {XM_ELEMENT} l_cursor.item as l_child then
 						if STRING_.same_case_insensitive (l_child.name, xml_condition) then
 							l_condition := new_condition (l_child, a_position_table, a_universe)
 							if l_condition /= Void then
@@ -715,7 +705,6 @@ feature {NONE} -- AST factory
 			l_condition: ET_ECF_CONDITIONS
 			l_conditions: ET_ECF_CONDITIONS
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			l_child: XM_ELEMENT
 		do
 			l_pathname := an_element.attribute_by_name (xml_location)
 			if l_pathname = Void then
@@ -726,8 +715,7 @@ feature {NONE} -- AST factory
 				Result := ast_factory.new_external_library (l_pathname.value)
 				l_cursor := an_element.new_cursor
 				from l_cursor.start until l_cursor.after loop
-					l_child ?= l_cursor.item
-					if l_child /= Void then
+					if attached {XM_ELEMENT} l_cursor.item as l_child then
 						if STRING_.same_case_insensitive (l_child.name, xml_condition) then
 							l_condition := new_condition (l_child, a_position_table, a_universe)
 							if l_condition /= Void then
@@ -757,7 +745,6 @@ feature {NONE} -- AST factory
 			l_condition: ET_ECF_CONDITIONS
 			l_conditions: ET_ECF_CONDITIONS
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			l_child: XM_ELEMENT
 		do
 			l_pathname := an_element.attribute_by_name (xml_location)
 			if l_pathname = Void then
@@ -768,8 +755,7 @@ feature {NONE} -- AST factory
 				Result := ast_factory.new_external_object (l_pathname.value)
 				l_cursor := an_element.new_cursor
 				from l_cursor.start until l_cursor.after loop
-					l_child ?= l_cursor.item
-					if l_child /= Void then
+					if attached {XM_ELEMENT} l_cursor.item as l_child then
 						if STRING_.same_case_insensitive (l_child.name, xml_condition) then
 							l_condition := new_condition (l_child, a_position_table, a_universe)
 							if l_condition /= Void then
@@ -801,12 +787,10 @@ feature {NONE} -- AST factory
 			l_conditions: ET_ECF_CONDITIONS
 			l_text: STRING
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			l_child: XM_ELEMENT
 		do
 			l_cursor := an_element.new_cursor
 			from l_cursor.start until l_cursor.after loop
-				l_child ?= l_cursor.item
-				if l_child /= Void then
+				if attached {XM_ELEMENT} l_cursor.item as l_child then
 					if STRING_.same_case_insensitive (l_child.name, xml_exclude) then
 						l_text := l_child.text
 						if l_text /= Void and then not l_text.is_empty then
@@ -935,7 +919,6 @@ feature {NONE} -- AST factory
 			l_readonly: XM_ATTRIBUTE
 			l_bool: STRING
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			l_child: XM_ELEMENT
 			l_cluster: ET_ECF_CLUSTER
 			l_subclusters: ET_ECF_CLUSTERS
 			l_file_rule: ET_ECF_FILE_RULE
@@ -980,8 +963,7 @@ feature {NONE} -- AST factory
 				end
 				l_cursor := an_element.new_cursor
 				from l_cursor.start until l_cursor.after loop
-					l_child ?= l_cursor.item
-					if l_child /= Void then
+					if attached {XM_ELEMENT} l_cursor.item as l_child then
 						if STRING_.same_case_insensitive (l_child.name, xml_cluster) then
 							l_cluster := new_cluster (l_child, a_position_table, True, a_universe)
 							if l_cluster /= Void then
@@ -1128,7 +1110,6 @@ feature {NONE} -- AST factory
 		local
 			l_name: XM_ATTRIBUTE
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			l_child: XM_ELEMENT
 			l_cluster: ET_ECF_CLUSTER
 			l_clusters: ET_ECF_CLUSTERS
 			l_library: ET_ECF_ADAPTED_LIBRARY
@@ -1154,8 +1135,7 @@ feature {NONE} -- AST factory
 				Result := ast_factory.new_target (l_name.value)
 				l_cursor := an_element.new_cursor
 				from l_cursor.start until l_cursor.after loop
-					l_child ?= l_cursor.item
-					if l_child /= Void then
+					if attached {XM_ELEMENT} l_cursor.item as l_child then
 						if STRING_.same_case_insensitive (l_child.name, xml_cluster) then
 							l_cluster := new_cluster (l_child, a_position_table, False, a_universe)
 							if l_cluster /= Void then
@@ -1339,7 +1319,6 @@ feature {NONE} -- Element change
 			l_namespace: XM_NAMESPACE
 			l_namespace_uri: STRING
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			l_child: XM_ELEMENT
 			l_target: ET_ECF_TARGET
 			l_targets: ET_ECF_TARGETS
 			l_target_name: XM_ATTRIBUTE
@@ -1359,8 +1338,7 @@ feature {NONE} -- Element change
 			a_system_config.set_ecf_version (ecf_version (l_namespace_uri))
 			l_cursor := an_element.new_cursor
 			from l_cursor.start until l_cursor.after loop
-				l_child ?= l_cursor.item
-				if l_child /= Void then
+				if attached {XM_ELEMENT} l_cursor.item as l_child then
 					if STRING_.same_case_insensitive (l_child.name, xml_target) then
 						l_target := new_target (l_child, a_position_table, a_universe)
 						if l_target /= Void then
@@ -1504,7 +1482,6 @@ feature {NONE} -- Element change
 			a_state_not_void: a_state /= Void
 		local
 			l_libraries: ET_ADAPTED_LIBRARIES
-			l_adapted_library: ET_ECF_ADAPTED_LIBRARY
 			l_library: ET_ECF_LIBRARY
 			i, nb: INTEGER
 			l_file: KL_TEXT_INPUT_FILE
@@ -1517,8 +1494,7 @@ feature {NONE} -- Element change
 				l_library_parser := library_parser
 				nb := l_libraries.count
 				from i := 1 until i > nb loop
-					l_adapted_library ?= l_libraries.library (i)
-					if l_adapted_library /= Void then
+					if attached {ET_ECF_ADAPTED_LIBRARY} l_libraries.library (i) as l_adapted_library then
 							-- Make sure that the filename of the ECF library is a canonical absolute pathname.
 						l_filename := l_adapted_library.filename.name
 						l_filename := Execution_environment.interpreted_string (l_filename)

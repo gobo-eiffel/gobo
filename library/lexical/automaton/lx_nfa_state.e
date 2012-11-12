@@ -5,7 +5,7 @@ note
 		"Non-deterministic finite automaton states"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -87,11 +87,8 @@ feature -- Status report
 
 	has_epsilon_transition: BOOLEAN
 			-- Is `transition' an epsilon transition?
-		local
-			xtion: LX_EPSILON_TRANSITION [LX_NFA_STATE]
 		do
-			xtion ?= transition
-			Result := xtion /= Void
+			Result := attached {LX_EPSILON_TRANSITION [LX_NFA_STATE]} transition
 		ensure
 			has_transition: Result implies has_transition
 		end
@@ -156,13 +153,10 @@ feature -- Status setting
 	set_beginning_as_normal
 			-- Set each state of the epsilon closure as normal
 			-- (i.e not in trailing context).
-		local
-			epsilon_xtion: LX_EPSILON_TRANSITION [LX_NFA_STATE]
 		do
 			if in_trail_context then
 				in_trail_context := False
-				epsilon_xtion ?= transition
-				if epsilon_xtion /= Void then
+				if attached {LX_EPSILON_TRANSITION [LX_NFA_STATE]} transition as epsilon_xtion then
 					epsilon_xtion.target.set_beginning_as_normal
 				end
 				if epsilon_transition /= Void then

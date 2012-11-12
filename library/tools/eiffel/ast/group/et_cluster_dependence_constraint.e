@@ -5,7 +5,7 @@ note
 		"Cluster dependence constraints"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/06/22 $"
 	revision: "$Revision: #4 $"
@@ -109,7 +109,6 @@ feature -- Status report
 			a_group_not_void: a_group /= Void
 		local
 			l_parent: ET_GROUP
-			l_library: ET_LIBRARY
 			l_library_name: STRING
 		do
 				-- Note that we check first whether `group_pathnames' and `group_names' are
@@ -128,8 +127,7 @@ feature -- Status report
 				if l_parent /= Void then
 					Result := has_group (l_parent)
 				elseif not group_names.is_empty then
-					l_library ?= a_group.universe
-					if l_library /= Void then
+					if attached {ET_LIBRARY} a_group.universe as l_library then
 						l_library_name := l_library.name
 						if l_library_name /= Void and then not l_library_name.is_empty then
 							Result := group_names.there_exists (agent STRING_.same_case_insensitive (?, l_library_name))

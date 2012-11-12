@@ -5,7 +5,7 @@ note
 		"xsl:sort element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2012, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -108,24 +108,20 @@ feature -- Element change
 	validate
 			-- Check that the stylesheet element is valid.
 		local
-			l_style_element: XM_XSLT_STYLE_ELEMENT
 			l_error: XM_XPATH_ERROR_VALUE
 		do
 			if select_expression /= Void then
 				if has_child_nodes then
 					create l_error.make_from_string ("xsl:sort must be empty when a 'select' attribute is supplied", Xpath_errors_uri, "XTSE1015", Static_error)
 					report_compile_error (l_error)
-				else
-					l_style_element ?= parent
-					if l_style_element = Void or else
-						(not l_style_element.is_for_each and then
-						 not l_style_element.is_for_each_group and then
-						 not l_style_element.is_perform_sort and then
-						 not l_style_element.is_apply_templates)
-					 then
-						create l_error.make_from_string ("xsl:sort must be child of xsl:apply-templates, xsl:for-each[-group], or xsl:perform-sort", Xpath_errors_uri, "XTSE0010", Static_error)
-						report_compile_error (l_error)
-					end
+				elseif not attached {XM_XSLT_STYLE_ELEMENT} parent as l_style_element or else
+					(not l_style_element.is_for_each and then
+					 not l_style_element.is_for_each_group and then
+					 not l_style_element.is_perform_sort and then
+					 not l_style_element.is_apply_templates)
+				 then
+					create l_error.make_from_string ("xsl:sort must be child of xsl:apply-templates, xsl:for-each[-group], or xsl:perform-sort", Xpath_errors_uri, "XTSE0010", Static_error)
+					report_compile_error (l_error)
 				end
 			else
 				if not has_child_nodes then

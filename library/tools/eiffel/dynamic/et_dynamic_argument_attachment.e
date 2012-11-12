@@ -5,7 +5,7 @@ note
 		"Eiffel argument passings at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -58,11 +58,8 @@ feature -- Access
 
 	description: STRING
 			-- Kind of attachment
-		local
-			l_implicit: ET_AGENT_IMPLICIT_OPEN_ARGUMENT
 		do
-			l_implicit ?= actual_argument
-			if l_implicit /= Void then
+			if attached {ET_AGENT_IMPLICIT_OPEN_ARGUMENT} actual_argument as l_implicit then
 				Result := implicit_open_argument_description + l_implicit.argument_index.out
 			elseif actual_argument.is_open_operand then
 				Result := open_argument_description

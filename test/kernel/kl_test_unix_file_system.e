@@ -6,7 +6,7 @@ note
 
 	test_status: "ok_to_run"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -803,7 +803,6 @@ feature -- File handling
 			a_file_system: KL_UNIX_FILE_SYSTEM
 			a_name: STRING
 			a_file: KI_TEXT_INPUT_FILE
-			a_unix_file: KL_UNIX_INPUT_FILE
 		do
 			create a_file_system.make
 			a_name := new_filename ("gobo", ".tmp")
@@ -811,8 +810,7 @@ feature -- File handling
 			assert ("not_void", a_file /= Void)
 			assert_equal ("name", a_name, a_file.name)
 			assert ("is_closed", a_file.is_closed)
-			a_unix_file ?= a_file
-			assert ("is_unix", a_unix_file /= Void)
+			assert ("is_unix", attached {KL_UNIX_INPUT_FILE} a_file)
 		end
 
 	test_new_output_file
@@ -821,7 +819,6 @@ feature -- File handling
 			a_file_system: KL_UNIX_FILE_SYSTEM
 			a_name: STRING
 			a_file: KI_TEXT_OUTPUT_FILE
-			a_unix_file: KL_UNIX_OUTPUT_FILE
 		do
 			create a_file_system.make
 			a_name := new_filename ("gobo", ".tmp")
@@ -829,8 +826,7 @@ feature -- File handling
 			assert ("not_void", a_file /= Void)
 			assert_equal ("name", a_name, a_file.name)
 			assert ("is_closed", a_file.is_closed)
-			a_unix_file ?= a_file
-			assert ("is_unix", a_unix_file /= Void)
+			assert ("is_unix", attached {KL_UNIX_OUTPUT_FILE} a_file)
 		end
 
 	test_eol

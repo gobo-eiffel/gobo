@@ -419,12 +419,10 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		local
 			a_target: ET_AGENT_TARGET
-			an_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
 			a_target := an_expression.target
 			a_target.process (Current)
-			an_arguments ?= an_expression.arguments
-			if an_arguments /= Void then
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.arguments as an_arguments then
 				process_agent_argument_operand_list (an_arguments)
 			end
 		end
@@ -928,12 +926,9 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
-		local
-			l_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
 			process_external_routine_closure (an_expression)
-			l_actual_arguments ?= an_expression.actual_arguments
-			if l_actual_arguments /= Void then
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.actual_arguments as l_actual_arguments then
 				process_agent_argument_operand_list (l_actual_arguments)
 			end
 		end
@@ -1140,12 +1135,9 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
-		local
-			l_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
 			process_internal_routine_closure (an_expression)
-			l_actual_arguments ?= an_expression.actual_arguments
-			if l_actual_arguments /= Void then
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.actual_arguments as l_actual_arguments then
 				process_agent_argument_operand_list (l_actual_arguments)
 			end
 		end

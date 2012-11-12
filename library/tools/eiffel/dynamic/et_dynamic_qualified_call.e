@@ -5,7 +5,7 @@ note
 		"Eiffel qualified calls at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -183,12 +183,10 @@ feature {NONE} -- Implementation
 			l_actual: ET_ARGUMENT_OPERAND
 			l_source_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_argument_type_set: ET_DYNAMIC_TYPE_SET
-			l_open_operand_type_set: ET_DYNAMIC_AGENT_OPERAND_PUSH_TYPE_SET
 			i, nb: INTEGER
-			l_agent_type: ET_DYNAMIC_ROUTINE_TYPE
 			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			l_manifest_tuple: ET_MANIFEST_TUPLE
 			l_manifest_tuple_type: ET_DYNAMIC_TYPE
+			l_actual_manifest_tuple: ET_MANIFEST_TUPLE
 		do
 			a_feature.set_regular (True)
 			l_actuals := static_call.arguments
@@ -199,8 +197,7 @@ feature {NONE} -- Implementation
 							-- This is something of the form:  'my_agent.call ([...])' or 'my_agent.item ([...])'
 							-- Try to get the open operand type sets directly from the
 							-- argument if it is a manifest tuple.
-						l_agent_type ?= a_type
-						if l_agent_type = Void then
+						if not attached {ET_DYNAMIC_ROUTINE_TYPE} a_type as l_agent_type then
 								-- Internal error: it has to be an agent type.
 							l_builder := a_system.dynamic_type_set_builder
 							l_builder.set_fatal_error
@@ -213,8 +210,8 @@ feature {NONE} -- Implementation
 								l_builder.error_handler.report_giaaa_error
 							else
 								l_actual := l_actuals.actual_argument (1)
-								l_manifest_tuple ?= l_actual
-								if l_manifest_tuple /= Void then
+								if attached {ET_MANIFEST_TUPLE} l_actual as l_manifest_tuple then
+									l_actual_manifest_tuple := l_manifest_tuple
 									l_open_operand_type_sets := l_agent_type.open_operand_type_sets
 									nb := l_open_operand_type_sets.count
 									if l_manifest_tuple.count < nb then
@@ -251,12 +248,11 @@ feature {NONE} -- Implementation
 									l_builder := a_system.dynamic_type_set_builder
 									l_builder.set_fatal_error
 									l_builder.error_handler.report_giaaa_error
-								elseif l_manifest_tuple = Void then
+								elseif l_actual_manifest_tuple = Void then
 									l_source_argument_type_set.put_target (l_target_argument_type_set, a_system)
 								else
-									l_open_operand_type_set ?= l_target_argument_type_set
 									l_manifest_tuple_type := l_source_argument_type_set.static_type
-									if l_open_operand_type_set /= Void and then l_manifest_tuple_type.conforms_to_type (l_open_operand_type_set.static_type) then
+									if attached {ET_DYNAMIC_AGENT_OPERAND_PUSH_TYPE_SET} l_target_argument_type_set as l_open_operand_type_set and then l_manifest_tuple_type.conforms_to_type (l_open_operand_type_set.static_type) then
 										l_open_operand_type_set.put_type (l_manifest_tuple_type)
 									else
 										l_source_argument_type_set.put_target (l_target_argument_type_set, a_system)
@@ -301,16 +297,14 @@ feature {NONE} -- Implementation
 		local
 			l_source_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_argument_type_set: ET_DYNAMIC_TYPE_SET
-			l_open_operand_type_set: ET_DYNAMIC_AGENT_OPERAND_PULL_TYPE_SET
 			l_actuals: ET_ARGUMENT_OPERANDS
 			l_actual: ET_ARGUMENT_OPERAND
 			i, nb: INTEGER
 			l_attachment: ET_DYNAMIC_ARGUMENT_ATTACHMENT
-			l_agent_type: ET_DYNAMIC_ROUTINE_TYPE
 			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			l_manifest_tuple: ET_MANIFEST_TUPLE
 			l_manifest_tuple_type: ET_DYNAMIC_TYPE
 			l_system: ET_DYNAMIC_SYSTEM
+			l_actual_manifest_tuple: ET_MANIFEST_TUPLE
 		do
 			l_system := a_builder.current_dynamic_system
 			a_feature.set_regular (True)
@@ -322,8 +316,7 @@ feature {NONE} -- Implementation
 							-- This is something of the form:  'my_agent.call ([...])' or 'my_agent.item ([...])'
 							-- Try to get the open operand type sets directly from the
 							-- argument if it is a manifest tuple.
-						l_agent_type ?= a_type
-						if l_agent_type = Void then
+						if not attached {ET_DYNAMIC_ROUTINE_TYPE} a_type as l_agent_type then
 								-- Internal error: it has to be an agent type.
 							a_builder.set_fatal_error
 							a_builder.error_handler.report_giaaa_error
@@ -334,8 +327,8 @@ feature {NONE} -- Implementation
 								a_builder.error_handler.report_giaaa_error
 							else
 								l_actual := l_actuals.actual_argument (1)
-								l_manifest_tuple ?= l_actual
-								if l_manifest_tuple /= Void then
+								if attached {ET_MANIFEST_TUPLE} l_actual as l_manifest_tuple then
+									l_actual_manifest_tuple := l_manifest_tuple
 									l_open_operand_type_sets := l_agent_type.open_operand_type_sets
 									nb := l_open_operand_type_sets.count
 									if l_manifest_tuple.count < nb then
@@ -375,13 +368,12 @@ feature {NONE} -- Implementation
 											-- arguments should be known at this stage.
 										a_builder.set_fatal_error
 										a_builder.error_handler.report_giaaa_error
-									elseif l_manifest_tuple = Void then
+									elseif l_actual_manifest_tuple = Void then
 										create l_attachment.make (l_source_argument_type_set, l_actual, current_feature, current_type)
 										l_target_argument_type_set.put_source (l_attachment, l_system)
 									else
-										l_open_operand_type_set ?= l_target_argument_type_set
 										l_manifest_tuple_type := l_source_argument_type_set.static_type
-										if l_open_operand_type_set /= Void and then l_manifest_tuple_type.conforms_to_type (l_open_operand_type_set.static_type) then
+										if attached {ET_DYNAMIC_AGENT_OPERAND_PULL_TYPE_SET} l_target_argument_type_set as l_open_operand_type_set and then l_manifest_tuple_type.conforms_to_type (l_open_operand_type_set.static_type) then
 											l_open_operand_type_set.put_type (l_manifest_tuple_type)
 										else
 											create l_attachment.make (l_source_argument_type_set, l_actual, current_feature, current_type)

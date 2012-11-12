@@ -5,7 +5,7 @@ note
 		"Routines that ought to be in class HASHABLE"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,11 +18,8 @@ feature -- Access
 			-- Hash code value
 		require
 			an_any_not_void: an_any /= Void
-		local
-			hashable: detachable HASHABLE
 		do
-			hashable ?= an_any
-			if hashable /= Void then
+			if attached {HASHABLE} an_any as hashable then
 				Result := hashable.hash_code
 			else
 				Result := an_any.generating_type.hash_code

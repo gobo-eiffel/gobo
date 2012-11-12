@@ -5,7 +5,7 @@ note
 		"Objects that enumerate the following-sibling:: Axis"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2012, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -45,11 +45,10 @@ feature -- Access
 
 	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Does `Current' yield a node_sequence?
-		local
-			a_tree_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_TREE_NODE]
 		do
-			a_tree_node_iterator ?= ANY_.to_any (Current)
-			Result := a_tree_node_iterator
+			if attached {XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_TREE_NODE]} Current as a_tree_node_iterator then
+				Result := a_tree_node_iterator
+			end
 		end
 
 feature -- Cursor movement

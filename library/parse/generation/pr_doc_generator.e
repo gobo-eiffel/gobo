@@ -5,7 +5,7 @@ note
 		"Grammar documentation generators"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -163,8 +163,6 @@ feature {NONE} -- Generation
 			a_file_open_write: a_file.is_open_write
 		local
 			i, nb: INTEGER
-			a_token: PR_TOKEN
-			a_variable: PR_VARIABLE
 		do
 			if a_rhs.is_empty then
 				print_empty_rhs (a_file)
@@ -175,13 +173,11 @@ feature {NONE} -- Generation
 				until
 					i > nb
 				loop
-					a_token ?= a_rhs.item (i)
-					if a_token /= Void then
+					if attached {PR_TOKEN} a_rhs.item (i) as a_token then
 						print_token (a_token, a_file)
-					else
-						a_variable ?= a_rhs.item (i)
+					elseif attached {PR_VARIABLE} a_rhs.item (i) as a_variable then
 							-- Do not take internal rules into account.
-						if a_variable /= Void and then a_variable.name.item (1) /= '@' then
+						if a_variable.name.item (1) /= '@' then
 							print_variable (a_variable, a_file)
 						end
 					end

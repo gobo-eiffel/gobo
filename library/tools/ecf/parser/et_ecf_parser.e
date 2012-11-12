@@ -5,7 +5,7 @@ note
 		"ECF parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,8 +35,9 @@ feature {NONE} -- Initialization
 				-- We must not create a new ET_ECF_LIBRARY_PARSER
 				-- object if `Current' is one already, or we will
 				-- recurse in this routine forever.
-			library_parser ?= Current
-			if library_parser = Void then
+			if attached {ET_ECF_LIBRARY_PARSER} Current as l_library_parser then
+				library_parser := l_library_parser
+			else
 				create library_parser.make_with_factory (a_factory, an_error_handler)
 				library_parser.set_parsed_libraries (parsed_libraries)
 				library_parser.set_parsed_dotnet_assemblies (parsed_dotnet_assemblies)
