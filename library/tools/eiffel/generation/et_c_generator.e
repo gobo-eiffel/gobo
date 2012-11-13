@@ -18152,16 +18152,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 						-- a "TUPLE [STRING]" provided that the dynamic type of the item of this tuple
 				 		-- conforms to type STRING.
 					nb := l_routine_type.open_operand_type_sets.count
-					if attached {ET_DYNAMIC_TUPLE_TYPE} l_tuple_source_type_set.static_type as l_source_tuple_type then
-						if l_source_tuple_type.item_type_sets.count < nb then
-								-- There is not enough items in the tuple. Keep the real tuple target
-								-- type so that a proper CAT-call error is emitted.
-							if attached {ET_DYNAMIC_TUPLE_TYPE} l_tuple_target_type_set.static_type as l_tuple_type then
-								l_tuple_target_type := l_tuple_type
-							end
-						else
-							l_tuple_target_type := l_source_tuple_type
+					if not attached {ET_DYNAMIC_TUPLE_TYPE} l_tuple_source_type_set.static_type as l_source_tuple_type or else l_source_tuple_type.item_type_sets.count < nb then
+							-- There is not enough items in the tuple. Keep the real tuple target
+							-- type so that a proper CAT-call error is emitted.
+						if attached {ET_DYNAMIC_TUPLE_TYPE} l_tuple_target_type_set.static_type as l_tuple_type then
+							l_tuple_target_type := l_tuple_type
 						end
+					else
+						l_tuple_target_type := l_source_tuple_type
 					end
 				elseif attached {ET_DYNAMIC_TUPLE_TYPE} l_tuple_target_type_set.static_type as l_tuple_type then
 					l_tuple_target_type := l_tuple_type
