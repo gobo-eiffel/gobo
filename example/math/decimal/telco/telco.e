@@ -268,16 +268,13 @@ feature -- Basic operations
 			a_file_not_end_of_input: not a_file.end_of_input
 		local
 			l_packed_string: STRING
-			l_last_decimal : detachable MA_DECIMAL
 		do
 			a_file.read_string (8)
 			if not a_file.end_of_input then
 				if calculate then
 					l_packed_string := a_file.last_string
 					bcd_parser.parse (l_packed_string)
-					if not bcd_parser.error then
-						l_last_decimal := bcd_parser.last_decimal
-						check l_last_decimal /= Void end
+					if not bcd_parser.error and then attached bcd_parser.last_decimal as l_last_decimal then
 						last_number := l_last_decimal
 					else
 						Exceptions.raise ("Invalid file format: need 8 byte packed decimal")
