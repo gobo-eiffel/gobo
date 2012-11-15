@@ -826,7 +826,7 @@ feature -- File handling
 			assert ("not_void", a_file /= Void)
 			assert_equal ("name", a_name, a_file.name)
 			assert ("is_closed", a_file.is_closed)
-			assert ("is_windows", attached {KL_WINDOWS_INPUT_FILE} a_file)
+			assert ("is_windows", attached {KL_WINDOWS_OUTPUT_FILE} a_file)
 		end
 
 	test_eol
