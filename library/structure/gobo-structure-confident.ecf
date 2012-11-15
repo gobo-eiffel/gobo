@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="gobo-structure" uuid="FC2A0909-3E1E-4B99-9D49-0CE0E304D38E" library_target="gobo-structure">
+	<target name="gobo-structure">
+		<root all_classes="true"/>
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="none" syntax="standard">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<library name="base-safe" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="gobo-kernel" location="$GOBO\library\kernel\gobo-kernel-safe.ecf"/>
+		<cluster name="gobo-regexp" location="$GOBO\library\structure\" recursive="true">
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/CVS$</exclude>
+				<exclude>/.svn$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>
