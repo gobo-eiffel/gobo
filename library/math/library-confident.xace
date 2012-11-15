@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<library name="math"  prefix="ma_">
+	<description>
+		description: "Xace file for the Gobo Eiffel Math Library"
+		library: "Gobo Eiffel Math Library"
+		copyright: "Copyright (c) 2004-2005, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<cluster name="math" location="${GOBO}/library/math">
+		
+		<option name="full_class_checking" value="true" if="${VOIDCONFIDENT}=true"/>
+		<option name="void_safety" value="full" if="${VOIDCONFIDENT}=true"/>
+		<option name="attached_by_default" value="true" if="${VOIDCONFIDENT}=true"/>
+
+		<option name="abstract" value="true"/>
+		<cluster name="decimal"/>
+	</cluster>
+</library>
