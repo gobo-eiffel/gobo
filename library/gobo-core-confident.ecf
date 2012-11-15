@@ -7,11 +7,11 @@
 		</option>
 		<setting name="console_application" value="true"/>
 		<library name="base-safe" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="gobo-kernel" location="$GOBO\library\kernel\gobo-kernel.ecf"/>
-		<library name="gobo-pattern" location="$GOBO\library\pattern\gobo-pattern.ecf"/>
-		<library name="gobo-structure" location="$GOBO\library\structure\gobo-structure.ecf"/>
-		<library name="gobo-time" location="$GOBO\library\time\gobo-time.ecf"/>
-		<library name="gobo-decimal" location="$GOBO\library\math\gobo-math.ecf"/>
+		<library name="gobo-kernel-safe" location="$GOBO\library\kernel\gobo-kernel-safe.ecf"/>
+		<library name="gobo-pattern-safe" location="$GOBO\library\pattern\gobo-pattern-safe.ecf"/>
+		<library name="gobo-structure-confident" location="$GOBO\library\structure\gobo-structure-confident.ecf"/>
+		<library name="gobo-time-confident" location="$GOBO\library\time\gobo-time-confident.ecf"/>
+		<library name="gobo-math-safe" location="$GOBO\library\math\gobo-math-safe.ecf"/>
 		<cluster name="gobo-core" location=".\" recursive="false">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

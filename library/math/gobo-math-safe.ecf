@@ -7,7 +7,7 @@
 		</option>
 		<setting name="console_application" value="true"/>
 		<library name="base-safe" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="gobo-kernel" location="$GOBO\library\kernel\gobo-kernel.ecf"/>
+		<library name="gobo-kernel-safe" location="$GOBO\library\kernel\gobo-kernel-safe.ecf"/>
 		<cluster name="gobo-math" location="$GOBO\library\math\decimal\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

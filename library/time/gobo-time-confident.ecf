@@ -6,8 +6,8 @@
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="gobo-kernel" location="C:\User\Eiffel\Dev\gobo.github.pgcrism\library\kernel\gobo-kernel.ecf"/>
+		<library name="base-safe" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="gobo-kernel-safe" location="C:\User\Eiffel\Dev\gobo.github.pgcrism\library\kernel\gobo-kernel-safe.ecf"/>
 		<cluster name="gobo-time" location="$GOBO\library\time\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>
