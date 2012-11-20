@@ -23,6 +23,7 @@
 			<cluster name="gobo-utility" location="$GOBO\library\utility\" recursive="true"/>
 			<cluster name="gobo-lexical" location="$GOBO\library\lexical\" recursive="true"/>
 			<cluster name="gobo-regexp" location="$GOBO\library\regexp\" recursive="true"/>
+			<cluster name="gobo-argument" location="$GOBO\library\argument\" recursive="true"/>
 		</cluster>
 	</target>
 </system>
