@@ -10,8 +10,8 @@ note
 	access: fixed, lifo, membership;
 	size: fixed;
 	contents: generic;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2008-12-29 20:36:38 +0100 (Mon, 29 Dec 2008) $"
+	revision: "$Revision: 254 $"
 
 class ARRAYED_STACK [G] inherit
 
@@ -53,7 +53,7 @@ class ARRAYED_STACK [G] inherit
 
 create
 	make
-
+	
 create {ARRAYED_STACK}
 	make_filled
 

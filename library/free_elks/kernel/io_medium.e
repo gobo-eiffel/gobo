@@ -3,8 +3,8 @@ note
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2009-04-17 07:20:59 +0200 (Fri, 17 Apr 2009) $"
+	revision: "$Revision: 291 $"
 
 deferred class IO_MEDIUM
 
@@ -445,7 +445,7 @@ feature -- Input
 			-- Functionally identical to `read_stream' but
 			-- won't prevent garbage collection from occurring
 			-- while blocked waiting for data, though data must
-			-- be copied an extra time.
+			-- be copied an extra time.			
 		require
 			is_readable: readable
 		do
@@ -472,7 +472,7 @@ feature -- Input
 			-- Functionally identical to `read_line' but
 			-- won't prevent garbage collection from occurring
 			-- while blocked waiting for data, though data must
-			-- be copied an extra time.
+			-- be copied an extra time.			
 		require
 			is_readable: readable
 		do

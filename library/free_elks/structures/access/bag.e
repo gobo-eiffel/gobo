@@ -10,8 +10,8 @@ note
 	names: bag, access;
 	access: membership;
 	contents: generic;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010-12-11 00:01:37 +0100 (Sat, 11 Dec 2010) $"
+	revision: "$Revision: 496 $"
 
 deferred class BAG [G] inherit
 
@@ -37,7 +37,9 @@ feature -- Element change
 			-- Add a new occurrence of `v'.
 		deferred
 		ensure then
-			one_more_occurrence: occurrences (v) = old (occurrences (v)) + 1
+				-- Commented due to the expensive nature of the check when inserting a new item
+				-- in a containers with many items.
+			-- one_more_occurrence: occurrences (v) = old (occurrences (v)) + 1
 		end
 
 note
@@ -52,13 +54,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-
-
-
 end -- class BAG
-
-
-

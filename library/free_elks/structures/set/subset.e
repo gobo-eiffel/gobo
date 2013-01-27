@@ -10,8 +10,8 @@ note
 	names: subset, set;
 	access: membership;
 	contents: generic;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2008-12-29 20:36:38 +0100 (Mon, 29 Dec 2008) $"
+	revision: "$Revision: 254 $"
 
 deferred class SUBSET [G] inherit
 
@@ -48,7 +48,7 @@ feature -- Comparison
 			temp: like Current
 		do
 			if not is_empty then
-				temp := duplicate (count)
+				temp := duplicate (count)	
 				temp.intersect (other)
 				Result := temp.is_empty
 			else
@@ -113,7 +113,7 @@ feature -- Basic operations
 		local
 			temp: like Current
 		do
-			temp := duplicate (count)
+			temp := duplicate (count)	
 			temp.intersect (other)
 			merge (other)
 			subtract (temp)

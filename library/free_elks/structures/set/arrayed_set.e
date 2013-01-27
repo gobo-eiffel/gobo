@@ -9,8 +9,8 @@ note
 	size: fixed;
 	access: membership;
 	contents: generic;
-	date: "$Date$";
-	revision: "$Revision$"
+	date: "$Date: 2011-05-18 01:25:55 +0200 (Wed, 18 May 2011) $";
+	revision: "$Revision: 510 $"
 
 class ARRAYED_SET [G] inherit
 
@@ -27,7 +27,7 @@ class ARRAYED_SET [G] inherit
 			put as al_put,
 			prune as al_prune
 		export
-			{ANY} valid_cursor_index, readable, writable
+			{ANY} valid_cursor_index, readable, writable, new_cursor
 			{ARRAYED_SET} go_to, area, cursor, full, i_th, lower, upper,
 				subcopy, valid_cursor, subarray
 			{NONE} all

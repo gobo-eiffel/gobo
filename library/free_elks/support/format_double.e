@@ -7,8 +7,8 @@ note
 	copyright: "Copyright (c) 2005, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	names: format_double;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010-06-21 23:21:10 +0200 (Mon, 21 Jun 2010) $"
+	revision: "$Revision: 467 $"
 
 class FORMAT_DOUBLE
 
@@ -256,14 +256,14 @@ feature {NONE} -- Implementation
 				from
 					i := Result.count
 				until
-					i = 1 or else Result.item (i) /= '0'
+					i <= 1 or else Result.item (i) /= '0'
 				loop
 					Result.remove (i)
 					i := i - 1
 				end
 			end
 		ensure
-			Result.count = decimals
+			valid_result: trailing_zeros_shown implies Result.count = decimals
 		end
 
 	separate_fraction (s: STRING): STRING

@@ -3,8 +3,8 @@ note
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 2006, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010-03-16 21:03:40 +0100 (Tue, 16 Mar 2010) $"
+	revision: "$Revision: 437 $"
 
 class
 	FILE_COMPARER
@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 					OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 				HANDLE l_path1_file = CreateFileA ((LPCSTR) $a_path1, GENERIC_READ, FILE_SHARE_READ, NULL,
 						OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-
+			
 				if ((l_path2_file == INVALID_HANDLE_VALUE) || (l_path1_file == INVALID_HANDLE_VALUE)) {
 						/* We do not need the handles anymore, simply close them. Since Microsoft
 						 * API accepts INVALID_HANDLE_VALUE we don't check the validity of arguments. */
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 						status = stat ($a_path1, &buf1);
 					}
 				}
-
+				
 				if (status == 0) {
 					status = lstat($a_path2, &buf2);
 					if (status == 0) {

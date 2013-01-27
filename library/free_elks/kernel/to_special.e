@@ -3,13 +3,13 @@ note
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2004, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010-08-11 19:46:11 +0200 (Wed, 11 Aug 2010) $"
+	revision: "$Revision: 480 $"
 
 class TO_SPECIAL [T]
 
 create
-	make_area
+	make_area, make_filled_area
 
 feature -- Access
 
@@ -20,6 +20,8 @@ feature {NONE} -- Initialization
 
 	make_area (n: INTEGER)
 			-- Creates a special object for `n' entries.
+		obsolete
+			"{TO_SPECIAL}.make_area is not void-safe and is being removed from the void-safe version. Use `make_filled_area' instead. [08-2010]"
 		require
 			non_negative_argument: n >= 0
 		do

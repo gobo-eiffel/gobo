@@ -7,8 +7,8 @@ note
 	legal: "See notice at end of class."
 
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2008-12-29 20:36:38 +0100 (Mon, 29 Dec 2008) $"
+	revision: "$Revision: 254 $"
 
 class SUBSET_STRATEGY_TREE [G -> COMPARABLE] inherit
 
@@ -39,7 +39,7 @@ feature -- Comparison
 				end
 			end
 		end
-
+	
 feature -- Basic operations
 
 	symdif (set1, set2: BINARY_SEARCH_TREE_SET [G])
@@ -55,7 +55,7 @@ feature -- Basic operations
 				set2.forth
 			end
 		end
-
+	
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

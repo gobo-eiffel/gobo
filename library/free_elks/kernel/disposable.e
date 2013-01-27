@@ -3,8 +3,8 @@ note
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2004, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2008-12-29 20:36:38 +0100 (Mon, 29 Dec 2008) $"
+	revision: "$Revision: 254 $"
 
 deferred class
 	DISPOSABLE
@@ -32,5 +32,5 @@ feature {NONE} -- Status report
 		alias
 			"return eif_is_in_final_collect;"
 		end
-
+	
 end

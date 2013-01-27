@@ -73,19 +73,17 @@ feature -- Setting
 	set_new_independent_format (v: BOOLEAN)
 			-- If `v' it will use ISE Eiffel 5.0 storable format for
 			-- storing.
-		external
-			"C signature (EIF_BOOLEAN) use %"eif_store.h%""
-		alias
-			"eif_set_new_independent_format"
+		obsolete
+			"It is now the new format. Use former version of EiffelStudio to store in the old format."
+		do
 		end
 
 	set_new_recoverable_format (v: BOOLEAN)
 			-- If `v' it will use ISE Eiffel 5.3 storable format for
 			-- storing with ability to recover when there is a type mismatch.
-		external
-			"C signature (EIF_BOOLEAN) use %"eif_store.h%""
-		alias
-			"eif_set_new_recoverable_format"
+		obsolete
+			"It is now the new format. Use former version of EiffelStudio to store in the old format."
+		do
 		end
 
 feature -- Element change

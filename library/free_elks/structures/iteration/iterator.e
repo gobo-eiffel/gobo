@@ -10,12 +10,12 @@ note
 
 	status: "See notice at end of class."
 	names: iterators, iteration;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2008-12-29 20:36:38 +0100 (Mon, 29 Dec 2008) $"
+	revision: "$Revision: 254 $"
 
 deferred class
 	ITERATOR [G]
-
+	
 feature -- Initialization
 
 	set (s: like target)
@@ -110,14 +110,14 @@ feature -- Iteration
 			test_exists: test /= Void
 		deferred
 		end
-
+		
 	for_all (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
 			-- Is `test' true for all items of `target'?
 		require
 			test_exists: test /= Void
 		deferred
 		end
-
+		
 invariant
 
 	traversable_exists: target /= Void
