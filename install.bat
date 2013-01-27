@@ -1,7 +1,7 @@
 @echo off
 
 rem description: "Install Gobo Eiffel package"
-rem copyright: "Copyright (c) 2007-2012, Eric Bezault and others"
+rem copyright: "Copyright (c) 2007-2013, Eric Bezault and others"
 rem license: "MIT License"
 rem date: "$Date$"
 rem revision: "$Revision$"
@@ -79,6 +79,7 @@ goto exit
 	set CFLAGS=-O2 -nologo -wd4049
 	set LFLAGS=-nologo -subsystem:console
 	set LFLAG_OUT=-out:
+	set LLIBS=
 	echo msc > %GOBO%\tool\gec\config\c\default.cfg
 	goto c_compilation
 
@@ -88,6 +89,7 @@ goto exit
 	set CFLAGS=-5 -q -w-8004 -w-8008 -w-8057 -w-8065 -w-8066 -w-8070 -O2
 	set LFLAGS=-5 -q 
 	set LFLAG_OUT=-e
+	set LLIBS=
 	echo bcc > %GOBO%\tool\gec\config\c\default.cfg
 	goto c_compilation
 
@@ -98,6 +100,7 @@ goto exit
 	set LD=lcclnk
 	set LFLAGS=-s -subsystem Console
 	set LFLAG_OUT=-o 
+	set LLIBS=
 	echo lcc-win32 > %GOBO%\tool\gec\config\c\default.cfg
 	goto c_compilation
 
@@ -105,8 +108,9 @@ goto exit
 	set CC=gcc
 	set LD=gcc
 	set CFLAGS=-O2
-	set LFLAGS=-lm
+	set LFLAGS=
 	set LFLAG_OUT=-o 
+	set LLIBS=-lm
 	set OBJ=.o
 	echo gcc > %GOBO%\tool\gec\config\c\default.cfg
 	goto c_compilation
@@ -115,8 +119,9 @@ goto exit
 	set CC=gcc
 	set LD=gcc
 	set CFLAGS=-O2
-	set LFLAGS=-lm
+	set LFLAGS=
 	set LFLAG_OUT=-o 
+	set LLIBS=-lm
 	set OBJ=.o
 	echo mingw > %GOBO%\tool\gec\config\c\default.cfg
 	goto c_compilation
@@ -127,6 +132,7 @@ goto exit
 	set CFLAGS='-fast'
 	set LFLAGS='-lm'
 	set LFLAG_OUT=-o 
+	set LLIBS=
 	set OBJ=.o
 	echo cc > %GOBO%\tool\gec\config\c\default.cfg
 	goto c_compilation
@@ -137,6 +143,7 @@ goto exit
 	set CFLAGS=-O2
 	set LFLAGS=
 	set LFLAG_OUT=-o 
+	set LLIBS=
 	set OBJ=.o
 	echo icc > %GOBO%\tool\gec\config\c\default.cfg
 	goto c_compilation
@@ -147,6 +154,7 @@ goto exit
 	set CFLAGS=-O2
 	set LFLAGS=-lm
 	set LFLAG_OUT=-o 
+	set LLIBS=
 	set OBJ=.o
 	echo tcc > %GOBO%\tool\gec\config\c\default.cfg
 	goto c_compilation
@@ -168,7 +176,7 @@ goto exit
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec3.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec2.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec1.c
-	%LD% %LFLAGS% %LFLAG_OUT%gec%EXE% gec*%OBJ%
+	%LD% %LFLAGS% %LFLAG_OUT%gec%EXE% gec*%OBJ% %LLIBS%
 	%RM% gec*%OBJ%
 	if .%CC%. == .bcc32. %RM% gec.tds
 	goto install
