@@ -14,14 +14,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="argument/introduction">
 <chapterinfo>
 	<copyright>
-		<year>2001-2006</year>
+		<year>2001-2012</year>
 		<holder>Bernd Schoeller</holder>
 	</copyright>
 	<author>
 		<firstname>Bernd</firstname><surname>Schoeller</surname>
 	</author>
 	<email>bernd@fams.de</email>
-	<date>14 September 2006</date>
+	<date>3 December 2012</date>
 </chapterinfo>
 
 <title>Argument Parser Introduction</title>
@@ -43,7 +43,7 @@
 		<emphasis>options</emphasis> and
 		<emphasis>parameters</emphasis>. Parameters (sometimes
 		also called operands) are the main inputs to the
-		program, for example the filename give to a text
+		program, for example the filename to a edit in a text
 		editor or the URL that a web-browser should open on
 		startup.
 	</para>
@@ -102,7 +102,7 @@
 
 	<para>
 		The main focus of a developer is to create a program
-		that provides the needed functionality. Comfortable
+		that provides a functionality. Comfortable
 		command line parsing is difficult. Many programmers
 		regard it as dispensable and few invest the necessary
 		time to get it right.
@@ -112,30 +112,22 @@
 		As a consequence, the command line behavior of tools
 		varies a lot. There are probably as many ways to parse
 		the command line as there are developers writing
-		applications. Often you have difficulties to use a
-		tool because you wrote the command line arguments
-		wrong, as the tool required them in a very specific form.
-		If also a useful help text message is missing,
-		the user wastes unnecessary time browsing through
-		man pages and application documentation, or just uses
-		trial-and-error until the command line arguments are
-		OK.
+		applications. Help text is bad or missing.
 	</para>
 
 	<para>
 		The <emphasis>Gobo Eiffel Argument Library</emphasis>
-		tries to take the burden off the developer to bother
-		himself with command line parsing. Instead, she or he
-		just defines a number of options that the application
-		should have, calls the parser and checks which options
+		makes it simple to do proper command line parsing. You
+		define a number of options that the application
+		should have, call the parser and check which options
 		were supplied and what the applications parameters
 		are.
 	</para>
 
 	<para>
-		The goal is: It should be easier to parse the command
+		It should be easier to parse the command
 		line of the application with the library than to write
-		a manual test, even if the application only has one or
+		a manual parser, even if the application only has one or
 		two options. Only this can motivate developers to use
 		the library for their applications. At the same time,
 		the library should provide a maximum in comfort for
@@ -145,9 +137,8 @@
 	</para>
 
 	<para>
-		With this goals in mind, there are a number of
-		properties that the library has, that will not satisfy
-		every need for software development. Specially, the
+		With this goals in mind, the library will not satisfy
+		every need you might have for parsing. Specially, the
 		library imposes a certain, standard way of command
 		line parsing onto the application. If you want a very
 		different way of command line parsing, perhaps because
@@ -171,11 +162,6 @@
 <section id="features">
 
 	<title>Feature overview</title>
-
-	<para>
-		To get the buzz-words right, here is a short overview
-		of what you get when you are using the library.
-	</para>
 
 	<itemizedlist>
 		<listitem><para>

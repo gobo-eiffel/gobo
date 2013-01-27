@@ -31,8 +31,6 @@
 		<geant target="xslt_and_shift" arguments="parser"/>
 		<geant target="xslt_and_shift" arguments="options"/>
 		<geant target="xslt_and_shift" arguments="alternate"/>
-		<geant target="xslt_and_shift" arguments="help"/>
-		<geant target="xslt_and_shift" arguments="error"/>
 		<geant target="xslt_and_shift" arguments="index"/>
 	</target>
 
@@ -54,8 +52,6 @@
 		<delete file="parser.html"/>
 		<delete file="options.html"/>
 		<delete file="alternate.html"/>
-		<delete file="help.html"/>
-		<delete file="error.html"/>
 	</target>
 
 <!-- Implementation -->

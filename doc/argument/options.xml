@@ -14,14 +14,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="argument/error">
 <chapterinfo>
 	<copyright>
-		<year>2001-2006</year>
+		<year>2001-2012</year>
 		<holder>Bernd Schoeller</holder>
 	</copyright>
 	<author>
 		<firstname>Bernd</firstname><surname>Schoeller</surname>
 	</author>
 	<email>bernd@fams.de</email>
-	<date>14 September 2006</date>
+	<date>3 December 2012</date>
 </chapterinfo>
 
 <title>Options</title>
@@ -137,7 +137,7 @@
 		It should be easy to implement own option types do
 		define own parameters, for example for file names or
 		dates. It is best to inherit form
-		<classname>AP_OPTION_WITH_PARAMETER</classname> or one
+		<classname>AP_OPTION_WITH_PARAMETER[G]</classname> or one
 		of its decedents.
 	</para>
 
