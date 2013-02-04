@@ -1,10 +1,10 @@
 note
 	description: "Contiguous integer intervals"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
+	copyright: "Copyright (c) 1986-2010, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010-03-23 11:11:37 +0100 (Tue, 23 Mar 2010) $"
+	revision: "$Revision: 448 $"
 
 class
 	INTEGER_INTERVAL
@@ -250,6 +250,14 @@ feature -- Resizing
 		ensure then
 			no_loss_from_bottom: lower <= old lower
 			no_loss_from_top: upper >= old upper
+		end
+
+	trim
+			-- <Precursor>
+		do
+			check
+				minimal_capacity: capacity = count
+			end
 		end
 
 feature -- Removal

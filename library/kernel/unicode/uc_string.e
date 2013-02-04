@@ -248,7 +248,6 @@ inherit
 	KI_TEXT_OUTPUT_STREAM
 		rename
 			put_character as append_character,
-			put_substring as append_substring,
 			append as append_stream,
 			True_constant as stream_true_constant,
 			False_constant as stream_false_constant
@@ -257,7 +256,7 @@ inherit
 			copy,
 			out
 		redefine
-			append_substring
+			put_substring
 		end
 
 	UC_STRING_HANDLER
@@ -1961,7 +1960,7 @@ feature -- Element change
 					byte_count := new_byte_count
 				else
 						-- If so, use proper UTF8 encoding.
-					append_substring (a_string, 1, a_string.count)
+					gobo_append_substring (a_string, 1, a_string.count)
 				end
 			else
 				a_uc_string ?= a_string
@@ -1999,17 +1998,22 @@ feature -- Element change
 							byte_count := new_byte_count
 						end
 					else
-						append_substring (a_string, 1, a_string.count)
+						gobo_append_substring (a_string, 1, a_string.count)
 					end
 				else
-					append_substring (a_string, 1, a_string.count)
+					gobo_append_substring (a_string, 1, a_string.count)
 				end
 			end
 		end
 
-	append_substring (a_string: STRING; s, e: INTEGER)
+	gobo_append_substring (a_string: STRING; s, e: INTEGER)
 			-- Append substring of `a_string' between indexes
 			-- `s' and `e' at end of current string.
+		require
+			a_string_not_void: a_string /= Void
+			s_large_enough: s >= 1
+			e_small_enough: e <= a_string.count
+			valid_interval: s <= e + 1
 		local
 			a_substring_count: INTEGER
 			k, nb: INTEGER
@@ -2037,6 +2041,13 @@ feature -- Element change
 			appended: is_equal (old cloned_string + old a_string.substring (s, e))
 		end
 
+	put_substring (a_string: STRING; s, e: INTEGER)
+			-- Write substring of `a_string' between indexes
+			-- `s' and `e' to output stream.
+		do
+			gobo_append_substring (a_string, s, e)
+		end
+		
 	append_utf8 (s: STRING)
 			-- Append UTF-8 encoded string `s' at end of current string.
 		require

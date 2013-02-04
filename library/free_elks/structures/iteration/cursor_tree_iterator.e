@@ -1,7 +1,7 @@
 note
 
 	description: "[
-		Objects that are able to iterate over cursor trees,
+		Objects that are able to iterate over cursor trees, 
 		on which they can perform repeated actions and tests according
 		to a number of predefined control structures such as ``if'',
 		``until'' and others.
@@ -13,8 +13,8 @@ note
 		cursor_tree_iteration, tree_iterators, tree_iteration;
 	exploration: depth_first, breadth_first;
 	traversal: preorder, postorder, inorder;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2008-12-29 20:36:38 +0100 (Mon, 29 Dec 2008) $"
+	revision: "$Revision: 254 $"
 
 deferred class CURSOR_TREE_ITERATOR [G] inherit
 

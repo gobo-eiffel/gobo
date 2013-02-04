@@ -14,22 +14,21 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="argument/index">
 <chapterinfo>
 	<copyright>
-		<year>2001-2006</year>
+		<year>2001-2012</year>
 		<holder>Bernd Schoeller</holder>
 	</copyright>
 	<author>
 		<firstname>Bernd</firstname><surname>Schoeller</surname>
 	</author>
 	<email>bernd@fams.de</email>
-	<date>14 September 2006</date>
+	<date>3 December 2012</date>
 </chapterinfo>
 
 <title>Gobo Eiffel Argument Library</title>
 
 <para>
-The <libraryname>Gobo Eiffel Argument Library</libraryname> is a
-library to facilitate parsing of command line arguments for Eiffel
-applications.
+	The <libraryname>Gobo Eiffel Argument Library</libraryname> is a
+	library to parse command line arguments of Eiffel applications.
 </para>
 
 <para>
@@ -67,7 +66,7 @@ This document is structured as follows:
 		</term>
 		<listitem><para>
 
-			An overview of available options and a guide
+			An reference of available options and a guide
 			on how to create own option types.
  
 		</para></listitem>
@@ -82,31 +81,6 @@ This document is structured as follows:
 			Alternative options lists are an advanced way
 			to specify options sets that are used for
 			different operation modes of the application.
-
-		</para></listitem>
-	</varlistentry>
-
-	<varlistentry>
-		<term>
-			<ulink url="help.html">Help text generation</ulink>
-		</term>
-		<listitem><para>
-
-			A guide on how the argument library
-			generates a help text and a description on how
-			you can modify the display to match your needs.
-
-		</para></listitem>
-	</varlistentry>
-
-	<varlistentry>
-		<term>
-			<ulink url="error.html">Error handling</ulink>
-		</term>
-		<listitem><para>
-
-			A short description how the argument parser
-			handles errors during parsing.
 
 		</para></listitem>
 	</varlistentry>

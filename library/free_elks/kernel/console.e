@@ -1,13 +1,13 @@
 note
 	description: "[
-		Commonly used console input and output mechanisms.
+		Commonly used console input and output mechanisms. 
 		This class may be used as ancestor by classes needing its facilities.
 		]"
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2011-06-04 18:41:59 +0200 (Sat, 04 Jun 2011) $"
+	revision: "$Revision: 513 $"
 
 class CONSOLE inherit
 
@@ -332,6 +332,8 @@ feature {NONE} -- Implementation
 			-- Return the number of characters actually read.
 		do
 			Result := file_gss (file_pointer, a_string.area.item_address (pos - 1), nb)
+				-- `a_string' was externally modified, we need to reset its `hash_code'.
+			a_string.set_internal_hash_code (0)
 		end
 
 	console_def (number: INTEGER): POINTER

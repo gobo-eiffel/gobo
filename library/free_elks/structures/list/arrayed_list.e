@@ -10,8 +10,8 @@ note
 	access: index, cursor, membership;
 	size: fixed;
 	contents: generic;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010-03-23 11:11:37 +0100 (Tue, 23 Mar 2010) $"
+	revision: "$Revision: 448 $"
 
 class ARRAYED_LIST [G] inherit
 
@@ -39,7 +39,7 @@ class ARRAYED_LIST [G] inherit
 			linear_representation, prunable, put, is_equal,
 			prune, occurrences, extendible, fill
 		redefine
-			extend, prune_all, full, wipe_out,
+			extend, prune_all, full, wipe_out, trim,
 			is_inserted, make_from_array, has, valid_index
 		end
 
@@ -466,6 +466,13 @@ feature -- Resizing
 			capacity_set: capacity >= new_capacity
 		end
 
+	trim
+			-- <Precursor>
+		do
+			Precursor
+			upper := lower + count - 1
+		end
+
 feature -- Removal
 
 	prune (v: like item)
@@ -673,7 +680,7 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -682,11 +689,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
-
 
 end -- class ARRAYED_LIST

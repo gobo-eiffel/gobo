@@ -26,7 +26,6 @@ inherit
 
 	KL_INPUT_FILE
 		redefine
-			string_name,
 			last_character,
 			last_string
 		end
@@ -69,7 +68,6 @@ inherit
 #ifdef GE
 			old_open_read,
 #endif
-			string_name,
 			last_character,
 			last_string
 		end
@@ -174,9 +172,6 @@ feature -- Input
 		end
 
 feature {NONE} -- Implementation
-
-	string_name: STRING
-			-- Name of file (STRING version)
 
 #ifdef GE
 feature {PLAIN_TEXT_FILE} -- Implementation

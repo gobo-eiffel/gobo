@@ -3,8 +3,8 @@ note
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 2005, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2009-05-13 19:12:41 +0200 (Wed, 13 May 2009) $"
+	revision: "$Revision: 294 $"
 
 deferred class
 	ABSTRACT_SPECIAL
@@ -15,7 +15,7 @@ inherit
 feature -- Measurement
 
 	count: INTEGER
-			-- Count of special area
+			-- Count of special area		
 		deferred
 		ensure
 			count_non_negative: Result >= 0

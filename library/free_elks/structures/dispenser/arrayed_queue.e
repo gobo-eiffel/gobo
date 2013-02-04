@@ -10,8 +10,8 @@ note
 	access: fixed, fifo, membership;
 	size: fixed;
 	contents: generic;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2010-03-23 11:11:37 +0100 (Tue, 23 Mar 2010) $"
+	revision: "$Revision: 448 $"
 
 class ARRAYED_QUEUE [G] inherit
 
@@ -42,7 +42,16 @@ class ARRAYED_QUEUE [G] inherit
 			linear_representation,
 			has, full, extendible,
 			valid_index_set,
-			index_set
+			index_set, trim
+		end
+
+	MISMATCH_CORRECTOR
+		export {NONE}
+			all
+		undefine
+			is_equal, copy
+		redefine
+			correct_mismatch
 		end
 
 create
@@ -57,11 +66,11 @@ feature -- Initialization
 			non_negative_argument: n >= 0
 		do
 			array_make (1, n)
-			in_index := 1
 			out_index := 1
-				-- One entry is kept free
+			count := 0
 		ensure
 			capacity_expected: capacity = n
+			is_empty: is_empty
 		end
 
 feature -- Access
@@ -78,45 +87,40 @@ feature -- Access
 			-- based on `object_comparison'.)
 		local
 			i: INTEGER
+			j: INTEGER
 		do
+			i := out_index
+			j := count
 			if object_comparison then
 				from
-					i := out_index
 				until
-					i = in_index or v ~ i_th (i)
+					j = 0 or v ~ i_th (i)
 				loop
 					i := i + 1
 					if i > capacity then
 						i := 1
 					end
+					j := j - 1
 				end
 			else
 				from
-					i := out_index
 				until
-					i = in_index or v = i_th (i)
+					j = 0 or v = i_th (i)
 				loop
 					i := i + 1
 					if i > capacity then
 						i := 1
 					end
+					j := j - 1
 				end
 			end
-			Result := (i /= in_index)
+			Result := j > 0
 		end
 
 feature -- Measurement
 
 	count: INTEGER
-			-- Number of items.
-		local
-			l_capacity: like capacity
-		do
-			l_capacity := capacity
-			if l_capacity > 0 then
-				Result := (in_index - out_index + l_capacity) \\ l_capacity
-			end
-		end
+			-- Number of items
 
 	index_set: INTEGER_INTERVAL
 			-- Range of acceptable indexes
@@ -131,14 +135,13 @@ feature -- Status report
 	is_empty, off: BOOLEAN
 			-- Is the structure empty?
 		do
-			Result := (in_index = out_index)
+			Result := count = 0
 		end
 
 	full: BOOLEAN
 			-- Is structure filled to capacity?
-			-- (Answer: no.)
 		do
-			Result := False
+			Result := count = capacity
 		end
 
 	extendible: BOOLEAN
@@ -158,21 +161,17 @@ feature -- Element change
 	extend, put, force (v: G)
 			-- Add `v' as newest item.
 		local
-			l_in_index: like in_index
 			l_capacity: like capacity
+			l_count: like count
 		do
 			l_capacity := capacity
-			l_in_index := in_index
-			if l_capacity = 0 or ((l_in_index - out_index + l_capacity) \\ l_capacity + 1 >= l_capacity) then
+			l_count := count
+			if l_count >= l_capacity then
 				grow
 				l_capacity := capacity
 			end
-			area.put (v, l_in_index - lower)
-			l_in_index := (l_in_index + 1) \\ l_capacity
-			if l_in_index = 0 then
-				l_in_index := l_capacity
-			end
-			in_index := l_in_index
+			area.put (v, in_index - lower)
+			count := l_count + 1
 		end
 
 	replace (v: like item)
@@ -197,6 +196,7 @@ feature -- Removal
 				l_out_index := l_capacity
 			end
 			out_index := l_out_index
+			count := count - 1
 		end
 
 	wipe_out
@@ -204,7 +204,39 @@ feature -- Removal
 		do
 			clear_all
 			out_index := 1
-			in_index := 1
+			count := 0
+		end
+
+feature -- Resizing
+
+	trim
+			-- <Precursor>
+		local
+			i: like lower
+			j: like lower
+			n: like count
+			m: like capacity
+		do
+			n := count
+			m := capacity
+			if n < m then
+					-- There are some unused slots.
+				i := out_index - lower
+				j := in_index - lower
+				if i < j then
+						-- All unused slots are in front of array.
+					area.move_data (i, 0, n)
+					out_index := lower
+				elseif n > 0 then
+						-- Unused slots are in middle of array.
+					area.move_data (i, j, m - i)
+						-- `out_index' will be equal to `in_index'.
+					out_index := j + lower
+				end
+					-- All unused slots for removal are at end of array.
+				area := area.resized_area (n)
+				upper := lower + n - 1
+			end
 		end
 
 feature -- Conversion
@@ -214,18 +246,46 @@ feature -- Conversion
 			-- (in the original insertion order)
 		local
 			i: INTEGER
+			j: INTEGER
 		do
-			create Result.make (count)
+			j := count
+			create Result.make (j)
 			from
 				i := out_index
 			until
-				i = in_index
+				j = 0
 			loop
 				Result.extend (i_th (i))
 				i := i + 1
 				if i > capacity then i := 1 end
+				j := j - 1
 			end
-			i := 1
+		end
+
+feature {NONE} -- Retrieval
+
+	correct_mismatch
+		do
+			if
+				not mismatch_information.has ("count") and then
+				attached {SPECIAL [G]} mismatch_information.item ("area") as a and then
+				attached {INTEGER} mismatch_information.item ("in_index") as i and then
+				attached {INTEGER} mismatch_information.item ("out_index") as o and then
+				attached {BOOLEAN} mismatch_information.item ("object_comparison") as c
+			then
+				area := a
+				out_index := o
+				if a.capacity = 0 then
+					count := 0
+				else
+					count := (i - o + a.capacity) \\ a.capacity
+				end
+				object_comparison := c
+				lower := 1
+				upper := a.capacity
+			else
+				Precursor
+			end
 		end
 
 feature {NONE} -- Inapplicable
@@ -257,6 +317,16 @@ feature {ARRAYED_QUEUE} -- Implementation
 
 	in_index: INTEGER
 			-- Position for next insertion
+		local
+			c: like capacity
+		do
+			c := capacity
+			if c > 0 then
+				Result := (out_index - lower + count) \\ c + lower
+			else
+				Result := out_index
+			end
+		end
 
 	grow
 		local
@@ -278,20 +348,18 @@ feature {ARRAYED_QUEUE} -- Implementation
 				out_index := j + 1
 			end
 		ensure
-			in_index_unchanged: in_index = old in_index
+			in_index_unchanged: in_index = old in_index or else in_index = old (in_index + capacity)
 		end
 
 invariant
 
-	not_full: not full
 	extendible: extendible
 	prunable: prunable
 	empty_means_storage_empty: is_empty implies all_default
 
-
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software

@@ -3,8 +3,8 @@ note
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2008-12-29 20:36:38 +0100 (Mon, 29 Dec 2008) $"
+	revision: "$Revision: 254 $"
 
 deferred class
 	STRING_TO_NUMERIC_CONVERTOR
@@ -64,7 +64,7 @@ feature -- Reset
 			-- Reset this convertor to start a new parse session
 			-- and get ready for parsing integer of `type'.
 			-- Always call this feature before every new parse session.
-			-- See `NUMBER_INFORMATION' for more information about `type'.
+			-- See `NUMBER_INFORMATION' for more information about `type'.			
 		require
 			type_valid: conversion_type_valid (type)
 		deferred
@@ -135,7 +135,7 @@ feature -- Parse
 
 	parse_character (c: CHARACTER)
 			-- Parse `c' in current parse session.
-			-- Make result available in `overflowed', `underflowed' and `parse_successful'.
+			-- Make result available in `overflowed', `underflowed' and `parse_successful'.			
 		deferred
 		end
 
