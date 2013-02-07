@@ -464,21 +464,21 @@ feature {NONE} -- Built-in validity
 				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 2 then
-						-- The signature should be 'field (i: INTEGER; object: G): ANY'.
+						-- The signature should be 'field (i: INTEGER; object: G): detachable ANY'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.any_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.detachable_any_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
-						-- The signature should be 'field (i: INTEGER; object: G): ANY'.
+						-- The signature should be 'field (i: INTEGER; object: G): detachable ANY'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.any_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.detachable_any_type)
 				elseif not l_formals.formal_argument (2).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
-						-- The signature should be 'field (i: INTEGER; object: G): ANY'.
+						-- The signature should be 'field (i: INTEGER; object: G): detachable ANY'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.any_type)
-				elseif not a_feature.type.same_syntactical_type (current_universe.any_type, current_class, current_class) then
-						-- The signature should be 'field (i: INTEGER; object: G): ANY'.
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.detachable_any_type)
+				elseif not a_feature.type.same_syntactical_type (current_universe.detachable_any_type, current_class, current_class) then
+						-- The signature should be 'field (i: INTEGER; object: G): detachable ANY'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.any_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.detachable_any_type)
 				end
 			elseif a_feature.name.same_feature_name (tokens.field_count_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_field_count))
@@ -512,17 +512,17 @@ feature {NONE} -- Built-in validity
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_field_static_type))
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 1 then
-						-- The signature should be 'field_static_type (i: INTEGER): TYPE [ANY]'.
+						-- The signature should be 'field_static_type (i: INTEGER): TYPE [detachable ANY]'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.type_any_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.type_detachable_any_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
-						-- The signature should be 'field_static_type (i: INTEGER): TYPE [ANY]'.
+						-- The signature should be 'field_static_type (i: INTEGER): TYPE [detachable ANY]'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.type_any_type)
-				elseif not a_feature.type.same_syntactical_type (current_universe.type_any_type, current_class, current_class) then
-						-- The signature should be 'field_static_type (i: INTEGER): TYPE [ANY]'.
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.type_detachable_any_type)
+				elseif not a_feature.type.same_syntactical_type (current_universe.type_detachable_any_type, current_class, current_class) then
+						-- The signature should be 'field_static_type (i: INTEGER): TYPE [detachable ANY]'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.type_any_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.type_detachable_any_type)
 				end
 			elseif a_feature.name.same_feature_name (tokens.field_type_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_field_type))
@@ -559,17 +559,17 @@ feature {NONE} -- Built-in validity
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_generic_parameter))
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 1 then
-						-- The signature should be 'generic_parameter (i: INTEGER): TYPE [ANY]'.
+						-- The signature should be 'generic_parameter (i: INTEGER): TYPE [detachable ANY]'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.type_any_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.type_detachable_any_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
-						-- The signature should be 'generic_parameter (i: INTEGER): TYPE [ANY]'.
+						-- The signature should be 'generic_parameter (i: INTEGER): TYPE [detachable ANY]'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.type_any_type)
-				elseif not a_feature.type.same_syntactical_type (current_universe.type_any_type, current_class, current_class) then
-						-- The signature should be 'generic_parameter (i: INTEGER): TYPE [ANY]'.
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.type_detachable_any_type)
+				elseif not a_feature.type.same_syntactical_type (current_universe.type_detachable_any_type, current_class, current_class) then
+						-- The signature should be 'generic_parameter (i: INTEGER): TYPE [detachable ANY]'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.type_any_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.type_detachable_any_type)
 				end
 			elseif a_feature.name.same_feature_name (tokens.generic_parameter_count_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_generic_parameter_count))
@@ -951,7 +951,7 @@ feature {NONE} -- Built-in validity
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_set_reference_field))
 				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.any_type.type>>, Void)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.detachable_any_type.type>>, Void)
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
@@ -1630,17 +1630,17 @@ feature {NONE} -- Built-in validity
 				a_feature.set_builtin_code (tokens.builtin_internal_feature (tokens.builtin_internal_type_of_type))
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 1 then
-						-- The signature should be 'type_of_type (a_type_id: INTEGER): TYPE [ANY]'.
+						-- The signature should be 'type_of_type (a_type_id: INTEGER): detachable TYPE [detachable ANY]'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.type_any_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.detachable_type_detachable_any_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
-						-- The signature should be 'type_of_type (a_type_id: INTEGER): TYPE [ANY]'.
+						-- The signature should be 'type_of_type (a_type_id: INTEGER): detachable TYPE [detachable ANY]'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.type_any_type)
-				elseif not a_feature.type.same_syntactical_type (current_universe.type_any_type, current_class, current_class) then
-						-- The signature should be 'type_of_type (a_type_id: INTEGER): TYPE [ANY]'.
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.detachable_type_detachable_any_type)
+				elseif not a_feature.type.same_syntactical_type (current_universe.detachable_type_detachable_any_type, current_class, current_class) then
+						-- The signature should be 'type_of_type (a_type_id: INTEGER): detachable TYPE [detachable ANY]'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.type_any_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.detachable_type_detachable_any_type)
 				end
 			elseif a_feature.name.same_feature_name (tokens.max_type_id_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_internal_feature (tokens.builtin_internal_max_type_id))
@@ -1865,7 +1865,7 @@ feature {NONE} -- Built-in validity
 				l_open_args := current_class.formal_parameter_type (2)
 				a_feature.set_builtin_code (tokens.builtin_procedure_feature (tokens.builtin_procedure_call))
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_open_args.type>>, Void)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<detachable_formal_parameter_type (l_open_args).type>>, Void)
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
@@ -1893,17 +1893,17 @@ feature {NONE} -- Built-in validity
 				a_feature.set_builtin_code (tokens.builtin_function_feature (tokens.builtin_function_item))
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 1 then
-						-- The signature should be 'item (args: OPEN_ARGS): RESULT_TYPE'.
+						-- The signature should be 'item (args: detachable OPEN_ARGS): RESULT_TYPE'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_open_args.type>>, l_result_type)
-				elseif not l_formals.formal_argument (1).type.same_syntactical_type (l_open_args, current_class, current_class) then
-						-- The signature should be 'item (args: OPEN_ARGS): RESULT_TYPE'.
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<detachable_formal_parameter_type (l_open_args).type>>, l_result_type)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type_with_type_marks (l_open_args, tokens.detachable_keyword, current_class, Void, current_class) then
+						-- The signature should be 'item (args: detachable OPEN_ARGS): RESULT_TYPE'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_open_args.type>>, l_result_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<detachable_formal_parameter_type (l_open_args).type>>, l_result_type)
 				elseif not a_feature.type.same_syntactical_type (l_result_type, current_class, current_class) then
-						-- The signature should be 'item (args: OPEN_ARGS): RESULT_TYPE'.
+						-- The signature should be 'item (args: detachable OPEN_ARGS): RESULT_TYPE'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_open_args.type>>, l_result_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<detachable_formal_parameter_type (l_open_args).type>>, l_result_type)
 				end
 			else
 					-- Unknown built-in routine.
@@ -3658,21 +3658,21 @@ feature {NONE} -- Built-in validity
 				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 3 then
-						-- The signature should be 'set_reference_field (i: INTEGER; object: G; value: ANY)'.
+						-- The signature should be 'set_reference_field (i: INTEGER; object: G; value: detachable ANY)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.any_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.detachable_any_type.type>>, Void)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
-						-- The signature should be 'set_reference_field (i: INTEGER; object: G; value: ANY)'.
+						-- The signature should be 'set_reference_field (i: INTEGER; object: G; value: detachable ANY)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.any_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.detachable_any_type.type>>, Void)
 				elseif not l_formals.formal_argument (2).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
-						-- The signature should be 'set_reference_field (i: INTEGER; object: G; value: ANY)'.
+						-- The signature should be 'set_reference_field (i: INTEGER; object: G; value: detachable ANY)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.any_type.type>>, Void)
-				elseif not l_formals.formal_argument (3).type.same_syntactical_type (current_universe.any_type, current_class, current_class) then
-						-- The signature should be 'set_reference_field (i: INTEGER; object: G; value: ANY)'.
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.detachable_any_type.type>>, Void)
+				elseif not l_formals.formal_argument (3).type.same_syntactical_type (current_universe.detachable_any_type, current_class, current_class) then
+						-- The signature should be 'set_reference_field (i: INTEGER; object: G; value: detachable ANY)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.any_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.detachable_any_type.type>>, Void)
 				end
 			elseif a_feature.name.same_feature_name (tokens.base_class_name_feature_name) then
 					-- 'TYPE.base_class_name' should be a function.
@@ -3702,7 +3702,7 @@ feature {NONE} -- Built-in validity
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_field))
 				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.any_type)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.detachable_any_type)
 			elseif a_feature.name.same_feature_name (tokens.field_count_feature_name) then
 					-- 'TYPE.field_count' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_field_count))
@@ -3712,7 +3712,7 @@ feature {NONE} -- Built-in validity
 					-- 'TYPE.field_static_type' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_field_static_type))
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.type_any_type)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.type_detachable_any_type)
 			elseif a_feature.name.same_feature_name (tokens.field_type_feature_name) then
 					-- 'TYPE.field_type' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_field_type))
@@ -3730,7 +3730,7 @@ feature {NONE} -- Built-in validity
 					-- 'TYPE.generic_parameter' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_generic_parameter))
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.type_any_type)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.type_detachable_any_type)
 			elseif a_feature.name.same_feature_name (tokens.generic_parameter_count_feature_name) then
 					-- 'TYPE.generic_parameter_count' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_generic_parameter_count))
@@ -4276,7 +4276,7 @@ feature {NONE} -- Built-in validity
 					-- 'INTERNAL.type_of_type' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_internal_feature (tokens.builtin_internal_type_of_type))
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.type_any_type)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.detachable_type_detachable_any_type)
 			elseif a_feature.name.same_feature_name (tokens.max_type_id_feature_name) then
 					-- 'INTERNAL.max_type_id' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_internal_feature (tokens.builtin_internal_max_type_id))
@@ -4394,13 +4394,13 @@ feature {NONE} -- Built-in validity
 				a_feature.set_builtin_code (tokens.builtin_procedure_feature (tokens.builtin_procedure_call))
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 1 then
-						-- The signature should be 'call (args: OPEN_ARGS)'.
+						-- The signature should be 'call (args: detachable OPEN_ARGS)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_open_args.type>>, Void)
-				elseif not l_formals.formal_argument (1).type.same_syntactical_type (l_open_args, current_class, current_class) then
-						-- The signature should be 'call (args: OPEN_ARGS)'.
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<detachable_formal_parameter_type (l_open_args).type>>, Void)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type_with_type_marks (l_open_args, tokens.detachable_keyword, current_class, Void, current_class) then
+						-- The signature should be 'call (args: detachable OPEN_ARGS)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_open_args.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<detachable_formal_parameter_type (l_open_args).type>>, Void)
 				end
 			else
 					-- Unknown built-in routine.
@@ -4429,7 +4429,7 @@ feature {NONE} -- Built-in validity
 				l_result_type := current_class.formal_parameter_type (3)
 				a_feature.set_builtin_code (tokens.builtin_function_feature (tokens.builtin_function_item))
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_open_args.type>>, l_result_type)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<detachable_formal_parameter_type (l_open_args).type>>, l_result_type)
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
@@ -5166,6 +5166,22 @@ feature {ET_AST_NODE} -- Type dispatcher
 			-- Process `a_feature'.
 		do
 			check_external_procedure_validity (a_feature)
+		end
+
+feature {NONE} -- Implementation
+
+	detachable_formal_parameter_type (a_formal_parameter: ET_FORMAL_PARAMETER_TYPE): ET_FORMAL_PARAMETER_TYPE
+			-- Detachable version of formal generic paramater `a_formal_parameter'
+		require
+			a_formal_parameter_not_void: a_formal_parameter /= Void
+		do
+			create Result.make (tokens.detachable_keyword, a_formal_parameter.name, a_formal_parameter.index, a_formal_parameter.implementation_class)
+		ensure
+			detachable_formal_parameter_type_not_void: Result /= Void
+			detachable_type_mark: attached Result.type_mark as l_type_mark and then l_type_mark.is_detachable_mark
+			same_name: Result.name = a_formal_parameter.name
+			same_index: Result.index = a_formal_parameter.index
+			same_implementation_class: Result.implementation_class = a_formal_parameter.implementation_class
 		end
 
 end
