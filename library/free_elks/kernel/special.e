@@ -6,8 +6,8 @@ note
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date: 2009-11-04 21:02:33 +0100 (Wed, 04 Nov 2009) $"
-	revision: "$Revision: 391 $"
+	date: "$Date: 2012-08-20 10:42:14 +0200 (Mon, 20 Aug 2012) $"
+	revision: "$Revision: 569 $"
 
 frozen class
 	SPECIAL [T]
@@ -27,6 +27,8 @@ feature {NONE} -- Initialization
 
 	make (n: INTEGER)
 			-- Create a special object for `n' entries.
+		obsolete
+			"{SPECIAL}.make is not void-safe and is being removed from the void-safe version. Use `make_filled' instead. [08-2010]"
 		require
 			non_negative_argument: n >= 0
 		external
@@ -208,7 +210,7 @@ feature -- Status report
 	filled_with (v: T; start_index, end_index: INTEGER): BOOLEAN
 			-- Are all items between index `start_index' and `end_index'
 			-- set to `v'?
-			-- (Use reference equality for comparison.)
+			-- (Use reference equality for comparison.)			
 		require
 			start_index_non_negative: start_index >= 0
 			start_index_not_too_big: start_index <= end_index + 1
@@ -449,6 +451,20 @@ feature -- Element change
 		end
 
 feature -- Resizing
+
+    keep_head (n: INTEGER)
+			-- Keep the first `n' entries.
+         require
+             non_negative_argument: n >= 0
+             less_than_count: n <= count
+         do
+             fill_with_default (n, count - 1)
+         ensure
+             count_unchanged: count = old count
+             capacity_unchanged: capacity = old capacity
+             kept: same_items (old twin, 0, 0, n)
+             not_kept: all_default (n, count - 1)
+         end
 
 	resized_area (n: INTEGER): like Current
 			-- Create a copy of Current with a count of `n'

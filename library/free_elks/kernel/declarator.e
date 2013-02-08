@@ -1,19 +1,19 @@
 note
 	Warning: "[
-		If you are precompiling a subset of EiffelBase, it is
-		preferable NOT to remove this class from the subset.
+		If you are precompiling a subset of EiffelBase, it is 
+		preferable NOT to remove this class from the subset. 
 		If you remove it you may see unnecessary recompilations
 		after changes.
 		]"
 	description: "[
-		Class used to ensure proper precompilation of EiffelBase.
+		Class used to ensure proper precompilation of EiffelBase. 
 		Not to be used otherwise.
 		]"
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2009-03-15 17:53:42 +0100 (Sun, 15 Mar 2009) $"
+	revision: "$Revision: 281 $"
 
 class
 	DECLARATOR

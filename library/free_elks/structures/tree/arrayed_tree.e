@@ -9,8 +9,8 @@ note
 	representation: recursive, array;
 	access: cursor, membership;
 	contents: generic;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2009-03-15 17:53:42 +0100 (Sun, 15 Mar 2009) $"
+	revision: "$Revision: 281 $"
 
 class ARRAYED_TREE [G] inherit
 
@@ -423,7 +423,7 @@ feature {ARRAYED_TREE} -- Implementation
 			l_arrayed_list := arrayed_list
 				-- Perform copy.
 			standard_copy (n)
-				-- Restore values that we wanted to preserve.
+				-- Restore values that we wanted to preserve.			
 			arrayed_list := l_arrayed_list
 			parent := Void
 		end

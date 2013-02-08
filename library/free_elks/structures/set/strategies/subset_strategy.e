@@ -8,10 +8,10 @@ note
 	legal: "See notice at end of class."
 
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2008-12-29 20:36:38 +0100 (Mon, 29 Dec 2008) $"
+	revision: "$Revision: 254 $"
 
-deferred class
+deferred class 
 	SUBSET_STRATEGY [G]
 
 feature -- Comparison
@@ -23,7 +23,7 @@ feature -- Comparison
 			same_rule: set1.object_comparison = set2.object_comparison
 		deferred
 		end
-
+	
 feature -- Basic operations
 
 	symdif (set1, set2: TRAVERSABLE_SUBSET [G])
@@ -34,7 +34,7 @@ feature -- Basic operations
 			same_rule: set1.object_comparison = set2.object_comparison
 		deferred
 		end
-
+	
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

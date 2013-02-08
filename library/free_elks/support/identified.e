@@ -3,8 +3,8 @@ note
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2009-03-22 21:59:24 +0100 (Sun, 22 Mar 2009) $"
+	revision: "$Revision: 284 $"
 
 class IDENTIFIED
 
@@ -27,7 +27,7 @@ feature -- Access
 			-- Unique for current object in any given session
 		do
 			if internal_id = 0 then
-				internal_id := eif_object_id (Current)
+				internal_id := eif_current_object_id
 			end
 			Result := internal_id
 		ensure

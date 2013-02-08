@@ -1,7 +1,7 @@
 note
 
 	description: "[
-		Queues (first-in, first-out dispensers), without commitment
+		Queues (first-in, first-out dispensers), without commitment 
 		to a particular representation
 		]"
 	legal: "See notice at end of class."
@@ -10,8 +10,8 @@ note
 	names: queue, dispenser;
 	access: fixed, fifo, membership;
 	contents: generic;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2008-12-29 20:36:38 +0100 (Mon, 29 Dec 2008) $"
+	revision: "$Revision: 254 $"
 
 deferred class QUEUE [G] inherit
 

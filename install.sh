@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # description: "Install Gobo Eiffel package"
-# copyright: "Copyright (c) 2007-2012, Eric Bezault and others"
+# copyright: "Copyright (c) 2007-2013, Eric Bezault and others"
 # license: "MIT License"
 # date: "$Date$"
 # revision: "$Revision$"
@@ -57,7 +57,7 @@ c_compilation() {
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec3.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec2.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec1.c
-	$LD $LFLAGS ${LFLAG_OUT}gec$EXE gec*$OBJ
+	$LD $LFLAGS ${LFLAG_OUT}gec$EXE gec*$OBJ $LLIBS
 	strip gec${EXE}
 	$RM gec*$OBJ
 }
@@ -90,6 +90,7 @@ elif [ "$CC" = "msc" -o "$CC" = "cl" ]; then
 	CFLAGS='-O2 -nologo -wd4049'
 	LFLAGS='-nologo -subsystem:console'
 	LFLAG_OUT='-out:'
+	LLIBS=''
 	echo msc > $GOBO/tool/gec/config/c/default.cfg
 	c_compilation
 elif [ "$CC" = "bcc" -o "$CC" = "bcc32" ]; then
@@ -99,6 +100,7 @@ elif [ "$CC" = "bcc" -o "$CC" = "bcc32" ]; then
 	CFLAGS='-5 -q -w-8004 -w-8008 -w-8057 -w-8065 -w-8066 -w-8070 -O2'
 	LFLAGS='-5 -q'
 	LFLAGS='-e'
+	LLIBS=''
 	echo bcc > $GOBO/tool/gec/config/c/default.cfg
 	c_compilation
 	$RM *.tds
@@ -110,6 +112,7 @@ elif [ "$CC" = "lcc-win32" -o "$CC" = "lcc" ]; then
 	LD=lcclnk
 	LFLAGS='-s -subsystem Console'
 	LFLAG_OUT='-o '
+	LLIBS=''
 	echo lcc-win32 > $GOBO/tool/gec/config/c/default.cfg
 	c_compilation
 elif [ "$CC" = "gcc" ]; then
@@ -117,8 +120,9 @@ elif [ "$CC" = "gcc" ]; then
 	LD=gcc
 #	CFLAGS='-O2'
 	CFLAGS=''
-	LFLAGS='-lm'
+	LFLAGS=''
 	LFLAG_OUT='-o '
+	LLIBS='-lm'
 	echo gcc > $GOBO/tool/gec/config/c/default.cfg
 	c_compilation
 elif [ "$CC" = "mingw" ]; then
@@ -127,8 +131,9 @@ elif [ "$CC" = "mingw" ]; then
 	EXE=.exe
 #	CFLAGS='-O2'
 	CFLAGS=''
-	LFLAGS='-lm'
+	LFLAGS=''
 	LFLAG_OUT='-o '
+	LLIBS='-lm'
 	echo mingw > $GOBO/tool/gec/config/c/default.cfg
 	c_compilation
 elif [ "$CC" = "cc" ]; then
@@ -137,6 +142,7 @@ elif [ "$CC" = "cc" ]; then
 	CFLAGS='-fast'
 	LDFLAGS='-lm'
 	LFLAG_OUT='-o '
+	LLIBS=''
 	echo cc > $GOBO/tool/gec/config/c/default.cfg
 	c_compilation
 elif [ "$CC" = "icc" ]; then
@@ -153,6 +159,7 @@ elif [ "$CC" = "tcc" ]; then
 	CFLAGS='-O2'
 	LDFLAGS='-lm'
 	LFLAG_OUT='-o '
+	LLIBS=''
 	echo tcc > $GOBO/tool/gec/config/c/default.cfg
 	c_compilation
 elif [ "$CC" = "no_c" ]; then

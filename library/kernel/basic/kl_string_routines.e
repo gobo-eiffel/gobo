@@ -1131,14 +1131,14 @@ feature -- Element change
 		do
 			uc_string ?= a_string
 			if uc_string /= Void then
-				uc_string.append_substring (other, s, e)
+				uc_string.gobo_append_substring (other, s, e)
 				Result := uc_string
 			else
 				uc_string ?= other
 				if uc_string /= Void then
 					uc_string := uc_string.new_empty_string (a_string.count + e - s + 1)
 					uc_string.append_string (a_string)
-					uc_string.append_substring (other, s, e)
+					uc_string.gobo_append_substring (other, s, e)
 					Result := uc_string
 				else
 					from
@@ -1217,7 +1217,7 @@ feature -- Element change
 		do
 			uc_string ?= a_string
 			if uc_string /= Void then
-				uc_string.append_substring (other, s, e)
+				uc_string.gobo_append_substring (other, s, e)
 			else
 				from
 					i := s

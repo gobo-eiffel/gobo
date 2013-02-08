@@ -856,6 +856,12 @@ feature -- Kernel types
 	type_any_type: ET_GENERIC_CLASS_TYPE
 			-- Class type "TYPE [ANY]"
 
+	type_detachable_any_type: ET_GENERIC_CLASS_TYPE
+			-- Class type "TYPE [detachable ANY]"
+
+	detachable_type_detachable_any_type: ET_GENERIC_CLASS_TYPE
+			-- Class type "detachable TYPE [detachable ANY]"
+
 	typed_pointer_any_type: ET_GENERIC_CLASS_TYPE
 			-- Class type "TYPED_POINTER [ANY]"
 
@@ -1428,6 +1434,10 @@ feature -- Kernel types
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (any_type)
 			create type_any_type.make (Void, l_name, l_parameters, l_master_class)
+			create l_parameters.make_with_capacity (1)
+			l_parameters.put_first (detachable_any_type)
+			create type_detachable_any_type.make (Void, l_name, l_parameters, l_master_class)
+			create detachable_type_detachable_any_type.make (tokens.detachable_keyword, l_name, l_parameters, l_master_class)
 		end
 
 	set_typed_pointer_type

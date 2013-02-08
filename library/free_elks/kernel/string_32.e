@@ -1372,6 +1372,19 @@ feature -- Resizing
 			end
 		end
 
+	trim
+			-- <Precursor>
+		local
+			n: like count
+		do
+			n := count
+			if n < capacity then
+				area := area.resized_area (n)
+			end
+		ensure then
+			same_string: same_string (old twin)
+		end
+
 feature -- Conversion
 
 	as_lower: like Current

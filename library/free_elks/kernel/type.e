@@ -576,22 +576,6 @@ feature -- Output
 			Result := name
 		end
 
-feature {NONE} -- Implementation: Access
-
-	internal_name: detachable IMMUTABLE_STRING_8
-			-- Storage for once per object `name'
-
-feature {NONE} -- Implementation
-
-	runtime_name: STRING
-			-- Name of Eiffel type represented by `Current', using Eiffel style guidelines
-			-- as specified in OOSC2 (e.g. COMPARABLE, HASH_TABLE [FOO, BAR], ...)
-		external
-			"built_in"
-		ensure
-			name_not_void: Result /= Void
-		end
-
 feature -- Features from STRING needed here for the transition period (see convert clause)
 
 	plus alias "+" (other: STRING): STRING
@@ -717,6 +701,22 @@ feature -- Features from STRING needed here for the transition period (see conve
 			Result := name
 		ensure
 			to_string_not_void: Result /= Void
+		end
+
+feature {NONE} -- Implementation: Access
+
+	internal_name: detachable IMMUTABLE_STRING_8
+			-- Storage for once per object `name'
+
+feature {NONE} -- Implementation
+
+	runtime_name: STRING
+			-- Name of Eiffel type represented by `Current', using Eiffel style guidelines
+			-- as specified in OOSC2 (e.g. COMPARABLE, HASH_TABLE [FOO, BAR], ...)
+		external
+			"built_in"
+		ensure
+			name_not_void: Result /= Void
 		end
 
 end

@@ -33,7 +33,7 @@ feature -- Creation
 
 feature -- Access
 
-	item alias "[]", at alias "@" (index: INTEGER): ANY assign put
+	item alias "[]", at alias "@" (index: INTEGER): detachable ANY assign put
 			-- Entry of key `index'.
 		require
 			valid_index: valid_index (index)
@@ -264,7 +264,7 @@ feature -- Comparison
 						until
 							i > nb or not Result
 						loop
-							Result := equal (item (i), other.item (i))
+							Result := item (i) ~ other.item (i)
 							i := i + 1
 						end
 					end
@@ -358,7 +358,7 @@ feature -- Status report
 			Result := k >= 1 and then k <= count
 		end
 
-	valid_type_for_index (v: ANY; index: INTEGER): BOOLEAN
+	valid_type_for_index (v: detachable ANY; index: INTEGER): BOOLEAN
 			-- Is object `v' a valid target for element at position `index'?
 		require
 			valid_index: valid_index (index)
@@ -456,7 +456,7 @@ feature -- Status report
 
 feature -- Element change
 
-	put (v: ANY; index: INTEGER)
+	put (v: detachable ANY; index: INTEGER)
 			-- Insert `v' at position `index'.
 		require
 			valid_index: valid_index (index)
@@ -1057,7 +1057,7 @@ feature -- Type conversion queries
 
 feature -- Conversion
 
-	arrayed: ARRAY [ANY]
+	arrayed: ARRAY [detachable ANY]
 			-- Items of Current as array
 		obsolete
 			"Will be removed in future releases"
@@ -1230,7 +1230,7 @@ feature -- Conversion
 			same_items: -- Items are the same in same order
 		end
 
-	string_arrayed: ARRAY [STRING]
+	string_arrayed: ARRAY [detachable STRING]
 			-- Items of Current as array
 			-- NOTE: Items with a type not cconforming to
 			--       type STRING are set to Void.
@@ -1238,7 +1238,6 @@ feature -- Conversion
 			"Will be removed in future releases"
 		local
 			i, cnt: INTEGER
-			s: STRING
 		do
 			from
 				i := 1
@@ -1247,8 +1246,9 @@ feature -- Conversion
 			until
 				i > cnt
 			loop
-				s ?= item (i)
-				Result.put (s, i)
+				if attached {STRING} item (i) as s then
+					Result.put (s, i)
+				end
 				i := i + 1
 			end
 		ensure
@@ -1261,15 +1261,13 @@ feature -- Retrieval
 	correct_mismatch
 			-- Attempt to correct object mismatch using `mismatch_information'.
 		local
-			l_area: SPECIAL [ANY]
 			i, nb: INTEGER
 			l_any: ANY
 		do
 				-- Old version of TUPLE had a SPECIAL [ANY] to store all values.
 				-- If we can get access to it, then most likely we can recover this
 				-- old TUPLE implementation.
-			l_area ?= Mismatch_information.item (area_name)
-			if l_area /= Void then
+			if attached {SPECIAL [ANY]} Mismatch_information.item (area_name) as l_area then
 				from
 					i := 1
 					nb := l_area.count

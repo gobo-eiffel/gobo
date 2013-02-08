@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system 
+	xmlns="http://www.eiffel.com/developers/xml/configuration-1-9-0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-9-0 http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd"
+	name="kernel"
+	uuid="6D7FF712-BBA5-4AC0-AABF-2D9880493A23"
+	library_target="kernel">
+
+	<description>
+		description: "ECF file for the Gobo Eiffel Kernel Library"
+		library: "Gobo Eiffel Kernel Library"
+		copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
+		license: "MIT License"
+	</description>
+
+	<target name="kernel">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+			<exclude>/\.git$</exclude>
+		</file_rule>
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" is_void_safe="true"/>
+
+		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf" readonly="true">
+			<condition>
+				<custom name="GOBO_EIFFEL" excluded_value="ge"/>
+			</condition>
+		</library>
+
+		<library name="time" location="$ISE_LIBRARY/library/time/time-safe.ecf" readonly="true">
+			<condition>
+				<custom name="GOBO_EIFFEL" excluded_value="ge"/>
+			</condition>
+		</library>
+
+		<library name="free_elks" location="$GOBO/library/free_elks/library.ecf" readonly="true">
+			<condition>
+				<custom name="GOBO_EIFFEL" value="ge"/>
+			</condition>
+		</library>
+
+		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
+		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
+		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>
+		<assembly name="system_xml" location="$ISE_DOTNET_FRAMEWORK\System.Xml.dll" prefix="XML_"/>
+
+		<cluster name="kernel" location="./" recursive="true">
+			<file_rule>
+				<exclude>/ge$</exclude>
+				<condition>
+					<custom name="GOBO_EIFFEL" excluded_value="ge"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/ise$</exclude>
+				<condition>
+					<custom name="GOBO_EIFFEL" value="ge"/>
+				</condition>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

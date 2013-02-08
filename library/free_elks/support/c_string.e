@@ -5,8 +5,8 @@ note
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2009-02-07 00:00:32 +0100 (Sat, 07 Feb 2009) $"
+	revision: "$Revision: 268 $"
 
 class
 	C_STRING
@@ -272,7 +272,7 @@ feature -- Access
 				j := j + 1
 			end
 		ensure
-			copied: -- for i in 0..end_pos - start_pos, a_area [i] = Current [i + start_pos]
+			copied: -- for i in 0..end_pos - start_pos, a_area [i] = Current [i + start_pos]			
 		end
 
 	item: POINTER

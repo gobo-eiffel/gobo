@@ -6,10 +6,10 @@ note
 		]"
 
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
+	copyright: "Copyright (c) 1986-2010, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date: 2009-10-06 21:13:09 +0200 (Tue, 06 Oct 2009) $"
-	revision: "$Revision: 382 $"
+	date: "$Date: 2011-06-17 23:12:32 +0200 (Fri, 17 Jun 2011) $"
+	revision: "$Revision: 515 $"
 
 class ARRAY [G] inherit
 
@@ -84,6 +84,8 @@ feature -- Initialization
 			-- Allocate array; set index interval to
 			-- `min_index' .. `max_index'; set all values to default.
 			-- (Make array empty if `min_index' = `max_index' + 1).
+		obsolete
+			" `make' is not void-safe statically. Use `make_empty' or `make_filled' instead. [07-2010]"
 		require
 			valid_bounds: min_index <= max_index + 1
 		local
@@ -376,6 +378,16 @@ feature -- Element change
 			higher_count: count >= old count
 		end
 
+	fill_with (v: G)
+			-- Set items between `lower' and `upper' with `v'.
+		do
+			area.fill_with (v, 0, upper - lower)
+		ensure
+			same_capacity: capacity = old capacity
+			count_definition: count = old count
+			filled: filled_with (v)
+		end
+
 	subcopy (other: ARRAY [like item]; start_pos, end_pos, index_pos: INTEGER)
 			-- Copy items of `other' within bounds `start_pos' and `end_pos'
 			-- to current array starting at index `index_pos'.
@@ -622,6 +634,19 @@ feature -- Resizing
 		ensure
 			no_low_lost: lower = min_index or else lower = old lower
 			no_high_lost: upper = max_index or else upper = old upper
+		end
+
+	trim
+			-- <Precursor>
+		local
+			n: like count
+		do
+			n := count
+			if n < area.capacity then
+				area := area.resized_area (n)
+			end
+		ensure then
+			same_items: linear_representation.is_equal (old linear_representation)
 		end
 
 feature -- Conversion

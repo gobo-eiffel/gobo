@@ -6,8 +6,17 @@
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="gobo-kernel" location="$GOBO\library\kernel\gobo-kernel-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf" readonly="true">
+			<condition>
+				<custom name="GOBO_EIFFEL" excluded_value="ge"/>
+			</condition>
+		</library>
+		<library name="free_elks" location="$GOBO/library/free_elks/library.ecf" readonly="true">
+			<condition>
+				<custom name="GOBO_EIFFEL" value="ge"/>
+			</condition>
+		</library>
+		<library name="gobo-kernel" location="$GOBO\library\kernel\library.ecf"/>
 		<cluster name="gobo-pattern" location="$GOBO\library\pattern\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

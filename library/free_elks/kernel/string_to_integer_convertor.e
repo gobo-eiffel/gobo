@@ -3,8 +3,8 @@ note
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2009-03-15 17:53:42 +0100 (Sun, 15 Mar 2009) $"
+	revision: "$Revision: 281 $"
 
 class
 	STRING_TO_INTEGER_CONVERTOR
@@ -328,7 +328,7 @@ feature{NONE} -- Implementation
 		end
 
 	part1, part2: like max_natural_type
-			-- Naturals used for conversion
+			-- Naturals used for conversion	
 
 	internal_overflowed: BOOLEAN
 			-- Internal overflow flag

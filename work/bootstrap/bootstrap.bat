@@ -1,7 +1,7 @@
 @echo off
 
 rem description: "Bootstrap Gobo Eiffel package"
-rem copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
+rem copyright: "Copyright (c) 2001-2013, Eric Bezault and others"
 rem license: "MIT License"
 rem date: "$Date$"
 rem revision: "$Revision$"
@@ -103,6 +103,7 @@ goto exit
 	set CFLAGS=-O2 -nologo -wd4049
 	set LFLAGS=-nologo -subsystem:console
 	set LFLAG_OUT=-out:
+	set LLIBS=
 	echo msc > %GOBO%\tool\gec\config\c\default.cfg
 	goto c_compilation
 
@@ -112,6 +113,7 @@ goto exit
 	set CFLAGS=-5 -q -w-8004 -w-8008 -w-8057 -w-8065 -w-8066 -w-8070 -O2
 	set LFLAGS=-5 -q 
 	set LFLAG_OUT=-e
+	set LLIBS=
 	echo bcc > %GOBO%\tool\gec\config\c\default.cfg
 	goto c_compilation
 
@@ -122,6 +124,7 @@ goto exit
 	set LD=lcclnk
 	set LFLAGS=-s -subsystem Console
 	set LFLAG_OUT=-o 
+	set LLIBS=
 	echo lcc-win32 > %GOBO%\tool\gec\config\c\default.cfg
 	goto c_compilation
 
@@ -129,8 +132,9 @@ goto exit
 	set CC=gcc
 	set LD=gcc
 	set CFLAGS=-O2
-	set LFLAGS=-lm
+	set LFLAGS=
 	set LFLAG_OUT=-o 
+	set LLIBS=-lm
 	set OBJ=.o
 	echo gcc > %GOBO%\tool\gec\config\c\default.cfg
 	goto c_compilation
@@ -139,8 +143,9 @@ goto exit
 	set CC=gcc
 	set LD=gcc
 	set CFLAGS=-O2
-	set LFLAGS=-lm
+	set LFLAGS=
 	set LFLAG_OUT=-o 
+	set LLIBS=-lm
 	set OBJ=.o
 	echo mingw > %GOBO%\tool\gec\config\c\default.cfg
 	goto c_compilation
@@ -151,6 +156,7 @@ goto exit
 	set CFLAGS='-fast'
 	set LFLAGS='-lm'
 	set LFLAG_OUT=-o 
+	set LLIBS=
 	set OBJ=.o
 	echo cc > %GOBO%\tool\gec\config\c\default.cfg
 	goto c_compilation
@@ -161,6 +167,7 @@ goto exit
 	set CFLAGS=-O2
 	set LFLAGS=
 	set LFLAG_OUT=-o 
+	set LLIBS=
 	set OBJ=.o
 	echo icc > %GOBO%\tool\gec\config\c\default.cfg
 	goto c_compilation
@@ -171,6 +178,7 @@ goto exit
 	set CFLAGS=-O2
 	set LFLAGS=-lm
 	set LFLAG_OUT=-o 
+	set LLIBS=
 	set OBJ=.o
 	echo tcc > %GOBO%\tool\gec\config\c\default.cfg
 	goto c_compilation
@@ -192,14 +200,14 @@ goto exit
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec3.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec2.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec1.c
-	%LD% %LFLAGS% %LFLAG_OUT%gec%EXE% gec*%OBJ%
+	%LD% %LFLAGS% %LFLAG_OUT%gec%EXE% gec*%OBJ% %LLIBS%
 	%RM% gec*%OBJ%
 
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gexace4.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gexace3.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gexace2.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gexace1.c
-	%LD% %LFLAGS% %LFLAG_OUT%gexace%EXE% gexace*%OBJ%
+	%LD% %LFLAGS% %LFLAG_OUT%gexace%EXE% gexace*%OBJ% %LLIBS%
 	%RM% gexace*%OBJ%
 
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\geant5.c
@@ -207,21 +215,21 @@ goto exit
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\geant3.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\geant2.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\geant1.c
-	%LD% %LFLAGS% %LFLAG_OUT%geant%EXE% geant*%OBJ%
+	%LD% %LFLAGS% %LFLAG_OUT%geant%EXE% geant*%OBJ% %LLIBS%
 	%RM% geant*%OBJ%
 
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gelex2.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gelex1.c
-	%LD% %LFLAGS% %LFLAG_OUT%gelex%EXE% gelex*%OBJ%
+	%LD% %LFLAGS% %LFLAG_OUT%gelex%EXE% gelex*%OBJ% %LLIBS%
 	%RM% gelex*%OBJ%
 
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\geyacc2.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\geyacc1.c
-	%LD% %LFLAGS% %LFLAG_OUT%%BIN_DIR%\geyacc%EXE% geyacc*%OBJ%
+	%LD% %LFLAGS% %LFLAG_OUT%%BIN_DIR%\geyacc%EXE% geyacc*%OBJ% %LLIBS%
 	%RM% geyacc*%OBJ%
 
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gepp1.c
-	%LD% %LFLAGS% %LFLAG_OUT%gepp%EXE% gepp*%OBJ%
+	%LD% %LFLAGS% %LFLAG_OUT%gepp%EXE% gepp*%OBJ% %LLIBS%
 	%RM% gepp*%OBJ%
 
 	if .%CC%. == .bcc32. %RM% *.tds
