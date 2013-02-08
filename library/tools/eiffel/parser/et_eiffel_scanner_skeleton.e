@@ -5,7 +5,7 @@ note
 		"Scanner skeletons for Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/11/19 $"
 	revision: "$Revision: #28 $"
@@ -381,7 +381,7 @@ feature -- Tokens
 	last_c3_character_constant: ET_C3_CHARACTER_CONSTANT
 			-- Last character constant scanned of the form '%/code/'
 		require
-			-- valid_literal: ([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]).recognizes (last_literal)
+			-- valid_literal: ((0*([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))|(0x[0-9a-fA-F]{1,4})).recognizes (last_literal)
 		local
 			l_literal: STRING
 			l_value: CHARACTER
