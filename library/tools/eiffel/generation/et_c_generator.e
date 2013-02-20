@@ -5,7 +5,7 @@ note
 		"C code generators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -5825,7 +5825,7 @@ feature {NONE} -- Instruction generation
 										current_file.put_string (c_case)
 										current_file.put_character (' ')
 										print_type_cast (l_value_type, current_file)
-										print_escaped_character (INTEGER_.to_character (k))
+										print_escaped_character (k.to_character_32)
 										current_file.put_character (':')
 										current_file.put_new_line
 										k := k + 1
@@ -27261,7 +27261,7 @@ feature {NONE} -- String generation
 			end
 		end
 
-	print_escaped_character (c: CHARACTER)
+	print_escaped_character (c: CHARACTER_32)
 			-- Print escaped version of `c'.
 		local
 			l_code: INTEGER
@@ -27269,7 +27269,7 @@ feature {NONE} -- String generation
 			current_file.put_character ('%'')
 			inspect c
 			when ' ', '!', '#', '$', '&', '('..'[', ']'..'~' then
-				current_file.put_character (c)
+				current_file.put_character (c.to_character_8)
 			when '%N' then
 				current_file.put_character ('\')
 				current_file.put_character ('n')

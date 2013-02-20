@@ -5,7 +5,7 @@ note
 		"ECF options"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2011-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -98,7 +98,6 @@ invariant
 	primary_options_not_void: primary_options /= Void
 	no_void_primary_option: not primary_options.has_void
 	no_void_primary_value: not primary_options.has_void_item
-	secondary_options_not_void: secondary_options /= Void
 --	no_cycle: `secondary_options', or recursively its secondary options, does not already have `Current' as secondary options
 
 end

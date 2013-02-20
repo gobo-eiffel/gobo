@@ -5,7 +5,7 @@ note
 		"Eiffel character constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -59,7 +59,7 @@ feature -- Status report
 
 feature -- Access
 
-	value: CHARACTER
+	value: CHARACTER_32
 			-- Character value
 
 	cast_type: ET_TARGET_TYPE

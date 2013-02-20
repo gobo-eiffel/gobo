@@ -5,7 +5,7 @@ note
 		"ECF settings"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2011-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -98,7 +98,6 @@ invariant
 	primary_settings_not_void: primary_settings /= Void
 	no_void_primary_setting: not primary_settings.has_void
 	no_void_primary_value: not primary_settings.has_void_item
-	secondary_settings_not_void: secondary_settings /= Void
 --	no_cycle: `secondary_settings', or recursively its secondary settings, does not already have `Current' as secondary settings
 
 end

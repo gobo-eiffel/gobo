@@ -384,19 +384,63 @@ feature -- Tokens
 			-- valid_literal: ((0*([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))|(0x[0-9a-fA-F]{1,4})).recognizes (last_literal)
 		local
 			l_literal: STRING
-			l_value: CHARACTER
+			l_value: CHARACTER_32
 			i, nb: INTEGER
 			c: CHARACTER
-			l_code: INTEGER
+			l_code: NATURAL_32
 		do
 			l_literal := last_literal
-			nb := l_literal.count
-			from i := 1 until i > nb loop
-				c := l_literal.item (i)
-				l_code := l_code * 10 + c.code - Zero_code
-				i := i + 1
+			if l_literal.starts_with ("0x") then
+				nb := l_literal.count
+				from i := 3 until i > nb loop
+					c := l_literal.item (i)
+					l_code := l_code * 16
+					inspect c
+					when '0' then
+							-- Do nothing.
+					when '1' then
+						l_code := l_code + 1
+					when '2' then
+						l_code := l_code + 2
+					when '3' then
+						l_code := l_code + 3
+					when '4' then
+						l_code := l_code + 4
+					when '5' then
+						l_code := l_code + 5
+					when '6' then
+						l_code := l_code + 6
+					when '7' then
+						l_code := l_code + 7
+					when '8' then
+						l_code := l_code + 8
+					when '9' then
+						l_code := l_code + 9
+					when 'a', 'A' then
+						l_code := l_code + 10
+					when 'b', 'B' then
+						l_code := l_code + 11
+					when 'c', 'C' then
+						l_code := l_code + 12
+					when 'd', 'D' then
+						l_code := l_code + 13
+					when 'e', 'E' then
+						l_code := l_code + 14
+					when 'f', 'F' then
+						l_code := l_code + 15
+					end
+					i := i + 1
+				end
+			else
+				nb := l_literal.count
+				from i := 1 until i > nb loop
+					c := l_literal.item (i)
+					l_code := l_code * 10 + c.natural_32_code - Zero_code.to_natural_32
+					i := i + 1
+				end
+				l_value := l_code.to_character_32
 			end
-			l_value := INTEGER_.to_character (l_code)
+			l_value := l_code.to_character_32
 			create Result.make (l_literal, l_value)
 		ensure
 			last_c3_character_constant_not_void: Result /= Void

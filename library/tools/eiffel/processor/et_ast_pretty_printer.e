@@ -5,7 +5,7 @@ note
 		"Eiffel AST pretty printers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -881,7 +881,7 @@ feature {ET_AST_NODE} -- Processing
 				print_space
 			end
 			print_character ('%'')
-			print_character (a_constant.value)
+			print_character (a_constant.literal)
 			print_character ('%'')
 			process_break (a_constant.break)
 		end

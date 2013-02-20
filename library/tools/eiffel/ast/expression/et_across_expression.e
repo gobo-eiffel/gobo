@@ -5,7 +5,7 @@ note
 		"Eiffel across expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2012-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,7 +38,9 @@ feature {NONE} -- Initialization
 			a_cursor_name_not_void: a_cursor_name /= Void
 			a_iteration_conditional_not_void: a_iteration_conditional /= Void
 		do
+			across_keyword := tokens.across_keyword
 			iterable_expression := a_iterable_expression
+			as_keyword := tokens.as_keyword
 			cursor_name := a_cursor_name
 			until_conditional := an_until_conditional
 			iteration_conditional := a_iteration_conditional
@@ -63,7 +65,9 @@ feature {NONE} -- Initialization
 			a_cursor_name_not_void: a_cursor_name /= Void
 			a_iteration_conditional_not_void: a_iteration_conditional /= Void
 		do
+			across_keyword := tokens.across_keyword
 			iterable_expression := a_iterable_expression
+			as_keyword := tokens.as_keyword
 			cursor_name := a_cursor_name
 			until_conditional := an_until_conditional
 			iteration_conditional := a_iteration_conditional
