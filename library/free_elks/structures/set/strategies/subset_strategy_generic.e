@@ -4,11 +4,11 @@ note
 		Strategies for calculating several features for subsets containing
 		items of any type.
 		]"
+	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
-	date: "$Date: 2008-12-29 20:36:38 +0100 (Mon, 29 Dec 2008) $"
-	revision: "$Revision: 254 $"
+	date: "$Date: 2012-05-24 06:13:10 +0200 (Thu, 24 May 2012) $"
+	revision: "$Revision: 559 $"
 
 class SUBSET_STRATEGY_GENERIC [G] inherit
 
@@ -44,7 +44,7 @@ feature -- Comparison
 				set2.forth
 			end
 		end
-	
+
 feature -- Basic operations
 
 	symdif (set1, set2: TRAVERSABLE_SUBSET [G])
@@ -53,7 +53,7 @@ feature -- Basic operations
 		local
 			tmp_set: LINKED_LIST [G]
 		do
-			create tmp_set.make 
+			create tmp_set.make
 			if set1.object_comparison then
 				tmp_set.compare_objects
 			end
@@ -73,25 +73,18 @@ feature -- Basic operations
 			from tmp_set.start until tmp_set.after loop
 				set1.extend (tmp_set.item)
 				tmp_set.forth
-			end	
+			end
 		end
-	
+
 note
-	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-
-
-
-end -- class SUBSET_STRATEGY_GENERIC
+end

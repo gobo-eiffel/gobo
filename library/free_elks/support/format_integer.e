@@ -1,14 +1,11 @@
 note
-
-	description:
-		"Formatter for integral numbers"
-
+	description: "Formatter for integral numbers"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 2005-2008, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
 	names: format_integer;
-	date: "$Date: 2009-11-24 19:58:42 +0100 (Tue, 24 Nov 2009) $"
-	revision: "$Revision: 401 $"
+	date: "$Date: 2012-07-23 23:02:19 +0200 (Mon, 23 Jul 2012) $"
+	revision: "$Revision: 567 $"
 
 class FORMAT_INTEGER
 
@@ -564,5 +561,16 @@ invariant
 	sign_string_equal_parts: sign_string.count \\ 3 = 0
 	wide_enough: width >= 1
 	no_justification <= justification and justification <= right_justification
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

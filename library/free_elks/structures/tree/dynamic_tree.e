@@ -1,16 +1,14 @@
 note
-
-	description:
-		"Trees with a dynamically modifiable structure"
+	description: "Trees with a dynamically modifiable structure"
+	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	names: dynamic_tree, tree;
 	representation: recursive;
 	access: cursor, membership;
 	contents: generic;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2012-07-23 23:02:19 +0200 (Mon, 23 Jul 2012) $"
+	revision: "$Revision: 567 $"
 
 deferred class DYNAMIC_TREE [G] inherit
 
@@ -86,7 +84,7 @@ feature -- Element change
 		deferred
 		end
 
-	merge_tree_before (other: like first_child)
+	merge_tree_before (other: attached like first_child)
 			-- Merge children of `other' into current structure
 			-- after cursor position. Do not move cursor.
 			-- Make `other' a leaf.
@@ -98,7 +96,7 @@ feature -- Element change
 			other_is_leaf: other.is_leaf
 		end
 
-	merge_tree_after (other: like first_child)
+	merge_tree_after (other: attached like first_child)
 			-- Merge children of `other' into current structure
 			-- after cursor position. Do not move cursor.
 			-- Make `other' a leaf.
@@ -273,18 +271,14 @@ invariant
 	child_after_definition: child_after = (child_index = arity + 1)
 
 note
-	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class DYNAMIC_TREE
-
-
-
+end

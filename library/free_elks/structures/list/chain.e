@@ -1,35 +1,35 @@
 note
-
 	description: "[
 		Possibly circular sequences of items,
 		without commitment to a particular representation
 		]"
+	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	names: chain, sequence;
 	access: index, cursor, membership;
 	contents: generic;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2013-01-15 22:41:22 +0100 (Tue, 15 Jan 2013) $"
+	revision: "$Revision: 700 $"
 
 deferred class CHAIN [G] inherit
 
 	CURSOR_STRUCTURE [G]
+		rename
+			put as sequence_put
 		undefine
 			prune_all
 		redefine
 			fill
-		select
-			put
 		end
 
 	INDEXABLE [G, INTEGER]
 		rename
 			item as i_th alias "[]",
-			put as put_i_th
+			put as put_i_th,
+			bag_put as sequence_put
 		undefine
-			prune_all
+			prune_all, sequence_put
 		redefine
 			fill
 		end
@@ -54,7 +54,7 @@ deferred class CHAIN [G] inherit
 		export
 			{NONE}
 				sequential_index_of, sequential_has,
-				sequence_put
+				sequence_put, sequential_occurrences
 		redefine
 			off, fill, append
 		end
@@ -180,7 +180,7 @@ feature -- Cursor movement
 			if i > 0 then
 				from
 				until
-					(counter = i) or else off
+					(counter = i) or else after
 				loop
 					forth
 					counter := counter + 1
@@ -265,10 +265,14 @@ feature -- Element change
 	put (v: like item)
 			-- Replace current item by `v'.
 			-- (Synonym for `replace')
+		require
+			writeable: writable
+			replaceable: replaceable
 		do
 			replace (v)
-		ensure then
+		ensure
 	 		same_count: count = old count
+	 		is_inserted: is_inserted (v)
 		end
 
 	put_i_th (v: like item; i: INTEGER)
@@ -285,7 +289,7 @@ feature -- Element change
 	append (s: SEQUENCE [G])
 			-- Append a copy of `s'.
 		local
-			l: like s
+			l: SEQUENCE [G]
 			l_cursor: CURSOR
 		do
 			l := s
@@ -381,24 +385,14 @@ invariant
 	index_set_has_same_count: index_set.count = count
 
 note
-	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-
-
-
-end -- class CHAIN
-
-
-
+end

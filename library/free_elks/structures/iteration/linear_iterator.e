@@ -1,14 +1,11 @@
 note
-
-	description:
-		"Objects that are able to iterate over linear structures"
+	description: "Objects that are able to iterate over linear structures"
+	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
-	names: iterators, iteration, linear_iterators,
-			linear_iteration;
-	date: "$Date$"
-	revision: "$Revision$"
+	names: iterators, iteration, linear_iterators, linear_iteration;
+	date: "$Date: 2012-07-23 23:02:19 +0200 (Mon, 23 Jul 2012) $"
+	revision: "$Revision: 567 $"
 
 class LINEAR_ITERATOR [G] inherit
 
@@ -26,7 +23,6 @@ feature -- Initialization
 			-- Make `s' the new target of iterations.
 		do
 			target := s
-			create internal_item_tuple
 		end
 
 feature -- Access
@@ -45,8 +41,9 @@ feature -- Access
 		require
 			not_off: not target.off
 		do
-			internal_item_tuple.put (target.item, 1)
-			Result := internal_item_tuple
+			Result := [target.item]
+		ensure
+			item_tuple_attached: Result /= Void
 		end
 
 	target: LINEAR [G]
@@ -88,7 +85,7 @@ feature -- Iteration
 			start
 			continue_while (action, test)
 		ensure then
-			finished: not exhausted implies not test.item (item_tuple)
+			finished: not exhausted implies not test.item ([target.item])
 		end
 
 	continue_while (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
@@ -99,17 +96,17 @@ feature -- Iteration
 			invariant_satisfied: invariant_value
 		do
 			from
-				if not exhausted then action.call (item_tuple) end
+				if not exhausted then action.call ([target.item]) end
 			invariant
 				invariant_value
 			until
-				exhausted or else not test.item (item_tuple)
+				exhausted or else not test.item ([target.item])
 			loop
 				forth
-				if not exhausted then action.call (item_tuple) end
+				if not exhausted then action.call ([target.item]) end
 			end
 		ensure then
-			finished: not exhausted implies not test.item (item_tuple)
+			finished: not exhausted implies not test.item ([target.item])
 		end
 
 	while_do (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
@@ -120,7 +117,7 @@ feature -- Iteration
 			start
 			while_continue (action, test)
 		ensure then
-			finished: not exhausted implies not test.item (item_tuple)
+			finished: not exhausted implies not test.item ([target.item])
 		end
 
 	while_continue (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
@@ -131,13 +128,13 @@ feature -- Iteration
 			invariant
 				invariant_value
 			until
-				exhausted or else not test.item (item_tuple)
+				exhausted or else not test.item ([target.item])
 			loop
-				action.call (item_tuple)
+				action.call ([target.item])
 				forth
 			end
 		ensure
-			finished: not exhausted implies not test.item (item_tuple)
+			finished: not exhausted implies not test.item ([target.item])
 		end
 
 	until_do (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
@@ -148,7 +145,7 @@ feature -- Iteration
 			start
 			until_continue (action, test)
 		ensure then
-			achieved: not exhausted implies test.item (item_tuple)
+			achieved: not exhausted implies test.item ([target.item])
 		end
 
 	until_continue (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
@@ -161,13 +158,13 @@ feature -- Iteration
 			invariant
 				invariant_value
 			until
-				exhausted or else test.item (item_tuple)
+				exhausted or else test.item ([target.item])
 			loop
 				action.call ([item])
 				forth
 			end
 		ensure
-			achieved: exhausted or else test.item (item_tuple)
+			achieved: exhausted or else test.item ([target.item])
 			invariant_satisfied: invariant_value
 		end
 
@@ -178,7 +175,7 @@ feature -- Iteration
 			start
 			continue_until (action, test)
 		ensure then
-			achieved: not exhausted implies test.item (item_tuple)
+			achieved: not exhausted implies test.item ([target.item])
 		end
 
 	continue_until (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
@@ -189,17 +186,17 @@ feature -- Iteration
 			invariant_satisfied: invariant_value
 		do
 			from
-				if not exhausted then action.call (item_tuple) end
+				if not exhausted then action.call ([target.item]) end
 			invariant
 				invariant_value
 			until
-				exhausted or else test.item (item_tuple)
+				exhausted or else test.item ([target.item])
 			loop
 				forth
-				if not exhausted then action.call (item_tuple) end
+				if not exhausted then action.call ([target.item]) end
 			end
 		ensure then
-			achieved: not exhausted implies test.item (item_tuple)
+			achieved: not exhausted implies test.item ([target.item])
 		end
 
 	search (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]; b: BOOLEAN)
@@ -219,12 +216,12 @@ feature -- Iteration
 			invariant
 				invariant_value
 			until
-				exhausted or else (b = test.item (item_tuple))
+				exhausted or else (b = test.item ([target.item]))
 			loop
 				forth
 			end
 		ensure then
-			found: not exhausted = (b = test.item (item_tuple))
+			found: not exhausted = (b = test.item ([target.item]))
 		end
 
 	do_for (action: PROCEDURE [ANY, TUPLE [G]]; i, n, k: INTEGER)
@@ -268,7 +265,7 @@ feature -- Iteration
 			until
 				exhausted or else i = n
 			loop
-				action.call (item_tuple)
+				action.call ([target.item])
 				i := i + 1
 				from
 					j := 0
@@ -303,27 +300,19 @@ feature -- Iteration
 			Result := not exhausted
 		end
 
-feature -- Implementation
-
-	internal_item_tuple: TUPLE [G]
-			-- Field holding the last item of `target'
-
 invariant
 
 	target_exists: target /= Void
-	internal_item_tuple_exists: internal_item_tuple /= Void
-	item_tuple_exists: not exhausted implies item_tuple /= Void
 
 note
-	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- LINEAR_ITERATOR
+end

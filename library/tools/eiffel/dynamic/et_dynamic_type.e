@@ -619,6 +619,8 @@ feature -- Features
 			when builtin_special_class then
 				if (a_builtin_code \\ builtin_capacity) = builtin_special_count then
 					Result := True
+				elseif (a_builtin_code \\ builtin_capacity) = builtin_special_capacity then
+					Result := True
 				end
 			else
 				Result := False

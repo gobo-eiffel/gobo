@@ -1,10 +1,10 @@
 note
 	description: "Objects identified, uniquely during any session, by an integer"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date: 2009-03-22 21:59:24 +0100 (Sun, 22 Mar 2009) $"
-	revision: "$Revision: 284 $"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2012-05-24 06:13:10 +0200 (Thu, 24 May 2012) $"
+	revision: "$Revision: 559 $"
 
 class IDENTIFIED
 
@@ -27,7 +27,7 @@ feature -- Access
 			-- Unique for current object in any given session
 		do
 			if internal_id = 0 then
-				internal_id := eif_current_object_id
+				internal_id := eif_object_id (Current)
 			end
 			Result := internal_id
 		ensure
@@ -99,9 +99,11 @@ feature -- Duplication
 		local
 			int_id: INTEGER
 		do
-			int_id := internal_id
-			standard_copy (other)
-			internal_id := int_id
+			if other /= Current then
+				int_id := internal_id
+				standard_copy (other)
+				internal_id := int_id
+			end
 		end
 
 feature {NONE} -- Removal
@@ -118,7 +120,18 @@ feature {NONE} -- Removal
 
 feature {IDENTIFIED} -- Implementation
 
-	internal_id: INTEGER
+	internal_id: INTEGER;
 			-- Internal representation of `object_id'
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

@@ -1,14 +1,14 @@
 note
-
 	description: "Unbounded stacks implemented as linked lists"
+	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	names: linked_stack, dispenser, linked_list;
 	representation: linked;
 	access: fixed, lifo, membership;
 	contents: generic;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2012-05-24 06:13:10 +0200 (Thu, 24 May 2012) $"
+	revision: "$Revision: 559 $"
 
 class LINKED_STACK [G] inherit
 
@@ -48,17 +48,13 @@ feature -- Access
 
 	item: G
 			-- Item at the first position
-		local
-			f: like first_element
 		do
 			check
 				not_empty: not is_empty
 			end
-			f := first_element
-			check
-				f_attached: f /= Void
+			check attached first_element as f then
+				Result := f.item
 			end
-			Result := f.item
 		end
 
 feature -- Element change
@@ -112,7 +108,7 @@ feature -- Conversion
 
 feature -- Duplication
 
-	duplicate (n: INTEGER): detachable like Current
+	duplicate (n: INTEGER): like Current
 			-- New stack containing the `n' latest items inserted
 			-- in current stack.
 			-- If `n' is greater than `count', identical to current stack.
@@ -123,10 +119,10 @@ feature -- Duplication
 			old_cursor: CURSOR
 			list: LINKED_LIST [G]
 		do
+			create Result.make
 			if not is_empty then
 				old_cursor := cursor
 				from
-					create Result.make
 					list := Result
 					start
 				until
@@ -142,24 +138,15 @@ feature -- Duplication
 		end
 
 note
-	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 
-
-
-
-
-
-end -- class LINKED_STACK
-
-
-
+end

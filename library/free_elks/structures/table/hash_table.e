@@ -1,5 +1,6 @@
 note
 	description: "Hash tables, used to store items identified by hashable keys"
+	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	instructions: "See instructions at the end of the class."
 	warning: "[
@@ -10,8 +11,8 @@ note
 		]"
 
 	status: "See notice at end of class."
-	date: "$Date: 2009-11-24 01:42:12 +0100 (Tue, 24 Nov 2009) $"
-	revision: "$Revision: 396 $"
+	date: "$Date: 2013-01-10 01:57:33 +0100 (Thu, 10 Jan 2013) $"
+	revision: "$Revision: 696 $"
 
 class HASH_TABLE [G, K -> detachable HASHABLE] inherit
 
@@ -25,12 +26,25 @@ class HASH_TABLE [G, K -> detachable HASHABLE] inherit
 	TABLE [detachable G, K]
 		rename
 			has as has_item,
-			wipe_out as clear_all,
 			extend as collection_extend
 		export
 			{NONE} prune_all
 		redefine
-			copy, is_equal, clear_all, has_item
+			copy, is_equal, wipe_out, has_item
+		end
+
+	TABLE_ITERABLE [G, K]
+		redefine
+			copy, is_equal
+		end
+
+	READABLE_INDEXABLE [G]
+		rename
+			item as iteration_item,
+			valid_index as valid_iteration_index,
+			index_set as iteration_index_set
+		redefine
+			copy, is_equal, new_cursor
 		end
 
 	MISMATCH_CORRECTOR
@@ -44,7 +58,8 @@ class HASH_TABLE [G, K -> detachable HASHABLE] inherit
 		end
 
 create
-	make
+	make,
+	make_equal
 
 feature -- Initialization
 
@@ -52,9 +67,12 @@ feature -- Initialization
 			-- Allocate hash table for at least `n' items.
 			-- The table will be resized automatically
 			-- if more than `n' items are inserted.
+		require
+			n_non_negative: n >= 0
 		local
 			clever: PRIMES
 			l_default_value: detachable G
+			l_default_key: detachable K
 			l_size: INTEGER
 		do
 			create clever
@@ -64,21 +82,41 @@ feature -- Initialization
 			capacity := l_size
 					-- Position `capacity' ignored by hash sequences,
 					-- used to store value for default key.
-			create content.make (l_size + 1)
-			create keys.make (l_size + 1)
-			create deleted_marks.make (l_size + 1)
-			iteration_position := l_size + 1
+			create content.make_empty (n + 1)
+			create keys.make_empty (n + 1)
+			create deleted_marks.make_filled (False, n + 1)
+			create indexes_map.make_filled (ht_impossible_position, l_size + 1)
+			iteration_position := n + 1
 			count := 0
-			deleted_position := 0
+			deleted_item_position := ht_impossible_position
 			control := 0
 			found_item := l_default_value
 			has_default := False
-			position := 0
-			used_slot_count := 0
+			item_position := 0
+			ht_lowest_deleted_position := ht_max_position
+			ht_deleted_item := l_default_value
+			ht_deleted_key := l_default_key
 		ensure
 			breathing_space: n < capacity
 			more_than_minimum: capacity > minimum_capacity
 			no_status: not special_status
+		end
+
+	make_equal (n: INTEGER)
+			-- Allocate hash table for at least `n' items.
+			-- The table will be resized automatically
+			-- if more than `n' items are inserted.
+			-- Use `~' to compare items.
+		require
+			n_non_negative: n >= 0
+		do
+			make (n)
+			compare_objects
+		ensure
+			breathing_space: n < capacity
+			more_than_minimum: capacity > minimum_capacity
+			no_status: not special_status
+			compare_objects: object_comparison
 		end
 
 	accommodate (n: INTEGER)
@@ -87,44 +125,37 @@ feature -- Initialization
 		require
 			n >= 0
 		local
-			i: INTEGER
+			i, nb: INTEGER
 			new_table: like Current
 			l_content: like content
 			l_keys: like keys
 		do
-				-- (Could also use iteration facilities.)
 			from
-				new_table := empty_duplicate (count.max (n))
+				new_table := empty_duplicate (keys.count.max (n))
 				l_content := content
 				l_keys := keys
+				nb := l_keys.count
 			until
-				i = capacity
+				i = nb
 			loop
 				if occupied (i) then
-					check
-						not new_table.soon_full
-							-- See invariant clause `sized_generously_enough'
-					end
 					new_table.put (l_content.item (i), l_keys.item (i))
 				end
 				i := i + 1
+			end
+			if has_default then
+				i := indexes_map.item (capacity)
+				new_table.put (l_content.item (i), keys.item (i))
 			end
 
 			set_content (new_table.content)
 			set_keys (new_table.keys)
 			set_deleted_marks (new_table.deleted_marks)
-
-			if has_default then
-				content.put (l_content.item (capacity), new_table.capacity)
-				keys.put_default (new_table.capacity)
-			end
-
+			set_indexes_map (new_table.indexes_map)
 			capacity := new_table.capacity
-			used_slot_count := count
 			iteration_position := new_table.iteration_position
 		ensure
 			count_not_changed: count = old count
-			slot_count_same_as_count: used_slot_count = count
 			breathing_space: count < capacity
 		end
 
@@ -135,16 +166,66 @@ feature -- Access
 
 	item alias "[]", at alias "@" (key: K): detachable G assign force
 			-- Item associated with `key', if present
-			-- otherwise default value of type `G'
+			-- otherwise default value of type `G'.
+		note
+			option: stable
 		local
-			old_control, old_position: INTEGER
+			l_default_key: detachable K
+			hash_value, increment, l_pos, l_item_pos, l_capacity: INTEGER
+			l_first_deleted_position: INTEGER
+			stop: INTEGER
+			l_keys: like keys
+			l_indexes: like indexes_map
+			l_deleted_marks: like deleted_marks
+			l_key: K
 		do
-			old_control := control; old_position := position
-			internal_search (key)
-			if found then
-				Result := content.item (position)
+			l_first_deleted_position := ht_impossible_position
+			if key = l_default_key or key = Void then
+				if has_default then
+					Result := content.item (indexes_map.item (capacity))
+				end
+			else
+				from
+					l_keys := keys
+					l_indexes := indexes_map
+					l_deleted_marks := deleted_marks
+					l_capacity := capacity
+					stop := l_capacity
+					hash_value := hash_code_of (key)
+					increment := 1 + hash_value \\ (l_capacity - 1)
+					l_item_pos := (hash_value \\ l_capacity) - increment
+				until
+					stop = 0
+				loop
+						-- Go to next increment.
+					l_item_pos := (l_item_pos + increment) \\ l_capacity
+					l_pos := l_indexes [l_item_pos]
+					if l_pos >= 0 then
+						l_key := l_keys.item (l_pos)
+						debug ("detect_hash_table_catcall")
+							check
+								catcall_detected: l_key /= Void and then l_key.same_type (key)
+							end
+						end
+						if same_keys (l_key, key) then
+								-- We found our item
+							stop := 1
+							Result := content.item (l_pos)
+						end
+					elseif l_pos = ht_impossible_position then
+						stop := 1
+					elseif l_first_deleted_position = ht_impossible_position then
+						l_pos := -l_pos + ht_deleted_position
+						check l_pos_valid: l_pos < l_deleted_marks.count end
+						if not l_deleted_marks [l_pos] then
+							stop := 1
+						else
+							l_first_deleted_position := l_item_pos
+						end
+					end
+					stop := stop - 1
+				end
 			end
-			control := old_control; position := old_position
 		ensure then
 			default_value_if_not_present:
 				(not (has (key))) implies (Result = computed_default_value)
@@ -153,12 +234,62 @@ feature -- Access
 	has (key: K): BOOLEAN
 			-- Is there an item in the table with key `key'?
 		local
-			old_control, old_position: INTEGER
+			l_default_key: detachable K
+			hash_value, increment, l_pos, l_item_pos, l_capacity: INTEGER
+			l_first_deleted_position: INTEGER
+			stop: INTEGER
+			l_keys: like keys
+			l_indexes: like indexes_map
+			l_deleted_marks: like deleted_marks
+			l_key: K
 		do
-			old_control := control; old_position := position
-			internal_search (key)
-			Result := found
-			control := old_control; position := old_position
+			l_first_deleted_position := ht_impossible_position
+			if key = l_default_key or key = Void then
+				if has_default then
+					Result := True
+				end
+			else
+				from
+					l_keys := keys
+					l_indexes := indexes_map
+					l_deleted_marks := deleted_marks
+					l_capacity := capacity
+					stop := l_capacity
+					hash_value := hash_code_of (key)
+					increment := 1 + hash_value \\ (l_capacity - 1)
+					l_item_pos := (hash_value \\ l_capacity) - increment
+				until
+					stop = 0
+				loop
+						-- Go to next increment.
+					l_item_pos := (l_item_pos + increment) \\ l_capacity
+					l_pos := l_indexes [l_item_pos]
+					if l_pos >= 0 then
+						l_key := l_keys.item (l_pos)
+						debug ("detect_hash_table_catcall")
+							check
+								catcall_detected: l_key /= Void and then l_key.same_type (key)
+							end
+						end
+						if same_keys (l_key, key) then
+								-- We found our item
+							stop := 1
+							Result := True
+						end
+					elseif l_pos = ht_impossible_position then
+						stop := 1
+					elseif l_first_deleted_position = ht_impossible_position then
+						l_pos := -l_pos + ht_deleted_position
+						check l_pos_valid: l_pos < l_deleted_marks.count end
+						if not l_deleted_marks [l_pos] then
+							stop := 1
+						else
+							l_first_deleted_position := l_item_pos
+						end
+					end
+					stop := stop - 1
+				end
+			end
 		ensure then
 			default_case: (key = computed_default_key) implies (Result = has_default)
 		end
@@ -169,7 +300,7 @@ feature -- Access
 			old_position: INTEGER
 			l_default_value: detachable G
 		do
-			old_position := position
+			old_position := item_position
 			internal_search (key)
 			Result := found
 			if Result then
@@ -177,7 +308,7 @@ feature -- Access
 			else
 				found_item := l_default_value
 			end
-			position := old_position
+			item_position := old_position
 		ensure then
 			default_case: (key = computed_default_key) implies (Result = has_default)
 			found: Result = found
@@ -189,18 +320,19 @@ feature -- Access
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
 		local
-			i: INTEGER
+			i, nb: INTEGER
 			l_content: like content
 		do
 			if has_default then
-				Result := (v = content.item (capacity))
+				Result := (v = content.item (indexes_map.item (capacity)))
 			end
 			if not Result then
 				l_content := content
+				nb := l_content.count
 				if object_comparison then
 					from
 					until
-						i = capacity or else Result
+						i = nb or else Result
 					loop
 						Result := occupied (i) and then (v ~ l_content.item (i))
 						i := i + 1
@@ -208,7 +340,7 @@ feature -- Access
 				else
 					from
 					until
-						i = capacity or else Result
+						i = nb or else Result
 					loop
 						Result := occupied (i) and then (v = l_content.item (i))
 						i := i + 1
@@ -223,18 +355,24 @@ feature -- Access
 			j: INTEGER
 			old_iteration_position: INTEGER
 		do
-			old_iteration_position := iteration_position
-			from
-				create Result.make (1, count)
-				start
-			until
-				off
-			loop
-				j := j + 1
-				Result.put (key_for_iteration, j)
-				forth
+			if is_empty then
+				create Result.make_empty
+			else
+				old_iteration_position := iteration_position
+				from
+					start
+					create Result.make_filled (key_for_iteration, 1, count)
+					j := 1
+					forth
+				until
+					off
+				loop
+					j := j + 1
+					Result.put (key_for_iteration, j)
+					forth
+				end
+				iteration_position := old_iteration_position
 			end
-			iteration_position := old_iteration_position
 		ensure
 			good_count: Result.count = count
  		end
@@ -253,8 +391,6 @@ feature -- Access
 			not_off: not off
 		do
 			Result := keys.item (iteration_position)
-		ensure
-			at_iteration_position: Result = key_at (iteration_position)
 		end
 
 	cursor: CURSOR
@@ -263,6 +399,28 @@ feature -- Access
 			create {HASH_TABLE_CURSOR} Result.make (iteration_position)
 		ensure
 			cursor_not_void: Result /= Void
+		end
+
+	new_cursor: HASH_TABLE_ITERATION_CURSOR [G, K]
+			-- <Precursor>
+		do
+			create Result.make (Current)
+			Result.start
+		end
+
+	iteration_item (i: INTEGER): G
+			-- <Precursor>
+		do
+			Result := content.item (i)
+		end
+
+	hash_code_of (a_key: attached K): INTEGER
+			-- Hash_code value associated to `a_key'.
+		do
+				-- Default implementation uses `{HASHABLE}.hash_code'.
+			Result := a_key.hash_code
+		ensure
+			non_negative: Result >= 0
 		end
 
 feature -- Measurement
@@ -305,16 +463,40 @@ feature -- Measurement
 			iteration_position := old_iteration_position
 		end
 
+	iteration_index_set: INTEGER_INTERVAL
+			-- <Precursor>
+		do
+			create Result.make (next_iteration_position (-1), previous_iteration_position (keys.count))
+		end
+
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN
 			-- Does table contain the same information as `other'?
 		do
-			Result :=
-				keys ~ other.keys and
-				content ~ other.content and
-				deleted_marks ~ other.deleted_marks and
-				(has_default = other.has_default)
+			if
+				count = other.count and then
+				object_comparison = other.object_comparison and then
+				has_default = other.has_default
+			then
+				Result := True
+				across
+					Current as l_c
+				until
+					not Result
+				loop
+					other.search (l_c.key)
+					if other.found then
+						if object_comparison then
+							Result := l_c.item ~ other.found_item
+						else
+							Result := l_c.item = other.found_item
+						end
+					else
+						Result := False
+					end
+				end
+			end
 		end
 
 	same_keys (a_search_key, a_key: K): BOOLEAN
@@ -327,16 +509,26 @@ feature -- Comparison
 			Result := a_search_key ~ a_key
 		end
 
+	disjoint (other: HASH_TABLE [G, K]): BOOLEAN
+			-- Is `Current' and `other' disjoint on their keys?
+			-- Use `same_keys' for comparison.
+		do
+				-- If any of the tables are empty, it is clearly disjoint,
+				-- otherwise we check that no elements of `other' appears in Current.
+			Result := is_empty or else other.is_empty or else
+				not across other as o some has (o.key) end
+		end
+
 feature -- Status report
 
 	full: BOOLEAN = False
-			-- Is structure filled to capacity? (Answer: no.)
+			-- Is structure filled to capacity?
 
-	extendible: BOOLEAN = True
-			-- May new items be added? (Answer: yes.)
+	extendible: BOOLEAN = False
+			-- May new items be added?
 
 	prunable: BOOLEAN
-			-- May items be removed? (Answer: yes.)
+			-- May items be removed?
 		do
 			Result := True
 		end
@@ -380,15 +572,7 @@ feature -- Status report
 	after, off: BOOLEAN
 			-- Is cursor past last item?
 		do
-			if has_default then
-				Result := iteration_position = (capacity + 1)
-			else
-				Result := iteration_position >= capacity
-			end
-		ensure
-			definition:
-				Result = ((not has_default and (iteration_position >= capacity)) or
-							(has_default and (iteration_position = (capacity + 1))))
+			Result := is_off_position (iteration_position)
 		end
 
 	valid_cursor (c: CURSOR): BOOLEAN
@@ -396,15 +580,11 @@ feature -- Status report
 		require
 			c_not_void: c /= Void
 		local
-			cursor_position: INTEGER
+			i: INTEGER
 		do
 			if attached {HASH_TABLE_CURSOR} c as ht_cursor then
-				cursor_position := ht_cursor.position
-				Result :=
-						(is_off_position (cursor_position)) or else
-							((cursor_position >= 0) and
-							(cursor_position <= capacity) and then
-							truly_occupied (cursor_position))
+				i := ht_cursor.position
+				Result := is_off_position (i) or else truly_occupied (i)
 			end
 		end
 
@@ -443,13 +623,19 @@ feature -- Status report
 			end
 		end
 
+	valid_iteration_index (i: INTEGER): BOOLEAN
+			-- <Precursor>
+		do
+			Result := truly_occupied (i)
+		end
+
 feature -- Cursor movement
 
 	start
 			-- Bring cursor to first position.
 		do
-			iteration_position := -1
-			forth
+				-- Get lower bound of iteration if any.
+			iteration_position := next_iteration_position (-1)
 		end
 
 	forth
@@ -457,22 +643,8 @@ feature -- Cursor movement
 			-- or `off' if no such position remains.
 		require
 			not_off: not off
-		local
-			stop: BOOLEAN
-			l_keys: like keys
-			pos_for_iter, table_size: INTEGER
 		do
-			from
-				l_keys := keys
-				table_size := l_keys.count - 2
-				pos_for_iter := iteration_position
-			until
-				stop
-			loop
-				pos_for_iter := pos_for_iter + 1
-				stop := pos_for_iter > table_size or else (not l_keys.is_default (pos_for_iter))
-			end
-			iteration_position := pos_for_iter
+			iteration_position := next_iteration_position (iteration_position)
 		end
 
 	go_to (c: CURSOR)
@@ -494,14 +666,14 @@ feature -- Cursor movement
 			old_position: INTEGER
 			l_default_value: detachable G
 		do
-			old_position := position
+			old_position := item_position
 			internal_search (key)
 			if found then
 				found_item := content.item (position)
 			else
 				found_item := l_default_value
 			end
-			position := old_position
+			item_position := old_position
 		ensure
 			found_or_not_found: found or not_found
 			item_if_found: found implies (found_item = item (key))
@@ -512,6 +684,50 @@ feature -- Cursor movement
 			"Use found_item instead."
 		do
 			Result := found_item
+		end
+
+feature {HASH_TABLE_ITERATION_CURSOR} -- Cursor movement
+
+	next_iteration_position (a_position: like iteration_position): like iteration_position
+			-- Given an iteration position, advanced to the next one taking into account deleted
+			-- slots in the `content' and `keys' structures.
+		require
+			a_position_big_enough: a_position >= -1
+			a_position_small_enough: a_position < keys.count
+		local
+			l_deleted_marks: like deleted_marks
+			l_table_size: INTEGER
+		do
+			Result := a_position + 1
+			l_deleted_marks := deleted_marks
+			l_table_size := content.count
+			from
+			until
+				Result >= l_table_size or else not l_deleted_marks.item (Result)
+			loop
+				Result := Result + 1
+			end
+		end
+
+	previous_iteration_position (a_position: like iteration_position): like iteration_position
+			-- Given an iteration position, go to the previous one taking into account deleted
+			-- slots in the `content' and `keys' structures.
+		require
+			a_position_big_enough: a_position >= 0
+			a_position_small_enough: a_position <= keys.count
+		local
+			l_deleted_marks: like deleted_marks
+			l_table_size: INTEGER
+		do
+			Result := a_position - 1
+			l_deleted_marks := deleted_marks
+			l_table_size := content.count
+			from
+			until
+				Result <= 0 or else not l_deleted_marks.item (Result)
+			loop
+				Result := Result - 1
+			end
 		end
 
 feature -- Element change
@@ -531,7 +747,7 @@ feature -- Element change
 			-- see `instructions' in the Indexing clause.
 		local
 			l_default_key: detachable K
-			l_pos: like position
+			l_new_pos, l_new_index_pos: like position
 		do
 			internal_search (key)
 			if found then
@@ -546,20 +762,21 @@ feature -- Element change
 						not_present: not found
 					end
 				end
-				if deleted_position /= Impossible_position then
-					position := deleted_position
-					l_pos := position
-					deleted_marks.put (False, l_pos)
+				if deleted_item_position /= ht_impossible_position then
+					l_new_pos := deleted_position (deleted_item_position)
+					l_new_index_pos := deleted_item_position
+					deleted_marks.force (False, l_new_pos)
 				else
-					l_pos := position
-					used_slot_count := used_slot_count + 1
+					l_new_pos := keys.count
+					l_new_index_pos := item_position
 				end
-				count := count + 1
-				content.put (new, l_pos)
-				keys.put (key, l_pos)
+				indexes_map.put (l_new_pos, l_new_index_pos)
+				content.force (new, l_new_pos)
+				keys.force (key, l_new_pos)
 				if key = l_default_key then
 					has_default := True
 				end
+				count := count + 1
 				found_item := new
 				control := inserted_constant
 			end
@@ -570,8 +787,6 @@ feature -- Element change
 			one_more_if_inserted: inserted implies (count = old count + 1)
 			unchanged_if_conflict: conflict implies (count = old count)
 			same_item_if_conflict: conflict implies (item (key) = old (item (key)))
-			slot_count_unchanged_if_conflict:
-				conflict implies (used_slot_count = old used_slot_count)
 			found_item_associated_with_key: found_item = item (key)
 			new_item_if_inserted: inserted implies (found_item = new)
 			old_item_if_conflict: conflict implies (found_item = old (item (key)))
@@ -595,6 +810,7 @@ feature -- Element change
 		local
 			l_default_key: detachable K
 			l_default_value: detachable G
+			l_new_pos, l_new_index_pos: like position
 		do
 			internal_search (key)
 			if not_found then
@@ -602,32 +818,32 @@ feature -- Element change
 					add_space
 					internal_search (key)
 				end
-				if deleted_position /= Impossible_position then
-					position := deleted_position
-					deleted_marks.put (False, position)
+				if deleted_item_position /= ht_impossible_position then
+					l_new_pos := deleted_position (deleted_item_position)
+					l_new_index_pos := deleted_item_position
+					deleted_marks.force (False, l_new_pos)
 				else
-					used_slot_count := used_slot_count + 1
+					l_new_pos := keys.count
+					l_new_index_pos := item_position
 				end
-				keys.put (key, position)
+				indexes_map.put (l_new_pos, l_new_index_pos)
+				keys.force (key, l_new_pos)
 				if key = l_default_key then
 					has_default := True
 				end
 				count := count + 1
 				found_item := l_default_value
 			else
-				found_item := content.item (position)
+				l_new_pos := position
+				found_item := content.item (l_new_pos)
 			end
-			content.put (new, position)
+			content.force (new, l_new_pos)
 		ensure then
 			insertion_done: item (key) = new
 			now_present: has (key)
 			found_or_not_found: found or not_found
 			not_found_if_was_not_present: not_found = not (old has (key))
 			same_count_or_one_more: (count = old count) or (count = old count + 1)
-			same_slot_count_or_one_more_unless_reallocated:
-				(used_slot_count = old used_slot_count) or
-				(used_slot_count = old used_slot_count + 1) or
-				(used_slot_count = count)
 			found_item_is_old_item: found implies (found_item = old (item (key)))
 			default_value_if_not_found:
 				not_found implies (found_item = computed_default_value)
@@ -651,34 +867,33 @@ feature -- Element change
 			not_present: not has (key)
 		local
 			l_default_key: detachable K
-			l_pos: like position
+			l_new_pos, l_new_index_pos: like position
 		do
 			search_for_insertion (key)
 			if soon_full then
 				add_space
 				search_for_insertion (key)
 			end
-			l_pos := position
-			if l_pos < capacity and then deleted_marks.item (l_pos) then
-				deleted_marks.put (False, l_pos)
+			if deleted_item_position /= ht_impossible_position then
+				l_new_pos := deleted_position (deleted_item_position)
+				l_new_index_pos := deleted_item_position
+				deleted_marks.force (False, l_new_pos)
 			else
-				used_slot_count := used_slot_count + 1
+				l_new_pos := keys.count
+				l_new_index_pos := item_position
 			end
-			count := count + 1
-			content.put (new, l_pos)
-			keys.put (key, l_pos)
+			indexes_map.put (l_new_pos, l_new_index_pos)
+			content.force (new, l_new_pos)
+			keys.force (key, l_new_pos)
 			if key = l_default_key then
 				has_default := True
 			end
+			count := count + 1
 			control := inserted_constant
 		ensure
 			inserted: inserted
 			insertion_done: item (key) = new
 			one_more: count = old count + 1
-			same_slot_count_or_one_more_unless_reallocated:
-				(used_slot_count = old used_slot_count) or
-				(used_slot_count = old used_slot_count + 1) or
-				(used_slot_count = count)
 			default_property:
 				has_default =
 					((key = computed_default_key) or (old has_default))
@@ -694,12 +909,16 @@ feature -- Element change
 			--
 			-- To choose between various insert/replace procedures,
 			-- see `instructions' in the Indexing clause.
+		local
+			l_default_item: detachable G
 		do
 			internal_search (key)
 			if found then
 				found_item := content.item (position)
 				content.put (new, position)
 				control := replaced_constant
+			else
+				found_item := l_default_item
 			end
 		ensure
 			replaced_or_not_found: replaced or not_found
@@ -746,10 +965,6 @@ feature -- Element change
 			conflict_iff_already_present: conflict = old (has (new_key))
 			not_inserted_if_conflict: conflict implies
 						(item (new_key) = old (item (new_key)))
-			default_property:
-				has_default =
-					((new_key = computed_default_key) or
-					((new_key /= computed_default_key) and (old has_default)))
 		end
 
 	merge (other: HASH_TABLE [G, K])
@@ -784,21 +999,47 @@ feature -- Removal
 			l_default_key: detachable K
 			l_default_value: detachable G
 			l_pos: like position
+			l_nb_removed_items: INTEGER
 		do
 			internal_search (key)
 			if found then
+				l_pos := position
 				if key = l_default_key then
-					set_no_default
-				else
-					l_pos := position
-					content.put_default (l_pos)
-					keys.put_default (l_pos)
-					deleted_marks.put (True, l_pos)
-					if iteration_position = l_pos then
-						forth
-					end
+					has_default := False
+				end
+				deleted_marks.put (True, l_pos)
+				indexes_map.put (-l_pos + ht_deleted_position, item_position)
+				if iteration_position = l_pos then
+					forth
 				end
 				count := count - 1
+					-- For void-safety concerns and to avoid leaking too many objects,
+					-- we set all deleted positions to the same item and key when removing
+					-- on the inside of the SPECIALs, otherwise we simply shrink the SPECIALs.
+				ht_lowest_deleted_position := l_pos.min (ht_lowest_deleted_position)
+				if (ht_lowest_deleted_position = count) then
+						-- We have removed all elements above `ht_lowest_deleted_position', we can
+						-- shrink our SPECIALs.
+					l_nb_removed_items := content.count - ht_lowest_deleted_position
+					content.remove_tail (l_nb_removed_items)
+					keys.remove_tail (l_nb_removed_items)
+						-- All elements above `ht_lowest_deleted_position' of `deleted_marks' are reset
+						-- to False. To be correct, we should also reset their corresponding indexes
+						-- in `indexes_map' to `ht_impossible_position' however that would be too
+						-- expensive to traverse the structure. Instead we leave items as they are but
+						-- we cope with them in `internal_search'.
+					deleted_marks.fill_with (False, ht_lowest_deleted_position, deleted_marks.count - 1)
+					ht_deleted_item := l_default_value
+					ht_deleted_key := l_default_key
+					ht_lowest_deleted_position := ht_max_position
+				elseif attached ht_deleted_item as l_item and attached ht_deleted_key as l_key then
+					content.put (l_item, l_pos)
+					keys.put (l_key, l_pos)
+				else
+						-- First time we actually remove an item from the table.
+					ht_deleted_item := content.item (l_pos)
+					ht_deleted_key := keys.item (l_pos)
+				end
 				control := removed_constant
 				found_item := l_default_value
 			end
@@ -806,7 +1047,6 @@ feature -- Removal
 			removed_or_not_found: removed or not_found
 			not_present: not has (key)
 			one_less: found implies (count = old count - 1)
-			same_slot_count: used_slot_count = old used_slot_count
 			default_case:
 				(key = computed_default_key) implies (not has_default)
 			non_default_case:
@@ -814,27 +1054,62 @@ feature -- Removal
 					(has_default = old has_default)
 		end
 
-	clear_all, wipe_out
+	prune (v: detachable G)
+			-- Remove first occurrence of `v', if any,
+			-- after cursor position.
+			-- Move cursor to right neighbor.
+			-- (or after if no right neighbor or `v' does not occur)
+		do
+				-- No need to check if we are before because `iteration_position' is either
+				-- a valid position or `off' (see invariant `valid_iteration_position').
+				-- Thus we can start iterating right away.
+			if object_comparison then
+				from
+				until
+					after or else item_for_iteration ~ v
+				loop
+					forth
+				end
+			else
+				from
+				until
+					after or else item_for_iteration = v
+				loop
+					forth
+				end
+			end
+			if not after then
+				remove (key_for_iteration)
+			end
+		end
+
+	wipe_out
 			-- Reset all items to default values; reset status.
 		local
 			l_default_value: detachable G
 		do
-			content.clear_all
-			keys.clear_all
-			deleted_marks.clear_all
+			content.wipe_out
+			keys.wipe_out
+			deleted_marks.fill_with (False, 0, deleted_marks.upper)
+			indexes_map.fill_with (ht_impossible_position, 0, capacity)
 			found_item := l_default_value
 			count := 0
-			used_slot_count := 0
-			position := 0
-			iteration_position := capacity + 1
+			item_position := 0
+			iteration_position := keys.count
 			control := 0
-			set_no_default
+			has_default := False
 		ensure then
-			position_equal_to_zero: position = 0
+			position_equal_to_zero: item_position = 0
 			count_equal_to_zero: count = 0
-			used_slot_count_equal_to_zero: used_slot_count = 0
 			has_default_set: not has_default
 			no_status: not special_status
+		end
+
+	clear_all
+		obsolete
+			"Use `wipe_out' instead."
+		do
+			wipe_out
 		end
 
 feature -- Conversion
@@ -865,13 +1140,16 @@ feature -- Duplication
 	copy (other: like Current)
 			-- Re-initialize from `other'.
 		do
-			standard_copy (other)
-			set_keys (other.keys.twin)
-			set_content (other.content.twin)
-			set_deleted_marks (other.deleted_marks.twin)
+			if other /= Current then
+				standard_copy (other)
+				set_content (other.content.twin)
+				set_keys (other.keys.twin)
+				set_deleted_marks (other.deleted_marks.twin)
+				set_indexes_map (other.indexes_map.twin)
+			end
 		end
 
-feature {NONE} -- Empty duplicate
+feature {NONE} -- Duplication
 
 	empty_duplicate (n: INTEGER): like Current
 			-- Create an empty copy of Current that can accommodate `n' items
@@ -879,8 +1157,11 @@ feature {NONE} -- Empty duplicate
 			n_non_negative: n >= 0
 		do
 			create Result.make (n)
+			if object_comparison then
+				Result.compare_objects
+			end
 		ensure
-			empty_duplicate_not_void: Result /= Void
+			empty_duplicate_attached: Result /= Void
 		end
 
 feature {NONE} -- Transformation
@@ -888,56 +1169,96 @@ feature {NONE} -- Transformation
 	correct_mismatch
 			-- Attempt to correct object mismatch during retrieve using `mismatch_information'.
 		local
-			l_deleted_marks: SPECIAL [BOOLEAN]
+			l_old_deleted_marks: detachable SPECIAL [BOOLEAN]
+			i, l_capacity, l_count: INTEGER
+			l_new_table: like Current
+			l_default_item: like ht_deleted_item
+			l_default_key: like ht_deleted_key
 		do
-				-- In version 5.1 and earlier, `content', `keys' and `deleted_marks'
-				-- where of base class ARRAY. In 5.2 we changed it to be a SPECIAL for
-				-- efficiency reasons. In order to retrieve an old HASH_TABLE we
-				-- need to convert those ARRAY instances into SPECIAL instances.
+			if not mismatch_information.has ("hash_table_version_64") then
+					-- In version 5.1 and earlier, `content', `keys' and `deleted_marks'
+					-- where of base class ARRAY. In 5.2 we changed it to be a SPECIAL for
+					-- efficiency reasons. In order to retrieve an old HASH_TABLE we
+					-- need to convert those ARRAY instances into SPECIAL instances.
 
-				-- Convert `content' from ARRAY to SPECIAL
-			if attached {ARRAY [G]} mismatch_information.item ("content") as array_content then
-				content := array_content.area
-			end
+					-- Convert `content' from ARRAY to SPECIAL
+				if attached {ARRAY [G]} mismatch_information.item ("content") as array_content then
+					content := array_content.area
+				end
 
-				-- Convert `keys' from ARRAY to SPECIAL
-			if attached {ARRAY [K]} mismatch_information.item ("keys") as array_keys then
-				keys := array_keys.area
-			end
+					-- Convert `keys' from ARRAY to SPECIAL
+				if attached {ARRAY [K]} mismatch_information.item ("keys") as array_keys then
+					keys := array_keys.area
+				end
 
-				-- Convert `deleted_marks' from ARRAY to SPECIAL
-			if attached {ARRAY [BOOLEAN]} mismatch_information.item ("deleted_marks") as array_marks then
-				deleted_marks := array_marks.area
-			end
+					-- Convert `deleted_marks' from ARRAY to SPECIAL
+				if attached {ARRAY [BOOLEAN]} mismatch_information.item ("deleted_marks") as array_marks then
+					deleted_marks := array_marks.area
+				end
 
-				-- In version 5.5 and later, `deleted_marks' had its size increased by 1 to take
-				-- into account removal of default key, and therefore if we hit a 5.4 or earlier
-				-- version, we need to resize `deleted_marks' to the new expected size.
-			if deleted_marks /= Void then
-				if not mismatch_information.has ("hash_table_version_57") then
-						-- Unfortunately this handling of the mismatch was added in 5.7 and
-						-- therefore we might have stored a valid HASH_TABLE using 5.5 or 5.6.
-						-- Fortunately enough we can simply compare the counts of
-						-- `deleted_marks' and `keys'. If they are the same it is 5.5 or 5.6,
-						-- otherwise it is 5.4 or older.
-					if deleted_marks.count /= keys.count then
-						l_deleted_marks := deleted_marks
-						create deleted_marks.make (keys.count)
-						deleted_marks.copy_data (l_deleted_marks, 0, 0, l_deleted_marks.count)
+					-- In version 5.5 and later, `deleted_marks' had its size increased by 1 to take
+					-- into account removal of default key, and therefore if we hit a 5.4 or earlier
+					-- version, we need to resize `deleted_marks' to the new expected size.
+				if deleted_marks /= Void and keys /= Void then
+					if not mismatch_information.has ("hash_table_version_57") then
+							-- Unfortunately this handling of the mismatch was added in 5.7 and
+							-- therefore we might have stored a valid HASH_TABLE using 5.5 or 5.6.
+							-- Fortunately enough we can simply compare the counts of
+							-- `deleted_marks' and `keys'. If they are the same it is 5.5 or 5.6,
+							-- otherwise it is 5.4 or older.
+						if deleted_marks.count /= keys.count then
+							l_old_deleted_marks := deleted_marks
+							create deleted_marks.make_empty (keys.count)
+							deleted_marks.copy_data (l_old_deleted_marks, 0, 0, l_old_deleted_marks.count)
+						end
 					end
 				end
-			end
 
-			if content = Void or keys = Void or deleted_marks = Void then
-					-- Could not retrieve old version of HASH_TABLE. We throw an exception.
-				Precursor {MISMATCH_CORRECTOR}
+				if attached {INTEGER} mismatch_information.item ("count") as l_retrieved_count then
+					l_count := l_retrieved_count
+				end
+
+				if content = Void or keys = Void or deleted_marks = Void then
+						-- Could not retrieve old version of HASH_TABLE. We throw an exception.
+					Precursor {MISMATCH_CORRECTOR}
+				else
+						-- Now we build the new HASH_TABLE from the old one.
+					from
+						l_capacity := keys.count
+						l_new_table := empty_duplicate (l_count)
+					until
+						i = l_capacity
+					loop
+						if attached keys.item (i) as l_key_item and then l_key_item /= l_default_key then
+							l_new_table.put (content.item (i), l_key_item)
+						end
+						i := i + 1
+					end
+					if attached {BOOLEAN} mismatch_information.item ("has_default") as l_bool and then l_bool then
+						l_new_table.put (content.item (content.capacity - 1), keys.item (l_capacity - 1))
+					end
+
+					set_content (l_new_table.content)
+					set_keys (l_new_table.keys)
+					set_deleted_marks (l_new_table.deleted_marks)
+					set_indexes_map (l_new_table.indexes_map)
+					capacity := l_new_table.capacity
+					iteration_position := l_new_table.iteration_position
+					deleted_item_position := l_new_table.deleted_item_position
+					item_position := l_new_table.item_position
+						-- We reset the following attributes to their default value
+					ht_lowest_deleted_position := ht_max_position
+					ht_deleted_item := l_default_item
+					ht_deleted_key := l_default_key
+						-- We don't change `object_comparison' from the value it was retrieved from.
+				end
 			end
 		end
 
-	hash_table_version_57: BOOLEAN
+	hash_table_version_64: BOOLEAN
 			-- Fake attribute for versioning purposes. Used in `correct_mismatch'.
 
-feature {HASH_TABLE} -- Implementation: content attributes and preservation
+feature {HASH_TABLE, HASH_TABLE_ITERATION_CURSOR} -- Implementation: content attributes and preservation
 
 	content: SPECIAL [G]
 			-- Array of contents
@@ -945,24 +1266,21 @@ feature {HASH_TABLE} -- Implementation: content attributes and preservation
 	keys: SPECIAL [K]
 			-- Array of keys
 
+feature {HASH_TABLE} -- Implementation: content attributes and preservation
+
+	indexes_map: SPECIAL [INTEGER]
+			-- Indexes of items in `content', and `keys'.
+			-- If item is not present, then it has `ht_mpossible_position'.
+			-- If item is deleted, then it has `ht_deleted_position'.
+
 	deleted_marks: SPECIAL [BOOLEAN]
-			-- Is position that of a deleted element?
+			-- Indexes of deleted positions in `content' and `keys'.
+
+	item_position: INTEGER
+			-- Position in `indexes_map' for item at position `position'. Set by `internal_search'.
 
 	has_default: BOOLEAN
 			-- Is the default key present?
-
-	set_default
-			-- Record information that there is a value for default key.
-		do
-			has_default := True
-		end
-
-	set_no_default
-			-- Record information that there is no value for default key.
-		do
-			has_default := False
-			content.put_default (capacity)
-		end
 
 feature {HASH_TABLE} -- Implementation: search attributes
 
@@ -972,71 +1290,99 @@ feature {HASH_TABLE} -- Implementation: search attributes
 	position: INTEGER
 			-- Hash table cursor, updated after each operation:
 			-- put, remove, has, replace, force, change_key...
+		do
+			Result := indexes_map.item (item_position)
+		end
 
 	soon_full: BOOLEAN
 			-- Is table close to being filled to current capacity?
-			-- (If so, resizing is needed to avoid performance degradation.)
 		do
-				-- We are full when we reach 0.75 of the capacity
-				-- (Note that 0.75 * capacity <=> (capacity - (capacity // 4))).
-			Result := (used_slot_count + 1) >= (capacity - (capacity // 4))
+			Result := keys.count = keys.capacity
 		ensure
-			Result = ((used_slot_count + 1) >= (capacity - (capacity // 4)))
+			Result = (keys.count = keys.capacity)
 		end
 
 	control: INTEGER
 			-- Control code set by operations that may produce
 			-- several possible conditions.
 
-	deleted_position: INTEGER
+	deleted_item_position: INTEGER
 			-- Place where a deleted element was found during a search
 
 feature {NONE} -- Implementation
 
-	Impossible_position: INTEGER = -1
-			-- Position outside the array indices
+	ht_max_position: INTEGER = 0x7FFFFFFD
+			-- Maximum possible position
 
-	used_slot_count: INTEGER
-			-- Number of slots occuped by an element either present
-			-- or marked as deleted
+	ht_impossible_position: INTEGER = -1
+			-- Position outside the array indices.
+
+	ht_deleted_position: INTEGER = -2
+			-- Marked a deleted position.
+
+	ht_lowest_deleted_position: INTEGER
+			-- Index of the lowest deleted position thus far.
+
+	ht_deleted_item: detachable G
+	ht_deleted_key: detachable K
+			-- Store the item and key that will be used to replace an element of the HASH_TABLE
+			-- that will be removed. If elements being removed are at the end of `content' or `keys'
+			-- then they are both Void. It is only used when removing an element at a position strictly
+			-- less than `count'.
+
+	deleted_position (a_pos: INTEGER): INTEGER
+			-- Given the position of a deleted item at `a_pos' gives the associated position
+			-- in `content/keys'.
+		require
+			deleted: deleted (a_pos)
+		do
+			Result := -indexes_map.item (a_pos) + ht_deleted_position
+				-- Sometime we shrink `keys' and `content' while removing items, as a result, some
+				-- stored deleted position in `indexes_map' are beyond `keys' and `content'. In those
+				-- cases, we simply return the location for the next insertion instead.
+			Result := Result.min (keys.count)
+		ensure
+			deleted_position_non_negative: Result >= 0
+			deleted_position_valid: Result <= keys.count and Result <= content.count
+		end
 
 	occupied (i: INTEGER): BOOLEAN
 			-- Is position `i' occupied by a non-default key and a value?
 		require
-			in_bounds: i >= 0 and i < capacity
+			in_bounds: deleted_marks.valid_index (i)
 		do
-			Result := not keys.is_default (i)
+			if has_default then
+				Result := i /= indexes_map.item (capacity) and then not deleted_marks.item (i)
+			else
+				Result := not deleted_marks.item (i)
+			end
 		end
 
 	truly_occupied (i: INTEGER): BOOLEAN
 			-- Is position `i' occupied by a key and a value?
-		require
-			in_bounds: i >= 0 and i <= capacity
 		do
-			Result := (has_default and i = capacity) or else (i < capacity and then occupied (i))
+			if i >= 0 and i < keys.count then
+				Result := (has_default and i = indexes_map.item (capacity)) or else occupied (i)
+			end
 		ensure
-			normal_key: (i < capacity) implies (occupied (i) implies Result)
-			default_key: (i = capacity) implies (Result = has_default)
+			normal_key: (i >= 0 and i < keys.count and i /= indexes_map.item (capacity)) implies (occupied (i) implies Result)
+			default_key: (i = indexes_map.item (capacity)) implies (Result = has_default)
 		end
 
 	is_off_position (pos: INTEGER): BOOLEAN
-			-- Is `pos' a cursor position past last item?
+			-- Is `pos' a cursor position outside the authorized range?
 		do
-			if has_default then
-				Result := pos = (capacity + 1)
-			else
-				Result := pos >= capacity
-			end
-		ensure
-			definition:
-				Result = ((not has_default and (pos >= capacity)) or
-							(has_default and (pos = (capacity + 1))))
+			Result := pos < 0 or pos >= keys.count
 		end
 
 	set_content (c: like content)
 			-- Assign `c' to `content'.
+		require
+			c_attached: c /= Void
 		do
 			content := c
+		ensure
+			content_set: content = c
 		end
 
 	deleted (i: INTEGER): BOOLEAN
@@ -1044,37 +1390,35 @@ feature {NONE} -- Implementation
 		require
 			in_bounds: i >= 0 and i <= capacity
 		do
-			Result := deleted_marks.item (i)
-		end
-
-	set_not_deleted (i: INTEGER)
-			-- Mark position `i' as not deleted.
-		require
-			in_bounds: i >= 0 and i <= capacity
-		do
-			deleted_marks.put (False, i)
-		end
-
-	set_deleted (i: INTEGER)
-			-- Mark position `i' as deleted.
-		require
-			in_bounds: i >= 0 and i <= capacity
-		do
-			deleted_marks.put (True, i)
-		ensure
-			deleted: deleted (i)
+			Result := indexes_map.item (i) <= ht_deleted_position
 		end
 
 	set_keys (c: like keys)
 			-- Assign `c' to `keys'.
+		require
+			c_attached: c /= Void
 		do
 			keys := c
+		ensure
+			keys_set: keys = c
 		end
 
 	set_deleted_marks (d: like deleted_marks)
-			-- Assign `d' to `deleted_marks'.
+			-- Assign `c' to `content'.
+		require
+			d_attached: d /= Void
 		do
 			deleted_marks := d
+		ensure
+			deleted_marks_set: deleted_marks = d
+		end
+
+	set_indexes_map (v: like indexes_map )
+			-- Assign `v' to `indexes_map'.
+		do
+			indexes_map := v
+		ensure
+			indexes_map_set: indexes_map = v
 		end
 
 	default_key_value: G
@@ -1082,7 +1426,7 @@ feature {NONE} -- Implementation
 		require
 			has_default: has_default
 		do
-			Result := content.item (capacity)
+			Result := content [indexes_map [capacity]]
 		end
 
 	computed_default_key: detachable K
@@ -1109,16 +1453,17 @@ feature {NONE} -- Implementation
 			-- and set status to `found' or `not_found'.
 		local
 			l_default_key: detachable K
-			hash_value, increment, l_pos, l_capacity: INTEGER
-			first_deleted_position: INTEGER
+			hash_value, increment, l_pos, l_item_pos, l_capacity: INTEGER
+			l_first_deleted_position: INTEGER
 			stop: INTEGER
 			l_keys: like keys
+			l_indexes: like indexes_map
 			l_deleted_marks: like deleted_marks
 			l_key: K
 		do
-			first_deleted_position := impossible_position
+			l_first_deleted_position := ht_impossible_position
 			if key = l_default_key or key = Void then
-				position := capacity
+				item_position := capacity
 				if has_default then
 					control := found_constant
 				else
@@ -1127,51 +1472,52 @@ feature {NONE} -- Implementation
 			else
 				from
 					l_keys := keys
+					l_indexes := indexes_map
 					l_deleted_marks := deleted_marks
 					l_capacity := capacity
 					stop := l_capacity
-					hash_value := key.hash_code
+					hash_value := hash_code_of (key)
 					increment := 1 + hash_value \\ (l_capacity - 1)
-					l_pos := (hash_value \\ l_capacity) - increment
+					l_item_pos := (hash_value \\ l_capacity) - increment
 					control := not_found_constant
 				until
 					stop = 0
 				loop
 						-- Go to next increment.
-					l_pos := (l_pos + increment) \\ l_capacity
-					l_key := l_keys.item (l_pos)
-					if l_key = l_default_key or l_key = Void then
-						if not l_deleted_marks.item (l_pos) then
-							stop := 1
-						elseif first_deleted_position = impossible_position then
-							first_deleted_position := l_pos
-						end
-					else
+					l_item_pos := (l_item_pos + increment) \\ l_capacity
+					l_pos := l_indexes [l_item_pos]
+					if l_pos >= 0 then
+						l_key := l_keys.item (l_pos)
 						debug ("detect_hash_table_catcall")
 							check
-								catcall_detected: l_key.same_type (key)
+								catcall_detected: l_key /= Void and then l_key.same_type (key)
 							end
 						end
 						if same_keys (l_key, key) then
 							stop := 1
 							control := found_constant
 						end
+					elseif l_pos = ht_impossible_position then
+						stop := 1
+					elseif l_first_deleted_position = ht_impossible_position then
+						l_pos := -l_pos + ht_deleted_position
+						check l_pos_valid: l_pos < l_deleted_marks.count end
+						if not l_deleted_marks [l_pos] then
+							stop := 1
+						else
+							l_first_deleted_position := l_item_pos
+						end
 					end
 					stop := stop - 1
 				end
-				position := l_pos
+				item_position := l_item_pos
 			end
-			deleted_position := first_deleted_position
+			deleted_item_position := l_first_deleted_position
 		ensure
 			found_or_not_found: found or not_found
 			deleted_item_at_deleted_position:
-				(deleted_position /= Impossible_position) implies
-					(deleted (deleted_position))
-			default_value_if_not_found:
-				not_found implies
-					(content.item (position) = computed_default_value)
-			default_iff_at_capacity:
-				(position = capacity) = (key = computed_default_key)
+				(deleted_item_position /= ht_impossible_position) implies (deleted (deleted_item_position))
+			default_iff_at_capacity: (item_position = capacity) = (key = computed_default_key)
 		end
 
 	search_for_insertion (key: K)
@@ -1181,44 +1527,66 @@ feature {NONE} -- Implementation
 			not_present: not has (key)
 		local
 			l_default_key: detachable K
-			hash_value, increment, l_pos, l_capacity: INTEGER
-			l_deleted_marks: like deleted_marks
+			hash_value, increment, l_pos, l_item_pos, l_capacity: INTEGER
+			l_first_deleted_position: INTEGER
+			stop: INTEGER
 			l_keys: like keys
+			l_indexes: like indexes_map
+			l_deleted_marks: like deleted_marks
 		do
+			l_first_deleted_position := ht_impossible_position
 			if key = l_default_key or key = Void then
 				check
 						-- Because of the precondition
 					not has_default
 				end
-				position := capacity
+				item_position := capacity
 			else
 				from
-					hash_value := key.hash_code
-					l_capacity := capacity
-					increment := 1 + hash_value \\ (l_capacity - 1)
-					l_pos := (hash_value \\ l_capacity)
-					l_deleted_marks := deleted_marks
 					l_keys := keys
+					l_indexes := indexes_map
+					l_deleted_marks := deleted_marks
+					l_capacity := capacity
+					stop := l_capacity
+					hash_value := hash_code_of (key)
+					increment := 1 + hash_value \\ (l_capacity - 1)
+					l_item_pos := (hash_value \\ l_capacity) - increment
 				until
-					l_deleted_marks.item (l_pos) or l_keys.is_default (l_pos)
+					stop = 0
 				loop
-					l_pos := (l_pos + increment) \\ l_capacity
+						-- Go to next increment.
+					l_item_pos := (l_item_pos + increment) \\ l_capacity
+					l_pos := l_indexes [l_item_pos]
+					if l_pos >= 0 then
+							-- Because of precondition, we are sure there is no key corresponding to `key'.
+					elseif l_pos = ht_impossible_position then
+						stop := 1
+					elseif l_first_deleted_position = ht_impossible_position then
+						l_pos := -l_pos + ht_deleted_position
+						check l_pos_valid: l_pos < l_deleted_marks.count end
+						if not l_deleted_marks [l_pos] then
+							stop := 1
+						else
+							l_first_deleted_position := l_item_pos
+						end
+					end
+					stop := stop - 1
 				end
-				position := l_pos
+				item_position := l_item_pos
 			end
+			deleted_item_position := l_first_deleted_position
 		ensure
-			deleted_or_default:
-				deleted (position) or (key_at (position) = computed_default_key)
-			default_iff_at_capacity:
-				(position = capacity) = (key = computed_default_key)
+			deleted_item_at_deleted_position:
+				(deleted_item_position /= ht_impossible_position) implies (deleted (deleted_item_position))
+			default_iff_at_capacity: (item_position = capacity) = (key = computed_default_key)
 		end
 
 	key_at (n: INTEGER): detachable K
 			-- Key at position `n'
-		require
-			in_bounds: n >= 0 and n < capacity
 		do
-			Result := keys.item (n)
+			if keys.valid_index (n) then
+				Result := keys.item (n)
+			end
 		end
 
 	initial_position (hash_value: INTEGER): INTEGER
@@ -1232,12 +1600,6 @@ feature {NONE} -- Implementation
 			-- `hash_value' (computed for no cycle: `capacity' is prime)
 		do
 			Result := 1 + hash_value \\ (capacity - 1)
-		end
-
-	to_next_candidate (increment: INTEGER)
-			-- Move from current `position' to next for same key
-		do
-			position := (position + increment) \\ capacity
 		end
 
 	conflict_constant: INTEGER = 1
@@ -1329,18 +1691,12 @@ feature {NONE} -- Implementation
 			accommodate (count + count // 2)
 		ensure
 			count_not_changed: count = old count
-			slot_count_same_as_count: used_slot_count = count
 			breathing_space: count < capacity
 		end
 
 	minimum_capacity: INTEGER = 2
 
 feature {NONE} -- Inapplicable
-
-	prune (v: detachable G)
-			-- Remove one occurrence of `v' if any.
-		do
-		end
 
 	collection_extend (v: detachable G)
 			-- Insert a new occurrence of `v'.
@@ -1351,10 +1707,8 @@ invariant
 
 	keys_not_void: keys /= Void
 	content_not_void: content /= Void
-	deleted_marks_not_void: deleted_marks /= Void
-	keys_same_capacity_plus_one: keys.count = capacity + 1
-	content_same_capacity_plus_one: content.count = capacity + 1
-	deleted_same_capacity: deleted_marks.count = capacity + 1
+	keys_enough_capacity: keys.count <= capacity + 1
+	content_enough_capacity: content.count <= capacity + 1
 	valid_iteration_position: off or truly_occupied (iteration_position)
 	control_non_negative: control >= 0
 	special_status: special_status =
@@ -1362,65 +1716,17 @@ invariant
 
 	count_big_enough: 0 <= count
 	count_small_enough: count <= capacity
-	count_no_more_than_slot_count: count <= used_slot_count
 	slot_count_big_enough: 0 <= count
-	slot_count_small_enough: used_slot_count <= capacity
 
 note
-	instruction: "[
-		Several procedures are provided for inserting an item
-		with a given key.
-
-		Here is how to choose between them:
-
-			- Use `put' if you want to do an insertion only if
-			  there was no item with the given key, doing nothing
-			  otherwise. (You can find out on return if there was one,
-			  and what it was.)
-
-			- Use `force' if you always want to insert the item;
-			  if there was one for the given key it will be removed,
-			  (and you can find out on return what it was).
-
-			- Use `extend' if you are sure there is no item with
-			  the given key, enabling faster insertion (but
-			  unpredictable behavior if this assumption is not true).
-
-			- Use `replace' if you want to replace an already present
-			  item with the given key, and do nothing if there is none.
-
-		In addition you can use `replace_key' to change the key of an
-		already present item, identified by its previous key, or
-		do nothing if there is nothing for that previous key.
-		You can find out on return.
-
-		To find out whether a key appears in the table, use `has'.
-		To find out the item, if any, associated with a certain key,
-		use `item'.
-
-		Both of these routines perform a search. If you need
-		both pieces of information (does a key appear? And, if so,
-		what is the associated item?), you can avoid performing
-		two redundant traversals by using instead the combination
-		of `search', `found' and `found_item' as follows:
-
-			your_table.search (your_key)
-			if your_table.found then
-				what_you_where_looking_for := your_table.found_item
-				... Do whatever is needed to `what_you_were_looking_for' ...
-			else
-				... No item was present for `your_key' ...
-			end
-		]"
-	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class HASH_TABLE
+end

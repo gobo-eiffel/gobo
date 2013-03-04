@@ -1,5 +1,4 @@
 note
-
 	description: "Original values of the attributes of a mismatched object."
 	instructions: "[
 		This object will contain the original values of the attributes
@@ -12,15 +11,15 @@ note
 		translation is in effect.
 		]"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 2005-2008, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2012-05-24 06:13:10 +0200 (Thu, 24 May 2012) $"
+	revision: "$Revision: 559 $"
 
 class MISMATCH_INFORMATION
 
 inherit
-	HASH_TABLE [ANY, STRING]
+	HASH_TABLE [detachable ANY, STRING]
 		redefine
 			default_create,
 			out
@@ -29,7 +28,7 @@ inherit
 create {MISMATCH_CORRECTOR}
 	default_create
 
-create {MISMATCH_INFORMATION}
+create
 	make
 
 feature -- Initialization
@@ -45,21 +44,45 @@ feature -- Access
 
 	class_name: STRING
 			-- Name of generating class which held attribute values
-		local
-			r: detachable STRING
 		do
 			check
-				has_class_entry: has (Class_key)
+				has_class_entry: has (type_name_key)
 			end
-			if attached {STRING} item (Class_key) as l_result then
-				r := l_result
+			check attached {STRING} item (type_name_key) as r then
+				Result := r
 			end
-			check
-				r_attached: r /= Void
-			end
-			Result := r
 		ensure
 			result_exists: Result /= Void
+		end
+
+	stored_version: detachable IMMUTABLE_STRING_8
+			-- Version associated to `class_name' in the stored system.
+
+	current_version: detachable IMMUTABLE_STRING_8
+			-- Version associated to `class_name' in the current system.
+
+	type_name_key: STRING = "_type_name"
+			-- Associated key for retrieving the type name of a mismatch.
+
+feature -- Status report
+
+	is_version_mismatched: BOOLEAN
+			-- Is the `stored_version' different from the current system version?
+		do
+			Result := stored_version /~ current_version
+		end
+
+feature -- Settings
+
+	set_versions (a_stored_version: like stored_version; a_current_version: like current_version)
+			-- Set `stored_version' with `a_stored_version'.
+			-- Set `current_version' with `a_current_version'.
+		do
+			stored_version := a_stored_version
+			current_version := a_current_version
+		ensure
+			stored_version_set: stored_version = a_stored_version
+			current_version_set: current_version = a_current_version
 		end
 
 feature -- Output
@@ -84,7 +107,7 @@ feature -- Output
 				after
 			loop
 				k := key_for_iteration
-				if k /~ Class_key then
+				if k /~ type_name_key then
 					Result.append ("  ")
 					if k = Void then
 						Result.append ("Void")
@@ -106,8 +129,6 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	Class_key: STRING = "class"
-
 	internal_put (value: ANY; ckey: POINTER)
 			-- Allows run-time to insert items into table
 		local
@@ -117,21 +138,57 @@ feature {NONE} -- Implementation
 			put (value, l_key)
 		end
 
+	set_string_versions (a_stored_version, a_current_version: POINTER)
+			-- Set `stored_version' with `a_stored_version'.
+			-- Set `current_version' with `a_current_version'.
+		local
+			l_null: POINTER
+			l_imm: IMMUTABLE_STRING_8
+		do
+			if a_stored_version /= l_null then
+				create l_imm.make_from_c (a_stored_version)
+				if l_imm.is_empty then
+					stored_version := Void
+				else
+					stored_version := l_imm
+				end
+			else
+				stored_version := Void
+			end
+			if a_current_version /= l_null then
+				create l_imm.make_from_c (a_current_version)
+				if l_imm.is_empty then
+					current_version := Void
+				else
+					current_version := l_imm
+				end
+			else
+				current_version := Void
+			end
+		end
+
 	set_callback_pointers
 			-- Sets call-back pointers in the run-time
 		once
-			set_mismatch_information_access (Current, $clear_all, $internal_put)
+			set_mismatch_information_access (Current, $clear_all, $internal_put, $set_string_versions)
 		end
 
 feature {NONE} -- Externals
 
-	set_mismatch_information_access (obj: ANY; init, add: POINTER)
+	set_mismatch_information_access (obj: ANY; init, add, set_vers: POINTER)
 		external
-			"C signature (EIF_OBJECT, EIF_PROCEDURE, EIF_PROCEDURE) use <eif_retrieve.h>"
+			"C signature (EIF_OBJECT, EIF_PROCEDURE, EIF_PROCEDURE, EIF_PROCEDURE) use <eif_retrieve.h>"
 		end
 
-invariant
-	singleton: (create {MISMATCH_CORRECTOR}).mismatch_information /= Void implies
-		Current = (create {MISMATCH_CORRECTOR}).mismatch_information
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

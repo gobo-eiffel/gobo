@@ -813,6 +813,8 @@ feature {NONE} -- C code Generation
 				end
 				include_runtime_header_file ("ge_eiffel.h", True, header_file)
 				header_file.put_new_line
+				include_runtime_header_file ("ge_native_string.h", True, header_file)
+				header_file.put_new_line
 				include_runtime_header_file ("ge_arguments.h", True, header_file)
 				header_file.put_new_line
 				include_runtime_header_file ("ge_exception.h", True, header_file)
@@ -1738,8 +1740,8 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			inspect l_builtin_class
 			when builtin_any_class then
 				print_external_builtin_any_function_body (a_feature)
-			when builtin_arguments_class then
-				print_external_builtin_arguments_function_body (a_feature)
+			when builtin_arguments_32_class then
+				print_external_builtin_arguments_32_function_body (a_feature)
 			when builtin_boolean_class then
 				print_external_builtin_boolean_function_body (a_feature)
 			when builtin_function_class then
@@ -1849,23 +1851,27 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_external_builtin_arguments_function_body (a_feature: ET_EXTERNAL_ROUTINE)
+	print_external_builtin_arguments_32_function_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
-			-- `a_feature' is a built-in function introduced in class "ARGUMENTS".
+			-- `a_feature' is a built-in function introduced in class "ARGUMENTS_32".
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_function: a_feature.is_function
 			a_feature_is_builtin: a_feature.is_builtin
-			a_feature_is_builtin_arguments: (a_feature.builtin_code // builtin_capacity) = builtin_arguments_class
+			a_feature_is_builtin_arguments_32: (a_feature.builtin_code // builtin_capacity) = builtin_arguments_32_class
 			valid_feature: current_feature.static_feature = a_feature
 		do
 			inspect a_feature.builtin_code \\ builtin_capacity
-			when builtin_arguments_argument then
-				print_builtin_arguments_argument_body (a_feature)
-			when builtin_arguments_argument_count then
+			when builtin_arguments_32_argument_count then
 				fill_call_formal_arguments (a_feature)
 				print_indentation_assign_to_result
-				print_builtin_arguments_argument_count_call (current_feature, current_type, False)
+				print_builtin_arguments_32_argument_count_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_arguments_32_i_th_argument_pointer then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_arguments_32_i_th_argument_pointer_call (current_feature, current_type, False)
 				print_semicolon_newline
 				call_operands.wipe_out
 			else
@@ -2055,6 +2061,12 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				print_builtin_platform_is_mac_call (current_feature, current_type, False)
 				print_semicolon_newline
 				call_operands.wipe_out
+			when builtin_platform_is_scoop_capable then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_platform_is_scoop_capable_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
 			when builtin_platform_is_thread_capable then
 				fill_call_formal_arguments (a_feature)
 				print_indentation_assign_to_result
@@ -2126,6 +2138,12 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				fill_call_formal_arguments (a_feature)
 				print_indentation_assign_to_result
 				print_builtin_pointer_hash_code_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_pointer_is_default_pointer then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_pointer_is_default_pointer_call (current_feature, current_type, False)
 				print_semicolon_newline
 				call_operands.wipe_out
 			when builtin_pointer_item then
@@ -2454,6 +2472,24 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				print_builtin_sized_real_identity_call (current_feature, current_type, False)
 				print_semicolon_newline
 				call_operands.wipe_out
+			when builtin_real_is_nan then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_sized_real_is_nan_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_real_is_negative_infinity then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_sized_real_is_negative_infinity_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_real_is_positive_infinity then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_sized_real_is_positive_infinity_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
 			when builtin_real_item then
 				fill_call_formal_arguments (a_feature)
 				print_indentation_assign_to_result
@@ -2472,6 +2508,18 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				print_builtin_sized_real_minus_call (current_feature, current_type, False)
 				print_semicolon_newline
 				call_operands.wipe_out
+			when builtin_real_nan then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_sized_real_nan_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_real_negative_infinity then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_sized_real_negative_infinity_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
 			when builtin_real_opposite then
 				fill_call_formal_arguments (a_feature)
 				print_indentation_assign_to_result
@@ -2484,6 +2532,12 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				fill_call_formal_arguments (a_feature)
 				print_indentation_assign_to_result
 				print_builtin_sized_real_plus_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_real_positive_infinity then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_sized_real_positive_infinity_call (current_feature, current_type, False)
 				print_semicolon_newline
 				call_operands.wipe_out
 			when builtin_real_power then
@@ -2667,6 +2721,12 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				print_builtin_type_character_8_field_body (a_feature)
 			when builtin_type_character_32_field then
 				print_builtin_type_character_32_field_body (a_feature)
+			when builtin_type_default then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_type_default_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
 			when builtin_type_field then
 				print_builtin_type_field_body (a_feature)
 			when builtin_type_field_count then
@@ -2689,6 +2749,12 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				fill_call_formal_arguments (a_feature)
 				print_indentation_assign_to_result
 				print_builtin_type_generic_parameter_count_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_type_has_default then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_type_has_default_call (current_feature, current_type, False)
 				print_semicolon_newline
 				call_operands.wipe_out
 			when builtin_type_integer_8_field then
@@ -3002,16 +3068,16 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			valid_feature: current_feature.static_feature = a_feature
 		do
 			inspect a_feature.builtin_code \\ builtin_capacity
-			when builtin_special_make then
+			when builtin_special_make_empty then
 				-- Do nothing: already done in `print_malloc_current'.
+			when builtin_special_extend then
+				print_builtin_special_extend_body (a_feature)
 			when builtin_special_put then
 				fill_call_formal_arguments (a_feature)
 				print_builtin_special_put_call (current_feature, current_type, False)
 				call_operands.wipe_out
-			when builtin_special_put_default then
-				fill_call_formal_arguments (a_feature)
-				print_builtin_special_put_default_call (current_feature, current_type, False)
-				call_operands.wipe_out
+			when builtin_special_set_count then
+				print_builtin_special_set_count_body (a_feature)
 			else
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
@@ -3313,7 +3379,10 @@ print ("**** language not recognized: " + l_language_string + "%N")
 						if l_argument_type_set.static_type = current_dynamic_system.pointer_type then
 								-- When compiling with C++, MSVC++ does not want to convert
 								-- 'void*' to non-'void*' implicitly.
-							current_file.put_string ("(char*)")
+							current_file.put_character ('(')
+							current_file.put_string (c_eif_native_char)
+							current_file.put_character ('*')
+							current_file.put_character (')')
 							print_argument_name (l_name, current_file)
 						elseif l_argument_type_set.static_type.base_class.is_typed_pointer_class then
 								-- The argument is declared of type 'TYPED_POINTER [XX]'.
@@ -6843,8 +6912,6 @@ feature {NONE} -- Procedure call generation
 			inspect a_feature.builtin_code \\ builtin_capacity
 			when builtin_special_put then
 				print_builtin_special_put_call (a_feature, a_target_type, a_check_void_target)
-			when builtin_special_put_default then
-				print_builtin_special_put_default_call (a_feature, a_target_type, a_check_void_target)
 			else
 				print_non_inlined_procedure_call (a_feature, a_target_type, a_check_void_target)
 			end
@@ -9602,6 +9669,10 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 				print_type_declaration (l_target_type, current_function_header_buffer)
 				current_function_header_buffer.put_character (' ')
 				print_object_test_local_name (l_name, current_function_header_buffer)
+				current_function_header_buffer.put_character (' ')
+				current_function_header_buffer.put_character ('=')
+				current_function_header_buffer.put_character (' ')
+				print_default_entity_value (l_target_type, current_function_header_buffer)
 				current_function_header_buffer.put_character (';')
 				current_function_header_buffer.put_new_line
 			end
@@ -12563,8 +12634,8 @@ feature {NONE} -- Query call generation
 			inspect l_builtin_class
 			when builtin_any_class then
 				print_builtin_any_query_call (a_feature, a_target_type, a_check_void_target)
-			when builtin_arguments_class then
-				print_builtin_arguments_query_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_arguments_32_class then
+				print_builtin_arguments_32_query_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_boolean_class then
 				print_builtin_boolean_query_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_character_8_class then
@@ -12645,9 +12716,9 @@ feature {NONE} -- Query call generation
 			end
 		end
 
-	print_builtin_arguments_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+	print_builtin_arguments_32_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to query `a_feature' (static binding).
-			-- `a_feature' is a built-in feature introduced in class "ARGUMENTS".
+			-- `a_feature' is a built-in feature introduced in class "ARGUMENTS_32".
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
 			-- Operands can be found in `call_operands'.
@@ -12658,13 +12729,15 @@ feature {NONE} -- Query call generation
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_query: a_feature.result_type_set /= Void
 			a_feature_is_builtin: a_feature.is_builtin
-			a_feature_is_builtin_arguments: (a_feature.builtin_code // builtin_capacity) = builtin_arguments_class
+			a_feature_is_builtin_arguments_32: (a_feature.builtin_code // builtin_capacity) = builtin_arguments_32_class
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			inspect a_feature.builtin_code \\ builtin_capacity
-			when builtin_arguments_argument_count then
-				print_builtin_arguments_argument_count_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_arguments_32_argument_count then
+				print_builtin_arguments_32_argument_count_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_arguments_32_i_th_argument_pointer then
+				print_builtin_arguments_32_i_th_argument_pointer_call (a_feature, a_target_type, a_check_void_target)
 			else
 				print_non_inlined_query_call (a_feature, a_target_type, a_check_void_target)
 			end
@@ -12822,6 +12895,8 @@ feature {NONE} -- Query call generation
 				print_builtin_platform_is_dotnet_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_platform_is_mac then
 				print_builtin_platform_is_mac_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_platform_is_scoop_capable then
+				print_builtin_platform_is_scoop_capable_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_platform_is_thread_capable then
 				print_builtin_platform_is_thread_capable_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_platform_is_unix then
@@ -12863,6 +12938,8 @@ feature {NONE} -- Query call generation
 			inspect a_feature.builtin_code \\ builtin_capacity
 			when builtin_pointer_hash_code then
 				print_builtin_pointer_hash_code_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_pointer_is_default_pointer then
+				print_builtin_pointer_is_default_pointer_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_pointer_item then
 				print_builtin_pointer_item_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_pointer_plus then
@@ -13019,16 +13096,28 @@ feature {NONE} -- Query call generation
 				print_builtin_sized_real_floor_real_64_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_real_identity then
 				print_builtin_sized_real_identity_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_real_is_nan then
+				print_builtin_sized_real_is_nan_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_real_is_negative_infinity then
+				print_builtin_sized_real_is_negative_infinity_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_real_is_positive_infinity then
+				print_builtin_sized_real_is_positive_infinity_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_integer_item then
 				print_builtin_sized_real_item_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_real_lt then
 				print_builtin_sized_real_lt_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_real_minus then
 				print_builtin_sized_real_minus_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_real_nan then
+				print_builtin_sized_real_nan_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_real_negative_infinity then
+				print_builtin_sized_real_negative_infinity_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_real_opposite then
 				print_builtin_sized_real_opposite_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_real_plus then
 				print_builtin_sized_real_plus_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_real_positive_infinity then
+				print_builtin_sized_real_positive_infinity_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_real_power then
 				print_builtin_sized_real_power_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_real_times then
@@ -13126,10 +13215,14 @@ feature {NONE} -- Query call generation
 			inspect a_feature.builtin_code \\ builtin_capacity
 			when builtin_type_base_class_name then
 				print_builtin_type_base_class_name_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_type_default then
+				print_builtin_type_default_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_type_field_count then
 				print_builtin_type_field_count_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_type_generic_parameter_count then
 				print_builtin_type_generic_parameter_count_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_type_has_default then
+				print_builtin_type_has_default_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_type_is_expanded then
 				print_builtin_type_is_expanded_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_type_name then
@@ -14929,7 +15022,7 @@ feature {NONE} -- Deep features generation
 			old_file: KI_TEXT_OUTPUT_STREAM
 			l_temp: ET_IDENTIFIER
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_count_type: ET_DYNAMIC_TYPE
+			l_capacity_type: ET_DYNAMIC_TYPE
 			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
 		do
 			old_type := current_type
@@ -15027,7 +15120,7 @@ feature {NONE} -- Deep features generation
 					current_file.put_string (c_ge_new)
 					current_file.put_integer (l_special_type.id)
 					current_file.put_character ('(')
-					print_attribute_special_count_access (tokens.current_keyword, l_special_type, False)
+					print_attribute_special_capacity_access (tokens.current_keyword, l_special_type, False)
 					current_file.put_character (',')
 					current_file.put_character (' ')
 					current_file.put_string (c_eif_false)
@@ -15074,6 +15167,37 @@ feature {NONE} -- Deep features generation
 						current_file.put_character (';')
 						current_file.put_new_line
 					end
+						-- Clear item slots beyond 'count' if needed.
+					current_file.put_string (c_ifndef)
+					current_file.put_character (' ')
+					if l_special_type.has_nested_reference_attributes then
+						current_file.put_line (c_ge_alloc_cleared)
+					else
+						current_file.put_line (c_ge_alloc_atomic_cleared)
+					end
+					print_indentation
+					current_file.put_string (c_memset)
+					current_file.put_character ('(')
+					print_attribute_special_item_access (tokens.current_keyword, l_special_type, False)
+					current_file.put_character ('+')
+					print_attribute_special_count_access (tokens.current_keyword, l_special_type, False)
+					current_file.put_character (',')
+					current_file.put_character ('0')
+					current_file.put_character (',')
+					current_file.put_character ('(')
+					print_attribute_special_capacity_access (tokens.current_keyword, l_special_type, False)
+					current_file.put_character ('-')
+					print_attribute_special_count_access (tokens.current_keyword, l_special_type, False)
+					current_file.put_character (')')
+					current_file.put_character ('*')
+					current_file.put_string (c_sizeof)
+					current_file.put_character ('(')
+					print_type_declaration (l_attribute_type, current_file)
+					current_file.put_character (')')
+					current_file.put_character (')')
+					current_file.put_character (';')
+					current_file.put_new_line
+					current_file.put_line (c_endif)
 				elseif a_type.is_expanded then
 					print_indentation
 					print_result_name (current_file)
@@ -15158,15 +15282,15 @@ feature {NONE} -- Deep features generation
 						-- contain themselves (recursively) reference attributes
 					if l_special_type /= Void then
 							-- Twin items.
-						if l_special_type.attribute_count < 1 then
+						if l_special_type.attribute_count < 2 then
 								-- Internal error: class "SPECIAL" should have at least the
-								-- feature 'count' as first feature.
+								-- features 'count' and 'capacity' as first features.
 								-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 							set_fatal_error
 							error_handler.report_giaaa_error
 						else
-							l_dynamic_type_set := result_type_set_in_feature (l_special_type.queries.first)
-							l_count_type := l_dynamic_type_set.static_type
+							l_dynamic_type_set := result_type_set_in_feature (l_special_type.queries.item (2))
+							l_capacity_type := l_dynamic_type_set.static_type
 							if l_attribute_type_set.is_empty then
 									-- If the dynamic type set of the items is empty,
 									-- then the items is always Void. No need to twin
@@ -15177,7 +15301,7 @@ feature {NONE} -- Deep features generation
 									-- (recursively) reference attributes. Otherwise we can copy
 									-- their contents without further ado.
 								if l_attribute_type.has_nested_reference_attributes then
-									l_temp := new_temp_variable (l_count_type)
+									l_temp := new_temp_variable (l_capacity_type)
 									print_indentation
 									current_file.put_string (c_for)
 									current_file.put_character (' ')
@@ -15218,7 +15342,7 @@ feature {NONE} -- Deep features generation
 								end
 							else
 									-- We are in the case of reference items.
-								l_temp := new_temp_variable (l_count_type)
+								l_temp := new_temp_variable (l_capacity_type)
 								print_indentation
 								current_file.put_string (c_for)
 								current_file.put_character (' ')
@@ -16301,9 +16425,13 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
-			l_temp: ET_IDENTIFIER
+			l_count_temp: ET_IDENTIFIER
+			l_capacity_temp: ET_IDENTIFIER
+			l_old_capacity_temp: ET_IDENTIFIER
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_count_type: ET_DYNAMIC_TYPE
+			l_capacity_type: ET_DYNAMIC_TYPE
+			l_item_type: ET_DYNAMIC_TYPE
 		do
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
@@ -16316,18 +16444,22 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument_type_set := dynamic_type_set (l_argument)
 				if attached {ET_DYNAMIC_SPECIAL_TYPE} a_target_type as l_special_type then
 -- TODO: both objects have to be of the same type.
-					if l_special_type.attribute_count < 1 then
+					if l_special_type.attribute_count < 2 then
 							-- Internal error: class "SPECIAL" should have at least the
-							-- feature 'count' as first feature.
+							-- features 'count' and 'capacity' as first features.
 							-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 						set_fatal_error
 						error_handler.report_giaaa_error
 					else
 						l_dynamic_type_set := result_type_set_in_feature (l_special_type.queries.first)
 						l_count_type := l_dynamic_type_set.static_type
+						l_count_temp := new_temp_variable (l_count_type)
+						l_dynamic_type_set := result_type_set_in_feature (l_special_type.queries.item (2))
+						l_capacity_type := l_dynamic_type_set.static_type
+						l_capacity_temp := new_temp_variable (l_capacity_type)
+						l_old_capacity_temp := new_temp_variable (l_capacity_type)
 						print_indentation
-						l_temp := new_temp_variable (l_count_type)
-						print_temp_name (l_temp, current_file)
+						print_temp_name (l_count_temp, current_file)
 						current_file.put_character (' ')
 						current_file.put_character ('=')
 						current_file.put_character (' ')
@@ -16335,13 +16467,21 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 						current_file.put_character (';')
 						current_file.put_new_line
 						print_indentation
+						print_temp_name (l_old_capacity_temp, current_file)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						print_attribute_special_capacity_access (l_target, l_special_type, a_check_void_target)
+						current_file.put_character (';')
+						current_file.put_new_line
+						print_indentation
 						current_file.put_string (c_if)
 						current_file.put_character (' ')
 						current_file.put_character ('(')
-						print_temp_name (l_temp, current_file)
+						print_temp_name (l_count_temp, current_file)
 						current_file.put_character ('<')
 						current_file.put_character ('=')
-						print_attribute_special_count_access (l_target, l_special_type, a_check_void_target)
+						print_temp_name (l_old_capacity_temp, current_file)
 						current_file.put_character (')')
 						current_file.put_character (' ')
 						current_file.put_character ('{')
@@ -16367,6 +16507,45 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 						current_file.put_character (')')
 						current_file.put_character (';')
 						current_file.put_new_line
+							-- Set 'capacity'.
+						print_indentation
+						print_temp_name (l_capacity_temp, current_file)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+							-- Note that we already checked that the target was not Void.
+							-- So no need to check it again here, hence the False argument in the calls below.
+						print_attribute_special_capacity_access (l_target, l_special_type, False)
+						current_file.put_character (';')
+						current_file.put_new_line
+						print_indentation
+						current_file.put_string (c_if)
+						current_file.put_character (' ')
+						current_file.put_character ('(')
+						print_temp_name (l_capacity_temp, current_file)
+						current_file.put_character ('>')
+						print_temp_name (l_old_capacity_temp, current_file)
+						current_file.put_character (')')
+						current_file.put_character (' ')
+						current_file.put_character ('{')
+						current_file.put_new_line
+						indent
+						print_indentation
+						print_temp_name (l_capacity_temp, current_file)
+						current_file.put_character ('=')
+						print_temp_name (l_old_capacity_temp, current_file)
+						current_file.put_character (';')
+						current_file.put_new_line
+						print_indentation
+						print_attribute_special_capacity_access (l_target, l_special_type, False)
+						current_file.put_character ('=')
+						print_temp_name (l_capacity_temp, current_file)
+						current_file.put_character (';')
+						current_file.put_new_line
+						dedent
+						print_indentation
+						current_file.put_character ('}')
+						current_file.put_new_line
 							-- Copy items.
 						print_indentation
 						current_file.put_string (c_memcpy)
@@ -16377,14 +16556,54 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 						current_file.put_character (',')
 						print_attribute_special_item_access (l_argument, l_special_type, False)
 						current_file.put_character (',')
-						print_attribute_special_count_access (l_argument, l_special_type, False)
+						print_temp_name (l_capacity_temp, current_file)
 						current_file.put_character ('*')
 						current_file.put_string (c_sizeof)
 						current_file.put_character ('(')
-						print_type_declaration (l_special_type.item_type_set.static_type, current_file)
+						l_item_type := l_special_type.item_type_set.static_type
+						print_type_declaration (l_item_type, current_file)
 						current_file.put_character (')')
 						current_file.put_character (')')
 						current_file.put_character (';')
+						current_file.put_new_line
+							-- Reset memory beyond the new capacity (up to the old capacity).
+						print_indentation
+						current_file.put_string (c_if)
+						current_file.put_character (' ')
+						current_file.put_character ('(')
+						print_temp_name (l_capacity_temp, current_file)
+						current_file.put_character ('<')
+						print_temp_name (l_old_capacity_temp, current_file)
+						current_file.put_character (')')
+						current_file.put_character (' ')
+						current_file.put_character ('{')
+						current_file.put_new_line
+						indent
+						print_indentation
+						current_file.put_string (c_memset)
+						current_file.put_character ('(')
+						print_attribute_special_item_access (l_target, l_special_type, False)
+						current_file.put_character ('+')
+						print_temp_name (l_capacity_temp, current_file)
+						current_file.put_character (',')
+						current_file.put_character ('0')
+						current_file.put_character (',')
+						current_file.put_character ('(')
+						print_temp_name (l_old_capacity_temp, current_file)
+						current_file.put_character ('-')
+						print_temp_name (l_capacity_temp, current_file)
+						current_file.put_character (')')
+						current_file.put_character ('*')
+						current_file.put_string (c_sizeof)
+						current_file.put_character ('(')
+						print_type_declaration (l_item_type, current_file)
+						current_file.put_character (')')
+						current_file.put_character (')')
+						current_file.put_character (';')
+						current_file.put_new_line
+						dedent
+						print_indentation
+						current_file.put_character ('}')
 						current_file.put_new_line
 						dedent
 						print_indentation
@@ -16450,7 +16669,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				current_file.put_string (c_ge_new)
 				current_file.put_integer (l_special_type.id)
 				current_file.put_character ('(')
-				print_attribute_special_count_access (tokens.current_keyword, l_special_type, False)
+				print_attribute_special_capacity_access (tokens.current_keyword, l_special_type, False)
 				current_file.put_character (',')
 				current_file.put_character (' ')
 				current_file.put_string (c_eif_false)
@@ -16485,7 +16704,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				current_file.put_character (',')
 				print_attribute_special_item_access (tokens.current_keyword, l_special_type, False)
 				current_file.put_character (',')
-				print_attribute_special_count_access (tokens.current_keyword, l_special_type, False)
+				print_attribute_special_capacity_access (tokens.current_keyword, l_special_type, False)
 				current_file.put_character ('*')
 				current_file.put_string (c_sizeof)
 				current_file.put_character ('(')
@@ -16608,7 +16827,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				current_file.put_string (c_ge_new)
 				current_file.put_integer (l_special_type.id)
 				current_file.put_character ('(')
-				print_attribute_special_count_access (tokens.current_keyword, l_special_type, False)
+				print_attribute_special_capacity_access (tokens.current_keyword, l_special_type, False)
 				current_file.put_character (',')
 				current_file.put_character (' ')
 				current_file.put_string (c_eif_false)
@@ -16644,7 +16863,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				current_file.put_character (',')
 				print_attribute_special_item_access (tokens.current_keyword, l_special_type, False)
 				current_file.put_character (',')
-				print_attribute_special_count_access (tokens.current_keyword, l_special_type, False)
+				print_attribute_special_capacity_access (tokens.current_keyword, l_special_type, False)
 				current_file.put_character ('*')
 				current_file.put_string (c_sizeof)
 				current_file.put_character ('(')
@@ -16729,9 +16948,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_arguments_argument_count_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+	print_builtin_arguments_32_argument_count_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
-			-- corresponding to built-in feature 'ARGUMENTS.argument_count'.
+			-- corresponding to built-in feature 'ARGUMENTS_32.argument_count'.
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
 			-- Operands can be found in `call_operands'.
@@ -16759,56 +16978,95 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_arguments_argument_body (a_feature: ET_EXTERNAL_ROUTINE)
-			-- Print to `current_file' the body of `a_feature' corresponding
-			-- to built-in feature 'ARGUMENTS.argument'.
+	print_builtin_arguments_32_i_th_argument_pointer_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ARGUMENTS_32.i_th_argument_pointer'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
 		require
 			a_feature_not_void: a_feature /= Void
-			valid_feature: current_feature.static_feature = a_feature
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
 		local
-			l_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_argument: ET_EXPRESSION
+			l_actual_type_set: ET_DYNAMIC_TYPE_SET
+			l_formal_type: ET_DYNAMIC_TYPE
 		do
-			l_result_type_set := current_feature.result_type_set
-			l_arguments := a_feature.arguments
-			if l_arguments = Void or else l_arguments.count /= 1 then
-					-- Internal error: this error should have been reported by the parser.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			elseif l_result_type_set = Void then
+			l_result_type_set := a_feature.result_type_set
+			if l_result_type_set = Void then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
 				error_handler.report_giaaa_error
+			elseif call_operands.count /= 2 then
+					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
 			else
-				print_indentation
-				current_file.put_string (c_char)
-				current_file.put_character ('*')
-				current_file.put_character (' ')
-				current_file.put_character ('s')
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				l_argument := call_operands.item (2)
+				l_actual_type_set := dynamic_type_set (l_argument)
+				l_formal_type := argument_type_set_in_feature (1, a_feature).static_type
+				print_type_cast (l_result_type_set.static_type, current_file)
+				current_file.put_character ('(')
 				current_file.put_string (c_ge_argv)
 				current_file.put_character ('[')
-				print_argument_name (l_arguments.formal_argument (1).name, current_file)
+				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
 				current_file.put_character (']')
-				current_file.put_character (';')
-				current_file.put_new_line
-				print_indentation
-				print_result_name (current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				if l_result_type_set.static_type = current_dynamic_system.string_32_type then
-					current_file.put_string (c_ge_ms32)
-				else
-					current_file.put_string (c_ge_ms8)
-				end
-				current_file.put_string ("(s,strlen(s))")
-				current_file.put_character (';')
-				current_file.put_new_line
+				current_file.put_character (')')
 			end
 		end
+
+--	print_builtin_arguments_32_i_th_argument_string_body (a_feature: ET_EXTERNAL_ROUTINE)
+--			-- Print to `current_file' the body of `a_feature' corresponding
+--			-- to built-in feature 'ARGUMENTS_32.i_th_argument_string'.
+--		require
+--			a_feature_not_void: a_feature /= Void
+--			valid_feature: current_feature.static_feature = a_feature
+--		local
+--			l_arguments: ET_FORMAL_ARGUMENT_LIST
+--			l_result_type_set: ET_DYNAMIC_TYPE_SET
+--		do
+--			l_result_type_set := current_feature.result_type_set
+--			l_arguments := a_feature.arguments
+--			if l_arguments = Void or else l_arguments.count /= 1 then
+--					-- Internal error: this error should have been reported by the parser.
+--				set_fatal_error
+--				error_handler.report_giaaa_error
+--			elseif l_result_type_set = Void then
+--					-- Internal error: `a_feature' is a query.
+--				set_fatal_error
+--				error_handler.report_giaaa_error
+--			else
+--				print_indentation
+--				current_file.put_string (c_char)
+--				current_file.put_character ('*')
+--				current_file.put_character (' ')
+--				current_file.put_character ('s')
+--				current_file.put_character (' ')
+--				current_file.put_character ('=')
+--				current_file.put_character (' ')
+--				current_file.put_string (c_ge_argv)
+--				current_file.put_character ('[')
+--				print_argument_name (l_arguments.formal_argument (1).name, current_file)
+--				current_file.put_character (']')
+--				current_file.put_character (';')
+--				current_file.put_new_line
+--				print_indentation
+--				print_result_name (current_file)
+--				current_file.put_character (' ')
+--				current_file.put_character ('=')
+--				current_file.put_character (' ')
+--				if l_result_type_set.static_type = current_dynamic_system.string_32_type then
+--					current_file.put_string (c_ge_ms32)
+--				else
+--					current_file.put_string (c_ge_ms8)
+--				end
+--				current_file.put_string ("(s,strlen(s))")
+--				current_file.put_character (';')
+--				current_file.put_new_line
+--			end
+--		end
 
 	print_builtin_boolean_and_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
@@ -17649,6 +17907,20 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			current_file.put_string (c_eif_is_mac)
 		end
 
+	print_builtin_platform_is_scoop_capable_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'PLATFORM.is_scoop_capable'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			current_file.put_string (c_eif_false)
+		end
+
 	print_builtin_platform_is_thread_capable_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'PLATFORM.is_thread_capable'.
@@ -17844,6 +18116,46 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					current_file.put_string ("0x7FFFFFFF")
 				end
 				current_file.put_character (')')
+				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_pointer_is_default_pointer_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'POINTER.is_default_pointer'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_target: ET_EXPRESSION
+			l_result_type: ET_DYNAMIC_TYPE
+			l_pointer_type: ET_DYNAMIC_TYPE
+		do
+			if a_feature.result_type_set = Void then
+					-- Internal error: `a_feature' is a query.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_target := call_operands.first
+				l_result_type := a_feature.result_type_set.static_type
+				print_type_cast (l_result_type, current_file)
+				current_file.put_character ('(')
+				if a_target_type.is_basic then
+					print_unboxed_expression (l_target, a_target_type, a_check_void_target)
+				else
+-- TODO: use feature `item'.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				end
+				current_file.put_character ('=')
+				current_file.put_character ('=')
+				l_pointer_type := current_dynamic_system.dynamic_type (current_universe_impl.pointer_type, current_type.base_type)
+				print_type_cast (l_pointer_type, current_file)
+				current_file.put_character ('0')
 				current_file.put_character (')')
 			end
 		end
@@ -20120,6 +20432,126 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
+	print_builtin_sized_real_is_nan_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'REAL_xx.is_nan'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_target: ET_EXPRESSION
+		do
+			if a_feature.result_type_set = Void then
+					-- Internal error: `a_feature' is a query.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_target := call_operands.first
+				include_runtime_header_file ("ge_real.h", False, header_file)
+				print_type_cast (a_feature.result_type_set.static_type, current_file)
+				current_file.put_character ('(')
+				if a_target_type.is_basic then
+					if a_target_type = current_dynamic_system.real_32_type then
+						current_file.put_string (c_ge_real_32_is_nan)
+					else
+						current_file.put_string (c_ge_real_64_is_nan)
+					end
+					current_file.put_character ('(')
+					print_unboxed_expression (l_target, a_target_type, a_check_void_target)
+					current_file.put_character (')')
+				else
+-- TODO: use feature `item'.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				end
+				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_sized_real_is_negative_infinity_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'REAL_xx.is_negative_infinity'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_target: ET_EXPRESSION
+		do
+			if a_feature.result_type_set = Void then
+					-- Internal error: `a_feature' is a query.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_target := call_operands.first
+				include_runtime_header_file ("ge_real.h", False, header_file)
+				print_type_cast (a_feature.result_type_set.static_type, current_file)
+				current_file.put_character ('(')
+				if a_target_type.is_basic then
+					if a_target_type = current_dynamic_system.real_32_type then
+						current_file.put_string (c_ge_real_32_is_negative_infinity)
+					else
+						current_file.put_string (c_ge_real_64_is_negative_infinity)
+					end
+					current_file.put_character ('(')
+					print_unboxed_expression (l_target, a_target_type, a_check_void_target)
+					current_file.put_character (')')
+				else
+-- TODO: use feature `item'.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				end
+				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_sized_real_is_positive_infinity_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'REAL_xx.is_positive_infinity'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_target: ET_EXPRESSION
+		do
+			if a_feature.result_type_set = Void then
+					-- Internal error: `a_feature' is a query.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_target := call_operands.first
+				include_runtime_header_file ("ge_real.h", False, header_file)
+				print_type_cast (a_feature.result_type_set.static_type, current_file)
+				current_file.put_character ('(')
+				if a_target_type.is_basic then
+					if a_target_type = current_dynamic_system.real_32_type then
+						current_file.put_string (c_ge_real_32_is_positive_infinity)
+					else
+						current_file.put_string (c_ge_real_64_is_positive_infinity)
+					end
+					current_file.put_character ('(')
+					print_unboxed_expression (l_target, a_target_type, a_check_void_target)
+					current_file.put_character (')')
+				else
+-- TODO: use feature `item'.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				end
+				current_file.put_character (')')
+			end
+		end
+
 	print_builtin_sized_real_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'REAL_xx_REF.item'.
@@ -20235,6 +20667,72 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
 				current_file.put_character (')')
 				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_sized_real_nan_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'REAL_xx.nan'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_target: ET_EXPRESSION
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if a_feature.result_type_set = Void then
+					-- Internal error: `a_feature' is a query.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_target := call_operands.first
+				include_runtime_header_file ("ge_real.h", False, header_file)
+				l_result_type := a_feature.result_type_set.static_type
+				print_type_cast (l_result_type, current_file)
+				current_file.put_character ('(')
+				if l_result_type = current_dynamic_system.real_32_type then
+					current_file.put_string (c_ge_real_32_nan)
+				else
+					current_file.put_string (c_ge_real_64_nan)
+				end
+				current_file.put_character ('(')
+			end
+		end
+
+	print_builtin_sized_real_negative_infinity_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'REAL_xx.negative_infinity'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_target: ET_EXPRESSION
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if a_feature.result_type_set = Void then
+					-- Internal error: `a_feature' is a query.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_target := call_operands.first
+				include_runtime_header_file ("ge_real.h", False, header_file)
+				l_result_type := a_feature.result_type_set.static_type
+				print_type_cast (l_result_type, current_file)
+				current_file.put_character ('(')
+				if l_result_type = current_dynamic_system.real_32_type then
+					current_file.put_string (c_ge_real_32_negative_infinity)
+				else
+					current_file.put_string (c_ge_real_64_negative_infinity)
+				end
+				current_file.put_character ('(')
 			end
 		end
 
@@ -20372,6 +20870,39 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
 				current_file.put_character (')')
 				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_sized_real_positive_infinity_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'REAL_xx.positive_infinity'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_target: ET_EXPRESSION
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if a_feature.result_type_set = Void then
+					-- Internal error: `a_feature' is a query.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_target := call_operands.first
+				include_runtime_header_file ("ge_real.h", False, header_file)
+				l_result_type := a_feature.result_type_set.static_type
+				print_type_cast (l_result_type, current_file)
+				current_file.put_character ('(')
+				if l_result_type = current_dynamic_system.real_32_type then
+					current_file.put_string (c_ge_real_32_positive_infinity)
+				else
+					current_file.put_string (c_ge_real_64_positive_infinity)
+				end
+				current_file.put_character ('(')
 			end
 		end
 
@@ -20694,7 +21225,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_item_type: ET_DYNAMIC_TYPE
 			l_temp: ET_IDENTIFIER
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_count_type: ET_DYNAMIC_TYPE
+			l_capacity_type: ET_DYNAMIC_TYPE
 		do
 			l_arguments := a_feature.arguments
 			if not attached {ET_DYNAMIC_SPECIAL_TYPE} current_type as l_special_type then
@@ -20706,23 +21237,23 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					-- Internal error: this error should have been reported by the parse.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_special_type.attribute_count < 1 then
+			elseif l_special_type.attribute_count < 2 then
 					-- Internal error: class "SPECIAL" should have at least the
-					-- feature 'count' as first feature.
+					-- features 'count' and 'capacity' as first features.
 					-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				l_dynamic_type_set := result_type_set_in_feature (l_special_type.queries.first)
-				l_count_type := l_dynamic_type_set.static_type
+				l_dynamic_type_set := result_type_set_in_feature (l_special_type.queries.item (2))
+				l_capacity_type := l_dynamic_type_set.static_type
+				l_temp := new_temp_variable (l_capacity_type)
 				l_item_type := l_special_type.item_type_set.static_type
-				l_temp := new_temp_variable (l_count_type)
 				print_indentation
 				print_temp_name (l_temp, current_file)
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
-				print_attribute_special_count_access (tokens.current_keyword, l_special_type, False)
+				print_attribute_special_capacity_access (tokens.current_keyword, l_special_type, False)
 				current_file.put_character (';')
 				current_file.put_new_line
 				print_indentation
@@ -20731,7 +21262,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				current_file.put_character ('(')
 				l_argument_name := l_arguments.formal_argument (1).name
 				print_argument_name (l_argument_name, current_file)
+				current_file.put_character (' ')
 				current_file.put_character ('>')
+				current_file.put_character (' ')
 				print_temp_name (l_temp, current_file)
 				current_file.put_character (')')
 				current_file.put_character (' ')
@@ -20791,76 +21324,37 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				current_file.put_character (')')
 				current_file.put_character (';')
 				current_file.put_new_line
-					-- Initialize new items if needed.
-				if l_item_type.is_expanded and then (l_item_type.is_generic or else l_item_type.has_generic_expanded_attributes) then
-					print_indentation
-					current_file.put_string (c_for)
-					current_file.put_character (' ')
-					current_file.put_character ('(')
-					current_file.put_character (';')
-					current_file.put_character (' ')
-					print_temp_name (l_temp, current_file)
-					current_file.put_character (' ')
-					current_file.put_character ('<')
-					current_file.put_character (' ')
-					print_argument_name (l_argument_name, current_file)
-					current_file.put_character (';')
-					current_file.put_character (' ')
-					print_temp_name (l_temp, current_file)
-					current_file.put_character ('+')
-					current_file.put_character ('+')
-					current_file.put_character (')')
-					current_file.put_character (' ')
-					current_file.put_character ('{')
-					current_file.put_new_line
-					indent
-					print_indentation
-					print_attribute_special_item_access (tokens.result_keyword, l_special_type, False)
-					current_file.put_character ('[')
-					print_temp_name (l_temp, current_file)
-					current_file.put_character (']')
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					print_default_name (l_item_type, current_file)
-					current_file.put_character (';')
-					current_file.put_new_line
-					dedent
-					print_indentation
-					current_file.put_character ('}')
-					current_file.put_new_line
+					-- Clear new item slots if needed.
+				current_file.put_string (c_ifndef)
+				current_file.put_character (' ')
+				if l_special_type.has_nested_reference_attributes then
+					current_file.put_line (c_ge_alloc_cleared)
 				else
-					current_file.put_string (c_ifndef)
-					current_file.put_character (' ')
-					if l_special_type.has_nested_reference_attributes then
-						current_file.put_line (c_ge_alloc_cleared)
-					else
-						current_file.put_line (c_ge_alloc_atomic_cleared)
-					end
-					print_indentation
-					current_file.put_string (c_memset)
-					current_file.put_character ('(')
-					print_attribute_special_item_access (tokens.result_keyword, l_special_type, False)
-					current_file.put_character ('+')
-					print_temp_name (l_temp, current_file)
-					current_file.put_character (',')
-					current_file.put_character ('0')
-					current_file.put_character (',')
-					current_file.put_character ('(')
-					print_argument_name (l_argument_name, current_file)
-					current_file.put_character ('-')
-					print_temp_name (l_temp, current_file)
-					current_file.put_character (')')
-					current_file.put_character ('*')
-					current_file.put_string (c_sizeof)
-					current_file.put_character ('(')
-					print_type_declaration (l_item_type, current_file)
-					current_file.put_character (')')
-					current_file.put_character (')')
-					current_file.put_character (';')
-					current_file.put_new_line
-					current_file.put_line (c_endif)
+					current_file.put_line (c_ge_alloc_atomic_cleared)
 				end
+				print_indentation
+				current_file.put_string (c_memset)
+				current_file.put_character ('(')
+				print_attribute_special_item_access (tokens.result_keyword, l_special_type, False)
+				current_file.put_character ('+')
+				print_temp_name (l_temp, current_file)
+				current_file.put_character (',')
+				current_file.put_character ('0')
+				current_file.put_character (',')
+				current_file.put_character ('(')
+				print_argument_name (l_argument_name, current_file)
+				current_file.put_character ('-')
+				print_temp_name (l_temp, current_file)
+				current_file.put_character (')')
+				current_file.put_character ('*')
+				current_file.put_string (c_sizeof)
+				current_file.put_character ('(')
+				print_type_declaration (l_item_type, current_file)
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+				current_file.put_line (c_endif)
 				dedent
 				print_indentation
 				current_file.put_character ('}')
@@ -20870,6 +21364,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				current_file.put_character ('{')
 				current_file.put_new_line
 				indent
+					-- Keep the same object.
 				print_indentation
 				print_result_name (current_file)
 				current_file.put_character (' ')
@@ -20878,13 +21373,79 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				print_current_name (current_file)
 				current_file.put_character (';')
 				current_file.put_new_line
+					-- Set new count if needed.
+				print_indentation
+				print_temp_name (l_temp, current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_attribute_special_count_access (tokens.result_keyword, l_special_type, False)
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_string (c_if)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_temp_name (l_temp, current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('>')
+				current_file.put_character (' ')
+				print_argument_name (l_argument_name, current_file)
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				print_indentation
+				print_attribute_special_count_access (tokens.result_keyword, l_special_type, False)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_argument_name (l_argument_name, current_file)
+				current_file.put_character (';')
+				current_file.put_new_line
+					-- Clear discarded item slots if needed.
+				current_file.put_string (c_ifndef)
+				current_file.put_character (' ')
+				if l_special_type.has_nested_reference_attributes then
+					current_file.put_line (c_ge_alloc_cleared)
+				else
+					current_file.put_line (c_ge_alloc_atomic_cleared)
+				end
+				print_indentation
+				current_file.put_string (c_memset)
+				current_file.put_character ('(')
+				print_attribute_special_item_access (tokens.result_keyword, l_special_type, False)
+				current_file.put_character ('+')
+				print_argument_name (l_argument_name, current_file)
+				current_file.put_character (',')
+				current_file.put_character ('0')
+				current_file.put_character (',')
+				current_file.put_character ('(')
+				print_temp_name (l_temp, current_file)
+				current_file.put_character ('-')
+				print_argument_name (l_argument_name, current_file)
+				current_file.put_character (')')
+				current_file.put_character ('*')
+				current_file.put_string (c_sizeof)
+				current_file.put_character ('(')
+				print_type_declaration (l_item_type, current_file)
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+				current_file.put_line (c_endif)
 				dedent
 				print_indentation
 				current_file.put_character ('}')
 				current_file.put_new_line
-					-- Set new count.
+				dedent
 				print_indentation
-				print_attribute_special_count_access (tokens.result_keyword, l_special_type, False)
+				current_file.put_character ('}')
+				current_file.put_new_line
+					-- Set new capacity.
+				print_indentation
+				print_attribute_special_capacity_access (tokens.result_keyword, l_special_type, False)
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
@@ -20969,6 +21530,75 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
+	print_builtin_special_extend_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of `a_feature' corresponding
+			-- to built-in feature 'SPECIAL.extend'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		local
+			l_arguments: ET_FORMAL_ARGUMENT_LIST
+			l_temp: ET_IDENTIFIER
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_count_type: ET_DYNAMIC_TYPE
+		do
+			l_arguments := a_feature.arguments
+			if not attached {ET_DYNAMIC_SPECIAL_TYPE} current_type as l_special_type then
+					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
+					-- This built-in can only be in class SPECIAL (and its descendants).
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif l_arguments = Void or else l_arguments.count /= 1 then
+					-- Internal error: this error should have been reported by the parse.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif l_special_type.attribute_count < 2 then
+					-- Internal error: class "SPECIAL" should have at least the
+					-- features 'count' and 'capacity' as first features.
+					-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_dynamic_type_set := result_type_set_in_feature (l_special_type.queries.first)
+				l_count_type := l_dynamic_type_set.static_type
+				l_temp := new_temp_variable (l_count_type)
+					-- Increment 'count'.
+				print_indentation
+				print_temp_name (l_temp, current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_attribute_special_count_access (tokens.current_keyword, l_special_type, False)
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				print_attribute_special_count_access (tokens.current_keyword, l_special_type, False)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_temp_name (l_temp, current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('+')
+				current_file.put_character (' ')
+				current_file.put_character ('1')
+				current_file.put_character (' ')
+				current_file.put_character (';')
+				current_file.put_new_line
+					-- Put the new item.
+				print_indentation
+				print_attribute_special_item_access (tokens.current_keyword, l_special_type, False)
+				current_file.put_character ('[')
+				print_temp_name (l_temp, current_file)
+				current_file.put_character (']')
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_argument_name (l_arguments.formal_argument (1).name, current_file)
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+		end
+
 	print_builtin_special_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'SPECIAL.item'.
@@ -21041,47 +21671,90 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_special_put_default_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
-			-- Print to `current_file' a call (static binding) to `a_feature'
-			-- corresponding to built-in feature 'SPECIAL.put_default'.
-			-- `a_target_type' is the dynamic type of the target.
-			-- `a_check_void_target' means that we need to check whether the target is Void or not.
-			-- Operands can be found in `call_operands'.
+	print_builtin_special_set_count_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of `a_feature' corresponding
+			-- to built-in feature 'SPECIAL.set_count'.
 		require
 			a_feature_not_void: a_feature /= Void
-			a_target_type_not_void: a_target_type /= Void
-			call_operands_not_empty: not call_operands.is_empty
+			valid_feature: current_feature.static_feature = a_feature
 		local
-			l_argument: ET_EXPRESSION
-			l_actual_type_set: ET_DYNAMIC_TYPE_SET
-			l_formal_type: ET_DYNAMIC_TYPE
+			l_arguments: ET_FORMAL_ARGUMENT_LIST
+			l_argument_name: ET_IDENTIFIER
+			l_temp: ET_IDENTIFIER
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_count_type: ET_DYNAMIC_TYPE
 			l_item_type: ET_DYNAMIC_TYPE
 		do
-			if not attached {ET_DYNAMIC_SPECIAL_TYPE} a_target_type as l_special_type then
+			l_arguments := a_feature.arguments
+			if not attached {ET_DYNAMIC_SPECIAL_TYPE} current_type as l_special_type then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 					-- This built-in can only be in class SPECIAL (and its descendants).
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif call_operands.count /= 2 then
-					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
+			elseif l_arguments = Void or else l_arguments.count /= 1 then
+					-- Internal error: this error should have been reported by the parse.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif l_special_type.attribute_count < 2 then
+					-- Internal error: class "SPECIAL" should have at least the
+					-- features 'count' and 'capacity' as first features.
+					-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
+				l_dynamic_type_set := result_type_set_in_feature (l_special_type.queries.first)
+				l_count_type := l_dynamic_type_set.static_type
+				l_temp := new_temp_variable (l_count_type)
+					-- Set new 'count'.
 				print_indentation
-				print_attribute_special_item_access (call_operands.first, a_target_type, a_check_void_target)
-				current_file.put_character ('[')
-				l_argument := call_operands.item (2)
-				l_actual_type_set := dynamic_type_set (l_argument)
-				l_formal_type := argument_type_set_in_feature (1, a_feature).static_type
-				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
-				current_file.put_character (']')
+				print_temp_name (l_temp, current_file)
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
-				l_item_type := l_special_type.item_type_set.static_type
-				print_default_entity_value (l_item_type, current_file)
+				print_attribute_special_count_access (tokens.current_keyword, l_special_type, False)
 				current_file.put_character (';')
 				current_file.put_new_line
+				print_indentation
+				print_attribute_special_count_access (tokens.current_keyword, l_special_type, False)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				l_argument_name := l_arguments.formal_argument (1).name
+				print_argument_name (l_argument_name, current_file)
+				current_file.put_character (';')
+				current_file.put_new_line
+					-- Clear discarded item slots if needed.
+				current_file.put_string (c_ifndef)
+				current_file.put_character (' ')
+				if l_special_type.has_nested_reference_attributes then
+					current_file.put_line (c_ge_alloc_cleared)
+				else
+					current_file.put_line (c_ge_alloc_atomic_cleared)
+				end
+				print_indentation
+				current_file.put_string (c_memset)
+				current_file.put_character ('(')
+				print_attribute_special_item_access (tokens.current_keyword, l_special_type, False)
+				current_file.put_character ('+')
+				print_argument_name (l_argument_name, current_file)
+				current_file.put_character (',')
+				current_file.put_character ('0')
+				current_file.put_character (',')
+				current_file.put_character ('(')
+				print_temp_name (l_temp, current_file)
+				current_file.put_character ('-')
+				print_argument_name (l_argument_name, current_file)
+				current_file.put_character (')')
+				current_file.put_character ('*')
+				current_file.put_string (c_sizeof)
+				current_file.put_character ('(')
+				l_item_type := l_special_type.item_type_set.static_type
+				print_type_declaration (l_item_type, current_file)
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+				current_file.put_line (c_endif)
 			end
 		end
 
@@ -22007,6 +22680,35 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			print_builtin_type_basic_expanded_field_body (a_feature)
 		end
 
+	print_builtin_type_default_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'TYPE.default'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_type: ET_DYNAMIC_TYPE
+		do
+			l_parameters := a_target_type.base_type.actual_parameters
+			if l_parameters = Void or else l_parameters.count < 1 then
+					-- Internal error: we should have already checked by now
+					-- that class TYPE has a generic parameter.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_type := current_dynamic_system.dynamic_type (l_parameters.type (1), a_target_type.base_type)
+				current_file.put_character ('(')
+				print_type_declaration (l_type, current_file)
+				current_file.put_character (')')
+				print_default_entity_value (l_type, current_file)
+			end
+		end
+
 	print_builtin_type_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.field'.
@@ -22572,6 +23274,36 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
+	print_builtin_type_has_default_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'TYPE.has_default'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_parameters: ET_ACTUAL_PARAMETER_LIST
+		do
+			l_parameters := a_target_type.base_type.actual_parameters
+			if l_parameters = Void or else l_parameters.count < 1 then
+					-- Internal error: we should have already checked by now
+					-- that class TYPE has a generic parameter.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				if l_parameters.type (1).is_type_expanded (a_target_type.base_type) then
+					current_file.put_string (c_eif_true)
+				elseif l_parameters.type (1).is_type_detachable (a_target_type.base_type) then
+					current_file.put_string (c_eif_true)
+				else
+					current_file.put_string (c_eif_false)
+				end
+			end
+		end
+
 	print_builtin_type_integer_8_field_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'TYPE.integer_8_field'.
@@ -23125,7 +23857,7 @@ feature {NONE} -- C function generation
 			old_call_info: STRING
 		do
 			old_call_info := current_call_info
-			current_file.put_line ("int main(int argc, char** argv)")
+			current_file.put_line ("int GE_main(int argc, EIF_NATIVE_CHAR** argv)")
 			current_file.put_character ('{')
 			current_file.put_new_line
 			l_root_type := current_dynamic_system.root_type
@@ -23299,6 +24031,19 @@ feature {NONE} -- C function generation
 				current_file.put_character ('=')
 				current_file.put_character (' ')
 				print_default_name (l_area_type, current_file)
+				current_file.put_character (';')
+				current_file.put_new_line
+					-- Set 'capacity' of 'area'.
+				print_indentation
+				print_attribute_special_capacity_access (l_temp, l_area_type, False)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				current_file.put_character ('c')
+				current_file.put_character ('+')
+				current_file.put_character ('1')
+				current_file.put_character (')')
 				current_file.put_character (';')
 				current_file.put_new_line
 					-- Set 'count' of 'area'.
@@ -23502,6 +24247,19 @@ feature {NONE} -- C function generation
 				current_file.put_character ('=')
 				current_file.put_character (' ')
 				print_default_name (l_area_type, current_file)
+				current_file.put_character (';')
+				current_file.put_new_line
+					-- Set 'capacity' of 'area'.
+				print_indentation
+				print_attribute_special_capacity_access (l_temp, l_area_type, False)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				current_file.put_character ('c')
+				current_file.put_character ('+')
+				current_file.put_character ('1')
+				current_file.put_character (')')
 				current_file.put_character (';')
 				current_file.put_new_line
 					-- Set 'count' of 'area'.
@@ -23767,6 +24525,15 @@ feature {NONE} -- C function generation
 				current_file.put_character ('=')
 				current_file.put_character (' ')
 				print_default_name (l_special_type, current_file)
+				current_file.put_character (';')
+				current_file.put_new_line
+					-- Set 'capacity' of 'area'.
+				print_indentation
+				print_attribute_special_capacity_access (l_temp, l_special_type, False)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('c')
 				current_file.put_character (';')
 				current_file.put_new_line
 					-- Set 'count' of 'area'.
@@ -24534,9 +25301,7 @@ feature {NONE} -- Memory allocation
 		local
 			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
 			l_item_type: ET_DYNAMIC_TYPE
-			l_temp: ET_IDENTIFIER
 			l_has_nested_reference_attributes: BOOLEAN
-			l_has_generic_expanded_attributes: BOOLEAN
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_integer_type: ET_DYNAMIC_TYPE
 		do
@@ -24563,14 +25328,14 @@ feature {NONE} -- Memory allocation
 			header_file.put_character ('(')
 			current_file.put_character ('(')
 			if l_special_type /= Void then
-				if l_special_type.attribute_count < 1 then
+				if l_special_type.attribute_count < 2 then
 						-- Internal error: class "SPECIAL" should have at least the
-						-- feature 'count' as first feature.
+						-- features 'count' and 'capacity' as first features.
 						-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
-					l_dynamic_type_set := result_type_set_in_feature (l_special_type.queries.first)
+					l_dynamic_type_set := result_type_set_in_feature (l_special_type.queries.item (2))
 					l_integer_type := l_dynamic_type_set.static_type
 					print_type_declaration (l_integer_type, header_file)
 					print_type_declaration (l_integer_type, current_file)
@@ -24666,18 +25431,6 @@ feature {NONE} -- Memory allocation
 			current_file.put_character ('{')
 			current_file.put_new_line
 			indent
-			if l_special_type /= Void then
-				if l_item_type.is_expanded and then (l_item_type.is_generic or else l_item_type.has_generic_expanded_attributes) then
-					l_has_generic_expanded_attributes := True
-					l_temp := temp_variable
-					print_indentation
-					print_type_declaration (l_integer_type, current_file)
-					current_file.put_character (' ')
-					print_temp_name (l_temp, current_file)
-					current_file.put_character (';')
-					current_file.put_new_line
-				end
-			end
 			print_indentation
 			current_file.put_character ('*')
 			print_type_cast (a_type, current_file)
@@ -24689,9 +25442,9 @@ feature {NONE} -- Memory allocation
 			current_file.put_character (';')
 			current_file.put_new_line
 			if l_special_type /= Void then
-					-- Set 'count'.
+					-- Set 'capacity'.
 				print_indentation
-				print_attribute_special_count_access (tokens.result_keyword, l_special_type, False)
+				print_attribute_special_capacity_access (tokens.result_keyword, l_special_type, False)
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
@@ -24699,82 +25452,41 @@ feature {NONE} -- Memory allocation
 				current_file.put_character ('1')
 				current_file.put_character (';')
 				current_file.put_new_line
+					-- Set 'count'.
+				print_indentation
+				print_attribute_special_count_access (tokens.result_keyword, l_special_type, False)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('0')
+				current_file.put_character (';')
+				current_file.put_new_line
 					-- Initialize items if needed.
-				if l_has_generic_expanded_attributes then
-					print_indentation
-					current_file.put_string (c_for)
-					current_file.put_character (' ')
-					current_file.put_character ('(')
-					print_temp_name (l_temp, current_file)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					current_file.put_character ('a')
-					current_file.put_character ('1')
-					current_file.put_character (' ')
-					current_file.put_character ('-')
-					current_file.put_character (' ')
-					current_file.put_character ('1')
-					current_file.put_character (';')
-					current_file.put_character (' ')
-					print_temp_name (l_temp, current_file)
-					current_file.put_character (' ')
-					current_file.put_character ('>')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					current_file.put_character ('0')
-					current_file.put_character (';')
-					current_file.put_character (' ')
-					print_temp_name (l_temp, current_file)
-					current_file.put_character ('-')
-					current_file.put_character ('-')
-					current_file.put_character (')')
-					current_file.put_character (' ')
-					current_file.put_character ('{')
-					current_file.put_new_line
-					indent
-					print_indentation
-					print_attribute_special_item_access (tokens.result_keyword, l_special_type, False)
-					current_file.put_character ('[')
-					print_temp_name (l_temp, current_file)
-					current_file.put_character (']')
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					print_default_name (l_item_type, current_file)
-					current_file.put_character (';')
-					current_file.put_new_line
-					dedent
-					print_indentation
-					current_file.put_character ('}')
-					current_file.put_new_line
+				current_file.put_string (c_ifndef)
+				current_file.put_character (' ')
+				if l_has_nested_reference_attributes then
+					current_file.put_line (c_ge_alloc_cleared)
 				else
-					current_file.put_string (c_ifndef)
-					current_file.put_character (' ')
-					if l_has_nested_reference_attributes then
-						current_file.put_line (c_ge_alloc_cleared)
-					else
-						current_file.put_line (c_ge_alloc_atomic_cleared)
-					end
-					print_indentation
-					current_file.put_string (c_memset)
-					current_file.put_character ('(')
-					print_attribute_special_item_access (tokens.result_keyword, l_special_type, False)
-					current_file.put_character (',')
-					current_file.put_character ('0')
-					current_file.put_character (',')
-					current_file.put_character ('a')
-					current_file.put_character ('1')
-					current_file.put_character ('*')
-					current_file.put_string (c_sizeof)
-					current_file.put_character ('(')
-					print_type_declaration (l_item_type, current_file)
-					current_file.put_character (')')
-					current_file.put_character (')')
-					current_file.put_character (';')
-					current_file.put_new_line
-					current_file.put_line (c_endif)
+					current_file.put_line (c_ge_alloc_atomic_cleared)
 				end
+				print_indentation
+				current_file.put_string (c_memset)
+				current_file.put_character ('(')
+				print_attribute_special_item_access (tokens.result_keyword, l_special_type, False)
+				current_file.put_character (',')
+				current_file.put_character ('0')
+				current_file.put_character (',')
+				current_file.put_character ('a')
+				current_file.put_character ('1')
+				current_file.put_character ('*')
+				current_file.put_string (c_sizeof)
+				current_file.put_character ('(')
+				print_type_declaration (l_item_type, current_file)
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+				current_file.put_line (c_endif)
 			end
 			dedent
 			print_indentation
@@ -26710,14 +27422,14 @@ feature {NONE} -- Feature name generation
 			a_file_open_write: a_file.is_open_write
 		do
 			if short_names then
-				if a_type.attribute_count < 1 then
+				if a_type.attribute_count < 2 then
 						-- Internal error: class "SPECIAL" should have at least the
-						-- feature 'count' as first feature.
+						-- feature 'capacity' as second feature.
 						-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
-					print_attribute_name (a_type.queries.first, a_type, a_file)
+					print_attribute_name (a_type.queries.item (2), a_type, a_file)
 				end
 			else
 -- TODO: long names
@@ -27500,6 +28212,8 @@ feature {NONE} -- Include files
 					included_runtime_c_files.force ("ge_identified.c")
 				elseif a_filename.same_string ("ge_main.h") then
 					included_runtime_c_files.force ("ge_main.c")
+				elseif a_filename.same_string ("ge_real.h") then
+					included_runtime_c_files.force ("ge_real.c")
 				elseif a_filename.same_string ("eif_cecil.h") then
 					included_runtime_c_files.force ("eif_cecil.c")
 				elseif a_filename.same_string ("eif_console.h") then
@@ -27509,12 +28223,18 @@ feature {NONE} -- Include files
 				elseif a_filename.same_string ("eif_dir.h") then
 					include_runtime_header_file ("eif_except.h", False, a_file)
 					included_runtime_c_files.force ("eif_dir.c")
+				elseif a_filename.same_string ("eif_eiffel.h") then
+					include_runtime_header_file ("eif_except.h", False, a_file)
+					include_runtime_header_file ("eif_globals.h", False, a_file)
 				elseif a_filename.same_string ("eif_except.h") then
 					include_runtime_header_file ("ge_exception.h", False, a_file)
 					included_runtime_c_files.force ("eif_except.c")
 				elseif a_filename.same_string ("eif_file.h") then
 					include_runtime_header_file ("eif_except.h", False, a_file)
+					include_runtime_header_file ("ge_real.h", False, a_file)
 					included_runtime_c_files.force ("eif_file.c")
+				elseif a_filename.same_string ("eif_globals.h") then
+					include_runtime_header_file ("eif_threads.h", False, a_file)
 				elseif a_filename.same_string ("eif_main.h") then
 					included_runtime_c_files.force ("eif_main.c")
 				elseif a_filename.same_string ("eif_memory.h") then
@@ -27532,6 +28252,8 @@ feature {NONE} -- Include files
 					included_runtime_c_files.force ("eif_sig.c")
 				elseif a_filename.same_string ("eif_store.h") then
 					included_runtime_c_files.force ("eif_store.c")
+				elseif a_filename.same_string ("eif_threads.h") then
+					include_runtime_header_file ("eif_cecil.h", False, a_file)
 				elseif a_filename.same_string ("eif_traverse.h") then
 					included_runtime_c_files.force ("eif_traverse.c")
 				end
@@ -28806,7 +29528,7 @@ feature {NONE} -- Temporary variables (Implementation)
 
 	temp_variable: ET_IDENTIFIER
 			-- Shared temporary variable, to be used in non-Eiffel features
-			-- such as 'GE_ms', 'GE_ma*' or 'main'.
+			-- such as 'GE_ms', 'GE_ma*' or 'GE_main'.
 		once
 			if short_names then
 				create Result.make ("t1")
@@ -29269,6 +29991,7 @@ feature {NONE} -- Constants
 	c_eif_is_vxworks: STRING = "EIF_IS_VXWORKS"
 	c_eif_is_windows: STRING = "EIF_IS_WINDOWS"
 	c_eif_mem_free: STRING = "eif_mem_free"
+	c_eif_native_char: STRING = "EIF_NATIVE_CHAR"
 	c_eif_natural: STRING = "EIF_NATURAL"
 	c_eif_natural_8: STRING = "EIF_NATURAL_8"
 	c_eif_natural_16: STRING = "EIF_NATURAL_16"
@@ -29331,6 +30054,18 @@ feature {NONE} -- Constants
 	c_ge_power: STRING = "GE_power"
 	c_ge_raise: STRING = "GE_raise"
 	c_ge_register_dispose: STRING = "GE_register_dispose"
+	c_ge_real_32_is_nan: STRING = "GE_real_32_is_nan"
+	c_ge_real_32_is_negative_infinity: STRING = "GE_real_32_is_negative_infinity"
+	c_ge_real_32_is_positive_infinity: STRING = "GE_real_32_is_positive_infinity"
+	c_ge_real_32_nan: STRING = "GE_real_32_nan"
+	c_ge_real_32_negative_infinity: STRING = "GE_real_32_negative_infinity"
+	c_ge_real_32_positive_infinity: STRING = "GE_real_32_positive_infinity"
+	c_ge_real_64_is_nan: STRING = "GE_real_64_is_nan"
+	c_ge_real_64_is_negative_infinity: STRING = "GE_real_64_is_negative_infinity"
+	c_ge_real_64_is_positive_infinity: STRING = "GE_real_64_is_positive_infinity"
+	c_ge_real_64_nan: STRING = "GE_real_64_nan"
+	c_ge_real_64_negative_infinity: STRING = "GE_real_64_negative_infinity"
+	c_ge_real_64_positive_infinity: STRING = "GE_real_64_positive_infinity"
 	c_ge_rescue: STRING = "GE_rescue"
 	c_ge_retry: STRING = "GE_retry"
 	c_ge_setjmp: STRING = "GE_setjmp"

@@ -101,6 +101,7 @@ feature -- Creation
 		do
 --			Result := c_new_instance_of (type_id)
 			print ("TODO: INTERNAL.new_instance_of not implemented yet%N")
+			create Result
 		ensure
 			not_special_type: not is_special (Result)
 			dynamic_type_set: dynamic_type (Result) = type_id
@@ -118,10 +119,12 @@ feature -- Creation
 --			create Result.make (count)
 --			c_set_dynamic_type (Result, type_id)
 			print ("TODO: INTERNAL.new_special_any_instance not implemented yet%N")
+			create Result.make_empty (count)
 		ensure
 			special_type: is_special (Result)
 			dynamic_type_set: dynamic_type (Result) = type_id
-			count_set: Result.count = count
+			count_set: Result.count = 0
+			capacity_set: Result.capacity = count
 		end
 
 	type_of (object: detachable ANY): TYPE [detachable ANY]
@@ -179,22 +182,16 @@ feature -- Status report
 			-- Is `object' a special object?
 		require
 			object_not_void: object /= Void
-		local
-			l_special: SPECIAL [detachable ANY]
 		do
-			l_special ?= object
-			Result := l_special /= Void
+			Result := attached {SPECIAL [detachable ANY]} object
 		end
 
 	is_tuple (object: ANY): BOOLEAN
 			-- Is `object' a TUPLE object?
 		require
 			object_not_void: object /= Void
-		local
-			l_tuple: TUPLE
 		do
-			l_tuple ?= object
-			Result := l_tuple /= Void
+			Result := attached {TUPLE} object
 		end
 
 	is_tuple_type (type_id: INTEGER): BOOLEAN
@@ -285,6 +282,8 @@ feature -- Access
 			l_type := type_of_type (type_id)
 			if l_type /= Void then
 				Result := l_type.base_class_name
+			else
+				Result := "**UNKNOWN**"
 			end
 		end
 
@@ -308,6 +307,8 @@ feature -- Access
 			l_type := type_of_type (type_id)
 			if l_type /= Void then
 				Result := l_type.name
+			else
+				Result := "**UNKNOWN**"
 			end
 		end
 
@@ -409,6 +410,8 @@ feature -- Access
 			l_type := type_of_type (type_id)
 			if l_type /= Void then
 				Result := l_type.field_name (i)
+			else
+				Result := "**unknown**"
 			end
 		end
 

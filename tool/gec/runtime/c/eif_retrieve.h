@@ -4,7 +4,7 @@
 		"C functions used to implement class STORABLE"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,7 +20,7 @@ extern "C" {
 extern char* eretrieve(EIF_INTEGER file_desc);
 extern void eif_set_discard_pointer_values(EIF_BOOLEAN state);
 extern EIF_REFERENCE stream_eretrieve(EIF_POINTER* buffer, EIF_INTEGER size, EIF_INTEGER start_pos, EIF_INTEGER* real_size);
-extern void set_mismatch_information_access(EIF_OBJECT object, EIF_PROCEDURE init, EIF_PROCEDURE add);
+extern void set_mismatch_information_access(EIF_OBJECT object, EIF_PROCEDURE init, EIF_PROCEDURE add, EIF_PROCEDURE set_vers);
 extern void class_translation_put (char* new_name, char* old_name);
 extern void class_translation_clear (void);
 extern EIF_INTEGER class_translation_count (void);

@@ -1,15 +1,16 @@
 note
 	description: "References to special objects, for direct access to arrays and strings"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2004, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date: 2010-08-11 19:46:11 +0200 (Wed, 11 Aug 2010) $"
-	revision: "$Revision: 480 $"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2012-05-24 06:13:10 +0200 (Thu, 24 May 2012) $"
+	revision: "$Revision: 559 $"
 
 class TO_SPECIAL [T]
 
 create
-	make_area, make_filled_area
+	make_empty_area,
+	make_filled_area
 
 feature -- Access
 
@@ -18,16 +19,16 @@ feature -- Access
 
 feature {NONE} -- Initialization
 
-	make_area (n: INTEGER)
+	make_empty_area (n: INTEGER)
 			-- Creates a special object for `n' entries.
-		obsolete
-			"{TO_SPECIAL}.make_area is not void-safe and is being removed from the void-safe version. Use `make_filled_area' instead. [08-2010]"
 		require
 			non_negative_argument: n >= 0
 		do
-			create area.make (n)
+			create area.make_empty (n)
 		ensure
-			area_allocated: area /= Void and then area.count = n
+			area_allocated: area /= Void
+			capacity_set: area.capacity = n
+			count_set: area.count = 0
 		end
 
 	make_filled_area (a_default_value: T; n: INTEGER)
@@ -58,7 +59,7 @@ feature -- Status report
 	valid_index (i: INTEGER): BOOLEAN
 			-- Is `i' within the bounds of Current?
 		do
-			Result := (0 <= i) and then (i < area.count)
+			Result := area.valid_index (i)
 		end
 
 feature -- Element change
@@ -82,5 +83,16 @@ feature {NONE} -- Element change
 		ensure
 			area_set: area = other
 		end
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

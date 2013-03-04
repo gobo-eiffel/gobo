@@ -53,6 +53,12 @@ feature -- Status settings
 -- TODO
 		end
 
+	set_description (a_description: detachable READABLE_STRING_GENERAL)
+			-- Set `description' with `a_description'.
+		do
+-- TODO
+		end
+
 feature {NONE} -- Implementation
 
 	internal_meaning: STRING

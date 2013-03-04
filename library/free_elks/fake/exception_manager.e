@@ -13,7 +13,7 @@ class
 
 feature -- Access
 
-	last_exception: EXCEPTION
+	last_exception: detachable EXCEPTION
 			-- Last exception
 		do
 -- TODO

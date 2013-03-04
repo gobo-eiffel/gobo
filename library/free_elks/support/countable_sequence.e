@@ -1,16 +1,13 @@
 note
-
-	description:
-		"Infinite sequences, indexed by integers"
-
+	description: "Infinite sequences, indexed by integers"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 2005-2008, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
 	names: countable_sequence, infinite_sequence;
 	access: cursor, membership;
 	contents: generic;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2012-05-24 06:13:10 +0200 (Thu, 24 May 2012) $"
+	revision: "$Revision: 559 $"
 
 deferred class COUNTABLE_SEQUENCE [G]
 
@@ -27,6 +24,8 @@ inherit
 					fill, prune_all, put,
 					prune,
 					wipe_out, replace, remove
+		redefine
+			replaceable
 		end
 
 	LINEAR [G]
@@ -63,6 +62,9 @@ feature -- Status report
 	writable: BOOLEAN = False
 			-- Is there a current item that may be written?
 			-- (Answer: no.)
+
+	replaceable: BOOLEAN = False
+			-- <Precursor>
 
 feature -- Cursor movement
 
@@ -123,5 +125,16 @@ feature {NONE} -- Inapplicable
 			-- Remove all items.
 		do
 		end
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

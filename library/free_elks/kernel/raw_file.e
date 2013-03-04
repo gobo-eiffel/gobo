@@ -1,10 +1,10 @@
 note
 	description: "Files, viewed as persistent sequences of bytes"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2012-11-06 08:57:44 +0100 (Tue, 06 Nov 2012) $"
+	revision: "$Revision: 605 $"
 
 class RAW_FILE
 
@@ -17,8 +17,8 @@ inherit
 		end
 
 create
-
-	make, make_open_read, make_open_write, make_open_append,
+	make, make_with_name, make_with_path,
+	make_open_read, make_open_write, make_open_append,
 	make_open_read_write, make_create_read_write,
 	make_open_read_append
 
@@ -242,32 +242,40 @@ feature {NONE} -- Implementation
 			-- Return the number of characters actually read.
 		do
 			Result := file_gss (file_pointer, a_string.area.item_address (pos - 1), nb)
+				-- `a_string' was externally modified, we need to reset its `hash_code'.
+			a_string.set_internal_hash_code (0)
 		end
 
 	file_gib (file: POINTER): INTEGER
 			-- Get an integer from `file'
 		external
 			"C signature (FILE *): EIF_INTEGER use %"eif_file.h%""
+		alias
+			"eif_file_gib"
 		end
 
 	file_grb (file: POINTER): REAL
 			-- Read a real from `file'
 		external
 			"C signature (FILE *): EIF_REAL_32 use %"eif_file.h%""
+		alias
+			"eif_file_grb"
 		end
 
 	file_gdb (file: POINTER): DOUBLE
 			-- Read a double from `file'
 		external
 			"C signature (FILE *): EIF_REAL_64 use %"eif_file.h%""
+		alias
+			"eif_file_gdb"
 		end
 
 	file_open (f_name: POINTER; how: INTEGER): POINTER
 			-- File pointer for file `f_name', in mode `how'.
 		external
-			"C signature (char *, int): EIF_POINTER use %"eif_file.h%""
+			"C signature (EIF_FILENAME, int): EIF_POINTER use %"eif_file.h%""
 		alias
-			"file_binary_open"
+			"eif_file_binary_open"
 		end
 
 	file_dopen (fd, how: INTEGER): POINTER
@@ -276,34 +284,40 @@ feature {NONE} -- Implementation
 		external
 			"C signature (int, int): EIF_POINTER use %"eif_file.h%""
 		alias
-			"file_binary_dopen"
+			"eif_file_binary_dopen"
 		end
 
-	file_reopen (f_name: POINTER; how: INTEGER; file: POINTER): POINTER
+	file_reopen (fname: POINTER; how: INTEGER; file: POINTER): POINTER
 			-- File pointer to `file', reopened to have new name `f_name'
 			-- in a mode specified by `how'.
 		external
-			"C signature (char *, int, FILE *): EIF_POINTER use %"eif_file.h%""
+			"C signature (EIF_FILENAME, int, FILE *): EIF_POINTER use %"eif_file.h%""
 		alias
-			"file_binary_reopen"
+			"eif_file_binary_reopen"
 		end
 
 	file_pib (file: POINTER; n: INTEGER)
 			-- Put `n' to end of `file'.
 		external
 			"C signature (FILE *, EIF_INTEGER) use %"eif_file.h%""
+		alias
+			"eif_file_pib"
 		end
 
 	file_prb (file: POINTER; r: REAL)
 			-- Put `r' to end of `file'.
 		external
 			"C signature (FILE *, EIF_REAL_32) use %"eif_file.h%""
+		alias
+			"eif_file_prb"
 		end
 
 	file_pdb (file: POINTER; d: DOUBLE)
 			-- Put `d' to end of `file'.
 		external
 			"C signature (FILE *, EIF_REAL_64) use %"eif_file.h%""
+		alias
+			"eif_file_pdb"
 		end
 
 	file_fread (dest: POINTER; elem_size, nb_elems: INTEGER; file: POINTER): INTEGER
@@ -318,5 +332,16 @@ feature {NONE} -- Implementation
 invariant
 
 	not_plain_text: not is_plain_text
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

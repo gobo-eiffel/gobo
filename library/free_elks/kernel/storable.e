@@ -4,10 +4,10 @@ note
 		This class may be used as ancestor by classes needing its facilities.
 		]"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2012-12-27 03:57:50 +0100 (Thu, 27 Dec 2012) $"
+	revision: "$Revision: 674 $"
 
 class
 	STORABLE
@@ -17,7 +17,7 @@ inherit
 
 feature -- Access
 
-	retrieved (medium: IO_MEDIUM): ANY
+	retrieved (medium: IO_MEDIUM): detachable ANY
 			-- Retrieved object structure, from external
 			-- representation previously stored in `medium'.
 			-- To access resulting object under correct type,
@@ -31,8 +31,6 @@ feature -- Access
 			medium_supports_storable: medium.support_storable
 		do
 			Result := medium.retrieved
-		ensure
-			Result_exists: Result /= Void
 		end
 
 	retrieve_by_name (file_name: STRING): detachable ANY
@@ -51,7 +49,7 @@ feature -- Access
 		local
 			file: RAW_FILE
 		do
-			create file.make (file_name)
+			create file.make_with_name (file_name)
 			if file.exists and then file.is_readable then
 				file.open_read
 				Result := file.retrieved
@@ -145,7 +143,7 @@ feature -- Element change
 			file: RAW_FILE
 			l_io_exception: IO_FAILURE
 		do
-			create file.make (file_name)
+			create file.make_with_name (file_name)
 			if (file.exists and then file.is_writable) or else
 				(file.is_creatable) then
 				file.open_write
@@ -153,9 +151,20 @@ feature -- Element change
 				file.close
 			else
 				create l_io_exception
-				l_io_exception.set_message ("write permission failure")
+				l_io_exception.set_description ("write permission failure")
 				l_io_exception.raise
 			end
 		end
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

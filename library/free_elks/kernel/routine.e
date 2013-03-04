@@ -52,7 +52,7 @@ feature -- Access
 			--| FIXME compiler support needed!
 		end
 
-	empty_operands: OPEN_ARGS
+	empty_operands: attached OPEN_ARGS
 			-- Empty tuple matching open operands
 		do
 			create Result
@@ -68,7 +68,7 @@ feature -- Status report
 	valid_operands (args: detachable TUPLE): BOOLEAN
 			-- Are `args' valid operands for this routine?
 		local
-			l_expected_args: OPEN_ARGS
+			l_expected_args: attached OPEN_ARGS
 			i, nb: INTEGER
 			l_arg_type_code: INTEGER
 			l_arg: detachable ANY

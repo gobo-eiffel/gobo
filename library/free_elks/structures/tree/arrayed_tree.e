@@ -1,16 +1,14 @@
 note
-
-	description:
-		"Trees where the children of each node are kept in an array"
+	description: "Trees where the children of each node are kept in an array"
+	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	names: tree;
 	representation: recursive, array;
 	access: cursor, membership;
 	contents: generic;
-	date: "$Date: 2009-03-15 17:53:42 +0100 (Sun, 15 Mar 2009) $"
-	revision: "$Revision: 281 $"
+	date: "$Date: 2012-07-23 23:02:19 +0200 (Mon, 23 Jul 2012) $"
+	revision: "$Revision: 567 $"
 
 class ARRAYED_TREE [G] inherit
 
@@ -53,7 +51,7 @@ feature -- Initialization
 
 feature -- Access
 
-	parent: detachable like child
+	parent: detachable like Current
 			-- Parent of current node
 
 	left_sibling: like parent
@@ -198,7 +196,7 @@ feature -- Element change
 			n.attach_to_parent (Current)
 		end
 
-	merge_tree_before (other: ARRAYED_TREE [G])
+	merge_tree_before (other: like Current)
 			-- Merge children of `other' into current structure
 			-- before cursor position. Do not move cursor.
 			-- Make `other' a leaf.
@@ -211,7 +209,7 @@ feature -- Element change
 			al_merge_left (l_list)
 		end
 
-	merge_tree_after (other: ARRAYED_TREE [G])
+	merge_tree_after (other: like Current)
 			-- Merge children of `other' into current structure
 			-- after cursor position. Do not move cursor.
 			-- Make `other' a leaf.
@@ -430,7 +428,7 @@ feature {ARRAYED_TREE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	arrayed_list: ARRAYED_LIST [ARRAYED_TREE [G]]
+	arrayed_list: ARRAYED_LIST [like Current]
 			-- arrayed list of arrayed_tree.
 
 	new_tree: like Current
@@ -457,7 +455,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	attach (other: ARRAYED_TREE [G])
+	attach (other: like Current)
 			-- Attach all children of `other' to current node.
 			-- Put `other' in mode `off'.
 		local
@@ -476,7 +474,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	do_all_internal (an_agent: PROCEDURE [ANY, TUPLE [G]]; a_tree_node: ARRAYED_TREE [G])
+	do_all_internal (an_agent: PROCEDURE [ANY, TUPLE [G]]; a_tree_node: like Current)
 			-- Apply action to every child.
 		require
 			non_void_agent: an_agent /= Void
@@ -500,12 +498,12 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	child: ARRAYED_TREE [G]
+	child: attached like parent
 		do
 			Result := arrayed_list.item
 		end
 
-	array_item (n: INTEGER): ARRAYED_TREE [G]
+	array_item (n: INTEGER): like Current
 		do
 			Result := arrayed_list.i_th (n)
 		end
@@ -520,7 +518,7 @@ feature -- Access
 			Result := arrayed_list.first
 		end
 
-	search_child (v: ARRAYED_TREE [like item])
+	search_child (v: like Current)
 		do
 			arrayed_list.search (v)
 		end
@@ -595,7 +593,7 @@ feature -- Access
 			arrayed_list.go_to (p)
 		end
 
-	index_of (v: ARRAYED_TREE [like item]; i: INTEGER): INTEGER
+	index_of (v: like Current; i: INTEGER): INTEGER
 		do
 			Result := arrayed_list.index_of (v, i)
 		end
@@ -636,7 +634,7 @@ feature {NONE} -- private access arrayed_list
 			arrayed_list.make (n)
 		end
 
-	al_extend (v: ARRAYED_TREE [like item])
+	al_extend (v: like Current)
 		do
 			arrayed_list.extend (v)
 		end
@@ -661,22 +659,22 @@ feature {NONE} -- private access arrayed_list
 			arrayed_list.remove_right
 		end
 
-	al_put_left (v: ARRAYED_TREE [like item])
+	al_put_left (v: like Current)
 		do
 			arrayed_list.put_left (v)
 		end
 
-	al_put_right (v: ARRAYED_TREE [like item])
+	al_put_right (v: like Current)
 		do
 			arrayed_list.put_right (v)
 		end
 
-	al_merge_left (v: ARRAYED_LIST [ARRAYED_TREE [like item]])
+	al_merge_left (v: ARRAYED_LIST [like Current])
 		do
 			arrayed_list.merge_left (v)
 		end
 
-	al_merge_right (v: ARRAYED_LIST [ARRAYED_TREE [like item]])
+	al_merge_right (v: ARRAYED_LIST [like Current])
 		do
 			arrayed_list.merge_right (v)
 		end
@@ -696,41 +694,40 @@ feature {NONE} -- private access arrayed_list
 			Result := arrayed_list.extendible
 		end
 
-	al_put (v: ARRAYED_TREE [like item])
+	al_put (v: like Current)
 		do
 			arrayed_list.put (v)
 		end
 
-	al_replace (v: ARRAYED_TREE [G])
+	al_replace (v: like Current)
 		do
 			arrayed_list.replace (v)
 		end
 
-	al_fill (other: CONTAINER [ARRAYED_TREE [G]])
+	al_fill (other: CONTAINER [like Current])
 		do
 			arrayed_list.fill (other)
 		end
 
-	al_lin_rep: LINEAR [ARRAYED_TREE [G]]
+	al_lin_rep: LINEAR [like Current]
 		do
 			Result := arrayed_list.linear_representation
 		end
 
-	al_has (v: ARRAYED_TREE [like item]): BOOLEAN
+	al_has (v: like Current): BOOLEAN
 		do
 			Result := arrayed_list.has (v)
 		end
 
 note
-	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class ARRAYED_TREE
+end

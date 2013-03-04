@@ -4,7 +4,7 @@
 		"C functions used to implement Thread support"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -13,7 +13,9 @@
 #ifndef EIF_THREADS_H
 #define EIF_THREADS_H
 
+#ifndef EIF_CECIL_H
 #include "eif_cecil.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {

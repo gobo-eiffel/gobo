@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -952,6 +952,8 @@ feature {NONE} -- Feature validity
 				end
 			when builtin_type_class then
 				inspect a_feature.builtin_code \\ builtin_capacity
+				when builtin_type_default then
+					report_builtin_type_default (a_feature)
 				when builtin_type_field then
 					report_builtin_type_field (a_feature)
 				when builtin_type_field_count then
@@ -2922,6 +2924,25 @@ feature {NONE} -- Built-in features
 						end
 						i := i + 1
 					end
+				end
+			end
+		end
+
+	report_builtin_type_default (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Report that built-in feature 'TYPE.default' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_result_type := result_type_set.static_type
+					-- The Result is either expanded or Void.
+					-- Nothing to propagate when it is Void.
+				if l_result_type.is_expanded then
+					mark_type_alive (l_result_type)
+					propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 				end
 			end
 		end

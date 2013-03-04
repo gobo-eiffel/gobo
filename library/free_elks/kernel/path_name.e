@@ -1,10 +1,10 @@
 note
 	description: "Path name abstraction"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2012-12-17 23:05:44 +0100 (Mon, 17 Dec 2012) $"
+	revision: "$Revision: 665 $"
 
 deferred class PATH_NAME
 
@@ -12,35 +12,15 @@ inherit
 	STRING
 		rename
 			make as string_make,
-			make_from_string as string_make_from_string,
+			make_empty as make,
 			extend as string_extend
 		export
 			{PATH_NAME} all
-			{ANY} is_empty, empty, to_c, wipe_out, out, string, twin, prunable, as_attached
+			{ANY} is_empty, empty, to_c, wipe_out, out, string, twin, prunable, as_attached, make, make_from_string
 		undefine
 			new_string
 		redefine
 			is_equal
-		end
-
-feature -- Initialization
-
-	make
-			-- Create path name object.
-		do
-			string_make (0)
-		end
-
-	make_from_string (p: STRING)
-			-- Create path name object and initialize it with the
-			-- path name `p'
-		require
-			path_not_void: p /= Void
-		do
-			string_make (p.count)
-			append (p)
-		ensure
-			valid_file_name: is_valid
 		end
 
 feature -- Comparison
@@ -88,6 +68,15 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+	reset (a_name: STRING)
+			-- Reset content with a path starting with `a_name'
+		require
+			a_name_attached: a_name /= Void
+		do
+			wipe_out
+			append (a_name)
+		end
 
 	set_volume (volume_name: STRING)
 			-- Set the volume part of the path name to `volume_name'.
@@ -206,5 +195,16 @@ feature {NONE} -- Externals
 		alias
 			"strlen"
 		end
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

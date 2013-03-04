@@ -19,14 +19,14 @@ extern "C" {
 
 extern EIF_POINTER console_def(EIF_INTEGER file);
 extern EIF_BOOLEAN console_eof(FILE* fp);
-extern EIF_CHARACTER console_separator(FILE* f);
+extern EIF_CHARACTER_8 console_separator(FILE* f);
 extern void console_ps(FILE* f, char* str, EIF_INTEGER len);
 extern void console_pr(FILE* f, EIF_REAL_32 number);
-extern void console_pc(FILE* f, EIF_CHARACTER c);
+extern void console_pc(FILE* f, EIF_CHARACTER_8 c);
 extern void console_pd(FILE* f, EIF_REAL_64 val);
 extern void console_pi(FILE* f, EIF_INTEGER number);
 extern void console_tnwl(FILE* f);
-extern EIF_CHARACTER console_readchar(FILE* f);
+extern EIF_CHARACTER_8 console_readchar(FILE* f);
 extern EIF_REAL_32 console_readreal(FILE* f);
 extern EIF_INTEGER console_readint(FILE* f);
 extern EIF_REAL_64 console_readdouble(FILE* f);

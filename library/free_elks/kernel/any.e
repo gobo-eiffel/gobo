@@ -1,5 +1,4 @@
 note
-
 	description: "[
 		Project-wide universal properties.
 		This class is an ancestor to all developer-written classes.
@@ -7,10 +6,10 @@ note
 		]"
 
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2013-01-25 20:49:00 +0100 (Fri, 25 Jan 2013) $"
+	revision: "$Revision: 712 $"
 
 class
 	ANY
@@ -151,7 +150,7 @@ feature -- Duplication
 
 	frozen twin: like Current
 			-- New object equal to `Current'
-			-- `twin' calls `copy'; to change copying/twining semantics, redefine `copy'.
+			-- `twin' calls `copy'; to change copying/twinning semantics, redefine `copy'.
 		external
 			"built_in"
 		ensure
@@ -369,5 +368,16 @@ feature -- Basic operations
 invariant
 	reflexive_equality: standard_is_equal (Current)
 	reflexive_conformance: conforms_to (Current)
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

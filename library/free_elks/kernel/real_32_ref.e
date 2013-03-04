@@ -1,10 +1,10 @@
 note
 	description: "References to objects containing a real value"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2012-05-24 06:13:10 +0200 (Thu, 24 May 2012) $"
+	revision: "$Revision: 559 $"
 
 class REAL_32_REF inherit
 
@@ -53,15 +53,37 @@ feature -- Access
 			-- Neutral element for "*" and "/"
 		do
 			create Result
-			Result.set_item (1.0)
+			Result.set_item ({REAL_32} 1.0)
 		end
 
 	zero: like Current
 			-- Neutral element for "+" and "-"
 		do
 			create Result
-			Result.set_item (0.0)
+			Result.set_item ({REAL_32} 0.0)
 		end
+
+	nan: REAL_32
+			-- Representation of not a number (NaN)
+		external
+			"built_in static"
+		end
+
+	negative_infinity: REAL_32
+			-- Representation of negative infinity
+		external
+			"built_in static"
+		end
+
+	positive_infinity: REAL_32
+			-- Representation of positive infinity
+		external
+			"built_in static"
+		end
+
+	min_value: REAL_32 = -3.4028234663852885981170e+038
+	max_value: REAL_32 = 3.4028234663852885981170e+038
+			-- Minimum and Maximum value hold in `item'.
 
 feature -- Comparison
 
@@ -116,6 +138,24 @@ feature -- Status report
 			-- (True if it is not its type's default.)
 		do
 			Result := item /= 0.0
+		end
+
+	is_nan: BOOLEAN
+			-- Is current the representation of `nan'?
+		do
+			Result := item.is_nan
+		end
+
+	is_negative_infinity: BOOLEAN
+			-- Is current the representation of `negative_infinity'?
+		do
+			Result := item.is_negative_infinity
+		end
+
+	is_positive_infinity: BOOLEAN
+			-- Is current the representation of `positive_infinity'?
+		do
+			Result := item.is_positive_infinity
 		end
 
 feature {NONE} -- Initialization
@@ -208,9 +248,9 @@ feature -- Conversion
 	rounded_real_32: REAL_32
 			-- Rounded integral value
 		do
-			Result := sign * ((abs + 0.5).floor_real_32)
+			Result := sign * ((abs + {REAL_32} 0.5).floor_real_32)
 		ensure
-			definition: Result = sign * ((abs + 0.5).floor_real_32)
+			definition: Result = sign * ((abs + {REAL_32} 0.5).floor_real_32)
 		end
 
 feature -- Basic operations
@@ -285,7 +325,10 @@ feature {NONE} -- Implementation
 	abs_ref: like Current
 			-- Absolute value
 		do
-			if item >= 0.0 then
+			if item = 0.0 then
+					-- Special case when `item' is `-0'.				
+				Result := zero
+			elseif item > 0.0 then
 				Result := Current
 			else
 				Result := -Current
@@ -296,6 +339,17 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	sign_times_abs: sign * abs = item
+	sign_times_abs: not item.is_nan implies sign * abs = item
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

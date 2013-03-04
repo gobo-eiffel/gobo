@@ -1,17 +1,14 @@
 note
-
-	description:
-		"Packed boolean strings"
-
+	description: "Packed boolean strings"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 2005, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
 	names: packed_booleans;
 	access: index;
 	representation: array;
 	size: fixed;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2012-05-24 06:13:10 +0200 (Thu, 24 May 2012) $"
+	revision: "$Revision: 559 $"
 
 class BOOL_STRING inherit
 
@@ -20,10 +17,13 @@ class BOOL_STRING inherit
 			{NONE} all
 			{BOOL_STRING} area
 		redefine
-			item, at, put, valid_index
+			item, at, put, valid_index, copy, is_equal
 		end
 
 	ANY
+		redefine
+			copy, is_equal
+		end
 
 create
 
@@ -36,7 +36,7 @@ feature -- Initialization
 		require
 			non_negative_size: n >= 0
 		do
-			make_area (n)
+			make_filled_area (False, n)
 		ensure
 			correct_allocation: count = n
 		end
@@ -48,6 +48,32 @@ feature -- Access
 			-- beginning at left, 1 origin
 		do
 			Result := area.item (i - 1)
+		end
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN
+			-- <Precursor>
+		do
+			if other = Current then
+				Result := True
+			else
+				Result := area.same_items (other.area, 0, 0, count)
+			end
+		end
+
+feature -- Duplication
+
+	copy (other: like Current)
+			-- <Precursor>
+		do
+			if other /= Current then
+				standard_copy (other)
+				set_area (other.area.twin)
+			end
+		ensure then
+			not_shared_if_different: other /= Current implies area /= other.area
+			equal_areas: area ~ other.area
 		end
 
 feature -- Status report
@@ -188,5 +214,16 @@ feature -- Basic operations
 				result_area.copy_data (area, n, 0, shift_count)
 			end
 		end
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

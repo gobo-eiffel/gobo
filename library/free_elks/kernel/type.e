@@ -2,10 +2,10 @@ note
 	description: "Representation of an Eiffel type."
 	remark: "At any given time, there is no more than one instance of TYPE representing a given Eiffel type."
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2013-01-07 23:32:27 +0100 (Mon, 07 Jan 2013) $"
+	revision: "$Revision: 690 $"
 
 frozen class
 	TYPE [G]
@@ -26,22 +26,17 @@ inherit
 		end
 
 create {NONE}
-
 	-- Creation is done either by using manifest types
 	-- or by calling ANY.generating_type.
 
 convert
-
 		-- Conversion useful for the transition period because of the
 		-- modification in ANY:
 		--    generating_type: STRING
 		-- becomes:
 		--    generating_type: TYPE [like Current]
-	to_string: {STRING, STRING_GENERAL},
-	to_readable_string_8: {READABLE_STRING_8},
-	to_readable_string_32: {READABLE_STRING_32},
-	to_immutable_string_8: {IMMUTABLE_STRING_8},
-	to_immutable_string_32: {IMMUTABLE_STRING_32}
+	to_string_8: {STRING_8, STRING_GENERAL, READABLE_STRING_GENERAL, READABLE_STRING_8},
+	to_string_32: {STRING_32, READABLE_STRING_32}
 
 feature -- Access
 
@@ -315,6 +310,13 @@ feature -- Measurement
 
 feature -- Status report
 
+	has_default: BOOLEAN
+			-- Is current type a type that has a default value?
+			-- I.e. a detachable type or an expanded type.
+		external
+			"built_in"
+		end
+
 	is_expanded: BOOLEAN
 			-- Is current type an expanded type?
 		external
@@ -331,11 +333,8 @@ feature -- Status report
 
 	is_special: BOOLEAN
 			-- Is current type a special type?
-		local
-			l_special: TYPE [SPECIAL [detachable ANY]]
 		do
-			l_special ?= Current
-			Result := l_special /= Void
+			Result := attached {TYPE [SPECIAL [detachable ANY]]} Current
 		end
 
 feature -- Comparison
@@ -542,7 +541,7 @@ feature -- Conversion
 			adapted: Result ~ g
 		end
 
-	attempt alias "#?" (obj: detachable ANY): detachable G
+	attempt alias "#?" (obj: detachable separate ANY): detachable G
 			-- Result of assignment attempt of `obj' to entity of type G
 		do
 			if attached {G} obj as l_g then
@@ -558,8 +557,9 @@ feature -- Conversion
 
 	default: G
 		require
---			has_default: has_default
-		do
+			has_default: has_default
+		external
+			"built_in"
 		end
 
 feature -- Output
@@ -567,13 +567,13 @@ feature -- Output
 	out: STRING
 			-- <Precursor>
 		do
-			Result := name
+			create Result.make_from_string (name)
 		end
 
 	debug_output: STRING
 			-- <Precursor>
 		do
-			Result := name
+			create Result.make_from_string (name)
 		end
 
 feature -- Features from STRING needed here for the transition period (see convert clause)
@@ -588,10 +588,12 @@ feature -- Features from STRING needed here for the transition period (see conve
 		require
 			argument_not_void: other /= Void
 		do
-			Result := name + other
+			create Result.make (name.count + other.count)
+			Result.append (name)
+			Result.append (other)
 		ensure
 			result_exists: Result /= Void
-			definition: Result.is_equal (name + other)
+			definition: Result.same_string (name + other)
 		end
 
 	same_string (other: STRING): BOOLEAN
@@ -633,10 +635,11 @@ feature -- Features from STRING needed here for the transition period (see conve
 		obsolete
 			"[070813] Use 'name.as_lower' instead (or 'out.as_lower' during the transition period)."
 		do
-			Result := name.as_lower
+			create Result.make_from_string (name)
+			Result.to_lower
 		ensure
 			as_lower_not_void: Result /= Void
-			definition: Result.is_equal (name.as_lower)
+			definition: Result.same_string (name.as_lower)
 		end
 
 	as_upper: STRING
@@ -647,60 +650,30 @@ feature -- Features from STRING needed here for the transition period (see conve
 		obsolete
 			"[070813] Use 'name.as_upper' instead (or 'out.as_upper' during the transition period)."
 		do
-			Result := name.as_upper
+			create Result.make_from_string (name)
+			Result.to_upper
 		ensure
 			as_upper_not_void: Result /= Void
-			definition: Result.is_equal (name.as_upper)
+			definition: Result.same_string (name.as_upper)
 		end
 
-	to_readable_string_8: READABLE_STRING_8
+	to_string_8: STRING_8
+		obsolete
+			"Use `name' instead (or `out' during the transition period)."
+		do
+			create Result.make_from_string (name)
+		ensure
+			to_string_8_not_void: Result /= Void
+		end
+
+	to_string_32: STRING_32
 			-- Name of type
 		obsolete
 			"[080717] Use 'name' instead (or 'out' during the transition period)."
 		do
-			Result := name
+			create Result.make_from_string_general (name)
 		ensure
-			to_readable_string_8_not_void: Result /= Void
-		end
-
-	to_readable_string_32: READABLE_STRING_32
-			-- Name of type
-		obsolete
-			"[080717] Use 'name' instead (or 'out' during the transition period)."
-		do
-			Result := name.as_string_32
-		ensure
-			to_readable_string_32_not_void: Result /= Void
-		end
-
-	to_immutable_string_8: READABLE_STRING_8
-			-- Name of type
-		obsolete
-			"[090918] Use 'name' instead (or 'out' during the transition period)."
-		do
-			Result := name
-		ensure
-			to_immutable_string_8_not_void: Result /= Void
-		end
-
-	to_immutable_string_32: READABLE_STRING_32
-			-- Name of type
-		obsolete
-			"[090918] Use 'name' instead (or 'out' during the transition period)."
-		do
-			Result := name.as_string_32
-		ensure
-			to_immutable_string_32_not_void: Result /= Void
-		end
-
-	to_string: STRING
-			-- Name of type
-		obsolete
-			"[090918] Use 'name' instead (or 'out' during the transition period)."
-		do
-			Result := name
-		ensure
-			to_string_not_void: Result /= Void
+			to_string_32_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation: Access
@@ -718,5 +691,16 @@ feature {NONE} -- Implementation
 		ensure
 			name_not_void: Result /= Void
 		end
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

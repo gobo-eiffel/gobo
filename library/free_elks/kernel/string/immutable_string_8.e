@@ -4,12 +4,12 @@ note
 		in a contiguous range.
 		]"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date: 2009-09-29 02:15:54 +0200 (Tue, 29 Sep 2009) $"
-	revision: "$Revision: 379 $"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2013-01-24 23:25:54 +0100 (Thu, 24 Jan 2013) $"
+	revision: "$Revision: 707 $"
 
-class
+frozen class
 	IMMUTABLE_STRING_8
 
 inherit
@@ -23,7 +23,14 @@ inherit
 	IMMUTABLE_STRING_GENERAL
 		rename
 			same_string as same_string_general,
-			plus as plus_string_general
+			starts_with as starts_with_general,
+			ends_with as ends_with_general,
+			is_case_insensitive_equal as is_case_insensitive_equal_general,
+			item as character_32_item,
+			has as character_32_has,
+			index_of as character_32_index_of,
+			last_index_of as character_32_last_index_of,
+			occurrences as character_32_occurrences
 		undefine
 			is_equal, out, copy
 		end
@@ -71,11 +78,12 @@ feature {NONE} -- Initialization
 			l_count: INTEGER
 		do
 			if a_system_string /= Void then
-				l_count := a_system_string.length
+				l_count := a_system_string.length + dotnet_convertor.escape_count (a_system_string)
 			end
 			make (l_count)
 			if l_count > 0 then
 				dotnet_convertor.read_system_string_into_area_8 (a_system_string, area)
+				count := l_count
 			end
 		end
 
@@ -84,39 +92,58 @@ feature {IMMUTABLE_STRING_8} -- Duplication
 	copy (other: like Current)
 			-- <Precursor>
 		do
-				-- Because it is immutable we can simply share the `area' from `other'.
-			standard_copy (other)
+			if other /= Current then
+					-- Because it is immutable we can simply share the `area' from `other'.
+				standard_copy (other)
+			end
 		ensure then
 			new_result_count: count = other.count
 			-- same_characters: For every `i' in 1..`count', `item' (`i') = `other'.`item' (`i')
 		end
 
-feature -- Element change
+feature -- Access
 
-	plus alias "+" (s: READABLE_STRING_8): like Current
-			-- <Precursor>
-		local
-			a: like area
+	item alias "[]", at alias "@" (i: INTEGER): CHARACTER_8
+			-- Character at position `i'.
 		do
-			create a.make (count + s.count + 1)
-			a.copy_data (area, area_lower, 0, count)
-			a.copy_data (s.area, s.area_lower, count, s.count)
-			create Result.make_from_area_and_bounds (a, 0, count + s.count)
+			Result := area.item (i + area_lower - 1)
 		end
 
-	plus_string_general (s: READABLE_STRING_GENERAL): like Current
+	character_32_item (i: INTEGER): CHARACTER_32
+			-- Character at position `i'.
+		do
+			Result := area.item (i + area_lower - 1).to_character_32
+		end
+
+	code (i: INTEGER): NATURAL_32
+			-- Numeric code of character at position `i'.
+		do
+			Result := area.item (i + area_lower - 1).natural_32_code
+		end
+
+	item_code (i: INTEGER): INTEGER
+			-- Numeric code of character at position `i'.
+		obsolete
+			"For consistency with Unicode string handling, use `code (i)' instead."
+		do
+			Result := area.item (i + area_lower - 1).natural_32_code.as_integer_32
+		end
+
+feature -- Element change
+
+	plus alias "+" (s: READABLE_STRING_GENERAL): like Current
 			-- <Precursor>
 		local
 			a, a_8: like area
 			i, j, nb: INTEGER
 			l_s32_area: SPECIAL [CHARACTER_32]
 		do
-			create a.make (count + s.count + 1)
+			create a.make_empty (count + s.count + 1)
 			a.copy_data (area, area_lower, 0, count)
 			if attached {READABLE_STRING_8} s as l_s8 then
 				a.copy_data (l_s8.area, l_s8.area_lower, count, l_s8.count + 1)
 			elseif attached {READABLE_STRING_32} s as l_s32 then
-				create a_8.make (l_s32.count + 1)
+				create a_8.make_empty (l_s32.count + 1)
 				from
 					i := 0
 					j := l_s32.area_lower
@@ -125,11 +152,11 @@ feature -- Element change
 				until
 					i > nb
 				loop
-					a_8.put (l_s32_area [j].to_character_8, i)
+					a_8.extend (l_s32_area [j].to_character_8)
 					i := i + 1
 					j := j + 1
 				end
-				a_8.put ('%/000/', i)
+				a_8.extend ('%/000/')
 				a.copy_data (a_8, 0, count, nb + 2)
 			end
 			create Result.make_from_area_and_bounds (a, 0, count + s.count)
@@ -140,8 +167,8 @@ feature -- Element change
 		local
 			a: like area
 		do
-			create a.make (count + 1)
-			a.copy_data (area, area_lower, 0, count)
+			create a.make_empty (count + 1)
+			a.copy_data (area, area_lower, 0, count + 1)
 			mirror_area (a, 0, count - 1)
 			create Result.make_from_area_and_bounds (a, 0, count)
 		end
@@ -151,8 +178,8 @@ feature -- Element change
 		local
 			a: like area
 		do
-			create a.make (count + 1)
-			a.copy_data (area, area_lower, 0, count)
+			create a.make_empty (count + 1)
+			a.copy_data (area, area_lower, 0, count + 1)
 			to_lower_area (a, 0, count - 1)
 			create Result.make_from_area_and_bounds (a, 0, count)
 		end
@@ -162,8 +189,8 @@ feature -- Element change
 		local
 			a: like area
 		do
-			create a.make (count + 1)
-			a.copy_data (area, area_lower, 0, count)
+			create a.make_empty (count + 1)
+			a.copy_data (area, area_lower, 0, count + 1)
 			to_upper_area (a, 0, count - 1)
 			create Result.make_from_area_and_bounds (a, 0, count)
 		end
@@ -172,11 +199,14 @@ feature -- Element change
 			-- <Precursor>
 		local
 			a: like area
+			nb: INTEGER
 		do
 			if (1 <= start_index) and (start_index <= end_index) and (end_index <= count) then
-				create a.make (end_index - start_index + 2)
-				a.copy_data (area, area_lower + start_index - 1, 0, end_index - start_index + 1)
-				create Result.make_from_area_and_bounds (a, 0, end_index - start_index + 1)
+				nb := end_index - start_index + 1
+				create a.make_empty (nb + 1)
+				a.copy_data (area, area_lower + start_index - 1, 0, nb)
+				a.extend ('%/000/')
+				create Result.make_from_area_and_bounds (a, 0, nb)
 			else
 				Result := empty_string
 			end
@@ -235,7 +265,18 @@ feature {NONE} -- Implementation
 
 feature {READABLE_STRING_8, READABLE_STRING_32} -- Implementation
 
-	area_lower: INTEGER
+	area_lower: INTEGER;
 			-- Index where current string starts in `area'
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

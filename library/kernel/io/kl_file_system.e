@@ -304,8 +304,10 @@ feature -- Directory handling
 			-- of the underlying platform. For pathname conversion
 			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		do
-			tmp_directory.reset (a_dirname)
-			Result := tmp_directory.is_readable
+			if not a_dirname.is_empty then
+				tmp_directory.reset (a_dirname)
+				Result := tmp_directory.is_readable
+			end
 		end
 
 	directory_exists (a_dirname: STRING): BOOLEAN
@@ -314,8 +316,10 @@ feature -- Directory handling
 			-- of the underlying platform. For pathname conversion
 			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		do
-			tmp_directory.reset (a_dirname)
-			Result := tmp_directory.exists
+			if not a_dirname.is_empty then
+				tmp_directory.reset (a_dirname)
+				Result := tmp_directory.exists
+			end
 		end
 
 	is_directory_empty (a_dirname: STRING): BOOLEAN
@@ -326,8 +330,10 @@ feature -- Directory handling
 			-- of the underlying platform. For pathname conversion
 			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		do
-			tmp_directory.reset (a_dirname)
-			Result := tmp_directory.is_empty
+			if not a_dirname.is_empty then
+				tmp_directory.reset (a_dirname)
+				Result := tmp_directory.is_empty
+			end
 		end
 
 	create_directory (a_dirname: STRING)
@@ -340,8 +346,10 @@ feature -- Directory handling
 			-- of the underlying platform. For pathname conversion
 			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		do
-			tmp_directory.reset (a_dirname)
-			tmp_directory.create_directory
+			if not a_dirname.is_empty then
+				tmp_directory.reset (a_dirname)
+				tmp_directory.create_directory
+			end
 		end
 
 	recursive_create_directory (a_dirname: STRING)
@@ -355,8 +363,10 @@ feature -- Directory handling
 			-- of the underlying platform. For pathname conversion
 			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		do
-			tmp_directory.reset (a_dirname)
-			tmp_directory.recursive_create_directory
+			if not a_dirname.is_empty then
+				tmp_directory.reset (a_dirname)
+				tmp_directory.recursive_create_directory
+			end
 		end
 
 	delete_directory (a_dirname: STRING)
@@ -367,8 +377,10 @@ feature -- Directory handling
 			-- of the underlying platform. For pathname conversion
 			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		do
-			tmp_directory.reset (a_dirname)
-			tmp_directory.delete
+			if not a_dirname.is_empty then
+				tmp_directory.reset (a_dirname)
+				tmp_directory.delete
+			end
 		end
 
 	recursive_delete_directory (a_dirname: STRING)
@@ -379,8 +391,10 @@ feature -- Directory handling
 			-- of the underlying platform. For pathname conversion
 			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		do
-			tmp_directory.reset (a_dirname)
-			tmp_directory.recursive_delete
+			if not a_dirname.is_empty then
+				tmp_directory.reset (a_dirname)
+				tmp_directory.recursive_delete
+			end
 		end
 
 	recursive_copy_directory (old_name, new_name: STRING)
@@ -391,8 +405,10 @@ feature -- Directory handling
 			-- convention of the underlying platform. For pathname
 			-- conversion use KI_FILE_SYSTEM.pathname_from_file_system.)
 		do
-			tmp_directory.reset (old_name)
-			tmp_directory.recursive_copy_directory (new_name)
+			if not old_name.is_empty then
+				tmp_directory.reset (old_name)
+				tmp_directory.recursive_copy_directory (new_name)
+			end
 		end
 
 feature -- Working directory
