@@ -1,0 +1,48 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+
+		"Eiffel built-in routines"
+
+	library: "Gobo Eiffel Tools Library"
+	copyright: "Copyright (c) 2010, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="tools/builtin_routines">
+<chapterinfo>
+	<copyright>
+		<year>2010</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>14 May 2010</date>
+</chapterinfo>
+
+<title>Eiffel Built-in Routines</title>
+
+<para>
+In Eiffel kernel classes, some of the external routines are marked with "built_in".
+This means that the implementation of these routines are provided by the Eiffel compiler.
+
+<blockquote>
+<variablelist>
+	<varlistentry>
+		<term>
+			<link linkend="new_builtin_routine">Adding a new built-in routine</link>
+		</term>
+		<listitem><para>
+			How to add a new built-in routine.
+		</para></listitem>
+	</varlistentry>
+</variablelist>
+</blockquote>
+</para>
+
+</chapter>
