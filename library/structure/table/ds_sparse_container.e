@@ -5,7 +5,7 @@ note
 		"Sparse containers. Used for implementation of sparse tables and sparse sets."
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/10/06 $"
 	revision: "$Revision: #16 $"
@@ -653,6 +653,8 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 			prev: INTEGER
+			l_position: INTEGER
+			l_slots_position: INTEGER
 			dead_key: K
 			a_tester: like key_equality_tester
 		do
@@ -669,15 +671,15 @@ feature {NONE} -- Implementation
 						a_tester.test (k, dead_key)
 					then
 						from
-							slots_position := hash_position (k)
-							i := slots_item (slots_position)
-							position := No_position
+							l_slots_position := hash_position (k)
+							i := slots_item (l_slots_position)
+							l_position := No_position
 							prev := No_position
 						until
 							i = No_position
 						loop
 							if a_tester.test (k, key_storage_item (i)) then
-								position := i
+								l_position := i
 									-- Jump out of the loop.
 								i := No_position
 							else
@@ -685,6 +687,8 @@ feature {NONE} -- Implementation
 								i := clashes_item (i)
 							end
 						end
+						position := l_position
+						slots_position := l_slots_position
 						clashes_previous_position := prev
 					end
 				else
