@@ -5812,8 +5812,10 @@ feature {NONE} -- Instruction generation
 			l_feature_name: ET_FEATURE_NAME
 			l_constant_attribute: ET_CONSTANT_ATTRIBUTE
 			k, nb3: INTEGER
+			l_i_nat32, l_nb_nat32: NATURAL_32
 			l_value_type_set: ET_DYNAMIC_TYPE_SET
 			l_value_type: ET_DYNAMIC_TYPE
+			l_stop: BOOLEAN
 		do
 -- TODO.
 			l_expression := an_instruction.conditional.expression
@@ -5896,20 +5898,32 @@ feature {NONE} -- Instruction generation
 									end
 								elseif l_lower_character /= Void and l_upper_character /= Void then
 									from
-										k := l_lower_character.value.code
-										nb3 := l_upper_character.value.code
+										l_i_nat32 := l_lower_character.value.natural_32_code
+										l_nb_nat32 := l_upper_character.value.natural_32_code
+										l_stop := l_i_nat32 > l_nb_nat32
 									until
-										k > nb3
+										l_stop
 									loop
 										l_has_case := True
 										print_indentation
 										current_file.put_string (c_case)
 										current_file.put_character (' ')
 										print_type_cast (l_value_type, current_file)
-										print_escaped_character (k.to_character_32)
+										if current_system.character_32_type.same_named_type (l_value_type.base_type, current_type.base_type, current_type.base_type) then
+											current_file.put_string (c_ge_nat32)
+											current_file.put_character ('(')
+											INTEGER_FORMATTER_.put_decimal_natural_32 (current_file, l_i_nat32)
+											current_file.put_character (')')
+										else
+											print_escaped_character_8 (l_i_nat32.to_character_8)
+										end
 										current_file.put_character (':')
 										current_file.put_new_line
-										k := k + 1
+										if l_i_nat32 = l_nb_nat32 then
+											l_stop := True
+										else
+											l_i_nat32 := l_i_nat32 + 1
+										end
 									end
 								else
 -- TODO
@@ -7678,7 +7692,14 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 				l_dynamic_type := dynamic_type_set (a_constant).static_type
 				print_type_cast (l_dynamic_type, current_file)
 				current_file.put_character ('(')
-				print_escaped_character (a_constant.value)
+				if current_system.character_32_type.same_named_type (l_dynamic_type.base_type, current_type.base_type, current_type.base_type) then
+					current_file.put_string (c_ge_nat32)
+					current_file.put_character ('(')
+					INTEGER_FORMATTER_.put_decimal_natural_32 (current_file, a_constant.value.natural_32_code)
+					current_file.put_character (')')
+				else
+					print_escaped_character_8 (a_constant.value.to_character_8)
+				end
 				current_file.put_character (')')
 			end
 		end
@@ -28130,7 +28151,7 @@ feature {NONE} -- String generation
 			end
 		end
 
-	print_escaped_character (c: CHARACTER_32)
+	print_escaped_character_8 (c: CHARACTER_8)
 			-- Print escaped version of `c'.
 		local
 			l_code: INTEGER
@@ -28138,7 +28159,7 @@ feature {NONE} -- String generation
 			current_file.put_character ('%'')
 			inspect c
 			when ' ', '!', '#', '$', '&', '('..'[', ']'..'~' then
-				current_file.put_character (c.to_character_8)
+				current_file.put_character (c)
 			when '%N' then
 				current_file.put_character ('\')
 				current_file.put_character ('n')

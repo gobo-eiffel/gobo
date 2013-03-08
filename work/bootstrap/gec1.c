@@ -2239,6 +2239,21 @@ if (t1==53) {
 }
 }
 
+/* Call to ET_SYSTEM.character_32_type */
+T0* T26x3183(T0* C)
+{
+	int t1 = ((T0*)(C))->id;
+if (t1<=56) {
+if (t1==53) {
+	return (((T53*)(C))->a12);
+} else {
+	return (((T56*)(C))->a17);
+}
+} else {
+	return (((T62*)(C))->a12);
+}
+}
+
 /* Call to ET_SYSTEM.any_clients */
 T0* T26x3177(T0* C)
 {
@@ -3022,21 +3037,6 @@ if (t1==53) {
 }
 } else {
 	return (((T62*)(C))->a26);
-}
-}
-
-/* Call to ET_SYSTEM.character_32_type */
-T0* T26x3183(T0* C)
-{
-	int t1 = ((T0*)(C))->id;
-if (t1<=56) {
-if (t1==53) {
-	return (((T53*)(C))->a12);
-} else {
-	return (((T56*)(C))->a17);
-}
-} else {
-	return (((T62*)(C))->a12);
 }
 }
 
@@ -23788,7 +23788,7 @@ if (t1==569) {
 }
 
 /* Call to XM_EIFFEL_SCANNER.is_applicable_encoding */
-T1 T530x27679T0(T0* C, T0* a1)
+T1 T530x27680T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=566) {
@@ -23826,7 +23826,7 @@ if (t1==569) {
 }
 
 /* Call to XM_EIFFEL_SCANNER.last_value */
-T0* T530x27690(T0* C)
+T0* T530x27691(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=566) {
@@ -23864,7 +23864,7 @@ if (t1==569) {
 }
 
 /* Call to XM_EIFFEL_SCANNER.error_position */
-T0* T530x27688(T0* C)
+T0* T530x27689(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=566) {
@@ -25781,7 +25781,7 @@ if (t1==173) {
 }
 
 /* Call to ET_ECF_CONDITION.is_enabled */
-T1 T808x28921T0(T0* C, T0* a1)
+T1 T808x28922T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=812) {
@@ -26715,7 +26715,7 @@ if (t1==1279) {
 }
 
 /* Call to ET_ALIAS_NAME.same_alias_name */
-T1 T1058x29053T0(T0* C, T0* a1)
+T1 T1058x29054T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1278) {
@@ -26850,7 +26850,7 @@ if (t1==1279) {
 }
 
 /* Call to ET_ALIAS_NAME.alias_lower_name */
-T0* T1058x29041(T0* C)
+T0* T1058x29042(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1278) {
@@ -26958,7 +26958,7 @@ if (t1==1279) {
 }
 
 /* Call to ET_ALIAS_NAME.is_infixable */
-T1 T1058x29037(T0* C)
+T1 T1058x29038(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1278) {
@@ -26985,7 +26985,7 @@ if (t1==1279) {
 }
 
 /* Call to ET_ALIAS_NAME.is_prefixable */
-T1 T1058x29036(T0* C)
+T1 T1058x29037(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1278) {
@@ -27096,7 +27096,7 @@ if (t1==600) {
 }
 
 /* Call to ET_CHARACTER_CONSTANT.cast_type */
-T0* T1091x33778(T0* C)
+T0* T1091x33779(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1144) {
@@ -27111,7 +27111,7 @@ if (t1==1131) {
 }
 
 /* Call to ET_CHARACTER_CONSTANT.value */
-T3 T1091x33777(T0* C)
+T3 T1091x33778(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1144) {
@@ -27141,7 +27141,7 @@ if (t1==1131) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.cast_type */
-T0* T1099x34195(T0* C)
+T0* T1099x34196(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1136) {
@@ -27164,7 +27164,7 @@ if (t1==1137) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.to_integer_32 */
-T6 T1099x34188(T0* C)
+T6 T1099x34189(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1136) {
@@ -27187,7 +27187,7 @@ if (t1==1137) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_negative */
-T1 T1099x34202(T0* C)
+T1 T1099x34203(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1136) {
@@ -27210,7 +27210,7 @@ if (t1==1137) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.literal */
-T0* T1099x34184(T0* C)
+T0* T1099x34185(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1136) {
@@ -27233,7 +27233,7 @@ if (t1==1137) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.sign */
-T0* T1099x34194(T0* C)
+T0* T1099x34195(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1136) {
@@ -27256,7 +27256,7 @@ if (t1==1137) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.value_position */
-T0* T1099x34198(T0* C)
+T0* T1099x34199(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1136) {
@@ -27279,7 +27279,7 @@ if (t1==1137) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_natural_64 */
-T1 T1099x34214(T0* C)
+T1 T1099x34215(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1136) {
@@ -27302,7 +27302,7 @@ if (t1==1137) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.value */
-T11 T1099x34185(T0* C)
+T11 T1099x34186(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1136) {
@@ -27325,7 +27325,7 @@ if (t1==1137) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_binary */
-T1 T1099x34205(T0* C)
+T1 T1099x34206(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1136) {
@@ -27348,7 +27348,7 @@ if (t1==1137) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_hexadecimal */
-T1 T1099x34204(T0* C)
+T1 T1099x34205(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1136) {
@@ -27371,7 +27371,7 @@ if (t1==1137) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_integer_64 */
-T1 T1099x34210(T0* C)
+T1 T1099x34211(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1136) {
@@ -27394,7 +27394,7 @@ if (t1==1137) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_integer_32 */
-T1 T1099x34209(T0* C)
+T1 T1099x34210(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1136) {
@@ -27417,7 +27417,7 @@ if (t1==1137) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_natural_32 */
-T1 T1099x34213(T0* C)
+T1 T1099x34214(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1136) {
@@ -27440,7 +27440,7 @@ if (t1==1137) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_natural_16 */
-T1 T1099x34212(T0* C)
+T1 T1099x34213(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1136) {
@@ -27463,7 +27463,7 @@ if (t1==1137) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_natural_8 */
-T1 T1099x34211(T0* C)
+T1 T1099x34212(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1136) {
@@ -27486,7 +27486,7 @@ if (t1==1137) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_integer_16 */
-T1 T1099x34208(T0* C)
+T1 T1099x34209(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1136) {
@@ -27509,7 +27509,7 @@ if (t1==1137) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_integer_8 */
-T1 T1099x34207(T0* C)
+T1 T1099x34208(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1136) {
@@ -27532,7 +27532,7 @@ if (t1==1137) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.to_natural_64 */
-T11 T1099x34193(T0* C)
+T11 T1099x34194(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1136) {
@@ -27555,7 +27555,7 @@ if (t1==1137) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.to_natural_32 */
-T10 T1099x34192(T0* C)
+T10 T1099x34193(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1136) {
@@ -27578,7 +27578,7 @@ if (t1==1137) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.to_natural_16 */
-T9 T1099x34191(T0* C)
+T9 T1099x34192(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1136) {
@@ -27601,7 +27601,7 @@ if (t1==1137) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.to_natural_8 */
-T8 T1099x34190(T0* C)
+T8 T1099x34191(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1136) {
@@ -27624,7 +27624,7 @@ if (t1==1137) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.to_integer_64 */
-T7 T1099x34189(T0* C)
+T7 T1099x34190(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1136) {
@@ -27647,7 +27647,7 @@ if (t1==1137) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.to_integer_16 */
-T5 T1099x34187(T0* C)
+T5 T1099x34188(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1136) {
@@ -27670,7 +27670,7 @@ if (t1==1137) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.to_integer_8 */
-T4 T1099x34186(T0* C)
+T4 T1099x34187(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1136) {
@@ -27877,7 +27877,7 @@ if (t1==1319) {
 }
 
 /* Call to ET_LIKE_TYPE.like_keyword */
-T0* T1198x34515(T0* C)
+T0* T1198x34516(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1316) {
@@ -28044,7 +28044,7 @@ if (t1==1321) {
 }
 
 /* Call to ET_CONVERT_FEATURE.name */
-T0* T1241x26185(T0* C)
+T0* T1241x26186(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1247) {
@@ -28059,7 +28059,7 @@ if (t1==469) {
 }
 
 /* Call to ET_CONVERT_FEATURE.is_convert_to */
-T1 T1241x26184(T0* C)
+T1 T1241x26185(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1247) {
@@ -28074,7 +28074,7 @@ if (t1==469) {
 }
 
 /* Call to ET_CONVERT_FEATURE.is_convert_from */
-T1 T1241x26183(T0* C)
+T1 T1241x26184(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1247) {
@@ -28960,7 +28960,7 @@ T0* T1443x6893(T0* C)
 }
 
 /* Call to ET_FORMAL_PARAMETER_TYPE.index */
-T6 T1509x33014(T0* C)
+T6 T1509x33015(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1187) {
@@ -28975,7 +28975,7 @@ if (t1==903) {
 }
 
 /* Call to ET_FORMAL_PARAMETER_TYPE.implementation_class */
-T0* T1509x33015(T0* C)
+T0* T1509x33016(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1187) {
@@ -29065,7 +29065,7 @@ if (t1==903) {
 }
 
 /* Call to ET_REPLICABLE_FEATURE.first_feature */
-T0* T1537x33120(T0* C)
+T0* T1537x33121(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1535) {
@@ -29080,7 +29080,7 @@ if (t1==905) {
 }
 
 /* Call to ET_REPLICABLE_FEATURE.replicated_feature */
-T0* T1537x33119(T0* C)
+T0* T1537x33120(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1535) {
@@ -29095,7 +29095,7 @@ if (t1==905) {
 }
 
 /* Call to ET_REPLICABLE_FEATURE.has_replication */
-T1 T1537x33118(T0* C)
+T1 T1537x33119(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1535) {
@@ -29110,7 +29110,7 @@ if (t1==905) {
 }
 
 /* Call to ET_REPLICABLE_FEATURE.selected_count */
-T6 T1537x33121(T0* C)
+T6 T1537x33122(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1535) {
@@ -29715,7 +29715,7 @@ if (t1==1273) {
 }
 
 /* Call to ET_FREE_NAME.free_operator_name */
-T0* T1877x29074(T0* C)
+T0* T1877x29075(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1096) {
@@ -29791,7 +29791,7 @@ if (t1==1431) {
 }
 
 /* Call to ET_CONVERT_EXPRESSION.convert_feature */
-T0* T1987x36977(T0* C)
+T0* T1987x36978(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=2105) {
@@ -29806,7 +29806,7 @@ if (t1==2104) {
 }
 
 /* Call to ET_CONVERT_EXPRESSION.expression */
-T0* T1987x36976(T0* C)
+T0* T1987x36977(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=2105) {
@@ -29851,7 +29851,7 @@ if (t1==142) {
 }
 
 /* Call to LX_TRANSITION [LX_NFA_STATE].target */
-T0* T2007x37009(T0* C)
+T0* T2007x37010(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=2008) {
@@ -29866,7 +29866,7 @@ if (t1==2006) {
 }
 
 /* Call to LX_TRANSITION [LX_NFA_STATE].labeled */
-T1 T2007x37012T6(T0* C, T6 a1)
+T1 T2007x37013T6(T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=2008) {
@@ -29926,7 +29926,7 @@ if (t1==1431) {
 }
 
 /* Call to ET_LIKE_IDENTIFIER.name */
-T0* T2061x34885(T0* C)
+T0* T2061x34886(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1319) {
@@ -38031,7 +38031,7 @@ if (t1==1279) {
 }
 
 /* Call to XM_EIFFEL_SCANNER.close_input */
-void T530x27675(T0* C)
+void T530x27676(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=566) {
@@ -38050,7 +38050,7 @@ if (t1==569) {
 }
 
 /* Call to XM_EIFFEL_SCANNER.set_input_from_resolver */
-void T530x27674T0(T0* C, T0* a1)
+void T530x27675T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=566) {
@@ -38069,7 +38069,7 @@ if (t1==569) {
 }
 
 /* Call to XM_EIFFEL_SCANNER.set_encoding */
-void T530x27680T0(T0* C, T0* a1)
+void T530x27681T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=566) {
@@ -38088,7 +38088,7 @@ if (t1==569) {
 }
 
 /* Call to XM_EIFFEL_SCANNER.push_start_condition_dtd_ignore */
-void T530x27671(T0* C)
+void T530x27672(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=566) {
@@ -38126,7 +38126,7 @@ if (t1==569) {
 }
 
 /* Call to XM_EIFFEL_SCANNER.set_input_stream */
-void T530x27673T0(T0* C, T0* a1)
+void T530x27674T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=566) {
@@ -38355,7 +38355,7 @@ if (t1==1279) {
 }
 
 /* Call to ET_ALIAS_NAME.set_infix */
-void T1058x29051(T0* C)
+void T1058x29052(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1278) {
@@ -38382,7 +38382,7 @@ if (t1==1279) {
 }
 
 /* Call to ET_ALIAS_NAME.set_prefix */
-void T1058x29050(T0* C)
+void T1058x29051(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1278) {
@@ -38424,7 +38424,7 @@ if (t1==600) {
 }
 
 /* Call to ET_CHARACTER_CONSTANT.set_cast_type */
-void T1091x33783T0(T0* C, T0* a1)
+void T1091x33784T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1144) {
@@ -38439,7 +38439,7 @@ if (t1==1131) {
 }
 
 /* Call to ET_CHARACTER_CONSTANT.set_type */
-void T1091x33784T0(T0* C, T0* a1)
+void T1091x33785T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1144) {
@@ -38454,7 +38454,7 @@ if (t1==1131) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.set_cast_type */
-void T1099x34216T0(T0* C, T0* a1)
+void T1099x34217T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1136) {
@@ -38477,7 +38477,7 @@ if (t1==1137) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.set_type */
-void T1099x34217T0(T0* C, T0* a1)
+void T1099x34218T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1136) {
@@ -38500,7 +38500,7 @@ if (t1==1137) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.set_sign */
-void T1099x34215T0(T0* C, T0* a1)
+void T1099x34216T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1136) {
@@ -38850,7 +38850,7 @@ if (t1==1400) {
 }
 
 /* Call to LX_TRANSITION [LX_NFA_STATE].record */
-void T2007x37013T0(T0* C, T0* a1)
+void T2007x37014T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=2008) {
