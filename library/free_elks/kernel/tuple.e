@@ -397,7 +397,7 @@ feature -- Status report
 				when Reference_code then
 						-- Let's check that type of `v' conforms to specified type of `index'-th
 						-- arguments of current TUPLE.
-					Result := v.generating_type.conforms_to (generating_type.generic_parameter (index))
+					Result := v.generating_type.conforms_to (generating_type.generic_parameter_type (index))
 				end
 			end
 		end

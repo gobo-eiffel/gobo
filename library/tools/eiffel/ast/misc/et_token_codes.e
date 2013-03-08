@@ -381,7 +381,7 @@ feature -- Built-in codes
 	builtin_type_field_static_type: INTEGER = 9
 	builtin_type_field_type: INTEGER = 10
 	builtin_type_generating_type: INTEGER = 11
-	builtin_type_generic_parameter: INTEGER = 12
+	builtin_type_generic_parameter_type: INTEGER = 12
 	builtin_type_generic_parameter_count: INTEGER = 13
 	builtin_type_has_default: INTEGER = 14
 	builtin_type_integer_8_field: INTEGER = 15
@@ -414,6 +414,8 @@ feature -- Built-in codes
 	builtin_type_set_real_64_field: INTEGER = 42
 	builtin_type_set_reference_field: INTEGER = 43
 	builtin_type_type_id: INTEGER = 44
+	builtin_type_new_instance: INTEGER = 45
+	builtin_type_new_special_any_instance: INTEGER = 46
 			-- Codes for built-in features from class "TYPE"
 
 	builtin_identified_feature (a_feature_code: INTEGER): INTEGER

@@ -2743,8 +2743,8 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				print_builtin_type_field_type_body (a_feature)
 			when builtin_type_generating_type then
 				print_builtin_type_generating_type_body (a_feature)
-			when builtin_type_generic_parameter then
-				print_builtin_type_generic_parameter_body (a_feature)
+			when builtin_type_generic_parameter_type then
+				print_builtin_type_generic_parameter_type_body (a_feature)
 			when builtin_type_generic_parameter_count then
 				fill_call_formal_arguments (a_feature)
 				print_indentation_assign_to_result
@@ -2785,6 +2785,18 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				print_builtin_type_natural_32_field_body (a_feature)
 			when builtin_type_natural_64_field then
 				print_builtin_type_natural_64_field_body (a_feature)
+			when builtin_type_new_instance then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_type_new_instance_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_type_new_special_any_instance then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_type_new_special_any_instance_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
 			when builtin_type_pointer_field then
 				print_builtin_type_pointer_field_body (a_feature)
 			when builtin_type_real_32_field then
@@ -13227,6 +13239,10 @@ feature {NONE} -- Query call generation
 				print_builtin_type_is_expanded_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_type_name then
 				print_builtin_type_name_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_type_new_instance then
+				print_builtin_type_new_instance_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_type_new_special_any_instance then
+				print_builtin_type_new_special_any_instance_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_type_type_id then
 				print_builtin_type_type_id_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_type_runtime_name then
@@ -23111,9 +23127,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			current_file.put_new_line
 		end
 
-	print_builtin_type_generic_parameter_body (a_feature: ET_EXTERNAL_ROUTINE)
+	print_builtin_type_generic_parameter_type_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
-			-- to built-in feature 'TYPE.generic_parameter'.
+			-- to built-in feature 'TYPE.generic_parameter_type'.
 		require
 			a_feature_not_void: a_feature /= Void
 			valid_feature: current_feature.static_feature = a_feature
@@ -23452,6 +23468,147 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			valid_feature: current_feature.static_feature = a_feature
 		do
 			print_builtin_type_basic_expanded_field_body (a_feature)
+		end
+
+	print_builtin_type_new_instance_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'TYPE.new_instance'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_type: ET_DYNAMIC_TYPE
+		do
+			l_parameters := a_target_type.base_type.actual_parameters
+			if l_parameters = Void or else l_parameters.count < 1 then
+					-- Internal error: we should have already checked by now
+					-- that class TYPE has a generic parameter.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_type := current_dynamic_system.dynamic_type (l_parameters.type (1), a_target_type.base_type)
+				if attached {ET_DYNAMIC_SPECIAL_TYPE} l_type as l_special_type then
+						-- This should never happen according to the precondition
+						-- of TYPE.new_instance.
+						-- Raise an exception and return Void.
+					current_file.put_character ('(')
+					current_file.put_string (c_ge_raise)
+					current_file.put_character ('(')
+					current_file.put_character ('2')
+					current_file.put_character ('5')
+					current_file.put_character (')')
+					current_file.put_character (',')
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_type_declaration (l_type, current_file)
+					current_file.put_character (')')
+					print_default_entity_value (l_type, current_file)
+					current_file.put_character (')')
+				elseif l_type.base_class.is_deferred then
+					current_file.put_character ('(')
+					current_file.put_string (c_ge_raise)
+					current_file.put_character ('(')
+					current_file.put_character ('1')
+					current_file.put_character ('7')
+					current_file.put_character (')')
+					current_file.put_character (',')
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_type_declaration (l_type, current_file)
+					current_file.put_character (')')
+					print_default_entity_value (l_type, current_file)
+					current_file.put_character (')')
+				elseif l_type.is_expanded then
+					current_file.put_character ('(')
+					print_type_declaration (l_type, current_file)
+					current_file.put_character (')')
+					print_default_entity_value (l_type, current_file)
+				else
+					current_file.put_character ('(')
+					print_type_declaration (l_type, current_file)
+					current_file.put_character (')')
+					current_file.put_character ('(')
+					current_file.put_string (c_ge_new)
+					current_file.put_integer (l_type.id)
+					current_file.put_character ('(')
+					current_file.put_string (c_eif_true)
+					current_file.put_character (')')
+					current_file.put_character (')')
+				end
+			end
+		end
+
+	print_builtin_type_new_special_any_instance_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'TYPE.new_special_any_instance'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_result_type: ET_DYNAMIC_TYPE
+			l_argument: ET_EXPRESSION
+			l_actual_type_set: ET_DYNAMIC_TYPE_SET
+			l_formal_type: ET_DYNAMIC_TYPE
+		do
+			l_parameters := a_target_type.base_type.actual_parameters
+			if l_parameters = Void or else l_parameters.count < 1 then
+					-- Internal error: we should have already checked by now
+					-- that class TYPE has a generic parameter.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif call_operands.count /= 2 then
+					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_result_type := current_dynamic_system.dynamic_type (l_parameters.type (1), a_target_type.base_type)
+				if attached {ET_DYNAMIC_SPECIAL_TYPE} l_result_type as l_special_type and then not l_special_type.item_type_set.static_type.is_expanded then
+					current_file.put_character ('(')
+					print_type_declaration (l_special_type, current_file)
+					current_file.put_character (')')
+					current_file.put_character ('(')
+					current_file.put_string (c_ge_new)
+					current_file.put_integer (l_special_type.id)
+					current_file.put_character ('(')
+					l_argument := call_operands.item (2)
+					l_actual_type_set := dynamic_type_set (l_argument)
+					l_formal_type := argument_type_set_in_feature (1, a_feature).static_type
+					print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
+					current_file.put_character (',')
+					current_file.put_character (' ')
+					current_file.put_string (c_eif_true)
+					current_file.put_character (')')
+					current_file.put_character (')')
+				else
+						-- This should never happen according to the precondition
+						-- of TYPE.new_special_any_instance.
+						-- Raise an exception and return Void or
+						-- the default value when the type is expanded.
+					current_file.put_character ('(')
+					current_file.put_string (c_ge_raise)
+					current_file.put_character ('(')
+					current_file.put_character ('2')
+					current_file.put_character ('5')
+					current_file.put_character (')')
+					current_file.put_character (',')
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_type_declaration (l_result_type, current_file)
+					current_file.put_character (')')
+					print_default_entity_value (l_result_type, current_file)
+					current_file.put_character (')')
+				end
+			end
 		end
 
 	print_builtin_type_pointer_field_body (a_feature: ET_EXTERNAL_ROUTINE)

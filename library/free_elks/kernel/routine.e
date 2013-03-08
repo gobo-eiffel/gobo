@@ -86,7 +86,7 @@ feature -- Status report
 					if l_arg_type_code = l_expected_args.item_code (i) then
 						if l_arg_type_code = {TUPLE}.reference_code then
 							l_arg := args.item (i)
-							if l_arg /= Void and then not l_arg.generating_type.conforms_to (l_expected_args.generating_type.generic_parameter (i)) then
+							if l_arg /= Void and then not l_arg.generating_type.conforms_to (l_expected_args.generating_type.generic_parameter_type (i)) then
 								Result := False
 								i := nb + 1
 							end

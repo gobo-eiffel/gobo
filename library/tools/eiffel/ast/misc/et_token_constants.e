@@ -1070,14 +1070,6 @@ feature -- Feature names
 			generator_feature_name_not_void: Result /= Void
 		end
 
-	generic_parameter_feature_name: ET_FEATURE_NAME
-			-- 'generic_parameter' feature name
-		once
-			create {ET_IDENTIFIER} Result.make (generic_parameter_name)
-		ensure
-			generic_parameter_feature_name_not_void: Result /= Void
-		end
-
 	generic_parameter_count_feature_name: ET_FEATURE_NAME
 			-- 'generic_parameter_count' feature name
 		once
@@ -1086,6 +1078,14 @@ feature -- Feature names
 			generic_parameter_count_feature_name_not_void: Result /= Void
 		end
 
+	generic_parameter_type_feature_name: ET_FEATURE_NAME
+			-- 'generic_parameter_type' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (generic_parameter_type_name)
+		ensure
+			generic_parameter_type_feature_name_not_void: Result /= Void
+		end
+		
 	has_default_feature_name: ET_FEATURE_NAME
 			-- 'has_default' feature name
 		once
@@ -1740,6 +1740,22 @@ feature -- Feature names
 			new_cursor_feature_name_not_void: Result /= Void
 		end
 
+	new_instance_feature_name: ET_FEATURE_NAME
+			-- 'new_instance' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (new_instance_name)
+		ensure
+			new_instance_feature_name_not_void: Result /= Void
+		end
+
+	new_special_any_instance_feature_name: ET_FEATURE_NAME
+			-- 'new_special_any_instance' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (new_special_any_instance_name)
+		ensure
+			new_special_any_instance_feature_name_not_void: Result /= Void
+		end
+		
 	object_comparison_feature_name: ET_FEATURE_NAME
 			-- 'object_comparison' feature name
 		once
@@ -3608,12 +3624,12 @@ feature -- Keyword and symbol names
 	generator_name: STRING = "generator"
 			-- Name of Eiffel feature 'generator'
 
-	generic_parameter_name: STRING = "generic_parameter"
-			-- Name of Eiffel feature 'generic_parameter'
-
 	generic_parameter_count_name: STRING = "generic_parameter_count"
 			-- Name of Eiffel feature 'generic_parameter_count'
 
+	generic_parameter_type_name: STRING = "generic_parameter_type"
+			-- Name of Eiffel feature 'generic_parameter_type'
+			
 	has_default_name: STRING = "has_default"
 			-- Name of Eiffel feature 'has_default'
 
@@ -3782,6 +3798,12 @@ feature -- Keyword and symbol names
 	new_cursor_name: STRING = "new_cursor"
 			-- Name of Eiffel feature 'new_cursor'
 
+	new_instance_name: STRING = "new_instance"
+			-- Name of Eiffel feature 'new_instance'
+
+	new_special_any_instance_name: STRING = "new_special_any_instance"
+			-- Name of Eiffel feature 'new_special_any_instance'
+			
 	object_comparison_name: STRING = "object_comparison"
 			-- Name of Eiffel feature 'object_comparison'
 

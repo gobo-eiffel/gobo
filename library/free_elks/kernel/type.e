@@ -63,7 +63,7 @@ feature -- Access
 			base_class_name_not_void: Result /= Void
 		end
 
-	generic_parameter (i: INTEGER): TYPE [detachable ANY]
+	generic_parameter_type (i: INTEGER): TYPE [detachable ANY]
 			-- `i'-th generic parameter of Eiffel type represented by `Current'
 		require
 			i_large_enough: i >= 1
@@ -82,10 +82,52 @@ feature -- Access
 			type_id_not_negative: Result >= 0
 		end
 
+	attached_type: TYPE [attached G]
+			-- Attached version of current type
+		do
+			Result := {attached G}
+		end
+
+	detachable_type: TYPE [detachable G]
+			-- Attached version of current type
+		do
+			Result := {detachable G}
+		end
+
 	hash_code: INTEGER
 			-- Hash code value
 		do
 			Result := type_id
+		end
+
+	new_instance: attached G
+			-- New instance of of current type, if not deferred,
+			-- Void otherwise.
+			-- Note: returned object is not initialized and may
+			-- hence violate its invariant.
+			-- The current type cannot represent a SPECIAL type, use
+			-- `new_special_any_instance' instead.
+		require
+			not_special_type: not is_special
+		external
+			"built_in"
+		ensure
+			dynamic_type_set: Result.generating_type = attached_type
+		end
+
+	new_special_any_instance (a_count: INTEGER): SPECIAL [detachable ANY]
+			-- New instance of current type that represents
+			-- a SPECIAL [XX] with `a_count' element where XX is a reference type.
+			-- To create a SPECIAL of basic type, use `SPECIAL'.
+		require
+			a_count_valid: a_count >= 0
+			special_type: is_special and generic_parameter_type (1).is_reference
+		external
+			"built_in"
+		ensure
+			dynamic_type_set: Result.generating_type.same_type (attached_type)
+			count_set: Result.count = 0
+			capacity_set: Result.capacity = a_count
 		end
 
 	field_name (i: INTEGER): STRING
