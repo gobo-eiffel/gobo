@@ -73,12 +73,4 @@ feature -- Status settings
 -- TODO
 		end
 
-feature {NONE} -- Implementation
-
-	internal_meaning: STRING
-			-- Internal `meaning'
-		once
-			Result := "General exception."
-		end
-
 end
