@@ -80,13 +80,13 @@ EIF_REAL_64_FUNCTION eif_real_64_function(char* rout, EIF_TYPE_ID cid) {
 	return (EIF_REAL_64_FUNCTION) 0;
 }
 
-EIF_CHARACTER_FUNCTION eif_character_function(char* rout, EIF_TYPE_ID cid) {
+EIF_CHARACTER_8_FUNCTION eif_character_8_function(char* rout, EIF_TYPE_ID cid) {
 	/* TODO */
 #ifdef EIF_WINDOWS
 	GE_show_console();
 #endif
-	fprintf(stderr, "'eif_character_function' in 'eif_cecil.c' not implemented\n");
-	return (EIF_CHARACTER_FUNCTION) 0;
+	fprintf(stderr, "'eif_character_8_function' in 'eif_cecil.c' not implemented\n");
+	return (EIF_CHARACTER_8_FUNCTION) 0;
 }
 
 EIF_OBJECT eif_create(EIF_TYPE_ID cid) {
