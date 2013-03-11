@@ -15027,7 +15027,7 @@ feature {NONE} -- Deep features generation
 		do
 			if not deep_twin_types.is_empty then
 				include_runtime_header_file ("ge_deep.h", True, header_file)
-					-- Be aware that `print_deep_twin_function' can added
+					-- Be aware that `print_deep_twin_function' can add
 					-- new types at the end of `deep_twin_types'.
 				from deep_twin_types.start until deep_twin_types.after loop
 					print_deep_twin_function (deep_twin_types.item_for_iteration)
@@ -23530,12 +23530,28 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					current_file.put_character (')')
 					print_default_entity_value (l_type, current_file)
 					current_file.put_character (')')
-				elseif l_type.base_class.is_deferred then
+				elseif l_type.base_class.is_deferred or l_type.base_class.is_none then
 					current_file.put_character ('(')
 					current_file.put_string (c_ge_raise)
 					current_file.put_character ('(')
 					current_file.put_character ('1')
 					current_file.put_character ('7')
+					current_file.put_character (')')
+					current_file.put_character (',')
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_type_declaration (l_type, current_file)
+					current_file.put_character (')')
+					print_default_entity_value (l_type, current_file)
+					current_file.put_character (')')
+				elseif not l_type.is_alive then
+						-- Raise an exception and return Void when the result type is not alive
+						-- (i.e. no object of that type has been otherwise created in the system).
+					current_file.put_character ('(')
+					current_file.put_string (c_ge_raise)
+					current_file.put_character ('(')
+					current_file.put_character ('2')
+					current_file.put_character ('5')
 					current_file.put_character (')')
 					current_file.put_character (',')
 					current_file.put_character (' ')
@@ -23593,24 +23609,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_result_type := current_dynamic_system.dynamic_type (l_parameters.type (1), a_target_type.base_type)
-				if attached {ET_DYNAMIC_SPECIAL_TYPE} l_result_type as l_special_type and then not l_special_type.item_type_set.static_type.is_expanded then
-					current_file.put_character ('(')
-					print_type_declaration (l_special_type, current_file)
-					current_file.put_character (')')
-					current_file.put_character ('(')
-					current_file.put_string (c_ge_new)
-					current_file.put_integer (l_special_type.id)
-					current_file.put_character ('(')
-					l_argument := call_operands.item (2)
-					l_actual_type_set := dynamic_type_set (l_argument)
-					l_formal_type := argument_type_set_in_feature (1, a_feature).static_type
-					print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
-					current_file.put_character (',')
-					current_file.put_character (' ')
-					current_file.put_string (c_eif_true)
-					current_file.put_character (')')
-					current_file.put_character (')')
-				else
+				if not attached {ET_DYNAMIC_SPECIAL_TYPE} l_result_type as l_special_type or else l_special_type.item_type_set.static_type.is_expanded then
 						-- This should never happen according to the precondition
 						-- of TYPE.new_special_any_instance.
 						-- Raise an exception and return Void or
@@ -23627,6 +23626,39 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					print_type_declaration (l_result_type, current_file)
 					current_file.put_character (')')
 					print_default_entity_value (l_result_type, current_file)
+					current_file.put_character (')')
+				elseif not l_result_type.is_alive then
+						-- Raise an exception and return Void when the result type is not alive
+						-- (i.e. no object of that type has been otherwise created in the system).
+					current_file.put_character ('(')
+					current_file.put_string (c_ge_raise)
+					current_file.put_character ('(')
+					current_file.put_character ('2')
+					current_file.put_character ('5')
+					current_file.put_character (')')
+					current_file.put_character (',')
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_type_declaration (l_result_type, current_file)
+					current_file.put_character (')')
+					print_default_entity_value (l_result_type, current_file)
+					current_file.put_character (')')	
+				else
+					current_file.put_character ('(')
+					print_type_declaration (l_special_type, current_file)
+					current_file.put_character (')')
+					current_file.put_character ('(')
+					current_file.put_string (c_ge_new)
+					current_file.put_integer (l_special_type.id)
+					current_file.put_character ('(')
+					l_argument := call_operands.item (2)
+					l_actual_type_set := dynamic_type_set (l_argument)
+					l_formal_type := argument_type_set_in_feature (1, a_feature).static_type
+					print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
+					current_file.put_character (',')
+					current_file.put_character (' ')
+					current_file.put_string (c_eif_true)
+					current_file.put_character (')')
 					current_file.put_character (')')
 				end
 			end
