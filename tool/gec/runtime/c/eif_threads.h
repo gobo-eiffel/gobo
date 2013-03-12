@@ -38,10 +38,13 @@ extern "C" {
 #define eif_thr_thread_id() NULL
 #define eif_thr_last_thread() NULL
 #define eif_thr_default_priority() 0
+#define eif_thr_create_with_attr(current_obj, init_func, attr)
 #define eif_thr_create_with_args(current_obj, init_func, priority, policy, detach)
 #define eif_thr_sleep(nanoseconds)
 #define eif_thr_cond_signal(a_cond_ptr)
 #define eif_thr_cond_wait_with_timeout(a_cond_ptr,a_mutex_ptr,a_timeout) 0
+#define eif_thr_wait_with_timeout(term,tms) EIF_FALSE
+#define eif_thr_wait(term)
 
 #endif
 

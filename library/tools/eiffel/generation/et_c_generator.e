@@ -28321,6 +28321,9 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("eif_portable.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_retrieve.h%"") then
 					include_runtime_header_file ("eif_retrieve.h", False, a_file)
+				elseif a_filename.same_string ("<eif_retrieve.h>") then
+						-- This notation is used in class MISMATCH_INFORMATION.
+					include_runtime_header_file ("eif_retrieve.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_sig.h%"") then
 					include_runtime_header_file ("eif_sig.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_store.h%"") then
