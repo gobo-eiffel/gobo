@@ -7132,7 +7132,7 @@ feature {NONE} -- Expression generation
 							-- Pass the address of the expanded object.
 						current_file.put_character ('&')
 						print_across_cursor_name (a_name, current_file)
-					elseif call_target_type.is_expanded and not call_target_type.is_generic then
+					elseif call_target_type.is_expanded then
 							-- We need to unbox the object and then pass its address.
 						current_file.put_character ('&')
 						current_file.put_character ('(')
@@ -7144,6 +7144,28 @@ feature {NONE} -- Expression generation
 				else
 					print_across_cursor_name (a_name, current_file)
 				end
+			end
+		end
+
+	print_adapted_attribute_access (an_attribute: ET_DYNAMIC_FEATURE; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print access to `an_attribute' applied to `a_target' of dynamic type `a_target_type'.
+			-- Useful for example when the access to `a_target' needs to be adapted depending on
+			-- the expandedness of the dynamic and static types of `a_target'. For example if the
+			-- static type is a reference type and the dynamic type is expaned, then `a_target' will
+			-- need to be unboxed before accessing its attribute.
+			-- (The boxed version of a type makes sure that each object
+			-- of that type contains its type-id. It can be the type itself
+			-- if it already contains its type-id, or a wrapper otherwise.)
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+		require
+			an_attribute_not_void: an_attribute /= Void
+			a_target_not_void: a_target /= Void
+			a_target_type_not_void: a_target_type /= Void
+		do
+			if dynamic_type_set (a_target).is_expanded then
+				print_attribute_access (an_attribute, a_target, a_target_type, a_check_void_target)
+			else
+				print_boxed_attribute_access (an_attribute, a_target, a_target_type, a_check_void_target)
 			end
 		end
 
@@ -7226,93 +7248,49 @@ feature {NONE} -- Expression generation
 			if a_target_type.is_expanded then
 -- TODO: check whether 'copy' has been redefined in `l_source_type'.
 				if l_source_type.is_expanded then
-					if l_source_type.is_generic then
 -- TODO: there might be some problems if the expanded types are generic with different actual parameters.
-						if l_has_non_conforming_types then
-							current_file.put_character ('*')
-							current_file.put_character ('(')
-							current_file.put_string (c_ge_catcall)
-							current_file.put_character ('(')
-								-- The object is already equipped with a type-id.
-								-- Just pass its address to 'GE_catcall'.
-							current_file.put_character ('&')
-							current_file.put_character ('(')
-						end
-						print_expression (an_expression)
-						if l_has_non_conforming_types then
-							current_file.put_character (')')
-							current_file.put_character (',')
-							current_file.put_string (l_dts_name)
-							current_file.put_character (',')
-							current_file.put_integer (nb)
-							current_file.put_character (')')
-							current_file.put_character (')')
-						end
+					if l_has_non_conforming_types then
+						current_file.put_character ('(')
+						print_boxed_type_cast (l_source_type, current_file)
+						current_file.put_character ('(')
+						current_file.put_string (c_ge_catcall)
+						current_file.put_character ('(')
+							-- We need to box the source object in order
+							-- to pass it to 'GE_catcall'.
+						print_boxed_expression (an_expression, l_source_type)
+						current_file.put_character (',')
+						current_file.put_string (l_dts_name)
+						current_file.put_character (',')
+						current_file.put_integer (nb)
+						current_file.put_character (')')
+						current_file.put_character (')')
+						current_file.put_character (')')
+						current_file.put_string (c_arrow)
+						print_boxed_attribute_item_name (l_source_type, current_file)
 					else
-						if l_has_non_conforming_types then
-							current_file.put_character ('(')
-							print_boxed_type_cast (l_source_type, current_file)
-							current_file.put_character ('(')
-							current_file.put_string (c_ge_catcall)
-							current_file.put_character ('(')
-								-- We need to box the source object in order
-								-- to pass it to 'GE_catcall'.
-							print_boxed_expression (an_expression, l_source_type)
-							current_file.put_character (',')
-							current_file.put_string (l_dts_name)
-							current_file.put_character (',')
-							current_file.put_integer (nb)
-							current_file.put_character (')')
-							current_file.put_character (')')
-							current_file.put_character (')')
-							current_file.put_string (c_arrow)
-							print_boxed_attribute_item_name (l_source_type, current_file)
-						else
-							print_expression (an_expression)
-						end
+						print_expression (an_expression)
 					end
 				else
-					if a_target_type.is_generic then
 -- TODO: there might be some problems if the expanded types are generic with different actual parameters.
-						current_file.put_character ('*')
+						-- The source object has been boxed.
+					if l_has_non_conforming_types then
 						current_file.put_character ('(')
-						print_type_cast (a_target_type, current_file)
+						print_boxed_type_cast (a_target_type, current_file)
 						current_file.put_character ('(')
-						if l_has_non_conforming_types then
-							current_file.put_string (c_ge_catcall)
-							current_file.put_character ('(')
-						end
+						current_file.put_string (c_ge_catcall)
+						current_file.put_character ('(')
 						print_non_void_expression (an_expression, True)
-						if l_has_non_conforming_types then
-							current_file.put_character (',')
-							current_file.put_string (l_dts_name)
-							current_file.put_character (',')
-							current_file.put_integer (nb)
-							current_file.put_character (')')
-						end
+						current_file.put_character (',')
+						current_file.put_string (l_dts_name)
+						current_file.put_character (',')
+						current_file.put_integer (nb)
 						current_file.put_character (')')
 						current_file.put_character (')')
+						current_file.put_character (')')
+						current_file.put_string (c_arrow)
+						print_boxed_attribute_item_name (l_source_type, current_file)
 					else
-							-- The source object has been boxed.
-						if l_has_non_conforming_types then
-							current_file.put_character ('(')
-							print_boxed_type_cast (a_target_type, current_file)
-							current_file.put_character ('(')
-							current_file.put_string (c_ge_catcall)
-							current_file.put_character ('(')
-							print_non_void_expression (an_expression, True)
-							current_file.put_character (',')
-							current_file.put_string (l_dts_name)
-							current_file.put_character (',')
-							current_file.put_integer (nb)
-							current_file.put_character (')')
-							current_file.put_character (')')
-							current_file.put_character (')')
-							current_file.put_string (c_arrow)
-							print_boxed_attribute_item_name (l_source_type, current_file)
-						else
-							print_boxed_attribute_item_access (an_expression, a_target_type, True)
-						end
+						print_boxed_attribute_item_access (an_expression, a_target_type, True)
 					end
 				end
 			else
@@ -7321,17 +7299,8 @@ feature {NONE} -- Expression generation
 					current_file.put_character ('(')
 				end
 				if l_source_type.is_expanded then
-					if l_source_type.is_generic then
-							-- The object is already equipped with a type-id.
--- TODO: we need to clone the source object.
-						current_file.put_character ('&')
-						current_file.put_character ('(')
-						print_expression (an_expression)
-						current_file.put_character (')')
-					else
-							-- We need to box the source object.
-						print_boxed_expression (an_expression, l_source_type)
-					end
+						-- We need to box the source object.
+					print_boxed_expression (an_expression, l_source_type)
 				else
 					if a_source_type_set.has_expanded then
 -- TODO: check to see whether some of the types in the source type set are expanded.
@@ -7572,14 +7541,14 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 			a_target_not_void: a_target /= Void
 			a_target_type_not_void: a_target_type /= Void
 		do
-			if a_target_type.is_expanded and then not a_target_type.is_generic then
+			if a_target_type.is_expanded then
 				current_file.put_character ('(')
 				print_boxed_attribute_item_access (a_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character ('.')
 			else
 				current_file.put_character ('(')
-				print_boxed_type_cast (a_target_type, current_file)
+				print_type_cast (a_target_type, current_file)
 				current_file.put_character ('(')
 				print_non_void_expression (a_target, a_check_void_target)
 				current_file.put_character (')')
@@ -7644,7 +7613,6 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 			an_expression_not_void: an_expression /= Void
 			a_type_not_void: a_type /= Void
 			a_type_expanded: a_type.is_expanded
-			a_type_not_generic: not a_type.is_generic
 		do
 			current_file.put_string (c_ge_boxed)
 			current_file.put_integer (a_type.id)
@@ -7921,7 +7889,7 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 			elseif in_target then
 				if current_type.is_expanded then
 					print_current_name (current_file)
-				elseif call_target_type.is_expanded and not call_target_type.is_generic then
+				elseif call_target_type.is_expanded then
 						-- We need to unbox the object and then pass its address.
 					current_file.put_character ('&')
 					current_file.put_character ('(')
@@ -8648,7 +8616,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 							-- Pass the address of the expanded object.
 						current_file.put_character ('&')
 						print_argument_name (a_name, current_file)
-					elseif call_target_type.is_expanded and not call_target_type.is_generic then
+					elseif call_target_type.is_expanded then
 							-- We need to unbox the object and then pass its address.
 						current_file.put_character ('&')
 						current_file.put_character ('(')
@@ -8864,7 +8832,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 						current_file.put_character ('&')
 						print_local_name (a_name, current_file)
 						current_file.put_character (')')
-					elseif call_target_type.is_expanded and not call_target_type.is_generic then
+					elseif call_target_type.is_expanded then
 							-- We need to unbox the object and then pass its address.
 						current_file.put_character ('&')
 						current_file.put_character ('(')
@@ -9802,7 +9770,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 							-- Pass the address of the expanded object.
 						current_file.put_character ('&')
 						print_object_test_local_name (a_name, current_file)
-					elseif call_target_type.is_expanded and not call_target_type.is_generic then
+					elseif call_target_type.is_expanded then
 							-- We need to unbox the object and then pass its address.
 						current_file.put_character ('&')
 						current_file.put_character ('(')
@@ -10453,7 +10421,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 						current_file.put_character ('&')
 						print_result_name (current_file)
 						current_file.put_character (')')
-					elseif call_target_type.is_expanded and not call_target_type.is_generic then
+					elseif call_target_type.is_expanded then
 							-- We need to unbox the object and then pass its address.
 						current_file.put_character ('&')
 						current_file.put_character ('(')
@@ -10846,7 +10814,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 							-- Pass the address of the expanded object.
 						current_file.put_character ('&')
 						print_temp_name (a_name, current_file)
-					elseif call_target_type.is_expanded and not call_target_type.is_generic then
+					elseif call_target_type.is_expanded then
 							-- We need to unbox the object and then pass its address.
 						current_file.put_character ('&')
 						current_file.put_character ('(')
@@ -10907,11 +10875,6 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 				l_static_type := dynamic_type_set (an_expression).static_type
 				if l_static_type.is_expanded then
 					print_expression (an_expression)
-				elseif a_type.is_generic then
-					current_file.put_character ('*')
-					current_file.put_character ('(')
-					print_expression (an_expression)
-					current_file.put_character (')')
 				else
 						-- We need to unbox the object.
 					print_boxed_attribute_item_access (an_expression, a_type, a_check_void)
@@ -11056,7 +11019,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 							current_file.put_character ('(')
 							print_attribute_access (l_dynamic_feature, tokens.current_keyword, current_type, False)
 							current_file.put_character (')')
-						elseif call_target_type.is_expanded and not call_target_type.is_generic then
+						elseif call_target_type.is_expanded then
 								-- We need to unbox the object and then pass its address.
 							current_file.put_character ('&')
 							current_file.put_character ('(')
@@ -11279,7 +11242,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 							current_file.put_character ('(')
 							print_attribute_access (l_dynamic_feature, tokens.current_keyword, current_type, False)
 							current_file.put_character (')')
-						elseif call_target_type.is_expanded and not call_target_type.is_generic then
+						elseif call_target_type.is_expanded then
 								-- We need to unbox the object and then pass its address.
 							current_file.put_character ('&')
 							current_file.put_character ('(')
@@ -12541,7 +12504,6 @@ feature {NONE} -- Query call generation
 			l_unique_attribute: ET_UNIQUE_ATTRIBUTE
 			l_attribute: ET_ATTRIBUTE
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			old_index: INTEGER
 			l_constant: ET_CONSTANT
 			old_type: ET_DYNAMIC_TYPE
@@ -12588,12 +12550,7 @@ feature {NONE} -- Query call generation
 					l_attribute ?= l_static_query
 					if l_attribute /= Void then
 						l_target := call_operands.first
-						l_target_type_set := dynamic_type_set (l_target)
-						if l_target_type_set.is_expanded then
-							print_attribute_access (a_feature, l_target, a_target_type, a_check_void_target)
-						else
-							print_boxed_attribute_access (a_feature, l_target, a_target_type, a_check_void_target)
-						end
+						print_adapted_attribute_access (a_feature, l_target, a_target_type, a_check_void_target)
 					elseif a_feature.is_builtin then
 						print_builtin_query_call (a_feature, a_target_type, a_check_void_target)
 					else
@@ -13331,18 +13288,11 @@ feature {NONE} -- Query call generation
 					-- a result type of the form 'like argument' (see
 					-- header comment).
 				if not l_source_type.is_expanded then
-					if a_target_type.is_generic then
 -- TODO: there might be some problems if the expanded types are generic with different actual parameters.
-						current_file.put_character ('*')
-						current_file.put_character ('(')
-						print_type_cast (a_target_type, current_file)
-						current_file.put_character ('(')
-					else
-							-- The source object has been boxed.
-						current_file.put_character ('(')
-						print_boxed_type_cast (a_target_type, current_file)
-						current_file.put_character ('(')
-					end
+						-- The source object has been boxed.
+					current_file.put_character ('(')
+					print_boxed_type_cast (a_target_type, current_file)
+					current_file.put_character ('(')
 					if a_source_type_set.can_be_void  then
 						can_be_void_target_count := can_be_void_target_count + 1
 						current_file.put_string (c_ge_void)
@@ -13357,34 +13307,22 @@ feature {NONE} -- Query call generation
 					end
 					current_file.put_character (')')
 					current_file.put_character (')')
-					if not a_target_type.is_generic then
-							-- The source object has been boxed.
-						current_file.put_string (c_arrow)
-						print_boxed_attribute_item_name (a_target_type, current_file)
-					end
+						-- The source object has been boxed.
+					current_file.put_string (c_arrow)
+					print_boxed_attribute_item_name (a_target_type, current_file)
 				else
 					a_print_expression.call ([])
 				end
 			else
 				if l_source_type.is_expanded then
-					if l_source_type.is_generic then
-							-- Return the address of the object,
-							-- it is already equipped with a type-id.
--- TODO: we should not return the address but freshly malloced object (but without calling 'copy')
-						current_file.put_character ('&')
-						current_file.put_character ('(')
-						a_print_expression.call ([])
-						current_file.put_character (')')
-					else
-							-- We need to box the object, but without triggering a call to
-							-- 'copy' (it will be called during subsequent attachment).
+						-- We need to box the object, but without triggering a call to
+						-- 'copy' (it will be called during subsequent attachment).
 -- TODO: 'geboxed' will trigger a call to 'copy'. We should avoid that.
-						current_file.put_string (c_ge_boxed)
-						current_file.put_integer (l_source_type.id)
-						current_file.put_character ('(')
-						a_print_expression.call ([])
-						current_file.put_character (')')
-					end
+					current_file.put_string (c_ge_boxed)
+					current_file.put_integer (l_source_type.id)
+					current_file.put_character ('(')
+					a_print_expression.call ([])
+					current_file.put_character (')')
 				else
 						-- Even if the dynamic type set of the expression contains
 						-- expanded types, there will be no copy or clone
@@ -13570,7 +13508,7 @@ print ("ET_C_GENERATOR.print_once_procedure_inline_agent: once key %"OBJECT%" no
 							-- Pass the address of the expanded object.
 						current_file.put_character ('&')
 						print_agent_open_operand_access (a_name)
-					elseif call_target_type.is_expanded and not call_target_type.is_generic then
+					elseif call_target_type.is_expanded then
 							-- We need to unbox the object and then pass its address.
 						current_file.put_character ('&')
 						current_file.put_character ('(')
@@ -13612,7 +13550,7 @@ print ("ET_C_GENERATOR.print_once_procedure_inline_agent: once key %"OBJECT%" no
 							-- Pass the address of the expanded object.
 						current_file.put_character ('&')
 						print_agent_closed_operand_access (a_name, formal_argument (1))
-					elseif call_target_type.is_expanded and not call_target_type.is_generic then
+					elseif call_target_type.is_expanded then
 							-- We need to unbox the object and then pass its address.
 						current_file.put_character ('&')
 						current_file.put_character ('(')
@@ -16401,7 +16339,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 						current_file.put_character ('(')
 						print_expression (l_target)
 						current_file.put_character (')')
-					elseif a_target_type.is_expanded and not a_target_type.is_generic then
+					elseif a_target_type.is_expanded then
 							-- We need to unbox the object.
 						current_file.put_character ('&')
 						current_file.put_character ('(')
@@ -17273,7 +17211,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 			else
 					-- Internal attribute.
-				print_attribute_access (a_feature, l_target, a_target_type, a_check_void_target)
+				print_adapted_attribute_access (a_feature, l_target, a_target_type, a_check_void_target)
 			end
 		end
 
@@ -17467,7 +17405,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					if l_item_attribute /= Void then
 							-- Set the built-in attribute 'item'.
 						print_indentation
-						print_attribute_access (l_item_attribute, l_target, a_target_type, a_check_void_target)
+						print_adapted_attribute_access (l_item_attribute, l_target, a_target_type, a_check_void_target)
 						current_file.put_character (' ')
 						current_file.put_character ('=')
 						current_file.put_character (' ')
@@ -18215,7 +18153,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 			else
 					-- Internal attribute.
-				print_attribute_access (a_feature, l_target, a_target_type, a_check_void_target)
+				print_adapted_attribute_access (a_feature, l_target, a_target_type, a_check_void_target)
 			end
 		end
 
@@ -18382,7 +18320,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					if l_item_attribute /= Void then
 							-- Set the built-in attribute 'item'.
 						print_indentation
-						print_attribute_access (l_item_attribute, l_target, a_target_type, a_check_void_target)
+						print_adapted_attribute_access (l_item_attribute, l_target, a_target_type, a_check_void_target)
 						current_file.put_character (' ')
 						current_file.put_character ('=')
 						current_file.put_character (' ')
@@ -18553,7 +18491,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 							error_handler.report_giaaa_error
 						else
 								-- Print attribute 'closed_operands'.
-							print_attribute_access (l_routine_type.queries.first, l_routine_object, l_routine_type, False)
+							print_adapted_attribute_access (l_routine_type.queries.first, l_routine_object, l_routine_type, False)
 						end
 						from i := 1 until i > nb loop
 							current_file.put_character (',')
@@ -18641,7 +18579,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 						error_handler.report_giaaa_error
 					else
 							-- Print attribute 'closed_operands'.
-						print_attribute_access (l_routine_type.queries.first, l_routine_object, l_routine_type, False)
+						print_adapted_attribute_access (l_routine_type.queries.first, l_routine_object, l_routine_type, False)
 					end
 					l_open_operand_type_sets := l_routine_type.open_operand_type_sets
 					nb := l_open_operand_type_sets.count
@@ -18772,7 +18710,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 			else
 					-- Internal attribute.
-				print_attribute_access (a_feature, l_target, a_target_type, a_check_void_target)
+				print_adapted_attribute_access (a_feature, l_target, a_target_type, a_check_void_target)
 			end
 		end
 
@@ -18865,7 +18803,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					if l_item_attribute /= Void then
 							-- Set the built-in attribute 'item'.
 						print_indentation
-						print_attribute_access (l_item_attribute, l_target, a_target_type, a_check_void_target)
+						print_adapted_attribute_access (l_item_attribute, l_target, a_target_type, a_check_void_target)
 						current_file.put_character (' ')
 						current_file.put_character ('=')
 						current_file.put_character (' ')
@@ -19631,7 +19569,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 			else
 					-- Internal attribute.
-				print_attribute_access (a_feature, l_target, a_target_type, a_check_void_target)
+				print_adapted_attribute_access (a_feature, l_target, a_target_type, a_check_void_target)
 			end
 		end
 
@@ -19976,7 +19914,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					if l_item_attribute /= Void then
 							-- Set the built-in attribute 'item'.
 						print_indentation
-						print_attribute_access (l_item_attribute, l_target, a_target_type, a_check_void_target)
+						print_adapted_attribute_access (l_item_attribute, l_target, a_target_type, a_check_void_target)
 						current_file.put_character (' ')
 						current_file.put_character ('=')
 						current_file.put_character (' ')
@@ -20607,7 +20545,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 			else
 					-- Internal attribute.
-				print_attribute_access (a_feature, l_target, a_target_type, a_check_void_target)
+				print_adapted_attribute_access (a_feature, l_target, a_target_type, a_check_void_target)
 			end
 		end
 
@@ -21057,7 +20995,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					if l_item_attribute /= Void then
 							-- Set the built-in attribute 'item'.
 						print_indentation
-						print_attribute_access (l_item_attribute, l_target, a_target_type, a_check_void_target)
+						print_adapted_attribute_access (l_item_attribute, l_target, a_target_type, a_check_void_target)
 						current_file.put_character (' ')
 						current_file.put_character ('=')
 						current_file.put_character (' ')
@@ -22120,7 +22058,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		do
 				-- Internal attribute.
-			print_attribute_access (a_feature, call_operands.first, a_target_type, a_check_void_target)
+			print_adapted_attribute_access (a_feature, call_operands.first, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_tuple_pointer_item_body (a_feature: ET_EXTERNAL_ROUTINE)
@@ -22550,7 +22488,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				if l_object_comparison_attribute /= Void then
 						-- Set the built-in attribute 'object_comparison'.
 					print_indentation
-					print_attribute_access (l_object_comparison_attribute, l_target, a_target_type, a_check_void_target)
+					print_adapted_attribute_access (l_object_comparison_attribute, l_target, a_target_type, a_check_void_target)
 					current_file.put_character (' ')
 					current_file.put_character ('=')
 					current_file.put_character (' ')
@@ -22670,7 +22608,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 						current_file.put_character (' ')
 						current_file.put_character ('=')
 						current_file.put_character (' ')
-						print_attribute_access (l_attribute, l_arguments.formal_argument (2).name, l_dynamic_type, True)
+						print_adapted_attribute_access (l_attribute, l_arguments.formal_argument (2).name, l_dynamic_type, True)
 						current_file.put_character (';')
 						current_file.put_new_line
 						print_indentation
@@ -22800,7 +22738,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					current_file.put_character (' ')
 					current_file.put_character ('=')
 					current_file.put_character (' ')
-					print_adapted_expression (agent print_attribute_access (l_attribute, l_arguments.formal_argument (2).name, l_dynamic_type, True), l_attribute_type_set, current_dynamic_system.any_type)
+					print_adapted_expression (agent print_adapted_attribute_access (l_attribute, l_arguments.formal_argument (2).name, l_dynamic_type, True), l_attribute_type_set, current_dynamic_system.any_type)
 					current_file.put_character (';')
 					current_file.put_new_line
 					print_indentation
@@ -23642,7 +23580,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					print_type_declaration (l_result_type, current_file)
 					current_file.put_character (')')
 					print_default_entity_value (l_result_type, current_file)
-					current_file.put_character (')')	
+					current_file.put_character (')')
 				else
 					current_file.put_character ('(')
 					print_type_declaration (l_special_type, current_file)
@@ -23788,7 +23726,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 						current_file.put_new_line
 						indent
 						print_indentation
-						print_attribute_access (l_attribute, l_arguments.formal_argument (2).name, l_dynamic_type, True)
+						print_adapted_attribute_access (l_attribute, l_arguments.formal_argument (2).name, l_dynamic_type, True)
 						current_file.put_character (' ')
 						current_file.put_character ('=')
 						current_file.put_character (' ')
@@ -24005,7 +23943,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 						current_file.put_new_line
 						indent
 						print_indentation
-						print_attribute_access (l_attribute, l_arguments.formal_argument (2).name, l_dynamic_type, True)
+						print_adapted_attribute_access (l_attribute, l_arguments.formal_argument (2).name, l_dynamic_type, True)
 						current_file.put_character (' ')
 						current_file.put_character ('=')
 						current_file.put_character (' ')
@@ -26054,59 +25992,63 @@ feature {NONE} -- Type generation
 						if not l_expanded_sorter.has (l_type) then
 							l_expanded_sorter.force (l_type)
 						end
-						if not l_type.is_generic then
-								-- For expanded types with no generics, there is no type
-								-- other than themselves that conform to them. Therefore
-								-- we do not keep the type-id in each object for those types
-								-- because if it is used as static type of an entity there
-								-- will be no polymorphic call. A boxed version (containing
-								-- the type-id) is nevertheless generated when those objects
-								-- are attached to entities of reference types (which might
-								-- be polymorphic).
-							if l_type = current_dynamic_system.boolean_type then
-								print_boolean_type_definition (l_type, a_file)
-							elseif l_type = current_dynamic_system.character_8_type then
-								print_character_8_type_definition (l_type, a_file)
-							elseif l_type = current_dynamic_system.character_32_type then
-								print_character_32_type_definition (l_type, a_file)
-							elseif l_type = current_dynamic_system.integer_8_type then
-								print_integer_8_type_definition (l_type, a_file)
-							elseif l_type = current_dynamic_system.integer_16_type then
-								print_integer_16_type_definition (l_type, a_file)
-							elseif l_type = current_dynamic_system.integer_32_type then
-								print_integer_32_type_definition (l_type, a_file)
-							elseif l_type = current_dynamic_system.integer_64_type then
-								print_integer_64_type_definition (l_type, a_file)
-							elseif l_type = current_dynamic_system.natural_8_type then
-								print_natural_8_type_definition (l_type, a_file)
-							elseif l_type = current_dynamic_system.natural_16_type then
-								print_natural_16_type_definition (l_type, a_file)
-							elseif l_type = current_dynamic_system.natural_32_type then
-								print_natural_32_type_definition (l_type, a_file)
-							elseif l_type = current_dynamic_system.natural_64_type then
-								print_natural_64_type_definition (l_type, a_file)
-							elseif l_type = current_dynamic_system.real_32_type then
-								print_real_32_type_definition (l_type, a_file)
-							elseif l_type = current_dynamic_system.real_64_type then
-								print_real_64_type_definition (l_type, a_file)
-							elseif l_type = current_dynamic_system.pointer_type then
-								print_pointer_type_definition (l_type, a_file)
-							else
-								print_type_definition (l_type, a_file)
-									-- Keep track of dependencies between expanded types.
-								l_queries := l_type.queries
-								nb2 := l_type.attribute_count
-								from j := 1 until j > nb2 loop
-									l_query := l_queries.item (j)
-									l_attribute_type := l_query.result_type_set.static_type
-									if l_attribute_type.is_expanded then
-										l_expanded_sorter.force_relation (l_attribute_type, l_type)
-									end
-									j := j + 1
+							-- For expanded types with no generics, there is no type
+							-- other than themselves that conform to them. Therefore
+							-- we do not keep the type-id in each object for those types
+							-- because if it is used as static type of an entity there
+							-- will be no polymorphic call. A boxed version (containing
+							-- the type-id) is nevertheless generated when those objects
+							-- are attached to entities of reference types (which might
+							-- be polymorphic).
+							-- Note that a boxed version is also generated for expanded
+							-- generic types, because we cannot get the address of an
+							-- expression (in order to attach it to an entity of reference
+							-- type) in the C language. So the boxed version is a way to
+							-- get around that (even though we already had a type-id) by
+							-- returning the pointer to a newly allocating piece of memory.
+						if l_type = current_dynamic_system.boolean_type then
+							print_boolean_type_definition (l_type, a_file)
+						elseif l_type = current_dynamic_system.character_8_type then
+							print_character_8_type_definition (l_type, a_file)
+						elseif l_type = current_dynamic_system.character_32_type then
+							print_character_32_type_definition (l_type, a_file)
+						elseif l_type = current_dynamic_system.integer_8_type then
+							print_integer_8_type_definition (l_type, a_file)
+						elseif l_type = current_dynamic_system.integer_16_type then
+							print_integer_16_type_definition (l_type, a_file)
+						elseif l_type = current_dynamic_system.integer_32_type then
+							print_integer_32_type_definition (l_type, a_file)
+						elseif l_type = current_dynamic_system.integer_64_type then
+							print_integer_64_type_definition (l_type, a_file)
+						elseif l_type = current_dynamic_system.natural_8_type then
+							print_natural_8_type_definition (l_type, a_file)
+						elseif l_type = current_dynamic_system.natural_16_type then
+							print_natural_16_type_definition (l_type, a_file)
+						elseif l_type = current_dynamic_system.natural_32_type then
+							print_natural_32_type_definition (l_type, a_file)
+						elseif l_type = current_dynamic_system.natural_64_type then
+							print_natural_64_type_definition (l_type, a_file)
+						elseif l_type = current_dynamic_system.real_32_type then
+							print_real_32_type_definition (l_type, a_file)
+						elseif l_type = current_dynamic_system.real_64_type then
+							print_real_64_type_definition (l_type, a_file)
+						elseif l_type = current_dynamic_system.pointer_type then
+							print_pointer_type_definition (l_type, a_file)
+						else
+							print_type_definition (l_type, a_file)
+								-- Keep track of dependencies between expanded types.
+							l_queries := l_type.queries
+							nb2 := l_type.attribute_count
+							from j := 1 until j > nb2 loop
+								l_query := l_queries.item (j)
+								l_attribute_type := l_query.result_type_set.static_type
+								if l_attribute_type.is_expanded then
+									l_expanded_sorter.force_relation (l_attribute_type, l_type)
 								end
+								j := j + 1
 							end
-							print_boxed_function (l_type)
 						end
+						print_boxed_function (l_type)
 					end
 					if l_type.base_class.is_type_class then
 						print_type_type_definition (l_type, a_file)
@@ -26942,7 +26884,7 @@ print ("Extended attribute " + a_type.base_class.upper_name + "." + l_query.stat
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
-			if a_type.is_expanded and not a_type.is_generic then
+			if a_type.is_expanded then
 				a_file.put_character ('/')
 				a_file.put_character ('*')
 				a_file.put_character (' ')
@@ -27175,7 +27117,7 @@ print ("Extended attribute " + a_type.base_class.upper_name + "." + l_query.stat
 		do
 			if short_names then
 				a_file.put_character ('T')
-				if a_type.is_expanded and then not a_type.is_generic then
+				if a_type.is_expanded then
 					a_file.put_character ('b')
 				end
 				a_file.put_integer (a_type.id)
@@ -27217,7 +27159,7 @@ print ("Extended attribute " + a_type.base_class.upper_name + "." + l_query.stat
 		do
 			if short_names then
 				a_file.put_character ('S')
-				if a_type.is_expanded and then not a_type.is_generic then
+				if a_type.is_expanded then
 					a_file.put_character ('b')
 				end
 				a_file.put_integer (a_type.id)
