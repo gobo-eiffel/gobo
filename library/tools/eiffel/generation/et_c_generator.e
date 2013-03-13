@@ -14332,9 +14332,9 @@ feature {NONE} -- Polymorphic call functions generation
 
 	print_polymorphic_call_function (a_first_call, a_last_call: ET_DYNAMIC_QUALIFIED_CALL; a_target_type: ET_DYNAMIC_TYPE)
 			-- Print to `current_file' dynamic binding code for the calls between `a_first_call'
-			-- and `a_last_call' whose target dynamic types are those stored in `a_target_dynamic_types'
-			-- whose type-id is itself stored between indexes `l' and `u' in `a_target_dynamic_type_ids'.
-			-- The generated code uses binary search to find out which feature to execute.
+			-- and `a_last_call' whose target static type if `a_target_type'.
+			-- The generated code uses either a switch-statment or binary search to find out
+			-- which feature to execute.
 		require
 			a_first_call_not_void: a_first_call /= Void
 			a_last_call_not_void: a_last_call /= Void
@@ -14366,7 +14366,10 @@ feature {NONE} -- Polymorphic call functions generation
 			l_manifest_tuple: ET_MANIFEST_TUPLE
 			l_manifest_tuple_operand: ET_MANIFEST_TUPLE
 			old_call_info: STRING
+			old_type: ET_DYNAMIC_TYPE
 		do
+			old_type := current_type
+			current_type := a_target_type
 			old_feature := current_feature
 			current_feature := dummy_feature
 			old_call_info := current_call_info
@@ -14493,6 +14496,10 @@ feature {NONE} -- Polymorphic call functions generation
 			end
 			print_type_declaration (a_target_type, header_file)
 			print_type_declaration (a_target_type, current_file)
+			if a_target_type.is_expanded then
+				header_file.put_character ('*')
+				current_file.put_character ('*')
+			end
 			header_file.put_character (' ')
 			current_file.put_character (' ')
 			print_current_name (header_file)
@@ -14643,6 +14650,7 @@ feature {NONE} -- Polymorphic call functions generation
 			current_dynamic_type_sets := old_dynamic_type_sets
 			current_call_info := old_call_info
 			current_feature := old_feature
+			current_type := old_type
 		end
 
 	print_binary_search_polymorphic_calls (a_first_call, a_last_call: ET_DYNAMIC_QUALIFIED_CALL; a_result_type: ET_DYNAMIC_TYPE; l, u: INTEGER; a_target_dynamic_type_ids: DS_ARRAYED_LIST [INTEGER]; a_target_dynamic_types: DS_HASH_TABLE [ET_DYNAMIC_TYPE, INTEGER])
