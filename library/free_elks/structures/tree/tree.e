@@ -1,16 +1,14 @@
 note
-
-	description:
-		"Trees, without commitment to a particular representation"
+	description: "Trees, without commitment to a particular representation"
+	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	names: tree;
 	access: cursor, membership;
 	representation: recursive;
 	contents: generic;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2012-07-23 23:02:19 +0200 (Mon, 23 Jul 2012) $"
+	revision: "$Revision: 567 $"
 
 deferred class TREE [G] inherit
 
@@ -40,14 +38,10 @@ feature -- Access
 			-- Item in current child node
 		require
 			readable: child_readable
-		local
-			c: like child
 		do
-			c := child
-			check
-				c_attached: c /= Void
+			check attached child as c then
+				Result := c.item
 			end
-			Result := c.item
 		end
 
 	child_cursor: CURSOR
@@ -250,7 +244,7 @@ feature -- Status report
 			end
 		end
 
-	is_sibling (other: like parent): BOOLEAN
+	is_sibling (other: attached like parent): BOOLEAN
 			-- Are current node and `other' siblings?
 		require
 			other_exists: other /= Void
@@ -898,15 +892,14 @@ invariant
 	child_after_definition: child_after = (child_index >= child_capacity + 1)
 
 note
-	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class TREE
+end

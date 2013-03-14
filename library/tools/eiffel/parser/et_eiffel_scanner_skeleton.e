@@ -384,19 +384,63 @@ feature -- Tokens
 			-- valid_literal: ((0*([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))|(0x[0-9a-fA-F]{1,4})).recognizes (last_literal)
 		local
 			l_literal: STRING
-			l_value: CHARACTER
+			l_value: CHARACTER_32
 			i, nb: INTEGER
 			c: CHARACTER
-			l_code: INTEGER
+			l_code: NATURAL_32
 		do
 			l_literal := last_literal
-			nb := l_literal.count
-			from i := 1 until i > nb loop
-				c := l_literal.item (i)
-				l_code := l_code * 10 + c.code - Zero_code
-				i := i + 1
+			if l_literal.starts_with ("0x") then
+				nb := l_literal.count
+				from i := 3 until i > nb loop
+					c := l_literal.item (i)
+					l_code := l_code * 16
+					inspect c
+					when '0' then
+							-- Do nothing.
+					when '1' then
+						l_code := l_code + 1
+					when '2' then
+						l_code := l_code + 2
+					when '3' then
+						l_code := l_code + 3
+					when '4' then
+						l_code := l_code + 4
+					when '5' then
+						l_code := l_code + 5
+					when '6' then
+						l_code := l_code + 6
+					when '7' then
+						l_code := l_code + 7
+					when '8' then
+						l_code := l_code + 8
+					when '9' then
+						l_code := l_code + 9
+					when 'a', 'A' then
+						l_code := l_code + 10
+					when 'b', 'B' then
+						l_code := l_code + 11
+					when 'c', 'C' then
+						l_code := l_code + 12
+					when 'd', 'D' then
+						l_code := l_code + 13
+					when 'e', 'E' then
+						l_code := l_code + 14
+					when 'f', 'F' then
+						l_code := l_code + 15
+					end
+					i := i + 1
+				end
+			else
+				nb := l_literal.count
+				from i := 1 until i > nb loop
+					c := l_literal.item (i)
+					l_code := l_code * 10 + c.natural_32_code - Zero_code.to_natural_32
+					i := i + 1
+				end
+				l_value := l_code.to_character_32
 			end
-			l_value := INTEGER_.to_character (l_code)
+			l_value := l_code.to_character_32
 			create Result.make (l_literal, l_value)
 		ensure
 			last_c3_character_constant_not_void: Result /= Void
@@ -730,7 +774,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.builtin_static_marker)
 				-- Class names.
 			Result.force_new (-1, tokens.capitalized_any_name)
-			Result.force_new (-1, tokens.capitalized_arguments_name)
+			Result.force_new (-1, tokens.capitalized_arguments_32_name)
 			Result.force_new (-1, tokens.capitalized_array_name)
 			Result.force_new (-1, tokens.capitalized_bit_name)
 			Result.force_new (-1, tokens.capitalized_boolean_name)
@@ -780,7 +824,6 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.after_name)
 			Result.force_new (-1, tokens.aliased_resized_area_name)
 			Result.force_new (-1, tokens.area_name)
-			Result.force_new (-1, tokens.argument_name)
 			Result.force_new (-1, tokens.argument_count_name)
 			Result.force_new (-1, tokens.as_natural_8_name)
 			Result.force_new (-1, tokens.as_natural_16_name)
@@ -818,6 +861,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.copy_name)
 			Result.force_new (-1, tokens.count_name)
 			Result.force_new (-1, tokens.deep_twin_name)
+			Result.force_new (-1, tokens.default_name)
 			Result.force_new (-1, tokens.default_create_name)
 			Result.force_new (-1, tokens.disjuncted_name)
 			Result.force_new (-1, tokens.disjuncted_exclusive_name)
@@ -828,6 +872,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.eif_object_id_name)
 			Result.force_new (-1, tokens.eif_object_id_free_name)
 			Result.force_new (-1, tokens.element_size_name)
+			Result.force_new (-1, tokens.extend_name)
 			Result.force_new (-1, tokens.field_name)
 			Result.force_new (-1, tokens.field_count_name)
 			Result.force_new (-1, tokens.field_name_name)
@@ -840,9 +885,13 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.free_name)
 			Result.force_new (-1, tokens.generating_type_name)
 			Result.force_new (-1, tokens.generator_name)
-			Result.force_new (-1, tokens.generic_parameter_name)
 			Result.force_new (-1, tokens.generic_parameter_count_name)
+			Result.force_new (-1, tokens.generic_parameter_type_name)
+			Result.force_new (-1, tokens.has_default_name)
 			Result.force_new (-1, tokens.hash_code_name)
+			Result.force_new (-1, tokens.i_th_argument_pointer_name)
+			Result.force_new (-1, tokens.i_th_argument_string_name)
+			Result.force_new (-1, tokens.identity_name)
 			Result.force_new (-1, tokens.implication_name)
 			Result.force_new (-1, tokens.integer_8_item_name)
 			Result.force_new (-1, tokens.integer_8_field_name)
@@ -856,11 +905,16 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.integer_quotient_name)
 			Result.force_new (-1, tokens.integer_remainder_name)
 			Result.force_new (-1, tokens.is_deep_equal_name)
+			Result.force_new (-1, tokens.is_default_pointer_name)
 			Result.force_new (-1, tokens.is_dotnet_name)
 			Result.force_new (-1, tokens.is_equal_name)
 			Result.force_new (-1, tokens.is_expanded_name)
 			Result.force_new (-1, tokens.is_less_name)
 			Result.force_new (-1, tokens.is_mac_name)
+			Result.force_new (-1, tokens.is_nan_name)
+			Result.force_new (-1, tokens.is_negative_infinity_name)
+			Result.force_new (-1, tokens.is_positive_infinity_name)
+			Result.force_new (-1, tokens.is_scoop_capable_name)
 			Result.force_new (-1, tokens.is_target_closed_name)
 			Result.force_new (-1, tokens.is_thread_capable_name)
 			Result.force_new (-1, tokens.is_unix_name)
@@ -872,9 +926,11 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.last_result_name)
 			Result.force_new (-1, tokens.lower_name)
 			Result.force_new (-1, tokens.make_name)
+			Result.force_new (-1, tokens.make_empty_name)
 			Result.force_new (-1, tokens.max_type_id_name)
 			Result.force_new (-1, tokens.minus_name)
 			Result.force_new (-1, tokens.name_name)
+			Result.force_new (-1, tokens.nan_name)
 			Result.force_new (-1, tokens.natural_8_item_name)
 			Result.force_new (-1, tokens.natural_8_field_name)
 			Result.force_new (-1, tokens.natural_16_item_name)
@@ -885,7 +941,10 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.natural_64_item_name)
 			Result.force_new (-1, tokens.natural_64_field_name)
 			Result.force_new (-1, tokens.negated_name)
+			Result.force_new (-1, tokens.negative_infinity_name)
 			Result.force_new (-1, tokens.new_cursor_name)
+			Result.force_new (-1, tokens.new_instance_name)
+			Result.force_new (-1, tokens.new_special_any_instance_name)
 			Result.force_new (-1, tokens.object_comparison_name)
 			Result.force_new (-1, tokens.opposite_name)
 			Result.force_new (-1, tokens.out_name)
@@ -893,13 +952,13 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.pointer_bytes_name)
 			Result.force_new (-1, tokens.pointer_item_name)
 			Result.force_new (-1, tokens.pointer_field_name)
+			Result.force_new (-1, tokens.positive_infinity_name)
 			Result.force_new (-1, tokens.power_name)
 			Result.force_new (-1, tokens.product_name)
 			Result.force_new (-1, tokens.put_name)
 			Result.force_new (-1, tokens.put_boolean_name)
 			Result.force_new (-1, tokens.put_character_8_name)
 			Result.force_new (-1, tokens.put_character_32_name)
-			Result.force_new (-1, tokens.put_default_name)
 			Result.force_new (-1, tokens.put_integer_8_name)
 			Result.force_new (-1, tokens.put_integer_16_name)
 			Result.force_new (-1, tokens.put_integer_32_name)
@@ -924,6 +983,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.set_boolean_field_name)
 			Result.force_new (-1, tokens.set_character_8_field_name)
 			Result.force_new (-1, tokens.set_character_32_field_name)
+			Result.force_new (-1, tokens.set_count_name)
 			Result.force_new (-1, tokens.set_integer_8_field_name)
 			Result.force_new (-1, tokens.set_integer_16_field_name)
 			Result.force_new (-1, tokens.set_integer_32_field_name)

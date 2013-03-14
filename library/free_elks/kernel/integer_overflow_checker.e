@@ -1,10 +1,10 @@
 note
 	description: "String - Integer/Natural conversion overflow checker"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2006, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date: 2008-12-29 20:36:38 +0100 (Mon, 29 Dec 2008) $"
-	revision: "$Revision: 254 $"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2012-05-24 06:13:10 +0200 (Thu, 24 May 2012) $"
+	revision: "$Revision: 559 $"
 
 class
 	INTEGER_OVERFLOW_CHECKER
@@ -20,38 +20,42 @@ feature{NONE} -- Initialization
 	make
 			-- Initialize.
 		do
-			create integer_overflow_state1.make (type_count * 2 + 1)
-			create integer_overflow_state2.make (type_count * 2 + 1)
+			create integer_overflow_state1.make_empty (type_count * 2 + 1)
+			integer_overflow_state1.extend (0)
+			create integer_overflow_state2.make_empty (type_count * 2 + 1)
+			integer_overflow_state2.extend (0)
 
-			integer_overflow_state1.put (({INTEGER_8}.max_value // 10).to_natural_64, 1)
-			integer_overflow_state2.put (({INTEGER_8}.max_value \\ 10).to_natural_64, 1)
-			integer_overflow_state1.put (({INTEGER_16}.max_value // 10).to_natural_64, 2)
-			integer_overflow_state2.put (({INTEGER_16}.max_value \\ 10).to_natural_64, 2)
-			integer_overflow_state1.put (({INTEGER}.max_value // 10).to_natural_64, 3)
-			integer_overflow_state2.put (({INTEGER}.max_value \\ 10).to_natural_64, 3)
-			integer_overflow_state1.put (({INTEGER_64}.max_value // 10).to_natural_64, 4)
-			integer_overflow_state2.put (({INTEGER_64}.max_value \\ 10).to_natural_64, 4)
+			integer_overflow_state1.extend (({INTEGER_8}.max_value // 10).to_natural_64)
+			integer_overflow_state2.extend (({INTEGER_8}.max_value \\ 10).to_natural_64)
+			integer_overflow_state1.extend (({INTEGER_16}.max_value // 10).to_natural_64)
+			integer_overflow_state2.extend (({INTEGER_16}.max_value \\ 10).to_natural_64)
+			integer_overflow_state1.extend (({INTEGER}.max_value // 10).to_natural_64)
+			integer_overflow_state2.extend (({INTEGER}.max_value \\ 10).to_natural_64)
+			integer_overflow_state1.extend (({INTEGER_64}.max_value // 10).to_natural_64)
+			integer_overflow_state2.extend (({INTEGER_64}.max_value \\ 10).to_natural_64)
 
-			integer_overflow_state1.put ((-({INTEGER_8}.min_value // 10)).to_natural_64, 5)
-			integer_overflow_state2.put ((-({INTEGER_8}.min_value \\ 10)).to_natural_64, 5)
-			integer_overflow_state1.put ((-({INTEGER_16}.min_value // 10)).to_natural_64, 6)
-			integer_overflow_state2.put ((-({INTEGER_16}.min_value \\ 10)).to_natural_64, 6)
-			integer_overflow_state1.put ((-({INTEGER}.min_value // 10)).to_natural_64, 7)
-			integer_overflow_state2.put ((-({INTEGER}.min_value \\ 10)).to_natural_64, 7)
-			integer_overflow_state1.put ((-({INTEGER_64}.min_value // 10)).to_natural_64, 8)
-			integer_overflow_state2.put ((-({INTEGER_64}.min_value \\ 10)).to_natural_64, 8)
+			integer_overflow_state1.extend ((-({INTEGER_8}.min_value // 10)).to_natural_64)
+			integer_overflow_state2.extend ((-({INTEGER_8}.min_value \\ 10)).to_natural_64)
+			integer_overflow_state1.extend ((-({INTEGER_16}.min_value // 10)).to_natural_64)
+			integer_overflow_state2.extend ((-({INTEGER_16}.min_value \\ 10)).to_natural_64)
+			integer_overflow_state1.extend ((-({INTEGER}.min_value // 10)).to_natural_64)
+			integer_overflow_state2.extend ((-({INTEGER}.min_value \\ 10)).to_natural_64)
+			integer_overflow_state1.extend ((-({INTEGER_64}.min_value // 10)).to_natural_64)
+			integer_overflow_state2.extend ((-({INTEGER_64}.min_value \\ 10)).to_natural_64)
 
-			create natural_overflow_state1.make (type_count + 1)
-			create natural_overflow_state2.make (type_count + 1)
+			create natural_overflow_state1.make_empty (type_count + 1)
+			natural_overflow_state1.extend (0)
+			create natural_overflow_state2.make_empty (type_count + 1)
+			natural_overflow_state2.extend (0)
 
-			natural_overflow_state1.put (({NATURAL_8}.max_value // 10).to_natural_64, 1)
-			natural_overflow_state2.put (({NATURAL_8}.max_value \\ 10).to_natural_64, 1)
-			natural_overflow_state1.put (({NATURAL_16}.max_value // 10).to_natural_64, 2)
-			natural_overflow_state2.put (({NATURAL_16}.max_value \\ 10).to_natural_64, 2)
-			natural_overflow_state1.put (({NATURAL_32}.max_value // 10).to_natural_64, 3)
-			natural_overflow_state2.put (({NATURAL_32}.max_value \\ 10).to_natural_64, 3)
-			natural_overflow_state1.put (({NATURAL_64}.max_value // 10).to_natural_64, 4)
-			natural_overflow_state2.put (({NATURAL_64}.max_value \\ 10).to_natural_64, 4)
+			natural_overflow_state1.extend (({NATURAL_8}.max_value // 10).to_natural_64)
+			natural_overflow_state2.extend (({NATURAL_8}.max_value \\ 10).to_natural_64)
+			natural_overflow_state1.extend (({NATURAL_16}.max_value // 10).to_natural_64)
+			natural_overflow_state2.extend (({NATURAL_16}.max_value \\ 10).to_natural_64)
+			natural_overflow_state1.extend (({NATURAL_32}.max_value // 10).to_natural_64)
+			natural_overflow_state2.extend (({NATURAL_32}.max_value \\ 10).to_natural_64)
+			natural_overflow_state1.extend (({NATURAL_64}.max_value // 10).to_natural_64)
+			natural_overflow_state2.extend (({NATURAL_64}.max_value \\ 10).to_natural_64)
 		end
 
 feature -- Overflow checking
@@ -92,7 +96,18 @@ feature{NONE} -- Implementation
 	integer_overflow_state1: SPECIAL [like max_natural_type]
 	integer_overflow_state2: SPECIAL [like max_natural_type]
 	natural_overflow_state1: SPECIAL [like max_natural_type]
-	natural_overflow_state2: SPECIAL [like max_natural_type]
+	natural_overflow_state2: SPECIAL [like max_natural_type];
 			-- Arrays to check conversion overflow
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

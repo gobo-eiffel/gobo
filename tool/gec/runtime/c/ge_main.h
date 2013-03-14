@@ -17,6 +17,8 @@
 extern "C" {
 #endif
 
+extern int GE_main(int argc, EIF_NATIVE_CHAR** argv);
+
 #ifdef EIF_WINDOWS
 
 #include <windows.h>

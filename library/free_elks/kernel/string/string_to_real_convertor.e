@@ -1,12 +1,12 @@
 note
 	description: "String to real/double convertor"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2012-05-24 06:13:10 +0200 (Thu, 24 May 2012) $"
+	revision: "$Revision: 559 $"
 
-class
+frozen class
 	STRING_TO_REAL_CONVERTOR
 
 inherit
@@ -91,7 +91,7 @@ feature -- Status reporting
 		end
 
 	is_integral_real: BOOLEAN
-			-- Is character sequence that has been parsed represents a valid real?
+			-- Is character sequence that has been parsed represents a valid real?	
 		do
 			Result := is_integral_double
 		end
@@ -127,7 +127,7 @@ feature -- Status reporting
 	parsed_real: REAL
 			-- Parsed real value
 		do
-			Result := parsed_double
+			Result := parsed_double.truncated_to_real
 		end
 
 feature -- Status setting
@@ -163,18 +163,55 @@ feature -- Parse
 	parse_string_with_type (s: READABLE_STRING_GENERAL; type: INTEGER)
 			-- Parse string `s' as real number of type `type'.
 		local
-			i: INTEGER
-			l_c: INTEGER
+			i, nb: INTEGER
+			l_area8: SPECIAL [CHARACTER_8]
+			l_area32: SPECIAL [CHARACTER_32]
+			l_c: CHARACTER_32
+			l_code: NATURAL_32
 		do
 			reset (type)
-			from
-				i := 1
-				l_c := s.count
-			until
-				i > l_c or last_state = 9
-			loop
-				parse_character (s.code (i).to_character_8)
-				i := i + 1
+			i := 0
+			nb := s.count
+			if attached {READABLE_STRING_8} s as l_str8 then
+				from
+					l_area8 := l_str8.area
+				until
+					i = nb or last_state = 9
+				loop
+					parse_character (l_area8.item (i))
+					i := i + 1
+				end
+			elseif attached {READABLE_STRING_32} s as l_str32 then
+				from
+					l_area32 := l_str32.area
+				until
+					i = nb or last_state = 9
+				loop
+					l_c := l_area32.item (i)
+					if l_c.is_character_8 then
+						parse_character (l_c.to_character_8)
+					else
+							-- Not a valid character.						
+						last_state := 9
+					end
+					i := i + 1
+				end
+			else
+				from
+					i := 1
+					nb := s.count
+				until
+					i > nb or last_state = 9
+				loop
+					l_code := s.code (i)
+					if l_code.is_valid_character_8_code then
+						parse_character (l_code.to_character_8)
+					else
+							-- Not a valid character.
+						last_state := 9
+					end
+					i := i + 1
+				end
 			end
 		end
 
@@ -192,7 +229,7 @@ feature -- Parse
 				-- Integer_literal = [Sign] Integer
 				-- Sign			= "+" | "-"
 				-- Integer		= Digit | Digit Integer
-				-- Digit		= "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9".
+				-- Digit		= "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9".			
 
 					-- last_state = 0 : waiting sign or double value.
 					-- last_state = 1 : sign read, waiting double value.
@@ -200,7 +237,7 @@ feature -- Parse
 					-- last_state = 3 : decimal point read
 					-- last_state = 4 : in fractional part
 					-- last_state = 5 : read 'E' or 'e' for scientific notation
-					-- last_state = 6 : sign of exponent read, waiting for digit.
+					-- last_state = 6 : sign of exponent read, waiting for digit.				
 					-- last_state = 7 : in exponent
 					-- last_state = 8 : after the number.
 					-- last_state = 9 : error state.
@@ -331,7 +368,18 @@ feature{NONE} -- Implementation
 	is_negative: BOOLEAN
 	has_negative_exponent: BOOLEAN
 	has_fractional_part: BOOLEAN
-	needs_digit: BOOLEAN
+	needs_digit: BOOLEAN;
 			-- Used to calculate real/double value
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

@@ -1,37 +1,43 @@
 note
 	description: "[
-		Sequences of 8-bit characters, accessible through integer indices
+		Sequences of 32-bit characters, accessible through integer indices
 		in a contiguous range.
 		]"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date: 2009-12-01 22:45:32 +0100 (Tue, 01 Dec 2009) $"
-	revision: "$Revision: 406 $"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2013-01-30 21:23:58 +0100 (Wed, 30 Jan 2013) $"
+	revision: "$Revision: 733 $"
 
 class
-	STRING_8
+	STRING_32
 
 inherit
-	READABLE_STRING_8
+	READABLE_STRING_32
 		export
 			{ANY} make, make_empty, make_filled, make_from_c, make_from_string, fill_character
 		redefine
-			item, at, area
+			area
 		end
 
 	STRING_GENERAL
 		rename
 			append as append_string_general,
+			append_substring as append_substring_general,
+			prepend as prepend_string_general,
+			prepend_substring as prepend_substring_general,
 			same_string as same_string_general,
-			plus as plus_string_general
+			starts_with as starts_with_general,
+			ends_with as ends_with_general,
+			is_case_insensitive_equal as is_case_insensitive_equal_general
 		undefine
-			copy, is_equal, out
+			copy, is_equal, out, has, index_of, last_index_of, occurrences
 		redefine
-			append_string_general
+			append_string_general,
+			prepend_string_general
 		end
 
-	INDEXABLE [CHARACTER_8, INTEGER]
+	INDEXABLE [CHARACTER_32, INTEGER]
 		undefine
 			copy, is_equal, out
 		redefine
@@ -39,14 +45,14 @@ inherit
 			changeable_comparison_criterion
 		end
 
-	RESIZABLE [CHARACTER_8]
+	RESIZABLE [CHARACTER_32]
 		undefine
 			copy, is_equal, out
 		redefine
 			changeable_comparison_criterion
 		end
 
-	TO_SPECIAL [CHARACTER_8]
+	TO_SPECIAL [CHARACTER_32]
 		undefine
 			copy, is_equal, out, item, at, put, valid_index
 		redefine
@@ -65,16 +71,29 @@ create
 	make_empty,
 	make_filled,
 	make_from_string,
+	make_from_string_general,
 	make_from_c,
 	make_from_c_pointer,
-	make_from_cil
+	make_from_cil,
+	make_from_separate
 
 convert
 	to_cil: {SYSTEM_STRING},
 	make_from_cil ({SYSTEM_STRING}),
-	as_string_32: {READABLE_STRING_32, STRING_32}
+	as_string_8: {READABLE_STRING_8, STRING_8}
 
 feature -- Initialization
+
+	make_from_string_general (s: READABLE_STRING_GENERAL)
+			-- Initialize from the characters of `s'.
+		do
+			if attached {READABLE_STRING_32} s as s32 then
+				make_from_string (s32)
+			else
+				make (s.count)
+				append_string_general (s)
+			end
+		end
 
 	make_from_cil (a_system_string: detachable SYSTEM_STRING)
 			-- Initialize Current with `a_system_string'.
@@ -82,7 +101,7 @@ feature -- Initialization
 			l_count: INTEGER
 		do
 			if a_system_string /= Void then
-				l_count := a_system_string.length
+				l_count := a_system_string.length + dotnet_convertor.escape_count (a_system_string)
 			end
 			make (l_count)
 			if l_count > 0 and then a_system_string /= Void then
@@ -102,7 +121,7 @@ feature -- Initialization
 			c_string_provider.set_shared_from_pointer (c_string)
 				-- Resize string in case it is not big enough
 			l_count := c_string_provider.count
-			resize (l_count + 1)
+			grow (l_count + 1)
 			count := l_count
 			internal_hash_code := 0
 			c_string_provider.read_string_into (Current)
@@ -127,7 +146,7 @@ feature -- Initialization
 			l_count := end_pos - start_pos + 1
 			c_string_provider.set_shared_from_pointer_and_count (c_string + (start_pos - 1), l_count)
 				-- Resize string in case it is not big enough
-			resize (l_count + 1)
+			grow (l_count + 1)
 			count := l_count
 			internal_hash_code := 0
 			c_string_provider.read_substring_into (Current, 1, l_count)
@@ -137,7 +156,7 @@ feature -- Initialization
 			--			 ASCII character at address c_string + (i - 1)
 		end
 
-	adapt (s: STRING_8): like Current
+	adapt (s: STRING_32): like Current
 			-- Object of a type conforming to the type of `s',
 			-- initialized with attributes from `s'
 		do
@@ -163,13 +182,27 @@ feature -- Initialization
 
 feature -- Access
 
-	item alias "[]", at alias "@" (i: INTEGER): CHARACTER_8 assign put
+	item alias "[]", at alias "@" (i: INTEGER): CHARACTER_32 assign put
 			-- Character at position `i'
 		do
 			Result := area.item (i - 1)
 		end
 
-	area: SPECIAL [CHARACTER_8]
+	code (i: INTEGER): NATURAL_32
+			-- Character at position `i'
+		do
+			Result := area.item (i - 1).code.to_natural_32
+		end
+
+	item_code (i: INTEGER): INTEGER
+			-- Character at position `i'
+		obsolete
+			"Due to potential truncation it is recommended to use `code (i)' instead."
+		do
+			Result := area.item (i - 1).natural_32_code.as_integer_32
+		end
+
+	area: SPECIAL [CHARACTER_32]
 			-- Storage for characters
 
 feature -- Status report
@@ -187,23 +220,23 @@ feature -- Status report
 
 feature -- Element change
 
-	set (t: like Current; n1, n2: INTEGER)
+	set (t: READABLE_STRING_32; n1, n2: INTEGER)
 			-- Set current string to substring of `t' from indices `n1'
 			-- to `n2', or to empty string if no such substring.
 		require
 			argument_not_void: t /= Void
 		local
-			s: STRING
+			s: READABLE_STRING_32
 		do
 			s := t.substring (n1, n2)
 			area := s.area
 			count := s.count
 			internal_hash_code := 0
 		ensure
-			is_substring: Current ~ (t.substring (n1, n2))
+			is_substring: same_string (t.substring (n1, n2))
 		end
 
-	subcopy (other: like Current; start_pos, end_pos, index_pos: INTEGER)
+	subcopy (other: READABLE_STRING_32; start_pos, end_pos, index_pos: INTEGER)
 			-- Copy characters of `other' within bounds `start_pos' and
 			-- `end_pos' to current string starting at index `index_pos'.
 		require
@@ -216,9 +249,9 @@ feature -- Element change
 		local
 			l_other_area, l_area: like area
 		do
-			l_other_area := other.area
-			l_area := area
 			if end_pos >= start_pos then
+				l_other_area := other.area
+				l_area := area
 				if l_area /= l_other_area then
 					l_area.copy_data (l_other_area, start_pos - 1, index_pos - 1,
 						end_pos - start_pos + 1)
@@ -236,7 +269,7 @@ feature -- Element change
 				old substring (index_pos + (end_pos - start_pos + 1), count)))
 		end
 
-	replace_substring (s: READABLE_STRING_8; start_index, end_index: INTEGER)
+	replace_substring (s: READABLE_STRING_32; start_index, end_index: INTEGER)
 			-- Replace characters from `start_index' to `end_index' with `s'.
 		require
 			string_not_void: s /= Void
@@ -276,7 +309,7 @@ feature -- Element change
 					s + substring (end_index + 1, count))))
 		end
 
-	replace_substring_all (original, new: READABLE_STRING_8)
+	replace_substring_all (original, new: READABLE_STRING_32)
 			-- Replace every occurrence of `original' with `new'.
 		require
 			original_exists: original /= Void
@@ -284,33 +317,36 @@ feature -- Element change
 			original_not_empty: not original.is_empty
 		local
 			l_first_pos, l_next_pos: INTEGER
-			l_orig_count, l_new_count, l_new_lower, l_count: INTEGER
+			l_orig_count, l_new_count, l_new_lower, l_count, i, l_index_count: INTEGER
+			l_src_index, l_dest_index, l_prev_index, l_copy_delta: INTEGER
 			l_area, l_new_area: like area
 			l_offset: INTEGER
 			l_string_searcher: like string_searcher
+			l_index_list: SPECIAL [INTEGER]
 		do
 			if not is_empty then
 				l_count := count
 				l_string_searcher := string_searcher
 				l_string_searcher.initialize_deltas (original)
-				l_first_pos := l_string_searcher.substring_index_with_deltas (Current, original, 1, l_count)
-				if l_first_pos > 0 then
-					l_orig_count := original.count
-					l_new_count := new.count
-					if l_orig_count = l_new_count then
-							-- String will not be resized, simply perform character substitution
-						from
-							l_area := area
-							l_new_area := new.area
-							l_new_lower := new.area_lower
-						until
-							l_first_pos = 0
-						loop
-							l_area.copy_data (l_new_area, l_new_lower, l_first_pos - 1, l_new_count)
-							if l_first_pos + l_new_count <= l_count then
-								l_first_pos := l_string_searcher.substring_index_with_deltas (Current, original, l_first_pos + l_new_count, l_count)
-							else
-								l_first_pos := 0
+				l_orig_count := original.count
+				l_new_count := new.count
+				if l_orig_count >= l_new_count then
+					l_first_pos := l_string_searcher.substring_index_with_deltas (Current, original, 1, l_count)
+					if l_first_pos > 0 then
+						if l_orig_count = l_new_count then
+								-- String will not be resized, simply perform character substitution
+							from
+								l_area := area
+								l_new_area := new.area
+								l_new_lower := new.area_lower
+							until
+								l_first_pos = 0
+							loop
+								l_area.copy_data (l_new_area, l_new_lower, l_first_pos - 1, l_new_count)
+								if l_first_pos + l_new_count <= l_count then
+									l_first_pos := l_string_searcher.substring_index_with_deltas (Current, original, l_first_pos + l_new_count, l_count)
+								else
+									l_first_pos := 0
 							end
 						end
 					elseif l_orig_count > l_new_count then
@@ -348,23 +384,44 @@ feature -- Element change
 
 							-- Update `count'
 						set_count (l_count - l_offset)
-					else
-							-- Optimization is harder as we don't know how many times we need to resize
-							-- the string. For now, we do like we did in our previous implementation
-						from
-						until
-							l_first_pos = 0
-						loop
-							replace_substring (new, l_first_pos, l_first_pos + l_orig_count - 1)
-							l_count := count
-							if l_first_pos + l_new_count <= l_count then
-								l_first_pos := l_string_searcher.substring_index_with_deltas (Current, original, l_first_pos + l_new_count, l_count)
-							else
-								l_first_pos := 0
-							end
 						end
+							-- String was modified we need to recompute the `hash_code'.
+						internal_hash_code := 0
 					end
-					internal_hash_code := 0
+				elseif attached l_string_searcher.substring_index_list_with_deltas (Current, original, 1, l_count) as l_list then
+						-- Get the number of substitution to be performed by getting a list
+						-- of location where `original' appears.
+					l_index_list := l_list.area
+					l_index_count := l_index_list.count
+						-- Store the index of the last character up to which we need to move
+						-- characters in the reallocated string.
+					l_prev_index := l_count
+						-- Resize Current with the appropriate number of characters
+					l_copy_delta := l_new_count - l_orig_count
+					l_count := l_count + (l_index_count * l_copy_delta)
+					l_area := area.resized_area_with_default ('%U', l_count + 1)
+					area := l_area
+						-- Perform the substitution starting from the end.
+					from
+						i := l_index_count
+						l_new_lower := new.area_lower
+						l_new_area := new.area
+					until
+						i = 0
+					loop
+						i := i - 1
+						l_src_index := l_index_list.item (i)
+						l_dest_index := l_src_index + (i) * l_copy_delta
+							-- Shift non-matching characters to the right of the newly replaced string.
+						l_area.overlapping_move (l_src_index + l_orig_count - 1, l_dest_index + l_new_count - 1, l_prev_index - l_src_index - l_orig_count + 1)
+							-- Store new end of string where characters will be moved.
+						l_prev_index := l_src_index - 1
+
+							-- Copy `new' to its appropriate position
+						l_area.copy_data (l_new_area, l_new_lower, l_dest_index - 1, l_new_count)
+					end
+						-- Update the new `count' which also resets the `hash_code'.
+					set_count (l_count)
 				end
 			end
 		end
@@ -388,7 +445,7 @@ feature -- Element change
 			-- all_blank: For every `i' in `count'..`capacity', `item' (`i') = `Blank'
 		end
 
-	fill_with (c: CHARACTER_8)
+	fill_with (c: CHARACTER_32)
 			-- Replace every character with `c'.
 		local
 			l_count: INTEGER
@@ -403,7 +460,7 @@ feature -- Element change
 			filled: elks_checking implies occurrences (c) = count
 		end
 
-	replace_character (c: CHARACTER_8)
+	replace_character (c: CHARACTER_32)
 			-- Replace every character with `c'.
 		obsolete
 			"ELKS 2001: use `fill_with' instead'"
@@ -414,54 +471,19 @@ feature -- Element change
 			filled: elks_checking implies occurrences (c) = count
 		end
 
-	head (n: INTEGER)
-			-- Remove all characters except for the first `n';
-			-- do nothing if `n' >= `count'.
-		obsolete
-			"ELKS 2001: use `keep_head' instead'"
-		require
-			non_negative_argument: n >= 0
-		do
-			keep_head (n)
-		ensure
-			new_count: count = n.min (old count)
-			kept: elks_checking implies Current ~ (old substring (1, n.min (count)))
-		end
-
 	keep_head (n: INTEGER)
 			-- Remove all characters except for the first `n';
 			-- do nothing if `n' >= `count'.
-		require
-			non_negative_argument: n >= 0
 		do
 			if n < count then
 				count := n
 				internal_hash_code := 0
 			end
-		ensure
-			new_count: count = n.min (old count)
-			kept: elks_checking implies Current ~ (old substring (1, n.min (count)))
-		end
-
-	tail (n: INTEGER)
-			-- Remove all characters except for the last `n';
-			-- do nothing if `n' >= `count'.
-		obsolete
-			"ELKS 2001: use `keep_tail' instead'"
-		require
-			non_negative_argument: n >= 0
-		do
-			keep_tail (n)
-		ensure
-			new_count: count = n.min (old count)
-			kept: elks_checking implies Current ~ (old substring (count - n.min(count) + 1, count))
 		end
 
 	keep_tail (n: INTEGER)
 			-- Remove all characters except for the last `n';
 			-- do nothing if `n' >= `count'.
-		require
-			non_negative_argument: n >= 0
 		local
 			nb: like count
 		do
@@ -471,9 +493,6 @@ feature -- Element change
 				count := n
 				internal_hash_code := 0
 			end
-		ensure
-			new_count: count = n.min (old count)
-			kept: elks_checking implies Current ~ (old substring (count - n.min(count) + 1, count))
 		end
 
 	left_adjust
@@ -481,13 +500,16 @@ feature -- Element change
 		local
 			nb, nb_space: INTEGER
 			l_area: like area
+			l_prop: like character_properties
 		do
+			l_prop := character_properties
+
 				-- Compute number of spaces at the left of current string.
 			from
 				nb := count - 1
 				l_area := area
 			until
-				nb_space > nb or else not l_area.item (nb_space).is_space
+				nb_space > nb or else not l_prop.is_space (l_area.item (nb_space))
 			loop
 				nb_space := nb_space + 1
 			end
@@ -501,10 +523,6 @@ feature -- Element change
 				count := nb
 				internal_hash_code := 0
 			end
-		ensure
-			valid_count: count <= old count
-			new_count: not is_empty implies not item (1).is_space
-			kept: elks_checking implies Current ~ ((old twin).substring (old count - count + 1, old count))
 		end
 
 	right_adjust
@@ -513,17 +531,26 @@ feature -- Element change
 			i, nb: INTEGER
 			nb_space: INTEGER
 			l_area: like area
+			c: CHARACTER_32
+			l_prop: like character_properties
 		do
+			l_prop := character_properties
 				-- Compute number of spaces at the right of current string.
 			from
 				nb := count - 1
 				i := nb
 				l_area := area
 			until
-				i < 0 or else not l_area.item (i).is_space
+				i < 0
 			loop
-				nb_space := nb_space + 1
-				i := i - 1
+				c := l_area.item (i)
+				if not l_prop.is_space (c) then
+						-- We are done.
+					i := -1
+				else
+					nb_space := nb_space + 1
+					i := i - 1
+				end
 			end
 
 			if nb_space > 0 then
@@ -531,17 +558,9 @@ feature -- Element change
 				count := nb + 1 - nb_space
 				internal_hash_code := 0
 			end
-		ensure
-			valid_count: count <= old count
-			new_count: (count /= 0) implies
-				((item (count) /= ' ') and
-				 (item (count) /= '%T') and
-				 (item (count) /= '%R') and
-				 (item (count) /= '%N'))
-			kept: elks_checking implies Current ~ ((old twin).substring (1, count))
 		end
 
-	share (other: STRING_8)
+	share (other: STRING_32)
 			-- Make current string share the text of `other'.
 			-- Subsequent changes to the characters of current string
 			-- will also affect `other', and conversely.
@@ -556,7 +575,7 @@ feature -- Element change
 			shared_area: other.area = area
 		end
 
-	put (c: CHARACTER_8; i: INTEGER)
+	put (c: CHARACTER_32; i: INTEGER)
 			-- Replace character at position `i' by `c'.
 		do
 			area.put (c, i - 1)
@@ -570,11 +589,21 @@ feature -- Element change
 	put_code (v: NATURAL_32; i: INTEGER)
 			-- Replace character at position `i' by character of code `v'.
 		do
-			area.put (v.to_character_8, i - 1)
+			area.put (v.to_character_32, i - 1)
 			internal_hash_code := 0
 		end
 
-	precede, prepend_character (c: CHARACTER_8)
+	prepend_string_general (s: READABLE_STRING_GENERAL)
+			-- Prepend characters of `s' at front.
+		do
+			if attached {READABLE_STRING_32} s as l_s32 then
+				prepend (l_s32)
+			else
+				Precursor {STRING_GENERAL} (s)
+			end
+		end
+
+	precede, prepend_character (c: CHARACTER_32)
 			-- Add `c' at front.
 		local
 			l_area: like area
@@ -591,43 +620,81 @@ feature -- Element change
 			new_count: count = old count + 1
 		end
 
-	prepend (s: READABLE_STRING_8)
-			-- Prepend a copy of `s' at front.
+	prepend (s: READABLE_STRING_32)
+			-- Prepend characters of `s' at front.
 		require
 			argument_not_void: s /= Void
 		do
 			insert_string (s, 1)
 		ensure
 			new_count: count = old (count + s.count)
-			inserted: elks_checking implies string ~ (old (s.twin.as_string_8) + old substring (1, count))
+			inserted: elks_checking implies same_string (old (s + Current))
+		end
+
+	prepend_substring (s: READABLE_STRING_32; start_index, end_index: INTEGER)
+			-- Prepend characters of `s.substring (start_index, end_index)' at front.
+		require
+			argument_not_void: s /= Void
+			start_index_valid: start_index >= 1
+			end_index_valid: end_index <= s.count
+			valid_bounds: start_index <= end_index + 1
+		local
+			new_size: INTEGER
+			l_s_count: INTEGER
+			l_area: like area
+		do
+				-- Insert `s' if `s' is not empty, otherwise is useless.
+			l_s_count := end_index - start_index + 1
+			if l_s_count > 0 then
+					-- Resize Current if necessary.
+				new_size := l_s_count + count
+				if new_size > capacity then
+					resize (new_size + additional_space)
+				end
+
+					-- Perform all operations using a zero based arrays.
+				l_area := area
+
+					-- First shift from `s.count' position all characters of current.
+				l_area.overlapping_move (0, l_s_count, count)
+
+					-- Copy string `s' at beginning.
+				l_area.copy_data (s.area, s.area_lower + start_index - 1, 0, l_s_count)
+
+				count := new_size
+				internal_hash_code := 0
+			end
+		ensure
+			new_count: count = old count + end_index - start_index + 1
+			inserted: elks_checking implies same_string (old (s.substring (start_index, end_index) + Current))
 		end
 
 	prepend_boolean (b: BOOLEAN)
 			-- Prepend the string representation of `b' at front.
 		do
-			prepend (b.out)
+			prepend_string_general (b.out)
 		end
 
 	prepend_double (d: DOUBLE)
 			-- Prepend the string representation of `d' at front.
 		do
-			prepend (d.out)
+			prepend_string_general (d.out)
 		end
 
 	prepend_integer (i: INTEGER)
 			-- Prepend the string representation of `i' at front.
 		do
-			prepend (i.out)
+			prepend_string_general (i.out)
 		end
 
 	prepend_real (r: REAL)
 			-- Prepend the string representation of `r' at front.
 		do
-			prepend (r.out)
+			prepend_string_general (r.out)
 		end
 
-	prepend_string (s: detachable READABLE_STRING_8)
-			-- Prepend a copy of `s', if not void, at front.
+	prepend_string (s: detachable READABLE_STRING_32)
+			-- Prepend characters of `s', if not void, at front.
 		do
 			if s /= Void then
 				prepend (s)
@@ -635,17 +702,17 @@ feature -- Element change
 		end
 
 	append_string_general (s: READABLE_STRING_GENERAL)
-			-- Append a copy of `s' at end.
+			-- Append characters of `s' at end.
 		do
-			if attached {READABLE_STRING_8} s as l_s8 then
-				append (l_s8)
+			if attached {READABLE_STRING_32} s as l_s32 then
+				append (l_s32)
 			else
 				Precursor {STRING_GENERAL} (s)
 			end
 		end
 
-	append (s: READABLE_STRING_8)
-			-- Append a copy of `s' at end.
+	append (s: READABLE_STRING_32)
+			-- Append characters of `s' at end.
 		require
 			argument_not_void: s /= Void
 		local
@@ -664,19 +731,36 @@ feature -- Element change
 			end
 		ensure
 			new_count: count = old count + old s.count
-			appended: elks_checking implies Current ~ (old twin + old s.twin)
+			appended: elks_checking implies same_string (old (Current + s))
 		end
 
-	plus alias "+" (s: READABLE_STRING_8): like Current
-			-- Append a copy of `s' at the end of a copy of Current,
-			-- Then return the Result.
+	append_substring (s: READABLE_STRING_32; start_index, end_index: INTEGER)
+			-- Append characters of `s.substring (start_index, end_index)' at end.
+		require
+			argument_not_void: s /= Void
+			start_index_valid: start_index >= 1
+			end_index_valid: end_index <= s.count
+			valid_bounds: start_index <= end_index + 1
+		local
+			l_count, l_s_count, l_new_size: INTEGER
 		do
-			Result := new_string (count + s.count)
-			Result.append (Current)
-			Result.append (s)
+			l_s_count := end_index - start_index + 1
+			if l_s_count > 0 then
+				l_count := count
+				l_new_size := l_s_count + l_count
+				if l_new_size > capacity then
+					resize (l_new_size + additional_space)
+				end
+				area.copy_data (s.area, s.area_lower + start_index - 1, l_count, l_s_count)
+				count := l_new_size
+				internal_hash_code := 0
+			end
+		ensure
+			new_count: count = old count + (end_index - start_index + 1)
+			appended: elks_checking implies same_string (old (Current + s.substring (start_index, end_index)))
 		end
 
-	plus_string_general (s: READABLE_STRING_GENERAL): like Current
+	plus alias "+" (s: READABLE_STRING_GENERAL): like Current
 			-- <Precursor>
 		do
 			Result := new_string (count + s.count)
@@ -684,7 +768,7 @@ feature -- Element change
 			Result.append_string_general (s)
 		end
 
-	append_string (s: detachable READABLE_STRING_8)
+	append_string (s: detachable READABLE_STRING_32)
 			-- Append a copy of `s', if not void, at end.
 		do
 			if s /= Void then
@@ -700,7 +784,7 @@ feature -- Element change
 		local
 			l_value: INTEGER
 			l_starting_index, l_ending_index: INTEGER
-			l_temp: CHARACTER_8
+			l_temp: CHARACTER_32
 			l_area: like area
 		do
 			if i = 0 then
@@ -726,7 +810,7 @@ feature -- Element change
 				until
 					l_value = 0
 				loop
-					append_character (((l_value \\ 10)+ 48).to_character_8)
+					append_character (((l_value \\ 10)+ 48).to_character_32)
 					l_value := l_value // 10
 				end
 
@@ -751,7 +835,7 @@ feature -- Element change
 		local
 			l_value: INTEGER_8
 			l_starting_index, l_ending_index: INTEGER
-			l_temp: CHARACTER_8
+			l_temp: CHARACTER_32
 			l_area: like area
 		do
 			if i = 0 then
@@ -777,7 +861,7 @@ feature -- Element change
 				until
 					l_value = 0
 				loop
-					append_character (((l_value \\ 10)+ 48).to_character_8)
+					append_character (((l_value \\ 10)+ 48).to_character_32)
 					l_value := l_value // 10
 				end
 
@@ -802,7 +886,7 @@ feature -- Element change
 		local
 			l_value: INTEGER_16
 			l_starting_index, l_ending_index: INTEGER
-			l_temp: CHARACTER_8
+			l_temp: CHARACTER_32
 			l_area: like area
 		do
 			if i = 0 then
@@ -828,7 +912,7 @@ feature -- Element change
 				until
 					l_value = 0
 				loop
-					append_character (((l_value \\ 10)+ 48).to_character_8)
+					append_character (((l_value \\ 10)+ 48).to_character_32)
 					l_value := l_value // 10
 				end
 
@@ -853,7 +937,7 @@ feature -- Element change
 		local
 			l_value: INTEGER_64
 			l_starting_index, l_ending_index: INTEGER
-			l_temp: CHARACTER_8
+			l_temp: CHARACTER_32
 			l_area: like area
 		do
 			if i = 0 then
@@ -879,7 +963,7 @@ feature -- Element change
 				until
 					l_value = 0
 				loop
-					append_character (((l_value \\ 10)+ 48).to_character_8)
+					append_character (((l_value \\ 10)+ 48).to_character_32)
 					l_value := l_value // 10
 				end
 
@@ -904,7 +988,7 @@ feature -- Element change
 		local
 			l_value: NATURAL_8
 			l_starting_index, l_ending_index: INTEGER
-			l_temp: CHARACTER_8
+			l_temp: CHARACTER_32
 			l_area: like area
 		do
 			if i = 0 then
@@ -917,7 +1001,7 @@ feature -- Element change
 				until
 					l_value = 0
 				loop
-					append_character (((l_value \\ 10)+ 48).to_character_8)
+					append_character (((l_value \\ 10)+ 48).to_character_32)
 					l_value := l_value // 10
 				end
 
@@ -942,7 +1026,7 @@ feature -- Element change
 		local
 			l_value: NATURAL_16
 			l_starting_index, l_ending_index: INTEGER
-			l_temp: CHARACTER_8
+			l_temp: CHARACTER_32
 			l_area: like area
 		do
 			if i = 0 then
@@ -955,7 +1039,7 @@ feature -- Element change
 				until
 					l_value = 0
 				loop
-					append_character (((l_value \\ 10)+ 48).to_character_8)
+					append_character (((l_value \\ 10)+ 48).to_character_32)
 					l_value := l_value // 10
 				end
 
@@ -980,7 +1064,7 @@ feature -- Element change
 		local
 			l_value: NATURAL_32
 			l_starting_index, l_ending_index: INTEGER
-			l_temp: CHARACTER_8
+			l_temp: CHARACTER_32
 			l_area: like area
 		do
 			if i = 0 then
@@ -993,7 +1077,7 @@ feature -- Element change
 				until
 					l_value = 0
 				loop
-					append_character (((l_value \\ 10)+ 48).to_character_8)
+					append_character (((l_value \\ 10)+ 48).to_character_32)
 					l_value := l_value // 10
 				end
 
@@ -1018,7 +1102,7 @@ feature -- Element change
 		local
 			l_value: NATURAL_64
 			l_starting_index, l_ending_index: INTEGER
-			l_temp: CHARACTER_8
+			l_temp: CHARACTER_32
 			l_area: like area
 		do
 			if i = 0 then
@@ -1031,7 +1115,7 @@ feature -- Element change
 				until
 					l_value = 0
 				loop
-					append_character (((l_value \\ 10)+ 48).to_character_8)
+					append_character (((l_value \\ 10)+ 48).to_character_32)
 					l_value := l_value // 10
 				end
 
@@ -1054,16 +1138,16 @@ feature -- Element change
 	append_real (r: REAL)
 			-- Append the string representation of `r' at end.
 		do
-			append (r.out)
+			append_string_general (r.out)
 		end
 
 	append_double (d: DOUBLE)
 			-- Append the string representation of `d' at end.
 		do
-			append (d.out)
+			append_string_general (d.out)
 		end
 
-	append_character, extend (c: CHARACTER_8)
+	append_character, extend (c: CHARACTER_32)
 			-- Append `c' at end.
 		local
 			current_count: INTEGER
@@ -1084,10 +1168,10 @@ feature -- Element change
 	append_boolean (b: BOOLEAN)
 			-- Append the string representation of `b' at end.
 		do
-			append (b.out)
+			append_string_general (b.out)
 		end
 
-	insert (s: READABLE_STRING_8; i: INTEGER)
+	insert (s: READABLE_STRING_32; i: INTEGER)
 			-- Add `s' to left of position `i' in current string.
 		obsolete
 			"ELKS 2001: use `insert_string' instead"
@@ -1102,7 +1186,7 @@ feature -- Element change
 				(Current ~ (old substring (1, i - 1) + old (s.twin) + old substring (i, count)))
 		end
 
-	insert_string (s: READABLE_STRING_8; i: INTEGER)
+	insert_string (s: READABLE_STRING_32; i: INTEGER)
 			-- Insert `s' at index `i', shifting characters between ranks
 			-- `i' and `count' rightwards.
 		require
@@ -1139,7 +1223,7 @@ feature -- Element change
 			inserted: elks_checking implies (Current ~ (old substring (1, i - 1) + old (s.twin) + old substring (i, count)))
 		end
 
-	insert_character (c: CHARACTER_8; i: INTEGER)
+	insert_character (c: CHARACTER_32; i: INTEGER)
 			-- Insert `c' at index `i', shifting characters between ranks
 			-- `i' and `count' rightwards.
 		require
@@ -1244,7 +1328,7 @@ feature -- Removal
 			removed: elks_checking implies Current ~ (old substring (1, count - n.min (count)))
 		end
 
-	prune (c: CHARACTER_8)
+	prune (c: CHARACTER_32)
 			-- Remove first occurrence of `c', if any.
 		require else
 			True
@@ -1263,14 +1347,14 @@ feature -- Removal
 			end
 		end
 
-	prune_all (c: CHARACTER_8)
+	prune_all (c: CHARACTER_32)
 			-- Remove all occurrences of `c'.
 		require else
 			True
 		local
 			i, j, nb: INTEGER
 			l_area: like area
-			l_char: CHARACTER_8
+			l_char: CHARACTER_32
 		do
 				-- Traverse string and shift characters to the left
 				-- each time we find an occurrence of `c'.
@@ -1294,7 +1378,7 @@ feature -- Removal
 			-- removed: For every `i' in 1..`count', `item' (`i') /= `c'
 		end
 
-	prune_all_leading (c: CHARACTER_8)
+	prune_all_leading (c: CHARACTER_32)
 			-- Remove all leading occurrences of `c'.
 		do
 			from
@@ -1305,7 +1389,7 @@ feature -- Removal
 			end
 		end
 
-	prune_all_trailing (c: CHARACTER_8)
+	prune_all_trailing (c: CHARACTER_32)
 			-- Remove all trailing occurrences of `c'.
 		do
 			from
@@ -1319,16 +1403,17 @@ feature -- Removal
 	wipe_out
 			-- Remove all characters.
 		do
-			create area.make (1)
 			count := 0
 			internal_hash_code := 0
 		ensure then
 			is_empty: count = 0
-			empty_capacity: capacity = 0
+			same_capacity: capacity = old capacity
 		end
 
 	clear_all
 			-- Reset all characters.
+		obsolete
+			"Use `wipe_out' instead."
 		do
 			count := 0
 			internal_hash_code := 0
@@ -1349,13 +1434,8 @@ feature -- Resizing
 			-- Rearrange string so that it can accommodate
 			-- at least `newsize' characters.
 			-- Do not lose any previously entered character.
-		local
-			area_count: INTEGER
 		do
-			area_count := area.count
-			if newsize >= area_count then
-				area := area.aliased_resized_area (newsize + 1)
-			end
+			area := area.aliased_resized_area_with_default ('%/000/', newsize + 1)
 		end
 
 	grow (newsize: INTEGER)
@@ -1373,7 +1453,7 @@ feature -- Resizing
 		do
 			n := count
 			if n < capacity then
-				area := area.resized_area (n)
+				area := area.aliased_resized_area (n)
 			end
 		ensure then
 			same_string: same_string (old twin)
@@ -1430,13 +1510,16 @@ feature -- Conversion
 			i, nb, l_offset: INTEGER
 			left_nb_space, right_nb_space: INTEGER
 			l_area: like area
+			l_prop: like character_properties
 		do
+			l_prop := character_properties
+
 				-- Compute number of spaces at the left of current string.
 			from
 				nb := count
 				l_area := area
 			until
-				left_nb_space = nb or else not l_area.item (left_nb_space).is_space
+				left_nb_space = nb or else not l_prop.is_space (l_area.item (left_nb_space))
 			loop
 				left_nb_space := left_nb_space + 1
 			end
@@ -1446,7 +1529,7 @@ feature -- Conversion
 				i := nb - 1
 				l_area := area
 			until
-				i = -1 or else not l_area.item (i).is_space
+				i = -1 or else not l_prop.is_space (l_area.item (i))
 			loop
 				right_nb_space := right_nb_space + 1
 				i := i - 1
@@ -1521,7 +1604,7 @@ feature -- Conversion
 			same_count: count = old count
 		end
 
-	character_justify (pivot: CHARACTER_8; position: INTEGER)
+	character_justify (pivot: CHARACTER_32; position: INTEGER)
 			-- Justify a string based on a `pivot'
 			-- and the `position' it needs to be in
 			-- the final string.
@@ -1575,10 +1658,10 @@ feature -- Conversion
 			length_and_content: elks_checking implies Current ~ (old as_upper)
 		end
 
-	linear_representation: LINEAR [CHARACTER_8]
+	linear_representation: LINEAR [CHARACTER_32]
 			-- Representation as a linear structure
 		local
-			temp: ARRAYED_LIST [CHARACTER_8]
+			temp: ARRAYED_LIST [CHARACTER_32]
 			i: INTEGER
 		do
 			create temp.make (capacity)
@@ -1621,7 +1704,7 @@ feature -- Conversion
 			-- "Hello world" -> "dlrow olleH".
 		local
 			a: like area
-			c: CHARACTER_8
+			c: CHARACTER_32
 			i, j: INTEGER
 		do
 			if count > 0 then
@@ -1702,24 +1785,29 @@ feature -- Transformation
 	correct_mismatch
 			-- Attempt to correct object mismatch during retrieve using `mismatch_information'.
 		do
-			-- Nothing to be done because we only added `internal_hash_code' that will
-			-- be recomputed next time we query `hash_code'.
-		end
+				-- Nothing to be done because we only added `internal_hash_code' that will
+				-- be recomputed next time we query `hash_code'.
 
-feature {NONE} -- Implementation
-
-	empty_area: SPECIAL [CHARACTER_8]
-			-- Empty `area' to avoid useless creation of empty areas when wiping out a STRING.
-		obsolete
-			"Simply create `area' directly."
-		do
-			create Result.make (1)
-		ensure
-			empty_area_not_void: Result /= Void
+				-- In .NET, we have a mismatch that is triggered due to the implementation of
+				-- SPECIAL [CHARACTER_32] as a .NET array of UInt16.
+			if area = Void and then attached {like area} mismatch_information.item ("area") as l_area then
+				area := l_area
+			end
 		end
 
 invariant
 	extendible: extendible
 	compare_character: not object_comparison
+
+note
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

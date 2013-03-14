@@ -300,7 +300,6 @@ feature -- Status report
 			-- Hash code value
 		local
 			i, nb, l_hash: INTEGER
-			l_key: HASHABLE
 		do
 			from
 				i := 1
@@ -338,8 +337,7 @@ feature -- Status report
 				when integer_64_code then
 					l_hash := integer_64_item (i).hash_code
 				when reference_code then
-					l_key ?= reference_item (i)
-					if l_key /= Void then
+					if attached {HASHABLE} reference_item (i) as l_key then
 						l_hash := l_key.hash_code
 					else
 						l_hash := 0
@@ -362,21 +360,6 @@ feature -- Status report
 			-- Is object `v' a valid target for element at position `index'?
 		require
 			valid_index: valid_index (index)
-		local
-			l_b: BOOLEAN_REF
-			l_c: CHARACTER_REF
-			l_wc: CHARACTER_32_REF
-			l_d: REAL_64_REF
-			l_r: REAL_32_REF
-			l_p: POINTER_REF
-			l_ui8: NATURAL_8_REF
-			l_ui16: NATURAL_16_REF
-			l_ui32: NATURAL_32_REF
-			l_ui64: NATURAL_64_REF
-			l_i8: INTEGER_8_REF
-			l_i16: INTEGER_16_REF
-			l_i32: INTEGER_32_REF
-			l_i64: INTEGER_64_REF
 		do
 			if v = Void then
 					-- A Void entry is always valid.
@@ -384,51 +367,37 @@ feature -- Status report
 			else
 				inspect item_code (index)
 				when boolean_code then
-					l_b ?= v
-					Result := l_b /= Void
+					Result := attached {BOOLEAN_REF} v
 				when character_8_code then
-					l_c ?= v
-					Result := l_c /= Void
+					Result := attached {CHARACTER_8_REF} v
 				when character_32_code then
-					l_wc ?= v
-					Result := l_wc /= Void
+					Result := attached {CHARACTER_32_REF} v
 				when real_64_code then
-					l_d ?= v
-					Result := l_d /= Void
+					Result := attached {REAL_64_REF} v
 				when real_32_code then
-					l_r ?= v
-					Result := l_r /= Void
+					Result := attached {REAL_32_REF} v
 				when pointer_code then
-					l_p ?= v
-					Result := l_p /= Void
+					Result := attached {POINTER_REF} v
 				when natural_8_code then
-					l_ui8 ?= v
-					Result := l_ui8 /= Void
+					Result := attached {NATURAL_8_REF} v
 				when natural_16_code then
-					l_ui16 ?= v
-					Result := l_ui16 /= Void
+					Result := attached {NATURAL_16_REF} v
 				when natural_32_code then
-					l_ui32 ?= v
-					Result := l_ui32 /= Void
+					Result := attached {NATURAL_32_REF} v
 				when natural_64_code then
-					l_ui64 ?= v
-					Result := l_ui64 /= Void
+					Result := attached {NATURAL_64_REF} v
 				when integer_8_code then
-					l_i8 ?= v
-					Result := l_i8 /= Void
+					Result := attached {INTEGER_8_REF} v
 				when integer_16_code then
-					l_i16 ?= v
-					Result := l_i16 /= Void
+					Result := attached {INTEGER_16_REF} v
 				when integer_32_code then
-					l_i32 ?= v
-					Result := l_i32 /= Void
+					Result := attached {INTEGER_32_REF} v
 				when integer_64_code then
-					l_i64 ?= v
-					Result := l_i64 /= Void
+					Result := attached {INTEGER_64_REF} v
 				when Reference_code then
 						-- Let's check that type of `v' conforms to specified type of `index'-th
 						-- arguments of current TUPLE.
-					Result := v.generating_type.conforms_to (generating_type.generic_parameter (index))
+					Result := v.generating_type.conforms_to (generating_type.generic_parameter_type (index))
 				end
 			end
 		end
@@ -461,85 +430,70 @@ feature -- Element change
 		require
 			valid_index: valid_index (index)
 			valid_type_for_index: valid_type_for_index (v, index)
-		local
-			l_b: BOOLEAN_REF
-			l_c: CHARACTER_REF
-			l_wc: CHARACTER_32_REF
-			l_d: DOUBLE_REF
-			l_r: REAL_REF
-			l_p: POINTER_REF
-			l_ui8: NATURAL_8_REF
-			l_ui16: NATURAL_16_REF
-			l_ui32: NATURAL_32_REF
-			l_ui64: NATURAL_64_REF
-			l_i8: INTEGER_8_REF
-			l_i16: INTEGER_16_REF
-			l_i32: INTEGER_REF
-			l_i64: INTEGER_64_REF
 		do
 			inspect item_code (index)
 			when boolean_code then
-				l_b ?= v
-				check valid_type_for_index: l_b /= Void end
-				put_boolean (l_b.item, index)
+				check valid_type_for_index: attached {BOOLEAN_REF} v as l_b then
+					put_boolean (l_b.item, index)
+				end
 			when character_8_code then
-				l_c ?= v
-				check valid_type_for_index: l_c /= Void end
-				put_character_8 (l_c.item, index)
+				check valid_type_for_index: attached {CHARACTER_8_REF} v as l_c then
+					put_character_8 (l_c.item, index)
+				end
 			when character_32_code then
-				l_wc ?= v
-				check valid_type_for_index: l_wc /= Void end
-				put_character_32 (l_wc.item, index)
+				check valid_type_for_index: attached {CHARACTER_32_REF} v as l_wc then
+					put_character_32 (l_wc.item, index)
+				end
 			when real_64_code then
-				l_d ?= v
-				check valid_type_for_index: l_d /= Void end
-				put_real_64 (l_d.item, index)
+				check valid_type_for_index: attached {REAL_64_REF} v as l_d then
+					put_real_64 (l_d.item, index)
+				end
 			when real_32_code then
-				l_r ?= v
-				check valid_type_for_index: l_r /= Void end
-				put_real_32 (l_r.item, index)
+				check valid_type_for_index: attached {REAL_32_REF} v as l_r then
+					put_real_32 (l_r.item, index)
+				end
 			when pointer_code then
-				l_p ?= v
-				check valid_type_for_index: l_p /= Void end
-				put_pointer (l_p.item, index)
+				check valid_type_for_index: attached {POINTER_REF} v as l_p then
+					put_pointer (l_p.item, index)
+				end
 			when natural_8_code then
-				l_ui8 ?= v
-				check valid_type_for_index: l_ui8 /= Void end
-				put_natural_8 (l_ui8, index)
+				check valid_type_for_index: attached {NATURAL_8_REF} v as l_ui8 then
+					put_natural_8 (l_ui8.item, index)
+				end
 			when natural_16_code then
-				l_ui16 ?= v
-				check valid_type_for_index: l_ui16 /= Void end
-				put_natural_16 (l_ui16, index)
+				check valid_type_for_index: attached {NATURAL_16_REF} v as l_ui16 then
+					put_natural_16 (l_ui16.item, index)
+				end
 			when natural_32_code then
-				l_ui32 ?= v
-				check valid_type_for_index: l_ui32 /= Void end
-				put_natural_32 (l_ui32, index)
+				check valid_type_for_index: attached {NATURAL_32_REF} v as l_ui32 then
+					put_natural_32 (l_ui32.item, index)
+				end
 			when natural_64_code then
-				l_ui64 ?= v
-				check valid_type_for_index: l_ui64 /= Void end
-				put_natural_64 (l_ui64, index)
+				check valid_type_for_index: attached {NATURAL_64_REF} v as l_ui64 then
+					put_natural_64 (l_ui64.item, index)
+				end
 			when integer_8_code then
-				l_i8 ?= v
-				check valid_type_for_index: l_i8 /= Void end
-				put_integer_8 (l_i8, index)
+				check valid_type_for_index: attached {INTEGER_8_REF} v as l_i8 then
+					put_integer_8 (l_i8.item, index)
+				end
 			when integer_16_code then
-				l_i16 ?= v
-				check valid_type_for_index: l_i16 /= Void end
-				put_integer_16 (l_i16, index)
+				check valid_type_for_index: attached {INTEGER_16_REF} v as l_i16 then
+					put_integer_16 (l_i16.item, index)
+				end
 			when integer_32_code then
-				l_i32 ?= v
-				check valid_type_for_index: l_i32 /= Void end
-				put_integer_32 (l_i32.item, index)
+				check valid_type_for_index: attached {INTEGER_32_REF} v as l_i32 then
+					put_integer_32 (l_i32.item, index)
+				end
 			when integer_64_code then
-				l_i64 ?= v
-				check valid_type_for_index: l_i64 /= Void end
-				put_integer_64 (l_i64.item, index)
+				check valid_type_for_index: attached {INTEGER_64_REF} v as l_i64 then
+					put_integer_64 (l_i64.item, index)
+				end
 			when reference_code then
 				put_reference (v, index)
 			end
 		end
 
-	put_reference (v: ANY; index: INTEGER)
+	put_reference (v: detachable ANY; index: INTEGER)
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -1067,7 +1021,7 @@ feature -- Conversion
 			from
 				i := 1
 				cnt := count
-				create Result.make (1, cnt)
+				create Result.make_filled (Void, 1, cnt)
 			until
 				i > cnt
 			loop
@@ -1092,7 +1046,7 @@ feature -- Conversion
 			from
 				i := 1
 				cnt := count
-				create Result.make (1, cnt)
+				create Result.make_filled (False, 1, cnt)
 			until
 				i > cnt
 			loop
@@ -1117,7 +1071,7 @@ feature -- Conversion
 			from
 				i := 1
 				cnt := count
-				create Result.make (1, cnt)
+				create Result.make_filled (' ', 1, cnt)
 			until
 				i > cnt
 			loop
@@ -1142,7 +1096,7 @@ feature -- Conversion
 			from
 				i := 1
 				cnt := count
-				create Result.make (1, cnt)
+				create Result.make_filled ({REAL_64} 0.0, 1, cnt)
 			until
 				i > cnt
 			loop
@@ -1167,7 +1121,7 @@ feature -- Conversion
 			from
 				i := 1
 				cnt := count
-				create Result.make (1, cnt)
+				create Result.make_filled ({INTEGER} 0, 1, cnt)
 			until
 				i > cnt
 			loop
@@ -1192,7 +1146,7 @@ feature -- Conversion
 			from
 				i := 1
 				cnt := count
-				create Result.make (1, cnt)
+				create Result.make_filled (Default_pointer, 1, cnt)
 			until
 				i > cnt
 			loop
@@ -1217,7 +1171,7 @@ feature -- Conversion
 			from
 				i := 1
 				cnt := count
-				create Result.make (1, cnt)
+				create Result.make_filled ({REAL_32} 0.0, 1, cnt)
 			until
 				i > cnt
 			loop
@@ -1242,7 +1196,7 @@ feature -- Conversion
 			from
 				i := 1
 				cnt := count
-				create Result.make (1, cnt)
+				create Result.make_filled (Void, 1, cnt)
 			until
 				i > cnt
 			loop

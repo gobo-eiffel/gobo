@@ -1,16 +1,14 @@
 note
-
-	description:
-		"Unbounded queues implemented as linked lists"
+	description: "Unbounded queues implemented as linked lists"
+	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	names: linked_queue, dispenser, linked_list;
 	representation: linked;
 	access: fixed, fifo, membership;
 	contents: generic;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2012-11-17 16:28:45 +0100 (Sat, 17 Nov 2012) $"
+	revision: "$Revision: 615 $"
 
 class LINKED_QUEUE [G] inherit
 
@@ -68,14 +66,10 @@ feature -- Access
 
 	item: G
 			-- Oldest item
-		local
-			a: like active
 		do
-			a := active
-			check
-				a_attached: a /= Void
+			check attached active as a then
+				Result := a.item
 			end
-			Result := a.item
 		ensure then
 			last_element_if_not_empty:
 				not is_empty implies (active = last_element)
@@ -98,17 +92,27 @@ feature -- Conversion
 	linear_representation: ARRAYED_LIST [G]
 			-- Representation as a linear structure
 			-- (order is same as original order of insertion)
+		local
+			l_list: ARRAYED_LIST [G]
 		do
-			create Result.make_filled (count)
+			create l_list.make (count)
 			from
 				start
-				Result.finish
 			until
 				after
 			loop
-				Result.replace (ll_item)
+				l_list.extend (ll_item)
 				forth
-				Result.back
+			end
+
+			from
+				create Result.make (count)
+				l_list.finish
+			until
+				l_list.before
+			loop
+				Result.extend (l_list.item)
+				l_list.back
 			end
 		end
 
@@ -138,34 +142,33 @@ feature -- Duplication
 			-- to `other', so as to yield equal objects.
 		local
 			cur: detachable like cursor
-			obj_comparison: BOOLEAN
 		do
-			obj_comparison := other.object_comparison
-			standard_copy (other)
-			if not other.is_empty then
-				internal_wipe_out
-				if attached {like cursor} other.cursor as l_cur then
-					cur := l_cur
+			if other /= Current then
+				standard_copy (other)
+				if not other.is_empty then
+					internal_wipe_out
+					if attached {like cursor} other.cursor as l_cur then
+						cur := l_cur
+					end
+					from
+						other.start
+					until
+						other.off
+					loop
+						ll_extend (other.ll_item)
+							-- For speeding up next insertion, we go
+							-- to the end, that way `extend' does not
+							-- need to traverse the list completely.
+						forth
+						other.forth
+					end
+					if cur /= Void then
+						other.go_to (cur)
+					end
 				end
-				from
-					other.start
-				until
-					other.off
-				loop
-					ll_extend (other.ll_item)
-						-- For speeding up next insertion, we go
-						-- to the end, that way `extend' does not
-						-- need to traverse the list completely.
-					forth
-					other.forth
-				end
-				if cur /= Void then
-					other.go_to (cur)
-				end
+				after := True
+				before := False
 			end
-			object_comparison := obj_comparison
-			after := True
-			before := False
 		end
 
 feature {NONE} -- Not applicable
@@ -189,18 +192,14 @@ invariant
 	is_always_after: not is_empty implies after
 
 note
-	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class LINKED_QUEUE
-
-
-
+end

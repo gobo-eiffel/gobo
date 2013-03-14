@@ -4,7 +4,7 @@
 		"C functions used to implement class EXECUTION_ENVIRONMENT"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,19 +28,23 @@
 extern "C" {
 #endif
 
-EIF_INTEGER eif_system(char* s) {
+EIF_INTEGER eif_system(EIF_NATIVE_CHAR* s) {
+#ifdef EIF_WINDOWS
+	return (EIF_INTEGER)_wsystem(s);
+#else
 	return (EIF_INTEGER)system(s);
+#endif
 }
 
-void eif_system_asynchronous(char* cmd) {
-#ifdef WIN32
-	STARTUPINFO siStartInfo;
+void eif_system_asynchronous(EIF_NATIVE_CHAR* cmd) {
+#ifdef EIF_WINDOWS
+	STARTUPINFOW siStartInfo;
 	PROCESS_INFORMATION procinfo;
-	char* current_dir;
+	wchar_t* current_dir;
 	EIF_INTEGER result;
 
-	current_dir = (char*)getcwd(NULL, PATH_MAX);
-	memset(&siStartInfo, 0, sizeof(STARTUPINFO));
+	current_dir = (wchar_t*)_wgetcwd(NULL, PATH_MAX);
+	memset(&siStartInfo, 0, sizeof siStartInfo);
 	siStartInfo.cb = sizeof(STARTUPINFO);
 	siStartInfo.lpTitle = NULL;
 	siStartInfo.lpReserved = NULL;
@@ -48,7 +52,7 @@ void eif_system_asynchronous(char* cmd) {
 	siStartInfo.cbReserved2 = 0;
 	siStartInfo.lpDesktop = NULL;
 	siStartInfo.dwFlags = STARTF_FORCEONFEEDBACK;
-	result = CreateProcessA(
+	result = CreateProcessW(
 		NULL,
 		cmd,
 		NULL,
@@ -63,7 +67,7 @@ void eif_system_asynchronous(char* cmd) {
 		CloseHandle(procinfo.hProcess);
 		CloseHandle(procinfo.hThread);
 	}
-	chdir(current_dir);
+	_wchdir(current_dir);
 	free(current_dir);
 #else
 	int status;

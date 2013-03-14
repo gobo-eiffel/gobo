@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Generate Eiffel files from .ge files"
-		copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2013, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -22,7 +22,6 @@
 
 		<gepp input="${gepp_dir}/${gepp_file}.ge" output="${spec_dir}/ge/${gepp_file}.e" lines="true">
 			<define name="GE"/>
-			<define name="GOBO_COMPATIBLE"/>
 		</gepp>
 		<gepp input="${gepp_dir}/${gepp_file}.ge" output="${spec_dir}/ise/${gepp_file}.e" lines="true">
 			<define name="ISE"/>

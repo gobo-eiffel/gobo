@@ -5,7 +5,7 @@ note
 		"Eiffel Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1026,7 +1026,7 @@ feature -- AST leaves
 			-- New character constant of the form '%/code/'
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: ([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]).recognizes (a_scanner.last_literal)
+			-- valid_literal: ((0*([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))|(0x[0-9a-fA-F]{1,4})).recognizes (a_scanner.last_literal)
 		do
 			Result := a_scanner.last_c3_character_constant
 			Result.set_position (a_scanner.line, a_scanner.column)

@@ -1,16 +1,14 @@
 note
-
-	description:
-		"Trees implemented using a two way linked list representation"
+	description: "Trees implemented using a two way linked list representation"
+	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	names: two_way_tree, tree, two_way_list;
 	representation: recursive, linked;
 	access: cursor, membership;
 	contents: generic;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2012-07-23 23:02:19 +0200 (Mon, 23 Jul 2012) $"
+	revision: "$Revision: 567 $"
 
 class TWO_WAY_TREE [G] inherit
 
@@ -70,6 +68,7 @@ class TWO_WAY_TREE [G] inherit
 			make as twl_make,
 			merge_left as twl_merge_left,
 			merge_right as twl_merge_right,
+			new_cursor as twl_new_cursor,
 			off as child_off,
 			prune as twl_prune,
 			put as child_put,
@@ -89,6 +88,7 @@ class TWO_WAY_TREE [G] inherit
 				twl_fill,
 				twl_duplicate,
 				twl_full,
+				twl_new_cursor,
 				split
 		undefine
 			copy, child_readable, is_leaf,
@@ -307,7 +307,7 @@ feature -- Removal
 
 feature {TWO_WAY_TREE} -- Implementation
 
-	new_cell (v: like item): TWO_WAY_TREE [G]
+	new_cell (v: like item): like Current
 			-- New cell containing `v'
 		do
 			create Result.make (v)
@@ -383,18 +383,14 @@ invariant
 	off_constraint: (child = Void) implies child_off
 
 note
-	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class TWO_WAY_TREE
-
-
-
+end

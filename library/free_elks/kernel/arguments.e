@@ -1,18 +1,23 @@
 note
-
 	description: "[
-		Access to command-line arguments. This class
+		Access to command-line arguments. This class 
 		may be used as ancestor by classes needing its facilities.
 		]"
 
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2013-01-25 20:58:54 +0100 (Fri, 25 Jan 2013) $"
+	revision: "$Revision: 713 $"
 
 class
 	ARGUMENTS
+
+obsolete
+	"Use `ARGUMENTS_32' to manipulate Unicode arguments."
+
+inherit
+	ITERABLE [STRING]
 
 feature -- Access
 
@@ -22,8 +27,8 @@ feature -- Access
 		require
 			index_large_enough: i >= 0
 			index_small_enough: i <= argument_count
-		external
-			"built_in"
+		do
+			Result := internal_arguments.argument (i).as_string_8
 		ensure
 			argument_not_void: Result /= Void
 		end
@@ -62,6 +67,14 @@ feature -- Access
 			Result := argument (0)
 		ensure
 			definition: Result ~ argument (0)
+		end
+
+feature -- Access: Cursor
+
+	new_cursor: ITERATION_CURSOR [STRING]
+			-- <Precursor>
+		do
+			Result := argument_array.new_cursor
 		end
 
 feature -- Status report
@@ -272,7 +285,7 @@ feature -- Status report
 
 	option_sign: CHARACTER_REF
 			-- The character used to signal options on the command line.
-			-- This can be '%U' if no sign is necesary for the argument
+			-- This can be '%U' if no sign is necessary for the argument
 			-- to be an option
 			-- Default is '-'
 		once
@@ -284,7 +297,7 @@ feature -- Status setting
 
 	set_option_sign (c: CHARACTER)
 			-- Make `c' the option sign.
-			-- Use'%U' if no sign is necesary for the argument to
+			-- Use'%U' if no sign is necessary for the argument to
 			-- be an option
 		do
 			option_sign.set_item (c)
@@ -295,8 +308,8 @@ feature -- Measurement
 	argument_count: INTEGER
 			-- Number of arguments given to command that started
 			-- system execution (command name does not count)
-		external
-			"built_in"
+		do
+			Result := internal_arguments.argument_count
 		ensure
 			argument_count_positive: Result >= 0
 		end
@@ -346,7 +359,7 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 		do
-			create Result.make (0, argument_count)
+			create Result.make_filled ("", 0, argument_count)
 			Result.compare_objects
 			from
 			until
@@ -360,7 +373,24 @@ feature {NONE} -- Implementation
 			internal_argument_array_compare_objects: Result.object_comparison
 		end
 
+	internal_arguments: ARGUMENTS_32
+			-- Access to the Unicode arguments.
+		once
+			create Result
+		end
+
 invariant
 	argument_array_consistent: argument_array ~ internal_argument_array
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

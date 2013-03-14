@@ -5,7 +5,7 @@ note
 		"Eiffel AST printers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -121,7 +121,7 @@ feature {ET_AST_NODE} -- Processing
 		do
 			precursor (a_constant)
 			file.put_character ('%'')
-			file.put_character (a_constant.value)
+			file.put_character (a_constant.literal)
 			file.put_character ('%'')
 			process_break (a_constant.break)
 		end

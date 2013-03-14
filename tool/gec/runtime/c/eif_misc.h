@@ -4,7 +4,7 @@
 		"C functions used to implement class EXECUTION_ENVIRONMENT"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,8 +17,8 @@
 extern "C" {
 #endif
 
-extern EIF_INTEGER eif_system(char* s);
-extern void eif_system_asynchronous(char* cmd);
+extern EIF_INTEGER eif_system(EIF_NATIVE_CHAR* s);
+extern void eif_system_asynchronous(EIF_NATIVE_CHAR* cmd);
 extern void eif_sleep(EIF_INTEGER_64);
 
 #ifdef EIF_WINDOWS

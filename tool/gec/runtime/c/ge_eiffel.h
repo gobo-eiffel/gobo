@@ -126,6 +126,13 @@ typedef void* EIF_POINTER;
 typedef float EIF_REAL_32;
 typedef double EIF_REAL_64;
 
+#ifdef EIF_WINDOWS
+typedef wchar_t EIF_NATIVE_CHAR;
+#else
+typedef char EIF_NATIVE_CHAR;
+#endif
+typedef EIF_NATIVE_CHAR* EIF_FILENAME;
+
 #define EIF_VOID ((EIF_REFERENCE)0)
 #define EIF_FALSE ((EIF_BOOLEAN)'\0')
 #define EIF_TRUE ((EIF_BOOLEAN)'\1')
@@ -148,8 +155,8 @@ typedef double EIF_REAL_64;
 #else /* ISO C 99 */
 #define GE_int64(x) x##LL
 #define GE_nat64(x) x##ULL
-#endif 
-#endif 
+#endif
+#endif
 
 #ifdef _MSC_VER /* MSVC */
 /* MSVC does not support ISO C 99's 'snprintf' from stdio.h */

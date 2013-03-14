@@ -1,17 +1,15 @@
 note
-
-	description:
-		"Compact trees as active structures that may be traversed using a cursor"
+	description: "Compact trees as active structures that may be traversed using a cursor"
+	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	names: compact_cursor_tree, cursor_tree;
 	representation: array;
 	access: cursor, membership;
 	size: resizable;
 	contents: generic;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2012-07-23 23:02:19 +0200 (Mon, 23 Jul 2012) $"
+	revision: "$Revision: 567 $"
 
 class COMPACT_CURSOR_TREE [G] inherit
 
@@ -31,13 +29,15 @@ feature -- Initialization
 	make (i: INTEGER)
 			-- Create an empty tree.
 			-- `i' is an estimate of the number of nodes.
+		local
+			l_default: detachable G
 		do
 			last := 1
 			active := 1
 			above := True
-			create item_table.make (1, i + 1)
-			create next_sibling_table.make (1, i + 1)
-			create first_child_table.make (1, i + 1)
+			create item_table.make_filled (l_default, 1, i + 1)
+			create next_sibling_table.make_filled (0, 1, i + 1)
+			create first_child_table.make_filled (0, 1, i + 1)
 		ensure
 			is_above: above
 			is_empty: is_empty
@@ -74,7 +74,9 @@ feature -- Access
 	item: G
 			-- Current item
 		do
-			Result := item_table.item (active)
+			check attached item_table.item (active) as r then
+				Result := r
+			end
 		end
 
 	cursor: COMPACT_TREE_CURSOR
@@ -181,9 +183,9 @@ feature -- Cursor movement
 			index, next: INTEGER
 		do
 			if below then
-					check
-						after
-					end
+				check
+					after
+				end
 					-- This is because:
 					-- below implies (before or after),
 					-- and before is false.
@@ -222,9 +224,9 @@ feature -- Cursor movement
 			-- Move cursor one position forward.
 		do
 			if below then
-					check
-						before
-					end
+				check
+					before
+				end
 					-- This is because:
 					-- below implies (before or after),
 					-- and after is false.
@@ -323,7 +325,7 @@ feature -- Cursor movement
 				above := temp.above
 			else
 				check
-					False
+					correct_cursor_type: False
 				end
 			end
 		end
@@ -469,7 +471,7 @@ feature -- Element change
 					next := next_sibling_table.item (index)
 				end
 				check
-					next < 0 -- parent exist
+					parent_exists: next < 0
 				end
 				next_sibling_table.put (next, new)
 				next_sibling_table.put (new, index)
@@ -532,6 +534,7 @@ feature -- Removal
 		local
 			old_active, next, index,
 			first_child_index: INTEGER
+			l_default: detachable G
 		do
 			old_active := active
 			first_child_index := first_child_table.item (old_active)
@@ -562,7 +565,7 @@ feature -- Removal
 			if old_active = last then
 				last := last - 1
 			else
-				item_table.area.put_default (old_active - 1)
+				item_table.area.put (l_default, old_active - 1)
 				first_child_table.put (Removed_mark, old_active)
 				next_sibling_table.put (free_list_index, old_active)
 				free_list_index := old_active
@@ -572,10 +575,12 @@ feature -- Removal
 
 	wipe_out
 			-- Remove all items.
+		local
+			l_default: G
 		do
-			item_table.conservative_resize (1, Block_threshold + 1)
-			next_sibling_table.conservative_resize (1, Block_threshold + 1)
-			first_child_table.conservative_resize (1, Block_threshold + 1)
+			item_table.conservative_resize_with_default (l_default, 1, Block_threshold + 1)
+			next_sibling_table.conservative_resize_with_default (0, 1, Block_threshold + 1)
+			first_child_table.conservative_resize_with_default (0, 1, Block_threshold + 1)
 			item_table.clear_all
 			next_sibling_table.clear_all
 			first_child_table.clear_all
@@ -603,7 +608,7 @@ feature {COMPACT_CURSOR_TREE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	item_table: ARRAY [G]
+	item_table: ARRAY [detachable G]
 			-- Array containing the items
 
 	first_child_table: ARRAY [INTEGER]
@@ -630,6 +635,7 @@ feature {NONE} -- Implementation
 	remove_subtree (i: INTEGER)
 		local
 			index, next: INTEGER
+			l_default: detachable G
 		do
 			from
 				index := first_child_table.item (i)
@@ -643,7 +649,7 @@ feature {NONE} -- Implementation
 			if i = last then
 				last := last - 1
 			else
-				item_table.area.put_default (i - 1)
+				item_table.area.put (l_default, i - 1)
 				first_child_table.put (Removed_mark, i)
 				next_sibling_table.put (free_list_index, i)
 				free_list_index := i
@@ -652,6 +658,8 @@ feature {NONE} -- Implementation
 		end
 
 	new_cell_index: INTEGER
+		local
+			l_default: detachable G
 		do
 			if free_list_index > 0 then
 				Result := free_list_index
@@ -662,7 +670,7 @@ feature {NONE} -- Implementation
 				if item_table.count < last then
 					item_table.grow (last)
 				else
-					item_table.area.put_default (last - 1)
+					item_table.area.put (l_default, last - 1)
 				end
 				next_sibling_table.force (0, last)
 				first_child_table.force (0, last)
@@ -677,15 +685,15 @@ feature {NONE} -- Implementation
 
 
 note
-	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class COMPACT_CURSOR_TREE
+
+end

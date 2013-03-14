@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic SPECIAL types at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 		do
 			Result := precursor (a_procedure, a_system)
 			l_name := a_procedure.name
-			if l_name.same_feature_name (tokens.put_feature_name) then
+			if l_name.same_feature_name (tokens.put_feature_name) or l_name.same_feature_name (tokens.extend_feature_name) then
 				l_procedure_type_sets := Result.dynamic_type_sets
 				nb := l_procedure_type_sets.count
 				create l_dynamic_type_sets.make_with_capacity (nb)

@@ -3,10 +3,10 @@ note
 		%collector problems (mainly objects moving around) when %
 		%interfacing with C APIs."
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date: 2009-02-07 00:00:32 +0100 (Sat, 07 Feb 2009) $"
-	revision: "$Revision: 268 $"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2013-01-21 01:35:07 +0100 (Mon, 21 Jan 2013) $"
+	revision: "$Revision: 706 $"
 
 class
 	C_STRING
@@ -20,7 +20,9 @@ create
 	make_by_pointer,
 	make_by_pointer_and_count,
 	make_shared_from_pointer,
-	make_shared_from_pointer_and_count
+	make_shared_from_pointer_and_count,
+	own_from_pointer,
+	own_from_pointer_and_count
 
 feature {NONE} -- Initialization
 
@@ -28,6 +30,7 @@ feature {NONE} -- Initialization
 			-- Make a C string from `a_string'.
 		require
 			a_string_not_void: a_string /= Void
+			a_string_is_valid_as_string_8: a_string.is_valid_as_string_8
 		do
 			make_empty (a_string.count)
 			set_string (a_string)
@@ -78,6 +81,26 @@ feature {NONE} -- Initialization
 		do
 			count := a_length
 			create managed_data.share_from_pointer (a_ptr, a_length + 1)
+		end
+
+	own_from_pointer (a_ptr: POINTER)
+			-- New instance using `a_ptr' as memory. Current will free pointed memory
+			-- by `a_ptr' when collected.
+		require
+			a_ptr_not_null: a_ptr /= default_pointer
+		do
+			own_from_pointer_and_count (a_ptr, c_strlen (a_ptr))
+		end
+
+	own_from_pointer_and_count (a_ptr: POINTER; a_length: INTEGER)
+			-- New instance using `a_ptr' as memory. Current will free pointed memory
+			-- by `a_ptr' when collected.
+		require
+			a_ptr_not_null: a_ptr /= default_pointer
+			a_length_non_negative: a_length >= 0
+		do
+			count := a_length
+			create managed_data.own_from_pointer (a_ptr, a_length)
 		end
 
 feature -- Initialization
@@ -394,5 +417,16 @@ feature {NONE} -- Implementation
 invariant
 	managed_data_not_void: managed_data /= Void
 	count_not_negative: count >= 0
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

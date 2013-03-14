@@ -1,16 +1,14 @@
 note
-
-	description:
-		"Binary tree: each node may have a left child and a right child"
+	description: "Binary tree: each node may have a left child and a right child"
+	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	names: binary_tree, tree, fixed_tree;
 	representation: recursive, array;
 	access: cursor, membership;
 	contents: generic;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2012-07-23 23:02:19 +0200 (Mon, 23 Jul 2012) $"
+	revision: "$Revision: 567 $"
 
 class
 	BINARY_TREE [G]
@@ -53,7 +51,7 @@ feature -- Initialization
 
 feature -- Access
 
-	parent: detachable BINARY_TREE [G]
+	parent: detachable like Current
 			-- Parent of current node
 
 	child_index: INTEGER
@@ -69,28 +67,20 @@ feature -- Access
 			-- Value of left child
 		require
 			has_left: left_child /= Void
-		local
-			l: like left_child
 		do
-			l := left_child
-			check
-				l_attached: l /= Void
+			check attached left_child as l then
+				Result := l.item
 			end
-			Result := l.item
 		end
 
 	right_item: like item
 			-- Value of right child
 		require
 			has_right: right_child /= Void
-		local
-			r: like right_child
 		do
-			r := right_child
-			check
-				r_attached: r /= Void
+			check attached right_child as r then
+				Result := r.item
 			end
-			Result := r.item
 		end
 
 	first_child: like parent
@@ -573,15 +563,14 @@ invariant
 	tree_is_binary: child_capacity = 2
 
 note
-	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class BINARY_TREE
+end

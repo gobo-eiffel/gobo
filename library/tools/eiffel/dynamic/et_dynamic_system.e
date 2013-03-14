@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic systems at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -436,10 +436,13 @@ feature {NONE} -- Types
 			else
 				create Result.make (a_base_type, l_base_class)
 			end
-				-- Make feature 'count' alive at the first position in the
-				-- feature list of the "SPECIAL" type.
+				-- Make feature 'count' and 'capacity' alive at the first two
+				-- positions in the feature list of the "SPECIAL" type.
 			if special_count_feature /= Void then
 				l_dynamic_feature := Result.dynamic_query (special_count_feature, Current)
+			end
+			if special_capacity_feature /= Void then
+				l_dynamic_feature := Result.dynamic_query (special_capacity_feature, Current)
 			end
 		ensure
 			new_special_type_not_void: Result /= Void
@@ -1191,6 +1194,7 @@ feature {NONE} -- Compilation
 				pointer_type := dynamic_type (l_class_type, l_any)
 					-- Class "SPECIAL".
 				special_count_feature := Void
+				special_capacity_feature := Void
 				l_class := current_system.special_any_type.base_class
 				if not l_class.is_preparsed then
 					set_fatal_error
@@ -1217,6 +1221,22 @@ feature {NONE} -- Compilation
 							set_fatal_error
 							error_handler.report_gvkfe3a_error (l_class, special_count_feature, l_class.universe.integer_type)
 							special_count_feature := Void
+						end
+							-- Check feature 'capacity' of class SPECIAL.
+						special_capacity_feature := l_class.named_query (tokens.capacity_feature_name)
+						if special_capacity_feature = Void then
+							l_procedure := l_class.named_procedure (tokens.capacity_feature_name)
+							if l_procedure /= Void then
+								set_fatal_error
+								error_handler.report_gvkfe2a_error (l_class, l_procedure)
+							else
+								set_fatal_error
+								error_handler.report_gvkfe1a_error (l_class, tokens.capacity_feature_name)
+							end
+						elseif not special_capacity_feature.type.same_named_type (l_class.universe.integer_type, l_class, l_class) then
+							set_fatal_error
+							error_handler.report_gvkfe3a_error (l_class, special_capacity_feature, l_class.universe.integer_type)
+							special_capacity_feature := Void
 						end
 					end
 				end
@@ -1668,6 +1688,9 @@ feature {NONE} -- Features
 
 	special_count_feature: ET_QUERY
 			-- Expected attribute 'count' in class "SPECIAL"
+
+	special_capacity_feature: ET_QUERY
+			-- Expected attribute 'capacity' in class "SPECIAL"
 
 	typed_pointer_to_pointer_feature: ET_QUERY
 			-- Expected attribute 'to_pointer' in class "TYPED_POINTER"

@@ -4,7 +4,7 @@
 		"C functions used to implement class ARGUMENTS"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,7 +18,7 @@ extern "C" {
 #endif
 
 extern int GE_argc;
-extern char** GE_argv;
+extern EIF_NATIVE_CHAR** GE_argv;
 
 #ifdef __cplusplus
 }

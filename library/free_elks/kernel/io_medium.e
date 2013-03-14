@@ -1,10 +1,10 @@
 note
 	description: "Any medium that can perform input and/or output"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date: 2009-04-17 07:20:59 +0200 (Fri, 17 Apr 2009) $"
-	revision: "$Revision: 291 $"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2012-09-28 18:01:26 +0200 (Fri, 28 Sep 2012) $"
+	revision: "$Revision: 575 $"
 
 deferred class IO_MEDIUM
 
@@ -23,7 +23,7 @@ feature -- Access
 		deferred
 		end
 
-	retrieved: ANY
+	retrieved: detachable ANY
 			-- Retrieved object structure
 			-- To access resulting object under correct type,
 			-- use assignment attempt.
@@ -33,8 +33,6 @@ feature -- Access
 			is_readable: readable
 			support_storable: support_storable
 		deferred
-		ensure
-			Result_exists: Result /= Void
 		end
 
 feature -- Element change
@@ -526,5 +524,16 @@ feature -- Obsolete
 		do
 			Result := last_double
 		end
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

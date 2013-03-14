@@ -829,6 +829,9 @@ feature -- Kernel types
 	special_any_type: ET_GENERIC_CLASS_TYPE
 			-- Class type "SPECIAL [ANY]", with implicit 'attached' type mark
 
+	special_detachable_any_type: ET_GENERIC_CLASS_TYPE
+			-- Class type "SPECIAL [detachable ANY]", with implicit 'attached' type mark
+
 	string_type: ET_CLASS_TYPE
 			-- Class type "STRING", with implicit 'attached' type mark
 
@@ -1332,9 +1335,14 @@ feature -- Kernel types
 			l_name := tokens.special_class_name
 			l_master_class := master_class (l_name)
 			l_master_class.set_in_system (True)
+				-- Type "SPECIAL [ANY]".
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (any_type)
 			create special_any_type.make (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
+				-- Type "SPECIAL [detachable ANY]".
+			create l_parameters.make_with_capacity (1)
+			l_parameters.put_first (detachable_any_type)
+			create special_detachable_any_type.make (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
 		end
 
 	set_string_type
@@ -2370,6 +2378,7 @@ invariant
 	real_64_type_not_void: real_64_type /= Void
 	routine_type_not_void: routine_type /= Void
 	special_any_type_not_void: special_any_type /= Void
+	special_detachable_any_type_not_void: special_detachable_any_type /= Void
 	string_8_type_not_void: string_8_type /= Void
 	string_32_type_not_void: string_32_type /= Void
 	system_object_type_not_void: system_object_type /= Void

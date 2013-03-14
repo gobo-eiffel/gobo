@@ -24,7 +24,8 @@ typedef EIF_INTEGER_32 (*EIF_INTEGER_32_FUNCTION)(EIF_REFERENCE, ...); /* Return
 typedef EIF_REFERENCE (*EIF_REFERENCE_FUNCTION)(EIF_REFERENCE, ...); /* Returns an Eiffel Reference */
 typedef EIF_POINTER (*EIF_POINTER_FUNCTION)(EIF_REFERENCE, ...); /* Returns an Eiffel Pointer */
 typedef EIF_BOOLEAN (*EIF_BOOLEAN_FUNCTION)(EIF_REFERENCE, ...); /* Returns an Eiffel Boolean */
-typedef EIF_CHARACTER (*EIF_CHARACTER_FUNCTION)(EIF_REFERENCE, ...); /* Returns char */
+typedef EIF_CHARACTER_8 (*EIF_CHARACTER_8_FUNCTION)(EIF_REFERENCE, ...); /* Returns char */
+#define EIF_CHARACTER_FUNCTION EIF_CHARACTER_8_FUNCTION
 typedef EIF_REAL_64 (*EIF_REAL_64_FUNCTION)(EIF_REFERENCE, ...); /* Returns an Eiffel Double */
 #define EIF_DOUBLE_FUNCTION EIF_REAL_64_FUNCTION
 typedef EIF_REAL_32 (*EIF_REAL_32_FUNCTION)(EIF_REFERENCE, ...); /* Returns an Eiffel Real */
@@ -40,7 +41,8 @@ extern EIF_REAL_64_FUNCTION eif_real_64_function(char* rout, EIF_TYPE_ID cid);
 #define eif_double_function(rout,cid) eif_real_64_function((rout),(cid))
 extern EIF_REAL_32_FUNCTION eif_real_32_function(char* rout, EIF_TYPE_ID cid);
 #define eif_real_function(rout,cid) eif_real_32_function((rout),(cid))
-extern EIF_CHARACTER_FUNCTION eif_character_function(char* rout, EIF_TYPE_ID cid);
+extern EIF_CHARACTER_8_FUNCTION eif_character_8_function(char* rout, EIF_TYPE_ID cid);
+#define eif_character_function(rout,cid) eif_character_8_function((rout),(cid))
 extern EIF_OBJECT eif_create(EIF_TYPE_ID cid);
 extern EIF_TYPE_ID eif_type_id(char* type_string);
 extern EIF_INTEGER eifaddr_offset(EIF_REFERENCE object, char *name, int * const ret);

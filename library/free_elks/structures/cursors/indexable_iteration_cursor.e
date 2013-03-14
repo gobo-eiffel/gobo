@@ -1,10 +1,12 @@
 note
 	description: "Concrete version of an external iteration cursor for {INDEXABLE}."
 	library: "EiffelBase: Library of reusable components for Eiffel."
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
 	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
-	date: "$Date: 2011-05-18 01:25:55 +0200 (Wed, 18 May 2011) $"
-	revision: "$Revision: 510 $"
+	date: "$Date: 2012-09-24 18:48:31 +0200 (Mon, 24 Sep 2012) $"
+	revision: "$Revision: 572 $"
 
 class
 	INDEXABLE_ITERATION_CURSOR [G]
@@ -52,19 +54,18 @@ feature -- Access
 		require
 			is_valid: is_valid
 		do
-				-- Take next index position if `target_index' is not in sync with step,
-				-- as the latter may happen when going `after' the end of the `target'.
-			if is_reversed then
-				Result := (index_set.upper - target_index + step - 1) // step + 1
-			else
-				Result := (target_index - index_set.lower + step - 1) // step + 1
-			end
+			Result := ((target_index - first_index).abs + step - 1) // step + 1
 		ensure
 			positive_index: Result >= 0
 		end
 
 	target_index: INTEGER
 			-- Index position of `target' for current iteration.
+
+	first_index: INTEGER
+	last_index: INTEGER
+			-- First and last valid index of `target' for current iteration.
+			-- Note that if `is_reversed', `first_index' might be greater than `last_index'.
 
 	step: INTEGER
 			-- Distance between successive iteration elements.
@@ -152,6 +153,18 @@ feature -- Status report
 			Result := attached {VERSIONABLE} target as l_versionable implies l_versionable.version = version
 		end
 
+	is_last: BOOLEAN
+			-- Is cursor at last position?
+		do
+			Result := target_index = last_index and then is_valid
+		end
+
+	is_first: BOOLEAN
+			-- Is cursor at first position?
+		do
+			Result := target_index = first_index and then is_valid
+		end
+
 feature -- Status setting
 
 	reverse
@@ -176,12 +189,18 @@ feature -- Cursor movement
 
 	start
 			-- Move to first position.
+		local
+			l_index_set: like index_set
 		do
+			l_index_set := index_set
 			if is_reversed then
-				target_index := index_set.upper
+				first_index := l_index_set.upper
+				last_index := l_index_set.lower
 			else
-				target_index := index_set.lower
+				last_index := l_index_set.upper
+				first_index := l_index_set.lower
 			end
+			target_index := first_index
 		ensure
 			cursor_index_set_to_one: cursor_index = 1
 		end
@@ -212,5 +231,16 @@ feature {ITERABLE, ITERATION_CURSOR} -- Implementation
 invariant
 	target_attached: target /= Void
 	step_positive: step > 0
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end
