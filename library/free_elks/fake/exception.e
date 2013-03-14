@@ -21,19 +21,33 @@ feature -- Raise
 
 feature -- Access
 
-	code: INTEGER
-			-- Code of the exception.
+	tag: IMMUTABLE_STRING_32
+			-- A short message describing what current exception is
+		once
+			create Result.make_from_string_8 ("General exception")
+		end
+
+	message: detachable STRING
+			-- Message of current exception
 		do
 		end
 
-	message: ?STRING
-			-- Message(Tag) of current exception
 
-	exception_trace: STRING
+	description: detachable READABLE_STRING_GENERAL
+			-- Detailed description of current exception
+		do
+		end
+
+	exception_trace: detachable STRING
 			-- String representation of current exception trace
 		do
 -- TODO
 			Result := ""
+		end
+
+	code: INTEGER
+			-- Code of the exception.
+		do
 		end
 
 	frozen original: EXCEPTION
@@ -53,12 +67,10 @@ feature -- Status settings
 -- TODO
 		end
 
-feature {NONE} -- Implementation
-
-	internal_meaning: STRING
-			-- Internal `meaning'
-		once
-			Result := "General exception."
+	set_description (a_description: detachable READABLE_STRING_GENERAL)
+			-- Set `description' with `a_description'.
+		do
+-- TODO
 		end
 
 end

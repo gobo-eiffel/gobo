@@ -5,7 +5,7 @@ note
 		"Data structures whose items are accessible through keys"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2000-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -53,10 +53,8 @@ feature -- Status report
 			-- Is Void a valid key?
 		local
 			k: detachable K
-			l_current: detachable DS_TABLE [G, detachable K]
 		do
-			l_current ?= Current
-			if l_current /= Void and k = Void then
+			if attached {DS_TABLE [G, detachable K]} Current as l_current and k = Void then
 				Result := l_current.valid_key (k)
 			end
 		end
@@ -72,10 +70,8 @@ feature -- Status report
 			-- Is there an item associated with Void?
 		local
 			k: detachable K
-			l_current: detachable DS_TABLE [G, detachable K]
 		do
-			l_current ?= Current
-			if l_current /= Void and k = Void then
+			if attached {DS_TABLE [G, detachable K]} Current as l_current and k = Void then
 				Result := l_current.has (k)
 			end
 		ensure

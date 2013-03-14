@@ -5,7 +5,7 @@ note
 		"Eiffel 'free-operator' feature names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -57,22 +57,17 @@ feature -- Comparison
 	same_call_name (other: ET_CALL_NAME): BOOLEAN
 			-- Are feature name and `other' the same feature call name?
 			-- (case insensitive)
-		local
-			op: ET_FREE_NAME
 		do
 			if other = Current then
 				Result := True
-			else
-				op ?= other
-				if op /= Void then
-					if hash_code = op.hash_code then
-						if is_infix_freeop /= op.is_infix_freeop then
-							Result := False
-						elseif op.free_operator_name = free_operator_name then
-							Result := True
-						else
-							Result := STRING_.same_case_insensitive (free_operator_name, op.free_operator_name)
-						end
+			elseif attached {ET_FREE_NAME} other as op then
+				if hash_code = op.hash_code then
+					if is_infix_freeop /= op.is_infix_freeop then
+						Result := False
+					elseif op.free_operator_name = free_operator_name then
+						Result := True
+					else
+						Result := STRING_.same_case_insensitive (free_operator_name, op.free_operator_name)
 					end
 				end
 			end

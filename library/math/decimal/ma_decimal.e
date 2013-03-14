@@ -236,10 +236,8 @@ feature {NONE} -- Initialization
 		require
 			a_decimal_parser_not_void: a_decimal_parser /= Void
 			a_context_not_void: a_context /= Void
-		local
-			l_last_parsed: detachable STRING
 		do
-			if a_decimal_parser.error then
+			if not attached a_decimal_parser.last_parsed as l_last_parsed or else a_decimal_parser.error then
 				if a_context.is_extended then
 					make_nan
 				else
@@ -274,8 +272,6 @@ feature {NONE} -- Initialization
 						exponent := exponent - a_decimal_parser.fractional_part_count
 					end
 					create {MA_DECIMAL_COEFFICIENT_IMP} coefficient.make ((a_context.digits + 1).max (a_decimal_parser.coefficient_count))
-					l_last_parsed := a_decimal_parser.last_parsed
-					check l_last_parsed /= Void end
 					coefficient.set_from_substring (l_last_parsed, a_decimal_parser.coefficient_begin, a_decimal_parser.coefficient_end)
 					clean_up (a_context)
 				end
@@ -2225,6 +2221,7 @@ feature {MA_DECIMAL} -- Basic operations
 				ctx.signal (Signal_subnormal, "")
 			else
 				l_was_rounded := ctx.is_flagged (Signal_rounded)
+				l_reason := ctx.reason
 			end
 				-- Rescale to `e_tiny'.
 			e_tiny := ctx.e_tiny
@@ -2287,9 +2284,7 @@ feature {MA_DECIMAL} -- Basic operations
 				end
 				exponent := e_tiny
 				if l_is_zero then
-					if l_was_rounded then
-						l_reason := ctx.reason
-						check l_reason /= Void end
+					if l_was_rounded and then l_reason /= Void then
 						ctx.signal (Signal_rounded, l_reason)
 					else
 						ctx.reset_flag (Signal_rounded)

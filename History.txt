@@ -66,6 +66,9 @@ Version 3.10 - ?
 	  '%token <EIFFEL_TYPE as alias_name> ...'. See bug#2621302.
 	* Added support for qualified anchored types in %type and %token declarations
 	  in .y files.
+	* Eiffel classes need to be regenerated with geyacc from .y files because
+	  of a breaking change to make the internal stacks void-safe compliant.
+	  Otherwise this will result in a compilation error.
 
 	Gobo Eiffel Kernel Library:
 
@@ -103,6 +106,10 @@ Version 3.10 - ?
 	* Added features `do_until' and `do_if_until' to DS_CONTAINER and its
 	  descendants.
 	* Added feature `has_void' to DS_CELL and DS_PAIR.
+	* Fixed bug in features `force_last_new' and `put_last_new' of DS_HASH_TABLE.
+	* Fixed bug in DS_HASH_TABLE when the calls to `key_equality_tester' in 
+	  `search_position' trigger the invariant which internally calls `search_position'.
+	   But this routine was not written to be re-entrant. 
 
 	Gobo Eiffel Time Library:
 

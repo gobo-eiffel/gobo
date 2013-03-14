@@ -1,11 +1,10 @@
 note
-
 	description: "Objects identified, uniquely during any session, by an integer"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2012-05-24 06:13:10 +0200 (Thu, 24 May 2012) $"
+	revision: "$Revision: 559 $"
 
 class IDENTIFIED_ROUTINES
 
@@ -19,14 +18,6 @@ feature -- Basic operations
 			"built_in"
 		end
 
-	eif_is_object_id_of_current (an_id: INTEGER): BOOLEAN
-			-- Is `an_id' the associated object ID of `Current'.
-		require
-			an_id_non_negative: an_id >= 0
-		do
-			Result := (eif_id_object (an_id) = Current)
-		end
-
 	eif_object_id (an_object: ANY): INTEGER
 			-- New identifier for `an_object'
 		external
@@ -34,15 +25,6 @@ feature -- Basic operations
 		ensure
 			eif_object_id_positive: Result > 0
 			inserted: eif_id_object (Result) = an_object
-		end
-
-	eif_current_object_id: INTEGER
-			-- New identifier for Current
-		do
-			Result := eif_object_id (Current)
-		ensure
-			eif_current_object_id: Result > 0
-			inserted: eif_is_object_id_of_current (Result)
 		end
 
 	eif_object_id_free (an_id: INTEGER)
@@ -54,5 +36,16 @@ feature -- Basic operations
 		ensure
 			removed: eif_id_object (an_id) = Void
 		end
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

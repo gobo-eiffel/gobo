@@ -5,7 +5,7 @@ note
 		"Formatters for double parameters"
 
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2004-2005, Object-Tools and others"
+	copyright: "Copyright (c) 2004-2012, Object-Tools and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -50,11 +50,8 @@ feature -- Status report
 
 	valid_parameter (a_parameter: ANY): BOOLEAN
 			-- Is `a_parameter' a valid parameter for current formatter?
-		local
-			a_cell: detachable DS_CELL [DOUBLE]
 		do
-			a_cell ?= a_parameter
-			Result := a_cell /= Void
+			Result := attached {DS_CELL [DOUBLE]} a_parameter
 		end
 
 feature -- Formatting
@@ -63,15 +60,13 @@ feature -- Formatting
 			-- Format `a_parameter' to `a_stream'.
 			-- (Use DS_CELL [DOUBLE] because in SE 2.1
 			-- DOUBLE does not conform to ANY.)
-		local
-			a_cell: detachable DS_CELL [DOUBLE]
 		do
-			a_cell ?= a_parameter
 			check
 					-- From precondition 'valid_parameter'.
-				valid_parameter: a_cell /= Void
+				valid_parameter: attached {DS_CELL [DOUBLE]} a_parameter as a_cell
+			then
+				double_format_to (a_cell.item, a_stream)
 			end
-			double_format_to (a_cell.item, a_stream)
 		end
 
 	double_format_to (a_parameter: DOUBLE; a_stream: KI_CHARACTER_OUTPUT_STREAM)

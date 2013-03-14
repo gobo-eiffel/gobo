@@ -43,7 +43,7 @@ EIF_REFERENCE stream_eretrieve(EIF_POINTER* buffer, EIF_INTEGER size, EIF_INTEGE
 	return EIF_VOID;
 }
 
-void set_mismatch_information_access(EIF_OBJECT object, EIF_PROCEDURE init, EIF_PROCEDURE add) {
+void set_mismatch_information_access(EIF_OBJECT object, EIF_PROCEDURE init, EIF_PROCEDURE add, EIF_PROCEDURE set_vers) {
 	/* TODO */
 #ifdef EIF_WINDOWS
 	GE_show_console();

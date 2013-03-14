@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type sets to which new types can be added"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -118,16 +118,14 @@ feature -- Element change
 				dynamic_types := l_dynamic_type_list
 				is_dynamic_types_readonly := False
 				count := count + 1
+			elseif attached {ET_DYNAMIC_TYPE_HASH_LIST} dynamic_types as l_dynamic_type_hash_list then
+				l_dynamic_type_hash_list.force_last (a_type)
+				count := count + 1
 			else
-				l_dynamic_type_list ?= dynamic_types
-				if l_dynamic_type_list = Void then
-					create l_dynamic_type_list.make_with_capacity ((count + 1).max (15))
-					l_dynamic_type_list.append_last (Current)
-					l_dynamic_type_list.put_last (a_type)
-					dynamic_types := l_dynamic_type_list
-				else
-					l_dynamic_type_list.force_last (a_type)
-				end
+				create l_dynamic_type_list.make_with_capacity ((count + 1).max (15))
+				l_dynamic_type_list.append_last (Current)
+				l_dynamic_type_list.put_last (a_type)
+				dynamic_types := l_dynamic_type_list
 				count := count + 1
 			end
 		ensure
@@ -201,16 +199,14 @@ feature -- Element change
 					dynamic_types := l_dynamic_type_list
 					is_dynamic_types_readonly := False
 					count := count + 1
+				elseif attached {ET_DYNAMIC_TYPE_HASH_LIST} dynamic_types as l_dynamic_type_hash_list then
+					l_dynamic_type_hash_list.force_last (a_type)
+					count := count + 1
 				else
-					l_dynamic_type_list ?= dynamic_types
-					if l_dynamic_type_list = Void then
-						create l_dynamic_type_list.make_with_capacity ((count + 1).max (15))
-						l_dynamic_type_list.append_last (Current)
-						l_dynamic_type_list.put_last (a_type)
-						dynamic_types := l_dynamic_type_list
-					else
-						l_dynamic_type_list.force_last (a_type)
-					end
+					create l_dynamic_type_list.make_with_capacity ((count + 1).max (15))
+					l_dynamic_type_list.append_last (Current)
+					l_dynamic_type_list.put_last (a_type)
+					dynamic_types := l_dynamic_type_list
 					count := count + 1
 				end
 			end

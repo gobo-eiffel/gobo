@@ -377,11 +377,9 @@ feature -- Conversion
 		require
 			a_string_not_void: a_string /= Void
 		local
-			uc_string: detachable UC_STRING
 			i, nb: INTEGER
 		do
-			uc_string ?= a_string
-			if uc_string /= Void then
+			if attached {UC_STRING} a_string as uc_string then
 				Result := uc_string.to_utf8
 			else
 				nb := a_string.count

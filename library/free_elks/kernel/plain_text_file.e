@@ -1,10 +1,10 @@
 note
 	description: "Files viewed as persistent sequences of ASCII characters"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2004, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2012-10-30 19:25:59 +0100 (Tue, 30 Oct 2012) $"
+	revision: "$Revision: 601 $"
 
 class PLAIN_TEXT_FILE
 
@@ -17,8 +17,8 @@ inherit
 		end
 
 create
-
-	make, make_open_read, make_open_write, make_open_append,
+	make, make_with_name, make_with_path,
+	make_open_read, make_open_write, make_open_append,
 	make_open_read_write, make_create_read_write,
 	make_open_read_append
 
@@ -251,46 +251,71 @@ feature {NONE} -- Implementation
 			-- Return the number of characters actually read.
 		do
 			Result := file_gss (file_pointer, a_string.area.item_address (pos - 1), nb)
+				-- `a_string' was externally modified, we need to reset its `hash_code'.
+			a_string.set_internal_hash_code (0)
 		end
 
 	file_gi (file: POINTER): INTEGER
 			-- Get an integer from `file'
 		external
 			"C signature (FILE *): EIF_INTEGER use %"eif_file.h%""
+		alias
+			"eif_file_gi"
 		end
 
 	file_gr (file: POINTER): REAL
 			-- Read a real from `file'
 		external
 			"C signature (FILE *): EIF_REAL_32 use %"eif_file.h%""
+		alias
+			"eif_file_gr"
 		end
 
 	file_gd (file: POINTER): DOUBLE
 			-- Read a double from `file'
 		external
 			"C signature (FILE *): EIF_REAL_64 use %"eif_file.h%""
+		alias
+			"eif_file_gd"
 		end
 
 	file_pi (file: POINTER; n: INTEGER)
 			-- Put `n' to end of `file'.
 		external
 			"C signature (FILE *, EIF_INTEGER) use %"eif_file.h%""
+		alias
+			"eif_file_pi"
 		end
 
 	file_pr (file: POINTER; r: REAL)
 			-- Put `r' to end of `file'.
 		external
 			"C signature (FILE *, EIF_REAL_32) use %"eif_file.h%""
+		alias
+			"eif_file_pr"
 		end
 
 	file_pd (file: POINTER; d: DOUBLE)
 			-- Put `d' to end of `file'.
 		external
 			"C signature (FILE *, EIF_REAL_64) use %"eif_file.h%""
+		alias
+			"eif_file_pd"
 		end
 
 invariant
 
 	plain_text: is_plain_text
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

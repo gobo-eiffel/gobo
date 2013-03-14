@@ -5,7 +5,7 @@ note
 		"ECF Eiffel system parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -88,6 +88,11 @@ feature {NONE} -- Element change
 				l_target.fill_root (l_system)
 				l_target.fill_settings (l_system)
 				l_target.fill_options (l_system)
+				parse_dotnet_assemblies (l_system, l_state)
+				from parsed_libraries.start until parsed_libraries.after loop
+					parse_dotnet_assemblies (parsed_libraries.item_for_iteration, l_state)
+					parsed_libraries.forth
+				end
 				last_system := l_system
 			end
 		end

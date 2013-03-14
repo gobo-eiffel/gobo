@@ -1,19 +1,19 @@
 note
 	Warning: "[
-		If you are precompiling a subset of EiffelBase, it is
-		preferable NOT to remove this class from the subset.
+		If you are precompiling a subset of EiffelBase, it is 
+		preferable NOT to remove this class from the subset. 
 		If you remove it you may see unnecessary recompilations
 		after changes.
 		]"
 	description: "[
-		Class used to ensure proper precompilation of EiffelBase.
+		Class used to ensure proper precompilation of EiffelBase. 
 		Not to be used otherwise.
 		]"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2012-05-24 06:13:10 +0200 (Thu, 24 May 2012) $"
+	revision: "$Revision: 559 $"
 
 class
 	DECLARATOR
@@ -46,6 +46,17 @@ feature {NONE} -- Implementation
 
 	s8_3: detachable SPECIAL [NATURAL_32]
 
-	s8_4: detachable SPECIAL [NATURAL_64]
+	s8_4: detachable SPECIAL [NATURAL_64];
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

@@ -1,10 +1,10 @@
 note
 	description: "Abstract convertor for string to number conversion"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2012-05-24 06:13:10 +0200 (Thu, 24 May 2012) $"
+	revision: "$Revision: 559 $"
 
 deferred class
 	STRING_TO_NUMERIC_CONVERTOR
@@ -35,7 +35,7 @@ feature -- Status reporting
 
 	conversion_type_valid (type: INTEGER): BOOLEAN
 			-- Is `type' to which string will be converted valid?
-			-- See `NUMBER_INFORMATION' for more information.
+			-- See `NUMERIC_INFORMATION' for more information.
 		deferred
 		end
 
@@ -56,7 +56,7 @@ feature -- Status reporting
 
 	conversion_type: INTEGER
 		-- Type to which a string will be converted
-		-- See `NUMBER_INFORMATION' for more information.
+		-- See `NUMERIC_INFORMATION' for more information.
 
 feature -- Reset
 
@@ -64,7 +64,7 @@ feature -- Reset
 			-- Reset this convertor to start a new parse session
 			-- and get ready for parsing integer of `type'.
 			-- Always call this feature before every new parse session.
-			-- See `NUMBER_INFORMATION' for more information about `type'.
+			-- See `NUMERIC_INFORMATION' for more information about `type'.			
 		require
 			type_valid: conversion_type_valid (type)
 		deferred
@@ -125,17 +125,16 @@ feature -- Parse
 			-- `Reset' convertor to start a new parse session and
 			-- parse `s' to see if it is a number of `type'.
 			-- Make result available in `overflowed', `underflowed' and `parse_successful'.
-			-- See `NUMBER_INFORMATION' for more information about `type'.
+			-- See `NUMERIC_INFORMATION' for more information about `type'.
 		require
 			s_not_void: s /= Void
-			s_is_valid_as_string_8: s.is_valid_as_string_8
 			type_valid: conversion_type_valid (type)
 		deferred
 		end
 
 	parse_character (c: CHARACTER)
 			-- Parse `c' in current parse session.
-			-- Make result available in `overflowed', `underflowed' and `parse_successful'.
+			-- Make result available in `overflowed', `underflowed' and `parse_successful'.			
 		deferred
 		end
 
@@ -150,4 +149,15 @@ feature {NONE} -- Implementation
 invariant
 	leading_separators_not_void: leading_separators /= Void
 	trailing_separators_not_void: trailing_separators /= Void
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
+
 end

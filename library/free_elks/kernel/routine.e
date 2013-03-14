@@ -10,18 +10,23 @@ note
 	revision: "$Revision$"
 
 deferred class
-	ROUTINE [BASE_TYPE, OPEN_ARGS -> TUPLE create default_create end]
+	ROUTINE [BASE_TYPE, OPEN_ARGS -> detachable TUPLE create default_create end]
 
 inherit
 	HASHABLE
 
 feature -- Access
 
-	target: ANY
+	target: detachable ANY
 			-- Target of call, if already known
+		local
+			c: like closed_operands
 		do
 			if is_target_closed then
-				Result := closed_operands.item (1)
+				c := closed_operands
+				if c /= Void and then c.count > 0 then
+					Result := c.item (1)
+				end
 			end
 		end
 
@@ -31,7 +36,7 @@ feature -- Access
 			Result := 1
 		end
 
-	precondition (args: OPEN_ARGS): BOOLEAN
+	precondition (args: detachable OPEN_ARGS): BOOLEAN
 			-- Do `args' satisfy routine's precondition
 			-- in current state?
 		do
@@ -39,7 +44,7 @@ feature -- Access
 			--| FIXME compiler support needed!
 		end
 
-	postcondition (args: OPEN_ARGS): BOOLEAN
+	postcondition (args: detachable OPEN_ARGS): BOOLEAN
 			-- Does current state satisfy routine's
 			-- postcondition for `args'?
 		do
@@ -47,7 +52,7 @@ feature -- Access
 			--| FIXME compiler support needed!
 		end
 
-	empty_operands: OPEN_ARGS
+	empty_operands: attached OPEN_ARGS
 			-- Empty tuple matching open operands
 		do
 			create Result
@@ -57,19 +62,16 @@ feature -- Access
 
 feature -- Status report
 
-	callable: BOOLEAN
+	callable: BOOLEAN = True
 			-- Can routine be called on current object?
-		do
-			Result := True
-		end
 
-	valid_operands (args: TUPLE): BOOLEAN
+	valid_operands (args: detachable TUPLE): BOOLEAN
 			-- Are `args' valid operands for this routine?
 		local
-			l_expected_args: OPEN_ARGS
+			l_expected_args: attached OPEN_ARGS
 			i, nb: INTEGER
 			l_arg_type_code: INTEGER
-			l_arg: ANY
+			l_arg: detachable ANY
 		do
 			create l_expected_args
 			if args = Void then
@@ -84,7 +86,7 @@ feature -- Status report
 					if l_arg_type_code = l_expected_args.item_code (i) then
 						if l_arg_type_code = {TUPLE}.reference_code then
 							l_arg := args.item (i)
-							if l_arg /= Void and then not l_arg.generating_type.conforms_to (l_expected_args.generating_type.generic_parameter (i)) then
+							if l_arg /= Void and then not l_arg.generating_type.conforms_to (l_expected_args.generating_type.generic_parameter_type (i)) then
 								Result := False
 								i := nb + 1
 							end
@@ -109,26 +111,30 @@ feature -- Setting
 			a_target_not_void: a_target /= Void
 			is_target_closed: is_target_closed
 			target_not_void: target /= Void
-			same_target_type: target.same_type (a_target)
+			same_target_type: attached target as t and then t.same_type (a_target)
+		local
+			c: like closed_operands
 		do
-			closed_operands.put (a_target, 1)
+			c := closed_operands
+			if c /= Void then
+				c.put (a_target, 1)
+			end
 		ensure
 			target_set: target = a_target
 		end
 
 feature -- Basic operations
 
-	call (args: OPEN_ARGS)
-			-- Call routine with operands `args'.
+	call (args: detachable OPEN_ARGS)
+			-- Call routine with `args'.
 		require
 			valid_operands: valid_operands (args)
-			callable: callable
 		deferred
 		end
 
 feature {ROUTINE} -- Implementation
 
-	frozen closed_operands: TUPLE
+	frozen closed_operands: detachable TUPLE
 			-- All closed arguments provided at creation time
 
 end

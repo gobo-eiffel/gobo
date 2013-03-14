@@ -117,6 +117,48 @@ feature -- File handling
 			end
 		end
 
+	put_decimal_natural_32 (a_file: KI_CHARACTER_OUTPUT_STREAM; a_value: NATURAL_32)
+			-- Write decimal representation of `a_value' to `a_file'.
+			-- Regexp: 0|([1-9][0-9]*)
+		require
+			a_file_not_void: a_file /= Void
+			a_file_is_open_write: a_file.is_open_write
+		local
+			i, k: NATURAL_32
+		do
+			if a_value = 0 then
+				a_file.put_character ('0')
+			else
+				k := a_value
+				i := k // 10
+				if i /= 0 then
+					put_decimal_natural_32 (a_file, i)
+				end
+				inspect k \\ 10
+				when 0 then
+					a_file.put_character ('0')
+				when 1 then
+					a_file.put_character ('1')
+				when 2 then
+					a_file.put_character ('2')
+				when 3 then
+					a_file.put_character ('3')
+				when 4 then
+					a_file.put_character ('4')
+				when 5 then
+					a_file.put_character ('5')
+				when 6 then
+					a_file.put_character ('6')
+				when 7 then
+					a_file.put_character ('7')
+				when 8 then
+					a_file.put_character ('8')
+				when 9 then
+					a_file.put_character ('9')
+				end
+			end
+		end
+
 	put_octal_integer (a_file: KI_CHARACTER_OUTPUT_STREAM; an_int: INTEGER)
 			-- Write octal representation of `an_int' to `a_file'.
 			-- Regexp: 0|[1-7][0-7]*

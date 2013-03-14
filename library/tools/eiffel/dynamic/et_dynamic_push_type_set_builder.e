@@ -252,7 +252,6 @@ feature {NONE} -- Event handling
 			i, nb: INTEGER
 			l_queries: ET_DYNAMIC_FEATURE_LIST
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_expression: ET_EXPRESSION
 			l_expression_type_set: ET_DYNAMIC_TYPE_SET
@@ -274,30 +273,27 @@ feature {NONE} -- Event handling
 					if l_dynamic_type_set = Void then
 							-- Error in feature 'area', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 						set_fatal_error
-					else
-						l_special_type ?= l_dynamic_type_set.static_type
-						if l_special_type = Void then
-								-- Error in feature 'area', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
-							set_fatal_error
-						else
-							mark_type_alive (l_special_type)
-							l_special_type.put_target (l_dynamic_type_set, current_dynamic_system)
-							l_item_type_set := l_special_type.item_type_set
-							nb := an_expression.count
-							from i := 1 until i > nb loop
-								l_expression := an_expression.expression (i)
-								l_expression_type_set := dynamic_type_set (l_expression)
-								if l_expression_type_set = Void then
-										-- Internal error: the dynamic type set of the expressions
-										-- in the manifest array should be known at this stage.
-									set_fatal_error
-									error_handler.report_giaaa_error
-								else
-									l_expression_type_set.put_target (l_item_type_set, current_dynamic_system)
-								end
-								i := i + 1
+					elseif attached {ET_DYNAMIC_SPECIAL_TYPE} l_dynamic_type_set.static_type as l_special_type then
+						mark_type_alive (l_special_type)
+						l_special_type.put_target (l_dynamic_type_set, current_dynamic_system)
+						l_item_type_set := l_special_type.item_type_set
+						nb := an_expression.count
+						from i := 1 until i > nb loop
+							l_expression := an_expression.expression (i)
+							l_expression_type_set := dynamic_type_set (l_expression)
+							if l_expression_type_set = Void then
+									-- Internal error: the dynamic type set of the expressions
+									-- in the manifest array should be known at this stage.
+								set_fatal_error
+								error_handler.report_giaaa_error
+							else
+								l_expression_type_set.put_target (l_item_type_set, current_dynamic_system)
 							end
+							i := i + 1
 						end
+					else
+							-- Error in feature 'area', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
+						set_fatal_error
 					end
 						-- Feature 'lower' should be the second in the list of features.
 					l_dynamic_type_set := l_queries.item (2).result_type_set
@@ -326,7 +322,6 @@ feature {NONE} -- Event handling
 			-- `current_type' has been processed.
 		local
 			l_type: ET_DYNAMIC_TYPE
-			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
 			i, nb: INTEGER
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_expression: ET_EXPRESSION
@@ -336,12 +331,7 @@ feature {NONE} -- Event handling
 				l_type := current_dynamic_system.dynamic_type (a_type, current_type)
 				mark_type_alive (l_type)
 				set_dynamic_type_set (l_type, an_expression)
-				l_tuple_type ?= l_type
-				if l_tuple_type = Void then
-						-- Internal error: the type of a manifest tuple should be a tuple type.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				else
+				if attached {ET_DYNAMIC_TUPLE_TYPE} l_type as l_tuple_type then
 					l_item_type_sets := l_tuple_type.item_type_sets
 					nb := an_expression.count
 					if l_item_type_sets.count /= nb then
@@ -364,6 +354,10 @@ feature {NONE} -- Event handling
 							i := i + 1
 						end
 					end
+				else
+						-- Internal error: the type of a manifest tuple should be a tuple type.
+					set_fatal_error
+					error_handler.report_giaaa_error
 				end
 			end
 		end
@@ -380,7 +374,6 @@ feature {NONE} -- Implementation
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_tuple_type: ET_TUPLE_TYPE
-			l_dynamic_tuple_type: ET_DYNAMIC_TUPLE_TYPE
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			j, nb_items: INTEGER
 		do
@@ -417,13 +410,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			create l_tuple_type.make (tokens.implicit_attached_type_mark, l_parameters, current_universe_impl.tuple_type.named_base_class)
-			l_dynamic_tuple_type ?= current_dynamic_system.dynamic_type (l_tuple_type, current_system.any_type)
-			if l_dynamic_tuple_type = Void then
-					-- Internal error: the dynamic type of a Tuple type
-					-- should be a dynamic tuple type.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			else
+			if attached {ET_DYNAMIC_TUPLE_TYPE} current_dynamic_system.dynamic_type (l_tuple_type, current_system.any_type) as l_dynamic_tuple_type then
 				mark_type_alive (l_dynamic_tuple_type)
 				if an_agent_type.attribute_count = 0 then
 						-- Internal error: missing feature 'closed_operands' in the Agent type,
@@ -474,6 +461,11 @@ feature {NONE} -- Implementation
 						i := i + 1
 					end
 				end
+			else
+					-- Internal error: the dynamic type of a Tuple type
+					-- should be a dynamic tuple type.
+				set_fatal_error
+				error_handler.report_giaaa_error
 			end
 		end
 

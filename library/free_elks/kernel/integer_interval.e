@@ -1,10 +1,10 @@
 note
 	description: "Contiguous integer intervals"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2012-05-24 06:13:10 +0200 (Thu, 24 May 2012) $"
+	revision: "$Revision: 559 $"
 
 class
 	INTEGER_INTERVAL
@@ -252,6 +252,14 @@ feature -- Resizing
 			no_loss_from_top: upper >= old upper
 		end
 
+	trim
+			-- <Precursor>
+		do
+			check
+				minimal_capacity: capacity = count
+			end
+		end
+
 feature -- Removal
 
 	wipe_out
@@ -272,13 +280,14 @@ feature -- Conversion
 		local
 			i: INTEGER
 		do
-			create Result.make (lower, upper)
+			create Result.make_empty
+			Result.rebase (lower)
 			from
 				i := lower
 			until
 				i > upper
 			loop
-				Result.put (i, i)
+				Result.force (i, i)
 				i := i + 1
 			end
 		ensure
@@ -312,15 +321,9 @@ feature -- Duplication
 	copy (other: like Current)
 			-- Reset to be the same interval as `other'.
 		do
-			lower_internal := other.lower_internal
-			upper_internal := other.upper_internal
-			lower_defined := other.lower_defined
-			upper_defined := other.upper_defined
-		ensure then
-			same_lower: lower = other.lower
-			same_upper: upper = other.upper
-			same_lower_defined: lower_defined = other.lower_defined
-			same_upper_defined: upper_defined = other.upper_defined
+			if other /= Current then
+				standard_copy (other)
+			end
 		end
 
 	subinterval (start_pos, end_pos: INTEGER): like Current
@@ -466,5 +469,16 @@ invariant
 	count_definition: upper_defined and lower_defined implies count = upper - lower + 1
 	index_set_is_range: index_set ~ Current
 	not_infinite: upper_defined and lower_defined
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

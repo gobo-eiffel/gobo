@@ -22,4 +22,6 @@
 			<cluster name="${GOBO_EIFFEL}" prefix="spec_"/>
 		</cluster>
 	</cluster>
+
+	<mount location="${GOBO}/library/kernel.xace"/>
 </library>

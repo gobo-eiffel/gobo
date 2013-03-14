@@ -166,9 +166,10 @@ feature -- Status report
 								Result := True
 							else
 								a_name := string_name
-								string_name := string_other_name
-								other_inode := inode
-								string_name := a_name
+								other_inode := tmp_file1.inode
+--								string_name := string_other_name
+--								other_inode := inode
+--								string_name := a_name
 								if inode /= other_inode then
 									Result := False
 								elseif tmp_file1.count /= count then
@@ -197,14 +198,18 @@ feature -- Status report
 												a_name := "gobotmp" + i.out
 												tmp_file1.reset (a_name)
 											end
-											old_change_name (a_name)
-											string_name := saved_string_name
+											tmp_file1.reset (string_name)
+											tmp_file1.change_name (a_name)
+--											old_change_name (a_name)
+--											string_name := saved_string_name
 											if not exists then
 												tmp_file1.reset (string_other_name)
 												Result := not tmp_file1.exists
-												string_name := a_name
-												old_change_name (saved_string_name)
-												string_name := saved_string_name
+												tmp_file1.reset (a_name)
+												tmp_file1.change_name (string_name)
+--												string_name := a_name
+--												old_change_name (saved_string_name)
+--												string_name := saved_string_name
 											else
 													-- We don't know.
 													-- Return True for safety reason.
@@ -219,7 +224,7 @@ feature -- Status report
 				end
 			else
 				if saved_string_name /= Void then
-					string_name := saved_string_name
+--					string_name := saved_string_name
 				end
 				Result := True
 			end
@@ -270,17 +275,17 @@ feature -- Basic operations
 					if exists then
 						if not same_physical_file (string_new_name) then
 							old_change_name (string_new_name)
-							string_name := saved_string_name
-							tmp_file1.reset (string_name)
-							if not tmp_file1.exists then
+--							string_name := saved_string_name
+--							tmp_file1.reset (string_name)
+--							if not tmp_file1.exists then
 								name := new_name
-								string_name := string_new_name
-							end
+--								string_name := string_new_name
+--							end
 						end
 					end
 				end
 			elseif saved_string_name /= Void then
-				string_name := saved_string_name
+--				string_name := saved_string_name
 			end
 		rescue
 			if not rescued then
@@ -434,14 +439,11 @@ feature {NONE} -- Implementation
 
 	string_name: STRING
 			-- Name of file (STRING version)
-
-	old_count: INTEGER
-			-- Size in bytes (0 if no associated physical file)
 		deferred
 		end
 
-	old_exists: BOOLEAN
-			-- Does physical file exist?
+	old_count: INTEGER
+			-- Size in bytes (0 if no associated physical file)
 		deferred
 		end
 
@@ -468,13 +470,6 @@ feature {NONE} -- Implementation
 
 	old_is_closed: BOOLEAN
 			-- Is file closed?
-		deferred
-		end
-
-	inode: INTEGER
-			-- I-node number
-		require
-			file_exists: old_exists
 		deferred
 		end
 
@@ -508,6 +503,20 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
+feature {KL_FILE} -- Implementation
+
+	inode: INTEGER
+			-- I-node number
+		require
+			file_exists: old_exists
+		deferred
+		end
+
+	old_exists: BOOLEAN
+			-- Does physical file exist?
+		deferred
+		end
+		
 invariant
 
 	string_name_not_void: string_name /= Void

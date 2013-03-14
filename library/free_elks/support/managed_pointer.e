@@ -8,10 +8,10 @@ note
 		this particular case.
 		]"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2006, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2012-10-30 01:12:00 +0100 (Tue, 30 Oct 2012) $"
+	revision: "$Revision: 593 $"
 
 class
 	MANAGED_POINTER
@@ -37,11 +37,13 @@ feature {NONE} -- Initialization
 		require
 			n_non_negative: n >= 0
 		do
-			item := item.memory_calloc (1, n.max (1))
+			increment_counter
+			item := item.memory_calloc (n.max (1), 1)
 			if item = default_pointer then
 				(create {EXCEPTIONS}).raise ("No more memory")
 			end
 			count := n
+			is_shared := False
 		ensure
 			item_set: item /= default_pointer
 			count_set: count = n
@@ -54,12 +56,14 @@ feature {NONE} -- Initialization
 		require
 			data_not_void: data /= Void
 		do
+			increment_counter
 			count := data.count
 			item := item.memory_alloc (count.max (1))
 			if item = default_pointer then
 				(create {EXCEPTIONS}).raise ("No more memory")
 			end
 			put_array (data, 0)
+			is_shared := False
 		ensure
 			item_set: item /= default_pointer
 			count_set: count = data.count
@@ -72,12 +76,14 @@ feature {NONE} -- Initialization
 			a_ptr_not_null: a_ptr /= default_pointer
 			n_non_negative: n >= 0
 		do
+			increment_counter
 			item := item.memory_alloc (n.max (1))
 			if item = default_pointer then
 				(create {EXCEPTIONS}).raise ("No more memory")
 			end
 			item.memory_copy (a_ptr, n)
 			count := n
+			is_shared := False
 		ensure
 			item_set: item /= default_pointer
 			count_set: count = n
@@ -90,6 +96,7 @@ feature {NONE} -- Initialization
 			a_ptr_valid: a_ptr = default_pointer implies n = 0
 			n_non_negative: n >= 0
 		do
+			increment_counter
 			item := a_ptr
 			count := n
 			is_shared := True
@@ -102,10 +109,13 @@ feature {NONE} -- Initialization
 	own_from_pointer (a_ptr: POINTER; n: INTEGER)
 			-- Use directly `a_ptr' with count `n' to hold current data and free
 			-- its associated C memory when Current is collected.
+			-- It assumes that `a_ptr' was allocated using the C-`malloc' routine and thus
+			-- will be freed by calling the C-`free' routine.
 		require
-			a_ptr_valid: a_ptr = default_pointer implies n = 0
+			a_ptr_valid: a_ptr /= default_pointer
 			n_non_negative: n >= 0
 		do
+			increment_counter
 			item := a_ptr
 			count := n
 			is_shared := False
@@ -134,7 +144,7 @@ feature -- Settings
 
 feature -- Access
 
-	item: POINTER
+	item: POINTER note option: transient attribute end
 			-- Access to allocated memory.
 
 	count: INTEGER
@@ -161,16 +171,13 @@ feature -- Duplication
 			-- and current is not large enough to hold `other' create
 			-- a new pointer area and `is_shared' is set to `False'.
 		do
-			if count >= other.count then
-					-- No need to reallocate, it is safe to just copy.
-				item.memory_copy (other.item, other.count)
-			else
-					-- We need to reallocate memory here
-				if is_shared then
-						-- Before `item' was shared, so we simply allocate
+			if other /= Current then
+				if item = other.item or is_shared then
+						-- Copy was most likely called via `twin' but even
+						-- if it is not, it makes sense to duplicate the memory.
+						-- Or before `item' was shared, so we simply allocate
 						-- a new memory area from `other' and reset
 						-- the `is_shared' flag.
-					is_shared := False
 					make_from_pointer (other.item, other.count)
 				else
 						-- Simply resize Current and copy data.
@@ -179,8 +186,8 @@ feature -- Duplication
 				end
 			end
 		ensure then
-			sharing_status_not_preserved:
-				(old is_shared and not is_shared) implies (other.count > old count)
+			sharing_status_not_preserved: (other /= Current) implies (old is_shared implies not is_shared)
+			count_preserved: count = other.count
 		end
 
 feature -- Access: Platform specific
@@ -330,15 +337,17 @@ feature -- Access: Platform specific
 			valid_position: (pos + a_count) <= count
 		local
 			i: INTEGER
+			l_area: SPECIAL [NATURAL_8]
 		do
 			from
-				create Result.make (1, a_count)
+				create l_area.make_empty (a_count)
 			until
 				i >= a_count
 			loop
-				Result.put (read_natural_8 (pos + i), i + 1)
+				l_area.extend (read_natural_8 (pos + i))
 				i := i + 1
 			end
+			create Result.make_from_special (l_area)
 		ensure
 			read_array_not_void: Result /= Void
 			read_array_valid_count: Result.count = a_count
@@ -1124,8 +1133,40 @@ feature {NONE} -- Disposal
 			shared_reset: not is_shared
 		end
 
+feature {NONE} -- Debugging
+
+	allocation_counter: CELL [NATURAL_64]
+			-- Store current number of allocation being made.
+		once
+			create Result.put (0)
+		end
+
+	counter: NATURAL_64 note option: transient attribute end
+			-- Allocation number associated to Current.
+
+	increment_counter
+			-- Set `counter' with a new allocation number.
+		do
+			debug ("MANAGED_POINTER_allocation")
+				counter := allocation_counter.item + 1
+				allocation_counter.put (counter)
+			end
+		end
+
+
 invariant
 	item_not_null: item = default_pointer implies (count = 0 and is_shared)
 	valid_count: count >= 0
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

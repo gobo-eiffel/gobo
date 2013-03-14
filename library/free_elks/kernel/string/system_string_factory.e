@@ -1,10 +1,10 @@
 note
 	description: "Factory for creating SYSTEM_STRING instances."
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2012-11-30 00:31:24 +0100 (Fri, 30 Nov 2012) $"
+	revision: "$Revision: 628 $"
 
 class
 	SYSTEM_STRING_FACTORY
@@ -51,5 +51,23 @@ feature -- Conversion
 			a_area_valid: a_area.count >= a_str.length
 		do
 		end
+
+	escape_count (a_str: SYSTEM_STRING): INTEGER
+			-- Number of `escape_character' in `a_str'.
+		require
+			is_dotnet: {PLATFORM}.is_dotnet
+		do
+		end
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

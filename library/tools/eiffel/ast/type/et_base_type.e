@@ -5,7 +5,7 @@ note
 		"Eiffel types directly based on a class"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -154,7 +154,9 @@ feature -- Access
 					-- The current type is its own context,
 					-- therefore it is its own base type (i.e all
 					-- its actual generic parameters are named).
-				Result ?= an_actual
+				if attached {ET_NAMED_TYPE} an_actual as l_named_type then
+					Result := l_named_type
+				end
 			end
 			if Result = Void then
 				Result := an_actual.named_type (a_context)

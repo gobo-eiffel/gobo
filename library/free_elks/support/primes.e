@@ -1,14 +1,11 @@
 note
-
-	description:
-		"Prime number properties"
-
+	description: "Prime number properties"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 2005, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
 	names: primes;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2012-07-23 23:02:19 +0200 (Mon, 23 Jul 2012) $"
+	revision: "$Revision: 567 $"
 
 class PRIMES inherit
 
@@ -82,7 +79,7 @@ feature -- Access
 		do
 				-- All odd numbers except 1 are candidates
 			from
-				create Result.make (1, n)
+				create Result.make_filled (False, 1, n)
 				i := 3
 			until
 				i > n
@@ -184,7 +181,7 @@ feature {NONE} -- Implementation
 		once
 			from
 				candidates := all_lower_primes (approximated_i_th (Precomputed_primes_count))
-				create Result.make (1, Precomputed_primes_count)
+				create Result.make_filled (0, 1, Precomputed_primes_count)
 				pos := 1
 				i := 1
 			until
@@ -213,7 +210,7 @@ feature {NONE} -- Implementation
 			if n >= 13 then
 					-- Using math formula from J. Massias and G. Robin,
 					-- "Bornes effectives pour certaines fonctions concernant les nombres premiers,"
-					-- J. Théorie Nombres Bordeaux, 8 (1996) 215-242.  MR 97g:11099:
+					-- J. ThÃ©orie Nombres Bordeaux, 8 (1996) 215-242.  MR 97g:11099:
 					-- n (ln n + ln (ln n) - 1 + 1.8 ln (ln n) / ln n)
 				create l_double_math
 				ln_n := l_double_math.log (n)
@@ -225,5 +222,16 @@ feature {NONE} -- Implementation
 		ensure
 			approximation_valid: i_th (n) <= Result
 		end
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

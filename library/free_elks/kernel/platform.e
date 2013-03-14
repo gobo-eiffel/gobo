@@ -1,10 +1,10 @@
 note
 	description: "Platform-dependent properties."
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2006, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2012-06-15 21:34:32 +0200 (Fri, 15 Jun 2012) $"
+	revision: "$Revision: 562 $"
 
 class PLATFORM
 
@@ -12,6 +12,12 @@ feature -- Platform
 
 	is_thread_capable: BOOLEAN
 			-- Is current platform capable of multi-threading?
+		external
+			"built_in static"
+		end
+
+	is_scoop_capable: BOOLEAN
+			-- Is current platform capable of SCOOP?
 		external
 			"built_in static"
 		end
@@ -278,5 +284,16 @@ feature -- Obsoletes
 		ensure
 			meaningful: Result <= 0
 		end
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

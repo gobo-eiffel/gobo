@@ -1,12 +1,12 @@
 note
 	description: "Convertor to do string to integer/natural conversion"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2012-05-24 06:13:10 +0200 (Thu, 24 May 2012) $"
+	revision: "$Revision: 559 $"
 
-class
+frozen class
 	STRING_TO_INTEGER_CONVERTOR
 
 inherit
@@ -26,10 +26,8 @@ feature{NONE} -- Initialization
 		ensure
 			leading_separators_set: leading_separators ~ " "
 			trailing_separators_set: trailing_separators ~ " "
-			leading_separators_not_acceptable:
-				not leading_separators_acceptable
-			trailing_separatorsnot_acceptable:
-				not trailing_separators_acceptable
+			leading_separators_not_acceptable: not leading_separators_acceptable
+			trailing_separatorsnot_acceptable: not trailing_separators_acceptable
 		end
 
 feature	-- State machine setting
@@ -54,18 +52,17 @@ feature -- Status reporting
 	separators_valid (separators: STRING): BOOLEAN
 			-- Are separators contained in `separators' valid?
 		local
-			i: INTEGER
-			l_c: INTEGER
+			i, nb: INTEGER
 			c: CHARACTER
 			done: BOOLEAN
 		do
 			from
 				i := 1
-				l_c := separators.count
+				nb := separators.count
 				done := False
 				Result := True
 			until
-				i > l_c or done
+				i > nb or done
 			loop
 				c := separators.item (i)
 				if (c >='0' and c <= '9') or c ='+' or c = '-' then
@@ -102,40 +99,53 @@ feature -- String parsing
 	parse_string_with_type (s: READABLE_STRING_GENERAL; type: INTEGER)
 			-- Parse string `s' as integer of type `type'.
 		local
-			i: INTEGER
-			l_c: INTEGER
+			i, nb: INTEGER
 			l_area8: SPECIAL [CHARACTER_8]
 			l_area32: SPECIAL [CHARACTER_32]
+			l_c: CHARACTER_32
+			l_code: NATURAL_32
 		do
 			reset (type)
 			i := 0
-			l_c := s.count
-			if attached {STRING_8} s as l_str8 then
+			nb := s.count
+			if attached {READABLE_STRING_8} s as l_str8 then
 				from
 					l_area8 := l_str8.area
 				until
-					i = l_c or last_state >= 4
+					i = nb or last_state >= 4
 				loop
 					parse_character (l_area8.item (i))
 					i := i + 1
 				end
-			elseif attached {STRING_32} s as l_str32 then
+			elseif attached {READABLE_STRING_32} s as l_str32 then
 				from
 					l_area32 := l_str32.area
 				until
-					i = l_c or last_state >= 4
+					i = nb or last_state >= 4
 				loop
-					parse_character (l_area32.item (i).to_character_8)
+					l_c := l_area32.item (i)
+					if l_c.is_character_8 then
+						parse_character (l_c.to_character_8)
+					else
+							-- Not a valid character.						
+						last_state := 4
+					end
 					i := i + 1
 				end
 			else
 				from
 					i := 1
-					l_c := s.count
+					nb := s.count
 				until
-					i > l_c or last_state >= 4
+					i > nb or last_state >= 4
 				loop
-					parse_character (s.code (i).to_character_8)
+					l_code := s.code (i)
+					if l_code.is_valid_character_8_code then
+						parse_character (l_code.to_character_8)
+					else
+							-- Not a valid character.						
+						last_state := 4
+					end
 					i := i + 1
 				end
 			end
@@ -187,6 +197,7 @@ feature -- String parsing
 					if c.is_digit then
 						part1 := 0
 						part2 := (c.code - 48).to_natural_64
+						l_state := 2
 						if conversion_type /= type_no_limitation then
 							if overflow_checker.will_overflow (part1, part2, conversion_type, sign) then
 								internal_overflowed := True
@@ -195,7 +206,6 @@ feature -- String parsing
 								l_state := 5
 							end
 						end
-						l_state := 2
 					else
 						l_state := 4
 					end
@@ -328,9 +338,20 @@ feature{NONE} -- Implementation
 		end
 
 	part1, part2: like max_natural_type
-			-- Naturals used for conversion
+			-- Naturals used for conversion	
 
-	internal_overflowed: BOOLEAN
+	internal_overflowed: BOOLEAN;
 			-- Internal overflow flag
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

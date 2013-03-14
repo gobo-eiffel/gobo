@@ -1,9 +1,9 @@
 note
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2004, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2012-05-24 06:13:10 +0200 (Thu, 24 May 2012) $"
+	revision: "$Revision: 559 $"
 
 class SEQ_STRING inherit
 
@@ -36,7 +36,8 @@ class SEQ_STRING inherit
 				sequence_put, seq_append
 		undefine
 			occurrences, out, copy, is_equal, prune_all,
-			changeable_comparison_criterion
+			changeable_comparison_criterion, do_all, do_if,
+			there_exists, for_all
 		redefine
 			has, index_of_occurrence, prune
 		select
@@ -273,6 +274,36 @@ feature -- Removal
 			index := 0
 		end
 
+feature -- Iteration
+
+	do_all (action: PROCEDURE [ANY, TUPLE [CHARACTER]])
+			-- Apply `action' to every item, from first to last.
+			-- Semantics not guaranteed if `action' changes the structure;
+			-- in such a case, apply iterator to clone of structure instead.
+		do
+			area.do_all_in_bounds (action, 0, area.count - 1)
+		end
+
+	do_if (action: PROCEDURE [ANY, TUPLE [CHARACTER]]; test: FUNCTION [ANY, TUPLE [CHARACTER], BOOLEAN])
+			-- Apply `action' to every item that satisfies `test', from first to last.
+			-- Semantics not guaranteed if `action' or `test' changes the structure;
+			-- in such a case, apply iterator to clone of structure instead.
+		do
+			area.do_if_in_bounds (action, test, 0, area.count - 1)
+		end
+
+	there_exists (test: FUNCTION [ANY, TUPLE [CHARACTER], BOOLEAN]): BOOLEAN
+			-- Is `test' true for at least one item?
+		do
+			Result := area.there_exists_in_bounds (test, 0, area.count - 1)
+		end
+
+	for_all (test: FUNCTION [ANY, TUPLE [CHARACTER], BOOLEAN]): BOOLEAN
+			-- Is `test' true for all items?
+		do
+			Result := area.for_all_in_bounds (test, 0, area.count - 1)
+		end
+
 feature -- Duplication
 
 	mirrored: like Current
@@ -319,5 +350,16 @@ feature {NONE} -- Inapplicable
 			-- Go to position marked `r'.
 		do
 		end
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

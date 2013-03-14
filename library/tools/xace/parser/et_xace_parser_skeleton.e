@@ -5,7 +5,7 @@ note
 		"Xace parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2010, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2012, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -157,7 +157,6 @@ feature {NONE} -- AST factory
 			a_pathname: STRING
 			a_bool: STRING
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			a_child: XM_ELEMENT
 			a_cluster: ET_XACE_CLUSTER
 			an_option: ET_XACE_OPTIONS
 			a_class: ET_XACE_CLASS_OPTIONS
@@ -209,8 +208,7 @@ feature {NONE} -- AST factory
 						Result.set_cluster_prefix (a_prefix)
 						a_cursor := an_element.new_cursor
 						from a_cursor.start until a_cursor.after loop
-							a_child ?= a_cursor.item
-							if a_child /= Void then
+							if attached {XM_ELEMENT} a_cursor.item as a_child then
 								if STRING_.same_string (a_child.name, uc_cluster) then
 									a_cluster := new_cluster (a_child, a_prefix, a_position_table, a_universe)
 									if a_cluster /= Void then
@@ -284,7 +282,6 @@ feature {NONE} -- AST factory
 			a_class_name: STRING
 			an_option: ET_XACE_OPTIONS
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			a_child: XM_ELEMENT
 			a_feature: ET_XACE_FEATURE_OPTIONS
 		do
 			if an_element.has_attribute_by_name (uc_name) then
@@ -295,8 +292,7 @@ feature {NONE} -- AST factory
 						Result := ast_factory.new_class_options (a_class_name, an_option)
 						a_cursor := an_element.new_cursor
 						from a_cursor.start until a_cursor.after loop
-							a_child ?= a_cursor.item
-							if a_child /= Void then
+							if attached {XM_ELEMENT} a_cursor.item as a_child then
 								if STRING_.same_string (a_child.name, uc_option) then
 									fill_options (an_option, a_child, a_position_table)
 								elseif STRING_.same_string (a_child.name, uc_feature) then
@@ -323,7 +319,6 @@ feature {NONE} -- AST factory
 			a_feature_name: STRING
 			an_option: ET_XACE_OPTIONS
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			a_child: XM_ELEMENT
 		do
 			if an_element.has_attribute_by_name (uc_name) then
 				a_feature_name := an_element.attribute_by_name (uc_name).value
@@ -333,8 +328,7 @@ feature {NONE} -- AST factory
 						Result := ast_factory.new_feature_options (a_feature_name, an_option)
 						a_cursor := an_element.new_cursor
 						from a_cursor.start until a_cursor.after loop
-							a_child ?= a_cursor.item
-							if a_child /= Void then
+							if attached {XM_ELEMENT} a_cursor.item as a_child then
 								if STRING_.same_string (a_child.name, uc_option) then
 									fill_options (an_option, a_child, a_position_table)
 								end
@@ -415,7 +409,6 @@ feature {NONE} -- AST factory
 			a_name: STRING
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			a_feature: ET_XACE_FEATURE_OPTIONS
-			a_child: XM_ELEMENT
 			an_option: ET_XACE_OPTIONS
 		do
 			if an_element.has_attribute_by_name (uc_class) then
@@ -426,8 +419,7 @@ feature {NONE} -- AST factory
 						Result := ast_factory.new_class_options (a_name, an_option)
 						a_cursor := an_element.new_cursor
 						from a_cursor.start until a_cursor.after loop
-							a_child ?= a_cursor.item
-							if a_child /= Void and then STRING_.same_string (a_child.name, uc_feature) then
+							if attached {XM_ELEMENT} a_cursor.item as a_child and then STRING_.same_string (a_child.name, uc_feature) then
 								a_feature := new_exported_feature (a_child, a_position_table)
 								if a_feature /= Void then
 									Result.put_feature_option (a_feature)
@@ -490,7 +482,6 @@ feature {NONE} -- Element change
 			a_class: STRING
 			a_creation: STRING
 			a_cursor, old_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			a_child: XM_ELEMENT
 			a_cluster: ET_XACE_CLUSTER
 			an_option: ET_XACE_OPTIONS
 			a_clusters: ET_XACE_CLUSTERS
@@ -516,8 +507,7 @@ feature {NONE} -- Element change
 			end
 			a_cursor := an_element.new_cursor
 			from a_cursor.start until a_cursor.after loop
-				a_child ?= a_cursor.item
-				if a_child /= Void then
+				if attached {XM_ELEMENT} a_cursor.item as a_child then
 					if STRING_.same_string (a_child.name, uc_cluster) then
 						if a_child.has_attribute_by_name (uc_name) then
 							a_cluster := new_cluster (a_child, empty_prefix, a_position_table, a_eiffel_system)
@@ -532,10 +522,9 @@ feature {NONE} -- Element change
 								-- Old syntax.
 							old_cursor := a_child.new_cursor
 							from old_cursor.start until old_cursor.after loop
-								a_child ?= old_cursor.item
-								if a_child /= Void then
-									if STRING_.same_string (a_child.name, uc_cluster) then
-										a_cluster := new_cluster (a_child, empty_prefix, a_position_table, a_eiffel_system)
+								if attached {XM_ELEMENT} old_cursor.item as a_old_child then
+									if STRING_.same_string (a_old_child.name, uc_cluster) then
+										a_cluster := new_cluster (a_old_child, empty_prefix, a_position_table, a_eiffel_system)
 										if a_cluster /= Void then
 											if a_clusters = Void then
 												a_clusters := ast_factory.new_clusters (a_cluster)
@@ -543,8 +532,8 @@ feature {NONE} -- Element change
 												a_clusters.put_last (a_cluster)
 											end
 										end
-									elseif STRING_.same_string (a_child.name, uc_mount) then
-										a_mount := new_mount (a_child, a_position_table, a_eiffel_system)
+									elseif STRING_.same_string (a_old_child.name, uc_mount) then
+										a_mount := new_mount (a_old_child, a_position_table, a_eiffel_system)
 										if a_mount /= Void then
 											if a_mounts = Void then
 												a_mounts := ast_factory.new_mounted_libraries
@@ -558,17 +547,17 @@ feature {NONE} -- Element change
 												a_mounts.put_last (a_mount)
 											end
 										end
-									elseif STRING_.same_string (a_child.name, uc_option) then
+									elseif STRING_.same_string (a_old_child.name, uc_option) then
 										if an_option /= Void then
-											fill_options (an_option, a_child, a_position_table)
+											fill_options (an_option, a_old_child, a_position_table)
 										else
-											an_option := new_options (a_child, a_position_table)
+											an_option := new_options (a_old_child, a_position_table)
 										end
-									elseif STRING_.same_string (a_child.name, uc_external) then
+									elseif STRING_.same_string (a_old_child.name, uc_external) then
 										if an_option = Void then
 											an_option := ast_factory.new_options
 										end
-										fill_externals (an_option, Void, a_child, a_position_table)
+										fill_externals (an_option, Void, a_old_child, a_position_table)
 									end
 								end
 								old_cursor.forth
@@ -662,7 +651,6 @@ feature {NONE} -- Element change
 			a_name: STRING
 			a_prefix: STRING
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			a_child: XM_ELEMENT
 			a_cluster: ET_XACE_CLUSTER
 			an_option: ET_XACE_OPTIONS
 			a_clusters: ET_XACE_CLUSTERS
@@ -705,8 +693,7 @@ feature {NONE} -- Element change
 				end
 				a_cursor := an_element.new_cursor
 				from a_cursor.start until a_cursor.after loop
-					a_child ?= a_cursor.item
-					if a_child /= Void then
+					if attached {XM_ELEMENT} a_cursor.item as a_child then
 						if STRING_.same_string (a_child.name, uc_cluster) then
 							a_cluster := new_cluster (a_child, empty_prefix, a_position_table, a_eiffel_system)
 							if a_cluster /= Void then
@@ -793,7 +780,6 @@ feature {NONE} -- Element change
 		local
 			is_enclosing_option: BOOLEAN
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			a_child: XM_ELEMENT
 			a_name: STRING
 			a_value: STRING
 			an_int: INTEGER
@@ -1416,8 +1402,7 @@ feature {NONE} -- Element change
 			end
 			a_cursor := an_element.new_cursor
 			from a_cursor.start until a_cursor.after loop
-				a_child ?= a_cursor.item
-				if a_child /= Void then
+				if attached {XM_ELEMENT} a_cursor.item as a_child then
 					if not is_enclosing_option then
 						-- Error already reported by the validator.
 					elseif STRING_.same_string (a_child.name, uc_option) then
@@ -1546,14 +1531,12 @@ feature {NONE} -- Element change
 			a_position_table_not_void: a_position_table /= Void
 		local
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			a_child: XM_ELEMENT
 			an_export: ET_XACE_CLASS_OPTIONS
 			a_value: STRING
 		do
 			a_cursor := an_element.new_cursor
 			from a_cursor.start until a_cursor.after loop
-				a_child ?= a_cursor.item
-				if a_child /= Void then
+				if attached {XM_ELEMENT} a_cursor.item as a_child then
 					if STRING_.same_string (a_child.name, uc_link_library) then
 						if a_child.has_attribute_by_name (uc_location) then
 							a_value := a_child.attribute_by_name (uc_location).value

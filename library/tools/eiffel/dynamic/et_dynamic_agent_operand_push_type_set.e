@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type sets of agent operands pushing types to supersets (type sets of argument of features 'call' and 'item')"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -55,7 +55,6 @@ feature -- Element change
 		local
 			old_count: INTEGER
 			i, nb: INTEGER
-			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_builder: ET_DYNAMIC_TYPE_SET_BUILDER
@@ -63,8 +62,7 @@ feature -- Element change
 			old_count := count
 			precursor (a_type, a_type_set, a_system)
 			if old_count < count then
-				l_tuple_type ?= a_type
-				if l_tuple_type /= Void then
+				if attached {ET_DYNAMIC_TUPLE_TYPE} a_type as l_tuple_type then
 					l_item_type_sets := l_tuple_type.item_type_sets
 					l_open_operand_type_sets := agent_type.open_operand_type_sets
 					nb := l_open_operand_type_sets.count
@@ -87,8 +85,7 @@ feature -- Element change
 					-- itself. For example it is OK to pass a "TUPLE [ANY]" to an Agent which expects
 					-- a "TUPLE [STRING]" provided that the dynamic type of the item of this tuple
 				 	-- conforms to type STRING.
-				l_tuple_type ?= a_type
-				if l_tuple_type /= Void then
+				if attached {ET_DYNAMIC_TUPLE_TYPE} a_type as l_tuple_type then
 					l_item_type_sets := l_tuple_type.item_type_sets
 					l_open_operand_type_sets := agent_type.open_operand_type_sets
 					nb := l_open_operand_type_sets.count

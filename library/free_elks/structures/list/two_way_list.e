@@ -1,16 +1,14 @@
 note
-
-	description:
-		"Sequential, two-way linked lists"
+	description: "Sequential, two-way linked lists"
+	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	names: two_way_list, sequence;
 	representation: linked;
 	access: index, cursor, membership;
 	contents: generic;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2012-07-23 23:02:19 +0200 (Mon, 23 Jul 2012) $"
+	revision: "$Revision: 567 $"
 
 class TWO_WAY_LIST [G] inherit
 
@@ -21,7 +19,7 @@ class TWO_WAY_LIST [G] inherit
 			merge_right, merge_left, new_cell,
 			remove, remove_left, remove_right, wipe_out,
 			previous, finish, move, islast, new_chain,
-			forth, back, cursor
+			forth, back, cursor, new_cursor
 		select
 			put_front,
 			merge_right,
@@ -44,7 +42,7 @@ class TWO_WAY_LIST [G] inherit
 			put_left, merge_left, remove, new_chain,
 			remove_left, finish, islast, first_element, extend,
 			last_element, previous, new_cell, remove_right,
-			forth, back, cursor
+			forth, back, cursor, new_cursor
 		end
 
 create
@@ -69,6 +67,13 @@ feature -- Access
 			-- Current cursor position
 		do
 			create Result.make (active, after, before)
+		end
+
+	new_cursor: TWO_WAY_LIST_ITERATION_CURSOR [G]
+			-- <Precursor>
+		do
+			create Result.make (Current)
+			Result.start
 		end
 
 feature -- Status report
@@ -265,38 +270,31 @@ feature -- Element change
 			-- Merge `other' into current structure before cursor
 			-- position. Do not move cursor. Empty `other'.
 		local
-			other_first_element: like first_element
-			other_last_element: like first_element
 			other_count: INTEGER
-			a: like active
 		do
 			if not other.is_empty then
-				other_first_element := other.first_element
-				other_last_element := other.last_element
 				other_count := other.count
-				other.wipe_out
 				check
-					other_first_element /= Void
-					other_last_element /= Void
-				end
-				if is_empty then
-					last_element := other_last_element
-					first_element := other_first_element
-					if before then
-						active := first_element
-					else -- after because of invariant 'empty_property'
+					attached other.first_element as other_first_element
+					attached other.last_element as other_last_element
+				then
+					other.wipe_out
+					if is_empty then
+						last_element := other_last_element
+						first_element := other_first_element
+						if before then
+							active := first_element
+						else -- after because of invariant 'empty_property'
+							active := last_element
+						end
+					elseif isfirst then
+						other_last_element.put_right (first_element)
+						first_element := other_first_element
+					elseif after then
+						other_first_element.put_left (last_element)
+						last_element := other_last_element
 						active := last_element
-					end
-				elseif isfirst then
-					other_last_element.put_right (first_element)
-					first_element := other_first_element
-				elseif after then
-					other_first_element.put_left (last_element)
-					last_element := other_last_element
-					active := last_element
-				else
-					a := active
-					if a /= Void then
+					elseif attached active as a then
 						other_first_element.put_left (a.left)
 						a.put_left (other_last_element)
 					end
@@ -489,27 +487,23 @@ feature {TWO_WAY_LIST} -- Implementation
 		end
 
 invariant
-
 	non_empty_list_has_two_endpoints: not is_empty implies
 				(first_element /= Void and last_element /= Void)
+	empty_list_has_no_endpoints: is_empty implies last_element = Void
 	first_element_constraint: attached first_element as f implies
 				f.left = Void
 	last_element_constraint: attached last_element as l implies
 				l.right = Void
 
 note
-	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class TWO_WAY_LIST
-
-
-
+end

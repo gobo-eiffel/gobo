@@ -5,7 +5,7 @@ note
 		"ECF errors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -2348,7 +2348,6 @@ feature {NONE} -- Implementation
 		local
 			l_shortest_path: DS_ARRAYED_LIST [ET_ADAPTED_UNIVERSE]
 			l_adapted_universe: ET_ADAPTED_UNIVERSE
-			l_adapted_ecf_library: ET_ECF_ADAPTED_LIBRARY
 			i, nb: INTEGER
 			l_position: ET_POSITION
 		do
@@ -2356,8 +2355,7 @@ feature {NONE} -- Implementation
 			nb := l_shortest_path.count
 			from i := nb until i < 1 loop
 				l_adapted_universe := l_shortest_path.item (i)
-				l_adapted_ecf_library ?= l_adapted_universe
-				if l_adapted_ecf_library /= Void then
+				if attached {ET_ECF_ADAPTED_LIBRARY} l_adapted_universe as l_adapted_ecf_library then
 					a_string.append_string ("%N%TUsed in ECF ")
 					a_string.append_string (l_adapted_ecf_library.universe.filename)
 					l_position := l_adapted_ecf_library.name_id.position

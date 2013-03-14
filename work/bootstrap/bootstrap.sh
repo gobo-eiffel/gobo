@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # description: "Bootstrap Gobo Eiffel package"
-# copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
+# copyright: "Copyright (c) 2001-2013, Eric Bezault and others"
 # license: "MIT License"
 # date: "$Date$"
 # revision: "$Revision$"
@@ -58,6 +58,7 @@ BOOTSTRAP_DIR=$GOBO/work/bootstrap
 cd $BIN_DIR
 
 c_compilation() {
+	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec17.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec16.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec15.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec14.c
@@ -74,14 +75,14 @@ c_compilation() {
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec3.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec2.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec1.c
-	$LD $LFLAGS ${LFLAG_OUT}gec$EXE gec*$OBJ
+	$LD $LFLAGS ${LFLAG_OUT}gec$EXE gec*$OBJ $LLIBS
 	$RM gec*$OBJ
 
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gexace4.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gexace3.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gexace2.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gexace1.c
-	$LD $LFLAGS ${LFLAG_OUT}gexace$EXE gexace*$OBJ
+	$LD $LFLAGS ${LFLAG_OUT}gexace$EXE gexace*$OBJ $LLIBS
 	$RM gexace*$OBJ
 
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/geant5.c
@@ -89,21 +90,21 @@ c_compilation() {
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/geant3.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/geant2.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/geant1.c
-	$LD $LFLAGS ${LFLAG_OUT}geant$EXE geant*$OBJ
+	$LD $LFLAGS ${LFLAG_OUT}geant$EXE geant*$OBJ $LLIBS
 	$RM geant*$OBJ
 
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gelex2.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gelex1.c
-	$LD $LFLAGS ${LFLAG_OUT}gelex$EXE gelex*$OBJ
+	$LD $LFLAGS ${LFLAG_OUT}gelex$EXE gelex*$OBJ $LLIBS
 	$RM gelex*$OBJ
 
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/geyacc2.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/geyacc1.c
-	$LD $LFLAGS ${LFLAG_OUT}geyacc$EXE geyacc*$OBJ
+	$LD $LFLAGS ${LFLAG_OUT}geyacc$EXE geyacc*$OBJ $LLIBS
 	$RM geyacc*$OBJ
 
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gepp1.c
-	$LD $LFLAGS ${LFLAG_OUT}gepp$EXE gepp*$OBJ
+	$LD $LFLAGS ${LFLAG_OUT}gepp$EXE gepp*$OBJ $LLIBS
 	$RM gepp*$OBJ
 }
 
@@ -135,6 +136,7 @@ elif [ "$CC" = "msc" -o "$CC" = "cl" ]; then
 	CFLAGS='-O2 -nologo -wd4049'
 	LFLAGS='-nologo -subsystem:console'
 	LFLAG_OUT='-out:'
+	LLIBS=''
 	echo msc > $GOBO/tool/gec/config/c/default.cfg
 	c_compilation
 elif [ "$CC" = "bcc" -o "$CC" = "bcc32" ]; then
@@ -144,6 +146,7 @@ elif [ "$CC" = "bcc" -o "$CC" = "bcc32" ]; then
 	CFLAGS='-5 -q -w-8004 -w-8008 -w-8057 -w-8065 -w-8066 -w-8070 -O2'
 	LFLAGS='-5 -q'
 	LFLAGS='-e'
+	LLIBS=''
 	echo bcc > $GOBO/tool/gec/config/c/default.cfg
 	c_compilation
 	$RM *.tds
@@ -155,6 +158,7 @@ elif [ "$CC" = "lcc-win32" -o "$CC" = "lcc" ]; then
 	LD=lcclnk
 	LFLAGS='-s -subsystem Console'
 	LFLAG_OUT='-o '
+	LLIBS=''
 	echo lcc-win32 > $GOBO/tool/gec/config/c/default.cfg
 	c_compilation
 elif [ "$CC" = "gcc" ]; then
@@ -162,8 +166,9 @@ elif [ "$CC" = "gcc" ]; then
 	LD=gcc
 #	CFLAGS='-O2'
 	CFLAGS=''
-	LFLAGS='-lm'
+	LFLAGS=''
 	LFLAG_OUT='-o '
+	LLIBS='-lm'
 	echo gcc > $GOBO/tool/gec/config/c/default.cfg
 	c_compilation
 elif [ "$CC" = "mingw" ]; then
@@ -172,8 +177,9 @@ elif [ "$CC" = "mingw" ]; then
 	EXE=.exe
 #	CFLAGS='-O2'
 	CFLAGS=''
-	LFLAGS='-lm'
+	LFLAGS=''
 	LFLAG_OUT='-o '
+	LLIBS='-lm'
 	echo mingw > $GOBO/tool/gec/config/c/default.cfg
 	c_compilation
 elif [ "$CC" = "cc" ]; then
@@ -182,6 +188,7 @@ elif [ "$CC" = "cc" ]; then
 	CFLAGS='-fast'
 	LDFLAGS='-lm'
 	LFLAG_OUT='-o '
+	LLIBS=''
 	echo cc > $GOBO/tool/gec/config/c/default.cfg
 	c_compilation
 elif [ "$CC" = "icc" ]; then
@@ -190,6 +197,7 @@ elif [ "$CC" = "icc" ]; then
 	CFLAGS='-O2'
 	LFLAGS=''
 	LFLAG_OUT='-o '
+	LLIBS=''
 	echo icc > $GOBO/tool/gec/config/c/default.cfg
 	c_compilation
 elif [ "$CC" = "tcc" ]; then
@@ -198,6 +206,7 @@ elif [ "$CC" = "tcc" ]; then
 	CFLAGS='-O2'
 	LDFLAGS='-lm'
 	LFLAG_OUT='-o '
+	LLIBS=''
 	echo tcc > $GOBO/tool/gec/config/c/default.cfg
 	c_compilation
 elif [ "$CC" = "no_c" ]; then

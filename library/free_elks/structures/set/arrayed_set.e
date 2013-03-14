@@ -1,16 +1,15 @@
 note
-
 	description: "Sets represented as arrayed lists"
+	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	names: arrayed_set, set, arrayed_list;
 	representation: array;
 	size: fixed;
 	access: membership;
 	contents: generic;
-	date: "$Date$";
-	revision: "$Revision$"
+	date: "$Date: 2012-07-23 23:02:19 +0200 (Mon, 23 Jul 2012) $";
+	revision: "$Revision: 567 $"
 
 class ARRAYED_SET [G] inherit
 
@@ -27,9 +26,9 @@ class ARRAYED_SET [G] inherit
 			put as al_put,
 			prune as al_prune
 		export
-			{ANY} valid_cursor_index, readable, writable
-			{ARRAYED_SET} go_to, area, cursor, full, i_th, lower, upper,
-				subcopy, valid_cursor, subarray
+			{ANY} valid_cursor_index, readable, writable, to_array, new_cursor
+			{ARRAYED_SET} go_to, area, area_v2, cursor, full, i_th, lower, upper,
+				valid_cursor
 			{NONE} all
 		undefine
 			is_inserted,
@@ -62,21 +61,14 @@ feature -- Removal
 		end
 
 note
-	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-
-
-
-end -- class ARRAYED_SET
+end

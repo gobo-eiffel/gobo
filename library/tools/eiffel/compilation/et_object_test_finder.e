@@ -5,7 +5,7 @@ note
 		"Eiffel object-test finders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -79,66 +79,48 @@ feature {ET_AST_NODE} -- Processing
 
 	process_do_function_inline_agent (an_expression: ET_DO_FUNCTION_INLINE_AGENT)
 			-- Process `an_expression'.
-		local
-			l_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
-			l_actual_arguments ?= an_expression.actual_arguments
-			if l_actual_arguments /= Void then
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.actual_arguments as l_actual_arguments then
 				l_actual_arguments.process (Current)
 			end
 		end
 
 	process_do_procedure_inline_agent (an_expression: ET_DO_PROCEDURE_INLINE_AGENT)
 			-- Process `an_expression'.
-		local
-			l_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
-			l_actual_arguments ?= an_expression.actual_arguments
-			if l_actual_arguments /= Void then
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.actual_arguments as l_actual_arguments then
 				l_actual_arguments.process (Current)
 			end
 		end
 
 	process_external_function_inline_agent (an_expression: ET_EXTERNAL_FUNCTION_INLINE_AGENT)
 			-- Process `an_expression'.
-		local
-			l_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
-			l_actual_arguments ?= an_expression.actual_arguments
-			if l_actual_arguments /= Void then
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.actual_arguments as l_actual_arguments then
 				l_actual_arguments.process (Current)
 			end
 		end
 
 	process_external_procedure_inline_agent (an_expression: ET_EXTERNAL_PROCEDURE_INLINE_AGENT)
 			-- Process `an_expression'.
-		local
-			l_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
-			l_actual_arguments ?= an_expression.actual_arguments
-			if l_actual_arguments /= Void then
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.actual_arguments as l_actual_arguments then
 				l_actual_arguments.process (Current)
 			end
 		end
 
 	process_once_function_inline_agent (an_expression: ET_ONCE_FUNCTION_INLINE_AGENT)
 			-- Process `an_expression'.
-		local
-			l_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
-			l_actual_arguments ?= an_expression.actual_arguments
-			if l_actual_arguments /= Void then
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.actual_arguments as l_actual_arguments then
 				l_actual_arguments.process (Current)
 			end
 		end
 
 	process_once_procedure_inline_agent (an_expression: ET_ONCE_PROCEDURE_INLINE_AGENT)
 			-- Process `an_expression'.
-		local
-			l_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
-			l_actual_arguments ?= an_expression.actual_arguments
-			if l_actual_arguments /= Void then
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.actual_arguments as l_actual_arguments then
 				l_actual_arguments.process (Current)
 			end
 		end

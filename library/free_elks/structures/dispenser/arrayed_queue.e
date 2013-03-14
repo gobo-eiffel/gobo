@@ -1,52 +1,38 @@
 note
-
-	description:
-		"Unbounded queues, implemented by resizable arrays"
+	description: "Unbounded queues, implemented by resizable arrays"
+	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	names: dispenser, array;
 	representation: array;
 	access: fixed, fifo, membership;
 	size: fixed;
 	contents: generic;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2012-07-23 23:02:19 +0200 (Mon, 23 Jul 2012) $"
+	revision: "$Revision: 567 $"
 
-class ARRAYED_QUEUE [G] inherit
+class ARRAYED_QUEUE [G]
 
+inherit
 	QUEUE [G]
-		undefine
-			copy, is_equal, prune_all
 		redefine
-			linear_representation, has, is_empty
-		select
-			count, is_empty, put
+			linear_representation, has, is_empty,
+			is_equal, copy, prune_all
 		end
 
-	ARRAY [G]
-		rename
-			count as array_count,
-			force as force_i_th,
-			item as i_th,
-			make as array_make,
-			put as put_i_th,
-			grow as array_grow,
-			is_empty as array_empty
-		export
-			{ANY} valid_index
-			{ARRAYED_QUEUE} lower, upper, i_th, area, subarray
-			{NONE} all
+	RESIZABLE [G]
 		redefine
-			wipe_out, extend, prunable,
-			linear_representation,
-			has, full, extendible,
-			valid_index_set,
-			index_set
+			is_equal, copy, is_empty
+		end
+
+	MISMATCH_CORRECTOR
+		export {NONE}
+			all
+		redefine
+			is_equal, copy, correct_mismatch
 		end
 
 create
-
 	make
 
 feature -- Initialization
@@ -56,12 +42,12 @@ feature -- Initialization
 		require
 			non_negative_argument: n >= 0
 		do
-			array_make (1, n)
-			in_index := 1
+			create area.make_empty (n)
 			out_index := 1
-				-- One entry is kept free
+			count := 0
 		ensure
 			capacity_expected: capacity = n
+			is_empty: is_empty
 		end
 
 feature -- Access
@@ -77,44 +63,135 @@ feature -- Access
  			-- (Reference or object equality,
 			-- based on `object_comparison'.)
 		local
-			i: INTEGER
+			i, j, nb: INTEGER
 		do
+			i := out_index - lower
+			j := count
+			nb := area.capacity
 			if object_comparison then
 				from
-					i := out_index
 				until
-					i = in_index or v ~ i_th (i)
+					j = 0 or v ~ area.item (i)
 				loop
 					i := i + 1
-					if i > capacity then
-						i := 1
+					if i = nb then
+						i := 0
 					end
+					j := j - 1
 				end
 			else
 				from
-					i := out_index
 				until
-					i = in_index or v = i_th (i)
+					j = 0 or v = area.item (i)
 				loop
 					i := i + 1
-					if i > capacity then
-						i := 1
+					if i = nb then
+						i := 0
+					end
+					j := j - 1
+				end
+			end
+			Result := j > 0
+		end
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN
+		local
+			i, j: INTEGER
+			nb, other_nb: INTEGER
+			c: INTEGER
+		do
+			c := count
+			if c = other.count and object_comparison = other.object_comparison then
+				i := out_index - lower
+				j := other.out_index - lower
+				nb := area.capacity
+				other_nb := other.area.capacity
+				Result := True
+				if object_comparison then
+					from
+					until
+						c = 0 or not Result
+					loop
+						Result := area.item (i) ~ other.area.item (j)
+						j := j + 1
+						if j > other_nb then
+							j := 0
+						end
+						i := i + 1
+						if i = nb then
+							i := 0
+						end
+						c := c - 1
+					end
+				else
+					from
+					until
+						c = 0 or not Result
+					loop
+						Result := area.item (i) = other.area.item (j)
+						j := j + 1
+						if j > other_nb then
+							j := 0
+						end
+						i := i + 1
+						if i = nb then
+							i := 0
+						end
+						c := c - 1
 					end
 				end
 			end
-			Result := (i /= in_index)
 		end
 
 feature -- Measurement
 
 	count: INTEGER
-			-- Number of items.
-		local
-			l_capacity: like capacity
+			-- Number of items
+
+	capacity: INTEGER
+			-- <Precursor>
 		do
-			l_capacity := capacity
-			if l_capacity > 0 then
-				Result := (in_index - out_index + l_capacity) \\ l_capacity
+			Result := area.capacity
+		end
+
+	occurrences (v: G): INTEGER
+			-- <Precursor>
+		local
+			i, j, nb: INTEGER
+		do
+			i := out_index - lower
+			j := count
+			nb := area.capacity
+			if object_comparison then
+				from
+				until
+					j = 0
+				loop
+					if area.item (i) ~ v then
+						Result := Result + 1
+					end
+					i := i + 1
+					if i = nb then
+						i := 0
+					end
+					j := j - 1
+				end
+			else
+				from
+				until
+					j = 0
+				loop
+					if area.item (i) = v then
+						Result := Result + 1
+					end
+					i := i + 1
+					if i = nb then
+						i := 0
+					end
+					j := j - 1
+				end
 			end
 		end
 
@@ -131,14 +208,7 @@ feature -- Status report
 	is_empty, off: BOOLEAN
 			-- Is the structure empty?
 		do
-			Result := (in_index = out_index)
-		end
-
-	full: BOOLEAN
-			-- Is structure filled to capacity?
-			-- (Answer: no.)
-		do
-			Result := False
+			Result := count = 0
 		end
 
 	extendible: BOOLEAN
@@ -148,9 +218,9 @@ feature -- Status report
 		end
 
 	prunable: BOOLEAN
-			-- May items be removed? (Answer: yes.)
+			-- May items be removed? (Answer: no.)
 		do
-			Result := True
+			Result := False
 		end
 
 feature -- Element change
@@ -158,53 +228,110 @@ feature -- Element change
 	extend, put, force (v: G)
 			-- Add `v' as newest item.
 		local
-			l_in_index: like in_index
 			l_capacity: like capacity
+			l_count: like count
 		do
 			l_capacity := capacity
-			l_in_index := in_index
-			if l_capacity = 0 or ((l_in_index - out_index + l_capacity) \\ l_capacity + 1 >= l_capacity) then
-				grow
+			l_count := count
+			if l_count >= l_capacity then
+				grow (l_capacity + additional_space)
 				l_capacity := capacity
 			end
-			area.put (v, l_in_index - lower)
-			l_in_index := (l_in_index + 1) \\ l_capacity
-			if l_in_index = 0 then
-				l_in_index := l_capacity
-			end
-			in_index := l_in_index
+			area.force (v, in_index - lower)
+			count := l_count + 1
 		end
 
 	replace (v: like item)
 			-- Replace oldest item by `v'.
 		do
-			put_i_th (v, out_index)
+			area.put (v, out_index - lower)
+		end
+
+feature -- Duplication
+
+	copy (other: like Current)
+		do
+			if other /= Current then
+				standard_copy (other)
+				area := area.twin
+			end
 		end
 
 feature -- Removal
 
 	remove
 			-- Remove oldest item.
+		require else
+			writable: writable
 		local
-			l_out_index: like out_index
-			l_capacity: like capacity
+			l_removed_index: like out_index
 		do
-			l_out_index := out_index
-			l_capacity := capacity
-			area.put_default (l_out_index - lower)
-			l_out_index := (l_out_index + 1) \\ l_capacity
-			if l_out_index = 0 then
-				l_out_index := l_capacity
+			l_removed_index := out_index
+			out_index := l_removed_index \\ capacity + 1
+			count := count - 1
+			if count = 0 then
+					-- No more elements in the queue, simply reset Current to its default state.
+				wipe_out
+			else
+					-- We put the newest element of the queue in place of the
+					-- just removed element.
+				area.put (newest_item, l_removed_index - lower)
 			end
-			out_index := l_out_index
+		end
+
+	prune (v: G)
+			-- <Precursor>
+		do
+
+		end
+
+	prune_all (v: G)
+			-- <Precursor>
+		do
+
 		end
 
 	wipe_out
 			-- Remove all items.
+		require else
+			prunable: True
 		do
-			clear_all
+			area.wipe_out
 			out_index := 1
-			in_index := 1
+			count := 0
+		end
+
+feature -- Resizing
+
+	trim
+			-- <Precursor>
+		local
+			i: like lower
+			j: like lower
+			n: like count
+			m: like capacity
+		do
+			n := count
+			m := capacity
+			if n < m then
+					-- There are some unused slots.
+				i := out_index - lower
+				j := in_index - lower
+				if i < j then
+						-- All unused slots are in front of array.
+					area.move_data (i, 0, n)
+					out_index := lower
+				elseif n > 0 then
+						-- Unused slots are in middle of array.
+					area.move_data (i, j, m - i)
+						-- `out_index' will be equal to `in_index'.
+					out_index := j + lower
+				end
+					-- All unused slots for removal are at end of array.
+				area := area.aliased_resized_area (n)
+			end
+		ensure then
+			same_items: linear_representation.is_equal (old linear_representation)
 		end
 
 feature -- Conversion
@@ -213,92 +340,125 @@ feature -- Conversion
 			-- Representation as a linear structure
 			-- (in the original insertion order)
 		local
-			i: INTEGER
+			i, j, nb: INTEGER
 		do
-			create Result.make (count)
 			from
-				i := out_index
+				i := out_index - lower
+				j := count
+				nb := area.capacity
+				create Result.make (j)
 			until
-				i = in_index
+				j = 0
 			loop
-				Result.extend (i_th (i))
+				Result.extend (area.item (i))
 				i := i + 1
-				if i > capacity then i := 1 end
+				if i = nb then
+					i := 0
+				end
+				j := j - 1
 			end
-			i := 1
 		end
 
-feature {NONE} -- Inapplicable
+feature {NONE} -- Retrieval
 
-	start
-			-- Move cursor to first position.
+	correct_mismatch
 		do
-		end
-
-	finish
-			-- Move cursor to last position.
-		do
-		end
-
-	forth
-			-- Move cursor to next position.
-		do
-		end
-
-	valid_index_set: BOOLEAN
-		do
-			Result := True
+			if
+				not mismatch_information.has ("count") and then
+				attached {SPECIAL [G]} mismatch_information.item ("area") as a and then
+				attached {INTEGER} mismatch_information.item ("in_index") as i and then
+				attached {INTEGER} mismatch_information.item ("out_index") as o and then
+				attached {BOOLEAN} mismatch_information.item ("object_comparison") as c
+			then
+				area := a
+				out_index := o
+				if a.capacity = 0 then
+					count := 0
+				else
+					count := (i - o + a.capacity) \\ a.capacity
+				end
+				object_comparison := c
+			else
+				Precursor
+			end
 		end
 
 feature {ARRAYED_QUEUE} -- Implementation
+
+	area: SPECIAL [G]
+			-- Storage for queue
 
 	out_index: INTEGER
 			-- Position of oldest item
 
 	in_index: INTEGER
 			-- Position for next insertion
-
-	grow
 		local
-			i, j: INTEGER
+			c: like capacity
 		do
-			i := array_count
-			conservative_resize (1, capacity + additional_space)
-			if out_index > 1 then
-				from
-					j := capacity
-				until
-					i < out_index
-				loop
-					put_i_th (i_th (i), j)
-					i := i - 1
-					area.put_default (i)
-					j := j - 1
-				end
-				out_index := j + 1
+			c := capacity
+			if c > 0 then
+				Result := (out_index - lower + count) \\ c + lower
+			else
+				Result := out_index
 			end
-		ensure
-			in_index_unchanged: in_index = old in_index
 		end
 
-invariant
+	grow (n: INTEGER)
+		local
+			old_count, new_capacity: like capacity
+			nb: INTEGER
+		do
+			new_capacity := area.capacity.max (n)
+			if count = 0 or else in_index > out_index then
+					-- Case were queue is not full and data is contiguous from
+					-- oldest item to the newest one.
+				area := area.aliased_resized_area (new_capacity)
+			else
+				old_count := area.count
+					-- Fill the empty space with the most recent added item.
+				area := area.aliased_resized_area_with_default (newest_item, new_capacity)
+				nb := old_count - out_index + 1
+				area.move_data (out_index - lower, new_capacity - nb, nb)
+				out_index := new_capacity - nb + 1
+			end
+		end
 
-	not_full: not full
-	extendible: extendible
-	prunable: prunable
-	empty_means_storage_empty: is_empty implies all_default
+feature {NONE} -- Implementation
 
+	lower: INTEGER = 1
+			-- Lower bound for accessing list items via indexes
+
+	upper: INTEGER
+			-- Upper bound for accessing list items via indexes
+		do
+			Result := area.count
+		end
+
+	newest_item: G
+			-- Most recently added item.
+		local
+			l_pos: INTEGER
+		do
+			l_pos := in_index - 1
+			if l_pos = 0 then
+					-- Next element is at the beginning of the area, so previous
+					-- one is at `area.upper'.
+				Result :=  area.item (area.upper)
+			else
+				Result :=  area.item (l_pos - lower)
+			end
+		end
 
 note
-	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class ARRAYED_QUEUE
+end

@@ -1,10 +1,10 @@
 note
 	description: "Helper for routines in INTERNAL class."
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 2005-2008, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2012-12-29 00:47:54 +0100 (Sat, 29 Dec 2012) $"
+	revision: "$Revision: 677 $"
 
 class
 	INTERNAL_HELPER
@@ -18,16 +18,16 @@ feature -- Status report
 			Result := False
 		end
 
-	is_valid_type_string (s: STRING): BOOLEAN
+	is_valid_type_string (s: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `s' a valid string representation for a TYPE.
 		local
-			l_type_name: STRING
+			l_type_name: STRING_32
 			l_start_pos, l_end_pos: INTEGER
-			l_class_type_name: STRING
-			l_parameters: detachable ARRAYED_LIST [STRING]
+			l_class_type_name: STRING_32
+			l_parameters: like parameters_decomposition
 		do
 			if s /= Void and then not s.is_empty then
-				l_class_type_name := s.twin
+				create l_class_type_name.make_from_string_general (s)
 				l_class_type_name.left_adjust
 				l_class_type_name.right_adjust
 
@@ -72,14 +72,14 @@ feature -- Status report
 			end
 		end
 
-	mapped_type (a_type: STRING): STRING
+	mapped_type (a_type: READABLE_STRING_GENERAL): READABLE_STRING_GENERAL
 			-- If `is_pre_ecma_mapping_disabled' `a_type', otherwise
 			-- the mapped typed.
 		require
 			a_type_not_void: a_type /= Void
 		local
 			l_table: like pre_ecma_type_mapping
-			r: detachable STRING
+			r: detachable READABLE_STRING_GENERAL
 		do
 			if not is_pre_ecma_mapping_disabled then
 				l_table := pre_ecma_type_mapping
@@ -114,43 +114,34 @@ feature -- Status setting
 
 feature {NONE} -- Implementation: status report
 
-	is_valid_identifier (s: STRING): BOOLEAN
+	is_valid_identifier (s: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `s' a valid Eiffel identifier?
 		require
 			name_not_void: s /= Void
 		local
 			i, nb: INTEGER
-			cc: CHARACTER
+			cc: CHARACTER_32
 		do
 			if not s.is_empty then
 				cc := s.item (1)
 				nb := s.count + 1
 				if cc = attached_mark or cc = detachable_mark then
-					from
-						i := 2
-					until
-						i = nb or not s.item (i).is_space
-					loop
-						i := i + 1
-					end
+					i := 2
 				elseif s.substring_index (attached_keyword, 1) = 1 then
-					from
-						i := attached_keyword.count + 1
-					until
-						i = nb or not s.item (i).is_space
-					loop
-						i := i + 1
-					end
+					i := attached_keyword.count + 1
 				elseif s.substring_index (detachable_keyword, 1) = 1 then
-					from
-						i := detachable_keyword.count + 1
-					until
-						i = nb or not s.item (i).is_space
-					loop
-						i := i + 1
-					end
+					i := detachable_keyword.count + 1
 				else
 					i := 1
+				end
+				if i > 1 then
+						-- Remove any whitespace between the attachment mark and the type name.
+					from
+					until
+						i = nb or not s.item (i).is_space
+					loop
+						i := i + 1
+					end
 				end
 				if s.item (i).is_alpha then
 					from
@@ -171,7 +162,7 @@ feature {NONE} -- Implementation: status report
 
 feature {NONE} -- Decompose string type
 
-	parameters_decomposition (a_str: STRING): detachable ARRAYED_LIST [STRING]
+	parameters_decomposition (a_str: READABLE_STRING_32): detachable ARRAYED_LIST [READABLE_STRING_32]
 			-- Decompose `a_str' which should be of the form "A, B, D [G], H [E ,F]"
 			-- into a list of strings "A", "B", "D [G]", "H [E, F]"
 			-- If decomposition is not possible, Void.
@@ -182,10 +173,9 @@ feature {NONE} -- Decompose string type
 			l_invalid: BOOLEAN
 			l_first_pos: INTEGER
 			l_nesting: INTEGER
-			r: ARRAYED_LIST [STRING]
 		do
 			from
-				create r.make (5)
+				create Result.make (5)
 				i := 1
 				l_first_pos := 1
 				nb := a_str.count
@@ -196,7 +186,7 @@ feature {NONE} -- Decompose string type
 					a_str.item (i)
 				when ',' then
 					if l_nesting = 0 then
-						r.extend (a_str.substring (l_first_pos, i - 1))
+						Result.extend (a_str.substring (l_first_pos, i - 1))
 						l_first_pos := i + 1
 					end
 				when '[' then
@@ -210,14 +200,15 @@ feature {NONE} -- Decompose string type
 				i := i + 1
 			end
 			if not l_invalid and then l_nesting = 0 then
-				r.extend (a_str.substring (l_first_pos, i - 1))
-				Result := r
+				Result.extend (a_str.substring (l_first_pos, i - 1))
+			else
+				Result := Void
 			end
 		end
 
 feature {NONE} -- ECMA mapping helper
 
-	pre_ecma_type_mapping: HASH_TABLE [STRING, STRING]
+	pre_ecma_type_mapping: STRING_TABLE [STRING]
 			-- Mapping between pre-ECMA type naming and new names.
 		once
 			create Result.make (12)
@@ -236,9 +227,25 @@ feature {NONE} -- ECMA mapping helper
 			pre_ecma_type_mapping_not_void: Result /= Void
 		end
 
-	attached_mark: CHARACTER = '!'
-	detachable_mark: CHARACTER = '?'
+	attached_mark: CHARACTER_32 = '!'
+	detachable_mark: CHARACTER_32 = '?'
 	attached_keyword: STRING = "attached"
 	detachable_keyword: STRING = "detachable"
 			-- Symbols use for attachment marks.
+
+feature {NONE} -- Type creation
+
+	type_keyword: STRING = "TYPE";
+			-- Used for creating type objects.
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
+
 end

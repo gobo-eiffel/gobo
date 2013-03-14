@@ -5,7 +5,7 @@ note
 		"Test features of class FUNCTION"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -71,7 +71,7 @@ feature -- Test
 			p2: FUNCTION [ANY, TUPLE, CHARACTER]
 			p3: FUNCTION [ANY, TUPLE, CHARACTER]
 		do
-			create a.make (2)
+			create a.make_filled ('%U', 2)
 			a.put ('g', 1)
 				-- 1 open, 0 closed.
 			p1 := agent a.item
@@ -287,7 +287,7 @@ feature -- Test
 			p2: FUNCTION [ANY, TUPLE [SPECIAL [CHARACTER]], CHARACTER]
 			p3: FUNCTION [ANY, TUPLE, CHARACTER]
 		do
-			create a.make (2)
+			create a.make_filled ('%U', 2)
 				-- 2 open, 0 closed.
 			a.put ('g', 1)
 			p1 := agent {SPECIAL [CHARACTER]}.item (?)
@@ -504,7 +504,7 @@ feature -- Test
 			p2: FUNCTION [ANY, TUPLE, CHARACTER]
 			p3: FUNCTION [ANY, TUPLE, CHARACTER]
 		do
-			create a.make (2)
+			create a.make_filled ('%U', 2)
 			a.put ('g', 1)
 				-- 1 open, 0 closed.
 			p1 := agent a.item
@@ -729,7 +729,7 @@ feature -- Test
 			p2: FUNCTION [ANY, TUPLE [SPECIAL [CHARACTER]], CHARACTER]
 			p3: FUNCTION [ANY, TUPLE, CHARACTER]
 		do
-			create a.make (2)
+			create a.make_filled ('%U', 2)
 				-- 2 open, 0 closed.
 			a.put ('g', 1)
 			p1 := agent {SPECIAL [CHARACTER]}.item (?)

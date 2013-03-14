@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -952,14 +952,20 @@ feature {NONE} -- Feature validity
 				end
 			when builtin_type_class then
 				inspect a_feature.builtin_code \\ builtin_capacity
+				when builtin_type_default then
+					report_builtin_type_default (a_feature)
 				when builtin_type_field then
 					report_builtin_type_field (a_feature)
 				when builtin_type_field_count then
 					report_builtin_type_field_count (a_feature)
 				when builtin_type_field_static_type then
 					report_builtin_type_field_static_type (a_feature)
-				when builtin_type_generic_parameter then
-					report_builtin_type_generic_parameter (a_feature)
+				when builtin_type_generic_parameter_type then
+					report_builtin_type_generic_parameter_type (a_feature)
+				when builtin_type_new_instance then
+					report_builtin_type_new_instance (a_feature)
+				when builtin_type_new_special_any_instance then
+					report_builtin_type_new_special_any_instance (a_feature)
 				else
 					report_builtin_function (a_feature)
 				end
@@ -2926,6 +2932,25 @@ feature {NONE} -- Built-in features
 			end
 		end
 
+	report_builtin_type_default (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Report that built-in feature 'TYPE.default' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_result_type := result_type_set.static_type
+					-- The Result is either expanded or Void.
+					-- Nothing to propagate when it is Void.
+				if l_result_type.is_expanded then
+					mark_type_alive (l_result_type)
+					propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+				end
+			end
+		end
+
 	report_builtin_type_field_count (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Report that built-in feature 'TYPE.field_count' is being analyzed.
 		require
@@ -3036,8 +3061,8 @@ feature {NONE} -- Built-in features
 			end
 		end
 
-	report_builtin_type_generic_parameter (a_feature: ET_EXTERNAL_FUNCTION)
-			-- Report that built-in feature 'TYPE.generic_parameter' is being analyzed.
+	report_builtin_type_generic_parameter_type (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Report that built-in feature 'TYPE.generic_parameter_type' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
@@ -3072,6 +3097,52 @@ feature {NONE} -- Built-in features
 							propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 							i := i + 1
 						end
+					end
+				end
+			end
+		end
+
+	report_builtin_type_new_instance (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Report that built-in feature 'TYPE.new_instance' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_result_type := result_type_set.static_type
+				if not l_result_type.base_class.is_deferred and not l_result_type.base_class.is_none then
+						-- Return Void when the base class is deferred,
+						-- or when the result type is not alive (i.e. no object of that
+						-- type has been otherwise created in the system).
+					propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+				end
+			end
+		end
+
+	report_builtin_type_new_special_any_instance (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Report that built-in feature 'TYPE.new_special_any_instance' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_parameters := current_type.actual_parameters
+				if l_parameters = Void or else l_parameters.count < 1 then
+						-- Internal error: we should have already checked by now
+						-- that class "TYPE" has a generic parameter.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_result_type := current_dynamic_system.dynamic_type (l_parameters.type (1), current_type)
+					if attached {ET_DYNAMIC_SPECIAL_TYPE} l_result_type as l_special_type and then not l_special_type.item_type_set.static_type.is_expanded then
+						-- Return Void when the result type is not alive (i.e. no object
+						-- of that type has been otherwise created in the system).
+						propagate_builtin_result_dynamic_types (l_special_type, current_dynamic_feature)
 					end
 				end
 			end

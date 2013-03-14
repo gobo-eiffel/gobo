@@ -1,15 +1,14 @@
 note
-
 	description: "Sequential, one-way linked lists"
+	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	names: linked_list, sequence;
 	representation: linked;
 	access: index, cursor, membership;
 	contents: generic;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2012-07-23 23:02:19 +0200 (Mon, 23 Jul 2012) $"
+	revision: "$Revision: 567 $"
 
 class LINKED_LIST [G] inherit
 
@@ -18,7 +17,8 @@ class LINKED_LIST [G] inherit
 			go_i_th, put_left, move, wipe_out,
 			isfirst, islast, is_inserted,
 			first, last, finish, merge_left, merge_right,
-			readable, start, before, after, off, copy
+			readable, start, before, after, off, copy,
+			new_cursor
 		end
 
 create
@@ -38,38 +38,26 @@ feature -- Access
 
 	item: G
 			-- Current item
-		local
-			a: like active
 		do
-			a := active
-			check
-				a_attached: a /= Void
+			check attached active as a then
+				Result := a.item
 			end
-			Result := a.item
 		end
 
 	first: like item
 			-- Item at first position
-		local
-			f: like first_element
 		do
-			f := first_element
-			check
-				f_attached: f /= Void
+			check attached first_element as f then
+				Result := f.item
 			end
-			Result := f.item
 		end
 
 	last: like item
 			-- Item at last position
-		local
-			l: like last_element
 		do
-			l := last_element
-			check
-				l_attached: l /= Void
+			check attached last_element as l then
+				Result := l.item
 			end
-			Result := l.item
 		end
 
 	index: INTEGER
@@ -98,6 +86,20 @@ feature -- Access
 		do
 			create Result.make (active, after, before)
 		end
+
+feature -- Access: Cursor
+
+	new_cursor: LINKED_LIST_ITERATION_CURSOR [G]
+			-- <Precursor>
+		do
+			create Result.make (Current)
+			Result.start
+		end
+
+feature {LINKED_LIST, LINKED_LIST_ITERATION_CURSOR} -- Access
+
+	first_element: detachable like new_cell
+			-- Head of list
 
 feature -- Measurement
 
@@ -249,6 +251,7 @@ feature -- Cursor movement
 				active := previous
 			end
 		end
+
 	move (i: INTEGER)
 			-- Move cursor `i' positions. The cursor
 			-- may end up `off' if the offset is too big.
@@ -311,8 +314,6 @@ feature -- Cursor movement
 
 	go_to (p: CURSOR)
 			-- Move cursor to position `p'.
-		local
-
 		do
 			if attached {like cursor} p as ll_c then
 				after := ll_c.after
@@ -603,10 +604,8 @@ feature -- Duplication
 			-- to `other', so as to yield equal objects.
 		local
 			cur: detachable LINKED_LIST_CURSOR [G]
-			obj_comparison: BOOLEAN
 		do
 			if other /= Current then
-				obj_comparison := other.object_comparison
 				standard_copy (other)
 				if not other.is_empty then
 					internal_wipe_out
@@ -629,7 +628,6 @@ feature -- Duplication
 						other.go_to (cur)
 					end
 				end
-				object_comparison := obj_comparison
 			end
 		end
 
@@ -690,9 +688,6 @@ feature {LINKED_LIST} -- Implementation
 	active: like first_element
 			-- Element at cursor position
 
-	first_element: detachable like new_cell
-			-- Head of list
-
 	last_element: like first_element
 			-- Tail of list
 		local
@@ -745,15 +740,14 @@ invariant
 	after_constraint: after implies (active = last_element)
 
 note
-	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class LINKED_LIST
+end

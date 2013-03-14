@@ -5,7 +5,7 @@ note
 		"Eiffel character constants of the form 'A'"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,8 +22,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_value: CHARACTER)
+	make (a_value: CHARACTER_32)
 			-- Create a new character constant.
+		require
+			a_value_is_character_8: a_value.is_character_8
 		do
 			value := a_value
 			make_leaf
@@ -34,6 +36,12 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	literal: CHARACTER
+			-- Character A such as 'A' is current character
+		do
+			Result := value.to_character_8
+		end
 
 	last_position: ET_POSITION
 			-- Position of last character of current node in source code
@@ -48,5 +56,9 @@ feature -- Processing
 		do
 			a_processor.process_c1_character_constant (Current)
 		end
+
+invariant
+
+	value_is_character_8: value.is_character_8
 
 end

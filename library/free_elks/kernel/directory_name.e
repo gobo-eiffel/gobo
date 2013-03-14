@@ -1,10 +1,10 @@
 note
 	description: "Directory name abstraction"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2004, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2012-12-17 23:05:44 +0100 (Mon, 17 Dec 2012) $"
+	revision: "$Revision: 665 $"
 
 class DIRECTORY_NAME
 
@@ -17,7 +17,7 @@ create
 create {DIRECTORY_NAME}
 	string_make
 
-feature
+feature -- Status report
 
 	is_valid: BOOLEAN
 			-- Is the directory name valid?
@@ -42,5 +42,16 @@ feature {NONE} -- Externals
 		external
 			"C signature (EIF_CHARACTER *): EIF_BOOLEAN use %"eif_path_name.h%""
 		end
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

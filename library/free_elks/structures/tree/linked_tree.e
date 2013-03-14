@@ -1,16 +1,14 @@
 note
-
-	description:
-		"Trees implemented using a linked list representation"
+	description: "Trees implemented using a linked list representation"
+	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	names: linked_tree, tree, linked_list;
 	representation: recursive, linked;
 	access: cursor, membership;
 	contents: generic;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2012-07-23 23:02:19 +0200 (Mon, 23 Jul 2012) $"
+	revision: "$Revision: 567 $"
 
 class LINKED_TREE [G] inherit
 
@@ -71,6 +69,7 @@ class LINKED_TREE [G] inherit
 			merge_left as ll_merge_left,
 			merge_right as ll_merge_right,
 			new_chain as new_tree,
+			new_cursor as ll_new_cursor,
 			off as child_off,
 			prune as ll_prune,
 			put as child_put,
@@ -88,7 +87,8 @@ class LINKED_TREE [G] inherit
 			{NONE}
 				ll_make, ll_has,
 			 	ll_merge_left, ll_merge_right,
-			 	ll_fill, ll_duplicate, ll_full, ll_empty
+			 	ll_fill, ll_duplicate, ll_full, ll_empty,
+			 	ll_new_cursor
 		undefine
 			child_readable, is_leaf,
 			child_writable,
@@ -302,7 +302,7 @@ feature {NONE} -- Inapplicable
 feature {LINKED_TREE} -- Implementation
 
 
-	new_cell (v: like item): LINKED_TREE [G]
+	new_cell (v: like item): like Current
 			-- New cell containing `v'
 		do
 			create Result.make (v)
@@ -368,15 +368,14 @@ invariant
 	no_void_child: readable_child = child_readable
 
 note
-	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class LINKED_TREE
+end

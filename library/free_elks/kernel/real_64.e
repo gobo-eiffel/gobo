@@ -3,16 +3,19 @@ note
 	external_name: "System.Double"
 	assembly: "mscorlib"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2006, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2012-05-24 06:13:10 +0200 (Thu, 24 May 2012) $"
+	revision: "$Revision: 559 $"
 
 frozen expanded class REAL_64 inherit
 
 	REAL_64_REF
 		redefine
 			is_less,
+			is_nan,
+			is_negative_infinity,
+			is_positive_infinity,
 			truncated_to_integer,
 			truncated_to_integer_64,
 			truncated_to_real,
@@ -33,13 +36,32 @@ create
 	make_from_reference
 
 convert
-	make_from_reference ({REAL_64_REF}),
-	truncated_to_real: {REAL_32}
+	make_from_reference ({REAL_64_REF})
 
 feature -- Comparison
 
 	is_less alias "<" (other: REAL_64): BOOLEAN
 			-- Is `other' greater than current double?
+		external
+			"built_in"
+		end
+
+feature -- Status Report
+
+	is_nan: BOOLEAN
+			-- Is current the representation of `nan'?
+		external
+			"built_in"
+		end
+
+	is_negative_infinity: BOOLEAN
+			-- Is current the representation of `negative_infinity'?
+		external
+			"built_in"
+		end
+
+	is_positive_infinity: BOOLEAN
+			-- Is current the representation of `positive_infinity'?
 		external
 			"built_in"
 		end
@@ -130,5 +152,16 @@ feature -- Output
 		external
 			"built_in"
 		end
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Compiler"
 
-	copyright: "Copyright (c) 2005-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -134,19 +134,13 @@ feature {NONE} -- Eiffel config file parsing
 			l_cursor: DS_LIST_CURSOR [STRING]
 			l_definition: STRING
 			l_index: INTEGER
-			gobo_eiffel: STRING
 			defined_variables: STRING
 		do
 			last_system := Void
 			create l_xace_error_handler.make_standard
 			create l_xace_variables.make_map (100)
 			l_xace_variables.set_key_equality_tester (string_equality_tester)
-			gobo_eiffel := Execution_environment.variable_value ("GOBO_EIFFEL")
-			if gobo_eiffel /= Void then
-				l_xace_variables.force_last (gobo_eiffel, "GOBO_EIFFEL")
-			else
-				l_xace_variables.force_last ("ge", "GOBO_EIFFEL")
-			end
+			l_xace_variables.force_last ("ge", "GOBO_EIFFEL")
 			if defined_variables /= Void then
 				create l_splitter.make
 				l_cursor := l_splitter.split (defined_variables).new_cursor
@@ -181,16 +175,12 @@ feature {NONE} -- Eiffel config file parsing
 		local
 			l_ecf_parser: ET_ECF_SYSTEM_PARSER
 			l_ecf_error_handler: ET_ECF_ERROR_HANDLER
-			l_gobo_eiffel: STRING
 			l_ecf_system: ET_ECF_SYSTEM
 			l_target: ET_ECF_TARGET
 			l_value: STRING
 		do
 			last_system := Void
-			l_gobo_eiffel := Execution_environment.variable_value ("GOBO_EIFFEL")
-			if l_gobo_eiffel = Void or else l_gobo_eiffel.is_empty then
-				Execution_environment.set_variable_value ("GOBO_EIFFEL", "ge")
-			end
+			Execution_environment.set_variable_value ("GOBO_EIFFEL", "ge")
 			create l_ecf_error_handler.make_standard
 			create l_ecf_parser.make (l_ecf_error_handler)
 			l_ecf_parser.set_finalize_mode (is_finalize)

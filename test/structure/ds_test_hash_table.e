@@ -6,7 +6,7 @@ note
 
 	test_status: "ok_to_run"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2001-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -211,6 +211,39 @@ feature -- Test
 			assert ("for_all2", a_table1.for_all (agent INTEGER_.is_even))
 		end
 
+	test_put_last_new
+			-- Test feature 'put_last_new'.
+		local
+			a_table1: DS_HASH_TABLE [INTEGER, STRING]
+		do
+			create a_table1.make (5)
+			a_table1.put_last_new (1, "one")
+			assert ("inserted_1", a_table1.has ("one"))
+		end
+
+	test_force_last_new
+			-- Test feature 'force_last_new'.
+		local
+			a_table1: DS_HASH_TABLE [INTEGER, STRING]
+		do
+			create a_table1.make (5)
+			a_table1.force_last_new (1, "one")
+			assert ("inserted_1", a_table1.has ("one"))
+		end
+
+	test_reentrant_search_position
+			-- Test reentrancy of feature 'search_position'.
+		local
+			a_table1: DS_HASH_TABLE [INTEGER, STRING]
+		do
+			create a_table1.make (5)
+			a_table1.set_key_equality_tester (create {KL_AGENT_EQUALITY_TESTER [STRING]}.make (agent same_strings_with_side_effect (?, ?, a_table1)))
+			a_table1.set_hash_function (create {KL_AGENT_HASH_FUNCTION [STRING]}.make (agent unique_string_hash_code))
+			a_table1.force_last (1, "one")
+			a_table1.force_last (2, "two")
+			assert ("not_has_void", not a_table1.has_void)
+		end
+
 feature {NONE} -- Implementation
 
 	same_integers (i, j: INTEGER): BOOLEAN
@@ -220,6 +253,26 @@ feature {NONE} -- Implementation
 			Result := (i = j)
 		ensure
 			definition: Result = (i = j)
+		end
+
+	same_strings_with_side_effect (s1, s2: STRING; a_table: DS_HASH_TABLE [INTEGER, STRING]): BOOLEAN
+			-- Is `s1' equal to `s2'?
+			-- (Used as agent to test iterators.)
+			-- Make sure that a call to `a_table.search_position' is invoked.
+		require
+			a_table_not_void: a_table /= Void
+		do
+				-- Force a call to `a_table.search_position'.
+			Result := not a_table.has_void
+			Result := (s1 ~ s2)
+		ensure
+			definition: Result = (s1 ~ s2)
+		end
+
+	unique_string_hash_code (a_string: STRING): INTEGER
+			-- Unique hash-code for all strings
+		do
+			Result := 1
 		end
 
 end

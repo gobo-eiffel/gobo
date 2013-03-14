@@ -18,9 +18,6 @@ inherit
 	KI_BINARY_OUTPUT_FILE
 
 	KL_OUTPUT_FILE
-		redefine
-			string_name
-		end
 
 	RAW_FILE
 		rename
@@ -64,9 +61,8 @@ inherit
 		redefine
 #ifdef GE
 			old_open_write,
-			old_open_append,
+			old_open_append
 #endif
-			string_name
 		end
 
 create
@@ -74,9 +70,6 @@ create
 	make
 
 feature {NONE} -- Implementation
-
-	string_name: STRING
-			-- Name of file (STRING version)
 
 #ifdef GE
 	old_open_write

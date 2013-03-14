@@ -1,15 +1,13 @@
 note
-
-	description:
-		"Structures whose items may be accessed sequentially, one-way"
+	description: "Structures whose items may be accessed sequentially, one-way"
+	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	names: sequential, traversing;
 	access: membership;
 	contents: generic;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2012-07-23 23:02:19 +0200 (Mon, 23 Jul 2012) $"
+	revision: "$Revision: 567 $"
 
 deferred class LINEAR [G] inherit
 
@@ -180,7 +178,6 @@ feature -- Iteration
 			-- Semantics not guaranteed if `action' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
 		local
-			t: TUPLE [G]
 			c: detachable CURSOR
 			cs: detachable CURSOR_STRUCTURE [G]
 		do
@@ -189,14 +186,12 @@ feature -- Iteration
 				c := acs.cursor
 			end
 
-			create t
 			from
 				start
 			until
 				after
 			loop
-				t.put (item, 1)
-				action.call (t)
+				action.call ([item])
 				forth
 			end
 
@@ -210,7 +205,6 @@ feature -- Iteration
 			-- Semantics not guaranteed if `action' or `test' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
 		local
-			t: TUPLE [G]
 			c: detachable CURSOR
 			cs: detachable CURSOR_STRUCTURE [G]
 		do
@@ -219,15 +213,13 @@ feature -- Iteration
 				c := acs.cursor
 			end
 
-			create t
 			from
 				start
 			until
 				after
 			loop
-				t.put (item, 1)
-				if test.item (t) then
-					action.call (t)
+				if test.item ([item]) then
+					action.call ([item])
 				end
 				forth
 			end
@@ -244,10 +236,7 @@ feature -- Iteration
 		local
 			c: detachable CURSOR
 			cs: detachable  CURSOR_STRUCTURE [G]
-			t: TUPLE [G]
 		do
-			create t
-
 			if attached {CURSOR_STRUCTURE [G]} Current as acs then
 				cs := acs
 				c := acs.cursor
@@ -258,8 +247,7 @@ feature -- Iteration
 			until
 				after or Result
 			loop
-				t.put (item, 1)
-				Result := test.item (t)
+				Result := test.item ([item])
 				forth
 			end
 
@@ -275,10 +263,7 @@ feature -- Iteration
 		local
 			c: detachable CURSOR
 			cs: detachable  CURSOR_STRUCTURE [G]
-			t: TUPLE [G]
 		do
-			create t
-
 			if attached {CURSOR_STRUCTURE [G]} Current as acs then
 				cs := acs
 				c := acs.cursor
@@ -290,8 +275,7 @@ feature -- Iteration
 			until
 				after or not Result
 			loop
-				t.put (item, 1)
-				Result := test.item (t)
+				Result := test.item ([item])
 				forth
 			end
 
@@ -315,24 +299,14 @@ invariant
 	after_constraint: after implies off
 
 note
-	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-
-
-
-end -- class LINEAR
-
-
-
+end

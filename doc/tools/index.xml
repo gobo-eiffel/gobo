@@ -22,7 +22,7 @@
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>28 February 2010</date>
+	<date>14 May 2010</date>
 </chapterinfo>
 
 <title>Gobo Eiffel Tools Library</title>
@@ -68,6 +68,14 @@ This documentation is structured as follows:
 		</term>
 		<listitem><para>
 			Purpose, syntax and semantics of Xace files.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="builtin_routines">Eiffel Built-in Routines</link>
+		</term>
+		<listitem><para>
+			How to add a new Eiffel built-in routine.
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>

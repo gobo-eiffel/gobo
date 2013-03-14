@@ -20,9 +20,6 @@ inherit
 	KI_TEXT_OUTPUT_FILE
 
 	KL_OUTPUT_FILE
-		redefine
-			string_name
-		end
 
 	PLAIN_TEXT_FILE
 		rename
@@ -66,9 +63,8 @@ inherit
 		redefine
 #ifdef GE
 			old_open_write,
-			old_open_append,
+			old_open_append
 #endif
-			string_name
 		end
 
 create
@@ -81,9 +77,6 @@ feature -- Access
 			-- Line separator
 
 feature {NONE} -- Implementation
-
-	string_name: STRING
-			-- Name of file (STRING version)
 
 #ifdef GE
 	old_open_write

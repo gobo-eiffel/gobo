@@ -381,13 +381,11 @@ feature -- Error handling
 	report_error (a_message: STRING)
 			-- Print error message.
 		local
-			f_buffer: YY_FILE_BUFFER
 			a_lined_message: STRING
 			an_error: UT_MESSAGE
 		do
 			create a_lined_message.make (30)
-			f_buffer ?= input_buffer
-			if f_buffer /= Void then
+			if attached {YY_FILE_BUFFER} input_buffer as f_buffer then
 				a_lined_message.append_string (f_buffer.file.name)
 				a_lined_message.append_string (", line ")
 			else

@@ -1,10 +1,10 @@
 note
 	description: "References to objects containing a unicode character value"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2006, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2013-01-26 07:05:34 +0100 (Sat, 26 Jan 2013) $"
+	revision: "$Revision: 724 $"
 
 class
 	CHARACTER_32_REF
@@ -30,14 +30,16 @@ feature -- Access
 
 	code: INTEGER
 			-- Associated integer value
+		obsolete
+			"Use `natural_32_code' instead."
 		do
-			Result := item.code
+			Result := natural_32_code.as_integer_32
 		end
 
 	hash_code: INTEGER
 			-- Hash code value
 		do
-			Result := code.hash_code
+			Result := natural_32_code.hash_code
 		end
 
 	natural_32_code: NATURAL_32
@@ -52,30 +54,17 @@ feature -- Access
 	max_value: NATURAL_32 = 4294967295
 			-- Bounds for integer representation of CHARACTER_32
 
-feature -- Status report
-
-	is_space: BOOLEAN
-			-- Is `item' a white space?
-		require
-			is_character_8_compatible: is_character_8
-		do
-			Result := to_character_8.is_space
-		end
-
-	is_character_8: BOOLEAN
-			-- Can current be represented on a CHARACTER_8?
-		do
-			Result := natural_32_code <= {CHARACTER_8}.max_value.to_natural_32
-		end
+	max_unicode_value: NATURAL_32 = 0x10FFFD
+			-- Maximum Unicode characters.
 
 feature -- Comparison
 
 	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is `other' greater than current character?
 		do
-			Result := code < other.code
+			Result := natural_32_code < other.natural_32_code
 		ensure then
-			definition: Result = (code < other.code)
+			definition: Result = (natural_32_code < other.natural_32_code)
 		end
 
 	is_equal (other: like Current): BOOLEAN
@@ -83,6 +72,57 @@ feature -- Comparison
 			-- as current object and identical to it?
 		do
 			Result := other.item = item
+		end
+
+feature -- Basic routines
+
+	plus alias "+" (incr: NATURAL_32): CHARACTER_32
+			-- Add `incr' to the code of `item'.
+		require
+			valid_increment: (item.natural_32_code.to_natural_64 + incr).is_valid_character_32_code
+		do
+			Result := (item.natural_32_code + incr).to_character_32
+		ensure
+			valid_result: Result |-| item = incr
+		end
+
+	minus alias "-" (decr: NATURAL_32): CHARACTER_32
+			-- Subtract `decr' from the code of `item'.
+		require
+			valid_decrement: (item.natural_32_code.to_integer_64 - decr).is_valid_character_32_code
+		do
+			Result := (item.natural_32_code - decr).to_character_32
+		ensure
+			valid_result: item |-| Result = decr
+		end
+
+	difference alias "|-|" (other: CHARACTER_32): INTEGER_64
+			-- Difference between the codes of `item' and `other'.
+		do
+			Result := item.natural_32_code.to_integer_64 - other.natural_32_code.to_integer_64
+		ensure
+			valid_non_negative_result: Result >= 0 implies ((other + Result.to_natural_32) = item)
+			valid_negative_result: Result < 0 implies (other = (item + Result.to_natural_32))
+		end
+
+	next: CHARACTER_32
+			-- Next character.
+		require
+			valid_character: (item.natural_32_code.to_natural_64 + 1).is_valid_character_32_code
+		do
+			Result := item + 1
+		ensure
+			valid_result: Result |-| item = 1
+		end
+
+	previous: CHARACTER_32
+			-- Previous character.
+		require
+			valid_character: (item.natural_32_code.to_natural_64 - 1).is_valid_character_32_code
+		do
+			Result := item - 1
+		ensure
+			valid_result: Result |-| item = -1
 		end
 
 feature -- Element change
@@ -96,12 +136,12 @@ feature -- Element change
 feature -- Output
 
 	out: STRING
-			-- Printable representation of wide character
+			-- Printable representation of wide character.
 		do
 			create Result.make (6)
 			Result.append_character ('U')
 			Result.append_character ('+')
-			Result.append_string (code.to_hex_string)
+			Result.append_string (natural_32_code.to_hex_string)
 		end
 
 feature {NONE} -- Initialization
@@ -119,7 +159,7 @@ feature {NONE} -- Initialization
 feature -- Conversion
 
 	to_reference: CHARACTER_32_REF
-			-- Associated reference of Current
+			-- Associated reference of Current.
 		do
 			create Result
 			Result.set_item (item)
@@ -128,7 +168,7 @@ feature -- Conversion
 		end
 
 	to_character_8: CHARACTER_8
-			-- Convert current to CHARACTER_8
+			-- Convert current to CHARACTER_8.
 		require
 			is_character_8_compatible: is_character_8
 		do
@@ -136,27 +176,113 @@ feature -- Conversion
 		end
 
 	to_character_32: CHARACTER_32
-			-- Convert current to CHARACTER_32
+			-- Convert current to CHARACTER_32.
 		do
 			Result := item
 		end
 
 	as_upper, upper: CHARACTER_32
-			-- Uppercase value of `item'
-			-- Returns `item' if not `is_lower'
-		require
-			is_character_8_compatible: is_character_8
+			-- Uppercase value of `item'.
+			-- Returns `item' if not `is_lower'.
 		do
-			Result := to_character_8.upper
+			Result := properties.to_upper (item)
 		end
 
 	as_lower, lower: CHARACTER_32
-			-- Lowercase value of `item'
-			-- Returns `item' if not `is_upper'
-		require
-			is_character_8_compatible: is_character_8
+			-- Lowercase value of `item'.
+			-- Returns `item' if not `is_upper'.
 		do
-			Result := to_character_8.lower
+			Result := properties.to_lower (item)
 		end
+
+feature -- Status report
+
+	is_character_8: BOOLEAN
+			-- Can current be represented on a CHARACTER_8?
+		do
+			Result := natural_32_code <= {CHARACTER_8}.max_value.to_natural_32
+		end
+
+	is_alpha: BOOLEAN
+			-- Is `item' alphabetic?
+			-- Alphabetic is `is_upper' or `is_lower'.
+		do
+			Result := properties.is_alpha (item)
+		end
+
+	is_upper: BOOLEAN
+			-- Is `item' uppercase?
+		do
+			Result := properties.is_upper (item)
+		end
+
+	is_lower: BOOLEAN
+			-- Is `item' lowercase?
+		do
+			Result := properties.is_lower (item)
+		end
+
+	is_digit: BOOLEAN
+			-- Is `item' a decimal digit as expected for ASCII characters?
+			-- A digit is one of 0123456789.
+		do
+			Result := '0' <= item and item <= '9'
+		end
+
+	is_unicode_digit: BOOLEAN
+			-- Is `item' a decimal digit as expected for Unicode characters?
+		do
+			Result := properties.is_digit (item)
+		end
+
+	is_hexa_digit: BOOLEAN
+			-- Is `item' a hexadecimal digit as expected for ASCII characters?
+			-- A digit is one of 0123456789ABCDEFabcedf.
+		do
+			Result := properties.is_hexa_digit (item)
+		end
+
+	is_space: BOOLEAN
+			-- Is `item' a white space?
+		do
+			Result := properties.is_space (item)
+		end
+
+	is_punctuation: BOOLEAN
+			-- Is `item' a punctuation?
+		do
+			Result := properties.is_punctuation (item)
+		end
+
+	is_alpha_numeric: BOOLEAN
+			-- Is `item' alphabetic or a digit?
+		do
+			Result := properties.is_alpha (item) or properties.is_digit (item)
+		end
+
+	is_control: BOOLEAN
+			-- Is `item' a control character?
+		do
+			Result := properties.is_control (item)
+		end
+
+feature {NONE} -- Implementation
+
+	properties: CHARACTER_PROPERTY
+			-- Property for Unicode characters.
+		once
+			create Result.make
+		end
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

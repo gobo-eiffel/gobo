@@ -1,11 +1,10 @@
 note
-	description:
-		"Sequential files, viewed as persistent sequences of characters"
+	description: "Sequential files, viewed as persistent sequences of characters"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2013-02-01 21:52:12 +0100 (Fri, 01 Feb 2013) $"
+	revision: "$Revision: 738 $"
 
 deferred class FILE inherit
 
@@ -15,7 +14,7 @@ deferred class FILE inherit
 		undefine
 			prune
 		redefine
-			off, append
+			off, append, replaceable
 		end
 
 	IO_MEDIUM
@@ -27,38 +26,70 @@ deferred class FILE inherit
 			read_line_thread_aware
 		end
 
+	NATIVE_STRING_HANDLER
+
 feature -- Initialization
 
-	make (fn: STRING)
+	make (fn: STRING_8)
 			-- Create file object with `fn' as file name.
+		obsolete
+			"Use any of the `make_...' routines instead to benefit from Unicode file names."
 		require
 			string_exists: fn /= Void
 			string_not_empty: not fn.is_empty
 		do
-			name := fn
-			mode := Closed_file
-			create last_string.make_empty
+			make_with_name (fn)
 		ensure
-			file_named: name = fn
+			file_named: internal_name = fn
 			file_closed: is_closed
 		end
 
-	make_open_read (fn: STRING)
+	make_with_name (fn: READABLE_STRING_GENERAL)
+			-- Create file object with `fn' as file name.
+		require
+			fn_exists: fn /= Void
+			fn_not_empty: not fn.is_empty
+		do
+			set_name (fn)
+			mode := Closed_file
+			file_pointer := default_pointer
+			create last_string.make_empty
+		ensure
+			file_named: internal_name = fn
+			file_closed: is_closed
+		end
+
+	make_with_path (a_path: PATH)
+			-- Create file object with `a_path' as path.
+		require
+			a_path_attached: a_path /= Void
+			a_path_not_empty: not a_path.is_empty
+		do
+			set_path (a_path)
+			mode := Closed_file
+			file_pointer := default_pointer
+			create last_string.make_empty
+		ensure
+			path_set: path.same_as (a_path)
+			file_closed: is_closed
+		end
+
+	make_open_read (fn: READABLE_STRING_GENERAL)
 			-- Create file object with `fn' as file name
 			-- and open file in read mode.
 		require
 			string_exists: fn /= Void
 			string_not_empty: not fn.is_empty
 		do
-			make (fn)
+			make_with_name (fn)
 			open_read
 		ensure
-			file_named: name = fn
+			file_named: internal_name = fn
 			exists: exists
 			open_read: is_open_read
 		end
 
-	make_open_write (fn: STRING)
+	make_open_write (fn: READABLE_STRING_GENERAL)
 			-- Create file object with `fn' as file name
 			-- and open file for writing;
 			-- create it if it does not exist.
@@ -66,46 +97,46 @@ feature -- Initialization
 			string_exists: fn /= Void
 			string_not_empty: not fn.is_empty
 		do
-			make (fn)
+			make_with_name (fn)
 			open_write
 		ensure
-			file_named: name = fn
+			file_named: internal_name = fn
 			exists: exists
 			open_write: is_open_write
 		end
 
-	make_open_append (fn: STRING)
+	make_open_append (fn: READABLE_STRING_GENERAL)
 			-- Create file object with `fn' as file name
 			-- and open file in append-only mode.
 		require
 			string_exists: fn /= Void
 			string_not_empty: not fn.is_empty
 		do
-			make (fn)
+			make_with_name (fn)
 			open_append
 		ensure
-			file_named: name = fn
+			file_named: internal_name = fn
 			exists: exists
 			open_append: is_open_append
 		end
 
-	make_open_read_write (fn: STRING)
+	make_open_read_write (fn: READABLE_STRING_GENERAL)
 			-- Create file object with `fn' as file name
 			-- and open file for both reading and writing.
 		require
 			string_exists: fn /= Void
 			string_not_empty: not fn.is_empty
 		do
-			make (fn)
+			make_with_name (fn)
 			open_read_write
 		ensure
-			file_named: name = fn
+			file_named: internal_name = fn
 			exists: exists
 			open_read: is_open_read
 			open_write: is_open_write
 		end
 
-	make_create_read_write (fn: STRING)
+	make_create_read_write (fn: READABLE_STRING_GENERAL)
 			-- Create file object with `fn' as file name
 			-- and open file for both reading and writing;
 			-- create it if it does not exist.
@@ -113,16 +144,16 @@ feature -- Initialization
 			string_exists: fn /= Void
 			string_not_empty: not fn.is_empty
 		do
-			make (fn)
+			make_with_name (fn)
 			create_read_write
 		ensure
-			file_named: name = fn
+			file_named: internal_name = fn
 			exists: exists
 			open_read: is_open_read
 			open_write: is_open_write
 		end
 
-	make_open_read_append (fn: STRING)
+	make_open_read_append (fn: READABLE_STRING_GENERAL)
 			-- Create file object with `fn' as file name
 			-- and open file for reading anywhere
 			-- but writing at the end only.
@@ -131,10 +162,10 @@ feature -- Initialization
 			string_exists: fn /= Void
 			string_not_empty: not fn.is_empty
 		do
-			make (fn)
+			make_with_name (fn)
 			open_read_append
 		ensure
-			file_named: name = fn
+			file_named: internal_name = fn
 			exists: exists
 			open_read: is_open_read
 			open_append: is_open_append
@@ -142,8 +173,24 @@ feature -- Initialization
 
 feature -- Access
 
+	path: PATH
+			-- Associated path of Current.
+		do
+			create Result.make_from_pointer (internal_name_pointer.item)
+		ensure
+			entry_not_empty: not Result.is_empty
+		end
+
 	name: STRING
-			-- File name
+			-- File name as a STRING_8 instance. The value might be truncated
+			-- from the original name used to create the current FILE instance.
+		obsolete
+			"Use `path.name' to ensure that Unicode filenames are not truncated."
+		do
+			Result := internal_name.as_string_8
+		ensure then
+			name_not_empty: not Result.is_empty
+		end
 
 	item: CHARACTER
 			-- Current item
@@ -178,7 +225,7 @@ feature -- Access
 	file_pointer: POINTER
 			-- File pointer as required in C
 
-	file_info: UNIX_FILE_INFO
+	file_info: FILE_INFO
 			-- Collected information about the file.
 		do
 			set_buffer
@@ -244,8 +291,7 @@ feature -- Access
 		require
 			file_exists: exists
 		do
-			set_buffer
-			Result := buffered_file_info.date
+			Result := eif_file_date (internal_name_pointer.item)
 		end
 
 	access_date: INTEGER
@@ -253,11 +299,10 @@ feature -- Access
 		require
 			file_exists: exists
 		do
-			set_buffer
-			Result := buffered_file_info.access_date
+			Result := eif_file_access_date (internal_name_pointer.item)
 		end
 
-	retrieved: ANY
+	retrieved: detachable ANY
 			-- Retrieved object structure
 			-- To access resulting object under correct type,
 			-- use assignment attempt.
@@ -314,11 +359,12 @@ feature -- Status report
 	exists: BOOLEAN
 			-- Does physical file exist?
 			-- (Uses effective UID.)
-		local
-			external_name: ANY
 		do
-			external_name := name.to_c
-			Result := file_exists ($external_name)
+			if is_closed then
+				Result := file_exists (internal_name_pointer.item)
+			else
+				Result := True
+			end
 		ensure then
 			unchanged_mode: mode = old mode
 		end
@@ -326,21 +372,19 @@ feature -- Status report
 	access_exists: BOOLEAN
 			-- Does physical file exist?
 			-- (Uses real UID.)
-		local
-			external_name: ANY
 		do
-			external_name := name.to_c
-			Result := file_access ($external_name, 0)
+			if is_closed then
+				Result := file_access (internal_name_pointer.item, 0)
+			else
+				Result := True
+			end
 		end
 
 	path_exists: BOOLEAN
 			-- Does physical file `name' exist without resolving
 			-- symbolic links?
-		local
-			external_name: ANY
 		do
-			external_name := name.to_c
-			Result := file_path_exists ($external_name)
+			Result := file_path_exists (internal_name_pointer.item)
 		ensure then
 			unchanged_mode: mode = old mode
 		end
@@ -373,11 +417,8 @@ feature -- Status report
 			-- Is file creatable in parent directory?
 			-- (Uses effective UID to check that parent is writable
 			-- and file does not exist.)
-		local
-			external_name: ANY
 		do
-			external_name := name.to_c
-			Result := file_creatable ($external_name, name.count)
+			Result := file_creatable (internal_name_pointer.item, internal_name_pointer.count)
 		end
 
 	is_plain: BOOLEAN
@@ -410,10 +451,17 @@ feature -- Status report
 	is_symlink: BOOLEAN
 			-- Is file a symbolic link?
 		require
-			file_exists: exists
+			file_exists: path_exists
+		local
+			l_buffer: like buffered_file_info
+			l_is_following_symbolic_links: BOOLEAN
 		do
-			set_buffer
-			Result := buffered_file_info.is_symlink
+			l_buffer := buffered_file_info
+			l_is_following_symbolic_links := l_buffer.is_following_symlinks
+			l_buffer.set_is_following_symlinks (False)
+			l_buffer.fast_update (internal_name, internal_name_pointer)
+			Result := l_buffer.is_symlink
+			l_buffer.set_is_following_symlinks (l_is_following_symbolic_links)
 		end
 
 	is_fifo: BOOLEAN
@@ -573,6 +621,12 @@ feature -- Status report
 			Result := mode >= Write_file
 		end
 
+	replaceable: BOOLEAN
+			-- <Precursor>
+		do
+			Result := False
+		end
+
 	file_prunable: BOOLEAN
 			-- May items be removed?
 		obsolete
@@ -590,16 +644,13 @@ feature -- Status report
 
 feature -- Comparison
 
-	same_file (fn: STRING): BOOLEAN
+	same_file (fn: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is current file the same as `a_filename'?
 		require
 			fn_not_void: fn /= Void
 			fn_not_empty: not fn.is_empty
-		local
-			l_comparer: FILE_COMPARER
 		do
-			create l_comparer
-			Result := l_comparer.same_files (name, fn)
+			Result := path.is_same_file_as (create {PATH}.make_from_string (fn))
 		end
 
 feature -- Status setting
@@ -608,11 +659,8 @@ feature -- Status setting
 			-- Open file in read-only mode.
 		require
 			is_closed: is_closed
-		local
-			external_name: ANY
 		do
-			external_name := name.to_c
-			file_pointer := file_open ($external_name, 0)
+			file_pointer := file_open (internal_name_pointer.item, 0)
 			mode := Read_file
 		ensure
 			exists: exists
@@ -622,11 +670,8 @@ feature -- Status setting
 	open_write
 			-- Open file in write-only mode;
 			-- create it if it does not exist.
-		local
-			external_name: ANY
 		do
-			external_name := name.to_c
-			file_pointer := file_open ($external_name, 1)
+			file_pointer := file_open (internal_name_pointer.item, 1)
 			mode := Write_file
 		ensure
 			exists: exists
@@ -638,11 +683,8 @@ feature -- Status setting
 			-- create it if it does not exist.
 		require
 			is_closed: is_closed
-		local
-			external_name: ANY
 		do
-			external_name := name.to_c
-			file_pointer := file_open ($external_name, 2)
+			file_pointer := file_open (internal_name_pointer.item, 2)
 			mode := Append_file
 		ensure
 			exists: exists
@@ -653,11 +695,8 @@ feature -- Status setting
 			-- Open file in read and write mode.
 		require
 			is_closed: is_closed
-		local
-			external_name: ANY
 		do
-			external_name := name.to_c
-			file_pointer := file_open ($external_name, 3)
+			file_pointer := file_open (internal_name_pointer.item, 3)
 			mode := Read_write_file
 		ensure
 			exists: exists
@@ -670,11 +709,8 @@ feature -- Status setting
 			-- create it if it does not exist.
 		require
 			is_closed: is_closed
-		local
-			external_name: ANY
 		do
-			external_name := name.to_c
-			file_pointer := file_open ($external_name, 4)
+			file_pointer := file_open (internal_name_pointer.item, 4)
 			mode := Read_write_file
 		ensure
 			exists: exists
@@ -687,11 +723,8 @@ feature -- Status setting
 			-- create it if it does not exist.
 		require
 			is_closed: is_closed
-		local
-			external_name: ANY
 		do
-			external_name := name.to_c
-			file_pointer := file_open ($external_name, 5)
+			file_pointer := file_open (internal_name_pointer.item, 5)
 			mode := Append_read_file
 		ensure
 			exists: exists
@@ -743,10 +776,7 @@ feature -- Status setting
 	fd_open_read_append (fd: INTEGER)
 			-- Open file of descriptor `fd'
 			-- in read and write-at-end mode.
-		local
-			external_name: ANY
 		do
-			external_name := name.to_c
 			file_pointer := file_dopen (fd, 5)
 			mode := Append_read_file
 		ensure
@@ -755,71 +785,59 @@ feature -- Status setting
 			open_append: is_open_append
 		end
 
-	reopen_read (fname: STRING)
+	reopen_read (fname: READABLE_STRING_GENERAL)
 			-- Reopen in read-only mode with file of name `fname';
 			-- create file if it does not exist.
 		require
 			is_open: not is_closed
 			valid_name: fname /= Void
-		local
-			external_name: ANY
 		do
-			external_name := fname.to_c
-			file_pointer := file_reopen ($external_name, 0, file_pointer)
-			name := fname
+			set_name (fname)
+			file_pointer := file_reopen (internal_name_pointer.item, 0, file_pointer)
 			mode := Read_file
 		ensure
 			exists: exists
 			open_read: is_open_read
 		end
 
-	reopen_write (fname: STRING)
+	reopen_write (fname: READABLE_STRING_GENERAL)
 			-- Reopen in write-only mode with file of name `fname';
 			-- create file if it does not exist.
 		require
 			is_open: not is_closed
 			valid_name: fname /= Void
-		local
-			external_name: ANY
 		do
-			external_name := name.to_c
-			file_pointer := file_reopen ($external_name, 1, file_pointer)
-			name := fname
+			set_name (fname)
+			file_pointer := file_reopen (internal_name_pointer.item, 1, file_pointer)
 			mode := Write_file
 		ensure
 			exists: exists
 			open_write: is_open_write
 		end
 
-	reopen_append (fname: STRING)
+	reopen_append (fname: READABLE_STRING_GENERAL)
 			-- Reopen in append mode with file of name `fname';
 			-- create file if it does not exist.
 		require
 			is_open: not is_closed
 			valid_name: fname /= Void
-		local
-			external_name: ANY
 		do
-			external_name := name.to_c
-			file_pointer := file_reopen ($external_name, 2, file_pointer)
-			name := fname
+			set_name (fname)
+			file_pointer := file_reopen (internal_name_pointer.item, 2, file_pointer)
 			mode := Append_file
 		ensure
 			exists: exists
 			open_append: is_open_append
 		end
 
-	reopen_read_write (fname: STRING)
+	reopen_read_write (fname: READABLE_STRING_GENERAL)
 			-- Reopen in read-write mode with file of name `fname'.
 		require
 			is_open: not is_closed
 			valid_name: fname /= Void
-		local
-			external_name: ANY
 		do
-			external_name := name.to_c
-			file_pointer := file_reopen ($external_name, 3, file_pointer)
-			name := fname
+			set_name (fname)
+			file_pointer := file_reopen (internal_name_pointer.item, 3, file_pointer)
 			mode := Read_write_file
 		ensure
 			exists: exists
@@ -827,18 +845,15 @@ feature -- Status setting
 			open_write: is_open_write
 		end
 
-	recreate_read_write (fname: STRING)
+	recreate_read_write (fname: READABLE_STRING_GENERAL)
 			-- Reopen in read-write mode with file of name `fname';
 			-- create file if it does not exist.
 		require
 			is_open: not is_closed
 			valid_name: fname /= Void
-		local
-			external_name: ANY
 		do
-			external_name := name.to_c
-			file_pointer := file_reopen ($external_name, 4, file_pointer)
-			name := fname
+			set_name (fname)
+			file_pointer := file_reopen (internal_name_pointer.item, 4, file_pointer)
 			mode := Read_write_file
 		ensure
 			exists: exists
@@ -846,18 +861,15 @@ feature -- Status setting
 			open_write: is_open_write
 		end
 
-	reopen_read_append (fname: STRING)
+	reopen_read_append (fname: READABLE_STRING_GENERAL)
 			-- Reopen in read and write-at-end mode with file
 			-- of name `fname'; create file if it does not exist.
 		require
 			is_open: not is_closed
 			valid_name: fname /= Void
-		local
-			external_name: ANY
 		do
-			external_name := name.to_c
-			file_pointer := file_reopen ($external_name, 5, file_pointer)
-			name := fname
+			set_name (fname)
+			file_pointer := file_reopen (internal_name_pointer.item, 5, file_pointer)
 			mode := Append_read_file
 		ensure
 			exists: exists
@@ -870,6 +882,7 @@ feature -- Status setting
 		do
 			file_close (file_pointer)
 			mode := Closed_file
+			file_pointer := default_pointer
 			descriptor_available := False
 		ensure then
 			is_closed: is_closed
@@ -969,19 +982,17 @@ feature -- Element change
 			file_flush (file_pointer)
 		end
 
-	link (fn: STRING)
+	link (fn: READABLE_STRING_GENERAL)
 			-- Link current file to `fn'.
 			-- `fn' must not already exist.
 		require
 			file_exists: exists
 			-- `fn' does not exist already
 		local
-			external_name: ANY
-			fn_name: ANY
+			l_ptr: MANAGED_POINTER
 		do
-			external_name := name.to_c
-			fn_name := fn.to_c
-			file_link ($external_name, $fn_name)
+			l_ptr := buffered_file_info.file_name_to_pointer (fn, Void)
+			file_link (internal_name_pointer.item, l_ptr.item)
 		end
 
 	append (f: like Current)
@@ -1058,11 +1069,8 @@ feature -- Element change
 			-- Stamp with `time' (for both access and modification).
 		require
 			file_exists: exists
-		local
-			external_name: ANY
 		do
-			external_name := name.to_c
-			file_utime ($external_name, time, 2)
+			file_utime (internal_name_pointer.item, time, 2)
 		ensure
 			date_updated: date = time	-- But race condition possible
 		end
@@ -1071,11 +1079,8 @@ feature -- Element change
 			-- Stamp with `time' (access only).
 		require
 			file_exists: exists
-		local
-			external_name: ANY
 		do
-			external_name := name.to_c
-			file_utime ($external_name, time, 0)
+			file_utime (internal_name_pointer.item, time, 0)
 		ensure
 			acess_date_updated: access_date = time	-- But race condition might occur
 			date_unchanged: date = old date	-- Modulo a race condition
@@ -1085,31 +1090,57 @@ feature -- Element change
 			-- Stamp with `time' (modification time only).
 		require
 			file_exists: exists
-		local
-			external_name: ANY
 		do
-			external_name := name.to_c
-			file_utime ($external_name, time, 1)
+			file_utime (internal_name_pointer.item, time, 1)
 		ensure
 			access_date_unchanged: access_date = old access_date	-- But race condition might occur
 			date_updated: date = time					-- Modulo a race condition
 		end
 
 	change_name (new_name: STRING)
+			-- Change file name to `new_name'.
+		obsolete
+			"Use `rename_file' instead."
+		require
+			new_name_not_void: new_name /= Void
+			new_name_not_empty: not new_name.is_empty
+			file_exists: exists
+		do
+			rename_file (new_name)
+		ensure
+			name_changed: internal_name = new_name
+		end
+
+	rename_file (new_name: READABLE_STRING_GENERAL)
 			-- Change file name to `new_name'
 		require
 			new_name_not_void: new_name /= Void
 			new_name_not_empty: not new_name.is_empty
 			file_exists: exists
 		local
-			ext_old_name, ext_new_name: ANY
+			l_ptr: MANAGED_POINTER
 		do
-			ext_old_name := name.to_c
-			ext_new_name := new_name.to_c
-			file_rename ($ext_old_name, $ext_new_name)
-			name := new_name
+			l_ptr := buffered_file_info.file_name_to_pointer (new_name, Void)
+			file_rename (internal_name_pointer.item, l_ptr.item)
+			set_name (new_name)
 		ensure
-			name_changed: name ~ new_name
+			name_changed: internal_name = new_name
+		end
+
+	rename_path (new_path: PATH)
+			-- Change file name to `new_path'
+		require
+			new_path_not_void: new_path /= Void
+			new_path_not_empty: not new_path.is_empty
+			file_exists: exists
+		local
+			l_ptr: MANAGED_POINTER
+		do
+			l_ptr := new_path.to_pointer
+			file_rename (internal_name_pointer.item, l_ptr.item)
+			set_path (new_path)
+		ensure
+			name_changed: internal_name.same_string (new_path.name)
 		end
 
 	add_permission (who, what: STRING)
@@ -1122,12 +1153,11 @@ feature -- Element change
 			what_is_not_void: what /= Void
 			file_descriptor_exists: exists
 		local
-			external_name, ext_who, ext_what: ANY
+			ext_who, ext_what: ANY
 		do
-			external_name := name.to_c
 			ext_who := who.to_c
 			ext_what := what.to_c
-			file_perm ($external_name, $ext_who, $ext_what, 1)
+			file_perm (internal_name_pointer.item, $ext_who, $ext_what, 1)
 		end
 
 	remove_permission (who, what: STRING)
@@ -1140,23 +1170,19 @@ feature -- Element change
 			what_is_not_void: what /= Void
 			file_descriptor_exists: exists
 		local
-			external_name, ext_who, ext_what: ANY
+			ext_who, ext_what: ANY
 		do
-			external_name := name.to_c
 			ext_who := who.to_c
 			ext_what := what.to_c
-			file_perm ($external_name, $ext_who, $ext_what, 0)
+			file_perm (internal_name_pointer.item, $ext_who, $ext_what, 0)
 		end
 
 	change_mode (mask: INTEGER)
 			-- Replace mode by `mask'.
 		require
 			file_exists: exists
-		local
-			external_name: ANY
 		do
-			external_name := name.to_c
-			file_chmod ($external_name, mask)
+			file_chmod (internal_name_pointer.item, mask)
 		end
 
 	change_owner (new_owner_id: INTEGER)
@@ -1165,11 +1191,8 @@ feature -- Element change
 			-- requires super-user privileges.
 		require
 			file_exists: exists
-		local
-			external_name: ANY
 		do
-			external_name := name.to_c
-			file_chown ($external_name, new_owner_id)
+			file_chown (internal_name_pointer.item, new_owner_id)
 		end
 
 	change_group (new_group_id: INTEGER)
@@ -1177,11 +1200,8 @@ feature -- Element change
 			-- system password file.
 		require
 			file_exists: exists
-		local
-			external_name: ANY
 		do
-			external_name := name.to_c
-			file_chgrp ($external_name, new_group_id)
+			file_chgrp (internal_name_pointer.item, new_group_id)
 		end
 
 	change_date: INTEGER
@@ -1197,11 +1217,8 @@ feature -- Element change
 			-- Update time stamp (for both access and modification).
 		require
 			file_exists: exists
-		local
-			external_name: ANY
 		do
-			external_name := name.to_c
-			file_touch ($external_name)
+			file_touch (internal_name_pointer.item)
 		ensure
 			date_changed: date /= old date	-- Race condition nearly impossible
 		end
@@ -1253,36 +1270,47 @@ feature -- Removal
 			-- I/O operations on it are still possible.
 			-- A directory must be empty to be deleted.
 		require
-			exists: exists
-		local
-			external_name: ANY
+			exists: path_exists
 		do
-			external_name := name.to_c
-			file_unlink ($external_name)
+			file_unlink (internal_name_pointer.item)
 		end
 
-	reset (fn: STRING)
+	reset (fn: READABLE_STRING_GENERAL)
 			-- Change file name to `fn' and reset
 			-- file descriptor and all information.
 		require
 			valid_file_name: fn /= Void
-		local
-			l: like last_string
 		do
-			name := fn
+			set_name (fn)
 			if mode /= Closed_file then
 				close
 			end
 			last_integer := 0
-			l := last_string
-			if l /= Void then
-				l.wipe_out
-			end
 			last_real := 0.0
-			last_character := '%U'
 			last_double := 0.0
+			last_character := '%U'
+			last_string.wipe_out
 		ensure
-			file_renamed: name = fn
+			file_renamed: internal_name = fn
+			file_closed: is_closed
+		end
+
+	reset_path (fp: PATH)
+			-- Change file name to `fp' and reset
+			-- file descriptor and all information.
+		require
+			valid_file_name: fp /= Void
+		do
+			set_path (fp)
+			if mode /= Closed_file then
+				close
+			end
+			last_integer := 0
+			last_real := 0.0
+			last_double := 0.0
+			last_character := '%U'
+			last_string.wipe_out
+		ensure
 			file_closed: is_closed
 		end
 
@@ -1379,7 +1407,7 @@ feature -- Input
 			l := last_string
 			l_buffer := read_data_buffer
 			from
-				l.clear_all
+				l.wipe_out
 				str_cap := l_buffer.capacity
 			until
 				done
@@ -1506,7 +1534,7 @@ feature -- Input
 			l := last_string
 			l_buffer := read_data_buffer
 			from
-				l.clear_all
+				l.wipe_out
 				str_cap := l_buffer.capacity
 			until
 				done
@@ -1565,6 +1593,52 @@ feature -- Convenience
 
 feature {NONE} -- Implementation
 
+	internal_name: READABLE_STRING_GENERAL
+			-- Store the name of the file as it was given to us by the user
+			-- to avoid conversion on storing as it is not necessary.
+
+	internal_name_pointer: MANAGED_POINTER
+			-- File system specific encoding of `internal_name'.
+			-- Typically a UTF-16 sequence on Windows, a UTF-8 sequence on Unix.
+		do
+			if attached internal_detachable_name_pointer as l_ptr then
+				Result := l_ptr
+			else
+					-- This is never True because `internal_detachable_name_pointer' is set during the creation
+					-- of the FILE object.
+				check internal_name_pointer_set: False then end
+			end
+		end
+
+	internal_detachable_name_pointer: detachable MANAGED_POINTER note option: stable, transient attribute end
+			-- File system specific encoding of `internal_name'.
+			-- Typically a UTF-16 sequence on Windows, a UTF-8 sequence on Unix.
+
+	set_name (a_name: READABLE_STRING_GENERAL)
+			-- Set `name' with `a_name'.
+		require
+			a_name_not_void: a_name /= Void
+		do
+			internal_name := a_name
+			internal_detachable_name_pointer := buffered_file_info.file_name_to_pointer (a_name, internal_detachable_name_pointer)
+		ensure
+			name_set: internal_name = a_name
+		end
+
+	set_path (a_path: PATH)
+			-- Set `internal_name_pointer' with a content matching `a_path'.
+		require
+			a_path_not_void: a_path /= Void
+		do
+				-- In the case of `a_path' being a mixed-encoding, `internal_name' holds
+				-- an encoded value of the actual path but not equal.
+			internal_name := a_path.name
+				-- Create a matching path.
+			internal_detachable_name_pointer := a_path.to_pointer
+		ensure
+			path_set: path.same_as (a_path)
+		end
+
 	create_last_string (a_min_size: INTEGER)
 			-- Create new instance of `last_string' with a least `a_min_size'
 			-- as capacity.
@@ -1613,7 +1687,7 @@ feature {NONE} -- Implementation
 			Result := "False"
 		end
 
-	buffered_file_info: UNIX_FILE_INFO
+	buffered_file_info: FILE_INFO
 			-- Information about the file.
 		once
 			create Result.make
@@ -1632,25 +1706,31 @@ feature {NONE} -- Implementation
 		require
 			file_exists: exists
 		do
-			buffered_file_info.update (name)
+			buffered_file_info.fast_update (internal_name, internal_name_pointer)
 		end
 
 	file_link (from_name, to_name: POINTER)
 			-- Link `to_name' to `from_name'
 		external
-			"C signature (char *, char *) use %"eif_file.h%""
+			"C signature (EIF_FILENAME, EIF_FILENAME) use %"eif_file.h%""
+		alias
+			"eif_file_link"
 		end
 
 	file_unlink (fname: POINTER)
 			-- Delete file `fname'.
 		external
-			"C signature (char *) use %"eif_file.h%""
+			"C signature (EIF_FILENAME) use %"eif_file.h%""
+		alias
+			"eif_file_unlink"
 		end
 
-	file_open (f_name: POINTER; how: INTEGER): POINTER
-			-- File pointer for file `f_name', in mode `how'.
+	file_open (fname: POINTER; how: INTEGER): POINTER
+			-- File pointer for file `fname', in mode `how'.
 		external
-			"C signature (char *, int): EIF_POINTER use %"eif_file.h%""
+			"C signature (EIF_FILENAME, int): EIF_POINTER use %"eif_file.h%""
+		alias
+			"eif_file_open"
 		end
 
 	file_dopen (fd, how: INTEGER): POINTER
@@ -1658,37 +1738,49 @@ feature {NONE} -- Implementation
 			-- (which must fit the way `fd' was obtained).
 		external
 			"C signature (int, int): EIF_POINTER use %"eif_file.h%""
+		alias
+			"eif_file_dopen"
 		end
 
-	file_reopen (f_name: POINTER; how: INTEGER; file: POINTER): POINTER
-			-- File pointer to `file', reopened to have new name `f_name'
+	file_reopen (fname: POINTER; how: INTEGER; file: POINTER): POINTER
+			-- File pointer to `file', reopened to have new name `fname'
 			-- in a mode specified by `how'.
 		external
-			"C signature (char *, int, FILE *): EIF_POINTER use %"eif_file.h%""
+			"C signature (EIF_FILENAME, int, FILE *): EIF_POINTER use %"eif_file.h%""
+		alias
+			"eif_file_reopen"
 		end
 
 	file_close (file: POINTER)
 			-- Close `file'.
 		external
 			"C signature (FILE *) use %"eif_file.h%""
+		alias
+			"eif_file_close"
 		end
 
 	file_flush (file: POINTER)
 			-- Flush `file'.
 		external
 			"C signature (FILE *) use %"eif_file.h%""
+		alias
+			"eif_file_flush"
 		end
 
 	file_fd (file: POINTER): INTEGER
 			-- Operating system's file descriptor
 		external
 			"C signature (FILE *): EIF_INTEGER use %"eif_file.h%""
+		alias
+			"eif_file_fd"
 		end
 
 	file_gc (file: POINTER): CHARACTER
 			-- Access the next character
 		external
 			"C blocking signature (FILE *): EIF_CHARACTER use %"eif_file.h%""
+		alias
+			"eif_file_gc"
 		end
 
 	file_gs (file: POINTER; a_string: POINTER; length, begin: INTEGER): INTEGER
@@ -1698,6 +1790,8 @@ feature {NONE} -- Implementation
 			-- If it fits, result is number of characters read.
 		external
 			"C signature (FILE *, char *, EIF_INTEGER, EIF_INTEGER): EIF_INTEGER use %"eif_file.h%""
+		alias
+			"eif_file_gs"
 		end
 
 	file_gss (file: POINTER; a_string: POINTER; length: INTEGER): INTEGER
@@ -1706,6 +1800,8 @@ feature {NONE} -- Implementation
 			-- Otherwise, result is the number of characters read.
 		external
 			"C signature (FILE *, char *, EIF_INTEGER): EIF_INTEGER use %"eif_file.h%""
+		alias
+			"eif_file_gss"
 		end
 
 	file_gw (file: POINTER; a_string: POINTER; length, begin: INTEGER): INTEGER
@@ -1717,34 +1813,36 @@ feature {NONE} -- Implementation
 			-- otherwise result is number of characters read.
 		external
 			"C signature (FILE *, char *, EIF_INTEGER, EIF_INTEGER): EIF_INTEGER use %"eif_file.h%""
+		alias
+			"eif_file_gw"
 		end
 
 	file_gs_ta (file: POINTER; a_string: POINTER; length, begin: INTEGER): INTEGER
 			-- Same as `file_gs' but it won't prevent garbage collection from occurring
-			-- while blocked waiting for data.
+			-- while blocked waiting for data.			
 		external
 			"C blocking signature (FILE *, char *, EIF_INTEGER, EIF_INTEGER): EIF_INTEGER use %"eif_file.h%""
 		alias
-			"file_gs"
+			"eif_file_gs"
 		end
 
 	file_gss_ta (file: POINTER; a_string: POINTER; length: INTEGER): INTEGER
 			-- Same as `file_gss' but it won't prevent garbage collection from occurring
-			-- while blocked waiting for data.
+			-- while blocked waiting for data.			
 
 		external
 			"C blocking signature (FILE *, char *, EIF_INTEGER): EIF_INTEGER use %"eif_file.h%""
 		alias
-			"file_gss"
+			"eif_file_gss"
 		end
 
 	file_gw_ta (file: POINTER; a_string: POINTER; length, begin: INTEGER): INTEGER
 			-- Same as `file_gw' but it won't prevent garbage collection from occurring
-			-- while blocked waiting for data.
+			-- while blocked waiting for data.			
 		external
 			"C blocking signature (FILE *, char *, EIF_INTEGER, EIF_INTEGER): EIF_INTEGER use %"eif_file.h%""
 		alias
-			"file_gw"
+			"eif_file_gw"
 		end
 
 	file_lh (file: POINTER): CHARACTER
@@ -1752,6 +1850,8 @@ feature {NONE} -- Implementation
 			-- character. Do not read over character.
 		external
 			"C signature (FILE *): EIF_CHARACTER use %"eif_file.h%""
+		alias
+			"eif_file_lh"
 		end
 
 	file_size (file: POINTER): INTEGER
@@ -1766,132 +1866,174 @@ feature {NONE} -- Implementation
 			-- Read upto next input line.
 		external
 			"C signature (FILE *) use %"eif_file.h%""
+		alias
+			"eif_file_tnil"
 		end
 
 	file_tell (file: POINTER): INTEGER
 			-- Current cursor position in file.
 		external
 			"C signature (FILE *): EIF_INTEGER use %"eif_file.h%""
+		alias
+			"eif_file_tell"
 		end
 
-	file_touch (f_name: POINTER)
-			-- Touch file `f_name'.
+	file_touch (fname: POINTER)
+			-- Touch file `fname'.
 		external
-			"C signature (char *) use %"eif_file.h%""
+			"C signature (EIF_FILENAME) use %"eif_file.h%""
+		alias
+			"eif_file_touch"
 		end
 
 	file_rename (old_name, new_name: POINTER)
 			-- Change file name from `old_name' to `new_name'.
 		external
-			"C signature (char *, char *) use %"eif_file.h%""
+			"C signature (EIF_FILENAME, EIF_FILENAME) use %"eif_file.h%""
+		alias
+			"eif_file_rename"
 		end
 
-	file_perm (f_name, who, what: POINTER; flag: INTEGER)
-			-- Change permissions for `f_name' to `who' and `what'.
+	file_perm (fname, who, what: POINTER; flag: INTEGER)
+			-- Change permissions for `fname' to `who' and `what'.
 			-- `flag' = 1 -> add permissions,
 			-- `flag' = 0 -> remove permissions.
 		external
-			"C signature (char *, char *, char *, int) use %"eif_file.h%""
+			"C signature (EIF_FILENAME, char *, char *, int) use %"eif_file.h%""
+		alias
+			"eif_file_perm"
 		end
 
-	file_chmod (f_name: POINTER; mask: INTEGER)
-			-- Change mode of `f_name' to `mask'.
+	file_chmod (fname: POINTER; mask: INTEGER)
+			-- Change mode of `fname' to `mask'.
 		external
-			"C signature (char *, int) use %"eif_file.h%""
+			"C signature (EIF_FILENAME, int) use %"eif_file.h%""
+		alias
+			"eif_file_chmod"
 		end
 
-	file_chown (f_name: POINTER; new_owner: INTEGER)
-			-- Change owner of `f_name' to `new_owner'
+	file_chown (fname: POINTER; new_owner: INTEGER)
+			-- Change owner of `fname' to `new_owner'
 		external
-			"C signature (char *, int) use %"eif_file.h%""
+			"C signature (EIF_FILENAME, int) use %"eif_file.h%""
+		alias
+			"eif_file_chown"
 		end
 
-	file_chgrp (f_name: POINTER; new_group: INTEGER)
-			-- Change group of `f_name' to `new_group'
+	file_chgrp (fname: POINTER; new_group: INTEGER)
+			-- Change group of `fname' to `new_group'
 		external
-			"C signature (char *, int) use %"eif_file.h%""
+			"C signature (EIF_FILENAME, int) use %"eif_file.h%""
+		alias
+			"eif_file_chgrp"
 		end
 
-	file_utime (f_name: POINTER; time, how: INTEGER)
+	file_utime (fname: POINTER; time, how: INTEGER)
 			-- Set access, modification time or both (`how' = 0,1,2) on
-			-- `f_name', using `time' as time stamp.
+			-- `fname', using `time' as time stamp.
 		external
-			"C signature (char *, int, int) use %"eif_file.h%""
+			"C signature (EIF_FILENAME, int, int) use %"eif_file.h%""
+		alias
+			"eif_file_utime"
 		end
 
 	file_tnwl (file: POINTER)
 			-- Print a new-line to `file'.
 		external
 			"C signature (FILE *) use %"eif_file.h%""
+		alias
+			"eif_file_tnwl"
 		end
 
 	file_append (file, from_file: POINTER; length: INTEGER)
 			-- Append a copy of `from_file' to `file'
 		external
 			"C signature (FILE *, FILE *, EIF_INTEGER) use %"eif_file.h%""
+		alias
+			"eif_file_append"
 		end
 
 	file_ps (file: POINTER; a_string: POINTER; length: INTEGER)
 			-- Print `a_string' to `file'.
 		external
 			"C signature (FILE *, char *, EIF_INTEGER) use %"eif_file.h%""
+		alias
+			"eif_file_ps"
 		end
 
 	file_pc (file: POINTER; c: CHARACTER)
 			-- Put `c' to end of `file'.
 		external
 			"C signature (FILE *, EIF_CHARACTER) use %"eif_file.h%""
+		alias
+			"eif_file_pc"
 		end
 
 	file_go (file: POINTER; abs_position: INTEGER)
 			-- Go to absolute `position', originated from start.
 		external
 			"C signature (FILE *, EIF_INTEGER) use %"eif_file.h%""
+		alias
+			"eif_file_go"
 		end
 
 	file_recede (file: POINTER; abs_position: INTEGER)
 			-- Go to absolute `position', originated from end.
 		external
 			"C signature (FILE *, EIF_INTEGER) use %"eif_file.h%""
+		alias
+			"eif_file_recede"
 		end
 
 	file_move (file: POINTER; offset: INTEGER)
 			-- Move file pointer by `offset'.
 		external
 			"C signature (FILE *, EIF_INTEGER) use %"eif_file.h%""
+		alias
+			"eif_file_move"
 		end
 
 	file_feof (file: POINTER): BOOLEAN
 			-- End of file?
 		external
 			"C signature (FILE *): EIF_BOOLEAN use %"eif_file.h%""
+		alias
+			"eif_file_feof"
 		end
 
-	file_exists (f_name: POINTER): BOOLEAN
-			-- Does `f_name' exist.
+	file_exists (fname: POINTER): BOOLEAN
+			-- Does `fname' exist.
 		external
-			"C signature (char *): EIF_BOOLEAN use %"eif_file.h%""
+			"C signature (EIF_FILENAME): EIF_BOOLEAN use %"eif_file.h%""
+		alias
+			"eif_file_exists"
 		end
 
-	file_path_exists (f_name: POINTER): BOOLEAN
-			-- Does `f_name' exist.
+	file_path_exists (fname: POINTER): BOOLEAN
+			-- Does `fname' exist.
 		external
-			"C signature (char *): EIF_BOOLEAN use %"eif_file.h%""
+			"C signature (EIF_FILENAME): EIF_BOOLEAN use %"eif_file.h%""
+		alias
+			"eif_file_path_exists"
 		end
 
-	file_access (f_name: POINTER; which: INTEGER): BOOLEAN
-			-- Perform access test `which' on `f_name' using real UID.
+	file_access (fname: POINTER; which: INTEGER): BOOLEAN
+			-- Perform access test `which' on `fname' using real UID.
 		external
-			"C signature (char *, EIF_INTEGER): EIF_BOOLEAN use %"eif_file.h%""
+			"C signature (EIF_FILENAME, EIF_INTEGER): EIF_BOOLEAN use %"eif_file.h%""
+		alias
+			"eif_file_access"
 		end
 
-	file_creatable (f_name: POINTER; n: INTEGER): BOOLEAN
-			-- Is `f_name' of count `n' creatable.
+	file_creatable (fname: POINTER; n: INTEGER): BOOLEAN
+			-- Is `fname' with `n' bytes creatable.
 		external
-			"C signature (char *, EIF_INTEGER): EIF_BOOLEAN use %"eif_file.h%""
+			"C signature (EIF_FILENAME, EIF_INTEGER): EIF_BOOLEAN use %"eif_file.h%""
+		alias
+			"eif_file_creatable"
 		end
 
-	c_retrieved (file_handle: INTEGER): ANY
+	c_retrieved (file_handle: INTEGER): detachable ANY
 			-- Object structured retrieved from file of pointer
 			-- `file_ptr'
 		external
@@ -1927,6 +2069,22 @@ feature {NONE} -- Implementation
 			"sstore"
 		end
 
+	eif_file_date (a_path: POINTER): INTEGER
+			-- Modification date of file named `a_path'.
+		external
+			"C signature (EIF_FILENAME): EIF_INTEGER use %"eif_file.h%""
+		alias
+			"eif_file_date"
+		end
+
+	eif_file_access_date (a_path: POINTER): INTEGER
+			-- Access date of a file named `a_path'.
+		external
+			"C signature (EIF_FILENAME): EIF_INTEGER use %"eif_file.h%""
+		alias
+			"eif_file_access_date"
+		end
+
 feature {NONE} -- Inapplicable
 
 	go_to (r: CURSOR)
@@ -1936,12 +2094,7 @@ feature {NONE} -- Inapplicable
 
 	replace (v: like item)
 			-- Replace current item by `v'.
-		require else
-			is_writable: file_writable
 		do
-		ensure then
-			item = v
-			count = old count
 		end
 
 	remove
@@ -1989,7 +2142,18 @@ feature {FILE} -- Implementation
 invariant
 
 	valid_mode: Closed_file <= mode and mode <= Append_read_file
-	name_exists: name /= Void
-	name_not_empty: not name.is_empty
+	name_exists: internal_name /= Void
+	name_not_empty: not internal_name.is_empty
+
+note
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

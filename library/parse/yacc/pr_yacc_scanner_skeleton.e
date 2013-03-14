@@ -5,7 +5,7 @@ note
 		"Scanner skeletons for parser generators such as 'geyacc'"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -74,11 +74,8 @@ feature -- Access
 
 	filename: STRING
 			-- Name of file being parsed
-		local
-			file_buffer: YY_FILE_BUFFER
 		do
-			file_buffer ?= input_buffer
-			if file_buffer /= Void then
+			if attached {YY_FILE_BUFFER} input_buffer as file_buffer then
 				Result := file_buffer.file.name
 			else
 				Result := "string"

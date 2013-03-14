@@ -5,7 +5,7 @@ note
 		"Eiffel .NET assemblies of classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -170,11 +170,8 @@ feature -- Access
 			-- `a_universe' may be a library or assembly from which the current
 			-- universe imports classes. Note that `a_universe' may be imported
 			-- twice by the current universe. Return one of them in that case.
-		local
-			l_dotnet_assembly: ET_DOTNET_ASSEMBLY
 		do
-			l_dotnet_assembly ?= a_universe
-			if l_dotnet_assembly /= Void and then referenced_assemblies.dotnet_assemblies.has (l_dotnet_assembly) then
+			if attached {ET_DOTNET_ASSEMBLY} a_universe as l_dotnet_assembly and then referenced_assemblies.dotnet_assemblies.has (l_dotnet_assembly) then
 				Result := l_dotnet_assembly
 			end
 		end

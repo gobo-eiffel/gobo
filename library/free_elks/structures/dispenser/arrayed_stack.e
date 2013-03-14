@@ -1,17 +1,15 @@
 note
-
-	description:
-		"Stacks implemented by resizable arrays"
+	description: "Stacks implemented by resizable arrays"
+	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	names: dispenser, array;
 	representation: array;
 	access: fixed, lifo, membership;
 	size: fixed;
 	contents: generic;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2012-07-23 23:02:19 +0200 (Mon, 23 Jul 2012) $"
+	revision: "$Revision: 567 $"
 
 class ARRAYED_STACK [G] inherit
 
@@ -42,8 +40,8 @@ class ARRAYED_STACK [G] inherit
 				count, readable, writable, extendible,
 			 	make, wipe_out, valid_index, index, off
 			{STACK} before, after, start, finish, forth, back
-			{ARRAYED_STACK} valid_cursor, cursor, go_to, area,
-				subarray, subcopy, i_th, upper, lower
+			{ARRAYED_STACK} valid_cursor, cursor, go_to, area, area_v2,
+				i_th, upper, lower
 		undefine
 			readable, writable,
 			append, fill
@@ -97,24 +95,14 @@ feature -- Conversion
 		end
 
 note
-	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-
-
-
-end -- class ARRAYED_STACK
-
-
-
+end

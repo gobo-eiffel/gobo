@@ -5,7 +5,7 @@ note
 		"Eiffel formal parameter validity checkers, first pass"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -421,7 +421,6 @@ feature {NONE} -- Constraint cycles
 		local
 			a_sorted_formals: DS_ARRAYED_LIST [ET_FORMAL_PARAMETER]
 			a_formal: ET_FORMAL_PARAMETER
-			a_constraint: ET_FORMAL_PARAMETER_TYPE
 			an_index: INTEGER
 			a_parameters: ET_FORMAL_PARAMETER_LIST
 			a_parameters_count: INTEGER
@@ -455,8 +454,7 @@ feature {NONE} -- Constraint cycles
 					nb := a_sorted_formals.count
 					from i := 1 until i > nb loop
 						a_formal := a_sorted_formals.item (i)
-						a_constraint ?= a_formal.constraint
-						if a_constraint /= Void then
+						if attached {ET_FORMAL_PARAMETER_TYPE} a_formal.constraint as a_constraint then
 							an_index := a_constraint.index
 							if an_index > a_parameters_count then
 									-- Internal error.

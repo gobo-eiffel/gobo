@@ -1,76 +1,55 @@
 note
-
-	description:
-		"Lists implemented by resizable arrays"
+	description: "Lists implemented by resizable arrays"
+	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	names: sequence;
 	representation: array;
 	access: index, cursor, membership;
 	size: fixed;
 	contents: generic;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2012-05-24 06:13:10 +0200 (Thu, 24 May 2012) $"
+	revision: "$Revision: 559 $"
 
 class ARRAYED_LIST [G] inherit
 
-	ARRAY [G]
+	TO_SPECIAL [G]
 		rename
-			force as force_i_th,
+			put as array_put,
+			at as array_at,
 			item as array_item,
-			at as array_infix_at,
-			make as array_make,
-			put as put_i_th,
-			count as array_count,
-			index_set as array_index_set,
-			make_filled as array_make_filled,
-			bag_put as put,
-			resize as array_resize
-		export
-			{NONE}
-				all
-			{ARRAYED_LIST}
-				array_make, subcopy, area, upper, lower,
-				same_items, subarray
-			{ANY}
-				capacity, all_default
-		undefine
-			linear_representation, prunable, put, is_equal,
-			prune, occurrences, extendible, fill
+			valid_index as array_valid_index,
+			area as area_v2
 		redefine
-			extend, prune_all, full, wipe_out,
-			is_inserted, make_from_array, has, valid_index
+			is_equal, copy
+		end
+
+	RESIZABLE [G]
+		redefine
+			is_equal, copy
 		end
 
 	DYNAMIC_LIST [G]
 		undefine
 			put_i_th,
-			force, is_inserted, copy,
-			for_all, there_exists, do_all, do_if
+			force, is_inserted, copy
 		redefine
 			first, last, swap, wipe_out, i_th, at,
 			go_i_th, move, prunable, start, finish,
 			count, prune, remove,
 			put_left, merge_left,
 			merge_right, duplicate, prune_all, has, search,
-			append, valid_index
-		select
-			count, index_set, i_th, at
+			append, valid_index, is_equal, copy,
+			for_all, there_exists, do_all, do_if
 		end
 
 	MISMATCH_CORRECTOR
-		undefine
-			is_equal, copy
 		redefine
-			correct_mismatch
+			is_equal, copy, correct_mismatch
 		end
 
 create
 	make, make_filled, make_from_array
-
-create {ARRAYED_LIST}
-	array_make
 
 feature -- Initialization
 
@@ -81,8 +60,7 @@ feature -- Initialization
 			valid_number_of_items: n >= 0
 		do
 			index := 0
-			set_count (0)
-			array_make (1, n)
+			create area_v2.make_empty (n)
 		ensure
 			correct_position: before
 			is_empty: is_empty
@@ -94,10 +72,10 @@ feature -- Initialization
 			-- This list will be full.
 		require
 			valid_number_of_items: n >= 0
+			has_default: ({G}).has_default
 		do
 			index := 0
-			set_count (n)
-			array_make (1, n)
+			make_filled_area (({G}).default, n)
 		ensure
 			correct_position: before
 			filled: full
@@ -105,43 +83,51 @@ feature -- Initialization
 
 	make_from_array (a: ARRAY [G])
 			-- Create list from array `a'.
+		require
+			array_exists: a /= Void
 		do
-			Precursor (a)
-			lower := 1
-			set_count (a.count)
-			upper := count
 			index := 0
-		ensure then
+			area_v2 := a.area
+		ensure
+			shared: area = a.area
 			correct_position: before
 			filled: count = a.count
 		end
 
 feature -- Access
 
+	area: SPECIAL [G]
+			-- Access to internal storage of ARRAYED_LIST
+		do
+				-- Internal storage is called `area_v2' so that it triggers
+				-- a mismatch during retrieval.
+			Result := area_v2
+		end
+
 	item: G
 			-- Current item
 		require else
 			index_is_valid: valid_index (index)
 		do
-			Result := area.item (index - 1)
+			Result := area_v2.item (index - 1)
 		end
 
 	i_th alias "[]", at alias "@" (i: INTEGER): like item assign put_i_th
 			-- Item at `i'-th position
 		do
-			Result := area.item (i - 1)
+			Result := area_v2.item (i - 1)
 		end
 
 	first: like item
 			-- Item at first position
 		do
-			Result := area.item (0)
+			Result := area_v2.item (0)
 		end
 
 	last: like first
 			-- Item at last position
 		do
-			Result := area.item (count - 1)
+			Result := area_v2.item (count - 1)
 		end
 
 	index: INTEGER
@@ -158,10 +144,10 @@ feature -- Access
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
 		local
-			l_area: like area
+			l_area: like area_v2
 			i, nb: INTEGER
 		do
-			l_area := area
+			l_area := area_v2
 			nb := count - 1
 			if object_comparison and v /= Void then
 				from
@@ -187,17 +173,144 @@ feature -- Access
 			-- Note that although the content is shared, it might
 			-- not be shared when a resizing occur in either ARRAY or Current.
 		do
-			create Result.make_from_special (area, 1, count)
+			create Result.make_from_special (area_v2)
 		ensure
 			to_array_attached: Result /= Void
 			array_lower_set: Result.lower = 1
 			array_upper_set: Result.upper = count
+			shared_area: Result.area = area
+		end
+
+feature -- Iteration
+
+	do_all (action: PROCEDURE [ANY, TUPLE [G]])
+			-- Apply `action' to every item, from first to last.
+			-- Semantics not guaranteed if `action' changes the structure;
+			-- in such a case, apply iterator to clone of structure instead.
+		do
+			area_v2.do_all_in_bounds (action, 0, area_v2.count - 1)
+		end
+
+	do_if (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+			-- Apply `action' to every item that satisfies `test', from first to last.
+			-- Semantics not guaranteed if `action' or `test' changes the structure;
+			-- in such a case, apply iterator to clone of structure instead.
+		do
+			area_v2.do_if_in_bounds (action, test, 0, area_v2.count - 1)
+		end
+
+	there_exists (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
+			-- Is `test' true for at least one item?
+		do
+			Result := area_v2.there_exists_in_bounds (test, 0, area_v2.count - 1)
+		end
+
+	for_all (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
+			-- Is `test' true for all items?
+		do
+			Result := area_v2.for_all_in_bounds (test, 0, area_v2.count - 1)
+		end
+
+	do_all_with_index (action: PROCEDURE [ANY, TUPLE [G, INTEGER]])
+			-- Apply `action' to every item, from first to last.
+			-- `action' receives item and its index.
+			-- Semantics not guaranteed if `action' changes the structure;
+			-- in such a case, apply iterator to clone of structure instead.
+		require
+			action_not_void: action /= Void
+		local
+			i, j, nb: INTEGER
+			l_area: like area_v2
+		do
+			from
+				i := 0
+				j := lower
+				nb := count - 1
+				l_area := area_v2
+			until
+				i > nb
+			loop
+				action.call ([l_area.item (i), j])
+				j := j + 1
+				i := i + 1
+			end
+		end
+
+	do_if_with_index (action: PROCEDURE [ANY, TUPLE [G, INTEGER]]; test: FUNCTION [ANY, TUPLE [G, INTEGER], BOOLEAN])
+			-- Apply `action' to every item that satisfies `test', from first to last.
+			-- `action' and `test' receive the item and its index.
+			-- Semantics not guaranteed if `action' or `test' changes the structure;
+			-- in such a case, apply iterator to clone of structure instead.
+		require
+			action_not_void: action /= Void
+			test_not_void: test /= Void
+		local
+			i, j, nb: INTEGER
+			l_area: like area_v2
+		do
+			from
+				i := 0
+				j := lower
+				nb := count - 1
+				l_area := area_v2
+			until
+				i > nb
+			loop
+				if test.item ([l_area.item (i), j]) then
+					action.call ([l_area.item (i), j])
+				end
+				j := j + 1
+				i := i + 1
+			end
 		end
 
 feature -- Measurement
 
+	lower: INTEGER = 1
+			-- Lower bound for accessing list items via indexes
+
+	upper: INTEGER
+			-- Upper bound for accessing list items via indexes
+		do
+			Result := area_v2.count
+		end
+
 	count: INTEGER
-			-- Number of items.
+			-- Number of items
+		do
+			Result := area_v2.count
+		end
+
+	capacity: INTEGER
+		do
+			Result := area_v2.capacity
+		end
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN
+			-- Is array made of the same items as `other'?
+		local
+			i: INTEGER
+		do
+			if other = Current then
+				Result := True
+			elseif count = other.count and then object_comparison = other.object_comparison then
+				if object_comparison then
+					from
+						Result := True
+						i := lower
+					until
+						not Result or i > upper
+					loop
+						Result := i_th (i) ~ other.i_th (i)
+						i := i + 1
+					end
+				else
+					Result := area_v2.same_items (other.area_v2, 0, 0, count)
+				end
+			end
+		end
 
 feature -- Status report
 
@@ -205,12 +318,6 @@ feature -- Status report
 			-- May items be removed? (Answer: yes.)
 		do
 			Result := True
-		end
-
-	full: BOOLEAN
-			-- Is structure filled to capacity?
-		do
-			Result := (count = capacity)
 		end
 
 	valid_cursor (p: CURSOR): BOOLEAN
@@ -231,14 +338,17 @@ feature -- Status report
 			-- Has `v' been inserted at the end by the most recent `put' or
 			-- `extend'?
 		do
-			check
-				put_constraint: (v /= last) implies not off
-					-- Because, if this routine has not been called by
-					-- `extend', it was called by `put' which replaces the
-					-- current item, which implies the cursor is not `off'.
+			if not is_empty then
+				Result := (v = last) or else (not off and then (v = item))
 			end
+		end
 
-			Result := (v = last) or else (v = item)
+	all_default: BOOLEAN
+			-- Are all items set to default values?
+		require
+			has_default: ({G}).has_default
+		do
+			Result := area_v2.filled_with (({G}).default, 0, area_v2.upper)
 		end
 
 feature -- Cursor movement
@@ -266,10 +376,6 @@ feature -- Cursor movement
 			-- Move cursor to last position if any.
 		do
 			index := count
-		--| Temporary patch. Start moves the cursor
-		--| to the first element. If the list is empty
-		--| the cursor is before. The parents (CHAIN, LIST...)
-		--| and decendants (ARRAYED_TREE...) need to be revised.
 		ensure then
 			before_when_empty: is_empty implies before
 		end
@@ -312,11 +418,11 @@ feature -- Cursor movement
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
 		local
-			l_area: like area
+			l_area: like area_v2
 			i, nb: INTEGER
 			l_found: BOOLEAN
 		do
-			l_area := area
+			l_area := area_v2
 			nb := count - 1
 				-- If we are before we need to be sure
 				-- that i is positive.
@@ -361,15 +467,26 @@ feature -- Element change
 			index := index + 1
 		end
 
+	put_i_th (v: like i_th; i: INTEGER_32)
+			-- Replace `i'-th entry, if in index interval, by `v'.
+		do
+			area_v2.put (v, i - 1)
+		end
+
 	force, extend (v: like item)
 			-- Add `v' to end.
 			-- Do not move cursor.
 		local
 			i: INTEGER
+			l_area: like area_v2
 		do
 			i := count + 1
-			set_count (i)
-			force_i_th (v, i)
+			l_area := area_v2
+			if i > l_area.capacity then
+				l_area := l_area.aliased_resized_area (i + additional_space)
+				area_v2 := l_area
+			end
+			l_area.extend (v)
 		end
 
 	put_left (v: like item)
@@ -422,13 +539,10 @@ feature -- Element change
 			if not other.is_empty then
 				l_old_count := count
 				l_new_count := l_old_count + other.count
-				conservative_resize (1, l_new_count)
-				set_count (l_new_count)
-				if index < l_old_count then
-					subcopy (Current, index + 1, l_old_count,
-						index + other.count + 1)
+				if l_new_count > area_v2.capacity then
+					area_v2 := area_v2.aliased_resized_area (l_new_count)
 				end
-				subcopy (other, 1, other.count, index + 1)
+				area_v2.insert_data (other.area_v2, 0, index, other.count)
 				other.wipe_out
 			end
 		end
@@ -443,10 +557,11 @@ feature -- Element change
 					-- If `s' is empty nothing to be done.
 				if c > 0 then
 					old_count := count
-					new_count := old_count + c
-					conservative_resize (1, new_count)
-					set_count (new_count)
-					subcopy (al, 1, c, old_count + 1)
+					new_count := old_count + al.count
+					if new_count > area_v2.capacity then
+						area_v2 := area_v2.aliased_resized_area (new_count)
+					end
+					area_v2.copy_data (al.area_v2, 0, old_count, c)
 				end
 			else
 				Precursor {DYNAMIC_LIST} (s)
@@ -455,15 +570,51 @@ feature -- Element change
 
 feature -- Resizing
 
+	grow (i: INTEGER)
+			-- Change the capacity to at least `i'.
+		do
+			if i > area_v2.capacity then
+				area_v2 := area_v2.aliased_resized_area (i)
+			end
+		end
+
 	resize (new_capacity: INTEGER)
 			-- Resize list so that it can contain
 			-- at least `n' items. Do not lose any item.
 		require
+			resizable: resizable
 			new_capacity_large_enough: new_capacity >= capacity
 		do
 			grow (new_capacity)
 		ensure
 			capacity_set: capacity >= new_capacity
+		end
+
+	trim
+			-- <Precursor>
+		local
+			n: like count
+		do
+			n := count
+			if n < area_v2.capacity then
+				area_v2 := area_v2.aliased_resized_area (n)
+			end
+		ensure then
+			same_items: to_array.same_items (old to_array)
+		end
+
+feature -- Duplication
+
+	copy (other: like Current)
+			-- Reinitialize by copying all the items of `other'.
+			-- (This is also used by `clone'.)
+		do
+			if other /= Current then
+				standard_copy (other)
+				set_area (other.area_v2.twin)
+			end
+		ensure then
+			equal_areas: area_v2 ~ other.area_v2
 		end
 
 feature -- Removal
@@ -503,10 +654,9 @@ feature -- Removal
 			-- (or `after' if no right neighbor)
 		do
 			if index < count then
-				subcopy (Current, index + 1, count, index)
+				area_v2.move_data (index, index - 1, count - index)
 			end
-			set_count (count - 1)
-			area.put_default (count)
+			area_v2.remove_tail (1)
 		ensure then
 			index: index = old index
 		end
@@ -520,11 +670,11 @@ feature -- Removal
 			offset: INTEGER
 			res: BOOLEAN
 			obj_cmp: BOOLEAN
-			l_area: like area
+			l_area: like area_v2
 		do
 			obj_cmp := object_comparison
 			from
-				l_area := area
+				l_area := area_v2
 				i := 0
 				nb := count
 			until
@@ -545,11 +695,10 @@ feature -- Removal
 						i := i + 1
 					end
 				else
-					l_area.put_default (i)
 					i := i + 1
 				end
 			end
-			set_count (count - offset)
+			l_area.remove_tail (offset)
 			index := count + 1
 		ensure then
 			is_after: after
@@ -575,9 +724,8 @@ feature -- Removal
 	wipe_out
 			-- Remove all items.
 		do
-			set_count (0)
+			area_v2.wipe_out
 			index := 0
-			clear_all
 		end
 
 feature -- Transformation
@@ -589,15 +737,37 @@ feature -- Transformation
 			old_item: like item
 		do
 			old_item := item
-			replace (area.item (i - 1))
-			area.put (old_item, i - 1)
+			replace (area_v2.item (i - 1))
+			area_v2.put (old_item, i - 1)
 		end
 
 feature -- Retrieval
 
 	correct_mismatch
+		local
+			i: INTEGER
 		do
-			Precursor
+			if
+				not mismatch_information.has ("area_v2") and then
+				attached {SPECIAL [G]} mismatch_information.item ("area") as l_area and then
+				attached {INTEGER} mismatch_information.item ("count") as l_count and then
+				attached {BOOLEAN} mismatch_information.item ("object_comparison") as l_comp and then
+				attached {INTEGER} mismatch_information.item ("index") as l_index
+			then
+				create area_v2.make_empty (l_count)
+				from
+					i := 0
+				until
+					i = l_count
+				loop
+					area_v2.extend (l_area.item (i))
+					i := i + 1
+				end
+				object_comparison := l_comp
+				index := l_index
+			else
+				Precursor
+			end
 		end
 
 feature -- Duplication
@@ -613,7 +783,7 @@ feature -- Duplication
 			else
 				end_pos := count.min (index + n - 1)
 				Result := new_filled_list (end_pos - index + 1)
-				Result.subcopy (Current, index, end_pos, 1)
+				Result.area_v2.copy_data (area_v2, index - 1, 0, end_pos - index + 1)
 			end
 		end
 
@@ -627,6 +797,14 @@ feature {NONE} -- Inapplicable
 
 feature {NONE} -- Implementation
 
+	force_i_th (v: like i_th; pos: INTEGER)
+		do
+			if count + 1 > capacity then
+				grow (count + additional_space)
+			end
+			area_v2.force (v, pos)
+		end
+
 	insert (v: like item; pos: INTEGER)
 			-- Add `v' at `pos', moving subsequent items
 			-- to the right.
@@ -635,21 +813,14 @@ feature {NONE} -- Implementation
 			index_large_enough: pos >= 1
 		do
 			if count + 1 > capacity then
-				auto_resize (lower, count + 1)
+				grow (count + additional_space)
 			end
-			set_count (count + 1)
-			subcopy (Current, pos , count - 1 , pos + 1)
-			enter (v, pos)
+			area_v2.move_data (pos - 1, pos, count - pos + 1)
+			put_i_th (v, pos)
 		ensure
 			new_count: count = old count + 1
 			index_unchanged: index = old index
 			insertion_done: i_th (pos) = v
-		end
-
-	set_count (new_count: INTEGER)
-			-- Set `count' to `new_count'
-		do
-			count := new_count
 		end
 
 	new_filled_list (n: INTEGER): like Current
@@ -657,36 +828,26 @@ feature {NONE} -- Implementation
 		require
 			n_non_negative: n >=0
 		do
-			create Result.make_filled (n)
+			create Result.make (n)
 		ensure
 			new_filled_list_not_void: Result /= Void
-			new_filled_list_count_set: Result.count = n
-			new_filled_list_full: Result.full
+			new_filled_list_count_set: Result.count = 0
 			new_filled_list_before: Result.before
 		end
 
 invariant
-
 	prunable: prunable
 	starts_from_one: lower = 1
-	empty_means_storage_empty: is_empty implies all_default
 
 note
-	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-
-
-
-end -- class ARRAYED_LIST
+end

@@ -5,7 +5,7 @@ note
 		"Objects that implement the XSLT regex-group() function"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2012, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -72,7 +72,6 @@ feature -- Evaluation
 		local
 			l_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 			l_regex_iterator: XM_XSLT_REGEXP_ITERATOR
-			l_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
 		do
 			arguments.item (1).evaluate_item (a_result, a_context)
 			if not a_result.item.is_error then
@@ -82,14 +81,17 @@ feature -- Evaluation
 				end
 				l_integer_value := a_result.item.as_machine_integer_value
 				a_result.put (Void)
-				l_evaluation_context ?= a_context
-				l_regex_iterator := l_evaluation_context.current_regexp_iterator
-				if l_regex_iterator /= Void then
-					if l_integer_value.is_platform_integer then
-						if not l_regex_iterator.is_matching then
-							a_result.put (create {XM_XPATH_STRING_VALUE}.make (""))
+				if attached {XM_XSLT_EVALUATION_CONTEXT} a_context as l_evaluation_context then
+					l_regex_iterator := l_evaluation_context.current_regexp_iterator
+					if l_regex_iterator /= Void then
+						if l_integer_value.is_platform_integer then
+							if not l_regex_iterator.is_matching then
+								a_result.put (create {XM_XPATH_STRING_VALUE}.make (""))
+							else
+								a_result.put (create {XM_XPATH_STRING_VALUE}.make (l_regex_iterator.regex_group (l_integer_value.as_integer)))
+							end
 						else
-							a_result.put (create {XM_XPATH_STRING_VALUE}.make (l_regex_iterator.regex_group (l_integer_value.as_integer)))
+							a_result.put (create {XM_XPATH_STRING_VALUE}.make (""))
 						end
 					else
 						a_result.put (create {XM_XPATH_STRING_VALUE}.make (""))

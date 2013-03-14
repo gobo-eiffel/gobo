@@ -1,13 +1,13 @@
 note
 	description: "[
-		Commonly used console input and output mechanisms.
+		Commonly used console input and output mechanisms. 
 		This class may be used as ancestor by classes needing its facilities.
 		]"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2013-01-26 07:13:49 +0100 (Sat, 26 Jan 2013) $"
+	revision: "$Revision: 727 $"
 
 class CONSOLE inherit
 
@@ -52,26 +52,26 @@ create {STD_FILES}
 
 feature -- Initialization
 
-	make_open_stdin (fn: STRING)
-			-- Create an unix standard input file.
+	make_open_stdin (fn: READABLE_STRING_GENERAL)
+			-- Create a standard input file.
 		do
-			make (fn)
+			make_with_name (fn)
 			file_pointer := console_def (0)
 			set_read_mode
 		end
 
-	make_open_stdout (fn: STRING)
-			-- Create an unix standard output file.
+	make_open_stdout (fn: READABLE_STRING_GENERAL)
+			-- Create a standard output file.
 		do
-			make (fn)
+			make_with_name (fn)
 			file_pointer := console_def (1)
 			set_write_mode
 		end
 
-	make_open_stderr (fn: STRING)
-			-- Create an unix standard error file.
+	make_open_stderr (fn: READABLE_STRING_GENERAL)
+			-- Create a standard error file.
 		do
-			make (fn)
+			make_with_name (fn)
 			file_pointer := console_def (2)
 			set_write_mode
 		end
@@ -150,7 +150,7 @@ feature -- Input
 			l := last_string
 			l_buffer := read_data_buffer
 			from
-				l.clear_all
+				l.wipe_out
 				str_cap := l_buffer.capacity
 			until
 				done
@@ -210,7 +210,7 @@ feature -- Input
 			l := last_string
 			l_buffer := read_data_buffer
 			from
-				l.clear_all
+				l.wipe_out
 				str_cap := l_buffer.capacity
 			until
 				done
@@ -288,7 +288,6 @@ feature -- Output
 
 feature {NONE} -- Inapplicable
 
-
 	is_empty: BOOLEAN = False
 			-- Useless for CONSOLE class.
 			--| `empty' is false not to invalidate invariant clauses.
@@ -332,6 +331,8 @@ feature {NONE} -- Implementation
 			-- Return the number of characters actually read.
 		do
 			Result := file_gss (file_pointer, a_string.area.item_address (pos - 1), nb)
+				-- `a_string' was externally modified, we need to reset its `hash_code'.
+			a_string.set_internal_hash_code (0)
 		end
 
 	console_def (number: INTEGER): POINTER
@@ -352,7 +353,7 @@ feature {NONE} -- Implementation
 			"C signature (FILE *): EIF_CHARACTER use %"eif_console.h%""
 		end
 
-	console_ps (file: POINTER; s_name: POINTER; length: INTEGER)
+	console_ps (file: POINTER; s: POINTER; length: INTEGER)
 			-- Write string `s' at end of `file'
 		external
 			"C signature (FILE *, char *, EIF_INTEGER) use %"eif_console.h%""
@@ -448,5 +449,16 @@ feature {NONE} -- Implementation
 		alias
 			"console_file_close"
 		end
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

@@ -4,12 +4,12 @@ note
 		in a contiguous range.
 		]"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date: 2009-09-29 02:15:54 +0200 (Tue, 29 Sep 2009) $"
-	revision: "$Revision: 379 $"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2013-01-10 01:50:44 +0100 (Thu, 10 Jan 2013) $"
+	revision: "$Revision: 695 $"
 
-class
+frozen class
 	IMMUTABLE_STRING_32
 
 inherit
@@ -23,9 +23,18 @@ inherit
 	IMMUTABLE_STRING_GENERAL
 		rename
 			same_string as same_string_general,
-			plus as plus_string_general
+			starts_with as starts_with_general,
+			ends_with as ends_with_general,
+			is_case_insensitive_equal as is_case_insensitive_equal_general
 		undefine
-			is_equal, out, copy
+			is_equal, out, copy, has, index_of, last_index_of, occurrences
+		end
+
+	MISMATCH_CORRECTOR
+		undefine
+			copy, is_equal, out
+		redefine
+			correct_mismatch
 		end
 
 create
@@ -33,6 +42,7 @@ create
 	make_empty,
 	make_filled,
 	make_from_string,
+	make_from_string_general,
 	make_from_string_8,
 	make_from_string_32,
 	make_from_c,
@@ -50,6 +60,19 @@ convert
 
 feature {NONE} -- Initialization
 
+	make_from_string_general (s: READABLE_STRING_GENERAL)
+			-- Initialize from the characters of `s'.
+		do
+			if attached {READABLE_STRING_8} s as s8 then
+				make_from_string_8 (s8)
+			elseif attached {READABLE_STRING_32} s as s32 then
+				make_from_string_32 (s32)
+			else
+				--| Unlikely to happen
+				make_from_string_32 (s.to_string_32)
+			end
+		end
+
 	make_from_string_8 (s: READABLE_STRING_8)
 			-- Initialize from the characters of `s'.
 		require
@@ -59,7 +82,7 @@ feature {NONE} -- Initialization
 			s_area: SPECIAL [CHARACTER_8]
 			i, j, nb: INTEGER
 		do
-			create a.make (s.count + 1)
+			create a.make_empty (s.count + 1)
 			from
 				i := 0
 				j := s.area_lower
@@ -68,39 +91,28 @@ feature {NONE} -- Initialization
 			until
 				i > nb
 			loop
-				a [i] := s_area [j]
+				a.extend (s_area [j])
 				i := i + 1
 				j := j + 1
 			end
+			a.extend ('%/000/')
 			make_from_area_and_bounds (a, 0, s.count)
 		end
 
 	make_from_string_32 (s: READABLE_STRING_32)
 			-- Initialize from the characters of `s'.
+			--| If `s' is already an immutable type, we reuse the same `area'.
 		require
 			s_attached: s /= Void
 		local
 			a: like area
-			s_area: SPECIAL [CHARACTER_32]
-			i, j, nb: INTEGER
 		do
 			area := s.area
 			if same_type (s) then
 				area_lower := s.area_lower
 			else
-				create a.make (s.count + 1)
-				from
-					i := 0
-					j := s.area_lower
-					s_area := s.area
-					nb := s.count - 1
-				until
-					i > nb
-				loop
-					a [i] := s_area [j]
-					i := i + 1
-					j := j + 1
-				end
+				create a.make_empty (s.count + 1)
+				a.copy_data (s.area, s.area_lower, 0, s.count + 1)
 				area := a
 				area_lower := 0
 			end
@@ -130,11 +142,12 @@ feature {NONE} -- Initialization
 			l_count: INTEGER
 		do
 			if a_system_string /= Void then
-				l_count := a_system_string.length
+				l_count := a_system_string.length + dotnet_convertor.escape_count (a_system_string)
 			end
 			make (l_count)
 			if l_count > 0 then
 				dotnet_convertor.read_system_string_into_area_32 (a_system_string, area)
+				count := l_count
 			end
 		end
 
@@ -143,39 +156,52 @@ feature {IMMUTABLE_STRING_32} -- Duplication
 	copy (other: like Current)
 			-- <Precursor>
 		do
-				-- Because it is immutable we can simply share the `area' from `other'.
-			standard_copy (other)
+			if other /= Current then
+					-- Because it is immutable we can simply share the `area' from `other'.
+				standard_copy (other)
+			end
 		ensure then
 			new_result_count: count = other.count
 			-- same_characters: For every `i' in 1..`count', `item' (`i') = `other'.`item' (`i')
 		end
 
-feature -- Element change
+feature -- Access
 
-	plus alias "+" (s: READABLE_STRING_32): like Current
-			-- <Precursor>
-		local
-			a: like area
+	item alias "[]", at alias "@" (i: INTEGER): CHARACTER_32
+			-- Character at position `i'
 		do
-			create a.make (count + s.count + 1)
-			a.copy_data (area, area_lower, 0, count)
-			a.copy_data (s.area, s.area_lower, count, s.count)
-			create Result.make_from_area_and_bounds (a, 0, count + s.count)
+			Result := area.item (i + area_lower - 1)
 		end
 
-	plus_string_general (s: READABLE_STRING_GENERAL): like Current
+	code (i: INTEGER): NATURAL_32
+			-- Numeric code of character at position `i'
+		do
+			Result := area.item (i + area_lower - 1).natural_32_code
+		end
+
+	item_code (i: INTEGER): INTEGER
+			-- Numeric code of character at position `i'
+		obsolete
+			"Due to potential truncation it is recommended to use `code (i)' instead."
+		do
+			Result := area.item (i + area_lower - 1).natural_32_code.as_integer_32
+		end
+
+feature -- Element change
+
+	plus alias "+" (s: READABLE_STRING_GENERAL): like Current
 			-- <Precursor>
 		local
 			a, a_32: like area
 			l_s8_area: SPECIAL [CHARACTER_8]
 			i, j, nb: INTEGER
 		do
-			create a.make (count + s.count + 1)
+			create a.make_empty (count + s.count + 1)
 			a.copy_data (area, area_lower, 0, count)
 			if attached {READABLE_STRING_32} s as l_s32 then
 				a.copy_data (l_s32.area, l_s32.area_lower, count, l_s32.count + 1)
 			elseif attached {READABLE_STRING_8} s as l_s8 then
-				create a_32.make (l_s8.count + 1)
+				create a_32.make_empty (l_s8.count + 1)
 				from
 					i := 0
 					j := l_s8.area_lower
@@ -184,11 +210,11 @@ feature -- Element change
 				until
 					i > nb
 				loop
-					a_32.put (l_s8_area [j], i)
+					a_32.extend (l_s8_area [j])
 					i := i + 1
 					j := j + 1
 				end
-				a_32.put ('%/000/', i)
+				a_32.extend ('%/000/')
 				a.copy_data (a_32, 0, count, nb + 2)
 			end
 			create Result.make_from_area_and_bounds (a, 0, count + s.count)
@@ -199,8 +225,8 @@ feature -- Element change
 		local
 			a: like area
 		do
-			create a.make (count + 1)
-			a.copy_data (area, area_lower, 0, count)
+			create a.make_empty (count + 1)
+			a.copy_data (area, area_lower, 0, count + 1)
 			mirror_area (a, 0, count - 1)
 			create Result.make_from_area_and_bounds (a, 0, count)
 		end
@@ -210,8 +236,8 @@ feature -- Element change
 		local
 			a: like area
 		do
-			create a.make (count + 1)
-			a.copy_data (area, area_lower, 0, count)
+			create a.make_empty (count + 1)
+			a.copy_data (area, area_lower, 0, count + 1)
 			to_lower_area (a, 0, count - 1)
 			create Result.make_from_area_and_bounds (a, 0, count)
 		end
@@ -221,8 +247,8 @@ feature -- Element change
 		local
 			a: like area
 		do
-			create a.make (count + 1)
-			a.copy_data (area, area_lower, 0, count)
+			create a.make_empty (count + 1)
+			a.copy_data (area, area_lower, 0, count + 1)
 			to_upper_area (a, 0, count - 1)
 			create Result.make_from_area_and_bounds (a, 0, count)
 		end
@@ -231,11 +257,14 @@ feature -- Element change
 			-- <Precursor>
 		local
 			a: like area
+			nb: INTEGER
 		do
 			if (1 <= start_index) and (start_index <= end_index) and (end_index <= count) then
-				create a.make (end_index - start_index + 2)
-				a.copy_data (area, area_lower + start_index - 1, 0, end_index - start_index + 1)
-				create Result.make_from_area_and_bounds (a, 0, end_index - start_index + 1)
+				nb := end_index - start_index + 1
+				create a.make_empty (nb + 1)
+				a.copy_data (area, area_lower + start_index - 1, 0, nb)
+				a.extend ('%/000/')
+				create Result.make_from_area_and_bounds (a, 0, nb)
 			else
 				Result := empty_string
 			end
@@ -294,7 +323,30 @@ feature {NONE} -- Implementation
 
 feature {READABLE_STRING_8, READABLE_STRING_32} -- Implementation
 
-	area_lower: INTEGER
+	area_lower: INTEGER;
 			-- Index where current string starts in `area'
+
+feature -- Transformation
+
+	correct_mismatch
+			-- Attempt to correct object mismatch during retrieve using `mismatch_information'.
+		do
+				-- In .NET, we have a mismatch that is triggered due to the implementation of
+				-- SPECIAL [CHARACTER_32] as a .NET array of UInt16.
+			if area = Void and then attached {like area} mismatch_information.item ("area") as l_area then
+				area := l_area
+			end
+		end
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

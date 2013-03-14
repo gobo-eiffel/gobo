@@ -5,7 +5,7 @@ note
 		"ECF variables"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -49,7 +49,7 @@ feature -- Access
 			primary_variables.search (a_variable)
 			if primary_variables.found then
 				Result := primary_variables.found_item
-			elseif secondary_variables /= Void then
+			else
 				Result := secondary_variables.value (a_variable)
 			end
 		end

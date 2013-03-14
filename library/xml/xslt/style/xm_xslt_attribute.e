@@ -5,7 +5,7 @@ note
 		"xsl:attribute element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2012, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -127,11 +127,9 @@ feature -- Element change
 	validate
 			-- Check that the stylesheet element is valid.
 		local
-			l_attribute_set: XM_XSLT_ATTRIBUTE_SET
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			l_attribute_set ?= parent
-			if l_attribute_set = Void then
+			if not attached {XM_XSLT_ATTRIBUTE_SET} parent then
 				check_within_template
 			end
 			create l_replacement.make (Void)

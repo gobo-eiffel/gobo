@@ -5,7 +5,7 @@ note
 		"Eiffel type checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -117,12 +117,11 @@ feature -- Validity checking
 			a_name: ET_FEATURE_NAME
 			a_seed: INTEGER
 			a_creation_procedure: ET_PROCEDURE
-			l_class_type: ET_CLASS_TYPE
-			a_formal_type: ET_FORMAL_PARAMETER_TYPE
 			an_index: INTEGER
 			a_formal_parameters: ET_FORMAL_PARAMETER_LIST
 			a_formal_parameter: ET_FORMAL_PARAMETER
 			a_formal_creator: ET_CONSTRAINT_CREATOR
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
 			has_formal_type_error: BOOLEAN
 			i, nb: INTEGER
 			j, nb2: INTEGER
@@ -159,8 +158,8 @@ feature -- Validity checking
 						a_creator := a_formal.creation_procedures
 						if a_creator /= Void and then not a_creator.is_empty then
 							a_base_class := a_named_actual.base_class (current_type)
-							a_formal_type ?= a_named_actual
-							if a_formal_type /= Void then
+							if attached {ET_FORMAL_PARAMETER_TYPE} a_named_actual as l_attached_formal_type then
+								a_formal_type := l_attached_formal_type
 								an_index := a_formal_type.index
 								if a_formal_parameters = Void or else an_index > a_formal_parameters.count then
 										-- Internal error: `a_formal_parameter' is supposed to be
@@ -278,8 +277,7 @@ feature -- Validity checking
 								-- is possible to create instances of `an_actual'
 								-- through that means. So we need to check recursively
 								-- its validity as a creation type.
-							l_class_type ?= a_named_actual
-							if l_class_type /= Void then
+							if attached {ET_CLASS_TYPE} a_named_actual as l_class_type then
 								had_error := has_fatal_error
 								check_creation_type_validity (l_class_type, current_class_impl, current_type, a_position)
 								if had_error then
@@ -291,8 +289,7 @@ feature -- Validity checking
 								-- In that case the creation of an instance of that
 								-- type will be implicit, so we need to check recursively
 								-- its validity as a creation type.
-							l_class_type ?= a_named_actual
-							if l_class_type /= Void and then l_class_type.is_expanded then
+							if attached {ET_CLASS_TYPE} a_named_actual as l_class_type and then l_class_type.is_expanded then
 								had_error := has_fatal_error
 								check_creation_type_validity (l_class_type, current_class_impl, current_type, a_position)
 								if had_error then
@@ -362,8 +359,6 @@ feature {NONE} -- Validity checking
 		local
 			a_query: ET_QUERY
 			a_procedure: ET_PROCEDURE
-			a_constant: ET_INTEGER_CONSTANT
-			a_constant_attribute: ET_CONSTANT_ATTRIBUTE
 		do
 			has_fatal_error := False
 -- TODO: should we check whether class BIT is in the universe or not?
@@ -375,11 +370,7 @@ feature {NONE} -- Validity checking
 				else
 					a_query := current_class_impl.named_query (a_type.name)
 					if a_query /= Void then
-						a_constant_attribute ?= a_query
-						if a_constant_attribute /= Void then
-							a_constant ?= a_constant_attribute.constant
-						end
-						if a_constant /= Void then
+						if attached {ET_CONSTANT_ATTRIBUTE} a_query as a_constant_attribute and then attached {ET_INTEGER_CONSTANT} a_constant_attribute.constant as a_constant then
 							a_type.resolve_identifier_type (a_query.first_seed, a_constant)
 							check_bit_type_validity (a_type)
 						else
@@ -640,7 +631,6 @@ feature {NONE} -- Validity checking
 			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			l_index: INTEGER
-			l_argument_name: ET_IDENTIFIER
 			resolved: BOOLEAN
 			l_feature: ET_FEATURE
 		do
@@ -678,10 +668,9 @@ feature {NONE} -- Validity checking
 								-- This has to be a 'like argument', otherwise this is an error.
 								-- Note that 'like argument' is not a valid construct in ECMA Eiffel.
 								-- This is supported here for backward compatibility.
-							l_feature ?= current_feature_impl
-							if l_feature /= Void then
-								l_argument_name ?= l_name
-								if l_argument_name /= Void then
+							if attached {ET_FEATURE} current_feature_impl as l_attached_feature then
+								l_feature := l_attached_feature
+								if attached {ET_IDENTIFIER} l_name as l_argument_name then
 									args := l_feature.arguments
 									if args /= Void then
 										l_index := args.index_of (l_argument_name)

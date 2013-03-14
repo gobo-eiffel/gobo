@@ -4,7 +4,7 @@
 		"C functions used to implement Thread support"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -13,7 +13,9 @@
 #ifndef EIF_THREADS_H
 #define EIF_THREADS_H
 
+#ifndef EIF_CECIL_H
 #include "eif_cecil.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -36,10 +38,13 @@ extern "C" {
 #define eif_thr_thread_id() NULL
 #define eif_thr_last_thread() NULL
 #define eif_thr_default_priority() 0
+#define eif_thr_create_with_attr(current_obj, init_func, attr)
 #define eif_thr_create_with_args(current_obj, init_func, priority, policy, detach)
 #define eif_thr_sleep(nanoseconds)
 #define eif_thr_cond_signal(a_cond_ptr)
 #define eif_thr_cond_wait_with_timeout(a_cond_ptr,a_mutex_ptr,a_timeout) 0
+#define eif_thr_wait_with_timeout(term,tms) EIF_FALSE
+#define eif_thr_wait(term)
 
 #endif
 

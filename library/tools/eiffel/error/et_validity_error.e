@@ -7761,9 +7761,6 @@ feature {NONE} -- Initialization
 			a_class_impl_not_void: a_class_impl /= Void
 			a_class_impl_preparsed: a_class_impl.is_preparsed
 			a_constant_not_void: a_constant /= Void
-		local
-			l_identifier: ET_IDENTIFIER
-			l_static_call: ET_STATIC_CALL_EXPRESSION
 		do
 			current_class := a_class
 			class_impl := a_class_impl
@@ -7778,17 +7775,13 @@ feature {NONE} -- Initialization
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
-			l_identifier ?= a_constant
-			if l_identifier /= Void then
+			if attached {ET_IDENTIFIER} a_constant as l_identifier then
 				parameters.put (l_identifier.lower_name, 7)
+			elseif attached {ET_STATIC_CALL_EXPRESSION} a_constant as l_static_call then
+				parameters.put (l_static_call.name.lower_name, 7)
 			else
-				l_static_call ?= a_constant
-				if l_static_call /= Void then
-					parameters.put (l_static_call.name.lower_name, 7)
-				else
 -- TODO: Should never happen. Find a better way to handle that.
-					parameters.put ("", 7)
-				end
+				parameters.put ("", 7)
 			end
 			set_compilers (True)
 		ensure

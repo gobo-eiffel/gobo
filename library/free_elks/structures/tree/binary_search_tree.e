@@ -1,19 +1,18 @@
 note
-
 	description:
 		"[
 		Binary search trees; left child item is less than current item,
 		right child item is greater
 		]"
+	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	names: binary_search_tree, tree;
 	representation: recursive, array;
 	access: cursor, membership;
 	contents: generic;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2012-07-23 23:02:19 +0200 (Mon, 23 Jul 2012) $"
+	revision: "$Revision: 567 $"
 
 class BINARY_SEARCH_TREE [G -> COMPARABLE] inherit
 
@@ -306,7 +305,7 @@ feature -- Transformation
 			--| it is balanced
 		local
 			seq: LINEAR [G]
-			temp: ARRAY [G]
+			temp: SPECIAL [G]
 			heap: HEAP_PRIORITY_QUEUE [G]
 			i: INTEGER
 		do
@@ -324,17 +323,15 @@ feature -- Transformation
 				seq.forth
 			end
 			from
-				create temp.make (1, heap.count)
-				i := 1
+				create temp.make_empty (heap.count)
 			until
 				heap.is_empty
 			loop
-				temp.put (heap.item, i)
+				temp.extend (heap.item)
 				heap.remove
-				i := i + 1
 			end
-			replace (temp.item ((temp.count) // 2 + 1))
-			fill_from_sorted_special (temp.area, 0, temp.count - 1)
+			replace (temp.item ((temp.count) // 2))
+			fill_from_sorted_special (temp, 0, temp.upper)
 		ensure
 			is_sorted: sorted
 		end
@@ -471,19 +468,24 @@ feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Implementation
 				else
 					Result := right_child
 					if Result = Void then
+							-- No right child.
 						Result := left_child
 						if Result /= Void then
+								-- Has left child, move it up.
 							Result.attach_to_parent (par)
 						end
 					elseif not has_left then
+							-- Has no left, but has right, move it up.
 						Result.attach_to_parent (par)
 					else
-						c := right_child
-						if c /= Void then
-							m := c.min_node
-							m.remove_node
-							item := m.item
-						end
+							-- Has both left and right children, make the
+							-- smallest element of the right_child tree the
+							-- Current item.
+						c := Result
+						check Result_is_right_child: c = right_child end
+						m := c.min_node
+						m.remove_node
+						item := m.item
 						Result := Current
 					end
 				end
@@ -573,17 +575,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class BINARY_SEARCH_TREE
-
-
+end

@@ -5,7 +5,7 @@ note
 		"Formatters for string parameters, $s"
 
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2004-2005, Object-Tools and others"
+	copyright: "Copyright (c) 2004-2012, Object-Tools and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,26 +36,21 @@ feature -- Status report
 
 	valid_parameter (a_parameter: ANY): BOOLEAN
 			-- Is `a_parameter' a valid parameter for current formatter?
-		local
-			a_string: detachable STRING
 		do
-			a_string ?= a_parameter
-			Result := a_string /= Void
+			Result := attached {STRING} a_parameter
 		end
 
 feature -- Formatting
 
 	format_to (a_parameter: ANY; a_stream: KI_CHARACTER_OUTPUT_STREAM)
 			-- Format `a_parameter' to `a_stream'.
-		local
-			a_string: detachable STRING
 		do
-			a_string ?= a_parameter
 			check
 					-- From precondition 'valid_parameter'.
-				valid_parameter: a_string /= Void
+				valid_parameter: attached {STRING} a_parameter as a_string
+			then
+				string_format_to (a_string, a_stream)
 			end
-			string_format_to (a_string, a_stream)
 		end
 
 	string_format_to (a_parameter: STRING; a_stream: KI_CHARACTER_OUTPUT_STREAM)

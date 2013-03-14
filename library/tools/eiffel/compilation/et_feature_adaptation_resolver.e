@@ -5,7 +5,7 @@ note
 		"Eiffel feature adaptation resolvers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -566,9 +566,7 @@ feature {NONE} -- Feature adaptation
 			i, nb: INTEGER
 			an_exports: ET_EXPORT_LIST
 			an_export: ET_EXPORT
-			an_all_export: ET_ALL_EXPORT
 			other_all_export: ET_ALL_EXPORT
-			a_feature_export: ET_FEATURE_EXPORT
 			j, nb2: INTEGER
 			new_count: INTEGER
 			a_name: ET_FEATURE_NAME
@@ -577,8 +575,7 @@ feature {NONE} -- Feature adaptation
 			nb := an_exports.count
 			from i := 1 until i > nb loop
 				an_export := an_exports.item (i)
-				an_all_export ?= an_export
-				if an_all_export /= Void then
+				if attached {ET_ALL_EXPORT} an_export as an_all_export then
 					if other_all_export /= Void then
 							-- Two 'all' export clauses for this parent.
 							-- This is not considered as a fatal error by gelint.
@@ -586,26 +583,23 @@ feature {NONE} -- Feature adaptation
 					else
 						other_all_export := an_all_export
 					end
-				else
-					a_feature_export ?= an_export
-					if a_feature_export /= Void then
-						nb2 := a_feature_export.count
-						new_count := new_count + nb2
-						if export_table.capacity < new_count then
-							 export_table.resize (new_count)
+				elseif attached {ET_FEATURE_EXPORT} an_export as a_feature_export then
+					nb2 := a_feature_export.count
+					new_count := new_count + nb2
+					if export_table.capacity < new_count then
+						 export_table.resize (new_count)
+					end
+					from j := 1 until j > nb2 loop
+						a_name := a_feature_export.feature_name (j)
+						export_table.search (a_name)
+						if not export_table.found then
+							export_table.put_new (a_name)
+						else
+								-- Feature name `a_name' appears twice in the Export clause.
+								-- This is not considered as a fatal error by gelint.
+							error_handler.report_vlel3a_error (current_class, a_parent, export_table.found_item.feature_name, a_name)
 						end
-						from j := 1 until j > nb2 loop
-							a_name := a_feature_export.feature_name (j)
-							export_table.search (a_name)
-							if not export_table.found then
-								export_table.put_new (a_name)
-							else
-									-- Feature name `a_name' appears twice in the Export clause.
-									-- This is not considered as a fatal error by gelint.
-								error_handler.report_vlel3a_error (current_class, a_parent, export_table.found_item.feature_name, a_name)
-							end
-							j := j + 1
-						end
+						j := j + 1
 					end
 				end
 				i := i + 1

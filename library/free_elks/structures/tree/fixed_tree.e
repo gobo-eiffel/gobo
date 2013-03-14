@@ -1,10 +1,10 @@
 note
-
 	description: "[
 		Trees where each node has a fixed number of children
 		(The number of children is arbitrary but cannot be
 		changed once the node has been created
 		]"
+	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
@@ -12,8 +12,8 @@ note
 	representation: recursive, array;
 	access: cursor, membership;
 	contents: generic;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2012-07-23 23:02:19 +0200 (Mon, 23 Jul 2012) $"
+	revision: "$Revision: 567 $"
 
 class FIXED_TREE [G] inherit
 
@@ -54,13 +54,11 @@ feature -- Initialization
 		end
 
 	make_filled (n: INTEGER; v: G)
-			-- Create node with `n' void children and item `v'.
+			-- Create node with `n' empty children and item `v'.
 		require
 			valid_number_of_children: n >= 0
-		local
-			l_default: detachable G
+			has_default: ({G}).has_default
 		do
-			check l_default_attached: l_default /= Void end
 			arity := n
 			create fixed_list.make_filled (n)
 			replace (v)
@@ -71,7 +69,7 @@ feature -- Initialization
 			until
 				fixed_list.after
 			loop
-				replace_child (create {like Current}.make (0, l_default))
+				replace_child (create {like Current}.make (0, ({G}).default))
 				fixed_list.forth
 			end
 		ensure
@@ -81,41 +79,29 @@ feature -- Initialization
 
 feature -- Access
 
-	parent: detachable FIXED_TREE [G]
+	parent: detachable like Current
 			-- Parent of current node
 
 	child_item: like item
 			-- Item of active child
-		local
-			c: like child
 		do
-			c := child
-			check
-				c_attached: c /= Void
+			check attached child as c then
+				Result := c.item
 			end
-			Result := c.item
 		end
 
 	left_sibling: like parent
 			-- Left neighbor, if any
-		local
-			p: like parent
 		do
-			if position_in_parent > 1 then
-				p := parent
-				if p /= Void then
-					Result := p.array_item (position_in_parent - 1)
-				end
+			if position_in_parent > 1 and then attached parent as p then
+				Result := p.array_item (position_in_parent - 1)
 			end
 		end
 
 	right_sibling: like parent
 			-- Right neighbor, if any
-		local
-			p: like parent
 		do
-			p := parent
-			if p /= Void and then position_in_parent < p.arity then
+			if attached parent as p and then position_in_parent < p.arity then
 				Result := p.array_item (position_in_parent + 1)
 			end
 		end
@@ -414,7 +400,7 @@ feature {NONE} -- Implementation
 
 feature {FIXED_TREE} -- Implementation
 
-	fixed_list: FIXED_LIST [detachable FIXED_TREE [G]]
+	fixed_list: FIXED_LIST [detachable like Current]
 
 	set_fixed_list (a_list: like fixed_list)
 			-- Set `fixed_list' with `a_list'
@@ -466,7 +452,7 @@ feature -- Access
 			Result := fixed_list.item
 		end
 
-	array_item (n: INTEGER): detachable FIXED_TREE [G]
+	array_item (n: INTEGER): detachable like Current
 		do
 			Result := fixed_list.i_th (n)
 		end
@@ -481,7 +467,7 @@ feature -- Access
 			Result := fixed_list.first
 		end
 
-	search_child (v: FIXED_TREE [like item])
+	search_child (v: like Current)
 		do
 			fixed_list.search (v)
 		end
@@ -543,7 +529,7 @@ feature -- Access
 			fixed_list.go_to (p)
 		end
 
-	index_of (v: FIXED_TREE [like item]; i: INTEGER): INTEGER
+	index_of (v: like Current; i: INTEGER): INTEGER
 		do
 			Result := fixed_list.index_of (v, i)
 		end
@@ -557,14 +543,16 @@ feature -- Access
 			create fixed_list.make (fixed_list.count)
 		end
 
-	put_i_th (v: FIXED_TREE [like item]; n: INTEGER)
+	put_i_th (v: like Current; n: INTEGER)
 		do
 			fixed_list.put_i_th (v, n)
 		end
 
 	array_make (min_index: INTEGER; max_index: INTEGER)
+		obsolete
+			"Should not be used."
 		do
-			fixed_list.array_make (min_index, max_index)
+			fixed_list.make (max_index - min_index + 1)
 		end
 
 	capacity: INTEGER
@@ -584,7 +572,7 @@ feature {NONE} -- private access fixed_list
 			fixed_list.make_filled (n)
 		end
 
-	fl_extend (v: FIXED_TREE [like item])
+	fl_extend (v: like Current)
 		do
 			fixed_list.extend (v)
 		end
@@ -614,41 +602,40 @@ feature {NONE} -- private access fixed_list
 			Result := fixed_list.extendible
 		end
 
-	fl_put (v: FIXED_TREE [like item])
+	fl_put (v: like Current)
 		do
 			fixed_list.put (v)
 		end
 
-	fl_replace (v: detachable FIXED_TREE [G])
+	fl_replace (v: detachable like Current)
 		do
 			fixed_list.replace (v)
 		end
 
-	fl_fill (other: CONTAINER [FIXED_TREE [G]])
+	fl_fill (other: CONTAINER [like Current])
 		do
 			--fixed_list.fill (other)
 		end
 
-	fl_lin_rep: LINEAR [detachable FIXED_TREE [G]]
+	fl_lin_rep: LINEAR [detachable like Current]
 		do
 			Result := fixed_list.linear_representation
 		end
 
-	fl_has (v: FIXED_TREE [like item]): BOOLEAN
+	fl_has (v: like Current): BOOLEAN
 		do
 			Result := fixed_list.has (v)
 		end
 
 note
-	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class FIXED_TREE
+end
