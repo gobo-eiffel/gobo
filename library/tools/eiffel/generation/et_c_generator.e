@@ -10228,10 +10228,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 					end
 					current_file.put_character (',')
 					current_file.put_character (' ')
-					current_file.put_character ('(')
-					print_type_declaration (l_call_type, current_file)
-					current_file.put_character (')')
-					print_default_entity_value (l_call_type, current_file)
+					print_typed_default_entity_value (l_call_type, current_file)
 					current_file.put_character (')')
 				elseif nb2 = 1 then
 						-- Static binding.
@@ -22685,10 +22682,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_type := current_dynamic_system.dynamic_type (l_parameters.type (1), a_target_type.base_type)
-				current_file.put_character ('(')
-				print_type_declaration (l_type, current_file)
-				current_file.put_character (')')
-				print_default_entity_value (l_type, current_file)
+				print_typed_default_entity_value (l_type, current_file)
 			end
 		end
 
@@ -23450,6 +23444,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 		local
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
 			l_type: ET_DYNAMIC_TYPE
+			l_meta_type: ET_DYNAMIC_TYPE
 		do
 			l_parameters := a_target_type.base_type.actual_parameters
 			if l_parameters = Void or else l_parameters.count < 1 then
@@ -23471,10 +23466,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					current_file.put_character (')')
 					current_file.put_character (',')
 					current_file.put_character (' ')
-					current_file.put_character ('(')
-					print_type_declaration (l_type, current_file)
-					current_file.put_character (')')
-					print_default_entity_value (l_type, current_file)
+					print_typed_default_entity_value (l_type, current_file)
 					current_file.put_character (')')
 				elseif l_type.base_class.is_deferred or l_type.base_class.is_none then
 					current_file.put_character ('(')
@@ -23485,10 +23477,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					current_file.put_character (')')
 					current_file.put_character (',')
 					current_file.put_character (' ')
-					current_file.put_character ('(')
-					print_type_declaration (l_type, current_file)
-					current_file.put_character (')')
-					print_default_entity_value (l_type, current_file)
+					print_typed_default_entity_value (l_type, current_file)
 					current_file.put_character (')')
 				elseif not l_type.is_alive then
 						-- Raise an exception and return Void when the result type is not alive
@@ -23501,16 +23490,31 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					current_file.put_character (')')
 					current_file.put_character (',')
 					current_file.put_character (' ')
-					current_file.put_character ('(')
-					print_type_declaration (l_type, current_file)
+					print_typed_default_entity_value (l_type, current_file)
 					current_file.put_character (')')
-					print_default_entity_value (l_type, current_file)
-					current_file.put_character (')')
+				elseif l_type.base_class.is_type_class then
+						-- Cannot have two instances of class TYPE representing the same Eiffel type.
+					l_meta_type := l_type.meta_type
+					if l_meta_type = Void then
+							-- Internal error: the meta type of the result type should
+							-- have been computed when analyzing the dynamic type sets
+							-- of `a_feature'.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						current_file.put_character ('(')
+						print_type_declaration (l_meta_type, current_file)
+						current_file.put_character (')')
+						current_file.put_character ('&')
+						current_file.put_character ('(')
+						current_file.put_string (c_ge_types)
+						current_file.put_character ('[')
+						current_file.put_integer (l_type.id)
+						current_file.put_character (']')
+						current_file.put_character (')')
+					end
 				elseif l_type.is_expanded then
-					current_file.put_character ('(')
-					print_type_declaration (l_type, current_file)
-					current_file.put_character (')')
-					print_default_entity_value (l_type, current_file)
+					print_typed_default_entity_value (l_type, current_file)
 				else
 					current_file.put_character ('(')
 					print_type_declaration (l_type, current_file)
@@ -23568,10 +23572,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					current_file.put_character (')')
 					current_file.put_character (',')
 					current_file.put_character (' ')
-					current_file.put_character ('(')
-					print_type_declaration (l_result_type, current_file)
-					current_file.put_character (')')
-					print_default_entity_value (l_result_type, current_file)
+					current_file.put_string (c_eif_void)
 					current_file.put_character (')')
 				elseif not l_result_type.is_alive then
 						-- Raise an exception and return Void when the result type is not alive
@@ -23584,10 +23585,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					current_file.put_character (')')
 					current_file.put_character (',')
 					current_file.put_character (' ')
-					current_file.put_character ('(')
-					print_type_declaration (l_result_type, current_file)
-					current_file.put_character (')')
-					print_default_entity_value (l_result_type, current_file)
+					current_file.put_string (c_eif_void)
 					current_file.put_character (')')
 				else
 					current_file.put_character ('(')
@@ -25773,12 +25771,7 @@ feature {NONE} -- Trace generation
 					if current_feature.is_query then
 						current_file.put_character (' ')
 						l_result_type := current_feature.result_type_set.static_type
-						current_file.put_character ('(')
-						print_type_declaration (l_result_type, current_file)
-						current_file.put_character (')')
-						current_file.put_character ('(')
-						print_default_entity_value (l_result_type, current_file)
-						current_file.put_character (')')
+						print_typed_default_entity_value (l_result_type, current_file)
 					end
 					current_file.put_character (';')
 					current_file.put_new_line
@@ -25852,12 +25845,7 @@ feature {NONE} -- Trace generation
 						l_result_type_set := dynamic_type_set (l_result)
 						l_result_type := l_result_type_set.static_type
 						current_file.put_character (' ')
-						current_file.put_character ('(')
-						print_type_declaration (l_result_type, current_file)
-						current_file.put_character (')')
-						current_file.put_character ('(')
-						print_default_entity_value (l_result_type, current_file)
-						current_file.put_character (')')
+						print_typed_default_entity_value (l_result_type, current_file)
 					end
 					current_file.put_character (';')
 					current_file.put_new_line
@@ -27420,6 +27408,25 @@ feature {NONE} -- Default initialization values generation
 			a_file_open_write: a_file.is_open_write
 		do
 			if not a_type.is_expanded or else a_type.is_basic then
+				a_file.put_character ('0')
+			else
+				print_default_name (a_type, a_file)
+			end
+		end
+
+	print_typed_default_entity_value (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print to `a_file' a typed version of the default initialization value for
+			-- entities declared of type `a_type'.
+			-- Same as `print_default_entity_value', but preceded by a type cast if needed.
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			if not a_type.is_expanded or else a_type.is_basic then
+				current_file.put_character ('(')
+				print_type_declaration (a_type, current_file)
+				current_file.put_character (')')
 				a_file.put_character ('0')
 			else
 				print_default_name (a_type, a_file)
