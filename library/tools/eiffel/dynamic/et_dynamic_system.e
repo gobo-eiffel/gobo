@@ -825,6 +825,42 @@ feature {ET_DYNAMIC_FEATURE} -- Types
 			type_of_type_feature_set: type_of_type_feature = a_feature
 		end
 
+feature -- New instance types
+
+	is_new_instance_type (a_type: ET_DYNAMIC_TYPE): BOOLEAN
+			-- Has `a_type' been specified as a type which can have instances
+			-- created by 'TYPE.new_instance' or 'TYPE.new_special_any_instance'?
+		require
+			a_type_not_void: a_type /= Void
+		local
+			l_name: STRING
+		do
+			if new_instance_types /= Void then
+				l_name := a_type.base_type.unaliased_to_text
+				l_name.replace_substring_all ("[attached] ", "")
+				l_name.replace_substring_all ("[detachable] ", "")
+				l_name.replace_substring_all ("attached ", "")
+				l_name.replace_substring_all ("detachable ", "")
+				Result := new_instance_types.has (l_name)
+			else
+				Result := True
+			end
+		end
+
+	new_instance_types: DS_HASH_SET [STRING]
+			-- Name of the types which can have instances created by 'TYPE.new_instance'
+			-- or 'TYPE.new_special_any_instance'
+			--
+			-- Use all non-deferred, non-NONE, alive types if no types have been specified.
+
+	set_new_instance_types (a_types: like new_instance_types)
+			-- Set `new_instance_types' to `a_types'.
+		do
+			new_instance_types := a_types
+		ensure
+			new_instance_types_set: new_instance_types = a_types
+		end
+
 feature -- Compilation
 
 	compile

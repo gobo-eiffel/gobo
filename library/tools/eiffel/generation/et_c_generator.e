@@ -23479,6 +23479,20 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					current_file.put_character (' ')
 					print_typed_default_entity_value (l_type, current_file)
 					current_file.put_character (')')
+				elseif not current_dynamic_system.is_new_instance_type (l_type) then
+						-- Raise an exception and return Void when the result type has not been
+						-- specified as a type which can have instances created by 'TYPE.new_instance'
+						-- or 'TYPE.new_special_any_instance'.
+					current_file.put_character ('(')
+					current_file.put_string (c_ge_raise)
+					current_file.put_character ('(')
+					current_file.put_character ('2')
+					current_file.put_character ('5')
+					current_file.put_character (')')
+					current_file.put_character (',')
+					current_file.put_character (' ')
+					print_typed_default_entity_value (l_type, current_file)
+					current_file.put_character (')')
 				elseif not l_type.is_alive then
 						-- Raise an exception and return Void when the result type is not alive
 						-- (i.e. no object of that type has been otherwise created in the system).
@@ -23564,6 +23578,20 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 						-- of TYPE.new_special_any_instance.
 						-- Raise an exception and return Void or
 						-- the default value when the type is expanded.
+					current_file.put_character ('(')
+					current_file.put_string (c_ge_raise)
+					current_file.put_character ('(')
+					current_file.put_character ('2')
+					current_file.put_character ('5')
+					current_file.put_character (')')
+					current_file.put_character (',')
+					current_file.put_character (' ')
+					current_file.put_string (c_eif_void)
+					current_file.put_character (')')
+				elseif not current_dynamic_system.is_new_instance_type (l_result_type) then
+						-- Raise an exception and return Void when the result type has not been
+						-- specified as a type which can have instances created by 'TYPE.new_instance'
+						-- or 'TYPE.new_special_any_instance'.
 					current_file.put_character ('(')
 					current_file.put_string (c_ge_raise)
 					current_file.put_character ('(')

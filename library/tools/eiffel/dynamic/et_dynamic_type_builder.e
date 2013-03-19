@@ -3112,10 +3112,15 @@ feature {NONE} -- Built-in features
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_result_type := result_type_set.static_type
-				if not l_result_type.base_class.is_deferred and not l_result_type.base_class.is_none then
-						-- Return Void when the base class is deferred,
-						-- or when the result type is not alive (i.e. no object of that
+				if l_result_type.base_class.is_deferred or l_result_type.base_class.is_none then
+						-- Return Void when the base class is deferred, or NONE.
+				elseif current_dynamic_system.is_new_instance_type (l_result_type) then
+						-- Return Void when the result type is not alive (i.e. no object of that
 						-- type has been otherwise created in the system).
+					if current_dynamic_system.new_instance_types /= Void then
+							-- Mark the type as if it has been explicitly specified.
+						mark_type_alive (l_result_type)
+					end
 					propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 				end
 			end
@@ -3139,9 +3144,13 @@ feature {NONE} -- Built-in features
 					error_handler.report_giaaa_error
 				else
 					l_result_type := current_dynamic_system.dynamic_type (l_parameters.type (1), current_type)
-					if attached {ET_DYNAMIC_SPECIAL_TYPE} l_result_type as l_special_type and then not l_special_type.item_type_set.static_type.is_expanded then
-						-- Return Void when the result type is not alive (i.e. no object
-						-- of that type has been otherwise created in the system).
+					if attached {ET_DYNAMIC_SPECIAL_TYPE} l_result_type as l_special_type and then not l_special_type.item_type_set.static_type.is_expanded and then current_dynamic_system.is_new_instance_type (l_result_type) then
+							-- Return Void when the result type is not alive (i.e. no object
+							-- of that type has been otherwise created in the system).
+						if current_dynamic_system.new_instance_types /= Void then
+								-- Mark the type as if it has been explicitly specified.
+							mark_type_alive (l_special_type)
+						end
 						propagate_builtin_result_dynamic_types (l_special_type, current_dynamic_feature)
 					end
 				end

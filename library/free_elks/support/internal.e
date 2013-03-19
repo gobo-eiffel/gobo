@@ -78,22 +78,22 @@ feature -- Creation
 			if l_table.found then
 				Result := l_table.found_item
 			else
-			  Result := invalid_type
-			  from
-				  i := max_type_id
-			  until
-				  i < 1
-			  loop
-				  l_type := type_of_type (i)
-				  if l_type /= Void and then l_type.name.same_string_general (class_type) then
-					  Result := l_type.type_id
-					  if l_type = {NONE} then
-						  Result := none_type
-					  end
-						  -- Jump out of the loop.
-					  i := 0
-				  end
-				  i := i - 1
+				Result := invalid_type
+				from
+					i := max_type_id
+			 	until
+					i < 1
+				loop
+					l_type := type_of_type (i)
+					if l_type /= Void and then stripped_type_name (l_type).same_string_general (class_type) then
+						Result := l_type.type_id
+					 	if l_type = {NONE} then
+							Result := none_type
+						end
+							-- Jump out of the loop.
+						i := 0
+					end
+					i := i - 1
 				end
 				l_table.put (Result, class_type)
 			end
@@ -101,6 +101,21 @@ feature -- Creation
 			dynamic_type_from_string_valid: Result = -1 or Result = none_type or Result >= 0
 		end
 
+	stripped_type_name (a_type: TYPE [detachable ANY]): STRING
+			-- Version of the name of `a_type' where attachement marks
+			-- have been removed
+		require
+			a_type_not_void: a_type /= Void
+		do
+			Result := a_type.name.twin
+			Result.replace_substring_all ("attached ", "")
+			Result.replace_substring_all ("[attached] ", "")
+			Result.replace_substring_all ("detachable ", "")
+			Result.replace_substring_all ("[detachable] ", "")
+		ensure
+			stripped_type_name_not_void: Result /= Void
+		end
+		
 	new_instance_of (type_id: INTEGER): ANY
 			-- New instance of dynamic `type_id'.
 			-- Note: returned object is not initialized and may
@@ -494,7 +509,7 @@ feature -- Access
 --		local
 --			l_result, l_null: POINTER
 		do
-			print ("TODO: INTERNAL.storable_version_of_type not implemented yet%N")
+--			print ("TODO: INTERNAL.storable_version_of_type not implemented yet%N")
 --			id_to_storable_version.search (a_type_id)
 --			if id_to_storable_version.found then
 --				Result := id_to_storable_version.found_item

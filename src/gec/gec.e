@@ -217,6 +217,9 @@ feature {NONE} -- Processing
 			l_command: KL_SHELL_COMMAND
 			l_filename: STRING
 			l_system_name: STRING
+			l_file: KL_TEXT_INPUT_FILE
+			l_type_names: DS_HASH_SET [STRING]
+			s: STRING
 		do
 			if is_silent then
 				a_system.set_error_handler (null_error_handler)
@@ -235,6 +238,32 @@ feature {NONE} -- Processing
 			end
 			l_system.set_catcall_error_mode (catcall_error_mode)
 			l_system.set_catcall_warning_mode (catcall_warning_mode)
+			if new_instance_types_option.was_found then
+				l_filename := new_instance_types_option.parameter
+				create l_file.make (l_filename)
+				l_file.open_read
+				if l_file.is_open_read then
+					create l_type_names.make_equal (100)
+					from
+						l_file.read_line
+					until
+						l_file.end_of_file
+					loop
+						s := l_file.last_string.twin
+						s.left_adjust
+						s.right_adjust
+						if not s.is_empty and not s.starts_with ("--") then
+							l_type_names.force (s)
+						end
+						l_file.read_line
+					end
+					l_file.close
+					l_system.set_new_instance_types (l_type_names)
+				else
+					report_cannot_read_error (l_filename)
+					Exceptions.die (1)
+				end
+			end
 			create {ET_DYNAMIC_PUSH_TYPE_SET_BUILDER} l_builder.make (l_system)
 			l_system.set_dynamic_type_set_builder (l_builder)
 			l_system.compile
@@ -405,6 +434,9 @@ feature -- Argument parsing
 	gc_option: AP_ENUMERATION_OPTION
 			-- Option for '--gc=<no|boehm>'
 
+	new_instance_types_option: AP_STRING_OPTION
+			-- Option for '--new_instance_types=<filename>'
+
 	silent_flag: AP_FLAG
 			-- Flag for '--silent'
 
@@ -460,6 +492,11 @@ feature -- Argument parsing
 			split_size_option.set_description ("Size of generated C files in bytes when in split mode.")
 			split_size_option.set_parameter_description ("size")
 			a_parser.options.force_last (split_size_option)
+				-- new_instance_types
+			create new_instance_types_option.make_with_long_form ("new_instance_types")
+			new_instance_types_option.set_description ("File containing the list of types which can have instances created by 'TYPE.new_instance' or 'TYPE.new_special_any_instance'.")
+			new_instance_types_option.set_parameter_description ("filename")
+			a_parser.options.force_last (new_instance_types_option)
 				-- gc
 			create gc_option.make_with_long_form ("gc")
 			gc_option.set_description ("Which garbage collector should the application be compiled with? (default: no)")
@@ -519,12 +556,14 @@ invariant
 	ace_filename_not_void: ace_filename /= Void
 	catcall_option_not_void: catcall_option /= Void
 	qat_option_not_void: qat_option /= Void
+	gelint_flag_not_void: gelint_flag /= Void
 	finalize_flag_not_void: finalize_flag /= Void
 	silent_flag_not_void: silent_flag /= Void
 	verbose_flag_not_void: verbose_flag /= Void
 	c_compile_option_not_void: c_compile_option /= Void
 	split_option_not_void: split_option /= Void
 	split_size_option_not_void: split_size_option /= Void
+	new_instance_types_option_not_void: new_instance_types_option /= Void
 	gc_option_not_void: gc_option /= Void
 
 end
