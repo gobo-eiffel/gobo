@@ -5,7 +5,7 @@ note
 		"Eiffel feature validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -2983,6 +2983,7 @@ feature {NONE} -- Instruction validity
 			l_convert_expression: ET_CONVERT_EXPRESSION
 			had_error: BOOLEAN
 			l_target_type_detachable: BOOLEAN
+			l_target_type_attached: BOOLEAN
 			l_source_type_attached: BOOLEAN
 			l_source_entity_attached: BOOLEAN
 		do
@@ -3017,6 +3018,7 @@ feature {NONE} -- Instruction validity
 					-- source conforms or converts to the type of the target.
 				if current_universe.attachment_type_conformance_mode then
 					l_target_type_detachable := l_target_context.is_type_detachable
+					l_target_type_attached := l_target_context.is_type_attached
 					l_source_type_attached := l_source_context.is_type_attached
 					if not l_source_type_attached then
 						if not l_target_type_detachable then
@@ -3063,18 +3065,24 @@ feature {NONE} -- Instruction validity
 						if attached {ET_RESULT} l_target then
 							if not l_target_type_detachable then
 								current_initialization_scope.add_result
-							elseif l_source_type_attached or l_source_entity_attached then
-								current_attachment_scope.add_result
-							else
-								current_attachment_scope.remove_result
+							end
+							if not l_target_type_attached then
+								if l_source_type_attached or l_source_entity_attached then
+									current_attachment_scope.add_result
+								else
+									current_attachment_scope.remove_result
+								end
 							end
 						elseif attached {ET_IDENTIFIER} l_target as l_identifier then
 							if not l_target_type_detachable then
 								current_initialization_scope.add_name (l_identifier)
-							elseif l_source_type_attached or l_source_entity_attached then
-								current_attachment_scope.add_name (l_identifier)
-							else
-								current_attachment_scope.remove_name (l_identifier)
+							end
+							if not l_target_type_attached then
+								if l_source_type_attached or l_source_entity_attached then
+									current_attachment_scope.add_name (l_identifier)
+								else
+									current_attachment_scope.remove_name (l_identifier)
+								end
 							end
 						end
 					end
@@ -3613,13 +3621,15 @@ feature {NONE} -- Instruction validity
 							if attached {ET_RESULT} l_target then
 								if not l_target_context.is_type_detachable then
 									current_initialization_scope.add_result
-								else
+								end
+								if not l_target_context.is_type_attached then
 									current_attachment_scope.add_result
 								end
 							elseif attached {ET_IDENTIFIER} l_target as l_identifier then
 								if not l_target_context.is_type_detachable then
 									current_initialization_scope.add_name (l_identifier)
-								else
+								end
+								if not l_target_context.is_type_attached then
 									current_attachment_scope.add_name (l_identifier)
 								end
 							end
