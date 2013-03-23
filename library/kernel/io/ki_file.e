@@ -110,4 +110,11 @@ feature -- Basic operations
 		deferred
 		end
 
+	change_mode (a_mask: INTEGER)
+			-- Replace mode by `a_mask'.
+		require
+			file_exists: exists
+		deferred
+		end
+		
 end

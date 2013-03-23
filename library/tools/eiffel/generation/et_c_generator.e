@@ -548,10 +548,8 @@ feature {NONE} -- Compilation script generation
 				l_command_name := template_expander.expand_from_values (l_link_template, l_variables)
 				l_file.put_line (l_command_name)
 				l_file.close
-				if not operating_system.is_windows then
-					create l_command.make ("chmod a+x " + l_script_filename)
-					l_command.execute
-				end
+					-- Set executable mode.
+				l_file.change_mode (0c777)
 			else
 				set_fatal_error
 				report_cannot_write_error (l_script_filename)

@@ -515,7 +515,7 @@ EIF_POINTER eif_file_dopen(int fd, int how) {
 #ifdef EIF_WINDOWS
 	fp = (FILE *)rt_file_fdopen(fd, rt_file_open_mode(how, (how < 10 ? 't' : 'b')));
 #else
-	fp = (FILE *)rt_file_fdopen(fd, rt_file_open_mode(how'\0'));
+	fp = (FILE *)rt_file_fdopen(fd, rt_file_open_mode(how, '\0'));
 #endif
 	if (fp == (FILE *)0) {
 		esys(); /* Open failed, raise exception */

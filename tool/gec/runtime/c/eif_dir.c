@@ -205,9 +205,9 @@ EIF_POINTER eif_dir_next(EIF_POINTER dir) {
 #else
 	struct dirent* p = readdir((DIR*)dir);
 	if (p) {
-		char* s = p->d_name;
+		return p->d_name;
 	} else {
-		return EIF_VOID;
+		return NULL;
 	}
 #endif
 }
@@ -302,7 +302,7 @@ EIF_BOOLEAN eif_dir_is_executable(EIF_FILENAME dirname) {
 		return ((mode & S_IXGRP) ? EIF_TRUE : EIF_FALSE);
 #ifdef HAS_GETGROUPS
 	else if (eif_group_in_list(gid))
-		return (EIF_BOOLEAN) ((mode & S_IXGRP) ? 'EIF_TRUE : EIF_FALSE);
+		return (EIF_BOOLEAN) ((mode & S_IXGRP) ? EIF_TRUE : EIF_FALSE);
 #endif
 	else
 		return ((mode & S_IXOTH) ? EIF_TRUE : EIF_FALSE);

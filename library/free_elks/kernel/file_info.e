@@ -601,7 +601,7 @@ feature {NONE} -- Implementation
 			#ifdef EIF_WINDOWS
 				return (EIF_INTEGER) MultiByteToWideChar(CP_ACP, 0, (LPSTR) $a_ptr, -1, (LPWSTR) $a_output, (int) $a_output_length) * sizeof(wchar_t);
 			#else
-				return $a_output_length
+				return $a_output_length;
 			#endif
 			}"
 		end
