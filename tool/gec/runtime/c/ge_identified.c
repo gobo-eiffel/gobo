@@ -40,7 +40,7 @@ GE_weak_pointer* GE_new_weak_pointer(EIF_REFERENCE object) {
 		wp = (GE_weak_pointer*) GE_malloc_atomic(sizeof(GE_weak_pointer));
 		wp->object = object;
 #ifdef EIF_BOEHM_GC
-		GC_GENERAL_REGISTER_DISAPPEARING_LINK(&wp->object, GC_base(object));
+		GC_GENERAL_REGISTER_DISAPPEARING_LINK((void**)(&wp->object), GC_base(object));
 #endif
 		return wp;
 	}
@@ -62,7 +62,7 @@ EIF_REFERENCE GE_weak_pointer_object_without_lock(GE_weak_pointer* wp) {
  */
 #ifdef EIF_BOEHM_GC
 EIF_REFERENCE GE_weak_pointer_object(GE_weak_pointer* wp) {
-	return (EIF_REFERENCE) GC_call_with_alloc_lock(GE_weak_pointer_object_without_lock, wp);
+	return (EIF_REFERENCE) GC_call_with_alloc_lock((GC_fn_type)GE_weak_pointer_object_without_lock, wp);
 }
 #else /* No GC */
 #define GE_weak_pointer_object(wp) GE_weak_pointer_object_without_lock(wp)
@@ -167,7 +167,7 @@ EIF_REFERENCE GE_id_object(EIF_INTEGER_32 id) {
 				if (object == 0) {
 					id_object_chunk[i] = (GE_weak_pointer*) 0;
 #ifdef EIF_BOEHM_GC
-					GC_unregister_disappearing_link(&wp->object);
+					GC_unregister_disappearing_link((void**)(&wp->object));
 #endif
 					GE_free(wp);
 					return (EIF_REFERENCE) 0;
@@ -198,7 +198,7 @@ void GE_object_id_free(EIF_INTEGER_32 id) {
 				object = GE_weak_pointer_object(wp);
 				if (object != 0) {
 #ifdef EIF_BOEHM_GC
-					GC_unregister_disappearing_link(&wp->object);
+					GC_unregister_disappearing_link((void**)(&wp->object));
 #endif
 				}
 				id_object_chunk[i] = (GE_weak_pointer*) 0;
