@@ -3,7 +3,7 @@
 <system name="gec">
 	<description>
 		system: "Gobo Eiffel Compiler"
-		copyright: "Copyright (c) 2005-2010, Eric Bezault and others"
+		copyright: "Copyright (c) 2005-2013, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -14,6 +14,9 @@
 	<option if="${GOBO_EIFFEL}=ge">
 		<option if="${BOEHM_GC}">
 			<option name="garbage_collector" value="boehm"/>
+			<option unless="${GOBO_OS}=windows">
+				<option name="link" value="-lpthread" unless="${IS_MAC_OS_X}"/>
+			</option>
 		</option>
 	</option>
 	<option unless="${DEBUG}">
