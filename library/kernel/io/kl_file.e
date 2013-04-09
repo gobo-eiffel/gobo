@@ -408,6 +408,26 @@ feature -- Basic operations
 			end
 		end
 
+	change_mode (a_mask: INTEGER)
+			-- Replace mode by `a_mask'.
+		local
+			rescued: BOOLEAN
+		do
+			if not rescued then
+				if string_name /= Empty_name then
+					if old_exists then
+						old_change_mode (a_mask)
+					end
+				end
+			end
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+		
+		
 feature {NONE} -- Implementation
 
 	Empty_name: STRING = "empty_name"
@@ -483,6 +503,13 @@ feature {NONE} -- Implementation
 			name_changed: string_name.is_equal (new_name)
 		end
 
+	old_change_mode (a_mask: INTEGER)
+			-- Replace mode by `a_mask'.
+		require
+			file_exists: old_exists
+		deferred
+		end
+		
 	old_close
 			-- Close file.
 		require
