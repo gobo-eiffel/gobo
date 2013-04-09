@@ -5,7 +5,7 @@ note
 		"Eiffel qualified anchored types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2013, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -981,17 +981,6 @@ feature -- Conformance
 				if l_query /= Void then
 					l_target_context := a_context.new_type_context (l_target_type)
 					Result := l_query.type.conforms_to_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
-					if not Result then
-							-- Covers the case where only 'like {G}.a'
-							-- conforms to 'like {G}.a'.
-						if other.same_syntactical_qualified_like_identifier_with_type_marks (Current, tokens.implicit_detachable_type_mark, a_context, tokens.implicit_detachable_type_mark, other_context) then
-							if a_context.attachment_type_conformance_mode then
-								Result := other.is_type_attached_with_type_mark (other_type_mark, other_context) implies is_type_attached_with_type_mark (a_type_mark, a_context)
-							else
-								Result := True
-							end
-						end
-					end
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -1021,22 +1010,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				Result := False
 			else
 				l_target_type := target_type
-				if l_target_type.named_type_is_formal_type (a_context) then
-						-- Current type is of the unfolded form 'like {G}.a'
-						-- and only 'like {G}.a' conforms to itself.
-					Result := False
+				l_class := l_target_type.base_class (a_context)
+				l_query := l_class.seeded_query (seed)
+				if l_query /= Void then
+					l_target_context := a_context.new_type_context (l_target_type)
+					Result := l_query.type.conforms_from_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
 				else
-					l_class := l_target_type.base_class (a_context)
-					l_query := l_class.seeded_query (seed)
-					if l_query /= Void then
-						l_target_context := a_context.new_type_context (l_target_type)
-						Result := l_query.type.conforms_from_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current qualified anchored type.
-						Result := False
-					end
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we resolved
+						-- current qualified anchored type.
+					Result := False
 				end
 			end
 		end
@@ -1059,22 +1042,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				Result := False
 			else
 				l_target_type := target_type
-				if l_target_type.named_type_is_formal_type (a_context) then
-						-- Current type is of the unfolded form 'like {G}.a'
-						-- and only 'like {G}.a' conforms to itself.
-					Result := False
+				l_class := l_target_type.base_class (a_context)
+				l_query := l_class.seeded_query (seed)
+				if l_query /= Void then
+					l_target_context := a_context.new_type_context (l_target_type)
+					Result := l_query.type.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
 				else
-					l_class := l_target_type.base_class (a_context)
-					l_query := l_class.seeded_query (seed)
-					if l_query /= Void then
-						l_target_context := a_context.new_type_context (l_target_type)
-						Result := l_query.type.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current qualified anchored type.
-						Result := False
-					end
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we resolved
+						-- current qualified anchored type.
+					Result := False
 				end
 			end
 		end
@@ -1097,22 +1074,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				Result := False
 			else
 				l_target_type := target_type
-				if l_target_type.named_type_is_formal_type (a_context) then
-						-- Current type is of the unfolded form 'like {G}.a'
-						-- and only 'like {G}.a' conforms to itself.
-					Result := False
+				l_class := l_target_type.base_class (a_context)
+				l_query := l_class.seeded_query (seed)
+				if l_query /= Void then
+					l_target_context := a_context.new_type_context (l_target_type)
+					Result := l_query.type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
 				else
-					l_class := l_target_type.base_class (a_context)
-					l_query := l_class.seeded_query (seed)
-					if l_query /= Void then
-						l_target_context := a_context.new_type_context (l_target_type)
-						Result := l_query.type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current qualified anchored type.
-						Result := False
-					end
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we resolved
+						-- current qualified anchored type.
+					Result := False
 				end
 			end
 		end
@@ -1135,22 +1106,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				Result := False
 			else
 				l_target_type := target_type
-				if l_target_type.named_type_is_formal_type (a_context) then
-						-- Current type is of the unfolded form 'like {G}.a'
-						-- and only 'like {G}.a' conforms to itself.
-					Result := False
+				l_class := l_target_type.base_class (a_context)
+				l_query := l_class.seeded_query (seed)
+				if l_query /= Void then
+					l_target_context := a_context.new_type_context (l_target_type)
+					Result := l_query.type.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
 				else
-					l_class := l_target_type.base_class (a_context)
-					l_query := l_class.seeded_query (seed)
-					if l_query /= Void then
-						l_target_context := a_context.new_type_context (l_target_type)
-						Result := l_query.type.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current qualified anchored type.
-						Result := False
-					end
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we resolved
+						-- current qualified anchored type.
+					Result := False
 				end
 			end
 		end
