@@ -20,15 +20,15 @@
 			<exclude>/\.svn$</exclude>
 			<exclude>/\.git$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="none"/>
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" is_void_safe="true"/>
 
-		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf" readonly="true">
+		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf" readonly="true">
 			<condition>
 				<custom name="GOBO_EIFFEL" excluded_value="ge"/>
 			</condition>
 		</library>
 
-		<library name="time" location="$ISE_LIBRARY/library/time/time.ecf" readonly="true">
+		<library name="time" location="$ISE_LIBRARY/library/time/time-safe.ecf" readonly="true">
 			<condition>
 				<custom name="GOBO_EIFFEL" excluded_value="ge"/>
 			</condition>

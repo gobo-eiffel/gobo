@@ -6,7 +6,7 @@
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
-		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf" readonly="true">
+		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf" readonly="true">
 			<condition>
 				<custom name="GOBO_EIFFEL" excluded_value="ge"/>
 			</condition>
@@ -16,11 +16,11 @@
 				<custom name="GOBO_EIFFEL" value="ge"/>
 			</condition>
 		</library>
-		<library name="gobo-kernel-safe" location="$GOBO\library\kernel\library-safe.ecf"/>
-		<library name="gobo-pattern-safe" location="$GOBO\library\pattern\gobo-pattern-safe.ecf"/>
-		<library name="gobo-structure-confident" location="$GOBO\library\structure\gobo-structure-confident.ecf"/>
-		<library name="gobo-time-confident" location="$GOBO\library\time\gobo-time-confident.ecf"/>
-		<library name="gobo-math-safe" location="$GOBO\library\math\gobo-math-safe.ecf"/>
+		<library name="gobo-kernel" location="$GOBO\library\kernel\library.ecf"/>
+		<library name="gobo-pattern" location="$GOBO\library\pattern\gobo-pattern.ecf"/>
+		<library name="gobo-structure" location="$GOBO\library\structure\gobo-structure.ecf"/>
+		<library name="gobo-time" location="$GOBO\library\time\gobo-time.ecf"/>
+		<library name="gobo-math" location="$GOBO\library\math\gobo-math.ecf"/>
 		<cluster name="gobo-core" location=".\" recursive="false">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

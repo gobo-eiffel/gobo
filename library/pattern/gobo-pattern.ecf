@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="gobo-math" uuid="95784FE0-7B83-497E-BEC0-9F0C4F3035F2" library_target="gobo-math">
-	<target name="gobo-math">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="gobo-pattern" uuid="9DD3EC52-EF03-4C63-A5C5-4D07AE7B28ED" library_target="gobo-pattern">
+	<target name="gobo-pattern">
 		<root all_classes="true"/>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="transitional">
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" syntax="transitional">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
@@ -16,8 +16,8 @@
 				<custom name="GOBO_EIFFEL" value="ge"/>
 			</condition>
 		</library>
-		<library name="gobo-kernel-safe" location="$GOBO\library\kernel\library-safe.ecf"/>
-		<cluster name="gobo-math" location="$GOBO\library\math\decimal\" recursive="true">
+		<library name="gobo-kernel" location="$GOBO\library\kernel\library.ecf"/>
+		<cluster name="gobo-pattern" location="$GOBO\library\pattern\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>
 				<exclude>/CVS$</exclude>

@@ -2,11 +2,11 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="gobo-math" uuid="95784FE0-7B83-497E-BEC0-9F0C4F3035F2" library_target="gobo-math">
 	<target name="gobo-math">
 		<root all_classes="true"/>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="transitional">
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="none" syntax="transitional">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
-		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf" readonly="true">
+		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf" readonly="true">
 			<condition>
 				<custom name="GOBO_EIFFEL" excluded_value="ge"/>
 			</condition>
@@ -16,7 +16,7 @@
 				<custom name="GOBO_EIFFEL" value="ge"/>
 			</condition>
 		</library>
-		<library name="gobo-kernel-safe" location="$GOBO\library\kernel\library-safe.ecf"/>
+		<library name="gobo-kernel-safe" location="$GOBO\library\kernel\library.ecf"/>
 		<cluster name="gobo-math" location="$GOBO\library\math\decimal\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>
