@@ -665,6 +665,9 @@ feature {NONE} -- Implementation
 			else
 				a_tester := key_equality_tester
 				if a_tester /= Void then
+					l_position := position
+					l_slots_position := slots_position
+					prev := clashes_previous_position
 					if
 						position = No_position or else
 						not a_tester.test (k, key_storage_item (position)) or else
@@ -687,10 +690,10 @@ feature {NONE} -- Implementation
 								i := clashes_item (i)
 							end
 						end
-						position := l_position
-						slots_position := l_slots_position
-						clashes_previous_position := prev
 					end
+					position := l_position
+					slots_position := l_slots_position
+					clashes_previous_position := prev
 				else
 					if position = No_position or else k /= key_storage_item (position) or else k = dead_key then
 						from
