@@ -122,7 +122,7 @@ feature {NONE} -- Cluster dependence constraints
 							end
 						end
 					elseif l_cluster.overridden_constraint_enabled then
-						l_overridden_class := current_class.non_override_overridden_class
+						l_overridden_class := current_class.first_non_override_overridden_class
 						if l_overridden_class /= Void then
 							l_group := l_overridden_class.group
 							if l_group.is_cluster then
@@ -159,7 +159,7 @@ feature {NONE} -- Cluster dependence constraints
 										end
 									end
 								elseif l_cluster.overridden_constraint_enabled then
-									l_overridden_class := l_provider.non_override_overridden_class
+									l_overridden_class := l_provider.first_non_override_overridden_class
 									if l_overridden_class /= Void then
 										l_provider_group := l_overridden_class.group
 										if l_provider_group.is_cluster then

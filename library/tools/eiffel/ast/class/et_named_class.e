@@ -61,6 +61,12 @@ feature -- Access
 			unignorable_actual_class_not_void: Result /= Void
 		end
 
+	first_non_override_overridden_class: ET_CLASS
+			-- First class other than `actual_class' that is not in an override group;
+			-- Void if no such class
+		deferred
+		end
+
 	actual_intrinsic_class: ET_CLASS
 			-- Actual class, not taking into account (recursively) the
 			-- fact that a class may be overridden by classes declared

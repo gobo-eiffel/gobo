@@ -705,7 +705,7 @@ feature -- Preparsing
 			definition: Result = Current
 		end
 
-	non_override_overridden_class: ET_CLASS
+	first_non_override_overridden_class: ET_CLASS
 			-- First overridden class that is not in an override group;
 			-- Void if no such class
 		local
