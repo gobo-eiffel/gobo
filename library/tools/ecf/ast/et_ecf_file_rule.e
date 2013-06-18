@@ -33,8 +33,8 @@ feature {NONE} -- Initialization
 		do
 			exclude := a_exclude
 			include := a_include
-			exclude_regexp := compile_regexp (exclude)
-			include_regexp := compile_regexp (include)
+			exclude_regexp := compiled_regexp (exclude)
+			include_regexp := compiled_regexp (include)
 		ensure
 			exclude_set: exclude = a_exclude
 			include_set: include = a_include
@@ -47,15 +47,11 @@ feature -- Status report
 			-- That means it is either not excluded or it is included.
 		do
 			Result := True
-			if exclude_regexp /= Void and then exclude_regexp.is_compiled then
-				exclude_regexp.match (a_pathname)
-				if exclude_regexp.has_matched then
-					Result := False
-					if include_regexp /= Void and then include_regexp.is_compiled then
-							-- It's excluded, check if there is an include that matches
-						include_regexp.match (a_pathname)
-						Result := include_regexp.has_matched
-					end
+			if exclude_regexp /= Void and then exclude_regexp.there_exists (agent {RX_PCRE_REGULAR_EXPRESSION}.matches (a_pathname)) then
+				Result := False
+				if include_regexp /= Void then
+						-- It's excluded, check if there is an include that matches.
+					Result := include_regexp.there_exists (agent {RX_PCRE_REGULAR_EXPRESSION}.matches (a_pathname))
 				end
 			end
 		end
@@ -70,35 +66,32 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	exclude_regexp: RX_PCRE_REGULAR_EXPRESSION
-			-- Exclude regular expression
+	exclude_regexp: DS_ARRAYED_LIST [RX_PCRE_REGULAR_EXPRESSION]
+			-- Exclude regular expressions
 
-	include_regexp: RX_PCRE_REGULAR_EXPRESSION
-			-- Include regular expression
+	include_regexp: DS_ARRAYED_LIST [RX_PCRE_REGULAR_EXPRESSION]
+			-- Include regular expressions
 
-	compile_regexp (a_patterns: DS_HASH_SET [STRING]): RX_PCRE_REGULAR_EXPRESSION
-			-- Compile `a_patterns' into a regular expression
+	compiled_regexp (a_patterns: DS_HASH_SET [STRING]): DS_ARRAYED_LIST [RX_PCRE_REGULAR_EXPRESSION]
+			-- Compile `a_patterns' into a regular expression.
 		local
 			l_cursor: DS_HASH_SET_CURSOR [STRING]
-			l_regexp_str: STRING
+			l_regexp: RX_PCRE_REGULAR_EXPRESSION
 		do
 			if a_patterns /= Void and then not a_patterns.is_empty then
-				create l_regexp_str.make (50)
+				create Result.make (a_patterns.count)
 				l_cursor := a_patterns.new_cursor
 				from l_cursor.start until l_cursor.after loop
-					if not l_regexp_str.is_empty then
-						l_regexp_str.append_character ('|')
+					create l_regexp.make
+					if operating_system.is_windows then
+						l_regexp.set_caseless (True)
 					end
-					l_regexp_str.append_character ('(')
-					l_regexp_str.append_string (l_cursor.item)
-					l_regexp_str.append_character (')')
+					l_regexp.compile (l_cursor.item)
+					if l_regexp.is_compiled then
+						Result.put_last (l_regexp)
+					end
 					l_cursor.forth
 				end
-				create Result.make
-				if operating_system.is_windows then
-					Result.set_caseless (True)
-				end
-				Result.compile (l_regexp_str)
 			end
 		end
 
@@ -106,5 +99,9 @@ invariant
 
 	no_void_exclude: exclude /= Void implies not exclude.has_void
 	no_void_include: include /= Void implies not include.has_void
+	no_void_exclude_regexp: exclude_regexp /= Void implies not exclude_regexp.has_void
+	exclude_regexp_compiled: exclude_regexp /= Void implies exclude_regexp.for_all (agent {RX_PCRE_REGULAR_EXPRESSION}.is_compiled)
+	no_void_include_regexp: include_regexp /= Void implies not include_regexp.has_void
+	include_regexp_compiled: include_regexp /= Void implies include_regexp.for_all (agent {RX_PCRE_REGULAR_EXPRESSION}.is_compiled)
 
 end
