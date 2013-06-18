@@ -63,6 +63,26 @@ feature -- Access
 			not_void: has_class (a_class) implies Result /= Void
 		end
 
+feature -- Iteration
+
+	base_classes_there_exists (a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN]): BOOLEAN
+			-- Is `a_test' true for at least one of the base classes?
+			-- (Semantics not guaranteed if `a_test' changes the list.)
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				if a_test.item ([storage.item (i).base_class]) then
+					Result := True
+						-- Jump out of the loop.
+					i := nb + 1
+				else
+					i := i + 1
+				end
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	fixed_array: KL_SPECIAL_ROUTINES [ET_BASE_TYPE]
