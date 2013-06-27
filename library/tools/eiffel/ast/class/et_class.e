@@ -27,7 +27,8 @@ inherit
 			make as make_type,
 			reset as reset_type,
 			type_mark as class_mark,
-			actual_parameters as formal_parameters
+			actual_parameters as formal_parameters,
+			actual_parameter_count as formal_parameter_count
 		undefine
 			upper_name, lower_name
 		redefine
