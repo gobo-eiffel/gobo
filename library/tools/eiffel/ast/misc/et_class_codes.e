@@ -38,11 +38,11 @@ feature -- Status report
 	is_numeric (a_code: NATURAL_8): BOOLEAN
 			-- Does `a_code' correspond to a numeric class?
 			--
-			-- Note: a basic class is one of "INTEGER_8", "INTEGER_16",
+			-- Note: a numeric class is one of "INTEGER_8", "INTEGER_16",
 			-- "INTEGER_32", "INTEGER_64", "NATURAL_8", "NATURAL_16",
 			-- "NATURAL_32", "NATURAL_64", "REAL_32", "REAL_64".
 		do
-			Result := boolean_class_code <= a_code and a_code <= pointer_class_code
+			Result := integer_8_class_code <= a_code and a_code <= real_64_class_code
 		end
 
 feature -- Access
