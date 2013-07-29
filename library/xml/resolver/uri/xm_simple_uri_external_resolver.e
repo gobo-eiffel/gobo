@@ -57,7 +57,7 @@ feature -- Status report
 			-- intermediate values directly.)
 
 	supports_registering_schemes: BOOLEAN
-			-- Does `Current' support resgitering scheme resolvers?
+			-- Does `Current' support registering scheme resolvers?
 		do
 			Result := True
 		end
