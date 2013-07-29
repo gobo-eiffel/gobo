@@ -262,75 +262,60 @@ feature -- Element change
 		do
 			ms := a_duration.millisecond_count
 			if ms /= 0 then
-				time_storage := time_storage + ms
-				if time_storage < 0 then
-					d := -((-time_storage) // Day_shift) - 1
-					time_storage := Day_shift - ((-time_storage) \\ Day_shift)
-				else
-					d := time_storage // Day_shift
-					time_storage := time_storage \\ Day_shift
-				end
+				add_milliseconds (ms)
 			end
 			add_years_months_days (a_duration.year, a_duration.month, a_duration.day + d)
 		end
 
 	add_hours (h: INTEGER)
 			-- Add `h' hours to `Current'.
+		local
+			ts: INTEGER_64
+			h64: INTEGER_64
 		do
 			if h /= 0 then
-				time_storage := time_storage + h * Hour_shift
-				if time_storage < 0 then
-					add_days (-((-time_storage) // Day_shift) - 1)
-					time_storage := Day_shift - ((-time_storage) \\ Day_shift)
-				else
-					add_days (time_storage // Day_shift)
-					time_storage := time_storage \\ Day_shift
-				end
+				h64 := h
+				ts := time_storage + h64 * Hour_shift
+				set_normalized_time_storage (ts)
 			end
 		end
 
 	add_minutes (m: INTEGER)
 			-- Add `m' minutes to `Current'.
+		local
+			ts: INTEGER_64
+			m64: INTEGER_64
 		do
 			if m /= 0 then
-				time_storage := time_storage + m * Minute_shift
-				if time_storage < 0 then
-					add_days (-((-time_storage) // Day_shift) - 1)
-					time_storage := Day_shift - ((-time_storage) \\ Day_shift)
-				else
-					add_days (time_storage // Day_shift)
-					time_storage := time_storage \\ Day_shift
-				end
+				m64 := m
+				ts := time_storage + m64 * Minute_shift
+				set_normalized_time_storage (ts)
 			end
 		end
 
 	add_seconds (s: INTEGER)
 			-- Add `s' seconds to `Current'.
+		local
+			ts: INTEGER_64
+			s64: INTEGER_64
 		do
 			if s /= 0 then
-				time_storage := time_storage + s * Second_shift
-				if time_storage < 0 then
-					add_days (-((-time_storage) // Day_shift) - 1)
-					time_storage := Day_shift - ((-time_storage) \\ Day_shift)
-				else
-					add_days (time_storage // Day_shift)
-					time_storage := time_storage \\ Day_shift
-				end
+				s64 := s
+				ts := time_storage + s64 * Second_shift
+				set_normalized_time_storage (ts)
 			end
 		end
 
 	add_milliseconds (ms: INTEGER)
 			-- Add `ms' milliseconds to `Current'.
+		local
+			ts: INTEGER_64
+			ms64: INTEGER_64
 		do
 			if ms /= 0 then
-				time_storage := time_storage + ms
-				if time_storage < 0 then
-					add_days (-((-time_storage) // Day_shift) - 1)
-					time_storage := Day_shift - ((-time_storage) \\ Day_shift)
-				else
-					add_days (time_storage // Day_shift)
-					time_storage := time_storage \\ Day_shift
-				end
+				ms64 := ms
+				ts := time_storage + ms64
+				set_normalized_time_storage (ts)
 			end
 		end
 
@@ -350,6 +335,21 @@ feature -- Comparison
 			other_not_void: other /= Void
 		do
 			Result := date_storage = other.date_storage and time_storage = other.time_storage
+		end
+
+feature {NONE} -- Implementation
+
+	set_normalized_time_storage (ts: INTEGER_64)
+			-- Set `time_storage' to `ts', and next normalise it to best
+			-- fit `date_storage' and `time_storage'.
+		do
+			if ts < 0 then
+				add_days ((-((-ts) // Day_shift) - 1).to_integer)
+				time_storage := (Day_shift - ((-ts) \\ Day_shift)).to_integer
+			else
+				add_days ((ts // Day_shift).to_integer)
+				time_storage := (ts \\ Day_shift).to_integer
+			end
 		end
 
 end
