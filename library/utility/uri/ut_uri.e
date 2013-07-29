@@ -497,7 +497,7 @@ feature -- If authority is <userinfo>@<host>:<port>
 		local
 			p: INTEGER
 		do
-			Result := authority /= Void and then not authority.is_empty
+			Result := has_authority and then not authority.is_empty
 			if Result then
 				p := authority.index_of ('@', 1)
 				Result := is_valid_host_port (authority.substring (p + 1, authority.count))
