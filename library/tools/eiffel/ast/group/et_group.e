@@ -5,7 +5,7 @@ note
 		"Groups of Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/15 $"
 	revision: "$Revision: #9 $"
@@ -24,7 +24,7 @@ inherit
 
 feature -- Initialization
 
-	reset_absolute_pathname: STRING
+	reset_absolute_pathname
 			-- Force the computation of `absolute_pathname' next time
 			-- it will be called. This is useful when the values of the
 			-- environment variables have changed or when the cluster
