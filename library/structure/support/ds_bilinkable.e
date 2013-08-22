@@ -5,7 +5,7 @@ note
 		"Linkable cells with a reference to their left and right neighbors"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,7 +25,7 @@ create
 
 feature -- Access
 
-	left: like Current
+	left: detachable like Current
 			-- Left neighbor
 
 feature -- Element change

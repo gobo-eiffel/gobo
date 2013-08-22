@@ -2,9 +2,9 @@
 
 <library name="structure" prefix="ds_">
 	<description>
-		description: "Xace fle for the Gobo Eiffel Structure Library"
+		description: "Xace file for the Gobo Eiffel Structure Library"
 		library: "Gobo Eiffel Structure Library"
-		copyright:  "Copyright (c) 2001, Eric Bezault and others"
+		copyright:  "Copyright (c) 2001-2013, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -20,4 +20,7 @@
 		<cluster name="support"/>
 		<cluster name="table"/>
 	</cluster>
+
+	<mount location="${GOBO}/library/kernel.xace"/>
+	<mount location="${GOBO}/library/kernel/library.xace"/>
 </library>

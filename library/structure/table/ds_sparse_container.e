@@ -5,7 +5,7 @@ note
 		"Sparse containers. Used for implementation of sparse tables and sparse sets."
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2003-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/10/06 $"
 	revision: "$Revision: #16 $"
@@ -19,8 +19,7 @@ inherit
 	DS_BILINEAR [G]
 		redefine
 			has,
-			occurrences,
-			cursor_off
+			occurrences
 		end
 
 	DS_RESIZABLE [G]
@@ -114,17 +113,15 @@ feature -- Measurement
 			-- if not void, use `=' criterion otherwise.)
 		local
 			i: INTEGER
-			a_tester: like equality_tester
 		do
 			i := last_position
-			a_tester := equality_tester
-			if a_tester /= Void then
+			if attached equality_tester as l_tester then
 				from
 				until
 					i < 1
 				loop
 					if clashes_item (i) > Free_watermark then
-						if a_tester.test (item_storage_item (i), v) then
+						if l_tester.test (item_storage_item (i), v) then
 							Result := Result + 1
 						end
 					end
@@ -154,16 +151,14 @@ feature -- Status report
 			-- if not void, use `=' criterion otherwise.)
 		local
 			i: INTEGER
-			a_tester: like equality_tester
 		do
 			i := last_position
-			a_tester := equality_tester
-			if a_tester /= Void then
+			if attached equality_tester as l_tester then
 				from
 				until
 					i < 1
 				loop
-					if clashes_item (i) > Free_watermark and then a_tester.test (item_storage_item (i), v) then
+					if clashes_item (i) > Free_watermark and then l_tester.test (item_storage_item (i), v) then
 						Result := True
 							-- Jump out of the loop.
 						i := 0
@@ -417,16 +412,12 @@ feature -- Duplication
 			-- Copy `other' to current container.
 			-- Move all cursors `off' (unless `other = Current').
 		local
-			old_cursor: like new_cursor
+			old_cursor: detachable like new_cursor
 		do
 			if other /= Current then
 				old_cursor := internal_cursor
 				move_all_cursors_after
 				standard_copy (other)
-					-- Set `internal_cursor' to Void before calling
-					-- `valid_cursor' and `new_cursor' to avoid an
-					-- invariant violation.
-				set_internal_cursor (Void)
 				if old_cursor /= Void and then valid_cursor (old_cursor) then
 					set_internal_cursor (old_cursor)
 				else
@@ -532,19 +523,17 @@ feature -- Optimization
 			-- Do not lose any item. Do not move cursors.
 		local
 			i, j, nb, h: INTEGER
-			dead_item: G
-			dead_key: K
 		do
 			if last_position /= count then
 				unset_found_item
 				nb := last_position
 				from
 					i := 1
+					j := 1
 				until
 					i > nb
 				loop
 					if clashes_item (i) > Free_watermark then
-						j := j + 1
 						if j /= i then
 							item_storage_put (item_storage_item (i), j)
 							key_storage_put (key_storage_item (i), j)
@@ -553,21 +542,15 @@ feature -- Optimization
 							clashes_put (No_position, j)
 							move_all_cursors (i, j)
 						end
+						j := j + 1
 					end
 					i := i + 1
 				end
-				from
-					j := j + 1
-				until
-					j > nb
-				loop
-					item_storage_put (dead_item, j)
-					key_storage_put (dead_key, j)
-					j := j + 1
-				end
+				nb := count
+				item_storage_keep_head (nb + 1)
+				key_storage_keep_head (nb + 1)
 				clashes_wipe_out
 				slots_wipe_out
-				nb := count
 				from
 					i := 1
 				until
@@ -584,7 +567,7 @@ feature -- Optimization
 		ensure
 			same_count: count = old count
 			compressed: last_position = count
-			not_reszied: capacity = old capacity
+			not_resized: capacity = old capacity
 		end
 
 feature {DS_SPARSE_CONTAINER_CURSOR} -- Implementation
@@ -597,7 +580,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Implementation
 			-- Item at position `i' in `item_storage'
 		require
 			i_large_enough: i >= 1
-			i_small_enough: i <= capacity
+			i_small_enough: i <= last_position
 		deferred
 		end
 
@@ -605,7 +588,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Implementation
 			-- Put `v' at position `i' in `item_storage'.
 		require
 			i_large_enough: i >= 1
-			i_small_enough: i <= capacity
+			i_small_enough: i <= last_position
 		deferred
 		ensure
 			inserted: item_storage_item (i) = v
@@ -615,7 +598,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Implementation
 			-- Item at position `i' in `key_storage'
 		require
 			i_large_enough: i >= 1
-			i_small_enough: i <= capacity
+			i_small_enough: i <= last_position
 		deferred
 		end
 
@@ -655,23 +638,20 @@ feature {NONE} -- Implementation
 			prev: INTEGER
 			l_position: INTEGER
 			l_slots_position: INTEGER
-			dead_key: K
-			a_tester: like key_equality_tester
 		do
 			if k = Void then
 				position := slots_item (modulus)
 				slots_position := modulus
 				clashes_previous_position := No_position
 			else
-				a_tester := key_equality_tester
-				if a_tester /= Void then
+				if attached key_equality_tester as l_tester then
 					l_position := position
 					l_slots_position := slots_position
 					prev := clashes_previous_position
 					if
 						position = No_position or else
-						not a_tester.test (k, key_storage_item (position)) or else
-						a_tester.test (k, dead_key)
+						clashes_item (position) = Free_watermark or else
+						not l_tester.test (k, key_storage_item (position))
 					then
 						from
 							l_slots_position := hash_position (k)
@@ -681,7 +661,7 @@ feature {NONE} -- Implementation
 						until
 							i = No_position
 						loop
-							if a_tester.test (k, key_storage_item (i)) then
+							if l_tester.test (k, key_storage_item (i)) then
 								l_position := i
 									-- Jump out of the loop.
 								i := No_position
@@ -695,7 +675,11 @@ feature {NONE} -- Implementation
 					slots_position := l_slots_position
 					clashes_previous_position := prev
 				else
-					if position = No_position or else k /= key_storage_item (position) or else k = dead_key then
+					if
+						position = No_position or else
+						clashes_item (position) = Free_watermark or else
+						k /= key_storage_item (position)
+					then
 						from
 							slots_position := hash_position (k)
 							i := slots_item (slots_position)
@@ -727,7 +711,7 @@ feature {NONE} -- Implementation
 					(slots_item (slots_position) = position)
 		end
 
-	key_equality_tester: KL_EQUALITY_TESTER [K]
+	key_equality_tester: detachable KL_EQUALITY_TESTER [K]
 			-- Equality tester for keys;
 			-- A void equality tester means that `='
 			-- will be used as comparison criterion.
@@ -757,8 +741,7 @@ feature {NONE} -- Implementation
 			valid_position: valid_position (i)
 			valid_slot: valid_slot (i)
 		local
-			dead_item: G
-			k, dead_key: K
+			k: K
 			h: INTEGER
 			a_tester: like key_equality_tester
 		do
@@ -782,12 +765,19 @@ feature {NONE} -- Implementation
 			else
 				clashes_put (clashes_item (position), clashes_previous_position)
 			end
-			item_storage_put (dead_item, position)
-			key_storage_put (dead_key, position)
 			if free_slot = No_position and position = last_position then
-				last_position := last_position - 1
+				item_storage_keep_head (position)
+				key_storage_keep_head (position)
 				clashes_put (No_position, position)
+				position := No_position
+				last_position := last_position - 1
 			else
+				if ({G}).has_default then
+					item_storage_put (({G}).default, position)
+				end
+				if ({K}).has_default then
+					key_storage_put (({K}).default, position)
+				end
 				clashes_put (Free_offset - free_slot, position)
 				free_slot := position
 			end
@@ -821,6 +811,14 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
+	item_storage_keep_head (n: INTEGER)
+			-- Keep the first `n' items in `item_storage'.
+		require
+			non_negative_argument: n >= 0
+			less_than_count: n <= last_position + 1
+		deferred
+		end
+
 	make_key_storage (n: INTEGER)
 			-- Create storage for keys of the set indexed
 			-- from 0 to `n-1' (position 0 is not used).
@@ -833,7 +831,7 @@ feature {NONE} -- Implementation
 			-- Put `k' at position `i' in `key_storage'.
 		require
 			i_large_enough: i >= 1
-			i_small_enough: i <= capacity
+			i_small_enough: i <= last_position
 		deferred
 		end
 
@@ -851,6 +849,14 @@ feature {NONE} -- Implementation
 
 	key_storage_wipe_out
 			-- Wipe out items in `key_storage'.
+		deferred
+		end
+
+	key_storage_keep_head (n: INTEGER)
+			-- Keep the first `n' items in `key_storage'.
+		require
+			non_negative_argument: n >= 0
+			less_than_count: n <= last_position + 1
 		deferred
 		end
 
@@ -985,14 +991,14 @@ feature {NONE} -- Cursor movements
 	move_all_cursors_after
 			-- Move `after' all cursors.
 		local
-			a_cursor, next_cursor: like new_cursor
+			a_cursor, next_cursor: detachable like new_cursor
 		do
 			from
 				a_cursor := internal_cursor
 			until
 				(a_cursor = Void)
 			loop
-				a_cursor.set_position (after_position)
+				a_cursor.set_after
 				next_cursor := a_cursor.next_cursor
 				a_cursor.set_next_cursor (Void)
 				a_cursor := next_cursor
@@ -1006,7 +1012,7 @@ feature {NONE} -- Cursor movements
 			valid_old_position: valid_position (old_position)
 			valid_new_position: valid_position (new_position) and then valid_slot (new_position)
 		local
-			a_cursor: like new_cursor
+			a_cursor: detachable like new_cursor
 		do
 			from
 				a_cursor := internal_cursor
@@ -1025,11 +1031,12 @@ feature {NONE} -- Cursor movements
 		require
 			valid_old_position: valid_position (old_position)
 		local
-			a_cursor, previous_cursor, next_cursor: like new_cursor
+			a_cursor, next_cursor: detachable like new_cursor
+			previous_cursor: like new_cursor
 		do
 			a_cursor := internal_cursor
 			if a_cursor.position = old_position then
-				a_cursor.set_position (after_position)
+				a_cursor.set_after
 			end
 			previous_cursor := a_cursor
 			a_cursor := a_cursor.next_cursor
@@ -1038,7 +1045,7 @@ feature {NONE} -- Cursor movements
 				(a_cursor = Void)
 			loop
 				if a_cursor.position = old_position then
-					a_cursor.set_position (after_position)
+					a_cursor.set_after
 					next_cursor := a_cursor.next_cursor
 					previous_cursor.set_next_cursor (next_cursor)
 					a_cursor.set_next_cursor (Void)
@@ -1081,18 +1088,6 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			Result := item_storage_item (a_cursor.position)
 		end
 
-	cursor_after (a_cursor: like new_cursor): BOOLEAN
-			-- Is there no valid position to right of `a_cursor'?
-		do
-			Result := (a_cursor.position = after_position)
-		end
-
-	cursor_before (a_cursor: like new_cursor): BOOLEAN
-			-- Is there no valid position to left of `a_cursor'?
-		do
-			Result := (a_cursor.position = before_position)
-		end
-
 	cursor_is_first (a_cursor: like new_cursor): BOOLEAN
 			-- Is `a_cursor' on first item?
 		local
@@ -1127,12 +1122,6 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			end
 		end
 
-	cursor_off (a_cursor: like new_cursor): BOOLEAN
-			-- Is there no item at `a_cursor' position?
-		do
-			Result := (a_cursor.position < 0)
-		end
-
 	cursor_same_position (a_cursor, other: like new_cursor): BOOLEAN
 			-- Is `a_cursor' at same position as `other'?
 		do
@@ -1146,7 +1135,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			was_off: BOOLEAN
 		do
 			if is_empty then
-				a_cursor.set_position (after_position)
+				a_cursor.set_after
 			else
 				was_off := cursor_off (a_cursor)
 				from
@@ -1158,7 +1147,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 					i := i + 1
 				end
 				if i > nb then
-					a_cursor.set_position (after_position)
+					a_cursor.set_after
 					if not was_off then
 						remove_traversing_cursor (a_cursor)
 					end
@@ -1178,7 +1167,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			was_off: BOOLEAN
 		do
 			if is_empty then
-				a_cursor.set_position (before_position)
+				a_cursor.set_before
 			else
 				was_off := cursor_off (a_cursor)
 				from
@@ -1189,7 +1178,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 					i := i - 1
 				end
 				if i < 0 then
-					a_cursor.set_position (before_position)
+					a_cursor.set_before
 					if not was_off then
 						remove_traversing_cursor (a_cursor)
 					end
@@ -1210,7 +1199,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			p: INTEGER
 		do
 			p := a_cursor.position
-			if p = before_position then
+			if p = a_cursor.before_position then
 				was_off := True
 				i := 0
 			else
@@ -1225,7 +1214,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 				i := i + 1
 			end
 			if i > nb then
-				a_cursor.set_position (after_position)
+				a_cursor.set_after
 				if not was_off then
 					remove_traversing_cursor (a_cursor)
 				end
@@ -1245,7 +1234,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			p: INTEGER
 		do
 			p := a_cursor.position
-			if p = after_position then
+			if p = a_cursor.after_position then
 				was_off := True
 				i := last_position
 			else
@@ -1259,7 +1248,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 				i := i - 1
 			end
 			if i < 1 then
-				a_cursor.set_position (before_position)
+				a_cursor.set_before
 				if not was_off then
 					remove_traversing_cursor (a_cursor)
 				end
@@ -1277,14 +1266,11 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
 			-- Move `after' if not found.
-		local
-			a_tester: like equality_tester
 		do
-			a_tester := equality_tester
-			if a_tester /= Void then
+			if attached equality_tester as l_tester then
 				from
 				until
-					cursor_after (a_cursor) or else a_tester.test (cursor_item (a_cursor), v)
+					cursor_after (a_cursor) or else l_tester.test (cursor_item (a_cursor), v)
 				loop
 					cursor_forth (a_cursor)
 				end
@@ -1305,14 +1291,11 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
 			-- Move `before' if not found.
-		local
-			a_tester: like equality_tester
 		do
-			a_tester := equality_tester
-			if a_tester /= Void then
+			if attached equality_tester as l_tester then
 				from
 				until
-					cursor_before (a_cursor) or else a_tester.test (cursor_item (a_cursor), v)
+					cursor_before (a_cursor) or else l_tester.test (cursor_item (a_cursor), v)
 				loop
 					cursor_back (a_cursor)
 				end
@@ -1333,7 +1316,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			was_off: BOOLEAN
 		do
 			was_off := cursor_off (a_cursor)
-			a_cursor.set_position (after_position)
+			a_cursor.set_after
 			if not was_off then
 				remove_traversing_cursor (a_cursor)
 			end
@@ -1345,7 +1328,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			was_off: BOOLEAN
 		do
 			was_off := cursor_off (a_cursor)
-			a_cursor.set_position (before_position)
+			a_cursor.set_before
 			if not was_off then
 				remove_traversing_cursor (a_cursor)
 			end
@@ -1366,12 +1349,6 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 				remove_traversing_cursor (a_cursor)
 			end
 		end
-
-	before_position: INTEGER = -1
-			-- Special value for before cursor position
-
-	after_position: INTEGER = -2
-			-- Special values for after cursor position
 
 feature {NONE} -- Configuration
 

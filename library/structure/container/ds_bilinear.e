@@ -5,7 +5,7 @@ note
 		"Data structures that can be traversed forward and backward"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,8 +16,7 @@ inherit
 
 	DS_LINEAR [G]
 		redefine
-			new_cursor,
-			cursor_off
+			new_cursor
 		end
 
 feature -- Access
@@ -52,6 +51,8 @@ feature -- Status report
 			-- Is there no valid position to left of internal cursor?
 		do
 			Result := cursor_before (internal_cursor)
+		ensure
+			before_constraint: Result implies off
 		end
 
 feature -- Cursor movement
@@ -93,14 +94,6 @@ feature -- Cursor movement
 			before: before
 		end
 
-feature {DS_CURSOR} -- Cursor implementation
-
-	cursor_off (a_cursor: like new_cursor): BOOLEAN
-			-- Is there no item at `a_cursor' position?
-		do
-			Result := cursor_after (a_cursor) or cursor_before (a_cursor)
-		end
-
 feature {DS_BILINEAR_CURSOR} -- Cursor implementation
 
 	cursor_is_last (a_cursor: like new_cursor): BOOLEAN
@@ -120,7 +113,8 @@ feature {DS_BILINEAR_CURSOR} -- Cursor implementation
 		require
 			a_cursor_not_void: a_cursor /= Void
 			a_cursor_valid: valid_cursor (a_cursor)
-		deferred
+		do
+			Result := a_cursor.before
 		end
 
 	cursor_finish (a_cursor: like new_cursor)
@@ -168,7 +162,6 @@ feature {DS_BILINEAR_CURSOR} -- Cursor implementation
 
 invariant
 
-	not_both: initialized implies (not (after and before))
-	before_constraint: initialized implies (before implies off)
+	not_both: not (after and before)
 
 end

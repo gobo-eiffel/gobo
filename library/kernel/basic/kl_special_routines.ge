@@ -104,7 +104,7 @@ feature -- Element change
 		require
 			a_array_not_void: a_array /= Void
 			i_large_enough: i >= 0
-			i_small_enough: i <= a_array.count
+			i_small_enough: i < a_array.capacity
 			not_full: i = a_array.count implies a_array.count < a_array.capacity
 		do
 			if i < a_array.count then

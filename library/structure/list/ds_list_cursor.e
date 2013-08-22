@@ -5,7 +5,7 @@ note
 		"Cursors for list traversals"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -229,7 +229,7 @@ feature -- Removal
 
 feature {DS_LIST} -- Implementation
 
-	next_cursor: DS_LIST_CURSOR [G]
+	next_cursor: detachable DS_LIST_CURSOR [G]
 			-- Next cursor
 			-- (Used by `container' to keep track of traversing
 			-- cursors (i.e. cursors associated with `container'

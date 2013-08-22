@@ -5,7 +5,7 @@ note
 		"Cells containing two hashable items"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2013, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,14 +27,14 @@ feature -- Access
 	hash_code: INTEGER
 			-- Hash code value
 		do
-			if first /= Void then
-				if second /= Void then
-					Result := first.hash_code // 2 + second.hash_code // 2
+			if attached first as l_first then
+				if attached second as l_second then
+					Result := l_first.hash_code // 2 + l_second.hash_code // 2
 				else
-					Result := first.hash_code
+					Result := l_first.hash_code
 				end
-			elseif second /= Void then
-				Result := second.hash_code
+			elseif attached second as l_second then
+				Result := l_second.hash_code
 			else
 				Result := 0
 			end

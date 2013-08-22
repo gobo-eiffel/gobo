@@ -9,7 +9,7 @@ note
 		are DS_AVL_TREE and DS_RED_BLACK_TREE.
 	]"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2008-2009, Daniel Tuser and others"
+	copyright: "Copyright (c) 2008-2013, Daniel Tuser and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -53,7 +53,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	new_tree_node (a_item: G; a_key: K): like root_node
+	new_tree_node (a_item: G; a_key: K): attached like root_node
 			-- Returns a new tree node instance where `a_item' is
 			-- associated with `a_key'.
 		do
@@ -82,15 +82,14 @@ feature -- Element change
 	replace (v: G; k: K)
 			-- Replace item associated with `k' by `v'.
 			-- (Performance: O(height).)
-		local
-			l_node: like root_node
 		do
 			search_insert_position (k)
-			l_node := found_node
-			check
-				found: exact_insert_position_found
+			check found_node_not_void: attached found_node as l_node then
+				check
+					found: exact_insert_position_found
+				end
+				l_node.set_item (v)
 			end
-			l_node.set_item (v)
 		end
 
 	put (v: G; k: K)
@@ -132,7 +131,7 @@ feature -- Element change
 
 feature {NONE} -- Element change
 
-	on_node_added (a_node: like root_node)
+	on_node_added (a_node: attached like root_node)
 			-- `a_node' was just added to the binary search tree.
 			-- This feature is basically used by balanced binary
 			-- search tree variants. They are informed which
@@ -152,7 +151,7 @@ feature {NONE} -- Removal
 		do
 		end
 
-	on_node_removed (a_old_node, a_node: like root_node; a_was_left_child: BOOLEAN)
+	on_node_removed (a_old_node, a_node: attached like root_node; a_was_left_child: BOOLEAN)
 			-- `a_old_node' was just removed from the tree.
 			-- The parent of `a_old_node' was `a_node'.
 			-- Depending on `a_was_left_child' `a_old_node'
@@ -190,7 +189,7 @@ feature -- Duplication
 
 feature {NONE} -- Implementation
 
-	root_node: DS_BINARY_SEARCH_TREE_NODE [G, K]
+	root_node: detachable DS_BINARY_SEARCH_TREE_NODE [G, K]
 			-- Root node
 
 end

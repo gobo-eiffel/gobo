@@ -10,7 +10,7 @@ note
 		in Eiffel.
 	]"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,12 +21,13 @@ inherit
 
 	DS_BILINEAR_CURSOR [K]
 		redefine
-			next_cursor
+			next_cursor,
+			before
 		end
 
 create {DS_SPARSE_TABLE_KEYS}
 
-	make
+	make, make_with_table_cursor
 
 feature {NONE} -- Initialization
 
@@ -42,17 +43,52 @@ feature {NONE} -- Initialization
 			before: before
 		end
 
+	make_with_table_cursor (a_container: like container; a_table_cursor: like table_cursor)
+			-- Create a new cursor for `a_container'.
+			-- `a_table_cursor' is a cursor for `a_container.table'.
+			--
+			-- This routine is to make the void-safe compiler happy,
+			-- with no qualified calls on `a_container'.
+		require
+			a_container_not_void: a_container /= Void
+			a_table_cursor_not_void: a_table_cursor /= Void
+		do
+			container := a_container
+			table_cursor := a_table_cursor
+		ensure
+			container_set: container = a_container
+			table_cursor_set: table_cursor = a_table_cursor
+-- The following precondition is commented out because
+-- ISE 7.3 in void-safe mode does not accept qualified calls
+-- here (and there is a qualified call in `before').
+--			before: before
+		end
+
 feature -- Access
 
 	container: DS_SPARSE_TABLE_KEYS [G, K]
 			-- Container traversed
 
+feature -- Status report
+
+	after: BOOLEAN
+			-- Is there no valid position to right of cursor?
+		do
+			Result := table_cursor.after
+		end
+
+	before: BOOLEAN
+			-- Is there no valid position to left of cursor?
+		do
+			Result := table_cursor.before
+		end
+
 feature {DS_SPARSE_TABLE_KEYS} -- Implementation
 
-	table_cursor: DS_SPARSE_TABLE_CURSOR [G, K]
+	table_cursor: like container.table.new_cursor
 			-- Cursor for the table to which the keys belong
 
-	next_cursor: DS_SPARSE_TABLE_KEYS_CURSOR [G, K]
+	next_cursor: detachable DS_SPARSE_TABLE_KEYS_CURSOR [G, K]
 			-- Next cursor
 			-- (Used by `container' to keep track of traversing
 			-- cursors (i.e. cursors associated with `container'

@@ -51,7 +51,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	root_node: DS_RED_BLACK_TREE_NODE [G, K]
+	root_node: detachable DS_RED_BLACK_TREE_NODE [G, K]
 			-- Root node of the tree
 
 end

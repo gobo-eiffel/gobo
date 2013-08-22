@@ -5,7 +5,7 @@ note
 		"Lists implemented with arrays"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -80,7 +80,9 @@ feature {NONE} -- Initialization
 			-- Use `=' as comparison criterion.
 		require
 			other_not_void: other /= Void
-			not_same: other /= Current
+-- The following precondition is commented out because it is not
+-- accepted by ISE 7.3 in void-safe mode.
+--			not_same: other /= Current
 		local
 			other_cursor: DS_LINEAR_CURSOR [G]
 			i, nb: INTEGER
@@ -194,16 +196,14 @@ feature -- Measurement
 			-- if not void, use `=' criterion otherwise.)
 		local
 			i: INTEGER
-			a_tester: like equality_tester
 		do
 			i := count
-			a_tester := equality_tester
-			if a_tester /= Void then
+			if attached  equality_tester as l_tester then
 				from
 				until
 					i < 1
 				loop
-					if a_tester.test (storage.item (i), v) then
+					if l_tester.test (storage.item (i), v) then
 						Result := Result + 1
 					end
 					i := i - 1
@@ -230,16 +230,14 @@ feature -- Status report
 			-- if not void, use `=' criterion otherwise.)
 		local
 			i: INTEGER
-			a_tester: like equality_tester
 		do
 			i := count
-			a_tester := equality_tester
-			if a_tester /= Void then
+			if attached equality_tester as l_tester then
 				from
 				until
 					i < 1
 				loop
-					if a_tester.test (storage.item (i), v) then
+					if l_tester.test (storage.item (i), v) then
 						Result := True
 							-- Jump out of the loop.
 						i := 0
@@ -279,7 +277,7 @@ feature -- Duplication
 			-- Move all cursors `off' (unless `other = Current').
 			-- (Performance: O(other.count).)
 		local
-			old_cursor: like new_cursor
+			old_cursor: detachable like new_cursor
 		do
 			if other /= Current then
 				old_cursor := internal_cursor
@@ -288,9 +286,6 @@ feature -- Duplication
 				if old_cursor /= Void and then valid_cursor (old_cursor) then
 					set_internal_cursor (old_cursor)
 				else
-						-- Set `internal_cursor' to Void before calling
-						-- `new_cursor' to avoid an invariant violation.
-					set_internal_cursor (Void)
 					set_internal_cursor (new_cursor)
 				end
 					-- Note: do not use `storage.twin' because SPECIAL.copy may
@@ -759,13 +754,11 @@ feature -- removal
 		local
 			i, j, nb: INTEGER
 			old_count: INTEGER
-			a_tester: like equality_tester
 		do
 			move_all_cursors_after
 			if not is_empty then
 				nb := count
-				a_tester := equality_tester
-				if a_tester /= Void then
+				if attached equality_tester as l_tester then
 					from
 						i := 1
 					until
@@ -773,13 +766,13 @@ feature -- removal
 					loop
 						from
 						until
-							i > nb or else not a_tester.test (storage.item (i), v)
+							i > nb or else not l_tester.test (storage.item (i), v)
 						loop
 							i := i + 1
 						end
 						from
 						until
-							i > nb or else a_tester.test (storage.item (i), v)
+							i > nb or else l_tester.test (storage.item (i), v)
 						loop
 							j := j + 1
 							storage.put (storage.item (i), j)
@@ -948,14 +941,14 @@ feature {NONE} -- Cursor movement
 	move_all_cursors_after
 			-- Move `after' all cursors.
 		local
-			a_cursor, next_cursor: like new_cursor
+			a_cursor, next_cursor: detachable like new_cursor
 		do
 			from
 				a_cursor := internal_cursor
 			until
 				(a_cursor = Void)
 			loop
-				a_cursor.set_position (after_position)
+				a_cursor.set_after
 				next_cursor := a_cursor.next_cursor
 				a_cursor.set_next_cursor (Void)
 				a_cursor := next_cursor
@@ -966,12 +959,13 @@ feature {NONE} -- Cursor movement
 			-- Move `after' all cursors at last position.
 		local
 			i: INTEGER
-			a_cursor, previous_cursor, next_cursor: like new_cursor
+			a_cursor, next_cursor: detachable like new_cursor
+			previous_cursor: like new_cursor
 		do
 			i := count
 			a_cursor := internal_cursor
 			if a_cursor.position = i then
-				a_cursor.set_position (after_position)
+				a_cursor.set_after
 			end
 			previous_cursor := a_cursor
 			a_cursor := a_cursor.next_cursor
@@ -980,7 +974,7 @@ feature {NONE} -- Cursor movement
 				(a_cursor = Void)
 			loop
 				if a_cursor.position = i then
-					a_cursor.set_position (after_position)
+					a_cursor.set_after
 					next_cursor := a_cursor.next_cursor
 					previous_cursor.set_next_cursor (next_cursor)
 					a_cursor.set_next_cursor (Void)
@@ -999,7 +993,7 @@ feature {NONE} -- Cursor movement
 			valid_i: 2 <= i and i <= count
 		local
 			j: INTEGER
-			a_cursor: like new_cursor
+			a_cursor: detachable like new_cursor
 		do
 			from
 				a_cursor := internal_cursor
@@ -1021,7 +1015,7 @@ feature {NONE} -- Cursor movement
 			valid_index: 1 <= i and i <= (count - offset + 1)
 			positive_offset: offset >= 0
 		local
-			a_cursor: like new_cursor
+			a_cursor: detachable like new_cursor
 			j: INTEGER
 		do
 			from
@@ -1051,21 +1045,9 @@ feature {DS_ARRAYED_LIST_CURSOR} -- Cursor implementation
 			-- (Performance: O(1).)
 		do
 			Result := a_cursor.position
-			if Result = after_position then
+			if Result = a_cursor.after_position then
 				Result := count + 1
 			end
-		end
-
-	cursor_after (a_cursor: like new_cursor): BOOLEAN
-			-- Is there no valid position to right of `a_cursor'?
-		do
-			Result := (a_cursor.position = after_position)
-		end
-
-	cursor_before (a_cursor: like new_cursor): BOOLEAN
-			-- Is there no valid position to left of `a_cursor'?
-		do
-			Result := a_cursor.position = 0
 		end
 
 	cursor_is_first (a_cursor: like new_cursor): BOOLEAN
@@ -1094,7 +1076,7 @@ feature {DS_ARRAYED_LIST_CURSOR} -- Cursor implementation
 		do
 			was_off := a_cursor.off
 			if is_empty then
-				a_cursor.set_position (after_position)
+				a_cursor.set_after
 			else
 				a_cursor.set_position (1)
 				if was_off then
@@ -1127,7 +1109,7 @@ feature {DS_ARRAYED_LIST_CURSOR} -- Cursor implementation
 			was_off := (p = 0)
 			p := p + 1
 			if p > count then
-				p := after_position
+				p := a_cursor.after_position
 				if not was_off then
 					remove_traversing_cursor (a_cursor)
 				end
@@ -1145,7 +1127,7 @@ feature {DS_ARRAYED_LIST_CURSOR} -- Cursor implementation
 			p: INTEGER
 		do
 			p := a_cursor.position
-			if p = after_position then
+			if p = a_cursor.after_position then
 				was_off := True
 				p := count
 			else
@@ -1169,17 +1151,15 @@ feature {DS_ARRAYED_LIST_CURSOR} -- Cursor implementation
 			-- Move `after' if not found.
 		local
 			i, nb: INTEGER
-			a_tester: like equality_tester
 			was_off: BOOLEAN
 		do
 			was_off := a_cursor.off
 			i := a_cursor.index
 			nb := count
-			a_tester := equality_tester
-			if a_tester /= Void then
+			if attached equality_tester as l_tester then
 				from
 				until
-					i > nb or else a_tester.test (item (i), v)
+					i > nb or else l_tester.test (item (i), v)
 				loop
 					i := i + 1
 				end
@@ -1193,7 +1173,7 @@ feature {DS_ARRAYED_LIST_CURSOR} -- Cursor implementation
 				end
 			end
 			if i > nb then
-				a_cursor.set_position (after_position)
+				a_cursor.set_after
 				if not was_off then
 					remove_traversing_cursor (a_cursor)
 				end
@@ -1214,16 +1194,14 @@ feature {DS_ARRAYED_LIST_CURSOR} -- Cursor implementation
 			-- (Performance: O(a_cursor.index).)
 		local
 			i: INTEGER
-			a_tester: like equality_tester
 			was_off: BOOLEAN
 		do
 			was_off := a_cursor.off
 			i := a_cursor.position
-			a_tester := equality_tester
-			if a_tester /= Void then
+			if attached equality_tester as l_tester then
 				from
 				until
-					i < 1 or else a_tester.test (item (i), v)
+					i < 1 or else l_tester.test (item (i), v)
 				loop
 					i := i - 1
 				end
@@ -1253,7 +1231,7 @@ feature {DS_ARRAYED_LIST_CURSOR} -- Cursor implementation
 			was_off: BOOLEAN
 		do
 			was_off := a_cursor.off
-			a_cursor.set_position (after_position)
+			a_cursor.set_after
 			if not was_off then
 				remove_traversing_cursor (a_cursor)
 			end
@@ -1297,7 +1275,7 @@ feature {DS_ARRAYED_LIST_CURSOR} -- Cursor implementation
 		do
 			was_off := a_cursor.off
 			if i > count then
-				a_cursor.set_position (after_position)
+				a_cursor.set_after
 				if not was_off then
 					remove_traversing_cursor (a_cursor)
 				end
@@ -1312,9 +1290,6 @@ feature {DS_ARRAYED_LIST_CURSOR} -- Cursor implementation
 				end
 			end
 		end
-
-	after_position: INTEGER = -1
-			-- Special value for after cursor position
 
 invariant
 

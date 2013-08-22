@@ -6,7 +6,7 @@ note
 		%using `hash_code' from HASHABLE by default."
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Hashing
 
-	hash_function: KL_HASH_FUNCTION [G]
+	hash_function: detachable KL_HASH_FUNCTION [G]
 			-- Hash function to compute position in the container
 
 	set_hash_function (a_hash_function: like hash_function)
@@ -57,8 +57,8 @@ feature {NONE} -- Implementation
 			-- if not Void, `v.hash_code' otherwise.
 		do
 			if v /= Void then
-				if hash_function /= Void then
-					Result := hash_function.hash_code (v) \\ modulus
+				if attached hash_function as l_hash_function then
+					Result := l_hash_function.hash_code (v) \\ modulus
 				else
 					Result := v.hash_code \\ modulus
 				end

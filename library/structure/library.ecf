@@ -3,18 +3,18 @@
 	xmlns="http://www.eiffel.com/developers/xml/configuration-1-9-0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-9-0 http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd"
-	name="kernel"
-	uuid="E1FFE100-60B0-0002-0001-000020130812"
-	library_target="kernel">
+	name="structure"
+	uuid="E1FFE100-60B0-0003-0001-000020130812"
+	library_target="structure">
 
 	<description>
-		description: "ECF file for the Gobo Eiffel Kernel Library"
-		library: "Gobo Eiffel Kernel Library"
-		copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
+		description: "ECF file for the Gobo Eiffel Structure Library"
+		library: "Gobo Eiffel Structure Library"
+		copyright: "Copyright (c) 2001-2013, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 
-	<target name="kernel">
+	<target name="structure">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
@@ -40,19 +40,8 @@
 			</condition>
 		</library>
 
-		<cluster name="kernel" location="./" recursive="true">
-			<file_rule>
-				<exclude>/ge$</exclude>
-				<condition>
-					<custom name="GOBO_EIFFEL" excluded_value="ge"/>
-				</condition>
-			</file_rule>
-			<file_rule>
-				<exclude>/ise$</exclude>
-				<condition>
-					<custom name="GOBO_EIFFEL" value="ge"/>
-				</condition>
-			</file_rule>
-		</cluster>
+		<library name="kernel" location="$GOBO/library/kernel/library.ecf" readonly="true"/>
+
+		<cluster name="structure" location="./" recursive="true"/>
 	</target>
 </system>

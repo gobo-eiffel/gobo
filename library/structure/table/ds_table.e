@@ -5,7 +5,7 @@ note
 		"Data structures whose items are accessible through keys"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2000-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,7 +31,7 @@ feature -- Access
 		deferred
 		end
 
-	value (k: K): G
+	value (k: K): detachable G
 			-- Item associated with `k';
 			-- Return default value if no such item
 		require else

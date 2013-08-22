@@ -5,7 +5,7 @@ note
 		"Cursors for arrayed list traversals"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,7 +16,8 @@ inherit
 
 	DS_LIST_CURSOR [G]
 		redefine
-			next_cursor
+			next_cursor,
+			before
 		end
 
 create
@@ -41,6 +42,20 @@ feature -- Access
 
 	container: DS_ARRAYED_LIST [G]
 			-- List traversed
+
+feature -- Status report
+
+	after: BOOLEAN
+			-- Is there no valid position to right of cursor?
+		do
+			Result := (position = after_position)
+		end
+
+	before: BOOLEAN
+			-- Is there no valid position to left of cursor?
+		do
+			Result := (position = 0)
+		end
 
 feature -- Element change
 
@@ -71,7 +86,7 @@ feature {DS_ARRAYED_LIST} -- Implementation
 	set_after
 			-- Set `position' to after position.
 		do
-			position := container.after_position
+			position := after_position
 		ensure
 			after: after
 		end
@@ -87,16 +102,19 @@ feature {DS_ARRAYED_LIST} -- Implementation
 	valid_position (p: INTEGER): BOOLEAN
 			-- Is `p' a valid value for `position'?
 		do
-			Result := p = container.after_position or (0 <= p and p <= container.count)
+			Result := p = after_position or (0 <= p and p <= container.count)
 		ensure
 			not_off: (1 <= p and p <= container.count) implies Result
 			before: (p = 0) implies Result
-			after: (p = container.after_position) implies Result
+			after: (p = after_position) implies Result
 		end
+
+	after_position: INTEGER = -1
+			-- Special value for after cursor position
 
 feature {DS_ARRAYED_LIST} -- Implementation
 
-	next_cursor: DS_ARRAYED_LIST_CURSOR [G]
+	next_cursor: detachable DS_ARRAYED_LIST_CURSOR [G]
 			-- Next cursor
 			-- (Used by `container' to keep track of traversing
 			-- cursors (i.e. cursors associated with `container'

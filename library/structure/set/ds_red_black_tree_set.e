@@ -8,7 +8,7 @@ note
 		It is guaranteed that `height' is always about `log_2 (count)'.
 	]"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2008-2009, Daniel Tuser and others"
+	copyright: "Copyright (c) 2008-2013, Daniel Tuser and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -62,7 +62,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	root_node: DS_RED_BLACK_TREE_SET_NODE [G]
+	root_node: detachable DS_RED_BLACK_TREE_SET_NODE [G]
 			-- Root node of tree
 
 end

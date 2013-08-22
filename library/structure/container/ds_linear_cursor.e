@@ -5,7 +5,7 @@ note
 		"Cursors for data structures that can be traversed forward"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,8 +40,15 @@ feature -- Status report
 
 	after: BOOLEAN
 			-- Is there no valid position to right of cursor?
+		deferred
+		ensure
+			after_constraint: Result implies off
+		end
+
+	off: BOOLEAN
+			-- Is there no item at cursor position?
 		do
-			Result := container.cursor_after (Current)
+			Result := after
 		end
 
 feature -- Cursor movement
@@ -85,14 +92,10 @@ feature -- Cursor movement
 
 feature {DS_LINEAR} -- Implementation
 
-	next_cursor: DS_LINEAR_CURSOR [G]
+	next_cursor: detachable DS_LINEAR_CURSOR [G]
 			-- Next cursor
 			-- (Used by `container' to keep track of traversing
 			-- cursors (i.e. cursors associated with `container'
 			-- and which are not currently `off').)
-
-invariant
-
-	after_constraint: after implies off
 
 end

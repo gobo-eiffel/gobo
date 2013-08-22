@@ -5,7 +5,7 @@ note
 		"Data structures that may be traversed forward"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/10/06 $"
 	revision: "$Revision: #8 $"
@@ -57,6 +57,8 @@ feature -- Status report
 			-- Is there no valid position to right of internal cursor?
 		do
 			Result := cursor_after (internal_cursor)
+		ensure
+			after_constraint: Result implies off
 		end
 
 	has (v: G): BOOLEAN
@@ -217,14 +219,6 @@ feature -- Duplication
 			same_count: Result.count = count
 		end
 
-feature {DS_CURSOR} -- Cursor implementation
-
-	cursor_off (a_cursor: like new_cursor): BOOLEAN
-			-- Is there no item at `a_cursor' position?
-		do
-			Result := cursor_after (a_cursor)
-		end
-
 feature {DS_LINEAR_CURSOR} -- Cursor implementation
 
 	cursor_is_first (a_cursor: like new_cursor): BOOLEAN
@@ -244,7 +238,8 @@ feature {DS_LINEAR_CURSOR} -- Cursor implementation
 		require
 			a_cursor_not_void: a_cursor /= Void
 			a_cursor_valid: valid_cursor (a_cursor)
-		deferred
+		do
+			Result := a_cursor.after
 		end
 
 	cursor_start (a_cursor: like new_cursor)
@@ -289,9 +284,5 @@ feature {DS_LINEAR_CURSOR} -- Cursor implementation
 		ensure
 			a_cursor_after: cursor_after (a_cursor)
 		end
-
-invariant
-
-	after_constraint: initialized implies (after implies off)
 
 end

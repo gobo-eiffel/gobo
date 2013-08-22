@@ -5,7 +5,7 @@ note
 		"Cursors for multi-arrayed hash set traversals"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,7 +31,7 @@ feature -- Access
 
 feature {DS_MULTIARRAYED_HASH_SET} -- Implementation
 
-	next_cursor: DS_MULTIARRAYED_HASH_SET_CURSOR [G]
+	next_cursor: detachable DS_MULTIARRAYED_HASH_SET_CURSOR [G]
 			-- Next cursor
 			-- (Used by `container' to keep track of traversing
 			-- cursors (i.e. cursors associated with `container'

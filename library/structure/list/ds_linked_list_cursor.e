@@ -5,7 +5,7 @@ note
 		"Cursors for linked list traversals"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -48,7 +48,9 @@ feature -- Access
 			-- Item at cursor position
 			-- (Performance: O(1).)
 		do
-			Result := current_cell.item
+			check not_off: attached current_cell as l_attached_current_cell then
+				Result := l_attached_current_cell.item
+			end
 		end
 
 	container: DS_LINKED_LIST [G]
@@ -66,6 +68,8 @@ feature -- Status report
 			-- Is there no item at cursor position?
 		do
 			Result := (current_cell = Void)
+		ensure then
+			definition: Result = (current_cell = Void)
 		end
 
 	same_position (other: like Current): BOOLEAN
@@ -80,17 +84,19 @@ feature -- Element change
 			-- Replace item at cursor position by `v'.
 			-- (Performance: O(1).)
 		do
-			current_cell.put (v)
+			check not_off: attached current_cell as l_attached_current_cell then
+				l_attached_current_cell.put (v)
+			end
 		end
 
 feature {DS_LINKED_LIST, DS_LINKED_LIST_CURSOR} -- Implementation
 
-	current_cell: DS_LINKABLE [G]
+	current_cell: detachable DS_LINKABLE [G]
 			-- Cell at cursor position
 
 feature {DS_LINKED_LIST} -- Implementation
 
-	set_current_cell (a_cell: like current_cell)
+	set_current_cell (a_cell: attached like current_cell)
 			-- Set `current_cell' to `a_cell'.
 			-- Do not change `after' or `before'.
 		require
@@ -139,14 +145,10 @@ feature {DS_LINKED_LIST} -- Implementation
 
 feature {DS_LINKED_LIST} -- Implementation
 
-	next_cursor: DS_LINKED_LIST_CURSOR [G]
+	next_cursor: detachable DS_LINKED_LIST_CURSOR [G]
 			-- Next cursor
 			-- (Used by `container' to keep track of traversing
 			-- cursors (i.e. cursors associated with `container'
 			-- and which are not currently `off').)
-
-invariant
-
-	off_definition: off = (current_cell = Void)
 
 end

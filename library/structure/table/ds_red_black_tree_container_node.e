@@ -5,7 +5,7 @@ note
 		"Red-back tree nodes with a color"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2008, Daniel Tuser and others"
+	copyright: "Copyright (c) 2008-2013, Daniel Tuser and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,33 +18,21 @@ inherit
 
 feature {DS_RED_BLACK_TREE_CONTAINER, DS_RED_BLACK_TREE_CONTAINER_NODE} -- Access
 
-	grand_parent: like parent
-			-- Parent of `parent';
-			-- May be Void
-		do
-			if parent /= Void then
-				Result := parent.parent
-			else
-				Result := Void
-			end
-		end
-
 	uncle: like parent
 			-- The other child of `grand_parent'
 		require
 			grand_parent_not_void: grand_parent /= Void
-		local
-			tmp_grand_parent: like parent
 		do
-			tmp_grand_parent := grand_parent
-			if parent = tmp_grand_parent.left_child then
-				Result := tmp_grand_parent.right_child
-			else
-				Result := tmp_grand_parent.left_child
+			check grand_parent_not_void: attached grand_parent as l_grand_parent then
+				if parent = l_grand_parent.left_child then
+					Result := l_grand_parent.right_child
+				else
+					Result := l_grand_parent.left_child
+				end
 			end
 		end
 
-feature {DS_RED_BLACK_TREE_CONTAINER} -- Status report
+feature {DS_RED_BLACK_TREE_CONTAINER, DS_RED_BLACK_TREE_CONTAINER_NODE} -- Status report
 
 	is_red: BOOLEAN
 			-- Is the node red?
@@ -55,12 +43,44 @@ feature {DS_RED_BLACK_TREE_CONTAINER} -- Status report
 			Result := not is_red
 		end
 
+	is_left_child_red: BOOLEAN
+			-- Is `left_child' red?
+		do
+			if attached left_child as l_left_child then
+				Result := l_left_child.is_red
+			end
+		end
+
+	is_left_child_black: BOOLEAN
+			-- Is `left_child' black?
+		do
+			if attached left_child as l_left_child then
+				Result := l_left_child.is_black
+			end
+		end
+
+	is_right_child_red: BOOLEAN
+			-- Is `right_child' red?
+		do
+			if attached right_child as l_right_child then
+				Result := l_right_child.is_red
+			end
+		end
+
+	is_right_child_black: BOOLEAN
+			-- Is `right_child' black?
+		do
+			if attached right_child as l_right_child then
+				Result := l_right_child.is_black
+			end
+		end
+
 	is_ancestor_of (a_node: like Current): BOOLEAN
 			-- Is `Current' an ancestor of `a_node'?
 		require
 			a_node_not_void: a_node /= Void
 		local
-			l_node: like Current
+			l_node: detachable like Current
 		do
 			from
 				l_node := Current
@@ -90,11 +110,11 @@ feature {DS_RED_BLACK_TREE_CONTAINER, DS_RED_BLACK_TREE_CONTAINER_NODE} -- Measu
 		local
 			left, right: INTEGER
 		do
-			if left_child /= Void then
-				left := left_child.number_of_black_nodes_in_branches
+			if attached left_child as l_left_child then
+				left := l_left_child.number_of_black_nodes_in_branches
 			end
-			if right_child /= Void then
-				right := right_child.number_of_black_nodes_in_branches
+			if attached right_child as l_right_child then
+				right := l_right_child.number_of_black_nodes_in_branches
 			end
 			if left = right then
 				Result := left

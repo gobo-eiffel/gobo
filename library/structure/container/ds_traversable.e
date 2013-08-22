@@ -7,7 +7,7 @@ note
 		%can be used for simultaneous traversals."
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,7 +33,11 @@ feature -- Access
 		deferred
 		ensure
 			cursor_not_void: Result /= Void
-			valid_cursor: valid_cursor (Result)
+-- The following postcondition has been commented out in order
+-- to make the ISE Eiffel compiler 7.3 happy when compiling in
+-- void-safe mode. No qualified call is allowed when calling
+-- `new_cursor' from the creation procedure.
+--			valid_cursor: valid_cursor (Result)
 		end
 
 feature -- Status report
@@ -42,6 +46,8 @@ feature -- Status report
 			-- Is there no item at internal cursor position?
 		do
 			Result := cursor_off (internal_cursor)
+		ensure
+			empty_constraint: is_empty implies Result
 		end
 
 	same_position (a_cursor: like new_cursor): BOOLEAN
@@ -77,6 +83,8 @@ feature {NONE} -- Cursor implementation
 
 	set_internal_cursor (c: like internal_cursor)
 			-- Set `internal_cursor' to `c'.
+		require
+			c_not_void: c /= Void
 		deferred
 		ensure
 			internal_cursor_set: internal_cursor = c
@@ -85,6 +93,9 @@ feature {NONE} -- Cursor implementation
 	internal_cursor: like new_cursor
 			-- Internal cursor
 		deferred
+		ensure
+			internal_cursor_not_void: Result /= Void
+			valid_internal_cursor: valid_cursor (Result)
 		end
 
 feature {DS_CURSOR} -- Cursor implementation
@@ -103,7 +114,8 @@ feature {DS_CURSOR} -- Cursor implementation
 		require
 			a_cursor_not_void: a_cursor /= Void
 			a_cursor_valid: valid_cursor (a_cursor)
-		deferred
+		do
+			Result := a_cursor.off
 		end
 
 	cursor_same_position (a_cursor, other: like new_cursor): BOOLEAN
@@ -147,7 +159,8 @@ feature {DS_CURSOR} -- Cursor implementation
 		require
 			a_cursor_not_void: a_cursor /= Void
 		local
-			current_cursor, previous_cursor: like new_cursor
+			current_cursor: detachable like new_cursor
+			previous_cursor: like new_cursor
 		do
 			if a_cursor /= internal_cursor then
 				from
@@ -165,24 +178,5 @@ feature {DS_CURSOR} -- Cursor implementation
 				end
 			end
 		end
-
-feature {NONE} -- Implementation
-
-	initialized: BOOLEAN
-			-- Some Eiffel compilers check invariants even when the
-			-- execution of the creation procedure is not completed.
-			-- (In this case, checking the assertions of the being
-			-- created `internal_cursor' triggers the invariants
-			-- on the current container. So these invariants need
-			-- to be protected.)
-		do
-			Result := (internal_cursor /= Void)
-		end
-
-invariant
-
-	empty_constraint: initialized implies (is_empty implies off)
-	internal_cursor_not_void: initialized implies (internal_cursor /= Void)
-	valid_internal_cursor: initialized implies valid_cursor (internal_cursor)
 
 end

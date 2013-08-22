@@ -6,7 +6,7 @@ note
 		%hash tables which should supply its hashing mechanism."
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -67,11 +67,9 @@ feature {NONE} -- Implementation
 
 	make_item_storage (n: INTEGER)
 			-- Create `item_storage'.
-		local
-			l_dead_item: G
 		do
 			create special_item_routines
-			item_storage := special_item_routines.make_filled (l_dead_item, n)
+			item_storage := special_item_routines.make (n)
 		end
 
 	clone_item_storage
@@ -84,26 +82,20 @@ feature {NONE} -- Implementation
 
 	item_storage_resize (n: INTEGER)
 			-- Resize `item_storage'.
-		local
-			l_dead_item: G
 		do
-			item_storage := special_item_routines.aliased_resized_area_with_default (item_storage, l_dead_item, n)
+			item_storage := special_item_routines.resize (item_storage, n)
 		end
 
 	item_storage_wipe_out
 			-- Wipe out items in `item_storage'.
-		local
-			i: INTEGER
-			dead_item: G
 		do
-			from
-				i := last_position
-			until
-				i < 1
-			loop
-				item_storage.put (dead_item, i)
-				i := i - 1
-			end
+			special_item_routines.keep_head (item_storage, 0, last_position + 1)
+		end
+
+	item_storage_keep_head (n: INTEGER)
+			-- Keep the first `n' items in `item_storage'.
+		do
+			special_item_routines.keep_head (item_storage, n, last_position + 1)
 		end
 
 	key_storage: SPECIAL [K]
@@ -111,11 +103,9 @@ feature {NONE} -- Implementation
 
 	make_key_storage (n: INTEGER)
 			-- Create `key_storage'.
-		local
-			l_dead_key: K
 		do
 			create special_key_routines
-			key_storage := special_key_routines.make_filled (l_dead_key, n)
+			key_storage := special_key_routines.make (n)
 		end
 
 	key_storage_put (k: K; i: INTEGER)
@@ -134,26 +124,20 @@ feature {NONE} -- Implementation
 
 	key_storage_resize (n: INTEGER)
 			-- Resize `key_storage'.
-		local
-			l_dead_key: K
 		do
-			key_storage := special_key_routines.aliased_resized_area_with_default (key_storage, l_dead_key, n)
+			key_storage := special_key_routines.resize (key_storage, n)
 		end
 
 	key_storage_wipe_out
 			-- Wipe out items in `key_storage'.
-		local
-			i: INTEGER
-			dead_key: K
 		do
-			from
-				i := last_position
-			until
-				i < 1
-			loop
-				key_storage.put (dead_key, i)
-				i := i - 1
-			end
+			special_key_routines.keep_head (key_storage, 0, last_position + 1)
+		end
+
+	key_storage_keep_head (n: INTEGER)
+			-- Keep the first `n' items in `key_storage'.
+		do
+			special_key_routines.keep_head (key_storage, n, last_position + 1)
 		end
 
 	clashes: SPECIAL [INTEGER]

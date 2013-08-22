@@ -19,7 +19,7 @@ note
 		the binary search tree container classes.
 	]"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2008-2012, Daniel Tuser and others"
+	copyright: "Copyright (c) 2008-2013, Daniel Tuser and others"
 	license: "MIT License"
 	date: "$Date: 2010/10/06 $"
 	revision: "$Revision: #11 $"
@@ -61,13 +61,17 @@ feature -- Access
 	first: G
 			-- First item in container
 		do
-			Result := first_node.item
+			check not_empty: attached first_node as l_first_node then
+				Result := l_first_node.item
+			end
 		end
 
 	last: G
 			-- Last item in container
 		do
-			Result := last_node.item
+			check not_empty: attached last_node as l_last_node then
+				Result := l_last_node.item
+			end
 		end
 
 	new_cursor: DS_BINARY_SEARCH_TREE_CONTAINER_CURSOR [G, K]
@@ -84,13 +88,12 @@ feature {NONE} -- Access
 			has_k: has_key (k)
 		do
 			search_node (k)
-			check
-				found_node_not_void: found_node /= Void
+			check found_node_not_void: attached found_node as l_found_node then
+				Result := l_found_node.item
 			end
-			Result := found_node.item
 		end
 
-	value (k: K): G
+	value (k: K): detachable G
 			-- Item associated with key `k', if `k' exists;
 			-- Default value otherwise
 			-- (Performance: O(height).)
@@ -117,32 +120,31 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Access
 			-- Left most binary tree node;
 			-- The `key' of this node is less than the `key' of all other nodes in the tree.
 
-	successor (v: like root_node): like root_node
+	successor (v: attached like root_node): like root_node
 			-- Successor of `v' if it exists, Void otherwise
 			-- (Performance: O(height).)
 		require
 			v_not_void: v /= Void
 		do
-			if v.right_child /= Void then
+			if attached v.right_child as l_right_child then
 				from
-					Result := v.right_child
+					Result := l_right_child
 				until
-					Result.left_child = Void
+					not attached Result.left_child as l_left_child
 				loop
-					Result := Result.left_child
+					Result := l_left_child
 				end
-			elseif v.parent /= Void then
-				Result := v.parent
+			elseif attached v.parent as l_v_parent then
+				Result := l_v_parent
 				if Result.right_child = v then
 					from
-						Result := v.parent
 					until
-						Result.parent = Void or else Result.parent.left_child = Result
+						not attached Result.parent as l_parent or else l_parent.left_child = Result
 					loop
-						Result := Result.parent
+						Result := l_parent
 					end
-					if Result.parent /= Void and then Result.parent.left_child = Result then
-						Result := Result.parent
+					if attached Result.parent as l_parent and then l_parent.left_child = Result then
+						Result := l_parent
 					else
 						Result := Void
 					end
@@ -152,7 +154,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Access
 			successor_in_same_tree: Result /= Void implies are_nodes_in_same_tree (Result, v)
 		end
 
-	successor_for_removal (v: like root_node): like root_node
+	successor_for_removal (v: attached like root_node): attached like root_node
 			-- Successor of `v'. Used by `remove'.
 			-- (Performance: O(height).)
 		require
@@ -161,11 +163,13 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Access
 			v_is_in_tree: is_node_in_tree (v)
 		do
 			from
-				Result := v.right_child
+				check v_has_right_child: attached v.right_child as l_right_child then
+					Result := l_right_child
+				end
 			until
-				Result.left_child = Void
+				not attached Result.left_child as l_left_child
 			loop
-				Result := Result.left_child
+				Result := l_left_child
 			end
 		ensure
 			successor_not_void: Result /= Void
@@ -181,33 +185,32 @@ feature {NONE} -- Access
 	found_node: like root_node
 			-- Node used as result for `search_node' and `search_insert_position'
 
-	predecessor (v: like root_node): like root_node
+	predecessor (v: attached like root_node): like root_node
 			-- Predecessor of `v' if it exists, Void otherwise
 			-- (Performance: O(height).)
 		require
 			v_not_void: v /= Void
 			v_is_in_tree: is_node_in_tree (v)
 		do
-			if v.left_child /= Void then
+			if attached v.left_child as l_left_child then
 				from
-					Result := v.left_child
+					Result := l_left_child
 				until
-					Result.right_child = Void
+					not attached Result.right_child as l_right_child
 				loop
-					Result := Result.right_child
+					Result := l_right_child
 				end
-			elseif v.parent /= Void then
-				Result := v.parent
+			elseif attached v.parent as l_v_parent then
+				Result := l_v_parent
 				if Result.left_child = v then
 					from
-						Result := v.parent
 					until
-						Result.parent = Void or else Result.parent.right_child = Result
+						not attached Result.parent as l_parent or else l_parent.right_child = Result
 					loop
-						Result := Result.parent
+						Result := l_parent
 					end
-					if Result.parent /= Void and Result.parent.right_child = Result then
-						Result := Result.parent
+					if attached Result.parent as l_parent and then l_parent.right_child = Result then
+						Result := l_parent
 					else
 						Result := Void
 					end
@@ -219,7 +222,7 @@ feature {NONE} -- Access
 			predecessor_is_in_tree: Result /= Void implies is_node_in_tree (Result)
 		end
 
-	new_tree_node (a_item: G; a_key: K): like root_node
+	new_tree_node (a_item: G; a_key: K): attached like root_node
 			-- New tree node where `a_item' is associated with `a_key'
 		deferred
 		ensure
@@ -239,8 +242,8 @@ feature -- Measurement
 			-- Maximum height of the binary search tree
 			-- (Performance: O(count).)
 		do
-			if root_node /= Void then
-				Result := root_node.height
+			if attached root_node as l_root_node then
+				Result := l_root_node.height
 			end
 		ensure
 			empty_tree_case: is_empty implies Result = 0
@@ -252,10 +255,10 @@ feature -- Status report
 	sorted: BOOLEAN
 			-- Is the binary search tree sorted?
 		do
-			if root_node = Void then
+			if not attached root_node as l_root_node then
 				Result := True
 			else
-				Result := root_node.sorted (key_comparator)
+				Result := l_root_node.sorted (key_comparator)
 			end
 		end
 
@@ -293,25 +296,25 @@ feature {NONE} -- Status report
 	key_comparator_settable (a_comparator: like key_comparator): BOOLEAN
 			-- Can `set_key_comparator' be called with `a_comparator'
 			-- as argument in current state of container?
+		require
+			a_comparator_not_void: a_comparator /= Void
 		do
-			Result := a_comparator /= Void and then is_empty
-		ensure
-			comparator_not_void: Result implies a_comparator /= Void
+			Result := is_empty
 		end
 
 feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Status report
 
-	is_node_in_tree (a_node: like root_node): BOOLEAN
+	is_node_in_tree (a_node: attached like root_node): BOOLEAN
 			-- Is `a_node' in current tree?
 		require
 			a_node_not_void: a_node /= Void
 		do
-			if root_node /= Void then
-				Result := are_nodes_in_same_tree (a_node, root_node)
+			if attached root_node as l_root_node then
+				Result := are_nodes_in_same_tree (a_node, l_root_node)
 			end
 		end
 
-	are_nodes_in_same_tree (a_node_1, a_node_2: like root_node): BOOLEAN
+	are_nodes_in_same_tree (a_node_1, a_node_2: attached like root_node): BOOLEAN
 			-- Has `a_node_1' the same `root_node' as `a_node_2'?
 		require
 			a_node_1_not_void: a_node_1 /= Void
@@ -324,18 +327,18 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Status report
 			invariant
 				l_root_node_1_not_void: l_root_node_1 /= Void
 			until
-				l_root_node_1.parent = Void
+				not attached l_root_node_1.parent as l_parent
 			loop
-				l_root_node_1 := l_root_node_1.parent
+				l_root_node_1 := l_parent
 			end
 			from
 				l_root_node_2 := a_node_2
 			invariant
 				l_root_node_2_not_void: l_root_node_2 /= Void
 			until
-				l_root_node_2.parent = Void
+				not attached l_root_node_2.parent as l_parent
 			loop
-				l_root_node_2 := l_root_node_2.parent
+				l_root_node_2 := l_parent
 			end
 			Result := l_root_node_1 = l_root_node_2
 		end
@@ -347,15 +350,15 @@ feature {NONE} -- Status report
 		local
 			l_node: like root_node
 		do
-			if root_node = Void then
+			if not attached root_node as l_root_node then
 				Result := first_node = Void
 			else
 				from
-					l_node := root_node
+					l_node := l_root_node
 				until
-					l_node.left_child = Void
+					not attached l_node.left_child as l_left_child
 				loop
-					l_node := l_node.left_child
+					l_node := l_left_child
 				end
 				Result := first_node = l_node
 			end
@@ -366,15 +369,15 @@ feature {NONE} -- Status report
 		local
 			l_node: like root_node
 		do
-			if root_node = Void then
+			if not attached root_node as l_root_node then
 				Result := last_node = Void
 			else
 				from
-					l_node := root_node
+					l_node := l_root_node
 				until
-					l_node.right_child = Void
+					not attached l_node.right_child as l_right_child
 				loop
-					l_node := l_node.right_child
+					l_node := l_right_child
 				end
 				Result := last_node = l_node
 			end
@@ -415,7 +418,7 @@ feature -- Comparison
 					l_other_node := other.first_node
 					Result := True
 				until
-					not Result or else l_current_node = Void
+					not Result or else l_current_node = Void or l_other_node = Void
 				loop
 					Result := l_current_node.item = l_other_node.item
 					l_current_node := successor (l_current_node)
@@ -429,6 +432,7 @@ feature {NONE} -- Setting
 	set_key_comparator (a_comparator: like key_comparator)
 			-- Set `key_comparator' to `a_comparator'.
 		require
+			a_comparator_not_void: a_comparator /= Void
 			key_comparator_settable: key_comparator_settable (a_comparator)
 		deferred
 		ensure
@@ -450,13 +454,17 @@ feature {DS_CURSOR} -- Cursor implementation
 	cursor_item (a_cursor: like new_cursor): G
 			-- Item at `a_cursor' position.
 		do
-			Result := a_cursor.position.item
+			check not_off: attached a_cursor.position as l_position then
+				Result := l_position.item
+			end
 		end
 
 	cursor_key (a_cursor: like new_cursor): K
 			-- Key at `a_cursor' position.
 		do
-			Result := a_cursor.position.key
+			check not_off: attached a_cursor.position as l_position then
+				Result := l_position.key
+			end
 		end
 
 	cursor_same_position (a_cursor, other: like new_cursor): BOOLEAN
@@ -464,7 +472,7 @@ feature {DS_CURSOR} -- Cursor implementation
 		do
 			Result := a_cursor.position = other.position
 			if Result and a_cursor.position = Void then
-				Result := a_cursor.is_before = other.is_before
+				Result := a_cursor.before = other.before
 			end
 		end
 
@@ -474,13 +482,13 @@ feature {DS_CURSOR} -- Cursor implementation
 			l_was_off: BOOLEAN
 		do
 			l_was_off := a_cursor.off
-			if other.position = Void then
-				a_cursor.set_is_before (other.is_before)
+			if not attached other.position as l_other_position then
+				a_cursor.set_before (other.before)
 				if not l_was_off then
 					remove_traversing_cursor (a_cursor)
 				end
 			else
-				a_cursor.set_position (other.position)
+				a_cursor.set_position (l_other_position)
 				if l_was_off then
 					add_traversing_cursor (a_cursor)
 				end
@@ -497,25 +505,20 @@ feature {DS_LINEAR_CURSOR} -- Cursor implementation
 			end
 		end
 
-	cursor_after (a_cursor: like new_cursor): BOOLEAN
-			-- Is there no valid position to right of `a_cursor'?
-		do
-			Result := a_cursor.position = Void and then not a_cursor.is_before
-		end
-
 	cursor_start (a_cursor: like new_cursor)
 			-- Move `a_cursor' to first position.
 		local
 			l_was_off: BOOLEAN
 		do
-			if is_empty then
-				cursor_go_after (a_cursor)
-			else
+			if attached first_node as l_first_node then
 				l_was_off := a_cursor.off
-				a_cursor.set_position (first_node)
+				a_cursor.set_position (l_first_node)
 				if l_was_off then
 					add_traversing_cursor (a_cursor)
 				end
+			else
+					-- `is_empty'
+				cursor_go_after (a_cursor)
 			end
 		end
 
@@ -528,13 +531,14 @@ feature {DS_LINEAR_CURSOR} -- Cursor implementation
 			l_position := a_cursor.position
 			l_has_cursor := l_position /= Void
 			l_add_cursor := True
-			if a_cursor.before then
+			if l_position = Void then
+					-- `a_cursor.before'
 				l_position := first_node
 			else
 				l_position := successor_for_cursor (l_position)
 			end
 			if l_position = Void then
-				a_cursor.set_is_before (False)
+				a_cursor.set_before (False)
 				l_add_cursor := False
 			else
 				a_cursor.set_position (l_position)
@@ -559,17 +563,17 @@ feature {DS_LINEAR_CURSOR} -- Cursor implementation
 				a_cursor.forth
 				l_was_off := True
 			end
-			if equality_tester = Void then
+			if attached equality_tester as l_tester then
 				from
 				until
-					a_cursor.after or else a_cursor.item = v
+					a_cursor.after or else l_tester.test (a_cursor.item, v)
 				loop
 					a_cursor.forth
 				end
 			else
 				from
 				until
-					a_cursor.after or else equality_tester.test (a_cursor.item, v)
+					a_cursor.after or else a_cursor.item = v
 				loop
 					a_cursor.forth
 				end
@@ -587,7 +591,7 @@ feature {DS_LINEAR_CURSOR} -- Cursor implementation
 			l_was_off: BOOLEAN
 		do
 			l_was_off := a_cursor.off
-			a_cursor.set_is_before (False)
+			a_cursor.set_before (False)
 			if not l_was_off then
 				remove_traversing_cursor (a_cursor)
 			end
@@ -603,25 +607,20 @@ feature {DS_BILINEAR_CURSOR} -- Cursor implementation
 			end
 		end
 
-	cursor_before (a_cursor: like new_cursor): BOOLEAN
-			-- Is there no valid position to left of `a_cursor'?
-		do
-			Result := a_cursor.position = Void and then a_cursor.is_before
-		end
-
 	cursor_finish (a_cursor: like new_cursor)
 			-- Move `a_cursor' to last position.
 		local
 			l_was_off: BOOLEAN
 		do
-			if is_empty then
-				cursor_go_before (a_cursor)
-			else
+			if attached last_node as l_last_node then
 				l_was_off := a_cursor.off
-				a_cursor.set_position (last_node)
+				a_cursor.set_position (l_last_node)
 				if l_was_off then
 					add_traversing_cursor (a_cursor)
 				end
+			else
+					-- `is_empty'
+				cursor_go_before (a_cursor)
 			end
 		end
 
@@ -633,14 +632,15 @@ feature {DS_BILINEAR_CURSOR} -- Cursor implementation
 		do
 			l_position := a_cursor.position
 			l_has_cursor := l_position /= Void
-			if a_cursor.after then
+			if l_position = Void then
+					-- `a_cursor.after'
 				l_position := last_node
 				l_add_cursor := True
 			else
 				l_position := predecessor_for_cursor (l_position)
 			end
 			if l_position = Void then
-				a_cursor.set_is_before (True)
+				a_cursor.set_before (True)
 				l_add_cursor := False
 			else
 				a_cursor.set_position (l_position)
@@ -665,17 +665,17 @@ feature {DS_BILINEAR_CURSOR} -- Cursor implementation
 				a_cursor.back
 				l_was_off := True
 			end
-			if equality_tester = Void then
+			if attached equality_tester as l_tester then
 				from
 				until
-					a_cursor.before or else a_cursor.item = v
+					a_cursor.before or else l_tester.test (a_cursor.item, v)
 				loop
 					a_cursor.back
 				end
 			else
 				from
 				until
-					a_cursor.before or else equality_tester.test (a_cursor.item, v)
+					a_cursor.before or else a_cursor.item = v
 				loop
 					a_cursor.back
 				end
@@ -693,7 +693,7 @@ feature {DS_BILINEAR_CURSOR} -- Cursor implementation
 			l_was_off: BOOLEAN
 		do
 			l_was_off := a_cursor.off
-			a_cursor.set_is_before (True)
+			a_cursor.set_before (True)
 			if not l_was_off then
 				remove_traversing_cursor (a_cursor)
 			end
@@ -710,26 +710,28 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER_CURSOR} -- Cursor implementation
 		do
 			l_was_off := a_cursor.off
 			if is_empty then
-				a_cursor.set_is_before (True)
+				a_cursor.set_before (True)
 			elseif k = Void then
-				a_cursor.set_is_before (True)
+				a_cursor.set_before (True)
 				if not l_was_off then
 					remove_traversing_cursor (a_cursor)
 				end
 			else
 				search_insert_position (k)
-				a_cursor.set_position (found_node)
-				if found_node.key = Void or else key_comparator.less_than (k, found_node.key) then
-					a_cursor.back
+				check found: attached found_node as l_found_node then
+					a_cursor.set_position (l_found_node)
+					if l_found_node.key = Void or else key_comparator.less_than (k, l_found_node.key) then
+						a_cursor.back
+					end
 				end
 			end
 		ensure
 			has_key_k_implies_a_cursor_points_to_it:
-				has_key (k) and k /= Void and a_cursor.position.key /= Void implies
-					key_comparator.order_equal (a_cursor.position.key, k)
+				has_key (k) and k /= Void and attached a_cursor.position as l_position and then attached l_position.key as l_key implies
+					key_comparator.order_equal (l_key, k)
 			k_greater_equal_cursor_positions_key:
-				not a_cursor.off and then a_cursor.position.key /= Void and k /= Void implies
-					key_comparator.greater_equal (k, a_cursor.position.key)
+				not a_cursor.off and then attached a_cursor.position as l_position and then attached l_position.key as l_key and then k /= Void implies
+					key_comparator.greater_equal (k, l_key)
 			a_cursor_not_after: not a_cursor.after
 		end
 
@@ -742,56 +744,57 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER_CURSOR} -- Cursor implementation
 		do
 			l_was_off := a_cursor.off
 			if is_empty then
-				a_cursor.set_is_before (False)
+				a_cursor.set_before (False)
 			elseif k = Void then
 				a_cursor.set_position (first_node)
 			else
 				search_insert_position (k)
-				a_cursor.set_position (found_node)
-				if found_node.key = Void or else key_comparator.greater_than (k, found_node.key) then
-					a_cursor.forth
+				check found: attached found_node as l_found_node then
+					a_cursor.set_position (l_found_node)
+					if l_found_node.key = Void or else key_comparator.greater_than (k, l_found_node.key) then
+						a_cursor.forth
+					end
 				end
 			end
 		ensure
 			has_key_k_implies_a_cursor_points_to_it:
-				has_key (k) and k /= Void and a_cursor.position.key /= Void implies
-					key_comparator.order_equal (a_cursor.position.key, k)
+				has_key (k) and k /= Void and attached a_cursor.position as l_position and then attached l_position.key as l_key implies
+					key_comparator.order_equal (l_key, k)
 			k_less_equal_cursors_key:
-				not a_cursor.off and then a_cursor.position.key /= Void and k /= Void implies
-					key_comparator.less_equal (k, a_cursor.position.key)
+				not a_cursor.off and then attached a_cursor.position as l_position and then attached l_position.key as l_key and then k /= Void implies
+					key_comparator.less_equal (k, l_key)
 			a_cursor_not_before: not a_cursor.before
 		end
 
 
 feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Cursor implementation
 
-	predecessor_for_cursor (v: like root_node): like root_node
+	predecessor_for_cursor (v: attached like root_node): like root_node
 			-- Predecessor of `v' if it exists, Void otherwise
 			-- (Performance: O(height).)
 		require
 			v_not_void: v /= Void
 			v_is_in_tree: is_node_in_tree (v)
 		do
-			if v.left_child /= Void then
+			if attached v.left_child as l_left_child then
 				from
-					Result := v.left_child
+					Result := l_left_child
 				until
-					Result.right_child = Void
+					not attached Result.right_child as l_right_child
 				loop
-					Result := Result.right_child
+					Result := l_right_child
 				end
-			elseif v.parent /= Void then
-				Result := v.parent
+			elseif attached v.parent as l_v_parent then
+				Result := l_v_parent
 				if Result.left_child = v then
 					from
-						Result := v.parent
 					until
-						Result.parent = Void or else Result.parent.right_child = Result
+						not attached Result.parent as l_parent or else l_parent.right_child = Result
 					loop
-						Result := Result.parent
+						Result := l_parent
 					end
-					if Result.parent /= Void and Result.parent.right_child = Result then
-						Result := Result.parent
+					if attached Result.parent as l_parent and then l_parent.right_child = Result then
+						Result := l_parent
 					else
 						Result := Void
 					end
@@ -803,32 +806,31 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Cursor implementation
 			predecessor_is_in_tree: Result /= Void implies is_node_in_tree (Result)
 		end
 
-	successor_for_cursor (v: like root_node): like root_node
+	successor_for_cursor (v: attached like root_node): like root_node
 			-- Successor of `v' if it exists, Void otherwise
 			-- (Performance: O(height).)
 		require
 			v_not_void: v /= Void
 		do
-			if v.right_child /= Void then
+			if attached v.right_child as l_right_child then
 				from
-					Result := v.right_child
+					Result := l_right_child
 				until
-					Result.left_child = Void
+					not attached Result.left_child as l_left_child
 				loop
-					Result := Result.left_child
+					Result := l_left_child
 				end
-			elseif v.parent /= Void then
-				Result := v.parent
+			elseif attached v.parent as l_v_parent then
+				Result := l_v_parent
 				if Result.right_child = v then
 					from
-						Result := v.parent
 					until
-						Result.parent = Void or else Result.parent.left_child = Result
+						not attached Result.parent as l_parent or else l_parent.left_child = Result
 					loop
-						Result := Result.parent
+						Result := l_parent
 					end
-					if Result.parent /= Void and then Result.parent.left_child = Result then
-						Result := Result.parent
+					if attached Result.parent as l_parent and then l_parent.left_child = Result then
+						Result := l_parent
 					else
 						Result := Void
 					end
@@ -849,12 +851,12 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Cursor implementation
 
 feature {NONE} -- Cursor movement
 
-	move_cursors_after (a_last_position: like root_node)
+	move_cursors_after (a_last_position: attached like root_node)
 			-- Move `after' all cursors at last position.
 		require
 			a_last_position_not_void: a_last_position /= Void
 		local
-			l_cursor: like new_cursor
+			l_cursor: detachable like new_cursor
 			l_previous_cursor: like new_cursor
 		do
 			from
@@ -876,13 +878,13 @@ feature {NONE} -- Cursor movement
 			end
 		end
 
-	move_all_cursors (a_old_node, a_new_node: like root_node)
+	move_all_cursors (a_old_node, a_new_node: attached like root_node)
 			-- Move all cursors at position `a_old_node' to `a_new_node'.
 		require
 			a_old_node_not_void: a_old_node /= Void
 			a_new_node_not_void: a_new_node /= Void
 		local
-			l_cursor: like new_cursor
+			l_cursor: detachable like new_cursor
 		do
 			from
 				l_cursor := internal_cursor
@@ -899,7 +901,7 @@ feature {NONE} -- Cursor movement
 	move_all_cursors_after
 			-- Move `after' all cursors.
 		local
-			l_cursor: like new_cursor
+			l_cursor: detachable like new_cursor
 		do
 			from
 				if not internal_cursor.off then
@@ -1177,8 +1179,7 @@ feature {NONE} -- Element change
 		require
 			valid_key: valid_key (k)
 		local
-			l_newest_tree_node: like root_node
-			l_node: like root_node
+			l_newest_tree_node: attached like root_node
 		do
 			if root_node = Void then
 					-- The binary search tree is empty.
@@ -1191,33 +1192,31 @@ feature {NONE} -- Element change
 				on_node_added (l_newest_tree_node)
 			else
 				search_insert_position (k)
-				l_node := found_node
-				check
-					l_node_not_void: l_node /= Void
-				end
-				if exact_insert_position_found then
-						-- Just update the `item'.
-					l_node.set_item (v)
-				elseif insert_position_is_left then
-					l_newest_tree_node := new_tree_node (v, k)
-					l_node.set_left_child (l_newest_tree_node)
-						-- Check if `first_node'
-						-- needs to be updated.
-					if l_node = first_node then
-						first_node := l_newest_tree_node
+				check found: attached found_node as l_node then
+					if exact_insert_position_found then
+							-- Just update the `item'.
+						l_node.set_item (v)
+					elseif insert_position_is_left then
+						l_newest_tree_node := new_tree_node (v, k)
+						l_node.set_left_child (l_newest_tree_node)
+							-- Check if `first_node'
+							-- needs to be updated.
+						if l_node = first_node then
+							first_node := l_newest_tree_node
+						end
+						count := count + 1
+						on_node_added (l_newest_tree_node)
+					else
+						l_newest_tree_node := new_tree_node (v, k)
+						l_node.set_right_child (l_newest_tree_node)
+							-- Check if `last_node'
+							-- needs to be updated.
+						if l_node = last_node then
+							last_node := l_newest_tree_node
+						end
+						count := count + 1
+						on_node_added (l_newest_tree_node)
 					end
-					count := count + 1
-					on_node_added (l_newest_tree_node)
-				else
-					l_newest_tree_node := new_tree_node (v, k)
-					l_node.set_right_child (l_newest_tree_node)
-						-- Check if `last_node'
-						-- needs to be updated.
-					if l_node = last_node then
-						last_node := l_newest_tree_node
-					end
-					count := count + 1
-					on_node_added (l_newest_tree_node)
 				end
 			end
 		ensure
@@ -1233,8 +1232,7 @@ feature {NONE} -- Element change
 			valid_key: valid_key (k)
 			new_item: not has_key (k)
 		local
-			l_newest_tree_node: like root_node
-			l_node: like root_node
+			l_newest_tree_node: attached like root_node
 		do
 			l_newest_tree_node := new_tree_node (v, k)
 			if root_node = Void then
@@ -1245,24 +1243,24 @@ feature {NONE} -- Element change
 				last_node := root_node
 			else
 				search_insert_position (k)
-				l_node := found_node
-				check
-					l_node_not_void: l_node /= Void
-					key_does_not_exist: not exact_insert_position_found
-				end
-				if insert_position_is_left then
-					l_node.set_left_child (l_newest_tree_node)
-						-- Check if the `first_node'
-						-- needs to be updated.
-					if l_node = first_node then
-						first_node := l_newest_tree_node
+				check found: attached found_node as l_node then
+					check
+						key_does_not_exist: not exact_insert_position_found
 					end
-				else
-					l_node.set_right_child (l_newest_tree_node)
-						-- Check if the `last_node'
-						-- needs to be updated.
-					if l_node = last_node then
-						last_node := l_newest_tree_node
+					if insert_position_is_left then
+						l_node.set_left_child (l_newest_tree_node)
+							-- Check if the `first_node'
+							-- needs to be updated.
+						if l_node = first_node then
+							first_node := l_newest_tree_node
+						end
+					else
+						l_node.set_right_child (l_newest_tree_node)
+							-- Check if the `last_node'
+							-- needs to be updated.
+						if l_node = last_node then
+							last_node := l_newest_tree_node
+						end
 					end
 				end
 			end
@@ -1275,7 +1273,7 @@ feature {NONE} -- Element change
 
 feature {NONE} -- Element change
 
-	on_node_added (a_node: like root_node)
+	on_node_added (a_node: attached like root_node)
 			-- `a_node' was just added to the binary search tree.
 			-- This feature is basically used by balanced binary
 			-- search tree variants. They are informed which
@@ -1324,14 +1322,14 @@ feature -- Removal
 
 feature {NONE} -- Removal
 
-	remove_node (a_node: like root_node)
+	remove_node (a_node: attached like root_node)
 			-- Remove `a_node' from the tree.
 		require
 			a_node_not_void: a_node /= Void
 			a_node_is_in_tree: is_node_in_tree (a_node)
 		local
-			l_in_order_successor: like root_node
-			l_old_cursor_position: like root_node
+			l_in_order_successor: attached like root_node
+			l_old_cursor_position: attached like root_node
 			l_new_cursor_position: like root_node
 		do
 				-- Special case of `count = 1' to avoid
@@ -1366,7 +1364,7 @@ feature {NONE} -- Removal
 			end
 		end
 
-	remove_successor_node (a_successor: like root_node)
+	remove_successor_node (a_successor: attached like root_node)
 			-- Remove `a_successor'. Take care that the child
 			-- is not lost.
 		require
@@ -1375,24 +1373,24 @@ feature {NONE} -- Removal
 			a_successor_is_predecesor: a_successor.left_child = Void
 			a_successor_is_from_tree: is_node_in_tree (a_successor)
 		local
-			l_parent: like root_node
 			l_child: like root_node
 		do
-			l_parent := a_successor.parent
-			l_child := a_successor.right_child
-			a_successor.set_right_child (Void)
-			if a_successor = l_parent.left_child then
-				l_parent.set_left_child (l_child)
-				on_node_removed (a_successor, l_parent, True)
-			else
-				check
-					else_case: a_successor = l_parent.right_child
+			check a_successor_has_parent: attached a_successor.parent as l_parent then
+				l_child := a_successor.right_child
+				a_successor.set_right_child (Void)
+				if a_successor = l_parent.left_child then
+					l_parent.set_left_child (l_child)
+					on_node_removed (a_successor, l_parent, True)
+				else
+					check
+						else_case: a_successor = l_parent.right_child
+					end
+					if a_successor = last_node then
+						last_node := l_parent
+					end
+					l_parent.set_right_child (l_child)
+					on_node_removed (a_successor, l_parent, False)
 				end
-				if a_successor = last_node then
-					last_node := l_parent
-				end
-				l_parent.set_right_child (l_child)
-				on_node_removed (a_successor, l_parent, False)
 			end
 		ensure
 			a_successor_has_no_parent: a_successor.parent = Void
@@ -1400,7 +1398,7 @@ feature {NONE} -- Removal
 			a_successor_has_no_right_child: a_successor.right_child = Void
 		end
 
-	remove_childless_node (a_node: like root_node): like root_node
+	remove_childless_node (a_node: attached like root_node): like root_node
 			-- Remove `a_node' from the tree and
 			-- return its successor.
 		require
@@ -1408,11 +1406,11 @@ feature {NONE} -- Removal
 			a_node_has_no_left_child: a_node.left_child = Void
 			a_node_has_no_right_child: a_node.right_child = Void
 			a_node_is_from_tree: is_node_in_tree (a_node)
-		local
-			l_parent: like root_node
 		do
-			l_parent := a_node.parent
-			if a_node = root_node then
+			if not attached a_node.parent as l_parent then
+				check
+					root_node: a_node = root_node
+				end
 				root_node := Void
 				first_node := Void
 				last_node := Void
@@ -1439,7 +1437,7 @@ feature {NONE} -- Removal
 			end
 		end
 
-	remove_node_with_left_child (a_node: like root_node): like root_node
+	remove_node_with_left_child (a_node: attached like root_node): like root_node
 			-- Remove `a_node' from the tree and return
 			-- its successor.
 		require
@@ -1448,18 +1446,19 @@ feature {NONE} -- Removal
 			a_node_has_no_right_child: a_node.right_child = Void
 			a_node_is_from_tree: is_node_in_tree (a_node)
 		local
-			l_parent: like root_node
 			l_child: like root_node
 		do
-			l_parent := a_node.parent
 			if a_node = last_node then
-				last_node := predecessor (last_node)
+				last_node := predecessor (a_node)
 			else
 				Result := successor (a_node)
 			end
 			l_child := a_node.left_child
 			a_node.set_left_child (Void)
-			if a_node = root_node then
+			if not attached a_node.parent as l_parent then
+				check
+					root_node: a_node = root_node
+				end
 				root_node := l_child
 				on_root_node_removed
 			elseif a_node = l_parent.left_child then
@@ -1493,7 +1492,7 @@ feature {NONE} -- Removal
 		deferred
 		end
 
-	on_node_removed (a_old_node, a_node: like root_node; a_was_left_child: BOOLEAN)
+	on_node_removed (a_old_node, a_node: attached like root_node; a_was_left_child: BOOLEAN)
 			-- `a_old_node' was just removed from the tree.
 			-- The parent of `a_old_node' was `a_node'.
 			-- Depending on `a_was_left_child' `a_old_node'
@@ -1511,7 +1510,7 @@ feature {NONE} -- Removal
 
 feature {NONE} -- Basic operation
 
-	rotate_right (a_node: like root_node)
+	rotate_right (a_node: attached like root_node)
 			-- Apply a right rotation to `a_node'. The tree height
 			-- is decreased on the left and increased on the right
 			-- hand side.
@@ -1526,54 +1525,55 @@ feature {NONE} -- Basic operation
 			--  a    b                       b      c
 		require
 			a_node_not_void: a_node /= Void
-			a_node_parent_not_void: a_node.parent /= Void
-			a_node_is_left_child_of_parent: a_node.parent.left_child = a_node
+			a_node_parent_not_void: attached a_node.parent as l_parent
+			a_node_is_left_child_of_parent: l_parent.left_child = a_node
 		local
-			l_parent, l_grand_parent: like root_node
+			l_grand_parent: like root_node
 			b: like root_node
 			l_parent_is_left: BOOLEAN
 		do
-			l_parent := a_node.parent
-			l_grand_parent := l_parent.parent
-			b := a_node.right_child
-				-- Prepare `l_grand_parent'.
-			if l_grand_parent /= Void then
-				if l_grand_parent.left_child = l_parent then
-					l_parent_is_left := True
-					l_grand_parent.set_left_child (Void)
-				else
-					l_parent_is_left := False
-					l_grand_parent.set_right_child (Void)
+			check a_node_parent_not_void: attached a_node.parent as l_parent then
+				l_grand_parent := l_parent.parent
+				b := a_node.right_child
+					-- Prepare `l_grand_parent'.
+				if l_grand_parent /= Void then
+					if l_grand_parent.left_child = l_parent then
+						l_parent_is_left := True
+						l_grand_parent.set_left_child (Void)
+					else
+						l_parent_is_left := False
+						l_grand_parent.set_right_child (Void)
+					end
 				end
-			end
-				-- Prepare `l_parent'.
-			l_parent.set_left_child (Void)
-				-- Prepare `b'.
-			a_node.set_right_child (Void)
-				-- Rebuild the tree.
-			if l_grand_parent /= Void then
-				if l_parent_is_left then
-					l_grand_parent.set_left_child (a_node)
-				else
-					l_grand_parent.set_right_child (a_node)
+					-- Prepare `l_parent'.
+				l_parent.set_left_child (Void)
+					-- Prepare `b'.
+				a_node.set_right_child (Void)
+					-- Rebuild the tree.
+				if l_grand_parent /= Void then
+					if l_parent_is_left then
+						l_grand_parent.set_left_child (a_node)
+					else
+						l_grand_parent.set_right_child (a_node)
+					end
 				end
-			end
-			a_node.set_right_child (l_parent)
-			l_parent.set_left_child (b)
-				-- Make sure we have the correct `root_node'.
-			if l_parent = root_node then
-				root_node := a_node
+				a_node.set_right_child (l_parent)
+				l_parent.set_left_child (b)
+					-- Make sure we have the correct `root_node'.
+				if l_parent = root_node then
+					root_node := a_node
+				end
 			end
 		ensure
-			grand_parent_correct: a_node.parent = old (a_node.parent.parent)
+			grand_parent_correct: a_node.parent = old (a_node.grand_parent)
 			parent_correct: a_node.right_child = old (a_node.parent)
 			a_correct: a_node.left_child = old (a_node.left_child)
-			b_correct: a_node.right_child.left_child = old (a_node.right_child)
-			c_correct: a_node.right_child.right_child = old (a_node.parent.right_child)
+			b_correct: a_node.right_child_left_child = old (a_node.right_child)
+			c_correct: a_node.right_child_right_child = old (a_node.parent_right_child)
 			root_node_corrected: (a_node = root_node) = old (a_node.parent = root_node)
 		end
 
-	rotate_left (a_node: like root_node)
+	rotate_left (a_node: attached like root_node)
 			-- Apply a left rotation to `a_node'. The tree height
 			-- is decreased on the right and increased on the left
 			-- hand side.
@@ -1588,54 +1588,55 @@ feature {NONE} -- Basic operation
 			--        b      c         a    b
 		require
 			a_node_not_void: a_node /= Void
-			a_node_parent_not_void: a_node.parent /= Void
-			a_node_is_right_child_of_parent: a_node.parent.right_child = a_node
+			a_node_parent_not_void: attached a_node.parent as l_parent
+			a_node_is_right_child_of_parent: l_parent.right_child = a_node
 		local
-			l_parent, l_grand_parent: like root_node
+			l_grand_parent: like root_node
 			b: like root_node
 			l_parent_is_left: BOOLEAN
 		do
-			l_parent := a_node.parent
-			l_grand_parent := l_parent.parent
-			b := a_node.left_child
-				-- Prepare `l_grand_parent'
-			if l_grand_parent /= Void then
-				if l_grand_parent.left_child = l_parent then
-					l_parent_is_left := True
-					l_grand_parent.set_left_child (Void)
-				else
-					l_parent_is_left := False
-					l_grand_parent.set_right_child (Void)
+			check a_node_parent_not_void: attached a_node.parent as l_parent then
+				l_grand_parent := l_parent.parent
+				b := a_node.left_child
+					-- Prepare `l_grand_parent'
+				if l_grand_parent /= Void then
+					if l_grand_parent.left_child = l_parent then
+						l_parent_is_left := True
+						l_grand_parent.set_left_child (Void)
+					else
+						l_parent_is_left := False
+						l_grand_parent.set_right_child (Void)
+					end
 				end
-			end
-				-- Prepare `l_parent'.
-			l_parent.set_right_child (Void)
-				-- Prepare `b'.
-			a_node.set_left_child (Void)
-				-- Rebuild the tree.
-			if l_grand_parent /= Void then
-				if l_parent_is_left then
-					l_grand_parent.set_left_child (a_node)
-				else
-					l_grand_parent.set_right_child (a_node)
+					-- Prepare `l_parent'.
+				l_parent.set_right_child (Void)
+					-- Prepare `b'.
+				a_node.set_left_child (Void)
+					-- Rebuild the tree.
+				if l_grand_parent /= Void then
+					if l_parent_is_left then
+						l_grand_parent.set_left_child (a_node)
+					else
+						l_grand_parent.set_right_child (a_node)
+					end
 				end
-			end
-			a_node.set_left_child (l_parent)
-			l_parent.set_right_child (b)
-				-- Make sure we have the correct `root_node'.
-			if l_parent = root_node then
-				root_node := a_node
+				a_node.set_left_child (l_parent)
+				l_parent.set_right_child (b)
+					-- Make sure we have the correct `root_node'.
+				if l_parent = root_node then
+					root_node := a_node
+				end
 			end
 		ensure
-			grand_parent_correct: a_node.parent = old (a_node.parent.parent)
+			grand_parent_correct: a_node.parent = old (a_node.grand_parent)
 			parent_correct: a_node.left_child = old (a_node.parent)
-			a_correct: a_node.left_child.left_child = old (a_node.parent.left_child)
-			b_correct: a_node.left_child.right_child = old (a_node.left_child)
+			a_correct: a_node.left_child_left_child = old (a_node.parent_left_child)
+			b_correct: a_node.left_child_right_child = old (a_node.left_child)
 			c_correct: a_node.right_child = old (a_node.right_child)
 			root_node_corrected: (a_node = root_node) = old (a_node.parent = root_node)
 		end
 
-	rotate_right_left (a_node: like root_node)
+	rotate_right_left (a_node: attached like root_node)
 			--
 			-- (grand_parent)       (grand_parent)
 			--      (|)                  (|)
@@ -1652,58 +1653,56 @@ feature {NONE} -- Basic operation
 			a_node_left_child_not_void: a_node.left_child /= Void
 		local
 			l_grand_parent: like root_node
-			l_parent: like root_node
 			l_parent_is_left: BOOLEAN
-			l_child: like root_node
 			b, c: like root_node
 		do
-			l_parent := a_node.parent
-			l_grand_parent := l_parent.parent
-			l_child := a_node.left_child
-			b := l_child.left_child
-			c := l_child.right_child
-				-- Prepare `l_grand_parent'.
-			if l_grand_parent /= Void then
-				if l_grand_parent.left_child = l_parent then
-					l_parent_is_left := True
-					l_grand_parent.set_left_child (Void)
-				else
-					l_parent_is_left := False
-					l_grand_parent.set_right_child (Void)
+			check a_node_parent_and_a_node_left_child_not_void: attached a_node.parent as l_parent and attached a_node.left_child as l_left_child then
+				l_grand_parent := l_parent.parent
+				b := l_left_child.left_child
+				c := l_left_child.right_child
+					-- Prepare `l_grand_parent'.
+				if l_grand_parent /= Void then
+					if l_grand_parent.left_child = l_parent then
+						l_parent_is_left := True
+						l_grand_parent.set_left_child (Void)
+					else
+						l_parent_is_left := False
+						l_grand_parent.set_right_child (Void)
+					end
 				end
-			end
-				-- Prepare `l_parent'.
-			l_parent.set_right_child (Void)
-				-- Prepare `l_child'.
-			a_node.set_left_child (Void)
-			l_child.set_left_child (Void)
-			l_child.set_right_child (Void)
-				-- Rebuild the tree.
-			if l_grand_parent /= Void then
-				if l_parent_is_left then
-					l_grand_parent.set_left_child (l_child)
-				else
-					l_grand_parent.set_right_child (l_child)
+					-- Prepare `l_parent'.
+				l_parent.set_right_child (Void)
+					-- Prepare `l_child'.
+				a_node.set_left_child (Void)
+				l_left_child.set_left_child (Void)
+				l_left_child.set_right_child (Void)
+					-- Rebuild the tree.
+				if l_grand_parent /= Void then
+					if l_parent_is_left then
+						l_grand_parent.set_left_child (l_left_child)
+					else
+						l_grand_parent.set_right_child (l_left_child)
+					end
 				end
-			end
-			l_child.set_left_child (l_parent)
-			l_child.set_right_child (a_node)
-			l_parent.set_right_child (b)
-			a_node.set_left_child (c)
-				-- Make sure we have the correct `root_node'.
-			if l_parent = root_node then
-				root_node := l_child
+				l_left_child.set_left_child (l_parent)
+				l_left_child.set_right_child (a_node)
+				l_parent.set_right_child (b)
+				a_node.set_left_child (c)
+					-- Make sure we have the correct `root_node'.
+				if l_parent = root_node then
+					root_node := l_left_child
+				end
 			end
 		ensure
-			grand_parent_correct: a_node.parent.parent = old (a_node.parent.parent)
-			parent_correct: a_node.parent.left_child = old (a_node.parent)
-			a_correct: a_node.parent.left_child.left_child = old (a_node.parent.left_child)
-			b_correct: a_node.parent.left_child.right_child = old (a_node.left_child.left_child)
-			c_correct: a_node.left_child = old (a_node.left_child.right_child)
+			grand_parent_correct: a_node.grand_parent = old (a_node.grand_parent)
+			parent_correct: a_node.parent_left_child = old (a_node.parent)
+			a_correct: attached a_node.parent as l_parent and then l_parent.left_child_left_child = old (a_node.parent_left_child)
+			b_correct: attached a_node.parent as l_parent2 and then l_parent2.left_child_right_child = old (a_node.left_child_left_child)
+			c_correct: a_node.left_child = old (a_node.left_child_right_child)
 			d_correct: a_node.right_child = old (a_node.right_child)
 		end
 
-	rotate_left_right (a_node: like root_node)
+	rotate_left_right (a_node: attached like root_node)
 			--  (grand_parent)       (grand_parent)
 			--       (|)                  (|)
 			--     parent                child
@@ -1719,55 +1718,53 @@ feature {NONE} -- Basic operation
 			a_node_right_child_not_void: a_node.right_child /= Void
 		local
 			l_grand_parent: like root_node
-			l_parent: like root_node
 			l_parent_is_left: BOOLEAN
-			l_child: like root_node
 			b, c: like root_node
 		do
-			l_parent := a_node.parent
-			l_grand_parent := l_parent.parent
-			l_child := a_node.right_child
-			b := l_child.left_child
-			c := l_child.right_child
-				-- Prepare `l_grand_parent'.
-			if l_grand_parent /= Void then
-				if l_grand_parent.left_child = l_parent then
-					l_parent_is_left := True
-					l_grand_parent.set_left_child (Void)
-				else
-					l_parent_is_left := False
-					l_grand_parent.set_right_child (Void)
+			check a_node_parent_and_a_node_left_child_not_void: attached a_node.parent as l_parent and attached a_node.right_child as l_right_child then
+				l_grand_parent := l_parent.parent
+				b := l_right_child.left_child
+				c := l_right_child.right_child
+					-- Prepare `l_grand_parent'.
+				if l_grand_parent /= Void then
+					if l_grand_parent.left_child = l_parent then
+						l_parent_is_left := True
+						l_grand_parent.set_left_child (Void)
+					else
+						l_parent_is_left := False
+						l_grand_parent.set_right_child (Void)
+					end
 				end
-			end
-				-- Prepare `l_parent'.
-			l_parent.set_left_child (Void)
-				-- Prepare `l_child'.
-			a_node.set_right_child (Void)
-			l_child.set_left_child (Void)
-			l_child.set_right_child (Void)
-				-- Rebuild the tree.
-			if l_grand_parent /= Void then
-				if l_parent_is_left then
-					l_grand_parent.set_left_child (l_child)
-				else
-					l_grand_parent.set_right_child (l_child)
+					-- Prepare `l_parent'.
+				l_parent.set_left_child (Void)
+					-- Prepare `l_child'.
+				a_node.set_right_child (Void)
+				l_right_child.set_left_child (Void)
+				l_right_child.set_right_child (Void)
+					-- Rebuild the tree.
+				if l_grand_parent /= Void then
+					if l_parent_is_left then
+						l_grand_parent.set_left_child (l_right_child)
+					else
+						l_grand_parent.set_right_child (l_right_child)
+					end
 				end
-			end
-			l_child.set_left_child (a_node)
-			l_child.set_right_child (l_parent)
-			l_parent.set_left_child (c)
-			a_node.set_right_child (b)
-				-- Make sure we have the correct `root_node'.
-			if l_parent = root_node then
-				root_node := l_child
+				l_right_child.set_left_child (a_node)
+				l_right_child.set_right_child (l_parent)
+				l_parent.set_left_child (c)
+				a_node.set_right_child (b)
+					-- Make sure we have the correct `root_node'.
+				if l_parent = root_node then
+					root_node := l_right_child
+				end
 			end
 		ensure
-			grand_parent_correct: a_node.parent.parent = old (a_node.parent.parent)
-			parent_correct: a_node.parent.right_child = old (a_node.parent)
+			grand_parent_correct: a_node.grand_parent = old (a_node.grand_parent)
+			parent_correct: a_node.parent_right_child = old (a_node.parent)
 			a_correct: a_node.left_child = old (a_node.left_child)
-			b_correct: a_node.right_child = old (a_node.right_child.left_child)
-			c_correct: a_node.parent.right_child.left_child = old (a_node.right_child.right_child)
-			d_correct: a_node.parent.right_child.right_child = old (a_node.parent.right_child)
+			b_correct: a_node.right_child = old (a_node.right_child_left_child)
+			c_correct: attached a_node.parent as l_parent and then l_parent.right_child_left_child = old (a_node.right_child_right_child)
+			d_correct: attached a_node.parent as l_parent2 and then l_parent2.right_child_right_child = old (a_node.parent_right_child)
 		end
 
 	search_node, search_node_for_removal (a_key: K)
@@ -1786,8 +1783,8 @@ feature {NONE} -- Basic operation
 			l_found_node := found_node
 			l_key_comparator := key_comparator
 			if a_key = Void then
-				if first_node /= Void and then first_node.key = Void then
-					l_found_node := first_node
+				if attached first_node as l_first_node and then l_first_node.key = Void then
+					l_found_node := l_first_node
 				else
 					l_found_node := Void
 				end
@@ -1828,7 +1825,7 @@ feature {NONE} -- Basic operation
 		require
 			tree_not_empty: not is_empty
 		local
-			l_found_node: like root_node
+			l_node: attached like root_node
 			l_key_comparator: like key_comparator
 			l_stop: BOOLEAN
 		do
@@ -1836,58 +1833,59 @@ feature {NONE} -- Basic operation
 				-- performance of the binary search trees heavily depends on
 				-- this routine, we can optimize it by accessing `found_node'
 				-- and `key_comparator' via local variables.
-			l_found_node := found_node
 			l_key_comparator := key_comparator
 			if a_key = Void then
-				l_found_node := first_node
-				if first_node.key = Void then
-					exact_insert_position_found := True
-				else
-					exact_insert_position_found := False
-					insert_position_is_left := True
-				end
-			else
-				exact_insert_position_found := False
-				from
-					l_found_node := root_node
-					l_stop := False
-				invariant
-					result_not_void: l_found_node /= Void
-				until
-					l_stop
-				loop
-					if l_found_node.key = Void then
-						if l_found_node.right_child /= Void then
-							l_found_node := l_found_node.right_child
-						else
-							insert_position_is_left := False
-							l_stop := True
-						end
-					elseif l_key_comparator.less_than (a_key, l_found_node.key) then
-						if l_found_node.left_child = Void then
-							insert_position_is_left := True
-							l_stop := True
-						else
-							l_found_node := l_found_node.left_child
-						end
-					elseif l_key_comparator.greater_than (a_key, l_found_node.key) then
-						if l_found_node.right_child = Void then
-							insert_position_is_left := False
-							l_stop := True
-						else
-							l_found_node := l_found_node.right_child
-						end
-					else
+				check not_empty: attached first_node as l_first_node then
+					found_node := l_first_node
+					if l_first_node.key = Void then
 						exact_insert_position_found := True
-						l_stop := True
+					else
+						exact_insert_position_found := False
+						insert_position_is_left := True
 					end
 				end
+			else
+				check not_empty: attached root_node as l_root_node then
+					exact_insert_position_found := False
+					from
+						l_node := l_root_node
+						l_stop := False
+					until
+						l_stop
+					loop
+						if l_node.key = Void then
+							if attached l_node.right_child as l_right_child then
+								l_node := l_right_child
+							else
+								insert_position_is_left := False
+								l_stop := True
+							end
+						elseif l_key_comparator.less_than (a_key, l_node.key) then
+							if not attached l_node.left_child as l_left_child then
+								insert_position_is_left := True
+								l_stop := True
+							else
+								l_node := l_left_child
+							end
+						elseif l_key_comparator.greater_than (a_key, l_node.key) then
+							if not attached l_node.right_child as l_right_child then
+								insert_position_is_left := False
+								l_stop := True
+							else
+								l_node := l_right_child
+							end
+						else
+							exact_insert_position_found := True
+							l_stop := True
+						end
+					end
+					found_node := l_node
+				end
 			end
-			found_node := l_found_node
 		ensure
-			result_not_void: found_node /= Void
-			no_left_child: insert_position_is_left and not exact_insert_position_found implies found_node.left_child = Void
-			no_right_child: not insert_position_is_left and not exact_insert_position_found implies found_node.right_child = Void
+			result_not_void: attached found_node as l_found_node
+			no_left_child: insert_position_is_left and not exact_insert_position_found implies l_found_node.left_child = Void
+			no_right_child: not insert_position_is_left and not exact_insert_position_found implies l_found_node.right_child = Void
 		end
 
 	unset_found_node
@@ -1900,22 +1898,22 @@ feature {NONE} -- Basic operation
 
 feature {NONE} -- Implementation
 
-	root_node: DS_BINARY_SEARCH_TREE_CONTAINER_NODE [G, K]
+	root_node: detachable DS_BINARY_SEARCH_TREE_CONTAINER_NODE [G, K]
 			-- Root node
 
 invariant
 
 	sorted: sorted
 	is_empty_iff_no_root_node: is_empty = (root_node = Void)
-	correct_count: root_node /= Void implies count = root_node.count
+	correct_count: attached root_node as l_root_node implies count = l_root_node.count
 	first_node_set: is_empty = (first_node = Void)
-	first_node_is_in_tree: not is_empty implies is_node_in_tree (first_node)
-	first_node_has_no_predecessor: not is_empty implies predecessor (first_node) = Void
+	first_node_is_in_tree: not is_empty implies attached first_node as l_first_node and then is_node_in_tree (l_first_node)
+	first_node_has_no_predecessor: not is_empty implies attached first_node as l_first_node and then predecessor (l_first_node) = Void
 	is_first_node_correct: is_first_node_correct
 	last_node_set: is_empty = (last_node = Void)
-	last_node_in_in_tree: not is_empty implies is_node_in_tree (last_node)
-	last_node_has_no_successor: not is_empty implies successor (last_node) = Void
+	last_node_in_in_tree: not is_empty implies attached last_node as l_last_node and then is_node_in_tree (l_last_node)
+	last_node_has_no_successor: not is_empty implies attached last_node as l_last_node and then successor (l_last_node) = Void
 	is_last_node_correct: is_last_node_correct
-	void_is_in_first_node: has_void implies first_node.key = Void
+	void_is_in_first_node: has_void implies attached first_node as l_first_node and then l_first_node.key = Void
 
 end

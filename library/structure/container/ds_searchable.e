@@ -5,7 +5,7 @@ note
 		"Data structures that can be searched"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,10 +31,8 @@ feature -- Status report
 			-- Does container include Void?
 		local
 			v: detachable G
-			l_current: detachable DS_SEARCHABLE [detachable G]
 		do
-			l_current ?= Current
-			if l_current /= Void and v = Void then
+			if attached {DS_SEARCHABLE [detachable G]} Current as l_current and then v = Void then
 				Result := l_current.has (v)
 			end
 		ensure
@@ -46,8 +44,8 @@ feature -- Status report
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
 		do
-			if equality_tester /= Void then
-				Result := equality_tester.test (v, u)
+			if attached equality_tester as l_equality_tester then
+				Result := l_equality_tester.test (v, u)
 			else
 				Result := (v = u)
 			end
@@ -84,7 +82,7 @@ feature -- Measurement
 
 feature -- Access
 
-	equality_tester: KL_EQUALITY_TESTER [G]
+	equality_tester: detachable KL_EQUALITY_TESTER [G]
 			-- Equality tester;
 			-- A void equality tester means that `='
 			-- will be used as comparison criterion.

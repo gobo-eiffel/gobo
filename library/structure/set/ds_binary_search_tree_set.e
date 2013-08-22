@@ -9,7 +9,7 @@ note
 		are DS_AVL_TREE_SET and DS_RED_BLACK_TREE_SET.
 	]"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2008, Daniel Tuser and others"
+	copyright: "Copyright (c) 2008-2013, Daniel Tuser and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -61,7 +61,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	new_tree_node (a_item, a_key: G): like root_node
+	new_tree_node (a_item, a_key: G): attached like root_node
 			-- New tree node with `a_item'
 		do
 			check
@@ -75,8 +75,8 @@ feature -- Status report
 	has_void: BOOLEAN
 			-- Does container include Void?
 		do
-			if not is_empty then
-				Result := first_node.item = Void
+			if attached first_node as l_first_node then
+				Result := l_first_node.item = Void
 			end
 		end
 
@@ -141,8 +141,8 @@ feature {DS_LINEAR_CURSOR} -- Cursor implementation
 			-- Move `after' if not found.
 		do
 			search_node (v)
-			if found_node /= Void then
-				a_cursor.set_position (found_node)
+			if attached found_node as l_found_node then
+				a_cursor.set_position (l_found_node)
 			else
 				a_cursor.go_after
 			end
@@ -158,8 +158,8 @@ feature {DS_BILINEAR_CURSOR} -- Cursor implementation
 			-- Move `before' if not found.
 		do
 			search_node (v)
-			if found_node /= Void then
-				a_cursor.set_position (found_node)
+			if attached found_node as l_found_node then
+				a_cursor.set_position (l_found_node)
 			else
 				a_cursor.go_before
 			end
@@ -208,7 +208,7 @@ feature -- Element change
 
 feature {NONE} -- Element change
 
-	on_node_added (a_node: like root_node)
+	on_node_added (a_node: attached like root_node)
 			-- `a_node' was just added to the binary search tree.
 			-- This feature is basically used by balanced binary
 			-- search tree variants. They are informed which
@@ -228,7 +228,7 @@ feature {NONE} -- Removal
 		do
 		end
 
-	on_node_removed (a_old_node, a_node: like root_node; a_was_left_child: BOOLEAN)
+	on_node_removed (a_old_node, a_node: attached like root_node; a_was_left_child: BOOLEAN)
 			-- `a_old_node' was just removed from the tree.
 			-- The parent of `a_old_node' was `a_node'.
 			-- Depending on `a_was_left_child' `a_old_node'
@@ -312,7 +312,9 @@ feature -- Basic operations
 				loop
 					l_item := l_cursor.item
 					if not other.has (l_item) then
-						remove_node (l_cursor.position)
+						check not_off: attached l_cursor.position as l_position then
+							remove_node (l_position)
+						end
 					else
 						l_cursor.forth
 					end
@@ -342,7 +344,9 @@ feature -- Basic operations
 				loop
 					l_item := l_cursor.item
 					if other.has (l_item) then
-						remove_node (l_cursor.position)
+						check not_off: attached l_cursor.position as l_position then
+							remove_node (l_position)
+						end
 					else
 						l_cursor.forth
 					end
@@ -386,7 +390,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	root_node: DS_BINARY_SEARCH_TREE_SET_NODE [G]
+	root_node: detachable DS_BINARY_SEARCH_TREE_SET_NODE [G]
 			-- Root node
 
 end

@@ -5,7 +5,7 @@ note
 		"Stacks (Last-In, First-Out) implemented with linked cells"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/10/06 $"
 	revision: "$Revision: #10 $"
@@ -63,17 +63,15 @@ feature -- Status report
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
 		local
-			a_tester: like equality_tester
 			a_cell: like first_cell
 		do
 			a_cell := first_cell
-			a_tester := equality_tester
-			if a_tester /= Void then
+			if attached equality_tester as l_tester then
 				from
 				until
 					(a_cell = Void)
 				loop
-					if a_tester.test (a_cell.item, v) then
+					if l_tester.test (a_cell.item, v) then
 						Result := True
 							-- Jump out of the loop.
 						a_cell := Void
@@ -111,7 +109,9 @@ feature -- Access
 	item: G
 			-- Item at top of stack
 		do
-			Result := first_cell.item
+			check not_empty: attached first_cell as l_first_cell then
+				Result := l_first_cell.item
+			end
 		end
 
 feature -- Measurement
@@ -124,17 +124,15 @@ feature -- Measurement
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
 		local
-			a_tester: like equality_tester
 			a_cell: like first_cell
 		do
 			a_cell := first_cell
-			a_tester := equality_tester
-			if a_tester /= Void then
+			if attached equality_tester as l_tester then
 				from
 				until
 					(a_cell = Void)
 				loop
-					if a_tester.test (a_cell.item, v) then
+					if l_tester.test (a_cell.item, v) then
 						Result := Result + 1
 					end
 					a_cell := a_cell.right
@@ -158,15 +156,16 @@ feature -- Duplication
 	copy (other: like Current)
 			-- Copy `other' to current stack.
 		local
-			a_cell, new_cell, old_cell: like first_cell
+			a_cell, new_cell: attached like first_cell
+			old_cell: like first_cell
 		do
 			if other /= Current then
 				standard_copy (other)
-				if not other.is_empty then
+				old_cell := other.first_cell
+				if old_cell /= Void then
 					from
-						old_cell := other.first_cell
-						create first_cell.make (old_cell.item)
-						a_cell := first_cell
+						create a_cell.make (old_cell.item)
+						first_cell := a_cell
 						old_cell := old_cell.right
 					until
 						old_cell = Void
@@ -195,7 +194,7 @@ feature -- Comparison
 					other_cell := other.first_cell
 					Result := True
 				until
-					a_cell = Void
+					a_cell = Void or other_cell = Void
 				loop
 					if a_cell.item /= other_cell.item then
 						Result := False
@@ -214,11 +213,11 @@ feature -- Element change
 	put, force (v: G)
 			-- Push `v' on stack.
 		local
-			a_cell: like first_cell
+			a_cell: attached like first_cell
 		do
 			create a_cell.make (v)
-			if first_cell /= Void then
-				a_cell.put_right (first_cell)
+			if attached first_cell as l_first_cell then
+				a_cell.put_right (l_first_cell)
 			end
 			first_cell := a_cell
 			count := count + 1
@@ -227,14 +226,16 @@ feature -- Element change
 	replace (v: G)
 			-- Replace top item by `v'.
 		do
-			first_cell.put (v)
+			check not_empty: attached first_cell as l_first_cell then
+				l_first_cell.put (v)
+			end
 		end
 
 	extend, append (other: DS_LINEAR [G])
 			-- Add items of `other' to stack.
 			-- Add `other.first' first, etc.
 		local
-			a_cell, new_first: like first_cell
+			a_cell, new_first: attached like first_cell
 			other_cursor: DS_LINEAR_CURSOR [G]
 		do
 			if not other.is_empty then
@@ -242,8 +243,8 @@ feature -- Element change
 				from
 					other_cursor.start
 					create a_cell.make (other_cursor.item)
-					if first_cell /= Void then
-						a_cell.put_right (first_cell)
+					if attached first_cell as l_first_cell then
+						a_cell.put_right (l_first_cell)
 					end
 					new_first := a_cell
 					other_cursor.forth
@@ -265,8 +266,10 @@ feature -- Removal
 	remove
 			-- Remove top item from stack.
 		do
-			first_cell := first_cell.right
-			count := count - 1
+			check not_empty: attached first_cell as l_first_cell then
+				first_cell := l_first_cell.right
+				count := count - 1
+			end
 		end
 
 	prune (n: INTEGER)
@@ -284,7 +287,9 @@ feature -- Removal
 				until
 					i > n
 				loop
-					a_cell := a_cell.right
+					check not_empty: a_cell /= Void then
+						a_cell := a_cell.right
+					end
 					i := i + 1
 				end
 				first_cell := a_cell
@@ -440,7 +445,7 @@ feature -- Iteration
 
 feature {DS_LINKED_STACK} -- Implementation
 
-	first_cell: DS_LINKABLE [G]
+	first_cell: detachable DS_LINKABLE [G]
 			-- First cell in stack
 
 invariant

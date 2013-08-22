@@ -5,7 +5,7 @@ note
 		"Cursors for in-order traversal of binary search trees"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2008-2009, Daniel Tuser and others"
+	copyright: "Copyright (c) 2008-2013, Daniel Tuser and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,12 +42,12 @@ feature -- Access
 
 feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Access
 
-	position: DS_BINARY_SEARCH_TREE_NODE [G, K]
+	position: detachable DS_BINARY_SEARCH_TREE_NODE [G, K]
 			-- Current position in the underlying tree
 
 feature {DS_BILINEAR} -- Implementation
 
-	next_cursor: DS_BINARY_SEARCH_TREE_CURSOR [G, K]
+	next_cursor: detachable DS_BINARY_SEARCH_TREE_CURSOR [G, K]
 			-- Next cursor
 			-- (Used by `container' to keep track of traversing
 			-- cursors (i.e. cursors associated with `container'

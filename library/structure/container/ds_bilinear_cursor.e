@@ -5,7 +5,7 @@ note
 		"Cursors for data structures that may be traversed forward and backward"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,7 +17,8 @@ inherit
 	DS_LINEAR_CURSOR [G]
 		redefine
 			container,
-			next_cursor
+			next_cursor,
+			off
 		end
 
 feature -- Access
@@ -40,8 +41,15 @@ feature -- Status report
 
 	before: BOOLEAN
 			-- Is there no valid position to left of cursor?
+		deferred
+		ensure
+			before_constraint: Result implies off
+		end
+
+	off: BOOLEAN
+			-- Is there no item at cursor position?
 		do
-			Result := container.cursor_before (Current)
+			Result := after or before
 		end
 
 feature -- Cursor movement
@@ -85,7 +93,7 @@ feature -- Cursor movement
 
 feature {DS_BILINEAR} -- Implementation
 
-	next_cursor: DS_BILINEAR_CURSOR [G]
+	next_cursor: detachable DS_BILINEAR_CURSOR [G]
 			-- Next cursor
 			-- (Used by `container' to keep track of traversing
 			-- cursors (i.e. cursors associated with `container'
@@ -94,6 +102,5 @@ feature {DS_BILINEAR} -- Implementation
 invariant
 
 	not_both: not (after and before)
-	before_constraint: before implies off
 
 end

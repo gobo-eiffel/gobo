@@ -5,7 +5,7 @@ note
 		"Stacks (Last-In, First-Out) implemented with arrays"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/10/06 $"
 	revision: "$Revision: #10 $"
@@ -79,16 +79,14 @@ feature -- Status report
 			-- if not void, use `=' criterion otherwise.)
 		local
 			i: INTEGER
-			a_tester: like equality_tester
 		do
-			a_tester := equality_tester
-			if a_tester /= Void then
+			if attached equality_tester as l_tester then
 				from
 					i := count
 				until
 					i < 1
 				loop
-					if a_tester.test (storage.item (i), v) then
+					if l_tester.test (storage.item (i), v) then
 						Result := True
 							-- Jump out of the loop.
 						i := 0
@@ -153,16 +151,14 @@ feature -- Measurement
 			-- if not void, use `=' criterion otherwise.)
 		local
 			i: INTEGER
-			a_tester: like equality_tester
 		do
-			a_tester := equality_tester
-			if a_tester /= Void then
+			if attached equality_tester as l_tester then
 				from
 					i := count
 				until
 					i < 1
 				loop
-					if a_tester.test (storage.item (i), v) then
+					if l_tester.test (storage.item (i), v) then
 						Result := Result + 1
 					end
 					i := i - 1

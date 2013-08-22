@@ -58,15 +58,15 @@ feature -- Access
 			index_small_enough: Result <= count + 1
 		end
 
-	sorted_items: DS_ARRAYED_LIST [G]
+	sorted_items: detachable DS_ARRAYED_LIST [G]
 			-- Sorted items
 
-	cycle: DS_ARRAYED_LIST [G]
+	cycle: detachable DS_ARRAYED_LIST [G]
 			-- Items involved in a cycle if any
 			-- (Note: the items in `cycle' are stored in reverse order
 			-- and the first item is repeated at the end of the list.)
 
-	equality_tester: KL_EQUALITY_TESTER [G]
+	equality_tester: detachable KL_EQUALITY_TESTER [G]
 			-- Equality tester to compare items to be sorted;
 			-- A void equality tester means that `=' will be
 			-- used as comparison criterion.
@@ -125,9 +125,9 @@ feature -- Status report
 	has_cycle: BOOLEAN
 			-- Has a cycle been detected?
 		do
-			Result := (cycle /= Void and then not cycle.is_empty)
+			Result := (attached cycle as l_cycle and then not l_cycle.is_empty)
 		ensure
-			definition: Result = (cycle /= Void and then not cycle.is_empty)
+			definition: Result = (attached cycle as l_cycle and then not l_cycle.is_empty)
 		end
 
 	equality_tester_settable (a_tester: like equality_tester): BOOLEAN
@@ -230,7 +230,8 @@ feature -- Element change
 			j_large_enough: j >= 1
 			j_small_enough: j <= count
 		local
-			succ, succ2: DS_LINKABLE [INTEGER]
+			succ: DS_LINKABLE [INTEGER]
+			succ2: detachable DS_LINKABLE [INTEGER]
 		do
 			reset
 			counts.replace (counts.item (j) + 1, j)
@@ -251,7 +252,8 @@ feature -- Removal
 			has: has (v)
 		local
 			k, j: INTEGER
-			s1, s2, s3, s4, old_s: DS_LINKABLE [INTEGER]
+			s1, s2, s3, old_s: detachable DS_LINKABLE [INTEGER]
+			s4: DS_LINKABLE [INTEGER]
 			i, nb: INTEGER
 		do
 			k := index_of (v)
@@ -283,8 +285,10 @@ feature -- Removal
 					if s1.item = k then
 						if s2 = Void then
 							successors.put (s1.right, i)
+						elseif attached s1.right as l_right then
+							s2.put_right (l_right)
 						else
-							s2.put_right (s1.right)
+							s2.forget_right
 						end
 						from
 							s3 := old_s
@@ -300,9 +304,17 @@ feature -- Removal
 								if s2 = Void then
 									s2 := s4
 									successors.put (s2, i)
-									s2.put_right (s1.right)
+									if attached s1.right as l_right then
+										s2.put_right (l_right)
+									else
+										s2.forget_right
+									end
 								else
-									s4.put_right (s2.right)
+									if attached s2.right as l_right then
+										s4.put_right (l_right)
+									else
+										s4.forget_right
+									end
 									s2.put_right (s4)
 									s2 := s4
 								end
@@ -359,10 +371,12 @@ feature -- Sort
 			i, nb: INTEGER
 			front, rear, old_front: INTEGER
 			qlinks: DS_ARRAYED_LIST [INTEGER]
-			succ: DS_LINKABLE [INTEGER]
+			succ: detachable DS_LINKABLE [INTEGER]
 			marks: ARRAY [BOOLEAN]
 			a_counts: like counts
 			a_successors: like successors
+			l_sorted_items: attached like sorted_items
+			l_cycle: attached like cycle
 		do
 				-- See description of algorithm in "The Art of Computer
 				-- Programming", Vol.1 3rd ed. p.265. The detection of
@@ -373,7 +387,8 @@ feature -- Sort
 			a_counts := counts.cloned_object
 			a_successors := successors.cloned_object
 			nb := items.count
-			create sorted_items.make (nb)
+			create l_sorted_items.make (nb)
+			sorted_items := l_sorted_items
 				-- T4. Scan for zeros.
 				-- `qlinks' is a queue containing items not processed
 				-- yet but which don't have predecessors or whose
@@ -421,15 +436,16 @@ feature -- Sort
 					succ := succ.right
 				end
 				a_successors.replace (Void, front)
-				sorted_items.put_last (items.item (front))
+				l_sorted_items.put_last (items.item (front))
 				old_front := front
 				front := qlinks.item (old_front)
 				qlinks.replace (0, old_front)
 			end
-			nb := items.count - sorted_items.count
+			nb := items.count - l_sorted_items.count
 			if nb /= 0 then
 					-- A cycle has been detected.
-				create cycle.make (nb + 1)
+				create l_cycle.make (nb + 1)
+				cycle := l_cycle
 					-- T8.
 				nb := items.count
 				from
@@ -485,15 +501,15 @@ feature -- Sort
 				until
 					marks.item (i) = True
 				loop
-					cycle.put_last (items.item (i))
+					l_cycle.put_last (items.item (i))
 					marks.put (True, i)
 					i := qlinks.item (i)
 				end
-				cycle.put_last (items.item (i))
+				l_cycle.put_last (items.item (i))
 			end
 		ensure
 			sorted: is_sorted
-			cycle: (sorted_items.count /= count) implies has_cycle
+			cycle: (attached sorted_items as l_attached_sorted_items and then (l_attached_sorted_items.count /= count)) implies has_cycle
 		end
 
 feature {NONE} -- Implementation
@@ -505,7 +521,7 @@ feature {NONE} -- Implementation
 			-- Number of predecessors for each item
 			-- (same indexing as in `items'.)
 
-	successors: DS_ARRAYED_LIST [DS_LINKABLE [INTEGER]]
+	successors: DS_ARRAYED_LIST [detachable DS_LINKABLE [INTEGER]]
 			-- Successors for each item
 			-- (same indexing as in `items'.)
 
@@ -518,6 +534,6 @@ invariant
 	successors_not_void: successors /= Void
 	successors_count: successors.count = items.count
 	successors_capacity: successors.capacity = items.capacity
-	has_cycle: has_cycle implies cycle.count >= 2 and then cycle.first = cycle.last
+	has_cycle: has_cycle implies attached cycle as l_cycle and then l_cycle.count >= 2 and then l_cycle.first = l_cycle.last
 
 end

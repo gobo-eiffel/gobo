@@ -5,7 +5,7 @@ note
 		"Cursors for data structure traversals"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -39,14 +39,15 @@ feature -- Access
 	container: DS_TRAVERSABLE [G]
 			-- Data structure traversed
 		deferred
+		ensure
+			container_not_void: Result /= Void
 		end
 
 feature -- Status report
 
 	off: BOOLEAN
 			-- Is there no item at cursor position?
-		do
-			Result := container.cursor_off (Current)
+		deferred
 		end
 
 	same_position (other: like Current): BOOLEAN
@@ -108,7 +109,7 @@ feature -- Comparison
 
 feature {DS_TRAVERSABLE} -- Implementation
 
-	next_cursor: DS_CURSOR [G]
+	next_cursor: detachable DS_CURSOR [G]
 			-- Next cursor
 			-- (Used by `container' to keep track of traversing
 			-- cursors (i.e. cursors associated with `container'
@@ -121,10 +122,5 @@ feature {DS_TRAVERSABLE} -- Implementation
 		ensure
 			next_cursor_set: next_cursor = a_cursor
 		end
-
-invariant
-
-	container_not_void: container /= Void
-	empty_constraint: container.is_empty implies off
 
 end

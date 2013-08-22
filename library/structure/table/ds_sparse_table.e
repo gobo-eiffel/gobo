@@ -6,7 +6,7 @@ note
 		%which should supply their hashing mechanisms."
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2000-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,8 +23,7 @@ inherit
 			has_item,
 			occurrences,
 			cursor_off,
-			key_for_iteration,
-			initialized
+			key_for_iteration
 		end
 
 	DS_SPARSE_CONTAINER [G, K]
@@ -35,8 +34,7 @@ inherit
 		redefine
 			search,
 			new_cursor,
-			copy,
-			initialized
+			copy
 		end
 
 feature {NONE} -- Initialization
@@ -140,7 +138,8 @@ feature {NONE} -- Initialization
 			equality_tester := an_item_tester
 			key_equality_tester := a_key_tester
 			make_sparse_container (n)
-			create internal_keys.make (Current)
+			create internal_keys.make_with_table_cursor (Current, new_cursor)
+			internal_keys.internal_set_equality_tester (key_equality_tester)
 		ensure
 			empty: is_empty
 			capacity_set: capacity = n
@@ -193,7 +192,7 @@ feature -- Access
 			create Result.make (Current)
 		end
 
-	key_equality_tester: KL_EQUALITY_TESTER [K]
+	key_equality_tester: detachable KL_EQUALITY_TESTER [K]
 			-- Equality tester for keys;
 			-- A void equality tester means that `='
 			-- will be used as comparison criterion.
@@ -395,12 +394,12 @@ feature -- Element change
 					compress
 					i := last_position + 1
 				end
+				last_position := i
 				h := slots_position
 				clashes_put (slots_item (h), i)
 				slots_put (i, h)
 				item_storage_put (v, i)
 				key_storage_put (k, i)
-				last_position := i
 				count := count + 1
 			end
 		ensure
@@ -425,12 +424,12 @@ feature -- Element change
 				compress
 				i := last_position + 1
 			end
+			last_position := i
 			h := hash_position (k)
 			clashes_put (slots_item (h), i)
 			slots_put (i, h)
 			item_storage_put (v, i)
 			key_storage_put (k, i)
-			last_position := i
 			count := count + 1
 		ensure
 			one_more: count = old count + 1
@@ -518,11 +517,11 @@ feature -- Element change
 				else
 					h := slots_position
 				end
+				last_position := i
 				clashes_put (slots_item (h), i)
 				slots_put (i, h)
 				item_storage_put (v, i)
 				key_storage_put (k, i)
-				last_position := i
 				count := count + 1
 			end
 		ensure
@@ -546,12 +545,12 @@ feature -- Element change
 			if i > capacity then
 				resize (new_capacity (i))
 			end
+			last_position := i
 			h := hash_position (k)
 			clashes_put (slots_item (h), i)
 			slots_put (i, h)
 			item_storage_put (v, i)
 			key_storage_put (k, i)
-			last_position := i
 			count := count + 1
 		ensure
 			one_more: count = old count + 1
@@ -569,7 +568,12 @@ feature -- Duplication
 		do
 			l_keys := internal_keys
 			precursor (other)
-			internal_keys := l_keys
+			if l_keys /= Void then
+				internal_keys := l_keys
+			else
+				create internal_keys.make_with_table_cursor (Current, new_cursor)
+				internal_keys.internal_set_equality_tester (key_equality_tester)
+			end
 		end
 
 feature -- Iteration
@@ -676,15 +680,17 @@ feature {NONE} -- Implementation
 	internal_keys: DS_SPARSE_TABLE_KEYS [G, K]
 			-- View of current table as a linear representation of its keys
 
-	initialized: BOOLEAN
-			-- Some Eiffel compilers check invariants even when the
-			-- execution of the creation procedure is not completed.
-			-- (In this case, checking the assertions of the being
-			-- created `internal_cursor' and `internal_keys'
-			-- triggers the invariants on the current container.
-			-- So these invariants need to be protected.)
+feature {DS_SPARSE_TABLE_KEYS} -- Implementation
+
+	set_internal_keys (a_keys: like internal_keys)
+			-- Set `internal_keys' to `a_keys'
+		require
+			a_keys_not_void: a_keys /= Void
+			valid_keys: a_keys.table = Current
 		do
-			Result := (internal_cursor /= Void and internal_keys /= Void)
+			internal_keys := a_keys
+		ensure
+			internal_keys_set: internal_keys = a_keys
 		end
 
 feature {DS_SPARSE_TABLE_CURSOR} -- Cursor implementation
@@ -697,7 +703,7 @@ feature {DS_SPARSE_TABLE_CURSOR} -- Cursor implementation
 
 invariant
 
-	internal_keys_not_void: initialized implies internal_keys /= Void
-	internal_keys_consistent: initialized implies internal_keys.table = Current
+	internal_keys_not_void: internal_keys /= Void
+	internal_keys_consistent: internal_keys.table = Current
 
 end

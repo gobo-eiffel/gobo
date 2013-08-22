@@ -5,7 +5,7 @@ note
 		"Cursors for sparse container traversals"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,7 +16,8 @@ inherit
 
 	DS_BILINEAR_CURSOR [G]
 		redefine
-			next_cursor
+			next_cursor,
+			off
 		end
 
 create
@@ -31,7 +32,7 @@ feature {NONE} -- Initialization
 			a_container_not_void: a_container /= Void
 		do
 			container := a_container
-			position := container.before_position
+			position := before_position
 		ensure
 			container_set: container = a_container
 			before: before
@@ -41,6 +42,26 @@ feature -- Access
 
 	container: DS_SPARSE_CONTAINER [G, K]
 			-- Container traversed
+
+feature -- Status report
+
+	after: BOOLEAN
+			-- Is there no valid position to right of cursor?
+		do
+			Result := (position = after_position)
+		end
+
+	before: BOOLEAN
+			-- Is there no valid position to left of cursor?
+		do
+			Result := (position = before_position)
+		end
+
+	off: BOOLEAN
+			-- Is there no item at cursor position?
+		do
+			Result := position < 0
+		end
 
 feature {DS_SPARSE_CONTAINER, DS_SPARSE_CONTAINER_CURSOR} -- Implementation
 
@@ -62,7 +83,7 @@ feature {DS_SPARSE_CONTAINER} -- Implementation
 	set_after
 			-- Set `position' to after position
 		do
-			position := container.after_position
+			position := after_position
 		ensure
 			after: after
 		end
@@ -70,7 +91,7 @@ feature {DS_SPARSE_CONTAINER} -- Implementation
 	set_before
 			-- Set `position' to before position
 		do
-			position := container.before_position
+			position := before_position
 		ensure
 			before: before
 		end
@@ -78,18 +99,24 @@ feature {DS_SPARSE_CONTAINER} -- Implementation
 	valid_position (p: INTEGER): BOOLEAN
 			-- Is `p' a valid value for `position'?
 		do
-			Result := (p = container.before_position or p = container.after_position) or
+			Result := (p = before_position or p = after_position) or
 				(container.valid_position (p) and then container.valid_slot (p))
 		ensure
 			not_off: (container.valid_position (p) and then container.valid_slot (p)) implies Result
-			before: (p = container.before_position) implies Result
-			after: (p = container.after_position) implies Result
+			before: (p = before_position) implies Result
+			after: (p = after_position) implies Result
 			valid_slot: (Result and container.valid_position (p)) implies container.valid_slot (p)
 		end
 
+	before_position: INTEGER = -1
+			-- Special value for before cursor position
+
+	after_position: INTEGER = -2
+			-- Special values for after cursor position
+
 feature {DS_SPARSE_CONTAINER} -- Implementation
 
-	next_cursor: DS_SPARSE_CONTAINER_CURSOR [G, K]
+	next_cursor: detachable DS_SPARSE_CONTAINER_CURSOR [G, K]
 			-- Next cursor
 			-- (Used by `container' to keep track of traversing
 			-- cursors (i.e. cursors associated with `container'

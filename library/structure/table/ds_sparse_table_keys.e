@@ -26,7 +26,7 @@ inherit
 
 create {DS_SPARSE_TABLE}
 
-	make
+	make, make_with_table_cursor
 
 feature {NONE} -- Initialization
 
@@ -38,6 +38,19 @@ feature {NONE} -- Initialization
 			table := a_table
 			equality_tester := table.key_equality_tester
 			set_internal_cursor (new_cursor)
+		ensure
+			table_set: table = a_table
+		end
+
+	make_with_table_cursor (a_table: like table; a_table_cursor: like table.new_cursor)
+			-- Create a new linear representation of the keys of `a_table'.
+			-- `a_table_cursor' is a cursor for `a_table'.
+		require
+			a_table_not_void: a_table /= Void
+			a_table_cursor_not_void: a_table_cursor /= Void
+		do
+			table := a_table
+			set_internal_cursor (new_cursor_with_table_cursor (a_table_cursor))
 		ensure
 			table_set: table = a_table
 		end
@@ -288,6 +301,7 @@ feature -- Duplication
 				if table = Void then
 						-- Called from `twin'.
 					make (other.table.twin)
+					table.set_internal_keys (Current)
 				else
 					table.copy (other.table)
 					equality_tester := table.key_equality_tester
@@ -314,24 +328,23 @@ feature {NONE} -- Cursor implementation
 	internal_cursor: like new_cursor
 			-- Internal cursor
 
+	new_cursor_with_table_cursor (a_table_cursor: like table.new_cursor): DS_SPARSE_TABLE_KEYS_CURSOR [G, K]
+			-- New external cursor for traversal
+			-- `a_table_cursor' is a cursor for `table'.
+		require
+			a_table_cursor_not_void: a_table_cursor /= Void
+		do
+			create Result.make_with_table_cursor (Current, a_table_cursor)
+		ensure
+			cursor_not_void: Result /= Void
+		end
+
 feature {DS_SPARSE_TABLE_KEYS_CURSOR} -- Cursor implementation
 
 	cursor_item (a_cursor: like new_cursor): K
 			-- Item at `a_cursor' position
 		do
 			Result := a_cursor.table_cursor.key
-		end
-
-	cursor_after (a_cursor: like new_cursor): BOOLEAN
-			-- Is there no valid position to right of `a_cursor'?
-		do
-			Result := a_cursor.table_cursor.after
-		end
-
-	cursor_before (a_cursor: like new_cursor): BOOLEAN
-			-- Is there no valid position to left of `a_cursor'?
-		do
-			Result := a_cursor.table_cursor.before
 		end
 
 	cursor_is_first (a_cursor: like new_cursor): BOOLEAN
@@ -382,14 +395,11 @@ feature {DS_SPARSE_TABLE_KEYS_CURSOR} -- Cursor implementation
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
 			-- Move `after' if not found.
-		local
-			a_tester: like equality_tester
 		do
-			a_tester := equality_tester
-			if a_tester /= Void then
+			if attached equality_tester as l_tester then
 				from
 				until
-					cursor_after (a_cursor) or else a_tester.test (cursor_item (a_cursor), v)
+					cursor_after (a_cursor) or else l_tester.test (cursor_item (a_cursor), v)
 				loop
 					cursor_forth (a_cursor)
 				end
@@ -410,14 +420,11 @@ feature {DS_SPARSE_TABLE_KEYS_CURSOR} -- Cursor implementation
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
 			-- Move `before' if not found.
-		local
-			a_tester: like equality_tester
 		do
-			a_tester := equality_tester
-			if a_tester /= Void then
+			if attached equality_tester as l_tester then
 				from
 				until
-					cursor_before (a_cursor) or else a_tester.test (cursor_item (a_cursor), v)
+					cursor_before (a_cursor) or else l_tester.test (cursor_item (a_cursor), v)
 				loop
 					cursor_back (a_cursor)
 				end

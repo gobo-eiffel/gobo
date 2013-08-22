@@ -5,7 +5,7 @@ note
 		"Cursors for in-order traversal of containers using red-black tree algorithms"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2009, Daniel Tuser and others"
+	copyright: "Copyright (c) 2009-2013, Daniel Tuser and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,12 +28,12 @@ feature -- Access
 
 feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Access
 
-	position: DS_RED_BLACK_TREE_CONTAINER_NODE [G, K]
+	position: detachable DS_RED_BLACK_TREE_CONTAINER_NODE [G, K]
 			-- Current position in the underlying tree
 
 feature {DS_BILINEAR} -- Implementation
 
-	next_cursor: DS_RED_BLACK_TREE_CONTAINER_CURSOR [G, K]
+	next_cursor: detachable DS_RED_BLACK_TREE_CONTAINER_CURSOR [G, K]
 			-- Next cursor
 			-- (Used by `container' to keep track of traversing
 			-- cursors (i.e. cursors associated with `container'
