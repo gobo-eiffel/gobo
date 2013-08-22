@@ -467,7 +467,7 @@ feature -- Removal
 				key_storage_wipe_out
 				clashes_wipe_out
 				slots_wipe_out
-				last_position := 0
+				last_position := No_position
 				free_slot := No_position
 				count := 0
 			end
@@ -650,7 +650,7 @@ feature {NONE} -- Implementation
 					prev := clashes_previous_position
 					if
 						position = No_position or else
-						clashes_item (position) = Free_watermark or else
+						clashes_item (position) <= Free_watermark or else
 						not l_tester.test (k, key_storage_item (position))
 					then
 						from
@@ -677,7 +677,7 @@ feature {NONE} -- Implementation
 				else
 					if
 						position = No_position or else
-						clashes_item (position) = Free_watermark or else
+						clashes_item (position) <= Free_watermark or else
 						k /= key_storage_item (position)
 					then
 						from

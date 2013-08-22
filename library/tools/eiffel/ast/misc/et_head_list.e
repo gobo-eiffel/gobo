@@ -133,7 +133,7 @@ feature -- Element change
 			an_item_not_void: an_item /= Void
 			not_full: count < capacity
 		do
-			fixed_array.force (storage,an_item, count)
+			fixed_array.force (storage, an_item, count)
 			count := count + 1
 		ensure
 			one_more: count = old count + 1
