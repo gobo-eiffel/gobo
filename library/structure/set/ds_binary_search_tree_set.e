@@ -312,9 +312,7 @@ feature -- Basic operations
 				loop
 					l_item := l_cursor.item
 					if not other.has (l_item) then
-						check not_off: attached l_cursor.position as l_position then
-							remove_node (l_position)
-						end
+						remove (l_item)
 					else
 						l_cursor.forth
 					end
@@ -327,7 +325,7 @@ feature -- Basic operations
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
 		local
-			l_cursor: like new_cursor
+			l_cursor: DS_SET_CURSOR [G]
 			l_item: G
 		do
 			if other.is_empty then
@@ -337,19 +335,16 @@ feature -- Basic operations
 			else
 				move_all_cursors_after
 				from
-					l_cursor := new_cursor
+					l_cursor := other.new_cursor
 					l_cursor.start
 				until
 					l_cursor.after
 				loop
 					l_item := l_cursor.item
-					if other.has (l_item) then
-						check not_off: attached l_cursor.position as l_position then
-							remove_node (l_position)
-						end
-					else
-						l_cursor.forth
+					if has (l_item) then
+						remove (l_item)
 					end
+					l_cursor.forth
 				end
 			end
 		end

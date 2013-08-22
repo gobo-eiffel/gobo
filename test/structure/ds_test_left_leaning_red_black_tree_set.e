@@ -342,7 +342,7 @@ feature -- Test
 			assert ("is_disjoint1", l_tree_3.is_disjoint (l_tree_2))
 			assert ("is_disjoint2", l_tree_2.is_disjoint (l_tree_3))
 			assert ("count1", l_tree_2.count = 2)
-			assert ("count1", l_tree_3.count = 2)
+			assert ("count2", l_tree_3.count = 2)
 			l_tree_1.subtract (l_tree_2)
 			assert ("is_disjoint3", l_tree_1.is_disjoint (l_tree_2))
 			assert ("is_disjoint4", l_tree_2.is_disjoint (l_tree_1))
