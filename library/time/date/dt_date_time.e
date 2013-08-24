@@ -260,11 +260,11 @@ feature -- Element change
 		local
 			ms, d: INTEGER
 		do
+			add_years_months_days (a_duration.year, a_duration.month, a_duration.day)
 			ms := a_duration.millisecond_count
 			if ms /= 0 then
 				add_milliseconds (ms)
 			end
-			add_years_months_days (a_duration.year, a_duration.month, a_duration.day + d)
 		end
 
 	add_hours (h: INTEGER)
