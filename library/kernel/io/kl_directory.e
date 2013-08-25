@@ -57,7 +57,11 @@ feature {NONE} -- Initialization
 		do
 			name := a_name
 			last_entry := Dummy_entry
-			old_make (STRING_.as_string (a_name))
+			if a_name.count > 0 then
+				old_make (STRING_.as_string (a_name))
+			else
+				old_make (Empty_name)
+			end
 		end
 
 feature -- Access
@@ -187,7 +191,7 @@ feature -- Status report
 	exists: BOOLEAN
 			-- Does directory physically exist on disk?
 		do
-			if string_name.count > 0 then
+			if name.count > 0 then
 				Result := old_exists
 			end
 		end
@@ -195,7 +199,7 @@ feature -- Status report
 	is_readable: BOOLEAN
 			-- Can directory be opened in read mode?
 		do
-			if string_name.count > 0 then
+			if name.count > 0 then
 				Result := old_exists and then old_is_readable
 			end
 		end
@@ -244,7 +248,7 @@ feature -- Basic operations
 			rescued: BOOLEAN
 		do
 			if not rescued then
-				if string_name.count > 0 then
+				if name.count > 0 then
 					entry_buffer := Void
 					end_of_input := False
 					if old_exists and then old_is_readable then
@@ -291,7 +295,7 @@ feature -- Basic operations
 			rescued: BOOLEAN
 		do
 			if not rescued then
-				if string_name.count > 0 then
+				if name.count > 0 then
 					if not old_exists then
 						create_dir
 					end
@@ -341,7 +345,7 @@ feature -- Basic operations
 			rescued: BOOLEAN
 		do
 			if not rescued then
-				if string_name.count > 0 then
+				if name.count > 0 then
 					if old_exists and then is_empty then
 						old_delete
 					end
@@ -363,7 +367,7 @@ feature -- Basic operations
 			rescued: BOOLEAN
 		do
 			if not rescued then
-				if string_name.count > 0 then
+				if name.count > 0 then
 					if old_exists then
 						old_recursive_delete
 					end
@@ -392,7 +396,7 @@ feature -- Basic operations
 			a_new_pathname: STRING
 		do
 			if not rescued then
-				if string_name.count > 0 then
+				if name.count > 0 then
 					create a_new_dir.make (new_name)
 					if not a_new_dir.exists and not file_system.file_exists (new_name) then
 						a_new_dir.recursive_create_directory
@@ -656,6 +660,9 @@ feature {NONE} -- Implementation
 
 	Dummy_entry: STRING = ""
 			-- Dummy entry
+
+	Empty_name: STRING = "empty_name"
+			-- Empty name place-holder
 
 invariant
 
