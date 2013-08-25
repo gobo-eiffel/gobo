@@ -93,6 +93,10 @@ Version 3.10 - ?
 	  setting `has_dollar' to True even though the dollar sign was escaped.
 	* Added features `pattern' and `is_case_insensitive' in class LX_PATTERN_MATCHER.
 
+	Gobo Eiffel Pattern Library:
+
+	* Made it compilable in void-safe mode with ISE 7.3.
+
 	Gobo Eiffel Regexp Library:
 
 	* The pattern being matched and the case-sensitiveness are now available

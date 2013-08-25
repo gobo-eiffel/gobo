@@ -4,7 +4,7 @@
 	<description>
 		description: "Xace file for the Gobo Eiffel Pattern Library"
 		library: "Gobo Eiffel Pattern Library"
-		copyright: "Copyright (c) 2001, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2013, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -15,4 +15,7 @@
 		<cluster name="bridge"/>
 		<cluster name="command"/>
 	</cluster>
+
+	<mount location="${GOBO}/library/kernel.xace"/>
+	<mount location="${GOBO}/library/kernel/library.xace"/>
 </library>
