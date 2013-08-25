@@ -5,7 +5,7 @@ note
 		"Parser skeletons for parser generators such as 'geyacc'"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -801,7 +801,7 @@ feature {NONE} -- Implementation
 			a_type: PR_TYPE
 		do
 				-- Make sure ANY is the first type in grammar.
-			a_type := new_type (Void, "ANY")
+			a_type := new_type ("detachable", "ANY")
 				-- Error token. The token id value 256
 				-- is specified by POSIX.
 			a_token := new_token ("error")
@@ -1576,7 +1576,7 @@ feature {NONE} -- Constants
 			-- Type used when no type has been specified:
 			--   %token token_name
 		do
-			Result := new_type (Void, "ANY")
+			Result := new_type ("detachable", "ANY")
 		ensure
 			no_type_not_void: Result /= Void
 		end
@@ -1584,7 +1584,7 @@ feature {NONE} -- Constants
 	Unknown_type: PR_TYPE
 			-- Type used when type is not known
 		do
-			Result := new_type (Void, "ANY")
+			Result := new_type ("detachable", "ANY")
 		ensure
 			no_type_not_void: Result /= Void
 		end

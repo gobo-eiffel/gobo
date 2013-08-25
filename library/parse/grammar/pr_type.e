@@ -232,11 +232,6 @@ feature {NONE} -- Initialization
 			id_set: id = an_id
 		end
 
-feature -- Status report
-
-	is_used: BOOLEAN
-			-- Should a conversion routine ANY->`name' be generated?
-
 feature -- Access
 
 	name: STRING
@@ -409,14 +404,6 @@ feature -- Output
 			a_file_open_write: a_file.is_open_write
 		do
 			print_indentation (indent, a_file)
-			a_file.put_line ("debug (%"GEYACC%")")
-			print_indentation (indent + 1, a_file)
-			a_file.put_string ("std.error.put_line (%"Create yyvs")
-			a_file.put_integer (id)
-			a_file.put_line ("%")")
-			print_indentation (indent, a_file)
-			a_file.put_line ("end")
-			print_indentation (indent, a_file)
 			a_file.put_string ("create yyspecial_routines")
 			a_file.put_integer (id)
 			a_file.put_new_line
@@ -442,19 +429,9 @@ feature -- Output
 			a_file_open_write: a_file.is_open_write
 		do
 			print_indentation (indent, a_file)
-			a_file.put_string ("if yyvs")
-			a_file.put_integer (id)
-			a_file.put_line (" /= Void then")
-			print_indentation (indent + 1, a_file)
 			a_file.put_string ("yyvs")
 			a_file.put_integer (id)
-			a_file.put_string (".fill_with (l_yyvs")
-			a_file.put_integer (id)
-			a_file.put_string ("_default_item, 0, yyvs")
-			a_file.put_integer (id)
-			a_file.put_line (".upper)")
-			print_indentation (indent, a_file)
-			a_file.put_line ("end")
+			a_file.put_line (".keep_head (0)")
 		end
 
 	print_increment_yyvsp (nb: INTEGER; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
@@ -513,15 +490,35 @@ feature -- Output
 			a_file.put_line (" + 1")
 			print_resize_yyvs (indent, a_file)
 			print_indentation (indent, a_file)
+			a_file.put_string ("if attached ")
+			a_file.put_string (last_value_name)
+			a_file.put_string (" as yyl_")
+			a_file.put_string (last_value_name)
+			a_file.put_line (" then")
+			print_indentation (indent + 1, a_file)
 			a_file.put_string ("yyspecial_routines")
 			a_file.put_integer (id)
 			a_file.put_string (".force (yyvs")
 			a_file.put_integer (id)
-			a_file.put_string (", ")
+			a_file.put_string (", yyl_")
 			a_file.put_string (last_value_name)
 			a_file.put_string (", yyvsp")
 			a_file.put_integer (id)
 			a_file.put_line (")")
+			print_indentation (indent, a_file)
+			a_file.put_line ("else")
+			print_indentation (indent + 1, a_file)
+			a_file.put_string ("yyspecial_routines")
+			a_file.put_integer (id)
+			a_file.put_string (".force (yyvs")
+			a_file.put_integer (id)
+			a_file.put_string (", ({")
+			a_file.put_string (name)
+			a_file.put_string ("}).default, yyvsp")
+			a_file.put_integer (id)
+			a_file.put_line (")")
+			print_indentation (indent, a_file)
+			a_file.put_line ("end")
 		end
 
 	print_pop_last_value (indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
@@ -554,38 +551,29 @@ feature -- Output
 			a_file.put_integer (id)
 			a_file.put_line (" then")
 			print_indentation (indent + 1, a_file)
-			a_file.put_string ("if yyvs")
-			a_file.put_integer (id)
-			a_file.put_line (" = Void then")
-			print_create_yyvs (indent + 2, a_file)
-			print_indentation (indent + 1, a_file)
-			a_file.put_line ("else")
-			print_indentation (indent + 2, a_file)
 			a_file.put_line ("debug (%"GEYACC%")")
-			print_indentation (indent + 3, a_file)
+			print_indentation (indent + 2, a_file)
 			a_file.put_string ("std.error.put_line (%"Resize yyvs")
 			a_file.put_integer (id)
 			a_file.put_line ("%")")
-			print_indentation (indent + 2, a_file)
+			print_indentation (indent + 1, a_file)
 			a_file.put_line ("end")
-			print_indentation (indent + 2, a_file)
+			print_indentation (indent + 1, a_file)
 			a_file.put_string ("yyvsc")
 			a_file.put_integer (id)
 			a_file.put_string (" := yyvsc")
 			a_file.put_integer (id)
 			a_file.put_line (" + yyInitial_yyvs_size")
-			print_indentation (indent + 2, a_file)
+			print_indentation (indent + 1, a_file)
 			a_file.put_string ("yyvs")
 			a_file.put_integer (id)
 			a_file.put_string (" := yyspecial_routines")
 			a_file.put_integer (id)
-			a_file.put_string (".resize (yyvs")
+			a_file.put_string (".aliased_resized_area (yyvs")
 			a_file.put_integer (id)
 			a_file.put_string (", yyvsc")
 			a_file.put_integer (id)
 			a_file.put_line (")")
-			print_indentation (indent + 1, a_file)
-			a_file.put_line ("end")
 			print_indentation (indent, a_file)
 			a_file.put_line ("end")
 		end

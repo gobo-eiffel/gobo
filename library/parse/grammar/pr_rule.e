@@ -287,7 +287,6 @@ feature -- Output
 			end
 			a_file.put_line ("%")")
 			a_file.put_line ("end")
-			a_type := lhs.type
 			a_file.put_new_line
 			a_file.put_string (action.out)
 			a_file.put_new_line
@@ -297,6 +296,7 @@ feature -- Output
 			a_file.put_integer (nb)
 			a_file.put_new_line
 			create types.make_map (nb + 1)
+			a_type := lhs.type
 			types.put_new (1, a_type)
 			from
 				i := 1

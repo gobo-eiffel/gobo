@@ -4,7 +4,7 @@
 	<description>
 		description: "Xace file for the Gobo Eiffel Parse Library"
 		library: "Gobo Eiffel Parse Library"
-		copyright: "Copyright (c) 2001, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2013, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -17,8 +17,10 @@
 		<cluster name="generation"/>
 		<cluster name="grammar"/>
 		<cluster name="parser"/>
-		<cluster name="skeleton"/>
 		<cluster name="support"/>
 		<cluster name="yacc"/>
 	</cluster>
+
+	<mount location="${GOBO}/library/parse/library_skl.xace"/>
+
 </library>

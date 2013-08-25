@@ -249,6 +249,7 @@ feature {NONE} -- Generation
 			tokens: DS_ARRAYED_LIST [PR_TOKEN]
 			a_type: PR_TYPE
 			i, nb: INTEGER
+			l_type_name: STRING
 		do
 			a_file.put_line ("feature -- Last values")
 			a_file.put_new_line
@@ -280,6 +281,10 @@ feature {NONE} -- Generation
 				a_file.put_string ("%T")
 				a_file.put_string (a_type.last_value_name)
 				a_file.put_string (": ")
+				l_type_name := a_type.name.as_lower
+				if not l_type_name.starts_with ("detachable ") and not l_type_name.starts_with ("?") then
+					a_file.put_string ("detachable ")
+				end
 				a_file.put_line (a_type.name)
 				a_cursor.forth
 			end
@@ -347,10 +352,25 @@ feature {NONE} -- Generation
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
+		local
+			types: DS_ARRAYED_LIST [PR_TYPE]
+			a_type: PR_TYPE
+			i, nb: INTEGER
 		do
 			a_file.put_line ("%Tyy_create_value_stacks")
 			a_file.put_line ("%T%T%T-- Create value stacks.")
 			a_file.put_line ("%T%Tdo")
+			types := machine.grammar.types
+			nb := types.count
+			from
+				i := 1
+			until
+				i > nb
+			loop
+				a_type := types.item (i)
+				a_type.print_create_yyvs (3, a_file)
+				i := i + 1
+			end
 			a_file.put_line ("%T%Tend")
 		end
 
@@ -400,21 +420,6 @@ feature {NONE} -- Generation
 			a_file.put_line ("%Tyy_clear_value_stacks")
 			a_file.put_line ("%T%T%T-- Clear objects in semantic value stacks so that")
 			a_file.put_line ("%T%T%T-- they can be collected by the garbage collector.")
-			if nb > 0 then
-				a_file.put_line ("%T%Tlocal")
-				from
-					i := 1
-				until
-					i > nb
-				loop
-					a_type := types.item (i)
-					a_file.put_string ("%T%T%Tl_yyvs")
-					a_file.put_integer (a_type.id)
-					a_file.put_string ("_default_item: ")
-					a_file.put_line (a_type.name)
-					i := i + 1
-				end
-			end
 			a_file.put_line ("%T%Tdo")
 			from
 				i := 1
