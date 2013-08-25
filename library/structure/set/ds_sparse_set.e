@@ -5,6 +5,7 @@ note
 		"Sets implemented with sparse arrays. Ancestor of hash sets %
 		%which should supply its hashing mechanism."
 
+	storable_version: "20130823"
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
@@ -123,7 +124,7 @@ feature -- Status report
 					i := last_position
 					Result := True
 				until
-					not Result or i < 1
+					not Result or i < 0
 				loop
 					if clashes_item (i) > Free_watermark then
 						an_item := item_storage_item (i)
@@ -149,7 +150,7 @@ feature -- Status report
 					i := last_position
 					Result := True
 				until
-					not Result or i < 1
+					not Result or i < 0
 				loop
 					if clashes_item (i) > Free_watermark then
 						an_item := item_storage_item (i)
@@ -193,7 +194,7 @@ feature -- Comparison
 					i := last_position
 					Result := True
 				until
-					not Result or i < 1
+					not Result or i < 0
 				loop
 					if clashes_item (i) > Free_watermark then
 						an_item := item_storage_item (i)
@@ -272,7 +273,7 @@ feature -- Element change
 				item_storage_put (v, position)
 			else
 				i := last_position + 1
-				if i > capacity then
+				if i >= capacity then
 					compress
 					i := last_position + 1
 				end
@@ -364,8 +365,8 @@ feature -- Element change
 				item_storage_put (v, position)
 			else
 				i := last_position + 1
-				if i > capacity then
-					resize (new_capacity (i))
+				if i >= capacity then
+					resize (new_capacity (i + 1))
 					h := hash_position (v)
 				else
 					h := slots_position
@@ -508,7 +509,7 @@ feature -- Basic operations
 				from
 					i := last_position
 				until
-					i < 1
+					i < 0
 				loop
 					if clashes_item (i) > Free_watermark then
 						an_item := item_storage_item (i)
@@ -541,7 +542,7 @@ feature -- Basic operations
 				from
 					i := last_position
 				until
-					i < 1
+					i < 0
 				loop
 					if clashes_item (i) > Free_watermark then
 						an_item := item_storage_item (i)

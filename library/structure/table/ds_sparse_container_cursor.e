@@ -4,6 +4,7 @@ note
 
 		"Cursors for sparse container traversals"
 
+	storable_version: "20130823"
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2003-2013, Eric Bezault and others"
 	license: "MIT License"
@@ -18,6 +19,15 @@ inherit
 		redefine
 			next_cursor,
 			off
+		end
+
+	MISMATCH_CORRECTOR
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		redefine
+			correct_mismatch
 		end
 
 create
@@ -108,10 +118,10 @@ feature {DS_SPARSE_CONTAINER} -- Implementation
 			valid_slot: (Result and container.valid_position (p)) implies container.valid_slot (p)
 		end
 
-	before_position: INTEGER = -1
+	before_position: INTEGER = -2
 			-- Special value for before cursor position
 
-	after_position: INTEGER = -2
+	after_position: INTEGER = -3
 			-- Special values for after cursor position
 
 feature {DS_SPARSE_CONTAINER} -- Implementation
@@ -121,6 +131,33 @@ feature {DS_SPARSE_CONTAINER} -- Implementation
 			-- (Used by `container' to keep track of traversing
 			-- cursors (i.e. cursors associated with `container'
 			-- and which are not currently `off').)
+
+feature {NONE} -- Storable mismatch
+
+	correct_mismatch
+			-- Attempt to correct object mismatch using `mismatch_information'.
+		local
+			l_stored_version_number: INTEGER
+		do
+			if not attached mismatch_information.stored_version as l_stored_version or else l_stored_version.is_empty then
+				correct_mismatch_20130823
+			elseif l_stored_version.is_integer then
+				l_stored_version_number := l_stored_version.to_integer
+				if l_stored_version_number < 20130823 then
+					correct_mismatch_20130823
+				else
+					precursor
+				end
+			else
+				precursor
+			end
+		end
+
+	correct_mismatch_20130823
+			-- Correct storable mismatch introducted in version "20130823".
+		do
+			position := position - 1
+		end
 
 invariant
 

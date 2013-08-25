@@ -5,6 +5,7 @@ note
 		"Sparse tables, implemented with arrays. Ancestor of hash tables %
 		%which should supply their hashing mechanisms."
 
+	storable_version: "20130823"
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2000-2013, Eric Bezault and others"
 	license: "MIT License"
@@ -260,7 +261,7 @@ feature -- Comparison
 					i := last_position
 					Result := True
 				until
-					not Result or i < 1
+					not Result or i < 0
 				loop
 					if clashes_item (i) > Free_watermark then
 						a_key := key_storage_item (i)
@@ -390,7 +391,7 @@ feature -- Element change
 				item_storage_put (v, position)
 			else
 				i := last_position + 1
-				if i > capacity then
+				if i >= capacity then
 					compress
 					i := last_position + 1
 				end
@@ -420,7 +421,7 @@ feature -- Element change
 		do
 			unset_found_item
 			i := last_position + 1
-			if i > capacity then
+			if i >= capacity then
 				compress
 				i := last_position + 1
 			end
@@ -511,8 +512,8 @@ feature -- Element change
 				item_storage_put (v, position)
 			else
 				i := last_position + 1
-				if i > capacity then
-					resize (new_capacity (i))
+				if i >= capacity then
+					resize (new_capacity (i + 1))
 					h := hash_position (k)
 				else
 					h := slots_position
@@ -542,8 +543,8 @@ feature -- Element change
 		do
 			unset_found_item
 			i := last_position + 1
-			if i > capacity then
-				resize (new_capacity (i))
+			if i >= capacity then
+				resize (new_capacity (i + 1))
 			end
 			last_position := i
 			h := hash_position (k)
@@ -586,7 +587,7 @@ feature -- Iteration
 			i: INTEGER
 		do
 			from
-				i := 1
+				i := 0
 			until
 				i > last_position
 			loop
@@ -607,7 +608,7 @@ feature -- Iteration
 			l_key: K
 		do
 			from
-				i := 1
+				i := 0
 			until
 				i > last_position
 			loop
@@ -629,7 +630,7 @@ feature -- Iteration
 			i: INTEGER
 		do
 			from
-				i := 1
+				i := 0
 			until
 				i > last_position
 			loop
@@ -637,7 +638,7 @@ feature -- Iteration
 					if a_test.item ([item_storage_item (i), key_storage_item (i)]) then
 						Result := True
 							-- Jump out of the loop.
-						i := last_position + 1
+						i := last_position
 					end
 				end
 				i := i + 1
@@ -652,7 +653,7 @@ feature -- Iteration
 		do
 			Result := True
 			from
-				i := 1
+				i := 0
 			until
 				i > last_position
 			loop
@@ -660,7 +661,7 @@ feature -- Iteration
 					if not a_test.item ([item_storage_item (i), key_storage_item (i)]) then
 						Result := False
 							-- Jump out of the loop.
-						i := last_position + 1
+						i := last_position
 					end
 				end
 				i := i + 1

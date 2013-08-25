@@ -4,6 +4,7 @@ note
 
 		"Classes of integer symbols, kept in increasing order"
 
+	storable_version: "20130823"
 	library: "Gobo Eiffel Lexical Library"
 	copyright: "Copyright (c) 1999, Eric Bezault and others"
 	license: "MIT License"

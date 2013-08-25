@@ -5,6 +5,7 @@ note
 		"Sparse sets implemented with single arrays. Ancestor of %
 		%hash sets which should supply its hashing mechanism."
 
+	storable_version: "20130823"
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
@@ -24,6 +25,15 @@ inherit
 		undefine
 			is_equal,
 			copy
+		end
+
+	MISMATCH_CORRECTOR
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		redefine
+			correct_mismatch
 		end
 
 feature -- Access
@@ -77,21 +87,21 @@ feature {NONE} -- Implementation
 	item_storage_resize (n: INTEGER)
 			-- Resize `item_storage'.
 		do
-			item_storage := special_item_routines.resize (item_storage, n)
+			item_storage := special_item_routines.aliased_resized_area (item_storage, n)
 		end
 
 	item_storage_wipe_out
 			-- Wipe out items in `item_storage'.
 		do
-			special_item_routines.keep_head (item_storage, 0, last_position + 1)
+			item_storage.keep_head (0)
 		end
 
 	item_storage_keep_head (n: INTEGER)
 			-- Keep the first `n' items in `item_storage'.
 		do
-			special_item_routines.keep_head (item_storage, n, last_position + 1)
+			item_storage.keep_head (n)
 		end
-		
+
 	clashes: SPECIAL [INTEGER]
 			-- Indexes in `item_storage' when there are clashes
 			-- in `slots'. Each entry points to the next alternative
@@ -102,7 +112,7 @@ feature {NONE} -- Implementation
 	make_clashes (n: INTEGER)
 			-- Create `clashes'.
 		do
-			clashes := SPECIAL_INTEGER_.make_filled (No_position, n)
+			create clashes.make_filled (No_position, n)
 		end
 
 	clashes_put (v: INTEGER; i: INTEGER)
@@ -133,7 +143,7 @@ feature {NONE} -- Implementation
 			from
 				i := last_position
 			until
-				i < 1
+				i < 0
 			loop
 				clashes.put (No_position, i)
 				i := i - 1
@@ -148,7 +158,7 @@ feature {NONE} -- Implementation
 	make_slots (n: INTEGER)
 			-- Create `slots'.
 		do
-			slots := SPECIAL_INTEGER_.make_filled (No_position, n)
+			create slots.make_filled (No_position, n)
 		end
 
 	slots_item (i: INTEGER): INTEGER
@@ -195,12 +205,66 @@ feature {NONE} -- Implementation
 	special_item_routines: KL_SPECIAL_ROUTINES [G]
 			-- Routines that ought to be in SPECIAL
 
+feature {NONE} -- Storable mismatch
+
+	correct_mismatch
+			-- Attempt to correct object mismatch using `mismatch_information'.
+		local
+			l_stored_version_number: INTEGER
+		do
+			if not attached mismatch_information.stored_version as l_stored_version or else l_stored_version.is_empty then
+				correct_mismatch_20130823
+			elseif l_stored_version.is_integer then
+				l_stored_version_number := l_stored_version.to_integer
+				if l_stored_version_number < 20130823 then
+					correct_mismatch_20130823
+				else
+					precursor
+				end
+			else
+				precursor
+			end
+		end
+
+	correct_mismatch_20130823
+			-- Correct storable mismatch introducted in version "20130823".
+		local
+			i, nb: INTEGER
+		do
+			item_storage.move_data (1, 0, last_position)
+			item_storage.keep_head (last_position)
+			from
+				i := 1
+				nb := clashes.count - 1
+			until
+				i > nb
+			loop
+				clashes.put (clashes.item (i) - 1, i - 1)
+				i := i + 1
+			end
+			clashes.put (No_position, clashes.count - 1)
+			from
+				i := slots.count - 1
+			until
+				i < 0
+			loop
+				slots.put (slots.item (i) - 1, i)
+				i := i - 1
+			end
+			clashes_previous_position := clashes_previous_position - 1
+			found_position := found_position - 1
+			free_slot := free_slot - 1
+			position := position - 1
+			last_position := last_position - 1
+			capacity := item_storage.capacity
+		end
+
 invariant
 
 	item_storage_not_void: item_storage /= Void
-	item_storage_count: item_storage.capacity = capacity + 1
+	item_storage_count: item_storage.capacity = capacity
 	clashes_not_void: clashes /= Void
-	clashes_count: clashes.count = capacity + 1
+	clashes_count: clashes.count = capacity
 	slots_not_void: slots /= Void
 	slots_count: slots.count = modulus + 1
 

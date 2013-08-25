@@ -5,7 +5,7 @@
 	<description>
 		description: "Eiffel Ant file for the Gobo Eiffel Kernel Library"
 		library: "Gobo Eiffel Kernel Library"
-		copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2013, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -27,7 +27,6 @@
 			Install the Gobo Eiffel Kernel Library.
 			Generate Eiffel files from .ge files.
 		</description>
-		<geant target="install_basic"/>
 		<geant target="install_io"/>
 		<geant target="install_misc"/>
 	</target>
@@ -47,14 +46,6 @@
 	</target>
 
 <!-- Implementation -->
-
-	<target name="install_basic">
-		<geant target="ge2e">
-			<argument name="spec_dir" value="spec"/>
-			<argument name="gepp_dir" value="basic"/>
-			<argument name="gepp_file" value="kl_special_routines"/>
-		</geant>
-	</target>
 	
 	<target name="install_io">
 		<geant target="ge2e">

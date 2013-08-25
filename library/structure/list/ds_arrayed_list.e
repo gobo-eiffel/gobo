@@ -4,6 +4,7 @@ note
 
 		"Lists implemented with arrays"
 
+	storable_version: "20130823"
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
@@ -30,6 +31,15 @@ inherit
 			is_equal
 		end
 
+	MISMATCH_CORRECTOR
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		redefine
+			correct_mismatch
+		end
+
 create
 
 	make,
@@ -48,7 +58,7 @@ feature {NONE} -- Initialization
 			positive_n: n >= 0
 		do
 			create special_routines
-			storage := special_routines.make (n + 1)
+			storage := special_routines.make (n)
 			capacity := n
 			set_internal_cursor (new_cursor)
 		ensure
@@ -65,7 +75,7 @@ feature {NONE} -- Initialization
 			positive_n: n >= 0
 		do
 			create special_routines
-			storage := special_routines.make (n + 1)
+			storage := special_routines.make (n)
 			capacity := n
 			set_internal_cursor (new_cursor)
 			create equality_tester
@@ -90,16 +100,12 @@ feature {NONE} -- Initialization
 			nb := other.count
 			make (nb)
 			count := nb
-			if nb > 0 then
-					-- Take care of the dummy item at position 0 in `storage'.
-				special_routines.force (storage, other.first, 0)
-			end
 			from
-				i := 1
+				i := 0
 				other_cursor := other.new_cursor
 				other_cursor.start
 			until
-				i > nb
+				i >= nb
 			loop
 				special_routines.force (storage, other_cursor.item, i)
 				other_cursor.forth
@@ -122,15 +128,11 @@ feature {NONE} -- Initialization
 			nb := other.count
 			make (nb)
 			count := nb
-			if nb > 0 then
-					-- Take care of the dummy item at position 0 in `storage'.
-				special_routines.force (storage, other.item (other.lower), 0)
-			end
 			from
-				j := 1
+				j := 0
 				i := other.lower
 			until
-				j > nb
+				j >= nb
 			loop
 				special_routines.force (storage, other.item (i), j)
 				j := j + 1
@@ -158,21 +160,21 @@ feature -- Access
 			-- Item at index `i'
 			-- (Performance: O(1).)
 		do
-			Result := storage.item (i)
+			Result := storage.item (i - 1)
 		end
 
 	first: G
 			-- First item in list
 			-- (Performance: O(1).)
 		do
-			Result := storage.item (1)
+			Result := storage.item (0)
 		end
 
 	last: G
 			-- Last item in list
 			-- (Performance: O(1).)
 		do
-			Result := storage.item (count)
+			Result := storage.item (count - 1)
 		end
 
 	new_cursor: DS_ARRAYED_LIST_CURSOR [G]
@@ -197,11 +199,11 @@ feature -- Measurement
 		local
 			i: INTEGER
 		do
-			i := count
+			i := count - 1
 			if attached  equality_tester as l_tester then
 				from
 				until
-					i < 1
+					i < 0
 				loop
 					if l_tester.test (storage.item (i), v) then
 						Result := Result + 1
@@ -212,7 +214,7 @@ feature -- Measurement
 					-- Use `=' as comparison criterion.
 				from
 				until
-					i < 1
+					i < 0
 				loop
 					if storage.item (i) = v then
 						Result := Result + 1
@@ -231,16 +233,16 @@ feature -- Status report
 		local
 			i: INTEGER
 		do
-			i := count
+			i := count - 1
 			if attached equality_tester as l_tester then
 				from
 				until
-					i < 1
+					i < 0
 				loop
 					if l_tester.test (storage.item (i), v) then
 						Result := True
 							-- Jump out of the loop.
-						i := 0
+						i := -1
 					else
 						i := i - 1
 					end
@@ -249,12 +251,12 @@ feature -- Status report
 					-- Use `=' as comparison criterion.
 				from
 				until
-					i < 1
+					i < 0
 				loop
 					if storage.item (i) = v then
 						Result := True
 							-- Jump out of the loop.
-						i := 0
+						i := -1
 					else
 						i := i - 1
 					end
@@ -310,8 +312,8 @@ feature -- Comparison
 			elseif ANY_.same_types (Current, other) and other.count = count then
 				other_storage := other.storage
 				from
-					i := 1
-					nb := count
+					i := 0
+					nb := count - 1
 					Result := True
 				until
 					not Result or i > nb
@@ -329,11 +331,7 @@ feature -- Element change
 			-- Do not move cursors.
 			-- (Performance: O(1).)
 		do
-			if i = 1 then
-					-- Take care of the dummy item at position 0 in `storage'.
-				storage.put (v, 0)
-			end
-			storage.put (v, i)
+			storage.put (v, i - 1)
 		end
 
 	put_first (v: G)
@@ -349,12 +347,8 @@ feature -- Element change
 			-- Do not move cursors.
 			-- (Performance: O(1).)
 		do
-			if count = 0 then
-					-- Take care of the dummy item at position 0 in `storage'.
-				special_routines.force (storage, v, 0)
-			end
-			count := count + 1
 			special_routines.force (storage, v, count)
+			count := count + 1
 		end
 
 	put (v: G; i: INTEGER)
@@ -367,7 +361,7 @@ feature -- Element change
 			else
 				move_right (i, 1)
 				move_cursors_right (i, 1)
-				storage.put (v, i)
+				storage.put (v, i - 1)
 			end
 		end
 
@@ -410,12 +404,8 @@ feature -- Element change
 			if not extendible (1) then
 				resize (new_capacity (count + 1))
 			end
-			if count = 0 then
-					-- Take care of the dummy item at position 0 in `storage'.
-				special_routines.force (storage, v, 0)
-			end
-			count := count + 1
 			special_routines.force (storage, v, count)
+			count := count + 1
 		end
 
 	force (v: G; i: INTEGER)
@@ -474,11 +464,7 @@ feature -- Element change
 			i: INTEGER
 			other_cursor: DS_LINEAR_CURSOR [G]
 		do
-			if count = 0 and other.count > 0 then
-					-- Take care of the dummy item at position 0 in `storage'.
-				special_routines.force (storage, other.first, 0)
-			end
-			i := count + 1
+			i := count
 			other_cursor := other.new_cursor
 			from
 				other_cursor.start
@@ -517,7 +503,7 @@ feature -- Element change
 				else
 					move_right (i, n)
 					move_cursors_right (i, n)
-					k := i
+					k := i - 1
 					other_cursor := other.new_cursor
 					from
 						other_cursor.start
@@ -623,7 +609,7 @@ feature -- removal
 			-- Move any cursors at this position `forth'.
 			-- (Performance: O(count).)
 		do
-			remove (1)
+			remove (0)
 		end
 
 	remove_last
@@ -632,8 +618,8 @@ feature -- removal
 			-- (Performance: O(1).)
 		do
 			move_last_cursors_after
-			clear_items (count, count)
 			count := count - 1
+			storage.keep_head (count)
 		end
 
 	remove (i: INTEGER)
@@ -646,7 +632,7 @@ feature -- removal
 			else
 				move_cursors_left (i + 1)
 				move_left (i + 1, 1)
-				clear_items (count + 1, count + 1)
+				storage.keep_head (count)
 			end
 		end
 
@@ -691,8 +677,8 @@ feature -- removal
 			-- (Performance: O(1).)
 		do
 			move_all_cursors_after
-			clear_items (count - n + 1, count)
 			count := count - n
+			storage.keep_head (count)
 		end
 
 	prune (n: INTEGER; i: INTEGER)
@@ -705,7 +691,7 @@ feature -- removal
 			else
 				move_all_cursors_after
 				move_left (i + n, n)
-				clear_items (count + 1, count + n)
+				storage.keep_head (count)
 			end
 		end
 
@@ -733,8 +719,8 @@ feature -- removal
 			-- (Performance: O(1).)
 		do
 			move_all_cursors_after
-			clear_items (n + 1, count)
 			count := n
+			storage.keep_head (count)
 		end
 
 	keep_last (n: INTEGER)
@@ -753,14 +739,13 @@ feature -- removal
 			-- (Performance: O(count).)
 		local
 			i, j, nb: INTEGER
-			old_count: INTEGER
 		do
 			move_all_cursors_after
 			if not is_empty then
-				nb := count
+				nb := count - 1
 				if attached equality_tester as l_tester then
 					from
-						i := 1
+						i := 0
 					until
 						i > nb
 					loop
@@ -774,15 +759,15 @@ feature -- removal
 						until
 							i > nb or else l_tester.test (storage.item (i), v)
 						loop
-							j := j + 1
 							storage.put (storage.item (i), j)
+							j := j + 1
 							i := i + 1
 						end
 					end
 				else
 						-- Use `=' as comparison criterion.
 					from
-						i := 1
+						i := 0
 					until
 						i > nb
 					loop
@@ -796,15 +781,14 @@ feature -- removal
 						until
 							i > nb or else storage.item (i) = v
 						loop
-							j := j + 1
 							storage.put (storage.item (i), j)
+							j := j + 1
 							i := i + 1
 						end
 					end
 				end
-				old_count := count
 				count := j
-				clear_items (count + 1, old_count)
+				storage.keep_head (count)
 			end
 		end
 
@@ -814,8 +798,8 @@ feature -- removal
 			-- (Performance: O(1).)
 		do
 			move_all_cursors_after
-			clear_items (1, count)
 			count := 0
+			storage.keep_head (0)
 		end
 
 feature -- Resizing
@@ -824,7 +808,7 @@ feature -- Resizing
 			-- Resize list so that it can contain
 			-- at least `n' items. Do not lose any item.
 		do
-			storage := special_routines.resize (storage, n + 1)
+			storage := special_routines.aliased_resized_area (storage, n)
 			capacity := n
 		end
 
@@ -848,17 +832,17 @@ feature {NONE} -- Implementation
 			if i <= count then
 					-- Fill the gap between `count' and `i + offset' if any.
 				from
-					j := count + 1
-					nb := i + offset - 1
+					j := count
+					nb := i + offset - 2
 				until
 					j > nb
 				loop
-					special_routines.force (storage, storage.item (i), j)
+					special_routines.force (storage, storage.item (i - 1), j)
 					j := j + 1
 				end
 					-- Move items to positions after `count'.
 				from
-					nb := count + offset
+					nb := count + offset - 1
 				until
 					j > nb
 				loop
@@ -867,8 +851,8 @@ feature {NONE} -- Implementation
 				end
 					-- Move items to positions before `count'.
 				from
-					j := count
-					nb := i + offset
+					j := count - 1
+					nb := i + offset - 1
 				until
 					j < nb
 				loop
@@ -892,8 +876,8 @@ feature {NONE} -- Implementation
 			j, nb: INTEGER
 		do
 			from
-				j := i
-				nb := count
+				j := i - 1
+				nb := count - 1
 			until
 				j > nb
 			loop
@@ -903,23 +887,6 @@ feature {NONE} -- Implementation
 			count := count - offset
 		ensure
 			count_set: count = old count - offset
-		end
-
-	clear_items (s, e: INTEGER)
-			-- Clear items in `storage' within bounds `s'..`e'.
-		require
-			s_large_enough: s >= 1
-			e_small_enough: e <= capacity
-			valid_bound: s <= e + 1
-		do
-			if e = 0 then
-				-- Nothing to be done.
-			elseif s = 1 then
-					-- Take care of the dummy item at position 0 in `storage'.
-				special_routines.keep_head (storage, 0, e + 1)
-			else
-				special_routines.keep_head (storage, s, e + 1)
-			end
 		end
 
 	special_routines: KL_SPECIAL_ROUTINES [G]
@@ -962,7 +929,7 @@ feature {NONE} -- Cursor movement
 			a_cursor, next_cursor: detachable like new_cursor
 			previous_cursor: like new_cursor
 		do
-			i := count
+			i := count - 1
 			a_cursor := internal_cursor
 			if a_cursor.position = i then
 				a_cursor.set_after
@@ -1001,7 +968,7 @@ feature {NONE} -- Cursor movement
 				(a_cursor = Void)
 			loop
 				j := a_cursor.position
-				if j >= i then
+				if j >= i - 1 then
 					a_cursor.set_position (j - 1)
 				end
 				a_cursor := a_cursor.next_cursor
@@ -1024,7 +991,7 @@ feature {NONE} -- Cursor movement
 				(a_cursor = Void)
 			loop
 				j := a_cursor.position
-				if j >= i then
+				if j >= i - 1 then
 					a_cursor.set_position (j + offset)
 				end
 				a_cursor := a_cursor.next_cursor
@@ -1037,7 +1004,7 @@ feature {DS_ARRAYED_LIST_CURSOR} -- Cursor implementation
 			-- Item at `a_cursor' position
 			-- (Performance: O(1).)
 		do
-			Result := item (a_cursor.position)
+			Result := storage.item (a_cursor.position)
 		end
 
 	cursor_index (a_cursor: like new_cursor): INTEGER
@@ -1046,20 +1013,21 @@ feature {DS_ARRAYED_LIST_CURSOR} -- Cursor implementation
 		do
 			Result := a_cursor.position
 			if Result = a_cursor.after_position then
-				Result := count + 1
+				Result := count
 			end
+			Result := Result + 1
 		end
 
 	cursor_is_first (a_cursor: like new_cursor): BOOLEAN
 			-- Is `a_cursor' on first item?
 		do
-			Result := not is_empty and a_cursor.position = 1
+			Result := not is_empty and a_cursor.position = 0
 		end
 
 	cursor_is_last (a_cursor: like new_cursor): BOOLEAN
 			-- Is `a_cursor' on last item?
 		do
-			Result := not is_empty and a_cursor.position = count
+			Result := not is_empty and a_cursor.position = count - 1
 		end
 
 	cursor_same_position (a_cursor, other: like new_cursor): BOOLEAN
@@ -1078,7 +1046,7 @@ feature {DS_ARRAYED_LIST_CURSOR} -- Cursor implementation
 			if is_empty then
 				a_cursor.set_after
 			else
-				a_cursor.set_position (1)
+				a_cursor.set_position (0)
 				if was_off then
 					add_traversing_cursor (a_cursor)
 				end
@@ -1092,7 +1060,7 @@ feature {DS_ARRAYED_LIST_CURSOR} -- Cursor implementation
 			was_off: BOOLEAN
 		do
 			was_off := a_cursor.off
-			a_cursor.set_position (count)
+			a_cursor.set_position (count - 1)
 			if count /= 0 and was_off then
 				add_traversing_cursor (a_cursor)
 			end
@@ -1106,9 +1074,9 @@ feature {DS_ARRAYED_LIST_CURSOR} -- Cursor implementation
 			p: INTEGER
 		do
 			p := a_cursor.position
-			was_off := (p = 0)
+			was_off := (p = -1)
 			p := p + 1
-			if p > count then
+			if p >= count then
 				p := a_cursor.after_position
 				if not was_off then
 					remove_traversing_cursor (a_cursor)
@@ -1129,12 +1097,12 @@ feature {DS_ARRAYED_LIST_CURSOR} -- Cursor implementation
 			p := a_cursor.position
 			if p = a_cursor.after_position then
 				was_off := True
-				p := count
+				p := count - 1
 			else
 				p := p - 1
 			end
 			a_cursor.set_position (p)
-			if p = 0 then
+			if p = -1 then
 				if not was_off then
 					remove_traversing_cursor (a_cursor)
 				end
@@ -1154,12 +1122,14 @@ feature {DS_ARRAYED_LIST_CURSOR} -- Cursor implementation
 			was_off: BOOLEAN
 		do
 			was_off := a_cursor.off
-			i := a_cursor.index
-			nb := count
-			if attached equality_tester as l_tester then
+			i := a_cursor.position
+			nb := count - 1
+			if i = a_cursor.after_position then
+				i := nb + 1
+			elseif attached equality_tester as l_tester then
 				from
 				until
-					i > nb or else l_tester.test (item (i), v)
+					i > nb or else l_tester.test (storage.item (i), v)
 				loop
 					i := i + 1
 				end
@@ -1167,7 +1137,7 @@ feature {DS_ARRAYED_LIST_CURSOR} -- Cursor implementation
 					-- Use `=' as comparison criterion.
 				from
 				until
-					i > nb or else item (i) = v
+					i > nb or else storage.item (i) = v
 				loop
 					i := i + 1
 				end
@@ -1201,7 +1171,7 @@ feature {DS_ARRAYED_LIST_CURSOR} -- Cursor implementation
 			if attached equality_tester as l_tester then
 				from
 				until
-					i < 1 or else l_tester.test (item (i), v)
+					i < 0 or else l_tester.test (storage.item (i), v)
 				loop
 					i := i - 1
 				end
@@ -1209,13 +1179,13 @@ feature {DS_ARRAYED_LIST_CURSOR} -- Cursor implementation
 					-- Use `=' as comparison criterion.
 				from
 				until
-					i < 1 or else item (i) = v
+					i < 0 or else storage.item (i) = v
 				loop
 					i := i - 1
 				end
 			end
 			a_cursor.set_position (i)
-			if i = 0 then
+			if i = -1 then
 				if not was_off then
 					remove_traversing_cursor (a_cursor)
 				end
@@ -1244,7 +1214,7 @@ feature {DS_ARRAYED_LIST_CURSOR} -- Cursor implementation
 			was_off: BOOLEAN
 		do
 			was_off := a_cursor.off
-			a_cursor.set_position (0)
+			a_cursor.set_position (-1)
 			if not was_off then
 				remove_traversing_cursor (a_cursor)
 			end
@@ -1280,7 +1250,7 @@ feature {DS_ARRAYED_LIST_CURSOR} -- Cursor implementation
 					remove_traversing_cursor (a_cursor)
 				end
 			else
-				a_cursor.set_position (i)
+				a_cursor.set_position (i - 1)
 				if i = 0 then
 					if not was_off then
 						remove_traversing_cursor (a_cursor)
@@ -1291,10 +1261,39 @@ feature {DS_ARRAYED_LIST_CURSOR} -- Cursor implementation
 			end
 		end
 
+feature {NONE} -- Storable mismatch
+
+	correct_mismatch
+			-- Attempt to correct object mismatch using `mismatch_information'.
+		local
+			l_stored_version_number: INTEGER
+		do
+			if not attached mismatch_information.stored_version as l_stored_version or else l_stored_version.is_empty then
+				correct_mismatch_20130823
+			elseif l_stored_version.is_integer then
+				l_stored_version_number := l_stored_version.to_integer
+				if l_stored_version_number < 20130823 then
+					correct_mismatch_20130823
+				else
+					precursor
+				end
+			else
+				precursor
+			end
+		end
+
+	correct_mismatch_20130823
+			-- Correct storable mismatch introducted in version "20130823".
+		do
+			storage.move_data (1, 0, count)
+			storage.keep_head (count)
+			capacity := storage.capacity
+		end
+
 invariant
 
 	storage_not_void: storage /= Void
-	capacity_definition: capacity = storage.capacity - 1
+	capacity_definition: capacity = storage.capacity
 	special_routines_not_void: special_routines /= Void
 
 end

@@ -5,6 +5,7 @@ note
 		"Sparse sets implemented with multi-arrays. Ancestor of %
 		%hash sets which should supply its hashing mechanism."
 
+	storable_version: "20130823"
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
@@ -34,6 +35,15 @@ inherit
 		undefine
 			is_equal,
 			copy
+		end
+
+	MISMATCH_CORRECTOR
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		redefine
+			correct_mismatch
 		end
 
 feature {NONE} -- Initialization
@@ -242,7 +252,7 @@ feature {NONE} -- Implementation
 			else
 				subitems := item_storage.item (i)
 				if subitems /= Void then
-					special_item_routines.keep_head (subitems, j, last_position + 1 - i * chunk_size)
+					subitems.keep_head (j)
 				end
 				from
 					i := i + 1
@@ -278,7 +288,7 @@ feature {NONE} -- Implementation
 			j := i // chunk_size
 			subclashes := clashes.item (j)
 			if subclashes = Void then
-				subclashes := SPECIAL_INTEGER_.make_filled (No_position, chunk_size)
+				create subclashes.make_filled (No_position, chunk_size)
 				clashes.put (subclashes, j)
 			end
 			subclashes.put (v, i \\ chunk_size)
@@ -352,7 +362,7 @@ feature {NONE} -- Implementation
 			j := i // chunk_size
 			subslots := slots.item (j)
 			if subslots = Void then
-				subslots := SPECIAL_INTEGER_.make_filled (No_position, chunk_size)
+				create subslots.make_filled (No_position, chunk_size)
 				slots.put (subslots, j)
 			end
 			subslots.put (v, i \\ chunk_size)
@@ -399,15 +409,118 @@ feature {NONE} -- Implementation
 	array_special_item_routines: KL_ARRAY_ROUTINES [detachable SPECIAL [G]]
 			-- Routines that ought to be in ARRAY
 
+feature {NONE} -- Storable mismatch
+
+	correct_mismatch
+			-- Attempt to correct object mismatch using `mismatch_information'.
+		local
+			l_stored_version_number: INTEGER
+		do
+			if not attached mismatch_information.stored_version as l_stored_version or else l_stored_version.is_empty then
+				correct_mismatch_20130823
+			elseif l_stored_version.is_integer then
+				l_stored_version_number := l_stored_version.to_integer
+				if l_stored_version_number < 20130823 then
+					correct_mismatch_20130823
+				else
+					precursor
+				end
+			else
+				precursor
+			end
+		end
+
+	correct_mismatch_20130823
+			-- Correct storable mismatch introducted in version "20130823".
+		local
+			i, nb: INTEGER
+			j, l_count: INTEGER
+		do
+			from
+				i := item_storage.lower
+				nb := item_storage.upper
+			until
+				i > nb
+			loop
+				if attached item_storage.item (i) as l_subitems then
+					l_count := l_subitems.count
+					if i /= 0 and then l_count > 0 then
+						item_storage_put (l_subitems.item (0), i * chunk_size - 1)
+					end
+					l_count := l_count - 1
+					if l_count > 0 then
+						l_subitems.move_data (1, 0, l_count)
+						l_subitems.keep_head (l_count)
+					else
+						item_storage.put (Void, i)
+					end
+				end
+				i := i + 1
+			end
+			if item_storage.count /= ((capacity - 1) // chunk_size) + 1 then
+				item_storage := item_storage.subarray (0, (capacity - 1) // chunk_size)
+			end
+			from
+				i := clashes.lower
+				nb := clashes.upper
+			until
+				i > nb
+			loop
+				if attached clashes.item (i) as l_subclashes then
+					l_count := l_subclashes.count
+					if i /= 0 and then l_count > 0 then
+						clashes_put (l_subclashes.item (0) - 1, i * chunk_size - 1)
+					end
+					from
+						j := 1
+						l_count := l_count - 1
+					until
+						j > nb
+					loop
+						l_subclashes.put (l_subclashes.item (j) - 1, j - 1)
+						j := j + 1
+					end
+					l_subclashes.put (No_position, l_count)
+				end
+				i := i + 1
+			end
+			if clashes.count /= ((capacity - 1) // chunk_size) + 1 then
+				clashes := clashes.subarray (0, (capacity - 1) // chunk_size)
+			end
+			from
+				i := slots.lower
+				nb := slots.upper
+			until
+				i > nb
+			loop
+				if attached slots.item (i) as l_subslots then
+					from
+						j := l_subslots.count - 1
+					until
+						j < 0
+					loop
+						l_subslots.put (l_subslots.item (j) - 1, j)
+						j := j - 1
+					end
+				end
+				i := i + 1
+			end
+			clashes_previous_position := clashes_previous_position - 1
+			found_position := found_position - 1
+			free_slot := free_slot - 1
+			position := position - 1
+			last_position := last_position - 1
+		end
+
 invariant
 
 	chunk_size_positive: chunk_size > 0
 	item_storage_not_void: item_storage /= Void
-	item_storage_count: item_storage.count = (capacity // chunk_size) + 1
+	item_storage_count: item_storage.count = ((capacity - 1) // chunk_size) + 1
 	special_item_routines_not_void: special_item_routines /= Void
 	array_special_item_routines_not_void: array_special_item_routines /= Void
 	clashes_not_void: clashes /= Void
-	clashes_count: clashes.count = (capacity // chunk_size) + 1
+	clashes_count: clashes.count = ((capacity - 1) // chunk_size) + 1
 	slots_not_void: slots /= Void
 	slots_count: slots.count = (modulus // chunk_size) + 1
 

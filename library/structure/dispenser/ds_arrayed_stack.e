@@ -4,6 +4,7 @@ note
 
 		"Stacks (Last-In, First-Out) implemented with arrays"
 
+	storable_version: "20130823"
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
@@ -26,6 +27,15 @@ inherit
 			is_equal
 		end
 
+	MISMATCH_CORRECTOR
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		redefine
+			correct_mismatch
+		end
+
 create
 
 	make,
@@ -42,7 +52,7 @@ feature {NONE} -- Initialization
 			positive_n: n >= 0
 		do
 			create special_routines
-			storage := special_routines.make (n + 1)
+			storage := special_routines.make (n)
 			capacity := n
 		ensure
 			empty: is_empty
@@ -82,14 +92,14 @@ feature -- Status report
 		do
 			if attached equality_tester as l_tester then
 				from
-					i := count
+					i := count - 1
 				until
-					i < 1
+					i < 0
 				loop
 					if l_tester.test (storage.item (i), v) then
 						Result := True
 							-- Jump out of the loop.
-						i := 0
+						i := -1
 					else
 						i := i - 1
 					end
@@ -97,14 +107,14 @@ feature -- Status report
 			else
 					-- Use `=' as comparison criterion.
 				from
-					i := count
+					i := count - 1
 				until
-					i < 1
+					i < 0
 				loop
 					if storage.item (i) = v then
 						Result := True
 							-- Jump out of the loop.
-						i := 0
+						i := -1
 					else
 						i := i - 1
 					end
@@ -125,7 +135,7 @@ feature -- Access
 	item: G
 			-- Item at top of stack
 		do
-			Result := storage.item (count)
+			Result := storage.item (count - 1)
 		end
 
 	i_th (i: INTEGER): G
@@ -134,7 +144,7 @@ feature -- Access
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
 		do
-			Result := storage.item (i)
+			Result := storage.item (i - 1)
 		end
 
 feature -- Measurement
@@ -154,9 +164,9 @@ feature -- Measurement
 		do
 			if attached equality_tester as l_tester then
 				from
-					i := count
+					i := count - 1
 				until
-					i < 1
+					i < 0
 				loop
 					if l_tester.test (storage.item (i), v) then
 						Result := Result + 1
@@ -166,9 +176,9 @@ feature -- Measurement
 			else
 					-- Use `=' as comparison criterion.
 				from
-					i := count
+					i := count - 1
 				until
-					i < 1
+					i < 0
 				loop
 					if storage.item (i) = v then
 						Result := Result + 1
@@ -185,7 +195,9 @@ feature -- Duplication
 		do
 			if other /= Current then
 				standard_copy (other)
-				storage := storage.twin
+					-- Note: do not use `storage.twin' because SPECIAL.copy may
+					-- shrink the 'capacity' down to 'count'.
+				storage := storage.resized_area (storage.capacity)
 			end
 		end
 
@@ -202,8 +214,8 @@ feature -- Comparison
 			elseif ANY_.same_types (Current, other) and other.count = count then
 				other_storage := other.storage
 				from
-					i := 1
-					nb := count
+					i := 0
+					nb := count - 1
 					Result := True
 				until
 					not Result or i > nb
@@ -219,12 +231,8 @@ feature -- Element change
 	put (v: G)
 			-- Push `v' on stack.
 		do
-			if count = 0 then
-					-- Take care of the dummy item at position 0 in `storage'.
-				special_routines.force (storage, v, 0)
-			end
-			count := count + 1
 			special_routines.force (storage, v, count)
+			count := count + 1
 		end
 
 	force (v: G)
@@ -234,22 +242,14 @@ feature -- Element change
 			if not extendible (1) then
 				resize (new_capacity (count + 1))
 			end
-			if count = 0 then
-					-- Take care of the dummy item at position 0 in `storage'.
-				special_routines.force (storage, v, 0)
-			end
-			count := count + 1
 			special_routines.force (storage, v, count)
+			count := count + 1
 		end
 
 	replace (v: G)
 			-- Replace top item by `v'.
 		do
-			if count = 1 then
-					-- Take care of the dummy item at position 0 in `storage'.
-				storage.put (v, 0)
-			end
-			storage.put (v, count)
+			storage.put (v, count - 1)
 		end
 
 	extend (other: DS_LINEAR [G])
@@ -259,11 +259,7 @@ feature -- Element change
 			i: INTEGER
 			other_cursor: DS_LINEAR_CURSOR [G]
 		do
-			if count = 0 and other.count > 0 then
-					-- Take care of the dummy item at position 0 in `storage'.
-				special_routines.force (storage, other.first, 0)
-			end
-			i := count + 1
+			i := count
 			other_cursor := other.new_cursor
 			from
 				other_cursor.start
@@ -296,28 +292,28 @@ feature -- Removal
 	remove
 			-- Remove top item from stack.
 		do
-			clear_items (count, count)
 			count := count - 1
+			storage.keep_head (count)
 		end
 
 	prune (n: INTEGER)
 			-- Remove `n' items from stack.
 		do
-			clear_items (count - n + 1, count)
 			count := count - n
+			storage.keep_head (count)
 		end
 
 	keep (n: INTEGER)
 			-- Keep `n' items in stack.
 		do
-			clear_items (n + 1, count)
 			count := n
+			storage.keep_head (count)
 		end
 
 	wipe_out
 			-- Remove all items from stack.
 		do
-			clear_items (1, count)
+			storage.keep_head (0)
 			count := 0
 		end
 
@@ -327,7 +323,7 @@ feature -- Resizing
 			-- Resize stack so that it can contain
 			-- at least `n' items. Do not lose any item.
 		do
-			storage := special_routines.resize (storage, n + 1)
+			storage := special_routines.aliased_resized_area (storage, n)
 			capacity := n
 		end
 
@@ -340,9 +336,9 @@ feature -- Iteration
 			i: INTEGER
 		do
 			from
-				i := count
+				i := count - 1
 			until
-				i < 1
+				i < 0
 			loop
 				an_action.call ([storage.item (i)])
 				i := i - 1
@@ -357,9 +353,9 @@ feature -- Iteration
 			l_item: G
 		do
 			from
-				i := count
+				i := count - 1
 			until
-				i < 1
+				i < 0
 			loop
 				l_item := storage.item (i)
 				if a_test.item ([l_item]) then
@@ -379,17 +375,17 @@ feature -- Iteration
 			l_item: G
 		do
 			from
-				i := count
+				i := count - 1
 			invariant
-				i_large_enough: i >= 0
-				i_small_enough: i <= count
+				i_large_enough: i >= -1
+				i_small_enough: i < count
 			until
-				i < 1
+				i < 0
 			loop
 				l_item := storage.item (i)
 				if a_condition.item ([l_item]) then
 						-- Stop.
-					i := 1
+					i := 0
 				else
 					an_action.call ([l_item])
 				end
@@ -409,17 +405,17 @@ feature -- Iteration
 			l_item: G
 		do
 			from
-				i := count
+				i := count - 1
 			invariant
-				i_large_enough: i >= 0
-				i_small_enough: i <= count
+				i_large_enough: i >= -1
+				i_small_enough: i < count
 			until
-				i < 1
+				i < 0
 			loop
 				l_item := storage.item (i)
 				if a_condition.item ([l_item]) then
 						-- Stop.
-					i := 1
+					i := 0
 				elseif a_test.item ([l_item]) then
 					an_action.call ([l_item])
 				end
@@ -436,14 +432,14 @@ feature -- Iteration
 			i: INTEGER
 		do
 			from
-				i := count
+				i := count - 1
 			until
-				i < 1
+				i < 0
 			loop
 				if a_test.item ([storage.item (i)]) then
 					Result := True
 						-- Jump out of the loop.
-					i := 0
+					i := -1
 				else
 					i := i - 1
 				end
@@ -458,14 +454,14 @@ feature -- Iteration
 		do
 			Result := True
 			from
-				i := count
+				i := count - 1
 			until
-				i < 1
+				i < 0
 			loop
 				if not a_test.item ([storage.item (i)]) then
 					Result := False
 						-- Jump out of the loop.
-					i := 0
+					i := -1
 				else
 					i := i - 1
 				end
@@ -479,30 +475,42 @@ feature {DS_ARRAYED_STACK} -- Implementation
 
 feature {NONE} -- Implementation
 
-	clear_items (s, e: INTEGER)
-			-- Clear items in `storage' within bounds `s'..`e'.
-		require
-			s_large_enough: s >= 1
-			e_small_enough: e <= capacity
-			valid_bound: s <= e + 1
+	special_routines: KL_SPECIAL_ROUTINES [G]
+			-- Routines that ought to be in SPECIAL
+
+feature {NONE} -- Storable mismatch
+
+	correct_mismatch
+			-- Attempt to correct object mismatch using `mismatch_information'.
+		local
+			l_stored_version_number: INTEGER
 		do
-			if e = 0 then
-				-- Nothing to be done.
-			elseif s = 1 then
-					-- Take care of the dummy item at position 0 in `storage'.
-				special_routines.keep_head (storage, 0, e + 1)
+			if not attached mismatch_information.stored_version as l_stored_version or else l_stored_version.is_empty then
+				correct_mismatch_20130823
+			elseif l_stored_version.is_integer then
+				l_stored_version_number := l_stored_version.to_integer
+				if l_stored_version_number < 20130823 then
+					correct_mismatch_20130823
+				else
+					precursor
+				end
 			else
-				special_routines.keep_head (storage, s, e + 1)
+				precursor
 			end
 		end
 
-	special_routines: KL_SPECIAL_ROUTINES [G]
-			-- Routines that ought to be in SPECIAL
+	correct_mismatch_20130823
+			-- Correct storable mismatch introducted in version "20130823".
+		do
+			storage.move_data (1, 0, count)
+			storage.keep_head (count)
+			capacity := storage.capacity
+		end
 
 invariant
 
 	storage_not_void: storage /= Void
-	capacity_definition: capacity = storage.capacity - 1
+	capacity_definition: capacity = storage.capacity
 	special_routines_not_void: special_routines /= Void
 
 end

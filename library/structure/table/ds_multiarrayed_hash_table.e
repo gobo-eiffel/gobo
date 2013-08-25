@@ -5,6 +5,7 @@ note
 		"Hash tables implemented with multi-arrays. %
 		%Keys are hashed using `hash_code' from HASHABLE by default."
 
+	storable_version: "20130823"
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2001-2013, Eric Bezault and others"
 	license: "MIT License"

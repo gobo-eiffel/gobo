@@ -4,6 +4,7 @@ note
 
 		"Cursors for multi-arrayed hash table traversals"
 
+	storable_version: "20130823"
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2001-2013, Eric Bezault and others"
 	license: "MIT License"

@@ -4,6 +4,7 @@ note
 
 		"Cursors for sparse set traversals"
 
+	storable_version: "20130823"
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"

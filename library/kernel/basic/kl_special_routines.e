@@ -7,7 +7,7 @@ note
 		%equipped with features `put', `item' and `count'."
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -120,23 +120,8 @@ feature -- Element change
 			non_negative_argument: n >= 0
 			less_than_count: n <= a_old_count
 			valid_old_count: a_old_count <= an_array.capacity
-#ifdef GOBO_COMPATIBLE
-		local
-			l_dead_item: G
-			i: INTEGER
-		do
-			from
-				i := n
-			until
-				i >= a_old_count
-			loop
-				an_array.put (l_dead_item, i)
-				i := i + 1
-			end
-#else
 		do
 			an_array.keep_head (n)
-#endif
 		ensure
 			kept: an_array.same_items (old an_array.twin, 0, 0, n)
 		end
@@ -145,6 +130,25 @@ feature -- Resizing
 
 	resize (an_array: SPECIAL [G]; n: INTEGER): SPECIAL [G]
 			-- Resize `an_array' so that it can contain `n' items.
+			-- Do not lose any previously entered items.
+			-- Note: the returned special object might be `an_array'
+			-- or a newly created special object where items from
+			-- `an_array' have been copied to.
+		obsolete
+			"[20130823] Use `aliased_resized_area' instead."
+		require
+			an_array_not_void: an_array /= Void
+			n_large_enough: n >= an_array.capacity
+		do
+			Result := aliased_resized_area (an_array, n)
+		ensure
+			special_not_void: Result /= Void
+			count_set: Result.capacity = n
+			preserved: Result.same_items (old an_array.twin, 0, 0, n.min (old an_array.count))
+		end
+
+	aliased_resized_area (an_array: SPECIAL [G]; n: INTEGER): SPECIAL [G]
+			-- Try to resize `an_array' so that it can contain `n' items.
 			-- Do not lose any previously entered items.
 			-- Note: the returned special object might be `an_array'
 			-- or a newly created special object where items from
@@ -163,7 +167,7 @@ feature -- Resizing
 			count_set: Result.capacity = n
 			preserved: Result.same_items (old an_array.twin, 0, 0, n.min (old an_array.count))
 		end
-
+		
 	aliased_resized_area_with_default (an_array: SPECIAL [G]; a_default_value: G; n: INTEGER): SPECIAL [G]
 			-- Try to resize `an_array' with a count of `n', if not
 			-- possible a new copy. Non yet initialized entries are set to `a_default_value'.
@@ -171,7 +175,11 @@ feature -- Resizing
 			an_array_not_void: an_array /= Void
 			n_large_enough: n >= an_array.capacity
 		do
-			Result := an_array.aliased_resized_area_with_default (a_default_value, n)
+			if n > an_array.capacity then
+				Result := an_array.aliased_resized_area_with_default (a_default_value, n)
+			else
+				Result := an_array
+			end
 		ensure
 			special_not_void: Result /= Void
 			new_count: Result.count = n
