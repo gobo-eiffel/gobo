@@ -111,6 +111,8 @@ Version 3.10 - ?
 	* Fixed bug in DS_HASH_TABLE when the calls to `key_equality_tester' in 
 	  `search_position' trigger the invariant which internally calls `search_position'.
 	   But this routine was not written to be re-entrant.
+	* Added iteration routines to the descendants of DS_TABLE so that the key can be
+	  passed first and then the item to the agents.
 	* Made it compilable in void-safe mode with ISE 7.3.
 
 	Gobo Eiffel Time Library:

@@ -1106,6 +1106,25 @@ feature {NONE} -- Iteration
 			end
 		end
 
+	do_all_with_key_2 (an_action: PROCEDURE [ANY, TUPLE [K, G]])
+			-- Apply `an_action' to every item, from first to last.
+			-- `an_action' receives the key and its item.
+			-- (Semantics not guaranteed if `an_action' changes the structure.)
+		require
+			an_action_not_void: an_action /= Void
+		local
+			l_node: like root_node
+		do
+			from
+				l_node := first_node
+			until
+				l_node = Void
+			loop
+				an_action.call ([l_node.key, l_node.item])
+				l_node := successor (l_node)
+			end
+		end
+
 	do_if_with_key (an_action: PROCEDURE [ANY, TUPLE [G, K]]; a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
 			-- `an_action' and `a_test' receive the item and its key.
@@ -1123,6 +1142,28 @@ feature {NONE} -- Iteration
 			loop
 				if a_test.item ([l_node.item, l_node.key]) then
 					an_action.call ([l_node.item, l_node.key])
+				end
+				l_node := successor (l_node)
+			end
+		end
+
+	do_if_with_key_2 (an_action: PROCEDURE [ANY, TUPLE [K, G]]; a_test: FUNCTION [ANY, TUPLE [K, G], BOOLEAN])
+			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
+			-- `an_action' and `a_test' receive the key and its item.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		local
+			l_node: like root_node
+		do
+			from
+				l_node := first_node
+			until
+				l_node = Void
+			loop
+				if a_test.item ([l_node.key, l_node.item]) then
+					an_action.call ([l_node.key, l_node.item])
 				end
 				l_node := successor (l_node)
 			end
@@ -1149,6 +1190,27 @@ feature {NONE} -- Iteration
 			end
 		end
 
+	there_exists_with_key_2 (a_test: FUNCTION [ANY, TUPLE [K, G], BOOLEAN]): BOOLEAN
+			-- Is `a_test' true for at least one key and its item?
+			-- (Semantics not guaranteed if `a_test' changes the structure.)
+		require
+			a_test_not_void: a_test /= Void
+		local
+			l_node: like root_node
+		do
+			from
+				l_node := first_node
+			until
+				Result or else l_node = Void
+			loop
+				if a_test.item ([l_node.key, l_node.item]) then
+					Result := True
+				else
+					l_node := successor (l_node)
+				end
+			end
+		end
+
 	for_all_with_key (a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for all items and their keys?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
@@ -1164,6 +1226,28 @@ feature {NONE} -- Iteration
 				not Result or else l_node = Void
 			loop
 				if not a_test.item ([l_node.item, l_node.key]) then
+					Result := False
+				else
+					l_node := successor (l_node)
+				end
+			end
+		end
+
+	for_all_with_key_2 (a_test: FUNCTION [ANY, TUPLE [K, G], BOOLEAN]): BOOLEAN
+			-- Is `a_test' true for all keys and their items?
+			-- (Semantics not guaranteed if `a_test' changes the structure.)
+		require
+			a_test_not_void: a_test /= Void
+		local
+			l_node: like root_node
+		do
+			from
+				l_node := first_node
+				Result := True
+			until
+				not Result or else l_node = Void
+			loop
+				if not a_test.item ([l_node.key, l_node.item]) then
 					Result := False
 				else
 					l_node := successor (l_node)

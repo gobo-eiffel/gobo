@@ -598,6 +598,25 @@ feature -- Iteration
 			end
 		end
 
+	do_all_with_key_2 (an_action: PROCEDURE [ANY, TUPLE [K, G]])
+			-- Apply `an_action' to every item, from first to last.
+			-- `an_action' receives the key and its item.
+			-- (Semantics not guaranteed if `an_action' changes the structure.)
+		local
+			i: INTEGER
+		do
+			from
+				i := 0
+			until
+				i > last_position
+			loop
+				if clashes_item (i) > Free_watermark then
+					an_action.call ([key_storage_item (i), item_storage_item (i)])
+				end
+				i := i + 1
+			end
+		end
+
 	do_if_with_key (an_action: PROCEDURE [ANY, TUPLE [G, K]]; a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
 			-- `an_action' and `a_test' receive the item and its key.
@@ -617,6 +636,31 @@ feature -- Iteration
 					l_key := key_storage_item (i)
 					if a_test.item ([l_item, l_key]) then
 						an_action.call ([l_item, l_key])
+					end
+				end
+				i := i + 1
+			end
+		end
+
+	do_if_with_key_2 (an_action: PROCEDURE [ANY, TUPLE [K, G]]; a_test: FUNCTION [ANY, TUPLE [K, G], BOOLEAN])
+			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
+			-- `an_action' and `a_test' receive the key and its item.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
+		local
+			i: INTEGER
+			l_item: G
+			l_key: K
+		do
+			from
+				i := 0
+			until
+				i > last_position
+			loop
+				if clashes_item (i) > Free_watermark then
+					l_item := item_storage_item (i)
+					l_key := key_storage_item (i)
+					if a_test.item ([l_key, l_item]) then
+						an_action.call ([l_key, l_item])
 					end
 				end
 				i := i + 1
@@ -645,6 +689,28 @@ feature -- Iteration
 			end
 		end
 
+	there_exists_with_key_2 (a_test: FUNCTION [ANY, TUPLE [K, G], BOOLEAN]): BOOLEAN
+			-- Is `a_test' true for at least one key and its item?
+			-- (Semantics not guaranteed if `a_test' changes the structure.)
+		local
+			i: INTEGER
+		do
+			from
+				i := 0
+			until
+				i > last_position
+			loop
+				if clashes_item (i) > Free_watermark then
+					if a_test.item ([key_storage_item (i), item_storage_item (i)]) then
+						Result := True
+							-- Jump out of the loop.
+						i := last_position
+					end
+				end
+				i := i + 1
+			end
+		end
+
 	for_all_with_key (a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for all items and their keys?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
@@ -659,6 +725,29 @@ feature -- Iteration
 			loop
 				if clashes_item (i) > Free_watermark then
 					if not a_test.item ([item_storage_item (i), key_storage_item (i)]) then
+						Result := False
+							-- Jump out of the loop.
+						i := last_position
+					end
+				end
+				i := i + 1
+			end
+		end
+
+	for_all_with_key_2 (a_test: FUNCTION [ANY, TUPLE [K, G], BOOLEAN]): BOOLEAN
+			-- Is `a_test' true for all keys and their items?
+			-- (Semantics not guaranteed if `a_test' changes the structure.)
+		local
+			i: INTEGER
+		do
+			Result := True
+			from
+				i := 0
+			until
+				i > last_position
+			loop
+				if clashes_item (i) > Free_watermark then
+					if not a_test.item ([key_storage_item (i), item_storage_item (i)]) then
 						Result := False
 							-- Jump out of the loop.
 						i := last_position
