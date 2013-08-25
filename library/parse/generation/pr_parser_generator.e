@@ -5,7 +5,7 @@ note
 		"Parser generators"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -51,9 +51,6 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	old_typing: BOOLEAN
-			-- Does the generated parser use the old typing mechanism?
-
 	line_pragma: BOOLEAN
 			-- Should line pragma be generated?
 
@@ -78,14 +75,6 @@ feature -- Setting
 		end
 
 feature -- Status setting
-
-	set_old_typing (b: BOOLEAN)
-			-- Set `old_typing' to `b'.
-		do
-			old_typing := b
-		ensure
-			old_typing_set: old_typing = b
-		end
 
 	set_line_pragma (b: BOOLEAN)
 			-- Set `line_pragma' to `b'.
@@ -115,20 +104,18 @@ feature -- Generation
 			a_file.put_string ("feature {NONE} -- Implementation%N%N")
 			print_build_parser_tables (a_file)
 			a_file.put_new_line
-			if not old_typing then
-				print_create_value_stacks (a_file)
-				a_file.put_new_line
-				print_init_value_stacks (a_file)
-				a_file.put_new_line
-				print_clear_value_stacks (a_file)
-				a_file.put_new_line
-				print_push_last_value (a_file)
-				a_file.put_new_line
-				print_push_error_value (a_file)
-				a_file.put_new_line
-				print_pop_last_value (a_file)
-				a_file.put_new_line
-			end
+			print_create_value_stacks (a_file)
+			a_file.put_new_line
+			print_init_value_stacks (a_file)
+			a_file.put_new_line
+			print_clear_value_stacks (a_file)
+			a_file.put_new_line
+			print_push_last_value (a_file)
+			a_file.put_new_line
+			print_push_error_value (a_file)
+			a_file.put_new_line
+			print_pop_last_value (a_file)
+			a_file.put_new_line
 			print_dummy_feature (a_file)
 			a_file.put_new_line
 			a_file.put_string ("feature {NONE} -- Semantic actions%N%N")
@@ -145,13 +132,8 @@ feature -- Generation
 			end
 			a_file.put_string ("%Nfeature {NONE} -- Table templates%N%N")
 			print_eiffel_tables (a_file)
-			if old_typing then
-				old_print_conversion_routines (a_file)
-				a_file.put_new_line
-			else
-				a_file.put_string ("%Nfeature {NONE} -- Semantic value stacks%N%N")
-				print_stack_declarations (a_file)
-			end
+			a_file.put_string ("%Nfeature {NONE} -- Semantic value stacks%N%N")
+			print_stack_declarations (a_file)
 			a_file.put_string ("feature {NONE} -- Constants%N%N")
 			print_constants (a_file)
 			a_file.put_string ("%Nfeature -- User-defined features%N%N")
@@ -195,9 +177,7 @@ feature {NONE} -- Generation
 			a_literal: STRING
 			i, nb: INTEGER
 		do
-			if not old_typing then
-				print_last_values (a_file)
-			end
+			print_last_values (a_file)
 			a_file.put_new_line
 			tokens := machine.grammar.tokens
 			nb := tokens.count
@@ -755,13 +735,11 @@ feature {NONE} -- Generation
 				loop
 					a_rule := rules.item (i)
 					a_type := a_rule.lhs.type
-					if not old_typing or not a_type.name.is_equal ("ANY") then
-						types.put (a_type)
-						if types.count = nb_types then
-								-- All types have already been registered.
-								-- Jump out of the loop.
-							i := nb + 1
-						end
+					types.put (a_type)
+					if types.count = nb_types then
+							-- All types have already been registered.
+							-- Jump out of the loop.
+						i := nb + 1
 					end
 					i := i + 1
 				end
@@ -790,11 +768,7 @@ feature {NONE} -- Generation
 				a_file.put_string ("when ")
 				a_file.put_integer (a_rule.id)
 				a_file.put_line (" then")
-				if old_typing then
-					a_rule.old_print_action (input_filename, line_pragma, a_file)
-				else
-					a_rule.print_action (input_filename, line_pragma, a_file)
-				end
+				a_rule.print_action (input_filename, line_pragma, a_file)
 				i := i + 1
 			end
 			a_file.put_line ("%T%T%Telse")
@@ -969,17 +943,11 @@ feature {NONE} -- Generation
 				a_file.put_string (input_filename)
 				a_file.put_line ("%"")
 				a_type := a_rule.lhs.type
-				if not old_typing or not a_type.name.is_equal ("ANY") then
-					a_file.put_line ("%T%Tlocal")
-					a_type.print_dollar_dollar_declaration (a_file)
-					a_file.put_new_line
-				end
+				a_file.put_line ("%T%Tlocal")
+				a_type.print_dollar_dollar_declaration (a_file)
+				a_file.put_new_line
 				a_file.put_line ("%T%Tdo")
-				if old_typing then
-					a_rule.old_print_action (input_filename, line_pragma, a_file)
-				else
-					a_rule.print_action (input_filename, line_pragma, a_file)
-				end
+				a_rule.print_action (input_filename, line_pragma, a_file)
 				a_file.put_line ("%T%Tend")
 				i := i + 1
 			end
@@ -1238,35 +1206,6 @@ feature {NONE} -- Generation
 					a_file.put_line ("%T%Tend")
 				end
 				i := i + 1
-			end
-		end
-
-	old_print_conversion_routines (a_file: KI_TEXT_OUTPUT_STREAM)
-			-- Print code for type conversion routines to `a_file'.
-		require
-			a_file_not_void: a_file /= Void
-			a_file_open_write: a_file.is_open_write
-		local
-			types: DS_ARRAYED_LIST [PR_TYPE]
-			a_type: PR_TYPE
-			i, nb: INTEGER
-		do
-			types := machine.grammar.types
-			if not types.is_empty then
-				a_file.put_string ("%Nfeature {NONE} -- Conversion%N%N")
-				nb := types.count
-				from
-					i := 1
-				until
-					i > nb
-				loop
-					a_type := types.item (i)
-					if a_type.is_used then
-						a_type.old_print_conversion_routine (a_file)
-						a_file.put_character ('%N')
-					end
-					i := i + 1
-				end
 			end
 		end
 

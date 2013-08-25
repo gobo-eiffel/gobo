@@ -5,7 +5,7 @@ note
 		"Geyacc commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2002, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2013, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -63,9 +63,6 @@ feature -- Access
 
 	input_filename: STRING
 			-- Input filename
-
-	old_typing: BOOLEAN
-			-- Use old typing mechanism
 
 	new_typing: BOOLEAN
 			-- Use new typing mechanism
@@ -135,14 +132,6 @@ feature -- Setting
 			input_filename_set: input_filename = a_filename
 		end
 
-	set_old_typing (b: BOOLEAN)
-			-- Set `old_typing' to `b'.
-		do
-			old_typing := b
-		ensure
-			old_typing_set: old_typing = b
-		end
-
 	set_new_typing (b: BOOLEAN)
 			-- Set `new_typing' to `b'.
 		do
@@ -167,10 +156,6 @@ feature -- Execution
 				cmd.append_string ("-v ")
 				cmd := STRING_.appended_string (cmd, a_filename)
 				cmd.append_string (" ")
-			end
-				-- Option --old_typing
-			if old_typing then
-				cmd.append_string ("--old_typing ")
 			end
 				-- Option --new_typing
 			if new_typing then

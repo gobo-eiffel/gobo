@@ -5,7 +5,7 @@ note
 		"Symbol types"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -231,7 +231,7 @@ feature {NONE} -- Initialization
 		ensure
 			id_set: id = an_id
 		end
-		
+
 feature -- Status report
 
 	is_used: BOOLEAN
@@ -618,110 +618,6 @@ feature -- Output
 			loop
 				a_file.put_character ('%T')
 				i := i + 1
-			end
-		end
-
-feature -- Old typing output
-
-	old_append_dollar_n_to_string (n: INTEGER; nb_rhs: INTEGER; a_rule: PR_RULE; a_string: STRING)
-			-- Append typed version of $`n' to `a_string' using the old typing mechanism.
-			-- `nb_rhs' is the maximum number of symbols on the
-			-- right-hand-side of `a_rule' that can be accessed.
-		require
-			a_rule_not_void: a_rule /= Void
-			n_positive: n > 0
-			n_small_enough: n <= nb_rhs
-			valid_nb_rhs: nb_rhs <= a_rule.rhs.count
-			a_string_not_void: a_string /= Void
-		local
-			offset: INTEGER
-			conversion_needed: BOOLEAN
-		do
-			conversion_needed := not name.is_equal ("ANY")
-			if conversion_needed then
-				is_used := True
-				a_string.append_string ("yytype")
-				INTEGER_.append_decimal_integer (id, a_string)
-				a_string.append_string (" (")
-			end
-			offset := nb_rhs - n
-			if offset = 0 then
-				a_string.append_string ("yyvs.item (yyvsp)")
-			else
-				a_string.append_string ("yyvs.item (yyvsp - ")
-				INTEGER_.append_decimal_integer (offset, a_string)
-				a_string.append_character (')')
-			end
-			if conversion_needed then
-				a_string.append_character (')')
-			end
-		end
-
-	old_append_dollar_dollar_to_string (a_string: STRING)
-			-- Append typed version of $$ to `a_string'
-			-- using the old typing mechanism.
-		require
-			a_string_not_void: a_string /= Void
-		do
-			a_string.append_string ("yyval")
-			if not name.is_equal ("ANY") then
-				INTEGER_.append_decimal_integer (id, a_string)
-			end
-		end
-
-	old_print_conversion_routine (a_file: KI_TEXT_OUTPUT_STREAM)
-			-- Print conversion routine ANY->`name' to `a_file'.
-		require
-			a_file_not_void: a_file /= Void
-			a_file_open_write: a_file.is_open_write
-		do
-			a_file.put_string ("%Tyytype")
-			a_file.put_integer (id)
-			a_file.put_string (" (v: ANY): ")
-			a_file.put_string (name)
-			a_file.put_string ("%N%
-				%%T%Trequire%N%
-				%%T%T%Tvalid_type: yyis_type")
-			a_file.put_integer (id)
-			a_file.put_string (" (v)%N%
-				%%T%Tdo%N%
-				%%T%T%TResult ?= v%N%
-				%%T%Tensure%N%
-				%%T%T%Tdefinition: Result = v%N%
-				%%T%Tend%N")
-			a_file.put_string ("%N%Tyyis_type")
-			a_file.put_integer (id)
-			a_file.put_string (" (v: ANY): BOOLEAN%N%
-				%%T%Tlocal%N%T%T%Tu: ")
-			a_file.put_string (name)
-			a_file.put_string ("%N%T%Tdo%N%
-				%%T%T%Tu ?= v%N%
-				%%T%T%TResult := (u = v)%N%
-				%%T%Tend%N")
-		end
-
-	old_print_dollar_dollar_initialization (a_file: KI_TEXT_OUTPUT_STREAM)
-			-- Print $$ initialization to `a_file'.
-		require
-			a_file_not_void: a_file /= Void
-			a_file_open_write: a_file.is_open_write
-		do
-			if name.is_equal ("ANY") then
-					-- Add a semicolon just in case the next user-defined
-					-- instruction starts with an open-parenthesis.
-				a_file.put_string ("%T%T%Tyyval := yyval_default;")
-			end
-		end
-
-	old_print_dollar_dollar_finalization (a_file: KI_TEXT_OUTPUT_STREAM)
-			-- Print $$ finalization to `a_file'.
-		require
-			a_file_not_void: a_file /= Void
-			a_file_open_write: a_file.is_open_write
-		do
-			if not name.is_equal ("ANY") then
-				a_file.put_string ("%T%T%Tyyval := yyval")
-				a_file.put_integer (id)
 			end
 		end
 

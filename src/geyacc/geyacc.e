@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Yacc: syntactical analyzer generator"
 
-	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,7 +44,6 @@ feature -- Processing
 
 			Arguments.set_program_name ("geyacc")
 			create error_handler.make_standard
-			old_typing := False
 			line_pragma := True
 			read_command_line
 			parse_input_file
@@ -87,7 +86,6 @@ feature -- Processing
 						create fsm.make (grammar, error_handler)
 					end
 					create parser_generator.make (fsm)
-					parser_generator.set_old_typing (old_typing)
 					parser_generator.set_line_pragma (line_pragma)
 					if input_filename /= Void then
 						parser_generator.set_input_filename (input_filename)
@@ -133,7 +131,6 @@ feature -- Processing
 			cannot_read: UT_CANNOT_READ_FILE_ERROR
 		do
 			create parser.make (error_handler)
-			parser.set_old_typing (old_typing)
 			if input_filename /= Void then
 				create a_file.make (input_filename)
 				a_file.open_read
@@ -221,10 +218,8 @@ feature -- Processing
 					actions_separated := True
 				elseif arg.count > 10 and then arg.substring (1, 10).is_equal ("--verbose=") then
 					verbose_filename := arg.substring (11, arg.count)
-				elseif arg.is_equal ("--old_typing") then
-					old_typing := True
 				elseif arg.is_equal ("--new_typing") then
-					old_typing := False
+					-- The default.
 				elseif arg.count > 6 and then arg.substring (1, 6).is_equal ("--doc=") then
 					doc_format := arg.substring (7, arg.count)
 					if not doc_format.is_equal ("html") and not doc_format.is_equal ("xml") then
@@ -260,7 +255,6 @@ feature -- Access
 	token_filename: STRING
 	verbose_filename: STRING
 	actions_separated: BOOLEAN
-	old_typing: BOOLEAN
 	doc_format: STRING
 			-- Command line arguments
 

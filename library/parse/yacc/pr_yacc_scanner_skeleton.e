@@ -5,7 +5,7 @@ note
 		"Scanner skeletons for parser generators such as 'geyacc'"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -60,10 +60,7 @@ feature -- Status report
 
 	successful: BOOLEAN
 			-- Has no fatal error been detected?
-
-	old_typing: BOOLEAN
-			-- Does the generated parser use the old typing mechanism?
-
+			
 feature -- Access
 
 	error_handler: UT_ERROR_HANDLER
@@ -96,14 +93,6 @@ feature -- Setting
 			error_handler_set: error_handler = handler
 		end
 
-	set_old_typing (b: BOOLEAN)
-			-- Set `old_typing' to `b'.
-		do
-			old_typing := b
-		ensure
-			old_typing_set: old_typing = b
-		end
-
 feature {NONE} -- Implementation
 
 	action_buffer: STRING
@@ -129,21 +118,11 @@ feature {NONE} -- Implementation
 			a_type: PR_TYPE
 		do
 			rhs := a_rule.rhs
-			if n <= 0 then
-				if old_typing then
-					report_dangerous_dollar_n_warning (n)
-				else
-					report_invalid_dollar_n_error (n)
-				end
-			elseif n > max then
+			if n <= 0 or n > max then
 				report_invalid_dollar_n_error (n)
 			else
 				a_type := rhs.item (n).type
-				if old_typing then
-					a_type.old_append_dollar_n_to_string (n, max, a_rule, action_buffer)
-				else
-					a_type.append_dollar_n_to_string (n, max, a_rule, action_buffer)
-				end
+				a_type.append_dollar_n_to_string (n, max, a_rule, action_buffer)
 			end
 		end
 
@@ -155,11 +134,7 @@ feature {NONE} -- Implementation
 			a_type: PR_TYPE
 		do
 			a_type := a_rule.lhs.type
-			if old_typing then
-				a_type.old_append_dollar_dollar_to_string (action_buffer)
-			else
-				a_type.append_dollar_dollar_to_string (action_buffer)
-			end
+			a_type.append_dollar_dollar_to_string (action_buffer)
 		end
 
 	cloned_string (a_string: STRING): STRING
@@ -257,18 +232,6 @@ feature {NONE} -- Error handling
 			successful := False
 		ensure
 			not_successful: not successful
-		end
-
-	report_dangerous_dollar_n_warning (n: INTEGER)
-			-- Report that $`n' has been used in a semantic
-			-- action but `n' is not a valid index for the
-			-- rhs of the corresponding rule and therefore
-			-- its use is dangerous.
-		local
-			an_error: PR_DANGEROUS_DOLLAR_N_ERROR
-		do
-			create an_error.make (filename, line_nb, n)
-			error_handler.report_warning (an_error)
 		end
 
 feature {NONE} -- Constants

@@ -69,6 +69,7 @@ Version 3.10 - ?
 	* Eiffel classes need to be regenerated with geyacc from .y files because
 	  of a breaking change to make the internal stacks void-safe compliant.
 	  Otherwise this will result in a compilation error.
+	* Removed command-line option '--old_typing'.
 
 	Gobo Eiffel Kernel Library:
 

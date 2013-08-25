@@ -6,7 +6,7 @@ note
 
 	remark: "To be used with 'geyacc --new_typing'."
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 2003-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -113,7 +113,7 @@ feature -- Parsing
 					yyssp := yyssp + 1
 					if yyssp >= yystacksize then
 						yystacksize := yystacksize + yyInitial_stack_size
-						yyss := SPECIAL_INTEGER_.resize (yyss, yystacksize)
+						yyss := SPECIAL_INTEGER_.aliased_resized_area (yyss, yystacksize)
 						debug ("GEYACC")
 							std.error.put_string ("Stack (yyss) size increased to ")
 							std.error.put_integer (yystacksize)
