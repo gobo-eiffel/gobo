@@ -4,6 +4,7 @@ note
 
 		"Cursors for in-order traversal of containers using binary search tree algorithms"
 
+	storable_version: "20130823"
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2008-2013, Daniel Tuser and others"
 	license: "MIT License"
@@ -18,6 +19,15 @@ inherit
 		redefine
 			item,
 			next_cursor
+		end
+
+	MISMATCH_CORRECTOR
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		redefine
+			correct_mismatch
 		end
 
 feature {NONE} -- Initialization
@@ -125,5 +135,38 @@ feature {DS_BILINEAR} -- Implementation
 			-- (Used by `container' to keep track of traversing
 			-- cursors (i.e. cursors associated with `container'
 			-- and which are not currently `off').)
+
+feature {NONE} -- Storable mismatch
+
+	correct_mismatch
+			-- Attempt to correct object mismatch using `mismatch_information'.
+		local
+			l_stored_version_number: INTEGER
+		do
+			if not attached mismatch_information.stored_version as l_stored_version or else l_stored_version.is_empty then
+				correct_mismatch_20130823
+			elseif l_stored_version.is_integer then
+				l_stored_version_number := l_stored_version.to_integer
+				if l_stored_version_number < 20130823 then
+					correct_mismatch_20130823
+				else
+					precursor
+				end
+			else
+				precursor
+			end
+		end
+
+	correct_mismatch_20130823
+			-- Correct storable mismatch introducted in version "20130823".
+		do
+			if position = Void then
+				if mismatch_information.has ("is_before") then
+					if attached {BOOLEAN} mismatch_information.item ("is_before") as l_old_is_before then
+						before := l_old_is_before
+					end
+				end
+			end
+		end
 
 end

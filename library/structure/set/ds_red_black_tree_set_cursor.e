@@ -4,6 +4,7 @@ note
 
 		"Cursors for in-order traversal of sets using red-black tree algorithms"
 
+	storable_version: "20130823"
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2009-2013, Daniel Tuser and others"
 	license: "MIT License"

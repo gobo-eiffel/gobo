@@ -4,6 +4,7 @@ note
 
 		"Cursors for in-order traversal of binary search trees"
 
+	storable_version: "20130823"
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2008-2013, Daniel Tuser and others"
 	license: "MIT License"
