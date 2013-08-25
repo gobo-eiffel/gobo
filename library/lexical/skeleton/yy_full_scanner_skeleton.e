@@ -5,7 +5,7 @@ note
 		"Skeletons of scanners implemented with full tables"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -76,11 +76,11 @@ feature -- Scanning
 						-- Find the next match.
 					l_content_area := yy_content_area
 					from
-						if yy_ec /= Void then
+						if attached yy_ec as l_yy_ec then
 							if l_content_area /= Void then
-								yy_c := yy_ec.item (l_content_area.item (yy_cp).code)
+								yy_c := l_yy_ec.item (l_content_area.item (yy_cp).code)
 							else
-								yy_c := yy_ec.item (yy_content.item (yy_cp).code)
+								yy_c := l_yy_ec.item (yy_content.item (yy_cp).code)
 							end
 						else
 							if l_content_area /= Void then
@@ -98,11 +98,11 @@ feature -- Scanning
 							yy_last_accepting_cpos := yy_cp
 						end
 						yy_cp := yy_cp + 1
-						if yy_ec /= Void then
+						if attached yy_ec as l_yy_ec then
 							if l_content_area /= Void then
-								yy_c := yy_ec.item (l_content_area.item (yy_cp).code)
+								yy_c := l_yy_ec.item (l_content_area.item (yy_cp).code)
 							else
-								yy_c := yy_ec.item (yy_content.item (yy_cp).code)
+								yy_c := l_yy_ec.item (yy_content.item (yy_cp).code)
 							end
 						else
 							if l_content_area /= Void then
@@ -214,7 +214,7 @@ feature {NONE} -- Tables
 			-- States to enter upon reading symbol;
 			-- indexed by (current_state_id * yyNb_rows + symbol)
 
-	yy_ec: SPECIAL [INTEGER]
+	yy_ec: detachable SPECIAL [INTEGER]
 			-- Equivalence classes;
 			-- Void if equivalence classes are not used
 
@@ -255,8 +255,8 @@ feature {NONE} -- Implementation
 				end
 				if yy_c = 0 then
 					yy_c := yyNull_equiv_class
-				elseif yy_ec /= Void then
-					yy_c := yy_ec.item (yy_c)
+				elseif attached yy_ec as l_yy_ec then
+					yy_c := l_yy_ec.item (yy_c)
 				end
 				Result := yy_nxt.item (Result * yyNb_rows + yy_c)
 				if yyBacking_up and then yy_accept.item (Result) /= 0 then

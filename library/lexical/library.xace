@@ -4,7 +4,7 @@
 	<description>
 		description: "Xace file for the Gobo Eiffel Lexical Library"
 		library: "Gobo Eiffel Lexical Library"
-		copyright: "Copyright (c) 2001, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2013, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -20,7 +20,8 @@
 			<mount location="${GOBO}/library/regexp/library.xace"/>
 		</cluster>
 		<cluster name="scanner"/>
-		<cluster name="skeleton"/>
 		<cluster name="support"/>
 	</cluster>
+
+	<mount location="${GOBO}/library/lexical/library_skl.xace"/>
 </library>

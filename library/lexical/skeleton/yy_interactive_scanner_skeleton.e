@@ -5,7 +5,7 @@ note
 		"Skeletons of interactive scanners implemented with compressed tables"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -104,11 +104,11 @@ feature -- Scanning
 						yy_done
 					loop
 						l_content_area := yy_content_area
-						if yy_ec /= Void then
+						if attached yy_ec as l_yy_ec then
 							if l_content_area /= Void then
-								yy_c := yy_ec.item (l_content_area.item (yy_cp).code)
+								yy_c := l_yy_ec.item (l_content_area.item (yy_cp).code)
 							else
-								yy_c := yy_ec.item (yy_content.item (yy_cp).code)
+								yy_c := l_yy_ec.item (yy_content.item (yy_cp).code)
 							end
 						else
 							if l_content_area /= Void then
@@ -130,7 +130,7 @@ feature -- Scanning
 							yy_chk.item (yy_base.item (yy_current_state) + yy_c) = yy_current_state
 						loop
 							yy_current_state := yy_def.item (yy_current_state)
-							if yy_meta /= Void and then yy_current_state >= yyTemplate_mark then
+							if attached yy_meta as l_yy_meta and then yy_current_state >= yyTemplate_mark then
 									-- We've arranged it so that templates are
 									-- never chained to one another. This means
 									-- we can afford to make a very simple test
@@ -138,7 +138,7 @@ feature -- Scanning
 									-- meta-equivalence class without worrying
 									-- about erroneously looking up the meta
 									-- equivalence class twice.
-								yy_c := yy_meta.item (yy_c)
+								yy_c := l_yy_meta.item (yy_c)
 							end
 						end
 						yy_current_state := yy_nxt.item (yy_base.item (yy_current_state) + yy_c)
@@ -173,54 +173,56 @@ feature -- Scanning
 						-- We branch here when backing up.
 					check
 						reject_used: yyReject_or_variable_trail_context
-					end
-					from
-						yy_found := False
-					until
-						yy_found
-					loop
-						if yy_lp /= 0 and yy_lp < yy_accept.item (yy_current_state + 1) then
-							yy_act := yy_acclist.item (yy_lp)
-							if yyVariable_trail_context then
-								if yy_act < -yyNb_rules or yy_looking_for_trail_begin /= 0 then
-									if yy_act = yy_looking_for_trail_begin then
-										yy_looking_for_trail_begin := 0
-										yy_act := -yy_act - yyNb_rules
-										yy_found := True
-									else
+						yy_acclist_not_void: attached yy_acclist as l_yy_acclist
+					then
+						from
+							yy_found := False
+						until
+							yy_found
+						loop
+							if yy_lp /= 0 and yy_lp < yy_accept.item (yy_current_state + 1) then
+								yy_act := l_yy_acclist.item (yy_lp)
+								if yyVariable_trail_context then
+									if yy_act < -yyNb_rules or yy_looking_for_trail_begin /= 0 then
+										if yy_act = yy_looking_for_trail_begin then
+											yy_looking_for_trail_begin := 0
+											yy_act := -yy_act - yyNb_rules
+											yy_found := True
+										else
+											yy_lp := yy_lp + 1
+										end
+									elseif yy_act < 0 then
+										yy_looking_for_trail_begin := yy_act - yyNb_rules
+										if yyReject_used then
+												-- Remember matched text in case
+												-- we back up due to `reject'.
+											yy_full_match := yy_cp
+											yy_full_state := yy_state_count
+											yy_full_lp := yy_lp
+										end
 										yy_lp := yy_lp + 1
-									end
-								elseif yy_act < 0 then
-									yy_looking_for_trail_begin := yy_act - yyNb_rules
-									if yyReject_used then
-											-- Remember matched text in case
-											-- we back up due to `reject'.
+									else
 										yy_full_match := yy_cp
 										yy_full_state := yy_state_count
 										yy_full_lp := yy_lp
+										yy_found := True
 									end
-									yy_lp := yy_lp + 1
 								else
 									yy_full_match := yy_cp
-									yy_full_state := yy_state_count
-									yy_full_lp := yy_lp
 									yy_found := True
 								end
 							else
-								yy_full_match := yy_cp
-								yy_found := True
+								yy_cp := yy_cp - 1
+								yy_state_count := yy_state_count - 1
+								yy_current_state := yy_state_stack.item (yy_state_count)
+								yy_lp := yy_accept.item (yy_current_state)
 							end
-						else
-							yy_cp := yy_cp - 1
-							yy_state_count := yy_state_count - 1
-							yy_current_state := yy_state_stack.item (yy_state_count)
-							yy_lp := yy_accept.item (yy_current_state)
 						end
+						yy_rejected_line := yy_line
+						yy_rejected_column := yy_column
+						yy_rejected_position := yy_position
+						yy_goto := yyDo_action
 					end
-					yy_rejected_line := yy_line
-					yy_rejected_column := yy_column
-					yy_rejected_position := yy_position
-					yy_goto := yyDo_action
 				when yyDo_action then
 						-- Set up `text' before action.
 					yy_bp := yy_bp - yy_more_len
