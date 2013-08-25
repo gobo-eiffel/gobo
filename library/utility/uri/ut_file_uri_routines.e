@@ -5,7 +5,7 @@ note
 		"Convert file: URI to and from local filesystem names. Percent-encodings in URIs are assumed to be UTF-8"
 
 	library: "Gobo Eiffel Utility Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,10 +42,11 @@ feature -- Filename
 					check
 						-- condition `a_uri.has_path_base'
 						a_uri_has_path_base: l_path_base_item /= Void
-					end
-					l_path := uri_component_to_pathname (l_path_base_item)
-					if l_path /= Void then
-						Result := file_system.pathname (Result, l_path)
+					then
+						l_path := uri_component_to_pathname (l_path_base_item)
+						if l_path /= Void then
+							Result := file_system.pathname (Result, l_path)
+						end
 					end
 				end
 			end
@@ -91,20 +92,23 @@ feature -- Pathname
 			a_uri_not_void: a_uri /= Void
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [UT_URI_STRING]
-			a_possible_drive: STRING
-			a_segment: STRING
+			a_possible_drive: detachable STRING
+			a_segment: detachable STRING
 			a_uri_authority_item: detachable UT_URI_STRING
+			l_result: KL_PATHNAME
 		do
-			if not a_uri.has_valid_scheme or else a_uri.scheme.same_string (File_scheme) then
-				create Result.make
+			if not a_uri.has_valid_scheme or else (attached a_uri.scheme as l_scheme and then l_scheme.same_string (File_scheme)) then
+				create l_result.make
+				Result := l_result
 				if a_uri.has_authority then
 					a_uri_authority_item := a_uri.authority_item
 					check
 						-- condition `a_uri.has_authority'
 						a_uri_has_authority: a_uri_authority_item /= Void
-					end
-					if not a_uri_authority_item.decoded.same_string (Localhost_authority) then
-						Result.set_hostname (a_uri.authority)
+					then
+						if not a_uri_authority_item.decoded.same_string (Localhost_authority) then
+							l_result.set_hostname (a_uri.authority)
+						end
 					end
 				end
 				Result.set_relative (not a_uri.is_opaque and not a_uri.has_absolute_path)
@@ -117,9 +121,9 @@ feature -- Pathname
 						Result := Void
 					else
 						if a_uri.has_absolute_path and then is_drive (a_possible_drive) then
-							Result.set_drive (a_possible_drive)
+							l_result.set_drive (a_possible_drive)
 						else
-							Result.append_name (a_possible_drive)
+							l_result.append_name (a_possible_drive)
 						end
 						-- Remaining items.
 						from a_cursor.forth until a_cursor.after loop
@@ -128,7 +132,7 @@ feature -- Pathname
 								Result := Void
 								a_cursor.go_after
 							else
-								Result.append_name (a_segment)
+								l_result.append_name (a_segment)
 								a_cursor.forth
 							end
 						end

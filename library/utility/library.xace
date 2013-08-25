@@ -4,7 +4,7 @@
 	<description>
 		description: "Xace file for the Gobo Eiffel Utility Library"
 		library: "Gobo Eiffel Utility Library"
-		copyright: "Copyright (c) 2001-2007, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2013, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -19,4 +19,10 @@
 		<cluster name="transcoder"/>
 		<cluster name="uri"/>
 	</cluster>
+
+	<mount location="${GOBO}/library/kernel.xace"/>
+	<mount location="${GOBO}/library/kernel/library.xace"/>
+	<mount location="${GOBO}/library/structure/library.xace"/>
+	<mount location="${GOBO}/library/lexical/library_skl.xace"/>
+	<mount location="${GOBO}/library/parse/library_skl.xace"/>
 </library>

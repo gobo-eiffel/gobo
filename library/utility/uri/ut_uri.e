@@ -6,7 +6,7 @@ note
 
 	standards: "RFC 3986 (obsoleting RFC 2396)"
 	library: "Gobo Eiffel XML Library"
-	author: "Copyright (c) 2004, Berend de Boer and others"
+	author: "Copyright (c) 2004-2013, Berend de Boer and others"
 	revision: "$Revision$"
 	date: "$Date$"
 
@@ -318,8 +318,9 @@ feature -- Access
 				check
 						-- `not is_relative' means `is_absolute" means `scheme /= Void'
 					scheme_not_void: l_scheme /= Void
+				then
+					Result := full_reference.substring (l_scheme.count + 2, full_reference.count)
 				end
-				Result := full_reference.substring (l_scheme.count + 2, full_reference.count)
 			end
 		ensure
 			scheme_specific_part_not_void: Result /= Void
@@ -340,8 +341,9 @@ feature -- Components
 			check
 					-- Precondition `has_authority'
 				l_authority_item /= Void
+			then
+				Result := l_authority_item.encoded
 			end
-			Result := l_authority_item.encoded
 		ensure
 			authority_not_void: Result /= Void
 			definition: attached authority_item as el_authority_item and then STRING_.same_string (Result, el_authority_item.encoded)
@@ -393,8 +395,9 @@ feature -- Components
 			check
 					-- precondition `has_path_base'
 				has_path_base: l_path_base_item /= Void
+			then
+				Result := l_path_base_item.encoded
 			end
-			Result := l_path_base_item.encoded
 		ensure
 			path_base_not_void: Result /= Void
 			not_empty: not Result.is_empty
@@ -412,8 +415,9 @@ feature -- Components
 			check
 					-- precondition `has_query'
 				has_query: l_query_item /= Void
+			then
+				Result := l_query_item.encoded
 			end
-			Result := l_query_item.encoded
 		ensure
 			query_not_void: Result /= Void
 			definition: attached query_item as el_query_item and then STRING_.same_string (Result, el_query_item.encoded)
@@ -431,8 +435,9 @@ feature -- Components
 			check
 					-- precondition `has_fragment'
 				has_fragment: l_fragment_item /= Void
+			then
+				Result := l_fragment_item.encoded
 			end
-			Result := l_fragment_item.encoded
 		ensure
 			fragment_not_void: Result /= Void
 			definition: attached fragment_item as el_fragment_item and then STRING_.same_string (Result, el_fragment_item.encoded)
@@ -521,18 +526,19 @@ feature -- If authority is <userinfo>@<host>:<port>
 			check
 					-- precondition `valid_authority'
 				valid_authority: l_authority_item /= Void
-			end
-			p := l_authority_item.encoded.index_of ('@', 1)
-			user_info_present := p > 1
-			if user_info_present then
-				user_info := authority.substring (1, p - 1)
-			end
-				-- `host_port' is remainder of `authority'.
-			if p = 0 then
-				create host_port.make (l_authority_item.encoded, default_port)
-			else
-				check valid_authority_implies: p + 1 < l_authority_item.encoded.count end
-				create host_port.make (l_authority_item.encoded.substring (p + 1, authority.count), default_port)
+			then
+				p := l_authority_item.encoded.index_of ('@', 1)
+				user_info_present := p > 1
+				if user_info_present then
+					user_info := authority.substring (1, p - 1)
+				end
+					-- `host_port' is remainder of `authority'.
+				if p = 0 then
+					create host_port.make (l_authority_item.encoded, default_port)
+				else
+					check valid_authority_implies: p + 1 < l_authority_item.encoded.count end
+					create host_port.make (l_authority_item.encoded.substring (p + 1, authority.count), default_port)
+				end
 			end
 		ensure
 			has_parsed_authority: has_parsed_authority
@@ -551,8 +557,9 @@ feature -- If authority is <userinfo>@<host>:<port>
 			check
 					-- precondition `has_authority'
 				has_authority: l_host_port /= Void
+			then
+				Result := l_host_port.host
 			end
-			Result := l_host_port.host
 		ensure
 			host_not_void: Result /= Void
 			definition: attached host_port as el_host_port and then host = el_host_port.host
@@ -569,8 +576,9 @@ feature -- If authority is <userinfo>@<host>:<port>
 			check
 					-- precondition `has_authority'
 				has_authority: l_host_port /= Void
+			then
+				Result := l_host_port.port
 			end
-			Result := l_host_port.port
 		ensure
 			definition: attached host_port as el_host_port and then port = el_host_port.port
 		end
@@ -637,29 +645,31 @@ feature -- Setting
 			no_invalid_characters: not Url_encoding.has_excluded_characters (a_path)
 			hierarchical: is_hierarchical
 		local
-			a_splitter: ST_SPLITTER
 			a_uri_string: UT_URI_STRING
-			some_items: DS_LIST [STRING]
-			a_cursor: DS_LINEAR_CURSOR [STRING]
+			i, j: INTEGER
 		do
-			create a_splitter.make
-			a_splitter.set_separators ("/")
 			if a_path.is_empty then
 				has_absolute_path := False
-				create {DS_ARRAYED_LIST [STRING]} some_items.make_default
-			elseif a_path.item (1) = '/' then
-				has_absolute_path := True
-				some_items := a_splitter.split_greedy (a_path.substring (2, a_path.count))
+				create path_items.make_default
 			else
-				has_absolute_path := False
-				some_items := a_splitter.split_greedy (a_path)
-			end
-			create path_items.make_default
-			a_cursor := some_items.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				create a_uri_string.make_encoded (a_cursor.item)
-				path_items.force_last (a_uri_string)
-				a_cursor.forth
+				if a_path.item (1) = '/' then
+					has_absolute_path := True
+					i := 2
+				else
+					has_absolute_path := False
+					i := 1
+				end
+				create path_items.make_default
+				from
+					j := path.index_of ('/', i)
+				until
+					j = 0
+				loop
+					create a_uri_string.make_encoded (path.substring (i, j - 1))
+					path_items.force_last (a_uri_string)
+					i := j + 1
+					j := path.index_of ('/', i)
+				end
 			end
 			full_reference := new_full_reference
 		ensure
@@ -735,9 +745,10 @@ feature {NONE} -- Update cached attributes
 				check
 						-- condition `is_absolute'
 					is_absolute: l_scheme /= Void
+				then
+					Result := STRING_.appended_string (Result, l_scheme)
+					Result.append_character (':')
 				end
-				Result := STRING_.appended_string (Result, l_scheme)
-				Result.append_character (':')
 			end
 			if has_authority then
 				Result.append_character ('/')
@@ -1030,10 +1041,11 @@ feature {NONE} -- Resolve a relative-path reference
 				check
 						-- condition `has_path_base'
 					has_path_base: l_path_base_item /= Void
-				end
-				if is_dot (l_path_base_item) or is_dot_dot (l_path_base_item) then
-					path_items.force_last (l_path_base_item)
-					path_base_item := Void
+				then
+					if is_dot (l_path_base_item) or is_dot_dot (l_path_base_item) then
+						path_items.force_last (l_path_base_item)
+						path_base_item := Void
+					end
 				end
 			end
 				-- Last segment is part of path if relative.

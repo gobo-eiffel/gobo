@@ -26,6 +26,10 @@ Version 3.10 - ?
 	  reported twice.
 	* Qualified anchored types are now accepted by default.
 
+	gelex:
+	
+	* Made the generated scanners compilable in void-safe mode with ISE 7.3.
+	
 	gelint:
 
 	* Fixed bug where it was reporting an internal error instead of a VTCT error
@@ -70,6 +74,7 @@ Version 3.10 - ?
 	  of a breaking change to make the internal stacks void-safe compliant.
 	  Otherwise this will result in a compilation error.
 	* Removed command-line option '--old_typing'.
+	* Made the generated parsers compilable in void-safe mode with ISE 7.3.
 
 	Gobo Eiffel Kernel Library:
 
@@ -162,6 +167,10 @@ Version 3.10 - ?
 	  so that it can accept code appearing in ISE's libraries.
 	* Added support for across instructions/expressions.
 
+	Gobo Eiffel Utility Library:
+	
+	* Made it compilable in void-safe mode with ISE 7.3.
+	
 	Gobo Eiffel XML Library:
 
 	* Added option to let the XML pretty printer use empty element tags
