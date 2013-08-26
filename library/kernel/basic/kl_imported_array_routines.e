@@ -5,7 +5,7 @@ note
 		"Imported routines that ought to be in class ARRAY"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,6 +44,22 @@ feature -- Access
 			create Result
 		ensure
 			string_array_routines_not_void: Result /= Void
+		end
+
+	string_array_routines: KL_ARRAY_ROUTINES [STRING]
+			-- Routines that ought to be in class ARRAY
+		once
+			create Result
+		ensure
+			string_array_routines_not_void: Result /= Void
+		end
+
+	detachable_string_array_routines: KL_ARRAY_ROUTINES [detachable STRING]
+			-- Routines that ought to be in class ARRAY
+		once
+			create Result
+		ensure
+			detachable_string_array_routines_not_void: Result /= Void
 		end
 
 	ARRAY_SPECIAL_INTEGER_: KL_ARRAY_ROUTINES [detachable SPECIAL [INTEGER]]

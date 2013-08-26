@@ -105,6 +105,7 @@ Version 3.10 - ?
 
 	* The pattern being matched and the case-sensitiveness are now available
 	  using queries `pattern' and `is_case_insensitive'.
+	* Made it compilable in void-safe mode with ISE 7.3.
 
 	Gobo Eiffel String Library:
 

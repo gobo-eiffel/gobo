@@ -5,7 +5,7 @@ note
 		"Regular expressions"
 
 	library: "Gobo Eiffel Regexp Library"
-	copyright: "Copyright (c) 2001-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -223,7 +223,7 @@ feature -- Splitting
 		require
 			is_matching: is_matching
 		do
-			Result := STRING_ARRAY_.make_empty_with_lower (1)
+			Result := string_array_routines.make_empty_with_lower (1)
 			append_split_to_array (Result)
 		ensure
 			all_matched: not has_matched

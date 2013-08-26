@@ -202,7 +202,7 @@ feature -- Status report
 
 feature -- Access
 
-	pattern: STRING
+	pattern: detachable STRING
 			-- Pattern being compiled
 
 	byte_code: RX_BYTE_CODE
@@ -675,8 +675,9 @@ feature -- Debugging
 					check
 							-- `a_position_map' has been set when `a_native_code' is False.
 						a_position_map_not_void: a_position_map /= Void
+					then
+						a_position := map_position (i, a_position_map)
 					end
-					a_position := map_position (i, a_position_map)
 				end
 				STRING_FORMATTER_.put_left_padded_string (a_file, a_position.out, 3, ' ')
 				a_file.put_character (' ')
@@ -689,8 +690,9 @@ feature -- Debugging
 							check
 									-- `a_position_map' has been set when `a_native_code' is False.
 								a_position_map_not_void: a_position_map /= Void
+							then
+								a_position := map_position (i + byte_code.integer_item (i + 1), a_position_map) - map_position (i, a_position_map)
 							end
-							a_position := map_position (i + byte_code.integer_item (i + 1), a_position_map) - map_position (i, a_position_map)
 						end
 						STRING_FORMATTER_.put_left_padded_string (a_file, a_position.out, 3, ' ')
 					else
@@ -709,8 +711,9 @@ feature -- Debugging
 								check
 										-- `a_position_map' has been set when `a_native_code' is False.
 									a_position_map_not_void: a_position_map /= Void
+								then
+									a_position := map_position (i + byte_code.integer_item (i + 1), a_position_map) - map_position (i, a_position_map)
 								end
-								a_position := map_position (i + byte_code.integer_item (i + 1), a_position_map) - map_position (i, a_position_map)
 							end
 							STRING_FORMATTER_.put_left_padded_string (a_file, a_position.out, 3, ' ')
 						else
@@ -727,8 +730,9 @@ feature -- Debugging
 								check
 										-- `a_position_map' has been set when `a_native_code' is False.
 									a_position_map_not_void: a_position_map /= Void
+								then
+									a_position := map_position (i, a_position_map) - map_position (i - byte_code.integer_item (i + 1), a_position_map)
 								end
-								a_position := map_position (i, a_position_map) - map_position (i - byte_code.integer_item (i + 1), a_position_map)
 							end
 							STRING_FORMATTER_.put_left_padded_string (a_file, a_position.out, 3, ' ')
 						else

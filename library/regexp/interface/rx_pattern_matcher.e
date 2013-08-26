@@ -5,7 +5,7 @@ note
 		"Pattern matchers"
 
 	library: "Gobo Eiffel Regexp Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -156,7 +156,7 @@ feature -- Status report
 
 feature -- Access
 
-	pattern: STRING
+	pattern: detachable STRING
 			-- Pattern being matched
 		deferred
 		end
