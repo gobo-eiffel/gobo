@@ -60,7 +60,7 @@ feature -- Status report
 
 	successful: BOOLEAN
 			-- Has no fatal error been detected?
-			
+
 feature -- Access
 
 	error_handler: UT_ERROR_HANDLER
@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 	last_error: INTEGER
 			-- Index of last %error read
 
-	rule: PR_RULE
+	rule: detachable PR_RULE
 			-- Rule being parsed
 
 	process_dollar_n (n: INTEGER; max: INTEGER; a_rule: PR_RULE)

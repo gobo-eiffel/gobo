@@ -21,6 +21,11 @@
 		<cluster name="yacc"/>
 	</cluster>
 
+	<mount location="${GOBO}/library/kernel.xace"/>
+	<mount location="${GOBO}/library/kernel/library.xace"/>
+	<mount location="${GOBO}/library/lexical/library_skl.xace"/>
 	<mount location="${GOBO}/library/parse/library_skl.xace"/>
-
+	<mount location="${GOBO}/library/structure/library.xace"/>
+	<mount location="${GOBO}/library/pattern/library.xace"/>
+	<mount location="${GOBO}/library/utility/library.xace"/>
 </library>

@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_id: INTEGER; a_type_mark: STRING; a_name: like name)
+	make (an_id: INTEGER; a_type_mark: detachable STRING; a_name: like name)
 			-- Create a new type named `a_name'.
 		require
 			valid_id: id >= 0
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			name_set: a_type_mark = Void implies name = a_name
 		end
 
-	make_generic (an_id: INTEGER; a_type_mark: STRING; a_name: like name; generics: DS_ARRAYED_LIST [PR_TYPE])
+	make_generic (an_id: INTEGER; a_type_mark: detachable STRING; a_name: like name; generics: DS_ARRAYED_LIST [PR_TYPE])
 			-- Create a new generic type named `a_name' and generic
 			-- parameters `generics'.
 		require
@@ -96,7 +96,7 @@ feature {NONE} -- Initialization
 			id_set: id = an_id
 		end
 
-	make_labeled_tuple (an_id: INTEGER; a_type_mark: STRING; a_name: like name; generics: DS_ARRAYED_LIST [PR_LABELED_TYPE])
+	make_labeled_tuple (an_id: INTEGER; a_type_mark: detachable STRING; a_name: like name; generics: DS_ARRAYED_LIST [PR_LABELED_TYPE])
 			-- Create a new labeled tuple type named `a_name' and generic
 			-- parameters `generics'.
 		require
@@ -156,7 +156,7 @@ feature {NONE} -- Initialization
 			id_set: id = an_id
 		end
 
-	make_anchored (an_id: INTEGER; a_type_mark: STRING; a_name: like name)
+	make_anchored (an_id: INTEGER; a_type_mark: detachable STRING; a_name: like name)
 			-- Create a new anchored type
 			-- of the form "like `a_name'".
 		require
@@ -181,7 +181,7 @@ feature {NONE} -- Initialization
 			id_set: id = an_id
 		end
 
-	make_like_current (an_id: INTEGER; a_type_mark: STRING)
+	make_like_current (an_id: INTEGER; a_type_mark: detachable STRING)
 			-- Create a new  type of the form "like Current".
 		require
 			valid_id: id >= 0
@@ -199,7 +199,7 @@ feature {NONE} -- Initialization
 			id_set: id = an_id
 		end
 
-	make_qualified_anchored (an_id: INTEGER; a_type_mark: STRING; a_type: PR_TYPE; a_name: like name)
+	make_qualified_anchored (an_id: INTEGER; a_type_mark: detachable STRING; a_type: PR_TYPE; a_name: like name)
 			-- Create a new anchored type
 			-- of the form "like {`a_type'}`a_name'".
 		require

@@ -5,7 +5,7 @@ note
 		"Finite State Machine states"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -84,17 +84,20 @@ feature -- Access
 		local
 			i: INTEGER
 		do
-			i := shifts.count
-			from
-			until
-				i < 1
-			loop
-				if shifts.item (i).accessing_symbol = a_symbol then
-					Result := shifts.item (i)
-						-- Jump out of the loop.
-					i := 0
-				else
-					i := i - 1
+			check has_shift: not shifts.is_empty then
+				Result := shifts.first
+				i := shifts.count
+				from
+				until
+					i < 1
+				loop
+					if shifts.item (i).accessing_symbol = a_symbol then
+						Result := shifts.item (i)
+							-- Jump out of the loop.
+						i := 0
+					else
+						i := i - 1
+					end
 				end
 			end
 		ensure
@@ -103,7 +106,7 @@ feature -- Access
 			accessing_symbol: Result.accessing_symbol = a_symbol
 		end
 
-	error_action: PR_ERROR_ACTION
+	error_action: detachable PR_ERROR_ACTION
 			-- Action to be executed when a syntax error
 			-- occurs at current state; Void if none
 
@@ -355,9 +358,8 @@ feature -- Conflicts
 			until
 				i < 1
 			loop
-				a_token ?= shifts.item (i).accessing_symbol
-				if a_token /= Void then
-					tokens.put_last (a_token)
+				if attached {PR_TOKEN} shifts.item (i).accessing_symbol as l_token then
+					tokens.put_last (l_token)
 				end
 				i := i - 1
 			end
@@ -471,9 +473,8 @@ feature -- Conflicts
 			until
 				i < 1
 			loop
-				a_token ?= shifts.item (i).accessing_symbol
-				if a_token /= Void then
-					tokens.put_last (a_token)
+				if attached {PR_TOKEN} shifts.item (i).accessing_symbol as l_token then
+					tokens.put_last (l_token)
 				end
 				i := i - 1
 			end
@@ -680,10 +681,11 @@ feature -- Output
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
-			no_default, defaulted: BOOLEAN
+			no_default: BOOLEAN
 			shift_tokens, tokens: DS_ARRAYED_LIST [PR_TOKEN]
 			lookaheads: DS_ARRAYED_LIST [PR_TOKEN]
-			a_reduction, default_reduction: PR_REDUCTION
+			a_reduction: PR_REDUCTION
+			default_reduction, defaulted_reduction: detachable PR_REDUCTION
 			a_rule: PR_RULE
 			a_token: PR_TOKEN
 			count, max: INTEGER
@@ -695,10 +697,9 @@ feature -- Output
 			until
 				i < 1
 			loop
-				a_token ?= shifts.item (i).accessing_symbol
-				if a_token /= Void then
-					shift_tokens.put_last (a_token)
-					if a_token.id = 1 then
+				if attached {PR_TOKEN} shifts.item (i).accessing_symbol as l_token then
+					shift_tokens.put_last (l_token)
+					if l_token.id = 1 then
 							-- If current state has a shift to the
 							-- error token, don't use a default rule.
 						no_default := True
@@ -737,6 +738,7 @@ feature -- Output
 				tokens.extend_last (shift_tokens)
 				tokens.extend_last (errors)
 				if not no_default then
+					a_reduction := reductions.first
 					i := reductions.count
 					from
 					until
@@ -770,7 +772,7 @@ feature -- Output
 					i < 1
 				loop
 					a_token := tokens.item (i)
-					defaulted := False
+					defaulted_reduction := Void
 					if shift_tokens.has (a_token) then
 						count := 1
 					else
@@ -795,12 +797,12 @@ feature -- Output
 									a_file.put_string (a_rule.lhs.name)
 									a_file.put_string (")%N")
 								else
-									defaulted := True
+									defaulted_reduction := default_reduction
 								end
 								count := count + 1
 							else
-								if defaulted then
-									a_rule := default_reduction.rule
+								if defaulted_reduction /= Void then
+									a_rule := defaulted_reduction.rule
 									a_file.put_character ('%T')
 									a_file.put_string (a_token.name)
 									a_file.put_string ("%Treduce using rule ")
@@ -808,7 +810,7 @@ feature -- Output
 									a_file.put_string (" (")
 									a_file.put_string (a_rule.lhs.name)
 									a_file.put_string (")%N")
-									defaulted := False
+									defaulted_reduction := Void
 								end
 								a_rule := a_reduction.rule
 								a_file.put_character ('%T')

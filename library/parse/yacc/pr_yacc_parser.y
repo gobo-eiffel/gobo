@@ -6,7 +6,7 @@ note
 		"Parsers for parser generators such as 'geyacc'"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,7 +42,7 @@ create
 %token <INTEGER> T_NUMBER T_ERROR '|' ':'
 
 %type <STRING> Identifier Eiffel_basic_type_name Qualified_identifiers
-%type <STRING> Type_mark Type_mark_no_expanded_reference Type_mark_no_expanded_reference_opt
+%type <detachable STRING> Type_mark Type_mark_no_expanded_reference Type_mark_no_expanded_reference_opt
 %type <PR_TOKEN> Terminal Token_declaration Left_declaration Right_declaration Nonassoc_declaration
 %type <PR_TYPE> Eiffel_type Eiffel_type_no_identifier
 %type <DS_ARRAYED_LIST [PR_TYPE]> Eiffel_type_list Eiffel_generics
@@ -119,13 +119,17 @@ Token_symbol_type: -- Empty
 		}
 	| '<' Eiffel_type '>'
 		{
-			type := $2
-			set_no_alias_name (type)
+			check attached $2 as l_type then
+				type := l_type
+				set_no_alias_name (l_type)
+			end
 		}
 	| '<' Eiffel_type T_AS Identifier '>'
 		{
-			type := $2
-			set_alias_name (type, $4)
+			check attached $2 as l_type then
+				type := l_type
+				set_alias_name (l_type, $4)
+			end
 		}
 	;
 
@@ -408,27 +412,37 @@ Token_declaration_list: -- Empty
 
 Token_declaration: Identifier
 		{
-			$$ := new_terminal ($1, type)
+			check type_not_void: attached type as l_type then
+				$$ := new_terminal ($1, l_type)
+			end
 		}
 	| Identifier T_NUMBER
 		{
-			$$ := new_terminal ($1, type)
-			set_token_id ($$, $2)
+			check type_not_void: attached type as l_type then
+				$$ := new_terminal ($1, l_type)
+				set_token_id ($$, $2)
+			end
 		}
 	| Identifier T_STR
 		{
-			$$ := new_terminal ($1, type)
-			set_literal_string ($$, $2)
+			check type_not_void: attached type as l_type then
+				$$ := new_terminal ($1, l_type)
+				set_literal_string ($$, $2)
+			end
 		}
 	| Identifier T_NUMBER T_STR
 		{
-			$$ := new_terminal ($1, type)
-			set_token_id ($$, $2)
-			set_literal_string ($$, $3)
+			check type_not_void: attached type as l_type then
+				$$ := new_terminal ($1, l_type)
+				set_token_id ($$, $2)
+				set_literal_string ($$, $3)
+			end
 		}
 	| T_CHAR
 		{
-			$$ := new_char_terminal ($1, type)
+			check type_not_void: attached type as l_type then
+				$$ := new_char_terminal ($1, l_type)
+			end
 		}
 	;
 
@@ -532,7 +546,9 @@ Type_declaration_list: -- Empty
 
 Nonterminal_declaration: Identifier
 		{
-			$$ := new_nonterminal ($1, type)
+			check type_not_void: attached type as l_type then
+				$$ := new_nonterminal ($1, l_type)
+			end
 		}
 	;
 
@@ -546,9 +562,11 @@ Rules: -- Empty
 
 Rule: Lhs Colon Rhs_list ';'
 		{
-			process_rule (rule)
-			rule := Void
-			precedence_token := Void
+			check rule_not_void: attached rule as l_rule then
+				process_rule (l_rule)
+				rule := Void
+				precedence_token := Void
+			end
 		}
 	;
 
@@ -556,21 +574,28 @@ Lhs: Identifier
 		{
 			if is_terminal ($1) then
 				report_lhs_symbol_token_error ($1)
-				rule := new_rule (new_dummy_variable)
+				check rule_not_void: attached new_rule (new_midrule_variable) as l_rule then
+					rule := l_rule
+					put_rule (l_rule)
+				end
 			else
-				rule := new_rule (new_variable ($1))
-				if rule.lhs.rules.count > 1 then
-					report_rule_declared_twice_warning ($1)
+				check rule_not_void: attached new_rule (new_variable ($1)) as l_rule then
+					rule := l_rule
+					if l_rule.lhs.rules.count > 1 then
+						report_rule_declared_twice_warning ($1)
+					end
+					put_rule (l_rule)
 				end
 			end
 			precedence_token := Void
-			put_rule (rule)
 		}
 	;
 
 Colon: ':'
 		{
-			rule.set_line_nb ($1)
+			check rule_not_void: attached rule as l_rule then
+				l_rule.set_line_nb ($1)
+			end
 		}
 	;
 
@@ -581,10 +606,12 @@ Rhs_list: Rhs_errors
 Rhs_errors: Rhs
 	| Rhs_errors T_ERROR '(' T_NUMBER ')' T_ACTION
 		{
-			if $4 < 1 or $4 > rule.error_actions.count then
-				report_invalid_error_n_error ($4)
-			else
-				put_error_action (new_error_action ($6, $2), $4, rule)
+			check rule_not_void: attached rule as l_rule then
+				if $4 < 1 or $4 > l_rule.error_actions.count then
+					report_invalid_error_n_error ($4)
+				else
+					put_error_action (new_error_action ($6, $2), $4, l_rule)
+				end
 			end
 		}
 	;
@@ -592,19 +619,27 @@ Rhs_errors: Rhs
 Rhs: -- Empty
 	| Rhs Identifier
 		{
-			put_symbol (new_symbol ($2), rule)
+			check rule_not_void: attached rule as l_rule then
+				put_symbol (new_symbol ($2), l_rule)
+			end
 		}
 	| Rhs T_CHAR
 		{
-			put_symbol (new_char_token ($2), rule)
+			check rule_not_void: attached rule as l_rule then
+				put_symbol (new_char_token ($2), l_rule)
+			end
 		}
 	| Rhs T_STR
 		{
-			put_symbol (new_string_token ($2), rule)
+			check rule_not_void: attached rule as l_rule then
+				put_symbol (new_string_token ($2), l_rule)
+			end
 		}
 	| Rhs T_ACTION
 		{
-			put_action (new_action ($2), rule)
+			check rule_not_void: attached rule as l_rule then
+				put_action (new_action ($2), l_rule)
+			end
 		}
 	| Rhs T_PREC Terminal
 		{
@@ -633,11 +668,15 @@ Terminal: Identifier
 
 Bar: '|'
 		{
-			process_rule (rule)
-			rule := new_rule (rule.lhs)
-			precedence_token := Void
-			rule.set_line_nb ($1)
-			put_rule (rule)
+			check rule_not_void: attached rule as l_rule then
+				process_rule (l_rule)
+				check new_rule_not_void: attached new_rule (l_rule.lhs) as l_new_rule then
+					rule := l_new_rule
+					precedence_token := Void
+					l_new_rule.set_line_nb ($1)
+					put_rule (l_new_rule)
+				end
+			end
 		}
 	;
 

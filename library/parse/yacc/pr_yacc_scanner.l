@@ -6,7 +6,7 @@ note
 		"Scanners for parser generators such as 'geyacc'"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -297,19 +297,19 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 					if start_condition = ERROR_ACTION then
 						report_invalid_dollar_dollar_error
 						action_buffer.append_string ("$$")
-					elseif rule /= Void then
-						process_dollar_dollar (rule)
+					elseif attached rule as l_rule then
+						process_dollar_dollar (l_rule)
 					else
 						action_buffer.append_string ("$$")
 					end
 				}
 	\$[0-9]+	{
 					if text_substring (2, text_count).is_integer then
-						if rule /= Void then
+						if attached rule as l_rule then
 							if start_condition = ERROR_ACTION then
-								process_dollar_n (text_substring (2, text_count).to_integer, last_error - 1, rule)
+								process_dollar_n (text_substring (2, text_count).to_integer, last_error - 1, l_rule)
 							else
-								process_dollar_n (text_substring (2, text_count).to_integer, rule.rhs.count, rule)
+								process_dollar_n (text_substring (2, text_count).to_integer, l_rule.rhs.count, l_rule)
 							end
 						else
 							action_buffer.append_string (text)
@@ -321,11 +321,11 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 				}
 	\$\-[0-9]+	{
 					if text_substring (3, text_count).is_integer then
-						if rule /= Void then
+						if attached rule as l_rule then
 							if start_condition = ERROR_ACTION then
-								process_dollar_n (- text_substring (3, text_count).to_integer, last_error - 1, rule)
+								process_dollar_n (- text_substring (3, text_count).to_integer, last_error - 1, l_rule)
 							else
-								process_dollar_n (- text_substring (3, text_count).to_integer, rule.rhs.count, rule)
+								process_dollar_n (- text_substring (3, text_count).to_integer, l_rule.rhs.count, l_rule)
 							end
 						else
 							action_buffer.append_string (text)

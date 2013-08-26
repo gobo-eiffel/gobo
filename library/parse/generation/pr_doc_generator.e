@@ -5,7 +5,7 @@ note
 		"Grammar documentation generators"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 2005-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -90,7 +90,8 @@ feature {NONE} -- Generation
 			i, nb: INTEGER
 			a_rules: DS_ARRAYED_LIST [PR_RULE]
 			a_rule: PR_RULE
-			a_lhs, last_lhs: PR_VARIABLE
+			a_lhs: PR_VARIABLE
+			last_lhs: detachable PR_VARIABLE
 		do
 			a_rules := grammar.rules
 			nb := a_rules.count

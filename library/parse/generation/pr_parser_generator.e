@@ -317,7 +317,7 @@ feature {NONE} -- Generation
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
-			eiffel_code: STRING
+			eiffel_code: detachable STRING
 		do
 			eiffel_code := machine.grammar.eiffel_code
 			if eiffel_code /= Void then
@@ -968,7 +968,7 @@ feature {NONE} -- Generation
 			i, nb: INTEGER
 			states: DS_ARRAYED_LIST [PR_STATE]
 			a_state: PR_STATE
-			an_action: PR_ERROR_ACTION
+			an_action: detachable PR_ERROR_ACTION
 		do
 			a_file.put_line ("%Tyy_do_error_action (yy_act: INTEGER)")
 			a_file.put_line ("%T%T%T-- Execute error action.")
@@ -1037,7 +1037,7 @@ feature {NONE} -- Generation
 			inspect_size: INTEGER
 			states: DS_ARRAYED_LIST [PR_STATE]
 			a_state: PR_STATE
-			an_action: PR_ERROR_ACTION
+			an_action: detachable PR_ERROR_ACTION
 		do
 				-- SmartEiffel generates C code which triggers a
 				-- stack overflow of the C compiler if there are
@@ -1800,7 +1800,7 @@ feature {NONE} -- Building
 		local
 			transitions: DS_LINKED_LIST [PR_TRANSITION]
 			a_cursor: DS_LINKED_LIST_CURSOR [PR_TRANSITION]
-			a_transition: PR_TRANSITION
+			a_transition: detachable PR_TRANSITION
 			state_count: ARRAY [INTEGER]
 			default_state: INTEGER
 			state_id: INTEGER

@@ -6,7 +6,7 @@ note
 		%symbols, see $GOBO\doc\geyacc\symbols.html"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -116,18 +116,21 @@ feature -- Access
 		local
 			cursor: DS_BILINEAR_CURSOR [PR_TRANSITION]
 		do
-			cursor := transitions.new_cursor
-			from
-				cursor.start
-			until
-				cursor.after
-			loop
-				Result := cursor.item
-				if Result.source = a_state then
-						-- Jump out of the loop.
-					cursor.go_after
-				else
-					cursor.forth
+			check has_transition: not transitions.is_empty then
+				Result := transitions.first
+				cursor := transitions.new_cursor
+				from
+					cursor.start
+				until
+					cursor.after
+				loop
+					Result := cursor.item
+					if Result.source = a_state then
+							-- Jump out of the loop.
+						cursor.go_after
+					else
+						cursor.forth
+					end
 				end
 			end
 		ensure

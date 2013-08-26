@@ -55,7 +55,7 @@ feature -- Access
 	rhs: DS_ARRAYED_LIST [PR_SYMBOL]
 			-- Right-hand-side of current rule
 
-	error_actions: DS_ARRAYED_LIST [PR_ERROR_ACTION]
+	error_actions: DS_ARRAYED_LIST [detachable PR_ERROR_ACTION]
 			-- Action to be executed if a syntax error occurs
 			-- before the i-th symbol of `rhs'
 

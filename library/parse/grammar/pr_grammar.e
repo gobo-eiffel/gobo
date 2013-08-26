@@ -5,7 +5,7 @@ note
 		"Grammars for LALR(1) context-free languages."
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 			create types.make (Initial_max_nb_types)
 			create rules.make (Initial_max_nb_rules)
 			create eiffel_header.make (1)
+			start_symbol := dummy_variable
 		end
 
 feature -- Access
@@ -80,7 +81,7 @@ feature -- Access
 
 feature -- User-defined Eiffel code
 
-	eiffel_code: STRING
+	eiffel_code: detachable STRING
 			-- User-defined Eiffel code
 			-- (Appears in section 3)
 
@@ -417,7 +418,7 @@ feature -- Processing
 			i, j, nb: INTEGER
 			a_rule: PR_RULE
 			token_found, stop: BOOLEAN
-			lhs, a_variable: PR_VARIABLE
+			lhs: PR_VARIABLE
 			rhs: DS_ARRAYED_LIST [PR_SYMBOL]
 			a_list: DS_ARRAYED_LIST [PR_VARIABLE]
 			old_todo, todo, tmp: DS_ARRAYED_LIST [DS_ARRAYED_LIST [PR_VARIABLE]]
@@ -443,11 +444,10 @@ feature -- Processing
 					until
 						token_found or j < 1
 					loop
-						a_variable ?= rhs.item (j)
-						if a_variable = Void then
+						if not attached {PR_VARIABLE} rhs.item (j) as l_variable then
 							token_found := True
-						elseif not a_variable.is_nullable then
-							a_list.put_last (a_variable)
+						elseif not l_variable.is_nullable then
+							a_list.put_last (l_variable)
 						end
 						j := j - 1
 					end
@@ -578,7 +578,7 @@ feature {NONE} -- Processing
 			i: INTEGER
 			a_rule: PR_RULE
 		do
-			useful := start_symbol /= Void and then start_symbol.is_useful
+			useful := start_symbol.is_useful
 			i := variables.count
 			from
 			until
@@ -614,7 +614,6 @@ feature {NONE} -- Processing
 		local
 			rhs: DS_ARRAYED_LIST [PR_SYMBOL]
 			r: DS_ARRAYED_LIST [PR_RULE]
-			variable2: PR_VARIABLE
 			a_symbol: PR_SYMBOL
 			a_rule: PR_RULE
 			i, j: INTEGER
@@ -634,11 +633,10 @@ feature {NONE} -- Processing
 						j < 1
 					loop
 						a_symbol := rhs.item (j)
-						variable2 ?= a_symbol
-						if variable2 /= Void then
-							if not variable2.is_useful then
-								variable2.set_useful (True)
-								traverse_variable (variable2)
+						if attached {PR_VARIABLE} a_symbol as l_other_variable then
+							if not l_other_variable.is_useful then
+								l_other_variable.set_useful (True)
+								traverse_variable (l_other_variable)
 							end
 						else
 							a_symbol.set_useful (True)
@@ -675,6 +673,22 @@ feature {NONE} -- Constants
 	Max_nb_rules_increment: INTEGER = 500
 			-- Increment when resizing `rules'
 
+	dummy_variable: PR_VARIABLE
+			-- Dummy variable
+		once
+			create Result.make (0, "dummy", dummy_type)
+		ensure
+			dummy_variable_not_void: Result /= Void
+		end
+
+	dummy_type: PR_TYPE
+			-- Dummy type
+		once
+			create Result.make (0, "detachable", "ANY")
+		ensure
+			dummy_type_not_void: Result /= Void
+		end
+
 invariant
 
 	tokens_not_void: tokens /= Void
@@ -687,5 +701,6 @@ invariant
 	no_void_rule: not rules.has_void
 	eiffel_header_not_void: eiffel_header /= Void
 	no_void_eiffel_header: not eiffel_header.has_void
+	start_symbol_not_void: start_symbol /= Void
 
 end

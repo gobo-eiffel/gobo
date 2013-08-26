@@ -5,7 +5,7 @@ note
 		"Positions in rules"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -72,7 +72,7 @@ feature -- Access
 			next_position: Result.index = index + 1
 		end
 
-	error_action: PR_ERROR_ACTION
+	error_action: detachable PR_ERROR_ACTION
 			-- Action to be executed when a syntax error
 			-- occurs at current position; Void is none
 		do

@@ -5,12 +5,12 @@ note
 		"Parser engines to be plugged to parser skeletons"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class PR_PARSER_ENGINE
+deferred class PR_PARSER_ENGINE
 
 feature -- Tables
 

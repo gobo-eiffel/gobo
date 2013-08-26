@@ -5,7 +5,7 @@ note
 		"Finite State Machines"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,7 +35,6 @@ feature {NONE} -- Initialization
 			-- Report results to `error_handler'.
 		require
 			a_grammar_not_void: a_grammar /= Void
-			valid_grammar: a_grammar.start_symbol /= Void
 			error_handler_not_void: error_handler /= Void
 		do
 			a_grammar.reduce (error_handler)
@@ -51,7 +50,6 @@ feature {NONE} -- Initialization
 			-- Report results to `error_handler' and `a_file'.
 		require
 			a_grammar_not_void: a_grammar /= Void
-			valid_grammar: a_grammar.start_symbol /= Void
 			error_handler_not_void: error_handler /= Void
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
@@ -68,7 +66,6 @@ feature {NONE} -- Initialization
 			-- Create a new finite state machine.
 		require
 			a_grammar_not_void: a_grammar /= Void
-			valid_grammar: a_grammar.start_symbol /= Void
 		do
 			grammar := a_grammar
 			create states.make (Initial_max_nb_states)
@@ -247,9 +244,10 @@ feature -- Setting
 			j, nb2: INTEGER
 			a_state: PR_STATE
 			positions: DS_ARRAYED_LIST [PR_POSITION]
-			a_position, action_position: PR_POSITION
+			a_position: PR_POSITION
+			action_position: detachable PR_POSITION
 			all_before, has_conflict: BOOLEAN
-			an_action, other_action: PR_ERROR_ACTION
+			an_action, other_action: detachable PR_ERROR_ACTION
 			start_rules: DS_ARRAYED_LIST [PR_RULE]
 			start_positions: DS_ARRAYED_LIST [PR_POSITION]
 			line1, line2: INTEGER
@@ -392,10 +390,11 @@ feature -- Setting
 			k, nb3: INTEGER
 			a_state: PR_STATE
 			positions: DS_ARRAYED_LIST [PR_POSITION]
-			conflicts: DS_ARRAYED_LIST [PR_POSITION]
-			a_position, action_position: PR_POSITION
+			conflicts: detachable DS_ARRAYED_LIST [PR_POSITION]
+			a_position: PR_POSITION
+			action_position: detachable PR_POSITION
 			all_before: BOOLEAN
-			an_action, other_action: PR_ERROR_ACTION
+			an_action, other_action: detachable PR_ERROR_ACTION
 			start_rules: DS_ARRAYED_LIST [PR_RULE]
 			start_positions: DS_ARRAYED_LIST [PR_POSITION]
 			line1, line2: INTEGER
@@ -684,10 +683,9 @@ feature {NONE} -- Processing (nondeterministic)
 			i, nb_positions: INTEGER
 			nb_tokens, nb_variables: INTEGER
 			a_position: PR_POSITION
-			target: PR_STATE
+			target: detachable PR_STATE
 			a_symbol: PR_SYMBOL
 			a_symbol_id: INTEGER
-			a_variable: PR_VARIABLE
 			transitions: ARRAY [detachable PR_STATE]
 			nb_transitions: INTEGER
 			shifts: DS_ARRAYED_LIST [PR_STATE]
@@ -724,9 +722,8 @@ feature {NONE} -- Processing (nondeterministic)
 					a_position := a_position.next
 					target.put_position (a_position)
 					if not a_position.after then
-						a_variable ?= a_position.symbol
-						if a_variable /= Void then
-							put_closure_positions (target, a_variable)
+						if attached {PR_VARIABLE} a_position.symbol as l_variable then
+							put_closure_positions (target, l_variable)
 						end
 					end
 				else
@@ -778,9 +775,8 @@ feature {NONE} -- Processing (nondeterministic)
 			loop
 				a_rule := rules.item (i)
 				if not a_rule.rhs.is_empty then
-					a_variable ?= a_rule.rhs.first
-					if a_variable /= Void then
-						a_rule.lhs.firsts.force_last (a_variable)
+					if attached {PR_VARIABLE} a_rule.rhs.first as l_variable then
+						a_rule.lhs.firsts.force_last (l_variable)
 					end
 				end
 				i := i - 1
@@ -810,6 +806,7 @@ feature {NONE} -- Processing (nondeterministic)
 			i, nb: INTEGER
 			a_code: INTEGER
 			state_list: DS_ARRAYED_LIST [PR_STATE]
+			l_result: detachable PR_STATE
 		do
 				-- The rule positions in `a_state' are sorted so
 				-- that we can compare states quickly.
@@ -822,11 +819,11 @@ feature {NONE} -- Processing (nondeterministic)
 					i := 1
 					nb := state_list.count
 				until
-					Result /= Void or i > nb
+					l_result /= Void or i > nb
 				loop
-					Result := state_list.item (i)
-					if not Result.same_state (a_state) then
-						Result := Void
+					l_result := state_list.item (i)
+					if not l_result.same_state (a_state) then
+						l_result := Void
 						i := i + 1
 					end
 				end
@@ -834,12 +831,14 @@ feature {NONE} -- Processing (nondeterministic)
 				create state_list.make (2)
 				cached_states.put_new (state_list, a_code)
 			end
-			if Result = Void then
+			if l_result = Void then
 				Result := a_state
 					-- States are indexed from 0.
 				Result.set_id (states.count)
 				states.put_last (a_state)
 				state_list.force_last (a_state)
+			else
+				Result := l_result
 			end
 		ensure
 			new_state_not_void: Result /= Void
@@ -869,8 +868,6 @@ feature {NONE} -- Processing (deterministic)
 			state1, state2: PR_STATE
 			a_transition: PR_TRANSITION
 			a_symbol: PR_SYMBOL
-			a_variable: PR_VARIABLE
-			a_token: PR_TOKEN
 			a_rule: PR_RULE
 		do
 			create reductions.make
@@ -895,10 +892,9 @@ feature {NONE} -- Processing (deterministic)
 					j < 1
 				loop
 					state2 := shifts.item (j)
-					a_variable ?= state2.accessing_symbol
-					if a_variable /= Void then
+					if attached {PR_VARIABLE} state2.accessing_symbol as l_variable then
 						create a_transition.make (state1, state2)
-						a_variable.put_transition (a_transition)
+						l_variable.put_transition (a_transition)
 						transitions.force_last (a_transition)
 					end
 					j := j - 1
@@ -922,73 +918,68 @@ feature {NONE} -- Processing (deterministic)
 					i < 1
 				loop
 					a_symbol := shifts.item (i).accessing_symbol
-					a_token ?= a_symbol
-					if a_token /= Void then
-						if not follows.has (a_token) then
-							follows.force_last (a_token)
+					if attached {PR_TOKEN} a_symbol as l_token then
+						if not follows.has (l_token) then
+							follows.force_last (l_token)
 						end
-					else
-						a_variable ?= a_symbol
-						check
-							a_variable_not_void: a_variable /= Void
-						end
-						if a_variable.is_nullable then
-							a_transition.included_tokens.force_last (a_variable.transition (state1))
+					elseif attached {PR_VARIABLE} a_symbol as l_variable then
+						if l_variable.is_nullable then
+							a_transition.included_tokens.force_last (l_variable.transition (state1))
 						end
 					end
 					i := i - 1
 				end
-				a_variable ?= a_transition.symbol
-				rules := a_variable.rules
-				i := rules.count
-				from
-				until
-					i < 1
-				loop
-					state1 := a_transition.source
-					visited_states.wipe_out
-					visited_states.put (state1)
-					a_rule := rules.item (i)
-					rhs := a_rule.rhs
-					nb := rhs.count
+				check transition_variable: attached {PR_VARIABLE} a_transition.symbol as l_transition_variable then
+					rules := l_transition_variable.rules
+					i := rules.count
 					from
-						j := 1
 					until
-						j > nb
+						i < 1
 					loop
-						state1 := state1.shift (rhs.item (j))
-						check
-							shift_not_void: state1 /= Void
-						end
+						state1 := a_transition.source
+						visited_states.wipe_out
 						visited_states.put (state1)
-						j := j + 1
-					end
-					if state1.lookahead_needed then
-						state1.put_transition (a_transition, a_rule)
-					end
-					j := rhs.count
-					visited_states.remove
-					from
-					until
-						j < 1
-					loop
-						a_variable ?= rhs.item (j)
-						if a_variable /= Void then
-							state1 := visited_states.item
-							visited_states.remove
-							a_variable.transition (state1).included_tokens.force_last (a_transition)
-							if not a_variable.is_nullable then
+						a_rule := rules.item (i)
+						rhs := a_rule.rhs
+						nb := rhs.count
+						from
+							j := 1
+						until
+							j > nb
+						loop
+							state1 := state1.shift (rhs.item (j))
+							check
+								shift_not_void: state1 /= Void
+							end
+							visited_states.put (state1)
+							j := j + 1
+						end
+						if state1.lookahead_needed then
+							state1.put_transition (a_transition, a_rule)
+						end
+						j := rhs.count
+						visited_states.remove
+						from
+						until
+							j < 1
+						loop
+							if attached {PR_VARIABLE} rhs.item (j) as l_variable then
+								state1 := visited_states.item
+								visited_states.remove
+								l_variable.transition (state1).included_tokens.force_last (a_transition)
+								if not l_variable.is_nullable then
+										-- Jump out of the loop.
+									j := 0
+								else
+									j := j - 1
+								end
+							else
 									-- Jump out of the loop.
 								j := 0
-							else
-								j := j - 1
 							end
-						else
-								-- Jump out of the loop.
-							j := 0
 						end
+						i := i - 1
 					end
-					i := i - 1
 				end
 				transitions_cursor.forth
 			end
@@ -1031,7 +1022,6 @@ invariant
 	has_states: not states.is_empty
 	no_void_state: not states.has_void
 	grammar_not_void: grammar /= Void
-	valid_grammar: grammar.start_symbol /= Void
 --	positions_sorted: forall state in states, state.positions_sorted
 	cached_states_not_void: cached_states /= Void
 	no_void_state_list: not cached_states.has_void_item
