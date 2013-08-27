@@ -6,7 +6,7 @@ note
 		"Scanners for lexical analyzer generators such as 'gelex'"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -89,10 +89,11 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 	"--".*													more
 	\"|\'|%|-												more
 	^"%}"		{
-					last_string := text_substring (1, text_count - 2)
-					line_nb := line_nb + last_string.occurrences ('%N')
-					description.eiffel_header.force_last (last_string)
-					set_start_condition (INITIAL)
+					check attached text_substring (1, text_count - 2) as l_last_string then
+						line_nb := line_nb + l_last_string.occurrences ('%N')
+						description.eiffel_header.force_last (l_last_string)
+						set_start_condition (INITIAL)
+					end
 				}
 }
 
@@ -185,9 +186,11 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 <DEFINITION>{
 	{WS}|{C}		-- Separates name and definition.
 	[^ \t\n\r][^\n\r]*	{
-					check last_string_not_void: last_string /= Void end
-					process_name_definition (last_string, text)
-					set_start_condition (INITIAL)
+					check last_string_not_void: attached last_string as l_last_string then
+						process_name_definition (l_last_string, text)
+						last_string := Void
+						set_start_condition (INITIAL)
+					end
 				}
 	{NL}		{
 					line_nb := line_nb + 1
@@ -253,11 +256,12 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 				}
 	"$"/[ \t\r\n]	last_token := Dollar_code
 	"{"{NAME}"}"	{
-					last_string := text.as_lower
-					if name_definitions.has (last_string) then
-						put_back_string (name_definitions.item (last_string))
-					else
-						report_undefined_definition_error (text)
+					check attached text.as_lower as l_last_string then
+						if name_definitions.has (l_last_string) then
+							put_back_string (name_definitions.item (l_last_string))
+						else
+							report_undefined_definition_error (text)
+						end
 					end
 				}
 	"{"			{
@@ -265,15 +269,16 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 					set_start_condition (NUM)
 				}
 	"["{FIRST_CCL_CHAR}{CCL_CHAR}*"]"	{
-					last_string := text
-					if character_classes.has (last_string) then
-						last_token := CCL_OP
-						last_lx_symbol_class_value := character_classes.item (last_string)
-					else
-						last_token := Left_bracket_code
-						last_string_value := last_string
-						less (1)
-						set_start_condition (FIRSTCCL)
+					check attached text as l_last_string then
+						if character_classes.has (l_last_string) then
+							last_token := CCL_OP
+							last_lx_symbol_class_value := character_classes.item (l_last_string)
+						else
+							last_token := Left_bracket_code
+							last_string_value := l_last_string
+							less (1)
+							set_start_condition (FIRSTCCL)
+						end
 					end
 				}
 	"["			{
@@ -435,11 +440,12 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 				}
 	"}"			{
 					if nb_open_brackets = 0 then
-						last_token := EIF_CODE
-						last_string := text_substring (1, text_count - 1)
-						line_nb := line_nb + last_string.occurrences ('%N')
-						last_string_value := last_string
-						set_start_condition (SECT2)
+						check attached text_substring (1, text_count - 1) as l_last_string then
+							last_token := EIF_CODE
+							line_nb := line_nb + l_last_string.occurrences ('%N')
+							last_string_value := l_last_string
+							set_start_condition (SECT2)
+						end
 					else
 						nb_open_brackets := nb_open_brackets - 1
 						more

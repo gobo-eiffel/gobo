@@ -19,7 +19,7 @@ note
 		%transition symbol, and therefore cost only one difference"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	meta_equiv_classes: LX_EQUIVALENCE_CLASSES
+	meta_equiv_classes: detachable LX_EQUIVALENCE_CLASSES
 			-- Meta equivalence classes which are sets of classes
 			-- with identical transitions out of templates;
 			-- Void if meta equivalence classes are not to be used
@@ -84,20 +84,20 @@ feature -- Access
 			-- class number in place of transition label
 		require
 			template_not_void: template /= Void
-			meta_equiv_classes_built: meta_equiv_classes /= Void implies meta_equiv_classes.built
+			meta_equiv_classes_built: attached meta_equiv_classes as l_meta_equiv_classes implies l_meta_equiv_classes.built
 		local
 			i, j, nb: INTEGER
-			target: LX_DFA_STATE
+			target: detachable LX_DFA_STATE
 			transitions: LX_TRANSITION_TABLE [LX_DFA_STATE]
 		do
-			if meta_equiv_classes = Void then
+			if not attached meta_equiv_classes as l_meta_equiv_classes then
 				Result := template
 			else
 					-- TODO: Bug in ISE 3.3.9 in final mode code generation.
 					-- Create `transitions' (not declared as "like anchor")
 					-- first and assign it to `Result'.
 --				create Result.make (1, meta_equiv_classes.capacity)
-				create transitions.make (1, meta_equiv_classes.capacity)
+				create transitions.make (1, l_meta_equiv_classes.capacity)
 				Result := transitions
 				nb := template.upper
 				from
@@ -105,10 +105,10 @@ feature -- Access
 				until
 					i > nb
 				loop
-					if meta_equiv_classes.is_representative (i) then
+					if l_meta_equiv_classes.is_representative (i) then
 						target := template.target (i)
 						if target /= Void then
-							j := meta_equiv_classes.equivalence_class (i)
+							j := l_meta_equiv_classes.equivalence_class (i)
 							Result.set_target (target, j)
 						end
 					end
@@ -149,8 +149,8 @@ feature -- Element change
 				i := i + 1
 			end
 			put_last (template)
-			if meta_equiv_classes /= Void then
-				meta_equiv_classes.add (symbol_class)
+			if attached meta_equiv_classes as l_meta_equiv_classes then
+				l_meta_equiv_classes.add (symbol_class)
 			end
 		end
 

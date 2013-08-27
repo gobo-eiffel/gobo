@@ -6,7 +6,7 @@ note
 		"Scanners for regular expressions"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -66,17 +66,17 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 					set_start_condition (NUM)
 				}
 	"["{FIRST_CCL_CHAR}{CCL_CHAR}*"]"	{
-					last_string := text
-					if character_classes.has (last_string) then
-						last_token := CCL_OP
-						last_lx_symbol_class_value := character_classes.item (last_string)
-					else
-						last_token := Left_bracket_code
-						last_string_value := last_string
-						less (1)
-						set_start_condition (FIRSTCCL)
+					check attached text as l_last_string then
+						if character_classes.has (l_last_string) then
+							last_token := CCL_OP
+							last_lx_symbol_class_value := character_classes.item (l_last_string)
+						else
+							last_token := Left_bracket_code
+							last_string_value := l_last_string
+							less (1)
+							set_start_condition (FIRSTCCL)
+						end
 					end
-					last_string := Void
 				}
 	[/|*+?.()]		last_token := text_item (1).code
 	.			{

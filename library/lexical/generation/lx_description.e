@@ -5,7 +5,7 @@ note
 		"Lexical analyzer descriptions"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -80,7 +80,7 @@ feature -- User-defined options
 			-- Should a backing-up report be generated?
 			-- ("-b" option)
 
-	backing_up_filename: STRING
+	backing_up_filename: detachable STRING
 			-- Filename for backing-up reports
 
 	case_insensitive: BOOLEAN
@@ -161,10 +161,10 @@ feature -- User-defined options
 	line_pragma: BOOLEAN
 			-- Should line pragma be generated?
 
-	input_filename: STRING
+	input_filename: detachable STRING
 			-- Name of input file
 
-	output_filename: STRING
+	output_filename: detachable STRING
 			-- Name of output file
 
 feature -- Option setting
@@ -368,7 +368,7 @@ feature -- Access
 	eof_rules: DS_ARRAYED_LIST [LX_RULE]
 			-- Rules for end-of-file semantic actions
 
-	equiv_classes: LX_EQUIVALENCE_CLASSES
+	equiv_classes: detachable LX_EQUIVALENCE_CLASSES
 			-- Equivalence classes
 			-- (Void when not `equiv_classes_used'.)
 
@@ -383,7 +383,7 @@ feature -- Access
 
 feature -- User-defined Eiffel code
 
-	eiffel_code: STRING
+	eiffel_code: detachable STRING
 			-- User-defined Eiffel code
 			-- (Appears in section 3)
 
@@ -442,9 +442,9 @@ feature -- Setting
 		do
 			create equiv_classes.make (1, characters_count)
 		ensure
-			equiv_classes_created: equiv_classes /= Void
-			lower_set: equiv_classes.lower = 1
-			upper_set: equiv_classes.upper = characters_count
+			equiv_classes_created: attached equiv_classes as l_equiv_classes
+			lower_set: l_equiv_classes.lower = 1
+			upper_set: l_equiv_classes.upper = characters_count
 		end
 
 	set_bol_needed (b: like bol_needed)

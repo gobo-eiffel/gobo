@@ -25,7 +25,10 @@ feature -- Status report
 	is_compiled: BOOLEAN
 			-- Has pattern been sucessfully compiled?
 		do
-			Result := yy_nxt /= Void
+			Result := yy_nxt /= Void and yy_accept /= Void
+		ensure then
+			yy_nxt_not_void: Result implies yy_nxt /= Void
+			yy_accept_not_void: Result implies yy_accept /= Void
 		end
 
 	matches (a_string: STRING): BOOLEAN
@@ -176,28 +179,30 @@ feature {NONE} -- Matching
 			a_state: INTEGER
 			a_symbol: INTEGER
 		do
-			from
-				i := start_pos
-				nb := a_string.count
-				a_state := 1
-				if yy_accept.item (a_state) /= 0 then
-					Result := i - 1
-				else
-					Result := -1
-				end
-			until
-				Result /= -1 or i > nb
-			loop
-				a_symbol := a_string.item (i).code
-				a_state := yy_nxt.item (a_state * yyNb_rows + a_symbol)
-				if a_state > 0 then
-					if yy_accept.item (a_state) /= 0 then
-						Result := i
+			check is_compiled: attached yy_nxt as l_yy_nxt and attached yy_accept as l_yy_accept then
+				from
+					i := start_pos
+					nb := a_string.count
+					a_state := 1
+					if l_yy_accept.item (a_state) /= 0 then
+						Result := i - 1
 					else
-						i := i + 1
+						Result := -1
 					end
-				else
-					i := nb + 1
+				until
+					Result /= -1 or i > nb
+				loop
+					a_symbol := a_string.item (i).code
+					a_state := l_yy_nxt.item (a_state * yyNb_rows + a_symbol)
+					if a_state > 0 then
+						if l_yy_accept.item (a_state) /= 0 then
+							Result := i
+						else
+							i := i + 1
+						end
+					else
+						i := nb + 1
+					end
 				end
 			end
 		ensure
@@ -218,27 +223,29 @@ feature {NONE} -- Matching
 			a_state: INTEGER
 			a_symbol: INTEGER
 		do
-			from
-				i := start_pos
-				nb := a_string.count
-				a_state := 1
-				if yy_accept.item (a_state) /= 0 then
-					Result := i - 1
-				else
-					Result := -1
-				end
-			until
-				i > nb
-			loop
-				a_symbol := a_string.item (i).code
-				a_state := yy_nxt.item (a_state * yyNb_rows + a_symbol)
-				if a_state > 0 then
-					if yy_accept.item (a_state) /= 0 then
-						Result := i
+			check is_compiled: attached yy_nxt as l_yy_nxt and attached yy_accept as l_yy_accept then
+				from
+					i := start_pos
+					nb := a_string.count
+					a_state := 1
+					if l_yy_accept.item (a_state) /= 0 then
+						Result := i - 1
+					else
+						Result := -1
 					end
-					i := i + 1
-				else
-					i := nb + 1
+				until
+					i > nb
+				loop
+					a_symbol := a_string.item (i).code
+					a_state := l_yy_nxt.item (a_state * yyNb_rows + a_symbol)
+					if a_state > 0 then
+						if l_yy_accept.item (a_state) /= 0 then
+							Result := i
+						end
+						i := i + 1
+					else
+						i := nb + 1
+					end
 				end
 			end
 		ensure
@@ -247,11 +254,11 @@ feature {NONE} -- Matching
 
 feature {NONE} -- Engine Data
 
-	yy_nxt: ARRAY [INTEGER]
+	yy_nxt: detachable ARRAY [INTEGER]
 			-- States to enter upon reading symbol;
 			-- indexed by (current_state_id * yyNb_rows + symbol)
 
-	yy_accept: ARRAY [INTEGER]
+	yy_accept: detachable ARRAY [INTEGER]
 			-- Accepting ids indexed by state ids
 
 	yyNb_rows: INTEGER

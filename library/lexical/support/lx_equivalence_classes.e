@@ -5,7 +5,7 @@ note
 		"Equivalence classes of integer symbols"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -101,7 +101,12 @@ feature -- Access
 			not_representative: not is_representative (symbol)
 			not_built: not built
 		do
-			Result := storage.item (symbol).left.item
+			check
+					-- See implementation of `is_representative'.
+				not_representative: attached storage.item (symbol).left as l_left
+			then
+				Result := l_left.item
+			end
 		end
 
 	count: INTEGER
@@ -134,6 +139,8 @@ feature -- Status report
 			valid_symbol: valid_symbol (symbol)
 		do
 			Result := storage.item (symbol).left = Void
+		ensure
+			definition: Result = (storage.item (symbol).left = Void)
 		end
 
 	valid_symbol (a_symbol: INTEGER): BOOLEAN
@@ -164,6 +171,7 @@ feature -- Element change
 		local
 			i, j, nb: INTEGER
 			cell: DS_BILINKABLE [INTEGER]
+			l_right: detachable DS_BILINKABLE [INTEGER]
 		do
 			nb := upper
 			from
@@ -176,12 +184,12 @@ feature -- Element change
 					from
 						j := j + 1
 						cell.put (j)
-						cell := cell.right
+						l_right := cell.right
 					until
-						cell = Void
+						l_right = Void
 					loop
-						cell.put (j)
-						cell := cell.right
+						l_right.put (j)
+						l_right := l_right.right
 					end
 				end
 				i := i + 1
@@ -197,7 +205,8 @@ feature -- Element change
 			not_built: not built
 			valid_symbol: valid_symbol (symbol)
 		local
-			cell, left, right: DS_BILINKABLE [INTEGER]
+			cell: DS_BILINKABLE [INTEGER]
+			left, right: detachable DS_BILINKABLE [INTEGER]
 		do
 			cell := storage.item (symbol)
 			left := cell.left
@@ -223,8 +232,10 @@ feature -- Element change
 			symbols_sorted: not symbol_class.sort_needed
 			valid_symbols: valid_symbol_class (symbol_class)
 		local
-			cell, right: DS_BILINKABLE [INTEGER]
-			old_cell, new_cell: DS_BILINKABLE [INTEGER]
+			cell: DS_BILINKABLE [INTEGER]
+			right: detachable DS_BILINKABLE [INTEGER]
+			old_cell: detachable DS_BILINKABLE [INTEGER]
+			new_cell: DS_BILINKABLE [INTEGER]
 			i, j, k, nb: INTEGER
 			stop, next_ec: BOOLEAN
 			symbol: INTEGER
@@ -291,7 +302,7 @@ feature -- Element change
 					end
 					right := right.right
 				end
-				if cell.left /= Void or else old_cell /= cell.left then
+				if cell.left /= Void and old_cell /= Void then
 					cell.forget_left
 					old_cell.forget_right
 				end

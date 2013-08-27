@@ -92,6 +92,7 @@ Version 3.10 - ?
 	* Fixed bug in LX_DFA_REGULAR_EXPRESSION where `compile ("foo\$")' was
 	  setting `has_dollar' to True even though the dollar sign was escaped.
 	* Added features `pattern' and `is_case_insensitive' in class LX_PATTERN_MATCHER.
+	* Made it compilable in void-safe mode with ISE 7.3.
 
 	Gobo Eiffel Parse Library:
 

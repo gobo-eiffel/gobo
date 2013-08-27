@@ -5,7 +5,7 @@ note
 		"Scanners"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -153,7 +153,7 @@ feature {NONE} -- Implementation
 	yy_execute_eof_action (yy_sc: INTEGER)
 			-- Execute EOF semantic action.
 		local
-			yy_rule: LX_RULE
+			yy_rule: detachable LX_RULE
 		do
 			pre_eof_action
 			if yy_eof_rules.valid_index (yy_sc) then

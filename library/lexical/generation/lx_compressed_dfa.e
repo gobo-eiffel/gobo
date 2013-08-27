@@ -5,7 +5,7 @@ note
 		"DFA which can generate scanners implemented with compressed tables"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -177,15 +177,15 @@ feature {NONE} -- Generation
 				a_file.put_character ('%N')
 				print_eiffel_array ("yy_ec_template", yy_ec, a_file)
 			end
-			if yy_meta /= Void then
+			if attached yy_meta as l_yy_meta then
 				a_file.put_character ('%N')
-				print_eiffel_array ("yy_meta_template", yy_meta, a_file)
+				print_eiffel_array ("yy_meta_template", l_yy_meta, a_file)
 			end
 			a_file.put_character ('%N')
 			print_eiffel_array ("yy_accept_template", yy_accept, a_file)
-			if yy_acclist /= Void then
+			if attached yy_acclist as l_yy_acclist then
 				a_file.put_character ('%N')
-				print_eiffel_array ("yy_acclist_template", yy_acclist, a_file)
+				print_eiffel_array ("yy_acclist_template", l_yy_acclist, a_file)
 			end
 		end
 
@@ -229,12 +229,14 @@ feature -- Building
 			i: INTEGER
 			a_state: LX_DFA_STATE
 			singleton: LX_SINGLETON
+			l_singletons: DS_ARRAYED_LIST [LX_SINGLETON]
 		do
 			first_free := 1
 			table_end := 0
 			templates_count := 0
 			create protos.make
-			create singletons.make (Singletons_capacity)
+			create l_singletons.make (Singletons_capacity)
+			singletons := l_singletons
 			if meta_equiv_classes_used then
 				create meta_equiv_classes.make (minimum_symbol, maximum_symbol)
 			end
@@ -266,7 +268,7 @@ feature -- Building
 			build_transitions (a_state)
 				-- Make sure it jams on end of buffer.
 			create singleton.make (a_state.id, Jam_id, 0, 0)
-			singletons.put_last (singleton)
+			l_singletons.put_last (singleton)
 			from
 				i := i + 1
 			until
@@ -494,11 +496,13 @@ feature {NONE} -- Compression
 			common_states: DS_ARRAYED_LIST [LX_DFA_STATE]
 			frequencies: DS_ARRAYED_LIST [INTEGER]
 			st_cursor: DS_ARRAYED_LIST_CURSOR [LX_DFA_STATE]
-			common_state: LX_DFA_STATE
+			common_state: detachable LX_DFA_STATE
 			common_freq: INTEGER
-			proto, new_proto: LX_PROTO
+			proto: detachable LX_PROTO
+			new_proto: LX_PROTO
 			cursor, proto_cursor: DS_BILINKED_LIST_CURSOR [LX_PROTO]
-			difference, new_diff: LX_TRANSITION_TABLE [LX_DFA_STATE]
+			difference: detachable LX_TRANSITION_TABLE [LX_DFA_STATE]
+			new_diff: LX_TRANSITION_TABLE [LX_DFA_STATE]
 			min_diff: INTEGER
 			default_id: INTEGER
 		do
@@ -508,136 +512,143 @@ feature {NONE} -- Compression
 			if trans_nb * 100 < symb_nb * Proto_size_percentage then
 				put_entry (state.id, Jam_id, transitions)
 			else
-					-- Search for the state which the most frequently targeted
-					-- by `transitions', and number of transitions to it.
-				create common_states.make (trans_nb)
-				create frequencies.make (trans_nb)
-				st_cursor := common_states.new_cursor
-				nb := maximum_symbol
-				from
-					i := minimum_symbol
-				until
-					i > nb
-				loop
-					common_state := transitions.target (i)
-					if common_state /= Void then
-						st_cursor.start
-						st_cursor.search_forth (common_state)
-						if not st_cursor.after then
-							j := st_cursor.index
-							frequencies.replace (frequencies.item (j) + 1, j)
-						else
-							common_states.put_last (common_state)
-							frequencies.put_last (1)
+				check protos_not_void: attached protos as l_protos then
+						-- Search for the state which the most frequently targeted
+						-- by `transitions', and number of transitions to it.
+					create common_states.make (trans_nb)
+					create frequencies.make (trans_nb)
+					st_cursor := common_states.new_cursor
+					nb := maximum_symbol
+					from
+						i := minimum_symbol
+					until
+						i > nb
+					loop
+						common_state := transitions.target (i)
+						if common_state /= Void then
+							st_cursor.start
+							st_cursor.search_forth (common_state)
+							if not st_cursor.after then
+								j := st_cursor.index
+								frequencies.replace (frequencies.item (j) + 1, j)
+							else
+								common_states.put_last (common_state)
+								frequencies.put_last (1)
+							end
 						end
+						i := i + 1
 					end
-					i := i + 1
-				end
-					-- Release cursor to GC.
-				st_cursor.go_after
-				nb := common_states.count
-				from
-					i := 1
-				until
-					i > nb
-				loop
-					if common_freq < frequencies.item (i) then
-						common_state := common_states.item (i)
-						common_freq := frequencies.item (i)
-					end
-					i := i + 1
-				end
-				proto_cursor := protos.new_cursor
-				if not protos.is_empty then
-					proto := protos.first
-					proto_cursor.start
-				end
-				min_diff := trans_nb
-				cursor := protos.new_cursor
-				cursor.start
-				if common_freq * 100 > trans_nb * Check_common_percentage then
-					from
-					until
-						cursor.after or else cursor.item.common_state = common_state
-					loop
-						cursor.forth
-					end
-					if not cursor.after then
-						proto := cursor.item
-						proto_cursor.go_to (cursor)
-						difference := transitions.difference (proto.transitions, null_state)
-						min_diff := difference.count
-					end
-				else
-						-- Since it has been decided that the most common
-						-- destination out of `state' does not occur with
-						-- high enough frequency, we set the `common_state'
-						-- to `null_state', assuring that if this state is
-						-- entered into the proto list, it will no be
-						-- considered as a template.
+						-- Release cursor to GC.
+					st_cursor.go_after
 					common_state := null_state
-					if not protos.is_empty then
-						proto := protos.first
-						proto_cursor.go_to (cursor)
-						difference := transitions.difference (proto.transitions, null_state)
-						min_diff := difference.count
-					end
-				end
-					-- We now have the first interesting proto. If it
-					-- matches within the tolerances set for the first
-					-- proto, we don't want to bother scanning the rest
-					-- of the proto list to see if we have any other
-					-- reasonable matches.
-				if min_diff * 100 > trans_nb * First_match_diff_percentage then
-						-- Not good enough match. Scan the rest of the protos.
+					nb := common_states.count
 					from
+						i := 1
 					until
-						cursor.after
+						i > nb
 					loop
-						new_proto := cursor.item
-						new_diff := transitions.difference (new_proto.transitions, null_state)
-						if new_diff.count < min_diff then
-							proto := new_proto
+						if common_freq < frequencies.item (i) then
+							common_state := common_states.item (i)
+							common_freq := frequencies.item (i)
+						end
+						i := i + 1
+					end
+					proto_cursor := l_protos.new_cursor
+					if not l_protos.is_empty then
+						proto := l_protos.first
+						proto_cursor.start
+					end
+					min_diff := trans_nb
+					cursor := l_protos.new_cursor
+					cursor.start
+					if common_freq * 100 > trans_nb * Check_common_percentage then
+						from
+						until
+							cursor.after or else cursor.item.common_state = common_state
+						loop
+							cursor.forth
+						end
+						if not cursor.after then
+							proto := cursor.item
 							proto_cursor.go_to (cursor)
-							difference := new_diff
+							difference := transitions.difference (proto.transitions, null_state)
 							min_diff := difference.count
 						end
-						cursor.forth
-					end
-				else
-						-- Release cursor to GC.
-					cursor.go_after
-				end
-					-- Check if the proto we've decided on as our best bet
-					-- is close enough to the state we want to match to
-					-- be usable.
-				if min_diff * 100 > trans_nb * Acceptable_diff_percentage then
-						-- No good. If the state is homogeneous enough,
-						-- we make a template out of it. Otherwise, we
-						-- make a proto.
-					if common_freq * 100 >= trans_nb * Template_same_percentage then
-						templates.put (state, common_state)
-						template := templates.last
-						default_id := -templates.count
-						protos.put (default_id, template, common_state)
-						put_entry (state.id, default_id, transitions.difference (template, null_state))
 					else
-						protos.put (state.id, transitions.cloned_object, common_state)
-						put_entry (state.id, Jam_id, transitions)
+							-- Since it has been decided that the most common
+							-- destination out of `state' does not occur with
+							-- high enough frequency, we set the `common_state'
+							-- to `null_state', assuring that if this state is
+							-- entered into the proto list, it will no be
+							-- considered as a template.
+						common_state := null_state
+						if not l_protos.is_empty then
+							proto := l_protos.first
+							proto_cursor.go_to (cursor)
+							difference := transitions.difference (proto.transitions, null_state)
+							min_diff := difference.count
+						end
 					end
-				else
-						-- Use the proto.
-					put_entry (state.id, proto.state_id, difference)
-						-- Move `proto' to the front of the proto queue.
-					protos.move_to_front (proto_cursor)
-						-- If this state was sufficiently different from
-						-- the proto we built it from, make it a proto too.
-					if min_diff * 100 >= trans_nb * New_proto_diff_percentage then
-						protos.put (state.id, transitions.cloned_object, common_state)
+						-- We now have the first interesting proto. If it
+						-- matches within the tolerances set for the first
+						-- proto, we don't want to bother scanning the rest
+						-- of the proto list to see if we have any other
+						-- reasonable matches.
+					if min_diff * 100 > trans_nb * First_match_diff_percentage then
+							-- Not good enough match. Scan the rest of the protos.
+						from
+						until
+							cursor.after
+						loop
+							new_proto := cursor.item
+							new_diff := transitions.difference (new_proto.transitions, null_state)
+							if new_diff.count < min_diff then
+								proto := new_proto
+								proto_cursor.go_to (cursor)
+								difference := new_diff
+								min_diff := difference.count
+							end
+							cursor.forth
+						end
+					else
+							-- Release cursor to GC.
+						cursor.go_after
 					end
+						-- Check if the proto we've decided on as our best bet
+						-- is close enough to the state we want to match to
+						-- be usable.
+					if min_diff * 100 > trans_nb * Acceptable_diff_percentage then
+							-- No good. If the state is homogeneous enough,
+							-- we make a template out of it. Otherwise, we
+							-- make a proto.
+						if common_freq * 100 >= trans_nb * Template_same_percentage then
+							check templates_not_void: attached templates as l_templates then
+								l_templates.put (state, common_state)
+								template := l_templates.last
+								default_id := -l_templates.count
+								l_protos.put (default_id, template, common_state)
+								put_entry (state.id, default_id, transitions.difference (template, null_state))
+							end
+						else
+							l_protos.put (state.id, transitions.cloned_object, common_state)
+							put_entry (state.id, Jam_id, transitions)
+						end
+					else
+							-- Use the proto.
+						check proto /= Void and difference /= Void then
+							put_entry (state.id, proto.state_id, difference)
+								-- Move `proto' to the front of the proto queue.
+							l_protos.move_to_front (proto_cursor)
+								-- If this state was sufficiently different from
+								-- the proto we built it from, make it a proto too.
+							if min_diff * 100 >= trans_nb * New_proto_diff_percentage then
+								l_protos.put (state.id, transitions.cloned_object, common_state)
+							end
+						end
+					end
+						-- Release cursor to GC.
+					proto_cursor.go_after
 				end
-					-- Release cursor to GC.
-				proto_cursor.go_after
 			end
 		end
 
@@ -654,134 +665,138 @@ feature {NONE} -- Compression
 			base_addr, table_base, table_last: INTEGER
 			yy_chk_, yy_nxt_: ARRAY [INTEGER]
 			singleton: LX_SINGLETON
-			target: LX_DFA_STATE
 		do
-			inspect transitions.count
-			when 0 then
-					-- There are no new out-transitions.
-				if default_id = Jam_id then
-					yy_base.put (Jam_id, state_id)
-				else
-					yy_base.put (0, state_id)
-				end
-				yy_def.put (default_id, state_id)
-			when 1 then
-					-- There is only one out-transition.
-					-- Save it for later to fill in holes in tables.
-				min_label := transitions.minimum_label
-				target := transitions.target (min_label)
-				create singleton.make (state_id, default_id, min_label, target.id)
-				if not singletons.is_full then
-					singletons.put_last (singleton)
-				else
-					put_singleton (singleton)
-				end
-			else
-				yy_nxt_ := yy_nxt
-				yy_chk_ := yy_chk
-					-- Whether we try to fit the state table in the
-					-- middle of the table entries we have already
-					-- generated, or if we just take the state table
-					-- at the end of next/check tables, we must make
-					-- sure that we have valid base address (i.e.
-					-- non negative).
-					--
-					-- Find the first transition of `state' that we
-					-- need to worry about.
-				min_label := transitions.minimum_label
-				max_label := transitions.maximum_label
-				trans_nb := transitions.count
-				symb_nb := transitions.capacity
-				if trans_nb * 100 <= symb_nb * Interior_fit_percentage then
-						-- Attempt to squeeze it into the middle of tables.
-					base_addr := first_free
-					from
-					until
-						base_addr >= min_label
-					loop
-							-- Using `base_addr' would result in a
-							-- negative base address below; find the
-							-- next free slot.
-						from
-							base_addr := base_addr + 1
-						until
-							yy_chk_.item (base_addr) = 0
-						loop
-							base_addr := base_addr + 1
+			check transitions_not_void: attached transitions as l_transitions then
+				inspect transitions.count
+				when 0 then
+						-- There are no new out-transitions.
+					if default_id = Jam_id then
+						yy_base.put (Jam_id, state_id)
+					else
+						yy_base.put (0, state_id)
+					end
+					yy_def.put (default_id, state_id)
+				when 1 then
+					check singletons_not_void: attached singletons as l_singletons then
+							-- There is only one out-transition.
+							-- Save it for later to fill in holes in tables.
+						min_label := l_transitions.minimum_label
+						check attached l_transitions.target (min_label) as l_target then
+							create singleton.make (state_id, default_id, min_label, l_target.id)
+							if not l_singletons.is_full then
+								l_singletons.put_last (singleton)
+							else
+								put_singleton (singleton)
+							end
 						end
 					end
-					max_index := base_addr + max_label - min_label + 1
+				else
+					yy_nxt_ := yy_nxt
+					yy_chk_ := yy_chk
+						-- Whether we try to fit the state table in the
+						-- middle of the table entries we have already
+						-- generated, or if we just take the state table
+						-- at the end of next/check tables, we must make
+						-- sure that we have valid base address (i.e.
+						-- non negative).
+						--
+						-- Find the first transition of `state' that we
+						-- need to worry about.
+					min_label := l_transitions.minimum_label
+					max_label := l_transitions.maximum_label
+					trans_nb := l_transitions.count
+					symb_nb := l_transitions.capacity
+					if trans_nb * 100 <= symb_nb * Interior_fit_percentage then
+							-- Attempt to squeeze it into the middle of tables.
+						base_addr := first_free
+						from
+						until
+							base_addr >= min_label
+						loop
+								-- Using `base_addr' would result in a
+								-- negative base address below; find the
+								-- next free slot.
+							from
+								base_addr := base_addr + 1
+							until
+								yy_chk_.item (base_addr) = 0
+							loop
+								base_addr := base_addr + 1
+							end
+						end
+						max_index := base_addr + max_label - min_label + 1
+						if max_index >= yy_nxt_.upper then
+							max_index := max_index + Max_xpairs_increment
+							INTEGER_ARRAY_.resize (yy_nxt_, 0, max_index)
+							INTEGER_ARRAY_.resize (yy_chk_, 0, max_index)
+						end
+						from
+							i := min_label
+						until
+							i > max_label
+						loop
+							if l_transitions.target (i) /= Void and yy_chk_.item (base_addr + i - min_label) /= 0 then
+									-- `base_addr' unsuitable. Find another.
+								from
+									base_addr := base_addr + 1
+									max_index := yy_nxt_.upper
+								until
+									base_addr > max_index or else yy_chk_.item (base_addr) = 0
+								loop
+									base_addr := base_addr + 1
+								end
+								max_index := base_addr + max_label - min_label + 1
+								if max_index >= yy_nxt_.upper then
+									max_index := max_index + Max_xpairs_increment
+									INTEGER_ARRAY_.resize (yy_nxt_, 0, max_index)
+									INTEGER_ARRAY_.resize (yy_chk_, 0, max_index)
+								end
+									-- Reset the loop counter so we'll start
+									-- all over again.
+								i := min_label
+							else
+								i := i + 1
+							end
+						end
+					else
+							-- Ensure that the base address we eventually
+							-- generate is non negative.
+						base_addr := min_label.max (table_end + 1)
+					end
+					table_base := base_addr - min_label
+					table_last := table_base + max_label
+					max_index := table_last + 1
 					if max_index >= yy_nxt_.upper then
 						max_index := max_index + Max_xpairs_increment
 						INTEGER_ARRAY_.resize (yy_nxt_, 0, max_index)
 						INTEGER_ARRAY_.resize (yy_chk_, 0, max_index)
 					end
+					yy_base.put (table_base, state_id)
+					yy_def.put (default_id, state_id)
 					from
 						i := min_label
 					until
 						i > max_label
 					loop
-						if transitions.target (i) /= Void and yy_chk_.item (base_addr + i - min_label) /= 0 then
-								-- `base_addr' unsuitable. Find another.
-							from
-								base_addr := base_addr + 1
-								max_index := yy_nxt_.upper
-							until
-								base_addr > max_index or else yy_chk_.item (base_addr) = 0
-							loop
-								base_addr := base_addr + 1
-							end
-							max_index := base_addr + max_label - min_label + 1
-							if max_index >= yy_nxt_.upper then
-								max_index := max_index + Max_xpairs_increment
-								INTEGER_ARRAY_.resize (yy_nxt_, 0, max_index)
-								INTEGER_ARRAY_.resize (yy_chk_, 0, max_index)
-							end
-								-- Reset the loop counter so we'll start
-								-- all over again.
-							i := min_label
-						else
-							i := i + 1
+						if attached l_transitions.target (i) as l_target then
+							yy_nxt_.put (l_target.id, table_base + i)
+							yy_chk_.put (state_id, table_base + i)
 						end
-					end
-				else
-						-- Ensure that the base address we eventually
-						-- generate is non negative.
-					base_addr := min_label.max (table_end + 1)
-				end
-				table_base := base_addr - min_label
-				table_last := table_base + max_label
-				max_index := table_last + 1
-				if max_index >= yy_nxt_.upper then
-					max_index := max_index + Max_xpairs_increment
-					INTEGER_ARRAY_.resize (yy_nxt_, 0, max_index)
-					INTEGER_ARRAY_.resize (yy_chk_, 0, max_index)
-				end
-				yy_base.put (table_base, state_id)
-				yy_def.put (default_id, state_id)
-				from
-					i := min_label
-				until
-					i > max_label
-				loop
-					if transitions.target (i) /= Void then
-						yy_nxt_.put (transitions.target (i).id, table_base + i)
-						yy_chk_.put (state_id, table_base + i)
-					end
-					i := i + 1
-				end
-				if base_addr = first_free then
-						-- Find next free slot in tables.
-					from
-						i := base_addr + 1
-					until
-						yy_chk_.item (i) = 0
-					loop
 						i := i + 1
 					end
-					first_free := i
+					if base_addr = first_free then
+							-- Find next free slot in tables.
+						from
+							i := base_addr + 1
+						until
+							yy_chk_.item (i) = 0
+						loop
+							i := i + 1
+						end
+						first_free := i
+					end
+					table_end := table_end.max (table_last)
 				end
-				table_end := table_end.max (table_last)
 			end
 		end
 
@@ -841,35 +856,37 @@ feature {NONE} -- Compression
 			i, max_index: INTEGER
 		do
 			yyTemplate_mark := states.count + 2
-			if meta_equiv_classes /= Void then
-				meta_equiv_classes.build
-				yy_meta := meta_equiv_classes.to_array (0, maximum_symbol)
+			if attached meta_equiv_classes as l_meta_equiv_classes then
+				l_meta_equiv_classes.build
+				yy_meta := l_meta_equiv_classes.to_array (0, maximum_symbol)
 			else
 				yy_meta := Void
 			end
-			templates_count := templates.count + 1
-			max_index := states.count + templates_count
-			if states.capacity < max_index then
-				INTEGER_ARRAY_.resize (yy_base, 0, max_index)
-				INTEGER_ARRAY_.resize (yy_def, 0, max_index)
-			end
-				-- Leave room for the jam-state after the last real state.
-			i := states.count + 2
-			cursor := templates.new_cursor
-			from
-				cursor.start
-			until
-				cursor.after
-			loop
-				template := templates.equiv_template (cursor.item)
-					-- It is assumed in the skeleton that if we're using
-					-- meta-equivalence classes, the yy_def entry for all
-					-- templates is the jam template, i.e. templates never
-					-- default to other non-jam table entries (e.g. another
-					-- template).
-				put_entry (i, Jam_id, template)
-				i := i + 1
-				cursor.forth
+			check templates_not_void: attached templates as l_templates then
+				templates_count := l_templates.count + 1
+				max_index := states.count + templates_count
+				if states.capacity < max_index then
+					INTEGER_ARRAY_.resize (yy_base, 0, max_index)
+					INTEGER_ARRAY_.resize (yy_def, 0, max_index)
+				end
+					-- Leave room for the jam-state after the last real state.
+				i := states.count + 2
+				cursor := l_templates.new_cursor
+				from
+					cursor.start
+				until
+					cursor.after
+				loop
+					template := l_templates.equiv_template (cursor.item)
+						-- It is assumed in the skeleton that if we're using
+						-- meta-equivalence classes, the yy_def entry for all
+						-- templates is the jam template, i.e. templates never
+						-- default to other non-jam table entries (e.g. another
+						-- template).
+					put_entry (i, Jam_id, template)
+					i := i + 1
+					cursor.forth
+				end
 			end
 		end
 
@@ -881,13 +898,15 @@ feature {NONE} -- Compression
 		local
 			i: INTEGER
 		do
-			from
-				i := singletons.count
-			until
-				i < 1
-			loop
-				put_singleton (singletons.item (i))
-				i := i - 1
+			check singletons_not_void: attached singletons as l_singletons then
+				from
+					i := l_singletons.count
+				until
+					i < 1
+				loop
+					put_singleton (l_singletons.item (i))
+					i := i - 1
+				end
 			end
 		end
 
@@ -972,7 +991,7 @@ feature {NONE} -- Compression
 
 feature {NONE} -- Compression data
 
-	meta_equiv_classes: LX_EQUIVALENCE_CLASSES
+	meta_equiv_classes: detachable LX_EQUIVALENCE_CLASSES
 			-- Meta equivalence classes which are sets of classes
 			-- with identical transitions out of templates;
 			-- Void if meta equivalence classes are not used
@@ -980,7 +999,7 @@ feature {NONE} -- Compression data
 	meta_equiv_classes_used: BOOLEAN
 			-- Should meta-equivalence classes be used?
 
-	protos: LX_PROTO_QUEUE
+	protos: detachable LX_PROTO_QUEUE
 			-- Queue of most recently used protos, which are DFA states
 			-- with transition tables that have a high probability of
 			-- either being redundant (a state processed later will have
@@ -990,7 +1009,7 @@ feature {NONE} -- Compression data
 			-- similar enough to be usable, and therefore compacting the
 			-- output tables
 
-	templates: LX_TEMPLATE_LIST
+	templates: detachable LX_TEMPLATE_LIST
 			-- Templates are a special type of proto. If a transition
 			-- table is homogeneous or nearly homogeneous (all transitions
 			-- go to the same destination) then the odds are good that
@@ -1007,7 +1026,7 @@ feature {NONE} -- Compression data
 			-- on the other hand, go to the common state on every
 			-- transition symbol, and therefore cost only one difference
 
-	singletons: DS_ARRAYED_LIST [LX_SINGLETON]
+	singletons: detachable DS_ARRAYED_LIST [LX_SINGLETON]
 			-- States with only one out-transition, saved
 			-- for later to fill in holes in tables
 

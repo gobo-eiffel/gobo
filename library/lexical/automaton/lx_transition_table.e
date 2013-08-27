@@ -5,7 +5,7 @@ note
 		"Transition tables, indexed by transition labels"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -56,7 +56,7 @@ feature -- Status report
 
 feature -- Access
 
-	target (a_label: INTEGER): G
+	target (a_label: INTEGER): detachable G
 			-- Target reached through transition `a_label';
 			-- Void if no such transition exists
 		require
@@ -202,7 +202,7 @@ feature -- Removal
 			end
 		ensure
 			one_less: count <= old count
-			removed: target (label) = Void or else target (label) = target (label).default
+			removed: not attached target (label) as l_target or else l_target = l_target.default
 		end
 
 	clear_all
@@ -242,12 +242,12 @@ feature -- Comparison
 
 feature {LX_TRANSITION_TABLE} -- Implementation
 
-	storage: ARRAY [G]
+	storage: ARRAY [detachable G]
 			-- Transitions indexed by labels
 
 feature {NONE} -- Implementation
 
-	array_routines: KL_ARRAY_ROUTINES [G]
+	array_routines: KL_ARRAY_ROUTINES [detachable G]
 			-- Routines that ought to be in class ARRAY
 
 invariant

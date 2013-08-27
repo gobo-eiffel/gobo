@@ -6,7 +6,7 @@ note
 		"Parsers for lexical analyzer generators such as 'gelex'"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -200,6 +200,7 @@ Regular_expression: Series
 		}
 	| Regular_expression '|'
 		{
+			$$ := $1
 			old_regexp_lines.force (regexp_line)
 			old_regexp_columns.force (regexp_column)
 			old_regexp_counts.force (regexp_count)

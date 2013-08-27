@@ -5,7 +5,7 @@ note
 		"DFA which can generate scanners implemented with full tables"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -168,7 +168,8 @@ feature {NONE} -- Building
 		local
 			yy_nxt_: ARRAY [INTEGER]
 			i, j, k, nb: INTEGER
-			a_state, target: LX_DFA_STATE
+			a_state: LX_DFA_STATE
+			target: detachable LX_DFA_STATE
 			transitions: LX_TRANSITION_TABLE [LX_DFA_STATE]
 			eob_state_id: INTEGER
 		do

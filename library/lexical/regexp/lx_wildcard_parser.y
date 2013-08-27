@@ -6,7 +6,7 @@ note
 		"Parsers for wildcards"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 2001-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -218,7 +218,7 @@ feature {NONE} -- Implementation
 			-- "?" character class (i.e. all characters except /)
 		local
 			question_string: STRING
-			equiv_classes: LX_EQUIVALENCE_CLASSES
+			equiv_classes: detachable LX_EQUIVALENCE_CLASSES
 		do
 			question_string := "?"
 			character_classes.search (question_string)

@@ -5,7 +5,7 @@ note
 		"DFA equipped with lexical analyzer generator"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -43,10 +43,11 @@ feature {NONE} -- Initialization
 			a_description_not_void: a_description /= Void
 		local
 			max: INTEGER
-			equiv_classes: LX_EQUIVALENCE_CLASSES
+			equiv_classes: detachable LX_EQUIVALENCE_CLASSES
 		do
-			input_filename := a_description.input_filename
-			if input_filename = Void then
+			if attached a_description.input_filename as l_input_filename then
+				input_filename := l_input_filename
+			else
 				input_filename := Default_input_filename
 			end
 			characters_count := a_description.characters_count
@@ -517,7 +518,7 @@ feature {NONE} -- Generation
 			a_file_open_write: a_file.is_open_write
 		local
 			i, nb: INTEGER
-			rule: LX_RULE
+			rule: detachable LX_RULE
 			actions: DS_ARRAYED_LIST [DS_PAIR [DP_COMMAND, DS_LINKED_LIST [LX_RULE]]]
 			action: DP_COMMAND
 			j, nb_actions: INTEGER
@@ -670,8 +671,8 @@ feature {NONE} -- Generation
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
-			if eiffel_code /= Void then
-				a_file.put_string (eiffel_code)
+			if attached eiffel_code as l_eiffel_code then
+				a_file.put_string (l_eiffel_code)
 			end
 		end
 
@@ -1029,7 +1030,7 @@ feature {NONE} -- Access
 	input_filename: STRING
 			-- Input filename
 
-	eiffel_code: STRING
+	eiffel_code: detachable STRING
 			-- User-defined Eiffel code
 
 	eiffel_header: DS_ARRAYED_LIST [STRING]

@@ -5,7 +5,7 @@ note
 		"Compressed tables for scanners"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,12 +34,12 @@ feature -- Tables
 	yy_def: ARRAY [INTEGER]
 			-- Where to go if `yy_chk' disallows `yy_nxt' entry
 
-	yy_acclist: ARRAY [INTEGER]
+	yy_acclist: detachable ARRAY [INTEGER]
 			-- Accepting id list, used when `reject' is called
 			-- or when there is a variable length trailing context;
 			-- Void otherwise
 
-	yy_meta: ARRAY [INTEGER]
+	yy_meta: detachable ARRAY [INTEGER]
 			-- Meta equivalence classes which are sets of classes
 			-- with identical transitions out of templates;
 			-- Void if meta equivalence classes are not used

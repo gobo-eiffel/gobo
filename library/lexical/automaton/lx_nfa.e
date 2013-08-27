@@ -5,7 +5,7 @@ note
 		"Non-deterministic finite automota"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -153,8 +153,8 @@ feature -- Duplication
 			old_states: like states
 			new_state, old_state: like start_state
 			i, nb: INTEGER
-			transition: LX_TRANSITION [LX_NFA_STATE]
-			epsilon_transition: LX_EPSILON_TRANSITION [LX_NFA_STATE]
+			transition: detachable LX_TRANSITION [LX_NFA_STATE]
+			epsilon_transition: detachable LX_EPSILON_TRANSITION [LX_NFA_STATE]
 		do
 			standard_copy (other)
 			old_states := states

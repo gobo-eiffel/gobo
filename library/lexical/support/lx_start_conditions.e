@@ -6,7 +6,7 @@ note
 
 	storable_version: "20130823"
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -86,19 +86,23 @@ feature -- Access
 		local
 			i, nb: INTEGER
 			a_lower_name: STRING
+			l_result: detachable LX_START_CONDITION
 		do
 			from
 				i := 1
 				nb := count
 				a_lower_name := a_name.as_lower
 			until
-				Result /= Void or i > nb
+				l_result /= Void or i > nb
 			loop
-				Result := item (i)
-				if not a_lower_name.is_equal (Result.name.as_lower) then
-					Result := Void
+				l_result := item (i)
+				if not a_lower_name.is_equal (l_result.name.as_lower) then
+					l_result := Void
 					i := i + 1
 				end
+			end
+			check has_start_condition: l_result /= Void then
+				Result := l_result
 			end
 		ensure
 			start_condition_not_void: Result /= Void
@@ -111,7 +115,7 @@ feature -- Access
 		do
 			nb := count
 			if nb = 0 then
-				Result := STRING_ARRAY_.make_empty_with_lower (0)
+				Result := string_array_routines.make_empty_with_lower (0)
 			else
 				from
 					create Result.make_filled (first.name, 0, nb - 1)

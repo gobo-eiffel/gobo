@@ -5,7 +5,7 @@ note
 		"Non-deterministic finite automaton states"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,13 +40,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	transition: LX_TRANSITION [LX_NFA_STATE]
+	transition: detachable LX_TRANSITION [LX_NFA_STATE]
 			-- Out-transition
 
-	epsilon_transition: LX_EPSILON_TRANSITION [LX_NFA_STATE]
+	epsilon_transition: detachable LX_EPSILON_TRANSITION [LX_NFA_STATE]
 			-- Epsilon out-transition
 
-	accepted_rule: LX_RULE
+	accepted_rule: detachable LX_RULE
 			-- Rule that current state is accepting,
 			-- Void otherwise
 
@@ -159,8 +159,8 @@ feature -- Status setting
 				if attached {LX_EPSILON_TRANSITION [LX_NFA_STATE]} transition as epsilon_xtion then
 					epsilon_xtion.target.set_beginning_as_normal
 				end
-				if epsilon_transition /= Void then
-					epsilon_transition.target.set_beginning_as_normal
+				if attached epsilon_transition as l_epsilon_transition then
+					l_epsilon_transition.target.set_beginning_as_normal
 				end
 			end
 		ensure

@@ -6,7 +6,7 @@ note
 		%generators such as 'gelex'"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -464,7 +464,7 @@ feature {NONE} -- Factory
 		local
 			a_name: STRING
 			a_character_class: LX_SYMBOL_CLASS
-			equiv_classes: LX_EQUIVALENCE_CLASSES
+			equiv_classes: detachable LX_EQUIVALENCE_CLASSES
 		do
 			equiv_classes := description.equiv_classes
 			if equiv_classes /= Void then
@@ -525,7 +525,7 @@ feature {NONE} -- Factory
 			lower_char: INTEGER
 			a_name: STRING
 			a_character_class: LX_SYMBOL_CLASS
-			equiv_classes: LX_EQUIVALENCE_CLASSES
+			equiv_classes: detachable LX_EQUIVALENCE_CLASSES
 		do
 			if description.case_insensitive then
 				equiv_classes := description.equiv_classes
@@ -582,7 +582,7 @@ feature {NONE} -- Factory
 		require
 			a_character_class_not_void: a_character_class /= Void
 		local
-			equiv_classes: LX_EQUIVALENCE_CLASSES
+			equiv_classes: detachable LX_EQUIVALENCE_CLASSES
 		do
 			if a_character_class.sort_needed then
 				a_character_class.sort
@@ -826,7 +826,7 @@ feature {NONE} -- Implementation
 			a_name: STRING
 			lower_char: INTEGER
 			a_character_class: LX_SYMBOL_CLASS
-			equiv_classes: LX_EQUIVALENCE_CLASSES
+			equiv_classes: detachable LX_EQUIVALENCE_CLASSES
 		do
 			if description.case_insensitive then
 				equiv_classes := description.equiv_classes
@@ -997,7 +997,7 @@ feature {NONE} -- Implementation
 			-- "." character class (i.e. all characters except new_line)
 		local
 			dot_string: STRING
-			equiv_classes: LX_EQUIVALENCE_CLASSES
+			equiv_classes: detachable LX_EQUIVALENCE_CLASSES
 		do
 			dot_string := "."
 			character_classes.search (dot_string)
@@ -1045,21 +1045,21 @@ feature {NONE} -- Implementation
 			equiv_classes_not_void: description.equiv_classes /= Void
 		local
 			cursor: DS_HASH_TABLE_CURSOR [LX_SYMBOL_CLASS, STRING]
-			equiv_classes: LX_EQUIVALENCE_CLASSES
 		do
-			equiv_classes := description.equiv_classes
-			equiv_classes.build
-			cursor := character_classes.new_cursor
-			from
-				cursor.start
-			until
-				cursor.after
-			loop
-				cursor.item.convert_to_equivalence (equiv_classes)
-				cursor.forth
+			check equiv_classes_not_void: attached description.equiv_classes as l_equiv_classes then
+				l_equiv_classes.build
+				cursor := character_classes.new_cursor
+				from
+					cursor.start
+				until
+					cursor.after
+				loop
+					cursor.item.convert_to_equivalence (l_equiv_classes)
+					cursor.forth
+				end
 			end
 		ensure
-			built: description.equiv_classes.built
+			built: attached description.equiv_classes as l_equiv_classes and then l_equiv_classes.built
 		end
 
 	check_options

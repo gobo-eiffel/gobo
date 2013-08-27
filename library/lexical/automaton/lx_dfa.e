@@ -5,7 +5,7 @@ note
 		"Deterministic finite automota"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -146,7 +146,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	partitions: LX_SYMBOL_PARTITIONS
+	partitions: detachable LX_SYMBOL_PARTITIONS
 			-- Partitions of symbols with same out-transitions
 
 	set_nfa_state_ids (start_conditions: LX_START_CONDITIONS)
@@ -285,31 +285,35 @@ feature {NONE} -- Implementation
 			transitions: LX_TRANSITION_TABLE [LX_DFA_STATE]
 			symbols: ARRAY [BOOLEAN]
 		do
-			nb := partitions.capacity
-			if states.capacity - states.count < nb then
-				resize (states.capacity + nb + Max_dfas_increment)
-			end
-			partitions.initialize
-			state.partition (partitions)
-			symbols := partitions.symbols
-			transitions := state.transitions
-			from
-				i := minimum_symbol
-			until
-				i > maximum_symbol
-			loop
-				if symbols.item (i) then
-						-- There is a transition labeled `i'
-						-- leaving `new_state'.
-					if partitions.is_representative (i) then
-						dfa_state := new_state (state.new_state (i))
-					else
-						previous := partitions.previous_symbol (i)
-						dfa_state := transitions.target (previous)
-					end
-					transitions.set_target (dfa_state, i)
+			check paritions_not_void: attached partitions as l_partitions then
+				nb := l_partitions.capacity
+				if states.capacity - states.count < nb then
+					resize (states.capacity + nb + Max_dfas_increment)
 				end
-				i := i + 1
+				l_partitions.initialize
+				state.partition (l_partitions)
+				symbols := l_partitions.symbols
+				transitions := state.transitions
+				from
+					i := minimum_symbol
+				until
+					i > maximum_symbol
+				loop
+					if symbols.item (i) then
+							-- There is a transition labeled `i'
+							-- leaving `new_state'.
+						if l_partitions.is_representative (i) then
+							dfa_state := new_state (state.new_state (i))
+						else
+							previous := l_partitions.previous_symbol (i)
+							check attached transitions.target (previous) as l_target then
+								dfa_state := l_target
+							end
+						end
+						transitions.set_target (dfa_state, i)
+					end
+					i := i + 1
+				end
 			end
 		end
 
@@ -321,23 +325,26 @@ feature {NONE} -- Implementation
 			not_full: not states.is_full
 		local
 			i, nb: INTEGER
+			l_result: detachable LX_DFA_STATE
 		do
 			from
 				i := start_states_count + 1
 				nb := states.count
 			until
-				Result /= Void or i > nb
+				l_result /= Void or i > nb
 			loop
-				Result := states.item (i)
-				if not Result.is_equal (state) then
-					Result := Void
+				l_result := states.item (i)
+				if not l_result.is_equal (state) then
+					l_result := Void
 					i := i + 1
 				end
 			end
-			if Result = Void then
+			if l_result = Void then
 				Result := state
 				states.put_last (state)
 				state.set_id (states.count)
+			else
+				Result := l_result
 			end
 		ensure
 			new_state_not_void: Result /= Void

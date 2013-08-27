@@ -5,7 +5,7 @@ note
 		"Deterministic finite automaton states"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,7 +44,6 @@ feature {NONE} -- Initialization
 		local
 			i, nb: INTEGER
 			state, nfa_state: LX_NFA_STATE
-			epsilon_transition: LX_EPSILON_TRANSITION [LX_NFA_STATE]
 		do
 			nb := nfa_states.count
 			create states.make (nb)
@@ -58,8 +57,7 @@ feature {NONE} -- Initialization
 			loop
 				state := nfa_states.item (i)
 				if state.transition /= Void then
-					epsilon_transition ?= state.transition
-					if epsilon_transition = Void then
+					if not attached {LX_EPSILON_TRANSITION [LX_NFA_STATE]} state.transition as epsilon_transition then
 						states.force_last (state)
 						code := code + state.id
 					else
@@ -70,18 +68,19 @@ feature {NONE} -- Initialization
 						end
 					end
 				end
-				if state.epsilon_transition /= Void then
-					nfa_state := state.epsilon_transition.target
+				if attached state.epsilon_transition as l_epsilon_transition then
+					nfa_state := l_epsilon_transition.target
 					if not nfa_states.has (nfa_state) then
 						nfa_states.force_last (nfa_state)
 						nb := nb + 1
 					end
 				end
-				if state.is_accepting then
+				if attached state.accepted_rule as l_accepted_rule then
+						-- `state.is_accepting'.
 					if state.is_accepting_head then
-						accepted_head_rules.force_last (state.accepted_rule)
+						accepted_head_rules.force_last (l_accepted_rule)
 					else
-						accepted_rules.force_last (state.accepted_rule)
+						accepted_rules.force_last (l_accepted_rule)
 					end
 					if states.is_empty or else states.last /= state then
 						states.force_last (state)
@@ -145,7 +144,7 @@ feature -- Access
 			definition: Result = transitions.upper
 		end
 
-	next_state (symbol: INTEGER): LX_DFA_STATE
+	next_state (symbol: INTEGER): detachable LX_DFA_STATE
 			-- Next DFA state reachable through transition labeled `symbol';
 			-- Void if no such transition exists
 		require
@@ -211,7 +210,7 @@ feature {LX_DFA} -- DFA construction
 			-- state through transition labeled `symbol'
 		local
 			i, nb: INTEGER
-			transition: LX_TRANSITION [LX_NFA_STATE]
+			transition: detachable LX_TRANSITION [LX_NFA_STATE]
 			nfa_states: DS_ARRAYED_LIST [LX_NFA_STATE]
 		do
 			nb := states.count
@@ -242,7 +241,7 @@ feature {LX_DFA} -- DFA construction
 --			recordable: forall NFA `transition', transition.recordable (equiv_classes)
 		local
 			i, nb: INTEGER
-			transition: LX_TRANSITION [LX_NFA_STATE]
+			transition: detachable LX_TRANSITION [LX_NFA_STATE]
 		do
 			nb := states.count
 			from

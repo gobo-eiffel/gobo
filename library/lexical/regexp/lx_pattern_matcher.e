@@ -5,7 +5,7 @@ note
 		"Pattern matchers"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -70,10 +70,10 @@ feature -- Element change
 
 feature -- Access
 
-	pattern: STRING
+	pattern: detachable STRING
 			-- Pattern being matched
 
-	matched_position (a_string: STRING): DS_PAIR [INTEGER, INTEGER]
+	matched_position (a_string: STRING): detachable DS_PAIR [INTEGER, INTEGER]
 			-- Position of the longest-leftmost token matched
 			-- by current pattern in `a_string'
 		require

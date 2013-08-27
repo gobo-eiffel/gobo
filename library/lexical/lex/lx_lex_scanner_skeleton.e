@@ -6,7 +6,7 @@ note
 		%analyzer generators such as 'gelex'"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -127,7 +127,7 @@ feature {NONE} -- Access
 			-- Number of characters { not-yet-balanced
 			-- in semantic actions
 
-	last_string: STRING
+	last_string: detachable STRING
 			-- Last string which has been read
 
 	last_integer_value: INTEGER
