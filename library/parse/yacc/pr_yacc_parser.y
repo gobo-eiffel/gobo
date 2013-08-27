@@ -167,11 +167,11 @@ Eiffel_type_no_identifier: Type_mark T_IDENTIFIER
 		{
 			$$ := new_basic_type ($1, $2)
 		}
-	| Type_mark T_IDENTIFIER '[' ']'
+	| Type_mark T_IDENTIFIER Open_bracket Close_bracket
 		{
 			$$ := new_type ($1, $2)
 		}
-	| T_IDENTIFIER '[' ']'
+	| T_IDENTIFIER Open_bracket Close_bracket
 		{
 			$$ := new_type (Void, $1)
 		}
@@ -187,11 +187,11 @@ Eiffel_type_no_identifier: Type_mark T_IDENTIFIER
 		{
 			$$ := new_type ($1, $2)
 		}
-	| Type_mark_no_expanded_reference T_TUPLE '[' ']'
+	| Type_mark_no_expanded_reference T_TUPLE Open_bracket Close_bracket
 		{
 			$$ := new_type ($1, $2)
 		}
-	| T_TUPLE '[' ']'
+	| T_TUPLE Open_bracket Close_bracket
 		{
 			$$ := new_type (Void, $1)
 		}
@@ -333,12 +333,24 @@ Type_mark_no_expanded_reference_opt: -- Empty
 		{ $$ := $1 }
 	;
 
-Eiffel_generics: '[' Eiffel_type_list ']'
+Eiffel_generics: Open_bracket Eiffel_type_list Close_bracket
 		{
 			$$ := $2
 		}
 	;
 
+Open_bracket: '['
+		{
+			in_generics := in_generics + 1
+		}
+	;
+
+Close_bracket: ']'
+		{
+			in_generics := in_generics - 1
+		}
+	;
+	
 Eiffel_type_list: Eiffel_type
 		{
 			create $$.make (5)
@@ -366,7 +378,7 @@ Eiffel_type_list: Eiffel_type
 		}
 	;
 
-Eiffel_labeled_generics: '[' Eiffel_labeled_type_list ']'
+Eiffel_labeled_generics: Open_bracket Eiffel_labeled_type_list Close_bracket
 		{
 			$$ := $2
 		}
