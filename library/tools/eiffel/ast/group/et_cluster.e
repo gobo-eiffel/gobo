@@ -5,7 +5,7 @@ note
 		"Eiffel clusters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -303,6 +303,60 @@ feature -- Access
 			else
 				Result := precursor (a_universe, a_separator)
 			end
+		end
+
+
+	implicit_relative_name (a_separator: CHARACTER): STRING
+			-- Name of current cluster relative its explicit ancestor
+			-- (use `a_separator' as separator between parents' and universes' names)
+		require
+			is_implicit: is_implicit
+		local
+			l_parent: like parent
+			l_parent_name: STRING
+			l_basename: STRING
+		do
+			l_parent := parent
+			if l_parent /= Void and then l_parent.is_implicit then
+				l_parent_name := l_parent.implicit_relative_name (a_separator)
+				l_basename := name
+				Result := STRING_.new_empty_string (l_parent_name, l_parent_name.count + l_basename.count + 1)
+				Result.append_string (l_parent_name)
+				Result.append_character (a_separator)
+				Result := STRING_.appended_string (Result, l_basename)
+			else
+				Result := name
+			end
+		ensure
+			implicit_relative_name_not_void: Result /= Void
+			implicit_relative_name_not_empty: Result.count > 0
+		end
+
+	implicit_relative_lower_name (a_separator: CHARACTER): STRING
+			-- Lower-name of current cluster relative its explicit ancestor
+			-- (use `a_separator' as separator between parents' and universes' names)
+		require
+			is_implicit: is_implicit
+		local
+			l_parent: like parent
+			l_parent_name: STRING
+			l_basename: STRING
+		do
+			l_parent := parent
+			if l_parent /= Void and then l_parent.is_implicit then
+				l_parent_name := l_parent.implicit_relative_lower_name (a_separator)
+				l_basename := lower_name
+				Result := STRING_.new_empty_string (l_parent_name, l_parent_name.count + l_basename.count + 1)
+				Result.append_string (l_parent_name)
+				Result.append_character (a_separator)
+				Result := STRING_.appended_string (Result, l_basename)
+			else
+				Result := lower_name
+			end
+		ensure
+			implicit_relative_lower_name_not_void: Result /= Void
+			implicit_relative_lower_name_not_empty: Result.count > 0
+			definition: Result.same_string (implicit_relative_name (a_separator).as_lower)
 		end
 
 	full_pathname: STRING

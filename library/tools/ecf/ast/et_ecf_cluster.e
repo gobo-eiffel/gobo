@@ -168,13 +168,13 @@ feature -- Status report
 				if file_rules = Void then
 					Result := True
 				else
-					if is_relative and then attached parent as l_parent then
-						l_pathname := "/" + unix_file_system.pathname (l_parent.relative_name (universe, '/'), a_filename)
+					if is_implicit then
+						l_pathname := "/" + unix_file_system.pathname (implicit_relative_name ('/'), a_filename)
 					else
 						l_pathname := "/" + a_filename
 					end
+					Result := file_rules.is_included (l_pathname)
 				end
-				Result := file_rules.is_included (l_pathname)
 			end
 		end
 
@@ -188,13 +188,13 @@ feature -- Status report
 				if file_rules = Void then
 					Result := True
 				else
-					if is_relative and then attached parent as l_parent then
-						l_pathname := "/" + unix_file_system.pathname (l_parent.relative_name (universe, '/'), a_dirname)
+					if is_implicit then
+						l_pathname := "/" + unix_file_system.pathname (implicit_relative_name ('/'), a_dirname)
 					else
 						l_pathname := "/" + a_dirname
 					end
+					Result := file_rules.is_included (l_pathname)
 				end
-				Result := file_rules.is_included (l_pathname)
 			end
 		end
 
