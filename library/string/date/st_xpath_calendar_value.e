@@ -5,7 +5,7 @@ note
 		"Chronological values consistent with XPath 2.0"
 
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2007, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2013, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -227,22 +227,25 @@ feature -- Access
 				check
 						-- precondition `zoned_value'
 					zoned_value: l_zoned_time /= Void
+				then
+					l_time_zone := l_zoned_time.time_zone
 				end
-				l_time_zone := l_zoned_time.time_zone
 			elseif is_xpath_date then
 				l_zoned_date := as_xpath_date.zoned_date
 				check
 						-- precondition `zoned_value'
 					zoned_value: l_zoned_date /= Void
+				then
+					l_time_zone := l_zoned_date.time_zone
 				end
-				l_time_zone := l_zoned_date.time_zone
 			else
 				l_zoned_date_time := as_xpath_date_time.zoned_date_time
 				check
 						-- precondition `zoned_value'
 					zoned_value: l_zoned_date_time /= Void
+				then
+					l_time_zone := l_zoned_date_time.time_zone
 				end
-				l_time_zone := l_zoned_date_time.time_zone
 			end
 			Result := l_time_zone.name
 			if Result.count = 1 then
@@ -296,8 +299,9 @@ feature -- Conversion
 			check
 					-- Fool the compiler for void-safety purpose
 				should_not_occur: v /= Void
+			then
+				Result := v
 			end
-			Result := v
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -312,8 +316,9 @@ feature -- Conversion
 			check
 					-- Fool the compiler for void-safety purpose
 				should_not_occur: v /= Void
+			then
+				Result := v
 			end
-			Result := v
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -328,8 +333,9 @@ feature -- Conversion
 			check
 					-- Fool the compiler for void-safety purpose
 				should_not_occur: v /= Void
+			then
+				Result := v
 			end
-			Result := v
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end

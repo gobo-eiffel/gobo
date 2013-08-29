@@ -7,7 +7,7 @@ note
 	generator: "geuc"
 
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2013, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -2084,8 +2084,7 @@ feature {NONE} -- Implementation
 	character_class_plane_0: SPECIAL [ARRAY [INTEGER_8]]
 			-- Generated character class array plane
 		once
-			create Result.make_filled (Void, 256)
-			Result.put (character_class_plane_0_segment_0, 0)
+			create Result.make_filled (character_class_plane_0_segment_0, 256)
 			Result.put (character_class_plane_0_segment_1, 1)
 			Result.put (character_class_plane_0_segment_2, 2)
 			Result.put (character_class_plane_0_segment_3, 3)
@@ -2525,8 +2524,7 @@ feature {NONE} -- Implementation
 	character_class_plane_1: SPECIAL [ARRAY [INTEGER_8]]
 			-- Generated character class array plane
 		once
-			create Result.make_filled (Void, 256)
-			Result.put (character_class_plane_1_segment_0, 0)
+			create Result.make_filled (character_class_plane_1_segment_0, 256)
 			Result.put (character_class_plane_1_segment_1, 1)
 			Result.put (character_class_plane_1_segment_2, 2)
 			Result.put (character_class_plane_1_segment_3, 3)
@@ -4150,8 +4148,7 @@ feature {NONE} -- Implementation
 	character_class_plane_2: SPECIAL [ARRAY [INTEGER_8]]
 			-- Generated character class array plane
 		once
-			create Result.make_filled (Void, 256)
-			Result.put (character_class_plane_2_segment_0, 0)
+			create Result.make_filled (character_class_plane_2_segment_0, 256)
 			Result.put (character_class_plane_2_segment_1, 1)
 			Result.put (character_class_plane_2_segment_2, 2)
 			Result.put (character_class_plane_2_segment_3, 3)
@@ -4415,263 +4412,7 @@ feature {NONE} -- Implementation
 	empty_character_class_plane: SPECIAL [ARRAY [INTEGER_8]]
 			-- Generated character class array plane
 		once
-			create Result.make_filled (Void, 256)
-			Result.put (empty_character_class_segment, 0)
-			Result.put (empty_character_class_segment, 1)
-			Result.put (empty_character_class_segment, 2)
-			Result.put (empty_character_class_segment, 3)
-			Result.put (empty_character_class_segment, 4)
-			Result.put (empty_character_class_segment, 5)
-			Result.put (empty_character_class_segment, 6)
-			Result.put (empty_character_class_segment, 7)
-			Result.put (empty_character_class_segment, 8)
-			Result.put (empty_character_class_segment, 9)
-			Result.put (empty_character_class_segment, 10)
-			Result.put (empty_character_class_segment, 11)
-			Result.put (empty_character_class_segment, 12)
-			Result.put (empty_character_class_segment, 13)
-			Result.put (empty_character_class_segment, 14)
-			Result.put (empty_character_class_segment, 15)
-			Result.put (empty_character_class_segment, 16)
-			Result.put (empty_character_class_segment, 17)
-			Result.put (empty_character_class_segment, 18)
-			Result.put (empty_character_class_segment, 19)
-			Result.put (empty_character_class_segment, 20)
-			Result.put (empty_character_class_segment, 21)
-			Result.put (empty_character_class_segment, 22)
-			Result.put (empty_character_class_segment, 23)
-			Result.put (empty_character_class_segment, 24)
-			Result.put (empty_character_class_segment, 25)
-			Result.put (empty_character_class_segment, 26)
-			Result.put (empty_character_class_segment, 27)
-			Result.put (empty_character_class_segment, 28)
-			Result.put (empty_character_class_segment, 29)
-			Result.put (empty_character_class_segment, 30)
-			Result.put (empty_character_class_segment, 31)
-			Result.put (empty_character_class_segment, 32)
-			Result.put (empty_character_class_segment, 33)
-			Result.put (empty_character_class_segment, 34)
-			Result.put (empty_character_class_segment, 35)
-			Result.put (empty_character_class_segment, 36)
-			Result.put (empty_character_class_segment, 37)
-			Result.put (empty_character_class_segment, 38)
-			Result.put (empty_character_class_segment, 39)
-			Result.put (empty_character_class_segment, 40)
-			Result.put (empty_character_class_segment, 41)
-			Result.put (empty_character_class_segment, 42)
-			Result.put (empty_character_class_segment, 43)
-			Result.put (empty_character_class_segment, 44)
-			Result.put (empty_character_class_segment, 45)
-			Result.put (empty_character_class_segment, 46)
-			Result.put (empty_character_class_segment, 47)
-			Result.put (empty_character_class_segment, 48)
-			Result.put (empty_character_class_segment, 49)
-			Result.put (empty_character_class_segment, 50)
-			Result.put (empty_character_class_segment, 51)
-			Result.put (empty_character_class_segment, 52)
-			Result.put (empty_character_class_segment, 53)
-			Result.put (empty_character_class_segment, 54)
-			Result.put (empty_character_class_segment, 55)
-			Result.put (empty_character_class_segment, 56)
-			Result.put (empty_character_class_segment, 57)
-			Result.put (empty_character_class_segment, 58)
-			Result.put (empty_character_class_segment, 59)
-			Result.put (empty_character_class_segment, 60)
-			Result.put (empty_character_class_segment, 61)
-			Result.put (empty_character_class_segment, 62)
-			Result.put (empty_character_class_segment, 63)
-			Result.put (empty_character_class_segment, 64)
-			Result.put (empty_character_class_segment, 65)
-			Result.put (empty_character_class_segment, 66)
-			Result.put (empty_character_class_segment, 67)
-			Result.put (empty_character_class_segment, 68)
-			Result.put (empty_character_class_segment, 69)
-			Result.put (empty_character_class_segment, 70)
-			Result.put (empty_character_class_segment, 71)
-			Result.put (empty_character_class_segment, 72)
-			Result.put (empty_character_class_segment, 73)
-			Result.put (empty_character_class_segment, 74)
-			Result.put (empty_character_class_segment, 75)
-			Result.put (empty_character_class_segment, 76)
-			Result.put (empty_character_class_segment, 77)
-			Result.put (empty_character_class_segment, 78)
-			Result.put (empty_character_class_segment, 79)
-			Result.put (empty_character_class_segment, 80)
-			Result.put (empty_character_class_segment, 81)
-			Result.put (empty_character_class_segment, 82)
-			Result.put (empty_character_class_segment, 83)
-			Result.put (empty_character_class_segment, 84)
-			Result.put (empty_character_class_segment, 85)
-			Result.put (empty_character_class_segment, 86)
-			Result.put (empty_character_class_segment, 87)
-			Result.put (empty_character_class_segment, 88)
-			Result.put (empty_character_class_segment, 89)
-			Result.put (empty_character_class_segment, 90)
-			Result.put (empty_character_class_segment, 91)
-			Result.put (empty_character_class_segment, 92)
-			Result.put (empty_character_class_segment, 93)
-			Result.put (empty_character_class_segment, 94)
-			Result.put (empty_character_class_segment, 95)
-			Result.put (empty_character_class_segment, 96)
-			Result.put (empty_character_class_segment, 97)
-			Result.put (empty_character_class_segment, 98)
-			Result.put (empty_character_class_segment, 99)
-			Result.put (empty_character_class_segment, 100)
-			Result.put (empty_character_class_segment, 101)
-			Result.put (empty_character_class_segment, 102)
-			Result.put (empty_character_class_segment, 103)
-			Result.put (empty_character_class_segment, 104)
-			Result.put (empty_character_class_segment, 105)
-			Result.put (empty_character_class_segment, 106)
-			Result.put (empty_character_class_segment, 107)
-			Result.put (empty_character_class_segment, 108)
-			Result.put (empty_character_class_segment, 109)
-			Result.put (empty_character_class_segment, 110)
-			Result.put (empty_character_class_segment, 111)
-			Result.put (empty_character_class_segment, 112)
-			Result.put (empty_character_class_segment, 113)
-			Result.put (empty_character_class_segment, 114)
-			Result.put (empty_character_class_segment, 115)
-			Result.put (empty_character_class_segment, 116)
-			Result.put (empty_character_class_segment, 117)
-			Result.put (empty_character_class_segment, 118)
-			Result.put (empty_character_class_segment, 119)
-			Result.put (empty_character_class_segment, 120)
-			Result.put (empty_character_class_segment, 121)
-			Result.put (empty_character_class_segment, 122)
-			Result.put (empty_character_class_segment, 123)
-			Result.put (empty_character_class_segment, 124)
-			Result.put (empty_character_class_segment, 125)
-			Result.put (empty_character_class_segment, 126)
-			Result.put (empty_character_class_segment, 127)
-			Result.put (empty_character_class_segment, 128)
-			Result.put (empty_character_class_segment, 129)
-			Result.put (empty_character_class_segment, 130)
-			Result.put (empty_character_class_segment, 131)
-			Result.put (empty_character_class_segment, 132)
-			Result.put (empty_character_class_segment, 133)
-			Result.put (empty_character_class_segment, 134)
-			Result.put (empty_character_class_segment, 135)
-			Result.put (empty_character_class_segment, 136)
-			Result.put (empty_character_class_segment, 137)
-			Result.put (empty_character_class_segment, 138)
-			Result.put (empty_character_class_segment, 139)
-			Result.put (empty_character_class_segment, 140)
-			Result.put (empty_character_class_segment, 141)
-			Result.put (empty_character_class_segment, 142)
-			Result.put (empty_character_class_segment, 143)
-			Result.put (empty_character_class_segment, 144)
-			Result.put (empty_character_class_segment, 145)
-			Result.put (empty_character_class_segment, 146)
-			Result.put (empty_character_class_segment, 147)
-			Result.put (empty_character_class_segment, 148)
-			Result.put (empty_character_class_segment, 149)
-			Result.put (empty_character_class_segment, 150)
-			Result.put (empty_character_class_segment, 151)
-			Result.put (empty_character_class_segment, 152)
-			Result.put (empty_character_class_segment, 153)
-			Result.put (empty_character_class_segment, 154)
-			Result.put (empty_character_class_segment, 155)
-			Result.put (empty_character_class_segment, 156)
-			Result.put (empty_character_class_segment, 157)
-			Result.put (empty_character_class_segment, 158)
-			Result.put (empty_character_class_segment, 159)
-			Result.put (empty_character_class_segment, 160)
-			Result.put (empty_character_class_segment, 161)
-			Result.put (empty_character_class_segment, 162)
-			Result.put (empty_character_class_segment, 163)
-			Result.put (empty_character_class_segment, 164)
-			Result.put (empty_character_class_segment, 165)
-			Result.put (empty_character_class_segment, 166)
-			Result.put (empty_character_class_segment, 167)
-			Result.put (empty_character_class_segment, 168)
-			Result.put (empty_character_class_segment, 169)
-			Result.put (empty_character_class_segment, 170)
-			Result.put (empty_character_class_segment, 171)
-			Result.put (empty_character_class_segment, 172)
-			Result.put (empty_character_class_segment, 173)
-			Result.put (empty_character_class_segment, 174)
-			Result.put (empty_character_class_segment, 175)
-			Result.put (empty_character_class_segment, 176)
-			Result.put (empty_character_class_segment, 177)
-			Result.put (empty_character_class_segment, 178)
-			Result.put (empty_character_class_segment, 179)
-			Result.put (empty_character_class_segment, 180)
-			Result.put (empty_character_class_segment, 181)
-			Result.put (empty_character_class_segment, 182)
-			Result.put (empty_character_class_segment, 183)
-			Result.put (empty_character_class_segment, 184)
-			Result.put (empty_character_class_segment, 185)
-			Result.put (empty_character_class_segment, 186)
-			Result.put (empty_character_class_segment, 187)
-			Result.put (empty_character_class_segment, 188)
-			Result.put (empty_character_class_segment, 189)
-			Result.put (empty_character_class_segment, 190)
-			Result.put (empty_character_class_segment, 191)
-			Result.put (empty_character_class_segment, 192)
-			Result.put (empty_character_class_segment, 193)
-			Result.put (empty_character_class_segment, 194)
-			Result.put (empty_character_class_segment, 195)
-			Result.put (empty_character_class_segment, 196)
-			Result.put (empty_character_class_segment, 197)
-			Result.put (empty_character_class_segment, 198)
-			Result.put (empty_character_class_segment, 199)
-			Result.put (empty_character_class_segment, 200)
-			Result.put (empty_character_class_segment, 201)
-			Result.put (empty_character_class_segment, 202)
-			Result.put (empty_character_class_segment, 203)
-			Result.put (empty_character_class_segment, 204)
-			Result.put (empty_character_class_segment, 205)
-			Result.put (empty_character_class_segment, 206)
-			Result.put (empty_character_class_segment, 207)
-			Result.put (empty_character_class_segment, 208)
-			Result.put (empty_character_class_segment, 209)
-			Result.put (empty_character_class_segment, 210)
-			Result.put (empty_character_class_segment, 211)
-			Result.put (empty_character_class_segment, 212)
-			Result.put (empty_character_class_segment, 213)
-			Result.put (empty_character_class_segment, 214)
-			Result.put (empty_character_class_segment, 215)
-			Result.put (empty_character_class_segment, 216)
-			Result.put (empty_character_class_segment, 217)
-			Result.put (empty_character_class_segment, 218)
-			Result.put (empty_character_class_segment, 219)
-			Result.put (empty_character_class_segment, 220)
-			Result.put (empty_character_class_segment, 221)
-			Result.put (empty_character_class_segment, 222)
-			Result.put (empty_character_class_segment, 223)
-			Result.put (empty_character_class_segment, 224)
-			Result.put (empty_character_class_segment, 225)
-			Result.put (empty_character_class_segment, 226)
-			Result.put (empty_character_class_segment, 227)
-			Result.put (empty_character_class_segment, 228)
-			Result.put (empty_character_class_segment, 229)
-			Result.put (empty_character_class_segment, 230)
-			Result.put (empty_character_class_segment, 231)
-			Result.put (empty_character_class_segment, 232)
-			Result.put (empty_character_class_segment, 233)
-			Result.put (empty_character_class_segment, 234)
-			Result.put (empty_character_class_segment, 235)
-			Result.put (empty_character_class_segment, 236)
-			Result.put (empty_character_class_segment, 237)
-			Result.put (empty_character_class_segment, 238)
-			Result.put (empty_character_class_segment, 239)
-			Result.put (empty_character_class_segment, 240)
-			Result.put (empty_character_class_segment, 241)
-			Result.put (empty_character_class_segment, 242)
-			Result.put (empty_character_class_segment, 243)
-			Result.put (empty_character_class_segment, 244)
-			Result.put (empty_character_class_segment, 245)
-			Result.put (empty_character_class_segment, 246)
-			Result.put (empty_character_class_segment, 247)
-			Result.put (empty_character_class_segment, 248)
-			Result.put (empty_character_class_segment, 249)
-			Result.put (empty_character_class_segment, 250)
-			Result.put (empty_character_class_segment, 251)
-			Result.put (empty_character_class_segment, 252)
-			Result.put (empty_character_class_segment, 253)
-			Result.put (empty_character_class_segment, 254)
-			Result.put (empty_character_class_segment, 255)
+			create Result.make_filled (empty_character_class_segment, 256)
 		ensure
 			result_not_void: Result /= Void
 			sub_arrays_not_void: True --not Result.has (Void)
@@ -4696,8 +4437,7 @@ feature {NONE} -- Implementation
 	character_class_plane_14: SPECIAL [ARRAY [INTEGER_8]]
 			-- Generated character class array plane
 		once
-			create Result.make_filled (Void, 256)
-			Result.put (character_class_plane_14_segment_0, 0)
+			create Result.make_filled (character_class_plane_14_segment_0, 256)
 			Result.put (character_class_plane_14_segment_1, 1)
 			Result.put (empty_character_class_segment, 2)
 			Result.put (empty_character_class_segment, 3)
@@ -7009,8 +6749,7 @@ feature {NONE} -- Implementation
 	character_class_plane_15: SPECIAL [ARRAY [INTEGER_8]]
 			-- Generated character class array plane
 		once
-			create Result.make_filled (Void, 256)
-			Result.put (character_class_plane_15_segment_0, 0)
+			create Result.make_filled (character_class_plane_15_segment_0, 256)
 			Result.put (character_class_plane_15_segment_1, 1)
 			Result.put (character_class_plane_15_segment_2, 2)
 			Result.put (character_class_plane_15_segment_3, 3)
@@ -9322,8 +9061,7 @@ feature {NONE} -- Implementation
 	character_class_plane_16: SPECIAL [ARRAY [INTEGER_8]]
 			-- Generated character class array plane
 		once
-			create Result.make_filled (Void, 256)
-			Result.put (character_class_plane_16_segment_0, 0)
+			create Result.make_filled (character_class_plane_16_segment_0, 256)
 			Result.put (character_class_plane_16_segment_1, 1)
 			Result.put (character_class_plane_16_segment_2, 2)
 			Result.put (character_class_plane_16_segment_3, 3)
@@ -9587,8 +9325,7 @@ feature {NONE} -- Implementation
 	character_classes: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]]
 			-- Character class for each code point
 		once
-			create Result.make_filled (Void, 17)
-			Result.put (character_class_plane_0, 0)
+			create Result.make_filled (character_class_plane_0, 17)
 			Result.put (character_class_plane_1, 1)
 			Result.put (character_class_plane_2, 2)
 			Result.put (empty_character_class_plane, 3)
@@ -9786,8 +9523,7 @@ feature {NONE} -- Implementation
 	decimal_value_plane_0: SPECIAL [ARRAY [INTEGER_8]]
 			-- Generated character class array plane
 		once
-			create Result.make_filled (Void, 256)
-			Result.put (decimal_value_plane_0_segment_0, 0)
+			create Result.make_filled (decimal_value_plane_0_segment_0, 256)
 			Result.put (empty_decimal_value_segment, 1)
 			Result.put (empty_decimal_value_segment, 2)
 			Result.put (empty_decimal_value_segment, 3)
@@ -10067,8 +9803,7 @@ feature {NONE} -- Implementation
 	decimal_value_plane_1: SPECIAL [ARRAY [INTEGER_8]]
 			-- Generated character class array plane
 		once
-			create Result.make_filled (Void, 256)
-			Result.put (empty_decimal_value_segment, 0)
+			create Result.make_filled (empty_decimal_value_segment, 256)
 			Result.put (empty_decimal_value_segment, 1)
 			Result.put (empty_decimal_value_segment, 2)
 			Result.put (empty_decimal_value_segment, 3)
@@ -10332,263 +10067,7 @@ feature {NONE} -- Implementation
 	empty_decimal_value_plane: SPECIAL [ARRAY [INTEGER_8]]
 			-- Generated character class array plane
 		once
-			create Result.make_filled (Void, 256)
-			Result.put (empty_decimal_value_segment, 0)
-			Result.put (empty_decimal_value_segment, 1)
-			Result.put (empty_decimal_value_segment, 2)
-			Result.put (empty_decimal_value_segment, 3)
-			Result.put (empty_decimal_value_segment, 4)
-			Result.put (empty_decimal_value_segment, 5)
-			Result.put (empty_decimal_value_segment, 6)
-			Result.put (empty_decimal_value_segment, 7)
-			Result.put (empty_decimal_value_segment, 8)
-			Result.put (empty_decimal_value_segment, 9)
-			Result.put (empty_decimal_value_segment, 10)
-			Result.put (empty_decimal_value_segment, 11)
-			Result.put (empty_decimal_value_segment, 12)
-			Result.put (empty_decimal_value_segment, 13)
-			Result.put (empty_decimal_value_segment, 14)
-			Result.put (empty_decimal_value_segment, 15)
-			Result.put (empty_decimal_value_segment, 16)
-			Result.put (empty_decimal_value_segment, 17)
-			Result.put (empty_decimal_value_segment, 18)
-			Result.put (empty_decimal_value_segment, 19)
-			Result.put (empty_decimal_value_segment, 20)
-			Result.put (empty_decimal_value_segment, 21)
-			Result.put (empty_decimal_value_segment, 22)
-			Result.put (empty_decimal_value_segment, 23)
-			Result.put (empty_decimal_value_segment, 24)
-			Result.put (empty_decimal_value_segment, 25)
-			Result.put (empty_decimal_value_segment, 26)
-			Result.put (empty_decimal_value_segment, 27)
-			Result.put (empty_decimal_value_segment, 28)
-			Result.put (empty_decimal_value_segment, 29)
-			Result.put (empty_decimal_value_segment, 30)
-			Result.put (empty_decimal_value_segment, 31)
-			Result.put (empty_decimal_value_segment, 32)
-			Result.put (empty_decimal_value_segment, 33)
-			Result.put (empty_decimal_value_segment, 34)
-			Result.put (empty_decimal_value_segment, 35)
-			Result.put (empty_decimal_value_segment, 36)
-			Result.put (empty_decimal_value_segment, 37)
-			Result.put (empty_decimal_value_segment, 38)
-			Result.put (empty_decimal_value_segment, 39)
-			Result.put (empty_decimal_value_segment, 40)
-			Result.put (empty_decimal_value_segment, 41)
-			Result.put (empty_decimal_value_segment, 42)
-			Result.put (empty_decimal_value_segment, 43)
-			Result.put (empty_decimal_value_segment, 44)
-			Result.put (empty_decimal_value_segment, 45)
-			Result.put (empty_decimal_value_segment, 46)
-			Result.put (empty_decimal_value_segment, 47)
-			Result.put (empty_decimal_value_segment, 48)
-			Result.put (empty_decimal_value_segment, 49)
-			Result.put (empty_decimal_value_segment, 50)
-			Result.put (empty_decimal_value_segment, 51)
-			Result.put (empty_decimal_value_segment, 52)
-			Result.put (empty_decimal_value_segment, 53)
-			Result.put (empty_decimal_value_segment, 54)
-			Result.put (empty_decimal_value_segment, 55)
-			Result.put (empty_decimal_value_segment, 56)
-			Result.put (empty_decimal_value_segment, 57)
-			Result.put (empty_decimal_value_segment, 58)
-			Result.put (empty_decimal_value_segment, 59)
-			Result.put (empty_decimal_value_segment, 60)
-			Result.put (empty_decimal_value_segment, 61)
-			Result.put (empty_decimal_value_segment, 62)
-			Result.put (empty_decimal_value_segment, 63)
-			Result.put (empty_decimal_value_segment, 64)
-			Result.put (empty_decimal_value_segment, 65)
-			Result.put (empty_decimal_value_segment, 66)
-			Result.put (empty_decimal_value_segment, 67)
-			Result.put (empty_decimal_value_segment, 68)
-			Result.put (empty_decimal_value_segment, 69)
-			Result.put (empty_decimal_value_segment, 70)
-			Result.put (empty_decimal_value_segment, 71)
-			Result.put (empty_decimal_value_segment, 72)
-			Result.put (empty_decimal_value_segment, 73)
-			Result.put (empty_decimal_value_segment, 74)
-			Result.put (empty_decimal_value_segment, 75)
-			Result.put (empty_decimal_value_segment, 76)
-			Result.put (empty_decimal_value_segment, 77)
-			Result.put (empty_decimal_value_segment, 78)
-			Result.put (empty_decimal_value_segment, 79)
-			Result.put (empty_decimal_value_segment, 80)
-			Result.put (empty_decimal_value_segment, 81)
-			Result.put (empty_decimal_value_segment, 82)
-			Result.put (empty_decimal_value_segment, 83)
-			Result.put (empty_decimal_value_segment, 84)
-			Result.put (empty_decimal_value_segment, 85)
-			Result.put (empty_decimal_value_segment, 86)
-			Result.put (empty_decimal_value_segment, 87)
-			Result.put (empty_decimal_value_segment, 88)
-			Result.put (empty_decimal_value_segment, 89)
-			Result.put (empty_decimal_value_segment, 90)
-			Result.put (empty_decimal_value_segment, 91)
-			Result.put (empty_decimal_value_segment, 92)
-			Result.put (empty_decimal_value_segment, 93)
-			Result.put (empty_decimal_value_segment, 94)
-			Result.put (empty_decimal_value_segment, 95)
-			Result.put (empty_decimal_value_segment, 96)
-			Result.put (empty_decimal_value_segment, 97)
-			Result.put (empty_decimal_value_segment, 98)
-			Result.put (empty_decimal_value_segment, 99)
-			Result.put (empty_decimal_value_segment, 100)
-			Result.put (empty_decimal_value_segment, 101)
-			Result.put (empty_decimal_value_segment, 102)
-			Result.put (empty_decimal_value_segment, 103)
-			Result.put (empty_decimal_value_segment, 104)
-			Result.put (empty_decimal_value_segment, 105)
-			Result.put (empty_decimal_value_segment, 106)
-			Result.put (empty_decimal_value_segment, 107)
-			Result.put (empty_decimal_value_segment, 108)
-			Result.put (empty_decimal_value_segment, 109)
-			Result.put (empty_decimal_value_segment, 110)
-			Result.put (empty_decimal_value_segment, 111)
-			Result.put (empty_decimal_value_segment, 112)
-			Result.put (empty_decimal_value_segment, 113)
-			Result.put (empty_decimal_value_segment, 114)
-			Result.put (empty_decimal_value_segment, 115)
-			Result.put (empty_decimal_value_segment, 116)
-			Result.put (empty_decimal_value_segment, 117)
-			Result.put (empty_decimal_value_segment, 118)
-			Result.put (empty_decimal_value_segment, 119)
-			Result.put (empty_decimal_value_segment, 120)
-			Result.put (empty_decimal_value_segment, 121)
-			Result.put (empty_decimal_value_segment, 122)
-			Result.put (empty_decimal_value_segment, 123)
-			Result.put (empty_decimal_value_segment, 124)
-			Result.put (empty_decimal_value_segment, 125)
-			Result.put (empty_decimal_value_segment, 126)
-			Result.put (empty_decimal_value_segment, 127)
-			Result.put (empty_decimal_value_segment, 128)
-			Result.put (empty_decimal_value_segment, 129)
-			Result.put (empty_decimal_value_segment, 130)
-			Result.put (empty_decimal_value_segment, 131)
-			Result.put (empty_decimal_value_segment, 132)
-			Result.put (empty_decimal_value_segment, 133)
-			Result.put (empty_decimal_value_segment, 134)
-			Result.put (empty_decimal_value_segment, 135)
-			Result.put (empty_decimal_value_segment, 136)
-			Result.put (empty_decimal_value_segment, 137)
-			Result.put (empty_decimal_value_segment, 138)
-			Result.put (empty_decimal_value_segment, 139)
-			Result.put (empty_decimal_value_segment, 140)
-			Result.put (empty_decimal_value_segment, 141)
-			Result.put (empty_decimal_value_segment, 142)
-			Result.put (empty_decimal_value_segment, 143)
-			Result.put (empty_decimal_value_segment, 144)
-			Result.put (empty_decimal_value_segment, 145)
-			Result.put (empty_decimal_value_segment, 146)
-			Result.put (empty_decimal_value_segment, 147)
-			Result.put (empty_decimal_value_segment, 148)
-			Result.put (empty_decimal_value_segment, 149)
-			Result.put (empty_decimal_value_segment, 150)
-			Result.put (empty_decimal_value_segment, 151)
-			Result.put (empty_decimal_value_segment, 152)
-			Result.put (empty_decimal_value_segment, 153)
-			Result.put (empty_decimal_value_segment, 154)
-			Result.put (empty_decimal_value_segment, 155)
-			Result.put (empty_decimal_value_segment, 156)
-			Result.put (empty_decimal_value_segment, 157)
-			Result.put (empty_decimal_value_segment, 158)
-			Result.put (empty_decimal_value_segment, 159)
-			Result.put (empty_decimal_value_segment, 160)
-			Result.put (empty_decimal_value_segment, 161)
-			Result.put (empty_decimal_value_segment, 162)
-			Result.put (empty_decimal_value_segment, 163)
-			Result.put (empty_decimal_value_segment, 164)
-			Result.put (empty_decimal_value_segment, 165)
-			Result.put (empty_decimal_value_segment, 166)
-			Result.put (empty_decimal_value_segment, 167)
-			Result.put (empty_decimal_value_segment, 168)
-			Result.put (empty_decimal_value_segment, 169)
-			Result.put (empty_decimal_value_segment, 170)
-			Result.put (empty_decimal_value_segment, 171)
-			Result.put (empty_decimal_value_segment, 172)
-			Result.put (empty_decimal_value_segment, 173)
-			Result.put (empty_decimal_value_segment, 174)
-			Result.put (empty_decimal_value_segment, 175)
-			Result.put (empty_decimal_value_segment, 176)
-			Result.put (empty_decimal_value_segment, 177)
-			Result.put (empty_decimal_value_segment, 178)
-			Result.put (empty_decimal_value_segment, 179)
-			Result.put (empty_decimal_value_segment, 180)
-			Result.put (empty_decimal_value_segment, 181)
-			Result.put (empty_decimal_value_segment, 182)
-			Result.put (empty_decimal_value_segment, 183)
-			Result.put (empty_decimal_value_segment, 184)
-			Result.put (empty_decimal_value_segment, 185)
-			Result.put (empty_decimal_value_segment, 186)
-			Result.put (empty_decimal_value_segment, 187)
-			Result.put (empty_decimal_value_segment, 188)
-			Result.put (empty_decimal_value_segment, 189)
-			Result.put (empty_decimal_value_segment, 190)
-			Result.put (empty_decimal_value_segment, 191)
-			Result.put (empty_decimal_value_segment, 192)
-			Result.put (empty_decimal_value_segment, 193)
-			Result.put (empty_decimal_value_segment, 194)
-			Result.put (empty_decimal_value_segment, 195)
-			Result.put (empty_decimal_value_segment, 196)
-			Result.put (empty_decimal_value_segment, 197)
-			Result.put (empty_decimal_value_segment, 198)
-			Result.put (empty_decimal_value_segment, 199)
-			Result.put (empty_decimal_value_segment, 200)
-			Result.put (empty_decimal_value_segment, 201)
-			Result.put (empty_decimal_value_segment, 202)
-			Result.put (empty_decimal_value_segment, 203)
-			Result.put (empty_decimal_value_segment, 204)
-			Result.put (empty_decimal_value_segment, 205)
-			Result.put (empty_decimal_value_segment, 206)
-			Result.put (empty_decimal_value_segment, 207)
-			Result.put (empty_decimal_value_segment, 208)
-			Result.put (empty_decimal_value_segment, 209)
-			Result.put (empty_decimal_value_segment, 210)
-			Result.put (empty_decimal_value_segment, 211)
-			Result.put (empty_decimal_value_segment, 212)
-			Result.put (empty_decimal_value_segment, 213)
-			Result.put (empty_decimal_value_segment, 214)
-			Result.put (empty_decimal_value_segment, 215)
-			Result.put (empty_decimal_value_segment, 216)
-			Result.put (empty_decimal_value_segment, 217)
-			Result.put (empty_decimal_value_segment, 218)
-			Result.put (empty_decimal_value_segment, 219)
-			Result.put (empty_decimal_value_segment, 220)
-			Result.put (empty_decimal_value_segment, 221)
-			Result.put (empty_decimal_value_segment, 222)
-			Result.put (empty_decimal_value_segment, 223)
-			Result.put (empty_decimal_value_segment, 224)
-			Result.put (empty_decimal_value_segment, 225)
-			Result.put (empty_decimal_value_segment, 226)
-			Result.put (empty_decimal_value_segment, 227)
-			Result.put (empty_decimal_value_segment, 228)
-			Result.put (empty_decimal_value_segment, 229)
-			Result.put (empty_decimal_value_segment, 230)
-			Result.put (empty_decimal_value_segment, 231)
-			Result.put (empty_decimal_value_segment, 232)
-			Result.put (empty_decimal_value_segment, 233)
-			Result.put (empty_decimal_value_segment, 234)
-			Result.put (empty_decimal_value_segment, 235)
-			Result.put (empty_decimal_value_segment, 236)
-			Result.put (empty_decimal_value_segment, 237)
-			Result.put (empty_decimal_value_segment, 238)
-			Result.put (empty_decimal_value_segment, 239)
-			Result.put (empty_decimal_value_segment, 240)
-			Result.put (empty_decimal_value_segment, 241)
-			Result.put (empty_decimal_value_segment, 242)
-			Result.put (empty_decimal_value_segment, 243)
-			Result.put (empty_decimal_value_segment, 244)
-			Result.put (empty_decimal_value_segment, 245)
-			Result.put (empty_decimal_value_segment, 246)
-			Result.put (empty_decimal_value_segment, 247)
-			Result.put (empty_decimal_value_segment, 248)
-			Result.put (empty_decimal_value_segment, 249)
-			Result.put (empty_decimal_value_segment, 250)
-			Result.put (empty_decimal_value_segment, 251)
-			Result.put (empty_decimal_value_segment, 252)
-			Result.put (empty_decimal_value_segment, 253)
-			Result.put (empty_decimal_value_segment, 254)
-			Result.put (empty_decimal_value_segment, 255)
+			create Result.make_filled (empty_decimal_value_segment, 256)
 		ensure
 			result_not_void: Result /= Void
 			sub_arrays_not_void: True --not Result.has (Void)
@@ -10597,8 +10076,7 @@ feature {NONE} -- Implementation
 	decimal_values: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]]
 			-- Decimal value for each code point
 		once
-			create Result.make_filled (Void, 17)
-			Result.put (decimal_value_plane_0, 0)
+			create Result.make_filled (decimal_value_plane_0, 17)
 			Result.put (decimal_value_plane_1, 1)
 			Result.put (empty_decimal_value_plane, 2)
 			Result.put (empty_decimal_value_plane, 3)
@@ -11180,8 +10658,7 @@ feature {NONE} -- Implementation
 	upper_case_property_plane_0: SPECIAL [ARRAY [BOOLEAN]]
 			-- Generated array plane
 		once
-			create Result.make_filled (Void, 256)
-			Result.put (upper_case_property_plane_0_segment_0, 0)
+			create Result.make_filled (upper_case_property_plane_0_segment_0, 256)
 			Result.put (upper_case_property_plane_0_segment_1, 1)
 			Result.put (upper_case_property_plane_0_segment_2, 2)
 			Result.put (upper_case_property_plane_0_segment_3, 3)
@@ -11620,8 +11097,7 @@ feature {NONE} -- Implementation
 	upper_case_property_plane_1: SPECIAL [ARRAY [BOOLEAN]]
 			-- Generated array plane
 		once
-			create Result.make_filled (Void, 256)
-			Result.put (all_false_upper_case_property_segment, 0)
+			create Result.make_filled (all_false_upper_case_property_segment, 256)
 			Result.put (all_false_upper_case_property_segment, 1)
 			Result.put (all_false_upper_case_property_segment, 2)
 			Result.put (all_false_upper_case_property_segment, 3)
@@ -11884,18 +11360,8 @@ feature {NONE} -- Implementation
 
 	all_false_upper_case_property_plane: SPECIAL [ARRAY [BOOLEAN]]
 			-- Generated array plane
-		local
-			i: INTEGER
 		once
-			create Result.make_filled (Void, 256)
-			from
-				i := 0
-			until
-				i > 255
-			loop
-				Result.put (create {ARRAY [BOOLEAN]}.make_filled (False, 1, 256), i)
-				i := i + 1
-			end
+			create Result.make_filled (create {ARRAY [BOOLEAN]}.make_filled (False, 1, 256), 256)
 		ensure
 			result_not_void: Result /= Void
 			sub_arrays_not_void: True --not Result.has (Void)
@@ -11904,8 +11370,7 @@ feature {NONE} -- Implementation
 	upper_case_properties: SPECIAL [SPECIAL [ARRAY [BOOLEAN]]]
 			-- Uppercase property for each code point
 		once
-			create Result.make_filled (Void, 17)
-			Result.put (upper_case_property_plane_0, 0)
+			create Result.make_filled (upper_case_property_plane_0, 17)
 			Result.put (upper_case_property_plane_1, 1)
 			Result.put (all_false_upper_case_property_plane, 2)
 			Result.put (all_false_upper_case_property_plane, 3)
@@ -12592,8 +12057,7 @@ feature {NONE} -- Implementation
 	lower_case_property_plane_0: SPECIAL [ARRAY [BOOLEAN]]
 			-- Generated array plane
 		once
-			create Result.make_filled (Void, 256)
-			Result.put (lower_case_property_plane_0_segment_0, 0)
+			create Result.make_filled (lower_case_property_plane_0_segment_0, 256)
 			Result.put (lower_case_property_plane_0_segment_1, 1)
 			Result.put (lower_case_property_plane_0_segment_2, 2)
 			Result.put (lower_case_property_plane_0_segment_3, 3)
@@ -13032,8 +12496,7 @@ feature {NONE} -- Implementation
 	lower_case_property_plane_1: SPECIAL [ARRAY [BOOLEAN]]
 			-- Generated array plane
 		once
-			create Result.make_filled (Void, 256)
-			Result.put (all_false_lower_case_property_segment, 0)
+			create Result.make_filled (all_false_lower_case_property_segment, 256)
 			Result.put (all_false_lower_case_property_segment, 1)
 			Result.put (all_false_lower_case_property_segment, 2)
 			Result.put (all_false_lower_case_property_segment, 3)
@@ -13296,18 +12759,8 @@ feature {NONE} -- Implementation
 
 	all_false_lower_case_property_plane: SPECIAL [ARRAY [BOOLEAN]]
 			-- Generated array plane
-		local
-			i: INTEGER
 		once
-			create Result.make_filled (Void, 256)
-			from
-				i := 0
-			until
-				i > 255
-			loop
-				Result.put (create {ARRAY [BOOLEAN]}.make_filled (False, 1, 256), i)
-				i := i + 1
-			end
+			create Result.make_filled (create {ARRAY [BOOLEAN]}.make_filled (False, 1, 256), 256)
 		ensure
 			result_not_void: Result /= Void
 			sub_arrays_not_void: True --not Result.has (Void)
@@ -13316,8 +12769,7 @@ feature {NONE} -- Implementation
 	lower_case_properties: SPECIAL [SPECIAL [ARRAY [BOOLEAN]]]
 			-- Lowercase property for each code point
 		once
-			create Result.make_filled (Void, 17)
-			Result.put (lower_case_property_plane_0, 0)
+			create Result.make_filled (lower_case_property_plane_0, 17)
 			Result.put (lower_case_property_plane_1, 1)
 			Result.put (all_false_lower_case_property_plane, 2)
 			Result.put (all_false_lower_case_property_plane, 3)
@@ -15159,8 +14611,7 @@ feature {NONE} -- Implementation
 	alphabetic_property_plane_0: SPECIAL [ARRAY [BOOLEAN]]
 			-- Generated array plane
 		once
-			create Result.make_filled (Void, 256)
-			Result.put (alphabetic_property_plane_0_segment_0, 0)
+			create Result.make_filled (alphabetic_property_plane_0_segment_0, 256)
 			Result.put (all_true_alphabetic_property_segment, 1)
 			Result.put (alphabetic_property_plane_0_segment_2, 2)
 			Result.put (alphabetic_property_plane_0_segment_3, 3)
@@ -15914,8 +15365,7 @@ feature {NONE} -- Implementation
 	alphabetic_property_plane_1: SPECIAL [ARRAY [BOOLEAN]]
 			-- Generated array plane
 		once
-			create Result.make_filled (Void, 256)
-			Result.put (alphabetic_property_plane_1_segment_0, 0)
+			create Result.make_filled (alphabetic_property_plane_1_segment_0, 256)
 			Result.put (alphabetic_property_plane_1_segment_1, 1)
 			Result.put (alphabetic_property_plane_1_segment_2, 2)
 			Result.put (alphabetic_property_plane_1_segment_3, 3)
@@ -16249,8 +15699,7 @@ feature {NONE} -- Implementation
 	alphabetic_property_plane_2: SPECIAL [ARRAY [BOOLEAN]]
 			-- Generated array plane
 		once
-			create Result.make_filled (Void, 256)
-			Result.put (all_true_alphabetic_property_segment, 0)
+			create Result.make_filled (all_true_alphabetic_property_segment, 256)
 			Result.put (all_true_alphabetic_property_segment, 1)
 			Result.put (all_true_alphabetic_property_segment, 2)
 			Result.put (all_true_alphabetic_property_segment, 3)
@@ -16513,18 +15962,8 @@ feature {NONE} -- Implementation
 
 	all_false_alphabetic_property_plane: SPECIAL [ARRAY [BOOLEAN]]
 			-- Generated array plane
-		local
-			i: INTEGER
 		once
-			create Result.make_filled (Void, 256)
-			from
-				i := 0
-			until
-				i > 255
-			loop
-				Result.put (create {ARRAY [BOOLEAN]}.make_filled (False, 1, 256), i)
-				i := i + 1
-			end
+			create Result.make_filled (create {ARRAY [BOOLEAN]}.make_filled (False, 1, 256), 256)
 		ensure
 			result_not_void: Result /= Void
 			sub_arrays_not_void: True --not Result.has (Void)
@@ -16533,8 +15972,7 @@ feature {NONE} -- Implementation
 	alphabetic_properties: SPECIAL [SPECIAL [ARRAY [BOOLEAN]]]
 			-- Alphabetic property for each code point
 		once
-			create Result.make_filled (Void, 17)
-			Result.put (alphabetic_property_plane_0, 0)
+			create Result.make_filled (alphabetic_property_plane_0, 17)
 			Result.put (alphabetic_property_plane_1, 1)
 			Result.put (alphabetic_property_plane_2, 2)
 			Result.put (all_false_alphabetic_property_plane, 3)
@@ -17081,8 +16519,7 @@ feature {NONE} -- Implementation
 	math_property_plane_0: SPECIAL [ARRAY [BOOLEAN]]
 			-- Generated array plane
 		once
-			create Result.make_filled (Void, 256)
-			Result.put (math_property_plane_0_segment_0, 0)
+			create Result.make_filled (math_property_plane_0_segment_0, 256)
 			Result.put (all_false_math_property_segment, 1)
 			Result.put (all_false_math_property_segment, 2)
 			Result.put (math_property_plane_0_segment_3, 3)
@@ -17486,8 +16923,7 @@ feature {NONE} -- Implementation
 	math_property_plane_1: SPECIAL [ARRAY [BOOLEAN]]
 			-- Generated array plane
 		once
-			create Result.make_filled (Void, 256)
-			Result.put (all_false_math_property_segment, 0)
+			create Result.make_filled (all_false_math_property_segment, 256)
 			Result.put (all_false_math_property_segment, 1)
 			Result.put (all_false_math_property_segment, 2)
 			Result.put (all_false_math_property_segment, 3)
@@ -17750,18 +17186,8 @@ feature {NONE} -- Implementation
 
 	all_false_math_property_plane: SPECIAL [ARRAY [BOOLEAN]]
 			-- Generated array plane
-		local
-			i: INTEGER
 		once
-			create Result.make_filled (Void, 256)
-			from
-				i := 0
-			until
-				i > 255
-			loop
-				Result.put (create {ARRAY [BOOLEAN]}.make_filled (False, 1, 256), i)
-				i := i + 1
-			end
+			create Result.make_filled (create {ARRAY [BOOLEAN]}.make_filled (False, 1, 256), 256)
 		ensure
 			result_not_void: Result /= Void
 			sub_arrays_not_void: True --not Result.has (Void)
@@ -17770,8 +17196,7 @@ feature {NONE} -- Implementation
 	math_properties: SPECIAL [SPECIAL [ARRAY [BOOLEAN]]]
 			-- Math property for each code point
 		once
-			create Result.make_filled (Void, 17)
-			Result.put (math_property_plane_0, 0)
+			create Result.make_filled (math_property_plane_0, 17)
 			Result.put (math_property_plane_1, 1)
 			Result.put (all_false_math_property_plane, 2)
 			Result.put (all_false_math_property_plane, 3)

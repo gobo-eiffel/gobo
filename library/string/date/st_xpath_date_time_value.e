@@ -5,7 +5,7 @@ note
 		"Date-time values consistent with XPath 2.0"
 
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2007, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2013, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -100,15 +100,17 @@ feature -- Access
 				check
 						-- condition `zoned'
 					zoned: l_zoned_date_time /= Void
+				then
+					l_date := l_zoned_date_time.zoned_date.date
 				end
-				l_date := l_zoned_date_time.zoned_date.date
 			else
 				l_local_date_time := local_date_time
 				check
 						-- condition by `not zoned'
 					not_zoned: l_local_date_time /= Void
+				then
+					l_date := l_local_date_time.date
 				end
-				l_date := l_local_date_time.date
 			end
 			Result := l_date
 		ensure
@@ -127,15 +129,17 @@ feature -- Access
 				check
 						-- condition `zoned'
 					zoned: l_zoned_date_time /= Void
+				then
+					l_time := l_zoned_date_time.zoned_time.time
 				end
-				l_time := l_zoned_date_time.zoned_time.time
 			else
 				l_local_date_time := local_date_time
 				check
 						-- condition `not zoned'
 					not_zoned: l_local_date_time /= Void
+				then
+					l_time := l_local_date_time.time
 				end
-				l_time := l_local_date_time.time
 			end
 			Result := l_time
 		ensure

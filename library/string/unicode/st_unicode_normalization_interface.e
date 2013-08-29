@@ -9,7 +9,7 @@ note
 		need a few modifications to account of surrogates.
 	]"
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2005-2012, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2013, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -299,7 +299,7 @@ feature -- Property
 			property_small_enough: Result <= Compatibility_decomposition_mapping
 		end
 
-	decomposition_mapping_property (a_code: INTEGER): DS_ARRAYED_LIST [INTEGER]
+	decomposition_mapping_property (a_code: INTEGER): detachable DS_ARRAYED_LIST [INTEGER]
 			-- Decomposition_Mapping property for `a_code'
 		require
 			valid_code: valid_code (a_code)
@@ -496,7 +496,7 @@ feature {NONE} -- Implementation
 			valid_code: valid_code (a_code)
 		local
 			i, j, k, a_rem, x, len: INTEGER
-			a_mapping: DS_ARRAYED_LIST [INTEGER]
+			a_mapping: detachable DS_ARRAYED_LIST [INTEGER]
 		do
 			i := a_code // (65536)
 			a_rem := a_code \\ (65536)
@@ -672,7 +672,7 @@ feature {NONE} -- Implementation
 --			no_void_decomposition_type_property: not Result.has (Void)
 		end
 
-	decomposition_mapping_properties: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]]
+	decomposition_mapping_properties: SPECIAL [SPECIAL [ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]]]
 			-- Decomposition mapping property for each code point
 		deferred
 		ensure

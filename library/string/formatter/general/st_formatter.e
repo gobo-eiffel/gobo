@@ -6,7 +6,7 @@ note
 		%as input and return the formatted output."
 
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2004-2012, Object-Tools and others"
+	copyright: "Copyright (c) 2004-2013, Object-Tools and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -326,16 +326,17 @@ feature {NONE} -- Formatting
 											-- items in `a_parameters', and therefore that
 											-- `a_parameters' is not Void.
 										a_parameters_not_void: a_parameters /= Void
-									end
-									a_parameter := a_parameters.item (j)
-									if attached {DS_CELL [INTEGER]} a_parameter as an_integer_parameter then
-										a_width := an_integer_parameter.item
-										if a_width < 0 then
-											set_error ("Width parameter must not be negative")
-											a_width := 0
+									then
+										a_parameter := a_parameters.item (j)
+										if attached {DS_CELL [INTEGER]} a_parameter as an_integer_parameter then
+											a_width := an_integer_parameter.item
+											if a_width < 0 then
+												set_error ("Width parameter must not be negative")
+												a_width := 0
+											end
+										else
+											set_error ("Width parameter must be a cell of INTEGER")
 										end
-									else
-										set_error ("Width parameter must be a cell of INTEGER")
 									end
 									j := j + 1
 								end
@@ -401,16 +402,17 @@ feature {NONE} -- Formatting
 												-- items in `a_parameters', and therefore that
 												-- `a_parameters' is not Void.
 											a_parameters_not_void: a_parameters /= Void
-										end
-										a_parameter := a_parameters.item (j)
-										if attached {DS_CELL [INTEGER]} a_parameter as an_integer_parameter then
-											a_precision := an_integer_parameter.item
-											if a_precision < 0 then
-												set_error ("Precision parameter must not be negative")
-												a_precision := 0
+										then
+											a_parameter := a_parameters.item (j)
+											if attached {DS_CELL [INTEGER]} a_parameter as an_integer_parameter then
+												a_precision := an_integer_parameter.item
+												if a_precision < 0 then
+													set_error ("Precision parameter must not be negative")
+													a_precision := 0
+												end
+											else
+												set_error ("Precision parameter must be a cell of INTEGER")
 											end
-										else
-											set_error ("Precision parameter must be a cell of INTEGER")
 										end
 										j := j + 1
 									end
@@ -465,14 +467,15 @@ feature {NONE} -- Formatting
 											-- items in `a_parameters', and therefore that
 											-- `a_parameters' is not Void.
 										a_parameters_not_void: a_parameters /= Void
-									end
-									a_parameter := a_parameters.item (j)
-									if a_parameter = Void then
-										set_error ("Invalid parameter Void for format specification " + escape_character.out + a_typechar.out)
-									elseif a_formatter.valid_parameter (a_parameter) then
-										a_formatter.format_to (a_parameter, a_stream)
-									else
-										set_error ("Invalid parameter " + a_parameter.out + " for format specification " + escape_character.out + a_typechar.out)
+									then
+										a_parameter := a_parameters.item (j)
+										if a_parameter = Void then
+											set_error ("Invalid parameter Void for format specification " + escape_character.out + a_typechar.out)
+										elseif a_formatter.valid_parameter (a_parameter) then
+											a_formatter.format_to (a_parameter, a_stream)
+										else
+											set_error ("Invalid parameter " + a_parameter.out + " for format specification " + escape_character.out + a_typechar.out)
+										end
 									end
 									j := j + 1
 								end

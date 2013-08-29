@@ -8,7 +8,7 @@ note
 	]"
 
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2008, Colin Adams and others"
+	copyright: "Copyright (c) 2008-2013, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -61,8 +61,9 @@ feature -- Access
 			check
 					-- postcondition of `format_date_time' ensures l_result_cell.item is not Void
 				result_cell_item_not_void: l_result /= Void
+			then
+				Result := l_result
 			end
-			Result := l_result
 		ensure
 			xslt_formatted_date_not_void: Result /= Void
 		end
@@ -111,8 +112,9 @@ feature -- Access
 			check
 					-- postcondition of `format_date_time' ensures l_result_cell.item is not Void
 				result_cell_item_not_void: l_result /= Void
+			then
+				Result := l_result
 			end
-			Result := l_result
 		ensure
 			xslt_formatted_time_not_void: Result /= Void
 		end
@@ -162,8 +164,9 @@ feature -- Access
 			check
 					-- postcondition of `format_date_time' ensures l_result_cell.item is not Void
 				result_cell_item_not_void: l_result /= Void
+			then
+				Result := l_result
 			end
-			Result := l_result
 		ensure
 			xslt_formatted_date_time_not_void: Result /= Void
 		end

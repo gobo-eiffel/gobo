@@ -7,7 +7,7 @@ note
 	generator: "geuc"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2013, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -608,7 +608,6 @@ feature {NONE} -- Implementation
 			-- Generated array plane
 		once
 			create Result.make_filled (lower_code_plane_0_segment_0, 256)
-			Result.put (lower_code_plane_0_segment_0, 0)
 			Result.put (lower_code_plane_0_segment_1, 1)
 			Result.put (lower_code_plane_0_segment_2, 2)
 			Result.put (lower_code_plane_0_segment_3, 3)
@@ -908,7 +907,6 @@ feature {NONE} -- Implementation
 			-- Generated array plane
 		once
 			create Result.make_filled (empty_lower_code_segment, 256)
-			Result.put (empty_lower_code_segment, 0)
 			Result.put (empty_lower_code_segment, 1)
 			Result.put (empty_lower_code_segment, 2)
 			Result.put (empty_lower_code_segment, 3)
@@ -1182,7 +1180,6 @@ feature {NONE} -- Implementation
 			-- Lower case code points for each code point
 		once
 			create Result.make_filled (lower_code_plane_0, 17)
-			Result.put (lower_code_plane_0, 0)
 			Result.put (lower_code_plane_1, 1)
 			Result.put (empty_lower_code_plane, 2)
 			Result.put (empty_lower_code_plane, 3)

@@ -4,7 +4,7 @@ note
 
 		"Full Unicode case mappings"
 
-	copyright: "Copyright (c) 2007, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2013, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,7 +26,7 @@ feature -- Access
 			a_string_not_void: a_string /= Void
 		local
 			i, l_count, l_code: INTEGER
-			l_codes: DS_ARRAYED_LIST [INTEGER]
+			l_codes: detachable DS_ARRAYED_LIST [INTEGER]
 		do
 			from
 				i := 1
@@ -60,7 +60,7 @@ feature -- Access
 			a_string_not_void: a_string /= Void
 		local
 			i, l_count, l_code: INTEGER
-			l_codes: DS_ARRAYED_LIST [INTEGER]
+			l_codes: detachable DS_ARRAYED_LIST [INTEGER]
 		do
 			from
 				i := 1
@@ -92,7 +92,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	lower_codes (a_code: INTEGER): DS_ARRAYED_LIST [INTEGER]
+	lower_codes (a_code: INTEGER): detachable DS_ARRAYED_LIST [INTEGER]
 			-- Code points of full lower case mapping of `a_code' as a Unicode code point
 		require
 			a_code_large_enough: a_code >= minimum_unicode_character_code
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 			non_empty: Result /= Void implies not Result.is_empty
 		end
 
-	upper_codes (a_code: INTEGER): DS_ARRAYED_LIST [INTEGER]
+	upper_codes (a_code: INTEGER): detachable DS_ARRAYED_LIST [INTEGER]
 			-- Code points of full upper case mapping of `a_code' as a Unicode code point
 		require
 			a_code_large_enough: a_code >= minimum_unicode_character_code
@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 			non_empty: Result /= Void implies not Result.is_empty
 		end
 
-	title_codes (a_code: INTEGER): DS_ARRAYED_LIST [INTEGER]
+	title_codes (a_code: INTEGER): detachable DS_ARRAYED_LIST [INTEGER]
 			-- Code points of full title case mapping of `a_code' as a Unicode code point
 		require
 			a_code_large_enough: a_code >= minimum_unicode_character_code
@@ -143,21 +143,21 @@ feature {NONE} -- Implementation
 			non_empty: Result /= Void implies not Result.is_empty
 		end
 
-	lower_case_mappings: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]]
+	lower_case_mappings: SPECIAL [SPECIAL [ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]]]
 			-- Full lower case mappings for each code point
 		deferred
 		ensure
 			lower_case_mappings_not_void: Result /= Void
 		end
 
-	title_case_mappings: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]]
+	title_case_mappings: SPECIAL [SPECIAL [ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]]]
 			-- Full title case mappings for each code point
 		deferred
 		ensure
 			title_case_mappings_not_void: Result /= Void
 		end
 
-	upper_case_mappings: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]]
+	upper_case_mappings: SPECIAL [SPECIAL [ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]]]
 			-- Full upper case mappings for each code point
 		deferred
 		ensure

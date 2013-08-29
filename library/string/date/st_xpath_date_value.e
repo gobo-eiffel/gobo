@@ -5,7 +5,7 @@ note
 		"Date values consistent with XPath 2.0"
 
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2007, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2013, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -80,16 +80,19 @@ feature -- Access
 				check
 						-- condition `zoned'
 					zoned: l_zoned_date /= Void
+				then
+					l_date := l_zoned_date.date
+					Result := l_date
 				end
-				l_date := l_zoned_date.date
 			else
 				l_date := local_date
 				check
 						-- condition `not zoned'
 					not_zoned: l_date /= Void
+				then
+					Result := l_date
 				end
 			end
-			Result := l_date
 		end
 
 feature -- Status report

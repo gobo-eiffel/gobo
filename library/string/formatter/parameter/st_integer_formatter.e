@@ -11,7 +11,7 @@ note
 		a precision 0, the output is empty.
 	]"
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2004-2005, Object-Tools and others"
+	copyright: "Copyright (c) 2004-2013, Object-Tools and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -65,11 +65,8 @@ feature -- Status report
 
 	valid_parameter (a_parameter: ANY): BOOLEAN
 			-- Is `a_parameter' a valid parameter for current formatter?
-		local
-			a_cell: detachable DS_CELL [INTEGER]
 		do
-			a_cell ?= a_parameter
-			Result := a_cell /= Void
+			Result := attached {DS_CELL [INTEGER]} a_parameter
 		end
 
 feature -- Formatting
@@ -78,15 +75,13 @@ feature -- Formatting
 			-- Format `a_parameter' to `a_stream'.
 			-- (Use DS_CELL [INTEGER] because in SE 2.1
 			-- INTEGER does not conform to ANY.)
-		local
-			a_cell: detachable DS_CELL [INTEGER]
 		do
-			a_cell ?= a_parameter
 			check
 					-- From precondition 'valid_parameter'.
-				valid_parameter: a_cell /= Void
+				valid_parameter: attached {DS_CELL [INTEGER]} a_parameter as l_cell
+			then
+				integer_format_to (l_cell.item, a_stream)
 			end
-			integer_format_to (a_cell.item, a_stream)
 		end
 
 	integer_format_to (a_parameter: INTEGER; a_stream: KI_CHARACTER_OUTPUT_STREAM)

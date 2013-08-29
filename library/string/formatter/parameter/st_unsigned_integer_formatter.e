@@ -5,7 +5,7 @@ note
 		"Formatters for unsigned integer parameters"
 
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2004-2005, Object-Tools and others"
+	copyright: "Copyright (c) 2004-2013, Object-Tools and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,11 +24,8 @@ feature -- Status report
 
 	valid_parameter (a_parameter: ANY): BOOLEAN
 			-- Is `a_parameter' a valid parameter for current formatter?
-		local
-			a_cell: detachable DS_CELL [INTEGER]
 		do
-			a_cell ?= a_parameter
-			Result := a_cell /= Void and then a_cell.item >= 0
+			Result := attached {DS_CELL [INTEGER]} a_parameter as l_cell and then l_cell.item >= 0
 		end
 
 feature -- Formatting

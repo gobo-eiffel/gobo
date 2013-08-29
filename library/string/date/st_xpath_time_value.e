@@ -5,7 +5,7 @@ note
 		"Time values consistent with XPath 2.0"
 
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2007, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2013, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -80,16 +80,19 @@ feature -- Access
 				check
 						-- condition `zoned'
 					zoned: l_zoned_time /= Void
+				then
+					l_time := l_zoned_time.time
+					Result := l_time
 				end
-				l_time := l_zoned_time.time
 			else
 				l_time := local_time
 				check
 						-- condition `not zoned'
 					not_zoned: l_time /= Void
+				then
+					Result := l_time
 				end
 			end
-			Result := l_time
 		ensure
 			time_not_void: Result /= Void
 		end

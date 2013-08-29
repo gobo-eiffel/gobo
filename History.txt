@@ -94,6 +94,10 @@ Version 3.10 - ?
 	* Added features `pattern' and `is_case_insensitive' in class LX_PATTERN_MATCHER.
 	* Made it compilable in void-safe mode with ISE 7.3.
 
+	Gobo Eiffel Math Library:
+	
+	* Made it compilable in void-safe mode with ISE 7.3.
+	
 	Gobo Eiffel Parse Library:
 
 	* Made it compilable in void-safe mode with ISE 7.3.
@@ -112,6 +116,7 @@ Version 3.10 - ?
 
 	* Fixed bug in the string formatter where the flags '+' and space where
 	  not taken into account. See bug#2768748.
+	* Made it compilable in void-safe mode with ISE 7.3.
 
 	Gobo Eiffel Structure Library:
 
@@ -134,6 +139,7 @@ Version 3.10 - ?
 	Gobo Eiffel Time Library:
 
 	* Added class DT_STOPWATCH in cluster 'stopwatch'.
+	* Made it compilable in void-safe mode with ISE 7.3.
 
 	Gobo Eiffel Tools Library:
 

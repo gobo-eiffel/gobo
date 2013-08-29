@@ -3,18 +3,18 @@
 	xmlns="http://www.eiffel.com/developers/xml/configuration-1-9-0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-9-0 http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd"
-	name="pattern"
-	uuid="E1FFE100-60B0-0008-0001-000020130825"
-	library_target="pattern">
+	name="math"
+	uuid="E1FFE100-60B0-0011-0001-000020130828"
+	library_target="math">
 
 	<description>
-		description: "ECF file for the Gobo Eiffel Pattern Library"
-		library: "Gobo Eiffel Pattern Library"
-		copyright: "Copyright (c) 2001-2013, Eric Bezault and others"
+		description: "ECF file for the Gobo Eiffel Math Library"
+		library: "Gobo Eiffel Math Library"
+		copyright: "Copyright (c) 2004-2013, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 
-	<target name="pattern">
+	<target name="math">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
@@ -36,6 +36,6 @@
 
 		<library name="kernel" location="$GOBO/library/kernel/library.ecf" readonly="true"/>
 
-		<cluster name="pattern" location="./" recursive="true"/>
+		<cluster name="math" location="./" recursive="true"/>
 	</target>
 </system>
