@@ -170,6 +170,7 @@ feature {NONE} -- Initialization
 			-- Create a new scanner.
 		do
 			make_with_buffer (Empty_buffer)
+			last_string_value := ""
 			line_nb := 1
 		end
 
@@ -179,6 +180,7 @@ feature -- Initialization
 			-- Reset scanner before scanning next input.
 		do
 			reset_compressed_scanner_skeleton
+			last_string_value := ""
 			line_nb := 1
 		end
 

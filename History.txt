@@ -74,6 +74,8 @@ Version 3.10 - ?
 	  of a breaking change to make the internal stacks void-safe compliant.
 	  Otherwise this will result in a compilation error.
 	* Removed command-line option '--old_typing'.
+	* In order to be void-safe compliant, the generated token class has been
+	  made deferred (last_value attributes may be attached).
 	* Made the generated parsers compilable in void-safe mode with ISE 7.3.
 
 	Gobo Eiffel Kernel Library:

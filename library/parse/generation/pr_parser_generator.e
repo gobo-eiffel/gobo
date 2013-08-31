@@ -154,7 +154,7 @@ feature -- Generation
 				%%Tdescription: %"Parser token codes%"%N%
 				%%Tgenerator: %"geyacc version ")
 			a_file.put_string (version)
-			a_file.put_string ("%"%N%Nclass ")
+			a_file.put_string ("%"%N%Ndeferred class ")
 			a_file.put_string (class_name)
 			a_file.put_string ("%N%Ninherit%N%N%
 				%%TYY_PARSER_TOKENS%N")
@@ -249,7 +249,6 @@ feature {NONE} -- Generation
 			tokens: DS_ARRAYED_LIST [PR_TOKEN]
 			a_type: PR_TYPE
 			i, nb: INTEGER
-			l_type_name: STRING
 		do
 			a_file.put_line ("feature -- Last values")
 			a_file.put_new_line
@@ -281,10 +280,6 @@ feature {NONE} -- Generation
 				a_file.put_string ("%T")
 				a_file.put_string (a_type.last_value_name)
 				a_file.put_string (": ")
-				l_type_name := a_type.name.as_lower
-				if not l_type_name.starts_with ("detachable ") and not l_type_name.starts_with ("?") then
-					a_file.put_string ("detachable ")
-				end
 				a_file.put_line (a_type.name)
 				a_cursor.forth
 			end
@@ -728,6 +723,8 @@ feature {NONE} -- Generation
 		do
 			a_file.put_line ("%Tyy_do_action (yy_act: INTEGER)")
 			a_file.put_line ("%T%T%T-- Execute semantic action.")
+			a_file.put_line ("%T%Tlocal")
+			a_file.put_line ("%T%T%Tyy_retried: BOOLEAN")
 			nb_types := machine.grammar.types.count
 			create types.make (nb_types)
 			rules := machine.grammar.rules
@@ -750,7 +747,6 @@ feature {NONE} -- Generation
 				end
 			end
 			if not types.is_empty then
-				a_file.put_line ("%T%Tlocal")
 				a_cursor := types.new_cursor
 				from
 					a_cursor.start
@@ -763,7 +759,8 @@ feature {NONE} -- Generation
 				end
 			end
 			a_file.put_line ("%T%Tdo")
-			a_file.put_line ("%T%T%Tinspect yy_act")
+			a_file.put_line ("%T%T%Tif not yy_retried then")
+			a_file.put_line ("%T%T%T%Tinspect yy_act")
 			from
 				i := 1
 			until
@@ -776,13 +773,19 @@ feature {NONE} -- Generation
 				a_rule.print_action (input_filename, line_pragma, a_file)
 				i := i + 1
 			end
-			a_file.put_line ("%T%T%Telse")
-			a_file.put_line ("%T%T%T%Tdebug (%"GEYACC%")")
-			a_file.put_line ("%T%T%T%T%Tstd.error.put_string (%"Error in parser: unknown rule id: %")")
-			a_file.put_line ("%T%T%T%T%Tstd.error.put_integer (yy_act)")
-			a_file.put_line ("%T%T%T%T%Tstd.error.put_new_line")
+			a_file.put_line ("%T%T%T%Telse")
+			a_file.put_line ("%T%T%T%T%Tdebug (%"GEYACC%")")
+			a_file.put_line ("%T%T%T%T%T%Tstd.error.put_string (%"Error in parser: unknown rule id: %")")
+			a_file.put_line ("%T%T%T%T%T%Tstd.error.put_integer (yy_act)")
+			a_file.put_line ("%T%T%T%T%T%Tstd.error.put_new_line")
+			a_file.put_line ("%T%T%T%T%Tend")
+			a_file.put_line ("%T%T%T%T%Tabort")
 			a_file.put_line ("%T%T%T%Tend")
-			a_file.put_line ("%T%T%T%Tabort")
+			a_file.put_line ("%T%T%Tend")
+			a_file.put_line ("%T%Trescue")
+			a_file.put_line ("%T%T%Tif yy_parsing_status = yyAborted then")
+			a_file.put_line ("%T%T%T%Tyy_retried := True")
+			a_file.put_line ("%T%T%T%Tretry")
 			a_file.put_line ("%T%T%Tend")
 			a_file.put_line ("%T%Tend")
 		end
@@ -949,10 +952,18 @@ feature {NONE} -- Generation
 				a_file.put_line ("%"")
 				a_type := a_rule.lhs.type
 				a_file.put_line ("%T%Tlocal")
+				a_file.put_line ("%T%T%Tyy_retried: BOOLEAN")
 				a_type.print_dollar_dollar_declaration (a_file)
 				a_file.put_new_line
 				a_file.put_line ("%T%Tdo")
+				a_file.put_line ("%T%T%Tif not yy_retried then")
 				a_rule.print_action (input_filename, line_pragma, a_file)
+				a_file.put_line ("%T%T%Tend")
+				a_file.put_line ("%T%Trescue")
+				a_file.put_line ("%T%T%Tif yy_parsing_status = yyAborted then")
+				a_file.put_line ("%T%T%T%Tyy_retried := True")
+				a_file.put_line ("%T%T%T%Tretry")
+				a_file.put_line ("%T%T%Tend")
 				a_file.put_line ("%T%Tend")
 				i := i + 1
 			end
