@@ -302,9 +302,11 @@ feature -- Element change
 					end
 					right := right.right
 				end
-				if cell.left /= Void and old_cell /= Void then
+				if cell.left /= Void or else old_cell /= cell.left then
 					cell.forget_left
-					old_cell.forget_right
+					if old_cell /= Void then
+						old_cell.forget_right
+					end
 				end
 				new_cell.forget_right
 					-- Find next symbol class member to process.
