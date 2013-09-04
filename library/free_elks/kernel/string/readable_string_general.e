@@ -3,8 +3,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2013-01-16 19:06:21 +0100 (Wed, 16 Jan 2013) $"
-	revision: "$Revision: 701 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	READABLE_STRING_GENERAL
@@ -528,27 +528,61 @@ feature -- Comparison
 			-- Is string made of same character sequence as `other' regardless of casing
 			-- (possibly with a different capacity)?
 		local
-			i, l_count: INTEGER
-			l_prop: like character_properties
+			nb: INTEGER
 		do
 			if other = Current then
 				Result := True
 			else
-				l_count := count
-				if l_count = other.count then
-					from
-						l_prop := character_properties
-						i := 1
-					until
-						i > l_count or else l_prop.to_lower (item (i)) /= l_prop.to_lower (other.item (i))
-					loop
-						i := i + 1
-					variant
-						increasing_index: l_count - i + 1
-					end
-					Result := i > l_count
+				nb := count
+				if nb = other.count then
+					Result := nb = 0 or else same_caseless_characters (other, 1, nb, 1)
 				end
 			end
+		ensure
+			symmetric: Result implies other.is_case_insensitive_equal (Current)
+			consistent: attached {like Current} other as l_other implies (standard_is_equal (l_other) implies Result)
+			valid_result: as_lower ~ other.as_lower implies Result
+		end
+
+ 	same_caseless_characters (other: READABLE_STRING_GENERAL; start_pos, end_pos, index_pos: INTEGER): BOOLEAN
+			-- Are characters of `other' within bounds `start_pos' and `end_pos'
+			-- caseless identical to characters of current string starting at index `index_pos'.
+		require
+			other_not_void: other /= Void
+			valid_start_pos: other.valid_index (start_pos)
+			valid_end_pos: other.valid_index (end_pos)
+			valid_bounds: (start_pos <= end_pos) or (start_pos = end_pos + 1)
+			valid_index_pos: valid_index (index_pos)
+		local
+			i, j, nb: INTEGER
+			l_prop: like character_properties
+			c1,c2: like item
+		do
+			nb := end_pos - start_pos + 1
+			if nb <= count - index_pos + 1 then
+				from
+					l_prop := character_properties
+					Result := True
+					i := index_pos
+					j := start_pos
+					nb := nb + i
+				until
+					i = nb
+				loop
+					c1 := item (i)
+					c2 := other.item (j)
+					if c1 /= c2 and then l_prop.to_lower (c1) /= l_prop.to_lower (c2) then
+						Result := False
+						i := nb - 1 -- Jump out of the loop
+					end
+					i := i + 1
+					j := j + 1
+				variant
+					increasing_index: nb - i + 1
+				end
+			end
+		ensure
+			same_characters: Result = substring (index_pos, index_pos + end_pos - start_pos).is_case_insensitive_equal (other.substring (start_pos, end_pos))
 		end
 
 	has_substring (other: READABLE_STRING_GENERAL): BOOLEAN
@@ -570,34 +604,57 @@ feature -- Comparison
 				(Result = substring (2, count).has_substring (other))
 		end
 
-	same_string (a_other: READABLE_STRING_GENERAL): BOOLEAN
-			-- Does `a_other' represent the same string as `Current'?
+	same_string (other: READABLE_STRING_GENERAL): BOOLEAN
+			-- Does `other' represent the same string as `Current'?
 		require
-			a_other_not_void: a_other /= Void
+			other_not_void: other /= Void
 		local
-			i, l_count: INTEGER
+			nb: INTEGER
 		do
-			if a_other = Current then
+			if other = Current then
 				Result := True
 			else
-				l_count := count
-				if l_count = a_other.count then
-					from
-						Result := True
-						i := 1
-					until
-						i > l_count
-					loop
-						if code (i) /= a_other.code (i) then
-							Result := False
-							i := l_count -- Jump out of the loop
-						end
-						i := i + 1
-					variant
-						increasing_index: l_count - i + 1
-					end
+				nb := count
+				if nb = other.count then
+					Result := nb = 0 or else same_characters (other, 1, nb, 1)
 				end
 			end
+		end
+
+ 	same_characters (other: READABLE_STRING_GENERAL; start_pos, end_pos, index_pos: INTEGER): BOOLEAN
+			-- Are characters of `other' within bounds `start_pos' and `end_pos'
+			-- identical to characters of current string starting at index `index_pos'.
+		require
+			other_not_void: other /= Void
+			valid_start_pos: other.valid_index (start_pos)
+			valid_end_pos: other.valid_index (end_pos)
+			valid_bounds: (start_pos <= end_pos) or (start_pos = end_pos + 1)
+			valid_index_pos: valid_index (index_pos)
+		local
+			i, j, nb: INTEGER
+		do
+			nb := end_pos - start_pos + 1
+			if nb <= count - index_pos + 1 then
+				from
+					Result := True
+					i := index_pos
+					j := start_pos
+					nb := nb + i
+				until
+					i = nb
+				loop
+					if item (i) /= other.item (j) then
+						Result := False
+						i := nb - 1 -- Jump out of the loop
+					end
+					i := i + 1
+					j := j + 1
+				variant
+					increasing_index: nb - i + 1
+				end
+			end
+		ensure
+			same_characters: Result = substring (index_pos, index_pos + end_pos - start_pos).same_string (other.substring (start_pos, end_pos))
 		end
 
 	starts_with (s: READABLE_STRING_GENERAL): BOOLEAN
@@ -1182,7 +1239,7 @@ feature {READABLE_STRING_GENERAL} -- Implementation
 			-- Cash for `case_insensitive_hash_code'.
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

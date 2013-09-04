@@ -2282,17 +2282,17 @@ feature {NONE} -- Built-in validity
 				a_feature.set_builtin_code (tokens.builtin_tuple_feature (tokens.builtin_tuple_reference_item))
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 1 then
-						-- The signature should be 'reference_item (i: INTEGER): ANY'.
+						-- The signature should be 'reference_item (i: INTEGER): detachable ANY'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.any_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.detachable_any_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
-						-- The signature should be 'reference_item (i: INTEGER): ANY'.
+						-- The signature should be 'reference_item (i: INTEGER): detachable ANY'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.any_type)
-				elseif not a_feature.type.same_syntactical_type (current_universe.any_type, current_class, current_class) then
-						-- The signature should be 'reference_item (i: INTEGER): ANY'.
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.detachable_any_type)
+				elseif not a_feature.type.same_syntactical_type (current_universe.detachable_any_type, current_class, current_class) then
+						-- The signature should be 'reference_item (i: INTEGER): detachable ANY'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.any_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.detachable_any_type)
 				end
 			elseif a_feature.name.same_feature_name (tokens.put_boolean_feature_name) then
 					-- 'TUPLE.put_boolean' should be a procedure.

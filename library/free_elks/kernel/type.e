@@ -373,6 +373,14 @@ feature -- Status report
 			definition: Result = not is_expanded
 		end
 
+	is_attached: BOOLEAN
+			-- Is current type attached?
+--<		external
+--<			"built_in"
+		do
+			Result := attached_type = Current
+		end
+
 	is_special: BOOLEAN
 			-- Is current type a special type?
 		do
@@ -735,7 +743,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

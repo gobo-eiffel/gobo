@@ -3,8 +3,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2012-05-24 06:13:10 +0200 (Thu, 24 May 2012) $"
-	revision: "$Revision: 559 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	ABSTRACT_SPECIAL
@@ -21,6 +21,20 @@ feature -- Measurement
 			count_non_negative: Result >= 0
 		end
 
+	capacity: INTEGER
+			-- Capacity of special area		
+		deferred
+		ensure
+			count_non_negative: Result >= 0
+		end
+
+feature -- Status report
+
+	valid_index (i: INTEGER): BOOLEAN
+			-- Is `i' within the bounds of Current?
+		deferred
+		end
+
 feature -- Output
 
 	debug_output: STRING
@@ -32,7 +46,7 @@ feature -- Output
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

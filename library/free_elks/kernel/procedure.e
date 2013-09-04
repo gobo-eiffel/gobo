@@ -14,7 +14,7 @@ note
 	revision: "$Revision$"
 
 class
-	PROCEDURE [BASE_TYPE, OPEN_ARGS -> detachable TUPLE create default_create end]
+	PROCEDURE [BASE_TYPE -> detachable ANY, OPEN_ARGS -> detachable TUPLE create default_create end]
 
 inherit
 	ROUTINE [BASE_TYPE, OPEN_ARGS]

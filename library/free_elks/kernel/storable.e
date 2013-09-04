@@ -6,8 +6,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2012-12-27 03:57:50 +0100 (Thu, 27 Dec 2012) $"
-	revision: "$Revision: 674 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	STORABLE
@@ -107,13 +107,15 @@ feature -- Element change
 			--| This feature may use a visible name of a class written
 			--| in the `visible' clause of the Ace file. This makes it
 			--| possible to overcome class name clashes.
+		obsolete
+			"Use `independent_store'."
 		require
 			medium_not_void: medium /= Void
 			medium_exists: medium.exists
 			medium_is_open_write: medium.is_open_write
 			medium_supports_storable: medium.support_storable
 		do
-			medium.general_store (Current)
+			medium.independent_store (Current)
 		end
 
 	independent_store (medium: IO_MEDIUM)
@@ -157,7 +159,7 @@ feature -- Element change
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

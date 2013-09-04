@@ -6,8 +6,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2013-02-01 00:44:17 +0100 (Fri, 01 Feb 2013) $"
-	revision: "$Revision: 735 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	READABLE_STRING_32
@@ -16,6 +16,8 @@ inherit
 	READABLE_STRING_GENERAL
 		rename
 			same_string as same_string_general,
+			same_characters as same_characters_general,
+			same_caseless_characters as same_caseless_characters_general,
 			starts_with as starts_with_general,
 			ends_with as ends_with_general,
 			is_case_insensitive_equal as is_case_insensitive_equal_general
@@ -118,7 +120,7 @@ feature {NONE} -- Initialization
 		deferred
 		end
 
-	make_from_separate (other: separate READABLE_STRING_32)
+	make_from_separate (other: separate READABLE_STRING_GENERAL)
 			-- Initialize current string from `other'.
 		require
 			other_not_void: other /= Void
@@ -134,7 +136,7 @@ feature {NONE} -- Initialization
 			until
 				i = nb
 			loop
-				l_area.put (other.area.item (i), i)
+				l_area.put (other.item (i + 1), i)
 				i := i + 1
 			end
 			count := nb
@@ -310,19 +312,19 @@ feature -- Comparison
 			-- Is string made of same character sequence as `other'
 			-- (possibly with a different capacity)?
 		local
-  			l_count: INTEGER
+  			nb: INTEGER
 			l_hash, l_other_hash: like internal_hash_code
   		do
   			if other = Current then
   				Result := True
   			else
-  				l_count := count
-  				if l_count = other.count then
+  				nb := count
+  				if nb = other.count then
 						-- Let's compare the content if and only if the hash_code are the same or not yet computed.
 					l_hash := internal_hash_code
 					l_other_hash := other.internal_hash_code
 					if l_hash = 0 or else l_other_hash = 0 or else l_hash = l_other_hash then
- 						Result := area.same_items (other.area, other.area_lower, area_lower, l_count)
+ 						Result := area.same_items (other.area, other.area_lower, area_lower, nb)
 					end
   				end
   			end
@@ -335,36 +337,14 @@ feature -- Comparison
 		require
 			other_not_void: other /= Void
 		local
-			l_area, l_other_area: like area
-			i, j, nb: INTEGER
-			l_prop: like character_properties
-			c1, c2: CHARACTER_32
+			nb: INTEGER
 		do
 			if other = Current then
 				Result := True
 			else
 				nb := count
 				if nb = other.count then
-					from
-						l_prop := character_properties
-						l_area := area
-						l_other_area := other.area
-						Result := True
-						i := area_lower
-						j := other.area_lower
-						nb := nb + i
-					until
-						i = nb
-					loop
-						c1 := l_prop.to_lower (l_area.item (i))
-						c2 := l_prop.to_lower (l_other_area.item (j))
-						if c1 /= c2 then
-							Result := False
-							i := nb - 1 -- Jump out of loop
-						end
-						i := i + 1
-						j := j + 1
-					end
+					Result := nb = 0 or else same_caseless_characters (other, 1, nb, 1)
 				end
 			end
 		ensure
@@ -373,22 +353,87 @@ feature -- Comparison
 			valid_result: as_lower ~ other.as_lower implies Result
 		end
 
+ 	same_caseless_characters (other: READABLE_STRING_32; start_pos, end_pos, index_pos: INTEGER): BOOLEAN
+			-- Are characters of `other' within bounds `start_pos' and `end_pos'
+			-- caseless identical to characters of current string starting at index `index_pos'.
+		require
+			other_not_void: other /= Void
+			valid_start_pos: other.valid_index (start_pos)
+			valid_end_pos: other.valid_index (end_pos)
+			valid_bounds: (start_pos <= end_pos) or (start_pos = end_pos + 1)
+			valid_index_pos: valid_index (index_pos)
+		local
+			i, j, nb: INTEGER
+			l_prop: like character_properties
+			l_area, l_other_area: like area
+			c1,c2: CHARACTER_32
+		do
+			nb := end_pos - start_pos + 1
+			if nb <= count - index_pos + 1 then
+				from
+					l_prop := character_properties
+					l_area := area
+					l_other_area := other.area
+					Result := True
+					i := area_lower + index_pos - 1
+					j := other.area_lower + start_pos - 1
+					nb := nb + i
+				until
+					i = nb
+				loop
+					c1 := l_area.item (i)
+					c2 := l_other_area.item (j)
+					if c1 /= c2 and then l_prop.to_lower (c1) /= l_prop.to_lower (c2) then
+						Result := False
+						i := nb - 1 -- Jump out of the loop
+					end
+					i := i + 1
+					j := j + 1
+				variant
+					increasing_index: nb - i + 1
+				end
+			end
+		ensure
+			same_characters: Result = substring (index_pos, index_pos + end_pos - start_pos).is_case_insensitive_equal (other.substring (start_pos, end_pos))
+		end
+
 	same_string (other: READABLE_STRING_32): BOOLEAN
 			-- Do `Current' and `other' have same character sequence?
 		require
 			other_not_void: other /= Void
+		local
+			nb: INTEGER
 		do
 			if other = Current then
 				Result := True
-			elseif other.count = count then
-				if same_type (other) then
-					Result := area.same_items (other.area, other.area_lower, area_lower, count)
-				else
-					Result := same_string_general (other)
+			else
+				nb := count
+				if nb = other.count then
+					Result := nb = 0 or else same_characters (other, 1, nb, 1)
 				end
 			end
 		ensure
 			definition: Result = (string ~ other.string)
+		end
+
+	same_characters (other: READABLE_STRING_32; start_pos, end_pos, index_pos: INTEGER): BOOLEAN
+			-- Are characters of `other' within bounds `start_pos' and `end_pos'
+			-- identical to characters of current string starting at index `index_pos'.
+		require
+			other_not_void: other /= Void
+			valid_start_pos: other.valid_index (start_pos)
+			valid_end_pos: other.valid_index (end_pos)
+			valid_bounds: (start_pos <= end_pos) or (start_pos = end_pos + 1)
+			valid_index_pos: valid_index (index_pos)
+		local
+			nb: INTEGER
+		do
+			nb := end_pos - start_pos + 1
+			if nb <= count - index_pos + 1 then
+				Result := area.same_items (other.area, other.area_lower + start_pos - 1, area_lower + index_pos - 1, nb)
+			end
+		ensure
+			same_characters: Result = substring (index_pos, index_pos + end_pos - start_pos).same_string (other.substring (start_pos, end_pos))
 		end
 
 	is_less alias "<" (other: like Current): BOOLEAN
@@ -790,7 +835,7 @@ invariant
 	area_not_void: area /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

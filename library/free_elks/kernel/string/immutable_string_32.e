@@ -6,8 +6,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2013-01-10 01:50:44 +0100 (Thu, 10 Jan 2013) $"
-	revision: "$Revision: 695 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 frozen class
 	IMMUTABLE_STRING_32
@@ -23,6 +23,8 @@ inherit
 	IMMUTABLE_STRING_GENERAL
 		rename
 			same_string as same_string_general,
+			same_characters as same_characters_general,
+			same_caseless_characters as same_caseless_characters_general,
 			starts_with as starts_with_general,
 			ends_with as ends_with_general,
 			is_case_insensitive_equal as is_case_insensitive_equal_general
@@ -46,7 +48,8 @@ create
 	make_from_string_8,
 	make_from_string_32,
 	make_from_c,
-	make_from_cil
+	make_from_cil,
+	make_from_separate
 
 create {IMMUTABLE_STRING_32}
 	make_from_area_and_bounds
@@ -339,7 +342,7 @@ feature -- Transformation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

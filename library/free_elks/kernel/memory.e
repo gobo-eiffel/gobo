@@ -159,7 +159,7 @@ feature -- Status report
 	objects_instance_of (an_object: ANY): SPECIAL [ANY]
 			-- Objects that have same dynamic type as `an_object'.
 		do
-			Result := objects_instance_of_type (internal_.dynamic_type (an_object))
+			Result := objects_instance_of_type (an_object.generating_type.type_id)
 		end
 
 	objects_instance_of_type (a_type_id: INTEGER): SPECIAL [ANY]
@@ -202,7 +202,7 @@ feature -- Status report
 			loop
 				l_item := l_spec.item (i)
 				if l_item /= Void then
-					dtype := internal_.dynamic_type (l_item)
+					dtype := l_item.generating_type.type_id
 					l_memory_count_map.force (l_memory_count_map.item (dtype) + 1, dtype)
 				end
 				i := i + 1
@@ -220,7 +220,7 @@ feature -- Status report
 			loop
 				l_item := l_spec.item (i)
 				if l_item /= Void then
-					dtype := internal_.dynamic_type (l_item)
+					dtype := l_item.generating_type.type_id
 					Result.search (dtype)
 					if Result.found and then attached Result.found_item as l_found_item then
 						l_list := l_found_item
@@ -257,7 +257,7 @@ feature -- Status report
 			loop
 				l_item := l_spec.item (i)
 				if l_item /= Void then
-					dtype := internal_.dynamic_type (l_item)
+					dtype := l_item.generating_type.type_id
 					Result.search (dtype)
 					if Result.found then
 						Result.force (Result.found_item + 1, dtype)
@@ -481,23 +481,12 @@ feature {NONE} -- Implementation
 
 	special_any_dynamic_type: INTEGER
 			-- Dynamic type ID of an instance of `SPECIAL [ANY]'
-		local
-			spec: SPECIAL [ANY]
 		once
-			create spec.make_empty (0)
-			Result := internal_.dynamic_type (spec)
-		end
-
-	internal_: INTERNAL
-			-- Internal features
-		once
-			create Result
-		ensure
-			internal_not_void: Result /= Void
+			Result := ({SPECIAL [ANY]}).type_id
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

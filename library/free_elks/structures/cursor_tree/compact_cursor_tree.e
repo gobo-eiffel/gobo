@@ -30,6 +30,7 @@ feature -- Initialization
 			-- Create an empty tree.
 			-- `i' is an estimate of the number of nodes.
 		local
+--<			l_default: G
 			l_default: detachable G
 		do
 			last := 1
@@ -74,6 +75,7 @@ feature -- Access
 	item: G
 			-- Current item
 		do
+--<			Result := item_table.item (active)
 			check attached item_table.item (active) as r then
 				Result := r
 			end

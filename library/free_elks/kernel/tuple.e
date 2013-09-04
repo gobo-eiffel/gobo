@@ -57,7 +57,7 @@ feature -- Access
 			end
 		end
 
-	reference_item (index: INTEGER): ANY
+	reference_item (index: INTEGER): detachable ANY
 			-- Reference item at `index'.
 		require
 			valid_index: valid_index (index)

@@ -590,35 +590,14 @@ feature -- Status report
 
 	valid_key (k: K): BOOLEAN
 			-- Is `k' a valid key?
-		local
-			l_internal: INTERNAL
-			l_default_key: detachable K
-			l_index, i, nb: INTEGER
-			l_name: STRING
-			l_cell: CELL [detachable K]
 		do
 			Result := True
 			debug ("prevent_hash_table_catcall")
-				if k /= l_default_key then
-					create l_internal
-					create l_cell.put (l_default_key)
-					from
-						i := 1
-						nb := l_internal.field_count (l_cell)
-						l_name := "item"
-					until
-						i > nb
-					loop
-						if l_internal.field_name (i, l_cell) ~ l_name then
-							l_index := i
-							i := nb + 1
-						end
-						i := i + 1
-					end
-					if l_index > 0 and then k /= Void then
-						Result := l_internal.field_static_type_of_type (
-							l_index, l_internal.dynamic_type (l_cell)) = l_internal.dynamic_type (k)
-					end
+					-- If `K' is expanded then there will be no catcall.
+					-- If `K' is a reference, we make sure that the type of the object `k'
+					-- is the detachable version of `K' as objects have the detachable type by default.
+				if not ({K}).is_expanded and then attached k then
+					Result := k.generating_type ~ {detachable K}
 				end
 			end
 		end
@@ -1719,7 +1698,7 @@ invariant
 	slot_count_big_enough: 0 <= count
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

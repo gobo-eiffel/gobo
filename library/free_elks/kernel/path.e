@@ -83,8 +83,8 @@ note
 
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
-	date: "$Date: 2013-02-01 09:29:30 +0100 (Fri, 01 Feb 2013) $"
-	revision: "$Revision: 737 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	PATH
@@ -120,7 +120,8 @@ create {PATH}
 create
 	make_empty,
 	make_current,
-	make_from_string
+	make_from_string,
+	make_from_separate
 
 feature {NONE} -- Initialization
 
@@ -173,6 +174,19 @@ feature {NONE} -- Initialization
 			is_normalized: is_normalized
 			roundtrip: True -- name.same_string_general (a_path) with all duplicated separators removed except for the first two in UNC path.
 			roundtrip_with_trailing: True -- name.same_string_general (a_path) with all trailing directory separators removed from `a_path' except if this is a root.
+		end
+
+	make_from_separate (a_path: separate PATH)
+			-- Initialize from separate `a_path'.
+		require
+			a_path_not_void: a_path /= Void
+		do
+			create storage.make_from_separate (a_path.storage)
+			is_normalized := True
+			reset_internal_data
+		ensure
+			not_empty: not a_path.is_empty implies not is_empty
+			is_normalized: is_normalized
 		end
 
 feature {NONE} -- Internal initialization
@@ -925,9 +939,10 @@ feature {NATIVE_STRING_HANDLER} -- Access
 		local
 			l_cstr: C_STRING
 		do
-				-- A `C_STRING' instance is zeroed out, we just need to verify we have an extra `character'
-				-- that is the null character at the end, thus the `+ unit_size'.
-			create l_cstr.make_empty (storage.count + unit_size)
+				-- A `C_STRING' instance is zeroed out and a single null byte character is added.
+				-- On Windows we need 2 null characters, thus the `+ unit_size - 1' addition
+				-- to the length of the storage.
+			create l_cstr.make_empty (storage.count + unit_size - 1)
 			l_cstr.set_string (storage)
 			Result := l_cstr.managed_data
 		end

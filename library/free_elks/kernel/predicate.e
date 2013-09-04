@@ -10,13 +10,13 @@ note
 	revision: "$Revision: 559 $"
 
 class
-	PREDICATE [BASE_TYPE, OPEN_ARGS -> detachable TUPLE create default_create end]
+	PREDICATE [BASE_TYPE -> detachable ANY, OPEN_ARGS -> detachable TUPLE create default_create end]
 
 inherit
 	FUNCTION [BASE_TYPE, OPEN_ARGS, BOOLEAN]
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

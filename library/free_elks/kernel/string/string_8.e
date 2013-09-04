@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Sequences of 8-bit characters, accessible through integer indices
 		in a contiguous range.
@@ -6,8 +6,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2013-01-30 21:23:58 +0100 (Wed, 30 Jan 2013) $"
-	revision: "$Revision: 733 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	STRING_8
@@ -27,6 +27,8 @@ inherit
 			prepend as prepend_string_general,
 			prepend_substring as prepend_substring_general,
 			same_string as same_string_general,
+			same_characters as same_characters_general,
+			same_caseless_characters as same_caseless_characters_general,
 			starts_with as starts_with_general,
 			ends_with as ends_with_general,
 			is_case_insensitive_equal as is_case_insensitive_equal_general,

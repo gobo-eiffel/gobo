@@ -29,8 +29,8 @@ note
 			into 1 byte, it uses the letter `u' followed by the hexadecimal value of the 2-byte sequence,
 			otherwise it simply uses the 1-byte hexadecimal representation.
 		]"
-	date: "$Date: 2013-01-26 06:37:05 +0100 (Sat, 26 Jan 2013) $"
-	revision: "$Revision: 722 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 expanded class
 	UTF_CONVERTER
@@ -2017,6 +2017,49 @@ feature -- Helpers
 			end
 		end
 
+	utf_8_to_string_32_count (s: SPECIAL [CHARACTER]; start_pos, end_pos: INTEGER): INTEGER
+			-- Count of characters corresponding to UTF-8 sequence `s'.
+		require
+			start_position_big_enough: start_pos >= 0
+			end_position_big_enough: start_pos <= end_pos + 1
+			end_pos_small_enough: end_pos < s.count
+		local
+			i: INTEGER
+			n: INTEGER
+			c: INTEGER
+		do
+			from
+				i := start_pos
+				n := end_pos
+			until
+				i > n
+			loop
+				c := s [i].code
+				if c <= 0x7F then
+						-- 0xxxxxxx
+					i := i + 1
+					Result := Result + 1
+				elseif c <= 0xDF then
+						-- 110xxxxx 10xxxxxx
+					i := i + 2
+					if i <= n then
+						Result := Result + 1
+					end
+				elseif c <= 0xEF then
+						-- 1110xxxx 10xxxxxx 10xxxxxx
+					i := i + 3
+					if i <= n then
+						Result := Result + 1
+					end
+				elseif c <= 0xF7 then
+						-- 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+					i := i + 4
+					if i <= n then
+						Result := Result + 1
+					end
+				end
+			end
+		end
 
 feature {NONE} -- Implementation
 
@@ -2069,7 +2112,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

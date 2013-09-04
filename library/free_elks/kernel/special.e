@@ -169,11 +169,9 @@ feature -- Measurement
 		end
 
 	capacity: INTEGER
-			-- Count of special area
+			-- Capacity of special area
 		external
 			"built_in"
-		ensure
-			capacity_non_negative: Result >= 0
 		end
 
 feature -- Status report

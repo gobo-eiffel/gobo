@@ -354,6 +354,8 @@ feature {NONE} -- Implementation
 		require
 			index_large_enough: i >= 0
 			index_small_enough: i <= argument_count
+--<		external
+--<			"built_in"
 		local
 			l_str: NATIVE_STRING
 			l_ptr: POINTER
