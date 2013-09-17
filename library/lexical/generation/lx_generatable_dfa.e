@@ -691,6 +691,15 @@ feature {NONE} -- Generation
 			a_file.put_character ('%T')
 			a_file.put_string (a_name)
 			a_file.put_string (": SPECIAL [INTEGER]%N")
+			if a_name.ends_with ("_template") then
+				a_file.put_string ("%T%T%T-- Template for `")
+				a_file.put_string (a_name.substring (1, a_name.count - 9))
+				a_file.put_string ("%'%N")
+			else
+				a_file.put_string ("%T%T%T-- `")
+				a_file.put_string (a_name)
+				a_file.put_string ("%'%N")
+			end
 			if array_size = 0 then
 				nb := 1
 			else
