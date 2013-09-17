@@ -609,7 +609,7 @@ feature -- removal
 			-- Move any cursors at this position `forth'.
 			-- (Performance: O(count).)
 		do
-			remove (0)
+			remove (1)
 		end
 
 	remove_last
