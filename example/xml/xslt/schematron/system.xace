@@ -3,7 +3,7 @@
 <system name="schematron">
 	<description>
 		system: "Schematron validator - XSLT example"
-		copyright: "Copyright (c) 2005-2008, Colin Adams and others"
+		copyright: "Copyright (c) 2005-2013, Colin Adams and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -18,11 +18,9 @@
 		<option if="${GOBO_EIFFEL}=ise">
 				<!--
 					In finized mode, it takes a huge amount of time to compile a big generated C file.
-					The options below turn off some optimizations to make the C compilation faster.
+					The option below turn off some optimizations to make the C compilation faster.
 				-->
 			<option name="inlining" value="none"/>
-			<option name="c_compiler_options" value="-Od" if="${GOBO_OS}=windows"/>
-			<option name="c_compiler_options" value="-O0" if="${GOBO_OS}=unix"/>
 		</option>
 	</option>
 	<option if="${DEBUG}">
