@@ -4,7 +4,6 @@ note
 
 		"Skeletons for parsers implemented with tables"
 
-	remark: "To be used with 'geyacc --new_typing'."
 	library: "Gobo Eiffel Parse Library"
 	copyright: "Copyright (c) 2003-2013, Eric Bezault and others"
 	license: "MIT License"

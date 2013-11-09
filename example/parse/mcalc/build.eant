@@ -61,7 +61,7 @@
 	</target>
 
 	<target name="mcalc">
-		<geyacc new_typing="true" input="mcalc.y" output="mcalc.e"/>
+		<geyacc input="mcalc.y" output="mcalc.e"/>
 	</target>
 
 	<target name="init_system">

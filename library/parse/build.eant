@@ -54,7 +54,7 @@
 	</target>
 
 	<target name="yacc_parser" dir="yacc">
-		<geyacc new_typing="true" input="pr_yacc_parser.y" tokens="PR_YACC_TOKENS" output="pr_yacc_parser.e"/>
+		<geyacc input="pr_yacc_parser.y" tokens="PR_YACC_TOKENS" output="pr_yacc_parser.e"/>
 	</target>
 
 </project>

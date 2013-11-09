@@ -52,7 +52,7 @@
 	</target>
 
 	<target name="config_parser" dir="config">
-		<geyacc new_typing="true" input="ut_config_parser.y" tokens="UT_CONFIG_TOKENS" output="ut_config_parser.e"/>
+		<geyacc input="ut_config_parser.y" tokens="UT_CONFIG_TOKENS" output="ut_config_parser.e"/>
 	</target>
 
 </project>

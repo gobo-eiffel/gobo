@@ -54,7 +54,7 @@
 	</target>
 
 	<target name="config_parser" dir="generation">
-		<geyacc new_typing="true" input="ts_config_parser.y" tokens="TS_CONFIG_TOKENS" output="ts_config_parser.e"/>
+		<geyacc input="ts_config_parser.y" tokens="TS_CONFIG_TOKENS" output="ts_config_parser.e"/>
 	</target>
 
 </project>

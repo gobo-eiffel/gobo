@@ -61,7 +61,7 @@
 	</target>
 
 	<target name="eiffel_parser" dir="eiffel/parser">
-		<geyacc new_typing="true" input="et_eiffel_parser.y" tokens="ET_EIFFEL_TOKENS" output="et_eiffel_parser.e" separate_actions="true"/>
+		<geyacc input="et_eiffel_parser.y" tokens="ET_EIFFEL_TOKENS" output="et_eiffel_parser.e" separate_actions="true"/>
 	</target>
 
 	<target name="eiffel_preparser" dir="eiffel/parser">
@@ -73,7 +73,7 @@
 	</target>
 
 	<target name="lace_parser" dir="lace/parser">
-		<geyacc new_typing="true" input="et_lace_parser.y" tokens="ET_LACE_TOKENS" output="et_lace_parser.e"/>
+		<geyacc input="et_lace_parser.y" tokens="ET_LACE_TOKENS" output="et_lace_parser.e"/>
 	</target>
 
 </project>

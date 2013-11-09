@@ -64,9 +64,6 @@ feature -- Access
 	input_filename: STRING
 			-- Input filename
 
-	new_typing: BOOLEAN
-			-- Use new typing mechanism
-
 feature -- Setting
 
 	set_verbose_filename (a_filename: like verbose_filename)
@@ -132,14 +129,6 @@ feature -- Setting
 			input_filename_set: input_filename = a_filename
 		end
 
-	set_new_typing (b: BOOLEAN)
-			-- Set `new_typing' to `b'.
-		do
-			new_typing := b
-		ensure
-			new_typing_set: new_typing = b
-		end
-
 feature -- Execution
 
 	execute
@@ -156,10 +145,6 @@ feature -- Execution
 				cmd.append_string ("-v ")
 				cmd := STRING_.appended_string (cmd, a_filename)
 				cmd.append_string (" ")
-			end
-				-- Option --new_typing
-			if new_typing then
-				cmd.append_string ("--new_typing ")
 			end
 				-- Option -x
 			if separate_actions then

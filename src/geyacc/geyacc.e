@@ -301,7 +301,7 @@ feature {NONE} -- Error handling
 	Usage_message: UT_USAGE_MESSAGE
 			-- Geyacc usage message
 		once
-			create Result.make ("[--version][--help][-hxV?][--(new|old)_typing]%N%
+			create Result.make ("[--version][--help][-hxV?]%N%
 				%%T[--pragma=[no]line][--doc=(html|xml)][-t classname]%N%
 				%%T[-k filename][-v filename][-o filename] filename")
 		ensure

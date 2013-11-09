@@ -61,7 +61,7 @@
 	</target>
 
 	<target name="rpcalc">
-		<geyacc new_typing="true" input="rpcalc.y" output="rpcalc.e"/>
+		<geyacc input="rpcalc.y" output="rpcalc.e"/>
 	</target>
 
 	<target name="init_system">

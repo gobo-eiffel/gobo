@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			end
 				-- new_typing:
 			if has_attribute (New_typing_attribute_name) then
-				command.set_new_typing (boolean_value (New_typing_attribute_name))
+				-- The default.
 			end
 				-- tokens_classname:
 			if has_attribute (Tokens_classname_attribute_name) then
