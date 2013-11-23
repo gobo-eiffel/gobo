@@ -6,7 +6,7 @@
 		"Geyacc Tasks"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2013, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -77,6 +77,19 @@
 				</listitem>
 			</varlistentry>
 
+			<varlistentry>
+				<term>rescue_on_abort</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>rescue_on_abort</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>-</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+			
 			<varlistentry>
 				<term>separate_actions</term>
 				<listitem>

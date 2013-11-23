@@ -34,6 +34,10 @@ feature {NONE} -- Initialization
 		do
 			Precursor {GEANT_TASK} (a_project, an_xml_element)
 
+				-- rescue_on_abort:
+			if has_attribute (Rescue_on_abort_attribute_name) then
+				command.set_rescue_on_abort (boolean_value (Rescue_on_abort_attribute_name))
+			end
 				-- separate_actions:
 			if has_attribute (Separate_actions_attribute_name) then
 				command.set_separate_actions (boolean_value (Separate_actions_attribute_name))
@@ -92,6 +96,15 @@ feature -- Access
 
 feature {NONE} -- Constants
 
+	Rescue_on_abort_attribute_name: STRING
+			-- Name of xml attribute for rescue_on_abort
+		once
+			Result := "rescue_on_abort"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+		
 	Separate_actions_attribute_name: STRING
 			-- Name of xml attribute for separate_actions
 		once

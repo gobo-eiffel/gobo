@@ -77,6 +77,8 @@ Version 3.10 - ?
 	* In order to be void-safe compliant, the generated token class has been
 	  made deferred (last_value attributes may be attached).
 	* Made the generated parsers compilable in void-safe mode with ISE 7.3.
+	* Added option --rescue-on-abort to generate a rescue clause in action routines 
+	  to catch abort exceptions. Useful when compiling in void-safe mode.
 
 	Gobo Eiffel Kernel Library:
 

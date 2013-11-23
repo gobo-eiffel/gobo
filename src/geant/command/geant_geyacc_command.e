@@ -49,6 +49,9 @@ feature -- Access
 	verbose_filename: STRING
 			-- -v option
 
+	rescue_on_abort: BOOLEAN
+			-- --rescue-on-abort option, default: false
+			
 	separate_actions: BOOLEAN
 			-- -x option, default: false
 
@@ -77,6 +80,14 @@ feature -- Setting
 			verbose_filename_set: verbose_filename = a_filename
 		end
 
+	set_rescue_on_abort (b: BOOLEAN)
+			-- Set  `rescue_on_abort' to `b'.
+		do
+			rescue_on_abort := b
+		ensure
+			rescue_on_abort_set: rescue_on_abort = b
+		end
+		
 	set_separate_actions (b: BOOLEAN)
 			-- Set  `separate_actions' to `b'.
 		do
@@ -149,6 +160,10 @@ feature -- Execution
 				-- Option -x
 			if separate_actions then
 				cmd.append_string ("-x ")
+			end
+				-- Option --rescue-on-abort
+			if rescue_on_abort then
+				cmd.append_string ("--rescue-on-abort ")
 			end
 				-- Option -t
 			if tokens_classname /= Void and then tokens_classname.count > 0 then

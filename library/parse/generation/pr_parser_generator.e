@@ -86,11 +86,13 @@ feature -- Status setting
 
 feature -- Generation
 
-	print_parser (tokens_needed, actions_separated: BOOLEAN; a_file: KI_TEXT_OUTPUT_STREAM)
+	print_parser (tokens_needed, actions_separated, a_rescue_on_abort: BOOLEAN; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print code for corresponding parser to `a_file'.
 			-- Print the token codes with the parser class text
 			-- if `tokens_needed' is true, and the semantic actions
 			-- in individual routines if `actions_separated' is true.
+			-- Print a rescue clause to catch abort exceptions in
+			-- action routines if `a_rescue_on_abort' is true.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
@@ -120,9 +122,9 @@ feature -- Generation
 			a_file.put_new_line
 			a_file.put_string ("feature {NONE} -- Semantic actions%N%N")
 			if actions_separated then
-				print_separated_actions (a_file)
+				print_separated_actions (a_rescue_on_abort, a_file)
 			else
-				print_actions (a_file)
+				print_actions (a_rescue_on_abort, a_file)
 			end
 			a_file.put_new_line
 			if actions_separated then
@@ -706,9 +708,11 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_actions (a_file: KI_TEXT_OUTPUT_STREAM)
+	print_actions (a_rescue_on_abort: BOOLEAN; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print code for actions to `a_file'.
 			-- Print all actions in one routine.
+			-- Print a rescue clause to catch abort exceptions
+			-- if `a_rescue_on_abort' is true.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
@@ -724,7 +728,9 @@ feature {NONE} -- Generation
 			a_file.put_line ("%Tyy_do_action (yy_act: INTEGER)")
 			a_file.put_line ("%T%T%T-- Execute semantic action.")
 			a_file.put_line ("%T%Tlocal")
-			a_file.put_line ("%T%T%Tyy_retried: BOOLEAN")
+			if a_rescue_on_abort then
+				a_file.put_line ("%T%T%Tyy_retried: BOOLEAN")
+			end
 			nb_types := machine.grammar.types.count
 			create types.make (nb_types)
 			rules := machine.grammar.rules
@@ -759,7 +765,9 @@ feature {NONE} -- Generation
 				end
 			end
 			a_file.put_line ("%T%Tdo")
-			a_file.put_line ("%T%T%Tif not yy_retried then")
+			if a_rescue_on_abort then
+				a_file.put_line ("%T%T%Tif not yy_retried then")
+			end
 			a_file.put_line ("%T%T%T%Tinspect yy_act")
 			from
 				i := 1
@@ -781,18 +789,22 @@ feature {NONE} -- Generation
 			a_file.put_line ("%T%T%T%T%Tend")
 			a_file.put_line ("%T%T%T%T%Tabort")
 			a_file.put_line ("%T%T%T%Tend")
-			a_file.put_line ("%T%T%Tend")
-			a_file.put_line ("%T%Trescue")
-			a_file.put_line ("%T%T%Tif yy_parsing_status = yyAborted then")
-			a_file.put_line ("%T%T%T%Tyy_retried := True")
-			a_file.put_line ("%T%T%T%Tretry")
-			a_file.put_line ("%T%T%Tend")
+			if a_rescue_on_abort then
+				a_file.put_line ("%T%T%Tend")
+				a_file.put_line ("%T%Trescue")
+				a_file.put_line ("%T%T%Tif yy_parsing_status = yyAborted then")
+				a_file.put_line ("%T%T%T%Tyy_retried := True")
+				a_file.put_line ("%T%T%T%Tretry")
+				a_file.put_line ("%T%T%Tend")
+			end
 			a_file.put_line ("%T%Tend")
 		end
 
-	print_separated_actions (a_file: KI_TEXT_OUTPUT_STREAM)
+	print_separated_actions (a_rescue_on_abort: BOOLEAN; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print code for actions to `a_file'.
 			-- Print each action into an individual routine.
+			-- Print a rescue clause to catch abort exceptions
+			-- if `a_rescue_on_abort' is true.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
@@ -952,18 +964,24 @@ feature {NONE} -- Generation
 				a_file.put_line ("%"")
 				a_type := a_rule.lhs.type
 				a_file.put_line ("%T%Tlocal")
-				a_file.put_line ("%T%T%Tyy_retried: BOOLEAN")
+				if a_rescue_on_abort then
+					a_file.put_line ("%T%T%Tyy_retried: BOOLEAN")
+				end
 				a_type.print_dollar_dollar_declaration (a_file)
 				a_file.put_new_line
 				a_file.put_line ("%T%Tdo")
-				a_file.put_line ("%T%T%Tif not yy_retried then")
+				if a_rescue_on_abort then
+					a_file.put_line ("%T%T%Tif not yy_retried then")
+				end
 				a_rule.print_action (input_filename, line_pragma, a_file)
-				a_file.put_line ("%T%T%Tend")
-				a_file.put_line ("%T%Trescue")
-				a_file.put_line ("%T%T%Tif yy_parsing_status = yyAborted then")
-				a_file.put_line ("%T%T%T%Tyy_retried := True")
-				a_file.put_line ("%T%T%T%Tretry")
-				a_file.put_line ("%T%T%Tend")
+				if a_rescue_on_abort then
+					a_file.put_line ("%T%T%Tend")
+					a_file.put_line ("%T%Trescue")
+					a_file.put_line ("%T%T%Tif yy_parsing_status = yyAborted then")
+					a_file.put_line ("%T%T%T%Tyy_retried := True")
+					a_file.put_line ("%T%T%T%Tretry")
+					a_file.put_line ("%T%T%Tend")
+				end
 				a_file.put_line ("%T%Tend")
 				i := i + 1
 			end

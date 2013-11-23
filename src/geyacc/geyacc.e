@@ -109,7 +109,7 @@ feature -- Processing
 						create out_file.make (output_filename)
 						out_file.open_write
 						if out_file.is_open_write then
-							parser_generator.print_parser (tokens_needed, actions_separated, out_file)
+							parser_generator.print_parser (tokens_needed, actions_separated, rescue_on_abort, out_file)
 							out_file.close
 						else
 							create cannot_write.make (output_filename)
@@ -117,7 +117,7 @@ feature -- Processing
 							Exceptions.die (1)
 						end
 					else
-						parser_generator.print_parser (tokens_needed, actions_separated, std.output)
+						parser_generator.print_parser (tokens_needed, actions_separated, rescue_on_abort, std.output)
 					end
 				end
 			end
@@ -207,6 +207,8 @@ feature -- Processing
 					end
 				elseif arg.count > 14 and then arg.substring (1, 14).is_equal ("--output-file=") then
 					output_filename := arg.substring (15, arg.count)
+				elseif arg.same_string ("--rescue-on-abort") then
+					rescue_on_abort := True
 				elseif arg.is_equal ("-v") then
 					i := i + 1
 					if i > nb then
@@ -255,6 +257,11 @@ feature -- Access
 	token_filename: STRING
 	verbose_filename: STRING
 	actions_separated: BOOLEAN
+	
+	rescue_on_abort: BOOLEAN
+			-- Should a rescue clause be generated in the action routines
+			-- to catch abort exceptions? Useful when compiling in void-safe mode.
+	
 	doc_format: STRING
 			-- Command line arguments
 
@@ -302,7 +309,7 @@ feature {NONE} -- Error handling
 			-- Geyacc usage message
 		once
 			create Result.make ("[--version][--help][-hxV?]%N%
-				%%T[--pragma=[no]line][--doc=(html|xml)][-t classname]%N%
+				%%T[--pragma=[no]line][--doc=(html|xml)][--rescue-on-abort][-t classname]%N%
 				%%T[-k filename][-v filename][-o filename] filename")
 		ensure
 			usage_message_not_void: Result /= Void
