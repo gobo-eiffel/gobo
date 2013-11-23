@@ -95,9 +95,9 @@ feature {NONE} -- Generation
 			-- Print Eiffel code for full tables to `a_file'.
 		do
 			print_eiffel_array ("yy_nxt_template", yy_nxt, a_file)
-			if yy_ec /= Void then
+			if attached yy_ec as l_yy_ec then
 				a_file.put_character ('%N')
-				print_eiffel_array ("yy_ec_template", yy_ec, a_file)
+				print_eiffel_array ("yy_ec_template", l_yy_ec, a_file)
 			end
 			a_file.put_character ('%N')
 			print_eiffel_array ("yy_accept_template", yy_accept, a_file)

@@ -17,7 +17,9 @@ inherit
 
 	LX_LEX_PARSER_SKELETON
 		redefine
-			last_integer_value
+			last_integer_value,
+			last_string_value,
+			last_lx_symbol_class_value
 		end
 
 	LX_LEX_SCANNER
@@ -26,7 +28,9 @@ inherit
 			make_from_description as make_lex_scanner_from_description,
 			reset as reset_lex_scanner
 		redefine
-			last_integer_value
+			last_integer_value,
+			last_string_value,
+			last_lx_symbol_class_value
 		end
 
 create
@@ -389,5 +393,11 @@ feature {NONE} -- Access
 
 	last_integer_value: INTEGER
 			-- Last semantic value of type INTEGER
+
+	last_string_value: STRING
+			-- Last semantic value of type STRING
+
+	last_lx_symbol_class_value: LX_SYMBOL_CLASS
+			-- Last semantic value of type LX_SYMBOL_CLASS
 
 end

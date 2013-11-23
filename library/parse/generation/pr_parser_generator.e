@@ -174,7 +174,7 @@ feature {NONE} -- Generation
 			tokens: DS_ARRAYED_LIST [PR_TOKEN]
 			a_token: PR_TOKEN
 			a_name: STRING
-			a_literal: STRING
+			a_literal: detachable STRING
 			i, nb: INTEGER
 		do
 			print_last_values (a_file)

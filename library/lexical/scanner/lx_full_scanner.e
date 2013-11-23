@@ -5,7 +5,7 @@ note
 		"Scanners implemented with full tables"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 	yy_build_tables
 			-- Build scanner tables.
 		local
-			an_array: ARRAY [INTEGER]
+			an_array: detachable ARRAY [INTEGER]
 		do
 			yy_nxt := yy_fixed_array (yy_nxt_template)
 			an_array := yy_ec_template

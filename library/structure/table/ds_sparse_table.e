@@ -139,8 +139,6 @@ feature {NONE} -- Initialization
 			equality_tester := an_item_tester
 			key_equality_tester := a_key_tester
 			make_sparse_container (n)
-			create internal_keys.make_with_table_cursor (Current, new_cursor)
-			internal_keys.internal_set_equality_tester (key_equality_tester)
 		ensure
 			empty: is_empty
 			capacity_set: capacity = n
@@ -200,8 +198,16 @@ feature -- Access
 
 	keys: DS_BILINEAR [K]
 			-- View of current table as a linear representation of its keys
+		local
+			l_keys: like internal_keys
 		do
-			Result := internal_keys
+			if attached internal_keys as l_internal_keys then
+				Result := l_internal_keys
+			else
+				create l_keys.make (Current)
+				internal_keys := l_keys
+				Result := l_keys
+			end
 		ensure
 			keys_not_void: Result /= Void
 		end
@@ -282,7 +288,9 @@ feature -- Setting
 			key_equality_tester_settable: key_equality_tester_settable (a_tester)
 		do
 			key_equality_tester := a_tester
-			internal_keys.internal_set_equality_tester (a_tester)
+			if attached internal_keys as l_internal_keys then
+				l_internal_keys.internal_set_equality_tester (a_tester)
+			end
 		ensure
 			key_equality_tester_set: key_equality_tester = a_tester
 		end
@@ -569,12 +577,10 @@ feature -- Duplication
 		do
 			l_keys := internal_keys
 			precursor (other)
-			if l_keys /= Void then
-				internal_keys := l_keys
-			else
-				create internal_keys.make_with_table_cursor (Current, new_cursor)
-				internal_keys.internal_set_equality_tester (key_equality_tester)
+			if l_keys = Void then
+				create l_keys.make (Current)
 			end
+			internal_keys := l_keys
 		end
 
 feature -- Iteration
@@ -764,10 +770,12 @@ feature {NONE} -- Implementation
 			-- (No precondition, to be used internally only.)
 		do
 			key_equality_tester := a_tester
-			internal_keys.internal_set_equality_tester (a_tester)
+			if attached internal_keys as l_internal_keys then
+				l_internal_keys.internal_set_equality_tester (a_tester)
+			end
 		end
 
-	internal_keys: DS_SPARSE_TABLE_KEYS [G, K]
+	internal_keys: detachable DS_SPARSE_TABLE_KEYS [G, K]
 			-- View of current table as a linear representation of its keys
 
 feature {DS_SPARSE_TABLE_KEYS} -- Implementation
@@ -793,7 +801,6 @@ feature {DS_SPARSE_TABLE_CURSOR} -- Cursor implementation
 
 invariant
 
-	internal_keys_not_void: internal_keys /= Void
-	internal_keys_consistent: internal_keys.table = Current
+	internal_keys_consistent: attached internal_keys as l_internal_keys implies l_internal_keys.table = Current
 
 end

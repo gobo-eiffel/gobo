@@ -5,7 +5,7 @@ note
 		"Tables for scanners"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,7 +36,7 @@ feature -- Tables
 	yy_accept: ARRAY [INTEGER]
 			-- Accepting ids indexed by state ids
 
-	yy_ec: ARRAY [INTEGER]
+	yy_ec: detachable ARRAY [INTEGER]
 			-- Equivalence classes;
 			-- Void if equivalence classes are not used
 

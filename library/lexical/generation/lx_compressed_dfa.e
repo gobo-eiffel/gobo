@@ -173,9 +173,9 @@ feature {NONE} -- Generation
 			print_eiffel_array ("yy_base_template", yy_base, a_file)
 			a_file.put_character ('%N')
 			print_eiffel_array ("yy_def_template", yy_def, a_file)
-			if yy_ec /= Void then
+			if attached yy_ec as l_yy_ec then
 				a_file.put_character ('%N')
-				print_eiffel_array ("yy_ec_template", yy_ec, a_file)
+				print_eiffel_array ("yy_ec_template", l_yy_ec, a_file)
 			end
 			if attached yy_meta as l_yy_meta then
 				a_file.put_character ('%N')

@@ -36,6 +36,7 @@ feature {NONE} -- Initialization
 			handler_not_void: handler /= Void
 		do
 			make_with_buffer (Empty_buffer)
+			last_string_value := ""
 			error_handler := handler
 			create action_buffer.make (Init_buffer_size)
 			successful := True
@@ -50,6 +51,7 @@ feature -- Initialization
 			-- Reset scanner before scanning next input.
 		do
 			reset_compressed_scanner_skeleton
+			last_string_value := ""
 			successful := True
 			action_buffer.wipe_out
 			nb_open_brackets := 0

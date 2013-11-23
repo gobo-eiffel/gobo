@@ -5,7 +5,7 @@ note
 		"Grammar documentation generators in XML format"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -89,12 +89,12 @@ feature {NONE} -- Generation
 			print_escaped (a_token.name, a_file)
 			a_file.put_line ("</name>")
 			a_file.put_string ("%T%T%T%T<literal")
-			if a_token.literal_string = Void then
-				a_file.put_line ("/>")
-			else
+			if attached a_token.literal_string as l_literal_string then
 				a_file.put_string (">")
-				print_escaped (a_token.literal_string, a_file)
+				print_escaped (l_literal_string, a_file)
 				a_file.put_line ("</literal>")
+			else
+				a_file.put_line ("/>")
 			end
 			a_file.put_line ("%T%T%T</token>")
 		end

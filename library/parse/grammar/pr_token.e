@@ -6,7 +6,7 @@ note
 		%see $GOBO\doc\geyacc\symbols.html"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -90,7 +90,7 @@ feature -- Access
 			-- Precedence level
 			-- (0 means that no `precedence' has been assigned.)
 
-	literal_string: STRING
+	literal_string: detachable STRING
 			-- Literal string that can be used instead
 			-- of curren token's name in rules
 			-- (Void if no such string.)

@@ -237,14 +237,14 @@ feature -- Access
 	name: STRING
 			-- Type name
 
-	alias_name: STRING
+	alias_name: detachable STRING
 			-- Name to be used in `last_value_name', typically "last_<alias_name>_value".
 			-- Use `name' instead if `alias_name' is Void or empty.
 
 	last_value_name: STRING
 			-- Name of last value entity
 		local
-			l_name: STRING
+			l_name: detachable STRING
 			i, nb: INTEGER
 			c: CHARACTER
 		do

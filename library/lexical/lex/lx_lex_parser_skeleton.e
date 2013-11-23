@@ -123,7 +123,7 @@ feature -- Access
 	action_factory: LX_ACTION_FACTORY
 			-- Semantic action factory
 
-	options_overrider: LX_DESCRIPTION_OVERRIDER
+	options_overrider: detachable LX_DESCRIPTION_OVERRIDER
 			-- Overrider of options specified in the input file
 
 feature -- Setting
@@ -148,7 +148,7 @@ feature -- Setting
 
 feature -- Status report
 
-	rule: LX_RULE
+	rule: detachable LX_RULE
 			-- Rule being parsed
 
 	in_trail_context: BOOLEAN
@@ -686,25 +686,27 @@ feature {NONE} -- Implementation
 			a_nfa_not_void: a_nfa /= Void
 			rule_not_void: rule /= Void
 		do
-			a_nfa.set_accepted_rule (rule)
-			rule.set_pattern (a_nfa)
-			description.rules.force_last (rule)
-			pending_rules.force_last (rule)
-			rule.set_line_nb (rule_line_nb)
-			rule.set_trail_context (has_trail_context)
-			rule.set_head_count (head_count)
-			rule.set_trail_count (trail_count)
-			rule.set_line_count (head_line)
-			rule.set_column_count (head_column)
-			if has_trail_context and then not (head_count >= 0 or trail_count >= 0) then
-				description.set_variable_trail_context (True)
-			end
-			if start_condition_stack.is_empty then
-					-- Add `a_nfa' to all non-exclusive start condition,
-					-- including the default (INITIAL) start condition.
-				description.start_conditions.add_nfa_to_non_exclusive (a_nfa)
-			else
-				start_condition_stack.add_nfa_to_all (a_nfa)
+			check precondition: attached rule as l_rule then
+				a_nfa.set_accepted_rule (l_rule)
+				l_rule.set_pattern (a_nfa)
+				description.rules.force_last (l_rule)
+				pending_rules.force_last (l_rule)
+				l_rule.set_line_nb (rule_line_nb)
+				l_rule.set_trail_context (has_trail_context)
+				l_rule.set_head_count (head_count)
+				l_rule.set_trail_count (trail_count)
+				l_rule.set_line_count (head_line)
+				l_rule.set_column_count (head_column)
+				if has_trail_context and then not (head_count >= 0 or trail_count >= 0) then
+					description.set_variable_trail_context (True)
+				end
+				if start_condition_stack.is_empty then
+						-- Add `a_nfa' to all non-exclusive start condition,
+						-- including the default (INITIAL) start condition.
+					description.start_conditions.add_nfa_to_non_exclusive (a_nfa)
+				else
+					start_condition_stack.add_nfa_to_all (a_nfa)
+				end
 			end
 		end
 
@@ -714,26 +716,28 @@ feature {NONE} -- Implementation
 			a_nfa_not_void: a_nfa /= Void
 			rule_not_void: rule /= Void
 		do
-			a_nfa.set_accepted_rule (rule)
-			rule.set_pattern (a_nfa)
-			description.rules.force_last (rule)
-			pending_rules.force_last (rule)
-			rule.set_line_nb (rule_line_nb)
-			rule.set_trail_context (has_trail_context)
-			rule.set_head_count (head_count)
-			rule.set_trail_count (trail_count)
-			rule.set_line_count (head_line)
-			rule.set_column_count (head_column)
-			if has_trail_context and then not (head_count >= 0 or trail_count >= 0) then
-				description.set_variable_trail_context (True)
-			end
-			description.set_bol_needed (True)
-			if start_condition_stack.is_empty then
-					-- Add `a_nfa' to all non-exclusive start condition,
-					-- including the default (INITIAL) start condition.
-				description.start_conditions.add_bol_nfa_to_non_exclusive (a_nfa)
-			else
-				start_condition_stack.add_bol_nfa_to_all (a_nfa)
+			check precondition: attached rule as l_rule then
+				a_nfa.set_accepted_rule (l_rule)
+				l_rule.set_pattern (a_nfa)
+				description.rules.force_last (l_rule)
+				pending_rules.force_last (l_rule)
+				l_rule.set_line_nb (rule_line_nb)
+				l_rule.set_trail_context (has_trail_context)
+				l_rule.set_head_count (head_count)
+				l_rule.set_trail_count (trail_count)
+				l_rule.set_line_count (head_line)
+				l_rule.set_column_count (head_column)
+				if has_trail_context and then not (head_count >= 0 or trail_count >= 0) then
+					description.set_variable_trail_context (True)
+				end
+				description.set_bol_needed (True)
+				if start_condition_stack.is_empty then
+						-- Add `a_nfa' to all non-exclusive start condition,
+						-- including the default (INITIAL) start condition.
+					description.start_conditions.add_bol_nfa_to_non_exclusive (a_nfa)
+				else
+					start_condition_stack.add_bol_nfa_to_all (a_nfa)
+				end
 			end
 		end
 
@@ -779,10 +783,10 @@ feature {NONE} -- Implementation
 					a_start_condition.set_has_eof (True)
 					create a_rule.make_default (a_start_condition.id)
 					a_rule.set_pattern (Eof_nfa)
-						-- Save `rule' as an end-of-file rule.
+						-- Save `a_rule' as an end-of-file rule.
 					eof_rules.force_last (a_rule)
 					pending_rules.force_last (a_rule)
-					rule.set_line_nb (rule_line_nb)
+					a_rule.set_line_nb (rule_line_nb)
 				end
 				i := i + 1
 			end
@@ -796,25 +800,27 @@ feature {NONE} -- Implementation
 			a_character_class: LX_SYMBOL_CLASS
 			a_nfa: LX_NFA
 		do
-			create a_character_class.make (0)
-			a_character_class.set_negated (True)
-			a_nfa := new_symbol_class_nfa (a_character_class)
-			a_nfa.set_accepted_rule (rule)
-			rule.set_pattern (a_nfa)
-			description.rules.force_last (rule)
-			pending_rules.force_last (rule)
-			rule.set_line_nb (0)
-			rule.set_trail_context (False)
-			rule.set_head_count (1)
-			rule.set_trail_count (0)
-			rule.set_line_count (Zero_or_more)
-			rule.set_column_count (Zero_or_more)
-			description.start_conditions.add_nfa_to_all (a_nfa)
-			if description.no_default_rule then
-				set_action ("last_token := yyError_token%N%
-					%fatal_error (%"scanner jammed%")")
-			else
-				set_action ("default_action")
+			check precondition: attached rule as l_rule then
+				create a_character_class.make (0)
+				a_character_class.set_negated (True)
+				a_nfa := new_symbol_class_nfa (a_character_class)
+				a_nfa.set_accepted_rule (l_rule)
+				l_rule.set_pattern (a_nfa)
+				description.rules.force_last (l_rule)
+				pending_rules.force_last (l_rule)
+				l_rule.set_line_nb (0)
+				l_rule.set_trail_context (False)
+				l_rule.set_head_count (1)
+				l_rule.set_trail_count (0)
+				l_rule.set_line_count (Zero_or_more)
+				l_rule.set_column_count (Zero_or_more)
+				description.start_conditions.add_nfa_to_all (a_nfa)
+				if description.no_default_rule then
+					set_action ("last_token := yyError_token%N%
+						%fatal_error (%"scanner jammed%")")
+				else
+					set_action ("default_action")
+				end
 			end
 		end
 
@@ -966,13 +972,16 @@ feature {NONE} -- Implementation
 		require
 			a_trail_not_void: a_trail /= Void
 			a_regexp_not_void: a_regexp /= Void
+			rule_not_void: rule /= Void
 		do
 			a_trail.set_beginning_as_normal
 			if not (head_count >= 0 or trail_count >= 0) then
 					-- Variable trailing context rule.
 					-- Mark the first part of the rule as the accepting
 					-- "head" part of a trailing context rule.
-				a_regexp.set_accepted_rule (rule)
+				check precondition: attached rule as l_rule then
+					a_regexp.set_accepted_rule (l_rule)
+				end
 			end
 			Result := a_regexp
 			Result.build_concatenation (a_trail)
@@ -1080,8 +1089,8 @@ feature {NONE} -- Implementation
 	override_options
 			-- Override options specified in the input file.
 		do
-			if options_overrider /= Void then
-				options_overrider.override_description (description)
+			if attached options_overrider as l_options_overrider then
+				l_options_overrider.override_description (description)
 			end
 		end
 

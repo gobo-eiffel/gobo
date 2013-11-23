@@ -5,7 +5,7 @@ note
 		"Grammar documentation generators in HTML format"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -99,13 +99,13 @@ feature {NONE} -- Generation
 	print_token (a_token: PR_TOKEN; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print `a_token' to `a_file'.
 		do
-			if a_token.literal_string /= Void then
+			if attached a_token.literal_string as l_literal_string then
 				a_file.put_string ("<span class=%"literal_token%">")
-				inspect a_token.literal_string.item (1)
+				inspect l_literal_string.item (1)
 				when '%"', '%'' then
-					print_escaped (a_token.literal_string.substring (2, a_token.literal_string.count - 1), a_file)
+					print_escaped (l_literal_string.substring (2, l_literal_string.count - 1), a_file)
 				else
-					print_escaped (a_token.literal_string, a_file)
+					print_escaped (l_literal_string, a_file)
 				end
 			else
 				inspect a_token.name.item (1)

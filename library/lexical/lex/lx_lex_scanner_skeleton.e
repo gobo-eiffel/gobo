@@ -37,6 +37,8 @@ feature {NONE} -- Initialization
 		do
 			create description.make
 			make_with_buffer (Empty_buffer)
+			last_string_value := ""
+			create last_lx_symbol_class_value.make (0)
 			error_handler := handler
 			create name_definitions.make_map (Initial_max_nb_names)
 			name_definitions.set_key_equality_tester (string_equality_tester)
@@ -57,6 +59,8 @@ feature {NONE} -- Initialization
 		do
 			description := a_description
 			make_with_buffer (Empty_buffer)
+			last_string_value := ""
+			create last_lx_symbol_class_value.make (0)
 			error_handler := handler
 			create name_definitions.make_map (Initial_max_nb_names)
 			name_definitions.set_key_equality_tester (string_equality_tester)
@@ -75,6 +79,8 @@ feature -- Initialization
 			-- Reset scanner before scanning next input.
 		do
 			reset_compressed_scanner_skeleton
+			last_string_value := ""
+			create last_lx_symbol_class_value.make (0)
 			description.reset
 			name_definitions.wipe_out
 			character_classes.wipe_out
@@ -132,6 +138,12 @@ feature {NONE} -- Access
 
 	last_integer_value: INTEGER
 			-- Last semantic value of type INTEGER
+
+	last_string_value: STRING
+			-- Last semantic value of type STRING
+
+	last_lx_symbol_class_value: LX_SYMBOL_CLASS
+			-- Last semantic value of type LX_SYMBOL_CLASS
 
 feature -- Setting
 

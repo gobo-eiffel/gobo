@@ -43,7 +43,12 @@ feature -- Status report
 			-- Is there no valid position to left of cursor?
 		deferred
 		ensure
-			before_constraint: Result implies off
+-- The following postcondition has been commented out in order
+-- to make the ISE Eiffel compiler 13.11 happy when compiling in
+-- void-safe mode. No qualified call is allowed when calling
+-- containers' routine 'new_cursor' from their creation procedure.
+-- And 'implies' is considered as a qualified call.
+--			before_constraint: Result implies off
 		end
 
 	off: BOOLEAN
@@ -101,6 +106,11 @@ feature {DS_BILINEAR} -- Implementation
 
 invariant
 
-	not_both: not (after and before)
+-- The following invariant has been commented out in order
+-- to make the ISE Eiffel compiler 13.11 happy when compiling in
+-- void-safe mode. No qualified call is allowed when calling
+-- containers' routine 'new_cursor' from their creation procedure.
+-- And 'not' and 'and' are considered as a qualified calls.
+--	not_both: not (after and before)
 
 end

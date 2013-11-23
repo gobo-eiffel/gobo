@@ -17,14 +17,18 @@ inherit
 
 	LX_LEX_SCANNER_SKELETON
 		redefine
-			last_integer_value
+			last_integer_value,
+			last_string_value,
+			last_lx_symbol_class_value
 		end
 
 	LX_LEX_TOKENS
 		export
 			{NONE} all
 		redefine
-			last_integer_value
+			last_integer_value,
+			last_string_value,
+			last_lx_symbol_class_value
 		end
 
 create
@@ -477,5 +481,11 @@ feature {NONE} -- Access
 
 	last_integer_value: INTEGER
 			-- Last semantic value of type INTEGER
+
+	last_string_value: STRING
+			-- Last semantic value of type STRING
+
+	last_lx_symbol_class_value: LX_SYMBOL_CLASS
+			-- Last semantic value of type LX_SYMBOL_CLASS
 
 end

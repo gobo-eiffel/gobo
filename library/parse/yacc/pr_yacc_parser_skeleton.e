@@ -936,7 +936,7 @@ feature {NONE} -- Implementation
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: not a_name.is_empty
 		local
-			l_old_alias_name: STRING
+			l_old_alias_name: detachable STRING
 			l_last_value_name: STRING
 			l_no_type: PR_TYPE
 		do
@@ -969,7 +969,7 @@ feature {NONE} -- Implementation
 		require
 			a_type_not_void: a_type /= Void
 		local
-			l_old_alias_name: STRING
+			l_old_alias_name: detachable STRING
 			l_last_value_name: STRING
 			l_no_type: PR_TYPE
 		do
@@ -1014,8 +1014,8 @@ feature {NONE} -- Implementation
 			a_string_not_void: a_string /= Void
 --			valid_string: (\"[^"\n]*\").recognizes (a_string)
 		do
-			if a_token.literal_string /= Void and then not a_token.literal_string.is_equal (a_string) then
-				report_two_strings_token_error (a_token.name, a_token.literal_string, a_string)
+			if attached a_token.literal_string as l_literal_string and then not l_literal_string.is_equal (a_string) then
+				report_two_strings_token_error (a_token.name, l_literal_string, a_string)
 			elseif terminal_symbols.has (a_string) and then terminal_symbols.item (a_string) /= a_token then
 				report_string_token_defined_twice_error (a_string, terminal_symbols.item (a_string).name, a_token.name)
 			end

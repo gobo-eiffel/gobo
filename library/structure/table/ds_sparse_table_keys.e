@@ -26,7 +26,7 @@ inherit
 
 create {DS_SPARSE_TABLE}
 
-	make, make_with_table_cursor
+	make
 
 feature {NONE} -- Initialization
 
@@ -36,21 +36,8 @@ feature {NONE} -- Initialization
 			a_table_not_void: a_table /= Void
 		do
 			table := a_table
-			equality_tester := table.key_equality_tester
-			set_internal_cursor (new_cursor)
-		ensure
-			table_set: table = a_table
-		end
-
-	make_with_table_cursor (a_table: like table; a_table_cursor: like table.new_cursor)
-			-- Create a new linear representation of the keys of `a_table'.
-			-- `a_table_cursor' is a cursor for `a_table'.
-		require
-			a_table_not_void: a_table /= Void
-			a_table_cursor_not_void: a_table_cursor /= Void
-		do
-			table := a_table
-			set_internal_cursor (new_cursor_with_table_cursor (a_table_cursor))
+			equality_tester := a_table.key_equality_tester
+			set_internal_cursor (new_cursor_with_table_cursor (a_table.new_cursor))
 		ensure
 			table_set: table = a_table
 		end
