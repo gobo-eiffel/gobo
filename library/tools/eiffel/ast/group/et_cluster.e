@@ -559,7 +559,7 @@ feature -- SCM mappings
 			-- SCM read mapping declared in current cluster
 			--
 			-- See class ET_CLUSTER_SCM_READ_MAPPING for explanations
-			-- about SCM read mapings.
+			-- about SCM read mappings.
 
 	scm_write_mapping: ET_CLUSTER_SCM_WRITE_MAPPING
 			-- SCM write mapping declared in current cluster
