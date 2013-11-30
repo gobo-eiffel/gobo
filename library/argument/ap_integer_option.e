@@ -5,7 +5,7 @@ note
 		"Options that need an integer argument"
 
 	library: "Gobo Eiffel Argument Library"
-	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
+	copyright: "Copyright (c) 2006-2013, Bernd Schoeller and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -65,13 +65,14 @@ feature {AP_PARSER} -- Parser Interface
 			check
 					-- Implied by inherited precondition `parameter_if_needed' and Current's value of `needs_parameter'
 				parameter_needed: l_last_option_parameter /= Void
-			end
-			if l_last_option_parameter.is_integer then
-				parameters.force_last (l_last_option_parameter.to_integer)
-			else
-				create error.make_invalid_parameter_error (Current, l_last_option_parameter)
-				a_parser.error_handler.report_error (error)
-				parameters.force_last (0)
+			then
+				if l_last_option_parameter.is_integer then
+					parameters.force_last (l_last_option_parameter.to_integer)
+				else
+					create error.make_invalid_parameter_error (Current, l_last_option_parameter)
+					a_parser.error_handler.report_error (error)
+					parameters.force_last (0)
+				end
 			end
 		end
 

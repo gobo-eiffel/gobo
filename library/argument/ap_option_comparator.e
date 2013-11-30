@@ -5,7 +5,7 @@ note
 		"Comparators for ordering options"
 
 	library: "Gobo Eiffel Argument Library"
-	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
+	copyright: "Copyright (c) 2006-2013, Bernd Schoeller and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,23 +24,14 @@ feature -- Status report
 			-- Is `u' considered less than `v'?
 		local
 			u_string, v_string: STRING
-			l_long_form: detachable STRING
 		do
-			if u.has_long_form then
-				l_long_form := u.long_form
-				check
-					u_has_long_form : l_long_form /= Void
-				end
-				u_string := l_long_form
+			if attached u.long_form as l_u_long_form then
+				u_string := l_u_long_form
 			else
 				u_string := u.short_form.out
 			end
-			if v.has_long_form then
-				l_long_form := v.long_form
-				check
-					v_has_long_form: l_long_form /= Void
-				end
-				v_string := l_long_form
+			if attached v.long_form as l_v_long_form then
+				v_string := l_v_long_form
 			else
 				v_string := v.short_form.out
 			end

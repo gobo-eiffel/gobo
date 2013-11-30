@@ -112,14 +112,15 @@ feature {AP_PARSER} -- Parser Interface
 			check
 					-- Implied by inherited precondition `parameter_if_needed' and Current's value of `needs_parameter'
 				parameter_needed: l_last_option_parameter /= Void
-			end
-			if true_strings.has (l_last_option_parameter) then
-				parameters.force_last (True)
-			elseif false_strings.has (l_last_option_parameter) then
-				parameters.force_last (False)
-			else
-				create error.make_invalid_parameter_error (Current, l_last_option_parameter)
-				a_parser.error_handler.report_error (error)
+			then
+				if true_strings.has (l_last_option_parameter) then
+					parameters.force_last (True)
+				elseif false_strings.has (l_last_option_parameter) then
+					parameters.force_last (False)
+				else
+					create error.make_invalid_parameter_error (Current, l_last_option_parameter)
+					a_parser.error_handler.report_error (error)
+				end
 			end
 		end
 

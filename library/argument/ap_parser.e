@@ -5,7 +5,7 @@ note
 		"Parsers for arguments supplied to a program"
 
 	library: "Gobo Eiffel Argument Library"
-	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
+	copyright: "Copyright (c) 2006-2013, Bernd Schoeller and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -343,7 +343,6 @@ feature -- Validity checks
 			l_option: AP_OPTION
 			long_set: DS_LINKED_LIST [STRING]
 			short_set: DS_LINKED_LIST [CHARACTER]
-			l_long_form: detachable STRING
 		do
 			Result := True
 			create long_set.make
@@ -363,11 +362,7 @@ feature -- Validity checks
 						Result := valid_short_form (l_option.short_form) and not short_set.has (l_option.short_form)
 						short_set.force_last (l_option.short_form)
 					end
-					if l_option.has_long_form and Result then
-						l_long_form := l_option.long_form
-						check
-							l_option_has_long_form : l_long_form /= Void
-						end
+					if attached l_option.long_form as l_long_form and Result then
 						Result := valid_long_form (l_long_form) and not long_set.has (l_long_form)
 						long_set.force_last (l_long_form)
 					end
@@ -380,7 +375,6 @@ feature -- Validity checks
 			-- Are all options correctly set up?
 		local
 			aol: AP_ALTERNATIVE_OPTIONS_LIST
-			l_long_form: detachable STRING
 		do
 			if all_valid_short_and_long_form (options) then
 				Result := True
@@ -396,11 +390,7 @@ feature -- Validity checks
 						if aol.introduction_option.has_short_form then
 							Result := not has_short_option (aol.introduction_option.short_form)
 						end
-						if aol.introduction_option.has_long_form and Result then
-							l_long_form := aol.introduction_option.long_form
-							check
-								aol_introduction_option_has_long_form: l_long_form /= Void
-							end
+						if attached aol.introduction_option.long_form as l_long_form and Result then
 							Result := not has_long_option (l_long_form)
 						end
 					end
@@ -434,22 +424,23 @@ feature {NONE} -- Implementation
 			check
 				-- Implied by precondition `current_options_not_void'
 				current_options_not_void: l_current_options /= Void
-			end
-			from
-				l_current_options.start
-			until
-				l_current_options.after
-			loop
-				o := l_current_options.item_for_iteration
-				if o.is_mandatory and not o.was_found then
-					create error.make_missing_option_error (o)
-					error_handler.report_error (error)
+			then
+				from
+					l_current_options.start
+				until
+					l_current_options.after
+				loop
+					o := l_current_options.item_for_iteration
+					if o.is_mandatory and not o.was_found then
+						create error.make_missing_option_error (o)
+						error_handler.report_error (error)
+					end
+					if o.maximum_occurrences > 0 and o.occurrences > o.maximum_occurrences then
+						create error.make_surplus_option_error (o)
+						error_handler.report_error (error)
+					end
+					l_current_options.forth
 				end
-				if o.maximum_occurrences > 0 and o.occurrences > o.maximum_occurrences then
-					create error.make_surplus_option_error (o)
-					error_handler.report_error (error)
-				end
-				l_current_options.forth
 			end
 		end
 
@@ -468,30 +459,30 @@ feature {NONE} -- Implementation
 			check
 					-- Implied by precondition `parameters_not_void'
 				parameters_not_void: l_parameters /= Void
-			end
-
-			l_argument := a_argument_list.item_for_iteration
-			length := l_argument.count
-			if length >= 2 and then l_argument.item (1) = short_option_introduction then
-				if l_argument.item (2) = long_option_introduction then
-					if length = 2 then
-						from
-							a_argument_list.forth
-						until
-							a_argument_list.after
-						loop
-							l_parameters.force_last (a_argument_list.item_for_iteration)
-							a_argument_list.forth
+			then
+				l_argument := a_argument_list.item_for_iteration
+				length := l_argument.count
+				if length >= 2 and then l_argument.item (1) = short_option_introduction then
+					if l_argument.item (2) = long_option_introduction then
+						if length = 2 then
+							from
+								a_argument_list.forth
+							until
+								a_argument_list.after
+							loop
+								l_parameters.force_last (a_argument_list.item_for_iteration)
+								a_argument_list.forth
+							end
+						else
+							parse_long (a_argument_list)
 						end
 					else
-						parse_long (a_argument_list)
+						parse_short (a_argument_list)
 					end
 				else
-					parse_short (a_argument_list)
+					l_parameters.force_last (l_argument)
+					a_argument_list.forth
 				end
-			else
-				l_parameters.force_last (l_argument)
-				a_argument_list.forth
 			end
 		end
 
@@ -511,7 +502,6 @@ feature {NONE} -- Implementation
 			parameter: detachable STRING
 			error: AP_ERROR
 			l_current_options: like current_options
-			l_long_form: detachable STRING
 		do
 			l_argument := a_argument_list.item_for_iteration
 			parameter_position := l_argument.index_of (long_option_parameter_introduction, 3)
@@ -529,12 +519,8 @@ feature {NONE} -- Implementation
 					option /= Void or alternative_options_lists.after
 				loop
 					o := alternative_options_lists.item_for_iteration.introduction_option
-					if o.has_long_form then
-						l_long_form := o.long_form
-						check
-							o_has_long_form: l_long_form /= Void
-						end
-						if STRING_.same_string (l_long_form, option_string) then
+					if attached o.long_form as l_o_long_form then
+						if STRING_.same_string (l_o_long_form, option_string) then
 							option := o
 							current_options := alternative_options_lists.item_for_iteration
 						end
@@ -551,12 +537,8 @@ feature {NONE} -- Implementation
 					option /= Void or l_current_options.after
 				loop
 					o := l_current_options.item_for_iteration
-					if o.has_long_form then
-						l_long_form := o.long_form
-						check
-							o_has_long_form: l_long_form /= Void
-						end
-						if STRING_.same_string (l_long_form, option_string) then
+					if attached o.long_form as l_o_long_form then
+						if STRING_.same_string (l_o_long_form, option_string) then
 							option := o
 						end
 					end

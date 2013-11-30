@@ -2,13 +2,20 @@
 
 <library name="argument" prefix="ap_">
 	<description>
-		description: "Xace file for the GOBO argument parser"
+		description: "Xace file for the Gobo Eiffel Argument Library"
 		library: "Gobo Eiffel Argument Library"
-		copyright: "Copyright (c) 2006, Bernd Schoeller and others"
+		copyright: "Copyright (c) 2006-2013, Bernd Schoeller and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
 
 	<cluster name="argument" location="${GOBO}/library/argument"/>
+
+
+	<mount location="${GOBO}/library/kernel.xace"/>
+	<mount location="${GOBO}/library/kernel/library.xace"/>
+	<mount location="${GOBO}/library/string/library.xace"/>
+	<mount location="${GOBO}/library/structure/library.xace"/>
+	<mount location="${GOBO}/library/utility/library.xace"/>
 </library>

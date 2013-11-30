@@ -5,7 +5,7 @@ note
 		"Abstract representations of an option, that might or might not require an extra argument"
 
 	library: "Gobo Eiffel Argument Library"
-	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
+	copyright: "Copyright (c) 2006-2013, Bernd Schoeller and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -103,14 +103,8 @@ feature -- Access
 
 	name: STRING
 			-- Name of the option (short or long from)
-		local
-			l_long_form: like long_form
 		do
-			if has_long_form then
-				l_long_form := long_form
-				check
-					has_long_form: l_long_form /= Void
-				end
+			if attached long_form as l_long_form then
 				Result := short_option_introduction.out + long_option_introduction.out + l_long_form
 			else
 				Result := short_option_introduction.out + short_form.out
@@ -123,17 +117,12 @@ feature -- Access
 			-- Names of the option (short and long)
 		local
 			s: detachable STRING
-			l_long_form: like long_form
 		do
 			if has_short_form then
 				s := short_option_introduction.out
 				s.append_character (short_form)
 			end
-			if has_long_form then
-				l_long_form := long_form
-				check
-					has_long_form: l_long_form /= Void
-				end
+			if attached long_form as l_long_form then
 				if s = Void then
 					s := "    "
 				else
@@ -146,8 +135,9 @@ feature -- Access
 			check
 					-- `s' not Void implied by invariant: has_short_or_long
 				has_short_or_long: s /= Void
+			then
+				Result := s
 			end
-			Result := s
 		ensure
 			names_not_void: Result /= Void
 		end
