@@ -293,7 +293,9 @@ feature {NONE} -- Access
 				elseif l_parent_cluster /= Void and then l_parent_cluster.is_recursive then
 					from until i > nb loop
 						l_name := a_names.item (i)
-						l_parent_cluster.add_recursive_cluster (l_name)
+						if l_parent_cluster.is_valid_directory_name (l_name) then
+							l_parent_cluster.add_recursive_cluster (l_name)
+						end
 						l_clusters := l_parent_cluster.subclusters
 						if l_clusters /= Void then
 							Result := l_clusters.cluster_by_name (l_name)
