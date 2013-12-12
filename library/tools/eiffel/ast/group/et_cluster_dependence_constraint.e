@@ -5,10 +5,10 @@ note
 		"Cluster dependence constraints"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2013, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2009/06/22 $"
-	revision: "$Revision: #4 $"
+	date: "$Date: 2013/09/19 $"
+	revision: "$Revision: #1 $"
 
 class ET_CLUSTER_DEPENDENCE_CONSTRAINT
 
@@ -128,10 +128,8 @@ feature -- Status report
 					Result := has_group (l_parent)
 				elseif not group_names.is_empty then
 					if attached {ET_LIBRARY} a_group.universe as l_library then
-						l_library_name := l_library.name
-						if l_library_name /= Void and then not l_library_name.is_empty then
-							Result := group_names.there_exists (agent STRING_.same_case_insensitive (?, l_library_name))
-						end
+						l_library_name := l_library.full_name ('/')
+						Result := group_names.there_exists (agent STRING_.same_case_insensitive (?, l_library_name))
 					end
 				end
 			end

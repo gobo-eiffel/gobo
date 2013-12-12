@@ -5,10 +5,10 @@ note
 		"Eiffel provider checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2013, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2013/09/19 $"
+	revision: "$Revision: #1 $"
 
 class ET_PROVIDER_CHECKER
 
@@ -113,7 +113,7 @@ feature {NONE} -- Cluster dependence constraints
 					if l_cluster.scm_mapping_constraint_enabled then
 						l_scm_write_mapping := l_cluster.scm_write_mapping_recursive
 						if l_scm_write_mapping /= Void then
-							l_mapped_cluster := l_scm_write_mapping.master_cluster.cluster_with_relative_pathname_to (l_cluster, l_scm_write_mapping.current_cluster)
+							l_mapped_cluster := scm_mapped_cluster (l_cluster)
 							if l_mapped_cluster /= Void then
 								l_group := l_mapped_cluster
 								l_provider_constraint := l_mapped_cluster.provider_constraint
@@ -150,7 +150,7 @@ feature {NONE} -- Cluster dependence constraints
 								if l_cluster.scm_mapping_constraint_enabled then
 									l_scm_write_mapping := l_cluster.scm_write_mapping_recursive
 									if l_scm_write_mapping /= Void then
-										l_mapped_cluster := l_scm_write_mapping.master_cluster.cluster_with_relative_pathname_to (l_cluster, l_scm_write_mapping.current_cluster)
+										l_mapped_cluster := scm_mapped_cluster (l_cluster)
 										if l_mapped_cluster /= Void then
 											l_provider_group := l_mapped_cluster
 											l_dependant_constraint := l_mapped_cluster.dependant_constraint
@@ -183,6 +183,17 @@ feature {NONE} -- Cluster dependence constraints
 					end
 				end
 			end
+		end
+
+	scm_mapped_cluster (a_cluster: ET_CLUSTER): detachable ET_CLUSTER
+			-- Cluster where classes from `a_cluster' will be checked-in to, if any
+		require
+			a_cluster_not_void: a_cluster /= Void
+		local
+			l_scm_write_mapping: ET_CLUSTER_SCM_WRITE_MAPPING
+		do
+			l_scm_write_mapping := a_cluster.scm_write_mapping_recursive
+			Result := l_scm_write_mapping.master_cluster.cluster_with_relative_pathname_to (a_cluster, l_scm_write_mapping.current_cluster)
 		end
 
 end

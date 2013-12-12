@@ -7,8 +7,8 @@ note
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2009/11/19 $"
-	revision: "$Revision: #28 $"
+	date: "$Date: 2013/09/19 $"
+	revision: "$Revision: #1 $"
 
 deferred class ET_EIFFEL_SCANNER_SKELETON
 
@@ -243,6 +243,11 @@ feature -- Cluster dependences
 					end
 				elseif a_cluster.parent /= Void then
 					l_provider_constraint := a_cluster.parent.provider_constraint
+				else
+					create l_cluster_names.make (50)
+					add_universe_full_name (a_cluster.universe, l_cluster_names)
+					a_cluster.universe.universes_do_all (agent add_universe_full_name (?, l_cluster_names))
+					create l_provider_constraint.make (a_cluster, l_cluster_names)
 				end
 				a_cluster.set_provider_constraint (l_provider_constraint)
 			end
@@ -3773,6 +3778,18 @@ feature {NONE} -- Processing
 		end
 
 feature {NONE} -- Implementation
+
+	add_universe_full_name (a_universe: ET_UNIVERSE; a_names: DS_ARRAYED_LIST [STRING])
+			-- Add full name of `a_universe' to `a_names'.
+		require
+			a_universe_not_void: a_universe /= Void
+			a_names_not_void: a_names /= Void
+			no_void_name: not a_names.has_void
+		do
+			a_names.force_last (a_universe.full_name ('/'))
+		ensure
+			no_void_name: not a_names.has_void
+		end
 
 	tmp_file: KL_TEXT_INPUT_FILE
 			-- Temporary file object
