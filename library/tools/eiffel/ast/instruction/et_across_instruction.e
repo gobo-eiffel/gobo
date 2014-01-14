@@ -5,7 +5,7 @@ note
 		"Eiffel across instructions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2012-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -62,7 +62,6 @@ feature -- Initialization
 			-- Reset instruction as it was just after it was last parsed.
 		do
 			iterable_expression.reset
-			cursor_name.reset
 			if from_compound /= Void then
 				from_compound.reset
 			end

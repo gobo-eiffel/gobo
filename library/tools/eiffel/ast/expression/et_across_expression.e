@@ -5,7 +5,7 @@ note
 		"Eiffel across expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2012-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2012-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -88,7 +88,6 @@ feature -- Initialization
 			-- Reset expression as it was just after it was last parsed.
 		do
 			iterable_expression.reset
-			cursor_name.reset
 			if invariant_part /= Void then
 				invariant_part.reset
 			end
