@@ -243,7 +243,7 @@ feature -- Cluster dependences
 					end
 				elseif a_cluster.parent /= Void then
 					l_provider_constraint := a_cluster.parent.provider_constraint
-				else
+				elseif not attached {ET_SYSTEM} a_cluster.universe then
 					create l_cluster_names.make (50)
 					add_universe_full_name (a_cluster.universe, l_cluster_names)
 					a_cluster.universe.universes_do_all (agent add_universe_full_name (?, l_cluster_names))
