@@ -5,7 +5,7 @@ note
 		"Eiffel AST pretty printers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -323,9 +323,9 @@ feature {ET_AST_NODE} -- Processing
 			a_compound := an_instruction.from_compound
 			if a_compound /= Void then
 				a_compound.process (Current)
+				print_new_line
+				process_comments
 			end
-			print_new_line
-			process_comments
 			an_invariant_part := an_instruction.invariant_part
 			if an_invariant_part /= Void then
 				an_invariant_part.process (Current)
