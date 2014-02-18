@@ -1010,7 +1010,7 @@ feature {ET_AST_NODE} -- Processing
 		end
 
 	process_local_variable_semicolon (a_local: ET_LOCAL_VARIABLE_SEMICOLON)
-			-- Process `an_argument'.
+			-- Process `a_local'.
 		require
 			a_local_not_void: a_local /= Void
 		deferred
