@@ -5,7 +5,7 @@ note
 		"Eiffel parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/11/01 $"
 	revision: "$Revision: #41 $"
@@ -1125,6 +1125,7 @@ feature {NONE} -- AST factory
 					if a_seed /= 0 then
 						an_identifier.set_seed (a_seed)
 						an_identifier.set_local (True)
+						last_local_variables.local_variable (a_seed).set_used (True)
 					end
 				end
 				if a_seed = 0 then
