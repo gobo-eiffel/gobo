@@ -763,7 +763,7 @@ feature {NONE} -- Basic operations
 			if not last_object_tests_stack.is_empty or last_object_tests /= Void then
 				last_object_tests_stack.force (last_object_tests)
 			end
-			last_across_components := Void
+			last_object_tests := Void
 			if not last_across_components_stack.is_empty or last_across_components /= Void then
 				last_across_components_stack.force (last_across_components)
 			end
