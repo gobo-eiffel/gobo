@@ -4,7 +4,7 @@ note
 
 		"Test semantics of object-tests"
 
-	copyright: "Copyright (c) 2009-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -248,6 +248,19 @@ feature -- Test
 			assert ("precondition1", my_feature1 ("gobo"))
 		end
 
+	test_precedence
+			-- Test precedence level of object-test.
+			-- Object_test has the same precedence as Unary_operator,
+			-- which is stronger that "and".
+		local
+			bb: BB
+		do
+			create bb
+			assert ("attached_1", attached bb and True)
+			assert ("attached_2", (attached bb) and True)
+			assert_false ("not_attached_1", attached (bb and True))
+		end
+		
 feature {NONE} -- Implementation
 
 	my_feature1 (a_string: detachable STRING): BOOLEAN
