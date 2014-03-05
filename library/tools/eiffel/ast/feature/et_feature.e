@@ -5,7 +5,7 @@ note
 		"Eiffel features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2011/09/15 $"
 	revision: "$Revision: #22 $"
@@ -394,6 +394,15 @@ feature -- Status report
 			-- Result := False
 		ensure
 			definition: Result = (type /= Void and (arguments /= Void and then arguments.count > 0))
+		end
+
+	is_parenthesisable: BOOLEAN
+			-- Can current feature have a name of
+			-- the form 'alias "()"'?
+		do
+			Result := attached arguments as l_arguments and then l_arguments.count > 0
+		ensure
+			definition: Result = (attached arguments as l_arguments and then l_arguments.count > 0)
 		end
 
 	is_flattened_immediate: BOOLEAN = True

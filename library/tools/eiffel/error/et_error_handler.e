@@ -5,7 +5,7 @@ note
 		"Error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/11/23 $"
 	revision: "$Revision: #35 $"
@@ -1483,7 +1483,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdpr2a_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR)
+	report_vdpr2a_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR_CALL)
 			-- Report VDPR-2 error: the parent name specified in `a_precursor'
 			-- is not the name of a parent of `a_class'.
 			--
@@ -1502,7 +1502,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdpr3a_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR; a_redefined_feature: ET_FEATURE; f1, f2: ET_PARENT_FEATURE)
+	report_vdpr3a_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR_CALL; a_redefined_feature: ET_FEATURE; f1, f2: ET_PARENT_FEATURE)
 			-- Report VDPR-3 error: two effective features `f1' and `f2' redefined into
 			-- the same feature `a_redefined_feature' containing `a_precursor' in `a_class'.
 			--
@@ -1523,7 +1523,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdpr3b_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR; a_redefined_feature: ET_FEATURE; an_inherited_feature: ET_PARENT_FEATURE)
+	report_vdpr3b_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR_CALL; a_redefined_feature: ET_FEATURE; an_inherited_feature: ET_PARENT_FEATURE)
 			-- Report VDPR-3 error: feature `a_redefined_feature' where `a_precursor' appears
 			-- is the redefinition of a deferred feature `an_inherited_feature' in `a_class'.
 			--
@@ -1543,7 +1543,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdpr3c_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR; a_redefined_feature: ET_FEATURE)
+	report_vdpr3c_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR_CALL; a_redefined_feature: ET_FEATURE)
 			-- Report VDPR-3 error: feature `a_redefined_feature' where `a_precursor' appears
 			-- is not the redefinition of a feature inherited from `a_precursor.parent_name'
 			-- in `a_class'.
@@ -1564,7 +1564,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdpr3d_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR; a_feature: ET_FEATURE)
+	report_vdpr3d_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR_CALL; a_feature: ET_FEATURE)
 			-- Report VDPR-3 error: `a_precursor' appears in `a_feature' in `a_class',
 			-- but `a_feature' is not a redeclared feature.
 			--
@@ -1583,7 +1583,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdpr3e_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR; an_agent: ET_INLINE_AGENT; a_feature: ET_STANDALONE_CLOSURE)
+	report_vdpr3e_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR_CALL; an_agent: ET_INLINE_AGENT; a_feature: ET_STANDALONE_CLOSURE)
 			-- Report VDPR-3 error: `a_precursor' appears in inline agent `an_agent'
 			-- of `a_feature' in `a_class', but the associated feature of inline
 			-- agents cannot be redefined.
@@ -2981,6 +2981,121 @@ feature -- Validity errors
 			end
 		end
 
+	report_vfav4a_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
+			-- Report VFAV-4 error: `a_feature' has a parenthesis alias
+			-- but is not a feature with at least one argument.
+			--
+			-- ISE
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_has_alias: a_feature.alias_name /= Void
+			a_feature_alias_parenthesis: a_feature.alias_name.is_parenthesis
+			a_feature_not_parenthesisable: not a_feature.is_parenthesisable
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav4_error (a_class) then
+				create an_error.make_vfav4a (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vfav4b_error (a_class: ET_CLASS; a_feature1, a_feature2: ET_FEATURE)
+			-- Report VFAV-4 error: `a_feature1' and `a_feature2' have both
+			-- a parenthesis alias.
+			--
+			-- ISE
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature1_not_void: a_feature1 /= Void
+			a_feature1_has_alias: a_feature1.alias_name /= Void
+			a_feature1_alias_parenthesis: a_feature1.alias_name.is_parenthesis
+			a_feature2_not_void: a_feature2 /= Void
+			a_feature2_has_alias: a_feature2.alias_name /= Void
+			a_feature2_alias_parenthesis: a_feature2.alias_name.is_parenthesis
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav4_error (a_class) then
+				create an_error.make_vfav4b (a_class, a_feature1, a_feature2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vfav4c_error (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_feature2: ET_PARENT_FEATURE)
+			-- Report VFAV-4 error: `a_feature1' and `a_feature2' have both
+			-- a parenthesis alias.
+			--
+			-- ISE
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature1_not_void: a_feature1 /= Void
+			a_feature1_has_alias: a_feature1.alias_name /= Void
+			a_feature1_alias_parenthesis: a_feature1.alias_name.is_parenthesis
+			a_feature2_not_void: a_feature2 /= Void
+			a_feature2_has_alias: a_feature2.alias_name /= Void
+			a_feature2_alias_parenthesis: a_feature2.alias_name.is_parenthesis
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav4_error (a_class) then
+				create an_error.make_vfav4c (a_class, a_feature1, a_feature2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vfav4d_error (a_class: ET_CLASS; a_feature1, a_feature2: ET_PARENT_FEATURE)
+			-- Report VFAV-4 error: `a_feature1' and `a_feature2' have both
+			-- a parenthesis alias.
+			--
+			-- ISE
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature1_not_void: a_feature1 /= Void
+			a_feature1_has_alias: a_feature1.alias_name /= Void
+			a_feature1_alias_parenthesis: a_feature1.alias_name.is_parenthesis
+			a_feature2_not_void: a_feature2 /= Void
+			a_feature2_has_alias: a_feature2.alias_name /= Void
+			a_feature2_alias_parenthesis: a_feature2.alias_name.is_parenthesis
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav4_error (a_class) then
+				create an_error.make_vfav4d (a_class, a_feature1, a_feature2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vfav4e_error (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE)
+			-- Report VFAV-4 error: the Rename_pair
+			-- `a_rename' has a new_name with a parenthesis alias,
+			-- but the corresponding feature `f' is not a
+			-- feature with at least one argument.
+			--
+			-- ISE
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_parent_not_void: a_parent /= Void
+			a_rename_not_void: a_rename /= Void
+			a_rename_has_alias: a_rename.new_name.alias_name /= Void
+			a_rename_alias_parenthesis: a_rename.new_name.alias_name.is_parenthesis
+			f_not_void: f /= Void
+			f_not_parenthesisable: not f.is_parenthesisable
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav4_error (a_class) then
+				create an_error.make_vfav4e (a_class, a_parent, a_rename, f)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vffd4a_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
 			-- Report VFFD-4 error: deferred `a_feature' is marked as frozen.
 			--
@@ -3664,7 +3779,7 @@ feature -- Validity errors
 			a_rename_has_alias: a_rename.new_name.alias_name /= Void
 			a_rename_alias_bracket: a_rename.new_name.alias_name.is_bracket
 			f_not_void: f /= Void
-			f_not_brackable: not f.is_bracketable
+			f_not_bracketable: not f.is_bracketable
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
@@ -6701,6 +6816,69 @@ feature -- Validity errors
 			end
 		end
 
+	report_gvuac0a_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE)
+			-- Report GVUAC error: `a_name' is an across cursor of
+			-- `a_feature' in `a_class', and hence cannot have actual
+			-- arguments.
+			--
+			-- Not in ETL as validity error but as syntax error
+			-- GVUAC: See ETL2 VUAR
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvuac_error (a_class) then
+				create an_error.make_gvuac0a (a_class, a_name, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvuac0b_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT)
+			-- Report GVUAC error: `a_name' is an across cursor of
+			-- inline agent `an_agent' in `a_class', and hence cannot
+			-- have actual arguments.
+			--
+			-- Not in ETL as validity error but as syntax error
+			-- GVUAC: See ETL2 VUAR
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			an_agent_not_void: an_agent /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvuac_error (a_class) then
+				create an_error.make_gvuac0b (a_class, a_name, an_agent)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvuac0c_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_invariants: ET_INVARIANTS)
+			-- Report GVUAC error: `a_name' is an across cursor of
+			-- invariants `a_invariants' in `a_class', and hence cannot
+			-- have actual arguments.
+			--
+			-- Not in ETL as validity error but as syntax error
+			-- GVUAC: See ETL2 VUAR
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_invariants_not_void: a_invariants /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvuac_error (a_class) then
+				create an_error.make_gvuac0c (a_class, a_name, a_invariants)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_gvual0a_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE)
 			-- Report GVUAL error: `a_name' is a local variable of
 			-- `a_feature' in `a_class', and hence cannot have actual
@@ -6739,6 +6917,69 @@ feature -- Validity errors
 		do
 			if reportable_gvual_error (a_class) then
 				create an_error.make_gvual0b (a_class, a_name, an_agent)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvuao0a_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE)
+			-- Report GVUAO error: `a_name' is an object-test local of
+			-- `a_feature' in `a_class', and hence cannot have actual
+			-- arguments.
+			--
+			-- Not in ETL as validity error but as syntax error
+			-- GVUAO: See ETL2 VUAR
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvuao_error (a_class) then
+				create an_error.make_gvuao0a (a_class, a_name, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvuao0b_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT)
+			-- Report GVUAO error: `a_name' is an object-test local of
+			-- inline agent `an_agent' in `a_class', and hence cannot
+			-- have actual arguments.
+			--
+			-- Not in ETL as validity error but as syntax error
+			-- GVUAO: See ETL2 VUAR
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			an_agent_not_void: an_agent /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvuao_error (a_class) then
+				create an_error.make_gvuao0b (a_class, a_name, an_agent)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvuao0c_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_invariants: ET_INVARIANTS)
+			-- Report GVUAO error: `a_name' is an object-test local of
+			-- invariants `a_invariants' in `a_class', and hence cannot
+			-- have actual arguments.
+			--
+			-- Not in ETL as validity error but as syntax error
+			-- GVUAO: See ETL2 VUAR
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_invariants_not_void: a_invariants /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvuao_error (a_class) then
+				create an_error.make_gvuao0c (a_class, a_name, a_invariants)
 				report_validity_error (an_error)
 			end
 		end
@@ -6783,6 +7024,66 @@ feature -- Validity errors
 			end
 		end
 
+	report_gvuic0a_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE)
+			-- Report GVUIC error: `a_name' is an across cursor of
+			-- `a_feature' in `a_class', and hence cannot be an
+			-- instruction.
+			--
+			-- Not in ETL as validity error but as syntax error
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvuic_error (a_class) then
+				create an_error.make_gvuic0a (a_class, a_name, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvuic0b_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT)
+			-- Report GVUIC error: `a_name' is an across cursor of
+			-- inline agent `an_agent' in `a_class', and hence cannot
+			-- be an instruction.
+			--
+			-- Not in ETL as validity error but as syntax error
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			an_agent_not_void: an_agent /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvuic_error (a_class) then
+				create an_error.make_gvuic0b (a_class, a_name, an_agent)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvuic0c_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_invariants: ET_INVARIANTS)
+			-- Report GVUIC error: `a_name' is an across cursor of
+			-- invariants `a_invariants' in `a_class', and hence cannot
+			-- be an instruction.
+			--
+			-- Not in ETL as validity error but as syntax error
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_invariants_not_void: a_invariants /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvuic_error (a_class) then
+				create an_error.make_gvuic0c (a_class, a_name, a_invariants)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_gvuil0a_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE)
 			-- Report GVUIL error: `a_name' is a local variable of
 			-- `a_feature' in `a_class', and hence cannot be an
@@ -6819,6 +7120,66 @@ feature -- Validity errors
 		do
 			if reportable_gvuil_error (a_class) then
 				create an_error.make_gvuil0b (a_class, a_name, an_agent)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvuio0a_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE)
+			-- Report GVUIO error: `a_name' is an object-test local of
+			-- `a_feature' in `a_class', and hence cannot be an
+			-- instruction.
+			--
+			-- Not in ETL as validity error but as syntax error
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvuio_error (a_class) then
+				create an_error.make_gvuio0a (a_class, a_name, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvuio0b_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT)
+			-- Report GVUIO error: `a_name' is an object-test local of
+			-- inline agent `an_agent' in `a_class', and hence cannot
+			-- be an instruction.
+			--
+			-- Not in ETL as validity error but as syntax error
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			an_agent_not_void: an_agent /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvuio_error (a_class) then
+				create an_error.make_gvuio0b (a_class, a_name, an_agent)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvuio0c_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_invariants: ET_INVARIANTS)
+			-- Report GVUIO error: `a_name' is an object-test local of
+			-- invariants `a_invariants' in `a_class', and hence cannot
+			-- be an instruction.
+			--
+			-- Not in ETL as validity error but as syntax error
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_invariants_not_void: a_invariants /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvuio_error (a_class) then
+				create an_error.make_gvuio0c (a_class, a_name, a_invariants)
 				report_validity_error (an_error)
 			end
 		end
@@ -7248,6 +7609,16 @@ feature -- Validity error status
 
 	reportable_vfav2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VFAV-2 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vfav4_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VFAV-4 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void
@@ -8246,8 +8617,28 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_gvuac_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a GVUAC error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_gvual_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVUAL error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_gvuao_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a GVUAO error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void
@@ -8266,8 +8657,28 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_gvuic_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a GVUIC error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_gvuil_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVUIL error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_gvuio_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a GVUIO error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

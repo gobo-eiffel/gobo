@@ -5,7 +5,7 @@ note
 		"Eiffel feature call names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -262,6 +262,12 @@ feature -- Status report
 
 	is_bracket: BOOLEAN
 			-- Is current call name of the form 'alias "[]"'?
+		do
+			-- Result := False
+		end
+
+	is_parenthesis: BOOLEAN
+			-- Is current call name of the form 'alias "()"'?
 		do
 			-- Result := False
 		end

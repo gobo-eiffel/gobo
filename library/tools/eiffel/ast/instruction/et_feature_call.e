@@ -5,7 +5,7 @@ note
 		"Eiffel feature calls"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,6 +32,13 @@ feature -- Access
 	arguments: ET_ACTUAL_ARGUMENTS
 			-- Arguments
 		deferred
+		end
+
+	parenthesis_call: detachable ET_REGULAR_FEATURE_CALL
+			-- Unfolded form when the current call is of the parenthesis alias form;
+			-- For example, if the current call is 'f (args)', its parenthesis call
+			-- will be 'f.g (args)' where 'g' is declared as 'g alias "()"'.
+		do
 		end
 
 feature -- Measurement

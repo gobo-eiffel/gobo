@@ -5,7 +5,7 @@ note
 		"Eiffel identifiers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -108,6 +108,7 @@ inherit
 		rename
 			name as identifier
 		undefine
+			parenthesis_call,
 			first_position, last_position,
 			is_tuple_label, reset, is_equal
 		end

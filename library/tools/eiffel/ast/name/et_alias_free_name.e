@@ -5,7 +5,7 @@ note
 		"Eiffel alias 'free-operator' feature names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,6 +20,7 @@ inherit
 			lower_name,
 			same_call_name,
 			is_bracket,
+			is_parenthesis,
 			is_infix_and,
 			is_infix_and_then,
 			is_infix_div,

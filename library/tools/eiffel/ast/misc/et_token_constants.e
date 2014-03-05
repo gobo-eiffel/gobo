@@ -5,7 +5,7 @@ note
 		"Eiffel token and symbol constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1085,7 +1085,7 @@ feature -- Feature names
 		ensure
 			generic_parameter_type_feature_name_not_void: Result /= Void
 		end
-		
+
 	has_default_feature_name: ET_FEATURE_NAME
 			-- 'has_default' feature name
 		once
@@ -1755,7 +1755,7 @@ feature -- Feature names
 		ensure
 			new_special_any_instance_feature_name_not_void: Result /= Void
 		end
-		
+
 	object_comparison_feature_name: ET_FEATURE_NAME
 			-- 'object_comparison' feature name
 		once
@@ -3629,7 +3629,7 @@ feature -- Keyword and symbol names
 
 	generic_parameter_type_name: STRING = "generic_parameter_type"
 			-- Name of Eiffel feature 'generic_parameter_type'
-			
+
 	has_default_name: STRING = "has_default"
 			-- Name of Eiffel feature 'has_default'
 
@@ -3803,7 +3803,7 @@ feature -- Keyword and symbol names
 
 	new_special_any_instance_name: STRING = "new_special_any_instance"
 			-- Name of Eiffel feature 'new_special_any_instance'
-			
+
 	object_comparison_name: STRING = "object_comparison"
 			-- Name of Eiffel feature 'object_comparison'
 
@@ -4237,6 +4237,7 @@ feature -- Infix, prefix and alias feature names
 	alias_or_else_name: STRING = "alias %"or else%""
 	alias_not_name: STRING = "alias %"not%""
 	alias_bracket_name: STRING = "alias %"[]%""
+	alias_parenthesis_name: STRING = "alias %"()%""
 			-- Alias feature names
 
 feature -- Built-in

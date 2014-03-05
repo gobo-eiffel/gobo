@@ -5,7 +5,7 @@ note
 		"Eiffel validity errors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -117,6 +117,11 @@ create
 	make_vfav2b,
 	make_vfav2c,
 	make_vfav2d,
+	make_vfav4a,
+	make_vfav4b,
+	make_vfav4c,
+	make_vfav4d,
+	make_vfav4e,
 	make_vffd4a,
 	make_vffd5a,
 	make_vffd6a,
@@ -295,12 +300,24 @@ create
 	make_gvtcg5b,
 	make_gvuaa0a,
 	make_gvuaa0b,
+	make_gvuac0a,
+	make_gvuac0b,
+	make_gvuac0c,
 	make_gvual0a,
 	make_gvual0b,
+	make_gvuao0a,
+	make_gvuao0b,
+	make_gvuao0c,
 	make_gvuia0a,
 	make_gvuia0b,
+	make_gvuic0a,
+	make_gvuic0b,
+	make_gvuic0c,
 	make_gvuil0a,
 	make_gvuil0b,
+	make_gvuio0a,
+	make_gvuio0b,
+	make_gvuio0c,
 	make_gvwmc2a
 
 feature {NONE} -- Initialization
@@ -1529,7 +1546,7 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = implementation class name
 		end
 
-	make_vdpr2a (a_class: ET_CLASS; a_precursor: ET_PRECURSOR)
+	make_vdpr2a (a_class: ET_CLASS; a_precursor: ET_PRECURSOR_CALL)
 			-- Create a new VDPR-2 error: the parent name specified in `a_precursor'
 			-- is not the name of a parent of `a_class'.
 			--
@@ -1573,7 +1590,7 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = parent class name
 		end
 
-	make_vdpr3a (a_class: ET_CLASS; a_precursor: ET_PRECURSOR; a_redefined_feature: ET_FEATURE; f1, f2: ET_PARENT_FEATURE)
+	make_vdpr3a (a_class: ET_CLASS; a_precursor: ET_PRECURSOR_CALL; a_redefined_feature: ET_FEATURE; f1, f2: ET_PARENT_FEATURE)
 			-- Create a new VDPR-3 error: two effective features `f1' and `f2' redefined into
 			-- the same feature `a_redefined_feature' containing `a_precursor' in `a_class'.
 			--
@@ -1622,7 +1639,7 @@ feature {NONE} -- Initialization
 			-- dollar10: $10 = second feature parent class name
 		end
 
-	make_vdpr3b (a_class: ET_CLASS; a_precursor: ET_PRECURSOR; a_redefined_feature: ET_FEATURE; an_inherited_feature: ET_PARENT_FEATURE)
+	make_vdpr3b (a_class: ET_CLASS; a_precursor: ET_PRECURSOR_CALL; a_redefined_feature: ET_FEATURE; an_inherited_feature: ET_PARENT_FEATURE)
 			-- Create a new VDPR-3 error: feature `a_redefined_feature' where `a_precursor' appears
 			-- is the redefinition of a deferred feature `an_inherited_feature' in `a_class'.
 			--
@@ -1664,7 +1681,7 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = redefined feature name
 		end
 
-	make_vdpr3c (a_class: ET_CLASS; a_precursor: ET_PRECURSOR; a_redefined_feature: ET_FEATURE)
+	make_vdpr3c (a_class: ET_CLASS; a_precursor: ET_PRECURSOR_CALL; a_redefined_feature: ET_FEATURE)
 			-- Create a new VDPR-3 error: feature `a_redefined_feature' where `a_precursor' appears
 			-- is not the redefinition of a feature inherited from `a_precursor.parent_name'
 			-- in `a_class'.
@@ -1712,7 +1729,7 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = parent class name
 		end
 
-	make_vdpr3d (a_class: ET_CLASS; a_precursor: ET_PRECURSOR; a_feature: ET_FEATURE)
+	make_vdpr3d (a_class: ET_CLASS; a_precursor: ET_PRECURSOR_CALL; a_feature: ET_FEATURE)
 			-- Create a new VDPR-3 error: `a_precursor' appears in `a_feature' in `a_class',
 			-- but `a_feature' is not a redeclared feature.
 			--
@@ -1753,7 +1770,7 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = feature name
 		end
 
-	make_vdpr3e (a_class: ET_CLASS; a_precursor: ET_PRECURSOR; an_agent: ET_INLINE_AGENT; a_feature: ET_STANDALONE_CLOSURE)
+	make_vdpr3e (a_class: ET_CLASS; a_precursor: ET_PRECURSOR_CALL; an_agent: ET_INLINE_AGENT; a_feature: ET_STANDALONE_CLOSURE)
 			-- Create a new VDPR-3 error: `a_precursor' appears in inline agent
 			-- `an_agent' of `a_feature' in `a_class', but the associated feature
 			-- of inline agents cannot be redefined.
@@ -4747,6 +4764,263 @@ feature {NONE} -- Initialization
 			-- dollar12: $12 = second parent base class
 		end
 
+	make_vfav4a (a_class: ET_CLASS; a_feature: ET_FEATURE)
+			-- Create a new VFAV-4 error: `a_feature' has a parenthesis alias
+			-- but is not a feature with at least one argument.
+			--
+			-- ISE.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_has_alias: a_feature.alias_name /= Void
+			a_feature_alias_parenthesis: a_feature.alias_name.is_parenthesis
+			a_feature_not_parenthesisable: not a_feature.is_parenthesisable
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.alias_name.position
+			code := template_code (vfav4a_template_code)
+			etl_code := vfav4_etl_code
+			default_template := default_message_template (vfav4a_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_feature.lower_name, 7)
+			parameters.put (a_feature.alias_name.alias_lower_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+			-- dollar8: $8 = alias name
+		end
+
+	make_vfav4b (a_class: ET_CLASS; a_feature1, a_feature2: ET_FEATURE)
+			-- Create a new VFAV-4 error: `a_feature1' and `a_feature2' have both
+			-- a parenthesis alias.
+			--
+			-- ISE
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature1_not_void: a_feature1 /= Void
+			a_feature1_has_alias: a_feature1.alias_name /= Void
+			a_feature1_alias_parenthesis: a_feature1.alias_name.is_parenthesis
+			a_feature2_not_void: a_feature2 /= Void
+			a_feature2_has_alias: a_feature2.alias_name /= Void
+			a_feature2_alias_parenthesis: a_feature2.alias_name.is_parenthesis
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature1.alias_name.position
+			code := template_code (vfav4b_template_code)
+			etl_code := vfav4_etl_code
+			default_template := default_message_template (vfav4b_default_template)
+			create parameters.make_filled (empty_string, 1, 10)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_feature1.lower_name, 7)
+			parameters.put (a_feature1.alias_name.alias_lower_name, 8)
+			parameters.put (a_feature2.lower_name, 9)
+			parameters.put (a_feature2.alias_name.alias_lower_name, 10)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = first feature name
+			-- dollar8: $8 = first alias name
+			-- dollar9: $9 = second feature name
+			-- dollar10: $10 = second alias name
+		end
+
+	make_vfav4c (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_feature2: ET_PARENT_FEATURE)
+			-- Create a new VFAV-4 error: `a_feature1' and `a_feature2' have both
+			-- a parenthesis alias.
+			--
+			-- ISE
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature1_not_void: a_feature1 /= Void
+			a_feature1_has_alias: a_feature1.alias_name /= Void
+			a_feature1_alias_parenthesis: a_feature1.alias_name.is_parenthesis
+			a_feature2_not_void: a_feature2 /= Void
+			a_feature2_has_alias: a_feature2.alias_name /= Void
+			a_feature2_alias_parenthesis: a_feature2.alias_name.is_parenthesis
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature1.alias_name.position
+			code := template_code (vfav4c_template_code)
+			etl_code := vfav4_etl_code
+			default_template := default_message_template (vfav4c_default_template)
+			create parameters.make_filled (empty_string, 1, 11)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_feature1.lower_name, 7)
+			parameters.put (a_feature1.alias_name.alias_lower_name, 8)
+			parameters.put (a_feature2.name.lower_name, 9)
+			parameters.put (a_feature2.alias_name.alias_lower_name, 10)
+			parameters.put (a_feature2.parent.type.upper_name, 11)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = first feature name
+			-- dollar8: $8 = first alias name
+			-- dollar9: $9 = second feature name
+			-- dollar10: $10 = second alias name
+			-- dollar11: $11 = second parent base class
+		end
+
+	make_vfav4d (a_class: ET_CLASS; a_feature1, a_feature2: ET_PARENT_FEATURE)
+			-- Create a new VFAV-4 error: `a_feature1' and `a_feature2' have both
+			-- a parenthesis alias.
+			--
+			-- ISE
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature1_not_void: a_feature1 /= Void
+			a_feature1_has_alias: a_feature1.alias_name /= Void
+			a_feature1_alias_parenthesis: a_feature1.alias_name.is_parenthesis
+			a_feature2_not_void: a_feature2 /= Void
+			a_feature2_has_alias: a_feature2.alias_name /= Void
+			a_feature2_alias_parenthesis: a_feature2.alias_name.is_parenthesis
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature1.parent.type.name.position
+			code := template_code (vfav4d_template_code)
+			etl_code := vfav4_etl_code
+			default_template := default_message_template (vfav4d_default_template)
+			create parameters.make_filled (empty_string, 1, 12)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_feature1.name.lower_name, 7)
+			parameters.put (a_feature1.alias_name.alias_lower_name, 8)
+			parameters.put (a_feature1.parent.type.upper_name, 9)
+			parameters.put (a_feature2.name.lower_name, 10)
+			parameters.put (a_feature2.alias_name.alias_lower_name, 11)
+			parameters.put (a_feature2.parent.type.upper_name, 12)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = first feature name
+			-- dollar8: $8 = first alias name
+			-- dollar9: $9 = first parent base class
+			-- dollar10: $10 = second feature name
+			-- dollar11: $11 = second alias name
+			-- dollar12: $12 = second parent base class
+		end
+
+	make_vfav4e (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE)
+			-- Create a new VFAV-4 error: the Rename_pair
+			-- `a_rename' has a new_name with a parenthesis alias,
+			-- but the corresponding feature `f' is not a
+			-- feature with at least one argument.
+			--
+			-- ISE
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_parent_not_void: a_parent /= Void
+			a_rename_not_void: a_rename /= Void
+			a_rename_has_alias: a_rename.new_name.alias_name /= Void
+			a_rename_alias_parenthesis: a_rename.new_name.alias_name.is_parenthesis
+			f_not_void: f /= Void
+			f_not_parenthesisable: not f.is_parenthesisable
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_rename.new_name.alias_name.position
+			code := template_code (vfav4e_template_code)
+			etl_code := vfav4_etl_code
+			default_template := default_message_template (vfav4e_default_template)
+			create parameters.make_filled (empty_string, 1, 10)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
+			parameters.put (a_rename.new_name.alias_name.alias_lower_name, 8)
+			parameters.put (f.lower_name, 9)
+			parameters.put (a_parent.type.upper_name, 10)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = new feature name
+			-- dollar8: $8 = new alias name
+			-- dollar9: $9 = old feature name
+			-- dollar10: $10 = parent base class
+		end
+
 	make_vffd4a (a_class: ET_CLASS; a_feature: ET_FEATURE)
 			-- Create a new VFFD-4 error: deferred `a_feature' is marked as frozen.
 			--
@@ -6181,7 +6455,7 @@ feature {NONE} -- Initialization
 			a_rename_has_alias: a_rename.new_name.alias_name /= Void
 			a_rename_alias_bracket: a_rename.new_name.alias_name.is_bracket
 			f_not_void: f /= Void
-			f_not_brackable: not f.is_bracketable
+			f_not_bracketable: not f.is_bracketable
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -12868,6 +13142,137 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = formal argument name
 		end
 
+	make_gvuac0a (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE)
+			-- Create a new GVUAC error: `a_name' is an across cursor of
+			-- `a_feature' in `a_class', and hence cannot have actual
+			-- arguments.
+			--
+			-- Not in ETL as validity error but as syntax error
+			-- GVUAC: See ETL2 VUAR
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			code := template_code (gvuac0a_template_code)
+			etl_code := gvuac_etl_code
+			default_template := default_message_template (gvuac0a_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			parameters.put (a_feature.lower_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = across cursor name
+			-- dollar8: $8 = feature name
+		end
+
+	make_gvuac0b (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT)
+			-- Create a new GVUAC error: `a_name' is an across cursor of
+			-- inline agent `an_agent' in `a_class', and hence cannot have actual
+			-- arguments.
+			--
+			-- Not in ETL as validity error but as syntax error
+			-- GVUAC: See ETL2 VUAR
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			an_agent_not_void: an_agent /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			code := template_code (gvuac0b_template_code)
+			etl_code := gvuac_etl_code
+			default_template := default_message_template (gvuac0b_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = across cursor name
+		end
+
+	make_gvuac0c (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_invariants: ET_INVARIANTS)
+			-- Create a new GVUAC error: `a_name' is an across cursor of
+			-- invariants `a_invariants' in `a_class', and hence cannot have actual
+			-- arguments.
+			--
+			-- Not in ETL as validity error but as syntax error
+			-- GVUAC: See ETL2 VUAR
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_invariants_not_void: a_invariants /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			code := template_code (gvuac0c_template_code)
+			etl_code := gvuac_etl_code
+			default_template := default_message_template (gvuac0c_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = across cursor name
+		end
+
 	make_gvual0a (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE)
 			-- Create a new GVUAL error: `a_name' is a local variable of
 			-- `a_feature' in `a_class', and hence cannot have actual
@@ -12956,6 +13361,137 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = local variable name
 		end
 
+	make_gvuao0a (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE)
+			-- Create a new GVUAO error: `a_name' is an object-test local of
+			-- `a_feature' in `a_class', and hence cannot have actual
+			-- arguments.
+			--
+			-- Not in ETL as validity error but as syntax error
+			-- GVUAO: See ETL2 VUAR
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			code := template_code (gvuao0a_template_code)
+			etl_code := gvuao_etl_code
+			default_template := default_message_template (gvuao0a_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			parameters.put (a_feature.lower_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = object-test local name
+			-- dollar8: $8 = feature name
+		end
+
+	make_gvuao0b (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT)
+			-- Create a new GVUAO error: `a_name' is an object-test local of
+			-- inline agent `an_agent' in `a_class', and hence cannot have actual
+			-- arguments.
+			--
+			-- Not in ETL as validity error but as syntax error
+			-- GVUAO: See ETL2 VUAR
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			an_agent_not_void: an_agent /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			code := template_code (gvuao0b_template_code)
+			etl_code := gvuao_etl_code
+			default_template := default_message_template (gvuao0b_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = object-test local name
+		end
+
+	make_gvuao0c (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_invariants: ET_INVARIANTS)
+			-- Create a new GVUAO error: `a_name' is an object-test local of
+			-- invariants `a_invariants' in `a_class', and hence cannot have actual
+			-- arguments.
+			--
+			-- Not in ETL as validity error but as syntax error
+			-- GVUAO: See ETL2 VUAR
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_invariants_not_void: a_invariants /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			code := template_code (gvuao0c_template_code)
+			etl_code := gvuao_etl_code
+			default_template := default_message_template (gvuao0c_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = object-test local name
+		end
+
 	make_gvuia0a (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE)
 			-- Create a new GVUIA error: `a_name' is a formal argument of
 			-- `a_feature' in `a_class', and hence cannot be an
@@ -13042,6 +13578,134 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = formal argument name
 		end
 
+	make_gvuic0a (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE)
+			-- Create a new GVUIC error: `a_name' is an across cursor of
+			-- `a_feature' in `a_class', and hence cannot be an
+			-- instruction.
+			--
+			-- Not in ETL as validity error but as syntax error
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			code := template_code (gvuic0a_template_code)
+			etl_code := gvuic_etl_code
+			default_template := default_message_template (gvuic0a_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			parameters.put (a_feature.lower_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = across cursor name
+			-- dollar8: $8 = feature name
+		end
+
+	make_gvuic0b (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT)
+			-- Create a new GVUIC error: `a_name' is an across cursor of
+			-- inline agent `an_agent' in `a_class', and hence cannot be an
+			-- instruction.
+			--
+			-- Not in ETL as validity error but as syntax error
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			an_agent_not_void: an_agent /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			code := template_code (gvuic0b_template_code)
+			etl_code := gvuic_etl_code
+			default_template := default_message_template (gvuic0b_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = across cursor name
+		end
+
+	make_gvuic0c (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_invariants: ET_INVARIANTS)
+			-- Create a new GVUIC error: `a_name' is an across cursor of
+			-- invariants `a_invariants' in `a_class', and hence cannot be an
+			-- instruction.
+			--
+			-- Not in ETL as validity error but as syntax error
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_invariants_not_void: a_invariants /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			code := template_code (gvuic0c_template_code)
+			etl_code := gvuic_etl_code
+			default_template := default_message_template (gvuic0c_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = across cursor name
+		end
+
 	make_gvuil0a (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE)
 			-- Create a new GVUIL error: `a_name' is a local variable of
 			-- `a_feature' in `a_class', and hence cannot be an
@@ -13126,6 +13790,134 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = local variable name
+		end
+
+	make_gvuio0a (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE)
+			-- Create a new GVUIO error: `a_name' is an object-test local of
+			-- `a_feature' in `a_class', and hence cannot be an
+			-- instruction.
+			--
+			-- Not in ETL as validity error but as syntax error
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			code := template_code (gvuio0a_template_code)
+			etl_code := gvuio_etl_code
+			default_template := default_message_template (gvuio0a_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			parameters.put (a_feature.lower_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = object-test local name
+			-- dollar8: $8 = feature name
+		end
+
+	make_gvuio0b (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT)
+			-- Create a new GVUIO error: `a_name' is an object-test local of
+			-- inline agent `an_agent' in `a_class', and hence cannot be an
+			-- instruction.
+			--
+			-- Not in ETL as validity error but as syntax error
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			an_agent_not_void: an_agent /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			code := template_code (gvuio0b_template_code)
+			etl_code := gvuio_etl_code
+			default_template := default_message_template (gvuio0b_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = object-test local name
+		end
+
+	make_gvuio0c (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_invariants: ET_INVARIANTS)
+			-- Create a new GVUIO error: `a_name' is an object-test local of
+			-- invariants `a_invariants' in `a_class', and hence cannot be an
+			-- instruction.
+			--
+			-- Not in ETL as validity error but as syntax error
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_invariants_not_void: a_invariants /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			code := template_code (gvuio0c_template_code)
+			etl_code := gvuio_etl_code
+			default_template := default_message_template (gvuio0c_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = object-test local name
 		end
 
 	make_gvwmc2a (a_class, a_class_impl: ET_CLASS; a_constant: ET_INTEGER_CONSTANT; a_type: ET_NAMED_TYPE)
@@ -13346,6 +14138,11 @@ feature {NONE} -- Implementation
 	vfav2b_default_template: STRING = "features `$7' and `$9' have both the same Bracket alias `$8'."
 	vfav2c_default_template: STRING = "features `$7' and `$9' inherited from $11 have both the same Bracket alias `$8'."
 	vfav2d_default_template: STRING = "features `$7' inherited from $9 and `$10' inherited from $12 have both the same Bracket alias `$8'."
+	vfav4a_default_template: STRING = "feature `$7' has a Parenthesis alias `$8' but is not a feature with at least one argument."
+	vfav4b_default_template: STRING = "features `$7' and `$9' have both the same Parenthesis alias `$8'."
+	vfav4c_default_template: STRING = "features `$7' and `$9' inherited from $11 have both the same Parenthesis alias `$8'."
+	vfav4d_default_template: STRING = "features `$7' inherited from $9 and `$10' inherited from $12 have both the same Parenthesis alias `$8'."
+	vfav4e_default_template: STRING = "`$7' has a Parenthesis alias `$8' but `$9' in $10 is not a feature with at least one argument."
 	vffd4a_default_template: STRING = "deferred feature `$7' is marked as frozen."
 	vffd5a_default_template: STRING = "feature `$7' has a Prefix name but is not an attribute or a function with no argument."
 	vffd6a_default_template: STRING = "feature `$7' has an Infix name but is not a function with exactly one argument."
@@ -13524,12 +14321,24 @@ feature {NONE} -- Implementation
 	gvtcg5b_default_template: STRING = "actual generic parameter '$7' in type '$8' is not expanded type but the corresponding formal parameter is marked as expanded."
 	gvuaa0a_default_template: STRING = "`$7' is a formal argument of feature `$8' and hence cannot have actual arguments."
 	gvuaa0b_default_template: STRING = "`$7' is a formal argument of an inline agent and hence cannot have actual arguments."
+	gvuac0a_default_template: STRING = "`$7' is an across cursor of feature `$8' and hence cannot have actual arguments."
+	gvuac0b_default_template: STRING = "`$7' is an across cursor of an inline agent and hence cannot have actual arguments."
+	gvuac0c_default_template: STRING = "`$7' is an across cursor of in an invariant and hence cannot have actual arguments."
 	gvual0a_default_template: STRING = "`$7' is a local variable of feature `$8' and hence cannot have actual arguments."
 	gvual0b_default_template: STRING = "`$7' is a local variable of an inline agent and hence cannot have actual arguments."
+	gvuao0a_default_template: STRING = "`$7' is an object-test local of feature `$8' and hence cannot have actual arguments."
+	gvuao0b_default_template: STRING = "`$7' is an object-test local of an inline agent and hence cannot have actual arguments."
+	gvuao0c_default_template: STRING = "`$7' is an object-test local of in an invariant and hence cannot have actual arguments."
 	gvuia0a_default_template: STRING = "`$7' is a formal argument of feature `$8' and hence cannot be an instruction."
 	gvuia0b_default_template: STRING = "`$7' is a formal argument of an inline agent and hence cannot be an instruction."
+	gvuic0a_default_template: STRING = "`$7' is an across cursor of feature `$8' and hence cannot be an instruction."
+	gvuic0b_default_template: STRING = "`$7' is an across cursor of an inline agent and hence cannot be an instruction."
+	gvuic0c_default_template: STRING = "`$7' is an across cursor of an invariant and hence cannot be an instruction."
 	gvuil0a_default_template: STRING = "`$7' is a local variable of feature `$8' and hence cannot be an instruction."
 	gvuil0b_default_template: STRING = "`$7' is a local variable of an inline agent and hence cannot be an instruction."
+	gvuio0a_default_template: STRING = "`$7' is an object-test local of feature `$8' and hence cannot be an instruction."
+	gvuio0b_default_template: STRING = "`$7' is an object-test local of an inline agent and hence cannot be an instruction."
+	gvuio0c_default_template: STRING = "`$7' is an object-test local of an invariant and hence cannot be an instruction."
 	gvwmc2a_default_template: STRING = "integer constant '$7' is not representable as an instance of '$8'."
 	gvzzz0a_default_template: STRING = "validity error"
 			-- Default templates
@@ -13576,6 +14385,7 @@ feature {NONE} -- Implementation
 	vfac4_etl_code: STRING = "VFAC-4"
 	vfav1_etl_code: STRING = "VFAV-1"
 	vfav2_etl_code: STRING = "VFAV-2"
+	vfav4_etl_code: STRING = "VFAV-4"
 	vffd4_etl_code: STRING = "VFFD-4"
 	vffd5_etl_code: STRING = "VFFD-5"
 	vffd6_etl_code: STRING = "VFFD-6"
@@ -13675,9 +14485,13 @@ feature {NONE} -- Implementation
 	gvscn1_etl_code: STRING = "GVSCN-1"
 	gvtcg5_etl_code: STRING = "GVTCG-5"
 	gvuaa_etl_code: STRING = "GVUAA"
+	gvuac_etl_code: STRING = "GVUAC"
 	gvual_etl_code: STRING = "GVUAL"
+	gvuao_etl_code: STRING = "GVUAO"
 	gvuia_etl_code: STRING = "GVUIA"
+	gvuic_etl_code: STRING = "GVUIC"
 	gvuil_etl_code: STRING = "GVUIL"
+	gvuio_etl_code: STRING = "GVUIO"
 	gvwmc2_etl_code: STRING = "GVWMC-2"
 	gvzzz_etl_code: STRING = "GVZZZ"
 			-- ETL validity codes
@@ -13795,6 +14609,11 @@ feature {NONE} -- Implementation
 	vfav2b_template_code: STRING = "vfav2b"
 	vfav2c_template_code: STRING = "vfav2c"
 	vfav2d_template_code: STRING = "vfav2d"
+	vfav4a_template_code: STRING = "vfav4a"
+	vfav4b_template_code: STRING = "vfav4b"
+	vfav4c_template_code: STRING = "vfav4c"
+	vfav4d_template_code: STRING = "vfav4d"
+	vfav4e_template_code: STRING = "vfav4e"
 	vffd4a_template_code: STRING = "vffd4a"
 	vffd5a_template_code: STRING = "vffd5a"
 	vffd6a_template_code: STRING = "vffd6a"
@@ -13973,12 +14792,24 @@ feature {NONE} -- Implementation
 	gvtcg5b_template_code: STRING = "gvtcg5b"
 	gvuaa0a_template_code: STRING = "gvuaa0a"
 	gvuaa0b_template_code: STRING = "gvuaa0b"
+	gvuac0a_template_code: STRING = "gvuac0a"
+	gvuac0b_template_code: STRING = "gvuac0b"
+	gvuac0c_template_code: STRING = "gvuac0c"
 	gvual0a_template_code: STRING = "gvual0a"
 	gvual0b_template_code: STRING = "gvual0b"
+	gvuao0a_template_code: STRING = "gvuao0a"
+	gvuao0b_template_code: STRING = "gvuao0b"
+	gvuao0c_template_code: STRING = "gvuao0c"
 	gvuia0a_template_code: STRING = "gvuia0a"
 	gvuia0b_template_code: STRING = "gvuia0b"
+	gvuic0a_template_code: STRING = "gvuic0a"
+	gvuic0b_template_code: STRING = "gvuic0b"
+	gvuic0c_template_code: STRING = "gvuic0c"
 	gvuil0a_template_code: STRING = "gvuil0a"
 	gvuil0b_template_code: STRING = "gvuil0b"
+	gvuio0a_template_code: STRING = "gvuio0a"
+	gvuio0b_template_code: STRING = "gvuio0b"
+	gvuio0c_template_code: STRING = "gvuio0c"
 	gvwmc2a_template_code: STRING = "gvwmc2a"
 	gvzzz0a_template_code: STRING = "gvzzz0a"
 			-- Template error codes

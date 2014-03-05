@@ -49,6 +49,7 @@ inherit
 			alias_string as operator_name
 		undefine
 			is_bracket,
+			is_parenthesis,
 			is_prefix_minus,
 			is_prefix_plus,
 			is_prefix_not,

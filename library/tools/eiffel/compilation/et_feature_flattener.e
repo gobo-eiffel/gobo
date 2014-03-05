@@ -5,7 +5,7 @@ note
 		"Eiffel class feature flatteners"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -343,9 +343,16 @@ feature {NONE} -- Feature flattening
 							if l_alias_name.is_bracket then
 								if not l_query.is_bracketable then
 										-- A feature with a Bracket alias should be
-										-- a function with one or more argument.
+										-- a function with one or more arguments.
 									set_fatal_error (current_class)
 									error_handler.report_vfav2a_error (current_class, l_query)
+								end
+							elseif l_alias_name.is_parenthesis then
+								if not l_query.is_parenthesisable then
+										-- A feature with a Parenthesis alias should be
+										-- a feature with one or more arguments.
+									set_fatal_error (current_class)
+									error_handler.report_vfav4a_error (current_class, l_query)
 								end
 							elseif l_query.is_prefixable then
 								if l_alias_name.is_prefixable then
@@ -427,9 +434,16 @@ feature {NONE} -- Feature flattening
 						if l_alias_name /= Void then
 							if l_alias_name.is_bracket then
 									-- A feature with a Bracket alias should be
-									-- a function with one or more argument.
+									-- a function with one or more arguments.
 								set_fatal_error (current_class)
 								error_handler.report_vfav2a_error (current_class, l_procedure)
+							elseif l_alias_name.is_parenthesis then
+								if not l_procedure.is_parenthesisable then
+										-- A feature with a Parenthesis alias should be
+										-- a feature with one or more arguments.
+									set_fatal_error (current_class)
+									error_handler.report_vfav4a_error (current_class, l_procedure)
+								end
 							elseif l_alias_name.is_infix then
 									-- A feature with a binary Operator alias should be
 									-- a function with exactly one argument.
@@ -453,6 +467,7 @@ feature {NONE} -- Feature flattening
 						-- Check that two features have not the same alias. Take into account
 						-- the infix and prefix properties to differentiate two alias names.
 						-- See VFAV-1 and VFAV-2, ECMA p.42.
+						-- See also VFAV-4 from ISE.
 					a_feature := a_named_feature.flattened_feature
 					l_alias_name := a_feature.alias_name
 					if l_alias_name /= Void then
@@ -467,6 +482,8 @@ feature {NONE} -- Feature flattening
 									l_parent_feature := a_named_feature.inherited_feature.flattened_parent
 									if l_alias_name.is_bracket then
 										error_handler.report_vfav2d_error (current_class, l_parent_feature, l_other_parent_feature)
+									elseif l_alias_name.is_parenthesis then
+										error_handler.report_vfav4d_error (current_class, l_parent_feature, l_other_parent_feature)
 									elseif l_alias_name.is_prefix then
 										error_handler.report_vfav1e_error (current_class, l_parent_feature, l_other_parent_feature)
 									else
@@ -476,6 +493,8 @@ feature {NONE} -- Feature flattening
 										-- Only `l_other_feature' is inherited with no redeclaration in current class.
 									if l_alias_name.is_bracket then
 										error_handler.report_vfav2c_error (current_class, a_feature, l_other_parent_feature)
+									elseif l_alias_name.is_parenthesis then
+										error_handler.report_vfav4c_error (current_class, a_feature, l_other_parent_feature)
 									elseif l_alias_name.is_prefix then
 										error_handler.report_vfav1d_error (current_class, a_feature, l_other_parent_feature)
 									else
@@ -487,6 +506,8 @@ feature {NONE} -- Feature flattening
 								l_parent_feature := a_named_feature.inherited_feature.flattened_parent
 								if l_alias_name.is_bracket then
 									error_handler.report_vfav2c_error (current_class, l_other_feature.flattened_feature, l_parent_feature)
+								elseif l_alias_name.is_parenthesis then
+									error_handler.report_vfav4c_error (current_class, l_other_feature.flattened_feature, l_parent_feature)
 								elseif l_alias_name.is_prefix then
 									error_handler.report_vfav1d_error (current_class, l_other_feature.flattened_feature, l_parent_feature)
 								else
@@ -496,6 +517,8 @@ feature {NONE} -- Feature flattening
 									-- Both features are either immediate or redeclared in current class.
 								if l_alias_name.is_bracket then
 									error_handler.report_vfav2b_error (current_class, a_feature, l_other_feature.flattened_feature)
+								elseif l_alias_name.is_parenthesis then
+									error_handler.report_vfav4b_error (current_class, a_feature, l_other_feature.flattened_feature)
 								elseif l_alias_name.is_prefix then
 									error_handler.report_vfav1c_error (current_class, a_feature, l_other_feature.flattened_feature)
 								else
@@ -1321,9 +1344,16 @@ feature {NONE} -- Feature adaptation validity
 						if l_alias_name.is_bracket then
 							if not l_precursor_feature.is_bracketable then
 									-- A feature with a Bracket alias should be
-									-- a function with one or more argument.
+									-- a function with one or more arguments.
 								set_fatal_error (current_class)
 								error_handler.report_vhrc4b_error (current_class, a_parent_feature.parent, a_parent_feature.new_name, l_precursor_feature)
+							end
+						elseif l_alias_name.is_parenthesis then
+							if not l_precursor_feature.is_parenthesisable then
+									-- A feature with a Parenthesis alias should be
+									-- a function with one or more arguments.
+								set_fatal_error (current_class)
+								error_handler.report_vfav4e_error (current_class, a_parent_feature.parent, a_parent_feature.new_name, l_precursor_feature)
 							end
 						elseif l_precursor_feature.is_prefixable then
 							if l_alias_name.is_prefixable then

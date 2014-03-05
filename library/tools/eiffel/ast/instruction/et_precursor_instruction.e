@@ -5,7 +5,7 @@ note
 		"Eiffel precursor instructions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,10 @@ class ET_PRECURSOR_INSTRUCTION
 
 inherit
 
-	ET_PRECURSOR
+	ET_PRECURSOR_CALL
+		redefine
+			parenthesis_call
+		end
 
 	ET_INSTRUCTION
 		undefine
@@ -24,6 +27,19 @@ inherit
 create
 
 	make
+
+feature -- Access
+
+	parenthesis_call: detachable ET_CALL_INSTRUCTION
+			-- <Precursor>
+
+feature -- Setting
+
+	set_parenthesis_call (a_target: ET_EXPRESSION; a_name: ET_PARENTHESIS_SYMBOL; a_arguments: ET_ACTUAL_ARGUMENT_LIST)
+			-- <Precursor>
+		do
+			create parenthesis_call.make (a_target, a_name, a_arguments)
+		end
 
 feature -- Processing
 

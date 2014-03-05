@@ -5,7 +5,7 @@ note
 		"Eiffel alias feature names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -37,6 +37,7 @@ inherit
 			is_infix_times,
 			is_infix_xor,
 			is_infix_dotdot,
+			is_parenthesis,
 			is_prefix,
 			is_prefix_minus,
 			is_prefix_plus,
@@ -67,7 +68,8 @@ create
 	make_or_else,
 	make_dotdot,
 	make_not,
-	make_bracket
+	make_bracket,
+	make_parenthesis
 
 feature {NONE} -- Initialization
 
@@ -331,6 +333,19 @@ feature {NONE} -- Initialization
 			is_bracket: is_bracket
 		end
 
+	make_parenthesis (a_string: like alias_string)
+			-- Create a new 'alias "()"' feature name.
+		require
+			a_string_not_void: a_string /= Void
+		do
+			alias_keyword := default_keyword
+			alias_string := a_string
+			code := tokens.alias_parenthesis_code
+		ensure
+			alias_string_set: alias_string = a_string
+			is_parenthesis: is_parenthesis
+		end
+
 feature -- Status report
 
 	is_alias: BOOLEAN
@@ -459,6 +474,12 @@ feature -- Status report
 			Result := (code = tokens.infix_xor_code)
 		end
 
+	is_parenthesis: BOOLEAN
+			-- Is current feature name of the form 'alias "()"'?
+		do
+			Result := (code = tokens.alias_parenthesis_code)
+		end
+
 	is_prefix: BOOLEAN
 			-- Is current feature name of the form 'prefix ...'?
 		do
@@ -513,6 +534,8 @@ feature -- Access
 			inspect code
 			when alias_bracket_code then
 				Result := tokens.alias_bracket_name
+			when alias_parenthesis_code then
+				Result := tokens.alias_parenthesis_name
 			when infix_and_code then
 				Result := tokens.alias_and_name
 			when infix_and_then_code then
@@ -682,6 +705,8 @@ feature -- Comparison
 				inspect code
 				when alias_bracket_code then
 					Result := other.is_bracket
+				when alias_parenthesis_code then
+					Result := other.is_parenthesis
 				when infix_and_code then
 					Result := other.is_infix_and
 				when infix_and_then_code then
@@ -782,6 +807,6 @@ invariant
 	is_alias: is_alias
 	alias_keyword_not_void: alias_keyword /= Void
 	alias_string_not_void: alias_string /= Void
-	alias_kinds: is_infix or is_prefix or is_bracket
+	alias_kinds: is_infix or is_prefix or is_bracket or is_parenthesis
 
 end

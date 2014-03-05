@@ -5,7 +5,7 @@ note
 		"Eiffel precursor validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -117,7 +117,7 @@ feature -- Validity checking
 
 feature {NONE} -- Precursor validity
 
-	check_precursor_validity (a_precursor: ET_PRECURSOR)
+	check_precursor_validity (a_precursor: ET_PRECURSOR_CALL)
 			-- Check validity of `a_precursor'.
 		require
 			a_precursor_not_void: a_precursor /= Void

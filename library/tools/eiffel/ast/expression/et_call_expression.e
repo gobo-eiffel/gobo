@@ -5,7 +5,7 @@ note
 		"Eiffel call expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,6 +18,7 @@ inherit
 
 	ET_FEATURE_CALL_EXPRESSION
 		undefine
+			parenthesis_call,
 			reset
 		end
 
@@ -29,6 +30,14 @@ inherit
 create
 
 	make
+
+feature -- Setting
+
+	set_parenthesis_call (a_target: ET_EXPRESSION; a_name: ET_PARENTHESIS_SYMBOL; a_arguments: ET_ACTUAL_ARGUMENT_LIST)
+			-- Set `parenthesis_call' with `a_target', `a_name' and `a_arguments'.
+		do
+			create parenthesis_call.make (a_target, a_name, a_arguments)
+		end
 
 feature -- Processing
 

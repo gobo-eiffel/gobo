@@ -5,7 +5,7 @@ note
 		"Eiffel decorated Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -164,6 +164,7 @@ inherit
 			new_alias_not_name,
 			new_alias_or_name,
 			new_alias_or_else_name,
+			new_alias_parenthesis_name,
 			new_alias_plus_name,
 			new_alias_power_name,
 			new_alias_times_name,
@@ -1729,6 +1730,17 @@ feature -- AST nodes
 		do
 			if a_string /= Void then
 				create Result.make_or_else (a_string)
+				if an_alias /= Void then
+					Result.set_alias_keyword (an_alias)
+				end
+			end
+		end
+
+	new_alias_parenthesis_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME
+			-- New alias "()" feature name
+		do
+			if a_string /= Void then
+				create Result.make_parenthesis (a_string)
 				if an_alias /= Void then
 					Result.set_alias_keyword (an_alias)
 				end

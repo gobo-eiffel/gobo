@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Eiffel Ant file for gelint validity tests"
-		copyright: "Copyright (c) 2008-2012, Eric Bezault and others"
+		copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -145,6 +145,10 @@
 		<geant file="build.eant" target="${target}" exit_code_variable="vfac3_exit_code" dir="vfac3"/>
 		<set name="do_all_exit_code" value="1" unless="${vfac3_exit_code}=0"/>
 		<geant file="build.eant" target="clean" dir="vfac3" if="${do_clean}=true"/>
+
+		<geant file="build.eant" target="${target}" exit_code_variable="vfav4_exit_code" dir="vfav4"/>
+		<set name="do_all_exit_code" value="1" unless="${vfav4_exit_code}=0"/>
+		<geant file="build.eant" target="clean" dir="vfav4" if="${do_clean}=true"/>
 		
 		<geant file="build.eant" target="${target}" exit_code_variable="vjar_exit_code" dir="vjar"/>
 		<set name="do_all_exit_code" value="1" unless="${vjar_exit_code}=0"/>
@@ -195,6 +199,7 @@
 		<echo message="# FAILED: veen8" unless="${veen8_exit_code}=0"/>
 		<echo message="# FAILED: vevi" unless="${vevi_exit_code}=0"/>
 		<echo message="# FAILED: vfac3" unless="${vfac3_exit_code}=0"/>
+		<echo message="# FAILED: vfav4" unless="${vfav4_exit_code}=0"/>
 		<echo message="# FAILED: vjar" unless="${vjar_exit_code}=0"/>
 		<echo message="# FAILED: voit1" unless="${voit1_exit_code}=0"/>
 		<echo message="# FAILED: voit2" unless="${voit2_exit_code}=0"/>

@@ -5,7 +5,7 @@ note
 		"Eiffel system class markers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1340,7 +1340,7 @@ feature {ET_AST_NODE} -- Processing
 			process_assertions (a_list)
 		end
 
-	process_precursor_call (a_call: ET_PRECURSOR)
+	process_precursor_call (a_call: ET_PRECURSOR_CALL)
 			-- Process `a_call'.
 		require
 			a_call_not_void: a_call /= Void

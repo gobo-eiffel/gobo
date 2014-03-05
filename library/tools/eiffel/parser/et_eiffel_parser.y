@@ -6,7 +6,7 @@ note
 		"Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -67,7 +67,7 @@ create
 %token <ET_MANIFEST_STRING> E_STRPLUS E_STRMINUS E_STRSTAR E_STRSLASH E_STRDIV
 %token <ET_MANIFEST_STRING> E_STRMOD E_STRPOWER E_STRLT E_STRLE E_STRGT E_STRGE
 %token <ET_MANIFEST_STRING> E_STRAND E_STROR E_STRXOR E_STRANDTHEN E_STRORELSE
-%token <ET_MANIFEST_STRING> E_STRDOTDOT E_STRBRACKET
+%token <ET_MANIFEST_STRING> E_STRDOTDOT E_STRBRACKET E_STRPARENTHESIS
 %token <ET_MANIFEST_STRING> E_STRIMPLIES E_STRFREEOP E_STRNOT E_STRING
 %token <ET_REAL_CONSTANT> E_REAL
 %token <ET_RESULT> E_RESULT
@@ -222,7 +222,7 @@ create
 %type <ET_WHEN_PART_LIST> When_list When_list_opt
 %type <ET_WRITABLE> Writable
 
-%expect 81
+%expect 82
 %start Class_declarations
 
 %%
@@ -2221,7 +2221,8 @@ Alias_name: E_ALIAS E_STRNOT
 		{ $$ := ast_factory.new_alias_free_name ($1, $2) }
 	| E_ALIAS E_STRBRACKET
 		{ $$ := ast_factory.new_alias_bracket_name ($1, $2) }
-
+	| E_ALIAS E_STRPARENTHESIS
+		{ $$ := ast_factory.new_alias_parenthesis_name ($1, $2) }
 	| E_ALIAS E_STRING
 		{ $$ := new_invalid_alias_name ($1, $2) }
 	;
@@ -4302,6 +4303,8 @@ Untyped_manifest_string: E_STRING
 	| E_STRDOTDOT
 		{ $$ := $1 }
 	| E_STRBRACKET
+		{ $$ := $1 }
+	| E_STRPARENTHESIS
 		{ $$ := $1 }
 	| E_STRERR
 		{ abort }

@@ -5,7 +5,7 @@ note
 		"Scanner skeletons for Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2013/09/19 $"
 	revision: "$Revision: #1 $"
@@ -3505,6 +3505,13 @@ feature {NONE} -- Processing
 					inspect text_item (3)
 					when ']' then
 						last_token := E_STRBRACKET
+					else
+						-- Do nothing.
+					end
+				when '(' then
+					inspect text_item (3)
+					when ')' then
+						last_token := E_STRPARENTHESIS
 					else
 						-- Do nothing.
 					end

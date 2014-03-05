@@ -190,6 +190,7 @@ Version 3.10 - ?
 	* Relaxed the validity rule to prevent cycles in qualified anchored types
 	  so that it can accept code appearing in ISE's libraries.
 	* Added support for across instructions/expressions.
+	* Added support for 'alias "()"'.
 
 	Gobo Eiffel Utility Library:
 	

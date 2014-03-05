@@ -5,12 +5,12 @@ note
 		"Eiffel precursor calls"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ET_PRECURSOR
+deferred class ET_PRECURSOR_CALL
 
 inherit
 
@@ -44,6 +44,7 @@ feature -- Initialization
 			if arguments /= Void then
 				arguments.reset
 			end
+			parenthesis_call := Void
 		end
 
 feature -- Access
@@ -60,6 +61,11 @@ feature -- Access
 	parent_type: ET_BASE_TYPE
 			-- Parent type;
 			-- Void if not resolved yet.
+
+	parenthesis_call: detachable ET_REGULAR_FEATURE_CALL
+			-- Unfolded form when the current precursor call is of the parenthesis alias form;
+			-- For example, if the current precursor call is 'precursor (args)', its parenthesis call
+			-- will be 'precursor.g (args)' where 'g' is declared as 'g alias "()"'.
 
 	position: ET_POSITION
 			-- Position of first character of
@@ -124,6 +130,21 @@ feature -- Setting
 			parent_type := a_parent_type
 		ensure
 			parent_type_set: parent_type = a_parent_type
+		end
+
+	set_parenthesis_call (a_target: ET_EXPRESSION; a_name: ET_PARENTHESIS_SYMBOL; a_arguments: ET_ACTUAL_ARGUMENT_LIST)
+			-- Set `parenthesis_call' with `a_target', `a_name' and `a_arguments'.
+		require
+			a_target_not_void: a_target /= Void
+			a_name_not_void: a_name /= Void
+			a_arguments_not_void: a_arguments /= Void
+			a_arguments_not_empty: a_arguments.count > 0
+		deferred
+		ensure
+			parenthesis_call_set: attached parenthesis_call as l_parenthesis_call
+			target_set: l_parenthesis_call.target = a_target
+			name_set: l_parenthesis_call.name = a_name
+			arguments_set: l_parenthesis_call.arguments = a_arguments
 		end
 
 feature -- Status report

@@ -1747,8 +1747,10 @@ feature {NONE} -- AST factory
 		do
 			if args /= Void then
 				Result := ast_factory.new_call_expression (Void, a_name, args)
-			elseif a_name /= Void then
+			else
 				Result := a_name
+			end
+			if a_name /= Void then
 				if last_formal_arguments /= Void then
 					a_seed := last_formal_arguments.index_of (a_name)
 					if a_seed /= 0 then
@@ -1765,20 +1767,18 @@ feature {NONE} -- AST factory
 						last_local_variables.local_variable (a_seed).set_used (True)
 					end
 				end
-				if a_seed = 0 then
-					if last_object_tests /= Void then
-						a_seed := last_object_tests.index_of_name (a_name)
-						if a_seed /= 0 then
-							a_name.set_object_test_local (True)
-						end
+				if a_seed = 0 and then last_across_components /= Void then
+					a_seed := last_across_components.index_of_name (a_name)
+					if a_seed /= 0 and then not last_across_components.across_component (a_seed).cursor_name.is_across_cursor then
+							-- We set 'cursor_name.is_across_cursor' to False when
+							-- parsing within its scope.
+						a_name.set_across_cursor (True)
 					end
-					if last_across_components /= Void then
-						a_seed := last_across_components.index_of_name (a_name)
-						if a_seed /= 0 and then not last_across_components.across_component (a_seed).cursor_name.is_across_cursor then
-								-- We set 'cursor_name.is_across_cursor' to False when
-								-- parsing within its scope.
-							a_name.set_across_cursor (True)
-						end
+				end
+				if a_seed = 0 and then last_object_tests /= Void then
+					a_seed := last_object_tests.index_of_name (a_name)
+					if a_seed /= 0 then
+						a_name.set_object_test_local (True)
 					end
 				end
 			end
@@ -1786,12 +1786,48 @@ feature {NONE} -- AST factory
 
 	new_unqualified_call_instruction (a_name: ET_IDENTIFIER; args: ET_ACTUAL_ARGUMENT_LIST): ET_INSTRUCTION
 			-- New unqualified call instruction
+		local
+			a_seed: INTEGER
 		do
 			if args /= Void then
 				Result := ast_factory.new_call_instruction (Void, a_name, args)
 			else
 				Result := a_name
-				a_name.set_instruction (True)
+			end
+			if a_name /= Void then
+				if last_formal_arguments /= Void then
+					a_seed := last_formal_arguments.index_of (a_name)
+					if a_seed /= 0 then
+						a_name.set_seed (a_seed)
+						a_name.set_argument (True)
+						last_formal_arguments.formal_argument (a_seed).set_used (True)
+					end
+				end
+				if a_seed = 0 and then last_local_variables /= Void then
+					a_seed := last_local_variables.index_of (a_name)
+					if a_seed /= 0 then
+						a_name.set_seed (a_seed)
+						a_name.set_local (True)
+						last_local_variables.local_variable (a_seed).set_used (True)
+					end
+				end
+				if a_seed = 0 and then last_across_components /= Void then
+					a_seed := last_across_components.index_of_name (a_name)
+					if a_seed /= 0 and then not last_across_components.across_component (a_seed).cursor_name.is_across_cursor then
+							-- We set 'cursor_name.is_across_cursor' to False when
+							-- parsing within its scope.
+						a_name.set_across_cursor (True)
+					end
+				end
+				if a_seed = 0 and then last_object_tests /= Void then
+					a_seed := last_object_tests.index_of_name (a_name)
+					if a_seed /= 0 then
+						a_name.set_object_test_local (True)
+					end
+				end
+				if a_seed = 0 and args = Void then
+					a_name.set_instruction (True)
+				end
 			end
 		end
 

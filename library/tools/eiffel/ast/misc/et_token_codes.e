@@ -5,7 +5,7 @@ note
 		"Eiffel token and symbol codes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,6 +46,7 @@ feature -- Keyword and symbol codes
 			-- Prefix operator codes
 
 	alias_bracket_code: CHARACTER = '%/100/'
+	alias_parenthesis_code: CHARACTER = '%/99/'
 			-- Alias operator codes
 
 	across_keyword_code: CHARACTER = '%/1/'
