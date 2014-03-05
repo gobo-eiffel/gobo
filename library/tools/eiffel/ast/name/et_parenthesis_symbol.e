@@ -77,13 +77,13 @@ feature -- Comparison
 		do
 			Result := ANY_.same_types (Current, other)
 		end
-		
+
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
---			a_processor.process_parenthesis_symbol (Current)
+			a_processor.process_parenthesis_symbol (Current)
 		end
 
 invariant

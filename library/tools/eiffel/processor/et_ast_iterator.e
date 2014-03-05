@@ -5,7 +5,7 @@ note
 		"Eiffel AST iterators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -2748,6 +2748,12 @@ feature {ET_AST_NODE} -- Processing
 		do
 			a_parent.parent.process (Current)
 			a_parent.semicolon.process (Current)
+		end
+
+	process_parenthesis_symbol (a_symbol: ET_PARENTHESIS_SYMBOL)
+			-- Process `a_symbol'.
+		do
+			process_symbol (a_symbol)
 		end
 
 	process_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION)

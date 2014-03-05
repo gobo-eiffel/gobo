@@ -5,7 +5,7 @@ note
 		"Eiffel AST processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1162,6 +1162,13 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_parent'.
 		require
 			a_parent_not_void: a_parent /= Void
+		deferred
+		end
+
+	process_parenthesis_symbol (a_symbol: ET_PARENTHESIS_SYMBOL)
+			-- Process `a_symbol'.
+		require
+			a_symbol_not_void: a_symbol /= Void
 		deferred
 		end
 

@@ -5,7 +5,7 @@ note
 		"Eiffel AST null processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -829,6 +829,10 @@ feature {ET_AST_NODE} -- Processing
 
 	process_parent_semicolon (a_parent: ET_PARENT_SEMICOLON)
 			-- Process `a_parent'.
+		do
+		end
+	process_parenthesis_symbol (a_symbol: ET_PARENTHESIS_SYMBOL)
+			-- Process `a_symbol'.
 		do
 		end
 
