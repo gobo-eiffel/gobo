@@ -1118,6 +1118,7 @@ feature {NONE} -- AST factory
 					if a_seed /= 0 then
 						an_identifier.set_seed (a_seed)
 						an_identifier.set_argument (True)
+						last_formal_arguments.formal_argument (a_seed).set_used (True)
 					end
 				end
 				if a_seed = 0 and then last_local_variables /= Void then
