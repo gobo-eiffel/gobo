@@ -52,10 +52,10 @@ feature -- Element change
 			l_pathname: STRING
 		do
 			if is_enabled (a_state) then
-				if l_pathname.starts_with ("$ECF_CONFIG_PATH") then
-					l_pathname := file_system.dirname (a_universe.filename) + l_pathname.substring (17, l_pathname.count)
-				elseif l_pathname.starts_with ("$(ECF_CONFIG_PATH)") or l_pathname.starts_with ("${ECF_CONFIG_PATH}") then
-					l_pathname := file_system.dirname (a_universe.filename) + l_pathname.substring (19, l_pathname.count)
+				if pathname.starts_with ("$ECF_CONFIG_PATH") then
+					l_pathname := file_system.dirname (a_universe.filename) + pathname.substring (17, pathname.count)
+				elseif pathname.starts_with ("$(ECF_CONFIG_PATH)") or pathname.starts_with ("${ECF_CONFIG_PATH}") then
+					l_pathname := file_system.dirname (a_universe.filename) + pathname.substring (19, pathname.count)
 				else
 					l_pathname := pathname
 				end
