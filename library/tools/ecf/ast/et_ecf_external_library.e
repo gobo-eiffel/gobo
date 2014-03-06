@@ -5,7 +5,7 @@ note
 		"ECF external libraries"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,9 @@ class ET_ECF_EXTERNAL_LIBRARY
 inherit
 
 	ET_ECF_CONDITIONED
+
+	KL_SHARED_FILE_SYSTEM
+		export {NONE} all end
 
 create
 
@@ -39,15 +42,24 @@ feature -- Access
 
 feature -- Element change
 
-	fill_external_libraries (a_system: ET_SYSTEM; a_state: ET_ECF_STATE)
-			-- Add to `a_system' the current external library pathname
+	fill_external_libraries (a_universe: ET_ECF_INTERNAL_UNIVERSE; a_state: ET_ECF_STATE)
+			-- Add to `a_universe.current_system' the current external library pathname
 			-- of conditions satisfy `a_state'.
 		require
-			a_system_not_void: a_system /= Void
+			a_universe_not_void: a_universe /= Void
 			a_state_not_void: a_state /= Void
+		local
+			l_pathname: STRING
 		do
 			if is_enabled (a_state) then
-				a_system.external_library_pathnames.force_last (pathname)
+				if l_pathname.starts_with ("$ECF_CONFIG_PATH") then
+					l_pathname := file_system.dirname (a_universe.filename) + l_pathname.substring (17, l_pathname.count)
+				elseif l_pathname.starts_with ("$(ECF_CONFIG_PATH)") or l_pathname.starts_with ("${ECF_CONFIG_PATH}") then
+					l_pathname := file_system.dirname (a_universe.filename) + l_pathname.substring (19, l_pathname.count)
+				else
+					l_pathname := pathname
+				end
+				a_universe.current_system.external_library_pathnames.force_last (l_pathname)
 			end
 		end
 

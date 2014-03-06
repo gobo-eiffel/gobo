@@ -5,7 +5,7 @@ note
 		"ECF external include lists"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -88,14 +88,14 @@ feature -- Element change
 			external_include_added: external_includes.last = a_external_include
 		end
 
-	fill_external_includes (a_system: ET_SYSTEM; a_state: ET_ECF_STATE)
-			-- Add to `a_system' the current external includes
+	fill_external_includes (a_universe: ET_ECF_INTERNAL_UNIVERSE; a_state: ET_ECF_STATE)
+			-- Add to `a_universe.current_system' the current external includes
 			-- whose conditions satisfy `a_state'.
 		require
-			a_system_not_void: a_system /= Void
+			a_universe_not_void: a_universe /= Void
 			a_state_not_void: a_state /= Void
 		do
-			external_includes.do_all (agent {ET_ECF_EXTERNAL_INCLUDE}.fill_external_includes (a_system, a_state))
+			external_includes.do_all (agent {ET_ECF_EXTERNAL_INCLUDE}.fill_external_includes (a_universe, a_state))
 		end
 
 feature {NONE} -- Constants

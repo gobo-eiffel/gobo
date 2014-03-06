@@ -287,13 +287,13 @@ feature -- Basic operations
 				end
 			end
 			if external_includes /= Void then
-				external_includes.fill_external_includes (a_universe.current_system, a_state)
+				external_includes.fill_external_includes (a_universe, a_state)
 			end
 			if external_objects /= Void then
-				external_objects.fill_external_objects (a_universe.current_system, a_state)
+				external_objects.fill_external_objects (a_universe, a_state)
 			end
 			if external_libraries /= Void then
-				external_libraries.fill_external_libraries (a_universe.current_system, a_state)
+				external_libraries.fill_external_libraries (a_universe, a_state)
 			end
 		end
 

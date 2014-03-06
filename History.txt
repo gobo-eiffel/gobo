@@ -191,6 +191,7 @@ Version 3.10 - ?
 	  so that it can accept code appearing in ISE's libraries.
 	* Added support for across instructions/expressions.
 	* Added support for 'alias "()"'.
+	* Added support for "$(ECF_CONFIG_PATH)" in ECF files.
 
 	Gobo Eiffel Utility Library:
 	
