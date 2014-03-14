@@ -5,7 +5,7 @@ note
 		"Eiffel extended feature names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -43,7 +43,7 @@ feature -- Access
 feature -- Comparison
 
 	same_extended_feature_name (other: ET_EXTENDED_FEATURE_NAME): BOOLEAN
-			-- Are feature name and `other' the same extended feature name?
+			-- Are current feature name and `other' the same extended feature name?
 			-- (case insensitive)
 		require
 			other_not_void: other /= Void
@@ -62,6 +62,14 @@ feature -- Comparison
 					end
 				end
 			end
+		end
+
+	same_call_name (a_call_name: ET_CALL_NAME): BOOLEAN
+			-- Is `Current' the name of a feature which could be called with `a_call_name'?
+			-- (case insensitive)
+		require
+			a_call_name_not_void: a_call_name /= Void
+		deferred
 		end
 
 end

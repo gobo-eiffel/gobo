@@ -2614,7 +2614,7 @@ feature {NONE} -- Instruction validity
 								l_overloaded_queries := new_overloaded_queries
 								l_target_base_class.add_overloaded_queries (l_name, l_overloaded_queries)
 								if not l_overloaded_queries.is_empty then
-									keep_best_overloaded_features (l_overloaded_queries, l_actuals, l_target_context, False, False)
+									keep_best_overloaded_features (l_overloaded_queries, l_name, l_actuals, l_target_context, False, False)
 									if has_fatal_error then
 										-- Do nothing.
 									elseif l_overloaded_queries.count = 1 then
@@ -3385,7 +3385,7 @@ feature {NONE} -- Instruction validity
 										l_overloaded_procedures := new_overloaded_procedures
 										l_class.add_overloaded_procedures (l_name, l_overloaded_procedures)
 										if not l_overloaded_procedures.is_empty then
-											keep_best_overloaded_features (l_overloaded_procedures, l_actuals, l_creation_context, False, True)
+											keep_best_overloaded_features (l_overloaded_procedures, l_name, l_actuals, l_creation_context, False, True)
 											if has_fatal_error then
 												-- Do nothing.
 											elseif l_overloaded_procedures.count = 1 then
@@ -4570,7 +4570,7 @@ feature {NONE} -- Instruction validity
 			l_overloaded_procedures := new_overloaded_procedures
 			a_class.add_overloaded_procedures (l_name, l_overloaded_procedures)
 			if not l_overloaded_procedures.is_empty then
-				keep_best_overloaded_features (l_overloaded_procedures, a_call.arguments, a_context, False, False)
+				keep_best_overloaded_features (l_overloaded_procedures, l_name, a_call.arguments, a_context, False, False)
 				if has_fatal_error then
 					-- Do nothing.
 				elseif l_overloaded_procedures.count = 1 then
@@ -4787,7 +4787,7 @@ feature {NONE} -- Instruction validity
 			l_overloaded_procedures := new_overloaded_procedures
 			a_class.add_overloaded_procedures (l_name, l_overloaded_procedures)
 			if not l_overloaded_procedures.is_empty then
-				keep_best_overloaded_features (l_overloaded_procedures, a_call.arguments, a_context, True, False)
+				keep_best_overloaded_features (l_overloaded_procedures, l_name, a_call.arguments, a_context, True, False)
 				if has_fatal_error then
 					-- Do nothing.
 				elseif l_overloaded_procedures.count = 1 then
@@ -5910,7 +5910,7 @@ feature {NONE} -- Expression validity
 									l_overloaded_procedures := new_overloaded_procedures
 									l_class.add_overloaded_procedures (l_name, l_overloaded_procedures)
 									if not l_overloaded_procedures.is_empty then
-										keep_best_overloaded_features (l_overloaded_procedures, l_actuals, a_context, False, True)
+										keep_best_overloaded_features (l_overloaded_procedures, l_name, l_actuals, a_context, False, True)
 										if has_fatal_error then
 											-- Do nothing.
 										elseif l_overloaded_procedures.count = 1 then
@@ -8859,7 +8859,7 @@ feature {NONE} -- Expression validity
 			l_overloaded_queries := new_overloaded_queries
 			a_class.add_overloaded_queries (l_name, l_overloaded_queries)
 			if not l_overloaded_queries.is_empty then
-				keep_best_overloaded_features (l_overloaded_queries, a_call.arguments, a_context, False, False)
+				keep_best_overloaded_features (l_overloaded_queries, l_name, a_call.arguments, a_context, False, False)
 				if has_fatal_error then
 					-- Do nothing.
 				elseif l_overloaded_queries.count = 1 then
@@ -9561,7 +9561,7 @@ feature {NONE} -- Expression validity
 			l_overloaded_queries := new_overloaded_queries
 			a_class.add_overloaded_queries (l_name, l_overloaded_queries)
 			if not l_overloaded_queries.is_empty then
-				keep_best_overloaded_features (l_overloaded_queries, a_call.arguments, a_context, True, False)
+				keep_best_overloaded_features (l_overloaded_queries, l_name, a_call.arguments, a_context, True, False)
 				if has_fatal_error then
 					-- Do nothing.
 				elseif l_overloaded_queries.count = 1 then
@@ -14938,13 +14938,14 @@ feature -- Precursors
 
 feature {NONE} -- Overloading (useful in .NET)
 
-	keep_best_overloaded_features (a_features: DS_ARRAYED_LIST [ET_FEATURE]; an_actuals: ET_ACTUAL_ARGUMENTS; a_target_context: ET_NESTED_TYPE_CONTEXT; a_is_static_call, a_is_creation_call: BOOLEAN)
+	keep_best_overloaded_features (a_features: DS_ARRAYED_LIST [ET_FEATURE]; a_name: ET_CALL_NAME; an_actuals: ET_ACTUAL_ARGUMENTS; a_target_context: ET_NESTED_TYPE_CONTEXT; a_is_static_call, a_is_creation_call: BOOLEAN)
 			-- Remove from `a_features' the features whose signature cannot
 			-- accommodate `an_actuals'. As a result `a_features' can be
 			-- empty if no feature is applicable.
 			-- Then keep only the best matches. There can be several
 			-- of them, in which case there is an ambiguity that should be
-			-- reported by the caller of this feature.
+			-- reported by the caller of this feature. In that case, we keep
+			-- the feature whose primary name is `a_name', if any.
 			-- `a_target_context' is the context in which the formal argument
 			-- types of features in `a_features' should be considered.
 			-- `a_is_static_call' means that the features are expected to appear in a static call.
@@ -14953,7 +14954,7 @@ feature {NONE} -- Overloading (useful in .NET)
 		require
 			a_features_not_void: a_features /= Void
 			no_void_feature: not a_features.has_void
-			an_actuals_not_void: an_actuals /= Void
+			a_name_not_void: a_name /= Void
 			a_target_context_not_void: a_target_context /= Void
 		local
 			l_actual_context: ET_NESTED_TYPE_CONTEXT
@@ -14978,7 +14979,9 @@ feature {NONE} -- Overloading (useful in .NET)
 		do
 			has_fatal_error := False
 			nb := a_features.count
-			nb_args := an_actuals.count
+			if an_actuals /= Void then
+				nb_args := an_actuals.count
+			end
 			if nb > 1 then
 					-- More than one feature with that name.
 					-- Start to remove those with the wrong number of arguments,
@@ -14996,7 +14999,7 @@ feature {NONE} -- Overloading (useful in .NET)
 					i := i - 1
 				end
 			end
-			if nb > 1 and nb_args > 0 then
+			if nb > 1 and an_actuals /= Void and then nb_args > 0 then
 				l_actual_context := new_context (current_type)
 				l_detachable_any_type := current_universe.detachable_any_type
 				l_best_overloaded_features := new_overloaded_features
@@ -15151,6 +15154,21 @@ feature {NONE} -- Overloading (useful in .NET)
 					a_features.keep_first (nb_one)
 				else
 					a_features.wipe_out
+				end
+			end
+			nb := a_features.count
+			if nb > 1 then
+					-- Keep the one with the expected feature name.
+				nb_all := 0
+				from i := 1 until i > nb loop
+					if a_features.item (i).extended_name.same_call_name (a_name) then
+						nb_all := nb_all + 1
+						a_features.swap (i, nb_all)
+					end
+					i := i + 1
+				end
+				if nb_all > 0 then
+					a_features.keep_first (nb_all)
 				end
 			end
 		ensure

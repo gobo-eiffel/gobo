@@ -5,7 +5,7 @@ note
 		"Eiffel feature names followed by a comma"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -74,6 +74,15 @@ feature -- Access
 			-- Break which appears just after current node
 		do
 			Result := comma.break
+		end
+
+feature -- Comparison
+
+	same_call_name (a_call_name: ET_CALL_NAME): BOOLEAN
+			-- Is `Current' the name of a feature which could be called with `a_call_name'?
+			-- (case insensitive)
+		do
+			Result := feature_name.same_call_name (a_call_name)
 		end
 
 feature -- Processing
