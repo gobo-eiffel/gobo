@@ -60,7 +60,7 @@ feature -- Access
 
 	compatible_mode: BOOLEAN
 			-- Compatible mode
-			
+
 	finalize_mode: BOOLEAN
 			-- Finalize mode
 
@@ -72,6 +72,22 @@ feature -- Access
 
 	exit_code_variable_name: STRING
 			-- Name of variable holding exit code of se compilation process
+
+	project_path: STRING = ""
+			-- Default is the current path
+
+	eifgen_directory: STRING
+			-- Directory where created and compiled files are saved
+		once
+			if project_path.is_empty then
+				Result := "EIFGENs"
+			else
+				Result := project_path + "/EIFGENs"
+			end
+		ensure
+			not_empty: Result /= Void and then not Result.is_empty
+		end
+
 
 feature -- Setting
 
@@ -98,7 +114,7 @@ feature -- Setting
 		ensure
 			compatible_mode_set: compatible_mode = b
 		end
-		
+
 	set_finalize_mode (b: BOOLEAN)
 			-- Set  `finalize_mode' to `b'.
 		do
@@ -134,6 +150,15 @@ feature -- Setting
 			exit_code_variable_name_set: exit_code_variable_name = a_exit_code_variable_name
 		end
 
+	set_project_path (a_directory: like project_path)
+		do
+			project_path.wipe_out
+			project_path.append_string (a_directory)
+		ensure
+			set: STRING_.same_string (project_path, a_directory)
+		end
+
+
 feature -- Execution
 
 	execute
@@ -155,7 +180,7 @@ feature -- Execution
 		local
 			cmd: STRING
 			old_cwd: STRING
-			eifgen, old_eifgen, project_dir: STRING
+			eifgen, project_dir: STRING
 			a_filename: STRING
 		do
 			create cmd.make (128)
@@ -172,15 +197,17 @@ feature -- Execution
 				cmd.append_string (" -finalize")
 			end
 			a_filename := system_name + ".epr"
-			eifgen := file_system.pathname ("EIFGENs", system_name)
-			old_eifgen := "EIFGEN"
+			eifgen := file_system.pathname (eifgen_directory, system_name)
 			if
 				file_system.file_exists (a_filename) and
-				(file_system.directory_exists (eifgen) or
-				file_system.directory_exists (old_eifgen))
+				file_system.directory_exists (eifgen)
 			then
 				cmd.append_string (" -project ")
 				cmd := STRING_.appended_string (cmd, a_filename)
+			end
+			if not project_path.is_empty then
+				cmd.append_string (" -project_path ")
+				cmd := STRING_.appended_string (cmd, project_path)
 			end
 			project.trace (<<"  [ise] ", cmd>>)
 			execute_shell (cmd)
@@ -191,14 +218,8 @@ feature -- Execution
 			if exit_code = 0 and then finish_freezing then
 				if finalize_mode then
 					project_dir := file_system.pathname (eifgen, "F_code")
-					if not file_system.directory_exists (project_dir) then
-						project_dir := file_system.pathname (old_eifgen, "F_code")
-					end
 				else
 					project_dir := file_system.pathname (eifgen, "W_code")
-					if not file_system.directory_exists (project_dir) then
-						project_dir := file_system.pathname (old_eifgen, "W_code")
-					end
 				end
 				project.trace (<<"  [ise] cd ", project_dir>>)
 				old_cwd := file_system.cwd
@@ -288,13 +309,13 @@ feature -- Execution
 					file_system.delete_file (a_name)
 				end
 			end
-			a_name := file_system.pathname ("EIFGENs", clean)
+			a_name := file_system.pathname (eifgen_directory, clean)
 			if file_system.directory_exists (a_name) then
 				project.trace (<<"  [ise] delete ", a_name>>)
 				if not project.options.no_exec then
 					file_system.recursive_delete_directory (a_name)
-					if file_system.is_directory_empty ("EIFGENs") then
-						file_system.delete_directory ("EIFGENs")
+					if file_system.is_directory_empty (eifgen_directory) then
+						file_system.delete_directory (eifgen_directory)
 					end
 				end
 			end
@@ -305,5 +326,10 @@ feature -- Execution
 				end
 			end
 		end
+
+
+invariant
+
+	project_path_not_void: project_path /= Void
 
 end

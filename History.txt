@@ -54,6 +54,11 @@ Version 3.10 - ?
 
 	* Added option "syntax" to support the corresponding option in ECF.
 	* Added documentation explaining how to add a new option in Xace.
+  * Add support to set compilation directory to different directory
+	  than current directory. Define GOBO_BUILD_PREFIX and ise compiler
+	  will now compile to that directory. This allows you to compile to
+	  a fast SSD or memdisk.
+    Not yet supported for the Gobo compiler.
 
 	geyacc:
 
