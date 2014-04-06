@@ -27,9 +27,9 @@ Version 3.10 - ?
 	* Qualified anchored types are now accepted by default.
 
 	gelex:
-	
+
 	* Made the generated scanners compilable in void-safe mode with ISE 7.3.
-	
+
 	gelint:
 
 	* Fixed bug where it was reporting an internal error instead of a VTCT error
@@ -77,13 +77,13 @@ Version 3.10 - ?
 	* In order to be void-safe compliant, the generated token class has been
 	  made deferred (last_value attributes may be attached).
 	* Made the generated parsers compilable in void-safe mode with ISE 7.3.
-	* Added option --rescue-on-abort to generate a rescue clause in action routines 
+	* Added option --rescue-on-abort to generate a rescue clause in action routines
 	  to catch abort exceptions. Useful when compiling in void-safe mode.
 
 	Gobo Eiffel Argument Library:
-	
+
 	* Made it compilable in void-safe mode with ISE 13.11.
-	
+
 	Gobo Eiffel Kernel Library:
 
 	* Added features `same_*_pathnames' to class KI_FILE_SYSTEM.
@@ -94,6 +94,7 @@ Version 3.10 - ?
 	* Fixed bug in feature `read_to_string' of file classes where the
 	  hash code was not reset properly.
 	* Made it compilable in void-safe mode with ISE 7.3.
+  * KL_FILE.copy_file: now uses 8192 blocks, instead of 512.
 
 	Gobo Eiffel Lexical Library:
 
@@ -103,9 +104,9 @@ Version 3.10 - ?
 	* Made it compilable in void-safe mode with ISE 7.3.
 
 	Gobo Eiffel Math Library:
-	
+
 	* Made it compilable in void-safe mode with ISE 7.3.
-	
+
 	Gobo Eiffel Parse Library:
 
 	* Made it compilable in void-safe mode with ISE 7.3.
@@ -137,7 +138,7 @@ Version 3.10 - ?
 	  descendants.
 	* Added feature `has_void' to DS_CELL and DS_PAIR.
 	* Fixed bug in features `force_last_new' and `put_last_new' of DS_HASH_TABLE.
-	* Fixed bug in DS_HASH_TABLE when the calls to `key_equality_tester' in 
+	* Fixed bug in DS_HASH_TABLE when the calls to `key_equality_tester' in
 	  `search_position' trigger the invariant which internally calls `search_position'.
 	   But this routine was not written to be re-entrant.
 	* Added iteration routines to the descendants of DS_TABLE so that the key can be
@@ -194,9 +195,9 @@ Version 3.10 - ?
 	* Added support for "$(ECF_CONFIG_PATH)" in ECF files.
 
 	Gobo Eiffel Utility Library:
-	
+
 	* Made it compilable in void-safe mode with ISE 7.3.
-	
+
 	Gobo Eiffel XML Library:
 
 	* Added option to let the XML pretty printer use empty element tags
