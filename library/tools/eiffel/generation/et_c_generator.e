@@ -20696,7 +20696,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				else
 					current_file.put_string (c_ge_real_64_nan)
 				end
-				current_file.put_character ('(')
+				current_file.put_character (')')
 			end
 		end
 
@@ -20729,7 +20729,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				else
 					current_file.put_string (c_ge_real_64_negative_infinity)
 				end
-				current_file.put_character ('(')
+				current_file.put_character (')')
 			end
 		end
 
@@ -20899,7 +20899,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				else
 					current_file.put_string (c_ge_real_64_positive_infinity)
 				end
-				current_file.put_character ('(')
+				current_file.put_character (')')
 			end
 		end
 
