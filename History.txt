@@ -144,6 +144,10 @@ Version 3.10 - ?
 	  passed first and then the item to the agents.
 	* Made it compilable in void-safe mode with ISE 7.3.
 
+	Gobo Eiffel Test Library:
+
+	* Made it compilable in void-safe mode with ISE 15.01.
+
 	Gobo Eiffel Time Library:
 
 	* Added class DT_STOPWATCH in cluster 'stopwatch'.

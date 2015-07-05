@@ -5,7 +5,7 @@ note
 		"Testers: test harness to execute registered test cases"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/12/24 $"
 	revision: "$Revision: #13 $"
@@ -60,10 +60,12 @@ feature -- Access
 	suite: TS_TEST_SUITE
 			-- Suite of tests to be run
 		do
-			if internal_suite = Void then
-				create internal_suite.make (generator.as_lower, variables)
+			if attached internal_suite as l_internal_suite then
+				Result := l_internal_suite
+			else
+				create Result.make (generator.as_lower, variables)
+				internal_suite := Result
 			end
-			Result := internal_suite
 		ensure
 			suite_not_void: Result /= Void
 		end
@@ -71,7 +73,7 @@ feature -- Access
 	variables: TS_VARIABLES
 			-- Defined variables (to be passed to the test cases)
 
-	output_filename: STRING
+	output_filename: detachable STRING
 			-- Output filename where messages and summary about
 			-- the tests will be printed
 			-- (Use standard output when not specified.)
@@ -98,25 +100,25 @@ feature -- Status report
 			-- (Useful when the current tester is root of a test harness
 			-- application, otherwise return False.)
 
-	enabled_test_cases: DS_LINKED_LIST [RX_REGULAR_EXPRESSION]
+	enabled_test_cases: detachable DS_LINKED_LIST [RX_REGULAR_EXPRESSION]
 			-- Only test cases whose name matches one of these regexps will
 			-- be executed, or execute all test cases is Void
 
-	disabled_test_cases: DS_LINKED_LIST [RX_REGULAR_EXPRESSION]
+	disabled_test_cases: detachable DS_LINKED_LIST [RX_REGULAR_EXPRESSION]
 			-- Test cases whose name matches one of these regexps will
 			-- not be executed
 
-	success_output_filename: STRING
+	success_output_filename: detachable STRING
 			-- Name of file where to print the name of tests
 			-- when successfully executed
 
-	failure_output_filename: STRING
+	failure_output_filename: detachable STRING
 			-- Name of file where to print the name of tests when failed
 
-	abort_output_filename: STRING
+	abort_output_filename: detachable STRING
 			-- Name of file where to print the name of tests when aborted
 
-	completed_output_filename: STRING
+	completed_output_filename: detachable STRING
 			-- Name of file where to print the name of tests when completed
 
 feature -- Status setting
@@ -153,13 +155,17 @@ feature -- Status setting
 		require
 			a_regexp_not_void: a_regexp /= Void
 			a_regexp_compiled: a_regexp.is_compiled
+		local
+			l_test_cases: like enabled_test_cases
 		do
-			if enabled_test_cases = Void then
-				create enabled_test_cases.make
+			l_test_cases := enabled_test_cases
+			if l_test_cases = Void then
+				create l_test_cases.make
+				enabled_test_cases := l_test_cases
 			end
-			enabled_test_cases.force_last (a_regexp)
+			l_test_cases.force_last (a_regexp)
 		ensure
-			added: enabled_test_cases /= Void and then enabled_test_cases.has (a_regexp)
+			added: attached enabled_test_cases as l_enabled_test_cases and then l_enabled_test_cases.has (a_regexp)
 		end
 
 	set_disabled_test_cases (a_test_cases: like disabled_test_cases)
@@ -178,13 +184,17 @@ feature -- Status setting
 		require
 			a_regexp_not_void: a_regexp /= Void
 			a_regexp_compiled: a_regexp.is_compiled
+		local
+			l_test_cases: like disabled_test_cases
 		do
-			if disabled_test_cases = Void then
-				create disabled_test_cases.make
+			l_test_cases := disabled_test_cases
+			if l_test_cases = Void then
+				create l_test_cases.make
+				disabled_test_cases := l_test_cases
 			end
-			disabled_test_cases.force_last (a_regexp)
+			l_test_cases.force_last (a_regexp)
 		ensure
-			added: disabled_test_cases /= Void and then disabled_test_cases.has (a_regexp)
+			added: attached disabled_test_cases as l_disabled_test_cases and then l_disabled_test_cases.has (a_regexp)
 		end
 
 	set_success_output_filename (a_filename: like success_output_filename)
@@ -250,14 +260,14 @@ feature -- Execution
 			a_file: KL_TEXT_OUTPUT_FILE
 			cannot_write: UT_CANNOT_WRITE_TO_FILE_ERROR
 		do
-			if output_filename /= Void then
-				create a_file.make (output_filename)
+			if attached output_filename as l_output_filename then
+				create a_file.make (l_output_filename)
 				a_file.open_write
 				if a_file.is_open_write then
 					execute_with_output (a_file)
 					a_file.close
 				else
-					create cannot_write.make (output_filename)
+					create cannot_write.make (l_output_filename)
 					report_error (cannot_write)
 				end
 			else
@@ -300,10 +310,10 @@ feature -- Execution
 			l_old_failure_output: KI_TEXT_OUTPUT_STREAM
 			l_old_abort_output: KI_TEXT_OUTPUT_STREAM
 			l_old_completed_output: KI_TEXT_OUTPUT_STREAM
-			l_success_file: KL_TEXT_OUTPUT_FILE
-			l_failure_file: KL_TEXT_OUTPUT_FILE
-			l_abort_file: KL_TEXT_OUTPUT_FILE
-			l_completed_file: KL_TEXT_OUTPUT_FILE
+			l_success_file: detachable KL_TEXT_OUTPUT_FILE
+			l_failure_file: detachable KL_TEXT_OUTPUT_FILE
+			l_abort_file: detachable KL_TEXT_OUTPUT_FILE
+			l_completed_file: detachable KL_TEXT_OUTPUT_FILE
 			l_cannot_write: UT_CANNOT_WRITE_TO_FILE_ERROR
 		do
 			l_suite := suite
@@ -311,50 +321,50 @@ feature -- Execution
 			a_summary.set_enabled_test_cases (enabled_test_cases)
 			a_summary.set_disabled_test_cases (disabled_test_cases)
 			l_old_success_output := a_summary.success_output
-			if success_output_filename /= Void then
-				create l_success_file.make (success_output_filename)
+			if attached success_output_filename as l_success_output_filename then
+				create l_success_file.make (l_success_output_filename)
 				l_success_file.recursive_open_append
 				if l_success_file.is_open_write then
 					a_summary.set_success_output (l_success_file)
 				else
 					l_success_file := Void
-					create l_cannot_write.make (success_output_filename)
+					create l_cannot_write.make (l_success_output_filename)
 					report_error (l_cannot_write)
 				end
 			end
 			l_old_failure_output := a_summary.failure_output
-			if failure_output_filename /= Void then
-				create l_failure_file.make (failure_output_filename)
+			if attached failure_output_filename as l_failure_output_filename then
+				create l_failure_file.make (l_failure_output_filename)
 				l_failure_file.recursive_open_append
 				if l_failure_file.is_open_write then
 					a_summary.set_failure_output (l_failure_file)
 				else
 					l_failure_file := Void
-					create l_cannot_write.make (failure_output_filename)
+					create l_cannot_write.make (l_failure_output_filename)
 					report_error (l_cannot_write)
 				end
 			end
 			l_old_abort_output := a_summary.abort_output
-			if abort_output_filename /= Void then
-				create l_abort_file.make (abort_output_filename)
+			if attached abort_output_filename as l_abort_output_filename then
+				create l_abort_file.make (l_abort_output_filename)
 				l_abort_file.recursive_open_append
 				if l_abort_file.is_open_write then
 					a_summary.set_abort_output (l_abort_file)
 				else
 					l_abort_file := Void
-					create l_cannot_write.make (abort_output_filename)
+					create l_cannot_write.make (l_abort_output_filename)
 					report_error (l_cannot_write)
 				end
 			end
 			l_old_completed_output := a_summary.completed_output
-			if completed_output_filename /= Void then
-				create l_completed_file.make (completed_output_filename)
+			if attached completed_output_filename as l_completed_output_filename then
+				create l_completed_file.make (l_completed_output_filename)
 				l_completed_file.recursive_open_append
 				if l_completed_file.is_open_write then
 					a_summary.set_completed_output (l_completed_file)
 				else
 					l_completed_file := Void
-					create l_cannot_write.make (completed_output_filename)
+					create l_cannot_write.make (l_completed_output_filename)
 					report_error (l_cannot_write)
 				end
 			end
@@ -720,7 +730,7 @@ Test harness to execute registered test cases.
 
 feature {NONE} -- Implementation
 
-	internal_suite: TS_TEST_SUITE
+	internal_suite: detachable TS_TEST_SUITE
 			-- Internal implementation of `suite'
 
 	new_summary: TS_SUMMARY
@@ -746,9 +756,9 @@ invariant
 
 	error_handler_not_void: error_handler /= Void
 	variables_not_void: variables /= Void
-	no_void_enabled_test_cases: enabled_test_cases /= Void implies not enabled_test_cases.has_void
-	enabled_test_cases_compiled: enabled_test_cases /= Void implies enabled_test_cases.for_all (agent {RX_REGULAR_EXPRESSION}.is_compiled)
-	no_void_disabled_test_cases: disabled_test_cases /= Void implies not disabled_test_cases.has_void
-	disabled_test_cases_compiled: disabled_test_cases /= Void implies disabled_test_cases.for_all (agent {RX_REGULAR_EXPRESSION}.is_compiled)
+	no_void_enabled_test_cases: attached enabled_test_cases as l_enabled_test_cases implies not l_enabled_test_cases.has_void
+	enabled_test_cases_compiled: attached enabled_test_cases as l_enabled_test_cases implies l_enabled_test_cases.for_all (agent {RX_REGULAR_EXPRESSION}.is_compiled)
+	no_void_disabled_test_cases: attached disabled_test_cases as l_disabled_test_cases implies not l_disabled_test_cases.has_void
+	disabled_test_cases_compiled: attached disabled_test_cases as l_disabled_test_cases implies l_disabled_test_cases.for_all (agent {RX_REGULAR_EXPRESSION}.is_compiled)
 
 end

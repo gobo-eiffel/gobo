@@ -123,8 +123,8 @@ feature -- Execution
 			-- Run test and put results in `a_summary'.
 		local
 			l_collecting: BOOLEAN
-			l_enabled_test_cases: DS_LINKED_LIST [RX_REGULAR_EXPRESSION]
-			l_disabled_test_cases: DS_LINKED_LIST [RX_REGULAR_EXPRESSION]
+			l_enabled_test_cases: detachable DS_LINKED_LIST [RX_REGULAR_EXPRESSION]
+			l_disabled_test_cases: detachable DS_LINKED_LIST [RX_REGULAR_EXPRESSION]
 		do
 			l_enabled_test_cases := a_summary.enabled_test_cases
 			l_disabled_test_cases := a_summary.disabled_test_cases
@@ -234,7 +234,7 @@ feature -- Registration
 			Result := array_routines.make_empty_with_lower (1)
 		ensure
 			features_under_test_not_void: Result /= Void
-			no_void_feature_under_test: not Result.has (Void)
+--			no_void_feature_under_test: not Result.has (Void)
 --			features_under_test_target: forall f in Result, f.target = Current
 		end
 
@@ -279,7 +279,7 @@ feature {NONE} -- Execution
 			retried: BOOLEAN
 			i, nb: INTEGER
 			an_error_messages: DS_ARRAYED_LIST [STRING]
-			l_message: STRING
+			l_message: detachable STRING
 		do
 			if not retried then
 				execute_without_rescue (a_summary)

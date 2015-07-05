@@ -5,7 +5,7 @@ note
 		"Test result summaries"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/29 $"
 	revision: "$Revision: #10 $"
@@ -61,11 +61,11 @@ feature -- Status report
 			-- debugging it might be useful to get the full exception
 			-- trace.)
 
-	enabled_test_cases: DS_LINKED_LIST [RX_REGULAR_EXPRESSION]
+	enabled_test_cases: detachable DS_LINKED_LIST [RX_REGULAR_EXPRESSION]
 			-- Only test cases whose name matches one of these regexps will
 			-- be executed, or execute all test cases is Void
 
-	disabled_test_cases: DS_LINKED_LIST [RX_REGULAR_EXPRESSION]
+	disabled_test_cases: detachable DS_LINKED_LIST [RX_REGULAR_EXPRESSION]
 			-- Test cases whose name matches one of these regexps will
 			-- not be executed
 
@@ -365,10 +365,10 @@ invariant
 	assertion_count_positive: assertion_count >= 0
 	results_not_void: results /= Void
 	no_void_result: not results.has_void
-	no_void_enabled_test_cases: enabled_test_cases /= Void implies not enabled_test_cases.has_void
-	enabled_test_cases_compiled: enabled_test_cases /= Void implies enabled_test_cases.for_all (agent {RX_REGULAR_EXPRESSION}.is_compiled)
-	no_void_disabled_test_cases: disabled_test_cases /= Void implies not disabled_test_cases.has_void
-	disabled_test_cases_compiled: disabled_test_cases /= Void implies disabled_test_cases.for_all (agent {RX_REGULAR_EXPRESSION}.is_compiled)
+	no_void_enabled_test_cases: attached enabled_test_cases as l_enabled_test_cases implies not l_enabled_test_cases.has_void
+	enabled_test_cases_compiled: attached enabled_test_cases as l_enabled_test_cases implies l_enabled_test_cases.for_all (agent {RX_REGULAR_EXPRESSION}.is_compiled)
+	no_void_disabled_test_cases: attached disabled_test_cases as l_disabled_test_cases implies not l_disabled_test_cases.has_void
+	disabled_test_cases_compiled: attached disabled_test_cases as l_disabled_test_cases implies l_disabled_test_cases.for_all (agent {RX_REGULAR_EXPRESSION}.is_compiled)
 	success_output_not_void: success_output /= Void
 	success_output_open_write: success_output.is_open_write
 	failure_output_not_void: failure_output /= Void

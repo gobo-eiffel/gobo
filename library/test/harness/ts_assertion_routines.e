@@ -5,7 +5,7 @@ note
 		"Assertion routines"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2011/03/17 $"
 	revision: "$Revision: #17 $"
@@ -111,7 +111,7 @@ feature {TS_TEST_HANDLER} -- Basic operations
 
 feature {TS_TEST_HANDLER} -- Equality
 
-	assert_equal (a_tag: STRING; expected, actual: ANY)
+	assert_equal (a_tag: STRING; expected, actual: detachable ANY)
 			-- Assert that `equal (expected, actual)'.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -128,7 +128,7 @@ feature {TS_TEST_HANDLER} -- Equality
 			end
 		end
 
-	check_equal (a_tag: STRING; expected, actual: ANY)
+	check_equal (a_tag: STRING; expected, actual: detachable ANY)
 			-- Check that `equal (expected, actual)'.
 			-- Violation of this assertion is not fatal.
 		require
@@ -142,7 +142,7 @@ feature {TS_TEST_HANDLER} -- Equality
 			assertions.set_exception_on_error (l_fatal)
 		end
 
-	assert_not_equal (a_tag: STRING; expected, actual: ANY)
+	assert_not_equal (a_tag: STRING; expected, actual: detachable ANY)
 			-- Assert that `not equal (expected, actual)'.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -159,7 +159,7 @@ feature {TS_TEST_HANDLER} -- Equality
 			end
 		end
 
-	check_not_equal (a_tag: STRING; expected, actual: ANY)
+	check_not_equal (a_tag: STRING; expected, actual: detachable ANY)
 			-- Check that `not equal (expected, actual)'.
 			-- Violation of this assertion is not fatal.
 		require
@@ -173,7 +173,7 @@ feature {TS_TEST_HANDLER} -- Equality
 			assertions.set_exception_on_error (l_fatal)
 		end
 
-	assert_same (a_tag: STRING; expected, actual: ANY)
+	assert_same (a_tag: STRING; expected, actual: detachable ANY)
 			-- Assert that `expected = actual'.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -190,7 +190,7 @@ feature {TS_TEST_HANDLER} -- Equality
 			end
 		end
 
-	check_same (a_tag: STRING; expected, actual: ANY)
+	check_same (a_tag: STRING; expected, actual: detachable ANY)
 			-- Check that `expected = actual'.
 			-- Violation of this assertion is not fatal.
 		require
@@ -204,7 +204,7 @@ feature {TS_TEST_HANDLER} -- Equality
 			assertions.set_exception_on_error (l_fatal)
 		end
 
-	assert_not_same (a_tag: STRING; expected, actual: ANY)
+	assert_not_same (a_tag: STRING; expected, actual: detachable ANY)
 			-- Assert that `expected /= actual'.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -221,7 +221,7 @@ feature {TS_TEST_HANDLER} -- Equality
 			end
 		end
 
-	check_not_same (a_tag: STRING; expected, actual: ANY)
+	check_not_same (a_tag: STRING; expected, actual: detachable ANY)
 			-- Check that `expected /= actual'.
 			-- Violation of this assertion is not fatal.
 		require
@@ -365,7 +365,7 @@ feature {TS_TEST_HANDLER} -- Equality
 			assertions.set_exception_on_error (l_fatal)
 		end
 
-	assert_strings_equal (a_tag: STRING; expected, actual: STRING)
+	assert_strings_equal (a_tag: STRING; expected, actual: detachable STRING)
 			-- Assert that `expected' and `actual' are the same string.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -390,7 +390,7 @@ feature {TS_TEST_HANDLER} -- Equality
 			end
 		end
 
-	check_strings_equal (a_tag: STRING; expected, actual: STRING)
+	check_strings_equal (a_tag: STRING; expected, actual: detachable STRING)
 			-- Check that `expected' and `actual' are the same string.
 			-- Violation of this assertion is not fatal.
 		require
@@ -404,7 +404,7 @@ feature {TS_TEST_HANDLER} -- Equality
 			assertions.set_exception_on_error (l_fatal)
 		end
 
-	assert_strings_not_equal (a_tag: STRING; expected, actual: STRING)
+	assert_strings_not_equal (a_tag: STRING; expected, actual: detachable STRING)
 			-- Assert that `expected' and `actual' are not the same string.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -429,7 +429,7 @@ feature {TS_TEST_HANDLER} -- Equality
 			end
 		end
 
-	check_strings_not_equal (a_tag: STRING; expected, actual: STRING)
+	check_strings_not_equal (a_tag: STRING; expected, actual: detachable STRING)
 			-- Check that `expected' and `actual' are not the same string.
 			-- Violation of this assertion is not fatal.
 		require
@@ -443,7 +443,7 @@ feature {TS_TEST_HANDLER} -- Equality
 			assertions.set_exception_on_error (l_fatal)
 		end
 
-	assert_strings_case_insensitive_equal (a_tag: STRING; expected, actual: STRING)
+	assert_strings_case_insensitive_equal (a_tag: STRING; expected, actual: detachable STRING)
 			-- Assert that `expected' and `actual' are the same string (case insensitive).
 		require
 			a_tag_not_void: a_tag /= Void
@@ -468,7 +468,7 @@ feature {TS_TEST_HANDLER} -- Equality
 			end
 		end
 
-	check_strings_case_insensitive_equal (a_tag: STRING; expected, actual: STRING)
+	check_strings_case_insensitive_equal (a_tag: STRING; expected, actual: detachable STRING)
 			-- Check that `expected' and `actual' are the same string (case insensitive).
 			-- Violation of this assertion is not fatal.
 		require
@@ -620,7 +620,7 @@ feature {TS_TEST_HANDLER} -- Files
 			a_filename2_not_empty: a_filename2.count > 0
 		local
 			a_file1, a_file2: KL_TEXT_INPUT_FILE
-			a_message: STRING
+			a_message: detachable STRING
 			done: BOOLEAN
 			i: INTEGER
 		do
@@ -739,7 +739,7 @@ feature {TS_TEST_HANDLER} -- Files
 			i, nb: INTEGER
 			a_name1, a_name2: STRING
 			c1, c2: CHARACTER
-			a_message: STRING
+			a_message: detachable STRING
 		do
 			assertions.add_assertion
 			nb := a_filename1.count
@@ -812,7 +812,8 @@ feature {TS_TEST_HANDLER} -- Containers
 		local
 			i, nb: INTEGER
 			i1, i2: INTEGER
-			new_tag, a_message: STRING
+			new_tag: STRING
+			a_message: detachable STRING
 			expected_item, actual_item: ANY
 		do
 			assertions.add_assertion
@@ -881,7 +882,8 @@ feature {TS_TEST_HANDLER} -- Containers
 		local
 			i, nb: INTEGER
 			i1, i2: INTEGER
-			new_tag, a_message: STRING
+			new_tag: STRING
+			a_message: detachable STRING
 			expected_item, actual_item: ANY
 		do
 			assertions.add_assertion
@@ -950,7 +952,8 @@ feature {TS_TEST_HANDLER} -- Containers
 		local
 			i, nb: INTEGER
 			i1, i2: INTEGER
-			new_tag, a_message: STRING
+			new_tag: STRING
+			a_message: detachable STRING
 			expected_item, actual_item: INTEGER
 		do
 			assertions.add_assertion
@@ -1099,7 +1102,7 @@ feature {TS_TEST_HANDLER} -- Execution
 
 feature {NONE} -- Messages
 
-	void_or_out (an_any: ANY): STRING
+	void_or_out (an_any: ANY): detachable STRING
 			-- Return `an_any.out' or Void if `an_any' is Void.
 		do
 			if an_any /= Void then
@@ -1107,7 +1110,7 @@ feature {NONE} -- Messages
 			end
 		end
 
-	assert_equal_message (a_tag: STRING; expected, actual: ANY): STRING
+	assert_equal_message (a_tag: STRING; expected, actual: detachable ANY): STRING
 			-- Message stating that `expected' and `actual' should be equal.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -1115,7 +1118,7 @@ feature {NONE} -- Messages
 			Result := assert_strings_equal_message (a_tag, void_or_out (expected), void_or_out (actual))
 		end
 
-	assert_not_equal_message (a_tag: STRING; expected, actual: ANY): STRING
+	assert_not_equal_message (a_tag: STRING; expected, actual: detachable ANY): STRING
 			-- Message stating that `expected' and `actual' should not be equal.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -1123,7 +1126,7 @@ feature {NONE} -- Messages
 			Result := assert_strings_not_equal_message (a_tag, void_or_out (expected), void_or_out (actual))
 		end
 
-	assert_strings_equal_message (a_tag: STRING; expected, actual: STRING): STRING
+	assert_strings_equal_message (a_tag: STRING; expected, actual: detachable STRING): STRING
 			-- Message stating that `expected' and `actual' should be equal.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -1146,7 +1149,7 @@ feature {NONE} -- Messages
 			message_not_void: Result /= Void
 		end
 
-	assert_strings_not_equal_message (a_tag: STRING; expected, actual: STRING): STRING
+	assert_strings_not_equal_message (a_tag: STRING; expected, actual: detachable STRING): STRING
 			-- Message stating that `expected' and `actual' should not be equal.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -1169,7 +1172,7 @@ feature {NONE} -- Messages
 			message_not_void: Result /= Void
 		end
 
-	assert_strings_equal_with_tolerance_message (a_tag: STRING; expected, actual, tolerance: STRING; a_strict: BOOLEAN): STRING
+	assert_strings_equal_with_tolerance_message (a_tag: STRING; expected, actual: detachable STRING; tolerance: STRING; a_strict: BOOLEAN): STRING
 			-- Message stating that `expected' and `actual' should be equal
 			-- with some (possibly strict) `tolerance'.
 		require
